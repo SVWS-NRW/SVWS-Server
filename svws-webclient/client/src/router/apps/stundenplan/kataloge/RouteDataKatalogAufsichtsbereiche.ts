@@ -29,8 +29,9 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 	}
 
 	get stundenplanManager(): StundenplanManager {
-		if (this._state.value.stundenplanManager === undefined)
+		if (this._state.value.stundenplanManager === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
+		}
 		return this._state.value.stundenplanManager;
 	}
 
@@ -50,8 +51,9 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 	gotoEintrag = async (eintrag: StundenplanAufsichtsbereich) => await RouteManager.doRoute(routeKatalogAufsichtsbereiche.getRoute({ idAufsichtsbereich: eintrag.id }));
 
 	addEintrag = async (eintrag: Partial<StundenplanAufsichtsbereich>) => {
-		if ((eintrag.kuerzel === undefined) || this.stundenplanManager.aufsichtsbereichExistsByKuerzel(eintrag.kuerzel))
+		if ((eintrag.kuerzel === undefined) || this.stundenplanManager.aufsichtsbereichExistsByKuerzel(eintrag.kuerzel)) {
 			throw new UserNotificationException('Eine Aufsichtsbereich mit diesem Kürzel existiert bereits');
+		}
 		delete eintrag.id;
 		const aufsichtsbereich = await api.server.addAufsichtsbereich(eintrag, api.schema);
 		const stundenplanManager = this.stundenplanManager;
@@ -64,10 +66,12 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 	deleteEintraege = async (eintraege: Iterable<StundenplanAufsichtsbereich>) => {
 		const stundenplanManager = this.stundenplanManager;
 		const listID = new ArrayList<number>();
-		for (const eintrag of eintraege)
+		for (const eintrag of eintraege) {
 			listID.add(eintrag.id);
-		if (listID.isEmpty())
+		}
+		if (listID.isEmpty()) {
 			return;
+		}
 		const aufsichtsbereiche = await api.server.deleteAufsichtsbereiche(listID, api.schema);
 		stundenplanManager.aufsichtsbereichRemoveAll(aufsichtsbereiche);
 		const liste = this.stundenplanManager.aufsichtsbereichGetMengeAsList();
@@ -77,8 +81,9 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 	};
 
 	patch = async (eintrag: Partial<StundenplanAufsichtsbereich>) => {
-		if (this.auswahl === undefined)
+		if (this.auswahl === undefined) {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		}
 		await api.server.patchAufsichtsbereich(eintrag, api.schema, this.auswahl.id);
 		const auswahl = this.auswahl;
 		Object.assign(auswahl, eintrag);
@@ -89,19 +94,22 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 
 	setKatalogAufsichtsbereicheImportJSON = api.call(async (formData: FormData) => {
 		const jsonFile = formData.get("data");
-		if (!(jsonFile instanceof File))
+		if (!(jsonFile instanceof File)) {
 			return;
+		}
 		const json = await jsonFile.text();
 		const aufsichtsbereiche: Partial<StundenplanAufsichtsbereich>[] = JSON.parse(json);
 		const list = new ArrayList<Partial<StundenplanAufsichtsbereich>>();
 		const stundenplanManager = this.stundenplanManager;
-		for (const item of aufsichtsbereiche)
+		for (const item of aufsichtsbereiche) {
 			if ((item.kuerzel !== undefined) && (stundenplanManager.aufsichtsbereichGetByKuerzelOrNull(item.kuerzel) === null)) {
 				delete item.id;
 				list.add(item);
 			}
-		if (list.isEmpty())
+		}
+		if (list.isEmpty()) {
 			return;
+		}
 		const res = await api.server.addAufsichtsbereiche(list, api.schema);
 		stundenplanManager.aufsichtsbereichAddAll(res);
 		await routeStundenplan.data.reloadVorlagen();

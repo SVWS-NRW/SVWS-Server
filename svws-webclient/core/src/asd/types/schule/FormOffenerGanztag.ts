@@ -98,7 +98,7 @@ export class FormOffenerGanztag extends JavaEnum<FormOffenerGanztag> implements 
 		return ['de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.schule.FormOffenerGanztag', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<FormOffenerGanztag>('de.svws_nrw.asd.types.schule.FormOffenerGanztag');
+	public static readonly class = new Class<FormOffenerGanztag>('de.svws_nrw.asd.types.schule.FormOffenerGanztag');
 
 }
 

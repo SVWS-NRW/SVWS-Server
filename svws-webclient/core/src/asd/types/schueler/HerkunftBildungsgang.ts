@@ -303,7 +303,7 @@ export class HerkunftBildungsgang extends JavaEnum<HerkunftBildungsgang> impleme
 		return ['de.svws_nrw.asd.types.schueler.HerkunftBildungsgang', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<HerkunftBildungsgang>('de.svws_nrw.asd.types.schueler.HerkunftBildungsgang');
+	public static readonly class = new Class<HerkunftBildungsgang>('de.svws_nrw.asd.types.schueler.HerkunftBildungsgang');
 
 }
 

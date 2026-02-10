@@ -63,8 +63,9 @@ class WorkerKursblockung {
 	 * @returns true, falls neue Ergebenisse vorliegen, und ansonsten false.
 	 */
 	public next(val: number): boolean {
-		if (this.algo === null)
+		if (this.algo === null) {
 			return false;
+		}
 		return this.algo.next(val);
 	}
 
@@ -76,10 +77,12 @@ class WorkerKursblockung {
 	 */
 	public getBlockungsergebnisse(): List<GostBlockungsergebnis> {
 		const result = new ArrayList<GostBlockungsergebnis>();
-		if (this.algo === null)
+		if (this.algo === null) {
 			return result;
-		for (const manager of this.algo.getBlockungsergebnisse())
+		}
+		for (const manager of this.algo.getBlockungsergebnisse()) {
 			result.add(manager.getErgebnis());
+		}
 		return result;
 	}
 
@@ -92,8 +95,9 @@ class WorkerKursblockung {
 	protected handleInit(message: WorkerKursblockungRequestInit) {
 		if (!this.isInitialized()) {
 			const faecherListe = new ArrayList<GostFach>();
-			for (const fach of message.faecher)
+			for (const fach of message.faecher) {
 				faecherListe.add(GostFach.transpilerFromJSON(fach));
+			}
 			const blockungsdaten = GostBlockungsdaten.transpilerFromJSON(message.blockungsdaten);
 			const mapCoreTypeNameJsonData = message.mapCoreTypeNameJsonData;
 			this.init(faecherListe, blockungsdaten, mapCoreTypeNameJsonData);
@@ -122,8 +126,9 @@ class WorkerKursblockung {
 	protected handleGetErgebnisse(message: WorkerKursblockungRequestErgebnisse) {
 		const ergebnisse = this.getBlockungsergebnisse();
 		const result = new Array<string>();
-		for (const ergebnis of ergebnisse)
+		for (const ergebnis of ergebnisse) {
 			result.push(GostBlockungsergebnis.transpilerToJSON(ergebnis));
+		}
 		postMessage(<WorkerKursblockungReplyErgebnisse>{ cmd: 'getErgebnisse', ergebnisse: result });
 	}
 

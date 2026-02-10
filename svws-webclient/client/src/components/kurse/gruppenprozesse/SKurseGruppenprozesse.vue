@@ -77,17 +77,46 @@
 					<!-- Ende: E-Mail-Eingabefelder -->
 				</svws-ui-input-wrapper>
 			</ui-card>
+			<ui-card v-if="hatKompetenzDruckenSchuelerLeistungsdaten" icon="i-ri-printer-line" title="Leistungsübersicht drucken" subtitle="Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der ausgewählten Kurse drucken"
+				:is-open="currentAction === 'druckKursListeSchuelerLeistungsdaten'" @update:is-open="isOpen => setCurrentAction('druckKursListeSchuelerLeistungsdaten', isOpen)">
+				<svws-ui-input-wrapper :grid="2" class="p-2">
+					<div class="text-left col-span-2 mb-2">
+						<br><p class="font-bold underline">Elemente der Druckausgabe:</p>
+						<div class="grid grid-cols-2 gap-x-4">
+							<template v-for="vp in vpLeistungsdaten" :key="vp.name">
+								<svws-ui-checkbox v-if="vp.typ === ReportingVorlageParameterTyp.BOOLEAN.getId()" :model-value="vp.wert === 'true'" @update:model-value="v => vp.wert = v.toString()" :name="vp.name">{{ vp.bezeichnung }}</svws-ui-checkbox>
+							</template>
+						</div>
+					</div>
+					<div class="text-left col-span-2 mb-2">
+						<br><p class="font-bold underline">Optionen zur Druckausgabe:</p>
+						<svws-ui-radio-group class="grid grid-cols-4 p-2 items-start">
+							<svws-ui-radio-option :value="1" v-model="druckoptionKursListeSchuelerLeistungsdaten" name="druckoptionKursListeSchuelerLeistungsdatenGesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
+							<svws-ui-radio-option :value="2" v-model="druckoptionKursListeSchuelerLeistungsdaten" name="druckoptionKursListeSchuelerLeistungsdatenEinzelausdruckEinseitig" label="Einzelausdruck einseitig" />
+							<svws-ui-radio-option :value="3" v-model="druckoptionKursListeSchuelerLeistungsdaten" name="druckoptionKursListeSchuelerLeistungsdatenGesamtausdruckDuplex" label="Gesamtausdruck duplex" />
+							<svws-ui-radio-option :value="4" v-model="druckoptionKursListeSchuelerLeistungsdaten" name="druckoptionKursListeSchuelerLeistungsdatenEinzelausdruckDuplex" label="Einzelausdruck duplex" />
+						</svws-ui-radio-group>
+					</div>
+					<div class="text-left col-span-2">
+						<svws-ui-button :disabled="isPrintDisabled" @click="downloadPDF" :is-loading="loading" class="mt-4">
+							<svws-ui-spinner v-if="loading" spinning />
+							<span v-else class="icon i-ri-printer-line" />
+							Drucken
+						</svws-ui-button>
+					</div>
+				</svws-ui-input-wrapper>
+			</ui-card>
 			<!-- Karte: Löschen (bestehende Funktionalität, DEV) -->
 			<ui-card v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Kurse werden gelöscht."
 				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
 				<div>
-					<span v-if="preConditionCheck[0]">Alle ausgewählten Kurse sind bereit zum Löschen.</span>
-					<template v-else v-for="message in preConditionCheck[1]" :key="message">
+					<span v-if="preConditionCheck.success">Alle ausgewählten Kurse sind bereit zum Löschen.</span>
+					<template v-else v-for="message, i in preConditionCheck.logs" :key="i">
 						<span class="text-ui-danger"> {{ message }} <br> </span>
 					</template>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button :disabled="!preConditionCheck[0] || loading" title="Löschen" @click="entferneKurse" :is-loading="loading" class="mt-4">
+					<svws-ui-button :disabled="!preConditionCheck.success || loading" title="Löschen" @click="entferneKurse" :is-loading="loading" class="mt-4">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						Löschen
@@ -107,23 +136,20 @@
 	import { ref, computed } from "vue";
 	import type { KurseGruppenprozesseProps } from "./SKurseGruppenprozesseProps";
 	import type { List } from "@core";
-	import { ServerMode, ReportingAusgabeformat, ReportingEMailDaten, ReportingEMailEmpfaengerTyp, ArrayList, BenutzerKompetenz, ReportingParameter, ReportingReportvorlage } from "@core";
+	import { ServerMode, ReportingAusgabeformat, ReportingEMailDaten, ReportingEMailEmpfaengerTyp, ReportingVorlageParameterTyp, ArrayList, BenutzerKompetenz, ReportingParameter, ReportingReportvorlage } from "@core";
 
-	type Action = 'druckKursListeSchuelerKontaktdatenErzieher' | 'delete' | '';
+	type Action = 'druckKursListeSchuelerKontaktdatenErzieher' | 'druckKursListeSchuelerLeistungsdaten' | 'delete' | '';
 
 	const props = defineProps<KurseGruppenprozesseProps>();
 
 	const currentAction = ref<Action>('');
-	const oldAction = ref<{ name: string | undefined; open: boolean }>({
-		name: undefined,
-		open: false,
-	});
 	const loading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
 
 	const hatKompetenzDrucken = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
 	const hatKompetenzDruckenSchuelerIndividualdaten = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN) && hatKompetenzDrucken.value));
+	const hatKompetenzDruckenSchuelerLeistungsdaten = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
 	const hatIrgendwelcheKompetenzen = computed(() => hatKompetenzDrucken.value || hatKompetenzLoeschen.value || hatKompetenzDruckenSchuelerIndividualdaten.value);
@@ -152,16 +178,21 @@
 	const option2048 = ref(false);
 	const option4096 = ref(false);
 	const druckoptionListeSchuelerKontaktdatenErzieher = ref(1);
+	const druckoptionKursListeSchuelerLeistungsdaten = ref(1);
+
+	const vpLeistungsdaten = ref(new ArrayList(ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_LEISTUNGSDATEN.getVorlageParameterList()));
 
 	const preConditionCheck = computed(() => {
-		if (currentAction.value === 'delete')
-			return [true, []];
-		return [false, []];
+		if (currentAction.value === 'delete') {
+			return { success: true, logs: new ArrayList<string>() };
+		}
+		return { success: false, logs: new ArrayList<string>() };
 	});
 
 	function setCurrentAction(newAction: Action, open: boolean) {
-		if (newAction !== currentAction.value && !open)
+		if (newAction !== currentAction.value && !open) {
 			return;
+		}
 		option1.value = false;
 		option2.value = false;
 		option4.value = false;
@@ -204,62 +235,74 @@
 	async function downloadPDF() {
 		const reportingParameter = new ReportingParameter();
 		const listeIdsKurse = new ArrayList<number>();
-		for (const kurs of props.manager().liste.auswahl())
+		for (const kurs of props.manager().liste.auswahl()) {
 			listeIdsKurse.add(kurs.id);
-
-		if (currentAction.value === 'druckKursListeSchuelerKontaktdatenErzieher') {
-			reportingParameter.reportvorlage = ReportingReportvorlage.KURSE_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
-			reportingParameter.idsHauptdaten = listeIdsKurse;
-			reportingParameter.einzelausgabeHauptdaten = ((druckoptionListeSchuelerKontaktdatenErzieher.value === 2) || (druckoptionListeSchuelerKontaktdatenErzieher.value === 4));
-			reportingParameter.einzelausgabeDetaildaten = false;
-			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.KURSE_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getVorlageParameterList());
-			for (const vp of reportingParameter.vorlageParameter) {
-				switch (vp.name) {
-					case "mitSchuelerKlasse":
-						vp.wert = option1.value.toString();
-						break;
-					case "nurSchuelerRufname":
-						vp.wert = option2.value.toString();
-						break;
-					case "mitSchuelerGeschlecht":
-						vp.wert = option4.value.toString();
-						break;
-					case "mitSchuelerGebDat":
-						vp.wert = option8.value.toString();
-						break;
-					case "mitSchuelerStaat":
-						vp.wert = option16.value.toString();
-						break;
-					case "mitSchuelerAnschrift":
-						vp.wert = option32.value.toString();
-						break;
-					case "mitSchuelerTelefonPrivat":
-						vp.wert = option64.value.toString();
-						break;
-					case "mitSchuelerEmailSchule":
-						vp.wert = option128.value.toString();
-						break;
-					case "mitSchuelerEmailPrivat":
-						vp.wert = option256.value.toString();
-						break;
-					case "mitSpalteSchuelerTelefonKontakte":
-						vp.wert = option512.value.toString();
-						break;
-					case "mitErzieher":
-						vp.wert = option1024.value.toString();
-						break;
-					case "mitErzieherAnschrift":
-						vp.wert = option2048.value.toString();
-						break;
-					case "mitErzieherEmailPrivat":
-						vp.wert = option4096.value.toString();
-						break;
-				}
-			}
-		} else {
-			return;
 		}
-		reportingParameter.duplexdruck = ((druckoptionListeSchuelerKontaktdatenErzieher.value === 3) || (druckoptionListeSchuelerKontaktdatenErzieher.value === 4));
+
+		switch (currentAction.value) {
+			case 'druckKursListeSchuelerKontaktdatenErzieher':
+				reportingParameter.reportvorlage = ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
+				reportingParameter.idsHauptdaten = listeIdsKurse;
+				reportingParameter.einzelausgabeHauptdaten = ((druckoptionListeSchuelerKontaktdatenErzieher.value === 2) || (druckoptionListeSchuelerKontaktdatenErzieher.value === 4));
+				reportingParameter.einzelausgabeDetaildaten = false;
+				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getVorlageParameterList());
+				for (const vp of reportingParameter.vorlageParameter) {
+					switch (vp.name) {
+						case "mitSchuelerKlasse":
+							vp.wert = option1.value.toString();
+							break;
+						case "nurSchuelerRufname":
+							vp.wert = option2.value.toString();
+							break;
+						case "mitSchuelerGeschlecht":
+							vp.wert = option4.value.toString();
+							break;
+						case "mitSchuelerGebDat":
+							vp.wert = option8.value.toString();
+							break;
+						case "mitSchuelerStaat":
+							vp.wert = option16.value.toString();
+							break;
+						case "mitSchuelerAnschrift":
+							vp.wert = option32.value.toString();
+							break;
+						case "mitSchuelerTelefonPrivat":
+							vp.wert = option64.value.toString();
+							break;
+						case "mitSchuelerEmailSchule":
+							vp.wert = option128.value.toString();
+							break;
+						case "mitSchuelerEmailPrivat":
+							vp.wert = option256.value.toString();
+							break;
+						case "mitSpalteSchuelerTelefonKontakte":
+							vp.wert = option512.value.toString();
+							break;
+						case "mitErzieher":
+							vp.wert = option1024.value.toString();
+							break;
+						case "mitErzieherAnschrift":
+							vp.wert = option2048.value.toString();
+							break;
+						case "mitErzieherEmailPrivat":
+							vp.wert = option4096.value.toString();
+							break;
+					}
+				}
+				break;
+			case 'druckKursListeSchuelerLeistungsdaten':
+				reportingParameter.reportvorlage = ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_LEISTUNGSDATEN.getBezeichnung();
+				reportingParameter.idsHauptdaten = listeIdsKurse;
+				reportingParameter.einzelausgabeHauptdaten = ((druckoptionKursListeSchuelerLeistungsdaten.value === 2) || (druckoptionKursListeSchuelerLeistungsdaten.value === 4));
+				reportingParameter.einzelausgabeDetaildaten = false;
+				reportingParameter.vorlageParameter = vpLeistungsdaten.value;
+				break;
+			default:
+				return;
+		}
+		reportingParameter.duplexdruck = (currentAction.value === 'druckKursListeSchuelerKontaktdatenErzieher')
+			? ((druckoptionListeSchuelerKontaktdatenErzieher.value === 3) || (druckoptionListeSchuelerKontaktdatenErzieher.value === 4))
+			: ((druckoptionKursListeSchuelerLeistungsdaten.value === 3) || (druckoptionKursListeSchuelerLeistungsdaten.value === 4));
 		loading.value = true;
 		const { data, name } = await props.getPDF(reportingParameter);
 		const link = document.createElement("a");
@@ -274,8 +317,9 @@
 	// E-Mail analog implementiert
 	async function sendPdfByEmail() {
 		const listeIdsKurse = new ArrayList<number>();
-		for (const kurs of props.manager().liste.auswahl())
+		for (const kurs of props.manager().liste.auswahl()) {
 			listeIdsKurse.add(kurs.id);
+		}
 
 		const reportingParameter = new ReportingParameter();
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
@@ -285,11 +329,11 @@
 		emailDaten.istPrivateEmailAlternative = istPrivateEmailAlternative.value;
 
 		if (currentAction.value === 'druckKursListeSchuelerKontaktdatenErzieher') {
-			reportingParameter.reportvorlage = ReportingReportvorlage.KURSE_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
+			reportingParameter.reportvorlage = ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
 			reportingParameter.idsHauptdaten = listeIdsKurse;
 			reportingParameter.einzelausgabeHauptdaten = true;
 			reportingParameter.einzelausgabeDetaildaten = false;
-			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.KURSE_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getVorlageParameterList());
+			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getVorlageParameterList());
 			for (const vp of reportingParameter.vorlageParameter) {
 				switch (vp.name) {
 					case "mitSchuelerKlasse":

@@ -89,7 +89,7 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.schueler.SchuelerLernabschnittListeEintrag'].includes(name);
 	}
 
-	public static class = new Class<SchuelerLernabschnittListeEintrag>('de.svws_nrw.core.data.schueler.SchuelerLernabschnittListeEintrag');
+	public static readonly class = new Class<SchuelerLernabschnittListeEintrag>('de.svws_nrw.core.data.schueler.SchuelerLernabschnittListeEintrag');
 
 	public static transpilerFromJSON(json: string): SchuelerLernabschnittListeEintrag {
 		const obj = JSON.parse(json) as Partial<SchuelerLernabschnittListeEintrag>;

@@ -1,4 +1,4 @@
-import { isRef, shallowRef, toRaw, toValue, triggerRef, watch, type MaybeRef, type ShallowRef } from "vue";
+import { isRef, shallowRef, toRaw, toValue, watch, type MaybeRef, type ShallowRef } from "vue";
 import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
 import type { List } from "../../../../../../core/src/java/util/List";
 import type { SelectFilter } from "./SelectFilter";
@@ -40,13 +40,15 @@ export class FachSelectFilter implements SelectFilter<FachKatalogEintrag> {
 	 * @returns Liste der gefilterten Optionen
 	 */
 	apply(options: List<FachKatalogEintrag>): List<FachKatalogEintrag> {
-		if (this._fachgruppen.value.size === 0)
+		if (this._fachgruppen.value.size === 0) {
 			return options;
+		}
 
 		const filteredOptions: List<FachKatalogEintrag> = new ArrayList<FachKatalogEintrag>();
 		for (const option of options) {
-			if (option.fachgruppe !== null && this._fachgruppen.value.has(option.fachgruppe))
+			if ((option.fachgruppe !== null) && (this._fachgruppen.value.has(option.fachgruppe))) {
 				filteredOptions.add(option);
+			}
 		}
 		return filteredOptions;
 	}

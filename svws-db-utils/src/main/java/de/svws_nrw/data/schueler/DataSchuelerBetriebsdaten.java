@@ -12,8 +12,8 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOBeschaeftigungsart;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebeAnsprechpartner;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetrieb;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAllgemeineAdresse;
@@ -117,7 +117,7 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 						final Long betrieb_id = JSONMapper.convertToLong(value, true);
 						if (betrieb_id == null)
 							throw new ApiOperationException(Status.BAD_REQUEST, "Es muss eine ID für den Betrieb angegeben werden.");
-						final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
+						final DTOBetrieb betrieb = conn.queryByKey(DTOBetrieb.class, betrieb_id);
 						if (betrieb == null)
 							throw new ApiOperationException(Status.NOT_FOUND, "Betrieb mit der ID " + betrieb_id + " wurde nicht gefunden.");
 						s_betrieb.Adresse_ID = betrieb_id;
@@ -145,7 +145,7 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 						if (a_id == null) {	//TODO Darf eine Beschäftigung ohne Ansprechpartner angeleget werden?
 							s_betrieb.Ansprechpartner_ID = null;
 						} else {
-							final DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, a_id);
+							final DTOBetriebeAnsprechpartner ansprechpartner = conn.queryByKey(DTOBetriebeAnsprechpartner.class, a_id);
 							if (ansprechpartner == null)
 								throw new ApiOperationException(Status.NOT_FOUND);
 							s_betrieb.Ansprechpartner_ID = a_id;
@@ -185,34 +185,6 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 		if (betriebe == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<SchuelerBetriebsdaten> daten = betriebe.stream().map(dtoMapper).toList();
-		/*
-		// TODO Isak später bitte entfernen
-		// Bestimme die Namen aller Betriebe, die bei den Schüler-Betriebsdaten vorkommen
-		List<Long> betriebIDs = daten.stream().filter(sbd -> sbd.betrieb_id != null).map(sbd -> sbd.betrieb_id).toList();
-		Map<Long, String> mapBetriebeIDName = (betriebIDs.size() <= 0) ? new HashMap<>() :
-			conn.queryNamed("DTOKatalogAllgemeineAdresse.id.multiple", betriebIDs, DTOKatalogAllgemeineAdresse.class).stream()
-				.collect(Collectors.toMap(b -> b.ID, b -> b.name1));
-		// Bestimme die Namen aller Ansprechpartner, die bei den Schüler-Betriebsdaten vorkommen
-		List<Long> ansprechpartnerIDs = daten.stream().filter(sbd -> sbd.ansprechpartner_id != null).map(sbd -> sbd.ansprechpartner_id).toList();
-		Map<Long, String> mapAnsprechpartnerIDName = (ansprechpartnerIDs.size() <= 0) ? new HashMap<>() :
-			conn.queryNamed("DTOAnsprechpartnerAllgemeineAdresse.id.multiple", ansprechpartnerIDs, DTOAnsprechpartnerAllgemeineAdresse.class).stream()
-				.collect(Collectors.toMap(b -> b.ID, b -> b.Name));
-		// Bestimme die Namen aller Betreuungslehrer, die bei den Schüler-Betriebsdaten vorkommen
-		List<Long> betreuungslehrerIDs = daten.stream().filter(sbd -> sbd.betreuungslehrer_id != null).map(sbd -> sbd.betreuungslehrer_id).toList();
-		Map<Long, String> mapBetreuungslehrerIDName = (betreuungslehrerIDs.size() <= 0) ? new HashMap<>() :
-			conn.queryNamed("DTOLehrer.id.multiple", betreuungslehrerIDs, DTOLehrer.class).stream()
-				.collect(Collectors.toMap(b -> b.ID, b -> b.Nachname));
-		// Setze nun alle Namen, welche für die obigen IDs bestimmt wurden
-		for (SchuelerBetriebsdaten sbd : daten) {
-			if (sbd.id != null)
-				sbd.betrieb_name = mapBetriebeIDName.get(sbd.betrieb_id);
-			if (sbd.ansprechpartner_id != null)
-				sbd.ansprechpartner_name = mapAnsprechpartnerIDName.get(sbd.ansprechpartner_id);
-			if (sbd.betreuungslehrer_id != null)
-				sbd.betreuungslehrer_name = mapBetreuungslehrerIDName.get(sbd.betreuungslehrer_id);
-		}
-
-		*/
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -235,7 +207,7 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 			if (schueler == null)
 				throw new ApiOperationException(Status.NOT_FOUND, "Schüler mit der ID " + schueler_id + " wurde nicht gefunden.");
 
-			final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
+			final DTOBetrieb betrieb = conn.queryByKey(DTOBetrieb.class, betrieb_id);
 			if (betrieb == null)
 				throw new ApiOperationException(Status.NOT_FOUND, "Betrieb mit der ID " + betrieb_id + " wurde nicht gefunden.");
 
@@ -290,7 +262,7 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 						if (a_id == null) {	//TODO Darf eine Beschäftigung ohne Ansprechpartner angeleget werden?
 							s_betrieb.Ansprechpartner_ID = null;
 						} else {
-							final DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, a_id);
+							final DTOBetriebeAnsprechpartner ansprechpartner = conn.queryByKey(DTOBetriebeAnsprechpartner.class, a_id);
 							if (ansprechpartner == null)
 								throw new ApiOperationException(Status.NOT_FOUND);
 							s_betrieb.Ansprechpartner_ID = a_id;

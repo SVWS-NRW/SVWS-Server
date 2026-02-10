@@ -12,7 +12,7 @@ import de.svws_nrw.data.gost.DataGostBlockungsdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.filterung.ReportingFilterDataType;
-import de.svws_nrw.module.reporting.proxytypes.gost.kursplanung.ProxyReportingGostKursplanungBlockungsergebnis;
+import de.svws_nrw.module.reporting.types.gost.kursplanung.ProxyReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungBlockungsergebnis;
 import jakarta.ws.rs.core.Response;
@@ -103,7 +103,7 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 
 		if ((blockungsergebnis == null) || (this.datenManager == null)) {
 			try {
-				final Long idBlockungsergebnis = this.reportingRepository.reportingParameter().idsHauptdaten.getFirst();
+				final Long idBlockungsergebnis = this.reportingRepository.reportingParameter().idsHauptdaten().getFirst();
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Die ID der Blockungsergebnisses wurde ermittelt: " + idBlockungsergebnis.toString());
 				this.blockungsergebnis = DataGostBlockungsergebnisse.getErgebnisFromID(this.reportingRepository.conn(), idBlockungsergebnis);
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Das Blockungsergebnis wurde ermittelt.");

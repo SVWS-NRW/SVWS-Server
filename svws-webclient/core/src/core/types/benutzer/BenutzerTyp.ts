@@ -109,7 +109,7 @@ export class BenutzerTyp extends JavaEnum<BenutzerTyp> {
 		return ['de.svws_nrw.core.types.benutzer.BenutzerTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<BenutzerTyp>('de.svws_nrw.core.types.benutzer.BenutzerTyp');
+	public static readonly class = new Class<BenutzerTyp>('de.svws_nrw.core.types.benutzer.BenutzerTyp');
 
 }
 

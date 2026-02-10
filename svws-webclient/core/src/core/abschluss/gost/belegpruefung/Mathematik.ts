@@ -10,6 +10,9 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class Mathematik extends GostBelegpruefung {
 
+	/**
+	 * Die Belegung für das Fach Mathematik.
+	 */
 	private _mathematik: AbiturFachbelegung | null = null;
 
 
@@ -55,7 +58,7 @@ export class Mathematik extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Mathematik'].includes(name);
 	}
 
-	public static class = new Class<Mathematik>('de.svws_nrw.core.abschluss.gost.belegpruefung.Mathematik');
+	public static readonly class = new Class<Mathematik>('de.svws_nrw.core.abschluss.gost.belegpruefung.Mathematik');
 
 }
 

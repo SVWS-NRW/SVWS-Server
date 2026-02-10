@@ -51,7 +51,7 @@ export class SchuelerTelefon extends JavaObject {
 		return ['de.svws_nrw.core.data.schueler.SchuelerTelefon'].includes(name);
 	}
 
-	public static class = new Class<SchuelerTelefon>('de.svws_nrw.core.data.schueler.SchuelerTelefon');
+	public static readonly class = new Class<SchuelerTelefon>('de.svws_nrw.core.data.schueler.SchuelerTelefon');
 
 	public static transpilerFromJSON(json: string): SchuelerTelefon {
 		const obj = JSON.parse(json) as Partial<SchuelerTelefon>;

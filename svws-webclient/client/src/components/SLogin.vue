@@ -97,8 +97,9 @@
 		error.value = null;
 		try {
 			inputDBSchemata.value = await props.connectTo(props.hostname);
-			if (inputDBSchemata.value.isEmpty())
+			if (inputDBSchemata.value.isEmpty()) {
 				throw new DeveloperNotificationException("Es sind keine Schemata vorhanden.");
+			}
 			schema.value = inputDBSchemata.value.get(0);
 			await initCoreTypes();
 		} catch (e) {
@@ -122,12 +123,14 @@
 		}
 		if (!hasDefault) {
 			const lastSchema = localStorage.getItem("SVWS-Client Last Used Schema");
-			if ((lastSchema !== null) && (lastSchema !== ''))
-				for (const s of inputDBSchemata.value)
+			if ((lastSchema !== null) && (lastSchema !== '')) {
+				for (const s of inputDBSchemata.value) {
 					if (s.name === lastSchema) {
 						schema.value = s;
 						break;
 					}
+				}
+			}
 		}
 		// Der Browser soll sich darum kümmern...
 		// const lastUsername = localStorage.getItem(`SVWS-Client Last Used Username for Schema_${schema.value.name}`);
@@ -143,21 +146,23 @@
 	async function doLogin() {
 		inputFocus.value = false;
 		error.value = null;
-		if ((schema.value === undefined) || (schema.value.name === null))
+		if ((schema.value === undefined) || (schema.value.name === null)) {
 			return error.value = { name: "Eingabefehler", message: "Es muss ein gültiges Schema ausgewählt sein." };
+		}
 		authenticating.value = true;
 		try {
 			await props.login(schema.value.name, username.value, password.value);
 			firstauth.value = false;
-			if (!props.authenticated)
+			if (!props.authenticated) {
 				error.value = { name: "Eingabefehler", message: "Passwort oder Benutzername falsch." };
-			else {
+			} else {
 				localStorage.setItem("SVWS-Client Last Used Schema", schema.value.name);
 				// localStorage.setItem(`SVWS-Client Last Used Username for Schema_${schema.value.name}`, username.value);
 			}
 		} catch (e) {
-			if (e instanceof UserNotificationException)
+			if (e instanceof UserNotificationException) {
 				error.value = e;
+			}
 		}
 		authenticating.value = false;
 	}

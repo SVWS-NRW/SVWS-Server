@@ -200,9 +200,9 @@ public final class ReportBuilderContextHtml extends ReportBuilderContext<ReportB
 	 *
 	 * @return Die Template-Engine für die Verwendung im Reporting.
 	 */
-	 TemplateEngine getHtmlTemplateEngine() {
+	TemplateEngine getHtmlTemplateEngine() {
 		if (this.htmlTemplateEngine == null)
-			this.htmlTemplateEngine = ReportBuilderUtils.createDefaultHtmlTemplateEngine();
+			this.htmlTemplateEngine = ReportBuilderUtils.createHtmlTemplateEngine();
 		return htmlTemplateEngine;
 	}
 

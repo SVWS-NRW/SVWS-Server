@@ -32,36 +32,39 @@ export class RouteDataBenutzerprofil extends RouteData<RouteStateBenutzerprofil>
 	};
 
 	public patchPasswort = async (eins: string, zwei: string): Promise<boolean> => {
-		if (eins !== zwei)
+		if (eins !== zwei) {
 			return false;
+		}
 		const password = eins.length > 0 ? eins : null;
 		try {
 			await api.server.setPassword(password, api.schema, api.benutzerdaten.id);
 			return true;
-		} catch (e) {
+		} catch {
 			return false;
 		}
 	};
 
 	public patchPasswortWenom = async (eins: string, zwei: string): Promise<boolean> => {
-		if ((eins !== zwei) || (api.benutzertyp !== BenutzerTyp.LEHRER))
+		if ((eins !== zwei) || (api.benutzertyp !== BenutzerTyp.LEHRER)) {
 			return false;
+		}
 		const password = eins.length > 0 ? eins : null;
 		try {
 			await api.server.setENMLehrerPassword(password, api.schema, api.benutzerIDLehrer);
 			return true;
-		} catch (e) {
+		} catch {
 			return false;
 		}
 	};
 
 	public passwordResetWenom = async () => {
 		try {
-			if (api.benutzertyp !== BenutzerTyp.LEHRER)
+			if (api.benutzertyp !== BenutzerTyp.LEHRER) {
 				return false;
+			}
 			await api.server.resetENMLehrerPasswordToInitial(api.schema, api.benutzerIDLehrer);
 			return true;
-		} catch (e) {
+		} catch {
 			return false;
 		}
 	};

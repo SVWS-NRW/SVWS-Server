@@ -1,30 +1,25 @@
-<html lang="de" xmlns:th="http://www.thymeleaf.org">
-	<head th:with="mediaPrint = ${Parameter.ausgabeformat >= 2}">
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<title>Kurse mit Schülern</title>
-		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../css/reporting-pdf.css" />
-		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-hoch.css}" href="../../css/reporting-A4-hoch.css" />
-		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../css/reporting-styles.css" />
-		<link rel="stylesheet" th:href="@{gost/kursplanung/GostKursplanungKurseMitStatistikwerten.css}" href="../../gost/kursplanung/GostKursplanungKurseMitStatistikwerten.css" />
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
+	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
+		title='Kurse mit Schülern',
+		htmlTemplatePfad=${Parameter.htmlTemplateDefinition().getPfadHtmlTemplate()},
+		namePageCSS='reporting-A4-hoch.css')}">
+		<title></title>
 	</head>
 
-	<body th:with="mediaPrint = ${Parameter.ausgabeformat >= 2},
-				   KursplanungKurse = ${GostBlockungsergebnis.kurseGefiltert()}">
+	<body th:with="KursplanungKurse = ${GostBlockungsergebnis.kurseGefiltert()}">
 		<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
-		<th:block th:if="${mediaPrint}">
-			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-			<div class="pageTopRight" th:utext="'Kurse mit Statistikwerten<br/>Schulnummer: ' + ${Schule.schulnummer()}">Kurse mit Statistikwerten<br/>Schulnummer: 123456</div>
-			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')} + ' von ' + ${Benutzer.benutzername()}">Gedruckt am 02.02.2022 von ABC</div>
-			<div class="pageBottomRight"><span class="page-nums-print">Seite </span></div>
+		<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+		<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
+			headerRight='Kurse mit Statistikwerten')}">
 		</th:block>
 		<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
 		<table class="fixed-100 p-0">
 			<thead>
-			<tr>
-				<td class="bo-b-grey"><h2 th:text="'Kursplanung ' + ${GostBlockungsergebnis.gostHalbjahr().kuerzel} + ' - Übersicht der Kurse mit statistischen Werten'">Kursplanung Q2.1 - Übersicht der Kurse mit statistischen Werten</h2></td>
-			</tr>
+				<tr>
+					<th class="bo-b-grey"><h2 th:text="'Kursplanung ' + ${GostBlockungsergebnis.gostHalbjahr().kuerzel} + ' - Übersicht der Kurse mit statistischen Werten'">Kursplanung Q2.1 - Übersicht der Kurse mit statistischen Werten</h2></th>
+				</tr>
 			</thead>
 			<tr><td class="p-t-25of100"></td></tr>
 			<tr><td class="p-b-25of100"></td></tr>
@@ -47,51 +42,53 @@
 				<col style="width: 8%" />
 			</colgroup>
 			<thead>
-			<tr>
-				<th class="head-small-grey ta-l">Nr.</th>
-				<th class="head-small-grey ta-l">Kurs</th>
-				<th class="head-small-grey ta-l">Lehrkräfte</th>
-				<th class="head-small-grey ta-c">Anzahl SuS.</th>
-				<th class="head-small-grey ta-c">Schriftl.</th>
-				<th class="head-small-grey ta-c">AB1/2</th>
-				<th class="head-small-grey ta-c">AB3</th>
-				<th class="head-small-grey ta-c">AB4</th>
-				<th class="head-small-grey ta-l">Fach</th>
-				<th class="head-small-grey ta-l">Art</th>
-				<th class="head-small-grey ta-c">Fachw.</th>
-				<th class="head-small-grey ta-c">Kursdif.</th>
-				<th class="head-small-grey ta-c">Schienen</th>
-			</tr>
+				<tr>
+					<th class="head-small-grey ta-l">Nr.</th>
+					<th class="head-small-grey ta-l">Kurs</th>
+					<th class="head-small-grey ta-l">Lehrkräfte</th>
+					<th class="head-small-grey ta-c">Anzahl SuS.</th>
+					<th class="head-small-grey ta-c">Schriftl.</th>
+					<th class="head-small-grey ta-c">AB1/2</th>
+					<th class="head-small-grey ta-c">AB3</th>
+					<th class="head-small-grey ta-c">AB4</th>
+					<th class="head-small-grey ta-l">Fach</th>
+					<th class="head-small-grey ta-l">Art</th>
+					<th class="head-small-grey ta-c">Fachw.</th>
+					<th class="head-small-grey ta-c">Kursdif.</th>
+					<th class="head-small-grey ta-c">Schienen</th>
+				</tr>
 			</thead>
-			<tr th:each="Kurs,iterationVarKurs : ${KursplanungKurse}" th:classappend="${iterationVarKurs.odd} ? 'bg-lightgrey'">
-				<td class="bo-b-grey p-tb-0 p-lr-1 f-small c-grey" th:text="${#numbers.formatInteger(iterationVarKurs.count,2)} + '.'">Nr.</td>
-				<td class="bo-b-grey p-tb-0 p-lr-1 ta-l" th:text="${Kurs.bezeichnung()}">GE-GK2</td>
-				<td class="bo-b-grey p-tb-0 p-lr-1 ta-l" th:text="${Kurs.lehrkraefteAuflistung()}">ABC</td>
-				<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:utext="(${Kurs.anzahlExterne()} == 0) ? ${Kurs.anzahlSchueler()} : ${Kurs.anzahlSchueler() + ' <span style=\'font-size: 0.6em;\'> (Ex. ' + Kurs.anzahlExterne() + ')</span>'}">23 (Ex. 8)</td>
-				<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kurs.anzahlSchuelerSchriftlich()}">12</td>
-				<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kurs.anzahlAB12()}">0</td>
-				<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kurs.anzahlAB3()}">5</td>
-				<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kurs.anzahlAB4()}">3</td>
-				<td class="bo-b-grey bo-l-grey p-tb-0 p-lr-1 f-small ta-l" th:text="${Kurs.fach().kuerzel()}">GE</td>
-				<td class="bo-b-grey p-tb-0 p-lr-1 f-small ta-l" th:text="${Kurs.gostKursart().kuerzel}">GK</td>
-				<th:block th:switch="${Kurs.gostKursart().kuerzel}" th:with="stat = ${Kurs.fachwahlstatistik().reportingGostFachwahlstatistik()}">
-					<td th:case="'LK'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.wahlenLK() >= 0 ? stat.wahlenLK() : '--'}">89</td>
-					<td th:case="'GK'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.wahlenGK() >= 0 ? stat.wahlenGK() : '--'}">89</td>
-					<td th:case="'ZK'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.wahlenZK() >= 0 ? stat.wahlenZK() : '--'}">89</td>
-					<td th:case="'PJK'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.wahlenPJK() >= 0 ? stat.wahlenPJK() : '--'}">89</td>
-					<td th:case="'VTF'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.wahlenVTF() >= 0 ? stat.wahlenVTF() : '--'}">89</td>
-					<td th:case="*" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c">--</td>
-				</th:block>
-				<th:block th:switch="${Kurs.gostKursart().kuerzel}" th:with="stat = ${Kurs.fachwahlstatistik()}">
-					<td th:case="'LK'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.differenzKursgroessenLK() >= 0 ? stat.differenzKursgroessenLK() : '--'}">3</td>
-					<td th:case="'GK'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.differenzKursgroessenGK() >= 0 ? stat.differenzKursgroessenGK() : '--'}">3</td>
-					<td th:case="'ZK'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.differenzKursgroessenZK() >= 0 ? stat.differenzKursgroessenZK() : '--'}">3</td>
-					<td th:case="'PJK'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.differenzKursgroessenPJK() >= 0 ? stat.differenzKursgroessenPJK() : '--'}">3</td>
-					<td th:case="'VTF'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.differenzKursgroessenVTF() >= 0 ? stat.differenzKursgroessenVTF() : '--'}">3</td>
-					<td th:case="*" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c">--</td>
-				</th:block>
-				<td class="bo-b-grey bo-l-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${Kurs.schienenAuflistung()}">3,7</td>
-			</tr>
+			<tbody>
+				<tr th:each="Kurs,iterationVarKurs : ${KursplanungKurse}" th:classappend="${iterationVarKurs.odd} ? 'bg-lightgrey'">
+					<td class="bo-b-grey p-tb-0 p-lr-1 f-small c-grey" th:text="${#numbers.formatInteger(iterationVarKurs.count,2)} + '.'">Nr.</td>
+					<td class="bo-b-grey p-tb-0 p-lr-1 ta-l" th:text="${Kurs.bezeichnung()}">GE-GK2</td>
+					<td class="bo-b-grey p-tb-0 p-lr-1 ta-l" th:text="${Kurs.lehrkraefteAuflistung()}">ABC</td>
+					<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:utext="(${Kurs.anzahlExterne()} == 0) ? ${Kurs.anzahlSchueler()} : ${Kurs.anzahlSchueler() + ' <span style=\'font-size: 0.6em;\'> (Ex. ' + Kurs.anzahlExterne() + ')</span>'}">23 (Ex. 8)</td>
+					<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kurs.anzahlSchuelerSchriftlich()}">12</td>
+					<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kurs.anzahlAB12()}">0</td>
+					<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kurs.anzahlAB3()}">5</td>
+					<td class="bo-b-grey p-tb-0 p-lr-1 ta-c" th:text="${Kurs.anzahlAB4()}">3</td>
+					<td class="bo-b-grey bo-l-grey p-tb-0 p-lr-1 f-small ta-l" th:text="${Kurs.fach().kuerzel()}">GE</td>
+					<td class="bo-b-grey p-tb-0 p-lr-1 f-small ta-l" th:text="${Kurs.gostKursart().kuerzel}">GK</td>
+					<th:block th:switch="${Kurs.gostKursart().kuerzel}" th:with="stat = ${Kurs.fachwahlstatistik().reportingGostFachwahlstatistik()}">
+						<td th:case="'LK'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.wahlenLK() >= 0 ? stat.wahlenLK() : '--'}">89</td>
+						<td th:case="'GK'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.wahlenGK() >= 0 ? stat.wahlenGK() : '--'}">89</td>
+						<td th:case="'ZK'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.wahlenZK() >= 0 ? stat.wahlenZK() : '--'}">89</td>
+						<td th:case="'PJK'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.wahlenPJK() >= 0 ? stat.wahlenPJK() : '--'}">89</td>
+						<td th:case="'VTF'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.wahlenVTF() >= 0 ? stat.wahlenVTF() : '--'}">89</td>
+						<td th:case="*" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c">--</td>
+					</th:block>
+					<th:block th:switch="${Kurs.gostKursart().kuerzel}" th:with="stat = ${Kurs.fachwahlstatistik()}">
+						<td th:case="'LK'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.differenzKursgroessenLK() >= 0 ? stat.differenzKursgroessenLK() : '--'}">3</td>
+						<td th:case="'GK'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.differenzKursgroessenGK() >= 0 ? stat.differenzKursgroessenGK() : '--'}">3</td>
+						<td th:case="'ZK'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.differenzKursgroessenZK() >= 0 ? stat.differenzKursgroessenZK() : '--'}">3</td>
+						<td th:case="'PJK'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.differenzKursgroessenPJK() >= 0 ? stat.differenzKursgroessenPJK() : '--'}">3</td>
+						<td th:case="'VTF'" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${stat.differenzKursgroessenVTF() >= 0 ? stat.differenzKursgroessenVTF() : '--'}">3</td>
+						<td th:case="*" class="bo-b-grey p-tb-0 p-lr-1 f-small ta-c">--</td>
+					</th:block>
+					<td class="bo-b-grey bo-l-grey p-tb-0 p-lr-1 f-small ta-c" th:text="${Kurs.schienenAuflistung()}">3,7</td>
+				</tr>
+			</tbody>
 		</table>
 	</body>
 </html>

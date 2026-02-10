@@ -17,14 +17,17 @@ import { BenutzerKompetenzKatalogEintrag } from '../core/data/benutzer/BenutzerK
 import { BenutzerLehrerCredentials } from '../core/data/benutzer/BenutzerLehrerCredentials';
 import { BenutzerListeEintrag } from '../core/data/benutzer/BenutzerListeEintrag';
 import { BerufskollegAnlageKatalogEintrag } from '../asd/data/schule/BerufskollegAnlageKatalogEintrag';
-import { BerufskollegBerufsebeneKatalogEintrag } from '../core/data/schule/BerufskollegBerufsebeneKatalogEintrag';
+import { BerufskollegBerufsebeneKatalogEintrag } from '../asd/data/schule/BerufskollegBerufsebeneKatalogEintrag';
 import { BerufskollegFachklassenKatalog } from '../core/data/schule/BerufskollegFachklassenKatalog';
 import { Beschaeftigungsart } from '../core/data/betrieb/Beschaeftigungsart';
+import { Betrieb } from '../core/data/schule/Betrieb';
 import { BetriebAnsprechpartner } from '../core/data/betrieb/BetriebAnsprechpartner';
+import { BetriebeAnsprechpartner } from '../core/data/schule/BetriebeAnsprechpartner';
 import { BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
+import { Betriebsart } from '../core/data/schule/Betriebsart';
 import { BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
 import { BilingualeSpracheKatalogEintrag } from '../asd/data/fach/BilingualeSpracheKatalogEintrag';
-import { BKGymAbiturdaten } from '../core/abschluss/bk/d/BKGymAbiturdaten';
+import { BKGymAbiturdaten } from '../core/data/bk/abi/BKGymAbiturdaten';
 import { BKGymLeistungen } from '../core/data/bk/abi/BKGymLeistungen';
 import { DatenbankVerbindungsdaten } from '../core/data/schema/DatenbankVerbindungsdaten';
 import { DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
@@ -36,7 +39,9 @@ import { ENMLehrerInitialKennwort } from '../core/data/enm/ENMLehrerInitialKennw
 import { ENMLeistung } from '../core/data/enm/ENMLeistung';
 import { ENMLeistungBemerkungen } from '../core/data/enm/ENMLeistungBemerkungen';
 import { ENMLernabschnitt } from '../core/data/enm/ENMLernabschnitt';
+import { ENMServerConfig } from '../core/data/enm/ENMServerConfig';
 import { ENMServerConfigElement } from '../core/data/enm/ENMServerConfigElement';
+import { ENMServerConnection } from '../core/data/enm/ENMServerConnection';
 import { ENMTeilleistung } from '../core/data/enm/ENMTeilleistung';
 import { Erzieherart } from '../core/data/erzieher/Erzieherart';
 import { ErzieherListeEintrag } from '../core/data/erzieher/ErzieherListeEintrag';
@@ -93,7 +98,6 @@ import { GostStatistikFachwahl } from '../core/data/gost/GostStatistikFachwahl';
 import { Haltestelle } from '../core/data/schule/Haltestelle';
 import { HerkunftKatalogEintrag } from '../core/data/schule/HerkunftKatalogEintrag';
 import { HerkunftsartenKatalogEintrag } from '../asd/data/schueler/HerkunftsartenKatalogEintrag';
-import { HerkunftsschulnummerKatalogEintrag } from '../core/data/schule/HerkunftsschulnummerKatalogEintrag';
 import { JahrgaengeKatalogEintrag } from '../asd/data/jahrgang/JahrgaengeKatalogEintrag';
 import { JahrgangsDaten } from '../core/data/jahrgang/JahrgangsDaten';
 import { KAOAAnschlussoptionenKatalogEintrag } from '../asd/data/kaoa/KAOAAnschlussoptionenKatalogEintrag';
@@ -102,9 +106,6 @@ import { KAOAEbene4KatalogEintrag } from '../asd/data/kaoa/KAOAEbene4KatalogEint
 import { KAOAKategorieKatalogEintrag } from '../asd/data/kaoa/KAOAKategorieKatalogEintrag';
 import { KAOAMerkmalKatalogEintrag } from '../asd/data/kaoa/KAOAMerkmalKatalogEintrag';
 import { KAOAZusatzmerkmalKatalogEintrag } from '../asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag';
-import { KatalogEintrag } from '../core/data/kataloge/KatalogEintrag';
-import { KatalogEintragOrte } from '../core/data/kataloge/KatalogEintragOrte';
-import { KatalogEintragOrtsteile } from '../core/data/kataloge/KatalogEintragOrtsteile';
 import { KatalogEintragStrassen } from '../core/data/kataloge/KatalogEintragStrassen';
 import { KatalogEntlassgrund } from '../core/data/kataloge/KatalogEntlassgrund';
 import { Kindergarten } from '../core/data/schule/Kindergarten';
@@ -152,9 +153,7 @@ import { OrtKatalogEintrag } from '../core/data/kataloge/OrtKatalogEintrag';
 import { OrtsteilKatalogEintrag } from '../core/data/kataloge/OrtsteilKatalogEintrag';
 import { PruefungsordnungKatalogEintrag } from '../core/data/schule/PruefungsordnungKatalogEintrag';
 import { Raum } from '../core/data/schule/Raum';
-import { ReformpaedagogikKatalogEintrag } from '../core/data/schule/ReformpaedagogikKatalogEintrag';
 import { ReligionEintrag } from '../core/data/schule/ReligionEintrag';
-import { ReligionKatalogEintrag } from '../asd/data/schule/ReligionKatalogEintrag';
 import { ReportingParameter } from '../core/data/reporting/ReportingParameter';
 import { Schild3KatalogEintragAbiturInfos } from '../core/data/schild3/Schild3KatalogEintragAbiturInfos';
 import { Schild3KatalogEintragDatenart } from '../core/data/schild3/Schild3KatalogEintragDatenart';
@@ -168,7 +167,6 @@ import { Schild3KatalogEintragUnicodeUmwandlung } from '../core/data/schild3/Sch
 import { Schild3KatalogEintragVersetzungsvermerke } from '../core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
 import { SchuelerBetriebsdaten } from '../asd/data/schueler/SchuelerBetriebsdaten';
 import { SchuelerEinwilligung } from '../core/data/schueler/SchuelerEinwilligung';
-import { SchuelerEinwilligungsartenZusammenfassung } from '../core/data/schueler/SchuelerEinwilligungsartenZusammenfassung';
 import { SchuelerFoerderempfehlung } from '../asd/data/schueler/SchuelerFoerderempfehlung';
 import { SchuelerKAoADaten } from '../core/data/schueler/SchuelerKAoADaten';
 import { SchuelerLeistungsdaten } from '../asd/data/schueler/SchuelerLeistungsdaten';
@@ -176,6 +174,7 @@ import { SchuelerLernabschnittBemerkungen } from '../asd/data/schueler/SchuelerL
 import { SchuelerLernabschnittListeEintrag } from '../core/data/schueler/SchuelerLernabschnittListeEintrag';
 import { SchuelerLernabschnittsdaten } from '../asd/data/schueler/SchuelerLernabschnittsdaten';
 import { SchuelerLernplattform } from '../core/data/schueler/SchuelerLernplattform';
+import { SchuelerListe } from '../core/data/schueler/SchuelerListe';
 import { SchuelerListeEintrag } from '../core/data/schueler/SchuelerListeEintrag';
 import { SchuelerSchulbesuchMerkmal } from '../asd/data/schueler/SchuelerSchulbesuchMerkmal';
 import { SchuelerSchulbesuchSchule } from '../asd/data/schueler/SchuelerSchulbesuchSchule';
@@ -201,6 +200,7 @@ import { Sprachbelegung } from '../asd/data/schueler/Sprachbelegung';
 import { Sprachpruefung } from '../asd/data/schueler/Sprachpruefung';
 import { SprachpruefungsniveauKatalogEintrag } from '../core/data/fach/SprachpruefungsniveauKatalogEintrag';
 import { SprachreferenzniveauKatalogEintrag } from '../asd/data/fach/SprachreferenzniveauKatalogEintrag';
+import { StatistikGesamt } from '../asd/data/statistik/StatistikGesamt';
 import { Stundenplan } from '../core/data/stundenplan/Stundenplan';
 import { StundenplanAufsichtsbereich } from '../core/data/stundenplan/StundenplanAufsichtsbereich';
 import { StundenplanKalenderwochenzuordnung } from '../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
@@ -216,7 +216,7 @@ import { StundenplanSchiene } from '../core/data/stundenplan/StundenplanSchiene'
 import { StundenplanUnterricht } from '../core/data/stundenplan/StundenplanUnterricht';
 import { StundenplanUnterrichtsverteilung } from '../core/data/stundenplan/StundenplanUnterrichtsverteilung';
 import { StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
-import { TelefonArt } from '../core/data/schule/TelefonArt';
+import { Telefonart } from '../core/data/schule/Telefonart';
 import { UebergangsempfehlungKatalogEintrag } from '../asd/data/schueler/UebergangsempfehlungKatalogEintrag';
 import { UvFach } from '../core/data/uv/UvFach';
 import { UvKlasse } from '../core/data/uv/UvKlasse';
@@ -381,60 +381,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = FoerderschwerpunktEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getKatalogOrte für den Zugriff auf die URL https://{hostname}/db/{schema}/allgemein/orte
-	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhandenen Orte. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Orts-Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KatalogEintragOrte>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Orts-Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Orts-Katalog-Einträgen
-	 */
-	public async getKatalogOrte(schema : string) : Promise<List<KatalogEintragOrte>> {
-		const path = "/db/{schema}/allgemein/orte"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<KatalogEintragOrte>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintragOrte.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getKatalogOrtsteile für den Zugriff auf die URL https://{hostname}/db/{schema}/allgemein/ortsteile
-	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhandenen Ortsteile. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Ortsteil-Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KatalogEintragOrtsteile>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Ortsteil-Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Ortsteil-Katalog-Einträgen
-	 */
-	public async getKatalogOrtsteile(schema : string) : Promise<List<KatalogEintragOrtsteile>> {
-		const path = "/db/{schema}/allgemein/ortsteile"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<KatalogEintragOrtsteile>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintragOrtsteile.transpilerFromJSON(text)); });
-		return ret;
 	}
 
 
@@ -1637,117 +1583,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogBetriebsart für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebsart
-	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhandenen Betriebsarten unter Angabe der ID, eines Kürzels und der textuellen Beschreibung sowie der Information, ob der Eintrag in der Anwendung sichtbar bzw. änderbar sein soll, und gibt diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Katalog-Einträgen zu den Betriebsarten.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Katalog-Einträgen zu den Betriebsarten.
-	 */
-	public async getKatalogBetriebsart(schema : string) : Promise<List<KatalogEintrag>> {
-		const path = "/db/{schema}/betriebe/betriebsart"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<KatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getKatalogBetriebsartMitID für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebsart/{id : \d+}
-	 *
-	 * Liest die Daten der Betriebsart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsarten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Katalog-Eintrag zu den Betriebsarten.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Katalog-Eintrag zu den Betriebsarten.
-	 */
-	public async getKatalogBetriebsartMitID(schema : string, id : number) : Promise<List<KatalogEintrag>> {
-		const path = "/db/{schema}/betriebe/betriebsart/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<KatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der PATCH-Methode patchBetriebsart für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebsart/{id : \d+}
-	 *
-	 * Passt die Beschäftigungsart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Betriebssart besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Beschäftigungsart-Daten integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Beschäftigungsart-Daten zu ändern.
-	 *   Code 404: Keine Beschäftigungsart mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<KatalogEintrag>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async patchBetriebsart(data : Partial<KatalogEintrag>, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/betriebe/betriebsart/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = KatalogEintrag.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode createBetriebsart für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebsart/new
-	 *
-	 * Erstellt eine neue Betriebart und gibt den neuen Datensatz zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eine Betriebsart besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Betiebsart wurde erfolgreich angelegt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: KatalogEintrag
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Betriebsart anzulegen.
-	 *   Code 404: Kein Betrieb  mit der angegebenen ID gefunden
-	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {KatalogEintrag} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Betiebsart wurde erfolgreich angelegt.
-	 */
-	public async createBetriebsart(data : KatalogEintrag, schema : string) : Promise<KatalogEintrag> {
-		const path = "/db/{schema}/betriebe/betriebsart/new"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = KatalogEintrag.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return KatalogEintrag.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der POST-Methode createBetrieb für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/new
 	 *
 	 * Erstellt einen neuen Betrieb und gibt den neuen Datensatz zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Betriebes besitzt.
@@ -2651,7 +2486,89 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode checkENMServer für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/check
+	 * Implementierung der PATCH-Methode patchENMServerConnection für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/connection/{id : \d+}
+	 *
+	 * Passt die Verbindung zu einem Web-Notenmodul-Server mit der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Verbindungen zu einem Web-Notenmodul-Server besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Verbindungsdaten integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Verbindung zu einem Web-Notenmodul-Server zu ändern.
+	 *   Code 404: Keine Verbindung zu einem Web-Notenmodul-Server mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<ENMServerConnection>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchENMServerConnection(data : Partial<ENMServerConnection>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/enm/connection/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = ENMServerConnection.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteENMServerConnection für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/connection/{id : \d+}
+	 *
+	 * Entfernt eine Verbindung zu einem Web-Notenmodul-Server. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen von Verbindungen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Verbindung zu einem Web-Notenmodul-Server wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ENMServerConnection
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Verbindung zu einem Web-Notenmodul-Server zu entfernen.
+	 *   Code 404: Die Verbindung zu einem Web-Notenmodul-Server mit der angegebenen ID ist nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Verbindung zu einem Web-Notenmodul-Server wurde erfolgreich entfernt.
+	 */
+	public async deleteENMServerConnection(schema : string, id : number) : Promise<ENMServerConnection> {
+		const path = "/db/{schema}/enm/connection/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return ENMServerConnection.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getENMServerConnection für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/connection/{id : \d+}
+	 *
+	 * Gibt die Verbindung zu einem Web-Notenmodul-Server zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Verbindungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Verbindung zu einem Web-Notenmodul-Server
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ENMServerConnection
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Verbindung anzusehen.
+	 *   Code 404: Keine Verbindung zu einem Web-Notenmodul-Server mit der ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Verbindung zu einem Web-Notenmodul-Server
+	 */
+	public async getENMServerConnection(schema : string, id : number) : Promise<ENMServerConnection> {
+		const path = "/db/{schema}/enm/connection/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return ENMServerConnection.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode checkENMServer für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/connection/{idVerbindung : \d+}/check
 	 *
 	 * Prüft, ob der ENM-Server mit den hinterlegten Verbindungsdaten erreichbar ist.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
 	 *
@@ -2674,12 +2591,14 @@ export class ApiServer extends BaseApi {
 	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idVerbindung - der Pfad-Parameter idVerbindung
 	 *
 	 * @returns Der ENM-Server ist erreichbar.
 	 */
-	public async checkENMServer(schema : string) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/enm/check"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+	public async checkENMServer(schema : string, idVerbindung : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/check"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
@@ -2687,7 +2606,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getENMServerConfig für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/config
+	 * Implementierung der GET-Methode getENMServerConfig für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/connection/{idVerbindung : \d+}/config
 	 *
 	 * Ein Getter für die ENM-Server-Konfiguration.
 	 *
@@ -2710,12 +2629,14 @@ export class ApiServer extends BaseApi {
 	 *     - Rückgabe-Typ: ENMConfigResponse
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idVerbindung - der Pfad-Parameter idVerbindung
 	 *
 	 * @returns Die Konfiguration konnte erfolgreich abgerufen werden.
 	 */
-	public async getENMServerConfig(schema : string) : Promise<ENMConfigResponse> {
-		const path = "/db/{schema}/enm/config"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+	public async getENMServerConfig(schema : string, idVerbindung : number) : Promise<ENMConfigResponse> {
+		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/config"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return ENMConfigResponse.transpilerFromJSON(text);
@@ -2723,7 +2644,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode setENMServerConfigElement für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/config
+	 * Implementierung der POST-Methode setENMServerConfigElement für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/connection/{idVerbindung : \d+}/config
 	 *
 	 * Schreibt den Konfigurationseintrag für den angebenen Schlüsselwert in die Konfiguration.
 	 *
@@ -2747,16 +2668,303 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @param {ENMServerConfigElement} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idVerbindung - der Pfad-Parameter idVerbindung
 	 *
 	 * @returns Der Konfigurationseintrag wurde erfolgreich geschrieben
 	 */
-	public async setENMServerConfigElement(data : ENMServerConfigElement, schema : string) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/enm/config"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+	public async setENMServerConfigElement(data : ENMServerConfigElement, schema : string, idVerbindung : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/config"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
 		const body : string = ENMServerConfigElement.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode downloadENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/connection/{idVerbindung : \d+}/download
+	 *
+	 * Importiert die Daten des Externen Notenmoduls und speichert diese in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) wurden heruntergeladen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
+	 *   Code 404: Keine ENM-Serverdaten gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Interner Serverfehler
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 502: Fehler bei der Verbindung zum ENM-Server
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idVerbindung - der Pfad-Parameter idVerbindung
+	 *
+	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden heruntergeladen
+	 */
+	public async downloadENMDaten(schema : string, idVerbindung : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/download"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode resetENMServer für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/connection/{idVerbindung : \d+}/reset
+	 *
+	 * Leert die Daten des Externen Notenmoduls (ENM).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) wurden geleert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
+	 *   Code 404: Keine ENM-Serverdaten gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Interner Serverfehler
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 502: Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idVerbindung - der Pfad-Parameter idVerbindung
+	 *
+	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden geleert.
+	 */
+	public async resetENMServer(schema : string, idVerbindung : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/reset"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode setupENMServer für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/connection/{idVerbindung : \d+}/setup
+	 *
+	 * Dieser Aufruf initialisert den ENM-Server beim ersten Aufruf. Weitere Aufrufe führen zu einem Fehler.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Stand des Setups, true, wurde initialisiert, false ist bereits initialisiert
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Boolean
+	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Operation auszuführen.
+	 *   Code 404: Keine ENM-Serverdaten gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 409: Der TLS-Zertifikat des ENM-Server wird nicht vertraut.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Interner Serverfehler
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 502: Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idVerbindung - der Pfad-Parameter idVerbindung
+	 *
+	 * @returns Der Stand des Setups, true, wurde initialisiert, false ist bereits initialisiert
+	 */
+	public async setupENMServer(schema : string, idVerbindung : number) : Promise<boolean> {
+		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/setup"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return (text === "true");
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode synchronizeENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/connection/{idVerbindung : \d+}/synchronize
+	 *
+	 * Liest die Daten des Externen Notenmoduls (ENM) aller Lehrer aus der Datenbank und lädt diese als ZIP beim ENM hoch, lädt danach die Daten des ENM runter und speichert diese in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) wurden synchronisiert
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
+	 *   Code 404: Keine ENM-Serverdaten gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Interner Serverfehler
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 502: Fehler bei der Verbindung zum ENM-Server
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idVerbindung - der Pfad-Parameter idVerbindung
+	 *
+	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden synchronisiert
+	 */
+	public async synchronizeENMDaten(schema : string, idVerbindung : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/synchronize"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode truncateENMServer für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/connection/{idVerbindung : \d+}/truncate
+	 *
+	 * Leert die Daten des Externen Notenmoduls (ENM), einschließlich der Benutzerdaten.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) wurden geleert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
+	 *   Code 404: Keine ENM-Serverdaten gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Interner Serverfehler
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 502: Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idVerbindung - der Pfad-Parameter idVerbindung
+	 *
+	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden geleert.
+	 */
+	public async truncateENMServer(schema : string, idVerbindung : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/truncate"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode uploadENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/connection/{idVerbindung : \d+}/upload
+	 *
+	 * Liest die Daten des Externen Notenmoduls (ENM) aller Lehrer aus der Datenbank und lädt diese als ZIP beim ENM hoch.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) wurden hochgeladen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
+	 *   Code 404: Keine ENM-Serverdaten gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Interner Serverfehler
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 502: Fehler bei der Verbindung zum ENM-Server
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idVerbindung - der Pfad-Parameter idVerbindung
+	 *
+	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden hochgeladen
+	 */
+	public async uploadENMDaten(schema : string, idVerbindung : number) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/enm/connection/{idVerbindung : \\d+}/upload"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idVerbindung\s*(:[^{}]+({[^{}]+})*)?}/g, idVerbindung.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addENMServerConnection für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/connection/create
+	 *
+	 * Erstellt einen neuen Eintrag für die Verbindung zu einem Web-Notenmodul-Server und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Verbindungen zu Web-Notenmodul-Servern besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Eintrag wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ENMServerConnection
+	 *   Code 400: Der Eintrag enthält Fehler, bspw. eine invalide URL.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Verbindung zu einem Web-Notenmodul-Server anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<ENMServerConnection>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Eintrag wurde erfolgreich hinzugefügt.
+	 */
+	public async addENMServerConnection(data : Partial<ENMServerConnection>, schema : string) : Promise<ENMServerConnection> {
+		const path = "/db/{schema}/enm/connection/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = ENMServerConnection.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return ENMServerConnection.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getENMServerConnections für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/connections
+	 *
+	 * Gibt die Verbindungen zu Web-Notenmodul-Servern der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Verbindungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste der Verbindungen zu Web-Notenmodul-Servern der Schule.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<ENMServerConnection>
+	 *   Code 403: Der SVWS-Benutzer hat keine Berechtigung zum Ansehen der Verbindungen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste der Verbindungen zu Web-Notenmodul-Servern der Schule.
+	 */
+	public async getENMServerConnections(schema : string) : Promise<List<ENMServerConnection>> {
+		const path = "/db/{schema}/enm/connections"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<ENMServerConnection>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ENMServerConnection.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
@@ -2826,42 +3034,6 @@ export class ApiServer extends BaseApi {
 		const body : string = JSON.stringify(data);
 		await super.postJSON(path, body);
 		return;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode downloadENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/download
-	 *
-	 * Importiert die Daten des Externen Notenmoduls und speichert diese in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) wurden heruntergeladen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
-	 *   Code 404: Keine ENM-Serverdaten gefunden.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 500: Interner Serverfehler
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 502: Fehler bei der Verbindung zum ENM-Server
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden heruntergeladen
-	 */
-	public async downloadENMDaten(schema : string) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/enm/download"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 
@@ -3012,113 +3184,50 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode resetENMServer für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/reset
+	 * Implementierung der PUT-Methode setNotenmodulLocalConfig für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/local/config
 	 *
-	 * Leert die Daten des Externen Notenmoduls (ENM).Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) wurden geleert.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
-	 *   Code 404: Keine ENM-Serverdaten gefunden.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 500: Interner Serverfehler
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 502: Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden geleert.
-	 */
-	public async resetENMServer(schema : string) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/enm/reset"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return SimpleOperationResponse.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode setupENMServer für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/setup
-	 *
-	 * Dieser Aufruf initialisert den ENM-Server beim ersten Aufruf. Weitere Aufrufe führen zu einem Fehler.
+	 * Schreibt den Konfigurationseintrag für den angebenen Schlüsselwert in die Konfiguration.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Stand des Setups, true, wurde initialisiert, false ist bereits initialisiert
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Boolean
-	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 204: Der Konfigurationseintrag wurde erfolgreich geschrieben
+	 *   Code 400: Die Daten sind fehlerhaft.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Operation auszuführen.
-	 *   Code 404: Keine ENM-Serverdaten gefunden.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 409: Der TLS-Zertifikat des ENM-Server wird nicht vertraut.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 500: Interner Serverfehler
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 502: Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *
+	 * @param {ENMServerConfigElement} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Der Stand des Setups, true, wurde initialisiert, false ist bereits initialisiert
 	 */
-	public async setupENMServer(schema : string) : Promise<boolean> {
-		const path = "/db/{schema}/enm/setup"
+	public async setNotenmodulLocalConfig(data : ENMServerConfigElement, schema : string) : Promise<void> {
+		const path = "/db/{schema}/enm/local/config"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return (text === "true");
+		const body : string = ENMServerConfigElement.transpilerToJSON(data);
+		return super.putJSON(path, body);
 	}
 
 
 	/**
-	 * Implementierung der GET-Methode synchronizeENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/synchronize
+	 * Implementierung der GET-Methode getNotenmodulLocalConfig für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/local/config/
 	 *
-	 * Liest die Daten des Externen Notenmoduls (ENM) aller Lehrer aus der Datenbank und lädt diese als ZIP beim ENM hoch, lädt danach die Daten des ENM runter und speichert diese in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
+	 * Ein Getter für die Notenmodul-Konfiguration.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) wurden synchronisiert
+	 *   Code 200: Die Konfiguration konnte erfolgreich abgerufen werden.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
-	 *   Code 404: Keine ENM-Serverdaten gefunden.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *     - Rückgabe-Typ: ENMServerConfig
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Operation auszuführen.
+	 *   Code 404: Keine Konfiguration gefunden.
 	 *   Code 500: Interner Serverfehler
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 502: Fehler bei der Verbindung zum ENM-Server
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden synchronisiert
+	 * @returns Die Konfiguration konnte erfolgreich abgerufen werden.
 	 */
-	public async synchronizeENMDaten(schema : string) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/enm/synchronize"
+	public async getNotenmodulLocalConfig(schema : string) : Promise<ENMServerConfig> {
+		const path = "/db/{schema}/enm/local/config/"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return SimpleOperationResponse.transpilerFromJSON(text);
+		return ENMServerConfig.transpilerFromJSON(text);
 	}
 
 
@@ -3143,78 +3252,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = ENMTeilleistung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode truncateENMServer für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/truncate
-	 *
-	 * Leert die Daten des Externen Notenmoduls (ENM), einschließlich der Benutzerdaten.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) wurden geleert.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
-	 *   Code 404: Keine ENM-Serverdaten gefunden.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 500: Interner Serverfehler
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 502: Fehler bei der Verbindung zum ENM-Server, u.U. auch fehlende OAuth-Daten.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden geleert.
-	 */
-	public async truncateENMServer(schema : string) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/enm/truncate"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return SimpleOperationResponse.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode uploadENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/upload
-	 *
-	 * Liest die Daten des Externen Notenmoduls (ENM) aller Lehrer aus der Datenbank und lädt diese als ZIP beim ENM hoch.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) wurden hochgeladen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 401: Die Authorisierung beim ENM-Server ist fehlgeschlagen.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
-	 *   Code 404: Keine ENM-Serverdaten gefunden.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 500: Interner Serverfehler
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 502: Fehler bei der Verbindung zum ENM-Server
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die Daten des Externen Notenmoduls (ENM) wurden hochgeladen
-	 */
-	public async uploadENMDaten(schema : string) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/enm/upload"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 
@@ -5067,6 +5104,38 @@ export class ApiServer extends BaseApi {
 			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
 		const body : string = GostBlockungsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addGostBlockungErgebnis für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{blockungsid : \d+}/addergebnis
+	 *
+	 * Fügt ein einzelnes Ergebnis zu einer Blockung der Gymnasialen Oberstufe hinzu. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen von Ergebnissen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Das Ergebnis wurde erfolgreich der Blockung hinzugefügt
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostBlockungsergebnis
+	 *   Code 400: Die Daten sind nicht konsistent (z.B. bei einer nicht passenden Blockungs-ID im Ergebnis).
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Ergebnisse hinzuzufügen.
+	 *   Code 404: Keine Blockung vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {GostBlockungsergebnis} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} blockungsid - der Pfad-Parameter blockungsid
+	 *
+	 * @returns Das Ergebnis wurde erfolgreich der Blockung hinzugefügt
+	 */
+	public async addGostBlockungErgebnis(data : GostBlockungsergebnis, schema : string, blockungsid : number) : Promise<GostBlockungsergebnis> {
+		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/addergebnis"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{blockungsid\s*(:[^{}]+({[^{}]+})*)?}/g, blockungsid.toString());
+		const body : string = GostBlockungsergebnis.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return GostBlockungsergebnis.transpilerFromJSON(text);
 	}
 
 
@@ -11055,12 +11124,95 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getOrtsteile für den Zugriff auf die URL https://{hostname}/db/{schema}/ortsteile
+	 * Implementierung der PATCH-Methode patchOrt für den Zugriff auf die URL https://{hostname}/db/{schema}/orte/{id : \d+}
 	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Ortsteile unter Angabe der ID, der zugehörigenOrt-ID, dem Namen des Ortsteils, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 * Patched den Ort mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Ortsteil-Katalog-Einträgen
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<OrtKatalogEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchOrt(data : Partial<OrtKatalogEintrag>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/orte/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = OrtKatalogEintrag.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addOrt für den Zugriff auf die URL https://{hostname}/db/{schema}/orte/create
+	 *
+	 * Erstellt einen neuen Ort, insofern die notwendigen Berechtigungen vorliegen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Ort wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: OrtKatalogEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Orte anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<OrtKatalogEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Ort wurde erfolgreich hinzugefügt.
+	 */
+	public async addOrt(data : Partial<OrtKatalogEintrag>, schema : string) : Promise<OrtKatalogEintrag> {
+		const path = "/db/{schema}/orte/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = OrtKatalogEintrag.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return OrtKatalogEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteOrte für den Zugriff auf die URL https://{hostname}/db/{schema}/orte/delete/multiple
+	 *
+	 * Entfernt mehrere Orte, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Orte zu entfernen.
+	 *   Code 404: Orte nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteOrte(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/orte/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getOrtsteile für den Zugriff auf die URL https://{hostname}/db/{schema}/ortsteile
+	 *
+	 * Gibt die Ortsteile im Katalog zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Ortsteile
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<OrtsteilKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
@@ -11068,7 +11220,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Eine Liste von Ortsteil-Katalog-Einträgen
+	 * @returns Eine Liste von Ortsteile
 	 */
 	public async getOrtsteile(schema : string) : Promise<List<OrtsteilKatalogEintrag>> {
 		const path = "/db/{schema}/ortsteile"
@@ -11077,6 +11229,89 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<OrtsteilKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(OrtsteilKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchOrtsteil für den Zugriff auf die URL https://{hostname}/db/{schema}/ortsteile/{id : \d+}
+	 *
+	 * Patched den Ortsteil mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<OrtsteilKatalogEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchOrtsteil(data : Partial<OrtsteilKatalogEintrag>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/ortsteile/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = OrtsteilKatalogEintrag.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addOrtsteil für den Zugriff auf die URL https://{hostname}/db/{schema}/ortsteile/create
+	 *
+	 * Erstellt einen neuen Ortsteil, insofern die notwendigen Berechtigungen vorliegen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Ortsteil wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: OrtsteilKatalogEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Ortsteile anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<OrtsteilKatalogEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Ortsteil wurde erfolgreich hinzugefügt.
+	 */
+	public async addOrtsteil(data : Partial<OrtsteilKatalogEintrag>, schema : string) : Promise<OrtsteilKatalogEintrag> {
+		const path = "/db/{schema}/ortsteile/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = OrtsteilKatalogEintrag.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return OrtsteilKatalogEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteOrtsteile für den Zugriff auf die URL https://{hostname}/db/{schema}/ortsteile/delete/multiple
+	 *
+	 * Entfernt mehrere Ortsteile, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Ortsteile zu entfernen.
+	 *   Code 404: Ortsteile nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteOrtsteile(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/ortsteile/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -12467,23 +12702,24 @@ export class ApiServer extends BaseApi {
 	 * Gibt die Informationen zur Verwaltung einer Schüler-Auswahlliste mit Filterfunktionen in Bezug auf einen Schuljahresabschnitt zurück.Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die GZip-komprimierten Daten zur Schüler-Auswahlliste
-	 *     - Mime-Type: application/octet-stream
-	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 200: Eine Liste von Schüler-Listen-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerListe
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.
 	 *   Code 404: Nicht alle Daten wurden gefunden, z.B. Schüler-Einträge
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} abschnitt - der Pfad-Parameter abschnitt
 	 *
-	 * @returns Die GZip-komprimierten Daten zur Schüler-Auswahlliste
+	 * @returns Eine Liste von Schüler-Listen-Einträgen
 	 */
-	public async getSchuelerAuswahllisteFuerAbschnitt(schema : string, abschnitt : number) : Promise<ApiFile> {
+	public async getSchuelerAuswahllisteFuerAbschnitt(schema : string, abschnitt : number) : Promise<SchuelerListe> {
 		const path = "/db/{schema}/schueler/abschnitt/{abschnitt : \\d+}/auswahlliste"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
-		const data : ApiFile = await super.getOctetStream(path);
-		return data;
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SchuelerListe.transpilerFromJSON(text);
 	}
 
 
@@ -13601,35 +13837,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteAbteilung für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/{id : \d+}
-	 *
-	 * Entfernt eine Abteilung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen eines Abteilung hat.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Abteilung wurde erfolgreich entfernt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Abteilung
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
-	 *   Code 404: Keine Abteilung vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft)
-	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Abteilung wurde erfolgreich entfernt.
-	 */
-	public async deleteAbteilung(schema : string, id : number) : Promise<Abteilung> {
-		const path = "/db/{schema}/schule/abteilungen/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return Abteilung.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getAbteilungenByIdJahresAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/abteilungen/{idSchuljahresabschnitt : \d+}
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhanden Abteilungen für die angegebene Id des Schuljahresabschnittes unter Angabe der ID, der Bezeichnung, der ID des Schuljahresabschnitts, der Lehrer-ID des Abteilungsleiters, die Bezeichnung des Raums des Abteilungsleiters, die eMail-Adresse des Abteilungsleiters, die interne telefonische Durchwahl des Abteilungsleiters, einer Sortierreihenfolge und und die Zuordnungen der Klassen zu der Abteilung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Abteilungen besitzt.
@@ -13989,33 +14196,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogHerkunftsschulnummern für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/herkunftsschulnummern
-	 *
-	 * Die Liste der Einträge aus dem Katalog der zusätzlichen Herkunftsschulnummern. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Katalog-Einträgen für den Katalog der zusätzlichen Herkunftsschulnummern
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<HerkunftsschulnummerKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Katalog-Einträgen für den Katalog der zusätzlichen Herkunftsschulnummern
-	 */
-	public async getKatalogHerkunftsschulnummern(schema : string) : Promise<List<HerkunftsschulnummerKatalogEintrag>> {
-		const path = "/db/{schema}/schule/allgemein/herkunftsschulnummern"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<HerkunftsschulnummerKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(HerkunftsschulnummerKatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getKatalogKindergartenbesuchsdauer für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/kindergartenbesuch
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Dauern des Kindergartenbesuchs, welche erfasst werden. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -14146,114 +14326,6 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<PruefungsordnungKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(PruefungsordnungKatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getKatalogReformpaedagogik für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/reformpaedagogik
-	 *
-	 * Gibt den Reformpädagogik-Katalog für die Schulform dieser Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Reformpädagogik-Katalog für die Schulform dieser Schule.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<ReformpaedagogikKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
-	 *   Code 404: Keine Reformpädagogik-Einträge für die Schulform dieser Schule gefunden.
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Der Reformpädagogik-Katalog für die Schulform dieser Schule.
-	 */
-	public async getKatalogReformpaedagogik(schema : string) : Promise<List<ReformpaedagogikKatalogEintrag>> {
-		const path = "/db/{schema}/schule/allgemein/reformpaedagogik"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<ReformpaedagogikKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ReformpaedagogikKatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getKatalogReformpaedagogikEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/reformpaedagogik/{id : \d+}
-	 *
-	 * Gibt den Reformpädagogik-Katalog-Eintrag für die angegebene ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Reformpädagogik-Katalog-Eintrag für die angegebene ID.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: ReformpaedagogikKatalogEintrag
-	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
-	 *   Code 404: Kein Reformpädagogik-Katalog-Eintrag für die angegebene ID gefunden.
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Der Reformpädagogik-Katalog-Eintrag für die angegebene ID.
-	 */
-	public async getKatalogReformpaedagogikEintrag(schema : string, id : number) : Promise<ReformpaedagogikKatalogEintrag> {
-		const path = "/db/{schema}/schule/allgemein/reformpaedagogik/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return ReformpaedagogikKatalogEintrag.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getKatalogReformpaedagogikAlle für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/reformpaedagogik/alle
-	 *
-	 * Gibt den Reformpädagogik-Katalog aller Schulformen zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Reformpädagogik-Katalog aller Schulformen.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<ReformpaedagogikKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
-	 *   Code 404: Keine Fachgruppen gefunden.
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Der Reformpädagogik-Katalog aller Schulformen.
-	 */
-	public async getKatalogReformpaedagogikAlle(schema : string) : Promise<List<ReformpaedagogikKatalogEintrag>> {
-		const path = "/db/{schema}/schule/allgemein/reformpaedagogik/alle"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<ReformpaedagogikKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ReformpaedagogikKatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getKatalogReligionen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/religionen
-	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Relgionen bzw. Konfessionen, welche im Rahmen der amtlichen Schulstatistik verwendet werden. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<ReligionKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Katalog-Einträgen
-	 */
-	public async getKatalogReligionen(schema : string) : Promise<List<ReligionKatalogEintrag>> {
-		const path = "/db/{schema}/schule/allgemein/religionen"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<ReligionKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ReligionKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -14646,30 +14718,331 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getSchuelerByEinwilligungsartID für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/einwilligungsart/{einwilligungsart : \d+}/schuelerinfos
+	 * Implementierung der GET-Methode getBetriebeNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe
 	 *
-	 * Erstellt eine Liste aller Schüler der angegebenen Einwilligungsart unter Angabe der ID.Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 * Gibt die Betriebe zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Schüler-Listen-Einträgen
+	 *   Code 200: Eine Liste der Betriebe.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchuelerEinwilligungsartenZusammenfassung>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.
-	 *   Code 404: Keine Schüler-Einträge gefunden
+	 *     - Rückgabe-Typ: List<Betrieb>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} einwilligungsart - der Pfad-Parameter einwilligungsart
 	 *
-	 * @returns Eine Liste von Schüler-Listen-Einträgen
+	 * @returns Eine Liste der Betriebe.
 	 */
-	public async getSchuelerByEinwilligungsartID(schema : string, einwilligungsart : number) : Promise<List<SchuelerEinwilligungsartenZusammenfassung>> {
-		const path = "/db/{schema}/schule/einwilligungsart/{einwilligungsart : \\d+}/schuelerinfos"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{einwilligungsart\s*(:[^{}]+({[^{}]+})*)?}/g, einwilligungsart.toString());
+	public async getBetriebeNeu(schema : string) : Promise<List<Betrieb>> {
+		const path = "/db/{schema}/schule/betriebe"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<SchuelerEinwilligungsartenZusammenfassung>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerEinwilligungsartenZusammenfassung.transpilerFromJSON(text)); });
+		const ret = new ArrayList<Betrieb>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Betrieb.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchBetriebeNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe/{id : \d+}
+	 *
+	 * Patched die Betriebe mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Betrieb>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchBetriebeNeu(data : Partial<Betrieb>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/betriebe/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = Betrieb.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addBetriebNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe/create
+	 *
+	 * Erstellt einen neuen Betrieb, insofern die notwendigen Berechtigungen vorliegen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Betrieb wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Betrieb
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Betriebe anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Betrieb>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Betrieb wurde erfolgreich hinzugefügt.
+	 */
+	public async addBetriebNeu(data : Partial<Betrieb>, schema : string) : Promise<Betrieb> {
+		const path = "/db/{schema}/schule/betriebe/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Betrieb.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Betrieb.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteBetriebeNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe/delete/multiple
+	 *
+	 * Entfernt mehrere Betriebe, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Betriebe zu entfernen.
+	 *   Code 404: Betriebe nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteBetriebeNeu(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schule/betriebe/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getBetriebeAnsprechpartnerNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe-ansprechpartner
+	 *
+	 * Gibt die Ansprechpartner zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste der Ansprechpartner.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<BetriebeAnsprechpartner>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste der Ansprechpartner.
+	 */
+	public async getBetriebeAnsprechpartnerNeu(schema : string) : Promise<List<BetriebeAnsprechpartner>> {
+		const path = "/db/{schema}/schule/betriebe-ansprechpartner"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<BetriebeAnsprechpartner>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BetriebeAnsprechpartner.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchBetriebeAnsprechpartnerNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe-ansprechpartner/{id : \d+}
+	 *
+	 * Patched die Ansprechpartner mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<BetriebeAnsprechpartner>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchBetriebeAnsprechpartnerNeu(data : Partial<BetriebeAnsprechpartner>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/betriebe-ansprechpartner/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = BetriebeAnsprechpartner.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addBetriebeAnsprechpartnerNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe-ansprechpartner/create
+	 *
+	 * Erstellt einen neuen Betrieb, insofern die notwendigen Berechtigungen vorliegen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Betrieb wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: BetriebeAnsprechpartner
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Ansprechpartner anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<BetriebeAnsprechpartner>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Betrieb wurde erfolgreich hinzugefügt.
+	 */
+	public async addBetriebeAnsprechpartnerNeu(data : Partial<BetriebeAnsprechpartner>, schema : string) : Promise<BetriebeAnsprechpartner> {
+		const path = "/db/{schema}/schule/betriebe-ansprechpartner/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = BetriebeAnsprechpartner.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return BetriebeAnsprechpartner.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteBetriebeAnsprechpartnerNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe-ansprechpartner/delete/multiple
+	 *
+	 * Entfernt mehrere Ansprechpartner, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Ansprechpartner zu entfernen.
+	 *   Code 404: Ansprechpartner nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteBetriebeAnsprechpartnerNeu(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schule/betriebe-ansprechpartner/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getBetriebsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebsarten
+	 *
+	 * Gibt die Betriebsarten zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste der Betriebsarten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Betriebsart>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste der Betriebsarten.
+	 */
+	public async getBetriebsarten(schema : string) : Promise<List<Betriebsart>> {
+		const path = "/db/{schema}/schule/betriebsarten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Betriebsart>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Betriebsart.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchBetriebsart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebsarten/{id : \d+}
+	 *
+	 * Patched die Betriebsart mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Betriebsart>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchBetriebsart(data : Partial<Betriebsart>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/betriebsarten/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = Betriebsart.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addBetriebsart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebsarten/create
+	 *
+	 * Erstellt eine neue Betriebsart, insofern die notwendigen Berechtigungen vorliegen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Betriebsart wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Betriebsart
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Betriebsarten anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Betriebsart>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Betriebsart wurde erfolgreich hinzugefügt.
+	 */
+	public async addBetriebsart(data : Partial<Betriebsart>, schema : string) : Promise<Betriebsart> {
+		const path = "/db/{schema}/schule/betriebsarten/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Betriebsart.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Betriebsart.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteBetriebsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebsarten/delete/multiple
+	 *
+	 * Entfernt mehrere Betriebsarten, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Betriebsarten zu entfernen.
+	 *   Code 404: Betriebsarten nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteBetriebsarten(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schule/betriebsarten/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -15427,116 +15800,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getLernplattform für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/lernplattform/{id : \d+}
-	 *
-	 * Liest die Daten der Lernplattform zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten der Lernplattform
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Lernplattform
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.
-	 *   Code 404: Keine Lernplattform mit der angegebenen ID gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Daten der Lernplattform
-	 */
-	public async getLernplattform(schema : string, id : number) : Promise<Lernplattform> {
-		const path = "/db/{schema}/schule/lernplattform/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return Lernplattform.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der PATCH-Methode patchLernplattform für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/lernplattform/{id : \d+}
-	 *
-	 * Passt die Lernplattform-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Lernplattform besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Lernplattform-Daten integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lernplattform-Daten zu ändern.
-	 *   Code 404: Keine Lernplattform mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<Lernplattform>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async patchLernplattform(data : Partial<Lernplattform>, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/schule/lernplattform/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = Lernplattform.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode deleteLernplattform für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/lernplattform/{id : \d+}
-	 *
-	 * Entfernt eine Lernplattform der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Lernplattform wurde erfolgreich entfernt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Lernplattform
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
-	 *   Code 404: Lernplattform nicht vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Lernplattform wurde erfolgreich entfernt.
-	 */
-	public async deleteLernplattform(schema : string, id : number) : Promise<Lernplattform> {
-		const path = "/db/{schema}/schule/lernplattform/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return Lernplattform.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode addLernplattform für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/lernplattform/new
-	 *
-	 * Erstellt eine neue Lernplattform und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Lernplattform besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 201: Lernplattform wurde erfolgreich angelegt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Lernplattform
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Lernplattform anzulegen.
-	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<Lernplattform>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Lernplattform wurde erfolgreich angelegt.
-	 */
-	public async addLernplattform(data : Partial<Lernplattform>, schema : string) : Promise<Lernplattform> {
-		const path = "/db/{schema}/schule/lernplattform/new"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = Lernplattform.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return Lernplattform.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getLernplattformen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/lernplattformen
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden Lernplattformen unter Angabe der ID und der Bezeichnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -15560,6 +15823,60 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<Lernplattform>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Lernplattform.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLernplattform für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/lernplattformen/{id : \d+}
+	 *
+	 * Passt die Lernplattform-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Lernplattform besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Lernplattform-Daten integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lernplattform-Daten zu ändern.
+	 *   Code 404: Keine Lernplattform mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Lernplattform>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchLernplattform(data : Partial<Lernplattform>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/lernplattformen/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = Lernplattform.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addLernplattform für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/lernplattformen/create
+	 *
+	 * Erstellt eine neue Lernplattform und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Lernplattform besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Lernplattform wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Lernplattform
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Lernplattform anzulegen.
+	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Lernplattform>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Lernplattform wurde erfolgreich angelegt.
+	 */
+	public async addLernplattform(data : Partial<Lernplattform>, schema : string) : Promise<Lernplattform> {
+		const path = "/db/{schema}/schule/lernplattformen/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Lernplattform.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Lernplattform.transpilerFromJSON(text);
 	}
 
 
@@ -16089,33 +16406,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getReligion für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/religionen/{id : \d+}
-	 *
-	 * Liest die Daten der Religion zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten der Religion
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: ReligionEintrag
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.
-	 *   Code 404: Keine Religion mit der angegebenen ID gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Daten der Religion
-	 */
-	public async getReligion(schema : string, id : number) : Promise<ReligionEintrag> {
-		const path = "/db/{schema}/schule/religionen/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return ReligionEintrag.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der PATCH-Methode patchReligion für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/religionen/{id : \d+}
 	 *
 	 * Passt die Religion-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Religion besitzt.
@@ -16142,67 +16432,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteReligionEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/religionen/{id : \d+}
-	 *
-	 * Entfernt einen Religion-Katalog-Eintrag der Schule. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Religion-Katalog-Eintrag wurde erfolgreich entfernt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: ReligionEintrag
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
-	 *   Code 404: Kein Religion-Katalog-Eintrag vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Der Religion-Katalog-Eintrag wurde erfolgreich entfernt.
-	 */
-	public async deleteReligionEintrag(schema : string, id : number) : Promise<ReligionEintrag> {
-		const path = "/db/{schema}/schule/religionen/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return ReligionEintrag.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode deleteReligionEintraege für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/religionen/delete/multiple
-	 *
-	 * Entfernt mehrere Religion-Katalog-Einträge der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Religion-Katalog-Einträge wurde erfolgreich entfernt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
-	 *   Code 404: Religion-Katalog-Einträge nicht vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die Religion-Katalog-Einträge wurde erfolgreich entfernt.
-	 */
-	public async deleteReligionEintraege(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
-		const path = "/db/{schema}/schule/religionen/delete/multiple"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.deleteJSON(path, body);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<SimpleOperationResponse>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode createReligion für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/religionen/new
+	 * Implementierung der POST-Methode addReligion für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/religionen/create
 	 *
 	 * Erstellt eine neue Religion und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Religion besitzt.
 	 *
@@ -16220,13 +16450,44 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Religion wurde erfolgreich angelegt.
 	 */
-	public async createReligion(data : Partial<ReligionEintrag>, schema : string) : Promise<ReligionEintrag> {
-		const path = "/db/{schema}/schule/religionen/new"
+	public async addReligion(data : Partial<ReligionEintrag>, schema : string) : Promise<ReligionEintrag> {
+		const path = "/db/{schema}/schule/religionen/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = ReligionEintrag.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return ReligionEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteReligionen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/religionen/delete/multiple
+	 *
+	 * Entfernt mehrere Religion-Katalog-Einträge der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Religion-Katalog-Einträge wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
+	 *   Code 404: Religion-Katalog-Einträge nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Religion-Katalog-Einträge wurde erfolgreich entfernt.
+	 */
+	public async deleteReligionen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schule/religionen/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
@@ -16402,7 +16663,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Einträge wurde erfolgreich entfernt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchulEintrag>
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
 	 *   Code 404: Räume nicht vorhanden
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -16413,14 +16674,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Einträge wurde erfolgreich entfernt.
 	 */
-	public async deleteSchulenVonKatalog(data : List<number>, schema : string) : Promise<List<SchulEintrag>> {
+	public async deleteSchulenVonKatalog(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/schulen/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<SchulEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -16502,34 +16763,34 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getTelefonart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/telefonart/{id : \d+}
+	 * Implementierung der GET-Methode getTelefonarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/telefonarten
 	 *
-	 * Liest die Daten der Telefonart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.
+	 * Erstellt eine Liste aller in dem Katalog vorhanden Telefonarten unter Angabe der ID und der Bezeichnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten der Telefonart
+	 *   Code 200: Eine Liste von Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: TelefonArt
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.
-	 *   Code 404: Keine Telefonart mit der angegebenen ID gefunden
+	 *     - Rückgabe-Typ: List<Telefonart>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
 	 *
-	 * @returns Die Daten der Telefonart
+	 * @returns Eine Liste von Katalog-Einträgen
 	 */
-	public async getTelefonart(schema : string, id : number) : Promise<TelefonArt> {
-		const path = "/db/{schema}/schule/telefonart/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+	public async getTelefonarten(schema : string) : Promise<List<Telefonart>> {
+		const path = "/db/{schema}/schule/telefonarten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
-		const text = result;
-		return TelefonArt.transpilerFromJSON(text);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Telefonart>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Telefonart.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchTelefonart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/Telefonart/{id : \d+}
+	 * Implementierung der PATCH-Methode patchTelefonart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/telefonarten/{id : \d+}
 	 *
 	 * Passt die Telefonart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Telefonart besitzt.
 	 *
@@ -16541,71 +16802,44 @@ export class ApiServer extends BaseApi {
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Partial<TelefonArt>} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<Telefonart>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchTelefonart(data : Partial<TelefonArt>, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/schule/Telefonart/{id : \\d+}"
+	public async patchTelefonart(data : Partial<Telefonart>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/telefonarten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = TelefonArt.transpilerToJSONPatch(data);
+		const body : string = Telefonart.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
 
 	/**
-	 * Implementierung der POST-Methode addTelefonart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/telefonart/new
+	 * Implementierung der POST-Methode addTelefonart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/telefonarten/create
 	 *
 	 * Erstellt eine neue Telefonart und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Telefonart besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 201: Telefonart wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: TelefonArt
+	 *     - Rückgabe-Typ: Telefonart
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Telefonart anzulegen.
 	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Partial<TelefonArt>} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<Telefonart>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Telefonart wurde erfolgreich angelegt.
 	 */
-	public async addTelefonart(data : Partial<TelefonArt>, schema : string) : Promise<TelefonArt> {
-		const path = "/db/{schema}/schule/telefonart/new"
+	public async addTelefonart(data : Partial<Telefonart>, schema : string) : Promise<Telefonart> {
+		const path = "/db/{schema}/schule/telefonarten/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = TelefonArt.transpilerToJSONPatch(data);
+		const body : string = Telefonart.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
-		return TelefonArt.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getTelefonarten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/Telefonarten
-	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Telefonarten unter Angabe der ID und der Bezeichnung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<TelefonArt>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Katalog-Einträgen
-	 */
-	public async getTelefonarten(schema : string) : Promise<List<TelefonArt>> {
-		const path = "/db/{schema}/schule/Telefonarten"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<TelefonArt>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(TelefonArt.transpilerFromJSON(text)); });
-		return ret;
+		return Telefonart.transpilerFromJSON(text);
 	}
 
 
@@ -16697,33 +16931,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getVermerkart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/vermerkarten/{id : \d+}
-	 *
-	 * Liest die Daten der Vermerkart zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten der Vermerkart
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: VermerkartEintrag
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.
-	 *   Code 404: Keine Vermerkart mit der angegebenen ID gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Daten der Vermerkart
-	 */
-	public async getVermerkart(schema : string, id : number) : Promise<VermerkartEintrag> {
-		const path = "/db/{schema}/schule/vermerkarten/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return VermerkartEintrag.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der PATCH-Methode patchVermerkart für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/vermerkarten/{id : \d+}
 	 *
 	 * Passt die Vermerkart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Vermerkart besitzt.
@@ -16746,35 +16953,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = VermerkartEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode deleteVermerkartEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/vermerkarten/{id : \d+}
-	 *
-	 * Entfernt einen Vermerkart-Katalog-Eintrag der Schule.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Vermerkart-Katalog-Eintrag wurde erfolgreich entfernt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: VermerkartEintrag
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
-	 *   Code 404: Kein Vermerkart-Katalog-Eintrag vorhanden
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Der Vermerkart-Katalog-Eintrag wurde erfolgreich entfernt.
-	 */
-	public async deleteVermerkartEintrag(schema : string, id : number) : Promise<VermerkartEintrag> {
-		const path = "/db/{schema}/schule/vermerkarten/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return VermerkartEintrag.transpilerFromJSON(text);
 	}
 
 
@@ -17057,6 +17235,30 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getStatistikGesamt für den Zugriff auf die URL https://{hostname}/db/{schema}/statistik/gesamt
+	 *
+	 * Gibt die Statistikdaten für die Schule zurück.Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Statistikdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Statistikdaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StatistikGesamt
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Statistikdaten anzusehen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Statistikdaten
+	 */
+	public async getStatistikGesamt(schema : string) : Promise<StatistikGesamt> {
+		const path = "/db/{schema}/statistik/gesamt"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return StatistikGesamt.transpilerFromJSON(text);
 	}
 
 

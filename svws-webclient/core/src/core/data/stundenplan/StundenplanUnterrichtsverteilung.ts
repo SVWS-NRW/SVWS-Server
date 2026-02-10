@@ -62,7 +62,7 @@ export class StundenplanUnterrichtsverteilung extends JavaObject {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung'].includes(name);
 	}
 
-	public static class = new Class<StundenplanUnterrichtsverteilung>('de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung');
+	public static readonly class = new Class<StundenplanUnterrichtsverteilung>('de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung');
 
 	public static transpilerFromJSON(json: string): StundenplanUnterrichtsverteilung {
 		const obj = JSON.parse(json) as Partial<StundenplanUnterrichtsverteilung>;

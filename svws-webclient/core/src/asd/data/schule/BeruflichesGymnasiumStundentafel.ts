@@ -38,7 +38,7 @@ export class BeruflichesGymnasiumStundentafel extends JavaObject {
 		return ['de.svws_nrw.asd.data.schule.BeruflichesGymnasiumStundentafel'].includes(name);
 	}
 
-	public static class = new Class<BeruflichesGymnasiumStundentafel>('de.svws_nrw.asd.data.schule.BeruflichesGymnasiumStundentafel');
+	public static readonly class = new Class<BeruflichesGymnasiumStundentafel>('de.svws_nrw.asd.data.schule.BeruflichesGymnasiumStundentafel');
 
 	public static transpilerFromJSON(json: string): BeruflichesGymnasiumStundentafel {
 		const obj = JSON.parse(json) as Partial<BeruflichesGymnasiumStundentafel>;

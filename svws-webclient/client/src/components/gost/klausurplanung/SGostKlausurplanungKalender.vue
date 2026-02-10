@@ -174,8 +174,9 @@
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const kalenderwoche = (datum?: string) => {
-		if (datum === undefined)
+		if (datum === undefined) {
 			datum = props.kalenderdatum.value!;
+		}
 		return props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, datum).kalenderwochenzuordnungGetByDatum(datum);
 	};
 
@@ -204,13 +205,14 @@
 	let klausurMoveDropZone: GostKlausurplanungDropZone = undefined;
 
 	async function verschiebeKlausurTrotzRaumzuweisung() {
-		if (klausurMoveDragData)
-			if (klausurMoveDropZone === undefined)
+		if (klausurMoveDragData) {
+			if (klausurMoveDropZone === undefined) {
 				await props.patchKlausurtermin(klausurMoveDragData.id, { datum: null, startzeit: null });
-			else if (klausurMoveDropZone instanceof StundenplanZeitraster) {
+			} else if (klausurMoveDropZone instanceof StundenplanZeitraster) {
 				const date = stundenplanManager().datumGetByKwzAndZeitraster(kalenderwoche(), klausurMoveDropZone);
 				await props.patchKlausurtermin(klausurMoveDragData.id, { datum: date, startzeit: klausurMoveDropZone.stundenbeginn });
 			}
+		}
 		props.terminSelected.value = undefined;
 
 	}
@@ -219,10 +221,11 @@
 
 	const anzahlProKwKonflikte2 = (threshold: number, thresholdOnly: boolean) => {
 		let konflikte: JavaSet<JavaMapEntry<number, JavaSet<GostSchuelerklausurTermin>>> | null = null;
-		if (props.terminSelected.value !== undefined && zeitrasterSelected.value !== undefined)
+		if (props.terminSelected.value !== undefined && zeitrasterSelected.value !== undefined) {
 			konflikte = props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(props.terminSelected.value, stundenplanManager().datumGetByKwzAndZeitraster(kalenderwoche(), zeitrasterSelected.value), threshold, thresholdOnly).entrySet();
-		else
+		} else {
 			konflikte = props.kMan().klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndThreshold(kalenderwoche().kw, props.jahrgangsdaten.abiturjahr, threshold, thresholdOnly).entrySet();
+		}
 		return konflikte.toArray() as JavaMapEntry<number, JavaSet<GostSchuelerklausurTermin>>[];
 	};
 
@@ -236,8 +239,9 @@
 		datum.setDate(datum.getDate() + by);
 		const datumStr = datum.getFullYear() + "-" + (datum.getMonth() + 1).toString().padStart(2, '0') + "-" + datum.getDate().toString().padStart(2, '0');// datum.toLocaleDateString("de-DE").slice(0, 10);
 		const stundenplan = props.kMan().stundenplanManagerGetByAbschnittAndKwOrNull(props.abschnitt!.id, DateUtils.gibKwJahrDesDatumsISO8601(datumStr), DateUtils.gibKwDesDatumsISO8601(datumStr));
-		if (stundenplan === null)
+		if (stundenplan === null) {
 			return undefined;
+		}
 		const kw = stundenplan.kalenderwochenzuordnungGetByDatum(datumStr);
 		return DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(kw.jahr, kw.kw);
 	};
@@ -247,8 +251,9 @@
 	}
 
 	function checkDropZoneTerminAuswahl(event: DragEvent): void {
-		if (props.terminSelected.value?.datum !== null)
+		if (props.terminSelected.value?.datum !== null) {
 			event.preventDefault();
+		}
 	}
 
 	function checkDropZoneZeitraster(event: DragEvent, zeitraster: StundenplanZeitraster | undefined): void {
@@ -258,9 +263,11 @@
 
 	function kurseGefiltert(datum: string, day: Wochentag, stunde: number) {
 		const kursIds = new ArrayList<number>();
-		if (props.terminSelected.value !== undefined)
-			for (const klausur of props.kMan().kursklausurGetMengeByTermin(props.terminSelected.value))
+		if (props.terminSelected.value !== undefined) {
+			for (const klausur of props.kMan().kursklausurGetMengeByTermin(props.terminSelected.value)) {
 				kursIds.add(klausur.idKurs);
+			}
+		}
 		const sManager = props.kMan().stundenplanManagerGetByAbschnittAndDatumOrNull(props.abschnitt!.id, datum);
 		return sManager !== null ? sManager.kursGetMengeGefiltertByWochentypAndWochentagAndStunde(kursIds, kalenderwoche(datum).wochentyp, day, stunde) : new ArrayList<number>() as List<number>;
 	}
@@ -268,9 +275,11 @@
 	function sumSchreiber(datum: string, day: Wochentag, stunde: number) {
 		const kurse = kurseGefiltert(datum, day, stunde);
 		let summe = 0;
-		if (props.terminSelected.value !== undefined)
-			for (const klausur of kurse)
+		if (props.terminSelected.value !== undefined) {
+			for (const klausur of kurse) {
 				summe += props.kMan().kursAnzahlSchuelerGesamtByKursklausur(props.kMan().kursklausurGetByTerminAndKursid(props.terminSelected.value, klausur)!);
+			}
+		}
 		return summe;
 	}
 
@@ -291,10 +300,11 @@
 		if (props.terminSelected.value !== undefined) {
 			klausurMoveDropZone = zone;
 			klausurMoveDragData = props.terminSelected.value;
-			if (props.kMan().isKlausurenInFremdraeumenByTermin(props.terminSelected.value))
+			if (props.kMan().isKlausurenInFremdraeumenByTermin(props.terminSelected.value)) {
 				modalKlausurHatRaeume.value = true;
-			else
+			} else {
 				await verschiebeKlausurTrotzRaumzuweisung();
+			}
 		}
 	};
 
@@ -303,8 +313,9 @@
 		isMounted.value = true;
 		if (props.terminSelected.value) {
 			const scrollToElement = document.getElementById("termin" + props.terminSelected.value.id);
-			if (scrollToElement)
+			if (scrollToElement) {
 				scrollToElement.scrollIntoView({ behavior: 'smooth', block: "nearest" });
+			}
 		}
 	});
 

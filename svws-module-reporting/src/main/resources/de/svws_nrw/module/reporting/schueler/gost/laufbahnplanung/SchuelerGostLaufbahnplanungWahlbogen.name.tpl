@@ -1,0 +1,13 @@
+[# th:if="${Schueler.isEmpty()}"]
+    GOSt-Laufbahnplanung-Wahlboegen
+[/]
+[# th:if="${!Schueler.isEmpty()}"]
+    [# th:each="schueler,iterState : ${Schueler}"]
+        [# th:if="${iterState.first && (Schueler.size() == 1)}"]
+            GOSt-Laufbahnwahl_Abi[(${ schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr(), '.', '') + '_' + #strings.replace(schueler.nachname(), ' ', '_') + '__' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm') })]
+        [/]
+        [# th:if="${iterState.first && (Schueler.size() > 1)}"]
+            GOSt-Laufbahnwahl_Abi[(${ schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr(), '.', '') })]
+        [/]
+    [/]
+[/]

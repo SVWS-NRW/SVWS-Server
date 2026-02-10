@@ -11,6 +11,9 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class Sport extends GostBelegpruefung {
 
+	/**
+	 * Die Belegungen für das Fach Sport.
+	 */
 	private _sport: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
 
@@ -46,7 +49,7 @@ export class Sport extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Sport'].includes(name);
 	}
 
-	public static class = new Class<Sport>('de.svws_nrw.core.abschluss.gost.belegpruefung.Sport');
+	public static readonly class = new Class<Sport>('de.svws_nrw.core.abschluss.gost.belegpruefung.Sport');
 
 }
 

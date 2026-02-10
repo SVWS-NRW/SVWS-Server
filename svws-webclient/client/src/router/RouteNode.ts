@@ -88,7 +88,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 		this._record = {
 			name: name,
 			path: path,
-			components: { default: component === undefined ? defineComponent({}) : component },
+			components: { default: component ?? defineComponent({}) },
 			props: { default: (to) => this.getNoProps(to) },
 			children: undefined,
 			meta: {
@@ -100,13 +100,15 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 		this._children = [];
 		this._menu = [];
 		this._hasData = (data !== undefined);
-		this._data = (data !== undefined) ? data : {} as TRouteData;
+		this._data = data ?? {} as TRouteData;
 		this._types = new Set([ViewType.DEFAULT]);
 		// Setze die erlaubten Schulformen
-		for (const sf of schulformen)
+		for (const sf of schulformen) {
 			this._schulformenErlaubt.add(sf);
-		for (const k of kompetenzen)
+		}
+		for (const k of kompetenzen) {
 			this._kompetenzenBenoetigt.add(k);
+		}
 	}
 
 
@@ -124,8 +126,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * Gibt den Namen der Route zurück.
 	 */
 	public get name(): string {
-		if (this._record.name === undefined)
-			throw Error("Die Route hat keinen gültigen Namen");
+		if (this._record.name === undefined) {
+			throw new Error("Die Route hat keinen gültigen Namen");
+		}
 		return this._record.name.toString();
 	}
 
@@ -155,8 +158,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 			result = Object.assign(result, cur.addRouteParamsFromState());
 			cur = cur.parent;
 		}
-		if (params !== undefined)
+		if (params !== undefined) {
 			result = Object.assign(result, params);
+		}
 		return result;
 	}
 
@@ -285,15 +289,16 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * Gibt an, ob ein Checkpoint hinterlegt ist und dieser gerade aktiv ist.
 	 */
 	public isCheckpointActive(): boolean {
-		return (this._checkpoint !== undefined) && this._checkpoint.active;
+		return this._checkpoint?.active ?? false;
 	}
 
 	/**
 	 * Gibt den hinterlegten Checkpoint zurück.
 	 */
 	public get checkpoint(): Checkpoint {
-		if (this._checkpoint === undefined)
+		if (this._checkpoint === undefined) {
 			throw new DeveloperNotificationException("Es wurde kein Checkpoint gesetzt.");
+		}
 		return this._checkpoint;
 	}
 
@@ -362,8 +367,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	public get children(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._children) {
-			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz()))
+			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
+			}
 			result.push(node);
 		}
 		return result;
@@ -388,8 +394,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	public get menu(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menu) {
-			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz()))
+			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
 				continue;
+			}
 			result.push(node);
 		}
 		return result;
@@ -421,8 +428,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public get children_records(): RouteRecordRaw[] {
 		const result: RouteRecordRaw[] = [];
-		for (const node of this.children)
+		for (const node of this.children) {
 			result.push(node.record);
+		}
 		return result;
 	}
 
@@ -448,8 +456,8 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * TODO
 	 */
 	public set selectedChildRecord(record: RouteRecordRaw | undefined) {
-		this._selectedChild.value = ((record === undefined) || (record.name === undefined))
-			? undefined : this._selectedChild.value = RouteNode.mapNodesByName.get(record.name.toString());
+		this._selectedChild.value = (record?.name === undefined)
+			? undefined : RouteNode.mapNodesByName.get(record.name.toString());
 	}
 
 	/**
@@ -497,21 +505,24 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 		const tabs: TabData[] = [];
 		let tab = null;
 		for (const node of nodes) {
-			if (!node.types.has(type))
+			if (!node.types.has(type)) {
 				continue;
-			if (!(node.hatEineKompetenz() && node.hatSchulform()))
+			}
+			if (!(node.hatEineKompetenz() && node.hatSchulform())) {
 				continue;
+			}
 			const newTab = <TabData>{ name: node.name, text: node.text };
-			if (!this.checkTabVisibility(newTab))
+			if (!this.checkTabVisibility(newTab)) {
 				continue;
+			}
 			newTab.tabgroup = node.menugroup;
 			newTab.image = node.icon;
 			tabs.push(newTab);
-			if (node.name === tabname)
+			if (node.name === tabname) {
 				tab = newTab;
+			}
 		}
-		if (tab === null)
-			tab = tabs[0];
+		tab ??= tabs[0];
 		return new TabManager(tabs, tab, setTab, nodesHidden);
 	}
 
@@ -568,12 +579,15 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @returns true, falls der Benutzer eine benötigte Kompetenz hat und ansonsten false
 	 */
 	public hatEineKompetenz(): boolean {
-		if (!api.authenticated)
+		if (!api.authenticated) {
 			return false;
-		if (this._kompetenzenBenoetigt.has(BenutzerKompetenz.KEINE))
+		}
+		if (this._kompetenzenBenoetigt.has(BenutzerKompetenz.KEINE)) {
 			return true;
-		if (api.benutzerIstAdmin)
+		}
+		if (api.benutzerIstAdmin) {
 			return true;
+		}
 		return api.benutzerHatEineKompetenz(this._kompetenzenBenoetigt);
 	}
 
@@ -592,8 +606,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	public hidden(params?: RouteParams): RouteLocationRaw | false {
 		// Prüfen, ob die aktuelle Schulform und die Kompetenzen des angemdelteten Benutzers die Route erlaubt oder nicht
 		if (api.authenticated && (this.name !== "init")) {
-			if ((!this.hatSchulform()) || (!this.hatEineKompetenz()))
+			if ((!this.hatSchulform()) || (!this.hatEineKompetenz())) {
 				return this.parent?.getRoute() ?? false;
+			}
 		}
 		// Prüfen, ob die Komponente dargestellt werden darf oder nicht
 		return (this.isHidden === undefined) ? false : this.isHidden(params);
@@ -606,14 +621,16 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public isSelected(name: RouteRecordName | null | undefined): boolean {
 		const node = RouteNode.getNodeByName(this.name);
-		if ((node === undefined) || (name === null) || (name === ""))
+		if ((node === undefined) || (name === null) || (name === "")) {
 			return false;
-		if (node.name === name)
+		}
+		if (node.name === name) {
 			return true;
-		else if (this.parent !== undefined)
+		} else if (this.parent !== undefined) {
 			return this.parent.isSelected(name);
-		else
+		} else {
 			return false;
+		}
 	}
 
 	/**
@@ -625,8 +642,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param prop_handler   der Property-Handler zum Erstellen der Properties für die Komponente
 	 */
 	protected setView(name: string, component: RouteComponent, prop_handler: (to: RouteLocationNormalized) => Record<string, any>) {
-		if ((this._record.components === undefined) || (this._record.props === undefined))
+		if ((this._record.components === undefined) || (this._record.props === undefined)) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler in der Methode RouteNode::addView. components oder props ist undefined.");
+		}
 		(this._record.components as Record<string, RouteComponent>)[name] = component;
 		(this._record.props as Record<string, (to: RouteLocationNormalized) => Record<string, any>>)[name] = prop_handler;
 	}
@@ -641,8 +659,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public hasView(name: string): boolean {
 		const comp: Record<string, RouteComponent | undefined> | null | undefined = this._record.components;
-		if ((comp === undefined) || (comp === null))
+		if ((comp === undefined) || (comp === null)) {
 			return false;
+		}
 		return (comp[name] !== undefined);
 	}
 
@@ -709,14 +728,16 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public checkSuccessorOf(other: string | RouteNode<any, any>): RouteNode<any, any>[] | false {
 		const other_node = typeof other === "string" ? RouteNode.getNodeByName(other) : other;
-		if ((other_node === undefined) || (this.parent === undefined))
+		if ((other_node === undefined) || (this.parent === undefined)) {
 			return false;
+		}
 		const result: RouteNode<any, any>[] = [this];
 		let current: RouteNode<any, any> | undefined = this.parent;
 		do {
 			result.push(current);
-			if (current.name === other_node.name)
+			if (current.name === other_node.name) {
 				return result.reverse();
+			}
 			current = current.parent;
 		} while (current !== undefined);
 		return false;
@@ -733,14 +754,16 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public checkPredecessorOf(other: string | RouteNode<any, any>): RouteNode<any, any>[] | false {
 		const other_node = typeof other === "string" ? RouteNode.getNodeByName(other) : other;
-		if ((other_node === undefined) || (other_node.parent === undefined))
+		if ((other_node?.parent === undefined)) {
 			return false;
+		}
 		const result: RouteNode<any, any>[] = [this];
 		let current: RouteNode<any, any> | undefined = other_node.parent;
 		while (current !== undefined) {
 			result.push(current);
-			if (current.name === this.name)
+			if (current.name === this.name) {
 				return result.reverse();
+			}
 			current = current.parent;
 		}
 		return false;
@@ -811,10 +834,12 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 		try {
 			// Prüfe mithilfe der hidden-Methode, ob die Route sichtbar ist
 			const tmpHidden = this.hidden(to_params);
-			if (tmpHidden !== false)
+			if (tmpHidden !== false) {
 				return this.parent === undefined ? this.getRoute() : tmpHidden;
-			if (this._parent !== undefined)
+			}
+			if (this._parent !== undefined) {
 				this._parent._selectedChild.value = this;
+			}
 			return await this.update(to, to_params, from, from_params, this.isReallyEntering(isEntering, redirected), redirected);
 		} catch (e) {
 			routerManager.errorcode = undefined;
@@ -875,8 +900,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @returns der Knoten oder undefined
 	 */
 	public static getNodeByName(name: string | undefined | null): RouteNode<any, any> | undefined {
-		if ((name === undefined) || (name === null))
+		if ((name === undefined) || (name === null)) {
 			return undefined;
+		}
 		return RouteNode.mapNodesByName.get(name);
 	}
 
@@ -884,8 +910,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * Führt einen Reset der Daten bei diesem Knoten aus.
 	 */
 	public resetData(): void {
-		if (this._hasData)
+		if (this._hasData) {
 			this._data.reset();
+		}
 	}
 
 	/**
@@ -893,8 +920,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * Dabei wird der Reset zuerst bei den Blättern ausgeführt.
 	 */
 	public resetDataRecursive(): void {
-		for (const child of this._children)
+		for (const child of this._children) {
 			child.resetDataRecursive();
+		}
 		this.resetData();
 	}
 
@@ -911,12 +939,13 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 		const res: Record<string, number | undefined> = {};
 		for (const name of names) {
 			const value = params[name] as string | string [] | undefined;
-			if (value instanceof Array)
+			if (Array.isArray(value)) {
 				throw new DeveloperNotificationException(`Fehler: Der Parameter ${name} der Route darf kein Array sein`);
-			else if ((value === undefined) || (value.toString().trim().length === 0))
+			} else if ((value === undefined) || (value.trim().length === 0)) {
 				res[name] = undefined;
-			else
-				res[name] = parseInt(value);
+			} else {
+				res[name] = Number.parseInt(value);
+			}
 		}
 		return res;
 	}
@@ -934,12 +963,13 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 		const res: Record<string, string | undefined> = {};
 		for (const name of names) {
 			const value = params[name] as string | string [] | undefined;
-			if (value instanceof Array)
+			if (Array.isArray(value)) {
 				throw new DeveloperNotificationException(`Fehler: Der Parameter ${name} der Route darf kein Array sein`);
-			else if ((value === undefined) || (value.toString().trim().length === 0))
+			} else if ((value === undefined) || (value.trim().length === 0)) {
 				res[name] = undefined;
-			else
-				res[name] = value.toString();
+			} else {
+				res[name] = value;
+			}
 		}
 		return res;
 	}

@@ -87,7 +87,7 @@ export class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS 
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusS', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusSZufaellig'].includes(name);
 	}
 
-	public static class = new Class<KursblockungAlgorithmusSZufaellig>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusSZufaellig');
+	public static readonly class = new Class<KursblockungAlgorithmusSZufaellig>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusSZufaellig');
 
 }
 

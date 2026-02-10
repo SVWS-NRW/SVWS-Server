@@ -42,12 +42,14 @@ public abstract class BasicValidator {
 	public boolean run() {
 		boolean success = true;
 		_fehler.clear();
+		_fehlerart = ValidatorFehlerart.UNGENUTZT;
 		// Berücksichtige auch Exceptions bei der Prüfung dieses Validators
 		try {
 			if (!this.pruefe())
 				success = false;
 		} catch (final Exception e) {
 			addFehler(-1, "Unerwarteter Fehler bei der Validierung: " + e.getMessage());
+			success = false;
 		}
 		return success;
 	}
@@ -61,7 +63,7 @@ public abstract class BasicValidator {
 	 */
 	protected void addFehler(final int pruefschritt, final @NotNull String fehlermeldung) {
 		_fehler.add(new ValidatorFehler(this, pruefschritt, fehlermeldung));
-		updateFehlerart(this.getValidatorFehlerart(pruefschritt));
+		updateFehlerart(this.getValidatorFehlerart());
 	}
 
 
@@ -91,11 +93,9 @@ public abstract class BasicValidator {
 	/**
 	 * Die Fehlerart, welche diesem speziellen Validator zugeordnet ist.
 	 *
-	 * @param pruefschritt   der Prüfschritt, bei welchem der Fehler aufgetreten ist
-	 *
 	 * @return die Fehlerart
 	 */
-	public @NotNull ValidatorFehlerart getValidatorFehlerart(final int pruefschritt) {
+	public @NotNull ValidatorFehlerart getValidatorFehlerart() {
 		return this._defaultValidatorFehlerart;
 	}
 

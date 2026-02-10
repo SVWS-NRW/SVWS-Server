@@ -213,30 +213,37 @@
 
 	const datumVorklausur = (klausur: GostKursklausur) => {
 		const vorklausur = props.kMan().kursklausurVorterminByKursklausur(klausur);
-		if (vorklausur === null)
+		if (vorklausur === null) {
 			return "-";
+		}
 		const termin = props.kMan().terminOrNullByKursklausur(vorklausur);
 		return termin === null || termin.datum === null ? "-" : DateUtils.gibDatumGermanFormat(termin.datum).substring(0, 6);
 	};
 
 	const terminBezeichnung = () => {
-		if (props.termin.bezeichnung !== null && props.termin.bezeichnung.length > 0)
+		if (props.termin.bezeichnung !== null && props.termin.bezeichnung.length > 0) {
 			return props.termin.bezeichnung;
-		if (!props.termin.istHaupttermin)
+		}
+		if (!props.termin.istHaupttermin) {
 			return "Nachschreibtermin";
-		if (kursklausuren().size() > 0)
+		}
+		if (kursklausuren().size() > 0) {
 			return [...props.kMan().kursklausurGetMengeByTermin(props.termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k)).join(", ");
+		}
 		return "Klausurtermin";
 	};
 
 	const tableRowStyle = computed<string>(() => {
 		let result = "grid-template-columns: 1rem 2rem minmax(5rem, 1.25fr) 4rem minmax(4rem, 0.5fr) minmax(3.25rem, 0.5fr)";
-		if (props.showKursschiene === true)
+		if (props.showKursschiene === true) {
 			result += " minmax(1.75rem, 0.25fr)";
-		if (props.kMan().quartalGetByTermin(props.termin) === -1)
+		}
+		if (props.kMan().quartalGetByTermin(props.termin) === -1) {
 			result += " minmax(1.75rem, 0.25fr)";
-		if (props.showLastKlausurtermin === true)
+		}
+		if (props.showLastKlausurtermin === true) {
 			result += " minmax(4.75rem, 0.25fr)";
+		}
 		return result;
 	});
 

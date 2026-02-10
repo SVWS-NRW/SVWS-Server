@@ -46,7 +46,7 @@ export class ENMFloskel extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMFloskel'].includes(name);
 	}
 
-	public static class = new Class<ENMFloskel>('de.svws_nrw.core.data.enm.ENMFloskel');
+	public static readonly class = new Class<ENMFloskel>('de.svws_nrw.core.data.enm.ENMFloskel');
 
 	public static transpilerFromJSON(json: string): ENMFloskel {
 		const obj = JSON.parse(json) as Partial<ENMFloskel>;

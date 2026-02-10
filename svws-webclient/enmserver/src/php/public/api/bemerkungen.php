@@ -1,34 +1,37 @@
 <?php
-	/**
-	 * Endpunkt zum Aktualisieren von Schülerbemerkungen.
-	 *
-	 * Dieser Endpunkt ermöglicht es autorisierten Lehrern, Bemerkungen zu Schülern über einen PATCH-Request zu aktualisieren.
-	 *
-	 * @httpMethod POST
-	 * @auth (Basic) Lehrer Username und Kennwort benötigt
-	 * @param int $id Die ID des Schülers, dessen Bemerkungen aktualisiert werden sollen.
-	 * @param {id: number, patch: {Partial<ENMAnkreuzkompetenzen>}} Das Patch-Objekt, das die zu aktualisierenden Bemerkungen enthält.
-	 * Folgende Werte können durch das Patch Objekt überschrieben werden: ASV, AUE, ZB, LELS, schulformEmpf, individuelleVersetzungsbemerkungen, foerderbemerkungen
-	 *
-	 * @return void
-	 * @responseCode 200
- 	 */
+/**
+ * Endpunkt zum Aktualisieren von Schülerbemerkungen.
+ *
+ * Dieser Endpunkt ermöglicht es autorisierten Lehrern, Bemerkungen zu Schülern über einen PATCH-Request zu aktualisieren.
+ *
+ * @httpMethod POST
+ * @auth (Basic) Lehrer Username und Kennwort benötigt
+ * @param int $id Die ID des Schülers, dessen Bemerkungen aktualisiert werden sollen.
+ * @param {id: number, patch: {Partial<ENMAnkreuzkompetenzen>}} Das Patch-Objekt, das die zu aktualisierenden Bemerkungen enthält.
+ * Folgende Werte können durch das Patch Objekt überschrieben werden: ASV, AUE, ZB, LELS, schulformEmpf, individuelleVersetzungsbemerkungen, foerderbemerkungen
+ *
+ * @return void
+ * @responseCode 200
+ */
+require_once dirname(__DIR__).'/../autoload.php';
 
-	// Initialisierung
-	require_once __DIR__.'/../../app/init.php';
-	require_once __DIR__.'/../../app/ENMDatenManager.php';
+use wenom\Application;
+use wenom\Http;
+use wenom\ENMDatenManager;
+use wenom\PatchManager;
 
-	// Prüfe die HTTP-Methode
-	$auth->pruefeHTTPMethod([ "POST" ]);
+$app = new Application();
 
-	// Prüfe, ob eine Authentifizierung mit einem gültigen Lehrer-Kennwort vorliegt
-	$lehrer = $auth->pruefeLehrerBasicAuth();
+// Prüfe die HTTP-Methode
+$app->auth->pruefeHTTPMethod([ "POST" ]);
 
-	// Erstelle für die Durchführung ein ENMDaten-Objekt aus der Datenbank und rufe dieses auf
-	$enmDatenManager = ENMDatenManager::createFromDatabase($db);
+// Prüfe, ob eine Authentifizierung mit einem gültigen Lehrer-Kennwort vorliegt
+$lehrer = $app->auth->pruefeLehrerBasicAuth();
 
-	// Lese den Patch aus dem Request ein, hier liegt die ID als Attribut 'id' vor und der eigentlich Patch als Attribut 'patch'
-	$patch = Http::getBodyJsonObject();
-	$enmDatenManager->patchENMSchuelerBemerkungen($db, $lehrer, $patch->id, $patch->patch);
+// Erstelle für die Durchführung ein ENMDaten-Objekt aus der Datenbank und rufe dieses auf
+$enmDatenManager = ENMDatenManager::createFromDatabase($app->db);
+$patchManager = new PatchManager($enmDatenManager);
 
-?>
+// Lese den Patch aus dem Request ein, hier liegt die ID als Attribut 'id' vor und der eigentliche Patch als Attribut 'patch'
+$patch = Http::getBodyJsonObject();
+$patchManager->patchENMSchuelerBemerkungen($lehrer, $patch->id, $patch->patch);

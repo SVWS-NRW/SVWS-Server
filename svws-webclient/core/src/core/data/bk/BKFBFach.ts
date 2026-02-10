@@ -52,7 +52,7 @@ export class BKFBFach extends JavaObject {
 		return ['de.svws_nrw.core.data.bk.BKFBFach'].includes(name);
 	}
 
-	public static class = new Class<BKFBFach>('de.svws_nrw.core.data.bk.BKFBFach');
+	public static readonly class = new Class<BKFBFach>('de.svws_nrw.core.data.bk.BKFBFach');
 
 	public static transpilerFromJSON(json: string): BKFBFach {
 		const obj = JSON.parse(json) as Partial<BKFBFach>;

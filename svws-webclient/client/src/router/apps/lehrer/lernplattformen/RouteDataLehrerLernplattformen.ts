@@ -24,8 +24,9 @@ export class RouteDataLehrerLernplattformen extends RouteData<RouteStateLehrerLe
 	}
 
 	get auswahl(): LehrerListeEintrag {
-		if (this._state.value.auswahl === undefined)
+		if (this._state.value.auswahl === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Lehrerauswahl nicht festgelegt, es können keine Informationen zu Lernplattformen abgerufen oder eingegeben werden.");
+		}
 		return this._state.value.auswahl;
 	}
 
@@ -38,15 +39,18 @@ export class RouteDataLehrerLernplattformen extends RouteData<RouteStateLehrerLe
 	}
 
 	patch = async (data: Partial<LehrerLernplattform> | undefined, idLernplattform: number) => {
-		if (data === undefined)
+		if (data === undefined) {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		}
 		api.status.start();
 
 		await api.server.patchLehrerLernplattform(data, api.schema, this.auswahl.id, idLernplattform);
 
-		for (const lernplattform of this.lehrerLernplattformen)
-			if (lernplattform.idLernplattform === idLernplattform)
+		for (const lernplattform of this.lehrerLernplattformen) {
+			if (lernplattform.idLernplattform === idLernplattform) {
 				Object.assign(lernplattform, data);
+			}
+		}
 		this.commit();
 		api.status.stop();
 	};
@@ -58,8 +62,9 @@ export class RouteDataLehrerLernplattformen extends RouteData<RouteStateLehrerLe
 			const lehrerLernplattformen = await api.server.getLehrerLernplattformen(api.schema, auswahl.id);
 			const lernplattformen = await api.server.getLernplattformen(api.schema);
 			const mapLernplattformen = new Map();
-			for (const lp of lernplattformen)
+			for (const lp of lernplattformen) {
 				mapLernplattformen.set(lp.id, lp);
+			}
 			this.setPatchedDefaultState({ auswahl, lehrerLernplattformen, mapLernplattformen });
 		}
 	}

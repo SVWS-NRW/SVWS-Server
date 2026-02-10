@@ -39,7 +39,7 @@ export class ENMSchuelerAnkreuzkompetenz extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMSchuelerAnkreuzkompetenz'].includes(name);
 	}
 
-	public static class = new Class<ENMSchuelerAnkreuzkompetenz>('de.svws_nrw.core.data.enm.ENMSchuelerAnkreuzkompetenz');
+	public static readonly class = new Class<ENMSchuelerAnkreuzkompetenz>('de.svws_nrw.core.data.enm.ENMSchuelerAnkreuzkompetenz');
 
 	public static transpilerFromJSON(json: string): ENMSchuelerAnkreuzkompetenz {
 		const obj = JSON.parse(json) as Partial<ENMSchuelerAnkreuzkompetenz>;

@@ -36,14 +36,16 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	}
 
 	private firstBenutzer(mapBenutzer: Map<number, BenutzerListeEintrag>): BenutzerListeEintrag | undefined {
-		if (mapBenutzer.size === 0)
+		if (mapBenutzer.size === 0) {
 			return undefined;
+		}
 		return mapBenutzer.values().next().value;
 	}
 
 	private async ladeBenutzerDaten(eintrag: BenutzerListeEintrag | undefined): Promise<BenutzerDaten | undefined> {
-		if (eintrag === undefined)
+		if (eintrag === undefined) {
 			return undefined;
+		}
 		const result = await api.server.getBenutzerDaten(api.schema, eintrag.id);
 		return result;
 	}
@@ -51,8 +53,9 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	public async ladeListe() {
 		this._state.value.listBenutzer = await api.server.getBenutzerliste(api.schema);
 		const mapBenutzer = new Map<number, BenutzerListeEintrag>();
-		for (const l of this.listBenutzer)
+		for (const l of this.listBenutzer) {
 			mapBenutzer.set(l.id, l);
+		}
 		this.mapBenutzer = mapBenutzer;
 		this.setPatchedState({
 			mapBenutzer: this._state.value.mapBenutzer,
@@ -61,8 +64,9 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	}
 
 	public async setBenutzer(benutzer: BenutzerListeEintrag | undefined) {
-		if (benutzer?.id === this._state.value.auswahl?.id)
+		if (benutzer?.id === this._state.value.auswahl?.id) {
 			return;
+		}
 		if ((benutzer === undefined) || (this.mapBenutzer.size === 0)) {
 			this.setPatchedDefaultState({
 				auswahl: undefined,
@@ -75,7 +79,7 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 			});
 			await this.ladeListe();
 		}
-		const auswahl = benutzer === undefined ? this.firstBenutzer(this.mapBenutzer) : benutzer;
+		const auswahl = benutzer ?? this.firstBenutzer(this.mapBenutzer);
 		const daten = await this.ladeBenutzerDaten(auswahl);
 		const listBenutzergruppen = await api.server.getBenutzergruppenliste(api.schema);
 		const benutzerManager = (daten === undefined) ? undefined : new BenutzerManager(daten);
@@ -117,8 +121,9 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	}
 
 	get daten(): BenutzerDaten {
-		if (this._state.value.daten === undefined)
+		if (this._state.value.daten === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+		}
 		return this._state.value.daten;
 	}
 
@@ -159,12 +164,15 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	 * @returns {Promise<void>}
 	 */
 	setAnzeigename = async (anzeigename: string | null): Promise<void> => {
-		if (this.benutzerManager.daten().typ !== BenutzerTyp.ALLGEMEIN.id)
+		if (this.benutzerManager.daten().typ !== BenutzerTyp.ALLGEMEIN.id) {
 			return;
+		}
 		await api.server.setAnzeigename(anzeigename, api.schema, this.benutzerManager.getID());
-		for (const benutzer of this.listBenutzer)
-			if ((benutzer.id === this.daten.id) && (anzeigename !== null))
+		for (const benutzer of this.listBenutzer) {
+			if ((benutzer.id === this.daten.id) && (anzeigename !== null)) {
 				benutzer.anzeigename = anzeigename;
+			}
+		}
 		this.benutzerManager.setAnzeigename(anzeigename ?? '');
 		this.commit();
 	};
@@ -196,10 +204,11 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	 * @returns {Promise<void>}
 	 */
 	setIstAdmin = async (istAdmin: boolean): Promise<void> => {
-		if (istAdmin)
+		if (istAdmin) {
 			await api.server.addBenutzerAdmin(api.schema, this.benutzerManager.getID());
-		else
+		} else {
 			await api.server.removeBenutzerAdmin(api.schema, this.benutzerManager.getID());
+		}
 		this.benutzerManager.setAdmin(istAdmin);
 		this.commit();
 	};
@@ -223,12 +232,7 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	 * @returns {Promise<void>}
 	 */
 	addBenutzerToBenutzergruppe = async (idGroup: number): Promise<void> => {
-		if (idGroup !== -1) {
-			const bg_ids = new ArrayList<number>();
-			bg_ids.add(this.benutzerManager.getID());
-			const result = await api.server.addBenutzergruppeBenutzer(bg_ids, api.schema, idGroup);
-			this.benutzerManager.addToGruppe(result);
-		} else {
+		if (idGroup === -1) {
 			const benutzer_id = new ArrayList<number>();
 			benutzer_id.add(this.benutzerManager.getID());
 			for (const bg of this.listBenutzergruppen) {
@@ -237,6 +241,11 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 					this.benutzerManager.addToGruppe(result);
 				}
 			}
+		} else {
+			const bg_ids = new ArrayList<number>();
+			bg_ids.add(this.benutzerManager.getID());
+			const result = await api.server.addBenutzergruppeBenutzer(bg_ids, api.schema, idGroup);
+			this.benutzerManager.addToGruppe(result);
 		}
 		this.setPatchedState({
 			benutzerManager: this._state.value.benutzerManager,
@@ -255,16 +264,16 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	removeBenutzerFromBenutzergruppe = async (idGroup: number): Promise<void> => {
 		const ids = new ArrayList<number>();
 		ids.add(this.benutzerManager.getID());
-		if (idGroup !== -1) {
-			const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema, idGroup);
-			this.benutzerManager.removeFromGruppe(result);
-		} else {
+		if (idGroup === -1) {
 			for (const eintrag of this.listBenutzergruppen) {
 				if (this.benutzerManager.istInGruppe(eintrag.id)) {
 					const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema, eintrag.id);
 					this.benutzerManager.removeFromGruppe(result);
 				}
 			}
+		} else {
+			const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema, idGroup);
+			this.benutzerManager.removeFromGruppe(result);
 		}
 		// TODO Durch eine entpsrechende Gruppenmitgliedschaft wird ein Benutzer administrativ und das wird in BenutzerView festgehalt.
 		// Die Entfernung dieser Mitgliedschaft wird im BenutzerManager nicht richtig umgesetzt. Die Gruppe wird zwar entfernt, jedoch muss auch im
@@ -285,8 +294,9 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	addKompetenz = async (kompetenz: BenutzerKompetenz) => {
 		const kid = new ArrayList<number>();
 		kid.add(kompetenz.daten.id);
-		if (this.benutzerManager.hatKompetenz(kompetenz))
+		if (this.benutzerManager.hatKompetenz(kompetenz)) {
 			return false;
+		}
 		await api.server.addBenutzerKompetenzen(kid, api.schema, this.benutzerManager.getID());
 		this.benutzerManager.addKompetenz(kompetenz);
 		this.setPatchedState({
@@ -303,8 +313,9 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	removeKompetenz = async (kompetenz: BenutzerKompetenz) => {
 		const kid = new ArrayList<number>();
 		kid.add(kompetenz.daten.id);
-		if (!this.benutzerManager.hatKompetenz(kompetenz))
+		if (!this.benutzerManager.hatKompetenz(kompetenz)) {
 			return false;
+		}
 		await api.server.removeBenutzerKompetenzen(kid, api.schema, this.benutzerManager.getID());
 		this.benutzerManager.removeKompetenz(kompetenz);
 		this.setPatchedState({
@@ -324,15 +335,17 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 			// Es werden nur die IDs der Kompetenzen in kids gespreichert, welche dem Benutzer direkt zugordnet sind.
 			// Sie sind also nicht über Benutzergruppen vererbt.
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
-				if (this.benutzerManager.getGruppen(komp).size() === 0)
+				if (this.benutzerManager.getGruppen(komp).size() === 0) {
 					kids.add(komp.daten.id);
+				}
 			}
 			await api.server.addBenutzerKompetenzen(kids, api.schema, this.benutzerManager.getID());
 			// Den obigen Schritten entsprechende Anpassung des Client-Objekts mithilfe des Managers
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				if (this.benutzerManager.getGruppen(komp).size() === 0) {
-					if (!this.benutzerManager.hatKompetenz(komp))
+					if (!this.benutzerManager.hatKompetenz(komp)) {
 						this.benutzerManager.addKompetenz(komp);
+					}
 				}
 			}
 		}
@@ -350,14 +363,17 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	removeBenutzerKompetenzGruppe = async (kompetenzgruppe: BenutzerKompetenzGruppe) => {
 		const kids = new ArrayList<number>();
 		if (!this.benutzerManager.istAdmin()) {
-			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe))
-				if (this.benutzerManager.getGruppen(komp).size() === 0)
+			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
+				if (this.benutzerManager.getGruppen(komp).size() === 0) {
 					kids.add(komp.daten.id);
+				}
+			}
 			await api.server.removeBenutzerKompetenzen(kids, api.schema, this.benutzerManager.getID());
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				if (this.benutzerManager.getGruppen(komp).size() === 0) {
-					if (this.benutzerManager.hatKompetenz(komp))
+					if (this.benutzerManager.hatKompetenz(komp)) {
 						this.benutzerManager.removeKompetenz(komp);
+					}
 				}
 			}
 		}
@@ -397,12 +413,14 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	deleteBenutzerMenge = async (selectedItems: BenutzerListeEintrag[]): Promise<void> => {
 		// Prüfe, ob die aktuelle Auswahl in der Liste der zu entfernenden Benutzer enthalten ist
 		let auswahl_gewaehlt = false;
-		if (this.auswahl !== undefined)
+		if (this.auswahl !== undefined) {
 			auswahl_gewaehlt = selectedItems.includes(this.auswahl);
+		}
 		// Rufe die Methode zum Entfernen der Benutzer beim Server auf
 		const benutzerIDs = new ArrayList<number>();
-		for (const benutzerEintrag of selectedItems)
+		for (const benutzerEintrag of selectedItems) {
 			benutzerIDs.add(benutzerEintrag.id);
+		}
 		await api.server.removeBenutzerMenge(benutzerIDs, api.schema);
 		// Aktualisiere die Liste der Benutzer und die zugehörige Map
 		for (const benutzerID of benutzerIDs) {
@@ -413,10 +431,11 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 			}
 		}
 		// Aktualisiere entweder den gewählten Benutzer, falls dieser entfernt wurde oder triggere ein Refresh der Anzeige
-		if (auswahl_gewaehlt)
+		if (auswahl_gewaehlt) {
 			await this.gotoBenutzer(this.listBenutzer.get(0));
-		else
+		} else {
 			this.commit();
+		}
 	};
 
 }

@@ -199,7 +199,7 @@ export class BenutzergruppenManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.benutzer.BenutzergruppenManager'].includes(name);
 	}
 
-	public static class = new Class<BenutzergruppenManager>('de.svws_nrw.core.utils.benutzer.BenutzergruppenManager');
+	public static readonly class = new Class<BenutzergruppenManager>('de.svws_nrw.core.utils.benutzer.BenutzergruppenManager');
 
 }
 

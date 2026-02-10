@@ -61,8 +61,9 @@ export class GridInputNumberFixed<KEY> extends GridInputInnerText<KEY, number | 
 			this._zahl /= 10;
 			this._nachkommastelle--;
 		}
-		if (this._nachkommastelle === 1)
+		if (this._nachkommastelle === 1) {
 			this._nachkommastelle = 0;
+		}
 		this.updateInternal();
 	}
 
@@ -101,12 +102,13 @@ export class GridInputNumberFixed<KEY> extends GridInputInnerText<KEY, number | 
 	 * Schreibt die internen Daten dieses Inputs mithilfe des Setters.
 	 */
 	public commit(): void {
-		if (this._zahl === null)
+		if (this._zahl === null) {
 			this._setter(null);
-		else if (this._nachkommastelle === 0)
+		} else if (this._nachkommastelle === 0) {
 			this._setter(this._zahl);
-		else
+		} else {
 			this._setter(this._zahl / Math.pow(10, this._nachkommastelle - 1));
+		}
 	}
 
 	/**
@@ -118,12 +120,15 @@ export class GridInputNumberFixed<KEY> extends GridInputInnerText<KEY, number | 
 	 */
 	public append(ziffer: number): boolean {
 		const tmp = (this._zahl === null) ? ziffer : ((this._zahl * 10) + ziffer);
-		if ((this._max !== null) && (tmp > this._max * Math.pow(10, this._nachkommastelle)))
+		if ((this._max !== null) && (tmp > this._max * Math.pow(10, this._nachkommastelle))) {
 			return false;
-		if (this._nachkommastelle > this._dp)
+		}
+		if (this._nachkommastelle > this._dp) {
 			return false;
-		if (this._nachkommastelle > 0)
+		}
+		if (this._nachkommastelle > 0) {
 			this._nachkommastelle++;
+		}
 		this._zahl = tmp;
 		this.updateInternal();
 		return true;
@@ -134,14 +139,16 @@ export class GridInputNumberFixed<KEY> extends GridInputInnerText<KEY, number | 
 	 * Input geleert.
 	 */
 	public remove() {
-		if (this._zahl === null)
+		if (this._zahl === null) {
 			return;
+		}
 		if ((this._nachkommastelle === 0) && (this._zahl < 10)) {
 			this.reset();
 			return;
 		}
-		if (this._nachkommastelle > 0)
+		if (this._nachkommastelle > 0) {
 			this._nachkommastelle--;
+		}
 		this._zahl = Math.floor(this._zahl / 10);
 		this.updateInternal();
 	}
@@ -154,8 +161,9 @@ export class GridInputNumberFixed<KEY> extends GridInputInnerText<KEY, number | 
 	 * @returns true   es hat aufgrund des Tastaturereignisses eine Änderung am Zustand des Inputs stattgefunden
 	 */
 	public onKeyDown(event: KeyboardEvent): boolean {
-		if (super.onKeyDownNavigation(event))
+		if (super.onKeyDownNavigation(event)) {
 			return false;
+		}
 		// Lösche ggf. den aktuellen Wert
 		if (event.key === "Delete") {
 			this.reset();
@@ -169,16 +177,18 @@ export class GridInputNumberFixed<KEY> extends GridInputInnerText<KEY, number | 
 		// Speicher den aktuellen Wert im Input
 		if (event.key === "Enter") {
 			this.commit();
-			if (this.navigateOnEnter === "DOWN")
+			if (this.navigateOnEnter === "DOWN") {
 				this.navigateDown();
-			else if (this.navigateOnEnter === "RIGHT")
+			} else if (this.navigateOnEnter === "RIGHT") {
 				this.navigateRight();
+			}
 			return true;
 		}
 		// Prüfe, ob ein Komma oder ein Punkt eingegeben wurde, für Nachkommastellen eingegeben wurde
 		if ((event.key === ",") || (event.key === ".")) {
-			if (this._nachkommastelle > 0)
+			if (this._nachkommastelle > 0) {
 				return false;
+			}
 			// Für den Fall, dass die Eingabe mit einem Komma begonnen wird, ergänze automatisch eine 0 vor dem Komma
 			if (this._isNewFocus.value) {
 				this.reset();
@@ -187,15 +197,18 @@ export class GridInputNumberFixed<KEY> extends GridInputInnerText<KEY, number | 
 			this._nachkommastelle = 1;
 		}
 		// Prüfe, ob eine Ziffer eingegeben wurde
-		const ziffer = parseInt(event.key);
-		if (isNaN(ziffer))
-			return false; // Keine erfolgreiche Eingabe...
-		// Wenn es sich um eine neue Fokussierung handelt, dann darf die Ziffer aber nicht größer als das vorgegebene Maximum sein (falls dieses einstellig ist)
-		if ((this._isNewFocus.value) && ((this._max !== null) && (ziffer > this._max)))
+		const ziffer = Number.parseInt(event.key);
+		if (Number.isNaN(ziffer)) {
 			return false;
+		} // Keine erfolgreiche Eingabe...
+		// Wenn es sich um eine neue Fokussierung handelt, dann darf die Ziffer aber nicht größer als das vorgegebene Maximum sein (falls dieses einstellig ist)
+		if ((this._isNewFocus.value) && ((this._max !== null) && (ziffer > this._max))) {
+			return false;
+		}
 		// Wenn es sich um eine neue Fokussierung handelt, dann ersetze den Wert bei einer Eingabe (sonst anhängen)
-		if (this._isNewFocus.value)
+		if (this._isNewFocus.value) {
 			this.reset();
+		}
 		return this.append(ziffer);
 	}
 

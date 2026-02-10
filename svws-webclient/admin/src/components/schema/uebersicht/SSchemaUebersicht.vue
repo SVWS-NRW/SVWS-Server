@@ -90,10 +90,12 @@
 
 	const eintrag = computed(() => props.data());
 	watch(eintrag, async (newEintrag, oldEintrag) => {
-		if ((newEintrag === undefined) && (oldEintrag === undefined))
+		if ((newEintrag === undefined) && (oldEintrag === undefined)) {
 			return;
-		if ((newEintrag !== undefined) && (oldEintrag !== undefined) && (newEintrag.name === oldEintrag.name))
+		}
+		if ((newEintrag !== undefined) && (oldEintrag !== undefined) && (newEintrag.name === oldEintrag.name)) {
 			return;
+		}
 		clear();
 	});
 
@@ -121,8 +123,9 @@
 
 	const revisionNotUpToDate = computed<boolean>(() => {
 		const revServer = props.revision;
-		if (eintrag.value === undefined || revServer === null || eintrag.value.revision < 0)
+		if (eintrag.value === undefined || revServer === null || eintrag.value.revision < 0) {
 			return false;
+		}
 		return revServer !== eintrag.value.revision;
 	});
 
@@ -137,14 +140,16 @@
 	];
 
 	function setCurrentAction(newAction: string, open: boolean) {
-		if (newAction === oldAction.value.name && !open)
+		if (newAction === oldAction.value.name && !open) {
 			return;
+		}
 		oldAction.value.name = currentAction.value;
 		oldAction.value.open = (currentAction.value === "") ? false : true;
-		if (open === true)
+		if (open === true) {
 			currentAction.value = newAction;
-		else
+		} else {
 			currentAction.value = "";
+		}
 	}
 
 	async function getBackupSchema() {
@@ -160,8 +165,9 @@
 	}
 
 	async function init() {
-		if (schule.value === undefined)
+		if (schule.value === undefined) {
 			return;
+		}
 		loading.value = true;
 		await props.initSchema(Number(schule.value.SchulNr));
 		loading.value = false;

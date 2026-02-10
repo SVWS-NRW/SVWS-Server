@@ -1,912 +1,962 @@
 [
-	{
-		"id" : 1,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "AM",
-		"bezeichnung" : "Agrarmarketing",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 2,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "AT",
-		"bezeichnung" : "Agrartechnologie",
-		"sortierung" : 10,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 3,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "BPH",
-		"bezeichnung" : "Bauphysik",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 4,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "BPT",
-		"bezeichnung" : "Bauplanungstechnik",
-		"sortierung" : 30,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 5,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "BT",
-		"bezeichnung" : "Bautechnik",
-		"sortierung" : 10,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 6,
-		"kuerzel" : "BK",
-		"kuerzelAnzeige" : "BIF",
-		"bezeichnung" : "Betriebsinformatik",
-		"sortierung" : 40,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 7,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "BO",
-		"bezeichnung" : "Betriebsorganisation",
-		"sortierung" : 40,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 8,
-		"kuerzel" : "BW",
-		"kuerzelAnzeige" : "BWL",
-		"bezeichnung" : "Betriebswirtschaftslehre",
-		"sortierung" : 40,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 9,
-		"kuerzel" : "BW",
-		"kuerzelAnzeige" : "BWR",
-		"bezeichnung" : "Betriebswirtschaftslehre mit Rechnungswesen",
-		"sortierung" : 10,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 10,
-		"kuerzel" : "BI",
-		"kuerzelAnzeige" : "BICH",
-		"bezeichnung" : "Biochemie",
-		"sortierung" : 30,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 11,
-		"kuerzel" : "BI",
-		"kuerzelAnzeige" : "BI",
-		"bezeichnung" : "Biologie",
-		"sortierung" : 80,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 12,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "BIT",
-		"bezeichnung" : "Biologietechnik",
-		"sortierung" : 30,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 13,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "BC",
-		"bezeichnung" : "Business Communication",
-		"sortierung" : 90,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 14,
-		"kuerzel" : "CH",
-		"kuerzelAnzeige" : "CH",
-		"bezeichnung" : "Chemie",
-		"sortierung" : 80,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 15,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "CHT",
-		"bezeichnung" : "Chemietechnik",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 16,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "DT",
-		"bezeichnung" : "Datentechnik",
-		"sortierung" : 40,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 17,
-		"kuerzel" : "DV",
-		"kuerzelAnzeige" : "DV",
-		"bezeichnung" : "Datenverarbeitung",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 18,
-		"kuerzel" : "DM",
-		"kuerzelAnzeige" : "DM",
-		"bezeichnung" : "Didaktik und Methodik",
-		"sortierung" : 40,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 19,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "DG",
-		"bezeichnung" : "Druckgrafik",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 20,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "ET",
-		"bezeichnung" : "Elektrotechnik",
-		"sortierung" : 40,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 21,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "ENT",
-		"bezeichnung" : "Energietechnik",
-		"sortierung" : 40,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 22,
-		"kuerzel" : "E",
-		"kuerzelAnzeige" : "E",
-		"bezeichnung" : "Englisch",
-		"sortierung" : 80,
-		"istFremdsprache" : true,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 23,
-		"kuerzel" : "EL",
-		"kuerzelAnzeige" : "EL",
-		"bezeichnung" : "Ernährung",
-		"sortierung" : 10,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 24,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "ELC",
-		"bezeichnung" : "Ernährungslehre mit Chemie",
-		"sortierung" : 10,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 25,
-		"kuerzel" : "PA",
-		"kuerzelAnzeige" : "EW",
-		"bezeichnung" : "Erziehungswissenschaften",
-		"sortierung" : 30,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 26,
-		"kuerzel" : "FP",
-		"kuerzelAnzeige" : "FP",
-		"bezeichnung" : "Fachpraxis",
-		"sortierung" : 120,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 27,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "FIT",
-		"bezeichnung" : "Fahrzeuginformationstechnik",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 28,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "FST",
-		"bezeichnung" : "Fahrzeugsystemtechnik",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 29,
-		"kuerzel" : "F",
-		"kuerzelAnzeige" : "F",
-		"bezeichnung" : "Französisch",
-		"sortierung" : 300,
-		"istFremdsprache" : true,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 30,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "FKZ",
-		"bezeichnung" : "Freies und konstruktives Zeichnen",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 31,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "GT",
-		"bezeichnung" : "Gestaltungstechnik",
-		"sortierung" : 60,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 32,
-		"kuerzel" : "HY",
-		"kuerzelAnzeige" : "GES",
-		"bezeichnung" : "Gesundheit",
-		"sortierung" : 10,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 33,
-		"kuerzel" : "HY",
-		"kuerzelAnzeige" : "GESE",
-		"bezeichnung" : "Gesundheitserziehung",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 34,
-		"kuerzel" : "HY",
-		"kuerzelAnzeige" : "GESW",
-		"bezeichnung" : "Gesundheitswissenschaften",
-		"sortierung" : 10,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 35,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "GS",
-		"bezeichnung" : "Global Studies",
-		"sortierung" : 70,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 36,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "GD",
-		"bezeichnung" : "Grafik-Design",
-		"sortierung" : 30,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 37,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "HHT",
-		"bezeichnung" : "Haushaltstechnik",
-		"sortierung" : 30,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 38,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "HT",
-		"bezeichnung" : "Holztechnik",
-		"sortierung" : 30,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 39,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "ID",
-		"bezeichnung" : "Industrie-Design",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 40,
-		"kuerzel" : "IF",
-		"kuerzelAnzeige" : "IF",
-		"bezeichnung" : "Informatik",
-		"sortierung" : 70,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 41,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "IT",
-		"bezeichnung" : "Informationstechnik",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 42,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "IW",
-		"bezeichnung" : "Informationswirtschaft",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 43,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "ING",
-		"bezeichnung" : "Ingenieurwissenschaften",
-		"sortierung" : 10,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 44,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "KFT",
-		"bezeichnung" : "Konstruktions- und Fertigungstechnik",
-		"sortierung" : 40,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 45,
-		"kuerzel" : "E",
-		"kuerzelAnzeige" : "KE",
-		"bezeichnung" : "Korrespondenz Englisch",
-		"sortierung" : 70,
-		"istFremdsprache" : true,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 46,
-		"kuerzel" : "KU",
-		"kuerzelAnzeige" : "KU",
-		"bezeichnung" : "Kunst",
-		"sortierung" : 50,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 47,
-		"kuerzel" : "KU",
-		"kuerzelAnzeige" : "KUG",
-		"bezeichnung" : "Kunst\/Kunstgeschichte",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 48,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "LT",
-		"bezeichnung" : "Lebensmitteltechnik",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 49,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "MB",
-		"bezeichnung" : "Maschinenbautechnik",
-		"sortierung" : 50,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 50,
-		"kuerzel" : "M",
-		"kuerzelAnzeige" : "M",
-		"bezeichnung" : "Mathematik",
-		"sortierung" : 60,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 51,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "MDT",
-		"bezeichnung" : "Medien- und Drucktechnik",
-		"sortierung" : 10,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 52,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "MGD",
-		"bezeichnung" : "Mediengestaltung\/Mediendesign",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 53,
-		"kuerzel" : "MU",
-		"kuerzelAnzeige" : "MU",
-		"bezeichnung" : "Musik",
-		"sortierung" : 50,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 54,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "NT",
-		"bezeichnung" : "Nachrichtentechnik",
-		"sortierung" : 40,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 55,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "NuLP",
-		"bezeichnung" : "Naturschutz und Landschaftspflege",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 56,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "Öko",
-		"bezeichnung" : "Ökologie",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 57,
-		"kuerzel" : "PA",
-		"kuerzelAnzeige" : "PA",
-		"bezeichnung" : "Pädagogik",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 58,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "PHA",
-		"bezeichnung" : "Pharmazie",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 59,
-		"kuerzel" : "PL",
-		"kuerzelAnzeige" : "PL",
-		"bezeichnung" : "Philosophie",
-		"sortierung" : 30,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 60,
-		"kuerzel" : "PH",
-		"kuerzelAnzeige" : "PH",
-		"bezeichnung" : "Physik",
-		"sortierung" : 80,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 61,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "PHC",
-		"bezeichnung" : "Physikalische Chemie",
-		"sortierung" : 30,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 62,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "PHT",
-		"bezeichnung" : "Physiktechnik",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 63,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "PD",
-		"bezeichnung" : "Produkt-Design",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 64,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "PAT",
-		"bezeichnung" : "Prozess- und Automatisierungstechnik",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 65,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "PuLT",
-		"bezeichnung" : "Prüfwesen und Labortechnik",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 66,
-		"kuerzel" : "PS",
-		"kuerzelAnzeige" : "PS",
-		"bezeichnung" : "Psychologie",
-		"sortierung" : 40,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 67,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "RV",
-		"bezeichnung" : "Recht und Verwaltung",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 68,
-		"kuerzel" : "RW",
-		"kuerzelAnzeige" : "RK",
-		"bezeichnung" : "Rechtskunde",
-		"sortierung" : 30,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 69,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "SKT",
-		"bezeichnung" : "Schnitt-\/Konstruktionstechnik",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 70,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "SOZP",
-		"bezeichnung" : "Sozialpädagogik",
-		"sortierung" : 60,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 71,
-		"kuerzel" : "SL",
-		"kuerzelAnzeige" : "SOZ",
-		"bezeichnung" : "Soziologie",
-		"sortierung" : 30,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 72,
-		"kuerzel" : "S",
-		"kuerzelAnzeige" : "S",
-		"bezeichnung" : "Spanisch",
-		"sortierung" : 300,
-		"istFremdsprache" : true,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 73,
-		"kuerzel" : "BW",
-		"kuerzelAnzeige" : "SBWL",
-		"bezeichnung" : "Spezielle Betriebswirtschaftslehre (Außenhandelsbetriebslehre)",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 74,
-		"kuerzel" : "SP",
-		"kuerzelAnzeige" : "SPG",
-		"bezeichnung" : "Sport\/Gesundheitsförderung",
-		"sortierung" : 10,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 75,
-		"kuerzel" : "TI",
-		"kuerzelAnzeige" : "TI",
-		"bezeichnung" : "Technische Informatik",
-		"sortierung" : 40,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 76,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "TBTB",
-		"bezeichnung" : "Textil- und Bekleidungstechnik, Profil Bekleidungstechnik",
-		"sortierung" : 10,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 77,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "TBTT",
-		"bezeichnung" : "Textil- und Bekleidungstechnik, Profil Textiltechnik",
-		"sortierung" : 10,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 78,
-		"kuerzel" : "E",
-		"kuerzelAnzeige" : "ÜE",
-		"bezeichnung" : "Übersetzung Englisch",
-		"sortierung" : 70,
-		"istFremdsprache" : true,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 79,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "UT",
-		"bezeichnung" : "Umweltschutztechnik",
-		"sortierung" : 30,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 80,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "VT",
-		"bezeichnung" : "Vermessungstechnik",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 81,
-		"kuerzel" : "VW",
-		"kuerzelAnzeige" : "VWL",
-		"bezeichnung" : "Volkswirtschaftslehre",
-		"sortierung" : 70,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 82,
-		"kuerzel" : "FB",
-		"kuerzelAnzeige" : "WT",
-		"bezeichnung" : "Werkstofftechnik",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 83,
-		"kuerzel" : "WI",
-		"kuerzelAnzeige" : "WI",
-		"bezeichnung" : "Wirtschaftsinformatik",
-		"sortierung" : 70,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 84,
-		"kuerzel" : "WW",
-		"kuerzelAnzeige" : "WL",
-		"bezeichnung" : "Wirtschaftslehre",
-		"sortierung" : 80,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 85,
-		"kuerzel" : "WW",
-		"kuerzelAnzeige" : "WLH",
-		"bezeichnung" : "Wirtschaftslehre des Haushalts",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 86,
-		"kuerzel" : "RW",
-		"kuerzelAnzeige" : "WR",
-		"bezeichnung" : "Wirtschaftsrecht",
-		"sortierung" : 20,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 87,
-		"kuerzel" : "D",
-		"kuerzelAnzeige" : "D",
-		"bezeichnung" : "Deutsch",
-		"sortierung" : 200,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 88,
-		"kuerzel" : "GL",
-		"kuerzelAnzeige" : "GmG",
-		"bezeichnung" : "Gesellschaftslehre mit Geschichte",
-		"sortierung" : 210,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 89,
-		"kuerzel" : "KN",
-		"kuerzelAnzeige" : "REL",
-		"bezeichnung" : "Religionslehre",
-		"sortierung" : 220,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 90,
-		"kuerzel" : "SP",
-		"kuerzelAnzeige" : "SP",
-		"bezeichnung" : "Sport",
-		"sortierung" : 230,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	},
-	{
-		"id" : 91,
-		"kuerzel" : "PH",
-		"kuerzelAnzeige" : "PH-T",
-		"bezeichnung" : "Physik-Technik",
-		"sortierung" : 32000,
-		"istFremdsprache" : false,
-		"istFremdSpracheNeuEinsetzend" : false,
-		"biliSprache" : null
-	}
+    {
+        "id": 1,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "AM",
+        "bezeichnung": "Agrarmarketing",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 2,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "AT",
+        "bezeichnung": "Agrartechnologie",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 3,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "BPH",
+        "bezeichnung": "Bauphysik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 4,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "BPT",
+        "bezeichnung": "Bauplanungstechnik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 5,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "BT",
+        "bezeichnung": "Bautechnik",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 6,
+        "kuerzel": "BK",
+        "kuerzelAnzeige": "BIF",
+        "bezeichnung": "Betriebsinformatik",
+        "sortierung": 40,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 7,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "BO",
+        "bezeichnung": "Betriebsorganisation",
+        "sortierung": 40,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 8,
+        "kuerzel": "BW",
+        "kuerzelAnzeige": "BWL",
+        "bezeichnung": "Betriebswirtschaftslehre",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 9,
+        "kuerzel": "BW",
+        "kuerzelAnzeige": "BWR",
+        "bezeichnung": "Betriebswirtschaftslehre mit Rechnungswesen",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 10,
+        "kuerzel": "BI",
+        "kuerzelAnzeige": "BICH",
+        "bezeichnung": "Biochemie",
+        "sortierung": 30,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 11,
+        "kuerzel": "BI",
+        "kuerzelAnzeige": "BI",
+        "bezeichnung": "Biologie",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 12,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "BIT",
+        "bezeichnung": "Biologietechnik",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 13,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "BC",
+        "bezeichnung": "Business Communication",
+        "sortierung": 70,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 14,
+        "kuerzel": "CH",
+        "kuerzelAnzeige": "CH",
+        "bezeichnung": "Chemie",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 15,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "CHT",
+        "bezeichnung": "Chemietechnik",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 16,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "DT",
+        "bezeichnung": "Datentechnik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 17,
+        "kuerzel": "DV",
+        "kuerzelAnzeige": "DV",
+        "bezeichnung": "Datenverarbeitung",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 18,
+        "kuerzel": "DM",
+        "kuerzelAnzeige": "DM",
+        "bezeichnung": "Didaktik und Methodik",
+        "sortierung": 40,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 19,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "DG",
+        "bezeichnung": "Druckgrafik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 20,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "ET",
+        "bezeichnung": "Elektrotechnik",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 21,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "ENT",
+        "bezeichnung": "Energietechnik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 22,
+        "kuerzel": "E",
+        "kuerzelAnzeige": "E",
+        "bezeichnung": "Englisch",
+        "sortierung": 20,
+        "istFremdsprache": true,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 23,
+        "kuerzel": "EL",
+        "kuerzelAnzeige": "EL",
+        "bezeichnung": "Ernährung",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 24,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "ELC",
+        "bezeichnung": "Ernährungslehre mit Chemie",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 25,
+        "kuerzel": "PA",
+        "kuerzelAnzeige": "EW",
+        "bezeichnung": "Erziehungswissenschaften",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 26,
+        "kuerzel": "FP",
+        "kuerzelAnzeige": "FP",
+        "bezeichnung": "Fachpraxis",
+        "sortierung": 120,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 27,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "FIT",
+        "bezeichnung": "Fahrzeuginformationstechnik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 28,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "FST",
+        "bezeichnung": "Fahrzeugsystemtechnik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 29,
+        "kuerzel": "F",
+        "kuerzelAnzeige": "F",
+        "bezeichnung": "Französisch",
+        "sortierung": 40,
+        "istFremdsprache": true,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 30,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "FKZ",
+        "bezeichnung": "Freies und konstruktives Zeichnen",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 31,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "GT",
+        "bezeichnung": "Gestaltungstechnik",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 32,
+        "kuerzel": "HY",
+        "kuerzelAnzeige": "GES",
+        "bezeichnung": "Gesundheit",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 33,
+        "kuerzel": "HY",
+        "kuerzelAnzeige": "GESE",
+        "bezeichnung": "Gesundheitserziehung",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 34,
+        "kuerzel": "HY",
+        "kuerzelAnzeige": "GESW",
+        "bezeichnung": "Gesundheitswissenschaften",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 35,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "GS",
+        "bezeichnung": "Global Studies",
+        "sortierung": 50,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 36,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "GD",
+        "bezeichnung": "Grafik-Design",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 37,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "HHT",
+        "bezeichnung": "Haushaltstechnik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 38,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "HT",
+        "bezeichnung": "Holztechnik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 39,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "ID",
+        "bezeichnung": "Industrie-Design",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 40,
+        "kuerzel": "IF",
+        "kuerzelAnzeige": "IF",
+        "bezeichnung": "Informatik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 41,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "IT",
+        "bezeichnung": "Informationstechnik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 42,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "IW",
+        "bezeichnung": "Informationswirtschaft",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 43,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "ING",
+        "bezeichnung": "Ingenieurwissenschaften",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 44,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "KFT",
+        "bezeichnung": "Konstruktions- und Fertigungstechnik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 45,
+        "kuerzel": "E",
+        "kuerzelAnzeige": "KE",
+        "bezeichnung": "Korrespondenz Englisch",
+        "sortierung": 70,
+        "istFremdsprache": true,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 46,
+        "kuerzel": "KU",
+        "kuerzelAnzeige": "KU",
+        "bezeichnung": "Kunst",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 47,
+        "kuerzel": "KU",
+        "kuerzelAnzeige": "KUG",
+        "bezeichnung": "Kunst/Kunstgeschichte",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 48,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "LT",
+        "bezeichnung": "Lebensmitteltechnik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 49,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "MB",
+        "bezeichnung": "Maschinenbautechnik",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 50,
+        "kuerzel": "M",
+        "kuerzelAnzeige": "M",
+        "bezeichnung": "Mathematik",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 51,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "MDT",
+        "bezeichnung": "Medien- und Drucktechnik",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 52,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "MGD",
+        "bezeichnung": "Mediengestaltung/Mediendesign",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 53,
+        "kuerzel": "MU",
+        "kuerzelAnzeige": "MU",
+        "bezeichnung": "Musik",
+        "sortierung": 50,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 54,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "NT",
+        "bezeichnung": "Nachrichtentechnik",
+        "sortierung": 40,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 55,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "NuLP",
+        "bezeichnung": "Naturschutz und Landschaftspflege",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 56,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "Öko",
+        "bezeichnung": "Ökologie",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 57,
+        "kuerzel": "PA",
+        "kuerzelAnzeige": "PA",
+        "bezeichnung": "Pädagogik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 58,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "PHA",
+        "bezeichnung": "Pharmazie",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 59,
+        "kuerzel": "PL",
+        "kuerzelAnzeige": "PL",
+        "bezeichnung": "Philosophie",
+        "sortierung": 30,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 60,
+        "kuerzel": "PH",
+        "kuerzelAnzeige": "PH",
+        "bezeichnung": "Physik",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 61,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "PHC",
+        "bezeichnung": "Physikalische Chemie",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 62,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "PHT",
+        "bezeichnung": "Physiktechnik",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 63,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "PD",
+        "bezeichnung": "Produkt-Design",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 64,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "PAT",
+        "bezeichnung": "Prozess- und Automatisierungstechnik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 65,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "PuLT",
+        "bezeichnung": "Prüfwesen und Labortechnik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 66,
+        "kuerzel": "PS",
+        "kuerzelAnzeige": "PS",
+        "bezeichnung": "Psychologie",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 67,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "RV",
+        "bezeichnung": "Recht und Verwaltung",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 68,
+        "kuerzel": "RW",
+        "kuerzelAnzeige": "RK",
+        "bezeichnung": "Rechtskunde",
+        "sortierung": 30,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 69,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "SKT",
+        "bezeichnung": "Schnitt-/Konstruktionstechnik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 70,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "SOZP",
+        "bezeichnung": "Sozialpädagogik",
+        "sortierung": 60,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 71,
+        "kuerzel": "PU",
+        "kuerzelAnzeige": "WPF",
+        "bezeichnung": "Wahlpflichtfach Diff-Bereich",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 72,
+        "kuerzel": "S",
+        "kuerzelAnzeige": "S",
+        "bezeichnung": "Spanisch",
+        "sortierung": 300,
+        "istFremdsprache": true,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 73,
+        "kuerzel": "BW",
+        "kuerzelAnzeige": "SBWL",
+        "bezeichnung": "Spezielle Betriebswirtschaftslehre (Außenhandelsbetriebslehre)",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 74,
+        "kuerzel": "SP",
+        "kuerzelAnzeige": "SPG",
+        "bezeichnung": "Sport/Gesundheitsförderung",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 75,
+        "kuerzel": "TI",
+        "kuerzelAnzeige": "TI",
+        "bezeichnung": "Technische Informatik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 76,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "TBTB",
+        "bezeichnung": "Textil- und Bekleidungstechnik, Profil Bekleidungstechnik",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 77,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "TBTT",
+        "bezeichnung": "Textil- und Bekleidungstechnik, Profil Textiltechnik",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 78,
+        "kuerzel": "SL",
+        "kuerzelAnzeige": "SL",
+        "bezeichnung": "Soziologie",
+        "sortierung": 70,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 79,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "UT",
+        "bezeichnung": "Umweltschutztechnik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 80,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "VT",
+        "bezeichnung": "Vermessungstechnik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 81,
+        "kuerzel": "VW",
+        "kuerzelAnzeige": "VWL",
+        "bezeichnung": "Volkswirtschaftslehre",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 82,
+        "kuerzel": "FB",
+        "kuerzelAnzeige": "WT",
+        "bezeichnung": "Werkstofftechnik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 83,
+        "kuerzel": "WI",
+        "kuerzelAnzeige": "WI",
+        "bezeichnung": "Wirtschaftsinformatik",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 84,
+        "kuerzel": "WW",
+        "kuerzelAnzeige": "WL",
+        "bezeichnung": "Wirtschaftslehre",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 85,
+        "kuerzel": "WW",
+        "kuerzelAnzeige": "WLH",
+        "bezeichnung": "Wirtschaftslehre des Haushalts",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 86,
+        "kuerzel": "RW",
+        "kuerzelAnzeige": "WR",
+        "bezeichnung": "Wirtschaftsrecht",
+        "sortierung": 20,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 87,
+        "kuerzel": "D",
+        "kuerzelAnzeige": "D",
+        "bezeichnung": "Deutsch",
+        "sortierung": 10,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 88,
+        "kuerzel": "GL",
+        "kuerzelAnzeige": "GmG",
+        "bezeichnung": "Gesellschaftslehre mit Geschichte",
+        "sortierung": 210,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 89,
+        "kuerzel": "KN",
+        "kuerzelAnzeige": "REL",
+        "bezeichnung": "Religionslehre",
+        "sortierung": 220,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 90,
+        "kuerzel": "SP",
+        "kuerzelAnzeige": "SP",
+        "bezeichnung": "Sport",
+        "sortierung": 230,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 91,
+        "kuerzel": "PH",
+        "kuerzelAnzeige": "PH-T",
+        "bezeichnung": "Physik-Technik",
+        "sortierung": 91,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 92,
+        "kuerzel": "F",
+        "kuerzelAnzeige": "F_freiw",
+        "bezeichnung": "Französisch",
+        "sortierung": 92,
+        "istFremdsprache": true,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 93,
+        "kuerzel": "S",
+        "kuerzelAnzeige": "S_freiw",
+        "bezeichnung": "Spanisch",
+        "sortierung": 93,
+        "istFremdsprache": true,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 94,
+        "kuerzel": "PU",
+        "kuerzelAnzeige": "WPF2",
+        "bezeichnung": "Wahlpflichtfach Diff-Bereich statt 2 FS",
+        "sortierung": 94,
+        "istFremdsprache": false,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 95,
+        "kuerzel": "T",
+        "kuerzelAnzeige": "TUERK",
+        "bezeichnung": "Türkisch",
+        "sortierung": 95,
+        "istFremdsprache": true,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    },
+    {
+        "id": 96,
+        "kuerzel": "SR",
+        "kuerzelAnzeige": "ARAB",
+        "bezeichnung": "Arabisch",
+        "sortierung": 96,
+        "istFremdsprache": true,
+        "istFremdSpracheNeuEinsetzend": false,
+        "biliSprache": null
+    }
 ]

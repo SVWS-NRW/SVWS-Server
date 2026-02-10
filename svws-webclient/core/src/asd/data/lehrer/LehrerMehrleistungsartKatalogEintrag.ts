@@ -19,7 +19,7 @@ export class LehrerMehrleistungsartKatalogEintrag extends CoreTypeDataNurSchulfo
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.lehrer.LehrerMehrleistungsartKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeDataNurSchulformen'].includes(name);
 	}
 
-	public static class = new Class<LehrerMehrleistungsartKatalogEintrag>('de.svws_nrw.asd.data.lehrer.LehrerMehrleistungsartKatalogEintrag');
+	public static readonly class = new Class<LehrerMehrleistungsartKatalogEintrag>('de.svws_nrw.asd.data.lehrer.LehrerMehrleistungsartKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): LehrerMehrleistungsartKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<LehrerMehrleistungsartKatalogEintrag>;

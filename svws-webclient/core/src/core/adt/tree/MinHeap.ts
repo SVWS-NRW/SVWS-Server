@@ -538,7 +538,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 		return ['de.svws_nrw.core.adt.tree.MinHeap', 'java.util.Collection', 'java.util.Queue', 'java.lang.Iterable'].includes(name);
 	}
 
-	public static class = new Class<MinHeap<any>>('de.svws_nrw.core.adt.tree.MinHeap');
+	public static readonly class = new Class<MinHeap<any>>('de.svws_nrw.core.adt.tree.MinHeap');
 
 	public [Symbol.iterator](): Iterator<T> {
 		const iter: JavaIterator<T> = this.iterator();

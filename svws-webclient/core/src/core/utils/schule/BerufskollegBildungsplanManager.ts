@@ -442,7 +442,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.schule.BerufskollegBildungsplanManager'].includes(name);
 	}
 
-	public static class = new Class<BerufskollegBildungsplanManager>('de.svws_nrw.core.utils.schule.BerufskollegBildungsplanManager');
+	public static readonly class = new Class<BerufskollegBildungsplanManager>('de.svws_nrw.core.utils.schule.BerufskollegBildungsplanManager');
 
 }
 

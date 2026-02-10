@@ -119,7 +119,7 @@
 		createKlausurraum: (raum: Partial<GostKlausurraum>) => Promise<void>;
 		loescheKlausurraum: (id: number) => Promise<boolean>;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>) => Promise<boolean>;
-		patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<void>;
+		patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur>) => Promise<void>;
 		dragData: () => GostKlausurplanungDragData;
 		onDrag: (event: DragEvent, data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
@@ -155,8 +155,9 @@
 
 	function mapIDs(skts: List<GostSchuelerklausurTermin | GostSchuelerklausurTerminRich>) {
 		const numList = new ArrayList<number>();
-		for (const skt of skts)
+		for (const skt of skts) {
 			numList.add(skt.id);
+		}
 		return numList;
 	}
 
@@ -177,8 +178,9 @@
 		await props.setzeRaumZuSchuelerklausuren(ListUtils.create1(raumAlleSkts), true);
 		await props.setzeRaumZuSchuelerklausuren(config.raeume, false);
 		loading.value = false;
-		if (nichtVerteilt > 0)
+		if (nichtVerteilt > 0) {
 			showModalNichtVerteilt.value = true;
+		}
 		_showModalAutomatischVerteilen.value = false;
 	}
 

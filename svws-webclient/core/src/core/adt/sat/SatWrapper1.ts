@@ -61,7 +61,7 @@ export class SatWrapper1 extends JavaObject implements JavaFunction<SatInput, Sa
 		return ['de.svws_nrw.core.adt.sat.SatWrapper1', 'java.util.function.Function'].includes(name);
 	}
 
-	public static class = new Class<SatWrapper1>('de.svws_nrw.core.adt.sat.SatWrapper1');
+	public static readonly class = new Class<SatWrapper1>('de.svws_nrw.core.adt.sat.SatWrapper1');
 
 }
 

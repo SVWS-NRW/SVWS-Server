@@ -80,7 +80,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 		// Mappe zunächst die Daten des DTO.
 		final SchuelerLernabschnittsdaten daten = mapInternalDTOSchuelerLernabschnittsdaten(dto);
 
-		// Ermittle die Fachbemerkungen des Lernabschnitts und ergänze sie im daten-Objekt.
+		// Ermittle die Fachbemerkungen des Lernabschnitts und ergänze sie im Daten-Objekt.
 		final List<DTOSchuelerPSFachBemerkungen> bemerkungen = conn.queryList(
 				DTOSchuelerPSFachBemerkungen.QUERY_BY_ABSCHNITT_ID, DTOSchuelerPSFachBemerkungen.class, dto.ID);
 		if (bemerkungen == null)
@@ -105,22 +105,31 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 	}
 
 	/**
-	 * Überführt nur die reinen Daten des DTO eines Schülerlernabschnitts in ein entsprechendes Core-Data-Objekt.
-	 * Dabei werden keine zum Lernabschnitt ergänzenden Daten wie Fachbemerkungen oder Leistungsdaten geladen und ergänzt.
+	 * Überführt die Daten des DTO eines Schülerlernabschnitts in ein entsprechendes Core-Data-Objekt, aber ohne Leistungsdaten.
 	 *
 	 * @param dto das DTO mit den SchuelerLernabschnittsdaten.
 	 *
-	 * @return    ein Core-Data-Objekt mit den reinen SchuelerLernabschnittsdaten.
+	 * @return    ein Core-Data-Objekt mit den SchuelerLernabschnittsdaten ohne Leistungsdaten.
 	 */
-	public SchuelerLernabschnittsdaten mapNurDTODaten(final DTOSchuelerLernabschnittsdaten dto) {
+	public SchuelerLernabschnittsdaten mapOhneLeistungsdaten(final DTOSchuelerLernabschnittsdaten dto) throws ApiOperationException {
 		final SchuelerLernabschnittsdaten daten = mapInternalDTOSchuelerLernabschnittsdaten(dto);
 
-		daten.bemerkungen.zeugnisASV = "";
-		daten.bemerkungen.zeugnisLELS = "";
-		daten.bemerkungen.zeugnisAUE = "";
-		daten.bemerkungen.uebergangESF = "";
-		daten.bemerkungen.foerderschwerpunkt = "";
-		daten.bemerkungen.versetzungsentscheidung = "";
+		// Ermittle die Fachbemerkungen des Lernabschnitts und ergänze sie im Daten-Objekt.
+		final List<DTOSchuelerPSFachBemerkungen> bemerkungen = conn.queryList(
+				DTOSchuelerPSFachBemerkungen.QUERY_BY_ABSCHNITT_ID, DTOSchuelerPSFachBemerkungen.class, dto.ID);
+		if (bemerkungen == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Datensatz mit Bemerkungen zur Abschnitt-ID " + dto.ID + " gefunden.");
+		if (bemerkungen.size() > 1)
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als einen Datensatz mit Bemerkungen zur Abschnitt-ID " + dto.ID + " gefunden.");
+		if (!bemerkungen.isEmpty()) {
+			final DTOSchuelerPSFachBemerkungen b = bemerkungen.getFirst();
+			daten.bemerkungen.zeugnisASV = b.ASV;
+			daten.bemerkungen.zeugnisLELS = b.LELS;
+			daten.bemerkungen.zeugnisAUE = b.AUE;
+			daten.bemerkungen.uebergangESF = b.ESF;
+			daten.bemerkungen.foerderschwerpunkt = b.BemerkungFSP;
+			daten.bemerkungen.versetzungsentscheidung = b.BemerkungVersetzung;
+		}
 
 		daten.leistungsdaten = new ArrayList<>();
 
@@ -574,7 +583,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 	 * Erstellt eine Liste von Lernabschnittsdaten anhand der übergebenen Schüler-IDs gemäß der übergebenen Parameter.
 	 *
 	 * @param schueler_ids                 die Liste mit Schüler-IDs
-	 * @param mitBemerkungenLeistungsdaten legt fest, ob die erzeugten Objekte bereits die Fachbemerkungen und Leistungsdaten des Lernabschnitts enthalten.
+	 * @param mitLeistungsdaten legt fest, ob die erzeugten Objekte bereits die Fachbemerkungen und Leistungsdaten des Lernabschnitts enthalten.
 	 * @param validiereSchueler            legt fest, ob die übergebenen Schüler-IDs validiert werden sollen. Diese Option sollte, stets true sein, sofern
 	 *                                     nicht vorher an der Stelle eine Validierung der IDs vorab stattgefunden hat.
 	 *
@@ -582,7 +591,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public List<SchuelerLernabschnittsdaten> getListFromSchuelerIDs(final List<Long> schueler_ids, final boolean mitBemerkungenLeistungsdaten,
+	public List<SchuelerLernabschnittsdaten> getListFromSchuelerIDs(final List<Long> schueler_ids, final boolean mitLeistungsdaten,
 			final boolean validiereSchueler)
 			throws ApiOperationException {
 		// Prüfe, ob die Liste der Schüler-IDs existiert
@@ -610,7 +619,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 
 		final List<SchuelerLernabschnittsdaten> daten = new ArrayList<>();
 		for (final DTOSchuelerLernabschnittsdaten a : dtoLernabschnitte)
-			daten.add(mitBemerkungenLeistungsdaten ? map(a) : mapNurDTODaten(a));
+			daten.add(mitLeistungsdaten ? map(a) : mapOhneLeistungsdaten(a));
 		return daten;
 	}
 

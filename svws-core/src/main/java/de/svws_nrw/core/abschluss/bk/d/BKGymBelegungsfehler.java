@@ -1,7 +1,12 @@
 package de.svws_nrw.core.abschluss.bk.d;
 
+import de.svws_nrw.core.types.bk.BKGymBelegungsfehlerArt;
+import de.svws_nrw.core.types.bk.BKGymBelegungsfehlerTyp;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * Diese Klasse repräsentiert einen Belegungsfehler.
+ */
 public class BKGymBelegungsfehler {
 	/** Der eindeutige Code des Belegungsfehlers */
 	public final @NotNull String code;
@@ -17,17 +22,18 @@ public class BKGymBelegungsfehler {
 
 
 	/**
-	 *  Konstruktor der den ausgefüllten Fehlertext erzeugt.
+	 *  Erstellt einen Belegungsfehler mit den angegebenen Daten
 	 *
 	 * @param fehlertyp   der Belegungsfehler, der mit den args präzisiert wird
 	 * @param args        die Parameter für den Belegungsfehler.
 	 */
-	public BKGymBelegungsfehler(@NotNull final BKGymBelegungsfehlerTyp fehlertyp, final Object... args) {
+	public BKGymBelegungsfehler(final @NotNull BKGymBelegungsfehlerTyp fehlertyp, final Object... args) {
 		this.code = fehlertyp.code;
 		this.art = fehlertyp.art;
 		this.wert = fehlertyp.wert;
 		this.text = fehlertyp.format(args);
 	}
+
 
 	/**
 	 * Reicht die Information, ob es ein Fehler ist, durch
@@ -37,6 +43,7 @@ public class BKGymBelegungsfehler {
 	public boolean istFehler() {
 		return (this.art != BKGymBelegungsfehlerArt.HINWEIS);
 	}
+
 
 	/**
 	 * Reicht die Information, ob die Fehlerart HINWEIS vorliegt

@@ -15,12 +15,12 @@ export class GostKlausurvorgabe extends JavaObject {
 	public abiJahrgang: number = -1;
 
 	/**
-	 * Das Gost-Halbjahr, in dem die Klausurg geschrieben wird.
+	 * Das Gost-Halbjahr, in dem die Klausur geschrieben wird.
 	 */
 	public halbjahr: number = -1;
 
 	/**
-	 * Das Quartal, in welchem die Klausur gechrieben wird.
+	 * Das Quartal, in welchem die Klausur geschrieben wird.
 	 */
 	public quartal: number = -1;
 
@@ -50,12 +50,12 @@ export class GostKlausurvorgabe extends JavaObject {
 	public istMdlPruefung: boolean = false;
 
 	/**
-	 * Die Information, ob Audioequipment nötig ist, z.B. für Klasuren mit Hörverstehensanteilen.
+	 * Die Information, ob Audioequipment nötig ist, z.B. für Klausuren mit Hörverstehensanteilen.
 	 */
 	public istAudioNotwendig: boolean = false;
 
 	/**
-	 * Die Information, ob Videoequipment nötig ist, z.B. für Klasuren mit Videoanalyse.
+	 * Die Information, ob Videoequipment nötig ist, z.B. für Klausuren mit Videoanalyse.
 	 */
 	public istVideoNotwendig: boolean = false;
 
@@ -73,13 +73,13 @@ export class GostKlausurvorgabe extends JavaObject {
 	}
 
 	/**
-	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 * Vergleicht, ob das aktuelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
 	 *
 	 * @param another     das zu vergleichende Objekt
-	 * @return true, falls die Objekte indentisch sind, sonst false
+	 * @return true, falls die Objekte identisch sind, sonst false
 	 */
 	public equals(another: unknown | null): boolean {
-		return (another !== null) && (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe')))) && (this.id === (another as unknown as GostKlausurvorgabe).id);
+		return (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe')))) && (this.id === (another as unknown as GostKlausurvorgabe).id);
 	}
 
 	/**
@@ -99,7 +99,7 @@ export class GostKlausurvorgabe extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe'].includes(name);
 	}
 
-	public static class = new Class<GostKlausurvorgabe>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe');
+	public static readonly class = new Class<GostKlausurvorgabe>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe');
 
 	public static transpilerFromJSON(json: string): GostKlausurvorgabe {
 		const obj = JSON.parse(json) as Partial<GostKlausurvorgabe>;

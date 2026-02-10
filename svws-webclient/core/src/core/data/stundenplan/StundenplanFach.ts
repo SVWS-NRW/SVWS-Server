@@ -50,7 +50,7 @@ export class StundenplanFach extends JavaObject {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanFach'].includes(name);
 	}
 
-	public static class = new Class<StundenplanFach>('de.svws_nrw.core.data.stundenplan.StundenplanFach');
+	public static readonly class = new Class<StundenplanFach>('de.svws_nrw.core.data.stundenplan.StundenplanFach');
 
 	public static transpilerFromJSON(json: string): StundenplanFach {
 		const obj = JSON.parse(json) as Partial<StundenplanFach>;

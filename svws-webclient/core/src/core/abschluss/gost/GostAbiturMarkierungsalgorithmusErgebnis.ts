@@ -37,7 +37,7 @@ export class GostAbiturMarkierungsalgorithmusErgebnis extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.gost.GostAbiturMarkierungsalgorithmusErgebnis'].includes(name);
 	}
 
-	public static class = new Class<GostAbiturMarkierungsalgorithmusErgebnis>('de.svws_nrw.core.abschluss.gost.GostAbiturMarkierungsalgorithmusErgebnis');
+	public static readonly class = new Class<GostAbiturMarkierungsalgorithmusErgebnis>('de.svws_nrw.core.abschluss.gost.GostAbiturMarkierungsalgorithmusErgebnis');
 
 	public static transpilerFromJSON(json: string): GostAbiturMarkierungsalgorithmusErgebnis {
 		const obj = JSON.parse(json) as Partial<GostAbiturMarkierungsalgorithmusErgebnis>;

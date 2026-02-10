@@ -19,7 +19,7 @@ export class JahrgaengeKatalogEintrag extends CoreTypeDataNurSchulformen {
 		return ['de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.CoreTypeDataNurSchulformen'].includes(name);
 	}
 
-	public static class = new Class<JahrgaengeKatalogEintrag>('de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag');
+	public static readonly class = new Class<JahrgaengeKatalogEintrag>('de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): JahrgaengeKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<JahrgaengeKatalogEintrag>;

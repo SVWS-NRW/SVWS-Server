@@ -33,11 +33,13 @@
 
 	async function import_file(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if ((target.files === null) || (target.files.length === 0))
+		if ((target.files === null) || (target.files.length === 0)) {
 			return;
+		}
 		const file = target.files.item(0);
-		if (!file)
+		if (!file) {
 			return;
+		}
 		status.value = undefined;
 		loading.value = true;
 		const formData = new FormData();
@@ -45,10 +47,11 @@
 		try {
 			await props.importLaufbahnplanung(formData);
 		} catch (e) {
-			if (e instanceof UserNotificationException)
+			if (e instanceof UserNotificationException) {
 				status.value = e.message;
-			else
+			} else {
 				status.value = "Es gab einen Fehler beim Import der Laufbahnplanungsdaten";
+			}
 		}
 		loading.value = false;
 	}

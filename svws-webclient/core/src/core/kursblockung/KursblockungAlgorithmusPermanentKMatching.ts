@@ -78,7 +78,7 @@ export class KursblockungAlgorithmusPermanentKMatching extends KursblockungAlgor
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKMatching', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentK'].includes(name);
 	}
 
-	public static class = new Class<KursblockungAlgorithmusPermanentKMatching>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKMatching');
+	public static readonly class = new Class<KursblockungAlgorithmusPermanentKMatching>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKMatching');
 
 }
 

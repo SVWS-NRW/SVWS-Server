@@ -1,30 +1,26 @@
-<html lang="de" xmlns:th="http://www.thymeleaf.org">
-	<head th:with="mediaPrint = ${Parameter.ausgabeformat >= 2}">
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<title>Schüler mit Kursen</title>
-		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../css/reporting-pdf.css" />
-		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-quer.css}" href="../../css/reporting-A4-quer.css" />
-		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../css/reporting-styles.css" />
-		<link rel="stylesheet" th:href="@{gost/kursplanung/GostKursplanungSchuelerMitKursen.css}" href="../../gost/kursplanung/GostKursplanungSchuelerMitKursen.css" />
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
+	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
+		title='Schüler mit Kursen',
+		htmlTemplatePfad=${Parameter.htmlTemplateDefinition().getPfadHtmlTemplate()},
+		namePageCSS='reporting-A4-quer.css')}">
+		<title></title>
 	</head>
 
-	<body th:with="mediaPrint = ${Parameter.ausgabeformat >= 2},
-				   KursplanungSchueler = ${GostBlockungsergebnis.schuelerGefiltert()}">
+	<body th:with="KursplanungSchueler = ${GostBlockungsergebnis.schuelerGefiltert()}">
 		<div style="page-break-inside: avoid;" th:each="schueler,iterationVarSchueler : ${KursplanungSchueler}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
-			<th:block th:if="${mediaPrint}">
-				<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-				<div class="pageTopRight" th:utext="'Kursbelegungen<br/>' + 'Abitur ' + ${GostBlockungsergebnis.abiturjahr()} + ' - ' + ${GostBlockungsergebnis.gostHalbjahr().kuerzel}">Kursbelegungen der Schülerinnen und Schüler<br/>Abitur 2023 - Q1.2<br/></div>
-				<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')} + ' von ' + ${Benutzer.benutzername()}">Gedruckt am 02.02.2022 von ABC</div>
-				<div class="pageBottomCenter" th:text="${GostBlockungsergebnis.bezeichnung() + ' (Erg-ID ' + GostBlockungsergebnis.id() + ')'}">A23 - Q1.2 (Erg-ID 4)</div>
-				<div class="pageBottomRight"><span class="page-nums-print">Seite </span></div>
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
+				headerRight='Kursbelegungen' +
+					'<br/>Abitur ' + ${GostBlockungsergebnis.abiturjahr()} + ' - ' + ${GostBlockungsergebnis.gostHalbjahr().kuerzel},
+				footerCenter=${GostBlockungsergebnis.bezeichnung() + ' (Erg-ID ' + GostBlockungsergebnis.id() + ')'})}">
 			</th:block>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
 			<table th:if="${iterationVarSchueler.count == iterationVarSchueler.first}" class="fixed-100 p-0">
 				<tr>
-					<td style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 th:text="${'Kursbelegungen - Abitur ' + GostBlockungsergebnis.abiturjahr() + ' - ' + GostBlockungsergebnis.gostHalbjahr()}">Kursbelegungen der Schülerinnen und Schüler - Abitur 2023 - Q1.2</h3></td>
+					<th style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 th:text="${'Kursbelegungen - Abitur ' + GostBlockungsergebnis.abiturjahr() + ' - ' + GostBlockungsergebnis.gostHalbjahr()}">Kursbelegungen der Schülerinnen und Schüler - Abitur 2023 - Q1.2</h3></th>
 				</tr>
 			</table>
 			<!--Definiere pro Schüler eine Tabelle mit seinen Kursen. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei
@@ -43,7 +39,7 @@
 					<col th:if="${restspaltenbreite > 0}" th:style="|width: ${restspaltenbreite}%|" />
 				</colgroup>
 				<tr style="height: 5px;">
-					<td></td>
+					<th></th>
 				</tr>
 				<tr>
 					<td colspan="12"> <p class="f-small" th:utext="${#numbers.formatInteger(iterationVarSchueler.count, 3) + '. <b>' + schueler.nachname() + ', ' + schueler.vorname() + '</b>'}">083. Mustermann, Max</p></td>

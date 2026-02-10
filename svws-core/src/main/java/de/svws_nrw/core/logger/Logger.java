@@ -16,13 +16,13 @@ public class Logger {
 	/** Die globale Instanz des Loggers */
 	private static Logger _instance = null;
 
-	/// Ein interner Vektor zum Speichern der Consumer von Log-Informationen.
+	/** Ein interner Vektor zum Speichern der Consumer von Log-Informationen. */
 	private final @NotNull ArrayList<Consumer<LogData>> consumer = new ArrayList<>();
 
-	/// Das Standard-Log-Level, welches für neue Log-Informationen genutzt wird.
+	/** Das Standard-Log-Level, welches für neue Log-Informationen genutzt wird. */
 	private @NotNull LogLevel defaultLevel = LogLevel.INFO;
 
-	/// Die Einrückung für die Ausgabe, die bei neuen Log-Informationen genutzt wird.
+	/** Die Einrückung für die Ausgabe, die bei neuen Log-Informationen genutzt wird. */
 	private int indent = 0;
 
 	/**

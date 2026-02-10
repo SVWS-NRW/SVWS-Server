@@ -31,7 +31,7 @@ import de.svws_nrw.csv.converter.current.SprachpruefungniveauConverterDeserializ
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerSprachpruefungen")
-@JsonPropertyOrder({"ID", "Schueler_ID", "Sprache", "ASDJahrgang", "Anspruchsniveau", "Pruefungsdatum", "IstHSUPruefung", "IstFeststellungspruefung", "KannErstePflichtfremdspracheErsetzen", "KannZweitePflichtfremdspracheErsetzen", "KannWahlpflichtfremdspracheErsetzen", "KannBelegungAlsFortgefuehrteSpracheErlauben", "Referenzniveau", "NotePruefung"})
+@JsonPropertyOrder({"ID", "Schueler_ID", "Sprache", "ASDJahrgang", "Anspruchsniveau", "Pruefungsdatum", "IstHSUPruefung", "IstFeststellungspruefung", "KannErstePflichtfremdspracheErsetzen", "KannZweitePflichtfremdspracheErsetzen", "KannWahlpflichtfremdspracheErsetzen", "KannBelegungAlsFortgefuehrteSpracheErlauben", "Referenzniveau", "NotePruefung", "Zeugnisbezeichnung"})
 public final class DTOSchuelerSprachpruefungen {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -130,6 +130,12 @@ public final class DTOSchuelerSprachpruefungen {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes NotePruefung */
 	public static final String QUERY_LIST_BY_NOTEPRUEFUNG = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.NotePruefung IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Zeugnisbezeichnung */
+	public static final String QUERY_BY_ZEUGNISBEZEICHNUNG = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Zeugnisbezeichnung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Zeugnisbezeichnung */
+	public static final String QUERY_LIST_BY_ZEUGNISBEZEICHNUNG = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.Zeugnisbezeichnung IN ?1";
+
 	/** ID des Sprachprüfungseintrags */
 	@Id
 	@Column(name = "ID")
@@ -222,6 +228,11 @@ public final class DTOSchuelerSprachpruefungen {
 	@JsonProperty
 	public Integer NotePruefung;
 
+	/** Die Bezeichnung der Sprache auf dem Zeugnis (z.B. nötig für einen Eintrag "Sonstige Sprache") */
+	@Column(name = "Zeugnisbezeichnung")
+	@JsonProperty
+	public String Zeugnisbezeichnung;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOSchuelerSprachpruefungen ohne eine Initialisierung der Attribute.
 	 */
@@ -273,7 +284,7 @@ public final class DTOSchuelerSprachpruefungen {
 	 */
 	@Override
 	public String toString() {
-		return "DTOSchuelerSprachpruefungen(ID=" + this.ID + ", Schueler_ID=" + this.Schueler_ID + ", Sprache=" + this.Sprache + ", ASDJahrgang=" + this.ASDJahrgang + ", Anspruchsniveau=" + this.Anspruchsniveau + ", Pruefungsdatum=" + this.Pruefungsdatum + ", IstHSUPruefung=" + this.IstHSUPruefung + ", IstFeststellungspruefung=" + this.IstFeststellungspruefung + ", KannErstePflichtfremdspracheErsetzen=" + this.KannErstePflichtfremdspracheErsetzen + ", KannZweitePflichtfremdspracheErsetzen=" + this.KannZweitePflichtfremdspracheErsetzen + ", KannWahlpflichtfremdspracheErsetzen=" + this.KannWahlpflichtfremdspracheErsetzen + ", KannBelegungAlsFortgefuehrteSpracheErlauben=" + this.KannBelegungAlsFortgefuehrteSpracheErlauben + ", Referenzniveau=" + this.Referenzniveau + ", NotePruefung=" + this.NotePruefung + ")";
+		return "DTOSchuelerSprachpruefungen(ID=" + this.ID + ", Schueler_ID=" + this.Schueler_ID + ", Sprache=" + this.Sprache + ", ASDJahrgang=" + this.ASDJahrgang + ", Anspruchsniveau=" + this.Anspruchsniveau + ", Pruefungsdatum=" + this.Pruefungsdatum + ", IstHSUPruefung=" + this.IstHSUPruefung + ", IstFeststellungspruefung=" + this.IstFeststellungspruefung + ", KannErstePflichtfremdspracheErsetzen=" + this.KannErstePflichtfremdspracheErsetzen + ", KannZweitePflichtfremdspracheErsetzen=" + this.KannZweitePflichtfremdspracheErsetzen + ", KannWahlpflichtfremdspracheErsetzen=" + this.KannWahlpflichtfremdspracheErsetzen + ", KannBelegungAlsFortgefuehrteSpracheErlauben=" + this.KannBelegungAlsFortgefuehrteSpracheErlauben + ", Referenzniveau=" + this.Referenzniveau + ", NotePruefung=" + this.NotePruefung + ", Zeugnisbezeichnung=" + this.Zeugnisbezeichnung + ")";
 	}
 
 }

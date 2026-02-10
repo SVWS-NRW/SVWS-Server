@@ -142,7 +142,7 @@ export class KlassenDaten extends JavaObject {
 		return ['de.svws_nrw.asd.data.klassen.KlassenDaten'].includes(name);
 	}
 
-	public static class = new Class<KlassenDaten>('de.svws_nrw.asd.data.klassen.KlassenDaten');
+	public static readonly class = new Class<KlassenDaten>('de.svws_nrw.asd.data.klassen.KlassenDaten');
 
 	public static transpilerFromJSON(json: string): KlassenDaten {
 		const obj = JSON.parse(json) as Partial<KlassenDaten>;

@@ -28,8 +28,6 @@ export class RouteKlassenleitung extends RouteNode<any, RouteApp> {
 			patchLernabschnitt: routeApp.data.patchLernabschnitt,
 			columnsVisible: () => routeApp.data.klassenleitungColumnsVisible,
 			setColumnsVisible: routeApp.data.setKlassenleitungColumnsVisible,
-			floskelEditorVisible: routeApp.data.floskelEditorVisible,
-			setFloskelEditorVisible: routeApp.data.setFloskelEditorVisible,
 		};
 	}
 

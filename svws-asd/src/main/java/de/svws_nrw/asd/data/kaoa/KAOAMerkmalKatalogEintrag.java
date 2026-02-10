@@ -28,7 +28,7 @@ public class KAOAMerkmalKatalogEintrag extends CoreTypeData {
 
 	/** Die Anlagen des Berufskollegs bei denen der Eintrag gemacht werden darf */
 	@Schema(description = "die Anlagen des Berufskollegs bei denen der Eintrag gemacht werden darf")
-	public @NotNull List<String> bkAnlagen = new ArrayList<>();
+	public @NotNull List<String> bkGliederungen = new ArrayList<>();
 
 	/**
 	 * Leerer Standardkonstruktor.

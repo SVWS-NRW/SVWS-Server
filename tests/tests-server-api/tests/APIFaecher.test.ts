@@ -3,7 +3,7 @@ import { privilegedApiServer } from "../../utils/APIUtils";
 import { FachDaten } from "../../../svws-webclient/core/src/core/data/fach/FachDaten";
 
 describe("Feacher Tests", () => {
-	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
+	describe.each([{ schema: "GymAbi01" }])('gegen %s', ({ schema }) => {
 		const api = privilegedApiServer;
 
 		test("getFaecher", async () => {
@@ -16,5 +16,5 @@ describe("Feacher Tests", () => {
 			const result = await api.getFach(schema, 16);
 			expect(result).toMatchSnapshot();
 		});
-	})
-})
+	});
+});

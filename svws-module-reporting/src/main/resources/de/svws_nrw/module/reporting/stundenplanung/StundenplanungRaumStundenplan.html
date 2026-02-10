@@ -1,24 +1,25 @@
 <!DOCTYPE html>
-<html lang="de" xmlns:th="http://www.thymeleaf.org">
-	<head th:with="mediaPrint = ${Parameter.ausgabeformat >= 2}">
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<title>Raum-Stundenplan</title>
-		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../css/reporting-pdf.css" />
-		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-hoch.css}" href="../css/reporting-A4-hoch.css" />
-		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../css/reporting-styles.css" />
-		<link rel="stylesheet" th:href="@{stundenplanung/StundenplanungRaumStundenplan.css}" href="StundenplanungRaumStundenplan.css" />
+<html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
+	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
+		title='Raum-Stundenplan',
+		htmlTemplatePfad=${Parameter.htmlTemplateDefinition().getPfadHtmlTemplate()},
+		namePageCSS='reporting-A4-hoch.css')}">
+		<title></title>
 	</head>
 
-	<body th:with="mediaPrint = ${Parameter.ausgabeformat >= 2}">
+	<body>
 		<div class="reset-page-counter start-new-page"
 			 th:each="plan,iterationVarPlan : ${RaeumeStundenplaene}"
 			 th:with="mitPausenzeiten = ${VorlageParameter.get('mitPausenzeiten')}">
+
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
-			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-			<div class="pageTopRight">Stundenplan <span th:text="${plan.stundenplan().schuljahresabschnitt().textSchuljahresabschnittKurz()}">2022.2</span><br/>Gültig ab: <span th:text="${plan.stundenplan().gueltigAb()}">01.02.2022</span><br/><span th:text="${'Raum: ' + plan.raum().kuerzel()}">Raum: E</span></div>
-			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
-			<div class="pageBottomRight"><span class="page-nums-print" th:text="${#lists.size(RaeumeStundenplaene) > 0} ? ('Druck ' + ${iterationVarPlan.count} + '/' + ${#lists.size(RaeumeStundenplaene)} + ' - Seite ') : 'Seite '">Druck 13/57 - Seite </span></div>
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
+				headerRight='Stundenplan' +
+					'<br/>Gültig ab: ' + ${plan.stundenplan().gueltigAb()} +
+					'<br/>Raum: ' + ${plan.raum().kuerzel()},
+				footerRight='Druck ' + ${iterationVarPlan.count} + '/' + ${#lists.size(RaeumeStundenplaene)})}">
+			</th:block>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
 			<!-- Für jede Woche, die im Stundenplan definiert, wird ein Block erzeugt. -->
@@ -35,18 +36,18 @@
 					<thead>
 						<!-- Angaben zum Schüler und Wochen -->
 						<tr th:if="${wochennummer == 1}">
-							<th th:colspan="${spaltenzahl}" style="border-bottom: 1px grey solid; vertical-align: middle"><h3 class="m-t-0" th:text="${plan.raum().kuerzel()}">A123</h3></th>
+							<td th:colspan="${spaltenzahl}" style="border-bottom: 1px grey solid; vertical-align: middle"><h3 class="m-t-0" th:text="${plan.raum().kuerzel()}">A123</h3></td>
 						</tr>
 						<tr th:if="${wochennummer == 1}" style="height: 3px;">
-							<th th:colspan="${spaltenzahl}"></th>
+							<td th:colspan="${spaltenzahl}"></td>
 						</tr>
 						<tr th:if="${wochentyp > 0}">
-							<th th:colspan="${spaltenzahl}"><h3 th:text="${plan.stundenplan().wochenbezeichnung(wochennummer) + '-Woche'}">A-Woche</h3></th>
+							<td th:colspan="${spaltenzahl}"><h3 th:text="${plan.stundenplan().wochenbezeichnung(wochennummer) + '-Woche'}">A-Woche</h3></td>
 						</tr>
 						<!-- Spaltenköpfe -->
 						<tr>
-							<th class="head-small-grey head-black-lines-small-all ta-cm"></th>
-							<th class="head-small-grey head-black-lines-small-all ta-cm" style="font-weight: bolder;" th:each="tag : ${plan.stundenplan().unterrichtsrasterWochentage()}" th:text="${tag.beschreibung}">Donnerstag</th>
+							<th scope="col" class="head-small-grey head-black-lines-small-all ta-cm"></th>
+							<th scope="col" class="head-small-grey head-black-lines-small-all ta-cm" style="font-weight: bolder;" th:each="tag : ${plan.stundenplan().unterrichtsrasterWochentage()}" th:text="${tag.beschreibung}">Donnerstag</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -73,10 +74,10 @@
 										</colgroup>
 										<th:block th:each="unterricht,iterationvarUnterricht : ${unterrichte}">
 											<tr>
-												<td class="f-small ta-lm"></td>
-                                                <td th:if="${unterricht.kurs() == null}" colspan="3" class="f-small ta-lm" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${unterricht.klassenAuflistungJahrgangParallelitaetKurz()}">09ABC</td>
-												<td th:if="${unterricht.kurs() != null}" colspan="3" class="f-small ta-lm" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${unterricht.klassenAuflistungJahrgangParallelitaetKurz() + ' (' + unterricht.kurs().kuerzel() + ')'}">09ABC (IF-WPI)</td>
-												<td class="f-small ta-lm"></td>
+												<th class="f-small ta-lm"></th>
+                                                <th th:if="${unterricht.kurs() == null}" colspan="3" class="f-small ta-lm" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${unterricht.klassenAuflistungJahrgangParallelitaetKurz()}">09ABC</th>
+												<th th:if="${unterricht.kurs() != null}" colspan="3" class="f-small ta-lm" th:classappend="${!iterationvarUnterricht.first ? ' bo-t-grey' : ''}" th:text="${unterricht.klassenAuflistungJahrgangParallelitaetKurz() + ' (' + unterricht.kurs().kuerzel() + ')'}">09ABC (IF-WPI)</th>
+												<th class="f-small ta-lm"></th>
 											</tr>
 											<tr>
 												<td></td>

@@ -83,7 +83,7 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.benutzer.BenutzerKompetenzKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<BenutzerKompetenzKatalogEintrag>('de.svws_nrw.core.data.benutzer.BenutzerKompetenzKatalogEintrag');
+	public static readonly class = new Class<BenutzerKompetenzKatalogEintrag>('de.svws_nrw.core.data.benutzer.BenutzerKompetenzKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): BenutzerKompetenzKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<BenutzerKompetenzKatalogEintrag>;

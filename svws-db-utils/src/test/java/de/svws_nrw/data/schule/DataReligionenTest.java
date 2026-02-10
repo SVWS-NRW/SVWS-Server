@@ -2,6 +2,7 @@ package de.svws_nrw.data.schule;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import de.svws_nrw.asd.types.schule.Religion;
@@ -10,6 +11,7 @@ import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -23,9 +25,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatException;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -49,19 +55,20 @@ class DataReligionenTest {
 	void initDTO() throws ApiOperationException {
 		final var konfession = new DTOKonfession(-1L, "test");
 
-		data.initDTO(konfession, 1L, new HashMap<>());
-		assertThat(konfession.ID).isEqualTo(1L);
+		this.data.initDTO(konfession, 1L, new HashMap<>());
+		assertThat(konfession)
+				.hasFieldOrPropertyWithValue("ID", 1L)
+				.hasFieldOrPropertyWithValue("Sortierung", 32000);
 	}
 
 	@Test
 	@DisplayName("getById | Religion mit ID existiert")
 	void getByIdWithReligionExists() throws ApiOperationException {
 		final DTOKonfession dto = createDTO(1L);
+
 		when(conn.queryByKey(DTOKonfession.class, 1L)).thenReturn(dto);
 
-		final ReligionEintrag result = data.getById(1L);
-
-		assertThat(result)
+		assertThat(this.data.getById(1L))
 				.hasFieldOrPropertyWithValue("id", 1L)
 				.hasFieldOrPropertyWithValue("bezeichnung", "bezeichnung1")
 				.hasFieldOrPropertyWithValue("bezeichnungZeugnis", "zeugnisBezeichnung1")
@@ -72,38 +79,75 @@ class DataReligionenTest {
 
 	@Test
 	@DisplayName("getByID | ID can't be null")
-	void getByIdTest_IdNull() {
-		final var throwable = catchThrowable(() -> this.data.getById(null));
-
-		assertThat(throwable)
+	void getByIdNull() {
+		assertThatException()
+				.isThrownBy(() -> this.data.getById(null))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Eine Anfrage mit der ID null ist unzulässig.")
+				.withMessage("Eine Anfrage mit der ID null ist unzulässig.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
 	@DisplayName("getById | Religion mit ID existiert nicht")
-	void getByIdWithReligionNotExists() {
+	void getByIdNotFound() {
 		when(conn.queryByKey(DTOKonfession.class, 1L)).thenReturn(null);
 
-		final Throwable result = catchThrowable(() -> data.getById(1L));
-
-		assertThat(result)
+		assertThatException()
+				.isThrownBy(() -> this.data.getById(1L))
 				.isInstanceOf(ApiOperationException.class)
-				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND)
-				.hasMessage("Es wurde kein Eintrag im Katalog der Religionen mit der ID 1 gefunden.");
+				.withMessage("Es wurde kein Eintrag im Katalog der Religionen mit der ID 1 gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
 	}
 
 	@Test
 	void getAll() {
-		when(conn.queryAll(DTOKonfession.class)).thenReturn(List.of(createDTO(1L), createDTO(2L), createDTO(3L)));
+		final var dto1 = createDTO(1L);
+		final var dto2 = createDTO(2L);
+		when(conn.queryAll(DTOKonfession.class)).thenReturn(List.of(dto1, dto2));
+		@SuppressWarnings("unchecked")
+		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(1L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
 
-		final List<ReligionEintrag> result = data.getAll();
-		assertThat(result)
-				.hasSize(3)
-				.hasOnlyElementsOfType(ReligionEintrag.class)
-				.extracting("id")
-				.contains(1L, 2L, 3L);
+		assertThat(this.data.getAll())
+				.hasSize(2)
+				.satisfiesExactly(
+						f1 -> assertThat(f1)
+								.isInstanceOf(ReligionEintrag.class)
+								.hasFieldOrPropertyWithValue("id", 1L)
+								.hasFieldOrPropertyWithValue("bezeichnung", "bezeichnung1"),
+						f2 -> assertThat(f2)
+								.isInstanceOf(ReligionEintrag.class)
+								.hasFieldOrPropertyWithValue("id", 2L)
+								.hasFieldOrPropertyWithValue("bezeichnung", "bezeichnung2")
+				);
+	}
+
+	@Test
+	@DisplayName("getAll | referenced in other tabled")
+	void getAllReferencedInOtherTables() {
+		final var dto1 = createDTO(1L);
+		final var dto2 = createDTO(2L);
+		when(this.conn.queryAll(DTOKonfession.class)).thenReturn(List.of(dto1, dto2));
+		@SuppressWarnings("unchecked")
+		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(1L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
+
+		assertThat(this.data.getAll())
+				.hasSize(2)
+				.satisfiesExactly(
+						f1 -> assertThat(f1)
+								.isInstanceOf(ReligionEintrag.class)
+								.hasFieldOrPropertyWithValue("id", 1L)
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", true),
+						f2 -> assertThat(f2)
+								.isInstanceOf(ReligionEintrag.class)
+								.hasFieldOrPropertyWithValue("id", 2L)
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", false)
+				);
 	}
 
 	@Test
@@ -111,8 +155,7 @@ class DataReligionenTest {
 	void map() {
 		final DTOKonfession dto = createDTO(2L);
 
-		final ReligionEintrag result = data.map(dto);
-		assertThat(result)
+		assertThat(this.data.map(dto))
 				.hasFieldOrPropertyWithValue("id", 2L)
 				.hasFieldOrPropertyWithValue("bezeichnung", "bezeichnung2")
 				.hasFieldOrPropertyWithValue("bezeichnungZeugnis", "zeugnisBezeichnung2")
@@ -215,6 +258,20 @@ class DataReligionenTest {
 				.isInstanceOf(ApiOperationException.class)
 				.hasMessage("Attribut bezeichnung: Ein leerer String ist hier nicht erlaubt.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung dto is null | make sure no Nullpointer is thrown in equalsIgnoreCase check")
+	void patchBezeichnungInDtoISNull() {
+		final var dto = new DTOKonfession(1L, "123");
+		dto.Bezeichnung = null;
+		when(conn.queryAll(DTOKonfession.class)).thenReturn(List.of(dto));
+		final var newDto = new DTOKonfession(2L, "abc");
+		when(this.conn.queryByKey(DTOKonfession.class, 2L)).thenReturn(newDto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		assertThatNoException()
+				.isThrownBy(() -> this.data.patch(2L, Map.of("bezeichnung", "test")));
 	}
 
 	private DTOKonfession createDTO(final long id) {

@@ -49,7 +49,7 @@ export class GostBlockungListeneintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostBlockungListeneintrag'].includes(name);
 	}
 
-	public static class = new Class<GostBlockungListeneintrag>('de.svws_nrw.core.data.gost.GostBlockungListeneintrag');
+	public static readonly class = new Class<GostBlockungListeneintrag>('de.svws_nrw.core.data.gost.GostBlockungListeneintrag');
 
 	public static transpilerFromJSON(json: string): GostBlockungListeneintrag {
 		const obj = JSON.parse(json) as Partial<GostBlockungListeneintrag>;

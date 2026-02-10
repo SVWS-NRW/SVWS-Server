@@ -1,5 +1,4 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { PersonTyp } from '../../../core/types/schule/PersonTyp';
 import { Class } from '../../../java/lang/Class';
 
 export class Einwilligungsart extends JavaObject {
@@ -17,12 +16,7 @@ export class Einwilligungsart extends JavaObject {
 	/**
 	 * Der Schlüssel der Einwilligungsart.
 	 */
-	public schluessel: string = "";
-
-	/**
-	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
-	 */
-	public sortierung: number = 1;
+	public schluessel: string | null = "";
 
 	/**
 	 * Eine ausführliche Beschreibung der Einwilligungsart.
@@ -30,14 +24,24 @@ export class Einwilligungsart extends JavaObject {
 	public beschreibung: string | null = "";
 
 	/**
-	 * Gibt an, für welche Personengruppe die Einwilligungsart relevant ist.
+	 * Die Id des PersonTyps der Einwilligungsart.
 	 */
-	public personTyp: number = PersonTyp.SCHUELER.id;
+	public idPersonTyp: number = -1;
 
 	/**
-	 * Gibt an, für welche Personengruppe die Einwilligungsart relevant ist.
+	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
 	 */
-	public anzahlEinwilligungen: number = 0;
+	public sortierung: number = 32000;
+
+	/**
+	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
+	 */
+	public istSichtbar: boolean = true;
+
+	/**
+	 * Gibt an, ob die Einwilligungsart in anderen Datenbanktabellen referenziert ist oder nicht.
+	 */
+	public referenziertInAnderenTabellen: boolean | null = false;
 
 
 	/**
@@ -55,7 +59,7 @@ export class Einwilligungsart extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.Einwilligungsart'].includes(name);
 	}
 
-	public static class = new Class<Einwilligungsart>('de.svws_nrw.core.data.schule.Einwilligungsart');
+	public static readonly class = new Class<Einwilligungsart>('de.svws_nrw.core.data.schule.Einwilligungsart');
 
 	public static transpilerFromJSON(json: string): Einwilligungsart {
 		const obj = JSON.parse(json) as Partial<Einwilligungsart>;
@@ -66,19 +70,18 @@ export class Einwilligungsart extends JavaObject {
 		if (obj.bezeichnung === undefined)
 			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (obj.schluessel === undefined)
-			throw new Error('invalid json format, missing attribute schluessel');
-		result.schluessel = obj.schluessel;
+		result.schluessel = (obj.schluessel === undefined) ? null : obj.schluessel === null ? null : obj.schluessel;
+		result.beschreibung = (obj.beschreibung === undefined) ? null : obj.beschreibung === null ? null : obj.beschreibung;
+		if (obj.idPersonTyp === undefined)
+			throw new Error('invalid json format, missing attribute idPersonTyp');
+		result.idPersonTyp = obj.idPersonTyp;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		result.beschreibung = (obj.beschreibung === undefined) ? null : obj.beschreibung === null ? null : obj.beschreibung;
-		if (obj.personTyp === undefined)
-			throw new Error('invalid json format, missing attribute personTyp');
-		result.personTyp = obj.personTyp;
-		if (obj.anzahlEinwilligungen === undefined)
-			throw new Error('invalid json format, missing attribute anzahlEinwilligungen');
-		result.anzahlEinwilligungen = obj.anzahlEinwilligungen;
+		if (obj.istSichtbar === undefined)
+			throw new Error('invalid json format, missing attribute istSichtbar');
+		result.istSichtbar = obj.istSichtbar;
+		result.referenziertInAnderenTabellen = (obj.referenziertInAnderenTabellen === undefined) ? null : obj.referenziertInAnderenTabellen === null ? null : obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
@@ -86,11 +89,12 @@ export class Einwilligungsart extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
-		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
-		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"schluessel" : ' + ((obj.schluessel === null) ? 'null' : JSON.stringify(obj.schluessel)) + ',';
 		result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
-		result += '"personTyp" : ' + obj.personTyp.toString() + ',';
-		result += '"anzahlEinwilligungen" : ' + obj.anzahlEinwilligungen.toString() + ',';
+		result += '"idPersonTyp" : ' + obj.idPersonTyp.toString() + ',';
+		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		result += '"referenziertInAnderenTabellen" : ' + ((obj.referenziertInAnderenTabellen === null) ? 'null' : obj.referenziertInAnderenTabellen.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -105,19 +109,22 @@ export class Einwilligungsart extends JavaObject {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.schluessel !== undefined) {
-			result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
-		}
-		if (obj.sortierung !== undefined) {
-			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+			result += '"schluessel" : ' + ((obj.schluessel === null) ? 'null' : JSON.stringify(obj.schluessel)) + ',';
 		}
 		if (obj.beschreibung !== undefined) {
 			result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		}
-		if (obj.personTyp !== undefined) {
-			result += '"personTyp" : ' + obj.personTyp.toString() + ',';
+		if (obj.idPersonTyp !== undefined) {
+			result += '"idPersonTyp" : ' + obj.idPersonTyp.toString() + ',';
 		}
-		if (obj.anzahlEinwilligungen !== undefined) {
-			result += '"anzahlEinwilligungen" : ' + obj.anzahlEinwilligungen.toString() + ',';
+		if (obj.sortierung !== undefined) {
+			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		}
+		if (obj.istSichtbar !== undefined) {
+			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		}
+		if (obj.referenziertInAnderenTabellen !== undefined) {
+			result += '"referenziertInAnderenTabellen" : ' + ((obj.referenziertInAnderenTabellen === null) ? 'null' : obj.referenziertInAnderenTabellen.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

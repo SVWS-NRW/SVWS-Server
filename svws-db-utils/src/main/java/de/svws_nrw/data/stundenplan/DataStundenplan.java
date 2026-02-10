@@ -52,6 +52,11 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 		setAttributesNotPatchable("id", "idSchuljahresabschnitt");
 	}
 
+	@Override
+	public Long getID(final Map<String, Object> attributes) throws ApiOperationException {
+		return JSONMapper.convertToLong(attributes.get("id"), false);
+	}
+
 	/**
 	 * Gibt die Daten eines Stundenplans zu dessen ID zurück.
 	 *
@@ -293,6 +298,7 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 		if (alt == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Stundenplan mit der ID %d gefunden.".formatted(idAlt));
 		final Stundenplan neu = super.addFromStream(isStundenplanNeu);
+		neu.wochenTypModell = alt.wochenTypModell;
 		final Long idSchuljahresabschnittNeu = getIdSchuljahresabschnittNeuIfDifferent(alt, neu);
 		final Map<Long, Long> aufsichtsbereichMapping = StundenplanCopyHelper.kopiereAufsichtsbereiche(conn, idAlt, neu);
 		StundenplanCopyHelper.kopiereKalenderwochenZuordnungen(conn, idAlt, neu);

@@ -102,7 +102,7 @@ export class DQR extends JavaEnum<DQR> {
 		return ['de.svws_nrw.core.types.DQR', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<DQR>('de.svws_nrw.core.types.DQR');
+	public static readonly class = new Class<DQR>('de.svws_nrw.core.types.DQR');
 
 }
 

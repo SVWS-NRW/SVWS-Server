@@ -1,19 +1,17 @@
 import groovy.json.JsonSlurper
 import svws.gradle.scripts.FileUtils
 
-/*
-* Alle Tasks in dieser Datei werden in den jeweiligen Unterpaketen ausgeführt.
-*/
-
 dependencies {
 	implementation project(':svws-server-app')
 }
 
 def buildDirPath = layout.buildDirectory.get()
 
-def configDir = "${rootDir}/config/tests"
-def configFile = file("$configDir/config.json").exists() ? file("$configDir/config.json") : file("$configDir/config_default.json")
-def config = new JsonSlurper().parse(configFile)
+if (!rootProject.ext.has('CONFIG')) {
+	rootProject.ext.CONFIG = file("${rootDir}/config/tests/config.json").exists()
+			? new JsonSlurper().parse(file("${rootDir}/config/tests/config.json"))
+			: new JsonSlurper().parse(file("${rootDir}/config/tests/config_default.json"))
+}
 
 if (!rootProject.ext.has('APP_BASE_IMAGE_NAME')) {
 	rootProject.ext.APP_BASE_IMAGE_NAME = "svws-app-base:" + (System.getenv('CI_COMMIT_SHORT_SHA') ?: UUID.randomUUID().toString().substring(0, 8))
@@ -41,7 +39,7 @@ tasks.register('generateDockerComposeFile') {
 
 	def inputFile = file('../templates/docker/compose.yml.template')
 	def outputFile = file("$buildDirPath/tempdocker/compose.yml")
-	def dbImageName = "${config.dockerRegistry}/svws-datenbank/${TARGET_TEST_DATABASES.first().toLowerCase()}:latest"
+	def dbImageName = "${rootProject.ext.CONFIG.dockerRegistry}/svws-datenbank/${TARGET_TEST_DATABASES.first().toLowerCase()}:latest"
 
 	doLast {
 
@@ -52,7 +50,7 @@ tasks.register('generateDockerComposeFile') {
 				'#GRADLE_PLACEHOLDER_DB_SERVICE_NAME'   : "${DB_SERVICE_NAME}",
 				'#GRADLE_PLACEHOLDER_DB_IMAGE_NAME'     : "${dbImageName}",
 				'#GRADLE_PLACEHOLDER_APP_IMAGE_NAME'    : "${APP_IMAGE_NAME}",
-				'#GRADLE_PLACEHOLDER_DOCKER_REG_URL'    : "${config.dockerRegistry}"
+				'#GRADLE_PLACEHOLDER_DOCKER_REG_URL'    : "${rootProject.ext.CONFIG.dockerRegistry}"
 		]
 
 		FileUtils.replaceFilePlaceholderWithValues(inputFile, outputFile, replacements)
@@ -174,10 +172,13 @@ tasks.register('generateStartupScript') {
 tasks.register('erzeugeOrdnerFuerTestumgebung') {
 	description = 'Erstellt die Ordner für die Testumgebung bzw. die Docker Container'
 
+	def dirDocker = file("$buildDirPath/tempdocker")
+	def dirDockerInitScripts = file("$buildDirPath/tempdocker/init-scripts")
+	def dirDockerAppConf = file("$buildDirPath/tempdocker/appConf")
 	doFirst {
-		mkdir "$buildDirPath/tempdocker"
-		mkdir "$buildDirPath/tempdocker/init-scripts"
-		mkdir "$buildDirPath/tempdocker/appConf"
+		dirDocker.mkdirs() 
+		dirDockerInitScripts.mkdirs()
+		dirDockerAppConf.mkdirs()
 	}
 }
 

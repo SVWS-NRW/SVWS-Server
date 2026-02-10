@@ -48,24 +48,27 @@
 	function klassen(list: List<StundenplanUnterricht>) {
 		const [item] = list;
 		const arr = [];
-		for (const id of item.klassen)
+		for (const id of item.klassen) {
 			arr.push(props.stundenplanManager().klasseGetByIdOrException(id).kuerzel);
+		}
 		return arr.join(', ');
 	}
 
 	function lehrer(list: List<StundenplanUnterricht>) {
 		const [item] = list;
 		const arr = [];
-		for (const id of item.lehrer)
+		for (const id of item.lehrer) {
 			arr.push(props.stundenplanManager().lehrerGetByIdOrException(id).kuerzel);
+		}
 		return arr.join(', ');
 	}
 
 	function raeume(list: List<StundenplanUnterricht>) {
 		const [item] = list;
 		const arr = [];
-		for (const id of item.raeume)
+		for (const id of item.raeume) {
 			arr.push(props.stundenplanManager().raumGetByIdOrException(id).kuerzel);
+		}
 		return arr.join(', ');
 	}
 

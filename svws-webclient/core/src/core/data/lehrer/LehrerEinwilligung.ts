@@ -36,7 +36,7 @@ export class LehrerEinwilligung extends JavaObject {
 		return ['de.svws_nrw.core.data.lehrer.LehrerEinwilligung'].includes(name);
 	}
 
-	public static class = new Class<LehrerEinwilligung>('de.svws_nrw.core.data.lehrer.LehrerEinwilligung');
+	public static readonly class = new Class<LehrerEinwilligung>('de.svws_nrw.core.data.lehrer.LehrerEinwilligung');
 
 	public static transpilerFromJSON(json: string): LehrerEinwilligung {
 		const obj = JSON.parse(json) as Partial<LehrerEinwilligung>;

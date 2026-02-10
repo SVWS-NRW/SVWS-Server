@@ -183,7 +183,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 		const sb: StringBuilder = new StringBuilder();
 		for (const fach of this.faecher) {
 			if (filter.test(fach)) {
-				if (sb.length() > 0)
+				if (!sb.isEmpty())
 					sb.append(", ");
 				sb.append(fach.kuerzel);
 			}
@@ -198,7 +198,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	public toString(): string {
 		const sb: StringBuilder = new StringBuilder();
 		for (const fach of this.faecher) {
-			if (sb.length() > 0)
+			if (!sb.isEmpty())
 				sb.append(", ");
 			let diffkursinfo: string = "";
 			if ((fach.kursart === null) || (fach.kuerzel === null))
@@ -218,7 +218,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.ge.AbschlussFaecherGruppe'].includes(name);
 	}
 
-	public static class = new Class<AbschlussFaecherGruppe>('de.svws_nrw.core.abschluss.ge.AbschlussFaecherGruppe');
+	public static readonly class = new Class<AbschlussFaecherGruppe>('de.svws_nrw.core.abschluss.ge.AbschlussFaecherGruppe');
 
 }
 

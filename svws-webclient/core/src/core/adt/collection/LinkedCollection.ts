@@ -622,7 +622,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 		return ['java.util.Collection', 'de.svws_nrw.core.adt.collection.LinkedCollection', 'java.util.Queue', 'java.util.Deque', 'java.lang.Iterable', 'java.util.SequencedCollection'].includes(name);
 	}
 
-	public static class = new Class<LinkedCollection<any>>('de.svws_nrw.core.adt.collection.LinkedCollection');
+	public static readonly class = new Class<LinkedCollection<any>>('de.svws_nrw.core.adt.collection.LinkedCollection');
 
 	public reversed(): Deque<E> {
 		throw new UnsupportedOperationException("Der Transpiler unterstützt diese Methode noch nicht.");

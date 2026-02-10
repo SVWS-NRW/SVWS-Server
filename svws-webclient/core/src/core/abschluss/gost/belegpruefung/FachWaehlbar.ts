@@ -102,7 +102,7 @@ export class FachWaehlbar extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.FachWaehlbar', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
 
-	public static class = new Class<FachWaehlbar>('de.svws_nrw.core.abschluss.gost.belegpruefung.FachWaehlbar');
+	public static readonly class = new Class<FachWaehlbar>('de.svws_nrw.core.abschluss.gost.belegpruefung.FachWaehlbar');
 
 }
 

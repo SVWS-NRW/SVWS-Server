@@ -470,7 +470,7 @@ export class GostFaecherManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.GostFaecherManager'].includes(name);
 	}
 
-	public static class = new Class<GostFaecherManager>('de.svws_nrw.core.utils.gost.GostFaecherManager');
+	public static readonly class = new Class<GostFaecherManager>('de.svws_nrw.core.utils.gost.GostFaecherManager');
 
 }
 

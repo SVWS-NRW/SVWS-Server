@@ -42,12 +42,11 @@ export class GridInputAbiturNotenpunkte<KEY> extends GridInputInnerText<KEY, str
 
 	private getNotenpunkteFromKuerzel(value: string | null): number | null {
 		const notenkuerzel = value;
-		if (notenkuerzel === null)
+		if (notenkuerzel === null) {
 			return null;
+		}
 		const nke: NoteKatalogEintrag | null = Note.fromKuerzel(notenkuerzel).daten(this._schuljahr);
-		if ((nke === null) || (nke.notenpunkte === null))
-			return null;
-		return nke.notenpunkte;
+		return nke?.notenpunkte ?? null;
 	}
 
 	private getNotenKuerzelFromNotenpunkte(value: number | null): string | null {
@@ -63,7 +62,11 @@ export class GridInputAbiturNotenpunkte<KEY> extends GridInputInnerText<KEY, str
 	 */
 	public update(value: string | null) {
 		const np = this.getNotenpunkteFromKuerzel(value);
-		super.updateText((np === null) ? null : ((np < 10) ? "0" : "") + np);
+		if (np === null) {
+			super.updateText(null);
+		} else {
+			super.updateText(((np < 10) ? "0" : "") + np);
+		}
 		this._notenpunkte.value = np;
 	}
 
@@ -82,8 +85,9 @@ export class GridInputAbiturNotenpunkte<KEY> extends GridInputInnerText<KEY, str
 	 * @returns true, falls das Anhängen der Ziffer zulässig war und sonst false
 	 */
 	public append(ziffer: number): boolean {
-		if ((this._notenpunkte.value !== null) && (this._notenpunkte.value !== 0) && (((this._notenpunkte.value === 1) && (ziffer > 5)) || (this._notenpunkte.value > 1)))
+		if ((this._notenpunkte.value !== null) && (this._notenpunkte.value !== 0) && (((this._notenpunkte.value === 1) && (ziffer > 5)) || (this._notenpunkte.value > 1))) {
 			return false;
+		}
 		const npNeu = (this._notenpunkte.value === null) ? ziffer : (this._notenpunkte.value * 10) + ziffer;
 		this.update(this.getNotenKuerzelFromNotenpunkte(npNeu));
 		return true;
@@ -94,8 +98,9 @@ export class GridInputAbiturNotenpunkte<KEY> extends GridInputInnerText<KEY, str
 	 * Input geleert.
 	 */
 	public remove() {
-		if (this._notenpunkte.value === null)
+		if (this._notenpunkte.value === null) {
 			return;
+		}
 		if (this._notenpunkte.value < 10) {
 			this.update(null);
 			return;
@@ -112,8 +117,9 @@ export class GridInputAbiturNotenpunkte<KEY> extends GridInputInnerText<KEY, str
 	 * @returns true   es hat aufgrund des Tastaturereignisses eine Änderung am Zustand des Inputs stattgefunden
 	 */
 	public onKeyDown(event: KeyboardEvent): boolean {
-		if (super.onKeyDownNavigation(event))
+		if (super.onKeyDownNavigation(event)) {
 			return false;
+		}
 		// Lösche ggf. den aktuellen Wert
 		if (event.key === "Delete") {
 			this.update(null);
@@ -127,19 +133,22 @@ export class GridInputAbiturNotenpunkte<KEY> extends GridInputInnerText<KEY, str
 		// Speicher den aktuellen Wert im Input
 		if (event.key === "Enter") {
 			this.commit();
-			if (this.navigateOnEnter === "DOWN")
+			if (this.navigateOnEnter === "DOWN") {
 				this.navigateDown();
-			else if (this.navigateOnEnter === "RIGHT")
+			} else if (this.navigateOnEnter === "RIGHT") {
 				this.navigateRight();
+			}
 			return true;
 		}
 		// Prüfe, ob eine Ziffer eingegeben wurde
-		const ziffer = parseInt(event.key);
-		if (isNaN(ziffer))
-			return false; // Keine erfolgreiche Eingabe...
+		const ziffer = Number.parseInt(event.key);
+		if (Number.isNaN(ziffer)) {
+			return false;
+		} // Keine erfolgreiche Eingabe...
 		// Wenn es sich um eine neue Fokussierung handelt, dann ersetze den Wert bei einer Eingabe (sonst anhängen)
-		if (this._isNewFocus.value)
+		if (this._isNewFocus.value) {
 			this.update(null);
+		}
 		return this.append(ziffer);
 	}
 

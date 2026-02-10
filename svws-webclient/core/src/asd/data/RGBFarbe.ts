@@ -88,7 +88,7 @@ export class RGBFarbe extends JavaObject {
 		return ['de.svws_nrw.asd.data.RGBFarbe'].includes(name);
 	}
 
-	public static class = new Class<RGBFarbe>('de.svws_nrw.asd.data.RGBFarbe');
+	public static readonly class = new Class<RGBFarbe>('de.svws_nrw.asd.data.RGBFarbe');
 
 	public static transpilerFromJSON(json: string): RGBFarbe {
 		const obj = JSON.parse(json) as Partial<RGBFarbe>;

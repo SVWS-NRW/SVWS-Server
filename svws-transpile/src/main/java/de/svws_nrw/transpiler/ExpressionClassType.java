@@ -467,6 +467,17 @@ public final class ExpressionClassType extends ExpressionType {
 						yield -1;
 					yield paramTypes.get(0).equals(paramTypes.get(1)) ? 1 : -1;
 				}
+				case "java.util.function.Supplier" -> {
+					if (resultType == null)
+						yield -1;
+					if (!paramTypes.isEmpty())
+						yield -1;
+					if (this.typeArguments.size() != 1)
+						yield -1;
+					if (this.typeArguments.get(0).isAssignable(transpiler, resultType) < 0)
+						yield -1;
+					yield 1;
+				}
 				case "java.util.function.Function" -> {
 					if (resultType == null)
 						yield -1;

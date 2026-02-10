@@ -26,7 +26,7 @@ export class KAOAKategorieKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.kaoa.KAOAKategorieKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<KAOAKategorieKatalogEintrag>('de.svws_nrw.asd.data.kaoa.KAOAKategorieKatalogEintrag');
+	public static readonly class = new Class<KAOAKategorieKatalogEintrag>('de.svws_nrw.asd.data.kaoa.KAOAKategorieKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): KAOAKategorieKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<KAOAKategorieKatalogEintrag>;

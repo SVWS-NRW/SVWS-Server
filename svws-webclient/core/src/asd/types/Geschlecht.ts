@@ -198,7 +198,7 @@ export class Geschlecht extends JavaEnum<Geschlecht> {
 		return ['de.svws_nrw.asd.types.Geschlecht', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Geschlecht>('de.svws_nrw.asd.types.Geschlecht');
+	public static readonly class = new Class<Geschlecht>('de.svws_nrw.asd.types.Geschlecht');
 
 }
 

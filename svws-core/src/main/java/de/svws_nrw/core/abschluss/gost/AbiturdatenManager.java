@@ -2106,11 +2106,11 @@ public class AbiturdatenManager {
 			// Prüfe Belegung des Projektkurses
 			if (!pruefeBelegungMitKursart(belegung, kursart, GostHalbjahr.Q21, GostHalbjahr.Q22))
 				return null;
-			// Prüfe die Belegung des Leitfaches und dessen Schriftlichkeit
-			final AbiturFachbelegung leitfach = getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
-			if (!pruefeBelegungMitKursart(leitfach, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12))
+			// Prüfe die Belegung des Referenzfaches und dessen Schriftlichkeit
+			final AbiturFachbelegung referenzfach = getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
+			if (!pruefeBelegungMitKursart(referenzfach, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12))
 				return null;
-			if (!pruefeBelegungMitSchriftlichkeit(leitfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12))
+			if (!pruefeBelegungMitSchriftlichkeit(referenzfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12))
 				return null;
 			return kursart;
 		}
@@ -2881,7 +2881,7 @@ public class AbiturdatenManager {
 				punktSummeEinfach += nke.notenpunkte;
 				final int notenpunkte = nke.notenpunkte * (istLK ? 2 : 1);
 				fachbelegung.block1PunktSumme += notenpunkte;
-				summeKurseFach++;
+				summeKurseFach += 1.0;
 				abidaten.block1AnzahlKurse++;
 				if (istLK) {
 					abidaten.block1PunktSummeLK += notenpunkte;
@@ -2895,7 +2895,8 @@ public class AbiturdatenManager {
 			}
 			fachbelegung.block1NotenpunkteDurchschnitt = (summeKurseFach == 0.0) ? null : (punktSummeEinfach / summeKurseFach);
 		}
-		final double summeNotenpunkte = abidaten.block1PunktSummeLK + abidaten.block1PunktSummeGK;
+		final int summeNotenpunkteGanzzahl = abidaten.block1PunktSummeLK + abidaten.block1PunktSummeGK;
+		final double summeNotenpunkte = summeNotenpunkteGanzzahl; // Sonar kritisiert die implizite Umwandlung einer Summe zu double.
 		final double anzahlKurse = (abidaten.block1AnzahlKurse + 8.0); // LK-Belegungen doppelt zählen, also + 2*4, da auch die Notenpunkte doppelt gezählt wurden
 		abidaten.block1PunktSummeNormiert = (int) Math.round((40.0 * summeNotenpunkte) / anzahlKurse);
 		abidaten.block1NotenpunkteDurchschnitt = Math.round((summeNotenpunkte / anzahlKurse) * 100.0) / 100.0;
@@ -3023,21 +3024,24 @@ public class AbiturdatenManager {
 	 * sofern die Daten vollständig vorliegen. Ist dies nicht der Fall, so wird das Ergebnis soweit
 	 * wie möglich berechnet. Diese Methode setzt die vorherige Berechnung der Zulassung voraus.
 	 *
+	 * @param servermode                     der Mode, in welchem der Server betrieben wird
 	 * @param abidaten                       die Abiturdaten, welche zur Berechnung verwendet werden
 	 * @param berechnePflichtpruefungenNeu   gibt an, ob die Pflichtprüfungen neu berechnet/gesetzt werden sollen oder nicht
 	 *
 	 * @return true, wenn die Berechnung vollständig durchgeführt werden konnte
 	 */
-	public static boolean berechnePruefungsergebnis(final @NotNull Abiturdaten abidaten, final boolean berechnePflichtpruefungenNeu) {
+	public static boolean berechnePruefungsergebnis(final @NotNull ServerMode servermode, final @NotNull Abiturdaten abidaten, final boolean berechnePflichtpruefungenNeu) {
 		// Bestimme die Fachbelegungen der Abiturfächer und sortiere diese
 		final @NotNull List<AbiturFachbelegung> abiBelegungen = new ArrayList<>();
 		for (final @NotNull AbiturFachbelegung fachbelegung : abidaten.fachbelegungen)
 			if (fachbelegung.abiturFach != null)
 				abiBelegungen.add(fachbelegung);
 
+		final boolean istAbi30ff = nutzeExperimentellenCode(servermode, abidaten.abiturjahr);
+
 		// Bestimme die Anzahl der Abiturfächer (BLL zählt ggf. als 5. Abiturfach), um die Punkte pro Notenpunkt festzulegen
 		final boolean hatBLL = !"K".equals(abidaten.besondereLernleistung);
-		final int faktor = hatBLL ? 4 : 5;
+		final int faktor = (istAbi30ff || hatBLL) ? 4 : 5;
 
 		// Bestimme die Prüfungsergebnisse in den Abiturfächern (erster Durchgang ohne mdl. Prüfungen im 1.-3. Fach)
 		int summe = 0;

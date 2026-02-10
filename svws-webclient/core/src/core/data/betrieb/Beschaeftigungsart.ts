@@ -24,9 +24,9 @@ export class Beschaeftigungsart extends JavaObject {
 	public istSichtbar: boolean = false;
 
 	/**
-	 * Die Änderbarkeit der Beschäftigungsart
+	 * Gibt an, ob die Beschäftigungsart in anderen Datenbanktabellen referenziert ist oder nicht.
 	 */
-	public istAenderbar: boolean = false;
+	public referenziertInAnderenTabellen: boolean = false;
 
 
 	public constructor() {
@@ -41,7 +41,7 @@ export class Beschaeftigungsart extends JavaObject {
 		return ['de.svws_nrw.core.data.betrieb.Beschaeftigungsart'].includes(name);
 	}
 
-	public static class = new Class<Beschaeftigungsart>('de.svws_nrw.core.data.betrieb.Beschaeftigungsart');
+	public static readonly class = new Class<Beschaeftigungsart>('de.svws_nrw.core.data.betrieb.Beschaeftigungsart');
 
 	public static transpilerFromJSON(json: string): Beschaeftigungsart {
 		const obj = JSON.parse(json) as Partial<Beschaeftigungsart>;
@@ -56,9 +56,9 @@ export class Beschaeftigungsart extends JavaObject {
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if (obj.istAenderbar === undefined)
-			throw new Error('invalid json format, missing attribute istAenderbar');
-		result.istAenderbar = obj.istAenderbar;
+		if (obj.referenziertInAnderenTabellen === undefined)
+			throw new Error('invalid json format, missing attribute referenziertInAnderenTabellen');
+		result.referenziertInAnderenTabellen = obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
@@ -68,7 +68,7 @@ export class Beschaeftigungsart extends JavaObject {
 		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
-		result += '"istAenderbar" : ' + obj.istAenderbar.toString() + ',';
+		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -88,8 +88,8 @@ export class Beschaeftigungsart extends JavaObject {
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
-		if (obj.istAenderbar !== undefined) {
-			result += '"istAenderbar" : ' + obj.istAenderbar.toString() + ',';
+		if (obj.referenziertInAnderenTabellen !== undefined) {
+			result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

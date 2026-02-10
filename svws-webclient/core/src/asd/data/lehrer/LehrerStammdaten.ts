@@ -142,7 +142,7 @@ export class LehrerStammdaten extends JavaObject {
 		return ['de.svws_nrw.asd.data.lehrer.LehrerStammdaten'].includes(name);
 	}
 
-	public static class = new Class<LehrerStammdaten>('de.svws_nrw.asd.data.lehrer.LehrerStammdaten');
+	public static readonly class = new Class<LehrerStammdaten>('de.svws_nrw.asd.data.lehrer.LehrerStammdaten');
 
 	public static transpilerFromJSON(json: string): LehrerStammdaten {
 		const obj = JSON.parse(json) as Partial<LehrerStammdaten>;

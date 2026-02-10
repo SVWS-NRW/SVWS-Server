@@ -29,7 +29,7 @@ export class StundenplanInputSimpleKlasse extends JavaObject {
 		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanInputSimpleKlasse'].includes(name);
 	}
 
-	public static class = new Class<StundenplanInputSimpleKlasse>('de.svws_nrw.core.data.stundenplanblockung.StundenplanInputSimpleKlasse');
+	public static readonly class = new Class<StundenplanInputSimpleKlasse>('de.svws_nrw.core.data.stundenplanblockung.StundenplanInputSimpleKlasse');
 
 	public static transpilerFromJSON(json: string): StundenplanInputSimpleKlasse {
 		const obj = JSON.parse(json) as Partial<StundenplanInputSimpleKlasse>;

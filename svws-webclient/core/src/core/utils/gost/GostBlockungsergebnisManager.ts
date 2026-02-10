@@ -1212,6 +1212,46 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		return ListUtils.getCountFiltered(this._parent.daten().schueler, { test: (schueler: Schueler) => this.getOfSchuelerHatStatusExtern(schueler.id) });
 	}
 
+	private static dividiereUndScheideNachZweiNachkommastellenAb(zaehler: number, nenner: number): number {
+		let hochskaliert: number = Math.trunc((zaehler * 100) / nenner);
+		return hochskaliert / 100.0;
+	}
+
+	/**
+	 * Liefert die Kursfrequenz als String, berechnet als (Summe aller Fachwahlen) / (interne Kurse).
+	 * <br>Hinweis: DummySuS werden ignoriert.
+	 * <br>Hinweis: Es werden 2 Nachkommastellen maximal angezeigt.
+	 *
+	 * @return die Kursfrequenz als String, berechnet als (Summe aller Fachwahlen) / (interne Kurse).
+	 */
+	public getKursfrequenz1AsString(): string {
+		let nKurse: number = this._parent.kursGetAnzahlIntener();
+		if (nKurse === 0)
+			return "Kursfrequenz = ?";
+		let nFachwahlen: number = this._parent.fachwahlGetAnzahl();
+		let avg1: number = GostBlockungsergebnisManager.dividiereUndScheideNachZweiNachkommastellenAb(nFachwahlen, nKurse);
+		return JavaString.replace(("" + avg1), '.', ',');
+	}
+
+	/**
+	 * Liefert die Kursfrequenz als String, berechnet als (Summe aller auf interne Kurse verteilten SuS) / (interne Kurse).
+	 * <br>Hinweis: DummySuS werden ignoriert.
+	 * <br>Hinweis: Es werden 2 Nachkommastellen maximal angezeigt.
+	 *
+	 * @return die Kursfrequenz als String, berechnet als (Summe aller auf interne Kurse verteilten SuS) / (interne Kurse).
+	 */
+	public getKursfrequenz2AsString(): string {
+		let nKurse: number = this._parent.kursGetAnzahlIntener();
+		if (nKurse === 0)
+			return "Kursfrequenz = ?";
+		let nVerteilt: number = 0;
+		for (const gKurs of this._parent.daten().kurse)
+			if (!gKurs.istKoopKurs)
+				nVerteilt += this.getOfKursAnzahlSchueler(gKurs.id);
+		let avg2: number = GostBlockungsergebnisManager.dividiereUndScheideNachZweiNachkommastellenAb(nVerteilt, nKurse);
+		return JavaString.replace(("" + avg2), '.', ',');
+	}
+
 	/**
 	 * Liefert die Anzahl an E-Schienen.
 	 *
@@ -1234,9 +1274,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Datenbank-ID der Blockungs. Das ist die ID des Elternteils.
+	 * Liefert die Datenbank-ID der Blockung. Das ist die ID des Elternteils.
 	 *
-	 * @return die Datenbank-ID der Blockungs. Das ist die ID des Elternteils.
+	 * @return die Datenbank-ID der Blockung. Das ist die ID des Elternteils.
 	 */
 	public getBlockungsdatenID(): number {
 		return this._ergebnis.blockungID;
@@ -2217,7 +2257,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			return false;
 		if ((konfliktTyp === 3) && ((!this.getOfSchuelerHatKollision(idSchueler)) && (!this.getOfSchuelerHatNichtwahl(idSchueler))))
 			return false;
-		if ((subString.length > 0) && (!this.getOfSchuelerHatImNamenSubstring(idSchueler, subString)))
+		if (!JavaString.isEmpty(subString) && (!this.getOfSchuelerHatImNamenSubstring(idSchueler, subString)))
 			return false;
 		if ((geschlecht !== null) && (this.getOfSchuelerGeschlechtOrException(idSchueler).id !== geschlecht.id))
 			return false;
@@ -5718,7 +5758,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager'].includes(name);
 	}
 
-	public static class = new Class<GostBlockungsergebnisManager>('de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager');
+	public static readonly class = new Class<GostBlockungsergebnisManager>('de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager');
 
 }
 

@@ -66,7 +66,7 @@ export class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlgorithm
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKOptimiereBest', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusK'].includes(name);
 	}
 
-	public static class = new Class<KursblockungAlgorithmusKOptimiereBest>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKOptimiereBest');
+	public static readonly class = new Class<KursblockungAlgorithmusKOptimiereBest>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKOptimiereBest');
 
 }
 

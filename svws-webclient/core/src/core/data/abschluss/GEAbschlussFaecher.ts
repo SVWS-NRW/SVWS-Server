@@ -42,7 +42,7 @@ export class GEAbschlussFaecher extends JavaObject {
 		return ['de.svws_nrw.core.data.abschluss.GEAbschlussFaecher'].includes(name);
 	}
 
-	public static class = new Class<GEAbschlussFaecher>('de.svws_nrw.core.data.abschluss.GEAbschlussFaecher');
+	public static readonly class = new Class<GEAbschlussFaecher>('de.svws_nrw.core.data.abschluss.GEAbschlussFaecher');
 
 	public static transpilerFromJSON(json: string): GEAbschlussFaecher {
 		const obj = JSON.parse(json) as Partial<GEAbschlussFaecher>;

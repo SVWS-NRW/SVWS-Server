@@ -38,8 +38,9 @@ export class RouteGostKlausurplanungNachschreiber extends RouteNode<any, RouteGo
 		try {
 			const { abiturjahr, halbjahr: halbjahrId } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr"]);
 			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
-			if ((abiturjahr === undefined) || (halbjahr === null))
+			if ((abiturjahr === undefined) || (halbjahr === null)) {
 				throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
+			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}

@@ -2,6 +2,8 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
+import org.jboss.resteasy.annotations.GZIP;
+
 import de.svws_nrw.core.data.erzieher.ErzieherListeEintrag;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.types.ServerMode;
@@ -56,6 +58,7 @@ public class APIErzieher {
 	 * @return die Liste mit den einzelnen Erziehern
 	 */
 	@GET
+	@GZIP
 	@Path("/")
 	@Operation(summary = "Gibt eine Übersicht von allen Erziehern zurück.",
 			description = "Erstellt eine Liste aller in der Datenbank vorhandenen Erzieher unter Angabe der ID, des Kürzels, "

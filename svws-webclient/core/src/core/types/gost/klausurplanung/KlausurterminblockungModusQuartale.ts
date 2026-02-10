@@ -116,7 +116,7 @@ export class KlausurterminblockungModusQuartale extends JavaEnum<Klausurterminbl
 		return ['de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusQuartale', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<KlausurterminblockungModusQuartale>('de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusQuartale');
+	public static readonly class = new Class<KlausurterminblockungModusQuartale>('de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusQuartale');
 
 }
 

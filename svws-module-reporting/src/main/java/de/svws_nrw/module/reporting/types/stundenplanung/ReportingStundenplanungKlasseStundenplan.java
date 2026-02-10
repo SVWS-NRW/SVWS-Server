@@ -4,7 +4,7 @@ package de.svws_nrw.module.reporting.types.stundenplanung;
 import java.util.Objects;
 
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
-import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 
 
 /**

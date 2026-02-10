@@ -41,13 +41,13 @@
 					</svws-ui-tooltip>
 				</svws-ui-button>
 				<span class="whitespace-nowrap flex items-center" v-else-if="hatKompetenzUpdate && termin !== undefined && !kMan().schuelerSchreibtKlausurtermin(kMan().schuelerGetBySchuelerklausurtermin(s).id, termin)">
-					<span>(</span><svws-ui-textarea-input :disabled="!hatKompetenzUpdate || !patchKlausur" class="text-sm inline-block align-middle" headless :rows="1" resizeable="none" autoresize placeholder="Grund des Fehlens" :model-value="s.bemerkung" @change="bemerkung => patchKlausur(s, {bemerkung})" /><span>)</span>
+					<span>(</span><svws-ui-textarea-input :disabled="!hatKompetenzUpdate || !patchKlausur" class="text-sm inline-block align-middle" headless :rows="1" resizeable="none" autoresize placeholder="Grund des Fehlens" :model-value="s.bemerkung" @change="bemerkung => patchKlausur?.(s, {bemerkung})" /><span>)</span>
 				</span>
 			</td>
 		</tr>
 	</table>
 	<div class="my-4">
-		<svws-ui-textarea-input placeholder="Bemerkungen zum Kurs" resizeable="none" autoresize :disabled="!hatKompetenzUpdate || !patchKlausur" :model-value="kursklausur.bemerkung" @change="bemerkung => patchKlausur(kursklausur, {bemerkung})" />
+		<svws-ui-textarea-input placeholder="Bemerkungen zum Kurs" resizeable="none" autoresize :disabled="!hatKompetenzUpdate || !patchKlausur" :model-value="kursklausur.bemerkung" @change="bemerkung => patchKlausur?.(kursklausur, {bemerkung})" />
 	</div>
 </template>
 
@@ -78,10 +78,11 @@
 	const show = ref<boolean>(false);
 
 	watchEffect(() => {
-		if (show.value)
+		if (show.value) {
 			emit('modal', true);
-		else
+		} else {
 			emit('modal', false);
+		}
 	});
 
 	const terminSelected = ref<GostSchuelerklausurTermin>(new GostSchuelerklausurTermin());

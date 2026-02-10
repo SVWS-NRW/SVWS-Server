@@ -34,13 +34,15 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 	protected checkHidden(params?: RouteParams) {
 		try {
 			const { id } = (params !== undefined) ? RouteNode.getIntParams(params, ["id"]) : { id: undefined };
-			if (!routeSchueler.data.manager.hasDaten())
+			if (!routeSchueler.data.manager.hasDaten()) {
 				return false;
+			}
 			const abiturjahr = routeSchueler.data.manager.auswahl().abiturjahrgang;
 			if (((abiturjahr !== null) && routeSchueler.data.manager.abiturjahrgaenge.get(abiturjahr))
 				&& (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
-					|| (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN) && api.benutzerKompetenzenAbiturjahrgaenge.has(abiturjahr))))
+					|| (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN) && api.benutzerKompetenzenAbiturjahrgaenge.has(abiturjahr)))) {
 				return false;
+			}
 			return routeSchueler.getRouteDefaultChild({ id });
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
@@ -49,24 +51,28 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		try {
-			if (isEntering)
-			// Wenn man in die Laufbahnplanung wechselt und von einer Gost-Route per Schülerlink kommt, dann im Filter direkt den Jahrgang wählen
-				if ((from !== undefined) && from.checkSuccessorOf('gost') !== false)
-					for (const e of routeSchueler.data.manager.jahrgaenge.list())
+			if (isEntering) {
+				// Wenn man in die Laufbahnplanung wechselt und von einer Gost-Route per Schülerlink kommt, dann im Filter direkt den Jahrgang wählen
+				if ((from !== undefined) && from.checkSuccessorOf('gost') !== false) {
+					for (const e of routeSchueler.data.manager.jahrgaenge.list()) {
 						if (e.id === routeSchueler.data.manager.auswahl().idJahrgang) {
 							routeSchueler.data.manager.jahrgaenge.auswahlAdd(e);
 							await routeSchueler.data.setFilter();
 							break;
 						}
+					}
+				}
+			}
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
-			if (id === undefined)
+			if (id === undefined) {
 				await this.data.ladeDaten(null);
-			else
+			} else {
 				try {
 					await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
 				} catch (error) {
 					return routeSchueler.getRoute({ id });
 				}
+			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}

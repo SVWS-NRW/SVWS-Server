@@ -1,9 +1,12 @@
 package de.svws_nrw.data.schueler;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.svws_nrw.asd.types.schule.Foerderschwerpunkt;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
@@ -14,6 +17,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOFoerderschwerpunkt;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +26,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatException;
 import static org.assertj.core.api.Assertions.assertThatNoException;
@@ -274,7 +279,7 @@ class DataKatalogSchuelerFoerderschwerpunkteTest {
 		when(this.conn.queryByKey(DTOFoerderschwerpunkt.class, 1L)).thenReturn(dto);
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("kuerzel", "Dieser Text ist viel zu lang, Dieser Text ist viel zu lang, Dieser Text ist viel zu lang")))
+				.isThrownBy(() -> this.data.patch(1L, Map.of("kuerzel", RandomStringUtils.insecure().nextAscii(51))))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Attribut kuerzel: Die Länge des Strings ist auf 50 Zeichen limitiert.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -567,6 +572,31 @@ class DataKatalogSchuelerFoerderschwerpunkteTest {
 		assertThat(response)
 				.hasFieldOrPropertyWithValue("success", true)
 				.satisfies(r -> assertThat(r.log).isEmpty());
+	}
+
+	@Test
+	@DisplayName("getIdsOfReferencedFoerderschwerpunkte | null")
+	void getIdsOfReferencedFoerderschwerpunkteIdsNull() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+		final Method method = DataKatalogSchuelerFoerderschwerpunkte.class.getDeclaredMethod("getIdsOfReferencedFoerderschwerpunkte", Set.class);
+		method.setAccessible(true);
+		final Object result = method.invoke(this.data, (Object) null);
+
+		assertThat((Set<Long>) result).isEmpty();
+
+		verify(this.conn, never()).query(anyString(), any());
+	}
+
+	@Test
+	@DisplayName("getIdsOfReferencedFoerderschwerpunkte | emptyList")
+	void getIdsOfReferencedFoerderschwerpunkteIdsEmpty() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+		final Method method = DataKatalogSchuelerFoerderschwerpunkte.class.getDeclaredMethod("getIdsOfReferencedFoerderschwerpunkte", Set.class);
+		method.setAccessible(true);
+		final Set<Long> emptySet = Collections.emptySet();
+		final Object result = method.invoke(this.data, emptySet);
+
+		assertThat((Set<Long>) result).isEmpty();
+
+		verify(this.conn, never()).query(anyString(), any());
 	}
 
 }

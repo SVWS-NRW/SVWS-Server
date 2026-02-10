@@ -34,7 +34,7 @@ export class SchuljahresabschnittsUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.schule.SchuljahresabschnittsUtils'].includes(name);
 	}
 
-	public static class = new Class<SchuljahresabschnittsUtils>('de.svws_nrw.core.utils.schule.SchuljahresabschnittsUtils');
+	public static readonly class = new Class<SchuljahresabschnittsUtils>('de.svws_nrw.core.utils.schule.SchuljahresabschnittsUtils');
 
 }
 

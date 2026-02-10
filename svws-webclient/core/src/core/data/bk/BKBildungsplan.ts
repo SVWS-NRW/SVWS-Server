@@ -59,7 +59,7 @@ export class BKBildungsplan extends JavaObject {
 		return ['de.svws_nrw.core.data.bk.BKBildungsplan'].includes(name);
 	}
 
-	public static class = new Class<BKBildungsplan>('de.svws_nrw.core.data.bk.BKBildungsplan');
+	public static readonly class = new Class<BKBildungsplan>('de.svws_nrw.core.data.bk.BKBildungsplan');
 
 	public static transpilerFromJSON(json: string): BKBildungsplan {
 		const obj = JSON.parse(json) as Partial<BKBildungsplan>;

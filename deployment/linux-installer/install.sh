@@ -5,12 +5,12 @@ if [ -f "/etc/debian_version" ] || [ -f "/etc/debian_release" ]; then
 fi
 
 if ! $IS_DEBIAN_LIKE; then
-  echo "Dieses Skript wird nicht auf einem Debian-basierten System ausgeführt. Beende Ausführung..."
+  echo "Dieses Skript wird nicht auf einem Debian-basierten System ausgeführt. Beende Ausführung ..."
   exit 1
 fi
 
 if [[ $EUID -ne 0 ]]; then
-   echo "Dieses Skript muss als Root ausgeführt werden"
+   echo "Dieses Skript muss als Root ausgeführt werden."
    exit 1
 fi
 
@@ -20,7 +20,7 @@ if systemctl is-active --quiet svws.service; then
 		  echo "Der SVWS ist aktiv -> Der SVWS-Service wird nun für das Update beendet!"
 		  systemctl stop svws.service
 	else
-		   echo "SVWS ist bereits installiert und gestartet! Zum updaten bitte --update verwenden"
+		   echo "SVWS ist bereits installiert und gestartet! Zum updaten bitte --update verwenden."
            exit 1
 	fi
 fi
@@ -47,8 +47,8 @@ export CONF_PATH=/etc/app/svws/conf
 export APP_PORT=8443
 
 export SVWS_TLS_KEYSTORE_PATH=$CONF_PATH/keystore
-export SVWS_TLS_KEYSTORE_PASSWORD=test123
-export SVWS_TLS_KEY_ALIAS=
+export SVWS_TLS_KEYSTORE_PASSWORD=${password2}
+export SVWS_TLS_KEY_ALIAS=svws
 
 
 
@@ -70,7 +70,7 @@ if [[ "$1" == "--update" ]]; then
 
     # Wenn DOWNLOAD_PFAD gesetzt ist, lade Datei herunter
     if [ ! -z "$DOWNLOAD_PFAD" ]; then
-      echo "Lade Datei herunter von $DOWNLOAD_PFAD..."
+      echo "Lade Datei herunter von $DOWNLOAD_PFAD ..."
       wget -N $DOWNLOAD_PFAD
       echo "Herunterladen abgeschlossen."
     fi
@@ -113,11 +113,11 @@ if [[ "$1" == "--update" ]]; then
     cd $script_dir
 
     # Lösche das Verzeichnis 'svws' im Home-Verzeichnis
-    echo "Lösche das Verzeichnis 'svws' im Home-Verzeichnis..."
+    echo "Lösche das Verzeichnis 'svws' im Home-Verzeichnis ..."
     rm -r ./svws
 
     # Lösche das Verzeichnis 'init-scripts' im Home-Verzeichnis
-    echo "Lösche das Verzeichnis 'init-scripts' im Home-Verzeichnis..."
+    echo "Lösche das Verzeichnis 'init-scripts' im Home-Verzeichnis ..."
     rm -r ./init-scripts
 
     # Aktualisieren der Systemd-Konfigurationen und Starten des Services
@@ -177,11 +177,12 @@ else
     		echo "Keystore für TLS:"
     		read -p "SVWS_TLS_KEYSTORE_PATH (default: '$CONF_PATH/keystore'): " SVWS_TLS_KEYSTORE_PATH
     		export SVWS_TLS_KEYSTORE_PATH=${SVWS_TLS_KEYSTORE_PATH:-$CONF_PATH/keystore}
-    		read -p "SVWS_TLS_KEYSTORE_PASSWORD (default: 'test123'): " SVWS_TLS_KEYSTORE_PASSWORD
-    		export SVWS_TLS_KEYSTORE_PASSWORD=${SVWS_TLS_KEYSTORE_PASSWORD:-test123}
-    		read -p "SVWS_TLS_KEY_ALIAS (default: 'alias1'): " SVWS_TLS_KEY_ALIAS
-    		export SVWS_TLS_KEY_ALIAS=${SVWS_TLS_KEY_ALIAS:-alias1}
-			echo "Bitte geben Sie die folgenden Informationen für den Distinguished Name (dname) ein:"
+    		read -p "SVWS_TLS_KEYSTORE_PASSWORD (default: '${password2}'): " SVWS_TLS_KEYSTORE_PASSWORD
+    		export SVWS_TLS_KEYSTORE_PASSWORD=${SVWS_TLS_KEYSTORE_PASSWORD:-${password2}}
+    		read -p "SVWS_TLS_KEY_ALIAS (default: 'svws'): " SVWS_TLS_KEY_ALIAS
+    		export SVWS_TLS_KEY_ALIAS=${SVWS_TLS_KEY_ALIAS:-svws}
+			echo "Bitte geben Sie die folgenden Informationen für den Distinguished Name (dname) an,"
+            echo "Umlaute, Sonderzeichen und Leerzeichen sind nicht erlaubt:"
 			read -p "Common NAME (CN): " INPUT_COMMON_NAME
 			export INPUT_COMMON_NAME=${INPUT_COMMON_NAME}
 			read -p "Organizational Unit (OU): " INPUT_ORGANIZATIONAL_UNIT
@@ -236,13 +237,13 @@ else
     	read -p "Sind alle Einstellungen korrekt? (j/N): " CONFIRM
 
     	if [ "$CONFIRM" = "n" ] || [ "$CONFIRM" = "N" ] || [ "$CONFIRM" = "" ]; then
-    		echo "Bitte Skript erneut ausführen";
+    		echo "Bitte Skript erneut ausführen.";
     		exit 0;
     	fi
     fi
 
     # Erstelle .env-Datei und schreibe Konfiguration hinein
-    echo "Erstelle .env-Datei und schreibe Konfiguration hinein"
+    echo "Erstelle .env-Datei und schreibe Konfiguration hinein:"
     touch .env
     echo "CREATE_MARIADB=$CREATE_MARIADB" >> .env
     echo "CREATE_KEYSTORE=$CREATE_KEYSTORE" >> .env
@@ -266,8 +267,8 @@ fi
 echo "Lade Abhängigkeiten ..."
 # Paketliste aktualisieren ohne Ausgabe
 apt update
-# Installieren von Abhängigkeiten in ruhigem Modus (-qq)
-apt-get -y install gettext zip wget curl software-properties-common dirmngr gnupg2 apt-transport-https sed grep
+# Installieren von Abhängigkeiten
+apt-get -y install gettext unzip wget curl dirmngr gnupg2 apt-transport-https sed grep
 mkdir -p /etc/apt/keyrings
 wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc
 osrelease=$(awk -F= '/^NAME/{print$2}' /etc/os-release)
@@ -300,7 +301,7 @@ echo "Lade SVWS ..."
 
 # Wenn DOWNLOAD_PFAD gesetzt ist, lade Datei herunter
 if [ ! -z "$DOWNLOAD_PFAD" ]; then
-  echo "Lade Datei herunter von $DOWNLOAD_PFAD..."
+  echo "Lade Datei herunter von $DOWNLOAD_PFAD ..."
   wget $DOWNLOAD_PFAD
   echo "Herunterladen abgeschlossen."
 fi
@@ -369,11 +370,11 @@ fi
 cd $script_dir
 
 # Lösche das Verzeichnis 'svws' im Home-Verzeichnis
-echo "Lösche das Verzeichnis 'svws' im Home-Verzeichnis..."
+echo "Lösche das Verzeichnis 'svws' im Home-Verzeichnis ..."
 rm -r ./svws
 
 # Lösche das Verzeichnis 'init-scripts' im Home-Verzeichnis
-echo "Lösche das Verzeichnis 'init-scripts' im Home-Verzeichnis..."
+echo "Lösche das Verzeichnis 'init-scripts' im Home-Verzeichnis ..."
 rm -r ./init-scripts
 
 # Einrichten des SVWS-Service als Systemd-Service

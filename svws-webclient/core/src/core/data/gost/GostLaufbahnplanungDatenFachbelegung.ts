@@ -40,7 +40,7 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenFachbelegung'].includes(name);
 	}
 
-	public static class = new Class<GostLaufbahnplanungDatenFachbelegung>('de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenFachbelegung');
+	public static readonly class = new Class<GostLaufbahnplanungDatenFachbelegung>('de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenFachbelegung');
 
 	public static transpilerFromJSON(json: string): GostLaufbahnplanungDatenFachbelegung {
 		const obj = JSON.parse(json) as Partial<GostLaufbahnplanungDatenFachbelegung>;

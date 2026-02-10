@@ -5,7 +5,7 @@
 				<svws-ui-button type="icon" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname} ${schueler.nachname}`" size="small" class="mr-0.5 mt-0.5">
 					<span class="icon i-ri-link" />
 				</svws-ui-button>
-				<span class="text-headline-md">{{ schueler.vorname }} {{ schueler.nachname }}</span>
+				<span class="text-headline-md">{{ schueler.vorname }} {{ schueler.nachname }} ({{ fachbelegungen.size() }} {{ fachbelegungen.size() === 1 ? 'Fachwahl' : 'Fachwahlen' }})</span>
 			</div>
 		</div>
 		<!-- Anzeige der Umwahlansicht, falls Fächer belegt wurden ... -->
@@ -193,8 +193,9 @@
 
 	const cols = computed(() => {
 		const cols: DataTableColumn[] = [{ key: "schiene", label: "Schiene", minWidth: 8, span: 1, align: 'left' }];
-		for (let i = 0; i < props.getErgebnismanager().getOfSchieneMaxKursanzahl(); i++)
+		for (let i = 0; i < props.getErgebnismanager().getOfSchieneMaxKursanzahl(); i++) {
 			cols.push({ key: "kurs_" + (i + 1), label: "Kurs " + (i + 1), align: 'center', minWidth: 7, span: 1 });
+		}
 		return cols;
 	});
 
@@ -205,30 +206,37 @@
 	);
 
 	const getAbiturfach = (idKurs: number) => computed<number | null>(() => {
-		if (!props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler.value, idKurs))
+		if (!props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler.value, idKurs)) {
 			return null;
-		if (props.getErgebnismanager().getOfSchuelerOfKursIstUngueltig(idSchueler.value, idKurs))
+		}
+		if (props.getErgebnismanager().getOfSchuelerOfKursIstUngueltig(idSchueler.value, idKurs)) {
 			return null;
+		}
 		const fachwahl = props.getErgebnismanager().getOfSchuelerOfKursFachwahl(idSchueler.value, idKurs);
 		return fachwahl.abiturfach;
 	});
 
 	const is_draggable = (idKurs: number) => computed<boolean>(() => {
-		if (props.apiStatus.pending || !hatUpdateKompetenz.value)
+		if (props.apiStatus.pending || !hatUpdateKompetenz.value) {
 			return false;
+		}
 		return props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler.value, idKurs) && !props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler.value, idKurs);
 	});
 
 	const is_drop_zone = (kurs: GostBlockungsergebnisKurs) => computed<boolean>(() => {
-		if (dragAndDropData.value === undefined)
+		if (dragAndDropData.value === undefined) {
 			return false;
+		}
 		const { id, fachID, kursart } = dragAndDropData.value;
-		if ((id !== undefined) && (id === kurs.id))
+		if ((id !== undefined) && (id === kurs.id)) {
 			return false;
-		if ((fachID !== kurs.fachID) || (kursart !== kurs.kursart))
+		}
+		if ((fachID !== kurs.fachID) || (kursart !== kurs.kursart)) {
 			return false;
-		if (props.getErgebnismanager().getOfSchuelerOfKursIstGesperrt(idSchueler.value, kurs.id))
+		}
+		if (props.getErgebnismanager().getOfSchuelerOfKursIstGesperrt(idSchueler.value, kurs.id)) {
 			return false;
+		}
 		return true;
 	});
 
@@ -241,14 +249,16 @@
 	}
 
 	function onDragOver(event: DragEvent, kurs: GostBlockungsergebnisKurs) {
-		if (is_drop_zone(kurs).value)
+		if (is_drop_zone(kurs).value) {
 			event.preventDefault();
+		}
 	}
 
 	async function drop_aendere_kurszuordnung(kurs_neu: GostBlockungsergebnisKurs) {
 		const kurs_alt = dragAndDropData.value;
-		if ((kurs_alt === undefined) || (!is_drop_zone(kurs_neu).value))
+		if ((kurs_alt === undefined) || (!is_drop_zone(kurs_neu).value)) {
 			return;
+		}
 		const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs_neu.id, idSchueler.value);
 		const update = props.getErgebnismanager().kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(SetUtils.create1(zuordnung));
 		await props.updateKursSchuelerZuordnungen(update);
@@ -256,8 +266,9 @@
 
 	async function drop_entferne_kurszuordnung(e: DragEvent) {
 		const obj = dragAndDropData.value;
-		if ((obj === undefined) || (obj.id === undefined))
+		if ((obj === undefined) || (obj.id === undefined)) {
 			return;
+		}
 		const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(obj.id, idSchueler.value);
 		const update = props.getErgebnismanager().kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(SetUtils.create1(zuordnung));
 		await props.updateKursSchuelerZuordnungen(update);
@@ -278,53 +289,60 @@
 	}
 
 	function fixier_regel(idKurs: number): GostBlockungRegel | null {
-		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler.value, idKurs))
+		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler.value, idKurs)) {
 			return props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler.value, idKurs);
+		}
 		return null;
 	}
 
 	function verbieten_regel(idKurs: number): GostBlockungRegel | null {
-		if (props.getDatenmanager().schuelerGetIstVerbotenInKurs(idSchueler.value, idKurs))
+		if (props.getDatenmanager().schuelerGetIstVerbotenInKurs(idSchueler.value, idKurs)) {
 			return props.getDatenmanager().schuelerGetRegelVerbotenInKurs(idSchueler.value, idKurs);
+		}
 		return null;
 	}
 
 	async function fixieren_regel_toggle(idKurs: number) {
 		let update = new GostBlockungRegelUpdate();
 		const regel = fixier_regel(idKurs);
-		if (regel === null)
+		if (regel === null) {
 			update = props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(SetUtils.create1(idSchueler.value), SetUtils.create1(idKurs));
-		else
+		} else {
 			update.listEntfernen.add(regel);
+		}
 		await props.regelnUpdate(update);
 	}
 
 	async function verbieten_regel_toggle(idKurs: number) {
 		let update = new GostBlockungRegelUpdate();
 		const regel = verbieten_regel(idKurs);
-		if (regel === null)
+		if (regel === null) {
 			update = props.getErgebnismanager().regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(SetUtils.create1(idSchueler.value), SetUtils.create1(idKurs));
-		else
+		} else {
 			update.listEntfernen.add(regel);
+		}
 		await props.regelnUpdate(update);
 	}
 
 	const fachwahlKurszuordnungen = computed<Map<number, GostBlockungsergebnisKurs>>(() => {
 		const zuordnungen = new Map<number, GostBlockungsergebnisKurs>();
-		if (props.schueler === undefined)
+		if (props.schueler === undefined) {
 			return zuordnungen;
+		}
 		for (const belegung of fachbelegungen.value) {
 			const z = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler.value, belegung.fachID);
-			if (z !== null)
+			if (z !== null) {
 				zuordnungen.set(belegung.fachID, z);
+			}
 		}
 		return zuordnungen;
 	});
 
 	const fachwahlKursarten = computed<Map<number, GostKursart>>(() => {
 		const kursarten = new Map<number, GostKursart>();
-		if (props.schueler === undefined)
+		if (props.schueler === undefined) {
 			return kursarten;
+		}
 		for (const belegung of fachbelegungen.value) {
 			const z = props.getErgebnismanager().getOfSchuelerOfFachKursart(idSchueler.value, belegung.fachID);
 			kursarten.set(belegung.fachID, z);
@@ -334,8 +352,9 @@
 
 	function bgColorFachwahl(idFach: number): string {
 		const fwKurszuordnung = fachwahlKurszuordnungen.value.get(idFach);
-		if (fwKurszuordnung !== undefined)
+		if (fwKurszuordnung !== undefined) {
 			return "white";
+		}
 		const f = props.getErgebnismanager().getFach(idFach);
 		return Fach.getBySchluesselOrDefault(f.kuerzel).getHMTLFarbeRGB(schuljahr.value);
 	}
@@ -351,11 +370,13 @@
 	}
 
 	function kursIstUngueltig(kurs: GostBlockungsergebnisKurs) {
-		if (props.schueler === undefined)
+		if (props.schueler === undefined) {
 			return true;
+		}
 		const kurse = props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().get(props.schueler.id);
-		if (kurse === null || kurse.isEmpty())
+		if (kurse === null || kurse.isEmpty()) {
 			return false;
+		}
 		return kurse.contains(kurs);
 	}
 

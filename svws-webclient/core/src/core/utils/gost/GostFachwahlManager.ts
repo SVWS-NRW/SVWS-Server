@@ -148,7 +148,7 @@ export class GostFachwahlManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.GostFachwahlManager'].includes(name);
 	}
 
-	public static class = new Class<GostFachwahlManager>('de.svws_nrw.core.utils.gost.GostFachwahlManager');
+	public static readonly class = new Class<GostFachwahlManager>('de.svws_nrw.core.utils.gost.GostFachwahlManager');
 
 }
 

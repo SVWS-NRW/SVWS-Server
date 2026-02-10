@@ -64,7 +64,7 @@ export class ENMTeilleistung extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMTeilleistung'].includes(name);
 	}
 
-	public static class = new Class<ENMTeilleistung>('de.svws_nrw.core.data.enm.ENMTeilleistung');
+	public static readonly class = new Class<ENMTeilleistung>('de.svws_nrw.core.data.enm.ENMTeilleistung');
 
 	public static transpilerFromJSON(json: string): ENMTeilleistung {
 		const obj = JSON.parse(json) as Partial<ENMTeilleistung>;

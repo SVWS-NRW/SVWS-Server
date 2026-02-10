@@ -10,10 +10,10 @@ interface ManagerStateDataSchuelerSchulbesuch {
 	daten: SchuelerSchulbesuchsdaten;
 }
 
-const defaultState = <ManagerStateDataSchuelerSchulbesuch> {
+const createDefaultState = (): ManagerStateDataSchuelerSchulbesuch => ({
 	auswahl: new SchuelerListeEintrag(),
 	daten: new SchuelerSchulbesuchsdaten(),
-};
+});
 
 /** Ein Manager für die Verwaltung von Schulbesuchsdaten */
 export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSchuelerSchulbesuch> {
@@ -59,7 +59,7 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	public constructor(daten: SchuelerSchulbesuchsdaten, auswahl: SchuelerListeEintrag, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulen: List<SchulEintrag>, merkmale: List<Merkmal>, entlassgruende: List<KatalogEntlassgrund>, kindergaerten: List<Kindergarten>,
 		jahrgaenge: List<JahrgangsDaten>, patch: (data: Partial<SchuelerSchulbesuchsdaten>) => Promise<void>) {
-		super(defaultState);
+		super(createDefaultState());
 		this._state.value.daten = daten;
 		this._state.value.auswahl = auswahl;
 		this._patch = patch;
@@ -73,33 +73,39 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	}
 
 	private mapJahrgaenge(jahrgaenge: List<JahrgangsDaten>) {
-		for (const jahrgang of jahrgaenge)
+		for (const jahrgang of jahrgaenge) {
 			this._jahrgaengeById.set(jahrgang.id, jahrgang);
+		}
 	}
 
 	private mapKindergaerten(kindergaerten: List<Kindergarten>) {
-		for (const kindergarten of kindergaerten)
+		for (const kindergarten of kindergaerten) {
 			this._kindergaertenById.set(kindergarten.id, kindergarten);
+		}
 	}
 
 	private mapSchuljahresabschnitte(schuljahresabschnitte: List<Schuljahresabschnitt>) {
-		for (const abschnitt of schuljahresabschnitte)
+		for (const abschnitt of schuljahresabschnitte) {
 			this._schuljahresabschnitteById.set(abschnitt.id, abschnitt);
+		}
 	}
 
 	private mapSchulen(schulen: List<SchulEintrag>) {
-		for (const schule of schulen)
+		for (const schule of schulen) {
 			this._schulenById.set(schule.id, schule);
+		}
 	}
 
 	private mapMerkmale(merkmale: List<Merkmal>) {
-		for (const merkmal of merkmale)
+		for (const merkmal of merkmale) {
 			this._merkmaleById.set(merkmal.id, merkmal);
+		}
 	}
 
 	private mapEntlassgruende(entlassgruende: List<KatalogEntlassgrund>) {
-		for (const entlassgrund of entlassgruende)
+		for (const entlassgrund of entlassgruende) {
 			this._entlassgruendeById.set(entlassgrund.id, entlassgrund);
+		}
 	}
 
 	/** Gibt die aktuell im Manager gespeicherten SchuelerSchulbesuchsdaten zurück. */
@@ -144,8 +150,9 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 
 	/** Gibt die vorherige Versetzungsart des ausgewählten Schülers zurück */
 	public getVorigeArtLetzteVersetzung(): Herkunftsarten | undefined {
-		if (this.daten.vorigeArtLetzteVersetzung === null)
+		if (this.daten.vorigeArtLetzteVersetzung === null) {
 			return undefined;
+		}
 		const artID = Number(this.daten.vorigeArtLetzteVersetzung);
 		return Herkunftsarten.data().getWertByIDOrNull(artID) || undefined;
 	}
@@ -154,16 +161,18 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	/** Gibt die vorherige AllgHerkunft des ausgewählten Schülers zurück. Diese ist abhängig von der ausgewählten Schule */
 	public getVorigeAllgHerkunft(): string | null {
 		const value = this.getVorigeSchulform();
-		if (value === null)
+		if (value === null) {
 			return null;
+		}
 		const entry = Schulform.data().getEintragBySchuljahrUndWert(this.schuljahr, value);
-		return (entry !== null) ? entry.text : null;
+		return entry?.text ?? null;
 	}
 
 	/** Gibt eine Liste der Jahrgaenge zurück, die in der gegebenen Schulform möglich sind */
 	public getJahrgaengeBySchulform(schulform: Schulform | null): List<Jahrgaenge> {
-		if (schulform === null)
+		if (schulform === null) {
 			return Jahrgaenge.data().getWerte();
+		}
 		return Jahrgaenge.data().getListBySchuljahrAndSchulform(this.schuljahr, schulform);
 	}
 
@@ -175,8 +184,9 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	/** Gibt die vorherige Schulform des ausgewählten Schülers zurück */
 	public getVorigeSchulform(): Schulform | null {
 		const schule = this.getVorherigeSchule();
-		if (schule === undefined || schule.idSchulform === null)
+		if (schule === undefined || schule.idSchulform === null) {
 			return null;
+		}
 		return Schulform.data().getWertByID(schule.idSchulform);
 	}
 
@@ -192,15 +202,17 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 
 	/** Gibt die Einschulungsart des ausgewählten Schülers zurück */
 	public getEinschulungsart(): Einschulungsart | null {
-		if (this.daten.grundschuleEinschulungsartID === null)
+		if (this.daten.grundschuleEinschulungsartID === null) {
 			return null;
+		}
 		return Einschulungsart.data().getWertByID(this.daten.grundschuleEinschulungsartID);
 	}
 
 	/** Gibt die PrimarstufeSchuleingangsphaseBesuchsjahre des ausgewählten Schülers zurück */
 	public getEPJahre(): PrimarstufeSchuleingangsphaseBesuchsjahre | null {
-		if (this.daten.idGrundschuleJahreEingangsphase === null)
+		if (this.daten.idGrundschuleJahreEingangsphase === null) {
 			return null;
+		}
 		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByID(this.daten.idGrundschuleJahreEingangsphase);
 	}
 
@@ -216,8 +228,9 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 
 	/** Gibt die Dauer des Kindergartenbesuchs zurück */
 	public getDauerKindergartenbesuch(): Kindergartenbesuch | null {
-		if (this.daten.idDauerKindergartenbesuch === null)
+		if (this.daten.idDauerKindergartenbesuch === null) {
 			return null;
+		}
 		return Kindergartenbesuch.data().getWertByID(this.daten.idDauerKindergartenbesuch);
 	}
 
@@ -243,10 +256,11 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	/** Die spezielle Patch-Methode der Schuleinträge */
 	public patchSchule(schule: SchulEintrag | undefined | null, key: string) {
 		const patchData: Record<string, any> = {};
-		if (schule !== undefined && schule !== null)
+		if (schule !== undefined && schule !== null) {
 			patchData[key] = schule.id;
-		else
+		} else {
 			patchData[key] = null;
+		}
 		void this.doPatch(patchData);
 
 	}
@@ -264,15 +278,17 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	/** Eintrag der bisher besuchten Schulen löschen */
 	public deleteBisherigeSchuleById(id: number) {
 		const index = this.getIndexBisherigeSchuleById(id);
-		if (index !== undefined)
+		if (index !== undefined) {
 			this.daten.alleSchulen.removeElementAt(index);
+		}
 	}
 
 	/** Eintrag der bisher besuchten Schulen patchen */
 	public patchBisherigeSchuleById(id: number, data: Partial<SchuelerSchulbesuchSchule>) {
 		const index = this.getIndexBisherigeSchuleById(id);
-		if (index === undefined)
+		if (index === undefined) {
 			return;
+		}
 		const schule = this.daten.alleSchulen.get(index);
 		Object.assign(schule, data);
 	}
@@ -285,8 +301,9 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	/** Eintrag der Merkmale patchen */
 	public patchSchuelerSchulbesuchMerkmalById(id: number, data: Partial<SchuelerSchulbesuchMerkmal>) {
 		const index = this.getIndexMerkmalById(id);
-		if (index === undefined)
+		if (index === undefined) {
 			return;
+		}
 		const merkmal = this.daten.merkmale.get(index);
 		Object.assign(merkmal, data);
 	}
@@ -294,8 +311,9 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	/** Eintrag der Merkmale löschen */
 	public deleteSchuelerSchulbesuchMerkmal(id: number) {
 		const index = this.getIndexMerkmalById(id);
-		if (index !== undefined)
+		if (index !== undefined) {
 			this.daten.merkmale.removeElementAt(index);
+		}
 	}
 
 	// --- util ---
@@ -303,21 +321,23 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 	private getIndexBisherigeSchuleById(id: number): number | undefined {
 		let index = 0;
 		for (const s of this.daten.alleSchulen) {
-			if (s.id === id)
+			if (s.id === id) {
 				return index;
+			}
 			index++;
 		}
-		return;
+		return index;
 	}
 
 	private getIndexMerkmalById(id: number): number | undefined {
 		let index = 0;
 		for (const s of this.daten.merkmale) {
-			if (s.id === id)
+			if (s.id === id) {
 				return index;
+			}
 			index++;
 		}
-		return;
+		return index;
 	}
 
 	private calcSchuljahr(): number {

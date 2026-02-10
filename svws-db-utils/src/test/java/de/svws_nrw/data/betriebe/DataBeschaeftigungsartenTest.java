@@ -11,6 +11,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOBeschaeftigungsart;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
 import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,10 +27,13 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatException;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -68,20 +72,26 @@ class DataBeschaeftigungsartenTest {
 
 	@Test
 	@DisplayName("setAttributesNotPatchable: id")
-	void setAttributesNotPatchableTest() {
-		final var dto = getDto();
-		when(this.conn.queryByKey(DTOBeschaeftigungsart.class, 1L)).thenReturn(dto);
+	void setAttributesNotPatchableIdTest() {
+		when(this.conn.queryByKey(DTOBeschaeftigungsart.class, 1L)).thenReturn(mock(DTOBeschaeftigungsart.class));
 
-		try (var mapperMock = Mockito.mockStatic(JSONMapper.class)) {
-			mapperMock.when(() -> JSONMapper.toMap(any(InputStream.class))).thenReturn(Map.of("id", 99L));
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("id", 1L)))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Folgende Attribute werden für ein Patch nicht zugelassen: id.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
 
-			final var throwable = catchThrowable(() -> this.data.patchAsResponse(1L, mock(InputStream.class)));
+	@Test
+	@DisplayName("setAttributesNotPatchable: referenziertInAnderenTabellen")
+	void setAttributesNotPatchableReferenziertInAnderenTabellen() {
+		when(this.conn.queryByKey(DTOBeschaeftigungsart.class, 1L)).thenReturn(mock(DTOBeschaeftigungsart.class));
 
-			assertThat(throwable)
-					.isInstanceOf(ApiOperationException.class)
-					.hasMessage("Folgende Attribute werden für ein Patch nicht zugelassen: id.")
-					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-		}
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("referenziertInAnderenTabellen", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Folgende Attribute werden für ein Patch nicht zugelassen: referenziertInAnderenTabellen.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
@@ -142,16 +152,25 @@ class DataBeschaeftigungsartenTest {
 		final var dto1 = new DTOBeschaeftigungsart(1L, "eins");
 		final var dto2 = new DTOBeschaeftigungsart(2L, "zwei");
 		when(this.conn.queryAll(DTOBeschaeftigungsart.class)).thenReturn(List.of(dto1, dto2));
+		@SuppressWarnings("unchecked") final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(1L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
 
 		assertThat(this.data.getAll())
-				.isInstanceOf(List.class)
-				.isNotNull()
-				.isNotEmpty()
 				.hasSize(2)
-				.allSatisfy(item -> assertThat(item)
-						.isInstanceOf(Beschaeftigungsart.class)
-						.hasFieldOrProperty("id")
-						.hasFieldOrProperty("bezeichnung"));
+				.satisfiesExactly(
+						f1 -> assertThat(f1)
+								.isInstanceOf(Beschaeftigungsart.class)
+								.hasFieldOrPropertyWithValue("id", 1L)
+								.hasFieldOrPropertyWithValue("bezeichnung", "eins")
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", true),
+						f2 -> assertThat(f2)
+								.isInstanceOf(Beschaeftigungsart.class)
+								.hasFieldOrPropertyWithValue("id", 2L)
+								.hasFieldOrPropertyWithValue("bezeichnung", "zwei")
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", false)
+				);
 	}
 
 	@Test
@@ -173,8 +192,7 @@ class DataBeschaeftigungsartenTest {
 				.hasFieldOrPropertyWithValue("id", dto.ID)
 				.hasFieldOrPropertyWithValue("bezeichnung", dto.Bezeichnung)
 				.hasFieldOrPropertyWithValue("sortierung", dto.Sortierung)
-				.hasFieldOrPropertyWithValue("istSichtbar", dto.Sichtbar)
-				.hasFieldOrPropertyWithValue("istAenderbar", dto.Aenderbar);
+				.hasFieldOrPropertyWithValue("istSichtbar", dto.Sichtbar);
 	}
 
 	private static Stream<Arguments> provideMappingAttributes() {
@@ -183,7 +201,6 @@ class DataBeschaeftigungsartenTest {
 				arguments("bezeichnung", "lalilu"),
 				arguments("sortierung", 1),
 				arguments("istSichtbar", false),
-				arguments("istAenderbar", false),
 				arguments("unknownArgument", "oh oh ! das wollen wir auf keinen Fall!")
 		);
 	}
@@ -204,7 +221,6 @@ class DataBeschaeftigungsartenTest {
 			case "bezeichnung" -> assertThat(dto.Bezeichnung).isEqualTo(value);
 			case "sortierung" -> assertThat(dto.Sortierung).isEqualTo(value);
 			case "istSichtbar" -> assertThat(dto.Sichtbar).isEqualTo(value);
-			case "istAenderbar" -> assertThat(dto.Aenderbar).isEqualTo(value);
 			default -> assertThat(throwable)
 					.isInstanceOf(ApiOperationException.class)
 					.hasMessageStartingWith("Die Daten des Patches enthalten das unbekannte Attribut")
@@ -268,21 +284,6 @@ class DataBeschaeftigungsartenTest {
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
-	private static DTOBeschaeftigungsart getDto() {
-		return new DTOBeschaeftigungsart(1L, "test");
-	}
-
-	@Test
-	@DisplayName("mapAttribute | bezeichnung change case")
-	void mapAttributeTest_bezeichnungChangeCase() throws ApiOperationException {
-		final var dto = new DTOBeschaeftigungsart(1L, "abc");
-		when(this.conn.queryAll(DTOBeschaeftigungsart.class)).thenReturn(List.of(dto));
-
-		this.data.mapAttribute(dto, "bezeichnung", "ABC", null);
-
-		assertThat(dto.Bezeichnung).isEqualTo("ABC");
-	}
-
 	@Test
 	@DisplayName("mapAttribute | bezeichnung dto is null")
 	void mapAttributeTest_bezeichnungDtoISNull() throws ApiOperationException {
@@ -294,6 +295,10 @@ class DataBeschaeftigungsartenTest {
 		this.data.mapAttribute(newDto, "bezeichnung", "test", null);
 
 		assertThat(newDto.Bezeichnung).isEqualTo("test");
+	}
+
+	private static DTOBeschaeftigungsart getDto() {
+		return new DTOBeschaeftigungsart(1L, "test");
 	}
 
 }

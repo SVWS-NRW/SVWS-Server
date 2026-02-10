@@ -15402,33 +15402,29 @@ JahrgangsDaten {
 }
 `;
 
-exports[`Server > getKatalogBetriebsart 1`] = `
+exports[`Server > getBetriebsarten 1`] = `
 ArrayList {
   "elementData": [
-    KatalogEintrag {
+    Betriebsart {
       "id": 1,
-      "istAenderbar": true,
       "istSichtbar": true,
       "kuerzel": "1",
       "text": "Einzelhandel",
     },
-    KatalogEintrag {
+    Betriebsart {
       "id": 4,
-      "istAenderbar": true,
       "istSichtbar": true,
       "kuerzel": "4",
       "text": "Handwerk",
     },
-    KatalogEintrag {
+    Betriebsart {
       "id": 2,
-      "istAenderbar": true,
       "istSichtbar": true,
       "kuerzel": "2",
       "text": "Industrie",
     },
-    KatalogEintrag {
+    Betriebsart {
       "id": 3,
-      "istAenderbar": true,
       "istSichtbar": true,
       "kuerzel": "3",
       "text": "Verwaltung",
@@ -24564,77 +24560,6 @@ ArrayList {
     },
   ],
   "modCount": 3,
-}
-`;
-
-exports[`Server > getKatalogReligionen 1`] = `
-ArrayList {
-  "elementData": [
-    ReligionKatalogEintrag {
-      "id": 11,
-      "istAenderbar": true,
-      "istSichtbar": true,
-      "kuerzel": "ER",
-      "sortierung": 220,
-      "text": "evangelisch",
-      "textZeugnis": "evangelisch",
-    },
-    ReligionKatalogEintrag {
-      "id": 12,
-      "istAenderbar": true,
-      "istSichtbar": true,
-      "kuerzel": "KR",
-      "sortierung": 230,
-      "text": "katholisch",
-      "textZeugnis": "katholisch",
-    },
-    ReligionKatalogEintrag {
-      "id": 13,
-      "istAenderbar": true,
-      "istSichtbar": true,
-      "kuerzel": "IR",
-      "sortierung": 80,
-      "text": "islamisch",
-      "textZeugnis": "islamisch",
-    },
-    ReligionKatalogEintrag {
-      "id": 14,
-      "istAenderbar": true,
-      "istSichtbar": true,
-      "kuerzel": "OH",
-      "sortierung": 210,
-      "text": "ohne Bekenntnis",
-      "textZeugnis": "ohne Bekenntnis",
-    },
-    ReligionKatalogEintrag {
-      "id": 15,
-      "istAenderbar": true,
-      "istSichtbar": true,
-      "kuerzel": "XO",
-      "sortierung": 200,
-      "text": "sonstige orthodoxe",
-      "textZeugnis": "sonstige orthodoxe",
-    },
-    ReligionKatalogEintrag {
-      "id": 16,
-      "istAenderbar": true,
-      "istSichtbar": true,
-      "kuerzel": "HR",
-      "sortierung": 170,
-      "text": "jüdisch",
-      "textZeugnis": "jüdisch",
-    },
-    ReligionKatalogEintrag {
-      "id": 17,
-      "istAenderbar": true,
-      "istSichtbar": true,
-      "kuerzel": "XR",
-      "sortierung": 180,
-      "text": "andere Religionen",
-      "textZeugnis": "andere Religionen",
-    },
-  ],
-  "modCount": 7,
 }
 `;
 

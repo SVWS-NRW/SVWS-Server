@@ -59,7 +59,7 @@ export class NationalitaetenKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<NationalitaetenKatalogEintrag>('de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag');
+	public static readonly class = new Class<NationalitaetenKatalogEintrag>('de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): NationalitaetenKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<NationalitaetenKatalogEintrag>;

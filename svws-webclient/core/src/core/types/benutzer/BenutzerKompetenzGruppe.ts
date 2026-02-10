@@ -196,7 +196,7 @@ export class BenutzerKompetenzGruppe extends JavaEnum<BenutzerKompetenzGruppe> {
 		return ['de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<BenutzerKompetenzGruppe>('de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe');
+	public static readonly class = new Class<BenutzerKompetenzGruppe>('de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe');
 
 }
 

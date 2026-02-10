@@ -19,13 +19,13 @@ public final class EmailJob {
 	/** Die E-Mail-Adresse des Senders (from) */
 	private final @NotNull String from;
 
-	/** Der Betreff der EMail */
+	/** Der Betreff der E-Mail */
 	private @NotNull String subject = "";
 
-	/** Der Body der EMail */
+	/** Der Body der E-Mail */
 	private @NotNull String body = "";
 
-	/** Eine Liste mit den Addressen der Empfänger und den ihnen zugeordneten Anhängen. */
+	/** Eine Liste mit den Adressen der Empfänger und den ihnen zugeordneten Anhängen. */
 	private final @NotNull List<EmailJobRecipient> recipients = new ArrayList<>();
 
 
@@ -33,7 +33,7 @@ public final class EmailJob {
 	private EmailJobStatus status = EmailJobStatus.QUEUED;
 
 	/** Gibt an, ob der Job zum Abbrechen markiert wurde. */
-	private boolean cancellationRequested = false;
+	private volatile boolean cancellationRequested = false;
 
 	/** Zeitstempel der letzten Statusänderung in Millisekunden */
 	private long timeLastChanged = System.currentTimeMillis();
@@ -50,17 +50,19 @@ public final class EmailJob {
 
 
 	/**
-	 * Erstellt einen neuen Email-Job zum Versenden einer Mail von der übergebenen Adresse
+	 * Erstellt einen neuen E-Mail-Job zum Versenden einer Mail von der übergebenen Adresse
 	 *
-	 * @param from   die Email-Adresse des Senders
+	 * @param from   die E-Mail-Adresse des Senders
 	 */
 	public EmailJob(final @NotNull String from) {
+		if ((from == null) || from.isBlank())
+			throw new IllegalArgumentException("Notwendiger Parameter Absender-E-Mail-Adresse für die Erzeugung eines E-Mail-Jobs ist null oder leer.");
 		this.from = from;
 	}
 
 
 	/**
-	 * Gibt die ID des Email-Jobs zurück, sofern diese zuvor von einem {@link EmailJobManager}
+	 * Gibt die ID des E-Mail-Jobs zurück, sofern diese zuvor von einem {@link EmailJobManager}
 	 * gesetzt wurde.
 	 *
 	 * @return die ID des Jobs
@@ -75,7 +77,7 @@ public final class EmailJob {
 
 
 	/**
-	 * Setzt die Job-ID für den Email-Job. Diese Methode ist package private,
+	 * Setzt die Job-ID für den E-Mail-Job. Diese Methode ist package private,
 	 * da sie nur vom zugehörigen {@link EmailJobManager} aufgerufen werden soll.
 	 *
 	 * @param id   die zu setzende Job-ID
@@ -91,9 +93,9 @@ public final class EmailJob {
 
 
 	/**
-	 * Gibt die Sender-Email-Adresse zurück.
+	 * Gibt die Sender-E-Mail-Adresse zurück.
 	 *
-	 * @return die Sender-Email-Adresse
+	 * @return die Sender-E-Mail-Adresse
 	 */
 	public @NotNull String getFrom() {
 		return this.from;
@@ -101,9 +103,9 @@ public final class EmailJob {
 
 
 	/**
-	 * Gibt den Betreff für die Email zurück.
+	 * Gibt den Betreff für die E-Mail zurück.
 	 *
-	 * @return der Betreff für die Email
+	 * @return der Betreff für die E-Mail
 	 */
 	public String getSubject() {
 		return subject;
@@ -111,9 +113,9 @@ public final class EmailJob {
 
 
 	/**
-	 * Gibt den Text für die Email zurück.
+	 * Gibt den Text für die E-Mail zurück.
 	 *
-	 * @return der Text für die Email
+	 * @return der Text für die E-Mail
 	 */
 	public String getBody() {
 		return body;
@@ -121,7 +123,7 @@ public final class EmailJob {
 
 
 	/**
-	 * Gibt die Empfängerliste mit den Anhängen für die Empfänger für die Email zuürck.
+	 * Gibt die Empfängerliste mit den Anhängen für die Empfänger für die E-Mail zurück.
 	 *
 	 * @return die Empfängerliste mit den Anhängen für die Empfänger
 	 */
@@ -137,21 +139,23 @@ public final class EmailJob {
 	 *
 	 * @return dieser Job
 	 */
-	public @NotNull EmailJob withSubject(final String subject) {
-		this.subject = subject;
+	public @NotNull EmailJob withSubject(final @NotNull String subject) {
+		if (subject != null)
+			this.subject = subject;
 		return this;
 	}
 
 
 	/**
-	 * Setzt den Text für die Email auf den übergegebenen Wert
+	 * Setzt den Text für die E-Mail auf den übergebenen Wert.
 	 *
 	 * @param body   der neue Text
 	 *
 	 * @return dieser Job
 	 */
-	public @NotNull EmailJob withBody(final String body) {
-		this.body = body;
+	public @NotNull EmailJob withBody(final @NotNull String body) {
+		if (body != null)
+			this.body = body;
 		return this;
 	}
 
@@ -159,25 +163,27 @@ public final class EmailJob {
 	/**
 	 * Fügt einen weiteren Empfänger mit den ihm zugeordneten Anhängen hinzu
 	 *
-	 * @param recipient   der hinzuzufügende Empfänger mit den ihm zugeordneten seinen Email-Anhängen
+	 * @param recipient   der hinzuzufügende Empfänger mit den ihm zugeordneten E-Mail-Anhängen. null wird ignoriert.
 	 *
 	 * @return dieser Job
 	 */
 	public @NotNull EmailJob addRecipient(final EmailJobRecipient recipient) {
-		this.recipients.add(recipient);
+		if (recipient != null)
+			this.recipients.add(recipient);
 		return this;
 	}
 
 
 	/**
-	 * Fügt mehrere Empfänger mit den ihnene jeweils zugeordneten Anhängen hinzu
+	 * Fügt mehrere Empfänger mit deren jeweils zugeordneten Anhängen hinzu
 	 *
-	 * @param recipients   die Liste der hinzuzufügenden Empfängern mit den ihnen jeweils zugeordneten seinen Email-Anhängen
+	 * @param recipients   die Liste der hinzuzufügenden Empfänger, mit den ihnen jeweils zugeordneten E-Mail-Anhängen. Leere Liste wird ignoriert.
 	 *
 	 * @return dieser Job
 	 */
 	public @NotNull EmailJob addRecipients(final List<EmailJobRecipient> recipients) {
-		this.recipients.addAll(recipients);
+		if ((recipients != null) && !recipients.isEmpty())
+			this.recipients.addAll(recipients);
 		return this;
 	}
 
@@ -217,7 +223,7 @@ public final class EmailJob {
 
 	/**
 	 * Diese Methode wird vom {@link EmailJobManager} aufgerufen, um diesen über
-	 * das erfolgreiche Versenden einer Email zu informieren.
+	 * das erfolgreiche Versenden einer E-Mail zu informieren.
 	 * Daher ist diese Methode package private.
 	 */
 	void notifyEmailSent() {
@@ -226,9 +232,9 @@ public final class EmailJob {
 
 
 	/**
-	 * Gibt die Anzahl der versendeten Emails aus diesem Job zurück.
+	 * Gibt die Anzahl der versendeten E-Mails aus diesem Job zurück.
 	 *
-	 * @return die Anzahl der versendeten Emails aus diesem Job
+	 * @return die Anzahl der versendeten E-Mails aus diesem Job
 	 */
 	public int getEmailsSent() {
 		return this.countSuccess;
@@ -236,7 +242,7 @@ public final class EmailJob {
 
 
 	/**
-	 * Setzt bei diesem Job, dass ein Abbruch des Jobs angefordert wurde.
+	 * Setzt bei diesem Job den Wert so, dass ein Abbruch des Jobs angefordert wurde.
 	 */
 	void requestCancellation() {
 		this.cancellationRequested = true;
@@ -246,7 +252,7 @@ public final class EmailJob {
 	/**
 	 * Gibt zurück, ob ein Abbruch des Jobs angefordert wurde
 	 *
-	 * @return true, wenn ein Abruch angefordert wurde, und ansonsten false
+	 * @return true, wenn ein Abbruch angefordert wurde, und ansonsten false
 	 */
 	boolean hasCancellationRequest() {
 		return this.cancellationRequested;

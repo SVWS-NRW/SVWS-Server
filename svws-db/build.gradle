@@ -4,38 +4,46 @@ configurations {
 }
 
 dependencies {
-    implementation project(':svws-asd')
-    implementation project(':svws-core')
+	implementation project(':svws-asd')
+	implementation project(':svws-core')
 
-    dto fileTree(dir: "${project.rootProject.projectDir}/svws-base/src/main/resources/schema", includes: ['**/*.csv'])
+	dto fileTree(dir: "${project.rootProject.projectDir}/svws-base/src/main/resources/schema", includes: ['**/*.csv'])
 }
 
 apply from: "$rootDir/publish-helper.gradle"
 publishing {
-  publications {
-    publishJava(MavenPublication) {
-      artifactId = 'svws-db'
-      pom {
-        name = 'SVWS DB Library'
-        description = 'Diese Bibliothek regelt den Zugriff auf Datenbanken für die Schulverwaltungssoftware in NRW'
-      }
-    }
-  }
+	publications {
+		publishJava(MavenPublication) {
+			artifactId = 'svws-db'
+			pom {
+				name = 'SVWS DB Library'
+				description = 'Diese Bibliothek regelt den Zugriff auf Datenbanken für die Schulverwaltungssoftware in NRW'
+			}
+		}
+	}
 }
 
 
 task createJavaDTOs(type: JavaExec) {
 	group = 'svws'
 	dependsOn compileJava
-    doFirst {
-		delete "$rootDir/svws-db-dto/src/main/java/de/svws_nrw/db/dto"
-	}
 	inputs.files sourceSets.main.java, configurations.dto.files
-    outputs.files fileTree(dir: "$rootDir/svws-db-dto/src/main/java/de/svws_nrw/db/dto"), "$rootDir/svws-db/src/main/resources/META-INF/persistence.xml"
-    description = "Erzeuge Java-DTOs"
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'de.svws_nrw.db.schema.app.DTOCreator'
-    args "--output", "$rootDir/svws-db-dto/src/main/java", "--persistence", "$rootDir/svws-db/src/main/resources/META-INF/persistence.xml"
+	outputs.files fileTree(dir: "$rootDir/svws-db-dto/src/main/java/de/svws_nrw/db/dto"), "$rootDir/svws-db/src/main/resources/META-INF/persistence.xml"
+	description = "Erzeuge Java-DTOs"
+	classpath = sourceSets.main.runtimeClasspath
+	mainClass = 'de.svws_nrw.db.schema.app.DTOCreator'
+	args "--output", "$rootDir/svws-db-dto/src/main/java", "--persistence", "$rootDir/svws-db/src/main/resources/META-INF/persistence.xml"
+}
+
+task deleteExistingJavaDTOs(type: Delete) {
+	delete "$rootDir/svws-db-dto/src/main/java/de/svws_nrw/db/dto"
+}
+
+// Falls createJavaDTOs ausgeführt wird, dann soll zuerst deleteExistingJavaDTOs ausgeführt werden
+gradle.taskGraph.whenReady { taskGraph ->
+	if (taskGraph.hasTask(tasks.findByPath('createJavaDTOs'))) {
+		tasks.findByPath('createJavaDTOs').dependsOn tasks.findByPath('deleteExistingJavaDTOs')
+	}
 }
 
 assemble.dependsOn createJavaDTOs

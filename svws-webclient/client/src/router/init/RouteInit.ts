@@ -3,7 +3,7 @@ import type { RouteLocationRaw, RouteParams } from "vue-router";
 
 import type { InitProps } from "~/components/init/SInitProps";
 import type { List, SchulenKatalogEintrag } from "@core";
-import { DatenbankVerbindungsdaten, DeveloperNotificationException, ServerMode, ArrayList, BenutzerKompetenz, Schulform } from "@core";
+import { DatenbankVerbindungsdaten, ServerMode, ArrayList, BenutzerKompetenz, Schulform } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
@@ -45,35 +45,40 @@ export class RouteInit extends RouteNode<any, any> {
 	};
 
 	migrateDB = async (formData: FormData, restore: boolean, db: string | undefined): Promise<boolean> => {
-		if (restore)
+		if (restore) {
 			return this.importSQLite(formData);
-		if (db === undefined)
+		}
+		if (db === undefined) {
 			return false;
-		const schulnummer = parseInt(formData.get('schulnummer')?.toString() ?? '');
+		}
+		const schulnummer = Number.parseInt((formData.get('schulnummer') ?? '0') as string);
 		const data = new DatenbankVerbindungsdaten();
-		data.location = formData.get('location')?.toString() ?? null;
-		data.schema = formData.get('schema')?.toString() ?? null;
-		data.username = formData.get('username')?.toString() ?? null;
-		data.password = formData.get('password')?.toString() ?? null;
+		data.location = formData.get('location') as string | null;
+		data.schema = formData.get('schema') as string | null;
+		data.username = formData.get('username') as string | null;
+		data.password = formData.get('password') as string | null;
 		try {
 			switch (db) {
 				case 'mariadb':
-					if (schulnummer > 0)
+					if (schulnummer > 0) {
 						await api.server.migrateMariaDBSchulnummer(data, api.schema, schulnummer);
-					else
+					} else {
 						await api.server.migrateMariaDB(data, api.schema);
+					}
 					break;
 				case 'mysql':
-					if (schulnummer > 0)
+					if (schulnummer > 0) {
 						await api.server.migrateMySqlSchulnummer(data, api.schema, schulnummer);
-					else
+					} else {
 						await api.server.migrateMySql(data, api.schema);
+					}
 					break;
 				case 'mssql':
-					if (schulnummer > 0)
+					if (schulnummer > 0) {
 						await api.server.migrateMsSqlServerSchulnummer(data, api.schema, schulnummer);
-					else
+					} else {
 						await api.server.migrateMsSqlServer(data, api.schema);
+					}
 					break;
 				case 'mdb':
 					await api.server.migrateMDB(formData, api.schema);
@@ -93,8 +98,9 @@ export class RouteInit extends RouteNode<any, any> {
 	};
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
+		if (isEntering) {
 			this.listSchulkatalog.value = await api.server.getKatalogSchulen(api.schema);
+		}
 	}
 
 	public getProps(): InitProps {

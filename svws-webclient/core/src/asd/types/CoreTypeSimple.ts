@@ -153,7 +153,7 @@ export abstract class CoreTypeSimple<T extends CoreTypeData, U extends CoreTypeS
 		return ['de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.CoreTypeSimple'].includes(name);
 	}
 
-	public static class = new Class<CoreTypeSimple<any, any>>('de.svws_nrw.asd.types.CoreTypeSimple');
+	public static readonly class = new Class<CoreTypeSimple<any, any>>('de.svws_nrw.asd.types.CoreTypeSimple');
 
 	public getManager(): CoreTypeDataManager<T, U> {
 		return de_svws_nrw_asd_types_CoreType_getManager(this);

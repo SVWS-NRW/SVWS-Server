@@ -124,7 +124,7 @@ export class AbschlussFaecherGruppen extends JavaObject {
 			const sb: StringBuilder = new StringBuilder();
 			const faecher: List<string> = this.getKuerzel(filter);
 			for (const fach of faecher) {
-				if (sb.length() > 0)
+				if (!sb.isEmpty())
 					sb.append(", ");
 				sb.append(fach);
 			}
@@ -136,12 +136,12 @@ export class AbschlussFaecherGruppen extends JavaObject {
 			const faecherFG1: List<string> = this.fg1.getKuerzel(filterFG1);
 			const faecherFG2: List<string> = this.fg2.getKuerzel(filterFG2);
 			for (const fach of faecherFG1) {
-				if (sb.length() > 0)
+				if (!sb.isEmpty())
 					sb.append(", ");
 				sb.append(fach);
 			}
 			for (const fach of faecherFG2) {
-				if (sb.length() > 0)
+				if (!sb.isEmpty())
 					sb.append(", ");
 				sb.append(fach);
 			}
@@ -157,7 +157,7 @@ export class AbschlussFaecherGruppen extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.ge.AbschlussFaecherGruppen'].includes(name);
 	}
 
-	public static class = new Class<AbschlussFaecherGruppen>('de.svws_nrw.core.abschluss.ge.AbschlussFaecherGruppen');
+	public static readonly class = new Class<AbschlussFaecherGruppen>('de.svws_nrw.core.abschluss.ge.AbschlussFaecherGruppen');
 
 }
 

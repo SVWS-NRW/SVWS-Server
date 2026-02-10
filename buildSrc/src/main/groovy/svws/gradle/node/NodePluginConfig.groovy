@@ -20,8 +20,10 @@ abstract class NodePluginConfig {
 
 	def os = DefaultNativePlatform.getCurrentOperatingSystem()
 	def arch = DefaultNativePlatform.getCurrentArchitecture().getName()
-	def rootProject
-	def project
+	def rootProjectDir
+	def node_download_url
+	def node_download_user
+	def node_download_passwd
 
 	abstract Property<String> getUrl()
 	abstract Property<String> getVersion()
@@ -30,13 +32,15 @@ abstract class NodePluginConfig {
 	abstract Property<String> getTsNodeTypesVersion()
 
 	NodePluginConfig(Project p) {
-		this.project = p
-		this.rootProject = p.rootProject
+		this.rootProjectDir = p.rootProject.projectDir
+		this.node_download_url = p.hasProperty('node_download_url') ? p.node_download_url : System.getenv("NODE_DOWNLOAD_URL")
+		this.node_download_user = p.hasProperty('node_download_user') ? p.node_download_user : System.getenv("NODE_DOWNLOAD_USER")
+		this.node_download_passwd = p.hasProperty('node_download_passwd') ? p.node_download_passwd : System.getenv("NODE_DOWNLOAD_PASSWD")
 		url.convention('https://nodejs.org/dist/v')
-		version.convention('24.11.0') // https://nodejs.org/en/download/prebuilt-installer
-		npmVersion.convention('11.6.1')
+		version.convention('24.13.0') // https://nodejs.org/en/download/prebuilt-installer
+		npmVersion.convention('11.6.2')
 		tsVersion.convention('5.9.3') // https://github.com/microsoft/TypeScript/releases
-		tsNodeTypesVersion.convention('24.9.1') // https://www.npmjs.com/package/@types/node
+		tsNodeTypesVersion.convention('25.0.2') // https://www.npmjs.com/package/@types/node
 	}
 
 	boolean isLinux() {
@@ -91,43 +95,31 @@ abstract class NodePluginConfig {
 	}
 
 	URL getDownloadURL() {
-		if (project.hasProperty('node_download_url'))
-			return new URI("${project.node_download_url}${version.get()}/${getCompressedFilenameExt()}").toURL()
-		def downloadUrl = System.getenv("NODE_DOWNLOAD_URL")
-		if (downloadUrl != null)
-			return new URI(downloadUrl + version.get() + "/" + getCompressedFilenameExt()).toURL()
+println "${this.node_download_url}${version.get()}/${getCompressedFilenameExt()}"
+		if (this.node_download_url != null)
+			return new URI("${this.node_download_url}${version.get()}/${getCompressedFilenameExt()}").toURL()
 		return new URI(url.get() + version.get() + "/" + getCompressedFilenameExt()).toURL()
 	}
 
 	String getDownloadUser() {
-		if (project.hasProperty('node_download_user'))
-			return project.node_download_user
-		def downloadUser = System.getenv("NODE_DOWNLOAD_USER")
-		if (downloadUser != null)
-			return downloadUser
-		return null
+		return this.node_download_user
 	}
 
 	String getDownloadPasswd() {
-		if (project.hasProperty('node_download_passwd'))
-			return project.node_download_passwd
-		def downloadPasswd = System.getenv("NODE_DOWNLOAD_PASSWD")
-		if (downloadPasswd != null)
-			return downloadPasswd
-		return ""
+		return (this.node_download_passwd == null) ? "" : this.node_download_passwd
 	}
 
 	String getDownloadDirectory() {
-		return "${project.rootProject.projectDir}/download"
+		return "${rootProjectDir}/download"
 	}
 
 	String getNodeDirectory() {
-		return useSystemNode() ? "" : "${project.rootProject.projectDir}/node"
+		return useSystemNode() ? "" : "${rootProjectDir}/node"
 	}
 
 	String getNpmExecutable() {
 		if (isWindows()) {
-	   		return useSystemNode() ? "npm.cmd" : Path.of(getNodeDirectory(), "npm.cmd").toString()
+			return useSystemNode() ? "npm.cmd" : Path.of(getNodeDirectory(), "npm.cmd").toString()
 		} else if (isLinux() || isMacOsX()) {
 			return useSystemNode() ? "npm" : Path.of(getNodeDirectory(), "bin", "npm").toString()
 		} else {

@@ -69,8 +69,9 @@
 		inputFocus.value = false;
 		try {
 			connected.value = await props.connectTo(props.hostname);
-			if (!connected.value)
+			if (!connected.value) {
 				throw new Error("Verbindung zum Server fehlgeschlagen. Bitte die Serveradresse prüfen und erneut versuchen.");
+			}
 		} catch (error) {
 			connection_failed.value = true;
 			connecting.value = false;
@@ -96,8 +97,9 @@
 		await props.login(username.value, password.value);
 		authenticating.value = false;
 		firstauth.value = false;
-		if (!props.authenticated)
+		if (!props.authenticated) {
 			throw new Error("Passwort oder Benutzername falsch.");
+		}
 	}
 
 </script>

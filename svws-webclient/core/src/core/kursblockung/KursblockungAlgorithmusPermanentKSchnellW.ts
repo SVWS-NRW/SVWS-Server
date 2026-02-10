@@ -60,7 +60,7 @@ export class KursblockungAlgorithmusPermanentKSchnellW extends KursblockungAlgor
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentK', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKSchnellW'].includes(name);
 	}
 
-	public static class = new Class<KursblockungAlgorithmusPermanentKSchnellW>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKSchnellW');
+	public static readonly class = new Class<KursblockungAlgorithmusPermanentKSchnellW>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKSchnellW');
 
 }
 

@@ -1,4 +1,4 @@
-import { ArrayList, Stundenplan, StundenplanListeEintrag } from "@core";
+import type { ArrayList, Stundenplan, StundenplanListeEintrag } from "@core";
 import type { Checkpoint, StundenplanListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 

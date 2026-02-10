@@ -4,11 +4,18 @@
 			<div class="content-card" v-if="manager().hasDaten()">
 				<div class="content-card--header content-card--headline">Allgemein</div>
 				<div class="content-card--content input-wrapper grid-cols-2">
-					<div v-if="!readonly" class="flex gap-1"><svws-ui-checkbox type="toggle" :disabled="(!manager().auswahl().aktiv && !manager().istKonfliktfreiZuAktivenStundenplaenen(gueltigData.gueltigAb, gueltigData.gueltigBis))" :model-value="manager().daten().isAktiv()" @update:model-value="handleChangeAktiv" />Stundenplan aktiv</div>
-					<svws-ui-text-input class="contentFocusField" :readonly placeholder="Bezeichnung" :model-value="manager().daten().getBezeichnungStundenplan()" :valid="StundenplanListeManager.validateBezeichnung" @change="bezeichnungStundenplan=> bezeichnungStundenplan && patch({ bezeichnungStundenplan })" />
-					<div v-if="!readonly" :class="{'flex gap-2': showExtraWTM}">
-						<svws-ui-select title="Wochentypmodell" :items="[0,2,3,4,5]" :item-text="i=> wochenTypModell[i] || ''" :model-value="manager().daten().getWochenTypModell()" @update:model-value="modell => doPatch(modell)" ref="select" />
-						<svws-ui-input-number v-if="showExtraWTM" placeholder="Wochentypmodell" :model-value="manager().daten().getWochenTypModell() < 5 ? 5 : manager().daten().getWochenTypModell()" @change="modell => doPatch(modell)" :min="5" :max="100" />
+					<div class="flex gap-1">
+						<svws-ui-checkbox autofocus :readonly type="toggle" :disabled="(!manager().auswahl().aktiv && (!validAb || !validBis || !manager().istKonfliktfreiZuAktivenStundenplaenen(gueltigData.gueltigAb, gueltigData.gueltigBis)))"
+							:model-value="manager().daten().isAktiv()" @update:model-value="handleChangeAktiv" />
+						Stundenplan aktiv
+						<span v-if="validateGueltigAb(gueltigData.gueltigAb) && validateGueltigBis(gueltigData.gueltigBis) && !manager().istKonfliktfreiZuAktivenStundenplaenen(gueltigData.gueltigAb, gueltigData.gueltigBis, false)" class="text-ui-caution">
+							<span class="icon icon-ui-caution i-ri-alert-line" /> Konflikt mit anderem Stundenplan
+						</span>
+					</div>
+					<svws-ui-text-input :readonly placeholder="Bezeichnung" :model-value="manager().daten().getBezeichnungStundenplan()" :valid="StundenplanListeManager.validateBezeichnung" @change="bezeichnungStundenplan=> bezeichnungStundenplan && patch({ bezeichnungStundenplan })" />
+					<div :class="{'flex gap-2': showExtraWTM}">
+						<svws-ui-select :readonly title="Wochentypmodell" :items="[0,2,3,4,5]" :item-text="i=> wochenTypModell[i] || ''" :model-value="manager().daten().getWochenTypModell()" @update:model-value="modell => doPatch(modell)" ref="select" />
+						<svws-ui-input-number :readonly v-if="showExtraWTM" placeholder="Wochentypmodell" :model-value="manager().daten().getWochenTypModell() < 5 ? 5 : manager().daten().getWochenTypModell()" @change="modell => doPatch(modell)" :min="5" :max="100" />
 					</div>
 					<svws-ui-text-input :readonly placeholder="Gültig ab" :model-value="manager().daten().getGueltigAb()" :valid="validateGueltigAb" @change="handleChangeGueltigAb" type="date" :fehlerart="manager().auswahl().aktiv ? ValidatorFehlerart.MUSS : ValidatorFehlerart.HINWEIS" />
 					<svws-ui-text-input :readonly placeholder="Gültig bis" :model-value="manager().daten().getGueltigBis()" :valid="validateGueltigBis" @change="handleChangeGueltigBis" type="date" :fehlerart="manager().auswahl().aktiv ? ValidatorFehlerart.MUSS : ValidatorFehlerart.HINWEIS" />
@@ -151,62 +158,70 @@
 	const jahrgaenge = computed(() => {
 		const list = props.manager().daten().jahrgangGetMengeAsList();
 		const a = [];
-		for (const j of list)
+		for (const j of list) {
 			a.push(j.id);
+		}
 		return a;
 	});
 
 	async function updateJahrgaenge(id: number) {
-		if (jahrgaenge.value.includes(id))
+		if (jahrgaenge.value.includes(id)) {
 			await props.removeJahrgang(id);
-		else
+		} else {
 			await props.addJahrgang(id);
+		}
 	}
 
 	function validateGueltigAb(gueltigAb: string | null): boolean {
-		validAb.value = props.manager().validateGueltigAb(gueltigAb, gueltigData.value.gueltigBis, gueltigData.value.aktiv, gueltigData.value.aktiv);
-		return props.manager().validateGueltigAb(gueltigAb, gueltigData.value.gueltigBis, true, props.manager().validateGueltigBis(gueltigData.value.gueltigAb, gueltigData.value.gueltigBis, true));
+		validAb.value = props.manager().validateGueltigAb(gueltigAb, gueltigData.value.gueltigBis, gueltigData.value.aktiv, false, false);
+		return props.manager().validateGueltigAb(gueltigAb, gueltigData.value.gueltigBis, gueltigData.value.aktiv, true, false);
 	}
 
 	function validateGueltigBis(gueltigBis: string | null): boolean {
-		validBis.value = props.manager().validateGueltigBis(gueltigData.value.gueltigAb, gueltigBis, gueltigData.value.aktiv);
-		return props.manager().validateGueltigBis(gueltigData.value.gueltigAb, gueltigBis, true);
+		validBis.value = props.manager().validateGueltigBis(gueltigData.value.gueltigAb, gueltigBis, gueltigData.value.aktiv, false, false);
+		return props.manager().validateGueltigBis(gueltigData.value.gueltigAb, gueltigBis, gueltigData.value.aktiv, true, false);
 	}
 
 	async function handleChangeAktiv(aktiv: boolean) {
 		gueltigData.value.aktiv = aktiv;
 		const patch: Partial<Stundenplan> = { aktiv };
-		if (aktiv === false) {
-			if (props.manager().validateGueltigBis(gueltigData.value.gueltigAb, gueltigData.value.gueltigBis, false))
+		if (!aktiv) {
+			if (props.manager().validateGueltigBis(gueltigData.value.gueltigAb, gueltigData.value.gueltigBis, aktiv, false, false)) {
 				patch.gueltigBis = gueltigData.value.gueltigBis;
-			if (props.manager().validateGueltigAb(gueltigData.value.gueltigAb, gueltigData.value.gueltigBis, false, false))
+			}
+			if (props.manager().validateGueltigAb(gueltigData.value.gueltigAb, gueltigData.value.gueltigBis, aktiv, false, false)) {
 				patch.gueltigAb = gueltigData.value.gueltigAb;
+			}
 		}
 		await props.patch(patch);
 	}
 
 	async function handleChangeGueltigAb(gueltigAb: string | null) {
-		if (gueltigAb === null)
+		if (gueltigAb === null || gueltigAb === gueltigData.value.gueltigAb) {
 			return;
+		}
 		gueltigData.value.gueltigAb = gueltigAb;
-		if (validAb.value === true && validBis.value === true)
+		if (validAb.value === true && validBis.value === true) {
 			await props.patch({ gueltigAb, gueltigBis: gueltigData.value.gueltigBis });
+		}
 	}
 
 	async function handleChangeGueltigBis(gueltigBis: string | null) {
-		if (gueltigBis === null)
+		if (gueltigBis === null || gueltigBis === gueltigData.value.gueltigBis) {
 			return;
+		}
 		gueltigData.value.gueltigBis = gueltigBis;
-		if (validAb.value === true && validBis.value === true)
+		if (validAb.value === true && validBis.value === true) {
 			await props.patch({ gueltigAb: gueltigData.value.gueltigAb, gueltigBis });
+		}
 	}
 
 	async function doPatch(wochenTypModell: number | null | undefined) {
-		if ((wochenTypModell === null) || (wochenTypModell === undefined) || (wochenTypModell === 1))
+		if ((wochenTypModell === null) || (wochenTypModell === undefined) || (wochenTypModell === 1)) {
 			return;
+		}
 		if (((props.manager().daten().stundenplanGetWochenTypModellSimulation(wochenTypModell) === 0)) || (wtmOK.value === true)) {
 			await props.patch({ wochenTypModell });
-			// wtmOK.value === undefined;
 			newWTM.value = -1;
 		} else if (wtmOK.value === false) {
 			select.value?.reset(true);
@@ -263,8 +278,9 @@
 
 	async function patchPausenKlassen(ids: number[], id: number) {
 		const klassen = new ArrayList<number>();
-		for (const klassenID of ids)
+		for (const klassenID of ids) {
 			klassen.add(klassenID);
+		}
 		await props.patchPausenzeit({ klassen }, id);
 	}
 
@@ -280,9 +296,11 @@
 
 	const listPausenzeitenRest = computed(() => {
 		const moeglich = new ArrayList<StundenplanPausenzeit>();
-		for (const e of props.listPausenzeiten())
-			if (!props.manager().daten().pausenzeitExistsByWochentagAndBeginnAndEnde(e.wochentag, e.beginn, e.ende))
+		for (const e of props.listPausenzeiten()) {
+			if (!props.manager().daten().pausenzeitExistsByWochentagAndBeginnAndEnde(e.wochentag, e.beginn, e.ende)) {
 				moeglich.add(e);
+			}
+		}
 		return moeglich;
 	});
 
@@ -290,8 +308,9 @@
 
 	const pausenzeitenSorted = computed(() => {
 		const temp = sortByAndOrder.value;
-		if (temp === undefined)
+		if (temp === undefined) {
 			return itemsPausenzeit.value;
+		}
 		const arr = [...itemsPausenzeit.value];
 		arr.sort((a, b) => {
 			switch (temp.key) {

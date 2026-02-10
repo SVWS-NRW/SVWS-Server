@@ -28,26 +28,31 @@ export class RouteKlassenStundenplan extends RouteNode<RouteDataKlassenStundenpl
 		try {
 			const { idSchuljahresabschnitt, id: idKlasse, idStundenplan, wochentyp } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id", "idStundenplan", "wochentyp"]);
 			const { kw: kwString } = RouteNode.getStringParams(to_params, ["kw"]);
-			if (idSchuljahresabschnitt === undefined)
+			if (idSchuljahresabschnitt === undefined) {
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
+			}
 			let kwjahr = undefined;
 			let kw = undefined;
 			if ((kwString !== undefined) && (kwString !== "") && (wochentyp === undefined)) {
 				const tmpKW = kwString.split(".");
-				if (tmpKW.length !== 2)
+				if (tmpKW.length !== 2) {
 					throw new DeveloperNotificationException("Die Angabe der Kalenderwoche muss die Form 'Jahr.KW' haben.");
+				}
 				kwjahr = parseInt(tmpKW[0]);
 				kw = parseInt(tmpKW[1]);
 			}
 			// Prüfe, ob ein Schüler ausgewählt ist. Wenn nicht dann wechsele in die Schüler-Route zurück.
-			if (idKlasse === undefined)
+			if (idKlasse === undefined) {
 				return routeKlassen.getRoute();
+			}
 			// Lade die Stundenplandaten neu, wenn die ID des Schuljahresabschnittes sich ändert (das passiert beim Laden der Route automatisch)
-			if (await this.data.ladeListe(idKlasse))
+			if (await this.data.ladeListe(idKlasse)) {
 				return this.getRoute();
+			}
 			// Aktualisiere / Lade ggf. den Stundenplan ...
-			if (idStundenplan !== undefined)
+			if (idStundenplan !== undefined) {
 				await routeKlassenStundenplan.data.setEintrag(idKlasse, idStundenplan, wochentyp ?? 0, kwjahr, kw);
+			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}

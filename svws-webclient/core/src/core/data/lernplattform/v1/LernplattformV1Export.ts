@@ -12,10 +12,9 @@ import { LernplattformV1Jahrgang } from '../../../../core/data/lernplattform/v1/
 export class LernplattformV1Export extends JavaObject {
 
 	/**
-	 * Die Revision des Lernplattform-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und
-	 *  ansonsten aufsteigend ab 1
+	 * Die Revision des Lernplattformen-Exports dient zur Überprüfung der Datei Version und der damit verbundenen Datenstruktur.
 	 */
-	public revision: number = -1;
+	public revision: number = 1;
 
 	/**
 	 * Gibt die ID der Lernplattform an.
@@ -123,7 +122,7 @@ export class LernplattformV1Export extends JavaObject {
 		return ['de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Export'].includes(name);
 	}
 
-	public static class = new Class<LernplattformV1Export>('de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Export');
+	public static readonly class = new Class<LernplattformV1Export>('de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Export');
 
 	public static transpilerFromJSON(json: string): LernplattformV1Export {
 		const obj = JSON.parse(json) as Partial<LernplattformV1Export>;

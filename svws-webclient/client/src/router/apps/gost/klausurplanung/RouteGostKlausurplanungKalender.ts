@@ -29,29 +29,35 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 	}
 
 	public checkHidden(params?: RouteParams) {
-		if (!routeGostKlausurplanung.data.abschnitt || routeGostKlausurplanung.data.manager.stundenplanManagerGeladenAndExistsByAbschnitt(routeGostKlausurplanung.data.abschnitt.id) === false)
+		if (!routeGostKlausurplanung.data.abschnitt || routeGostKlausurplanung.data.manager.stundenplanManagerGeladenAndExistsByAbschnitt(routeGostKlausurplanung.data.abschnitt.id) === false) {
 			return { name: routeGostKlausurplanung.defaultChild!.name, params };
+		}
 		return false;
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		try {
-			if (!routeGostKlausurplanung.data.manager.stundenplanManagerExistsByAbschnitt(routeGostKlausurplanung.data.abschnitt!.id))
+			if (!routeGostKlausurplanung.data.manager.stundenplanManagerExistsByAbschnitt(routeGostKlausurplanung.data.abschnitt!.id)) {
 				return routeGostKlausurplanungVorgaben.getRoute();
+			}
 			const { abiturjahr, halbjahr: halbjahrId, idtermin } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr", "idtermin"]);
 			let { datum } = RouteNode.getStringParams(to_params, ["datum"]);
-			if (datum !== undefined && datum === "-1")
+			if (datum !== undefined && datum === "-1") {
 				datum = undefined;
-			if (datum !== undefined)
+			}
+			if (datum !== undefined) {
 				datum = datum.slice(0, 4) + "-" + datum.slice(4, 6) + "-" + datum.slice(6, 8);
+			}
 			let { datum: datumFrom } = RouteNode.getStringParams(from_params, ["datum"]);
-			if (datumFrom !== undefined)
+			if (datumFrom !== undefined) {
 				datumFrom = datumFrom.slice(0, 4) + "-" + datumFrom.slice(4, 6) + "-" + datumFrom.slice(6, 8);
+			}
 			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
 			const termin = routeGostKlausurplanung.data.manager.terminGetByIdOrNull(idtermin ?? -1) ?? undefined;
 			routeGostKlausurplanung.data.terminSelected.value = termin;
-			if ((abiturjahr === undefined) || (halbjahr === null))
+			if ((abiturjahr === undefined) || (halbjahr === null)) {
 				throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen definiert sein.");
+			}
 			if ((datum === undefined) && (datumFrom === undefined)) {
 				let datumNeu = routeGostKlausurplanung.data.kalenderdatum.value === undefined ? new Date().toISOString().slice(0, 10) : routeGostKlausurplanung.data.kalenderdatum.value;
 				const stundenplan = routeGostKlausurplanung.data.manager.stundenplanManagerGetByAbschnittAndDatumOrClosest(routeGostKlausurplanung.data.abschnitt!.id, datumNeu);

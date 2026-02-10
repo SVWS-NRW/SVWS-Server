@@ -36,10 +36,12 @@ export class RouteApp extends RouteNode<RouteData, any> {
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		let cur: RouteNode<unknown, any> = to;
-		while (cur.parent !== this)
+		while (cur.parent !== this) {
 			cur = cur.parent;
-		if (cur !== this.data.view)
+		}
+		if (cur !== this.data.view) {
 			await this.data.setView(cur);
+		}
 	}
 
 	public getRoute(): RouteLocationRaw {
@@ -61,17 +63,20 @@ export class RouteApp extends RouteNode<RouteData, any> {
 
 	private getApps(): TabData[] {
 		const result: TabData[] = [];
-		for (const c of super.menu)
+		for (const c of super.menu) {
 			result.push({ name: c.name, text: c.text });
+		}
 		return result;
 	}
 
 	private setApp = async (value: TabData) => {
-		if (value.name === this.data.view.name)
+		if (value.name === this.data.view.name) {
 			return;
+		}
 		const node = RouteNode.getNodeByName(value.name);
-		if (node === undefined)
+		if (node === undefined) {
 			throw new Error("Unbekannte Route");
+		}
 		await RouteManager.doRoute({ name: value.name, params: { } });
 		await this.data.setView(node);
 	};

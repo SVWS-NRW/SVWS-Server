@@ -72,8 +72,8 @@ public class APIAbteilungen {
 	@ApiResponse(responseCode = "404", description = "Keine Abteilung-Einträge gefunden")
 	public Response getAbteilungenByIdJahresAbschnitt(@PathParam("schema") final String schema, @PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn ->  new DataAbteilungen(conn, idSchuljahresabschnitt).getAllAsResponse(),
-				request, ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN);
+		return DBBenutzerUtils.runWithTransaction(conn ->  new DataAbteilungen(conn, idSchuljahresabschnitt, new DataAbteilungenKlassenzuordnungen(conn)).getListAsResponse(),
+				request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN);
 	}
 
 	/**
@@ -100,7 +100,8 @@ public class APIAbteilungen {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Abteilung.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataAbteilungen(conn, idSchuljahresabschnitt).addAsResponse(is), request, ServerMode.DEV,
+				conn -> new DataAbteilungen(conn, idSchuljahresabschnitt, null).addAsResponse(is), request,
+				ServerMode.DEV,
 				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
@@ -131,7 +132,7 @@ public class APIAbteilungen {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Abteilung.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataAbteilungen(conn).patchAsResponse(id, is), request, ServerMode.DEV,
+				conn -> new DataAbteilungen(conn, null, null).patchAsResponse(id, is), request, ServerMode.DEV,
 				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
@@ -158,34 +159,10 @@ public class APIAbteilungen {
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataAbteilungen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)), request, ServerMode.DEV,
+				conn -> new DataAbteilungen(conn, null, null).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)), request, ServerMode.DEV,
 				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
-	/**
-	 * Die OpenAPI-Methode für das Entfernen der Abteilung.
-	 *
-	 * @param schema    das Datenbankschema
-	 * @param id        der InputStream, mit der Liste von zu löschenden IDs
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Abteilung
-	 */
-	@DELETE
-	@Path("/{id : \\d+}")
-	@Operation(summary = "Entfernt eine Abteilung anhand der mitgelieferten ID.",
-			description = "Entfernt eine Abteilung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen eines Abteilung hat.")
-	@ApiResponse(responseCode = "200", description = "Die Abteilung wurde erfolgreich entfernt.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Abteilung.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
-	@ApiResponse(responseCode = "404", description = "Keine Abteilung vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft)")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
-	public Response deleteAbteilung(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataAbteilungen(conn).deleteAsResponse(id), request, ServerMode.DEV,
-				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
-	}
 
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen einer Abteilung.

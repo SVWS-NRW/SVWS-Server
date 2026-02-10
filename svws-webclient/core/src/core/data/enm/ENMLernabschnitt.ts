@@ -70,7 +70,7 @@ export class ENMLernabschnitt extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMLernabschnitt'].includes(name);
 	}
 
-	public static class = new Class<ENMLernabschnitt>('de.svws_nrw.core.data.enm.ENMLernabschnitt');
+	public static readonly class = new Class<ENMLernabschnitt>('de.svws_nrw.core.data.enm.ENMLernabschnitt');
 
 	public static transpilerFromJSON(json: string): ENMLernabschnitt {
 		const obj = JSON.parse(json) as Partial<ENMLernabschnitt>;

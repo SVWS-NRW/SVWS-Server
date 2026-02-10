@@ -5,7 +5,7 @@
 	:root {
 		/* TODO color-scheme: light dark; -> Als default - Browser-Default...*/
 		/* color-scheme: light; */
-		color-scheme: light dark; 
+		color-scheme: light dark;
 
 		--color-text-ui: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-100));
 		--color-text-ui-0: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-900));
@@ -22,7 +22,7 @@
 		--color-text-ui-brand-secondary: light-dark(var(--color-palette-brand-300), var(--color-palette-brand-500));
 		--color-text-ui-brand-secondary-hover: light-dark(var(--color-palette-brand-400), var(--color-palette-brand-400));
 		--color-text-ui-statistic: light-dark(var(--color-palette-statistic-500), var(--color-palette-statistic-300));
-		--color-text-ui-statistic-hover: light-dark(var(--color-palette-statistic-600), var(--color-palette-statistic-200));
+		--color-text-ui-statistic-hover: light-dark(var(--color-palette-statistic-600), var(--color-palette-statistic-100));
 		--color-text-ui-statistic-secondary: light-dark(var(--color-palette-statistic-300), var(--color-palette-statistic-400));
 		--color-text-ui-statistic-secondary-hover: light-dark(var(--color-palette-statistic-400), var(--color-palette-statistic-300));
 		--color-text-ui-selected: light-dark(var(--color-palette-schoolboost-secondary), var(--color-palette-schoolboost-secondary));
@@ -49,8 +49,8 @@
 		--color-text-ui-neutral-hover: light-dark(var(--color-palette-neutral-600), var(--color-palette-neutral-100));
 		--color-text-ui-neutral-secondary: light-dark(var(--color-palette-neutral-700), var(--color-palette-neutral-600));
 		--color-text-ui-neutral-secondary-hover: light-dark(var(--color-palette-neutral-600), var(--color-palette-neutral-500));
-		--color-text-ui-disabled: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-850));
-		--color-text-ui-disabled-secondary: light-dark(var(--color-palette-neutral-850), var(--color-palette-neutral-900));
+		--color-text-ui-disabled: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-750));
+		--color-text-ui-disabled-secondary: light-dark(var(--color-palette-neutral-400), var(--color-palette-neutral-900));
 		--color-text-ui-onbrand: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
 		--color-text-ui-onbrand-hover: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-200));
 		--color-text-ui-onbrand-secondary: light-dark(var(--color-palette-brand-200), var(--color-palette-brand-200));
@@ -68,10 +68,10 @@
 		--color-text-ui-oncaution-secondary: light-dark(var(--color-palette-danger-200), var(--color-palette-danger-200));
 		--color-text-ui-onsuccess: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
 		--color-text-ui-onsuccess-hover: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
-		--color-text-ui-onsuccess-secondary: light-dark(var(--color-palette-success-200), var(--color-palette-success-200));
+		--color-text-ui-onsuccess-secondary: light-dark(var(--color-palette-success-100), var(--color-palette-success-100));
 		--color-text-ui-onwarning: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-900));
 		--color-text-ui-onwarning-hover: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-900));
-		--color-text-ui-onwarning-secondary: light-dark(var(--color-palette-warning-900), var(--color-palette-warning-900));
+		--color-text-ui-onwarning-secondary: light-dark(var(--color-palette-warning-900), var(--color-palette-warning-600));
 		--color-text-ui-onneutral: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-100));
 		--color-text-ui-onneutral-hover: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-400));
 		--color-text-ui-onneutral-secondary: light-dark(var(--color-palette-neutral-700), var(--color-palette-neutral-400));
@@ -127,8 +127,8 @@
 		--color-icon-ui-neutral-hover: light-dark(var(--color-palette-neutral-600), var(--color-palette-neutral-100));
 		--color-icon-ui-neutral-secondary: light-dark(var(--color-palette-neutral-700), var(--color-palette-neutral-600));
 		--color-icon-ui-neutral-secondary-hover: light-dark(var(--color-palette-neutral-600), var(--color-palette-neutral-500));
-		--color-icon-ui-disabled: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-850));
-		--color-icon-ui-disabled-secondary: light-dark(var(--color-palette-neutral-850), var(--color-palette-neutral-900));
+		--color-icon-ui-disabled: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-750));
+		--color-icon-ui-disabled-secondary: light-dark(var(--color-palette-neutral-400), var(--color-palette-neutral-900));
 		--color-icon-ui-onbrand: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
 		--color-icon-ui-onbrand-hover: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-200));
 		--color-icon-ui-onbrand-secondary: light-dark(var(--color-palette-brand-200), var(--color-palette-brand-200));
@@ -146,10 +146,10 @@
 		--color-icon-ui-oncaution-secondary: light-dark(var(--color-palette-danger-200), var(--color-palette-danger-200));
 		--color-icon-ui-onsuccess: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
 		--color-icon-ui-onsuccess-hover: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
-		--color-icon-ui-onsuccess-secondary: light-dark(var(--color-palette-success-200), var(--color-palette-success-200));
+		--color-icon-ui-onsuccess-secondary: light-dark(var(--color-palette-success-100), var(--color-palette-success-100));
 		--color-icon-ui-onwarning: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-900));
 		--color-icon-ui-onwarning-hover: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-900));
-		--color-icon-ui-onwarning-secondary: light-dark(var(--color-palette-warning-900), var(--color-palette-warning-900));
+		--color-icon-ui-onwarning-secondary: light-dark(var(--color-palette-warning-900), var(--color-palette-warning-600));
 		--color-icon-ui-onneutral: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-100));
 		--color-icon-ui-onneutral-hover: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-400));
 		--color-icon-ui-onneutral-secondary: light-dark(var(--color-palette-neutral-700), var(--color-palette-neutral-400));
@@ -181,20 +181,20 @@
 		--color-bg-ui-selected-hover: light-dark(#2aa0bc, #2aa0bc);
 		--color-bg-ui-danger: light-dark(var(--color-palette-danger-500), var(--color-palette-danger-500));
 		--color-bg-ui-danger-hover: light-dark(var(--color-palette-danger-600), var(--color-palette-danger-400));
-		--color-bg-ui-danger-secondary: light-dark(var(--color-palette-danger-50), var(--color-palette-danger-50));
+		--color-bg-ui-danger-secondary: light-dark(var(--color-palette-danger-50), var(--color-palette-danger-950));
 		--color-bg-ui-success: light-dark(var(--color-palette-success-500), var(--color-palette-success-500));
 		--color-bg-ui-success-hover: light-dark(var(--color-palette-success-600), var(--color-palette-success-400));
 		--color-bg-ui-success-secondary: light-dark(var(--color-palette-success-300), var(--color-palette-success-300));
 		--color-bg-ui-warning: light-dark(var(--color-palette-warning-400), var(--color-palette-warning-500));
 		--color-bg-ui-warning-hover: light-dark(var(--color-palette-warning-600), var(--color-palette-warning-300));
-		--color-bg-ui-warning-secondary: light-dark(var(--color-palette-warning-50), var(--color-palette-warning-50));
+		--color-bg-ui-warning-secondary: light-dark(var(--color-palette-warning-50), var(--color-palette-warning-900));
 		--color-bg-ui-caution: light-dark(var(--color-palette-caution-400), var(--color-palette-caution-500));
 		--color-bg-ui-caution-hover: light-dark(var(--color-palette-caution-600), var(--color-palette-caution-300));
 		--color-bg-ui-caution-secondary: light-dark(var(--color-palette-caution-50), var(--color-palette-caution-900));
 		--color-bg-ui-neutral: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-750));
 		--color-bg-ui-neutral-hover: light-dark(var(--color-palette-neutral-400), var(--color-palette-neutral-700));
-		--color-bg-ui-neutral-secondary: light-dark(var(--color-palette-neutral-50), var(--color-palette-neutral-950));
-		--color-bg-ui-disabled: light-dark(var(--color-palette-neutral-300), var(--color-palette-neutral-850));
+		--color-bg-ui-neutral-secondary: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-900));
+		--color-bg-ui-disabled: light-dark(var(--color-palette-neutral-300), var(--color-palette-neutral-750));
 		--color-bg-uistatic: var(--color-palette-neutral-100);
 		--color-bg-uistatic-0: var(--color-palette-neutral-900);
 		--color-bg-uistatic-10: var(--color-palette-neutral-800);
@@ -227,24 +227,7 @@
 		--color-border-ui-caution-hover: light-dark(var(--color-palette-caution-800), var(--color-palette-caution-600));
 		--color-border-ui-neutral: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-700));
 		--color-border-ui-neutral-hover: light-dark(var(--color-palette-neutral-600), var(--color-palette-neutral-500));
-		--color-border-ui-disabled: light-dark(var(--color-palette-neutral-850), var(--color-palette-neutral-850));
-		--color-border-ui-onbrand: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
-		--color-border-ui-onbrand-hover: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-200));
-		--color-border-ui-onstatistic: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
-		--color-border-ui-onstatistic-hover: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-200));
-		--color-border-ui-onselected: light-dark(var(--color-palette-brand-700), var(--color-palette-brand-200));
-		--color-border-ui-onselected-hover: light-dark(var(--color-palette-brand-700), var(--color-palette-brand-200));
-		--color-border-ui-ondanger: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
-		--color-border-ui-ondanger-hover: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-200));
-		--color-border-ui-onsuccess: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
-		--color-border-ui-onsuccess-hover: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-200));
-		--color-border-ui-onwarning: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-900));
-		--color-border-ui-onwarning-hover: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-900));
-		--color-border-ui-oncaution: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-900));
-		--color-border-ui-oncaution-hover: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-900));
-		--color-border-ui-onneutral: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-100));
-		--color-border-ui-onneutral-hover: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-300));
-		--color-border-ui-ondisabled: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-850));
+		--color-border-ui-disabled: light-dark(var(--color-palette-neutral-400), var(--color-palette-neutral-750));
 		--color-border-uistatic: var(--color-palette-neutral-900);
 		--color-border-uistatic-0: var(--color-palette-neutral-100);
 		--color-border-uistatic-10: var(--color-palette-neutral-300);
@@ -274,13 +257,13 @@
 		--color-accent-ui-onneutral: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-100));
 		--color-accent-ui-ondisabled: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-700));
 
-		--color-ring-ui: light-dark(var(--color-palette-brand-100), var(--color-palette-brand-100));
-		--color-ring-ui-brand: light-dark(var(--color-palette-brand-100), var(--color-palette-brand-100));
-		--color-ring-ui-statistic: light-dark(var(--color-palette-statistic-100), var(--color-palette-statistic-100));
-		--color-ring-ui-danger: light-dark(var(--color-palette-danger-100), var(--color-palette-danger-100));
-		--color-ring-ui-success: light-dark(var(--color-palette-success-100), var(--color-palette-success-100));
-		--color-ring-ui-warning: light-dark(var(--color-palette-warning-100), var(--color-palette-warning-100));
-		--color-ring-ui-caution: light-dark(var(--color-palette-caution-100), var(--color-palette-caution-100));
+		--color-ring-ui: light-dark(var(--color-palette-brand-200), var(--color-palette-brand-600));
+		--color-ring-ui-brand: light-dark(var(--color-palette-brand-200), var(--color-palette-brand-600));
+		--color-ring-ui-statistic: light-dark(var(--color-palette-statistic-200), var(--color-palette-statistic-600));
+		--color-ring-ui-danger: light-dark(var(--color-palette-danger-200), var(--color-palette-danger-800));
+		--color-ring-ui-success: light-dark(var(--color-palette-success-200), var(--color-palette-success-600));
+		--color-ring-ui-warning: light-dark(var(--color-palette-warning-200), var(--color-palette-warning-800));
+		--color-ring-ui-caution: light-dark(var(--color-palette-caution-200), var(--color-palette-caution-100));
 		--color-ring-ui-neutral: light-dark(rgba(0, 0, 0, 0.1),rgba(255, 255, 255, 0.2));
 
 		--color-shadow-ui-0: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-900));
@@ -411,23 +394,6 @@
 	--border-color-ui-neutral: var(--color-border-ui-neutral);
 	--border-color-ui-neutral-hover: var(--color-border-ui-neutral-hover);
 	--border-color-ui-disabled: var(--color-border-ui-disabled);
-	--border-color-ui-onbrand: var(--color-border-ui-onbrand);
-	--border-color-ui-onbrand-hover: var(--color-border-ui-onbrand-hover);
-	--border-color-ui-onstatistic: var(--color-border-ui-onstatistic);
-	--border-color-ui-onstatistic-hover: var(--color-border-ui-onstatistic-hover);
-	--border-color-ui-onselected: var(--color-border-ui-onselected);
-	--border-color-ui-onselected-hover: var(--color-border-ui-onselected-hover);
-	--border-color-ui-ondanger: var(--color-border-ui-ondanger);
-	--border-color-ui-ondanger-hover: var(--color-border-ui-ondanger-hover);
-	--border-color-ui-onsuccess: var(--color-border-ui-onsuccess);
-	--border-color-ui-onsuccess-hover: var(--color-border-ui-onsuccess-hover);
-	--border-color-ui-onwarning: var(--color-border-ui-onwarning);
-	--border-color-ui-onwarning-hover: var(--color-border-ui-onwarning-hover);
-	--border-color-ui-oncaution: var(--color-border-ui-oncaution);
-	--border-color-ui-oncaution-hover: var(--color-border-ui-oncaution-hover);
-	--border-color-ui-onneutral: var(--color-border-ui-onneutral);
-	--border-color-ui-onneutral-hover: var(--color-border-ui-onneutral-hover);
-	--border-color-ui-ondisabled: var(--color-border-ui-ondisabled);
 	--border-color-uistatic: var(--color-text-uistatic);
 	--border-color-uistatic-0: var(--color-text-uistatic-0);
 	--border-color-uistatic-10: var(--color-text-uistatic-10);
@@ -590,5 +556,5 @@
 	--shadow-ui-50: var(--color-shadow-ui-50);
 	--shadow-ui-75: var(--color-shadow-ui-75);
 	--shadow-ui-100: var(--color-shadow-ui-100);
-	
+
 }

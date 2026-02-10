@@ -51,7 +51,7 @@ export class StundenplanPausenzeit extends JavaObject {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit'].includes(name);
 	}
 
-	public static class = new Class<StundenplanPausenzeit>('de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit');
+	public static readonly class = new Class<StundenplanPausenzeit>('de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit');
 
 	public static transpilerFromJSON(json: string): StundenplanPausenzeit {
 		const obj = JSON.parse(json) as Partial<StundenplanPausenzeit>;

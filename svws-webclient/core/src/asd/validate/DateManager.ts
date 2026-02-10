@@ -378,7 +378,7 @@ export class DateManager extends JavaObject implements Comparable<DateManager> {
 	 *     das Geburtsdatum des Managers
 	 */
 	public getAlter(other: DateManager): number {
-		const cmp: number = this.compareTo(other);
+		const cmp: number = other.compareTo(this);
 		if (cmp < 0)
 			throw new InvalidDateException("Das angegebene Datum ist vor dem Geburtsdatum. Eine Altersbestimmung ist so nicht möglich.")
 		const tmp: number = other.jahr - this.jahr;
@@ -407,7 +407,7 @@ export class DateManager extends JavaObject implements Comparable<DateManager> {
 		return ['de.svws_nrw.asd.validate.DateManager', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<DateManager>('de.svws_nrw.asd.validate.DateManager');
+	public static readonly class = new Class<DateManager>('de.svws_nrw.asd.validate.DateManager');
 
 }
 

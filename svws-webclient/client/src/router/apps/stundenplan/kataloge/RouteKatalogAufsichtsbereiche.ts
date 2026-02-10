@@ -33,18 +33,22 @@ export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAuf
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		try {
 			const { idAufsichtsbereich } = RouteNode.getIntParams(to_params, ["idAufsichtsbereich"]);
-			if (isEntering)
+			if (isEntering) {
 				await this.data.ladeListe();
-			if (this.data.stundenplanManager.aufsichtsbereichGetMengeAsList().isEmpty())
+			}
+			if (this.data.stundenplanManager.aufsichtsbereichGetMengeAsList().isEmpty()) {
 				return;
+			}
 			let eintrag: StundenplanAufsichtsbereich | undefined;
-			if ((idAufsichtsbereich === undefined) && this.data.auswahl)
+			if ((idAufsichtsbereich === undefined) && this.data.auswahl) {
 				return this.getRoute();
+			}
 			if (idAufsichtsbereich === undefined) {
 				eintrag = this.data.stundenplanManager.aufsichtsbereichGetMengeAsList().get(0);
 				return this.getRoute({ id: eintrag.id });
-			} else
+			} else {
 				eintrag = this.data.stundenplanManager.aufsichtsbereichGetByIdOrException(idAufsichtsbereich);
+			}
 			await this.data.setEintrag(eintrag);
 		} catch (error) {
 			return await routeError.getErrorRoute(error as DeveloperNotificationException);

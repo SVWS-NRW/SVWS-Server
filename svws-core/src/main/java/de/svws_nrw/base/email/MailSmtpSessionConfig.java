@@ -35,6 +35,8 @@ public class MailSmtpSessionConfig {
 	 * @param password   das Kennwort
 	 */
 	public MailSmtpSessionConfig(final @NotNull String host, final @NotNull String username, final @NotNull String password) {
+		if ((host == null) || (username == null) || (password == null) || host.isBlank() || username.isBlank())
+			throw new IllegalArgumentException("Notwendige Parameter für die Erzeugung eines E-Mail-SmtpSessionConfig sind null oder leer.");
 		this._host = host;
 		this._username = username;
 		this._password = password;

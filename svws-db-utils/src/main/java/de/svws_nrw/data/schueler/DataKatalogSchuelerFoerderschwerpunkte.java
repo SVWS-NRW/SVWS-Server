@@ -11,6 +11,7 @@ import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Collections;
 import java.util.HashSet;
@@ -68,13 +69,11 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 				? Collections.emptySet()
 				: this.getIdsOfReferencedFoerderschwerpunkte(idsFoerderschwerpunkte);
 
-		return foerderschwerpunkte.stream()
-				.map(f -> {
-					final FoerderschwerpunktEintrag foerderschwerpunkt = this.map(f);
-					foerderschwerpunkt.referenziertInAnderenTabellen = idsOfReferencedFoerderschwerpunkte.contains(f.ID);
-					return foerderschwerpunkt;
-				})
-				.sorted(Comparator.comparing(f -> f.id))
+		return foerderschwerpunkte
+				.stream()
+				.map(this::map)
+				.map(e -> setReferencedFlag(e, idsOfReferencedFoerderschwerpunkte))
+				.sorted(Comparator.comparing(e -> e.id))
 				.toList();
 	}
 
@@ -174,10 +173,6 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 				.collect(Collectors.toSet());
 	}
 
-	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
-		return Objects.equals(oldValue, newValue) || newValue.isBlank();
-	}
-
 	private static boolean noMatchingCoreTypeFound(final String kuerzel) {
 		return Foerderschwerpunkt.data().getWertBySchluessel(kuerzel) == null;
 	}
@@ -187,4 +182,14 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 				.queryAll(DTOFoerderschwerpunkt.class).stream()
 				.anyMatch(f -> (f.ID != id) && bezeichnung.equalsIgnoreCase(f.Bezeichnung));
 	}
+
+	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
+		return Objects.equals(oldValue, newValue) || ((newValue != null) && newValue.isBlank());
+	}
+
+	private FoerderschwerpunktEintrag setReferencedFlag(final FoerderschwerpunktEintrag foerderschwerpunkt, final Set<Long> idsOfReferencedEntlassgruende) {
+		foerderschwerpunkt.referenziertInAnderenTabellen = idsOfReferencedEntlassgruende.contains(foerderschwerpunkt.id);
+		return foerderschwerpunkt;
+	}
+
 }

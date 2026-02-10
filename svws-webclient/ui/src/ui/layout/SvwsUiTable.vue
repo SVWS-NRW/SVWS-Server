@@ -21,7 +21,7 @@
 						<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
 							<li v-for="(column, index) in columns.filter(col => (typeof col !== 'string') && !col.toggleInvisible)" :key="index">
 								<template v-if="typeof column !== 'string'">
-									<svws-ui-checkbox :model-value="!hiddenColumns.has(column.key)" :disabled="!column.toggle" @update:model-value="ok => updateHiddenColumns(column.key, ok)">
+									<svws-ui-checkbox :model-value="!hiddenColumns.has(column.key)" :disabled="!column.toggle" @update:model-value="(ok: boolean) => updateHiddenColumns(column.key, ok)">
 										{{ column.label }}
 									</svws-ui-checkbox>
 								</template>
@@ -161,7 +161,7 @@
 						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="(typeof noData !== 'undefined' ? noData : noDataCalculated) || lockSelectable" />
 					</div>
 					<div v-if="count" class="text-sm svws-ui-td font-medium" role="cell">
-						<template v-if="allRowsSelected && modelValue">Alle {{ modelValue.length - selectedItemsNotListed.length - unselectable.size }} ausgewählt<template v-if="selectedItemsNotListed.length > 0">, <svws-ui-button class="m-0.5" type="transparent" size="small" title="Weitere ausgewählte Einträge, die nicht angezeigt werden. Klicken entfernt aus der Liste." @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Weitere nicht angezeigt</svws-ui-button>, <svws-ui-button type="transparent" size="small" title="Alle ausgwählten Einträge. Klicken, um alle aus der Auswahl zu entfernen." @click="unselectAllRows"><span class="icon-sm i-ri-close-line" />{{ modelValue.length - unselectable.size }}</svws-ui-button> insgesamt</template></template>
+						<template v-if="allRowsSelected && modelValue">{{ numberOfSelectedEntriesText }}<template v-if="selectedItemsNotListed.length > 0">, <svws-ui-button class="m-0.5" type="transparent" size="small" title="Weitere ausgewählte Einträge, die nicht angezeigt werden. Klicken entfernt aus der Liste." @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Weitere nicht angezeigt</svws-ui-button>, <svws-ui-button type="transparent" size="small" title="Alle ausgwählten Einträge. Klicken, um alle aus der Auswahl zu entfernen." @click="unselectAllRows"><span class="icon-sm i-ri-close-line" />{{ modelValue.length - unselectable.size }}</svws-ui-button> insgesamt</template></template>
 						<template v-else-if="someNotAllRowsSelected && modelValue">{{ modelValue.length - selectedItemsNotListed.length }}/<span class="text-ui-secondary">{{ sortedRows.length - unselectable.size }}</span> ausgewählt<template v-if="selectedItemsNotListed.length > 0"><svws-ui-button class="m-0.5" type="transparent" size="small" title="Weitere ausgewählte Einträge, die nicht angezeigt werden. Klicken entfernt aus der Liste." @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Weitere</svws-ui-button><svws-ui-button type="transparent" size="small" title="Alle ausgwählten Einträge. Klicken, um alle aus der Auswahl zu entfernen." @click="unselectAllRows"><span class="icon-sm i-ri-close-line" />{{ modelValue.length - unselectable.size }} insgesamt</svws-ui-button></template></template>
 						<template v-else><span class="text-ui-secondary">{{ (sortedRows.length - unselectable.size) === 1 ? '1 Eintrag': `${sortedRows.length - unselectable.size} Einträge` }}</span><template v-if="selectedItemsNotListed.length > 0">, <svws-ui-button class="m-0.5" type="transparent" size="small" @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Ausgewählte nicht angezeigt</svws-ui-button></template></template>
 					</div>
@@ -303,7 +303,6 @@
 		"update:hiddenColumns": [keys: Set<string>];
 	}>();
 
-	// const attrs = useAttrs();
 	const itemRefs = ref(new Map());
 	const selectionRefs = ref(new Map());
 
@@ -317,19 +316,30 @@
 		return Object.keys(accumulatedObject);
 	}
 
+	const numberOfSelectedEntriesText = computed<string>(() => {
+		if (props.modelValue === undefined) {
+			return "";
+		}
+		const numberOfSelectedEntries = props.modelValue.length - selectedItemsNotListed.value.length - props.unselectable.size;
+		return (numberOfSelectedEntries === 1) ? "Alle ausgewählt" : "Alle " + numberOfSelectedEntries + " ausgewählt";
+	});
+
 	function switchElement(event: KeyboardEvent, list: Map<number, HTMLElement | null>, index: number, backwards: boolean) {
-		if (!props.allowArrowKeySelection)
+		if (!props.allowArrowKeySelection) {
 			return;
+		}
 		let targetIndex;
-		if (index === list.size - 1 && !backwards)
+		if (index === list.size - 1 && !backwards) {
 			targetIndex = 0;
-		else if (index === 0 && backwards)
+		} else if (index === 0 && backwards) {
 			targetIndex = list.size - 1;
-		else
+		} else {
 			targetIndex = backwards ? index - 1 : index + 1;
+		}
 		const ele = list.get(targetIndex);
-		if ((ele !== null) && (ele !== undefined))
+		if ((ele !== null) && (ele !== undefined)) {
 			ele.focus();
+		}
 	}
 
 	const buildTableColumn = (source: DataTableColumnSource, initialIndex: number): DataTableColumnInternal => {
@@ -375,15 +385,18 @@
 		})));
 
 	const sortedRows = computed(() => {
-		if (rowsComputed.value.length < 0 || props.sortByMulti !== undefined)
+		if (rowsComputed.value.length < 0 || props.sortByMulti !== undefined) {
 			return rowsComputed.value;
+		}
 		const columnIndex = columnsComputed.value.findIndex(({ key, sortable }) => (internalSortByAndOrder.value.key === key) && sortable);
-		if ((columnIndex < 0) || (columnIndex > columnsComputed.value.length - 1))
+		if ((columnIndex < 0) || (columnIndex > columnsComputed.value.length - 1)) {
 			return rowsComputed.value;
+		}
 		const sortingOrderRatio = internalSortByAndOrder.value.order === false ? -1 : 1;
 		return [...rowsComputed.value].sort((a, b) => {
-			if (internalSortByAndOrder.value.order === null)
+			if (internalSortByAndOrder.value.order === null) {
 				return a.initialIndex - b.initialIndex;
+			}
 			const firstValue = String(a.cells[columnIndex].value);
 			const secondValue = String(b.cells[columnIndex].value);
 			return sortingOrderRatio * (firstValue.localeCompare(secondValue));
@@ -391,10 +404,12 @@
 	});
 
 	function cycleSorting(value: boolean | null | undefined) {
-		if (value === null || value === undefined)
+		if (value === null || value === undefined) {
 			return true;
-		if (value === true)
+		}
+		if (value === true) {
 			return false;
+		}
 		return null;
 	}
 
@@ -403,9 +418,9 @@
 
 	function toggleSorting(column: DataTableColumnInternal) {
 		const neu: SortByAndOrder = { key: column.key, order: true };
-		if (column.key === internalSortByAndOrder.value.key)
+		if (column.key === internalSortByAndOrder.value.key) {
 			neu.order = cycleSorting(internalSortByAndOrder.value.order);
-		else if (props.sortByMulti !== undefined) {
+		} else if (props.sortByMulti !== undefined) {
 			const alt = props.sortByMulti.get(column.key);
 			neu.order = cycleSorting(alt);
 		}
@@ -458,19 +473,22 @@
 	}
 
 	function toggleRowSelection(row: DataTableRow) {
-		if (!props.selectable)
+		if (!props.selectable) {
 			return;
-		if (isRowSelected(row))
+		}
+		if (isRowSelected(row)) {
 			unselectRow(row);
-		else
+		} else {
 			selectRow(row);
+		}
 	}
 
 	function toggleBulkSelection() {
-		if (allRowsSelected.value)
+		if (allRowsSelected.value) {
 			unselectAllVisibleRows();
-		else
+		} else {
 			selectAllRows();
+		}
 	}
 
 	const clickedItemRaw = computed(() => (toRaw(props.clicked) ?? null));
@@ -478,31 +496,36 @@
 
 	function isRowClicked(row: DataTableRow) {
 		const is = row.source === clickedItemRaw.value;
-		if (!is)
+		if (!is) {
 			return false;
+		}
 		clickedItemIndex.value = sortedRows.value.indexOf(row);
 		return true;
 	}
 
 	function toggleRowClick(row: DataTableRow) {
-		if (!props.clickable)
+		if (!props.clickable) {
 			return;
+		}
 		setClickedRow(row);
 	}
 
 	function setClickedRow(row: DataTableRow) {
-		if (!props.clickable)
+		if (!props.clickable) {
 			return;
+		}
 		emit('update:clicked', row.source);
 	}
 
 	watch(() => props.clicked, (neu, alt) => {
-		if ((neu === undefined) || (neu === null))
+		if ((neu === undefined) || (neu === null)) {
 			return;
+		}
 		const index = clickedItemIndex.value = sortedRows.value.map(r => r.source).indexOf(neu);
 		const clickedElementHtml: unknown = itemRefs.value.get(index);
-		if ((alt !== neu) && (clickedElementHtml instanceof HTMLElement))
+		if ((alt !== neu) && (clickedElementHtml instanceof HTMLElement)) {
 			clickedElementHtml.focus();
+		}
 	});
 
 	watch(() => props.items, () => nextTick(scrollToClickedElement));
@@ -514,18 +537,21 @@
 
 	function scrollToClickedElement() {
 		// wenn eine Mehrfachauswahl durchgeführt wird, springe nicht zum ausgewählten Item
-		if (props.modelValue !== undefined && props.modelValue.length > 0)
+		if (props.modelValue !== undefined && props.modelValue.length > 0) {
 			return;
-		if ((props.scrollIntoView === undefined) || (props.scrollIntoView === false) || (clickedItemIndex.value === undefined))
+		}
+		if ((props.scrollIntoView === undefined) || (props.scrollIntoView === false) || (clickedItemIndex.value === undefined)) {
 			return;
+		}
 		// TODO scrollIntoViewIfNeeded wird nicht von FF unterstützt as of 116
 		const clickedElementHtml: any = itemRefs.value.get(clickedItemIndex.value);
 		const scrollOptions: ScrollIntoViewOptions = { behavior: "auto", block: "center" };
 		if ((clickedElementHtml !== undefined) && (clickedElementHtml !== null)) {
-			if (typeof clickedElementHtml.scrollIntoViewIfNeeded === "function")
+			if (typeof clickedElementHtml.scrollIntoViewIfNeeded === "function") {
 				clickedElementHtml.scrollIntoViewIfNeeded(scrollOptions);
-			else if (!isInView(clickedElementHtml))
+			} else if (!isInView(clickedElementHtml)) {
 				clickedElementHtml.scrollIntoView(scrollOptions);
+			}
 		}
 	}
 
@@ -537,8 +563,9 @@
 	watch(() => props.hiddenColumns, (value: Set<string>) => updateHiddenColumnsSet(value), { immediate: false });
 
 	function updateHiddenColumnsSet(value: Set<string>) {
-		if ((data.value.size === value.size) && [...data.value].every(dataVal => value.has(dataVal)))
+		if ((data.value.size === value.size) && [...data.value].every(dataVal => value.has(dataVal))) {
 			return;
+		}
 		data.value = value;
 	}
 
@@ -552,24 +579,28 @@
 	}
 
 	const win11FForMacOS = computed<boolean>(() => {
-		const userAgent = window.navigator.userAgent;
-		if (userAgent.includes("Mac"))
+		const userAgent = globalThis.navigator.userAgent;
+		if (userAgent.includes("Mac")) {
 			return true;
-		if (userAgent.includes("Win") && userAgent.includes("Firefox"))
+		}
+		if (userAgent.includes("Win") && userAgent.includes("Firefox")) {
 			return true;
+		}
 		return false;
 	});
 
 	onMounted(() => {
-		if (props.focusFirstElement)
+		if (props.focusFirstElement) {
 			itemRefs.value.get(0)?.focus();
-		else
+		} else {
 			itemRefs.value.get(clickedItemIndex.value)?.focus();
+		}
 	});
 
 	function rowDragListeners(row: DataTableItem) {
-		if (!props.rowDraggable(row))
-			return {}; // keine Drag-Listener
+		if (!props.rowDraggable(row)) {
+			return {};
+		} // keine Drag-Listener
 		return {
 			dragstart: (event: DragEvent) => props.rowDragstart(event, row),
 			dragend: (event: DragEvent) => props.rowDragend(event, row),

@@ -1,14 +1,15 @@
 package de.svws_nrw.asd.validate;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
-import de.svws_nrw.asd.data.schule.SchuleStatistikdatenGesamt;
-import de.svws_nrw.asd.validate.gesamt.ValidatorGesamtLehrerdaten;
-import de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonaldaten;
-import de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdaten;
-import de.svws_nrw.asd.validate.schule.ValidatorSchuleStammdaten;
+import de.svws_nrw.asd.data.statistik.LehrerStatistikGesamt;
+import de.svws_nrw.asd.data.statistik.StatistikGesamt;
+import de.svws_nrw.asd.validate.gesamt.ValidatorGlGesamtLehrerdaten;
+import de.svws_nrw.asd.validate.lehrer.ValidatorLpLehrerPersonaldaten;
+import de.svws_nrw.asd.validate.lehrer.ValidatorLsLehrerStammdaten;
+import de.svws_nrw.asd.validate.schule.ValidatorSssSchuleStammdatenSchulform;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -16,7 +17,11 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorGesamt extends Validator {
 
-	private final @NotNull SchuleStatistikdatenGesamt daten;
+	/** Eine Liste von Validatoren, die bei diesem Validator mitgeprüft werden. */
+	protected final @NotNull List<Validator> validatoren = new ArrayList<>();
+
+	/** Die Daten des Validators */
+	protected final @NotNull Supplier<StatistikGesamt> daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -24,30 +29,41 @@ public final class ValidatorGesamt extends Validator {
 	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorGesamt(final @NotNull SchuleStatistikdatenGesamt daten, final @NotNull ValidatorKontext kontext) {
+	public ValidatorGesamt(final @NotNull Supplier<StatistikGesamt> daten, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
-		_validatoren.add(new ValidatorSchuleStammdaten(kontext));
 
-		final HashMap<Long, LehrerStammdaten> mapStammdaten = new HashMap<>();
-		for (final LehrerStammdaten lehrerStammdaten : daten.lehrerStammdaten) {
-			_validatoren.add(new ValidatorLehrerStammdaten(lehrerStammdaten, kontext));
-			mapStammdaten.put(lehrerStammdaten.id, lehrerStammdaten);
-		}
+		validatoren.add(new ValidatorSssSchuleStammdatenSchulform(() -> daten.get().schule.schulform, kontext));
 
-		for (final LehrerPersonaldaten lehrerPersonaldaten : daten.lehrerPersonaldaten) {
-			final LehrerStammdaten stammdaten = mapStammdaten.get(lehrerPersonaldaten.id);
-			if (stammdaten == null)
-				continue;
-			_validatoren.add(new ValidatorLehrerPersonaldaten(lehrerPersonaldaten, stammdaten, kontext));
-		}
-
-		_validatoren.add(new ValidatorGesamtLehrerdaten(daten.lehrerStammdaten, daten.lehrerPersonaldaten, kontext));
+		validatoren.add(new ValidatorGlGesamtLehrerdaten(() -> daten.get().lehrer, kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
-		// Keine speziellen Prüfungen direkt auf diesem DTO...
+		_validatoren.clear();
+		_validatoren.addAll(validatoren);
+
+		final @NotNull StatistikGesamt gesamt = daten.get();
+		for (final LehrerStatistikGesamt lehrer : gesamt.lehrer) {
+			_validatoren.add(new ValidatorLsLehrerStammdaten(() -> lehrer.nachname,
+					() -> lehrer.vorname,
+					() -> lehrer.geburtsdatum,
+					() -> lehrer.geschlecht,
+					() -> lehrer.kuerzel,
+					this.kontext()));
+			_validatoren.add(new ValidatorLpLehrerPersonaldaten(
+					() -> lehrer.id,
+					() -> gesamt.schule.idSchuljahresabschnitt,
+					() -> lehrer.rechtsverhaeltnis,
+					() -> lehrer.pflichtstundensoll,
+					() -> lehrer.einsatzstatus,
+					() -> lehrer.beschaeftigungsart,
+					() -> lehrer.geburtsdatum,
+					() -> lehrer.lehraemter,
+					() -> lehrer.mehrleistung,
+					() -> lehrer.minderleistung,
+					this.kontext()));
+		}
 		return true;
 	}
 

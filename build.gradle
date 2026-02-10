@@ -2,10 +2,11 @@ import org.gradle.internal.os.OperatingSystem
 
 plugins {
 	id 'com.github.jk1.dependency-license-report' version '2.8'
-	id 'org.sonarqube' version '6.2.0.5505'
+	id 'org.sonarqube' version '7.1.0.6387'
 	id "io.github.gradle-nexus.publish-plugin" version "2.0.0"
 	id 'svws.gradle.node.plugin'
 	id "org.owasp.dependencycheck" version "10.0.4"
+	id "jacoco"
 }
 
 apply from: ("$rootDir/gradle/checkVulnerability.gradle")
@@ -60,6 +61,12 @@ wrapper {
 	distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-bin.zip"
 }
 
+sonar {
+	properties {
+		property "sonar.coverage.jacoco.xmlReportPaths", "${project.layout.buildDirectory.get()}/reports/jacoco/coverage-report.xml"
+	}
+}
+
 allprojects {
 	apply plugin: 'svws.gradle.javalib.plugin'
 	apply plugin: 'svws.gradle.svwsmavenrepo.plugin'
@@ -101,6 +108,7 @@ allprojects {
 	sonar {
 		properties {
 			property "sonar.sourceEncoding", "UTF-8"
+			property "sonar.junit.reportPaths", "${project.layout.buildDirectory.get()}/test-results/test"
 		}
 	}
 
@@ -134,23 +142,50 @@ allprojects {
 
 }
 
-subprojects {
+tasks.named("sonar").configure {
+	dependsOn("aggregateCoverageReport")
+}
 
+def projectsWithJacoco = []
+subprojects {
 	checkstyle {
 		toolVersion = "10.25.0"
+	}
+
+	jacoco {
+		toolVersion = "0.8.13"
+	}
+
+	sonar {
+		properties {
+			property "sonar.java.binaries", "${project.layout.buildDirectory.get()}/classes/java/main"
+		}
 	}
 
 	// Publishing-Plugin für alle Module aktivieren (mit Ausnahme des Moduls 'gradle-build-src')
 	if (it.name != 'gradle-build-src') {
 		apply plugin: 'svws.gradle.svwsmavenpublish.plugin'
+		apply plugin: 'jacoco'
 
 		svwsmavenpublish {
 			nexusSnapshotRepositoryUrl = 'https://artifactory.svws-nrw.de/repository/svws-maven-snapshots'
 			nexusReleasesRepositoryUrl = 'https://artifactory.svws-nrw.de/repository/svws-maven-releases'
-			githubReleasesRepositoryUrl =  'https://maven.pkg.github.com/SVWS-NRW/SVWS-Server'
+			githubReleasesRepositoryUrl = 'https://maven.pkg.github.com/SVWS-NRW/SVWS-Server'
+		}
+
+		def jacocoTask = it.tasks.findByName("jacocoTestReport")
+		if (jacocoTask != null) {
+			projectsWithJacoco.add(it.name)
+			jacocoTask.configure {
+				dependsOn tasks.named("test")
+
+				reports {
+					xml.required = true
+					html.required = true
+				}
+			}
 		}
 	}
-
 }
 
 println "Prüfe die Projekt-Version und passe diese ggf. an:"
@@ -166,13 +201,13 @@ fileTree(dir: './', include: '**/package.json', exclude: '**/node_modules/**').f
 	}
 }
 def fileVersionTS = new File("${rootDir}/svws-webclient/client/version.ts")
-fileVersionTS.withWriter { w -> w << 'export const version = "' + config.project.version + '"' }
+fileVersionTS.withWriter { w -> w << 'export const version = "' + config.project.version + '";' }
 def fileVersionTSAdminClient = new File("${rootDir}/svws-webclient/admin/version.ts")
-fileVersionTSAdminClient.withWriter { w -> w << 'export const version = "' + config.project.version + '"' }
+fileVersionTSAdminClient.withWriter { w -> w << 'export const version = "' + config.project.version + '";' }
 def fileVersionTSLaufbahnplanung = new File("${rootDir}/svws-webclient/laufbahnplanung/version.ts")
-fileVersionTSLaufbahnplanung.withWriter { w -> w << 'export const version = "' + config.project.version + '"' }
+fileVersionTSLaufbahnplanung.withWriter { w -> w << 'export const version = "' + config.project.version + '";' }
 def fileVersionTSEnmServer = new File("${rootDir}/svws-webclient/enmserver/version.ts")
-fileVersionTSEnmServer.withWriter { w -> w << 'export const version = "' + config.project.version + '"' }
+fileVersionTSEnmServer.withWriter { w -> w << 'export const version = "' + config.project.version + '";' }
 
 def tsGitHashStr = (gitHASH == null) ? 'null' : '"' + gitHASH + '"'
 def fileGithashTS = new File("${rootDir}/svws-webclient/client/githash.ts")
@@ -236,7 +271,7 @@ nexusPublishing {
 		sonatype {
 			nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
 			snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-			username =  getOssrhActor()
+			username = getOssrhActor()
 			password = getOssrhToken()
 		}
 	}
@@ -314,3 +349,22 @@ licenseReport {
 	allowedLicensesFile = new File("$projectDir/allowed-licenses.json")
 }
 
+tasks.register('aggregateCoverageReport', JacocoReport) {
+	group = "Verification"
+	description = "Erzeugt einen Jacoco Coverage Report zusammengefasst für alle Submodule"
+
+	def submodulesWithReports = subprojects.findAll {projectsWithJacoco.contains(it.name)}
+
+	executionData submodulesWithReports.collect {
+		it.layout.buildDirectory.file("jacoco/test.exec").get().asFile
+	}
+
+	classDirectories.setFrom files(submodulesWithReports.collect { it.sourceSets.main.output })
+	sourceDirectories.setFrom files(submodulesWithReports.collect { it.sourceSets.main.allSource.srcDirs })
+
+	reports {
+		xml.required = true
+		xml.outputLocation = project.layout.buildDirectory.file("reports/jacoco/coverage-report.xml").get().asFile
+		html.required = false
+	}
+}

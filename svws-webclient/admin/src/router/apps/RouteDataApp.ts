@@ -30,10 +30,11 @@ export class RouteDataApp {
 	}
 
 	public async setView(view: RouteNode<any, any>) {
-		if (routeApp.children.includes(view))
+		if (routeApp.children.includes(view)) {
 			this.setPatchedDefaultState({ view: view });
-		else
+		} else {
 			throw new Error("Diese gewählte Ansicht wird nicht unterstützt.");
+		}
 	}
 
 	public get view(): RouteNode<any, any> {

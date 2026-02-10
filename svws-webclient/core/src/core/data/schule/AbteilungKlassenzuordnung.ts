@@ -34,7 +34,7 @@ export class AbteilungKlassenzuordnung extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.AbteilungKlassenzuordnung'].includes(name);
 	}
 
-	public static class = new Class<AbteilungKlassenzuordnung>('de.svws_nrw.core.data.schule.AbteilungKlassenzuordnung');
+	public static readonly class = new Class<AbteilungKlassenzuordnung>('de.svws_nrw.core.data.schule.AbteilungKlassenzuordnung');
 
 	public static transpilerFromJSON(json: string): AbteilungKlassenzuordnung {
 		const obj = JSON.parse(json) as Partial<AbteilungKlassenzuordnung>;

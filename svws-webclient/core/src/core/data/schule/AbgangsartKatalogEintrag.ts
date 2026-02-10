@@ -32,7 +32,7 @@ export class AbgangsartKatalogEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.AbgangsartKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<AbgangsartKatalogEintrag>('de.svws_nrw.core.data.schule.AbgangsartKatalogEintrag');
+	public static readonly class = new Class<AbgangsartKatalogEintrag>('de.svws_nrw.core.data.schule.AbgangsartKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): AbgangsartKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<AbgangsartKatalogEintrag>;

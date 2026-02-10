@@ -77,7 +77,7 @@ export class GostFremdsprachenart extends JavaEnum<GostFremdsprachenart> {
 		return ['de.svws_nrw.core.types.gost.GostFremdsprachenart', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<GostFremdsprachenart>('de.svws_nrw.core.types.gost.GostFremdsprachenart');
+	public static readonly class = new Class<GostFremdsprachenart>('de.svws_nrw.core.types.gost.GostFremdsprachenart');
 
 }
 

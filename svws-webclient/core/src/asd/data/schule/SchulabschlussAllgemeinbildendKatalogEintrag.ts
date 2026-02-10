@@ -19,7 +19,7 @@ export class SchulabschlussAllgemeinbildendKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<SchulabschlussAllgemeinbildendKatalogEintrag>('de.svws_nrw.asd.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag');
+	public static readonly class = new Class<SchulabschlussAllgemeinbildendKatalogEintrag>('de.svws_nrw.asd.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): SchulabschlussAllgemeinbildendKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<SchulabschlussAllgemeinbildendKatalogEintrag>;

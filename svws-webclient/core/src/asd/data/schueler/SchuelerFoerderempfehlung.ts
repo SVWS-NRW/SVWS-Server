@@ -124,7 +124,7 @@ export class SchuelerFoerderempfehlung extends JavaObject {
 		return ['de.svws_nrw.asd.data.schueler.SchuelerFoerderempfehlung'].includes(name);
 	}
 
-	public static class = new Class<SchuelerFoerderempfehlung>('de.svws_nrw.asd.data.schueler.SchuelerFoerderempfehlung');
+	public static readonly class = new Class<SchuelerFoerderempfehlung>('de.svws_nrw.asd.data.schueler.SchuelerFoerderempfehlung');
 
 	public static transpilerFromJSON(json: string): SchuelerFoerderempfehlung {
 		const obj = JSON.parse(json) as Partial<SchuelerFoerderempfehlung>;

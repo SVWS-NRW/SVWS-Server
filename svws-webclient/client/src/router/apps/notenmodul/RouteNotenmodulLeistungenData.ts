@@ -30,8 +30,6 @@ export class RouteNotenmodulLeistungenData extends RouteNode<any, RouteNotenmodu
 			patchLeistung: routeNotenmodul.data.patchLeistung,
 			columnsVisible: () => routeNotenmodulLeistungen.data.columnsVisible,
 			setColumnsVisible: routeNotenmodulLeistungen.data.setColumnsVisible,
-			floskelEditorVisible: routeNotenmodulLeistungen.data.floskelEditorVisible,
-			setFloskelEditorVisible: routeNotenmodulLeistungen.data.setFloskelEditorVisible,
 		};
 	}
 

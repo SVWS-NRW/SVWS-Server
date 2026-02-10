@@ -31,7 +31,7 @@ export class FloskelJahrgangZuordnung extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.FloskelJahrgangZuordnung'].includes(name);
 	}
 
-	public static class = new Class<FloskelJahrgangZuordnung>('de.svws_nrw.core.data.schule.FloskelJahrgangZuordnung');
+	public static readonly class = new Class<FloskelJahrgangZuordnung>('de.svws_nrw.core.data.schule.FloskelJahrgangZuordnung');
 
 	public static transpilerFromJSON(json: string): FloskelJahrgangZuordnung {
 		const obj = JSON.parse(json) as Partial<FloskelJahrgangZuordnung>;

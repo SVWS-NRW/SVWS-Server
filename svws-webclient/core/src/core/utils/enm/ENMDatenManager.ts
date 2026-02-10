@@ -685,7 +685,7 @@ export class ENMDatenManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.enm.ENMDatenManager'].includes(name);
 	}
 
-	public static class = new Class<ENMDatenManager>('de.svws_nrw.core.utils.enm.ENMDatenManager');
+	public static readonly class = new Class<ENMDatenManager>('de.svws_nrw.core.utils.enm.ENMDatenManager');
 
 }
 

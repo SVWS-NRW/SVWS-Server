@@ -80,7 +80,7 @@ public class Tabelle_AllgAdrAnsprechpartner extends SchemaTabelle {
 		setImportExport(true);
 		setPKAutoIncrement();
 		setJavaSubPackage("schild.katalog");
-		setJavaClassName("DTOAnsprechpartnerAllgemeineAdresse");
+		setJavaClassName("DTOBetriebeAnsprechpartner");
 		setJavaComment("Ansprechpartner-Daten die einem Betrieb/Adresse in K_AllgAdresse zugeordnet werden können");
 	}
 

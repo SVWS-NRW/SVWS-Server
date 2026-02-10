@@ -111,7 +111,7 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostLaufbahnplanungDaten'].includes(name);
 	}
 
-	public static class = new Class<GostLaufbahnplanungDaten>('de.svws_nrw.core.data.gost.GostLaufbahnplanungDaten');
+	public static readonly class = new Class<GostLaufbahnplanungDaten>('de.svws_nrw.core.data.gost.GostLaufbahnplanungDaten');
 
 	public static transpilerFromJSON(json: string): GostLaufbahnplanungDaten {
 		const obj = JSON.parse(json) as Partial<GostLaufbahnplanungDaten>;

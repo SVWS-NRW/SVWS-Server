@@ -34,7 +34,7 @@ export class NoteKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.NoteKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<NoteKatalogEintrag>('de.svws_nrw.asd.data.NoteKatalogEintrag');
+	public static readonly class = new Class<NoteKatalogEintrag>('de.svws_nrw.asd.data.NoteKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): NoteKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<NoteKatalogEintrag>;

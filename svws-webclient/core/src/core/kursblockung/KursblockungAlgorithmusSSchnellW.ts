@@ -80,7 +80,7 @@ export class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorithmusS {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusSSchnellW', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusS'].includes(name);
 	}
 
-	public static class = new Class<KursblockungAlgorithmusSSchnellW>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusSSchnellW');
+	public static readonly class = new Class<KursblockungAlgorithmusSSchnellW>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusSSchnellW');
 
 }
 

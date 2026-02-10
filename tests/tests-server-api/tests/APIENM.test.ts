@@ -13,7 +13,7 @@ import type { ENMLerngruppe } from "../../../svws-webclient/core/src/core/data/e
 import type { ENMSchueler } from "../../../svws-webclient/core/src/core/data/enm/ENMSchueler";
 
 describe("APIENM Tests", () => {
-	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
+	describe.each([{ schema: "GymAbi01" }])('gegen %s', ({ schema }) => {
 		const api = privilegedApiServer;
 
 		test("getLehrerENMDaten", async () => {
@@ -41,5 +41,5 @@ describe("APIENM Tests", () => {
 			expect(result.lerngruppen.size()).toMatchSnapshot();
 			expect(result.schueler.size()).toMatchSnapshot();
 		});
-	})
-})
+	});
+});

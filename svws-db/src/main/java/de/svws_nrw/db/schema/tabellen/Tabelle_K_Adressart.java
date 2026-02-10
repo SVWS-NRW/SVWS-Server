@@ -15,29 +15,29 @@ public class Tabelle_K_Adressart extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 			.setNotNull()
-			.setJavaComment("ID der Adressart");
+			.setJavaComment("ID der Betriebsart");
 
 	/** Die Definition der Tabellenspalte Bezeichnung */
 	public final SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(30)
 			.setNotNull()
-			.setJavaComment("Bezeichnung der Adressart (Betrieb Kammer usw)");
+			.setJavaComment("Bezeichnung der Betriebsart");
 
 	/** Die Definition der Tabellenspalte Sortierung */
 	public final SchemaTabelleSpalte col_Sortierung = add("Sortierung", SchemaDatentypen.INT, false)
 			.setDefault("32000")
-			.setJavaComment("Sortierung der Adressart");
+			.setJavaComment("Sortierung der Betriebsart");
 
 	/** Die Definition der Tabellenspalte Sichtbar */
 	public final SchemaTabelleSpalte col_Sichtbar = add("Sichtbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 			.setDefault("+")
 			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
-			.setJavaComment("Sichtbarkeit der Adressart");
+			.setJavaComment("Sichtbarkeit der Betriebsart");
 
 	/** Die Definition der Tabellenspalte Aenderbar */
 	public final SchemaTabelleSpalte col_Aenderbar = add("Aenderbar", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 			.setDefault("+")
 			.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
-			.setJavaComment("Adressart ist änderbar Ja Nein");
+			.setJavaComment("Betriebsart ist änderbar Ja Nein");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public final SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
@@ -61,8 +61,8 @@ public class Tabelle_K_Adressart extends SchemaTabelle {
 		setImportExport(true);
 		setPKAutoIncrement();
 		setJavaSubPackage("schild.katalog");
-		setJavaClassName("DTOKatalogAdressart");
-		setJavaComment("Katalog der Arten, die den weiteren Adressen/Betrieben zugeordnet werden können");
+		setJavaClassName("DTOBetriebsart");
+		setJavaComment("Katalog der Betriebsarten, die den weiteren Betrieben zugeordnet werden können");
 	}
 
 }

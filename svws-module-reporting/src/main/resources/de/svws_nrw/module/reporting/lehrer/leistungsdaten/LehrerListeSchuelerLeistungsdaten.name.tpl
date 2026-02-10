@@ -1,0 +1,13 @@
+[# th:if="${Lehrer.isEmpty()}"]
+    Lehrer-Liste-Schueler-Leistungsdaten
+[/]
+[# th:if="${!Lehrer.isEmpty()}"]
+    [# th:each="lehrer,iterState : ${Lehrer}"]
+        [# th:if="${iterState.first && (Lehrer.size() == 1)}"]
+            Lehrer-Liste-Schueler-Leistungsdaten_[(${ #strings.replace(lehrer.kuerzel(), ' ', '_') })]_[(${ #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm') })]
+        [/]
+        [# th:if="${iterState.first && (Lehrer.size() > 1)}"]
+            Lehrer-Liste-Schueler-Leistungsdaten_[(${ #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm') })]
+        [/]
+    [/]
+[/]

@@ -156,12 +156,18 @@
 
 	const sidvariante = ref<number>(1);
 	async function setSIDVariante(value: number | string | boolean | object) {
-		if (typeof value !== 'string')
+		if (typeof value !== 'string') {
 			return;
+		}
 		sidvariante.value = parseInt(value);
 		if (gpusBrauchenGPU002.includes(aktuell.value)) {
-			if (gpu002.value !== null)
-				daten.value = await aktuell.value.export(gpu002.value);
+			if (gpu002.value !== null) {
+				if (aktuell.value === blockungGPUs) {
+					daten.value = await aktuell.value.export(gpu002.value, blockungsergebnisse.value);
+				} else {
+					daten.value = await aktuell.value.export(gpu002.value);
+				}
+			}
 		} else {
 			daten.value = await aktuell.value.export();
 		}
@@ -188,14 +194,18 @@
 	const zeigeGPU002Laden = computed<boolean>(() => gpusBrauchenGPU002.includes(aktuell.value));
 	const zeigeDateiSpeichern = computed<boolean>(() => (daten.value !== null) && (!zeigeGPU002Laden.value || (gpu002.value !== null)));
 	const textZweckGPU002 = computed<string>(() => {
-		if (aktuell.value === fachwahlenGPU015)
+		if (aktuell.value === fachwahlenGPU015) {
 			return "Schüler-Kurs-Zuordnungen (Kurswahlen)";
-		if (aktuell.value === klausurenGPU017)
+		}
+		if (aktuell.value === klausurenGPU017) {
 			return "Klausuren";
-		if (aktuell.value === blockungGPUs)
+		}
+		if (aktuell.value === blockungGPUs) {
 			return "Daten der Blockung";
-		if (aktuell.value === schienenGPU019)
+		}
+		if (aktuell.value === schienenGPU019) {
 			return "Kurs-Schienen";
+		}
 		return "TODO (noch nicht implementiert)";
 	});
 
@@ -204,8 +214,9 @@
 	watch(() => props.schuljahresabschnitt, () => onSelect(aktuell.value));
 
 	function isVisible(gpu: GPU) {
-		if (gpu === blockungGPUs)
-			return Schulform.getListMitGymOb(props.schuljahresabschnitt().schuljahr).contains(props.schulform.daten(props.schuljahresabschnitt().schuljahr));
+		if (gpu === blockungGPUs) {
+			return Schulform.getListMitGymOb(props.schuljahresabschnitt().schuljahr).contains(props.schulform);
+		}
 		return true;
 	}
 
@@ -246,29 +257,35 @@
 		aktuell.value = gpu;
 		// Initialisiere die Dateinamen für den Ouput
 		filenames.value = new Array<string>(gpu.files.length);
-		for (let i = 0; i < gpu.files.length; i++)
+		for (let i = 0; i < gpu.files.length; i++) {
 			filenames.value[i] = gpu.files[i];
+		}
 		// Setze die Daten auf null, falls die GPU002 noch geladen werden muss
-		if (gpusBrauchenGPU002.includes(aktuell.value))
+		if (gpusBrauchenGPU002.includes(aktuell.value)) {
 			daten.value = null;
-		else
+		} else {
 			daten.value = await gpu.export();
+		}
 		gpu002.value = null;
 		await updateAbiturjahrgaenge(gpu);
 	}
 
 	async function importGPU002(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if ((target.files === null) || (target.files.length === 0))
+		if ((target.files === null) || (target.files.length === 0)) {
 			return;
+		}
 		const file = target.files.item(0);
-		if (!file)
+		if (!file) {
 			return;
+		}
 		gpu002.value = await file.text();
-		if (aktuell.value !== blockungGPUs)
+		if (aktuell.value !== blockungGPUs) {
 			daten.value = await aktuell.value.export(gpu002.value);
-		if ((aktuell.value === blockungGPUs) && (blockungsergebnisse.value.length > 0))
+		}
+		if ((aktuell.value === blockungGPUs) && (blockungsergebnisse.value.length > 0)) {
 			daten.value = await aktuell.value.export(gpu002.value, blockungsergebnisse.value);
+		}
 	}
 
 	async function setBlockungsergebnis(info: AbijahrgangsBlockungsinfos, value: boolean) {
@@ -279,8 +296,9 @@
 	}
 
 	function onSave(index: number): void {
-		if ((daten.value === null) || (filenames.value[index].trim() === ''))
+		if ((daten.value === null) || (filenames.value[index].trim() === '')) {
 			return;
+		}
 		const link = document.createElement("a");
 		const blob = new Blob([daten.value[index]], { type: 'plain/text' });
 		link.href = URL.createObjectURL(blob);

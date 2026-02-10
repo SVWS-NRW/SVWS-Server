@@ -34,16 +34,19 @@ export class RouteGostAbiturPruefungsuebersicht extends RouteNode<any, RouteGost
 	protected checkHidden(params?: RouteParams) {
 		try {
 			const { abiturjahr } = (params !== undefined) ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: undefined };
-			if (abiturjahr === undefined)
+			if (abiturjahr === undefined) {
 				return false;
+			}
 			const eintrag = routeGost.data.mapAbiturjahrgaenge.get(abiturjahr);
-			if (eintrag === undefined)
+			if (eintrag === undefined) {
 				return false;
+			}
 			if ((eintrag.abiturjahr !== -1)
 				&& (api.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN)
 					|| (api.benutzerHatKompetenz(BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN) && api.benutzerKompetenzenAbiturjahrgaenge.has(eintrag.abiturjahr)))
-				&& (eintrag.jahrgang === 'Q2') && (eintrag.halbjahr === 2))
+				&& (eintrag.jahrgang === 'Q2') && (eintrag.halbjahr === 2)) {
 				return false;
+			}
 			return routeGost.getRouteDefaultChild({ abiturjahr });
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);

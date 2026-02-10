@@ -84,11 +84,13 @@
 	const primarschulformen = new Set([Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.S, Schulform.KS, Schulform.V]);
 
 	const epJahre = computed<PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag | null>(() => {
-		if (!primarschulformen.has(schulform.value))
+		if (!primarschulformen.has(schulform.value)) {
 			return null;
+		}
 		const ep = props.manager().schuelerGet().epJahre ?? null;
-		if (ep === null)
+		if (ep === null) {
 			return null;
+		}
 		const schuljahr = props.manager().schuljahrGet();
 		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByIDOrNull(ep)?.daten(schuljahr) ?? null;
 	});
@@ -105,47 +107,54 @@
 
 	const klasse = computed<KlassenDaten | null>(() => {
 		const id = props.manager().lernabschnittGet().klassenID;
-		if (id === null)
+		if (id === null) {
 			return null;
+		}
 		return props.manager().klasseGetByIdOrException(id);
 	});
 
 	const jahrgang = computed<JahrgangsDaten | null>(() => {
 		const id = props.manager().lernabschnittGet().jahrgangID;
-		if (id === null)
+		if (id === null) {
 			return null;
+		}
 		return props.manager().jahrgangGetByIdOrException(id);
 	});
 
 	const sonderpaedagoge = computed<LehrerListeEintrag | null>(() => {
 		const id = props.manager().lernabschnittGet().sonderpaedagogeID;
-		if (id === null)
+		if (id === null) {
 			return null;
+		}
 		return props.manager().lehrerGetByIdOrException(id);
 	});
 
 	const tutor = computed<LehrerListeEintrag | null>(() => {
 		const id = props.manager().lernabschnittGet().tutorID;
-		if (id === null)
+		if (id === null) {
 			return null;
+		}
 		return props.manager().lehrerGetByIdOrException(id);
 	});
 
 	const klassenlehrer = computed<LehrerListeEintrag[]>(() => {
 		const k = klasse.value;
-		if (k === null)
+		if (k === null) {
 			return [];
+		}
 		const result: LehrerListeEintrag[] = [];
-		for (const lid of k.klassenLeitungen)
+		for (const lid of k.klassenLeitungen) {
 			result.push(props.manager().lehrerGetByIdOrException(lid));
+		}
 		return result;
 	});
 
 	const foerderschwerpunkt = computed<FoerderschwerpunktEintrag | null>({
 		get: () => {
 			const id = props.manager().lernabschnittGet().foerderschwerpunkt1ID;
-			if (id === null)
+			if (id === null) {
 				return null;
+			}
 			return props.manager().foerderschwerpunktGetByIdOrException(id);
 		},
 		set: (value) => void props.patch({ foerderschwerpunkt1ID: value?.id ?? null }),
@@ -154,16 +163,18 @@
 	const foerderschwerpunkt2 = computed<FoerderschwerpunktEintrag | null>({
 		get: () => {
 			const id = props.manager().lernabschnittGet().foerderschwerpunkt2ID;
-			if (id === null)
+			if (id === null) {
 				return null;
+			}
 			return props.manager().foerderschwerpunktGetByIdOrException(id);
 		},
 		set: (value) => void props.patch({ foerderschwerpunkt2ID: value?.id ?? null }),
 	});
 
 	function textFoerderschwerpunkt(value: FoerderschwerpunktEintrag | null): string {
-		if (!value)
+		if (!value) {
 			return "";
+		}
 		const wert = Foerderschwerpunkt.data().getWertBySchluessel(value.kuerzelStatistik);
 		return wert?.daten(schuljahr.value)?.text ?? "";
 
@@ -207,8 +218,9 @@
 
 	const gliederung = computed<Schulgliederung | null>({
 		get: () => {
-			if (props.manager().lernabschnittGet().schulgliederung === null)
+			if (props.manager().lernabschnittGet().schulgliederung === null) {
 				return null;
+			}
 			const kuerzel = props.manager().lernabschnittGet().schulgliederung;
 			return ((kuerzel === null) ? null : Schulgliederung.data().getWertByKuerzel(kuerzel));
 		},
@@ -218,27 +230,33 @@
 	const organisationsformen = computed<List<OrganisationsformKatalogEintrag>>(() => {
 		const result = new ArrayList<OrganisationsformKatalogEintrag>();
 		if (schulform.value === Schulform.WB) {
-			for (const orgform of WeiterbildungskollegOrganisationsformen.values())
+			for (const orgform of WeiterbildungskollegOrganisationsformen.values()) {
 				result.add(orgform.daten(schuljahr.value));
+			}
 		} else if ((schulform.value === Schulform.BK) || (schulform.value === Schulform.SB)) {
-			for (const orgform of BerufskollegOrganisationsformen.values())
+			for (const orgform of BerufskollegOrganisationsformen.values()) {
 				result.add(orgform.daten(schuljahr.value));
+			}
 		} else {
-			for (const orgform of AllgemeinbildendOrganisationsformen.values())
+			for (const orgform of AllgemeinbildendOrganisationsformen.values()) {
 				result.add(orgform.daten(schuljahr.value));
+			}
 		}
 		return result;
 	});
 
 	const organisationsform = computed<OrganisationsformKatalogEintrag | null>({
 		get: () => {
-			if (props.manager().lernabschnittGet().organisationsform === null)
+			if (props.manager().lernabschnittGet().organisationsform === null) {
 				return null;
+			}
 			const kuerzel = props.manager().lernabschnittGet().organisationsform;
-			if (schulform.value === Schulform.WB)
+			if (schulform.value === Schulform.WB) {
 				return ((kuerzel === null) ? null : WeiterbildungskollegOrganisationsformen.data().getWertByKuerzel(kuerzel)?.daten(schuljahr.value) ?? null);
-			if ((schulform.value === Schulform.BK) || (schulform.value === Schulform.SB))
+			}
+			if ((schulform.value === Schulform.BK) || (schulform.value === Schulform.SB)) {
 				return ((kuerzel === null) ? null : BerufskollegOrganisationsformen.data().getWertByKuerzel(kuerzel)?.daten(schuljahr.value) ?? null);
+			}
 			return ((kuerzel === null) ? null : AllgemeinbildendOrganisationsformen.data().getWertByKuerzel(kuerzel)?.daten(schuljahr.value) ?? null);
 		},
 		set: (value) => void props.patch({ organisationsform: value?.kuerzel ?? null }),
@@ -249,14 +267,17 @@
 	const bilingualerZweig = computed<BilingualeSprache | null>({
 		get: () => {
 			const bilingualerZweig = props.manager().lernabschnittGet().bilingualerZweig;
-			if (bilingualerZweig === null)
+			if (bilingualerZweig === null) {
 				return null;
+			}
 			const schulform = Schulform.data().getWertByKuerzel(props.schule.schulform);
-			if (schulform === null)
+			if (schulform === null) {
 				throw new DeveloperNotificationException("Keine gültige Schulform festgelegt");
+			}
 			const bili = BilingualeSprache.data().getWertBySchluessel(bilingualerZweig);
-			if ((bili !== null) && (bili.hatSchulform(schuljahr.value, schulform)))
+			if ((bili !== null) && (bili.hatSchulform(schuljahr.value, schulform))) {
 				return bili;
+			}
 			return null;
 		},
 		set: (value: BilingualeSprache | null) => void props.patch({ bilingualerZweig: value?.daten(schuljahr.value)?.kuerzel ?? null }),

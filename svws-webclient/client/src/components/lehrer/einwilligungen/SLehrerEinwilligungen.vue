@@ -60,16 +60,20 @@
 	const readonly = computed(() => !hatKompetenzAendern.value);
 
 	const hasAbgefragteEinwilligungen = computed(() => {
-		for (const einwilligung of props.einwilligungen())
-			if ((einwilligung.istAbgefragt || einwilligung.istZugestimmt))
+		for (const einwilligung of props.einwilligungen()) {
+			if ((einwilligung.istAbgefragt || einwilligung.istZugestimmt)) {
 				return true;
+			}
+		}
 		return false;
 	});
 
 	const hasNichtAbgefragteEinwilligungen = computed(() => {
-		for (const einwilligung of props.einwilligungen())
-			if ((!einwilligung.istAbgefragt && !einwilligung.istZugestimmt))
+		for (const einwilligung of props.einwilligungen()) {
+			if ((!einwilligung.istAbgefragt && !einwilligung.istZugestimmt)) {
 				return true;
+			}
+		}
 		return false;
 	});
 
@@ -79,19 +83,21 @@
 
 	async function updateEinwilligungStatus(einwilligung: LehrerEinwilligung, istZugestimmt: boolean) {
 		const update: Partial<LehrerEinwilligung> = { istZugestimmt };
-		if ((istZugestimmt) && (!einwilligung.istAbgefragt))
+		if ((istZugestimmt) && (!einwilligung.istAbgefragt)) {
 			update.istAbgefragt = true;
+		}
 		await props.patch(update, einwilligung.idEinwilligungsart);
 	}
 
 	function getEinwilligungsstatus(einwilligung: LehrerEinwilligung): string {
-		if (einwilligung.istAbgefragt && einwilligung.istZugestimmt)
+		if (einwilligung.istAbgefragt && einwilligung.istZugestimmt) {
 			return 'Abgefragt und Zugestimmt';
-		else if (einwilligung.istZugestimmt)
+		} else if (einwilligung.istZugestimmt) {
 			return 'Zugestimmt';
-		else if (einwilligung.istAbgefragt)
+		} else if (einwilligung.istAbgefragt) {
 			return 'Abgefragt';
-		else
+		} else {
 			return '';
+		}
 	}
 </script>

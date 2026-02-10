@@ -49,9 +49,11 @@
 
 	const items = computed<List<GostJahrgangFachkombination>>(() => {
 		const result = new ArrayList<GostJahrgangFachkombination>();
-		for (const kombi of props.mapFachkombinationen().values())
-			if (GostLaufbahnplanungFachkombinationTyp.fromValue(kombi.typ) === props.typ)
+		for (const kombi of props.mapFachkombinationen().values()) {
+			if (GostLaufbahnplanungFachkombinationTyp.fromValue(kombi.typ) === props.typ) {
 				result.add(kombi);
+			}
+		}
 		return result;
 	});
 

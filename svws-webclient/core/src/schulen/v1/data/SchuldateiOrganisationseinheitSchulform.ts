@@ -39,7 +39,7 @@ export class SchuldateiOrganisationseinheitSchulform extends SchuldateiEintrag {
 		return ['de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitSchulform', 'de.svws_nrw.schulen.v1.data.SchuldateiEintrag'].includes(name);
 	}
 
-	public static class = new Class<SchuldateiOrganisationseinheitSchulform>('de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitSchulform');
+	public static readonly class = new Class<SchuldateiOrganisationseinheitSchulform>('de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitSchulform');
 
 	public static transpilerFromJSON(json: string): SchuldateiOrganisationseinheitSchulform {
 		const obj = JSON.parse(json) as Partial<SchuldateiOrganisationseinheitSchulform>;

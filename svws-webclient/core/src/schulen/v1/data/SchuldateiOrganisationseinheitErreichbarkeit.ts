@@ -49,7 +49,7 @@ export class SchuldateiOrganisationseinheitErreichbarkeit extends SchuldateiEint
 		return ['de.svws_nrw.schulen.v1.data.SchuldateiEintrag', 'de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitErreichbarkeit'].includes(name);
 	}
 
-	public static class = new Class<SchuldateiOrganisationseinheitErreichbarkeit>('de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitErreichbarkeit');
+	public static readonly class = new Class<SchuldateiOrganisationseinheitErreichbarkeit>('de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitErreichbarkeit');
 
 	public static transpilerFromJSON(json: string): SchuldateiOrganisationseinheitErreichbarkeit {
 		const obj = JSON.parse(json) as Partial<SchuldateiOrganisationseinheitErreichbarkeit>;

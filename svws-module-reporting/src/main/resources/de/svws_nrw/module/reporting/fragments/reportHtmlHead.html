@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+	<!--
+		Fragment: reportingHead
+		Parameter:
+		  - title: Der Titel der Seite (String)
+		  - htmlTemplatePfad: Der Pfad zur aufrufenden HTML-Datei (String, z.B. 'schueler/SchuelerListe.html')
+		  - namePageCSS: Der Dateiname des Seitenformat-CSS (String, z.B. 'reporting-A4-hoch-duplex.css')
+	-->
+	<head th:fragment="htmlHead(title, htmlTemplatePfad, namePageCSS)"
+		  th:with="istDruckausgabe = ${Parameter.istDruckausgabe()},
+					customCssPath = ${#strings.replace(htmlTemplatePfad, '.html', '.css')}">
+
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width"/>
+
+		<title th:text="${title}">Report-Titel</title>
+
+		<!-- Basis-CSS für PDF-Ausgabe -->
+		<link th:if="${istDruckausgabe}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href=""/>
+
+		<!-- Dynamisches Seitenformat-CSS (wird vom Aufrufer bestimmt) -->
+		<link th:if="${istDruckausgabe and namePageCSS != null}" rel="stylesheet" th:href="@{'css/' + ${namePageCSS}}" href=""/>
+
+		<!-- Globale Styles -->
+		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href=""/>
+
+		<!-- Report-spezifisches CSS (abgeleitet vom Template-Pfad) -->
+		<link th:if="${customCssPath != null}" rel="stylesheet" th:href="@{${customCssPath}}" href=""/>
+	</head>
+
+	<body>
+
+	</body>
+</html>

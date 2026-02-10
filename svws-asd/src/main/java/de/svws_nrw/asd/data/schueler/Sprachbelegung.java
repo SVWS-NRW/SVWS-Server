@@ -15,6 +15,9 @@ public class Sprachbelegung {
 	/** Das einstellige Sprachkürzel des belegten Faches */
 	public @NotNull String sprache = "";
 
+	/** Für WbK: Gibt an, ob die Sprachbelegung einer zweiten Fremdsprache durch Nachweis erfolgt (siehe §34 Abst 3,4 APO-WbK) */
+	public boolean istNachweis;
+
 	/** Gibt an, an welcher Stelle in der Sprachenfolge die Sprache begonnen wurde */
 	public Integer reihenfolge;
 

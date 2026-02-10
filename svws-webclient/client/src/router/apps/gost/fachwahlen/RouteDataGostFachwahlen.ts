@@ -40,8 +40,9 @@ export class RouteDataGostFachwahlen extends RouteData<RouteStateDataGostFachwah
 	}
 
 	get abiturjahr(): number {
-		if (this._state.value.abiturjahr < 0)
+		if (this._state.value.abiturjahr < 0) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Abiturjahrgang nicht initialisiert");
+		}
 		return this._state.value.abiturjahr;
 	}
 
@@ -77,12 +78,14 @@ export class RouteDataGostFachwahlen extends RouteData<RouteStateDataGostFachwah
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
 		for (const s of listSchueler) {
 			const status = SchuelerStatus.data().getWertByKuerzel("" + s.status);
-			if ((status !== null) && ([SchuelerStatus.AKTIV, SchuelerStatus.EXTERN, SchuelerStatus.ABSCHLUSS, SchuelerStatus.BEURLAUBT, SchuelerStatus.NEUAUFNAHME].includes(status)))
+			if ((status !== null) && ([SchuelerStatus.AKTIV, SchuelerStatus.EXTERN, SchuelerStatus.ABSCHLUSS, SchuelerStatus.BEURLAUBT, SchuelerStatus.NEUAUFNAHME].includes(status))) {
 				mapSchueler.set(s.id, s);
+			}
 		}
 		const auswahl = this.auswahl;
-		if (idFach !== undefined)
+		if (idFach !== undefined) {
 			auswahl.idFach = idFach;
+		}
 		this.setPatchedDefaultState({ abiturjahr, fachwahlstatistik, fachwahlenManager, mapSchueler, auswahl });
 	}
 
@@ -92,31 +95,34 @@ export class RouteDataGostFachwahlen extends RouteData<RouteStateDataGostFachwah
 		// Ermittle die Route, die aufgrund der Auswahl genutzt werden soll
 		let route: RouteLocationRaw | undefined;
 		if (idFach === undefined) {
-			if (bereich === undefined)
+			if (bereich === undefined) {
 				route = routeGostFachwahlenAllgemein.getRoute();
-			else if ((bereich === "Halbjahr") && (halbjahr !== undefined))
+			} else if ((bereich === "Halbjahr") && (halbjahr !== undefined)) {
 				route = routeGostFachwahlenHalbjahr.getRoute({ idHalbjahr: halbjahr.id });
-			else if (bereich === "ZK")
+			} else if (bereich === "ZK") {
 				route = routeGostFachwahlenZusatzkurse.getRoute();
-			else if (bereich === "LK")
+			} else if (bereich === "LK") {
 				route = routeGostFachwahlenLeistungskurse.getRoute();
-			else if (bereich === "Abi")
+			} else if (bereich === "Abi") {
 				route = routeGostFachwahlenAbitur.getRoute();
+			}
 		} else {
-			if (bereich === undefined)
+			if (bereich === undefined) {
 				route = routeGostFachwahlenFach.getRoute({ idFach });
-			else if ((bereich === "Halbjahr") && (halbjahr !== undefined))
+			} else if ((bereich === "Halbjahr") && (halbjahr !== undefined)) {
 				route = routeGostFachwahlenFachHalbjahr.getRoute({ idFach, idHalbjahr: halbjahr.id });
-			else if (bereich === "ZK")
+			} else if (bereich === "ZK") {
 				route = routeGostFachwahlenZKFach.getRoute({ idFach });
-			else if (bereich === "LK")
+			} else if (bereich === "LK") {
 				route = routeGostFachwahlenLKFach.getRoute({ idFach });
-			else if (bereich === "Abi")
+			} else if (bereich === "Abi") {
 				route = routeGostFachwahlenAbiturFach.getRoute({ idFach });
+			}
 		}
 		// Wähle ggf. die Default-Route, um Fehler abzufangen...
-		if (route === undefined)
+		if (route === undefined) {
 			route = route = routeGostFachwahlenAllgemein.getRoute();
+		}
 		// Führe das Routing durch
 		await RouteManager.doRoute(route);
 	};

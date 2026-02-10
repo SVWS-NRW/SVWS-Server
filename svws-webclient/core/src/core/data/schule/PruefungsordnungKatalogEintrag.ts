@@ -114,7 +114,7 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.PruefungsordnungKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<PruefungsordnungKatalogEintrag>('de.svws_nrw.core.data.schule.PruefungsordnungKatalogEintrag');
+	public static readonly class = new Class<PruefungsordnungKatalogEintrag>('de.svws_nrw.core.data.schule.PruefungsordnungKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): PruefungsordnungKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<PruefungsordnungKatalogEintrag>;

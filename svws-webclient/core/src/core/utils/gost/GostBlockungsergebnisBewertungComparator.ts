@@ -82,7 +82,7 @@ export class GostBlockungsergebnisBewertungComparator extends JavaObject impleme
 		return ['de.svws_nrw.core.utils.gost.GostBlockungsergebnisBewertungComparator', 'java.util.Comparator'].includes(name);
 	}
 
-	public static class = new Class<GostBlockungsergebnisBewertungComparator>('de.svws_nrw.core.utils.gost.GostBlockungsergebnisBewertungComparator');
+	public static readonly class = new Class<GostBlockungsergebnisBewertungComparator>('de.svws_nrw.core.utils.gost.GostBlockungsergebnisBewertungComparator');
 
 }
 

@@ -75,7 +75,7 @@ export class SprachpruefungsniveauKatalogEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.fach.SprachpruefungsniveauKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<SprachpruefungsniveauKatalogEintrag>('de.svws_nrw.core.data.fach.SprachpruefungsniveauKatalogEintrag');
+	public static readonly class = new Class<SprachpruefungsniveauKatalogEintrag>('de.svws_nrw.core.data.fach.SprachpruefungsniveauKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): SprachpruefungsniveauKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<SprachpruefungsniveauKatalogEintrag>;

@@ -10,6 +10,7 @@ ArrayList {
       "id": 1,
       "istAenderbar": true,
       "istSichtbar": true,
+      "referenziertInAnderenTabellen": false,
       "sortierung": 1,
     },
     Fahrschuelerart {
@@ -17,6 +18,7 @@ ArrayList {
       "id": 2,
       "istAenderbar": true,
       "istSichtbar": true,
+      "referenziertInAnderenTabellen": false,
       "sortierung": 2,
     },
     Fahrschuelerart {
@@ -24,6 +26,7 @@ ArrayList {
       "id": 3,
       "istAenderbar": true,
       "istSichtbar": true,
+      "referenziertInAnderenTabellen": false,
       "sortierung": 3,
     },
   ],

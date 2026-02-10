@@ -333,7 +333,7 @@ export class LehrerLehramt extends JavaEnum<LehrerLehramt> implements CoreType<L
 		return ['de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.lehrer.LehrerLehramt', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<LehrerLehramt>('de.svws_nrw.asd.types.lehrer.LehrerLehramt');
+	public static readonly class = new Class<LehrerLehramt>('de.svws_nrw.asd.types.lehrer.LehrerLehramt');
 
 }
 

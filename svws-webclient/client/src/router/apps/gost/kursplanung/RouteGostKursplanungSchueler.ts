@@ -42,8 +42,9 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 	public checkHidden(params?: RouteParams) {
 		try {
 			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: null };
-			if ((abiturjahr === null) || (abiturjahr === -1))
+			if ((abiturjahr === null) || (abiturjahr === -1)) {
 				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr } };
+			}
 			return false;
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
@@ -54,12 +55,15 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 		try {
 			const { abiturjahr, halbjahr: halbjahrId, idblockung: idBlockung, idergebnis: idErgebnis } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr", "idblockung", "idergebnis"]);
 			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
-			if (abiturjahr === undefined)
+			if (abiturjahr === undefined) {
 				return { name: routeGost.name, params: { } };
-			if ((halbjahr === null) || (idBlockung === undefined))
+			}
+			if ((halbjahr === null) || (idBlockung === undefined)) {
 				return routeGostKursplanung.getRouteHalbjahr(abiturjahr, (halbjahr === null) ? GostHalbjahr.EF1.id : halbjahr.id);
-			if (idErgebnis === undefined)
+			}
+			if (idErgebnis === undefined) {
 				return routeGostKursplanung.getRouteBlockung(abiturjahr, halbjahr.id, idBlockung);
+			}
 			return true;
 		} catch (e) {
 			return await routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
@@ -70,17 +74,21 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 		try {
 			const { abiturjahr, halbjahr: halbjahrId, idblockung: idBlockung, idergebnis: idErgebnis, idschueler: idSchueler } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr", "idblockung", "idergebnis", "idschueler"]);
 			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
-			if ((abiturjahr === undefined) || (halbjahr === null))
+			if ((abiturjahr === undefined) || (halbjahr === null)) {
 				throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
-			if ((abiturjahr !== routeGostKursplanung.data.abiturjahr) || (halbjahr !== routeGostKursplanung.data.halbjahr) || (idBlockung === undefined))
+			}
+			if ((abiturjahr !== routeGostKursplanung.data.abiturjahr) || (halbjahr !== routeGostKursplanung.data.halbjahr) || (idBlockung === undefined)) {
 				return routeGostKursplanung.getRouteHalbjahr(abiturjahr, halbjahr.id);
-			if (idBlockung !== routeGostKursplanung.data.auswahlBlockung.id)
+			}
+			if (idBlockung !== routeGostKursplanung.data.auswahlBlockung.id) {
 				return routeGostKursplanung.getRouteBlockung(abiturjahr, halbjahr.id, idBlockung);
+			}
 			if (idErgebnis !== routeGostKursplanung.data.auswahlErgebnis.id) {
-				if (idErgebnis === undefined)
+				if (idErgebnis === undefined) {
 					routeGostKursplanung.getRouteBlockung(abiturjahr, halbjahr.id, idBlockung);
-				else
+				} else {
 					routeGostKursplanung.getRouteErgebnis(abiturjahr, halbjahr.id, idBlockung, idErgebnis);
+				}
 			}
 			// ... wurde die ID des Schülers auf undefined setzt, so prüfe, ob die Schülerliste leer ist und wähle ggf. das erste Element aus
 			if (idSchueler === undefined) {
@@ -94,8 +102,9 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 			if ((!routeGostKursplanung.data.hatSchueler) || (routeGostKursplanung.data.auswahlSchueler.id !== idSchueler)) {
 			// Setze den neu ausgewählten Schüler-Eintrag
 				const schueler = routeGostKursplanung.data.datenmanager.schuelerGetOrNull(idSchueler);
-				if (schueler === null)
+				if (schueler === null) {
 					return this.getRoute({ idschueler: undefined });
+				}
 				await routeGostKursplanung.data.setAuswahlSchueler(schueler);
 			}
 		} catch (e) {

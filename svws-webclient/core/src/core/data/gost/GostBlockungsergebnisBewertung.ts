@@ -61,7 +61,7 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostBlockungsergebnisBewertung'].includes(name);
 	}
 
-	public static class = new Class<GostBlockungsergebnisBewertung>('de.svws_nrw.core.data.gost.GostBlockungsergebnisBewertung');
+	public static readonly class = new Class<GostBlockungsergebnisBewertung>('de.svws_nrw.core.data.gost.GostBlockungsergebnisBewertung');
 
 	public static transpilerFromJSON(json: string): GostBlockungsergebnisBewertung {
 		const obj = JSON.parse(json) as Partial<GostBlockungsergebnisBewertung>;

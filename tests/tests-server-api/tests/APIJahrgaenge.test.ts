@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { privilegedApiServer } from "../../utils/APIUtils";
 
 describe("Jahrgaenge Tests", () => {
-	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
+	describe.each([{ schema: "GymAbi01" }])('gegen %s', ({ schema }) => {
 		const api = privilegedApiServer;
 
 		test("getJahrgaenge", async () => {
@@ -14,5 +14,5 @@ describe("Jahrgaenge Tests", () => {
 			const result = await api.getJahrgang(schema, 10);
 			expect(result).toMatchSnapshot();
 		});
-	})
-})
+	});
+});

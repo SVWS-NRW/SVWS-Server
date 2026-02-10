@@ -100,7 +100,7 @@ export class UvLerngruppe extends JavaObject {
 		return ['de.svws_nrw.core.data.uv.UvLerngruppe'].includes(name);
 	}
 
-	public static class = new Class<UvLerngruppe>('de.svws_nrw.core.data.uv.UvLerngruppe');
+	public static readonly class = new Class<UvLerngruppe>('de.svws_nrw.core.data.uv.UvLerngruppe');
 
 	public static transpilerFromJSON(json: string): UvLerngruppe {
 		const obj = JSON.parse(json) as Partial<UvLerngruppe>;

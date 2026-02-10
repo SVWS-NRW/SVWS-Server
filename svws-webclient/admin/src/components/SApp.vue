@@ -87,18 +87,21 @@
 	const pendingSetApp = ref('');
 
 	function isVisible(item: TabData): boolean {
-		if ((item.name === 'config') && (!props.isServerAdmin))
+		if ((item.name === 'config') && (!props.isServerAdmin)) {
 			return false;
+		}
 		return true;
 	}
 
 	function is_active(current: TabData): boolean {
 		const routename = props.app.name.split('.')[0];
 		const title = current.text;
-		if (routename !== current.name)
+		if (routename !== current.name) {
 			return false;
-		if (document.title !== title)
+		}
+		if (document.title !== title) {
 			document.title = title;
+		}
 		return true;
 	}
 

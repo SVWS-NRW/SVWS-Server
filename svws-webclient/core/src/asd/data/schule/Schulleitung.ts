@@ -49,7 +49,7 @@ export class Schulleitung extends JavaObject {
 		return ['de.svws_nrw.asd.data.schule.Schulleitung'].includes(name);
 	}
 
-	public static class = new Class<Schulleitung>('de.svws_nrw.asd.data.schule.Schulleitung');
+	public static readonly class = new Class<Schulleitung>('de.svws_nrw.asd.data.schule.Schulleitung');
 
 	public static transpilerFromJSON(json: string): Schulleitung {
 		const obj = JSON.parse(json) as Partial<Schulleitung>;

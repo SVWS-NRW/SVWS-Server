@@ -2,7 +2,6 @@ plugins {
 	id 'svws.gradle.node.plugin'
 }
 
-// Führt alle Tasks von subproject-plugin.gradle in diesem Verzeichnis aus
 apply from: ('../subproject-plugin.gradle')
 
 /**
@@ -55,15 +54,15 @@ tasks.register('testAgainstDockerEnv', NpmRun) {
 
 	dependsOn ':svws-webclient:core:assemble'
 	dependsOn ':svws-webclient:client:assemble'
-	dependsOn 'starteDockerContainerMitTestUmgebung'
 	dependsOn 'npmInstall'
+	dependsOn 'starteDockerContainerMitTestUmgebung'
 
-	doFirst {
-		mkdir file("$projectDir/build/test-results")
+	if (!rootProject.ext.CONFIG.keepContainerAfterTestRun) {
+		finalizedBy 'removeTestEnvironmentEntryPoint'
 	}
 
-	// Falls Exceptions auftreten führen diese nicht zum Abbruch des Scripts
 	ignoreExitValue = true
+	outputs.upToDateWhen { false }
 
 	// Die Ziel-url vom Container mit der Application
 	if (System.getenv('CI_SERVER')) {
@@ -71,10 +70,7 @@ tasks.register('testAgainstDockerEnv', NpmRun) {
 	} else {
 		environment VITE_targetHost: "https://localhost:$project.ext.FORWARDED_APP_PORT"
 	}
-	outputs.upToDateWhen { false }
-	outputs.dir file("$projectDir/build/test-results")
 
-	// npm Kommando
 	args = ['test']
 }
 
@@ -83,11 +79,11 @@ tasks.register('testAgainstDockerEnv', NpmRun) {
  * Starten der Tests gegen die lokale Applikation. Hier wird kein Docker gestartet.
  */
 tasks.register('no_auto_docker_test_E2E', NpmRun) {
-	group = "verification"
+	group = "testing"
 	dependsOn ':tests:checkIfLocalAppIsRunning'
 	dependsOn ':tests:checkIfLocalDatabaseIsRunning'
 	inputs.dir file("$projectDir/tests")
-	args = ['test:local']
+	args = ['test']
 }
 
 /**
@@ -95,6 +91,10 @@ tasks.register('no_auto_docker_test_E2E', NpmRun) {
  */
 tasks.register('recordE2ETest', NpmRun) {
 	dependsOn 'playwrightInstallDeps'
-	mkdir file("$projectDir/build/codegen")
+
+	doFirst{
+		mkdir project.layout.buildDirectory.dir("codegen").get().asFile
+	}
+
 	args = ['codegen']
 }

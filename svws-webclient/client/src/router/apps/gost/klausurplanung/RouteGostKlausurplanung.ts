@@ -20,11 +20,12 @@ import { RouteDataGostKlausurplanung } from "~/router/apps/gost/klausurplanung/R
 
 import type { GostKlausurplanungAuswahlProps } from "~/components/gost/klausurplanung/SGostKlausurplanungAuswahlProps";
 import { routeError } from "~/router/error/RouteError";
-import { ConfigElement } from "../../../../../../ui/src/utils/Config";
+import { ConfigElement } from "@ui";
 import { api } from "~/router/Api";
 import type { GostKlausurplanungProps } from "~/components/gost/klausurplanung/SGostKlausurplanungProps";
 import { routeGostKlausurplanungProbleme } from "./RouteGostKlausurplanungProbleme";
 import type { TabData } from "@ui";
+import { CONFIG_KEY_GOST_KLAUSURPLAN_VORGABENTOIGNORE } from "~/components/gost/klausurplanung/SGostKlausurplanungVorgabenIgnoreManager";
 
 
 const SGostKlausurplanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanung.vue");
@@ -63,6 +64,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			new ConfigElement("gost.klausurplan.raumblockung_regel_forciere_selbe_kursklausur_im_selben_raum", "user", "true"),
 			new ConfigElement("gost.klausurplan.raumblockung_regel_forciere_selbe_klausurdauer_pro_raum", "user", "false"),
 			new ConfigElement("gost.klausurplan.raumblockung_regel_forciere_selben_klausurstart_pro_raum", "user", "true"),
+			new ConfigElement(CONFIG_KEY_GOST_KLAUSURPLAN_VORGABENTOIGNORE, "user", "[]"),
 		]);
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
@@ -72,8 +74,9 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	public checkHidden(params?: RouteParams) {
 		try {
 			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: null };
-			if ((abiturjahr === null))
+			if ((abiturjahr === null)) {
 				return routeGost.getRouteDefaultChild({ abiturjahr: -1 });
+			}
 			return false;
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
@@ -83,8 +86,9 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams): Promise<boolean | void | Error | RouteLocationRaw> {
 		try {
 			const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
-			if ((abiturjahr === undefined))
+			if ((abiturjahr === undefined)) {
 				return routeGost.getRouteDefaultChild({ abiturjahr: -1 });
+			}
 			return true;
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
@@ -96,8 +100,9 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			const { abiturjahr, halbjahr: halbjahrId, idtermin } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr", "idtermin"]);
 			const { datum } = RouteNode.getStringParams(to_params, ["datum"]);
 			// Prüfe das Abiturjahr
-			if (abiturjahr === undefined)
+			if (abiturjahr === undefined) {
 				throw new DeveloperNotificationException("Fehler: Das Abiturjahr darf an dieser Stelle nicht undefined sein.");
+			}
 			// Füge ggf. die Konfiguration fpr die Routen-Parameter zur Config hinzu
 			if (!api.config.hasElement("gost.klausurplan.routeparams")) {
 				const strAbiturjahr = (abiturjahr < 0) ? "vorlage" : ("abi" + abiturjahr);
@@ -122,20 +127,27 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			let halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
 			if (abiturjahrwechsel || (halbjahr === null)) {
 				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
-				if (hj === null) // In zwei Fällen existiert Halbjahr, z.B. weil der Abiturjahrgang abgeschlossen ist oder noch in der Sek I ist.
+				// In zwei Fällen existiert Halbjahr, z.B. weil der Abiturjahrgang abgeschlossen ist oder noch in der Sek I ist.
+				if (hj === null) {
 					hj = (abiturjahr < routeApp.data.aktAbschnitt.value.schuljahr + routeApp.data.aktAbschnitt.value.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
+				}
 				halbjahr = hj;
 			}
 			const changedHalbjahr: boolean = await this.data.setHalbjahr(halbjahr, abiturjahrwechsel);
-			if (!to.name.startsWith(this.data.view.name))
-				for (const child of this.children)
-					if (to.name.startsWith(child.name))
+			if (!to.name.startsWith(this.data.view.name)) {
+				for (const child of this.children) {
+					if (to.name.startsWith(child.name)) {
 						this.data.setView(child, this.children);
+					}
+				}
+			}
 			if (changedHalbjahr || (to.name === this.name)) {
-				if ((this.data.view.name === "gost.klausurplanung.raumzeit") && (idtermin !== undefined))
+				if ((this.data.view.name === "gost.klausurplanung.raumzeit") && (idtermin !== undefined)) {
 					return this.data.view.getRoute({ halbjahr: halbjahr.id, idtermin });
-				if (this.data.view.name === "gost.klausurplanung.kalender")
+				}
+				if (this.data.view.name === "gost.klausurplanung.kalender") {
 					return this.data.view.getRoute({ halbjahr: halbjahr.id, datum, idtermin });
+				}
 				return this.data.view.getRoute({ halbjahr: halbjahr.id });
 			}
 		} catch (e) {
@@ -146,8 +158,9 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
 		const { abiturjahr } = RouteNode.getIntParams(from_params, ["abiturjahr"]);
-		if (abiturjahr !== undefined)
+		if (abiturjahr !== undefined) {
 			this.data.setParams(abiturjahr, from_params);
+		}
 		this.data.reset();
 	}
 
@@ -165,6 +178,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			halbjahr: this.data.halbjahr,
 			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
 			getConfigNumberValue: routeGostKlausurplanung.data.getConfigNumberValue,
+			getObjectValue: api.config.getObjectValue.bind(api.config),
 		};
 	}
 
@@ -177,20 +191,24 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	}
 
 	protected checkTabVisibility(tab: TabData) {
-		if (this.data.abiturjahr === -1)
+		if (this.data.abiturjahr === -1) {
 			return (tab.name === routeGostKlausurplanungVorgaben.name);
+		}
 		return true;
 	}
 
 	private setTab = async (value: TabData) => {
-		if (value.name === this.data.view.name)
+		if (value.name === this.data.view.name) {
 			return;
+		}
 		const node = RouteNode.getNodeByName(value.name);
-		if (node === undefined)
+		if (node === undefined) {
 			throw new DeveloperNotificationException("Unbekannte Route");
+		}
 		const nodeRoute = node.getRoute() as RouteLocationAsRelativeGeneric;
-		if ((nodeRoute.params !== undefined))
+		if ((nodeRoute.params !== undefined)) {
 			delete nodeRoute.params.idtermin;
+		}
 		await RouteManager.doRoute(nodeRoute);
 		this.data.setView(node, this.children);
 	};

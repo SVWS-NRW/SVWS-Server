@@ -36,12 +36,14 @@
 		get: () => props.getBenutzergruppenManager().hatKompetenz(props.kompetenz),
 		set: (value) => {
 			const alt = props.getBenutzergruppenManager().hatKompetenz(props.kompetenz);
-			if (alt === value)
+			if (alt === value) {
 				return;
-			if (value)
+			}
+			if (value) {
 				void props.addKompetenz(props.kompetenz);
-			else
+			} else {
 				void props.removeKompetenz(props.kompetenz);
+			}
 		},
 	});
 

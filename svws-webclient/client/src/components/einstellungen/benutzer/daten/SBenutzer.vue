@@ -96,11 +96,12 @@
 	const kennwort1 = ref();
 	const kennwort2 = ref();
 
-	function setPwd() {
-		if (kennwort1.value === kennwort2.value)
-			void props.setPassword(kennwort1.value);
-		else
+	async function setPwd() {
+		if (kennwort1.value === kennwort2.value) {
+			await props.setPassword(kennwort1.value);
+		} else {
 			alert("Kennwörter stimmen nicht überein");
+		}
 	}
 
 	const kompetenzgruppen = computed<BenutzerKompetenzGruppe[]>(() => BenutzerKompetenzGruppe.values().filter(gr => gr.daten.id >= 0));
@@ -108,8 +109,9 @@
 	const inputIstAdmin = computed<boolean>({
 		get: () => props.getBenutzerManager().istAdmin(),
 		set: (value) => {
-			if (value === props.getBenutzerManager().istAdmin())
+			if (value === props.getBenutzerManager().istAdmin()) {
 				return;
+			}
 			void props.setIstAdmin(value);
 		},
 	});

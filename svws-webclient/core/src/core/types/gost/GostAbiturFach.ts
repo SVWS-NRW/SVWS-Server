@@ -192,7 +192,7 @@ export class GostAbiturFach extends JavaEnum<GostAbiturFach> {
 		return ['de.svws_nrw.core.types.gost.GostAbiturFach', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<GostAbiturFach>('de.svws_nrw.core.types.gost.GostAbiturFach');
+	public static readonly class = new Class<GostAbiturFach>('de.svws_nrw.core.types.gost.GostAbiturFach');
 
 }
 

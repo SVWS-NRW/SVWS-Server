@@ -65,8 +65,9 @@ export class PendingStateManager<T> extends StateManager<PendingState<T>> {
 		return computed<Type>({
 			get: () => {
 				const value = this.pendingValues[attributeName];
-				if (value === undefined)
+				if (value === undefined) {
 					return defaultValue;
+				}
 				return getMapper ? getMapper(value) : value as Type;
 			},
 			set: (value: Type) => {

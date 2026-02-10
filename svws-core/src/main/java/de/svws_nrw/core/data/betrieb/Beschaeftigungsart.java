@@ -29,7 +29,7 @@ public class Beschaeftigungsart {
 	@Schema(description = "Die Sichtbarkeit der Beschäftigungsart", example = "true")
 	public boolean istSichtbar;
 
-	/** Die Änderbarkeit der Beschäftigungsart */
-	@Schema(description = "Die Änderbarkeit der Beschäftigungsart", example = "true")
-	public boolean istAenderbar;
+	/** Gibt an, ob die Beschäftigungsart in anderen Datenbanktabellen referenziert ist oder nicht. */
+	@Schema(description = "Gibt an, ob die Beschäftigungsart in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
+	public boolean referenziertInAnderenTabellen;
 }

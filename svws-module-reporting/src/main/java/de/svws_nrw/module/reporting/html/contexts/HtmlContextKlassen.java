@@ -12,7 +12,7 @@ import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
-import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import org.thymeleaf.context.Context;
 
@@ -47,7 +47,7 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> {
 	public HtmlContextKlassen(final ReportingRepository reportingRepository) {
 		super(reportingRepository, true);
 		this.reportingRepository = reportingRepository;
-		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten);
+		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten());
 	}
 
 
@@ -88,7 +88,7 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> {
 					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getById(idKlasse);
 					mapKlassen.put(idKlasse, this.reportingRepository.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(idKlasse));
 				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.putStacktraceInLog(
+					ReportingExceptionUtils.logException(
 							"FEHLER: Fehler bei der Ermittlung der Daten für des Klassen %s.".formatted(idKlasse), e, reportingRepository.logger(),
 							LogLevel.ERROR,
 							0);

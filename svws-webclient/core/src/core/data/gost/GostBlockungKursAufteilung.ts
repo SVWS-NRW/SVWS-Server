@@ -42,7 +42,7 @@ export class GostBlockungKursAufteilung extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostBlockungKursAufteilung'].includes(name);
 	}
 
-	public static class = new Class<GostBlockungKursAufteilung>('de.svws_nrw.core.data.gost.GostBlockungKursAufteilung');
+	public static readonly class = new Class<GostBlockungKursAufteilung>('de.svws_nrw.core.data.gost.GostBlockungKursAufteilung');
 
 	public static transpilerFromJSON(json: string): GostBlockungKursAufteilung {
 		const obj = JSON.parse(json) as Partial<GostBlockungKursAufteilung>;

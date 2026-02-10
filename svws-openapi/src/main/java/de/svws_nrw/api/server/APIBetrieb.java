@@ -6,7 +6,6 @@ import de.svws_nrw.core.data.betrieb.Beschaeftigungsart;
 import de.svws_nrw.core.data.betrieb.BetriebAnsprechpartner;
 import de.svws_nrw.core.data.betrieb.BetriebListeEintrag;
 import de.svws_nrw.core.data.betrieb.BetriebStammdaten;
-import de.svws_nrw.core.data.kataloge.KatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
@@ -15,7 +14,6 @@ import de.svws_nrw.data.betriebe.DataBetriebAnsprechpartner;
 import de.svws_nrw.data.betriebe.DataBetriebsStammdaten;
 import de.svws_nrw.data.betriebe.DataBetriebsliste;
 import de.svws_nrw.data.betriebe.DataBeschaeftigungsarten;
-import de.svws_nrw.data.betriebe.DataKatalogBetriebsarten;
 import de.svws_nrw.data.schueler.DataSchuelerBetriebsdaten;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -38,6 +36,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.List;
+
+import org.jboss.resteasy.annotations.GZIP;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die grundlegenden Betriebsdaten aus der SVWS-Datenbank.
@@ -65,6 +65,7 @@ public class APIBetrieb {
 	 * @return die Liste mit den einzelnen Betrieben
 	 */
 	@GET
+	@GZIP
 	@Path("/")
 	@Operation(summary = "Gibt eine Übersicht von allen Betrieben zurück.",
 			description = "Erstellt eine Liste aller in der Datenbank vorhandenen Betriebe unter Angabe der ID, der Betriebsart , " // TODO Beschreibung anpassen.
@@ -462,6 +463,7 @@ public class APIBetrieb {
 	* @return              die Liste der Beschäftigungsarten
 	*/
 	@GET
+	@GZIP
 	@Path("/beschaeftigungsarten")
 	@Operation(summary = "Gibt eine Übersicht der Beschäftigungsarten im Katalog zurück.",
 			description = "Gibt die Beschäftigungsarten zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
@@ -559,112 +561,5 @@ public class APIBetrieb {
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage der Liste der Beschäftigungsarten im angegebenen Schema.
-	 *
-	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request       die Informationen zur HTTP-Anfrage
-	 *
-	 * @return              die Liste der Beschäftigungsarten mit ID des Datenbankschemas
-	 */
-	@GET
-	@Path("/betriebsart")
-	@Operation(summary = "Gibt eine Übersicht aller Betriebsarten im Katalog zurück.",
-			description = "Erstellt eine Liste aller in dem Katalog vorhandenen Betriebsarten unter Angabe der ID, eines Kürzels und der textuellen "
-					+ "Beschreibung sowie der Information, ob der Eintrag in der Anwendung sichtbar bzw. änderbar sein soll, und gibt diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen zu den Betriebsarten.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-	public Response getKatalogBetriebsart(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogBetriebsarten(conn).getList(),
-				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage einer Betriebsart im angegebenen Schema.
-	 *
-	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request       die Informationen zur HTTP-Anfrage
-	 * @param id        die Datenbank-ID zur Identifikation der Betriebsart
-	 * @return              die Betriebsart mit ID des Datenbankschemas
-	 */
-	@GET
-	@Path("/betriebsart/{id : \\d+}")
-	@Operation(summary = "Liefert zu der ID der Betriebsart die zugehörigen Daten..",
-			description = "Liest die Daten der Betriebsart zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsarten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Katalog-Eintrag zu den Betriebsarten.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KatalogEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-	public Response getKatalogBetriebsartMitID(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogBetriebsarten(conn).get(id),
-				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für das Erstellen einer neuen Betriebsart.
-	 *
-	 * @param schema       das Datenbankschema, in welchem der Betriebsansprechpartner erstellt wird
-	 * @param is           das JSON-Objekt
-	  * @param request      die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit der neuen Betriebsart
-	 */
-	@POST
-	@Path("/betriebsart/new")
-	@Operation(summary = "Erstellt einen neue Betriebsart und gibt den neuen Datensatz zurück.",
-			description = "Erstellt eine neue Betriebart und gibt den neuen Datensatz zurück."
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eine Betriebsart besitzt.")
-	@ApiResponse(responseCode = "200", description = "Betiebsart wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON,
-			schema = @Schema(implementation = KatalogEintrag.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Betriebsart anzulegen.")
-	@ApiResponse(responseCode = "404", description = "Kein Betrieb  mit der angegebenen ID gefunden")
-	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response createBetriebsart(@PathParam("schema") final String schema,
-			@RequestBody(description = "Der Post für die Betriebanpsrechpartner-Daten", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KatalogEintrag.class))) final InputStream is,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogBetriebsarten(conn).create(is),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für das Patchen einer Betriebsart im angegebenen Schema
-	 *
-	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation der Betriebsart
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return das Ergebnis der Patch-Operation
-	 */
-	@PATCH
-	@Path("/betriebsart/{id : \\d+}")
-	@Operation(summary = "Passt die zu der ID der Betriebsart zugehörigen Stammdaten an.",
-			description = "Passt die Beschäftigungsart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Betriebssart besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Beschäftigungsart-Daten integriert.")
-	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Beschäftigungsart-Daten zu ändern.")
-	@ApiResponse(responseCode = "404", description = "Keine Beschäftigungsart mit der angegebenen ID gefunden")
-	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
-			+ " (z.B. eine negative ID)")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response patchBetriebsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@RequestBody(description = "Der Patch für die Betrieb-Stammdaten", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KatalogEintrag.class))) final InputStream is,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogBetriebsarten(conn).patch(id, is),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
-	}
 
 }

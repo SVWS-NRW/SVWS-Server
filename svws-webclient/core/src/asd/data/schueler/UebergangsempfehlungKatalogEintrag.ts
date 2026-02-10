@@ -19,7 +19,7 @@ export class UebergangsempfehlungKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<UebergangsempfehlungKatalogEintrag>('de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag');
+	public static readonly class = new Class<UebergangsempfehlungKatalogEintrag>('de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): UebergangsempfehlungKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<UebergangsempfehlungKatalogEintrag>;

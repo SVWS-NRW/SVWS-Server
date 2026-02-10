@@ -36,8 +36,8 @@ export class StundenplanUnterricht extends JavaObject {
 	public lehrer: List<number> = new ArrayList<number>();
 
 	/**
-	 * Die IDs der Klassen, die dieser Unterrichtseinheit zugeordnet sind. Diese Liste ist leer, falls idKurs definiert ist.
-	 *   Dann müssen die Klassen über die Schüler des Kurses aggregiert werden!
+	 * Die IDs der Klassen, die dieser Unterrichtseinheit zugeordnet sind.
+	 *   Vorsicht: Auch Kurs-Unterricht kann eine definierte Klasse haben, ABER dort muss man dann über die Schüler des Kurses aggregieren!
 	 */
 	public klassen: List<number> = new ArrayList<number>();
 
@@ -67,7 +67,7 @@ export class StundenplanUnterricht extends JavaObject {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanUnterricht'].includes(name);
 	}
 
-	public static class = new Class<StundenplanUnterricht>('de.svws_nrw.core.data.stundenplan.StundenplanUnterricht');
+	public static readonly class = new Class<StundenplanUnterricht>('de.svws_nrw.core.data.stundenplan.StundenplanUnterricht');
 
 	public static transpilerFromJSON(json: string): StundenplanUnterricht {
 		const obj = JSON.parse(json) as Partial<StundenplanUnterricht>;

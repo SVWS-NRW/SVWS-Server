@@ -75,6 +75,48 @@
 					<!-- Ende: E-Mail-Eingabefelder -->
 				</svws-ui-input-wrapper>
 			</ui-card>
+			<ui-card v-if="hatKompetenzDruckenSchuelerLeistungsdaten" icon="i-ri-printer-line" title="Leistungsübersicht drucken" subtitle="Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der ausgewählten Klassen drucken"
+				:is-open="currentAction === 'druckKlasseListeSchuelerLeistungsdaten'" @update:is-open="isOpen => setCurrentAction('druckKlasseListeSchuelerLeistungsdaten', isOpen)">
+				<svws-ui-input-wrapper :grid="2" class="p-2">
+					<div class="text-left mb-2">
+						<p class="font-bold underline">Fächer der Liste einschränken:</p>
+						<svws-ui-checkbox v-model="option2" name="nurZeugnisRelevant">Nur zeugnisrelevante Fächer</svws-ui-checkbox><br>
+						<svws-ui-checkbox v-model="option4" name="nurPruefungsordnungRelevant">Nur prüfungsordnungsrelevante Fächer</svws-ui-checkbox>
+					</div>
+					<div class="text-left mb-2">
+						<p class="font-bold underline">Sortierung der Fächer:</p>
+						<svws-ui-radio-group class="grid grid-cols-1 p-2 items-start">
+							<svws-ui-radio-option :value="1" v-model="drucksortierungKlasseListeSchuelerLeistungsdaten" name="drucksortierungKlasseListeSchuelerLeistungsdatenFach" label="Fächersortierung" />
+							<svws-ui-radio-option :value="2" v-model="drucksortierungKlasseListeSchuelerLeistungsdaten" name="drucksortierungKlasseListeSchuelerLeistungsdatenGost" label="GOSt-Sortierung" />
+							<svws-ui-radio-option :value="3" v-model="drucksortierungKlasseListeSchuelerLeistungsdaten" name="drucksortierungKlasseListeSchuelerLeistungsdatenFachkuerzel" label="Fachkürzel" />
+						</svws-ui-radio-group>
+					</div>
+					<div class="text-left col-span-2 mb-2">
+						<br><p class="font-bold underline">Elemente der Druckausgabe:</p>
+						<div class="grid grid-cols-2 gap-x-4">
+							<template v-for="vp in vpLeistungsdaten" :key="vp.name">
+								<svws-ui-checkbox v-if="vp.typ === ReportingVorlageParameterTyp.BOOLEAN.getId()" :model-value="vp.wert === 'true'" @update:model-value="v => vp.wert = v.toString()" :name="vp.name">{{ vp.bezeichnung }}</svws-ui-checkbox>
+							</template>
+						</div>
+					</div>
+					<div class="text-left col-span-2 mb-2">
+						<br><p class="font-bold underline">Optionen zur Druckausgabe:</p>
+						<svws-ui-radio-group class="grid grid-cols-4 p-2 items-start">
+							<svws-ui-radio-option :value="1" v-model="druckoptionKlasseListeSchuelerLeistungsdaten" name="druckoptionKlasseListeSchuelerLeistungsdatenGesamtausdruckEinseitig" label="Gesamtausdruck einseitig" />
+							<svws-ui-radio-option :value="2" v-model="druckoptionKlasseListeSchuelerLeistungsdaten" name="druckoptionKlasseListeSchuelerLeistungsdatenEinzelausdruckEinseitig" label="Einzelausdruck einseitig" />
+							<svws-ui-radio-option :value="3" v-model="druckoptionKlasseListeSchuelerLeistungsdaten" name="druckoptionKlasseListeSchuelerLeistungsdatenGesamtausdruckDuplex" label="Gesamtausdruck duplex" />
+							<svws-ui-radio-option :value="4" v-model="druckoptionKlasseListeSchuelerLeistungsdaten" name="druckoptionKlasseListeSchuelerLeistungsdatenEinzelausdruckDuplex" label="Einzelausdruck duplex" />
+						</svws-ui-radio-group>
+					</div>
+					<div class="text-left col-span-2">
+						<svws-ui-button :disabled="isPrintDisabled" @click="downloadPDF" :is-loading="loading" class="mt-4">
+							<svws-ui-spinner v-if="loading" spinning />
+							<span v-else class="icon i-ri-printer-line" />
+							Drucken
+						</svws-ui-button>
+					</div>
+				</svws-ui-input-wrapper>
+			</ui-card>
 			<ui-card v-if="hatKompetenzDruckenStundenplan && (mapStundenplaene.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken oder versenden" subtitle="Die Stundenpläne der ausgewählten Klassen drucken oder versenden."
 				:is-open="currentAction === 'druckKlasseStundenplan'" @update:is-open="isOpen => setCurrentAction('druckKlasseStundenplan', isOpen)">
 				<svws-ui-input-wrapper :grid="2" class="p-2">
@@ -155,18 +197,20 @@
 	import { ref, computed } from "vue";
 	import type { KlassenGruppenprozesseProps } from "./SKlassenGruppenprozesseProps";
 	import type { StundenplanListeEintrag, List } from "@core";
-	import { ServerMode, ReportingAusgabeformat, ReportingEMailDaten, ReportingEMailEmpfaengerTyp, ArrayList, BenutzerKompetenz, DateUtils, ReportingParameter, ReportingReportvorlage, ListUtils } from "@core";
+	import { ReportingFilterDefinition, ReportingFilterKriterium, ReportingFilterOperation,	ReportingFilterVerknuepfung, ReportingFilterEintrag, ReportingSortierungDefinition,	ReportingVorlageParameterTyp,
+		ServerMode, ReportingAusgabeformat, ReportingEMailDaten, ReportingEMailEmpfaengerTyp, ArrayList, BenutzerKompetenz, DateUtils, ReportingParameter, ReportingReportvorlage, ListUtils } from "@core";
 
-	type Action = 'druckKlasseListeSchuelerKontaktdatenErzieher' | 'druckKlasseStundenplan' | 'delete' | '';
+	type Action = 'druckKlasseListeSchuelerKontaktdatenErzieher' | 'druckKlasseListeSchuelerLeistungsdaten' | 'druckKlasseStundenplan' | 'delete' | '';
 
 	const props = defineProps<KlassenGruppenprozesseProps>();
 
 	const hatKompetenzDrucken = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
 	const hatKompetenzDruckenStundenplan = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzDruckenSchuelerIndividualdaten = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN) && hatKompetenzDrucken.value));
+	const hatKompetenzDruckenSchuelerLeistungsdaten = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN) && hatKompetenzDrucken.value));
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
-	const hatIrgendwelcheKompetenzen = computed(() => hatKompetenzDrucken.value || hatKompetenzLoeschen.value || hatKompetenzDruckenStundenplan.value || hatKompetenzDruckenSchuelerIndividualdaten.value);
+	const hatIrgendwelcheKompetenzen = computed(() => hatKompetenzDrucken.value || hatKompetenzLoeschen.value || hatKompetenzDruckenStundenplan.value || hatKompetenzDruckenSchuelerIndividualdaten.value || hatKompetenzDruckenSchuelerLeistungsdaten.value);
 
 	const isPrintDisabled = computed<boolean>(() => !props.manager().liste.auswahlExists() || loading.value);
 	const isPrintStundenplanDisabled = computed<boolean>(() => isPrintDisabled.value || stundenplanAuswahl.value === undefined);
@@ -183,9 +227,11 @@
 
 	const nichtAlleKlassenLeer = computed(() => {
 		const errorLog: List<string> = new ArrayList<string>();
-		if (!alleKlassenLeer.value)
-			for (const klasse of props.manager().getKlassenIDsMitSchuelern())
+		if (!alleKlassenLeer.value) {
+			for (const klasse of props.manager().getKlassenIDsMitSchuelern()) {
 				errorLog.add(`Klasse ${props.manager().liste.get(klasse)?.kuerzel ?? '???'} (ID: ${klasse}) kann nicht gelöscht werden, da ihr noch Schüler zugeordnet sind.`);
+			}
+		}
 		return errorLog;
 	});
 
@@ -193,8 +239,9 @@
 		!alleKlassenLeer.value && (props.manager().getKlassenIDsMitSchuelern().size() !== props.manager().liste.auswahlSize()));
 
 	function setCurrentAction(newAction: Action, open: boolean) {
-		if (newAction !== currentAction.value && !open)
+		if (newAction !== currentAction.value && !open) {
 			return;
+		}
 		option2.value = false;
 		option4.value = false;
 		option8.value = false;
@@ -208,6 +255,7 @@
 		option2048.value = false;
 		option4096.value = false;
 		druckoptionKlasseListeSchuelerKontaktdatenErzieher.value = 1;
+		druckoptionKlasseListeSchuelerLeistungsdaten.value = 1;
 		druckoptionKlasseStundenplan.value = 1;
 		emailBetreff.value = '';
 		emailText.value = '';
@@ -251,20 +299,26 @@
 	const option2048 = ref(false);
 	const option4096 = ref(false);
 	const druckoptionKlasseListeSchuelerKontaktdatenErzieher = ref(1);
+	const druckoptionKlasseListeSchuelerLeistungsdaten = ref(1);
+	const drucksortierungKlasseListeSchuelerLeistungsdaten = ref(1);
 	const druckoptionKlasseStundenplan = ref(1);
+
+	const vpLeistungsdaten = ref(new ArrayList(ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN.getVorlageParameterList()));
 
 	async function downloadPDF() {
 		const reportingParameter = new ReportingParameter();
 		const listeIdsKlassen = new ArrayList<number>();
-		for (const klasse of props.manager().liste.auswahl())
+		for (const klasse of props.manager().liste.auswahl()) {
 			listeIdsKlassen.add(klasse.id);
+		}
+		const sortierungReportingFach = new ReportingSortierungDefinition();
 		switch (currentAction.value) {
 			case 'druckKlasseListeSchuelerKontaktdatenErzieher':
-				reportingParameter.reportvorlage = ReportingReportvorlage.KLASSEN_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
+				reportingParameter.reportvorlage = ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
 				reportingParameter.idsHauptdaten = listeIdsKlassen;
 				reportingParameter.einzelausgabeHauptdaten = ((druckoptionKlasseListeSchuelerKontaktdatenErzieher.value === 2) || (druckoptionKlasseListeSchuelerKontaktdatenErzieher.value === 4));
 				reportingParameter.einzelausgabeDetaildaten = false;
-				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.KLASSEN_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getVorlageParameterList());
+				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getVorlageParameterList());
 				for (const vp of reportingParameter.vorlageParameter) {
 					switch (vp.name) {
 						case "nurSchuelerRufname":
@@ -306,15 +360,68 @@
 					}
 				}
 				break;
+			case 'druckKlasseListeSchuelerLeistungsdaten':
+				reportingParameter.reportvorlage = ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN.getBezeichnung();
+				reportingParameter.idsHauptdaten = listeIdsKlassen;
+				reportingParameter.einzelausgabeHauptdaten = ((druckoptionKlasseListeSchuelerLeistungsdaten.value === 2) || (druckoptionKlasseListeSchuelerLeistungsdaten.value === 4));
+				reportingParameter.einzelausgabeDetaildaten = false;
+				reportingParameter.vorlageParameter = vpLeistungsdaten.value;
+
+				// Filterung der Fächer
+				if (option2.value || option4.value) {
+					const filterReportingFach = new ReportingFilterDefinition();
+					filterReportingFach.typ = "ReportingFach";
+					const filterReportingFachKriterium = new ReportingFilterKriterium();
+					filterReportingFachKriterium.verknuepfung = ReportingFilterVerknuepfung.AND.getId();
+
+					if (option2.value) {
+						const e1 = new ReportingFilterEintrag();
+						e1.attribut = "aufZeugnis";
+						e1.operation = ReportingFilterOperation.EQUAL.getId();
+						e1.werte.add("true");
+						filterReportingFachKriterium.eintraege.add(e1);
+					}
+
+					if (option4.value) {
+						const e2 = new ReportingFilterEintrag();
+						e2.attribut = "istPruefungsordnungsRelevant";
+						e2.operation = ReportingFilterOperation.EQUAL.getId();
+						e2.werte.add("true");
+						filterReportingFachKriterium.eintraege.add(e2);
+					}
+
+					filterReportingFach.kriterien.add(filterReportingFachKriterium);
+					reportingParameter.filterDefinitionen.add(filterReportingFach);
+				}
+
+				// Sortierung
+				reportingParameter.sortierungDefinitionen = new ArrayList();
+				sortierungReportingFach.typ = "ReportingFach";
+
+				if (drucksortierungKlasseListeSchuelerLeistungsdaten.value === 1) {
+					// Fächersortierung ist Standardsortierung
+					sortierungReportingFach.verwendeStandardsortierung = true;
+				} else if (drucksortierungKlasseListeSchuelerLeistungsdaten.value === 2) {
+					// GOSt-Sortierung
+					sortierungReportingFach.verwendeStandardsortierung = false;
+					sortierungReportingFach.attribute.add("gostSortierung");
+				} else if (drucksortierungKlasseListeSchuelerLeistungsdaten.value === 3) {
+					// Sortierung nach Fachkürzel
+					sortierungReportingFach.verwendeStandardsortierung = false;
+					sortierungReportingFach.attribute.add("kuerzel");
+				}
+				reportingParameter.sortierungDefinitionen.add(sortierungReportingFach);
+				break;
 			case 'druckKlasseStundenplan':
-				if (stundenplanAuswahl.value === undefined)
+				if (stundenplanAuswahl.value === undefined) {
 					return;
-				reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN.getBezeichnung();
+				}
+				reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN.getBezeichnung();
 				reportingParameter.idsHauptdaten = ListUtils.create1(stundenplanAuswahl.value.id);
 				reportingParameter.idsDetaildaten = listeIdsKlassen;
 				reportingParameter.einzelausgabeHauptdaten = false;
 				reportingParameter.einzelausgabeDetaildaten = (druckoptionKlasseStundenplan.value === 2);
-				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN.getVorlageParameterList());
+				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN.getVorlageParameterList());
 				for (const vp of reportingParameter.vorlageParameter) {
 					switch (vp.name) {
 						case "mitPausenzeiten":
@@ -346,8 +453,9 @@
 
 	async function sendPdfByEmail() {
 		const listeIdsKlassen = new ArrayList<number>();
-		for (const klasse of props.manager().liste.auswahl())
+		for (const klasse of props.manager().liste.auswahl()) {
 			listeIdsKlassen.add(klasse.id);
+		}
 
 		const reportingParameter = new ReportingParameter();
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
@@ -359,13 +467,13 @@
 
 		switch (currentAction.value) {
 			case 'druckKlasseListeSchuelerKontaktdatenErzieher':
-				reportingParameter.reportvorlage = ReportingReportvorlage.KLASSEN_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
+				reportingParameter.reportvorlage = ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getBezeichnung();
 				reportingParameter.idsHauptdaten = listeIdsKlassen;
 				reportingParameter.einzelausgabeHauptdaten = true;
 				reportingParameter.einzelausgabeDetaildaten = false;
 				emailDaten.empfaengerTyp = ReportingEMailEmpfaengerTyp.KLASSENLEHRER.getId();
 				emailDaten.istPrivateEmailAlternative = istPrivateEmailAlternative.value;
-				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.KLASSEN_v_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getVorlageParameterList());
+				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER.getVorlageParameterList());
 				for (const vp of reportingParameter.vorlageParameter) {
 					switch (vp.name) {
 						case "nurSchuelerRufname":
@@ -410,14 +518,15 @@
 				emailDaten.text = ((emailText.value.trim().length === 0) ? ("Im Anhang dieser E-Mail ist die Klassenliste mit Kontaktdaten enthalten.") : emailText.value);
 				break;
 			case 'druckKlasseStundenplan':
-				if (stundenplanAuswahl.value === undefined)
+				if (stundenplanAuswahl.value === undefined) {
 					return;
-				reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN.getBezeichnung();
+				}
+				reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN.getBezeichnung();
 				reportingParameter.idsHauptdaten = ListUtils.create1(stundenplanAuswahl.value.id);
 				reportingParameter.idsDetaildaten = listeIdsKlassen;
 				reportingParameter.einzelausgabeHauptdaten = false;
 				reportingParameter.einzelausgabeDetaildaten = true;
-				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_v_KLASSEN_STUNDENPLAN.getVorlageParameterList());
+				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN.getVorlageParameterList());
 				for (const vp of reportingParameter.vorlageParameter) {
 					switch (vp.name) {
 						case "mitPausenzeiten":

@@ -1,10 +1,10 @@
 <template>
 	<div class="page page-flex-row select-none">
-		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
+		<Teleport to=".svws-sub-nav-target" defer>
 			<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
 				<div class="ml-4 flex gap-0.5 items-center leading-none select-none">
 					<div class="text-button font-bold mr-1 -mt-px">Klasse:</div>
-					<svws-ui-select headless title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" autocomplete
+					<svws-ui-select headless v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" autocomplete autofocus
 						:item-filter="(i, text) => i.filter(k=>k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" removable focus-class-sub-nav />
 				</div>
 			</svws-ui-sub-nav>
@@ -87,7 +87,7 @@
 
 <script setup lang="ts">
 
-	import { computed, onMounted, ref } from "vue";
+	import { computed, ref } from "vue";
 	import type { Wochentag, List, StundenplanPausenzeit, StundenplanKlasse, StundenplanPausenaufsicht, StundenplanLehrer } from "@core";
 	import { StundenplanPausenaufsichtBereich, StundenplanPausenaufsichtBereichUpdate, HashMap3D, ArrayList, BenutzerKompetenz } from "@core";
 	import { useRegionSwitch } from "@ui";
@@ -98,9 +98,6 @@
 	const props = defineProps<StundenplanPausenProps>();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
-
-	const isMounted = ref(false);
-	onMounted(() => isMounted.value = true);
 
 	const _klasse = ref<StundenplanKlasse>();
 	const dragLehrer = ref<StundenplanLehrer>();
@@ -119,8 +116,9 @@
 		dropZone.value = true;
 		if (dragOverPausenzeit.value !== undefined) {
 			const { pauseID: pID, aufsichtsbereichID: aID, typ: t } = dragOverPausenzeit.value;
-			if (pauseID === pID && aufsichtsbereichID === aID && typ === t)
+			if (pauseID === pID && aufsichtsbereichID === aID && typ === t) {
 				return;
+			}
 		}
 		dragOverPausenzeit.value = { pauseID, aufsichtsbereichID, typ };
 	}
@@ -131,45 +129,57 @@
 	}
 
 	const isDraggingOver = (pauseID: number, aufsichtsbereichID: number, typ?: number) => computed(() => {
-		if (dragOverPausenzeit.value === undefined)
+		if (dragOverPausenzeit.value === undefined) {
 			return false;
+		}
 		const { pauseID: pID, aufsichtsbereichID: aID, typ: t } = dragOverPausenzeit.value;
-		if (typ !== undefined)
+		if (typ !== undefined) {
 			return (pauseID === pID && aufsichtsbereichID === aID && typ === t);
+		}
 		return (pauseID === pID && aufsichtsbereichID === aID);
 	});
 
 	const bereichGesperrt = (pauseID: number, bereichID: number) => computed(() => {
-		if (!isDraggingOver(pauseID, bereichID).value || (dragOverPausenzeit.value === undefined))
+		if (!isDraggingOver(pauseID, bereichID).value || (dragOverPausenzeit.value === undefined)) {
 			return false;
+		}
 		const aufsicht = lehrerAufsichten.value.get(pauseID);
-		if (aufsicht === undefined)
+		if (aufsicht === undefined) {
 			return false;
+		}
 		if ((dragFromPausenzeit.value !== undefined) && (dragFromPausenzeit.value.aufsichtsbereichID === bereichID) && (dragFromPausenzeit.value.pauseID === pauseID)) {
-			if (dragFromPausenzeit.value.typ === dragOverPausenzeit.value.typ)
+			if (dragFromPausenzeit.value.typ === dragOverPausenzeit.value.typ) {
 				return true;
-			if (mapAufsichtBereichTyp.value.getNonNullValuesOfMap3AsList(aufsicht.id, bereichID).size() < 2)
+			}
+			if (mapAufsichtBereichTyp.value.getNonNullValuesOfMap3AsList(aufsicht.id, bereichID).size() < 2) {
 				return false;
-			if ((dragFromPausenzeit.value.aufsichtsbereichID === dragOverPausenzeit.value.aufsichtsbereichID) && (dragOverPausenzeit.value.typ === 0))
+			}
+			if ((dragFromPausenzeit.value.aufsichtsbereichID === dragOverPausenzeit.value.aufsichtsbereichID) && (dragOverPausenzeit.value.typ === 0)) {
 				return true;
-			for (const b of mapAufsichtBereichTyp.value.getNonNullValuesOfMap3AsList(aufsicht.id, bereichID))
-				if (b.wochentyp === dragOverPausenzeit.value.typ && b.idAufsichtsbereich === dragOverPausenzeit.value.aufsichtsbereichID)
+			}
+			for (const b of mapAufsichtBereichTyp.value.getNonNullValuesOfMap3AsList(aufsicht.id, bereichID)) {
+				if (b.wochentyp === dragOverPausenzeit.value.typ && b.idAufsichtsbereich === dragOverPausenzeit.value.aufsichtsbereichID) {
 					return true;
+				}
+			}
 			return false;
 		}
 		const typ = dragOverPausenzeit.value.typ;
 		const typX = mapAufsichtBereichTyp.value.getOrNull(aufsicht.id, bereichID, typ);
-		if (typX)
+		if (typX) {
 			return true;
+		}
 		const typ0 = mapAufsichtBereichTyp.value.getOrNull(aufsicht.id, bereichID, 0);
-		if (typ0)
+		if (typ0) {
 			return true;
+		}
 		return ((isDraggingOver(pauseID, bereichID, 0).value) && (mapAufsichtBereichTyp.value.containsKey1AndKey2(aufsicht.id, bereichID)));
 	});
 
 	function dragEnd() {
-		if (!dropZone.value)
+		if (!dropZone.value) {
 			dragReset();
+		}
 	}
 
 	function dragReset() {
@@ -179,17 +189,21 @@
 	}
 
 	async function onDrop() {
-		if (dragOverPausenzeit.value && bereichGesperrt(dragOverPausenzeit.value.pauseID, dragOverPausenzeit.value.aufsichtsbereichID).value)
+		if (dragOverPausenzeit.value && bereichGesperrt(dragOverPausenzeit.value.pauseID, dragOverPausenzeit.value.aufsichtsbereichID).value) {
 			return dragReset();
+		}
 		const update = new StundenplanPausenaufsichtBereichUpdate();
 		if (dragFromPausenzeit.value !== undefined) {
 			const { aufsichtsbereichID, pauseID, typ } = dragFromPausenzeit.value;
 			const aufsichtFrom = lehrerAufsichten.value.get(pauseID);
-			if (aufsichtFrom === undefined)
+			if (aufsichtFrom === undefined) {
 				return dragReset();
-			for (const b of aufsichtFrom.bereiche)
-				if (b.idAufsichtsbereich === aufsichtsbereichID && b.wochentyp === typ)
+			}
+			for (const b of aufsichtFrom.bereiche) {
+				if (b.idAufsichtsbereich === aufsichtsbereichID && b.wochentyp === typ) {
 					update.listEntfernen.add(b);
+				}
+			}
 		}
 		if ((dragOverPausenzeit.value !== undefined) && (dragLehrer.value !== undefined)) {
 			const { aufsichtsbereichID, pauseID, typ } = dragOverPausenzeit.value;
@@ -206,18 +220,21 @@
 
 	const wochentypen = computed<List<number>>(() => {
 		let modell = props.stundenplanManager().getWochenTypModell();
-		if (modell <= 1)
+		if (modell <= 1) {
 			modell = 0;
+		}
 		const result = new ArrayList<number>();
-		for (let n = 0; n <= modell; n++)
+		for (let n = 0; n <= modell; n++) {
 			result.add(n);
+		}
 		return result;
 	});
 
 	const klasse = computed<StundenplanKlasse | undefined>({
 		get: () => {
-			if (_klasse.value !== undefined)
+			if (_klasse.value !== undefined) {
 				return props.stundenplanManager().klasseGetByIdOrException(_klasse.value.id);
+			}
 			return _klasse.value;
 		},
 		set: (value) => _klasse.value = value,
@@ -225,26 +242,31 @@
 
 	const lehrerAufsichten = computed<Map<number, StundenplanPausenaufsicht>>(() => {
 		const map = new Map<number, StundenplanPausenaufsicht>();
-		if (dragLehrer.value === undefined)
+		if (dragLehrer.value === undefined) {
 			return map;
-		for (const aufsicht of props.stundenplanManager().pausenaufsichtGetMengeByLehrerId(dragLehrer.value.id))
+		}
+		for (const aufsicht of props.stundenplanManager().pausenaufsichtGetMengeByLehrerId(dragLehrer.value.id)) {
 			map.set(aufsicht.idPausenzeit, aufsicht);
+		}
 		return map;
 	});
 
 	const mapAufsichtBereichTyp = computed<HashMap3D<number, number, number, StundenplanPausenaufsichtBereich>>(() => {
 		const map = new HashMap3D<number, number, number, StundenplanPausenaufsichtBereich>();
-		for (const aufsicht of lehrerAufsichten.value.values())
-			for (const e of aufsicht.bereiche)
+		for (const aufsicht of lehrerAufsichten.value.values()) {
+			for (const e of aufsicht.bereiche) {
 				map.put(e.idPausenaufsicht, e.idAufsichtsbereich, e.wochentyp, e);
+			}
+		}
 		return map;
 	});
 
 	const getPausenzeitenWochentag = (wochentag: Wochentag) => computed<StundenplanPausenzeit[]>(() => {
-		if (klasse.value !== undefined)
-			return [...props.stundenplanManager().pausenzeitGetMengeByKlasseIdAndWochentagAsList(klasse.value.id, wochentag.id)];
-		else
+		if (klasse.value === undefined) {
 			return [...props.stundenplanManager().pausenzeitGetMengeByWochentagOrEmptyList(wochentag.id)];
+		} else {
+			return [...props.stundenplanManager().pausenzeitGetMengeByKlasseIdAndWochentagAsList(klasse.value.id, wochentag.id)];
+		}
 	});
 
 	const beginn = computed(() => {
@@ -264,10 +286,12 @@
 
 	const mapLehrerPausenaufsichten = computed(() => {
 		const map = new Map<number, List<StundenplanPausenaufsicht>>();
-		for (const l of props.stundenplanManager().lehrerGetMengeAsList())
+		for (const l of props.stundenplanManager().lehrerGetMengeAsList()) {
 			map.set(l.id, new ArrayList<StundenplanPausenaufsicht>());
-		for (const aufsicht of props.stundenplanManager().pausenaufsichtGetMengeAsList())
+		}
+		for (const aufsicht of props.stundenplanManager().pausenaufsichtGetMengeAsList()) {
 			map.get(aufsicht.idLehrer)?.add(aufsicht);
+		}
 		return map;
 	});
 

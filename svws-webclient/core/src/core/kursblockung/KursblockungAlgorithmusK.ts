@@ -53,7 +53,7 @@ export abstract class KursblockungAlgorithmusK extends JavaObject {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusK'].includes(name);
 	}
 
-	public static class = new Class<KursblockungAlgorithmusK>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusK');
+	public static readonly class = new Class<KursblockungAlgorithmusK>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusK');
 
 }
 

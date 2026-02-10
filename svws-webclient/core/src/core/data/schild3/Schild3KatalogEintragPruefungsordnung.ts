@@ -64,7 +64,7 @@ export class Schild3KatalogEintragPruefungsordnung extends JavaObject {
 		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragPruefungsordnung'].includes(name);
 	}
 
-	public static class = new Class<Schild3KatalogEintragPruefungsordnung>('de.svws_nrw.core.data.schild3.Schild3KatalogEintragPruefungsordnung');
+	public static readonly class = new Class<Schild3KatalogEintragPruefungsordnung>('de.svws_nrw.core.data.schild3.Schild3KatalogEintragPruefungsordnung');
 
 	public static transpilerFromJSON(json: string): Schild3KatalogEintragPruefungsordnung {
 		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragPruefungsordnung>;

@@ -1,0 +1,38 @@
+.validation-tooltip-icon {
+	@apply cursor-pointer pointer-events-auto;
+
+	&.disabled {
+		@apply cursor-default;
+	}
+}
+
+.validation-tooltip-content {
+	@apply flex flex-col gap-3;
+	.statistic-headline {
+		@apply flex gap-2 items-center justify-center py-1 px-2;
+	}
+
+	.fehlergruppe-headline-muss {
+		@apply rounded-sm px-2 bg-ui-danger text-ui-ondanger;
+	}
+
+	.fehlergruppe-headline-kann {
+		@apply rounded-sm px-2 bg-ui-caution text-ui-oncaution;
+	}
+
+	.fehlergruppe-headline-hinweis {
+		@apply rounded-sm px-2 bg-ui-warning text-ui-onwarning;
+	}
+
+	.fehlergruppe-item {
+		@apply flex items-start mt-2;
+
+		.fehler-badge {
+			@apply mr-2 min-w-15 mt-1 bg-ui-selected border-ui-selected text-ui-onselected border font-mono text-xs px-1 mx-1 rounded-sm	}
+	}
+
+	.fehler-icon {
+		@apply icon-ui-onselected i-ri-checkbox-blank-circle-fill icon-xs mt-1.5 mr-2;
+	}
+
+}

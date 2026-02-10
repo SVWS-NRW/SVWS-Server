@@ -33,7 +33,7 @@ export class KursUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.kurse.KursUtils'].includes(name);
 	}
 
-	public static class = new Class<KursUtils>('de.svws_nrw.core.utils.kurse.KursUtils');
+	public static readonly class = new Class<KursUtils>('de.svws_nrw.core.utils.kurse.KursUtils');
 
 }
 

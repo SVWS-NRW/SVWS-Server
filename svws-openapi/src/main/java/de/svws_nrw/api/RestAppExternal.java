@@ -2,8 +2,11 @@ package de.svws_nrw.api;
 
 import java.util.Set;
 
+import de.svws_nrw.api.common.ApiOperationExceptionMapper;
+import de.svws_nrw.api.common.GenericExceptionMapper;
 import de.svws_nrw.api.common.OpenAPICorsFilter;
 import de.svws_nrw.api.external.APILernplattformenV1;
+import de.svws_nrw.api.external.APISchuljahresabschnitteV1;
 import jakarta.ws.rs.core.Application;
 
 
@@ -19,6 +22,9 @@ public final class RestAppExternal extends Application {
 	/// Enthält alle Klassen, die für die OpenAPI eingebunden werden
 	private final Set<Class<?>> classes = Set.of(
 			APILernplattformenV1.class,
+			APISchuljahresabschnitteV1.class,
+			ApiOperationExceptionMapper.class,
+			GenericExceptionMapper.class,
 			OpenAPICorsFilter.class,
 			OpenApiExternal.class);
 

@@ -85,22 +85,26 @@
 
 	async function terminQuartalWechseln() {
 		const terminQuartal = props.kMan().quartalGetByTermin(props.termin());
-		if (props.termin().quartal === 0)
-			if (terminQuartal > 0)
+		if (props.termin().quartal === 0) {
+			if (terminQuartal > 0) {
 				await props.patchKlausurtermin(props.termin().id, { quartal: terminQuartal });
-			else
-				return; // TODO Fehlermeldung, Klausuren mit unterschiedlichen Quartale enthalten
-		else if (props.termin().quartal > 0 && props.kMan().schuelerklausurterminGetMengeByTermin(props.termin()).size() > 0)
+			} else {
+				// TODO Fehlermeldung, Klausuren mit unterschiedlichen Quartale enthalten
+				return;
+			}
+		} else if (props.termin().quartal > 0 && props.kMan().schuelerklausurterminGetMengeByTermin(props.termin()).size() > 0) {
 			await props.patchKlausurtermin(props.termin().id, { quartal: 0 });
-		else
+		} else {
 			await props.patchKlausurtermin(props.termin().id, { quartal: (props.termin().quartal + 1) % 3 });
+		}
 	}
 
 	function isDropZone(): boolean {
 		if (props.dragData() !== undefined) {
 			if (props.dragData() instanceof GostKursklausur) {
-				if (props.kMan().vorgabeByKursklausur(props.dragData() as GostKursklausur).quartal === props.termin().quartal || props.termin().quartal === 0)
+				if (props.kMan().vorgabeByKursklausur(props.dragData() as GostKursklausur).quartal === props.termin().quartal || props.termin().quartal === 0) {
 					return true;
+				}
 			} else if (props.dragData() instanceof GostSchuelerklausurTermin) {
 				return true;
 			}
@@ -109,16 +113,18 @@
 	}
 
 	function checkDropZone(event: DragEvent) {
-		if (isDropZone())
+		if (isDropZone()) {
 			event.preventDefault();
+		}
 	}
 
 	const konflikteTerminDragKlausur = computed(() => {
 		const data = props.dragData();
-		if (data instanceof GostKursklausur)
+		if (data instanceof GostKursklausur) {
 			return props.kMan().konflikteAnzahlZuTerminGetByTerminAndKursklausur(props.termin(), data);
-		else
+		} else {
 			return -1;
+		}
 	});
 
 	const konflikteTermin = () => props.kMan().konflikteAnzahlGetByTermin(props.termin());

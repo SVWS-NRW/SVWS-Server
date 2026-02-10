@@ -200,9 +200,11 @@
 
 	const fach = computed<GostFach | undefined>({
 		get: () => {
-			for (const fach of props.faecherManager.faecher())
-				if (fach.id === props.schuelerFilter().fach)
+			for (const fach of props.faecherManager.faecher()) {
+				if (fach.id === props.schuelerFilter().fach) {
 					return fach;
+				}
+			}
 			return undefined;
 		},
 		set: (value) => props.schuelerFilter().fach = value?.id,
@@ -210,23 +212,26 @@
 
 	const selected = computed<Schueler | undefined>({
 		get: () => {
-			if (props.schueler !== undefined && props.schuelerFilter().filtered.value.includes(props.schueler))
+			if (props.schueler !== undefined && props.schuelerFilter().filtered.value.includes(props.schueler)) {
 				return props.schueler;
+			}
 			if (props.schuelerFilter().filtered.value.length > 0) {
 				void props.setSchueler(props.schuelerFilter().filtered.value[0]);
 			}
 			return undefined;
 		},
 		set: (value) => {
-			if (value !== undefined)
+			if (value !== undefined) {
 				void props.setSchueler(value);
+			}
 		},
 	});
 
 	const kollision = (idSchueler: number) => computed<boolean>(() => {
 		const kursid = props.schuelerFilter().kurs?.id;
-		if (kursid === undefined)
+		if (kursid === undefined) {
 			return props.getErgebnismanager().getOfSchuelerHatKollision(idSchueler);
+		}
 		return props.getErgebnismanager().getOfSchuelerOfKursHatKollision(idSchueler, kursid);
 	});
 
@@ -234,8 +239,9 @@
 
 	const weitere = computed(() => {
 		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
+		if (kurs === undefined) {
 			return '';
+		}
 		const anzahl = props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id);
 		return anzahl > 0 ? `+${anzahl} weitere` : '';
 	});
@@ -243,17 +249,20 @@
 
 	function istSchriftlich(id: number) {
 		const kurs = props.schuelerFilter().kurs;
-		if ((fach.value === undefined) && (kurs === undefined))
+		if ((fach.value === undefined) && (kurs === undefined)) {
 			return undefined;
+		}
 		let idFach: number;
-		if (fach.value !== undefined)
+		if (fach.value !== undefined) {
 			idFach = fach.value.id;
-		else if (kurs !== undefined)
+		} else if (kurs !== undefined) {
 			idFach = kurs.fach_id;
-		else
+		} else {
 			return undefined;
-		if (!props.getErgebnismanager().getParent().schuelerGetHatFach(id, idFach))
+		}
+		if (!props.getErgebnismanager().getParent().schuelerGetHatFach(id, idFach)) {
 			return undefined;
+		}
 		return props.getErgebnismanager().getParent().schuelerGetOfFachFachwahl(id, idFach).istSchriftlich ? 's' : 'm';
 	}
 
@@ -263,10 +272,12 @@
 			{ key: 'fixiert', label: 'F', tooltip: "Kursfixierung", fixedWidth: 2, align: "center" },
 			{ key: 'schuelerAuswahl', label: 'Schüler', span: 1 },
 		];
-		if (props.showGeschlecht())
+		if (props.showGeschlecht()) {
 			cols.push({ key: 'geschlecht', label: 'G', tooltip: "Geschlecht", fixedWidth: 2, align: "center" });
-		if ((fach.value !== undefined) || (props.schuelerFilter().kurs !== undefined))
+		}
+		if ((fach.value !== undefined) || (props.schuelerFilter().kurs !== undefined)) {
 			cols.push({ key: 'schriftlichkeit', label: 'W', tooltip: 'Wahl: schriftlich oder mündlich', fixedWidth: 2, align: "center" });
+		}
 		return cols;
 	});
 
@@ -276,14 +287,16 @@
 	const fixierRegeln = computed(() => {
 		const regeln = props.getDatenmanager().regelGetListe();
 		const map = new Map<number, Set<number>>();
-		for (const r of regeln)
+		for (const r of regeln) {
 			if (r.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
 				const entry = map.get(r.parameter.get(0));
-				if (entry !== undefined)
+				if (entry !== undefined) {
 					entry.add(r.parameter.get(1));
-				else
+				} else {
 					map.set(r.parameter.get(0), new Set([r.parameter.get(1)]));
+				}
 			}
+		}
 		return map;
 	});
 
@@ -292,18 +305,21 @@
 	);
 
 	const fixierRegelFach = (idFach: number | undefined, idSchueler: number) => computed<boolean>(() => {
-		if (idFach === undefined)
+		if (idFach === undefined) {
 			return false;
+		}
 		const kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler, idFach);
 		const idKurs = kurs?.id;
-		if (idKurs === undefined)
+		if (idKurs === undefined) {
 			return false;
+		}
 		return (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs)) ? true : false;
 	});
 
 	const fixier_regel = (idKurs: number, idSchueler: number) => computed<number | undefined>(() => {
-		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs))
+		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs)) {
 			return props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, idKurs).id;
+		}
 		return undefined;
 	});
 
@@ -314,24 +330,28 @@
 
 	async function fixieren_regel_entfernen(idKurs: number, idSchueler: number) {
 		const idRegel = fixier_regel(idKurs, idSchueler).value;
-		if (idRegel === undefined)
+		if (idRegel === undefined) {
 			return;
+		}
 		const update = props.getErgebnismanager().regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(SetUtils.create1(idSchueler), SetUtils.create1(idKurs));
 		await props.regelnUpdate(update);
 	}
 
 	async function fixieren_regel_toggle(fachID: number | undefined, idSchueler: number, event: Event) {
-		if (fachID === undefined)
+		if (fachID === undefined) {
 			return;
+		}
 		event.stopPropagation();
 		const kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler, fachID);
-		if (kurs === null)
+		if (kurs === null) {
 			return;
+		}
 		const idKurs = kurs.id;
-		if (fixier_regel(idKurs, idSchueler).value === undefined)
+		if (fixier_regel(idKurs, idSchueler).value === undefined) {
 			await fixieren_regel_hinzufuegen(idKurs, idSchueler);
-		else
+		} else {
 			await fixieren_regel_entfernen(idKurs, idSchueler);
+		}
 	}
 
 </script>

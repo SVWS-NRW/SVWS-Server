@@ -49,7 +49,7 @@ export class Schild3KatalogEintragDatenart extends JavaObject {
 		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragDatenart'].includes(name);
 	}
 
-	public static class = new Class<Schild3KatalogEintragDatenart>('de.svws_nrw.core.data.schild3.Schild3KatalogEintragDatenart');
+	public static readonly class = new Class<Schild3KatalogEintragDatenart>('de.svws_nrw.core.data.schild3.Schild3KatalogEintragDatenart');
 
 	public static transpilerFromJSON(json: string): Schild3KatalogEintragDatenart {
 		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragDatenart>;

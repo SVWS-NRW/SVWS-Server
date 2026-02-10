@@ -25,7 +25,7 @@ task testCore(type: NpmRun) {
 	dependsOn ':svws-webclient:core:assemble'
 	inputs.files file("$projectDir/src")
 	outputs.dir file("$projectDir/build/coverage")
-	args = [ 'test:run' ]
+	args = [ 'test:coverage' ]
 	doFirst {
 		mkdir file("$projectDir/build/coverage")
 	}

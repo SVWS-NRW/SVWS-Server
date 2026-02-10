@@ -34,7 +34,7 @@ export class ENMServerConfigElement extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMServerConfigElement'].includes(name);
 	}
 
-	public static class = new Class<ENMServerConfigElement>('de.svws_nrw.core.data.enm.ENMServerConfigElement');
+	public static readonly class = new Class<ENMServerConfigElement>('de.svws_nrw.core.data.enm.ENMServerConfigElement');
 
 	public static transpilerFromJSON(json: string): ENMServerConfigElement {
 		const obj = JSON.parse(json) as Partial<ENMServerConfigElement>;

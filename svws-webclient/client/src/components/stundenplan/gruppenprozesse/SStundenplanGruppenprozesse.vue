@@ -4,10 +4,10 @@
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Stundenpläne werden gelöscht."
 				:is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
 				<div class="w-full">
-					<span>Alle ausgewählten Klassen sind bereit zum Löschen.</span>
+					<span>Alle ausgewählten Stundenpläne sind bereit zum Löschen.</span>
 				</div>
 				<template #buttonFooterLeft>
-					<svws-ui-button :disabled="loading"
+					<svws-ui-button :disabled="(stundenplanListeManager().liste.auswahlSize() === 0) || loading || !hatKompetenzLoeschen"
 						title="Löschen" @click="entferneStundenplaene" :is-loading="loading" class="mt-4">
 						<svws-ui-spinner v-if="loading" spinning />
 						<span v-else class="icon i-ri-play-line" />Löschen
@@ -25,9 +25,9 @@
 
 <script setup lang="ts">
 
-	import { ref, computed } from "vue";
+	import { computed, ref } from "vue";
 	import type { StundenplanGruppenprozesseProps } from "./SStundenplanGruppenprozesseProps";
-	import { ArrayList, BenutzerKompetenz, type List } from "@core";
+	import { BenutzerKompetenz, type List } from "@core";
 
 	const props = defineProps<StundenplanGruppenprozesseProps>();
 
@@ -44,14 +44,16 @@
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
 	function setCurrentAction(newAction: string, open: boolean) {
-		if (newAction === oldAction.value.name && !open)
+		if (newAction === oldAction.value.name && !open) {
 			return;
+		}
 		oldAction.value.name = currentAction.value;
 		oldAction.value.open = (currentAction.value === "") ? false : true;
-		if (open === true)
+		if (open === true) {
 			currentAction.value = newAction;
-		else
+		} else {
 			currentAction.value = "";
+		}
 	}
 
 

@@ -68,6 +68,11 @@ export class Sprachpruefung extends JavaObject {
 	 */
 	public note: number | null = null;
 
+	/**
+	 * Die Bezeichnung der Sprache auf dem Zeugnis (z.B. nötig für einen Eintrag "Sonstige Sprache")
+	 */
+	public zeugnisbezeichnung: string = "";
+
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -84,7 +89,7 @@ export class Sprachpruefung extends JavaObject {
 		return ['de.svws_nrw.asd.data.schueler.Sprachpruefung'].includes(name);
 	}
 
-	public static class = new Class<Sprachpruefung>('de.svws_nrw.asd.data.schueler.Sprachpruefung');
+	public static readonly class = new Class<Sprachpruefung>('de.svws_nrw.asd.data.schueler.Sprachpruefung');
 
 	public static transpilerFromJSON(json: string): Sprachpruefung {
 		const obj = JSON.parse(json) as Partial<Sprachpruefung>;
@@ -116,6 +121,9 @@ export class Sprachpruefung extends JavaObject {
 		result.kannBelegungAlsFortgefuehrteSpracheErlauben = obj.kannBelegungAlsFortgefuehrteSpracheErlauben;
 		result.referenzniveau = (obj.referenzniveau === undefined) ? null : obj.referenzniveau === null ? null : obj.referenzniveau;
 		result.note = (obj.note === undefined) ? null : obj.note === null ? null : obj.note;
+		if (obj.zeugnisbezeichnung === undefined)
+			throw new Error('invalid json format, missing attribute zeugnisbezeichnung');
+		result.zeugnisbezeichnung = obj.zeugnisbezeichnung;
 		return result;
 	}
 
@@ -134,6 +142,7 @@ export class Sprachpruefung extends JavaObject {
 		result += '"kannBelegungAlsFortgefuehrteSpracheErlauben" : ' + obj.kannBelegungAlsFortgefuehrteSpracheErlauben.toString() + ',';
 		result += '"referenzniveau" : ' + ((obj.referenzniveau === null) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
 		result += '"note" : ' + ((obj.note === null) ? 'null' : obj.note.toString()) + ',';
+		result += '"zeugnisbezeichnung" : ' + JSON.stringify(obj.zeugnisbezeichnung) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -179,6 +188,9 @@ export class Sprachpruefung extends JavaObject {
 		}
 		if (obj.note !== undefined) {
 			result += '"note" : ' + ((obj.note === null) ? 'null' : obj.note.toString()) + ',';
+		}
+		if (obj.zeugnisbezeichnung !== undefined) {
+			result += '"zeugnisbezeichnung" : ' + JSON.stringify(obj.zeugnisbezeichnung) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

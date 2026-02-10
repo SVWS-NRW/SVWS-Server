@@ -46,7 +46,7 @@ export class GostBelegpruefungsErgebnisse extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostBelegpruefungsErgebnisse'].includes(name);
 	}
 
-	public static class = new Class<GostBelegpruefungsErgebnisse>('de.svws_nrw.core.data.gost.GostBelegpruefungsErgebnisse');
+	public static readonly class = new Class<GostBelegpruefungsErgebnisse>('de.svws_nrw.core.data.gost.GostBelegpruefungsErgebnisse');
 
 	public static transpilerFromJSON(json: string): GostBelegpruefungsErgebnisse {
 		const obj = JSON.parse(json) as Partial<GostBelegpruefungsErgebnisse>;

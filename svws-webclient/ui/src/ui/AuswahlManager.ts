@@ -145,13 +145,16 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 * @return die gefilterte Liste
 	 */
 	public filtered(): List<TAuswahl> {
-		if (this._filtered !== null)
+		if (this._filtered !== null) {
 			return this._filtered;
+		}
 		this._filtered = new ArrayList();
 		const aktAuswahl: TAuswahl | null = (this._daten === null) ? null : this.auswahl();
-		for (const eintrag of this.liste.list())
-			if ((this._filterPermitAuswahl && (aktAuswahl !== null) && (this.compareAuswahl(aktAuswahl, eintrag) === 0)) || this.checkFilter(eintrag))
+		for (const eintrag of this.liste.list()) {
+			if ((this._filterPermitAuswahl && (aktAuswahl !== null) && (this.compareAuswahl(aktAuswahl, eintrag) === 0)) || this.checkFilter(eintrag)) {
 				this._filtered.add(eintrag);
+			}
+		}
 		const comparator: Comparator<TAuswahl> = { compare: (a: TAuswahl, b: TAuswahl) => this.compareAuswahl(a, b) };
 		this._filtered.sort(comparator);
 		return this._filtered;
@@ -200,10 +203,11 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	private onListeChangedInternal(): void {
 		const idAuswahl: TID | null = this.auswahlID();
 		if (idAuswahl !== null) {
-			if (this.liste.get(idAuswahl) === null)
+			if (this.liste.get(idAuswahl) === null) {
 				this.setDaten(null);
-			else
+			} else {
 				this.setDaten(this.daten());
+			}
 		}
 		this.onListeChanged();
 	}
@@ -271,8 +275,9 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 		for (let i: number = 0; i < this._order.size(); i++) {
 			const eintrag: Pair<string, boolean> = this._order.get(i);
 			if (JavaObject.equalsTranspiler(eintrag.a, (field))) {
-				if (JavaObject.equalsTranspiler(eintrag.b, (order)))
+				if (JavaObject.equalsTranspiler(eintrag.b, (order))) {
 					return;
+				}
 				this._order.remove(eintrag);
 				eintrag.b = order;
 				this._order.add(0, eintrag);
@@ -291,8 +296,9 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 * @return die Schulform der Schule
 	 */
 	public schulform(): Schulform {
-		if (this._schulform === null)
+		if (this._schulform === null) {
 			throw new DeveloperNotificationException("Der Auswahl-Manager sollte nur mit einer korrekt gesetzten Schulform verwendet werden.");
+		}
 		return this._schulform;
 	}
 
@@ -311,8 +317,9 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 * @return die Daten
 	 */
 	public daten(): TDaten {
-		if (this._daten === null)
+		if (this._daten === null) {
 			throw new DeveloperNotificationException("Es exitsiert derzeit keine Auswahl und damit auch keine Daten");
+		}
 		return this._daten;
 	}
 
@@ -331,8 +338,9 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 			const eintrag: TAuswahl = this.liste.getOrException(this._datenToId.apply(daten));
 			const updateEintrag: boolean = this.onSetDaten(eintrag, daten);
 			this._daten = daten;
-			if (updateEintrag)
+			if (updateEintrag) {
 				this.orderSet(this.orderGet());
+			}
 		}
 		this._filtered = null;
 	}
@@ -370,8 +378,9 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 * @throws DeveloperNotificationException wenn keine gültige Auswahl vorliegt
 	 */
 	public auswahl(): TAuswahl {
-		if (this._daten === null)
+		if (this._daten === null) {
 			throw new DeveloperNotificationException("Für den Aufruf dieser Methode muss zuvor eine Auswahl vorliegen.");
+		}
 		return this.liste.getOrException(this._datenToId.apply(this._daten));
 	}
 
@@ -409,8 +418,9 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 */
 	public getSchuljahresabschnittSchule(): Schuljahresabschnitt {
 		const result: Schuljahresabschnitt | null = this.schuljahresabschnitte.get(this._schuljahresabschnittSchule);
-		if (result === null)
+		if (result === null) {
 			throw new DeveloperNotificationException("Der Schuljahresabschnitt der Schule ist nicht verfügbar.");
+		}
 		return result;
 	}
 
@@ -432,8 +442,9 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	public istSchuljahresabschnittAktuell(): boolean {
 		const abschnittAuswahl: Schuljahresabschnitt | null = this.getSchuljahresabschnittAuswahl();
 		const abschnittSchule: Schuljahresabschnitt | null = this.getSchuljahresabschnittSchule();
-		if (abschnittAuswahl === null)
+		if (abschnittAuswahl === null) {
 			return false;
+		}
 		return (abschnittAuswahl.schuljahr === abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt === abschnittSchule.abschnitt);
 	}
 
@@ -447,8 +458,9 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	public istSchuljahresabschnittPlanung(): boolean {
 		const abschnittAuswahl: Schuljahresabschnitt | null = this.getSchuljahresabschnittAuswahl();
 		const abschnittSchule: Schuljahresabschnitt | null = this.getSchuljahresabschnittSchule();
-		if (abschnittAuswahl === null)
+		if (abschnittAuswahl === null) {
 			return false;
+		}
 		return (abschnittAuswahl.schuljahr > abschnittSchule.schuljahr) || ((abschnittAuswahl.schuljahr === abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt > abschnittSchule.abschnitt));
 	}
 
@@ -462,8 +474,9 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	public istSchuljahresabschnittVergangenheit(): boolean {
 		const abschnittAuswahl: Schuljahresabschnitt | null = this.getSchuljahresabschnittAuswahl();
 		const abschnittSchule: Schuljahresabschnitt | null = this.getSchuljahresabschnittSchule();
-		if (abschnittAuswahl === null)
+		if (abschnittAuswahl === null) {
 			return false;
+		}
 		return (abschnittAuswahl.schuljahr < abschnittSchule.schuljahr) || ((abschnittAuswahl.schuljahr === abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt < abschnittSchule.abschnitt));
 	}
 

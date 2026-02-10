@@ -64,7 +64,7 @@ export class Schild3KatalogEintragExportCSV extends JavaObject {
 		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragExportCSV'].includes(name);
 	}
 
-	public static class = new Class<Schild3KatalogEintragExportCSV>('de.svws_nrw.core.data.schild3.Schild3KatalogEintragExportCSV');
+	public static readonly class = new Class<Schild3KatalogEintragExportCSV>('de.svws_nrw.core.data.schild3.Schild3KatalogEintragExportCSV');
 
 	public static transpilerFromJSON(json: string): Schild3KatalogEintragExportCSV {
 		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragExportCSV>;

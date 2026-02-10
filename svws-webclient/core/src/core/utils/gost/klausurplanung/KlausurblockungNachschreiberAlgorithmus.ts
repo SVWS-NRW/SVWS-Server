@@ -165,7 +165,7 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungNachschreiberAlgorithmus'].includes(name);
 	}
 
-	public static class = new Class<KlausurblockungNachschreiberAlgorithmus>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungNachschreiberAlgorithmus');
+	public static readonly class = new Class<KlausurblockungNachschreiberAlgorithmus>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungNachschreiberAlgorithmus');
 
 }
 

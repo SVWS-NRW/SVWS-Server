@@ -23,8 +23,9 @@ export class RouteDataLehrerEinwilligungen extends RouteData<RouteStateLehrerEin
 	}
 
 	get auswahl(): LehrerListeEintrag {
-		if (this._state.value.auswahl === undefined)
+		if (this._state.value.auswahl === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Lehrerauswahl nicht festgelegt, es können keine Informationen zu Lehrereinwilligungen abgerufen oder eingegeben werden.");
+		}
 		return this._state.value.auswahl;
 	}
 
@@ -37,15 +38,18 @@ export class RouteDataLehrerEinwilligungen extends RouteData<RouteStateLehrerEin
 	}
 
 	patch = async (data: Partial<LehrerEinwilligung> | undefined, idEinwilligungsart: number) => {
-		if (data === undefined)
+		if (data === undefined) {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		}
 		api.status.start();
 
 		await api.server.patchLehrerEinwilligung(data, api.schema, this.auswahl.id, idEinwilligungsart);
 
-		for (const einwilligung of this.einwilligungen)
-			if (einwilligung.idEinwilligungsart === idEinwilligungsart)
+		for (const einwilligung of this.einwilligungen) {
+			if (einwilligung.idEinwilligungsart === idEinwilligungsart) {
 				Object.assign(einwilligung, data);
+			}
+		}
 		this.commit();
 		api.status.stop();
 	};
@@ -57,8 +61,9 @@ export class RouteDataLehrerEinwilligungen extends RouteData<RouteStateLehrerEin
 			const einwilligungen = await api.server.getLehrerEinwilligungen(api.schema, auswahl.id);
 			const einwilligungsArten = await api.server.getEinwilligungsarten(api.schema);
 			const mapEinwilligungsarten = new Map();
-			for (const ea of einwilligungsArten)
+			for (const ea of einwilligungsArten) {
 				mapEinwilligungsarten.set(ea.id, ea);
+			}
 			this.setPatchedDefaultState({ auswahl, einwilligungen, mapEinwilligungsarten });
 		}
 	}

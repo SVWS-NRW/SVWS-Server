@@ -22,10 +22,8 @@ import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTele
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schüler.</p>
@@ -50,9 +48,6 @@ public class ReportingSchueler extends ReportingPerson {
 
 	/** Daten des ausgewählten Lernabschnitts. */
 	protected ReportingSchuelerLernabschnitt auswahlLernabschnitt;
-
-	/** Status-Flags zu bereits aus der Datenbank geladenen Daten. */
-	protected EnumSet<ReportingSchuelerDatenstatus> datenstatus;
 
 	/** Gibt an, ob die Konfession bei dem Schülerdatensatz auf dem Zeugnis erscheinen soll. */
 	protected boolean druckeKonfessionAufZeugnisse;
@@ -159,7 +154,6 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @param anrede Die Anrede des Schülers.
 	 * @param aufnahmedatum Das Aufnahmedatum des Schülers.
 	 * @param auswahlLernabschnitt Daten des ausgewählten Lernabschnitts.
-	 * @param datenstatus Status-Flags zu bereits aus der Datenbank geladenen Date
 	 * @param druckeKonfessionAufZeugnisse Gibt an, ob die Konfession bei dem Schülerdatensatz auf dem Zeugnis erscheinen soll.
 	 * @param emailPrivat Die private Email-Adresse des Schülers.
 	 * @param emailSchule Die schulische E-Mail-Adresse des Schülers.
@@ -216,11 +210,10 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public ReportingSchueler(final ReportingSchuelerLernabschnitt aktuellerLernabschnitt, final String anmeldedatum,
 			final String anrede, final String aufnahmedatum, final ReportingSchuelerLernabschnitt auswahlLernabschnitt,
-			final EnumSet<ReportingSchuelerDatenstatus> datenstatus, final boolean druckeKonfessionAufZeugnisse,
-			final String emailPrivat, final String emailSchule, final boolean erhaeltMeisterBAFOEG, final boolean erhaeltSchuelerBAFOEG,
-			final List<ReportingErzieher> erzieher, final List<ReportingErzieherArtGruppe> erzieherArtGruppen, final String externeSchulNr,
-			final Long fahrschuelerArtID, final String foto, final String geburtsdatum, final String geburtsland, final String geburtslandMutter,
-			final String geburtslandVater, final String geburtsname, final String geburtsort, final Geschlecht geschlecht,
+			final boolean druckeKonfessionAufZeugnisse, final String emailPrivat, final String emailSchule, final boolean erhaeltMeisterBAFOEG,
+			final boolean erhaeltSchuelerBAFOEG, final List<ReportingErzieher> erzieher, final List<ReportingErzieherArtGruppe> erzieherArtGruppen,
+			final String externeSchulNr, final Long fahrschuelerArtID, final String foto, final String geburtsdatum, final String geburtsland,
+			final String geburtslandMutter, final String geburtslandVater, final String geburtsname, final String geburtsort, final Geschlecht geschlecht,
 			final ReportingSchuelerGostAbitur gostAbitur, final List<ReportingGostKlausurplanungSchuelerklausur> gostKlausurplanungSchuelerklausuren,
 			final List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen,
 			final ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung, final Long haltestelleID, final boolean hatMasernimpfnachweis,
@@ -240,12 +233,11 @@ public class ReportingSchueler extends ReportingPerson {
 		this.anmeldedatum = anmeldedatum;
 		this.aufnahmedatum = aufnahmedatum;
 		this.auswahlLernabschnitt = auswahlLernabschnitt;
-		this.datenstatus = datenstatus;
 		this.druckeKonfessionAufZeugnisse = druckeKonfessionAufZeugnisse;
 		this.erhaeltMeisterBAFOEG = erhaeltMeisterBAFOEG;
 		this.erhaeltSchuelerBAFOEG = erhaeltSchuelerBAFOEG;
-		this.erzieher = erzieher;
-		this.erzieherArtGruppen = erzieherArtGruppen;
+		this.erzieher = (erzieher != null) ? erzieher : new ArrayList<>();
+		this.erzieherArtGruppen = (erzieherArtGruppen != null) ? erzieherArtGruppen : new ArrayList<>();
 		this.externeSchulNr = externeSchulNr;
 		this.fahrschuelerArtID = fahrschuelerArtID;
 		this.foto = foto;
@@ -268,9 +260,9 @@ public class ReportingSchueler extends ReportingPerson {
 		this.religionanmeldung = religionanmeldung;
 		this.religion = religion;
 		this.schulbesuch = schulbesuch;
-		this.sprachbelegungen = sprachbelegungen;
+		this.sprachbelegungen = (sprachbelegungen != null) ? sprachbelegungen : new ArrayList<>();
 		this.status = status;
-		this.telefonKontakte = telefonKontakte;
+		this.telefonKontakte = (telefonKontakte != null) ? telefonKontakte : new ArrayList<>();
 		this.verkehrspracheFamilie = verkehrspracheFamilie;
 		this.zuzugsjahr = zuzugsjahr;
 
@@ -336,7 +328,7 @@ public class ReportingSchueler extends ReportingPerson {
 	public ReportingSchuelerLernabschnitt aktiverLernabschnittInSchuljahresabschnitt(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
 		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty())
 			return null;
-		return this.mapLernabschnitte().getSingle12OrNull(schuljahresabschnitt.id(), 0);
+		return this.mapLernabschnitte.getSingle12OrNull(schuljahresabschnitt.id(), 0);
 	}
 
 	/**
@@ -373,15 +365,6 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public ReportingSchuelerLernabschnitt auswahlLernabschnitt() {
 		return auswahlLernabschnitt;
-	}
-
-	/**
-	 * Status-Flags zu bereits aus der Datenbank geladenen Daten.
-	 *
-	 * @return Inhalt des Feldes datenstatus
-	 */
-	public Set<ReportingSchuelerDatenstatus> datenstatus() {
-		return datenstatus;
 	}
 
 	/**
@@ -520,7 +503,7 @@ public class ReportingSchueler extends ReportingPerson {
 	}
 
 	/**
-	 * Gibt die Kursbelegung des Schülers aus der Kursplanung der gymnasialen Oberstufe zurück, die zur angegebenen ID des Kurses gehört oder null.
+	 * Gibt die Kursbelegung des Schülers aus der Kursplanung der gymnasialen Oberstufe zurück, die zur angegebenen ID des Kurses gehört, oder null.
 	 * @param idKurs	Die ID des Kurses, dessen Kursbelegung gesucht ist.
 	 *
 	 * @return			Die Kursbelegung des Kurses.
@@ -594,6 +577,43 @@ public class ReportingSchueler extends ReportingPerson {
 	}
 
 	/**
+	 * Überprüft, ob ein Schüler in der Primarstufe ist, basierend auf einem gegebenen Schuljahresabschnitt.
+	 *
+	 * @param schuljahresabschnitt Der Schuljahresabschnitt, für den überprüft werden soll, ob der Schüler in der Primarstufe ist.
+	 *
+	 * @return true, wenn der Schüler in der Primarstufe ist, sonst false.
+	 */
+	public boolean istSchuelerInPrimarstufe(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
+		return this.aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt).jahrgang().istJahrgangImBereichPrimarstufe();
+	}
+
+	/**
+	 * Prüft, ob ein Schüler im angegebenen Schuljahresabschnitt zur Sekundarstufe I gehört.
+	 *
+	 * @param schuljahresabschnitt Der Schuljahresabschnitt, für den überprüft werden soll,
+	 *                             ob der Schüler in der Sekundarstufe I ist.
+	 *
+	 * @return true, wenn der Schüler im angegebenen Schuljahresabschnitt zur Sekundarstufe I gehört,
+	 *         ansonsten false.
+	 */
+	public boolean istSchuelerInSek1(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
+		return this.aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt).jahrgang().istJahrgangImBereichSek1();
+	}
+
+	/**
+	 * Prüft, ob ein Schüler im angegebenen Schuljahresabschnitt in der Sekundarstufe II
+	 * oder in einer Weiterbildung ist.
+	 *
+	 * @param schuljahresabschnitt Der Schuljahresabschnitt, in dem geprüft werden soll.
+	 *
+	 * @return true, wenn der Schüler in der Sekundarstufe II oder in einer Weiterbildung ist,
+	 *         ansonsten false.
+	 */
+	public boolean istSchuelerInSek2OderWB(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
+		return this.aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt).jahrgang().istJahrgangImBereichSek2OderWeiterbildung();
+	}
+
+	/**
 	 * Gibt an, ob der Schüler die Schulpflicht erfüllt hat oder nicht.
 	 *
 	 * @return Inhalt des Feldes istSchulpflichtErfuellt
@@ -621,6 +641,19 @@ public class ReportingSchueler extends ReportingPerson {
 	}
 
 	/**
+	 * Daten des Lernabschnitts zur übergebenen ID des Lernabschnitts.
+	 *
+	 * @param id Die ID des Lernabschnitts.
+	 *
+	 * @return Der Lernabschnitt zur ID.
+	 */
+	public ReportingSchuelerLernabschnitt lernabschnittById(final long id) {
+		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty())
+			return null;
+		return mapLernabschnitte.getSingle3OrNull(id);
+	}
+
+	/**
 	 * Daten aller Lernabschnitte.
 	 *
 	 * @return Inhalt des Feldes lernabschnitte
@@ -630,12 +663,16 @@ public class ReportingSchueler extends ReportingPerson {
 	}
 
 	/**
-	 * Gibt eine Map mit den Lernabschnitten des Schülers nach Schuljahresabschnitt, WechselNr und LernabschnittsID zurück
+	 * Daten der Lernabschnitte zur übergebenen ID des Schuljahresabschnitts.
 	 *
-	 * @return Map der Lernabschnitte oder eine leere Liste.
+	 * @param id Die ID des Schuljahresabschnitts, dessen Lernabschnitte gesucht werden sollen.
+	 *
+	 * @return Die Lernabschnitte zur ID.
 	 */
-	public ListMap3DLongKeys<ReportingSchuelerLernabschnitt> mapLernabschnitte() {
-		return mapLernabschnitte;
+	public List<ReportingSchuelerLernabschnitt> lernabschnittBySchuljahresabschnittsId(final long id) {
+		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty())
+			return new ArrayList<>();
+		return mapLernabschnitte.get1(id);
 	}
 
 	/**
@@ -801,8 +838,7 @@ public class ReportingSchueler extends ReportingPerson {
 	/**
 	 * Setzt die Liste der Lernabschnitte und aktualisiert die zugehörigen internen Datenstrukturen.
 	 *
-	 * @param lernabschnitte Eine Liste von Lernabschnitten vom Typ ReportingSchuelerLernabschnitt,
-	 *                       die gesetzt werden soll.
+	 * @param lernabschnitte Eine Liste von Lernabschnitten vom Typ ReportingSchuelerLernabschnitt, die gesetzt werden sollen.
 	 */
 	public void setLernabschnitte(final List<ReportingSchuelerLernabschnitt> lernabschnitte) {
 		this.lernabschnitte = new ArrayList<>();

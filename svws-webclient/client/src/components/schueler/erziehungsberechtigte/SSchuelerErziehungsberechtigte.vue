@@ -58,7 +58,7 @@
 					<svws-ui-spacing />
 					<svws-ui-text-input placeholder="Name" :model-value="erzieher?.nachname" @change="nachname=>(erzieher !== undefined) &&
 						patchErzieher({ nachname }, erzieher.id)" type="text" :readonly />
-					<svws-ui-text-input placeholder="Vorname" :model-value="erzieher?.vorname" @change="vorname=>(erzieher !== undefined) &&
+					<svws-ui-text-input placeholder="Rufname" :model-value="erzieher?.vorname" @change="vorname=>(erzieher !== undefined) &&
 						patchErzieher({ vorname }, erzieher.id)" type="text" :readonly />
 					<svws-ui-text-input placeholder="E-Mail Adresse" :model-value="erzieher?.eMail" @change="eMail=>(erzieher !== undefined) &&
 						patchErzieher({ eMail }, erzieher.id)" type="email" verify-email :readonly />
@@ -80,7 +80,7 @@
 					<svws-ui-input-wrapper :grid="2" class="text-left">
 						<svws-ui-text-input placeholder="Anrede" v-model="zweiterErz.anrede" type="text" :readonly />
 						<svws-ui-text-input placeholder="Titel" v-model="zweiterErz.titel" type="text" :readonly />
-						<svws-ui-text-input placeholder="Vorname" v-model="zweiterErz.vorname" type="text" required :readonly />
+						<svws-ui-text-input placeholder="Rufname" v-model="zweiterErz.vorname" type="text" required :readonly />
 						<svws-ui-text-input placeholder="Nachname" v-model="zweiterErz.nachname" type="text" required :readonly />
 						<svws-ui-text-input placeholder="E-Mail Adresse" v-model="zweiterErz.eMail" type="email" verify-email :readonly />
 						<ui-select label="Staatsangehörigkeit" v-model="zweiteErzStaatsangehoerigkeit" :manager="staatsangehoerigkeitenManager" :readonly searchable />
@@ -146,22 +146,24 @@
 		return list.sort((a, b) => {
 			const ersteErzId = Math.floor(a.id / 10);
 			const zweiteErzId = Math.floor(b.id / 10);
-			if (ersteErzId !== zweiteErzId)
+			if (ersteErzId !== zweiteErzId) {
 				return ersteErzId - zweiteErzId;
+			}
 			return a.id - b.id;
 		});
 	});
 
 	const erzieherarten = computed(() => props.mapErzieherarten.values());
 
-	const erzieherartenManager = new SelectManager({ options: erzieherarten.value, sort: erzieherArtSort, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
+	const erzieherartenManager = new SelectManager({ options: erzieherarten, sort: erzieherArtSort, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
 
 	const erzieherart = computed({
 		get: () => props.mapErzieherarten.get(erzieher.value?.idErzieherArt ?? -1),
 		set: (value) => {
 			const id = value?.id ?? undefined;
-			if (erzieher.value === undefined)
+			if (erzieher.value === undefined) {
 				return;
+			}
 			erzieher.value.idErzieherArt = id ?? null;
 			void props.patchErzieher({ idErzieherArt: id ?? null }, erzieher.value.id);
 		},
@@ -169,13 +171,14 @@
 
 	const orte = computed(() => props.mapOrte.values());
 
-	const wohnortManager = new SelectManager({ options: orte.value, optionDisplayText: i => `${i.plz} ${i.ortsname}`, sort: orte_sort, selectionDisplayText: i => `${i.plz} ${i.ortsname}` });
+	const wohnortManager = new SelectManager({ options: orte, optionDisplayText: i => `${i.plz} ${i.ortsname}`, sort: orte_sort, selectionDisplayText: i => `${i.plz} ${i.ortsname}` });
 
 	const erzWohnort = computed({
 		get: () => props.mapOrte.get(erzieher.value?.wohnortID ?? -1) ?? null,
 		set: (value) => {
-			if (erzieher.value === undefined)
+			if (erzieher.value === undefined) {
 				return;
+			}
 			erzieher.value.wohnortID = value?.id ?? -1;
 			void props.patchErzieher({ wohnortID: value?.id ?? null }, erzieher.value.id);
 		},
@@ -187,8 +190,9 @@
 			return Nationalitaeten.getByISO3(iso3)?.daten(schuljahr.value) ?? null;
 		},
 		set: (value) => {
-			if (erzieher.value === undefined)
+			if (erzieher.value === undefined) {
 				return;
+			}
 			const iso3 = value?.iso3 ?? null;
 			erzieher.value.staatsangehoerigkeitID = iso3;
 			void props.patchErzieher({ staatsangehoerigkeitID: iso3 }, erzieher.value.id);
@@ -203,8 +207,9 @@
 			return Nationalitaeten.getByISO3(iso3)?.daten(schuljahr.value) ?? null;
 		},
 		set: (value) => {
-			if (erzieher.value === undefined)
+			if (erzieher.value === undefined) {
 				return;
+			}
 			zweiterErz.value.staatsangehoerigkeitID = value?.iso3 ?? null;
 		},
 	});
@@ -213,8 +218,9 @@
 
 	const erzOrtsteileFiltered = computed(() => {
 		const wohnortID = erzieher.value?.wohnortID;
-		if (wohnortID === null)
+		if (wohnortID === null) {
 			return ortsteile.value;
+		}
 		return ortsteile.value.filter(o => o.ort_id === wohnortID);
 	});
 
@@ -229,18 +235,20 @@
 			return props.mapOrtsteile.get(id) ?? null;
 		},
 		set: (value: OrtsteilKatalogEintrag | null) => {
-			if (erzieher.value === undefined)
+			if (erzieher.value === undefined) {
 				return;
+			}
 			erzieher.value.ortsteilID = value?.id ?? null;
 			void props.patchErzieher({ ortsteilID: value?.id ?? null }, erzieher.value.id);
 		},
 	});
 
 	watch(() => props.data(), (neu) => {
-		if (neu.isEmpty())
+		if (neu.isEmpty()) {
 			erzieher.value = undefined;
-		else
+		} else {
 			erzieher.value = neu.getFirst();
+		}
 	}, { immediate: true });
 
 	const columns: DataTableColumn[] = [
@@ -253,8 +261,9 @@
 	];
 
 	function stringIsValid(input: string | null, mandatory: boolean, maxLength: number) {
-		if (mandatory)
+		if (mandatory) {
 			return (input !== null) && (!JavaString.isBlank(input)) && (input.length <= maxLength);
+		}
 		return (input === null) || (input.length <= maxLength);
 	}
 
@@ -349,14 +358,17 @@
 
 	async function sendRequest() {
 		const { id, idSchueler, ...partialDataWithoutId } = ersterErz.value;
-		if (currentMode.value === Mode.ADD)
+		if (currentMode.value === Mode.ADD) {
 			await props.addErzieher(partialDataWithoutId, 1);
+		}
 		// Normale Patch für beide Positionen
-		if (currentMode.value === Mode.PATCH)
+		if (currentMode.value === Mode.PATCH) {
 			await props.patchErzieher(partialDataWithoutId, ersterErz.value.id);
+		}
 		// Zweite Position zum bestehenden Eintrag hinzufügen
-		if (currentMode.value === Mode.PATCH_POS2)
+		if (currentMode.value === Mode.PATCH_POS2) {
 			await props.patchErzieherAnPosition(partialDataWithoutId, ersterErz.value.id, 2);
+		}
 		enterDefaultMode();
 	}
 
@@ -383,11 +395,13 @@
 	}
 
 	async function deleteErzieherRequest() {
-		if (selectedErz.value.length === 0)
+		if (selectedErz.value.length === 0) {
 			return;
+		}
 		const ids = new ArrayList<number>();
-		for (const s of selectedErz.value)
+		for (const s of selectedErz.value) {
 			ids.add(s.id);
+		}
 		await props.deleteErzieher(ids);
 		selectedErz.value = [];
 	}

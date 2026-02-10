@@ -6,13 +6,13 @@ export default defineConfig({
 		globals: true,
 		reporters: ["default", "junit"],
 		outputFile: "build/coverage/junit.xml",
-		setupFiles: "src/test/setup.ts",
+		setupFiles: "test/setup.ts",
 		coverage: {
 			provider: "v8",
 			reportsDirectory: "build/coverage",
 		},
 		include: [
-			"src/**/*.test.ts",
+			"test/**/*.test.ts",
 		],
 	},
 	resolve: {

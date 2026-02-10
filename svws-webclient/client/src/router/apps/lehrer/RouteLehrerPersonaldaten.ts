@@ -6,17 +6,17 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeLehrer, type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 
-import type { LehrerPersonaldatenProps } from "~/components/lehrer/personaldaten/SLehrerPersonaldatenProps";
+import type { LehrerPersonaldatenProps } from "~/components/lehrer/personaldaten/LehrerPersonaldatenProps";
 import { routeApp } from "../RouteApp";
 import { routeError } from "~/router/error/RouteError";
 import { api } from "~/router/Api";
 
-const SLehrerPersonaldaten = () => import("~/components/lehrer/personaldaten/SLehrerPersonaldaten.vue");
+const LehrerPersonaldaten = () => import("~/components/lehrer/personaldaten/LehrerPersonaldaten.vue");
 
 export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN], "lehrer.personaldaten", "personaldaten", SLehrerPersonaldaten);
+		super(Schulform.values(), [BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN], "lehrer.personaldaten", "personaldaten", LehrerPersonaldaten);
 		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Personaldaten";
@@ -24,11 +24,13 @@ export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		try {
-			if (!routeLehrer.data.manager.hasDaten())
+			if (!routeLehrer.data.manager.hasDaten()) {
 				return routeLehrer.getRoute();
+			}
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
-			if ((!routeLehrer.data.manager.hasPersonalDaten()) || (id !== routeLehrer.data.manager.personalDaten().id))
+			if ((!routeLehrer.data.manager.hasPersonalDaten()) || (id !== routeLehrer.data.manager.personalDaten().id)) {
 				await routeLehrer.data.loadPersonaldaten();
+			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
@@ -38,7 +40,7 @@ export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 		await routeLehrer.data.unloadPersonaldaten();
 	}
 
-	public getProps(to: RouteLocationNormalized): LehrerPersonaldatenProps {
+	public getProps(_: RouteLocationNormalized): LehrerPersonaldatenProps {
 		return {
 			validatorKontext: () => api.validatorKontext,
 			schulform: api.schulform,

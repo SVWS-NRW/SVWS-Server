@@ -35,7 +35,7 @@ export class SchuelerblockungOutputFachwahlZuKurs extends JavaObject {
 		return ['de.svws_nrw.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs'].includes(name);
 	}
 
-	public static class = new Class<SchuelerblockungOutputFachwahlZuKurs>('de.svws_nrw.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs');
+	public static readonly class = new Class<SchuelerblockungOutputFachwahlZuKurs>('de.svws_nrw.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs');
 
 	public static transpilerFromJSON(json: string): SchuelerblockungOutputFachwahlZuKurs {
 		const obj = JSON.parse(json) as Partial<SchuelerblockungOutputFachwahlZuKurs>;

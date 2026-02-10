@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 
-	import { ref } from 'vue';
+	import { onMounted, ref } from 'vue';
 	import type { TabData } from './TabData';
 	import type { TabManager } from './TabManager';
 
@@ -37,8 +37,20 @@
 		tabManager: () => TabManager;
 	}>();
 
-	// Eine Map, welche für die Tab-Gruppen festlegt, ob diese zusammengeklapt sind oder nicht.
-	const isCollapsed = ref<Set<string>>(new Set());
+	// Eine Map, welche für die Tab-Gruppen festlegt, ob diese zusammengeklappt sind oder nicht.
+	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
+	const isCollapsed = ref<Set<string>>(new Set<string>(props.tabManager().tabgroups));
+
+
+	onMounted(() => {
+		openFirstTab();
+	});
+
+	function openFirstTab() {
+		if (props.tabManager().tabgroups.length > 0) {
+			toggle(props.tabManager().tabgroups[0]);
+		}
+	}
 
 	function toggle(tabgroup: string) {
 		if (isCollapsed.value.has(tabgroup)) {
@@ -53,8 +65,9 @@
 	}
 
 	async function setTab(tab: TabData) {
-		if (!isCurrent(tab))
+		if (!isCurrent(tab)) {
 			await props.tabManager().setTab(tab);
+		}
 	}
 
 </script>

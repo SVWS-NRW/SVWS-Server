@@ -130,8 +130,9 @@ export class Config {
 	 * @param elem   die hinzuzufügenden Konfigurationselemente
 	 */
 	public addElements(elements: Iterable<ConfigElement>) {
-		for (const elem of elements)
+		for (const elem of elements) {
 			this.addElement(elem);
+		}
 	}
 
 	/**
@@ -146,8 +147,9 @@ export class Config {
 	public getValue(key: string): string {
 		// Prüfe, ob das Konfigurationselement bekannt ist oder nicht
 		const elem: ConfigElement | undefined = this._mapElements.get(key);
-		if (elem === undefined)
+		if (elem === undefined) {
 			throw Error("Es ist kein Konfigurations-Element mit dem Schlüssel '" + key + "' bekannt.");
+		}
 		// Lese den Wert aus der entsprechenden Konfiguration (Benutzer oder Global) aus - falls vorhanden...
 		const value: string | undefined = (elem.type === 'global') ? this._mapGlobal.get(key) : this._mapUser.get(key);
 		// Ist ein Wert kein vorhanden, so gebe den Default-Wert zurück und im anderen Fall den gespeicherten Wert
@@ -164,8 +166,9 @@ export class Config {
 	public async setDefaultValue(key: string): Promise<void> {
 		// Prüfe, ob das Konfigurationselement bekannt ist oder nicht
 		const elem: ConfigElement | undefined = this._mapElements.get(key);
-		if (elem === undefined)
+		if (elem === undefined) {
 			throw Error("Es ist kein Konfigurations-Element mit dem Schlüssel '" + key + "' bekannt.");
+		}
 		await this.setValue(key, elem.default);
 	}
 
@@ -180,8 +183,9 @@ export class Config {
 	public async setValue(key: string, value: string): Promise<void> {
 		// Prüfe, ob das Konfigurationselement bekannt ist oder nicht
 		const elem: ConfigElement | undefined = this._mapElements.get(key);
-		if (elem === undefined)
+		if (elem === undefined) {
 			throw Error("Es ist kein Konfigurations-Element mit dem Schlüssel '" + key + "' bekannt.");
+		}
 		if (elem.type === 'global') {
 			await this._setGlobal(key, value);
 			this._mapGlobal.set(key, value);
@@ -203,8 +207,9 @@ export class Config {
 	public getNumberValue(key: string): number {
 		// Prüfe, ob das Konfigurationselement bekannt ist oder nicht
 		const elem: ConfigElement | undefined = this._mapElements.get(key);
-		if (elem === undefined)
+		if (elem === undefined) {
 			throw Error("Es ist kein Konfigurations-Element mit dem Schlüssel '" + key + "' bekannt.");
+		}
 		// Lese den Wert aus der entsprechenden Konfiguration (Benutzer oder Global) aus - falls vorhanden...
 		const value: string | undefined = (elem.type === 'global') ? this._mapGlobal.get(key) : this._mapUser.get(key);
 		// Ist ein Wert kein vorhanden, so gebe den Default-Wert zurück und im anderen Fall den gespeicherten Wert
@@ -222,8 +227,9 @@ export class Config {
 	public async setNumberValue(key: string, value: number): Promise<void> {
 		// Prüfe, ob das Konfigurationselement bekannt ist oder nicht
 		const elem: ConfigElement | undefined = this._mapElements.get(key);
-		if (elem === undefined)
+		if (elem === undefined) {
 			throw Error("Es ist kein Konfigurations-Element mit dem Schlüssel '" + key + "' bekannt.");
+		}
 		if (elem.type === 'global') {
 			await this._setGlobal(key, value.toString());
 			this._mapGlobal.set(key, value.toString());
@@ -245,8 +251,9 @@ export class Config {
 	public getBooleanValue(key: string): boolean {
 		// Prüfe, ob das Konfigurationselement bekannt ist oder nicht
 		const elem: ConfigElement | undefined = this._mapElements.get(key);
-		if (elem === undefined)
+		if (elem === undefined) {
 			throw Error("Es ist kein Konfigurations-Element mit dem Schlüssel '" + key + "' bekannt.");
+		}
 		// Lese den Wert aus der entsprechenden Konfiguration (Benutzer oder Global) aus - falls vorhanden...
 		const value: string | undefined = (elem.type === 'global') ? this._mapGlobal.get(key) : this._mapUser.get(key);
 		// Ist ein Wert kein vorhanden, so gebe den Default-Wert zurück und im anderen Fall den gespeicherten Wert
@@ -264,8 +271,9 @@ export class Config {
 	public async setBooleanValue(key: string, value: boolean): Promise<void> {
 		// Prüfe, ob das Konfigurationselement bekannt ist oder nicht
 		const elem: ConfigElement | undefined = this._mapElements.get(key);
-		if (elem === undefined)
+		if (elem === undefined) {
 			throw Error("Es ist kein Konfigurations-Element mit dem Schlüssel '" + key + "' bekannt.");
+		}
 		if (elem.type === 'global') {
 			await this._setGlobal(key, value.toString());
 			this._mapGlobal.set(key, value.toString());
@@ -289,16 +297,19 @@ export class Config {
 	public getObjectValue<TObject>(key: string, fromJSON: (json: string) => TObject): TObject | null {
 		// Prüfe, ob das Konfigurationselement bekannt ist oder nicht
 		const elem: ConfigElement | undefined = this._mapElements.get(key);
-		if (elem === undefined)
+		if (elem === undefined) {
 			throw Error("Es ist kein Konfigurations-Element mit dem Schlüssel '" + key + "' bekannt.");
+		}
 		// Lese den Wert aus der entsprechenden Konfiguration (Benutzer oder Global) aus - falls vorhanden...
 		let value: string | undefined = (elem.type === 'global') ? this._mapGlobal.get(key) : this._mapUser.get(key);
 		// Ist ein Wert kein vorhanden, so gebe den Default-Wert zurück und im anderen Fall den gespeicherten Wert
-		if (value === undefined)
+		if (value === undefined) {
 			value = elem.default;
+		}
 		// Bei einem leeren String gebe null zurück.
-		if (value === "")
+		if (value === "") {
 			return null;
+		}
 		return fromJSON(value);
 	}
 
@@ -314,8 +325,9 @@ export class Config {
 	public async setObjectValue<TObject>(key: string, value: TObject | null, toJSON: (obj: TObject) => string): Promise<void> {
 		// Prüfe, ob das Konfigurationselement bekannt ist oder nicht
 		const elem: ConfigElement | undefined = this._mapElements.get(key);
-		if (elem === undefined)
+		if (elem === undefined) {
 			throw Error("Es ist kein Konfigurations-Element mit dem Schlüssel '" + key + "' bekannt.");
+		}
 		const strValue = value === null ? "" : toJSON(value);
 		if (elem.type === 'global') {
 			await this._setGlobal(key, strValue);

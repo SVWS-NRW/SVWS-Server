@@ -18,7 +18,7 @@ export class KAOAMerkmalKatalogEintrag extends CoreTypeData {
 	/**
 	 * Die Anlagen des Berufskollegs bei denen der Eintrag gemacht werden darf
 	 */
-	public bkAnlagen: List<string> = new ArrayList<string>();
+	public bkGliederungen: List<string> = new ArrayList<string>();
 
 
 	/**
@@ -36,7 +36,7 @@ export class KAOAMerkmalKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.kaoa.KAOAMerkmalKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<KAOAMerkmalKatalogEintrag>('de.svws_nrw.asd.data.kaoa.KAOAMerkmalKatalogEintrag');
+	public static readonly class = new Class<KAOAMerkmalKatalogEintrag>('de.svws_nrw.asd.data.kaoa.KAOAMerkmalKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): KAOAMerkmalKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<KAOAMerkmalKatalogEintrag>;
@@ -59,9 +59,9 @@ export class KAOAMerkmalKatalogEintrag extends CoreTypeData {
 			throw new Error('invalid json format, missing attribute kategorie');
 		result.kategorie = obj.kategorie;
 		result.optionsart = (obj.optionsart === undefined) ? null : obj.optionsart === null ? null : obj.optionsart;
-		if (obj.bkAnlagen !== undefined) {
-			for (const elem of obj.bkAnlagen) {
-				result.bkAnlagen.add(elem);
+		if (obj.bkGliederungen !== undefined) {
+			for (const elem of obj.bkGliederungen) {
+				result.bkGliederungen.add(elem);
 			}
 		}
 		return result;
@@ -77,11 +77,11 @@ export class KAOAMerkmalKatalogEintrag extends CoreTypeData {
 		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result += '"kategorie" : ' + JSON.stringify(obj.kategorie) + ',';
 		result += '"optionsart" : ' + ((obj.optionsart === null) ? 'null' : JSON.stringify(obj.optionsart)) + ',';
-		result += '"bkAnlagen" : [ ';
-		for (let i = 0; i < obj.bkAnlagen.size(); i++) {
-			const elem = obj.bkAnlagen.get(i);
+		result += '"bkGliederungen" : [ ';
+		for (let i = 0; i < obj.bkGliederungen.size(); i++) {
+			const elem = obj.bkGliederungen.get(i);
 			result += '"' + elem + '"';
-			if (i < obj.bkAnlagen.size() - 1)
+			if (i < obj.bkGliederungen.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -116,12 +116,12 @@ export class KAOAMerkmalKatalogEintrag extends CoreTypeData {
 		if (obj.optionsart !== undefined) {
 			result += '"optionsart" : ' + ((obj.optionsart === null) ? 'null' : JSON.stringify(obj.optionsart)) + ',';
 		}
-		if (obj.bkAnlagen !== undefined) {
-			result += '"bkAnlagen" : [ ';
-			for (let i = 0; i < obj.bkAnlagen.size(); i++) {
-				const elem = obj.bkAnlagen.get(i);
+		if (obj.bkGliederungen !== undefined) {
+			result += '"bkGliederungen" : [ ';
+			for (let i = 0; i < obj.bkGliederungen.size(); i++) {
+				const elem = obj.bkGliederungen.get(i);
 				result += '"' + elem + '"';
-				if (i < obj.bkAnlagen.size() - 1)
+				if (i < obj.bkGliederungen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

@@ -133,25 +133,28 @@
 
 	const sortByMulti = computed<Map<string, boolean>>(() => {
 		const map = new Map<string, boolean>();
-		for (const pair of props.manager().orderGet())
-			if (pair.b !== null)
+		for (const pair of props.manager().orderGet()) {
+			if (pair.b !== null) {
 				map.set(pair.a === "klassen" ? "idKlasse" : pair.a, pair.b);
+			}
+		}
 		return map;
 	});
 
 	const sortByAndOrder = computed<SortByAndOrder | undefined>({
 		get: () => {
 			const list = props.manager().orderGet();
-			if (list.isEmpty())
+			if (list.isEmpty()) {
 				return undefined;
-			else {
+			} else {
 				const { a: key, b: order } = list.get(0);
 				return { key: key === 'klassen' ? 'idKlasse' : key, order };
 			}
 		},
 		set: (value) => {
-			if ((value === undefined) || (value.key === null))
+			if ((value === undefined) || (value.key === null)) {
 				return;
+			}
 			const key = value.key === 'idKlasse' ? 'klassen' : value.key;
 			props.manager().orderUpdate(key, value.order);
 			void props.setFilter();
@@ -161,7 +164,7 @@
 	const cols = computed(() => {
 		const arr = [{ key: "idKlasse", label: "Klasse", sortable: true, span: 1 },
 			{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
-			{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
+			{ key: "vorname", label: "Rufname", sortable: true, span: 2 },
 		];
 		// if (primarstufe.value)
 		// 	arr.push({ key: "epJahre", label: "Jg", sortable: false, span: 1 });
@@ -172,10 +175,12 @@
 		const arr = [];
 		const searchValueIsNumber = /^[0-9]+$/.test(search.value.trim());
 		const searchValueLowerCase = search.value.toLocaleLowerCase();
-		for (const e of props.manager().filtered())
+		for (const e of props.manager().filtered()) {
 			if ((searchValueIsNumber && e.id.toString().includes(search.value))
-				|| (e.nachname.toLocaleLowerCase().includes(searchValueLowerCase) || e.vorname.toLocaleLowerCase().includes(searchValueLowerCase)))
+				|| (e.nachname.toLocaleLowerCase().includes(searchValueLowerCase) || e.vorname.toLocaleLowerCase().includes(searchValueLowerCase))) {
 				arr.push(e);
+			}
+		}
 		return arr;
 	});
 
@@ -191,8 +196,9 @@
 		get: () => [...props.manager().schuelerstatus.auswahl()],
 		set: (value) => {
 			props.manager().schuelerstatus.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.manager().schuelerstatus.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -201,8 +207,9 @@
 		get: () => [...props.manager().schulgliederungen.auswahl()],
 		set: (value) => {
 			props.manager().schulgliederungen.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.manager().schulgliederungen.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -211,8 +218,9 @@
 		get: () => [...props.manager().jahrgaenge.auswahl()],
 		set: (value) => {
 			props.manager().jahrgaenge.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.manager().jahrgaenge.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -221,8 +229,9 @@
 		get: () => [...props.manager().klassen.auswahl()],
 		set: (value) => {
 			props.manager().klassen.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.manager().klassen.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -231,8 +240,9 @@
 		get: () => [...props.manager().kurse.auswahl()],
 		set: (value) => {
 			props.manager().kurse.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.manager().kurse.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -252,8 +262,9 @@
 		if (props.manager().schulgliederungen.auswahlExists()
 			|| props.manager().jahrgaenge.auswahlExists()
 			|| props.manager().klassen.auswahlExists()
-			|| props.manager().kurse.auswahlExists())
+			|| props.manager().kurse.auswahlExists()) {
 			return true;
+		}
 		return (!(props.manager().schuelerstatus.auswahlSize() === 2
 			&& props.manager().schuelerstatus.auswahlHas(SchuelerStatus.AKTIV)
 			&& props.manager().schuelerstatus.auswahlHas(SchuelerStatus.EXTERN)));
@@ -264,11 +275,13 @@
 		let index = 0;
 		for (const j of kurs.idJahrgaenge) {
 			const jg = props.manager().jahrgaenge.get(j);
-			if (jg === null)
+			if (jg === null) {
 				continue;
+			}
 			jahrgaenge += jg.kuerzel;
-			if (index < kurs.idJahrgaenge.size() - 1)
+			if (index < kurs.idJahrgaenge.size() - 1) {
 				jahrgaenge += ', ';
+			}
 			index++;
 		}
 		return `${kurs.kuerzel} (${jahrgaenge})`;
@@ -276,17 +289,21 @@
 
 	function find(klassen: Iterable<JahrgangsDaten | KlassenDaten>, search: string) {
 		const matchedKlassen = [];
-		for (const klasse of klassen)
-			if ((klasse.kuerzel !== null) && klasse.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+		for (const klasse of klassen) {
+			if ((klasse.kuerzel !== null) && klasse.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
 				matchedKlassen.push(klasse);
+			}
+		}
 		return matchedKlassen;
 	}
 
 	function findKurs(kurse: Iterable<KursDaten>, search: string) {
 		const matchedKurse = [];
-		for (const kurs of kurse)
-			if (kurs.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+		for (const kurs of kurse) {
+			if (kurs.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
 				matchedKurse.push(kurs);
+			}
+		}
 		return matchedKurse;
 	}
 
@@ -298,19 +315,23 @@
 
 	async function setAuswahl(schuelerEintraege: SchuelerListeEintrag[]) {
 		props.manager().liste.auswahlClear();
-		for (const schueler of schuelerEintraege)
-			if (props.manager().liste.hasValue(schueler))
+		for (const schueler of schuelerEintraege) {
+			if (props.manager().liste.hasValue(schueler)) {
 				props.manager().liste.auswahlAdd(schueler);
+			}
+		}
 
-		if (props.manager().liste.auswahlExists())
+		if (props.manager().liste.auswahlExists()) {
 			await props.gotoGruppenprozessView(true);
-		else
+		} else {
 			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+		}
 	}
 
 	const clickedEintrag = computed(() => {
-		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) {
 			return null;
+		}
 		return props.manager().hasDaten() ? props.manager().auswahl() : null;
 	});
 

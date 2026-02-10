@@ -2,8 +2,8 @@ import { describe, expect, test } from "vitest";
 import { privilegedApiServer } from "../../utils/APIUtils";
 
 describe("Schule Tests ", () => {
-	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
-		const api = privilegedApiServer
+	describe.each([{ schema: "GymAbi01" }])('gegen %s', ({ schema }) => {
+		const api = privilegedApiServer;
 
 		test("getSchullogo", async () => {
 			const result = await api.getSchullogo(schema);
@@ -24,5 +24,5 @@ describe("Schule Tests ", () => {
 			const result = await api.getLernplattformen(schema);
 			expect(result).toMatchSnapshot();
 		});
-	})
-})
+	});
+});

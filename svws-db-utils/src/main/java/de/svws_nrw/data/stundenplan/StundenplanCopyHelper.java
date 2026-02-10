@@ -10,12 +10,11 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
-import de.svws_nrw.data.lehrer.DataLehrerPersonaldaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanAufsichtsbereich;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanKalenderwochenZuordnung;
@@ -34,7 +33,11 @@ import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
 
-class StundenplanCopyHelper {
+final class StundenplanCopyHelper {
+
+	private StundenplanCopyHelper() {
+		// Hidden constructor
+	}
 
 	/**
 	 * Kopiert alle Aufsichtsbereiche eines bestehenden Stundenplans in den neuen Stundenplan.
@@ -338,6 +341,8 @@ class StundenplanCopyHelper {
 	 */
 	static Map<Long, Long> getKursMappings(final DBEntityManager conn,
 			final Collection<Long> kursIdsAlt, final long abschnittNeu) {
+		if (kursIdsAlt.isEmpty())
+			return new HashMap<>();
 		final Map<Long, DTOKurs> kurseAlleAlt = conn.queryList(DTOKurs.QUERY_LIST_BY_ID,
 				DTOKurs.class, kursIdsAlt).stream()
 				.collect(Collectors.toMap(k -> k.ID, k -> k));
@@ -401,6 +406,8 @@ class StundenplanCopyHelper {
 	 * @return eine Map von alten zu neuen Klassen-IDs
 	 */
 	static Map<Long, Long> getKlassenMappings(final DBEntityManager conn, final Collection<Long> klassenIdsAlt, final long abschnittNeu) {
+		if (klassenIdsAlt.isEmpty())
+			return new HashMap<>();
 		final Map<Long, DTOKlassen> klassenAlleAlt = conn.queryList(DTOKlassen.QUERY_LIST_BY_ID,
 				DTOKlassen.class, klassenIdsAlt).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
 		final Map<String, DTOKlassen> klassenAlleNeu = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID,
@@ -517,8 +524,8 @@ class StundenplanCopyHelper {
 		long nextID = conn.transactionGetNextID(DTOStundenplanUnterrichtLehrer.class);
 		for (final DTOStundenplanUnterrichtLehrer alt : listAlt) {
 			Long lehrerID = alt.Lehrer_ID;
-			final LehrerPersonaldaten lehrer = new DataLehrerPersonaldaten(conn).getById(lehrerID);
-			if ((lehrer == null) || ((lehrer.abgangsdatum != null) && (lehrer.abgangsdatum.compareTo(stundenplanNeu.gueltigAb) < 0))) {
+			final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, lehrerID);
+			if ((lehrer == null) || ((lehrer.DatumAbgang != null) && (lehrer.DatumAbgang.compareTo(stundenplanNeu.gueltigAb) < 0))) {
 				lehrerID = lookupNewLehrerID(conn, unterrichteMapping.get(alt.Unterricht_ID),
 						(abschnittNeu == null) ? stundenplanNeu.idSchuljahresabschnitt : abschnittNeu);
 				if (lehrerID == null)

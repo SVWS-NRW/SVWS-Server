@@ -1,5 +1,10 @@
 package de.svws_nrw.asd.types.lehrer;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import de.svws_nrw.asd.data.lehrer.LehrerFachrichtungKatalogEintrag;
 import de.svws_nrw.asd.types.CoreType;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
@@ -344,6 +349,13 @@ public enum LehrerFachrichtung implements @NotNull CoreType<LehrerFachrichtungKa
 	/** Fachrichtung 'Hörakustik' */
 	ID_HA;
 
+
+	/* ----- Die nachfolgenden Attribute werden nicht initialisiert und werden als Cache verwendet, um z.B. den Schuljahres-bezogenen Zugriff zu cachen ----- */
+
+	/** Eine Map für die Zuordnung der zulässigen Lehrämter zu den Fachrichtungen bei einem Schuljahr */
+	private static final @NotNull Map<Integer, Map<LehrerFachrichtung, List<LehrerLehramt>>> _mapLehraemterBySchuljahrAndFachrichtung = new HashMap<>();
+
+
 	/**
 	 * Initialisiert den Core-Type mit dem angegebenen Manager.
 	 *
@@ -351,6 +363,7 @@ public enum LehrerFachrichtung implements @NotNull CoreType<LehrerFachrichtungKa
 	 */
 	public static void init(final @NotNull CoreTypeDataManager<LehrerFachrichtungKatalogEintrag, LehrerFachrichtung> manager) {
 		CoreTypeDataManager.putManager(LehrerFachrichtung.class, manager);
+		_mapLehraemterBySchuljahrAndFachrichtung.clear();
 	}
 
 
@@ -361,6 +374,61 @@ public enum LehrerFachrichtung implements @NotNull CoreType<LehrerFachrichtungKa
 	 */
 	public static @NotNull CoreTypeDataManager<LehrerFachrichtungKatalogEintrag, LehrerFachrichtung> data() {
 		return CoreTypeDataManager.getManager(LehrerFachrichtung.class);
+	}
+
+
+	/**
+	 * Erstellt für den internen Cache eine Map für die zulässigen Lehrämter einer Fachrichtung in Bezug auf das
+	 * angegebene Schuljahr.
+	 *
+	 * @param schuljahr   das Schuljahr, auf welches sich die Map bezieht
+	 *
+	 * @return die Map mit den zulässigen Lehrämtern für die Fachrichtungen
+	 */
+	private static @NotNull Map<LehrerFachrichtung, List<LehrerLehramt>> getMapLehraemterByFachrichtung(final int schuljahr) {
+		final Map<LehrerFachrichtung, List<LehrerLehramt>> result = new HashMap<>();
+		for (final LehrerFachrichtung fr : LehrerFachrichtung.data().getWerte()) {
+			final LehrerFachrichtungKatalogEintrag eintrag = fr.daten(schuljahr);
+			final List<LehrerLehramt> lehraemter = new ArrayList<>();
+			if (eintrag != null)
+				for (final String laBezeichner : eintrag.lehraemter)
+					lehraemter.add(LehrerLehramt.data().getWertByBezeichner(laBezeichner));
+			result.put(fr, lehraemter);
+		}
+		return result;
+	}
+
+
+	/**
+	 * Bestimmt die Liste aller Lehrämter, welche in dem angebenen Schuljahr für die übergebene Fachrichtung zulässig sind.
+	 *
+	 * @param schuljahr      das Schuljahr, auf welches sich die Anfrage bezieht
+	 * @param fachrichtung   die Fachrichtung, zu welcher die zulässigen Lehrämter angefragt werden
+	 *
+	 * @return die Liste der zulässigen Lehrämter für die übergebene Fachrichtung in dem angebebenen Schuljahr
+	 */
+	public static @NotNull List<LehrerLehramt> getLehraemterBySchuljahrAndFachrichtung(final int schuljahr, final @NotNull LehrerFachrichtung fachrichtung) {
+		// Überprüfen, ob der Cache für das Schuljahr existiert; falls nicht, Cache für alle Kategorien aufbauen
+		Map<LehrerFachrichtung, List<LehrerLehramt>> mapByFachrichtung = _mapLehraemterBySchuljahrAndFachrichtung.get(schuljahr);
+		if (mapByFachrichtung == null) {
+			mapByFachrichtung = getMapLehraemterByFachrichtung(schuljahr);
+			_mapLehraemterBySchuljahrAndFachrichtung.put(schuljahr, mapByFachrichtung);
+		}
+		// Rückgabe der Liste von Jahrgängen aus dem Cache oder eine leere Liste, falls Kategorie nicht vorhanden
+		final List<LehrerLehramt> lehraemter = mapByFachrichtung.get(fachrichtung);
+		return (lehraemter != null) ? lehraemter : new ArrayList<>();
+	}
+
+
+	/**
+	 * Gibt für diese Fachrichtung die Liste der zulässigen Lehrämter zurück.
+	 *
+	 * @param schuljahr   das Schuljahr, auf welches sich die Anfrage bezieht
+	 *
+	 * @return die Liste der zulässigen Lehrämter
+	 */
+	public @NotNull List<LehrerLehramt> getLehraemterBySchuljahr(final int schuljahr) {
+		return getLehraemterBySchuljahrAndFachrichtung(schuljahr, this);
 	}
 
 }

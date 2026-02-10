@@ -1,40 +1,36 @@
 package de.svws_nrw.data.schule;
 
-import java.io.InputStream;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
-import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.VermerkartEintrag;
-import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOVermerkArt;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerVermerke;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
-import org.assertj.core.api.ThrowableAssert;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatException;
 import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /** Diese Klasse testet die Klasse {@link DataVermerkarten} */
@@ -54,36 +50,52 @@ class DataVermerkartenTest {
 	}
 
 	@Test
-	@DisplayName("setAttributesNotPatchable : id")
-	void setAttributesNotPatchableTest() {
-		final var dto = new DTOVermerkArt(1L, "abc");
-		when(this.conn.queryByKey(DTOVermerkArt.class, 1L)).thenReturn(dto);
+	@DisplayName("setAttributesRequiredOnCreation: bezeichnung")
+	void setAttributesRequiredOnCreationBezeichnung() {
+		assertThatException()
+				.isThrownBy(() -> this.data.add(Map.of("test", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Es werden weitere Attribute (bezeichnung) benötigt, damit die Entität erstellt werden kann.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
 
-		try (var mapperMock = Mockito.mockStatic(JSONMapper.class)) {
-			mapperMock.when(() -> JSONMapper.toMap(any(InputStream.class))).thenReturn(Map.of("id", 99L));
+	@Test
+	@DisplayName("setAttributesNotPatchable: id")
+	void setAttributesNotPatchableId() {
+		when(this.conn.queryByKey(DTOVermerkArt.class, 1L)).thenReturn(mock(DTOVermerkArt.class));
 
-			final var throwable = catchThrowable(() -> this.data.patchAsResponse(1L, mock(InputStream.class)));
-
-			assertThat(throwable)
-					.isInstanceOf(ApiOperationException.class)
-					.hasMessage("Folgende Attribute werden für ein Patch nicht zugelassen: id.");
-		}
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("id", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Folgende Attribute werden für ein Patch nicht zugelassen: id.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
 	@DisplayName("initDTO | Erfolg")
-	void initDTOTest() {
-		final var dto = new DTOVermerkArt(1L, "abc");
+	void initDTO() {
+		final var dto = new DTOVermerkArt(1L, "");
 
 		this.data.initDTO(dto, 2L, null);
 
-		assertThat(dto.ID).isEqualTo(2L);
+		assertThat(dto)
+				.hasFieldOrPropertyWithValue("ID", 2L)
+				.hasFieldOrPropertyWithValue("Sortierung", 32000);
+	}
+
+	@Test
+	@DisplayName("getLongId | Erfolg")
+	void getLongId() {
+		final var dto = new DTOVermerkArt(1L, "");
+
+		assertThat(this.data.getLongId(dto)).isEqualTo(1L);
 	}
 
 	@Test
 	@DisplayName("getById | Erfolg")
-	void getByIdTest() throws ApiOperationException {
-		final var dto = new DTOVermerkArt(1L, "abc");
+	void getById() throws ApiOperationException {
+		final var dto = new DTOVermerkArt(1L, "");
+
 		when(this.conn.queryByKey(DTOVermerkArt.class, 1L)).thenReturn(dto);
 
 		assertThat(this.data.getById(1L))
@@ -93,225 +105,347 @@ class DataVermerkartenTest {
 
 	@Test
 	@DisplayName("getByID | ID can't be null")
-	void getByIdTest_IdNull() {
-		final var throwable = catchThrowable(() -> this.data.getById(null));
-
-		assertThat(throwable)
+	void getByIdNull() {
+		assertThatException()
+				.isThrownBy(() -> this.data.getById(null))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Eine Anfrage zu einer Vermerkart mit der ID null ist unzulässig.")
+				.withMessage("Die ID der Vermerkart darf nicht null sein.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
 	@DisplayName("getByID | id not found")
-	void getByIdTest_IdNotFound() {
-		final var throwable = catchThrowable(() -> this.data.getById(99L));
+	void getByIdNotFound() {
+		when(this.conn.queryByKey(DTOVermerkArt.class, 99L)).thenReturn(null);
 
-		assertThat(throwable)
+		assertThatException()
+				.isThrownBy(() -> this.data.getById(99L))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Die Vermerkart mit der ID 99 wurde nicht gefunden.")
+				.withMessage("Die Vermerkart mit der ID 99 wurde nicht gefunden.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
 	}
 
 	@Test
 	@DisplayName("getAll | Erfolg")
-	void getAllTest() {
-		final var dto1 = new DTOVermerkArt(1L, "abc");
-		final var dto2 = new DTOVermerkArt(2L, "abc");
+	void getAll() {
+		final var dto1 = new DTOVermerkArt(1L, "bez1");
+		final var dto2 = new DTOVermerkArt(2L, "bez2");
 		when(this.conn.queryAll(DTOVermerkArt.class)).thenReturn(List.of(dto1, dto2));
+		@SuppressWarnings("unchecked")
+		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(1L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
 
 		assertThat(this.data.getAll())
-				.isInstanceOf(List.class)
-				.isNotNull()
-				.isNotEmpty()
 				.hasSize(2)
-				.allSatisfy(item -> assertThat(item)
-						.isInstanceOf(VermerkartEintrag.class)
-						.hasFieldOrProperty("id"));
+				.satisfiesExactly(
+						f1 -> assertThat(f1)
+								.isInstanceOf(VermerkartEintrag.class)
+								.hasFieldOrPropertyWithValue("id", 1L)
+								.hasFieldOrPropertyWithValue("bezeichnung", "bez1"),
+						f2 -> assertThat(f2)
+								.isInstanceOf(VermerkartEintrag.class)
+								.hasFieldOrPropertyWithValue("id", 2L)
+								.hasFieldOrPropertyWithValue("bezeichnung", "bez2")
+				);
+	}
+
+	@Test
+	@DisplayName("getAll | referenced in other tabled")
+	void getAllReferencedInOtherTables() {
+		final var dto1 = new DTOVermerkArt(1L, "bez1");
+		final var dto2 = new DTOVermerkArt(2L, "bez2");
+		when(this.conn.queryAll(DTOVermerkArt.class)).thenReturn(List.of(dto1, dto2));
+		@SuppressWarnings("unchecked")
+		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(1L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
+
+		assertThat(this.data.getAll())
+				.hasSize(2)
+				.satisfiesExactly(
+						f1 -> assertThat(f1)
+								.isInstanceOf(VermerkartEintrag.class)
+								.hasFieldOrPropertyWithValue("id", 1L)
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", true),
+						f2 -> assertThat(f2)
+								.isInstanceOf(VermerkartEintrag.class)
+								.hasFieldOrPropertyWithValue("id", 2L)
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", false)
+				);
 	}
 
 	@Test
 	@DisplayName("getAll | Database empty")
-	void getAllTest_Empty() {
-		assertThat(this.data.getAll()).isNotNull().isEmpty();
+	void getAllEmpty() {
+		when(this.conn.queryAll(DTOVermerkArt.class)).thenReturn(Collections.emptyList());
+
+		verify(this.conn, never()).query(anyString(), eq(Long.class));
+		assertThat(this.data.getAll()).isEmpty();
 	}
 
 	@Test
 	@DisplayName("map | Erfolg")
-	void mapTest() {
-		final var dto = new DTOVermerkArt(1L, "abc");
-		dto.Sichtbar = true;
-		dto.Sortierung = 1;
+	void map() {
+		final var dto = new DTOVermerkArt(1L, "bezeichnung");
 
 		assertThat(this.data.map(dto))
 				.isInstanceOf(VermerkartEintrag.class)
 				.hasFieldOrPropertyWithValue("id", dto.ID)
-				.hasFieldOrPropertyWithValue("istSichtbar", true)
-				.hasFieldOrPropertyWithValue("sortierung", 1);
-	}
-
-	private static Stream<Arguments> provideMappingAttributes() {
-		return Stream.of(
-				arguments("id", 35),
-				arguments("bezeichnung", "test"),
-				arguments("sortierung", 2),
-				arguments("istSichtbar", true),
-				arguments("unknownArgument", "oh oh ! das wollen wir auf keinen Fall!")
-		);
-	}
-
-	@ParameterizedTest
-	@DisplayName("mapAttribute | Erfolg")
-	@MethodSource("provideMappingAttributes")
-	void mapAttributeTest(final String key, final Object value) {
-		final var dto = new DTOVermerkArt(1L, "abc");
-
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(dto, key, value, null));
-
-		switch (key) {
-			case "id" -> assertThat(throwable)
-					.isInstanceOf(ApiOperationException.class)
-					.hasMessage("Die ID 35 des Patches ist null oder stimmt nicht mit der ID 1 in der Datenbank überein.")
-					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-			case "istSichtbar" -> assertThat(dto.Sichtbar).isTrue();
-			case "bezeichnung" -> assertThat(dto.Bezeichnung).isEqualTo("test");
-			case "sortierung" -> assertThat(dto.Sortierung).isEqualTo(2);
-			default -> assertThat(throwable)
-					.isInstanceOf(ApiOperationException.class)
-					.hasMessageStartingWith("Die Daten des Patches enthalten das unbekannte Attribut")
-					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-		}
+				.hasFieldOrPropertyWithValue("bezeichnung", dto.Bezeichnung)
+				.hasFieldOrPropertyWithValue("istSichtbar", false)
+				.hasFieldOrPropertyWithValue("sortierung", 32000);
 	}
 
 	@Test
-	@DisplayName("mapAttribute | id is correct | nothing thrown")
-	void mapAttributeTest_idIsCorrect() {
-		final var dto = new DTOVermerkArt(1L, "abc");
-		assertThatNoException().isThrownBy(() -> this.data.mapAttribute(dto, "id", 1L, null));
+	@DisplayName("map | bezeichnung null")
+	void mapBezeichnungIsNull() {
+		final var dto = new DTOVermerkArt(1L, "bezeichnung");
+		dto.Bezeichnung = null;
+
+		assertThat(this.data.map(dto))
+				.isInstanceOf(VermerkartEintrag.class)
+				.hasFieldOrPropertyWithValue("bezeichnung", null);
 	}
 
 	@Test
-	@DisplayName("mapAttribute | Bezeichnung bereits vorhanden")
-	void mapAttributeTest_bezeichnungDoppeltVergeben() {
-		final var vermerkartABC = new DTOVermerkArt(1L, "abc");
-		when(this.conn.queryAll(DTOVermerkArt.class)).thenReturn(List.of(vermerkartABC));
+	@DisplayName("map | sichtbar null")
+	void mapSichtbarIsNull() {
+		final var dto = new DTOVermerkArt(1L, "bezeichnung");
+		dto.Sichtbar = null;
 
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(new DTOVermerkArt(2L, "abc"), "bezeichnung", "ABC", null));
+		assertThat(this.data.map(dto))
+				.isInstanceOf(VermerkartEintrag.class)
+				.hasFieldOrPropertyWithValue("istSichtbar", false);
+	}
 
-		assertThat(throwable)
+	@Test
+	@DisplayName("map | sortierung null")
+	void mapSortierungIsNull() {
+		final var dto = new DTOVermerkArt(1L, "bezeichnung");
+		dto.Sortierung = null;
+
+		assertThat(this.data.map(dto))
+				.isInstanceOf(VermerkartEintrag.class)
+				.hasFieldOrPropertyWithValue("sortierung", 32000);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | idWrong")
+	void mapAttributeIdIsWrong() {
+		assertThatException()
+				.isThrownBy(() -> this.data.mapAttribute(mock(DTOVermerkArt.class), "id", 2L, null))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Die Bezeichnung ABC ist bereits vorhanden.")
+				.withMessage("Die ID 2 des Patches ist null oder stimmt nicht mit der ID 0 in der Datenbank überein.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("mapAttribute | Bezeichnung case aendert sich")
-	void mapAttributeTest_changeCaseOfBezeichnung() throws ApiOperationException {
-		final var dto = new DTOVermerkArt(1L, "abc");
-		when(this.conn.queryAll(DTOVermerkArt.class)).thenReturn(List.of(dto));
+	@DisplayName("mapAttribute | id")
+	void mapAttributeId() {
+		final var dto = new DTOVermerkArt(1L, "bezeichnung");
 
-		this.data.mapAttribute(dto, "bezeichnung", "ABC", null);
-
-		assertThat(dto.Bezeichnung).isEqualTo("ABC");
+		assertDoesNotThrow(() -> this.data.mapAttribute(dto, "id", 1L, null));
 	}
 
 	@Test
-	@DisplayName("deleteMultipleAsResponse | Vermerke vorhanden")
-	void deleteMultipleAsResponseTest_vermerkeVorhanden() {
-		final List<Long> ids = List.of(1L);
-		final var vermerk = new DTOSchuelerVermerke(1L, 2L);
-		vermerk.VermerkArt_ID = 1L;
-		when(this.conn.queryByKeyList(DTOVermerkArt.class, ids)).thenReturn(List.of(new DTOVermerkArt(1L, "abc")));
-		when(this.conn.queryList("SELECT v FROM DTOSchuelerVermerke v WHERE v.VermerkArt_ID IN ?1", DTOSchuelerVermerke.class, ids)).thenReturn(List.of(vermerk));
-		try (var response = this.data.deleteMultipleAsResponse(ids)) {
-			final var result = ((List<?>) response.getEntity()).stream().map(SimpleOperationResponse.class::cast).toList();
+	@DisplayName("patch | bezeichnung > 30 Zeichen")
+	void patchBezeichnungIsTooLong() {
+		final var dto = new DTOVermerkArt(1L, "bezeichnung");
 
-			assertThat(result.getFirst().log.getFirst()).isEqualTo("Vermerkart abc (ID: 1) hat noch 1 verknüpfte(n) Vermerke.");
-		}
-	}
+		when(this.conn.queryByKey(DTOVermerkArt.class, 1L)).thenReturn(dto);
 
-	@Test
-	@DisplayName("deleteMultipleAsResponse | keine Vermerke vorhanden")
-	void deleteMultipleAsResponseTest_keineVermerkeVorhanden() {
-		final List<Long> ids = List.of(1L);
-		when(this.conn.queryByKeyList(DTOVermerkArt.class, ids)).thenReturn(List.of(new DTOVermerkArt(1L, "abc")));
-		when(this.conn.queryList("SELECT v FROM DTOSchuelerVermerke v WHERE v.VermerkArt_ID IN ?1", DTOSchuelerVermerke.class, ids)).thenReturn(Collections.emptyList());
-		when(this.conn.transactionRemove(any())).thenReturn(true);
-
-		try (var response = this.data.deleteMultipleAsResponse(ids)) {
-			final var result = ((List<?>) response.getEntity()).stream().map(SimpleOperationResponse.class::cast).toList();
-
-			assertThat(result.getFirst().log).isEmpty();
-			assertThat(result.getFirst().success).isTrue();
-		}
-	}
-
-	@Test
-	@DisplayName("deleteMultipleAsResponse | ids empty")
-	void deleteMultipleAsResponseTest_idsEmpty() {
-		try (var response = this.data.deleteMultipleAsResponse(Collections.emptyList())) {
-			final var result = (SimpleOperationResponse) response.getEntity();
-
-			assertThat(result.log.getFirst()).isEqualTo("Die Liste der zu löschenden Ids ist leer.");
-			assertThat(result.success).isFalse();
-		}
-	}
-
-	@Test
-	@DisplayName("mapAttribute | bezeichnung change case")
-	void mapAttributeTest_bezeichnungChangeCase() throws ApiOperationException {
-		final var dto = new DTOVermerkArt(1L, "abc");
-		when(this.conn.queryAll(DTOVermerkArt.class)).thenReturn(List.of(dto));
-
-		this.data.mapAttribute(dto, "bezeichnung", "ABC", null);
-
-		assertThat(dto.Bezeichnung).isEqualTo("ABC");
-	}
-
-	@Test
-	@DisplayName("mapAttribute | bezeichnung unverändert")
-	void mapAttributeTest_bezeichnungUnchanging() {
-		final var dto = new DTOVermerkArt(1L, "abc");
-
-		assertThatNoException().isThrownBy(() -> this.data.mapAttribute(dto, "bezeichnung", "abc", null));
-
-		verifyNoInteractions(this.conn);
-		assertThat(dto.Bezeichnung).isEqualTo("abc");
-	}
-
-	@Test
-	@DisplayName("mapAttribute | bezeichnung null")
-	void mapAttributeTest_bezeichnungNull() {
-		final var throwable = ThrowableAssert.catchThrowable(() -> this.data.mapAttribute(new DTOVermerkArt(1L, "abc"), "bezeichnung", null, null));
-
-		assertThat(throwable)
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", RandomStringUtils.insecure().nextAscii(31))))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Attribut bezeichnung: Der Wert null ist nicht erlaubt.")
+				.withMessage("Attribut bezeichnung: Die Länge des Strings ist auf 30 Zeichen limitiert.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("mapAttribute | bezeichnung blank")
-	void mapAttributeTest_bezeichnungBlank() {
-		final var throwable = ThrowableAssert.catchThrowable(() -> this.data.mapAttribute(new DTOVermerkArt(1L, "abc"), "bezeichnung", "", null));
+	@DisplayName("patch | bezeichnung Null")
+	void patchBezeichnungIsNull() {
+		when(this.conn.queryByKey(DTOVermerkArt.class, 1L)).thenReturn(mock(DTOVermerkArt.class));
+		final var map = new HashMap<String, Object>();
+		map.put("bezeichnung", null);
 
-		assertThat(throwable)
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, map))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Attribut bezeichnung: Ein leerer String ist hier nicht erlaubt.")
+				.withMessage("Attribut bezeichnung: Der Wert null ist nicht erlaubt.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("mapAttribute | bezeichnung dto is null")
-	void mapAttributeTest_bezeichnungDtoISNull() throws ApiOperationException {
+	@DisplayName("patch | bezeichnung empty")
+	void patchBezeichnungIsEmpty() {
+		when(this.conn.queryByKey(DTOVermerkArt.class, 1L)).thenReturn(mock(DTOVermerkArt.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut bezeichnung: Ein leerer String ist hier nicht erlaubt.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung is blank")
+	void patchBezeichnungIsBlank() throws ApiOperationException {
+		final var dto = new DTOVermerkArt(1L, "bezeichnung");
+		when(this.conn.queryByKey(DTOVermerkArt.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("bezeichnung", "    "));
+
+		verify(this.conn, never()).queryAll(DTOVermerkArt.class);
+		assertThat(dto.Bezeichnung).isEqualTo("bezeichnung");
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung doesn't change")
+	void patchBezeichnungDoesNotChange() throws ApiOperationException {
+		final var dto = new DTOVermerkArt(1L, "bezeichnung");
+		when(this.conn.queryByKey(DTOVermerkArt.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("bezeichnung", "bezeichnung"));
+
+		verify(this.conn, never()).queryAll(DTOVermerkArt.class);
+		assertThat(dto.Bezeichnung).isEqualTo("bezeichnung");
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung already used")
+	void patchBezeichnungAlreadyUsed() {
+		when(this.conn.queryByKey(DTOVermerkArt.class, 1L)).thenReturn(mock(DTOVermerkArt.class));
+		when(this.conn.queryAll(DTOVermerkArt.class)).thenReturn(List.of(new DTOVermerkArt(1L, "test")));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die Bezeichnung test ist bereits vorhanden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung already used different case")
+	void patchBezeichnungAlreadyUsedWithDifferentCase() {
+		when(this.conn.queryByKey(DTOVermerkArt.class, 1L)).thenReturn(mock(DTOVermerkArt.class));
+		when(this.conn.queryAll(DTOVermerkArt.class)).thenReturn(List.of(new DTOVermerkArt(2L, "TEST")));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die Bezeichnung test ist bereits vorhanden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung change case in same object")
+	void patchBezeichnungChangeCase() throws ApiOperationException {
+		final var dto = new DTOVermerkArt(1L, "test");
+		when(conn.queryAll(DTOVermerkArt.class)).thenReturn(List.of(dto));
+		final var newDto = new DTOVermerkArt(2L, "abc");
+		when(this.conn.queryByKey(DTOVermerkArt.class, 2L)).thenReturn(newDto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(2L, Map.of("bezeichnung", "ABC"));
+
+		assertThat(newDto.Bezeichnung).isEqualTo("ABC");
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung dto is null | make sure no Nullpointer is thrown in equalsIgnoreCase check")
+	void patchBezeichnungInDtoISNull() {
 		final var dto = new DTOVermerkArt(1L, "123");
 		dto.Bezeichnung = null;
-		final var newDto = new DTOVermerkArt(1L, "abc");
 		when(conn.queryAll(DTOVermerkArt.class)).thenReturn(List.of(dto));
+		final var newDto = new DTOVermerkArt(2L, "abc");
+		when(this.conn.queryByKey(DTOVermerkArt.class, 2L)).thenReturn(newDto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.mapAttribute(newDto, "bezeichnung", "test", null);
+		assertThatNoException()
+				.isThrownBy(() -> this.data.patch(2L, Map.of("bezeichnung", "test")));
+	}
 
-		assertThat(newDto.Bezeichnung).isEqualTo("test");
+	@Test
+	@DisplayName("patch | bezeichnung")
+	void patchBezeichnung() throws ApiOperationException {
+		final var dto = new DTOVermerkArt(1L, "bezeichnung");
+		when(this.conn.queryByKey(DTOVermerkArt.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("bezeichnung", "neu"));
+
+		assertThat(dto.Bezeichnung).isEqualTo("neu");
+	}
+
+	@Test
+	@DisplayName("patch | istSichtbar is null")
+	void patchIstSichtbarIsNull() {
+		when(this.conn.queryByKey(DTOVermerkArt.class, 1L)).thenReturn(mock(DTOVermerkArt.class));
+		final var map = new HashMap<String, Object>();
+		map.put("istSichtbar", null);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, map))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut istSichtbar: Der Wert null ist nicht erlaubt")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | istSichtbar")
+	void patchIstSichtbar() throws ApiOperationException {
+		final var dto = new DTOVermerkArt(1L, "bezeichnung");
+		dto.Sichtbar = false;
+		when(this.conn.queryByKey(DTOVermerkArt.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("istSichtbar", true));
+
+		assertThat(dto.Sichtbar).isTrue();
+	}
+
+	@Test
+	@DisplayName("patch | sortierung is null")
+	void patchSortierungIsNull() {
+		when(this.conn.queryByKey(DTOVermerkArt.class, 1L)).thenReturn(mock(DTOVermerkArt.class));
+		final var map = new HashMap<String, Object>();
+		map.put("sortierung", null);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, map))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut sortierung: Der Wert null ist nicht erlaubt")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | Sortierung")
+	void patchSortierung() throws ApiOperationException {
+		final var dto = new DTOVermerkArt(1L, "bezeichnung");
+		dto.Sortierung = 123;
+		when(this.conn.queryByKey(DTOVermerkArt.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("sortierung", 345));
+
+		assertThat(dto.Sortierung).isEqualTo(345);
+	}
+
+	@Test
+	@DisplayName("patch | unknown argument")
+	void patchUnknownArgument() {
+		when(this.conn.queryByKey(DTOVermerkArt.class, 1L)).thenReturn(mock(DTOVermerkArt.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("unknown", "unknown")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die Daten des Patches enthalten das unbekannte Attribut unknown.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 }

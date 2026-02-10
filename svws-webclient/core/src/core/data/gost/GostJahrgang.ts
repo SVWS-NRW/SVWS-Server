@@ -54,7 +54,7 @@ export class GostJahrgang extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostJahrgang'].includes(name);
 	}
 
-	public static class = new Class<GostJahrgang>('de.svws_nrw.core.data.gost.GostJahrgang');
+	public static readonly class = new Class<GostJahrgang>('de.svws_nrw.core.data.gost.GostJahrgang');
 
 	public static transpilerFromJSON(json: string): GostJahrgang {
 		const obj = JSON.parse(json) as Partial<GostJahrgang>;

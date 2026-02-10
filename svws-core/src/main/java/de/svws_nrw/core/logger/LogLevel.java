@@ -21,7 +21,7 @@ public enum LogLevel {
 	DEBUG(10000);
 
 
-	/// der Integer-Wert des Log-Levels
+	/** Der Integer-Wert des Log-Levels. */
 	private final int level;
 
 

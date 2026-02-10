@@ -14,7 +14,7 @@ export default defineConfig({
 		tailwindcss(),
 		Markdown({}),
 		Components({
-			globs: ["src/**/*.{vue,md}", "src/**/*Props.ts", "../ui/src/**/*.{md,vue}", "../ui/src/**/*Props.ts", '!../ui/src/**/*.story.*'],
+			globs: ["src/**/*.{vue,md}", "src/**/*Props.ts", "../ui/src/**/*.{md,vue}", "../ui/src/**/*Props.ts", '!../ui/src/**/*.story.*', '!../ui/src/stories/**/*.vue'],
 			types: [],
 		}),
 	],

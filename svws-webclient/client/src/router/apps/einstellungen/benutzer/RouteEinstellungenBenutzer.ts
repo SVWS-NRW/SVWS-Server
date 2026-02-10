@@ -37,8 +37,9 @@ export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungen
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams): Promise<boolean | void | Error | RouteLocationRaw> {
 		try {
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
-			if (id !== undefined)
+			if (id !== undefined) {
 				return routeEinstellungenBenutzer.getRoute({ id });
+			}
 			return true;
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
@@ -50,8 +51,9 @@ export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungen
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
 			await this.data.ladeListe();
 			if (to.name === this.name) {
-				if (this.data.mapBenutzer.size === 0)
+				if (this.data.mapBenutzer.size === 0) {
 					return;
+				}
 				const [next] = this.data.mapBenutzer.values();
 				return this.getRouteDefaultChild({ id: next.id });
 			}
@@ -87,11 +89,13 @@ export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungen
 	}
 
 	private setTab = async (value: TabData) => {
-		if (value.name === this.data.view.name)
+		if (value.name === this.data.view.name) {
 			return;
+		}
 		const node = RouteNode.getNodeByName(value.name);
-		if (node === undefined)
+		if (node === undefined) {
 			throw new DeveloperNotificationException("Unbekannte Route");
+		}
 		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, routeEinstellungen.children);
 	};

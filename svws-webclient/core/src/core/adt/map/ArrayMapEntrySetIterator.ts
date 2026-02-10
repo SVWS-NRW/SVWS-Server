@@ -77,7 +77,7 @@ export class ArrayMapEntrySetIterator<K, V> extends JavaObject implements JavaIt
 		return ['java.util.Iterator', 'de.svws_nrw.core.adt.map.ArrayMapEntrySetIterator'].includes(name);
 	}
 
-	public static class = new Class<ArrayMapEntrySetIterator<any, any>>('de.svws_nrw.core.adt.map.ArrayMapEntrySetIterator');
+	public static readonly class = new Class<ArrayMapEntrySetIterator<any, any>>('de.svws_nrw.core.adt.map.ArrayMapEntrySetIterator');
 
 }
 

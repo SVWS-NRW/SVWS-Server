@@ -92,6 +92,11 @@ public class Tabelle_SchuelerSprachpruefungen extends SchemaTabelle {
 			.setJavaComment(
 					"Note der Sprachprüfung, die herangezogen werden kann, falls die Note der Sprachprüfung an die Stelle einer Fremdsprachennote tritt");
 
+	/** Die Definition der Tabellenspalte Zeugnisbezeichnung */
+	public final SchemaTabelleSpalte col_Zeugnisbezeichnung = add("Zeugnisbezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+			.setJavaComment("Die Bezeichnung der Sprache auf dem Zeugnis (z.B. nötig für einen Eintrag \"Sonstige Sprache\")")
+			.setRevision(SchemaRevisionen.REV_54);
+
 
 	/** Die Definition des Fremdschlüssels SchuelerSprachpruefungen_Schueler_FK */
 	public final SchemaTabelleFremdschluessel fk_SchuelerSprachpruefungen_Schueler_FK = addForeignKey(

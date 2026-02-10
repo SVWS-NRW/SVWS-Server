@@ -3,8 +3,10 @@
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input placeholder="Kürzel" :required="true" :max-len="15" :valid="validateKuerzel" v-model="data.kuerzel" type="text" />
-					<svws-ui-text-input placeholder="Beschreibung" :max-len="150" :valid="validateBeschreibung" v-model="data.beschreibung" type="text" />
+					<svws-ui-text-input placeholder="Kürzel" type="text" :required="true" :max-len="15" v-model="data.kuerzel"
+						:validation="() => modelProxy.getFehler('kuerzel')" skip-default-validation />
+					<svws-ui-text-input placeholder="Beschreibung" type="text" :max-len="150" v-model="data.beschreibung"
+						:validation="() => modelProxy.getFehler('beschreibung')" skip-default-validation />
 					<svws-ui-spacing />
 
 					<svws-ui-select title="Klassen-Jahrgang" v-model="jahrgang" :items="jahrgaenge" :item-text="getSelectTextJahrgang"
@@ -43,156 +45,141 @@
 
 <script setup lang="ts">
 
-	import { ref, computed, onMounted, watch } from "vue";
+	import { ref, computed, onMounted, watch, shallowRef } from "vue";
 	import type { KlassenNeuProps } from "~/components/klassen/SKlassenNeuProps";
-	import type { KlassenDaten, JahrgangsDaten, List } from '@core';
-	import { AllgemeinbildendOrganisationsformen, Klassenart, Schulgliederung, ArrayList, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen } from "@core";
+	import type { JahrgangsDaten, List } from '@core';
+	import { KlassenDaten, AllgemeinbildendOrganisationsformen, Klassenart, Schulgliederung, ArrayList, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen } from "@core";
+	import { KlassenModelProxy } from "./KlassenModelProxy";
 
 	const props = defineProps<KlassenNeuProps>();
 
 	const schulform = computed(() => props.schulform);
 	const schuljahr = computed(() => props.manager().getSchuljahr());
 
-	const isLoading = ref<boolean>(false);
-	const isValid = ref<boolean>(false);
-	const data = ref<Partial<KlassenDaten>>({});
+	const dataNotPatched = shallowRef(new KlassenDaten());
+
+	const modelProxy = new KlassenModelProxy(() => dataNotPatched.value, () => props.manager().liste.list());
+	const data = modelProxy.proxy;
 
 	onMounted(() => {
-		const schulgliederungDefault = Schulgliederung.getDefault(props.schulform);
-		const schulgliederung = (schulgliederungDefault !== null) ? schulgliederungDefault
-			: Schulgliederung.getBySchuljahrAndSchulform(props.manager().getSchuljahr(), props.schulform).getFirst();
-		const idSchulgliederung = schulgliederung.daten(props.manager().getSchuljahr())?.id ?? -1;
-		const idKlassenart = Klassenart.getDefault(props.schulform).daten(props.manager().getSchuljahr())?.id ?? Klassenart.UNDEFINIERT.daten(props.manager().getSchuljahr())?.id;
-		if (props.schulform.istAllgemeinbildend())
-			data.value = {
-				kuerzel: "",
-				beschreibung: "",
-				idJahrgang: null,
-				parallelitaet: null,
-				idSchulgliederung,
-				idKlassenart,
-				idAllgemeinbildendOrganisationsform: AllgemeinbildendOrganisationsformen.GANZTAG.daten(props.manager().getSchuljahr())?.id ?? null,
-			};
-		else if (props.schulform.istBerufsbildend())
-			data.value = {
-				kuerzel: "",
-				beschreibung: "",
-				idJahrgang: null,
-				parallelitaet: null,
-				idSchulgliederung,
-				idBerufsbildendOrganisationsform: BerufskollegOrganisationsformen.VOLLZEIT.daten(props.manager().getSchuljahr())?.id ?? null,
-			};
-		else if (props.schulform.istWeiterbildung())
-			data.value = {
-				kuerzel: "",
-				beschreibung: "",
-				idJahrgang: null,
-				parallelitaet: null,
-				idSchulgliederung,
-				idWeiterbildungOrganisationsform: WeiterbildungskollegOrganisationsformen.VOLLZEIT.daten(props.manager().getSchuljahr())?.id ?? null,
-			};
+		const proxy = modelProxy.proxy;
+		initWithDefaults(proxy);
+		modelProxy.validate();
 
-
-		watch(() => data.value, async () => {
-			if (isLoading.value)
-				return;
-
-			props.checkpoint.active = true;
-			validateAll();
-		}, { immediate: false, deep: true });
+		watch(() => modelProxy.pending, () => props.checkpoint.active = true);
 	});
 
+
+	const isValid = computed<boolean>(() => modelProxy.getAlleFehler().isEmpty());
+
+	/**
+	 * Initialisiere den Default-State
+	 *
+	 * @param daten   die zu initialisierenden Daten
+	 */
+	function initWithDefaults(daten: KlassenDaten) {
+		const schulgliederungDefault = Schulgliederung.getDefault(props.schulform);
+		const schulgliederung = (schulgliederungDefault === null)
+			? Schulgliederung.getBySchuljahrAndSchulform(props.manager().getSchuljahr(), props.schulform).getFirst()
+			: schulgliederungDefault;
+		const idSchulgliederung = schulgliederung.daten(props.manager().getSchuljahr())?.id ?? -1;
+		daten.kuerzel = "";
+		daten.beschreibung = "";
+		daten.idJahrgang = null;
+		daten.parallelitaet = null;
+		daten.idSchulgliederung = idSchulgliederung;
+		if (props.schulform.istAllgemeinbildend()) {
+			daten.idKlassenart = (Klassenart.getDefault(props.schulform).daten(props.manager().getSchuljahr())?.id) ?? (Klassenart.UNDEFINIERT.daten(props.manager().getSchuljahr())?.id ?? -1);
+			daten.idAllgemeinbildendOrganisationsform = AllgemeinbildendOrganisationsformen.GANZTAG.daten(props.manager().getSchuljahr())?.id ?? null;
+		} else if (props.schulform.istBerufsbildend()) {
+			daten.idBerufsbildendOrganisationsform = BerufskollegOrganisationsformen.VOLLZEIT.daten(props.manager().getSchuljahr())?.id ?? null;
+		} else if (props.schulform.istWeiterbildung()) {
+			daten.idWeiterbildungOrganisationsform = WeiterbildungskollegOrganisationsformen.VOLLZEIT.daten(props.manager().getSchuljahr())?.id ?? null;
+		}
+	}
+
+	const isLoading = ref<boolean>(false);
+
 	const parallelitaet = computed<string | null>({
-		get: () => data.value.parallelitaet ?? '---',
-		set: (value) => data.value.parallelitaet = value,
+		get: () => data.parallelitaet ?? '---',
+		set: (value) => data.parallelitaet = value,
 	});
 
 	const schulgliederung = computed<Schulgliederung | null>({
-		get: () => (data.value.idSchulgliederung === undefined) ? null : Schulgliederung.data().getWertByID(data.value.idSchulgliederung),
-		set: (value) => data.value.idSchulgliederung = value?.daten(schuljahr.value)?.id,
+		get: () => (data.idSchulgliederung === -1) ? null : Schulgliederung.data().getWertByID(data.idSchulgliederung),
+		set: (value) => data.idSchulgliederung = value?.daten(schuljahr.value)?.id ?? -1,
 	});
-
 	const schulgliederungen = computed(() => Schulgliederung.getBySchuljahrAndSchulform(schuljahr.value, schulform.value));
 
 	const klassenart = computed<Klassenart | null>({
-		get: () => (data.value.idKlassenart === undefined) ? null : Klassenart.data().getWertByID(data.value.idKlassenart),
-		set: (value) => data.value.idKlassenart = value?.daten(schuljahr.value)?.id,
+		get: () => (data.idKlassenart === -1) ? null : Klassenart.data().getWertByID(data.idKlassenart),
+		set: (value) => data.idKlassenart = value?.daten(schuljahr.value)?.id ?? -1,
 	});
 	const klassenarten = computed(() => Klassenart.getBySchuljahrAndSchulform(schuljahr.value, schulform.value));
 
 	const organisationsformAllgemeinbildend = computed<AllgemeinbildendOrganisationsformen | null>({
 		get: () => {
-			const id = data.value.idAllgemeinbildendOrganisationsform;
-			if ((id === null) || (id === undefined))
-				return null;
-			return AllgemeinbildendOrganisationsformen.data().getWertByID(id);
+			const id = data.idAllgemeinbildendOrganisationsform;
+			return (id === null) ? null : AllgemeinbildendOrganisationsformen.data().getWertByID(id);
 		},
-		set: (value) => data.value.idAllgemeinbildendOrganisationsform = value?.daten(schuljahr.value)?.id,
+		set: (value) => data.idAllgemeinbildendOrganisationsform = value?.daten(schuljahr.value)?.id ?? null,
 	});
 	const organisationsformenAllgemeinbildend = computed(() => AllgemeinbildendOrganisationsformen.values());
 
 	const organisationsformBerufsbildend = computed<BerufskollegOrganisationsformen | null>({
 		get: () => {
-			const id = data.value.idBerufsbildendOrganisationsform;
-			if ((id === null) || (id === undefined))
-				return null;
-			return BerufskollegOrganisationsformen.data().getWertByID(id);
+			const id = data.idBerufsbildendOrganisationsform;
+			return (id === null) ? null : BerufskollegOrganisationsformen.data().getWertByID(id);
 		},
-		set: (value) => data.value.idBerufsbildendOrganisationsform = value?.daten(schuljahr.value)?.id,
+		set: (value) => data.idBerufsbildendOrganisationsform = value?.daten(schuljahr.value)?.id ?? null,
 	});
 	const organisationsformenBerufsbildend = computed(() => BerufskollegOrganisationsformen.values());
 
 	const organisationsformWeiterbildend = computed<WeiterbildungskollegOrganisationsformen | null>({
 		get: () => {
-			const id = data.value.idWeiterbildungOrganisationsform;
-			if ((id === null) || (id === undefined))
-				return null;
-			return WeiterbildungskollegOrganisationsformen.data().getWertByID(id);
+			const id = data.idWeiterbildungOrganisationsform;
+			return (id === null) ? null : WeiterbildungskollegOrganisationsformen.data().getWertByID(id);
 		},
-		set: (value) => data.value.idWeiterbildungOrganisationsform = value?.daten(schuljahr.value)?.id,
+		set: (value) => data.idWeiterbildungOrganisationsform = value?.daten(schuljahr.value)?.id ?? null,
 	});
 	const organisationsformenWeiterbildend = computed(() => WeiterbildungskollegOrganisationsformen.values());
 
 	const jahrgang = computed<JahrgangsDaten | null>({
 		get: () => {
-			const id = data.value.idJahrgang;
-			if ((id === null) || (id === undefined))
-				return null;
-			return props.manager().jahrgaenge.get(id);
+			const id = data.idJahrgang;
+			return (id === null) ? null : props.manager().jahrgaenge.get(id);
 		},
-		set: (value) => (data.value.idJahrgang = value?.id ?? null),
+		set: (value) => (data.idJahrgang = value?.id ?? null),
 	});
 	const jahrgaenge = computed<List<JahrgangsDaten>>(() => {
 		const result = new ArrayList<JahrgangsDaten>();
-		for (const jg of props.manager().jahrgaenge.list())
-			if (jg.kuerzel !== "E3") // Das dritte Jahr der Schuleingangsphase sollte nicht für einen Jahrgang einer Klasse verwendet werden, da es Schüler-spezifisch ist
+		for (const jg of props.manager().jahrgaenge.list()) {
+			if (jg.kuerzel !== "E3") { // Das dritte Jahr der Schuleingangsphase sollte nicht für einen Jahrgang einer Klasse verwendet werden, da es Schüler-spezifisch ist
 				result.add(jg);
+			}
+		}
 		return result;
 	});
 
 	const vorgaengerklasse = computed<KlassenDaten | null>({
 		get: () => {
-			const id = data.value.idVorgaengerklasse;
-			if ((id === null) || (id === undefined))
-				return null;
-			return props.mapKlassenVorigerAbschnitt().get(id) ?? null;
+			const id = data.idVorgaengerklasse;
+			return (id === null) ? null : props.mapKlassenVorigerAbschnitt().get(id) ?? null;
 		},
-		set: (value) => data.value.idVorgaengerklasse = value?.id ?? null,
+		set: (value) => data.idVorgaengerklasse = value?.id ?? null,
 	});
 
 	const folgeklasse = computed<KlassenDaten | null>({
 		get: () => {
-			const id = data.value.idFolgeklasse;
-			if ((id === null) || (id === undefined))
-				return null;
-			return props.mapKlassenFolgenderAbschnitt().get(id) ?? null;
+			const id = data.idFolgeklasse;
+			return (id === null) ? null : props.mapKlassenFolgenderAbschnitt().get(id) ?? null;
 		},
-		set: (value) => data.value.idFolgeklasse = value?.id ?? null,
+		set: (value) => data.idFolgeklasse = value?.id ?? null,
 	});
 
-	const kuerzelVorgaengerklasse = computed<string | null>(() => (data.value.kuerzelVorgaengerklasse === null) ? '&nbsp;' : data.value.kuerzelVorgaengerklasse ?? null);
+	const kuerzelVorgaengerklasse = computed<string | null>(() => (data.kuerzelVorgaengerklasse === null) ? '&nbsp;' : data.kuerzelVorgaengerklasse);
 
-	const kuerzelFolgeklasse = computed<string | null>(() => (data.value.kuerzelFolgeklasse === null) ? '&nbsp;' : data.value.kuerzelFolgeklasse ?? null);
+	const kuerzelFolgeklasse = computed<string | null>(() => (data.kuerzelFolgeklasse === null) ? '&nbsp;' : data.kuerzelFolgeklasse);
 
 	async function cancel() {
 		props.checkpoint.active = false;
@@ -200,19 +187,15 @@
 	}
 
 	async function addKlasse() {
-		if (isLoading.value === true)
+		if (isLoading.value === true) {
 			return;
+		}
 
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		await props.add(data.value);
+		await props.add(modelProxy.pending);
 		isLoading.value = false;
 	}
-
-	const validateKuerzel = (kuerzel: string | null): boolean => props.manager().validateKuerzel(kuerzel);
-	const validateBeschreibung = (beschreibung: string | null): boolean => props.manager().validateBeschreibung(beschreibung);
-
-	const validateAll = () => isValid.value = (data.value.kuerzel !== undefined) && validateKuerzel(data.value.kuerzel) && (data.value.beschreibung !== undefined) && validateBeschreibung(data.value.beschreibung);
 
 	function getSelectText(value: Klassenart | Schulgliederung | AllgemeinbildendOrganisationsformen | BerufskollegOrganisationsformen | WeiterbildungskollegOrganisationsformen) {
 		return value.daten(schuljahr.value)?.kuerzel + ' - ' + value.daten(schuljahr.value)?.text;
@@ -233,23 +216,28 @@
 
 	const listeFolgeklassen = computed<List<KlassenDaten>>(() => {
 		const result = new ArrayList<KlassenDaten>();
-		if (data.value.idJahrgang === null) {
-			for (const kl of props.mapKlassenFolgenderAbschnitt().values())
+
+		const idJahrgang = data.idJahrgang;
+		if (idJahrgang === null) {
+			for (const kl of props.mapKlassenFolgenderAbschnitt().values()) {
 				result.add(kl);
+			}
 			return result;
 		}
 
-		const jg = data.value.idJahrgang === undefined ? null : props.manager().jahrgaenge.get(data.value.idJahrgang);
-		if (jg === null)
+		const jg = props.manager().jahrgaenge.get(idJahrgang);
+		if (jg === null) {
 			return result;
+		}
 
 		for (const kl of props.mapKlassenFolgenderAbschnitt().values()) {
 			if (kl.idJahrgang === null) {
 				result.add(kl);
 			} else {
 				const jgKl = props.manager().jahrgaenge.get(kl.idJahrgang);
-				if (jg.idFolgejahrgang === jgKl?.id)
+				if (jg.idFolgejahrgang === jgKl?.id) {
 					result.add(kl);
+				}
 			}
 		}
 		return result;
@@ -257,23 +245,28 @@
 
 	const listeVorgaengerklassen = computed<List<KlassenDaten>>(() => {
 		const result = new ArrayList<KlassenDaten>();
-		if (data.value.idJahrgang === null) {
-			for (const kl of props.mapKlassenVorigerAbschnitt().values())
+
+		const idJahrgang = data.idJahrgang;
+		if (idJahrgang === null) {
+			for (const kl of props.mapKlassenVorigerAbschnitt().values()) {
 				result.add(kl);
+			}
 			return result;
 		}
 
-		const jg = data.value.idJahrgang === undefined ? null : props.manager().jahrgaenge.get(data.value.idJahrgang);
-		if (jg === null)
+		const jg = props.manager().jahrgaenge.get(idJahrgang);
+		if (jg === null) {
 			return result;
+		}
 
 		for (const kl of props.mapKlassenVorigerAbschnitt().values()) {
 			if (kl.idJahrgang === null) {
 				result.add(kl);
 			} else {
 				const jgKl = props.manager().jahrgaenge.get(kl.idJahrgang);
-				if (jg.id === jgKl?.idFolgejahrgang)
+				if (jg.id === jgKl?.idFolgejahrgang) {
 					result.add(kl);
+				}
 			}
 		}
 		return result;

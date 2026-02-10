@@ -55,7 +55,7 @@ export class LehrerAnrechnungsgrund extends CoreTypeSimple<LehrerAnrechnungsgrun
 		return ['de.svws_nrw.asd.types.lehrer.LehrerAnrechnungsgrund', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.CoreTypeSimple'].includes(name);
 	}
 
-	public static class = new Class<LehrerAnrechnungsgrund>('de.svws_nrw.asd.types.lehrer.LehrerAnrechnungsgrund');
+	public static readonly class = new Class<LehrerAnrechnungsgrund>('de.svws_nrw.asd.types.lehrer.LehrerAnrechnungsgrund');
 
 }
 

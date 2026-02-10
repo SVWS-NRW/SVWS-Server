@@ -30,8 +30,9 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<any, RouteGostKla
 			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
 			const termin = routeGostKlausurplanung.data.manager.terminGetByIdOrNull(idtermin ?? -1) ?? undefined;
 			routeGostKlausurplanung.data.terminSelected.value = termin ?? undefined;
-			if ((abiturjahr === undefined) || (halbjahr === null))
+			if ((abiturjahr === undefined) || (halbjahr === null)) {
 				throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
+			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}

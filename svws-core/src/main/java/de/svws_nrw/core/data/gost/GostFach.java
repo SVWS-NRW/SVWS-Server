@@ -81,16 +81,16 @@ public class GostFach {
 	/** Die Wochenstundenzahl des Faches in der Qualifikationsphase */
 	public int wochenstundenQualifikationsphase = 3;
 
-	/** Die Fach-ID des Leitfaches eines Projektkurses oder Vertiefungsfaches */
+	/** Die Fach-ID des Leit- bzw. Referenzfaches eines Projektkurses oder Vertiefungsfaches */
 	public Long projektKursLeitfach1ID = null;
 
-	/** Das Fach-Kürzel des Leitfaches eines Projektkurses oder Vertiefungsfaches */
+	/** Das Fach-Kürzel des Leit- bzw. Referenzfaches eines Projektkurses oder Vertiefungsfaches */
 	public String projektKursLeitfach1Kuerzel = null;
 
-	/** Die Fach-ID des zweiten Leitfaches eines Projektkurses */
+	/** Die Fach-ID des zweiten Leit- bzw. Referenzfaches eines Projektkurses */
 	public Long projektKursLeitfach2ID = null;
 
-	/** Die Fach-Kürzel des zweiten Leitfaches eines Projektkurses */
+	/** Die Fach-Kürzel des zweiten Leit- bzw. Referenzfaches eines Projektkurses */
 	public String projektKursLeitfach2Kuerzel = null;
 
 	/**

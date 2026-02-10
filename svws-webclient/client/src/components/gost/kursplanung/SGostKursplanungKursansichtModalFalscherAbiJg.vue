@@ -37,8 +37,9 @@
 
 	async function removeZuordnung() {
 		const set = new HashSet<number>();
-		for (const z of selected.value)
+		for (const z of selected.value) {
 			set.add(z.id);
+		}
 		show.value = false;
 		if (!set.isEmpty()) {
 			const kursUpdate = props.getErgebnismanager().kursSchuelerUpdate_02b_ENTFERNE_SCHUELERMENGE_AUS_ALLEN_KURSEN(set);

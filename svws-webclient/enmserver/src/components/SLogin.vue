@@ -116,8 +116,9 @@
 		await props.login(username.value, password.value);
 		authenticating.value = false;
 		firstauth.value = false;
-		if (!props.authenticated)
+		if (!props.authenticated) {
 			error.value = { name: "Eingabefehler", message: "Passwort oder Benutzername falsch." };
+		}
 	}
 
 </script>

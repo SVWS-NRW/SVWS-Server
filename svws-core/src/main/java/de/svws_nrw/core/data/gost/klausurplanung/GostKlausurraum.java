@@ -30,14 +30,14 @@ public class GostKlausurraum {
 	public String bemerkung = null;
 
 	/**
-	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 * Vergleicht, ob das aktuelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
 	 *
 	 * @param another     das zu vergleichende Objekt
-	 * @return true, falls die Objekte indentisch sind, sonst false
+	 * @return true, falls die Objekte identisch sind, sonst false
 	 */
 	@Override
 	public boolean equals(final Object another) {
-		return (another != null) && (another instanceof final GostKlausurraum raum) && (this.id == raum.id);
+		return (another instanceof final GostKlausurraum raum) && (this.id == raum.id);
 	}
 
 	/**

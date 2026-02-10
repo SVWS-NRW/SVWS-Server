@@ -26,7 +26,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Ankreuzfloskeln")
-@JsonPropertyOrder({"ID", "Fach_ID", "IstASV", "Jahrgang", "Gliederung", "FloskelText", "Sortierung", "FachSortierung", "Abschnitt", "Sichtbar", "Aktiv"})
+@JsonPropertyOrder({"ID", "Fach_ID", "IstASV", "Gliederung", "FloskelText", "Sortierung", "FachSortierung", "Abschnitt", "Sichtbar", "Aktiv"})
 public final class DTOAnkreuzfloskeln {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -58,12 +58,6 @@ public final class DTOAnkreuzfloskeln {
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstASV */
 	public static final String QUERY_LIST_BY_ISTASV = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.IstASV IN ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Jahrgang */
-	public static final String QUERY_BY_JAHRGANG = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Jahrgang = ?1";
-
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Jahrgang */
-	public static final String QUERY_LIST_BY_JAHRGANG = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Jahrgang IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Gliederung */
 	public static final String QUERY_BY_GLIEDERUNG = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Gliederung = ?1";
@@ -123,11 +117,6 @@ public final class DTOAnkreuzfloskeln {
 	@JsonProperty
 	public int IstASV;
 
-	/** ASD-Jahrgang zu der die Ankreuzfloskel gehört */
-	@Column(name = "Jahrgang")
-	@JsonProperty
-	public String Jahrgang;
-
 	/** Schulgliederung zu der die Ankreuzkompetenz gehört (nur wichtig bei BK) */
 	@Column(name = "Gliederung")
 	@JsonProperty
@@ -180,16 +169,11 @@ public final class DTOAnkreuzfloskeln {
 	 * Erstellt ein neues Objekt der Klasse DTOAnkreuzfloskeln ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 * @param IstASV   der Wert für das Attribut IstASV
-	 * @param Jahrgang   der Wert für das Attribut Jahrgang
 	 * @param FloskelText   der Wert für das Attribut FloskelText
 	 */
-	public DTOAnkreuzfloskeln(final long ID, final int IstASV, final String Jahrgang, final String FloskelText) {
+	public DTOAnkreuzfloskeln(final long ID, final int IstASV, final String FloskelText) {
 		this.ID = ID;
 		this.IstASV = IstASV;
-		if (Jahrgang == null) {
-			throw new NullPointerException("Jahrgang must not be null");
-		}
-		this.Jahrgang = Jahrgang;
 		if (FloskelText == null) {
 			throw new NullPointerException("FloskelText must not be null");
 		}
@@ -225,7 +209,7 @@ public final class DTOAnkreuzfloskeln {
 	 */
 	@Override
 	public String toString() {
-		return "DTOAnkreuzfloskeln(ID=" + this.ID + ", Fach_ID=" + this.Fach_ID + ", IstASV=" + this.IstASV + ", Jahrgang=" + this.Jahrgang + ", Gliederung=" + this.Gliederung + ", FloskelText=" + this.FloskelText + ", Sortierung=" + this.Sortierung + ", FachSortierung=" + this.FachSortierung + ", Abschnitt=" + this.Abschnitt + ", Sichtbar=" + this.Sichtbar + ", Aktiv=" + this.Aktiv + ")";
+		return "DTOAnkreuzfloskeln(ID=" + this.ID + ", Fach_ID=" + this.Fach_ID + ", IstASV=" + this.IstASV + ", Gliederung=" + this.Gliederung + ", FloskelText=" + this.FloskelText + ", Sortierung=" + this.Sortierung + ", FachSortierung=" + this.FachSortierung + ", Abschnitt=" + this.Abschnitt + ", Sichtbar=" + this.Sichtbar + ", Aktiv=" + this.Aktiv + ")";
 	}
 
 }

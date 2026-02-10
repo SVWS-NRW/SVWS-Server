@@ -55,7 +55,7 @@ export class LehrerMehrleistungsarten extends CoreTypeSimple<LehrerMehrleistungs
 		return ['de.svws_nrw.asd.types.lehrer.LehrerMehrleistungsarten', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.CoreTypeSimple'].includes(name);
 	}
 
-	public static class = new Class<LehrerMehrleistungsarten>('de.svws_nrw.asd.types.lehrer.LehrerMehrleistungsarten');
+	public static readonly class = new Class<LehrerMehrleistungsarten>('de.svws_nrw.asd.types.lehrer.LehrerMehrleistungsarten');
 
 }
 

@@ -57,7 +57,7 @@
 	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
-		{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
+		{ key: "vorname", label: "Rufname", sortable: true, span: 2 },
 	];
 
 	function textPersonaltyp(personaltyp: PersonalTyp): string {
@@ -86,33 +86,37 @@
 		get: () => [...props.manager().personaltypen.auswahl()],
 		set: (value) => {
 			props.manager().personaltypen.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.manager().personaltypen.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
 
 	const sortByMulti = computed<Map<string, boolean>>(() => {
 		const map = new Map<string, boolean>();
-		for (const pair of props.manager().orderGet())
-			if (pair.b !== null)
+		for (const pair of props.manager().orderGet()) {
+			if (pair.b !== null) {
 				map.set(pair.a, pair.b);
+			}
+		}
 		return map;
 	});
 
 	const sortByAndOrder = computed<SortByAndOrder | undefined>({
 		get: () => {
 			const list = props.manager().orderGet();
-			if (list.isEmpty())
+			if (list.isEmpty()) {
 				return undefined;
-			else {
+			} else {
 				const { a: key, b: order } = list.get(0);
 				return { key, order };
 			}
 		},
 		set: (value) => {
-			if ((value === undefined) || (value.key === null))
+			if ((value === undefined) || (value.key === null)) {
 				return;
+			}
 			props.manager().orderUpdate(value.key, value.order);
 			void props.setFilter();
 		},
@@ -124,12 +128,14 @@
 		const arr = [];
 		const locale = search.value.toLocaleLowerCase();
 		const searchValueIsNumber = /^[0-9]+$/.test(locale.trim());
-		for (const e of props.manager().filtered())
+		for (const e of props.manager().filtered()) {
 			if ((searchValueIsNumber && e.id.toString().includes(locale))
 				|| e.nachname.toLocaleLowerCase().includes(locale)
 				|| e.vorname.toLocaleLowerCase().includes(locale)
-				|| e.kuerzel.toLocaleLowerCase().includes(locale))
+				|| e.kuerzel.toLocaleLowerCase().includes(locale)) {
 				arr.push(e);
+			}
+		}
 		return arr;
 	});
 
@@ -145,20 +151,24 @@
 	}
 
 	const clickedEintrag = computed(() => {
-		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN))
+		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) {
 			return null;
+		}
 		return props.manager().hasDaten() ? props.manager().auswahl() : null;
 	});
 
 	async function setAuswahl(items: LehrerListeEintrag[]) {
 		props.manager().liste.auswahlClear();
-		for (const item of items)
-			if (props.manager().liste.hasValue(item))
+		for (const item of items) {
+			if (props.manager().liste.hasValue(item)) {
 				props.manager().liste.auswahlAdd(item);
-		if (props.manager().liste.auswahlExists())
+			}
+		}
+		if (props.manager().liste.auswahlExists()) {
 			await props.gotoGruppenprozessView(true);
-		else
+		} else {
 			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
+		}
 	}
 
 </script>

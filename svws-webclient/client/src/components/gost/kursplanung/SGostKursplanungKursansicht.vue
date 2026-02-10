@@ -51,7 +51,13 @@
 					</div>
 					<div role="row" class="svws-ui-tr select-none" :style="gridTemplateColumns">
 						<div role="columnheader" class="svws-ui-td svws-divider" :class="zeigeAufklappzeile ? 'col-span-7' : 'col-span-6'">
-							Schülerzahl
+							<div class="flex items-center justify-between w-full">
+								<span>Schülerzahl</span>
+								<span :title="'Kursfrequenz 1 = (Summe aller Fachwahlen) / (interne Kurse) / (interne Kurse) = ' + getErgebnismanager().getKursfrequenz1AsString()
+									+ '\nKursfrequenz 2 = (Summe aller auf interne Kurse verteilten SuS) / (interne Kurse) = ' + getErgebnismanager().getKursfrequenz2AsString()">
+									⌀ = {{ getErgebnismanager().getKursfrequenz2AsString() }}
+								</span>
+							</div>
 						</div>
 						<div role="columnheader" class="svws-ui-td svws-align-center !px-0" v-for="(s, index) in schienen" :key="s.id" :class="{'svws-divider': (index + 1) < schienen.size()}">
 							<template v-if="getAnzahlSchuelerSchiene(s.id) > 0">
@@ -86,7 +92,7 @@
 							</span>
 						</div>
 						<div role="columnheader" class="svws-ui-td">Lehrkraft</div>
-						<div class="svws-ui-td svws-align-center" title="Kooperation">Koop</div>
+						<div class="svws-ui-td svws-align-center" title="Kooperations-Kurs, welcher an einer anderen Schule unterrichtet wird.">Koop</div>
 						<div class="svws-ui-td svws-align-center" title="Fachwahlen">FW</div>
 						<div class="svws-ui-td svws-align-center svws-divider" title="Differenz">Diff</div>
 						<!--Schienen-->
@@ -416,16 +422,18 @@
 	const columns = computed<DataTableColumn[]>(() => {
 		const cols: DataTableColumn[] = [];
 		cols.push({ key: "auswahl", label: "", fixedWidth: 1.5, align: 'center' });
-		if (zeigeAufklappzeile.value)
+		if (zeigeAufklappzeile.value) {
 			cols.push({ key: "actions", label: "", fixedWidth: 1.5, align: 'center' });
+		}
 		cols.push({ key: "kurs", label: "Kurs", span: 1.75, fixedWidth: 8 },
 			{ key: "lehrer", label: "Lehrer", span: 1.5, fixedWidth: 6 },
 			{ key: "koop", label: "Koop", align: 'center', fixedWidth: 3.75 });
 		if (props.blockungstabelleHidden() === 'nichts') {
 			cols.push({ key: "FW", label: "FW", align: 'center', fixedWidth: 3.75 },
 				{ key: "Diff", label: "Diff", align: 'center', fixedWidth: 3.75 });
-			for (let i = 1; i < schienen.value.size(); i++)
+			for (let i = 1; i < schienen.value.size(); i++) {
 				cols.push({ key: "schiene_" + (i + 1), label: "schiene_" + (i + 1), fixedWidth: 3.75, align: 'center' });
+			}
 		}
 		cols.push({ key: "schiene_" + (1), label: "SuS", fixedWidth: 3.75, align: 'center' });
 		return cols;
@@ -453,18 +461,24 @@
 
 	const fachwahlListe = computed<List<{ kursart: GostKursart, fachwahlen: GostStatistikFachwahl }>>(() => {
 		const result = new ArrayList<{ kursart: GostKursart, fachwahlen: GostStatistikFachwahl }>();
-		if (props.kurssortierung.value === 'fach')
-			for (const fachwahlen of props.mapFachwahlStatistik().values())
-				for (const kursart of GostKursart.values())
+		if (props.kurssortierung.value === 'fach') {
+			for (const fachwahlen of props.mapFachwahlStatistik().values()) {
+				for (const kursart of GostKursart.values()) {
 					result.add({ kursart, fachwahlen });
-		else
-			for (const kursart of GostKursart.values())
-				for (const fachwahlen of props.mapFachwahlStatistik().values())
+				}
+			}
+		} else {
+			for (const kursart of GostKursart.values()) {
+				for (const fachwahlen of props.mapFachwahlStatistik().values()) {
 					if (kursart === GostKursart.GK) {
 						result.add({ kursart, fachwahlen });
 						result.add({ kursart: GostKursart.ZK, fachwahlen });
-					} else if (kursart !== GostKursart.ZK)
+					} else if (kursart !== GostKursart.ZK) {
 						result.add({ kursart, fachwahlen });
+					}
+				}
+			}
+		}
 		return result;
 	});
 
@@ -502,8 +516,9 @@
 	}
 
 	function allow_del_schiene(schiene: GostBlockungSchiene): boolean {
-		if (!props.hatErgebnis)
+		if (!props.hatErgebnis) {
 			return false;
+		}
 		return props.getDatenmanager().schieneGetIsRemoveAllowed(schiene.id) && props.getErgebnismanager().getOfSchieneRemoveAllowed(schiene.id);
 	}
 
@@ -511,18 +526,21 @@
 		const auswahl = props.getKursauswahl();
 		const allSelected = (props.getDatenmanager().kursGetAnzahl() === auswahl.size());
 		const set = new HashSet<number>();
-		if (!allSelected)
-			for (const kurs of props.getDatenmanager().kursGetListeSortiertNachFachKursartNummer())
+		if (!allSelected) {
+			for (const kurs of props.getDatenmanager().kursGetListeSortiertNachFachKursartNummer()) {
 				set.add(kurs.id);
+			}
+		}
 		props.setKursauswahl(set);
 	}
 
 	function updateKursauswahl(kurs: GostBlockungKurs) {
 		const set = props.getKursauswahl();
-		if (set.contains(kurs.id))
+		if (set.contains(kurs.id)) {
 			set.remove(kurs.id);
-		else
+		} else {
 			set.add(kurs.id);
+		}
 		props.setKursauswahl(set);
 	}
 
@@ -536,13 +554,15 @@
 	}
 
 	async function add_schiene() {
-		if (!props.apiStatus.pending)
+		if (!props.apiStatus.pending) {
 			return await props.addSchiene();
+		}
 	}
 
 	async function del_schiene(schiene: GostBlockungSchiene) {
-		if (!props.apiStatus.pending)
+		if (!props.apiStatus.pending) {
 			return await props.removeSchiene(schiene);
+		}
 	}
 
 	const dragSperreSchiene = ref<GostBlockungSchiene | undefined>(undefined);
@@ -587,69 +607,83 @@
 
 	/** ist das Drag-Objekt ein Kurs, der auf der Schiene liegt? */
 	const isKursDragging = computed(() => {
-		if (dragKurs.value === null || dragSchiene.value === null)
+		if (dragKurs.value === null || dragSchiene.value === null) {
 			return false;
+		}
 		return props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dragKurs.value.id, dragSchiene.value.id);
 	});
 
 	/** Soll ein Kurs verschoben werden, dann befinden wir uns im gleichen Kurs, aber auf einer anderen Schiene */
 	const highlightKursVerschieben = (kurs: GostBlockungKurs) => computed<boolean>(() => {
-		if (dragKurs.value === null || dragSchiene.value === null || dragOverKurs.value === null || dragOverSchiene.value === null)
+		if (dragKurs.value === null || dragSchiene.value === null || dragOverKurs.value === null || dragOverSchiene.value === null) {
 			return false;
+		}
 		// wird ein leeres Feld gezogen, dann ist das kein Grund für ein Highlight
-		if (!isKursDragging.value)
+		if (!isKursDragging.value) {
 			return false;
+		}
 		// befindet sich der Kurs außerhalb der eigenen Zeile, false
-		if (dragKurs.value.id !== dragOverKurs.value.id)
+		if (dragKurs.value.id !== dragOverKurs.value.id) {
 			return false;
+		}
 		// kurs auf Kurs und gleiche Schiene ist ungültig (auch bei Kultikursen)
-		if ((dragOverKurs.value.id === dragKurs.value.id) && props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dragKurs.value.id, dragOverSchiene.value.id))
+		if ((dragOverKurs.value.id === dragKurs.value.id) && props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dragKurs.value.id, dragOverSchiene.value.id)) {
 			return false;
+		}
 		// kurs auf kurs aber andere Schiene ist ok, Kurs fixierteVerschieben
-		if ((dragOverKurs.value.id === dragKurs.value.id) && (dragOverSchiene.value.id !== dragSchiene.value.id) && (kurs.id === dragOverKurs.value.id))
+		if ((dragOverKurs.value.id === dragKurs.value.id) && (dragOverSchiene.value.id !== dragSchiene.value.id) && (kurs.id === dragOverKurs.value.id)) {
 			return true;
+		}
 		return false;
 	});
 
 	/** Es soll ein Kurs auf einen anderen Kurs gezogen werden, um gemeinsame Sache zu machen */
 	const highlightKursAufAnderenKurs = (kurs: GostBlockungKurs, schieneE: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
-		if ((dragKurs.value === null) || (dragSchiene.value === null) || (dragOverSchiene.value === null) || (dragOverKurs.value === null))
+		if ((dragKurs.value === null) || (dragSchiene.value === null) || (dragOverSchiene.value === null) || (dragOverKurs.value === null)) {
 			return false;
+		}
 		const schiene = props.getErgebnismanager().getSchieneG(schieneE.id);
 		// wenn kein Kurs gezogen wird, dann kann auch kein Highlighting stattfinden
-		if (!isKursDragging.value)
+		if (!isKursDragging.value) {
 			return false;
+		}
 		// kurs auf Kurs ist ungültig
-		if (kurs.id === dragKurs.value.id)
+		if (kurs.id === dragKurs.value.id) {
 			return false;
-		if ((kurs.id !== dragOverKurs.value.id) || (schiene.id !== dragOverSchiene.value.id))
+		}
+		if ((kurs.id !== dragOverKurs.value.id) || (schiene.id !== dragOverSchiene.value.id)) {
 			return false;
+		}
 		// kurs auf anderen kurs ist ok, Kurs mit Kurs Sperren/Fixieren etc
 		return props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dragOverKurs.value.id, dragOverSchiene.value.id);
 	});
 
 	/** Wird ein Rechteck gezogen, so wird ein Feld über mehrere Kurse hinweg bewegt und landet nicht auf einem anderen Kurs */
 	const highlightRechteck = (kurs: GostBlockungKurs, schieneE: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
-		if ((dragKurs.value === null) || (dragSchiene.value === null) || (dragOverSchiene.value === null) || (dragOverKurs.value === null))
+		if ((dragKurs.value === null) || (dragSchiene.value === null) || (dragOverSchiene.value === null) || (dragOverKurs.value === null)) {
 			return false;
+		}
 		const schiene = props.getErgebnismanager().getSchieneG(schieneE.id);
 		// ein Kurs in der gleichen Zeile, also wenn Kursauswahl = 1, dann nicht erlauben, weil wir verschieben
-		if (isKursDragging.value && (kurseInRechteckSet.value.size() === 1))
+		if (isKursDragging.value && (kurseInRechteckSet.value.size() === 1)) {
 			return false;
+		}
 		// wenn ich auf einem Kurs lande, dann will ich kein Rechteck, sondern eine Kurs mit Kurs-Aktion, es sei denn ich bin im gleichen Kurs oder ich habe keinen Kurs gezogen
 		// aktuell möchte ich das doch...
 		// if (isKursDragging.value && props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dragOverKurs.value.id, dragOverSchiene.value.id))
 		// 	return false;
 		// ist der aktuelle Kurs nicht Teil des Rechtecks, dann nicht highlighten
-		if (!kurseInRechteckSet.value.contains(kurs.id))
+		if (!kurseInRechteckSet.value.contains(kurs.id)) {
 			return false;
+		}
 		return (((schiene.nummer <= dragSchiene.value.nummer) && (schiene.nummer >= dragOverSchiene.value.nummer)) || ((schiene.nummer >= dragSchiene.value.nummer) && (schiene.nummer <= dragOverSchiene.value.nummer)));
 	});
 
 	/** Wird ein Rechteck gezogen, so wird ein Feld über mehrere Kurse hinweg bewegt und landet nicht auf einem anderen Kurs */
 	const highlightRechteckDrop = (kurs: GostBlockungKurs, schieneE: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
-		if (kurseUndSchienenInRechteck.value === null)
+		if (kurseUndSchienenInRechteck.value === null) {
 			return false;
+		}
 		const schiene = props.getErgebnismanager().getSchieneG(schieneE.id);
 		const [kurse, schienen] = kurseUndSchienenInRechteck.value;
 		return (kurse.contains(kurs.id)) && (schienen.contains(schiene.nummer));
@@ -658,8 +692,9 @@
 	/** Dieses computed ermittelt ein Set von Kursen, die innerhalb des Rechtecks liegen */
 	const kurseInRechteckSet = computed<JavaSet<number>>(() => {
 		const range = new HashSet<number>();
-		if ((dragKurs.value === null) || (dragOverKurs.value === null))
+		if ((dragKurs.value === null) || (dragOverKurs.value === null)) {
 			return range;
+		}
 		const k1 = toRaw(dragKurs.value);
 		const k2 = toRaw(dragOverKurs.value);
 		let goon = false;
@@ -668,21 +703,24 @@
 		const kMin = iK1 <= iK2 ? k1 : k2;
 		const kMax = iK2 >= iK1 ? k2 : k1;
 		for (const k of kurse.value) {
-			if (k.id === kMin.id)
+			if (k.id === kMin.id) {
 				goon = true;
+			}
 			if (k.id === kMax.id) {
 				range.add(k.id);
 				break;
 			}
-			if (goon)
+			if (goon) {
 				range.add(k.id);
+			}
 		}
 		return range;
 	});
 
 	const zusammenKursbezeichnung = computed<string | null>(() => {
-		if (!kurseUndSchienenInRechteck.value?.[2])
+		if (!kurseUndSchienenInRechteck.value?.[2]) {
 			return null;
+		}
 		const [id1, id2] = kurseUndSchienenInRechteck.value[2];
 		return `${props.getDatenmanager().kursGetName(id1)} und ${props.getDatenmanager().kursGetName(id2)}`;
 	});
@@ -692,57 +730,67 @@
 	function setDrag(p1: GostBlockungKurs | GostBlockungsergebnisSchiene, p2?: GostBlockungsergebnisSchiene) {
 		dragOverKurs.value = null;
 		dragOverSchiene.value = null;
-		if (p1 instanceof GostBlockungKurs)
+		if (p1 instanceof GostBlockungKurs) {
 			dragKurs.value = p1;
-		else
+		} else {
 			dragSchiene.value = props.getErgebnismanager().getSchieneG(p1.id);
-		if (p2 instanceof GostBlockungsergebnisSchiene && p1 instanceof GostBlockungKurs)
+		}
+		if (p2 instanceof GostBlockungsergebnisSchiene && p1 instanceof GostBlockungKurs) {
 			dragSchiene.value = props.getErgebnismanager().getSchieneG(p2.id);
-		else
+		} else {
 			throw new DeveloperNotificationException("Es können keine zwei Schienen übergeben werden");
+		}
 	}
 
 	function setDragOver(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
-		if (kurs.id === dragOverKurs.value?.id && dragOverSchiene.value?.id === schiene.id)
+		if (kurs.id === dragOverKurs.value?.id && dragOverSchiene.value?.id === schiene.id) {
 			return;
+		}
 		dragOverKurs.value = kurs;
 		dragOverSchiene.value = props.getErgebnismanager().getSchieneG(schiene.id);
 	}
 
 	async function setDrop(p1: GostBlockungKurs | GostBlockungsergebnisSchiene, p2?: GostBlockungsergebnisSchiene) {
-		if (p1 instanceof GostBlockungKurs)
+		if (p1 instanceof GostBlockungKurs) {
 			dropKurs.value = p1;
-		else
+		} else {
 			dropSchiene.value = props.getErgebnismanager().getSchieneG(p1.id);
-		if (p2 instanceof GostBlockungsergebnisSchiene && p1 instanceof GostBlockungKurs)
+		}
+		if (p2 instanceof GostBlockungsergebnisSchiene && p1 instanceof GostBlockungKurs) {
 			dropSchiene.value = props.getErgebnismanager().getSchieneG(p2.id);
-		else
+		} else {
 			throw new DeveloperNotificationException("Es können keine zwei Schienen übergeben werden");
-		if (highlightKursVerschieben(p1).value)
+		}
+		if (highlightKursVerschieben(p1).value) {
 			await setKursVerschieben();
-		else if (highlightRechteck(p1, p2).value)
+		} else if (highlightRechteck(p1, p2).value) {
 			setRechteck();
+		}
 	}
 
 	async function setKursVerschieben() {
-		if ((dropKurs.value === null) || (dropSchiene.value === null) || (dragKurs.value === null) || (dragSchiene.value === null))
+		if ((dropKurs.value === null) || (dropSchiene.value === null) || (dragKurs.value === null) || (dragSchiene.value === null)) {
 			return;
-		if (istVorlage.value && props.getDatenmanager().kursGetHatFixierungInSchiene(dragKurs.value.id, dragSchiene.value.id))
+		}
+		if (istVorlage.value && props.getDatenmanager().kursGetHatFixierungInSchiene(dragKurs.value.id, dragSchiene.value.id)) {
 			await props.regelnUpdate(props.getErgebnismanager().regelupdateRemove_02e_KURS_FIXIERE_IN_EINER_SCHIENE(dragKurs.value.id, dragSchiene.value.id));
+		}
 		await props.updateKursSchienenZuordnung(dragKurs.value.id, dragSchiene.value.id, dropSchiene.value.id);
 	}
 
 	function setRechteck() {
 		dropKurs2.value = dragKurs.value;
 		dropSchiene2.value = dragSchiene.value;
-		if ((dropKurs.value === null) || (dropSchiene.value === null) || (dragKurs.value === null) || (dragSchiene.value === null))
+		if ((dropKurs.value === null) || (dropSchiene.value === null) || (dragKurs.value === null) || (dragSchiene.value === null)) {
 			return;
+		}
 		showTooltip.value = { kursID: dropKurs.value.id, schieneID: dropSchiene.value.id };
 		const s1 = props.getErgebnismanager().getSchieneG(dropSchiene.value.id);
 		const s2 = props.getErgebnismanager().getSchieneG(dragSchiene.value.id);
 		const schienenSet = new HashSet<number>();
-		for (let i = Math.min(s1.nummer, s2.nummer); (i < Math.max(s1.nummer, s2.nummer) + 1); i++)
+		for (let i = Math.min(s1.nummer, s2.nummer); (i < Math.max(s1.nummer, s2.nummer) + 1); i++) {
 			schienenSet.add(i);
+		}
 		const kurseZusammen = props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dragKurs.value.id, dragSchiene.value.id) && props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dropKurs.value.id, dropSchiene.value.id)
 			? SetUtils.create2(dragKurs.value.id, dropKurs.value.id)
 			: null;
@@ -766,19 +814,22 @@
 	}
 
 	async function rechteckActions(action: 'kurse fixieren' | 'kurse lösen' | 'toggle kurse' | 'schienen sperren' | 'schienen entsperren' | 'toggle schienen' | 'schüler fixieren' | 'schüler lösen' | 'toggle schüler' | 'Schüler LK fixieren' | 'Schüler AB3 fixieren' | 'Schüler LK und AB3 fixieren' | 'Schüler AB4 fixieren' | 'Schüler AB fixieren' | 'Schüler schriftlichen fixieren' | 'kurse immer zusammen' | 'kurse nie zusammen') {
-		if (kurseUndSchienenInRechteck.value === null)
+		if (kurseUndSchienenInRechteck.value === null) {
 			return false;
+		}
 		const [kurse, schienen, set] = kurseUndSchienenInRechteck.value;
 		resetDrop();
 		const update = (() => {
 			switch (action) {
 				case 'kurse immer zusammen':
-					if (set === null)
+					if (set === null) {
 						throw new DeveloperNotificationException('Es wurde ein leeres Set mit Kursen für Regel 8 übergeben');
+					}
 					return props.getErgebnismanager().regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(set);
 				case 'kurse nie zusammen':
-					if (set === null)
+					if (set === null) {
 						throw new DeveloperNotificationException('Es wurde ein leeres Set mit Kursen für Regel 7 übergeben');
+					}
 					return props.getErgebnismanager().regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(set);
 				case 'schüler fixieren':
 					return props.getErgebnismanager().regelupdateCreate_04b_SCHUELER_FIXIEREN_IN_DEN_KURSEN(kurse);
@@ -829,25 +880,29 @@
 
 	const listenDerKurse = computed<HashMap2D<number, number, List<GostBlockungKurs>>>(() => {
 		const result = new HashMap2D<number, number, List<GostBlockungKurs>>();
-		for (const fachwahlen of props.mapFachwahlStatistik().values())
-			for (const kursart of GostKursart.values())
+		for (const fachwahlen of props.mapFachwahlStatistik().values()) {
+			for (const kursart of GostKursart.values()) {
 				result.put(fachwahlen.id, kursart.id, props.getDatenmanager().kursGetListeByFachUndKursart(fachwahlen.id, kursart.id));
+			}
+		}
 		return result;
 	});
 
 	function bgColor(fachwahl: { fachwahlen: GostStatistikFachwahl, kursart: GostKursart }): string {
-		if (fachwahl.fachwahlen.kuerzelStatistik === null)
+		if (fachwahl.fachwahlen.kuerzelStatistik === null) {
 			return 'rgb(220,220,220)';
-		return Fach.getBySchluesselOrDefault(fachwahl.fachwahlen.kuerzelStatistik).getHMTLFarbeRGBA(schuljahr.value, 1.0);
+		}
+		return Fach.getBySchluesselOrDefault(fachwahl.fachwahlen.kuerzelStatistik).getHMTLFarbeRGBA(schuljahr.value, 1);
 	}
 
 	function toggleSchuelerFilterFachwahl(fachwahl: { fachwahlen: GostStatistikFachwahl, kursart: GostKursart }) {
 		const filter = props.schuelerFilter();
-		if (filter.fach !== fachwahl.fachwahlen.id) {
+		if (filter.fach === fachwahl.fachwahlen.id) {
+			filter.reset();
+		} else {
 			filter.kursart = fachwahl.kursart;
 			filter.fach = fachwahl.fachwahlen.id;
-		} else
-			filter.reset();
+		}
 	}
 
 	async function add_kurs(fachwahl: { fachwahlen: GostStatistikFachwahl, kursart: GostKursart }) {
@@ -869,41 +924,49 @@
 
 	const kurslehrer_liste = (kurs: GostBlockungKurs) => computed<LehrerListeEintrag[]>(() => {
 		const vergeben = new Set();
-		for (const l of props.getDatenmanager().kursGetLehrkraefteSortiert(kurs.id))
+		for (const l of props.getDatenmanager().kursGetLehrkraefteSortiert(kurs.id)) {
 			vergeben.add(l.id);
+		}
 		const id = kurslehrer(kurs).value?.id;
-		if (id !== undefined)
+		if (id !== undefined) {
 			vergeben.delete(id);
+		}
 		const result = [];
-		for (const l of props.mapLehrer.values())
-			if (!vergeben.has(l.id) && l.istSichtbar)
+		for (const l of props.mapLehrer.values()) {
+			if (!vergeben.has(l.id) && l.istSichtbar) {
 				result.push(l);
+			}
+		}
 		return result;
 	});
 
 	async function setKurslehrer(kurs: GostBlockungKurs, value: LehrerListeEintrag | undefined) {
 		const lehrer = kurslehrer(kurs).value;
-		if ((value === undefined && lehrer === undefined) || (value !== undefined && props.getDatenmanager().kursGetLehrkraftMitIDExists(kurs.id, value.id)))
+		if ((value === undefined && lehrer === undefined) || (value !== undefined && props.getDatenmanager().kursGetLehrkraftMitIDExists(kurs.id, value.id))) {
 			return;
+		}
 		if (value !== undefined) {
 			await props.addKursLehrer(kurs.id, value.id);
 			await addLehrerRegel();
 		}
-		if (lehrer !== undefined)
+		if (lehrer !== undefined) {
 			await props.removeKursLehrer(kurs.id, lehrer.id);
+		}
 	}
 
 	const lehrer_regel = computed<GostBlockungRegel | undefined>(() => {
 		const regel_typ = GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN;
 		const regeln = props.getDatenmanager().regelGetListeOfTyp(regel_typ);
-		if (regeln.isEmpty())
+		if (regeln.isEmpty()) {
 			return undefined;
+		}
 		return regeln.get(0);
 	});
 
 	async function addLehrerRegel() {
-		if (lehrer_regel.value !== undefined)
+		if (lehrer_regel.value !== undefined) {
 			return;
+		}
 		const update = props.getErgebnismanager().regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN(true);
 		await props.regelnUpdate(update);
 	}
@@ -913,8 +976,9 @@
 		if ((filter.fach !== kurs.fach_id) || (filter.kursart?.id !== kurs.kursart)) {
 			filter.kursart = GostKursart.fromID(kurs.kursart);
 			filter.fach = kurs.fach_id;
-		} else
+		} else {
 			filter.reset();
+		}
 	}
 
 	async function setKoop(kurs: GostBlockungKurs, istKoopKurs: boolean) {
@@ -935,8 +999,9 @@
 	});
 
 	const kursdifferenz = (kurs: GostBlockungKurs) => computed<[number, number, number]>(() => {
-		if (filtered_by_kursart(kurs).value.isEmpty())
+		if (filtered_by_kursart(kurs).value.isEmpty()) {
 			return [-1, -1, -1];
+		}
 		const fachart_id = GostKursart.getFachartID(kurs.fach_id, kurs.kursart);
 		const wahlen = props.getDatenmanager().fachwahlGetListeOfFachart(fachart_id).size();
 		const kdiff = props.getErgebnismanager().getOfFachartKursdifferenz(fachart_id);
@@ -959,10 +1024,11 @@
 
 	function toggleKursAusgewaehlt(kurs: GostBlockungKurs) {
 		const filter = props.schuelerFilter();
-		if (filter.kurs?.id !== kurs.id)
-			filter.kurs = kurs;
-		else
+		if (filter.kurs?.id === kurs.id) {
 			filter.reset();
+		} else {
+			filter.kurs = kurs;
+		}
 	}
 
 	const istKursGesperrtInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {

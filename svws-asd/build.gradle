@@ -23,13 +23,15 @@ task cleanTranspiled(type: Delete) {
 }
 
 task prepareTranspile {
+	def fileTranspilerFiles = file("$buildDir/transpiler-files.txt")
+	def configTranspiler = configurations.transpiler
 	doLast {
-		file("$buildDir/transpiler-files.txt").text = configurations.transpiler.files.toString().replace("[", "").replace("]", "").trim()
+		fileTranspilerFiles.text = configTranspiler.files.toString().replace("[", "").replace("]", "").trim()
 	}
 	group = "build"
 	dependsOn compileJava
-	inputs.files configurations.transpiler
-	outputs.files "$buildDir/transpiler-files.txt"
+	inputs.files configTranspiler
+	outputs.files fileTranspilerFiles
 }
 
 task transpile(type: JavaExec) {
@@ -37,9 +39,6 @@ task transpile(type: JavaExec) {
 	dependsOn compileJava
 	dependsOn prepareTranspile
 	dependsOn project(':svws-transpile').tasks.assemble
-	doFirst {
-		delete fileTree(dir: "$buildDir/ts"), fileTree(dir: "$buildDir/tmp/transpiler/ts", includes: ["**/*.class"])
-	}
 	inputs.files "$buildDir/transpiler-files.txt", configurations.transpiler.files
 	outputs.dir "$buildDir/ts"
 	description = "Transpiliert den Java-Code nach Typescript"
@@ -50,6 +49,11 @@ task transpile(type: JavaExec) {
 		"--tmpdir", "$buildDir/tmp/transpiler/ts",
 		"--files", "$buildDir/transpiler-files.txt"
 	jvmArgs "--add-opens", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED"
+	doFirst {
+		def outputDir = file("$buildDir/ts")
+		if (outputDir.exists())
+			outputDir.deleteDir()
+	}
 }
 
 task generateDocu(type: JavaExec) {
@@ -59,8 +63,8 @@ task generateDocu(type: JavaExec) {
 	outputs.dir "$buildDir/docs/validate"
 	description = "Erzeugt die Dokumentation zu den Validatoren"
 	mainClass = "de.svws_nrw.asd.utils.docs.ValidatorDocGenerator"
-    args "--output"    , "build/docs/validate",
-         "--projectdir", "$projectDir"
+	args "--output"    , "build/docs/validate",
+		"--projectdir", "$projectDir"
 }
 
 assemble.dependsOn transpile
@@ -69,14 +73,14 @@ assemble.dependsOn transpile
 apply from: "$rootDir/publish-helper.gradle"
 
 publishing {
-  publications {
-    publishJava(MavenPublication) {
-      artifactId = 'svws-asd'
-      pom {
-        name = 'SVWS ASD Library'
-        description = 'Diese Bibliothek stellt grundlegende Datenypen und Algorithmen für die Prüfung der amtlichen Schuldaten in NRW bereit'
-      }
-    }
-  }
+	publications {
+		publishJava(MavenPublication) {
+			artifactId = 'svws-asd'
+			pom {
+				name = 'SVWS ASD Library'
+				description = 'Diese Bibliothek stellt grundlegende Datenypen und Algorithmen für die Prüfung der amtlichen Schuldaten in NRW bereit'
+			}
+		}
+	}
 }
 

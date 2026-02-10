@@ -37,7 +37,7 @@ export class ENMConfigResponse extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMConfigResponse'].includes(name);
 	}
 
-	public static class = new Class<ENMConfigResponse>('de.svws_nrw.core.data.enm.ENMConfigResponse');
+	public static readonly class = new Class<ENMConfigResponse>('de.svws_nrw.core.data.enm.ENMConfigResponse');
 
 	public static transpilerFromJSON(json: string): ENMConfigResponse {
 		const obj = JSON.parse(json) as Partial<ENMConfigResponse>;

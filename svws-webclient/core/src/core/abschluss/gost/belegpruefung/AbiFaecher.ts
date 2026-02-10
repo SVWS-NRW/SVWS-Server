@@ -15,20 +15,44 @@ import { HashSet } from '../../../../java/util/HashSet';
 
 export class AbiFaecher extends GostBelegpruefung {
 
+	/**
+	 * Eine ArrayMap für den schnellen Zugriff auf die 4 Abiturfachbelegungen, sofern diese zugeordnet sind.
+	 */
 	private mapAbiturFachbelegungen: ArrayMap<GostAbiturFach, AbiturFachbelegung> | null = null;
 
+	/**
+	 * Die Anzahl der belegten Abitur-Fächer (sollten 4 sein).
+	 */
 	private anzahlAbiFaecher: number = 0;
 
+	/**
+	 * Die Anzahl der Abiturfächer im Bereich Deutsch, Mathematik oder Fremdsprache (muss mindestens 2 sein).
+	 */
 	private anzahlDeutschMatheFremdsprache: number = 0;
 
+	/**
+	 * Die Anzahl der Fremdsprachen.
+	 */
 	private anzahlFremdsprachen: number = 0;
 
+	/**
+	 * Die Anzahl der Abiturfächer im Bereich Sport und Religion (darf maximal 1 sein).
+	 */
 	private anzahlSportReligion: number = 0;
 
+	/**
+	 * Gibt an, ob das AufgabenFeld I abgedeckt ist.
+	 */
 	private hatAufgabenfeldI: boolean = false;
 
+	/**
+	 * Gibt an, ob das AufgabenFeld II abgedeckt ist.
+	 */
 	private hatAufgabenfeldII: boolean = false;
 
+	/**
+	 * Gibt an, ob das AufgabenFeld III abgedeckt ist.
+	 */
 	private hatAufgabenfeldIII: boolean = false;
 
 
@@ -220,7 +244,7 @@ export class AbiFaecher extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
 
-	public static class = new Class<AbiFaecher>('de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher');
+	public static readonly class = new Class<AbiFaecher>('de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher');
 
 }
 

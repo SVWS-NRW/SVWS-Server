@@ -192,6 +192,9 @@ class TestArrayMap {
 						assertEquals(true, map1.containsValue(value2));
 					}
 				}
+				default -> {
+					// nichts
+				}
 			}
 
 		}

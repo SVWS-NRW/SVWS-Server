@@ -6,11 +6,11 @@
 
 		<template #modalContent>
 			<svws-ui-input-wrapper>
-				<svws-ui-text-input v-model="anzeigename" placeholder="Anzeigename (z.B. Tim Taler)" />
+				<svws-ui-text-input v-model="modelProxy.proxy.anzeigename" placeholder="Anzeigename (z.B. Tim Taler)" />
 				<svws-ui-spacing />
-				<svws-ui-text-input v-model.trim="name" placeholder="Anmeldename (z.B. tim)" :valid />
-				<svws-ui-text-input v-model.trim="passwort1" type="password" placeholder="Passwort" />
-				<svws-ui-text-input v-model.trim="passwort2" type="password" placeholder="Passwort wiederholen" :valid="validPassword2" />
+				<svws-ui-text-input v-model.trim="modelProxy.proxy.name" placeholder="Anmeldename (z.B. tim)" :validation="() => modelProxy.getFehler('name')" skip-default-validation />
+				<svws-ui-text-input v-model.trim="modelProxy.proxy.passwort1" type="password" placeholder="Passwort" />
+				<svws-ui-text-input v-model.trim="modelProxy.proxy.passwort2" type="password" placeholder="Passwort wiederholen" :validation="() => modelProxy.getFehler('passwort2')" skip-default-validation />
 			</svws-ui-input-wrapper>
 		</template>
 
@@ -29,8 +29,9 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from "vue";
+	import { computed, ref, shallowRef, watch } from "vue";
 	import type { BenutzerListeEintrag } from "@core";
+	import { BenutzerModelProxy } from "./BenutzerModelProxy";
 
 	const props = withDefaults(defineProps<{
 		showDeleteIcon?: boolean;
@@ -44,31 +45,18 @@
 	});
 
 	const show = ref<boolean>(false);
-	const anzeigename = ref("");
-	const name = ref("");
-	const passwort1 = ref("");
-	const passwort2 = ref("");
 
-	function valid(value: string | null) {
-		for (const b of props.mapBenutzer.values())
-			if ((value === null) || (b.name.toLocaleLowerCase('de') === value.toLocaleLowerCase('de')) || (/\s/.exec(value) !== null))
-				return false;
-		return true;
-	}
+	const dataNotPatched = shallowRef({ anzeigename: "", name: "", passwort1: "", passwort2: "" });
 
-	function validPassword2() {
-		return passwort1.value === passwort2.value;
-	}
+	const modelProxy = shallowRef(new BenutzerModelProxy(() => dataNotPatched.value, () => props.mapBenutzer.values()));
+	watch(() => props.mapBenutzer, () => modelProxy.value = new BenutzerModelProxy(() => dataNotPatched.value, () => props.mapBenutzer.values()), { immediate: false });
 
-	const disabled = computed(() => (passwort1.value !== passwort2.value) || (passwort1.value.length === 0) || !valid(name.value));
+	const disabled = computed(() => (modelProxy.value.proxy.passwort1 !== modelProxy.value.proxy.passwort2) || (modelProxy.value.proxy.passwort1.length === 0) || modelProxy.value.hatFehler());
 
 	async function create() {
-		await props.createBenutzerAllgemein(anzeigename.value, name.value, passwort1.value);
+		await props.createBenutzerAllgemein(modelProxy.value.proxy.anzeigename, modelProxy.value.proxy.name, modelProxy.value.proxy.passwort1);
 		show.value = false;
-		anzeigename.value = "";
-		name.value = "";
-		passwort1.value = "";
-		passwort2.value = "";
+		dataNotPatched.value = { anzeigename: "", name: "", passwort1: "", passwort2: "" };
 	}
 
 </script>

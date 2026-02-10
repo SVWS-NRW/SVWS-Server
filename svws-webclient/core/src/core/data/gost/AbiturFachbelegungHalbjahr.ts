@@ -79,7 +79,7 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr'].includes(name);
 	}
 
-	public static class = new Class<AbiturFachbelegungHalbjahr>('de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr');
+	public static readonly class = new Class<AbiturFachbelegungHalbjahr>('de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr');
 
 	public static transpilerFromJSON(json: string): AbiturFachbelegungHalbjahr {
 		const obj = JSON.parse(json) as Partial<AbiturFachbelegungHalbjahr>;

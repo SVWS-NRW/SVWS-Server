@@ -4,9 +4,9 @@ import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
 import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_statistikId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
-import { ReligionKatalogEintrag } from '../../../asd/data/schule/ReligionKatalogEintrag';
+import { CoreTypeData } from '../../../asd/data/CoreTypeData';
 
-export class Religion extends JavaEnum<Religion> implements CoreType<ReligionKatalogEintrag, Religion> {
+export class Religion extends JavaEnum<Religion> implements CoreType<CoreTypeData, Religion> {
 
 	/** an array containing all values of this enumeration */
 	static readonly all_values_by_ordinal: Array<Religion> = [];
@@ -80,7 +80,7 @@ export class Religion extends JavaEnum<Religion> implements CoreType<ReligionKat
 	 *
 	 * @param manager   der Manager für die Daten des Core-Types
 	 */
-	public static init(manager: CoreTypeDataManager<ReligionKatalogEintrag, Religion>): void {
+	public static init(manager: CoreTypeDataManager<CoreTypeData, Religion>): void {
 		CoreTypeDataManager.putManager(Religion.class, manager);
 	}
 
@@ -89,7 +89,7 @@ export class Religion extends JavaEnum<Religion> implements CoreType<ReligionKat
 	 *
 	 * @return der Daten-Manager
 	 */
-	public static data(): CoreTypeDataManager<ReligionKatalogEintrag, Religion> {
+	public static data(): CoreTypeDataManager<CoreTypeData, Religion> {
 		return CoreTypeDataManager.getManager(Religion.class);
 	}
 
@@ -114,11 +114,11 @@ export class Religion extends JavaEnum<Religion> implements CoreType<ReligionKat
 		return (!tmp) ? null : tmp;
 	}
 
-	public getManager(): CoreTypeDataManager<ReligionKatalogEintrag, Religion> {
+	public getManager(): CoreTypeDataManager<CoreTypeData, Religion> {
 		return de_svws_nrw_asd_types_CoreType_getManager(this);
 	}
 
-	public daten(schuljahr: number): ReligionKatalogEintrag | null {
+	public daten(schuljahr: number): CoreTypeData | null {
 		return de_svws_nrw_asd_types_CoreType_daten(this, schuljahr);
 	}
 
@@ -126,7 +126,7 @@ export class Religion extends JavaEnum<Religion> implements CoreType<ReligionKat
 		return de_svws_nrw_asd_types_CoreType_statistikId(this);
 	}
 
-	public historie(): List<ReligionKatalogEintrag> {
+	public historie(): List<CoreTypeData> {
 		return de_svws_nrw_asd_types_CoreType_historie(this);
 	}
 
@@ -138,7 +138,7 @@ export class Religion extends JavaEnum<Religion> implements CoreType<ReligionKat
 		return ['de.svws_nrw.asd.types.schule.Religion', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Religion>('de.svws_nrw.asd.types.schule.Religion');
+	public static readonly class = new Class<Religion>('de.svws_nrw.asd.types.schule.Religion');
 
 }
 

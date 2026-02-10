@@ -19,10 +19,10 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class LiterarischKuenstlerisch extends GostBelegpruefung {
 
-	/// Die Belegungen für Kunst und Musik
+	/** Die Belegungen für Kunst und Musik. */
 	private List<AbiturFachbelegung> kunst_musik;
 
-	/// Die Belegungen für die Ersatzfächer aus dem literarisch-künstlerischen Bereich
+	/** Die Belegungen für die Ersatzfächer aus dem literarisch-künstlerischen Bereich. */
 	private List<AbiturFachbelegung> kunst_musik_ersatz;
 
 

@@ -28,7 +28,8 @@
       </xs:appinfo>
    </xs:annotation>
    <xs:include schemaLocation="xschule-baukasten.xsd"/>
-   <xs:import schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"
+	<!-- Schema von "http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd" -->
+   <xs:import schemaLocation="xmldsig-core-schema.xsd"
               namespace="http://www.w3.org/2000/09/xmldsig#"/>
    <xs:import schemaLocation="http://xbildung.de/def/xbildung/1.1/xsd/xbildung-baukasten.xsd"
               namespace="http://xbildung.de/def/xbildung/1.1/xsd"/>

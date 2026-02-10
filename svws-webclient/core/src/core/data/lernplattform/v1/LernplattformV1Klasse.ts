@@ -46,7 +46,7 @@ export class LernplattformV1Klasse extends JavaObject {
 		return ['de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Klasse'].includes(name);
 	}
 
-	public static class = new Class<LernplattformV1Klasse>('de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Klasse');
+	public static readonly class = new Class<LernplattformV1Klasse>('de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Klasse');
 
 	public static transpilerFromJSON(json: string): LernplattformV1Klasse {
 		const obj = JSON.parse(json) as Partial<LernplattformV1Klasse>;

@@ -24,13 +24,15 @@ export class RouteLehrerLernplattformen extends RouteNode<RouteDataLehrerLernpla
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		try {
-			if (this.parent === undefined)
+			if (this.parent === undefined) {
 				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
+			}
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
-			if (id === undefined)
+			if (id === undefined) {
 				await this.data.ladeDaten(null);
-			else
+			} else {
 				await this.data.ladeDaten(routeLehrer.data.manager.liste.get(id));
+			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}

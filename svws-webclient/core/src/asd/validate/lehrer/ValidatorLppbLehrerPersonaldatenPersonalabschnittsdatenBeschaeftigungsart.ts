@@ -1,43 +1,29 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
-import type { JavaSet } from '../../../java/util/JavaSet';
-import { java_util_Set_of } from '../../../java/util/JavaSet';
-import { LehrerPersonalabschnittsdaten } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdaten';
+import { ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
+import { ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';
 
 export class ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart extends Validator {
-
-	/**
-	 * Die Lehrer-Personalabschnittsdaten
-	 */
-	private readonly daten: LehrerPersonalabschnittsdaten;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
-	 * @param kontext   der Kontext des Validators
+	 * @param beschaeftigungsart    die Beschäftigungsart
+	 * @param einsatzstatus     	der Einsatzstatus
+	 * @param pflichtstundensoll    das Pflichtstundensoll
+	 * @param kontext   			der Kontext des Validators
 	 */
-	public constructor(daten: LehrerPersonalabschnittsdaten, kontext: ValidatorKontext) {
+	public constructor(beschaeftigungsart: Supplier<string>, einsatzstatus: Supplier<string>, pflichtstundensoll: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.daten = daten;
+		this._validatoren.add(new ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsart, einsatzstatus, kontext));
+		this._validatoren.add(new ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(beschaeftigungsart, einsatzstatus, pflichtstundensoll, kontext));
 	}
 
 	protected pruefe(): boolean {
-		let success: boolean = true;
-		const beschaeftigungsart: string | null = this.daten.beschaeftigungsart;
-		const einsatzstatus: string | null = this.daten.einsatzstatus;
-		const setEinsatzstatus2: JavaSet<string> | null = java_util_Set_of("A", "B");
-		const fehlertext2: string | null = "Bei einer unentgeltlich beschäftigten Lehrkraft (Feld 'Beschäftigungsart' = 'Unentgeltlich Beschäftigte') dürfen im Feld 'Einsatzstatus' nicht die Einträge 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' oder 'nicht Stammschule, aber auch hier tätig' eingetragen sein.";
-		if (!this.exec(2, { getAsBoolean: () => (setEinsatzstatus2.contains(einsatzstatus)) && (JavaObject.equalsTranspiler("X", (beschaeftigungsart))) }, fehlertext2))
-			success = false;
-		const pflichtstundensoll: number | null = this.daten.pflichtstundensoll;
-		const fehlertext3: string | null = "Laut Ihren Angaben handelt es sich um eine voll abgeordnete Lehrkraft mit Gestellungsvertrag. Es ist zu erwarten, dass eine Lehrkraft mit Gestellungsvertrag Unterricht an Ihrer Schule erteilt. Bitte überprüfen Sie Ihre Angaben.";
-		if (!this.exec(3, { getAsBoolean: () => (JavaObject.equalsTranspiler("G", (beschaeftigungsart)) && JavaObject.equalsTranspiler("A", (einsatzstatus)) && pflichtstundensoll === 0) }, fehlertext3))
-			success = false;
-		return success;
+		return true;
 	}
 
 	transpilerCanonicalName(): string {
@@ -48,7 +34,7 @@ export class ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigu
 		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.lehrer.ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart>('de.svws_nrw.asd.validate.lehrer.ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart');
+	public static readonly class = new Class<ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart>('de.svws_nrw.asd.validate.lehrer.ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart');
 
 }
 

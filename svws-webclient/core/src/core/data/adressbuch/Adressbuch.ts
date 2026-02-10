@@ -52,7 +52,7 @@ export class Adressbuch extends JavaObject {
 		return ['de.svws_nrw.core.data.adressbuch.Adressbuch'].includes(name);
 	}
 
-	public static class = new Class<Adressbuch>('de.svws_nrw.core.data.adressbuch.Adressbuch');
+	public static readonly class = new Class<Adressbuch>('de.svws_nrw.core.data.adressbuch.Adressbuch');
 
 	public static transpilerFromJSON(json: string): Adressbuch {
 		const obj = JSON.parse(json) as Partial<Adressbuch>;

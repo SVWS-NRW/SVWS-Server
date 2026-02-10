@@ -123,7 +123,7 @@ export class Wochentag extends JavaEnum<Wochentag> {
 		return ['de.svws_nrw.core.types.Wochentag', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Wochentag>('de.svws_nrw.core.types.Wochentag');
+	public static readonly class = new Class<Wochentag>('de.svws_nrw.core.types.Wochentag');
 
 }
 

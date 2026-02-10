@@ -54,7 +54,7 @@ export class SchuelerLernabschnittBemerkungen extends JavaObject {
 		return ['de.svws_nrw.asd.data.schueler.SchuelerLernabschnittBemerkungen'].includes(name);
 	}
 
-	public static class = new Class<SchuelerLernabschnittBemerkungen>('de.svws_nrw.asd.data.schueler.SchuelerLernabschnittBemerkungen');
+	public static readonly class = new Class<SchuelerLernabschnittBemerkungen>('de.svws_nrw.asd.data.schueler.SchuelerLernabschnittBemerkungen');
 
 	public static transpilerFromJSON(json: string): SchuelerLernabschnittBemerkungen {
 		const obj = JSON.parse(json) as Partial<SchuelerLernabschnittBemerkungen>;

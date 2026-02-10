@@ -1,16 +1,22 @@
 package de.svws_nrw.api.server;
 
 import de.svws_nrw.core.data.erzieher.Erzieherart;
+import de.svws_nrw.core.data.schule.Betrieb;
+import de.svws_nrw.core.data.schule.BetriebeAnsprechpartner;
+import de.svws_nrw.core.data.schule.Betriebsart;
 import de.svws_nrw.core.data.schule.Floskel;
 import de.svws_nrw.core.data.schule.Floskelgruppe;
 import de.svws_nrw.core.data.schule.Lernplattform;
-import de.svws_nrw.core.data.schule.TelefonArt;
+import de.svws_nrw.core.data.schule.Telefonart;
 import de.svws_nrw.data.erzieher.DataErzieherarten;
+import de.svws_nrw.data.schule.DataBetriebe;
+import de.svws_nrw.data.schule.DataBetriebeAnsprechpartner;
+import de.svws_nrw.data.schule.DataBetriebsarten;
 import de.svws_nrw.data.schule.DataFloskelJahrgangZuordnung;
 import de.svws_nrw.data.schule.DataFloskelgruppen;
 import de.svws_nrw.data.schule.DataFloskeln;
-import de.svws_nrw.data.schule.DataKatalogLernplattformen;
-import de.svws_nrw.data.schule.DataKatalogTelefonArten;
+import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.data.schule.DataTelefonarten;
 import java.io.InputStream;
 
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
@@ -19,27 +25,23 @@ import de.svws_nrw.asd.data.schule.Schulleitung;
 import de.svws_nrw.asd.data.schule.VerkehrsspracheKatalogEintrag;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
-import de.svws_nrw.core.data.schueler.SchuelerEinwilligungsartenZusammenfassung;
 import de.svws_nrw.core.data.schueler.SchuelerVermerkartZusammenfassung;
 import de.svws_nrw.core.data.schule.AbgangsartKatalog;
 import de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag;
 import de.svws_nrw.core.data.schule.Aufsichtsbereich;
 import de.svws_nrw.asd.data.schule.BerufskollegAnlageKatalogEintrag;
-import de.svws_nrw.core.data.schule.BerufskollegBerufsebeneKatalogEintrag;
+import de.svws_nrw.asd.data.schule.BerufskollegBerufsebeneKatalogEintrag;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalog;
 import de.svws_nrw.core.data.schule.Einwilligungsart;
 import de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag;
-import de.svws_nrw.core.data.schule.HerkunftsschulnummerKatalogEintrag;
 import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
 import de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag;
 import de.svws_nrw.asd.data.NoteKatalogEintrag;
 import de.svws_nrw.asd.data.schule.OrganisationsformKatalogEintrag;
 import de.svws_nrw.core.data.schule.PruefungsordnungKatalogEintrag;
 import de.svws_nrw.core.data.schule.Raum;
-import de.svws_nrw.core.data.schule.ReformpaedagogikKatalogEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.data.schule.VermerkartEintrag;
-import de.svws_nrw.asd.data.schule.ReligionKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
@@ -58,7 +60,6 @@ import de.svws_nrw.data.kataloge.DataKatalogAufsichtsbereiche;
 import de.svws_nrw.data.kataloge.DataKatalogPausenzeiten;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
-import de.svws_nrw.data.schueler.DataSchuelerEinwilligungsartenZusammenfassung;
 import de.svws_nrw.data.schueler.DataSchuelerVermerkartenZusammenfassung;
 import de.svws_nrw.data.schule.DataKatalogAbgangsartenAllgemeinbildend;
 import de.svws_nrw.data.schule.DataKatalogAbgangsartenBerufsbildend;
@@ -67,16 +68,13 @@ import de.svws_nrw.data.schule.DataKatalogBerufskollegAnlagen;
 import de.svws_nrw.data.schule.DataKatalogBerufskollegBerufsebenen;
 import de.svws_nrw.data.schule.DataKatalogBerufskollegFachklassen;
 import de.svws_nrw.data.schule.DataKatalogEinschulungsarten;
-import de.svws_nrw.data.schule.DataKatalogEinwilligungsarten;
+import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataKatalogFoerderschwerpunkte;
-import de.svws_nrw.data.schule.DataKatalogHerkunftsschulnummern;
 import de.svws_nrw.data.schule.DataKatalogKindergartenbesuch;
 import de.svws_nrw.data.schule.DataKatalogNationalitaeten;
 import de.svws_nrw.data.schule.DataKatalogNoten;
 import de.svws_nrw.data.schule.DataKatalogOrganisationsformen;
 import de.svws_nrw.data.schule.DataKatalogPruefungsordnungen;
-import de.svws_nrw.data.schule.DataKatalogReformpaedagogik;
-import de.svws_nrw.data.schule.DataKatalogReligionen;
 import de.svws_nrw.data.schule.DataKatalogSchulabschluesseAllgemeinbildend;
 import de.svws_nrw.data.schule.DataKatalogSchulabschluesseBerufsbildend;
 import de.svws_nrw.data.schule.DataKatalogSchulen;
@@ -113,7 +111,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
 
 
 /**
@@ -614,57 +611,6 @@ public class APISchule {
 	}
 
 	/**
-	 * Die OpenAPI-Methode für die Abfrage des Kataloges für die Relgionen bzw. Konfessionen,
-	 * welche im Rahmen der amtlichen Schulstatistik verwendet werden.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Liste mit dem Katalog der Relgionen bzw. Konfessionen
-	 */
-	@GET
-	@Path("/allgemein/religionen")
-	@Operation(summary = "Gibt den Katalog der Relgionen bzw. Konfessionen zurück, welche im Rahmen der amtlichen Schulstatistik verwendet werden.",
-			description = "Erstellt eine Liste aller in dem Katalog vorhanden Relgionen bzw. Konfessionen, welche "
-					+ "im Rahmen der amtlichen Schulstatistik verwendet werden. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReligionKatalogEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-	public Response getKatalogReligionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogReligionen().getList(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage einer Religion.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id              die Datenbank-ID zur Identifikation der Religion
-	 * @param request    die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Daten zur Religion
-	 */
-	@GET
-	@Path("/religionen/{id : \\d+}")
-	@Operation(summary = "Liefert zu der ID der Religion die zugehörigen Daten.",
-			description = "Liest die Daten der Religion zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Daten der Religion",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReligionEintrag.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Religion mit der angegebenen ID gefunden")
-	public Response getReligion(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).getByIdAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-	/**
 	 * Die OpenAPI-Methode für das Erstellen einer neuen Religion.
 	 *
 	 * @param schema       das Datenbankschema, in welchem die Religion erstellt wird
@@ -673,7 +619,7 @@ public class APISchule {
 	 * @return die HTTP-Antwort mit der neuen Religion
 	 */
 	@POST
-	@Path("/religionen/new")
+	@Path("/religionen/create")
 	@Operation(summary = "Erstellt eine neue Religion und gibt sie zurück.",
 			description = "Erstellt eine neue Religion und gibt sie zurück."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Religion besitzt.")
@@ -683,7 +629,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Religion  mit dem eingegebenen Kuerzel gefunden")
 	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response createReligion(@PathParam("schema") final String schema, @RequestBody(description = "Der Post für die Religion-Daten", required = true,
+	public Response addReligion(@PathParam("schema") final String schema, @RequestBody(description = "Der Post für die Religion-Daten", required = true,
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ReligionEintrag.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).addAsResponse(is),
@@ -745,36 +691,6 @@ public class APISchule {
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
-
-
-	/**
-	 * Die OpenAPI-Methode für das Entfernen eines Religion-Katalog-Eintrags der Schule.
-	 *
-	 * @param schema       das Datenbankschema
-	 * @param id           die ID des Religion-Katalog-Eintrags
-	 * @param request      die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Religion-Katalog-Eintrag
-	 */
-	@DELETE
-	@Path("/religionen/{id : \\d+}")
-	@Operation(summary = "Entfernt einen Religion-Katalog-Eintrag der Schule.",
-			description = "Entfernt einen Religion-Katalog-Eintrag der Schule. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum "
-					+ "Bearbeiten von Katalogen hat.")
-	@ApiResponse(responseCode = "200", description = "Der Religion-Katalog-Eintrag wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReligionEintrag.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
-	@ApiResponse(responseCode = "404", description = "Kein Religion-Katalog-Eintrag vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteReligionEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).deleteAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
-	}
-
-
 	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Religion-Katalog-Einträge der Schule.
 	 *
@@ -795,14 +711,14 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Religion-Katalog-Einträge nicht vorhanden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteReligionEintraege(@PathParam("schema") final String schema,
+	public Response deleteReligionen(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Religion-Katalog-Einträge", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 
@@ -855,33 +771,6 @@ public class APISchule {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerVermerkartenZusammenfassung(conn).getListByVermerkartIdAsResponse(vermerkart),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage einer Vermerkart.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation der Vermerkart
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Daten zur Vermerkart
-	 */
-	@GET
-	@Path("/vermerkarten/{id : \\d+}")
-	@Operation(summary = "Liefert zu der ID der Vermerkarten die zugehörigen Daten.",
-			description = "Liest die Daten der Vermerkart zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten "
-					+ "besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Daten der Vermerkart",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = VermerkartEintrag.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Vermerkart mit der angegebenen ID gefunden")
-	public Response getVermerkart(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataVermerkarten(conn).getByIdAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
 	}
 
 
@@ -946,35 +835,6 @@ public class APISchule {
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
-
-	/**
-	 * Die OpenAPI-Methode für das Entfernen eines Vermerkart-Katalog-Eintrags der Schule.
-	 *
-	 * @param schema       das Datenbankschema
-	 * @param id           die ID des Vermerkart-Katalog-Eintrags
-	 * @param request      die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Vermerkart-Katalog-Eintrag
-	 */
-	@DELETE
-	@Path("/vermerkarten/{id : \\d+}")
-	@Operation(summary = "Entfernt einen Vermerkart-Katalog-Eintrag der Schule.",
-			description = "Entfernt einen Vermerkart-Katalog-Eintrag der Schule."
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
-	@ApiResponse(responseCode = "200", description = "Der Vermerkart-Katalog-Eintrag wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = VermerkartEintrag.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
-	@ApiResponse(responseCode = "404", description = "Kein Vermerkart-Katalog-Eintrag vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteVermerkartEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataVermerkarten(conn).deleteAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
-	}
-
-
 	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Vermerkart-Katalog-Einträge der Schule.
 	 *
@@ -1000,9 +860,9 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataVermerkarten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataVermerkarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 	/**
@@ -1025,8 +885,9 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getEinwilligungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).getAllAsResponse(),
-				request, ServerMode.DEV, BenutzerKompetenz.KEINE);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).getAllAsResponse(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
 	}
 
 	/**
@@ -1050,8 +911,8 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Einwilligungsart mit der angegebenen ID gefunden")
 	public Response getEinwilligungsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).getByIdAsResponse(id),
-				request, ServerMode.DEV,
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).getByIdAsResponse(id),
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
 
@@ -1078,8 +939,8 @@ public class APISchule {
 			@RequestBody(description = "Der initiale Patch für die neue Einwilligungsart", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Einwilligungsart.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).addAsResponse(is),
-				request, ServerMode.DEV,
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).addAsResponse(is),
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -1111,8 +972,8 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = Einwilligungsart.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).patchAsResponse(id, is),
-				request, ServerMode.DEV,
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).patchAsResponse(id, is),
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -1139,9 +1000,9 @@ public class APISchule {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteEinwilligungsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).deleteAsResponse(id),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).deleteAsResponse(id),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 
@@ -1170,36 +1031,11 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEinwilligungsarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataEinwilligungsarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
-	/**
-	 * Die OpenAPI-Methode für die Abfrage der Liste aller Schüler.
-	 *
-	 * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param einwilligungsart   die ID des Schuljahresabschnitts dessen Schüler zurückgegeben werden sollen
-	 * @param request     die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Liste mit den einzelnen Schülern
-	 */
-	@GET
-	@Path("/einwilligungsart/{einwilligungsart : \\d+}/schuelerinfos")
-	@Operation(summary = "Gibt eine Übersicht von allen Schülern welche einen Einwilligung mit der angegebenen Einwilligungsart haben zurück.",
-			description = "Erstellt eine Liste aller Schüler der angegebenen Einwilligungsart unter Angabe der ID."
-					+ "Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Schüler-Listen-Einträgen",
-			content = @Content(mediaType = "application/json",
-					array = @ArraySchema(schema = @Schema(implementation = SchuelerEinwilligungsartenZusammenfassung.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Schüler-Einträge gefunden")
-	public Response getSchuelerByEinwilligungsartID(@PathParam("schema") final String schema, @PathParam("einwilligungsart") final long einwilligungsart,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerEinwilligungsartenZusammenfassung(conn).getListByEinwilligungsartIdAsResponse(einwilligungsart),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
-	}
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage des Kataloges der Abgangsarten für
@@ -1345,105 +1181,6 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getKatalogSchuelerStatus(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.run(() -> new DataSchuelerStatus().getAll(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage des Kataloges der zusätzlichen Herkunftsschulnummern
-	 *
-	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request       die Informationen zur HTTP-Anfrage
-	 *
-	 * @return der Katalog
-	 */
-	@GET
-	@Path("/allgemein/herkunftsschulnummern")
-	@Operation(summary = "Die Liste der Einträge aus dem Katalog der zusätzlichen Herkunftsschulnummern.",
-			description = "Die Liste der Einträge aus dem Katalog der zusätzlichen Herkunftsschulnummern. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den Katalog der zusätzlichen Herkunftsschulnummern",
-			content = @Content(mediaType = "application/json",
-					array = @ArraySchema(schema = @Schema(implementation = HerkunftsschulnummerKatalogEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-	public Response getKatalogHerkunftsschulnummern(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> new DataKatalogHerkunftsschulnummern().getAll(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage des Reformpädagogik-Kataloges aller Schulformen.
-	 *
-	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request       die Informationen zur HTTP-Anfrage
-	 *
-	 * @return der Reformpädagogik-Katalog aller Schulformen
-	 */
-	@GET
-	@Path("/allgemein/reformpaedagogik/alle")
-	@Operation(summary = "Gibt den Reformpädagogik-Katalog aller Schulformen zurück.",
-			description = "Gibt den Reformpädagogik-Katalog aller Schulformen zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Reformpädagogik-Katalog aller Schulformen.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReformpaedagogikKatalogEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
-	@ApiResponse(responseCode = "404", description = "Keine Fachgruppen gefunden.")
-	public Response getKatalogReformpaedagogikAlle(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogReformpaedagogik(conn).getAll(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage des Reformpädagogik-Kataloges für die Schulform dieser Schule.
-	 *
-	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request       die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Liste mit den Einträgen des Reformpädagogik-Kataloges für die Schulform dieser Schule
-	 */
-	@GET
-	@Path("/allgemein/reformpaedagogik")
-	@Operation(summary = "Gibt den Reformpädagogik-Katalog für die Schulform dieser Schule zurück.",
-			description = "Gibt den Reformpädagogik-Katalog für die Schulform dieser Schule zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Reformpädagogik-Katalog für die Schulform dieser Schule.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReformpaedagogikKatalogEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
-	@ApiResponse(responseCode = "404", description = "Keine Reformpädagogik-Einträge für die Schulform dieser Schule gefunden.")
-	public Response getKatalogReformpaedagogik(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogReformpaedagogik(conn).getList(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage des Reformpädagogik-Katalog-Eintrags für die angegebene ID.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id        die ID des Reformpädagogik-Katalog-Eintrags
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return der Reformpädagogik-Katalog-Eintrag
-	 */
-	@GET
-	@Path("/allgemein/reformpaedagogik/{id : \\d+}")
-	@Operation(summary = "Gibt den Reformpädagogik-Katalog-Eintrag für die angegebene ID zurück.",
-			description = "Gibt den Reformpädagogik-Katalog-Eintrag für die angegebene ID zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Reformpädagogik-Katalog-Eintrag für die angegebene ID.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReformpaedagogikKatalogEintrag.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
-	@ApiResponse(responseCode = "404", description = "Kein Reformpädagogik-Katalog-Eintrag für die angegebene ID gefunden.")
-	public Response getKatalogReformpaedagogikEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogReformpaedagogik(conn).get(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -2493,9 +2230,8 @@ public class APISchule {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulen(conn).deleteAsResponse(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
-
 
 	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Einträge aus dem schulspezifischen Katalog der Schulen.
@@ -2512,21 +2248,20 @@ public class APISchule {
 			description = "Entfernt mehrere Einträge aus dem schulspezifischen Katalog der Schulen."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
 	@ApiResponse(responseCode = "200", description = "Die Einträge wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchulEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
 	@ApiResponse(responseCode = "404", description = "Räume nicht vorhanden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteSchulenVonKatalog(@PathParam("schema") final String schema,
-			@RequestBody(description = "Die IDs der zu löschenden Einträge", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@RequestBody(description = "Die IDs der zu löschenden Schulen", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulen(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
-
-
 	/**
 	 * Die OpenAPI-Methode für die Abfrage aller Leitungsfunktionen der Schule.
 	 *
@@ -2741,32 +2476,8 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getLernplattformen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).getAllAsResponse(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformen(conn).getAllAsResponse(),
 				request, ServerMode.DEV, BenutzerKompetenz.KEINE);
-	}
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage einer Lernplattform.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation der Lernplattform
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Daten zur Lernplattform
-	 */
-	@GET
-	@Path("/lernplattform/{id : \\d+}")
-	@Operation(summary = "Liefert zu der ID der Lernplattform die zugehörigen Daten.",
-			description = "Liest die Daten der Lernplattform zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Daten der Lernplattform",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Lernplattform.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Lernplattform mit der angegebenen ID gefunden")
-	public Response getLernplattform(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).getByIdAsResponse(id),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.KEINE);
 	}
 
 	/**
@@ -2779,7 +2490,7 @@ public class APISchule {
 	 * @return die HTTP-Antwort mit der neuen Lernplattform
 	 */
 	@POST
-	@Path("/lernplattform/new")
+	@Path("/lernplattformen/create")
 	@Operation(summary = "Erstellt eine neue Lernplattform und gibt sie zurück.",
 			description = "Erstellt eine neue Lernplattform und gibt sie zurück."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Lernplattform besitzt.")
@@ -2792,7 +2503,7 @@ public class APISchule {
 			@RequestBody(description = "Der initiale Patch für die neue Lernplattform", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Lernplattform.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).addAsResponse(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformen(conn).addAsResponse(is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -2808,7 +2519,7 @@ public class APISchule {
 	 * @return das Ergebnis der Patch-Operation
 	 */
 	@PATCH
-	@Path("/lernplattform/{id : \\d+}")
+	@Path("/lernplattformen/{id : \\d+}")
 	@Operation(summary = "Passt die zu der ID der Lernplattform zugehörigen Stammdaten an.",
 			description = "Passt die Lernplattform-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Lernplattform besitzt.")
@@ -2824,36 +2535,9 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = Lernplattform.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).patchAsResponse(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformen(conn).patchAsResponse(id, is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
-	}
-
-	/**
-	 * Die OpenAPI-Methode für das Entfernen einer Lernplattform der Schule.
-	 *
-	 * @param schema       das Datenbankschema
-	 * @param id           die ID der Lernplattform
-	 * @param request      die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Lernplattform
-	 */
-	@DELETE
-	@Path("/lernplattform/{id : \\d+}")
-	@Operation(summary = "Entfernt eine Lernplattform der Schule.",
-			description = "Entfernt eine Lernplattform der Schule."
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
-	@ApiResponse(responseCode = "200", description = "Die Lernplattform wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Lernplattform.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
-	@ApiResponse(responseCode = "404", description = "Lernplattform nicht vorhanden")
-	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteLernplattform(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).deleteAsResponse(id),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 
@@ -2882,7 +2566,7 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLernplattformen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
@@ -2896,42 +2580,19 @@ public class APISchule {
 	 * @return          die Liste mit dem Katalog der Telefonarten
 	 */
 	@GET
-	@Path("/Telefonarten")
+	@Path("/telefonarten")
 	@Operation(summary = "Gibt eine Übersicht aller Telefonarten im Katalog zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Telefonarten unter Angabe der ID und der Bezeichnung. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TelefonArt.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Telefonart.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getTelefonarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).getAllAsResponse(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataTelefonarten(conn).getAllAsResponse(),
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
-	/**
-	 * Die OpenAPI-Methode für die Abfrage einer Telefonart.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id        die Datenbank-ID zur Identifikation der Telefonart
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Daten zur Telefonart
-	 */
-	@GET
-	@Path("/telefonart/{id : \\d+}")
-	@Operation(summary = "Liefert zu der ID der Telefonart die zugehörigen Daten.",
-			description = "Liest die Daten der Telefonart zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Daten der Telefonart",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = TelefonArt.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Telefonart mit der angegebenen ID gefunden")
-	public Response getTelefonart(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).getByIdAsResponse(id),
-				request, ServerMode.DEV,
-				BenutzerKompetenz.KEINE);
-	}
 
 	/**
 	 * Die OpenAPI-Methode für das Erstellen einer neuen Telefonart.
@@ -2943,20 +2604,20 @@ public class APISchule {
 	 * @return die HTTP-Antwort mit der neuen Telefonart
 	 */
 	@POST
-	@Path("/telefonart/new")
+	@Path("/telefonarten/create")
 	@Operation(summary = "Erstellt eine neue Telefonart und gibt sie zurück.",
 			description = "Erstellt eine neue Telefonart und gibt sie zurück."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Telefonart besitzt.")
 	@ApiResponse(responseCode = "201", description = "Telefonart wurde erfolgreich angelegt.",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = TelefonArt.class)))
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Telefonart.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Telefonart anzulegen.")
 	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addTelefonart(@PathParam("schema") final String schema,
 			@RequestBody(description = "Der initiale Patch für die neue Telefonart", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = TelefonArt.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Telefonart.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).addAsResponse(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataTelefonarten(conn).addAsResponse(is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -2972,7 +2633,7 @@ public class APISchule {
 	 * @return das Ergebnis der Patch-Operation
 	 */
 	@PATCH
-	@Path("/Telefonart/{id : \\d+}")
+	@Path("/telefonarten/{id : \\d+}")
 	@Operation(summary = "Passt die zu der ID der Telefonart zugehörigen Stammdaten an.",
 			description = "Passt die Telefonart-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern der Daten der Telefonart besitzt.")
@@ -2986,9 +2647,9 @@ public class APISchule {
 	public Response patchTelefonart(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die Telefonart", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = TelefonArt.class))) final InputStream is,
+							schema = @Schema(implementation = Telefonart.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).patchAsResponse(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataTelefonarten(conn).patchAsResponse(id, is),
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
@@ -3016,7 +2677,7 @@ public class APISchule {
 	public Response deleteTelefonarten(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Telefonarten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogTelefonArten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataTelefonarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
@@ -3355,6 +3016,314 @@ public class APISchule {
 			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
 				conn -> new DataFloskeln(conn, new DataFloskelJahrgangZuordnung(conn)).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste der Betriebe.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Betriebe
+	 */
+	@GET
+	@Path("/betriebe")
+	@Operation(summary = "Gibt eine Liste der Betriebe im Katalog zurück.",
+			description = "Gibt die Betriebe zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste der Betriebe.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Betrieb.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	public Response getBetriebeNeu(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebe(conn, new DataBetriebeAnsprechpartner(conn)).getAllAsResponse(),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Betriebe.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id		die ID zur Identifikation der Betriebe
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/betriebe/{id : \\d+}")
+	@Operation(summary = "Patched die Betriebe mit der angegebenen ID",
+			description = "Patched die Betriebe mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
+	public Response patchBetriebeNeu(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch eines Betriebs", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebe(conn, new DataBetriebeAnsprechpartner(conn)).patchAsResponse(id, is),
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen eines Betriebs.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten des Betriebs
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem erstellten Betrieb
+	 */
+	@POST
+	@Path("/betriebe/create")
+	@Operation(summary = "Erstellt einen neuen Betrieb und gibt das erstellte Objekt zurück.",
+			description = "Erstellt einen neuen Betrieb, insofern die notwendigen Berechtigungen vorliegen")
+	@ApiResponse(responseCode = "201", description = "Der Betrieb wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebe anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addBetriebNeu(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten des zu erstellenden Betriebs.", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebe(conn, new DataBetriebeAnsprechpartner(conn)).addAsResponse(is),
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Betriebe.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/betriebe/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Betriebe.", description = "Entfernt mehrere Betriebe, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebe zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Betriebe nicht vorhanden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteBetriebeNeu(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Betriebe",
+			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataBetriebe(conn, new DataBetriebeAnsprechpartner(conn)).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste der Ansprechpartner.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Ansprechpartner
+	 */
+	@GET
+	@Path("/betriebe-ansprechpartner")
+	@Operation(summary = "Gibt eine Liste der Ansprechpartner im Katalog zurück.",
+			description = "Gibt die Ansprechpartner zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste der Ansprechpartner.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BetriebeAnsprechpartner.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	public Response getBetriebeAnsprechpartnerNeu(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebeAnsprechpartner(conn).getAllAsResponse(),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Ansprechpartner.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id		die ID zur Identifikation der Ansprechpartner
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/betriebe-ansprechpartner/{id : \\d+}")
+	@Operation(summary = "Patched die Ansprechpartner mit der angegebenen ID",
+			description = "Patched die Ansprechpartner mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
+	public Response patchBetriebeAnsprechpartnerNeu(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch eines Betriebs", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebeAnsprechpartner.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataBetriebeAnsprechpartner(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen eines Betriebs.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten des Betriebs
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem erstellten Betrieb
+	 */
+	@POST
+	@Path("/betriebe-ansprechpartner/create")
+	@Operation(summary = "Erstellt einen neuen Betrieb und gibt das erstellte Objekt zurück.",
+			description = "Erstellt einen neuen Betrieb, insofern die notwendigen Berechtigungen vorliegen")
+	@ApiResponse(responseCode = "201", description = "Der Betrieb wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebeAnsprechpartner.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Ansprechpartner anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addBetriebeAnsprechpartnerNeu(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten des zu erstellenden Betriebs.", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebeAnsprechpartner.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataBetriebeAnsprechpartner(conn).addAsResponse(is), request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Ansprechpartner.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/betriebe-ansprechpartner/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Ansprechpartner.", description = "Entfernt mehrere Ansprechpartner, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Ansprechpartner zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Ansprechpartner nicht vorhanden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteBetriebeAnsprechpartnerNeu(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden Ansprechpartner",
+			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataBetriebeAnsprechpartner(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste der Betriebsarten.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Betriebsarten
+	 */
+	@GET
+	@Path("/betriebsarten")
+	@Operation(summary = "Gibt eine Liste der Betriebsarten im Katalog zurück.",
+			description = "Gibt die Betriebsarten zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste der Betriebsarten.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Betriebsart.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	public Response getBetriebsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebsarten(conn)
+						.getAllAsResponse(),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Betriebsart.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id		die ID zur Identifikation der Betriebsart
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/betriebsarten/{id : \\d+}")
+	@Operation(summary = "Patched die Betriebsart mit der angegebenen ID",
+			description = "Patched die Betriebsart mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
+	public Response patchBetriebsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch einer Betriebsart", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betriebsart.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataBetriebsarten(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen einer Betriebsart.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten der Betriebsart
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit der erstellten Betriebsart
+	 */
+	@POST
+	@Path("/betriebsarten/create")
+	@Operation(summary = "Erstellt eine neue Betriebsart und gibt das erstellte Objekt zurück.",
+			description = "Erstellt eine neue Betriebsart, insofern die notwendigen Berechtigungen vorliegen")
+	@ApiResponse(responseCode = "201", description = "Die Betriebsart wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betriebsart.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebsarten anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addBetriebsart(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten der zu erstellenden Betriebsart.", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betriebsart.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataBetriebsarten(conn).addAsResponse(is), request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Betriebsarten.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/betriebsarten/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Betriebsarten.", description = "Entfernt mehrere Betriebsarten, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebsarten zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Betriebsarten nicht vorhanden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteBetriebsarten(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Betriebsarten",
+			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataBetriebsarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}

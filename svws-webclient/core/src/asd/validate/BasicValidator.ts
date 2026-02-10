@@ -43,11 +43,13 @@ export abstract class BasicValidator extends JavaObject {
 	public run(): boolean {
 		let success: boolean = true;
 		this._fehler.clear();
+		this._fehlerart = ValidatorFehlerart.UNGENUTZT;
 		try {
 			if (!this.pruefe())
 				success = false;
 		} catch(e : any) {
 			this.addFehler(-1, "Unerwarteter Fehler bei der Validierung: " + e.getMessage());
+			success = false;
 		}
 		return success;
 	}
@@ -60,7 +62,7 @@ export abstract class BasicValidator extends JavaObject {
 	 */
 	protected addFehler(pruefschritt: number, fehlermeldung: string): void {
 		this._fehler.add(new ValidatorFehler(this, pruefschritt, fehlermeldung));
-		this.updateFehlerart(this.getValidatorFehlerart(pruefschritt));
+		this.updateFehlerart(this.getValidatorFehlerart());
 	}
 
 	/**
@@ -87,11 +89,9 @@ export abstract class BasicValidator extends JavaObject {
 	/**
 	 * Die Fehlerart, welche diesem speziellen Validator zugeordnet ist.
 	 *
-	 * @param pruefschritt   der Prüfschritt, bei welchem der Fehler aufgetreten ist
-	 *
 	 * @return die Fehlerart
 	 */
-	public getValidatorFehlerart(pruefschritt: number): ValidatorFehlerart {
+	public getValidatorFehlerart(): ValidatorFehlerart {
 		return this._defaultValidatorFehlerart;
 	}
 
@@ -131,7 +131,7 @@ export abstract class BasicValidator extends JavaObject {
 		return ['de.svws_nrw.asd.validate.BasicValidator'].includes(name);
 	}
 
-	public static class = new Class<BasicValidator>('de.svws_nrw.asd.validate.BasicValidator');
+	public static readonly class = new Class<BasicValidator>('de.svws_nrw.asd.validate.BasicValidator');
 
 }
 

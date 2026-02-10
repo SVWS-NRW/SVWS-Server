@@ -16,27 +16,19 @@ export class Erzieherart extends JavaObject {
 	/**
 	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
 	 */
-	public sortierung: number = 1;
+	public sortierung: number = 0;
 
 	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 */
-	public istSichtbar: boolean = true;
+	public istSichtbar: boolean = false;
 
 	/**
-	 * Exportbezeichnung der Erzieherart
+	 * Gibt an, ob die Erzieherart in anderen Datenbanktabellen referenziert ist oder nicht.
 	 */
-	public exportBez: string | null = "";
-
-	/**
-	 * Gibt an wie vielen Erziehungsberechtigten die entsprechende Erzieherart zugeordnet sind.
-	 */
-	public anzahlErziehungsberechtigte: number = 0;
+	public referenziertInAnderenTabellen: boolean = false;
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}
@@ -49,7 +41,7 @@ export class Erzieherart extends JavaObject {
 		return ['de.svws_nrw.core.data.erzieher.Erzieherart'].includes(name);
 	}
 
-	public static class = new Class<Erzieherart>('de.svws_nrw.core.data.erzieher.Erzieherart');
+	public static readonly class = new Class<Erzieherart>('de.svws_nrw.core.data.erzieher.Erzieherart');
 
 	public static transpilerFromJSON(json: string): Erzieherart {
 		const obj = JSON.parse(json) as Partial<Erzieherart>;
@@ -66,10 +58,9 @@ export class Erzieherart extends JavaObject {
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		result.exportBez = (obj.exportBez === undefined) ? null : obj.exportBez === null ? null : obj.exportBez;
-		if (obj.anzahlErziehungsberechtigte === undefined)
-			throw new Error('invalid json format, missing attribute anzahlErziehungsberechtigte');
-		result.anzahlErziehungsberechtigte = obj.anzahlErziehungsberechtigte;
+		if (obj.referenziertInAnderenTabellen === undefined)
+			throw new Error('invalid json format, missing attribute referenziertInAnderenTabellen');
+		result.referenziertInAnderenTabellen = obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
@@ -79,8 +70,7 @@ export class Erzieherart extends JavaObject {
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
-		result += '"exportBez" : ' + ((obj.exportBez === null) ? 'null' : JSON.stringify(obj.exportBez)) + ',';
-		result += '"anzahlErziehungsberechtigte" : ' + obj.anzahlErziehungsberechtigte.toString() + ',';
+		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -100,11 +90,8 @@ export class Erzieherart extends JavaObject {
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
-		if (obj.exportBez !== undefined) {
-			result += '"exportBez" : ' + ((obj.exportBez === null) ? 'null' : JSON.stringify(obj.exportBez)) + ',';
-		}
-		if (obj.anzahlErziehungsberechtigte !== undefined) {
-			result += '"anzahlErziehungsberechtigte" : ' + obj.anzahlErziehungsberechtigte.toString() + ',';
+		if (obj.referenziertInAnderenTabellen !== undefined) {
+			result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

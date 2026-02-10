@@ -52,13 +52,14 @@
 	const option16 = ref(false);
 
 	async function downloadPDF() {
-		if (stundenplanAuswahl.value === undefined)
+		if (stundenplanAuswahl.value === undefined) {
 			return;
+		}
 		loading.value = true;
 		const reportingParameter = new ReportingParameter();
-		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN.getBezeichnung();
+		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN.getBezeichnung();
 		reportingParameter.einzelausgabeDetaildaten = false;
-		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_v_SCHUELER_STUNDENPLAN.getVorlageParameterList());
+		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN.getVorlageParameterList());
 		for (const vp of reportingParameter.vorlageParameter) {
 			switch (vp.name) {
 				case "mitPausenzeiten":

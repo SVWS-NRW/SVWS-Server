@@ -72,7 +72,7 @@ export class AdressenUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.AdressenUtils'].includes(name);
 	}
 
-	public static class = new Class<AdressenUtils>('de.svws_nrw.core.utils.AdressenUtils');
+	public static readonly class = new Class<AdressenUtils>('de.svws_nrw.core.utils.AdressenUtils');
 
 }
 

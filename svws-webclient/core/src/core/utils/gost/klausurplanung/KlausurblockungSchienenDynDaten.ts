@@ -784,7 +784,7 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenDynDaten'].includes(name);
 	}
 
-	public static class = new Class<KlausurblockungSchienenDynDaten>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenDynDaten');
+	public static readonly class = new Class<KlausurblockungSchienenDynDaten>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenDynDaten');
 
 }
 

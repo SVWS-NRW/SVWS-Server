@@ -68,7 +68,7 @@ export class UvZeitraster extends JavaObject {
 		return ['de.svws_nrw.core.data.uv.UvZeitraster'].includes(name);
 	}
 
-	public static class = new Class<UvZeitraster>('de.svws_nrw.core.data.uv.UvZeitraster');
+	public static readonly class = new Class<UvZeitraster>('de.svws_nrw.core.data.uv.UvZeitraster');
 
 	public static transpilerFromJSON(json: string): UvZeitraster {
 		const obj = JSON.parse(json) as Partial<UvZeitraster>;

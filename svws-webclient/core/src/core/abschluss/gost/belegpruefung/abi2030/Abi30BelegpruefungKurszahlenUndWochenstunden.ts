@@ -18,30 +18,69 @@ import { GostBelegungsfehler } from '../../../../../core/abschluss/gost/GostBele
 
 export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruefung {
 
+	/**
+	 * Die Kurszahlen der einzelnen Halbjahre.
+	 */
 	private kurszahlen: ArrayMap<GostHalbjahr, ArrayMap<GostKursart, number>> | null = null;
 
+	/**
+	 * Die Kurszahlen der einzelnen Halbjahre.
+	 */
 	private kurszahlenGrundkurse: ArrayMap<GostHalbjahr, number> | null = null;
 
+	/**
+	 * Die Kurszahlen der einzelnen Halbjahre.
+	 */
 	private kurszahlenLeistungskurse: ArrayMap<GostHalbjahr, number> | null = null;
 
+	/**
+	 * Die Kurszahlen der anrechenbaren Kurse für die einzelnen Halbjahre.
+	 */
 	private kurszahlenAnrechenbar: ArrayMap<GostHalbjahr, number> | null = null;
 
+	/**
+	 * Die Kurszahlen der Einführungsphase.
+	 */
 	private kurszahlenEinfuehrungsphase: ArrayMap<GostKursart, number> | null = null;
 
+	/**
+	 * Die Kurszahlen der Qualifikationsphase.
+	 */
 	private kurszahlenQualifikationsphase: ArrayMap<GostKursart, number> | null = null;
 
+	/**
+	 * Die Gesamtzahl der Grundkurse der Qualifikationsphase (auch Zusatzkurse und ggf. Projektkurse, die zu keiner besonderen Lernleistung zählen).
+	 */
 	private blockIAnzahlGrundkurse: number = 0;
 
+	/**
+	 * Die Anzahl der belegten LK-Fächer (sollten 2 sein).
+	 */
 	private anzahlLKFaecher: number = 0;
 
+	/**
+	 * Die Gesamtzahl der Leistungskurse der Qualifikationsphase (sollten 8 sein).
+	 */
 	private blockIAnzahlLeistungskurse: number = 0;
 
+	/**
+	 * Die Gesamtzahl der anrechenbaren Kurse der Qualifikationsphase.
+	 */
 	private blockIAnzahlAnrechenbar: number = 0;
 
+	/**
+	 * Die Anzahl der Wochenstunden in dem entsprechenden Halbjahr.
+	 */
 	private wochenstunden: ArrayMap<GostHalbjahr, number> | null = null;
 
+	/**
+	 * Die Anzahl der WochenStunden in der Einführungsphase.
+	 */
 	private wochenstundenEinfuehrungsphase: number = 0;
 
+	/**
+	 * Die Anzahl der WochenStunden in der Qualifikationsphase.
+	 */
 	private wochenstundenQualifikationsphase: number = 0;
 
 
@@ -172,6 +211,11 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 					this.blockIAnzahlLeistungskurse++;
 					this.blockIAnzahlAnrechenbar++;
 				}
+				if (halbjahr.istQualifikationsphase() && (kursart as unknown === GostKursart.VTF as unknown)) {
+					const kurszahlAnrechenbar: number | null = this.kurszahlenAnrechenbar.get(halbjahr);
+					this.kurszahlenAnrechenbar.put(halbjahr, (kurszahlAnrechenbar === null) ? 1 : (kurszahlAnrechenbar + 1));
+					this.blockIAnzahlAnrechenbar++;
+				}
 				let stunden: number = 0;
 				switch (kursart.kuerzel) {
 					case "GK": {
@@ -183,7 +227,7 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 						break;
 					}
 					case "PJK": {
-						stunden = (fachbelegungHalbjahr.wochenstunden === 3) ? 3 : 2;
+						stunden = 3;
 						break;
 					}
 					case "VTF": {
@@ -346,8 +390,8 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 		if (this.kurszahlenQualifikationsphase === null)
 			throw new NullPointerException()
 		const kurszahlQ_VTF: number | null = this.kurszahlenQualifikationsphase.get(GostKursart.VTF);
-		if ((kurszahlQ_VTF !== null) && (kurszahlQ_VTF > 2))
-			this.addFehler(GostBelegungsfehler.VF_11);
+		if ((kurszahlQ_VTF !== null) && (kurszahlQ_VTF > 4))
+			this.addFehler(GostBelegungsfehler.VF_11_2);
 	}
 
 	/**
@@ -356,7 +400,7 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 	 */
 	private pruefeAnrechenbareKurse(): void {
 		if (this.blockIAnzahlAnrechenbar < 36)
-			this.addFehler(GostBelegungsfehler.ANZ_12);
+			this.addFehler(GostBelegungsfehler.ANZ_12_2);
 	}
 
 	/**
@@ -549,7 +593,7 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungKurszahlenUndWochenstunden', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
 
-	public static class = new Class<Abi30BelegpruefungKurszahlenUndWochenstunden>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungKurszahlenUndWochenstunden');
+	public static readonly class = new Class<Abi30BelegpruefungKurszahlenUndWochenstunden>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungKurszahlenUndWochenstunden');
 
 }
 

@@ -59,8 +59,8 @@
 			text-align: center;
 			width: 100%;
 			height: 100%;
-			border-color: var(--color-border-ui);
-			border-bottom: 1px solid var(--color-border-ui);
+			border-color: var(--color-border-ui-75);
+			border-bottom: 1px solid var(--color-border-ui-75);
 		}
 
 		& > thead > tr > th,
@@ -75,12 +75,12 @@
 		& > tbody > tr > td.ui-divider,
 		& > tfoot > tr > th.ui-divider,
 		& > tfoot > tr > td.ui-divider {
-			border-right: 1px solid var(--color-border-ui-25);
+			border-right: 1px solid var(--color-border-ui-75);
 		}
 
 		& > thead > tr:not(:last-child) > th,
 		& > thead > tr:not(:last-child) > td {
-			border-bottom: 1px solid var(--color-border-ui);
+			border-bottom: 1px solid var(--color-border-ui-75);
 			border-top: 1px solid transparent;
 		}
 

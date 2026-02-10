@@ -51,7 +51,7 @@
 		</div>
 		<div title="Unterrichtsliste" class="min-w-fit h-full overflow-y-auto w-full flex flex-col gap-4">
 			<div class="text-headline-sm">Unterrichtsliste</div>
-			<svws-ui-table :items="stundenplanUnterrichtListeManager().filtered()" :columns :no-data="false" has-background scoll>
+			<svws-ui-table :items="stundenplanUnterrichtListeManager().filtered()" :columns :no-data="false" has-background scoll allow-arrow-key-selection focus-first-element>
 				<template #cell(idZeitraster)="{ value }">
 					{{ wochentage[stundenplanManager().zeitrasterGetByIdOrException(value).wochentag] }} {{ stundenplanManager().zeitrasterGetByIdOrException(value).unterrichtstunde }}.
 				</template>
@@ -122,7 +122,7 @@
 	import { computed, ref } from "vue";
 	import type { StundenplanUnterrichteProps } from "./SStundenplanUnterrichteProps";
 	import type { List, StundenplanKlasse, StundenplanKurs, StundenplanRaum, StundenplanSchiene, StundenplanSchueler, StundenplanZeitraster, Wochentag, StundenplanLehrer, StundenplanFach, StundenplanUnterricht } from "@core";
-	import { ArrayList, ListUtils, Fach, BenutzerKompetenz } from "@core";
+	import { ListUtils, Fach, BenutzerKompetenz } from "@core";
 
 	type FokusType = { type: 'lehrer' | 'klassen' | 'raeume' | 'schienen' | null, id: number | null };
 
@@ -147,8 +147,9 @@
 	const wochentyprange = computed(() => {
 		const range = [];
 		const modell = props.stundenplanManager().stundenplanGetWochenTypModell();
-		for (let i = 0; i <= modell; i++)
+		for (let i = 0; i <= modell; i++) {
 			range.push(i);
+		}
 		return range;
 	});
 
@@ -163,9 +164,10 @@
 	];
 
 	function getBgColor(kuerzel: string | null) {
-		if (kuerzel === null)
+		if (kuerzel === null) {
 			return 'rgb(220,220,220)';
-		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(schuljahr.value, 1.0);
+		}
+		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(schuljahr.value, 1);
 	}
 
 	const filtered = computed(() => {
@@ -205,8 +207,9 @@
 		get: () => [...props.stundenplanUnterrichtListeManager().schueler.auswahl()],
 		set: (value) => {
 			props.stundenplanUnterrichtListeManager().schueler.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.stundenplanUnterrichtListeManager().schueler.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -215,8 +218,9 @@
 		get: () => [...props.stundenplanUnterrichtListeManager().lehrer.auswahl()],
 		set: (value) => {
 			props.stundenplanUnterrichtListeManager().lehrer.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.stundenplanUnterrichtListeManager().lehrer.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -225,8 +229,9 @@
 		get: () => [...props.stundenplanUnterrichtListeManager().klassen.auswahl()],
 		set: (value) => {
 			props.stundenplanUnterrichtListeManager().klassen.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.stundenplanUnterrichtListeManager().klassen.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -235,8 +240,9 @@
 		get: () => [...props.stundenplanUnterrichtListeManager().kurse.auswahl()],
 		set: (value) => {
 			props.stundenplanUnterrichtListeManager().kurse.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.stundenplanUnterrichtListeManager().kurse.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -245,8 +251,9 @@
 		get: () => [...props.stundenplanUnterrichtListeManager().wochentypen.auswahl()],
 		set: (value) => {
 			props.stundenplanUnterrichtListeManager().wochentypen.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.stundenplanUnterrichtListeManager().wochentypen.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -255,8 +262,9 @@
 		get: () => [...props.stundenplanUnterrichtListeManager().faecher.auswahl()],
 		set: (value) => {
 			props.stundenplanUnterrichtListeManager().faecher.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.stundenplanUnterrichtListeManager().faecher.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -265,118 +273,136 @@
 		get: () => [...props.stundenplanUnterrichtListeManager().schienen.auswahl()],
 		set: (value) => {
 			props.stundenplanUnterrichtListeManager().schienen.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.stundenplanUnterrichtListeManager().schienen.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
 
-	function filterWochentag(wochentag: Wochentag) {
+	async function filterWochentag(wochentag: Wochentag) {
 		props.stundenplanUnterrichtListeManager().wochentage.auswahlToggle(wochentag);
-		void props.setFilter();
+		await props.setFilter();
 	}
 
-	function filterStunde(stunde: number) {
+	async function filterStunde(stunde: number) {
 		props.stundenplanUnterrichtListeManager().stunden.auswahlToggle(stunde);
-		void props.setFilter();
+		await props.setFilter();
 	}
 
-	function filterZeiraster(zeitraster: StundenplanZeitraster | null) {
-		if (zeitraster === null)
+	async function filterZeiraster(zeitraster: StundenplanZeitraster | null) {
+		if (zeitraster === null) {
 			return;
+		}
 		props.stundenplanUnterrichtListeManager().zeitraster.auswahlToggle(zeitraster);
-		void props.setFilter();
+		await props.setFilter();
 	}
 
 	function modelValueLehrer(list: List<number>) {
 		const res: StundenplanLehrer[] = [];
-		for (const l of list)
+		for (const l of list) {
 			res.push(props.stundenplanManager().lehrerGetByIdOrException(l));
+		}
 		return res;
 	}
 
 	async function patchLehrer(lehrer: StundenplanLehrer[], unterricht: StundenplanUnterricht) {
 		unterricht.lehrer.clear();
-		for (const l of lehrer)
+		for (const l of lehrer) {
 			unterricht.lehrer.add(l.id);
+		}
 		await props.patchUnterricht(ListUtils.create1(unterricht));
 	}
 
 
 	function modelValueKlassen(list: List<number>) {
 		const res: StundenplanKlasse[] = [];
-		for (const k of list)
+		for (const k of list) {
 			res.push(props.stundenplanManager().klasseGetByIdOrException(k));
+		}
 		return res;
 	}
 
 	async function patchKlassen(klassen: (StundenplanKlasse | StundenplanRaum)[], unterricht: StundenplanUnterricht) {
 		unterricht.klassen.clear();
-		for (const k of klassen)
+		for (const k of klassen) {
 			unterricht.klassen.add(k.id);
+		}
 		await props.patchUnterricht(ListUtils.create1(unterricht));
 	}
 
 	function modelValueRaeume(list: List<number>) {
 		const res: StundenplanRaum[] = [];
-		for (const r of list)
+		for (const r of list) {
 			res.push(props.stundenplanManager().raumGetByIdOrException(r));
+		}
 		return res;
 	}
 
 	async function patchRaeume(raeume: (StundenplanKlasse | StundenplanRaum)[], unterricht: StundenplanUnterricht) {
 		unterricht.raeume.clear();
-		for (const r of raeume)
+		for (const r of raeume) {
 			unterricht.raeume.add(r.id);
+		}
 		await props.patchUnterricht(ListUtils.create1(unterricht));
 	}
 
 	function modelValueSchienen(list: List<number>) {
 		const res: StundenplanSchiene[] = [];
-		for (const s of list)
+		for (const s of list) {
 			res.push(props.stundenplanManager().schieneGetByIdOrException(s));
+		}
 		return res;
 	}
 
 	async function patchSchienen(schienen: StundenplanSchiene[], unterricht: StundenplanUnterricht) {
 		unterricht.schienen.clear();
-		for (const s of schienen)
+		for (const s of schienen) {
 			unterricht.schienen.add(s.id);
+		}
 		await props.patchUnterricht(ListUtils.create1(unterricht));
 	}
 
 
 	function find(items: Iterable<StundenplanKlasse | StundenplanRaum>, search: string) {
 		const list = [];
-		for (const i of items)
-			if (i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+		for (const i of items) {
+			if (i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
 				list.push(i);
+			}
+		}
 		return list;
 	}
 
 	function findLehrer(items: Iterable<StundenplanLehrer>, search: string) {
 		const list = [];
 		const lcSearch = search.toLocaleLowerCase();
-		for (const i of items)
-			if (i.kuerzel.toLocaleLowerCase().includes(lcSearch)	|| i.nachname.toLocaleLowerCase().includes(lcSearch) || i.vorname.toLocaleLowerCase().includes(lcSearch))
+		for (const i of items) {
+			if (i.kuerzel.toLocaleLowerCase().includes(lcSearch)	|| i.nachname.toLocaleLowerCase().includes(lcSearch) || i.vorname.toLocaleLowerCase().includes(lcSearch)) {
 				list.push(i);
+			}
+		}
 		return list;
 	}
 
 	function findSchueler(items: Iterable<StundenplanSchueler>, search: string) {
 		const list = [];
 		const lcSearch = search.toLocaleLowerCase();
-		for (const i of items)
-			if (i.nachname.toLocaleLowerCase().includes(lcSearch) || i.vorname.toLocaleLowerCase().includes(lcSearch))
+		for (const i of items) {
+			if (i.nachname.toLocaleLowerCase().includes(lcSearch) || i.vorname.toLocaleLowerCase().includes(lcSearch)) {
 				list.push(i);
+			}
+		}
 		return list;
 	}
 
 	function findKurs(items: Iterable<StundenplanKurs>, search: string) {
 		const list = [];
-		for (const i of items)
-			if (i.bezeichnung.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+		for (const i of items) {
+			if (i.bezeichnung.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
 				list.push(i);
+			}
+		}
 		return list;
 	}
 

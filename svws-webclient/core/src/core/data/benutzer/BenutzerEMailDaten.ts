@@ -49,7 +49,7 @@ export class BenutzerEMailDaten extends JavaObject {
 		return ['de.svws_nrw.core.data.benutzer.BenutzerEMailDaten'].includes(name);
 	}
 
-	public static class = new Class<BenutzerEMailDaten>('de.svws_nrw.core.data.benutzer.BenutzerEMailDaten');
+	public static readonly class = new Class<BenutzerEMailDaten>('de.svws_nrw.core.data.benutzer.BenutzerEMailDaten');
 
 	public static transpilerFromJSON(json: string): BenutzerEMailDaten {
 		const obj = JSON.parse(json) as Partial<BenutzerEMailDaten>;

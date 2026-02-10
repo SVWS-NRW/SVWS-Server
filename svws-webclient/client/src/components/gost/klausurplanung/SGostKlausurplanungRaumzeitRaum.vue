@@ -32,7 +32,7 @@
 					</template>
 				</span>
 			</div>
-			<svws-ui-table :items="[]" :columns="cols" :no-data="klausurenImRaum().size() === 0" no-data-text="Noch keine Klausuren zugewiesen." class="mt-4">
+			<svws-ui-table :items="[]" :columns="cols" :no-data="(klausurenImRaum().size() + nachschreiberImRaum().size()) === 0" no-data-text="Noch keine Klausuren zugewiesen." class="mt-4">
 				<template #header><span /></template>
 				<template #body>
 					<div v-for="klausur of klausurenImRaum()" :key="klausur.id" class="svws-ui-tr cursor-grab" role="row" :data="klausur" :draggable="hatKompetenzUpdate" @dragstart="onDrag($event, klausur)"	@dragend="onDrag($event, undefined)">
@@ -66,7 +66,38 @@
 						</div>
 						<div class="svws-ui-td" role="cell">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
 						<div class="svws-ui-td" role="cell">
-							<svws-ui-text-input :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" headless :placeholder="klausurStartzeit(klausur) + ' Uhr'" @change="zeit => patchKlausurbeginn(zeit, klausur)" />
+							<svws-ui-text-input :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" headless :placeholder="klausurStartzeit(klausur) + ' Uhr'" @change="zeit => patchKlausurbeginn(zeit, klausur, false)" />
+						</div>
+					</div>
+					<div v-if="klausurenImRaum().size() > 0 && nachschreiberImRaum().size() > 0">Nachschreiber:</div>
+					<div v-for="klausur of nachschreiberImRaum()" :key="klausur.id" class="svws-ui-tr cursor-grab" role="row" :data="klausur" :draggable="hatKompetenzUpdate" @dragstart="onDrag($event, klausur)"	@dragend="onDrag($event, undefined)">
+						<div class="svws-ui-td" role="cell">
+							<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable" />
+						</div>
+						<div class="svws-ui-td" role="cell">
+							{{ GostHalbjahr.fromIDorException(kMan().vorgabeByKursklausur(klausur).halbjahr).jahrgang }}
+						</div>
+						<div class="svws-ui-td" role="cell">
+							<svws-ui-tooltip :hover="false" :indicator="false" autosize>
+								<template #content>
+									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin="kMan().terminOrNullByKursklausur(klausur)!" :benutzer-kompetenzen />
+								</template>
+								<span class="svws-ui-badge hover:opacity-75" :style="`color: var(--color-text-uistatic); background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+								<svws-ui-tooltip>
+									<template #content>
+										Bemerkung: {{ klausur.bemerkung }}
+									</template>
+									<span class="icon i-ri-edit-2-line icon-ui-brand" v-if="(klausur.bemerkung !== null) && (klausur.bemerkung.trim().length > 0)" />
+								</svws-ui-tooltip>
+							</svws-ui-tooltip>
+						</div>
+						<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
+						<div class="svws-ui-td flex" role="cell">
+							{{ kMan().schuelerklausurterminGetMengeByRaumAndKursklausur(raum, klausur).size() }}
+						</div>
+						<div class="svws-ui-td" role="cell">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
+						<div class="svws-ui-td" role="cell">
+							<svws-ui-text-input :model-value="kMan().schuelerklausurterminGetMengeByRaumAndKursklausur(raum, klausur).getFirst().startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(kMan().schuelerklausurterminGetMengeByRaumAndKursklausur(raum, klausur).getFirst().startzeit!) : ''" headless :placeholder="DateUtils.getStringOfUhrzeitFromMinuten(termin().startzeit!) + ' Uhr'" @change="zeit => patchKlausurbeginn(zeit, klausur, true)" />
 						</div>
 					</div>
 				</template>
@@ -92,13 +123,11 @@
 
 <script setup lang="ts">
 
-	import type { StundenplanRaum, GostKlausurplanManager, GostKlausurenCollectionSkrsKrsData, GostKlausurraum, GostKlausurtermin } from '@core';
-	import { BenutzerKompetenz } from '@core';
+	import type { GostKlausurplanManager, GostKlausurraum, GostKlausurtermin, GostSchuelerklausurTermin, StundenplanRaum } from '@core';
+	import { BenutzerKompetenz, DateUtils, GostHalbjahr, GostKursklausur } from '@core';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 	import type { DataTableColumn } from "@ui";
-	import { GostKursklausur, GostHalbjahr } from '@core';
 	import { computed } from 'vue';
-	import { DateUtils } from "@core";
 
 	const props = defineProps<{
 		benutzerKompetenzen: Set<BenutzerKompetenz>,
@@ -106,7 +135,7 @@
 		kMan: () => GostKlausurplanManager;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>) => Promise<boolean>;
 		loescheKlausurraum: (id: number) => Promise<boolean>;
-		patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<void>;
+		patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur>) => Promise<void>;
 		dragData: () => GostKlausurplanungDragData;
 		onDrag: (event: DragEvent, data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
@@ -120,7 +149,8 @@
 
 	const raumHatFehler = () => (props.raum.idStundenplanRaum !== null && anzahlSuS() > props.kMan().stundenplanraumGetByKlausurraum(props.raum).groesse) || props.raum.idStundenplanRaum === null;
 
-	const klausurenImRaum = () => props.kMan().kursklausurGetMengeByRaum(props.raum, true);
+	const klausurenImRaum = () => props.kMan().kursklausurGetMengeByRaum(props.raum, false);
+	const nachschreiberImRaum = () => props.kMan().nachschreiberGetMengeByRaum(props.raum);
 
 	const anzahlSuS = () => props.kMan().schuelerklausurterminGetMengeByRaum(props.raum).size();
 
@@ -128,16 +158,18 @@
 
 	const klausurStartzeit = (klausur: GostKursklausur) => {
 		let startzeit = -1;
-		if (klausur.startzeit !== null)
+		if (klausur.startzeit !== null) {
 			startzeit = klausur.startzeit;
-		else if (klausur.idTermin === props.raum.idTermin) {
+		} else if (klausur.idTermin === props.raum.idTermin) {
 			const startzeitKursklausur = props.kMan().startzeitByKursklausurOrNull(klausur);
-			if (startzeitKursklausur !== null)
+			if (startzeitKursklausur !== null) {
 				startzeit = startzeitKursklausur;
+			}
 		} else {
 			const startzeitRaum = termin().startzeit;
-			if (startzeitRaum !== null)
+			if (startzeitRaum !== null) {
 				startzeit = startzeitRaum;
+			}
 		}
 		return startzeit !== -1 ? DateUtils.getStringOfUhrzeitFromMinuten(startzeit) : undefined;
 	};
@@ -148,28 +180,39 @@
 
 	const raeumeVerfuegbar = computed(() => {
 		const raeume = props.kMan().stundenplanraumVerfuegbarGetMengeByTermin(termin(), props.multijahrgang());
-		if (props.raum.idStundenplanRaum !== null)
+		if (props.raum.idStundenplanRaum !== null) {
 			raeume.add(0, props.kMan().stundenplanraumGetByKlausurraum(props.raum));
+		}
 		return raeume;
 	});
 
 	function isDropZone(): boolean {
-		if ((props.dragData() === undefined) || ((props.dragData() instanceof GostKursklausur) && props.kMan().containsKlausurraumKursklausur(props.raum, props.dragData() as GostKursklausur)))
+		if ((props.dragData() === undefined) || ((props.dragData() instanceof GostKursklausur) && props.kMan().containsKlausurraumKursklausur(props.raum, props.dragData() as GostKursklausur))) {
 			return false;
+		}
 		return true;
 	}
 
 	function checkDropZone(event: DragEvent) {
-		if (isDropZone())
+		if (isDropZone()) {
 			event.preventDefault();
+		}
 	}
 
-	async function patchKlausurbeginn(event: string | null, klausur: GostKursklausur) {
-		if (event === null)
+	async function patchKlausurbeginn(event: string | null, klausur: GostKursklausur, nk: boolean) {
+		if (event === null) {
 			return;
+		}
 		try {
 			const startzeit = event.trim().length > 0 ? DateUtils.gibMinutenOfZeitAsString(event) : null;
-			await props.patchKlausur(klausur, { startzeit });
+			if (nk === true) {
+				const nachschreiberSkts = props.kMan().schuelerklausurterminGetMengeByRaumAndKursklausur(props.raum, klausur);
+				for (const nachSkt of nachschreiberSkts) {
+					await props.patchKlausur(nachSkt, { startzeit });
+				}
+			} else {
+				await props.patchKlausur(klausur, { startzeit });
+			}
 		} catch (e) {
 			// Do nothing
 		}

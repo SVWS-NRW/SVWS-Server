@@ -28,8 +28,9 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 	}
 
 	public checkHidden(params?: RouteParams) {
-		if (!routeGostKlausurplanung.data.abschnitt || routeGostKlausurplanung.data.manager.stundenplanManagerGeladenAndExistsByAbschnitt(routeGostKlausurplanung.data.abschnitt.id) === false)
+		if (!routeGostKlausurplanung.data.abschnitt || routeGostKlausurplanung.data.manager.stundenplanManagerGeladenAndExistsByAbschnitt(routeGostKlausurplanung.data.abschnitt.id) === false) {
 			return { name: routeGostKlausurplanung.defaultChild!.name, params };
+		}
 		return false;
 	}
 
@@ -37,17 +38,20 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 		try {
 			const { abiturjahr, halbjahr: halbjahrId, idtermin } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr", "idtermin"]);
 			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
-			if ((abiturjahr === undefined) || (halbjahr === null))
+			if ((abiturjahr === undefined) || (halbjahr === null)) {
 				throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen definiert sein.");
+			}
 			const terminList = routeGostKlausurplanung.data.manager.terminMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(routeGostKlausurplanung.data.jahrgangsdaten.abiturjahr, routeGostKlausurplanung.data.halbjahr, routeGostKlausurplanung.data.quartalsauswahl.value);
 			if ((idtermin === undefined) && !terminList.isEmpty()) {
 				const termin = (routeGostKlausurplanung.data.terminSelected.value !== undefined) && terminList.contains(routeGostKlausurplanung.data.terminSelected.value) ? routeGostKlausurplanung.data.terminSelected.value : terminList.getFirst();
 				return this.getRoute({ idtermin: termin.id });
 			}
 			const termin = routeGostKlausurplanung.data.manager.terminGetByIdOrNull(idtermin ?? -1) ?? undefined;
-			if (termin !== undefined && termin.datum !== null)
-				if (routeGostKlausurplanung.data.manager.stundenplanManagerExistsByAbschnittAndDatum(routeGostKlausurplanung.data.abschnitt!.id, termin.datum))
+			if (termin !== undefined && termin.datum !== null) {
+				if (routeGostKlausurplanung.data.manager.stundenplanManagerExistsByAbschnittAndDatum(routeGostKlausurplanung.data.abschnitt!.id, termin.datum)) {
 					routeGostKlausurplanung.data.setRaumTermin(termin);
+				}
+			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}

@@ -230,7 +230,6 @@
 .svws-ui-tfoot--data {
 	@apply sticky z-10;
 	@apply -mt-px border-y;
-	@apply -bottom-px;
 
 	.svws-ui-table.overflow-auto & {
 		@apply bottom-0;

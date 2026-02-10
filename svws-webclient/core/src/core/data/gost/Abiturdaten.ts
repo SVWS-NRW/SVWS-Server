@@ -204,7 +204,7 @@ export class Abiturdaten extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.Abiturdaten'].includes(name);
 	}
 
-	public static class = new Class<Abiturdaten>('de.svws_nrw.core.data.gost.Abiturdaten');
+	public static readonly class = new Class<Abiturdaten>('de.svws_nrw.core.data.gost.Abiturdaten');
 
 	public static transpilerFromJSON(json: string): Abiturdaten {
 		const obj = JSON.parse(json) as Partial<Abiturdaten>;

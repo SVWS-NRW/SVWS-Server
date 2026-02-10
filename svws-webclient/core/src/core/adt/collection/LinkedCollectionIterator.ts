@@ -68,7 +68,7 @@ export class LinkedCollectionIterator<E> extends JavaObject implements JavaItera
 		return ['java.util.Iterator', 'de.svws_nrw.core.adt.collection.LinkedCollectionIterator'].includes(name);
 	}
 
-	public static class = new Class<LinkedCollectionIterator<any>>('de.svws_nrw.core.adt.collection.LinkedCollectionIterator');
+	public static readonly class = new Class<LinkedCollectionIterator<any>>('de.svws_nrw.core.adt.collection.LinkedCollectionIterator');
 
 }
 

@@ -1,0 +1,4 @@
+/* Ergänzende Einträge zu den allgemeinen css-Styles. Überschreiben diese bei gleicher Bezeichnung */
+td {
+	font-size: 0.9em;
+}

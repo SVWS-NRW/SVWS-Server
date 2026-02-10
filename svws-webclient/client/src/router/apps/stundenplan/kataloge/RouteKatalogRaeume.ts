@@ -29,17 +29,20 @@ export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteS
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		try {
-			if (isEntering)
+			if (isEntering) {
 				await this.data.ladeListe();
+			}
 			const { idSchuljahresabschnitt, idRaum } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "idRaum"]);
-			if (idSchuljahresabschnitt === undefined)
+			if (idSchuljahresabschnitt === undefined) {
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
+			}
 			const eintrag = (idRaum !== undefined) ? this.data.raumListeManager.liste.get(idRaum) : null;
 			this.data.setEintrag(eintrag);
 			if (!this.data.raumListeManager.hasDaten()) {
 				if (idRaum === undefined) {
-					if (this.data.raumListeManager.filtered().isEmpty())
+					if (this.data.raumListeManager.filtered().isEmpty()) {
 						return;
+					}
 					return this.getRoute({ idRaum: this.data.raumListeManager.filtered().get(0).id });
 				}
 				return;

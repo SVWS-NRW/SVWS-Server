@@ -43,9 +43,11 @@
 
 	const belegungsHinweise: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => {
 		const res = new ArrayList<GostBelegpruefungErgebnisFehler>();
-		for (const fehler of props.fehlerliste())
-			if (GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.HINWEIS)
+		for (const fehler of props.fehlerliste()) {
+			if (GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.HINWEIS) {
 				res.add(fehler);
+			}
+		}
 		return res;
 	});
 

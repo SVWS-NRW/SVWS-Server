@@ -1,0 +1,10 @@
+[# th:if="${Schueler.isEmpty()}"]
+    GOSt-Laufbahnplanung-Pruefungsergebnisse
+[/]
+[# th:if="${!Schueler.isEmpty()}"]
+    [# th:each="schueler,iterState : ${Schueler}"]
+        [# th:if="${iterState.first}"]
+            GOSt-Laufbahnplanung-Pruefungsergebnisse_Abi[(${ schueler.gostLaufbahnplanung().abiturjahr() + '_' + #strings.replace(schueler.gostLaufbahnplanung().auswahlGOStHalbjahr(), '.', '') })]
+        [/]
+    [/]
+[/]

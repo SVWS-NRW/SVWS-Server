@@ -175,7 +175,7 @@ export class ArrayMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMa
 		return ['de.svws_nrw.core.adt.map.ArrayMapEntrySet', 'java.util.Collection', 'java.util.Set', 'java.lang.Iterable'].includes(name);
 	}
 
-	public static class = new Class<ArrayMapEntrySet<any, any>>('de.svws_nrw.core.adt.map.ArrayMapEntrySet');
+	public static readonly class = new Class<ArrayMapEntrySet<any, any>>('de.svws_nrw.core.adt.map.ArrayMapEntrySet');
 
 	public [Symbol.iterator](): Iterator<JavaMapEntry<any, any>> {
 		const iter: JavaIterator<JavaMapEntry<any, any>> = this.iterator();

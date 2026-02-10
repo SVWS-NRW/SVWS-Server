@@ -18,12 +18,24 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class Fremdsprachen extends GostBelegpruefung {
 
+	/**
+	 * Die Belegungen für alle Fächer der Fremdsprachen.
+	 */
 	private _fremdsprachen: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
+	/**
+	 * Die Belegungen für alle neu einsetzenden Fremdsprachen.
+	 */
 	private _fremdsprachenNeu: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
+	/**
+	 * Die Belegungen für alle fortgeführten Fremdsprachen.
+	 */
 	private _fremdsprachenFortgefuehrt: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
+	/**
+	 * Die Belegungen von bilingualen Sachfächern.
+	 */
 	private _biliSachfaecher: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
 	/**
@@ -521,7 +533,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Fremdsprachen'].includes(name);
 	}
 
-	public static class = new Class<Fremdsprachen>('de.svws_nrw.core.abschluss.gost.belegpruefung.Fremdsprachen');
+	public static readonly class = new Class<Fremdsprachen>('de.svws_nrw.core.abschluss.gost.belegpruefung.Fremdsprachen');
 
 }
 

@@ -19,7 +19,7 @@ export class BildungsstufeKatalogEintrag extends CoreTypeDataNurSchulformen {
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.schule.BildungsstufeKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeDataNurSchulformen'].includes(name);
 	}
 
-	public static class = new Class<BildungsstufeKatalogEintrag>('de.svws_nrw.asd.data.schule.BildungsstufeKatalogEintrag');
+	public static readonly class = new Class<BildungsstufeKatalogEintrag>('de.svws_nrw.asd.data.schule.BildungsstufeKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): BildungsstufeKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<BildungsstufeKatalogEintrag>;

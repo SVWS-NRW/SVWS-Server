@@ -66,7 +66,7 @@ export class ENMLerngruppe extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMLerngruppe'].includes(name);
 	}
 
-	public static class = new Class<ENMLerngruppe>('de.svws_nrw.core.data.enm.ENMLerngruppe');
+	public static readonly class = new Class<ENMLerngruppe>('de.svws_nrw.core.data.enm.ENMLerngruppe');
 
 	public static transpilerFromJSON(json: string): ENMLerngruppe {
 		const obj = JSON.parse(json) as Partial<ENMLerngruppe>;

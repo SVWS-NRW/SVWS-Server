@@ -8,8 +8,8 @@ import de.svws_nrw.core.data.reporting.ReportingVorlageParameter;
 import de.svws_nrw.core.types.reporting.ReportingVorlageParameterTyp;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.parameter.ReportingVorlageParameterTypisiert;
-import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingBenutzer;
-import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingSchule;
+import de.svws_nrw.module.reporting.types.schule.ProxyReportingBenutzer;
+import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchule;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import jakarta.ws.rs.core.Response;
 import org.thymeleaf.context.Context;
@@ -55,8 +55,8 @@ public final class HtmlContextBasisdaten extends HtmlContext<Object> {
 		context.setVariable("Parameter", this.reportingRepository.reportingParameter());
 
 		// Baue die HashMap mit den übergebenen Vorlage-Parameter-Namen und ihren Werten auf, damit diese in den Templates direkt genutzt werden können.
-		if ((this.reportingRepository.reportingParameter() != null) && (this.reportingRepository.reportingParameter().vorlageParameter != null)) {
-			for (final ReportingVorlageParameter reportingVorlageParameter : this.reportingRepository.reportingParameter().vorlageParameter) {
+		if ((this.reportingRepository.reportingParameter() != null) && (this.reportingRepository.reportingParameter().vorlageParameter() != null)) {
+			for (final ReportingVorlageParameter reportingVorlageParameter : this.reportingRepository.reportingParameter().vorlageParameter()) {
 				final ReportingVorlageParameterTypisiert<?> typisiert = erstelleTypisiertenParameter(reportingVorlageParameter);
 				this.vorlageParameterWerte.put(typisiert.getName(), typisiert.getWert());
 			}

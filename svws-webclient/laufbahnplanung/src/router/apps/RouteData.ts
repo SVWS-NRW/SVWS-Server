@@ -107,10 +107,11 @@ export class RouteData {
 	}
 
 	public async setView(view: RouteNode<any, any>) {
-		if (routeApp.children.includes(view))
+		if (routeApp.children.includes(view)) {
 			this.setPatchedState({ view: view });
-		else
+		} else {
 			throw new Error("Diese gewählte Ansicht wird nicht unterstützt.");
+		}
 	}
 
 	public get view(): RouteNode<any, any> {
@@ -120,17 +121,21 @@ export class RouteData {
 	protected createAbiturdatenmanager(faecherManager?: GostFaecherManager, daten?: Abiturdaten): AbiturdatenManager | undefined {
 		const abiturdaten = (daten === undefined) ? this._state.value.abiturdaten : daten;
 		const fachManager = (faecherManager === undefined) ? this._state.value.faecherManager : faecherManager;
-		if ((abiturdaten === undefined) || (fachManager === undefined))
+		if ((abiturdaten === undefined) || (fachManager === undefined)) {
 			return undefined;
+		}
 		const jahrgangsdaten = this._state.value.gostJahrgangsdaten;
 		const art = this.gostBelegpruefungsArt;
-		if (art === 'ef1')
+		if (art === 'ef1') {
 			return new AbiturdatenManager(this.serverMode, abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.EF1);
-		if (art === 'gesamt')
+		}
+		if (art === 'gesamt') {
 			return new AbiturdatenManager(this.serverMode, abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.GESAMT);
+		}
 		const abiturdatenManager = new AbiturdatenManager(this.serverMode, abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.GESAMT);
-		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen(), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen(), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 			return abiturdatenManager;
+		}
 		return new AbiturdatenManager(this.serverMode, abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.EF1);
 	}
 
@@ -175,28 +180,32 @@ export class RouteData {
 		abiturdaten.abiturjahr = daten.abiturjahr;
 		abiturdaten.sprachendaten = planungsdaten.sprachendaten;
 		abiturdaten.bilingualeSprache = planungsdaten.bilingualeSprache;
-		for (const hj of GostHalbjahr.values())
+		for (const hj of GostHalbjahr.values()) {
 			abiturdaten.bewertetesHalbjahr[hj.id] = planungsdaten.bewertetesHalbjahr[hj.id];
+		}
 		for (let i = 0; i < planungsdaten.fachbelegungen.size() ; i++) {
 			const belegung = new AbiturFachbelegung();
 			const fb = planungsdaten.fachbelegungen.get(i);
 			const fach = faecherManager.get(fb.fachID);
-			if (fach === null)
+			if (fach === null) {
 				continue;
+			}
 			belegung.fachID = fb.fachID;
 			belegung.abiturFach = fb.abiturFach;
 			belegung.istFSNeu = fach.istFremdSpracheNeuEinsetzend;
 			for (const hj of GostHalbjahr.values()) {
 				const kursart = fb.kursart[hj.id];
-				if (kursart === null)
+				if (kursart === null) {
 					continue;
+				}
 				const hjBelegung = new AbiturFachbelegungHalbjahr();
 				hjBelegung.halbjahrKuerzel = hj.kuerzel;
 				hjBelegung.kursartKuerzel = kursart;
 				hjBelegung.schriftlich = fb.schriftlich[hj.id];
 				hjBelegung.biliSprache = fach.biliSprache;
-				if (fach.kuerzel === "PX")
+				if (fach.kuerzel === "PX") {
 					hjBelegung.wochenstunden = fach.wochenstundenQualifikationsphase;
+				}
 				belegung.belegungen[hj.id] = hjBelegung;
 				belegung.letzteKursart = kursart;
 			}
@@ -204,8 +213,9 @@ export class RouteData {
 		}
 		// Erstelle den Abiturdaten-Manager
 		const abiturdatenManager = this.createAbiturdatenmanager(faecherManager, abiturdaten);
-		if (abiturdatenManager === undefined)
+		if (abiturdatenManager === undefined) {
 			throw new UserNotificationException("Belegprüfungsergebnis konnte nicht berechnet werden.");
+		}
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		gostJahrgangsdaten.istBlockungFestgelegt = abiturdaten.bewertetesHalbjahr;
 		this.setPatchedDefaultState({
@@ -223,8 +233,9 @@ export class RouteData {
 	}
 
 	public async schreibeDaten(): Promise<GostLaufbahnplanungDaten> {
-		if ((this._state.value.faecherManager === undefined) || (this._state.value.abiturdaten === undefined) || (this._state.value.auswahl === undefined))
+		if ((this._state.value.faecherManager === undefined) || (this._state.value.abiturdaten === undefined) || (this._state.value.auswahl === undefined)) {
 			throw new UserNotificationException("Es müssen Abiturdaten geladen sein.");
+		}
 		const daten = new GostLaufbahnplanungDaten();
 		daten.schulNr = this._state.value.schuleStammdaten.schulNr;
 		daten.schulBezeichnung1 = this._state.value.schuleStammdaten.bezeichnung1;
@@ -239,8 +250,9 @@ export class RouteData {
 		daten.beginnZusatzkursSW = this._state.value.gostJahrgangsdaten.beginnZusatzkursSW;
 		daten.beratungslehrer.addAll(this._state.value.beratungslehrer);
 		daten.textBeratungsbogen = this._state.value.gostJahrgangsdaten.textBeratungsbogen;
-		for (const fk of this._state.value.faecherManager.getFachkombinationen())
+		for (const fk of this._state.value.faecherManager.getFachkombinationen()) {
 			daten.fachkombinationen.add(fk);
+		}
 		daten.faecher.addAll(this._state.value.faecherManager.faecher());
 		const s = new GostLaufbahnplanungDatenSchueler();
 		s.id = this._state.value.auswahl.id;
@@ -250,8 +262,9 @@ export class RouteData {
 		s.geschlecht = this._state.value.auswahl.geschlecht;
 		s.bilingualeSprache = this._state.value.abiturdaten.bilingualeSprache;
 		s.sprachendaten = this._state.value.abiturdaten.sprachendaten;
-		for (const hj of GostHalbjahr.values())
+		for (const hj of GostHalbjahr.values()) {
 			s.bewertetesHalbjahr[hj.id] = this._state.value.abiturdaten.bewertetesHalbjahr[hj.id];
+		}
 		for (let i = 0; i < this._state.value.abiturdaten.fachbelegungen.size() ; i++) {
 			const belegung = this._state.value.abiturdaten.fachbelegungen.get(i);
 			const fb = new GostLaufbahnplanungDatenFachbelegung();
@@ -259,8 +272,9 @@ export class RouteData {
 			fb.abiturFach = belegung.abiturFach;
 			for (const hj of GostHalbjahr.values()) {
 				const hjBelegung = belegung.belegungen[hj.id];
-				if (hjBelegung === null)
+				if (hjBelegung === null) {
 					continue;
+				}
 				fb.kursart[hj.id] = hjBelegung.kursartKuerzel;
 				fb.schriftlich[hj.id] = hjBelegung.schriftlich;
 			}
@@ -275,8 +289,9 @@ export class RouteData {
 	}
 
 	get auswahl(): SchuelerListeEintrag {
-		if (this._state.value.auswahl === undefined)
+		if (this._state.value.auswahl === undefined) {
 			throw new Error("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zur Laufbahnplanung abgerufen oder eingegeben werden.");
+		}
 		return this._state.value.auswahl;
 	}
 
@@ -293,8 +308,9 @@ export class RouteData {
 	}
 
 	get faechermanager(): GostFaecherManager {
-		if (this._state.value.faecherManager === undefined)
+		if (this._state.value.faecherManager === undefined) {
 			throw new Error("Unerwarteter Fehler: Fächer-Manager nicht initialisiert");
+		}
 		return this._state.value.faecherManager;
 	}
 
@@ -303,8 +319,9 @@ export class RouteData {
 	}
 
 	get abiturdatenManager(): AbiturdatenManager {
-		if (this._state.value.abiturdatenManager === undefined)
+		if (this._state.value.abiturdatenManager === undefined) {
 			throw new Error("Unerwarteter Fehler: Abiturdaten-Manager nicht initialisiert");
+		}
 		return this._state.value.abiturdatenManager;
 	}
 
@@ -315,8 +332,9 @@ export class RouteData {
 
 	setGostBelegpruefungErgebnis = async () => {
 		const abiturdatenManager = this.createAbiturdatenmanager();
-		if (abiturdatenManager === undefined)
+		if (abiturdatenManager === undefined) {
 			return;
+		}
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedState({ abiturdatenManager, gostBelegpruefungErgebnis });
 	};
@@ -324,29 +342,33 @@ export class RouteData {
 	protected fachbelegungErstellen(fachID: number, wahl: GostSchuelerFachwahl): void {
 		const faecherManager = this.abiturdatenManager.faecher();
 		const abidaten = this._state.value.abiturdaten;
-		if (abidaten === undefined)
+		if (abidaten === undefined) {
 			throw new DeveloperNotificationException("Die Laufbahnplanungsdaten stehen unerwartet nicht zur Verfügung.");
+		}
 		const belegung = new AbiturFachbelegung();
 		const fach = faecherManager.get(fachID);
-		if (fach === null)
+		if (fach === null) {
 			throw new DeveloperNotificationException("Das Fach mit der ID " + fachID + " steht unerwartet nicht zur Verfügung.");
+		}
 		belegung.fachID = fachID;
 		belegung.abiturFach = wahl.abiturFach;
 		belegung.istFSNeu = fach.istFremdSpracheNeuEinsetzend;
 		for (const hj of GostHalbjahr.values()) {
 			const w = wahl.halbjahre[hj.id];
-			if (w === null)
+			if (w === null) {
 				continue;
+			}
 			const hjBelegung = new AbiturFachbelegungHalbjahr();
 			hjBelegung.halbjahrKuerzel = hj.kuerzel;
 			if (w === "M") {
 				if (fach.kuerzel === "PX") {
 					hjBelegung.kursartKuerzel = GostKursart.PJK.kuerzel;
 					hjBelegung.wochenstunden = fach.wochenstundenQualifikationsphase;
-				} else if (fach.kuerzel === "VX")
+				} else if (fach.kuerzel === "VX") {
 					hjBelegung.kursartKuerzel = GostKursart.VTF.kuerzel;
-				else
+				} else {
 					hjBelegung.kursartKuerzel = GostKursart.GK.kuerzel;
+				}
 				hjBelegung.schriftlich = false;
 			} else if (w === "ZK") {
 				hjBelegung.kursartKuerzel = GostKursart.ZK.kuerzel;
@@ -367,17 +389,21 @@ export class RouteData {
 
 	protected fachbelegungEntfernen(fachID: number, wahl: GostSchuelerFachwahl): void {
 		const abidaten = this._state.value.abiturdaten;
-		if (abidaten === undefined)
+		if (abidaten === undefined) {
 			throw new DeveloperNotificationException("Die Laufbahnplanungsdaten stehen unerwartet nicht zur Verfügung.");
-		for (let i = 0; i < abidaten.fachbelegungen.size(); i++)
-			if (abidaten.fachbelegungen.get(i).fachID === fachID)
+		}
+		for (let i = 0; i < abidaten.fachbelegungen.size(); i++) {
+			if (abidaten.fachbelegungen.get(i).fachID === fachID) {
 				abidaten.fachbelegungen.removeElementAt(i);
+			}
+		}
 	}
 
 	setWahl = async (fachID: number, wahl: GostSchuelerFachwahl) => {
 		const abidaten = this._state.value.abiturdaten;
-		if (abidaten === undefined)
+		if (abidaten === undefined) {
 			throw new DeveloperNotificationException("Die Laufbahnplanungsdaten stehen unerwartet nicht zur Verfügung.");
+		}
 		const leereWahl = (wahl.halbjahre[0] === null) && (wahl.halbjahre[1] === null) && (wahl.halbjahre[2] === null) &&
 			(wahl.halbjahre[3] === null) && (wahl.halbjahre[4] === null) && (wahl.halbjahre[5] === null);
 		const belegung = this.abiturdatenManager.getFachbelegungByID(fachID);
@@ -396,8 +422,9 @@ export class RouteData {
 	exportLaufbahnplanung = async (): Promise<ApiFile> => {
 		const json = GostLaufbahnplanungDaten.transpilerToJSON(await this.schreibeDaten());
 		const rawData = new Response(json).body;
-		if (rawData === null)
+		if (rawData === null) {
 			throw new UserNotificationException("Unerwarteter Fehler beim Erstellen der Export-Daten aufgetreten.");
+		}
 		const compressedStream = rawData.pipeThrough(new CompressionStream('gzip'));
 		const data = await new Response(compressedStream).blob();
 		const name = `Laufbahnplanung_${this.gostJahrgangsdaten.abiturjahr}_${this.gostJahrgangsdaten.jahrgang}_${this.auswahl.nachname}_${this.auswahl.vorname}_${this.auswahl.id}.lp`;
@@ -408,14 +435,16 @@ export class RouteData {
 	importLaufbahnplanung = async (formData: FormData): Promise<void> => {
 		this.reader.readAll();
 		const gzData = formData.get("data");
-		if (!(gzData instanceof File))
+		if (!(gzData instanceof File)) {
 			throw new UserNotificationException("Es wurde keine gültige Datei angegeben");
+		}
 		const ds = new DecompressionStream("gzip");
 		const rawData = await (new Response(gzData.stream().pipeThrough(ds))).text();
 		const laufbahnplanungsdaten = GostLaufbahnplanungDaten.transpilerFromJSON(rawData);
 		const revRequired = 1;
-		if (laufbahnplanungsdaten.lpRevision !== revRequired)
+		if (laufbahnplanungsdaten.lpRevision !== revRequired) {
 			throw new UserNotificationException("Die Revision der Laufbahnplanungsdatei (" + laufbahnplanungsdaten.lpRevision + ") entspricht nicht der unterstützen Revision " + revRequired);
+		}
 		await this.ladeDaten(laufbahnplanungsdaten);
 		await RouteManager.doRoute(routeLaufbahnplanung.name);
 	};
@@ -425,39 +454,46 @@ export class RouteData {
 	}
 
 	saveLaufbahnplanung = async (): Promise<void> => {
-		if (this._state.value.abiturdaten === undefined)
+		if (this._state.value.abiturdaten === undefined) {
 			return;
+		}
 		const zwischenspeicher = Abiturdaten.transpilerFromJSON(Abiturdaten.transpilerToJSON(this._state.value.abiturdaten));
 		this.setPatchedState({ zwischenspeicher });
 	};
 
 	restoreLaufbahnplanung = async (): Promise<void> => {
-		if (this._state.value.zwischenspeicher === undefined)
+		if (this._state.value.zwischenspeicher === undefined) {
 			return;
+		}
 		const abiturdaten = this._state.value.zwischenspeicher;
 		const abiturdatenManager = this.createAbiturdatenmanager(this._state.value.faecherManager, abiturdaten);
-		if (abiturdatenManager === undefined)
+		if (abiturdatenManager === undefined) {
 			return;
+		}
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedState({ zwischenspeicher: undefined, abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis, dirty: true });
 	};
 
 	resetFachwahlen = async (forceDelete: boolean) => {
 		const abiturdaten = this._state.value.abiturdaten;
-		if (abiturdaten === undefined)
+		if (abiturdaten === undefined) {
 			throw new DeveloperNotificationException("Die Laufbahnplanungsdaten stehen unerwartet nicht zur Verfügung.");
+		}
 		for (const fachbelegung of abiturdaten.fachbelegungen) {
 			fachbelegung.abiturFach = null;
-			for (let i = 0; i < this.gostJahrgangsdaten.istBlockungFestgelegt.length; i++)
-				if (this.gostJahrgangsdaten.istBlockungFestgelegt[i] === true)
+			for (let i = 0; i < this.gostJahrgangsdaten.istBlockungFestgelegt.length; i++) {
+				if (this.gostJahrgangsdaten.istBlockungFestgelegt[i] === true) {
 					continue;
-				else
+				} else {
 					fachbelegung.belegungen[i] = null;
+				}
+			}
 		}
 		const temp = Abiturdaten.transpilerFromJSON(Abiturdaten.transpilerToJSON(abiturdaten));
 		const abiturdatenManager = this.createAbiturdatenmanager(this._state.value.faecherManager, temp);
-		if (abiturdatenManager === undefined)
+		if (abiturdatenManager === undefined) {
 			return;
+		}
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedState({ abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis });
 	};

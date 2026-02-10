@@ -83,7 +83,7 @@ export class UvPlanungsabschnitt extends JavaObject {
 		return ['de.svws_nrw.core.data.uv.UvPlanungsabschnitt'].includes(name);
 	}
 
-	public static class = new Class<UvPlanungsabschnitt>('de.svws_nrw.core.data.uv.UvPlanungsabschnitt');
+	public static readonly class = new Class<UvPlanungsabschnitt>('de.svws_nrw.core.data.uv.UvPlanungsabschnitt');
 
 	public static transpilerFromJSON(json: string): UvPlanungsabschnitt {
 		const obj = JSON.parse(json) as Partial<UvPlanungsabschnitt>;

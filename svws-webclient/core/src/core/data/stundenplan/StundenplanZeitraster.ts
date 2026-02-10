@@ -44,7 +44,7 @@ export class StundenplanZeitraster extends JavaObject {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanZeitraster'].includes(name);
 	}
 
-	public static class = new Class<StundenplanZeitraster>('de.svws_nrw.core.data.stundenplan.StundenplanZeitraster');
+	public static readonly class = new Class<StundenplanZeitraster>('de.svws_nrw.core.data.stundenplan.StundenplanZeitraster');
 
 	public static transpilerFromJSON(json: string): StundenplanZeitraster {
 		const obj = JSON.parse(json) as Partial<StundenplanZeitraster>;

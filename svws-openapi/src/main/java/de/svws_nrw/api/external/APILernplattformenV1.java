@@ -1,11 +1,14 @@
 package de.svws_nrw.api.external;
 
+import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1;
 import de.svws_nrw.core.data.lernplattform.v1.LernplattformV1Export;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.data.lernplattformen.DataLernplattformen;
+import de.svws_nrw.data.lernplattformen.DataLernplattformenV1;
+import de.svws_nrw.data.schule.DataLernplattformen;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -60,7 +63,7 @@ public class APILernplattformenV1 {
 	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Ressourcen gefunden.")
 	public Response getLernplattformenExport(@PathParam("schema") final String schema, @PathParam("idLernplattform") final long idLernplattform,
 			@PathParam("idSchuljahresabschnitt") final int idSchuljahresabschnitt, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformen(conn, idSchuljahresabschnitt).getByIdAsResponse(idLernplattform),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformenV1(conn, idSchuljahresabschnitt, new DataLernplattformen(conn)).getByIdAsResponse(idLernplattform),
 				request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM);
 	}
 
@@ -88,7 +91,28 @@ public class APILernplattformenV1 {
 	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Ressourcen gefunden.")
 	public Response getLernplattformenExportAsGzip(@PathParam("schema") final String schema, @PathParam("idLernplattform") final long idLernplattform,
 			@PathParam("idSchuljahresabschnitt") final int idSchuljahresabschnitt, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformen(conn, idSchuljahresabschnitt).getByIdAsGzipResponse(idLernplattform),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformenV1(conn, idSchuljahresabschnitt, new DataLernplattformen(conn)).getByIdAsGzipResponse(idLernplattform),
+				request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der schulspezifischen Lernplattformen.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return          die Liste mit dem Katalog der Lernplattformen
+	 */
+	@GET
+	@Path("/")
+	@Operation(summary = "Gibt eine Übersicht aller schulspezifischen Lernplattformen zurück.",
+			description = "Erstellt eine Liste aller vorhandenen Lernplattformen, insofer die notwendige Berechtigung vorliegen.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Lernplattformen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LernplattformV1.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lernplattformen anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Lernplattformen gefunden")
+	public Response getLernplattformen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLernplattformenV1(conn, -1, new DataLernplattformen(conn)).getAllAsResponse(),
 				request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_LERNPLATTFORM);
 	}
 

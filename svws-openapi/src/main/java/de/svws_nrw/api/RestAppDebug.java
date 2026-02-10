@@ -2,6 +2,8 @@ package de.svws_nrw.api;
 
 import java.util.Set;
 
+import de.svws_nrw.api.common.ApiOperationExceptionMapper;
+import de.svws_nrw.api.common.GenericExceptionMapper;
 import de.svws_nrw.api.common.OpenAPICorsFilter;
 import de.svws_nrw.api.common.PathUtils;
 import de.svws_nrw.api.debug.APIDebug;
@@ -19,6 +21,8 @@ public final class RestAppDebug extends Application {
 
 	/// Enthält die API-Klasse für den Zugriff auf die Swagger-UI-Dateien
 	private final Set<Class<?>> classes = Set.of(
+			ApiOperationExceptionMapper.class,
+			GenericExceptionMapper.class,
 			OpenAPICorsFilter.class,
 			APIDebug.class);
 

@@ -153,7 +153,7 @@ export class MapUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.MapUtils'].includes(name);
 	}
 
-	public static class = new Class<MapUtils>('de.svws_nrw.core.utils.MapUtils');
+	public static readonly class = new Class<MapUtils>('de.svws_nrw.core.utils.MapUtils');
 
 }
 

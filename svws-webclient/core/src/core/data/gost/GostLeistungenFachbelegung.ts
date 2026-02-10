@@ -94,7 +94,7 @@ export class GostLeistungenFachbelegung extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostLeistungenFachbelegung'].includes(name);
 	}
 
-	public static class = new Class<GostLeistungenFachbelegung>('de.svws_nrw.core.data.gost.GostLeistungenFachbelegung');
+	public static readonly class = new Class<GostLeistungenFachbelegung>('de.svws_nrw.core.data.gost.GostLeistungenFachbelegung');
 
 	public static transpilerFromJSON(json: string): GostLeistungenFachbelegung {
 		const obj = JSON.parse(json) as Partial<GostLeistungenFachbelegung>;

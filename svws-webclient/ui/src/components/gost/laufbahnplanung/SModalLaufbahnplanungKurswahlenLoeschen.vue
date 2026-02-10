@@ -39,40 +39,43 @@
 
 
 	const buttonText = computed<string>(() => {
-		if (props.schuelerAnsicht && hatFesteWahlen.value)
+		if (props.schuelerAnsicht && hatFesteWahlen.value) {
 			return "Fachwahlen löschen";
-		else if (props.schuelerAnsicht)
+		} else if (props.schuelerAnsicht) {
 			return "Fachwahlen zurücksetzen";
-		else if (props.gostJahrgangsdaten.abiturjahr === -1)
+		} else if (props.gostJahrgangsdaten.abiturjahr === -1) {
 			return "Zurücksetzen aus Standardwerte";
-		else
+		} else {
 			return "Zurücksetzen auf allg. Vorlage";
+		}
 	});
 
 	const modalTitle = computed<string>(() => {
-		if (props.schuelerAnsicht && hatFesteWahlen.value)
+		if (props.schuelerAnsicht && hatFesteWahlen.value) {
 			return "Nicht feste Fachwahlen löschen";
-		else if (props.schuelerAnsicht && doForceDelete.value)
+		} else if (props.schuelerAnsicht && doForceDelete.value) {
 			return "Alle Fachwahlen löschen";
-		else if (props.schuelerAnsicht)
+		} else if (props.schuelerAnsicht) {
 			return "Alle Fachwahlen zurücksetzen";
-		else if (props.gostJahrgangsdaten.abiturjahr === -1)
+		} else if (props.gostJahrgangsdaten.abiturjahr === -1) {
 			return "Zurücksetzen aus Standardwerte";
-		else
+		} else {
 			return "Zurücksetzen der Vorlage auf die allgemeine Vorlage";
+		}
 	});
 
 	const modalDescription = computed<string>(() => {
-		if (props.schuelerAnsicht && hatFesteWahlen.value)
+		if (props.schuelerAnsicht && hatFesteWahlen.value) {
 			return "Sollen die nicht festen Fachwahlen gelöscht werden?";
-		else if (props.schuelerAnsicht && doForceDelete.value)
+		} else if (props.schuelerAnsicht && doForceDelete.value) {
 			return "Soll die Laufbahnplanung vollständig geleert werden?";
-		else if (props.schuelerAnsicht)
+		} else if (props.schuelerAnsicht) {
 			return "Soll die Laufbahnplanung auf die jahrgangs-spezifische Vorlage zurückgesetzt werden?";
-		else if (props.gostJahrgangsdaten.abiturjahr === -1)
+		} else if (props.gostJahrgangsdaten.abiturjahr === -1) {
 			return "Soll die Vorlage auf die Standardwerte zurückgesetzt werden?";
-		else
+		} else {
 			return "Soll diese jahrgangs-spezifisch Vorlage auf die allgemeine Vorlage zurückgesetzt werden?";
+		}
 	});
 
 	const hatFesteWahlen = computed<boolean>(() => {

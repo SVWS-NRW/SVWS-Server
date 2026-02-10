@@ -94,22 +94,22 @@ export class GostFach extends JavaObject {
 	public wochenstundenQualifikationsphase: number = 3;
 
 	/**
-	 * Die Fach-ID des Leitfaches eines Projektkurses oder Vertiefungsfaches
+	 * Die Fach-ID des Leit- bzw. Referenzfaches eines Projektkurses oder Vertiefungsfaches
 	 */
 	public projektKursLeitfach1ID: number | null = null;
 
 	/**
-	 * Das Fach-Kürzel des Leitfaches eines Projektkurses oder Vertiefungsfaches
+	 * Das Fach-Kürzel des Leit- bzw. Referenzfaches eines Projektkurses oder Vertiefungsfaches
 	 */
 	public projektKursLeitfach1Kuerzel: string | null = null;
 
 	/**
-	 * Die Fach-ID des zweiten Leitfaches eines Projektkurses
+	 * Die Fach-ID des zweiten Leit- bzw. Referenzfaches eines Projektkurses
 	 */
 	public projektKursLeitfach2ID: number | null = null;
 
 	/**
-	 * Die Fach-Kürzel des zweiten Leitfaches eines Projektkurses
+	 * Die Fach-Kürzel des zweiten Leit- bzw. Referenzfaches eines Projektkurses
 	 */
 	public projektKursLeitfach2Kuerzel: string | null = null;
 
@@ -129,7 +129,7 @@ export class GostFach extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostFach'].includes(name);
 	}
 
-	public static class = new Class<GostFach>('de.svws_nrw.core.data.gost.GostFach');
+	public static readonly class = new Class<GostFach>('de.svws_nrw.core.data.gost.GostFach');
 
 	public static transpilerFromJSON(json: string): GostFach {
 		const obj = JSON.parse(json) as Partial<GostFach>;

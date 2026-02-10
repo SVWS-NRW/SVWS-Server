@@ -17,18 +17,39 @@ import { GostBelegungsfehler } from '../../../../../core/abschluss/gost/GostBele
 
 export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 
+	/**
+	 * Die Belegungen für alle Fächer der Gesellschaftswissenschaften.
+	 */
 	private gesellschaftswissenschaften: List<AbiturFachbelegung> | null = null;
 
+	/**
+	 * Die Belegung des Faches Geschichte - oder null, falls es nicht belegt wurde.
+	 */
 	private geschichte: List<AbiturFachbelegung> | null = null;
 
+	/**
+	 * Die Belegung des Faches Sozialwissenschaften - oder null, falls es nicht belegt wurde.
+	 */
 	private sozialwissenschaften: List<AbiturFachbelegung> | null = null;
 
+	/**
+	 * Die Belegung des Faches Philosophie - oder null, falls es nicht belegt wurde.
+	 */
 	private philosophie: AbiturFachbelegung | null = null;
 
+	/**
+	 * Die Belegungen für die Fächer Gesellschaftswissenschaften außer Geschichte, Sozialwissenschaften und Philosophie.
+	 */
 	private sonstige_gesellschaftswissenschaften: List<AbiturFachbelegung> | null = null;
 
+	/**
+	 * Die Belegung des Faches Religion - oder null, falls es nicht belegt wurde.
+	 */
 	private religion: List<AbiturFachbelegung> | null = null;
 
+	/**
+	 * Alle Fachbelegungen bei denen Zusatzkurse in zwei aufeinanderfolgenden Halbjahren in der Qualifikationsphase belegt wurden..
+	 */
 	private zusatzkursFachbelegungen: ArrayList<AbiturFachbelegung> | null = null;
 
 
@@ -299,7 +320,7 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungGesellschaftswissenschaftenUndReligion'].includes(name);
 	}
 
-	public static class = new Class<Abi30BelegpruefungGesellschaftswissenschaftenUndReligion>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungGesellschaftswissenschaftenUndReligion');
+	public static readonly class = new Class<Abi30BelegpruefungGesellschaftswissenschaftenUndReligion>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungGesellschaftswissenschaftenUndReligion');
 
 }
 

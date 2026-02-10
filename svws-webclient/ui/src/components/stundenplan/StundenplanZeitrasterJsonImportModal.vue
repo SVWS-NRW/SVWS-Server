@@ -66,8 +66,9 @@
 	}
 
 	async function importFile() {
-		if (!file.value)
+		if (!file.value) {
 			return;
+		}
 		status.value = undefined;
 		loading.value = true;
 		const json = await file.value.text();

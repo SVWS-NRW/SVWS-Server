@@ -11,6 +11,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOHaltestellen;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +30,8 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -135,18 +138,27 @@ class DataHaltestellenTest {
 	@Test
 	@DisplayName("getAll | Erfolg")
 	void getAllTest() {
-		final var dto1 = getDto();
-		final var dto2 = getDto();
+		final var dto1 = new DTOHaltestellen(1L, "1");
+		final var dto2 = new DTOHaltestellen(2L, "2");
 		when(this.conn.queryAll(DTOHaltestellen.class)).thenReturn(List.of(dto1, dto2));
+		@SuppressWarnings("unchecked")
+		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(1L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
 
 		assertThat(this.data.getAll())
-				.isInstanceOf(List.class)
-				.isNotNull()
-				.isNotEmpty()
 				.hasSize(2)
-				.allSatisfy(item -> assertThat(item)
-						.isInstanceOf(Haltestelle.class)
-						.hasFieldOrProperty("id"));
+				.satisfiesExactly(
+						f1 -> assertThat(f1)
+								.isInstanceOf(Haltestelle.class)
+								.hasFieldOrPropertyWithValue("id", 1L)
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", true),
+						f2 -> assertThat(f2)
+								.isInstanceOf(Haltestelle.class)
+								.hasFieldOrPropertyWithValue("id", 2L)
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", false)
+				);
 	}
 
 	@Test
@@ -170,7 +182,6 @@ class DataHaltestellenTest {
 				.hasFieldOrPropertyWithValue("bezeichnung", dto.Bezeichnung)
 				.hasFieldOrPropertyWithValue("entfernungSchule", dto.EntfernungSchule)
 				.hasFieldOrPropertyWithValue("istSichtbar", dto.Sichtbar)
-				.hasFieldOrPropertyWithValue("istAenderbar", dto.Aenderbar)
 				.hasFieldOrPropertyWithValue("sortierung", dto.Sortierung);
 	}
 
@@ -180,7 +191,6 @@ class DataHaltestellenTest {
 				arguments("bezeichnung", "test"),
 				arguments("entfernungSchule", 17d),
 				arguments("istSichtbar", true),
-				arguments("istAenderbar", true),
 				arguments("sortierung", 25),
 				arguments("unknownArgument", "oh oh ! das wollen wir auf keinen Fall!")
 		);
@@ -202,7 +212,6 @@ class DataHaltestellenTest {
 			case "bezeichnung" -> assertThat(dto.Bezeichnung).isEqualTo(value);
 			case "entfernungSchule" -> assertThat(dto.EntfernungSchule).isEqualTo(value);
 			case "istSichtbar" -> assertThat(dto.Sichtbar).isEqualTo(value);
-			case "istAenderbar" -> assertThat(dto.Aenderbar).isEqualTo(value);
 			case "sortierung" -> assertThat(dto.Sortierung).isEqualTo(value);
 			default -> assertThat(throwable)
 					.isInstanceOf(ApiOperationException.class)

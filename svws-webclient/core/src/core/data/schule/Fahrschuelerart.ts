@@ -11,27 +11,29 @@ export class Fahrschuelerart extends JavaObject {
 	/**
 	 * Die Bezeichnung der Fahrschülerart.
 	 */
-	public bezeichnung: string | null = "";
+	public bezeichnung: string | null = null;
 
 	/**
 	 * gibt an, ob die Fahrschülerart in der Anwendung sichtbar sein soll oder nicht
 	 */
-	public istSichtbar: boolean = true;
+	public istSichtbar: boolean = false;
 
 	/**
 	 * Gibt an, ob die Fahrschülerart in der Anwendung änderbar sein soll oder nicht.
 	 */
-	public istAenderbar: boolean = true;
+	public istAenderbar: boolean = false;
 
 	/**
 	 * Gibt die Position in der Sortierreihenfolge für die Fahrschülerarten an.
 	 */
-	public sortierung: number = 1;
-
+	public sortierung: number = 0;
 
 	/**
-	 * Leerer Standardkonstruktor.
+	 * Gibt an, ob die Fahrschuelerart in anderen Datenbanktabellen referenziert ist oder nicht.
 	 */
+	public referenziertInAnderenTabellen: boolean = false;
+
+
 	public constructor() {
 		super();
 	}
@@ -44,7 +46,7 @@ export class Fahrschuelerart extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.Fahrschuelerart'].includes(name);
 	}
 
-	public static class = new Class<Fahrschuelerart>('de.svws_nrw.core.data.schule.Fahrschuelerart');
+	public static readonly class = new Class<Fahrschuelerart>('de.svws_nrw.core.data.schule.Fahrschuelerart');
 
 	public static transpilerFromJSON(json: string): Fahrschuelerart {
 		const obj = JSON.parse(json) as Partial<Fahrschuelerart>;
@@ -62,6 +64,9 @@ export class Fahrschuelerart extends JavaObject {
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
+		if (obj.referenziertInAnderenTabellen === undefined)
+			throw new Error('invalid json format, missing attribute referenziertInAnderenTabellen');
+		result.referenziertInAnderenTabellen = obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
@@ -72,6 +77,7 @@ export class Fahrschuelerart extends JavaObject {
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"istAenderbar" : ' + obj.istAenderbar.toString() + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -93,6 +99,9 @@ export class Fahrschuelerart extends JavaObject {
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		}
+		if (obj.referenziertInAnderenTabellen !== undefined) {
+			result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

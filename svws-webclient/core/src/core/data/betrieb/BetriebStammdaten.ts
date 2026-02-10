@@ -157,7 +157,7 @@ export class BetriebStammdaten extends JavaObject {
 		return ['de.svws_nrw.core.data.betrieb.BetriebStammdaten'].includes(name);
 	}
 
-	public static class = new Class<BetriebStammdaten>('de.svws_nrw.core.data.betrieb.BetriebStammdaten');
+	public static readonly class = new Class<BetriebStammdaten>('de.svws_nrw.core.data.betrieb.BetriebStammdaten');
 
 	public static transpilerFromJSON(json: string): BetriebStammdaten {
 		const obj = JSON.parse(json) as Partial<BetriebStammdaten>;

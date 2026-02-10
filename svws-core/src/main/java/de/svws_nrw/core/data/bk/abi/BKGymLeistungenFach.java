@@ -34,5 +34,4 @@ public class BKGymLeistungenFach {
 	public BKGymLeistungenFach() {
 		// leer
 	}
-
 }

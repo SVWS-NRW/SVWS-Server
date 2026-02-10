@@ -2,6 +2,7 @@ package de.svws_nrw.api;
 
 import java.util.Set;
 
+import de.svws_nrw.api.common.GenericExceptionMapper;
 import de.svws_nrw.api.common.OpenAPICorsFilter;
 import de.svws_nrw.api.dav.APIDav;
 import jakarta.ws.rs.core.Application;
@@ -19,6 +20,7 @@ public final class RestAppDav extends Application {
 	/// Enthält alle Klassen, die für die OpenAPI eingebunden werden
 	private final Set<Class<?>> classes = Set.of(
 			APIDav.class,
+			GenericExceptionMapper.class,
 			OpenAPICorsFilter.class);
 
 	/**

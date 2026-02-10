@@ -83,7 +83,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 
 		final DTOGostKlausurenTermine klasseDto = conn.queryByKey(DTOGostKlausurenTermine.class, id);
 		if (klasseDto == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine GostKlausurtermin zur ID " + id + " gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Kein GostKlausurtermin zur ID " + id + " gefunden.");
 
 		return klasseDto;
 	}
@@ -114,34 +114,34 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	protected void mapAttribute(final DTOGostKlausurenTermine dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "idSchuljahresabschnitt" -> dto.Schuljahresabschnitt_ID = JSONMapper.convertToLong(value, false);
-			case "abijahr" -> dto.Abi_Jahrgang = JSONMapper.convertToInteger(value, false);
-			case "halbjahr" -> dto.Halbjahr = DataGostKlausurenVorgabe.checkHalbjahr(JSONMapper.convertToInteger(value, false));
-			case "quartal" -> dto.Quartal =	DataGostKlausurenVorgabe.checkQuartal(JSONMapper.convertToInteger(value, false));
-			case "bemerkung" -> dto.Bemerkungen = DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Termine.col_Bemerkungen.datenlaenge()));
-			case "bezeichnung" -> dto.Bezeichnung =	DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Termine.col_Bezeichnung.datenlaenge()));
+			case "idSchuljahresabschnitt" -> dto.Schuljahresabschnitt_ID = JSONMapper.convertToLong(value, false, name);
+			case "abijahr" -> dto.Abi_Jahrgang = JSONMapper.convertToInteger(value, false, name);
+			case "halbjahr" -> dto.Halbjahr = DataGostKlausurenVorgabe.checkHalbjahr(JSONMapper.convertToInteger(value, false, name));
+			case "quartal" -> dto.Quartal =	DataGostKlausurenVorgabe.checkQuartal(JSONMapper.convertToInteger(value, false, name));
+			case "bemerkung" -> dto.Bemerkungen = DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Termine.col_Bemerkungen.datenlaenge(), name));
+			case "bezeichnung" -> dto.Bezeichnung =	DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Termine.col_Bezeichnung.datenlaenge(), name));
 			case "datum" -> {
-				final String newDate = JSONMapper.convertToString(value, true, false, null);
+				final String newDate = JSONMapper.convertToString(value, true, false, null, name);
 				final boolean change = !Objects.equals(newDate, dto.Datum);
 				if (change)
 					handleRaumzuweisungenBeiTerminverschiebung(dto);
 				dto.Datum = newDate;
 				if (newDate == null)
 					dto.Startzeit = null;
-				else if (change && raumDataChanged == null)
+				else if (change && (raumDataChanged == null))
 					raumDataChanged = new GostKlausurenCollectionSkrsKrsData(); // neu berechnen
 			}
 			case "startzeit" -> {
-				final Integer startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
-				final boolean change = startzeit != null && !startzeit.equals(dto.Startzeit);
+				final Integer startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440, name);
+				final boolean change = (startzeit != null) && !startzeit.equals(dto.Startzeit);
 				dto.Startzeit = startzeit;
-				if (change && raumDataChanged == null)
+				if (change && (raumDataChanged == null))
 					raumDataChanged = new GostKlausurenCollectionSkrsKrsData(); // neu berechnen
 			}
-			case "istHaupttermin" -> dto.IstHaupttermin = JSONMapper.convertToBoolean(value, false);
+			case "istHaupttermin" -> dto.IstHaupttermin = JSONMapper.convertToBoolean(value, false, name);
 			case "nachschreiberZugelassen" -> {
-				final boolean newValue = JSONMapper.convertToBoolean(value, false);
-				if ((dto.NachschreiberZugelassen != null) && dto.NachschreiberZugelassen.booleanValue() && !newValue
+				final boolean newValue = JSONMapper.convertToBoolean(value, false, name);
+				if ((dto.NachschreiberZugelassen != null) && dto.NachschreiberZugelassen && !newValue
 						&& !new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuTerminIds(ListUtils.create1(dto.ID)).stream().filter(skt -> skt.folgeNr > 0).toList().isEmpty())
 					throw new ApiOperationException(Status.FORBIDDEN, "Klausurtermin enthält Nachschreibklausuren");
 				dto.NachschreiberZugelassen = newValue;
@@ -230,13 +230,13 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 			throws ApiOperationException {
 		final GostHalbjahr ghj = (halbjahr < 0) ? null : DataGostKlausurenVorgabe.checkHalbjahr(halbjahr);
 
-		final String plusHJ = (ghj == null ? "" : " AND t.Halbjahr IN :hj");
-		final String plusTermine = ((plusTerminIds == null || plusTerminIds.isEmpty()) ? "" : " OR t.ID IN :plusIds");
+		final String plusHJ = ((ghj == null) ? "" : " AND t.Halbjahr IN :hj");
+		final String plusTermine = (((plusTerminIds == null) || plusTerminIds.isEmpty()) ? "" : " OR t.ID IN :plusIds");
 		final TypedQuery<DTOGostKlausurenTermine> query = conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid" + plusHJ + plusTermine, DTOGostKlausurenTermine.class)
 				.setParameter("jgid", abiturjahr);
 		if (ghj != null)
 			query.setParameter("hj", Arrays.asList(ganzesSchuljahr ? ghj.getSchuljahr() : new GostHalbjahr[] { ghj }));
-		if (plusTermine.length() > 0)
+		if (!plusTermine.isEmpty())
 			query.setParameter("plusIds", plusTerminIds);
 		return mapList(query.getResultList());
 	}
@@ -348,7 +348,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	    final Set<GostKlausurraum> neueRaumListe = new HashSet<>();
 
 	    for (final GostKlausurraum raum : raumDataOriginal.raeume) {
-	    	if (raum.idTermin == referenzTermin.id && raum.idStundenplanRaum != null) {
+	    	if ((raum.idTermin == referenzTermin.id) && (raum.idStundenplanRaum != null)) {
 	    	    final Map<String, Object> patchAttributes = new HashMap<>();
 	    	    patchAttributes.put("idStundenplanRaum", null);
 	    	    new DataGostKlausurenRaum(conn).patch(raum.id, patchAttributes);
@@ -370,11 +370,11 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	}
 
 	private static boolean istTerminraumMitTerminfremdenKlausuren(final GostKlausurraum raum, final long terminId, final GostKlausurplanManager manager) {
-	    return raum.idTermin == terminId && manager.raumEnthaeltTerminfremdeKlausuren(raum);
+	    return (raum.idTermin == terminId) && manager.raumEnthaeltTerminfremdeKlausuren(raum);
 	}
 
 	private static boolean istTerminfremderRaumMitTerminklausuren(final GostKlausurraum raum, final GostKlausurplanManager manager, final GostKlausurtermin referenzTermin) {
-	    return raum.idTermin != referenzTermin.id && !manager.schuelerklausurterminGetMengeByRaumAndTermin(raum, referenzTermin).isEmpty();
+	    return (raum.idTermin != referenzTermin.id) && !manager.schuelerklausurterminGetMengeByRaumAndTermin(raum, referenzTermin).isEmpty();
 	}
 
 	private void bearbeiteTerminraumMitTerminfremdenKlausuren(final GostKlausurraum raum, final GostKlausurplanManager manager,

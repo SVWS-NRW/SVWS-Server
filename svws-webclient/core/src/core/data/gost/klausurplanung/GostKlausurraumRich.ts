@@ -80,7 +80,7 @@ export class GostKlausurraumRich extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich'].includes(name);
 	}
 
-	public static class = new Class<GostKlausurraumRich>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich');
+	public static readonly class = new Class<GostKlausurraumRich>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich');
 
 	public static transpilerFromJSON(json: string): GostKlausurraumRich {
 		const obj = JSON.parse(json) as Partial<GostKlausurraumRich>;

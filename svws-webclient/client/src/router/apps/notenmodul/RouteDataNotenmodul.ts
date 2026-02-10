@@ -1,11 +1,11 @@
 import type { ENMKlasse, ENMLeistung, ENMLeistungBemerkungen, ENMLernabschnitt, ENMTeilleistung } from "@core";
-import { ENMDaten, OpenApiError } from "@core";
-import { BenutzerKompetenz, BenutzerTyp, DeveloperNotificationException } from "@core";
+import { BenutzerKompetenz, BenutzerTyp, DeveloperNotificationException, ENMDaten, OpenApiError } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
 import type { EnmLerngruppenAuswahlEintrag } from "@ui";
-import { EnmManager } from "@ui";
+import { EnmManager, EnmSperrManager } from "@ui";
+import { EnmSpaltenManager } from "../../../../../ui/src/components/enm/EnmSpaltenManager";
 
 
 interface RouteStateNotenmodul extends RouteStateInterface {
@@ -44,6 +44,10 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	}
 
 	public async ladeDaten() {
+		// TODO dies verhindert anscheinend das korrekte Nachladen beim Entern der Route, obwohl bei leave ein Entfernen der Daten initiiert wird!
+		if (this._state.value.daten !== null) {
+			return;
+		}
 		const patchedState = <Partial<RouteStateNotenmodul>>{ daten: null, manager: null, auswahlKlassen: [], auswahlLerngruppen: [] };
 		try {
 			if (!api.benutzerIstAdmin && !api.benutzerHatEineKompetenz([
@@ -57,15 +61,26 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 			if (api.benutzertyp === BenutzerTyp.LEHRER) {
 				patchedState.daten = await api.server.getLehrerENMDaten(api.schema, api.benutzerIDLehrer);
 			} else {
-				const file = await api.server.getENMDatenGZip(api.schema);
-				const blob = await new Response(file.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
-				patchedState.daten = ENMDaten.transpilerFromJSON(await blob.text());
+				patchedState.daten = await api.server.getENMDaten(api.schema);
 			}
 			patchedState.manager = new EnmManager(patchedState.daten, patchedState.daten.lehrerID);
 			const lerngruppen = patchedState.manager.mapLerngruppenAuswahl.values();
 			patchedState.auswahlLerngruppe = lerngruppen.isEmpty() ? null : lerngruppen.iterator().next();
 			const klassen = patchedState.manager.listKlassenKlassenlehrer;
 			patchedState.auswahlKlasse = klassen.isEmpty() ? null : klassen.getFirst();
+
+			const config = await api.server.getNotenmodulLocalConfig(api.schema);
+			let jsonSperrungen = "[]";
+			let jsonSpalten = "[]";
+			for (const element of config.global) {
+				if (element.key === "noteneingabe.gesperrt") {
+					jsonSperrungen = element.value;
+				}	else if (element.key === "table.columns") {
+					jsonSpalten = element.value;
+				}
+			}
+			patchedState.manager.sperrungen = new EnmSperrManager(jsonSperrungen);
+			patchedState.manager.spalten = new EnmSpaltenManager(jsonSpalten);
 
 		} catch (error) {
 			if ((error instanceof OpenApiError) && (error.response instanceof Response) && (error.response.status === 404)) {
@@ -88,8 +103,9 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	}
 
 	public get manager(): EnmManager {
-		if (this._state.value.manager === null)
+		if (this._state.value.manager === null) {
 			throw new DeveloperNotificationException("Die ENM-Daten wurden nicht geladen.");
+		}
 		return this._state.value.manager;
 	}
 
@@ -109,8 +125,9 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 * @returns die Lerngruppen-Auswahl
 	 */
 	get auswahlLerngruppen(): Array<EnmLerngruppenAuswahlEintrag> {
-		if (this._state.value.auswahlLerngruppe === null)
+		if (this._state.value.auswahlLerngruppe === null) {
 			return this._state.value.auswahlLerngruppen;
+		}
 		return [this._state.value.auswahlLerngruppe];
 	}
 
@@ -159,8 +176,9 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 * @returns die Klassen-Auswahl
 	 */
 	get auswahlKlassen(): Array<ENMKlasse> {
-		if (this._state.value.auswahlKlasse === null)
+		if (this._state.value.auswahlKlasse === null) {
 			return this._state.value.auswahlKlassen;
+		}
 		return [this._state.value.auswahlKlasse];
 	}
 

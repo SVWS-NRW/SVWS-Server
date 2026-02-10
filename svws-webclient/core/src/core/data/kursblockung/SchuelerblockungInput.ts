@@ -43,7 +43,7 @@ export class SchuelerblockungInput extends JavaObject {
 		return ['de.svws_nrw.core.data.kursblockung.SchuelerblockungInput'].includes(name);
 	}
 
-	public static class = new Class<SchuelerblockungInput>('de.svws_nrw.core.data.kursblockung.SchuelerblockungInput');
+	public static readonly class = new Class<SchuelerblockungInput>('de.svws_nrw.core.data.kursblockung.SchuelerblockungInput');
 
 	public static transpilerFromJSON(json: string): SchuelerblockungInput {
 		const obj = JSON.parse(json) as Partial<SchuelerblockungInput>;

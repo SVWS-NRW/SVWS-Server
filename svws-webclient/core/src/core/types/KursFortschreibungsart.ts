@@ -184,7 +184,7 @@ export class KursFortschreibungsart extends JavaEnum<KursFortschreibungsart> {
 		return ['de.svws_nrw.core.types.KursFortschreibungsart', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<KursFortschreibungsart>('de.svws_nrw.core.types.KursFortschreibungsart');
+	public static readonly class = new Class<KursFortschreibungsart>('de.svws_nrw.core.types.KursFortschreibungsart');
 
 }
 

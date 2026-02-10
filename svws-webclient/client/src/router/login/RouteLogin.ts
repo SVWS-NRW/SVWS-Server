@@ -40,15 +40,18 @@ export class RouteLogin extends RouteNode<any, any> {
 		await api.login(schema, username, password);
 		if (api.authenticated) {
 			if (await api.init()) {
-				if (this.routepath !== "/")
-					// Überprüfe das Schema, falls ein redirect nach dem Login geplant ist
-					if (!this.routepath.startsWith("/" + encodeURIComponent(schema)))
+				// Überprüfe das Schema, falls ein redirect nach dem Login geplant ist
+				if (this.routepath !== "/") {
+					if (!this.routepath.startsWith("/" + encodeURIComponent(schema))) {
 						this.routepath = "/";
+					}
+				}
 				await RouteManager.doRoute(this.routepath);
 				return;
 			}
-			if (api.benutzerIstAdmin)
+			if (api.benutzerIstAdmin) {
 				await RouteManager.doRoute(routeInit.name);
+			}
 		}
 	};
 

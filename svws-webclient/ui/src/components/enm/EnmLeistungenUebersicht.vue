@@ -83,7 +83,8 @@
 				{{ enmManager().lerngruppeGetFachlehrerOrNull(pair.a.lerngruppenID) }}
 			</td>
 			<template v-if="gridManager.isColVisible('Quartal') ?? true">
-				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)" :ref="inputNoteQuartal(pair, 6, index)" class="ui-table-grid-input"
+				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Quartalsnoten')"
+					:ref="inputNoteQuartal(pair, 6, index)" class="ui-table-grid-input"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 6),
 						'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII(),
@@ -92,7 +93,8 @@
 				<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII() }">{{ pair.a.noteQuartal ?? "-" }}</td>
 			</template>
 			<template v-if="gridManager.isColVisible('Note') ?? true">
-				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)" :ref="inputNote(pair, 7, index)" class="ui-table-grid-input"
+				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Note')"
+					:ref="inputNote(pair, 7, index)" class="ui-table-grid-input"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 7),
 						'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII(),
@@ -101,27 +103,25 @@
 				<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII() }">{{ pair.a.note ?? "-" }}</td>
 			</template>
 			<template v-if="gridManager.isColVisible('Mahnung') ?? true">
-				<template v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)">
+				<template v-if="(pair.a.mahndatum === null) && enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Mahnung')">
 					<td :ref="inputMahnung(pair, 8, index)" class="ui-table-grid-button"
 						:class="{
 							'bg-ui-selected': (gridManager.focusColumn === 8),
 							'contentFocusField': gridManager.isFocusLast(8, index),
 						}">
-						<span v-if="pair.a.mahndatum !== null" class="icon-sm align-middle i-ri-checkbox-line bg-ui-50" />
-						<span v-else-if="pair.a.istGemahnt === true" class="icon-sm align-middle i-ri-checkbox-line bg-ui-danger" />
+						<span v-if="pair.a.istGemahnt === true" class="icon-sm align-middle i-ri-checkbox-line bg-ui-danger" />
 						<span v-else class="icon-sm align-middle i-ri-checkbox-blank-line" />
 					</td>
 				</template>
 				<template v-else>
 					<td>
-						<span v-if="pair.a.mahndatum !== null" class="icon-sm align-middle i-ri-checkbox-line bg-ui-50" />
-						<span v-else-if="pair.a.istGemahnt === true" class="icon-sm align-middle i-ri-checkbox-line bg-ui-danger" />
-						<span v-else class="icon-sm align-middle i-ri-checkbox-blank-line" />
+						<span v-if="pair.a.mahndatum !== null" class="icon-sm align-middle i-ri-check-line" />
+						<span v-else-if="pair.a.istGemahnt === true" class="icon-sm align-middle i-ri-check-line bg-ui-danger" />
 					</td>
 				</template>
 			</template>
 			<template v-if="gridManager.isColVisible('FS') ?? true">
-				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
+				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, false)"
 					:ref="inputFehlstunden(pair, 9, index)" class="ui-table-grid-input"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 9),
@@ -130,7 +130,7 @@
 				<td v-else>{{ pair.a.fehlstundenFach ?? "—" }}</td>
 			</template>
 			<template v-if="gridManager.isColVisible('FSU') ?? true">
-				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)"
+				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, false)"
 					:ref="inputFehlstundenUnendschuldigt(pair, 10, index)" class="ui-table-grid-input"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 10),
@@ -139,11 +139,21 @@
 				<td v-else>{{ pair.a.fehlstundenUnentschuldigtFach ?? "-" }}</td>
 			</template>
 			<template v-if="gridManager.isColVisible('Bemerkung') ?? true">
-				<td :ref="inputBemerkung(pair, 11, index)" class="ui-table-grid-button"
+				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'FB')"
+					:ref="inputBemerkung(pair, 11, index)" class="ui-table-grid-button"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 11),
 						'contentFocusField': gridManager.isFocusLast(11, index),
 					}">
+					<svws-ui-tooltip v-if="(pair.a.fachbezogeneBemerkungen !== null) && (pair.a.fachbezogeneBemerkungen.length > 20)" class="h-full w-full">
+						<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.a.fachbezogeneBemerkungen ?? "-" }}</span>
+						<template #content>
+							{{ pair.a.fachbezogeneBemerkungen }}
+						</template>
+					</svws-ui-tooltip>
+					<span v-else class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.a.fachbezogeneBemerkungen ?? "-" }}</span>
+				</td>
+				<td v-else>
 					<svws-ui-tooltip v-if="(pair.a.fachbezogeneBemerkungen !== null) && (pair.a.fachbezogeneBemerkungen.length > 20)" class="h-full w-full">
 						<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.a.fachbezogeneBemerkungen ?? "-" }}</span>
 						<template #content>
@@ -182,8 +192,9 @@
 			const result = new ArrayList<PairNN<ENMLeistung, ENMSchueler>>();
 			for (const lerngruppenAuswahl of props.auswahl()) {
 				const leistungen = props.enmManager().mapLerngruppeLeistungen.get(lerngruppenAuswahl.id);
-				if ((leistungen === null))
+				if ((leistungen === null)) {
 					continue;
+				}
 				result.addAll(leistungen);
 			}
 			return result;
@@ -210,8 +221,9 @@
 		}),
 	});
 	gridManager.onFocusInput = (input: GridInput<any, any> | null) => {
-		if ((input === null) || (input.row >= gridManager.daten.size()))
+		if ((input === null) || (input.row >= gridManager.daten.size())) {
 			return;
+		}
 		const pair = gridManager.daten.get(input.row);
 		void props.focusFloskelEditor(pair.b, pair.a, input.row, false);
 	};
@@ -224,8 +236,9 @@
 		const setter = (value: string | null) => void props.patchLeistung(pair.a, { noteQuartal: value });
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
-			if (input !== null)
+			if (input !== null) {
 				gridManager.update(key, pair.a.noteQuartal);
+			}
 		};
 	}
 
@@ -234,8 +247,9 @@
 		const setter = (value: string | null) => void props.patchLeistung(pair.a, { note: value });
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
-			if (input !== null)
+			if (input !== null) {
 				gridManager.update(key, pair.a.note);
+			}
 		};
 	}
 
@@ -244,8 +258,9 @@
 		const setter = (value: boolean) => void props.patchLeistung(pair.a, { istGemahnt: value });
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputToggle(key, col, index, element, setter);
-			if (input !== null)
+			if (input !== null) {
 				watchEffect(() => gridManager.update(key, pair.a.istGemahnt ?? false));
+			}
 		};
 	}
 
@@ -257,15 +272,17 @@
 			if (inputFSU !== null) {
 				const inputFSUTyped = inputFSU as GridInputIntegerDiv<string>;
 				inputFSUTyped.max = value ?? 0;
-				if ((patch.fehlstundenUnentschuldigtFach ?? 0) > (value ?? 0))
+				if ((patch.fehlstundenUnentschuldigtFach ?? 0) > (value ?? 0)) {
 					patch.fehlstundenUnentschuldigtFach = (value ?? 0);
+				}
 			}
 			void props.patchLeistung(pair.a, { fehlstundenFach: value });
 		};
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputIntegerDiv(key, col, index, element, 999, setter);
-			if (input !== null)
+			if (input !== null) {
 				watchEffect(() => gridManager.update(key, pair.a.fehlstundenFach));
+			}
 		};
 	}
 
@@ -274,8 +291,9 @@
 		const setter = (value: number | null) => void props.patchLeistung(pair.a, { fehlstundenUnentschuldigtFach: value });
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputIntegerDiv(key, col, index, element, pair.a.fehlstundenFach ?? 0, setter);
-			if (input !== null)
+			if (input !== null) {
 				watchEffect(() => gridManager.update(key, pair.a.fehlstundenUnentschuldigtFach));
+			}
 		};
 	}
 

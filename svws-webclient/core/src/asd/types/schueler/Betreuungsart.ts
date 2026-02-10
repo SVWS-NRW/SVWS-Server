@@ -113,7 +113,7 @@ export class Betreuungsart extends JavaEnum<Betreuungsart> implements CoreType<B
 		return ['de.svws_nrw.asd.types.schueler.Betreuungsart', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Betreuungsart>('de.svws_nrw.asd.types.schueler.Betreuungsart');
+	public static readonly class = new Class<Betreuungsart>('de.svws_nrw.asd.types.schueler.Betreuungsart');
 
 }
 

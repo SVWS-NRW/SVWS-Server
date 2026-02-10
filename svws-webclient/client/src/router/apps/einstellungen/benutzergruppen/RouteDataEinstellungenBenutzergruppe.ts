@@ -38,14 +38,16 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 	}
 
 	private firstBenutzer(mapBenutzergruppe: Map<number, BenutzergruppeListeEintrag>): BenutzergruppeListeEintrag | undefined {
-		if (mapBenutzergruppe.size === 0)
+		if (mapBenutzergruppe.size === 0) {
 			return undefined;
+		}
 		return mapBenutzergruppe.values().next().value;
 	}
 
 	private async ladeBenutzergruppenDaten(eintrag: BenutzergruppeListeEintrag | undefined): Promise<BenutzergruppeDaten | undefined> {
-		if (eintrag === undefined)
+		if (eintrag === undefined) {
 			return undefined;
+		}
 		const result = await api.server.getBenutzergruppeDaten(api.schema, eintrag.id);
 		return result;
 	}
@@ -53,8 +55,9 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 	public async ladeListe() {
 		const listBenutzergruppe = await api.server.getBenutzergruppenliste(api.schema);
 		const mapBenutzergruppe = new Map<number, BenutzergruppeListeEintrag>();
-		for (const l of listBenutzergruppe)
+		for (const l of listBenutzergruppe) {
 			mapBenutzergruppe.set(l.id, l);
+		}
 		const listBenutzerAlle = await api.server.getBenutzerliste(api.schema);
 		this.setPatchedState({
 			listBenutzergruppe: listBenutzergruppe,
@@ -63,8 +66,9 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 		});
 	}
 	public async setBenutzergruppe(benutzerGruppe: BenutzergruppeListeEintrag | undefined) {
-		if (benutzerGruppe?.id === this._state.value.auswahl?.id && this.hatDaten)
+		if (benutzerGruppe?.id === this._state.value.auswahl?.id && this.hatDaten) {
 			return;
+		}
 		if ((benutzerGruppe === undefined) || (this.mapBenutzergruppe.size === 0)) {
 			this.setPatchedDefaultState({
 				auswahl: undefined,
@@ -77,7 +81,7 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 			});
 			await this.ladeListe();
 		}
-		const neueAuswahl = benutzerGruppe === undefined ? this.firstBenutzer(this.mapBenutzergruppe) : benutzerGruppe;
+		const neueAuswahl = benutzerGruppe ?? this.firstBenutzer(this.mapBenutzergruppe);
 		const daten = await this.ladeBenutzergruppenDaten(neueAuswahl);
 		const benutzergruppenManager = daten === undefined ? undefined : new BenutzergruppenManager(daten);
 		const listBenutzergruppenBenutzer = neueAuswahl === undefined ? undefined : await api.server.getBenutzerMitGruppenID(api.schema, neueAuswahl.id);
@@ -91,8 +95,9 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 
 	gotoBenutzer = async (b_id: number) => {
 		const node = RouteNode.getNodeByName("einstellungen.benutzer.daten");
-		if (node !== undefined)
+		if (node !== undefined) {
 			await RouteManager.doRoute(node.getRoute({ id: b_id }));
+		}
 	};
 
 	gotoBenutzergruppe = async (value: BenutzergruppeListeEintrag | undefined) => {
@@ -150,8 +155,9 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 	}
 
 	get daten(): BenutzergruppeDaten {
-		if (this._state.value.daten === undefined)
+		if (this._state.value.daten === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+		}
 		return this._state.value.daten;
 	}
 
@@ -176,8 +182,9 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 	 * @returns {Promise<void>}
 	 */
 	setBezeichnung = async (bezeichnung: string | null) => {
-		if (bezeichnung === null)
+		if (bezeichnung === null) {
 			return;
+		}
 		await api.server.setBenutzergruppeBezeichnung(bezeichnung, api.schema, this.benutzergruppenManager.getID());
 		this.benutzergruppenManager.setBezeichnung(bezeichnung);
 		const neueAuswahl = this.mapBenutzergruppe.get(this.daten.id);
@@ -197,10 +204,11 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 	 * @returns {Promise<void>}
 	 */
 	setIstAdmin = async (istAdmin: boolean) => {
-		if (istAdmin)
+		if (istAdmin) {
 			await api.server.addBenutzergruppeAdmin(api.schema, this.benutzergruppenManager.getID());
-		else
+		} else {
 			await api.server.removeBenutzergruppeAdmin(api.schema, this.benutzergruppenManager.getID());
+		}
 		this.benutzergruppenManager.setAdmin(istAdmin);
 		this.setPatchedState({
 			benutzergruppenManager: this.benutzergruppenManager,
@@ -216,8 +224,9 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 	addKompetenz = async (kompetenz: BenutzerKompetenz) => {
 		const kid = new ArrayList<number>();
 		kid.add(kompetenz.daten.id);
-		if (this.benutzergruppenManager.hatKompetenz(kompetenz))
+		if (this.benutzergruppenManager.hatKompetenz(kompetenz)) {
 			return false;
+		}
 		await api.server.addBenutzergruppeKompetenzen(kid, api.schema, this.benutzergruppenManager.getID());
 		this.benutzergruppenManager.addKompetenz(kompetenz);
 		this.setPatchedState({
@@ -234,8 +243,9 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 	removeKompetenz = async (kompetenz: BenutzerKompetenz) => {
 		const kid = new ArrayList<number>();
 		kid.add(kompetenz.daten.id);
-		if (!this.benutzergruppenManager.hatKompetenz(kompetenz))
+		if (!this.benutzergruppenManager.hatKompetenz(kompetenz)) {
 			return false;
+		}
 		await api.server.removeBenutzergruppeKompetenzen(kid, api.schema, this.benutzergruppenManager.getID());
 		this.benutzergruppenManager.removeKompetenz(kompetenz);
 		this.setPatchedState({
@@ -256,10 +266,10 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 				kids.add(komp.daten.id);
 			}
 			await api.server.addBenutzergruppeKompetenzen(kids, api.schema, this.benutzergruppenManager.getID());
-			// const benutzergruppendaten = await api.server.getBenutzergruppeDaten(api.schema, this.benutzergruppenManager.getID())
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
-				if (!this.benutzergruppenManager.hatKompetenz(komp))
+				if (!this.benutzergruppenManager.hatKompetenz(komp)) {
 					this.benutzergruppenManager.addKompetenz(komp);
+				}
 			}
 		}
 		this.setPatchedState({
@@ -276,12 +286,14 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 	removeBenutzerKompetenzGruppe = async (kompetenzgruppe: BenutzerKompetenzGruppe) => {
 		const kids = new ArrayList<number>();
 		if (!this.benutzergruppenManager.istAdmin()) {
-			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe))
+			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				kids.add(komp.daten.id);
+			}
 			await api.server.removeBenutzergruppeKompetenzen(kids, api.schema, this.benutzergruppenManager.getID());
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
-				if (this.benutzergruppenManager.hatKompetenz(komp))
+				if (this.benutzergruppenManager.hatKompetenz(komp)) {
 					this.benutzergruppenManager.removeKompetenz(komp);
+				}
 			}
 		}
 		this.setPatchedState({
@@ -324,8 +336,9 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 			bids.add(b.id);
 		}
 		let auswahl_gewaehlt = false;
-		if (this.auswahl !== undefined)
+		if (this.auswahl !== undefined) {
 			auswahl_gewaehlt = selectedItems.includes(this.auswahl);
+		}
 		await api.server.removeBenutzerGruppe(bids, api.schema);
 		for (const i of bids) {
 			this.mapBenutzergruppe.delete(i);
@@ -334,8 +347,9 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 			this.listBenutzergruppe.remove(b);
 		}
 		alert("Benutzergruppe gelöscht.");
-		if (auswahl_gewaehlt)
+		if (auswahl_gewaehlt) {
 			await this.gotoBenutzergruppe(this.listBenutzergruppe.get(0));
+		}
 		this.setPatchedState({
 			listBenutzergruppe: this.listBenutzergruppe,
 			mapBenutzergruppe: this.mapBenutzergruppe,
@@ -363,8 +377,9 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 			liste_benutzer_ids.add(b.id);
 		}
 		for (const b of this.listBenutzerAlle) {
-			if (!liste_benutzer_ids.has(b.id))
+			if (!liste_benutzer_ids.has(b.id)) {
 				temp_listBenutzerAlle.add(b);
+			}
 		}
 		this.setPatchedState({
 			listBenutzergruppenBenutzer: temp,

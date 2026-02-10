@@ -137,8 +137,9 @@
 			workerManager.value = undefined;
 			selected.value = [];
 		}
-		if (neu === true)
+		if (neu === true) {
 			workerManager.value = new WorkerManagerKursblockung(props.getDatenmanager(), toRaw(props.mapCoreTypeNameJsonData()));
+		}
 	});
 
 	const selected = ref<GostBlockungsergebnis[]>([]);
@@ -153,33 +154,39 @@
 
 	async function getWaiting() {
 		const p = workerManager.value?.waiting;
-		if (p !== undefined)
+		if (p !== undefined) {
 			await Promise.allSettled(p);
+		}
 	}
 
 	function addWorker() {
-		if ((workerManager.value === undefined) || (workerManager.value.threads === WorkerManagerKursblockung.MAX_WORKER))
+		if ((workerManager.value === undefined) || (workerManager.value.threads === WorkerManagerKursblockung.MAX_WORKER)) {
 			return;
+		}
 		workerManager.value.threads = workerManager.value.threads + 1;
 	}
 
 	function removeWorker() {
-		if ((workerManager.value === undefined) || (workerManager.value.threads === 1))
+		if ((workerManager.value === undefined) || (workerManager.value.threads === 1)) {
 			return;
+		}
 		workerManager.value.threads = workerManager.value.threads - 1;
 	}
 
 	function setWorkerMaximum() {
-		if (workerManager.value === undefined)
+		if (workerManager.value === undefined) {
 			return;
+		}
 		workerManager.value.threads = WorkerManagerKursblockung.MAX_WORKER;
 	}
 
 	async function berechne() {
-		if (workerManager.value === undefined)
+		if (workerManager.value === undefined) {
 			return;
-		if (!workerManager.value.isInitialized())
+		}
+		if (!workerManager.value.isInitialized()) {
 			workerManager.value.init();
+		}
 		workerManager.value.interval = 100;
 		workerManager.value.start();
 	}
@@ -191,12 +198,14 @@
 	}
 
 	async function ergebnisseUebernehmen() {
-		if (selected.value.length === 0)
+		if (selected.value.length === 0) {
 			return;
+		}
 		pending.value = true;
 		const ergebnisse = new ArrayList<GostBlockungsergebnis>();
-		for (const ergebnis of selected.value)
+		for (const ergebnis of selected.value) {
 			ergebnisse.add(ergebnis);
+		}
 		await props.addErgebnisse(ergebnisse);
 		pending.value = false;
 		closeModal();

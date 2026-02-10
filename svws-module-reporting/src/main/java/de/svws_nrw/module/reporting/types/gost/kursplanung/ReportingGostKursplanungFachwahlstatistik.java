@@ -1,7 +1,7 @@
 package de.svws_nrw.module.reporting.types.gost.kursplanung;
 
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
-import de.svws_nrw.module.reporting.types.gost.ReportingGostFachwahlstatistikHalbjahr;
+import de.svws_nrw.module.reporting.types.gost.fachwahlstatistik.ReportingGostFachwahlstatistikHalbjahr;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungFachwahlstatistik.

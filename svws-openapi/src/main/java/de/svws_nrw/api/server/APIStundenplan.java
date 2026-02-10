@@ -2,6 +2,8 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
+import org.jboss.resteasy.annotations.GZIP;
+
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
@@ -162,6 +164,7 @@ public class APIStundenplan {
 	 * @return              die Daten für den angegebenen Stundenplan
 	 */
 	@GET
+	@GZIP
 	@Path("/{id : \\d+}")
 	@Operation(summary = "Gibt die grundlegenden Daten des Stundeplans mit der angegebenen ID zurück.",
 			description = "Gibt die grundlegenden Daten des Stundeplans mit der angegebenen ID zurück. "
@@ -329,6 +332,7 @@ public class APIStundenplan {
 	 * @return              die Liste der Zeitraster-Einträge für den angegebenen Stundenplan
 	 */
 	@GET
+	@GZIP
 	@Path("/{id : \\d+}/zeitraster")
 	@Operation(summary = "Gibt die Einträge aus dem Zeitraster des angegebenen Stundeplans zurück.",
 			description = "Erstellt eine Liste der Einträge aus dem Zeitraster des angegebenen Stundeplans. "
@@ -1631,6 +1635,7 @@ public class APIStundenplan {
 	 * @return die Unterrichte für den angegebenen Stundenplan
 	 */
 	@GET
+	@GZIP
 	@Path("/{id : \\d+}/unterrichte")
 	@Operation(summary = "Gibt die Unterrichte des Stundeplans mit der angegebenen ID zurück.",
 			description = "Gibt die Unterrichte des Stundeplans mit der angegebenen ID zurück. "
@@ -1869,6 +1874,7 @@ public class APIStundenplan {
 	 * @return              die Daten zur Unterrichtsverteilung für den angegebenen Stundenplan
 	 */
 	@GET
+	@GZIP
 	@Path("/{id : \\d+}/unterrichtsverteilung")
 	@Operation(summary = "Gibt die Daten zur Unterrichtsverteilung des Stundenplans mit der angegebenen ID zurück.",
 			description = "Gibt die Daten zur Unterrichtsverteilung des Stundenplans mit der angegebenen ID zurück. "
@@ -1923,6 +1929,7 @@ public class APIStundenplan {
 	 * @return              der Stundenplan des Schülers
 	 */
 	@GET
+	@GZIP
 	@Path("/plaene/{id : \\d+}/schueler/{schueler_id : \\d+}")
 	@Operation(summary = "Gibt den Stundeplan des Schülers zurück.",
 			description = "Erstellt den angebebenen Stundeplan in Bezug auf den angegebenen Schüler. "
@@ -1950,6 +1957,7 @@ public class APIStundenplan {
 	 * @return der Stundenplan des Lehrers
 	 */
 	@GET
+	@GZIP
 	@Path("/plaene/{id : \\d+}/lehrer/{lehrer_id : \\d+}")
 	@Operation(summary = "Gibt den Stundeplan des Lehrers zurück.",
 			description = "Erstellt den angebebenen Stundeplan in Bezug auf den angegebenen Lehrer. "
@@ -1976,6 +1984,7 @@ public class APIStundenplan {
 	 * @return der Stundenplan der Klasse
 	 */
 	@GET
+	@GZIP
 	@Path("/plaene/{id : \\d+}/klasse/{klasse_id : \\d+}")
 	@Operation(summary = "Gibt den Stundeplan der Klasse zurück.",
 			description = "Erstellt den angebebenen Stundeplan in Bezug auf die angegebene Klasse. "

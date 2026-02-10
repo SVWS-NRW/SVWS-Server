@@ -43,8 +43,8 @@
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Lehrer werden gelöscht."
 				:is-open="currentAction === 'delete'" @update:is-open="isOpen => setCurrentAction('delete', isOpen)">
 				<div>
-					<span v-if="preConditionCheck[0]">Alle ausgewählten Lehrer sind bereit zum Löschen.</span>
-					<template v-else v-for="message in preConditionCheck[1]" :key="message">
+					<span v-if="preConditionCheck.success">Alle ausgewählten Lehrer sind bereit zum Löschen.</span>
+					<template v-else v-for="message, i in preConditionCheck.logs" :key="i">
 						<span class="text-ui-danger"> {{ message }} <br> </span>
 					</template>
 					<span v-if="loeschbareLehrerVorhanden">Einige Lehrer sind noch an anderer Stelle referenziert, die Übrigen können gelöscht werden.</span>
@@ -76,8 +76,7 @@
 
 	import { ref, computed } from "vue";
 	import type { List, StundenplanListeEintrag } from "@core";
-	import { ArrayList } from "@core";
-	import { BenutzerKompetenz, DateUtils, ReportingParameter, ReportingReportvorlage, ServerMode } from "@core";
+	import { BenutzerKompetenz, DateUtils, ReportingParameter, ReportingReportvorlage, ServerMode, ArrayList } from "@core";
 	import type { LehrerGruppenprozesseProps } from "~/components/lehrer/gruppenprozesse/SLehrerGruppenprozesseProps";
 
 	type Action = 'print' | 'delete' | '';
@@ -104,20 +103,23 @@
 		!alleLehrerLoeschbar.value && (props.lehrerListeManager().getIdsReferenzierterLehrer().size() !== props.lehrerListeManager().liste.auswahlSize()));
 
 	const preConditionCheck = computed(() => {
-		if (currentAction.value === 'delete')
-			return props.deleteLehrerCheck();
-		return [true, []];
+		if (currentAction.value === 'delete') {
+			return props.deleteCheck();
+		}
+		return { success: true, logs: new ArrayList<string>() };
 	});
 
 	function setCurrentAction(newAction: Action, open: boolean) {
-		if (newAction === oldAction.value.name && !open)
+		if (newAction === oldAction.value.name && !open) {
 			return;
+		}
 		oldAction.value.name = currentAction.value;
-		oldAction.value.open = (currentAction.value === "") ? false : true;
-		if (open === true)
+		oldAction.value.open = currentAction.value !== "";
+		if (open === true) {
 			currentAction.value = newAction;
-		else
+		} else {
 			currentAction.value = "";
+		}
 	}
 
 	function clearLog() {
@@ -141,13 +143,14 @@
 	const option8 = ref(false);
 
 	async function downloadPDF() {
-		if (stundenplanAuswahl.value === undefined)
+		if (stundenplanAuswahl.value === undefined) {
 			return;
+		}
 		loading.value = true;
 		const reportingParameter = new ReportingParameter();
 		if (gruppe2.value === 2) {
-			reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT.getBezeichnung();
-			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN_KOMBINIERT.getVorlageParameterList());
+			reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT.getBezeichnung();
+			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT.getVorlageParameterList());
 			for (const vp of reportingParameter.vorlageParameter) {
 				switch (vp.name) {
 					case "mitPausenaufsichten":
@@ -162,8 +165,8 @@
 				}
 			}
 		} else {
-			reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN.getBezeichnung();
-			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN.getVorlageParameterList());
+			reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN.getBezeichnung();
+			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN.getVorlageParameterList());
 			for (const vp of reportingParameter.vorlageParameter) {
 				switch (vp.name) {
 					case "mitPausenaufsichten":
@@ -178,8 +181,9 @@
 				}
 			}
 		}
-		if (gruppe2.value === 1)
+		if (gruppe2.value === 1) {
 			reportingParameter.einzelausgabeDetaildaten = true;
+		}
 		const { data, name } = await props.getPDF(reportingParameter, stundenplanAuswahl.value.id);
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);

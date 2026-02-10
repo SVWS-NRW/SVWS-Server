@@ -118,7 +118,7 @@ export class SchuleStammdaten extends JavaObject {
 		return ['de.svws_nrw.asd.data.schule.SchuleStammdaten'].includes(name);
 	}
 
-	public static class = new Class<SchuleStammdaten>('de.svws_nrw.asd.data.schule.SchuleStammdaten');
+	public static readonly class = new Class<SchuleStammdaten>('de.svws_nrw.asd.data.schule.SchuleStammdaten');
 
 	public static transpilerFromJSON(json: string): SchuleStammdaten {
 		const obj = JSON.parse(json) as Partial<SchuleStammdaten>;

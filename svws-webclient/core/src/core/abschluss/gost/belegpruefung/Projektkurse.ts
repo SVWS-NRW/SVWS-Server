@@ -19,10 +19,19 @@ import { HashSet } from '../../../../java/util/HashSet';
 
 export class Projektkurse extends GostBelegpruefung {
 
+	/**
+	 * Eine Vektor mit den Projektfächern, die belegt wurden. Dies sollte im Regelfall nur ein Fach sein, können aber ggf. bei einer gültigen Belegung bis zu drei Fächer sein.
+	 */
 	private readonly projektkursBelegung: ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
+	/**
+	 * falls ein Projektkurs gültig gewählt wurde: Der Projektkurs, sonst: null.
+	 */
 	private projektkurs: AbiturFachbelegung | null = null;
 
+	/**
+	 * ein Vektor, welcher die anrechenbaren Halbjahre eines gültig angewählten Projektkurses beinhaltet.
+	 */
 	private readonly projektkursHalbjahre: ArrayList<GostHalbjahr> = new ArrayList<GostHalbjahr>();
 
 
@@ -289,7 +298,7 @@ export class Projektkurse extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Projektkurse'].includes(name);
 	}
 
-	public static class = new Class<Projektkurse>('de.svws_nrw.core.abschluss.gost.belegpruefung.Projektkurse');
+	public static readonly class = new Class<Projektkurse>('de.svws_nrw.core.abschluss.gost.belegpruefung.Projektkurse');
 
 }
 

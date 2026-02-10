@@ -259,7 +259,7 @@ export class SchulenKatalogEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.SchulenKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<SchulenKatalogEintrag>('de.svws_nrw.core.data.schule.SchulenKatalogEintrag');
+	public static readonly class = new Class<SchulenKatalogEintrag>('de.svws_nrw.core.data.schule.SchulenKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): SchulenKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<SchulenKatalogEintrag>;

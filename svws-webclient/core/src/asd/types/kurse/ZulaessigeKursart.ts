@@ -558,7 +558,7 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 		return ['de.svws_nrw.asd.types.kurse.ZulaessigeKursart', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<ZulaessigeKursart>('de.svws_nrw.asd.types.kurse.ZulaessigeKursart');
+	public static readonly class = new Class<ZulaessigeKursart>('de.svws_nrw.asd.types.kurse.ZulaessigeKursart');
 
 }
 

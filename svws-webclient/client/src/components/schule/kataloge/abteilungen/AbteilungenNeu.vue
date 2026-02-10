@@ -1,0 +1,154 @@
+<template>
+	<div class="page page-grid-cards">
+		<svws-ui-content-card>
+			<svws-ui-content-card title="Allgemein">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-text-input placeholder="Bezeichnung"
+						v-model="data.bezeichnung"
+						:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="50" required :disabled="!hatKompetenzAdd" />
+					<svws-ui-text-input placeholder="Raum"
+						v-model="data.raum"
+						:valid="() => fieldIsValid('raum')" :max-len="20" :disabled="!hatKompetenzAdd" />
+					<svws-ui-text-input placeholder="E-Mail-Adresse" type="email"
+						v-model="data.email"
+						:valid="() => fieldIsValid('email')" :max-len="100" :disabled="!hatKompetenzAdd" />
+					<svws-ui-text-input placeholder="Durchwahl" type="tel"
+						v-model="data.durchwahl"
+						:valid="() => fieldIsValid('durchwahl')" :max-len="20" :disabled="!hatKompetenzAdd" />
+					<ui-select label="Lehrer"
+						v-model="idLehrer"
+						:manager="lehrerSelectManager"
+						:disabled="!hatKompetenzAdd" searchable />
+					<svws-ui-spacing :size="2" />
+					<svws-ui-content-card title="Ansicht & Sortierung">
+						<svws-ui-input-number placeholder="Sortierung"
+							v-model="data.sortierung"
+							:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" :removable="false" />
+						<svws-ui-spacing />
+						<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
+							Sichtbar
+						</svws-ui-checkbox>
+					</svws-ui-content-card>
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<div class="mt-7 flex flex-row gap-4 justify-end">
+				<svws-ui-button type="secondary" @click="cancel">
+					Abbrechen
+				</svws-ui-button>
+				<svws-ui-button @click="add" :disabled="!formIsValid">
+					Speichern
+				</svws-ui-button>
+			</div>
+		</svws-ui-content-card>
+		<svws-ui-content-card title="Klassen zuordnen">
+			<svws-ui-table :columns
+				:items="manager().klassenById.values()"
+				v-model="klassenToBeAdded"
+				:selectable="hatKompetenzAdd" count scroll />
+		</svws-ui-content-card>
+		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
+	</div>
+</template>
+
+<script setup lang="ts">
+
+	import type { AbteilungenNeuProps } from "~/components/schule/kataloge/abteilungen/AbteilungenNeuProps";
+	import type { DataTableColumn } from "@ui";
+	import type { KlassenDaten, LehrerListeEintrag, List } from "@core";
+	import { BenutzerKompetenz, Abteilung, AbteilungKlassenzuordnung, ArrayList } from "@core";
+	import { SelectManager } from "@ui";
+	import { computed, ref, watch } from "vue";
+	import { emailIsValid, isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
+
+	const props = defineProps<AbteilungenNeuProps>();
+	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const data = ref<Abteilung>(Object.assign(new Abteilung(), { istSichtbar: true, sortierung: 32000 }));
+	const columns: DataTableColumn[] = [{ key: "kuerzel", label: "Klasse" }];
+	const isLoading = ref<boolean>(false);
+	const klassenToBeAdded = ref<KlassenDaten[]>([]);
+
+	const idLehrer = computed({
+		get: () => props.manager().lehrerById.get(data.value.idAbteilungsleiter),
+		set: (v: LehrerListeEintrag | null) => data.value.idAbteilungsleiter = v?.id ?? null,
+	});
+	const lehrer = computed(() => props.manager().lehrerById.values());
+	const lehrerSelectManager = new SelectManager({	options: lehrer, optionDisplayText: v => v.vorname + ' ' + v.nachname,
+		selectionDisplayText: v => v.vorname + ' ' + v.nachname,
+	});
+
+	const formIsValid = computed(() => {
+		return Object.keys(data.value)
+			.every((field: string) => fieldIsValid(field as keyof Abteilung));
+	});
+
+	const fieldIsValid = (field: keyof Abteilung): boolean => {
+		switch (field) {
+			case 'bezeichnung':
+				return bezeichnungIsValid(data.value.bezeichnung);
+			case 'raum':
+				return optionalInputIsValid(data.value.raum, 20);
+			case 'email':
+				return emailIsValid(data.value.email, 100);
+			case 'durchwahl':
+				return phoneNumberIsValid(data.value.durchwahl, 20);
+			case 'sortierung':
+				return sortierungIsValid(data.value.sortierung);
+			default:
+				return true;
+		}
+	};
+
+	function sortierungIsValid(sortierung: number): boolean {
+		return !numberHasDecimals(sortierung)
+			&& numberIsValid(sortierung, true, 0, 32000);
+	}
+
+	function bezeichnungIsValid(value: string | null) {
+		return mandatoryInputIsValid(value, 50)
+			&& isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
+	}
+
+	function createKlassenzuordnungen(idAbteilung: number): List<AbteilungKlassenzuordnung> {
+		if (klassenToBeAdded.value.length === 0) {
+			return new ArrayList<AbteilungKlassenzuordnung>();
+		}
+
+		const klassenzuordnungen = new ArrayList<AbteilungKlassenzuordnung>();
+		for (const klasse of klassenToBeAdded.value) {
+			const zuordnung = new AbteilungKlassenzuordnung();
+			zuordnung.idAbteilung = idAbteilung;
+			zuordnung.idKlasse = klasse.id;
+			const { id, ...partialData } = zuordnung;
+			klassenzuordnungen.add(partialData as AbteilungKlassenzuordnung);
+		}
+		return klassenzuordnungen;
+	}
+
+	async function cancel() {
+		props.checkpoint.active = false;
+		await props.goToDefaultView(null);
+	}
+
+	async function add() {
+		if (isLoading.value) {
+			return;
+		}
+
+		props.checkpoint.active = false;
+		isLoading.value = true;
+		const { id, klassenzuordnungen, ...partialData } = data.value;
+		const idAbteilung = await props.addAbteilung(partialData);
+		const zuordnungen = createKlassenzuordnungen(idAbteilung);
+		await props.addKlassenzuordnungen(zuordnungen, idAbteilung);
+		isLoading.value = false;
+	}
+
+	watch(() => data.value, async () => {
+		if (isLoading.value) {
+			return;
+		}
+
+		props.checkpoint.active = true;
+	}, { immediate: false, deep: true });
+
+</script>

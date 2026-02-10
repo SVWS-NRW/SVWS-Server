@@ -122,7 +122,7 @@ export class BlockungsUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.BlockungsUtils'].includes(name);
 	}
 
-	public static class = new Class<BlockungsUtils>('de.svws_nrw.core.utils.BlockungsUtils');
+	public static readonly class = new Class<BlockungsUtils>('de.svws_nrw.core.utils.BlockungsUtils');
 
 }
 

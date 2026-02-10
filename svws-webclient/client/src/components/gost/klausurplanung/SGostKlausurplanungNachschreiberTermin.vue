@@ -20,6 +20,7 @@
 						<span class="icon i-ri-alert-line icon-ui-caution" />
 						<span>{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : 2 }}</span>
 					</span>
+					<span class="border rounded-md p-1 text-button" v-if="zeigeAlleJahrgaenge()">{{ GostHalbjahr.fromIDorException(termin().halbjahr).jahrgang }}</span>
 				</div>
 			</template>
 			<template #actions>
@@ -43,10 +44,8 @@
 <script setup lang="ts">
 
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import type { GostHalbjahr, GostKlausurenCollectionSkrsKrsData, GostKlausurenUpdate } from "@core";
-	import { BenutzerKompetenz } from "@core";
-	import { GostKursklausur } from "@core";
-	import { type GostKlausurplanManager, type GostKlausurtermin, type List, Arrays, GostSchuelerklausurTermin } from "@core";
+	import type { GostKlausurenUpdate, GostKlausurplanManager, GostKlausurtermin, List } from "@core";
+	import { GostKursklausur, GostHalbjahr, BenutzerKompetenz, Arrays, GostSchuelerklausurTermin } from "@core";
 	import { computed } from 'vue';
 
 	const props = withDefaults(defineProps<{
@@ -66,6 +65,7 @@
 		updateKlausurblockung: (update: GostKlausurenUpdate) => Promise<void>;
 		gotoKalenderdatum: (datum: string | undefined, termin: GostKlausurtermin | undefined) => Promise<void>;
 		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
+		zeigeAlleJahrgaenge: () => boolean;
 
 	}>(), {
 		loescheKlausurtermine: undefined,
@@ -83,15 +83,18 @@
 
 	async function terminQuartalWechseln() {
 		const terminQuartal = props.kMan().quartalGetByTermin(props.termin());
-		if (props.termin().quartal === 0)
-			if (terminQuartal > 0)
+		if (props.termin().quartal === 0) {
+			if (terminQuartal > 0) {
 				await props.patchKlausurtermin(props.termin().id, { quartal: terminQuartal });
-			else
-				return; // TODO Fehlermeldung, Klausuren mit unterschiedlichen Quartale enthalten
-		else if (props.termin().quartal > 0 && props.kMan().schuelerklausurterminGetMengeByTermin(props.termin()).size() > 0)
+			} else {
+				// TODO Fehlermeldung, Klausuren mit unterschiedlichen Quartale enthalten
+				return;
+			}
+		} else if (props.termin().quartal > 0 && props.kMan().schuelerklausurterminGetMengeByTermin(props.termin()).size() > 0) {
 			await props.patchKlausurtermin(props.termin().id, { quartal: 0 });
-		else
+		} else {
 			await props.patchKlausurtermin(props.termin().id, { quartal: (props.termin().quartal + 1) % 3 });
+		}
 	}
 
 	function isDropZone(termin: GostKlausurtermin): boolean {
@@ -106,15 +109,17 @@
 	}
 
 	function checkDropZone(event: DragEvent, termin: GostKlausurtermin) {
-		if (isDropZone(termin))
+		if (isDropZone(termin)) {
 			event.preventDefault();
+		}
 	}
 
 	const konflikteTerminDragKlausur = computed(() => {
 		if (props.dragData instanceof GostSchuelerklausurTermin) {
 			return props.kMan().konfliktPaarGetMengeTerminAndSchuelerklausurtermin(props.termin(), props.dragData).size();
-		} else
+		} else {
 			return -1;
+		}
 	});
 
 </script>

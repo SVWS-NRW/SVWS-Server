@@ -2,14 +2,13 @@ package de.svws_nrw.core.abschluss.bk.d;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import de.svws_nrw.asd.data.schule.BeruflichesGymnasiumStundentafel;
 import de.svws_nrw.asd.data.schule.BeruflichesGymnasiumStundentafelFach;
-import de.svws_nrw.core.adt.map.HashMap2D;
+import de.svws_nrw.core.data.bk.abi.BKGymAbiturFachbelegung;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.types.bk.BKGymBelegungsfehlerTyp;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import jakarta.validation.constraints.NotNull;
@@ -17,16 +16,10 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Die abstrakte Klasse für die Belegprüfungen bei Bildungsgängen.
  */
-public abstract class BKGymBelegpruefung {
-	/** Die Abiturdaten-Manager */
-	protected final @NotNull BKGymAbiturdatenManager manager;
+public class BKGymBelegpruefung {
 
-	/** Die Stundentafeln laut APO-BK der Anlage */
-	final @NotNull List<BeruflichesGymnasiumStundentafel> stundentafeln;
-
-	/** Eine HashMap2D für den schnellen Zugriff auf die Fächer der Stundentafeln anhand der Tafel und der Fachbezeichnung */
-	private final @NotNull HashMap2D<@NotNull BeruflichesGymnasiumStundentafel, @NotNull String, @NotNull BeruflichesGymnasiumStundentafelFach>
-		mapStundentafelFachByTafelAndFachbezeichnung = new HashMap2D<>();
+	/** Der Abiturdaten-Manager */
+	protected final @NotNull BKGymAbiturdatenManager abidatenManager;
 
 	/** Die Belegungsfehler, die für jede Stundentafel bei der Prüfung festgehalten werden. */
 	private final @NotNull HashMap<BeruflichesGymnasiumStundentafel, List<BKGymBelegungsfehler>> mapBelegungsfehler = new HashMap<>();
@@ -43,41 +36,26 @@ public abstract class BKGymBelegpruefung {
 	 *
 	 * @param manager   der Manager für die Abiturdaten
 	 */
-	protected BKGymBelegpruefung(final @NotNull BKGymAbiturdatenManager manager) {
-		this.manager = manager;
-		stundentafeln = manager.getStundentafeln();
-		init();
+	public BKGymBelegpruefung(final @NotNull BKGymAbiturdatenManager manager) {
+		this.abidatenManager = manager;
 	}
 
 
 	/**
-	 * Initialisiert die Maps für schnelle Zugriffe
-	 */
-	private void init() {
-		for (final @NotNull BeruflichesGymnasiumStundentafel tafel : stundentafeln) {
-			for (final @NotNull BeruflichesGymnasiumStundentafelFach fach : tafel.faecher) {
-				mapStundentafelFachByTafelAndFachbezeichnung.put(tafel, fach.fachbezeichnung, fach);
-			}
-		}
-	}
-
-
-	/**
-	 * Fügt einen Belegungsfehler zu der Belegprüfung hinzu. Diese Methode wird von den Sub-Klassen
-	 * aufgerufen, wenn dort ein Belegungsfehler erkannt wird.
+	 * Fügt einen Belegungsfehler zu der Belegprüfung hinzu.
 	 *
-	 * @param tafel    die Stundentafel
-	 * @param fehler   der hinzuzufügende Belegungsfehler
+	 * @param tafel       die Stundentafel
+	 * @param fehlerTyp   der hinzuzufügende Belegungsfehlertyp
+	 * @param params      die Parameter für den Belegungsfehlertyp
 	 *
 	 * @return true, falls ein Fehler vorliegt false, wenn nur ein Hinweis ausgegeben wurde.
 	 */
-	protected boolean addFehler(final BeruflichesGymnasiumStundentafel tafel, final @NotNull BKGymBelegungsfehler fehler) {
-		if (tafel != null) {
-			final List<BKGymBelegungsfehler> fehlerliste = mapBelegungsfehler.get(tafel);
-			if (fehlerliste != null && !fehlerliste.contains(fehler)) {
-				fehlerliste.add(fehler);
-				dirty = true;
-			}
+	private boolean addFehler(final @NotNull BeruflichesGymnasiumStundentafel tafel, final @NotNull BKGymBelegungsfehlerTyp fehlerTyp, final Object... params) {
+		final @NotNull BKGymBelegungsfehler fehler = new BKGymBelegungsfehler(fehlerTyp, params);
+		final List<BKGymBelegungsfehler> fehlerliste = mapBelegungsfehler.get(tafel);
+		if (fehlerliste != null && !fehlerliste.contains(fehler)) {
+			fehlerliste.add(fehler);
+			dirty = true;
 		}
 		return fehler.istFehler();
 	}
@@ -121,7 +99,7 @@ public abstract class BKGymBelegpruefung {
 	 */
 	public boolean istErfolgreich() {
 		for (final @NotNull BKGymBelegungsfehler fehler : getBelegungsfehler())
-			if (!fehler.istInfo())
+			if (!fehler.istInfo() && fehler.wert > 0)
 				return false;
 		return true;
 	}
@@ -131,387 +109,349 @@ public abstract class BKGymBelegpruefung {
 	 * Die Methode wird zur Durchführung der Belegprüfung aufgerufen.
 	 *
 	 * Sie führt zuerst die allgemeinen Prüfungen aus, die für alle Anlagen des beruflichen Gymnasiums identisch sind.
-	 * Im Anschluss werden dann ggf. die spezifischen Prüfungen für die jeweilige Anlage durchgeführt.
-	 * Hierzu ist bei Bedarf die Methode spezifischePruefungen in der Kindklasse zu implementieren.
 	 */
 	public void pruefe() {
-		for (final @NotNull BeruflichesGymnasiumStundentafel tafel : stundentafeln) {
+		for (final @NotNull BeruflichesGymnasiumStundentafel tafel : abidatenManager.getStundentafelManager().getStundentafeln()) {
+			// damit fehlerfreie Belegungen erkannt werden
 			mapBelegungsfehler.put(tafel, new ArrayList<>());
-			final @NotNull Map<Integer, List<BeruflichesGymnasiumStundentafelFach>> mapFaecherByIndex = manager.getMapFaecherFromTafelByIndex(tafel);
-			final @NotNull Map<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>> mapBelegungByFach =
-					manager.getMapBelegungenForTafelByFach(tafel);
-			bewegeBelegungZuWahlfach(tafel, mapFaecherByIndex, mapBelegungByFach);
-			allgemeinePruefungen(tafel, mapFaecherByIndex, mapBelegungByFach);
-			spezifischePruefungen(tafel, mapFaecherByIndex, mapBelegungByFach);
+			nichtBelegteHalbjahreHinweis(tafel);
+			pruefeEineTafel(tafel);
 		}
 	}
 
 
 	/**
-	 * Diese Methode identifiziert für Positionen einer Stundentafel, die Wahlmöglichkeiten vorsieht,
-	 * ob mehrere Belegungen vorliegen, von denen nur eine der Position zugewiesen wird und die anderen
-	 * dem Wahlfach zugeschlagen wird.
-	 * Es sollte nur ein Fach pro Position vorhanden sein, dass in der Gruppe Berufsbezogen bzw. Berufsübergreifend ist.
-	 * Die anderen Belegungen müssten Differenzierung zugewiesen sein.
-	 * Dafür wird ermittelt welche Belegung den Vorgaben der Position entspricht. Die erste wird behalten, die
-	 * anderen werden nach Wahlfach verschoben.
+	 * Führt die Belegprüfung für eine Stundentafel durch.
 	 *
-	 * @param tafel               die zu überprüfende Stundentafel
-	 * @param mapFaecherByIndex   die Map mit den Fächern der Stundentafel
-	 * @param mapBelegungByFach   die Map mit den Fächern der Belegungen
+	 * @param tafel   die zu überprüfende Stundentafel
 	 */
-	private void bewegeBelegungZuWahlfach(@NotNull final BeruflichesGymnasiumStundentafel tafel,
-			@NotNull final Map<Integer, List<BeruflichesGymnasiumStundentafelFach>> mapFaecherByIndex,
-			@NotNull final Map<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>> mapBelegungByFach) {
-		final @NotNull List<BKGymAbiturFachbelegung> wahlBelegungen = getBelegungenWahlfach(tafel, mapBelegungByFach);
-
-		// Prüfe Einträge der Stundentafel mit Wahlmöglichkeit auf mehrfache Belegung
-		for (final List<BeruflichesGymnasiumStundentafelFach> faecher : mapFaecherByIndex.values()) {
-			if (faecher == null)
-				continue;
-			if (hatStundentafelpositionWahloption(faecher, mapBelegungByFach))
-				bewegeWahlfach(faecher, mapBelegungByFach, wahlBelegungen);
-		}
-	}
-
-
-	/**
-	 * Prüft, ob die Stundentafel eine Wahloption hat anhand der gegebenen Fächerliste der Position
-	 *
-	 * @param faecher             die Liste der Fächer einer Position der Stundentafel
-	 * @param mapBelegungByFach   die Map mit den Fächern der Belegungen
-	 *
-	 * @return true, wenn ein Wahlfach in der Position der Stundentafel vorhanden ist, sonst false
-	 */
-	private static boolean hatStundentafelpositionWahloption(final @NotNull List<BeruflichesGymnasiumStundentafelFach> faecher,
-			@NotNull final Map<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>> mapBelegungByFach) {
-		if (faecher.size() == 1)
-			return false;
-
-		final Iterator<BeruflichesGymnasiumStundentafelFach> iter = faecher.iterator();
-		// schaue nach nicht belegten Fächern (und Differenzierungsfächern)
-		while (iter.hasNext()) {
-			final BeruflichesGymnasiumStundentafelFach tafelFach = iter.next();
-			final List<BKGymAbiturFachbelegung> belegungen = mapBelegungByFach.get(tafelFach);
-			if ((belegungen == null) || (belegungen.isEmpty())) //|| manager.istDifferenzierung(belegung))
-				iter.remove();
-		}
-
-		return faecher.size() >= 2;
-	}
-
-
-	/**
-	 * Bei Wahlmöglichkeiten für ein Pflichtfach wird bei Belegung mehrerer Fächer das erstbeste behalten und
-	 * die anderen Belegungen zum Wahlfach übertragen
-	 *
-	 * @param faecher             die Liste der Fächer einer Position der Stundentafel
-	 * @param mapBelegungByFach   die Map mit den Fächern der Belegungen
-	 * @param wahlBelegungen      die Liste der Belegungen des Wahlfachs
-	 */
-	private void bewegeWahlfach(final @NotNull List<BeruflichesGymnasiumStundentafelFach> faecher,
-			@NotNull final Map<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>> mapBelegungByFach, @NotNull final List<BKGymAbiturFachbelegung> wahlBelegungen) {
-		if (!bewegeFortgefuehrteFS(faecher, mapBelegungByFach, wahlBelegungen)) {
-			final Iterator<BeruflichesGymnasiumStundentafelFach> iter = faecher.iterator();
-			boolean gefunden = false;
-			while (iter.hasNext()) {
-				final BeruflichesGymnasiumStundentafelFach tafelFach = iter.next();
-				if (gefunden) {
-					wahlBelegungen.addAll(mapBelegungByFach.get(tafelFach));
-					iter.remove();
-				} else {
-					gefunden = istPflichtFach(tafelFach, mapBelegungByFach, !iter.hasNext());
-					if (!gefunden) {
-						wahlBelegungen.addAll(mapBelegungByFach.get(tafelFach));
-						iter.remove();
-					}
-				}
-			}
-		}
-	}
-
-
-	/**
-	 * Wird nur aufgerufen, wenn fortgeführte und neu einsetzende Fremdsprachen belegt sind.
-	 * Die fortgeführte Fremdsprache wird zum Wahlfach verschoben
-	 *
-	 * @param faecher             die Liste der Fächer einer Position der Stundentafel
-	 * @param mapBelegungByFach   die Map mit den Fächern der Belegungen
-	 * @param wahlBelegungen      die Liste der Belegungen für das Wahlfach
-	 *
-	 * @return true, wenn die Fremdsprachen behandelt wurden, sonst false
-	 */
-	private boolean bewegeFortgefuehrteFS(@NotNull final List<BeruflichesGymnasiumStundentafelFach> faecher,
-			@NotNull final Map<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>> mapBelegungByFach,
-			@NotNull final List<BKGymAbiturFachbelegung> wahlBelegungen) {
-		final BeruflichesGymnasiumStundentafelFach tafelFach = faecher.getFirst();
-		if ((tafelFach != null) && (manager.istZweiteFremdsprache(tafelFach.fachbezeichnung) || manager.istNeueFremdsprache(tafelFach.fachbezeichnung))) {
-			final Iterator<BeruflichesGymnasiumStundentafelFach> iter = faecher.iterator();
-			while (iter.hasNext()) {
-				final BeruflichesGymnasiumStundentafelFach tf = iter.next();
-				if (manager.istZweiteFremdsprache(tf.fachbezeichnung)) {
-					wahlBelegungen.addAll(mapBelegungByFach.get(tf));
-					iter.remove();
-				}
-			}
-			return true;
-		}
-		return false;
-	}
-
-
-	/**
-	 * Gilt für die Positionen der Stundentafel, die Wahlmöglichkeiten vorsehen wie Physik/Chemie/Biologie.
-	 * Hier wird geprüft, ob die Belegung in Ordnung ist.
-	 *
-	 * @param tafelFach           ein Fach der Stundentafel
-	 * @param mapBelegungByFach   die Map mit den Fächern der Belegungen
-	 * @param letztesFach         ob es das letzte Fach der Position in der Stundentafel ist.
-	 *
-	 * @return true, wenn als Pflichtfach erkannt, sonst false
-	 */
-	private boolean istPflichtFach(final BeruflichesGymnasiumStundentafelFach tafelFach,
-			@NotNull final Map<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>> mapBelegungByFach, final boolean letztesFach) {
-		if (tafelFach == null)
-			return false;
-
-		final List<BKGymAbiturFachbelegung> belegungen = mapBelegungByFach.get(tafelFach);
-
-		if ((belegungen == null) || (belegungen.size() != 1))
-			return letztesFach;
-
-		final BKGymAbiturFachbelegung belegung = belegungen.getFirst();
-		if (belegung != null)
-			return pruefeBelegung(null, tafelFach, belegung);
-
-		throw new DeveloperNotificationException(
-					"In der Belegungsprüfung ist ein interner Fehler aufgetreten: Die Belegung für ein Fach ist nicht vorhanden.");
-	}
-
-
-	/**
-	 * allgemeinePruefungen führt die Belegprüfungen durch, die für alle Anlagen des beruflichen Gymnasiums identisch ausgeführt werden können.
-	 * Aufgetretene Fehler werden in die Map mapBelegungsfehler eingetragen.
-	 *
-	 * @param tafel                    die zu überprüfende Stundentafel
-	 * @param mapFaecherByIndex        die Map mit den Fächern der Stundentafel
-	 * @param mapBelegungByTafelfach   die Map mit den Fächern der Belegungen
-	 */
-	private void allgemeinePruefungen(final @NotNull BeruflichesGymnasiumStundentafel tafel,
-			final @NotNull Map<Integer, List<BeruflichesGymnasiumStundentafelFach>> mapFaecherByIndex,
-			final @NotNull Map<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>> mapBelegungByTafelfach) {
-		pruefeLKs(tafel);
+	private void pruefeEineTafel(final @NotNull BeruflichesGymnasiumStundentafel tafel) {
+		boolean zweiteFremdspracheBelegt = true;
+		boolean religionVollbelegt = false;
+		final @NotNull BKGymFachbelegungManager fbManager = abidatenManager.getFachbelegungManager();
+		final @NotNull BKGymFachbelegungZuStundentafelfachManager fb2TafelManager = fbManager.newFachbelegungZuStundentafelfachManager(BKGymStundentafelManager.getMaximalSortierung(tafel));
 		pruefeAbiGrundkurse(tafel);
-
-		// Eigentliche Belegprüfung: Durchwandern der Zuordnung der Fächer in der Stundentafel
-		for (final List<BeruflichesGymnasiumStundentafelFach> faecher : mapFaecherByIndex.values()) {
-			if (faecher != null)
-				allgemeinePruefungenTafelfach(tafel, faecher, mapBelegungByTafelfach);
+		for (final @NotNull BeruflichesGymnasiumStundentafelFach fach : tafel.faecher) {
+			if (BKGymStundentafelManager.istZweiteFremdsprache(fach.fachbezeichnung))
+				zweiteFremdspracheBelegt = pruefeBelegungZweiteFremdsprache(fb2TafelManager, tafel, fach);
+			else if (BKGymStundentafelManager.istNeueFremdsprache(fach.fachbezeichnung))
+				pruefeBelegungNeueFremdsprache(fb2TafelManager, tafel, fach);
+			else if (BKGymStundentafelManager.istReligion(fach.fachbezeichnung))
+				religionVollbelegt = pruefeBelegungReligion(fb2TafelManager, fach);
+			else if (BKGymStundentafelManager.istWahlfach(fach.fachbezeichnung)) {
+				if (!zweiteFremdspracheBelegt)
+					pruefeBelegungFremdsprachenErsatzfach(fb2TafelManager, tafel);
+				if (!religionVollbelegt)
+					pruefeBelegungReligionErsatzfach(fb2TafelManager, tafel);
+				pruefeBelegungWahlfach(fb2TafelManager, tafel, fach);
+			} else
+				pruefeBelegungFach(fb2TafelManager, tafel, fach);
 		}
 	}
 
 
 	/**
-	 * Führt für eine Position der Stundentafel die Prüfung der Belegung durch.
+	 * Prüfe auf korrekte Belegung des 3. und 4. Abiturfachs
 	 *
-	 * @param tafel                    die zu überprüfende Stundentafel
-	 * @param faecher                  die Liste der Fächer einer Position der Stundentafel
-	 * @param mapBelegungByTafelfach   die Map mit den Fächern der Belegungen
+	 * @param tafel   die zu prüfende Stundentafel
 	 */
-	private void allgemeinePruefungenTafelfach(@NotNull final BeruflichesGymnasiumStundentafel tafel, @NotNull final List<BeruflichesGymnasiumStundentafelFach> faecher,
-			@NotNull final Map<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>> mapBelegungByTafelfach) {
-		if (faecher.size() > 1)
-			throw new DeveloperNotificationException(
-					"In der Belegungsprüfung ist ein interner Fehler aufgetreten: Für eine Position der Stundentafel gibt es mehr als einen Eintrag.");
-		// Wenn ein Fach keine Belegung braucht.
-		if (faecher.isEmpty())
-			throw new DeveloperNotificationException(
-					"In der Belegungsprüfung ist ein interner Fehler aufgetreten: Für eine Position der Stundentafel gibt keinen Eintrag.");
+	private void pruefeAbiGrundkurse(final @NotNull BeruflichesGymnasiumStundentafel tafel) {
+		final @NotNull BKGymFachbelegungManager fbManager = abidatenManager.getFachbelegungManager();
+		// Bestimme das dritte Abiturfach
+		final BKGymAbiturFachbelegung ab3 = fbManager.getAbiFachbelegung(GostAbiturFach.AB3);
+		if (ab3 == null)
+			addFehler(tafel, BKGymBelegungsfehlerTyp.AB_3);
 
-		final BeruflichesGymnasiumStundentafelFach tafelFach = faecher.getFirst();
-		if (tafelFach == null)
+		// Bestimme das vierte Abiturfach
+		final BKGymAbiturFachbelegung ab4 = fbManager.getAbiFachbelegung(GostAbiturFach.AB4);
+		if (ab4 == null)
+			addFehler(tafel, BKGymBelegungsfehlerTyp.AB_4);
+
+		// Prüfe ob ab3 und ab4 eine gültige Wahl ist
+		final String ab3Bezeichnung = ab3 == null ? null : abidatenManager.getFaecherManager().getBezeichnungByFachID(ab3.fachID);
+		final String ab4Bezeichnung = ab4 == null ? null : abidatenManager.getFaecherManager().getBezeichnungByFachID(ab4.fachID);
+		if ((ab3Bezeichnung != null) && (ab4Bezeichnung != null)
+				&& !abidatenManager.getStundentafelManager().pruefeAbiGrundkurswahl(tafel, ab3Bezeichnung, ab4Bezeichnung))
+			addFehler(tafel, BKGymBelegungsfehlerTyp.AB_5, ab3Bezeichnung, ab4Bezeichnung, abidatenManager.getGliederung().name(), abidatenManager.getFachklassenschluessel());
+	}
+
+
+	/**
+	 * Gibt Hinweise ins Log aus, wenn Halbjahre nicht bewertet wurden.
+	 *
+	 * @param tafel   die zu prüfende Stundentafel
+	 */
+	private void nichtBelegteHalbjahreHinweis(final @NotNull BeruflichesGymnasiumStundentafel tafel) {
+		for (final GostHalbjahr hj : GostHalbjahr.values())
+			if (!abidatenManager.istBewertet(hj))
+				addFehler(tafel, BKGymBelegungsfehlerTyp.HJ_1_INFO, hj.kuerzel);
+	}
+
+
+	/**
+	 * Führt die Belegung für die zweite Fremdsprache durch.
+	 * Wenn keine zweite Fremdsprache belegt werden kann, wird das als false mitgeteilt, damit
+	 * später geprüft wird, ob ein Ersatzfach belegt wurde. Das muss direkt vor der Prüfung des Wahlfachs durchgeführt werden
+	 * und nach der Prüfung eines Ersatzfaches für Religion, da hier die möglichen Ersatzfächer eingeschränkt sind.
+	 *
+	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel           die zu überprüfende Stundentafel
+	 * @param fach            das zu prüfende Fach der Stundentafel
+	 *
+	 * @return true, wenn die Belegung erfolgreich war, sonst false
+	 */
+	private boolean pruefeBelegungZweiteFremdsprache(@NotNull final BKGymFachbelegungZuStundentafelfachManager fb2TafelManager,
+			@NotNull final BeruflichesGymnasiumStundentafel tafel, @NotNull final BeruflichesGymnasiumStundentafelFach fach) {
+		final String bezeichnerFremdsprache = abidatenManager.getFachbelegungManager().getZweiteFremdspracheBezeichnung();
+		if (bezeichnerFremdsprache == null)
+			return false;
+		final @NotNull BeruflichesGymnasiumStundentafelFach fachFremdsprache = copyStundentafelFach(fach, bezeichnerFremdsprache);
+		return pruefeBelegungFach(fb2TafelManager, tafel, fachFremdsprache);
+	}
+
+
+	/**
+	 * Führt die Belegung für die neue Fremdsprache durch.
+	 *
+	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel   die zu überprüfende Stundentafel
+	 * @param fach    das zu prüfende Fach der Stundentafel
+	 */
+	private void pruefeBelegungNeueFremdsprache(@NotNull final BKGymFachbelegungZuStundentafelfachManager fb2TafelManager,
+			@NotNull final BeruflichesGymnasiumStundentafel tafel, @NotNull final BeruflichesGymnasiumStundentafelFach fach) {
+		final String bezeichnerFremdsprache = abidatenManager.getFachbelegungManager().getZweiteFremdspracheBezeichnung();
+		if (bezeichnerFremdsprache == null) {
+			addFehler(tafel, BKGymBelegungsfehlerTyp.ST_4, fach.fachbezeichnung);
 			return;
-
-		final List<BKGymAbiturFachbelegung> belegungen = mapBelegungByTafelfach.get(tafelFach);
-		if ((belegungen == null) || belegungen.isEmpty()) {
-			addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.ST_4, tafelFach.fachbezeichnung));
-			return;
 		}
+		final @NotNull BeruflichesGymnasiumStundentafelFach fachFremdsprache = copyStundentafelFach(fach, bezeichnerFremdsprache);
+		pruefeBelegungFach(fb2TafelManager, tafel, fachFremdsprache);
+	}
 
-		if (manager.istWahlfach(tafelFach.fachbezeichnung))
-			pruefeBelegungWahlfach(tafel, tafelFach, belegungen);
-		else {
-			if (belegungen.size() > 1)
-				addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.ST_1, tafelFach.fachbezeichnung));
-			else
-				pruefeBelegung(tafel, tafelFach, belegungen.getFirst());
+
+	/**
+	 * Führt die Belegung für das Ersatzfach der zweiten Fremdsprache durch. Dies ist beliebig muss aberfür Religion durch.
+	 * für alle vier Halbjahre belegt werden.
+	 *
+	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel      die zu überprüfende Stundentafel
+	 */
+	private void pruefeBelegungFremdsprachenErsatzfach(@NotNull final BKGymFachbelegungZuStundentafelfachManager fb2TafelManager,
+			@NotNull final BeruflichesGymnasiumStundentafel tafel) {
+		final @NotNull BKGymStundentafelManager stManager = abidatenManager.getStundentafelManager();
+		// hole das Fach der zweiten Fremdsprache aus der Stundentafel
+		final BeruflichesGymnasiumStundentafelFach fachZweiteFremdsprache =
+				stManager.getFachByTafelAndBezeichnung(tafel, BKGymStundentafelManager.ZWEITE_FREMDSPRACHE);
+		if (fachZweiteFremdsprache == null)
+			throw new DeveloperNotificationException("Das Fach \"Zweite Fremdsprache\" fehlt in der Stundentafel.");
+		for (final @NotNull String ersatzfachBezeichnung : fb2TafelManager.getFachbezeichnungenFreierBelegungen()) {
+			final @NotNull BeruflichesGymnasiumStundentafelFach ersatzfach = copyStundentafelFach(fachZweiteFremdsprache, ersatzfachBezeichnung);
+			if (fb2TafelManager.belegeErsatzfachVomEndeHer(ersatzfach))
+				break;
 		}
+		pruefeStundenumfang(fb2TafelManager, tafel, fachZweiteFremdsprache);
 	}
 
 
 	/**
-	 * Führt die Prüfungen für eine Belegung durch
+	 * Führt die Belegung für das Fach Religion durch.
 	 *
-	 * @param tafel          die Stundentafel der Anlage
-	 * @param fachTafel      das zu prüfende Fach aus der Stundentafel
-	 * @param fachBelegung   die zugeordnete Fachbelegung
+	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param fach    das zu prüfende Fach der Stundentafel
 	 *
-	 * @return true, wenn die Prüfung keinen Fehler entdeckt, sonst false
+	 * @return true, wenn die Belegung erfolgreich war, sonst false
 	 */
-	private boolean pruefeBelegung(final BeruflichesGymnasiumStundentafel tafel, final @NotNull BeruflichesGymnasiumStundentafelFach fachTafel,
-			final @NotNull BKGymAbiturFachbelegung fachBelegung) {
-		final boolean successStundenumfang = pruefeStundenumfang(tafel, fachTafel, fachBelegung);
-		final boolean successSchriftlichkeit = pruefeSchriftlich(tafel, fachTafel, fachBelegung);
-		return successStundenumfang && successSchriftlichkeit;
+	private static boolean pruefeBelegungReligion(@NotNull final BKGymFachbelegungZuStundentafelfachManager fb2TafelManager,
+			@NotNull final BeruflichesGymnasiumStundentafelFach fach) {
+		fb2TafelManager.belegeFach(fach);
+		return fb2TafelManager.istVollbelegt(fach);
 	}
 
 
 	/**
-	 * Schlägt die Belegungen für das Wahlfach nach
+	 * Führt die Belegung für das Ersatzfach für Religion durch. Dies ist beliebig muss aber
+	 * für alle vier Halbjahre belegt werden.
 	 *
-	 * @param tafel                    die betreffende Stundentafel
-	 * @param mapBelegungByTafelfach   das zugehörige Mapping der Belegungen auf die Fächer der Stundentafel
-	 *
-	 * @return Die Liste der Belegungen für das Wahlfach
+	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel      die zu überprüfende Stundentafel
 	 */
-	private @NotNull List<BKGymAbiturFachbelegung> getBelegungenWahlfach(final @NotNull BeruflichesGymnasiumStundentafel tafel,
-			final @NotNull Map<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>> mapBelegungByTafelfach) {
-		final BeruflichesGymnasiumStundentafelFach tafelWahlfach = mapStundentafelFachByTafelAndFachbezeichnung.getOrNull(tafel, manager.wahlfach);
-		List<BKGymAbiturFachbelegung> wahlfachBelegungen = null;
-		if (tafelWahlfach != null)
-			wahlfachBelegungen = mapBelegungByTafelfach.computeIfAbsent(tafelWahlfach,  k -> new ArrayList<>());
-		if (wahlfachBelegungen != null)
-			return wahlfachBelegungen;
-		return new ArrayList<>();
+	private void pruefeBelegungReligionErsatzfach(@NotNull final BKGymFachbelegungZuStundentafelfachManager fb2TafelManager, @NotNull final BeruflichesGymnasiumStundentafel tafel) {
+		final @NotNull BKGymStundentafelManager stManager = abidatenManager.getStundentafelManager();
+		// hole das Fach Religion aus der Stundentafel
+		final BeruflichesGymnasiumStundentafelFach fachReligion =
+				stManager.getFachByTafelAndBezeichnung(tafel, BKGymStundentafelManager.RELIGION);
+		if (fachReligion == null)
+			throw new DeveloperNotificationException("Das Fach " + BKGymStundentafelManager.RELIGION + " fehlt in der Stundentafel.");
+		for (final @NotNull String ersatzfachBezeichnung : BKGymStundentafelManager.ERSATZ_FUER_RELIGION) {
+			final @NotNull BeruflichesGymnasiumStundentafelFach ersatzfach = copyStundentafelFach(fachReligion, ersatzfachBezeichnung);
+			if (fb2TafelManager.belegeErsatzfach(ersatzfach))
+				break;
+		}
+		pruefeStundenumfang(fb2TafelManager, tafel, fachReligion);
 	}
 
 
 	/**
-	 * Führt die Belegungsprüfung für das Wahlfach aus.
-	 * Hier muss nur die Summe der Wochenstunden pro Halbjahr erfüllt sein.
+	 * Führt die Belegung für das Wahlfach durch.
 	 *
-	 * @param tafel        die Stundentafel der Anlage
-	 * @param fachTafel    das zu prüfende Fach aus der Stundentafel
-	 * @param belegungen   die zugeordnete Fachbelegung
-	 *
-	 * @return true, wenn die Prüfung keinen Fehler entdeckt, sonst false
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die zu überprüfende Stundentafel
+	 * @param fach              das zu prüfende Fach der Stundentafel
 	 */
-	private boolean pruefeBelegungWahlfach(final BeruflichesGymnasiumStundentafel tafel,
-			final @NotNull BeruflichesGymnasiumStundentafelFach fachTafel, final @NotNull List<BKGymAbiturFachbelegung> belegungen) {
-		boolean success = true;
-		final @NotNull int[] summeWS = new int[GostHalbjahr.maxHalbjahre];
-		// Summe der Wochenstunden der Wahlbelegungen ermitteln.
-		for (final BKGymAbiturFachbelegung fachBelegung : belegungen)
-			for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase()) {
-				final BKGymAbiturFachbelegungHalbjahr belegung = fachBelegung.belegungen[hj.id];
-				if (belegung != null)
-					summeWS[hj.id] += belegung.wochenstunden;
-			}
-
-		// Prüfen ob die Wochenstunden in den Halbjahren erreicht wurden
+	private void pruefeBelegungWahlfach(@NotNull final BKGymFachbelegungZuStundentafelfachManager fb2TafelManager, @NotNull final BeruflichesGymnasiumStundentafel tafel,
+			@NotNull final BeruflichesGymnasiumStundentafelFach fach) {
 		for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase())
-			if ((summeWS[hj.id] < fachTafel.stundenumfang[hj.id])
-					&& addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.ST_3, fachTafel.fachbezeichnung)))
-				success = false;
-
-		return success;
+			fb2TafelManager.belegeBeliebigesFachFuerHalbjahr(hj, fach);
+		pruefeStundenumfang(fb2TafelManager, tafel, fach);
 	}
 
 
 	/**
-	 * Prüft, ob Unterricht im erforderlichen Umfang erteilt wurde.
+	 * Führt die Belegung des Fachs aus dem Pool der noch nicht verwendeten Belegungen durch.
+	 * Dabei wird die Stundenumfang überprüft und Fehler werden in der Tafel eingetragen.
 	 *
-	 * @param tafel          die Stundentafel der Anlage
-	 * @param fachTafel      das zu prüfende Fach aus der Stundentafel
-	 * @param fachBelegung   die zugeordnete Fachbelegung
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die zu überprüfende Stundentafel
+	 * @param fach              das zu prüfende Fach der Stundentafel
 	 *
-	 * @return true bei fehlerloser Prüfung sonst false
+	 * @return true, wenn die Belegung erfolgreich war, sonst false
 	 */
-	private boolean pruefeStundenumfang(final BeruflichesGymnasiumStundentafel tafel,
-			final @NotNull BeruflichesGymnasiumStundentafelFach fachTafel, final @NotNull BKGymAbiturFachbelegung fachBelegung) {
+	private boolean pruefeBelegungFach(final @NotNull BKGymFachbelegungZuStundentafelfachManager fb2TafelManager, final @NotNull BeruflichesGymnasiumStundentafel tafel,
+			final @NotNull BeruflichesGymnasiumStundentafelFach fach) {
+		fb2TafelManager.belegeFach(fach);
+		final boolean resultStundenumfang = pruefeStundenumfang(fb2TafelManager, tafel, fach);
+		final boolean resultKursart = pruefeKursart(tafel, fach);
+		final boolean resultSchriftlich = pruefeSchriftlich(fb2TafelManager, tafel, fach);
+		return resultStundenumfang && resultKursart && resultSchriftlich;
+	}
+
+
+	/**
+	 * Prüft, ob der Stundenumfang einer Stundentafelposition erfüllt wird.
+	 *
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die zu überprüfende Stundentafel
+	 * @param fach              das zu prüfende Fach der Stundentafel
+	 *
+	 * @return true, wenn der Stundenumfang ausreichend ist, sonst false
+	 */
+	private boolean pruefeStundenumfang(@NotNull final BKGymFachbelegungZuStundentafelfachManager fb2TafelManager,
+			final @NotNull BeruflichesGymnasiumStundentafel tafel, final @NotNull BeruflichesGymnasiumStundentafelFach fach) {
 		boolean success = true;
 		int summeTafel = 0;
 		int summeBelegung = 0;
 		boolean unterbelegung = false;
 		for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase()) {
-			summeTafel += fachTafel.stundenumfang[hj.id];
-			final BKGymAbiturFachbelegungHalbjahr belegung = fachBelegung.belegungen[hj.id];
-
-			if (belegung == null) {
-				if (fachTafel.stundenumfang[hj.id] > 0)
-					success = !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.ST_6, fachTafel.fachbezeichnung, hj.kuerzel)) && success;
-				continue;
-			}
-
-			if ((belegung.notenkuerzel != null) && (!belegung.notenkuerzel.isEmpty())) {
-				summeBelegung += belegung.wochenstunden;
-				unterbelegung |= (fachTafel.stundenumfang[hj.id] > belegung.wochenstunden);
-			} else if (fachTafel.stundenumfang[hj.id] > 0) {
-				success = !(addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.ST_2, fachTafel.fachbezeichnung, hj.kuerzel))) && success;
+			final int belegteStunden = fb2TafelManager.getBelegteStundenByHalbjahrAndFach(hj, fach);
+			summeTafel += fach.stundenumfang[hj.id];
+			summeBelegung += belegteStunden;
+			if (belegteStunden == -1) {
+				if (fach.stundenumfang[hj.id] > 0) {
+					// Es ist eine Belegung vorhanden, aber keine Note
+					success = !addFehler(tafel, BKGymBelegungsfehlerTyp.ST_2, fach.fachbezeichnung, hj.kuerzel) && success;
+					unterbelegung = true;
+				}
+			} else if (belegteStunden < fach.stundenumfang[hj.id]) {
 				unterbelegung = true;
+				if (belegteStunden == 0)
+					// Es ist keine Belegung vorhanden
+					success = !addFehler(tafel, BKGymBelegungsfehlerTyp.ST_6, fach.fachbezeichnung, hj.kuerzel) && success;
 			}
 		}
 
+		if (summeTafel > summeBelegung)
+			return !addFehler(tafel, BKGymBelegungsfehlerTyp.ST_3, fach.fachbezeichnung) && success;
 
-		if (summeTafel > summeBelegung) {
-			success = !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.ST_3, fachTafel.fachbezeichnung)) && success;
-			return success;
-		}
-
-		success = !(unterbelegung && addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.ST_5_INFO, fachTafel.fachbezeichnung)))  && success;
+		if (unterbelegung)
+			success = !addFehler(tafel, BKGymBelegungsfehlerTyp.ST_5_INFO, fach.fachbezeichnung) && success;
 		return success;
 	}
 
+
+	/**
+	 * Prüft d, ob das Fach als Leistungskurs belegt wurde, wenn dies in der Stundentafel gefordert ist.
+	 *
+	 * @param tafel             die zu überprüfende Stundentafel
+	 * @param fach              das zu prüfende Fach der Stundentafel
+	 *
+	 * @return true, wenn in Stundentafel und Belegung die Kursarten zueinander passen, sonst false
+	 */
+	@SuppressWarnings("java:S6916")
+	private boolean pruefeKursart(@NotNull final BeruflichesGymnasiumStundentafel tafel, @NotNull final BeruflichesGymnasiumStundentafelFach fach) {
+		final BKGymAbiturFachbelegung fachBelegung = abidatenManager.getFachbelegungManager().getFachbelegungByBezeichnung(fach.fachbezeichnung);
+		if (fachBelegung == null)
+			return !BKGymStundentafelManager.brauchtBelegungInQPhase(fach);
+		final @NotNull String kursartBelegung = fachBelegung.letzteKursart == null ? "" : fachBelegung.letzteKursart;
+		int lkNummerTafel = 0;
+		int lkNummerBelegung = 0;
+		if (fach.abifach != null)
+			lkNummerTafel = fach.abifach;
+		if (fachBelegung.abiturFach != null)
+			lkNummerBelegung = fachBelegung.abiturFach;
+		switch (fach.kursart) {
+			case "GK" -> {
+					if ("LK".equals(kursartBelegung))
+						return !addFehler(tafel, BKGymBelegungsfehlerTyp.LK_3, fach.fachbezeichnung);
+				}
+			case "LK" -> {
+				if (!"LK".equals(kursartBelegung) || (lkNummerTafel != lkNummerBelegung))
+					return !addFehler(tafel, lkNummerTafel == 1 ? BKGymBelegungsfehlerTyp.LK_1 : BKGymBelegungsfehlerTyp.LK_2, fach.fachbezeichnung);
+				}
+			default ->
+				throw new DeveloperNotificationException("Ungültige Kursart '" + fach.kursart + "' in der Stundentafel.");
+		}
+		return true;
+	}
 
 
 	/**
 	 * Prüft, ob die Schriftlichkeit der Fächer korrekt erfüllt ist.
 	 *
-	 * @param tafel          die Stundentafel der Anlage
-	 * @param fachTafel      das zu prüfende Fach aus der Stundentafel
-	 * @param fachBelegung   die zugeordnete Fachbelegung
+	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel         die Stundentafel der Anlage
+	 * @param fach          das zu prüfende Fach aus der Stundentafel
 	 *
 	 * @return true, wenn die Prüfung keinen Fehler entdeckt, sonst false
 	 */
-	private boolean pruefeSchriftlich(final BeruflichesGymnasiumStundentafel tafel, final @NotNull BeruflichesGymnasiumStundentafelFach fachTafel,
-			final @NotNull BKGymAbiturFachbelegung fachBelegung) {
+	private boolean pruefeSchriftlich(@NotNull final BKGymFachbelegungZuStundentafelfachManager fb2TafelManager,
+			final @NotNull BeruflichesGymnasiumStundentafel tafel, final @NotNull BeruflichesGymnasiumStundentafelFach fach) {
 		boolean success;
-
-		success = pruefeSchriftlichEF(GostHalbjahr.EF1, tafel, fachTafel, fachBelegung);
-		success = pruefeSchriftlichEF(GostHalbjahr.EF2, tafel, fachTafel, fachBelegung) && success;
-		success = pruefeSchriftlichQ1(GostHalbjahr.Q11, tafel, fachTafel, fachBelegung) && success;
-		success = pruefeSchriftlichQ1(GostHalbjahr.Q12, tafel, fachTafel, fachBelegung) && success;
-		success = pruefeSchriftlichQ2(GostHalbjahr.Q21, tafel, fachTafel, fachBelegung) && success;
-		success = pruefeSchriftlichQ2(GostHalbjahr.Q22, tafel, fachTafel, fachBelegung) && success;
-
+		final BKGymAbiturFachbelegung fachBelegung = abidatenManager.getFachbelegungManager().getFachbelegungByBezeichnung(fach.fachbezeichnung);
+		if (fachBelegung == null)
+			return true;
+		success = pruefeSchriftlichEF(fb2TafelManager, tafel, fach, fachBelegung, GostHalbjahr.EF1);
+		success = pruefeSchriftlichEF(fb2TafelManager, tafel, fach, fachBelegung, GostHalbjahr.EF2) && success;
+		success = pruefeSchriftlichQ1(fb2TafelManager, tafel, fach, fachBelegung, GostHalbjahr.Q11) && success;
+		success = pruefeSchriftlichQ1(fb2TafelManager, tafel, fach, fachBelegung, GostHalbjahr.Q12) && success;
+		success = pruefeSchriftlichQ2(fb2TafelManager, tafel, fach, fachBelegung, GostHalbjahr.Q21) && success;
+		success = pruefeSchriftlichQ2(fb2TafelManager, tafel, fach, fachBelegung, GostHalbjahr.Q22) && success;
 		return success;
 	}
 
 
 	/**
 	 * In der EF muss in mindestens vier Fächern, in den LK-Fächern, Deutsch, Mathematik und Fremdsprachen in jedem Fall
+	 * Da es die LK-Kombination Mathe-Deutsch nicht gibt, sind mindestens vier Fächer gegeben, wenn die obligatorischen
+	 * Klausurfächer geprüft sind.
 	 *
-	 * @param hj             das Oberstufenhalbjahr
-	 * @param tafel          die Stundentafel der Anlage
-	 * @param fachTafel      das zu prüfende Fach aus der Stundentafel
-	 * @param fachBelegung   die zugeordnete Fachbelegung
+	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel           die Stundentafel der Anlage
+	 * @param fachBelegung    die Fachbelegung zur Halbjahresbelegung
+	 * @param fach            das zu prüfende Fach aus der Stundentafel
+	 * @param hj              das Oberstufenhalbjahr
 	 *
 	 * @return true, wenn die Prüfung keinen Fehler entdeckt, sonst false
 	 */
-	private boolean pruefeSchriftlichEF(final @NotNull GostHalbjahr hj, final BeruflichesGymnasiumStundentafel tafel, @NotNull final BeruflichesGymnasiumStundentafelFach fachTafel,
-			@NotNull final BKGymAbiturFachbelegung fachBelegung) {
-		final BKGymAbiturFachbelegungHalbjahr belegungHj = fachBelegung.belegungen[hj.id];
-
-		if ((belegungHj == null) || (belegungHj.schriftlich))
+	private boolean pruefeSchriftlichEF(final @NotNull BKGymFachbelegungZuStundentafelfachManager fb2TafelManager, final @NotNull BeruflichesGymnasiumStundentafel tafel,
+			@NotNull final BeruflichesGymnasiumStundentafelFach fach, @NotNull final BKGymAbiturFachbelegung fachBelegung, final @NotNull GostHalbjahr hj) {
+		if (fb2TafelManager.getSchriftlichBelegt(hj, fach))
 			return true;
-
-		if ("Deutsch".equals(fachTafel.fachbezeichnung) || "Mathematik".equals(fachTafel.fachbezeichnung))
-			return !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.KL_1, fachTafel.fachbezeichnung, hj.kuerzel));
+		if ("Deutsch".equals(fach.fachbezeichnung) || "Mathematik".equals(fach.fachbezeichnung))
+			return !addFehler(tafel, BKGymBelegungsfehlerTyp.KL_1_INFO, fach.fachbezeichnung, hj.kuerzel);
 		if ((fachBelegung.abiturFach != null) && (fachBelegung.abiturFach <= 2))
-			return !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.KL_2, fachTafel.fachbezeichnung, hj.kuerzel));
-		if (manager.istFremdsprachenbelegung(fachBelegung))
-			return !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.KL_3, fachTafel.fachbezeichnung, hj.kuerzel));
-
+			return !addFehler(tafel, BKGymBelegungsfehlerTyp.KL_2, fach.fachbezeichnung, hj.kuerzel);
+		if (abidatenManager.istFremdsprachenbelegung(fachBelegung))
+			return !addFehler(tafel, BKGymBelegungsfehlerTyp.KL_3_INFO, fach.fachbezeichnung, hj.kuerzel);
 		return true;
 	}
 
@@ -520,27 +460,24 @@ public abstract class BKGymBelegpruefung {
 	 * In der Q1 müssen allen Abiturfächer schriftlich belegt sein. Deutsch, Mathematik,
 	 * Fremdsprachen und die Fächer der Berufsabschlussprüfung in jedem Fall
 	 *
-	 * @param hj             das Oberstufenhalbjahr
-	 * @param tafel          die Stundentafel der Anlage
-	 * @param fachTafel      das zu prüfende Fach aus der Stundentafel
-	 * @param fachBelegung   die zugeordnete Fachbelegung
+	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel           die Stundentafel der Anlage
+	 * @param fachBelegung    die Fachbelegung zur Halbjahresbelegung
+	 * @param fach            das zu prüfende Fach aus der Stundentafel
+	 * @param hj              das Oberstufenhalbjahr
 	 *
 	 * @return true, wenn die Prüfung keinen Fehler entdeckt, sonst false
 	 */
-	private boolean pruefeSchriftlichQ1(final @NotNull GostHalbjahr hj, final BeruflichesGymnasiumStundentafel tafel, @NotNull final BeruflichesGymnasiumStundentafelFach fachTafel,
-			@NotNull final BKGymAbiturFachbelegung fachBelegung) {
-		final BKGymAbiturFachbelegungHalbjahr belegungHj = fachBelegung.belegungen[hj.id];
-
-		if ((belegungHj == null) || (belegungHj.schriftlich))
+	private boolean pruefeSchriftlichQ1(final @NotNull BKGymFachbelegungZuStundentafelfachManager fb2TafelManager, final @NotNull BeruflichesGymnasiumStundentafel tafel,
+			@NotNull final BeruflichesGymnasiumStundentafelFach fach, @NotNull final BKGymAbiturFachbelegung fachBelegung, final @NotNull GostHalbjahr hj) {
+		if (fb2TafelManager.getSchriftlichBelegt(hj, fach))
 			return true;
-
-		if ("Deutsch".equals(fachTafel.fachbezeichnung) || "Mathematik".equals(fachTafel.fachbezeichnung))
-			return !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.KL_1, fachTafel.fachbezeichnung, hj.kuerzel));
+		if ("Deutsch".equals(fach.fachbezeichnung) || "Mathematik".equals(fach.fachbezeichnung))
+			return !addFehler(tafel, BKGymBelegungsfehlerTyp.KL_1, fach.fachbezeichnung, hj.kuerzel);
 		if ((fachBelegung.abiturFach != null) && (fachBelegung.abiturFach <= 4))
-			return !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.KL_4, fachTafel.fachbezeichnung, hj.kuerzel));
-		if (manager.istFremdsprachenbelegung(fachBelegung))
-			return !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.KL_3, fachTafel.fachbezeichnung, hj.kuerzel));
-
+			return !addFehler(tafel, BKGymBelegungsfehlerTyp.KL_4, fach.fachbezeichnung, hj.kuerzel);
+		if (abidatenManager.istFremdsprachenbelegung(fachBelegung))
+			return !addFehler(tafel, BKGymBelegungsfehlerTyp.KL_3, fach.fachbezeichnung, hj.kuerzel);
 		return true;
 	}
 
@@ -549,86 +486,43 @@ public abstract class BKGymBelegpruefung {
 	 * In der Q2 müssen das erste bis dritte Abiturfach schriftlich belegt sein. Deutsch, Mathematik,
 	 * Nur in der Q21 auch die Fremdsprachen
 	 *
-	 * @param hj             das Oberstufenhalbjahr
-	 * @param tafel          die Stundentafel der Anlage
-	 * @param fachTafel      das zu prüfende Fach aus der Stundentafel
-	 * @param fachBelegung   die zugeordnete Fachbelegung
+	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel           die Stundentafel der Anlage
+	 * @param fachBelegung    die Fachbelegung zur Halbjahresbelegung
+	 * @param fach            das zu prüfende Fach aus der Stundentafel
+	 * @param hj              das Oberstufenhalbjahr
 	 *
 	 * @return true, wenn die Prüfung keinen Fehler entdeckt, sonst false
 	 */
-	private boolean pruefeSchriftlichQ2(final @NotNull GostHalbjahr hj, final BeruflichesGymnasiumStundentafel tafel, @NotNull final BeruflichesGymnasiumStundentafelFach fachTafel,
-			@NotNull final BKGymAbiturFachbelegung fachBelegung) {
-		final BKGymAbiturFachbelegungHalbjahr belegungHj = fachBelegung.belegungen[hj.id];
-
-		if ((belegungHj == null) || (belegungHj.schriftlich))
+	private boolean pruefeSchriftlichQ2(final @NotNull BKGymFachbelegungZuStundentafelfachManager fb2TafelManager, final @NotNull BeruflichesGymnasiumStundentafel tafel,
+			@NotNull final BeruflichesGymnasiumStundentafelFach fach, @NotNull final BKGymAbiturFachbelegung fachBelegung, final @NotNull GostHalbjahr hj) {
+		if (fb2TafelManager.getSchriftlichBelegt(hj, fach))
 			return true;
-
 		if ((fachBelegung.abiturFach != null) && (fachBelegung.abiturFach <= 3))
-			return !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.KL_4, fachTafel.fachbezeichnung, hj.kuerzel));
-		if ((GostHalbjahr.Q21 == hj) && manager.istFremdsprachenbelegung(fachBelegung))
-			return !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.KL_3, fachTafel.fachbezeichnung, hj.kuerzel));
-
+			return !addFehler(tafel, BKGymBelegungsfehlerTyp.KL_4, fach.fachbezeichnung, hj.kuerzel);
+		if ((GostHalbjahr.Q21 == hj) && abidatenManager.istFremdsprachenbelegung(fachBelegung))
+			return !addFehler(tafel, BKGymBelegungsfehlerTyp.KL_3, fach.fachbezeichnung, hj.kuerzel);
 		return true;
 	}
 
 
 	/**
-	 * Diese Methode prüft die LK-Belegung in der Stundentafel.
+	 * Hilfsmethode. Erstellt eine Kopie des Stundentafelfaches mit einer neuen Fachbezeichnung.
 	 *
-	 * @param tafel   die zu prüfende Stundentafel
-	 */
-	private void pruefeLKs(final @NotNull BeruflichesGymnasiumStundentafel tafel) {
-		// Bestimme die Leistungskursbelegungen. Diese müssen für die weitere Prüfung vorhanden sein.
-		final BKGymAbiturFachbelegung lk1 = manager.getAbiFachbelegung(GostAbiturFach.LK1);
-		if (lk1 == null)
-			addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.LK_1));
-		final BKGymAbiturFachbelegung lk2 = manager.getAbiFachbelegung(GostAbiturFach.LK2);
-		if (lk2 == null)
-			addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.LK_2));
-
-		if (lk1 != null && lk2 != null && !(manager.isValidKursartFachbelegung(tafel, lk1, GostAbiturFach.LK1)
-				&& manager.isValidKursartFachbelegung(tafel, lk2, GostAbiturFach.LK2)))
-			addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.LK_3, manager.getFachkuerzelFromFachbelegung(lk1),
-					manager.getFachkuerzelFromFachbelegung(lk2), manager.getGliederung().name(), manager.getFachklassenschluessel()));
-	}
-
-
-	/**
-	 * pruefe die Belegung des 3. und 4. Abiturfachs
+	 * @param fach              das zu kopierende Fach
+	 * @param fachbezeichnung   die neue Fachbezeichnung
 	 *
-	 * @param tafel
+	 * @return die Kopie des Faches mit der neuen Fachbezeichnung
 	 */
-	private void pruefeAbiGrundkurse(final @NotNull BeruflichesGymnasiumStundentafel tafel) {
-		// Prüfe, ob das dritte und vierte Abiturfach korrekt gewählt sind.
-		// Bestimme das dritte Abiturfach
-		final BKGymAbiturFachbelegung ab3 = manager.getAbiFachbelegung(GostAbiturFach.AB3);
-		if (ab3 == null)
-			addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.AB_3));
-
-		// Bestimme das vierte Abiturfach
-		final BKGymAbiturFachbelegung ab4 = manager.getAbiFachbelegung(GostAbiturFach.AB4);
-		if (ab4 == null)
-			addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.AB_4));
-
-		// Prüfe die Wahlmöglichkeiten bei den Varianten in Bezug auf AB3 und AB4, verlasse ggf. die Prüfung, wenn keine Wahlmöglichkeit für AB3 und AB4 gefunden wurde
-		if ((ab3 != null) && (ab4 != null) && !manager.pruefeAbiGrundkurswahl(tafel, ab3, ab4))
-			addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.AB_5, manager.getFachkuerzelFromFachbelegung(ab3),
-					manager.getFachkuerzelFromFachbelegung(ab4), manager.getGliederung().name(), manager.getFachklassenschluessel()));
+	private static @NotNull BeruflichesGymnasiumStundentafelFach copyStundentafelFach(final @NotNull BeruflichesGymnasiumStundentafelFach fach,
+			final @NotNull String fachbezeichnung) {
+		final @NotNull BeruflichesGymnasiumStundentafelFach copy = new BeruflichesGymnasiumStundentafelFach();
+		copy.fachbezeichnung = fachbezeichnung;
+		copy.sortierung = fach.sortierung;
+		copy.abifach = fach.abifach;
+		copy.kursart = fach.kursart;
+		copy.stundenumfang = fach.stundenumfang;
+		copy.zeugnisbereich = fach.zeugnisbereich;
+		return copy;
 	}
-
-
-	/**
-	 * Führt die für eine Anlage spezifische Belegprüfung durch.
-	 * Diese Methode ist von jeder Kindklasse, welche spezifische Prüfungen hat, zu überschreiben.
-	 *
-	 * @param tafel                die zu überprüfende Stundentafel
-	 * @param mapFaecherByIndex    die Map mit den Fächern der Stundentafel
-	 * @param mapBelegungByIndex   die Map mit den Fächern der Belegungen
-	 */
-	protected void spezifischePruefungen(@NotNull final BeruflichesGymnasiumStundentafel tafel,
-			@NotNull final Map<Integer, List<BeruflichesGymnasiumStundentafelFach>> mapFaecherByIndex,
-			@NotNull final Map<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>> mapBelegungByIndex) {
-		// nichts zu tun
-	}
-
 }

@@ -35,7 +35,12 @@ public final class DataStundenplanZeitraster extends DataManagerRevised<Long, DT
 		super(conn);
 		this.stundenplanID = stundenplanID;
 		setAttributesRequiredOnCreation("wochentag", "unterrichtstunde", "stundenbeginn", "stundenende");
-		setAttributesNotPatchable("id", "idStundenplan");
+		setAttributesNotPatchable("idStundenplan");
+	}
+
+	@Override
+	public Long getID(final Map<String, Object> attributes) throws ApiOperationException {
+		return JSONMapper.convertToLong(attributes.get("id"), false, "id");
 	}
 
 	/**
@@ -79,7 +84,11 @@ public final class DataStundenplanZeitraster extends DataManagerRevised<Long, DT
 	protected void mapAttribute(final DTOStundenplanZeitraster dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "id" -> dto.ID = JSONMapper.convertToLong(value, false);
+			case "id" -> {
+				final Long id = JSONMapper.convertToLong(value, false, name);
+				if ((id == null) || (id != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Patches stimmt nicht mit der ID des Objekts überein.");
+			}
 			case "wochentag" -> dto.Tag = JSONMapper.convertToIntegerInRange(value, false, 1, 8);
 			case "unterrichtstunde" -> dto.Stunde = JSONMapper.convertToIntegerInRange(value, false, 0, 30);
 			case "stundenbeginn" -> dto.Beginn = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);

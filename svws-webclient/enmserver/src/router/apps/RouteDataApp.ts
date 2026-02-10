@@ -5,12 +5,16 @@ import type { ENMLeistung } from "@core/core/data/enm/ENMLeistung";
 import type { ENMLeistungBemerkungen } from "@core/core/data/enm/ENMLeistungBemerkungen";
 import type { ENMLernabschnitt } from "@core/core/data/enm/ENMLernabschnitt";
 import type { ENMTeilleistung } from "@core/core/data/enm/ENMTeilleistung";
-import type { ENMKlasse } from "@core/index";
-import { DeveloperNotificationException, ENMDaten, Schulform } from "@core/index";
+import type { ENMKlasse } from "@core/core/data/enm/ENMKlasse";
+import { ENMDaten } from "@core/core/data/enm/ENMDaten";
+import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+import { Schulform } from "@core/asd/types/schule/Schulform";
 import { EnmManager } from "@ui/components/enm/EnmManager";
 import { type EnmLerngruppenAuswahlEintrag } from "@ui/components/enm/EnmManager";
 import { shallowRef } from "vue";
 import { Config, ConfigElement } from "@ui/utils/Config";
+import { EnmSperrManager } from "@ui/components/enm/EnmSperrManager";
+import { EnmSpaltenManager } from "@ui/components/enm/EnmSpaltenManager";
 
 
 /**
@@ -62,11 +66,64 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 			view: routeLeistungen,
 			daten: null,
 			manager: null,
+			managerSperrungen: null,
 			config: null,
 			nonPersistentConfig: null,
 		});
 	}
 
+	private async ladeLehrerENMDaten(): Promise<ENMDaten> {
+		const file = await api.server.getLehrerENMDaten();
+		const blob = await new Response(file.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
+		return ENMDaten.transpilerFromJSON(await blob.text());
+	}
+
+	private initAuswahl(manager: EnmManager) {
+		const lerngruppen = manager.mapLerngruppenAuswahl.values();
+		this._auswahlLerngruppe.value = lerngruppen.isEmpty() ? null : lerngruppen.iterator().next();
+		this._auswahlLerngruppen.value = [];
+		const klassen = manager.listKlassenKlassenlehrer;
+		this._auswahlKlasse.value = klassen.isEmpty() ? null : klassen.getFirst();
+		this._auswahlKlassen.value = [];
+	}
+
+	private async ladeConfig(): Promise<Config> {
+		// Laden der Konfiguration
+		const cfg = await api.server.getClientConfig();
+		const mapUser = new Map<string, string>();
+		for (const c of cfg.user) {
+			mapUser.set(c.key, c.value);
+		}
+		const mapGlobal = new Map<string, string>();
+		for (const c of cfg.global) {
+			mapGlobal.set(c.key, c.value);
+		}
+		// Persistente Config mit den geladenen Daten anlegen
+		const config = new Config(async (key: string, value: string): Promise<void> => {
+			// Schreiben der globalen Konfiguration
+			throw new DeveloperNotificationException("Die Anwendung unterstützt kein Schreiben der globalen Konfiguration.");
+		}, async (key: string, value: string): Promise<void> => {
+			// Schreiben der benutzerspezifischen Konfiguration
+			await api.server.setClientConfigUserKey(value, key);
+		});
+		config.mapGlobal = mapGlobal;
+		config.mapUser = mapUser;
+		config.addElements([
+			new ConfigElement("noteneingabe.gesperrt", "global", "[]"),
+			new ConfigElement("table.columns", "global", "[]"),
+			new ConfigElement("leistungen.table.columns", "user", "null"),
+			new ConfigElement("teilleistungen.table.columns", "user", "null"),
+			new ConfigElement("klassenleitung.table.columns", "user", "null"),
+		]);
+		return config;
+	}
+
+	private initNonPersistenConfig(): Config {
+		const config = new Config(async (_, __) => {}, async (_, __) => { });
+		config.mapGlobal = new Map<string, string>();
+		config.mapUser = new Map<string, string>();
+		return config;
+	}
 
 	/**
 	 * Lädt die ENM-Daten und erzeugt den zugehörigen ENM-Manager
@@ -74,79 +131,24 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	public async ladeDaten() {
 		try {
 			const newState = <Partial<RouteStateApp>>{};
-			// Lade auch die ENM-Daten vom Server...
-			const file = await api.server.getLehrerENMDaten();
-			const blob = await new Response(file.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
-			newState.daten = ENMDaten.transpilerFromJSON(await blob.text());
+
+			// Lade die ENM-Daten vom Server...
+			newState.daten = await this.ladeLehrerENMDaten();
+
+			// Erstellen des Enm-Managers
 			newState.manager = new EnmManager(newState.daten, newState.daten.lehrerID ?? -1);
 
-			const lerngruppen = newState.manager.mapLerngruppenAuswahl.values();
-			this._auswahlLerngruppe.value = lerngruppen.isEmpty() ? null : lerngruppen.iterator().next();
-			this._auswahlLerngruppen.value = [];
-			const klassen = newState.manager.listKlassenKlassenlehrer;
-			this._auswahlKlasse.value = klassen.isEmpty() ? null : klassen.getFirst();
-			this._auswahlKlassen.value = [];
+			// Laden der persistenten Konfiguration
+			newState.config = await this.ladeConfig();
+			newState.manager.sperrungen = new EnmSperrManager(newState.config.getValue("noteneingabe.gesperrt"));
+			newState.manager.spalten = new EnmSpaltenManager(newState.config.getValue("table.columns"));
 
-			// Laden der Konfiguration
-			const cfg = await api.server.getClientConfig();
-			const mapUser = new Map<string, string>();
-			for (const c of cfg.user)
-				mapUser.set(c.key, c.value);
-			const mapGlobal = new Map<string, string>();
-			for (const c of cfg.global)
-				mapGlobal.set(c.key, c.value);
-			// Persistente Config mit den geladenen Daten anlegen
-			newState.config = new Config(async (key: string, value: string): Promise<void> => {
-				// Schreiben der globalen Konfiguration
-				throw new DeveloperNotificationException("Die Anwendung unterstützt kein Schreiben der globalen Konfiguration.");
-			}, async (key: string, value: string): Promise<void> => {
-				// Schreiben der benutzerspezifischen Konfiguration
-				await api.server.setClientConfigUserKey(value, key);
-			});
-			newState.config.mapGlobal = mapGlobal;
-			newState.config.mapUser = mapUser;
-			newState.config.addElements([
-				new ConfigElement("floskelEditorVisible", "user", 'true'),
-				new ConfigElement("leistungen.table.columns", "user", JSON.stringify([
-					["Klasse", null],
-					["Name", null],
-					["Fach", null],
-					["Kurs", true],
-					["Kursart", true],
-					["Lehrer", true],
-					["Quartal", true],
-					["Note", null],
-					["Mahnung", true],
-					["FS", true],
-					["FSU", true],
-					["Bemerkung", true],
-				])),
-				new ConfigElement("teilleistungen.table.columns", "user", JSON.stringify([
-					["Klasse", null],
-					["Name", null],
-					["Fach", null],
-					["Kurs", true],
-					["Kursart", true],
-					["Lehrer", true],
-					["Teilleistung", null],
-					["Quartal", true],
-					["Note", null],
-				])),
-				new ConfigElement("klassenleitung.table.columns", "user", JSON.stringify([
-					["Klasse", null],
-					["Name", null],
-					["FS", null],
-					["FSU", null],
-					["ASV", true],
-					["AUE", true],
-					["ZB", true],
-				])),
-			]);
 			// Nicht-persistente Config leer anlegen
-			newState.nonPersistentConfig = new Config(async (_, __) => {}, async (_, __) => { });
-			newState.nonPersistentConfig.mapGlobal = new Map<string, string>();
-			newState.nonPersistentConfig.mapUser = new Map<string, string>();
+			newState.nonPersistentConfig = this.initNonPersistenConfig();
 			this.setPatchedDefaultState(newState);
+
+			// Initialisiere die Auswahlen
+			this.initAuswahl(newState.manager);
 		} catch (e) {
 			this.entferneDaten();
 			// TODO Fehler beim Laden der Daten sollte benutzerfreundlicher gehandhabt werden...
@@ -175,8 +177,9 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @returns die ENM-Daten
 	 */
 	get daten(): ENMDaten {
-		if (this._state.value.daten === null)
+		if (this._state.value.daten === null) {
 			throw new DeveloperNotificationException("Es wurden noch keine ENM-Daten geladen - Ein Zugriff auf diese Methode darf daher zu diesem Zeitpunkt nicht erfolgen");
+		}
 		return this._state.value.daten;
 	}
 
@@ -186,8 +189,9 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @returns der ENM-Manager
 	 */
 	get manager(): EnmManager {
-		if (this._state.value.manager === null)
+		if (this._state.value.manager === null) {
 			throw new DeveloperNotificationException("Es wurden noch keine ENM-Daten geladen - Ein Zugriff auf diese Methode darf daher zu diesem Zeitpunkt nicht erfolgen");
+		}
 		return this._state.value.manager;
 	}
 
@@ -197,8 +201,9 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @returns die persistente Konfiguration
 	 */
 	get config(): Config {
-		if (this._state.value.config === null)
+		if (this._state.value.config === null) {
 			throw new DeveloperNotificationException("Die persistente Konfiguration wurde noch nicht geladen - Ein Zugriff auf diese Methode darf daher zu diesem Zeitpunkt nicht erfolgen");
+		}
 		return this._state.value.config;
 	}
 
@@ -208,8 +213,9 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @returns die nicht persistente Konfiguration
 	 */
 	get nonPersistentConfig(): Config {
-		if (this._state.value.nonPersistentConfig === null)
+		if (this._state.value.nonPersistentConfig === null) {
 			throw new DeveloperNotificationException("Die nicht persistente Konfiguration wurde noch nicht erzeugt - Ein Zugriff auf diese Methode darf daher zu diesem Zeitpunkt nicht erfolgen");
+		}
 		return this._state.value.nonPersistentConfig;
 	}
 
@@ -219,11 +225,13 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @returns die Schulform
 	 */
 	public get schulform(): Schulform {
-		if (this.daten.schulform === null)
+		if (this.daten.schulform === null) {
 			throw new DeveloperNotificationException("In den ENM-Daten ist keine Schulform eingetragen.");
+		}
 		const schulform = Schulform.data().getWertByKuerzel(this.daten.schulform);
-		if (schulform === null)
+		if (schulform === null) {
 			throw new DeveloperNotificationException("In den ENM-Daten ist eine ungültige Schulform eingetragen.");
+		}
 		return schulform;
 	}
 
@@ -235,7 +243,11 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @return eine Map, welche vom Spalten-Kürzel auf einen boolean-Wert oder null abbildet
 	 */
 	get klassenleitungColumnsVisible(): Map<string, boolean | null> {
-		return new Map<string, boolean | null>(JSON.parse(this.config.getValue("klassenleitung.table.columns")));
+		const config = JSON.parse(this.config.getValue("klassenleitung.table.columns"));
+		if (config === null) {
+			return this.manager.spalten.mapSpaltenKlassenleitung;
+		}
+		return new Map<string, boolean | null>(config);
 	}
 
 	/**
@@ -255,7 +267,11 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @return eine Map, welche vom Spalten-Kürzel auf einen boolean-Wert oder null abbildet
 	 */
 	get leistungenColumnsVisible(): Map<string, boolean | null> {
-		return new Map<string, boolean | null>(JSON.parse(this.config.getValue("leistungen.table.columns")));
+		const config = JSON.parse(this.config.getValue("leistungen.table.columns"));
+		if (config === null) {
+			return this.manager.spalten.mapSpaltenLeistungen;
+		}
+		return new Map<string, boolean | null>(config);
 	}
 
 	/**
@@ -275,7 +291,11 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @return eine Map, welche vom Spalten-Kürzel auf einen boolean-Wert oder null abbildet
 	 */
 	get teilleistungenColumnsVisible(): Map<string, boolean | null> {
-		return new Map<string, boolean | null>(JSON.parse(this.config.getValue("teilleistungen.table.columns")));
+		const config = JSON.parse(this.config.getValue("teilleistungen.table.columns"));
+		if (config === null) {
+			return this.manager.spalten.mapSpaltenTeilleistungen;
+		}
+		return new Map<string, boolean | null>(config);
 	}
 
 	/**
@@ -285,27 +305,6 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 */
 	setTeilleistungenColumnsVisible = async (value: Map<string, boolean | null>) => {
 		await this.config.setValue('teilleistungen.table.columns', JSON.stringify([...value]));
-		this.commit();
-	};
-
-	/**
-	 * Gibt die Information aus der benutzerspezifischen Konfiguration zurück, ob
-	 * der Floskel-Editor angezeigt werden soll oder nicht.
-	 *
-	 * @returns true, wenn der Floskel-Editor angezeigt werden soll, und ansonsten false
-	 */
-	get floskelEditorVisible(): boolean {
-		return (this.config.getValue("floskelEditorVisible") === 'true');
-	}
-
-	/**
-	 * Setzt die Information in der benutzerspezifischen Konfiguration, ob der Floskel-Editor
-	 * angezeigt werden soll oder nicht.
-	 *
-	 * @param value   true, wenn der Floskel-Editor angezeigt werden soll, und ansonsten false
-	 */
-	setFloskelEditorVisible = async (value: boolean) => {
-		await this.config.setValue('floskelEditorVisible', value ? 'true' : 'false');
 		this.commit();
 	};
 
@@ -325,8 +324,9 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @returns die Lerngruppen-Auswahl
 	 */
 	get auswahlLerngruppen(): Array<EnmLerngruppenAuswahlEintrag> {
-		if (this._auswahlLerngruppe.value === null)
+		if (this._auswahlLerngruppe.value === null) {
 			return this._auswahlLerngruppen.value;
+		}
 		return [this._auswahlLerngruppe.value];
 	}
 
@@ -373,8 +373,9 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @returns die Klassen-Auswahl
 	 */
 	get auswahlKlassen(): Array<ENMKlasse> {
-		if (this._auswahlKlasse.value === null)
+		if (this._auswahlKlasse.value === null) {
 			return this._auswahlKlassen.value;
+		}
 		return [this._auswahlKlasse.value];
 	}
 

@@ -20,7 +20,8 @@ public final class Revision52Updates extends SchemaRevisionUpdateSQL {
 				INSERT INTO Katalog_Floskeln_Gruppen(ID, Kuerzel, Hauptgruppe_ID, Bezeichnung, Farbe)
 				SELECT ROW_NUMBER() OVER() AS ID, Kuerzel,
 				CASE Hauptgruppe WHEN 'ASV' THEN 1 WHEN 'AUE' THEN 2 WHEN 'FACH' THEN 3 WHEN 'FSP' THEN 4 WHEN 'FOERD' THEN 5
-				    WHEN 'FÖRD' THEN 5 WHEN 'VERM' THEN 6 WHEN 'VERS' THEN 7 WHEN 'ZB' THEN 8 ELSE 0 END AS Hauptgruppe_ID,
+				    WHEN 'FÖRD' THEN 5 WHEN 'VERM' THEN 6 WHEN 'VERS' THEN 7 WHEN 'ZB' THEN 8
+				    WHEN 'LELS' THEN 9 WHEN 'ÜG45' THEN 10 ELSE 0 END AS Hauptgruppe_ID,
 				Bezeichnung, Farbe FROM Floskelgruppen
 				""",
 				Schema.tab_Floskelgruppen, Schema.tab_Katalog_Floskeln_Gruppen);

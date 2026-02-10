@@ -15,7 +15,7 @@
 					<p v-for="log in error.log.log" :key="log || ''" v-text="log" />
 				</template>
 				<template #stack v-if="error.stack !== ''">
-					<pre v-html="error.stack" />
+					<pre>{{ Array.isArray(error.stack) ? error.stack.join('\n') : error.stack }}</pre>
 				</template>
 			</svws-ui-notification>
 		</template>
@@ -50,10 +50,12 @@
 	function errorHandler(event: ErrorEvent | PromiseRejectionEvent) {
 		event.preventDefault();
 		api.status.stop();
-		if (event instanceof ErrorEvent)
+		if (event instanceof ErrorEvent) {
 			void createCapturedError(event.error);
-		if (event instanceof PromiseRejectionEvent)
+		}
+		if (event instanceof PromiseRejectionEvent) {
 			void createCapturedError(event.reason);
+		}
 	}
 
 	// Dieser Listener gilt nur für Promises
@@ -64,10 +66,11 @@
 
 	onErrorCaptured((reason) => {
 		api.status.stop();
-		if (reason.name === 'resetAllErrors')
+		if (reason.name === 'resetAllErrors') {
 			errors.value.clear();
-		else
+		} else {
 			void createCapturedError(reason);
+		}
 		return false;
 	});
 
@@ -77,23 +80,25 @@
 		let name = `Fehler ${reason.name !== 'Error' ? ': ' + reason.name : ''}`;
 		let message = reason.message;
 		let log = null;
-		if (reason instanceof DeveloperNotificationException)
+		if (reason instanceof DeveloperNotificationException) {
 			name = "Programmierfehler: Bitte melden Sie diesen Fehler.";
-		else if (reason instanceof UserNotificationException)
+		} else if (reason instanceof UserNotificationException) {
 			name = "Nutzungsfehler: Dieser Fehler wurde durch eine nicht vorgesehene Nutzung der verwendeten Funktion hervorgerufen, z.B. durch unmögliche Kombinationen etc.";
-		else if (reason instanceof OpenApiError) {
+		} else if (reason instanceof OpenApiError) {
 			name = "API-Fehler: Dieser Fehler wird durch eine fehlerhafte Kommunikation mit dem Server verursacht. In der Regel bedeutet das, dass die verschickten Daten nicht den Vorgaben entsprechen.";
 			if (reason.response instanceof Response) {
 				const text = await reason.response.text();
 				try {
 					const res = JSON.parse(text);
-					if (('log' in res) && ('success' in res))
+					if (('log' in res) && ('success' in res)) {
 						log = res satisfies SimpleOperationResponse;
+					}
 				} catch {
-					if (text.length > 0)
+					if (text.length > 0) {
 						message = text;
-					else
+					} else {
 						message += ` - Status: ${reason.response.status}`;
+					}
 				}
 			}
 		}

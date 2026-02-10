@@ -61,7 +61,7 @@ export class SchuelerLernplattform extends JavaObject {
 		return ['de.svws_nrw.core.data.schueler.SchuelerLernplattform'].includes(name);
 	}
 
-	public static class = new Class<SchuelerLernplattform>('de.svws_nrw.core.data.schueler.SchuelerLernplattform');
+	public static readonly class = new Class<SchuelerLernplattform>('de.svws_nrw.core.data.schueler.SchuelerLernplattform');
 
 	public static transpilerFromJSON(json: string): SchuelerLernplattform {
 		const obj = JSON.parse(json) as Partial<SchuelerLernplattform>;

@@ -73,7 +73,7 @@ export class GostLeistungen extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostLeistungen'].includes(name);
 	}
 
-	public static class = new Class<GostLeistungen>('de.svws_nrw.core.data.gost.GostLeistungen');
+	public static readonly class = new Class<GostLeistungen>('de.svws_nrw.core.data.gost.GostLeistungen');
 
 	public static transpilerFromJSON(json: string): GostLeistungen {
 		const obj = JSON.parse(json) as Partial<GostLeistungen>;

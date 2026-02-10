@@ -94,8 +94,9 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		// abgerufen wurde und somit die Bedingung, welche Route als Default für Gruppenprozesse genutzt werden soll, nicht geprüft werden kann
 		// Diese Stelle eignet sich als Alternative, da sie noch vor dem ersten Betreten der Route aber bereits nach dem Abruf der ServerModes liegt
 		// TODO: Ausbauen sobald die Route routeSchuelerIndividualdatenGruppenprozesse im "Stable" Mode bereitsteht
-		if (api.mode !== ServerMode.DEV)
+		if (api.mode !== ServerMode.DEV) {
 			this._defaultState = { ...defaultState, gruppenprozesseView: routeLehrerAllgemeinesGruppenprozesse };
+		}
 
 		return { manager };
 	}
@@ -105,16 +106,18 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	}
 
 	protected async updateManager(manager: LehrerListeManager, managerAlt: LehrerListeManager, daten: LehrerStammdaten) {
-		if (managerAlt.hasPersonalDaten())
+		if (managerAlt.hasPersonalDaten()) {
 			manager.setPersonalDaten(await api.server.getLehrerPersonaldaten(api.schema, daten.id));
+		}
 		await this.updateMapStundenplaene();
 	}
 
 	public async updateMapStundenplaene() {
 		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, this.idSchuljahresabschnitt);
 		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
-		for (const l of listStundenplaene)
+		for (const l of listStundenplaene) {
 			mapStundenplaene.set(l.id, l);
+		}
 		this.setPatchedState({ mapStundenplaene });
 	}
 
@@ -142,22 +145,27 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	}
 
 	public async ladeDatenMultiple(auswahlList: List<LehrerListeEintrag>, state: Partial<RouteStateLehrer>): Promise<List<LehrerStammdaten> | null> {
-		if (auswahlList.isEmpty())
+		if (auswahlList.isEmpty()) {
 			return null;
+		}
 		const ids: List<number> = new ArrayList();
-		for (const eintrag of auswahlList)
+		for (const eintrag of auswahlList) {
 			ids.add(eintrag.id);
+		}
 		return await api.server.getLehrerStammdatenMultiple(ids, api.schema);
 	}
 
 	public async loadPersonaldaten() {
-		if (!this.manager.hasDaten())
+		if (!this.manager.hasDaten()) {
 			return;
+		}
 		const listSchulen = await api.server.getSchulenMitKuerzel(api.schema);
 		const mapSchulen = new Map<string, SchulEintrag>();
-		for (const s of listSchulen)
-			if (s.schulnummerStatistik !== null)
+		for (const s of listSchulen) {
+			if (s.schulnummerStatistik !== null) {
 				mapSchulen.set(s.schulnummerStatistik, s);
+			}
+		}
 		const personaldaten = await api.server.getLehrerPersonaldaten(api.schema, this.manager.auswahl().id);
 		this.manager.setPersonalDaten(personaldaten);
 		this.setPatchedState({ mapSchulen });
@@ -173,8 +181,9 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	}
 
 	patchPersonaldaten = async (data: Partial<LehrerPersonaldaten>) => {
-		if (!this.manager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten()) {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		}
 		const personaldaten = this.manager.personalDaten();
 		await api.server.patchLehrerPersonaldaten(data, api.schema, personaldaten.id);
 		Object.assign(personaldaten, data);
@@ -183,11 +192,13 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	};
 
 	patchPersonalAbschnittsdaten = async (data: Partial<LehrerPersonalabschnittsdaten>, id: number) => {
-		if (!this.manager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten()) {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		}
 		const abschnittsdaten = this.manager.getAbschnittById(id);
-		if (abschnittsdaten === null)
+		if (abschnittsdaten === null) {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten mit der ID " + id.toString() + " geladen.");
+		}
 		await api.server.patchLehrerPersonalabschnittsdaten(data, api.schema, abschnittsdaten.id);
 		Object.assign(abschnittsdaten, data);
 		this.commit();
@@ -244,88 +255,108 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	};
 
 	addLehramt = async (eintrag: Partial<LehrerLehramtEintrag>) => {
-		if (!this.manager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten()) {
 			throw new DeveloperNotificationException("Lehrämter können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
+		}
 		const result = await api.server.addLehrerLehramt(eintrag, api.schema);
 		this.manager.personalDaten().lehraemter.add(result);
 		this.commit();
 	};
 
 	removeLehraemter = async (eintraege: List<LehrerLehramtEintrag>) => {
-		if (!this.manager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten()) {
 			throw new DeveloperNotificationException("Lehrämter können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
+		}
 		// TODO ggf. zu einem API-Aufruf zusammenfassen - Server-API muss dafür noch erweitert werden
-		for (const eintrag of eintraege)
+		for (const eintrag of eintraege) {
 			await api.server.deleteLehrerLehramt(api.schema, eintrag.id);
+		}
 		this.manager.personalDaten().lehraemter.removeAll(eintraege);
 		this.commit();
 	};
 
 	patchLehramt = async (eintrag: LehrerLehramtEintrag, patch: Partial<LehrerLehramtEintrag>) => {
-		if (!this.manager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten()) {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		}
 		await api.server.patchLehrerLehramt(patch, api.schema, eintrag.id);
 		Object.assign(eintrag, patch);
 		this.commit();
 	};
 
 	addLehrbefaehigung = async (eintrag: Partial<LehrerLehrbefaehigungEintrag>) => {
-		if (!this.manager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten()) {
 			throw new DeveloperNotificationException("Lehrbefähigungen können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
-		if (eintrag.idLehramt === undefined)
+		}
+		if (eintrag.idLehramt === undefined) {
 			throw new DeveloperNotificationException("Lehrbefähigungen können nur mit einer Lehramts-ID hinzugefügt werden.");
+		}
 		const result = await api.server.addLehrerLehrbefaehigung(eintrag, api.schema);
-		for (const lehramt of this.manager.personalDaten().lehraemter)
-			if (lehramt.id === eintrag.idLehramt)
+		for (const lehramt of this.manager.personalDaten().lehraemter) {
+			if (lehramt.id === eintrag.idLehramt) {
 				lehramt.lehrbefaehigungen.add(result);
+			}
+		}
 		this.commit();
 	};
 
 	removeLehrbefaehigungen = async (eintraege: List<LehrerLehrbefaehigungEintrag>) => {
-		if (!this.manager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten()) {
 			throw new DeveloperNotificationException("Lehrbefähigungen können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
+		}
 		// TODO ggf. zu einem API-Aufruf zusammenfassen - Server-API muss dafür noch erweitert werden
-		for (const eintrag of eintraege)
+		for (const eintrag of eintraege) {
 			await api.server.deleteLehrerLehrbefaehigung(api.schema, eintrag.id);
-		for (const lehramt of this.manager.personalDaten().lehraemter)
+		}
+		for (const lehramt of this.manager.personalDaten().lehraemter) {
 			lehramt.lehrbefaehigungen.removeAll(eintraege);
+		}
 		this.commit();
 	};
 
 	patchLehrbefaehigung = async (eintrag: LehrerLehrbefaehigungEintrag, patch: Partial<LehrerLehrbefaehigungEintrag>) => {
-		if (!this.manager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten()) {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		}
 		await api.server.patchLehrerLehrbefaehigung(patch, api.schema, eintrag.id);
 		Object.assign(eintrag, patch);
 		this.commit();
 	};
 
 	addFachrichtung = async (eintrag: Partial<LehrerFachrichtungEintrag>) => {
-		if (!this.manager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten()) {
 			throw new DeveloperNotificationException("Fachrichtungen können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
-		if (eintrag.idLehramt === undefined)
+		}
+		if (eintrag.idLehramt === undefined) {
 			throw new DeveloperNotificationException("Fachrichtungen können nur mit einer Lehramts-ID hinzugefügt werden.");
+		}
 		const result = await api.server.addLehrerFachrichtung(eintrag, api.schema);
-		for (const lehramt of this.manager.personalDaten().lehraemter)
-			if (lehramt.id === eintrag.idLehramt)
+		for (const lehramt of this.manager.personalDaten().lehraemter) {
+			if (lehramt.id === eintrag.idLehramt) {
 				lehramt.fachrichtungen.add(result);
+			}
+		}
 		this.commit();
 	};
 
 	removeFachrichtungen = async (eintraege: List<LehrerFachrichtungEintrag>) => {
-		if (!this.manager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten()) {
 			throw new DeveloperNotificationException("Fachrichtungen können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
+		}
 		// TODO ggf. zu einem API-Aufruf zusammenfassen - Server-API muss dafür noch erweitert werden
-		for (const eintrag of eintraege)
+		for (const eintrag of eintraege) {
 			await api.server.deleteLehrerFachrichtung(api.schema, eintrag.id);
-		for (const lehramt of this.manager.personalDaten().lehraemter)
+		}
+		for (const lehramt of this.manager.personalDaten().lehraemter) {
 			lehramt.fachrichtungen.removeAll(eintraege);
+		}
 		this.commit();
 	};
 
 	patchFachrichtung = async (eintrag: LehrerFachrichtungEintrag, patch: Partial<LehrerFachrichtungEintrag>) => {
-		if (!this.manager.hasPersonalDaten())
+		if (!this.manager.hasPersonalDaten()) {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		}
 		await api.server.patchLehrerFachrichtung(patch, api.schema, eintrag.id);
 		Object.assign(eintrag, patch);
 		this.commit();
@@ -338,9 +369,11 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 
 	protected filterOnDelete(ids: List<number>): List<number> {
 		const list = new ArrayList<number>();
-		for (const id of ids)
-			if (!this.manager.getIdsReferenzierterLehrer().contains(id))
+		for (const id of ids) {
+			if (!this.manager.getIdsReferenzierterLehrer().contains(id)) {
 				list.add(id);
+			}
+		}
 		return list;
 	}
 
@@ -348,18 +381,21 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		return `Lehrer ${(lehrer?.vorname ?? '???') + ' ' + (lehrer?.nachname ?? '???')} (ID: ${id.toString()}) wurde erfolgreich gelöscht.`;
 	}
 
-	deleteLehrerCheck = (): { success: boolean, logs: List<string> } => {
+	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
-		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_LOESCHEN))
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Lehrern vor.');
+		}
 
-		if (!this.manager.liste.auswahlExists())
+		if (!this.manager.liste.auswahlExists()) {
 			errorLog.add('Es wurde kein Lehrer zum Löschen ausgewählt.');
+		}
 
 		for (const id of this.manager.getIdsReferenzierterLehrer()) {
 			const lehrer = this.manager.liste.get(id);
-			if (lehrer)
+			if (lehrer) {
 				errorLog.add(`Die Lehrkraft ${lehrer.vorname} ${lehrer.nachname} ist an anderer Stelle referenziert und kann daher nicht gelöscht werden.`);
+			}
 		}
 
 		return { success: errorLog.isEmpty(), logs: errorLog };
@@ -371,13 +407,14 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		await this.gotoDefaultView(lehrerStammdaten.id);
 	};
 
-	getPDF = api.call(async (reportingParameter: ReportingParameter, idStundenplan: number): Promise<ApiFile> => {
-		if (!this.manager.liste.auswahlExists())
+	getPDF = api.call(async (reportingParameter: ReportingParameter): Promise<ApiFile> => {
+		if (!this.manager.liste.auswahlExists()) {
 			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens ein Lehrer ausgewählt ist.");
+		}
 		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-		reportingParameter.idsHauptdaten.add(idStundenplan);
-		for (const l of this.manager.liste.auswahl())
+		for (const l of this.manager.liste.auswahl()) {
 			reportingParameter.idsDetaildaten.add(l.id);
+		}
 		return await api.server.pdfReport(reportingParameter, api.schema);
 	});
 

@@ -54,7 +54,7 @@ export class ENMServerConfigSMTP extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMServerConfigSMTP'].includes(name);
 	}
 
-	public static class = new Class<ENMServerConfigSMTP>('de.svws_nrw.core.data.enm.ENMServerConfigSMTP');
+	public static readonly class = new Class<ENMServerConfigSMTP>('de.svws_nrw.core.data.enm.ENMServerConfigSMTP');
 
 	public static transpilerFromJSON(json: string): ENMServerConfigSMTP {
 		const obj = JSON.parse(json) as Partial<ENMServerConfigSMTP>;

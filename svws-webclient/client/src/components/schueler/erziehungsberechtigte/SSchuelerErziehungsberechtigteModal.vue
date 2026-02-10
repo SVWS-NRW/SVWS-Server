@@ -9,7 +9,7 @@
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Anrede" v-model="ersterErz.anrede" type="text" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" />
 				<svws-ui-text-input placeholder="Titel" v-model="ersterErz.titel" type="text" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" />
-				<svws-ui-text-input placeholder="Vorname" v-model="ersterErz.vorname" type="text" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" required />
+				<svws-ui-text-input placeholder="Rufname" v-model="ersterErz.vorname" type="text" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" required />
 				<svws-ui-text-input placeholder="Nachname" v-model="ersterErz.nachname" type="text" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" required />
 				<svws-ui-text-input placeholder="E-Mail Adresse" v-model="ersterErz.eMail" type="email" :readonly="(!hatKompetenzUpdate) || (istErsterErzGespeichert)" verify-email />
 				<ui-select label="Staatsangehörigkeit" v-model="ersteErzStaatsangehoerigkeit" :manager="staatsangehoerigkeitManager" searchable />
@@ -36,7 +36,7 @@
 				<svws-ui-input-wrapper :grid="2" class="text-left">
 					<svws-ui-text-input placeholder="Anrede" v-model="zweiterErz.anrede" type="text" :readonly="!hatKompetenzUpdate" />
 					<svws-ui-text-input placeholder="Titel" v-model="zweiterErz.titel" type="text" :readonly="!hatKompetenzUpdate" />
-					<svws-ui-text-input placeholder="Vorname" v-model="zweiterErz.vorname" type="text" required :readonly="!hatKompetenzUpdate" />
+					<svws-ui-text-input placeholder="Rufname" v-model="zweiterErz.vorname" type="text" required :readonly="!hatKompetenzUpdate" />
 					<svws-ui-text-input placeholder="Nachname" v-model="zweiterErz.nachname" type="text" required :readonly="!hatKompetenzUpdate" />
 					<svws-ui-text-input placeholder="E-Mail Adresse" v-model="zweiterErz.eMail" type="email" verify-email :readonly="!hatKompetenzUpdate" />
 					<ui-select label="Staatsangehörigkeit" v-model="zweiteErzStaatsangehoerigkeit" :manager="staatsangehoerigkeitManager" searchable />
@@ -102,7 +102,7 @@
 
 	const erzieherarten = computed(() => props.mapErzieherarten.values());
 
-	const erzieherartenManager = new SelectManager({ options: erzieherarten.value, sort: erzieherArtSort, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
+	const erzieherartenManager = new SelectManager({ options: erzieherarten, sort: erzieherArtSort, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
 
 	const selectedErzieherart = computed<Erzieherart | null>({
 		get: () => props.mapErzieherarten.get(props.ersterErz.idErzieherArt ?? -1) ?? null,
@@ -143,7 +143,7 @@
 
 	const orte = computed(() => props.mapOrte.values());
 
-	const wohnortManager = new SelectManager({ options: orte.value, sort: orte_sort, optionDisplayText: i => `${i.plz} ${i.ortsname}`, selectionDisplayText: i => `${i.plz} ${i.ortsname}` });
+	const wohnortManager = new SelectManager({ options: orte, sort: orte_sort, optionDisplayText: i => `${i.plz} ${i.ortsname}`, selectionDisplayText: i => `${i.plz} ${i.ortsname}` });
 
 	const wohnort = computed<OrtKatalogEintrag | undefined>({
 		get: () => ((props.ersterErz.wohnortID === null)) ? undefined : props.mapOrte.get(props.ersterErz.wohnortID),
@@ -154,8 +154,9 @@
 
 	const erzOrtsteileFiltered = computed(() => {
 		const wohnortID = props.ersterErz.wohnortID;
-		if (wohnortID === null)
+		if (wohnortID === null) {
 			return ortsteile.value;
+		}
 		return ortsteile.value.filter(o => o.ort_id === wohnortID);
 	});
 
@@ -194,8 +195,9 @@
 	}
 
 	function stringIsValid(input: string | null, mandatory: boolean, maxLength: number) {
-		if (mandatory)
+		if (mandatory) {
 			return (input !== null) && (!JavaString.isBlank(input)) && (input.length <= maxLength);
+		}
 		return (input === null) || (input.length <= maxLength);
 	}
 

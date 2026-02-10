@@ -20,7 +20,7 @@ export class StundenplanblockungAlgorithmus extends Service {
 		return ['de.svws_nrw.core.stundenplanblockung.StundenplanblockungAlgorithmus', 'de.svws_nrw.core.Service'].includes(name);
 	}
 
-	public static class = new Class<StundenplanblockungAlgorithmus>('de.svws_nrw.core.stundenplanblockung.StundenplanblockungAlgorithmus');
+	public static readonly class = new Class<StundenplanblockungAlgorithmus>('de.svws_nrw.core.stundenplanblockung.StundenplanblockungAlgorithmus');
 
 }
 

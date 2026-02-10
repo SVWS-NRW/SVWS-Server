@@ -28,8 +28,7 @@
 
 <script lang="ts" setup>
 
-	import { onMounted } from 'vue';
-	import { computed, ref } from 'vue';
+	import { onMounted, computed, ref } from 'vue';
 
 	const props = withDefaults(defineProps<{
 		modelValue: boolean;
@@ -62,19 +61,21 @@
 	onMounted(() => doFocus());
 
 	function doFocus() {
-		if (props.autofocus)
+		if (props.autofocus) {
 			input.value?.focus();
+		}
 	}
 
 	const emit = defineEmits<{
-		(e: 'update:modelValue', event: boolean): void;
+		'update:modelValue': [value: boolean];
 	}>();
 
 	const checked = computed<boolean>({
 		get: () => props.modelValue,
 		set: (value) =>	{
-			if (props.readonly === false)
+			if (props.readonly === false) {
 				emit("update:modelValue", value);
+			}
 		},
 	});
 

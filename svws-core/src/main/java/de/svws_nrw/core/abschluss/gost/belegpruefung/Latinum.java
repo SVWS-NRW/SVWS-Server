@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class Latinum extends GostBelegpruefung {
 
-	/// Die Belegung für das Fach Latein
+	/** Die Belegung für das Fach Latein. */
 	private AbiturFachbelegung latein;
 
 	/**

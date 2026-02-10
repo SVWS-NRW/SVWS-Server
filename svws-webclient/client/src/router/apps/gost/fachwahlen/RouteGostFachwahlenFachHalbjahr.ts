@@ -41,8 +41,9 @@ export class RouteGostFachwahlenFachHalbjahr extends RouteNode<any, RouteGost> {
 	public checkHidden(params?: RouteParams) {
 		try {
 			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: null };
-			if ((abiturjahr === null) || (abiturjahr === -1))
+			if ((abiturjahr === null) || (abiturjahr === -1)) {
 				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr } };
+			}
 			return false;
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
@@ -54,8 +55,9 @@ export class RouteGostFachwahlenFachHalbjahr extends RouteNode<any, RouteGost> {
 			const { idFach, idHalbjahr } = RouteNode.getIntParams(to_params, ["idFach", "idHalbjahr"]);
 			this._idFach.value = idFach ?? -1;
 			const halbjahr = GostHalbjahr.fromID(idHalbjahr ?? null);
-			if (halbjahr === null)
+			if (halbjahr === null) {
 				throw new DeveloperNotificationException("Fehler: Das Halbjahr " + idHalbjahr + " ist ungültig");
+			}
 			this._halbjahr.value = halbjahr;
 			routeGostFachwahlen.data.auswahl = { idFach: this._idFach.value, bereich: halbjahr.kuerzel };
 		} catch (e) {

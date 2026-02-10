@@ -40,21 +40,24 @@ export class Story {
 	}
 
 	get variant() {
-		if (this._variant === undefined)
+		if (this._variant === undefined) {
 			return new Variant();
+		}
 		return this._variant;
 	}
 	setVariantById(id: string) {
 		const variant = this.mapVariants.get(id);
-		if (variant !== undefined)
-			this._variant = variant;
-		else
+		if (variant === undefined) {
 			this._variant = new Variant();
+		} else {
+			this._variant = variant;
+		}
 	}
 
 	registerVariant(variant: Variant) {
-		if (!this.mapVariants.has(variant.id))
+		if (!this.mapVariants.has(variant.id)) {
 			this.mapVariants.set(variant.id, variant);
+		}
 	}
 
 	get color() {
@@ -99,8 +102,9 @@ export class StoryManager extends StateManager<Stories> {
 	}
 
 	setStoryByID(id: string) {
-		if (!this.mapStories.has(id))
+		if (!this.mapStories.has(id)) {
 			this.mapStories.set(id, new Story(id));
+		}
 		const story = this.mapStories.get(id);
 		this.setPatchedState({ story });
 	}
@@ -118,8 +122,9 @@ export class StoryManager extends StateManager<Stories> {
 		const story = this.story;
 		story.registerVariant(new Variant(props, slots));
 		this.setPatchedState({ story });
-		if (story.mapVariants.size === 1)
+		if (story.mapVariants.size === 1) {
 			void nextTick(() => this.setVariantById(props.id));
+		}
 	}
 
 	get color() {

@@ -62,7 +62,7 @@ export class OAuth2ClientConnection extends JavaObject {
 		return ['de.svws_nrw.core.data.oauth2.OAuth2ClientConnection'].includes(name);
 	}
 
-	public static class = new Class<OAuth2ClientConnection>('de.svws_nrw.core.data.oauth2.OAuth2ClientConnection');
+	public static readonly class = new Class<OAuth2ClientConnection>('de.svws_nrw.core.data.oauth2.OAuth2ClientConnection');
 
 	public static transpilerFromJSON(json: string): OAuth2ClientConnection {
 		const obj = JSON.parse(json) as Partial<OAuth2ClientConnection>;

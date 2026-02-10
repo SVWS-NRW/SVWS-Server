@@ -89,7 +89,7 @@ export class BKGymLeistungenFachHalbjahr extends JavaObject {
 		return ['de.svws_nrw.core.data.bk.abi.BKGymLeistungenFachHalbjahr'].includes(name);
 	}
 
-	public static class = new Class<BKGymLeistungenFachHalbjahr>('de.svws_nrw.core.data.bk.abi.BKGymLeistungenFachHalbjahr');
+	public static readonly class = new Class<BKGymLeistungenFachHalbjahr>('de.svws_nrw.core.data.bk.abi.BKGymLeistungenFachHalbjahr');
 
 	public static transpilerFromJSON(json: string): BKGymLeistungenFachHalbjahr {
 		const obj = JSON.parse(json) as Partial<BKGymLeistungenFachHalbjahr>;

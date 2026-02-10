@@ -13,9 +13,9 @@ import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
-import de.svws_nrw.core.abschluss.bk.d.BKGymAbiturFachbelegung;
-import de.svws_nrw.core.abschluss.bk.d.BKGymAbiturFachbelegungHalbjahr;
-import de.svws_nrw.core.abschluss.bk.d.BKGymAbiturdaten;
+import de.svws_nrw.core.data.bk.abi.BKGymAbiturFachbelegung;
+import de.svws_nrw.core.data.bk.abi.BKGymAbiturFachbelegungHalbjahr;
+import de.svws_nrw.core.data.bk.abi.BKGymAbiturdaten;
 import de.svws_nrw.core.data.bk.abi.BKGymFach;
 import de.svws_nrw.core.data.bk.abi.BKGymLeistungen;
 import de.svws_nrw.core.data.bk.abi.BKGymLeistungenFach;
@@ -32,6 +32,7 @@ import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.dto.current.schild.schueler.abitur.DTOSchuelerAbitur;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
@@ -309,6 +310,12 @@ public final class DataBKGymLeistungen {
 		if (aktLernabschnitt == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Konnte keinen aktuellen Lernabschnitt für den Schüler mit der ID %d ermitteln.".formatted(id));
 
+		// Lese die Abiturdaten anhand der ID aus der Datenbank
+		final DTOSchuelerAbitur dtoSchuelerAbitur = getDatabaseDTOByID(conn, schuljahresabschnitt, id);
+		if (dtoSchuelerAbitur == null)
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Es wurden keine Abiturdaten für den Schüler mit der ID %d in der Datenbank gefunden.".formatted(id));
+
 		// Bestimme die Jahrgänge der Schule
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 		// Bestimme das Abiturjahr
@@ -349,6 +356,12 @@ public final class DataBKGymLeistungen {
 		abidaten.fachklassenschluessel = fachklasse.FKS_AP_SIM;
 		abidaten.sprachendaten = leistungen.sprachendaten;
 		abidaten.bilingualeSprache = leistungen.bilingualeSprache;
+		abidaten.besondereLernleistung = dtoSchuelerAbitur.BesondereLernleistungArt.kuerzel;
+		abidaten.besondereLernleistungNotenpunkte = dtoSchuelerAbitur.BesondereLernleistungNotenpunkte;
+		abidaten.besondereLernleistungThema = dtoSchuelerAbitur.BesondereLernleistungThema;
+		abidaten.facharbeitFachbezeichnung = dtoSchuelerAbitur.FacharbeitFach;
+		abidaten.facharbeitNotenpunkte = dtoSchuelerAbitur.FacharbeitNotenpunkte;
+		abidaten.facharbeitThema = dtoSchuelerAbitur.ProjektkursThema; //ja, da steht das drin.
 
 		for (final GostHalbjahr hj : GostHalbjahr.values())
 			abidaten.bewertetesHalbjahr[hj.id] = leistungen.bewertetesHalbjahr[hj.id];
@@ -412,6 +425,50 @@ public final class DataBKGymLeistungen {
 
 		// und gib die Abiturdaten zurück...
 		return abidaten;
+	}
+
+
+	/**
+	 * Liefert das DTO SchuelerAbitur für eine gegebene SchülerID
+	 *
+	 * @param conn                   die Datenbank-Verbindung
+	 * @param schuljahresabschnitt   die ID des Schuljahresabschnitts
+	 * @param schueler_id            die ID des Schülers
+	 *
+	 * @return die für das Abitur relevanten Daten für den Schüler mit der angegebenen ID
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static DTOSchuelerAbitur getDatabaseDTOByID(final DBEntityManager conn, final Schuljahresabschnitt schuljahresabschnitt,
+			final Long schueler_id) throws ApiOperationException {
+		// Lese die Abiturdaten anhand der ID aus der Datenbank
+		final List<DTOSchuelerAbitur> dtosSchuelerAbitur = conn.queryList(DTOSchuelerAbitur.QUERY_BY_SCHUELER_ID,
+				DTOSchuelerAbitur.class, schueler_id);
+		if ((dtosSchuelerAbitur == null) || (dtosSchuelerAbitur.isEmpty()))
+			return null;
+		// Abiturjahr wurde nicht angegeben - ggf. auswählen
+		if (schuljahresabschnitt == null) {
+			DTOSchuelerAbitur current = null;
+			Schuljahresabschnitt currentSja = null;
+			for (final DTOSchuelerAbitur dtoSchuelerAbitur : dtosSchuelerAbitur) {
+				final Schuljahresabschnitt dtoSja = (dtoSchuelerAbitur.Schuljahresabschnitts_ID) == null ? null
+						: conn.getUser().schuleGetAbschnittById(dtoSchuelerAbitur.Schuljahresabschnitts_ID);
+				if ((currentSja == null) || ((dtoSja != null) && ((dtoSja.schuljahr > currentSja.schuljahr)
+						|| ((dtoSja.schuljahr == currentSja.schuljahr) && (dtoSja.abschnitt > currentSja.abschnitt))))) {
+					current = dtoSchuelerAbitur;
+					currentSja = dtoSja;
+				}
+			}
+			return current;
+		}
+		for (final DTOSchuelerAbitur dtoSchuelerAbitur : dtosSchuelerAbitur) {
+			if (dtoSchuelerAbitur.Schuljahresabschnitts_ID == null)
+				throw new ApiOperationException(Status.NOT_FOUND,
+					"Es wurden kein Schuljahr im Datensatz der Tabelle SchuelerAbitur für den Schüler mit der ID %d in der Datenbank gefunden.".formatted(schueler_id));
+			if (dtoSchuelerAbitur.Schuljahresabschnitts_ID == schuljahresabschnitt.id)
+				return dtoSchuelerAbitur;
+		}
+		return null;
 	}
 
 }

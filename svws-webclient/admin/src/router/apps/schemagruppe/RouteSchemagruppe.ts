@@ -25,8 +25,9 @@ export class RouteSchemagruppe extends RouteNode<unknown, RouteApp> {
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
-		if (routeSchema.data.auswahlGruppe.length === 0)
+		if (routeSchema.data.auswahlGruppe.length === 0) {
 			return routeSchema.getRoute();
+		}
 	}
 
 	public getRoute(): RouteLocationRaw {

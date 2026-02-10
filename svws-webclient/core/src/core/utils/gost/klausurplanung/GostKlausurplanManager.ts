@@ -171,6 +171,26 @@ export class GostKlausurplanManager extends JavaObject {
 		return JavaLong.compare(a.id, b.id);
 	} };
 
+	private readonly _compSchuelerklausurByDatumHT: Comparator<GostSchuelerklausur> = { compare: (a: GostSchuelerklausur, b: GostSchuelerklausur) => {
+		const aV: GostKlausurvorgabe | null = this.vorgabeBySchuelerklausur(a);
+		const bV: GostKlausurvorgabe | null = this.vorgabeBySchuelerklausur(b);
+		const quartalComp: number = JavaInteger.compare(aV.quartal, bV.quartal);
+		if (quartalComp !== 0)
+			return quartalComp;
+		const aDatum: string | null = this.datumSchuelerklausurHT(a);
+		const bDatum: string | null = this.datumSchuelerklausurHT(b);
+		if ((aDatum === null) && (bDatum !== null))
+			return 1;
+		if ((aDatum !== null) && (bDatum === null))
+			return -1;
+		if (aDatum !== null) {
+			const datumComp: number = JavaString.compareTo(aDatum, bDatum);
+			if (datumComp !== 0)
+				return datumComp;
+		}
+		return this._compSchuelerklausur.compare(a, b);
+	} };
+
 	private readonly _compSchuelerklausurTermin: Comparator<GostSchuelerklausurTermin> = { compare: (a: GostSchuelerklausurTermin, b: GostSchuelerklausurTermin) => {
 		if ((a as unknown === b as unknown) || (a.id === b.id))
 			return 0;
@@ -2426,9 +2446,8 @@ export class GostKlausurplanManager extends JavaObject {
 
 	private schuelerklausurraumstundenmengeRemoveOhneUpdateByIdSchuelerklausurtermin(idSchuelerklausurtermin: number): void {
 		const skrsList: List<GostSchuelerklausurterminraumstunde> | null = this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.get1(idSchuelerklausurtermin);
-		if (skrsList !== null)
-			for (const skrs of skrsList)
-				this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.removeSingleOrException(skrs.idSchuelerklausurtermin, skrs.idRaumstunde);
+		for (const skrs of skrsList)
+			this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.removeSingleOrException(skrs.idSchuelerklausurtermin, skrs.idRaumstunde);
 	}
 
 	/**
@@ -2650,10 +2669,10 @@ export class GostKlausurplanManager extends JavaObject {
 
 	private gruppiereUeberschneidungen(termine: List<GostKlausurtermin>): List<List<GostKlausurtermin>> {
 		const ergebnis: List<List<GostKlausurtermin>> = new ArrayList<List<GostKlausurtermin>>();
-		let added: boolean = false;
 		for (const terminToAdd of termine) {
+			let added: boolean = false;
 			for (const listToCheck of ergebnis) {
-				for (const terminInListe of termine) {
+				for (const terminInListe of listToCheck) {
 					if (this.checkTerminUeberschneidung(terminInListe, terminToAdd)) {
 						listToCheck.add(terminToAdd);
 						added = true;
@@ -3449,6 +3468,17 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert den {@link GostKlausurtermin} zu einer {@link GostSchuelerklausur}, sonst <code>null</code>, wenn noch kein Termin bestimmt wurde.
+	 *
+	 * @param sk die {@link GostSchuelerklausur}, zu der der Termin gesucht wird.
+	 *
+	 * @return den {@link GostKlausurtermin} oder <code>null</code>
+	 */
+	public terminOrNullBySchuelerklausur(sk: GostSchuelerklausur): GostKlausurtermin | null {
+		return this.terminOrNullByKursklausur(this.kursklausurBySchuelerklausur(sk));
+	}
+
+	/**
 	 * Liefert den {@link GostKlausurtermin} zu einer {@link GostKursklausur}. Wenn noch kein Termin bestimmt ist, wird eine <code>DeveloperNotificationException</code> geworfen.
 	 *
 	 * @param klausur die {@link GostKursklausur}, zu der der Termin gesucht wird.
@@ -4200,6 +4230,19 @@ export class GostKlausurplanManager extends JavaObject {
 	 * Gibt das Datum des Vorgängertermins zum übergebenen {@link GostSchuelerklausurTermin}
 	 * zurück. Falls kein Vorgängertermin existiert, wird eine <code>DeveloperNotificationException</code> geworfen. Falls noch kein Termin oder kein Datum zugewiesen ist, wird <code>null</code> zurückgegeben.
 	 *
+	 * @param sk der {@link GostSchuelerklausurTermin}, dessen Vorgänger-Datum gesucht wird.
+	 *
+	 * @return das Datum des Vorgängertermins zum übergebenen {@link GostSchuelerklausurTermin}
+	 */
+	public datumSchuelerklausurHT(sk: GostSchuelerklausur): string | null {
+		const termin: GostKlausurtermin | null = this.terminOrNullBySchuelerklausur(sk);
+		return (termin === null) ? null : termin.datum;
+	}
+
+	/**
+	 * Gibt das Datum des Vorgängertermins zum übergebenen {@link GostSchuelerklausurTermin}
+	 * zurück. Falls kein Vorgängertermin existiert, wird eine <code>DeveloperNotificationException</code> geworfen. Falls noch kein Termin oder kein Datum zugewiesen ist, wird <code>null</code> zurückgegeben.
+	 *
 	 * @param skt der {@link GostSchuelerklausurTermin}, dessen Vorgänger-Datum gesucht wird.
 	 *
 	 * @return das Datum des Vorgängertermins zum übergebenen {@link GostSchuelerklausurTermin}
@@ -4375,6 +4418,23 @@ export class GostKlausurplanManager extends JavaObject {
 			return kursklausuren;
 		for (const skt of this._schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.get1(raum.id))
 			if ((skt.folgeNr === 0) || includeNachschreiber)
+				kursklausuren.add(this.kursklausurBySchuelerklausurTermin(skt));
+		return kursklausuren;
+	}
+
+	/**
+	 * Liefert die Menge aller {@link GostKursklausur}en zurück, die in einem {@link GostKlausurraum} geschrieben werden, wenn es sich um Nachschreibklausuren handelt.
+	 *
+	 * @param raum  der {@link GostKlausurraum}
+	 *
+	 * @return die Menge aller {@link GostKursklausur}en zurück, die in einem {@link GostKlausurraum} geschrieben werden, wenn es sich um Nachschreibklausuren handelt.
+	 */
+	public nachschreiberGetMengeByRaum(raum: GostKlausurraum): JavaSet<GostKursklausur> {
+		const kursklausuren: JavaSet<GostKursklausur> | null = new HashSet<GostKursklausur>();
+		if (!this._schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.containsKey1(raum.id))
+			return kursklausuren;
+		for (const skt of this._schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.get1(raum.id))
+			if (skt.folgeNr > 0)
 				kursklausuren.add(this.kursklausurBySchuelerklausurTermin(skt));
 		return kursklausuren;
 	}
@@ -4908,19 +4968,40 @@ export class GostKlausurplanManager extends JavaObject {
 		return ergebnis;
 	}
 
+	private ignoreVorgabeMatches(v: GostKlausurvorgabe, i: GostKlausurvorgabe): boolean {
+		return (v.halbjahr === i.halbjahr) && (v.quartal === i.quartal) && (v.idFach === i.idFach) && JavaObject.equalsTranspiler(v.kursart, (i.kursart));
+	}
+
+	private vorgabeIsIgnored(vorgabe: GostKlausurvorgabe, ignoreVorgaben: List<GostKlausurvorgabe>): boolean {
+		for (const ign of ignoreVorgaben)
+			if (this.ignoreVorgabeMatches(vorgabe, ign))
+				return true;
+		return false;
+	}
+
 	/**
 	 * Liefert eine Liste von fehlenden {@link GostKlausurvorgabe}n zum übergebenen {@link GostHalbjahr} und Quartal
 	 *
 	 * @param abiJahrgang der Abitur-Jahrgang
 	 * @param halbjahr das {@link GostHalbjahr}
 	 * @param quartal die Nummer des Quartals, 0 für alle Quartale
+	 * @param ignoreVorgaben eine Liste von {@link GostKlausurvorgabe}n, die ignoriert werden sollen
 	 *
 	 * @return die Liste von fehlenden {@link GostKlausurvorgabe}n
 	 */
-	public vorgabefehlendGetMengeByHalbjahrAndQuartal(abiJahrgang: number, halbjahr: GostHalbjahr, quartal: number): List<GostKlausurvorgabe> {
+	public vorgabefehlendGetMengeByHalbjahrAndQuartal(abiJahrgang: number, halbjahr: GostHalbjahr, quartal: number, ignoreVorgaben: List<GostKlausurvorgabe> | null): List<GostKlausurvorgabe> {
+		let alle: List<GostKlausurvorgabe> | null;
 		if (quartal === 0)
-			return this._vorgabefehlend_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach.getNonNullValuesOfMap3AsList(abiJahrgang, halbjahr.id);
-		return this._vorgabefehlend_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach.getNonNullValuesOfMap4AsList(abiJahrgang, halbjahr.id, quartal);
+			alle = this._vorgabefehlend_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach.getNonNullValuesOfMap3AsList(abiJahrgang, halbjahr.id);
+		else
+			alle = this._vorgabefehlend_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach.getNonNullValuesOfMap4AsList(abiJahrgang, halbjahr.id, quartal);
+		if ((ignoreVorgaben === null) || ignoreVorgaben.isEmpty())
+			return alle;
+		const result: List<GostKlausurvorgabe> | null = new ArrayList<GostKlausurvorgabe>();
+		for (const vorgabe of alle)
+			if (!this.vorgabeIsIgnored(vorgabe, ignoreVorgaben))
+				result.add(vorgabe);
+		return result;
 	}
 
 	/**
@@ -4975,12 +5056,13 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @param halbjahr das {@link GostHalbjahr}
 	 * @param quartal die Nummer des Quartals, 0 für alle Quartale
 	 * @param kwErrorLimit das Errorlimit für die Anzahl der Klausuren pro Schüler und Woche
+	 * @param ignoreVorgaben eine Liste von {@link GostKlausurvorgabe}n, die bei der Zählung ignoriert werden sollen
 	 *
 	 * @return die Anzahl möglicher Probleme in der aktuellen Klausurplanung zum übergebenen {@link GostHalbjahr} und Quartal
 	 */
-	public planungsfehlerGetAnzahlByHalbjahrAndQuartal(abiJahrgang: number, halbjahr: GostHalbjahr, quartal: number, kwErrorLimit: number): number {
+	public planungsfehlerGetAnzahlByHalbjahrAndQuartal(abiJahrgang: number, halbjahr: GostHalbjahr, quartal: number, kwErrorLimit: number, ignoreVorgaben: List<GostKlausurvorgabe> | null): number {
 		let anzahl: number = 0;
-		anzahl += this.vorgabefehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		anzahl += this.vorgabefehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal, ignoreVorgaben).size();
 		anzahl += this.kursklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.schuelerklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
@@ -5123,8 +5205,7 @@ export class GostKlausurplanManager extends JavaObject {
 		const ergebnis: List<GostSchuelerklausurterminraumstunde> = new ArrayList<GostSchuelerklausurterminraumstunde>();
 		for (const stunde of raumStunden) {
 			const listStunden: List<GostSchuelerklausurterminraumstunde> | null = this._schuelerklausurraumstunde_by_idSchuelerklausurtermin_and_idRaumstunde.get2(stunde.id);
-			if (listStunden !== null)
-				ergebnis.addAll(listStunden);
+			ergebnis.addAll(listStunden);
 		}
 		return ergebnis;
 	}
@@ -5146,6 +5227,18 @@ export class GostKlausurplanManager extends JavaObject {
 		return ergebnis;
 	}
 
+	/**
+	 * Liefert eine Liste aller {@link GostSchuelerklausur}-Objekte. <br>
+	 * Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link GostSchuelerklausur}-Objekte.
+	 */
+	public schuelerklausurGetMengeAsListSortedByDatumHT(): List<GostSchuelerklausur> {
+		const sorted: List<GostSchuelerklausur> | null = new ArrayList<GostSchuelerklausur>(this._schuelerklausurmenge);
+		sorted.sort(this._compSchuelerklausurByDatumHT);
+		return sorted;
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager';
 	}
@@ -5154,7 +5247,7 @@ export class GostKlausurplanManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager'].includes(name);
 	}
 
-	public static class = new Class<GostKlausurplanManager>('de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager');
+	public static readonly class = new Class<GostKlausurplanManager>('de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager');
 
 }
 

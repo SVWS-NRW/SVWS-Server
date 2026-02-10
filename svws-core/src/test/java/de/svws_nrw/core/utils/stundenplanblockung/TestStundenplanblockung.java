@@ -128,6 +128,9 @@ class TestStundenplanblockung {
 					ra.setKuerzel("Raum " + ra.getID() + "-" + pRandom.nextInt(_MAX_RAEUME));
 				}
 			}
+			default -> {
+				// nichts
+			}
 		}
 	}
 
@@ -150,6 +153,9 @@ class TestStundenplanblockung {
 					final StundenplanblockungManagerKopplung ko = pMan.getKopplungen().getRandomOrException(pRandom);
 					ko.setKuerzel("Kopplung " + ko.getID() + "-" + pRandom.nextInt(_MAX_KOPPLUNGEN));
 				}
+			}
+			default -> {
+				// nichts
 			}
 		}
 	}

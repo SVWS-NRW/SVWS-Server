@@ -270,18 +270,21 @@
 	});
 
 	function setReligionabmeldung(value: string | null) {
-		if (value !== null)
+		if (value !== null) {
 			religionabmeldung.value = value;
+		}
 	}
 
 	function setReligionanmeldung(value: string | null) {
-		if (value !== null)
+		if (value !== null) {
 			religionanmeldung.value = value;
+		}
 	}
 
 	function setAufnahmedatum(value: string | null) {
-		if (value !== null)
+		if (value !== null) {
 			aufnahmedatum.value = value;
+		}
 	}
 
 	const minZuzugsjahr = new Date().getFullYear() + 1 - 100;
@@ -292,10 +295,11 @@
 	const setZuzugsjahr = (value: number | null) => {
 		disableSave.value = ((value !== null) && ((value < minZuzugsjahr) || (value > maxZuzugsjahr)));
 
-		if ((value !== null) && !disableSave.value)
+		if ((value !== null) && !disableSave.value) {
 			zuzugsjahr.value = value;
-		else
+		} else {
 			props.pendingStateManager().removePendingState("zuzugsjahr");
+		}
 	};
 
 	async function continueRoutingAfterCheckpointCustom() {

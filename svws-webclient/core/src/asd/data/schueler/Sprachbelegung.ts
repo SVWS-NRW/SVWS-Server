@@ -9,6 +9,11 @@ export class Sprachbelegung extends JavaObject {
 	public sprache: string = "";
 
 	/**
+	 * Für WbK: Gibt an, ob die Sprachbelegung einer zweiten Fremdsprache durch Nachweis erfolgt (siehe §34 Abst 3,4 APO-WbK)
+	 */
+	public istNachweis: boolean = false;
+
+	/**
 	 * Gibt an, an welcher Stelle in der Sprachenfolge die Sprache begonnen wurde
 	 */
 	public reihenfolge: number | null = null;
@@ -74,7 +79,7 @@ export class Sprachbelegung extends JavaObject {
 		return ['de.svws_nrw.asd.data.schueler.Sprachbelegung'].includes(name);
 	}
 
-	public static class = new Class<Sprachbelegung>('de.svws_nrw.asd.data.schueler.Sprachbelegung');
+	public static readonly class = new Class<Sprachbelegung>('de.svws_nrw.asd.data.schueler.Sprachbelegung');
 
 	public static transpilerFromJSON(json: string): Sprachbelegung {
 		const obj = JSON.parse(json) as Partial<Sprachbelegung>;
@@ -82,6 +87,9 @@ export class Sprachbelegung extends JavaObject {
 		if (obj.sprache === undefined)
 			throw new Error('invalid json format, missing attribute sprache');
 		result.sprache = obj.sprache;
+		if (obj.istNachweis === undefined)
+			throw new Error('invalid json format, missing attribute istNachweis');
+		result.istNachweis = obj.istNachweis;
 		result.reihenfolge = (obj.reihenfolge === undefined) ? null : obj.reihenfolge === null ? null : obj.reihenfolge;
 		result.belegungVonJahrgang = (obj.belegungVonJahrgang === undefined) ? null : obj.belegungVonJahrgang === null ? null : obj.belegungVonJahrgang;
 		result.belegungVonAbschnitt = (obj.belegungVonAbschnitt === undefined) ? null : obj.belegungVonAbschnitt === null ? null : obj.belegungVonAbschnitt;
@@ -106,6 +114,7 @@ export class Sprachbelegung extends JavaObject {
 	public static transpilerToJSON(obj: Sprachbelegung): string {
 		let result = '{';
 		result += '"sprache" : ' + JSON.stringify(obj.sprache) + ',';
+		result += '"istNachweis" : ' + obj.istNachweis.toString() + ',';
 		result += '"reihenfolge" : ' + ((obj.reihenfolge === null) ? 'null' : obj.reihenfolge.toString()) + ',';
 		result += '"belegungVonJahrgang" : ' + ((obj.belegungVonJahrgang === null) ? 'null' : JSON.stringify(obj.belegungVonJahrgang)) + ',';
 		result += '"belegungVonAbschnitt" : ' + ((obj.belegungVonAbschnitt === null) ? 'null' : obj.belegungVonAbschnitt.toString()) + ',';
@@ -125,6 +134,9 @@ export class Sprachbelegung extends JavaObject {
 		let result = '{';
 		if (obj.sprache !== undefined) {
 			result += '"sprache" : ' + JSON.stringify(obj.sprache) + ',';
+		}
+		if (obj.istNachweis !== undefined) {
+			result += '"istNachweis" : ' + obj.istNachweis.toString() + ',';
 		}
 		if (obj.reihenfolge !== undefined) {
 			result += '"reihenfolge" : ' + ((obj.reihenfolge === null) ? 'null' : obj.reihenfolge.toString()) + ',';

@@ -29,7 +29,7 @@ export class BKFachklassenSchluessel extends JavaObject {
 		return ['de.svws_nrw.core.data.bk.BKFachklassenSchluessel'].includes(name);
 	}
 
-	public static class = new Class<BKFachklassenSchluessel>('de.svws_nrw.core.data.bk.BKFachklassenSchluessel');
+	public static readonly class = new Class<BKFachklassenSchluessel>('de.svws_nrw.core.data.bk.BKFachklassenSchluessel');
 
 	public static transpilerFromJSON(json: string): BKFachklassenSchluessel {
 		const obj = JSON.parse(json) as Partial<BKFachklassenSchluessel>;

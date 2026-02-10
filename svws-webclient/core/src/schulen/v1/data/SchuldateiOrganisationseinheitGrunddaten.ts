@@ -109,7 +109,7 @@ export class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 		return ['de.svws_nrw.schulen.v1.data.SchuldateiEintrag', 'de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitGrunddaten'].includes(name);
 	}
 
-	public static class = new Class<SchuldateiOrganisationseinheitGrunddaten>('de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitGrunddaten');
+	public static readonly class = new Class<SchuldateiOrganisationseinheitGrunddaten>('de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitGrunddaten');
 
 	public static transpilerFromJSON(json: string): SchuldateiOrganisationseinheitGrunddaten {
 		const obj = JSON.parse(json) as Partial<SchuldateiOrganisationseinheitGrunddaten>;

@@ -1,18 +1,26 @@
-import { LehrerPersonaldaten } from '../../asd/data/lehrer/LehrerPersonaldaten';
-import { ValidatorSchuleStammdaten } from '../../asd/validate/schule/ValidatorSchuleStammdaten';
-import { HashMap } from '../../java/util/HashMap';
-import { LehrerStammdaten } from '../../asd/data/lehrer/LehrerStammdaten';
+import { ArrayList } from '../../java/util/ArrayList';
+import { ValidatorSssSchuleStammdatenSchulform } from '../../asd/validate/schule/ValidatorSssSchuleStammdatenSchulform';
+import { ValidatorLpLehrerPersonaldaten } from '../../asd/validate/lehrer/ValidatorLpLehrerPersonaldaten';
+import type { List } from '../../java/util/List';
+import type { Supplier } from '../../java/util/function/Supplier';
 import { Class } from '../../java/lang/Class';
+import { StatistikGesamt } from '../../asd/data/statistik/StatistikGesamt';
 import { ValidatorKontext } from '../../asd/validate/ValidatorKontext';
-import { ValidatorLehrerPersonaldaten } from '../../asd/validate/lehrer/ValidatorLehrerPersonaldaten';
-import { ValidatorGesamtLehrerdaten } from '../../asd/validate/gesamt/ValidatorGesamtLehrerdaten';
 import { Validator, cast_de_svws_nrw_asd_validate_Validator } from '../../asd/validate/Validator';
-import { SchuleStatistikdatenGesamt } from '../../asd/data/schule/SchuleStatistikdatenGesamt';
-import { ValidatorLehrerStammdaten } from '../../asd/validate/lehrer/ValidatorLehrerStammdaten';
+import { ValidatorGlGesamtLehrerdaten } from '../../asd/validate/gesamt/ValidatorGlGesamtLehrerdaten';
+import { ValidatorLsLehrerStammdaten } from '../../asd/validate/lehrer/ValidatorLsLehrerStammdaten';
 
 export class ValidatorGesamt extends Validator {
 
-	private readonly daten: SchuleStatistikdatenGesamt;
+	/**
+	 * Eine Liste von Validatoren, die bei diesem Validator mitgeprüft werden.
+	 */
+	protected readonly validatoren: List<Validator> = new ArrayList<Validator>();
+
+	/**
+	 * Die Daten des Validators
+	 */
+	protected readonly daten: Supplier<StatistikGesamt>;
 
 
 	/**
@@ -21,25 +29,21 @@ export class ValidatorGesamt extends Validator {
 	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: SchuleStatistikdatenGesamt, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<StatistikGesamt>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
-		this._validatoren.add(new ValidatorSchuleStammdaten(kontext));
-		const mapStammdaten: HashMap<number, LehrerStammdaten> | null = new HashMap<number, LehrerStammdaten>();
-		for (const lehrerStammdaten of daten.lehrerStammdaten) {
-			this._validatoren.add(new ValidatorLehrerStammdaten(lehrerStammdaten, kontext));
-			mapStammdaten.put(lehrerStammdaten.id, lehrerStammdaten);
-		}
-		for (const lehrerPersonaldaten of daten.lehrerPersonaldaten) {
-			const stammdaten: LehrerStammdaten | null = mapStammdaten.get(lehrerPersonaldaten.id);
-			if (stammdaten === null)
-				continue;
-			this._validatoren.add(new ValidatorLehrerPersonaldaten(lehrerPersonaldaten, stammdaten, kontext));
-		}
-		this._validatoren.add(new ValidatorGesamtLehrerdaten(daten.lehrerStammdaten, daten.lehrerPersonaldaten, kontext));
+		this.validatoren.add(new ValidatorSssSchuleStammdatenSchulform({ get: () => daten.get().schule.schulform }, kontext));
+		this.validatoren.add(new ValidatorGlGesamtLehrerdaten({ get: () => daten.get().lehrer }, kontext));
 	}
 
 	protected pruefe(): boolean {
+		this._validatoren.clear();
+		this._validatoren.addAll(this.validatoren);
+		const gesamt: StatistikGesamt = this.daten.get();
+		for (const lehrer of gesamt.lehrer) {
+			this._validatoren.add(new ValidatorLsLehrerStammdaten({ get: () => lehrer.nachname }, { get: () => lehrer.vorname }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.geschlecht }, { get: () => lehrer.kuerzel }, this.kontext()));
+			this._validatoren.add(new ValidatorLpLehrerPersonaldaten({ get: () => lehrer.id }, { get: () => gesamt.schule.idSchuljahresabschnitt }, { get: () => lehrer.rechtsverhaeltnis }, { get: () => lehrer.pflichtstundensoll }, { get: () => lehrer.einsatzstatus }, { get: () => lehrer.beschaeftigungsart }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.lehraemter }, { get: () => lehrer.mehrleistung }, { get: () => lehrer.minderleistung }, this.kontext()));
+		}
 		return true;
 	}
 
@@ -51,7 +55,7 @@ export class ValidatorGesamt extends Validator {
 		return ['de.svws_nrw.asd.validate.ValidatorGesamt', 'de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<ValidatorGesamt>('de.svws_nrw.asd.validate.ValidatorGesamt');
+	public static readonly class = new Class<ValidatorGesamt>('de.svws_nrw.asd.validate.ValidatorGesamt');
 
 }
 

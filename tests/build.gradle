@@ -7,13 +7,25 @@ dependencies {
 }
 
 def buildDirPath = layout.buildDirectory.get()
-def config = file("${rootDir}/config/tests/config.json").exists()
-		? new JsonSlurper().parse(file("${rootDir}/config/tests/config.json"))
-		: new JsonSlurper().parse(file("${rootDir}/config/tests/config_default.json"))
 
 ext {
+	def CONFIG
 	def APP_BASE_IMAGE_NAME
 	def CONTAINER_NAME_SUFFIX
+}
+
+sonar {
+	properties {
+		property "sonar.junit.reportPaths", "./tests-server-api/build/test-results,\
+				./tests-e2e-devmode/build/test-results,\
+				./tests-e2e-stablemode/build/test-results,\
+				./tests-server-dav/build/test-results,\
+				./tests-server-enm/build/test-results"
+	}
+}
+
+tasks.named('test') {
+	enabled = false
 }
 
 tasks.register('copyWebclientBuildArtefacts', Copy) {
@@ -71,7 +83,7 @@ tasks.register('generateAppBaseDockerfile') {
 	def templateDockerfile = file('templates/docker/template.app.base.dockerfile')
 	def outputDockerfile = file("${buildDirPath}/docker/app.base.dockerfile")
 
-	def DOCKER_REGISTRY_URL = System.getenv('CI_SERVER') != null ? config.dockerRegistry : "docker.io"
+	def DOCKER_REGISTRY_URL = System.getenv('CI_SERVER') != null ? CONFIG.dockerRegistry : "docker.io"
 
 	doFirst {
 		mkdir "${buildDirPath}/docker"
@@ -167,7 +179,6 @@ tasks.register('startTestDockerNetwork') {
 	}
 }
 
-
 /**
  * Führe alle verfügbaren Integrations standardisiert gegen Docker Container aus.
  * Dieser Task macht sowohl die Vor- als auch die Nachbereitung der Tests.
@@ -177,31 +188,25 @@ tasks.register('integrationTest') {
 	group = 'testing'
 	description = 'Ausführung aller Integrationstests welche jeweils gegen eine temporäre standardisierte Testumgebung laufen.'
 
-	// Überprüfe ob für die Integrationstests alle Voraussetzungen erfüllt sind
 	dependsOn 'startTestDockerNetwork'
 	dependsOn 'checkIfConfigFilesAreConsistent'
+	dependsOn subprojects.collect { "${it.path}:testAgainstDockerEnv" }
 
-	// Integrationstests welche für jedes Subpackage ausgeführt werden
-	// Weitere Testpackages können hier hinzugefügt werden
-	dependsOn 'tests-server-api:testAgainstDockerEnv' // Vite API Tests
-	dependsOn 'tests-e2e-devmode:testAgainstDockerEnv' // Playwright E2E Tests DEV Modus
-	dependsOn 'tests-e2e-stablemode:testAgainstDockerEnv' // Playwright E2E Tests STABLE Modus
-	dependsOn 'tests-server-dav:testAgainstDockerEnv' // Vite API Dav Tests
-	dependsOn 'tests-server-enm:testAgainstDockerEnv' // Vite API ENM Tests
-
-	if (!config.keepContainerAfterTestRun) {
-		// Stoppe die Container für die jeweiligen Testumgebungen nach den Integrationstests
-		finalizedBy 'tests-server-api:removeTestEnvironmentEntryPoint'
-		finalizedBy 'tests-e2e-devmode:removeTestEnvironmentEntryPoint'
-		finalizedBy 'tests-e2e-stablemode:removeTestEnvironmentEntryPoint'
-		finalizedBy 'tests-server-dav:removeTestEnvironmentEntryPoint'
-		finalizedBy 'tests-server-enm:removeTestEnvironmentEntryPoint'
-
-		// Aggregiere die Test-Results aus allen Tests
-		finalizedBy 'checkJUnitResults'
-	} else {
-		println("Achtung: Testcontainer werden nicht abgeräumt!")
+	// Serielle Ausführung sicherstellen
+	project('tests-e2e-devmode').tasks.named('testAgainstDockerEnv').configure {
+		mustRunAfter project('tests-server-api').tasks.named('testAgainstDockerEnv')
 	}
+	project('tests-e2e-stablemode').tasks.named('testAgainstDockerEnv').configure {
+		mustRunAfter project('tests-e2e-devmode').tasks.named('testAgainstDockerEnv')
+	}
+	project('tests-server-dav').tasks.named('testAgainstDockerEnv').configure {
+		mustRunAfter project('tests-e2e-stablemode').tasks.named('testAgainstDockerEnv')
+	}
+	project('tests-server-enm').tasks.named('testAgainstDockerEnv').configure {
+		mustRunAfter project('tests-server-dav').tasks.named('testAgainstDockerEnv')
+	}
+
+	finalizedBy 'checkJUnitResults'
 }
 
 
@@ -282,18 +287,13 @@ tasks.register('no_auto_docker_integrationTest') {
  * @throws GradleException falls ein beliebiger Integrationstest fehlgeschlagen ist.
  */
 tasks.register('checkJUnitResults') {
-	// Die Tests sollten komplett abgeschlossen (und rückgebaut) werden bevor die Ergebnisse evaluiert werden
-	mustRunAfter 'tests-server-api:removeTestEnvironmentEntryPoint'
-	mustRunAfter 'tests-e2e-devmode:removeTestEnvironmentEntryPoint'
-	mustRunAfter 'tests-e2e-stablemode:removeTestEnvironmentEntryPoint'
-	mustRunAfter 'tests-server-dav:removeTestEnvironmentEntryPoint'
-	mustRunAfter 'tests-server-enm:removeTestEnvironmentEntryPoint'
+	mustRunAfter subprojects.collect { "${it.path}:removeTestEnvironmentEntryPoint" }
 
 	// Die Liste der JUnit Report Files. Hier sollten neue Einträge ergänzt werden wenn weitere Testpackages geschrieben werden.
 	def junitReportFiles = [
 			'tests-server-api/build/test-results/api-test-results.xml',
-			'tests-e2e-devmode/build/test-results/zusammenfassung/e2e-results.xml',
-			'tests-e2e-stablemode/build/test-results/zusammenfassung/e2e-results.xml',
+			'tests-e2e-devmode/build/test-results/e2e-dev-test-results.xml',
+			'tests-e2e-stablemode/build/test-results/e2e-stable-test-results.xml',
 			'tests-server-dav/build/test-results/api-test-results.xml',
 			'tests-server-enm/build/test-results/after-setup-test-results.xml',
 			'tests-server-enm/build/test-results/setup-test-results.xml',
@@ -305,11 +305,9 @@ tasks.register('checkJUnitResults') {
 		int totalSkippedTests = 0
 
 		junitReportFiles.each { filePath ->
-			// Lade die JUnit Report Datei
 			def junitReportFile = file(filePath)
-
 			if (!junitReportFile.exists()) {
-				throw new GradleException("JUnit Report Datei: ${junitReportFile}")
+				throw new GradleException("JUnit Result nicht gefunden! ${junitReportFile}")
 			}
 
 			// Zähle für jeden JUnit Report file die entsprechenden Einträge
@@ -337,4 +335,3 @@ tasks.register('checkJUnitResults') {
 		}
 	}
 }
-

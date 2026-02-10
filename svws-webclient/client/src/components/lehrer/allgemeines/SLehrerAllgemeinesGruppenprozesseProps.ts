@@ -5,11 +5,11 @@ import type { ApiStatus } from "~/components/ApiStatus";
 export interface SLehrerAllgemeinesGruppenprozesseProps {
 	apiStatus: ApiStatus;
 	serverMode: ServerMode;
-	getPDF: (parameter: ReportingParameter, idStundenplan: number) => Promise<ApiFile>;
+	getPDF: (parameter: ReportingParameter) => Promise<ApiFile>;
 	sendEMail: (parameter: ReportingParameter) => Promise<SimpleOperationResponse>;
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	lehrerListeManager: () => LehrerListeManager;
 	deleteLehrer: () => Promise<[boolean, List<string | null>]>;
-	deleteLehrerCheck: () => { success: boolean, logs: List<string> };
+	deleteCheck: () => { success: boolean, logs: Iterable<string> };
 }

@@ -87,7 +87,7 @@ export class AbschlussManager extends JavaObject {
 			return "";
 		const sb: StringBuilder | null = new StringBuilder();
 		for (const fach of ergebnis.npFaecher) {
-			if (sb.length() > 0)
+			if (!sb.isEmpty())
 				sb.append(", ");
 			sb.append(fach);
 		}
@@ -214,7 +214,7 @@ export class AbschlussManager extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.AbschlussManager'].includes(name);
 	}
 
-	public static class = new Class<AbschlussManager>('de.svws_nrw.core.abschluss.AbschlussManager');
+	public static readonly class = new Class<AbschlussManager>('de.svws_nrw.core.abschluss.AbschlussManager');
 
 }
 

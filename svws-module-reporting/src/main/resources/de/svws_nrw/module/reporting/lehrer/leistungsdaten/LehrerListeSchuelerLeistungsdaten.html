@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}, duplex = ${Parameter.duplexdruck}">
+	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
+		title='Leistungsdaten',
+		htmlTemplatePfad=${Parameter.htmlTemplateDefinition().getPfadHtmlTemplate()},
+		namePageCSS='reporting-A4-hoch' + (${duplex} ? '-duplex' : '') + '.css')}">
+		<title></title>
+	</head>
+
+	<body>
+		<!-- Äußere Schleife über Lehrer -->
+		<div class="reset-page-counter start-new-page" th:each="lehrer,iterationVarLehrer : ${Lehrer}">
+
+			<!-- Innere Schleife über die Klassenunterrichte des Lehrers -->
+			<div th:if="${VorlageParameter.get('mitKlassenunterricht')}" th:each="klassenunterricht,iterationVarKlasse : ${lehrer.klassenunterrichtAlsFachlehrer()}" >
+				<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+				<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+				<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
+					headerRight='Unterricht: ' + ${klassenunterricht.kuerzel()} +
+						'<br/>Leitung: ' + ${(klassenunterricht.bewertenderLehrer() != '') ? klassenunterricht.bewertenderLehrer().kuerzel() : '---'})}">
+				</th:block>
+				<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+				<table class="fixed-100 mp-0 m-b-6" style="page-break-inside: avoid;">
+					<colgroup>
+						<col style="width: 7mm;"/> <!-- lfd. Nr. -->
+						<col style="width: 56mm;"/> <!-- Name. Vorname (Ges.) -->
+						<col style="width: 12mm;"/> <!-- Klasse -->
+						<col style="width: 12mm;"/> <!-- Kursart -->
+						<col style="width: 12mm;"/> <!-- Quartalsnote -->
+						<col style="width: 12mm;"/> <!-- Note -->
+						<col style="width: 12mm;"/> <!-- gemahnt -->
+						<col style="width: 12mm;"/> <!-- FS -->
+						<col style="width: 12mm;"/> <!-- FSU -->
+						<col /> <!-- Füllt auf 100% der Breite auf - fachbezogene Bemerkungen -->
+					</colgroup>
+					<thead>
+						<tr>
+							<th colspan="10">
+								<table class="fixed-100 mp-0">
+									<tr>
+										<th class="ta-lb bo-b-grey" style="width: 35%; font-size: 13pt; font-weight: bold;" th:text="${'Leistungsdaten ' + klassenunterricht.kuerzel()}">
+											Leistungsdaten M-10A
+										</th>
+										<th class="ta-rb bo-b-grey" style="width: 65%; font-size: 9pt;" th:text="${((!klassenunterricht.auflistungJahrgaenge().isEmpty()) ? ((klassenunterricht.jahrgaenge().size() == 1) ? ('Jahrgangsstufe: ' + klassenunterricht.auflistungJahrgaenge() + ' - ') : ('Jahrgangsstufen: ' + klassenunterricht.auflistungJahrgaenge() + ' - ')) : '')  + ((klassenunterricht.fachlehrer().size() == 1) ? 'Lehrkraft: ' : 'Lehrkräfte: ') + klassenunterricht.auflistungFachlehrerkuerzel()}">
+											Jahrgangsstufe: 10 - Lehrkraft: ABC"
+										</th>
+									</tr>
+									<tr>
+										<td class="ta-lt" style="width: 35%; font-size: 9pt;" th:text="${klassenunterricht.schueler().size() + ' Personen ' + klassenunterricht.statistikGeschlechter()}">
+											22 Personen (12/10/0)</td>
+										<td class="ta-rt" style="width: 65%; font-size: 9pt;" th:text="${'Klasse: ' + klassenunterricht.auflistungKlassen()}">
+											Klasse: 10A"
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2" class="ta-lb" style="height: 2mm"></td>
+									</tr>
+								</table>
+							</th>
+						</tr>
+						<tr>
+							<td class="head-small-grey"></td>
+							<td class="head-small-grey">Name</td>
+							<td class="head-small-grey">Klasse</td>
+							<td class="head-small-grey">Art</td>
+							<td class="head-small-grey ta-c">Quartal</td>
+							<td class="head-small-grey ta-c" th:text="${VorlageParameter.get('mitPunktenStattNoten') ? 'Punkte' : 'Note'}">Note</td>
+							<td class="head-small-grey ta-c">Mahnung</td>
+							<td class="head-small-grey ta-r">FS</td>
+							<td class="head-small-grey ta-r">FSU</td>
+							<td class="head-small-grey">Bemerkung</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="schueler,iterationVarSchueler : ${klassenunterricht.schueler()}"
+							th:with="leistungsdaten = ${klassenunterricht.leistungsdatenBySchueler(schueler.id())}"
+							th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${iterationVarSchueler.count + '. '}">1.</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.nachnameVorname()}">Mustermann, Max</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.auswahlLernabschnitt().klasse().kuerzel()}">10a</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${leistungsdaten.kursart()}">GKM</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${VorlageParameter.get('mitPunktenStattNoten') ? leistungsdaten.noteQuartalPunkte() : leistungsdaten.noteQuartalKuerzel()}">3+</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${VorlageParameter.get('mitPunktenStattNoten') ? leistungsdaten.notePunkte() : leistungsdaten.noteKuerzel()}">2-</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${leistungsdaten.istGemahnt()} ? 'ja' : ''">ja</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${leistungsdaten.fehlstundenGesamt()}">25</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${leistungsdaten.fehlstundenUnentschuldigt()}">5</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${#strings.isEmpty(leistungsdaten.textFachbezogeneLernentwicklung()) ? '' : 'ja'}">ja</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<th:block th:if="${VorlageParameter.get('mitBemerkungen') && klassenunterricht.hatSchuelerMitFachbezogenerBemerkung()}">
+					<table class="fixed-100 mp-0 m-b-6" style="page-break-inside: avoid;">
+						<colgroup>
+							<col style="width: 7mm;"/> <!-- lfd. Nr. -->
+							<col style="width: 56mm;"/> <!-- Name, Vorname (Ges.) -->
+							<col/> <!-- Füllt auf 100% der Breite auf - fachbezogene Bemerkungen -->
+						</colgroup>
+						<thead>
+							<tr>
+								<th colspan="3">
+									<table class="fixed-100 mp-0">
+										<tr>
+											<th class="ta-lb bo-b-grey" style="width: 100%; font-size: 11pt; font-weight: bold;">
+												Fachbezogene Bemerkungen
+											</th>
+										</tr>
+										<tr>
+											<td class="ta-lb" style="height: 2mm"></td>
+										</tr>
+									</table>
+								</th>
+							</tr>
+							<tr>
+								<td class="head-small-grey">Nr.</td>
+								<td class="head-small-grey">Name</td>
+								<td class="head-small-grey">Bemerkung</td>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:each="schueler,iterationVarSchueler : ${klassenunterricht.schueler()}"
+									  th:with="leistungsdaten = ${klassenunterricht.leistungsdatenBySchueler(schueler.id())},
+											   bemerkung = ${leistungsdaten.textFachbezogeneLernentwicklung()}">
+								<tr th:if="${!#strings.isEmpty(bemerkung)}"	th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
+									<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${iterationVarSchueler.count + '. '}">1.</td>
+									<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.nachnameVorname()}">Mustermann, Max</td>
+									<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${bemerkung}">fachbezogene Bemerkungen</td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</th:block>
+			</div>
+
+			<!-- Innere Schleife über die Kursunterrichte des Lehrers -->
+			<div th:if="${VorlageParameter.get('mitKursunterricht')}" th:each="kursunterricht,iterationVarKursunterricht : ${lehrer.kursunterrichtAlsFachlehrer()}" >
+				<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+				<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+				<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
+					headerRight='Kurs: ' + ${kursunterricht.kuerzel()} +
+						'<br/>Kursleitung: ' + ${(kursunterricht.kursleitung() != '') ? kursunterricht.kursleitung().kuerzel() : '---'})}">
+				</th:block>
+				<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+				<table class="fixed-100 mp-0 m-b-6" style="page-break-inside: avoid;">
+					<colgroup>
+						<col style="width: 7mm;"/> <!-- lfd. Nr. -->
+						<col style="width: 56mm;"/> <!-- Name. Vorname (Ges.) -->
+						<col style="width: 12mm;"/> <!-- Klasse -->
+						<col style="width: 12mm;"/> <!-- Kursart -->
+						<col style="width: 12mm;"/> <!-- Quartalsnote -->
+						<col style="width: 12mm;"/> <!-- Note -->
+						<col style="width: 12mm;"/> <!-- gemahnt -->
+						<col style="width: 12mm;"/> <!-- FS -->
+						<col style="width: 12mm;"/> <!-- FSU -->
+						<col /> <!-- Füllt auf 100% der Breite auf - fachbezogene Bemerkungen -->
+					</colgroup>
+					<thead>
+						<tr>
+							<th colspan="10">
+								<table class="fixed-100 mp-0">
+									<tr>
+										<th class="ta-lb bo-b-grey" style="width: 35%; font-size: 13pt; font-weight: bold;" th:text="${'Leistungsdaten ' + kursunterricht.kuerzel()}">
+											Leistungsdaten GE-GK-2
+										</th>
+										<th class="ta-rb bo-b-grey" style="width: 65%; font-size: 9pt;" th:text="${((!kursunterricht.auflistungJahrgaenge().isEmpty()) ? ((kursunterricht.jahrgaenge().size() == 1) ? ('Jahrgangsstufe: ' + kursunterricht.auflistungJahrgaenge() + ' - ') : ('Jahrgangsstufen: ' + kursunterricht.auflistungJahrgaenge() + ' - ')) : '')  + ((kursunterricht.kurslehrer().size() == 1) ? 'Lehrkraft: ' : 'Lehrkräfte: ') + kursunterricht.auflistungKurslehrerkuerzel()}">
+											Jahrgangsstufe: EF - Lehrkräfte: ABC,DEF"
+										</th>
+									</tr>
+									<tr>
+										<td class="ta-lt" style="width: 35%; font-size: 9pt;" th:text="${kursunterricht.schueler().size() + ' Personen ' + kursunterricht.statistikGeschlechter()}">
+											22 Personen (12/10/0)</td>
+										<td class="ta-rt" style="width: 65%; font-size: 9pt;" th:text="${'Klassen: ' + kursunterricht.auflistungKlassen() + ' - Belegung: ' + kursunterricht.statistikIndividuelleKursarten()}">
+											Klassen: EFA,EFB - Belegung: GKM: 12, GKS: 10"
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2" class="ta-lb" style="height: 2mm"></td>
+									</tr>
+								</table>
+							</th>
+						</tr>
+						<tr>
+							<td class="head-small-grey"></td>
+							<td class="head-small-grey">Name</td>
+							<td class="head-small-grey">Klasse</td>
+							<td class="head-small-grey">Art</td>
+							<td class="head-small-grey ta-c">Quartal</td>
+							<td class="head-small-grey ta-c" th:text="${VorlageParameter.get('mitPunktenStattNoten') ? 'Punkte' : 'Note'}">Note</td>
+							<td class="head-small-grey ta-c">Mahnung</td>
+							<td class="head-small-grey ta-r">FS</td>
+							<td class="head-small-grey ta-r">FSU</td>
+							<td class="head-small-grey">Bemerkung</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="schueler,iterationVarSchueler : ${kursunterricht.schueler()}"
+							th:with="leistungsdaten = ${kursunterricht.leistungsdatenBySchueler(schueler.id())}"
+							th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${iterationVarSchueler.count + '. '}">1.</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.nachnameVorname()}">Mustermann, Max</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.auswahlLernabschnitt().klasse().kuerzel()}">10a</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${leistungsdaten.kursart()}">GKM</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${VorlageParameter.get('mitPunktenStattNoten') ? leistungsdaten.noteQuartalPunkte() : leistungsdaten.noteQuartalKuerzel()}">3+</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${VorlageParameter.get('mitPunktenStattNoten') ? leistungsdaten.notePunkte() : leistungsdaten.noteKuerzel()}">2-</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-c" th:text="${leistungsdaten.istGemahnt()} ? 'ja' : ''">ja</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${leistungsdaten.fehlstundenGesamt()}">25</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${leistungsdaten.fehlstundenUnentschuldigt()}">5</td>
+							<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${#strings.isEmpty(leistungsdaten.textFachbezogeneLernentwicklung()) ? '' : 'ja'}">ja</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<th:block th:if="${VorlageParameter.get('mitBemerkungen') && kursunterricht.hatSchuelerMitFachbezogenerBemerkung()}">
+					<table class="fixed-100 mp-0 m-b-6" style="page-break-inside: avoid;">
+						<colgroup>
+							<col style="width: 7mm;"/> <!-- lfd. Nr. -->
+							<col style="width: 56mm;"/> <!-- Name, Vorname (Ges.) -->
+							<col/> <!-- Füllt auf 100% der Breite auf - fachbezogene Bemerkungen -->
+						</colgroup>
+						<thead>
+							<tr>
+								<th colspan="3">
+									<table class="fixed-100 mp-0">
+										<tr>
+											<th class="ta-lb bo-b-grey" style="width: 100%; font-size: 11pt; font-weight: bold;">
+												Fachbezogene Bemerkungen
+											</th>
+										</tr>
+										<tr>
+											<td class="ta-lb" style="height: 2mm"></td>
+										</tr>
+									</table>
+								</th>
+							</tr>
+							<tr>
+								<td class="head-small-grey">Nr.</td>
+								<td class="head-small-grey">Name</td>
+								<td class="head-small-grey">Bemerkung</td>
+							</tr>
+						</thead>
+						<tbody>
+							<th:block th:each="schueler,iterationVarSchueler : ${kursunterricht.schueler()}"
+									  th:with="leistungsdaten = ${kursunterricht.leistungsdatenBySchueler(schueler.id())},
+											   bemerkung = ${leistungsdaten.textFachbezogeneLernentwicklung()}">
+								<tr th:if="${!#strings.isEmpty(bemerkung)}"	th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
+									<td class="f-small bo-t-grey p-tb-0 p-lr-1 ta-r" th:text="${iterationVarSchueler.count + '. '}">1.</td>
+									<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${schueler.nachnameVorname()}">Mustermann, Max</td>
+									<td class="f-small bo-t-grey p-tb-0 p-lr-1" th:text="${bemerkung}">fachbezogene Bemerkungen</td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</th:block>
+			</div>
+		</div>
+	</body>
+</html>
+

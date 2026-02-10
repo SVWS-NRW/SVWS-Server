@@ -4,7 +4,7 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-wrapper>
 					<svws-ui-checkbox v-model="data.istSichtbar" :disabled>Ist Sichtbar</svws-ui-checkbox>
-					<svws-ui-checkbox v-model="data.istRelevantFuerStatistik" :disabled>Ist Relevant für Statistik</svws-ui-checkbox>
+					<svws-ui-checkbox v-model="data.istRelevantFuerStatistik" :disabled>Ist relevant für Statistik</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
 				<svws-ui-text-input placeholder="Kürzel" required :max-len="10" :valid="fieldIsValid('kuerzel')" v-model="data.kuerzel" statistics :disabled />
 				<svws-ui-select title="Personal-Typ" required :items="PersonalTyp.values()" :item-text="i => i.bezeichnung" :disabled
@@ -68,9 +68,11 @@
 	);
 	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
 		const result: Array<OrtsteilKatalogEintrag> = [];
-		for (const ortsteil of props.mapOrtsteile.values())
-			if (ortsteil.ort_id === data.value.wohnortID)
+		for (const ortsteil of props.mapOrtsteile.values()) {
+			if (ortsteil.ort_id === data.value.wohnortID) {
 				result.push(ortsteil);
+			}
+		}
 		return result;
 	});
 	const adresse = computed({
@@ -138,33 +140,38 @@
 	}
 
 	function kuerzelIsValid(kuerzel: string | null) {
-		if ((kuerzel === null) || JavaString.isBlank(kuerzel) || (kuerzel.length > 10))
+		if ((kuerzel === null) || JavaString.isBlank(kuerzel) || (kuerzel.length > 10)) {
 			return false;
+		}
 		for (const lehrerStammdaten of props.lehrerListeManager().liste.list()) {
-			if (JavaObject.equalsTranspiler(lehrerStammdaten.kuerzel, kuerzel))
+			if (JavaObject.equalsTranspiler(lehrerStammdaten.kuerzel, kuerzel)) {
 				return false;
+			}
 		}
 		return true;
 	}
 
 	function phoneNumberIsValid(input: string | null, mandatory: boolean, maxLength: number) {
-		if ((input === null) || (JavaString.isBlank(input)))
+		if ((input === null) || (JavaString.isBlank(input))) {
 			return !mandatory;
+		}
 		// folgende Formate sind erlaubt: 0151123456, 0151/123456, 0151-123456, +49/176-456456 -> Buchstaben sind nicht erlaubt
 		return /^\+?\d+([-/]?\d+)*$/.test(input) && input.length <= maxLength;
 	}
 
 	function stringIsValid(input: string | null, mandatory: boolean, maxLength: number) {
-		if (mandatory)
+		if (mandatory) {
 			return (input !== null) && (!JavaString.isBlank(input)) && (input.length <= maxLength);
+		}
 		return (input === null) || (input.length <= maxLength);
 	}
 
 	const isLoading = ref<boolean>(false);
 
 	watch(() => data.value, async () => {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		props.checkpoint.active = true;
 	}, { immediate: false, deep: true });
@@ -172,8 +179,9 @@
 
 	// api call
 	async function addLehrerStammdaten() {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		isLoading.value = true;
 		props.checkpoint.active = false;
@@ -183,9 +191,9 @@
 	}
 
 	// other
-	function cancel() {
+	async function cancel() {
 		props.checkpoint.active = false;
-		void props.gotoDefaultView(null);
+		await props.gotoDefaultView(null);
 	}
 
 </script>

@@ -485,7 +485,7 @@ export class BenutzerManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.benutzer.BenutzerManager'].includes(name);
 	}
 
-	public static class = new Class<BenutzerManager>('de.svws_nrw.core.utils.benutzer.BenutzerManager');
+	public static readonly class = new Class<BenutzerManager>('de.svws_nrw.core.utils.benutzer.BenutzerManager');
 
 }
 

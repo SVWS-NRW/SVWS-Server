@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from "vitest";
-import { l,n,s } from "../../shared/TestObjects";
+import { l, n, s } from "../../shared/TestObjects";
 import { TestConsumer } from "../../shared/TestConsumer";
 import { TestMaxComparator } from "../../shared/TestComparator";
 import { ArrayIndexOutOfBoundsException } from "../../../../../main/resources/typescript/java/lang/ArrayIndexOutOfBoundsException";
@@ -7,6 +7,7 @@ import { NullPointerException } from "../../../../../main/resources/typescript/j
 import { ArrayList } from "../../../../../main/resources/typescript/java/util/ArrayList";
 import { ArrayListEnumerator } from "../../../../../main/resources/typescript/java/util/ArrayListEnumerator";
 import { NoSuchElementException } from "../../../../../main/resources/typescript/java/util/NoSuchElementException";
+import { Collections } from "../../../../../main/resources/typescript/java/util/Collections";
 
 const maxComparator = new TestMaxComparator();
 
@@ -112,10 +113,10 @@ describe.each([s, n, l])("java.util.ArrayList, getestet mit $name", ({ a, b, c, 
 		expect(v2.contains(c)).toBeTruthy();
 	});
 	test("removeElementAt: ArrayList throws on wrong index", () => {
-		expect(() => v.removeElementAt(1)).toThrow( ArrayIndexOutOfBoundsException);
+		expect(() => v.removeElementAt(1)).toThrow(ArrayIndexOutOfBoundsException);
 	});
 	test("removeElementAt: ArrayList throws on negative index", () => {
-		expect(() => v.removeElementAt(-2)).toThrow( ArrayIndexOutOfBoundsException);
+		expect(() => v.removeElementAt(-2)).toThrow(ArrayIndexOutOfBoundsException);
 	});
 	test("removeElementAt: ArrayList removes 'c' element in second position", () => {
 		v.add(c);
@@ -154,7 +155,7 @@ describe.each([s, n, l])("java.util.ArrayList, getestet mit $name", ({ a, b, c, 
 		expect(array).toEqual([a, b, c, d, e]);
 	});
 	test("elementAt: ArrayList throws on wrong index", () => {
-		expect(() => v.elementAt(-1)).toThrow( ArrayIndexOutOfBoundsException);
+		expect(() => v.elementAt(-1)).toThrow(ArrayIndexOutOfBoundsException);
 	});
 	test("elementAt: returns element from index", () => {
 		expect(v.elementAt(0)).toEqual(a);
@@ -167,10 +168,10 @@ describe.each([s, n, l])("java.util.ArrayList, getestet mit $name", ({ a, b, c, 
 		expect(v.lastElement()).toEqual(b);
 	});
 	test("setElementAt: ArrayList throws on wrong index", () => {
-		expect(() => v.setElementAt(c, 3)).toThrow( ArrayIndexOutOfBoundsException);
+		expect(() => v.setElementAt(c, 3)).toThrow(ArrayIndexOutOfBoundsException);
 	});
 	test("setElementAt: ArrayList throws on negative index", () => {
-		expect(() => v.setElementAt(c, -2)).toThrow( ArrayIndexOutOfBoundsException);
+		expect(() => v.setElementAt(c, -2)).toThrow(ArrayIndexOutOfBoundsException);
 	});
 	test("setElementAt: ArrayList sets element at index", () => {
 		v.setElementAt(b, 0);
@@ -189,7 +190,7 @@ describe.each([s, n, l])("java.util.ArrayList, getestet mit $name", ({ a, b, c, 
 	test("toString: returns string of elements", () => {
 		const string = v.toString();
 		const [obj] = JSON.parse(string);
-		expect(obj).toEqual(a)
+		expect(obj).toEqual(a);
 	});
 	test("get: returns element at index", () => {
 		expect(v.get(0)).toEqual(a);
@@ -206,7 +207,7 @@ describe.each([s, n, l])("java.util.ArrayList, getestet mit $name", ({ a, b, c, 
 	test("getLast: gets last element of the list", () => {
 		v.add(b);
 		v.add(c);
-		expect(v.getLast()).toBe(c)
+		expect(v.getLast()).toBe(c);
 	});
 	test("getFirst: gets exception when list empty", () => {
 		const vv = new ArrayList();
@@ -329,8 +330,9 @@ describe.each([s, n, l])("java.util.ArrayList, getestet mit $name", ({ a, b, c, 
 	test("symbol iterator:", () => {
 		v.add(b);
 		v.add(c);
-		for (const e of v)
+		for (const e of v) {
 			expect(e).toBeDefined();
+		}
 	});
 	test("listIterator: returns an Iterator for the ArrayList", () => {
 		v.add(b);
@@ -364,5 +366,17 @@ describe.each([s, n, l])("java.util.ArrayList, getestet mit $name", ({ a, b, c, 
 		expect(v.elementAt(0)).toEqual(a);
 		v.sort(maxComparator);
 		expect(v.elementAt(0)).toEqual(c);
+	});
+	test("reverse: Ändere die Reihenfolge der Elemente", () => {
+		v.add(b);
+		v.add(c);
+		v.add(d);
+		v.add(e);
+		Collections.reverse(v);
+		expect(v.elementAt(0)).toEqual(e);
+		expect(v.elementAt(1)).toEqual(d);
+		expect(v.elementAt(2)).toEqual(c);
+		expect(v.elementAt(3)).toEqual(b);
+		expect(v.elementAt(4)).toEqual(a);
 	});
 });

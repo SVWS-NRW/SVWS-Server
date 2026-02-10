@@ -7,4 +7,8 @@
 	.dark {
 		color-scheme: dark;
 	}
+
+	.light {
+		color-scheme: light;
+	}
 }

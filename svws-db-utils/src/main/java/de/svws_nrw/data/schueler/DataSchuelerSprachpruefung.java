@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import de.svws_nrw.asd.data.NoteKatalogEintrag;
+import de.svws_nrw.asd.data.fach.FachKatalogEintrag;
 import de.svws_nrw.asd.data.fach.SprachreferenzniveauKatalogEintrag;
 import de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.Sprachpruefung;
@@ -15,6 +16,7 @@ import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.fach.Sprachpruefungniveau;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.asd.types.fach.Sprachreferenzniveau;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.data.DataManagerRevised;
@@ -81,7 +83,21 @@ public final class DataSchuelerSprachpruefung extends DataManagerRevised<Long, D
 		final Note note = Note.fromNoteSekI(dto.NotePruefung);
 		final NoteKatalogEintrag noteEintrag = (note == null) ? null : note.daten(abschnitt.schuljahr);
 		daten.note = (noteEintrag == null) ? null : dto.NotePruefung;
+		daten.zeugnisbezeichnung = mapZeugnisbezeichnung(dto.Zeugnisbezeichnung, dto.Sprache);
 		return daten;
+	}
+
+
+	private static @NotNull String mapZeugnisbezeichnung(final String zeugnisbezeichnung, final String sprache) {
+		if (zeugnisbezeichnung != null)
+			return zeugnisbezeichnung;
+		final Fach fach = Fach.data().getWertByKuerzel(sprache);
+		if (fach == null)
+			return "";
+		final FachKatalogEintrag fachEintrag = fach.historie().getLast();
+		if (fachEintrag.istHKFS)
+			return fachEintrag.text.replaceFirst("^.*-", "").trim();
+		return fachEintrag.text;
 	}
 
 
@@ -164,6 +180,7 @@ public final class DataSchuelerSprachpruefung extends DataManagerRevised<Long, D
 					dto.NotePruefung = note;
 				}
 			}
+			case "zeugnisbezeichnung" -> dto.Zeugnisbezeichnung = JSONMapper.convertToString(value, true, true, 255, "zeugnisbezeichnung");
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten ein unbekanntes Attribut.");
 		}
 	}

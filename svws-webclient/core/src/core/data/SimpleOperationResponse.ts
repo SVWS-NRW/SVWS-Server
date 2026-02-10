@@ -36,7 +36,7 @@ export class SimpleOperationResponse extends JavaObject {
 		return ['de.svws_nrw.core.data.SimpleOperationResponse'].includes(name);
 	}
 
-	public static class = new Class<SimpleOperationResponse>('de.svws_nrw.core.data.SimpleOperationResponse');
+	public static readonly class = new Class<SimpleOperationResponse>('de.svws_nrw.core.data.SimpleOperationResponse');
 
 	public static transpilerFromJSON(json: string): SimpleOperationResponse {
 		const obj = JSON.parse(json) as Partial<SimpleOperationResponse>;

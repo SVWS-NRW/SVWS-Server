@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class ReligionEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id = -1;
 
 	/** Die Bezeichnung bzw. der Name der Religion. */
@@ -38,6 +38,10 @@ public class ReligionEintrag {
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
 	public boolean istSichtbar = true;
+
+	/** Gibt an, ob die Religion in anderen Datenbanktabellen referenziert ist oder nicht. */
+	@Schema(description = "Gibt an, ob die Religion in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
+	public boolean referenziertInAnderenTabellen = false;
 
 	/**
 	 * Leerer Standardkonstruktor.

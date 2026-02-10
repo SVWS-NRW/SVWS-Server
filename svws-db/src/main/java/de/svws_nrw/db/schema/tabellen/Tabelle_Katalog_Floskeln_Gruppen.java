@@ -42,7 +42,7 @@ public class Tabelle_Katalog_Floskeln_Gruppen extends SchemaTabelle {
 	public Tabelle_Katalog_Floskeln_Gruppen() {
 		super("Katalog_Floskeln_Gruppen", SchemaRevisionen.REV_52);
 		setMigrate(false);
-		setImportExport(false);
+		setImportExport(true);
 		setPKAutoIncrement();
 		setJavaSubPackage("katalog");
 		setJavaClassName("DTOFloskelgruppen");

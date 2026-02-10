@@ -34,11 +34,13 @@
 
 	async function importFile(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if ((target.files === null) || (target.files.length === 0))
+		if ((target.files === null) || (target.files.length === 0)) {
 			return;
+		}
 		const formData = new FormData();
-		for (let i = 0; i < target.files.length; i++)
+		for (let i = 0; i < target.files.length; i++) {
 			formData.append("data", target.files[i], "lpfile" + (i + 1));
+		}
 		try {
 			await props.importLaufbahnplanung(formData);
 			emit('update:show', false);

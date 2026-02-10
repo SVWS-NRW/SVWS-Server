@@ -39,13 +39,15 @@
 	const rowsFiltered = computed<LehrerListeEintrag[]>(() => {
 		const arr = [];
 		for (const e of props.manager().lehrer.list()) {
-			if (!e.istAktiv)
+			if (!e.istAktiv) {
 				continue;
+			}
 			if ((e.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
 				|| e.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
 				|| e.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
-				&& !klassenleitungen.value.contains(e.id))
+				&& !klassenleitungen.value.contains(e.id)) {
 				arr.push(e);
+			}
 		}
 		return arr;
 	});

@@ -86,7 +86,7 @@ export class GostKlausurenCollectionHjData extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionHjData'].includes(name);
 	}
 
-	public static class = new Class<GostKlausurenCollectionHjData>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionHjData');
+	public static readonly class = new Class<GostKlausurenCollectionHjData>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionHjData');
 
 	public static transpilerFromJSON(json: string): GostKlausurenCollectionHjData {
 		const obj = JSON.parse(json) as Partial<GostKlausurenCollectionHjData>;

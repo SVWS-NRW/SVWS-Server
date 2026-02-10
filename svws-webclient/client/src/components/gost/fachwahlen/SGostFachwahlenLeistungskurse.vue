@@ -57,9 +57,11 @@
 
 	const fachwahlenstatistik = computed<GostStatistikFachwahl[]>(() => {
 		const result = new Array<GostStatistikFachwahl>();
-		for (const fws of props.fachwahlstatistik)
-			if (hatLeistungskurs(fws))
+		for (const fws of props.fachwahlstatistik) {
+			if (hatLeistungskurs(fws)) {
 				result.push(fws);
+			}
+		}
 		return result;
 	});
 
@@ -84,19 +86,22 @@
 	const schuljahr = computed<number>(() => props.faecherManager.getSchuljahr());
 
 	function getBgColor(fws: GostStatistikFachwahl): string {
-		if (fws.kuerzelStatistik === null)
+		if (fws.kuerzelStatistik === null) {
 			return 'rgb(220,220,220)';
+		}
 		return Fach.getBySchluesselOrDefault(fws.kuerzelStatistik).getHMTLFarbeRGBA(schuljahr.value, 1.0);
 	}
 
 	function doSortSchuelerListeByNachnameAndVornameAndId(liste: List<SchuelerListeEintrag>): List<SchuelerListeEintrag> {
 		liste.sort({ compare(a: SchuelerListeEintrag, b: SchuelerListeEintrag): number {
 			let cmp = a.nachname.localeCompare(b.nachname);
-			if (cmp !== 0)
+			if (cmp !== 0) {
 				return cmp;
+			}
 			cmp = a.vorname.localeCompare(b.vorname);
-			if (cmp !== 0)
+			if (cmp !== 0) {
 				return cmp;
+			}
 			return b.id - a.id;
 		} });
 		return liste;
@@ -107,16 +112,19 @@
 		const schuelermenge = props.fachwahlenManager.schuelerGetMengeLKByFachAndHalbjahrAsListOrException(idFach, halbjahr);
 		for (const id of schuelermenge) {
 			const schueler = props.mapSchueler.get(id);
-			if (schueler !== undefined)
+			if (schueler !== undefined) {
 				result.add(schueler);
+			}
 		}
 		return doSortSchuelerListeByNachnameAndVornameAndId(result);
 	}
 
 	function hatLeistungskurs(fws: GostStatistikFachwahl): boolean {
-		for (const halbjahr of GostHalbjahr.values())
-			if (!props.fachwahlenManager.schuelerGetMengeLKByFachAndHalbjahrAsListOrException(fws.id, halbjahr).isEmpty())
+		for (const halbjahr of GostHalbjahr.values()) {
+			if (!props.fachwahlenManager.schuelerGetMengeLKByFachAndHalbjahrAsListOrException(fws.id, halbjahr).isEmpty()) {
 				return true;
+			}
+		}
 		return false;
 	}
 

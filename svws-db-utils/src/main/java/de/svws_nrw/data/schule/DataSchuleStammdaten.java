@@ -8,21 +8,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import de.svws_nrw.asd.data.CoreTypeData;
 import de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag;
-import de.svws_nrw.asd.data.schule.ReligionKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.asd.types.schule.Herkunftsschulnummer;
 import de.svws_nrw.asd.types.schule.Religion;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.core.data.kataloge.KatalogEintragOrte;
 import de.svws_nrw.core.data.schule.SchulenKatalogEintrag;
-import de.svws_nrw.core.types.schule.Herkunftsschulnummern;
 import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.core.utils.AdressenUtils;
 import de.svws_nrw.data.DataManager;
@@ -32,7 +32,7 @@ import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOBeschaeftigungsart;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOErzieherart;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOTelefonArt;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebsart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKursarten;
@@ -49,6 +49,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.schule.DTOTeilstandorte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -89,14 +90,21 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		daten.idSchuljahresabschnitt = schule.Schuljahresabschnitts_ID;
 		daten.anzJGS_Jahr = (schule.AnzJGS_Jahr == null) ? 1 : schule.AnzJGS_Jahr;
 		daten.schuleAbschnitte.anzahlAbschnitte = schule.AnzahlAbschnitte;
-		daten.schuleAbschnitte.abschnittBez = schule.AbschnittBez;
-		daten.schuleAbschnitte.bezAbschnitte.add(schule.BezAbschnitt1);
-		if (daten.schuleAbschnitte.anzahlAbschnitte >= 2)
-			daten.schuleAbschnitte.bezAbschnitte.add(schule.BezAbschnitt2);
-		if (daten.schuleAbschnitte.anzahlAbschnitte >= 3)
-			daten.schuleAbschnitte.bezAbschnitte.add(schule.BezAbschnitt3);
-		if (daten.schuleAbschnitte.anzahlAbschnitte >= 4)
-			daten.schuleAbschnitte.bezAbschnitte.add(schule.BezAbschnitt4);
+		daten.schuleAbschnitte.abschnittBez = ((schule.AbschnittBez == null) || (schule.AbschnittBez.isBlank())) ? "Halbjahr" : schule.AbschnittBez;
+		final @NotNull String bezAbschnitt1 = ((schule.BezAbschnitt1 == null) || (schule.BezAbschnitt1.isBlank())) ? "1. Halbjahr" : schule.BezAbschnitt1;
+		daten.schuleAbschnitte.bezAbschnitte.add(bezAbschnitt1);
+		if (daten.schuleAbschnitte.anzahlAbschnitte >= 2) {
+			final @NotNull String bezAbschnitt2 = ((schule.BezAbschnitt2 == null) || (schule.BezAbschnitt2.isBlank())) ? "2. Halbjahr" : schule.BezAbschnitt2;
+			daten.schuleAbschnitte.bezAbschnitte.add(bezAbschnitt2);
+		}
+		if (daten.schuleAbschnitte.anzahlAbschnitte >= 3) {
+			final @NotNull String bezAbschnitt3 = ((schule.BezAbschnitt3 == null) || (schule.BezAbschnitt3.isBlank())) ? "" : schule.BezAbschnitt3;
+			daten.schuleAbschnitte.bezAbschnitte.add(bezAbschnitt3);
+		}
+		if (daten.schuleAbschnitte.anzahlAbschnitte >= 4) {
+			final @NotNull String bezAbschnitt4 = ((schule.BezAbschnitt4 == null) || (schule.BezAbschnitt4.isBlank())) ? "" : schule.BezAbschnitt4;
+			daten.schuleAbschnitte.bezAbschnitte.add(bezAbschnitt4);
+		}
 		daten.dauerUnterrichtseinheit = (schule.DauerUnterrichtseinheit == null) ? 45 : schule.DauerUnterrichtseinheit;
 		return daten;
 	}
@@ -546,9 +554,9 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		conn.transactionFlush();
 
 		// K_Adressart mit Betrieb füllen
-		final DTOKatalogAdressart addressart = new DTOKatalogAdressart(1L, "Betrieb");
-		addressart.Sortierung = 1;
-		conn.transactionPersist(addressart);
+		final DTOBetriebsart betriebsart = new DTOBetriebsart(1L, "Betrieb");
+		betriebsart.Sortierung = 1;
+		conn.transactionPersist(betriebsart);
 		conn.transactionFlush();
 
 		// K_Beschaeftigungsart mit Ausbildung und Praktikum füllen
@@ -617,7 +625,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		final ArrayList<DTOKonfession> dtoKonfession = new ArrayList<>();
 		int i = 1;
 		for (final Religion kon : Religion.values()) {
-			final ReligionKatalogEintrag eintrag = kon.daten(schuljahr);
+			final CoreTypeData eintrag = kon.daten(schuljahr);
 			if (eintrag == null)
 				continue;
 			final DTOKonfession dto = new DTOKonfession(i, eintrag.text);
@@ -629,17 +637,17 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		conn.transactionPersistAll(dtoKonfession);
 		conn.transactionFlush();
 
-		// K_Schule mit Schulen aus dem sonstigen Ausland, den Bundesländern und Nachbarländern, Keine Schul und der eigenen Schule befüllen (Core-Type)
+		// K_Schule mit Schulen aus dem sonstigen Ausland, den Bundesländern und Nachbarländern, Keine Schule und der eigenen Schule befüllen (Core-Type)
 		final ArrayList<DTOSchuleNRW> dtoSchulen = new ArrayList<>();
 		i = 1;
-		for (final Herkunftsschulnummern snr : Herkunftsschulnummern.values()) {
+		for (final Herkunftsschulnummer snr : Herkunftsschulnummer.values()) {
 			final DTOSchuleNRW dto = new DTOSchuleNRW(i, "" + (200000 + i + 1));
-			dto.SchulNr_SIM = "" + snr.daten.schulnummer;
-			dto.Name = snr.daten.bezeichnung;
+			dto.SchulNr_SIM = "" + snr.daten(schuljahr).schluessel;
+			dto.Name = snr.daten(schuljahr).text;
 			dto.Sortierung = i;
 			dto.Sichtbar = true;
 			dto.Aenderbar = true;
-			dto.KurzBez = snr.daten.bezeichnung;
+			dto.KurzBez = snr.daten(schuljahr).kuerzel;
 			dtoSchulen.add(dto);
 			i++;
 		}

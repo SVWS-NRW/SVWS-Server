@@ -101,7 +101,7 @@ export class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKMatching', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusK'].includes(name);
 	}
 
-	public static class = new Class<KursblockungAlgorithmusKMatching>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKMatching');
+	public static readonly class = new Class<KursblockungAlgorithmusKMatching>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKMatching');
 
 }
 

@@ -43,8 +43,9 @@ export class Color {
 			this.red = color;
 			this.green = green;
 			this.blue = blue;
-		} else
+		} else {
 			throw new Error("Fehlerhafter Konstruktoraufruf!");
+		}
 	}
 
 
@@ -64,8 +65,9 @@ export class Color {
 	 * Gibt die relative Luminanz der Farbe zurück.
 	 */
 	public get luminance(): number {
-		if (this._luminance === null)
+		if (this._luminance === null) {
 			this._luminance = (0.2126 * this.calcComponent(this.red)) + (0.7152 * this.calcComponent(this.green)) + (0.0722 * this.calcComponent(this.blue));
+		}
 		return this._luminance;
 	}
 

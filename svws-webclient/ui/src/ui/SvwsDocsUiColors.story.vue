@@ -258,11 +258,7 @@
 			<div v-if="type === 'border'" class=" inline">
 				<h1>Borderfarben</h1>
 				<p>
-					Folgende Farben werden für Borders (Rahmen) verwendet. Es ist zu beachten, dass die Kontrastrichtlinien von WCAG eingehalten werden. Um
-					diese zu erreichen, müssen die <code class="bg-ui-selected">-on</code> Farben zu den passenden Hintergründen verwendet werden. Beispiel:
-					Für die Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> ist die Borderfarbe
-					<code class="bg-ui-selected">border-ui-onsuccess</code> zu verwenden. Für <code class="bg-ui-selected">bg-ui-success-hover</code> hingegen ist
-					die Borderfarbe <code class="bg-ui-selected">border-ui-onsuccess-hover</code> zu verwenden. <br>
+					Folgende Farben werden für Borders (Rahmen) verwendet.
 				</p>
 			</div>
 			<div v-if="type === 'accent'" class=" inline">
@@ -296,7 +292,7 @@
 				<h1>Shadowfarben</h1>
 				<p>
 					Folgende Farben werden für Schattierungen verwendet. Wenn diese rein zum Styling verwendet werden, ohne inhaltlichen Wert zu übermitteln,
-					müssen sie keinen WCAG Kontrastrichtlienien entsprechen.
+					müssen sie keinen WCAG Kontrastrichtlinien entsprechen.
 				</p>
 			</div>
 			<div :class="[(type === 'bg') ? 'grid-cols-[1fr_auto_auto_auto_auto]' : 'grid-cols-[1fr_auto_auto_auto_auto_auto_auto]', 'grid rounded-md m-2']"
@@ -308,7 +304,7 @@
 				</div>
 				<div class="border-b border-ui" />
 				<div class="grid grid-cols-subgrid col-start-2 font-medium text-ui-secondary border-b border-ui py-2 text-center"
-					:class="[(type === 'bg') ? 'col-span-4 [&>*]:w-20' : 'col-span-6 [&>*]:w-18']">
+					:class="[(type === 'bg') ? 'col-span-4 *:w-30' : 'col-span-6 *:w-25']">
 					<div>Farbe</div>
 					<div v-if="type !== 'bg'">Vorschau</div>
 					<div>Kontrast</div>
@@ -317,7 +313,7 @@
 					<div>Kontrast</div>
 				</div>
 
-				<div v-for="([role, roleColors]) in typeMap" :key="role" class="relative grid grid-cols-subgrid col-span-full my-2">
+				<div v-for="([role, roleColors]) in typeMap" :key="role" class="relative grid grid-cols-subgrid col-span-full my-2 bg-ui">
 					<div class="border-t border-x border-ui rounded-t-lg bg-ui-brand-secondary text-xs font-semibold col-span-full w-fit p-2">{{ role }}</div>
 					<div class="grid grid-cols-subgrid col-span-full border border-ui rounded-lg rounded-tl-none overflow-hidden">
 						<div v-for="color in roleColors" :key="color" class="contents swatch-colors">
@@ -339,41 +335,40 @@
 								</span>
 							</div>
 							<div v-for="(isDark, index) in [false, true]" :key="index" :class="isDark ? 'dark' : 'light'" class="contents">
-								<Theme :contrast-values="getContrast(color, isDark)" :background="getBackgroundColor(color)">
-									<template #default="{ contrast, backgroundColor }">
-										<div :id="`${color}${isDark === true ? '-dark' : ''}`" class="p-2 flex items-center justify-center relative"
-											:class="backgroundColor">
-											<div class="w-12 h-8 rounded-lg z-0" :style="{ backgroundColor: `var(--color-${color})` }" />
-											<div v-if="type === 'text'" class="w-12 h-8 rounded-lg absolute z-10 cursor-pointer bg-ui-selected opacity-0
+								<div :id="`${color}${isDark ? '-dark' : ''}`" class="p-2 flex items-center justify-center relative" :class="getBackgroundColor(color)">
+									<div :ref="el => { if(el) swatchDivs.set(`${color}-${isDark ? 'dark' : 'light'}`, el as HTMLElement); }"
+										class="w-12 h-8 rounded-lg z-0" :style="{ backgroundColor: `var(--color-${color})` }" />
+									<div v-if="type === 'text'" class="w-12 h-8 rounded-lg absolute z-10 cursor-pointer bg-ui-selected opacity-0
 												hover:opacity-100 hover:ring-2 hover:ring-ui-brand flex items-center justify-center"
-												@click="setColorPreviewInformation(color, isDark)">
-												<span class="i-ri-eye-line icon-lg inline-block" />
-											</div>
-										</div>
-										<div v-if="type !== 'bg'" :class="backgroundColor" class="flex flex-col justify-center items-center">
+										@click="setColorPreviewInformation(color, isDark)">
+										<span class="i-ri-eye-line icon-lg inline-block" />
+									</div>
+								</div>
+								<div v-if="type !== 'bg'" class="flex flex-col justify-center items-center" :class="getBackgroundColor(color)">
+									<div>
+										<span v-if="type === 'icon'" class="i-ri-archive-line icon-xl inline-block" :class="color" />
+										<div v-if="type === 'text'">
 											<div>
-												<span v-if="type === 'icon'" class="i-ri-archive-line icon-xl inline-block" :class="color" />
-												<div v-if="type === 'text'">
-													<div>
-														<div :class="color" class="text-[9pt]">Text</div>
-														<div :class="color" class="text-[9pt] font-bold">Text</div>
-													</div>
-												</div>
-												<div v-if="type === 'border'" class="w-12 h-8 rounded-lg border-2" :style="{ borderColor: `var(--color-${color})` }" />
-												<div v-if="type=== 'accent'" :class="color">
-													<input type="checkbox" checked style="pointer-events: none; accent-color: inherit;">
-												</div>
-												<div v-if="type === 'ring'" class="w-12 h-8 rounded-lg ring-2" :style="{ color: `var(--color-${color})` }" />
-												<div v-if="type === 'shadow'">
-													<div class="w-12 h-8 rounded-lg bg-ui border border-ui" :style="{ boxShadow: `0 4px 6px -1px var(--color-${color})` }" />
-												</div>
+												<div :class="color" class="text-[9pt]">Text</div>
+												<div :class="color" class="text-[9pt] font-bold">Text</div>
 											</div>
 										</div>
-										<div class="flex font-bold items-center justify-center" :class="[backgroundColor, getContrastColor(contrast.contrastLevel)]">
-											<div class="bg-ui px-1 rounded-full w-13 text-center">{{ contrast.contrastRatio }}</div>
+										<div v-if="type === 'border'" class="w-12 h-8 rounded-lg border-2" :style="{ borderColor: `var(--color-${color})` }" />
+										<div v-if="type=== 'accent'" :class="color">
+											<input type="checkbox" checked style="pointer-events: none; accent-color: inherit;">
 										</div>
-									</template>
-								</Theme>
+										<div v-if="type === 'ring'" class="w-12 h-8 rounded-lg ring-2" :style="{ color: `var(--color-${color})` }" />
+										<div v-if="type === 'shadow'">
+											<div class="w-12 h-8 rounded-lg bg-ui border border-ui" :style="{ boxShadow: `0 4px 6px -1px var(--color-${color})` }" />
+										</div>
+									</div>
+								</div>
+								<div :ref="el => { if(el) bgDivs.set(`${color}-${isDark ? 'dark' : 'light'}`, el as HTMLElement); }"
+									class="flex font-bold items-center justify-center text-ui" :class="[getBackgroundColor(color), getContrastTextColor(color, isDark)]">
+									<div class="bg-ui px-1 rounded-full w-13 text-center">
+										{{ contrastValues.get(`${color}-${isDark ? 'dark' : 'light'}`) }}
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -388,7 +383,7 @@
 						Weitere Informationen:
 						<a href="https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html" target="_blank" class="text-ui-brand">Web Content Accessibility Guidelines (WCAG) 2.1</a>
 					</p>
-					<div class="grid grid-flow-col grid-rows-4 [&>*]:bg-ui text-center border border-ui-neutral rounded-lg mb-2 overflow-hidden">
+					<div class="grid grid-flow-col grid-rows-4 *:bg-ui text-center border border-ui-neutral rounded-lg mb-2 overflow-hidden">
 						<div class="text-ui-secondary font-medium py-2 border-b border-ui-neutral">Kontrast Light</div>
 						<div class="text-ui-danger font-bold py-2">4.49:1</div>
 						<div class="text-ui-warning font-bold py-2">4.50:1</div>
@@ -450,10 +445,31 @@
 
 <script setup lang="ts">
 
-	import type { PropType } from 'vue';
-	import { defineComponent, reactive } from 'vue';
+	import { nextTick, onMounted, reactive, ref } from 'vue';
 	import { DeveloperNotificationException } from '../../../core/src/core/exceptions/DeveloperNotificationException';
 
+	// Alle Farb-Swatches und Hintergrundfarben-Elemente zur Berechnung der Kontraste
+	const swatchDivs = ref<Map <string, HTMLElement>>(new Map());
+	const bgDivs = ref<Map<string, HTMLElement>>(new Map());
+	const contrastValues = ref<Map<string, string>>(new Map());
+
+	// Enthält alle Informationen für die Vorschau der Textfarben auf der rechten Bildschirmseite.
+	const colorPreview = reactive({
+		color: '',
+		background: '',
+		dark: false,
+		contrast: 'N/A',
+		contrastLevels: <string[]>[],
+	});
+
+	// Zusammensetzung alle Farben
+	const semantics = {
+		type: ['bg', 'text', 'border', 'accent', 'ring', 'icon'],
+		role: ['', 'brand', 'statistic', 'selected', 'danger', 'success', 'warning', 'caution', 'neutral', 'disabled', 'onbrand', 'onstatistic', 'onselected',
+			'ondanger', 'onsuccess', 'onwarning', 'oncaution', 'onneutral', 'ondisabled'],
+		prominence: ['', 'secondary', '0', '10', '25', '50', '75', '100'],
+		interaction: ['', 'hover'],
+	};
 
 	// Folgende Maps enthalten alle definierten Farben
 	const textColorMap: Map<string, string[]> = new Map([
@@ -537,18 +553,8 @@
 		['caution', ['border-ui-caution', 'border-ui-caution-hover']],
 		['neutral', ['border-ui-neutral', 'border-ui-neutral-hover']],
 		['disabled', ['border-ui-disabled']],
-		['onbrand', ['border-ui-onbrand', 'border-ui-onbrand-hover']],
-		['onstatistic', ['border-ui-onstatistic', 'border-ui-onstatistic-hover']],
-		['onselected', ['border-ui-onselected', 'border-ui-onselected-hover']],
-		['ondanger', ['border-ui-ondanger', 'border-ui-ondanger-hover']],
-		['onsuccess', ['border-ui-onsuccess', 'border-ui-onsuccess-hover']],
-		['onwarning', ['border-ui-onwarning', 'border-ui-onwarning-hover']],
-		['oncaution', ['border-ui-oncaution', 'border-ui-oncaution-hover']],
-		['onneutral', ['border-ui-onneutral', 'border-ui-onneutral-hover']],
-		['ondisabled', ['border-ui-ondisabled']],
 		['uistatic', ['border-uistatic', 'border-uistatic-0', 'border-uistatic-10', 'border-uistatic-25', 'border-uistatic-50', 'border-uistatic-75', 'border-uistatic-100']],
 	]);
-
 
 	const backgroundColorMap: Map<string, string[]> = new Map([
 		['default', ['bg-ui', 'bg-ui-0', 'bg-ui-10', 'bg-ui-25', 'bg-ui-50', 'bg-ui-75', 'bg-ui-100', 'bg-ui-hover']],
@@ -563,7 +569,6 @@
 		['disabled', ['bg-ui-disabled']],
 		['uistatic', ['bg-uistatic', 'bg-uistatic-0', 'bg-uistatic-10', 'bg-uistatic-25', 'bg-uistatic-50', 'bg-uistatic-75', 'bg-uistatic-100']],
 	]);
-
 
 	const accentColorMap: Map<string, string[]> = new Map([
 		['default', ['accent-ui']],
@@ -626,181 +631,118 @@
 		['default', ['shadow-ui-0', 'shadow-ui-10', 'shadow-ui-25', 'shadow-ui-50', 'shadow-ui-75', 'shadow-ui-100']],
 	]);
 
-	// Eine Map, die den type-Namen zusammen mit den dazugehörigen Farben enthält.
 	const typeList = new Map([["bg", backgroundColorMap], ["text", textColorMap], ['border', borderColorMap], ['accent', accentColorMap],
 		['ring', ringColorMap], ['icon', iconColorMap], ['shadow', shadowColorMap]]);
 
+	const onColorBackgroundMap = [
+		{ suffix: '-onbrand-hover', bg: 'bg-ui-brand-hover' },
+		{ suffix: '-onbrand-secondary', bg: 'bg-ui-brand-secondary' },
+		{ suffix: '-onbrand', bg: 'bg-ui-brand' },
+		{ suffix: '-onstatistic-hover', bg: 'bg-ui-statistic-hover' },
+		{ suffix: '-onstatistic-secondary', bg: 'bg-ui-statistic-secondary' },
+		{ suffix: '-onstatistic', bg: 'bg-ui-statistic' },
+		{ suffix: '-onselected-hover', bg: 'bg-ui-selected-hover' },
+		{ suffix: '-onselected', bg: 'bg-ui-selected' },
+		{ suffix: '-ondanger-hover', bg: 'bg-ui-danger-hover' },
+		{ suffix: '-ondanger-secondary', bg: 'bg-ui-danger-secondary' },
+		{ suffix: '-ondanger', bg: 'bg-ui-danger' },
+		{ suffix: '-onsuccess-hover', bg: 'bg-ui-success-hover' },
+		{ suffix: '-onsuccess-secondary', bg: 'bg-ui-success-secondary' },
+		{ suffix: '-onsuccess', bg: 'bg-ui-success' },
+		{ suffix: '-onwarning-hover', bg: 'bg-ui-warning-hover' },
+		{ suffix: '-onwarning-secondary', bg: 'bg-ui-warning-secondary' },
+		{ suffix: '-onwarning', bg: 'bg-ui-warning' },
+		{ suffix: '-oncaution-hover', bg: 'bg-ui-caution-hover' },
+		{ suffix: '-oncaution-secondary', bg: 'bg-ui-caution-secondary' },
+		{ suffix: '-oncaution', bg: 'bg-ui-caution' },
+		{ suffix: '-onneutral-hover', bg: 'bg-ui-neutral-hover' },
+		{ suffix: '-onneutral-secondary', bg: 'bg-ui-neutral-secondary' },
+		{ suffix: '-onneutral', bg: 'bg-ui-neutral' },
+		{ suffix: '-ondisabled', bg: 'bg-ui-disabled' },
+	];
 
-	// Zusammensetzung alle Farben
-	const semantics = {
-		type: ['bg', 'text', 'border', 'accent', 'ring', 'icon'],
-		role: ['', 'brand', 'statistic', 'selected', 'danger', 'success', 'warning', 'caution', 'neutral', 'disabled', 'onbrand', 'onstatistic', 'onselected', 'ondanger', 'onsuccess', 'onwarning', 'oncaution', 'onneutral', 'ondisabled'],
-		prominence: ['', 'secondary', '0', '10', '25', '50', '75', '100'],
-		interaction: ['', 'hover'],
-	};
-
-	// Eine Inline-Komponente, die pro Theme verwendet wird. Das Auslagern in diese Komponente verhindert, dass im Template mehrmals Funktionen für Kontraste
-	// und Hintergrundfarben aufgerufen werden müssen.
-	const Theme = defineComponent({
-		props: {
-			contrastValues: {
-				type: Object as PropType<{ contrastRatio: string; contrastLevel: string }>,
-				required: true,
-			},
-			background: {
-				type: String,
-				required: true,
-			},
-		},
-		setup(props, { slots }) {
-			return () => {
-				return slots.default ? slots.default({ contrast: props.contrastValues, backgroundColor: props.background }) : null;
-			};
-		},
-	});
-
-	// Enthält alle Informationen für die Vorschau der Textfarben auf der rechten Bildschirmseite.
-	const colorPreview = reactive({
-		color: '',
-		background: '',
-		dark: false,
-		contrast: 'N/A',
-		contrastLevels: <string[]>[],
-	});
-
-	/**
-	 * Setzt die Farben und Kontrastwerte in der Farbvorschau für Texte auf der rechten Seite.
-	 *
-	 * @param color   die Farbe, die für die Preview gesetzt werden soll
-	 * @param dark    bestimmt, ob die Farbe im light oder dark-Mode angezeigt werden soll
-	 */
-	function setColorPreviewInformation(color: string, dark: boolean) {
-		colorPreview.color = color;
-		colorPreview.background = getBackgroundColor(color);
-		colorPreview.dark = dark;
-		const { contrastRatio: contrast, contrastLevel: score } = getContrast(color, dark);
-		colorPreview.contrast = contrast;
-		colorPreview.contrastLevels = generateContrastLevels(score);
-	}
-
-	/**
-	 * Generiert die Kontrastlevel nach WCAG für die verschiedenen Schriftgrößen
-	 *
-	 * @param score   der score, der mit dem Kontrast für die Farben erreicht wurde.
-	 *
-	 * @returns die Kontrastlevel für die verschiedenen Schriftgrößen
-	 */
-	function generateContrastLevels(score: string): string[] {
-		const result: string[] = [];
-
-		switch (score) {
-			case "none":
-				result.push(...Array(6).fill("< AA"));
-				break;
-			case "noneLargeAA":
-				result.push(...Array(4).fill("< AA"));
-				result.push(...Array(2).fill("AA"));
-				break;
-			case "AALargeAAA":
-				result.push(...Array(4).fill("AA"));
-				result.push(...Array(2).fill("AAA"));
-				break;
-			case "AAA":
-				result.push(...Array(4).fill("AAA"));
-				result.push(...Array(2).fill("AAA"));
-				break;
+	onMounted(async () => {
+		await nextTick(); // sicherstellen, dass alle Elemente gemountet sind
+		for (const [key, swatch] of swatchDivs.value) {
+			const bg = bgDivs.value.get(key);
+			if (bg === undefined) {
+				continue;
+			}
+			// Berechnung der Kontraste
+			const swatchColor = getComputedStyle(swatch).getPropertyValue("background-color");
+			const bgColor = getComputedStyle(bg).getPropertyValue("background-color");
+			contrastValues.value.set(key, contrastRatio(swatchColor, bgColor));
 		}
-
-		return result;
-	}
+	});
 
 	/**
-	 * Bestimmt den Farbwert einer Farbe anhand der Variable und des Themes
+	 * Kopiert den Namen der Farbe in die Zwischenablage.
 	 *
-	 * @param variableName   die Farbvariable, deren RGB bestimmt werden soll.
-	 * @param dark           false, wenn die Farbe im light-Mode bestimmt werden soll. True, wenn die Farbe im dark-Mode bestimmt werden soll.
-	 *
-	 * @returns der Farbwert
+	 * @param color   Name der Farbe
 	 */
-	function resolveComputedColor(variableName: string, dark = false): string {
-		// Zur Bestimmung der Farbe muss eine dummy-div erstellt werden. Dieses ist nicht sichtbar.
-		const dummy = document.createElement('div');
-		dummy.style.display = 'none';
-		dummy.style.setProperty('--color', `var(--color-${variableName})`);
-		dummy.className = dark ? 'dark' : '';
-		document.body.appendChild(dummy);
-
-		const color = getComputedStyle(dummy).getPropertyValue('--color');
-		const themeColor = resolveLightDark(color, dark);
-		document.body.removeChild(dummy);
-		return themeColor.trim();
+	async function copyToClipboard(color: string) {
+		try {
+			await navigator.clipboard.writeText(color);
+		} catch (e) {
+			throw new DeveloperNotificationException("Beim Kopieren ist ein Fehler aufgetreten!");
+		}
 	}
 
 	/**
-	 * Bestimmt aus einer "light-dark" Variablendefinition den entsprechenden RGB-Wert.
+	 * Berechnet die passende Hintergrundfarbe zur übergebenen Farbe
 	 *
-	 * @param input   der String mit der light-dark Variable
-	 * @param dark    false, wenn die light-Mode Farbe bestimmt werden soll. True, denn die dark-Mode Farbe bestimmt werden soll.
-	 *
-	 * @returns die RGB-Definition der entsprechenden Farbe und des entsprechenden Themes
-	 */
-	function resolveLightDark(input: string, dark: boolean): string {
-		if (!input.includes('light-dark'))
-			return input;
-
-		const match = /light-dark\(((?:[^(),]+|\([^()]*\))+),\s*((?:[^(),]+|\([^()]*\))+)\)/.exec(input);
-
-		if (!match)
-			return input;
-
-		const [, lightValue, darkValue] = match;
-
-		return dark ? darkValue.trim() : lightValue.trim();
-	}
-
-	/**
-	 * Berechnet die zugehörige Hintergrundfarbe zu einer gegebenen Farbe.
-	 *
-	 * @param color   die Farbe, deren Hintergrundfabe bestimmt werden soll.
-	 *
-	 * @returns die Hintergrundfarbe zur gegebenen Vordergrundfarbe
+	 * @param color   Farbe des Swatches
 	 */
 	function getBackgroundColor(color: string): string {
-		if (!color.includes('-on'))
-			return 'bg-ui';
-
-		return color
-			.split('-')
-			.map((part, index, parts) => {
-				// Erster Teil wird 'bg'
-				if (index === 0)
-					return 'bg';
-
-				// Das 'on' am Anfang des dritten Teils entfernen
-				if (index === 2 && part.startsWith('on'))
-					return part.replace(/^on/, '');
-
-				// Wenn der String mit '-secondary-hover' endet, entferne '-secondary'
-				if (index === parts.length - 2 && part === 'secondary' && parts[parts.length - 1] === 'hover') {
-					return ''; // Entfernt 'secondary', wenn 'hover' direkt folgt
-				}
-
-				return part;
-			})
-			.filter(part => part !== '') // Entfernt leere Teile
-			.join('-');
+		return onColorBackgroundMap.find(item => color.includes(item.suffix))?.bg ?? 'bg-ui';
 	}
 
+	/**
+	 * Berechnet die W3C Contrastratio zwischen zwei Farben.
+	 * @param color1   Erste Farbe als HEX, RGB oder HSL
+	 * @param color2   Erste Farbe als HEX, RGB oder HSL
+	 *
+	 * @returns Contrastratio als String mit 2 Nachkommastellen
+	 */
+	function contrastRatio(color1: string, color2: string): string {
+		const rgb1 = parseColorToRGB(color1);
+		const rgb2 = parseColorToRGB(color2);
+
+		const l1 = luminance(rgb1);
+		const l2 = luminance(rgb2);
+
+		// Welche Farbe heller ist, ist entscheidend für die Formel der Kontrastberechnung
+		const [bright, dark] = l1 > l2 ? [l1, l2] : [l2, l1];
+		return ((bright + 0.05) / (dark + 0.05)).toFixed(2);
+	}
 
 	/**
-	 * Bestimmt die Farbe für den Kontrastwert, abhängig von dem erreichten WCAG-Level.
+	 * Berechnet die Lumineszenz einer RGB Farbe nach W3C
+	 * @param r   Farbwert für R in RGB
+	 * @param g   Farbwert für G in RGB
+	 * @param b   Farbwert für B in RGB
 	 *
-	 * @param score   WCAG Level
+	 * @return Lumineszenz der RGB Farbe
+	 */
+	function luminance({ r, g, b }: { r: number; g: number; b: number }): number {
+		const a = [r, g, b].map(v => {
+			v /= 255; // Normalisierung des Wertes zwischen 0 und 255 auf einen Wert zwischen 0 und 1
+			return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); // Umrechnung in sRGB
+		});
+		return (0.2126 * a[0]) + (0.7152 * a[1]) + (0.0722 * a[2]); // Berechnung der Lumineszenz nach W3C
+	}
+
+	/**
+	 * Bestimmt die Textfarbe für den Kontrastwert, abhängig von dem erreichten WCAG-Level.
+	 *
+	 * @param color   CSS-Klasse der Farbe für den Kontrastwert
+	 * @param dark    Darkmode
 	 *
 	 * @returns die Textfarbe für das Kontrastlevel
 	 */
-	function getContrastColor(score: string): string {
-		switch (score) {
+	function getContrastTextColor(color: string, dark: boolean): string {
+		const contrastLevel = getContrastLevel(contrastValues.value.get(`${color}-${dark ? 'dark' : 'light'}`));
+		switch (contrastLevel) {
 			case "AAA":
 				return "text-ui-success";
 			case "AALargeAAA":
@@ -811,37 +753,31 @@
 	}
 
 	/**
-	 * Berechnen der relativen Leuchtdichte eines RGB-Farbwerts
-	 * http://www.w3.org/TR/WCAG20/#contrast-ratiodef
+	 * Gibt das Kontrastlevel nach W3C an. Das Level hängt davon ab, wie groß der Text ist. Große Texte sind Texte mit 18pt/24px oder fette Texte mit 14pt/18.5px.
+	 * AAA: Kontrastlevel AAA bei jeder Textgröße
+	 * AALargeAAA: Kontrastlevel AA bei kleinen Texten und AAA bei großen Texten
+	 * noneLargeAA: Kontrastlevel <AA bei kleinen Texten und AA bei großen Texten
+	 * none: Kontrastlevel <AA unabhängig von der Textgröße
+	 * N/A: Kein Level bestimmbar
 	 *
-	 * @param rgb   der RGB Farbwert
+	 * @param contrast   Contrastratio zwischen 2 Farben
 	 *
-	 * @returns die relative Leuchtdichte
+	 * @returns   Kontrastlevel als String
 	 */
-	function getContrastRelativeLuminance(rgb: { r: number, g: number, b: number }): number {
-		const lowc = 1 / 12.92;
-		const rsrgb = rgb.r / 255;
-		const gsrgb = rgb.g / 255;
-		const bsrgb = rgb.b / 255;
-		// sRGB-Gammakorrektur
-		const r = rsrgb <= 0.03928 ? rsrgb * lowc : Math.pow((rsrgb + 0.055) / 1.055, 2.4);
-		const g = gsrgb <= 0.03928 ? gsrgb * lowc : Math.pow((gsrgb + 0.055) / 1.055, 2.4);
-		const b = bsrgb <= 0.03928 ? bsrgb * lowc : Math.pow((bsrgb + 0.055) / 1.055, 2.4);
-		return (r * 0.2126) + (g * 0.7152) + (b * 0.0722);
-	}
-
-	/**
-	 * Berechnen des Kontrasts zwischen zwei Leuchtdichten
-	 *
-	 * @param background   Hintergrundfarbe
-	 * @param foreground   Vordergrundfarbe
-	 *
-	 * @returns das Kontrastverhältnis
-	 */
-	function getContrastLuminance(background = 0, foreground = 0): number {
-		const l1 = Math.max(background, foreground);
-		const l2 = Math.min(background, foreground);
-		return (l1 + 0.05) / (l2 + 0.05);
+	function getContrastLevel(contrast: string | undefined): 'AAA' | 'AALargeAAA' | 'noneLargeAA' | 'none' | 'N/A' {
+		const contrastAsNum = Number(contrast);
+		switch (true) {
+			case isNaN(contrastAsNum):
+				return "N/A";
+			case contrastAsNum >= 7:
+				return "AAA";
+			case contrastAsNum >= 4.5:
+				return "AALargeAAA";
+			case contrastAsNum >= 3:
+				return "noneLargeAA";
+			default:
+				return "none";
+		}
 	}
 
 	/**
@@ -852,9 +788,6 @@
 	 * @returns { r: number; g: number; b: number }   ein Objekt mit den RGB-Werten
 	 */
 	function parseColorToRGB(color: string): { r: number; g: number; b: number } {
-		if (typeof color !== 'string')
-			return { r: 0, g: 0, b: 0 };
-
 		color = color.trim().toLowerCase();
 
 		const colorType = color.startsWith('#') ? 'hex' :
@@ -873,7 +806,6 @@
 		}
 	}
 
-
 	/**
 	 * Wandelt einen HEX-Farbstring in RGB um.
 	 *
@@ -885,11 +817,13 @@
 		// entfernt das '#' Zeichen
 		let hex = color.slice(1);
 		// Wandelt 3-stellige Hexadezimalwerte in 6-stellige um, indem die Buchstaben verdoppelt werden
-		if (hex.length === 3)
+		if (hex.length === 3) {
 			hex = hex.split('').map(c => c + c).join('');
+		}
 		// Prüft, ob der Hexwert die richtige Zeichenlänge und die richtigen Zeichen beinhaltet.
-		if (hex.length !== 6 || !/^[0-9a-f]{6}$/i.test(hex))
+		if (hex.length !== 6 || !/^[0-9a-f]{6}$/i.test(hex)) {
 			return { r: 0, g: 0, b: 0 };
+		}
 		// Wandelt den Hexadezimalwert in einen RGB-Wert um
 		const bigint = parseInt(hex, 16);
 		return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
@@ -906,8 +840,9 @@
 		// Extrahiere die Zahlen aus dem RGB-Farbwert, der als string übergeben wird.
 		const match = color.match(/\d+/g);
 		// Prüft, ob ein gültiger Wert übergeben wurde
-		if (!match || match.length < 3)
+		if (!match || match.length < 3) {
 			return { r: 0, g: 0, b: 0 };
+		}
 		const [r, g, b] = match.map(Number).slice(0, 3);
 		return { r, g, b };
 	}
@@ -924,8 +859,9 @@
 		// Extrahiere die Zahlen aus dem HSL-Farbwert, der als string übergeben wird.
 		const match = color.match(/[\d.]+/g);
 		// Prüft, ob ein gültiger Wert übergeben wurde
-		if (!match || match.length < 3)
+		if (!match || match.length < 3) {
 			return { r: 0, g: 0, b: 0 };
+		}
 
 		// Konvertiere die extrahierten Strings in Zahlen (h, s, l)
 		const [h, s, l] = match.map(Number);
@@ -946,19 +882,24 @@
 		const hueToRGB = (p: number, q: number, tRaw: number): number => {
 			let t = tRaw;
 			// Bereinige t, wenn es außerhalb des [0, 1]-Bereichs liegt
-			if (t < 0)
+			if (t < 0) {
 				t += 1;
-			if (t > 1)
+			}
+			if (t > 1) {
 				t -= 1;
+			}
 
 			// Berechne RGB basierend auf dem Wert von t (Hue)
-			// Diese Berechnungen kommen aus den HSL-to-RGB Formeln
-			if (t < (1 / 6))
-				return p + ((q - p) * 6 * t); // Farbton zwischen 0 und 60°
-			if (t < (1 / 2))
-				return q; // Farbton zwischen 60° und 180°
-			if (t < (2 / 3))
-				return p + ((q - p) * ((2 / 3) - t) * 6); // Farbton zwischen 180° und 240°
+			// diese Berechnungen kommen aus den HSL-to-RGB Formeln
+			if (t < (1 / 6)) {
+				return p + ((q - p) * 6 * t);
+			} // Farbton zwischen 0 und 60°
+			if (t < (1 / 2)) {
+				return q;
+			} // Farbton zwischen 60° und 180°
+			if (t < (2 / 3)) {
+				return p + ((q - p) * ((2 / 3) - t) * 6);
+			} // Farbton zwischen 180° und 240°
 			return p; // Farbton zwischen 240° und 360°
 		};
 
@@ -983,46 +924,50 @@
 	}
 
 	/**
-	 * Berechnet den Kontrastwert zwischen zwei Farben und gibt eine Bewertung zurück.
+	 * Setzt die Farben und Kontrastwerte in der Farbvorschau für Texte auf der rechten Seite.
 	 *
-	 * @param color   die Farbe, deren Kontrast zur zugehörigen Hintergrundfarbe berechnet werden soll
-	 * @param dark    false, wenn der Kontrast für den light-Mode berechnet werden soll. True, wenn der Kontrast für den dark-mode berechnet werden soll.
-	 *
-	 * @returns { contrastRatio: string, contrastLevel: string }   ein Objekt mit dem Kontrastverhältnis und dem Kontrastlevel
+	 * @param color   CSS-Klasse für die Farbe
+	 * @param dark    Darkmode
 	 */
-	function getContrast(color: string, dark: boolean): { contrastRatio: string, contrastLevel: string } {
-		return { contrastLevel: '', contrastRatio: '' };
-		const foreground = resolveComputedColor(color, dark);
-		const background = resolveComputedColor(getBackgroundColor(color), dark);
-
-		const fg = parseColorToRGB(foreground);
-		const bg = parseColorToRGB(background);
-		// Berechnen des Kontrastverhältnisses
-		const contrast = getContrastLuminance(getContrastRelativeLuminance(bg), getContrastRelativeLuminance(fg));
-		// Bewerten des Kontrastverhältnisses gemäß WCAG-Richtlinien
-		let score = "";
-		if (contrast >= 7)
-			score = "AAA";
-		else if (contrast >= 4.5)
-			score = "AALargeAAA";
-		else if (contrast >= 3)
-			score = "noneLargeAA";
-		else
-			score = "none";
-		return { contrastRatio: contrast.toFixed(2), contrastLevel: score };
+	function setColorPreviewInformation(color: string, dark: boolean): void {
+		colorPreview.color = color;
+		colorPreview.background = getBackgroundColor(color);
+		colorPreview.dark = dark;
+		colorPreview.contrast = contrastValues.value.get(`${color}-${dark ? 'dark' : 'light'}`) ?? 'N/A';
+		const score = getContrastLevel(colorPreview.contrast);
+		colorPreview.contrastLevels = generateContrastLevelsForPreview(score);
 	}
 
 	/**
-	 * Kopiert den Namen der Farbe in die Zwischenablage.
+	 * Generiert die Kontrastlevel nach WCAG für die verschiedenen Schriftgrößen
 	 *
-	 * @param color   Name der Farbe
+	 * @param score   der score, der mit dem Kontrast für die Farben erreicht wurde.
+	 *
+	 * @returns die Kontrastlevel für die verschiedenen Schriftgrößen
 	 */
-	async function copyToClipboard(color: string) {
-		try {
-			await navigator.clipboard.writeText(color);
-		} catch (e) {
-			throw new DeveloperNotificationException("Beim Kopieren ist ein Fehler aufgetreten!");
+	function generateContrastLevelsForPreview(score: string): string[] {
+		const result: string[] = [];
+
+		switch (score) {
+			case "none":
+				result.push(...Array(6).fill("< AA"));
+				break;
+			case "noneLargeAA":
+				result.push(...Array(3).fill("< AA"));
+				result.push(...Array(3).fill("AA"));
+				break;
+			case "AALargeAAA":
+				result.push(...Array(3).fill("AA"));
+				result.push(...Array(3).fill("AAA"));
+				break;
+			case "AAA":
+				result.push(...Array(6).fill("AAA"));
+				break;
+			default:
+				result.push(...Array(6).fill("N/A"));
 		}
+
+		return result;
 	}
 
 </script>

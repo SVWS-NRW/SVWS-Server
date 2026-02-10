@@ -108,7 +108,7 @@ export class ReportingVorlageParameterTyp extends JavaEnum<ReportingVorlageParam
 		return ['de.svws_nrw.core.types.reporting.ReportingVorlageParameterTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<ReportingVorlageParameterTyp>('de.svws_nrw.core.types.reporting.ReportingVorlageParameterTyp');
+	public static readonly class = new Class<ReportingVorlageParameterTyp>('de.svws_nrw.core.types.reporting.ReportingVorlageParameterTyp');
 
 }
 

@@ -44,7 +44,7 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragDQRNiveaus'].includes(name);
 	}
 
-	public static class = new Class<Schild3KatalogEintragDQRNiveaus>('de.svws_nrw.core.data.schild3.Schild3KatalogEintragDQRNiveaus');
+	public static readonly class = new Class<Schild3KatalogEintragDQRNiveaus>('de.svws_nrw.core.data.schild3.Schild3KatalogEintragDQRNiveaus');
 
 	public static transpilerFromJSON(json: string): Schild3KatalogEintragDQRNiveaus {
 		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragDQRNiveaus>;

@@ -20,8 +20,9 @@ export class RouteEinstellungenBenutzergruppeDaten extends RouteNode<any, RouteE
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
-		if (routeEinstellungenBenutzergruppe.data.auswahl === undefined)
-			return routeEinstellungenBenutzergruppe.getRoute(undefined);
+		if (routeEinstellungenBenutzergruppe.data.auswahl === undefined) {
+			return routeEinstellungenBenutzergruppe.getRoute();
+		}
 	}
 
 	public getProps(to: RouteLocationNormalized): BenutzergruppeProps {

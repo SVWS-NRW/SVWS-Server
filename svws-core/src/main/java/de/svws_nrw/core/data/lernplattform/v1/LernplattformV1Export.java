@@ -17,10 +17,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class LernplattformV1Export {
 
-	/** Die Revision des Lernplattform-Datenformates, um zu überprüfen, ob die Datei in dem richtigen Format vorliegt (-1 für Entwickler-Revisionen und
-	 * ansonsten aufsteigend ab 1 */
+	/** Die Revision des Lernplattformen-Exports dient zur Überprüfung der Datei Version und der damit verbundenen Datenstruktur. */
 	@Schema(description = "Die Revisionsnummer des Rückgabeformates der Daten.", example = "1")
-	public int revision = -1;
+	public int revision = 1;
 
 	/** Gibt die ID der Lernplattform an. */
 	@Schema(description = "Enthält die ID der Lernplattform.", example = "1")

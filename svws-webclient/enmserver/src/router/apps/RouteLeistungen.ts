@@ -26,8 +26,6 @@ export class RouteLeistungen extends RouteNode<any, RouteApp> {
 			patchLeistung: routeApp.data.patchLeistung,
 			columnsVisible: () => routeApp.data.leistungenColumnsVisible,
 			setColumnsVisible: routeApp.data.setLeistungenColumnsVisible,
-			floskelEditorVisible: routeApp.data.floskelEditorVisible,
-			setFloskelEditorVisible: routeApp.data.setFloskelEditorVisible,
 		};
 	}
 

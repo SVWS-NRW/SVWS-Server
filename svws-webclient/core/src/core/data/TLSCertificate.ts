@@ -86,7 +86,7 @@ export class TLSCertificate extends JavaObject {
 		return ['de.svws_nrw.core.data.TLSCertificate'].includes(name);
 	}
 
-	public static class = new Class<TLSCertificate>('de.svws_nrw.core.data.TLSCertificate');
+	public static readonly class = new Class<TLSCertificate>('de.svws_nrw.core.data.TLSCertificate');
 
 	public static transpilerFromJSON(json: string): TLSCertificate {
 		const obj = JSON.parse(json) as Partial<TLSCertificate>;

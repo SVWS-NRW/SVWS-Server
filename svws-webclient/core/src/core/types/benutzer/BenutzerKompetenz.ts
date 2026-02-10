@@ -653,7 +653,7 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 		return ['de.svws_nrw.core.types.benutzer.BenutzerKompetenz', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<BenutzerKompetenz>('de.svws_nrw.core.types.benutzer.BenutzerKompetenz');
+	public static readonly class = new Class<BenutzerKompetenz>('de.svws_nrw.core.types.benutzer.BenutzerKompetenz');
 
 }
 

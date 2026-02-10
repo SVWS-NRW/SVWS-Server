@@ -36,9 +36,11 @@
 
 	const zuordnungen = computed<HashSet<GostBlockungsergebnisKursSchuelerZuordnung>>(() => {
 		const zuordnungenSet = new HashSet<GostBlockungsergebnisKursSchuelerZuordnung>();
-		for (const es of props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().entrySet())
-			for (const kurs of es.getValue())
+		for (const es of props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().entrySet()) {
+			for (const kurs of es.getValue()) {
 				zuordnungenSet.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs.id, es.getKey()));
+			}
+		}
 		return zuordnungenSet;
 	});
 
@@ -47,8 +49,9 @@
 
 	async function removeZuordnung() {
 		const set = new HashSet<GostBlockungsergebnisKursSchuelerZuordnung>();
-		for (const z of selected.value)
+		for (const z of selected.value) {
 			set.add(z);
+		}
 		show.value = false;
 		if (!set.isEmpty()) {
 			const update = props.getErgebnismanager().kursSchuelerUpdate_03b_ENTFERNE_KURS_SCHUELER_PAARE(set);

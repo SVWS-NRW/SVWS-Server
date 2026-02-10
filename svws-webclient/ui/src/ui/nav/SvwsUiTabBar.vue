@@ -77,14 +77,18 @@
 		state.value.scrolledMax = (tabsListElement.value?.scrollLeft ?? 0) >= state.value.maxScrollLeft;
 		tabsListElement.value?.addEventListener("scroll", handleScroll);
 		window.addEventListener("resize", handleScroll);
-		window.addEventListener("keydown", switchTab);
+		window.addEventListener("keydown", (event) => {
+			void switchTab(event);
+		});
 	});
 
 
 	onUnmounted(() => {
 		tabsListElement.value?.removeEventListener("scroll", handleScroll);
 		window.removeEventListener("resize", handleScroll);
-		window.removeEventListener("keydown", switchTab);
+		window.removeEventListener("keydown", (event) => {
+			void switchTab(event);
+		});
 	});
 
 
@@ -109,12 +113,12 @@
 		});
 	}
 
-	function switchTab(event: KeyboardEvent) {
-		if (event.altKey && event.ctrlKey && !processingKeyboardEvent && !event.repeat && ((event.key === "ArrowLeft") || (event.key === "ArrowRight"))) {
+	async function switchTab(event: KeyboardEvent) {
+		if (!props.secondary && event.altKey && event.ctrlKey && !processingKeyboardEvent && !event.repeat && ((event.key === "ArrowLeft") || (event.key === "ArrowRight"))) {
 			processingKeyboardEvent = true;
 			const backwards = (event.key === "ArrowLeft");
 			const newTab = backwards ? props.tabManager().prevTab : props.tabManager().nextTab;
-			void props.tabManager().setTab(newTab);
+			await props.tabManager().setTab(newTab);
 			processingKeyboardEvent = false;
 		}
 	}

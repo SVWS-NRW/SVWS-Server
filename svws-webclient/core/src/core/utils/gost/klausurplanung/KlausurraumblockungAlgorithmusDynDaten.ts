@@ -383,7 +383,7 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurraumblockungAlgorithmusDynDaten'].includes(name);
 	}
 
-	public static class = new Class<KlausurraumblockungAlgorithmusDynDaten>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurraumblockungAlgorithmusDynDaten');
+	public static readonly class = new Class<KlausurraumblockungAlgorithmusDynDaten>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurraumblockungAlgorithmusDynDaten');
 
 }
 

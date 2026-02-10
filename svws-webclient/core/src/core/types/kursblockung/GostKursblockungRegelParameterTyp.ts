@@ -79,7 +79,7 @@ export class GostKursblockungRegelParameterTyp extends JavaEnum<GostKursblockung
 		return ['de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<GostKursblockungRegelParameterTyp>('de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp');
+	public static readonly class = new Class<GostKursblockungRegelParameterTyp>('de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp');
 
 }
 

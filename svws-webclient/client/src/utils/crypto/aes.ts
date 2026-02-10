@@ -50,8 +50,9 @@ export class AES {
 			output.set(new Uint8Array(encrypted), 16);
 			return output;
 		} catch (e: unknown) {
-			if (e instanceof Error)
+			if (e instanceof Error) {
 				throw new AESException("Fehler beim Verschlüsseln der Daten.", e);
+			}
 			throw new AESException("Fehler beim Verschüsseln der Daten", new Error("Unbekannter Fehlergrund"));
 		}
 	}
@@ -70,15 +71,17 @@ export class AES {
 
 	public async decrypt(input: Uint8Array<ArrayBuffer>): Promise<Uint8Array<ArrayBuffer>> {
 		try {
-			if (input.length < 16)
+			if (input.length < 16) {
 				throw new ArrayIndexOutOfBoundsException("Das übegebene Array ist zu klein und kann noch nicht einmal einen Initialisierungsvektor enthalten.");
+			}
 			const iv = input.slice(0, 16);
 			const data = input.slice(16);
 			const decryptedData = await crypto.subtle.decrypt({ name: this.algo.value, iv }, this.key, data);
 			return new Uint8Array(decryptedData);
 		} catch (e: unknown) {
-			if (e instanceof Error)
+			if (e instanceof Error) {
 				throw new AESException("Fehler beim Entschlüsseln der Daten.", e);
+			}
 			throw new AESException("Fehler beim Entschlüsseln der Daten", new Error("Unbekannter Fehlergrund"));
 		}
 	}
@@ -126,15 +129,17 @@ export class AES {
 		const base64url: string | ArrayBuffer | null = await new Promise((r) => {
 			const reader = new FileReader();
 			reader.onload = () => r(reader.result);
-			if (data instanceof File)
+			if (data instanceof File) {
 				reader.readAsDataURL(data);
-			else
+			} else {
 				reader.readAsDataURL(new Blob([data]));
+			}
 		});
-		if (typeof base64url === 'string')
+		if (typeof base64url === 'string') {
 			return base64url.split(",", 2)[1];
-		else
+		} else {
 			throw new DeveloperNotificationException("Keine gültigen Daten zum Umwandeln in Base64");
+		}
 	}
 
 	/**
@@ -161,8 +166,9 @@ export class AES {
 		try {
 			return await crypto.subtle.generateKey({ name: "AEA-CBC", length: 256 }, true, ["encrypt", "decrypt"]);
 		} catch (e: unknown) {
-			if (e instanceof Error)
+			if (e instanceof Error) {
 				throw new AESException("Fehler beim Erstellen eines zufälligen AES-Schlüssels.", e);
+			}
 			throw new AESException("Fehler beim Erstellen eines zufälligen AES-Schlüssels.", new Error("Unbekannter Fehlergrund"));
 		}
 	}
@@ -190,8 +196,9 @@ export class AES {
 			const key = await crypto.subtle.deriveKey(keySpec, passwordKey, derivedKeyType, true, ["encrypt", "decrypt"]);
 			return key;
 		} catch (e: unknown) {
-			if (e instanceof Error)
+			if (e instanceof Error) {
 				throw new AESException("Fehler beim Erstellen des AES-Schlüssels aus dem Kennwort und dem Salt.", e);
+			}
 			throw new AESException("Fehler beim Erstellen des AES-Schlüssels aus dem Kennwort und dem Salt.", new Error("Unbekannter Fehlergrund"));
 		}
 	}

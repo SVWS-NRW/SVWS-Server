@@ -92,7 +92,7 @@
 	import type { List } from '../../../../core/src/java/util/List';
 	import type { EnmManager, BemerkungenHauptgruppe, EnmLerngruppenAuswahlEintrag } from './EnmManager';
 	import { PairNN } from '../../../../core/src/asd/adt/PairNN';
-	import { SelectManager } from '../../ui/controls/select/selectManager/SelectManager';
+	import { SelectManager } from '../../ui/controls/select/manager/SelectManager';
 
 	type RowType = { gruppe: ENMFloskelgruppe, floskel: ENMFloskel | null };
 	type StrOrUndef = string | undefined;
@@ -131,12 +131,13 @@
 	const gridManagerSchueler = new GridManager<string, PairNN<string, ENMSchueler>, List<PairNN<string, ENMSchueler>>>({
 		daten: computed<List<PairNN<string, ENMSchueler>>>(() => {
 			const result = new ArrayList<PairNN<string, ENMSchueler>>();
-			for (const lerngruppenAuswahl of props.lerngruppenAuswahl())
+			for (const lerngruppenAuswahl of props.lerngruppenAuswahl()) {
 				if (lerngruppenAuswahl instanceof ENMKlasse) {
 					const listSchueler = props.enmManager().mapKlassenSchueler.get(lerngruppenAuswahl.id);
 					const klasse = props.enmManager().mapKlassen.get(lerngruppenAuswahl.id);
-					if ((klasse === null) || (listSchueler === null))
+					if ((klasse === null) || (listSchueler === null)) {
 						continue;
+					}
 					const list = new ArrayList<PairNN<string, ENMSchueler>>();
 					for (const schueler of listSchueler) {
 						const pair = new PairNN<string, ENMSchueler>(klasse.kuerzel ?? '???', schueler);
@@ -146,13 +147,15 @@
 				} else {
 					const leistungen = props.enmManager().mapLerngruppeLeistungen.get(lerngruppenAuswahl.id);
 					const fach = props.enmManager().lerngruppeByIDOrException(lerngruppenAuswahl.id);
-					if (leistungen === null)
+					if (leistungen === null) {
 						continue;
+					}
 					for (const pairLeistung of leistungen) {
 						const pair = new PairNN<string, ENMSchueler>(fach.bezeichnung ?? '???', pairLeistung.b);
 						result.add(pair);
 					}
 				}
+			}
 			return result;
 		}),
 		getRowKey: row => `${row.a}_${row.b.id}`,
@@ -163,17 +166,20 @@
 		daten: computed<List<RowType>>(() => {
 			const result = new ArrayList<RowType>();
 			const auswahl = props.auswahl;
-			if ((auswahl.schueler === null) || ((auswahl.leistung === null) && (auswahl.klasse === null)))
+			if ((auswahl.schueler === null) || ((auswahl.leistung === null) && (auswahl.klasse === null))) {
 				return result;
+			}
 			for (const gruppe of floskelgruppen.value) {
 				result.add({ gruppe, floskel: null });
 				for (const floskel of gruppe.floskeln) {
 					// wende den Filter für den Jahrgang an
-					if ((jahrgangSelected.value !== undefined) && (floskel.jahrgangID !== null) && (jahrgangSelected.value !== floskel.jahrgangID))
+					if ((jahrgangSelected.value !== undefined) && (floskel.jahrgangID !== null) && (jahrgangSelected.value !== floskel.jahrgangID)) {
 						continue;
+					}
 					// wenden den Filter für das Niveau an
-					if ((niveauSelected.value !== undefined) && (floskel.niveau !== niveauSelected.value))
+					if ((niveauSelected.value !== undefined) && (floskel.niveau !== niveauSelected.value)) {
 						continue;
+					}
 					result.add({ gruppe, floskel });
 				}
 			}
@@ -194,41 +200,48 @@
 		const floskelnHauptgruppe: ENMFloskelgruppe[] = [];
 		const floskelnAllgemein: ENMFloskelgruppe[] = [];
 		for (const gruppe of props.enmManager().listFloskelgruppen) {
-			if (gruppe.floskeln.isEmpty())
+			if (gruppe.floskeln.isEmpty()) {
 				continue;
-			if (gruppe.hauptgruppe === props.erlaubteHauptgruppe)
+			}
+			if (gruppe.hauptgruppe === props.erlaubteHauptgruppe) {
 				floskelnHauptgruppe.push(gruppe);
-			else if (gruppe.hauptgruppe === 'ALLG')
+			} else if (gruppe.hauptgruppe === 'ALLG') {
 				floskelnAllgemein.push(gruppe);
+			}
 		}
 		const floskelgruppen = ref(floskelnHauptgruppe.concat(floskelnAllgemein));
-		for (const gruppe of floskelgruppen.value)
+		for (const gruppe of floskelgruppen.value) {
 			for (const floskel of gruppe.floskeln) {
 				// Prüfe, wenn es sich um fachbezogene Floskeln handelt auch das Fach der Floskel zu dem Fach der Leistung passt
-				if ((props.auswahl.leistung !== null) && (floskel.fachID !== null) && ((props.enmManager().lerngruppeByIDOrException(props.auswahl.leistung.lerngruppenID).fachID !== floskel.fachID)))
+				if ((props.auswahl.leistung !== null) && (floskel.fachID !== null) && ((props.enmManager().lerngruppeByIDOrException(props.auswahl.leistung.lerngruppenID).fachID !== floskel.fachID))) {
 					continue;
-				if (floskel.jahrgangID !== null)
+				}
+				if (floskel.jahrgangID !== null) {
 					jahrgangSet.value.add(floskel.jahrgangID);
-				if (floskel.niveau !== null)
+				}
+				if (floskel.niveau !== null) {
 					niveauSet.value.add(floskel.niveau);
+				}
 			}
+		}
 		return { jahrgangSet, niveauSet, floskelgruppen };
 	}).value;
 
 	const jahrgangManager = computed(() => new SelectManager({
-		options: jahrgangSet.value,
+		options: jahrgangSet,
 		optionDisplayText: id => props.enmManager().mapJahrgaenge.get(id)?.kuerzel ?? '???',
 		selectionDisplayText: id => props.enmManager().mapJahrgaenge.get(id)?.kuerzel ?? '???',
 	}));
 
-	const niveauManager = computed(() => new SelectManager({ options: niveauSet.value }));
+	const niveauManager = computed(() => new SelectManager({ options: niveauSet }));
 	const niveauSelected = ref<number>();
 
 	const jahrgangSelectedMemo = ref<number>();
 	const jahrgangSelected = computed({
 		get() {
-			if (jahrgangSelectedMemo.value === undefined)
+			if (jahrgangSelectedMemo.value === undefined) {
 				return props.auswahl.schueler?.jahrgangID;
+			}
 			return jahrgangSelectedMemo.value;
 		},
 		set: (value) => jahrgangSelectedMemo.value = value,
@@ -254,18 +267,21 @@
 			if (input !== null) {
 				gridManagerSchueler.update(key, false);
 				gridManagerSchueler.setNavigationOnEnter(key, null);
-				if (index === lastRow.value)
+				if (index === lastRow.value) {
 					gridManagerSchueler.doFocusByKey(key);
+				}
 			}
 		};
 	}
 
 	const bemerkung = computed<string | null>(() => {
 		const auswahl = props.auswahl;
-		if (auswahl.schueler === null)
+		if (auswahl.schueler === null) {
 			return null;
-		if (auswahl.leistung !== null)
+		}
+		if (auswahl.leistung !== null) {
 			return auswahl.leistung.fachbezogeneBemerkungen;
+		}
 		switch (props.erlaubteHauptgruppe) {
 			case 'ASV':
 				return auswahl.schueler.bemerkungen.ASV;
@@ -287,37 +303,46 @@
 	const clean = computed(() => (text.value === null) || !templateRegex.exec(text.value));
 
 	function onInput(value: string) {
-		if (value.length > 1)
+		if (value.length > 1) {
 			text.value = value;
-		else
+		} else {
 			text.value = null;
+		}
 	}
 
 	const gruppenMap = computed(() => {
 		const map = new Map<ENMFloskelgruppe, ArrayList<ENMFloskel>>();
 		const auswahl = props.auswahl;
-		if ((auswahl.schueler === null) || (auswahl.leistung === null))
+		if ((auswahl.schueler === null) || (auswahl.leistung === null)) {
 			return map;
+		}
 		for (const gruppe of props.enmManager().listFloskelgruppen) {
-			if ((gruppe.hauptgruppe !== props.erlaubteHauptgruppe) && (gruppe.hauptgruppe !== 'ALLG'))
+			if ((gruppe.hauptgruppe !== props.erlaubteHauptgruppe) && (gruppe.hauptgruppe !== 'ALLG')) {
 				continue;
+			}
 			const floskeln = new ArrayList<ENMFloskel>();
-			for (const floskel of gruppe.floskeln)
+			for (const floskel of gruppe.floskeln) {
 				if ((floskel.fachID === null) || ((props.enmManager().lerngruppeByIDOrException(auswahl.leistung.lerngruppenID).fachID === floskel.fachID)
-					&& ((floskel.jahrgangID === null) || (floskel.jahrgangID === auswahl.schueler.jahrgangID))))
+					&& ((floskel.jahrgangID === null) || (floskel.jahrgangID === auswahl.schueler.jahrgangID)))) {
 					floskeln.add(floskel);
-			if (!floskeln.isEmpty())
+				}
+			}
+			if (!floskeln.isEmpty()) {
 				map.set(gruppe, floskeln);
+			}
 		}
 		return map;
 	});
 
 	const floskelMap = computed(() => {
 		const floskeln = new Map<string, ENMFloskel>();
-		for (const gruppe of gruppenMap.value.values())
-			for (const floskel of gruppe)
-				if (floskel.kuerzel !== null)
+		for (const gruppe of gruppenMap.value.values()) {
+			for (const floskel of gruppe) {
+				if (floskel.kuerzel !== null) {
 					floskeln.set(floskel.kuerzel.toLocaleLowerCase(), floskel);
+				}
+			}
+		}
 		return floskeln;
 	});
 
@@ -327,7 +352,7 @@
 	 * die zweite sucht nach dem Muster #tag
 	 * ?: verhindert das Erzeugen von Gruppen, die erste RegexGruppe wäre also Vorname
 	 *  */
-	const query = /(?:\$(?:(Vorname)|(Name|Nachname)|(weibl)|(ein)|(Anrede)|(\S+%\S+))\$)|(#\S+)/;
+	const query = /(?:[$|&](?:(Vorname)|(Name|Nachname)|(weibl)|(ein)|(Anrede)|(\S+%\S+))[$|&])|(#\S+)/;
 	const templateRegexGlobal = new RegExp(query, 'gi');
 	const templateRegex = new RegExp(query, 'i');
 	const every = ref(3);
@@ -337,24 +362,27 @@
 
 	function ergaenzeFloskel(floskel: ENMFloskel) {
 		let tmp = text.value;
-		if (tmp === null)
+		if (tmp === null) {
 			tmp = "";
-		else if (tmp.endsWith('.'))
+		} else if (tmp.endsWith('.')) {
 			tmp += " ";
+		}
 		tmp += floskel.text;
 		text.value = tmp;
 	}
 
 	function ersetzeTemplates() {
 		const schueler = props.auswahl.schueler;
-		if ((schueler === null) || (text.value === null))
+		if ((schueler === null) || (text.value === null)) {
 			return;
+		}
 		let counter = -1;
 		text.value = text.value.replaceAll(templateRegexGlobal, (match, vorname: StrOrUndef, nachname: StrOrUndef, weibl: StrOrUndef, ein: StrOrUndef, anrede: StrOrUndef, mwdx: StrOrUndef, kuerzel: StrOrUndef, _offset, fullString: string, _groups: string[]) => {
 			if (vorname !== undefined) {
 				counter++;
-				if ((counter % every.value) === 0)
+				if ((counter % every.value) === 0) {
 					return schueler.vorname ?? '???';
+				}
 				return fullString.slice(0, _offset).trimEnd().endsWith('.')
 					? grossPronomenMap.value.get(schueler.geschlecht ?? 'x') ?? schueler.vorname ?? '???'
 					: kleinPronomenMap.value.get(schueler.geschlecht ?? 'x') ?? schueler.vorname ?? '???';
@@ -378,8 +406,9 @@
 	}
 
 	async function doPatchLeistung() {
-		if (!clean.value)
+		if (!clean.value) {
 			return ersetzeTemplates();
+		}
 		await props.patch(text.value);
 	}
 

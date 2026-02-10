@@ -20,8 +20,9 @@ export class RouteEinstellungen extends RouteNode<any, RouteApp> {
 	}
 
 	protected async update(to: RouteNode<any, any>) {
-		if (to.name === this.name)
+		if (to.name === this.name) {
 			return routeEinstellungenBenutzer.getRoute();
+		}
 	}
 
 	public benutzerKompetenzen = (gruppe: BenutzerKompetenzGruppe): List<BenutzerKompetenz> => {

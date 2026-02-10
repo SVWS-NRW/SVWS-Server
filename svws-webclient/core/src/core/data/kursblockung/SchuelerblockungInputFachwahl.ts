@@ -40,7 +40,7 @@ export class SchuelerblockungInputFachwahl extends JavaObject {
 		return ['de.svws_nrw.core.data.kursblockung.SchuelerblockungInputFachwahl'].includes(name);
 	}
 
-	public static class = new Class<SchuelerblockungInputFachwahl>('de.svws_nrw.core.data.kursblockung.SchuelerblockungInputFachwahl');
+	public static readonly class = new Class<SchuelerblockungInputFachwahl>('de.svws_nrw.core.data.kursblockung.SchuelerblockungInputFachwahl');
 
 	public static transpilerFromJSON(json: string): SchuelerblockungInputFachwahl {
 		const obj = JSON.parse(json) as Partial<SchuelerblockungInputFachwahl>;

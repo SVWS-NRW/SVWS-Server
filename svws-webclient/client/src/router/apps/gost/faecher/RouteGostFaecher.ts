@@ -30,8 +30,9 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams): Promise<boolean | void | Error | RouteLocationRaw> {
 		try {
 			const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
-			if (abiturjahr === undefined)
+			if (abiturjahr === undefined) {
 				return routeGost.getRoute();
+			}
 			return true;
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
@@ -41,8 +42,9 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		try {
 			const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
-			if (this.parent === undefined)
+			if (this.parent === undefined) {
 				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
+			}
 			await this.data.setEintrag(abiturjahr);
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);

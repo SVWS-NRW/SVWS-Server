@@ -5,7 +5,7 @@
 			<svws-ui-radio-group :row="true">
 				<svws-ui-radio-option value="light" v-model="colormode" name="colormode" label="Light" />
 				<svws-ui-radio-option value="dark" v-model="colormode" name="colormode" label="Dark" />
-				<svws-ui-radio-option value="auto" v-model="colormode" name="colormode" label="System/Browsereinstellungen" />
+				<svws-ui-radio-option v-if="auto" value="auto" v-model="colormode" name="colormode" label="System/Browsereinstellungen" />
 			</svws-ui-radio-group>
 			<svws-ui-notification v-if="colormode === 'dark' && warningDark" type="warning">
 				Achtung! Das Dark-Theme befindet sich gerade noch in der Entwicklung und ist noch nicht

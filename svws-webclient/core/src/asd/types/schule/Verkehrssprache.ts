@@ -83,7 +83,7 @@ export class Verkehrssprache extends CoreTypeSimple<VerkehrsspracheKatalogEintra
 		return ['de.svws_nrw.asd.types.schule.Verkehrssprache', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.CoreTypeSimple'].includes(name);
 	}
 
-	public static class = new Class<Verkehrssprache>('de.svws_nrw.asd.types.schule.Verkehrssprache');
+	public static readonly class = new Class<Verkehrssprache>('de.svws_nrw.asd.types.schule.Verkehrssprache');
 
 }
 

@@ -34,7 +34,7 @@ export class SchildReportingDatenquelleAttribut extends JavaObject {
 		return ['de.svws_nrw.core.data.schild3.reporting.SchildReportingDatenquelleAttribut'].includes(name);
 	}
 
-	public static class = new Class<SchildReportingDatenquelleAttribut>('de.svws_nrw.core.data.schild3.reporting.SchildReportingDatenquelleAttribut');
+	public static readonly class = new Class<SchildReportingDatenquelleAttribut>('de.svws_nrw.core.data.schild3.reporting.SchildReportingDatenquelleAttribut');
 
 	public static transpilerFromJSON(json: string): SchildReportingDatenquelleAttribut {
 		const obj = JSON.parse(json) as Partial<SchildReportingDatenquelleAttribut>;

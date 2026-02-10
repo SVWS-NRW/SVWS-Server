@@ -188,7 +188,7 @@ export class Foerderschwerpunkt extends JavaEnum<Foerderschwerpunkt> implements 
 		return ['de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.schule.Foerderschwerpunkt', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Foerderschwerpunkt>('de.svws_nrw.asd.types.schule.Foerderschwerpunkt');
+	public static readonly class = new Class<Foerderschwerpunkt>('de.svws_nrw.asd.types.schule.Foerderschwerpunkt');
 
 }
 

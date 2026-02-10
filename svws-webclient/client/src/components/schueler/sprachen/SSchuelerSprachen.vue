@@ -3,11 +3,13 @@
 		<svws-ui-content-card title="Sprachenfolge">
 			<div v-if="!readonly && verfuegbareSprachen.length" class="w-1/4 mb-4">
 				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache=> hinzufuegen(sprache)"
-					:items="verfuegbareSprachen" :item-text="i => `${i} - ${Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—'}`"
-					ref="selectSprachen" autofocus focus-class-content />
+					:items="verfuegbareSprachen" :item-text="i => getTextBySprache(i)" ref="selectSprachen" autofocus focus-class-content />
 			</div>
 			<svws-ui-table v-if="sprachbelegungen().size()" :items="sprachbelegungen()" :columns="colsSprachenfolge" :selectable="!readonly" v-model="auswahl">
-				<template #cell(sprache)="{ value: kuerzel }">{{ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(kuerzel)?.daten(schuljahr)?.text ?? '—' }} </template>
+				<template #cell(sprache)="{ value: kuerzel }">{{ getTextBySprache(kuerzel) }} </template>
+				<template #cell(nachweis)="{ rowData }" v-if="schulform === Schulform.WB">
+					<svws-ui-checkbox :model-value="rowData.istNachweis" @update:model-value="value => patchSprachbelegung({ istNachweis: value }, rowData.sprache)" headless :readonly />
+				</template>
 				<template #cell(reihenfolge)="{ rowData }">
 					<svws-ui-input-number v-if="!readonly" title="Reihenfolge" headless :model-value="rowData.reihenfolge"
 						@update:model-value="reihenfolge=>reihenfolge && patchSprachbelegung({reihenfolge}, rowData.sprache)" :min="1" :max="9" />
@@ -79,11 +81,16 @@
 		<svws-ui-content-card title="Sprachprüfungen – Herkunftsprachlicher Unterricht">
 			<div v-if="!readonly && verfuegbareSprachenPruefungenHerkunftsprachlich.length" class="w-1/4 mb-4">
 				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache=> hinzufuegenPruefungHerkunftssprachlich(sprache, true)"
-					:items="verfuegbareSprachenPruefungenHerkunftsprachlich" :item-text="i=> `${i} - ${ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—' }`"
+					:items="verfuegbareSprachenPruefungenHerkunftsprachlich" :item-text="i => getTextBySprache(i)"
 					ref="selectSprachenPruefungHerkunftsprachlich" focus-class-content />
 			</div>
 			<svws-ui-table v-if="sprachpruefungenHSU.length" :items="sprachpruefungenHSU" :columns="colsSprachpruefungenHSU" :selectable="!readonly" v-model="auswahlPrHSU">
-				<template #cell(sprache)="{ value: kuerzel }">{{ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(kuerzel)?.daten(schuljahr)?.text }} </template>
+				<template #cell(sprache)="{ value: kuerzel }">{{ getTextBySprache(kuerzel) }} </template>
+				<template #cell(zeugnisbezeichnung)="{ rowData }">
+					<svws-ui-text-input v-if="!readonly" title="Zeugnisbezeichnung" headless :model-value="rowData.zeugnisbezeichnung"
+						@update:model-value="value => patchSprachpruefung({ zeugnisbezeichnung: value ?? '' }, rowData.sprache)" />
+					<div v-else>{{ rowData.zeugnisbezeichnung }}</div>
+				</template>
 				<template #cell(kannBelegungAlsFortgefuehrteSpracheErlauben)="{ rowData }">
 					<svws-ui-checkbox :disabled="readonly" :model-value="rowData.kannBelegungAlsFortgefuehrteSpracheErlauben"
 						@update:model-value="kannBelegungAlsFortgefuehrteSpracheErlauben => patchSprachpruefung({kannBelegungAlsFortgefuehrteSpracheErlauben}, rowData.sprache)"
@@ -130,11 +137,16 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachprüfungen – Feststellungsprüfungen">
 			<div v-if="!readonly && verfuegbareSprachenPruefungenFeststellungErsatz.length" class="w-1/4 mb-4">
-				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache => hinzufuegenPruefungFeststellung(sprache, false)" :items="verfuegbareSprachenPruefungenFeststellungErsatz"
-					:item-text="i => `${i} - ${Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—'}`" ref="selectSprachenPruefungFeststellungErsatz" focus-class />
+				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache => hinzufuegenPruefungFeststellung(sprache, false)"
+					:items="verfuegbareSprachenPruefungenFeststellungErsatz" :item-text="i => getTextBySprache(i)" ref="selectSprachenPruefungFeststellungErsatz" focus-class />
 			</div>
 			<svws-ui-table v-if="sprachpruefungenFP.length" :items="sprachpruefungenFP" :columns="colsSprachpruefungenFP" :selectable="!readonly" v-model="auswahlPrFP">
-				<template #cell(sprache)="{ value: kuerzel }">{{ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(kuerzel)?.daten(schuljahr)?.text ?? '—' }} </template>
+				<template #cell(sprache)="{ value: kuerzel }">{{ getTextBySprache(kuerzel) }} </template>
+				<template #cell(zeugnisbezeichnung)="{ rowData }">
+					<svws-ui-text-input v-if="!readonly" title="Zeugnisbezeichnung" headless :model-value="rowData.zeugnisbezeichnung"
+						@update:model-value="value => patchSprachpruefung({ zeugnisbezeichnung: value ?? '' }, rowData.sprache)" />
+					<div v-else>{{ rowData.zeugnisbezeichnung }}</div>
+				</template>
 				<template #cell(ersetzt)="{ rowData }">
 					<svws-ui-select v-if="!readonly" title="Ersetzt" headless :items="ersetzt" :item-text="i=> i.key" removable
 						:model-value="rowData.kannErstePflichtfremdspracheErsetzen ? ersetzt[0] : rowData.kannZweitePflichtfremdspracheErsetzen ? ersetzt[1] : rowData.kannWahlpflichtfremdspracheErsetzen ? ersetzt[2] : undefined"
@@ -215,7 +227,10 @@
 		const schulgliederung = Schulgliederung.data().getWertByKuerzel(props.schuelerListeManager().auswahl().schulgliederung);
 		return [{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache", span: 2 },
 			{ key: "reihenfolge", label: "Reihenfolge", tooltip: "Reihenfolge", divider: true },
-			...(([Schulform.BK, Schulform.SB].includes(props.schuelerListeManager().schulform()) && !(schulgliederung && ([Schulgliederung.D01, Schulgliederung.D02].includes(schulgliederung))))
+			...((Schulform.WB === props.schulform)
+				? [{ key: "nachweis", label: "Nachweis", tooltip: "Sprachbelegung einer zweiten Fremdsprache durch Nachweis erfolgt (siehe §34 Abst 3,4 APO-WbK)" }]
+				: []),
+			...(([Schulform.BK, Schulform.SB].includes(props.schulform) && !(schulgliederung && ([Schulgliederung.D01, Schulgliederung.D02].includes(schulgliederung))))
 				? []
 				: [{ key: "belegungVonJahrgang", label: "ab Jg", tooltip: "belegt ab Jahrgang" },
 					{ key: "belegungVonAbschnitt", label: "Halbjahr", tooltip: "belegt ab Abschnitt", divider: true },
@@ -229,6 +244,7 @@
 	const colsSprachpruefungenHSU = computed<DataTableColumn[]>(() => {
 		const schulgliederung = Schulgliederung.data().getWertByKuerzel(props.schuelerListeManager().auswahl().schulgliederung);
 		return [{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache", minWidth: 4 },
+			{ key: "zeugnisbezeichnung", label: "Zeugnistext", tooltip: "Reihenfolge", minWidth: 4, divider: true },
 			{ key: "kannBelegungAlsFortgefuehrteSpracheErlauben", label: "Fortgef. Fs. GOSt", tooltip: "Durch die Prüfung kann die Sprache als fortgeführte Fremdsprache in der GOSt belegt werden", align: 'center', minWidth: 4 },
 			...([Schulform.BK, Schulform.SB].includes(props.schuelerListeManager().schulform()) && !(schulgliederung && ([Schulgliederung.D01, Schulgliederung.D02].includes(schulgliederung)))
 				? [] : [{ key: "jahrgang", label: "Jahrgang", tooltip: "Im Jahrgang", minWidth: 4 }]),
@@ -241,6 +257,7 @@
 	const colsSprachpruefungenFP = computed<DataTableColumn[]>(() => {
 		const schulgliederung = Schulgliederung.data().getWertByKuerzel(props.schuelerListeManager().auswahl().schulgliederung);
 		return [{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache", minWidth: 4 },
+			{ key: "zeugnisbezeichnung", label: "Zeugnistext", tooltip: "Reihenfolge", minWidth: 4, divider: true },
 			{ key: "ersetzt", label: "Ersetzt", minWidth: 4 },
 			{ key: "kannBelegungAlsFortgefuehrteSpracheErlauben", label: "Fortgef. Fs. GOSt", tooltip: "Durch die Prüfung kann die Sprache als fortgeführte Fremdsprache in der GOSt belegt werden", align: 'center', minWidth: 4 },
 			...([Schulform.BK, Schulform.SB].includes(props.schuelerListeManager().schulform()) && !(schulgliederung && ([Schulgliederung.D01, Schulgliederung.D02].includes(schulgliederung)))
@@ -252,16 +269,29 @@
 		];
 	});
 
+	function getTextBySprache(kuerzel: string) {
+		const fachEintrag = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(kuerzel)?.daten(schuljahr.value) ?? null;
+		if (fachEintrag === null) {
+			return '—';
+		}
+		if (fachEintrag.istHKFS) {
+			return fachEintrag.text.replace(/^.*-/, "").trim();
+		}
+		return fachEintrag.text;
+	}
+
 	const verfuegbareSprachen = computed(() => {
 		const belegungen = new Set();
 		const sprachen = [];
-		for (const b of props.sprachbelegungen())
+		for (const b of props.sprachbelegungen()) {
 			belegungen.add(b.sprache);
+		}
 		for (const k of Fach.getListFremdsprachenKuerzelAtomar(schuljahr.value)) {
 			const sprache = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(k);
 			const spracheEintrag = sprache?.daten(schuljahr.value) ?? null;
-			if ((spracheEintrag !== null) && !spracheEintrag.istErsatzPflichtFS && !spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !belegungen.has(k))
+			if ((spracheEintrag !== null) && !spracheEintrag.istErsatzPflichtFS && !spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !belegungen.has(k)) {
 				sprachen.push(k);
+			}
 		}
 		return sprachen;
 	});
@@ -269,13 +299,15 @@
 	const verfuegbareSprachenPruefungenHerkunftsprachlich = computed(() => {
 		const pruefungenHKFS = new Set();
 		const sprachen = [];
-		for (const p of props.sprachpruefungen())
+		for (const p of props.sprachpruefungen()) {
 			pruefungenHKFS.add(p.sprache);
+		}
 		for (const k of Fach.getListFremdsprachenKuerzelAtomar(schuljahr.value)) {
 			const sprache = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(k);
 			const spracheEintrag = sprache?.daten(schuljahr.value) ?? null;
-			if ((spracheEintrag !== null) && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !pruefungenHKFS.has(k))
+			if ((spracheEintrag !== null) && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !pruefungenHKFS.has(k)) {
 				sprachen.push(k);
+			}
 		}
 		return sprachen;
 	});
@@ -283,42 +315,52 @@
 	const verfuegbareSprachenPruefungenFeststellungErsatz = computed(() => {
 		const pruefungenFeststellung = new Set();
 		const sprachen = [];
-		for (const p of props.sprachpruefungen())
+		for (const p of props.sprachpruefungen()) {
 			pruefungenFeststellung.add(p.sprache);
+		}
 		for (const k of Fach.getListFremdsprachenKuerzelAtomar(schuljahr.value)) {
 			const sprache = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(k);
 			const spracheEintrag = sprache?.daten(schuljahr.value) ?? null;
-			if ((spracheEintrag !== null) && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !pruefungenFeststellung.has(k))
+			if ((spracheEintrag !== null) && spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !pruefungenFeststellung.has(k)) {
 				sprachen.push(k);
+			}
 		}
 		return sprachen;
 	});
 
 	const sprachpruefungenHSU = computed(() => {
 		const list = [];
-		for (const s of props.sprachpruefungen())
-			if (s.istHSUPruefung)
+		for (const s of props.sprachpruefungen()) {
+			if (s.istHSUPruefung) {
 				list.push(s);
+			}
+		}
 		return list;
 	});
 
 	const sprachpruefungenFP = computed(() => {
 		const list = [];
-		for (const s of props.sprachpruefungen())
-			if (!s.istHSUPruefung)
+		for (const s of props.sprachpruefungen()) {
+			if (!s.istHSUPruefung) {
 				list.push(s);
+			}
+		}
 		return list;
 	});
 
 	const sprachJahrgaenge = computed(() => {
 		const schulform = props.schuelerListeManager().schulform();
-		if ((schulform === Schulform.BK) || (schulform === Schulform.SB))
+		if ((schulform === Schulform.BK) || (schulform === Schulform.SB)) {
 			return Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr.value, Schulform.GE);
-		if (schulform !== Schulform.WB)
+		}
+		if (schulform !== Schulform.WB) {
 			return Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr.value, schulform);
+		}
 		const jahrgaenge = new ArrayList<Jahrgaenge>(Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr.value, schulform));
 		jahrgaenge.addAll(Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr.value, Schulform.R));
-		jahrgaenge.sort({ compare(a, b) { return a.ordinal() - b.ordinal() } });
+		jahrgaenge.sort({ compare(a, b) {
+			return a.ordinal() - b.ordinal();
+		} });
 		return jahrgaenge;
 	});
 
@@ -326,59 +368,74 @@
 		const jahrgangVon = (sprachbelegung.belegungVonJahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(sprachbelegung.belegungVonJahrgang);
 		const jahrgaenge_list = sprachJahrgaenge.value;
 		const jahrgaenge = [];
-		for (const jahrgang of jahrgaenge_list)
-			if ((jahrgangVon !== null) && (jahrgang.ordinal() > jahrgangVon.ordinal()))
+		for (const jahrgang of jahrgaenge_list) {
+			if ((jahrgangVon !== null) && (jahrgang.ordinal() > jahrgangVon.ordinal())) {
 				jahrgaenge.push(jahrgang);
+			}
+		}
 		return jahrgaenge;
 	});
 
 	function jahrgangText(jg: Jahrgaenge | undefined) {
-		if (jg === undefined)
+		if (jg === undefined) {
 			return '—';
+		}
 		const jgDaten = jg.daten(schuljahr.value);
-		if (jgDaten === null)
+		if (jgDaten === null) {
 			return '—';
+		}
 		return jgDaten.kuerzel;
 	}
 
 	const latein = [{ text: 'Kleines Latinum' }, { text: 'Latinum' }];
 	const latinum = computed(() => {
-		if (hatKleinesLatinum.value)
+		if (hatKleinesLatinum.value) {
 			return latein[0];
-		if (hatLatinum.value)
+		}
+		if (hatLatinum.value) {
 			return latein[1];
-		return;
+		}
+		return undefined;
 	});
 
 	async function patchLatinum(item: any) {
 		console.log(item);
-		if (item === undefined)
+		if (item === undefined) {
 			await props.patchSprachbelegung({ hatKleinesLatinum: false, hatLatinum: false }, 'L');
-		if (item === latein[0])
+		}
+		if (item === latein[0]) {
 			await props.patchSprachbelegung({ hatKleinesLatinum: true, hatLatinum: false }, 'L');
-		if (item === latein[1])
+		}
+		if (item === latein[1]) {
 			await props.patchSprachbelegung({ hatKleinesLatinum: false, hatLatinum: true }, 'L');
+		}
 	}
 
 	const hatKleinesLatinum = computed<boolean>(() => {
-		for (const sprache of props.sprachbelegungen())
-			if (sprache.sprache === 'L')
+		for (const sprache of props.sprachbelegungen()) {
+			if (sprache.sprache === 'L') {
 				return sprache.hatKleinesLatinum;
+			}
+		}
 		return false;
 	});
 
 	const hatLatinum = computed<boolean>(() => {
-		for (const sprache of props.sprachbelegungen())
-			if (sprache.sprache === 'L')
+		for (const sprache of props.sprachbelegungen()) {
+			if (sprache.sprache === 'L') {
 				return sprache.hatLatinum;
+			}
+		}
 		return false;
 	});
 
 	const hatGraecum = computed<boolean>({
 		get: () => {
-			for (const sprache of props.sprachbelegungen())
-				if (sprache.sprache === 'G')
+			for (const sprache of props.sprachbelegungen()) {
+				if (sprache.sprache === 'G') {
 					return sprache.hatGraecum;
+				}
+			}
 			return false;
 		},
 		set: (hatGraecum) => void props.patchSprachbelegung({ hatGraecum }, 'G'),
@@ -386,17 +443,20 @@
 
 	const hatHebraicum = computed<boolean>({
 		get: () => {
-			for (const sprache of props.sprachbelegungen())
-				if (sprache.sprache === 'H')
+			for (const sprache of props.sprachbelegungen()) {
+				if (sprache.sprache === 'H') {
 					return sprache.hatHebraicum;
+				}
+			}
 			return false;
 		},
 		set: (hatHebraicum) => void props.patchSprachbelegung({ hatHebraicum }, 'H'),
 	});
 
 	async function remove() {
-		for (const sprache of auswahl.value)
+		for (const sprache of auswahl.value) {
 			await props.removeSprachbelegung(sprache);
+		}
 		auswahl.value = [];
 	}
 	async function suchen() {
@@ -417,8 +477,9 @@
 		data.belegungVonAbschnitt = 1;
 		data.belegungBisAbschnitt = 2;
 		const schulform = props.schuelerListeManager().schulform();
-		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB))
+		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB)) {
 			data.belegungVonJahrgang = props.schuelerListeManager().jahrgaenge.get(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzelStatistik;
+		}
 		await props.addSprachbelegung(data);
 		selectSprachen.value.reset();
 	}
@@ -432,8 +493,9 @@
 		const data: Partial<Sprachpruefung> = {};
 		data.sprache = sprache;
 		const schulform = props.schuelerListeManager().schulform();
-		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB))
+		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB)) {
 			data.jahrgang = props.schuelerListeManager().jahrgaenge.get(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzelStatistik;
+		}
 		data.istHSUPruefung = hsu;
 		data.istFeststellungspruefung = !hsu;
 		await props.addSprachpruefung(data);
@@ -449,8 +511,9 @@
 		const data: Partial<Sprachpruefung> = {};
 		data.sprache = sprache;
 		const schulform = props.schuelerListeManager().schulform();
-		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB))
+		if ((schulform !== Schulform.BK) && (schulform !== Schulform.SB)) {
 			data.jahrgang = props.schuelerListeManager().jahrgaenge.get(props.schuelerListeManager().auswahl().idJahrgang)?.kuerzelStatistik;
+		}
 		data.istHSUPruefung = hsu;
 		data.istFeststellungspruefung = !hsu;
 		await props.addSprachpruefung(data);
@@ -459,12 +522,14 @@
 
 	async function removePruefungen(hsu: boolean) {
 		const list = hsu ? auswahlPrHSU.value : auswahlPrFP.value;
-		for (const pruefung of list)
+		for (const pruefung of list) {
 			await props.removeSprachpruefung(pruefung);
-		if (hsu)
+		}
+		if (hsu) {
 			auswahlPrHSU.value = [];
-		else
+		} else {
 			auswahlPrFP.value = [];
+		}
 	}
 
 	const ersetzt = [{ key: '1. Pflichtfremdsprache' }, { key: '2. Pflichtfremdsprache' }, { key: 'Wahlpflichtfremdsprache' }];

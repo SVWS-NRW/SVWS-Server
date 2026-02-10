@@ -54,8 +54,9 @@
 	}
 
 	async function actionFunction() {
-		if (file.value === null)
+		if (file.value === null) {
 			return;
+		}
 		props.setStatus(true);
 		const formData = new FormData();
 		formData.append("database", file.value);

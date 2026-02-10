@@ -104,13 +104,13 @@
         <class>de.svws_nrw.db.dto.migration.schild.impexp.MigrationDTOEigeneImporte</class>
         <class>de.svws_nrw.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteFelder</class>
         <class>de.svws_nrw.db.dto.migration.schild.impexp.MigrationDTOEigeneImporteTabellen</class>
-        <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOAnsprechpartnerAllgemeineAdresse</class>
+        <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOBetrieb</class>
+        <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOBetriebeAnsprechpartner</class>
+        <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOBetriebsart</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOFahrschuelerart</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOFloskelgruppen</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOFloskeln</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOHaltestellen</class>
-        <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogAdressart</class>
-        <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogAllgemeineAdresse</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogEinwilligungsart</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKonfession</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKursarten</class>
@@ -245,10 +245,14 @@
         <class>de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis</class>
         <class>de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene</class>
         <class>de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler</class>
+        <class>de.svws_nrw.db.dto.current.katalog.DTOAnkreuzkompetenzJahrgang</class>
         <class>de.svws_nrw.db.dto.current.katalog.DTOFloskelgruppen</class>
         <class>de.svws_nrw.db.dto.current.katalog.DTOFloskeln</class>
         <class>de.svws_nrw.db.dto.current.katalog.DTOFloskelnJahrgaenge</class>
-        <class>de.svws_nrw.db.dto.current.lehrer.DTOLehrerNotenmodulCredentials</class>
+        <class>de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials</class>
+        <class>de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulKonfigurationClient</class>
+        <class>de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulKonfigurationServer</class>
+        <class>de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulVerbindungen</class>
         <class>de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente</class>
         <class>de.svws_nrw.db.dto.current.schema.DTOSchemaCoreTypeVersion</class>
         <class>de.svws_nrw.db.dto.current.schema.DTOSchemaStatus</class>
@@ -298,11 +302,11 @@
         <class>de.svws_nrw.db.dto.current.schild.impexp.DTOEigeneImporte</class>
         <class>de.svws_nrw.db.dto.current.schild.impexp.DTOEigeneImporteFelder</class>
         <class>de.svws_nrw.db.dto.current.schild.impexp.DTOEigeneImporteTabellen</class>
-        <class>de.svws_nrw.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse</class>
+        <class>de.svws_nrw.db.dto.current.schild.katalog.DTOBetrieb</class>
+        <class>de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebeAnsprechpartner</class>
+        <class>de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebsart</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOFahrschuelerart</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOHaltestellen</class>
-        <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart</class>
-        <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAufsichtsbereich</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogRaum</class>
@@ -433,7 +437,7 @@
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavRessourceCollectionsACL</class>
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavSyncTokenLehrer</class>
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavSyncTokenSchueler</class>
-        <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsLehrerNotenmodulCredentials</class>
+        <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsNotenmodulCredentials</class>
         <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerAnkreuzkompetenzen</class>
         <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten</class>
         <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten</class>

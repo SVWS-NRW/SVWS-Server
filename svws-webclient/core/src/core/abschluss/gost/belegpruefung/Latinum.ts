@@ -9,6 +9,9 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class Latinum extends GostBelegpruefung {
 
+	/**
+	 * Die Belegung für das Fach Latein.
+	 */
 	private latein: AbiturFachbelegung | null = null;
 
 
@@ -51,7 +54,7 @@ export class Latinum extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.Latinum', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
 
-	public static class = new Class<Latinum>('de.svws_nrw.core.abschluss.gost.belegpruefung.Latinum');
+	public static readonly class = new Class<Latinum>('de.svws_nrw.core.abschluss.gost.belegpruefung.Latinum');
 
 }
 

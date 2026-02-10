@@ -23,18 +23,21 @@
 	const initialRow = ref<number | null>(null);
 
 	function focusGrid() {
-		if (gridRef.value !== null)
+		if (gridRef.value !== null) {
 			gridRef.value.gridManager.doFocus(true);
+		}
 	}
 
 	function onUpdate(row: number | null, focus: boolean) {
-		if ((gridRef.value === null) || (row === null))
+		if ((gridRef.value === null) || (row === null)) {
 			return;
+		}
 		gridRef.value.gridManager.focusRowLast = row;
 		const { b: schueler, a: leistung } = gridRef.value.gridManager.daten.get(row);
 		auswahlZelle.value = { klasse: null, schueler, leistung };
-		if (focus)
+		if (focus) {
 			focusGrid();
+		}
 	}
 
 	async function focusFloskelEditor(schueler: ENMSchueler | null, leistung: ENMLeistung | null, row: number | null, doFocus: boolean) {
@@ -47,8 +50,9 @@
 	}
 
 	async function doPatchLeistung(fachbezogeneBemerkungen: string | null) {
-		if ((auswahlZelle.value.schueler === null) || (auswahlZelle.value.leistung === null))
+		if ((auswahlZelle.value.schueler === null) || (auswahlZelle.value.leistung === null)) {
 			return;
+		}
 		await props.patchLeistung(auswahlZelle.value.leistung, { fachbezogeneBemerkungen });
 		const { schueler, leistung, klasse } = auswahlZelle.value;
 		leistung.fachbezogeneBemerkungen = fachbezogeneBemerkungen;

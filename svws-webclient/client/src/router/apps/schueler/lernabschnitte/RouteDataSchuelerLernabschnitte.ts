@@ -63,8 +63,9 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 	}
 
 	get manager(): SchuelerLernabschnittManager {
-		if (this._state.value.manager === undefined)
+		if (this._state.value.manager === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Schüler-Lernabschnittsdaten nicht initialisiert");
+		}
 		return this._state.value.manager;
 	}
 
@@ -73,8 +74,9 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 	}
 
 	get klausurManager(): GostKlausurplanManager {
-		if (this._state.value.klausurManager === undefined)
+		if (this._state.value.klausurManager === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Schüler-Klausurmanager nicht initialisiert");
+		}
 		return this._state.value.klausurManager;
 	}
 
@@ -83,8 +85,9 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		for (const current of curState.listAbschnitte) {
 			if (current.schuljahresabschnitt === idSchuljahresabschnitt) {
 				found = current;
-				if (current.wechselNr === wechselNr)
+				if (current.wechselNr === wechselNr) {
 					break;
+				}
 			}
 		}
 		return found;
@@ -93,8 +96,9 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 	protected async updateSchuljahresabschnitt(curState: RouteStateDataSchuelerLernabschnitte, newSchuljahresabschnitt: number | undefined, newWechselNr: number): Promise<RouteStateDataSchuelerLernabschnitte> {
 		let found: SchuelerLernabschnittListeEintrag | undefined = undefined;
 		// Prüfe, ob ein alter Schuljahresabschnitt (und ggf. die Wechselnummer) in der Liste der Lernabschnitte existiert
-		if (newSchuljahresabschnitt !== undefined)
+		if (newSchuljahresabschnitt !== undefined) {
 			found = this.getLernabschnitt(curState, newSchuljahresabschnitt, newWechselNr);
+		}
 		// Wenn kein passender Lernabschnitt gefunden wurde, dann prüfe, ob ein Lernabschnitt für das aktuelle Halbjahr vorhanden ist.
 		if (found === undefined) {
 			const idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
@@ -107,8 +111,9 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		}
 		// Ansonsten nimm einfach den letzten Lernabschnitt der Liste
 		if (found === undefined) {
-			if (curState.listAbschnitte.isEmpty())
+			if (curState.listAbschnitte.isEmpty()) {
 				return curState;
+			}
 			found = curState.listAbschnitte.get(curState.listAbschnitte.size() - 1);
 		}
 		const daten = await api.server.getSchuelerLernabschnittsdatenByID(api.schema, found.id);
@@ -129,8 +134,9 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		const schueler = routeSchueler.data.manager.auswahl();
 		const mapSchuljahresabschnitte = api.mapAbschnitte.value;
 		const schuljahresabschnitt = mapSchuljahresabschnitte.get(daten.schuljahresabschnitt);
-		if (schuljahresabschnitt === undefined)
+		if (schuljahresabschnitt === undefined) {
 			throw new DeveloperNotificationException("Der Schülerlernabschnitt hat keinen gültigen Schuljahresabschnitt zugeordnet. Dies darf nicht vorkommen.");
+		}
 		const manager = new SchuelerLernabschnittManager(api.schulform, schueler, daten, schuljahresabschnitt, curState.listFaecher, curState.listFoerderschwerpunkte, curState.listJahrgaenge, listKlassen, listKurse, listLehrer);
 		let klausurManager = undefined;
 		const abiturjahrgang = routeSchueler.data.manager.auswahl().abiturjahrgang;
@@ -140,8 +146,9 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 				const gostKlausurCollection = await api.server.getGostKlausurenCollectionBySchuelerid(api.schema, schueler.id, abiturjahrgang, halbjahr.id);
 				klausurManager = new GostKlausurplanManager(gostKlausurCollection.vorgaben, gostKlausurCollection.kursklausuren, gostKlausurCollection.termine, gostKlausurCollection.schuelerklausuren, gostKlausurCollection.schuelerklausurtermine);
 				klausurManager.getKursManager().addAll(listKurse);
-				for (const l of listLehrer)
+				for (const l of listLehrer) {
 					klausurManager.getLehrerMap().put(l.id, l);
+				}
 			}
 		}
 		curState = Object.assign({ ... curState }, { auswahl: found, daten, manager, klausurManager });
@@ -156,8 +163,9 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 	 * @param force        gibt an, ob das Laden erzwungen werden soll, obwohl die ID bereits geladen ist
 	 */
 	public async setSchueler(idSchueler: number, force: boolean = false): Promise<void> {
-		if ((!force) && (idSchueler === this._state.value.idSchueler))
+		if ((!force) && (idSchueler === this._state.value.idSchueler)) {
 			return;
+		}
 		const listAbschnitte = await api.server.getSchuelerLernabschnittsliste(api.schema, idSchueler);
 		let hatGymOb: boolean = false;
 		for (const abschnitt of listAbschnitte) {
@@ -193,21 +201,24 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 	}
 
 	get auswahl(): SchuelerLernabschnittListeEintrag {
-		if (this._state.value.auswahl === undefined)
+		if (this._state.value.auswahl === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Lernabschnittseintrag nicht festgelegt, es können keine Informationen zu den Leistungsdaten abgerufen oder eingegeben werden.");
+		}
 		return this._state.value.auswahl;
 	}
 
 	get daten(): SchuelerLernabschnittsdaten {
-		if (this._state.value.daten === undefined)
+		if (this._state.value.daten === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Lernabschnittdaten nicht initialisiert");
+		}
 		return this._state.value.daten;
 	}
 
 	public async setLernabschnitt(idSchuljahresabschnitt: number, wechselNr: number) {
 		const curAuswahl = this._state.value.auswahl;
-		if ((curAuswahl === undefined) || ((idSchuljahresabschnitt === curAuswahl.schuljahresabschnitt) && (wechselNr === curAuswahl.wechselNr)))
+		if ((curAuswahl === undefined) || ((idSchuljahresabschnitt === curAuswahl.schuljahresabschnitt) && (wechselNr === curAuswahl.wechselNr))) {
 			return;
+		}
 		const newState = await this.updateSchuljahresabschnitt(this._state.value, idSchuljahresabschnitt, wechselNr);
 		this.setPatchedState(newState);
 	}
@@ -238,8 +249,9 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 
 	deleteLeistungen = async (leistungenIDs: List<number>) => {
 		const leistungen = await api.server.deleteSchuelerLeistungsdatenMultiple(leistungenIDs, api.schema);
-		for (const l of leistungen)
+		for (const l of leistungen) {
 			this.manager.leistungRemoveByID(l.id);
+		}
 		this.commit();
 	};
 
@@ -263,18 +275,22 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 	};
 
 	patchSchuelerklausurTermin = async (id: number, skt: Partial<GostSchuelerklausurTermin>) => {
+		const sktAlt = this.klausurManager.schuelerklausurterminGetByIdOrException(id);
 		await api.server.patchGostKlausurenSchuelerklausurtermin(skt, api.schema, id);
+		this.klausurManager.schuelerklausurterminPatchAttributes(Object.assign(sktAlt, skt));
 	};
 
 	gotoPlanung = async () => {
 		const abiturjahr = this.manager.schuelerGet().abiturjahrgang;
-		if (abiturjahr === null)
+		if (abiturjahr === null) {
 			return;
+		}
 		const schuljahr = this.manager.schuljahresabschnittGet().schuljahr;
 		const abschnitt = this.manager.schuljahresabschnittGet().abschnitt;
 		const halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, schuljahr, abschnitt);
-		if (halbjahr === null)
+		if (halbjahr === null) {
 			return;
+		}
 		const dest = RouteNode.getNodeByName("gost.klausurplanung.nachschreiber")!.getRoute({ abiturjahr, halbjahr: halbjahr.id });
 		await RouteManager.doRoute(dest);
 	};

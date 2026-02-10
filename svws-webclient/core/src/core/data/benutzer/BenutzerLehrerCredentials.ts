@@ -34,7 +34,7 @@ export class BenutzerLehrerCredentials extends JavaObject {
 		return ['de.svws_nrw.core.data.benutzer.BenutzerLehrerCredentials'].includes(name);
 	}
 
-	public static class = new Class<BenutzerLehrerCredentials>('de.svws_nrw.core.data.benutzer.BenutzerLehrerCredentials');
+	public static readonly class = new Class<BenutzerLehrerCredentials>('de.svws_nrw.core.data.benutzer.BenutzerLehrerCredentials');
 
 	public static transpilerFromJSON(json: string): BenutzerLehrerCredentials {
 		const obj = JSON.parse(json) as Partial<BenutzerLehrerCredentials>;

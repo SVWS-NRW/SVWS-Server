@@ -82,7 +82,7 @@ export class BenutzerDaten extends JavaObject {
 		return ['de.svws_nrw.core.data.benutzer.BenutzerDaten'].includes(name);
 	}
 
-	public static class = new Class<BenutzerDaten>('de.svws_nrw.core.data.benutzer.BenutzerDaten');
+	public static readonly class = new Class<BenutzerDaten>('de.svws_nrw.core.data.benutzer.BenutzerDaten');
 
 	public static transpilerFromJSON(json: string): BenutzerDaten {
 		const obj = JSON.parse(json) as Partial<BenutzerDaten>;

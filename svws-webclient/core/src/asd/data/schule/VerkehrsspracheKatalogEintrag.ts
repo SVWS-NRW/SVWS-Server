@@ -24,7 +24,7 @@ export class VerkehrsspracheKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.schule.VerkehrsspracheKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<VerkehrsspracheKatalogEintrag>('de.svws_nrw.asd.data.schule.VerkehrsspracheKatalogEintrag');
+	public static readonly class = new Class<VerkehrsspracheKatalogEintrag>('de.svws_nrw.asd.data.schule.VerkehrsspracheKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): VerkehrsspracheKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<VerkehrsspracheKatalogEintrag>;

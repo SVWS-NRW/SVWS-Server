@@ -3365,7 +3365,7 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		return ['de.svws_nrw.core.adt.map.ListMap5DLongKeys'].includes(name);
 	}
 
-	public static class = new Class<ListMap5DLongKeys<any>>('de.svws_nrw.core.adt.map.ListMap5DLongKeys');
+	public static readonly class = new Class<ListMap5DLongKeys<any>>('de.svws_nrw.core.adt.map.ListMap5DLongKeys');
 
 }
 

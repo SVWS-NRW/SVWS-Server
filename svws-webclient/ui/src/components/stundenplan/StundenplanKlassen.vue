@@ -45,8 +45,9 @@
 	}
 
 	function getUnterricht(wochentag: number, stunde: number, wochentyp: number, schiene: number | null): List<StundenplanUnterricht> {
-		if (schiene === null)
+		if (schiene === null) {
 			return props.manager().unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag, stunde, wochentyp, false);
+		}
 		return props.manager().unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(props.id, wochentag, stunde, wochentyp, schiene, false);
 	}
 

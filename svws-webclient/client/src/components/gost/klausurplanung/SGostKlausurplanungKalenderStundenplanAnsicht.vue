@@ -36,7 +36,7 @@
 					</div>
 				</div>
 				<!-- Die Pausenzeiten -->
-				<template v-for="pause in pausenzeiten" :key="pause">
+				<template v-for="pause in pausenzeiten" :key="pause.id">
 					<div class="svws-ui-stundenplan--pause text-sm font-bold text-center justify-center" :style="posPause(pause)">
 						<div> {{ pause.bezeichnung }} </div>
 						<div> {{ ((pause.ende || 0) - (pause.beginn || 0)) }} Minuten </div>
@@ -67,7 +67,7 @@
 					<div v-else class="svws-ui-stundenplan--stunde flex-row relative bg-ui-warning-secondary text-center justify-center" :style="posZeitraster(wochentag.a, stunde)">Stundenplan fehlt</div>
 				</template>
 				<!-- Darstellung der Pausenzeiten und der zugehörigen Aufsichten -->
-				<template v-for="pause in getPausenzeitenWochentag(wochentag.a)" :key="pause">
+				<template v-for="pause in getPausenzeitenWochentag(wochentag.a)" :key="pause.id">
 					<div class="svws-ui-stundenplan--pause" :style="posPause(pause)">
 						<template v-for="pausenaufsicht in getPausenaufsichtenPausenzeit(pause)" :key="pausenaufsicht.id">
 							<div class="svws-ui-stundenplan--pausen-aufsicht" :class="{'svws-lehrkraft': mode === 'lehrer'}">
@@ -151,12 +151,15 @@
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const terminBezeichnung = (termin: GostKlausurtermin) => {
-		if (termin.bezeichnung !== null && termin.bezeichnung.length > 0)
+		if (termin.bezeichnung !== null && termin.bezeichnung.length > 0) {
 			return termin.bezeichnung;
-		if (!termin.istHaupttermin)
+		}
+		if (!termin.istHaupttermin) {
 			return "Nachschreibtermin";
-		if (props.kMan().kursklausurGetMengeByTermin(termin).size() > 0)
+		}
+		if (props.kMan().kursklausurGetMengeByTermin(termin).size() > 0) {
 			return [...props.kMan().kursklausurGetMengeByTermin(termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k)).join(", ");
+		}
 		return "Klausurtermin";
 	};
 
@@ -166,14 +169,16 @@
 	};
 
 	const beginn = computed(() => {
-		if (props.ignoreEmpty)
+		if (props.ignoreEmpty) {
 			return props.manager().pausenzeitUndZeitrasterGetMinutenMinOhneLeere();
+		}
 		return props.manager().pausenzeitUndZeitrasterGetMinutenMin();
 	});
 
 	const ende = computed(() => {
-		if (props.ignoreEmpty)
+		if (props.ignoreEmpty) {
 			return props.manager().pausenzeitUndZeitrasterGetMinutenMaxOhneLeere();
+		}
 		return props.manager().pausenzeitUndZeitrasterGetMinutenMax();
 	});
 
@@ -182,16 +187,19 @@
 	});
 
 	const zeitrasterRange = computed(() => {
-		if (props.ignoreEmpty)
+		if (props.ignoreEmpty) {
 			return props.manager().zeitrasterGetStundenRangeOhneLeere();
+		}
 		return props.manager().zeitrasterGetStundenRange();
 	});
 
 	const pausenzeiten = computed(() => {
-		if (props.mode === 'schueler')
+		if (props.mode === 'schueler') {
 			return props.manager().pausenzeitGetMengeBySchuelerIdAsList(props.id);
-		if (props.mode === 'lehrer')
+		}
+		if (props.mode === 'lehrer') {
 			return props.manager().pausenzeitGetMengeByLehrerIdAsList(props.id);
+		}
 		return props.manager().pausenzeitGetMengeByKlasseIdAsList(props.id);
 	});
 
@@ -209,8 +217,9 @@
 		let result = "";
 		for (const aufsichtsbereich of pausenaufsicht.bereiche) {
 			const bereich = props.manager().aufsichtsbereichGetByIdOrException(aufsichtsbereich.idAufsichtsbereich);
-			if (result !== "")
+			if (result !== "") {
 				result += ",";
+			}
 			result += bereich.kuerzel;
 		}
 		return result;
@@ -218,19 +227,23 @@
 
 
 	function getPausenzeitenWochentag(wochentag: Wochentag): List<StundenplanPausenzeit> {
-		if (props.mode === 'schueler')
+		if (props.mode === 'schueler') {
 			return props.manager().pausenzeitGetMengeBySchuelerIdAndWochentagAsList(props.id, wochentag.id);
-		if (props.mode === 'lehrer')
+		}
+		if (props.mode === 'lehrer') {
 			return props.manager().pausenzeitGetMengeByLehrerIdAndWochentagAsList(props.id, wochentag.id);
+		}
 		return props.manager().pausenzeitGetMengeByKlasseIdAndWochentagAsList(props.id, wochentag.id);
 	}
 
 	function getPausenaufsichtenPausenzeit(pause: StundenplanPausenzeit): List<StundenplanPausenaufsicht> {
 		// TODO Pausenaufsicht zusätzlich pro "wochentyp" UND "inklWoche0=true"
-		if (props.mode === 'schueler')
+		if (props.mode === 'schueler') {
 			return props.manager().pausenaufsichtGetMengeBySchuelerIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
-		if (props.mode === 'lehrer')
+		}
+		if (props.mode === 'lehrer') {
 			return props.manager().pausenaufsichtGetMengeByLehrerIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
+		}
 		return props.manager().pausenaufsichtGetMengeByKlasseIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
 	}
 
@@ -240,10 +253,12 @@
 		if (wochentag !== undefined) {
 			const z = props.manager().zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde);
 			if (z !== null) {
-				if (z.stundenbeginn !== null)
+				if (z.stundenbeginn !== null) {
 					zbeginn = z.stundenbeginn;
-				if (z.stundenende !== null)
+				}
+				if (z.stundenende !== null) {
 					zende = z.stundenende;
+				}
 			}
 		}
 		let rowStart = 0;
@@ -284,8 +299,9 @@
 	}
 
 	function getBgColors(termin: GostKlausurtermin) {
-		if (termin.abijahr !== props.jahrgangsdaten.abiturjahr)
+		if (termin.abijahr !== props.jahrgangsdaten.abiturjahr) {
 			return "#f2f4f5";
+		}
 
 		const klausuren = [...props.kMan().kursklausurGetMengeByTermin(termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k).split('-')[0]);
 		const colors = klausuren.map(kuerzel => Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(props.jahrgangsdaten.abiturjahr - 1, 1.0));

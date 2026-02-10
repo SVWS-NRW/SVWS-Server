@@ -34,7 +34,7 @@ export class DBSchemaListeEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.db.DBSchemaListeEintrag'].includes(name);
 	}
 
-	public static class = new Class<DBSchemaListeEintrag>('de.svws_nrw.core.data.db.DBSchemaListeEintrag');
+	public static readonly class = new Class<DBSchemaListeEintrag>('de.svws_nrw.core.data.db.DBSchemaListeEintrag');
 
 	public static transpilerFromJSON(json: string): DBSchemaListeEintrag {
 		const obj = JSON.parse(json) as Partial<DBSchemaListeEintrag>;

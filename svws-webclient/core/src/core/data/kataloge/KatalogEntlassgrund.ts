@@ -21,12 +21,12 @@ export class KatalogEntlassgrund extends JavaObject {
 	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll.
 	 */
-	public istSichtbar: boolean = false;
+	public istSichtbar: boolean = true;
 
 	/**
-	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll.
+	 * Gibt an, ob der Entlassgrund in anderen Datenbanktabellen referenziert ist oder nicht.
 	 */
-	public istAenderbar: boolean = false;
+	public referenziertInAnderenTabellen: boolean | null = false;
 
 
 	/**
@@ -44,7 +44,7 @@ export class KatalogEntlassgrund extends JavaObject {
 		return ['de.svws_nrw.core.data.kataloge.KatalogEntlassgrund'].includes(name);
 	}
 
-	public static class = new Class<KatalogEntlassgrund>('de.svws_nrw.core.data.kataloge.KatalogEntlassgrund');
+	public static readonly class = new Class<KatalogEntlassgrund>('de.svws_nrw.core.data.kataloge.KatalogEntlassgrund');
 
 	public static transpilerFromJSON(json: string): KatalogEntlassgrund {
 		const obj = JSON.parse(json) as Partial<KatalogEntlassgrund>;
@@ -61,9 +61,7 @@ export class KatalogEntlassgrund extends JavaObject {
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if (obj.istAenderbar === undefined)
-			throw new Error('invalid json format, missing attribute istAenderbar');
-		result.istAenderbar = obj.istAenderbar;
+		result.referenziertInAnderenTabellen = (obj.referenziertInAnderenTabellen === undefined) ? null : obj.referenziertInAnderenTabellen === null ? null : obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
@@ -73,7 +71,7 @@ export class KatalogEntlassgrund extends JavaObject {
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
-		result += '"istAenderbar" : ' + obj.istAenderbar.toString() + ',';
+		result += '"referenziertInAnderenTabellen" : ' + ((obj.referenziertInAnderenTabellen === null) ? 'null' : obj.referenziertInAnderenTabellen.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -93,8 +91,8 @@ export class KatalogEntlassgrund extends JavaObject {
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
-		if (obj.istAenderbar !== undefined) {
-			result += '"istAenderbar" : ' + obj.istAenderbar.toString() + ',';
+		if (obj.referenziertInAnderenTabellen !== undefined) {
+			result += '"referenziertInAnderenTabellen" : ' + ((obj.referenziertInAnderenTabellen === null) ? 'null' : obj.referenziertInAnderenTabellen.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

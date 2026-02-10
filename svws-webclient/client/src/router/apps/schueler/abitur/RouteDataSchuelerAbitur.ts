@@ -29,22 +29,25 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 
 	get schueler(): SchuelerListeEintrag {
 		const schueler = this._state.value.schueler;
-		if (schueler === null)
+		if (schueler === null) {
 			throw new DeveloperNotificationException("Ein Aufruf dieser Methode sollte vor der korrekten Initialisierung nicht erfolgen.");
+		}
 		return schueler;
 	}
 
 	get managerLaufbahnplanung(): AbiturdatenManager {
 		const managerLaufbahnplanung = this._state.value.managerLaufbahnplanung;
-		if (managerLaufbahnplanung === null)
+		if (managerLaufbahnplanung === null) {
 			throw new DeveloperNotificationException("Ein Aufruf dieser Methode sollte vor der korrekten Initialisierung der Laufbahnplanungsdaten nicht erfolgen.");
+		}
 		return managerLaufbahnplanung;
 	}
 
 	get ergebnisBelegpruefung(): GostBelegpruefungErgebnis {
 		const ergebnisBelegpruefung = this._state.value.ergebnisBelegpruefung;
-		if (ergebnisBelegpruefung === null)
+		if (ergebnisBelegpruefung === null) {
 			throw new DeveloperNotificationException("Ein Aufruf dieser Methode sollte vor der korrekten Initialisierung der Laufbahnplanungsdaten nicht erfolgen.");
+		}
 		return ergebnisBelegpruefung;
 	}
 
@@ -59,11 +62,13 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 	 * @param force      gibt an, ob das Laden erzwungen werden soll, obwohl die ID bereits geladen ist
 	 */
 	public async setSchueler(schueler: SchuelerListeEintrag, force: boolean = false): Promise<void> {
-		if ((!force) && (schueler.id === this._state.value.schueler?.id))
+		if ((!force) && (schueler.id === this._state.value.schueler?.id)) {
 			return;
+		}
 		// Lade die Informationen zum Abiturjahrgang des Schülers
-		if (schueler.abiturjahrgang === null)
+		if (schueler.abiturjahrgang === null) {
 			throw new DeveloperNotificationException("Für den Schüler konnte kein Abiturjahrgang ermittelt werden.");
+		}
 		let gostJahrgangsdaten = undefined;
 		let listGostFaecher = undefined;
 		let faecherManager = undefined;
@@ -111,8 +116,9 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 	};
 
 	updateAbiturpruefungsdaten = async (manager: () => AbiturdatenManager, belegung: Partial<AbiturFachbelegung>, berechnePflichtpruefungenNeu: boolean) => {
-		if (belegung.fachID === undefined)
+		if (belegung.fachID === undefined) {
 			throw new DeveloperNotificationException("Die FachID muss bei der Abitur-Fachbelegung gesetzt sein, damit ein Patchen möglich ist.");
+		}
 		// Erstelle eine Kopie der Abiturdaten, wo die Fachbelegung aus dem Patch angepasst wurde.
 		const orig = manager().daten();
 		const clone = Abiturdaten.transpilerFromJSON(Abiturdaten.transpilerToJSON(orig));
@@ -124,10 +130,11 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 				break;
 			}
 		}
-		if (!found)
+		if (!found) {
 			throw new DeveloperNotificationException("Die FachID ist in den Abiturdaten nicht als Belegung vorhanden.");
+		}
 		// Berechnen des Prüfungsergebnisses und Senden an den Server
-		AbiturdatenManager.berechnePruefungsergebnis(clone, berechnePflichtpruefungenNeu);
+		AbiturdatenManager.berechnePruefungsergebnis(api.mode, clone, berechnePflichtpruefungenNeu);
 		await api.server.patchGostSchuelerAbiturdaten(clone, api.schema, clone.schuelerID);
 		// Patchen der Originaldaten und dortige Berechnung des Prüfungsergebnisses nach erfolgreichem Senden an den Server
 		for (const tmpBelegung of orig.fachbelegungen) {
@@ -137,7 +144,7 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 			}
 		}
 		manager().pruefeZulassung();
-		AbiturdatenManager.berechnePruefungsergebnis(orig, berechnePflichtpruefungenNeu);
+		AbiturdatenManager.berechnePruefungsergebnis(api.mode, orig, berechnePflichtpruefungenNeu);
 		this.commit();
 	};
 

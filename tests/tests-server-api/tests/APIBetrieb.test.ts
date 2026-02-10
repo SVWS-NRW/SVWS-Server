@@ -3,7 +3,7 @@ import { privilegedApiServer } from "../../utils/APIUtils";
 import { BetriebListeEintrag } from "../../../svws-webclient/core/src/core/data/betrieb/BetriebListeEintrag";
 
 describe("Betrieb Tests2", () => {
-	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
+	describe.each([{ schema: "GymAbi01" }])('gegen %s', ({ schema }) => {
 
 		const api = privilegedApiServer;
 
@@ -40,5 +40,5 @@ describe("Betrieb Tests2", () => {
 			// const result = await api.patchBetriebsart(schema, 1);
 			// expect(result).toBeTruthy();
 		});
-	})
-})
+	});
+});

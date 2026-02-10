@@ -43,7 +43,7 @@ export class KlausurterminblockungAlgorithmusGreedy2 extends Klausurterminblocku
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmusGreedy2', 'de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmusAbstract'].includes(name);
 	}
 
-	public static class = new Class<KlausurterminblockungAlgorithmusGreedy2>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmusGreedy2');
+	public static readonly class = new Class<KlausurterminblockungAlgorithmusGreedy2>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmusGreedy2');
 
 }
 

@@ -43,9 +43,11 @@ export class GridInputNote<KEY> extends GridInputInnerText<KEY, string | null> {
 		this._setter = setter;
 		this._schuljahr = schuljahr;
 		this._firstChars = new Set<string>();
-		for (const note of Note.data().getEintraegeBySchuljahr(schuljahr))
-			if (note.kuerzel.length > 0)
+		for (const note of Note.data().getEintraegeBySchuljahr(schuljahr)) {
+			if (note.kuerzel.length > 0) {
 				this._firstChars.add(note.kuerzel.charAt(0));
+			}
+		}
 		super.updateText(null);
 	}
 
@@ -64,8 +66,9 @@ export class GridInputNote<KEY> extends GridInputInnerText<KEY, string | null> {
 	 * @param value   der Wert
 	 */
 	public update(value: string | null) {
-		if (value === null)
+		if (value === null) {
 			this._noteTemp.value = "";
+		}
 		const note = this.getNoteFromKuerzel(value);
 		super.updateText(value);
 		this._note.value = note;
@@ -94,12 +97,14 @@ export class GridInputNote<KEY> extends GridInputInnerText<KEY, string | null> {
 		const len = this._noteTemp.value.length;
 		const tmp = this._noteTemp.value + ziffer;
 		const note = Note.fromKuerzel(tmp);
-		if (((len === 0) && !this._firstChars.has(ziffer)) || ((len > 0) && (note === Note.KEINE)))
+		if (((len === 0) && !this._firstChars.has(ziffer)) || ((len > 0) && (note === Note.KEINE))) {
 			return false;
+		}
 		this._noteTemp.value = tmp;
 		super.updateText(tmp);
-		if (note !== Note.KEINE)
+		if (note !== Note.KEINE) {
 			this.update(tmp);
+		}
 		return true;
 	}
 
@@ -108,8 +113,9 @@ export class GridInputNote<KEY> extends GridInputInnerText<KEY, string | null> {
 	 * Input geleert.
 	 */
 	public remove() {
-		if (this._noteTemp.value.length === 0)
+		if (this._noteTemp.value.length === 0) {
 			return;
+		}
 		const tmp = this._noteTemp.value.substring(0, this._noteTemp.value.length - 1);
 		this._noteTemp.value = tmp;
 		this.update(tmp);
@@ -123,8 +129,9 @@ export class GridInputNote<KEY> extends GridInputInnerText<KEY, string | null> {
 	 * @returns true   es hat aufgrund des Tastaturereignisses eine Änderung am Zustand des Inputs stattgefunden
 	 */
 	public onKeyDown(event: KeyboardEvent): boolean {
-		if (super.onKeyDownNavigation(event))
+		if (super.onKeyDownNavigation(event)) {
 			return false;
+		}
 		// Lösche ggf. den aktuellen Wert
 		if (event.key === "Delete") {
 			this.update(null);
@@ -138,18 +145,21 @@ export class GridInputNote<KEY> extends GridInputInnerText<KEY, string | null> {
 		// Speicher den aktuellen Wert im Input
 		if (event.key === "Enter") {
 			this.commit();
-			if (this.navigateOnEnter === "DOWN")
+			if (this.navigateOnEnter === "DOWN") {
 				this.navigateDown();
-			else if (this.navigateOnEnter === "RIGHT")
+			} else if (this.navigateOnEnter === "RIGHT") {
 				this.navigateRight();
+			}
 			return true;
 		}
 		// Prüfe, ob eine Zeichen eingegeben wurde
-		if (event.key.length !== 1)
-			return false; // Keine erfolgreiche Eingabe...
+		if (event.key.length !== 1) {
+			return false;
+		} // Keine erfolgreiche Eingabe...
 		// Wenn es sich um eine neue Fokussierung handelt, dann ersetze den Wert bei einer Eingabe (sonst anhängen)
-		if (this._isNewFocus.value)
+		if (this._isNewFocus.value) {
 			this._noteTemp.value = "";
+		}
 		// Konvertiere automatisch in Großbuchstaben, um z.B. E3 zu erfassen, auch bei Eigabe von e3
 		return this.append(event.key.toLocaleUpperCase());
 	}

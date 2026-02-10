@@ -11,8 +11,8 @@ import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingStunde
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingStundenplanungLehrerStundenplan;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingStundenplanungRaumStundenplan;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingStundenplanungSchuelerStundenplan;
-import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
-import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungFachStundenplan;
@@ -65,11 +65,11 @@ public abstract class HtmlContext<T> {
 		this.reportingRepository = reportingRepository;
 		this.istHauptdatenContext = istHauptdatenContext;
 		if (this.istHauptdatenContext) {
-			this.verwendeStandardsortierung = reportingRepository.reportingParameter().sortierungHauptdaten.verwendeStandardsortierung;
-			setSortierungAttribute(this.reportingRepository.reportingParameter().sortierungHauptdaten.attribute);
+			this.verwendeStandardsortierung = reportingRepository.reportingParameter().sortierungHauptdaten().verwendeStandardsortierung;
+			setSortierungAttribute(this.reportingRepository.reportingParameter().sortierungHauptdaten().attribute);
 		} else {
-			this.verwendeStandardsortierung = reportingRepository.reportingParameter().sortierungDetaildaten.verwendeStandardsortierung;
-			setSortierungAttribute(this.reportingRepository.reportingParameter().sortierungDetaildaten.attribute);
+			this.verwendeStandardsortierung = reportingRepository.reportingParameter().sortierungDetaildaten().verwendeStandardsortierung;
+			setSortierungAttribute(this.reportingRepository.reportingParameter().sortierungDetaildaten().attribute);
 		}
 	}
 
@@ -290,7 +290,7 @@ public abstract class HtmlContext<T> {
 		if (comparator == null) {
 			if (validierungsfehler.isEmpty())
 				validierungsfehler.add("- keine -");
-			ReportingExceptionUtils.putInfoInLog(
+			ReportingExceptionUtils.logInfo(
 					("INFO: Es konnte kein Comparator für %s erstellt werden. Zudem wurden folgende Attribute zur Sortierung "
 							+ "übergeben, die nicht in der Registry definiert wurden: %s.")
 							.formatted(typeName, String.join(", ", validierungsfehler)),
@@ -302,7 +302,7 @@ public abstract class HtmlContext<T> {
 
 		// Falls Attribute ungültig waren, werden diese ins Log geschrieben.
 		if (!validierungsfehler.isEmpty()) {
-			ReportingExceptionUtils.putInfoInLog(
+			ReportingExceptionUtils.logInfo(
 					"INFO: Es wurden folgende Attribute zur Sortierung übergeben, die nicht in der Registry definiert wurden: "
 							+ String.join(", ", validierungsfehler),
 					reportingRepository.logger(), LogLevel.INFO, 4);

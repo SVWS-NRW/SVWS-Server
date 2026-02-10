@@ -103,7 +103,7 @@ export class LehrerFachrichtungAnerkennung extends JavaEnum<LehrerFachrichtungAn
 		return ['de.svws_nrw.asd.types.lehrer.LehrerFachrichtungAnerkennung', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<LehrerFachrichtungAnerkennung>('de.svws_nrw.asd.types.lehrer.LehrerFachrichtungAnerkennung');
+	public static readonly class = new Class<LehrerFachrichtungAnerkennung>('de.svws_nrw.asd.types.lehrer.LehrerFachrichtungAnerkennung');
 
 }
 

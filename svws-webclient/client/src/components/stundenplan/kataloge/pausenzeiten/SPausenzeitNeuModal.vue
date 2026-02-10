@@ -29,6 +29,7 @@
 	}>();
 
 	const show = ref<boolean>(false);
+	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
 	const wochentage = ref<Wochentag[]>(props.stundenplanManager().zeitrasterGetWochentageAlsEnumRange());
 
 	const klassen = ref<number[]>([]);
@@ -40,33 +41,39 @@
 	};
 
 	const disabled = computed<boolean>(() => {
-		for (const w of wochentage.value)
-			if (props.stundenplanManager().pausenzeitExistsByWochentagAndBeginnAndEnde(w.id, item.value.beginn ?? null, item.value.ende ?? null))
+		for (const w of wochentage.value) {
+			if (props.stundenplanManager().pausenzeitExistsByWochentagAndBeginnAndEnde(w.id, item.value.beginn ?? null, item.value.ende ?? null)) {
 				return true;
+			}
+		}
 		return false;
 	});
 
 	async function importer() {
 		const list = [];
 		const listKlassen = new ArrayList<number>();
-		for (const klasse of klassen.value)
+		for (const klasse of klassen.value) {
 			listKlassen.add(klasse);
-		for (const tag of wochentage.value)
+		}
+		for (const tag of wochentage.value) {
 			list.push({ wochentag: tag.id, beginn: item.value.beginn, ende: item.value.ende, bezeichnung: 'Pause', klassen: listKlassen });
+		}
 		show.value = false;
 		await props.addPausenzeiten(list);
 	}
 
 	async function patchBeginn(start: string | null) {
-		if (start === null)
+		if (start === null) {
 			return;
+		}
 		const stundenbeginn = DateUtils.gibMinutenOfZeitAsString(start);
 		item.value.beginn = stundenbeginn;
 	}
 
 	async function patchEnde(ende: string | null) {
-		if (ende === null)
+		if (ende === null) {
 			return;
+		}
 		const stundenende = DateUtils.gibMinutenOfZeitAsString(ende);
 		item.value.ende = stundenende;
 	}

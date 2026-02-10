@@ -63,9 +63,10 @@ task testUi(type: NpmRun) {
 			file("$projectDir/src/test/ts/vueconfig.json"),
 			file("$projectDir/src/test/ts/vitest.config.ts")
 	outputs.dir file("$projectDir/build/testresults")
-	args = [ 'test:run' ]
+	args = [ 'test:coverage' ]
+	def dirResults = file("$projectDir/build/testresults")
 	doFirst {
-		mkdir file("$projectDir/build/testresults")
+		dirResults.mkdirs()
 	}
 }
 

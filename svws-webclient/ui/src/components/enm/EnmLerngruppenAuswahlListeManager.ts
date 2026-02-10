@@ -53,10 +53,12 @@ export class EnmLerngruppenAuswahlListeManager extends AuswahlManager<number, EN
 			let cmp: number = 0;
 			if (JavaObject.equalsTranspiler("bezeichnung", (field))) {
 				cmp = JavaString.compareTo(a.bezeichnung ?? "", b.bezeichnung);
-			} else
+			} else {
 				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-			if (cmp === 0)
+			}
+			if (cmp === 0) {
 				continue;
+			}
 			return asc ? cmp : -cmp;
 		}
 		return this.enmManager.comparatorLerngruppen.compare(a, b);

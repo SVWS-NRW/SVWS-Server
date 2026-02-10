@@ -51,7 +51,7 @@ export class StundenplanblockungManagerFach extends JavaObject {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerFach'].includes(name);
 	}
 
-	public static class = new Class<StundenplanblockungManagerFach>('de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerFach');
+	public static readonly class = new Class<StundenplanblockungManagerFach>('de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerFach');
 
 }
 

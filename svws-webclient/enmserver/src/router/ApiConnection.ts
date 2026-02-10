@@ -11,7 +11,7 @@ export class ApiConnection {
 	protected _authenticated = ref<boolean>(false);
 
 	// Der Hostname (evtl. mit Port) des Servers, bei dem der Login stattfindet
-	protected _hostname = ref<string>(window.location.hostname + ":" + window.location.port);
+	protected _hostname = ref<string>(globalThis.location.hostname + ":" + globalThis.location.port);
 
 	// Die URL mit welcher der Server verbunden ist
 	protected _url: string | undefined = undefined;
@@ -34,8 +34,9 @@ export class ApiConnection {
 
 	// Gibt die Server-API zurück.
 	get api(): ApiEnmServer {
-		if (this._api === undefined)
+		if (this._api === undefined) {
 			throw new DeveloperNotificationException("Es wurde kein Api-Objekt angelegt - Verbindungen zum Server können nicht erfolgen");
+		}
 		return this._api;
 	}
 
@@ -87,8 +88,9 @@ export class ApiConnection {
 		console.log(`Verbinde zum ENM-Server unter https://${host}...`);
 		try {
 			await this.connect(host);
-			if (url.port.length > 0)
+			if (url.port.length > 0) {
 				localStorage.setItem("ENM-Server Port", url.port);
+			}
 			return;
 		} catch (error) {
 			console.log(`Verbindung zum ENM-Server unter https://${host} fehlgeschlagen`);
@@ -126,8 +128,9 @@ export class ApiConnection {
 	 */
 	login = async (username: string, password: string): Promise<boolean> => {
 		try {
-			if (this._url === undefined)
+			if (this._url === undefined) {
 				throw new DeveloperNotificationException("Keine gültige URL für einen Login verfügbar.");
+			}
 			this._username = username;
 			this._password = password;
 			this._api = new ApiEnmServer(this._url, this._username, this._password);

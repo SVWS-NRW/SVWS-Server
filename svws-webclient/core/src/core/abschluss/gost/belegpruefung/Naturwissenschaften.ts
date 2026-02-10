@@ -11,12 +11,24 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class Naturwissenschaften extends GostBelegpruefung {
 
+	/**
+	 * Die Belegungen für alle Fächer der Naturwissenschaften.
+	 */
 	private _naturwissenschaften: List<AbiturFachbelegung> | null = null;
 
+	/**
+	 * Die Belegungen für alle Fächer der klassischen Naturwissenschaften.
+	 */
 	private _naturwissenschaftenKlassisch: List<AbiturFachbelegung> | null = null;
 
+	/**
+	 * Die Anzahl der durchgehenden bzw. potentiell durchgehenden Belegungen - mündlich und schriftlich (für die Schwerpunktberechnung).
+	 */
 	private _anzahlDurchgehend: number = 0;
 
+	/**
+	 * Die Anzahl der durchgehenden bzw. potentiell durchgehenden Belegungen - nur schriftlich (für die Schwerpunktberechnung).
+	 */
 	private _anzahlDurchgehendSchriftlich: number = 0;
 
 
@@ -85,7 +97,7 @@ export class Naturwissenschaften extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.Naturwissenschaften', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
 
-	public static class = new Class<Naturwissenschaften>('de.svws_nrw.core.abschluss.gost.belegpruefung.Naturwissenschaften');
+	public static readonly class = new Class<Naturwissenschaften>('de.svws_nrw.core.abschluss.gost.belegpruefung.Naturwissenschaften');
 
 }
 

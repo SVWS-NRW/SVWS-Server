@@ -10,7 +10,7 @@
 # https://github.com/gradle/gradle
 
 
-image: 10.1.1.3/svwsnrw/docker-runner:21
+image: ${REGISTRY_HOST}/svwsnrw/docker-runner:21
 
 # Disable the Gradle daemon for Continuous Integration servers as correctness
 # is usually a priority over speed in CI environments. Using a fresh
@@ -28,14 +28,36 @@ cache: &global_cache
         - .gradle
 
 stages:
+    - lint
     - build
     - test
     - cleanup
     - analyze
-    - build_snapshot_installer
-    - build_installer
+    - package
     - sign
     - publish
+    - scheduled
+
+lint:eslint:
+    image: ${REGISTRY_HOST}/dockerhub_proxy/node:24-slim
+    stage: lint
+    interruptible: true
+    before_script:
+        - apt-get update
+        - apt-get install -y git
+        - rm -rf /var/lib/apt/lists/*
+        - npm ci
+    script:
+        - time echo -e "svws-webclient/admin\nsvws-webclient/client\nsvws-webclient/ui\nsvws-webclient/enmserver\nsvws-webclient/laufbahnplanung" \
+            | xargs -P5 -I{} npm --workspace {} run lint
+    rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
+        - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # läuft in MR-Pipeline
+        - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
+          when: never
+        - if: $CI_COMMIT_BRANCH # läuft in Branch Pipeline
+        - when: never # läuft sonst nicht
 
 build:
     stage: build
@@ -52,17 +74,26 @@ build:
         reports:
             junit: ./**/build/test-results/test/**/TEST-*.xml
         paths:
-            - "./build/**"
             - "./**/build/**"
+        exclude:
+            - "./**/build/sonar/**"
         expire_in: "1 days"
-    when: always
+    rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
+        - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # läuft in MR-Pipeline
+        - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
+          when: never
+        - if: $CI_COMMIT_BRANCH # läuft in Branch Pipeline
+        - when: never # läuft sonst nicht
 
 test:integration-tests:
-    image: ${REGISTRY_HOST}/svws-ci/test-runner:jdk21-node22-playwright1.56
+    image: ${REGISTRY_HOST}/svws-ci/test-runner:jdk21-node24-playwright1.56
+    stage: test
     dependencies:
         - build
-    stage: test
-    interruptible: true
+    interruptible: false
     variables:
         USE_SYSTEM_NODE: "1" # Node aus dem Test-Runner Image wird verwendet und nicht erneut heruntergeladen
     before_script:
@@ -80,91 +111,184 @@ test:integration-tests:
         when: always
         expire_in: "7 days"
         paths:
-            - ./tests/tests-e2e-*/build/test-results
+            - "**/tests/**/build/test-results/**"
         reports:
-            junit: ./tests/**/build/test-results/**/*.xml
+            junit: "**/tests/**/build/test-results/**/*.xml"
+    rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
+        - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # läuft in MR-Pipeline
+        - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
+          when: never
+        - if: $CI_COMMIT_BRANCH # läuft in Branch Pipeline
+        - when: never # läuft sonst nicht
 
 cleanup:integration-tests:
     stage: cleanup
+    needs:
+        - test:integration-tests
+    interruptible: false
     before_script:
         - chmod +x ./.gitlab/.script/*.sh
     script:
-        - ./.gitlab/.script/cleanup_integration_test_container.sh $CI_COMMIT_SHORT_SHA
-    when: always
+        - ./.gitlab/.script/cleanup_integration_test_container.sh ${CI_COMMIT_SHORT_SHA}
+    rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
+        - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # läuft in MR-Pipeline
+        - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
+          when: never
+        - if: $CI_COMMIT_BRANCH # läuft in Branch Pipeline
+        - when: never # läuft sonst nicht
     allow_failure: true
 
 analyze:sonarqube:
     stage: analyze
+    needs:
+        - job: build
+          artifacts: true # benötigt sources und test-results
+        - job: test:integration-tests
+          artifacts: true # benötigt integration test-results
     interruptible: true
-    only:
-        - dev
+    variables:
+        SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+        GIT_DEPTH: "0"
     script:
-        - ./gradlew sonar -Dsonar.projectKey=svws-server -Dsonar.host.url=$SONAR_URL -Dsonar.token=$SONAR_TOKEN --full-stacktrace
-    when: manual
+        - |
+            if [[ "$CI_PIPELINE_SOURCE" == "merge_request_event" ]]; then
+                echo "Running SonarQube MR analysis for MR $CI_MERGE_REQUEST_IID"
 
-build_snapshot_windows:
-    stage: build_snapshot_installer
+                ./gradlew sonar \
+                    -Dsonar.projectKey=svws-server \
+                    -Dsonar.host.url=$SONAR_URL \
+                    -Dsonar.token=$SONAR_TOKEN \
+                    -Dsonar.pullrequest.key=$CI_MERGE_REQUEST_IID \
+                    -Dsonar.pullrequest.branch=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME \
+                    -Dsonar.pullrequest.base=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME \
+                    -Dsonar.gradle.skipCompile=true \
+                    -Dsonar.qualitygate.wait=true
+            else
+                echo "Running SonarQube branch analysis for Branch $CI_COMMIT_BRANCH"
+
+                ./gradlew sonar \
+                    -Dsonar.projectKey=svws-server \
+                    -Dsonar.host.url=$SONAR_URL \
+                    -Dsonar.token=$SONAR_TOKEN \
+                    -Dsonar.branch.name=$CI_COMMIT_BRANCH \
+                    -Dsonar.gradle.skipCompile=true \
+                    -Dsonar.qualitygate.wait=true
+            fi
+    cache:
+        key: "${CI_JOB_NAME}"
+        paths:
+            - .sonar/cache
+    rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
+        - if: $CI_COMMIT_TAG # läuft nicht in Tag Pipeline
+          when: never
+        - if: $CI_COMMIT_BRANCH == 'dev' || $CI_COMMIT_BRANCH == 'master' # läuft in dev & master Pipeline
+        - if: $CI_PIPELINE_SOURCE == 'merge_request_event' # läuft in MR-Pipeline
+        - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
+          when: never
+        - when: manual # läuft sonst nur manuell
+    allow_failure: true
+
+package:installer:snapshot:win:
+    image: ${REGISTRY_HOST}/svwsnrw/docker-runner-wine:21
+    stage: package
     needs:
         - build
         - test:integration-tests
-    image: 10.1.1.3/svwsnrw/docker-runner-wine:21
-    script:
+    before_script:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
-        - ./gradlew :deployment:windows-installer:doZip
         - mkdir artifacts_windows
+    script:
+        - ./gradlew :deployment:windows-installer:doZip
+    after_script:
         - cp ./deployment/windows-installer/build/output/win64-installer* ./artifacts_windows/
+    cache:
+        <<: *global_cache
+        policy: pull
     artifacts:
         paths:
             - artifacts_windows/
-    when: manual
-
-build_linux:
-    stage: build_installer
     rules:
-       - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
+        - if: $CI_COMMIT_TAG # läuft nicht in Tag Pipeline
+          when: never
+        - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS # läuft nicht in Branch Pipeline, wenn bereits ein offener MR existiert
+          when: never
+        - when: manual # läuft sonst nur manuell
+    allow_failure: true
+
+package:installer:release:win:
+    image: ${REGISTRY_HOST}/svwsnrw/docker-runner-wine:21
+    stage: package
     needs:
-        - job: build
-    script:
+        - build
+    before_script:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
-        - ./gradlew :deployment:linux-installer:buildLinuxInstaller
+        - mkdir artifacts_windows
+    script:
+        - ./gradlew :deployment:windows-installer:doZip
+    after_script:
+        - cp ./deployment/windows-installer/build/output/win64-installer* ./artifacts_windows/
+    cache:
+        <<: *global_cache
+        policy: pull
+    artifacts:
+        paths:
+            - artifacts_windows/
+    rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
+        - when: never # läuft sonst nicht
+
+package:installer:release:linux:
+    stage: package
+    needs:
+        - build
+    before_script:
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
         - mkdir artifacts_linux
+    script:
+        - ./gradlew :deployment:linux-installer:buildLinuxInstaller
+    after_script:
         - cp -r ./deployment/linux-installer/build/distributions/ ./artifacts_linux
+    cache:
+        <<: *global_cache
+        policy: pull
     artifacts:
         paths:
             - artifacts_linux/
-
-build_windows:
-    stage: build_installer
     rules:
-        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
-    needs:
-        - job: build
-    image: 10.1.1.3/svwsnrw/docker-runner-wine:21
-    script:
-        - chmod +x ./deployment/setupVersion.sh
-        - ./deployment/setupVersion.sh
-        - ./gradlew :deployment:windows-installer:doZip
-        - mkdir artifacts_windows
-        - cp ./deployment/windows-installer/build/output/win64-installer* ./artifacts_windows/
-    artifacts:
-        paths:
-            - artifacts_windows/
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
+        - when: never # läuft sonst nicht
 
-sign_artifacts:
+sign:jars-and-installer:release:
+    image: ${REGISTRY_HOST}/svwsnrw/docker-runner:17
     stage: sign
-    image: 10.1.1.3/svwsnrw/docker-runner:17
-    rules:
-        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
     needs:
-        - job: build
-        - job: build_windows
-        - job: build_linux
+        - build
+        - package:installer:release:win
+        - package:installer:release:linux
     before_script:
         - chmod u+x config/signing/*.sh
     script:
         - ./gradlew signJars signWindowsInstaller
+    cache:
+        <<: *global_cache
+        policy: pull
     artifacts:
         paths:
             - artifacts_windows/
@@ -172,68 +296,104 @@ sign_artifacts:
         exclude:
             - "./build/signing/**/*"
             - "./build/signing"
-
-publish_all:
-    stage: publish
     rules:
-        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
+        - when: never # läuft sonst nicht
+
+publish:all:release:
+    stage: publish
+    needs:
+        - build
+        - sign:jars-and-installer:release
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
-    needs:
-        - job: build
-        - job: sign_artifacts
-    script:
-        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-        - cat gradle_secure.properties >> gradle.properties
+    before_script:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
+
+        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+        - cat gradle_secure.properties >> gradle.properties
+    script:
         - ./gradlew publishReleaseAll
-
-publish_maven:
-    stage: publish
     rules:
-        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
+        - when: never # läuft sonst nicht
+
+publish:maven:release:
+    stage: publish
+    needs:
+        - build
+        - sign:jars-and-installer:release
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
-    needs:
-        - job: build
-        - job: sign_artifacts
-    script:
-        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-        - cat gradle_secure.properties >> gradle.properties
+    before_script:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
+
+        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+        - cat gradle_secure.properties >> gradle.properties
+    script:
         - ./gradlew publishAllPublicationsToSonatypeRepository closeAndReleaseSonatypeStagingRepository
-
-publish_dockerhub:
-    stage: publish
     rules:
-        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
+        - when: never # läuft sonst nicht
+
+publish:dockerhub:release:
+    stage: publish
+    needs:
+        - build
+        - sign:jars-and-installer:release
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
-    needs:
-        - job: build
-        - job: sign_artifacts
-    script:
+    before_script:
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
+
         - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
         - cat gradle_secure.properties >> gradle.properties
+
         - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
-        - chmod +x ./deployment/setupVersion.sh
-        - ./deployment/setupVersion.sh
+    script:
         - ./gradlew :deployment:docker:dockerPushAllDockerhub
-
-publish_github:
-    stage: publish
     rules:
-        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
+        - when: never # läuft sonst nicht
+
+publish:github:release:
+    stage: publish
+    needs:
+        - build
+        - sign:jars-and-installer:release
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
-    needs:
-        - job: build
-        - job: sign_artifacts
-    script:
-        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-        - cat gradle_secure.properties >> gradle.properties
+    before_script:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
+
+        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+        - cat gradle_secure.properties >> gradle.properties
+    script:
         - ./gradlew :deployment:githubRelease
+    rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule"' # läuft nicht in Scheduled Pipeline
+          when: never
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/' # läuft in Release Pipeline
+        - when: never # läuft sonst nicht
+
+scheduled:cleanup-sonarqube:
+    stage: scheduled
+    before_script:
+        - chmod +x ./.gitlab/.script/cleanup_orphan_sonarqube_mr_analyses.sh
+    script:
+        - ./.gitlab/.script/cleanup_orphan_sonarqube_mr_analyses.sh
+    rules:
+        - if: '$CI_PIPELINE_SOURCE == "schedule" && $SCHEDULED_JOB_NAME == "cleanup-sonarqube"' # läuft nur als Scheduled Pipeline mit Variable SCHEDULED_JOB_NAME="cleanup-sonarqube"
+        - when: never # läuft sonst nicht

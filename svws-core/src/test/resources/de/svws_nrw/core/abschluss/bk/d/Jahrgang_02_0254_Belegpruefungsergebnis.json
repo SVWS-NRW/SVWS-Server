@@ -1,0 +1,26 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [
+    {
+      "code" : "ST_2",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Biologie weist im Halbjahr Q2.1 keine Note auf, obwohl es belegt werden muss."
+    },
+    {
+      "code" : "ST_3",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Biologie der Stundentafel wurde nicht im nötigen Stundenumfang belegt."
+    },
+    {
+      "code" : "ST_2",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Deutsch weist im Halbjahr Q2.2 keine Note auf, obwohl es belegt werden muss."
+    },
+    {
+      "code" : "ST_3",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Deutsch der Stundentafel wurde nicht im nötigen Stundenumfang belegt."
+    }
+  ],
+  "log" : [ ]
+}

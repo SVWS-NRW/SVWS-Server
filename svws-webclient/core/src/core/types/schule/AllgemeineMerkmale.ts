@@ -209,7 +209,7 @@ export class AllgemeineMerkmale extends JavaEnum<AllgemeineMerkmale> {
 		return ['de.svws_nrw.core.types.schule.AllgemeineMerkmale', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<AllgemeineMerkmale>('de.svws_nrw.core.types.schule.AllgemeineMerkmale');
+	public static readonly class = new Class<AllgemeineMerkmale>('de.svws_nrw.core.types.schule.AllgemeineMerkmale');
 
 }
 

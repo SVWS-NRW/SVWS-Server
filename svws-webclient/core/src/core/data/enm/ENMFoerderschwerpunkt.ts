@@ -34,7 +34,7 @@ export class ENMFoerderschwerpunkt extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMFoerderschwerpunkt'].includes(name);
 	}
 
-	public static class = new Class<ENMFoerderschwerpunkt>('de.svws_nrw.core.data.enm.ENMFoerderschwerpunkt');
+	public static readonly class = new Class<ENMFoerderschwerpunkt>('de.svws_nrw.core.data.enm.ENMFoerderschwerpunkt');
 
 	public static transpilerFromJSON(json: string): ENMFoerderschwerpunkt {
 		const obj = JSON.parse(json) as Partial<ENMFoerderschwerpunkt>;

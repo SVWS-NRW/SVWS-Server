@@ -55,7 +55,7 @@ export class HerkunftSonstige extends CoreTypeSimple<HerkunftSonstigeKatalogEint
 		return ['de.svws_nrw.asd.types.schueler.HerkunftSonstige', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.CoreTypeSimple'].includes(name);
 	}
 
-	public static class = new Class<HerkunftSonstige>('de.svws_nrw.asd.types.schueler.HerkunftSonstige');
+	public static readonly class = new Class<HerkunftSonstige>('de.svws_nrw.asd.types.schueler.HerkunftSonstige');
 
 }
 

@@ -1,6 +1,6 @@
 package de.svws_nrw.asd.types.schule;
 
-import de.svws_nrw.asd.data.schule.ReligionKatalogEintrag;
+import de.svws_nrw.asd.data.CoreTypeData;
 import de.svws_nrw.asd.types.CoreType;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
 import jakarta.validation.constraints.NotNull;
@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Ein Core-Type für die für die amtliche Schulstatistik erhobenen Religionen.
  */
-public enum Religion implements @NotNull CoreType<ReligionKatalogEintrag, Religion> {
+public enum Religion implements @NotNull CoreType<CoreTypeData, Religion> {
 
 	/** Religion: alevitisch */
 	AR,
@@ -48,7 +48,7 @@ public enum Religion implements @NotNull CoreType<ReligionKatalogEintrag, Religi
 	 *
 	 * @param manager   der Manager für die Daten des Core-Types
 	 */
-	public static void init(final @NotNull CoreTypeDataManager<ReligionKatalogEintrag, Religion> manager) {
+	public static void init(final @NotNull CoreTypeDataManager<CoreTypeData, Religion> manager) {
 		CoreTypeDataManager.putManager(Religion.class, manager);
 	}
 
@@ -58,7 +58,7 @@ public enum Religion implements @NotNull CoreType<ReligionKatalogEintrag, Religi
 	 *
 	 * @return der Daten-Manager
 	 */
-	public static @NotNull CoreTypeDataManager<ReligionKatalogEintrag, Religion> data() {
+	public static @NotNull CoreTypeDataManager<CoreTypeData, Religion> data() {
 		return CoreTypeDataManager.getManager(Religion.class);
 	}
 

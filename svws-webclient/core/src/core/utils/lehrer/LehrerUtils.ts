@@ -44,7 +44,7 @@ export class LehrerUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.lehrer.LehrerUtils'].includes(name);
 	}
 
-	public static class = new Class<LehrerUtils>('de.svws_nrw.core.utils.lehrer.LehrerUtils');
+	public static readonly class = new Class<LehrerUtils>('de.svws_nrw.core.utils.lehrer.LehrerUtils');
 
 }
 

@@ -383,6 +383,48 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 	}
 
 	/**
+	 * Gibt die Note als Kürzel wie '3+' zurück, z. B. für Leistungsdatenübersichten.
+	 *
+	 * @param schuljahr	Schuljahr, für das der Wert abgefragt wird.
+	 *
+	 * @return die Note als Kürzel oder im Fehlerfall null.
+	 */
+	public String getNoteKuerzel(final int schuljahr) {
+		final NoteKatalogEintrag nke = this.daten(schuljahr);
+		if (nke == null)
+			return null;
+		return nke.kuerzel;
+	}
+
+	/**
+	 * Gibt die Note in ihrer Textdarstellung zurück, z. B. 'befriedigend (plus)'.
+	 *
+	 * @param schuljahr	Schuljahr, für das der Wert abgefragt wird.
+	 *
+	 * @return die Note in den Textdarstellungen oder im Fehlerfall null.
+	 */
+	public String getNoteText(final int schuljahr) {
+		final NoteKatalogEintrag nke = this.daten(schuljahr);
+		if (nke == null)
+			return null;
+		return nke.text;
+	}
+
+	/**
+	 * Gibt die Note als Note ohne Tendenz in ihrer Textdarstellung zurück, z. B. für Zeugnisse.
+	 *
+	 * @param schuljahr	Schuljahr, für das der Wert abgefragt wird.
+	 *
+	 * @return die Note in der Textdarstellung 'sehr gut' bis 'ungenügend' oder im Fehlerfall null.
+	 */
+	public String getNoteTextZeugnis(final int schuljahr) {
+		final NoteKatalogEintrag nke = this.daten(schuljahr);
+		if (nke == null)
+			return null;
+		return nke.textZeugnis;
+	}
+
+	/**
 	 * Gibt die Note als Notenpunkte der Sekundarstufe II als zweistelligen String zurück.
 	 *
 	 * @param schuljahr	Schuljahr, für das der Wert abgefragt wird.
@@ -414,4 +456,24 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 		return this.daten(schuljahr);
 	}
 
+
+	/**
+	 * Gibt zu einem Notenkürzel die entsprechenden Notenpunkte zurück
+	 *
+	 * @param notenkuerzel   das Notenkürzel
+	 * @param schuljahr      das Schuljahr
+	 *
+	 * @return -1, wenn es sich nicht um eine reguläre Note von 1+ bis 6 handelt, sonst die Notenpunkte von 0 bis 15
+	 */
+	public static Integer getPunkteFromNotenkuerzel(final @NotNull String notenkuerzel, final int schuljahr) {
+		final @NotNull Note note = Note.fromKuerzel(notenkuerzel);
+		if (!note.istNote(schuljahr))
+			return null;
+		final NoteKatalogEintrag nke = note.daten(schuljahr);
+		if (nke == null)
+			return null;
+		if (nke.notenpunkte == null)
+			return null;
+		return nke.notenpunkte;
+	}
 }

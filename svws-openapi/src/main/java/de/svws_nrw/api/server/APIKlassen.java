@@ -2,6 +2,8 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
+import org.jboss.resteasy.annotations.GZIP;
+
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.klassen.KlassenartKatalogEintrag;
@@ -58,6 +60,7 @@ public class APIKlassen {
 	 * @return              die Liste der Klassen mit ID des Datenbankschemas
 	 */
 	@GET
+	@GZIP
 	@Path("/abschnitt/{abschnitt : \\d+}")
 	@Operation(summary = "Gibt eine Übersicht von allen Klassen zurück.",
 			description = "Erstellt eine Liste aller in der Datenbank vorhanden Klassen unter Angabe der ID, des Kürzels, der Parallelität, der Kürzel des "
@@ -85,6 +88,7 @@ public class APIKlassen {
 	 * @return die Daten der Klasse
 	 */
 	@GET
+	@GZIP
 	@Path("/{id : \\d+}")
 	@Operation(summary = "Liefert zu der ID der Klasse die zugehörigen Daten.",
 			description = "Liest die Daten der Klasse zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
@@ -199,6 +203,7 @@ public class APIKlassen {
 	 * @return der Katalog der gültigen Klassenarten
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/klassenarten")
 	@Operation(summary = "Gibt den Katalog der gültigen Klassenarten zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden gültigen Klassenarten. "

@@ -53,7 +53,7 @@ export class PairNN<A, B> extends JavaObject {
 		return ['de.svws_nrw.asd.adt.PairNN'].includes(name);
 	}
 
-	public static class = new Class<PairNN<any, any>>('de.svws_nrw.asd.adt.PairNN');
+	public static readonly class = new Class<PairNN<any, any>>('de.svws_nrw.asd.adt.PairNN');
 
 }
 

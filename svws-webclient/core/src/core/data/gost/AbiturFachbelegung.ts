@@ -101,7 +101,7 @@ export class AbiturFachbelegung extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.AbiturFachbelegung'].includes(name);
 	}
 
-	public static class = new Class<AbiturFachbelegung>('de.svws_nrw.core.data.gost.AbiturFachbelegung');
+	public static readonly class = new Class<AbiturFachbelegung>('de.svws_nrw.core.data.gost.AbiturFachbelegung');
 
 	public static transpilerFromJSON(json: string): AbiturFachbelegung {
 		const obj = JSON.parse(json) as Partial<AbiturFachbelegung>;

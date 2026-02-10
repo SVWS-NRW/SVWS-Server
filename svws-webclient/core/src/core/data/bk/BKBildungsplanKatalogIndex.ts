@@ -37,7 +37,7 @@ export class BKBildungsplanKatalogIndex extends JavaObject {
 		return ['de.svws_nrw.core.data.bk.BKBildungsplanKatalogIndex'].includes(name);
 	}
 
-	public static class = new Class<BKBildungsplanKatalogIndex>('de.svws_nrw.core.data.bk.BKBildungsplanKatalogIndex');
+	public static readonly class = new Class<BKBildungsplanKatalogIndex>('de.svws_nrw.core.data.bk.BKBildungsplanKatalogIndex');
 
 	public static transpilerFromJSON(json: string): BKBildungsplanKatalogIndex {
 		const obj = JSON.parse(json) as Partial<BKBildungsplanKatalogIndex>;

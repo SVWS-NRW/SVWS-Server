@@ -4,7 +4,7 @@
 			<ui-card icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Abiturjahrgäge werden gelöscht." :is-open="currentAction === 'delete'" @update:is-open="(isOpen) => setCurrentAction('delete', isOpen)">
 				<div>
 					<span v-if="checkIsEnabled[0] === true">Alle ausgewählten Abiturjahrgänge sind bereit zum Löschen.</span>
-					<template v-else v-for="message in checkIsEnabled[1]" :key="message">
+					<template v-else v-for="message, i in checkIsEnabled[1]" :key="i">
 						<span class="text-ui-danger"> {{ message }} <br> </span>
 					</template>
 				</div>
@@ -44,20 +44,23 @@
 	const status = ref<boolean | undefined>();
 
 	const checkIsEnabled = computed(() => {
-		if (currentAction.value === 'delete')
+		if (currentAction.value === 'delete') {
 			return props.removeAbiturjahrgaengeCheck();
+		}
 		return [false, []];
 	});
 
 	function setCurrentAction(newAction: "delete", open: boolean) {
-		if (newAction === oldAction.value.name && !open)
+		if (newAction === oldAction.value.name && !open) {
 			return;
+		}
 		oldAction.value.name = currentAction.value;
-		oldAction.value.open = (currentAction.value === "") ? false : true;
-		if (open === true)
+		oldAction.value.open = currentAction.value !== "";
+		if (open === true) {
 			currentAction.value = newAction;
-		else
+		} else {
 			currentAction.value = "";
+		}
 	}
 
 	function clearLog() {

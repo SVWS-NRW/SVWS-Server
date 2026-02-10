@@ -76,7 +76,7 @@ export class SchulgliederungGueltigerAbschluss extends JavaObject {
 		return ['de.svws_nrw.asd.data.schule.SchulgliederungGueltigerAbschluss'].includes(name);
 	}
 
-	public static class = new Class<SchulgliederungGueltigerAbschluss>('de.svws_nrw.asd.data.schule.SchulgliederungGueltigerAbschluss');
+	public static readonly class = new Class<SchulgliederungGueltigerAbschluss>('de.svws_nrw.asd.data.schule.SchulgliederungGueltigerAbschluss');
 
 	public static transpilerFromJSON(json: string): SchulgliederungGueltigerAbschluss {
 		const obj = JSON.parse(json) as Partial<SchulgliederungGueltigerAbschluss>;

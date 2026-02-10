@@ -1,18 +1,19 @@
 package de.svws_nrw.data.enm;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -28,9 +29,11 @@ import de.svws_nrw.asd.types.schule.Floskelgruppenart;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.base.compression.CompressionException;
 import de.svws_nrw.base.crypto.Passwords;
-import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.core.data.benutzer.BenutzerConfigElement;
 import de.svws_nrw.core.data.enm.ENMAnkreuzkompetenz;
-import de.svws_nrw.core.data.enm.ENMConfigResponse;
+import de.svws_nrw.core.data.enm.ENMConfigKlasse;
+import de.svws_nrw.core.data.enm.ENMConfigKlasseSpalte;
 import de.svws_nrw.core.data.enm.ENMDaten;
 import de.svws_nrw.core.data.enm.ENMFach;
 import de.svws_nrw.core.data.enm.ENMFloskel;
@@ -44,19 +47,20 @@ import de.svws_nrw.core.data.enm.ENMLerngruppe;
 import de.svws_nrw.core.data.enm.ENMSchueler;
 import de.svws_nrw.core.data.enm.ENMSchuelerAnkreuzkompetenz;
 import de.svws_nrw.core.data.enm.ENMServerConfig;
+import de.svws_nrw.core.data.enm.ENMServerConfigElement;
 import de.svws_nrw.core.data.enm.ENMTeilleistung;
 import de.svws_nrw.core.data.enm.ENMTeilleistungsart;
-import de.svws_nrw.core.logger.LogConsumerList;
-import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.core.types.oauth2.OAuth2ServerTyp;
 import de.svws_nrw.core.utils.enm.ENMDatenManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.oauth2.OAuth2Client;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.katalog.DTOAnkreuzkompetenzJahrgang;
 import de.svws_nrw.db.dto.current.katalog.DTOFloskelnJahrgaenge;
-import de.svws_nrw.db.dto.current.lehrer.DTOLehrerNotenmodulCredentials;
+import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
+import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulKonfigurationClient;
+import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulKonfigurationServer;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzdaten;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
@@ -75,7 +79,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerPSFachBemerkungen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerTeilleistung;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOTeilleistungsarten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
-import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsLehrerNotenmodulCredentials;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsNotenmodulCredentials;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerAnkreuzkompetenzen;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten;
@@ -83,6 +87,7 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleist
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.ext.jbcrypt.BCrypt;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -92,6 +97,9 @@ import jakarta.ws.rs.core.Response.Status;
  * Core-DTO {@link ENMDaten}.
  */
 public final class DataENMDaten extends DataManager<Long> {
+
+	private static final DateTimeFormatter ofPattern =
+			new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss").appendFraction(ChronoField.MILLI_OF_SECOND, 0, 3, true).toFormatter();
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link ENMDaten}.
@@ -180,6 +188,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		if ((id != null) && (dtoLehrer == null))
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final Map<Long, DTOAnkreuzfloskeln> mapKatalogAnkreuzkompetenzen = getAnkreuzkompetenzenListe(conn);
+		final Map<Long, List<DTOAnkreuzkompetenzJahrgang>> kompetenzZuordnungenByJahrgang = getKompetenzZuordnungenByJahrgang(conn);
 		final Map<Long, DTOFoerderschwerpunkt> mapFoerderschwerpunkte = getFoerderschwerpunktListe(conn);
 		final Map<Long, DTOSchueler> mapSchueler = getSchuelerListe(conn, abschnitt);
 		final Map<Long, DTOFach> mapFaecher = getFaecherListe(conn);
@@ -460,10 +469,11 @@ public final class DataENMDaten extends DataManager<Long> {
 							|| ((dtoAnkreuzkompetenz.Fach_ID != null) && !leistungenFachIDs.contains(dtoAnkreuzkompetenz.Fach_ID))))
 						continue;
 					// Prüfe die Ankreuzfloskel und ergänze sie ggf.
+					final String jahrgang = getJahrgang(ankreuzkompetenz.ID, lernabschnitt.Fachklasse_ID, mapKlassen, kompetenzZuordnungenByJahrgang, mapJahrgaenge);
 					final ENMAnkreuzkompetenz enmAnkreuzkompetenz = manager.getAnkreuzkompetenz(ankreuzkompetenz.Floskel_ID);
 					if (enmAnkreuzkompetenz == null)
 						manager.addAnkreuzkompetenz(dtoAnkreuzkompetenz.ID, (dtoAnkreuzkompetenz.IstASV == 0), dtoAnkreuzkompetenz.Fach_ID,
-								dtoAnkreuzkompetenz.Jahrgang, dtoAnkreuzkompetenz.FloskelText, dtoAnkreuzkompetenz.Sortierung);
+								jahrgang, dtoAnkreuzkompetenz.FloskelText, dtoAnkreuzkompetenz.Sortierung);
 					// Füge die Schueler-Ankreuzkompetenz hinzu
 					final DTOTimestampsSchuelerAnkreuzkompetenzen ankreuzkompetenzTimestamps = mapAnkreuzkompetenzenTimestamps.get(ankreuzkompetenz.ID);
 					if (ankreuzkompetenzTimestamps == null)
@@ -483,12 +493,190 @@ public final class DataENMDaten extends DataManager<Long> {
 		return manager.daten;
 	}
 
+	private static String getJahrgang(final long idAnkreuzkompetenz, final Long idKlasse, final Map<Long, DTOKlassen> klassenById,
+			final Map<Long, List<DTOAnkreuzkompetenzJahrgang>> zuordnungenByIdJahrgang, final Map<Long, DTOJahrgang> jahrgaengeById) {
+		if (idKlasse == null) {
+			return "";
+		}
+		final DTOKlassen klasse = klassenById.get(idKlasse);
+		if ((klasse == null) || (klasse.Jahrgang_ID == null)) {
+			return "";
+		}
+		final long idJahrgang = klasse.Jahrgang_ID;
+		final boolean exists = zuordnungenByIdJahrgang
+				.getOrDefault(idJahrgang, List.of())
+				.stream()
+				.anyMatch(dto -> dto.idAnkreuzkompetenz == idAnkreuzkompetenz);
+		if (!exists) {
+			return "";
+		}
+		return Optional.ofNullable(jahrgaengeById.get(idJahrgang))
+				.map(dto -> dto.ASDJahrgang)
+				.orElse("");
+	}
+
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
 	}
 
+
+	/**
+	 * Lädt die Konfiguration, inwiefern Anpassungen an den Daten für die Klasse zulässig ist oder nicht.
+	 *
+	 * @param idKlasse   die ID der Klasse, für welche die Konfiguation geladen werden soll
+	 *
+	 * @return die Konfigurationen für die Klasse oder null, falls keine existiert
+	 *
+	 * @throws ApiOperationException   falls ein Fehler beim Deserialisieren der Konfiguration auftritt
+	 */
+	private ENMConfigKlasse getKonfigurationErlaubt(final long idKlasse) throws ApiOperationException {
+		try {
+			final DTONotenmodulKonfigurationClient config = conn.queryByKey(DTONotenmodulKonfigurationClient.class, "noteneingabe.gesperrt");
+			if (config == null)
+				return null;
+			final List<ENMConfigKlasse> list = JSONMapper.mapper.readerForListOf(ENMConfigKlasse.class).readValue(config.wert);
+			if (list == null)
+				return null;
+			for (final ENMConfigKlasse cfg : list)
+				if (cfg.id == idKlasse)
+					return cfg;
+			return null;
+		} catch (final @NotNull IOException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Einlesen der Konfiguration.");
+		}
+	}
+
+
+	/**
+	 * Prüfe, ob die zeitliche Eingabebeschränkung für den Eingabebeginn die Notenanpassung erlaubt oder nicht.
+	 *
+	 * @param config  die Konfiguration für die Klasse
+	 * @param now     der aktuelle Zeitpunkt
+	 *
+	 * @throws ApiOperationException   falls die Eingabe von der Zeiteinschränkung her nicht erlaubt ist
+	 */
+	private static void pruefeEingabebeginn(final @NotNull ENMConfigKlasse config, final @NotNull Timestamp now) throws ApiOperationException {
+		if (config.tsEingabeAb == null)
+			return;
+		try {
+			final Timestamp beginn = getTimeStampFromIso(config.tsEingabeAb);
+			if (beginn == null)
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+						"Fehlerhaftes Datumsformat beim Eingabebeginn für die Klasse mit der ID " + config.id);
+			if (!now.after(beginn))
+				throw new ApiOperationException(Status.FORBIDDEN,
+						"Die Eingabe ist noch nicht freigegeben. (Das Datum für den Eingabebeginn liegt in der Zukunft).");
+		} catch (final DateTimeParseException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
+					"Fehlerhaftes Datumsformat beim Eingabebeginn für die Klasse mit der ID " + config.id);
+		}
+	}
+
+
+	/**
+	 * Prüfe, ob die zeitliche Eingabebeschränkung die Notenanpassung erlaubt oder nicht.
+	 *
+	 * @param config  die Konfiguration für die Klasse
+	 * @param now     der aktuelle Zeitpunkt
+	 *
+	 * @throws ApiOperationException   falls die Eingabe von der Zeiteinschränkung her nicht erlaubt ist
+	 */
+	private static void pruefeEingabeende(final @NotNull ENMConfigKlasse config, final @NotNull Timestamp now) throws ApiOperationException {
+		if (config.tsEingabeBis == null)
+			return;
+		try {
+			final Timestamp ende = getTimeStampFromIso(config.tsEingabeBis);
+			if (ende == null)
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+						"Fehlerhaftes Datumsformat beim Eingabeende für die Klasse mit der ID " + config.id);
+			if (!now.before(ende))
+				throw new ApiOperationException(Status.FORBIDDEN,
+						"Die Eingabe ist nicht mehr freigegeben. (Das Datum für das Eingabeende liegt in der Vergangenheit).");
+		} catch (final DateTimeParseException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
+					"Fehlerhaftes Datumsformat beim Eingabeende für die Klasse mit der ID " + config.id);
+		}
+	}
+
+
+	private void pruefeKonfigurationPatchErlaubt(final long idKlasse, final @NotNull String attribute) throws ApiOperationException {
+		// TODO if Entfernen, wenn das Feature auch außerhalb des DEV-Modes genutzt werden soll
+		if (SVWSKonfiguration.get().getServerMode() != ServerMode.DEV)
+			return;
+		final ENMConfigKlasse config = getKonfigurationErlaubt(idKlasse);
+		if (config == null)
+			throw new ApiOperationException(Status.FORBIDDEN, "Es liegt keine Konfiguration für die Eingabe von Noten für diese Klasse vor.");
+		// Prüfe generelle Berechtigung bei der Eingabespalte
+		boolean allowed = false;
+		for (final @NotNull ENMConfigKlasseSpalte col : config.spalten) {
+			if (attribute.equals(col.name) && (!col.gesperrt)) {
+				allowed = true;
+				break;
+			}
+		}
+		if (!allowed)
+			throw new ApiOperationException(Status.FORBIDDEN, "Eine Änderung wurde nicht explizit für diese Klasse erlaubt.");
+		// Prüfe die zeitliche Einschränkung für die Eingabe, sofern eine gesetzt wurde
+		final Timestamp now = getTimeStampNow();
+		pruefeEingabebeginn(config, now);
+		pruefeEingabeende(config, now);
+	}
+
+
+	private void pruefeKonfigurationPatchErlaubtFehlstunden(final long idKlasse, final boolean istGesamtFS) throws ApiOperationException {
+		// TODO if Entfernen, wenn das Feature auch außerhalb des DEV-Modes genutzt werden soll
+		if (SVWSKonfiguration.get().getServerMode() != ServerMode.DEV)
+			return;
+		final ENMConfigKlasse config = getKonfigurationErlaubt(idKlasse);
+		if (config == null)
+			throw new ApiOperationException(Status.FORBIDDEN, "Es liegt keine Konfiguration für die Eingabe von Noten für diese Klasse vor.");
+		// Prüfe generelle Berechtigung bei den Fehlstunden
+		boolean allowed = false;
+		for (final @NotNull ENMConfigKlasseSpalte col : config.spalten) {
+			if ("Fehlstunden".equals(col.name) && (!col.gesperrt)) {
+				allowed = true;
+				break;
+			}
+		}
+		if (!allowed)
+			throw new ApiOperationException(Status.FORBIDDEN, "Eine Änderung von Fehlstunden wurde nicht explizit für diese Klasse erlaubt.");
+
+		// TODO prüfe auch die Information, ob nur Gesamtfehlstunden eingegeben werden sollen oder auf Basis von Lerngruppen
+
+		// Prüfe die zeitliche Einschränkung für die Eingabe, sofern eine gesetzt wurde
+		final Timestamp now = getTimeStampNow();
+		pruefeEingabebeginn(config, now);
+		pruefeEingabeende(config, now);
+	}
+
+	private void pruefeKonfigurationPatchErlaubtTeilleistung(final long idKlasse, final long idTeilleistungsart) throws ApiOperationException {
+		// TODO if Entfernen, wenn das Feature auch außerhalb des DEV-Modes genutzt werden soll
+		if (SVWSKonfiguration.get().getServerMode() != ServerMode.DEV)
+			return;
+		final ENMConfigKlasse config = getKonfigurationErlaubt(idKlasse);
+		if (config == null)
+			throw new ApiOperationException(Status.FORBIDDEN, "Es liegt keine Konfiguration für die Eingabe von Noten für diese Klasse vor.");
+		// Prüfe generelle Berechtigung bei der Eingabespalte
+		boolean allowed = false;
+		boolean allowedSpecial = false;
+		for (final @NotNull ENMConfigKlasseSpalte col : config.spalten) {
+			if ("Teilnoten".equals(col.name) && (!col.gesperrt)) {
+				allowed = true;
+			} else if ((col.idTeilleistung != null) && (col.idTeilleistung == idTeilleistungsart) && (!col.gesperrt)) {
+				allowedSpecial = true;
+			}
+		}
+		if (!allowed)
+			throw new ApiOperationException(Status.FORBIDDEN, "Eine Änderung von Teilleistungen wurde nicht explizit für diese Klasse erlaubt.");
+		if (!allowedSpecial)
+			throw new ApiOperationException(Status.FORBIDDEN, "Eine Änderung der Teilleistungsart wurde nicht explizit für diese Klasse erlaubt.");
+		// Prüfe die zeitliche Einschränkung für die Eingabe, sofern eine gesetzt wurde
+		final Timestamp now = getTimeStampNow();
+		pruefeEingabebeginn(config, now);
+		pruefeEingabeende(config, now);
+	}
 
 
 	/**
@@ -587,38 +775,53 @@ public final class DataENMDaten extends DataManager<Long> {
 		if (leistung == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Für die ID %d konnten keine Leistungsdaten gefunden werden.".formatted(id));
 
+		// Bestimme den Lernabschnitt und die Klasse des Lernabschnittes
+		final DTOSchuelerLernabschnittsdaten lernabschnitt = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, leistung.Abschnitt_ID);
+		if ((lernabschnitt == null) || (lernabschnitt.Klassen_ID == null))
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Für die Abschnitts-ID %d konnten keine Klassenzugehörigkeit bestimmt werden.".formatted(leistung.Abschnitt_ID));
+
 		// Prüfe die Berechtigung für das Patchen der Leistungsdaten
 		pruefeBerechtigungPatchLeistung(leistung); // final int berechtigung =
 
 		// Durchführen des Patches
-		// TODO Prüfe, ob die aktuelle Notenmodul-Konfiguration die jeweilige Änderung zulässt
 		// Die Umsetzung der Notenmodul-Konfiguration ist noch nicht erfolgt.
 		for (final Entry<String, Object> p : patch.entrySet()) {
 			switch (p.getKey()) {
 				case "id" -> {
 					/* do nothing */ }
 				case "noteQuartal" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Quartalsnoten");
 					final String kuerzel = JSONMapper.convertToString(p.getValue(), true, false, null, "noteQuartal");
 					if ((kuerzel != null) && (Note.fromKuerzel(kuerzel) == Note.KEINE))
 						throw new ApiOperationException(Status.BAD_REQUEST, "Die Zeichenkette '%s' ist keine gültige Note.".formatted(kuerzel));
 					leistung.NotenKrzQuartal = kuerzel;
 				}
 				case "note" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Note");
 					final String kuerzel = JSONMapper.convertToString(p.getValue(), true, false, null, "note");
 					if ((kuerzel != null) && (Note.fromKuerzel(kuerzel) == Note.KEINE))
 						throw new ApiOperationException(Status.BAD_REQUEST, "Die Zeichenkette '%s' ist keine gültige Note.".formatted(kuerzel));
 					leistung.NotenKrz = kuerzel;
 				}
-				case "fehlstundenFach" ->
+				case "fehlstundenFach" -> {
+					pruefeKonfigurationPatchErlaubtFehlstunden(lernabschnitt.Klassen_ID, false);
 					leistung.FehlStd = JSONMapper.convertToIntegerInRange(p.getValue(), true, 0, 1000, "fehlstundenFach");
-				case "fehlstundenUnentschuldigtFach" ->
+				}
+				case "fehlstundenUnentschuldigtFach" -> {
+					pruefeKonfigurationPatchErlaubtFehlstunden(lernabschnitt.Klassen_ID, false);
 					leistung.uFehlStd = JSONMapper.convertToIntegerInRange(p.getValue(), true, 0, 1000, "fehlstundenUnentschuldigtFach");
-				case "fachbezogeneBemerkungen" ->
+				}
+				case "fachbezogeneBemerkungen" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "FB");
 					leistung.Lernentw = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLeistungsdaten.col_Lernentw.datenlaenge(),
 							"fachbezogeneBemerkungen");
+				}
 				case "istGemahnt" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Mahnung");
 					if ((leistung.Warndatum != null) && (!"".equals(leistung.Warndatum.trim())))
-						throw new ApiOperationException(Status.BAD_REQUEST, "Patchen, ob gemahnt wurde, ist nicht erlaubt, da bereits ein Warndatum gesetzt ist.");
+						throw new ApiOperationException(Status.BAD_REQUEST,
+								"Patchen, ob gemahnt wurde, ist nicht erlaubt, da bereits ein Warndatum gesetzt ist.");
 					leistung.Warnung = JSONMapper.convertToBoolean(p.getValue(), true, p.getKey());
 				}
 				default ->
@@ -667,17 +870,23 @@ public final class DataENMDaten extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Für die ID %d konnten keine Leistungsdaten gefunden werden.".formatted(teilleistung.Leistung_ID));
 
+		// Bestimme den Lernabschnitt und die Klasse des Lernabschnittes
+		final DTOSchuelerLernabschnittsdaten lernabschnitt = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, leistung.Abschnitt_ID);
+		if ((lernabschnitt == null) || (lernabschnitt.Klassen_ID == null))
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Für die Abschnitts-ID %d konnten keine Klassenzugehörigkeit bestimmt werden.".formatted(leistung.Abschnitt_ID));
+
 		// Prüfe die Berechtigung für das Patchen der Teilleistungsdaten anhand der zugehörigen Leistungsdaten
 		pruefeBerechtigungPatchLeistung(leistung); // final int berechtigung =
 
 		// Durchführen des Patches
-		// TODO Prüfe, ob die aktuelle Notenmodul-Konfiguration die jeweilige Änderungen zulässt
 		// Die Umsetzung der Notenmodul-Konfiguration ist noch nicht erfolgt.
 		for (final Entry<String, Object> p : patch.entrySet()) {
 			switch (p.getKey()) {
 				case "id" -> {
 					/* do nothing */ }
 				case "note" -> {
+					pruefeKonfigurationPatchErlaubtTeilleistung(lernabschnitt.Klassen_ID, teilleistung.Art_ID);
 					final String kuerzel = JSONMapper.convertToString(p.getValue(), true, false, null, "note");
 					if ((kuerzel != null) && (Note.fromKuerzel(kuerzel) == Note.KEINE))
 						throw new ApiOperationException(Status.BAD_REQUEST, "Die Zeichenkette '%s' ist keine gültige Note.".formatted(kuerzel));
@@ -744,46 +953,65 @@ public final class DataENMDaten extends DataManager<Long> {
 			throw new ApiOperationException(Status.BAD_REQUEST, "In dem Patch sind keine Daten enthalten.");
 
 		// Bestimme den Lernabschnitt des Schülers im aktuellen Schuljahresabschnitt der Schule.
-		final DTOSchuelerLernabschnittsdaten sla = getLernabschnitt(id);
+		final DTOSchuelerLernabschnittsdaten lernabschnitt = getLernabschnitt(id);
 
 		// Prüfe die Berechtigung für das Patchen der Bemerkungen anhand des Lernabschnittes des Schülers
-		pruefeBerechtigungPatchLernabschnitt(sla); // final int berechtigung =
+		pruefeBerechtigungPatchLernabschnitt(lernabschnitt); // final int berechtigung =
 
 		// Bestimme die Bemerkungen, welche dem Schüler zugeordnet sind.
 		final List<DTOSchuelerPSFachBemerkungen> sbs =
-				conn.queryList(DTOSchuelerPSFachBemerkungen.QUERY_BY_ABSCHNITT_ID, DTOSchuelerPSFachBemerkungen.class, sla.ID);
+				conn.queryList(DTOSchuelerPSFachBemerkungen.QUERY_BY_ABSCHNITT_ID, DTOSchuelerPSFachBemerkungen.class, lernabschnitt.ID);
 		if (sbs.size() > 1)
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-					"Es gibt mehrere Einträge für Fachbemekungen zu dem Lernabschnitt mit der ID %d.".formatted(sla.ID));
+					"Es gibt mehrere Einträge für Fachbemekungen zu dem Lernabschnitt mit der ID %d.".formatted(lernabschnitt.ID));
 		final DTOSchuelerPSFachBemerkungen sb;
 		if (sbs.isEmpty()) {
-			sb = new DTOSchuelerPSFachBemerkungen(conn.transactionGetNextID(DTOSchuelerPSFachBemerkungen.class), sla.ID);
+			sb = new DTOSchuelerPSFachBemerkungen(conn.transactionGetNextID(DTOSchuelerPSFachBemerkungen.class), lernabschnitt.ID);
 		} else {
 			sb = sbs.getFirst();
 		}
 
 		// Durchführen des Patches
-		// TODO Prüfe, ob die aktuelle Notenmodul-Konfiguration die jeweilige Änderungen zulässt
 		// Die Umsetzung der Notenmodul-Konfiguration ist noch nicht erfolgt.
 		for (final Entry<String, Object> p : patch.entrySet()) {
 			switch (p.getKey()) {
-				case "ASV" -> sb.ASV = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_ASV.datenlaenge(), p.getKey());
-				case "AUE" -> sb.AUE = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_AUE.datenlaenge(), p.getKey());
-				case "ZB" -> sla.ZeugnisBem =
-						JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLernabschnittsdaten.col_ZeugnisBem.datenlaenge(), p.getKey());
-				case "LELS" ->
+				case "ASV" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "ASV");
+					sb.ASV = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_ASV.datenlaenge(), p.getKey());
+				}
+				case "AUE" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "AUE");
+					sb.AUE = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_AUE.datenlaenge(), p.getKey());
+				}
+				case "ZB" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "ZB");
+					lernabschnitt.ZeugnisBem =
+							JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLernabschnittsdaten.col_ZeugnisBem.datenlaenge(),
+									p.getKey());
+				}
+				case "LELS" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "LELS");
 					sb.LELS = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_LELS.datenlaenge(), p.getKey());
-				case "schulformEmpf" ->
+				}
+				case "schulformEmpf" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "SchulformEmpfehlung");
 					sb.ESF = JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_ESF.datenlaenge(), p.getKey());
-				case "individuelleVersetzungsbemerkungen" -> sb.BemerkungVersetzung =
-						JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_BemerkungVersetzung.datenlaenge(), p.getKey());
-				case "foerderbemerkungen" -> sb.BemerkungFSP =
-						JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_BemerkungFSP.datenlaenge(), p.getKey());
+				}
+				case "individuelleVersetzungsbemerkungen" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Versetzungsbemerkungen");
+					sb.BemerkungVersetzung = JSONMapper.convertToString(p.getValue(), true, true,
+							Schema.tab_SchuelerLD_PSFachBem.col_BemerkungVersetzung.datenlaenge(), p.getKey());
+				}
+				case "foerderbemerkungen" -> {
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Förderbemerkungen");
+					sb.BemerkungFSP =
+							JSONMapper.convertToString(p.getValue(), true, true, Schema.tab_SchuelerLD_PSFachBem.col_BemerkungFSP.datenlaenge(), p.getKey());
+				}
 				default ->
 					throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s darf nicht im Patch enthalten sein.".formatted(p.getKey()));
 			}
 		}
-		conn.transactionPersist(sla);
+		conn.transactionPersist(lernabschnitt);
 		conn.transactionPersist(sb);
 		conn.transactionFlush();
 		return Response.status(Status.NO_CONTENT).build();
@@ -817,16 +1045,19 @@ public final class DataENMDaten extends DataManager<Long> {
 		pruefeBerechtigungPatchLernabschnitt(sla); // final int berechtigung =
 
 		// Durchführen des Patches
-		// TODO Prüfe, ob die aktuelle Notenmodul-Konfiguration die jeweilige Änderungen zulässt
 		// Die Umsetzung der Notenmodul-Konfiguration ist noch nicht erfolgt.
 		for (final Entry<String, Object> p : patch.entrySet()) {
 			switch (p.getKey()) {
 				case "id" -> {
 					/* do nothing */ }
-				case "fehlstundenGesamt" ->
+				case "fehlstundenGesamt" -> {
+					pruefeKonfigurationPatchErlaubtFehlstunden(sla.Klassen_ID, true);
 					sla.SumFehlStd = JSONMapper.convertToIntegerInRange(p.getValue(), true, 0, 1000, "fehlstundenGesamt");
-				case "fehlstundenGesamtUnentschuldigt" ->
+				}
+				case "fehlstundenGesamtUnentschuldigt" -> {
+					pruefeKonfigurationPatchErlaubtFehlstunden(sla.Klassen_ID, true);
 					sla.SumFehlStdU = JSONMapper.convertToIntegerInRange(p.getValue(), true, 0, 1000, "fehlstundenGesamtUnentschuldigt");
+				}
 				default ->
 					throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s darf nicht im Patch enthalten sein.".formatted(p.getKey()));
 			}
@@ -870,17 +1101,17 @@ public final class DataENMDaten extends DataManager<Long> {
 	}
 
 	private static Map<Long, String> getLehrerCredsListe(final DBEntityManager conn) {
-		final List<DTOLehrerNotenmodulCredentials> lehrer = conn.queryAll(DTOLehrerNotenmodulCredentials.class);
+		final List<DTONotenmodulCredentials> lehrer = conn.queryAll(DTONotenmodulCredentials.class);
 		if (lehrer.isEmpty())
 			return new HashMap<>();
-		return lehrer.stream().collect(Collectors.toMap(e -> e.Lehrer_ID, e -> e.PasswordHash));
+		return lehrer.stream().collect(Collectors.toMap(e -> e.idLehrer, e -> e.passwordHash));
 	}
 
 	private static Map<Long, String> getLehrerCredsTimstampsListe(final DBEntityManager conn) {
-		final List<DTOTimestampsLehrerNotenmodulCredentials> lehrer = conn.queryAll(DTOTimestampsLehrerNotenmodulCredentials.class);
+		final List<DTOTimestampsNotenmodulCredentials> lehrer = conn.queryAll(DTOTimestampsNotenmodulCredentials.class);
 		if (lehrer.isEmpty())
 			return new HashMap<>();
-		return lehrer.stream().collect(Collectors.toMap(e -> e.Lehrer_ID, e -> e.tsPasswordHash));
+		return lehrer.stream().collect(Collectors.toMap(e -> e.idLehrer, e -> e.tsPasswordHash));
 	}
 
 	private static Map<Long, DTOAnkreuzfloskeln> getAnkreuzkompetenzenListe(final DBEntityManager conn) {
@@ -888,6 +1119,14 @@ public final class DataENMDaten extends DataManager<Long> {
 		if (ankreuzkompetenzen.isEmpty())
 			return new HashMap<>();
 		return ankreuzkompetenzen.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+	}
+
+	private static Map<Long, List<DTOAnkreuzkompetenzJahrgang>> getKompetenzZuordnungenByJahrgang(final DBEntityManager conn) {
+		final List<DTOAnkreuzkompetenzJahrgang> ankreuzkompetenzen = conn.queryAll(DTOAnkreuzkompetenzJahrgang.class);
+		if (ankreuzkompetenzen.isEmpty()) {
+			return new HashMap<>();
+		}
+		return ankreuzkompetenzen.stream().collect(Collectors.groupingBy(dto -> dto.idJahrgang));
 	}
 
 	private static Map<Long, DTOFoerderschwerpunkt> getFoerderschwerpunktListe(final DBEntityManager conn) {
@@ -1003,6 +1242,64 @@ public final class DataENMDaten extends DataManager<Long> {
 		}
 	}
 
+
+	/**
+	 * Holt die lokalen Notenmodul-Konfiguration.
+	 *
+	 * @param conn   die Datenbank-Verbindung
+	 *
+	 * @return die HTTP-Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Response getNotenmodulLocalConfig(final DBEntityManager conn) {
+		final ENMServerConfig res = new ENMServerConfig();
+		res.server.addAll(conn.queryAll(DTONotenmodulKonfigurationServer.class)
+				.stream().map(e -> new BenutzerConfigElement(e.schluessel, e.wert)).toList());
+		res.global.addAll(conn.queryAll(DTONotenmodulKonfigurationClient.class)
+				.stream().map(e -> new BenutzerConfigElement(e.schluessel, e.wert)).toList());
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(res).build();
+	}
+
+
+	/**
+	 * Schreibt ein Konfigurationselement in die Notenmodul-Konfiguration des Servers.
+	 *
+	 * @param conn   die Datenbank-Verbindung
+	 * @param elem   das Konfigurationselement
+	 *
+	 * @return die HTTP-Response
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Response setNotenmodulLocalConfigElement(final DBEntityManager conn, final ENMServerConfigElement elem) throws ApiOperationException {
+		if (elem == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es wurde kein gültiges Konfigurationselement übergeben.");
+		// Füge den Konfiguationswert hinzu ...
+		if ("server".equals(elem.type)) {
+			// ... in der Server-Konfiguration
+			DTONotenmodulKonfigurationServer dto = conn.queryByKey(DTONotenmodulKonfigurationServer.class, elem.key);
+			if (dto == null) {
+				dto = new DTONotenmodulKonfigurationServer(elem.key, elem.value);
+			} else {
+				dto.wert = elem.value;
+			}
+			conn.transactionPersist(dto);
+		} else if ("global".equals(elem.type)) {
+			// ... in der allgemeinen Client-Konfiguration
+			DTONotenmodulKonfigurationClient dto = conn.queryByKey(DTONotenmodulKonfigurationClient.class, elem.key);
+			if (dto == null) {
+				dto = new DTONotenmodulKonfigurationClient(elem.key, elem.value);
+			} else {
+				dto.wert = elem.value;
+			}
+			conn.transactionPersist(dto);
+		} else
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es wurde ein ungültiger Typ für das Konfigurations übergeben.");
+		return Response.status(Status.OK).build();
+	}
+
+
 	/**
 	 * Gibt für alle Lehrer, welche bei den ENM-Daten vorkommen die Initialkennwörter zurück.
 	 *
@@ -1019,11 +1316,11 @@ public final class DataENMDaten extends DataManager<Long> {
 		final List<ENMLehrerInitialKennwort> daten = new ArrayList<>();
 		final List<Long> idsLehrer = enmdaten.lehrer.stream().map(l -> l.id).toList();
 		if (!idsLehrer.isEmpty()) {
-			final List<DTOLehrerNotenmodulCredentials> dtos = conn.queryByKeyList(DTOLehrerNotenmodulCredentials.class, idsLehrer);
-			for (final DTOLehrerNotenmodulCredentials dto : dtos) {
+			final List<DTONotenmodulCredentials> dtos = conn.queryByKeyList(DTONotenmodulCredentials.class, idsLehrer);
+			for (final DTONotenmodulCredentials dto : dtos) {
 				final ENMLehrerInitialKennwort cred = new ENMLehrerInitialKennwort();
-				cred.id = dto.Lehrer_ID;
-				cred.initialKennwort = dto.Initialkennwort;
+				cred.id = dto.idLehrer;
+				cred.initialKennwort = dto.initialkennwort;
 				daten.add(cred);
 			}
 		}
@@ -1037,25 +1334,25 @@ public final class DataENMDaten extends DataManager<Long> {
 	 */
 	public static void generateInitialCredentials(final DBEntityManager conn) {
 		// Prüfe zunächst die existierenden Credentials auf Vollständigkeit
-		final List<DTOLehrerNotenmodulCredentials> existing = conn.queryAll(DTOLehrerNotenmodulCredentials.class);
-		for (final DTOLehrerNotenmodulCredentials cred : existing) {
-			final boolean hasInitial = (cred.Initialkennwort != null) && (!cred.Initialkennwort.isBlank());
-			final boolean hasHash = (cred.PasswordHash != null) && (!cred.PasswordHash.isBlank());
+		final List<DTONotenmodulCredentials> existing = conn.queryAll(DTONotenmodulCredentials.class);
+		for (final DTONotenmodulCredentials cred : existing) {
+			final boolean hasInitial = (cred.initialkennwort != null) && (!cred.initialkennwort.isBlank());
+			final boolean hasHash = (cred.passwordHash != null) && (!cred.passwordHash.isBlank());
 			if (hasInitial && hasHash)
 				continue;
 			if (!hasInitial)
-				cred.Initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
+				cred.initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
 			if (!hasHash)
-				cred.PasswordHash = BCrypt.hashpw(cred.Initialkennwort, BCrypt.gensalt());
+				cred.passwordHash = BCrypt.hashpw(cred.initialkennwort, BCrypt.gensalt());
 			conn.transactionPersist(cred);
 		}
 		// Erstelle dann die noch fehlenden Credentials
-		final Set<Long> idsExisting = existing.stream().map(c -> c.Lehrer_ID).collect(Collectors.toUnmodifiableSet());
+		final Set<Long> idsExisting = existing.stream().map(c -> c.idLehrer).collect(Collectors.toUnmodifiableSet());
 		final List<Long> ids = conn.queryAll(DTOLehrer.class).stream().map(l -> l.ID).filter(l -> !idsExisting.contains(l)).toList();
 		for (final long id : ids) {
 			final String initial = Passwords.generateRandomPasswordWithoutSpecialChars(10);
 			final String hash = BCrypt.hashpw(initial, BCrypt.gensalt());
-			conn.transactionPersist(new DTOLehrerNotenmodulCredentials(id, initial, hash));
+			conn.transactionPersist(new DTONotenmodulCredentials(id, initial, hash));
 		}
 		conn.transactionFlush();
 	}
@@ -1074,16 +1371,16 @@ public final class DataENMDaten extends DataManager<Long> {
 		final DTOLehrer dtoLehrer = conn.queryByKey(DTOLehrer.class, idLehrer);
 		if (dtoLehrer == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Ein Lehrer mit der ID %d konnte nicht gefunden werden.".formatted(idLehrer));
-		DTOLehrerNotenmodulCredentials cred = conn.queryByKey(DTOLehrerNotenmodulCredentials.class, idLehrer);
+		DTONotenmodulCredentials cred = conn.queryByKey(DTONotenmodulCredentials.class, idLehrer);
 		if (cred == null) {
 			final String initial = Passwords.generateRandomPasswordWithoutSpecialChars(10);
 			final String hash = BCrypt.hashpw(initial, BCrypt.gensalt());
-			cred = new DTOLehrerNotenmodulCredentials(idLehrer, initial, hash);
+			cred = new DTONotenmodulCredentials(idLehrer, initial, hash);
 		} else {
-			final boolean hasInitial = (cred.Initialkennwort != null) && (!cred.Initialkennwort.isBlank());
+			final boolean hasInitial = (cred.initialkennwort != null) && (!cred.initialkennwort.isBlank());
 			if (!hasInitial)
-				cred.Initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
-			cred.PasswordHash = BCrypt.hashpw(cred.Initialkennwort, BCrypt.gensalt());
+				cred.initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
+			cred.passwordHash = BCrypt.hashpw(cred.initialkennwort, BCrypt.gensalt());
 		}
 		conn.transactionPersist(cred);
 	}
@@ -1108,16 +1405,16 @@ public final class DataENMDaten extends DataManager<Long> {
 		if (dtoLehrer == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Ein Lehrer mit der ID %d konnte nicht gefunden werden.".formatted(idLehrer));
 		// Setze die Credentials und erzeuge bei Bedarf neue
-		DTOLehrerNotenmodulCredentials cred = conn.queryByKey(DTOLehrerNotenmodulCredentials.class, idLehrer);
+		DTONotenmodulCredentials cred = conn.queryByKey(DTONotenmodulCredentials.class, idLehrer);
 		final String hash = BCrypt.hashpw(password, BCrypt.gensalt());
 		if (cred == null) {
 			final String initial = Passwords.generateRandomPasswordWithoutSpecialChars(10);
-			cred = new DTOLehrerNotenmodulCredentials(idLehrer, initial, hash);
+			cred = new DTONotenmodulCredentials(idLehrer, initial, hash);
 		} else {
-			final boolean hasInitial = (cred.Initialkennwort != null) && (!cred.Initialkennwort.isBlank());
+			final boolean hasInitial = (cred.initialkennwort != null) && (!cred.initialkennwort.isBlank());
 			if (!hasInitial)
-				cred.Initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
-			cred.PasswordHash = hash;
+				cred.initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
+			cred.passwordHash = hash;
 		}
 		conn.transactionPersist(cred);
 	}
@@ -1178,23 +1475,23 @@ public final class DataENMDaten extends DataManager<Long> {
 		final Map<Long, DTOLehrer> mapLehrerDTOs = conn.queryByKeyList(DTOLehrer.class, idsLehrer).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
 		if (mapLehrerDTOs.keySet().size() != idsLehrer.size())
 			throw new ApiOperationException(Status.NOT_FOUND, "Nicht alle Lehrer in den ENM-Daten konnten auch in der Datenbank gefunden werden.");
-		final Map<Long, DTOLehrerNotenmodulCredentials> mapLehrerCreds =
-				conn.queryByKeyList(DTOLehrerNotenmodulCredentials.class, idsLehrer).stream().collect(Collectors.toMap(c -> c.Lehrer_ID, c -> c));
-		final Map<Long, DTOTimestampsLehrerNotenmodulCredentials> mapLehrerCredsTimestamps =
-				conn.queryByKeyList(DTOTimestampsLehrerNotenmodulCredentials.class, idsLehrer).stream().collect(Collectors.toMap(t -> t.Lehrer_ID, t -> t));
+		final Map<Long, DTONotenmodulCredentials> mapLehrerCreds =
+				conn.queryByKeyList(DTONotenmodulCredentials.class, idsLehrer).stream().collect(Collectors.toMap(c -> c.idLehrer, c -> c));
+		final Map<Long, DTOTimestampsNotenmodulCredentials> mapLehrerCredsTimestamps =
+				conn.queryByKeyList(DTOTimestampsNotenmodulCredentials.class, idsLehrer).stream().collect(Collectors.toMap(t -> t.idLehrer, t -> t));
 		// Gehe die einzelnen Lehrer durch und aktualisiere ggf. die Credentials
 		for (final ENMLehrer enmLehrer : listEnmLehrer) {
 			final DTOLehrer dtoLehrer = mapLehrerDTOs.get(enmLehrer.id);
 			if (dtoLehrer == null)
 				throw new ApiOperationException(Status.NOT_FOUND,
 						"Der Lehrer in den ENM-Daten mit der ID %d konnte in der Datenbank nicht gefunden werden.".formatted(enmLehrer.id));
-			DTOLehrerNotenmodulCredentials cred = mapLehrerCreds.get(enmLehrer.id);
-			final DTOTimestampsLehrerNotenmodulCredentials credTS = mapLehrerCredsTimestamps.get(enmLehrer.id);
+			DTONotenmodulCredentials cred = mapLehrerCreds.get(enmLehrer.id);
+			final DTOTimestampsNotenmodulCredentials credTS = mapLehrerCredsTimestamps.get(enmLehrer.id);
 			if (isTimestampAfter(enmLehrer.tsPasswordHash, credTS == null ? null : credTS.tsPasswordHash)) {
 				if (cred == null)
-					cred = new DTOLehrerNotenmodulCredentials(enmLehrer.id, "", enmLehrer.passwordHash);
+					cred = new DTONotenmodulCredentials(enmLehrer.id, "", enmLehrer.passwordHash);
 				else
-					cred.PasswordHash = enmLehrer.passwordHash;
+					cred.passwordHash = enmLehrer.passwordHash;
 				conn.transactionPersist(cred);
 			}
 		}
@@ -1481,6 +1778,30 @@ public final class DataENMDaten extends DataManager<Long> {
 
 
 	/**
+	 * Wandelt die im ISO-Format übergeben Zeitangabe in einen Timestamp um.
+	 *
+	 * @param iso   der ISO-String
+	 *
+	 * @return der Timestamp oder null, falls der ISO-String ungültig ist
+	 */
+	private static Timestamp getTimeStampFromIso(final String iso) {
+		if ((iso == null) || iso.isBlank())
+			return null;
+		return Timestamp.valueOf(LocalDateTime.parse(iso, ofPattern));
+	}
+
+
+	/**
+	 * Gibt den aktuellen Zeitpunkt als Timestamp zurück.
+	 *
+	 * @return der aktuelle Timestamp
+	 */
+	private static Timestamp getTimeStampNow() {
+		return Timestamp.valueOf(LocalDateTime.now());
+	}
+
+
+	/**
 	 * Prüft, ob der gegebene Timestamp-String tsCheckStr nach dem Timestamp-String tsOtherStr
 	 * liegt.
 	 *
@@ -1490,418 +1811,13 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * @return true, wenn tsCheckStr nach tsOtherStr liegt
 	 */
 	private static boolean isTimestampAfter(final String tsCheckStr, final String tsOtherStr) {
-		if ((tsCheckStr == null) || tsCheckStr.isBlank())
+		final Timestamp tsCheck = getTimeStampFromIso(tsCheckStr);
+		if (tsCheck == null)
 			return false;
-		final DateTimeFormatter ofPattern = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss")
-				.appendFraction(ChronoField.MILLI_OF_SECOND, 0, 3, true).toFormatter();
-		final Timestamp tsCheck = Timestamp.valueOf(LocalDateTime.parse(tsCheckStr, ofPattern));
-		if ((tsOtherStr == null) || tsOtherStr.isBlank())
+		final Timestamp tsOther = getTimeStampFromIso(tsOtherStr);
+		if (tsOther == null)
 			return true;
-		final Timestamp tsOther = Timestamp.valueOf(LocalDateTime.parse(tsOtherStr, ofPattern));
 		return tsCheck.after(tsOther);
-	}
-
-
-	/**
-	 * Lädt die ENM-Daten über den gegebenen OAuthClient vom ENM-Server und mit dem gegebenen DataManager in die
-	 * Datenbank
-	 *
-	 * @param conn     die Datenbank-Verbindung
-	 * @param client   der OAuthClient
-	 * @param logger   der Logger
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	private static void downloadENMDaten(final DBEntityManager conn, final OAuth2Client client, final Logger logger) throws ApiOperationException {
-		logger.logLn("Sende die Anfrage zum Herunderladen der ENM-Daten von dem ENM-Server...");
-		final HttpResponse<byte[]> httpResponse = client.get("/api/secure/export", BodyHandlers.ofByteArray());
-		if (httpResponse.statusCode() != Status.OK.getStatusCode())
-			throw new ApiOperationException(Status.BAD_GATEWAY, httpResponse.body());
-		logger.logLn("Schreibe die neuen Daten aus ENM-Daten anhand der Zeitstempel in die Datenbank des SVWS-Servers...");
-		importDatenGZip(conn, httpResponse.body());
-	}
-
-
-	/**
-	 * Lädt die ENM-Daten beim ENM-Server hoch
-	 *
-	 * @param conn     die Datenbank-Verbindung
-	 * @param client   der OAuth-Client zur Verbindung mit dem ENM
-	 * @param logger   der Logger
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	private static void uploadENMDaten(final DBEntityManager conn, final OAuth2Client client, final Logger logger) throws ApiOperationException {
-		logger.logLn("Bestimme die ENM-Daten aus der Datenbank des SVWS-Servers...");
-		final byte[] daten = getAllGZIPBytes(conn);
-		logger.logLn("Sende die ENM-Daten an den ENM-Server...");
-		logger.modifyIndent(2);
-		final HttpResponse<String> response = client.postMultipart("/api/secure/import", "json.gz", daten, BodyHandlers.ofString());
-		logger.modifyIndent(-2);
-		if (response.statusCode() != Status.OK.getStatusCode())
-			throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
-		logger.logLn("ENM-Daten erfolgreich an den ENM-Server übertragen.");
-	}
-
-
-	/**
-	 * Synchronisiert die Daten des Externen Notenmoduls (ENM) mit dem ENM-Server und lädt
-	 * dabei diese als ZIP beim ENM hoch und anschließend wieder von diesem herunter und speichert
-	 * diese in der Datenbank.
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response synchronize(final DBEntityManager conn) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		// Führe den Upload und dann den Download aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		final SimpleOperationResponse sor = new SimpleOperationResponse();
-		Status status = Status.OK;
-		try {
-			logger.logLn("Führe eine Synchronisation der Daten durch...");
-			logger.modifyIndent(2);
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
-			uploadENMDaten(conn, client, logger);
-			downloadENMDaten(conn, client, logger);
-			logger.logLn("Die Synchronisation wurde erfolgreich abgeschlossen.");
-			sor.success = true;
-			logger.setIndent(0);
-		} catch (final Exception e) {
-			status = Status.INTERNAL_SERVER_ERROR;
-			if (e instanceof final ApiOperationException aoe) {
-				status = aoe.getStatus();
-			}
-			logger.log("Fehler: " + e.getLocalizedMessage());
-			sor.success = false;
-			logger.setIndent(0);
-		}
-		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		sor.log = log.getStrings();
-		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
-	}
-
-
-	/**
-	 * Lädt die ENM-Daten aus der Datenbank zu dem ENM-Server hoch.
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response upload(final DBEntityManager conn) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		// Führe den Upload aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		final SimpleOperationResponse sor = new SimpleOperationResponse();
-		Status status = Status.OK;
-		try {
-			logger.logLn("Führe einen Upload der Daten durch...");
-			logger.modifyIndent(2);
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
-			uploadENMDaten(conn, client, logger);
-			logger.logLn("Der Upload wurde erfolgreich abgeschlossen.");
-			sor.success = true;
-			logger.setIndent(0);
-		} catch (final Exception e) {
-			status = Status.INTERNAL_SERVER_ERROR;
-			if (e instanceof final ApiOperationException aoe) {
-				status = aoe.getStatus();
-			}
-			logger.log("Fehler: " + e.getLocalizedMessage());
-			sor.success = false;
-			logger.setIndent(0);
-		}
-		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		sor.log = log.getStrings();
-		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
-	}
-
-
-	/**
-	 * Importiert die ENM-Daten von dem ENM-Server und schreibt diese in die Datenbank.
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response download(final DBEntityManager conn) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		// Führe den Download aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		final SimpleOperationResponse sor = new SimpleOperationResponse();
-		Status status = Status.OK;
-		try {
-			logger.logLn("Führe einen Download der Daten durch...");
-			logger.modifyIndent(2);
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
-			downloadENMDaten(conn, client, logger);
-			logger.logLn("Der Download wurde erfolgreich abgeschlossen.");
-			sor.success = true;
-			logger.setIndent(0);
-		} catch (final Exception e) {
-			status = Status.INTERNAL_SERVER_ERROR;
-			if (e instanceof final ApiOperationException aoe) {
-				status = aoe.getStatus();
-			}
-			logger.log("Fehler: " + e.getLocalizedMessage());
-			sor.success = false;
-			logger.setIndent(0);
-		}
-		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		sor.log = log.getStrings();
-		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
-	}
-
-
-	/**
-	 * Entfernt die ENM-Daten von dem ENM-Server. Dabei werden auch die Benutzerdaten auf dem Server entfernt.
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response truncate(final DBEntityManager conn) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		// Führe den Truncate aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		final SimpleOperationResponse sor = new SimpleOperationResponse();
-		Status status = Status.OK;
-		try {
-			logger.logLn("Führe ein Truncate auf dem Server durch...");
-			logger.modifyIndent(2);
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
-			final HttpResponse<String> response = client.postEmpty("/api/secure/truncate", BodyHandlers.ofString());
-			if (response.statusCode() != Status.OK.getStatusCode())
-				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
-			logger.logLn("Die Truncate-Operation wurde erfolgreich abgeschlossen.");
-			sor.success = true;
-			logger.setIndent(0);
-		} catch (final Exception e) {
-			status = Status.INTERNAL_SERVER_ERROR;
-			if (e instanceof final ApiOperationException aoe) {
-				status = aoe.getStatus();
-			}
-			logger.log("Fehler: " + e.getLocalizedMessage());
-			sor.success = false;
-			logger.setIndent(0);
-		}
-		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		sor.log = log.getStrings();
-		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
-	}
-
-	/**
-	 * Entfernt die ENM-Daten von dem ENM-Server.
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response reset(final DBEntityManager conn) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		// Führe den Reset aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		final SimpleOperationResponse sor = new SimpleOperationResponse();
-		Status status = Status.OK;
-		try {
-			logger.logLn("Führe ein Reset auf dem Server durch...");
-			logger.modifyIndent(2);
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
-			final HttpResponse<String> response = client.postEmpty("/api/secure/reset", BodyHandlers.ofString());
-			if (response.statusCode() != Status.OK.getStatusCode())
-				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
-			logger.logLn("Die Reset-Operation wurde erfolgreich abgeschlossen.");
-			sor.success = true;
-			logger.setIndent(0);
-		} catch (final Exception e) {
-			status = Status.INTERNAL_SERVER_ERROR;
-			if (e instanceof final ApiOperationException aoe) {
-				status = aoe.getStatus();
-			}
-			logger.log("Fehler: " + e.getLocalizedMessage());
-			sor.success = false;
-			logger.setIndent(0);
-		}
-		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		sor.log = log.getStrings();
-		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
-	}
-
-	/**
-	 * Prüft, ob der ENM-Server mit den hinterlegten Verbindungsdaten errichbar ist.
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response check(final DBEntityManager conn) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		// Führe den Login aus und gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		final SimpleOperationResponse sor = new SimpleOperationResponse();
-		Status status = Status.OK;
-		try {
-			logger.logLn("Prüft, ob der Endpunkt für einen Verbindungstest erreichbar ist...");
-			logger.modifyIndent(2);
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
-			final HttpResponse<String> response = client.get("/api/secure/check", BodyHandlers.ofString());
-			if (response.statusCode() != Status.OK.getStatusCode())
-				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
-			logger.logLn("Der Verbindungstest wurde erfolgreich durchgeführt.");
-			sor.success = true;
-			logger.setIndent(0);
-		} catch (final Exception e) {
-			status = Status.INTERNAL_SERVER_ERROR;
-			if (e instanceof final ApiOperationException aoe) {
-				status = aoe.getStatus();
-			}
-			logger.log("Fehler: " + e.getLocalizedMessage());
-			sor.success = false;
-			logger.setIndent(0);
-		}
-		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		sor.log = log.getStrings();
-		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(sor).build();
-	}
-
-	/**
-	 * Holt die auf dem ENM-Server hintelegten Konfigurationselemente
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response getENMServerConfig(final DBEntityManager conn) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		// Führe den Login aus und gib den Erfolg der Operation als ENMConfigResponse mit einem Log zurück
-		final ENMConfigResponse res = new ENMConfigResponse();
-		Status status = Status.OK;
-		try {
-			logger.logLn("Frage Serverkonfiguration an...");
-			logger.modifyIndent(2);
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
-			final HttpResponse<String> response = client.get("/api/secure/serverconfig", BodyHandlers.ofString());
-			if (response.statusCode() != Status.OK.getStatusCode())
-				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
-			logger.logLn("Die Serverkonfiguration wurde erfolgreich abgefragt.");
-			if (response.body() == null)
-				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Keine Daten vom Server erhalten.");
-			res.config = JSONMapper.toObject(response.body().getBytes(), ENMServerConfig.class);
-			res.success = true;
-		} catch (final Exception e) {
-			status = Status.INTERNAL_SERVER_ERROR;
-			if (e instanceof final ApiOperationException aoe) {
-				status = aoe.getStatus();
-			}
-			logger.log("Fehler: " + e.getLocalizedMessage());
-			res.success = false;
-		}
-		logger.setIndent(0);
-		// Gib den Erfolg der Operation als ENMConfigResponse mit einem Log zurück
-		res.log = log.getStrings();
-		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(res).build();
-	}
-
-
-	/**
-	 * Prüft, ob der ENM-Server mit den hinterlegten Verbindungsdaten errichbar ist.
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 * @param is     der Input-Stream mit den Konfigurationsdaten
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response setENMServerConfigElement(final DBEntityManager conn, final InputStream is) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		// Führe den Login aus und gib den Erfolg der Operation als ENMConfigResponse mit einem Log zurück
-		final SimpleOperationResponse res = new SimpleOperationResponse();
-		Status status = Status.OK;
-		try {
-			logger.logLn("Schicke das Konfigurationselement an den Server...");
-			logger.modifyIndent(2);
-			final String element = JSONMapper.toJsonString(is);
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, true);
-			final HttpResponse<String> response = client.put("/api/secure/serverconfig", BodyHandlers.ofString(), element);
-			if (response.statusCode() != Status.OK.getStatusCode())
-				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
-			logger.logLn("Das Konfigurationselement wurde erfolgreich gesetzt.");
-			res.success = true;
-		} catch (final Exception e) {
-			status = Status.INTERNAL_SERVER_ERROR;
-			if (e instanceof final ApiOperationException aoe) {
-				status = aoe.getStatus();
-			}
-			logger.log("Fehler: " + e.getLocalizedMessage());
-			res.success = false;
-		}
-		logger.setIndent(0);
-		// Gib den Erfolg der Operation als SimpleOperationResponse mit einem Log zurück
-		res.log = log.getStrings();
-		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(res).build();
-	}
-
-	/**
-	 * Prüft, ob der ENM-Server bereits initialisiert ist und gleichzeitig, ob das TLS bekannt ist.
-	 *
-	 * @param conn   die Datenbank-Verbindung
-	 *
-	 * @return die HTTP-Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response setup(final DBEntityManager conn) throws ApiOperationException {
-		// Erstelle zunächst einen Logger für die Operation
-		final Logger logger = new Logger();
-		try {
-			final OAuth2Client client = new OAuth2Client(conn, logger, OAuth2ServerTyp.WENOM, false);
-			final boolean isTrusted = client.checkCertificate();
-			if (!isTrusted)
-				return Response.status(Status.CONFLICT).entity("Dem Zertifikat wird aktuell nicht vertraut.").build();
-			final HttpResponse<String> response = client.getUnauthorized("/api/setup", BodyHandlers.ofString());
-			if ((response.statusCode() != Status.NO_CONTENT.getStatusCode()) && (response.statusCode() != Status.CONFLICT.getStatusCode()))
-				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(response.statusCode() == Status.NO_CONTENT.getStatusCode()).build();
-		} catch (final Exception e) {
-			if (e instanceof final ApiOperationException aoe)
-				throw aoe;
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Unerwarteter Fehler aufgetreten: " + e.getMessage());
-		}
 	}
 
 }

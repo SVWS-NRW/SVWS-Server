@@ -61,8 +61,9 @@
 
 	const lehrerSubline = computed(() => {
 		const auswahlLehrerList = props.manager().liste.auswahlSorted();
-		if (auswahlLehrerList.size() > 5)
+		if (auswahlLehrerList.size() > 5) {
 			return `${auswahlLehrerList.size()} Lehrer ausgewählt`;
+		}
 		return [...auswahlLehrerList].map(k => k.kuerzel).join(', ');
 	});
 

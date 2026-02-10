@@ -1,6 +1,7 @@
 <template>
 	<template v-if="!getErgebnisse().isEmpty()">
-		<svws-ui-table clickable :clicked="auswahlErgebnis" @update:clicked="gotoErgebnis" v-model="selected_ergebnisse" :selectable="(getErgebnisse().size() > 1) && hatUpdateKompetenz" class="z-20 relative"
+		<svws-ui-table clickable :clicked="auswahlErgebnis" @update:clicked="gotoErgebnis" v-model="selected_ergebnisse" class="z-20 relative"
+			:selectable="(getErgebnisse().size() > 1) && hatUpdateKompetenz" :focus-switching-enabled :focus-help-visible allow-arrow-key-selection
 			:columns="[{ key: 'id', label: 'ID', fixedWidth: getErgebnisse().size() > 1 ? 3 : 4.75, align: 'left'}, { key: 'bewertung', label: 'Ergebnis' }]"
 			:items="getErgebnisse()" :count="getErgebnisse().size() > 1" scroll>
 			<template #header(id)>
@@ -93,8 +94,9 @@
 <script setup lang="ts">
 
 	import { ref } from 'vue';
-	import type { GostBlockungsdatenManager, GostBlockungsergebnis, GostBlockungsergebnisManager, GostHalbjahr, List } from "@core";
 	import type { ApiStatus } from '~/components/ApiStatus';
+	import type { GostBlockungsdatenManager, GostBlockungsergebnis, GostBlockungsergebnisManager, GostHalbjahr, List } from "@core";
+	import { useRegionSwitch } from '@ui';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -106,6 +108,8 @@
 		apiStatus: ApiStatus;
 		hatUpdateKompetenz: boolean;
 	}>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const selected_ergebnisse = ref<GostBlockungsergebnis[]>([]);
 
@@ -119,8 +123,9 @@
 	}
 
 	async function remove_ergebnis() {
-		if (!props.auswahlErgebnis)
+		if (!props.auswahlErgebnis) {
 			return;
+		}
 		await props.removeErgebnisse([props.auswahlErgebnis]);
 	}
 

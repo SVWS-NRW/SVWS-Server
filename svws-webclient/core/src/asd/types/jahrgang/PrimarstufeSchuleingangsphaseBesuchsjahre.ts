@@ -98,7 +98,7 @@ export class PrimarstufeSchuleingangsphaseBesuchsjahre extends JavaEnum<Primarst
 		return ['de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<PrimarstufeSchuleingangsphaseBesuchsjahre>('de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre');
+	public static readonly class = new Class<PrimarstufeSchuleingangsphaseBesuchsjahre>('de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre');
 
 }
 

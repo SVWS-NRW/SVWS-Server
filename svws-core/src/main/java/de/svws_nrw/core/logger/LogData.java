@@ -12,19 +12,19 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class LogData implements Comparable<LogData> {
 
-	/// der Zeitstempel der Log-Information
+	/** Der Zeitstempel der Log-Information. */
 	private final long time;
 
-	/// das zugehörige Log-Level
+	/** Das zugehörige Log-Level. */
 	private final @NotNull LogLevel level;
 
-	/// der Text der Log-Information
+	/** Der Text der Log-Information. */
 	private final @NotNull String text;
 
-	/// gibt an, ob die Log-Informationen beim Ausgeben mit einer neuen Zeile beendet werden sollen oder nicht
+	/** Gibt an, ob die Log-Informationen beim Ausgeben mit einer neuen Zeile beendet werden sollen oder nicht. */
 	private final boolean newLine;
 
-	/// die Anzahl der Leerzeichen, die bei der Ausgabe zur Einrückung genutzt werden sollen.
+	/** die Anzahl der Leerzeichen, die bei der Ausgabe zur Einrückung genutzt werden sollen. */
 	private int indent;
 
 

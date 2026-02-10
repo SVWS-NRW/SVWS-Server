@@ -9,12 +9,12 @@ import jakarta.ws.rs.core.Response.Status;
  * Eine Exception, welche im Verlauf einer Operation von der OpenAPI
  * erzeugt wird.
  */
-public class ApiOperationException extends Exception {
+public class ApiOperationException extends RuntimeException {
 
 	private static final long serialVersionUID = -7737733085773788685L;
 
 	/** Der HTTP-Status-Code */
-	private final Status status;
+	private Status status;
 
 	/** Der zu serialisierende Body der Exception */
 	private final transient Object body;
@@ -85,6 +85,17 @@ public class ApiOperationException extends Exception {
 		this.mimeType = mimeType;
 	}
 
+	/**
+	 * Setzt den Status bei dieser Exception und gibt diese wieder zurück.
+	 *
+	 * @param status   der zu setzende Status
+	 *
+	 * @return diese Exception
+	 */
+	public ApiOperationException withStatus(final @NotNull Status status) {
+		this.status = status;
+		return this;
+	}
 
 	/**
 	 * Gibt den HTTP-Response-Code dieser Exception zurück.

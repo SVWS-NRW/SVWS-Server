@@ -762,7 +762,7 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> implements CoreTy
 		return ['de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.schule.Schulgliederung', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Schulgliederung>('de.svws_nrw.asd.types.schule.Schulgliederung');
+	public static readonly class = new Class<Schulgliederung>('de.svws_nrw.asd.types.schule.Schulgliederung');
 
 }
 

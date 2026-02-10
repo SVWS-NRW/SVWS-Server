@@ -96,10 +96,10 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 	protected void mapAttribute(final DTOGostKlausurenSchuelerklausuren dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "idKursklausur" -> dto.Kursklausur_ID = JSONMapper.convertToLong(value, false);
-			case "idSchueler" -> dto.Schueler_ID = JSONMapper.convertToLong(value, false);
+			case "idKursklausur" -> dto.Kursklausur_ID = JSONMapper.convertToLong(value, false, name);
+			case "idSchueler" -> dto.Schueler_ID = JSONMapper.convertToLong(value, false, name);
 			case "bemerkung" -> dto.Bemerkungen =
-					JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Schuelerklausuren.col_Bemerkungen.datenlaenge());
+					JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Schuelerklausuren.col_Bemerkungen.datenlaenge(), name);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
 		}
 	}

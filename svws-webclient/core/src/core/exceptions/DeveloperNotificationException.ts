@@ -623,7 +623,7 @@ export class DeveloperNotificationException extends RuntimeException {
 		return ['java.lang.Throwable', 'de.svws_nrw.core.exceptions.DeveloperNotificationException', 'java.lang.RuntimeException', 'java.lang.Exception', 'java.io.Serializable'].includes(name);
 	}
 
-	public static class = new Class<DeveloperNotificationException>('de.svws_nrw.core.exceptions.DeveloperNotificationException');
+	public static readonly class = new Class<DeveloperNotificationException>('de.svws_nrw.core.exceptions.DeveloperNotificationException');
 
 }
 

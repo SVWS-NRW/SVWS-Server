@@ -255,7 +255,7 @@ export class KAOAEbene4 extends JavaEnum<KAOAEbene4> implements CoreType<KAOAEbe
 		return ['de.svws_nrw.asd.types.kaoa.KAOAEbene4', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<KAOAEbene4>('de.svws_nrw.asd.types.kaoa.KAOAEbene4');
+	public static readonly class = new Class<KAOAEbene4>('de.svws_nrw.asd.types.kaoa.KAOAEbene4');
 
 }
 

@@ -45,8 +45,9 @@
 	onMounted(() => setAutofocus());
 
 	function setAutofocus() {
-		if (props.autofocus && (addButton.value !== null))
+		if (props.autofocus && (addButton.value !== null)) {
 			addButton.value.focus();
+		}
 	}
 
 </script>

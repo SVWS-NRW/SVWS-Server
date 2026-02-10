@@ -10,8 +10,14 @@ import { GostBelegungsfehler } from '../../../../../core/abschluss/gost/GostBele
 
 export class Abi30BelegpruefungLiterarischKuenstlerisch extends GostBelegpruefung {
 
+	/**
+	 * Die Belegungen für Kunst und Musik.
+	 */
 	private kunst_musik: List<AbiturFachbelegung> | null = null;
 
+	/**
+	 * Die Belegungen für die Ersatzfächer aus dem literarisch-künstlerischen Bereich.
+	 */
 	private kunst_musik_ersatz: List<AbiturFachbelegung> | null = null;
 
 
@@ -67,7 +73,7 @@ export class Abi30BelegpruefungLiterarischKuenstlerisch extends GostBelegpruefun
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungLiterarischKuenstlerisch', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
 
-	public static class = new Class<Abi30BelegpruefungLiterarischKuenstlerisch>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungLiterarischKuenstlerisch');
+	public static readonly class = new Class<Abi30BelegpruefungLiterarischKuenstlerisch>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungLiterarischKuenstlerisch');
 
 }
 

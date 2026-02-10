@@ -6,62 +6,49 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-wrapper>
-					<svws-ui-checkbox :readonly :model-value="data().istSichtbar"
-						@update:model-value="istSichtbar => patch({istSichtbar: istSichtbar === true})" focus-class-content>
+					<svws-ui-checkbox :readonly v-model="data.istSichtbar" focus-class-content>
 						Ist sichtbar
 					</svws-ui-checkbox>
-					<svws-ui-checkbox :readonly :model-value="data().istRelevantFuerStatistik" statistics
-						@update:model-value="istRelevantFuerStatistik => patch({istRelevantFuerStatistik: istRelevantFuerStatistik === true})">
-						Ist Relevant für Statistik
+					<svws-ui-checkbox :readonly v-model="data.istRelevantFuerStatistik" statistics>
+						Ist relevant für Statistik
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
-				<svws-ui-text-input placeholder="Kürzel" :readonly :model-value="data().kuerzel" statistics
-					@change="kuerzel => patch({kuerzel: kuerzel ?? undefined})" required focus />
+				<svws-ui-text-input placeholder="Kürzel" :readonly v-model="data.kuerzel" statistics required focus />
 				<svws-ui-select title="Personal-Typ" :readonly v-model="inputPersonalTyp" :items="PersonalTyp.values()"
 					:item-text="i => i.bezeichnung" required />
-				<svws-ui-text-input placeholder="Nachname" :readonly :model-value="data().nachname"
-					@change="nachname => {if (nachname?.trim()) patch({nachname: nachname ?? undefined})}" required statistics :validator="() => validatorNachname"
-					:do-validate="validateNachname" />
-				<svws-ui-text-input placeholder="Rufname" :readonly :model-value="data().vorname"
-					@change="vorname => {if (vorname?.trim()) patch({vorname: vorname ?? undefined})}" required statistics :validator="() => validatorVorname"
-					:do-validate="validateVorname" />
+				<svws-ui-text-input placeholder="Nachname" :readonly v-model="data.nachname" required statistics
+					:validation="() => validationProxy.getFehler('nachname')" />
+				<svws-ui-text-input placeholder="Rufname" :readonly v-model="data.vorname" required statistics
+					:validation="() => validationProxy.getFehler('vorname')" />
 				<svws-ui-spacing />
 				<svws-ui-select title="Geschlecht" :readonly v-model="inputGeschlecht" :items="Geschlecht.values()" :item-text="i=>i.text"
 					required />
-				<svws-ui-text-input placeholder="Geburtsdatum" :readonly :model-value="data().geburtsdatum"
-					@change="geburtsdatum => geburtsdatum && patch({geburtsdatum})" type="date" required statistics :validator="() => validatorGeburtsdatum"
-					:do-validate="validateGeburtsdatum" />
+				<svws-ui-text-input placeholder="Geburtsdatum" :readonly v-model="data.geburtsdatum" type="date" required statistics
+					:validation="() => validationProxy.getFehler('geburtsdatum')" />
 				<svws-ui-select title="Staatsangehörigkeit" :readonly v-model="inputStaatsangehoerigkeit" :items="Nationalitaeten.values()"
 					:item-text="i => i.historie().getLast().staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
 					:item-filter="staatsangehoerigkeitKatalogEintragFilter" required autocomplete statistics />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Akadademischer Grad" :readonly :model-value="data().titel" @change="titel => patch({titel})"
-					type="text" />
-				<svws-ui-text-input placeholder="Amtsbezeichnung" :readonly :model-value="data().amtsbezeichnung"
-					@change="amtsbezeichnung => patch({amtsbezeichnung})" />
+				<svws-ui-text-input placeholder="Akademischer Grad" :readonly v-model="data.titel" type="text" />
+				<svws-ui-text-input placeholder="Amtsbezeichnung" :readonly v-model="data.amtsbezeichnung" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Wohnort und Kontaktdaten">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly :model-value="strasse" @change="patchStrasse"
-					type="text" span="full" />
+				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly v-model="inputStrasse" type="text" span="full" />
 				<svws-ui-select v-model="wohnortID" title="Wohnort" :readonly :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort"
 					:item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 				<svws-ui-select v-model="ortsteilID" title="Ortsteil" :readonly :items="ortsteile" :item-sort="ortsteilSort"
 					:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" removable />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Telefon" :readonly :model-value="data().telefon" @change="telefon => patch({telefon})"
-					type="tel" :max-len="20" />
-				<svws-ui-text-input placeholder="Mobil oder Fax" :readonly :model-value="data().telefonMobil"
-					@change="telefonMobil => patch({telefonMobil})" type="tel" :max-len="20" />
-				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :readonly :model-value="data().emailPrivat"
-					@change="emailPrivat => patch({emailPrivat})" type="email" verify-email />
-				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :readonly :model-value="data().emailDienstlich"
-					@change="emailDienstlich => patch({emailDienstlich})" type="email" verify-email />
+				<svws-ui-text-input placeholder="Telefon" :readonly v-model="data.telefon" type="tel" :max-len="20" />
+				<svws-ui-text-input placeholder="Mobil oder Fax" :readonly v-model="data.telefonMobil" type="tel" :max-len="20" />
+				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :readonly v-model="data.emailPrivat" type="email" verify-email />
+				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :readonly v-model="data.emailDienstlich" type="email" verify-email />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Leitungsfunktionen">
-			<svws-ui-table :columns="colsLeitungsfunktionen" :items="lehrerListeManager().daten().leitungsfunktionen" count>
+			<svws-ui-table :columns="colsLeitungsfunktionen" :items="dataNotPatched().leitungsfunktionen" count>
 				<template #cell(idLeitungsfunktion)="{ value }">
 					{{ LehrerLeitungsfunktion.data().getWertByID(value)?.daten(schuljahr)?.text ?? '—' }}
 				</template>
@@ -80,90 +67,74 @@
 
 	import { computed } from "vue";
 	import type { LehrerIndividualdatenProps } from "./SLehrerIndividualdatenProps";
-	import type { OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
-	import { Geschlecht, Nationalitaeten, PersonalTyp, AdressenUtils, DateUtils, JavaString, LehrerLeitungsfunktion, BenutzerKompetenz,
-		ValidatorLehrerStammdatenNachname, ValidatorLehrerStammdatenVorname, ValidatorLehrerStammdatenGeburtsdatum } from "@core";
+	import type { LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+	import { Geschlecht, Nationalitaeten, PersonalTyp, AdressenUtils, DateUtils, JavaString, LehrerLeitungsfunktion, BenutzerKompetenz } from "@core";
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, orte_filter, orte_sort, ortsteilSort } from "~/utils/helfer";
+	import { LehrerIndividualdatenModelProxy } from "./LehrerIndividualdatenModelProxy";
 
 	const props = defineProps<LehrerIndividualdatenProps>();
 
-	const validatorNachname = computed(() => new ValidatorLehrerStammdatenNachname(props.lehrerListeManager().daten(), props.validatorKontext()));
-	function validateNachname(validator: ValidatorLehrerStammdatenNachname, value: string | null): boolean {
-		const name = props.lehrerListeManager().daten().nachname;
-		props.lehrerListeManager().daten().nachname = value ?? "";
-		const res = validator.run();
-		props.lehrerListeManager().daten().nachname = name;
-		return res;
-	};
-
-	const validatorVorname = computed(() => new ValidatorLehrerStammdatenVorname(props.lehrerListeManager().daten(), props.validatorKontext()));
-	function validateVorname(validator: ValidatorLehrerStammdatenVorname, value: string | null): boolean {
-		const name = props.lehrerListeManager().daten().vorname;
-		props.lehrerListeManager().daten().vorname = value ?? "";
-		const res = validator.run();
-		props.lehrerListeManager().daten().vorname = name;
-		return res;
-	};
-
-	const validatorGeburtsdatum = computed(() => new ValidatorLehrerStammdatenGeburtsdatum(props.lehrerListeManager().daten(), props.validatorKontext()));
-	function validateGeburtsdatum(validator: ValidatorLehrerStammdatenGeburtsdatum, value: string | null): boolean {
-		const datum = props.lehrerListeManager().daten().geburtsdatum;
-		props.lehrerListeManager().daten().geburtsdatum = value ?? "";
-		const res = validator.run();
-		props.lehrerListeManager().daten().geburtsdatum = datum;
-		return res;
-	};
+	const dataNotPatched = () => props.lehrerListeManager().daten();
+	async function patchMethod(data: Partial<LehrerStammdaten>): Promise<boolean> {
+		await props.patch(data);
+		return true;
+	}
+	const validationProxy = new LehrerIndividualdatenModelProxy(dataNotPatched, () => props.validatorKontext(), patchMethod);
+	const data = computed(() => validationProxy.proxy);
 
 	const schuljahr = computed<number>(() => props.lehrerListeManager().getSchuljahr());
 
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 
-	const data = () => props.lehrerListeManager().daten();
-
 	const inputGeschlecht = computed<Geschlecht>({
-		get: () => Geschlecht.fromValue(data().geschlecht) || Geschlecht.X,
-		set: (value) => void props.patch({ geschlecht: value.id }),
+		get: () => Geschlecht.fromValue(data.value.geschlecht) || Geschlecht.X,
+		set: (value) => data.value.geschlecht = value.id,
 	});
 
 	const inputPersonalTyp = computed<PersonalTyp>({
-		get: () => PersonalTyp.fromKuerzel(data().personalTyp) || PersonalTyp.SONSTIGE,
-		set: (value) => void props.patch({ personalTyp: value.kuerzel }),
+		get: () => PersonalTyp.fromKuerzel(data.value.personalTyp) || PersonalTyp.SONSTIGE,
+		set: (value) => data.value.personalTyp = value.kuerzel,
 	});
 
 	const inputStaatsangehoerigkeit = computed<Nationalitaeten>({
-		get: () => Nationalitaeten.getByISO3(data().staatsangehoerigkeitID) ?? Nationalitaeten.getDEU(),
-		set: (value) => void props.patch({ staatsangehoerigkeitID: value.historie().getLast().iso3 }),
+		get: () => Nationalitaeten.getByISO3(data.value.staatsangehoerigkeitID) ?? Nationalitaeten.getDEU(),
+		set: (value) => data.value.staatsangehoerigkeitID = value.historie().getLast().iso3,
 	});
 
-	const strasse = computed(() => AdressenUtils.combineStrasse(data().strassenname ?? "", data().hausnummer ?? "", data().hausnummerZusatz ?? ""));
-
-	async function patchStrasse(value: string | null) {
-		const vals = AdressenUtils.splitStrasse(value);
-		await props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] });
-	}
+	const inputStrasse = computed<string | null>({
+		get: () => AdressenUtils.combineStrasse(data.value.strassenname ?? "", data.value.hausnummer ?? "", data.value.hausnummerZusatz ?? ""),
+		set: (value) => {
+			const vals = AdressenUtils.splitStrasse(value);
+			data.value.strassenname = vals[0];
+			data.value.hausnummer = vals[1];
+			data.value.hausnummerZusatz = vals[2];
+		},
+	});
 
 	const wohnortID = computed<OrtKatalogEintrag | null>({
 		get: () => {
-			const idWohnort = data().wohnortID;
+			const idWohnort = data.value.wohnortID;
 			return (idWohnort === null) ? null : props.mapOrte.get(idWohnort) ?? null;
 		},
-		set: (val) => void props.patch({ wohnortID: val?.id ?? null }),
+		set: (val) => data.value.wohnortID = val?.id ?? null,
 	});
 
 	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
 		const result: Array<OrtsteilKatalogEintrag> = [];
-		for (const ortsteil of props.mapOrtsteile.values())
-			if (ortsteil.ort_id === data().wohnortID)
+		for (const ortsteil of props.mapOrtsteile.values()) {
+			if (ortsteil.ort_id === data.value.wohnortID) {
 				result.push(ortsteil);
+			}
+		}
 		return result;
 	});
 
 	const ortsteilID = computed<OrtsteilKatalogEintrag | null>({
 		get: () => {
-			const idOrtsteil = data().ortsteilID;
+			const idOrtsteil = data.value.ortsteilID;
 			return idOrtsteil === null ? null : props.mapOrtsteile.get(idOrtsteil) ?? null;
 		},
-		set: (val) => void props.patch({ ortsteilID: val?.id ?? null }),
+		set: (val) => data.value.ortsteilID = val?.id ?? null,
 	});
 
 	const colsLeitungsfunktionen = [

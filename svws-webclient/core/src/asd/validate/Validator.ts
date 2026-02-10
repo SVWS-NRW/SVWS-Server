@@ -1,14 +1,15 @@
-import { ValidatorFehlerart } from '../../asd/validate/ValidatorFehlerart';
 import { ValidatorManager } from '../../asd/validate/ValidatorManager';
-import { ValidatorException } from '../../asd/validate/ValidatorException';
 import { BasicValidator } from '../../asd/validate/BasicValidator';
 import { ArrayList } from '../../java/util/ArrayList';
 import { ValidatorFehler } from '../../asd/validate/ValidatorFehler';
+import { Exception } from '../../java/lang/Exception';
+import { ValidatorFehlerart } from '../../asd/validate/ValidatorFehlerart';
+import { DateManager } from '../../asd/validate/DateManager';
+import { NullPointerException } from '../../java/lang/NullPointerException';
 import type { List } from '../../java/util/List';
+import type { Supplier } from '../../java/util/function/Supplier';
 import { Class } from '../../java/lang/Class';
 import { ValidatorKontext } from '../../asd/validate/ValidatorKontext';
-import type { BooleanSupplier } from '../../java/util/function/BooleanSupplier';
-import { Exception } from '../../java/lang/Exception';
 
 export abstract class Validator extends BasicValidator {
 
@@ -31,7 +32,61 @@ export abstract class Validator extends BasicValidator {
 	protected constructor(kontext: ValidatorKontext) {
 		super(ValidatorFehlerart.UNGENUTZT);
 		this._kontext = kontext;
-		this._defaultValidatorFehlerart = this.getValidatorFehlerart(-1);
+		this._defaultValidatorFehlerart = this.getValidatorFehlerart();
+	}
+
+	/**
+	 * Wandelt einen Supplier für Strings in einen Supplier für Strings zurück, welcher keine null-Werte liefert,
+	 * sondern nur leere Strings.
+	 *
+	 * @param supplier   der Supplier, welcher auch null-Werte für Strings liefern kann
+	 * @param <T>        der Datentyp, der vom Supplier geliefert wird
+	 *
+	 * @return ein Supplier, welcher keine Null-Werte liefert.
+	 */
+	protected getNotNullObjectSupplier<T>(supplier: Supplier<T | null>): Supplier<T> {
+		return { get: () => {
+			const value: T | null = supplier.get();
+			if (value === null)
+				throw new NullPointerException()
+			return value;
+		} };
+	}
+
+	/**
+	 * Wandelt einen Supplier für Strings in einen Supplier für Strings zurück, welcher keine null-Werte liefert,
+	 * sondern nur leere Strings.
+	 *
+	 * @param supplier   der Supplier, welcher auch null-Werte für Strings liefern kann
+	 *
+	 * @return ein Supplier, welcher keine Null-Werte liefert.
+	 */
+	protected getNotNullSupplier(supplier: Supplier<string | null>): Supplier<string> {
+		return { get: () => {
+			const value: string | null = supplier.get();
+			return (value === null) ? "" : value;
+		} };
+	}
+
+	/**
+	 * Wandelt einen Supplier für Strings in einen Supplier für Strings zurück, welcher keine null-Werte liefert,
+	 * sondern nur leere Strings.
+	 *
+	 * @param supplier   der Supplier, welcher auch null-Werte für Strings liefern kann
+	 *
+	 * @return ein Supplier, welcher keine Null-Werte liefert.
+	 */
+	protected getDateManagerSupplier(supplier: Supplier<string | null>): Supplier<DateManager | null> {
+		return { get: () => {
+			const value: string | null = supplier.get();
+			if (value === null)
+				return null;
+			try {
+				return DateManager.from(value);
+			} catch(e : any) {
+				return null;
+			}
+		} };
 	}
 
 	/**
@@ -97,30 +152,6 @@ export abstract class Validator extends BasicValidator {
 	}
 
 	/**
-	 * Diese Methode führt einen Prüfschritt aus, genau dann, wenn der Validator selbst und dieser explixite Schritt aktiv sind.
-	 * Das Lambda stellt die Fehlerbedingung da, die TRUE liefert, wenn ein Fehler vorliegt.
-	 *
-	 * @param schrittNummer     die Nummer des Prüfschrittes. Startet in der Regel mit 0
-	 * @param fehlerbedingung   die Prüfschrittbedingung als Lambda
-	 * @param error             die Fehlermeldung, falls der Prüfschritt fehlschlägt
-	 *
-	 * @return true, wenn der Prüfschritt erfolgreich ausgeführt wurde oder nicht aktiv ist und false, wenn ein Fehler beim Prüfschritt auftritt
-	 */
-	protected exec(schrittNummer: number, fehlerbedingung: BooleanSupplier, error: string): boolean {
-		if (schrittNummer < 0)
-			throw new ValidatorException("Ein negativer Wert als Nummer für einen Validator-Prüfschritt ist nicht zulässig. Die -1 wird in Fehlercodes nur für interne Fehler verwendet.")
-		const isActive: boolean = this._kontext.getValidatorManager().isPruefschrittActiveInSchuljahr(this._kontext.getSchuljahr(), this.getClass().getCanonicalName(), schrittNummer);
-		if (!isActive)
-			return true;
-		const result: boolean = fehlerbedingung.getAsBoolean();
-		if (result) {
-			this.addFehler(schrittNummer, error);
-			return false;
-		}
-		return true;
-	}
-
-	/**
 	 * Gibt die Fehler des Validators als unmodifiable List zurück.
 	 *
 	 * @return die Liste der Fehler als unmodifiable List
@@ -132,12 +163,10 @@ export abstract class Validator extends BasicValidator {
 	/**
 	 * Die Fehlerart, welche diesem speziellen Validator zugeordnet ist.
 	 *
-	 * @param pruefschritt   der Prüfschritt, bei welchem der Fehler aufgetreten ist
-	 *
 	 * @return die Fehlerart
 	 */
-	public getValidatorFehlerart(pruefschritt: number): ValidatorFehlerart {
-		return this._kontext.getValidatorManager().getFehlerartBySchuljahrAndValidatorClassAndPruefschritt(this._kontext.getSchuljahr(), this.getClass(), pruefschritt);
+	public getValidatorFehlerart(): ValidatorFehlerart {
+		return this._kontext.getValidatorManager().getFehlerartBySchuljahrAndValidatorClass(this._kontext.getSchuljahr(), this.getClass());
 	}
 
 	/**
@@ -157,7 +186,7 @@ export abstract class Validator extends BasicValidator {
 		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<Validator>('de.svws_nrw.asd.validate.Validator');
+	public static readonly class = new Class<Validator>('de.svws_nrw.asd.validate.Validator');
 
 }
 

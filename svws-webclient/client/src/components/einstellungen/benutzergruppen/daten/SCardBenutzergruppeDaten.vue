@@ -19,8 +19,9 @@
 	const inputIstAdmin = computed<boolean>({
 		get: () => props.getBenutzergruppenManager().istAdmin(),
 		set: (value) => {
-			if (value === props.getBenutzergruppenManager().istAdmin())
+			if (value === props.getBenutzergruppenManager().istAdmin()) {
 				return;
+			}
 			void props.setIstAdmin(value);
 		},
 	});

@@ -1,13 +1,15 @@
-import type { Erzieherart, KatalogEintrag, LehrerListeEintrag, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Verkehrssprache, CoreTypeData, SchulenKatalogEintrag, SchulEintrag } from "@core";
+import type { Erzieherart, LehrerListeEintrag, Nationalitaeten, OrtKatalogEintrag, OrtsteilKatalogEintrag, Verkehrssprache, CoreTypeData, SchulenKatalogEintrag, SchulEintrag } from "@core";
 import { Schulform } from "@core";
 
 
 /** Die Sortierfunktion für den Ortskatalog */
 export function orte_sort(a: OrtKatalogEintrag, b: OrtKatalogEintrag): number {
-	if (a.ortsname === null)
+	if (a.ortsname === null) {
 		return -1;
-	if (b.ortsname === null)
+	}
+	if (b.ortsname === null) {
 		return 1;
+	}
 	return a.ortsname.localeCompare(b.ortsname, "de-DE");
 }
 
@@ -18,35 +20,42 @@ export function orte_filter(items: OrtKatalogEintrag[], search: string): OrtKata
 	const plz = plzmatch ? plzmatch[0] : "";
 	// Teilmatch Ort
 	const ortsname = search.replace(/\d+\s*/, "").trim();
-	if ((plz.length === 0) && (ortsname.length === 0))
+	if ((plz.length === 0) && (ortsname.length === 0)) {
 		return items;
-	if (plz.length === 0)
+	}
+	if (plz.length === 0) {
 		return items.filter((item: OrtKatalogEintrag) => {
-			if (item.ortsname !== null)
+			if (item.ortsname !== null) {
 				return item.ortsname.toLocaleLowerCase("de-DE").startsWith(ortsname.toLocaleLowerCase("de-DE"));
+			}
 			return false;
 		});
-	else if (ortsname.length === 0)
+	} else if (ortsname.length === 0) {
 		return items.filter(item => {
-			if (item.plz !== null)
+			if (item.plz !== null) {
 				return item.plz.includes(plz);
+			}
 			return false;
 		});
-	else
+	} else {
 		return items.filter(item => {
-			if ((item.plz !== null) && (item.ortsname !== null))
+			if ((item.plz !== null) && (item.ortsname !== null)) {
 				return (item.plz.includes(plz) && item.ortsname.toLocaleLowerCase("de-DE").startsWith(ortsname.toLocaleLowerCase("de-DE")));
+			}
 			return false;
 		});
+	}
 }
 
 /** Filter für Staatsangehörigkeiten */
 export function staatsangehoerigkeitKatalogEintragFilter(items: Iterable<Nationalitaeten>, search: string) {
 	const list = [];
-	for (const i of items)
+	for (const i of items) {
 		if (i.historie().getLast().staatsangehoerigkeit.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-			|| i.historie().getLast().iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+			|| i.historie().getLast().iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
 			list.push(i);
+		}
+	}
 	return list;
 }
 
@@ -54,22 +63,25 @@ export function staatsangehoerigkeitKatalogEintragFilter(items: Iterable<Nationa
 export function staatsangehoerigkeitKatalogEintragSort(a: Nationalitaeten, b: Nationalitaeten) {
 	const va = a.historie().getLast().staatsangehoerigkeit;
 	const vb = b.historie().getLast().staatsangehoerigkeit;
-	if ((va.length > 0) && (vb.length > 0))
+	if ((va.length > 0) && (vb.length > 0)) {
 		return va.localeCompare(vb);
-	else if ((va.length > 0) && (vb.length === 0))
+	} else if ((va.length > 0) && (vb.length === 0)) {
 		return -1;
-	else if ((va.length === 0) && (vb.length === 0))
+	} else if ((va.length === 0) && (vb.length === 0)) {
 		return 1;
+	}
 	return 0;
 }
 
 /** Filter für Sprachen */
 export function verkehrsspracheKatalogEintragFilter(items: Iterable<Verkehrssprache>, search: string) {
 	const list = [];
-	for (const i of items)
+	for (const i of items) {
 		if (i.historie().getLast().iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-			|| i.historie().getLast().text.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+			|| i.historie().getLast().text.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
 			list.push(i);
+		}
+	}
 	return list;
 }
 
@@ -81,10 +93,12 @@ export function verkehrsspracheKatalogEintragSort(a: Verkehrssprache, b: Verkehr
 /** Filter für Länder */
 export function nationalitaetenKatalogEintragFilter(items: Iterable<Nationalitaeten>, search: string) {
 	const list = [];
-	for (const i of items)
+	for (const i of items) {
 		if (i.historie().getLast().bezeichnung.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-			|| i.historie().getLast().iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+			|| i.historie().getLast().iso3.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
 			list.push(i);
+		}
+	}
 	return list;
 }
 
@@ -93,45 +107,24 @@ export function nationalitaetenKatalogEintragSort(a: Nationalitaeten, b: Nationa
 	return a.historie().getLast().bezeichnung.localeCompare(b.historie().getLast().bezeichnung);
 }
 
-export function katalogEintragSort(a: KatalogEintrag | null, b: KatalogEintrag | null) {
-	if ((typeof a?.text === 'string') && (typeof b?.text === 'string'))
-		return a.text.localeCompare(b.text);
-	else if (a && !b)
-		return -1;
-	else if (!a && !b)
-		return 1;
-	return 0;
-}
-
-export function katalogEintragFilter(items: Iterable<KatalogEintrag> | undefined, search: string) {
-	const list: KatalogEintrag[] = [];
-	if (items === undefined)
-		return list;
-	for (const i of items)
-		if ((i.text !== null) && (i.kuerzel !== null)
-			&& (i.text.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-				|| i.kuerzel
-					.toLocaleLowerCase()
-					.includes(search.toLocaleLowerCase())))
-			list.push(i);
-	return list;
-}
-
 export function ortsteilSort(a: OrtsteilKatalogEintrag, b: OrtsteilKatalogEintrag) {
-	if ((a.ortsteil !== null) && (b.ortsteil !== null))
-		a.ortsteil.localeCompare(b.ortsteil);
-	else if ((a.ortsteil !== null) && (b.ortsteil === null))
+	if ((a.ortsteil !== null) && (b.ortsteil !== null)) {
+		return a.ortsteil.localeCompare(b.ortsteil);
+	} else if ((a.ortsteil !== null) && (b.ortsteil === null)) {
 		return -1;
-	else if ((a.ortsteil === null) && (b.ortsteil === null))
+	} else if ((a.ortsteil === null) && (b.ortsteil === null)) {
 		return 1;
+	}
 	return 0;
 }
 
 export function ortsteilFilter(items: Iterable<OrtsteilKatalogEintrag>, search: string) {
 	const o = [];
-	for (const i of items)
-		if ((i.ortsteil !== null) && i.ortsteil.includes(search))
+	for (const i of items) {
+		if ((i.ortsteil !== null) && i.ortsteil.includes(search)) {
 			o.push(i);
+		}
+	}
 	return o;
 }
 
@@ -142,14 +135,17 @@ export function erzieherArtSort(a: Erzieherart, b: Erzieherart) {
 /** Der Filter für Lehrer mit Kürzelsuche */
 export function lehrer_filter(items: Iterable<LehrerListeEintrag>, search: string): LehrerListeEintrag[] {
 	const name = search.replace(/\d+\s*/, "").trim();
-	if (name.length === 0)
+	if (name.length === 0) {
 		return Array.isArray(items) ? items : [...items];
+	}
 	const list = [];
-	for (const i of items)
+	for (const i of items) {
 		if (i.kuerzel.toLocaleLowerCase("de-DE").startsWith(name.toLocaleLowerCase("de-DE"))
 			|| i.nachname.toLocaleLowerCase("de-DE").startsWith(name.toLocaleLowerCase("de-DE"))
-			|| i.vorname.toLocaleLowerCase("de-DE").startsWith(name.toLocaleLowerCase("de-DE")))
+			|| i.vorname.toLocaleLowerCase("de-DE").startsWith(name.toLocaleLowerCase("de-DE"))) {
 			list.push(i);
+		}
+	}
 	return list;
 }
 
@@ -157,12 +153,14 @@ export function lehrer_filter(items: Iterable<LehrerListeEintrag>, search: strin
 export function filterSchulenKatalogEintraege(items: SchulenKatalogEintrag[], search: string): SchulenKatalogEintrag[] {
 	const searchLower = search.toLocaleLowerCase();
 	const list = [];
-	for (const i of items)
+	for (const i of items) {
 		if ((i.SchulNr.includes(searchLower))
 				|| ((i.KurzBez !== null) && i.KurzBez.toLowerCase().includes(searchLower))
 				|| ((i.ABez1 !== null) && i.ABez1.toLowerCase().includes(searchLower))
-				|| ((i.Ort !== null) && i.Ort.toLowerCase().includes(searchLower)))
+				|| ((i.Ort !== null) && i.Ort.toLowerCase().includes(searchLower))) {
 			list.push(i);
+		}
+	}
 	return list;
 }
 
@@ -178,8 +176,9 @@ export function filterSchulenEintraege(items: SchulEintrag[], search: string): S
 				|| ((i.kurzbezeichnung !== null) && i.kurzbezeichnung.toLowerCase().includes(searchLower))
 				|| i.name.toLowerCase().includes(searchLower) || ((i.ort !== null) && i.ort.toLowerCase().includes(searchLower))
 				|| ((i.kuerzel !== null) && i.kuerzel.toLowerCase().includes(searchLower))
-				|| ((i.plz !== null) && i.plz.toLowerCase().includes(searchLower)))
+				|| ((i.plz !== null) && i.plz.toLowerCase().includes(searchLower))) {
 			list.push(i);
+		}
 	}
 	return list;
 }
@@ -193,7 +192,8 @@ export function coreTypeDataFilter(items: CoreTypeData[], search: string): CoreT
 
 /** Formatiert ein Datum in das Format 01.01.2020 */
 export function formatDate(dateString: string | null): string {
-	if (dateString === null)
+	if (dateString === null) {
 		return "";
+	}
 	return new Date(dateString).toLocaleDateString("de-DE");
 }

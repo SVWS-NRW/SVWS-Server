@@ -13,10 +13,19 @@ export class Logger extends JavaObject {
 	 */
 	private static _instance: Logger | null = null;
 
+	/**
+	 * Ein interner Vektor zum Speichern der Consumer von Log-Informationen.
+	 */
 	private readonly consumer: ArrayList<Consumer<LogData>> = new ArrayList<Consumer<LogData>>();
 
+	/**
+	 * Das Standard-Log-Level, welches für neue Log-Informationen genutzt wird.
+	 */
 	private defaultLevel: LogLevel = LogLevel.INFO;
 
+	/**
+	 * Die Einrückung für die Ausgabe, die bei neuen Log-Informationen genutzt wird.
+	 */
 	private indent: number = 0;
 
 
@@ -249,7 +258,7 @@ export class Logger extends JavaObject {
 		return ['de.svws_nrw.core.logger.Logger'].includes(name);
 	}
 
-	public static class = new Class<Logger>('de.svws_nrw.core.logger.Logger');
+	public static readonly class = new Class<Logger>('de.svws_nrw.core.logger.Logger');
 
 }
 

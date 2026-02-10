@@ -33,6 +33,13 @@ public class Tabelle_SchuelerSprachenfolge extends SchemaTabelle {
 			.setRevision(SchemaRevisionen.REV_1)
 			.setJavaComment("Atomares Sprachkürzel aus StatKue_SVWS_ZulaessigeFaecher");
 
+	/** Die Definition der Tabellenspalte IstNachweis */
+	public final SchemaTabelleSpalte col_IstNachweis = add("IstNachweis", SchemaDatentypen.INT, false)
+			.setConverter(Boolean01Converter.class)
+			.setDefault("0")
+			.setJavaComment("Für WbK: Gibt an, ob die Sprachbelegung einer zweiten Fremdsprache durch Nachweis erfolgt (siehe §34 Abst 3,4 APO-WbK)")
+			.setRevision(SchemaRevisionen.REV_54);
+
 	/** Die Definition der Tabellenspalte ReihenfolgeNr */
 	public final SchemaTabelleSpalte col_ReihenfolgeNr = add("ReihenfolgeNr", SchemaDatentypen.INT, false)
 			.setRevision(SchemaRevisionen.REV_1)

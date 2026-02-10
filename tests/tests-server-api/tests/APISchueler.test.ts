@@ -2,8 +2,8 @@ import { describe, expect, test } from "vitest";
 import { privilegedApiServer } from "../../utils/APIUtils";
 
 describe("Schueler Tests ", () => {
-	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
-		const api = privilegedApiServer
+	describe.each([{ schema: "GymAbi01" }])('gegen %s', ({ schema }) => {
+		const api = privilegedApiServer;
 
 		test("getSchuelerErzieher", async () => {
 			const result = await api.getSchuelerErzieher(schema, 1199);
@@ -39,5 +39,5 @@ describe("Schueler Tests ", () => {
 			const result = await api.getKatalogFoerderschwerpunkte(schema);
 			expect(result).toMatchSnapshot();
 		});
-	})
-})
+	});
+});

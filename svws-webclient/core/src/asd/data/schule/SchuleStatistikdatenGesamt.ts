@@ -63,7 +63,7 @@ export class SchuleStatistikdatenGesamt extends JavaObject {
 		return ['de.svws_nrw.asd.data.schule.SchuleStatistikdatenGesamt'].includes(name);
 	}
 
-	public static class = new Class<SchuleStatistikdatenGesamt>('de.svws_nrw.asd.data.schule.SchuleStatistikdatenGesamt');
+	public static readonly class = new Class<SchuleStatistikdatenGesamt>('de.svws_nrw.asd.data.schule.SchuleStatistikdatenGesamt');
 
 	public static transpilerFromJSON(json: string): SchuleStatistikdatenGesamt {
 		const obj = JSON.parse(json) as Partial<SchuleStatistikdatenGesamt>;

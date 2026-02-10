@@ -143,7 +143,7 @@ export abstract class GostBelegpruefung extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
 
-	public static class = new Class<GostBelegpruefung>('de.svws_nrw.core.abschluss.gost.GostBelegpruefung');
+	public static readonly class = new Class<GostBelegpruefung>('de.svws_nrw.core.abschluss.gost.GostBelegpruefung');
 
 }
 

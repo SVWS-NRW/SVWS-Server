@@ -1,5 +1,5 @@
 {
-	"version": 3,
+	"version": 4,
 	"daten": [ {
 		"bezeichner": "UNDEFINIERT",
 		"idStatistik": "1",
@@ -24,13 +24,13 @@
 			"schluessel": "1A",
 			"zulaessig": [
 				{ "schulform": "H", "gliederung": null },
-				{ "schulform": "GM", "gliederung": "H" },
+											 
 				{ "schulform": "R", "gliederung": "H" },
-				{ "schulform": "SK", "gliederung": "H" },
+											 
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2010
 		}, {
 			"id": 1001,
 			"kuerzel": "1A",
@@ -38,9 +38,36 @@
 			"schluessel": "1A",
 			"zulaessig": [
 				{ "schulform": "H", "gliederung": null },
-				{ "schulform": "R", "gliederung": "H" },
+				{ "schulform": "GM", "gliederung": "H" },
+				{ "schulform": "R",	"gliederung": "H" },
+				{ "schulform": "V",	"gliederung": null }
+			],
+			"gueltigVon": 2011,
+			"gueltigBis": 2011
+		}, {
+			"id": 1002,
+			"kuerzel": "1A",
+			"text": "Klasse 10 Typ A (Hauptschule)",
+			"schluessel": "1A",
+			"zulaessig": [
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "GM", "gliederung": "H" },
+				{ "schulform": "R",	"gliederung": "H" },
 				{ "schulform": "SK", "gliederung": "H" },
-				{ "schulform": "V", "gliederung": null }
+				{ "schulform": "V",	"gliederung": null }
+			],
+			"gueltigVon": 2012,
+			"gueltigBis": 2022
+		}, {
+			"id": 1003,
+			"kuerzel": "1A",
+			"text": "Klasse 10 Typ A (Hauptschule)",
+			"schluessel": "1A",
+			"zulaessig": [
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "R",	"gliederung": "H" },
+				{ "schulform": "SK", "gliederung": "H" },
+				{ "schulform": "V",	"gliederung": null }
 			],
 			"gueltigVon": 2023,
 			"gueltigBis": 2023
@@ -55,14 +82,54 @@
 			"schluessel": "1B",
 			"zulaessig": [
 				{ "schulform": "H", "gliederung": null },
-				{ "schulform": "GM", "gliederung": "H" },
-				{ "schulform": "SK", "gliederung": "H" },
+											 
+				{ "schulform": "R", "gliederung": "H" },
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2010
 		}, {
 			"id": 2001,
+			"kuerzel": "1B",
+			"text": "Klasse 10 Typ B (Hauptschule)",
+			"schluessel": "1B",
+			"zulaessig": [
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "GM", "gliederung": "H" },
+				{ "schulform": "R",	"gliederung": "H" },
+				{ "schulform": "V",	"gliederung": null }
+			],
+			"gueltigVon": 2011,
+			"gueltigBis": 2011
+		}, {
+			"id": 2002,
+			"kuerzel": "1B",
+			"text": "Klasse 10 Typ B (Hauptschule)",
+			"schluessel": "1B",
+			"zulaessig": [
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "GM", "gliederung": "H" },
+				{ "schulform": "R",	"gliederung": "H" },
+				{ "schulform": "SK", "gliederung": "H" },
+				{ "schulform": "V",	"gliederung": null }
+			],
+			"gueltigVon": 2012,
+			"gueltigBis": 2021
+		}, {
+			"id": 2003,
+			"kuerzel": "1B",
+			"text": "Klasse 10 Typ B (Hauptschule)",
+			"schluessel": "1B",
+			"zulaessig": [
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "GM", "gliederung": "H" },
+				{ "schulform": "SK", "gliederung": "H" },
+				{ "schulform": "V",	"gliederung": null }
+			],
+			"gueltigVon": 2022,
+			"gueltigBis": 2022
+		}, {
+			"id": 2004,
 			"kuerzel": "1B",
 			"text": "Klasse 10 Typ B (Hauptschule)",
 			"schluessel": "1B",
@@ -84,14 +151,53 @@
 			"schluessel": "AB",
 			"zulaessig": [
 				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "R", "gliederung": "H" },
+				{ "schulform": "V", "gliederung": null }
+			],
+			"gueltigVon": null,
+			"gueltigBis": 2010
+		}, {
+			"id": 3001,
+			"kuerzel": "AB",
+			"text": "Klassen im Jahrgang 10 ohne Differenzierung in Typ A und Typ B (Hauptschule)",
+			"schluessel": "AB",
+			"zulaessig": [
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "GM", "gliederung": "H" },
+				{ "schulform": "R", "gliederung": "H" },
+				{ "schulform": "V", "gliederung": null }
+			],
+			"gueltigVon": 2011,
+			"gueltigBis": 2011
+		}, {
+			"id": 3002,
+			"kuerzel": "AB",
+			"text": "Klassen im Jahrgang 10 ohne Differenzierung in Typ A und Typ B (Hauptschule)",
+			"schluessel": "AB",
+			"zulaessig": [
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "GM", "gliederung": "H" },
+				{ "schulform": "R", "gliederung": "H" },
+				{ "schulform": "SK", "gliederung": "H" },
+				{ "schulform": "V", "gliederung": null }
+			],
+			"gueltigVon": 2012,
+			"gueltigBis": 2021
+		}, {
+			"id": 3003,
+			"kuerzel": "AB",
+			"text": "Klassen im Jahrgang 10 ohne Differenzierung in Typ A und Typ B (Hauptschule)",
+			"schluessel": "AB",
+			"zulaessig": [
+				{ "schulform": "H", "gliederung": null },
 				{ "schulform": "GM", "gliederung": "H" },
 				{ "schulform": "SK", "gliederung": "H" },
 				{ "schulform": "V", "gliederung": null }
 			],
-			"gueltigVon": null,
+			"gueltigVon": 2022,
 			"gueltigBis": 2022
 		}, {
-			"id": 3001,
+			"id": 3004,
 			"kuerzel": "AB",
 			"text": "Klassen im Jahrgang 10 ohne Differenzierung in Typ A und Typ B (Hauptschule)",
 			"schluessel": "AB",
@@ -104,12 +210,78 @@
 			"gueltigBis": 2023
 		} ]
 	}, {
+		"bezeichner": "AK",
+		"idStatistik": "11",
+		"historie": [ {
+			"id": 10000,
+			"kuerzel": "AK",
+			"text": "Auffangklasse",
+			"schluessel": "AK",
+			"zulaessig": [
+				{ "schulform": "G", "gliederung": null },
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "R", "gliederung": null }
+			],
+			"gueltigVon": null,
+			"gueltigBis": 2010
+		}, {
+			"id": 10001,
+			"kuerzel": "AK",
+			"text": "Auffangklasse",
+			"schluessel": "AK",
+			"zulaessig": [
+				{ "schulform": "G", "gliederung": null },
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GM", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "R", "gliederung": null }
+			],
+			"gueltigVon": 2011,
+			"gueltigBis": 2011
+		}, {
+			"id": 10002,
+			"kuerzel": "AK",
+			"text": "Auffangklasse",
+			"schluessel": "AK",
+			"zulaessig": [
+				{ "schulform": "G", "gliederung": null },
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GM", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "R", "gliederung": null },
+				{ "schulform": "SK", "gliederung": null	}
+			],
+			"gueltigVon": 2012,
+			"gueltigBis": 2012
+		}, {
+			"id": 10003,
+			"kuerzel": "AK",
+			"text": "Auffangklasse",
+			"schluessel": "AK",
+			"zulaessig": [
+				{ "schulform": "G", "gliederung": null },
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GM", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "PS", "gliederung": null },
+				{ "schulform": "R", "gliederung": null },
+				{ "schulform": "SK", "gliederung": null }
+			],
+			"gueltigVon": 2013,
+			"gueltigBis": 2016
+		} ]
+	}, {
 		"bezeichner": "AM",
 		"idStatistik": "5",
 		"historie": [ {
 			"id": 4000,
 			"kuerzel": "AM",
-			"text": "Frühförderung für hör- und sehgeschädigte Kinder: Hausfrüherziehung, ambulante Maßnahmen ",
+			"text": "Ambulante Maßnahmen",
 			"schluessel": "AM",
 			"zulaessig": [
 				{ "schulform": "KS", "gliederung": null },
@@ -119,12 +291,199 @@
 			"gueltigBis": null
 		} ]
 	}, {
+		"bezeichner": "BP",
+		"idStatistik": "12",
+		"historie": [ {
+			"id": 11000,
+			"kuerzel": "BP",
+			"text": "BUS - Klasse (Beruf und Schule)",
+			"schluessel": "BP",
+			"zulaessig": [
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "KS", "gliederung": null },
+				{ "schulform": "S", "gliederung": null }
+			],
+			"gueltigVon": null,
+			"gueltigBis": 2011
+		}, {
+			"id": 11001,
+			"kuerzel": "BP",
+			"text": "BUS - Klasse (Beruf und Schule)",
+			"schluessel": "BP",
+			"zulaessig": [
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "KS", "gliederung": null },
+				{ "schulform": "R", "gliederung": null },
+				{ "schulform": "S", "gliederung": null },
+				{ "schulform": "SK", "gliederung": null }
+			],
+			"gueltigVon": 2012,
+			"gueltigBis": 2012
+		}, {
+			"id": 11002,
+			"kuerzel": "BP",
+			"text": "BUS - Klasse (Beruf und Schule)",
+			"schluessel": "BP",
+			"zulaessig": [
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "KS", "gliederung": null },
+				{ "schulform": "PS", "gliederung": null },
+				{ "schulform": "R", "gliederung": null },
+				{ "schulform": "S", "gliederung": null },
+				{ "schulform": "SK", "gliederung": null }
+			],
+			"gueltigVon": 2013,
+			"gueltigBis": 2014
+		} ]
+	}, {
+		"bezeichner": "IL",
+		"idStatistik": "13",
+		"historie": [ {
+			"id": 12000,
+			"kuerzel": "IL",
+			"text": "Integrative Lerngruppe",
+			"schluessel": "IL",
+			"zulaessig": [
+				{ "schulform": "FW", "gliederung": null },
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "R", "gliederung": null }
+			],
+			"gueltigVon": null,
+			"gueltigBis": 2009
+		}, {
+			"id": 12001,
+			"kuerzel": "IL",
+			"text": "Integrative Lerngruppe",
+			"schluessel": "IL",
+			"zulaessig": [
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "R", "gliederung": null }
+			],
+			"gueltigVon": 2010,
+			"gueltigBis": 2010
+		}, {
+			"id": 12002,
+			"kuerzel": "IL",
+			"text": "Integrative Lerngruppe",
+			"schluessel": "IL",
+			"zulaessig": [
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GM", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "R", "gliederung": null }
+			],
+			"gueltigVon": 2011,
+			"gueltigBis": 2011
+		}, {
+			"id": 12003,
+			"kuerzel": "IL",
+			"text": "Integrative Lerngruppe",
+			"schluessel": "IL",
+			"zulaessig": [
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GM", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "R", "gliederung": null },
+				{ "schulform": "SK", "gliederung": null }
+			],
+			"gueltigVon": 2012,
+			"gueltigBis": 2012
+		}, {
+			"id": 12004,
+			"kuerzel": "IL",
+			"text": "Integrative Lerngruppe",
+			"schluessel": "IL",
+			"zulaessig": [
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GM", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "PS", "gliederung": null },
+				{ "schulform": "R", "gliederung": null },
+				{ "schulform": "SK", "gliederung": null }
+			],
+			"gueltigVon": 2013,
+			"gueltigBis": 2014
+		}, {
+			"id": 12005,
+			"kuerzel": "IL",
+			"text": "Integrative Lerngruppe",
+			"schluessel": "IL",
+			"zulaessig": [
+				{ "schulform": "FW", "gliederung": null },
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GM", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "HI", "gliederung": null },
+				{ "schulform": "PS", "gliederung": null },
+				{ "schulform": "R", "gliederung": null },
+				{ "schulform": "SK", "gliederung": null }
+			],
+			"gueltigVon": 2015,
+			"gueltigBis": 2018
+		} ]
+	}, {
+		"bezeichner": "KK",
+		"idStatistik": "14",
+		"historie": [ {
+			"id": 13000,
+			"kuerzel": "KK",
+			"text": "Kooperationsklasse",
+			"schluessel": "KK",
+			"zulaessig": [
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "KS", "gliederung": null },
+				{ "schulform": "S", "gliederung": null }
+			],
+			"gueltigVon": 2009,
+			"gueltigBis": 2010
+		}, {
+			"id": 13001,
+			"kuerzel": "KK",
+			"text": "Kooperationsklasse",
+			"schluessel": "KK",
+			"zulaessig": [
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "KS", "gliederung": null },
+				{ "schulform": "R", "gliederung": null },
+				{ "schulform": "S", "gliederung": null }
+			],
+			"gueltigVon": 2011,
+			"gueltigBis": 2011
+		}, {
+			"id": 13002,
+			"kuerzel": "KK",
+			"text": "Kooperationsklasse",
+			"schluessel": "KK",
+			"zulaessig": [
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "KS", "gliederung": null },
+				{ "schulform": "R", "gliederung": null },
+				{ "schulform": "SK", "gliederung": null },
+				{ "schulform": "S", "gliederung": null }
+			],
+			"gueltigVon": 2012,
+			"gueltigBis": 2013
+		} ]
+	}, {
 		"bezeichner": "PG",
 		"idStatistik": "6",
 		"historie": [ {
 			"id": 5000,
 			"kuerzel": "PG",
-			"text": "Frühförderung für hör- und sehgeschädigte Kinder: Förderschulkindergarten, Präsenzgruppe",
+			"text": "Präsenzgruppe",
 			"schluessel": "PG",
 			"zulaessig": [
 				{ "schulform": "KS", "gliederung": null },
@@ -157,7 +516,7 @@
 				{ "schulform": "GY", "gliederung": null }
 			],
 			"gueltigVon": 2024,
-			"gueltigBis": null		
+			"gueltigBis": null
 		} ]
 	}, {
 		"bezeichner": "RK",
@@ -282,7 +641,7 @@
 				{ "schulform": "V", "gliederung": null }
 			],
 			"gueltigVon": 2023,
-			"gueltigBis": 2023		
+			"gueltigBis": 2023
 		} ]
 	}, {
 		"bezeichner": "DF",
@@ -309,6 +668,76 @@
 			],
 			"gueltigVon": 2024,
 			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VK",
+		"idStatistik": "15",
+		"historie": [ {
+			"id": 14000,
+			"kuerzel": "VK",
+			"text": "Vorbereitungsklasse",
+			"schluessel": "VK",
+			"zulaessig": [
+				{ "schulform": "G", "gliederung": null },
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "R", "gliederung": null },
+				{ "schulform": "V", "gliederung": null }
+			],
+			"gueltigVon": null,
+			"gueltigBis": 2010
+		}, {
+			"id": 14001,
+			"kuerzel": "VK",
+			"text": "Vorbereitungsklasse",
+			"schluessel": "VK",
+			"zulaessig": [
+				{ "schulform": "G", "gliederung": null },
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GM", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "R", "gliederung": null },
+				{ "schulform": "V", "gliederung": null }
+			],
+			"gueltigVon": 2011,
+			"gueltigBis": 2011
+		}, {
+			"id": 14002,
+			"kuerzel": "VK",
+			"text": "Vorbereitungsklasse",
+			"schluessel": "VK",
+			"zulaessig": [
+				{ "schulform": "G", "gliederung": null },
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GM", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "R", "gliederung": null },
+				{ "schulform": "SK", "gliederung": null },
+				{ "schulform": "V", "gliederung": null }
+			],
+			"gueltigVon": 2012,
+			"gueltigBis": 2012
+		}, {
+			"id": 14003,
+			"kuerzel": "VK",
+			"text": "Vorbereitungsklasse",
+			"schluessel": "VK",
+			"zulaessig": [
+				{ "schulform": "G", "gliederung": null },
+				{ "schulform": "GE", "gliederung": null },
+				{ "schulform": "GM", "gliederung": null },
+				{ "schulform": "GY", "gliederung": null },
+				{ "schulform": "H", "gliederung": null },
+				{ "schulform": "PS", "gliederung": null },
+				{ "schulform": "R", "gliederung": null },
+				{ "schulform": "SK", "gliederung": null },
+				{ "schulform": "V", "gliederung": null }
+			],
+			"gueltigVon": 2013,
+			"gueltigBis": 2016
 		} ]
 	} ]
 }

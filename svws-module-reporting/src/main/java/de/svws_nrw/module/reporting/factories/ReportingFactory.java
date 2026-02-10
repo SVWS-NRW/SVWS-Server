@@ -96,11 +96,16 @@ public final class ReportingFactory {
 
 			// Validiere die Angaben zur Vorlage für den Report.
 			this.logger.logLn(LogLevel.DEBUG, 4, "Validiere Report-Vorlage.");
-			if (ReportingReportvorlage.getByBezeichnung(this.reportingParameter.reportvorlage) == null) {
+			final ReportingReportvorlage reportvorlage = ReportingReportvorlage.getByBezeichnung(this.reportingParameter.reportvorlage);
+			if (reportvorlage == null) {
 				this.logger.logLn(LogLevel.ERROR, 4, "FEHLER: Es wurde keine gültige Report-Vorlage für die Initialisierung der Reporting-Factory übergeben.");
 				throw new ApiOperationException(Status.BAD_REQUEST,
 						"### FEHLER: Es wurde keine gültige Report-Vorlage für die Initialisierung der Reporting-Factory übergeben.");
 			}
+
+			// Logge für einen evtl. späteren Fehlerfall das Format und das Template.
+			this.logger.logLn(LogLevel.DEBUG, 4, "Übergebenes und validiertes Ausgabeformat: " + reportingAusgabeformat.name());
+			this.logger.logLn(LogLevel.DEBUG, 4, "Übergebene und validierte Report-Vorlage: " + reportvorlage.getBezeichnung());
 
 			// Validiere Hauptdaten-Angabe
 			this.logger.logLn(LogLevel.DEBUG, 4, "Validiere Hauptdaten.");
@@ -133,9 +138,10 @@ public final class ReportingFactory {
 
 			this.logger.logLn(LogLevel.DEBUG, 0, "<<< Ende des Initialisierens der Reporting-Factory und des Validierens übergebener Daten.");
 		} catch (final Exception e) {
-			logger.logLn(LogLevel.ERROR, 0,
-					"### FEHLER: Während der Initialisierung und Validierung der Daten der Reporting-Factory ist ein Fehler aufgetreten.");
-			final SimpleOperationResponse sop = ReportingExceptionUtils.getSimpleOperationResponse(e, logger, log);
+			ReportingExceptionUtils.logException(
+					"### FEHLER: Während der Initialisierung und Validierung der Daten der Reporting-Factory ist ein Fehler aufgetreten.", e, logger,
+					LogLevel.ERROR, 0);
+			final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
 			// Gebe das Log, das in der SimpleOperationResponse für Entwicklungszwecke auf der Console aus.
 			sop.log.forEach(Logger.global()::logLn);
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, sop, MediaType.APPLICATION_JSON);
@@ -203,7 +209,7 @@ public final class ReportingFactory {
 			switch (ReportingAusgabeformat.getByID(reportingParameter.ausgabeformat)) {
 				case ReportingAusgabeformat.UNDEFINED -> {
 					logger.logLn(LogLevel.ERROR, 4, "FEHLER: Das Ausgabeformat UNDEFINIERT wurde für die Report-Generierung übergeben.");
-					final SimpleOperationResponse sop = ReportingExceptionUtils.getSimpleOperationResponse(null, logger, log);
+					final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
 					throw new ApiOperationException(Status.BAD_REQUEST, null, sop, MediaType.APPLICATION_JSON);
 				}
 				case ReportingAusgabeformat.HTML -> {
@@ -214,7 +220,7 @@ public final class ReportingFactory {
 						if (!log.getText(LogLevel.ERROR).isEmpty()) {
 							logger.logLn(LogLevel.ERROR, 0,
 									"### FEHLER: Während der Erzeugung einer HTML-Response zur Report-Generierung ist ein Fehler geloggt worden.");
-							final SimpleOperationResponse sop = ReportingExceptionUtils.getSimpleOperationResponse(null, logger, log);
+							final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
 							throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, null, sop, MediaType.APPLICATION_JSON);
 						}
 						// Response klonen, damit die zurückgegebene Response nicht die Auto-Close-Ressource ist
@@ -232,7 +238,7 @@ public final class ReportingFactory {
 						if (!log.getText(LogLevel.ERROR).isEmpty()) {
 							logger.logLn(LogLevel.ERROR, 0,
 									"### FEHLER: Während der Erzeugung einer PDF-Response zur Report-Generierung ist ein Fehler geloggt worden.");
-							final SimpleOperationResponse sop = ReportingExceptionUtils.getSimpleOperationResponse(null, logger, log);
+							final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
 							throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, null, sop, MediaType.APPLICATION_JSON);
 						}
 						// Response klonen, damit die zurückgegebene Response nicht die Auto-Close-Ressource ist
@@ -250,7 +256,7 @@ public final class ReportingFactory {
 					try (Response autocloseResponse = emailFactory.sendEmails(pdfFactory)) {
 						if (!log.getText(LogLevel.ERROR).isEmpty()) {
 							logger.logLn(LogLevel.ERROR, 0, "### FEHLER: Während des E-Mail-Versands (Response) wurde ein Fehler geloggt.");
-							final SimpleOperationResponse sop = ReportingExceptionUtils.getSimpleOperationResponse(null, logger, log);
+							final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
 							throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, null, sop, MediaType.APPLICATION_JSON);
 						}
 						// Response klonen, damit die zurückgegebene Response nicht die Auto-Close-Ressource ist
@@ -259,7 +265,7 @@ public final class ReportingFactory {
 				}
 				case null, default -> {
 					logger.logLn(LogLevel.ERROR, 4, "FEHLER: Kein bekanntes Ausgabeformat für die Report-Generierung übergeben.");
-					final SimpleOperationResponse sop = ReportingExceptionUtils.getSimpleOperationResponse(null, logger, log);
+					final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
 					throw new ApiOperationException(Status.NOT_FOUND, null, sop, MediaType.APPLICATION_JSON);
 				}
 			}
@@ -267,15 +273,17 @@ public final class ReportingFactory {
 			// geworfen wurde.
 			if (!log.getText(LogLevel.ERROR).isEmpty()) {
 				logger.logLn(LogLevel.ERROR, 0, "### FEHLER: Während der Erzeugung einer API-Response zur Report-Generierung ist ein Fehler geloggt worden.");
-				final SimpleOperationResponse sop = ReportingExceptionUtils.getSimpleOperationResponse(null, logger, log);
+				final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, null, sop, MediaType.APPLICATION_JSON);
 			}
 			// Wenn kein Fehler vermerkt wurde, kann der Report zurückgegeben werden.
 			this.logger.logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung einer API-Response zur Report-Generierung.");
 			return reportResponse;
 		} catch (final Exception e) {
-			logger.logLn(LogLevel.ERROR, 0, "### FEHLER: Während der Erzeugung einer API-Response zur Report-Generierung ist ein Fehler aufgetreten.");
-			final SimpleOperationResponse sop = ReportingExceptionUtils.getSimpleOperationResponse(e, logger, log);
+			ReportingExceptionUtils.logException(
+					"### FEHLER: Während der Erzeugung einer API-Response zur Report-Generierung ist ein Fehler aufgetreten.", e, logger,
+					LogLevel.ERROR, 0);
+			final SimpleOperationResponse sop = ReportingExceptionUtils.getLogAsSimpleOperationResponse(log);
 			// Gebe das Log, das in der SimpleOperationResponse für Entwicklungszwecke auf der Console aus.
 			sop.log.forEach(Logger.global()::logLn);
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, sop, MediaType.APPLICATION_JSON);

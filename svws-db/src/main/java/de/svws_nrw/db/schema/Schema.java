@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.svws_nrw.db.schema.tabellen.Tabelle_AllgAdrAnsprechpartner;
 import de.svws_nrw.db.schema.tabellen.Tabelle_AllgemeineMerkmaleKatalog_Keys;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Ankreuzkompetenz_Jahrgang;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Benutzer;
 import de.svws_nrw.db.schema.tabellen.Tabelle_BenutzerAllgemein;
 import de.svws_nrw.db.schema.tabellen.Tabelle_BenutzerEmail;
@@ -164,6 +165,10 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_Logins;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Nationalitaeten_Keys;
 import de.svws_nrw.db.schema.tabellen.Tabelle_NichtMoeglAbiFachKombi;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Noten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Notenmodul_Credentials;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Notenmodul_Konfiguration_Client;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Notenmodul_Konfiguration_Server;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Notenmodul_Verbindungen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_OrganisationsformenKatalog_Keys;
 import de.svws_nrw.db.schema.tabellen.Tabelle_PersonalTypen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Personengruppen;
@@ -233,6 +238,7 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_Stundentafel;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundentafel_Faecher;
 import de.svws_nrw.db.schema.tabellen.Tabelle_TextExportVorlagen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsLehrerNotenmodulCredentials;
+import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsNotenmodulCredentials;
 import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerAnkreuzkompetenzen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerLernabschnittsdaten;
@@ -291,10 +297,10 @@ public final class Schema {
 	}
 
 	/** Das übergeordnete Java-Paket, welches die Klassen für die SVWS-Datenbank beinhaltet */
-	public static final String javaPackage = "de.svws_nrw.db";
+	public static final String JAVA_PACKAGE = "de.svws_nrw.db";
 
 	/** Das Java-Unterpaket, welches die Klassen für die generierten DTOs für den Datenbankzugriff beinhaltet */
-	public static final String javaDTOPackage = "dto";
+	public static final String JAVA_DTO_PACKAGE = "dto";
 
 	/** Eine Map von dem Namen der Tabelle auf die einzelnen Tabellen. */
 	private static final List<SchemaTabelle> _tabellen = new ArrayList<>();
@@ -680,6 +686,15 @@ public final class Schema {
 	/** Tabelle SchuleOAuthSecrets */
 	public static final Tabelle_SchuleOAuthSecrets tab_SchuleOAuthSecrets = add(new Tabelle_SchuleOAuthSecrets());
 
+	/** Tabelle Notenmodul_Verbindungen */
+	public static final Tabelle_Notenmodul_Verbindungen tab_Notenmodul_Verbindungen = add(new Tabelle_Notenmodul_Verbindungen());
+
+	/** Tabelle Notenmodul_Konfiguration_Client */
+	public static final Tabelle_Notenmodul_Konfiguration_Client tab_Notenmodul_Konfiguration_Client = add(new Tabelle_Notenmodul_Konfiguration_Client());
+
+	/** Tabelle Notenmodul_Konfiguration_Server */
+	public static final Tabelle_Notenmodul_Konfiguration_Server tab_Notenmodul_Konfiguration_Server = add(new Tabelle_Notenmodul_Konfiguration_Server());
+
 	/** Tabelle Schulformen */
 	public static final Tabelle_Schulformen tab_Schulformen = add(new Tabelle_Schulformen());
 
@@ -721,6 +736,9 @@ public final class Schema {
 
 	/** Tabelle LehrerNotenmodulCredentials */
 	public static final Tabelle_LehrerNotenmodulCredentials tab_LehrerNotenmodulCredentials = add(new Tabelle_LehrerNotenmodulCredentials());
+
+	/** Tabelle Notenmodul_Credentials */
+	public static final Tabelle_Notenmodul_Credentials tab_Notenmodul_Credentials = add(new Tabelle_Notenmodul_Credentials());
 
 	/** Tabelle Schueler */
 	public static final Tabelle_Schueler tab_Schueler = add(new Tabelle_Schueler());
@@ -1149,6 +1167,10 @@ public final class Schema {
 	public static final Tabelle_TimestampsLehrerNotenmodulCredentials tab_TimestampsLehrerNotenmodulCredentials =
 			add(new Tabelle_TimestampsLehrerNotenmodulCredentials());
 
+	/** Tabelle TimestampsNotenmodulCredentials */
+	public static final Tabelle_TimestampsNotenmodulCredentials tab_TimestampsNotenmodulCredentials =
+			add(new Tabelle_TimestampsNotenmodulCredentials());
+
 	/** Tabelle TimestampsSchuelerLeistungsdaten */
 	public static final Tabelle_TimestampsSchuelerLeistungsdaten tab_TimestampsSchuelerLeistungsdaten = add(new Tabelle_TimestampsSchuelerLeistungsdaten());
 
@@ -1165,6 +1187,9 @@ public final class Schema {
 
 	/** Tabelle Wiedervorlage */
 	public static final Tabelle_Wiedervorlage tab_Wiedervorlage = add(new Tabelle_Wiedervorlage());
+
+	/** Tabelle Katalog_Ankreuzkompetenz_Jahrgang */
+	public static final Tabelle_Ankreuzkompetenz_Jahrgang tab_Ankreuzkompetenz_Jahrgang = add(new Tabelle_Ankreuzkompetenz_Jahrgang());
 
 
 	/**

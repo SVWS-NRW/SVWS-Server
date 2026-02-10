@@ -35,7 +35,7 @@ export class RouteLehrerAllgemeinesGruppenprozesse extends RouteNode<any, RouteL
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			lehrerListeManager: () => routeLehrer.data.manager,
 			deleteLehrer: routeLehrer.data.delete,
-			deleteLehrerCheck: routeLehrer.data.deleteLehrerCheck,
+			deleteCheck: routeLehrer.data.deleteCheck,
 		};
 	}
 

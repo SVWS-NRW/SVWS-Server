@@ -1,6 +1,9 @@
 package de.svws_nrw.data.lehrer;
 
+import java.io.InputStream;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -11,6 +14,9 @@ import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.types.PersonalTyp;
+import de.svws_nrw.data.schule.DataEinwilligungsarten;
+import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.data.util.TestUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
@@ -34,6 +40,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -46,6 +54,12 @@ class DataLehrerStammdatenTest {
 
 	@Mock
 	private DBEntityManager conn;
+
+	@Mock
+	private DataEinwilligungsarten dataEinwilligungsarten;
+
+	@Mock
+	private DataLernplattformen dataLernplattformen;
 
 	@InjectMocks
 	private DataLehrerStammdaten dataLehrerStammdaten;
@@ -63,6 +77,24 @@ class DataLehrerStammdatenTest {
 		this.dataLehrerStammdaten.initDTO(dtoLehrer, 2L, null);
 
 		assertThat(dtoLehrer.ID).isEqualTo(2L);
+	}
+
+	@Test
+	@DisplayName("add | erfolgreiches Anlegen eines Lehrerstammdatensatzes")
+	void addLehrerTest() throws ApiOperationException {
+		final HashMap<String, Object> coreDtoLehrer = getCoreDtoLehrerMap();
+		final DTOLehrer mockedLehrer = getDtoLehrer();
+		final InputStream is = TestUtils.fromObject(coreDtoLehrer);
+		when(this.conn.queryByKey(eq(DTOLehrer.class), any())).thenReturn(mockedLehrer);
+		when(conn.transactionPersist(any(DTOLehrer.class))).thenReturn(true);
+		when(conn.transactionPersistAll(anyList())).thenReturn(true);
+
+		this.dataLehrerStammdaten.addAsResponse(is);
+
+		verify(dataLernplattformen).getAll();
+		verify(dataEinwilligungsarten).getAll();
+
+		verify(conn, times(2)).transactionPersistAll(any(Collection.class));
 	}
 
 	@Test
@@ -765,6 +797,17 @@ class DataLehrerStammdatenTest {
 		dtoLehrer.Sichtbar = true;
 		dtoLehrer.statistikRelevant = true;
 		return dtoLehrer;
+	}
+
+	private HashMap<String, Object> getCoreDtoLehrerMap() {
+		final HashMap<String, Object> lehrerMap = new HashMap<>();
+		lehrerMap.put("vorname", "abc");
+		lehrerMap.put("nachname", "abc");
+		lehrerMap.put("kuerzel", "abc");
+		lehrerMap.put("personalTyp", "LEHRKRAFT");
+		lehrerMap.put("geschlecht", 4);
+
+		return lehrerMap;
 	}
 
 }

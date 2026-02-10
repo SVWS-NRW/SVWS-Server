@@ -1,5 +1,10 @@
 package de.svws_nrw.api.server;
 
+import java.io.InputStream;
+import java.util.List;
+
+import org.jboss.resteasy.annotations.GZIP;
+
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursAufteilung;
@@ -44,9 +49,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import java.io.InputStream;
-import java.util.List;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die SVWS-Datenbank in Bezug auf die
@@ -164,6 +166,7 @@ public class APIGostKursplanung {
 	 * @return die Blockungsdaten
 	 */
 	@GET
+	@GZIP
 	@Path("/blockungen/{blockungsid : \\d+}")
 	@Operation(summary = "Liest für die angegebene Blockung der gymnasialen Oberstufe die grundlegenden Daten aus.",
 			description = "Liest für die angegebene Blockung der gymnasialen Oberstufe die grundlegenden Daten aus. "
@@ -1019,6 +1022,7 @@ public class APIGostKursplanung {
 	 * @return die Daten des Blockungsergebnisses
 	 */
 	@GET
+	@GZIP
 	@Path("/blockungen/zwischenergebnisse/{ergebnisid : \\d+}")
 	@Operation(summary = "Liest für das angegebene Blockungsergebnis einer Blockung der gymnasialen Oberstufe die Daten aus.",
 			description = "Liest für das angegebene Blockungsergebnis einer Blockung der gymnasialen Oberstufe die Daten aus. "
@@ -1065,6 +1069,41 @@ public class APIGostKursplanung {
 					array = @ArraySchema(schema = @Schema(implementation = GostBlockungsergebnis.class)))) final List<GostBlockungsergebnis> ergebnisse,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).addErgebnisse(idBlockung, ergebnisse),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen eines einzelnen Ergebnisses
+	 * zu einer Blockung der gymnasialen Oberstufe.
+	 *
+	 * @param schema          das Datenbankschema, in welchem die Regel der Blockung erstellt wird
+	 * @param idBlockung      die ID der Blockung
+	 * @param ergebnis        das Ergebnis (Pseudo-ID wird ignoriert)
+	 * @param request         die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort
+	 */
+	@POST
+	@Path("/blockungen/{blockungsid : \\d+}/addergebnis")
+	@Operation(summary = "Fügt ein einzelnes Ergebnis zu einer Blockung der Gymnasialen Oberstufe hinzu.",
+	description = "Fügt ein einzelnes Ergebnis zu einer Blockung der Gymnasialen Oberstufe hinzu. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen von Ergebnissen hat.")
+	@ApiResponse(responseCode = "200", description = "Das Ergebnis wurde erfolgreich der Blockung hinzugefügt",
+	content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBlockungsergebnis.class)))
+	@ApiResponse(responseCode = "400", description = "Die Daten sind nicht konsistent (z.B. bei einer nicht passenden Blockungs-ID im Ergebnis).")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Ergebnisse hinzuzufügen.")
+	@ApiResponse(responseCode = "404", description = "Keine Blockung vorhanden")
+	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addGostBlockungErgebnis(@PathParam("schema") final String schema, @PathParam("blockungsid") final long idBlockung,
+			@RequestBody(description = "Das Ergebnis", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			schema = @Schema(implementation = GostBlockungsergebnis.class))) final GostBlockungsergebnis ergebnis,
+			@Context final HttpServletRequest request) {
+
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).addErgebnis(idBlockung, ergebnis),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);

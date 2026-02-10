@@ -60,7 +60,7 @@
 
 	.notification--error &,
 	.svws-ui-stundenplan--unterricht--warning & {
-		@apply text-ui-ondanger border-ui-ondanger;
+		@apply text-ui-ondanger border-ui-danger;
 	}
 
 	&:hover,
@@ -73,7 +73,7 @@
 
 		.notification--error &,
 		.svws-ui-stundenplan--unterricht--warning & {
-			@apply text-ui-ondanger-hover border-ui-ondanger-hover;
+			@apply text-ui-ondanger-hover border-ui-danger-hover;
 		}
 	}
 

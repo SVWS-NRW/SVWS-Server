@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org"
+	  th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}, duplex = ${Parameter.duplexdruck},
+	           querformat = ${!Klassen.isEmpty() && Klassen[0].schuelerLeistungsdatenMatrix().spaltenFaecher().size() > 16}">
+	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
+			title='Klassenliste mit Leistungsdaten',
+			htmlTemplatePfad=${Parameter.htmlTemplateDefinition().getPfadHtmlTemplate()},
+			namePageCSS='reporting-A4-' + (${querformat} ? 'quer' : 'hoch') + (${duplex} ? '-duplex' : '') + '.css')}">
+		<title></title>
+	</head>
+
+	<body th:with="schuljahr = ${Schule.auswahlSchuljahresabschnitt().schuljahr()},
+				   abschnitt = ${Schule.auswahlSchuljahresabschnitt()},
+				   mitQuartalsnote = ${VorlageParameter.get('mitQuartalsnote')},
+				   mitPunktenStattNoten = ${VorlageParameter.get('mitPunktenStattNoten')},
+				   mitIndividuellerKursart = ${VorlageParameter.get('mitIndividuellerKursart')},
+				   mitZuweisung = ${VorlageParameter.get('mitZuweisung')},
+				   mitGesamtfehlstunden = ${VorlageParameter.get('mitGesamtfehlstunden')},
+				   mitFachbezogenenFehlstunden = ${VorlageParameter.get('mitFachbezogenenFehlstunden')},
+				   mitFachbezogenenBemerkungen = ${VorlageParameter.get('mitFachbezogenenBemerkungen')},
+				   mitFoerderschwerpunkt = ${VorlageParameter.get('mitFoerderschwerpunkt')},
+				   mitLernentwicklung = ${VorlageParameter.get('mitLernentwicklung')},
+				   mitASVBemerkung = ${VorlageParameter.get('mitASVBemerkung')},
+				   mitAUEBemerkung = ${VorlageParameter.get('mitAUEBemerkung')},
+				   mitZeugnisbemerkung = ${VorlageParameter.get('mitZeugnisbemerkung')},
+				   mitVersetzungAbschluss = ${VorlageParameter.get('mitVersetzungAbschluss')},
+		           mitVersetzungsentscheidung = ${VorlageParameter.get('mitVersetzungsentscheidung')},
+		           mitSchulformempfehlung = ${VorlageParameter.get('mitSchulformempfehlung')}">
+
+	<div class="reset-page-counter start-new-page" th:each="klasse : ${Klassen}"
+		 th:with="matrix = ${klasse.schuelerLeistungsdatenMatrix()}">
+
+		<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+		<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+		<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
+				headerRight='Leistungsübersicht<br/>Klasse: ' + ${klasse.kuerzel()} +
+					'<br/>Klassenleitung: ' + (${(klasse.auflistungKlassenlehrerkuerzel() != '') ? klasse.auflistungKlassenlehrerkuerzel() : '---'}),
+			    footerCenter='Mahnungen werden durch seitliche, rote Markierungen und epochaler Unterricht durch Halbkreise gekennzeichnet.')}">
+		</th:block>
+		<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+		<table class="fixed-100 mp-0">
+			<!-- Spaltendefinition laut Anforderung -->
+			<colgroup>
+				<col style="width: 8mm;" />  <!-- Nr -->
+				<col style="width: 35mm;" /> <!-- Name -->
+				<col th:if="${mitGesamtfehlstunden}" style="width: 8mm;" /> <!-- Fehlstunden -->
+				<col th:each="fach : ${matrix.spaltenFaecher()}" style="width: 8mm;" /> <!-- Fächer fix 8mm -->
+				<col /> <!-- Leerraum am Ende -->
+			</colgroup>
+
+			<thead>
+			<tr>
+				<td th:colspan="${4 + matrix.spaltenFaecher().size()}">
+					<table class="fixed-100 mp-0">
+						<tr>
+							<th scope="row" class="ta-lb f-bold" style="font-size: 13pt;" th:text="${'Leistungsübersicht ' + klasse.kuerzel()}">Leistungsübersicht</th>
+							<th scope="row" class="ta-rb" th:text="${(mitQuartalsnote ? (Schule.auswahlSchuljahresabschnitt().abschnitt() == 1 ? '1' : '3' ) + '. Quartal - ' : '')  + 'Schuljahr ' + Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittLang()}">HJ</th>
+						</tr>
+						<tr><td colspan="2" class="bo-t-grey" style="height: 2mm"></td></tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<th scope="col" class="head-small-grey ta-cm p-tb-05 p-lr-1">Nr.</th>
+				<th scope="col" class="head-small-grey ta-lm p-tb-05 p-lr-1">Name, Vorname</th>
+				<th th:if="${mitGesamtfehlstunden}" scope="col" class="head-small-grey ta-cm p-tb-05 p-lr-1">FStd.</th>
+				<th scope="col" th:each="fach : ${matrix.spaltenFaecher()}" class="head-small-grey ta-cm p-tb-05 p-lr-1" th:text="${fach.kuerzel()}">D</th>
+				<th scope="col" class="head-small-grey p-tb-05 p-lr-1"></th>
+			</tr>
+			</thead>
+			<tbody>
+			<th:block th:each="schueler, itSchueler : ${matrix.schueler()}"
+					  th:with="lernabschnitt = ${matrix.schuelerLernabschnitt(schueler)},
+							   defizitpunktzahl = ${schueler.istSchuelerInSek2OderWB(lernabschnitt.schuljahresabschnitt()) ? '04' : '03'}">
+				<tr th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
+					<!-- Nummer -->
+					<td class="ta-ct bo-t-grey p-tb-05 p-lr-1">
+						<span th:text="${itSchueler.count + '.'}">1.</span>
+					</td>
+					<!-- Name und weitere Angaben -->
+					<td class="ta-lt bo-t-grey p-tb-05 p-lr-1">
+						<span th:text="${schueler.nachnameVorname()}">Mustermann, Max</span>
+						<span th:if="${mitFoerderschwerpunkt && lernabschnitt != null && (lernabschnitt.foerderschwerpunkt1() != null || lernabschnitt.foerderschwerpunkt2() != null)}" class="displayblock f-tiny" th:text="${'Förderschwerpunkt: ' + lernabschnitt.foerderschwerpunkt1().kuerzel + ((lernabschnitt.foerderschwerpunkt1() != null && lernabschnitt.foerderschwerpunkt2() != null) ? '/' : '' ) + lernabschnitt.foerderschwerpunkt2().kuerzel}">S</span>
+						<span th:if="${mitVersetzungAbschluss && lernabschnitt != null}" class="displayblock f-tiny" th:text="${!lernabschnitt.versetzungsvermerkKuerzel().isEmpty() ? 'Versetzung: ' + lernabschnitt.versetzungsvermerkKuerzel() : 'Versetzung: -----'}">Versetzung: V</span>
+						<span th:if="${mitVersetzungAbschluss && lernabschnitt != null}" class="displayblock f-tiny" th:text="${(lernabschnitt.istAbschlussPrognose() ? 'Progn.: ' : 'Abschl.: ') + (!lernabschnitt.abschluss().isEmpty() ? lernabschnitt.abschluss() : '-----')}">Abschl.: MSA</span>
+					</td>
+
+					<!-- Fehlstunden und Wiederholung-->
+					<td th:if="${mitGesamtfehlstunden}" class="ta-ct bo-t-grey bo-l-grey p-tb-05 p-lr-1">
+						<th:block th:if="${lernabschnitt != null}">
+							<span class="displayblock" th:text="${lernabschnitt.fehlstundenGesamt()}">0</span>
+							<span class="displayblock" th:classappend="${(lernabschnitt.fehlstundenGesamt() < lernabschnitt.fehlstundenUnentschuldigt()) ? 'bg-lightorange' : ''}" th:text="${lernabschnitt.fehlstundenUnentschuldigt()}">0</span>
+							<span th:if="${lernabschnitt != null && lernabschnitt.istWiederholung()}" class="displayblock f-very-tiny f-bold" >(Wdh.)</span>
+						</th:block>
+					</td>
+
+					<!-- Leistungsdaten -->
+					<td th:each="leistung : ${matrix.schuelerLeistungsdatenZeile(schueler)}" class="ta-ct bo-t-grey bo-l-grey p-0" style="vertical-align: top;">
+						<th:block th:if="${leistung != null}"
+								  th:with="note = ${!mitPunktenStattNoten ? leistung.noteKuerzel() : leistung.notePunkte},
+										   quartalsnote = ${!mitPunktenStattNoten ? leistung.noteQuartalKuerzel() : leistung.noteQuartalPunkte},
+										   keineNoteVorhanden = ${(!mitQuartalsnote && #strings.isEmpty(note)) || (mitQuartalsnote && #strings.isEmpty(quartalsnote))},
+										   istGemahnt = ${leistung.istGemahnt()},
+										   istDefizit = ${(!mitQuartalsnote && leistung.note() != null && (defizitpunktzahl >= leistung.notePunkte())) || (mitQuartalsnote && leistung.noteQuartal() != null && (defizitpunktzahl >= leistung.noteQuartalPunkte()))},
+										   istUngenuegend = ${(!mitQuartalsnote && (leistung.notePunkte() == '00')) || (mitQuartalsnote && (leistung.noteQuartalPunkte() == '00'))}">
+							<table class="fixed-100 mp-0" style="height: 100%;">
+								<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th><th scope="col">Col3</th></tr></thead>
+								<tbody>
+									<!-- Note und Epochenfach-Markierung -->
+									<tr th:with="noteFarbeText = ${istUngenuegend ? 'c-white' : (istDefizit  ? 'c-red' : '')},
+												 noteFarbeHintergrund = ${keineNoteVorhanden ? 'bg-yellow' : (istUngenuegend ? 'bg-darkred' : '')}">
+										<td class="p-t-05 p-lr-0 m-lr-0 ta-lt" style="width: auto;">
+											<span class="mp-0" th:classappend="${istGemahnt ? 'bg-red' : ''}" th:text="${leistung.istEpochal() ? '\u25D0' : ' '}"></span>
+										</td>
+										<td class="p-t-05 ta-ct" style="width: 5mm;">
+											<span class="mp-0 displayblock" th:classappend="${noteFarbeHintergrund + ' ' + noteFarbeText}" th:utext="${!mitQuartalsnote ? (!#strings.isEmpty(note) ? note : '&nbsp;'): (!#strings.isEmpty(quartalsnote) ? quartalsnote : '&nbsp;')}">02</span>
+										</td>
+										<td class="p-t-05 p-lr-0 m-lr-0 ta-rt" style="width: auto;">
+											<span class="mp-0" th:classappend="${istGemahnt ? 'bg-red' : ''}" th:text="${leistung.istEpochal() ? '\u25D0' : ' '}"></span>
+										</td>
+									</tr>
+									<!-- Kursart und Zuweisung-->
+									<tr th:if="${mitIndividuellerKursart && !mitZuweisung}">
+										<td colspan="3" class="ta-ct f-very-tiny f-ital" th:utext="${leistung.kursart() != null && !leistung.kursart().isEmpty() ? leistung.kursart() : '&nbsp;'}">GKM</td>
+									</tr>
+									<tr th:if="${mitZuweisung}">
+										<td colspan="3" class="ta-ct f-very-tiny f-ital" th:utext="${(leistung.kursart() != null && !leistung.kursart().isEmpty() ? leistung.kursart() : '&nbsp;') + (!leistung.zuweisungKursart().isEmpty() ? ' &rarr; ' + leistung.zuweisungKursart() : '')}">E &rarr; G</td>
+									</tr>
+									<!-- Lehrer -->
+									<tr>
+										<td colspan="3" class="ta-ct f-very-tiny" th:utext="${leistung.fachlehrer() != null ? leistung.fachlehrer().kuerzel() : '&nbsp;'}">ABC</td>
+									</tr>
+									<!-- Fachbezogene Fehlstunden (2 Spalten für links und rechts) -->
+									<tr th:if="${mitFachbezogenenFehlstunden}">
+										<td colspan="3">
+											<table class="fixed-100 mp-0">
+												<thead th:if="${false}"><!-- Header nur für SonarCube, keine Ausgabe --><tr><th scope="col">Col1</th><th scope="col">Col2</th></tr></thead>
+												<tr>
+													<td class="ta-cm f-extrem-tiny bo-grey" th:text="${leistung.fehlstundenGesamt()}">0</td>
+													<td class="ta-cm f-extrem-tiny bo-grey" th:classappend="${(leistung.fehlstundenGesamt() < leistung.fehlstundenUnentschuldigt()) ? 'bg-lightorange' : ''}" th:text="${leistung.fehlstundenUnentschuldigt()}">0</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</th:block>
+						<th:block th:if="${leistung == null}">
+							<span class="displayblock"></span>
+						</th:block>
+					</td>
+					<td class="bo-t-grey bo-l-grey p-tb-05 p-lr-1"></td>
+				</tr>
+
+				<!-- Abschnitt: Fachbezogene Lernentwicklung (LELS) -->
+				<th:block th:if="${mitFachbezogenenBemerkungen && matrix.hatFachbezogeneLernentwicklung(schueler)}">
+					<th:block th:each="leistung : ${matrix.schuelerLeistungsdatenZeile(schueler)}">
+						<tr th:if="${leistung != null && leistung.textFachbezogeneLernentwicklung() != null && !leistung.textFachbezogeneLernentwicklung().isEmpty()}"
+							th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
+							<td class="ta-lt p-tb-05 p-lr-1"></td>
+							<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold" th:text="'Bemerkung zum Fach ' + ${leistung.fach().kuerzel()} + ':'">Bemerkung zum Fach</td>
+							<td th:colspan="${matrix.spaltenFaecher().size() + (mitGesamtfehlstunden ? 2 : 1)}" class="bo-t-grey p-tb-05 p-lr-1 f-tiny ta-lt" th:text="${leistung.textFachbezogeneLernentwicklung()}">Fachbezogene Bemerkung</td>
+						</tr>
+					</th:block>
+				</th:block>
+
+				<!-- LELS allgemein, in der Regel an Grundschulen -->
+				<tr th:if="${mitLernentwicklung && !lernabschnitt.zeugnisLELSText().isEmpty()}"
+					th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
+					<td class="ta-lt p-tb-05 p-lr-1"></td>
+					<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Lernentwicklung:</td>
+					<td th:colspan="${matrix.spaltenFaecher().size() + (mitGesamtfehlstunden ? 2 : 1)}" class="bo-t-grey p-tb-05 p-lr-1 f-tiny ta-lt" th:text="${lernabschnitt.zeugnisLELSText()}">Lernentwicklung</td>
+				</tr>
+
+				<!-- Förderschwerpunkt -->
+				<tr th:if="${mitFoerderschwerpunkt && !lernabschnitt.foerderschwerpunktText().isEmpty()}"
+					th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
+					<td class="ta-lt p-tb-05 p-lr-1"></td>
+					<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Bemerkung zum Förderschwerpunkt:</td>
+					<td th:colspan="${matrix.spaltenFaecher().size() + (mitGesamtfehlstunden ? 2 : 1)}" class="bo-t-grey p-tb-05 p-lr-1 f-tiny ta-lt" th:text="${lernabschnitt.zeugnisLELSText()}">Förderschwerpunkt</td>
+				</tr>
+
+				<!-- Bemerkungen Zeilen: Nur anzeigen wenn Inhalt vorhanden ist -->
+				<!-- ASV -->
+				<tr th:if="${mitASVBemerkung && !lernabschnitt.zeugnisASVText().isEmpty()}"
+					th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
+					<td class="ta-lt p-tb-05 p-lr-1"></td>
+					<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Arbeits- und Sozialverhalten:</td>
+					<td th:colspan="${matrix.spaltenFaecher().size() + (mitGesamtfehlstunden ? 2 : 1)}" class="bo-t-grey p-tb-05 p-lr-1 f-tiny ta-lt" th:text="${lernabschnitt.zeugnisASVText()}">ASV</td>
+				</tr>
+
+				<!-- AUE -->
+				<tr th:if="${mitAUEBemerkung && !lernabschnitt.zeugnisAUEText().isEmpty()}"
+					th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
+					<td class="ta-lt p-tb-05 p-lr-1"></td>
+					<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Außerunterrichtliches Engagement:</td>
+					<td th:colspan="${matrix.spaltenFaecher().size() + (mitGesamtfehlstunden ? 2 : 1)}" class="bo-t-grey p-tb-05 p-lr-1 f-tiny ta-lt" th:text="${lernabschnitt.zeugnisAUEText()}">AUE</td>
+				</tr>
+
+				<!-- Zeugnisbemerkung -->
+				<tr th:if="${mitZeugnisbemerkung && !lernabschnitt.zeugnisBemerkungText().isEmpty()}"
+					th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
+					<td class="ta-lt p-tb-05 p-lr-1"></td>
+					<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Zeugnisbemerkungen:</td>
+					<td th:colspan="${matrix.spaltenFaecher().size() + (mitGesamtfehlstunden ? 2 : 1)}" class="bo-t-grey p-tb-05 p-lr-1 f-tiny ta-lt" th:text="${lernabschnitt.zeugnisBemerkungText()}">Bemerkung</td>
+				</tr>
+
+				<!-- Versetzungsentscheidung -->
+				<tr th:if="${mitVersetzungsentscheidung && !lernabschnitt.versetzungsentscheidungText().isEmpty()}"
+					th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
+					<td class="ta-lt p-tb-05 p-lr-1"></td>
+					<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Versetzungsentscheidung:</td>
+					<td th:colspan="${matrix.spaltenFaecher().size() + (mitGesamtfehlstunden ? 2 : 1)}" class="bo-t-grey p-tb-05 p-lr-1 f-tiny ta-lt" th:text="${lernabschnitt.versetzungsentscheidungText()}">Versetzungsentscheidung</td>
+				</tr>
+
+				<!-- Schulformempfehlung -->
+				<tr th:if="${mitSchulformempfehlung && !lernabschnitt.uebergangsempfehlungText().isEmpty()}"
+					th:classappend="${itSchueler.even} ? 'bg-lightgrey'">
+					<td class="ta-lt p-tb-05 p-lr-1"></td>
+					<td class="ta-lt bo-t-grey p-tb-05 p-lr-1 f-tiny f-bold">Empfehlung der Schulform:</td>
+					<td th:colspan="${matrix.spaltenFaecher().size() + (mitGesamtfehlstunden ? 2 : 1)}" class="bo-t-grey p-tb-05 p-lr-1 f-tiny ta-lt" th:text="${lernabschnitt.uebergangsempfehlungText()}">Schulformempfehlung</td>
+				</tr>
+			</th:block>
+			</tbody>
+		</table>
+	</div>
+	</body>
+</html>

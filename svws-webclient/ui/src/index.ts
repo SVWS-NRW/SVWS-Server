@@ -85,12 +85,13 @@ export { default as SvwsUiTextInput } from "./ui/controls/SvwsUiTextInput.vue";
 export { default as SvwsUiTodo } from "./ui/SvwsUiTodo.vue";
 export { default as SvwsUiToggle } from "./ui/controls/SvwsUiToggle.vue";
 export { default as SvwsUiTooltip } from "./ui/SvwsUiTooltip.vue";
+export { default as UiValidationTooltip } from "./ui/UiValidationTooltip.vue";
 
 // Use exports
 export { useRegionSwitch } from "./ui/composables/useRegionSwitch";
 export { usePaneSplitter } from "./ui/composables/usePaneSplitter";
 
-// Type exorts
+// Type exports
 export type { DataTableColumn, SortByAndOrder } from "./types";
 export type { TabData } from "./ui/nav/TabData";
 
@@ -101,8 +102,8 @@ export { TabManager } from "./ui/nav/TabManager";
 export { Checkpoint } from "./ui/modal/Checkpoint";
 export { Color } from "./ui/Color";
 export { LaufbahnplanungUiManager } from "./components/gost/laufbahnplanung/LaufbahnplanungUiManager";
-export { SelectManager } from "./ui/controls/select/selectManager/SelectManager";
-export { CoreTypeSelectManager } from "./ui/controls/select/selectManager/CoreTypeSelectManager";
+export { SelectManager } from "./ui/controls/select/manager/SelectManager";
+export { CoreTypeSelectManager } from "./ui/controls/select/manager/CoreTypeSelectManager";
 export { GridManager } from "./ui/controls/tablegrid/GridManager";
 export { GridInput } from "./ui/controls/tablegrid/GridInput";
 export { GridInputInnerText } from "./ui/controls/tablegrid/GridInputInnerText";
@@ -112,6 +113,7 @@ export { GridInputToggle } from "./ui/controls/tablegrid/GridInputToggle";
 export { PendingStateManager } from "./ui/wrapper/PendingStateManager";
 export { StateManager } from "./ui/StateManager";
 export { EnmManager } from "./components/enm/EnmManager";
+export { EnmSperrManager } from "./components/enm/EnmSperrManager";
 export { EnmLerngruppenAuswahlListeManager } from "./components/enm/EnmLerngruppenAuswahlListeManager";
 export { EnmKlassenleitungAuswahlListeManager } from "./components/enm/EnmKlassenleitungAuswahlListeManager";
 export type { EnmLerngruppenAuswahlEintrag } from "./components/enm/EnmManager";
@@ -124,32 +126,59 @@ export type { EnmKlassenleitungProps } from "./components/enm/EnmKlassenleitungP
 export { AppMenuGroup } from "./ui/nav/AppMenuGroup";
 export { ViewType } from "./ui/nav/ViewType";
 
-// Managers
+// Validierung
+export { ModelProxy, type ModelProxyConfiguration } from "./model/ModelProxy";
+export { ValidationResult } from "./validation/ValidationResult";
+export { ValidatorBenutzerAnmeldenameNeu } from "./validation/ValidatorBenutzerAnmeldenameNeu";
+export { ValidatorEmail } from "./validation/ValidatorEmail";
+export { ValidatorKlassenKuerzel } from "./validation/ValidatorKlassenKuerzel";
+export { ValidatorKursKuerzel } from "./validation/ValidatorKursKuerzel";
+export { ValidatorLehrerKuerzel } from "./validation/ValidatorLehrerKuerzel";
+export { ValidatorSchemaNameMariaDB } from "./validation/ValidatorSchemaNameMariaDB";
+export { ValidatorSchuelerAnmeldedatum } from "./validation/ValidatorSchuelerAnmeldedatum";
+export { ValidatorSchuelerAufnahmedatum } from "./validation/ValidatorSchuelerAufnahmedatum";
+export { ValidatorSchuelerDatumBeginnBildungsgang } from "./validation/ValidatorSchuelerDatumBeginnBildungsgang";
+export { ValidatorSchuelerGeburtsdatum } from "./validation/ValidatorSchuelerGeburtsdatum";
+export { ValidatorSortierung } from "./validation/ValidatorSortierung";
+export { ValidatorStringEquals } from "./validation/ValidatorStringEquals";
+export { ValidatorStringExistsIn } from "./validation/ValidatorStringExistsIn";
+export { ValidatorStringHasNoWhitespaces } from "./validation/ValidatorStringHasNoWhitespaces";
+export { ValidatorStringLength } from "./validation/ValidatorStringLength";
+export { ValidatorStringNotEmpty } from "./validation/ValidatorStringNotEmpty";
+export { ValidatorStringNotIn } from "./validation/ValidatorStringNotIn";
+export { ValidatorNumberLengthDecPlaces } from "./validation/ValidatorNumberLengthDecPlaces";
+export { ValidatorTelefon } from "./validation/ValidatorTelefon";
+
+// Manager
 export { AuswahlManager } from "./ui/AuswahlManager";
-export { TelefonArtListeManager } from "./ui/managers/telefonart/TelefonArtListeManager";
-export { StundenplanListeManager } from "./ui/managers/stundenplan/StundenplanListeManager";
-export { StundenplanUnterrichtListeManager } from "./ui/managers/stundenplan/StundenplanUnterrichtListeManager";
-export { KatalogSchuleListeManager } from "./ui/managers/schule/KatalogSchuleListeManager";
-export { SchuelerListeManager } from "./ui/managers/schueler/SchuelerListeManager";
-export { SchuelerKAoAManager } from "./ui/managers/schueler/SchuelerKAoAManager";
-export { KonfessionenListeManager } from "./ui/managers/kataloge/konfessionen/KonfessionenListeManager";
-export { RaumListeManager } from "./ui/managers/raum/RaumListeManager";
-export { LernplattformListeManager } from "./ui/managers/lernplattform/LernplattformListeManager";
-export { LehrerListeManager } from "./ui/managers/lehrer/LehrerListeManager";
-export { KursListeManager } from "./ui/managers/kurse/KursListeManager";
-export { KlassenListeManager } from "./ui/managers/klassen/KlassenListeManager";
-export { AbteilungenListeManager } from './ui/managers/kataloge/abteilungen/AbteilungenListeManager';
-export { BeschaeftigungsartenListeManager } from './ui/managers/kataloge/beschaeftigungsarten/BeschaeftigungsartenListeManager';
-export { EntlassgruendeListeManager } from './ui/managers/kataloge/entlassgruende/EntlassgruendeListeManager';
-export { FahrschuelerartenListeManager } from './ui/managers/kataloge/fahrschuelerarten/FahrschuelerartenListeManager';
-export { FoerderschwerpunkteListeManager } from './ui/managers/kataloge/foerderschwerpunkte/FoerderschwerpunkteListeManager';
-export { HaltestellenListeManager } from './ui/managers/kataloge/haltestellen/HaltestellenListeManager';
-export { JahrgaengeListeManager } from './ui/managers/kataloge/jahrgaenge/JahrgaengeListeManager';
-export { KindergaertenListeManager } from './ui/managers/kataloge/kindergaerten/KindergaertenListeManager';
-export { MerkmaleListeManager } from './ui/managers/kataloge/merkmale/MerkmaleListeManager';
-export { VermerkartenListeManager } from './ui/managers/kataloge/vermerkart/VermerkartenListeManager';
-export { FachListeManager } from './ui/managers/fach/FachListeManager';
-export { ErzieherartListeManager } from './ui/managers/erzieherart/ErzieherartListeManager';
-export { EinwilligungsartenListeManager } from './ui/managers/einwilligungsart/EinwilligungsartenListeManager';
-export { FloskelgruppenListeManager } from './ui/managers/schule/schulbezogen/FloskelgruppenListeManager';
-export { FloskelnListeManager } from './ui/managers/schule/schulbezogen/FloskelnListeManager';
+export { TelefonartenListeManager } from "./ui/manager/kataloge/TelefonartenListeManager";
+export { StundenplanListeManager } from "./ui/manager/stundenplan/StundenplanListeManager";
+export { StundenplanUnterrichtListeManager } from "./ui/manager/stundenplan/StundenplanUnterrichtListeManager";
+export { SchulenListeManager } from "./ui/manager/kataloge/SchulenListeManager";
+export { SchuelerListeManager } from "./ui/manager/schueler/SchuelerListeManager";
+export { SchuelerKAoAManager } from "./ui/manager/schueler/SchuelerKAoAManager";
+export { KonfessionenListeManager } from "./ui/manager/kataloge/KonfessionenListeManager";
+export { RaumListeManager } from "./ui/manager/raum/RaumListeManager";
+export { LernplattformListeManager } from "./ui/manager/kataloge/LernplattformListeManager";
+export { LehrerListeManager } from "./ui/manager/lehrer/LehrerListeManager";
+export { KursListeManager } from "./ui/manager/kurse/KursListeManager";
+export { KlassenListeManager } from "./ui/manager/klassen/KlassenListeManager";
+export { AbteilungenListeManager } from './ui/manager/kataloge/AbteilungenListeManager';
+export { BeschaeftigungsartenListeManager } from './ui/manager/kataloge/BeschaeftigungsartenListeManager';
+export { BetriebsartenListeManager } from './ui/manager/kataloge/BetriebsartenListeManager';
+export { EntlassgruendeListeManager } from './ui/manager/kataloge/EntlassgruendeListeManager';
+export { FahrschuelerartenListeManager } from './ui/manager/kataloge/FahrschuelerartenListeManager';
+export { FoerderschwerpunkteListeManager } from './ui/manager/kataloge/FoerderschwerpunkteListeManager';
+export { HaltestellenListeManager } from './ui/manager/kataloge/HaltestellenListeManager';
+export { JahrgaengeListeManager } from './ui/manager/kataloge/JahrgaengeListeManager';
+export { KindergaertenListeManager } from './ui/manager/kataloge/KindergaertenListeManager';
+export { VermerkartenListeManager } from './ui/manager/kataloge/VermerkartenListeManager';
+export { FaecherListeManager } from './ui/manager/kataloge/FaecherListeManager';
+export { ErzieherartListeManager } from './ui/manager/kataloge/ErzieherartListeManager';
+export { EinwilligungsartenListeManager } from './ui/manager/kataloge/EinwilligungsartenListeManager';
+export { FloskelgruppenListeManager } from './ui/manager/kataloge/FloskelgruppenListeManager';
+export { FloskelnListeManager } from './ui/manager/kataloge/FloskelnListeManager';
+export { WenomAuswahlListeManager } from './components/enm/WenomAuswahlListeManager';
+export { BetriebeListeManager } from './ui/manager/kataloge/BetriebeListeManager';
+export { OrtsteileListeManager } from './ui/manager/kataloge/OrtsteileListeManager';
+export { OrteListeManager } from './ui/manager/kataloge/OrteListeManager';

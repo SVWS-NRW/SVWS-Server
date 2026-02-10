@@ -4,6 +4,7 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteStundenplan, routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { api } from "~/router/Api";
+import { ConfigElement } from "@ui";
 
 const SStundenplanKlasse = () => import("~/components/stundenplan/klasse/SStundenplanKlasse.vue");
 
@@ -17,6 +18,9 @@ export class RouteStundenplanKlasse extends RouteNode<any, RouteStundenplan> {
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klassen";
 		this.isHidden = (params?: RouteParams) => RouteStundenplan.katalogeCheckHidden(false, this, params);
+		api.config.addElements([
+			new ConfigElement("stundenplan.klassen.doppelstundenmodus", "user", 'false'),
+		]);
 	}
 
 	public getProps(to: RouteLocationNormalized): StundenplanKlasseProps {
@@ -29,6 +33,9 @@ export class RouteStundenplanKlasse extends RouteNode<any, RouteStundenplan> {
 			addUnterrichte: routeStundenplan.data.addUnterrichte,
 			removeUnterrichte: routeStundenplan.data.removeUnterrichte,
 			mergeUnterrichte: routeStundenplan.data.mergeUnterrichte,
+			// Config
+			doppelstundenmodus: () => routeStundenplan.data.doppelstundenmodus,
+			setDoppelstundenmodus: routeStundenplan.data.setDoppelstundenmodus,
 		};
 	}
 

@@ -6,36 +6,42 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input class="contentFocusField" v-autofocus placeholder="Nachname" :readonly :model-value="data.nachname"
-					@change="nachname => patch({ nachname: nachname ?? undefined })" type="text" />
-				<svws-ui-text-input placeholder="Rufname" :readonly :model-value="data.vorname"
-					@change="vorname => patch({ vorname: vorname ?? undefined })" type="text" />
-				<svws-ui-text-input placeholder="Alle Vornamen" :readonly :model-value="data.alleVornamen"
-					@change="alleVornamen => patch({ alleVornamen: alleVornamen ?? undefined })" type="text" />
+				<svws-ui-text-input placeholder="Nachname" class="contentFocusField"
+					:model-value="schuelerListeManager().daten().nachname"
+					@change="patchNachname"
+					:valid="v => mandatoryInputIsValid(v, 120)" :min-len="1" :max-len="120" required :readonly v-autofocus />
+				<svws-ui-text-input placeholder="Rufname"
+					:model-value="schuelerListeManager().daten().vorname"
+					@change="patchVorname"
+					:valid="v => mandatoryInputIsValid(v, 80)" :min-len="1" :max-len="80" required :readonly />
+				<svws-ui-text-input placeholder="Alle Vornamen"
+					:model-value="schuelerListeManager().daten().alleVornamen"
+					@change="patchAlleVornamen"
+					:valid="v => optionalInputIsValid(v, 255)" :max-len="255" :readonly />
 				<svws-ui-spacing />
 				<svws-ui-select title="Geschlecht" :readonly v-model="geschlecht" :items="Geschlecht.values()"
 					statistics :item-text="(i: Geschlecht)=>i.text" />
-				<svws-ui-text-input placeholder="Geburtsdatum" :readonly :model-value="data.geburtsdatum"
+				<svws-ui-text-input placeholder="Geburtsdatum" :readonly :model-value="schuelerListeManager().daten().geburtsdatum"
 					@change="geburtsdatum => geburtsdatum && patch({geburtsdatum})" type="date" :valid="istGeburtsdatumGueltig" required statistics />
-				<svws-ui-text-input placeholder="Geburtsort" :readonly :model-value="data.geburtsort"
+				<svws-ui-text-input placeholder="Geburtsort" :readonly :model-value="schuelerListeManager().daten().geburtsort"
 					@change="geburtsort => patch({ geburtsort })" type="text" />
-				<svws-ui-text-input placeholder="Geburtsname" :readonly :model-value="data.geburtsname"
+				<svws-ui-text-input placeholder="Geburtsname" :readonly :model-value="schuelerListeManager().daten().geburtsname"
 					@change="geburtsname => patch({ geburtsname })" type="text" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Statusdaten" v-if="hatKompetenzAnsehen">
 			<template #actions v-if="schulform === Schulform.BK || schulform === Schulform.SB">
-				<svws-ui-checkbox :readonly :model-value="data.istDuplikat" @update:model-value="istDuplikat => patch({istDuplikat})">Ist Duplikat</svws-ui-checkbox>
+				<svws-ui-checkbox :readonly :model-value="schuelerListeManager().daten().istDuplikat" @update:model-value="istDuplikat => patch({istDuplikat})">Ist Duplikat</svws-ui-checkbox>
 			</template>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select title="Status" :readonly :model-value="SchuelerStatus.data().getWertByKuerzel('' + data.status)"
+				<svws-ui-select title="Status" :readonly :model-value="SchuelerStatus.data().getWertByKuerzel('' + schuelerListeManager().daten().status)"
 					@update:model-value="status => (status?.daten(schuljahr)?.id !== undefined) && patch({ status: status?.daten(schuljahr)?.id })"
 					:items="SchuelerStatus.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" statistics focus-class-content />
 				<svws-ui-select v-if="schuelerListeManager().daten().status === SchuelerStatus.EXTERN.daten(schuljahr)?.id" :readonly
 					title="Stammschule" v-model="inputStammschule" :items="mapSchulen.values()" :item-text="i => i.kuerzel ?? i.schulnummerStatistik ?? i.kurzbezeichnung ?? i.name" removable />
 				<div v-else />
 				<template v-if="props.serverMode === ServerMode.DEV">
-					<svws-ui-text-input placeholder="Schülerausweis-Nummer" :readonly :model-value="data.idSchuelerausweis"
+					<svws-ui-text-input placeholder="Schülerausweis-Nummer" :readonly :model-value="schuelerListeManager().daten().idSchuelerausweis"
 						@change="value => patch({ idSchuelerausweis : value ?? null })" removable />
 					<div />
 				</template>
@@ -43,32 +49,32 @@
 					:item-text="i => i.bezeichnung ?? ''" removable />
 				<svws-ui-select title="Haltestelle" :readonly v-model="inputHaltestelleID" :items="mapHaltestellen"
 					:item-text="i => i.bezeichnung ?? ''" removable />
-				<svws-ui-text-input placeholder="Anmeldedatum" :readonly :model-value="data.anmeldedatum"
+				<svws-ui-text-input placeholder="Anmeldedatum" :readonly :model-value="schuelerListeManager().daten().anmeldedatum"
 					@change="anmeldedatum => patch({ anmeldedatum : anmeldedatum ?? null })" type="date" removable />
-				<svws-ui-text-input placeholder="Aufnahmedatum" :readonly :model-value="data.aufnahmedatum"
+				<svws-ui-text-input placeholder="Aufnahmedatum" :readonly :model-value="schuelerListeManager().daten().aufnahmedatum"
 					@change="aufnahmedatum => patch({ aufnahmedatum : aufnahmedatum ?? null })" type="date" statistics />
 				<svws-ui-spacing />
 				<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes">
-					<svws-ui-checkbox :readonly :model-value="data.istVolljaehrig" statistics
+					<svws-ui-checkbox :readonly :model-value="schuelerListeManager().daten().istVolljaehrig" statistics
 						@update:model-value="istVolljaehrig => patch({ istVolljaehrig })">
 						Volljährig
 					</svws-ui-checkbox>
-					<svws-ui-checkbox :readonly :model-value="data.keineAuskunftAnDritte"
+					<svws-ui-checkbox :readonly :model-value="schuelerListeManager().daten().keineAuskunftAnDritte"
 						@update:model-value="keineAuskunftAnDritte => patch({ keineAuskunftAnDritte })">
 						Keine Auskunft an Dritte
 					</svws-ui-checkbox>
-					<svws-ui-checkbox :readonly :model-value="data.istSchulpflichtErfuellt" statistics>
+					<svws-ui-checkbox :readonly :model-value="schuelerListeManager().daten().istSchulpflichtErfuellt" statistics>
 						Schulpflicht erfüllt
 					</svws-ui-checkbox>
-					<svws-ui-checkbox :readonly :model-value="data.istBerufsschulpflichtErfuellt"
+					<svws-ui-checkbox :readonly :model-value="schuelerListeManager().daten().istBerufsschulpflichtErfuellt"
 						@update:model-value="istBerufsschulpflichtErfuellt => patch({ istBerufsschulpflichtErfuellt })">
 						Schulpflicht SII erfüllt
 					</svws-ui-checkbox>
-					<svws-ui-checkbox :readonly :model-value="data.hatMasernimpfnachweis"
+					<svws-ui-checkbox :readonly :model-value="schuelerListeManager().daten().hatMasernimpfnachweis"
 						@update:model-value="hatMasernimpfnachweis => patch({ hatMasernimpfnachweis })">
 						Masern Impfnachweis
 					</svws-ui-checkbox>
-					<svws-ui-checkbox :readonly :model-value="data.erhaeltSchuelerBAFOEG"
+					<svws-ui-checkbox :readonly :model-value="schuelerListeManager().daten().erhaeltSchuelerBAFOEG"
 						@update:model-value="erhaeltSchuelerBAFOEG => patch({ erhaeltSchuelerBAFOEG })">
 						BAFöG
 					</svws-ui-checkbox>
@@ -79,18 +85,22 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly :model-value="strasse"
 					@change="patchStrasse" type="text" span="full" />
-				<svws-ui-select title="Wohnort" :readonly v-model="wohnortID" :items="mapOrte"
-					:item-filter="orte_filter" :item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`" autocomplete statistics />
-				<svws-ui-select title="Ortsteil" :readonly v-model="ortsteilID" :items="ortsteile"
-					:item-text="i => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" removable />
+				<ui-select label="Wohnort"
+					v-model="selectedOrt"
+					:manager="orteManager"
+					searchable :readonly statistics :removable="false" />
+				<ui-select label="Ortsteil"
+					v-model="selectedOrtsteil"
+					:manager="ortsteilManager"
+					searchable :readonly statistics :disabled="selectedOrt === null" />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Telefon" :readonly :model-value="data.telefon"
+				<svws-ui-text-input placeholder="Telefon" :readonly :model-value="schuelerListeManager().daten().telefon"
 					@change="telefon => patch({ telefon })" type="tel" :max-len="20" />
-				<svws-ui-text-input placeholder="Mobil oder Fax" :readonly :model-value="data.telefonMobil"
+				<svws-ui-text-input placeholder="Mobil oder Fax" :readonly :model-value="schuelerListeManager().daten().telefonMobil"
 					@change="telefonMobil => patch({ telefonMobil })" type="tel" :max-len="20" />
-				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :readonly :model-value="data.emailPrivat"
+				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :readonly :model-value="schuelerListeManager().daten().emailPrivat"
 					@change="emailPrivat => patch({ emailPrivat })" type="email" verify-email />
-				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :readonly :model-value="data.emailSchule"
+				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :readonly :model-value="schuelerListeManager().daten().emailSchule"
 					@change="emailSchule => patch({ emailSchule })" type="email" verify-email />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -102,13 +112,13 @@
 				<svws-ui-select title="2. Staatsangehörigkeit" :readonly v-model="staatsangehoerigkeit2" autocomplete removable
 					:items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"
 					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
-				<svws-ui-select title="Konfession" :readonly v-model="religion" :items="mapReligionen" :item-text="i => i.bezeichnungZeugnis ?? ''" required statistics />
+				<svws-ui-select title="Konfession" :readonly v-model="religion" :items="mapReligionen" :item-text="i => i.bezeichnung ?? ''" required statistics />
 				<div class="flex items-center pl-2">
 					<svws-ui-checkbox v-model="druckeKonfessionAufZeugnisse" :readonly>Konfession aufs Zeugnis</svws-ui-checkbox>
 				</div>
-				<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht" :readonly :model-value="data.religionabmeldung"
+				<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht" :readonly :model-value="schuelerListeManager().daten().religionabmeldung"
 					@change="religionabmeldung => patch({religionabmeldung})" type="date" statistics />
-				<svws-ui-text-input placeholder="Wiederanmeldung" :readonly :model-value="data.religionanmeldung"
+				<svws-ui-text-input placeholder="Wiederanmeldung" :readonly :model-value="schuelerListeManager().daten().religionanmeldung"
 					@change="religionanmeldung => patch({religionanmeldung})" type="date" statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -132,7 +142,7 @@
 				<template #modalContent>
 					<svws-ui-input-wrapper :grid="2" class="text-left">
 						<svws-ui-select title="Telefonart" :items="mapTelefonArten.values()" v-model="selectedTelefonArt" :item-text="i => i.bezeichnung" />
-						<svws-ui-text-input v-model="newEntryTelefonnummer.telefonnummer" type="text" placeholder="Telefonnummer" :max-len="20" />
+						<svws-ui-text-input v-model="newEntryTelefonnummer.telefonnummer" type="tel" placeholder="Telefonnummer" :max-len="20" />
 						<svws-ui-tooltip class="col-span-full">
 							<svws-ui-text-input v-model="newEntryTelefonnummer.bemerkung" type="text" placeholder="Bemerkung" />
 							<template #content>
@@ -157,12 +167,12 @@
 		<svws-ui-content-card title="Migrationshintergrund" v-if="hatKompetenzAnsehen">
 			<template #actions>
 				<svws-ui-checkbox :readonly class="mt-3 xl:mt-0" :model-value="hatMigrationshintergrund" statistics
-					@update:model-value="hatMigrationshintergrund => patch({hatMigrationshintergrund})" focus-class-content>
+					@update:model-value="value => patch({hatMigrationshintergrund: value})" focus-class-content>
 					Migrationshintergrund vorhanden
 				</svws-ui-checkbox>
 			</template>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-input-number placeholder="Zuzugsjahr" :model-value="data.zuzugsjahr" @change="zuzugsjahr => patch({zuzugsjahr})"
+				<svws-ui-input-number placeholder="Zuzugsjahr" :model-value="schuelerListeManager().daten().zuzugsjahr" @change="zuzugsjahr => patch({zuzugsjahr})"
 					:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && readonly" statistics hide-stepper :min :max />
 				<svws-ui-select title="Geburtsland" v-model="geburtsland" :items="Nationalitaeten.values()" :item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`"
 					:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter"
@@ -185,11 +195,14 @@
 
 	import { computed, ref } from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SSchuelerIndividualdatenProps";
-	import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, TelefonArt, Haltestelle, Fahrschuelerart } from "@core";
-	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode, ArrayList, ReportingParameter, ReportingSortierungDefinition, ReportingReportvorlage } from "@core";
+	import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, Telefonart, Haltestelle, Fahrschuelerart } from "@core";
+	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode,
+		ArrayList, ReportingParameter, ReportingSortierungDefinition, ReportingReportvorlage } from "@core";
 	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort,
-		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, orte_filter, ortsteilSort, ortsteilFilter } from "~/utils/helfer";
+		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, ortsteilSort } from "~/utils/helfer";
 	import type { DataTableColumn } from "@ui";
+	import { SelectManager } from "@ui";
+	import { mandatoryInputIsValid, optionalInputIsValid } from "~/util/validation/Validation";
 
 	const props = defineProps<SchuelerIndividualdatenProps>();
 
@@ -198,8 +211,16 @@
 	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN));
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const hatKompetenzDrucken = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
-
-	const data = computed<SchuelerStammdaten>(() => props.schuelerListeManager().daten());
+	const orte = computed(() => props.mapOrte.values());
+	const ortsteile = computed(() => {
+		const filtered = new ArrayList<OrtsteilKatalogEintrag>();
+		for (const ortsteil of props.mapOrtsteile.values()) {
+			if (ortsteil.ort_id === props.schuelerListeManager().daten().wohnortID) {
+				filtered.add(ortsteil);
+			}
+		}
+		return filtered;
+	});
 
 	function enterDefaultMode() {
 		setMode(Mode.DEFAULT);
@@ -211,7 +232,7 @@
 	const newEntryTelefonnummer = ref<SchuelerTelefon>(new SchuelerTelefon());
 
 	const columns: DataTableColumn[] = [
-		{ key: "idTelefonArt", label: "Ansprechpartner" },
+		{ key: "idTelefonArt", label: "Telefonart" },
 		{ key: "telefonnummer", label: "Telefonnummern" },
 		{ key: "bemerkung", label: "Bemerkung", span: 2 },
 		{ key: "istGesperrt", label: "Gesperrt", span: 1, align: "right" },
@@ -221,7 +242,7 @@
 		return props.mapTelefonArten.get(idTelefonArt)?.bezeichnung ?? "";
 	}
 
-	const selectedTelefonArt = computed<TelefonArt | null>({
+	const selectedTelefonArt = computed<Telefonart | null>({
 		get: () => props.mapTelefonArten.get(newEntryTelefonnummer.value.idTelefonArt) ?? null,
 		set: (selected) => newEntryTelefonnummer.value.idTelefonArt = (selected === null) ? 0 : selected.id,
 	});
@@ -239,10 +260,12 @@
 	async function sendRequestTelefonnummer() {
 		const { id, idSchueler, ...partialDataWithoutId } = newEntryTelefonnummer.value;
 		const schuelerId = props.schuelerListeManager().daten().id;
-		if (currentMode.value === Mode.ADD)
+		if (currentMode.value === Mode.ADD) {
 			await props.addSchuelerTelefoneintrag(partialDataWithoutId, schuelerId);
-		if (currentMode.value === Mode.PATCH)
+		}
+		if (currentMode.value === Mode.PATCH) {
 			await props.patchSchuelerTelefoneintrag(partialDataWithoutId, newEntryTelefonnummer.value.id);
+		}
 		enterDefaultMode();
 	}
 
@@ -258,11 +281,13 @@
 	}
 
 	async function deleteTelefonnummern() {
-		if (selected.value.length === 0)
+		if (selected.value.length === 0) {
 			return;
+		}
 		const ids = new ArrayList<number>();
-		for (const s of selected.value)
+		for (const s of selected.value) {
 			ids.add(s.id);
+		}
 		await props.deleteSchuelerTelefoneintrage(ids);
 		selected.value = [];
 	}
@@ -278,7 +303,7 @@
 	}
 
 	function setMode(newMode: Mode) {
-		return currentMode.value = newMode;
+		currentMode.value = newMode;
 	}
 
 	function resetTelefonnummer() {
@@ -290,8 +315,9 @@
 	}
 
 	function istGeburtsdatumGueltig(strDate: string | null) {
-		if (strDate === null || typeof strDate === 'number')
+		if (strDate === null) {
 			return true;
+		}
 		try {
 			const date = DateUtils.extractFromDateISO8601(strDate);
 			const curDate = new Date();
@@ -303,11 +329,11 @@
 	}
 
 	const geschlecht = computed<Geschlecht>({
-		get: () => Geschlecht.fromValue(data.value.geschlecht) ?? Geschlecht.X,
+		get: () => Geschlecht.fromValue(props.schuelerListeManager().daten().geschlecht) ?? Geschlecht.X,
 		set: (value) => void props.patch({ geschlecht: value.id }),
 	});
 
-	const strasse = computed(() => AdressenUtils.combineStrasse(data.value.strassenname ?? "", data.value.hausnummer ?? "", data.value.hausnummerZusatz ?? ""));
+	const strasse = computed(() => AdressenUtils.combineStrasse(props.schuelerListeManager().daten().strassenname ?? "", props.schuelerListeManager().daten().hausnummer ?? "", props.schuelerListeManager().daten().hausnummerZusatz ?? ""));
 
 	async function patchStrasse(value: string | null) {
 		if (value !== null) {
@@ -316,51 +342,26 @@
 		}
 	}
 
-	const wohnortID = computed<OrtKatalogEintrag | undefined>({
-		get: () => {
-			const id = data.value.wohnortID;
-			return id === null ? undefined : props.mapOrte.get(id);
-		},
-		set: (value) => void props.patch({ wohnortID: value === undefined ? null : value.id }),
-	});
-
-	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
-		const result: Array<OrtsteilKatalogEintrag> = [];
-		for (const ortsteil of props.mapOrtsteile.values())
-			if ((ortsteil.ort_id === null) || (ortsteil.ort_id === data.value.wohnortID))
-				result.push(ortsteil);
-		return result;
-	});
-
-	const ortsteilID = computed<OrtsteilKatalogEintrag | undefined>({
-		get: () => {
-			const id = data.value.ortsteilID;
-			return id === null ? undefined : props.mapOrtsteile.get(id);
-		},
-		set: (value) => void props.patch({ ortsteilID: value === undefined ? null : value.id }),
-	});
-
-
 	const staatsangehoerigkeit = computed<Nationalitaeten>({
-		get: () => Nationalitaeten.getByISO3(data.value.staatsangehoerigkeitID) ?? Nationalitaeten.getDEU(),
+		get: () => Nationalitaeten.getByISO3(props.schuelerListeManager().daten().staatsangehoerigkeitID) ?? Nationalitaeten.getDEU(),
 		set: (value) => void props.patch({ staatsangehoerigkeitID: value.historie().getLast().iso3 }),
 	});
 
 	const staatsangehoerigkeit2 = computed<Nationalitaeten | null>({
-		get: () => Nationalitaeten.getByISO3(data.value.staatsangehoerigkeit2ID),
+		get: () => Nationalitaeten.getByISO3(props.schuelerListeManager().daten().staatsangehoerigkeit2ID),
 		set: (value) => void props.patch({ staatsangehoerigkeit2ID: value?.historie().getLast().iso3 ?? null }),
 	});
 
 	const religion = computed<ReligionEintrag | undefined>({
 		get: () => {
-			const id = data.value.religionID;
+			const id = props.schuelerListeManager().daten().religionID;
 			return id === null ? undefined : props.mapReligionen.get(id);
 		},
 		set: (value) => void props.patch({ religionID: value === undefined ? null : value.id }),
 	});
 
 	const druckeKonfessionAufZeugnisse = computed<boolean>({
-		get: () => data.value.druckeKonfessionAufZeugnisse,
+		get: () => props.schuelerListeManager().daten().druckeKonfessionAufZeugnisse,
 		set: (value) => void props.patch({ druckeKonfessionAufZeugnisse: value }),
 	});
 
@@ -370,33 +371,33 @@
 	const min = max - 100;
 
 	const geburtsland = computed<Nationalitaeten>({
-		get: () => Nationalitaeten.getByISO3(data.value.geburtsland) ?? Nationalitaeten.getDEU(),
+		get: () => Nationalitaeten.getByISO3(props.schuelerListeManager().daten().geburtsland) ?? Nationalitaeten.getDEU(),
 		set: (value) => void props.patch({ geburtsland: value.historie().getLast().iso3 }),
 	});
 
 	const geburtslandMutter = computed<Nationalitaeten>({
-		get: () => Nationalitaeten.getByISO3(data.value.geburtslandMutter) ?? Nationalitaeten.getDEU(),
+		get: () => Nationalitaeten.getByISO3(props.schuelerListeManager().daten().geburtslandMutter) ?? Nationalitaeten.getDEU(),
 		set: (value) => void props.patch({ geburtslandMutter: value.historie().getLast().iso3 }),
 	});
 
 	const geburtslandVater = computed<Nationalitaeten>({
-		get: () => Nationalitaeten.getByISO3(data.value.geburtslandVater) ?? Nationalitaeten.getDEU(),
+		get: () => Nationalitaeten.getByISO3(props.schuelerListeManager().daten().geburtslandVater) ?? Nationalitaeten.getDEU(),
 		set: (value) => void props.patch({ geburtslandVater: value.historie().getLast().iso3 }),
 	});
 
 	const verkehrsprache = computed<Verkehrssprache>({
-		get: () => Verkehrssprache.getByIsoKuerzel(data.value.verkehrspracheFamilie) ?? Verkehrssprache.data().getWertBySchluesselOrException("de"),
+		get: () => Verkehrssprache.getByIsoKuerzel(props.schuelerListeManager().daten().verkehrspracheFamilie) ?? Verkehrssprache.data().getWertBySchluesselOrException("de"),
 		set: (value) => void props.patch({ verkehrspracheFamilie: value.historie().getLast().iso3 }),
 	});
 
 	const inputStammschule = computed<SchulEintrag | undefined>({
-		get: () => (data.value.externeSchulNr === null) ? undefined : (props.mapSchulen.get(data.value.externeSchulNr) ?? undefined),
+		get: () => (props.schuelerListeManager().daten().externeSchulNr === null) ? undefined : (props.mapSchulen.get(props.schuelerListeManager().daten().externeSchulNr ?? "") ?? undefined),
 		set: (value) => void props.patch({ externeSchulNr: value === undefined ? null : value.schulnummerStatistik }),
 	});
 
 	const inputFahrschuelerArtID = computed<Fahrschuelerart | undefined>({
 		get: () => {
-			const id = data.value.fahrschuelerArtID;
+			const id = props.schuelerListeManager().daten().fahrschuelerArtID;
 			return id === null ? undefined : props.mapFahrschuelerarten.get(id);
 		},
 		set: (value) => void props.patch({ fahrschuelerArtID: value === undefined ? null : value.id }),
@@ -404,10 +405,40 @@
 
 	const inputHaltestelleID = computed<Haltestelle | undefined>({
 		get: () => {
-			const id = data.value.haltestelleID;
+			const id = props.schuelerListeManager().daten().haltestelleID;
 			return id === null ? undefined : props.mapHaltestellen.get(id);
 		},
 		set: (value) => void props.patch({ haltestelleID: value === undefined ? null : value.id }),
+	});
+
+	const selectedOrt = computed<OrtKatalogEintrag | null>({
+		get: () => {
+			const id = props.schuelerListeManager().daten().wohnortID;
+			return props.mapOrte.get(id ?? -1) ?? null;
+		},
+		set: (value: OrtKatalogEintrag | null) => void props.patch({ wohnortID: value?.id ?? null }),
+	});
+
+	const selectedOrtsteil = computed<OrtsteilKatalogEintrag | null>({
+		get: () => {
+			const id = props.schuelerListeManager().daten().ortsteilID;
+			return props.mapOrtsteile.get(id ?? -1) ?? null;
+		},
+		set: (value: OrtsteilKatalogEintrag | null) => void props.patch({ ortsteilID: value?.id ?? null }),
+	});
+
+	const orteManager = new SelectManager({
+		options: orte,
+		sort: orte_sort,
+		optionDisplayText: v => v.plz + ' ' + v.ortsname,
+		selectionDisplayText: v => v.plz + ' ' + v.ortsname,
+	});
+
+	const ortsteilManager = new SelectManager({
+		options: ortsteile,
+		sort: ortsteilSort,
+		optionDisplayText: v => v.ortsteil ?? '',
+		selectionDisplayText: v => v.ortsteil ?? '',
 	});
 
 	const loading = ref<boolean>(false);
@@ -416,13 +447,13 @@
 		const reportingParameter = new ReportingParameter();
 		const listeIdsSchueler = new ArrayList<number>();
 		listeIdsSchueler.add(props.schuelerListeManager().auswahlID());
-		reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_v_SCHULBESCHEINIGUNG.getBezeichnung();
+		reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG.getBezeichnung();
 		reportingParameter.idsHauptdaten = listeIdsSchueler;
 		reportingParameter.einzelausgabeHauptdaten = true;
 		reportingParameter.einzelausgabeDetaildaten = false;
 		reportingParameter.sortierungHauptdaten = new ReportingSortierungDefinition();
 		reportingParameter.sortierungHauptdaten.verwendeStandardsortierung = true;
-		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_v_SCHULBESCHEINIGUNG.getVorlageParameterList());
+		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG.getVorlageParameterList());
 		for (const vp of reportingParameter.vorlageParameter) {
 			switch (vp.name) {
 				case "fuerErzieher":
@@ -456,5 +487,24 @@
 		URL.revokeObjectURL(link.href);
 		loading.value = false;
 	}
+
+	async function patchVorname(vorname: string | null) {
+		if (mandatoryInputIsValid(vorname, 80)) {
+			await props.patch({ vorname: vorname });
+		}
+	}
+
+	async function patchNachname(nachname: string | null) {
+		if (mandatoryInputIsValid(nachname, 120)) {
+			await props.patch({ nachname: nachname });
+		}
+	}
+
+	async function patchAlleVornamen(alleVornamen: string | null) {
+		if (optionalInputIsValid(alleVornamen, 255)) {
+			await props.patch({ alleVornamen: alleVornamen ?? undefined });
+		}
+	}
+
 
 </script>

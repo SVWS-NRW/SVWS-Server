@@ -1,5 +1,6 @@
 package de.svws_nrw.module.reporting.repositories;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -7,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
@@ -27,14 +30,16 @@ import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
+import de.svws_nrw.core.data.reporting.ReportingFilterDefinition;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.data.schueler.Sprachbelegung;
+import de.svws_nrw.core.data.reporting.ReportingSortierungDefinition;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
-import de.svws_nrw.core.data.schule.TelefonArt;
+import de.svws_nrw.core.data.schule.Telefonart;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsicht;
@@ -54,7 +59,9 @@ import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
-import de.svws_nrw.data.schule.DataKatalogTelefonArten;
+import de.svws_nrw.data.schule.DataEinwilligungsarten;
+import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.data.schule.DataTelefonarten;
 import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.data.schule.DataSchulen;
@@ -66,20 +73,23 @@ import de.svws_nrw.data.stundenplan.DataStundenplanUnterrichtsverteilung;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
-import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
-import de.svws_nrw.module.reporting.proxytypes.schueler.erzieher.ProxyReportingErzieherArt;
-import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingSchuljahresabschnitt;
-import de.svws_nrw.module.reporting.proxytypes.stundenplanung.ProxyReportingStundenplanungStundenplan;
+import de.svws_nrw.module.reporting.filterung.FilterRegistry;
+import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
+import de.svws_nrw.module.reporting.types.lehrer.ProxyReportingLehrer;
+import de.svws_nrw.module.reporting.types.schueler.ProxyReportingSchueler;
+import de.svws_nrw.module.reporting.types.schueler.erzieher.ProxyReportingErzieherArt;
+import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchuljahresabschnitt;
+import de.svws_nrw.module.reporting.types.stundenplanung.ProxyReportingStundenplanungStundenplan;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingLehrer;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchueler;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
-import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
-import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.erzieher.ReportingErzieherArt;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerZuweisung;
 import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
@@ -101,7 +111,7 @@ public class ReportingRepository {
 	private final DBEntityManager conn;
 
 	/** Einstellungen und Daten zum Steuern der Report-Generierung. */
-	private final ReportingParameter reportingParameter;
+	private final ReportingParameterTypisiert reportingParameterTypisiert;
 
 	/** Logger, der den Ablauf protokolliert und Fehlerdaten sammelt. */
 	private final Logger logger;
@@ -143,7 +153,7 @@ public class ReportingRepository {
 	private Map<Long, SchulformKatalogEintrag> katalogSchulformen;
 
 	/** Stelle die Telefonnummer-Arten zu ihrer ID zur Verfügung. */
-	private Map<Long, TelefonArt> katalogTelefonnummerArten = new HashMap<>();
+	private Map<Long, Telefonart> katalogTelefonnummerArten = new HashMap<>();
 
 
 	/** Stellt die Daten aller bereits abgerufenen Leistungsdaten zur Schüler-, Lernabschnitts- und Leistungsdaten-ID zur Verfügung. */
@@ -218,6 +228,9 @@ public class ReportingRepository {
 	/** Stellt die Liste aller Schüler über eine Map zur Schüler-ID zur Verfügung */
 	private final Map<Long, List<ReportingSchuelerTelefonkontakt>> mapSchuelerTelefonkontakte = new HashMap<>();
 
+	/** Stellt die Zuweisungen von bereits abgerufenen Zuweisungen über eine Map zur Lernabschnitts-ID zur Verfügung */
+	private final Map<Long, List<ReportingSchuelerZuweisung>> mapSchuelerZuweisungen = new HashMap<>();
+
 	/** Stellt die Liste aller Schuljahresabschnitte über eine Map zur Schulabschnitts-ID zur Verfügung */
 	private final Map<Long, ReportingSchuljahresabschnitt> mapSchuljahresabschnitte = new HashMap<>();
 
@@ -268,7 +281,7 @@ public class ReportingRepository {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"FEHLER: Es wurden keine Daten Ausgabe im Report für die Initialisierung des Reporting-Repository übergeben.");
 		}
-		this.reportingParameter = reportingParameter;
+		this.reportingParameterTypisiert = new ReportingParameterTypisiert(this, reportingParameter);
 
 		// Ermittle die Daten der Schule. Wenn diese nicht gefunden wird oder sie keinen aktuellen Schuljahresabschnitt besitzt, dann wird ein Fehler geworfen.
 		this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle Stammdaten und Abschnitte der Schule.");
@@ -283,9 +296,9 @@ public class ReportingRepository {
 			}
 
 			idAktuellerSchuljahresabschnitt = this.schulstammdaten.idSchuljahresabschnitt;
-			idAuswahlSchuljahresabschnitt = this.reportingParameter.idSchuljahresabschnitt;
+			idAuswahlSchuljahresabschnitt = this.reportingParameterTypisiert.schuljahresabschnitt().id();
 		} catch (final Exception e) {
-			ReportingExceptionUtils.putStacktraceInLog(
+			ReportingExceptionUtils.logException(
 					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden oder der Schuljahresabschnitt ist ungültig.",
 					e, this.logger(), LogLevel.ERROR, 8);
 			throw new ApiOperationException(Status.NOT_FOUND,
@@ -328,10 +341,11 @@ public class ReportingRepository {
 					new DataKatalogSchuelerFoerderschwerpunkte(this.conn).getAll().stream().collect(Collectors.toMap(f -> f.id, f -> f));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Förderschwerpunkte geladen.");
 
-			this.katalogOrte = new DataOrte(this.conn).getOrte().stream().collect(Collectors.toMap(o -> o.id, o -> o));
+			final DataOrte dataOrte = new DataOrte(this.conn);
+			this.katalogOrte = dataOrte.getAll().stream().collect(Collectors.toMap(o -> o.id, o -> o));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Orte geladen.");
 
-			this.katalogOrtsteile = new DataOrtsteile(this.conn).getOrtsteile().stream().collect(Collectors.toMap(o -> o.id, o -> o));
+			this.katalogOrtsteile = new DataOrtsteile(this.conn, dataOrte).getAll().stream().collect(Collectors.toMap(o -> o.id, o -> o));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Ortsteile geladen.");
 
 			this.katalogReligionen = new DataReligionen(this.conn).getAll().stream().collect(Collectors.toMap(r -> r.id, r -> r));
@@ -346,7 +360,7 @@ public class ReportingRepository {
 			this.katalogSchulformen = schulformen.stream().collect(Collectors.toMap(sfke -> sfke.id, sfke -> sfke));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Schulformen geladen.");
 
-			this.katalogTelefonnummerArten = new DataKatalogTelefonArten(this.conn).getAll().stream().collect(Collectors.toMap(ta -> ta.id, ta -> ta));
+			this.katalogTelefonnummerArten = new DataTelefonarten(this.conn).getAll().stream().collect(Collectors.toMap(ta -> ta.id, ta -> ta));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog TelefonnummerArten geladen.");
 
 			this.mapErzieherarten = new DataErzieherarten(this.conn).getAll().stream().collect(Collectors.toMap(a -> a.id,
@@ -383,7 +397,7 @@ public class ReportingRepository {
 	private void initLehrerStammdaten() throws ApiOperationException {
 		try {
 			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle die Lehrerstammdaten.");
-			this.mapLehrerStammdaten = new DataLehrerStammdaten(this.conn).getAll().stream()
+			this.mapLehrerStammdaten = new DataLehrerStammdaten(this.conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getAll().stream()
 					.collect(Collectors.toMap(l -> l.id, l -> l));
 		} catch (final Exception e) {
 			this.mapLehrerStammdaten = new HashMap<>();
@@ -459,10 +473,10 @@ public class ReportingRepository {
 	/**
 	 * Einstellungen und Daten zum Steuern der Report-Generierung.
 	 *
-	 * @return Inhalt des Feldes reportingParameter
+	 * @return Inhalt des Feldes reportingParameterTypisiert
 	 */
-	public ReportingParameter reportingParameter() {
-		return reportingParameter;
+	public ReportingParameterTypisiert reportingParameter() {
+		return reportingParameterTypisiert;
 	}
 
 
@@ -605,7 +619,7 @@ public class ReportingRepository {
 	 *
 	 * @return Map der Telefonnummer-Arten
 	 */
-	public Map<Long, TelefonArt> katalogTelefonnummerArten() {
+	public Map<Long, Telefonart> katalogTelefonnummerArten() {
 		return katalogTelefonnummerArten;
 	}
 
@@ -790,6 +804,15 @@ public class ReportingRepository {
 	}
 
 	/**
+	 * Stellt bereits abgerufene Zuweisungen über eine Map zur Lernabschnitts-ID zur Verfügung.
+	 *
+	 * @return Inhalt des Feldes mapSchuelerZuweisungen
+	 */
+	public Map<Long, List<ReportingSchuelerZuweisung>> mapSchuelerZuweisungen() {
+		return mapSchuelerZuweisungen;
+	}
+
+	/**
 	 * Stellt die Liste aller Schuljahresabschnitte über eine Map zur Schulabschnitts-ID zur Verfügung
 	 *
 	 * @return Inhalt des Feldes mapSchuljahresabschnitte
@@ -867,7 +890,7 @@ public class ReportingRepository {
 				klassenDaten = new DataKlassendaten(this.conn()).getById(idKlasse);
 				this.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(idKlasse);
 			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.putStacktraceInLog(
+				ReportingExceptionUtils.logException(
 						"FEHLER: Fehler bei der Ermittlung der Daten für des Klassen %s.".formatted(idKlasse), e, this.logger(),
 						LogLevel.ERROR,
 						0);
@@ -894,10 +917,11 @@ public class ReportingRepository {
 		// Lade ggf. fehlende Lehrerstammdaten analog zum Vorgehen bei Schülern nach.
 		if (!mapLehrerStammdaten.containsKey(idLehrer)) {
 			try {
-				final LehrerStammdaten fehlendeLehrerstammdaten = new DataLehrerStammdaten(this.conn).getById(idLehrer);
+				final LehrerStammdaten fehlendeLehrerstammdaten = new DataLehrerStammdaten(this.conn, new DataLernplattformen(conn),
+						new DataEinwilligungsarten(conn)).getById(idLehrer);
 				mapLehrerStammdaten.put(fehlendeLehrerstammdaten.id, fehlendeLehrerstammdaten);
 			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.putStacktraceInLog(
+				ReportingExceptionUtils.logException(
 						"FEHLER: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrkraft aus der Datenbank im ReportingRepository.", e,
 						this.logger(), LogLevel.ERROR, 0);
 				return null;
@@ -915,54 +939,44 @@ public class ReportingRepository {
 	 * Fehlende Stammdaten werden bei Bedarf nachgeladen und zur weiteren Verarbeitung genutzt.
 	 *
 	 * @param idsLehrer Eine Liste der IDs der gewünschten Lehrer. Nullwerte oder IDs kleiner 0 werden ignoriert.
-	 * @return Eine gemäß den konfigurierten Reporting-Parametern sortierte Liste von ReportingLehrer-Objekten.
+	 *
+	 * @return Eine Liste von {@link ReportingLehrer}-Objekten, sortiert gemäß den vordefinierten oder standardmäßigen Sortierparametern,
+	 *         sofern definiert. Wenn keine Lehrer gefunden werden, wird eine leere Liste zurückgegeben.
 	 */
 	public List<ReportingLehrer> lehrer(final List<Long> idsLehrer) {
+		return lehrer(idsLehrer, true);
+	}
 
-		final List<ReportingLehrer> resultLehrer = new ArrayList<>();
+	/**
+	 * Diese Methode erstellt eine Liste von ReportingLehrer-Objekten basierend auf den übergebenen Lehrerkürzeln (IDs).
+	 * Fehlende Stammdaten werden bei Bedarf nachgeladen und zur weiteren Verarbeitung genutzt.
+	 *
+	 * @param idsLehrer Eine Liste der IDs der gewünschten Lehrer. Nullwerte oder IDs kleiner 0 werden ignoriert.
+	 * @param sortiereListe Legt fest, ob die definierte Sortierung auf die erzeugte Liste angewendet werden soll.
+	 *
+	 * @return Eine Liste von {@link ReportingLehrer}-Objekten, sortiert gemäß den vordefinierten oder standardmäßigen Sortierparametern,
+	 *         sofern definiert. Wenn keine Lehrer gefunden werden, wird eine leere Liste zurückgegeben.
+	 */
+	public List<ReportingLehrer> lehrer(final List<Long> idsLehrer, final boolean sortiereListe) {
+		final Optional<Comparator<ReportingLehrer>> optionalComparator = sortiereListe
+				? ComparatorFactory.buildOptionalComparator(this, ReportingLehrer.class.getSimpleName(),
+						SortierungRegistryReportingLehrer.sortierungRegistry())
+				: Optional.empty();
 
-		// Analog zu schueler(...): fehlende Stammdaten nachladen.
-		if ((idsLehrer == null) || idsLehrer.isEmpty())
-			return resultLehrer;
-
-		final List<Long> fehlendeLehrerIds = idsLehrer.stream()
-				.filter(Objects::nonNull)
-				.filter(id -> id >= 0)
-				.distinct()
-				.filter(id -> !mapLehrerStammdaten.containsKey(id))
-				.toList();
-
-		if (!fehlendeLehrerIds.isEmpty()) {
-			try {
-				final List<LehrerStammdaten> fehlendeLehrerstammdaten = new DataLehrerStammdaten(this.conn).getListByIDs(fehlendeLehrerIds);
-				for (final LehrerStammdaten l : fehlendeLehrerstammdaten) {
-					if (l != null)
-						mapLehrerStammdaten.put(l.id, l);
-				}
-			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.putStacktraceInLog(
-						"FEHLER: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrerliste aus der Datenbank im ReportingRepository.", e,
-						this.logger(), LogLevel.ERROR, 0);
-				return resultLehrer;
-			}
-		}
-
-		// Sofern noch keine Reporting-Objekte der Lehrer existieren, erzeuge sie und speichere sie.
-		for (final Long idLehrer : idsLehrer) {
-			if ((idLehrer == null) || (idLehrer < 0))
-				continue;
-			if (mapLehrerStammdaten.containsKey(idLehrer))
-				resultLehrer.add(mapLehrer.computeIfAbsent(idLehrer, key -> new ProxyReportingLehrer(this, mapLehrerStammdaten.get(key))));
-		}
-
-		// Sortiere gemäß den Angaben in den ReportingParametern.
-		final Optional<Comparator<ReportingLehrer>> optionalComparator = ComparatorFactory.buildOptionalComparator(this, ReportingLehrer.class.getSimpleName(),
-				SortierungRegistryReportingLehrer.sortierungRegistry(),
-				SortierungRegistryReportingLehrer.standardsortierung());
-
-		return optionalComparator
-				.map(reportingLehrerComparator -> resultLehrer.stream().sorted(reportingLehrerComparator).toList())
-				.orElse(resultLehrer);
+		return erstelleReportingListe(idsLehrer, mapLehrerStammdaten, mapLehrer,
+				fehlendeIds -> {
+					try {
+						return new DataLehrerStammdaten(this.conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getListByIDs(fehlendeIds);
+					} catch (final ApiOperationException e) {
+						ReportingExceptionUtils.logException(
+								"FEHLER: Fehler bei der Ermittlung der fehlenden Lehrerstammdaten einer Lehrerliste aus der Datenbank im "
+										+ "ReportingRepository.",
+								e, this.logger(), LogLevel.ERROR, 0);
+						return new ArrayList<>();
+					}
+				},
+				key -> new ProxyReportingLehrer(this, mapLehrerStammdaten.get(key)),
+				optionalComparator);
 	}
 
 
@@ -973,9 +987,9 @@ public class ReportingRepository {
 	 * Falls die Schülerdaten nicht im lokalen Cache enthalten sind, werden sie aus der Datenbank abgerufen
 	 * und im Cache gespeichert. Tritt ein Fehler beim Abrufen auf, wird null zurückgegeben.
 	 *
-	 * @param idSchueler die ID des Schülers, dessen Reporting-Daten abgerufen werden sollen
+	 * @param idSchueler Die ID des Schülers, dessen Reporting-Daten abgerufen werden sollen
 	 *                   (muss positiv oder 0 sein, andernfalls wird null zurückgegeben).
-	 * @return ein ReportingSchueler-Objekt für den gegebenen Schüler,
+	 * @return Ein ReportingSchueler-Objekt für den gegebenen Schüler,
 	 *         falls die Daten erfolgreich abgerufen werden konnten; sonst null.
 	 */
 	public ReportingSchueler schueler(final long idSchueler) {
@@ -987,9 +1001,9 @@ public class ReportingRepository {
 				final SchuelerStammdaten fehlendeSchulerstammdaten = new DataSchuelerStammdaten(this.conn).getById(idSchueler);
 				mapSchuelerStammdaten.put(fehlendeSchulerstammdaten.id, fehlendeSchulerstammdaten);
 			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.putStacktraceInLog(
-						"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten eines Schülers aus der Datenbank im ReportingRepository.", e,
-						this.logger(), LogLevel.ERROR, 0);
+				ReportingExceptionUtils.logException(
+						"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten eines Schülers aus der Datenbank im ReportingRepository.",
+						e, this.logger(), LogLevel.ERROR, 0);
 				return null;
 			}
 		}
@@ -1008,61 +1022,48 @@ public class ReportingRepository {
 	 *
 	 * @param idsSchueler Eine Liste von Schüler-IDs, für die {@link ReportingSchueler}-Objekte erstellt und/oder zurückgegeben werden sollen;
 	 *                    null oder eine leere Liste führt zu einer Rückgabe einer leeren Liste.
+	 *
 	 * @return Eine Liste von {@link ReportingSchueler}-Objekten, sortiert gemäß den vordefinierten oder standardmäßigen Sortierparametern,
 	 *         sofern definiert. Wenn keine Schüler gefunden werden, wird eine leere Liste zurückgegeben.
 	 */
 	public List<ReportingSchueler> schueler(final List<Long> idsSchueler) {
-
-		final List<ReportingSchueler> resultSchueler = new ArrayList<>();
-
-		// Sofern noch keine Schülerstammdaten für (einzelne) Schüler aus der DB geladen wurden, müssen diese nachgeladen werden, weil dann auch keine
-		// ReportingSchueler-Objekte vorhanden sein können.
-		if ((idsSchueler == null) || idsSchueler.isEmpty())
-			return resultSchueler;
-
-		// Bereinige die Liste der IDs und suche die heraus, zu denen noch keine Stammdaten vorhanden sind.
-		final List<Long> fehlendeSchuelerIds = idsSchueler.stream()
-				.filter(Objects::nonNull)
-				.filter(id -> id >= 0)
-				.distinct()
-				.filter(id -> !mapSchuelerStammdaten.containsKey(id))
-				.toList();
-
-		// Lade die fehlenden Schülerstammdaten aus der Datenbank nach.
-		if (!fehlendeSchuelerIds.isEmpty()) {
-			try {
-				final List<SchuelerStammdaten> fehlendeSchulerstammdaten = new DataSchuelerStammdaten(this.conn).getListByIds(fehlendeSchuelerIds);
-				for (final SchuelerStammdaten s : fehlendeSchulerstammdaten) {
-					if (s != null)
-						mapSchuelerStammdaten.put(s.id, s);
-				}
-			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.putStacktraceInLog(
-						"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten einer Schülerliste aus der Datenbank im ReportingRepository.", e,
-						this.logger(), LogLevel.ERROR, 0);
-				return resultSchueler;
-			}
-		}
-
-		// Sofern noch keine Reporting-Objekte der Schüler existieren, erzeuge sie und speichere sie.
-		for (final Long idSchueler : idsSchueler) {
-			if ((idSchueler == null) || (idSchueler < 0))
-				continue;
-			if (mapSchuelerStammdaten.containsKey(idSchueler))
-				resultSchueler.add(mapSchueler.computeIfAbsent(idSchueler, key -> new ProxyReportingSchueler(this, mapSchuelerStammdaten.get(key))));
-		}
-
-		// Sortiere gemäß den Angaben in den ReportingParametern.
-		final Optional<Comparator<ReportingSchueler>> optionalComparator =
-				ComparatorFactory.buildOptionalComparator(this, ReportingSchueler.class.getSimpleName(),
-						SortierungRegistryReportingSchueler.sortierungRegistry(), SortierungRegistryReportingSchueler.standardsortierung());
-
-		// Rückgabe der sortierten Liste oder der unsortierten Liste.
-		return optionalComparator
-				.map(reportingSchuelerComparator -> resultSchueler.stream().sorted(reportingSchuelerComparator).toList())
-				.orElse(resultSchueler);
+		return schueler(idsSchueler, true);
 	}
 
+	/**
+	 * Liefert eine Liste von {@link ReportingSchueler}-Objekten basierend auf einer gegebenen Liste von Schüler-IDs.
+	 * Diese Methode überprüft, ob die benötigten Stammdaten für die angegebenen Schüler-IDs bereits im Speicher vorhanden sind,
+	 * und lädt diese gegebenenfalls aus der Datenbank nach. Anschließend werden entsprechende {@link ReportingSchueler}-Objekte erstellt
+	 * und zurückgegeben.
+	 *
+	 * @param idsSchueler Eine Liste von Schüler-IDs, für die {@link ReportingSchueler}-Objekte erstellt und/oder zurückgegeben werden sollen;
+	 *                    null oder eine leere Liste führt zu einer Rückgabe einer leeren Liste.
+	 * @param sortiereListe Legt fest, ob die definierte Sortierung auf die erzeugte Liste angewendet werden soll.
+	 *
+	 * @return Eine Liste von {@link ReportingSchueler}-Objekten, auf Wunsch sortiert gemäß den vordefinierten oder standardmäßigen Sortierparametern,
+	 *         sofern definiert. Wenn keine Schüler gefunden werden, wird eine leere Liste zurückgegeben.
+	 */
+	public List<ReportingSchueler> schueler(final List<Long> idsSchueler, final boolean sortiereListe) {
+		final Optional<Comparator<ReportingSchueler>> optionalComparator = sortiereListe
+				? ComparatorFactory.buildOptionalComparator(this, ReportingSchueler.class.getSimpleName(),
+						SortierungRegistryReportingSchueler.sortierungRegistry())
+				: Optional.empty();
+
+		return erstelleReportingListe(idsSchueler, mapSchuelerStammdaten, mapSchueler,
+				fehlendeIds -> {
+					try {
+						return new DataSchuelerStammdaten(this.conn).getListByIds(fehlendeIds);
+					} catch (final ApiOperationException e) {
+						ReportingExceptionUtils.logException(
+								"FEHLER: Fehler bei der Ermittlung der fehlenden Schülerstammdaten einer Schülerliste aus der Datenbank im "
+										+ "ReportingRepository.",
+								e, this.logger(), LogLevel.ERROR, 0);
+						return new ArrayList<>();
+					}
+				},
+				key -> new ProxyReportingSchueler(this, mapSchuelerStammdaten.get(key)),
+				optionalComparator);
+	}
 
 	// ##### Stundenpläne erzeugen und verwalten #####
 
@@ -1144,6 +1145,215 @@ public class ReportingRepository {
 		});
 
 		return this.mapStundenplanManager.get(idStundenplan);
+	}
+
+
+
+	// ##### Generische Hilfsmethode für Lehrer und Schüler #####
+
+	/**
+	 * Generische Hilfsmethode zum Laden und Erstellen einer Liste von Reporting-Objekten basierend auf IDs.
+	 *
+	 * @param <S> Der Typ der Stammdaten (z. B. LehrerStammdaten, SchülerStammdaten)
+	 * @param <R> Der Typ der Reporting-Objekte (z.B. ReportingLehrer, ReportingSchueler)
+	 * @param ids Die Liste der IDs, für die Reporting-Objekte erstellt werden sollen
+	 * @param mapStammdaten Die Map mit bereits geladenen Stammdaten
+	 * @param mapReportingObjekte Eine Map mit bereits erstellten Reporting-Objekten
+	 * @param stammdatenLoader Funktion zum Laden fehlender Stammdaten aus der DB
+	 * @param reportingObjektErsteller Funktion zum Erstellen eines Reporting-Objekts aus Stammdaten
+	 * @param comparatorOptional Optional: Comparator für die Sortierung
+	 *
+	 * @return Eine sortierte Liste von Reporting-Objekten
+	 */
+	private <S, R> List<R> erstelleReportingListe(final List<Long> ids, final Map<Long, S> mapStammdaten, final Map<Long, R> mapReportingObjekte,
+			final Function<List<Long>, List<S>> stammdatenLoader, final Function<Long, R> reportingObjektErsteller,
+			final Optional<Comparator<R>> comparatorOptional) {
+
+		final List<R> result = new ArrayList<>();
+
+		final String datentyp;
+		switch (mapReportingObjekte) {
+			case final ReportingLehrer l -> datentyp = "Lehrer";
+			case final ReportingSchueler s -> datentyp = "Schüler";
+			default -> datentyp = "";
+		}
+
+		if (ids == null)
+			return result;
+
+		final List<Long> idsNonNull = ids.stream().filter(Objects::nonNull).filter(id -> id >= 0).distinct().toList();
+
+		if (idsNonNull.isEmpty())
+			return result;
+
+		// Fehlende Stammdaten ermitteln
+		final List<Long> fehlendeIds = idsNonNull.stream().filter(id -> !mapStammdaten.containsKey(id)).toList();
+
+		if (!fehlendeIds.isEmpty()) {
+			try {
+				final List<S> fehlendeStammdaten = stammdatenLoader.apply(fehlendeIds);
+				for (final S stammdaten : fehlendeStammdaten) {
+					if (stammdaten != null) {
+						final Long id = getIdFromStammdaten(stammdaten);
+						if (id != null)
+							mapStammdaten.put(id, stammdaten);
+					}
+				}
+			} catch (final Exception e) {
+				ReportingExceptionUtils.logException(
+						"FEHLER: Fehler bei der Ermittlung der fehlenden %sstammdaten einer %sliste aus der Datenbank im ReportingRepository."
+								.formatted(datentyp, datentyp),
+						e, this.logger(), LogLevel.ERROR, 0);
+				return result;
+			}
+		}
+
+		// Reporting-Objekte erstellen
+		idsNonNull.stream().filter(mapStammdaten::containsKey).forEach(id -> result.add(mapReportingObjekte.computeIfAbsent(id, reportingObjektErsteller)));
+
+		// Sortierung anwenden
+		return comparatorOptional
+				.map(comparator -> result.stream().sorted(comparator).toList())
+				.orElse(result);
+	}
+
+	/**
+	 * Eine Hilfsmethode zum Extrahieren der ID aus Stammdaten-Objekten.
+	 *
+	 * @param stammdaten Das Stammdaten-Objekt
+	 * @return Die ID des Stammdaten-Objekts
+	 */
+	private Long getIdFromStammdaten(final Object stammdaten) {
+		if (stammdaten instanceof final LehrerStammdaten l)
+			return l.id;
+		if (stammdaten instanceof final SchuelerStammdaten s)
+			return s.id;
+		return null;
+	}
+
+
+	// ##### Hilfsmethoden, um die Sortierungsattribute aus den Reporting-Parametern zu laden und aufbereitet für eine Klasse zurückzugeben. #####
+
+	/**
+	 * Ermittelt die Sortierattribute für einen bestimmten Typ aus den Reporting-Parametern. Dabei werden die Attribute bereinigt (Leerzeichen, Klammern).
+	 * Falls keine benutzerdefinierte Sortierung vorliegt oder die Standardsortierung gewählt wurde, wird (je nach Parameter) die im System für diesen Typ
+	 * definierte Standardsortierung zurückgegeben.
+	 *
+	 * @param typ                                Der Name des Typs (z. B. "ReportingSchueler"), welcher bspw. über class.getSimpleName() ermittelt werden kann.
+	 * @param nutzeStandardsortierungAlsFallback Gibt an, ob die Standardsortierung bei fehlenden/fehlerhaften Attributen geladen werden soll.
+	 *
+	 * @return Eine Liste der bereinigten Attributnamen.
+	 */
+	public List<String> getSortierungsAttribute(final String typ, final boolean nutzeStandardsortierungAlsFallback) {
+		ReportingSortierungDefinition reportingSortierungDefinition =
+				((this.reportingParameterTypisiert == null) || (this.reportingParameterTypisiert.sortierungDefinitionen() == null))
+						? null
+						: this.reportingParameterTypisiert.sortierungDefinitionen().stream()
+								.filter(d -> (d != null) && Objects.equals(typ, d.typ))
+								.findFirst()
+								.orElse(null);
+
+		// Falls keine typspezifische Definition in den Sortierdefinitionen gefunden wurde, prüfe die Haupt- oder Detailsortierung als Fallback.
+		if ((reportingSortierungDefinition == null) && (this.reportingParameterTypisiert != null)) {
+			if (Objects.equals(typ, this.reportingParameterTypisiert.sortierungHauptdaten().typ))
+				reportingSortierungDefinition = this.reportingParameterTypisiert.sortierungHauptdaten();
+			else if (Objects.equals(typ, this.reportingParameterTypisiert.sortierungDetaildaten().typ))
+				reportingSortierungDefinition = this.reportingParameterTypisiert.sortierungDetaildaten();
+		}
+
+		// 1. Fall: Es gibt eine explizite benutzerdefinierte Sortierung mit vorhandenen Attributen
+		if ((reportingSortierungDefinition != null) && Boolean.FALSE.equals(reportingSortierungDefinition.verwendeStandardsortierung)
+				&& (reportingSortierungDefinition.attribute != null) && !reportingSortierungDefinition.attribute.isEmpty()) {
+			return reportingSortierungDefinition.attribute.stream()
+					.filter(Objects::nonNull)
+					.map(sa -> sa.replace("()", "").trim())
+					.filter(sa -> !sa.isBlank())
+					.toList();
+		}
+
+		// 2. Fall: Es besteht der explizite Wunsch nach Standardsortierung in den Parametern ODER Fallback bei fehlender Definition
+		if (((reportingSortierungDefinition != null) && Boolean.TRUE.equals(reportingSortierungDefinition.verwendeStandardsortierung))
+				|| ((reportingSortierungDefinition == null) && nutzeStandardsortierungAlsFallback))
+			return getStandardsortierungByTyp(typ);
+
+		// 3. Fall: Keine Sortierung gewünscht oder zulässig
+		return new ArrayList<>();
+	}
+
+	/**
+	 * Eine Hilfsmethode, um die Standardsortierung eines Typs automatisch aus der zuständigen Registry zu laden. Nutzt Reflection, um die statische Methode
+	 * 'standardsortierung()' der Klasse 'de.svws_nrw.module.reporting.sortierung.SortierungRegistry<Typ>' aufzurufen.
+	 *
+	 * @param typ Der Name des Reporting-Typs (z. B. "ReportingSchueler"), welcher bspw. über class.getSimpleName() ermittelt werden kann.
+	 *
+	 * @return Die Liste der Standard-Sortierattribute oder eine leere Liste, falls keine Registry gefunden wurde.
+	 */
+	@SuppressWarnings("unchecked")
+	private List<String> getStandardsortierungByTyp(final String typ) {
+		if ((typ == null) || typ.isBlank())
+			return new ArrayList<>();
+		try {
+			final String className = "de.svws_nrw.module.reporting.sortierung.SortierungRegistry" + typ;
+			final Class<?> clazz = Class.forName(className);
+			final Method method = clazz.getMethod("standardsortierung");
+			return (List<String>) method.invoke(null);
+		} catch (final Exception e) {
+			// Falls keine Registry oder Methode existiert, wird ein Hinweis geloggt und eine leere Liste geliefert.
+			this.logger.logLn(LogLevel.DEBUG, 8, "### HINWEIS: Keine SortierungRegistry oder Standardsortierung für Typ '" + typ + "' gefunden.");
+			return new ArrayList<>();
+		}
+	}
+
+	/**
+	 * Erstellt einen Filter (Predicate) für einen bestimmten Typ basierend auf den Filterdefinitionen in den Reporting-Parametern.
+	 *
+	 * @param <T>                Der Typ der zu filternden Objekte.
+	 * @param typ                Der Name des Typs (z. B. "ReportingFach"), welcher bspw. über class.getSimpleName() ermittelt werden kann.
+	 * @param validierungsfehler Eine Liste, in der unbekannte Attribute während der Filtererstellung gesammelt werden (darf null sein).
+	 *
+	 * @return Ein {@link Predicate}, das die Filterkriterien anwendet. Falls keine Definition vorhanden ist, wird ein Filter zurückgegeben, der alles akzeptiert.
+	 */
+	public <T> Predicate<T> getFilter(final String typ, final List<String> validierungsfehler) {
+		final ReportingFilterDefinition reportingFilterDefinition =
+				((this.reportingParameterTypisiert == null) || (this.reportingParameterTypisiert.filterDefinitionen() == null) || this.reportingParameterTypisiert.filterDefinitionen().isEmpty())
+						? null
+						: this.reportingParameterTypisiert.filterDefinitionen().stream()
+								.filter(d -> (d != null) && Objects.equals(typ, d.typ))
+								.findFirst()
+								.orElse(null);
+
+		if (reportingFilterDefinition == null)
+			return t -> true;
+
+		final FilterRegistry<T> registry = getFilterRegistryByTyp(typ);
+		if (registry == null)
+			return t -> true;
+
+		return registry.erstelleFilter(reportingFilterDefinition, validierungsfehler);
+	}
+
+	/**
+	 * Eine Hilfsmethode, um die FilterRegistry eines Typs automatisch zu laden. Nutzt Reflection, um die statische Methode
+	 * 'filterRegistry()' der Klasse 'de.svws_nrw.module.reporting.filterung.FilterRegistry<Typ>' aufzurufen.
+	 *
+	 * @param <T> Der Typ der Registry.
+	 * @param typ Der Name des Reporting-Typs (z. B. "ReportingFach").
+	 *
+	 * @return Die FilterRegistry oder null, falls keine gefunden wurde.
+	 */
+	@SuppressWarnings("unchecked")
+	private <T> FilterRegistry<T> getFilterRegistryByTyp(final String typ) {
+		if ((typ == null) || typ.isBlank())
+			return null;
+		try {
+			final String className = "de.svws_nrw.module.reporting.filterung.FilterRegistry" + typ;
+			final Class<?> clazz = Class.forName(className);
+			final Method method = clazz.getMethod("filterRegistry");
+			return (FilterRegistry<T>) method.invoke(null);
+		} catch (final Exception e) {
+			this.logger.logLn(LogLevel.DEBUG, 8, "### HINWEIS: Keine FilterRegistry für Typ '" + typ + "' gefunden.");
+			return null;
+		}
 	}
 
 }

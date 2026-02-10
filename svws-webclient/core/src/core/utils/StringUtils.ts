@@ -92,7 +92,7 @@ export class StringUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.StringUtils'].includes(name);
 	}
 
-	public static class = new Class<StringUtils>('de.svws_nrw.core.utils.StringUtils');
+	public static readonly class = new Class<StringUtils>('de.svws_nrw.core.utils.StringUtils');
 
 }
 

@@ -44,8 +44,9 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 	}
 
 	get auswahl(): SchuelerListeEintrag {
-		if (this._state.value.auswahl === undefined)
+		if (this._state.value.auswahl === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Schülerauswahl nicht festgelegt, es können keine Informationen zur Laufbahnplanung abgerufen oder eingegeben werden.");
+		}
 		return this._state.value.auswahl;
 	}
 
@@ -73,8 +74,9 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 	}
 
 	get abiturdatenManager(): AbiturdatenManager {
-		if (this._state.value.abiturdatenManager === undefined)
+		if (this._state.value.abiturdatenManager === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Abiturdaten-Manager nicht initialisiert");
+		}
 		return this._state.value.abiturdatenManager;
 	}
 	set abiturdatenManager(abiturdatenManager: AbiturdatenManager | undefined) {
@@ -92,23 +94,28 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 
 	createAbiturdatenmanager = (daten?: Abiturdaten): AbiturdatenManager | undefined => {
 		const abiturdaten = daten || this._state.value.abiturdaten;
-		if (abiturdaten === undefined)
+		if (abiturdaten === undefined) {
 			return;
+		}
 		const art = this.gostBelegpruefungsArt;
-		if (art === 'ef1')
+		if (art === 'ef1') {
 			return new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
-		if (art === 'gesamt')
+		}
+		if (art === 'gesamt') {
 			return new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
+		}
 		const abiturdatenManager = new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
-		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen(), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen(), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 			return abiturdatenManager;
+		}
 		return new AbiturdatenManager(api.mode, abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
 	};
 
 	setGostBelegpruefungErgebnis = async () => {
 		const abiturdatenManager = this.createAbiturdatenmanager();
-		if (abiturdatenManager === undefined)
+		if (abiturdatenManager === undefined) {
 			return;
+		}
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedState({ abiturdatenManager, gostBelegpruefungErgebnis });
 	};
@@ -125,12 +132,12 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		list.add(this.auswahl.id);
 		const reportingParameter = new ReportingParameter();
 		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
-		reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getBezeichnung();
+		reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getBezeichnung();
 		reportingParameter.idsHauptdaten = list;
 		reportingParameter.einzelausgabeHauptdaten = false;
 		switch (title) {
 			case 'Laufbahnwahlbogen':
-				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getVorlageParameterList());
+				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getVorlageParameterList());
 				for (const vp of reportingParameter.vorlageParameter) {
 					if (vp.name === "nurBelegteFaecher") {
 						vp.wert = false.toString();
@@ -138,7 +145,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 				}
 				return await api.server.pdfReport(reportingParameter, api.schema);
 			case 'Laufbahnwahlbogen (nur Belegung)':
-				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getVorlageParameterList());
+				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getVorlageParameterList());
 				for (const vp of reportingParameter.vorlageParameter) {
 					if (vp.name === "nurBelegteFaecher") {
 						vp.wert = true.toString();
@@ -158,8 +165,9 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		await api.server.importGostSchuelerLaufbahnplanung(data, api.schema, this.auswahl.id);
 		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
 		const abiturdatenManager = this.createAbiturdatenmanager(abiturdaten);
-		if (abiturdatenManager === undefined)
+		if (abiturdatenManager === undefined) {
 			return;
+		}
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedState({ abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis });
 	});
@@ -176,21 +184,24 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 	});
 
 	restoreLaufbahnplanung = api.call(async (): Promise<void> => {
-		if (this._state.value.zwischenspeicher === undefined)
+		if (this._state.value.zwischenspeicher === undefined) {
 			return;
+		}
 		await api.server.importGostSchuelerLaufbahnplanungsdaten(this._state.value.zwischenspeicher, api.schema, this.auswahl.id);
 		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
 		const abiturdatenManager = this.createAbiturdatenmanager(abiturdaten);
-		if (abiturdatenManager === undefined)
+		if (abiturdatenManager === undefined) {
 			return;
+		}
 		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedState({ zwischenspeicher: undefined, abiturdaten, abiturdatenManager, gostBelegpruefungErgebnis });
 	});
 
 	get gostBelegpruefungsArt(): 'ef1' | 'gesamt' | 'auto' {
 		const s = api.config.getValue("app.gost.belegpruefungsart");
-		if (s === 'ef1' || s === 'gesamt' || s === 'auto')
+		if (s === 'ef1' || s === 'gesamt' || s === 'auto') {
 			return s;
+		}
 		void api.config.setValue("app.gost.belegpruefungsart", 'auto');
 		throw new DeveloperNotificationException("Es wurde eine fehlerhafte Belegpruefungsart als Standardauswahl hinterlegt");
 	}
@@ -201,14 +212,16 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 	};
 
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null) {
-		if (auswahl === this._state.value.auswahl)
+		if (auswahl === this._state.value.auswahl) {
 			return;
-		if (auswahl === null)
+		}
+		if (auswahl === null) {
 			this.setPatchedDefaultState({});
-		else {
+		} else {
 			const gostJahrgang = new GostJahrgang();
-			if (auswahl.abiturjahrgang !== null)
+			if (auswahl.abiturjahrgang !== null) {
 				gostJahrgang.abiturjahr = auswahl.abiturjahrgang;
+			}
 			gostJahrgang.jahrgang = auswahl.jahrgang;
 			try {
 				const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, auswahl.id);
@@ -222,13 +235,15 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 				const listeLehrer = new ArrayList<LehrerListeEintrag>();
 				const listeLehrerRest = new ArrayList<LehrerListeEintrag>();
 				const idsBeratungslehrer = [];
-				for (const b of gostJahrgangsdaten.beratungslehrer)
+				for (const b of gostJahrgangsdaten.beratungslehrer) {
 					idsBeratungslehrer.push(b.id);
+				}
 				for (const l of tempListLehrer) {
-					if (idsBeratungslehrer.includes(l.id))
+					if (idsBeratungslehrer.includes(l.id)) {
 						listeLehrer.add(l);
-					else
+					} else {
 						listeLehrerRest.add(l);
+					}
 				}
 				listeLehrer.addAll(listeLehrerRest);
 				this.setPatchedState({ auswahl, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten, faecherManager, listeLehrer, zwischenspeicher: undefined });
@@ -240,10 +255,11 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 	}
 
 	resetFachwahlen = api.call(async (forceDelete: boolean) => {
-		if (forceDelete)
+		if (forceDelete) {
 			await api.server.deleteGostSchuelerFachwahlen(api.schema, this.auswahl.id);
-		else
+		} else {
 			await api.server.resetGostSchuelerFachwahlen(api.schema, this.auswahl.id);
+		}
 		const abiturdaten = await api.server.getGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
 		this._state.value.abiturdaten = abiturdaten;
 		await this.setGostBelegpruefungErgebnis();
@@ -253,8 +269,9 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 	gotoKursblockung = api.call(async (halbjahr: GostHalbjahr): Promise<void> => {
 		// Bestimme die Liste der Blockungen
 		const blockungsliste = await api.server.getGostAbiturjahrgangBlockungsliste(api.schema, this.gostJahrgangsdaten.abiturjahr, halbjahr.id);
-		if (blockungsliste.isEmpty())
+		if (blockungsliste.isEmpty()) {
 			return;
+		}
 		// Bestimme die aktive Blockung, falls gesetzt, sonst nehme das erste in der Liste
 		let blockungseintrag: GostBlockungListeneintrag | undefined = undefined;
 		for (const e of blockungsliste) {
@@ -263,12 +280,14 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 				break;
 			}
 		}
-		if (blockungseintrag === undefined)
+		if (blockungseintrag === undefined) {
 			blockungseintrag = blockungsliste.get(0);
+		}
 		// Bestimme die Daten der Blockung mit der Ergebnisliste
 		const blockungsdaten = await api.server.getGostBlockung(api.schema, blockungseintrag.id);
-		if (blockungsdaten.ergebnisse.isEmpty())
+		if (blockungsdaten.ergebnisse.isEmpty()) {
 			return;
+		}
 		// Bestimme das aktive Ergebnis, falls gesetzt, sonst nehme das erste in der Liste
 		let ergebnis: GostBlockungsergebnis | undefined = undefined;
 		for (const e of blockungsdaten.ergebnisse) {
@@ -277,8 +296,9 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 				break;
 			}
 		}
-		if (ergebnis === undefined)
+		if (ergebnis === undefined) {
 			ergebnis = blockungsdaten.ergebnisse.get(0);
+		}
 		const route = RouteNode.getNodeByName("gost.kursplanung.schueler")!.getRoute({ abiturjahr: this.gostJahrgangsdaten.abiturjahr, halbjahr: halbjahr.id, idblockung: blockungsdaten.id, idergebnis: ergebnis.id, idschueler: this.auswahl.id });
 		await RouteManager.doRoute(route);
 	});

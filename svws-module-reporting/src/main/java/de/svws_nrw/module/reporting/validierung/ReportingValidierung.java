@@ -27,9 +27,9 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.module.reporting.proxytypes.kurs.ProxyReportingKurs;
+import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKurs;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
-import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -280,7 +280,7 @@ public final class ReportingValidierung {
 
 
 	/**
-	 * Validiert von der API übergebene Daten für GOSt-Blockungsergebnis. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
+	 * Validiert die von der API übergebenen Daten für ein GOSt-Blockungsergebnis. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
 	 *
 	 * @param reportingRepository		Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
 	 *
@@ -291,7 +291,7 @@ public final class ReportingValidierung {
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Validierung der Blockungsergebnisdaten.");
 
-		if ((reportingRepository.reportingParameter().idsHauptdaten == null) || reportingRepository.reportingParameter().idsHauptdaten.isEmpty()) {
+		if ((reportingRepository.reportingParameter().idsHauptdaten() == null) || reportingRepository.reportingParameter().idsHauptdaten().isEmpty()) {
 			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
 			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
 		}
@@ -304,7 +304,7 @@ public final class ReportingValidierung {
 			throw new ApiOperationException(Status.NOT_FOUND, e, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
 		}
 
-		final Long idBlockungsergebnis = reportingRepository.reportingParameter().idsHauptdaten.getFirst();
+		final Long idBlockungsergebnis = reportingRepository.reportingParameter().idsHauptdaten().getFirst();
 
 		// Prüfe nun, ob es zur angegebenen Blockungsergebnis-ID ein Ergebnis gibt.
 		try {
@@ -339,7 +339,7 @@ public final class ReportingValidierung {
 		// Erwartete Datenstruktur in idsHauptdaten der Reporting-Parameter: Abiturjahr - GostHalbjahrID (0-5) - Abiturjahr - GostHalbjahrID (0-5) - usw.
 		// Die Einträge müssen paarweise auftreten.
 		// Ist die Liste leer, so sollen alle drei Abiturjahrgänge gedruckt werden.
-		final List<Long> parameterDaten = reportingRepository.reportingParameter().idsHauptdaten.stream().filter(Objects::nonNull).toList();
+		final List<Long> parameterDaten = reportingRepository.reportingParameter().idsHauptdaten().stream().filter(Objects::nonNull).toList();
 
 		// Wenn die Liste der Stufen nicht leer ist, deren Werte prüfen.
 		if (!parameterDaten.isEmpty()) {
@@ -393,7 +393,7 @@ public final class ReportingValidierung {
 
 		// Erwartete Datenstruktur in idsHauptdaten der Reporting-Parameter: Abiturjahr - GostHalbjahrID (0-5) - GostHalbjahrID (0-5) - usw.
 		// Die Liste muss immer das Abiturjahr enthalten. Sind keine GostHalbjahre angegeben, werden später alle Halbjahre betrachtet.
-		final List<Long> parameterDaten = reportingRepository.reportingParameter().idsHauptdaten.stream().filter(Objects::nonNull).toList();
+		final List<Long> parameterDaten = reportingRepository.reportingParameter().idsHauptdaten().stream().filter(Objects::nonNull).toList();
 
 		// Wenn die Liste der Stufen nicht leer ist, deren Werte prüfen.
 		if (!parameterDaten.isEmpty()) {
@@ -432,12 +432,12 @@ public final class ReportingValidierung {
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Validierung der Stundenplanungsdaten.");
 
-		if ((reportingRepository.reportingParameter().idsHauptdaten == null) || reportingRepository.reportingParameter().idsHauptdaten.isEmpty()) {
+		if ((reportingRepository.reportingParameter().idsHauptdaten() == null) || reportingRepository.reportingParameter().idsHauptdaten().isEmpty()) {
 			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Es wurde keine ID für die Stundenplanung übergeben.");
 			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurde keine ID für die Stundenplanung übergeben.");
 		}
 
-		final Long idStundenplan = reportingRepository.reportingParameter().idsHauptdaten.getFirst();
+		final Long idStundenplan = reportingRepository.reportingParameter().idsHauptdaten().getFirst();
 
 		// Prüfe nun, ob es zur angegebenen Stundenplan-ID einen Stundenplan gibt.
 		if ((idStundenplan == null) || (reportingRepository.stundenplan(idStundenplan) == null)) {

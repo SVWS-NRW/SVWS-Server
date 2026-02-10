@@ -125,9 +125,11 @@
 
 	const lehrerAktiv = computed<List<LehrerListeEintrag>>(() => {
 		const result = new ArrayList<LehrerListeEintrag>();
-		for (const l of props.manager().lehrer.list())
-			if (l.istAktiv)
+		for (const l of props.manager().lehrer.list()) {
+			if (l.istAktiv) {
 				result.add(l);
+			}
+		}
 		return result;
 	});
 
@@ -143,8 +145,9 @@
 
 	const jahrgangsListe = computed<List<JahrgangsDaten>>(() => {
 		const result = new ArrayList<JahrgangsDaten>();
-		for (const jg of props.manager().jahrgaenge.list())
+		for (const jg of props.manager().jahrgaenge.list()) {
 			result.add(jg);
+		}
 		return result;
 	});
 
@@ -154,8 +157,9 @@
 			const arr = [];
 			for (const id of data().idJahrgaenge) {
 				const e = props.manager().jahrgaenge.get(id);
-				if (e !== null)
+				if (e !== null) {
 					arr.push(e);
+				}
 			}
 			return arr;
 		},
@@ -174,14 +178,17 @@
 			const result = new ArrayList<number>();
 			let changed = false;
 			for (const s of value) {
-				if (!data().schienen.contains(s))
+				if (!data().schienen.contains(s)) {
 					changed = true;
+				}
 				result.add(s);
 			}
-			if (!changed)
+			if (!changed) {
 				changed = (data().schienen.size() !== result.size());
-			if (changed)
+			}
+			if (changed) {
 				void props.patch({ schienen: result });
+			}
 		},
 	});
 
@@ -189,16 +196,20 @@
 		const arten = new Map<string, string>();
 		for (const art of ZulaessigeKursart.data().getWerteBySchuljahr(schuljahr.value)) {
 			const daten = art.daten(schuljahr.value);
-			if (daten === null)
+			if (daten === null) {
 				continue;
-			if (daten.kuerzel === "PUK")
+			}
+			if (daten.kuerzel === "PUK") {
 				continue;
-			if ((daten.kuerzelAllg !== null) && (daten.bezeichnungAllg !== null))
+			}
+			if ((daten.kuerzelAllg !== null) && (daten.bezeichnungAllg !== null)) {
 				arten.set(daten.kuerzelAllg, daten.bezeichnungAllg);
-			else
+			} else {
 				arten.set(daten.kuerzel, daten.text);
-			if (daten.kuerzelAllg === "DK")
+			}
+			if (daten.kuerzelAllg === "DK") {
 				arten.set(daten.kuerzel, daten.text);
+			}
 		}
 		return new Map([...arten.entries()].sort());
 	});
@@ -211,7 +222,7 @@
 	const colsSchueler: DataTableColumn[] = [
 		{ key: "linkToSchueler", label: " ", fixedWidth: 1.75, align: "center" },
 		{ key: "nachname", label: "Nachname", sortable: true },
-		{ key: "vorname", label: "Vorname", sortable: true },
+		{ key: "vorname", label: "Rufname", sortable: true },
 		{ key: "status", label: "Status", sortable: true, span: 0.5 },
 	];
 
@@ -219,8 +230,9 @@
 		get: () => [...props.manager().schuelerstatus.auswahl()],
 		set: (value) => {
 			props.manager().schuelerstatus.auswahlClear();
-			for (const v of value)
+			for (const v of value) {
 				props.manager().schuelerstatus.auswahlAdd(v);
+			}
 			void props.setFilter();
 		},
 	});
@@ -229,7 +241,7 @@
 	const weitereLehrer = computed(() => [...props.manager().daten().weitereLehrer]);
 	const columnsKursLehrer: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true },
-		{ key: "vorname", label: "Vorname", sortable: true },
+		{ key: "vorname", label: "Rufname", sortable: true },
 		{ key: "nachname", label: "Nachname", sortable: true },
 		{ key: "wochenstundenLehrer", label: "Wochenstunden", sortable: true },
 	];
@@ -237,11 +249,13 @@
 	// --- delete ---
 	const auswahlKursLehrer = ref<KursLehrer[]>([]);
 	async function deleteAuswahlKursLehrer() {
-		if (auswahlKursLehrer.value.length === 0)
+		if (auswahlKursLehrer.value.length === 0) {
 			return;
+		}
 		const ids = new ArrayList<number>();
-		for (const k of auswahlKursLehrer.value)
+		for (const k of auswahlKursLehrer.value) {
 			ids.add(k.idLehrer);
+		}
 		await props.deleteKursLehrer(ids, idKurs.value);
 		auswahlKursLehrer.value = [];
 	}
@@ -251,12 +265,15 @@
 	const showModalKursLehrer = ref<boolean>(false);
 	const lehrerFiltered = computed<LehrerListeEintrag[]>(() => {
 		const idsAssignedLehrer = new Set<number>();
-		for (const kl of weitereLehrer.value)
+		for (const kl of weitereLehrer.value) {
 			idsAssignedLehrer.add(kl.idLehrer);
+		}
 		const result = [];
-		for (const l of props.manager().lehrer.list())
-			if (!idsAssignedLehrer.has(l.id) && (l.istAktiv))
+		for (const l of props.manager().lehrer.list()) {
+			if (!idsAssignedLehrer.has(l.id) && (l.istAktiv)) {
 				result.push(l);
+			}
+		}
 		return result;
 	});
 	const newEntryKursLehrer = ref<KursLehrer>(createNewKursLehrerEntry());
@@ -296,17 +313,19 @@
 
 	async function sendRequestKursLehrer(type: Mode) {
 		if (type === Mode.ADD) {
-			if (newEntryKursLehrer.value.wochenstundenLehrer < 0)
+			if (newEntryKursLehrer.value.wochenstundenLehrer < 0) {
 				newEntryKursLehrer.value.wochenstundenLehrer = 0;
+			}
 			await props.addKursLehrer(newEntryKursLehrer.value, idKurs.value);
 		}
-		if ((type === Mode.PATCH) && (newEntryKursLehrer.value.wochenstundenLehrer >= 0))
+		if ((type === Mode.PATCH) && (newEntryKursLehrer.value.wochenstundenLehrer >= 0)) {
 			await props.patchKursLehrer({ wochenstundenLehrer: newEntryKursLehrer.value.wochenstundenLehrer }, idKurs.value, newEntryKursLehrer.value.idLehrer);
+		}
 		enterDefaultMode();
 	}
 
 	// --- Mode ---
-	enum Mode { ADD, PATCH, DEFAULT };
+	enum Mode { ADD, PATCH, DEFAULT }
 	const currentMode = ref<Mode>(Mode.DEFAULT);
 	function setMode(newMode: Mode) {
 		currentMode.value = newMode;

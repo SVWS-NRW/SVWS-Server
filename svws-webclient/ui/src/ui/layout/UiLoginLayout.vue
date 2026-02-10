@@ -28,7 +28,7 @@
 									<div>
 										<span class="font-bold">v{{ version }}</span>
 										<span v-if="version.includes('SNAPSHOT')">
-											<a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`"> &nbsp;{{ githash.substring(0, 8) }} </a>
+											<a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`"> &nbsp;{{ githash?.substring(0, 8) }} </a>
 										</span>
 									</div>
 									<div @click="copyToClipboard" class="cursor-pointer place-items-center flex">

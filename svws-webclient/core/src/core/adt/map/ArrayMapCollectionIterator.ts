@@ -75,7 +75,7 @@ export class ArrayMapCollectionIterator<K, V> extends JavaObject implements Java
 		return ['de.svws_nrw.core.adt.map.ArrayMapCollectionIterator', 'java.util.Iterator'].includes(name);
 	}
 
-	public static class = new Class<ArrayMapCollectionIterator<any, any>>('de.svws_nrw.core.adt.map.ArrayMapCollectionIterator');
+	public static readonly class = new Class<ArrayMapCollectionIterator<any, any>>('de.svws_nrw.core.adt.map.ArrayMapCollectionIterator');
 
 }
 

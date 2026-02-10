@@ -2,10 +2,10 @@ import { describe, expect, test } from "vitest";
 import { privilegedApiServer } from "../../utils/APIUtils";
 import { GostFach } from "../../../svws-webclient/core/src/core/data/gost/GostFach";
 
-const allowDestructiveTests = process.env.MODE === 'allowDestructiveTests'
+const allowDestructiveTests = process.env.MODE === 'allowDestructiveTests';
 
 describe("Gesamtschule Tests", () => {
-	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
+	describe.each([{ schema: "GymAbi01" }])('gegen %s', ({ schema }) => {
 		const api = privilegedApiServer;
 
 		test("getGostAbiturjahrgaenge", async () => {
@@ -36,7 +36,7 @@ describe("Gesamtschule Tests", () => {
 		});
 
 		test.skip("patchGostAbiturjahrgangFach", async () => {
-			await api.patchGostAbiturjahrgangFach({bezeichnung: "NewName"}, schema, 2021, 16);
+			await api.patchGostAbiturjahrgangFach({ bezeichnung: "NewName" }, schema, 2021, 16);
 			expect((await api.getGostAbiturjahrgangFach(schema, 2021, 16)).bezeichnung).toEqual("NewName");
 		});
 
@@ -104,7 +104,7 @@ describe("Gesamtschule Tests", () => {
 
 		// TODO: FIX ME
 		test.skip("getGostSchuelerFachwahl", async () => {
-			//Parameter ok, mit der alten API getestet
+			// Parameter ok, mit der alten API getestet
 			const result = await api.getGostSchuelerFachwahl(schema, 1199, 16);
 			expect(result).toMatchSnapshot();
 		});
@@ -138,5 +138,5 @@ describe("Gesamtschule Tests", () => {
 			// const result = await api.patchGostSchuelerFachwahl(schema, 1199, 16);
 			// expect(result).toBeTruthy();
 		});
-	})
-})
+	});
+});

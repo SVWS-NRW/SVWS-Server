@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { privilegedApiServer } from "../../utils/APIUtils";
 
 describe.skip("ClientConfig Tests", () => {
-	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
+	describe.each([{ schema: "GymAbi01" }])('gegen %s', ({ schema }) => {
 
 		const api = privilegedApiServer;
 
@@ -11,5 +11,5 @@ describe.skip("ClientConfig Tests", () => {
 			const result = await api.getClientConfigUserKey(schema, "test", "test");
 			expect(result).toMatchSnapshot();
 		});
-	})
-})
+	});
+});

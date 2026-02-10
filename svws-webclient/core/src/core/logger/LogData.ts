@@ -7,14 +7,29 @@ import { System } from '../../java/lang/System';
 
 export class LogData extends JavaObject implements Comparable<LogData> {
 
+	/**
+	 * Der Zeitstempel der Log-Information.
+	 */
 	private readonly time: number;
 
+	/**
+	 * Das zugehörige Log-Level.
+	 */
 	private readonly level: LogLevel;
 
+	/**
+	 * Der Text der Log-Information.
+	 */
 	private readonly text: string;
 
+	/**
+	 * Gibt an, ob die Log-Informationen beim Ausgeben mit einer neuen Zeile beendet werden sollen oder nicht.
+	 */
 	private readonly newLine: boolean;
 
+	/**
+	 * die Anzahl der Leerzeichen, die bei der Ausgabe zur Einrückung genutzt werden sollen.
+	 */
 	private indent: number = 0;
 
 
@@ -140,7 +155,7 @@ export class LogData extends JavaObject implements Comparable<LogData> {
 		return ['java.lang.Comparable', 'de.svws_nrw.core.logger.LogData'].includes(name);
 	}
 
-	public static class = new Class<LogData>('de.svws_nrw.core.logger.LogData');
+	public static readonly class = new Class<LogData>('de.svws_nrw.core.logger.LogData');
 
 }
 

@@ -69,7 +69,7 @@ export class ENMSprachenfolge extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMSprachenfolge'].includes(name);
 	}
 
-	public static class = new Class<ENMSprachenfolge>('de.svws_nrw.core.data.enm.ENMSprachenfolge');
+	public static readonly class = new Class<ENMSprachenfolge>('de.svws_nrw.core.data.enm.ENMSprachenfolge');
 
 	public static transpilerFromJSON(json: string): ENMSprachenfolge {
 		const obj = JSON.parse(json) as Partial<ENMSprachenfolge>;

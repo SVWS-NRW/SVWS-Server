@@ -43,10 +43,12 @@ export class OrtKatalogEintrag extends JavaObject {
 	 */
 	public istAenderbar: boolean = false;
 
-
 	/**
-	 * Leerer Standardkonstruktor.
+	 * Gibt an, ob der Ort in anderen Datenbanktabellen referenziert ist oder nicht.
 	 */
+	public referenziertInAnderenTabellen: boolean = false;
+
+
 	public constructor() {
 		super();
 	}
@@ -59,7 +61,7 @@ export class OrtKatalogEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.kataloge.OrtKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<OrtKatalogEintrag>('de.svws_nrw.core.data.kataloge.OrtKatalogEintrag');
+	public static readonly class = new Class<OrtKatalogEintrag>('de.svws_nrw.core.data.kataloge.OrtKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): OrtKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<OrtKatalogEintrag>;
@@ -80,6 +82,9 @@ export class OrtKatalogEintrag extends JavaObject {
 		if (obj.istAenderbar === undefined)
 			throw new Error('invalid json format, missing attribute istAenderbar');
 		result.istAenderbar = obj.istAenderbar;
+		if (obj.referenziertInAnderenTabellen === undefined)
+			throw new Error('invalid json format, missing attribute referenziertInAnderenTabellen');
+		result.referenziertInAnderenTabellen = obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
@@ -93,6 +98,7 @@ export class OrtKatalogEintrag extends JavaObject {
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"istAenderbar" : ' + obj.istAenderbar.toString() + ',';
+		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -123,6 +129,9 @@ export class OrtKatalogEintrag extends JavaObject {
 		}
 		if (obj.istAenderbar !== undefined) {
 			result += '"istAenderbar" : ' + obj.istAenderbar.toString() + ',';
+		}
+		if (obj.referenziertInAnderenTabellen !== undefined) {
+			result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

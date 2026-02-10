@@ -1,4 +1,5 @@
-.ui-select {
+.ui-select,
+.ui-select-multi {
 	:popover-open {
 		@apply absolute m-0;
 	}

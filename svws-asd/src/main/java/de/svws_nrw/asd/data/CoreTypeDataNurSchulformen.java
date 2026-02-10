@@ -23,8 +23,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class CoreTypeDataNurSchulformen extends CoreTypeData {
 
-	/** Die Kürzel der Schulformen, bei welchen der Jahrgang vorkommt. */
-	@Schema(description = "die Kürzel der Schulformen, bei welchen der Jahrgang vorkommt")
+	/** Die Bezeichner der Schulformen, bei welchen der Jahrgang vorkommt. */
+	@Schema(description = "die Bezeichner der Schulformen, bei welchen der Jahrgang vorkommt")
 	public @NotNull List<String> schulformen = new ArrayList<>();
 
 	/**

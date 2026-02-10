@@ -18,30 +18,69 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
+	/**
+	 * Die Kurszahlen der einzelnen Halbjahre.
+	 */
 	private kurszahlen: ArrayMap<GostHalbjahr, ArrayMap<GostKursart, number>> | null = null;
 
+	/**
+	 * Die Kurszahlen der einzelnen Halbjahre.
+	 */
 	private kurszahlenGrundkurse: ArrayMap<GostHalbjahr, number> | null = null;
 
+	/**
+	 * Die Kurszahlen der einzelnen Halbjahre.
+	 */
 	private kurszahlenLeistungskurse: ArrayMap<GostHalbjahr, number> | null = null;
 
+	/**
+	 * Die Kurszahlen der anrechenbaren Kurse für die einzelnen Halbjahre.
+	 */
 	private kurszahlenAnrechenbar: ArrayMap<GostHalbjahr, number> | null = null;
 
+	/**
+	 * Die Kurszahlen der Einführungsphase.
+	 */
 	private kurszahlenEinfuehrungsphase: ArrayMap<GostKursart, number> | null = null;
 
+	/**
+	 * Die Kurszahlen der Qualifikationsphase.
+	 */
 	private kurszahlenQualifikationsphase: ArrayMap<GostKursart, number> | null = null;
 
+	/**
+	 * Die Gesamtzahl der Grundkurse der Qualifikationsphase (auch Zusatzkurse und ggf. Projektkurse, die zu keiner besonderen Lernleistung zählen).
+	 */
 	private blockIAnzahlGrundkurse: number = 0;
 
+	/**
+	 * Die Anzahl der belegten LK-Fächer (sollten 2 sein).
+	 */
 	private anzahlLKFaecher: number = 0;
 
+	/**
+	 * Die Gesamtzahl der Leistungskurse der Qualifikationsphase (sollten 8 sein).
+	 */
 	private blockIAnzahlLeistungskurse: number = 0;
 
+	/**
+	 * Die Gesamtzahl der anrechenbaren Kurse der Qualifikationsphase.
+	 */
 	private blockIAnzahlAnrechenbar: number = 0;
 
+	/**
+	 * Die Anzahl der Wochenstunden in dem entsprechenden Halbjahr.
+	 */
 	private wochenstunden: ArrayMap<GostHalbjahr, number> | null = null;
 
+	/**
+	 * Die Anzahl der WochenStunden in der Einführungsphase.
+	 */
 	private wochenstundenEinfuehrungsphase: number = 0;
 
+	/**
+	 * Die Anzahl der WochenStunden in der Qualifikationsphase.
+	 */
 	private wochenstundenQualifikationsphase: number = 0;
 
 
@@ -549,7 +588,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.KurszahlenUndWochenstunden'].includes(name);
 	}
 
-	public static class = new Class<KurszahlenUndWochenstunden>('de.svws_nrw.core.abschluss.gost.belegpruefung.KurszahlenUndWochenstunden');
+	public static readonly class = new Class<KurszahlenUndWochenstunden>('de.svws_nrw.core.abschluss.gost.belegpruefung.KurszahlenUndWochenstunden');
 
 }
 

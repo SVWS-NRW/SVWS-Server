@@ -49,7 +49,7 @@ export class ENMAnkreuzkompetenz extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMAnkreuzkompetenz'].includes(name);
 	}
 
-	public static class = new Class<ENMAnkreuzkompetenz>('de.svws_nrw.core.data.enm.ENMAnkreuzkompetenz');
+	public static readonly class = new Class<ENMAnkreuzkompetenz>('de.svws_nrw.core.data.enm.ENMAnkreuzkompetenz');
 
 	public static transpilerFromJSON(json: string): ENMAnkreuzkompetenz {
 		const obj = JSON.parse(json) as Partial<ENMAnkreuzkompetenz>;

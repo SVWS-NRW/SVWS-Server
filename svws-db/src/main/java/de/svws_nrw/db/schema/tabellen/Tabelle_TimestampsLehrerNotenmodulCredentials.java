@@ -71,6 +71,7 @@ public class Tabelle_TimestampsLehrerNotenmodulCredentials extends SchemaTabelle
 		setJavaClassName("DTOTimestampsLehrerNotenmodulCredentials");
 		setJavaComment("Diese Tabelle beinhaltet die Zeitstempel, wann an der Datenbanktabelle für die Lehrer-Notenmodul-Credentials"
 				+ " zuletzt Änderungen vorgenommen wurden.");
+		setVeraltet(SchemaRevisionen.REV_53);
 	}
 
 }

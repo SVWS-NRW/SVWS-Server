@@ -156,14 +156,16 @@
 
 	function next(id: number) {
 		const el = itemRefs.value.get(id + 1);
-		if ((el !== null) && (el !== undefined))
+		if ((el !== null) && (el !== undefined)) {
 			el.input.focus();
+		}
 	}
 
 	function previous(id: number) {
 		const el = itemRefs.value.get(id - 1);
-		if ((el !== null) && (el !== undefined))
+		if ((el !== null) && (el !== undefined)) {
 			el.input.focus();
+		}
 	}
 
 	// Funktionen für die Sortierung	// Sortiere nur Name und Fach
@@ -176,8 +178,9 @@
 
 	const dataSorted = computed(() => {
 		const temp = sortByAndOrder.value;
-		if (temp === undefined)
+		if (temp === undefined) {
 			return data.value;
+		}
 		const arr = [...data.value];
 		arr.sort((a, b) => {
 			switch (temp.key) {

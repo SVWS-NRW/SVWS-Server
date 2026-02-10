@@ -39,7 +39,6 @@ import { BildungsgangTypKatalogEintrag } from "../data/schule/BildungsgangTypKat
 import { FoerderschwerpunktKatalogEintrag } from "../data/schule/FoerderschwerpunktKatalogEintrag";
 import { KindergartenbesuchKatalogEintrag } from "../data/schule/KindergartenbesuchKatalogEintrag";
 import { OrganisationsformKatalogEintrag } from "../data/schule/OrganisationsformKatalogEintrag";
-import { ReligionKatalogEintrag } from "../data/schule/ReligionKatalogEintrag";
 import { SchulabschlussAllgemeinbildendKatalogEintrag } from "../data/schule/SchulabschlussAllgemeinbildendKatalogEintrag";
 import { SchulabschlussBerufsbildendKatalogEintrag } from "../data/schule/SchulabschlussBerufsbildendKatalogEintrag";
 import { SchulformKatalogEintrag } from "../data/schule/SchulformKatalogEintrag";
@@ -129,6 +128,15 @@ import { HerkunftSchulform } from "../types/schueler/HerkunftSchulform";
 import { HerkunftSchulformKatalogEintrag } from "../data/schueler/HerkunftSchulformKatalogEintrag";
 import { Bildungsstufe } from "../types/schule/Bildungsstufe";
 import { BildungsstufeKatalogEintrag } from "../data/schule/BildungsstufeKatalogEintrag";
+import { BerufskollegBerufsebene1 } from "../types/schule/BerufskollegBerufsebene1";
+import { BerufskollegBerufsebene2 } from "../types/schule/BerufskollegBerufsebene2";
+import { BerufskollegBerufsebene3 } from "../types/schule/BerufskollegBerufsebene3";
+import { BerufskollegBerufsebeneKatalogEintrag } from "../data/schule/BerufskollegBerufsebeneKatalogEintrag";
+import { HerkunftsschulnummerKatalogEintrag } from "../data/schule/HerkunftsschulnummerKatalogEintrag";
+import { Herkunftsschulnummer } from "../types/schule/Herkunftsschulnummer";
+import { ReformpaedagogikKatalogEintrag } from "../data/schule/ReformpaedagogikKatalogEintrag";
+import { Reformpaedagogik } from "../types/schule/Reformpaedagogik";
+import {CoreTypeData} from "../data/CoreTypeData";
 
 interface JsonCoreTypeEntry<T> {
 	bezeichner: string;
@@ -171,7 +179,7 @@ export class JsonCoreTypeReader {
 		"LehrerLehramtAnerkennung", "LehrerLehrbefaehigungAnerkennung", "LehrerLeitungsfunktion", "LehrerRechtsverhaeltnis", "LehrerZugangsgrund", "BilingualeSprache", "KAOABerufsfeld",
 		"KAOAMerkmaleOptionsarten", "KAOAZusatzmerkmaleOptionsarten", "KAOAEbene4", "KAOAZusatzmerkmal", "KAOAAnschlussoptionen", "KAOAKategorie", "KAOAMerkmal", "Klassenart", "Uebergangsempfehlung",
 		"ZulaessigeKursart", "Foerderschwerpunkt", "Termin", "Betreuungsart", "FormOffenerGanztag", "LehrerAnrechnungsgrund", "LehrerMehrleistungsarten", "LehrerMinderleistungsarten", "LehrerPflichtstundensollVollzeit", "Nationalitaeten", "ValidatorenFehlerartKontext",
-		"Floskelgruppenart", "Einwilligungsschluessel", "Herkunftsarten", "HerkunftSonstige", "HerkunftSchulform", "Bildungsstufe",
+		"Floskelgruppenart", "Einwilligungsschluessel", "Herkunftsarten", "HerkunftSonstige", "HerkunftSchulform", "Bildungsstufe", "BerufskollegBerufsebene1", "BerufskollegBerufsebene2", "BerufskollegBerufsebene3", "Herkunftsschulnummer", "Reformpaedagogik",
 	] as const;
 
 	public constructor(url?: string) {
@@ -179,11 +187,6 @@ export class JsonCoreTypeReader {
 	}
 
 	mapCoreTypeNameJsonData = new Map<string, string>();
-
-	protected async loadJson(coreTypeName: string) {
-		const jsonData = await this.api.getJSON(`/types/${coreTypeName}.json`);
-		this.mapCoreTypeNameJsonData.set(coreTypeName, jsonData);
-	}
 
 	private read<T>(name: string, mapper: (json: string) => T): JsonCoreTypeDataResult<T> {
 		if (name === "")
@@ -292,8 +295,8 @@ export class JsonCoreTypeReader {
 	}
 
 	public readReligion() {
-		const data = this.read('Religion', (json) => ReligionKatalogEintrag.transpilerFromJSON(json));
-		const manager = new CoreTypeDataManager<ReligionKatalogEintrag, Religion>(data.version, Religion.class, Religion.values(), data.mapData, data.mapStatistikIDs);
+		const data = this.read('Religion', (json) => CoreTypeData.transpilerFromJSON(json));
+		const manager = new CoreTypeDataManager<CoreTypeData, Religion>(data.version, Religion.class, Religion.values(), data.mapData, data.mapStatistikIDs);
 		Religion.init(manager);
 	}
 
@@ -603,6 +606,41 @@ export class JsonCoreTypeReader {
 		HerkunftSchulform.init(manager);
 	}
 
+	public readBerufskollegBerufsebene1() {
+		const data = this.read('BerufskollegBerufsebene1', (json) => BerufskollegBerufsebeneKatalogEintrag.transpilerFromJSON(json));
+		CoreTypeSimple.initValues(new BerufskollegBerufsebene1(), BerufskollegBerufsebene1.class, data.mapData);
+		const manager = new CoreTypeDataManager<BerufskollegBerufsebeneKatalogEintrag, BerufskollegBerufsebene1>(data.version, BerufskollegBerufsebene1.class, BerufskollegBerufsebene1.values(), data.mapData, data.mapStatistikIDs);
+		BerufskollegBerufsebene1.init(manager);
+	}
+
+	public readBerufskollegBerufsebene2() {
+		const data = this.read('BerufskollegBerufsebene2', (json) => BerufskollegBerufsebeneKatalogEintrag.transpilerFromJSON(json));
+		CoreTypeSimple.initValues(new BerufskollegBerufsebene2(), BerufskollegBerufsebene2.class, data.mapData);
+		const manager = new CoreTypeDataManager<BerufskollegBerufsebeneKatalogEintrag, BerufskollegBerufsebene2>(data.version, BerufskollegBerufsebene2.class, BerufskollegBerufsebene2.values(), data.mapData, data.mapStatistikIDs);
+		BerufskollegBerufsebene2.init(manager);
+	}
+
+	public readBerufskollegBerufsebene3() {
+		const data = this.read('BerufskollegBerufsebene3', (json) => BerufskollegBerufsebeneKatalogEintrag.transpilerFromJSON(json));
+		CoreTypeSimple.initValues(new BerufskollegBerufsebene3(), BerufskollegBerufsebene3.class, data.mapData);
+		const manager = new CoreTypeDataManager<BerufskollegBerufsebeneKatalogEintrag, BerufskollegBerufsebene3>(data.version, BerufskollegBerufsebene3.class, BerufskollegBerufsebene3.values(), data.mapData, data.mapStatistikIDs);
+		BerufskollegBerufsebene3.init(manager);
+	}
+
+	public readHerkunftsschulnummer() {
+		const data = this.read('Herkunftsschulnummer', (json) => HerkunftsschulnummerKatalogEintrag.transpilerFromJSON(json));
+		CoreTypeSimple.initValues(new Herkunftsschulnummer(), Herkunftsschulnummer.class, data.mapData);
+		const manager = new CoreTypeDataManager<HerkunftsschulnummerKatalogEintrag, Herkunftsschulnummer>(data.version, Herkunftsschulnummer.class, Herkunftsschulnummer.values(), data.mapData, data.mapStatistikIDs);
+		Herkunftsschulnummer.init(manager);
+	}
+
+	public readReformpaedagogik() {
+		const data = this.read('Reformpaedagogik', (json) => ReformpaedagogikKatalogEintrag.transpilerFromJSON(json));
+		CoreTypeSimple.initValues(new Reformpaedagogik(), Reformpaedagogik.class, data.mapData);
+		const manager = new CoreTypeDataManager<ReformpaedagogikKatalogEintrag, Reformpaedagogik>(data.version, Reformpaedagogik.class, Reformpaedagogik.values(), data.mapData, data.mapStatistikIDs);
+		Reformpaedagogik.init(manager);
+	}
+
 	public readValidatorenFehlerartKontext() {
 		const name = "ValidatorenFehlerartKontext";
 		const json: string | undefined = this.mapCoreTypeNameJsonData.get(name);
@@ -629,10 +667,14 @@ export class JsonCoreTypeReader {
 	}
 
 	public async loadAll(): Promise<Map<string, string>> {
-		const arr = [];
-		for (const key of this.keys)
-			arr.push(this.loadJson(key));
-		await Promise.all(arr);
+		const all = JSON.parse(await this.api.getJSON(`/types/allinone.json`));
+		for (const key of this.keys) {
+			const single = all[key];
+			if (single === undefined)
+				continue;
+			const json = JSON.stringify(single);
+			this.mapCoreTypeNameJsonData.set(key, json);
+		}
 		return this.mapCoreTypeNameJsonData;
 	}
 
@@ -701,6 +743,11 @@ export class JsonCoreTypeReader {
 			this.readHerkunftSonstige();
 			this.readHerkunftSchulform();
 			this.readBildungsstufe();
+			this.readBerufskollegBerufsebene1();
+			this.readBerufskollegBerufsebene2();
+			this.readBerufskollegBerufsebene3();
+			this.readHerkunftsschulnummer();
+			this.readReformpaedagogik();
 		} catch (e) {
 			console.log(e);
 		}

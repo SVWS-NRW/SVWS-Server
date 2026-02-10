@@ -1,33 +1,52 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { Class } from '../../../java/lang/Class';
 
 export class FachDaten extends JavaObject {
 
 	/**
-	 * Die ID des Faches.
+	 * Die ID des Fachs.
 	 */
 	public id: number = -1;
 
 	/**
-	 * Das eindeutige Kürzel des Faches
+	 * Das eindeutige Kürzel des Fachs
 	 */
 	public kuerzel: string = "";
 
 	/**
-	 * Das Statistik-Kürzel des Faches
+	 * Das Statistik-Kürzel des Fachs
 	 */
 	public kuerzelStatistik: string = "";
 
 	/**
-	 * Die Bezeichnung des Faches
+	 * Die Bezeichnung des Fachs
 	 */
 	public bezeichnung: string = "";
 
 	/**
-	 * Die Sortierreihenfolge des Fächerlisten-Eintrags.
+	 * Das Aufgabenfeld am Berufskolleg, zu welchem das Fach gehört.
 	 */
-	public sortierung: number = 32000;
+	public aufgabenfeld: string | null = null;
+
+	/**
+	 * Die Sprache in der das Fach unterrichtet wird, sofern es sich um ein bilinguales Sachfach handelt.
+	 */
+	public bilingualeSprache: string | null = null;
+
+	/**
+	 * Gibt an, ob das Fach auf einem Zeugnis erscheinen soll.
+	 */
+	public aufZeugnis: boolean = false;
+
+	/**
+	 * Die Bezeichnung des Fachs auf allgemeinen Zeugnissen.
+	 */
+	public bezeichnungZeugnis: string | null = null;
+
+	/**
+	 * Die Bezeichnung des Fachs auf Überweisungs-Zeugnissen.
+	 */
+	public bezeichnungUeberweisungszeugnis: string | null = null;
 
 	/**
 	 * Gibt an, ob es sich um ein Fach der Oberstufe handelt oder nicht.
@@ -40,54 +59,19 @@ export class FachDaten extends JavaObject {
 	public istPruefungsordnungsRelevant: boolean = false;
 
 	/**
-	 * Gibt an, ob es sich um ein Fremdsprachen-Fach handelt
+	 * Gibt an, ob es sich um ein Fremdsprachen-Fach handelt.
 	 */
 	public istFremdsprache: boolean = false;
 
 	/**
-	 * Gibt an, ob es sich um ein Fremdsprachen-Fach handelt, welches in der Sekundarstufe II neu einsetzen ist.
+	 * Gibt an, ob es sich um ein Fremdsprachen-Fach handelt, welches in der Sekundarstufe II neu einsetzbar ist.
 	 */
 	public istMoeglichAlsNeueFremdspracheInSekII: boolean = false;
-
-	/**
-	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
-	 */
-	public istSichtbar: boolean = false;
-
-	/**
-	 * Das Aufgabenfeld am Berufskolleg, zu welchem das Fach gehört
-	 */
-	public aufgabenfeld: string | null = null;
-
-	/**
-	 * Die Sprache in der das Fach unterrichtet wird, sofern es sich um ein bilinguales Sachefach handelt.
-	 */
-	public bilingualeSprache: string | null = null;
 
 	/**
 	 * Gibt an, ob eine Nachprüfung in diesem Fach möglich ist.
 	 */
 	public istNachpruefungErlaubt: boolean = false;
-
-	/**
-	 * Gibt an, ob das Fach auf einem Zeugnis erscheinen soll.
-	 */
-	public aufZeugnis: boolean = false;
-
-	/**
-	 * Die Bezeichnung des Faches auf allgemeinen Zeugnissen
-	 */
-	public bezeichnungZeugnis: string = "";
-
-	/**
-	 * Die Bezeichnung des Faches auf Überweisungs-Zeugnissen
-	 */
-	public bezeichnungUeberweisungszeugnis: string = "";
-
-	/**
-	 * Gibt die maximale Anzahl an Zeichen an, doe in Fachbemerkungen genutzt werden dürfen.
-	 */
-	public maxZeichenInFachbemerkungen: number = JavaInteger.MAX_VALUE;
 
 	/**
 	 * Gibt an, ob das Fach ein schriftliches Fach für die zentralen Klausuren ist oder nicht.
@@ -105,19 +89,32 @@ export class FachDaten extends JavaObject {
 	public istFHRFach: boolean = false;
 
 	/**
-	 * Gibt an, ob das Fach ggf. bei der Aggregation von Leistungen aus früheren Lernabschnitten/Jahrgängen für eine Abschlussbrechnung berücksichtigt wird, sofern es im aktuellen Abschnitt nicht belegt wurde.
+	 * Gibt an, ob das Fach ggf. bei der Aggregation von Leistungen aus früheren Lernabschnitten/Jahrgängen für eine Abschlussbrechnung berücksichtigt wird,
+	 *  sofern es im aktuellen Abschnitt nicht belegt wurde.
 	 */
 	public holeAusAltenLernabschnitten: boolean = false;
 
 	/**
-	 * Gibt an, ob das Fach in anderen Datenbanktabellen referenziert ist oder nicht.
+	 * Gibt die maximale Anzahl an Zeichen an, die in Fachbemerkungen genutzt werden dürfen.
 	 */
-	public referenziertInAnderenTabellen: boolean | null = null;
-
+	public maxZeichenInFachbemerkungen: number | null = null;
 
 	/**
-	 * Leerer Standardkonstruktor.
+	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 */
+	public istSichtbar: boolean = false;
+
+	/**
+	 * Die Sortierreihenfolge des Fächerlisten-Eintrags.
+	 */
+	public sortierung: number = 0;
+
+	/**
+	 * Gibt an, ob das Fach in anderen Datenbanktabellen referenziert ist oder nicht.
+	 */
+	public referenziertInAnderenTabellen: boolean = false;
+
+
 	public constructor() {
 		super();
 	}
@@ -130,7 +127,7 @@ export class FachDaten extends JavaObject {
 		return ['de.svws_nrw.core.data.fach.FachDaten'].includes(name);
 	}
 
-	public static class = new Class<FachDaten>('de.svws_nrw.core.data.fach.FachDaten');
+	public static readonly class = new Class<FachDaten>('de.svws_nrw.core.data.fach.FachDaten');
 
 	public static transpilerFromJSON(json: string): FachDaten {
 		const obj = JSON.parse(json) as Partial<FachDaten>;
@@ -147,9 +144,13 @@ export class FachDaten extends JavaObject {
 		if (obj.bezeichnung === undefined)
 			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (obj.sortierung === undefined)
-			throw new Error('invalid json format, missing attribute sortierung');
-		result.sortierung = obj.sortierung;
+		result.aufgabenfeld = (obj.aufgabenfeld === undefined) ? null : obj.aufgabenfeld === null ? null : obj.aufgabenfeld;
+		result.bilingualeSprache = (obj.bilingualeSprache === undefined) ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
+		if (obj.aufZeugnis === undefined)
+			throw new Error('invalid json format, missing attribute aufZeugnis');
+		result.aufZeugnis = obj.aufZeugnis;
+		result.bezeichnungZeugnis = (obj.bezeichnungZeugnis === undefined) ? null : obj.bezeichnungZeugnis === null ? null : obj.bezeichnungZeugnis;
+		result.bezeichnungUeberweisungszeugnis = (obj.bezeichnungUeberweisungszeugnis === undefined) ? null : obj.bezeichnungUeberweisungszeugnis === null ? null : obj.bezeichnungUeberweisungszeugnis;
 		if (obj.istOberstufenFach === undefined)
 			throw new Error('invalid json format, missing attribute istOberstufenFach');
 		result.istOberstufenFach = obj.istOberstufenFach;
@@ -162,26 +163,9 @@ export class FachDaten extends JavaObject {
 		if (obj.istMoeglichAlsNeueFremdspracheInSekII === undefined)
 			throw new Error('invalid json format, missing attribute istMoeglichAlsNeueFremdspracheInSekII');
 		result.istMoeglichAlsNeueFremdspracheInSekII = obj.istMoeglichAlsNeueFremdspracheInSekII;
-		if (obj.istSichtbar === undefined)
-			throw new Error('invalid json format, missing attribute istSichtbar');
-		result.istSichtbar = obj.istSichtbar;
-		result.aufgabenfeld = (obj.aufgabenfeld === undefined) ? null : obj.aufgabenfeld === null ? null : obj.aufgabenfeld;
-		result.bilingualeSprache = (obj.bilingualeSprache === undefined) ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
 		if (obj.istNachpruefungErlaubt === undefined)
 			throw new Error('invalid json format, missing attribute istNachpruefungErlaubt');
 		result.istNachpruefungErlaubt = obj.istNachpruefungErlaubt;
-		if (obj.aufZeugnis === undefined)
-			throw new Error('invalid json format, missing attribute aufZeugnis');
-		result.aufZeugnis = obj.aufZeugnis;
-		if (obj.bezeichnungZeugnis === undefined)
-			throw new Error('invalid json format, missing attribute bezeichnungZeugnis');
-		result.bezeichnungZeugnis = obj.bezeichnungZeugnis;
-		if (obj.bezeichnungUeberweisungszeugnis === undefined)
-			throw new Error('invalid json format, missing attribute bezeichnungUeberweisungszeugnis');
-		result.bezeichnungUeberweisungszeugnis = obj.bezeichnungUeberweisungszeugnis;
-		if (obj.maxZeichenInFachbemerkungen === undefined)
-			throw new Error('invalid json format, missing attribute maxZeichenInFachbemerkungen');
-		result.maxZeichenInFachbemerkungen = obj.maxZeichenInFachbemerkungen;
 		if (obj.istSchriftlichZK === undefined)
 			throw new Error('invalid json format, missing attribute istSchriftlichZK');
 		result.istSchriftlichZK = obj.istSchriftlichZK;
@@ -194,7 +178,16 @@ export class FachDaten extends JavaObject {
 		if (obj.holeAusAltenLernabschnitten === undefined)
 			throw new Error('invalid json format, missing attribute holeAusAltenLernabschnitten');
 		result.holeAusAltenLernabschnitten = obj.holeAusAltenLernabschnitten;
-		result.referenziertInAnderenTabellen = (obj.referenziertInAnderenTabellen === undefined) ? null : obj.referenziertInAnderenTabellen === null ? null : obj.referenziertInAnderenTabellen;
+		result.maxZeichenInFachbemerkungen = (obj.maxZeichenInFachbemerkungen === undefined) ? null : obj.maxZeichenInFachbemerkungen === null ? null : obj.maxZeichenInFachbemerkungen;
+		if (obj.istSichtbar === undefined)
+			throw new Error('invalid json format, missing attribute istSichtbar');
+		result.istSichtbar = obj.istSichtbar;
+		if (obj.sortierung === undefined)
+			throw new Error('invalid json format, missing attribute sortierung');
+		result.sortierung = obj.sortierung;
+		if (obj.referenziertInAnderenTabellen === undefined)
+			throw new Error('invalid json format, missing attribute referenziertInAnderenTabellen');
+		result.referenziertInAnderenTabellen = obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
@@ -204,24 +197,24 @@ export class FachDaten extends JavaObject {
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
-		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"aufgabenfeld" : ' + ((obj.aufgabenfeld === null) ? 'null' : JSON.stringify(obj.aufgabenfeld)) + ',';
+		result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
+		result += '"aufZeugnis" : ' + obj.aufZeugnis.toString() + ',';
+		result += '"bezeichnungZeugnis" : ' + ((obj.bezeichnungZeugnis === null) ? 'null' : JSON.stringify(obj.bezeichnungZeugnis)) + ',';
+		result += '"bezeichnungUeberweisungszeugnis" : ' + ((obj.bezeichnungUeberweisungszeugnis === null) ? 'null' : JSON.stringify(obj.bezeichnungUeberweisungszeugnis)) + ',';
 		result += '"istOberstufenFach" : ' + obj.istOberstufenFach.toString() + ',';
 		result += '"istPruefungsordnungsRelevant" : ' + obj.istPruefungsordnungsRelevant.toString() + ',';
 		result += '"istFremdsprache" : ' + obj.istFremdsprache.toString() + ',';
 		result += '"istMoeglichAlsNeueFremdspracheInSekII" : ' + obj.istMoeglichAlsNeueFremdspracheInSekII.toString() + ',';
-		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
-		result += '"aufgabenfeld" : ' + ((obj.aufgabenfeld === null) ? 'null' : JSON.stringify(obj.aufgabenfeld)) + ',';
-		result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		result += '"istNachpruefungErlaubt" : ' + obj.istNachpruefungErlaubt.toString() + ',';
-		result += '"aufZeugnis" : ' + obj.aufZeugnis.toString() + ',';
-		result += '"bezeichnungZeugnis" : ' + JSON.stringify(obj.bezeichnungZeugnis) + ',';
-		result += '"bezeichnungUeberweisungszeugnis" : ' + JSON.stringify(obj.bezeichnungUeberweisungszeugnis) + ',';
-		result += '"maxZeichenInFachbemerkungen" : ' + obj.maxZeichenInFachbemerkungen.toString() + ',';
 		result += '"istSchriftlichZK" : ' + obj.istSchriftlichZK.toString() + ',';
 		result += '"istSchriftlichBA" : ' + obj.istSchriftlichBA.toString() + ',';
 		result += '"istFHRFach" : ' + obj.istFHRFach.toString() + ',';
 		result += '"holeAusAltenLernabschnitten" : ' + obj.holeAusAltenLernabschnitten.toString() + ',';
-		result += '"referenziertInAnderenTabellen" : ' + ((obj.referenziertInAnderenTabellen === null) ? 'null' : obj.referenziertInAnderenTabellen.toString()) + ',';
+		result += '"maxZeichenInFachbemerkungen" : ' + ((obj.maxZeichenInFachbemerkungen === null) ? 'null' : obj.maxZeichenInFachbemerkungen.toString()) + ',';
+		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -241,8 +234,20 @@ export class FachDaten extends JavaObject {
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
-		if (obj.sortierung !== undefined) {
-			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		if (obj.aufgabenfeld !== undefined) {
+			result += '"aufgabenfeld" : ' + ((obj.aufgabenfeld === null) ? 'null' : JSON.stringify(obj.aufgabenfeld)) + ',';
+		}
+		if (obj.bilingualeSprache !== undefined) {
+			result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
+		}
+		if (obj.aufZeugnis !== undefined) {
+			result += '"aufZeugnis" : ' + obj.aufZeugnis.toString() + ',';
+		}
+		if (obj.bezeichnungZeugnis !== undefined) {
+			result += '"bezeichnungZeugnis" : ' + ((obj.bezeichnungZeugnis === null) ? 'null' : JSON.stringify(obj.bezeichnungZeugnis)) + ',';
+		}
+		if (obj.bezeichnungUeberweisungszeugnis !== undefined) {
+			result += '"bezeichnungUeberweisungszeugnis" : ' + ((obj.bezeichnungUeberweisungszeugnis === null) ? 'null' : JSON.stringify(obj.bezeichnungUeberweisungszeugnis)) + ',';
 		}
 		if (obj.istOberstufenFach !== undefined) {
 			result += '"istOberstufenFach" : ' + obj.istOberstufenFach.toString() + ',';
@@ -256,29 +261,8 @@ export class FachDaten extends JavaObject {
 		if (obj.istMoeglichAlsNeueFremdspracheInSekII !== undefined) {
 			result += '"istMoeglichAlsNeueFremdspracheInSekII" : ' + obj.istMoeglichAlsNeueFremdspracheInSekII.toString() + ',';
 		}
-		if (obj.istSichtbar !== undefined) {
-			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
-		}
-		if (obj.aufgabenfeld !== undefined) {
-			result += '"aufgabenfeld" : ' + ((obj.aufgabenfeld === null) ? 'null' : JSON.stringify(obj.aufgabenfeld)) + ',';
-		}
-		if (obj.bilingualeSprache !== undefined) {
-			result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
-		}
 		if (obj.istNachpruefungErlaubt !== undefined) {
 			result += '"istNachpruefungErlaubt" : ' + obj.istNachpruefungErlaubt.toString() + ',';
-		}
-		if (obj.aufZeugnis !== undefined) {
-			result += '"aufZeugnis" : ' + obj.aufZeugnis.toString() + ',';
-		}
-		if (obj.bezeichnungZeugnis !== undefined) {
-			result += '"bezeichnungZeugnis" : ' + JSON.stringify(obj.bezeichnungZeugnis) + ',';
-		}
-		if (obj.bezeichnungUeberweisungszeugnis !== undefined) {
-			result += '"bezeichnungUeberweisungszeugnis" : ' + JSON.stringify(obj.bezeichnungUeberweisungszeugnis) + ',';
-		}
-		if (obj.maxZeichenInFachbemerkungen !== undefined) {
-			result += '"maxZeichenInFachbemerkungen" : ' + obj.maxZeichenInFachbemerkungen.toString() + ',';
 		}
 		if (obj.istSchriftlichZK !== undefined) {
 			result += '"istSchriftlichZK" : ' + obj.istSchriftlichZK.toString() + ',';
@@ -292,8 +276,17 @@ export class FachDaten extends JavaObject {
 		if (obj.holeAusAltenLernabschnitten !== undefined) {
 			result += '"holeAusAltenLernabschnitten" : ' + obj.holeAusAltenLernabschnitten.toString() + ',';
 		}
+		if (obj.maxZeichenInFachbemerkungen !== undefined) {
+			result += '"maxZeichenInFachbemerkungen" : ' + ((obj.maxZeichenInFachbemerkungen === null) ? 'null' : obj.maxZeichenInFachbemerkungen.toString()) + ',';
+		}
+		if (obj.istSichtbar !== undefined) {
+			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		}
+		if (obj.sortierung !== undefined) {
+			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		}
 		if (obj.referenziertInAnderenTabellen !== undefined) {
-			result += '"referenziertInAnderenTabellen" : ' + ((obj.referenziertInAnderenTabellen === null) ? 'null' : obj.referenziertInAnderenTabellen.toString()) + ',';
+			result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

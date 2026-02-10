@@ -147,7 +147,7 @@ export class ENMDaten extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMDaten'].includes(name);
 	}
 
-	public static class = new Class<ENMDaten>('de.svws_nrw.core.data.enm.ENMDaten');
+	public static readonly class = new Class<ENMDaten>('de.svws_nrw.core.data.enm.ENMDaten');
 
 	public static transpilerFromJSON(json: string): ENMDaten {
 		const obj = JSON.parse(json) as Partial<ENMDaten>;

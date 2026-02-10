@@ -174,7 +174,7 @@ export class KAOABerufsfeld extends JavaEnum<KAOABerufsfeld> implements CoreType
 		return ['de.svws_nrw.asd.types.kaoa.KAOABerufsfeld', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<KAOABerufsfeld>('de.svws_nrw.asd.types.kaoa.KAOABerufsfeld');
+	public static readonly class = new Class<KAOABerufsfeld>('de.svws_nrw.asd.types.kaoa.KAOABerufsfeld');
 
 }
 

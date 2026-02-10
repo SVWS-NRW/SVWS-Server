@@ -36,7 +36,7 @@ export class SchuleAbschnitte extends JavaObject {
 		return ['de.svws_nrw.asd.data.schule.SchuleAbschnitte'].includes(name);
 	}
 
-	public static class = new Class<SchuleAbschnitte>('de.svws_nrw.asd.data.schule.SchuleAbschnitte');
+	public static readonly class = new Class<SchuleAbschnitte>('de.svws_nrw.asd.data.schule.SchuleAbschnitte');
 
 	public static transpilerFromJSON(json: string): SchuleAbschnitte {
 		const obj = JSON.parse(json) as Partial<SchuleAbschnitte>;

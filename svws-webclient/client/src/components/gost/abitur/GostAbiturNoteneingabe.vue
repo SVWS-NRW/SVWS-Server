@@ -142,9 +142,11 @@
 			// Wenn ein Abiturfach gesetzt ist, dann filtere die Abiturfachbelegungen anhand des Abiturfaches
 			const abiturfach = auswahlAbiturfach.value;
 			if (abiturfach !== null) {
-				for (const belegung of schuelerInPruefung.value)
-					if (GostAbiturFach.fromID(belegung.abiturfach) === abiturfach)
+				for (const belegung of schuelerInPruefung.value) {
+					if (GostAbiturFach.fromID(belegung.abiturfach) === abiturfach) {
 						auswahl.add(belegung);
+					}
+				}
 				return auswahl;
 			}
 			// Ansonsten nehme alle Abiturfachbelegungen
@@ -186,19 +188,22 @@
 	};
 
 	const auswahlKurs = shallowRef<KursDaten | null>(null);
-	const kursSelectManager = computed<SelectManager<KursDaten>>(() => new SelectManager({ options: alleKurse.value.keySet(),
+	const auswahlKursKeys = computed(() => alleKurse.value.keySet());
+	const kursSelectManager = computed<SelectManager<KursDaten>>(() => new SelectManager({ options: auswahlKursKeys,
 		optionDisplayText: k => k.kuerzel, selectionDisplayText: k => k.kuerzel	}));
 
 	const auswahlPruefer = shallowRef<LehrerListeEintrag | null>(null);
-	const prueferSelectManager = computed<SelectManager<LehrerListeEintrag>>(() => new SelectManager({ options: allePruefer.value.keySet(),
+	const auswahlPrueferKeys = computed(() => allePruefer.value.keySet());
+	const prueferSelectManager = computed<SelectManager<LehrerListeEintrag>>(() => new SelectManager({ options: auswahlPrueferKeys,
 		optionDisplayText: l => l.kuerzel, selectionDisplayText: l => l.kuerzel	}));
 
 	const auswahlAbiturfach = shallowRef<GostAbiturFach | null>(null);
 	const abiturfachSelectManager = computed<SelectManager<GostAbiturFach>>(() => {
 		const abiManager = props.managerMap().isEmpty() ? null : props.managerMap().values().iterator().next();
 		const values = [GostAbiturFach.LK1, GostAbiturFach.LK2, GostAbiturFach.AB3, GostAbiturFach.AB4];
-		if ((abiManager !== null) && AbiturdatenManager.nutzeExperimentellenCode(props.serverMode, abiManager.daten().abiturjahr))
+		if ((abiManager !== null) && AbiturdatenManager.nutzeExperimentellenCode(props.serverMode, abiManager.daten().abiturjahr)) {
 			values.push(GostAbiturFach.AB5);
+		}
 		return new SelectManager({ options: values, optionDisplayText: f => f.kuerzel, selectionDisplayText: f => f.kuerzel	});
 	});
 
@@ -207,11 +212,13 @@
 		for (const row of schuelerInPruefung.value) {
 			const idKurs = row.belegung.belegungen[GostHalbjahr.Q22.id]?.idKurs ?? null;
 			const kurs = (idKurs === null) ? null : props.mapKurse.get(idKurs);
-			if (kurs === null)
+			if (kurs === null) {
 				continue;
+			}
 			const list = result.computeIfAbsent(kurs, { apply: (k: KursDaten) => new ArrayList<SchuelerAbiturbelegung>() });
-			if (list === null)
+			if (list === null) {
 				continue;
+			}
 			list.add(row);
 		}
 		return result;
@@ -222,11 +229,13 @@
 		for (const row of schuelerInPruefung.value) {
 			const idLehrer = row.belegung.block2Pruefer;
 			const lehrer = (idLehrer === null) ? null : props.mapLehrer.get(idLehrer);
-			if (lehrer === null)
+			if (lehrer === null) {
 				continue;
+			}
 			const list = result.computeIfAbsent(lehrer, { apply: (l: LehrerListeEintrag) => new ArrayList<SchuelerAbiturbelegung>() });
-			if (list === null)
+			if (list === null) {
 				continue;
+			}
 			list.add(row);
 		}
 		return result;
@@ -241,17 +250,22 @@
 				const tmp = new ArrayList<AbiturFachbelegung>();
 				const abiFaecher = new Set<number>();
 				for (const belegung of manager.daten().fachbelegungen) {
-					if ((belegung.abiturFach === null) || (belegung.abiturFach < 1) || (belegung.abiturFach > 5))
+					if ((belegung.abiturFach === null) || (belegung.abiturFach < 1) || (belegung.abiturFach > 5)) {
 						continue;
-					if (abiFaecher.has(belegung.abiturFach))
+					}
+					if (abiFaecher.has(belegung.abiturFach)) {
 						throw new DeveloperNotificationException("Ein Abiturfach darf nur einmal gesetzt sein. Dies muss an dieser Stelle sichergestellt werden.");
+					}
 					abiFaecher.add(belegung.abiturFach);
 					tmp.add(belegung);
 				}
-				tmp.sort(<Comparator<AbiturFachbelegung>>{ compare(a, b) { return a.abiturFach! - b.abiturFach! } });
+				tmp.sort(<Comparator<AbiturFachbelegung>>{ compare(a, b) {
+					return a.abiturFach! - b.abiturFach!;
+				} });
 				for (const belegung of tmp) {
-					if (belegung.abiturFach === null)
+					if (belegung.abiturFach === null) {
 						continue;
+					}
 					result.add({
 						index: counter++,
 						manager,
@@ -267,30 +281,35 @@
 	});
 
 	function getPruefer(row: SchuelerAbiturbelegung): LehrerListeEintrag | null {
-		if (row.belegung.block2Pruefer === null)
+		if (row.belegung.block2Pruefer === null) {
 			return null;
+		}
 		return props.mapLehrer.get(row.belegung.block2Pruefer);
 	}
 
 	function getQ22Kurs(row: SchuelerAbiturbelegung): KursDaten | null {
 		const belegungQ22 = row.belegung.belegungen[GostHalbjahr.Q22.id];
-		if (belegungQ22 === null)
+		if (belegungQ22 === null) {
 			return null;
+		}
 		return props.mapKurse.get(belegungQ22.idKurs);
 	}
 
 	function istWertungDefizit(row: SchuelerAbiturbelegung): boolean {
-		if (row.belegung.block2PunkteZwischenstand === null)
+		if (row.belegung.block2PunkteZwischenstand === null) {
 			return false;
+		}
 		return row.belegung.block2PunkteZwischenstand < (row.hatAbiFach5 ? 20 : 25);
 	}
 
 	function getNotenpunkteFromKuerzel(notenkuerzel: string | null, schuljahr: number): number | null {
-		if (notenkuerzel === null)
+		if (notenkuerzel === null) {
 			return null;
+		}
 		const nke: NoteKatalogEintrag | null = Note.fromKuerzel(notenkuerzel).daten(schuljahr);
-		if ((nke === null) || (nke.notenpunkte === null))
+		if ((nke === null) || (nke.notenpunkte === null)) {
 			return null;
+		}
 		return nke.notenpunkte;
 	}
 
@@ -301,8 +320,9 @@
 
 	function getFachgruppe(row: SchuelerAbiturbelegung): Fachgruppe | null {
 		const fach = row.manager.faecher().get(row.belegung.fachID);
-		if (fach === null)
+		if (fach === null) {
 			return null;
+		}
 		const f = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		// TODO ggf. für Abi30ff zusätzlich check...
 		// if ((isAbi30ff) && ((f === Fach.IN) || (f === Fach.VO)))
@@ -321,13 +341,16 @@
 	}
 
 	function formatNotenpunkteDurchschnitt(avg: number | null): string {
-		if (avg === null)
+		if (avg === null) {
 			return "";
+		}
 		let tmp = ((avg < 10) ? "0" : "") + avg;
-		if (tmp.length === 2)
+		if (tmp.length === 2) {
 			tmp += ".";
-		while (tmp.length < 5)
+		}
+		while (tmp.length < 5) {
 			tmp += "0";
+		}
 		return tmp;
 	}
 
@@ -356,8 +379,9 @@
 		const setter = (value: string | null) => updateNotenpunkte(row, value);
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputAbiturNotenpunkte(key, 1, row.index, element, setter, row.manager.daten().schuljahrAbitur);
-			if (input !== null)
+			if (input !== null) {
 				watchEffect(() => gridManager.update(key, row.belegung.block2NotenKuerzelPruefung));
+			}
 		};
 	}
 
@@ -366,8 +390,9 @@
 		const setter = (value: boolean) => updatePflichtPruefung(row, value);
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputToggle(key, 2, row.index, element, setter);
-			if (input !== null)
+			if (input !== null) {
 				watchEffect(() => gridManager.update(key, (row.belegung.block2MuendlichePruefungBestehen === true) || (row.belegung.block2MuendlichePruefungAbweichung === true)));
+			}
 		};
 	}
 
@@ -376,8 +401,9 @@
 		const setter = (value: boolean) => updateFreiwilligePruefung(row, value);
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputToggle(key, 3, row.index, element, setter);
-			if (input !== null)
+			if (input !== null) {
 				watchEffect(() => gridManager.update(key, row.belegung.block2MuendlichePruefungFreiwillig ?? false));
+			}
 		};
 	}
 
@@ -386,8 +412,9 @@
 		const setter = (value: number | null) => updatePruefungsreihenfolge(row, value);
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputAbiturPruefungsreihenfolge(key, 4, row.index, element, setter);
-			if (input !== null)
+			if (input !== null) {
 				watchEffect(() => gridManager.update(key, row.belegung.block2MuendlichePruefungReihenfolge));
+			}
 		};
 	}
 
@@ -396,8 +423,9 @@
 		const setter = (value: string | null) => updateNotenpunkteMdl(row, value);
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputAbiturNotenpunkte(key, 5, row.index, element, setter, row.manager.daten().schuljahrAbitur);
-			if (input !== null)
+			if (input !== null) {
 				watchEffect(() => gridManager.update(key, row.belegung.block2MuendlichePruefungNotenKuerzel));
+			}
 		};
 	}
 

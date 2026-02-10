@@ -4,15 +4,15 @@
 			<svws-ui-sub-nav :focus-switching-enabled :focus-help-visible>
 				<div class="ml-4 flex gap-0.5 items-center leading-none">
 					<div class="text-button font-bold mr-1 -mt-px">Klasse:</div>
-					<svws-ui-select headless title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" autocomplete
+					<svws-ui-select headless v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" autocomplete autofocus
 						:item-filter="(i, text)=> i.filter(k => k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0" type="transparent" focus-class-sub-nav />
 					<template v-if="stundenplanManager().getWochenTypModell() > 0">
 						<div class="text-button font-bold mr-1 -mt-px">Wochentyp:</div>
 						<svws-ui-select headless title="Wochentyp" v-model="wochentypAnzeige" :items="wochentypen()" class="print:!hidden" type="transparent"
 							:disabled="wochentypen().size() <= 0" :item-text="wt => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
 					</template>
-					<svws-ui-button v-if="!readonly" type="transparent" @click.stop="doppelstundenModus = !doppelstundenModus" title="Doppelstundenmodus ein- und ausschalten" class="text-ui-100">
-						{{ doppelstundenModus ? 'Doppelstundenmodus' : 'Einzelstundenmodus' }}
+					<svws-ui-button v-if="!readonly" type="transparent" @click.stop="setDoppelstundenmodus(!doppelstundenmodus())" title="Doppelstundenmodus ein- und ausschalten" class="text-ui-100">
+						{{ doppelstundenmodus() ? 'Doppelstundenmodus' : 'Einzelstundenmodus' }}
 					</svws-ui-button>
 					<template v-if="(stundenplanManager().unterrichtsgruppenMergeableGet().size() > 0) || (stundenplanManager().unterrichtGetMengeUngueltigAsList().size() > 0) && !readonly">
 						<span class="ml-4">Unterricht:</span>
@@ -165,12 +165,11 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef, toRaw, watch } from "vue";
-	import { useRegionSwitch, type DataTableColumn } from "@ui";
-	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "@ui";
+	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone, DataTableColumn } from "@ui";
+	import { useRegionSwitch } from "@ui";
 	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
 	import type { List, StundenplanRaum } from "@core";
-	import { StundenplanKlasse } from "@core";
-	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, Fach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene, BenutzerKompetenz, ListUtils, Wochentag } from "@core";
+	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, Fach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene, BenutzerKompetenz, ListUtils, Wochentag, StundenplanKlasse } from "@core";
 
 	const props = defineProps<StundenplanKlasseProps>();
 
@@ -178,10 +177,8 @@
 
 	const _klasse = shallowRef<StundenplanKlasse | undefined>(undefined);
 	const wochentypAnzeige = shallowRef<number>(0);
-	const doppelstundenModus = shallowRef<boolean>(false);
 	const schienSortierung = shallowRef<boolean>(true);
 	const auswahl = ref<StundenplanKlassenunterricht | StundenplanUnterricht | StundenplanKurs | undefined>();
-	const refSelect = ref();
 
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
@@ -189,10 +186,11 @@
 
 	const klasse = computed<StundenplanKlasse>({
 		get: (): StundenplanKlasse => {
-			if (_klasse.value !== undefined)
+			if (_klasse.value !== undefined) {
 				try {
 					return props.stundenplanManager().klasseGetByIdOrException(_klasse.value.id);
-				} catch (e) { /* empty */ }
+				} catch { /* empty */ }
+			}
 			return props.stundenplanManager().klasseGetMengeAsList().isEmpty() ? new StundenplanKlasse() : props.stundenplanManager().klasseGetMengeAsList().get(0);
 		},
 		set: (value: StundenplanKlasse) => _klasse.value = value,
@@ -238,8 +236,9 @@
 
 	function raumInfo(raum: StundenplanRaum, unterrichte: List<StundenplanUnterricht> = unterrichteAuswahl.value) {
 		const ids = new ArrayList<number>();
-		for (const u of unterrichte)
+		for (const u of unterrichte) {
 			ids.add(u.id);
+		}
 		const beschreibung = raum.kuerzel;
 		const groesse = raum.groesse;
 		const kollisionen = props.stundenplanManager().raumGetAnzahlAnKollisionenFuerUnterrichte(raum.id, ids);
@@ -257,28 +256,25 @@
 
 	function wochentypen(): List<number> {
 		let modell = props.stundenplanManager().getWochenTypModell();
-		if (modell <= 1)
+		if (modell <= 1) {
 			modell = 0;
+		}
 		const result = new ArrayList<number>();
-		for (let n = 0; n <= modell; n++)
+		for (let n = 0; n <= modell; n++) {
 			result.add(n);
+		}
 		return result;
-	}
-
-	function getListOfUnterrichte(unterricht: StundenplanUnterricht) {
-		const liste = new ArrayList<number>();
-		for (const u of props.stundenplanManager().unterrichtGetMengeByUnterrichtId(unterricht.id))
-			liste.add(u.id);
-		return liste;
 	}
 
 	async function patchUnterrichtRaeume(liste: List<StundenplanUnterricht>, raeume: Iterable<StundenplanRaum>) {
 		disabled.value = true;
 		const ids = new ArrayList<number>();
-		for (const r of raeume)
+		for (const r of raeume) {
 			ids.add(r.id);
-		for (const u of liste)
+		}
+		for (const u of liste) {
 			u.raeume = ids;
+		}
 		await props.patchUnterrichte(liste);
 		disabled.value = false;
 	}
@@ -287,8 +283,9 @@
 
 	function getRaeume(u: StundenplanUnterricht) {
 		const arr: StundenplanRaum[] = [];
-		for (const r of u.raeume)
+		for (const r of u.raeume) {
 			arr.push(props.stundenplanManager().raumGetByIdOrException(r));
+		}
 		return arr;
 	}
 
@@ -301,29 +298,36 @@
 
 	async function onDrop(zone: StundenplanAnsichtDropZone, wochentyp?: number) {
 		// else if oder return der api-methode, sonst wird weiter geprüft
-		if (dragData.value === undefined)
+		if (dragData.value === undefined) {
 			return;
+		}
 		// Fall StundenplanUnterricht -> StundenplanZeitraster
-		if ((dragData.value instanceof StundenplanUnterricht) && (zone instanceof StundenplanZeitraster) && (wochentyp !== undefined))
+		if ((dragData.value instanceof StundenplanUnterricht) && (zone instanceof StundenplanZeitraster) && (wochentyp !== undefined)) {
 			return await props.patchUnterrichte([dragData.value], zone, wochentyp);
+		}
 		// Fall List<StundenplanUnterricht> -> StundenplanZeitraster
 		// Fall List<StundenplanKurs> -> StundenplanZeitraster
 		// Fall List<StundenplanUnterricht> -> undefined
 		if (dragData.value.isTranspiledInstanceOf("java.util.List")) {
 			const listStundenplanUnterricht = new ArrayList<StundenplanUnterricht>();
 			const listStundenplanKurs = new ArrayList<StundenplanKurs>();
-			for (const item of dragData.value as List<unknown>)
-				if (item instanceof StundenplanUnterricht)
+			for (const item of dragData.value as List<unknown>) {
+				if (item instanceof StundenplanUnterricht) {
 					listStundenplanUnterricht.add(item);
-				else if ((item instanceof StundenplanKurs) && (zone instanceof StundenplanZeitraster) && (wochentyp !== undefined) && props.stundenplanManager().kursDarfInZelle(item, zone.wochentag, zone.unterrichtstunde, wochentyp))
+				} else if ((item instanceof StundenplanKurs) && (zone instanceof StundenplanZeitraster) && (wochentyp !== undefined) && props.stundenplanManager().kursDarfInZelle(item, zone.wochentag, zone.unterrichtstunde, wochentyp)) {
 					listStundenplanKurs.add(item);
-			if (listStundenplanKurs.size() > 0)
+				}
+			}
+			if (listStundenplanKurs.size() > 0) {
 				return await props.addUnterrichte(listStundenplanKurs);
-			if (listStundenplanUnterricht.size() > 0)
-				if ((zone instanceof StundenplanZeitraster) && (wochentyp !== undefined))
+			}
+			if (listStundenplanUnterricht.size() > 0) {
+				if ((zone instanceof StundenplanZeitraster) && (wochentyp !== undefined)) {
 					return await props.patchUnterrichte(listStundenplanUnterricht, zone, wochentyp);
-				else if (zone === undefined)
+				} else if (zone === undefined) {
 					return await props.removeUnterrichte(listStundenplanUnterricht);
+				}
+			}
 		}
 		// Fall StundenplanKlassenunterricht -> StundenplanZeitraster
 		if ((dragData.value instanceof StundenplanKlassenunterricht) && (zone instanceof StundenplanZeitraster) && (wochentyp !== undefined) && props.stundenplanManager().klassenunterrichtDarfInZelle(dragData.value, zone.wochentag, zone.unterrichtstunde, wochentyp)) {
@@ -332,31 +336,43 @@
 			const stunde = { idZeitraster: zone.id, wochentyp, idKurs: null, idFach: dragData.value.idFach, klassen, lehrer: dragData.value.lehrer, schienen: dragData.value.schienen };
 			const arr = [];
 			arr.push(stunde);
-			if (doppelstundenModus.value === true && props.stundenplanManager().klassenunterrichtGetWochenstundenREST(klasse.value.id, dragData.value.idFach) >= 2) {
+			if (props.doppelstundenmodus() && (props.stundenplanManager().klassenunterrichtGetWochenstundenREST(klasse.value.id, dragData.value.idFach) >= 2)) {
 				const next = props.stundenplanManager().getZeitrasterNext(zone);
-				if (next && props.stundenplanManager().klassenunterrichtDarfInZelle(dragData.value, zone.wochentag, next.unterrichtstunde, wochentyp))
+				if (next !== null) {
 					arr.push({ idZeitraster: next.id, wochentyp, idKurs: null, idFach: dragData.value.idFach, klassen, lehrer: dragData.value.lehrer, schienen: dragData.value.schienen });
+				}
 			}
 			await props.addUnterrichte(arr);
 			return;
 		}
 		// Fall StundenplanUnterricht -> undefined
-		if ((dragData.value instanceof StundenplanUnterricht) && (zone === undefined))
-			return await props.removeUnterrichte([dragData.value]);
+		if ((dragData.value instanceof StundenplanUnterricht) && (zone === undefined)) {
+			const arr = [dragData.value];
+			// wenn der Doppelstundenmodus aktiviert ist und am gleichen Tag, in der nächsten Stunde ebenfalls ein Unterricht des selben Fachs vorliegt, ebenfalls löschen
+			if (props.doppelstundenmodus()) {
+				const next = props.stundenplanManager().unterrichtGetByIdFolgePartnerOrNull(dragData.value.id);
+				if (next !== null) {
+					arr.push(next);
+				}
+			}
+			return await props.removeUnterrichte(arr);
+		}
 		// TODO Fall StundenplanKurs -> StundenplanZeitraster
 		if ((dragData.value instanceof StundenplanKurs) && (zone instanceof StundenplanZeitraster) && (wochentyp !== undefined) && props.stundenplanManager().kursDarfInZelle(dragData.value, zone.wochentag, zone.unterrichtstunde, wochentyp)) {
 			const klassen = new HashSet<number>();
 			const listSchueler = props.stundenplanManager().schuelerGetMengeByKursIdAsListOrException(dragData.value.id);
-			for (const schueler of listSchueler)
+			for (const schueler of listSchueler) {
 				klassen.add(schueler.idKlasse);
+			}
 			const stunde = { idZeitraster: zone.id, wochentyp, idKurs: dragData.value.id, idFach: dragData.value.idFach, klassen: new ArrayList(klassen), schienen: dragData.value.schienen, lehrer: dragData.value.lehrer };
 			const arr = [];
 			arr.push(stunde);
 			// stundenplanManager().klassenunterrichtGetWochenstundenIST(ku.idKlasse, ku.idFach) }}/{{ stundenplanManager().klassenunterrichtGetWochenstundenSOLL(ku.idKlasse, ku.idFach)
-			if (doppelstundenModus.value === true && props.stundenplanManager().kursGetWochenstundenREST(dragData.value.id) >= 2) {
+			if (props.doppelstundenmodus() && (props.stundenplanManager().kursGetWochenstundenREST(dragData.value.id) >= 2)) {
 				const next = props.stundenplanManager().getZeitrasterNext(zone);
-				if (next && props.stundenplanManager().kursDarfInZelle(dragData.value, zone.wochentag, next.unterrichtstunde, wochentyp))
+				if (next && props.stundenplanManager().kursDarfInZelle(dragData.value, zone.wochentag, next.unterrichtstunde, wochentyp)) {
 					arr.push({ idZeitraster: next.id, wochentyp, idKurs: dragData.value.id, idFach: dragData.value.idFach, klassen: new ArrayList(klassen), schienen: dragData.value.schienen, lehrer: dragData.value.lehrer });
+				}
 			}
 			return await props.addUnterrichte(arr);
 		}
@@ -368,14 +384,16 @@
 				if ((zone instanceof StundenplanZeitraster) && (wochentyp !== undefined) && props.stundenplanManager().kursDarfInZelle(kurs, zone.wochentag, zone.unterrichtstunde, wochentyp)) {
 					const klassen = new HashSet<number>();
 					const listSchueler = props.stundenplanManager().schuelerGetMengeByKursIdAsListOrException(kurs.id);
-					for (const schueler of listSchueler)
+					for (const schueler of listSchueler) {
 						klassen.add(schueler.idKlasse);
+					}
 					const stunde = { idZeitraster: zone.id, wochentyp, idKurs: kurs.id, idFach: kurs.idFach, klassen: new ArrayList(klassen), schienen: kurs.schienen, lehrer: kurs.lehrer };
 					arr.push(stunde);
-					if ((doppelstundenModus.value === true) && (props.stundenplanManager().kursGetWochenstundenREST(kurs.id) >= 2)) {
+					if (props.doppelstundenmodus() && (props.stundenplanManager().kursGetWochenstundenREST(kurs.id) >= 2)) {
 						const next = props.stundenplanManager().getZeitrasterNext(zone);
-						if (next && (props.stundenplanManager().kursDarfInZelle(kurs, zone.wochentag, next.unterrichtstunde, wochentyp)))
+						if (next && (props.stundenplanManager().kursDarfInZelle(kurs, zone.wochentag, next.unterrichtstunde, wochentyp))) {
 							arr.push({ idZeitraster: next.id, wochentyp, idKurs: kurs.id, idFach: kurs.idFach, klassen: new ArrayList(klassen), schienen: kurs.schienen, lehrer: kurs.lehrer });
+						}
 					}
 				}
 			}
@@ -389,14 +407,16 @@
 	}
 
 	function isDropZone(): boolean {
-		if ((dragData.value === undefined) || (dragData.value instanceof StundenplanKurs) || (dragData.value instanceof StundenplanKlassenunterricht))
+		if ((dragData.value === undefined) || (dragData.value instanceof StundenplanKurs) || (dragData.value instanceof StundenplanKlassenunterricht)) {
 			return false;
+		}
 		return true;
 	}
 
 	function checkDropZone(event: DragEvent) {
-		if (isDropZone())
+		if (isDropZone()) {
 			event.preventDefault();
+		}
 	}
 
 	function openTheModal(openModal: () => void) {

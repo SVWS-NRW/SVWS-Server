@@ -1,13 +1,10 @@
 package de.svws_nrw.data.schueler;
 
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
@@ -17,25 +14,21 @@ import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.types.schule.Verkehrssprache;
-import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOFahrschuelerart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOHaltestellen;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerDatenschutz;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerFoto;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernplattform;
-import de.svws_nrw.db.dto.current.svws.auth.DTOLernplattformen;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import org.apache.commons.lang3.Strings;
 
 
 /**
@@ -44,8 +37,6 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSchueler, SchuelerStammdaten> {
 
-	private final Long idSchuljahresabschnitt;
-
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link SchuelerStammdaten}.
 	 *
@@ -53,18 +44,6 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	 */
 	public DataSchuelerStammdaten(final DBEntityManager conn) {
 		super(conn);
-		this.idSchuljahresabschnitt = 0L;
-	}
-
-	/**
-	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link SchuelerStammdaten}.
-	 *
-	 * @param conn                     die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
-	 */
-	public DataSchuelerStammdaten(final DBEntityManager conn, final Long idSchuljahresabschnitt) {
-		super(conn);
-		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
 	}
 
 	@Override
@@ -157,124 +136,9 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		return dto.ID;
 	}
 
-
-	@Override
-	protected void initDTO(final DTOSchueler dto, final Long id, final Map<String, Object> initAttributes) {
-		// Basisdaten
-		dto.ID = id;
-		dto.GU_ID = String.format("{%s}", UUID.randomUUID());
-		dto.Schuljahresabschnitts_ID = idSchuljahresabschnitt;
-		dto.Nachname = "";
-		dto.Vorname = "";
-		dto.AlleVornamen = "";
-		dto.Geschlecht = Geschlecht.M;
-		dto.Geburtsdatum = "";
-		dto.Geburtsort = "";
-		dto.Geburtsname = "";
-		// Wohnort und Kontaktdaten
-		dto.Strassenname = "";
-		dto.HausNr = "";
-		dto.HausNrZusatz = "";
-		dto.Ort_ID = null;
-		dto.Ortsteil_ID = null;
-		dto.Telefon = "";
-		dto.Fax = "";
-		dto.Email = "";
-		dto.SchulEmail = "";
-		// Daten zur Staatsangehörigkeit und zur Religion
-		dto.StaatKrz = null;
-		dto.StaatKrz2 = null;
-		dto.Religion_ID = null;
-		dto.KonfDruck = false;
-		dto.Religionsabmeldung = "";
-		dto.Religionsanmeldung = "";
-		// Daten zum Migrationshintergrund
-		dto.Migrationshintergrund = false;
-		dto.JahrZuzug = null;
-		dto.GeburtslandSchueler = null;
-		dto.VerkehrsspracheFamilie = null;
-		dto.GeburtslandVater = null;
-		dto.GeburtslandMutter = null;
-		// Statusdaten
-		dto.idStatus = null;
-		dto.Duplikat = false;
-		dto.ExterneSchulNr = null;
-		dto.Ausweisnummer = null;
-		dto.Fahrschueler_ID = null;
-		dto.Haltestelle_ID = null;
-		dto.AnmeldeDatum = null;
-		dto.Aufnahmedatum = null;
-		dto.Volljaehrig = false;
-		dto.KeineAuskunft = false;
-		dto.SchulpflichtErf = false;
-		dto.BerufsschulpflErf = false;
-		dto.MasernImpfnachweis = false;
-		dto.Bafoeg = false;
-		dto.MeisterBafoeg = false;
-		dto.KeineAuskunft = false;
-
-		dto.BeginnBildungsgang = null;
-		dto.DauerBildungsgang = null;
-	}
-
-
 	@Override
 	protected Long getID(final Map<String, Object> attributes) throws ApiOperationException {
 		return JSONMapper.convertToLong(attributes.get("id"), false);
-	}
-
-	/**
-	 * Erstellt einen Schüler aus dem InputStream und liefert das erstellte Core-DTO zurück.
-	 * Für den Schüler wird ein Lernabschnitt angelegt. Außerdem werden dem Schüler alle Einwilligungen und Lernplattformen hinzugefügt.
-	 *
-	 * @param is InputStream mit den JSON-Daten
-	 * @return das erstellte SchuelerStammdaten Core-DTO
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public Response createNewSchuelerWithLernabschnitt(final InputStream is) throws ApiOperationException {
-		final Map<String, Object> initAttributes = JSONMapper.toMap(is);
-
-		final Map<String, Object> lernAbschnittAttributes = new HashMap<>();
-		final String[] keysToExtract = { "schuljahresabschnitt", "jahrgangID", "klassenID" };
-		for (final String k : keysToExtract)
-			if (initAttributes.containsKey(k))
-				lernAbschnittAttributes.put(k, initAttributes.remove(k));
-
-		// Schüler wird angelegt
-		final SchuelerStammdaten created = this.add(initAttributes);
-		conn.transactionFlush();
-
-		// Anlegen aller Einwilligungen für den Schüler
-		final List<DTOKatalogEinwilligungsart> katalogEinwilligungsarten = conn.queryAll(DTOKatalogEinwilligungsart.class);
-		final List<DTOSchuelerDatenschutz> listEinwilligungen = katalogEinwilligungsarten.stream()
-				.filter(e -> e.personTyp == PersonTyp.SCHUELER)
-				.map(e -> new DTOSchuelerDatenschutz(created.id, e.ID, false, false))
-				.toList();
-		if (!listEinwilligungen.isEmpty())
-			conn.transactionPersistAll(listEinwilligungen);
-
-		// Anlegen aller Lernplattformen für den Schüler
-		final List<DTOLernplattformen> katalogLernplattformen = conn.queryAll(DTOLernplattformen.class);
-		final List<DTOSchuelerLernplattform> listLernplattformen = katalogLernplattformen.stream()
-				.map(e -> new DTOSchuelerLernplattform(created.id, e.ID, false, false, false, false))
-				.toList();
-		if (!listLernplattformen.isEmpty())
-			conn.transactionPersistAll(listLernplattformen);
-
-		// Anlegen des Lernabschnitts für den Schüler
-		if (!lernAbschnittAttributes.isEmpty()) {
-			Long tmpIdSchuljahresabschnitt = null;
-			if (lernAbschnittAttributes.containsKey("schuljahresabschnitt"))
-				tmpIdSchuljahresabschnitt = JSONMapper.convertToLong(lernAbschnittAttributes.remove("schuljahresabschnitt"), false, "schuljahresabschnitt");
-			final DataSchuelerLernabschnittsdaten data = new DataSchuelerLernabschnittsdaten(conn);
-			lernAbschnittAttributes.put("schuelerID", created.id);
-			if (tmpIdSchuljahresabschnitt != null)
-				lernAbschnittAttributes.put("schuljahresabschnitt", tmpIdSchuljahresabschnitt);
-			data.add(lernAbschnittAttributes);
-		}
-
-		return Response.status(Response.Status.CREATED).entity(created).build();
 	}
 
 	@Override
@@ -341,7 +205,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		switch (name) {
 			// Persönliche Daten
 			case "id" -> mapID(dto, value);
-			case "foto" -> mapSchuelerFoto(dto, value);
+			case "foto" -> updateSchuelerFoto(dto, value);
 			case "nachname" -> dto.Nachname = JSONMapper.convertToString(value, false, false, Schema.tab_Schueler.col_Name.datenlaenge(), "nachname");
 			case "vorname" -> dto.Vorname = JSONMapper.convertToString(value, false, false, Schema.tab_Schueler.col_Vorname.datenlaenge(), "vorname");
 			case "alleVornamen" -> dto.AlleVornamen = JSONMapper.convertToString(value, false, true, Schema.tab_Schueler.col_Zusatz.datenlaenge(),
@@ -522,8 +386,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		final SchuelerStatus schuelerStatus = SchuelerStatus.data().getWertBySchluessel(String.valueOf(status));
 		if (schuelerStatus == null)
 			throw new ApiOperationException(Status.BAD_REQUEST);
-		final long schuljahresabschnittsID = (dto.Schuljahresabschnitts_ID != null) ? dto.Schuljahresabschnitts_ID : idSchuljahresabschnitt;
-		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(schuljahresabschnittsID);
+		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID);
 		final SchuelerStatusKatalogEintrag schuelerStatusEintrag = schuelerStatus.daten(abschnitt.schuljahr);
 		if (schuelerStatusEintrag == null)
 			throw new ApiOperationException(Status.BAD_REQUEST);
@@ -561,24 +424,38 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 	/**
-	 * Setzt das Schüler-Foto für den übergebenen Schüler.
+	 * CRUD für das Schüler-Foto des übergebenen Schülers.
 	 *
-	 * @param dto     das DB-DTO des Schülers
+	 * @param schuelerDto     das DB-DTO des Schülers
 	 * @param value   das Schüler-Foto in Base64-Kodierung
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	void mapSchuelerFoto(final DTOSchueler dto, final Object value) throws ApiOperationException {
-		final String schuelerFotoNeu = JSONMapper.convertToString(value, true, true, null);
-		DTOSchuelerFoto schuelerFotoOldDto = conn.queryByKey(DTOSchuelerFoto.class, dto.ID);
-		if (schuelerFotoOldDto == null)
-			schuelerFotoOldDto = new DTOSchuelerFoto(dto.ID);
-		if ((schuelerFotoNeu != null) && !schuelerFotoNeu.equals(schuelerFotoOldDto.FotoBase64)) {
-			schuelerFotoOldDto.FotoBase64 = schuelerFotoNeu;
-			conn.transactionPersist(schuelerFotoOldDto);
+	void updateSchuelerFoto(final DTOSchueler schuelerDto, final Object value) throws ApiOperationException {
+		final String fotoPayloadNeu = JSONMapper.convertToString(value, true, true, null);
+		final DTOSchuelerFoto schuelerFotoOldDto = conn.queryByKey(DTOSchuelerFoto.class, schuelerDto.ID);
+		if (isFotoUnchanged(schuelerFotoOldDto, fotoPayloadNeu)) {
+			return;
+		}
+
+		if (fotoPayloadNeu == null) {
+			conn.transactionRemove(schuelerFotoOldDto);
+		} else {
+			persistFoto(schuelerDto.ID, schuelerFotoOldDto, fotoPayloadNeu);
 		}
 	}
 
+	private static boolean isFotoUnchanged(final DTOSchuelerFoto schuelerFotoOldDto, final String schuelerFotoNeu) {
+		final boolean isInvalidUpdate = (schuelerFotoOldDto == null) && (schuelerFotoNeu == null);
+		final boolean isIdenticalUpdate = (schuelerFotoOldDto != null) && Strings.CS.equals(schuelerFotoNeu, schuelerFotoOldDto.FotoBase64);
+		return isInvalidUpdate || isIdenticalUpdate;
+	}
+
+	private void persistFoto(final Long dtoID, final DTOSchuelerFoto existingDto, final String schuelerFotoNeu) {
+		final var newFoto = (existingDto != null) ? existingDto : new DTOSchuelerFoto(dtoID);
+		newFoto.FotoBase64 = schuelerFotoNeu;
+		conn.transactionPersist(newFoto);
+	}
 
 	/**
 	 * Setzt den Wohnort bei den Schülerdaten und prüft dabei die Angabe des Ortsteils auf Korrektheit in Bezug auf die Ortsteile

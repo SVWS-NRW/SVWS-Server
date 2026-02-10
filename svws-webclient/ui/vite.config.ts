@@ -12,7 +12,7 @@ export default defineConfig({
 		environment: "happy-dom",
 		reporters: ["default", "junit", "verbose"],
 		outputFile: { junit: "build/testresults/junit.xml" },
-		include: ["src/**/*.test.ts"],
+		include: ["test/**/*.test.ts"],
 	},
 	resolve: {
 		alias: {

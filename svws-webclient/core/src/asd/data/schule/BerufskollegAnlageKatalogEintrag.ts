@@ -19,7 +19,7 @@ export class BerufskollegAnlageKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.schule.BerufskollegAnlageKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<BerufskollegAnlageKatalogEintrag>('de.svws_nrw.asd.data.schule.BerufskollegAnlageKatalogEintrag');
+	public static readonly class = new Class<BerufskollegAnlageKatalogEintrag>('de.svws_nrw.asd.data.schule.BerufskollegAnlageKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): BerufskollegAnlageKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<BerufskollegAnlageKatalogEintrag>;

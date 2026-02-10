@@ -31,8 +31,6 @@ export class RouteNotenmodulKlassenleitungData extends RouteNode<any, RouteNoten
 			patchLernabschnitt: routeNotenmodul.data.patchLernabschnitt,
 			columnsVisible: () => routeNotenmodulKlassenleitung.data.columnsVisible,
 			setColumnsVisible: routeNotenmodulKlassenleitung.data.setColumnsVisible,
-			floskelEditorVisible: routeNotenmodulKlassenleitung.data.floskelEditorVisible,
-			setFloskelEditorVisible: routeNotenmodulKlassenleitung.data.setFloskelEditorVisible,
 		};
 	}
 

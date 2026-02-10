@@ -26,7 +26,7 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "SchuelerSprachenfolge")
-@JsonPropertyOrder({"ID", "Schueler_ID", "Sprache", "ReihenfolgeNr", "ASDJahrgangVon", "ASDJahrgangBis", "AbschnittVon", "AbschnittBis", "Referenzniveau", "KleinesLatinumErreicht", "LatinumErreicht", "GraecumErreicht", "HebraicumErreicht"})
+@JsonPropertyOrder({"ID", "Schueler_ID", "Sprache", "IstNachweis", "ReihenfolgeNr", "ASDJahrgangVon", "ASDJahrgangBis", "AbschnittVon", "AbschnittBis", "Referenzniveau", "KleinesLatinumErreicht", "LatinumErreicht", "GraecumErreicht", "HebraicumErreicht"})
 public final class DTOSchuelerSprachenfolge {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -58,6 +58,12 @@ public final class DTOSchuelerSprachenfolge {
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sprache */
 	public static final String QUERY_LIST_BY_SPRACHE = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Sprache IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes IstNachweis */
+	public static final String QUERY_BY_ISTNACHWEIS = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.IstNachweis = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes IstNachweis */
+	public static final String QUERY_LIST_BY_ISTNACHWEIS = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.IstNachweis IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes ReihenfolgeNr */
 	public static final String QUERY_BY_REIHENFOLGENR = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ReihenfolgeNr = ?1";
@@ -134,6 +140,14 @@ public final class DTOSchuelerSprachenfolge {
 	@Column(name = "Sprache")
 	@JsonProperty
 	public String Sprache;
+
+	/** Für WbK: Gibt an, ob die Sprachbelegung einer zweiten Fremdsprache durch Nachweis erfolgt (siehe §34 Abst 3,4 APO-WbK) */
+	@Column(name = "IstNachweis")
+	@JsonProperty
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
+	public Boolean IstNachweis;
 
 	/** Reihenfolge Nummer des Sprachenfolgeeintrags */
 	@Column(name = "ReihenfolgeNr")
@@ -248,7 +262,7 @@ public final class DTOSchuelerSprachenfolge {
 	 */
 	@Override
 	public String toString() {
-		return "DTOSchuelerSprachenfolge(ID=" + this.ID + ", Schueler_ID=" + this.Schueler_ID + ", Sprache=" + this.Sprache + ", ReihenfolgeNr=" + this.ReihenfolgeNr + ", ASDJahrgangVon=" + this.ASDJahrgangVon + ", ASDJahrgangBis=" + this.ASDJahrgangBis + ", AbschnittVon=" + this.AbschnittVon + ", AbschnittBis=" + this.AbschnittBis + ", Referenzniveau=" + this.Referenzniveau + ", KleinesLatinumErreicht=" + this.KleinesLatinumErreicht + ", LatinumErreicht=" + this.LatinumErreicht + ", GraecumErreicht=" + this.GraecumErreicht + ", HebraicumErreicht=" + this.HebraicumErreicht + ")";
+		return "DTOSchuelerSprachenfolge(ID=" + this.ID + ", Schueler_ID=" + this.Schueler_ID + ", Sprache=" + this.Sprache + ", IstNachweis=" + this.IstNachweis + ", ReihenfolgeNr=" + this.ReihenfolgeNr + ", ASDJahrgangVon=" + this.ASDJahrgangVon + ", ASDJahrgangBis=" + this.ASDJahrgangBis + ", AbschnittVon=" + this.AbschnittVon + ", AbschnittBis=" + this.AbschnittBis + ", Referenzniveau=" + this.Referenzniveau + ", KleinesLatinumErreicht=" + this.KleinesLatinumErreicht + ", LatinumErreicht=" + this.LatinumErreicht + ", GraecumErreicht=" + this.GraecumErreicht + ", HebraicumErreicht=" + this.HebraicumErreicht + ")";
 	}
 
 }

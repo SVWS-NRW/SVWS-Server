@@ -38,7 +38,7 @@
 				<svws-ui-select title="Entlassjahrgang"
 					:items="manager().jahrgaengeById.values()"
 					v-model="entlassjahrgangEigeneSchule"
-					:readonly :item-text='j => j.bezeichnung ?? ""' removable />
+					:readonly :item-text="j => j.bezeichnung ?? ''" removable />
 				<svws-ui-select title="Entlassgrund" :items="manager().entlassgruendeById.values()" :item-text="v => v.bezeichnung" removable
 					:model-value="manager().getEntlassgrund('entlassungGrundID')" :readonly
 					@update:model-value="v => manager().patchEntlassgrund(v, 'entlassungGrundID')" />
@@ -68,29 +68,26 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Wechsel zu aufnehmender Schule">
 			<template #actions>
+				<svws-ui-checkbox v-if="ServerMode.DEV.checkServerMode(serverMode)" :model-value="wechselBevorstehend"
+					:indeterminate="manager().daten.aufnehmendBestaetigt === null" @update:model-value="wechselBevorstehend=!wechselBevorstehend" disabled>
+					<!-- Disabled, solange keine Backend-Funktionalität für den Schulwechsel implementiert ist. -->
+					Wechsel bevorstehend
+				</svws-ui-checkbox>
 				<svws-ui-checkbox :model-value="manager().daten.aufnehmendBestaetigt === true" :indeterminate="manager().daten.aufnehmendBestaetigt === null"
 					@update:model-value="aufnehmendBestaetigt => manager().doPatch({ aufnehmendBestaetigt })" focus-class-content :readonly>
 					Aufnahme bestätigt
 				</svws-ui-checkbox>
 			</template>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-checkbox v-if="ServerMode.DEV.checkServerMode(serverMode)" :model-value="wechselBevorstehend"
-					:indeterminate="manager().daten.aufnehmendBestaetigt === null" @update:model-value="wechselBevorstehend=!wechselBevorstehend">
-					Wechsel bevorstehend
-				</svws-ui-checkbox>
-				<ui-select v-if="ServerMode.DEV.checkServerMode(serverMode)" label="Wechselgrund" :manager="schulwechselGrundSelectManager" :disabled="!wechselBevorstehend" />
 				<svws-ui-select title="Schule" :items="manager().schulenById.values()" :item-text="textSchule" autocomplete :readonly
 					:model-value="manager().schulenById.get(manager().daten.idAufnehmendeSchule ?? -1)" :item-filter="filterSchulenEintraege" removable
-					@update:model-value="v => manager().patchSchule(v, 'idAufnehmendeSchule')"
-					:disabled="ServerMode.DEV.checkServerMode(serverMode) && !wechselBevorstehend" />
-				<svws-ui-button type="transparent" @click="goToSchule(manager().daten.idAufnehmendeSchule ?? -1)" :readonly
-					:disabled="ServerMode.DEV.checkServerMode(serverMode) && !wechselBevorstehend">
+					@update:model-value="v => manager().patchSchule(v, 'idAufnehmendeSchule')" />
+				<svws-ui-button type="transparent" @click="goToSchule(manager().daten.idAufnehmendeSchule ?? -1)" :readonly>
 					<span class="icon i-ri-link" />Zur Schule
 				</svws-ui-button>
-
 				<svws-ui-text-input placeholder="Wechseldatum" :model-value="manager().daten.aufnehmendWechseldatum" :readonly
-					@change="aufnehmendWechseldatum => manager().doPatch({ aufnehmendWechseldatum })" type="date"
-					:disabled="ServerMode.DEV.checkServerMode(serverMode) && !wechselBevorstehend" />
+					@change="aufnehmendWechseldatum => manager().doPatch({ aufnehmendWechseldatum })" type="date" />
+				<ui-select v-if="ServerMode.DEV.checkServerMode(serverMode)" label="Wechselgrund" :manager="schulwechselGrundSelectManager" :disabled="!wechselBevorstehend" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Grundschulbesuch">
@@ -270,9 +267,9 @@
 	}
 
 	const wechselBevorstehend = ref<boolean>(false);
-
+	const options = computed(() => props.manager().entlassgruendeById.values());
 	const schulwechselGrundSelectManager = new SelectManager({
-		options: props.manager().entlassgruendeById.values(),
+		options: options,
 		optionDisplayText: (option) => option.bezeichnung,
 		selectionDisplayText: (option) => option.bezeichnung,
 	});
@@ -291,8 +288,9 @@
 		const result = [];
 		for (const m of props.manager().merkmaleById.values()) {
 			const alreadyExists = merkmale.value.some(v => v.idMerkmal === m.id);
-			if (!alreadyExists)
+			if (!alreadyExists) {
 				result.push(m);
+			}
 		}
 		return result;
 	});
@@ -320,10 +318,12 @@
 	// --- api calls Merkmal ---
 	async function sendRequestMerkmal(type: Mode) {
 		const { id, ...partialDataWithoutId } = newEntryMerkmal.value;
-		if (type === Mode.ADD)
+		if (type === Mode.ADD) {
 			await props.addSchuelerSchulbesuchMerkmal(partialDataWithoutId);
-		if (type === Mode.PATCH)
+		}
+		if (type === Mode.PATCH) {
 			await props.patchSchuelerSchulbesuchMerkmal(newEntryMerkmal.value.id, partialDataWithoutId);
+		}
 		enterDefaultMode();
 	}
 
@@ -341,11 +341,13 @@
 	// Delete
 	const auswahlMerkmale = ref<SchuelerSchulbesuchMerkmal[]>([]);
 	async function deleteAuswahlMerkmale() {
-		if (auswahlMerkmale.value.length === 0)
+		if (auswahlMerkmale.value.length === 0) {
 			return;
+		}
 		const ids = new ArrayList<number>();
-		for (const s of auswahlMerkmale.value)
+		for (const s of auswahlMerkmale.value) {
 			ids.add(s.id);
+		}
 		await props.deleteSchuelerSchulbesuchMerkmale(ids);
 		auswahlMerkmale.value = [];
 	}
@@ -372,8 +374,9 @@
 	});
 
 	watch(newEntryBisherigeSchuleDatumBis, () => {
-		if (currentMode.value === Mode.ADD)
+		if (currentMode.value === Mode.ADD) {
 			newEntryBisherigeSchule.value.schulgliederung = schulgliederungenBisherigeSchule.value[0]?.schluessel ?? null;
+		}
 	});
 
 	// --- Bisherige Schulen Modal ---
@@ -403,45 +406,52 @@
 	}
 
 	const selectedSchuleForNewEntryBisherigeSchule = computed<SchulEintrag>(() => {
-		if (newEntryBisherigeSchule.value.idSchule === null)
+		if (newEntryBisherigeSchule.value.idSchule === null) {
 			return new SchulEintrag();
+		}
 		const schule = props.manager().schulenById.get(newEntryBisherigeSchule.value.idSchule);
 		return (schule === undefined) ? new SchulEintrag() : schule;
 	});
 
 	const schulformEintragSelectedSchuleNewEntryBisherigeSchule = computed<SchulformKatalogEintrag | null>(() => {
-		if (selectedSchuleForNewEntryBisherigeSchule.value.idSchulform === null)
+		if (selectedSchuleForNewEntryBisherigeSchule.value.idSchulform === null) {
 			return null;
+		}
 		return Schulform.data().getEintragByID(selectedSchuleForNewEntryBisherigeSchule.value.idSchulform);
 	});
 
 	const schulformSelectedSchuleNEwEntryBisherigeSchule = computed<Schulform | null>(() => {
-		if (selectedSchuleForNewEntryBisherigeSchule.value.idSchulform === null)
+		if (selectedSchuleForNewEntryBisherigeSchule.value.idSchulform === null) {
 			return null;
+		}
 		return Schulform.data().getWertByID(selectedSchuleForNewEntryBisherigeSchule.value.idSchulform);
 	});
 
 	const schulgliederungenBisherigeSchule = computed<SchulgliederungKatalogEintrag[]>(() => {
-		if ((!schulformEintragSelectedSchuleNewEntryBisherigeSchule.value) || (newEntryBisherigeSchule.value.datumBis === null))
+		if ((!schulformEintragSelectedSchuleNewEntryBisherigeSchule.value) || (newEntryBisherigeSchule.value.datumBis === null)) {
 			return [];
+		}
 		const gliederungenByJahr = Schulgliederung.data().getEintraegeBySchuljahr(schuljahrNewEntryBisherigeSchuleDatumBis.value);
 		const result = [];
 		for (const g of gliederungenByJahr) {
-			if (g.schulformen.contains(schulformEintragSelectedSchuleNewEntryBisherigeSchule.value.kuerzel))
+			if (g.schulformen.contains(schulformEintragSelectedSchuleNewEntryBisherigeSchule.value.kuerzel)) {
 				result.push(g);
+			}
 		}
 		return result;
 	});
 
 	const schuljahrNewEntryBisherigeSchuleDatumVon = computed<number>(() => {
-		if (newEntryBisherigeSchule.value.datumVon === null)
+		if (newEntryBisherigeSchule.value.datumVon === null) {
 			return -1;
+		}
 		return Number(newEntryBisherigeSchule.value.datumVon.substring(0, 4));
 	});
 
 	const schuljahrNewEntryBisherigeSchuleDatumBis = computed<number>(() => {
-		if (newEntryBisherigeSchule.value.datumBis === null)
+		if (newEntryBisherigeSchule.value.datumBis === null) {
 			return -1;
+		}
 		return Number(newEntryBisherigeSchule.value.datumBis.substring(0, 4));
 	});
 
@@ -458,14 +468,16 @@
 
 	function findGliederung() {
 		for (const g of schulgliederungenBisherigeSchule.value) {
-			if (g.schluessel === newEntryBisherigeSchule.value.schulgliederung)
+			if (g.schluessel === newEntryBisherigeSchule.value.schulgliederung) {
 				return g;
+			}
 		}
 	}
 
 	const adresseBisherigeSchule = computed<string>(() => {
-		if (selectedSchuleForNewEntryBisherigeSchule.value.id === -1)
+		if (selectedSchuleForNewEntryBisherigeSchule.value.id === -1) {
 			return '';
+		}
 		const strasse = AdressenUtils.combineStrasse(selectedSchuleForNewEntryBisherigeSchule.value.strassenname,
 			selectedSchuleForNewEntryBisherigeSchule.value.hausnummer,
 			selectedSchuleForNewEntryBisherigeSchule.value.zusatzHausnummer);
@@ -476,10 +488,12 @@
 	// --- api calls Bisherige Schulen ---
 	async function sendRequestBisherigeSchule(type: Mode) {
 		const { id, ...partialDataWithoutId } = newEntryBisherigeSchule.value;
-		if (type === Mode.ADD)
+		if (type === Mode.ADD) {
 			await props.addSchuelerSchulbesuchSchule(partialDataWithoutId);
-		if (type === Mode.PATCH)
+		}
+		if (type === Mode.PATCH) {
 			await props.patchSchuelerSchulbesuchSchule(newEntryBisherigeSchule.value.id, partialDataWithoutId);
+		}
 		enterDefaultMode();
 	}
 
@@ -532,8 +546,9 @@
 	}
 
 	function textMerkmal(m: Merkmal) {
-		if (m.bezeichnung === null)
+		if (m.bezeichnung === null) {
 			return '';
+		}
 		return m.bezeichnung;
 	}
 
@@ -558,14 +573,17 @@
 	}
 
 	function textSchulgliederung(v: string | null) {
-		if (v === null)
+		if (v === null) {
 			return '-';
+		}
 		const wertBySchluessel = Schulgliederung.data().getWertBySchluessel(v);
-		if (!wertBySchluessel)
+		if (!wertBySchluessel) {
 			return '-';
+		}
 		const historienEintrag = wertBySchluessel.daten(props.manager().schuljahr);
-		if (!historienEintrag)
+		if (!historienEintrag) {
 			return '-';
+		}
 		return historienEintrag.text;
 	}
 

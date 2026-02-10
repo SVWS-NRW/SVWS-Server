@@ -59,7 +59,7 @@ export class Schild3KatalogEintragVersetzungsvermerke extends JavaObject {
 		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragVersetzungsvermerke'].includes(name);
 	}
 
-	public static class = new Class<Schild3KatalogEintragVersetzungsvermerke>('de.svws_nrw.core.data.schild3.Schild3KatalogEintragVersetzungsvermerke');
+	public static readonly class = new Class<Schild3KatalogEintragVersetzungsvermerke>('de.svws_nrw.core.data.schild3.Schild3KatalogEintragVersetzungsvermerke');
 
 	public static transpilerFromJSON(json: string): Schild3KatalogEintragVersetzungsvermerke {
 		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragVersetzungsvermerke>;

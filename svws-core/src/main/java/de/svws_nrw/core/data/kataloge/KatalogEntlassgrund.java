@@ -28,11 +28,13 @@ public class KatalogEntlassgrund {
 
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll. */
 	@Schema(description = "Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll.", example = "true")
-	public boolean istSichtbar;
+	public boolean istSichtbar = true;
 
-	/** Gibt an, ob der Eintrag in der Anwendung änderbar sein soll. */
-	@Schema(description = "Gibt an, ob der Eintrag in der Anwendung änderbar sein soll.", example = "true")
-	public boolean istAenderbar;
+
+	/** Gibt an, ob der Entlassgrund in anderen Datenbanktabellen referenziert ist oder nicht. */
+	@Schema(description = "Gibt an, ob der Entlassgrund in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
+	public Boolean referenziertInAnderenTabellen = false;
+
 
 	/**
 	 * Leerer Standardkonstruktor.

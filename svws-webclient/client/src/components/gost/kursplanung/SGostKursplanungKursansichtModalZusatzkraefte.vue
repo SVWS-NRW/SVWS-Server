@@ -76,8 +76,9 @@
 	}
 
 	async function remove() {
-		for (const l of selected.value)
+		for (const l of selected.value) {
 			await props.removeKursLehrer(props.kurs.id, l.id);
+		}
 		selected.value = [];
 	}
 
@@ -90,20 +91,24 @@
 		const result = new ArrayList<LehrerListeEintrag>();
 		for (const l of tmp) {
 			const lehrer = props.mapLehrer.get(l.id);
-			if (lehrer !== undefined)
+			if (lehrer !== undefined) {
 				result.add(lehrer);
+			}
 		}
 		return result;
 	});
 
 	const lehrer_liste = computed<LehrerListeEintrag[]>(() => {
 		const vergeben = new Set();
-		for (const l of kurslehrer.value)
+		for (const l of kurslehrer.value) {
 			vergeben.add(l.id);
+		}
 		const result = [];
-		for (const l of props.mapLehrer.values())
-			if ((!vergeben.has(l.id)) && (l.istSichtbar))
+		for (const l of props.mapLehrer.values()) {
+			if ((!vergeben.has(l.id)) && (l.istSichtbar)) {
 				result.push(l);
+			}
+		}
 		return result;
 	});
 

@@ -204,7 +204,7 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 		return ['java.util.function.Consumer', 'de.svws_nrw.core.logger.LogConsumerList'].includes(name);
 	}
 
-	public static class = new Class<LogConsumerList>('de.svws_nrw.core.logger.LogConsumerList');
+	public static readonly class = new Class<LogConsumerList>('de.svws_nrw.core.logger.LogConsumerList');
 
 }
 

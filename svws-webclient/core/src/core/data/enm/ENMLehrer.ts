@@ -59,7 +59,7 @@ export class ENMLehrer extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMLehrer'].includes(name);
 	}
 
-	public static class = new Class<ENMLehrer>('de.svws_nrw.core.data.enm.ENMLehrer');
+	public static readonly class = new Class<ENMLehrer>('de.svws_nrw.core.data.enm.ENMLehrer');
 
 	public static transpilerFromJSON(json: string): ENMLehrer {
 		const obj = JSON.parse(json) as Partial<ENMLehrer>;

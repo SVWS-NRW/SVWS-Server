@@ -1,39 +1,41 @@
 import org.gradle.internal.os.OperatingSystem
 
 configurations {
-	implementation.extendsFrom(crypto, database, jetty, jackson, resteasy, swagger)
+	implementation.extendsFrom(crypto, database, jetty, jackson, resteasy, swagger, pdf)
 }
 
 dependencies {
-    implementation project(':svws-asd')
-    implementation project(':svws-core')
-    implementation project(':svws-db')
-    implementation project(':svws-db-utils')
-    implementation project(':svws-openapi')
+	implementation project(':svws-asd')
+	implementation project(':svws-core')
+	implementation project(':svws-db')
+	implementation project(':svws-db-utils')
+	implementation project(':svws-openapi')
 }
 
 compileJava.dependsOn(":svws-db:jar")
 compileJava.dependsOn(":svws-db-utils:jar")
 compileJava.dependsOn(":svws-openapi:jar")
 
+def execOperations = project.services.get(ExecOperations)
+
 /* TODO Support JPMS-Modules
 extraJavaModuleInfo {
-    automaticModule("asyncutil-0.1.0.jar", "com.ibm.asyncutil")
-    automaticModule("btf-1.3.jar", "com.github.fge")
-    automaticModule("jackson-coreutils-2.0.jar", "com.github.fge.jackson")
-    automaticModule("javassist-3.22.0-GA.jar", "javaassist")
-    automaticModule("json-patch-1.13.jar", "com.github.fge.jsonpatch")
-    automaticModule("microprofile-config-api-1.4.jar", "org.eclipse.microprofile.config")
-    automaticModule("msg-simple-1.2.jar", "com.github.fge.msgsimple")
-    automaticModule("resteasy-core-4.5.8.Final.jar", "org.jboss.resteasy.core")
-    automaticModule("resteasy-core-spi-4.5.8.Final.jar", "org.jboss.resteasy.spi")
-    automaticModule("resteasy-client-4.5.8.Final.jar", "org.jboss.resteasy.client")
+	automaticModule("asyncutil-0.1.0.jar", "com.ibm.asyncutil")
+	automaticModule("btf-1.3.jar", "com.github.fge")
+	automaticModule("jackson-coreutils-2.0.jar", "com.github.fge.jackson")
+	automaticModule("javassist-3.22.0-GA.jar", "javaassist")
+	automaticModule("json-patch-1.13.jar", "com.github.fge.jsonpatch")
+	automaticModule("microprofile-config-api-1.4.jar", "org.eclipse.microprofile.config")
+	automaticModule("msg-simple-1.2.jar", "com.github.fge.msgsimple")
+	automaticModule("resteasy-core-4.5.8.Final.jar", "org.jboss.resteasy.core")
+	automaticModule("resteasy-core-spi-4.5.8.Final.jar", "org.jboss.resteasy.spi")
+	automaticModule("resteasy-client-4.5.8.Final.jar", "org.jboss.resteasy.client")
 	automaticModule("resteasy-client-api-4.5.8.Final.jar", "org.jboss.resteasy.client.api")
-    automaticModule("resteasy-jackson2-provider-4.5.8.Final.jar", "org.jboss.resteasy.providers.jackson")
-    automaticModule("resteasy-jaxb-provider-4.5.8.Final.jar", "org.jboss.resteasy.providers.jaxb")
-    automaticModule("resteasy-multipart-provider-4.5.8.Final.jar", "org.jboss.resteasy.providers.multipart")
-    automaticModule("smallrye-config-1.6.1.jar", "io.smallrye.config")
-    automaticModule("smallrye-config-common-1.6.1.jar", "io.smallrye.config.common")
+	automaticModule("resteasy-jackson2-provider-4.5.8.Final.jar", "org.jboss.resteasy.providers.jackson")
+	automaticModule("resteasy-jaxb-provider-4.5.8.Final.jar", "org.jboss.resteasy.providers.jaxb")
+	automaticModule("resteasy-multipart-provider-4.5.8.Final.jar", "org.jboss.resteasy.providers.multipart")
+	automaticModule("smallrye-config-1.6.1.jar", "io.smallrye.config")
+	automaticModule("smallrye-config-common-1.6.1.jar", "io.smallrye.config.common")
 }
 */
 
@@ -41,30 +43,28 @@ task runServer(type: JavaExec) {
 	group = 'svws'
 	dependsOn compileJava
 	classpath = sourceSets.main.runtimeClasspath
-    description = "Starte den SVWS-Server"
-    mainClass = 'de.svws_nrw.server.jetty.Main'
-    jvmArgs "-Dfile.encoding=UTF-8"
+	description = "Starte den SVWS-Server"
+	mainClass = 'de.svws_nrw.server.jetty.Main'
+	jvmArgs "-Dfile.encoding=UTF-8"
 }
 
 task createScripts {
 	group = 'svws'
 	dependsOn compileJava
+	def mainRuntimeClasspath = sourceSets.main.runtimeClasspath
+	def file_Linux = file("./start_server.sh")
+	def file_Win = file("./start_server.cmd")
 	doLast {
 		if (OperatingSystem.current().isLinux()) {
-			file("./start_server.sh").text =
-			  '#! /bin/bash\n' +
-			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.server.jetty.Main\n'
-			providers.exec {
+			file_Linux.text = '#! /bin/bash\n' + 'java --class-path ' + mainRuntimeClasspath.getAsPath() + ' de.svws_nrw.server.jetty.Main\n'
+			execOperations.exec {
 				commandLine('chmod',  '+x', './start_server.sh')
 			}
 		} else if (OperatingSystem.current().isWindows()) {
-			file("./start_server.cmd").text =
-			  'java --class-path "' + sourceSets.main.runtimeClasspath.getAsPath() + '" de.svws_nrw.server.jetty.Main\n'
+			file_Win.text = 'java --class-path "' + mainRuntimeClasspath.getAsPath() + '" de.svws_nrw.server.jetty.Main\n'
 		} else if (OperatingSystem.current().isMacOsX()) {
-			file("./start_server.sh").text =
-			  '#! /bin/zsh\n' +
-			  'java --class-path ' + sourceSets.main.runtimeClasspath.getAsPath() + ' de.svws_nrw.server.jetty.Main\n'
-			providers.exec {
+			file_Linux.text = '#! /bin/zsh\n' + 'java --class-path ' + mainRuntimeClasspath.getAsPath() + ' de.svws_nrw.server.jetty.Main\n'
+			execOperations.exec {
 				commandLine('chmod',  '+x', './start_server.sh')
 			}
 		} else {
@@ -75,15 +75,15 @@ task createScripts {
 
 apply from: "$rootDir/publish-helper.gradle"
 publishing {
-  publications {
-    publishJava(MavenPublication) {
-      artifactId = 'svws-server-app'
-      pom {
-        name = 'SVWS Server Application'
-        description = 'Diese Bibliothek enthält den Java-Server für die Schulverwaltungssoftware in NRW'
-      }
-    }
-  }
+	publications {
+		publishJava(MavenPublication) {
+			artifactId = 'svws-server-app'
+			pom {
+				name = 'SVWS Server Application'
+				description = 'Diese Bibliothek enthält den Java-Server für die Schulverwaltungssoftware in NRW'
+			}
+		}
+	}
 }
 
 assemble.dependsOn createScripts

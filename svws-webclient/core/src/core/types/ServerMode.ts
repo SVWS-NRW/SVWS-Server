@@ -110,7 +110,7 @@ export class ServerMode extends JavaEnum<ServerMode> {
 		return ['de.svws_nrw.core.types.ServerMode', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<ServerMode>('de.svws_nrw.core.types.ServerMode');
+	public static readonly class = new Class<ServerMode>('de.svws_nrw.core.types.ServerMode');
 
 }
 

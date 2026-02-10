@@ -1,5 +1,5 @@
-import type { SimpleOperationResponse } from "@core";
-import { UnsupportedOperationException, type ENMKlasse, type List } from "@core";
+import type { SimpleOperationResponse, ENMKlasse, List } from "@core";
+import { UnsupportedOperationException } from "@core";
 import { EnmKlassenleitungAuswahlListeManager, ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
@@ -57,19 +57,15 @@ export class RouteDataNotenmodulKlassenleitung extends RouteDataAuswahl<EnmKlass
 	}
 
 	get columnsVisible(): Map<string, boolean | null> {
-		return new Map<string, boolean | null>(JSON.parse(api.config.getValue("notenmodul.klassenleitung.table.columns")));
+		const config = JSON.parse(api.config.getValue("notenmodul.klassenleitung.table.columns"));
+		if (config === null) {
+			return routeNotenmodul.data.manager.spalten.mapSpaltenKlassenleitung;
+		}
+		return new Map<string, boolean | null>(config);
 	}
 
 	setColumnsVisible = async (value: Map<string, boolean | null>) => {
 		await api.config.setValue('notenmodul.klassenleitung.table.columns', JSON.stringify([...value]));
-	};
-
-	get floskelEditorVisible(): boolean {
-		return (api.config.getValue("notenmodul.klassenleitung.floskelEditorVisible") === 'true');
-	}
-
-	setFloskelEditorVisible = async (value: boolean) => {
-		await api.config.setValue('notenmodul.klassenleitung.floskelEditorVisible', value ? 'true' : 'false');
 	};
 
 }

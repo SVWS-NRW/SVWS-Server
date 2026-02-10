@@ -58,8 +58,9 @@
 		for (const entry of props.mapAnsprechpartner.entries()) {
 			const mapKey = entry[0];
 			const mapValue = entry[1];
-			if (mapValue.betrieb_id === id)
+			if (mapValue.betrieb_id === id) {
 				t.set(mapKey, mapValue);
+			}
 		}
 		return t;
 	}

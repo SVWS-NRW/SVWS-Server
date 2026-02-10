@@ -8,8 +8,14 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class Schwerpunkt extends GostBelegpruefung {
 
+	/**
+	 * Gibt an, ob ein ein fremdsprachlicher Schwerpunkt vorliegt oder nicht.
+	 */
 	private _hatSchwerpunktFremdsprachen: boolean = false;
 
+	/**
+	 * Gibt an, ob ein ein naturwissenschaftlicher Schwerpunkt vorliegt oder nicht.
+	 */
 	private _hatSchwerpunktNaturwissenschaften: boolean = false;
 
 
@@ -91,7 +97,7 @@ export class Schwerpunkt extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Schwerpunkt'].includes(name);
 	}
 
-	public static class = new Class<Schwerpunkt>('de.svws_nrw.core.abschluss.gost.belegpruefung.Schwerpunkt');
+	public static readonly class = new Class<Schwerpunkt>('de.svws_nrw.core.abschluss.gost.belegpruefung.Schwerpunkt');
 
 }
 

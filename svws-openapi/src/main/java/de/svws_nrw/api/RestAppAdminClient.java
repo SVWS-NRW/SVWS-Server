@@ -3,6 +3,8 @@ package de.svws_nrw.api;
 import java.util.Set;
 
 import de.svws_nrw.api.client.APIAdminClient;
+import de.svws_nrw.api.common.ApiOperationExceptionMapper;
+import de.svws_nrw.api.common.GenericExceptionMapper;
 import de.svws_nrw.api.common.OpenAPICorsFilter;
 import de.svws_nrw.api.common.PathUtils;
 import jakarta.ws.rs.core.Application;
@@ -20,6 +22,8 @@ public final class RestAppAdminClient extends Application {
 	/// Enthält alle Klassen, die für die OpenAPI eingebunden werden
 	private final Set<Class<?>> classes = Set.of(
 			APIAdminClient.class,
+			ApiOperationExceptionMapper.class,
+			GenericExceptionMapper.class,
 			OpenAPICorsFilter.class);
 
 	/**

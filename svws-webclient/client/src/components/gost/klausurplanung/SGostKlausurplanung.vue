@@ -27,6 +27,7 @@
 	import type { GostKlausurplanungProps } from "./SGostKlausurplanungProps";
 	import { computed, onMounted, ref } from "vue";
 	import { useRegionSwitch } from "@ui";
+	import { SGostKlausurplanungVorgabenIgnoreManager } from "~/components/gost/klausurplanung/SGostKlausurplanungVorgabenIgnoreManager";
 
 	const props = defineProps<GostKlausurplanungProps>();
 
@@ -35,7 +36,12 @@
 	const isMounted = ref(false);
 	onMounted(() => isMounted.value = true);
 
-	const numErrors = computed<number>(() => props.kMan().planungsfehlerGetAnzahlByHalbjahrAndQuartal(props.jahrgangsdaten!.abiturjahr, props.halbjahr, props.quartalsauswahl.value, props.getConfigNumberValue("kwErrorLimit")));
+	const vorgabenIgnoreManager = new SGostKlausurplanungVorgabenIgnoreManager(
+		props.getObjectValue,
+		undefined
+	);
+
+	const numErrors = computed<number>(() => props.kMan().planungsfehlerGetAnzahlByHalbjahrAndQuartal(props.jahrgangsdaten!.abiturjahr, props.halbjahr, props.quartalsauswahl.value, props.getConfigNumberValue("kwErrorLimit"), vorgabenIgnoreManager.getAll()));
 	const numWarnings = computed<number>(() => props.kMan().planungshinweiseGetAnzahlByHalbjahrAndQuartal(props.jahrgangsdaten!.abiturjahr, props.halbjahr, props.quartalsauswahl.value, props.getConfigNumberValue("kwWarnLimit"), props.getConfigNumberValue("kwErrorLimit")));
 
 	const dropdownList = [

@@ -64,8 +64,9 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 	public checkHidden(params?: RouteParams) {
 		try {
 			const { abiturjahr } = params !== undefined ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: undefined };
-			if ((abiturjahr === undefined) || (abiturjahr === -1))
+			if ((abiturjahr === undefined) || (abiturjahr === -1)) {
 				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr } };
+			}
 			return false;
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
@@ -80,8 +81,9 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: jahrgang.abiturjahr } };
 			}
 			await this.data.setEintrag(abiturjahr);
-			if (to.name === this.name)
+			if (to.name === this.name) {
 				return this.getRouteDefaultChild();
+			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
