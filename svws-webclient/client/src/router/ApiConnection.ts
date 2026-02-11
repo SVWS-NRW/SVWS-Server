@@ -1,7 +1,7 @@
 import { ref, shallowRef } from "vue";
 
 import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten } from "@core";
-import { ValidatorKontext, ApiSchema, ApiServer, ApiExternal, BenutzerKompetenz, ServerMode, DeveloperNotificationException, UserNotificationException, OpenApiError, Schulform } from "@core";
+import { ValidatorKontext, ApiSchema, ApiServer, ApiExternal, BenutzerKompetenz, ServerMode, DeveloperNotificationException, UserNotificationException, OpenApiError, Schulform, JsonCoreTypeReader } from "@core";
 
 import { Config } from "../../../ui/src/utils/Config";
 import { AES } from "~/utils/crypto/aes";

@@ -436,6 +436,7 @@ public class APIClient {
 	 * Gibt eine avif-Datei aus dem Ordner "/assets" zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
 	 * @param name   der Name der Datei ohne ".avif"
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
 	 *         nicht gefunden wurde
@@ -443,8 +444,8 @@ public class APIClient {
 	@GET
 	@Produces("image/avif")
 	@Path("/assets/{name}.avif")
-	public Response getClientFileAssetsAVIF(@PathParam("name") final String name) {
-		return getFile("assets/" + name + ".avif");
+	public Response getClientFileAssetsAVIF(@PathParam("name") final String name, @Context final HttpServletRequest request) {
+		return getFile("assets/" + name + ".avif", request);
 	}
 
 
