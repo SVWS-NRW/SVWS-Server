@@ -13,6 +13,8 @@ RUN gradle :deployment:docker:copyDockerClientArtifacts -x test --no-daemon
 FROM node:20 AS frontend-builder
 WORKDIR /app
 
+ENV NODE_OPTIONS=--max-old-space-size=4096
+
 COPY package*.json ./
 COPY tsconfig.base.json ./
 COPY eslint.config.js ./
