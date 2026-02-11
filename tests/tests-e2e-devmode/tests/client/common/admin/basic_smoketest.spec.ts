@@ -35,7 +35,7 @@ test('Smoke-Test - Basic', async ({ page }) => {
 	await page.getByRole('link', { name: 'Stundenplan' }).click();
 	await expect(page.locator('header')).toContainText('Stundenplan 2. Halbjahr ID: 1');
 	await page.getByRole('link', { name: 'Einstellungen' }).click();
-	await expect(page.locator('header')).toContainText('Administrator');
+	await expect(page.locator('header')).toContainText('E-Mail-Server');
 
 	await logout();
 });

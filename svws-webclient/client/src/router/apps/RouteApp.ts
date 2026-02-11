@@ -56,9 +56,9 @@ import { routeNotenmodulZugangsdaten } from "./notenmodul/RouteNotenmodulZugangs
 import { routeBetriebe } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebe";
 import { routeOrte } from "~/router/apps/schule/kataloge/orte/RouteOrte";
 import { routeOrtsteile } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteile";
-
-import SApp from "~/components/SApp.vue";
 import { routeBetriebsarten } from "./schule/kataloge/betriebsarten/RouteBetriebsarten";
+import { routeEmailServer } from "~/router/apps/einstellungen/emailserver/RouteEmailServer";
+import SApp from "~/components/SApp.vue";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -140,6 +140,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeEinstellungen,
 		];
 		this._menuEinstellungen = [
+			routeEmailServer,
 			routeEinstellungenBenutzer,
 			routeEinstellungenBenutzergruppe,
 		];

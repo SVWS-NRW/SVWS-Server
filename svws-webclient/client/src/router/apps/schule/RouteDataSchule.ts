@@ -1,4 +1,4 @@
-import { BenutzerKompetenz, OpenApiError, SimpleOperationResponse, SMTPServerKonfiguration } from "@core";
+import { OpenApiError, SimpleOperationResponse, SMTPServerKonfiguration } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeFaecher } from "./kataloge/faecher/RouteFaecher";
@@ -21,29 +21,6 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 		super(defaultState);
 	}
 
-	public async ladeDaten() {
-		let smtpServerKonfiguration = new SMTPServerKonfiguration();
-		if (api.benutzerIstAdmin || api.benutzerHatKompetenz(BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN)) {
-			smtpServerKonfiguration = await api.server.getSMTPServerKonfiguration(api.schema);
-		}
-		this.setPatchedState({ smtpServerKonfiguration });
-	}
-
-	public async entferneDaten() {
-		const smtpServerKonfiguration = new SMTPServerKonfiguration();
-		this.setPatchedState({ smtpServerKonfiguration });
-	}
-
-	get smtpServerKonfiguration(): SMTPServerKonfiguration {
-		return this._state.value.smtpServerKonfiguration;
-	}
-
-	patchSMTServerKonfiguration = async (data: Partial<SMTPServerKonfiguration>) => {
-		const smtpServerKonfiguration = this._state.value.smtpServerKonfiguration;
-		await api.server.patchSMTPServerKonfiguration(data, api.schema);
-		Object.assign(smtpServerKonfiguration, data);
-		this.setPatchedState({ smtpServerKonfiguration });
-	};
 
 	setGostLupoImportMDBFuerJahrgang = async (formData: FormData, mode: 'none' | 'schueler' | 'all'): Promise<SimpleOperationResponse> => {
 		try {

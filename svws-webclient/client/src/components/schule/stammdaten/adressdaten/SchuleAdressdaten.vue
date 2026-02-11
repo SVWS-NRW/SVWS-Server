@@ -61,29 +61,6 @@
 					</svws-ui-input-wrapper>
 				</svws-ui-content-card>
 				<svws-ui-spacing :size="2" />
-				<svws-ui-content-card v-if="!readonly" title="E-Mail-Server">
-					<svws-ui-input-wrapper :grid="2">
-						<svws-ui-text-input placeholder="SMTP-Host" class="contentFocusField"
-							:model-value="smptServerKonfiguration().host"
-							@change="host => host && patchSMTPServerKonfiguration({ host })" />
-						<svws-ui-input-number placeholder="Port"
-							:model-value="smptServerKonfiguration().port"
-							@change="port => (port !== null) && (port !== undefined) && patchSMTPServerKonfiguration({ port })" />
-						<svws-ui-checkbox type="toggle"
-							:model-value="smptServerKonfiguration().useStartTLS"
-							@update:model-value="value => patchSMTPServerKonfiguration({ useStartTLS : value })">
-							Nutze StartTLS
-						</svws-ui-checkbox>
-						<svws-ui-checkbox type="toggle"
-							:model-value="smptServerKonfiguration().useTLS"
-							@update:model-value="value => patchSMTPServerKonfiguration({ useTLS : value })">
-							Nutze TLS
-						</svws-ui-checkbox>
-						<svws-ui-text-input placeholder="Trust TLS Host"
-							:model-value="smptServerKonfiguration().trustTLSHost"
-							@change="trustTLSHost => patchSMTPServerKonfiguration({ trustTLSHost: trustTLSHost || null })" />
-					</svws-ui-input-wrapper>
-				</svws-ui-content-card>
 			</svws-ui-input-wrapper>
 		</div>
 	</div>

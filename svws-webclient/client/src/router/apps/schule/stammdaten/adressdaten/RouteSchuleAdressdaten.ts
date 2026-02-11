@@ -7,7 +7,6 @@ import type { RouteLocationNormalized } from "vue-router";
 
 import type { SchuleAdressdatenProps } from "~/components/schule/stammdaten/adressdaten/SchuleAdressdatenProps";
 import { api } from "~/router/Api";
-import { routeSchule } from "~/router/apps/schule/RouteSchule";
 
 const SchuleAdressdaten =
 	() => import("~/components/schule/stammdaten/adressdaten/SchuleAdressdaten.vue");
@@ -31,8 +30,6 @@ export class RouteSchuleAdressdaten extends RouteNode<any, RouteSchuleStammdaten
 		return {
 			schule: () => api.schuleStammdaten,
 			patch: routeSchuleAdressdaten.data.patch,
-			smptServerKonfiguration: () => routeSchule.data.smtpServerKonfiguration,
-			patchSMTPServerKonfiguration: routeSchule.data.patchSMTServerKonfiguration,
 			benutzerIstAdmin: api.benutzerIstAdmin,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 		};

@@ -30,10 +30,6 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		}
 	}
 
-	public async leave(): Promise<void> {
-		await this.data.entferneDaten();
-	}
-
 }
 
 export const routeSchule = new RouteSchule();
