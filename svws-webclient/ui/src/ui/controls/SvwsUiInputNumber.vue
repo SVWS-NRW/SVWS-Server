@@ -104,8 +104,9 @@
 
 	const vFocus = {
 		mounted: (el: HTMLInputElement) => {
-			if (props.focus)
+			if (props.focus) {
 				el.focus();
+			}
 		},
 	};
 
@@ -115,13 +116,15 @@
 	watch(() => props.modelValue, (value: number | null) => updateData(value), { immediate: false });
 
 	const isValid = computed(() => {
-		if (props.required && (data.value === null))
+		if (props.required && (data.value === null)) {
 			return false;
+		}
 
 		if ((data.value !== null)
 			&& (((attrs.min !== undefined) && (attrs.min !== null) && (data.value < Number(attrs.min)))
-				|| ((attrs.max !== undefined) && (attrs.max !== null) && (data.value > Number(attrs.max)))))
+				|| ((attrs.max !== undefined) && (attrs.max !== null) && (data.value > Number(attrs.max))))) {
 			return false;
+		}
 
 		return props.valid(data.value);
 	});
@@ -136,13 +139,15 @@
 	function onInput(event: Event) {
 		const strValue = (event.target as HTMLInputElement).value;
 		const value = (strValue === "") ? null : Number(strValue);
-		if (value !== data.value)
+		if (value !== data.value) {
 			updateData(value);
+		}
 	}
 
 	function onInputNumber(stepDirection: string) {
-		if (input.value === null)
+		if (input.value === null) {
 			return;
+		}
 		if (stepDirection === 'up') {
 			input.value.stepUp();
 		} else if (stepDirection === 'down') {
@@ -153,17 +158,20 @@
 
 	function onBlur(event: Event) {
 		// prevent firing change/blur event, if the user only switches between input and button elements inside the SVWSUiInputNumber component itself
-		if (event instanceof FocusEvent && ([input.value, btnPlus.value, btnMinus.value] as Array<HTMLElement>).includes(event.relatedTarget as HTMLElement))
+		if (event instanceof FocusEvent && ([input.value, btnPlus.value, btnMinus.value] as Array<HTMLElement>).includes(event.relatedTarget as HTMLElement)) {
 			return;
+		}
 
-		if (props.modelValue !== data.value)
+		if (props.modelValue !== data.value) {
 			emit("change", data.value);
+		}
 		emit("blur", data.value);
 	}
 
 	function onKeyEnter(event: Event) {
-		if (props.modelValue !== data.value)
+		if (props.modelValue !== data.value) {
 			emit("change", data.value);
+		}
 	}
 
 	function reset() {

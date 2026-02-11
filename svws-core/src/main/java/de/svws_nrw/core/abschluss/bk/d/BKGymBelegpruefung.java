@@ -9,7 +9,10 @@ import java.util.Map;
 import de.svws_nrw.asd.data.schule.BeruflichesGymnasiumStundentafel;
 import de.svws_nrw.asd.data.schule.BeruflichesGymnasiumStundentafelFach;
 import de.svws_nrw.core.adt.map.HashMap2D;
+import de.svws_nrw.core.data.bk.abi.BKGymAbiturFachbelegung;
+import de.svws_nrw.core.data.bk.abi.BKGymAbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.types.bk.BKGymBelegungsfehlerTyp;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import jakarta.validation.constraints.NotNull;
@@ -17,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Die abstrakte Klasse für die Belegprüfungen bei Bildungsgängen.
  */
-public abstract class BKGymBelegpruefung {
+public class BKGymBelegpruefung {
 	/** Die Abiturdaten-Manager */
 	protected final @NotNull BKGymAbiturdatenManager manager;
 
@@ -43,7 +46,7 @@ public abstract class BKGymBelegpruefung {
 	 *
 	 * @param manager   der Manager für die Abiturdaten
 	 */
-	protected BKGymBelegpruefung(final @NotNull BKGymAbiturdatenManager manager) {
+	public BKGymBelegpruefung(final @NotNull BKGymAbiturdatenManager manager) {
 		this.manager = manager;
 		stundentafeln = manager.getStundentafeln();
 		init();
@@ -131,8 +134,6 @@ public abstract class BKGymBelegpruefung {
 	 * Die Methode wird zur Durchführung der Belegprüfung aufgerufen.
 	 *
 	 * Sie führt zuerst die allgemeinen Prüfungen aus, die für alle Anlagen des beruflichen Gymnasiums identisch sind.
-	 * Im Anschluss werden dann ggf. die spezifischen Prüfungen für die jeweilige Anlage durchgeführt.
-	 * Hierzu ist bei Bedarf die Methode spezifischePruefungen in der Kindklasse zu implementieren.
 	 */
 	public void pruefe() {
 		for (final @NotNull BeruflichesGymnasiumStundentafel tafel : stundentafeln) {
@@ -142,7 +143,6 @@ public abstract class BKGymBelegpruefung {
 					manager.getMapBelegungenForTafelByFach(tafel);
 			bewegeBelegungZuWahlfach(tafel, mapFaecherByIndex, mapBelegungByFach);
 			allgemeinePruefungen(tafel, mapFaecherByIndex, mapBelegungByFach);
-			spezifischePruefungen(tafel, mapFaecherByIndex, mapBelegungByFach);
 		}
 	}
 
@@ -376,7 +376,7 @@ public abstract class BKGymBelegpruefung {
 	 */
 	private @NotNull List<BKGymAbiturFachbelegung> getBelegungenWahlfach(final @NotNull BeruflichesGymnasiumStundentafel tafel,
 			final @NotNull Map<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>> mapBelegungByTafelfach) {
-		final BeruflichesGymnasiumStundentafelFach tafelWahlfach = mapStundentafelFachByTafelAndFachbezeichnung.getOrNull(tafel, manager.wahlfach);
+		final BeruflichesGymnasiumStundentafelFach tafelWahlfach = mapStundentafelFachByTafelAndFachbezeichnung.getOrNull(tafel, BKGymAbiturdatenManager.WAHLFACH);
 		List<BKGymAbiturFachbelegung> wahlfachBelegungen = null;
 		if (tafelWahlfach != null)
 			wahlfachBelegungen = mapBelegungByTafelfach.computeIfAbsent(tafelWahlfach,  k -> new ArrayList<>());
@@ -413,7 +413,6 @@ public abstract class BKGymBelegpruefung {
 			if ((summeWS[hj.id] < fachTafel.stundenumfang[hj.id])
 					&& addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.ST_3, fachTafel.fachbezeichnung)))
 				success = false;
-
 		return success;
 	}
 
@@ -476,14 +475,12 @@ public abstract class BKGymBelegpruefung {
 	private boolean pruefeSchriftlich(final BeruflichesGymnasiumStundentafel tafel, final @NotNull BeruflichesGymnasiumStundentafelFach fachTafel,
 			final @NotNull BKGymAbiturFachbelegung fachBelegung) {
 		boolean success;
-
 		success = pruefeSchriftlichEF(GostHalbjahr.EF1, tafel, fachTafel, fachBelegung);
 		success = pruefeSchriftlichEF(GostHalbjahr.EF2, tafel, fachTafel, fachBelegung) && success;
 		success = pruefeSchriftlichQ1(GostHalbjahr.Q11, tafel, fachTafel, fachBelegung) && success;
 		success = pruefeSchriftlichQ1(GostHalbjahr.Q12, tafel, fachTafel, fachBelegung) && success;
 		success = pruefeSchriftlichQ2(GostHalbjahr.Q21, tafel, fachTafel, fachBelegung) && success;
 		success = pruefeSchriftlichQ2(GostHalbjahr.Q22, tafel, fachTafel, fachBelegung) && success;
-
 		return success;
 	}
 
@@ -504,14 +501,12 @@ public abstract class BKGymBelegpruefung {
 
 		if ((belegungHj == null) || (belegungHj.schriftlich))
 			return true;
-
 		if ("Deutsch".equals(fachTafel.fachbezeichnung) || "Mathematik".equals(fachTafel.fachbezeichnung))
 			return !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.KL_1, fachTafel.fachbezeichnung, hj.kuerzel));
 		if ((fachBelegung.abiturFach != null) && (fachBelegung.abiturFach <= 2))
 			return !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.KL_2, fachTafel.fachbezeichnung, hj.kuerzel));
 		if (manager.istFremdsprachenbelegung(fachBelegung))
 			return !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.KL_3, fachTafel.fachbezeichnung, hj.kuerzel));
-
 		return true;
 	}
 
@@ -533,14 +528,12 @@ public abstract class BKGymBelegpruefung {
 
 		if ((belegungHj == null) || (belegungHj.schriftlich))
 			return true;
-
 		if ("Deutsch".equals(fachTafel.fachbezeichnung) || "Mathematik".equals(fachTafel.fachbezeichnung))
 			return !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.KL_1, fachTafel.fachbezeichnung, hj.kuerzel));
 		if ((fachBelegung.abiturFach != null) && (fachBelegung.abiturFach <= 4))
 			return !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.KL_4, fachTafel.fachbezeichnung, hj.kuerzel));
 		if (manager.istFremdsprachenbelegung(fachBelegung))
 			return !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.KL_3, fachTafel.fachbezeichnung, hj.kuerzel));
-
 		return true;
 	}
 
@@ -562,12 +555,10 @@ public abstract class BKGymBelegpruefung {
 
 		if ((belegungHj == null) || (belegungHj.schriftlich))
 			return true;
-
 		if ((fachBelegung.abiturFach != null) && (fachBelegung.abiturFach <= 3))
 			return !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.KL_4, fachTafel.fachbezeichnung, hj.kuerzel));
 		if ((GostHalbjahr.Q21 == hj) && manager.istFremdsprachenbelegung(fachBelegung))
 			return !addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.KL_3, fachTafel.fachbezeichnung, hj.kuerzel));
-
 		return true;
 	}
 
@@ -585,9 +576,8 @@ public abstract class BKGymBelegpruefung {
 		final BKGymAbiturFachbelegung lk2 = manager.getAbiFachbelegung(GostAbiturFach.LK2);
 		if (lk2 == null)
 			addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.LK_2));
-
-		if (lk1 != null && lk2 != null && !(manager.isValidKursartFachbelegung(tafel, lk1, GostAbiturFach.LK1)
-				&& manager.isValidKursartFachbelegung(tafel, lk2, GostAbiturFach.LK2)))
+		if (lk1 != null && lk2 != null && !(manager.istGueltigeKursartFachbelegung(tafel, lk1, GostAbiturFach.LK1)
+				&& manager.istGueltigeKursartFachbelegung(tafel, lk2, GostAbiturFach.LK2)))
 			addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.LK_3, manager.getFachkuerzelFromFachbelegung(lk1),
 					manager.getFachkuerzelFromFachbelegung(lk2), manager.getGliederung().name(), manager.getFachklassenschluessel()));
 	}
@@ -615,20 +605,4 @@ public abstract class BKGymBelegpruefung {
 			addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.AB_5, manager.getFachkuerzelFromFachbelegung(ab3),
 					manager.getFachkuerzelFromFachbelegung(ab4), manager.getGliederung().name(), manager.getFachklassenschluessel()));
 	}
-
-
-	/**
-	 * Führt die für eine Anlage spezifische Belegprüfung durch.
-	 * Diese Methode ist von jeder Kindklasse, welche spezifische Prüfungen hat, zu überschreiben.
-	 *
-	 * @param tafel                die zu überprüfende Stundentafel
-	 * @param mapFaecherByIndex    die Map mit den Fächern der Stundentafel
-	 * @param mapBelegungByIndex   die Map mit den Fächern der Belegungen
-	 */
-	protected void spezifischePruefungen(@NotNull final BeruflichesGymnasiumStundentafel tafel,
-			@NotNull final Map<Integer, List<BeruflichesGymnasiumStundentafelFach>> mapFaecherByIndex,
-			@NotNull final Map<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>> mapBelegungByIndex) {
-		// nichts zu tun
-	}
-
 }

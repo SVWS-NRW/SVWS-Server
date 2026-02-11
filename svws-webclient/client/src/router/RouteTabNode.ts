@@ -56,12 +56,16 @@ export abstract class RouteTabNode<TRouteData extends RouteData<any>, TRoutePare
 	 * @returns ggf. die Route für ein redirect oder ein Fehler
 	 */
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
-		if (to.name === this.name)
+		if (to.name === this.name) {
 			return this.getRouteDefaultChild();
-		if (!to.name.startsWith(this.data.view.name))
-			for (const child of this.children)
-				if (to.name.startsWith(child.name))
+		}
+		if (!to.name.startsWith(this.data.view.name)) {
+			for (const child of this.children) {
+				if (to.name.startsWith(child.name)) {
 					this.data.setView(child, this.children);
+				}
+			}
+		}
 	}
 
 	/**
@@ -81,11 +85,13 @@ export abstract class RouteTabNode<TRouteData extends RouteData<any>, TRoutePare
 	 */
 	private setTab = async (value: TabData) => {
 		this.data.autofocus = true;
-		if (value.name === this.data.view.name)
+		if (value.name === this.data.view.name) {
 			return;
+		}
 		const node = RouteNode.getNodeByName(value.name);
-		if (node === undefined)
+		if (node === undefined) {
 			throw new DeveloperNotificationException("Unbekannte Route");
+		}
 		await RouteManager.doRoute(this.getRouteView(node));
 		this.data.setView(node, this.children);
 		this.data.autofocus = false;

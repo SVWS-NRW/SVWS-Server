@@ -19,7 +19,7 @@ export class PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag extends Cor
 		return ['de.svws_nrw.asd.data.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag>('de.svws_nrw.asd.data.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag');
+	public static readonly class = new Class<PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag>('de.svws_nrw.asd.data.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag>;

@@ -123,7 +123,7 @@ export class BerufskollegAnlage extends JavaEnum<BerufskollegAnlage> implements 
 		return ['de.svws_nrw.asd.types.schule.BerufskollegAnlage', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<BerufskollegAnlage>('de.svws_nrw.asd.types.schule.BerufskollegAnlage');
+	public static readonly class = new Class<BerufskollegAnlage>('de.svws_nrw.asd.types.schule.BerufskollegAnlage');
 
 }
 

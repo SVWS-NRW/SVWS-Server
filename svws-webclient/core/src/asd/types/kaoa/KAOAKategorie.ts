@@ -243,7 +243,7 @@ export class KAOAKategorie extends JavaEnum<KAOAKategorie> implements CoreType<K
 		return ['de.svws_nrw.asd.types.kaoa.KAOAKategorie', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<KAOAKategorie>('de.svws_nrw.asd.types.kaoa.KAOAKategorie');
+	public static readonly class = new Class<KAOAKategorie>('de.svws_nrw.asd.types.kaoa.KAOAKategorie');
 
 }
 

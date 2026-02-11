@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.adt.Pair;
@@ -116,25 +117,25 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	protected void mapAttribute(final DTOGostKlausurenSchuelerklausurenTermine dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "idSchuelerklausur" -> dto.Schuelerklausur_ID = JSONMapper.convertToLong(value, false);
+			case "idSchuelerklausur" -> dto.Schuelerklausur_ID = JSONMapper.convertToLong(value, false, name);
 			case "idTermin" -> {
-				final long terminNeu = JSONMapper.convertToLong(value, true);
-				if (dto.Termin_ID != terminNeu) {
-					dto.Termin_ID = JSONMapper.convertToLong(value, true);
+				final Long terminNeu = JSONMapper.convertToLong(value, true, name);
+				if (!Objects.equals(dto.Termin_ID, terminNeu)) {
+					dto.Termin_ID = terminNeu;
 					raumDataChanged =
 							new DataGostKlausurenSchuelerklausurraumstunde(conn).loescheRaumZuSchuelerklausurenTransaction(ListUtils.create1(map(dto)));
 				}
 			}
-			case "folgeNr" -> dto.Folge_Nr = JSONMapper.convertToInteger(value, false);
+			case "folgeNr" -> dto.Folge_Nr = JSONMapper.convertToInteger(value, false, name);
 			case "startzeit" -> {
-				final int startzeitNeu = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
-				if (dto.Startzeit != startzeitNeu) {
+				final Integer startzeitNeu = JSONMapper.convertToIntegerInRange(value, true, 0, 1440, name);
+				if (!Objects.equals(dto.Startzeit, startzeitNeu)) {
 					dto.Startzeit = startzeitNeu;
 					raumDataChanged = new DataGostKlausurenSchuelerklausurraumstunde(conn).updateRaeumeZuSchuelerklausurterminen(ListUtils.create1(map(dto)));
 				}
 			}
 			case "bemerkung" -> dto.Bemerkungen =
-					DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Schuelerklausuren_Termine.col_Bemerkungen.datenlaenge()));
+					DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Schuelerklausuren_Termine.col_Bemerkungen.datenlaenge(), name));
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
 		}
 	}
@@ -146,17 +147,18 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	 */
 	@Override
 	public void checkBeforeCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
-		final DTOGostKlausurenSchuelerklausurenTermine lastTermin = conn
+		final List<DTOGostKlausurenSchuelerklausurenTermine> lastTermin = conn
 				.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Schuelerklausur_ID = :skid ORDER BY skt.Folge_Nr DESC",
 						DTOGostKlausurenSchuelerklausurenTermine.class)
 				.setParameter("skid", initAttributes.get("idSchuelerklausur"))
-				.setMaxResults(1)
-				.getSingleResult();
-		final List<DTOGostKlausurenSchuelerklausurenTermineRaumstunden> raumstunden = conn.queryList(
-				DTOGostKlausurenSchuelerklausurenTermineRaumstunden.QUERY_BY_SCHUELERKLAUSURTERMIN_ID,
-				DTOGostKlausurenSchuelerklausurenTermineRaumstunden.class, lastTermin.ID);
-		conn.transactionRemoveAll(raumstunden);
-		initAttributes.put("folgeNr", lastTermin.Folge_Nr + 1);
+				.setMaxResults(1).getResultList(); //.getSingleResultOrNull();
+		if (!lastTermin.isEmpty()) {
+			final List<DTOGostKlausurenSchuelerklausurenTermineRaumstunden> raumstunden = conn.queryList(
+					DTOGostKlausurenSchuelerklausurenTermineRaumstunden.QUERY_BY_SCHUELERKLAUSURTERMIN_ID,
+					DTOGostKlausurenSchuelerklausurenTermineRaumstunden.class, lastTermin.getFirst().ID);
+			conn.transactionRemoveAll(raumstunden);
+		}
+		initAttributes.put("folgeNr", (lastTermin.isEmpty()) ? 0 : (lastTermin.getFirst().Folge_Nr + 1));
 	}
 
 	/**

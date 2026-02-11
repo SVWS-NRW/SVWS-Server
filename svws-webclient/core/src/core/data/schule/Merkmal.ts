@@ -41,7 +41,7 @@ export class Merkmal extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.Merkmal'].includes(name);
 	}
 
-	public static class = new Class<Merkmal>('de.svws_nrw.core.data.schule.Merkmal');
+	public static readonly class = new Class<Merkmal>('de.svws_nrw.core.data.schule.Merkmal');
 
 	public static transpilerFromJSON(json: string): Merkmal {
 		const obj = JSON.parse(json) as Partial<Merkmal>;

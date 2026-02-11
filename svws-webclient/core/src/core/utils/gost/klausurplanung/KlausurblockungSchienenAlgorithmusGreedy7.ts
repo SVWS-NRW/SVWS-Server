@@ -43,7 +43,7 @@ export class KlausurblockungSchienenAlgorithmusGreedy7 extends KlausurblockungSc
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmusGreedy7', 'de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmusAbstract'].includes(name);
 	}
 
-	public static class = new Class<KlausurblockungSchienenAlgorithmusGreedy7>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmusGreedy7');
+	public static readonly class = new Class<KlausurblockungSchienenAlgorithmusGreedy7>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmusGreedy7');
 
 }
 

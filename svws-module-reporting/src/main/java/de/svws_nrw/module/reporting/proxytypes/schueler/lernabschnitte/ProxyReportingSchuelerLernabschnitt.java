@@ -14,13 +14,15 @@ import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 
 import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
+import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOSchuelerZuweisung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdaten;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerZuweisung;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
-import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 
@@ -163,7 +165,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 				try {
 					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idFolgeklasse());
 				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.putStacktraceInLog(
+					ReportingExceptionUtils.logException(
 							"FEHLER: Fehler bei der Ermittlung der Daten für die Folgeklasse des Schülers %s in %s."
 									.formatted(super.schueler().id(), super.schuljahresabschnitt.textSchuljahresabschnittKurz()),
 							e, reportingRepository.logger(), LogLevel.ERROR, 0);
@@ -242,7 +244,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 								try {
 									return new DataLehrerStammdaten(reportingRepository.conn()).getById(super.idSonderpaedagoge());
 								} catch (final ApiOperationException e) {
-									ReportingExceptionUtils.putStacktraceInLog(
+									ReportingExceptionUtils.logException(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
 											reportingRepository.logger(), LogLevel.INFO, 0);
 									return new LehrerStammdaten();
@@ -267,7 +269,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 								try {
 									return new DataLehrerStammdaten(reportingRepository.conn()).getById(super.idTutor());
 								} catch (final ApiOperationException e) {
-									ReportingExceptionUtils.putStacktraceInLog(
+									ReportingExceptionUtils.logException(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
 											reportingRepository.logger(), LogLevel.INFO, 0);
 									return new LehrerStammdaten();
@@ -276,4 +278,35 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 		}
 		return super.tutor();
 	}
+
+	/**
+	 * Die Zuweisungen des Schülers in diesem Lernabschnitt.
+	 *
+	 * @return DIe Liste der Zuweisungen.
+	 */
+	@Override
+	public List<ReportingSchuelerZuweisung> zuweisungen() {
+		if (super.zuweisungen == null) {
+			if (!this.reportingRepository.mapSchuelerZuweisungen().containsKey(this.id())) {
+				final List<ReportingSchuelerZuweisung> reportingZuweisungen = new ArrayList<>();
+				try {
+					final List<DTOSchuelerZuweisung> dtos =
+							this.reportingRepository.conn().queryList(DTOSchuelerZuweisung.QUERY_BY_ABSCHNITT_ID, DTOSchuelerZuweisung.class, this.id);
+					if (dtos != null) {
+						for (final DTOSchuelerZuweisung dto : dtos) {
+							reportingZuweisungen.add(new ProxyReportingSchuelerZuweisung(this.reportingRepository, dto, this));
+						}
+					}
+				} catch (final Exception e) {
+					ReportingExceptionUtils.logException(
+							"INFO: Fehler bei der Ermittlung der Zuweisungen für Lernabschnitt %d aus der Datenbank. Gebe leere Liste zurück."
+									.formatted(this.id), e, this.reportingRepository.logger(), LogLevel.INFO, 0);
+				}
+				this.reportingRepository.mapSchuelerZuweisungen().put(this.id(), reportingZuweisungen);
+			}
+			super.zuweisungen = this.reportingRepository.mapSchuelerZuweisungen().get(this.id());
+		}
+		return super.zuweisungen;
+	}
+
 }

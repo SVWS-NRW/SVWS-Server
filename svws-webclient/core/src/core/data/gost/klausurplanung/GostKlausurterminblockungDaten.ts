@@ -39,7 +39,7 @@ export class GostKlausurterminblockungDaten extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten'].includes(name);
 	}
 
-	public static class = new Class<GostKlausurterminblockungDaten>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten');
+	public static readonly class = new Class<GostKlausurterminblockungDaten>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten');
 
 	public static transpilerFromJSON(json: string): GostKlausurterminblockungDaten {
 		const obj = JSON.parse(json) as Partial<GostKlausurterminblockungDaten>;

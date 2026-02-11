@@ -25,8 +25,9 @@ export class RouteKatalogZeitraster extends RouteNode<any, RouteStundenplan> {
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams,
 		isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
+		if (isEntering) {
 			await this.data.ladeListe();
+		}
 		return super.update(to, to_params, from, from_params, isEntering, redirected);
 	}
 

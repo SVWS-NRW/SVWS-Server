@@ -1,20 +1,20 @@
 <?php
-	/**
-	 * Endpunkt für das Fetchen von Mode.
-	 *
-	 * @httpMethod GET
-	 *
-	 * @return string : servermode (dev / stable)
-	 * @responseCode 200
-	 */
+/**
+ * Endpunkt für das Fetchen von Mode.
+ *
+ * @httpMethod GET
+ *
+ * @return string : servermode (dev / stable)
+ * @responseCode 200
+ */
+require_once dirname(__DIR__).'/../autoload.php';
 
-	// Initialisierung
-	require_once __DIR__.'/../../app/init.php';
+use wenom\Application;
 
-	// Prüfe die HTTP-Methode
-	$auth->pruefeHTTPMethod([ "GET" ]);
+$app = new Application();
 
-	// Gib den konfigurierten Server-Modus zurück
-	echo $config->getServerMode();
+// Prüfe die HTTP-Methode
+$app->auth->pruefeHTTPMethod([ "GET" ]);
 
-?>
+// Gib den konfigurierten Server-Modus zurück
+echo $app->config->getServerMode();

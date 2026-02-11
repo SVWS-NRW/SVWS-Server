@@ -18,6 +18,8 @@ plugins {
 
 def downloadBaseDir = "$projectDir/download"
 def downloadDir = "$downloadBaseDir/svws-${project.version}"
+def fileDownloadBaseDir = file("$downloadBaseDir")
+def fileDownloadDir = file("$downloadDir")
 
 group = 'de.svws-nrw'
 version = project.ext.svwsArtifactVersion
@@ -26,40 +28,40 @@ java {
 	targetCompatibility = JavaVersion.VERSION_21
 }
 
-ext.svws_version = version
+def svws_version = version
 
-ext.base_url = (project.hasProperty('svws_installer_downloads_base_url')) ? project.svws_installer_downloads_base_url : System.getenv("SVWS_INSTALLER_DOWNLOADS_BASE_URL")
+def base_url = (project.hasProperty('svws_installer_downloads_base_url')) ? project.svws_installer_downloads_base_url : System.getenv("SVWS_INSTALLER_DOWNLOADS_BASE_URL")
 
-ext.jdk = "21"
-ext.jdk_version = "21.0.6"
-ext.jdk_fix = "7"
-ext.jdk_win_url = (ext.base_url == null)
+def jdk = "21"
+def jdk_version = "21.0.6"
+def jdk_fix = "7"
+def jdk_win_url = (base_url == null)
 	? "https://github.com/adoptium/temurin${jdk}-binaries/releases/download/jdk-${jdk_version}+${jdk_fix}/OpenJDK${jdk}U-jdk_x64_windows_hotspot_${jdk_version}_${jdk_fix}.zip"
 	: "${base_url}/OpenJDK${jdk}U-jdk_x64_windows_hotspot_${jdk_version}_${jdk_fix}.zip"
-//ext.jdk_win_url = "https://download.java.net/java/GA/jdk${jdk_version}/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-${jdk_version}_windows-x64_bin.zip"
+//def jdk_win_url = "https://download.java.net/java/GA/jdk${jdk_version}/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-${jdk_version}_windows-x64_bin.zip"
 
-ext.mariadb_version = "11.4.4"
-ext.mariadb_win_url = (ext.base_url == null)
+def mariadb_version = "11.4.4"
+def mariadb_win_url = (base_url == null)
 	? "https://mirror.netcologne.de/mariadb/mariadb-${mariadb_version}/winx64-packages/mariadb-${mariadb_version}-winx64.zip"
 	: "${base_url}/mariadb-${mariadb_version}-winx64.zip"
 
-ext.innosetup_version = "6.0.5"
-ext.innosetup_win_url = (ext.base_url == null)
+def innosetup_version = "6.0.5"
+def innosetup_win_url = (base_url == null)
 	? "https://files.jrsoftware.org/is/6/innosetup-${innosetup_version}.exe"
 	: "${base_url}/innosetup-${innosetup_version}.exe"
 
-ext.innoextract_version = "1.9"
-ext.innoextract_win_url = (ext.base_url == null)
+def innoextract_version = "1.9"
+def innoextract_win_url = (base_url == null)
 	? "https://constexpr.org/innoextract/files/innoextract-${innoextract_version}-windows.zip"
 	: "${base_url}/innoextract-${innoextract_version}-windows.zip"
 
-ext.windowsservicewrapper_version = "2.10.3"
-ext.windowsservicewrapper_win_url = (ext.base_url == null)
+def windowsservicewrapper_version = "2.10.3"
+def windowsservicewrapper_win_url = (base_url == null)
 	? "https://github.com/winsw/winsw/releases/download/v${windowsservicewrapper_version}/WinSW.NETCore31.x64.exe"
 	: "${base_url}/servicewrapper-v${windowsservicewrapper_version}-windows.exe"
 
-ext.curl_version = "8.10.1_3"
-ext.curl_win_url = (ext.base_url == null)
+def curl_version = "8.10.1_3"
+def curl_win_url = (base_url == null)
 	? "https://curl.se/windows/dl-${curl_version}/curl-${curl_version}-win64-mingw.zip"
 	: "${base_url}/curl-${curl_version}-win64-mingw.zip"
 
@@ -102,10 +104,14 @@ task downloadJarsAll(type: Copy) {
 	from configurations.runtimeClasspath
 	into "download/svws-" + project.version + "/jar/"
 	include "*.jar"
+	def fileRunServer_Win = file(downloadDir + "/run_server.cmd")
+	def fileRunServer_Linux = file(downloadDir + "/run_server.sh")
+	def fileConfigWriter_Win = file(downloadDir + "/config_writer.cmd")
+	def confImplementationServerApp = configurations.extendedImplementation
 	doLast {
-		file(downloadDir + "/run_server.cmd").text =
+		fileRunServer_Win.text =
 			'@echo off' + System.lineSeparator() +
-			'.\\java\\bin\\java.exe --class-path "' + configurations.extendedImplementation.collect{ t -> 'svws-server/' + t.getName() }.join(';') + '" de.svws_nrw.server.jetty.Main' +
+			'.\\java\\bin\\java.exe --class-path "' + confImplementationServerApp.collect{ t -> 'svws-server/' + t.getName() }.join(';') + '" de.svws_nrw.server.jetty.Main' +
 			System.lineSeparator() +
 			'set exitcode=%ERRORLEVEL%' + System.lineSeparator() +
 			'IF %exitcode% EQU 42 (' + System.lineSeparator() +
@@ -117,11 +123,11 @@ task downloadJarsAll(type: Copy) {
 			') else (' + System.lineSeparator() +
 			'  echo SVWS-Server wurde normal beendet' + System.lineSeparator() +
 			')'
-		file(downloadDir + "/run_server.sh").text =
+		fileRunServer_Linux.text =
 			'#!/bin/sh' + '\n' +
-			'java.exe --class-path "' + configurations.extendedImplementation.collect{ t -> 'svws-server/' + t.getName() }.join(':') + '" de.svws_nrw.server.jetty.Main' +
+			'java.exe --class-path "' + confImplementationServerApp.collect{ t -> 'svws-server/' + t.getName() }.join(':') + '" de.svws_nrw.server.jetty.Main' +
 			System.lineSeparator()
-		file(downloadDir + "/config_writer.cmd").text =
+		fileConfigWriter_Win.text =
 			"set outputfile=%1" + System.lineSeparator() +
 			"set clientpath=%2" + System.lineSeparator() +
 			"set adminclientpath=%3" + System.lineSeparator() +
@@ -131,18 +137,18 @@ task downloadJarsAll(type: Copy) {
 			"set keystorepassword=%7" + System.lineSeparator() +
 			"set dbhost=%8" + System.lineSeparator() +
 			"set dbport=%9" + System.lineSeparator() +
-			".\\java\\bin\\java.exe --class-path " + configurations.extendedImplementation.collect{ t -> "svws-server/" + t.getName() }.join(';') + " de.svws_nrw.config.app.SVWSConfigFileWriter --output %outputfile% --clientpath %clientpath% --adminclientpath %adminclientpath% --loggingpath %loggingpath% --temppath %temppath% --keystorepath %keystorepath% --keystorepassword %keystorepassword% --dbhost %dbhost% --dbport %dbport% --noschema"
+			".\\java\\bin\\java.exe --class-path " + confImplementationServerApp.collect{ t -> "svws-server/" + t.getName() }.join(';') + " de.svws_nrw.config.app.SVWSConfigFileWriter --output %outputfile% --clientpath %clientpath% --adminclientpath %adminclientpath% --loggingpath %loggingpath% --temppath %temppath% --keystorepath %keystorepath% --keystorepassword %keystorepassword% --dbhost %dbhost% --dbport %dbport% --noschema"
 	}
 }
 
 
 task downloadJDK {
+	def file = new File("${downloadDir}/jdk-${jdk_version}-win.zip")
 	doLast {
-		def file = new File("${downloadDir}/jdk-${jdk_version}-win.zip")
 		if (file.exists()) {
 			println "Datei jdk-${jdk_version}-win.zip wurde bereits heruntergeladen, skipping download"
 		} else {
-			mkdir "${downloadDir}"
+			fileDownloadDir.mkdirs()
 			def url = new URL(jdk_win_url)
 			println "Downloading jdk-${jdk_version}-win.zip from $url..."
 			url.withInputStream { i -> file.withOutputStream { it << i } }
@@ -152,12 +158,12 @@ task downloadJDK {
 
 
 task downloadMariaDB {
+	def file = new File("${downloadDir}/mariadb-${mariadb_version}-winx64.zip")
 	doLast {
-		def file = new File("${downloadDir}/mariadb-${mariadb_version}-winx64.zip")
 		if (file.exists()) {
 			println "Datei mariadb-${mariadb_version}-winx64.zip wurde bereits heruntergeladen, skipping download"
 		} else {
-			mkdir "${downloadDir}"
+			fileDownloadDir.mkdirs()
 			def url = new URL(mariadb_win_url)
 			println "Downloading mariadb-${mariadb_version}-winx64.zip from $url..."
 			url.withInputStream { i -> file.withOutputStream { it << i } }
@@ -168,12 +174,12 @@ task downloadMariaDB {
 
 
 task downloadInnosetup {
+	def file = new File("${downloadDir}/innosetup-${innosetup_version}.exe")
 	doLast {
-		def file = new File("${downloadDir}/innosetup-${innosetup_version}.exe")
 		if (file.exists()) {
 			println "Datei innosetup-${innosetup_version}.exe wurde bereits heruntergeladen, skipping download"
 		} else {
-			mkdir "${downloadDir}"
+			fileDownloadDir.mkdirs()
 			def url = new URL(innosetup_win_url)
 			println "Downloading innosetup-${innosetup_version}.exe from $url..."
 			url.withInputStream { i -> file.withOutputStream { it << i } }
@@ -183,12 +189,12 @@ task downloadInnosetup {
 
 
 task downloadInnoextract {
+	def file = new File("${downloadDir}/innoextract-${innoextract_version}-windows.zip")
 	doLast {
-		def file = new File("${downloadDir}/innoextract-${innoextract_version}-windows.zip")
 		if (file.exists()) {
 			println "Datei innoextract-${innoextract_version}-windows.zip wurde bereits heruntergeladen, skipping download"
 		} else {
-			mkdir "${downloadDir}"
+			fileDownloadDir.mkdirs()
 			def url = new URL(innoextract_win_url)
 			println "Downloading innoextract-${innoextract_version}-windows.zip from $url..."
 			url.withInputStream { i -> file.withOutputStream { it << i } }
@@ -198,12 +204,12 @@ task downloadInnoextract {
 
 
 task downloadWindowsServiceWrapper {
+	def file = new File("${downloadDir}/servicewrapper-v${windowsservicewrapper_version}-windows.exe")
 	doLast {
-		def file = new File("${downloadDir}/servicewrapper-v${windowsservicewrapper_version}-windows.exe")
 		if (file.exists()) {
 			println "Datei servicewrapper-v${windowsservicewrapper_version}-windows.exe wurde bereits heruntergeladen, skipping download"
 		} else {
-			mkdir "${downloadDir}"
+			fileDownloadDir.mkdirs()
 			def url = new URL(windowsservicewrapper_win_url)
 			println "Downloading servicewrapper-v${windowsservicewrapper_version}-windows.exe from $url..."
 			url.withInputStream { i -> file.withOutputStream { it << i } }
@@ -213,12 +219,12 @@ task downloadWindowsServiceWrapper {
 
 
 task downloadCurl {
+	def file = new File("${downloadDir}/curl-${curl_version}-windows.zip")
 	doLast {
-		def file = new File("${downloadDir}/curl-${curl_version}-windows.zip")
 		if (file.exists()) {
 			println "Datei curl-${curl_version}-windows.zip wurde bereits heruntergeladen, skipping download"
 		} else {
-			mkdir "${downloadDir}"
+			fileDownloadDir.mkdirs()
 			def url = new URL(curl_win_url)
 			println "Downloading curl-${curl_version}-windows.zip from $url..."
 			url.withInputStream { i -> file.withOutputStream { it << i } }
@@ -349,17 +355,19 @@ task buildPrepare {
 
 /* Wichtig: Wird dieser Task nicht unter Windows ausgeführt, so muss eine passende Wine-Konfiguration vorliegen */
 task buildWindowsInstaller(type:Exec) {
+	def projectBuildDir = "${buildDir}"
+	def outputDir = file("$buildDir/output")
 	group = 'build'
 	if (OperatingSystem.current().isWindows()) {
-		commandLine "cmd", "/c", "${buildDir}/inno/app/iscc.exe", "SVWS_Installer_full.iss"
+		commandLine "cmd", "/c", "${projectBuildDir}/inno/app/iscc.exe", "SVWS_Installer_full.iss"
 	} else {
 		commandLine "wine", "../inno/app/iscc.exe", "SVWS_Installer_full.iss"
 	}
 	dependsOn "buildPrepare"
 	doFirst {
-		mkdir "$buildDir/output"
+		outputDir.mkdirs()
 	}
-	workingDir file("${buildDir}/installer")
+	workingDir file("${projectBuildDir}/installer")
 }
 
 
@@ -372,5 +380,5 @@ task doZip(type: Zip) {
 doZip.dependsOn buildWindowsInstaller
 
 clean.doLast {
-	file("${downloadBaseDir}").deleteDir()
+	fileDownloadBaseDir.deleteDir()
 }

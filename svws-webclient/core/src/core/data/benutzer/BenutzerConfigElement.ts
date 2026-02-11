@@ -17,8 +17,29 @@ export class BenutzerConfigElement extends JavaObject {
 	/**
 	 * Leerer Standardkonstruktor.
 	 */
-	public constructor() {
+	public constructor();
+
+	/**
+	 * Erzeugt ein neues Konfigurationselement
+	 *
+	 * @param key     der Schlüssel des Konfigurationselements
+	 * @param value   der Wert des Konfigurationselements
+	 */
+	public constructor(key: string, value: string);
+
+	/**
+	 * Implementation for method overloads of 'constructor'
+	 */
+	public constructor(__param0?: string, __param1?: string) {
 		super();
+		if ((__param0 === undefined) && (__param1 === undefined)) {
+			// empty method body
+		} else if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && (typeof __param1 === "string"))) {
+			const key: string = __param0;
+			const value: string = __param1;
+			this.key = key;
+			this.value = value;
+		} else throw new Error('invalid method overload');
 	}
 
 	transpilerCanonicalName(): string {
@@ -29,7 +50,7 @@ export class BenutzerConfigElement extends JavaObject {
 		return ['de.svws_nrw.core.data.benutzer.BenutzerConfigElement'].includes(name);
 	}
 
-	public static class = new Class<BenutzerConfigElement>('de.svws_nrw.core.data.benutzer.BenutzerConfigElement');
+	public static readonly class = new Class<BenutzerConfigElement>('de.svws_nrw.core.data.benutzer.BenutzerConfigElement');
 
 	public static transpilerFromJSON(json: string): BenutzerConfigElement {
 		const obj = JSON.parse(json) as Partial<BenutzerConfigElement>;

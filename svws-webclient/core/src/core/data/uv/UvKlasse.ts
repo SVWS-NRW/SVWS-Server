@@ -103,7 +103,7 @@ export class UvKlasse extends JavaObject {
 		return ['de.svws_nrw.core.data.uv.UvKlasse'].includes(name);
 	}
 
-	public static class = new Class<UvKlasse>('de.svws_nrw.core.data.uv.UvKlasse');
+	public static readonly class = new Class<UvKlasse>('de.svws_nrw.core.data.uv.UvKlasse');
 
 	public static transpilerFromJSON(json: string): UvKlasse {
 		const obj = JSON.parse(json) as Partial<UvKlasse>;

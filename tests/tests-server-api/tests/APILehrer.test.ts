@@ -4,7 +4,7 @@ import type { LehrerListeEintrag } from "../../../svws-webclient/core/src/core/d
 import type { List } from "../../../svws-webclient/core/src/java/util/List";
 
 describe("Lehrer Tests ", () => {
-	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
+	describe.each([{ schema: "GymAbi01" }])('gegen %s', ({ schema }) => {
 		const api = privilegedApiServer;
 
 		test("getLehrerListe", async () => {
@@ -28,6 +28,6 @@ describe("Lehrer Tests ", () => {
 			expect(result).toMatchSnapshot();
 		});
 
-	})
+	});
 
-})
+});

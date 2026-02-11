@@ -34,7 +34,7 @@ export class SchuldateiEintrag extends JavaObject {
 		return ['de.svws_nrw.schulen.v1.data.SchuldateiEintrag'].includes(name);
 	}
 
-	public static class = new Class<SchuldateiEintrag>('de.svws_nrw.schulen.v1.data.SchuldateiEintrag');
+	public static readonly class = new Class<SchuldateiEintrag>('de.svws_nrw.schulen.v1.data.SchuldateiEintrag');
 
 	public static transpilerFromJSON(json: string): SchuldateiEintrag {
 		const obj = JSON.parse(json) as Partial<SchuldateiEintrag>;

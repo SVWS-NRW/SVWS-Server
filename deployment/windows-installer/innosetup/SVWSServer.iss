@@ -720,7 +720,7 @@ procedure CreateDefaultKeystoreSelfSigned;
             '/C .\keytool.exe -genkey -alias selfsigned -keyalg RSA -keysize 8192 -keystore ' +
             '"' + SVWSDataDir + '/res/keystore" ' +
             '-validity 3650 -storepass "' + SVWSKeyStorePassword + '" ' +
-            '-dname "CN=localhost,OU=Schule,O=' + ZertifikatSchulname + ',L=' + ZertifikatOrtsname + ',ST=NRW,C=DE" ' +
+            '-dname "CN=' + ZertifikatHostname + ',OU=Schule,O=' + ZertifikatSchulname + ',L=' + ZertifikatOrtsname + ',ST=NRW,C=DE" ' +
             '-ext "' + GetHostNames4Certificates(ZertifikatHostname) + '" ' +
             '> "' + SVWSDataDir + '/logs/keystore.log" 2>&1',
             ExpandConstant('{app}/java/bin'),

@@ -249,7 +249,7 @@ export class Logger extends JavaObject {
 		return ['de.svws_nrw.core.logger.Logger'].includes(name);
 	}
 
-	public static class = new Class<Logger>('de.svws_nrw.core.logger.Logger');
+	public static readonly class = new Class<Logger>('de.svws_nrw.core.logger.Logger');
 
 }
 

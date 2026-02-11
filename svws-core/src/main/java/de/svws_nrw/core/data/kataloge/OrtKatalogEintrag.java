@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class OrtKatalogEintrag {
 
 	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
+	@Schema(description = "die ID des Katalog-Eintrags", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id;
 
 	/** Die Postleitzahl. */
@@ -26,7 +26,7 @@ public class OrtKatalogEintrag {
 	public String ortsname;
 
 	/** Der Name des Kreises. */
-	@Schema(description = "der Name des Kreises", example = "Rhein-Sieg-Kreis")
+	@Schema(description = "der Name des Kreises", example = "RSK")
 	public String kreis;
 
 	/** Das Kürzel des Bundeslandes.  */
@@ -45,11 +45,10 @@ public class OrtKatalogEintrag {
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht", example = "true")
 	public boolean istAenderbar;
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public OrtKatalogEintrag() {
-		// leer
-	}
+	/** Gibt an, ob der Ort in anderen Datenbanktabellen referenziert ist oder nicht. */
+	@Schema(description = "Gibt an, ob der Ort in anderen Datenbanktabellen referenziert ist oder nicht.",
+			example = "true",
+			accessMode = Schema.AccessMode.READ_ONLY)
+	public boolean referenziertInAnderenTabellen;
 
 }

@@ -3,6 +3,8 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 import java.util.List;
 
+import org.jboss.resteasy.annotations.GZIP;
+
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionData;
@@ -82,6 +84,7 @@ public class APIGostKlausuren {
 	 * @return die Liste der {@link GostKlausurvorgabe}n
 	 */
 	@GET
+	@GZIP
 	@Path("/vorgaben/abiturjahrgang/{abiturjahr : -?\\d+}")
 	@Operation(summary = "Liefert die Klausurvorgaben eines Abiturjahrgangs der gymnasialen Oberstufe.",
 			description = "Liefert die Klausurvorgaben eines Abiturjahrgangs der gymnasialen Oberstufe. "
@@ -384,6 +387,7 @@ public class APIGostKlausuren {
 	 * @return das {@link GostKlausurenCollectionAllData}-Objekt mit den Daten zur Klausurplanung
 	 */
 	@POST
+	@GZIP
 	@Path("/collections/alldata")
 	@Operation(summary = "Liefert alle zur Klausurplanung gehörenden Daten in einem GostKlausurenCollectionAllData-Objekt.",
 			description = "Liefert alle zur Klausurplanung gehörenden Daten in einem GostKlausurenCollectionAllData-Objekt."
@@ -448,6 +452,7 @@ public class APIGostKlausuren {
 	 * @return das {@link GostKlausurenCollectionHjData}-Objekt mit den Fehlern und Problemen zur Klausurplanung
 	 */
 	@GET
+	@GZIP
 	@Path("/collections/issues/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}")
 	@Operation(summary = "Liefert alle zur Klausurplanung gehörenden Fehler und Probleme in einem GostKlausurenCollectionHjData-Objekt.",
 			description = "Liefert alle zur Klausurplanung gehörenden Fehler und Probleme in einem GostKlausurenCollectionHjData-Objekt."
@@ -879,6 +884,7 @@ public class APIGostKlausuren {
 	 * @return das {@link GostKlausurenCollectionData}-Objekt mit den Klausurdaten des Schülers
 	 */
 	@GET
+	@GZIP
 	@Path("/schueler/{sid : -?\\d+}/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}")
 	@Operation(summary = "Fragt die Klausurdaten eines Schülers ab.",
 			description = "Fragt die Klausurdaten eines Schülers ab."

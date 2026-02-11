@@ -2,7 +2,6 @@ package de.svws_nrw.base.email;
 
 import jakarta.validation.constraints.NotNull;
 
-import java.time.Duration;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,16 +14,16 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
 
 /**
- * Dieser Manager verwaltet Jobs zum Versenden von Emails mithilfe eines Threads pro Datenbankschema und Benutzer.
+ * Dieser Manager verwaltet Jobs zum Versenden von E-Mails mithilfe eines Threads pro Datenbankschema und Benutzer.
  * Diese werden über den Thread nebenläufig versendet und der Status und ein Log werden dabei erstellt. Zur Steuerung,
- * dass nicht zu viele Emails versendet werden kann eine Versandbegrenzung in Form eine Rate-Limit eingestellt werden.
+ * dass nicht zu viele E-Mails versendet werden, kann eine Versandbegrenzung in Form eines Rate-Limits eingestellt werden.
  */
 public final class EmailJobManager {
 
 	/** Der Kontext mit Benutzerinformationen, der SMTP-Session und Manager-Konfigurationseinstellungen*/
 	private final @NotNull EmailJobManagerContext context;
 
-	/** Eine Hilfsklasse, welche die Verwaltung der abgeschlossen Jobs übernimmt */
+	/** Eine Hilfsklasse, welche die Verwaltung der abgeschlossenen Jobs übernimmt */
 	private final @NotNull EmailJobManagerCompletedJobs completedJobs;
 
 	/** Eine Queue zur Verwaltung der Jobs, welche den Status QUEUED haben. */
@@ -33,13 +32,13 @@ public final class EmailJobManager {
 	/** Eine Hash-Map zum Speichern aller Jobs anhand ihrer ID. Hier sind alle Jobs unabhängig vom Status enthalten. */
 	private final ConcurrentHashMap<Long, EmailJob> mapJobs = new ConcurrentHashMap<>();
 
-	/** Eine Deque, um die Sendezeitpunkte für die letzten 60 Sekunden zu Speichern, um damit die Senderate von Emails pro Minute zu begrenzen. */
+	/** Eine Deque, um die Sendezeitpunkte für die letzten 60 Sekunden zu speichern, um damit die Senderate von E-Mails pro Minute zu begrenzen. */
 	private final ArrayDeque<Long> sendTimestamps = new ArrayDeque<>();
 
 	/** Der Worker-Thread, der für diesen Job-Manager verantwortlich ist. */
 	private final Thread thread;
 
-	/** Der interne Status, ob dieser Job-Manager aktuell am laufen ist. */
+	/** Der interne Status, ob dieser Job-Manager aktuell läuft. */
 	private volatile boolean running = true;
 
 	/** Die nächste freie Job-ID zur Vergabe an den nächsten Job */
@@ -47,8 +46,8 @@ public final class EmailJobManager {
 
 
 	/**
-	 * Erstellt einen neuen Email-Job-Manager zum Versenden von Emails.
-	 * Dieser verwendet einen Worker-Thread, um Emails asynchron zu versenden.
+	 * Erstellt einen neuen E-Mail-Job-Manager zum Versenden von E-Mails.
+	 * Dieser verwendet einen Worker-Thread, um E-Mails asynchron zu versenden.
 	 *
 	 * @param context   der Kontext für den Manager mit Benutzerinformationen, der SMTP-Session
 	 *                  und Manager-Konfigurationseinstellungen
@@ -62,14 +61,14 @@ public final class EmailJobManager {
 
 
 	/**
-	 * Fügt einen neuen Job zum Versenden von Emails zu der Warteschlange des Managers hinzu.
+	 * Fügt einen neuen Job zum Versenden von E-Mails zu der Warteschlange des Managers hinzu.
 	 *
-	 * @param job   der Email-Job
+	 * @param job   der E-Mail-Job
 	 *
 	 * @return die ID des neuen Jobs oder -1, wenn der Job bereits eine ID hatte und erneut versucht wurde diesen Job hinzuzufügen
 	 */
 	public long enqueue(final @NotNull EmailJob job) {
-		// Setzt die Job-ID und füge den Job hinzu
+		// Setzt die Job-ID und fügt den Job hinzu.
 		final boolean isNewJob = job.setId(nextJobId.getAndIncrement());
 		if (!isNewJob)
 			return -1;
@@ -80,8 +79,7 @@ public final class EmailJobManager {
 
 
 	/**
-	 * Stoppt den Thread zum Versenden von Emails.
-	 *
+	 * Stoppt den Thread zum Versenden von E-Mails.
 	 * Hierzu wird das interne Flag running auf false gesetzt und der Worker-Thread des Managers wird unterbrochen.
 	 * Außerdem wird die Liste der abgeschlossenen Jobs sofort geleert.
 	 * Diese Methode sollte aufgerufen werden, bevor die Anwendung heruntergefahren wird, um die verbleibenden
@@ -131,17 +129,18 @@ public final class EmailJobManager {
 		if (job == null)
 			return false;
 
-		// Wenn ja, dann breche den Job ab
+		// Breche den Job ab. Ab diesem Moment wird der Job spätestens in processJob() abgebrochen.
 		job.requestCancellation();
 		if (job.getStatus() != EmailJobStatus.QUEUED)
 			return true;
 
-		// Entferne den Job auch aus der Queue und markiere ihn auch als abgebrochen
+		// Entferne den Job auch aus der Queue und markiere ihn auch als abgebrochen.
 		if (jobs.remove(job)) {
-			job.logSkipped.add("- Hinweis: Job " + idJob + " wurde vor dem Start abgebrochen.");
+			job.logError.add("- ABBRUCH: Job %d wurde vor dem Start abgebrochen.".formatted(job.getId()));
 			completedJobs.add(job, EmailJobStatus.CANCELED);
-		} else
-			job.logSkipped.add("- Fehler: Job " + idJob + " konnte vor dem Start nicht abgebrochen werden.");
+		}
+		// Wenn der Job nicht entfernt werden konnte, ist der Job schon im Worker. Dann wird er in processJob() abgebrochen und der Abbruch dort dokumentiert.
+		// Gebe daher true zurück.
 		return true;
 	}
 
@@ -175,13 +174,16 @@ public final class EmailJobManager {
 
 
 	/**
-	 * Bearbeitet den übergebenen Job und startet das Versenden der Emails.
+	 * Bearbeitet den übergebenen Job und startet das Versenden der E-Mails.
 	 *
-	 * @param job   der abzuarbeitenden Job des Managers
+	 * @param job   der abzuarbeitende Job des Managers
 	 */
 	private void processJob(final EmailJob job) {
-		// Wenn der Job als abgebrochen markiert wurde, dann kann er auch nicht weiter bearbeitet werden und der Status wird aus CANCELED gesetzt
+		// Wenn der Job als abgebrochen markiert wurde, kann er auch nicht weiter bearbeitet werden und der Status wird aus CANCELED gesetzt
 		if (job.hasCancellationRequest()) {
+			// Protokolliere den Abbruch. Dies greift nur, falls cancelJob() den Job nicht mehr aus der Queue entfernen konnte.
+			if (job.logError.isEmpty())
+				job.logError.add("- ABBRUCH: Job %d wurde vor dem Start abgebrochen.".formatted(job.getId()));
 			completedJobs.add(job, EmailJobStatus.CANCELED);
 			return;
 		}
@@ -190,33 +192,51 @@ public final class EmailJobManager {
 		job.setStatus(EmailJobStatus.SENDING);
 		try {
 			// ... und versende alle Mails des Jobs
-			this.sendAll(job);
-
-			// Wenn der Job nicht vorher abgebrochen wurde, dann markiere ihn als abgeschlossen und setze den Status auf COMPLETED.
-			if (!job.hasCancellationRequest()) {
-				completedJobs.add(job, EmailJobStatus.COMPLETED);
-			}
+			final boolean allSuccessful = this.sendAll(job);
+			setStatusAfterProcessJob(job, allSuccessful);
 		} catch (@SuppressWarnings("unused") final EmailJobCanceledException e) {
-			// Diese Exception wird in dem Fall aufgerufen, dass der Job unterbrochen wurde -> Status CANCELED
-			job.logSkipped.add("- Hinweis: Versand wurde abgebrochen.");
+			// Diese Exception wird in dem Fall aufgerufen, dass der Job unterbrochen wurde. Damit Status CANCELED
+			job.logError.add("- ABBRUCH: Job %d wurde während des Versands abgebrochen.".formatted(job.getId()));
 			completedJobs.add(job, EmailJobStatus.CANCELED);
 		} catch (final Exception e) {
 			// Bei einem unerwarteten Fehler wird der Status des Jobs auf FAILED gesetzt
-			job.logError.add("- Fehler: Unerwarteter Fehler: " + (e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName()));
+			job.logError.add("- FEHLER: Unerwarteter Fehler während des Versands von Job " + job.getId() + ": "
+					+ (e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName()));
 			completedJobs.add(job, EmailJobStatus.FAILED);
+		}
+	}
+
+	private void setStatusAfterProcessJob(final EmailJob job, final boolean allSuccessful) {
+		// Wenn der Job nicht vorher abgebrochen wurde, prüfe, ob alle Mails erfolgreich versandt wurden.
+		if (!job.hasCancellationRequest()) {
+			if (allSuccessful && job.logError.isEmpty() && job.logSkipped.isEmpty()) {
+				// Der Job ist nur erfolgreich, wenn alle Mails erfolgreich versendet wurden und kein Fehler aufgetreten ist.
+				completedJobs.add(job, EmailJobStatus.COMPLETED_SUCCESSFULLY);
+			} else {
+				if (job.getEmailsSent() > 0)
+					completedJobs.add(job, EmailJobStatus.COMPLETED_WITH_ERRORS);
+				else
+					completedJobs.add(job, EmailJobStatus.FAILED);
+			}
+		} else {
+			// Falls aufgrund des Multi-Threading zwischen dem ersten Check mittels hasCancellationRequest zu Beginn dieser Methode und dem Check dieser
+			// if-Bedingung ein CancellationRequest gesetzt wurde und keine Exception auftritt, würde der Status des Jobs hier immer noch SENDING sein.
+			// Setze den Status daher korrekterweise für diesen sehr seltenen Randfall auf CANCELED.
+			job.logError.add("- ABBRUCH: Job %d wurde während des Versands abgebrochen.".formatted(job.getId()));
+			completedJobs.add(job, EmailJobStatus.CANCELED);
 		}
 	}
 
 
 	/**
-	 * Diese Methode dient der Einhaltung des Limit für die Anzahl der Emails pro Minute.
-	 * Sie wartet blockierend, bis wieder genüg Zeit für das Versenden einer weiteren Email vergangen ist.
+	 * Diese Methode dient der Einhaltung des Limits für die Anzahl der E-Mails pro Minute.
+	 * Sie wartet blockierend, bis wieder genüg Zeit für das Versenden einer weiteren E-Mail vergangen ist.
 	 *
 	 * @throws EmailJobCanceledException   falls der wartende Thread durch Thread.interrupt() unterbrochen wurde (siehe shutdown-Methode)
 	 */
 	private void awaitRateLimit() {
 		// Die Größe des Zeitfensters für den Versand: Anzahl an Millisekunden für eine Minute
-		final long zeitfenster = Duration.ofMinutes(1).toMillis();
+		final long zeitfenster = context.getRateLimitTimeframeMs();
 
 		// Synchronisiert den Zugriff auf der Deque bei dem Zugriff durch mehrere Threads. wait und notifyAll benötigen dieselbe Monitor-Instanz.
 		synchronized (sendTimestamps) {
@@ -229,23 +249,23 @@ public final class EmailJobManager {
 				while (!sendTimestamps.isEmpty() && ((now - sendTimestamps.peekFirst()) >= zeitfenster))
 					sendTimestamps.pollFirst();
 
-				// Prüfe, ob die maximale Rate das Senden eine Email erlaubt
+				// Prüfe, ob die maximale Rate das Senden einer E-Mail erlaubt
 				final Long oldest = sendTimestamps.peekFirst();
 				if ((oldest == null) || (sendTimestamps.size() < context.getMaxEmailsPerMinute())) {
-					// Füge den Zeitstempel in die Queue ein, wecken dann ggf. noch wartende andere Threads und verlasse die Methode zum Senden...
+					// Füge den Zeitstempel in die Queue ein, wecken dann ggf. noch wartende andere Threads und verlasse die Methode zum Senden ...
 					sendTimestamps.addLast(now);
 					sendTimestamps.notifyAll();
 					return;
 				}
 
-				// Kein Versenden erlaubt, bestimme die Wartezeit anhand des ältesten Eintrags, warte aber mindestens 50ms um ein Busy-Wait zu vermeiden
+				// Kein Versenden erlaubt. Bestimme daher die Wartezeit anhand des ältesten Eintrags, warte aber mindestens 50ms, um ein Busy-Wait zu vermeiden.
 				final long wartezeit = Math.max(50, zeitfenster - (now - oldest));
 				try {
-					// Warte solange, bis die Wartezeit abgelaufen ist oder ein notifyAll durch einen anderen Thread diesen Thread wieder aufweckt ...
+					// Warte so lange, bis die Wartezeit abgelaufen ist oder ein notifyAll durch einen anderen Thread diesen Thread wieder aufweckt ...
 					sendTimestamps.wait(wartezeit);
 					// ... und dann der nächste Schleifendurchlauf zum Prüfen, ob eine Berechtigung zum Senden besteht
 				} catch (@SuppressWarnings("unused") final InterruptedException ie) {
-					// Reagiere auf den Abbruch des Jobs von der shutdown-Methode und signalisiere dies an die Threads mithilfe eine Exception
+					// Reagiere auf den Abbruch des Jobs von der shutdown-Methode und signalisiere dies an die Threads mithilfe einer Exception.
 					Thread.currentThread().interrupt();
 					throw new EmailJobCanceledException();
 				}
@@ -256,46 +276,68 @@ public final class EmailJobManager {
 
 	/**
 	 * Sendet die E-Mails des übergebenen Jobs. Der Versand findet an alle Empfänger des Jobs statt.
-	 * Vor jeder einzelnen Email wird geprüft, ob das Versandlimit für Emails erreicht wurde und der Versand wird
-	 * ggf. für einen Zeitraum ausgesetzt.
+	 * Vor jeder einzelnen E-Mail wird geprüft, ob das Versandlimit für E-Mails erreicht wurde, und der Versand wird ggf. für einen Zeitraum ausgesetzt.
 	 *
-	 * @param job   der Email-Job
+	 * @param job   der E-Mail-Job
+	 *
+	 * @return true, wenn alle E-Mails erfolgreich versendet wurden, andernfalls false
 	 */
-	private void sendAll(final EmailJob job) {
-		for (final EmailJobRecipient recipient : job.getRecipients())
-			sendToRecipient(job, recipient);
+	private boolean sendAll(final EmailJob job) {
+		boolean allSuccessful = true;
+		for (final EmailJobRecipient recipient : job.getRecipients()) {
+			if (!sendToRecipient(job, recipient)) {
+				allSuccessful = false;
+			}
+		}
+		return allSuccessful;
 	}
 
 
 	/**
 	 * Sendet die E-Mails des übergebenen Jobs und des übergebenen Empfängers. Es wird vor dem Versand geprüft,
-	 * das Versandlimit für Emails erreicht wurde und der Versand wird ggf. für einen Zeitraum ausgesetzt.
+	 * das Versandlimit für E-Mails erreicht wurde und der Versand wird ggf. für einen Zeitraum ausgesetzt.
 	 *
-	 * @param job         der Email-Job
-	 * @param recipient   der Empfänger der Email mit den zugehörigen Anhängen
+	 * @param job         der E-Mail-Job
+	 * @param recipient   der Empfänger der E-Mail mit den zugehörigen Anhängen
+	 *
+	 * @return true, wenn alle E-Mails erfolgreich versendet wurden, andernfalls false
 	 */
-	private void sendToRecipient(final @NotNull EmailJob job, final @NotNull EmailJobRecipient recipient) {
-		// Prüfe, ob die Anhänge direkt versendet werden können, da kein Größen-Limit gesetzt ist
-		if (context.getMaxAttachementSize() <= 0) {
-			sendInternal(job, recipient, recipient.attachments);
-			return;
-		}
-
-		// Wenn ein Größen-Limit gesetzt ist, dann unterteile die Anhänge, bilde geignete Pakete ...
-		final List<List<Integer>> pakete = groupAttachements(job, recipient.attachments, recipient.email);
-		if (pakete.isEmpty()) {
-			job.logSkipped.add("- Für Empfänger %s konnten keine versendbaren Anhänge ermittelt werden. Er wird beim Versand übersprungen."
+	private boolean sendToRecipient(final @NotNull EmailJob job, final @NotNull EmailJobRecipient recipient) {
+		// Prüfe, ob E-Mails ohne Anhänge herausgefiltert werden sollen und der Empfänger keine Anhänge erhält.
+		if (recipient.attachments.isEmpty() && context.isFilterMailsWithoutAttachments()) {
+			job.logSkipped.add("- Für Empfänger %s konnten keine Anhänge für den Versand ermittelt werden. Er wird beim Versand übersprungen."
 					.formatted(recipient.email));
-			return;
+			return false;
 		}
 
-		// ... und versende diese in einzelnen Emails
+		// Prüfe, ob die Anhänge direkt versendet werden können, da kein Größen-Limit gesetzt ist
+		if (context.getMaxAttachmentSize() <= 0) {
+			return sendInternal(job, recipient, recipient.attachments);
+		}
+
+		// Wenn ein Größen-Limit gesetzt ist, unterteile die Anhänge, bilde geeignete Pakete ...
+		final List<List<Integer>> pakete = groupAttachments(job, recipient.attachments, recipient.email);
+		if (pakete.isEmpty()) {
+			if (context.isFilterMailsWithoutAttachments()) {
+				job.logSkipped.add("- Für Empfänger %s konnten keine Anhänge für den Versand ermittelt werden. Er wird beim Versand übersprungen."
+						.formatted(recipient.email));
+				return false;
+			} else {
+				return sendInternal(job, recipient, new ArrayList<>());
+			}
+		}
+
+		// ... und versende diese in einzelnen E-Mails
+		boolean allSuccessful = true;
 		for (final List<Integer> paket : pakete) {
 			final List<EmailJobAttachment> paketData = new ArrayList<>(paket.size());
 			for (final Integer index : paket)
 				paketData.add(recipient.attachments.get(index));
-			sendInternal(job, recipient, paketData);
+			if (!sendInternal(job, recipient, paketData)) {
+				allSuccessful = false;
+			}
 		}
+		return allSuccessful;
 	}
 
 
@@ -303,9 +345,9 @@ public final class EmailJobManager {
 	 * Versendet eine einzelne E-Mail des Jobs mit den zugehörigen Anhängen und behandelt eventuell auftretende Fehler.
 	 * Außerdem wird überprüft, ob das Rate-Limit für den Versand bereits erreicht wurde.
 	 *
-	 * @param job           der Email-Job
-	 * @param recipient     die Empfänger-Email-Adresse
-	 * @param attachments   eine Liste mit den Email-Anhängen
+	 * @param job           der E-Mail-Job
+	 * @param recipient     die Empfänger-E-Mail-Adresse
+	 * @param attachments   eine Liste mit den E-Mail-Anhängen
 	 *
 	 * @return true, wenn die E-Mail erfolgreich versendet wurde, andernfalls false.
 	 */
@@ -315,9 +357,17 @@ public final class EmailJobManager {
 		if (job.hasCancellationRequest())
 			throw new EmailJobCanceledException();
 
-		// Versuche die nächste Email an den übergebenen Empfänger und den übergebenen Anhängen zu versenden
+		// Versuche die nächste E-Mail an den übergebenen Empfänger und den übergebenen Anhängen zu versenden
 		try {
-			context.getSmtpSession().sendTextMessageWithAttachments(job.getFrom(), recipient.email, job.getSubject(), job.getBody(), attachments);
+			final MailSmtpSession session = context.getSmtpSession();
+			// Während die SMTP-Sitzung erstellt wurde, kann der Job abgebrochen worden sein. Prüfe daher hier erneut auf einen Abbruch.
+			if (job.hasCancellationRequest())
+				throw new EmailJobCanceledException();
+			// Wenn bis hier kein Abbruch erfolgt ist, kann der Versand einer E-Mail nicht mehr verhindert werden.
+			session.sendTextMessageWithAttachments(job.getFrom(), recipient.email, job.getSubject(), job.getBody(), attachments);
+		} catch (final EmailJobCanceledException e) {
+			// Wenn der Versand abgebrochen wurde, wird die Exception weitergeleitet.
+			throw e;
 		} catch (final Exception e) {
 			job.logError.add("- Fehler beim Versand an Empfänger " + recipient + ": " + e.getMessage());
 			return false;
@@ -328,72 +378,70 @@ public final class EmailJobManager {
 
 
 	/**
-	 * Bildet für eine Liste von Anhängen Gruppen, welche eine im Job definierte maximale Größe für die Anhänge der Emails einhalten.
+	 * Bildet für eine Liste von Anhängen Gruppen, welche eine im Job definierte maximale Größe für die Anhänge der E-Mails einhalten.
 	 * Es kann dabei im Job definiert werden, ob auch einzelne Anhänge diese maximale Größe einhalten müssen.
 	 * Im letzteren Fall werden dann zu große Anhänge verworfen und als Fehler geloggt.
 	 *
-	 * @param job           der Email-Job
+	 * @param job           der E-Mail-Job
 	 * @param attachments   die Liste mit den einzelnen Datei-Anhängen zur Gruppierung.
-	 * @param recipient     die E-Mail-Adresse des Empfängers, welche ggf. im Logging beim Fehlern angegeben wird.
+	 * @param recipient     die E-Mail-Adresse des Empfängers, welche ggf. im Logging bei Fehlern angegeben wird.
 	 *
 	 * @return eine Liste von Listen mit Indizes, welche jeweils Gruppen von Anhängen darstellen, die gemeinsam
 	 *         versendet werden. Die Indizes beziehen sich dabei auf die übergebene Liste von Datei-Anhängen.
 	 */
-	private @NotNull List<List<Integer>> groupAttachements(final @NotNull EmailJob job, final @NotNull List<EmailJobAttachment> attachments,
+	private @NotNull List<List<Integer>> groupAttachments(final @NotNull EmailJob job, final @NotNull List<EmailJobAttachment> attachments,
 			final @NotNull String recipient) {
 		// Erstellt die Ergebnis-Liste für die Gruppen
 		final List<List<Integer>> groups = new ArrayList<>();
-		if (attachments.isEmpty() || (context.getMaxAttachementSize() <= 0))
+		if (attachments.isEmpty() || (context.getMaxAttachmentSize() <= 0))
 			return groups;
 
 		// Lese die maximale Anhangsgröße aus der Job-Definition aus
-		final long maxSize = context.getMaxAttachementSize();
+		final long maxSize = context.getMaxAttachmentSize();
 
 		// Bestimme die Größen der Anhänge und speichere diese in einem Array für den schnellen Zugriff auf die Größen
-		final int[] attachementSizes = new int[attachments.size()];
+		final int[] attachmentSizes = new int[attachments.size()];
 		for (int i = 0; i < attachments.size(); i++)
-			attachementSizes[i] = Optional.of(attachments.get(i)).map(d -> d.data.length).orElse(0);
+			attachmentSizes[i] = Optional.of(attachments.get(i)).map(d -> d.data.length).orElse(0);
 
 		// Erstelle für die spätere Gruppenbildung zunächst eine Liste mit den Indizes, welche anhand der Größe der Anhänge sortiert ist
 		final List<Integer> sortedAttachmentIndizes =
-				IntStream.range(0, attachments.size()).boxed().sorted((a, b) -> Integer.compare(attachementSizes[b], attachementSizes[a])).toList();
+				IntStream.range(0, attachments.size()).boxed().sorted((a, b) -> Integer.compare(attachmentSizes[b], attachmentSizes[a])).toList();
 
 		// Befülle die Gruppen einzeln mit den Anhängen, versuche dabei immer mit den nächstgrößeren Anhängen die zuerst erzeugten Gruppen weiter zu befüllen
 		final List<Long> groupSizes = new ArrayList<>();
 		for (final int index : sortedAttachmentIndizes) {
-			final long size = attachementSizes[index];
+			final long size = attachmentSizes[index];
 
-			// Fall 1: Die Größe überschreitet das Limit und dies ist laut Job-Konfiguration untersagt
-			if ((size > maxSize) && (context.isForceMaxAttachementSize())) {
-				// Die maximale Paketgröße darf nicht überschritten werden, verwerfe daher den Anhang und logge das Problem.
-				job.logError.add("- Fehler: Anhang wurde nicht an %s versendet, da er das maximale Größenlimit des Anhangs überschreitet."
-						.formatted(recipient));
-				continue;
-			}
-
-			// Fall 2: Die Größe überschreitet das Limit und dies ist laut Job-Konfiguration erlaubt -> Erzeuge ein Einzelpaket am Ende der Ergebnisliste
 			if (size > maxSize) {
-				final List<Integer> einzelanhang = new ArrayList<>(1);
-				einzelanhang.add(index);
-				groups.add(einzelanhang);
-				groupSizes.add(size);
-				continue;
+				// Fall 1: Die Größe überschreitet das Limit und dies ist laut Job-Konfiguration untersagt
+				if (context.isForceMaxAttachmentSize()) {
+					// Die maximale Paketgröße darf nicht überschritten werden, verwerfe daher den Anhang und logge das Problem.
+					job.logSkipped
+							.add(("- Für Empfänger %s wurde ein Anhang nicht versendet. Grund: Der Anhang überschreitet die maximale Größe für E-Mail-Anhänge.")
+									.formatted(recipient));
+				} else {
+					// Fall 2: Die Größe überschreitet das Limit und dies ist laut Job-Konfiguration erlaubt. Erzeuge daher ein Einzelpaket am Ende der Ergebnisliste
+					final List<Integer> einzelanhang = new ArrayList<>(1);
+					einzelanhang.add(index);
+					groups.add(einzelanhang);
+					groupSizes.add(size);
+				}
+			} else {
+				// Fall 3: Versuche, den aktuellen Anhang in einer bestehenden Gruppe unterzubringen.
+				final OptionalInt indexGroup = IntStream.range(0, groups.size()).filter(i -> ((groupSizes.get(i) + size) <= maxSize)).findFirst();
+				if (indexGroup.isPresent()) {
+					final int i = indexGroup.getAsInt();
+					groups.get(i).add(index);
+					groupSizes.set(i, groupSizes.get(i) + size);
+				} else {
+					// Fall 4: Erstelle eine neue Gruppe am Ende der Ergebnisliste, wenn zuvor kein Platz für den Anhang gefunden wurde
+					final List<Integer> group = new ArrayList<>();
+					group.add(index);
+					groups.add(group);
+					groupSizes.add(size);
+				}
 			}
-
-			// Fall 3: Versuche den aktuellen Anhang in einer bestehenden Gruppe unterzubringen
-			final OptionalInt indexGroup = IntStream.range(0, groups.size()).filter(i -> (groupSizes.get(i) + size <= maxSize)).findFirst();
-			if (indexGroup.isPresent()) {
-				final int i = indexGroup.getAsInt();
-				groups.get(i).add(index);
-				groupSizes.set(i, groupSizes.get(i) + size);
-				continue;
-			}
-
-			// Fall 4: Erstelle eine neue Gruppe am Ende der Ergebnisliste, wenn zuvor kein Platz für den Anhang gefunden wurde
-			final List<Integer> group = new ArrayList<>();
-			group.add(index);
-			groups.add(group);
-			groupSizes.add(size);
 		}
 		return groups;
 	}

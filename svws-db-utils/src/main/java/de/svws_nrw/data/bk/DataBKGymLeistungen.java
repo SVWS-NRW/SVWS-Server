@@ -13,9 +13,9 @@ import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
-import de.svws_nrw.core.abschluss.bk.d.BKGymAbiturFachbelegung;
-import de.svws_nrw.core.abschluss.bk.d.BKGymAbiturFachbelegungHalbjahr;
-import de.svws_nrw.core.abschluss.bk.d.BKGymAbiturdaten;
+import de.svws_nrw.core.data.bk.abi.BKGymAbiturFachbelegung;
+import de.svws_nrw.core.data.bk.abi.BKGymAbiturFachbelegungHalbjahr;
+import de.svws_nrw.core.data.bk.abi.BKGymAbiturdaten;
 import de.svws_nrw.core.data.bk.abi.BKGymFach;
 import de.svws_nrw.core.data.bk.abi.BKGymLeistungen;
 import de.svws_nrw.core.data.bk.abi.BKGymLeistungenFach;
@@ -32,6 +32,7 @@ import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.dto.current.schild.schueler.abitur.DTOSchuelerAbitur;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
@@ -309,6 +310,12 @@ public final class DataBKGymLeistungen {
 		if (aktLernabschnitt == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Konnte keinen aktuellen Lernabschnitt für den Schüler mit der ID %d ermitteln.".formatted(id));
 
+		// Lese die Abiturdaten anhand der ID aus der Datenbank
+		final DTOSchuelerAbitur dtoSchuelerAbitur = conn.queryByKey(DTOSchuelerAbitur.class, id);
+		if (dtoSchuelerAbitur == null)
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Es wurden keine Abiturdaten für den Schüler mit der ID %d in der Datenbank gefunden.".formatted(id));
+
 		// Bestimme die Jahrgänge der Schule
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 		// Bestimme das Abiturjahr
@@ -349,6 +356,12 @@ public final class DataBKGymLeistungen {
 		abidaten.fachklassenschluessel = fachklasse.FKS_AP_SIM;
 		abidaten.sprachendaten = leistungen.sprachendaten;
 		abidaten.bilingualeSprache = leistungen.bilingualeSprache;
+		abidaten.besondereLernleistung = dtoSchuelerAbitur.BesondereLernleistungArt.kuerzel;
+		abidaten.besondereLernleistungNotenpunkte = dtoSchuelerAbitur.BesondereLernleistungNotenpunkte;
+		abidaten.besondereLernleistungThema = dtoSchuelerAbitur.BesondereLernleistungThema;
+		abidaten.facharbeitFachbezeichnung = dtoSchuelerAbitur.FacharbeitFach;
+		abidaten.facharbeitNotenpunkte = dtoSchuelerAbitur.FacharbeitNotenpunkte;
+		abidaten.facharbeitThema = dtoSchuelerAbitur.ProjektkursThema; //ja, da steht das drin.
 
 		for (final GostHalbjahr hj : GostHalbjahr.values())
 			abidaten.bewertetesHalbjahr[hj.id] = leistungen.bewertetesHalbjahr[hj.id];

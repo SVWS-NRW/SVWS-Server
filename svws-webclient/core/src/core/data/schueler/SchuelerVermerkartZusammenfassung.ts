@@ -44,7 +44,7 @@ export class SchuelerVermerkartZusammenfassung extends JavaObject {
 		return ['de.svws_nrw.core.data.schueler.SchuelerVermerkartZusammenfassung'].includes(name);
 	}
 
-	public static class = new Class<SchuelerVermerkartZusammenfassung>('de.svws_nrw.core.data.schueler.SchuelerVermerkartZusammenfassung');
+	public static readonly class = new Class<SchuelerVermerkartZusammenfassung>('de.svws_nrw.core.data.schueler.SchuelerVermerkartZusammenfassung');
 
 	public static transpilerFromJSON(json: string): SchuelerVermerkartZusammenfassung {
 		const obj = JSON.parse(json) as Partial<SchuelerVermerkartZusammenfassung>;

@@ -1,1 +1,6 @@
 /* Ergänzende Einträge zu den allgemeinen css-Styles. Überschreiben diese bei gleicher Bezeichnung */
+td {
+	text-align: left;
+	vertical-align: top;
+	font-size: 0.9em;
+}

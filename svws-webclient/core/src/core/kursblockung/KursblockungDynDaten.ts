@@ -1458,7 +1458,7 @@ export class KursblockungDynDaten extends JavaObject {
 		return ['de.svws_nrw.core.kursblockung.KursblockungDynDaten'].includes(name);
 	}
 
-	public static class = new Class<KursblockungDynDaten>('de.svws_nrw.core.kursblockung.KursblockungDynDaten');
+	public static readonly class = new Class<KursblockungDynDaten>('de.svws_nrw.core.kursblockung.KursblockungDynDaten');
 
 }
 

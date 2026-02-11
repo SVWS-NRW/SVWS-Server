@@ -75,7 +75,7 @@ export class ArrayMapKeySetIterator<K, V> extends JavaObject implements JavaIter
 		return ['java.util.Iterator', 'de.svws_nrw.core.adt.map.ArrayMapKeySetIterator'].includes(name);
 	}
 
-	public static class = new Class<ArrayMapKeySetIterator<any, any>>('de.svws_nrw.core.adt.map.ArrayMapKeySetIterator');
+	public static readonly class = new Class<ArrayMapKeySetIterator<any, any>>('de.svws_nrw.core.adt.map.ArrayMapKeySetIterator');
 
 }
 

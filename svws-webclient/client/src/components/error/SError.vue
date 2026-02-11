@@ -84,24 +84,27 @@
 	const copied = ref<boolean | null>(null);
 
 	const errorDescription = computed(() => {
-		if (props.error instanceof DeveloperNotificationException)
+		if (props.error instanceof DeveloperNotificationException) {
 			return "Programmierfehler: Bitte melden Sie diesen Fehler.";
-		else if (props.error instanceof UserNotificationException)
+		} else if (props.error instanceof UserNotificationException) {
 			return "Nutzungsfehler: Dieser Fehler wurde durch eine nicht vorgesehene Nutzung der verwendeten Funktion hervorgerufen, z.B. durch unmögliche Kombinationen etc.";
-		else if (props.error instanceof OpenApiError)
+		} else if (props.error instanceof OpenApiError) {
 			return "API-Fehler: Dieser Fehler wird durch eine fehlerhafte Kommunikation mit dem Server verursacht. In der Regel bedeutet das, dass die verschickten Daten nicht den Vorgaben entsprechen.";
+		}
 		return "Unbekannter Fehler";
 	});
 
 	const errorText = computed<string | null>(() => {
-		if (props.errortext === undefined)
+		if (props.errortext === undefined) {
 			return null;
+		}
 		return props.errortext;
 	});
 
 	const errorSimpleOperationResponse = computed<SimpleOperationResponse | null>(() => {
-		if (errorText.value === null)
+		if (errorText.value === null) {
 			return null;
+		}
 		try {
 			return SimpleOperationResponse.transpilerFromJSON(errorText.value);
 		} catch (e) {
@@ -115,8 +118,9 @@
 
 	async function createCapturedError(): Promise<CapturedError> {
 		const reason = props.error;
-		if (reason === undefined)
+		if (reason === undefined) {
 			return { id: 0, name: "Unbekannter Fehler", message: "Ein Fehler verhindert den weiteren Ablauf des SVWS-Client, der Fehler ist jedoch unbekannt", stack: "", log: null };
+		}
 		console.warn(reason);
 		const name = errorDescription.value;
 		const message = reason.message;

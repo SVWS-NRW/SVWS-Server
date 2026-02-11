@@ -218,7 +218,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.ge.AbschlussFaecherGruppe'].includes(name);
 	}
 
-	public static class = new Class<AbschlussFaecherGruppe>('de.svws_nrw.core.abschluss.ge.AbschlussFaecherGruppe');
+	public static readonly class = new Class<AbschlussFaecherGruppe>('de.svws_nrw.core.abschluss.ge.AbschlussFaecherGruppe');
 
 }
 

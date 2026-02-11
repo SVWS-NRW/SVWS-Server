@@ -15,9 +15,11 @@ export class PendingStateManagerRegistry {
 	 * @return Liefert <code>true</code> wenn es ausstehende Änderungen gibt, ansonsten <code>false</code>
 	 */
 	public pendingStateExists(): boolean {
-		for (const ps of this.pendingStateManagers)
-			if (ps.pendingStateExists())
+		for (const ps of this.pendingStateManagers) {
+			if (ps.pendingStateExists()) {
 				return true;
+			}
+		}
 		return false;
 	}
 

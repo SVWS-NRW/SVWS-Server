@@ -108,7 +108,7 @@ export class LehrerZugangsgrund extends JavaEnum<LehrerZugangsgrund> implements 
 		return ['de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.lehrer.LehrerZugangsgrund', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<LehrerZugangsgrund>('de.svws_nrw.asd.types.lehrer.LehrerZugangsgrund');
+	public static readonly class = new Class<LehrerZugangsgrund>('de.svws_nrw.asd.types.lehrer.LehrerZugangsgrund');
 
 }
 

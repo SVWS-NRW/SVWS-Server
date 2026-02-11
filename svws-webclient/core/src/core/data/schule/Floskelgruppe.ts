@@ -42,7 +42,7 @@ export class Floskelgruppe extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.Floskelgruppe'].includes(name);
 	}
 
-	public static class = new Class<Floskelgruppe>('de.svws_nrw.core.data.schule.Floskelgruppe');
+	public static readonly class = new Class<Floskelgruppe>('de.svws_nrw.core.data.schule.Floskelgruppe');
 
 	public static transpilerFromJSON(json: string): Floskelgruppe {
 		const obj = JSON.parse(json) as Partial<Floskelgruppe>;

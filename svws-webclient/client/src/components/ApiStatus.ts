@@ -84,8 +84,9 @@ export class ApiStatus {
 	 * 	bereits ein anderer API-Aufruf läuft.
 	 */
 	public start(data?: ApiPendingData): boolean {
-		if (this.pending)
+		if (this.pending) {
 			return false;
+		}
 		this._state.value = { pending: true, error: undefined, data };
 		return true;
 	}
@@ -99,8 +100,9 @@ export class ApiStatus {
 	 * @returns true, falls ein API-Aufruf am laufen war und false, falls kein API-Aufruf aktiv war.
 	 */
 	public stop(error?: Error): boolean {
-		if (!this.pending)
+		if (!this.pending) {
 			return false;
+		}
 		this._state.value = { pending: false, error, data: undefined };
 		return true;
 	}

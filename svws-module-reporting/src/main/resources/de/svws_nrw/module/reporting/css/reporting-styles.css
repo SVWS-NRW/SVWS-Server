@@ -28,10 +28,13 @@ Definitionen für Farben
 	color: #808080;
 }
 .c-lightgrey {
-	background-color: #DADADA;
+	color: #DADADA;
+}
+.c-white {
+	color: #FFFFFF;
 }
 .c-lightyellow {
-	background-color: #FFFDAF;
+	color: #FFFDAF;
 }
 
 
@@ -42,7 +45,7 @@ Definitionen body: Festlegen der Schrift mit Unicode Unterstützung.
 */
 body {
 	/*noinspection CssNoGenericFontName*/
-	font-family: 'liberation';
+	font-family: 'liberation', sans-serif;
 	font-weight: normal;
 	font-size: 9pt;
 	margin: 0;
@@ -116,6 +119,9 @@ sup {
 .f-very-tiny {
 	font-size: 0.7em;
 }
+.f-extrem-tiny {
+	font-size: 0.64em;
+}
 
 .ta-l {
 	text-align: left;
@@ -169,6 +175,10 @@ sup {
 Definitionen für Spacing, Padding, Margin
 ##########################################################################################################################
 */
+.displayblock {
+	display: block;
+}
+
 .zero-height {
 	height: 0;
 }
@@ -568,22 +578,22 @@ th.head-small-grey {
 	font-size: 0.8em;
 	font-weight: normal;
 	color: white;
-	background-color: #808080;
+	background-color: #757575;
 	padding-left: 1mm;
 	padding-right: 1mm;
-	border-top: 0.5px solid #808080;
-	border-bottom: 0.5px solid #808080;
+	border-top: 0.5px solid #757575;
+	border-bottom: 0.5px solid #757575;
 }
 
 td.head-small-grey {
 	font-size: 0.8em;
 	font-weight: normal;
 	color: white;
-	background-color: #808080;
+	background-color: #757575;
 	padding-left: 1mm;
 	padding-right: 1mm;
-	border-top: 0.5px solid #808080;
-	border-bottom: 0.5px solid #808080;
+	border-top: 0.5px solid #757575;
+	border-bottom: 0.5px solid #757575;
 }
 
 th.head-black-lines {
@@ -696,25 +706,55 @@ Definitionen für Border and Background
 	border-left: 0.5px solid #000000;
 	border-right: 0.5px solid #000000;
 }
-.bo-lr-black {
+.bo-lr-black-strong {
 	border-left: 1px solid #000000;
 	border-right: 1px solid #000000;
 }
 
+.bo-lr-red {
+	border-left: 0.5px solid #ff0000;
+	border-right: 0.5px solid #ff0000;
+}
+
+.bo-lr-red-strong {
+	border-left: 1px solid #ff0000;
+	border-right: 1px solid #ff0000;
+}
+
+.bg-lightgrey {
+	background-color: #DADADA;
+}
 .bg-lightblue {
 	background-color: #44aaff;
 }
 .bg-lightgreen {
 	background-color: #aaff44;
 }
-.bg-lightgrey {
-	background-color: #DADADA;
+.bg-darkred {
+	background-color: #8B0000;
+}
+.bg-red {
+	background-color: #FF0000;
 }
 .bg-lightorange {
 	background-color: #ffaa44;
+}
+.bg-yellow {
+	background-color: #FFFF00;
 }
 .bg-lightyellow {
 	background-color: #FFFDAF;
 }
 
+div.fill {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+}
 
+div.fill-05 {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	min-height: 0.5mm;
+}

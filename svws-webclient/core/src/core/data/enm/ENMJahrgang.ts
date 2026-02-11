@@ -49,7 +49,7 @@ export class ENMJahrgang extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMJahrgang'].includes(name);
 	}
 
-	public static class = new Class<ENMJahrgang>('de.svws_nrw.core.data.enm.ENMJahrgang');
+	public static readonly class = new Class<ENMJahrgang>('de.svws_nrw.core.data.enm.ENMJahrgang');
 
 	public static transpilerFromJSON(json: string): ENMJahrgang {
 		const obj = JSON.parse(json) as Partial<ENMJahrgang>;

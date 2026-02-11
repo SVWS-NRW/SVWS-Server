@@ -7,7 +7,7 @@
 		--icon-size-sm: 1rem;
 		--icon-size-lg: 1.5rem;
 		--icon-size-xl: 2rem;
-		--icon-size-xxl: 4rem;	
+		--icon-size-xxl: 4rem;
 	}
 
 }
@@ -506,6 +506,13 @@
 @utility i-ri-eye-line {
 	mask-image: url(@icons/System/eye-line.svg);
 	-webkit-mask-image: url(@icons/System/eye-line.svg);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+@utility i-ri-eye-off-line {
+	mask-image: url(@icons/System/eye-off-line.svg);
+	-webkit-mask-image: url(@icons/System/eye-off-line.svg);
 	mask-repeat: no-repeat;
 	mask-position: center;
 }

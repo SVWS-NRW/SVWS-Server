@@ -22,14 +22,16 @@ export class RouteDataSchuelerSchulbesuch extends RouteData<RouteStateDataSchuel
 	}
 
 	get auswahl(): SchuelerListeEintrag {
-		if (this._state.value.auswahl === undefined)
+		if (this._state.value.auswahl === undefined) {
 			throw new DeveloperNotificationException("Beim Zugriff auf die Daten sind noch keine gültigen Daten geladen.");
+		}
 		return this._state.value.auswahl;
 	}
 
 	get schuelerSchulbesuchManager(): SchuelerSchulbesuchManager {
-		if (this._state.value.schuelerSchulbesuchManager === undefined)
+		if (this._state.value.schuelerSchulbesuchManager === undefined) {
 			throw new DeveloperNotificationException("SchülerSchulbesuchManager nicht initialisiert.");
+		}
 		return this._state.value.schuelerSchulbesuchManager;
 	}
 
@@ -51,8 +53,9 @@ export class RouteDataSchuelerSchulbesuch extends RouteData<RouteStateDataSchuel
 
 	deleteSchuelerSchulbesuchSchulen = async (ids: List<number>): Promise<void> => {
 		await api.server.deleteBisherigeSchulen(ids, api.schema);
-		for (const id of ids)
+		for (const id of ids) {
 			this.schuelerSchulbesuchManager.deleteBisherigeSchuleById(id);
+		}
 		this.commit();
 	};
 
@@ -70,17 +73,19 @@ export class RouteDataSchuelerSchulbesuch extends RouteData<RouteStateDataSchuel
 
 	deleteSchuelerSchulbesuchMerkmale = async (ids: List<number>): Promise<void> => {
 		await api.server.deleteSchuelerMerkmale(ids, api.schema);
-		for (const id of ids)
+		for (const id of ids) {
 			this.schuelerSchulbesuchManager.deleteSchuelerSchulbesuchMerkmal(id);
+		}
 		this.commit();
 	};
 
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null) {
-		if (auswahl === this._state.value.auswahl)
+		if (auswahl === this._state.value.auswahl) {
 			return;
-		if (auswahl === null)
+		}
+		if (auswahl === null) {
 			this.setDefaultState();
-		else {
+		} else {
 			try {
 				const data: SchuelerSchulbesuchsdaten = await api.server.getSchuelerSchulbesuch(api.schema, auswahl.id);
 				const schulen = await api.server.getSchulen(api.schema);

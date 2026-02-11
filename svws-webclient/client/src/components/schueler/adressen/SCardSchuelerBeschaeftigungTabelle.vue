@@ -53,8 +53,9 @@
 	const inputBetrieb = computed<BetriebListeEintrag | undefined>({
 		get: () => props.mapBetriebe.get(props.betrieb.betrieb_id),
 		set: (value) => {
-			if (value !== undefined)
+			if (value !== undefined) {
 				void props.patchSchuelerBetriebsdaten({ betrieb_id: value.id, ansprechpartner_id: null }, props.betrieb.id);
+			}
 		},
 	});
 

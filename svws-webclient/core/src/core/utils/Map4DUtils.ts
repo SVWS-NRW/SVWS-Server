@@ -71,7 +71,7 @@ export class Map4DUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.Map4DUtils'].includes(name);
 	}
 
-	public static class = new Class<Map4DUtils>('de.svws_nrw.core.utils.Map4DUtils');
+	public static readonly class = new Class<Map4DUtils>('de.svws_nrw.core.utils.Map4DUtils');
 
 }
 

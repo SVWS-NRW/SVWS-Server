@@ -1,6 +1,6 @@
 export enum RouteSchuleMenuGroup {
-	SCHULBEZOGEN = "Schulbezogene Kataloge",
-	ALLGEMEIN = "Allgemeine Kataloge",
+	ALLGEMEIN = "Allgemein",
+	KATALOGE = "Kataloge",
 	DATENAUSTAUSCH = "Datenaustausch",
 	REPORTING = "Reporting"
 }

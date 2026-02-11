@@ -51,10 +51,11 @@
 	const selected = computed<boolean>({
 		get: () => selectedHatAlle.value,
 		set: (value) => {
-			if (value)
+			if (value) {
 				void props.addBenutzerKompetenzGruppe(props.kompetenzgruppe);
-			else
+			} else {
 				void props.removeBenutzerKompetenzGruppe(props.kompetenzgruppe);
+			}
 		},
 	});
 

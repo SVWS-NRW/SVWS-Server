@@ -45,7 +45,7 @@ export class GostBelegpruefungsdaten extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostBelegpruefungsdaten'].includes(name);
 	}
 
-	public static class = new Class<GostBelegpruefungsdaten>('de.svws_nrw.core.data.gost.GostBelegpruefungsdaten');
+	public static readonly class = new Class<GostBelegpruefungsdaten>('de.svws_nrw.core.data.gost.GostBelegpruefungsdaten');
 
 	public static transpilerFromJSON(json: string): GostBelegpruefungsdaten {
 		const obj = JSON.parse(json) as Partial<GostBelegpruefungsdaten>;

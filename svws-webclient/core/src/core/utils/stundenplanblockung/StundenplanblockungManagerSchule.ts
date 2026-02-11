@@ -40,7 +40,7 @@ export class StundenplanblockungManagerSchule extends JavaObject {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerSchule'].includes(name);
 	}
 
-	public static class = new Class<StundenplanblockungManagerSchule>('de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerSchule');
+	public static readonly class = new Class<StundenplanblockungManagerSchule>('de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerSchule');
 
 }
 

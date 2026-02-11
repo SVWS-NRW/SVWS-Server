@@ -55,7 +55,7 @@ export class Herkunftsarten extends CoreTypeSimple<HerkunftsartenKatalogEintrag,
 		return ['de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.schueler.Herkunftsarten', 'de.svws_nrw.asd.types.CoreTypeSimple'].includes(name);
 	}
 
-	public static class = new Class<Herkunftsarten>('de.svws_nrw.asd.types.schueler.Herkunftsarten');
+	public static readonly class = new Class<Herkunftsarten>('de.svws_nrw.asd.types.schueler.Herkunftsarten');
 
 }
 

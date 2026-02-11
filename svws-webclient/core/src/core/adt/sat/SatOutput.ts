@@ -127,7 +127,7 @@ export class SatOutput extends JavaObject {
 		return ['de.svws_nrw.core.adt.sat.SatOutput'].includes(name);
 	}
 
-	public static class = new Class<SatOutput>('de.svws_nrw.core.adt.sat.SatOutput');
+	public static readonly class = new Class<SatOutput>('de.svws_nrw.core.adt.sat.SatOutput');
 
 }
 

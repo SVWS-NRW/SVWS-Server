@@ -47,8 +47,9 @@
 	const betrieb = computed<BetriebListeEintrag | undefined>({
 		get: () => props.mapBetriebe.get(schuelerBetriebsdaten.value.betrieb_id),
 		set: (value) => {
-			if (value === undefined)
+			if (value === undefined) {
 				throw new DeveloperNotificationException("Ungültiger Betrieb ausgewählt");
+			}
 			schuelerBetriebsdaten.value.betrieb_id = value.id;
 			schuelerBetriebsdaten.value.ansprechpartner_id = null;
 			for (const ap of props.mapAnsprechpartner.values()) {
@@ -90,8 +91,9 @@
 		console.log(props.mapAnsprechpartner);
 		for (const a of props.mapAnsprechpartner.entries()) {
 			console.log(a);
-			if (betrieb.value?.id === a[1].betrieb_id)
+			if (betrieb.value?.id === a[1].betrieb_id) {
 				t.set(a[0], a[1]);
+			}
 		}
 		return t;
 	});

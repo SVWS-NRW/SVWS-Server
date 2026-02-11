@@ -133,7 +133,8 @@
 							:update-klausurblockung
 							:show-schuelerklausuren="true"
 							:goto-kalenderdatum
-							:goto-raumzeit-termin />
+							:goto-raumzeit-termin
+							:zeige-alle-jahrgaenge />
 					</template>
 					<template v-else>
 						<div class="shadow-inner rounded-lg h-48" />
@@ -197,9 +198,9 @@
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
 		if (dragData.value instanceof GostKursklausur || dragData.value instanceof GostSchuelerklausurTermin) {
-			if (zone === undefined && dragData.value.idTermin !== null)
+			if (zone === undefined && dragData.value.idTermin !== null) {
 				await props.patchKlausur(dragData.value, { idTermin: null });
-			else if (zone instanceof GostKlausurtermin) {
+			} else if (zone instanceof GostKlausurtermin) {
 				if (zone.id !== dragData.value.idTermin) {
 					await props.patchKlausur(dragData.value, { idTermin: zone.id });
 					terminSelected.value = zone;
@@ -211,15 +212,15 @@
 	const termine = computed(() => props.kMan().terminNTGetMengeByAbijahrAndHalbjahrAndQuartalMultijahrgang(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, multijahrgang()));
 
 	const klausurCssClasses = (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => {
-		if (klausur instanceof GostKursklausur && dragData.value !== undefined)
+		if (klausur instanceof GostKursklausur && dragData.value !== undefined) {
 			return {
 				"bg-ui-danger text-ui-ondanger": props.kMan().konfliktZuKursklausurBySchuelerklausur((dragData.value as GostSchuelerklausurTermin), klausur),
 			};
-		else if (klausur instanceof GostSchuelerklausurTermin && dragData.value !== undefined)
+		} else if (klausur instanceof GostSchuelerklausurTermin && dragData.value !== undefined) {
 			return {
 				"bg-ui-danger text-ui-ondanger": props.kMan().schuelerklausurGetByIdOrException(klausur.idSchuelerklausur).idSchueler === props.kMan().schuelerklausurGetByIdOrException((dragData.value as GostSchuelerklausurTermin).idSchuelerklausur).idSchueler,
 			};
-		else if (klausur instanceof GostSchuelerklausurTermin && termin !== undefined) {
+		} else if (klausur instanceof GostSchuelerklausurTermin && termin !== undefined) {
 			return {
 				"bg-ui-danger text-ui-ondanger": props.kMan().konfliktPaarGetMengeTerminAndSchuelerklausurtermin(termin, klausur).size() > 0,
 			};

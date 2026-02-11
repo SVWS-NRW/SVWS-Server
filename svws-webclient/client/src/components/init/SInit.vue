@@ -116,14 +116,16 @@
 	});
 
 	function setCurrentAction(newAction: string, open: boolean) {
-		if (newAction === oldAction.value.name && !open)
+		if (newAction === oldAction.value.name && !open) {
 			return;
+		}
 		oldAction.value.name = currentAction.value;
 		oldAction.value.open = (currentAction.value === "") ? false : true;
-		if (open === true)
+		if (open === true) {
 			currentAction.value = newAction;
-		else
+		} else {
 			currentAction.value = "";
+		}
 	}
 
 	function clearLog() {
@@ -135,13 +137,15 @@
 	// Restore
 	function onFileChanged(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if ((target.files !== null) && (target.files.length > 0))
+		if ((target.files !== null) && (target.files.length > 0)) {
 			file.value = target.files[0];
+		}
 	}
 
 	async function restore() {
-		if (!file.value)
+		if (!file.value) {
 			return;
+		}
 		isLoading.value = true;
 		const formData = new FormData();
 		formData.append("database", file.value);
@@ -164,8 +168,9 @@
 	const password = ref("");
 
 	async function set(item: string | null | undefined) {
-		if (item === null || item === undefined)
+		if (item === null || item === undefined) {
 			return;
+		}
 		for (const [k, v] of items.entries()) {
 			if ((v === item) && (k !== undefined)) {
 				db.value = k;
@@ -177,8 +182,9 @@
 	async function migrate(): Promise<void> {
 		isLoading.value = true;
 		const formData = new FormData();
-		if (file.value)
+		if (file.value) {
 			formData.append("database", file.value);
+		}
 		formData.append('username', user.value);
 		formData.append('password', password.value);
 		formData.append('databasePassword', password.value);
@@ -189,8 +195,9 @@
 	}
 
 	async function init() {
-		if (schule.value === undefined)
+		if (schule.value === undefined) {
 			return;
+		}
 		isLoading.value = true;
 		status.value = await props.initSchule(schule.value);
 		isLoading.value = false;

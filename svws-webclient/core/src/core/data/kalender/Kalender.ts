@@ -67,7 +67,7 @@ export class Kalender extends JavaObject {
 		return ['de.svws_nrw.core.data.kalender.Kalender'].includes(name);
 	}
 
-	public static class = new Class<Kalender>('de.svws_nrw.core.data.kalender.Kalender');
+	public static readonly class = new Class<Kalender>('de.svws_nrw.core.data.kalender.Kalender');
 
 	public static transpilerFromJSON(json: string): Kalender {
 		const obj = JSON.parse(json) as Partial<Kalender>;

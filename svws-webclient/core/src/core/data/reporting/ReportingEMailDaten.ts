@@ -42,7 +42,7 @@ export class ReportingEMailDaten extends JavaObject {
 		return ['de.svws_nrw.core.data.reporting.ReportingEMailDaten'].includes(name);
 	}
 
-	public static class = new Class<ReportingEMailDaten>('de.svws_nrw.core.data.reporting.ReportingEMailDaten');
+	public static readonly class = new Class<ReportingEMailDaten>('de.svws_nrw.core.data.reporting.ReportingEMailDaten');
 
 	public static transpilerFromJSON(json: string): ReportingEMailDaten {
 		const obj = JSON.parse(json) as Partial<ReportingEMailDaten>;

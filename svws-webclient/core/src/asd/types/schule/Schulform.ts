@@ -321,7 +321,7 @@ export class Schulform extends JavaEnum<Schulform> implements CoreType<Schulform
 		return ['de.svws_nrw.asd.types.schule.Schulform', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Schulform>('de.svws_nrw.asd.types.schule.Schulform');
+	public static readonly class = new Class<Schulform>('de.svws_nrw.asd.types.schule.Schulform');
 
 }
 

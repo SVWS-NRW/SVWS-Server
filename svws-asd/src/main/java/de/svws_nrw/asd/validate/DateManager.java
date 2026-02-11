@@ -370,7 +370,7 @@ public final class DateManager implements Comparable<DateManager> {
 	 *     das Geburtsdatum des Managers
 	 */
 	public int getAlter(final @NotNull DateManager other) throws InvalidDateException {
-		final int cmp = compareTo(other);
+		final int cmp = other.compareTo(this);
 		if (cmp < 0)
 			throw new InvalidDateException("Das angegebene Datum ist vor dem Geburtsdatum."
 					+ " Eine Altersbestimmung ist so nicht möglich.");

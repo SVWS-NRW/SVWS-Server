@@ -107,45 +107,56 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 		isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		try {
 			const { idSchuljahresabschnitt, id: paramId } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", this._idParam]);
-			if (idSchuljahresabschnitt === undefined)
+			if (idSchuljahresabschnitt === undefined) {
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
+			}
 			let id = paramId;
 			if ((paramId === undefined) && isEntering) {
-				const lastId = parseInt(api.nonPersistentConfig.getValue(`${this.name}.auswahl.id`));
-				if (!isNaN(lastId))
+				const lastId = Number.parseInt(api.nonPersistentConfig.getValue(`${this.name}.auswahl.id`));
+				if (!Number.isNaN(lastId)) {
 					id = lastId;
+				}
 			}
-			if (isEntering && to.hasOneOfTypes([ViewType.GRUPPENPROZESSE, ViewType.HINZUFUEGEN, ViewType.NEU]))
+			if (isEntering && to.hasOneOfTypes([ViewType.GRUPPENPROZESSE, ViewType.HINZUFUEGEN, ViewType.NEU])) {
 				return this.getRouteView(this.data.view, { id: id ?? '' });
+			}
 			// Daten zum ausgewählten Schuljahresabschnitt und Schüler laden
 			const idNeu = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt, isEntering);
-			if ((idNeu !== null) && (idNeu !== id))
+			if ((idNeu !== null) && (idNeu !== id)) {
 				return this.data.defaultView.getRoute({ id: idNeu });
+			}
 
 			// Wenn einer der folgenden Routen Types aufgerufen wird, wird hier ein Redirect initiiert, sobald eine ID in der URL enthalten ist.
-			if (to.hasOneOfTypes([ViewType.GRUPPENPROZESSE, ViewType.HINZUFUEGEN]) && (id !== undefined))
+			if (to.hasOneOfTypes([ViewType.GRUPPENPROZESSE, ViewType.HINZUFUEGEN]) && (id !== undefined)) {
 				return this.getRouteView(to, { id: '' });
+			}
 
-			if (to.hasType(ViewType.GRUPPENPROZESSE))
+			if (to.hasType(ViewType.GRUPPENPROZESSE)) {
 				await this.data.gotoGruppenprozessView(false);
-			else if (to.hasType(ViewType.HINZUFUEGEN))
+			} else if (to.hasType(ViewType.HINZUFUEGEN)) {
 				await this.data.gotoHinzufuegenView(false);
-			else if (to.hasType(ViewType.NEU))
+			} else if (to.hasType(ViewType.NEU)) {
 				await this.data.gotoSchnelleingabeView(false);
-			else
+			} else {
 				await this.data.gotoDefaultView(id);
+			}
 
 			if (to.name === this.name) {
-				if (this._updateIfTarget !== undefined)
+				if (this._updateIfTarget !== undefined) {
 					return await this._updateIfTarget(to, to_params, from, from_params, isEntering, redirected);
-				if (this.data.manager.hasDaten())
+				}
+				if (this.data.manager.hasDaten()) {
 					return this.getRouteSelectedChild();
+				}
 				return;
 			}
-			if (!to.name.startsWith(this.data.view.name))
-				for (const child of this.children)
-					if (to.name.startsWith(child.name))
+			if (!to.name.startsWith(this.data.view.name)) {
+				for (const child of this.children) {
+					if (to.name.startsWith(child.name)) {
 						this.data.setView(child, this.children);
+					}
+				}
+			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
@@ -154,8 +165,9 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams, to: RouteNode<any, any>, to_params: RouteParams): Promise<void> {
 		// Wenn eine Route mit ViewType != Default verlassen wird, soll bei der Rückkehr zu dieser Route kein Child Node mehr selektiert sein.
 		// Es soll dann die Default View angezeigt werden.
-		if (this.data.activeViewType !== ViewType.DEFAULT)
+		if (this.data.activeViewType !== ViewType.DEFAULT) {
 			this._selectedChild.value = undefined;
+		}
 
 		this.data.reset();
 		const { id } = RouteNode.getStringParams(from_params, [this._idParam]);
@@ -170,11 +182,13 @@ export abstract class RouteAuswahlNode<TAuswahlManager extends AuswahlManager<nu
 	 */
 	public addRouteParamsFromState(): RouteParamsRawGeneric {
 		const params = {};
-		if (!this.data.hasManager)
+		if (!this.data.hasManager) {
 			return params;
+		}
 		const id = this.data.manager.auswahlID();
-		if (id !== null)
+		if (id !== null) {
 			this.data.addID(params, id);
+		}
 		return params;
 	}
 

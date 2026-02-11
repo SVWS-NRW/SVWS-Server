@@ -57,15 +57,17 @@
 
 	function onFileChanged(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if (target.files)
+		if (target.files) {
 			file.value = target.files[0];
+		}
 		loading.value = false;
 		status.value = undefined;
 	}
 
 	async function import_file() {
-		if (file.value === null)
+		if (file.value === null) {
 			return;
+		}
 		status.value = undefined;
 		loading.value = true;
 		const formData = new FormData();

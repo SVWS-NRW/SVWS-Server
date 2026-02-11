@@ -13,7 +13,7 @@
 		</Teleport>
 		<div class="min-w-fit max-w-280 h-full overflow-hidden">
 			<div v-if="hatUpdateKompetenz">Zum Ändern der Kalenderwoche die jeweilige Zeile anklicken</div>
-			<svws-ui-table :items :columns :clickable="hatUpdateKompetenz" @update:clicked="toggleWochentyp" scroll />
+			<svws-ui-table :items :columns :clickable="hatUpdateKompetenz" @update:clicked="toggleWochentyp" scroll focus-first-element allow-arrow-key-selection focus-switching-enabled />
 		</div>
 		<div class="min-w-fit max-w-140 h-full overflow-auto">
 			<svws-ui-table :items="summen" />
@@ -40,8 +40,9 @@
 		const modell = props.stundenplanManager().getWochenTypModell();
 		const list = modus.value ? [kw] : props.stundenplanManager().kalenderwochenzuordnungGetMengeAsList();
 		for (const e of list) {
-			if (e.kw >= kw.kw)
+			if (e.kw >= kw.kw) {
 				e.wochentyp = (e.wochentyp + 1 > modell) ? 1 : e.wochentyp + 1;
+			}
 			kalenderwochenZuordnung.add(e);
 		}
 		await props.patchKalenderwochenzuordnungen(kalenderwochenZuordnung);
@@ -55,11 +56,12 @@
 
 	const summen = computed<Array<{ wochentyp: string, anzahl: number }>>(() => {
 		const result: Array<{ wochentyp: string, anzahl: number }> = [];
-		for (let wt = 1; wt <= props.stundenplanManager().getWochenTypModell(); wt++)
+		for (let wt = 1; wt <= props.stundenplanManager().getWochenTypModell(); wt++) {
 			result.push({
 				wochentyp: props.stundenplanManager().stundenplanGetWochenTypAsString(wt),
 				anzahl: props.stundenplanManager().kalenderwochenzuordnungGetMengeByWochentyp(wt).size(),
 			});
+		}
 		return result;
 	});
 
@@ -72,7 +74,7 @@
 
 	const items = computed<Array<{ zuordnung: StundenplanKalenderwochenzuordnung, kalenderwoche: number, montag: string, sonntag: string, wochentyp: string }>>(() => {
 		const result: Array<{ zuordnung: StundenplanKalenderwochenzuordnung, kalenderwoche: number, montag: string, sonntag: string, wochentyp: string }> = [];
-		for (const zuordnung of props.stundenplanManager().kalenderwochenzuordnungGetMengeAsList())
+		for (const zuordnung of props.stundenplanManager().kalenderwochenzuordnungGetMengeAsList()) {
 			result.push({
 				zuordnung: zuordnung,
 				kalenderwoche: zuordnung.kw,
@@ -80,6 +82,7 @@
 				sonntag: DateUtils.gibDatumGermanFormat(DateUtils.gibDatumDesSonntagsOfJahrAndKalenderwoche(zuordnung.jahr, zuordnung.kw)),
 				wochentyp: props.stundenplanManager().stundenplanGetWochenTypAsStringKurz(zuordnung.wochentyp),
 			});
+		}
 		return result;
 	});
 

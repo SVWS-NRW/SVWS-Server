@@ -31,11 +31,23 @@ public enum Klassenart implements CoreType<KlassenartKatalogEintrag, Klassenart>
 	/** Klassenart: Hauptschuleklasse ohne Differenzierung nach A und B */
 	HA_AB,
 
+	/** Klassenart: Auffangklasse */
+	AK,
+
 	/** Klassenart: Frühförderung: SKG (Ambulante Maßnahmen für blinde, gehörlose, sehbeh. und schwerh. Kinder) */
 	AM,
 
+	/** Klassenart: BUS - Beruf und Schule */
+	BP,
+
 	/** Klassenart: Deutschförderung (ohne Bildungsgangzuordnung, BASS 13-63 Nr. 3) */
 	DF,
+
+	/** Klassenart: Integrative Lerngruppe */
+	IL,
+
+	/** Klassenart: Kooperationsklasse */
+	KK,
 
 	/** Klassenart: Frühförderung: SKG (Präsenzgruppe) */
 	PG,
@@ -47,7 +59,10 @@ public enum Klassenart implements CoreType<KlassenartKatalogEintrag, Klassenart>
 	RK,
 
 	/** Klassenart: Deutschförderklasse (gemäß BASS 13-63 Nr. 3, Nummer 3.5.1) */
-	SG;
+	SG,
+
+	/** Klassenart: Vorbereitungsklasse */
+	VK;
 
 
 	/** Die Menge der Schulformen. Diese ist nach der Initialisierung nicht leer. */

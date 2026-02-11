@@ -299,7 +299,7 @@ export class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends Go
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungGesellschaftswissenschaftenUndReligion'].includes(name);
 	}
 
-	public static class = new Class<Abi30BelegpruefungGesellschaftswissenschaftenUndReligion>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungGesellschaftswissenschaftenUndReligion');
+	public static readonly class = new Class<Abi30BelegpruefungGesellschaftswissenschaftenUndReligion>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungGesellschaftswissenschaftenUndReligion');
 
 }
 

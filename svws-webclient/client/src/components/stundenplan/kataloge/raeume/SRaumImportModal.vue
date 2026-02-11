@@ -59,8 +59,9 @@
 	}
 
 	async function import_file() {
-		if (file.value === null)
+		if (file.value === null) {
 			return;
+		}
 		status.value = undefined;
 		loading.value = true;
 		const formData = new FormData();

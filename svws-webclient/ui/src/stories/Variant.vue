@@ -56,8 +56,9 @@
 	const color = computed(() => storyManager.color);
 
 	function switchActive() {
-		if (!active.value)
+		if (!active.value) {
 			storyManager.setVariantById(props.id);
+		}
 	}
 
 	const dragger = ref<HTMLElement | null>(null);

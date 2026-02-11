@@ -56,7 +56,7 @@ export class KursblockungAlgorithmusPermanentKFachwahlmatrix extends Kursblockun
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentK', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKFachwahlmatrix'].includes(name);
 	}
 
-	public static class = new Class<KursblockungAlgorithmusPermanentKFachwahlmatrix>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKFachwahlmatrix');
+	public static readonly class = new Class<KursblockungAlgorithmusPermanentKFachwahlmatrix>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKFachwahlmatrix');
 
 }
 

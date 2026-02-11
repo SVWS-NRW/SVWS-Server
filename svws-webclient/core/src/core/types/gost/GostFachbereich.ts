@@ -34,94 +34,99 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 	public static readonly KUNST_MUSIK: GostFachbereich = new GostFachbereich("KUNST_MUSIK", 2, null, Fach.KU, Fach.MU);
 
 	/**
+	 * Fachbereich künstlerisch musikalisch und literarisch
+	 */
+	public static readonly KUNST_MUSIK_LITERATUR: GostFachbereich = new GostFachbereich("KUNST_MUSIK_LITERATUR", 3, null, Fach.KU, Fach.MU, Fach.LI);
+
+	/**
 	 * Fachbereich Ersatz für literarisch künstlerisch
 	 */
-	public static readonly LITERARISCH_KUENSTLERISCH_ERSATZ: GostFachbereich = new GostFachbereich("LITERARISCH_KUENSTLERISCH_ERSATZ", 3, null, Fach.LI, Fach.IN, Fach.VO);
+	public static readonly LITERARISCH_KUENSTLERISCH_ERSATZ: GostFachbereich = new GostFachbereich("LITERARISCH_KUENSTLERISCH_ERSATZ", 4, null, Fach.LI, Fach.IN, Fach.VO);
 
 	/**
 	 * Fachbereich literarisch künstlerisch
 	 */
-	public static readonly LITERARISCH_KUENSTLERISCH: GostFachbereich = new GostFachbereich("LITERARISCH_KUENSTLERISCH", 4, Arrays.asList(GostFachbereich.KUNST_MUSIK, GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ));
+	public static readonly LITERARISCH_KUENSTLERISCH: GostFachbereich = new GostFachbereich("LITERARISCH_KUENSTLERISCH", 5, Arrays.asList(GostFachbereich.KUNST_MUSIK, GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ));
 
 	/**
 	 * Fachbereich sprachlich literarisch künstlerisch
 	 */
-	public static readonly SPRACHLICH_LITERARISCH_KUENSTLERISCH: GostFachbereich = new GostFachbereich("SPRACHLICH_LITERARISCH_KUENSTLERISCH", 5, Arrays.asList(GostFachbereich.DEUTSCH, GostFachbereich.FREMDSPRACHE, GostFachbereich.KUNST_MUSIK, GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ));
+	public static readonly SPRACHLICH_LITERARISCH_KUENSTLERISCH: GostFachbereich = new GostFachbereich("SPRACHLICH_LITERARISCH_KUENSTLERISCH", 6, Arrays.asList(GostFachbereich.DEUTSCH, GostFachbereich.FREMDSPRACHE, GostFachbereich.KUNST_MUSIK, GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ));
 
 	/**
 	 * Fachbereich geschichtlich
 	 */
-	public static readonly GESCHICHTE: GostFachbereich = new GostFachbereich("GESCHICHTE", 6, null, Fach.GE);
+	public static readonly GESCHICHTE: GostFachbereich = new GostFachbereich("GESCHICHTE", 7, null, Fach.GE);
 
 	/**
 	 * Fachbereich sozialwissenschaftlich
 	 */
-	public static readonly SOZIALWISSENSCHAFTEN: GostFachbereich = new GostFachbereich("SOZIALWISSENSCHAFTEN", 7, null, Fach.SW);
+	public static readonly SOZIALWISSENSCHAFTEN: GostFachbereich = new GostFachbereich("SOZIALWISSENSCHAFTEN", 8, null, Fach.SW);
 
 	/**
 	 * Fachbereich philosophisch
 	 */
-	public static readonly PHILOSOPHIE: GostFachbereich = new GostFachbereich("PHILOSOPHIE", 8, null, Fach.PL);
+	public static readonly PHILOSOPHIE: GostFachbereich = new GostFachbereich("PHILOSOPHIE", 9, null, Fach.PL);
 
 	/**
 	 * Fachbereich Sonstige gesellschaftswissenschaftliche
 	 */
-	public static readonly GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE: GostFachbereich = new GostFachbereich("GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE", 9, null, Fach.EK, Fach.PA, Fach.PS, Fach.RK);
+	public static readonly GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE: GostFachbereich = new GostFachbereich("GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE", 10, null, Fach.EK, Fach.PA, Fach.PS, Fach.RK);
 
 	/**
 	 * Fachbereich gesellschaftswissenschaftlich
 	 */
-	public static readonly GESELLSCHAFTSWISSENSCHAFTLICH: GostFachbereich = new GostFachbereich("GESELLSCHAFTSWISSENSCHAFTLICH", 10, Arrays.asList(GostFachbereich.GESCHICHTE, GostFachbereich.SOZIALWISSENSCHAFTEN, GostFachbereich.PHILOSOPHIE, GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE));
+	public static readonly GESELLSCHAFTSWISSENSCHAFTLICH: GostFachbereich = new GostFachbereich("GESELLSCHAFTSWISSENSCHAFTLICH", 11, Arrays.asList(GostFachbereich.GESCHICHTE, GostFachbereich.SOZIALWISSENSCHAFTEN, GostFachbereich.PHILOSOPHIE, GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE));
 
 	/**
 	 * Fachbereich Religion
 	 */
-	public static readonly RELIGION: GostFachbereich = new GostFachbereich("RELIGION", 11, null, Fach.HR, Fach.OR, Fach.YR, Fach.ER, Fach.KR, Fach.IL);
+	public static readonly RELIGION: GostFachbereich = new GostFachbereich("RELIGION", 12, null, Fach.HR, Fach.OR, Fach.YR, Fach.ER, Fach.KR, Fach.IL);
 
 	/**
 	 * Fachbereich gesellschaftswissenschaftlich mit Religion
 	 */
-	public static readonly GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION: GostFachbereich = new GostFachbereich("GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION", 12, Arrays.asList(GostFachbereich.GESCHICHTE, GostFachbereich.SOZIALWISSENSCHAFTEN, GostFachbereich.PHILOSOPHIE, GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE, GostFachbereich.RELIGION));
+	public static readonly GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION: GostFachbereich = new GostFachbereich("GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION", 13, Arrays.asList(GostFachbereich.GESCHICHTE, GostFachbereich.SOZIALWISSENSCHAFTEN, GostFachbereich.PHILOSOPHIE, GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE, GostFachbereich.RELIGION));
 
 	/**
 	 * Fachbereich mathematisch
 	 */
-	public static readonly MATHEMATIK: GostFachbereich = new GostFachbereich("MATHEMATIK", 13, null, Fach.M);
+	public static readonly MATHEMATIK: GostFachbereich = new GostFachbereich("MATHEMATIK", 14, null, Fach.M);
 
 	/**
 	 * Fachbereich klassisch naturwissenschaftlich
 	 */
-	public static readonly NATURWISSENSCHAFTLICH_KLASSISCH: GostFachbereich = new GostFachbereich("NATURWISSENSCHAFTLICH_KLASSISCH", 14, null, Fach.BI, Fach.CH, Fach.PH);
+	public static readonly NATURWISSENSCHAFTLICH_KLASSISCH: GostFachbereich = new GostFachbereich("NATURWISSENSCHAFTLICH_KLASSISCH", 15, null, Fach.BI, Fach.CH, Fach.PH);
 
 	/**
 	 * Fachbereich naturwissenschaftlich neueinsetzend
 	 */
-	public static readonly NATURWISSENSCHAFTLICH_NEU_EINSETZEND: GostFachbereich = new GostFachbereich("NATURWISSENSCHAFTLICH_NEU_EINSETZEND", 15, null, Fach.EL, Fach.IF, Fach.TC);
+	public static readonly NATURWISSENSCHAFTLICH_NEU_EINSETZEND: GostFachbereich = new GostFachbereich("NATURWISSENSCHAFTLICH_NEU_EINSETZEND", 16, null, Fach.EL, Fach.IF, Fach.TC);
 
 	/**
 	 * Fachbereich naturwissenschaftlich
 	 */
-	public static readonly NATURWISSENSCHAFTLICH: GostFachbereich = new GostFachbereich("NATURWISSENSCHAFTLICH", 16, Arrays.asList(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH, GostFachbereich.NATURWISSENSCHAFTLICH_NEU_EINSETZEND));
+	public static readonly NATURWISSENSCHAFTLICH: GostFachbereich = new GostFachbereich("NATURWISSENSCHAFTLICH", 17, Arrays.asList(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH, GostFachbereich.NATURWISSENSCHAFTLICH_NEU_EINSETZEND));
 
 	/**
 	 * Fachbereich mathematisch naturwissenschaftlich
 	 */
-	public static readonly MATHEMATISCH_NATURWISSENSCHAFTLICH: GostFachbereich = new GostFachbereich("MATHEMATISCH_NATURWISSENSCHAFTLICH", 17, Arrays.asList(GostFachbereich.MATHEMATIK, GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH, GostFachbereich.NATURWISSENSCHAFTLICH_NEU_EINSETZEND));
+	public static readonly MATHEMATISCH_NATURWISSENSCHAFTLICH: GostFachbereich = new GostFachbereich("MATHEMATISCH_NATURWISSENSCHAFTLICH", 18, Arrays.asList(GostFachbereich.MATHEMATIK, GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH, GostFachbereich.NATURWISSENSCHAFTLICH_NEU_EINSETZEND));
 
 	/**
 	 * Fachbereich sportlich
 	 */
-	public static readonly SPORT: GostFachbereich = new GostFachbereich("SPORT", 18, null, Fach.SP);
+	public static readonly SPORT: GostFachbereich = new GostFachbereich("SPORT", 19, null, Fach.SP);
 
 	/**
 	 * Pseudo-Fachbereich Vertiefungskurse
 	 */
-	public static readonly VERTIEFUNGSKURSE: GostFachbereich = new GostFachbereich("VERTIEFUNGSKURSE", 19, null, Fach.VX);
+	public static readonly VERTIEFUNGSKURSE: GostFachbereich = new GostFachbereich("VERTIEFUNGSKURSE", 20, null, Fach.VX);
 
 	/**
 	 * Pseudo-Fachbereich Projektkurse
 	 */
-	public static readonly PROJEKTKURSE: GostFachbereich = new GostFachbereich("PROJEKTKURSE", 20, null, Fach.PX);
+	public static readonly PROJEKTKURSE: GostFachbereich = new GostFachbereich("PROJEKTKURSE", 21, null, Fach.PX);
 
 	/**
 	 * Eine Map mit allen Statistik-Fächern, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind. Die Map verweist auf einen Long-Wert für die Sortierung der Fächer
@@ -383,7 +388,7 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 		return ['de.svws_nrw.core.types.gost.GostFachbereich', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<GostFachbereich>('de.svws_nrw.core.types.gost.GostFachbereich');
+	public static readonly class = new Class<GostFachbereich>('de.svws_nrw.core.types.gost.GostFachbereich');
 
 }
 

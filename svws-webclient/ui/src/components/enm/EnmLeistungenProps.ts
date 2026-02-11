@@ -7,6 +7,4 @@ export interface EnmLeistungenProps {
 	patchLeistung: (data: ENMLeistung, patch: Partial<ENMLeistung>) => Promise<void>;
 	columnsVisible: () => Map<string, boolean | null>;
 	setColumnsVisible: (columns: Map<string, boolean | null>) => Promise<void>;
-	floskelEditorVisible: boolean;
-	setFloskelEditorVisible: (value: boolean) => Promise<void>;
 }

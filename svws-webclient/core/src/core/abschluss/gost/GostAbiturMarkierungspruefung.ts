@@ -703,7 +703,7 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.gost.GostAbiturMarkierungspruefung'].includes(name);
 	}
 
-	public static class = new Class<GostAbiturMarkierungspruefung>('de.svws_nrw.core.abschluss.gost.GostAbiturMarkierungspruefung');
+	public static readonly class = new Class<GostAbiturMarkierungspruefung>('de.svws_nrw.core.abschluss.gost.GostAbiturMarkierungspruefung');
 
 }
 

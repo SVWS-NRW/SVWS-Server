@@ -299,7 +299,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.GesellschaftswissenschaftenUndReligion'].includes(name);
 	}
 
-	public static class = new Class<GesellschaftswissenschaftenUndReligion>('de.svws_nrw.core.abschluss.gost.belegpruefung.GesellschaftswissenschaftenUndReligion');
+	public static readonly class = new Class<GesellschaftswissenschaftenUndReligion>('de.svws_nrw.core.abschluss.gost.belegpruefung.GesellschaftswissenschaftenUndReligion');
 
 }
 

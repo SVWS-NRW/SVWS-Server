@@ -92,13 +92,11 @@
 
 <script setup lang="ts">
 
-	import type { StundenplanRaum, GostKlausurplanManager, GostKlausurenCollectionSkrsKrsData, GostKlausurraum, GostKlausurtermin } from '@core';
-	import { BenutzerKompetenz } from '@core';
+	import type { GostKlausurplanManager, GostKlausurraum, GostKlausurtermin, StundenplanRaum } from '@core';
+	import { BenutzerKompetenz, DateUtils, GostHalbjahr, GostKursklausur } from '@core';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 	import type { DataTableColumn } from "@ui";
-	import { GostKursklausur, GostHalbjahr } from '@core';
 	import { computed } from 'vue';
-	import { DateUtils } from "@core";
 
 	const props = defineProps<{
 		benutzerKompetenzen: Set<BenutzerKompetenz>,
@@ -128,16 +126,18 @@
 
 	const klausurStartzeit = (klausur: GostKursklausur) => {
 		let startzeit = -1;
-		if (klausur.startzeit !== null)
+		if (klausur.startzeit !== null) {
 			startzeit = klausur.startzeit;
-		else if (klausur.idTermin === props.raum.idTermin) {
+		} else if (klausur.idTermin === props.raum.idTermin) {
 			const startzeitKursklausur = props.kMan().startzeitByKursklausurOrNull(klausur);
-			if (startzeitKursklausur !== null)
+			if (startzeitKursklausur !== null) {
 				startzeit = startzeitKursklausur;
+			}
 		} else {
 			const startzeitRaum = termin().startzeit;
-			if (startzeitRaum !== null)
+			if (startzeitRaum !== null) {
 				startzeit = startzeitRaum;
+			}
 		}
 		return startzeit !== -1 ? DateUtils.getStringOfUhrzeitFromMinuten(startzeit) : undefined;
 	};
@@ -148,25 +148,29 @@
 
 	const raeumeVerfuegbar = computed(() => {
 		const raeume = props.kMan().stundenplanraumVerfuegbarGetMengeByTermin(termin(), props.multijahrgang());
-		if (props.raum.idStundenplanRaum !== null)
+		if (props.raum.idStundenplanRaum !== null) {
 			raeume.add(0, props.kMan().stundenplanraumGetByKlausurraum(props.raum));
+		}
 		return raeume;
 	});
 
 	function isDropZone(): boolean {
-		if ((props.dragData() === undefined) || ((props.dragData() instanceof GostKursklausur) && props.kMan().containsKlausurraumKursklausur(props.raum, props.dragData() as GostKursklausur)))
+		if ((props.dragData() === undefined) || ((props.dragData() instanceof GostKursklausur) && props.kMan().containsKlausurraumKursklausur(props.raum, props.dragData() as GostKursklausur))) {
 			return false;
+		}
 		return true;
 	}
 
 	function checkDropZone(event: DragEvent) {
-		if (isDropZone())
+		if (isDropZone()) {
 			event.preventDefault();
+		}
 	}
 
 	async function patchKlausurbeginn(event: string | null, klausur: GostKursklausur) {
-		if (event === null)
+		if (event === null) {
 			return;
+		}
 		try {
 			const startzeit = event.trim().length > 0 ? DateUtils.gibMinutenOfZeitAsString(event) : null;
 			await props.patchKlausur(klausur, { startzeit });

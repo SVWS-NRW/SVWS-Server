@@ -122,7 +122,7 @@ export class GostBesondereLernleistung extends JavaEnum<GostBesondereLernleistun
 		return ['de.svws_nrw.core.types.gost.GostBesondereLernleistung', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<GostBesondereLernleistung>('de.svws_nrw.core.types.gost.GostBesondereLernleistung');
+	public static readonly class = new Class<GostBesondereLernleistung>('de.svws_nrw.core.types.gost.GostBesondereLernleistung');
 
 }
 

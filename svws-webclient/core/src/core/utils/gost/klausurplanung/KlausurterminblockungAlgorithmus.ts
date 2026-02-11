@@ -191,7 +191,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmus'].includes(name);
 	}
 
-	public static class = new Class<KlausurterminblockungAlgorithmus>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmus');
+	public static readonly class = new Class<KlausurterminblockungAlgorithmus>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmus');
 
 }
 

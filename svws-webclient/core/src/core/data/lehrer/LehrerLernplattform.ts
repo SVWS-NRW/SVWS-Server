@@ -61,7 +61,7 @@ export class LehrerLernplattform extends JavaObject {
 		return ['de.svws_nrw.core.data.lehrer.LehrerLernplattform'].includes(name);
 	}
 
-	public static class = new Class<LehrerLernplattform>('de.svws_nrw.core.data.lehrer.LehrerLernplattform');
+	public static readonly class = new Class<LehrerLernplattform>('de.svws_nrw.core.data.lehrer.LehrerLernplattform');
 
 	public static transpilerFromJSON(json: string): LehrerLernplattform {
 		const obj = JSON.parse(json) as Partial<LehrerLernplattform>;

@@ -25,7 +25,7 @@ public class LehrerPersonalabschnittsdatenAnrechnungsstunden {
 
 	/** Die ID des Anrechnungsgrundes. */
 	@Schema(description = "Die ID des Anrechnungsgrundes.", example = "4713")
-	public long idGrund = -1;
+	public Long idGrund = null;
 
 	/** Die Anzahl der Anrechnungsstunden, welche dem Grund zugeordnet sind. */
 	@Schema(description = "Die Anzahl der Anrechnungsstunden, welche dem Grund zugeordnet sind.", example = "0.5")

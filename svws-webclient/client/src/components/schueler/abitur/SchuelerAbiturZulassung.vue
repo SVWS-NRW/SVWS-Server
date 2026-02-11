@@ -107,11 +107,13 @@
 
 	const belegungsfehler = computed<List<GostBelegpruefungErgebnisFehler>>(() => {
 		const res = new ArrayList<GostBelegpruefungErgebnisFehler>();
-		for (const fehler of props.ergebnisBelegpruefung().fehlercodes)
+		for (const fehler of props.ergebnisBelegpruefung().fehlercodes) {
 			if (GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.BELEGUNG
 				|| GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.SCHRIFTLICHKEIT
-				|| GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.SCHULSPEZIFISCH)
+				|| GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.SCHULSPEZIFISCH) {
 				res.add(fehler);
+			}
+		}
 		return res;
 	});
 

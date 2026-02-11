@@ -228,7 +228,7 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.GostJahrgangsFachwahlenManager'].includes(name);
 	}
 
-	public static class = new Class<GostJahrgangsFachwahlenManager>('de.svws_nrw.core.utils.gost.GostJahrgangsFachwahlenManager');
+	public static readonly class = new Class<GostJahrgangsFachwahlenManager>('de.svws_nrw.core.utils.gost.GostJahrgangsFachwahlenManager');
 
 }
 

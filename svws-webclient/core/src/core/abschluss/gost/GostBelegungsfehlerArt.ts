@@ -108,7 +108,7 @@ export class GostBelegungsfehlerArt extends JavaEnum<GostBelegungsfehlerArt> {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegungsfehlerArt', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<GostBelegungsfehlerArt>('de.svws_nrw.core.abschluss.gost.GostBelegungsfehlerArt');
+	public static readonly class = new Class<GostBelegungsfehlerArt>('de.svws_nrw.core.abschluss.gost.GostBelegungsfehlerArt');
 
 }
 

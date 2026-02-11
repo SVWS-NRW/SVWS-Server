@@ -179,7 +179,7 @@ export class Sprachreferenzniveau extends JavaEnum<Sprachreferenzniveau> impleme
 		return ['de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.fach.Sprachreferenzniveau', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Sprachreferenzniveau>('de.svws_nrw.asd.types.fach.Sprachreferenzniveau');
+	public static readonly class = new Class<Sprachreferenzniveau>('de.svws_nrw.asd.types.fach.Sprachreferenzniveau');
 
 }
 

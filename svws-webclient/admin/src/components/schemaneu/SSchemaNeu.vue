@@ -61,14 +61,16 @@
 	}
 
 	function setCurrentAction(newAction: string, open: boolean) {
-		if (newAction === oldAction.value.name && !open)
+		if (newAction === oldAction.value.name && !open) {
 			return;
+		}
 		oldAction.value.name = currentAction.value;
 		oldAction.value.open = (currentAction.value === "") ? false : true;
-		if (open === true)
+		if (open === true) {
 			currentAction.value = newAction;
-		else
+		} else {
 			currentAction.value = "";
+		}
 	}
 
 	function clear() {
@@ -78,8 +80,9 @@
 	}
 
 	const validatorUsername = (username: string | null) => {
-		if ((username === null) || (username === 'root') || (username === props.apiUsername))
+		if ((username === null) || (username === 'root') || (username === props.apiUsername)) {
 			return false;
+		}
 		return true;
 	};
 

@@ -43,12 +43,12 @@ public final class HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistik
 		// In den idsHauptdaten der Reporting-Parameter werden das Abiturjahr und evtl. GostHalbjahres-IDs (0 = EF.1 bis 5 = Q2.2) übergeben.
 		// In den idsDetails der Reporting-Parameter liegen die Ids der Fächer.
 		// Hier werden die Daten NICHT validiert. Die Daten aus den Parametern müssen vorab validiert worden sein (ReportingValidierung).
-		final int abiturjahr = reportingRepository.reportingParameter().idsHauptdaten.stream().filter(Objects::nonNull).toList().getFirst().intValue();
-		final List<Long> idsFaecher = reportingRepository.reportingParameter().idsDetaildaten.stream().filter(Objects::nonNull).toList();
+		final int abiturjahr = reportingRepository.reportingParameter().idsHauptdaten().stream().filter(Objects::nonNull).toList().getFirst().intValue();
+		final List<Long> idsFaecher = reportingRepository.reportingParameter().idsDetaildaten().stream().filter(Objects::nonNull).toList();
 		final List<Integer> idsGostHalbjahre = new ArrayList<>();
 
-		for (int i = 1; i < reportingRepository.reportingParameter().idsHauptdaten.size(); i = i + 1) {
-			idsGostHalbjahre.add(reportingRepository.reportingParameter().idsHauptdaten.get(i).intValue());
+		for (int i = 1; i < reportingRepository.reportingParameter().idsHauptdaten().size(); i = i + 1) {
+			idsGostHalbjahre.add(reportingRepository.reportingParameter().idsHauptdaten().get(i).intValue());
 		}
 		// Sind keine GostHalbjahre angegeben, so erfolgt die Ausgabe aller Halbjahre. Ergänze sie daher in der Liste
 		if (idsGostHalbjahre.isEmpty()) {

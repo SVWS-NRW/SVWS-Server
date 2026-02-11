@@ -64,7 +64,7 @@ export class CoreTypeException extends RuntimeException {
 		return ['java.lang.Throwable', 'de.svws_nrw.asd.data.CoreTypeException', 'java.lang.RuntimeException', 'java.lang.Exception', 'java.io.Serializable'].includes(name);
 	}
 
-	public static class = new Class<CoreTypeException>('de.svws_nrw.asd.data.CoreTypeException');
+	public static readonly class = new Class<CoreTypeException>('de.svws_nrw.asd.data.CoreTypeException');
 
 }
 

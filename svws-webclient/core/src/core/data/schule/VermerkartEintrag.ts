@@ -11,7 +11,7 @@ export class VermerkartEintrag extends JavaObject {
 	/**
 	 * Die Bezeichnung der Vermerkart.
 	 */
-	public bezeichnung: string = "";
+	public bezeichnung: string | null = "";
 
 	/**
 	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
@@ -24,9 +24,9 @@ export class VermerkartEintrag extends JavaObject {
 	public istSichtbar: boolean = true;
 
 	/**
-	 * Gibt an wie viele Vermerke dem entsprechenden Vermerkart-Eintrag zugeordnet sind (berechneter Wert).
+	 * Gibt an, ob die Vermerkart in anderen Datenbanktabellen referenziert ist oder nicht.
 	 */
-	public anzahlVermerke: number = 0;
+	public referenziertInAnderenTabellen: boolean = false;
 
 
 	/**
@@ -44,7 +44,7 @@ export class VermerkartEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.VermerkartEintrag'].includes(name);
 	}
 
-	public static class = new Class<VermerkartEintrag>('de.svws_nrw.core.data.schule.VermerkartEintrag');
+	public static readonly class = new Class<VermerkartEintrag>('de.svws_nrw.core.data.schule.VermerkartEintrag');
 
 	public static transpilerFromJSON(json: string): VermerkartEintrag {
 		const obj = JSON.parse(json) as Partial<VermerkartEintrag>;
@@ -52,28 +52,26 @@ export class VermerkartEintrag extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (obj.bezeichnung === undefined)
-			throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = obj.bezeichnung;
+		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if (obj.anzahlVermerke === undefined)
-			throw new Error('invalid json format, missing attribute anzahlVermerke');
-		result.anzahlVermerke = obj.anzahlVermerke;
+		if (obj.referenziertInAnderenTabellen === undefined)
+			throw new Error('invalid json format, missing attribute referenziertInAnderenTabellen');
+		result.referenziertInAnderenTabellen = obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
 	public static transpilerToJSON(obj: VermerkartEintrag): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
-		result += '"anzahlVermerke" : ' + obj.anzahlVermerke.toString() + ',';
+		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -85,7 +83,7 @@ export class VermerkartEintrag extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
@@ -93,8 +91,8 @@ export class VermerkartEintrag extends JavaObject {
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
-		if (obj.anzahlVermerke !== undefined) {
-			result += '"anzahlVermerke" : ' + obj.anzahlVermerke.toString() + ',';
+		if (obj.referenziertInAnderenTabellen !== undefined) {
+			result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

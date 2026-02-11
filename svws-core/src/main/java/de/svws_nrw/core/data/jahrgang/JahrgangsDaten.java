@@ -1,6 +1,5 @@
 package de.svws_nrw.core.data.jahrgang;
 
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,19 +31,23 @@ public class JahrgangsDaten {
 
 	/** Die dem Jahrgang zugeordnete schulinterne Bezeichnung. */
 	@Schema(description = "Die dem Jahrgang zugeordnete schulinterne Bezeichnung.", example = "Einführungsphase")
-	public @NotNull String bezeichnung = "";
+	public String bezeichnung;
 
 	/** Die Sortierreihenfolge des Jahrgangslisten-Eintrags. */
 	@Schema(description = "die Sortierreihenfolge des Jahrgangslisten-Eintrags", example = "1")
 	public int sortierung;
 
-	/** Die ID der Schulgliederung, der der Eintrag zugeordnet ist. */
-	@Schema(description = "die ID der Schulgliederung, der der Eintrag zugeordnet ist", example = "***")
+	/** Das Kürzel der Schulgliederung, der der Eintrag zugeordnet ist. */
+	@Schema(description = "Das Kürzel der Schulgliederung, der der Eintrag zugeordnet ist", example = "***")
 	public String kuerzelSchulgliederung;
 
 	/** Die ID des Folgejahrgangs, sofern einer definiert ist, ansonsten null */
 	@Schema(description = "die ID des Folgejahrgangs, sofern einer definiert ist", example = "4712")
 	public Long idFolgejahrgang;
+
+	/** Die ID der Bildungsstufe, sofern eine definiert ist, ansonsten null */
+	@Schema(description = "die ID der Bildungsstufe, sofern eine definiert ist", example = "1")
+	public Long idBildungsstufe;
 
 	/** Gibt die Anzahl der Restabschnitte bis zum Abschluss bei der Schulform an */
 	@Schema(description = "Gibt die Anzahl der Restabschnitte bis zum Abschluss bei der Schulform an", example = "null")
@@ -68,7 +71,6 @@ public class JahrgangsDaten {
 	@Schema(description = "Gibt an, ob der Jahrgang in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
 	public Boolean referenziertInAnderenTabellen = null;
 
-	// TODO Weitere Daten
 
 	/**
 	 * Leerer Standardkonstruktor.

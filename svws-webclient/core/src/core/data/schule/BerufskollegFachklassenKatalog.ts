@@ -32,7 +32,7 @@ export class BerufskollegFachklassenKatalog extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalog'].includes(name);
 	}
 
-	public static class = new Class<BerufskollegFachklassenKatalog>('de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalog');
+	public static readonly class = new Class<BerufskollegFachklassenKatalog>('de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalog');
 
 	public static transpilerFromJSON(json: string): BerufskollegFachklassenKatalog {
 		const obj = JSON.parse(json) as Partial<BerufskollegFachklassenKatalog>;

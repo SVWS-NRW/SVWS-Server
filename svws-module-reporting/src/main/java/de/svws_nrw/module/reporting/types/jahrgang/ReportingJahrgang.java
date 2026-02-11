@@ -5,7 +5,7 @@ import java.util.Set;
 
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
-import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 

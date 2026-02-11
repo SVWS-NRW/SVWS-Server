@@ -27,7 +27,7 @@ test('Smoke-Test - Basic', async ({ page }) => {
 	await page.getByRole('link', { name: 'Kurse' }).click();
 	await expect(page.locator('header')).toContainText('N-F-1');
 	await page.getByRole('link', { name: 'Noten' }).click();
-	await expect(page.locator('header')).toContainText('Leistungsdaten');
+	await expect(page.locator('header')).toContainText('Administration Lokales Notenmodul');
 	await page.getByRole('link', { name: 'Oberstufe' }).click();
 	await expect(page.locator('header')).toContainText('Abiturjahrgang 2019');
 	await page.getByRole('link', { name: 'Statistik' }).click();

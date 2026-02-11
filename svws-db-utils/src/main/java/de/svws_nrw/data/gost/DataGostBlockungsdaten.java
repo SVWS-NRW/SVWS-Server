@@ -892,44 +892,6 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			}
 		}
 		conn.transactionFlush();
-		// Dupliziere die Regeln
-		final DTOSchemaAutoInkremente dbRegelID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Regeln");
-		long idRegelDuplikat = (dbRegelID == null) ? 1 : (dbRegelID.MaxID + 1);
-		final HashMap<Long, Long> mapRegelIDs = new HashMap<>();
-		final HashMap<Long, GostKursblockungRegelTyp> mapRegelTypen = new HashMap<>(); // Die Typen für die neuen Regel-IDs
-		final List<DTOGostBlockungRegel> regelnOriginal = conn.queryList(DTOGostBlockungRegel.QUERY_BY_BLOCKUNG_ID,
-				DTOGostBlockungRegel.class, ergebnisOriginal.Blockung_ID);
-		final List<Long> regelIDsOriginal = regelnOriginal.stream().map(k -> k.ID).toList();
-		for (final DTOGostBlockungRegel regelOriginal : regelnOriginal) {
-			mapRegelTypen.put(idRegelDuplikat, regelOriginal.Typ);
-			final DTOGostBlockungRegel regelDuplikat = new DTOGostBlockungRegel(idRegelDuplikat, idBlockungDuplikat, regelOriginal.Typ);
-			mapRegelIDs.put(regelOriginal.ID, regelDuplikat.ID);
-			conn.transactionPersist(regelDuplikat);
-			idRegelDuplikat++;
-		}
-		conn.transactionFlush();
-		// Dupliziere die RegelParameter
-		if (!regelIDsOriginal.isEmpty()) {
-			final List<DTOGostBlockungRegelParameter> paramListeOriginal = conn.queryList(DTOGostBlockungRegelParameter.QUERY_LIST_BY_REGEL_ID,
-					DTOGostBlockungRegelParameter.class, regelIDsOriginal);
-			for (final DTOGostBlockungRegelParameter paramOriginal : paramListeOriginal) {
-				idRegelDuplikat = mapRegelIDs.get(paramOriginal.Regel_ID);
-				// Passe den Parameter an...
-				final GostKursblockungRegelTyp typ = mapRegelTypen.get(idRegelDuplikat);
-				final GostKursblockungRegelParameterTyp paramTyp = typ.getParamType(paramOriginal.Nummer);
-				final Long paramValue = switch (paramTyp) {
-					case KURSART -> paramOriginal.Parameter;
-					case KURS_ID -> mapKursIDs.get(paramOriginal.Parameter);
-					case SCHIENEN_NR -> paramOriginal.Parameter;
-					case SCHUELER_ID -> paramOriginal.Parameter;
-					default -> paramOriginal.Parameter;
-				};
-				final DTOGostBlockungRegelParameter paramDuplikat = new DTOGostBlockungRegelParameter(idRegelDuplikat,
-						paramOriginal.Nummer, paramValue);
-				conn.transactionPersist(paramDuplikat);
-			}
-		}
-		conn.transactionFlush();
 		// Dupliziere das Zwischenergebnis
 		final DTOGostBlockungZwischenergebnis ergebnisDuplikat = new DTOGostBlockungZwischenergebnis(
 				idErgebnisDuplikat, idBlockungDuplikat, false);
@@ -965,6 +927,75 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			}
 		}
 		conn.transactionFlush();
+		// Ungültige Regeln identifizieren (Teil I: Mapping von Regel zu Parametern erzeugen)
+		HashMap<Long, long[]> mapRegelOriginal_RegeltypParam1Param2 = new HashMap<>();
+		final List<DTOGostBlockungRegel> regelnOriginal = conn.queryList(DTOGostBlockungRegel.QUERY_BY_BLOCKUNG_ID,
+				DTOGostBlockungRegel.class, ergebnisOriginal.Blockung_ID);
+		for (final DTOGostBlockungRegel regelOriginal : regelnOriginal)
+			mapRegelOriginal_RegeltypParam1Param2.put(regelOriginal.ID, new long[] {regelOriginal.Typ.typ, -1, -1});
+		// Ungültige Regeln identifizieren (Teil II: Parameterwerte pro Regel aggregieren)
+		if (!regelnOriginal.isEmpty()) {
+			final List<Long> regelIDsOriginal = regelnOriginal.stream().map(k -> k.ID).toList();
+			final List<DTOGostBlockungRegelParameter> paramListeOriginal = conn.queryList(DTOGostBlockungRegelParameter.QUERY_LIST_BY_REGEL_ID,
+					DTOGostBlockungRegelParameter.class, regelIDsOriginal);
+			for (final DTOGostBlockungRegelParameter paramOriginal : paramListeOriginal)
+				if ((paramOriginal.Nummer >= 0) && (paramOriginal.Nummer <= 1))
+					mapRegelOriginal_RegeltypParam1Param2.get(paramOriginal.Regel_ID)[paramOriginal.Nummer + 1] = paramOriginal.Parameter;
+		}
+		// Ungültige Regeln identifizieren (Teil III: Gefilterte Liste erstellen)
+		final List<DTOGostBlockungRegel> regelnOriginalGefiltert = new ArrayList<>();
+		for (final DTOGostBlockungRegel regelOriginal : regelnOriginal) {
+			long[] a = mapRegelOriginal_RegeltypParam1Param2.get(regelOriginal.ID);
+			// Fall: SCHUELER_FIXIEREN_IN_KURS / SCHUELER_VERBIETEN_IN_KURS
+			if ((a[0] == GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) || (a[0] == GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ)) {
+				long idSchueler = a[1];
+				long idKursAlt = a[2];
+				if ((idSchueler >= 0) && (idKursAlt >= 0)) {
+					long idKursNeu = mapKursIDs.get(idKursAlt);
+					final DTOGostBlockungKurs kursNeu = mapKurseHochgeschrieben.get(idKursNeu);
+					if (!managerFachwahlen.hatFachwahl(idSchueler, kursNeu.Fach_ID, kursNeu.Kursart))
+						continue; // Diese Regel filtern
+				}
+			}
+			// Diese Regel übernehmen
+			regelnOriginalGefiltert.add(regelOriginal);
+		}
+		if (!regelnOriginalGefiltert.isEmpty()) {
+			// Dupliziere die Regeln
+			final DTOSchemaAutoInkremente dbRegelID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Regeln");
+			long idRegelDuplikat = (dbRegelID == null) ? 1 : (dbRegelID.MaxID + 1);
+			final HashMap<Long, Long> mapRegelIDs = new HashMap<>();
+			final HashMap<Long, GostKursblockungRegelTyp> mapRegelTypen = new HashMap<>(); // Die Typen für die neuen Regel-IDs
+			final List<Long> regelIDsOriginalGefiltert = regelnOriginalGefiltert.stream().map(k -> k.ID).toList();
+			for (final DTOGostBlockungRegel regelOriginal : regelnOriginalGefiltert) {
+				mapRegelTypen.put(idRegelDuplikat, regelOriginal.Typ);
+				final DTOGostBlockungRegel regelDuplikat = new DTOGostBlockungRegel(idRegelDuplikat, idBlockungDuplikat, regelOriginal.Typ);
+				mapRegelIDs.put(regelOriginal.ID, regelDuplikat.ID);
+				conn.transactionPersist(regelDuplikat);
+				idRegelDuplikat++;
+			}
+			conn.transactionFlush();
+			// Dupliziere die RegelParameter
+			final List<DTOGostBlockungRegelParameter> paramListeOriginal = conn.queryList(DTOGostBlockungRegelParameter.QUERY_LIST_BY_REGEL_ID,
+					DTOGostBlockungRegelParameter.class, regelIDsOriginalGefiltert);
+			for (final DTOGostBlockungRegelParameter paramOriginal : paramListeOriginal) {
+				idRegelDuplikat = mapRegelIDs.get(paramOriginal.Regel_ID);
+				// Passe den Parameter an...
+				final GostKursblockungRegelTyp typ = mapRegelTypen.get(idRegelDuplikat);
+				final GostKursblockungRegelParameterTyp paramTyp = typ.getParamType(paramOriginal.Nummer);
+				final Long paramValue = switch (paramTyp) {
+					case KURSART -> paramOriginal.Parameter;
+					case KURS_ID -> mapKursIDs.get(paramOriginal.Parameter);
+					case SCHIENEN_NR -> paramOriginal.Parameter;
+					case SCHUELER_ID -> paramOriginal.Parameter;
+					default -> paramOriginal.Parameter;
+				};
+				final DTOGostBlockungRegelParameter paramDuplikat = new DTOGostBlockungRegelParameter(idRegelDuplikat,
+						paramOriginal.Nummer, paramValue);
+				conn.transactionPersist(paramDuplikat);
+			}
+			conn.transactionFlush();
+		}
 		return get(idBlockungDuplikat);
 	}
 

@@ -113,7 +113,7 @@ export class KAOAZusatzmerkmaleOptionsarten extends JavaEnum<KAOAZusatzmerkmaleO
 		return ['de.svws_nrw.asd.types.kaoa.KAOAZusatzmerkmaleOptionsarten', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<KAOAZusatzmerkmaleOptionsarten>('de.svws_nrw.asd.types.kaoa.KAOAZusatzmerkmaleOptionsarten');
+	public static readonly class = new Class<KAOAZusatzmerkmaleOptionsarten>('de.svws_nrw.asd.types.kaoa.KAOAZusatzmerkmaleOptionsarten');
 
 }
 

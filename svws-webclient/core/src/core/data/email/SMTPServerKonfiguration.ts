@@ -49,7 +49,7 @@ export class SMTPServerKonfiguration extends JavaObject {
 		return ['de.svws_nrw.core.data.email.SMTPServerKonfiguration'].includes(name);
 	}
 
-	public static class = new Class<SMTPServerKonfiguration>('de.svws_nrw.core.data.email.SMTPServerKonfiguration');
+	public static readonly class = new Class<SMTPServerKonfiguration>('de.svws_nrw.core.data.email.SMTPServerKonfiguration');
 
 	public static transpilerFromJSON(json: string): SMTPServerKonfiguration {
 		const obj = JSON.parse(json) as Partial<SMTPServerKonfiguration>;

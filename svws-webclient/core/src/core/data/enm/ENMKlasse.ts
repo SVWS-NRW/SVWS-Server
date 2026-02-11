@@ -51,7 +51,7 @@ export class ENMKlasse extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMKlasse'].includes(name);
 	}
 
-	public static class = new Class<ENMKlasse>('de.svws_nrw.core.data.enm.ENMKlasse');
+	public static readonly class = new Class<ENMKlasse>('de.svws_nrw.core.data.enm.ENMKlasse');
 
 	public static transpilerFromJSON(json: string): ENMKlasse {
 		const obj = JSON.parse(json) as Partial<ENMKlasse>;

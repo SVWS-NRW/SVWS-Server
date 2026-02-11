@@ -1,16 +1,23 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
 import { LehrerPersonaldaten } from '../../../asd/data/lehrer/LehrerPersonaldaten';
-import { LehrerLehramtEintrag } from '../../../asd/data/lehrer/LehrerLehramtEintrag';
-import type { JavaSet } from '../../../java/util/JavaSet';
-import { java_util_Set_of } from '../../../java/util/JavaSet';
-import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../asd/types/schule/Schulform';
+import { ValidatorLplk06LehrerPersonaldatenLehramtKombination } from '../../../asd/validate/lehrer/ValidatorLplk06LehrerPersonaldatenLehramtKombination';
+import { ValidatorLplk03LehrerPersonaldatenLehramtKombination } from '../../../asd/validate/lehrer/ValidatorLplk03LehrerPersonaldatenLehramtKombination';
+import { ValidatorLplk01LehrerPersonaldatenLehramtKombination } from '../../../asd/validate/lehrer/ValidatorLplk01LehrerPersonaldatenLehramtKombination';
+import { ValidatorLplk04LehrerPersonaldatenLehramtKombination } from '../../../asd/validate/lehrer/ValidatorLplk04LehrerPersonaldatenLehramtKombination';
+import { ValidatorLpl02LehrerPersonaldatenLehramt } from '../../../asd/validate/lehrer/ValidatorLpl02LehrerPersonaldatenLehramt';
+import { ValidatorLplk08LehrerPersonaldatenLehramtKombination } from '../../../asd/validate/lehrer/ValidatorLplk08LehrerPersonaldatenLehramtKombination';
+import { ValidatorLpl00LehrerPersonaldatenLehramt } from '../../../asd/validate/lehrer/ValidatorLpl00LehrerPersonaldatenLehramt';
 import { DateManager } from '../../../asd/validate/DateManager';
-import { LehrerLehramt } from '../../../asd/types/lehrer/LehrerLehramt';
+import { ValidatorLplk02LehrerPersonaldatenLehramtKombination } from '../../../asd/validate/lehrer/ValidatorLplk02LehrerPersonaldatenLehramtKombination';
+import { ValidatorLpl01LehrerPersonaldatenLehramt } from '../../../asd/validate/lehrer/ValidatorLpl01LehrerPersonaldatenLehramt';
+import { ValidatorLpl03LehrerPersonaldatenLehramt } from '../../../asd/validate/lehrer/ValidatorLpl03LehrerPersonaldatenLehramt';
+import { ValidatorLplk10LehrerPersonaldatenLehramtKombination } from '../../../asd/validate/lehrer/ValidatorLplk10LehrerPersonaldatenLehramtKombination';
+import { ValidatorLplk00LehrerPersonaldatenLehramtKombination } from '../../../asd/validate/lehrer/ValidatorLplk00LehrerPersonaldatenLehramtKombination';
+import { ValidatorLplk09LehrerPersonaldatenLehramtKombination } from '../../../asd/validate/lehrer/ValidatorLplk09LehrerPersonaldatenLehramtKombination';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
-import type { JavaMap } from '../../../java/util/JavaMap';
+import { ValidatorLplk05LehrerPersonaldatenLehramtKombination } from '../../../asd/validate/lehrer/ValidatorLplk05LehrerPersonaldatenLehramtKombination';
 import { Validator } from '../../../asd/validate/Validator';
+import { ValidatorLplk07LehrerPersonaldatenLehramtKombination } from '../../../asd/validate/lehrer/ValidatorLplk07LehrerPersonaldatenLehramtKombination';
 
 export class ValidatorLplLehrerPersonaldatenLehramt extends Validator {
 
@@ -24,8 +31,6 @@ export class ValidatorLplLehrerPersonaldatenLehramt extends Validator {
 	 */
 	private readonly geburtsdatum: DateManager;
 
-	private regulaereLehraemter: JavaSet<LehrerLehramt> = java_util_Set_of(LehrerLehramt.ID_00, LehrerLehramt.ID_01, LehrerLehramt.ID_02, LehrerLehramt.ID_04, LehrerLehramt.ID_08, LehrerLehramt.ID_09, LehrerLehramt.ID_10, LehrerLehramt.ID_11, LehrerLehramt.ID_12, LehrerLehramt.ID_14, LehrerLehramt.ID_15, LehrerLehramt.ID_16, LehrerLehramt.ID_17, LehrerLehramt.ID_19, LehrerLehramt.ID_20, LehrerLehramt.ID_21, LehrerLehramt.ID_24, LehrerLehramt.ID_25, LehrerLehramt.ID_27, LehrerLehramt.ID_29, LehrerLehramt.ID_30, LehrerLehramt.ID_31, LehrerLehramt.ID_35, LehrerLehramt.ID_40, LehrerLehramt.ID_50, LehrerLehramt.ID_51, LehrerLehramt.ID_52, LehrerLehramt.ID_53, LehrerLehramt.ID_54, LehrerLehramt.ID_55, LehrerLehramt.ID_96);
-
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -38,42 +43,27 @@ export class ValidatorLplLehrerPersonaldatenLehramt extends Validator {
 		super(kontext);
 		this.lehrerPersonaldaten = lehrerPersonaldaten;
 		this.geburtsdatum = geburtsdatum;
+		this._validatoren.add(new ValidatorLpl00LehrerPersonaldatenLehramt(lehrerPersonaldaten, kontext));
+		this._validatoren.add(new ValidatorLpl01LehrerPersonaldatenLehramt(lehrerPersonaldaten, kontext));
+		this._validatoren.add(new ValidatorLpl02LehrerPersonaldatenLehramt(lehrerPersonaldaten, kontext));
+		this._validatoren.add(new ValidatorLpl03LehrerPersonaldatenLehramt(lehrerPersonaldaten, geburtsdatum, kontext));
+		if (this.lehrerPersonaldaten.lehraemter !== null && this.lehrerPersonaldaten.lehraemter.size() > 0) {
+			this._validatoren.add(new ValidatorLplk00LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			this._validatoren.add(new ValidatorLplk01LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			this._validatoren.add(new ValidatorLplk02LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			this._validatoren.add(new ValidatorLplk03LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			this._validatoren.add(new ValidatorLplk04LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			this._validatoren.add(new ValidatorLplk05LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			this._validatoren.add(new ValidatorLplk06LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			this._validatoren.add(new ValidatorLplk07LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			this._validatoren.add(new ValidatorLplk08LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			this._validatoren.add(new ValidatorLplk09LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+			this._validatoren.add(new ValidatorLplk10LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext));
+		}
 	}
 
 	protected pruefe(): boolean {
-		let success: boolean = true;
-		const schulform: Schulform = this.kontext().getSchulform();
-		const istFW: boolean = JavaObject.equalsTranspiler(Schulform.FW, (schulform));
-		const anzahlLehraemter: number = this.lehrerPersonaldaten.lehraemter.size();
-		if (!istFW && !this.exec(0, { getAsBoolean: () => anzahlLehraemter === 0 }, "Zu jeder Lehrkraft muss mindest ein Lehramt vorliegen. Lehrer ID: " + this.lehrerPersonaldaten.id))
-			success = false;
-		if (istFW && !this.exec(1, { getAsBoolean: () => anzahlLehraemter > 0 }, "Bei Freien Waldorfschulen darf kein Lehramt erfasst sein. Lehrer ID: " + this.lehrerPersonaldaten.id))
-			success = false;
-		const lehramtMap: JavaMap<number, LehrerLehramtEintrag> = new HashMap<number, LehrerLehramtEintrag>();
-		for (const lehrerLehramtEintrag of this.lehrerPersonaldaten.lehraemter) {
-			if (lehramtMap.put(lehrerLehramtEintrag.idKatalogLehramt, lehrerLehramtEintrag) !== null) {
-				try {
-					success = this.exec(2, { getAsBoolean: () => true }, "Das Lehramt '" + LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).text + "' ist mehrfach eingetragen. Bitte löschen Sie die überflüssigen Einträge.");
-				} catch(e : any) {
-					success = this.exec(2, { getAsBoolean: () => true }, "Das Lehramt '" + lehrerLehramtEintrag.idKatalogLehramt + "' ist mehrfach eingetragen. Bitte löschen Sie die überflüssigen Einträge.");
-				}
-			}
-		}
-		if (this.geburtsdatum.getJahr() >= 2003 && this.geburtsdatum.getJahr() <= 2006) {
-			for (const lehrerLehramtEintrag2 of this.lehrerPersonaldaten.lehraemter) {
-				const lehrerLehramt2: LehrerLehramt | null = LehrerLehramt.data().getWertByIDOrNull(lehrerLehramtEintrag2.idKatalogLehramt);
-				if (lehrerLehramt2 === null)
-					continue;
-				if (this.regulaereLehraemter.contains(lehrerLehramt2)) {
-					try {
-						success = this.exec(3, { getAsBoolean: () => true }, "Für das Lehramt '" + LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag2.idKatalogLehramt).text + "' ist die Lehrkraft sehr jung. Wenn das Alter der Lehrkraft korrekt ist, sollte das eingetragene Lehramt überprüft werden. Bitte verwenden Sie die 'regulären' Lehrämter nur dann, wenn eine entsprechende abgeschlossene Ausbildung vorliegt. Wenn es sich um einen Studierenden handelt, der neben seinem Studium als Lehrkraft tätig ist, verwenden sie bitte das Lehramt 'Studierende'. Ansonsten tragen Sie bitte das Lehramt 'Sonstiges' ein. ");
-					} catch(e : any) {
-						success = this.exec(3, { getAsBoolean: () => true }, "Für das Lehramt mit der ID '" + lehrerLehramtEintrag2.idKatalogLehramt + "' ist die Lehrkraft sehr jung. Wenn das Alter der Lehrkraft korrekt ist, sollte das eingetragene Lehramt überprüft werden. Bitte verwenden Sie die 'regulären' Lehrämter nur dann, wenn eine entsprechende abgeschlossene Ausbildung vorliegt. Wenn es sich um einen Studierenden handelt, der neben seinem Studium als Lehrkraft tätig ist, verwenden sie bitte das Lehramt 'Studierende'. Ansonsten tragen Sie bitte das Lehramt 'Sonstiges' ein. ");
-					}
-				}
-			}
-		}
-		return success;
+		return true;
 	}
 
 	transpilerCanonicalName(): string {
@@ -84,7 +74,7 @@ export class ValidatorLplLehrerPersonaldatenLehramt extends Validator {
 		return ['de.svws_nrw.asd.validate.BasicValidator', 'de.svws_nrw.asd.validate.lehrer.ValidatorLplLehrerPersonaldatenLehramt', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<ValidatorLplLehrerPersonaldatenLehramt>('de.svws_nrw.asd.validate.lehrer.ValidatorLplLehrerPersonaldatenLehramt');
+	public static readonly class = new Class<ValidatorLplLehrerPersonaldatenLehramt>('de.svws_nrw.asd.validate.lehrer.ValidatorLplLehrerPersonaldatenLehramt');
 
 }
 

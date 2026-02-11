@@ -1,4 +1,4 @@
-@Page:left {
+@page :left {
 	size: A4 portrait;
 	margin: 18mm 18mm 12mm 10mm;
 
@@ -37,7 +37,7 @@
 	}
 }
 
-@Page:right {
+@page :right {
 	size: A4 portrait;
 	margin: 18mm 10mm 12mm 18mm;
 

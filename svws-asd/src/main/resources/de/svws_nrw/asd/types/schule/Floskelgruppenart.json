@@ -99,5 +99,27 @@
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
+	},{
+		"bezeichner": "LELS",
+		"idStatistik": "9",
+		"historie": [ {
+			"id": 9,
+			"kuerzel": "LELS",
+			"text": "Floskeln für allgemeine Lernentwicklung und Leistungsstand",
+			"schluessel": "LELS",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "UEG45",
+		"idStatistik": "10",
+		"historie": [ {
+			"id": 10,
+			"kuerzel": "ÜG45",
+			"text": "Floskeln für die Übergangsempfehlung 4 nach 5",
+			"schluessel": "ÜG45",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
 	} ]
 }

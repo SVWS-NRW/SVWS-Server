@@ -66,7 +66,7 @@ export class ArrayMapEntry<K, V> extends JavaObject implements JavaMapEntry<K, V
 		return ['de.svws_nrw.core.adt.map.ArrayMapEntry', 'java.util.Map.Entry'].includes(name);
 	}
 
-	public static class = new Class<ArrayMapEntry<any, any>>('de.svws_nrw.core.adt.map.ArrayMapEntry');
+	public static readonly class = new Class<ArrayMapEntry<any, any>>('de.svws_nrw.core.adt.map.ArrayMapEntry');
 
 }
 

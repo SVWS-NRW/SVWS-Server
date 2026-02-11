@@ -42,15 +42,17 @@
 	const beratungsdatum = computed<string>(() => props.gostLaufbahnBeratungsdaten().beratungsdatum ?? new Date().toISOString().slice(0, -14));
 
 	watch(() => props.schueler, () => {
-		if ((refBeratungsdatum.value?.input?.value === undefined) || refKommentar.value?.content === undefined)
+		if ((refBeratungsdatum.value?.input?.value === undefined) || refKommentar.value?.content === undefined) {
 			return;
+		}
 		refBeratungsdatum.value.input.value = beratungsdatum.value;
 		refKommentar.value.content = props.gostLaufbahnBeratungsdaten().kommentar;
 	});
 
 	watch(() => props.updated, (neu) => {
-		if (neu && (refBeratungsdatum.value?.input?.value !== undefined))
+		if (neu && (refBeratungsdatum.value?.input?.value !== undefined)) {
 			refBeratungsdatum.value.input.value = new Date().toISOString().slice(0, -14);
+		}
 	});
 
 	const dirty = computed<boolean>(() => {
@@ -65,11 +67,14 @@
 
 	const getBeratungslehrer = computed<LehrerListeEintrag | null>(() => {
 		let id = props.gostLaufbahnBeratungsdaten().beratungslehrerID;
-		if (id === null)
+		if (id === null) {
 			id = (props.id === undefined) ? -1 : props.id;
-		for (const l of props.listLehrer)
-			if (l.id === id)
+		}
+		for (const l of props.listLehrer) {
+			if (l.id === id) {
 				return l;
+			}
+		}
 		return null;
 	});
 
@@ -78,8 +83,9 @@
 		result.beratungslehrerID = (refLehrer.value?.content instanceof LehrerListeEintrag)
 			? refLehrer.value.content.id : null;
 		result.beratungsdatum = (refBeratungsdatum.value?.content === undefined) ? null : refBeratungsdatum.value.content;
-		if (result.beratungsdatum !== refBeratungsdatum.value?.input?.value)
+		if (result.beratungsdatum !== refBeratungsdatum.value?.input?.value) {
 			result.beratungsdatum = refBeratungsdatum.value?.input?.value ?? null;
+		}
 		result.kommentar = (refKommentar.value?.content === undefined) ? null : refKommentar.value.content;
 		await props.patchBeratungsdaten(result);
 	}

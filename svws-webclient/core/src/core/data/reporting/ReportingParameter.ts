@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { ReportingFilterDefinition } from '../../../core/data/reporting/ReportingFilterDefinition';
 import { ReportingVorlageParameter } from '../../../core/data/reporting/ReportingVorlageParameter';
 import { ReportingEMailDaten } from '../../../core/data/reporting/ReportingEMailDaten';
 import { ArrayList } from '../../../java/util/ArrayList';
@@ -57,7 +58,12 @@ export class ReportingParameter extends JavaObject {
 	/**
 	 * Typenspezifische Sortierdefinitionen, die für die Sortierung von ProxyTyp-Objekten verwendet werden sollen.
 	 */
-	public sortierungDefinitionen: List<ReportingSortierungDefinition> | null = new ArrayList<ReportingSortierungDefinition>();
+	public sortierungDefinitionen: List<ReportingSortierungDefinition> = new ArrayList<ReportingSortierungDefinition>();
+
+	/**
+	 * Typenspezifische Filterdefinitionen, die für die Filterung von ProxyTyp-Objekten verwendet werden sollen.
+	 */
+	public filterDefinitionen: List<ReportingFilterDefinition> = new ArrayList<ReportingFilterDefinition>();
 
 	/**
 	 * Parameter, der die Daten für den E-Mail-Versand enthält.
@@ -91,7 +97,7 @@ export class ReportingParameter extends JavaObject {
 		return ['de.svws_nrw.core.data.reporting.ReportingParameter'].includes(name);
 	}
 
-	public static class = new Class<ReportingParameter>('de.svws_nrw.core.data.reporting.ReportingParameter');
+	public static readonly class = new Class<ReportingParameter>('de.svws_nrw.core.data.reporting.ReportingParameter');
 
 	public static transpilerFromJSON(json: string): ReportingParameter {
 		const obj = JSON.parse(json) as Partial<ReportingParameter>;
@@ -123,13 +129,15 @@ export class ReportingParameter extends JavaObject {
 		result.einzelausgabeDetaildaten = obj.einzelausgabeDetaildaten;
 		result.sortierungHauptdaten = ((obj.sortierungHauptdaten === undefined) || (obj.sortierungHauptdaten === null)) ? null : ReportingSortierungDefinition.transpilerFromJSON(JSON.stringify(obj.sortierungHauptdaten));
 		result.sortierungDetaildaten = ((obj.sortierungDetaildaten === undefined) || (obj.sortierungDetaildaten === null)) ? null : ReportingSortierungDefinition.transpilerFromJSON(JSON.stringify(obj.sortierungDetaildaten));
-		if ((obj.sortierungDefinitionen !== undefined) && (obj.sortierungDefinitionen !== null)) {
-			result.sortierungDefinitionen = new ArrayList();
+		if (obj.sortierungDefinitionen !== undefined) {
 			for (const elem of obj.sortierungDefinitionen) {
 				result.sortierungDefinitionen.add(ReportingSortierungDefinition.transpilerFromJSON(JSON.stringify(elem)));
 			}
-		} else {
-			result.sortierungDefinitionen = null;
+		}
+		if (obj.filterDefinitionen !== undefined) {
+			for (const elem of obj.filterDefinitionen) {
+				result.filterDefinitionen.add(ReportingFilterDefinition.transpilerFromJSON(JSON.stringify(elem)));
+			}
 		}
 		result.eMailDaten = ((obj.eMailDaten === undefined) || (obj.eMailDaten === null)) ? null : ReportingEMailDaten.transpilerFromJSON(JSON.stringify(obj.eMailDaten));
 		if (obj.duplexdruck === undefined)
@@ -168,18 +176,22 @@ export class ReportingParameter extends JavaObject {
 		result += '"einzelausgabeDetaildaten" : ' + obj.einzelausgabeDetaildaten.toString() + ',';
 		result += '"sortierungHauptdaten" : ' + ((obj.sortierungHauptdaten === null) ? 'null' : ReportingSortierungDefinition.transpilerToJSON(obj.sortierungHauptdaten)) + ',';
 		result += '"sortierungDetaildaten" : ' + ((obj.sortierungDetaildaten === null) ? 'null' : ReportingSortierungDefinition.transpilerToJSON(obj.sortierungDetaildaten)) + ',';
-		if (!obj.sortierungDefinitionen) {
-			result += '"sortierungDefinitionen" : null' + ',';
-		} else {
-			result += '"sortierungDefinitionen" : [ ';
-			for (let i = 0; i < obj.sortierungDefinitionen.size(); i++) {
-				const elem = obj.sortierungDefinitionen.get(i);
-				result += ReportingSortierungDefinition.transpilerToJSON(elem);
-				if (i < obj.sortierungDefinitionen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"sortierungDefinitionen" : [ ';
+		for (let i = 0; i < obj.sortierungDefinitionen.size(); i++) {
+			const elem = obj.sortierungDefinitionen.get(i);
+			result += ReportingSortierungDefinition.transpilerToJSON(elem);
+			if (i < obj.sortierungDefinitionen.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
+		result += '"filterDefinitionen" : [ ';
+		for (let i = 0; i < obj.filterDefinitionen.size(); i++) {
+			const elem = obj.filterDefinitionen.get(i);
+			result += ReportingFilterDefinition.transpilerToJSON(elem);
+			if (i < obj.filterDefinitionen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
 		result += '"eMailDaten" : ' + ((obj.eMailDaten === null) ? 'null' : ReportingEMailDaten.transpilerToJSON(obj.eMailDaten)) + ',';
 		result += '"duplexdruck" : ' + obj.duplexdruck.toString() + ',';
 		result += '"vorlageParameter" : [ ';
@@ -239,18 +251,24 @@ export class ReportingParameter extends JavaObject {
 			result += '"sortierungDetaildaten" : ' + ((obj.sortierungDetaildaten === null) ? 'null' : ReportingSortierungDefinition.transpilerToJSON(obj.sortierungDetaildaten)) + ',';
 		}
 		if (obj.sortierungDefinitionen !== undefined) {
-			if (!obj.sortierungDefinitionen) {
-				result += '"sortierungDefinitionen" : null' + ',';
-			} else {
-				result += '"sortierungDefinitionen" : [ ';
-				for (let i = 0; i < obj.sortierungDefinitionen.size(); i++) {
-					const elem = obj.sortierungDefinitionen.get(i);
-					result += ReportingSortierungDefinition.transpilerToJSON(elem);
-					if (i < obj.sortierungDefinitionen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"sortierungDefinitionen" : [ ';
+			for (let i = 0; i < obj.sortierungDefinitionen.size(); i++) {
+				const elem = obj.sortierungDefinitionen.get(i);
+				result += ReportingSortierungDefinition.transpilerToJSON(elem);
+				if (i < obj.sortierungDefinitionen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
+		}
+		if (obj.filterDefinitionen !== undefined) {
+			result += '"filterDefinitionen" : [ ';
+			for (let i = 0; i < obj.filterDefinitionen.size(); i++) {
+				const elem = obj.filterDefinitionen.get(i);
+				result += ReportingFilterDefinition.transpilerToJSON(elem);
+				if (i < obj.filterDefinitionen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
 		}
 		if (obj.eMailDaten !== undefined) {
 			result += '"eMailDaten" : ' + ((obj.eMailDaten === null) ? 'null' : ReportingEMailDaten.transpilerToJSON(obj.eMailDaten)) + ',';

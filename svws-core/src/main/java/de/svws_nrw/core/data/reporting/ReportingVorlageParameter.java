@@ -22,6 +22,10 @@ public class ReportingVorlageParameter {
 	@Schema(description = "Der Name des Vorlage-Parameters, wie er später im HTML-Template verwendet wird.")
 	public @NotNull String name = "";
 
+	/** Die Bezeichnung des Vorlage-Parameters, wie er später in der Anzeige der GUI oder an ähnlichen Stellen dargestellt werden soll. */
+	@Schema(description = "Die Bezeichnung des Vorlage-Parameters, wie er später in der Anzeige der GUI oder an ähnlichen Stellen dargestellt werden soll.")
+	public @NotNull String bezeichnung = "";
+
 	/** Der Typ des Wertes des Vorlage-Parameters. */
 	@Schema(description = "Der Wert des Vorlage-Parameters.")
 	public int typ = ReportingVorlageParameterTyp.UNDEFINED.getId();

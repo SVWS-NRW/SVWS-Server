@@ -113,7 +113,7 @@ export class LehrerEinsatzstatus extends JavaEnum<LehrerEinsatzstatus> implement
 		return ['de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.lehrer.LehrerEinsatzstatus', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<LehrerEinsatzstatus>('de.svws_nrw.asd.types.lehrer.LehrerEinsatzstatus');
+	public static readonly class = new Class<LehrerEinsatzstatus>('de.svws_nrw.asd.types.lehrer.LehrerEinsatzstatus');
 
 }
 

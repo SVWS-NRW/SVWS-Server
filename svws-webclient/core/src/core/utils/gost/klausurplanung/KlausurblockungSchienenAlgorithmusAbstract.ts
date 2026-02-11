@@ -44,7 +44,7 @@ export abstract class KlausurblockungSchienenAlgorithmusAbstract extends JavaObj
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmusAbstract'].includes(name);
 	}
 
-	public static class = new Class<KlausurblockungSchienenAlgorithmusAbstract>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmusAbstract');
+	public static readonly class = new Class<KlausurblockungSchienenAlgorithmusAbstract>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmusAbstract');
 
 }
 

@@ -42,7 +42,7 @@ export class ENMFloskelgruppe extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMFloskelgruppe'].includes(name);
 	}
 
-	public static class = new Class<ENMFloskelgruppe>('de.svws_nrw.core.data.enm.ENMFloskelgruppe');
+	public static readonly class = new Class<ENMFloskelgruppe>('de.svws_nrw.core.data.enm.ENMFloskelgruppe');
 
 	public static transpilerFromJSON(json: string): ENMFloskelgruppe {
 		const obj = JSON.parse(json) as Partial<ENMFloskelgruppe>;

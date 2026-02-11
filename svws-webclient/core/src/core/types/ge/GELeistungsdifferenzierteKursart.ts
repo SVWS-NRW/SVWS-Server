@@ -114,7 +114,7 @@ export class GELeistungsdifferenzierteKursart extends JavaEnum<GELeistungsdiffer
 		return ['de.svws_nrw.core.types.ge.GELeistungsdifferenzierteKursart', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<GELeistungsdifferenzierteKursart>('de.svws_nrw.core.types.ge.GELeistungsdifferenzierteKursart');
+	public static readonly class = new Class<GELeistungsdifferenzierteKursart>('de.svws_nrw.core.types.ge.GELeistungsdifferenzierteKursart');
 
 }
 

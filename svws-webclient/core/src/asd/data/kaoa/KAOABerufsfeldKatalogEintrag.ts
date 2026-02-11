@@ -19,7 +19,7 @@ export class KAOABerufsfeldKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.kaoa.KAOABerufsfeldKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<KAOABerufsfeldKatalogEintrag>('de.svws_nrw.asd.data.kaoa.KAOABerufsfeldKatalogEintrag');
+	public static readonly class = new Class<KAOABerufsfeldKatalogEintrag>('de.svws_nrw.asd.data.kaoa.KAOABerufsfeldKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): KAOABerufsfeldKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<KAOABerufsfeldKatalogEintrag>;

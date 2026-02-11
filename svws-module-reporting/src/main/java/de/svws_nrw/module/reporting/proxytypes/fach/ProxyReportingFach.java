@@ -44,6 +44,8 @@ public class ProxyReportingFach extends ReportingFach {
 			super.statistikfach = new ProxyReportingStatistikFach(Fach.getBySchluesselOrDefault(fach.StatistikKuerzel), schuljahr, true);
 			super.statistikfach.setFach(this);
 			super.fachgruppe = super.statistikfach().fachgruppe();
+			if (super.aufgabenfeld.isEmpty() && (super.statistikfach.aufgabenfeld() != null))
+				super.aufgabenfeld =  super.statistikfach.aufgabenfeld().toString();
 		}
 	}
 

@@ -61,8 +61,9 @@
 			const result = [];
 			for (const id of data.value.idJahrgaenge) {
 				const jahrgang = props.manager().jahrgaenge.get(id);
-				if (jahrgang !== null)
+				if (jahrgang !== null) {
 					result.push(jahrgang);
+				}
 			}
 			return result;
 		},
@@ -86,14 +87,17 @@
 			const result = new ArrayList<number>();
 			let changed = false;
 			for (const s of value) {
-				if (!data.value.schienen.contains(s))
+				if (!data.value.schienen.contains(s)) {
 					changed = true;
+				}
 				result.add(s);
 			}
-			if (!changed)
+			if (!changed) {
 				changed = (data.value.schienen.size() !== result.size());
-			if (changed)
+			}
+			if (changed) {
 				data.value.schienen = result;
+			}
 		},
 	});
 
@@ -101,24 +105,29 @@
 		const arten = new Map<string, string>();
 		for (const art of ZulaessigeKursart.data().getWerteBySchuljahr(schuljahr.value)) {
 			const daten = art.daten(schuljahr.value);
-			if (daten === null)
+			if (daten === null) {
 				continue;
-			if (daten.kuerzel === "PUK")
+			}
+			if (daten.kuerzel === "PUK") {
 				continue;
-			if ((daten.kuerzelAllg !== null) && (daten.bezeichnungAllg !== null))
+			}
+			if ((daten.kuerzelAllg !== null) && (daten.bezeichnungAllg !== null)) {
 				arten.set(daten.kuerzelAllg, daten.bezeichnungAllg);
-			else
+			} else {
 				arten.set(daten.kuerzel, daten.text);
-			if (daten.kuerzelAllg === "DK")
+			}
+			if (daten.kuerzelAllg === "DK") {
 				arten.set(daten.kuerzel, daten.text);
+			}
 		}
 		return new Map([...arten.entries()].sort());
 	});
 
 	const jahrgaenge = computed<List<JahrgangsDaten>>(() => {
 		const result = new ArrayList<JahrgangsDaten>();
-		for (const jg of props.manager().jahrgaenge.list())
+		for (const jg of props.manager().jahrgaenge.list()) {
 			result.add(jg);
+		}
 		return result;
 	});
 
@@ -140,18 +149,21 @@
 	}
 
 	function kuerzelIsValid() {
-		if (JavaString.isBlank(data.value.kuerzel) || data.value.kuerzel.length > 20)
+		if (JavaString.isBlank(data.value.kuerzel) || data.value.kuerzel.length > 20) {
 			return false;
+		}
 		for (const kurs of props.manager().liste.list()) {
-			if (JavaString.equalsIgnoreCase(data.value.kuerzel, kurs.kuerzel))
+			if (JavaString.equalsIgnoreCase(data.value.kuerzel, kurs.kuerzel)) {
 				return false;
+			}
 		}
 		return true;
 	}
 
 	function bezeichnungZeugnisIsValid(input: string | null) {
-		if (input === null)
+		if (input === null) {
 			return true;
+		}
 		return input.length <= 130;
 	}
 
@@ -165,8 +177,9 @@
 	});
 
 	async function addKurs() {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
@@ -182,8 +195,9 @@
 	}
 
 	watch(() => data.value, async () => {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 		props.checkpoint.active = true;
 	}, { immediate: false, deep: true });
 

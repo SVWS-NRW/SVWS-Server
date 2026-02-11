@@ -1,10 +1,14 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { LehrerLehramt } from '../../../asd/types/lehrer/LehrerLehramt';
+import { HashMap } from '../../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
+import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
 import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_statistikId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
 import { LehrerFachrichtungKatalogEintrag } from '../../../asd/data/lehrer/LehrerFachrichtungKatalogEintrag';
+import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> implements CoreType<LehrerFachrichtungKatalogEintrag, LehrerFachrichtung> {
 
@@ -569,6 +573,11 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> implements 
 	 */
 	public static readonly ID_HA: LehrerFachrichtung = new LehrerFachrichtung("ID_HA", 110, );
 
+	/**
+	 * Eine Map für die Zuordnung der zulässigen Lehrämter zu den Fachrichtungen bei einem Schuljahr
+	 */
+	private static readonly _mapLehraemterBySchuljahrAndFachrichtung: JavaMap<number, JavaMap<LehrerFachrichtung, List<LehrerLehramt>>> = new HashMap<number, JavaMap<LehrerFachrichtung, List<LehrerLehramt>>>();
+
 	private constructor(name: string, ordinal: number) {
 		super(name, ordinal);
 		LehrerFachrichtung.all_values_by_ordinal.push(this);
@@ -582,6 +591,7 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> implements 
 	 */
 	public static init(manager: CoreTypeDataManager<LehrerFachrichtungKatalogEintrag, LehrerFachrichtung>): void {
 		CoreTypeDataManager.putManager(LehrerFachrichtung.class, manager);
+		LehrerFachrichtung._mapLehraemterBySchuljahrAndFachrichtung.clear();
 	}
 
 	/**
@@ -591,6 +601,56 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> implements 
 	 */
 	public static data(): CoreTypeDataManager<LehrerFachrichtungKatalogEintrag, LehrerFachrichtung> {
 		return CoreTypeDataManager.getManager(LehrerFachrichtung.class);
+	}
+
+	/**
+	 * Erstellt für den internen Cache eine Map für die zulässigen Lehrämter einer Fachrichtung in Bezug auf das
+	 * angegebene Schuljahr.
+	 *
+	 * @param schuljahr   das Schuljahr, auf welches sich die Map bezieht
+	 *
+	 * @return die Map mit den zulässigen Lehrämtern für die Fachrichtungen
+	 */
+	private static getMapLehraemterByFachrichtung(schuljahr: number): JavaMap<LehrerFachrichtung, List<LehrerLehramt>> {
+		const result: JavaMap<LehrerFachrichtung, List<LehrerLehramt>> | null = new HashMap<LehrerFachrichtung, List<LehrerLehramt>>();
+		for (const fr of LehrerFachrichtung.data().getWerte()) {
+			const eintrag: LehrerFachrichtungKatalogEintrag | null = fr.daten(schuljahr);
+			const lehraemter: List<LehrerLehramt> | null = new ArrayList<LehrerLehramt>();
+			if (eintrag !== null)
+				for (const laBezeichner of eintrag.lehraemter)
+					lehraemter.add(LehrerLehramt.data().getWertByBezeichner(laBezeichner));
+			result.put(fr, lehraemter);
+		}
+		return result;
+	}
+
+	/**
+	 * Bestimmt die Liste aller Lehrämter, welche in dem angebenen Schuljahr für die übergebene Fachrichtung zulässig sind.
+	 *
+	 * @param schuljahr      das Schuljahr, auf welches sich die Anfrage bezieht
+	 * @param fachrichtung   die Fachrichtung, zu welcher die zulässigen Lehrämter angefragt werden
+	 *
+	 * @return die Liste der zulässigen Lehrämter für die übergebene Fachrichtung in dem angebebenen Schuljahr
+	 */
+	public static getLehraemterBySchuljahrAndFachrichtung(schuljahr: number, fachrichtung: LehrerFachrichtung): List<LehrerLehramt> {
+		let mapByFachrichtung: JavaMap<LehrerFachrichtung, List<LehrerLehramt>> | null = LehrerFachrichtung._mapLehraemterBySchuljahrAndFachrichtung.get(schuljahr);
+		if (mapByFachrichtung === null) {
+			mapByFachrichtung = LehrerFachrichtung.getMapLehraemterByFachrichtung(schuljahr);
+			LehrerFachrichtung._mapLehraemterBySchuljahrAndFachrichtung.put(schuljahr, mapByFachrichtung);
+		}
+		const lehraemter: List<LehrerLehramt> | null = mapByFachrichtung.get(fachrichtung);
+		return (lehraemter !== null) ? lehraemter : new ArrayList();
+	}
+
+	/**
+	 * Gibt für diese Fachrichtung die Liste der zulässigen Lehrämter zurück.
+	 *
+	 * @param schuljahr   das Schuljahr, auf welches sich die Anfrage bezieht
+	 *
+	 * @return die Liste der zulässigen Lehrämter
+	 */
+	public getLehraemterBySchuljahr(schuljahr: number): List<LehrerLehramt> {
+		return LehrerFachrichtung.getLehraemterBySchuljahrAndFachrichtung(schuljahr, this);
 	}
 
 	/**
@@ -638,7 +698,7 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> implements 
 		return ['de.svws_nrw.asd.types.lehrer.LehrerFachrichtung', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<LehrerFachrichtung>('de.svws_nrw.asd.types.lehrer.LehrerFachrichtung');
+	public static readonly class = new Class<LehrerFachrichtung>('de.svws_nrw.asd.types.lehrer.LehrerFachrichtung');
 
 }
 

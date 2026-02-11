@@ -24,7 +24,7 @@ export class IntegerComparator extends JavaObject implements Comparator<number> 
 		return ['de.svws_nrw.core.utils.stundenplan.IntegerComparator', 'java.util.Comparator'].includes(name);
 	}
 
-	public static class = new Class<IntegerComparator>('de.svws_nrw.core.utils.stundenplan.IntegerComparator');
+	public static readonly class = new Class<IntegerComparator>('de.svws_nrw.core.utils.stundenplan.IntegerComparator');
 
 }
 

@@ -24,7 +24,7 @@ export class EinschulungsartKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<EinschulungsartKatalogEintrag>('de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag');
+	public static readonly class = new Class<EinschulungsartKatalogEintrag>('de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): EinschulungsartKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<EinschulungsartKatalogEintrag>;

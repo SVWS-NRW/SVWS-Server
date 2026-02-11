@@ -504,12 +504,12 @@ public final class DTOFach {
 	@JsonDeserialize(using = BooleanPlusMinusDefaultMinusConverterDeserializer.class)
 	public Boolean IstMoeglichAlsNeueFremdspracheInSekII;
 
-	/** bei Projektkursfächern: Die ID des Leitfaches */
+	/** bei Projektkursfächern: Die ID des Leit- bzw. Referenzfaches */
 	@Column(name = "Leitfach_ID")
 	@JsonProperty
 	public Long ProjektKursLeitfach1_ID;
 
-	/** bei Projektkursfächern: Ggf. die ID des zweiten Leitfaches */
+	/** bei Projektkursfächern: Ggf. die ID des zweiten Leit- bzw. Referenzfaches */
 	@Column(name = "Leitfach2_ID")
 	@JsonProperty
 	public Long ProjektKursLeitfach2_ID;

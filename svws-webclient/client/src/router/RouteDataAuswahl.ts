@@ -36,7 +36,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	/** Die Route für die Schnelleingabe */
 	private readonly _routeSchnelleingabe: RouteNode<any, any> | undefined;
 
-	private _pendingStateManagerRegistry: PendingStateManagerRegistry;
+	private readonly _pendingStateManagerRegistry: PendingStateManagerRegistry;
 
 	/**
 	 * Erzeugt ein neues Route-Daten-Objekt mit dem übergebenen Default-State.
@@ -89,8 +89,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	get manager(): TAuswahlManager {
 		if (this._state.value.manager === undefined) {
 			const dummy = this.getDummyManager();
-			if (dummy !== undefined)
+			if (dummy !== undefined) {
 				return dummy;
+			}
 			throw new DeveloperNotificationException("Abfrage des Managers ohne vorige Initialisierung");
 		}
 		return this._state.value.manager;
@@ -114,8 +115,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 */
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number, isEntering: boolean): Promise<number | null> {
 		// Wenn die ID des Schuljahresabschnittes bereits gesetzt ist, dann muss der Manager für den Schuljahresabschnitt nicht neu initialisiert werden
-		if (!isEntering && (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt))
+		if (!isEntering && (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)) {
 			return null;
+		}
 		// Ansonsten lade den Schuljahresabschnitt...
 		return this.ladeSchuljahresabschnitt(idSchuljahresabschnitt);
 	}
@@ -141,8 +143,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt: number): Promise<number | null> {
 		const newState = await this.createManager(idSchuljahresabschnitt);
 		const manager = newState.manager;
-		if (manager === undefined)
+		if (manager === undefined) {
 			throw new DeveloperNotificationException('Die Methode createManager muss einen gültigen State mit einem initialisierten Manager liefern');
+		}
 		newState.idSchuljahresabschnitt = idSchuljahresabschnitt;
 
 		// Lade und setze Daten falls eine Auswahl bestand und diese im neuen Manager vorhanden ist
@@ -150,11 +153,13 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 		if (vorherigeAuswahl !== null) {
 			const auswahl = manager.liste.get(this.manager.getIdByEintrag(vorherigeAuswahl));
 			let daten = await this.ladeDaten(auswahl, newState);
-			if ((daten === null) && (!manager.liste.list().isEmpty()))
+			if ((daten === null) && (!manager.liste.list().isEmpty())) {
 				daten = await this.ladeDaten(manager.liste.list().getFirst(), newState);
+			}
 			manager.setDaten(daten);
-			if (daten !== null)
+			if (daten !== null) {
 				await this.updateManager(manager, this.manager, daten);
+			}
 		}
 
 		// stellt die ursprünglich gefilterte Liste wieder her
@@ -187,8 +192,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * @returns der Eintrag
 	 */
 	public getEintragOrDefault(id: number): TAuswahl | null {
-		if (this.manager.liste.has(id))
+		if (this.manager.liste.has(id)) {
 			return this.manager.liste.get(id);
+		}
 		return this.manager.filtered().isEmpty() ? null : this.manager.filtered().get(0);
 	}
 
@@ -236,8 +242,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 */
 	public async setDaten(auswahl: TAuswahl | null): Promise<void> {
 		const hatteDaten = this.manager.hasDaten();
-		if ((auswahl === null) && (!hatteDaten))
+		if ((auswahl === null) && (!hatteDaten)) {
 			return;
+		}
 
 		if ((auswahl === null)/* || (this.manager.liste.list().isEmpty())*/) {
 			this.manager.setDaten(null);
@@ -246,8 +253,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 		}
 
 		const id = this.manager.getIdByEintrag(auswahl);
-		if (hatteDaten && (id === this.manager.getIdByEintrag(this.manager.auswahl())))
+		if (hatteDaten && (id === this.manager.getIdByEintrag(this.manager.auswahl()))) {
 			return;
+		}
 
 		const eintrag = this.getEintragOrDefault(id);
 		const daten = await this.ladeDaten(eintrag, this._state.value);
@@ -286,8 +294,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * @param data   die Daten für den Patch
 	 */
 	patch = async (data: Partial<TDaten>) => {
-		if (!this.manager.hasDaten())
+		if (!this.manager.hasDaten()) {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		}
 		const id = this.manager.getIdByEintrag(this.manager.auswahl());
 		const daten = this.manager.daten();
 		await this.doPatch(data, id);
@@ -315,8 +324,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 
 	public delete = async (): Promise<[boolean, List<string | null>]> => {
 		let ids: List<number> = new ArrayList();
-		for (const eintrag of this.manager.liste.auswahlSorted())
+		for (const eintrag of this.manager.liste.auswahlSorted()) {
 			ids.add(this.manager.getIdByEintrag(eintrag));
+		}
 		ids = this.filterOnDelete(ids);
 
 		const operationResponses = await this.doDelete(ids);
@@ -371,8 +381,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 				await this.setDaten(eintrag);
 			}
 
-			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE))
+			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE)) {
 				this.setDefaults();
+			}
 
 			this.commit();
 			return;
@@ -385,8 +396,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 			this.addID(params, this.manager.getIdByEintrag(eintrag));
 			const route = this.defaultView.getRoute(params);
 			const result = await RouteManager.doRoute(route);
-			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE))
+			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE)) {
 				this.setDefaults();
+			}
 
 			await this.setDaten(eintrag);
 		}
@@ -407,16 +419,18 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 			for (const eintrag of this.manager.liste.auswahl()) {
 				const id = this.manager.getIdByEintrag(eintrag);
 				const daten = currentSelection.get(id);
-				if (daten === null)
+				if (daten === null) {
 					deltaSelection.add(eintrag);
-				else
+				} else {
 					newSelection.put(id, daten);
+				}
 			}
 
 			if (deltaSelection.size() > 0) {
 				const deltaDaten = await this.ladeDatenMultiple(deltaSelection, this._state.value);
-				if (deltaDaten === null)
+				if (deltaDaten === null) {
 					throw new DeveloperNotificationException("Fehler beim Laden der Daten. Es konnten keine Daten zu den ausgewählten Einträgen geladen werden.");
+				}
 
 				for (const datenObj of deltaDaten) {
 					newSelection.put(this.manager.getIdByDaten(datenObj), datenObj);
@@ -441,8 +455,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 			} else if (this._routeGruppenprozesse !== undefined) {
 				await RouteManager.doRoute(this._routeGruppenprozesse.getRoute());
 				this._state.value.view = this._routeGruppenprozesse;
-			} else
+			} else {
 				throw new DeveloperNotificationException('Es wurde keine Standard Route für Gruppenprozesse festgelegt!');
+			}
 		}
 		this.commit();
 	};
@@ -453,8 +468,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * @param navigate   gibt an, ob ein Routing durchgeführt werden soll oder nur die View im State gesetzt werden soll
 	 */
 	gotoHinzufuegenView = async (navigate: boolean) => {
-		if (this._routeHinzufuegen === undefined)
+		if (this._routeHinzufuegen === undefined) {
 			throw new DeveloperNotificationException("Es wurde keine Route definiert, um Daten in der Auswahlliste zu ergänzen.");
+		}
 
 		if ((this.activeViewType === ViewType.HINZUFUEGEN) || (this._state.value.view === this._routeHinzufuegen)) {
 			this.commit();
@@ -464,8 +480,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 		this.activeViewType = ViewType.HINZUFUEGEN;
 		if (navigate) {
 			const result = await RouteManager.doRoute(this._routeHinzufuegen.getRoute());
-			if (result === RoutingStatus.SUCCESS)
+			if (result === RoutingStatus.SUCCESS) {
 				this.manager.liste.auswahlClear();
+			}
 		}
 
 		this._state.value.view = this._routeHinzufuegen;
@@ -479,8 +496,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * @param id         die ID des Schülers, zu dessen Schnelleingabe navigiert werden soll
 	 */
 	gotoSchnelleingabeView = async (navigate: boolean, id?: number | null) => {
-		if (this._routeSchnelleingabe === undefined)
+		if (this._routeSchnelleingabe === undefined) {
 			throw new DeveloperNotificationException("Es wurde keine Route definiert, um Daten in der Auswahlliste zu ergänzen.");
+		}
 
 		if ((this.activeViewType === ViewType.NEU) || (this._state.value.view === this._routeSchnelleingabe)) {
 			return;
@@ -490,8 +508,9 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 
 		if (navigate) {
 			const params: RouteParamsRawGeneric = {};
-			if ((id !== undefined) && (id !== null) && this.manager.liste.has(id))
+			if ((id !== undefined) && (id !== null) && this.manager.liste.has(id)) {
 				this.addID(params, id);
+			}
 
 			await RouteManager.doRoute(this._routeSchnelleingabe.getRoute(params));
 		}

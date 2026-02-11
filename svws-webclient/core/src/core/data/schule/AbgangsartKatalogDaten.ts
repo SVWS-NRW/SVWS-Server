@@ -47,7 +47,7 @@ export class AbgangsartKatalogDaten extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.AbgangsartKatalogDaten'].includes(name);
 	}
 
-	public static class = new Class<AbgangsartKatalogDaten>('de.svws_nrw.core.data.schule.AbgangsartKatalogDaten');
+	public static readonly class = new Class<AbgangsartKatalogDaten>('de.svws_nrw.core.data.schule.AbgangsartKatalogDaten');
 
 	public static transpilerFromJSON(json: string): AbgangsartKatalogDaten {
 		const obj = JSON.parse(json) as Partial<AbgangsartKatalogDaten>;

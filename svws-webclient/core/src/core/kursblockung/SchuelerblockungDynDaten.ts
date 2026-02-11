@@ -357,7 +357,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		return ['de.svws_nrw.core.kursblockung.SchuelerblockungDynDaten'].includes(name);
 	}
 
-	public static class = new Class<SchuelerblockungDynDaten>('de.svws_nrw.core.kursblockung.SchuelerblockungDynDaten');
+	public static readonly class = new Class<SchuelerblockungDynDaten>('de.svws_nrw.core.kursblockung.SchuelerblockungDynDaten');
 
 }
 

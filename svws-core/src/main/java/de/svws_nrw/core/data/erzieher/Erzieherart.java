@@ -24,25 +24,14 @@ public class Erzieherart {
 
 	/** Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. */
 	@Schema(description = "Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an", example = "1")
-	public int sortierung = 1;
+	public int sortierung;
 
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(description = "Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
-	public boolean istSichtbar = true;
+	public boolean istSichtbar;
 
-	/** Exportbezeichnung der Erzieherart */
-	@Schema(description = "die Bezeichnung der Erzieherart, welche exportiert wird", example = "Export")
-	public String exportBez = "";
-
-	/** Gibt an wie vielen Erziehungsberechtigten die entsprechende Erzieherart zugeordnet sind. */
-	@Schema(description = "Gibt an wie vielen Erziehungsberechtigten die entsprechende Erzieherart zugeordnet sind", example = "3")
-	public int anzahlErziehungsberechtigte;
-
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public Erzieherart() {
-		// leer
-	}
+	/** Gibt an, ob die Erzieherart in anderen Datenbanktabellen referenziert ist oder nicht. */
+	@Schema(description = "Gibt an, ob die Erzieherart in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
+	public boolean referenziertInAnderenTabellen;
 
 }

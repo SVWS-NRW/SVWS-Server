@@ -28,8 +28,9 @@ export class RouteSchuelerIndividualdatenGruppenprozesse extends RouteNode<Route
 
 	protected checkHidden(params?: RouteParams) {
 		try {
-			if (api.mode === ServerMode.DEV)
+			if (api.mode === ServerMode.DEV) {
 				return false;
+			}
 			// if (!api.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN))
 			//	return false;
 			return this.getRoute(params);

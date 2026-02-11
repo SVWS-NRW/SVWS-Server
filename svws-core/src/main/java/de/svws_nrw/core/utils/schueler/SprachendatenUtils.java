@@ -653,6 +653,31 @@ public final class SprachendatenUtils {
 
 
 	/**
+	 * prüft, ob die Sprachendaten vollständig und plausibel eingetragen wurden.
+	 *
+	 * @param sprachendaten   die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
+	 *
+	 * @return Liste der Sprachen, die nicht vollständig eingetragen wurden.
+	 */
+	public static @NotNull List<String> unvollstaendigeSprachbelegungen(final Sprachendaten sprachendaten) {
+		final @NotNull List<String> result = new ArrayList<>();
+
+		if (sprachendaten == null)
+			return result;
+
+		for (final @NotNull Sprachbelegung belegung : sprachendaten.belegungen) {
+			if ((belegung.reihenfolge == null) || (belegung.belegungVonJahrgang == null) || (belegung.belegungBisJahrgang == null)
+					|| (belegung.belegungVonAbschnitt == null) || (belegung.belegungBisAbschnitt == null)
+					|| (belegung.belegungVonAbschnitt < 1) || (belegung.belegungVonAbschnitt > 2)
+					|| (belegung.belegungBisAbschnitt < 1) || (belegung.belegungBisAbschnitt > 2))
+				result.add(belegung.sprache);
+		}
+
+		return result;
+	}
+
+
+	/**
 	 * Hilfsfunktion, die prüft, ob die Sprache der übergebenen Feststellungsprüfung an die Stelle der ersten Pflichtfremdsprache treten kann.
 	 *
 	 * @param pruefung	Feststellungsprüfung, die geprüft werden soll.
@@ -705,7 +730,7 @@ public final class SprachendatenUtils {
 	 *
 	 * @return Wert des ASDJahrgangs zwischen 5 und 13, wenn dieser nicht bestimmt werden kann, wird der Wert 0 zurückgegeben.
 	 */
-	private static int getJahrgangNumerisch(final String kuerzelJg) {
+	public static int getJahrgangNumerisch(final String kuerzelJg) {
 		if ((kuerzelJg == null) || "".equals(kuerzelJg))
 			return 0;
 		switch (kuerzelJg) {

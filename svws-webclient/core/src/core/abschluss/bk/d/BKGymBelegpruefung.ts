@@ -4,12 +4,12 @@ import { BKGymAbiturdatenManager } from '../../../../core/abschluss/bk/d/BKGymAb
 import { GostAbiturFach } from '../../../../core/types/gost/GostAbiturFach';
 import { HashMap } from '../../../../java/util/HashMap';
 import { ArrayList } from '../../../../java/util/ArrayList';
-import { BKGymAbiturFachbelegung } from '../../../../core/abschluss/bk/d/BKGymAbiturFachbelegung';
-import { BKGymAbiturFachbelegungHalbjahr } from '../../../../core/abschluss/bk/d/BKGymAbiturFachbelegungHalbjahr';
+import { BKGymAbiturFachbelegung } from '../../../../core/data/bk/abi/BKGymAbiturFachbelegung';
+import { BKGymAbiturFachbelegungHalbjahr } from '../../../../core/data/bk/abi/BKGymAbiturFachbelegungHalbjahr';
 import { BeruflichesGymnasiumStundentafel } from '../../../../asd/data/schule/BeruflichesGymnasiumStundentafel';
 import { JavaString } from '../../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
-import { BKGymBelegungsfehlerTyp } from '../../../../core/abschluss/bk/d/BKGymBelegungsfehlerTyp';
+import { BKGymBelegungsfehlerTyp } from '../../../../core/types/bk/BKGymBelegungsfehlerTyp';
 import { BKGymBelegungsfehler } from '../../../../core/abschluss/bk/d/BKGymBelegungsfehler';
 import { JavaInteger } from '../../../../java/lang/JavaInteger';
 import type { JavaIterator } from '../../../../java/util/JavaIterator';
@@ -19,7 +19,7 @@ import { Class } from '../../../../java/lang/Class';
 import type { JavaMap } from '../../../../java/util/JavaMap';
 import { BeruflichesGymnasiumStundentafelFach } from '../../../../asd/data/schule/BeruflichesGymnasiumStundentafelFach';
 
-export abstract class BKGymBelegpruefung extends JavaObject {
+export class BKGymBelegpruefung extends JavaObject {
 
 	/**
 	 * Die Abiturdaten-Manager
@@ -57,7 +57,7 @@ export abstract class BKGymBelegpruefung extends JavaObject {
 	 *
 	 * @param manager   der Manager für die Abiturdaten
 	 */
-	protected constructor(manager: BKGymAbiturdatenManager) {
+	public constructor(manager: BKGymAbiturdatenManager) {
 		super();
 		this.manager = manager;
 		this.stundentafeln = manager.getStundentafeln();
@@ -140,8 +140,6 @@ export abstract class BKGymBelegpruefung extends JavaObject {
 	 * Die Methode wird zur Durchführung der Belegprüfung aufgerufen.
 	 *
 	 * Sie führt zuerst die allgemeinen Prüfungen aus, die für alle Anlagen des beruflichen Gymnasiums identisch sind.
-	 * Im Anschluss werden dann ggf. die spezifischen Prüfungen für die jeweilige Anlage durchgeführt.
-	 * Hierzu ist bei Bedarf die Methode spezifischePruefungen in der Kindklasse zu implementieren.
 	 */
 	public pruefe(): void {
 		for (const tafel of this.stundentafeln) {
@@ -150,7 +148,6 @@ export abstract class BKGymBelegpruefung extends JavaObject {
 			const mapBelegungByFach: JavaMap<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>> = this.manager.getMapBelegungenForTafelByFach(tafel);
 			this.bewegeBelegungZuWahlfach(tafel, mapFaecherByIndex, mapBelegungByFach);
 			this.allgemeinePruefungen(tafel, mapFaecherByIndex, mapBelegungByFach);
-			this.spezifischePruefungen(tafel, mapFaecherByIndex, mapBelegungByFach);
 		}
 	}
 
@@ -345,7 +342,7 @@ export abstract class BKGymBelegpruefung extends JavaObject {
 	 * @return Die Liste der Belegungen für das Wahlfach
 	 */
 	private getBelegungenWahlfach(tafel: BeruflichesGymnasiumStundentafel, mapBelegungByTafelfach: JavaMap<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>>): List<BKGymAbiturFachbelegung> {
-		const tafelWahlfach: BeruflichesGymnasiumStundentafelFach | null = this.mapStundentafelFachByTafelAndFachbezeichnung.getOrNull(tafel, this.manager.wahlfach);
+		const tafelWahlfach: BeruflichesGymnasiumStundentafelFach | null = this.mapStundentafelFachByTafelAndFachbezeichnung.getOrNull(tafel, BKGymAbiturdatenManager.WAHLFACH);
 		let wahlfachBelegungen: List<BKGymAbiturFachbelegung> | null = null;
 		if (tafelWahlfach !== null)
 			wahlfachBelegungen = mapBelegungByTafelfach.computeIfAbsent(tafelWahlfach, { apply: (k: BeruflichesGymnasiumStundentafelFach | null) => new ArrayList() });
@@ -519,7 +516,7 @@ export abstract class BKGymBelegpruefung extends JavaObject {
 		const lk2: BKGymAbiturFachbelegung | null = this.manager.getAbiFachbelegung(GostAbiturFach.LK2);
 		if (lk2 === null)
 			this.addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.LK_2));
-		if (lk1 !== null && lk2 !== null && !(this.manager.isValidKursartFachbelegung(tafel, lk1, GostAbiturFach.LK1) && this.manager.isValidKursartFachbelegung(tafel, lk2, GostAbiturFach.LK2)))
+		if (lk1 !== null && lk2 !== null && !(this.manager.istGueltigeKursartFachbelegung(tafel, lk1, GostAbiturFach.LK1) && this.manager.istGueltigeKursartFachbelegung(tafel, lk2, GostAbiturFach.LK2)))
 			this.addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.LK_3, this.manager.getFachkuerzelFromFachbelegung(lk1), this.manager.getFachkuerzelFromFachbelegung(lk2), this.manager.getGliederung().name(), this.manager.getFachklassenschluessel()));
 	}
 
@@ -539,18 +536,6 @@ export abstract class BKGymBelegpruefung extends JavaObject {
 			this.addFehler(tafel, new BKGymBelegungsfehler(BKGymBelegungsfehlerTyp.AB_5, this.manager.getFachkuerzelFromFachbelegung(ab3), this.manager.getFachkuerzelFromFachbelegung(ab4), this.manager.getGliederung().name(), this.manager.getFachklassenschluessel()));
 	}
 
-	/**
-	 * Führt die für eine Anlage spezifische Belegprüfung durch.
-	 * Diese Methode ist von jeder Kindklasse, welche spezifische Prüfungen hat, zu überschreiben.
-	 *
-	 * @param tafel                die zu überprüfende Stundentafel
-	 * @param mapFaecherByIndex    die Map mit den Fächern der Stundentafel
-	 * @param mapBelegungByIndex   die Map mit den Fächern der Belegungen
-	 */
-	protected spezifischePruefungen(tafel: BeruflichesGymnasiumStundentafel, mapFaecherByIndex: JavaMap<number, List<BeruflichesGymnasiumStundentafelFach>>, mapBelegungByIndex: JavaMap<BeruflichesGymnasiumStundentafelFach, List<BKGymAbiturFachbelegung>>): void {
-		// empty block
-	}
-
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.abschluss.bk.d.BKGymBelegpruefung';
 	}
@@ -559,7 +544,7 @@ export abstract class BKGymBelegpruefung extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.bk.d.BKGymBelegpruefung'].includes(name);
 	}
 
-	public static class = new Class<BKGymBelegpruefung>('de.svws_nrw.core.abschluss.bk.d.BKGymBelegpruefung');
+	public static readonly class = new Class<BKGymBelegpruefung>('de.svws_nrw.core.abschluss.bk.d.BKGymBelegpruefung');
 
 }
 

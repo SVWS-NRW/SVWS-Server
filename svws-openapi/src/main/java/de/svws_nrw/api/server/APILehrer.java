@@ -2,6 +2,8 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
+import org.jboss.resteasy.annotations.GZIP;
+
 import de.svws_nrw.asd.data.lehrer.LehrerAbgangsgrundKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerAnrechnungsgrundKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerBeschaeftigungsartKatalogEintrag;
@@ -108,6 +110,7 @@ public class APILehrer {
 	 * @return die Liste mit den einzelnen Lehrern
 	 */
 	@GET
+	@GZIP
 	@Path("/")
 	@Operation(summary = "Gibt eine Übersicht von allen Lehrern zurück.",
 			description = "Erstellt eine Liste aller in der Datenbank vorhanden Lehrer unter Angabe der ID, des Kürzels, "
@@ -135,6 +138,7 @@ public class APILehrer {
 	 * @return die Liste mit den Lehrern eines Schuljahresabschnittes
 	 */
 	@GET
+	@GZIP
 	@Path("/abschnitt/{abschnitt : \\d+}")
 	@Operation(summary = "Gibt eine Übersicht von allen Lehrern eines Schuljahresabschnittes zurück.",
 			description = "Erstellt eine Liste aller in der Datenbank vorhanden Lehrer eines Schuljahresabschnittes unter Angabe der ID, des Kürzels, "
@@ -191,6 +195,7 @@ public class APILehrer {
 	 * @return die Stammdaten des Lehrers
 	 */
 	@GET
+	@GZIP
 	@Path("/{id : \\d+}/stammdaten")
 	@Operation(summary = "Liefert zu der ID des Lehrer die zugehörigen Stammdaten.",
 			description = "Liest die Stammdaten des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
@@ -217,6 +222,7 @@ public class APILehrer {
 	 * @return die Stammdaten der Lehrer
 	 */
 	@POST
+	@GZIP
 	@Path("stammdaten")
 	@Operation(summary = "Liefert zu den Lehrer IDs die zugehörigen Stammdaten.",
 			description = "Liest die Stammdaten der Lehrer zu der angegebenen IDs aus der Datenbank und liefert diese zurück."
@@ -1355,6 +1361,7 @@ public class APILehrer {
 	 * @return die Liste mit dem Katalog der Lehrerzugangsgründe
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/zugangsgruende")
 	@Operation(summary = "Gibt den Katalog der Lehrerzugangsgründe zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrerzugangsgründe unter Angabe der ID, der Bezeichnung und des Statistikschlüssels. "
@@ -1379,6 +1386,7 @@ public class APILehrer {
 	 * @return die Liste mit dem Katalog der Lehrerabgangsgründe
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/abgangsgruende")
 	@Operation(summary = "Gibt den Katalog der Lehrerabgangsgründe zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrerabgangsgründe unter Angabe der ID, der Bezeichnung und des Statistikschlüssels. "
@@ -1403,6 +1411,7 @@ public class APILehrer {
 	 * @return die Liste mit dem Katalog der Lehrer Beschäftigungsarten
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/beschaeftigungsarten")
 	@Operation(summary = "Gibt den Katalog der Beschäftigungsarten zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Beschäftigungsarten unter Angabe der ID, eines Kürzels und der Bezeichnung. "
@@ -1427,6 +1436,7 @@ public class APILehrer {
 	 * @return die Liste mit dem Katalog der Lehrer Einsatzstatusarten
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/einsatzstatus")
 	@Operation(summary = "Gibt den Katalog des Einsatzstatus zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Einsatzstatusarten unter Angabe der ID, eines Kürzels und der Bezeichnung. "
@@ -1451,6 +1461,7 @@ public class APILehrer {
 	 * @return die Liste mit dem Katalog der Fachrichtungen von Lehrern
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/fachrichtungen")
 	@Operation(summary = "Gibt den Katalog der Fachrichtungen von Lehrern zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Fachrichtungen von Lehrern. "
@@ -1475,6 +1486,7 @@ public class APILehrer {
 	 * @return die Liste mit dem Katalog der Anerkennungen von Fachrichtungen für Lehrer
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/fachrichtungen_anerkennungen")
 	@Operation(summary = "Gibt den Katalog des Anerkennungen von Fachrichtungen für Lehrer zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Anerkennungen von Fachrichtungen für Lehrer. "
@@ -1499,6 +1511,7 @@ public class APILehrer {
 	 * @return die Liste mit dem Katalog der Lehrämter
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/lehraemter")
 	@Operation(summary = "Gibt den Katalog der Lehrämter zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrämter. "
@@ -1523,6 +1536,7 @@ public class APILehrer {
 	 * @return die Liste mit dem Katalog der Anerkennungen von Lehrämtern
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/lehraemter_anerkennungen")
 	@Operation(summary = "Gibt den Katalog der Anerkennungen von Lehrämtern zurück.",
 			description = "Erstellt eine Liste aller Anerkennungen von Lehrämtern. "
@@ -1547,6 +1561,7 @@ public class APILehrer {
 	 * @return die Liste mit dem Katalog der Lehrbefähigungen
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/lehrbefaehigungen")
 	@Operation(summary = "Gibt den Katalog des Lehrbefähigungen von Lehrern zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrbefähigungen. "
@@ -1571,6 +1586,7 @@ public class APILehrer {
 	 * @return die Liste mit dem Katalog der Anerkennungen von Lehrbefähigungen
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/lehrbefaehigungen_anerkennungen")
 	@Operation(summary = "Gibt den Katalog der Anerkennungen von Lehrbefähigungen zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Anerkennungen von Lehrbefähigungen. "
@@ -1595,6 +1611,7 @@ public class APILehrer {
 	 * @return die Liste mit dem Katalog der Arten von Mehrleistungen durch Lehrer
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/mehrleistungsarten")
 	@Operation(summary = "Gibt den Katalog der Arten von Mehrleistungen durch Lehrer zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden die Arten von Mehrleistungen durch Lehrer. "
@@ -1619,6 +1636,7 @@ public class APILehrer {
 	 * @return die Liste mit dem Katalog der Arten von Minderleistungen durch Lehrer
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/minderleistungsarten")
 	@Operation(summary = "Gibt den Katalog der Arten von Minderleistungen durch Lehrer zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Arten von Minderleistungen durch Lehrer. "
@@ -1643,6 +1661,7 @@ public class APILehrer {
 	 * @return die Liste mit dem Katalog der Lehrer Rechtsverhältnisse
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/rechtsverhaeltnisse")
 	@Operation(summary = "Gibt den Katalog des Rechtsverhältnisse zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Rechtsverhältnisse unter Angabe der ID, eines Kürzels und der Bezeichnung. "
@@ -1667,6 +1686,7 @@ public class APILehrer {
 	 * @return die Liste mit dem Katalog der Gründe für Anrechnungsstunden von Lehrern
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/anrechnungsgruende")
 	@Operation(summary = "Gibt den Katalog der Gründe für Anrechnungsstunden von Lehrern zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Gründe für Anrechnungsstunden von Lehrern."

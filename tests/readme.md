@@ -13,7 +13,7 @@ Alle Tests erlauben, dass sie für spezifische User ausgeführt werden. Der ents
 Die Integrationstests in diesem Paket sind infrastrukturell ähnlich aufgebaut. Dabei gibt es drei Möglichkeiten, die Integrationstests auszuführen:
 
 ### Möglichkeit 1: Integrationstests über Gradle gegen für den Test-Durchlauf temporär aufgebaute Anwendungen
-Hier wird für jedes Subpaket ein SVWS-Backend und eine Datenbank als Docker-Container gestartet. Dann laufen alle Tests vom Host-System gegen diese Container. Alle Integrationstests werden gleichzeitig gestartet. Dabei kann der Task über die IDE (Task > Verification > integrationTest) oder über die Konsole gestartet werden. Dieser Task wird von der GitLab CI/CD-Pipeline ausgeführt.
+Hier wird für jedes Subpaket ein SVWS-Backend und eine Datenbank als Docker-Container gestartet. Dann laufen alle Tests vom Host-System gegen diese Container. Alle Integrationstests werden gleichzeitig gestartet. Dabei kann der Task über die IDE (Task > Testing > integrationTest) oder über die Konsole gestartet werden. Dieser Task wird von der GitLab CI/CD-Pipeline ausgeführt.
 
 ```
     ./gradlew :tests:integrationTest
@@ -33,7 +33,7 @@ Dieser Durchlauf ist langsam, dafür sind alle Tests reproduzierbar. Da für jed
 > Dieser Gradle Task wird in der CICD Pipeline bei jedem Commit ausgeführt. Es sollte daher vor einem Commit lokal geprüft werden ob die Integrationstests scheitern.
 
 ### Möglichkeit 2: Integrationstests über Gradle gegen laufende Anwendung
-Alle Integrationstests können gleichzeitig oder einzeln gestartet werden. Dabei kann der Task über die IDE (Task > Verification > no_auto_docker_integrationTest) oder über die Konsole gestartet werden. Wichtig: Hier muss die Anwendung und die Datenbank bereits laufen. Hier wird für den Test keine Anwendung gestartet, sondern alles gegen die aktuell laufende gerichtet. ENM-Tests werden hier nicht unterstützt.
+Alle Integrationstests können gleichzeitig oder einzeln gestartet werden. Dabei kann der Task über die IDE (Task > Testing > no_auto_docker_integrationTest) oder über die Konsole gestartet werden. Wichtig: Hier muss die Anwendung und die Datenbank bereits laufen. Hier wird für den Test keine Anwendung gestartet, sondern alles gegen die aktuell laufende gerichtet. ENM-Tests werden hier nicht unterstützt.
 
 Gebündelte Ausführung
 ```

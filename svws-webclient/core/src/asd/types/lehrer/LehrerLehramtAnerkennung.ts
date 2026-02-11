@@ -108,7 +108,7 @@ export class LehrerLehramtAnerkennung extends JavaEnum<LehrerLehramtAnerkennung>
 		return ['de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.lehrer.LehrerLehramtAnerkennung', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<LehrerLehramtAnerkennung>('de.svws_nrw.asd.types.lehrer.LehrerLehramtAnerkennung');
+	public static readonly class = new Class<LehrerLehramtAnerkennung>('de.svws_nrw.asd.types.lehrer.LehrerLehramtAnerkennung');
 
 }
 

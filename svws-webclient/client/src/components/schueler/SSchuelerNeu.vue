@@ -37,9 +37,9 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Persönliche Daten" class="col-span-full">
 			<svws-ui-input-wrapper :grid="4">
-				<svws-ui-text-input placeholder="Name" required v-model="data.nachname" :valid="fieldIsValid('nachname')" :max-len="120" />
-				<svws-ui-text-input placeholder="Vorname" required v-model="data.vorname" :valid="fieldIsValid('vorname')" :max-len="120" />
-				<svws-ui-text-input placeholder="Weitere Vornamen" v-model="data.alleVornamen" :valid="fieldIsValid('alleVornamen')" :max-len="120" />
+				<svws-ui-text-input placeholder="Nachname" required v-model="data.nachname" :valid="fieldIsValid('nachname')" :max-len="120" />
+				<svws-ui-text-input placeholder="Rufname" required v-model="data.vorname" :valid="fieldIsValid('vorname')" :max-len="120" />
+				<svws-ui-text-input placeholder="Alle Vornamen" v-model="data.alleVornamen" :valid="fieldIsValid('alleVornamen')" :max-len="120" />
 				<ui-select label="Geschlecht" v-model="geschlecht" :manager="geschlechtManager" :removable="false" required />
 				<svws-ui-text-input placeholder="Geburtsdatum" required type="date" v-model="data.geburtsdatum" :valid="istGeburtsdatumGueltig" />
 				<div v-if="!istGeburtsdatumGueltig(data.geburtsdatum)" class="flex my-auto">
@@ -78,8 +78,9 @@
 	const keineKlassenVorhanden = computed(() => props.schuelerListeManager().klassen.list().isEmpty());
 
 	watch(() => data.value, async () => {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 		props.checkpoint.active = true;
 	}, { immediate: false, deep: true });
 
@@ -96,20 +97,23 @@
 			switch (field) {
 				case 'schuljahresabschnitt': {
 					const id = data.value.schuljahresabschnitt;
-					if (id <= 0)
+					if (id <= 0) {
 						return false;
+					}
 					return gefilterteSchuljahresabschnitte.value.some(i => i.id === id);
 				}
 				case 'jahrgangID': {
 					const id = data.value.jahrgangID;
-					if (id === null || id <= 0)
+					if (id === null || id <= 0) {
 						return false;
+					}
 					return jahrgaenge.value.some(i => i.id === id);
 				}
 				case 'klassenID': {
 					const id = data.value.klassenID;
-					if (id === null || id <= 0)
+					if (id === null || id <= 0) {
 						return false;
+					}
 					return gefilterteKlassen.value.some(i => i.id === id);
 				}
 				case 'nachname':
@@ -155,8 +159,9 @@
 		const akt = props.aktAbschnitt;
 		const ids = new Set<number>();
 		ids.add(akt.id);
-		if (akt.idFolgeAbschnitt !== null)
+		if (akt.idFolgeAbschnitt !== null) {
 			ids.add(akt.idFolgeAbschnitt);
+		}
 		return schuljahresabschnitte.value.filter(s => ids.has(s.id));
 	});
 
@@ -171,8 +176,9 @@
 
 			if (value) {
 				const vorschlag = defaultBeginnBildungsgang(value);
-				if (vorschlag !== null)
+				if (vorschlag !== null) {
 					data.value.beginnBildungsgang = vorschlag;
+				}
 			}
 			void loadKlassenFuerAbschnitt(value?.id ?? -1);
 		},
@@ -181,8 +187,9 @@
 	const jahrgaenge = computed(() => Array.from(props.schuelerListeManager().jahrgaenge.list()));
 
 	const gefilterteJahrgaenge = computed(() => {
-		if (!schuljahresabschnitt.value)
+		if (!schuljahresabschnitt.value) {
 			return [];
+		}
 		const saId = schuljahresabschnitt.value.id;
 		return jahrgaenge.value.filter(jahrgang => {
 			const von = jahrgang.gueltigVon ?? Number.MIN_SAFE_INTEGER;
@@ -212,8 +219,9 @@
 	}
 
 	const gefilterteKlassen = computed<KlassenDaten[]>(() => {
-		if (schuljahresabschnitt.value === null)
+		if (schuljahresabschnitt.value === null) {
 			return [];
+		}
 		const jgId = data.value.jahrgangID;
 
 		return klassenFuerAbschnitt.value.filter(k => {
@@ -229,7 +237,7 @@
 	});
 
 	const einschulungsarten = computed(() => props.mapEinschulungsarten.values());
-	const einschulungsartManager = new SelectManager({ options: einschulungsarten.value, optionDisplayText: i => i.text, selectionDisplayText: i => i.text });
+	const einschulungsartManager = new SelectManager({ options: einschulungsarten, optionDisplayText: i => i.text, selectionDisplayText: i => i.text });
 
 	const einschulungsart = computed({
 		get: () => props.mapEinschulungsarten.get(dataSchulbesuchsdaten.value.grundschuleEinschulungsartID ?? -1) ?? null,
@@ -243,8 +251,9 @@
 		set: (value) => data.value.geschlecht = value?.id ?? -1 });
 
 	function parseISOToDate(strDate: string | null) {
-		if (strDate === null)
+		if (strDate === null) {
 			return null;
+		}
 		try {
 			const d = DateUtils.extractFromDateISO8601(strDate);
 			return new Date(d[0], d[1] - 1, d[2]);
@@ -254,45 +263,54 @@
 	}
 
 	function istAnmeldedatumGueltig(strDate: string | null) {
-		if (strDate === null)
+		if (strDate === null) {
 			return true;
+		}
 		const d = parseISOToDate(strDate);
-		if (d === null)
+		if (d === null) {
 			return false;
+		}
 		const today = new Date();
 		// Datum darf nicht in der Zukunft liegen (heutige Datum ist erlaubt)
 		return d.getTime() <= new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
 	}
 
 	function istAufnahmedatumGueltig(strDate: string | null) {
-		if (strDate === null)
+		if (strDate === null) {
 			return true;
+		}
 		const aufnahme = parseISOToDate(strDate);
-		if (aufnahme === null)
+		if (aufnahme === null) {
 			return false;
+		}
 		// Aufnahmedatum darf nicht vor Anmeldedatum liegen
 		const anmeld = parseISOToDate(data.value.anmeldedatum);
-		if (anmeld !== null)
+		if (anmeld !== null) {
 			return aufnahme.getTime() >= anmeld.getTime();
+		}
 		return true;
 	}
 
 	function istBeginnBildungsgangGueltig(strDate: string | null) {
-		if (strDate === null)
+		if (!schulenMitBKoderSK.value || (strDate === null)) {
 			return true;
+		}
 		const beginn = parseISOToDate(strDate);
-		if (beginn === null)
+		if (beginn === null) {
 			return false;
+		}
 		// Beginn des Bildungangs darf nicht vor Aufnahmedatum liegen
 		const aufnahme = parseISOToDate(data.value.aufnahmedatum);
-		if (aufnahme !== null)
+		if (aufnahme !== null) {
 			return beginn.getTime() >= aufnahme.getTime();
+		}
 		return true;
 	}
 
 	function istGeburtsdatumGueltig(strDate: string | null) {
-		if (strDate === null)
+		if (strDate === null) {
 			return true;
+		}
 		try {
 			const date = DateUtils.extractFromDateISO8601(strDate);
 			const curDate = new Date();
@@ -304,16 +322,22 @@
 	}
 
 	function defaultBeginnBildungsgang(abschnitt: { schuljahr: number, abschnitt: number }): string | null {
-		if (abschnitt.abschnitt === 1)
-			return `${abschnitt.schuljahr}-08-01`; // immer 1. August des Startjahres
-		if (abschnitt.abschnitt === 2)
-			return `${abschnitt.schuljahr + 1}-02-01`; // immer 1. Februar des Folgejahres
+		if (!schulenMitBKoderSK.value) {
+			return null;
+		}
+		if (abschnitt.abschnitt === 1) {
+			return `${abschnitt.schuljahr}-08-01`;
+		} // immer 1. August des Startjahres
+		if (abschnitt.abschnitt === 2) {
+			return `${abschnitt.schuljahr + 1}-02-01`;
+		} // immer 1. Februar des Folgejahres
 		return null;
 	}
 
 	async function addSchuelerStammdaten() {
-		if (isLoading.value)
+		if (isLoading.value) {
 			return;
+		}
 
 		isLoading.value = true;
 		props.checkpoint.active = false;
@@ -342,24 +366,31 @@
 	const routedFromSchnelleingabe = computed(() => initialeSchuelerDaten.value !== null);
 
 	watch(initialeSchuelerDaten, async (val) => {
-		if (val === null)
+		if (val === null) {
 			return;
+		}
 
-		if (val.anmeldedatum !== null)
+		if (val.anmeldedatum !== null) {
 			data.value.anmeldedatum = val.anmeldedatum;
-		if (val.aufnahmedatum !== null)
+		}
+		if (val.aufnahmedatum !== null) {
 			data.value.aufnahmedatum = val.aufnahmedatum;
-		if (val.beginnBildungsgang !== null)
+		}
+		if (val.beginnBildungsgang !== null) {
 			data.value.beginnBildungsgang = val.beginnBildungsgang;
-		if (val.dauerBildungsgang !== null)
+		}
+		if (val.dauerBildungsgang !== null) {
 			data.value.dauerBildungsgang = val.dauerBildungsgang;
+		}
 
 		schuljahresabschnitt.value = gefilterteSchuljahresabschnitte.value.find(s => s.id === val.schuljahresabschnitt) ?? null;
 		await loadKlassenFuerAbschnitt(val.schuljahresabschnitt);
-		if (val.jahrgangID !== null)
+		if (val.jahrgangID !== null) {
 			data.value.jahrgangID = val.jahrgangID;
-		if (val.klassenID !== null)
+		}
+		if (val.klassenID !== null) {
 			data.value.klassenID = val.klassenID;
+		}
 
 	}, { immediate: true });
 

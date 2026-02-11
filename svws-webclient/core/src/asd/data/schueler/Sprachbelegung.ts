@@ -74,7 +74,7 @@ export class Sprachbelegung extends JavaObject {
 		return ['de.svws_nrw.asd.data.schueler.Sprachbelegung'].includes(name);
 	}
 
-	public static class = new Class<Sprachbelegung>('de.svws_nrw.asd.data.schueler.Sprachbelegung');
+	public static readonly class = new Class<Sprachbelegung>('de.svws_nrw.asd.data.schueler.Sprachbelegung');
 
 	public static transpilerFromJSON(json: string): Sprachbelegung {
 		const obj = JSON.parse(json) as Partial<Sprachbelegung>;

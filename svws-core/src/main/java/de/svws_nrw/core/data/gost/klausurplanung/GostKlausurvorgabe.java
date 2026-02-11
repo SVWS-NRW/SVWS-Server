@@ -22,11 +22,11 @@ public class GostKlausurvorgabe {
 	@Schema(description = "das Jahr, in welchem der Jahrgang Abitur machen wird", example = "2025")
 	public int abiJahrgang = -1;
 
-	/** Das Gost-Halbjahr, in dem die Klausurg geschrieben wird. */
+	/** Das Gost-Halbjahr, in dem die Klausur geschrieben wird. */
 	@Schema(description = "das Gost-Halbjahr, in dem die Klausurg geschrieben wird", example = "3")
 	public int halbjahr = -1;
 
-	/** Das Quartal, in welchem die Klausur gechrieben wird. */
+	/** Das Quartal, in welchem die Klausur geschrieben wird. */
 	@Schema(description = "das Quartal, in welchem die Klausur gechrieben wird", example = "1")
 	public int quartal = -1;
 
@@ -50,11 +50,11 @@ public class GostKlausurvorgabe {
 	@Schema(defaultValue = "false", description = "die Information, ob es sich um eine mündliche Prüfung handelt", example = "false")
 	public boolean istMdlPruefung = false;
 
-	/** Die Information, ob Audioequipment nötig ist, z.B. für Klasuren mit Hörverstehensanteilen. */
+	/** Die Information, ob Audioequipment nötig ist, z.B. für Klausuren mit Hörverstehensanteilen. */
 	@Schema(defaultValue = "false", description = "die Information, ob Audioequipment nötig ist, z.B. für Klasuren mit Hörverstehensanteilen", example = "false")
 	public boolean istAudioNotwendig = false;
 
-	/** Die Information, ob Videoequipment nötig ist, z.B. für Klasuren mit Videoanalyse. */
+	/** Die Information, ob Videoequipment nötig ist, z.B. für Klausuren mit Videoanalyse. */
 	@Schema(defaultValue = "false", description = "die Information, ob Videoequipment nötig ist, z.B. für Klasuren mit Videoanalyse", example = "false")
 	public boolean istVideoNotwendig = false;
 
@@ -63,14 +63,14 @@ public class GostKlausurvorgabe {
 	public String bemerkungVorgabe = null;
 
 	/**
-	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 * Vergleicht, ob das aktuelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
 	 *
 	 * @param another     das zu vergleichende Objekt
-	 * @return true, falls die Objekte indentisch sind, sonst false
+	 * @return true, falls die Objekte identisch sind, sonst false
 	 */
 	@Override
 	public boolean equals(final Object another) {
-		return (another != null) && (another instanceof final GostKlausurvorgabe vorgabe) && (this.id == vorgabe.id);
+		return (another instanceof final GostKlausurvorgabe vorgabe) && (this.id == vorgabe.id);
 	}
 
 	/**

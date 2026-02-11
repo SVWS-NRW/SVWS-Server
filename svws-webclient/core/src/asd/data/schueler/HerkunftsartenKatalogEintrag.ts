@@ -19,7 +19,7 @@ export class HerkunftsartenKatalogEintrag extends CoreTypeDataNurSchulformen {
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.schueler.HerkunftsartenKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeDataNurSchulformen'].includes(name);
 	}
 
-	public static class = new Class<HerkunftsartenKatalogEintrag>('de.svws_nrw.asd.data.schueler.HerkunftsartenKatalogEintrag');
+	public static readonly class = new Class<HerkunftsartenKatalogEintrag>('de.svws_nrw.asd.data.schueler.HerkunftsartenKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): HerkunftsartenKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<HerkunftsartenKatalogEintrag>;

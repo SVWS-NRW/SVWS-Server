@@ -32,7 +32,7 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 		return ['de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefungsdaten'].includes(name);
 	}
 
-	public static class = new Class<SchuelerLernabschnittNachpruefungsdaten>('de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefungsdaten');
+	public static readonly class = new Class<SchuelerLernabschnittNachpruefungsdaten>('de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefungsdaten');
 
 	public static transpilerFromJSON(json: string): SchuelerLernabschnittNachpruefungsdaten {
 		const obj = JSON.parse(json) as Partial<SchuelerLernabschnittNachpruefungsdaten>;

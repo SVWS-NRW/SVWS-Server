@@ -53,9 +53,11 @@
 
 	const regelnVerletzt = computed<Set<GostJahrgangFachkombination>>(() => {
 		const set = new Set<GostJahrgangFachkombination>();
-		for (const kombi of props.abiturdatenManager().faecher().getFachkombinationen())
-			if (!istRegelErfuellt(kombi))
+		for (const kombi of props.abiturdatenManager().faecher().getFachkombinationen()) {
+			if (!istRegelErfuellt(kombi)) {
 				set.add(kombi);
+			}
+		}
 		return set;
 	});
 
@@ -66,8 +68,9 @@
 		const f2 = (fach2 === null) ? null : props.abiturdatenManager().getFachbelegungByID(fach2.id);
 		const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
 		const kursart2 = GostKursart.fromKuerzel(kombi.kursart2);
-		if (((kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue()) && (f1 === null || f2 === null)) || (f1 === null))
+		if (((kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue()) && (f1 === null || f2 === null)) || (f1 === null)) {
 			return true;
+		}
 		for (const hj of GostHalbjahr.values()) {
 			if (kombi.gueltigInHalbjahr[hj.id]) {
 				const bel1 = kursart1 === null
@@ -76,10 +79,12 @@
 				const bel2 = kursart2 === null
 					? props.abiturdatenManager().pruefeBelegung(f2, hj)
 					: props.abiturdatenManager().pruefeBelegungMitKursart(f2, kursart2, hj);
-				if (bel1 && bel2 && kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue())
+				if (bel1 && bel2 && kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue()) {
 					return false;
-				if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() && bel1 && !bel2)
+				}
+				if (kombi.typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() && bel1 && !bel2) {
 					return false;
+				}
 			}
 		}
 		return true;

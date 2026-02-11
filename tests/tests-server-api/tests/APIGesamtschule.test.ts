@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { privilegedApiServer } from "../../utils/APIUtils";
 
 describe("Gesamtschule Tests", () => {
-	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
+	describe.each([{ schema: "GymAbi01" }])('gegen %s', ({ schema }) => {
 		const api = privilegedApiServer;
 
 		// TODO: Fix Me
@@ -16,5 +16,5 @@ describe("Gesamtschule Tests", () => {
 			const result = await api.getGesamtschuleSchuelerPrognosLeistungsdatenFuerAbschnitt(schema, 1199, 13);
 			expect(result).toMatchSnapshot();
 		});
-	})
-})
+	});
+});

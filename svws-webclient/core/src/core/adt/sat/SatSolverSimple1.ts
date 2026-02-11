@@ -85,7 +85,7 @@ export class SatSolverSimple1 extends SatSolver {
 		return ['de.svws_nrw.core.adt.sat.SatSolverSimple1', 'java.util.function.Function', 'de.svws_nrw.core.adt.sat.SatSolver'].includes(name);
 	}
 
-	public static class = new Class<SatSolverSimple1>('de.svws_nrw.core.adt.sat.SatSolverSimple1');
+	public static readonly class = new Class<SatSolverSimple1>('de.svws_nrw.core.adt.sat.SatSolverSimple1');
 
 }
 

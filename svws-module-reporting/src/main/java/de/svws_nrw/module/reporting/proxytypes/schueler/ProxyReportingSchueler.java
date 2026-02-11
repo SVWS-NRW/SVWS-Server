@@ -245,7 +245,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 					if (!erzieherStammdaten.isEmpty())
 						this.reportingRepository.mapErzieherStammdaten().putAll(erzieherStammdaten.stream().collect(Collectors.groupingBy(e -> e.idSchueler)));
 				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.putStacktraceInLog(
+					ReportingExceptionUtils.logException(
 							"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Erzieher der bereits eingelesenen Schülerstammdaten.",
 							e, reportingRepository.logger(), LogLevel.INFO, 0);
 					return;
@@ -305,7 +305,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 					final Abiturdaten abiturdaten = new DataGostAbiturdaten(this.reportingRepository.conn(), null).getById(this.id());
 					super.gostAbitur = new ProxyReportingSchuelerGostAbitur(this.reportingRepository, abiturdaten);
 				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.putStacktraceInLog(
+					ReportingExceptionUtils.logException(
 							"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Abiturdaten eines Schülers.", e,
 							reportingRepository.logger(), LogLevel.INFO, 0);
 					return null;
@@ -393,7 +393,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				schuelerGesamteLernabschnittsdaten.addAll(new DataSchuelerLernabschnittsdaten(this.reportingRepository().conn())
 						.getListFromSchuelerIDs(idsSchuelerOhneLernabschnitte, false, false));
 			} catch (final ApiOperationException e) {
-				ReportingExceptionUtils.putStacktraceInLog(
+				ReportingExceptionUtils.logException(
 						"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Lernabschnitte eines Schülers.", e,
 						reportingRepository.logger(), LogLevel.INFO, 0);
 			}
@@ -433,7 +433,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 								.putAll(dataSchulbesuch.getListByIds((idsSchuelerOhneSchulbesuchsdaten)).stream()
 										.collect(Collectors.toMap(sb -> sb.id, sb -> sb)));
 					} catch (final ApiOperationException e) {
-						ReportingExceptionUtils.putStacktraceInLog(
+						ReportingExceptionUtils.logException(
 								"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Schulbesuchsdaten eines Schülers.", e,
 								reportingRepository.logger(), LogLevel.INFO, 0);
 					}
@@ -512,7 +512,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 								.map(t -> (ReportingSchuelerTelefonkontakt) new ProxyReportingSchuelerTelefonkontakt(this.reportingRepository, t))
 								.sorted(Comparator.comparing(ReportingSchuelerTelefonkontakt::sortierung)).toList()));
 					} catch (final Exception e) {
-						ReportingExceptionUtils.putStacktraceInLog(
+						ReportingExceptionUtils.logException(
 								"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Telefonnummern eines Schülers.", e,
 								reportingRepository.logger(), LogLevel.INFO, 0);
 					}

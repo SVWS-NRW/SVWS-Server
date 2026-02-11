@@ -521,7 +521,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Fremdsprachen'].includes(name);
 	}
 
-	public static class = new Class<Fremdsprachen>('de.svws_nrw.core.abschluss.gost.belegpruefung.Fremdsprachen');
+	public static readonly class = new Class<Fremdsprachen>('de.svws_nrw.core.abschluss.gost.belegpruefung.Fremdsprachen');
 
 }
 

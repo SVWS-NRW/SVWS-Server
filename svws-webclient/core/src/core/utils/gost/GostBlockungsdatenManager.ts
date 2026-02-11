@@ -143,7 +143,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	private readonly _map_multikey_regeln: HashMap<LongArrayKey, GostBlockungRegel> = new HashMap<LongArrayKey, GostBlockungRegel>();
 
 	/**
-	 * Eine interne Hashmap zum schnellen Zugriff auf die Schueler anhand ihrer Datenbank-ID.
+	 * Eine interne Hashmap zum schnellen Zugriff auf die Schüler anhand ihrer Datenbank-ID.
 	 */
 	private readonly _map_idSchueler_schueler: HashMap<number, Schueler> = new HashMap<number, Schueler>();
 
@@ -1018,6 +1018,19 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public kursGetAnzahl(): number {
 		return this._map_idKurs_kurs.size();
+	}
+
+	/**
+	 * Liefert die Anzahl an Kursen, die keine KOOP-Kurse sind.
+	 *
+	 * @return die Anzahl an Kursen, die keine KOOP-Kurse sind.
+	 */
+	public kursGetAnzahlIntener(): number {
+		let nKurse: number = 0;
+		for (const k of this._map_idKurs_kurs.values())
+			if (!k.istKoopKurs)
+				nKurse++;
+		return nKurse;
 	}
 
 	/**
@@ -2663,7 +2676,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.GostBlockungsdatenManager'].includes(name);
 	}
 
-	public static class = new Class<GostBlockungsdatenManager>('de.svws_nrw.core.utils.gost.GostBlockungsdatenManager');
+	public static readonly class = new Class<GostBlockungsdatenManager>('de.svws_nrw.core.utils.gost.GostBlockungsdatenManager');
 
 }
 

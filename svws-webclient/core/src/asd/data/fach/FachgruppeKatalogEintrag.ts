@@ -40,7 +40,7 @@ export class FachgruppeKatalogEintrag extends CoreTypeDataNurSchulformen {
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeDataNurSchulformen'].includes(name);
 	}
 
-	public static class = new Class<FachgruppeKatalogEintrag>('de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag');
+	public static readonly class = new Class<FachgruppeKatalogEintrag>('de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): FachgruppeKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<FachgruppeKatalogEintrag>;

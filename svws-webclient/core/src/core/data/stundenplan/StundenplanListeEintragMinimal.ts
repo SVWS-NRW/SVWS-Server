@@ -34,7 +34,7 @@ export class StundenplanListeEintragMinimal extends JavaObject {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanListeEintragMinimal'].includes(name);
 	}
 
-	public static class = new Class<StundenplanListeEintragMinimal>('de.svws_nrw.core.data.stundenplan.StundenplanListeEintragMinimal');
+	public static readonly class = new Class<StundenplanListeEintragMinimal>('de.svws_nrw.core.data.stundenplan.StundenplanListeEintragMinimal');
 
 	public static transpilerFromJSON(json: string): StundenplanListeEintragMinimal {
 		const obj = JSON.parse(json) as Partial<StundenplanListeEintragMinimal>;

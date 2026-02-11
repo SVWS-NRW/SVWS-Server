@@ -94,7 +94,7 @@ export class SchildReportingSchuelerLernabschnitt extends JavaObject {
 		return ['de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerLernabschnitt'].includes(name);
 	}
 
-	public static class = new Class<SchildReportingSchuelerLernabschnitt>('de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerLernabschnitt');
+	public static readonly class = new Class<SchildReportingSchuelerLernabschnitt>('de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerLernabschnitt');
 
 	public static transpilerFromJSON(json: string): SchildReportingSchuelerLernabschnitt {
 		const obj = JSON.parse(json) as Partial<SchildReportingSchuelerLernabschnitt>;

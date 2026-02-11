@@ -64,7 +64,7 @@ export class Einschulungsart extends CoreTypeSimple<EinschulungsartKatalogEintra
 		return ['de.svws_nrw.asd.types.schueler.Einschulungsart', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.CoreTypeSimple'].includes(name);
 	}
 
-	public static class = new Class<Einschulungsart>('de.svws_nrw.asd.types.schueler.Einschulungsart');
+	public static readonly class = new Class<Einschulungsart>('de.svws_nrw.asd.types.schueler.Einschulungsart');
 
 }
 

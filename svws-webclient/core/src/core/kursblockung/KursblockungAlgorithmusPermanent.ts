@@ -160,7 +160,7 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanent'].includes(name);
 	}
 
-	public static class = new Class<KursblockungAlgorithmusPermanent>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanent');
+	public static readonly class = new Class<KursblockungAlgorithmusPermanent>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanent');
 
 }
 

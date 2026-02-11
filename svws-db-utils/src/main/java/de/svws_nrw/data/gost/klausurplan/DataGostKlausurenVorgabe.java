@@ -130,30 +130,30 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 			throws ApiOperationException {
 		switch (name) {
 			case "idVorgabe" -> {
-				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				final Long patch_id = JSONMapper.convertToLong(value, true, name);
+				if ((patch_id == null) || (patch_id != dto.ID))
 					throw new ApiOperationException(Status.BAD_REQUEST);
 			}
 			case "abiJahrgang" -> {
-				dto.Abi_Jahrgang = JSONMapper.convertToInteger(value, false);
+				dto.Abi_Jahrgang = JSONMapper.convertToInteger(value, false, name);
 				if (conn.queryByKey(DTOGostJahrgangsdaten.class, dto.Abi_Jahrgang) == null)
 					throw new ApiOperationException(Status.BAD_REQUEST, "Jahrgang nicht gefunden, ID: " + dto.Abi_Jahrgang);
 			}
-			case "halbjahr" -> dto.Halbjahr = checkHalbjahr(JSONMapper.convertToInteger(value, false));
-			case "quartal" -> dto.Quartal = checkQuartal(JSONMapper.convertToInteger(value, false));
+			case "halbjahr" -> dto.Halbjahr = checkHalbjahr(JSONMapper.convertToInteger(value, false, name));
+			case "quartal" -> dto.Quartal = checkQuartal(JSONMapper.convertToInteger(value, false, name));
 			case "idFach" -> {
-				dto.Fach_ID = JSONMapper.convertToLong(value, false);
+				dto.Fach_ID = JSONMapper.convertToLong(value, false, name);
 				if (conn.queryByKey(DTOFach.class, dto.Fach_ID) == null)
 					throw new ApiOperationException(Status.BAD_REQUEST, "Fach nicht gefunden, ID: " + dto.Fach_ID);
 			}
 			case "kursart" -> dto.Kursart = checkKursart(JSONMapper.convertToString(value, false, false, null));
-			case "dauer" -> dto.Dauer = JSONMapper.convertToInteger(value, false);
-			case "auswahlzeit" -> dto.Auswahlzeit = JSONMapper.convertToInteger(value, false);
-			case "istMdlPruefung" -> dto.IstMdlPruefung = JSONMapper.convertToBoolean(value, false);
-			case "istAudioNotwendig" -> dto.IstAudioNotwendig = JSONMapper.convertToBoolean(value, false);
-			case "istVideoNotwendig" -> dto.IstVideoNotwendig = JSONMapper.convertToBoolean(value, false);
+			case "dauer" -> dto.Dauer = JSONMapper.convertToInteger(value, false, name);
+			case "auswahlzeit" -> dto.Auswahlzeit = JSONMapper.convertToInteger(value, false, name);
+			case "istMdlPruefung" -> dto.IstMdlPruefung = JSONMapper.convertToBoolean(value, false, name);
+			case "istAudioNotwendig" -> dto.IstAudioNotwendig = JSONMapper.convertToBoolean(value, false, name);
+			case "istVideoNotwendig" -> dto.IstVideoNotwendig = JSONMapper.convertToBoolean(value, false, name);
 			case "bemerkungVorgabe" -> dto.Bemerkungen =
-					DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Vorgaben.col_Bemerkungen.datenlaenge()));
+					DataGostKlausuren.convertEmptyStringToNull(JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Vorgaben.col_Bemerkungen.datenlaenge(), name));
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
 		}
 	}

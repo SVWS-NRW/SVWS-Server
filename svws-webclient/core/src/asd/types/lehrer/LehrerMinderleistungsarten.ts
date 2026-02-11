@@ -55,7 +55,7 @@ export class LehrerMinderleistungsarten extends CoreTypeSimple<LehrerMinderleist
 		return ['de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.CoreTypeSimple'].includes(name);
 	}
 
-	public static class = new Class<LehrerMinderleistungsarten>('de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten');
+	public static readonly class = new Class<LehrerMinderleistungsarten>('de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten');
 
 }
 

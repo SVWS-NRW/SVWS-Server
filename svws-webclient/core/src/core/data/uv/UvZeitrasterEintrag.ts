@@ -78,7 +78,7 @@ export class UvZeitrasterEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.uv.UvZeitrasterEintrag'].includes(name);
 	}
 
-	public static class = new Class<UvZeitrasterEintrag>('de.svws_nrw.core.data.uv.UvZeitrasterEintrag');
+	public static readonly class = new Class<UvZeitrasterEintrag>('de.svws_nrw.core.data.uv.UvZeitrasterEintrag');
 
 	public static transpilerFromJSON(json: string): UvZeitrasterEintrag {
 		const obj = JSON.parse(json) as Partial<UvZeitrasterEintrag>;

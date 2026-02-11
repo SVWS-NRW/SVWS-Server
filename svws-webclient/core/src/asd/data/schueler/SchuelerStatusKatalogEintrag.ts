@@ -19,7 +19,7 @@ export class SchuelerStatusKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<SchuelerStatusKatalogEintrag>('de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag');
+	public static readonly class = new Class<SchuelerStatusKatalogEintrag>('de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): SchuelerStatusKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<SchuelerStatusKatalogEintrag>;

@@ -12,12 +12,15 @@ public enum EmailJobStatus {
 	SENDING,
 
 	/** Der Job wurde erfolgreich abgeschlossen. */
-	COMPLETED,
+	COMPLETED_SUCCESSFULLY,
+
+	/** Der Job wurde erfolgreich abgeschlossen. */
+	COMPLETED_WITH_ERRORS,
 
 	/** Der Job wurde abgebrochen. */
 	CANCELED,
 
 	/** Der Job ist fehlgeschlagen. */
-	FAILED;
+	FAILED
 
 }

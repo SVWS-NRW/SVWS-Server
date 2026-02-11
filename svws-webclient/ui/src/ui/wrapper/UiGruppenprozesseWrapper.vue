@@ -66,22 +66,26 @@
 	const attributeValue = computed(() => {
 		// Prüfe, ob Attribut in Generic <T> vorhanden sein kann
 		let value = undefined;
-		if (props.attributeName in props.pendingStateManager().pendingValues)
+		if (props.attributeName in props.pendingStateManager().pendingValues) {
 			value = props.pendingStateManager().pendingValues[props.attributeName];
+		}
 		return value;
 	});
 
 	const pendingAmountOverall = computed<number>(() => {
 		let amount = 0;
-		for (const keyAmount of actualValuesWithAmount.value.values())
+		for (const keyAmount of actualValuesWithAmount.value.values()) {
 			amount += keyAmount;
+		}
 		return amount;
 	});
 
 	const showClearButton = computed<boolean>(() => {
-		for (const key of actualValuesWithAmount.value.keySet())
-			if ((key !== 'Keine Daten') && (attributeValue.value !== null))
+		for (const key of actualValuesWithAmount.value.keySet()) {
+			if ((key !== 'Keine Daten') && (attributeValue.value !== null)) {
 				return true;
+			}
+		}
 		return false;
 	});
 
@@ -101,8 +105,9 @@
 		if ((attributeValue.value !== undefined) && (attributeValue.value !== null)) {
 			const mapper = props.pendingStateManager().attributeDisplayMappers.get(props.attributeName);
 			tooltipAfter += (mapper !== undefined) ? mapper(attributeValue.value) : attributeValue.value;
-		} else
+		} else {
 			tooltipAfter += 'Keine Daten';
+		}
 
 		tooltipAfter += ` (${pendingAmountOverall.value})`;
 		return tooltipAfter;
@@ -115,8 +120,9 @@
 
 	// Setzt den pendingState für das Attribut auf <code>null</code>
 	function setNull() {
-		if (!props.nullable || !showClearButton.value)
+		if (!props.nullable || !showClearButton.value) {
 			return;
+		}
 		props.pendingStateManager().setPendingState(props.attributeName, null, props.pendingStateManager().auswahlManager.liste.auswahlKeyList());
 	}
 

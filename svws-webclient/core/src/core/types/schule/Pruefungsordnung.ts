@@ -135,7 +135,7 @@ export class Pruefungsordnung extends JavaEnum<Pruefungsordnung> {
 		return ['de.svws_nrw.core.types.schule.Pruefungsordnung', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Pruefungsordnung>('de.svws_nrw.core.types.schule.Pruefungsordnung');
+	public static readonly class = new Class<Pruefungsordnung>('de.svws_nrw.core.types.schule.Pruefungsordnung');
 
 }
 

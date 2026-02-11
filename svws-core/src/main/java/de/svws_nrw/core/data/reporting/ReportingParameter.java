@@ -63,7 +63,11 @@ public class ReportingParameter {
 	@Schema(description = "Typenspezifische Sortierdefinitionen, die für die Sortierung von ProxyTyp-Objekten verwendet werden sollen.",
 			example = "[ {\"typ\":\"ReportingSchueler\",\"verwendeStandardsortierung\":false,\"attribute\":[auswahlLernabschnitt.klasse, nachname, vorname] }"
 					+ " ]")
-	public List<ReportingSortierungDefinition> sortierungDefinitionen = new ArrayList<>();
+	public @NotNull List<ReportingSortierungDefinition> sortierungDefinitionen = new ArrayList<>();
+
+	/** Typenspezifische Filterdefinitionen, die für die Filterung von ProxyTyp-Objekten verwendet werden sollen. */
+	@Schema(description = "Typenspezifische Filterdefinitionen, die für die Filterung von ProxyTyp-Objekten verwendet werden sollen.", example = "[]")
+	public @NotNull List<ReportingFilterDefinition> filterDefinitionen = new ArrayList<>();
 
 	/** Parameter, der die Daten für den E-Mail-Versand enthält. */
 	@Schema(description = "Parameter, der die Daten für den E-Mail-Versand enthält.",

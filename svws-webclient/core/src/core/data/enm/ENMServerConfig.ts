@@ -32,7 +32,7 @@ export class ENMServerConfig extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMServerConfig'].includes(name);
 	}
 
-	public static class = new Class<ENMServerConfig>('de.svws_nrw.core.data.enm.ENMServerConfig');
+	public static readonly class = new Class<ENMServerConfig>('de.svws_nrw.core.data.enm.ENMServerConfig');
 
 	public static transpilerFromJSON(json: string): ENMServerConfig {
 		const obj = JSON.parse(json) as Partial<ENMServerConfig>;

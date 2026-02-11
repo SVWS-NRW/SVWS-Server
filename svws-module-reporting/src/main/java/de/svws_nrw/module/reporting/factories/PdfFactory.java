@@ -1,11 +1,11 @@
 package de.svws_nrw.module.reporting.factories;
 
-import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderContextPdf;
 import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
 import de.svws_nrw.module.reporting.builders.ReportBuilderPdf;
+import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -34,7 +34,7 @@ public class PdfFactory {
 	private final ReportingRepository reportingRepository;
 
 	/** Einstellungen und Daten zum Steuern der Report-Generierung. */
-	private final ReportingParameter reportingParameter;
+	private final ReportingParameterTypisiert reportingParameter;
 
 	/** Map mit den Dateinamen und HTML-Dateiinhalten, die in PDF-Dateien gewandelt werden sollen. */
 	private final List<ReportBuilderHtml> htmlBuilders;

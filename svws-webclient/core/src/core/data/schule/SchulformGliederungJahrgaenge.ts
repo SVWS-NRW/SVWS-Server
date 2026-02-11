@@ -36,7 +36,7 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.SchulformGliederungJahrgaenge'].includes(name);
 	}
 
-	public static class = new Class<SchulformGliederungJahrgaenge>('de.svws_nrw.core.data.schule.SchulformGliederungJahrgaenge');
+	public static readonly class = new Class<SchulformGliederungJahrgaenge>('de.svws_nrw.core.data.schule.SchulformGliederungJahrgaenge');
 
 	public static transpilerFromJSON(json: string): SchulformGliederungJahrgaenge {
 		const obj = JSON.parse(json) as Partial<SchulformGliederungJahrgaenge>;

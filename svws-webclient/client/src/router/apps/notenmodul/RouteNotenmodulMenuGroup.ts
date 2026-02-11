@@ -1,3 +1,4 @@
 export enum RouteNotenmodulMenuGroup {
-	ALLGEMEIN = "Allgemein"
+	ALLGEMEIN = "Noteneingabe",
+	ADMINISTRATION = "Administration"
 }

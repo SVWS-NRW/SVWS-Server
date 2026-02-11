@@ -1,7 +1,14 @@
+import { ArrayList } from '../../../java/util/ArrayList';
+import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { CoreTypeData } from '../../../asd/data/CoreTypeData';
 
 export class LehrerFachrichtungKatalogEintrag extends CoreTypeData {
+
+	/**
+	 * Die Bezeichner der zulässigen Lehrämter für die Fachrichtung
+	 */
+	public lehraemter: List<string> = new ArrayList<string>();
 
 
 	/**
@@ -19,7 +26,7 @@ export class LehrerFachrichtungKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.lehrer.LehrerFachrichtungKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<LehrerFachrichtungKatalogEintrag>('de.svws_nrw.asd.data.lehrer.LehrerFachrichtungKatalogEintrag');
+	public static readonly class = new Class<LehrerFachrichtungKatalogEintrag>('de.svws_nrw.asd.data.lehrer.LehrerFachrichtungKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): LehrerFachrichtungKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<LehrerFachrichtungKatalogEintrag>;
@@ -38,6 +45,11 @@ export class LehrerFachrichtungKatalogEintrag extends CoreTypeData {
 		result.text = obj.text;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		if (obj.lehraemter !== undefined) {
+			for (const elem of obj.lehraemter) {
+				result.lehraemter.add(elem);
+			}
+		}
 		return result;
 	}
 
@@ -49,6 +61,14 @@ export class LehrerFachrichtungKatalogEintrag extends CoreTypeData {
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"lehraemter" : [ ';
+		for (let i = 0; i < obj.lehraemter.size(); i++) {
+			const elem = obj.lehraemter.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.lehraemter.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -73,6 +93,16 @@ export class LehrerFachrichtungKatalogEintrag extends CoreTypeData {
 		}
 		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		}
+		if (obj.lehraemter !== undefined) {
+			result += '"lehraemter" : [ ';
+			for (let i = 0; i < obj.lehraemter.size(); i++) {
+				const elem = obj.lehraemter.get(i);
+				result += '"' + elem + '"';
+				if (i < obj.lehraemter.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

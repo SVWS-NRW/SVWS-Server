@@ -64,7 +64,7 @@ export class StundenplanListeEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag'].includes(name);
 	}
 
-	public static class = new Class<StundenplanListeEintrag>('de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag');
+	public static readonly class = new Class<StundenplanListeEintrag>('de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag');
 
 	public static transpilerFromJSON(json: string): StundenplanListeEintrag {
 		const obj = JSON.parse(json) as Partial<StundenplanListeEintrag>;

@@ -1,0 +1,340 @@
+{
+	"version": 4,
+	"daten": [
+		{
+			"bezeichner": "UNDEFINIERT",
+			"idStatistik": "1",
+			"historie": [
+				{
+					"id": 0,
+					"kuerzel": "**",
+					"text": "Kein Eintrag",
+					"schluessel": "**",
+					"zulaessig": [
+						{ "schulform": "WB", "gliederung": null }
+					],
+					"gueltigVon": null,
+					"gueltigBis": null
+				}
+			]
+		},
+		{
+			"bezeichner": "HA_1A",
+			"idStatistik": "2",
+			"historie": [
+				{
+					"id": 1003,
+					"kuerzel": "BK",
+					"text": "B - Kurzer Eintrag",
+					"schluessel": "1A",
+					"zulaessig": [
+						{ "schulform": "H", "gliederung": null },
+						{ "schulform": "R", "gliederung": "H" },
+						{ "schulform": "SK", "gliederung": "H" },
+						{ "schulform": "V", "gliederung": null }
+					],
+					"gueltigVon": null,
+					"gueltigBis": null
+				}
+			]
+		},
+		{
+			"bezeichner": "HA_1B",
+			"idStatistik": "3",
+			"historie": [
+				{
+					"id": 2004,
+					"kuerzel": "SK",
+					"text": "KS - Kurzer Eintrag",
+					"schluessel": "1B",
+					"zulaessig": [
+						{ "schulform": "H", "gliederung": null },
+						{ "schulform": "SK", "gliederung": "H" },
+						{ "schulform": "V", "gliederung": null }
+					],
+					"gueltigVon": null,
+					"gueltigBis": null
+				}
+			]
+		},
+		{
+			"bezeichner": "HA_AB",
+			"idStatistik": "4",
+			"historie": [
+				{
+					"id": 3004,
+					"kuerzel": "KK",
+					"text": "K - Ein sehr langer Eintrag mit insgesamt 52 Zeichen",
+					"schluessel": "AB",
+					"zulaessig": [
+						{ "schulform": "H", "gliederung": null },
+						{ "schulform": "SK", "gliederung": "H" },
+						{ "schulform": "V", "gliederung": null }
+					],
+					"gueltigVon": null,
+					"gueltigBis": null
+				}
+			]
+		},
+		{
+			"bezeichner": "AK",
+			"idStatistik": "11",
+			"historie": [
+				{
+					"id": 10003,
+					"kuerzel": "OKK",
+					"text": "OK - Ein sehr laaanger Eintrag mit 45 Zeichen",
+					"schluessel": "AK",
+					"zulaessig": [
+						{ "schulform": "G", "gliederung": null },
+						{ "schulform": "GE", "gliederung": null },
+						{ "schulform": "GM", "gliederung": null },
+						{ "schulform": "GY", "gliederung": null },
+						{ "schulform": "H", "gliederung": null },
+						{ "schulform": "PS", "gliederung": null },
+						{ "schulform": "R", "gliederung": null },
+						{ "schulform": "SK", "gliederung": null }
+					],
+					"gueltigVon": null,
+					"gueltigBis": null
+				}
+			]
+		},
+		{
+			"bezeichner": "AM",
+			"idStatistik": "5",
+			"historie": [
+				{
+					"id": 4000,
+					"kuerzel": "OK",
+					"text": "O - Kurzer Eintrag",
+					"schluessel": "AM",
+					"zulaessig": [
+						{ "schulform": "KS", "gliederung": null },
+						{ "schulform": "S", "gliederung": null }
+					],
+					"gueltigVon": null,
+					"gueltigBis": null
+				}
+			]
+		},
+		{
+			"bezeichner": "BP",
+			"idStatistik": "12",
+			"historie": [
+				{
+					"id": 11002,
+					"kuerzel": "AK",
+					"text": "A - Kurzer Eintrag",
+					"schluessel": "BP",
+					"zulaessig": [
+						{ "schulform": "GE", "gliederung": null },
+						{ "schulform": "H", "gliederung": null },
+						{ "schulform": "KS", "gliederung": null },
+						{ "schulform": "PS", "gliederung": null },
+						{ "schulform": "R", "gliederung": null },
+						{ "schulform": "S", "gliederung": null },
+						{ "schulform": "SK", "gliederung": null }
+					],
+					"gueltigVon": 2013,
+					"gueltigBis": 2014
+				}
+			]
+		},
+		{
+			"bezeichner": "IL",
+			"idStatistik": "13",
+			"historie": [
+				{
+					"id": 12005,
+					"kuerzel": "HK",
+					"text": "H - Kurzer Eintrag",
+					"schluessel": "IL",
+					"zulaessig": [
+						{ "schulform": "FW", "gliederung": null },
+						{ "schulform": "GE", "gliederung": null },
+						{ "schulform": "GM", "gliederung": null },
+						{ "schulform": "GY", "gliederung": null },
+						{ "schulform": "H", "gliederung": null },
+						{ "schulform": "HI", "gliederung": null },
+						{ "schulform": "PS", "gliederung": null },
+						{ "schulform": "R", "gliederung": null },
+						{ "schulform": "SK", "gliederung": null }
+					],
+					"gueltigVon": null,
+					"gueltigBis": null
+				}
+			]
+		},
+		{
+			"bezeichner": "KK",
+			"idStatistik": "14",
+			"historie": [
+				{
+					"id": 13002,
+					"kuerzel": "PK",
+					"text": "P - Ein etwas längerer Eintrag",
+					"schluessel": "KK",
+					"zulaessig": [
+						{ "schulform": "H", "gliederung": null },
+						{ "schulform": "KS", "gliederung": null },
+						{ "schulform": "R", "gliederung": null },
+						{ "schulform": "SK", "gliederung": null },
+						{ "schulform": "S", "gliederung": null }
+					],
+					"gueltigVon": null,
+					"gueltigBis": null
+				}
+			]
+		},
+		{
+			"bezeichner": "PG",
+			"idStatistik": "6",
+			"historie": [
+				{
+					"id": 5000,
+					"kuerzel": "ZK",
+					"text": "Z - Kurzer Eintrag",
+					"schluessel": "PG",
+					"zulaessig": [
+						{ "schulform": "KS", "gliederung": null },
+						{ "schulform": "S", "gliederung": null }
+					],
+					"gueltigVon": null,
+					"gueltigBis": null
+				}
+			]
+		},
+		{
+			"bezeichner": "PK",
+			"idStatistik": "7",
+			"historie": [
+				{
+					"id": 6001,
+					"kuerzel": "VK",
+					"text": "V - Kurzer Eintrag",
+					"schluessel": "PK",
+					"zulaessig": [
+						{ "schulform": "GY", "gliederung": null }
+					],
+					"gueltigVon": null,
+					"gueltigBis": null
+				}
+			]
+		},
+		{
+			"bezeichner": "RK",
+			"idStatistik": "8",
+			"historie": [
+				{
+					"id": 7002,
+					"kuerzel": "TK",
+					"text": "T - Kurzer Eintrag",
+					"schluessel": "RK",
+					"zulaessig": [
+						{ "schulform": "FW", "gliederung": null },
+						{ "schulform": "HI", "gliederung": null },
+						{ "schulform": "WF", "gliederung": null },
+						{ "schulform": "G", "gliederung": null },
+						{ "schulform": "GE", "gliederung": null },
+						{ "schulform": "GY", "gliederung": null },
+						{ "schulform": "H", "gliederung": null },
+						{ "schulform": "PS", "gliederung": null },
+						{ "schulform": "R", "gliederung": null },
+						{ "schulform": "S", "gliederung": null },
+						{ "schulform": "KS", "gliederung": null },
+						{ "schulform": "SG", "gliederung": null },
+						{ "schulform": "SK", "gliederung": null },
+						{ "schulform": "SR", "gliederung": null },
+						{ "schulform": "V", "gliederung": null },
+						{ "schulform": "WB", "gliederung": null }
+					],
+					"gueltigVon": null,
+					"gueltigBis": null
+				}
+			]
+		},
+		{
+			"bezeichner": "SG",
+			"idStatistik": "9",
+			"historie": [
+				{
+					"id": 8001,
+					"kuerzel": "IK",
+					"text": "I - Kurzer Eintrag",
+					"schluessel": "SG",
+					"zulaessig": [
+						{ "schulform": "G", "gliederung": null },
+						{ "schulform": "GE", "gliederung": null },
+						{ "schulform": "GY", "gliederung": null },
+						{ "schulform": "H", "gliederung": null },
+						{ "schulform": "PS", "gliederung": null },
+						{ "schulform": "R", "gliederung": null },
+						{ "schulform": "S", "gliederung": null },
+						{ "schulform": "KS", "gliederung": null },
+						{ "schulform": "SG", "gliederung": null },
+						{ "schulform": "SK", "gliederung": null },
+						{ "schulform": "SR", "gliederung": null },
+						{ "schulform": "V", "gliederung": null }
+					],
+					"gueltigVon": null,
+					"gueltigBis": null
+				}
+			]
+		},
+		{
+			"bezeichner": "DF",
+			"idStatistik": "10",
+			"historie": [
+				{
+					"id": 9000,
+					"kuerzel": "JK",
+					"text": "OJ - Ein längerer Eintrag mit 40 Zeichen",
+					"schluessel": "DF",
+					"zulaessig": [
+						{ "schulform": "G", "gliederung": null },
+						{ "schulform": "GE", "gliederung": null },
+						{ "schulform": "GY", "gliederung": null },
+						{ "schulform": "H", "gliederung": null },
+						{ "schulform": "PS", "gliederung": null },
+						{ "schulform": "R", "gliederung": null },
+						{ "schulform": "S", "gliederung": null },
+						{ "schulform": "KS", "gliederung": null },
+						{ "schulform": "SG", "gliederung": null },
+						{ "schulform": "SK", "gliederung": null },
+						{ "schulform": "SR", "gliederung": null },
+						{ "schulform": "V", "gliederung": null },
+						{ "schulform": "WB", "gliederung": null }
+					],
+					"gueltigVon": null,
+					"gueltigBis": null
+				}
+			]
+		},
+		{
+			"bezeichner": "VK",
+			"idStatistik": "15",
+			"historie": [
+				{
+					"id": 14003,
+					"kuerzel": "CK",
+					"text": "C - Kurzer Eintrag",
+					"schluessel": "VK",
+					"zulaessig": [
+						{ "schulform": "G", "gliederung": null },
+						{ "schulform": "GE", "gliederung": null },
+						{ "schulform": "GM", "gliederung": null },
+						{ "schulform": "GY", "gliederung": null },
+						{ "schulform": "H", "gliederung": null },
+						{ "schulform": "PS", "gliederung": null },
+						{ "schulform": "R", "gliederung": null },
+						{ "schulform": "SK", "gliederung": null },
+						{ "schulform": "V", "gliederung": null }
+					],
+					"gueltigVon": 2023,
+					"gueltigBis": null
+				}
+			]
+		}
+	]
+}

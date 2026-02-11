@@ -336,7 +336,7 @@ public class ReportingSchueler extends ReportingPerson {
 	public ReportingSchuelerLernabschnitt aktiverLernabschnittInSchuljahresabschnitt(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
 		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty())
 			return null;
-		return this.mapLernabschnitte().getSingle12OrNull(schuljahresabschnitt.id(), 0);
+		return this.mapLernabschnitte.getSingle12OrNull(schuljahresabschnitt.id(), 0);
 	}
 
 	/**
@@ -594,6 +594,43 @@ public class ReportingSchueler extends ReportingPerson {
 	}
 
 	/**
+	 * Überprüft, ob ein Schüler in der Primarstufe ist, basierend auf einem gegebenen Schuljahresabschnitt.
+	 *
+	 * @param schuljahresabschnitt Der Schuljahresabschnitt, für den überprüft werden soll, ob der Schüler in der Primarstufe ist.
+	 *
+	 * @return true, wenn der Schüler in der Primarstufe ist, sonst false.
+	 */
+	public boolean istSchuelerInPrimarstufe(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
+		return this.aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt).jahrgang().istJahrgangImBereichPrimarstufe();
+	}
+
+	/**
+	 * Prüft, ob ein Schüler im angegebenen Schuljahresabschnitt zur Sekundarstufe I gehört.
+	 *
+	 * @param schuljahresabschnitt Der Schuljahresabschnitt, für den überprüft werden soll,
+	 *                             ob der Schüler in der Sekundarstufe I ist.
+	 *
+	 * @return true, wenn der Schüler im angegebenen Schuljahresabschnitt zur Sekundarstufe I gehört,
+	 *         ansonsten false.
+	 */
+	public boolean istSchuelerInSek1(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
+		return this.aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt).jahrgang().istJahrgangImBereichSek1();
+	}
+
+	/**
+	 * Prüft, ob ein Schüler im angegebenen Schuljahresabschnitt in der Sekundarstufe II
+	 * oder in einer Weiterbildung ist.
+	 *
+	 * @param schuljahresabschnitt Der Schuljahresabschnitt, in dem geprüft werden soll.
+	 *
+	 * @return true, wenn der Schüler in der Sekundarstufe II oder in einer Weiterbildung ist,
+	 *         ansonsten false.
+	 */
+	public boolean istSchuelerInSek2OderWB(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
+		return this.aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt).jahrgang().istJahrgangImBereichSek2OderWeiterbildung();
+	}
+
+	/**
 	 * Gibt an, ob der Schüler die Schulpflicht erfüllt hat oder nicht.
 	 *
 	 * @return Inhalt des Feldes istSchulpflichtErfuellt
@@ -621,6 +658,19 @@ public class ReportingSchueler extends ReportingPerson {
 	}
 
 	/**
+	 * Daten des Lernabschnitts zur übergebenen ID des Lernabschnitts.
+	 *
+	 * @param id Die ID des Lernabschnitts.
+	 *
+	 * @return Der Lernabschnitt zur ID.
+	 */
+	public ReportingSchuelerLernabschnitt lernabschnittById(final long id) {
+		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty())
+			return null;
+		return mapLernabschnitte.getSingle3OrNull(id);
+	}
+
+	/**
 	 * Daten aller Lernabschnitte.
 	 *
 	 * @return Inhalt des Feldes lernabschnitte
@@ -630,12 +680,16 @@ public class ReportingSchueler extends ReportingPerson {
 	}
 
 	/**
-	 * Gibt eine Map mit den Lernabschnitten des Schülers nach Schuljahresabschnitt, WechselNr und LernabschnittsID zurück
+	 * Daten der Lernabschnitte zur übergebenen ID des Schuljahresabschnitts.
 	 *
-	 * @return Map der Lernabschnitte oder eine leere Liste.
+	 * @param id Die ID des Schuljahresabschnitts, dessen Lernabschnitte gesucht werden sollen.
+	 *
+	 * @return Die Lernabschnitte zur ID.
 	 */
-	public ListMap3DLongKeys<ReportingSchuelerLernabschnitt> mapLernabschnitte() {
-		return mapLernabschnitte;
+	public List<ReportingSchuelerLernabschnitt> lernabschnittBySchuljahresabschnittsId(final long id) {
+		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty())
+			return new ArrayList<>();
+		return mapLernabschnitte.get1(id);
 	}
 
 	/**

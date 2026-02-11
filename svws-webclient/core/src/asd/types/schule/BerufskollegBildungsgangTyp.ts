@@ -108,7 +108,7 @@ export class BerufskollegBildungsgangTyp extends JavaEnum<BerufskollegBildungsga
 		return ['de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.schule.BerufskollegBildungsgangTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<BerufskollegBildungsgangTyp>('de.svws_nrw.asd.types.schule.BerufskollegBildungsgangTyp');
+	public static readonly class = new Class<BerufskollegBildungsgangTyp>('de.svws_nrw.asd.types.schule.BerufskollegBildungsgangTyp');
 
 }
 

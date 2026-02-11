@@ -59,7 +59,7 @@ export abstract class RouteData<RouteState extends RouteStateInterface> {
 	 * @param patch   der Patch, welcher auf den Default-State angewendet wird.
 	 */
 	protected setPatchedDefaultState(patch: Partial<RouteState>) {
-		this._state.value = Object.assign({ ... this._defaultState }, patch);
+		this._state.value = { ...this._defaultState, ...patch };
 	}
 
 	/**
@@ -70,7 +70,7 @@ export abstract class RouteData<RouteState extends RouteStateInterface> {
 	 * @param patch   der Patch, welcher auf den Default-State angewendet wird.
 	 */
 	protected setPatchedDefaultStateKeepView(patch: Partial<RouteState>) {
-		const tmp = Object.assign({ ... this._state.value }, patch);
+		const tmp = { ...this._state.value, ...patch };
 		tmp.view = this._state.value.view;
 		this._state.value = tmp;
 	}
@@ -81,10 +81,11 @@ export abstract class RouteData<RouteState extends RouteStateInterface> {
 	 * @param patch   der Patch, welcher auf den aktuellen State angewendet wird.
 	 */
 	protected setPatchedState(patch: Partial<RouteState>, newobj: boolean = true) {
-		if (newobj)
-			this._state.value = Object.assign({ ... this._state.value }, patch);
-		else
+		if (newobj) {
+			this._state.value = { ... this._state.value, ...patch };
+		} else {
 			this._state.value = Object.assign(this._state.value, patch);
+		}
 	}
 
 	/**
@@ -113,32 +114,20 @@ export abstract class RouteData<RouteState extends RouteStateInterface> {
 	 * @param validViews   die Menge der gültigen Ansichten
 	 */
 	public setView(value: RouteNode<any, any>, validViews: RouteNode<any, any>[]) {
-		if (validViews.includes(value))
+		if (validViews.includes(value)) {
 			this.setPatchedState(<RouteState>{ view: value });
-		else
+		} else {
 			throw new DeveloperNotificationException("Die gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	/**
-	 * Setter für die aktuelle Ansicht/Child Route. Das Setzen der Ansicht ist nicht reaktiv.
-	 * Ist eine Reaktivität gewünscht, so muss die Methode setView aufgerufen werden.
-	 *
-	 * @param value        die zu setzende Ansicht
-	 * @param validViews   die Menge der gültigen Ansichten
-	 */
-	public setViewNonReactive(value: RouteNode<any, any>, validViews: RouteNode<any, any>[]) {
-		if (validViews.includes(value))
-			this.setPatchedState(<RouteState>{ view: value });
-		else
-			throw new DeveloperNotificationException("Die gewählte Ansicht wird nicht unterstützt.");
+		}
 	}
 
 	/**
 	 * Getter für die aktuelle Ansicht/Child Route.
 	 */
 	public get view(): RouteNode<any, any> {
-		if (this._state.value.view === undefined)
+		if (this._state.value.view === undefined) {
 			throw new DeveloperNotificationException("Bei dieser Route wurde keine Ansicht im Default-State definiert.");
+		}
 		return this._state.value.view;
 	}
 
@@ -146,8 +135,9 @@ export abstract class RouteData<RouteState extends RouteStateInterface> {
 	 * Getter für die Default-View
 	 */
 	public get defaultView(): RouteNode<any, any> {
-		if (this._defaultState.view === undefined)
+		if (this._defaultState.view === undefined) {
 			throw new DeveloperNotificationException("Bei dieser Route wurde keine Ansicht im Default-State definiert.");
+		}
 		return this._defaultState.view;
 	}
 
@@ -156,8 +146,9 @@ export abstract class RouteData<RouteState extends RouteStateInterface> {
 	 * Ist keiner spezifiziert, so wird DEFAULT zurückgegeben.
 	 */
 	get activeViewType(): ViewType {
-		if (this._state.value.activeViewType === undefined)
+		if (this._state.value.activeViewType === undefined) {
 			return ViewType.DEFAULT;
+		}
 		return this._state.value.activeViewType;
 	}
 

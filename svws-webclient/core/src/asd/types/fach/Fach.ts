@@ -1709,7 +1709,7 @@ export class Fach extends JavaEnum<Fach> implements CoreType<FachKatalogEintrag,
 		return ['de.svws_nrw.asd.types.fach.Fach', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Fach>('de.svws_nrw.asd.types.fach.Fach');
+	public static readonly class = new Class<Fach>('de.svws_nrw.asd.types.fach.Fach');
 
 }
 

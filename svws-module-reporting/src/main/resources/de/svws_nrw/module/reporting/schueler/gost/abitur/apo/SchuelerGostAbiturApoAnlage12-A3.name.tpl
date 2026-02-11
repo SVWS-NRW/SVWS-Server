@@ -1,0 +1,13 @@
+[# th:if="${Schueler.isEmpty()}"]
+    APO-GOSt-Anlage12
+[/]
+[# th:if="${!Schueler.isEmpty()}"]
+    [# th:each="schueler,iterState : ${Schueler}"]
+        [# th:if="${iterState.first && (Schueler.size() == 1)}"]
+            Abitur[(${ schueler.gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12_' + #strings.replace(schueler.nachname(), ' ', '_') + '__' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')' })]
+        [/]
+        [# th:if="${iterState.first && (Schueler.size() > 1)}"]
+            Abitur[(${ schueler.gostAbitur().abiturjahr() + '_APO-GOSt-Anlage12' })]
+        [/]
+    [/]
+[/]

@@ -7,6 +7,7 @@ import java.util.Calendar;
 
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
+import com.openhtmltopdf.svgsupport.BatikSVGDrawer;
 import com.openhtmltopdf.util.XRLog;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
@@ -77,6 +78,7 @@ public final class ReportRendererPdf {
 			builder.useFastMode();
 			builder.usePDDocument(doc);
 			builder.withHtmlContent(html, baseURI);
+			builder.useSVGDrawer(new BatikSVGDrawer());
 			builder.toStream(outputStream);
 
 			// PDF generieren

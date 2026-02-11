@@ -8,7 +8,7 @@ import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingSchuel
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
-import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 import java.util.Comparator;
@@ -138,7 +138,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 		if (super.schueler().isEmpty()) {
 			final Optional<Comparator<ReportingSchueler>> optionalComparator =
 					ComparatorFactory.buildOptionalComparator(this.reportingRepository, ReportingSchueler.class.getSimpleName(),
-							SortierungRegistryReportingSchueler.sortierungRegistry(), SortierungRegistryReportingSchueler.standardsortierung());
+							SortierungRegistryReportingSchueler.sortierungRegistry());
 			super.schueler = optionalComparator.map(
 					reportingSchuelerComparator -> klassen().stream().flatMap(k -> k.schueler().stream()).sorted(reportingSchuelerComparator).toList())
 					.orElseGet(() -> klassen().stream().flatMap(k -> k.schueler().stream()).toList());

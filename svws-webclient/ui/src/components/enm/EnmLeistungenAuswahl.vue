@@ -32,8 +32,9 @@
 
 	function getFirst(): EnmLerngruppenAuswahlEintrag | null {
 		const map = props.enmManager().mapLerngruppenAuswahl.values();
-		if (map.isEmpty())
+		if (map.isEmpty()) {
 			return null;
+		}
 		return map.iterator().next();
 	}
 

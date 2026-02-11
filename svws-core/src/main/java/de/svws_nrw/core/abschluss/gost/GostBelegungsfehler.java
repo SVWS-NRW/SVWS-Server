@@ -514,6 +514,11 @@ public enum GostBelegungsfehler {
 			"Ein Projektkurs kann als Leitfach kein anderes Projektkursfach, ein Vertiefungskursfach oder ein Ersatzfach aus dem literarisch künstlerischen Bereich haben.",
 			null),
 
+	/** BelegungsfehlerArt PF_19 */
+	PF_19_2("PF_19_2", GostBelegungsfehlerArt.BELEGUNG,
+			"Ein Projektkurs kann als Referenzfach kein anderes Projektkursfach, ein Vertiefungskursfach oder ein Ersatzfach aus dem literarisch künstlerischen Bereich haben.",
+			null),
+
 	/** Experimenteller Code - BelegungsfehlerArt PF_20_2 */
 	PF_20_2("PF_20_2", GostBelegungsfehlerArt.BELEGUNG,
 			"Ein Projektkurses muss in den beiden Halbjahren der Q2 gewählt werden.",
@@ -526,22 +531,22 @@ public enum GostBelegungsfehler {
 
 	/** Experimenteller Code - BelegungsfehlerArt PF_22_2 */
 	PF_22_2("PF_22_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Ein Projektkurs muss genau ein Leitfach haben.",
+			"Ein Projektkurs muss ein Referenzfächer haben.",
 			null),
 
 	/** Experimenteller Code - BelegungsfehlerArt PF_23_2 */
 	PF_23_2("PF_23_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Ein Projektkurs kann nur belegt werden, wenn sein Leitfach in der EF und Q1 gewählt wurde.",
+			"Ein Projektkurs kann nur belegt werden, wenn eines seiner Referenzfächer in der EF und Q1 gewählt wurde.",
 			null),
 
 	/** Experimenteller Code - BelegungsfehlerArt PF_24_2 */
 	PF_24_2("PF_24_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Ein Projektkurs kann nur belegt werden, wenn sein Leitfach in der Q1 schriftlich gewählt wurde.",
+			"Ein Projektkurs kann nur belegt werden, wenn sein Referenzfach in der Q1 schriftlich gewählt wurde.",
 			null),
 
 	/** BelegungsfehlerArt PF_25 */
 	PF_25("PF_25_2", GostBelegungsfehlerArt.BELEGUNG,
-			"Ein Projektkurs kann nur belegt werden, wenn sein Leitfach ein gültiges Fach in der gymnasialen Oberstufe ist.",
+			"Ein Projektkurs kann nur belegt werden, wenn sein Referenzfach ein gültiges Fach in der gymnasialen Oberstufe ist.",
 			null),
 
 	/** BelegungsfehlerArt RE_10 */
@@ -587,6 +592,11 @@ public enum GostBelegungsfehler {
 	/** BelegungsfehlerArt VF_11 */
 	VF_11("VF_11", GostBelegungsfehlerArt.BELEGUNG,
 			"In der Qualifikationsphase können maximal zwei Vertiefungskurse belegt werden.",
+			null),
+
+	/** BelegungsfehlerArt VF_11_2 */
+	VF_11_2("VF_11_2", GostBelegungsfehlerArt.BELEGUNG,
+			"In der Qualifikationsphase können maximal vier Vertiefungskurse belegt werden.",
 			null),
 
 	/** BelegungsfehlerArt WST_10 */

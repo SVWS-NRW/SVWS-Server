@@ -88,7 +88,7 @@ export class KAOAMerkmaleOptionsarten extends JavaEnum<KAOAMerkmaleOptionsarten>
 		return ['de.svws_nrw.asd.types.kaoa.KAOAMerkmaleOptionsarten', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<KAOAMerkmaleOptionsarten>('de.svws_nrw.asd.types.kaoa.KAOAMerkmaleOptionsarten');
+	public static readonly class = new Class<KAOAMerkmaleOptionsarten>('de.svws_nrw.asd.types.kaoa.KAOAMerkmaleOptionsarten');
 
 }
 

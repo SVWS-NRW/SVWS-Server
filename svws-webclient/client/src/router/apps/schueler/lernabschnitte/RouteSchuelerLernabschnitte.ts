@@ -12,7 +12,9 @@ import { routeSchuelerLernabschnittVersetzungAbschluss } from "~/router/apps/sch
 import { routeSchuelerLernabschnittKonferenz } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittKonferenz";
 import { routeSchuelerLernabschnittZeugnisdruck } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittZeugnisdruck";
 import { routeSchuelerLernabschnittNachpruefung } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittNachpruefung";
+import { routeSchuelerLernabschnittFoerderempfehlungen } from "./RouteSchuelerLernabschnittFoerderempfehlungen";
 import { RouteDataSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteDataSchuelerLernabschnitte";
+
 
 import type { SchuelerLernabschnitteProps } from "~/components/schueler/lernabschnitte/SSchuelerLernabschnitteProps";
 import { routeSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
@@ -36,6 +38,7 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 			routeSchuelerLernabschnittKonferenz,
 			routeSchuelerLernabschnittZeugnisdruck,
 			routeSchuelerLernabschnittNachpruefung,
+			routeSchuelerLernabschnittFoerderempfehlungen,
 		];
 		super.defaultChild = routeSchuelerLernabschnittLeistungen;
 	}
@@ -43,18 +46,23 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		try {
 			const { id, abschnitt: idSchuljahresabschnitt, wechselNr } = RouteNode.getIntParams(to_params, ["id", "abschnitt", "wechselNr"]);
-			if (id === undefined)
+			if (id === undefined) {
 				throw new DeveloperNotificationException("Fehler: Keine Schüler-ID in der URL angegeben.");
+			}
 			await this.data.setSchueler(id, isEntering);
 			if (idSchuljahresabschnitt !== undefined) {
 				await routeSchuelerLernabschnitte.data.setLernabschnitt(idSchuljahresabschnitt, wechselNr ?? 0);
 			}
-			if ((to === this) && (this.data.hatAuswahl))
+			if ((to === this) && (this.data.hatAuswahl)) {
 				return this.getRouteView(this.data.view);
-			if (!to.name.startsWith(this.data.view.name))
-				for (const child of this.children)
-					if (to.name.startsWith(child.name))
+			}
+			if (!to.name.startsWith(this.data.view.name)) {
+				for (const child of this.children) {
+					if (to.name.startsWith(child.name)) {
 						this.data.setView(child, this.children);
+					}
+				}
+			}
 		} catch (e) {
 			return await routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
@@ -80,11 +88,13 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 	}
 
 	private setTab = async (value: TabData) => {
-		if (value.name === this.data.view.name)
+		if (value.name === this.data.view.name) {
 			return;
+		}
 		const node = RouteNode.getNodeByName(value.name);
-		if (node === undefined)
+		if (node === undefined) {
 			throw new DeveloperNotificationException("Unbekannte Route");
+		}
 		await RouteManager.doRoute(this.getRouteView(node));
 		this.data.setView(node, this.children);
 	};
@@ -92,4 +102,3 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 }
 
 export const routeSchuelerLernabschnitte = new RouteSchuelerLernabschnitte();
-

@@ -14,29 +14,9 @@ export class Lernplattform extends JavaObject {
 	public bezeichnung: string = "";
 
 	/**
-	 * Suffix für den Benutzernamen bei den Lehrern.
+	 * Gibt an, ob die Lernplattform in anderen Datenbanktabellen referenziert ist oder nicht.
 	 */
-	public benutzernameSuffixLehrer: string | null = "";
-
-	/**
-	 * Suffix für den Benutzernamen bei den Erziehern.
-	 */
-	public benutzernameSuffixErzieher: string | null = "";
-
-	/**
-	 * Suffix für den Benutzernamen bei den Schülern.
-	 */
-	public benutzernameSuffixSchueler: string | null = "";
-
-	/**
-	 * Json-Objekt mit den Konfigurationseinstellungen der Accounterstellung für die Lernplattform.
-	 */
-	public konfiguration: string | null = "";
-
-	/**
-	 * Gibt an, für welche Personengruppe die Lernplattform relevant ist.
-	 */
-	public anzahlEinwilligungen: number = 0;
+	public referenziertInAnderenTabellen: boolean | null = false;
 
 
 	public constructor() {
@@ -51,7 +31,7 @@ export class Lernplattform extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.Lernplattform'].includes(name);
 	}
 
-	public static class = new Class<Lernplattform>('de.svws_nrw.core.data.schule.Lernplattform');
+	public static readonly class = new Class<Lernplattform>('de.svws_nrw.core.data.schule.Lernplattform');
 
 	public static transpilerFromJSON(json: string): Lernplattform {
 		const obj = JSON.parse(json) as Partial<Lernplattform>;
@@ -62,13 +42,7 @@ export class Lernplattform extends JavaObject {
 		if (obj.bezeichnung === undefined)
 			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		result.benutzernameSuffixLehrer = (obj.benutzernameSuffixLehrer === undefined) ? null : obj.benutzernameSuffixLehrer === null ? null : obj.benutzernameSuffixLehrer;
-		result.benutzernameSuffixErzieher = (obj.benutzernameSuffixErzieher === undefined) ? null : obj.benutzernameSuffixErzieher === null ? null : obj.benutzernameSuffixErzieher;
-		result.benutzernameSuffixSchueler = (obj.benutzernameSuffixSchueler === undefined) ? null : obj.benutzernameSuffixSchueler === null ? null : obj.benutzernameSuffixSchueler;
-		result.konfiguration = (obj.konfiguration === undefined) ? null : obj.konfiguration === null ? null : obj.konfiguration;
-		if (obj.anzahlEinwilligungen === undefined)
-			throw new Error('invalid json format, missing attribute anzahlEinwilligungen');
-		result.anzahlEinwilligungen = obj.anzahlEinwilligungen;
+		result.referenziertInAnderenTabellen = (obj.referenziertInAnderenTabellen === undefined) ? null : obj.referenziertInAnderenTabellen === null ? null : obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
@@ -76,11 +50,7 @@ export class Lernplattform extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
-		result += '"benutzernameSuffixLehrer" : ' + ((obj.benutzernameSuffixLehrer === null) ? 'null' : JSON.stringify(obj.benutzernameSuffixLehrer)) + ',';
-		result += '"benutzernameSuffixErzieher" : ' + ((obj.benutzernameSuffixErzieher === null) ? 'null' : JSON.stringify(obj.benutzernameSuffixErzieher)) + ',';
-		result += '"benutzernameSuffixSchueler" : ' + ((obj.benutzernameSuffixSchueler === null) ? 'null' : JSON.stringify(obj.benutzernameSuffixSchueler)) + ',';
-		result += '"konfiguration" : ' + ((obj.konfiguration === null) ? 'null' : JSON.stringify(obj.konfiguration)) + ',';
-		result += '"anzahlEinwilligungen" : ' + obj.anzahlEinwilligungen.toString() + ',';
+		result += '"referenziertInAnderenTabellen" : ' + ((obj.referenziertInAnderenTabellen === null) ? 'null' : obj.referenziertInAnderenTabellen.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -94,20 +64,8 @@ export class Lernplattform extends JavaObject {
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
-		if (obj.benutzernameSuffixLehrer !== undefined) {
-			result += '"benutzernameSuffixLehrer" : ' + ((obj.benutzernameSuffixLehrer === null) ? 'null' : JSON.stringify(obj.benutzernameSuffixLehrer)) + ',';
-		}
-		if (obj.benutzernameSuffixErzieher !== undefined) {
-			result += '"benutzernameSuffixErzieher" : ' + ((obj.benutzernameSuffixErzieher === null) ? 'null' : JSON.stringify(obj.benutzernameSuffixErzieher)) + ',';
-		}
-		if (obj.benutzernameSuffixSchueler !== undefined) {
-			result += '"benutzernameSuffixSchueler" : ' + ((obj.benutzernameSuffixSchueler === null) ? 'null' : JSON.stringify(obj.benutzernameSuffixSchueler)) + ',';
-		}
-		if (obj.konfiguration !== undefined) {
-			result += '"konfiguration" : ' + ((obj.konfiguration === null) ? 'null' : JSON.stringify(obj.konfiguration)) + ',';
-		}
-		if (obj.anzahlEinwilligungen !== undefined) {
-			result += '"anzahlEinwilligungen" : ' + obj.anzahlEinwilligungen.toString() + ',';
+		if (obj.referenziertInAnderenTabellen !== undefined) {
+			result += '"referenziertInAnderenTabellen" : ' + ((obj.referenziertInAnderenTabellen === null) ? 'null' : obj.referenziertInAnderenTabellen.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

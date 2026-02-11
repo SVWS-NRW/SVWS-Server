@@ -45,7 +45,7 @@ public final class DataStundenplanLehrer extends DataManager<Long> {
 		daten.id = l.ID;
 		daten.kuerzel = l.Kuerzel;
 		daten.nachname = l.Nachname;
-		daten.vorname = l.Vorname;
+		daten.vorname = (l.Vorname == null) ? "" : l.Vorname;
 		return daten;
 	};
 

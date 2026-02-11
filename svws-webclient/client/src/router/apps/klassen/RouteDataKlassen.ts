@@ -62,8 +62,9 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateKlassen>> {
 		const schuljahresabschnitt = api.mapAbschnitte.value.get(idSchuljahresabschnitt);
-		if (schuljahresabschnitt === undefined)
+		if (schuljahresabschnitt === undefined) {
 			throw new DeveloperNotificationException('Es ist kein gültiger Schuljahresabschnitt ausgewählt');
+		}
 		// Lade die Kataloge und erstelle den Manager
 		const listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const mapKlassenVorigerAbschnitt = schuljahresabschnitt.idVorigerAbschnitt === null
@@ -101,9 +102,11 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 	protected filterOnDelete(ids: List<number>): List<number> {
 		const neueIDs = new ArrayList<number>();
 		const set = this.manager.getKlassenIDsMitSchuelern();
-		for (const id of ids)
-			if (!set.contains(id))
+		for (const id of ids) {
+			if (!set.contains(id)) {
 				neueIDs.add(id);
+			}
+		}
 		return neueIDs;
 	}
 
@@ -115,16 +118,18 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
 		if (api.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)) {
 			const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, this.idSchuljahresabschnitt);
-			for (const l of listStundenplaene)
+			for (const l of listStundenplaene) {
 				mapStundenplaene.set(l.id, l);
+			}
 		}
 		this.setPatchedState({ mapStundenplaene });
 	}
 
 	addKlassenleitung = async (idLehrer: number, idKlasse: number): Promise<void> => {
 		// Prüfe zunächst, ob die Lehrer-ID bereits in der Liste der Klassenleitungen vorkommt
-		if (this.manager.daten().klassenLeitungen.contains(idLehrer))
+		if (this.manager.daten().klassenLeitungen.contains(idLehrer)) {
 			throw new DeveloperNotificationException("Die Klassenleitung mit der Lehrer-ID " + idLehrer + " kommt bereits in der Klasse mit der ID " + idKlasse + "vor.");
+		}
 
 		// Erstelle die neue Klassenliste durch anhängen der neuen Lehrer-ID
 		const listKlassenleitungenNeu = new ArrayList<number>(this.manager.daten().klassenLeitungen);
@@ -148,8 +153,9 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		// Führe den API-Aufruf durch
 		const requestBody: Partial<KlassenDaten> = { klassenLeitungen: listKlassenleitungenNeu };
 		const klassenId: number | null = this.manager.auswahlID();
-		if (klassenId === null)
+		if (klassenId === null) {
 			throw new DeveloperNotificationException("Keine Klasse ausgewählt, Klassenleitung kann nicht entfernt werden");
+		}
 		await api.server.patchKlasse(requestBody, api.schema, klassenId);
 
 		// Aktualisiere die Liste der Klassenleitungen im Erfolgsfall
@@ -159,13 +165,15 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 
 	updateReihenfolgeKlassenleitung = async (idLehrer: number, erhoehe: boolean): Promise<void> => {
 		const idKlasse: number | null = this.manager.auswahlID();
-		if (idKlasse === null)
+		if (idKlasse === null) {
 			throw new DeveloperNotificationException("Für das Anpassen der Reihenfolge von Klassenlehrern muss eine Klasse ausgewählt sein.");
+		}
 
 		// Erstelle eine Kopie der Liste der Klassenleitungen und führe an dieser die Änderungen durch
 		const listKlassenleitungenNeu = new ArrayList<number>(this.manager.daten().klassenLeitungen);
-		if (!KlassenListeManager.updateReihenfolgeKlassenleitung(listKlassenleitungenNeu, idLehrer, erhoehe))
+		if (!KlassenListeManager.updateReihenfolgeKlassenleitung(listKlassenleitungenNeu, idLehrer, erhoehe)) {
 			return;
+		}
 
 		// Führe den API-Aufruf durch
 		const requestBody: Partial<KlassenDaten> = { klassenLeitungen: listKlassenleitungenNeu };
@@ -199,15 +207,17 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 	};
 
 	getPDF = api.call(async (reportingParameter: ReportingParameter): Promise<ApiFile> => {
-		if (!this.manager.liste.auswahlExists())
+		if (!this.manager.liste.auswahlExists()) {
 			throw new DeveloperNotificationException("Die Ausgabe kann nur erfolgen, wenn mindestens eine Klasse ausgewählt ist.");
+		}
 		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
 		return await api.server.pdfReport(reportingParameter, api.schema);
 	});
 
 	sendEMail = api.call(async (reportingParameter: ReportingParameter): Promise<SimpleOperationResponse> => {
-		if (!this.manager.liste.auswahlExists())
+		if (!this.manager.liste.auswahlExists()) {
 			throw new UserNotificationException("Dieser Report kann nur versendet werden, wenn mindestens eine Klasse ausgewählt ist.");
+		}
 		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
 		return await api.server.emailReport(reportingParameter, api.schema);
 	});

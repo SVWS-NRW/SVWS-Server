@@ -100,8 +100,9 @@ export class RouteManager {
 		const manager = this.getInstanceOrException();
 		// Ignoriere Aufruf, wenn der manager bereits in einem Routing-Vorgang ist. Dies kann sonst das aktuelle Routing canceln
 		// und zu ungültigen Zuständen führen
-		if (manager.active)
+		if (manager.active) {
 			return RoutingStatus.STOPPED_ROUTING_IS_ACTIVE;
+		}
 
 		// Prüfen, ob ein Checkpoint betreten wurde, an dem gestoppt werden muss, um die doCheckpoint() Hook auszuführen
 		const currentNode = manager._node;
@@ -121,16 +122,16 @@ export class RouteManager {
 	 */
 	public static async continueRoutingAfterCheckpoint(): Promise<RoutingStatus> {
 		const currentRoute = this.getInstanceOrException()._node;
-		if (currentRoute === undefined)
+		if (currentRoute === undefined) {
 			throw new DeveloperNotificationException("Es kann kein Routing nach einem Checkpoint fortgeführt werden, da die aktuelle RouteNode undefined ist.");
+		}
 
 		const currentCheckpoint = currentRoute.checkpoint;
-		if (currentCheckpoint === undefined)
-			throw new DeveloperNotificationException(`Es kann kein Routing nach einem Checkpoint fortgeführt werden, da für diese RouteNode ${currentRoute.name} kein Checkpoint definiert wurde.`);
 
 		const destinationRoute = currentCheckpoint.originallyDestinationRoute;
-		if (destinationRoute === undefined)
+		if (destinationRoute === undefined) {
 			return RoutingStatus.STOPPED_CHECKPOINT_DESTINATION_ROUTE_MISSING;
+		}
 
 		// clean/remove checkpoint destination route for next checkpoint activation to prevent problems
 		currentCheckpoint.originallyDestinationRoute = undefined;
@@ -139,9 +140,9 @@ export class RouteManager {
 
 	public static getInstanceOrException(): RouteManager {
 		const manager = RouteManager._instance;
-		if (manager === undefined)
+		if (manager === undefined) {
 			throw new DeveloperNotificationException("Unzulässiger Zugriff auf den RouteManager, bevor eine Instanz erzeugt wurde.");
-
+		}
 		return manager;
 	}
 
@@ -153,8 +154,9 @@ export class RouteManager {
 	 * @returns die Instanz des Managers
 	 */
 	public static create(router: Router): RouteManager {
-		if (RouteManager._instance !== undefined)
+		if (RouteManager._instance !== undefined) {
 			throw new DeveloperNotificationException("Es sind keine zwei Instanzen des Route-Managers erlaubt.");
+		}
 		RouteManager._instance = new RouteManager(router);
 		return RouteManager._instance;
 	}
@@ -166,8 +168,9 @@ export class RouteManager {
 	 */
 	public static isActive(): boolean {
 		const manager = RouteManager._instance;
-		if (manager === undefined)
+		if (manager === undefined) {
 			return false;
+		}
 		return manager.active;
 	}
 
@@ -189,8 +192,9 @@ export class RouteManager {
 	 */
 	protected async beforeEach(to: RouteLocationNormalized, from: RouteLocationNormalized): Promise<boolean | void | Error | RouteLocationRaw> {
 		// Prüfe, ob bereits ein Routing-Vorgang durchgeführt wird. Ist dies der Fall, so wird der neue Vorgang ignoriert
-		if ((this.active) && (to.redirectedFrom === undefined))
+		if ((this.active) && (to.redirectedFrom === undefined)) {
 			return false;
+		}
 		this.active = true; // Setze, dass ein Routing-Vorgang bearbeitet wird
 		api.status.start();
 		if (!api.authenticated && !this.sessionRestoreAttempted) {
@@ -209,8 +213,10 @@ export class RouteManager {
 		// Aktualisiere ggf. den goto-Parameter
 		if (!api.authenticated && (to.name === "login")) {
 			let redirect = to.query.redirect;
-			if ((redirect === undefined) || (redirect === null) || ((!Array.isArray(redirect)) && (redirect.startsWith("/error"))))
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			if ((redirect === undefined) || (redirect === null) || ((!Array.isArray(redirect)) && (redirect.startsWith("/error")))) {
 				redirect = "/";
+			}
 			if (redirect.toString() !== routeLogin.routepath) {
 				routeLogin.routepath = redirect.toString();
 				return { name: "login", query: { redirect: redirect } };
@@ -220,76 +226,93 @@ export class RouteManager {
 		const to_node: RouteNode<any, any> | undefined = RouteNode.getNodeByName(to.name?.toString());
 		const from_node: RouteNode<any, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
 		const nodeRedirected: RouteNode<any, any> | undefined = RouteNode.getNodeByName(to.redirectedFrom?.name?.toString());
-		if (to_node === undefined)
+		if (to_node === undefined) {
 			return false;
-		if ((from_node === undefined) && (from.fullPath !== "/"))
+		}
+		if ((from_node === undefined) && (from.fullPath !== "/")) {
 			return false;
-		if (api.authenticated && api.benutzerIstAdmin && to.name?.toString().startsWith("init"))
+		}
+		if (api.authenticated && api.benutzerIstAdmin && (to.name?.toString().startsWith("init") ?? false)) {
 			return await to_node.doUpdate(to_node, to.params, from_node, from.params, true, nodeRedirected);
+		}
 		// Prüfe zunächst, ob die Ziel-Route für den angemeldeten Benutzer und die Schulform der Schule erlaubt ist oder nicht
-		if (api.authenticated && (!to_node.hatSchulform() || !to_node.hatEineKompetenz()))
+		if (api.authenticated && (!to_node.hatSchulform() || !to_node.hatEineKompetenz())) {
 			return false;
-		if (api.mode !== ServerMode.STABLE)
+		}
+		if (api.mode !== ServerMode.STABLE) {
 			console.log("Routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node.name + " " + JSON.stringify(to.params)
-		if (!to_node.mode.checkServerMode(api.mode))
+		}
+		if (!to_node.mode.checkServerMode(api.mode)) {
 			return await routeError.getErrorRoute(new DeveloperNotificationException("Die Route ist nicht verfügbar, da die Client-Funktionen sich derzeit in der Entwicklung befinden (Stand: " + to_node.mode.name() + ")."), 503);
+		}
 		// Rufe die beforeEach-Methode bei der Ziel-Route auf und prüfe, ob die Route abgelehnt oder umgeleite wird...
 		let result: any = await to_node.doBeforeEach(to_node, to.params, from_node, from.params);
-		if (result !== true)
+		if (result !== true) {
 			return result;
+		}
 		// Ereignisbehandlung: Sende die entsprechenden Nachrichten enter, update, leave zur Aktualisierung an die Knoten
 		if (from.fullPath === "/") {
 			// Die Analyse der Quell-Route ist nicht erheblich - die Ereignisse für die Ziel-Route sind aber wichtig
 			const to_predecessors: RouteNode<any, any>[] = to_node.getPredecessors();
 			for (const node of to_predecessors) {
 				result = await node.doUpdate(to_node, to.params, from_node, from.params, true, nodeRedirected);
-				if (result !== undefined)
+				if (result !== undefined) {
 					return result;
+				}
 			}
 			result = await to_node.doUpdate(to_node, to.params, from_node, from.params, true, nodeRedirected);
-			if (result !== undefined)
+			if (result !== undefined) {
 				return result;
+			}
 		} else {
 			// Bestimme den Knoten, der Route, die zuvor ausgewählt war - diese muss ja auch gültig sein...
-			if (from_node === undefined)
+			if (from_node === undefined) {
 				return false;
+			}
 			// Prüfe, ob die Knoten Nachfolger bzw. Vorgänger voneinander sind
 			const equals = (to_node.name === from_node.name);
 			const to_is_successor = to_node.checkSuccessorOf(from_node);
 			const from_is_successor = from_node.checkSuccessorOf(to_node);
 			const to_predecessors_all: RouteNode<any, any>[] = to_node.getPredecessors();
-			if (to_is_successor) {
+			if (to_is_successor !== false) {
 				for (const node of to_predecessors_all) {
 					result = await node.doUpdate(to_node, to.params, from_node, from.params, (to_is_successor.includes(node) && (node.name !== from_node.name)), nodeRedirected);
-					if (result !== undefined)
+					if (result !== undefined) {
 						return result;
+					}
 				}
 				result = await to_node.doUpdate(to_node, to.params, from_node, from.params, true, nodeRedirected);
-				if (result !== undefined)
+				if (result !== undefined) {
 					return result;
-			} else if (from_is_successor) {
+				}
+			} else if (from_is_successor !== false) {
 				for (const node of from_is_successor.slice(1).reverse()) {
 					result = await node.doLeaveBefore(from_node, from.params, to_node, to.params);
-					if (result !== undefined)
+					if (result !== undefined) {
 						return result;
+					}
 				}
 				for (const node of to_predecessors_all) {
 					result = await node.doUpdate(to_node, to.params, from_node, from.params, false, nodeRedirected);
-					if (result !== undefined)
+					if (result !== undefined) {
 						return result;
+					}
 				}
 				result = await to_node.doUpdate(to_node, to.params, from_node, from.params, false, nodeRedirected);
-				if (result !== undefined)
+				if (result !== undefined) {
 					return result;
+				}
 			} else if (equals) {
 				for (const node of to_predecessors_all) {
 					result = await node.doUpdate(to_node, to.params, from_node, from.params, false, nodeRedirected);
-					if (result !== undefined)
+					if (result !== undefined) {
 						return result;
+					}
 				}
 				result = await to_node.doUpdate(to_node, to.params, from_node, from.params, false, nodeRedirected);
-				if (result !== undefined)
+				if (result !== undefined) {
 					return result;
+				}
 			} else {
 				let from_predecessors: RouteNode<any, any>[] = from_node.getPredecessors();
 				let to_predecessors: RouteNode<any, any>[] = [...to_predecessors_all];
@@ -299,21 +322,25 @@ export class RouteManager {
 					to_predecessors = to_predecessors.slice(1);
 				}
 				result = await from_node.doLeaveBefore(from_node, from.params, to_node, to.params);
-				if (result !== undefined)
+				if (result !== undefined) {
 					return result;
+				}
 				for (const node of [...from_predecessors].reverse()) {
 					result = await node.doLeaveBefore(from_node, from.params, to_node, to.params);
-					if (result !== undefined)
+					if (result !== undefined) {
 						return result;
+					}
 				}
 				for (const node of to_predecessors_all) {
 					result = await node.doUpdate(to_node, to.params, from_node, from.params, to_predecessors.includes(node), nodeRedirected);
-					if (result !== undefined)
+					if (result !== undefined) {
 						return result;
+					}
 				}
 				result = await to_node.doUpdate(to_node, to.params, from_node, from.params, true, nodeRedirected);
-				if (result !== undefined)
+				if (result !== undefined) {
 					return result;
+				}
 			}
 		}
 		// Akzeptiere die Route...
@@ -337,18 +364,20 @@ export class RouteManager {
 			this._routeLocation = to;
 			const from_node: RouteNode<any, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
 			if (failure === undefined) {
-				if (api.mode !== ServerMode.STABLE)
+				if (api.mode !== ServerMode.STABLE) {
 					console.log("Completed routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
-				if ((to_node !== undefined) && (from_node !== undefined) && (from.fullPath !== "/") && api.authenticated && (!to.name?.toString().startsWith("init"))) {
+				}
+				if ((to_node !== undefined) && (from_node !== undefined) && (from.fullPath !== "/") && api.authenticated && (!(to.name?.toString().startsWith("init") ?? false))) {
 					// Prüfe, ob die Knoten Nachfolger bzw. Vorgänger voneinander sind
 					const equals = (to_node.name === from_node.name);
 					const to_is_successor = to_node.checkSuccessorOf(from_node);
-					if (!to_is_successor) {
+					if (to_is_successor === false) {
 						const from_is_successor = from_node.checkSuccessorOf(to_node);
 						const to_predecessors_all: RouteNode<any, any>[] = to_node.getPredecessors();
-						if (from_is_successor) {
-							for (const node of from_is_successor.slice(1).reverse())
+						if (from_is_successor !== false) {
+							for (const node of from_is_successor.slice(1).reverse()) {
 								await node.leave(from_node, from.params, to_node, to.params);
+							}
 						} else if (!equals) {
 							let from_predecessors: RouteNode<any, any>[] = from_node.getPredecessors();
 							let to_predecessors: RouteNode<any, any>[] = [...to_predecessors_all];
@@ -358,14 +387,16 @@ export class RouteManager {
 								to_predecessors = to_predecessors.slice(1);
 							}
 							await from_node.leave(from_node, from.params, to_node, to.params);
-							for (const node of [...from_predecessors].reverse())
+							for (const node of [...from_predecessors].reverse()) {
 								await node.leave(from_node, from.params, to_node, to.params);
+							}
 						}
 					}
 				}
 			} else {
-				if (api.mode !== ServerMode.STABLE)
+				if (api.mode !== ServerMode.STABLE) {
 					console.log("Failed Routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); //  + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
+				}
 			}
 		} catch (e) {
 			console.log("Unexpected routing error:", e);
@@ -392,8 +423,9 @@ export class RouteManager {
 	 * @returns die Parameter zur aktuellen Route
 	 */
 	public getRouteParams(): RouteParams | undefined {
-		if (this._routeLocation === undefined)
+		if (this._routeLocation === undefined) {
 			return undefined;
+		}
 		return this._routeLocation.params;
 	}
 

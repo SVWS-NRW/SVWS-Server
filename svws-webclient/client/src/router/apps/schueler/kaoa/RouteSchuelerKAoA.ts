@@ -27,8 +27,9 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 			const schuljahr = routeSchueler.data.manager.getSchuljahr();
 			if (!routeSchueler.data.manager.hasDaten()
 				|| (auswahl.status === SchuelerStatus.EXTERN.daten(schuljahr)?.id)
-				|| (auswahl.status === SchuelerStatus.EHEMALIGE.daten(schuljahr)?.id))
+				|| (auswahl.status === SchuelerStatus.EHEMALIGE.daten(schuljahr)?.id)) {
 				return routeSchueler.getRouteDefaultChild({ id });
+			}
 			return false;
 		} catch (e) {
 			return routeError.getSimpleErrorRoute(e as DeveloperNotificationException);
@@ -38,8 +39,9 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		try {
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
-			if (this.parent === undefined)
+			if (this.parent === undefined) {
 				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
+			}
 			if (id === undefined) {
 				await this.data.ladeDaten(null);
 			} else {

@@ -545,6 +545,24 @@ export class SprachendatenUtils extends JavaObject {
 	}
 
 	/**
+	 * prüft, ob die Sprachendaten vollständig und plausibel eingetragen wurden.
+	 *
+	 * @param sprachendaten   die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
+	 *
+	 * @return Liste der Sprachen, die nicht vollständig eingetragen wurden.
+	 */
+	public static unvollstaendigeSprachbelegungen(sprachendaten: Sprachendaten | null): List<string> {
+		const result: List<string> = new ArrayList<string>();
+		if (sprachendaten === null)
+			return result;
+		for (const belegung of sprachendaten.belegungen) {
+			if ((belegung.reihenfolge === null) || (belegung.belegungVonJahrgang === null) || (belegung.belegungBisJahrgang === null) || (belegung.belegungVonAbschnitt === null) || (belegung.belegungBisAbschnitt === null) || (belegung.belegungVonAbschnitt < 1) || (belegung.belegungVonAbschnitt > 2) || (belegung.belegungBisAbschnitt < 1) || (belegung.belegungBisAbschnitt > 2))
+				result.add(belegung.sprache);
+		}
+		return result;
+	}
+
+	/**
 	 * Hilfsfunktion, die prüft, ob die Sprache der übergebenen Feststellungsprüfung an die Stelle der ersten Pflichtfremdsprache treten kann.
 	 *
 	 * @param pruefung	Feststellungsprüfung, die geprüft werden soll.
@@ -585,7 +603,7 @@ export class SprachendatenUtils extends JavaObject {
 	 *
 	 * @return Wert des ASDJahrgangs zwischen 5 und 13, wenn dieser nicht bestimmt werden kann, wird der Wert 0 zurückgegeben.
 	 */
-	private static getJahrgangNumerisch(kuerzelJg: string | null): number {
+	public static getJahrgangNumerisch(kuerzelJg: string | null): number {
 		if ((kuerzelJg === null) || JavaObject.equalsTranspiler("", (kuerzelJg)))
 			return 0;
 		switch (kuerzelJg) {
@@ -616,7 +634,7 @@ export class SprachendatenUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.schueler.SprachendatenUtils'].includes(name);
 	}
 
-	public static class = new Class<SprachendatenUtils>('de.svws_nrw.core.utils.schueler.SprachendatenUtils');
+	public static readonly class = new Class<SprachendatenUtils>('de.svws_nrw.core.utils.schueler.SprachendatenUtils');
 
 }
 

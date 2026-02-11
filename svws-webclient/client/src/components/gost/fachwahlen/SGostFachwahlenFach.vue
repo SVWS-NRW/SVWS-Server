@@ -94,8 +94,9 @@
 
 	const istZKMoeglich = computed<boolean>(() => {
 		const fach = props.faecherManager.get(props.fachID);
-		if (fach === null)
+		if (fach === null) {
 			return false;
+		}
 		const zfach = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		return (zfach === Fach.GE) || (zfach === Fach.SW);
 	});
@@ -105,28 +106,33 @@
 	}
 
 	const fws = computed<GostStatistikFachwahl | undefined>(() => {
-		for (const f of props.fachwahlstatistik)
-			if (f.id === props.fachID)
+		for (const f of props.fachwahlstatistik) {
+			if (f.id === props.fachID) {
 				return f;
+			}
+		}
 		return undefined;
 	});
 
 	const schuljahr = computed<number>(() => props.faecherManager.getSchuljahr());
 
 	function getBgColor(fws: GostStatistikFachwahl): string {
-		if (fws.kuerzelStatistik === null)
+		if (fws.kuerzelStatistik === null) {
 			return 'rgb(220,220,220)';
+		}
 		return Fach.getBySchluesselOrDefault(fws.kuerzelStatistik).getHMTLFarbeRGBA(schuljahr.value, 1.0);
 	}
 
 	function doSortSchuelerListeByNachnameAndVornameAndId(liste: List<SchuelerListeEintrag>): List<SchuelerListeEintrag> {
 		liste.sort({ compare(a: SchuelerListeEintrag, b: SchuelerListeEintrag): number {
 			let cmp = a.nachname.localeCompare(b.nachname);
-			if (cmp !== 0)
+			if (cmp !== 0) {
 				return cmp;
+			}
 			cmp = a.vorname.localeCompare(b.vorname);
-			if (cmp !== 0)
+			if (cmp !== 0) {
 				return cmp;
+			}
 			return b.id - a.id;
 		} });
 		return liste;
@@ -135,18 +141,20 @@
 	function getSchuelerListe(idFach: number, halbjahr: GostHalbjahr, col: number): List<SchuelerListeEintrag> {
 		const result = new ArrayList<SchuelerListeEintrag>();
 		let schuelermenge: List<number> = new ArrayList<number>();
-		if (col === 1)
+		if (col === 1) {
 			schuelermenge = props.fachwahlenManager.schuelerGetMengeGKSchriftlichByFachAndHalbjahrAsListOrException(idFach, halbjahr);
-		else if (col === 2)
+		} else if (col === 2) {
 			schuelermenge = props.fachwahlenManager.schuelerGetMengeGKMuendlichByFachAndHalbjahrAsListOrException(idFach, halbjahr);
-		else if (col === 3)
+		} else if (col === 3) {
 			schuelermenge = props.fachwahlenManager.schuelerGetMengeLKByFachAndHalbjahrAsListOrException(idFach, halbjahr);
-		else if ((istZKMoeglich.value) && (col === 4))
+		} else if ((istZKMoeglich.value) && (col === 4)) {
 			schuelermenge = props.fachwahlenManager.schuelerGetMengeZKByFachAndHalbjahrAsListOrException(idFach, halbjahr);
+		}
 		for (const id of schuelermenge) {
 			const schueler = props.mapSchueler.get(id);
-			if (schueler !== undefined)
+			if (schueler !== undefined) {
 				result.add(schueler);
+			}
 		}
 		return doSortSchuelerListeByNachnameAndVornameAndId(result);
 	}

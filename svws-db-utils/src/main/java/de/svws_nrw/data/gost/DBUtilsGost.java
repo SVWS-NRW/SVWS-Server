@@ -15,6 +15,8 @@ import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostLeistungenFachbelegung;
@@ -42,6 +44,19 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response.Status;
 
+/*
+ * Die Implementierung enthält Teile von experimentellem Code. Für diesen gilt folgendes:
+ *
+ * Bei dieser Implementierung handelt es sich um eine Umsetzung in Bezug auf möglichen zukünftigen
+ * Änderungen in der APO-GOSt. Diese basiert auf der aktuellen Implementierung und integriert Aspekte
+ * aus dem Eckpunktepapier und auf in den Schulleiterdienstbesprechungen erläuterten Vorhaben.
+ * Sie dient der Evaluierung von möglichen Umsetzungsvarianten und als Vorbereitung einer späteren
+ * Implementierung der Belegprüfung. Insbesondere sollen erste Versuche mit Laufbahnen mit einem
+ * 5. Abiturfach und Projektkursen erprobt werden. Detailaspekte können erst nach Erscheinen der APO-GOSt
+ * umgesetzt werden.
+ * Es handelt sich also um experimentellen Code, der keine Rückschlüsse auf Details einer zukünftigen APO-GOSt
+ * erlaubt.
+ */
 /**
  * Dies Klassen stellt Hilfmethoden für den Datenbankzugriff
  * zur Verfügung, welche in den Data-Klassen an mehreren Stellen
@@ -190,8 +205,8 @@ public final class DBUtilsGost {
 		// Bestimme die Schueler-Leistungsdaten zu den Lernabschnitten, welche einen (Quartals-)Noteneintrag aufweisen
 		final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList(
 				"SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID IN ?1 AND"
-				+ " NOT (((e.NotenKrz IS NULL) OR (e.NotenKrz = '') OR (e.NotenKrz = 'AT')) AND"
-				+ " ((e.NotenKrzQuartal IS NULL) OR (e.NotenKrzQuartal = '') OR (e.NotenKrzQuartal = 'AT')))",
+						+ " NOT (((e.NotenKrz IS NULL) OR (e.NotenKrz = '') OR (e.NotenKrz = 'AT')) AND"
+						+ " ((e.NotenKrzQuartal IS NULL) OR (e.NotenKrzQuartal = '') OR (e.NotenKrzQuartal = 'AT')))",
 				DTOSchuelerLeistungsdaten.class,
 				idsSchuelerLernabschnittsdaten);
 		// ... und prüfe diese Lernabschnitte, ob sie Einträge für die gymnasiale Oberstufe beinhalten
@@ -316,7 +331,7 @@ public final class DBUtilsGost {
 	}
 
 
-	private static void getLeistung(final GostLeistungen daten, final DTOSchuelerLernabschnittsdaten lernabschnitt,
+	private static void getLeistung(final Integer abiturjahr, final GostLeistungen daten, final DTOSchuelerLernabschnittsdaten lernabschnitt,
 			final DTOSchuelerLeistungsdaten leistung, final DTOSchuljahresabschnitte abschnittLeistungsdaten,
 			final Jahrgaenge jahrgang, final GostHalbjahr halbjahr, final Sprachendaten sprachendaten,
 			final GostFaecherManager gostFaecher, final Map<String, GostLeistungenFachwahl> faecher) {
@@ -358,7 +373,8 @@ public final class DBUtilsGost {
 		belegung.istSchriftlich = (kursart == GostKursart.LK)
 				|| ((kursart == GostKursart.GK) && (("GKS".equals(leistung.Kursart))
 						|| ("AB3".equals(leistung.Kursart))
-						|| ("AB4".equals(leistung.Kursart) && (halbjahr != GostHalbjahr.Q22))));
+						|| ("AB4".equals(leistung.Kursart) && (halbjahr != GostHalbjahr.Q22))))
+				|| (AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), abiturjahr) && (kursart == GostKursart.PJK));
 		belegung.bilingualeSprache = gostFach.biliSprache;
 		belegung.wochenstunden = (leistung.Wochenstunden == null)
 				? kursart.getWochenstunden(fach.istFSNeu)
@@ -458,7 +474,7 @@ public final class DBUtilsGost {
 			if (leistungen.isEmpty())
 				daten.bewertetesHalbjahr[halbjahr.id] = false;
 			for (final DTOSchuelerLeistungsdaten leistung : leistungen)
-				getLeistung(daten, lernabschnitt, leistung, abschnittLeistungsdaten, jahrgang, halbjahr, sprachendaten, gostFaecher, faecher);
+				getLeistung(abiturjahr, daten, lernabschnitt, leistung, abschnittLeistungsdaten, jahrgang, halbjahr, sprachendaten, gostFaecher, faecher);
 		}
 		// Sortiere Fächer anhand der SII-Sortierung der Fächer
 		faecher.values().stream()
@@ -483,6 +499,7 @@ public final class DBUtilsGost {
 	 */
 	public static Map<Long, GostLeistungen> getLeistungsdaten(final int schuljahr, final DBEntityManager conn, final List<Long> ids)
 			throws ApiOperationException {
+		final Schulform schulform = conn.getUser().schuleGetSchulform();
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 		// TODO Ermittle die Abi-Jahrgangsspezifische Fächerliste !
 		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(schuljahr, conn, null);
@@ -522,6 +539,10 @@ public final class DBUtilsGost {
 			final Jahrgaenge aktJahrgang =
 					((dtoAktJahrgang == null) || (dtoAktJahrgang.ASDJahrgang == null)) ? null
 							: Jahrgaenge.data().getWertBySchluessel(dtoAktJahrgang.ASDJahrgang);
+			final Schulgliederung schulgliederung = (aktLernabschnitt.Schulgliederung == null)
+					? Schulgliederung.getDefault(schulform)
+					: Schulgliederung.data().getWertByKuerzel(aktLernabschnitt.Schulgliederung);
+			final Integer abiturjahr = getAbiturjahr(schulform, schulgliederung, abschnittSchueler.Jahr, aktJahrgang);
 
 			// Ermittle nun die Leistungsdaten aus den Lernabschnitten
 			final GostLeistungen daten = new GostLeistungen();
@@ -554,7 +575,7 @@ public final class DBUtilsGost {
 				if (leistungen.isEmpty())
 					daten.bewertetesHalbjahr[halbjahr.id] = false;
 				for (final DTOSchuelerLeistungsdaten leistung : leistungen)
-					getLeistung(daten, lernabschnitt, leistung, abschnittLeistungsdaten, jahrgang, halbjahr, sprachendaten, gostFaecher, faecher);
+					getLeistung(abiturjahr, daten, lernabschnitt, leistung, abschnittLeistungsdaten, jahrgang, halbjahr, sprachendaten, gostFaecher, faecher);
 			}
 			// Sortiere Fächer anhand der Sortierung der Fächer
 			faecher.values().stream()
@@ -654,7 +675,8 @@ public final class DBUtilsGost {
 				if (leistungen.isEmpty())
 					daten.bewertetesHalbjahr[halbjahr.id] = false;
 				for (final DTOSchuelerLeistungsdaten leistung : leistungen)
-					getLeistung(daten, lernabschnitt, leistung, abschnittLeistungsdaten, jahrgang, halbjahr, sprachendaten, gostFaecherManager, faecher);
+					getLeistung(gostFaecherManager.getSchuljahr() + 1, daten, lernabschnitt, leistung, abschnittLeistungsdaten, jahrgang, halbjahr,
+							sprachendaten, gostFaecherManager, faecher);
 			}
 			// Sortiere Fächer anhand der Sortierung der Fächer
 			faecher.values().stream()

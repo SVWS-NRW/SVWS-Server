@@ -6,7 +6,7 @@ import { ENMDaten } from "@core";
  * @param {Blob} binaryData - Die zu parsenden Binärdaten.
  * @returns {Promise<ENMDaten>} - Ein Promise, das das geparste ENMDaten-Objekt zurückgibt.
 */
-export async function parse(binaryData: Blob) {
+export async function parse(binaryData: Blob): Promise<ENMDaten> {
 	const blob = await new Response(binaryData.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
 	return ENMDaten.transpilerFromJSON(await blob.text());
 }

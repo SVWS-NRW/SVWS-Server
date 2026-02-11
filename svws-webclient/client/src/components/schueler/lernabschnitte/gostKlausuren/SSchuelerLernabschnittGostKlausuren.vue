@@ -1,5 +1,5 @@
 <template>
-	<div class="w-140">
+	<div class="w-full">
 		<svws-ui-modal v-if="showModalTerminGrund" :show="showModalTerminGrund" size="small">
 			<template #modalTitle>
 				Grund für Fehlen angeben
@@ -13,52 +13,82 @@
 			</template>
 		</svws-ui-modal>
 		<svws-ui-content-card v-if="hatKlausurManager()">
-			<svws-ui-table :items="kMan().schuelerklausurGetMengeAsList()" :columns="colsKlausuren">
+			<svws-ui-table :items="kMan().schuelerklausurGetMengeAsListSortedByDatumHT()" :columns="colsKlausuren">
+				<!-- Quartal -->
 				<template #cell(quartal)="{ rowData }">
-					<span class="mt-3 mb-3">{{ kMan().vorgabeBySchuelerklausur(rowData).quartal }}</span>
+					<div class="flex items-center min-h-12 font-medium">
+						{{ kMan().vorgabeBySchuelerklausur(rowData).quartal }}
+					</div>
 				</template>
+				<!-- Termin(e) -->
 				<template #cell(termin)="{ rowData }">
-					<svws-ui-table class="-mb-5" v-if="kMan().terminKursklausurBySchuelerklausur(rowData) !== null && kMan().terminKursklausurBySchuelerklausur(rowData)!.datum !== null" :items="kMan().schuelerklausurterminGetMengeBySchuelerklausur(rowData)" :columns="colsTermine" disable-header>
-						<template #cell(datum)="{ rowData: termin }">
-							<span class="h-full flex justify-center items-center">{{ kMan().terminOrNullBySchuelerklausurTermin(termin) !== null ? (kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum !== null ? DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum!) : "N.N.") : "N.N." }}</span>
-						</template>
-						<template #cell(button)="{ rowData: termin }">
-							<div class="flex space-x-1 pl-1" v-if="kMan().istSchuelerklausurterminAktuell(termin)">
-								<svws-ui-button class="" v-if="kMan().terminOrNullBySchuelerklausurTermin(termin) !== null && kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum !== null" @click="terminSelected = termin; showModalTerminGrund = true">
-									<svws-ui-tooltip>
-										<template #content>
-											Klausur nicht mitgeschrieben
-										</template>
-										<span class="icon i-ri-user-forbid-line" />
-									</svws-ui-tooltip>
-								</svws-ui-button>
-								<svws-ui-button type="danger" v-if="kMan().schuelerklausurterminGetMengeBySchuelerklausur(rowData).size() > 1" class="mt-4" @click="deleteSchuelerklausurTermin(termin)">
-									<svws-ui-tooltip>
-										<template #content>
-											Nachschreibtermin löschen
-										</template>
-										<span class="icon i-ri-delete-bin-line" />
-									</svws-ui-tooltip>
-								</svws-ui-button>
-							</div>
-							<div v-else>
-								<svws-ui-textarea-input :disabled="!patchSchuelerklausurTermin" :rows="1" resizeable="none" autoresize :placeholder="(termin.bemerkung === null || termin.bemerkung!.trim().length === 0) ? 'Kein Grund angegeben' : ''" :model-value="termin.bemerkung" @change="bemerkung => patchSchuelerklausurTermin(termin.id, {bemerkung})" />
-							</div>
-						</template>
-					</svws-ui-table>
-					<div v-else>Noch kein Termin gesetzt</div>
+					<div v-if="kMan().terminKursklausurBySchuelerklausur(rowData) !== null && kMan().terminKursklausurBySchuelerklausur(rowData)!.datum !== null" class="pl-4 border-l border-slate-300 space-y-2">
+						<svws-ui-table :items="kMan().schuelerklausurterminGetMengeBySchuelerklausur(rowData)"
+							:columns="colsTermine"
+							disable-header
+							class="bg-transparent [&_.svws-ui-td]:items-center! [&_.svws-ui-td]:py-1!">
+							<!-- Datum -->
+							<template #cell(datum)="{ rowData: termin }">
+								<span class="text-sm font-mono text-slate-600">
+									{{ kMan().terminOrNullBySchuelerklausurTermin(termin) !== null
+										? (
+											kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum !== null
+												? DateUtils.gibDatumGermanFormat(
+													kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum!
+												)
+												: 'N.N.'
+										)
+										: 'N.N.' }}
+								</span>
+							</template>
+							<!-- Aktionen / Bemerkung -->
+							<template #cell(button)="{ rowData: termin }">
+								<div v-if="kMan().istSchuelerklausurterminAktuell(termin)" class="flex gap-1">
+									<svws-ui-button v-if="kMan().terminOrNullBySchuelerklausurTermin(termin) !== null && kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum !== null" @click="terminSelected = termin; showModalTerminGrund = true">
+										<svws-ui-tooltip>
+											<template #content>
+												Klausur nicht mitgeschrieben
+											</template>
+											<span class="icon i-ri-user-forbid-line" />
+										</svws-ui-tooltip>
+									</svws-ui-button>
+
+									<svws-ui-button type="danger" v-if="kMan().schuelerklausurterminGetMengeBySchuelerklausur(rowData).size() > 1" @click="deleteSchuelerklausurTermin(termin)">
+										<svws-ui-tooltip>
+											<template #content>
+												Nachschreibtermin löschen
+											</template>
+											<span class="icon i-ri-delete-bin-line" />
+										</svws-ui-tooltip>
+									</svws-ui-button>
+								</div>
+								<div v-else class="max-w-sm">
+									<svws-ui-textarea-input class="-mt-1 -mb-1" size="small" :disabled="!patchSchuelerklausurTermin" :rows="1" resizeable="none" autoresize :placeholder=" (termin.bemerkung === null || termin.bemerkung!.trim().length === 0) ? 'Kein Grund angegeben' : ''" :model-value="termin.bemerkung" @change="bemerkung => patchSchuelerklausurTermin(termin.id, { bemerkung })" />
+								</div>
+							</template>
+						</svws-ui-table>
+					</div>
+					<div v-else class="flex items-center min-h-12 text-slate-400 italic">
+						Noch kein Termin gesetzt
+					</div>
 				</template>
+				<!-- Kurs -->
 				<template #cell(kurs)="{ rowData }">
-					<span class="mt-3">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausur(rowData)) }}</span>
+					<div class="flex items-center min-h-12">
+						{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausur(rowData)) }}
+					</div>
 				</template>
+				<!-- Lehrer -->
 				<template #cell(lehrer)="{ rowData }">
-					<span class="mt-3">{{ kMan().kursLehrerKuerzelByKursklausur(kMan().kursklausurBySchuelerklausur(rowData)) }}</span>
+					<div class="flex items-center min-h-12 text-slate-600">
+						{{ kMan().kursLehrerKuerzelByKursklausur(kMan().kursklausurBySchuelerklausur(rowData)) }}
+					</div>
 				</template>
 			</svws-ui-table>
-			<div v-if="GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(manager().schuelerGet().abiturjahrgang!, manager().schuljahresabschnittGet().schuljahr, manager().schuljahresabschnittGet().abschnitt) !== null"
-				class="mt-2 flex">
+			<div v-if="GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(manager().schuelerGet().abiturjahrgang!, manager().schuljahresabschnittGet().schuljahr, manager().schuljahresabschnittGet().abschnitt) !== null" class="mt-3 flex">
 				<svws-ui-button type="transparent" size="small" @click="gotoPlanung">
-					<span class="icon i-ri-link" /> Planung öffnen
+					<span class="icon i-ri-link" />
+					Planung öffnen
 				</svws-ui-button>
 			</div>
 		</svws-ui-content-card>
@@ -94,7 +124,7 @@
 
 	const colsKlausuren: Array<DataTableColumn> = [
 		{ key: "quartal", label: "Quartal", tooltip: "Ursprüngliches Datum der Klausur", fixedWidth: 5 },
-		{ key: "kurs", label: "Kurs", tooltip: "Kurs" },
+		{ key: "kurs", label: "Kurs", tooltip: "Kurs", fixedWidth: 7 },
 		{ key: "lehrer", label: "Fachlehrer", tooltip: "Fachlehrer", fixedWidth: 7 },
 		{ key: "termin", label: "Datum", tooltip: "Ursprüngliches Datum der Klausur", minWidth: 6 },
 	];

@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostJahrgang;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
@@ -88,6 +89,9 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		if ((dtosJahrgaenge == null) || (dtosJahrgaenge.isEmpty()))
 			throw new ApiOperationException(Status.NOT_FOUND, "Es konnten keine Jahrgänge gefunden werden.");
 
+		// Bestimme die allgemeinen Jahrgangsinformationen für die Gost für alle Jahrgänge der DB
+		final HashMap2D<Long, String, DTOGostJahrgangsinformationen> mapJahrgangsinfos = DTOGostJahrgangsinformationen.getMapJahrgangsinformationen(conn);
+
 		// Lese alle Abiturjahrgänge aus der Datenbank ein und ergänze diese im Vektor
 		final ArrayList<GostJahrgang> daten = new ArrayList<>();
 		final List<DTOGostJahrgangsdaten> dtos = conn.queryAll(DTOGostJahrgangsdaten.class);
@@ -119,8 +123,9 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 						conn.getUser().schuleGetAbschnitteBySchuljahre(eintrag.abiturjahr - 1, eintrag.abiturjahr - 2, eintrag.abiturjahr - 3);
 				for (final Schuljahresabschnitt a : abschnitte) {
 					final GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(eintrag.abiturjahr, a.schuljahr, a.abschnitt);
-					eintrag.istBlockungFestgelegt[halbjahr.id] = DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, a);
-					eintrag.existierenNotenInLeistungsdaten[halbjahr.id] = DBUtilsGost.pruefeHatNotenFuerOberstufeInAbschnitt(conn, halbjahr, a);
+					final DTOGostJahrgangsinformationen info = mapJahrgangsinfos.getOrNull(a.id, halbjahr.jahrgang);
+					eintrag.istBlockungFestgelegt[halbjahr.id] = (info == null) ? false : (info.anzahlKurse > 0);
+					eintrag.existierenNotenInLeistungsdaten[halbjahr.id] = (info == null) ? false : (info.anzahlNoten > 0);
 				}
 				daten.add(eintrag);
 			}

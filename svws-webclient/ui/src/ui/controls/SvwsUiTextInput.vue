@@ -1,7 +1,7 @@
 <template>
 	<label class="text-input-component"
 		:class="{
-			'text-input--filled': (`${data}`.length > 0 && data !== null) || type === 'date',
+			'text-input--filled': (`${data}`.length > 0 && data !== null) || (type === 'date') || (type === 'datetime-local'),
 			'text-input--invalid': (isValid === false),
 			'text-input--statistic-muss': (((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.MUSS)) || ((isValid === false) && (fehlerart === ValidatorFehlerart.MUSS))),
 			'text-input--statistic-kann': (((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.KANN)) || ((isValid === false) && (fehlerart === ValidatorFehlerart.KANN))),
@@ -11,7 +11,7 @@
 			'text-input--select': isSelectInput,
 			'text-input--statistics': statistics,
 			'text-input--search': type === 'search',
-			'text-input--date': type === 'date',
+			'text-input--date': (type === 'date') || (type === 'datetime-local'),
 			'text-input-component--headless': headless,
 			'col-span-full': span === 'full',
 			'col-span-2': span === '2',
@@ -25,7 +25,7 @@
 			v-focus
 			:class="{ 'text-input--control': !headless, 'text-input--headless': headless, 'text-input--rounded': rounded, 'text-input--prefix': url, }"
 			v-bind="{ ...$attrs }"
-			:type="type"
+			:type
 			:min="minDate"
 			:max="maxDate"
 			:value="data"
@@ -92,7 +92,7 @@
 			</span>
 			<span v-if="readonly && !isSelectInput" class="icon-xs i-ri-lock-line" />
 		</span>
-		<span v-if="removable && (type === 'date') && (!readonly)" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
+		<span v-if="removable && (type === 'date' || type === 'datetime-local') && (!readonly)" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
 		<span v-if="(type === 'date') && !firefox()" class="svws-icon icon i-ri-calendar-2-line" />
 		<span v-if="type === 'email'" class="svws-icon icon i-ri-at-line" />
 		<span v-if="type === 'tel'" class="svws-icon icon i-ri-phone-line" />
@@ -111,12 +111,12 @@
 	});
 
 	function firefox() {
-		return window.navigator.userAgent.includes('Firefox/');
+		return globalThis.navigator.userAgent.includes('Firefox/');
 	}
 	const input = ref<null | HTMLInputElement>(null);
 
 	const props = withDefaults(defineProps<{
-		type?: "text" | "date" | "email" | "search" | "tel" | "password";
+		type?: "text" | "date" | "email" | "search" | "tel" | "password" | "datetime-local";
 		minDate?: string;
 		maxDate?: string;
 		modelValue?: string | null;
@@ -176,8 +176,9 @@
 
 	const vFocus = {
 		mounted: (el: HTMLInputElement) => {
-			if (props.focus)
+			if (props.focus) {
 				el.focus();
+			}
 		},
 	};
 
@@ -197,16 +198,21 @@
 
 	const isValid = computed((): boolean => {
 		let tmpIsValid = true;
-		if (props.required && ((data.value === null) || (data.value === '')))
+		if (props.required && ((data.value === null) || (data.value === ''))) {
 			tmpIsValid = false;
-		if (props.validator !== undefined)
+		}
+		if (props.validator !== undefined) {
 			return props.doValidate(props.validator(), data.value);
-		if (tmpIsValid && (!minLenValid.value || !maxLenValid.value))
+		}
+		if (tmpIsValid && (!minLenValid.value || !maxLenValid.value)) {
 			tmpIsValid = false;
-		if (tmpIsValid && props.type === "email")
+		}
+		if (tmpIsValid && props.type === "email") {
 			tmpIsValid = validatorEmail(data.value ?? '');
-		if (tmpIsValid)
+		}
+		if (tmpIsValid) {
 			tmpIsValid = props.valid(data.value);
+		}
 		return tmpIsValid;
 	});
 
@@ -218,32 +224,37 @@
 	}
 
 	const minLenValid = computed((): boolean => {
-		if ((props.minLen === undefined) || ((data.value === null) && (props.minLen <= 0)))
+		if ((props.minLen === undefined) || ((data.value === null) && (props.minLen <= 0))) {
 			return true;
+		}
 		return (data.value !== null) && (data.value.toLocaleString().length >= props.minLen);
 	});
 
 	const maxLenValid = computed((): boolean => {
-		if ((props.maxLen === undefined) || (data.value === null))
+		if ((props.maxLen === undefined) || (data.value === null)) {
 			return true;
+		}
 		return data.value.toLocaleString().length <= props.maxLen;
 	});
 
 	function onInput(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
-		if (value !== data.value)
+		if (value !== data.value) {
 			updateData(value);
+		}
 	}
 
 	function onBlur(event: Event) {
-		if (props.modelValue !== data.value)
+		if (props.modelValue !== data.value) {
 			emit("change", data.value);
+		}
 		emit("blur", data.value);
 	}
 
 	function onKeyEnter(event: Event) {
-		if (props.modelValue !== data.value)
+		if (props.modelValue !== data.value) {
 			emit("change", data.value);
+		}
 	}
 
 	function reset() {

@@ -63,18 +63,22 @@
 
 	const andereKurse = computed<Map<number, GostBlockungsergebnisKurs>>(() => {
 		const result = new Map<number, GostBlockungsergebnisKurs>();
-		for (const k of props.getErgebnismanager().getOfFachartKursmenge(props.fachart))
-			if (k.id !== props.kurs.id)
+		for (const k of props.getErgebnismanager().getOfFachartKursmenge(props.fachart)) {
+			if (k.id !== props.kurs.id) {
 				result.set(k.id, k);
+			}
+		}
 		return result;
 	});
 
 	async function updateExterne(anzahl: number | null) {
-		if (props.apiStatus.pending)
+		if (props.apiStatus.pending) {
 			return;
+		}
 		const curr = props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(props.kurs.id);
-		if (curr === anzahl || (anzahl === null) || anzahl < 0)
+		if (curr === anzahl || (anzahl === null) || anzahl < 0) {
 			return;
+		}
 		const update = props.getErgebnismanager().regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(props.kurs.id, anzahl);
 		await props.regelnUpdate(update);
 	}

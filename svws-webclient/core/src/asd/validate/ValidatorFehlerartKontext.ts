@@ -2,7 +2,6 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import { ArrayList } from '../../java/util/ArrayList';
 import type { List } from '../../java/util/List';
 import { Class } from '../../java/lang/Class';
-import { ValidatorFehlerartKontextPruefschritt } from '../../asd/validate/ValidatorFehlerartKontextPruefschritt';
 
 export class ValidatorFehlerartKontext extends JavaObject {
 
@@ -22,9 +21,19 @@ export class ValidatorFehlerartKontext extends JavaObject {
 	public praefix: string = "";
 
 	/**
-	 * Die Liste mit den Zuordnungen der Fehlerarten für die einzelnen Prüfschritte eines Validators
+	 * Liste der Schulformen, in denen bei dem Prüfschritt ein Fehler vorliegt
 	 */
-	public pruefschritte: List<ValidatorFehlerartKontextPruefschritt> = new ArrayList<ValidatorFehlerartKontextPruefschritt>();
+	public muss: List<string> = new ArrayList<string>();
+
+	/**
+	 * Liste der Schulformen, in denen bei dem Prüfschritt wahrscheinlich ein Fehler vorliegt
+	 */
+	public kann: List<string> = new ArrayList<string>();
+
+	/**
+	 * Liste der Schulformen, in denen bei dem Prüfschritt ein Hinweis auf einen möglichen Fehler erfolgt
+	 */
+	public hinweis: List<string> = new ArrayList<string>();
 
 	/**
 	 * Gibt an, ab welchem Schuljahr die Laufeigenschaft des Validators gilt. Falls schon immer, so ist null gesetzt.
@@ -52,7 +61,7 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		return ['de.svws_nrw.asd.validate.ValidatorFehlerartKontext'].includes(name);
 	}
 
-	public static class = new Class<ValidatorFehlerartKontext>('de.svws_nrw.asd.validate.ValidatorFehlerartKontext');
+	public static readonly class = new Class<ValidatorFehlerartKontext>('de.svws_nrw.asd.validate.ValidatorFehlerartKontext');
 
 	public static transpilerFromJSON(json: string): ValidatorFehlerartKontext {
 		const obj = JSON.parse(json) as Partial<ValidatorFehlerartKontext>;
@@ -66,9 +75,19 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		if (obj.praefix === undefined)
 			throw new Error('invalid json format, missing attribute praefix');
 		result.praefix = obj.praefix;
-		if (obj.pruefschritte !== undefined) {
-			for (const elem of obj.pruefschritte) {
-				result.pruefschritte.add(ValidatorFehlerartKontextPruefschritt.transpilerFromJSON(JSON.stringify(elem)));
+		if (obj.muss !== undefined) {
+			for (const elem of obj.muss) {
+				result.muss.add(elem);
+			}
+		}
+		if (obj.kann !== undefined) {
+			for (const elem of obj.kann) {
+				result.kann.add(elem);
+			}
+		}
+		if (obj.hinweis !== undefined) {
+			for (const elem of obj.hinweis) {
+				result.hinweis.add(elem);
 			}
 		}
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
@@ -81,11 +100,27 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		result += '"zebras" : ' + obj.zebras.toString() + ',';
 		result += '"svws" : ' + obj.svws.toString() + ',';
 		result += '"praefix" : ' + JSON.stringify(obj.praefix) + ',';
-		result += '"pruefschritte" : [ ';
-		for (let i = 0; i < obj.pruefschritte.size(); i++) {
-			const elem = obj.pruefschritte.get(i);
-			result += ValidatorFehlerartKontextPruefschritt.transpilerToJSON(elem);
-			if (i < obj.pruefschritte.size() - 1)
+		result += '"muss" : [ ';
+		for (let i = 0; i < obj.muss.size(); i++) {
+			const elem = obj.muss.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.muss.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"kann" : [ ';
+		for (let i = 0; i < obj.kann.size(); i++) {
+			const elem = obj.kann.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.kann.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"hinweis" : [ ';
+		for (let i = 0; i < obj.hinweis.size(); i++) {
+			const elem = obj.hinweis.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.hinweis.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -107,12 +142,32 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		if (obj.praefix !== undefined) {
 			result += '"praefix" : ' + JSON.stringify(obj.praefix) + ',';
 		}
-		if (obj.pruefschritte !== undefined) {
-			result += '"pruefschritte" : [ ';
-			for (let i = 0; i < obj.pruefschritte.size(); i++) {
-				const elem = obj.pruefschritte.get(i);
-				result += ValidatorFehlerartKontextPruefschritt.transpilerToJSON(elem);
-				if (i < obj.pruefschritte.size() - 1)
+		if (obj.muss !== undefined) {
+			result += '"muss" : [ ';
+			for (let i = 0; i < obj.muss.size(); i++) {
+				const elem = obj.muss.get(i);
+				result += '"' + elem + '"';
+				if (i < obj.muss.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (obj.kann !== undefined) {
+			result += '"kann" : [ ';
+			for (let i = 0; i < obj.kann.size(); i++) {
+				const elem = obj.kann.get(i);
+				result += '"' + elem + '"';
+				if (i < obj.kann.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (obj.hinweis !== undefined) {
+			result += '"hinweis" : [ ';
+			for (let i = 0; i < obj.hinweis.size(); i++) {
+				const elem = obj.hinweis.get(i);
+				result += '"' + elem + '"';
+				if (i < obj.hinweis.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

@@ -39,7 +39,7 @@ export class StundenplanKalenderwochenzuordnung extends JavaObject {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung'].includes(name);
 	}
 
-	public static class = new Class<StundenplanKalenderwochenzuordnung>('de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung');
+	public static readonly class = new Class<StundenplanKalenderwochenzuordnung>('de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung');
 
 	public static transpilerFromJSON(json: string): StundenplanKalenderwochenzuordnung {
 		const obj = JSON.parse(json) as Partial<StundenplanKalenderwochenzuordnung>;

@@ -1,5 +1,5 @@
 import { Jahrgaenge, Note, JavaLong, KursUtils, HashMap, Fach, KlassenUtils, ArrayList,
-	DeveloperNotificationException, Schulgliederung, JavaString, HashSet, } from '@core';
+	DeveloperNotificationException, Schulgliederung, JavaString, HashSet } from '@core';
 import type { Schuljahresabschnitt, SchuelerLernabschnittsdaten, SchuelerLeistungsdaten, Schulform, JahrgangsDaten,
 	KlassenDaten, SchuelerListeEintrag, KursDaten, LehrerListeEintrag, FachDaten, FoerderschwerpunktEintrag, List,
 	Comparator, JavaMap, JavaSet } from '@core';
@@ -70,8 +70,9 @@ export class SchuelerLernabschnittManager {
 	// Comparator: Führt einen Vergleich von zwei Fächern durch
 	private static readonly _compFach: Comparator<FachDaten> = { compare: (a: FachDaten, b: FachDaten) => {
 		let cmp: number = a.sortierung - b.sortierung;
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
@@ -79,11 +80,13 @@ export class SchuelerLernabschnittManager {
 	// Comparator: Führt einen Vergleich von zwei Lehrern durch
 	private static readonly _compLehrer: Comparator<LehrerListeEintrag> = { compare: (a: LehrerListeEintrag, b: LehrerListeEintrag) => {
 		let cmp: number = JavaString.compareTo(a.nachname, b.nachname);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = JavaString.compareTo(a.vorname, b.vorname);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = a.sortierung - b.sortierung;
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
@@ -98,12 +101,14 @@ export class SchuelerLernabschnittManager {
 	// Comparator: Führt einen Vergleich von zwei Jahrgängen durch
 	private static readonly jahrgangsDatencomparator: Comparator<JahrgangsDaten> = { compare: (a: JahrgangsDaten, b: JahrgangsDaten) => {
 		let cmp: number = a.sortierung - b.sortierung;
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		if ((a.kuerzel !== null) && (b.kuerzel !== null)) {
 			cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
-			if (cmp !== 0)
+			if (cmp !== 0) {
 				return cmp;
+			}
 		}
 		return JavaLong.compare(a.id, b.id);
 	} };
@@ -143,8 +148,9 @@ export class SchuelerLernabschnittManager {
 	 * @param leistungsdaten   die Leistungsdaten aus dem Schüler-Lernabschnitt
 	 */
 	private initLeistungsdaten(leistungsdaten: List<SchuelerLeistungsdaten>): void {
-		for (const leistung of leistungsdaten)
+		for (const leistung of leistungsdaten) {
 			this.leistungAddInternal(leistung);
+		}
 	}
 
 	/**
@@ -158,8 +164,9 @@ export class SchuelerLernabschnittManager {
 		this._faecher.addAll(faecher);
 		this._faecher.sort(SchuelerLernabschnittManager._compFach);
 		this._mapFachByID.clear();
-		for (const f of faecher)
+		for (const f of faecher) {
 			this._mapFachByID.put(f.id, f);
+		}
 	}
 
 	/**
@@ -173,8 +180,9 @@ export class SchuelerLernabschnittManager {
 		this._foerderschwerpunkte.addAll(foerderschwerpunkte);
 		this._foerderschwerpunkte.sort(FoerderschwerpunkteListeManager.comparator);
 		this._mapFoerderschwerpunktByID.clear();
-		for (const f of foerderschwerpunkte)
+		for (const f of foerderschwerpunkte) {
 			this._mapFoerderschwerpunktByID.put(f.id, f);
+		}
 	}
 
 	/**
@@ -188,8 +196,9 @@ export class SchuelerLernabschnittManager {
 		this._jahrgaenge.addAll(jahrgaenge);
 		this._jahrgaenge.sort(SchuelerLernabschnittManager.jahrgangsDatencomparator);
 		this._mapJahrgangByID.clear();
-		for (const j of jahrgaenge)
+		for (const j of jahrgaenge) {
 			this._mapJahrgangByID.put(j.id, j);
+		}
 	}
 
 	/**
@@ -203,8 +212,9 @@ export class SchuelerLernabschnittManager {
 		this._klassen.addAll(klassen);
 		this._klassen.sort(KlassenUtils.comparator);
 		this._mapKlasseByID.clear();
-		for (const k of klassen)
+		for (const k of klassen) {
 			this._mapKlasseByID.put(k.id, k);
+		}
 	}
 
 	/**
@@ -218,8 +228,9 @@ export class SchuelerLernabschnittManager {
 		this._kurse.addAll(kurse);
 		this._kurse.sort(KursUtils.comparator);
 		this._mapKursByID.clear();
-		for (const k of kurse)
+		for (const k of kurse) {
 			this._mapKursByID.put(k.id, k);
+		}
 	}
 
 	/**
@@ -237,8 +248,9 @@ export class SchuelerLernabschnittManager {
 			this._mapLehrerByID.put(l.id, l);
 			if (l.istAktiv === true) {
 				this._lehrerAktiv.add(l);
-				if (l.istSichtbar)
+				if (l.istSichtbar) {
 					this._lehrerAktivUndSichtbar.add(l);
+				}
 			}
 		}
 	}
@@ -260,8 +272,9 @@ export class SchuelerLernabschnittManager {
 	 * @return die Schulgliederung oder null
 	 */
 	public lernabschnittGetGliederung(): Schulgliederung | null {
-		if (this._lernabschnittsdaten.schulgliederung === null)
+		if (this._lernabschnittsdaten.schulgliederung === null) {
 			return null;
+		}
 		return Schulgliederung.data().getWertByKuerzel(this._lernabschnittsdaten.schulgliederung);
 	}
 
@@ -272,11 +285,13 @@ export class SchuelerLernabschnittManager {
 	 * @return der Statistik-Jahrgang
 	 */
 	public lernabschnittGetStatistikJahrgang(): Jahrgaenge | null {
-		if (this._lernabschnittsdaten.jahrgangID === null)
+		if (this._lernabschnittsdaten.jahrgangID === null) {
 			return null;
+		}
 		const eintrag: JahrgangsDaten | null = this._mapJahrgangByID.get(this._lernabschnittsdaten.jahrgangID);
-		if ((eintrag === null) || (eintrag.kuerzelStatistik === null))
+		if ((eintrag === null) || (eintrag.kuerzelStatistik === null)) {
 			return null;
+		}
 		return Jahrgaenge.data().getWertByKuerzel(eintrag.kuerzelStatistik);
 	}
 
@@ -287,8 +302,9 @@ export class SchuelerLernabschnittManager {
 	 */
 	public lernabschnittGetLernbereichsnote1Bezeichnung(): string | null {
 		const jg: Jahrgaenge | null = this.lernabschnittGetStatistikJahrgang();
-		if (jg === null)
+		if (jg === null) {
 			return null;
+		}
 		return jg.getLernbereichsnote1Bezeichnung(this._schulform, this.lernabschnittGetGliederung(), this._schuljahresabschnitt.schuljahr);
 	}
 
@@ -299,8 +315,9 @@ export class SchuelerLernabschnittManager {
 	 */
 	public lernabschnittGetLernbereichsnote2Bezeichnung(): string | null {
 		const jg: Jahrgaenge | null = this.lernabschnittGetStatistikJahrgang();
-		if (jg === null)
+		if (jg === null) {
 			return null;
+		}
 		return jg.getLernbereichsnote2Bezeichnung(this._schulform, this.lernabschnittGetGliederung(), this._schuljahresabschnitt.schuljahr);
 	}
 
@@ -332,8 +349,9 @@ export class SchuelerLernabschnittManager {
 	public leistungRemoveByID(idLeistungsdaten: number): void {
 		for (let i: number = this._lernabschnittsdaten.leistungsdaten.size() - 1; i >= 0; i--) {
 			const leistung: SchuelerLeistungsdaten = this._lernabschnittsdaten.leistungsdaten.get(i);
-			if (leistung.id === idLeistungsdaten)
+			if (leistung.id === idLeistungsdaten) {
 				this._lernabschnittsdaten.leistungsdaten.remove(leistung);
+			}
 		}
 		this._mapLeistungById.remove(idLeistungsdaten);
 	}
@@ -421,8 +439,9 @@ export class SchuelerLernabschnittManager {
 	 */
 	public fachGetByLeistungId(idLeistung: number): FachDaten | null {
 		const leistung: SchuelerLeistungsdaten | null = this._mapLeistungById.get(idLeistung);
-		if (leistung === null)
+		if (leistung === null) {
 			return null;
+		}
 		return this._mapFachByID.get(leistung.fachID);
 	}
 
@@ -448,8 +467,9 @@ export class SchuelerLernabschnittManager {
 	 */
 	public fachFarbeGetByLeistungsIdOrDefault(idLeistung: number): string {
 		const fachDaten: FachDaten | null = this.fachGetByLeistungId(idLeistung);
-		if (fachDaten === null)
+		if (fachDaten === null) {
 			return "rgb(220,220,220)";
+		}
 		return Fach.getBySchluesselOrDefault(fachDaten.kuerzelStatistik).getHMTLFarbeRGB(this._schuljahresabschnitt.schuljahr);
 	}
 
@@ -622,8 +642,9 @@ export class SchuelerLernabschnittManager {
 		const leistung: SchuelerLeistungsdaten = DeveloperNotificationException.ifMapGetIsNull(this._mapLeistungById, idLeistung);
 		const result: List<KursDaten> = new ArrayList<KursDaten>();
 		for (const k of this._kurse) {
-			if ((k.idFach === leistung.fachID) && (k.idJahrgaenge.isEmpty() || k.idJahrgaenge.contains(this._lernabschnittsdaten.jahrgangID)))
+			if ((k.idFach === leistung.fachID) && (k.idJahrgaenge.isEmpty() || k.idJahrgaenge.contains(this._lernabschnittsdaten.jahrgangID))) {
 				result.add(k);
+			}
 		}
 		return result;
 	}

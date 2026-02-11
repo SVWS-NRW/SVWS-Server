@@ -4,6 +4,7 @@ import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContext;
+import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import jakarta.ws.rs.core.Response;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -51,8 +52,8 @@ public final class ReportRendererHtml {
 			return templateEngine.process(htmlTemplate, finalContext);
 		} catch (final Exception e) {
 			if (logger != null)
-				logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Das HTML konnte nicht gerendert werden: " + e.getMessage());
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, "### FEHLER: Das HTML konnte nicht gerendert werden: " + e.getMessage());
+				ReportingExceptionUtils.logException("### FEHLER: Das HTML konnte nicht gerendert werden.",	e, logger, LogLevel.ERROR, 0);
+			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "### FEHLER: Das HTML konnte nicht gerendert werden.");
 		}
 	}
 

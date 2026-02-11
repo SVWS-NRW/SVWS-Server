@@ -58,32 +58,20 @@ export abstract class RouteData<RouteState extends RouteStateInterface> extends 
 	 * @param validViews   die Menge der gültigen Ansichten
 	 */
 	public setView(value: RouteNode<any, any>, validViews: RouteNode<any, any>[]) {
-		if (validViews.includes(value))
+		if (validViews.includes(value)) {
 			this.setPatchedState(<RouteState>{ view: value });
-		else
+		} else {
 			throw new DeveloperNotificationException("Die gewählte Ansicht wird nicht unterstützt.");
-	}
-
-	/**
-	 * Setter für die aktuelle Ansicht/Child Route. Das Setzen der Ansicht ist nicht reaktiv.
-	 * Ist eine Reaktivität gewünscht, so muss die Methode setView aufgerufen werden.
-	 *
-	 * @param value        die zu setzende Ansicht
-	 * @param validViews   die Menge der gültigen Ansichten
-	 */
-	public setViewNonReactive(value: RouteNode<any, any>, validViews: RouteNode<any, any>[]) {
-		if (validViews.includes(value))
-			this.setPatchedState(<RouteState>{ view: value });
-		else
-			throw new DeveloperNotificationException("Die gewählte Ansicht wird nicht unterstützt.");
+		}
 	}
 
 	/**
 	 * Getter für die aktuelle Ansicht/Child Route.
 	 */
 	public get view(): RouteNode<any, any> {
-		if (this._state.value.view === undefined)
+		if (this._state.value.view === undefined) {
 			throw new DeveloperNotificationException("Bei dieser Route wurde keine Ansicht im Default-State definiert.");
+		}
 		return this._state.value.view;
 	}
 
@@ -91,14 +79,16 @@ export abstract class RouteData<RouteState extends RouteStateInterface> extends 
 	 * Getter für die Default-View
 	 */
 	public get defaultView(): RouteNode<any, any> {
-		if (this._defaultState.view === undefined)
+		if (this._defaultState.view === undefined) {
 			throw new DeveloperNotificationException("Bei dieser Route wurde keine Ansicht im Default-State definiert.");
+		}
 		return this._defaultState.view;
 	}
 
 	public get defaultGruppenprozesseView(): RouteNode<any, any> {
-		if (this._defaultState.gruppenprozesseView === undefined)
+		if (this._defaultState.gruppenprozesseView === undefined) {
 			throw new DeveloperNotificationException("Bei dieser Route wurde keine Gruppenprozess Ansicht im Default-State definiert.");
+		}
 		return this._defaultState.gruppenprozesseView;
 	}
 
@@ -107,8 +97,9 @@ export abstract class RouteData<RouteState extends RouteStateInterface> extends 
 	 * Ist keiner spezifiziert, so wird DEFAULT zurückgegeben.
 	 */
 	get activeViewType(): ViewType {
-		if (this._state.value.activeViewType === undefined)
+		if (this._state.value.activeViewType === undefined) {
 			return ViewType.DEFAULT;
+		}
 		return this._state.value.activeViewType;
 	}
 

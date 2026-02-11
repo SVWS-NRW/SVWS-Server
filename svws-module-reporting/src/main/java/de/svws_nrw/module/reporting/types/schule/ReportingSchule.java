@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
+import de.svws_nrw.module.reporting.utils.ReportingImageUtils;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schule.
@@ -203,6 +204,15 @@ public class ReportingSchule extends ReportingSchuleBasisdatenNRW {
 	 */
 	public String schullogo() {
 		return schullogo;
+	}
+
+	/**
+	 * Das Schullogo der Schule als HTML-ImageSource inklusive MIME-Type. Dieser wird versucht aus den Bilddaten zu ermitteln.
+	 *
+	 * @return Das Schullogo der Schule als HTML-ImageSource im base64-Format mit MIME-Type.
+	 */
+	public String schullogoHtmlImageSource() {
+		return ReportingImageUtils.base64ImageToHtmlImageSource(schullogo, "", null);
 	}
 
 	/**

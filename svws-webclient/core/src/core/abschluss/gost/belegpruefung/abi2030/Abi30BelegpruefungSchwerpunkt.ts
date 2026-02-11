@@ -65,7 +65,7 @@ export class Abi30BelegpruefungSchwerpunkt extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungSchwerpunkt'].includes(name);
 	}
 
-	public static class = new Class<Abi30BelegpruefungSchwerpunkt>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungSchwerpunkt');
+	public static readonly class = new Class<Abi30BelegpruefungSchwerpunkt>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungSchwerpunkt');
 
 }
 

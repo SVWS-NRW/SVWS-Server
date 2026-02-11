@@ -497,7 +497,7 @@ export class SatInput extends JavaObject {
 		return ['de.svws_nrw.core.adt.sat.SatInput'].includes(name);
 	}
 
-	public static class = new Class<SatInput>('de.svws_nrw.core.adt.sat.SatInput');
+	public static readonly class = new Class<SatInput>('de.svws_nrw.core.adt.sat.SatInput');
 
 }
 

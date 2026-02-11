@@ -92,7 +92,7 @@ export class Map3DUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.Map3DUtils'].includes(name);
 	}
 
-	public static class = new Class<Map3DUtils>('de.svws_nrw.core.utils.Map3DUtils');
+	public static readonly class = new Class<Map3DUtils>('de.svws_nrw.core.utils.Map3DUtils');
 
 }
 

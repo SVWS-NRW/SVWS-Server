@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -224,6 +225,39 @@ public enum GostHalbjahr {
 	/**
 	 * Gibt alle Halbjahre des übergebenen Jahrgangs zurück.
 	 *
+	 * @param ab   das GostHalbjahr
+	 *
+	 * @return ein Array mit den Halbjahren ab dem angegebenen
+	 */
+	public static @NotNull GostHalbjahr @NotNull [] getHalbjahreAbHalbjahr(final @NotNull GostHalbjahr ab) {
+		switch (ab) {
+			case EF1:
+				final @NotNull GostHalbjahr @NotNull [] ef1 = { GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22 };
+				return ef1;
+			case EF2:
+				final @NotNull GostHalbjahr @NotNull [] ef2 = { GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22 };
+				return ef2;
+			case Q11:
+				final @NotNull GostHalbjahr @NotNull [] q11 = { GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22 };
+				return q11;
+			case Q12:
+				final @NotNull GostHalbjahr @NotNull [] q12 = { GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22 };
+				return q12;
+			case Q21:
+				final @NotNull GostHalbjahr @NotNull [] q21 = { GostHalbjahr.Q21, GostHalbjahr.Q22 };
+				return q21;
+			case Q22:
+				final @NotNull GostHalbjahr @NotNull [] q22 = { GostHalbjahr.Q22 };
+				return q22;
+			default:
+				throw new IllegalArgumentException("Der angegebene Jahrgang ist kein gültiger Jahrgang der gymnasialen Oberstufe");
+		}
+	}
+
+
+	/**
+	 * Gibt alle Halbjahre ab dem angegebenen Halbjahres zurück.
+	 *
 	 * @param jahrgang     der Jahrgang
 	 *
 	 * @return ein Array mit den Halbjahren des Jahrgangs
@@ -270,6 +304,33 @@ public enum GostHalbjahr {
 				return GostHalbjahr.Q22;
 			default:
 				return null;
+		}
+	}
+
+
+	/**
+	 * Gibt das Kürzel des Halbjahrs zurück, welches die übergebene ID hat.
+	 *
+	 * @param id   die ID des Halbjahres
+	 *
+	 * @return das Halbjahr oder Exception, falls die ID nicht gültig ist
+	 */
+	public static @NotNull String kuerzelFromIDOrException(final int id) {
+		switch (id) {
+			case 0:
+				return GostHalbjahr.EF1.kuerzel;
+			case 1:
+				return GostHalbjahr.EF2.kuerzel;
+			case 2:
+				return GostHalbjahr.Q11.kuerzel;
+			case 3:
+				return GostHalbjahr.Q12.kuerzel;
+			case 4:
+				return GostHalbjahr.Q21.kuerzel;
+			case 5:
+				return GostHalbjahr.Q22.kuerzel;
+			default:
+				throw new DeveloperNotificationException("Für die angegebene ID " + id + " existiert kein entsprechendes Halbjahr.");
 		}
 	}
 
@@ -446,6 +507,22 @@ public enum GostHalbjahr {
 	@JsonIgnore
 	public boolean istQualifikationsphase() {
 		return !istEinfuehrungsphase();
+	}
+
+
+	/**
+	 * Prüft, ob dieses Halbjahr einer der übergebenen Halbjahre ist.
+	 *
+	 * @param halbjahre    die Halbjahre
+	 *
+	 * @return true oder false
+	 */
+	@JsonIgnore
+	public boolean istIn(final GostHalbjahr... halbjahre) {
+		for (final @NotNull GostHalbjahr h : halbjahre)
+			if (h == this)
+				return true;
+		return false;
 	}
 
 

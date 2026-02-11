@@ -309,7 +309,7 @@ export class KAOAMerkmal extends JavaEnum<KAOAMerkmal> implements CoreType<KAOAM
 		return ['de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.kaoa.KAOAMerkmal', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<KAOAMerkmal>('de.svws_nrw.asd.types.kaoa.KAOAMerkmal');
+	public static readonly class = new Class<KAOAMerkmal>('de.svws_nrw.asd.types.kaoa.KAOAMerkmal');
 
 }
 

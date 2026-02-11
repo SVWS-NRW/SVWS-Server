@@ -89,7 +89,7 @@ export class SchildReportingAttributTyp extends JavaEnum<SchildReportingAttribut
 		return ['de.svws_nrw.core.types.schild3.SchildReportingAttributTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<SchildReportingAttributTyp>('de.svws_nrw.core.types.schild3.SchildReportingAttributTyp');
+	public static readonly class = new Class<SchildReportingAttributTyp>('de.svws_nrw.core.types.schild3.SchildReportingAttributTyp');
 
 }
 

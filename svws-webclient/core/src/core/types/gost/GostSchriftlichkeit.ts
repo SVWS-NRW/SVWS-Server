@@ -75,7 +75,7 @@ export class GostSchriftlichkeit extends JavaEnum<GostSchriftlichkeit> {
 		return ['de.svws_nrw.core.types.gost.GostSchriftlichkeit', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<GostSchriftlichkeit>('de.svws_nrw.core.types.gost.GostSchriftlichkeit');
+	public static readonly class = new Class<GostSchriftlichkeit>('de.svws_nrw.core.types.gost.GostSchriftlichkeit');
 
 }
 

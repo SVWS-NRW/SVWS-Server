@@ -48,7 +48,7 @@ public class ProxyReportingGostFachwahlstatistikenAbiturjahrgang extends Reporti
 			}
 			setFachwahlstatistiken(reportingGostFachwahlstatistiken);
 		} catch (final ApiOperationException e) {
-			ReportingExceptionUtils.putStacktraceInLog(
+			ReportingExceptionUtils.logException(
 					"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Fachwahlstatistik.", e,
 					reportingRepository.logger(), LogLevel.INFO, 0);
 		}

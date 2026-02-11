@@ -24,7 +24,7 @@ export class SchulformKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.schule.SchulformKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<SchulformKatalogEintrag>('de.svws_nrw.asd.data.schule.SchulformKatalogEintrag');
+	public static readonly class = new Class<SchulformKatalogEintrag>('de.svws_nrw.asd.data.schule.SchulformKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): SchulformKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<SchulformKatalogEintrag>;

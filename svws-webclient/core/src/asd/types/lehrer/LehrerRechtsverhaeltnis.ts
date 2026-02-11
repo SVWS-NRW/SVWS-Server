@@ -147,7 +147,7 @@ export class LehrerRechtsverhaeltnis extends JavaEnum<LehrerRechtsverhaeltnis> i
 		return ['de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<LehrerRechtsverhaeltnis>('de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis');
+	public static readonly class = new Class<LehrerRechtsverhaeltnis>('de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis');
 
 }
 

@@ -73,8 +73,9 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 	};
 
 	protected async updateList(abiturjahr: number, gostBelegpruefungsArt: GostBelegpruefungsArt) {
-		if (abiturjahr < 1)
+		if (abiturjahr < 1) {
 			throw new DeveloperNotificationException(`Fehlerhafte Übergabe des Abiturjahrs: ${abiturjahr}`);
+		}
 		const listBelegpruefungsErgebnisse = (gostBelegpruefungsArt === GostBelegpruefungsArt.GESAMT)
 			? await api.server.getGostAbiturjahrgangBelegpruefungsergebnisseGesamt(api.schema, abiturjahr)
 			: await api.server.getGostAbiturjahrgangBelegpruefungsergebnisseEF1(api.schema, abiturjahr);
@@ -86,8 +87,9 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 	}
 
 	setGostBelegpruefungsArt = async (gostBelegpruefungsArt: GostBelegpruefungsArt) => {
-		if (gostBelegpruefungsArt === this.gostBelegpruefungsArt)
+		if (gostBelegpruefungsArt === this.gostBelegpruefungsArt) {
 			return;
+		}
 		await this.updateList(this.abiturjahr, gostBelegpruefungsArt);
 		this.setPatchedState({ gostBelegpruefungsArt });
 	};
@@ -131,18 +133,21 @@ export class RouteDataGostLaufbahnfehler extends RouteData<RouteStateDataGostLau
 	};
 
 	resetFachwahlenAlle = async (ergebnisse: Iterable<GostBelegpruefungsErgebnisse>) => {
-		if ([...ergebnisse].length === this.listBelegpruefungsErgebnisse.size())
+		if ([...ergebnisse].length === this.listBelegpruefungsErgebnisse.size()) {
 			await api.server.resetGostAbiturjahrgangSchuelerFachwahlen(api.schema, this.abiturjahr);
-		else
-			for (const ergebnis of ergebnisse)
+		} else {
+			for (const ergebnis of ergebnisse) {
 				await api.server.resetGostSchuelerFachwahlen(api.schema, ergebnis.schueler.id);
+			}
+		}
 		await this.setAbiturjahr(this.abiturjahr);
 	};
 
 	loeschenFachwahlenSelected = async (ergebnisse: Iterable<GostBelegpruefungsErgebnisse>) => {
 		const idsSchueler = new ArrayList<number>();
-		for (const ergebnis of ergebnisse)
+		for (const ergebnis of ergebnisse) {
 			idsSchueler.add(ergebnis.schueler.id);
+		}
 		await api.server.deleteGostSchuelerFachwahlenMultiple(idsSchueler, api.schema);
 		await this.setAbiturjahr(this.abiturjahr);
 	};

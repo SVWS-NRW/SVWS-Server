@@ -6,7 +6,7 @@ export class Kindergarten extends JavaObject {
 	/**
 	 * Die ID des Kindergartens.
 	 */
-	public id: number = -1;
+	public id: number = 0;
 
 	/**
 	 * Die Bezeichnung des Kindergartens.
@@ -14,54 +14,59 @@ export class Kindergarten extends JavaObject {
 	public bezeichnung: string = "";
 
 	/**
-	 * Die PLZ des Kindergartens.
+	 * Bemerkung zum Kindergartens.
 	 */
-	public plz: string | null = "";
-
-	/**
-	 * Der Ort des Kindergartens.
-	 */
-	public ort: string | null = "";
-
-	/**
-	 * Der Strassenname des Kindergartens.
-	 */
-	public strassenname: string | null = "";
-
-	/**
-	 * Die Hausnummer des Kindergartens.
-	 */
-	public hausNr: string | null = "";
-
-	/**
-	 * der Hausnummerzusatz des Kindergartens.
-	 */
-	public hausNrZusatz: string | null = "";
+	public bemerkung: string | null = null;
 
 	/**
 	 * Die Telefonnummer des Kindergartens.
 	 */
-	public tel: string | null = "";
+	public tel: string | null = null;
 
 	/**
 	 * Die E-Mail des Kindergartens.
 	 */
-	public email: string | null = "";
+	public email: string | null = null;
 
 	/**
-	 * Bemerkung zum Kindergartens.
+	 * Der Strassenname des Kindergartens.
 	 */
-	public bemerkung: string | null = "";
+	public strassenname: string | null = null;
 
 	/**
-	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
+	 * Die Hausnummer des Kindergartens.
 	 */
-	public istSichtbar: boolean = true;
+	public hausNr: string | null = null;
+
+	/**
+	 * der Hausnummerzusatz des Kindergartens.
+	 */
+	public hausNrZusatz: string | null = null;
+
+	/**
+	 * Die PLZ des Kindergartens.
+	 */
+	public plz: string | null = null;
+
+	/**
+	 * Der Ort des Kindergartens.
+	 */
+	public ort: string | null = null;
 
 	/**
 	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
 	 */
-	public sortierung: number = 1;
+	public sortierung: number = 0;
+
+	/**
+	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
+	 */
+	public istSichtbar: boolean = false;
+
+	/**
+	 * Gibt an, ob der Kindergarten in anderen Datenbanktabellen referenziert ist oder nicht.
+	 */
+	public referenziertInAnderenTabellen: boolean = false;
 
 
 	public constructor() {
@@ -76,7 +81,7 @@ export class Kindergarten extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.Kindergarten'].includes(name);
 	}
 
-	public static class = new Class<Kindergarten>('de.svws_nrw.core.data.schule.Kindergarten');
+	public static readonly class = new Class<Kindergarten>('de.svws_nrw.core.data.schule.Kindergarten');
 
 	public static transpilerFromJSON(json: string): Kindergarten {
 		const obj = JSON.parse(json) as Partial<Kindergarten>;
@@ -87,20 +92,23 @@ export class Kindergarten extends JavaObject {
 		if (obj.bezeichnung === undefined)
 			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		result.plz = (obj.plz === undefined) ? null : obj.plz === null ? null : obj.plz;
-		result.ort = (obj.ort === undefined) ? null : obj.ort === null ? null : obj.ort;
+		result.bemerkung = (obj.bemerkung === undefined) ? null : obj.bemerkung === null ? null : obj.bemerkung;
+		result.tel = (obj.tel === undefined) ? null : obj.tel === null ? null : obj.tel;
+		result.email = (obj.email === undefined) ? null : obj.email === null ? null : obj.email;
 		result.strassenname = (obj.strassenname === undefined) ? null : obj.strassenname === null ? null : obj.strassenname;
 		result.hausNr = (obj.hausNr === undefined) ? null : obj.hausNr === null ? null : obj.hausNr;
 		result.hausNrZusatz = (obj.hausNrZusatz === undefined) ? null : obj.hausNrZusatz === null ? null : obj.hausNrZusatz;
-		result.tel = (obj.tel === undefined) ? null : obj.tel === null ? null : obj.tel;
-		result.email = (obj.email === undefined) ? null : obj.email === null ? null : obj.email;
-		result.bemerkung = (obj.bemerkung === undefined) ? null : obj.bemerkung === null ? null : obj.bemerkung;
-		if (obj.istSichtbar === undefined)
-			throw new Error('invalid json format, missing attribute istSichtbar');
-		result.istSichtbar = obj.istSichtbar;
+		result.plz = (obj.plz === undefined) ? null : obj.plz === null ? null : obj.plz;
+		result.ort = (obj.ort === undefined) ? null : obj.ort === null ? null : obj.ort;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
+		if (obj.istSichtbar === undefined)
+			throw new Error('invalid json format, missing attribute istSichtbar');
+		result.istSichtbar = obj.istSichtbar;
+		if (obj.referenziertInAnderenTabellen === undefined)
+			throw new Error('invalid json format, missing attribute referenziertInAnderenTabellen');
+		result.referenziertInAnderenTabellen = obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
@@ -108,16 +116,17 @@ export class Kindergarten extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
-		result += '"plz" : ' + ((obj.plz === null) ? 'null' : JSON.stringify(obj.plz)) + ',';
-		result += '"ort" : ' + ((obj.ort === null) ? 'null' : JSON.stringify(obj.ort)) + ',';
+		result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+		result += '"tel" : ' + ((obj.tel === null) ? 'null' : JSON.stringify(obj.tel)) + ',';
+		result += '"email" : ' + ((obj.email === null) ? 'null' : JSON.stringify(obj.email)) + ',';
 		result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		result += '"hausNr" : ' + ((obj.hausNr === null) ? 'null' : JSON.stringify(obj.hausNr)) + ',';
 		result += '"hausNrZusatz" : ' + ((obj.hausNrZusatz === null) ? 'null' : JSON.stringify(obj.hausNrZusatz)) + ',';
-		result += '"tel" : ' + ((obj.tel === null) ? 'null' : JSON.stringify(obj.tel)) + ',';
-		result += '"email" : ' + ((obj.email === null) ? 'null' : JSON.stringify(obj.email)) + ',';
-		result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
-		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		result += '"plz" : ' + ((obj.plz === null) ? 'null' : JSON.stringify(obj.plz)) + ',';
+		result += '"ort" : ' + ((obj.ort === null) ? 'null' : JSON.stringify(obj.ort)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -131,11 +140,14 @@ export class Kindergarten extends JavaObject {
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
-		if (obj.plz !== undefined) {
-			result += '"plz" : ' + ((obj.plz === null) ? 'null' : JSON.stringify(obj.plz)) + ',';
+		if (obj.bemerkung !== undefined) {
+			result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
-		if (obj.ort !== undefined) {
-			result += '"ort" : ' + ((obj.ort === null) ? 'null' : JSON.stringify(obj.ort)) + ',';
+		if (obj.tel !== undefined) {
+			result += '"tel" : ' + ((obj.tel === null) ? 'null' : JSON.stringify(obj.tel)) + ',';
+		}
+		if (obj.email !== undefined) {
+			result += '"email" : ' + ((obj.email === null) ? 'null' : JSON.stringify(obj.email)) + ',';
 		}
 		if (obj.strassenname !== undefined) {
 			result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
@@ -146,20 +158,20 @@ export class Kindergarten extends JavaObject {
 		if (obj.hausNrZusatz !== undefined) {
 			result += '"hausNrZusatz" : ' + ((obj.hausNrZusatz === null) ? 'null' : JSON.stringify(obj.hausNrZusatz)) + ',';
 		}
-		if (obj.tel !== undefined) {
-			result += '"tel" : ' + ((obj.tel === null) ? 'null' : JSON.stringify(obj.tel)) + ',';
+		if (obj.plz !== undefined) {
+			result += '"plz" : ' + ((obj.plz === null) ? 'null' : JSON.stringify(obj.plz)) + ',';
 		}
-		if (obj.email !== undefined) {
-			result += '"email" : ' + ((obj.email === null) ? 'null' : JSON.stringify(obj.email)) + ',';
+		if (obj.ort !== undefined) {
+			result += '"ort" : ' + ((obj.ort === null) ? 'null' : JSON.stringify(obj.ort)) + ',';
 		}
-		if (obj.bemerkung !== undefined) {
-			result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+		if (obj.sortierung !== undefined) {
+			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		}
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
-		if (obj.sortierung !== undefined) {
-			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		if (obj.referenziertInAnderenTabellen !== undefined) {
+			result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

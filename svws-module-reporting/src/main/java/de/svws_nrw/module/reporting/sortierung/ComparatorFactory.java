@@ -1,6 +1,5 @@
 package de.svws_nrw.module.reporting.sortierung;
 
-import de.svws_nrw.core.data.reporting.ReportingSortierungDefinition;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
@@ -24,41 +23,29 @@ public final class ComparatorFactory {
 	 * @param reportingRepository Das Repository, das die benötigten Reporting-Parameter enthält.
 	 * @param typName Der Typname, der verwendet wird, um eine entsprechende Sortierungsdefinition zu suchen.
 	 * @param sortierungRegistry Die Registry, die die möglichen Sortierungsregeln bereitstellt.
-	 * @param standardsortierung Eine Liste von Standardattributen, die verwendet werden, wenn keine benutzerdefinierten
-	 *                          Attribute in der Sortierungsdefinition angegeben sind.
+
 	 * @return Ein Optional, das einen Comparator enthält, falls eine passende Definition gefunden wurde und
 	 *         erfolgreich verarbeitet werden konnte; sonst ein leeres Optional.
 	 */
 	public static <T> Optional<Comparator<T>> buildOptionalComparator(
 			final ReportingRepository reportingRepository,
 			final String typName,
-			final SortierungRegistry<T> sortierungRegistry,
-			final List<String> standardsortierung) {
+			final SortierungRegistry<T> sortierungRegistry) {
 
 		if ((reportingRepository == null) || (reportingRepository.reportingParameter() == null))
 			return Optional.empty();
 
 		// Prüfe, ob eine Definition für die Sortierung des angegebenen Typs vorhanden ist.
-		final ReportingSortierungDefinition reportingSortierungDefinition = reportingRepository.reportingParameter().sortierungDefinitionen.stream()
-				.filter(d -> typName.equals(d.typ))
-				.findFirst()
-				.orElse(null);
+		final List<String> attribute = reportingRepository.getSortierungsAttribute(typName, true);
 
-		// Wenn eine Sortierung gefunden wurde, aber die Standardsortierung nicht verwendet werden soll UND gleichzeitig keine Attribute angegeben sind, dann gibt es keinen Comparator.
-		if ((reportingSortierungDefinition != null)
-				&& (!reportingSortierungDefinition.verwendeStandardsortierung
-						&& ((reportingSortierungDefinition.attribute == null) || reportingSortierungDefinition.attribute.isEmpty())))
+		if (attribute.isEmpty())
 			return Optional.empty();
-
-		final List<String> attribute = ((reportingSortierungDefinition == null) || reportingSortierungDefinition.verwendeStandardsortierung)
-								? standardsortierung
-								: reportingSortierungDefinition.attribute;
 
 		final List<String> validierungsfehler = new ArrayList<>();
 		final Comparator<T> comparator = ComparatorBuilder.build(sortierungRegistry, attribute, validierungsfehler);
 
 		if (!validierungsfehler.isEmpty()) {
-			ReportingExceptionUtils.putInfoInLog(
+			ReportingExceptionUtils.logInfo(
 					"INFO: Es wurden folgende Attribute zur Sortierung übergeben, die nicht in der Registry definiert wurden: "
 							+ String.join(", ", validierungsfehler),
 					reportingRepository.logger(), LogLevel.INFO, 4);

@@ -121,8 +121,9 @@
 			const result = new ArrayList<GostFach>();
 			for (const fach of props.manager().faecher().faecher()) {
 				const fb = props.manager().getFachbelegungByID(fach.id);
-				if (fb === null)
+				if (fb === null) {
 					continue;
+				}
 				for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 					const fbh: AbiturFachbelegungHalbjahr | null = fb.belegungen[halbjahr.id];
 					if ((fbh !== null)) {
@@ -136,10 +137,12 @@
 		getRowKey: fach => {
 			let result = props.manager().daten().schuelerID + "_" + fach.id;
 			const fachbelegung = props.manager().getFachbelegungByID(fach.id);
-			if (fachbelegung === null)
+			if (fachbelegung === null) {
 				return result;
-			for (const halbjahr of GostHalbjahr.getQualifikationsphase())
+			}
+			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 				result += "_" + (fachbelegung.belegungen[halbjahr.id]?.block1gewertet ?? "");
+			}
 			return result;
 		},
 		columns: [
@@ -163,37 +166,42 @@
 
 	function getAbiFach(fach: GostFach): string {
 		const belegung = props.manager().getFachbelegungByID(fach.id);
-		if (belegung === null)
+		if (belegung === null) {
 			return "???";
+		}
 		return (belegung.abiturFach === null) ? "" : "" + belegung.abiturFach;
 	}
 
 	function getKursart(fach: GostFach): string {
 		const belegung = props.manager().getFachbelegungByID(fach.id);
-		if ((belegung === null) || (belegung.letzteKursart === null))
+		if ((belegung === null) || (belegung.letzteKursart === null)) {
 			return "???";
+		}
 		return belegung.letzteKursart;
 	}
 
 	function hatBelegung(fach: GostFach, hj: GostHalbjahr): boolean {
 		const belegung = props.manager().getFachbelegungByID(fach.id);
-		if (belegung === null)
+		if (belegung === null) {
 			return false;
+		}
 		return (belegung.belegungen[hj.id] !== null);
 	}
 
 	function istSchriftlich(fach: GostFach, hj: GostHalbjahr): boolean {
 		const belegung = props.manager().getFachbelegungByID(fach.id);
-		if (belegung === null)
+		if (belegung === null) {
 			return false;
+		}
 		const belegungHalbjahr = belegung.belegungen[hj.id];
 		return (belegungHalbjahr !== null) && (belegungHalbjahr.schriftlich);
 	}
 
 	function getNotenpunkteString(fach: GostFach, hj: GostHalbjahr): string {
 		const np = props.manager().getNotenpunkteByFachIDAndHalbjahr(fach.id, hj);
-		if (np === null)
+		if (np === null) {
 			return "";
+		}
 		return ((np < 10) ? "0" : "") + np;
 	}
 
@@ -213,16 +221,18 @@
 
 	function istGewertet(fach: GostFach, hj: GostHalbjahr): boolean {
 		const belegung = props.manager().getFachbelegungByID(fach.id);
-		if (belegung === null)
+		if (belegung === null) {
 			return false;
+		}
 		const hjbelegung = belegung.belegungen[hj.id];
 		return ((hjbelegung !== null) && (hjbelegung.block1gewertet === true));
 	}
 
 	function getFachSummeBlockI(fach: GostFach): number {
 		const belegung = props.manager().getFachbelegungByID(fach.id);
-		if (belegung === null)
+		if (belegung === null) {
 			return 0;
+		}
 		return belegung.block1PunktSumme ?? 0;
 	}
 
@@ -260,13 +270,16 @@
 	}
 
 	function formatNotenpunkteDurchschnitt(avg: number | null): string {
-		if (avg === null)
+		if (avg === null) {
 			return "";
+		}
 		let tmp = ((avg < 10) ? "0" : "") + avg;
-		if (tmp.length === 2)
+		if (tmp.length === 2) {
 			tmp += ".";
-		while (tmp.length < 5)
+		}
+		while (tmp.length < 5) {
 			tmp += "0";
+		}
 		return tmp;
 	}
 
@@ -278,17 +291,21 @@
 
 	function updateMarkierung(fach: GostFach, hj: GostHalbjahr, value: boolean): void {
 		const fachbelegung = props.manager().getFachbelegungByID(fach.id);
-		if (fachbelegung === null)
+		if (fachbelegung === null) {
 			return;
+		}
 		const partial = <Partial<AbiturFachbelegung>>{ fachID: fach.id, belegungen: fachbelegung.belegungen };
-		if (partial.belegungen === undefined)
+		if (partial.belegungen === undefined) {
 			return;
+		}
 		const belegungHalbjahr = partial.belegungen[hj.id];
-		if (belegungHalbjahr === null)
+		if (belegungHalbjahr === null) {
 			return;
+		}
 		belegungHalbjahr.block1gewertet = value;
-		if (props.updateAbiturpruefungsdaten !== null)
+		if (props.updateAbiturpruefungsdaten !== null) {
 			void props.updateAbiturpruefungsdaten(props.manager, partial, true);
+		}
 	}
 
 	function inputMarkierungToggle(fach: GostFach, index: number, hj: GostHalbjahr) {
@@ -297,8 +314,9 @@
 		const belegungHalbjahr = props.manager().getFachbelegungByID(fach.id)?.belegungen[hj.id] ?? null;
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputToggle(key, hj.id, index, element, setter);
-			if (input !== null)
+			if (input !== null) {
 				watchEffect(() => gridManager.update(key, belegungHalbjahr?.block1gewertet ?? false));
+			}
 		};
 	}
 

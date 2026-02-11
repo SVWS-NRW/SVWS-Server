@@ -133,7 +133,7 @@ export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 		return ['java.util.Collection', 'java.util.Set', 'de.svws_nrw.core.adt.map.ArrayMapKeySet', 'java.lang.Iterable'].includes(name);
 	}
 
-	public static class = new Class<ArrayMapKeySet<any, any>>('de.svws_nrw.core.adt.map.ArrayMapKeySet');
+	public static readonly class = new Class<ArrayMapKeySet<any, any>>('de.svws_nrw.core.adt.map.ArrayMapKeySet');
 
 	public [Symbol.iterator](): Iterator<K> {
 		const iter: JavaIterator<K> = this.iterator();

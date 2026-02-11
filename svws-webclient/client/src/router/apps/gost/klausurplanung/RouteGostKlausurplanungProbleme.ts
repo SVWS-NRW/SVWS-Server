@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
 import type { GostKlausurplanungProblemeProps } from "~/components/gost/klausurplanung/SGostKlausurplanungProblemeProps";
 import { schulformenGymOb } from "~/router/RouteHelper";
+import { api } from "~/router/Api";
 
 const SGostKlausurplanungProbleme = () => import("~/components/gost/klausurplanung/SGostKlausurplanungProbleme.vue");
 
@@ -39,6 +40,8 @@ export class RouteGostKlausurplanungProbleme extends RouteNode<any, RouteGostKla
 			gotoStundenplan: routeGostKlausurplanung.data.gotoStundenplan,
 			setConfigValue: routeGostKlausurplanung.data.setConfigValue,
 			getConfigNumberValue: routeGostKlausurplanung.data.getConfigNumberValue,
+			getObjectValue: api.config.getObjectValue.bind(api.config),
+			setObjectValue: api.config.setObjectValue.bind(api.config),
 		};
 	}
 

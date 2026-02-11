@@ -39,7 +39,7 @@ export class AdressbuchEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.adressbuch.AdressbuchEintrag'].includes(name);
 	}
 
-	public static class = new Class<AdressbuchEintrag>('de.svws_nrw.core.data.adressbuch.AdressbuchEintrag');
+	public static readonly class = new Class<AdressbuchEintrag>('de.svws_nrw.core.data.adressbuch.AdressbuchEintrag');
 
 	public static transpilerFromJSON(json: string): AdressbuchEintrag {
 		const obj = JSON.parse(json) as Partial<AdressbuchEintrag>;

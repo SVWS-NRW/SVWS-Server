@@ -78,6 +78,8 @@ public final class EmailJobManagerFactory {
 	 * @return die Instanz des {@link EmailJobManager}
 	 */
 	public synchronized @NotNull EmailJobManager getManager(final @NotNull EmailJobManagerContext context) {
+		if (context == null)
+			throw new IllegalArgumentException("Ohne einen Job-Manager-Context kann kein Manager erzeugt werden.");
 		if (!active)
 			throw new IllegalArgumentException("Die Klasse EmailJobManager ist nicht mehr aktiv. Es kann daher kein neuer Manager mehr erstellt werden.");
 		final HashMap<Long, EmailJobManager> tmp = mapInstances.computeIfAbsent(context.getDBSchema(), k -> new HashMap<>());

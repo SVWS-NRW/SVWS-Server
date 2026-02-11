@@ -33,10 +33,11 @@ export class RouteSchuleDatenaustauschKurs42 extends RouteTabNode<RouteDataSchul
 	}
 
 	public getRouteDefaultChild(params?: RouteParamsRawGeneric): RouteLocationRaw {
-		if (routeSchuleDatenaustauschKurs42Blockung.hidden() === false)
+		if (routeSchuleDatenaustauschKurs42Blockung.hidden() === false) {
 			return routeSchuleDatenaustauschKurs42Blockung.getRoute();
-		else
+		} else {
 			return routeSchuleDatenaustauschKurs42Raeume.getRoute();
+		}
 	}
 
 }

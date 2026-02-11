@@ -906,7 +906,7 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 		return ['de.svws_nrw.schulen.v1.utils.SchuldateiOrganisationseinheitManager'].includes(name);
 	}
 
-	public static class = new Class<SchuldateiOrganisationseinheitManager>('de.svws_nrw.schulen.v1.utils.SchuldateiOrganisationseinheitManager');
+	public static readonly class = new Class<SchuldateiOrganisationseinheitManager>('de.svws_nrw.schulen.v1.utils.SchuldateiOrganisationseinheitManager');
 
 }
 

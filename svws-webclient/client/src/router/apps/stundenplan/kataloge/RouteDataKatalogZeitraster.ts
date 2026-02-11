@@ -24,8 +24,9 @@ export class RouteDataKatalogZeitraster extends RouteData<RouteStateKatalogZeitr
 	}
 
 	get stundenplanManager(): StundenplanManager {
-		if (this._state.value.stundenplanManager === undefined)
+		if (this._state.value.stundenplanManager === undefined) {
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
+		}
 		return this._state.value.stundenplanManager;
 	}
 
@@ -68,8 +69,9 @@ export class RouteDataKatalogZeitraster extends RouteData<RouteStateKatalogZeitr
 	removeZeitraster = async (zeitraster: Iterable<StundenplanZeitraster>) => {
 		api.status.start();
 		const list = new ArrayList<number>();
-		for (const z of zeitraster)
+		for (const z of zeitraster) {
 			list.add(z.id);
+		}
 		const items = await api.server.deleteZeitrasterEintraege(list, api.schema);
 		this.stundenplanManager.zeitrasterRemoveAll(items);
 		this._state.value.selected = undefined;
@@ -81,8 +83,9 @@ export class RouteDataKatalogZeitraster extends RouteData<RouteStateKatalogZeitr
 	patchZeitraster = async (zeitraster: Iterable<StundenplanZeitraster>) => {
 		api.status.start();
 		const list: List<StundenplanZeitraster> = new ArrayList();
-		for (const z of zeitraster)
+		for (const z of zeitraster) {
 			list.add(z);
+		}
 		await api.server.patchZeitrasterEintraege(list, api.schema);
 		this.stundenplanManager.zeitrasterPatchAttributesAll(list);
 		await routeStundenplan.data.reloadVorlagen();

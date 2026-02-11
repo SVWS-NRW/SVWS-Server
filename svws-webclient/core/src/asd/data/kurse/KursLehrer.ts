@@ -31,7 +31,7 @@ export class KursLehrer extends JavaObject {
 		return ['de.svws_nrw.asd.data.kurse.KursLehrer'].includes(name);
 	}
 
-	public static class = new Class<KursLehrer>('de.svws_nrw.asd.data.kurse.KursLehrer');
+	public static readonly class = new Class<KursLehrer>('de.svws_nrw.asd.data.kurse.KursLehrer');
 
 	public static transpilerFromJSON(json: string): KursLehrer {
 		const obj = JSON.parse(json) as Partial<KursLehrer>;

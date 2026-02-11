@@ -45,9 +45,9 @@
 	async function downloadPDF() {
 		loading.value = true;
 		const reportingParameter = new ReportingParameter();
-		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_v_RAUM_STUNDENPLAN.getBezeichnung();
+		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_V_RAUM_STUNDENPLAN.getBezeichnung();
 		reportingParameter.einzelausgabeDetaildaten = false;
-		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_v_LEHRER_STUNDENPLAN.getVorlageParameterList());
+		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN.getVorlageParameterList());
 		for (const vp of reportingParameter.vorlageParameter) {
 			if (vp.name === "mitPausenzeiten") {
 				vp.wert = option2.value.toString();

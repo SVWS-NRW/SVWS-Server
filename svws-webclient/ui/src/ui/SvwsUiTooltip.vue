@@ -67,11 +67,13 @@
 	const floating = ref(null);
 	const floatingArrow = ref(null);
 
-	if (props.hover === false || props.initOpen === true)
+	if (props.hover === false || props.initOpen === true) {
 		onClickOutside(floating, hideTooltip, { ignore: [reference] });
+	}
 
-	if ((props.keepOpen === true) || (props.initOpen === true))
+	if ((props.keepOpen === true) || (props.initOpen === true)) {
 		isOpen.value = true;
+	}
 
 	const { position, showArrow } = toRefs(props);
 
@@ -86,8 +88,9 @@
 	);
 
 	const floatingArrowBalance = computed(() => {
-		if (props.showArrow === false)
+		if (props.showArrow === false) {
 			return {};
+		}
 		const flipped = {
 			top: "bottom",
 			right: "left",
@@ -103,25 +106,29 @@
 	}
 
 	function hoverEnterTooltip() {
-		if (props.hover && !props.keepOpen)
+		if (props.hover && !props.keepOpen) {
 			showTooltip();
+		}
 	}
 
 	function hideTooltip() {
-		if (props.keepOpen)
+		if (props.keepOpen) {
 			return;
+		}
 		isOpen.value = false;
 		emit("close");
 	}
 
 	function hoverLeaveTooltip() {
-		if (props.hover && !props.keepOpen)
+		if (props.hover && !props.keepOpen) {
 			isOpen.value = false;
+		}
 	}
 
 	function toggleTooltip() {
-		if (!props.keepOpen)
+		if (!props.keepOpen) {
 			isOpen.value = !isOpen.value;
+		}
 	}
 
 </script>

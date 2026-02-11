@@ -43,10 +43,11 @@
 	const selected = computed<boolean>({
 		get: () => props.getBenutzerManager().hatKompetenz(props.kompetenz),
 		set: (value) => {
-			if (value)
+			if (value) {
 				void props.addKompetenz(props.kompetenz);
-			else
+			} else {
 				void props.removeKompetenz(props.kompetenz);
+			}
 		},
 	});
 

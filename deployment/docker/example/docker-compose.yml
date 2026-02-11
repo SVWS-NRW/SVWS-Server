@@ -1,9 +1,12 @@
 version: '3.1'
 services:
   db:
-    image: mariadb:latest
+    image: harbor.svws-nrw.de/svws-datenbank/gymabi01
     environment:
       MARIADB_ROOT_PASSWORD: root
       MARIADB_DATABASE: svwsdb
     ports:
       - "3306:3306"
+
+volumes:
+    mariadb_data:

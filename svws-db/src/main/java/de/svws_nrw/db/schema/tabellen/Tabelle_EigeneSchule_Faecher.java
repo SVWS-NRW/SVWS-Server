@@ -218,12 +218,12 @@ public class Tabelle_EigeneSchule_Faecher extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Leitfach_ID */
 	public final SchemaTabelleSpalte col_Leitfach_ID = add("Leitfach_ID", SchemaDatentypen.BIGINT, false)
 			.setJavaName("ProjektKursLeitfach1_ID")
-			.setJavaComment("bei Projektkursfächern: Die ID des Leitfaches");
+			.setJavaComment("bei Projektkursfächern: Die ID des Leit- bzw. Referenzfaches");
 
 	/** Die Definition der Tabellenspalte Leitfach2_ID */
 	public final SchemaTabelleSpalte col_Leitfach2_ID = add("Leitfach2_ID", SchemaDatentypen.BIGINT, false)
 			.setJavaName("ProjektKursLeitfach2_ID")
-			.setJavaComment("bei Projektkursfächern: Ggf. die ID des zweiten Leitfaches");
+			.setJavaComment("bei Projektkursfächern: Ggf. die ID des zweiten Leit- bzw. Referenzfaches");
 
 	/** Die Definition der Tabellenspalte E1_WZE */
 	public final SchemaTabelleSpalte col_E1_WZE = add("E1_WZE", SchemaDatentypen.INT, false)

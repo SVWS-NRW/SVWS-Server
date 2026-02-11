@@ -8,6 +8,7 @@ import de.svws_nrw.module.reporting.html.dialects.ConvertExpressionDialect;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 /**
@@ -22,17 +23,50 @@ public final class ReportBuilderUtils {
 	}
 
 	/**
-	 * Erstellt eine minimal konfigurierte TemplateEngine für String-Templates im HTML-Modus.
+	 * Erstellt eine minimal konfigurierte TemplateEngine für String-Templates.
 	 *
-	 * @return TemplateEngine
+	 * @param templateMode Der Template-Mode (HTML oder TEXT)
+	 * @return TemplateEngine mit dem angegebenen Mode
 	 */
-	public static TemplateEngine createDefaultHtmlTemplateEngine() {
-		final StringTemplateResolver resolver = new StringTemplateResolver();
-		resolver.setTemplateMode(TemplateMode.HTML);
+	private static TemplateEngine createTemplateEngine(final TemplateMode templateMode) {
+		final ClassLoaderTemplateResolver classLoaderResolver = new ClassLoaderTemplateResolver();
+		classLoaderResolver.setTemplateMode(templateMode);
+		classLoaderResolver.setPrefix("de/svws_nrw/module/reporting/");
+		classLoaderResolver.setSuffix((templateMode == TemplateMode.HTML) ? ".html" : "");
+		classLoaderResolver.setCharacterEncoding("UTF-8");
+		classLoaderResolver.setOrder(1);
+		classLoaderResolver.setCheckExistence(true);
+
+		final StringTemplateResolver stringResolver = new StringTemplateResolver();
+		stringResolver.setTemplateMode(templateMode);
+		stringResolver.setOrder(2);
+
 		final TemplateEngine engine = new TemplateEngine();
-		engine.setTemplateResolver(resolver);
+		engine.addTemplateResolver(classLoaderResolver);
+		engine.addTemplateResolver(stringResolver);
 		engine.addDialect(new ConvertExpressionDialect());
 		return engine;
+	}
+
+
+	/**
+	 * Erstellt eine TemplateEngine für HTML-Report-Templates.
+	 * Diese Engine wird für die Verarbeitung von HTML-Report-Templates verwendet.
+	 *
+	 * @return TemplateEngine im HTML-Mode
+	 */
+	public static TemplateEngine createHtmlTemplateEngine() {
+		return createTemplateEngine(TemplateMode.HTML);
+	}
+
+	/**
+	 * Erstellt eine TemplateEngine für TEXT-Mode-Templates.
+	 * Diese Engine wird speziell für die Verarbeitung von Dateinamensvorlagen (Textual Syntax von Thymeleaf).
+	 *
+	 * @return TemplateEngine im TEXT-Mode
+	 */
+	private static TemplateEngine createTextTemplateEngine() {
+		return createTemplateEngine(TemplateMode.TEXT);
 	}
 
 	/**
@@ -48,67 +82,58 @@ public final class ReportBuilderUtils {
 			return finalContext;
 
 		for (final HtmlContext<?> htmlCtx : contexts) {
-			if (htmlCtx == null)
-				continue;
-			final Context ctx = htmlCtx.getContext();
-			if (ctx == null)
-				continue;
-			for (final String variable : ctx.getVariableNames()) {
-				finalContext.setVariable(variable, ctx.getVariable(variable));
+			if (htmlCtx != null) {
+				final Context ctx = htmlCtx.getContext();
+				if (ctx == null)
+					continue;
+				for (final String variable : ctx.getVariableNames()) {
+					finalContext.setVariable(variable, ctx.getVariable(variable));
+				}
 			}
 		}
 		return finalContext;
 	}
 
 	/**
-	 * Generiert einen Dateinamen basierend auf einer Vorlage unter Verwendung einer Template-Engine und zusätzlicher Kontextinformationen.
+	 * Generiert einen Dateinamen basierend auf einer Vorlage unter Verwendung zusätzlicher Kontextinformationen.
+	 * Die Vorlage wird im TEXT-Mode verarbeitet und unterstützt die Textual Syntax von Thymeleaf.
 	 * Wenn die Vorlage leer ist, wird ein leerer String zurückgegeben. Tritt ein Fehler während der Dateinamensgenerierung auf,
 	 * wird ebenfalls ein leerer String zurückgegeben.
 	 *
-	 * @param templateEngine   Die zu verwendende Template-Engine. Wird eine null-Referenz übergeben, wird eine Standard-Template-Engine verwendet.
 	 * @param dateinamensvorlage Die Vorlage für den zu generierenden Dateinamen. Darf nicht null oder leer sein.
-	 * @param contexts          Eine Liste von HtmlContext-Objekten, die zusätzliche Variablen für die Vorlage enthalten. Darf null oder leer sein.
+	 * @param contexts           Eine Liste von HtmlContext-Objekten, die zusätzliche Variablen für die Vorlage enthalten. Darf null oder leer sein.
 	 *
 	 * @return Der generierte Dateiname. Ist die Vorlage leer oder tritt ein Fehler auf, wird ein leerer String zurückgegeben.
 	 */
-	public static String generiereDateinameAusVorlage(final TemplateEngine templateEngine, final String dateinamensvorlage,
-			final List<HtmlContext<?>> contexts) {
+	public static String generiereDateinameAusVorlage(final String dateinamensvorlage, final List<HtmlContext<?>> contexts) {
 
 		if ((dateinamensvorlage == null) || dateinamensvorlage.isBlank())
 			return "";
 
 		final Context context = mergeHtmlContexts(contexts);
-		final TemplateEngine engine = (templateEngine != null) ? templateEngine : createDefaultHtmlTemplateEngine();
-		final String html = engine.process(dateinamensvorlage, context);
 
-		// Extrahiere Name aus <p>...</p>
-		final String dateiname = extrahiereDateinameAusAbsatz(html);
-		if (dateiname.isBlank())
+		try {
+			// Verwende immer TEXT-Mode Engine für Dateinamensvorlagen (ignoriere übergebene Engine)
+			final TemplateEngine textEngine = createTextTemplateEngine();
+
+			// Verarbeite die Vorlage im TEXT-Mode (unterstützt Textual Syntax)
+			final String textOutput = textEngine.process(dateinamensvorlage, context);
+
+			// Der Output ist bereits reiner Text, kein HTML-Parsing notwendig. Aber der Output enthält auch die Formatierungen aus der Textdatei.
+			// Entferne daher Tabs, Zeilenumbrüche und weitere Whitespaces (außer Space) wie Formfeed, Vertical Tab, ggf. Unicode-Whitespaces.
+			final String dateiname = textOutput.replace("\t", "").replaceAll("\\R\\s*", "").replaceAll("[^\\S ]+", "").trim();
+
+			if (dateiname.isBlank())
+				return "";
+
+			if (istValiderDateiname(dateiname))
+				return dateiname;
+
 			return "";
-
-		if (istValiderDateiname(dateiname))
-			return dateiname;
-
-		return "";
-	}
-
-	/**
-	 * Extrahiert den Dateinamen aus einem HTML-Absatz-Tag ("<p>...</p>").
-	 * Wenn das übergebene HTML null, leer oder kein vollständiges Absatz-Tag enthält,
-	 * wird ein leerer String zurückgegeben.
-	 *
-	 * @param html der HTML-String, aus dem der Dateiname extrahiert werden soll. Muss ein Absatz-Tag enthalten, um erfolgreich einen Dateinamen zu extrahieren.
-	 *
-	 * @return der aus dem Absatz-Tag extrahierte Inhalt als String. Gibt einen leeren String zurück, wenn kein entsprechender Inhalt gefunden wird.
-	 */
-	private static String extrahiereDateinameAusAbsatz(final String html) {
-		if ((html == null) || html.isBlank())
+		} catch (final Exception e) {
+			// Bei Fehler leeren String zurückgeben (Fallback auf statischen Namen)
 			return "";
-		final int startTag = html.indexOf("<p>");
-		final int endTag = html.indexOf("</p>");
-		if ((startTag < 0) || (endTag < 0) || ((startTag + 3) >= endTag))
-			return "";
-		return html.substring(startTag + 3, endTag).trim();
+		}
 	}
 
 	/**

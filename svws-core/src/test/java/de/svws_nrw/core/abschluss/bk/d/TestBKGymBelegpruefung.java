@@ -3,12 +3,12 @@ package de.svws_nrw.core.abschluss.bk.d;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,13 +20,15 @@ import org.junit.jupiter.api.TestFactory;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.ResourceUtils;
+import de.svws_nrw.core.data.bk.abi.BKGymAbiturdaten;
+import de.svws_nrw.core.data.bk.abi.BKGymBelegpruefungErgebnis;
 import de.svws_nrw.core.data.bk.abi.BKGymFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.bk.BKGymFaecherManager;
 
 /**
  * Diese Klasse enthält die Testroutinen für den Belegprüfungsalgorithmus
- * für das Abitur in dem beruflichen Gymnasium.
+ * für das Abitur im Beruflichen Gymnasium.
  */
 @DisplayName("Teste den Belegprüfungsalgorithmus für das Abitur in dem beruflichen Gymnasium")
 class TestBKGymBelegpruefung {
@@ -37,7 +39,7 @@ class TestBKGymBelegpruefung {
 	/** Eine Map mit den Abiturdaten von Schülern des beruflichen Gymnasiums aus den zugehörigen JSON-Dateien mit den Testfällen */
 	static HashMap<String, HashMap<String, BKGymAbiturdaten>> testAbiturdaten = new HashMap<>();
 
-	/** Eine Map mit den Belegprüfungsergebnissen von Schülern des beruflichen Gymnasiums aus den zugehörigen JSON-Dateien mit den Testfällen */
+	/** Eine Map mit den Belegprüfungsergebnissen von Schülern des Beruflichen Gymnasiums aus den zugehörigen JSON-Dateien mit den Testfällen */
 	static HashMap<String, HashMap<String, BKGymBelegpruefungErgebnis>> testBelegpruefungsergebnisse = new HashMap<>();
 
 
@@ -97,12 +99,12 @@ class TestBKGymBelegpruefung {
 
 
 	/**
-	 * Führt für alle Testfälle eine Belegpruefung durch.
+	 * Führt für alle Testfälle eine Belegprüfung durch.
 	 *
 	 * @return ein Stream der Testfälle als {@link DynamicTest}-Objekte
 	 */
 	@TestFactory
-	@DisplayName("Teste Belegprüfungsalgorithmus...")
+	@DisplayName("Teste Belegprüfungsalgorithmus im Beruflichen Gymnasium...")
 	Stream<DynamicTest> testBelegpruefung() {
 		final ArrayList<DynamicTest> tests = new ArrayList<>();
 		testAbiturdaten.forEach((jahrgang, mapSchuelerJahrgang) -> {

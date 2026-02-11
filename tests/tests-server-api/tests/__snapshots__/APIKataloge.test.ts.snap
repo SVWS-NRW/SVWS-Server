@@ -22,24 +22,24 @@ ArrayList {
       "bezeichnung": "628 Meckelstraße",
       "entfernungSchule": 0,
       "id": 1,
-      "istAenderbar": true,
       "istSichtbar": true,
+      "referenziertInAnderenTabellen": false,
       "sortierung": 1,
     },
     Haltestelle {
       "bezeichnung": "628 Fingscheid",
       "entfernungSchule": 0,
       "id": 2,
-      "istAenderbar": true,
       "istSichtbar": true,
+      "referenziertInAnderenTabellen": true,
       "sortierung": 2,
     },
     Haltestelle {
       "bezeichnung": "RE7 Hauptbahnhof",
       "entfernungSchule": 0,
       "id": 3,
-      "istAenderbar": true,
       "istSichtbar": true,
+      "referenziertInAnderenTabellen": false,
       "sortierung": 3,
     },
   ],
@@ -51,38 +51,39 @@ ArrayList {
 }
 `;
 
+
 exports[`Kataloge Tests > gegen { schema: 'GymAbi01' } > getKatalogBetriebsart 1`] = `
 ArrayList {
   "addFirst": [Function],
   "addLast": [Function],
   "elementData": [
-    KatalogEintrag {
+    Betriebsart {
+      "bezeichnung": "Einzelhandel",
       "id": 1,
-      "istAenderbar": true,
       "istSichtbar": true,
-      "kuerzel": "1",
-      "text": "Einzelhandel",
+      "referenziertInAnderenTabellen": true,
+      "sortierung": 1,
     },
-    KatalogEintrag {
-      "id": 4,
-      "istAenderbar": true,
-      "istSichtbar": true,
-      "kuerzel": "4",
-      "text": "Handwerk",
-    },
-    KatalogEintrag {
+    Betriebsart {
+      "bezeichnung": "Industrie",
       "id": 2,
-      "istAenderbar": true,
       "istSichtbar": true,
-      "kuerzel": "2",
-      "text": "Industrie",
+      "referenziertInAnderenTabellen": false,
+      "sortierung": 2,
     },
-    KatalogEintrag {
+    Betriebsart {
+      "bezeichnung": "Verwaltung",
       "id": 3,
-      "istAenderbar": true,
       "istSichtbar": true,
-      "kuerzel": "3",
-      "text": "Verwaltung",
+      "referenziertInAnderenTabellen": false,
+      "sortierung": 3,
+    },
+    Betriebsart {
+      "bezeichnung": "Handwerk",
+      "id": 4,
+      "istSichtbar": true,
+      "referenziertInAnderenTabellen": true,
+      "sortierung": 4,
     },
   ],
   "getFirst": [Function],

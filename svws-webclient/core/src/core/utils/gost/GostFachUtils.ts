@@ -147,7 +147,7 @@ export class GostFachUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.GostFachUtils'].includes(name);
 	}
 
-	public static class = new Class<GostFachUtils>('de.svws_nrw.core.utils.gost.GostFachUtils');
+	public static readonly class = new Class<GostFachUtils>('de.svws_nrw.core.utils.gost.GostFachUtils');
 
 }
 

@@ -104,7 +104,7 @@ export class GostSchuelerklausurTerminRich extends JavaObject {
 	 * @return true, falls die Objekte identisch sind, sonst false
 	 */
 	public equals(another: unknown | null): boolean {
-		return (another !== null) && (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTerminRich')))) && (this.id === (another as unknown as GostSchuelerklausurTerminRich).id);
+		return (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTerminRich')))) && (this.id === (another as unknown as GostSchuelerklausurTerminRich).id);
 	}
 
 	/**
@@ -124,7 +124,7 @@ export class GostSchuelerklausurTerminRich extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTerminRich'].includes(name);
 	}
 
-	public static class = new Class<GostSchuelerklausurTerminRich>('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTerminRich');
+	public static readonly class = new Class<GostSchuelerklausurTerminRich>('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTerminRich');
 
 	public static transpilerFromJSON(json: string): GostSchuelerklausurTerminRich {
 		const obj = JSON.parse(json) as Partial<GostSchuelerklausurTerminRich>;

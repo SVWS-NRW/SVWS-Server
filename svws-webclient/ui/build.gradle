@@ -64,8 +64,9 @@ task testUi(type: NpmRun) {
 			file("$projectDir/src/test/ts/vitest.config.ts")
 	outputs.dir file("$projectDir/build/testresults")
 	args = [ 'test:run' ]
+	def dirResults = file("$projectDir/build/testresults")
 	doFirst {
-		mkdir file("$projectDir/build/testresults")
+		dirResults.mkdirs()
 	}
 }
 

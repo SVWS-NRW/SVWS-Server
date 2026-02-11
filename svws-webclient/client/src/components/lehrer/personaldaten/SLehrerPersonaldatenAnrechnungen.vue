@@ -88,18 +88,32 @@
 
 	const comparatorEintrag: Comparator<Eintrag> = {
 		compare: (a: Eintrag, b: Eintrag): number => {
-			if (a.data.idGrund < b.data.idGrund)
+			if ((a.data.idGrund === null) && (b.data.idGrund !== null)) {
 				return -1;
-			if (a.data.idGrund > b.data.idGrund)
+			}
+			if ((a.data.idGrund !== null) && (b.data.idGrund === null)) {
 				return 1;
-			if (a.typ > b.typ)
+			}
+			if ((a.data.idGrund !== null) && (b.data.idGrund !== null)) {
+				if (a.data.idGrund < b.data.idGrund) {
+					return -1;
+				}
+				if (a.data.idGrund > b.data.idGrund) {
+					return 1;
+				}
+			}
+			if (a.typ > b.typ) {
 				return -1;
-			if (a.typ < b.typ)
+			}
+			if (a.typ < b.typ) {
 				return 1;
-			if (a.data.id < b.data.id)
+			}
+			if (a.data.id < b.data.id) {
 				return -1;
-			if (a.data.id > b.data.id)
+			}
+			if (a.data.id > b.data.id) {
 				return 1;
+			}
 			return 0;
 		},
 	};
@@ -108,15 +122,19 @@
 		daten: computed<List<Eintrag>>(() => {
 			const result = new ArrayList<Eintrag>();
 			const abschnittsdaten = props.personalabschnittsdaten();
-			if (abschnittsdaten === null)
+			if (abschnittsdaten === null) {
 				return result;
+			}
 			// Füge Mehrleistungen, Minderleistung und Anrechngen hinzu
-			for (const data of abschnittsdaten.mehrleistung)
+			for (const data of abschnittsdaten.mehrleistung) {
 				result.add({ typ: 'mehrleistung', data });
-			for (const data of abschnittsdaten.minderleistung)
+			}
+			for (const data of abschnittsdaten.minderleistung) {
 				result.add({ typ: 'minderleistung', data });
-			for (const data of abschnittsdaten.anrechnungen)
+			}
+			for (const data of abschnittsdaten.anrechnungen) {
 				result.add({ typ: 'anrechnung', data });
+			}
 			result.sort(comparatorEintrag);
 			return result;
 		}),
@@ -130,14 +148,16 @@
 	});
 
 	function updateAnzahl(row: Eintrag, anzahl: number | null): void {
-		if (anzahl === null)
+		if (anzahl === null) {
 			return;
-		if (row.typ === 'mehrleistung')
+		}
+		if (row.typ === 'mehrleistung') {
 			void props.patchMehrleistung({ anzahl }, row.data.id);
-		else if (row.typ === 'minderleistung')
+		} else if (row.typ === 'minderleistung') {
 			void props.patchMinderleistung({ anzahl }, row.data.id);
-		else
+		} else {
 			void props.patchAnrechnung({ anzahl }, row.data.id);
+		}
 	}
 
 	function inputAnzahl(row: Eintrag, index: number) {
@@ -145,24 +165,33 @@
 		const setter = (value: number | null) => updateAnzahl(row, value);
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputNumberFixed(key, 4, index, element, 100, 2, setter);
-			if (input !== null)
+			if (input !== null) {
 				gridManager.update(key, row.data.anzahl);
+			}
 		};
 	}
 
 	function removeDaten(row: Eintrag): void {
-		if (row.typ === 'mehrleistung')
+		if (row.typ === 'mehrleistung') {
 			void props.removeMehrleistung(row.data);
-		else if (row.typ === 'minderleistung')
+		} else if (row.typ === 'minderleistung') {
 			void props.removeMinderleistung(row.data);
-		else
+		} else {
 			void props.removeAnrechnung(row.data);
+		}
 	}
 
 	function getGrundText(row: Eintrag): string {
-		const data = (row.typ === 'mehrleistung') ? LehrerMehrleistungsarten.data().getEintragByID(row.data.idGrund)
-			: (row.typ === 'minderleistung') ? LehrerMinderleistungsarten.data().getEintragByID(row.data.idGrund)
-				: LehrerAnrechnungsgrund.data().getEintragByID(row.data.idGrund);
+		let data = null;
+		if (row.data.idGrund !== null) {
+			if (row.typ === 'mehrleistung') {
+				data = LehrerMehrleistungsarten.data().getEintragByID(row.data.idGrund);
+			} else if (row.typ === 'minderleistung') {
+				data = LehrerMinderleistungsarten.data().getEintragByID(row.data.idGrund);
+			} else {
+				data = LehrerAnrechnungsgrund.data().getEintragByID(row.data.idGrund);
+			}
+		}
 		return (data === null) ? "???" : data.kuerzel + " - " + data.text;
 	}
 
@@ -200,67 +229,91 @@
 	const mehrleistungenVorhanden = computed<JavaSet<number>>(() => {
 		const vorhanden = new HashSet<number>();
 		const abschnittsdaten = props.personalabschnittsdaten();
-		if (abschnittsdaten === null)
+		if (abschnittsdaten === null) {
 			return vorhanden;
-		for (const mehrleistung of abschnittsdaten.mehrleistung)
-			vorhanden.add(mehrleistung.idGrund);
+		}
+		for (const mehrleistung of abschnittsdaten.mehrleistung) {
+			if (mehrleistung.idGrund !== null) {
+				vorhanden.add(mehrleistung.idGrund);
+			}
+		}
 		return vorhanden;
 	});
 
 	function filterMehrleistungen(options: List<LehrerMehrleistungsartKatalogEintrag>): List<LehrerMehrleistungsartKatalogEintrag> {
 		const result = new ArrayList<LehrerMehrleistungsartKatalogEintrag>();
-		for (const e of options)
-			if (!mehrleistungenVorhanden.value.contains(e.id))
+		for (const e of options) {
+			if (!mehrleistungenVorhanden.value.contains(e.id)) {
 				result.add(e);
+			}
+		}
 		return result;
 	}
 
 	const minderleistungenVorhanden = computed<JavaSet<number>>(() => {
 		const vorhanden = new HashSet<number>();
 		const abschnittsdaten = props.personalabschnittsdaten();
-		if (abschnittsdaten === null)
+		if (abschnittsdaten === null) {
 			return vorhanden;
-		for (const minderleistung of abschnittsdaten.minderleistung)
-			vorhanden.add(minderleistung.idGrund);
+		}
+		for (const minderleistung of abschnittsdaten.minderleistung) {
+			if (minderleistung.idGrund !== null) {
+				vorhanden.add(minderleistung.idGrund);
+			}
+		}
 		return vorhanden;
 	});
 
 	function filterMinderleistungen(options: List<LehrerMinderleistungsartKatalogEintrag>): List<LehrerMinderleistungsartKatalogEintrag> {
 		const result = new ArrayList<LehrerMinderleistungsartKatalogEintrag>();
-		for (const e of options)
-			if (!minderleistungenVorhanden.value.contains(e.id))
+		for (const e of options) {
+			if (!minderleistungenVorhanden.value.contains(e.id)) {
 				result.add(e);
+			}
+		}
 		return result;
 	}
 
 	const anrechnungenVorhanden = computed<JavaSet<number>>(() => {
 		const vorhanden = new HashSet<number>();
 		const abschnittsdaten = props.personalabschnittsdaten();
-		if (abschnittsdaten === null)
+		if (abschnittsdaten === null) {
 			return vorhanden;
-		for (const anrechnung of abschnittsdaten.anrechnungen)
-			vorhanden.add(anrechnung.idGrund);
+		}
+		for (const anrechnung of abschnittsdaten.anrechnungen) {
+			if (anrechnung.idGrund !== null) {
+				vorhanden.add(anrechnung.idGrund);
+			}
+		}
 		return vorhanden;
 	});
 
 	function filterAnrechnungen(options: List<LehrerAnrechnungsgrundKatalogEintrag>): List<LehrerAnrechnungsgrundKatalogEintrag> {
 		const result = new ArrayList<LehrerAnrechnungsgrundKatalogEintrag>();
-		for (const e of options)
-			if (!anrechnungenVorhanden.value.contains(e.id))
+		for (const e of options) {
+			if (!anrechnungenVorhanden.value.contains(e.id)) {
 				result.add(e);
+			}
+		}
 		return result;
 	}
 
 	async function create() {
-		for (const eintrag of auswahlMehrleistungenNeu.value)
-			if (!mehrleistungenVorhanden.value.contains(eintrag.id))
+		for (const eintrag of auswahlMehrleistungenNeu.value) {
+			if (!mehrleistungenVorhanden.value.contains(eintrag.id)) {
 				await props.addMehrleistung({ idAbschnittsdaten: props.personalabschnittsdaten()?.id ?? -1, idGrund: eintrag.id, anzahl: 1 });
-		for (const eintrag of auswahlMinderleistungenNeu.value)
-			if (!minderleistungenVorhanden.value.contains(eintrag.id))
+			}
+		}
+		for (const eintrag of auswahlMinderleistungenNeu.value) {
+			if (!minderleistungenVorhanden.value.contains(eintrag.id)) {
 				await props.addMinderleistung({ idAbschnittsdaten: props.personalabschnittsdaten()?.id ?? -1, idGrund: eintrag.id, anzahl: 1 });
-		for (const eintrag of auswahlAnrechnungenNeu.value)
-			if (!anrechnungenVorhanden.value.contains(eintrag.id))
+			}
+		}
+		for (const eintrag of auswahlAnrechnungenNeu.value) {
+			if (!anrechnungenVorhanden.value.contains(eintrag.id)) {
 				await props.addAnrechnung({ idAbschnittsdaten: props.personalabschnittsdaten()?.id ?? -1, idGrund: eintrag.id, anzahl: 1 });
+			}
+		}
 		showHinzufuegen.value = false;
 	}
 

@@ -48,8 +48,9 @@
 
 	const selectedHatAlle = computed<boolean>(() => {
 		const kompetenzen = BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe);
-		if (kompetenzen.isEmpty())
+		if (kompetenzen.isEmpty()) {
 			return false;
+		}
 		return props.getBenutzerManager().hatKompetenzen(kompetenzen);
 	});
 	const selectedMindestensEine = computed<boolean>(() => props.getBenutzerManager().hatKompetenzenMindestensEine(props.benutzerKompetenzen(props.kompetenzgruppe)));
@@ -58,21 +59,25 @@
 	const selected = computed<boolean>({
 		get: () => selectedHatAlle.value,
 		set: (value) => {
-			if (value)
+			if (value) {
 				void props.addBenutzerKompetenzGruppe(props.kompetenzgruppe);
-			else
+			} else {
 				void props.removeBenutzerKompetenzGruppe(props.kompetenzgruppe);
+			}
 		},
 	});
 
 	const getTopLevelGruppen4Kompetenz = computed<string>(() => {
-		if (hatSubKompetenzen.value === 0)
+		if (hatSubKompetenzen.value === 0) {
 			return props.getBenutzerManager().getBenutzerGruppenStringForKompetenzgruppe(props.kompetenzgruppe);
+		}
 		const subKompetenzen = props.benutzerKompetenzen(props.kompetenzgruppe).toArray() as BenutzerKompetenz[];
 		const tmp = new Set<string>();
-		for (const k of subKompetenzen)
-			for (const benutzergruppe of props.getBenutzerManager().getGruppen(k))
+		for (const k of subKompetenzen) {
+			for (const benutzergruppe of props.getBenutzerManager().getGruppen(k)) {
 				tmp.add(benutzergruppe.bezeichnung);
+			}
+		}
 		return [...tmp].join(', ');
 	});
 

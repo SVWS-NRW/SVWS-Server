@@ -17,13 +17,21 @@ public class OrtsteilKatalogEintrag {
 	@Schema(description = "die ID des Katalog-Eintrags", example = "42")
 	public long id;
 
+	/** Der Name des Ortsteils. */
+	@Schema(description = "der Name des Ortsteils", example = "Sieglar")
+	public String ortsteil;
+
 	/** Die ID des zugehörigen Ortes. */
 	@Schema(description = "die ID des zugehörigen Ortes", example = "4711")
 	public Long ort_id;
 
-	/** Der Name des Ortsteils. */
-	@Schema(description = "der Name des Ortsteils", example = "Sieglar")
-	public String ortsteil;
+	/** Die Bezeichnung des zugehörigen Ortes. */
+	@Schema(description = "Die Bezeichnung des zugehörigen Ortes", example = "Kassel", accessMode = Schema.AccessMode.READ_ONLY)
+	public String bezeichnungOrt;
+
+	/** Die Postleitzahl des zugehörigen Ortes. */
+	@Schema(description = "die Postleitzahl des zugehörigen Ortes", example = "47111", accessMode = Schema.AccessMode.READ_ONLY)
+	public String plzOrt;
 
 	/** Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. */
 	@Schema(description = "gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an", example = "1")
@@ -36,6 +44,11 @@ public class OrtsteilKatalogEintrag {
 	/** Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht. */
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht", example = "true")
 	public boolean istAenderbar;
+
+	/** Gibt an, ob der Ortsteil in anderen Datenbanktabellen referenziert ist oder nicht. */
+	@Schema(description = "Gibt an, ob der Ortsteil in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode =
+			Schema.AccessMode.READ_ONLY)
+	public boolean referenziertInAnderenTabellen = false;
 
 	/**
 	 * Leerer Standardkonstruktor.

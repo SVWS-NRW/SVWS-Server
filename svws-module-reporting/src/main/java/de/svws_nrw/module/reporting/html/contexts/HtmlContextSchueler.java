@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdatenMatrix;
+import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdatenMatrix;
 import org.thymeleaf.context.Context;
 
 import java.util.ArrayList;
@@ -39,7 +41,7 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> {
 	public HtmlContextSchueler(final ReportingRepository reportingRepository) {
 		super(reportingRepository, true);
 		this.reportingRepository = reportingRepository;
-		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten);
+		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten());
 	}
 
 	/**
@@ -75,6 +77,16 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> {
 		context.setVariable("Schueler", getContextData());
 
 		super.setContext(context);
+	}
+
+	/**
+	 * Erstellt eine Leistungsdaten-Matrix für die Schüler in diesem Context basierend auf dem ausgewählten Schuljahresabschnitt.
+	 *
+	 * @return Die Leistungsdaten-Matrix für die Schüler dieses Contexts.
+	 */
+	public ReportingSchuelerLeistungsdatenMatrix schuelerLeistungsdatenMatrix() {
+		return new ProxyReportingSchuelerLeistungsdatenMatrix(this.reportingRepository, this.getContextData(),
+				this.reportingRepository.auswahlSchuljahresabschnitt());
 	}
 
 	/**

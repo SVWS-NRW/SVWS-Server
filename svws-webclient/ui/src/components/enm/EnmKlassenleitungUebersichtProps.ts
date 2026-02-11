@@ -11,6 +11,5 @@ export interface EnmKlassenleitungUebersichtProps {
 	patchLernabschnitt: (data: ENMLernabschnitt, patch: Partial<ENMLernabschnitt>) => Promise<void>;
 	columnsVisible: () => Map<string, boolean | null>;
 	setColumnsVisible: (columns: Map<string, boolean | null>) => Promise<void>;
-	floskelEditorVisible: boolean;
 	focusFloskelEditor: (hauptgruppe: BemerkungenHauptgruppe | null, schueler: ENMSchueler | null, klasse: ENMKlasse | null, row: number | null, doFocus: boolean) => Promise<void>;
 }

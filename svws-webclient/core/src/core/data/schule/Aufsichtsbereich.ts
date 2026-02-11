@@ -34,7 +34,7 @@ export class Aufsichtsbereich extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.Aufsichtsbereich'].includes(name);
 	}
 
-	public static class = new Class<Aufsichtsbereich>('de.svws_nrw.core.data.schule.Aufsichtsbereich');
+	public static readonly class = new Class<Aufsichtsbereich>('de.svws_nrw.core.data.schule.Aufsichtsbereich');
 
 	public static transpilerFromJSON(json: string): Aufsichtsbereich {
 		const obj = JSON.parse(json) as Partial<Aufsichtsbereich>;

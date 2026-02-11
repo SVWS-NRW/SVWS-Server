@@ -82,13 +82,15 @@
 	import type { LehrerIndividualdatenProps } from "./SLehrerIndividualdatenProps";
 	import type { OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 	import { Geschlecht, Nationalitaeten, PersonalTyp, AdressenUtils, DateUtils, JavaString, LehrerLeitungsfunktion, BenutzerKompetenz,
-		ValidatorLehrerStammdatenNachname, ValidatorLehrerStammdatenVorname, ValidatorLehrerStammdatenGeburtsdatum } from "@core";
+		ValidatorLsnLehrerStammdatenNachname, ValidatorLsvLehrerStammdatenVorname, ValidatorLsdLehrerStammdatenGeburtsdatum } from "@core";
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, orte_filter, orte_sort, ortsteilSort } from "~/utils/helfer";
 
 	const props = defineProps<LehrerIndividualdatenProps>();
 
-	const validatorNachname = computed(() => new ValidatorLehrerStammdatenNachname(props.lehrerListeManager().daten(), props.validatorKontext()));
-	function validateNachname(validator: ValidatorLehrerStammdatenNachname, value: string | null): boolean {
+	const validatorNachname = computed(() => new ValidatorLsnLehrerStammdatenNachname({
+		get: () => props.lehrerListeManager().daten().nachname,
+	}, props.validatorKontext()));
+	function validateNachname(validator: ValidatorLsnLehrerStammdatenNachname, value: string | null): boolean {
 		const name = props.lehrerListeManager().daten().nachname;
 		props.lehrerListeManager().daten().nachname = value ?? "";
 		const res = validator.run();
@@ -96,8 +98,10 @@
 		return res;
 	};
 
-	const validatorVorname = computed(() => new ValidatorLehrerStammdatenVorname(props.lehrerListeManager().daten(), props.validatorKontext()));
-	function validateVorname(validator: ValidatorLehrerStammdatenVorname, value: string | null): boolean {
+	const validatorVorname = computed(() => new ValidatorLsvLehrerStammdatenVorname({
+		get: () => props.lehrerListeManager().daten().vorname,
+	}, props.validatorKontext()));
+	function validateVorname(validator: ValidatorLsvLehrerStammdatenVorname, value: string | null): boolean {
 		const name = props.lehrerListeManager().daten().vorname;
 		props.lehrerListeManager().daten().vorname = value ?? "";
 		const res = validator.run();
@@ -105,8 +109,10 @@
 		return res;
 	};
 
-	const validatorGeburtsdatum = computed(() => new ValidatorLehrerStammdatenGeburtsdatum(props.lehrerListeManager().daten(), props.validatorKontext()));
-	function validateGeburtsdatum(validator: ValidatorLehrerStammdatenGeburtsdatum, value: string | null): boolean {
+	const validatorGeburtsdatum = computed(() => new ValidatorLsdLehrerStammdatenGeburtsdatum({
+		get: () => props.lehrerListeManager().daten().geburtsdatum,
+	}, props.validatorKontext()));
+	function validateGeburtsdatum(validator: ValidatorLsdLehrerStammdatenGeburtsdatum, value: string | null): boolean {
 		const datum = props.lehrerListeManager().daten().geburtsdatum;
 		props.lehrerListeManager().daten().geburtsdatum = value ?? "";
 		const res = validator.run();
@@ -152,9 +158,11 @@
 
 	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
 		const result: Array<OrtsteilKatalogEintrag> = [];
-		for (const ortsteil of props.mapOrtsteile.values())
-			if (ortsteil.ort_id === data().wohnortID)
+		for (const ortsteil of props.mapOrtsteile.values()) {
+			if (ortsteil.ort_id === data().wohnortID) {
 				result.push(ortsteil);
+			}
+		}
 		return result;
 	});
 

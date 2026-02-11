@@ -41,7 +41,7 @@ export class AbschlussErgebnis extends JavaObject {
 		return ['de.svws_nrw.core.data.abschluss.AbschlussErgebnis'].includes(name);
 	}
 
-	public static class = new Class<AbschlussErgebnis>('de.svws_nrw.core.data.abschluss.AbschlussErgebnis');
+	public static readonly class = new Class<AbschlussErgebnis>('de.svws_nrw.core.data.abschluss.AbschlussErgebnis');
 
 	public static transpilerFromJSON(json: string): AbschlussErgebnis {
 		const obj = JSON.parse(json) as Partial<AbschlussErgebnis>;

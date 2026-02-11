@@ -93,7 +93,7 @@ export class LehrerLeitungsfunktion extends JavaEnum<LehrerLeitungsfunktion> imp
 		return ['de.svws_nrw.asd.types.lehrer.LehrerLeitungsfunktion', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<LehrerLeitungsfunktion>('de.svws_nrw.asd.types.lehrer.LehrerLeitungsfunktion');
+	public static readonly class = new Class<LehrerLeitungsfunktion>('de.svws_nrw.asd.types.lehrer.LehrerLeitungsfunktion');
 
 }
 

@@ -144,8 +144,9 @@
 
 	const dataSorted = computed(() => {
 		const temp = sortByAndOrder.value;
-		if (temp === undefined)
+		if (temp === undefined) {
 			return filtered.value;
+		}
 		const arr = [...filtered.value];
 		arr.sort((a, b) => {
 			switch (temp.key) {
@@ -165,21 +166,27 @@
 	const showModalImport = ref<boolean>(false);
 
 	const filtered = computed<List<GostBelegpruefungsErgebnisse>>(() => {
-		if (!props.filterFehler() && !props.filterExterne() && !props.filterNurMitFachwahlen() && !props.filterNeuaufnahmen())
+		if (!props.filterFehler() && !props.filterExterne() && !props.filterNurMitFachwahlen() && !props.filterNeuaufnahmen()) {
 			return props.listBelegpruefungsErgebnisse();
+		}
 		const a: List<GostBelegpruefungsErgebnisse> = new ArrayList();
 		for (const e of props.listBelegpruefungsErgebnisse()) {
 			let erlaubt = true;
-			if (props.filterFehler() && e.ergebnis.erfolgreich)
+			if (props.filterFehler() && e.ergebnis.erfolgreich) {
 				erlaubt = false;
-			if ((props.filterExterne()) && (SchuelerStatus.data().getWertByID(e.schueler.status) === SchuelerStatus.EXTERN))
+			}
+			if ((props.filterExterne()) && (SchuelerStatus.data().getWertByID(e.schueler.status) === SchuelerStatus.EXTERN)) {
 				erlaubt = false;
-			if (props.filterNurMitFachwahlen() && !e.hatFachwahlen)
+			}
+			if (props.filterNurMitFachwahlen() && !e.hatFachwahlen) {
 				erlaubt = false;
-			if (props.filterNeuaufnahmen() && (SchuelerStatus.data().getWertByID(e.schueler.status) !== SchuelerStatus.NEUAUFNAHME))
+			}
+			if (props.filterNeuaufnahmen() && (SchuelerStatus.data().getWertByID(e.schueler.status) !== SchuelerStatus.NEUAUFNAHME)) {
 				erlaubt = false;
-			if (erlaubt)
+			}
+			if (erlaubt) {
 				a.add(e);
+			}
 		}
 		return a;
 	});
@@ -188,15 +195,18 @@
 	const auswahl = computed<GostBelegpruefungsErgebnisse[]>({
 		get: () => {
 			const list = [];
-			for (const s of filtered.value)
-				if (ids.value.has(s.schueler.id))
+			for (const s of filtered.value) {
+				if (ids.value.has(s.schueler.id)) {
 					list.push(s);
+				}
+			}
 			return list;
 		},
 		set: (value) => {
 			ids.value.clear();
-			for (const s of value)
+			for (const s of value) {
 				ids.value.add(s.schueler.id);
+			}
 		},
 	});
 
@@ -217,31 +227,38 @@
 			return props.gostBelegpruefungsArt() === GostBelegpruefungsArt.EF1 ? 'ef1' : 'gesamt';
 		},
 		set: (value) => {
-			if (value === 'auto')
+			if (value === 'auto') {
 				return;
+			}
 			void props.setGostBelegpruefungsArt(value === 'ef1' ? GostBelegpruefungsArt.EF1 : GostBelegpruefungsArt.GESAMT);
 		},
 	});
 
 
 	function counter(fehlercodes: List<GostBelegpruefungErgebnisFehler> | undefined): number {
-		if (fehlercodes === undefined)
+		if (fehlercodes === undefined) {
 			return 0;
+		}
 		let res = 0;
-		for (const fehler of fehlercodes)
-			if (GostBelegungsfehlerArt.fromKuerzel(fehler.art) !== GostBelegungsfehlerArt.HINWEIS)
+		for (const fehler of fehlercodes) {
+			if (GostBelegungsfehlerArt.fromKuerzel(fehler.art) !== GostBelegungsfehlerArt.HINWEIS) {
 				res++;
+			}
+		}
 		return res;
 	}
 
 	function counterAnzahlOderWochenstunden(fehlercodes: List<GostBelegpruefungErgebnisFehler> | undefined): number {
-		if (fehlercodes === undefined)
+		if (fehlercodes === undefined) {
 			return 0;
+		}
 		let res = 0;
-		for (const fehler of fehlercodes)
+		for (const fehler of fehlercodes) {
 			if ((GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.HINWEIS) &&
-				(fehler.code.startsWith("WST") || fehler.code.startsWith("ANZ")))
+				(fehler.code.startsWith("WST") || fehler.code.startsWith("ANZ"))) {
 				res++;
+			}
+		}
 		return res;
 	}
 
@@ -265,27 +282,31 @@
 
 	async function downloadPDF(vorlage: string, nurBelegung: boolean, mitFehlern: boolean, mitHinweisen: boolean, einzelausgabe: boolean) {
 		const list = new ArrayList<number>();
-		if (auswahl.value.length > 0)
-			for (const e of filtered.value)
-				if (auswahl.value.includes(e))
+		if (auswahl.value.length > 0) {
+			for (const e of filtered.value) {
+				if (auswahl.value.includes(e)) {
 					list.add(e.schueler.id);
-		if (list.isEmpty())
+				}
+			}
+		}
+		if (list.isEmpty()) {
 			list.add(schueler.value.schueler.id);
+		}
 
 		const reportingParameter = new ReportingParameter();
 		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.PDF.getId();
 		if (vorlage === "Laufbahnwahlbogen") {
-			reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getBezeichnung();
-			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getVorlageParameterList());
+			reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getBezeichnung();
+			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getVorlageParameterList());
 			for (const vp of reportingParameter.vorlageParameter) {
 				if (vp.name === "nurBelegteFaecher") {
 					vp.wert = nurBelegung.toString();
 				}
 			}
 		} else if (vorlage === "Ergebnisliste") {
-			reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT.getBezeichnung();
-			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT.getVorlageParameterList());
+			reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT.getBezeichnung();
+			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT.getVorlageParameterList());
 			for (const vp of reportingParameter.vorlageParameter) {
 				switch (vp.name) {
 					case "mitFehlernKommentaren":
@@ -312,18 +333,22 @@
 
 	async function sendPdfByMail(nurBelegung: boolean) {
 		const list = new ArrayList<number>();
-		if (auswahl.value.length > 0)
-			for (const e of filtered.value)
-				if (auswahl.value.includes(e))
+		if (auswahl.value.length > 0) {
+			for (const e of filtered.value) {
+				if (auswahl.value.includes(e)) {
 					list.add(e.schueler.id);
-		if (list.isEmpty())
+				}
+			}
+		}
+		if (list.isEmpty()) {
 			list.add(schueler.value.schueler.id);
+		}
 
 		const reportingParameter = new ReportingParameter();
 		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
-		reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getBezeichnung();
-		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getVorlageParameterList());
+		reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getBezeichnung();
+		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getVorlageParameterList());
 		for (const vp of reportingParameter.vorlageParameter) {
 			if (vp.name === "nurBelegteFaecher") {
 				vp.wert = nurBelegung.toString();
@@ -348,8 +373,9 @@
 	async function export_laufbahnplanung() {
 		const list = new ArrayList<number>();
 		const arr = auswahl.value.length > 0 ? auswahl.value : filtered.value;
-		for (const s of arr)
+		for (const s of arr) {
 			list.add(s.schueler.id);
+		}
 		const { data, name } = await props.exportLaufbahnplanung(list);
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);

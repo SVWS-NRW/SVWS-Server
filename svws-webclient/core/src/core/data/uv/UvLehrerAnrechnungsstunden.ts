@@ -79,7 +79,7 @@ export class UvLehrerAnrechnungsstunden extends JavaObject {
 		return ['de.svws_nrw.core.data.uv.UvLehrerAnrechnungsstunden'].includes(name);
 	}
 
-	public static class = new Class<UvLehrerAnrechnungsstunden>('de.svws_nrw.core.data.uv.UvLehrerAnrechnungsstunden');
+	public static readonly class = new Class<UvLehrerAnrechnungsstunden>('de.svws_nrw.core.data.uv.UvLehrerAnrechnungsstunden');
 
 	public static transpilerFromJSON(json: string): UvLehrerAnrechnungsstunden {
 		const obj = JSON.parse(json) as Partial<UvLehrerAnrechnungsstunden>;

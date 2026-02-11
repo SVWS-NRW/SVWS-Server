@@ -43,17 +43,21 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		try {
 			// Lade die ENM-Daten
-			if (isEntering)
+			if (isEntering) {
 				await this.data.ladeDaten();
+			}
 			// Prüfe, ob dies die Ziel-Route ist. Wenn ja, dann leite zum Default-Child um
-			if (to.name === this.name)
+			if (to.name === this.name) {
 				return this.defaultChild!.getRoute();
+			}
 			// Prüfe, ob die View aktualisiert werden muss
 			let cur: RouteNode<any, any> = to;
-			while (cur.parent !== this)
+			while (cur.parent !== this) {
 				cur = cur.parent;
-			if (cur !== this.data.view)
+			}
+			if (cur !== this.data.view) {
 				this.data.setView(cur, this.children);
+			}
 		} catch (e) {
 			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
@@ -89,21 +93,26 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	private getApps(): TabData[] {
 		const result: TabData[] = [];
-		for (const c of super.menu)
-			if (c.hatEineKompetenz() && c.hatSchulform() && (c.hidden() === false))
+		for (const c of super.menu) {
+			if (c.hatEineKompetenz() && c.hatSchulform() && (c.hidden() === false)) {
 				result.push({ name: c.name, text: c.text });
+			}
+		}
 		return result;
 	}
 
 	private setApp = async (value: TabData) => {
-		if (value.name === this.data.view.name)
+		if (value.name === this.data.view.name) {
 			return;
+		}
 		const node = RouteNode.getNodeByName(value.name);
-		if (node === undefined)
+		if (node === undefined) {
 			throw new DeveloperNotificationException("Unbekannte Route");
+		}
 		const result = await RouteManager.doRoute(node.getRoute());
-		if (result === RoutingStatus.SUCCESS)
+		if (result === RoutingStatus.SUCCESS) {
 			this.data.setView(node, this.children);
+		}
 	};
 
 }

@@ -567,7 +567,7 @@ export class DateUtils extends JavaObject {
 		const startDateArray: Array<number> = DateUtils.extractFromDateISO8601(startDate);
 		const endDateArray: Array<number> = DateUtils.extractFromDateISO8601(endDate);
 		const dateList: ArrayList<string> = new ArrayList<string>();
-		while (startDateArray[0] < endDateArray[0] || (startDateArray[0] === endDateArray[0] && (startDateArray[1] < endDateArray[1] || (startDateArray[1] === endDateArray[1] && startDateArray[2] <= endDateArray[2])))) {
+		while ((startDateArray[0] < endDateArray[0]) || ((startDateArray[0] === endDateArray[0]) && ((startDateArray[1] < endDateArray[1]) || ((startDateArray[1] === endDateArray[1]) && (startDateArray[2] <= endDateArray[2]))))) {
 			dateList.add(JavaString.format("%04d-%02d-%02d", startDateArray[0], startDateArray[1], startDateArray[2]));
 			startDateArray[2]++;
 			if (startDateArray[2] > DateUtils.daysInMonth(startDateArray[0], startDateArray[1])) {
@@ -658,7 +658,7 @@ export class DateUtils extends JavaObject {
 		return ['de.svws_nrw.core.utils.DateUtils'].includes(name);
 	}
 
-	public static class = new Class<DateUtils>('de.svws_nrw.core.utils.DateUtils');
+	public static readonly class = new Class<DateUtils>('de.svws_nrw.core.utils.DateUtils');
 
 }
 

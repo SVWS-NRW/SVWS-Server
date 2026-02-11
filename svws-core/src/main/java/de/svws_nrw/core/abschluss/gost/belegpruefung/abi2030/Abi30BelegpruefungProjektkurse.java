@@ -14,6 +14,7 @@ import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.core.types.gost.GostSchriftlichkeit;
 import de.svws_nrw.core.utils.gost.GostFachUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -35,13 +36,13 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 
-	/// Eine Vektor mit den Projektfächern, die belegt wurden. Dies sollte im Regelfall nur ein Fach sein, können aber ggf. bei einer gültigen Belegung bis zu drei Fächer sein
+	/** Eine Vektor mit den Projektfächern, die belegt wurden. Dies sollte im Regelfall nur ein Fach sein, können aber ggf. bei einer gültigen Belegung bis zu drei Fächer sein */
 	private @NotNull List<AbiturFachbelegung> projektkursBelegung = new ArrayList<>();
 
-	/// falls ein Projektkurs gültig gewählt wurde: Der Projektkurs, sonst: null
-	private AbiturFachbelegung projektkurs;
+	/** falls ein Projektkurs gültig gewählt wurde: Der Projektkurs, sonst: null */
+	private AbiturFachbelegung projektkurs = null;
 
-	/// ein Vektor, welcher die anrechenbaren Halbjahre eines gültig angewählten Projektkurses beinhaltet
+	/** ein Vektor, welcher die anrechenbaren Halbjahre eines gültig angewählten Projektkurses beinhaltet */
 	private @NotNull List<GostHalbjahr> projektkursHalbjahre = new ArrayList<>();
 
 
@@ -69,9 +70,8 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 				continue;
 
 			final GostFach fach = manager.getFach(fachbelegung);
-			if ((fach != null) && GostFachUtils.istProjektkurs(fach)) {
+			if ((fach != null) && GostFachUtils.istProjektkurs(fach))
 				projektkursBelegung.add(fachbelegung);
-			}
 		}
 	}
 
@@ -88,8 +88,8 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 		// Prüfe die Belegung des Projektkurses und der Leitfächer
 		pruefeBelegungEF();
 		pruefeBelegung();
-		pruefeAufAnrechenbarenProjektkurs();
-		pruefeBelegungLeitfaecher();
+		if (projektkurs != null)
+			pruefeBelegungLeitfaecher();
 
 		// ist der Kurs eine besondere Lernleistung?
 		if (manager.istProjektKursBesondereLernleistung())
@@ -119,94 +119,102 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 	 * Prüft, ob genau eine Projektkurs belegt wurde.
 	 */
 	private void pruefeBelegung() {
-		if (projektkursBelegung.isEmpty())
+		if (projektkursBelegung.isEmpty()) {
 			addFehler(GostBelegungsfehler.PF_21_2);
-	}
-
-
-	/**
-	 * Prüft, ob ein anrechenbarer Projektkurs unter den belegten Projektfächern existiert. Es darf aber
-	 * auch nur genau ein anrechenbarer Projektkurs existieren!
-	 */
-	private void pruefeAufAnrechenbarenProjektkurs() {
-		// Prüfe ggf. auch mehrere Projektfächer, da abgebrochene Einzelbelegungen vorliegen können
-		for (final AbiturFachbelegung fachbelegung : projektkursBelegung) {
-			// Prüfe die einzelnen Halbjahresbelegungen der Projektfächer
-			for (final AbiturFachbelegungHalbjahr belegungHalbjahr : fachbelegung.belegungen) {
-				if (belegungHalbjahr == null)
-					continue;
-
-				final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
-				if (halbjahr == null)
-					continue;
-
-				// Ignoriere fehlerhafte EF-Belegungen an dieser Stelle
-				if ((halbjahr == GostHalbjahr.EF1) || (halbjahr == GostHalbjahr.EF2))
-					continue;
-
-				// Prüfe, ob der Projektkurs in der Q2 belegt wurde
-				if ((halbjahr != GostHalbjahr.Q21) && (halbjahr != GostHalbjahr.Q22)) {
-					addFehler(GostBelegungsfehler.PF_20_2);
-					continue;
-				}
-
-				// Der Projektkurs ist nur anrechenbar, sofern das Fach im nachfolgenden Halbjahr belegt wurde.
-				final GostHalbjahr nextHalbjahr = halbjahr.next();
-				if (nextHalbjahr == null) {
-					addFehler(GostBelegungsfehler.PF_18);
-					continue;
-				} else if (!manager.pruefeBelegung(fachbelegung, nextHalbjahr)) {
-					addFehler(GostBelegungsfehler.PF_17_2);
-					continue;
-				}
-
-				// Wurde bereits ein anderer Projektkurs in zwei aufeinanderfolgenden Jahren belegt?
-				if (projektkurs != null) {
-					addFehler(GostBelegungsfehler.PF_14);
-					break;
-				}
-
-				// Speichere den anrechenbaren Projektkurs für spätere Prüfungen
-				projektkurs = fachbelegung;
-				projektkursHalbjahre.add(halbjahr);
-				projektkursHalbjahre.add(nextHalbjahr);
-				break;
-			}
+			return;
 		}
-	}
 
+		if (projektkursBelegung.size() > 1) {
+			addFehler(GostBelegungsfehler.PF_14);
+			return;
+		}
+
+		final AbiturFachbelegung fachbelegung = projektkursBelegung.get(0);
+		if (fachbelegung == null)
+			return;
+
+		// Prüfe auf fehlerhafte Belegungen in den Halbjahren der Q1
+		if ((fachbelegung.belegungen[GostHalbjahr.Q11.id] != null) || (fachbelegung.belegungen[GostHalbjahr.Q12.id] != null)) {
+			addFehler(GostBelegungsfehler.PF_20_2);
+			return;
+		}
+
+		// Prüfe auf Belegungen in beiden Halbjahren der Q2
+		if ((fachbelegung.belegungen[GostHalbjahr.Q21.id] == null) || (fachbelegung.belegungen[GostHalbjahr.Q22.id] == null)) {
+			addFehler(GostBelegungsfehler.PF_20_2);
+			return;
+		}
+
+		projektkurs = fachbelegung;
+		projektkursHalbjahre.add(GostHalbjahr.Q21);
+		projektkursHalbjahre.add(GostHalbjahr.Q22);
+	}
 
 
 	/**
 	 * Prüft die Belegung der Leitfächer
 	 */
 	private void pruefeBelegungLeitfaecher() {
-		for (final AbiturFachbelegung fachbelegung : projektkursBelegung) {
-			final GostFach fach = manager.getFach(fachbelegung);
-			if (fach == null)
-				continue;
-			// Prüfe nun, ob genau ein Leitfach/Referenzfach belegt wurde
-			final AbiturFachbelegung leitfach1 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
-			final AbiturFachbelegung leitfach2 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
-			if ((leitfach1 == null) || (leitfach2 != null)) {
-				addFehler(GostBelegungsfehler.PF_22_2);
-				continue;
-			}
-			// Prüfe die durchgängige Belegung des Referenzfaches in EF und Q1
-			if (!manager.pruefeBelegung(leitfach1, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
-				addFehler(GostBelegungsfehler.PF_23_2);
-				continue;
-			}
+		if (projektkurs == null)
+			return;
+		final GostFach fach = manager.getFach(projektkurs);
+		if (fach == null)
+			return;
+		// Prüfe nun, ob genau ein Leitfach/Referenzfach belegt wurde
+		final AbiturFachbelegung leitfach1 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
+		final AbiturFachbelegung leitfach2 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
+		if ((leitfach1 == null) && (leitfach2 == null)) {
+			addFehler(GostBelegungsfehler.PF_22_2);
+			return;
+		}
+
+		// Prüfe, ob die Belegung des ersten Leitfaches als Referenzfach geeignet ist
+		boolean hatReferenzfach1Belegung = false;
+		boolean hatReferenzfach1BelegungSchriftlich = false;
+		if (leitfach1 != null) {
 			// Prüfe, ob die Fachdefinition des Leitfaches zulässig ist (eigentlich keine individuelle Belegprüfung)
 			final GostFach lf = manager.getFach(leitfach1);
 			if (lf == null) {
 				addFehler(GostBelegungsfehler.PF_25);
-				continue;
+				return;
 			}
 			final Fach zf = Fach.getBySchluesselOrDefault(lf.kuerzel);
 			if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf == Fach.PX) || (zf == Fach.VX)))
 				addFehler(GostBelegungsfehler.PF_19);
+
+			// Prüfe die Belegung des Referenzfaches in EF und Q1 und die Schriftlichkeit in der Q1
+			hatReferenzfach1Belegung = manager.pruefeBelegung(leitfach1, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			hatReferenzfach1BelegungSchriftlich = manager.pruefeBelegungMitSchriftlichkeit(leitfach1, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
 		}
+
+		// Prüfe, ob die Belegung des zweiten Leitfaches als Referenzfach geeignet ist
+		boolean hatReferenzfach2Belegung = false;
+		boolean hatReferenzfach2BelegungSchriftlich = false;
+		if (leitfach2 != null) {
+			// Prüfe, ob die Fachdefinition des Leitfaches zulässig ist (eigentlich keine individuelle Belegprüfung)
+			final GostFach lf = manager.getFach(leitfach2);
+			if (lf == null) {
+				addFehler(GostBelegungsfehler.PF_25);
+				return;
+			}
+			final Fach zf = Fach.getBySchluesselOrDefault(lf.kuerzel);
+			if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf == Fach.PX) || (zf == Fach.VX)))
+				addFehler(GostBelegungsfehler.PF_19);
+
+			// Prüfe die Belegung des Referenzfaches in EF und Q1 und die Schriftlichkeit in der Q1
+			hatReferenzfach2Belegung = manager.pruefeBelegung(leitfach2, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
+			hatReferenzfach2BelegungSchriftlich = manager.pruefeBelegungMitSchriftlichkeit(leitfach2, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12);
+		}
+
+		// Prüfe, ob einer der beiden Referenzfächer belegt wurde
+		if (!hatReferenzfach1Belegung && !hatReferenzfach2Belegung) {
+			addFehler(GostBelegungsfehler.PF_23_2);
+			return;
+		}
+
+		if ((!hatReferenzfach1Belegung || !hatReferenzfach1BelegungSchriftlich)
+				&& (!hatReferenzfach2Belegung || !hatReferenzfach2BelegungSchriftlich))
+			addFehler(GostBelegungsfehler.PF_24_2);
 	}
 
 

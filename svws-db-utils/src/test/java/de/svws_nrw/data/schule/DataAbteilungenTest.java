@@ -1,35 +1,34 @@
 package de.svws_nrw.data.schule;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.schule.Abteilung;
 import de.svws_nrw.core.data.schule.AbteilungKlassenzuordnung;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungen;
-import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungsKlassen;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
-import org.assertj.core.api.Assertions;
-import org.assertj.core.api.ThrowableAssert;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.ThrowableAssert.catchThrowable;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.assertj.core.api.Assertions.assertThatException;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -39,319 +38,532 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class DataAbteilungenTest {
 
-	private final Long idSchuljahresabschnitt = 2L;
-
 	@Mock
 	private DBEntityManager conn;
+
+	@Mock
+	private DataAbteilungenKlassenzuordnungen dataAbteilungenKlassenzuordnungen;
 
 	@InjectMocks
 	private DataAbteilungen data;
 
 	@BeforeAll
-	static void setUpAll() {
+	static void setup() {
 		ASDCoreTypeUtils.initAll();
 	}
 
 	@Test
-	@DisplayName("initDTO | erfolgreiches Update der ID")
-	void initDTOTest() throws ApiOperationException {
-		final DTOAbteilungen dtoAbteilungen = createDTOAbteilungen();
-		final Map<String, Object> initAttributes = new HashMap<>();
-		initAttributes.put("idSchuljahresabschnitt", idSchuljahresabschnitt);
-
-		this.data.initDTO(dtoAbteilungen, 2L, initAttributes);
-
-		assertThat(dtoAbteilungen)
-				.isInstanceOf(DTOAbteilungen.class)
-				.hasFieldOrPropertyWithValue("ID", 2L)
-				.hasFieldOrPropertyWithValue("Sichtbar", true)
-				.hasFieldOrPropertyWithValue("Schuljahresabschnitts_ID", idSchuljahresabschnitt);
-	}
-
-	@Test
-	@DisplayName("GetById | Erfolg")
-	void getByIdTestSuccess() throws ApiOperationException {
-		final DTOAbteilungen dtoAbteilungen = createDTOAbteilungen();
-		when(this.conn.queryByKey(DTOAbteilungen.class, dtoAbteilungen.ID)).thenReturn(dtoAbteilungen);
-
-		assertThat(data.getById(dtoAbteilungen.ID))
-				.isInstanceOf(Abteilung.class)
-				.hasFieldOrPropertyWithValue("id", dtoAbteilungen.ID)
-				.hasFieldOrPropertyWithValue("bezeichnung", dtoAbteilungen.Bezeichnung)
-				.hasFieldOrPropertyWithValue("idAbteilungsleiter", dtoAbteilungen.AbteilungsLeiter_ID)
-				.hasFieldOrPropertyWithValue("sortierung", dtoAbteilungen.Sortierung)
-				.hasFieldOrPropertyWithValue("durchwahl", dtoAbteilungen.Durchwahl)
-				.hasFieldOrPropertyWithValue("durchwahl", dtoAbteilungen.Durchwahl)
-				.hasFieldOrPropertyWithValue("raum", dtoAbteilungen.Raum);
-	}
-
-	@Test
-	@DisplayName("GetById | Erfolg, überprüfe Klassenzuordnungen")
-	void getByIdTestSuccessCheckKlassenzuordnungen() throws ApiOperationException {
-		final DTOAbteilungen dtoAbteilungen = createDTOAbteilungen();
-		when(this.conn.queryByKey(DTOAbteilungen.class, dtoAbteilungen.ID)).thenReturn(dtoAbteilungen);
-		when(this.conn.queryList(DTOAbteilungsKlassen.QUERY_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, dtoAbteilungen.ID))
-				.thenReturn(List.of(new DTOAbteilungsKlassen(1L, dtoAbteilungen.ID, 2L)));
-
-		assertThat(data.getById(dtoAbteilungen.ID).klassenzuordnungen)
-				.isInstanceOf(List.class)
-				.isNotNull()
-				.isNotEmpty()
-				.allSatisfy(abteilungKlassenzuordnung -> {
-					assertThat(abteilungKlassenzuordnung)
-					.isInstanceOf(AbteilungKlassenzuordnung.class)
-					.hasFieldOrPropertyWithValue("id", 1L)
-					.hasFieldOrPropertyWithValue("idAbteilung", dtoAbteilungen.ID)
-					.hasFieldOrPropertyWithValue("idKlasse", 2L);
-		});
-	}
-
-	@Test
-	@DisplayName("GetById | Falsche ID")
-	void getByIdTestFailed() {
-		final Throwable throwable = Assertions.catchThrowable(() -> data.getById(1L));
-
-		assertThat(throwable)
+	@DisplayName("setAttributesRequiredOnCreation: bezeichnung")
+	void setAttributesRequiredOnCreationBezeichnung() {
+		assertThatException()
+				.isThrownBy(() -> this.data.add(Map.of("test", "test")))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Eine Abteilung mit der ID 1 konnte nicht gefunden werden.")
-				.hasFieldOrPropertyWithValue("Status", Response.Status.NOT_FOUND);
-	}
-
-	@Test
-	@DisplayName("getAll | Erfolgreich mit JahresabschnittsId, überprüfe Abteilungen")
-	void getAllTest() throws ApiOperationException {
-		data = new DataAbteilungen(conn, idSchuljahresabschnitt);
-		final DTOAbteilungen dtoAbteilungen = createDTOAbteilungen();
-		when(conn.queryList(DTOAbteilungen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOAbteilungen.class, idSchuljahresabschnitt))
-				.thenReturn(List.of(dtoAbteilungen));
-		final List<DTOAbteilungsKlassen> dtoAbteilungsKlassens = List.of(new DTOAbteilungsKlassen(1L, 2L, 3L));
-		when(conn.queryList(DTOAbteilungsKlassen.QUERY_LIST_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, List.of(dtoAbteilungen.ID))).thenReturn(dtoAbteilungsKlassens);
-
-		final List<Abteilung> result = this.data.getAll();
-
-		assertThat(result)
-				.isInstanceOf(List.class)
-				.hasSize(1)
-				.isNotNull()
-				.isNotEmpty()
-				.allSatisfy(abteilung -> {
-					assertThat(abteilung)
-							.isInstanceOf(Abteilung.class)
-							.hasFieldOrPropertyWithValue("id", dtoAbteilungen.ID)
-							.hasFieldOrPropertyWithValue("bezeichnung", dtoAbteilungen.Bezeichnung)
-							.hasFieldOrPropertyWithValue("idSchuljahresabschnitt", dtoAbteilungen.Schuljahresabschnitts_ID)
-							.hasFieldOrPropertyWithValue("raum", dtoAbteilungen.Raum)
-							.hasFieldOrPropertyWithValue("email", dtoAbteilungen.Email)
-							.hasFieldOrPropertyWithValue("durchwahl", dtoAbteilungen.Durchwahl)
-							.hasFieldOrPropertyWithValue("sortierung", dtoAbteilungen.Sortierung);
-				});
-	}
-
-	@Test
-	@DisplayName("getAll | Leere Liste")
-	void getAllTestEmptyList() throws ApiOperationException {
-		data = new DataAbteilungen(conn, idSchuljahresabschnitt);
-		when(conn.queryList(DTOAbteilungen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOAbteilungen.class, idSchuljahresabschnitt))
-				.thenReturn(Collections.emptyList());
-
-		final List<Abteilung> result = this.data.getAll();
-
-		assertThat(result).isEmpty();
-
-	}
-
-
-	@Test
-	@DisplayName("getAll | Erfolgreich mit JahresabschnittsId, überprüfe AbteilungKlassenzurodnungen")
-	void getAllTestAbteilungKlassenzuordnungen() throws ApiOperationException {
-		data = new DataAbteilungen(conn, idSchuljahresabschnitt);
-		final DTOAbteilungen dtoAbteilungen = createDTOAbteilungen();
-		dtoAbteilungen.ID = 2L;
-		when(conn.queryList(DTOAbteilungen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOAbteilungen.class, idSchuljahresabschnitt))
-				.thenReturn(List.of(dtoAbteilungen));
-		when(conn.queryList(DTOAbteilungsKlassen.QUERY_LIST_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, List.of(2L))).thenReturn(List.of(new DTOAbteilungsKlassen(1L, 1L, 1L), new DTOAbteilungsKlassen(2L,
-				2L, 2L), new DTOAbteilungsKlassen(3L, 1L, 3L)));
-
-		final List<Abteilung> actual = this.data.getAll();
-
-		assertThat(actual.getFirst().klassenzuordnungen)
-				.isInstanceOf(List.class)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(1)
-				.allSatisfy(abteilungKlassenzuordnung -> {
-					assertThat(abteilungKlassenzuordnung)
-							.isInstanceOf(AbteilungKlassenzuordnung.class)
-							.hasFieldOrPropertyWithValue("id", 2L)
-							.hasFieldOrPropertyWithValue("idAbteilung", 2L)
-							.hasFieldOrPropertyWithValue("idKlasse", 2L);
-				});
-	}
-
-	@Test
-	@DisplayName("Map | Erfolgreich")
-	void testMap() throws ApiOperationException {
-		final DTOAbteilungen dtoAbteilungen = createDTOAbteilungen();
-
-		assertThat(this.data.map(dtoAbteilungen))
-				.isInstanceOf(Abteilung.class)
-				.hasFieldOrPropertyWithValue("id", 1L)
-				.hasFieldOrPropertyWithValue("bezeichnung", "Bezeichnung")
-				.hasFieldOrPropertyWithValue("idSchuljahresabschnitt", 2L)
-				.hasFieldOrPropertyWithValue("idAbteilungsleiter", 2L)
-				.hasFieldOrPropertyWithValue("raum", "205")
-				.hasFieldOrPropertyWithValue("email", "test@test.com")
-				.hasFieldOrPropertyWithValue("durchwahl", "343")
-				.hasFieldOrPropertyWithValue("sortierung", 3200);
-	}
-
-	@Test
-	@DisplayName("Map | Erfolgreich mit null Werten")
-	void testMapNullValues() throws ApiOperationException {
-		final DTOAbteilungen dtoAbteilungen = createDTOAbteilungen();
-		dtoAbteilungen.Raum = null;
-		dtoAbteilungen.Email = null;
-		dtoAbteilungen.Durchwahl = null;
-		dtoAbteilungen.Bezeichnung = null;
-		dtoAbteilungen.Sortierung = null;
-
-		assertThat(this.data.map(dtoAbteilungen))
-				.isInstanceOf(Abteilung.class)
-				.hasFieldOrPropertyWithValue("bezeichnung", "")
-				.hasFieldOrPropertyWithValue("raum", null)
-				.hasFieldOrPropertyWithValue("email", null)
-				.hasFieldOrPropertyWithValue("durchwahl", null)
-				.hasFieldOrPropertyWithValue("sortierung", 32000);
-	}
-
-	@ParameterizedTest
-	@DisplayName("MapAttribute | Erfolgreiches Mapping und unbekannte Daten")
-	@MethodSource("provideMappingAttributes")
-	void testMapAttribute(final String key, final Object value) {
-		final DTOAbteilungen expectedDTO = createDTOAbteilungen();
-
-		final Throwable throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, key, value, null));
-
-		switch (key) {
-			case "id" -> assertThat(expectedDTO.ID).isEqualTo(value);
-			case "bezeichnung" -> assertThat(expectedDTO.Bezeichnung).isEqualTo(value);
-			case "idSchuljahresabschnitt" -> assertThat(expectedDTO.Schuljahresabschnitts_ID).isEqualTo(value);
-			case "idAbteilungsleiter" -> assertThat(expectedDTO.AbteilungsLeiter_ID).isEqualTo(value);
-			case "raum" -> assertThat(expectedDTO.Raum).isEqualTo(value);
-			case "email" -> assertThat(expectedDTO.Email).isEqualTo(value);
-			case "durchwahl" -> assertThat(expectedDTO.Durchwahl).isEqualTo(value);
-			case "sortierung" -> assertThat(expectedDTO.Sortierung).isEqualTo(value);
-			default -> assertThat(throwable)
-					.isInstanceOf(ApiOperationException.class)
-					.hasMessageStartingWith("Das Patchen des Attributes test wird nicht unterstützt.")
-					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-		}
-
-	}
-
-	@ParameterizedTest
-	@DisplayName("mapAttribute | fehlerhaftes Mapping der ID")
-	@MethodSource("provideMappingAttributes")
-	void testMapAttributeFalseID(final String key, final Object value) {
-		final DTOAbteilungen expectedDTO = createDTOAbteilungen();
-		expectedDTO.ID = 14L;
-
-		final Throwable throwable = ThrowableAssert.catchThrowable(() -> this.data.mapAttribute(expectedDTO, key, value, null));
-
-		if (key.equals("id"))
-			assertThat(throwable)
-					.isInstanceOf(ApiOperationException.class)
-					.hasMessage("Die ID 1 des Patches ist null oder stimmt nicht mit der ID 14 in der Datenbank überein.")
-					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-
-	}
-
-	private static Stream<Arguments> provideMappingAttributes() {
-		return Stream.of(
-				arguments("id", 1L),
-				arguments("bezeichnung", "Bezeichnung"),
-				arguments("idSchuljahresabschnitt", 2L),
-				arguments("idAbteilungsleiter", 2L),
-				arguments("raum", "205"),
-				arguments("email", "test@test.com"),
-				arguments("durchwahl", "343"),
-				arguments("sortierung", 3200),
-				arguments("test", 3000)
-		);
-	}
-
-
-	@Test
-	@DisplayName("mapAttribute | bezeichnung doppelt vergeben")
-	void mapAttributeTest_bezeichnungDoppeltVergeben() {
-		final var expectedDTO = new DTOAbteilungen(1L, "abc", 1L);
-		when(this.conn.queryAll(DTOAbteilungen.class)).thenReturn(List.of(new DTOAbteilungen(2L, "test", 1L)));
-
-		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, "bezeichnung", "TEST", null));
-
-		assertThat(throwable)
-				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Die Bezeichnung TEST ist bereits vorhanden.")
+				.withMessage("Es werden weitere Attribute (bezeichnung) benötigt, damit die Entität erstellt werden kann.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("mapAttribute | bezeichnung case aendern im gleichen Objekt")
-	void mapAttributeTest_changeCaseOfBezeichnung() throws ApiOperationException {
-		final var expectedDTO = new DTOAbteilungen(1L, "test", 1L);
-		when(this.conn.queryAll(DTOAbteilungen.class)).thenReturn(List.of(expectedDTO));
+	@DisplayName("initDTO | Erfolg")
+	void initDTO() {
+		final var data = new DataAbteilungen(this.conn, 22L, this.dataAbteilungenKlassenzuordnungen);
+		final var dto = new DTOAbteilungen(1L, "", 1L);
 
-		this.data.mapAttribute(expectedDTO, "bezeichnung", "TEST", null);
+		data.initDTO(dto, 2L, null);
 
-		assertThat(expectedDTO.Bezeichnung).isEqualTo("TEST");
+		assertThat(dto)
+				.hasFieldOrPropertyWithValue("ID", 2L)
+				.hasFieldOrPropertyWithValue("Schuljahresabschnitts_ID", 22L);
 	}
 
 	@Test
-	@DisplayName("mapAttribute | bezeichnung dto is null")
-	void mapAttributeTest_bezeichnungDtoISNull() throws ApiOperationException {
+	@DisplayName("getLongId | Erfolg")
+	void getLongId() {
+		final var dto = new DTOAbteilungen(1L, "", 1L);
+
+		assertThat(this.data.getLongId(dto)).isEqualTo(1L);
+	}
+
+	@Test
+	@DisplayName("getById | Erfolg")
+	void getById() throws ApiOperationException {
+		final var dto = new DTOAbteilungen(1L, "", 1L);
+
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+
+		assertThat(this.data.getById(1L))
+				.isInstanceOf(Abteilung.class)
+				.hasFieldOrPropertyWithValue("id", dto.ID);
+	}
+
+	@Test
+	@DisplayName("getByID | ID can't be null")
+	void getByIdNull() {
+		assertThatException()
+				.isThrownBy(() -> this.data.getById(null))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die ID der Abteilung darf nicht null sein.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("getByID | id not found")
+	void getByIdNotFound() {
+		when(this.conn.queryByKey(DTOAbteilungen.class, 99L)).thenReturn(null);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.getById(99L))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die Abteilung mit der ID 99 wurde nicht gefunden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
+	}
+
+	@Test
+	@DisplayName("map")
+	void map() {
+		final var dto = new DTOAbteilungen(1L, "", 1L);
+		dto.Raum = "raum";
+		dto.Email = "email";
+		dto.Durchwahl = "durchwahl";
+		dto.Sortierung = 42;
+		dto.Sichtbar = true;
+
+		assertThat(this.data.map(dto))
+				.isInstanceOf(Abteilung.class)
+				.hasFieldOrPropertyWithValue("id", dto.ID)
+				.hasFieldOrPropertyWithValue("bezeichnung", dto.Bezeichnung)
+				.hasFieldOrPropertyWithValue("raum", dto.Raum)
+				.hasFieldOrPropertyWithValue("email", dto.Email)
+				.hasFieldOrPropertyWithValue("durchwahl", dto.Durchwahl)
+				.hasFieldOrPropertyWithValue("sortierung", dto.Sortierung)
+				.hasFieldOrPropertyWithValue("istSichtbar", dto.Sichtbar);
+	}
+
+	@Test
+	@DisplayName("map | sortierung null")
+	void mapSortierungNull() {
+		final var dto = new DTOAbteilungen(1L, "", 1L);
+		dto.Sortierung = null;
+
+		assertThat(this.data.map(dto)).hasFieldOrPropertyWithValue("sortierung", 32000);
+	}
+
+	@Test
+	@DisplayName("map | sichtbar null")
+	void mapSichtbarNull() {
+		final var dto = new DTOAbteilungen(1L, "", 1L);
+		dto.Sichtbar = null;
+
+		assertThat(this.data.map(dto)).hasFieldOrPropertyWithValue("istSichtbar", false);
+	}
+
+	@Test
+	@DisplayName("getList | Erfolg")
+	void getList() {
+		final var data = new DataAbteilungen(this.conn, 22L, this.dataAbteilungenKlassenzuordnungen);
+		final var dto1 = new DTOAbteilungen(1L, "1", 22L);
+		final var dto2 = new DTOAbteilungen(2L, "2", 22L);
+
+		when(this.conn.queryList(DTOAbteilungen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOAbteilungen.class, 22L)).thenReturn(List.of(dto1, dto2));
+		final var zuordnung = new AbteilungKlassenzuordnung();
+		zuordnung.id = 42L;
+		zuordnung.idKlasse = 99L;
+		zuordnung.idAbteilung = 1L;
+		when(this.dataAbteilungenKlassenzuordnungen.getAll()).thenReturn(List.of(zuordnung));
+
+		assertThat(data.getList())
+				.hasSize(2)
+				.satisfiesExactly(
+						f1 -> assertThat(f1)
+								.isInstanceOf(Abteilung.class)
+								.hasFieldOrPropertyWithValue("bezeichnung", dto1.Bezeichnung)
+								.extracting(e -> e.klassenzuordnungen)
+								.asInstanceOf(InstanceOfAssertFactories.LIST)
+								.hasSize(1)
+								.satisfiesExactly(
+										a -> assertThat(a)
+												.isInstanceOf(AbteilungKlassenzuordnung.class)
+												.hasFieldOrPropertyWithValue("id", zuordnung.id)
+												.hasFieldOrPropertyWithValue("idKlasse", zuordnung.idKlasse)
+												.hasFieldOrPropertyWithValue("idAbteilung", zuordnung.idAbteilung)
+								),
+						f2 -> assertThat(f2)
+								.isInstanceOf(Abteilung.class)
+								.hasFieldOrPropertyWithValue("bezeichnung", dto2.Bezeichnung)
+				);
+	}
+
+	@Test
+	@DisplayName("getList | idSchuljahresabschnitt null")
+	void getListIdSchuljahresabschnittNull() {
+		assertThat(this.data.getList()).isEmpty();
+		verify(this.conn, never()).queryList(any(), any(), any());
+	}
+
+	@Test
+	@DisplayName("mapAttribute | idWrong")
+	void mapAttributeIdIsWrong() {
+		assertThatException()
+				.isThrownBy(() -> this.data.mapAttribute(mock(DTOAbteilungen.class), "id", 2L, null))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die ID 2 des Patches ist null oder stimmt nicht mit der ID 0 in der Datenbank überein.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("mapAttribute | id")
+	void mapAttributeId() {
+		final var dto = new DTOAbteilungen(1L, "1", 1L);
+
+		assertDoesNotThrow(() -> this.data.mapAttribute(dto, "id", 1L, null));
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung > 50 Zeichen")
+	void patchBezeichnungIsTooLong() {
+		final var dto = new DTOAbteilungen(1L, "bezeichnung", 1L);
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", RandomStringUtils.insecure().nextAscii(51))))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut bezeichnung: Die Länge des Strings ist auf 50 Zeichen limitiert.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung Null")
+	void patchBezeichnungIsNull() {
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(mock(DTOAbteilungen.class));
+		final var map = new HashMap<String, Object>();
+		map.put("bezeichnung", null);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, map))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut bezeichnung: Der Wert null ist nicht erlaubt.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung empty")
+	void patchBezeichnungIsEmpty() {
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(mock(DTOAbteilungen.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut bezeichnung: Ein leerer String ist hier nicht erlaubt.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung is blank")
+	void patchBezeichnungIsBlank() throws ApiOperationException {
+		final var dto = new DTOAbteilungen(1L, "bezeichnung", 1L);
+
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("bezeichnung", "    "));
+
+		verify(this.conn, never()).queryAll(DTOAbteilungen.class);
+		assertThat(dto.Bezeichnung).isEqualTo("bezeichnung");
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung doesn't change")
+	void patchBezeichnungDoesNotChange() throws ApiOperationException {
+		final var dto = new DTOAbteilungen(1L, "bezeichnung", 1L);
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("bezeichnung", "bezeichnung"));
+
+		verify(this.conn, never()).queryAll(DTOAbteilungen.class);
+		assertThat(dto.Bezeichnung).isEqualTo("bezeichnung");
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung already used")
+	void patchBezeichnungAlreadyUsed() {
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(mock(DTOAbteilungen.class));
+		when(this.conn.queryAll(DTOAbteilungen.class)).thenReturn(List.of(new DTOAbteilungen(1L, "test", 1L)));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die Bezeichnung test ist bereits vorhanden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung already used different case")
+	void patchBezeichnungAlreadyUsedWithDifferentCase() {
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(mock(DTOAbteilungen.class));
+		when(this.conn.queryAll(DTOAbteilungen.class)).thenReturn(List.of(new DTOAbteilungen(2L, "TEST", 1L)));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die Bezeichnung test ist bereits vorhanden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung change case in same object")
+	void patchBezeichnungChangeCase() throws ApiOperationException {
+		final var dto = new DTOAbteilungen(1L, "bezeichnung", 1L);
+		when(conn.queryAll(DTOAbteilungen.class)).thenReturn(List.of(dto));
+		final var newDto = new DTOAbteilungen(2L, "abc", 1L);
+		when(this.conn.queryByKey(DTOAbteilungen.class, 2L)).thenReturn(newDto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(2L, Map.of("bezeichnung", "ABC"));
+
+		assertThat(newDto.Bezeichnung).isEqualTo("ABC");
+	}
+
+	@Test
+	@DisplayName("patch | bezeichnung dto is null | make sure no Nullpointer is thrown in equalsIgnoreCase check")
+	void patchBezeichnungInDtoISNull() {
 		final var dto = new DTOAbteilungen(1L, "123", 1L);
 		dto.Bezeichnung = null;
-		final var newDto = new DTOAbteilungen(2L, "abc", 1L);
 		when(conn.queryAll(DTOAbteilungen.class)).thenReturn(List.of(dto));
+		final var newDto = new DTOAbteilungen(2L, "abc", 1L);
+		when(this.conn.queryByKey(DTOAbteilungen.class, 2L)).thenReturn(newDto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.mapAttribute(newDto, "bezeichnung", "test", null);
-
-		assertThat(newDto.Bezeichnung).isEqualTo("test");
+		assertThatNoException()
+				.isThrownBy(() -> this.data.patch(2L, Map.of("bezeichnung", "test")));
 	}
 
 	@Test
-	@DisplayName("mapAttribute | bezeichnung null")
-	void mapAttributeTest_bezeichnungNull() {
-		final var throwable = catchThrowable(() -> this.data
-				.mapAttribute(new DTOAbteilungen(1L, "abc", 1L), "bezeichnung", null, null));
+	@DisplayName("patch | bezeichnung")
+	void patchBezeichnung() throws ApiOperationException {
+		final var dto = new DTOAbteilungen(1L, "bezeichnung", 1L);
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		assertThat(throwable)
+		this.data.patch(1L, Map.of("bezeichnung", "neu"));
+
+		assertThat(dto.Bezeichnung).isEqualTo("neu");
+	}
+
+	@Test
+	@DisplayName("patch | idAbteilungsleiter | null")
+	void patchIdAbteilungsleiterIsNull() throws ApiOperationException {
+		final var dto = new DTOAbteilungen(1L, "", 1L);
+		dto.AbteilungsLeiter_ID = 42L;
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+		final var map = new HashMap<String, Object>();
+		map.put("idAbteilungsleiter", null);
+
+		this.data.patch(1L, map);
+
+		assertThat(dto.AbteilungsLeiter_ID).isNull();
+	}
+
+	@Test
+	@DisplayName("patch | idAbteilungsleiter")
+	void patchIdAbteilungsleiter() throws ApiOperationException {
+		final var dto = new DTOAbteilungen(1L, "", 1L);
+		dto.AbteilungsLeiter_ID = 42L;
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("idAbteilungsleiter", 99L));
+
+		assertThat(dto.AbteilungsLeiter_ID).isEqualTo(99L);
+	}
+
+	@Test
+	@DisplayName("patch | Raum | null")
+	void patchRaumIsNull() throws ApiOperationException {
+		final var dto = new DTOAbteilungen(1L, "", 1L);
+		dto.Raum = "raum";
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+		final var map = new HashMap<String, Object>();
+		map.put("raum", null);
+
+		this.data.patch(1L, map);
+
+		assertThat(dto.Raum).isNull();
+	}
+
+	@Test
+	@DisplayName("patch | Raum")
+	void patchRaum() throws ApiOperationException {
+		final var dto = new DTOAbteilungen(1L, "", 1L);
+		dto.Raum = "raum";
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("raum", "neuerRaum"));
+
+		assertThat(dto.Raum).isEqualTo("neuerRaum");
+	}
+
+	@Test
+	@DisplayName("patch | Raum > 20 Zeichen")
+	void patchRaumIsTooLong() {
+		final var dto = new DTOAbteilungen(1L, "bezeichnung", 1L);
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("raum", RandomStringUtils.insecure().nextAscii(21))))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Attribut bezeichnung: Der Wert null ist nicht erlaubt.")
+				.withMessage("Attribut raum: Die Länge des Strings ist auf 20 Zeichen limitiert.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
-	@DisplayName("mapAttribute | bezeichnung empty")
-	void mapAttributeTest_bezeichnungEmpty() {
-		final var throwable = catchThrowable(() -> this.data
-				.mapAttribute(new DTOAbteilungen(1L, "abc", 1L), "bezeichnung", "", null));
+	@DisplayName("patch | Email | null")
+	void patchEmailIsNull() throws ApiOperationException {
+		final var dto = new DTOAbteilungen(1L, "", 1L);
+		dto.Email = "email";
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+		final var map = new HashMap<String, Object>();
+		map.put("email", null);
 
-		assertThat(throwable)
+		this.data.patch(1L, map);
+
+		assertThat(dto.Email).isNull();
+	}
+
+	@Test
+	@DisplayName("patch | Email")
+	void patchEmail() throws ApiOperationException {
+		final var dto = new DTOAbteilungen(1L, "", 1L);
+		dto.Email = "email";
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("email", "neueEmail"));
+
+		assertThat(dto.Email).isEqualTo("neueEmail");
+	}
+
+	@Test
+	@DisplayName("patch | Email > 100 Zeichen")
+	void patchEmailIsTooLong() {
+		final var dto = new DTOAbteilungen(1L, "bezeichnung", 1L);
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("email", RandomStringUtils.insecure().nextAscii(101))))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Attribut bezeichnung: Ein leerer String ist hier nicht erlaubt.")
+				.withMessage("Attribut email: Die Länge des Strings ist auf 100 Zeichen limitiert.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
-	private DTOAbteilungen createDTOAbteilungen() {
-		final DTOAbteilungen dtoAbteilungen = new DTOAbteilungen(1L, "Bezeichnung", idSchuljahresabschnitt);
-		dtoAbteilungen.Sichtbar = true;
-		dtoAbteilungen.AbteilungsLeiter_ID = 2L;
-		dtoAbteilungen.Sortierung = 3200;
-		dtoAbteilungen.Durchwahl = "343";
-		dtoAbteilungen.Email = "test@test.com";
-		dtoAbteilungen.Raum = "205";
-		return dtoAbteilungen;
+	@Test
+	@DisplayName("patch | Durchwahl | null")
+	void patchDurchwahlIsNull() throws ApiOperationException {
+		final var dto = new DTOAbteilungen(1L, "", 1L);
+		dto.Durchwahl = "durchwahl";
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+		final var map = new HashMap<String, Object>();
+		map.put("durchwahl", null);
+
+		this.data.patch(1L, map);
+
+		assertThat(dto.Durchwahl).isNull();
+	}
+
+	@Test
+	@DisplayName("patch | Durchwahl")
+	void patchDurchwahl() throws ApiOperationException {
+		final var dto = new DTOAbteilungen(1L, "", 1L);
+		dto.Durchwahl = "durchwahl";
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("durchwahl", "neueDurchwahl"));
+
+		assertThat(dto.Durchwahl).isEqualTo("neueDurchwahl");
+	}
+
+	@Test
+	@DisplayName("patch | Durchwahl > 20 Zeichen")
+	void patchDurchwahlIsTooLong() {
+		final var dto = new DTOAbteilungen(1L, "bezeichnung", 1L);
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("durchwahl", RandomStringUtils.insecure().nextAscii(21))))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut durchwahl: Die Länge des Strings ist auf 20 Zeichen limitiert.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | istSichtbar is null")
+	void patchIstSichtbarIsNull() {
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(mock(DTOAbteilungen.class));
+		final var map = new HashMap<String, Object>();
+		map.put("istSichtbar", null);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, map))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut istSichtbar: Der Wert null ist nicht erlaubt")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | istSichtbar")
+	void patchIstSichtbar() throws ApiOperationException {
+		final var dto = new DTOAbteilungen(1L, "bezeichnung", 1L);
+		dto.Sichtbar = false;
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("istSichtbar", true));
+
+		assertThat(dto.Sichtbar).isTrue();
+	}
+
+	@Test
+	@DisplayName("patch | sortierung is null")
+	void patchSortierungIsNull() {
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(mock(DTOAbteilungen.class));
+		final var map = new HashMap<String, Object>();
+		map.put("sortierung", null);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, map))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut sortierung: Der Wert null ist nicht erlaubt")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | Sortierung")
+	void patchSortierung() throws ApiOperationException {
+		final var dto = new DTOAbteilungen(1L, "bezeichnung", 1L);
+		dto.Sortierung = 123;
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		this.data.patch(1L, Map.of("sortierung", 345));
+
+		assertThat(dto.Sortierung).isEqualTo(345);
+	}
+
+	@Test
+	@DisplayName("patch | unknown argument")
+	void patchUnknownArgument() {
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(mock(DTOAbteilungen.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("unknown", "unknown")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die Daten des Patches enthalten das unbekannte Attribut unknown.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 }

@@ -32,7 +32,7 @@ export class GostBlockungRegelUpdate extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostBlockungRegelUpdate'].includes(name);
 	}
 
-	public static class = new Class<GostBlockungRegelUpdate>('de.svws_nrw.core.data.gost.GostBlockungRegelUpdate');
+	public static readonly class = new Class<GostBlockungRegelUpdate>('de.svws_nrw.core.data.gost.GostBlockungRegelUpdate');
 
 	public static transpilerFromJSON(json: string): GostBlockungRegelUpdate {
 		const obj = JSON.parse(json) as Partial<GostBlockungRegelUpdate>;

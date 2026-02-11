@@ -1,0 +1,56 @@
+package de.svws_nrw.asd.validate.lehrer;
+
+import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerLehramtKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
+import de.svws_nrw.asd.types.lehrer.LehrerLehramt;
+import de.svws_nrw.asd.validate.Validator;
+import de.svws_nrw.asd.validate.ValidatorKontext;
+import jakarta.validation.constraints.NotNull;
+
+/**
+ * Dieser Validator führt eine Statistikprüfung auf ein vorhandenes Lehramt
+ * eines Lehrers einer Schule in Kombination zu anderen vorhandenen Lehrämtern aus.
+ */
+public final class ValidatorLplk05LehrerPersonaldatenLehramtKombination extends Validator {
+
+	/** Die Lehrer-Personaldaten */
+	private final @NotNull LehrerPersonaldaten lehrerPersonaldaten;
+
+	/**
+	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
+	 *
+	 * @param lehrerPersonaldaten   die Lehrer-Personaldaten, die geprüft werden sollen
+	 * @param kontext               der Kontext des Validators
+	 */
+	public ValidatorLplk05LehrerPersonaldatenLehramtKombination(final @NotNull LehrerPersonaldaten lehrerPersonaldaten, final @NotNull ValidatorKontext kontext) {
+		super(kontext);
+		this.lehrerPersonaldaten = lehrerPersonaldaten;
+	}
+
+	@Override
+	protected boolean pruefe() {
+
+		// Fehlerkürzel: LPLK05 Die Lehramtseinträge 'Sonstige pädagogische Unterrichtshilfe ohne sonderpädagogische Zusatzausbildung' und 'Sonstige pädagogische Unterrichtshilfe mit sonderpädagogischer Zusatzausbildung' sollten nicht zusammen vorliegen. Falls der Lehramtseintrag 'Sonstige pädagogische Unterrichtshilfe mit sonderpädagogischer Zusatzausbildung' korrekt ist, entfernen Sie bitte den Lehramtseintrag 'Sonstige pädagogische Unterrichtshilfe ohne sonderpädagogische Zusatzausbildung'.
+		boolean lehramtId59Vorhanden = false;
+		boolean lehramtId62Vorhanden = false;
+		LehrerLehramtKatalogEintrag lehrerLehramtKatalogEintrag59 = LehrerLehramt.ID_59.daten(this.kontext().getSchuljahr());
+		LehrerLehramtKatalogEintrag lehrerLehramtKatalogEintrag62 = LehrerLehramt.ID_62.daten(this.kontext().getSchuljahr());
+
+		if (lehrerLehramtKatalogEintrag59 != null && lehrerLehramtKatalogEintrag62 != null) {
+			for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : lehrerPersonaldaten.lehraemter) {
+				if (lehrerLehramtKatalogEintrag59.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+					lehramtId59Vorhanden = true;
+				else if (lehrerLehramtKatalogEintrag62.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+					lehramtId62Vorhanden = true;
+			}
+		}
+
+		if (lehramtId59Vorhanden && lehramtId62Vorhanden) {
+			this.addFehler(5, "Die Lehramtseinträge 'Sonstige pädagogische Unterrichtshilfe ohne sonderpädagogische Zusatzausbildung' und 'Sonstige pädagogische Unterrichtshilfe mit sonderpädagogischer Zusatzausbildung' sollten nicht zusammen vorliegen. Falls der Lehramtseintrag 'Sonstige pädagogische Unterrichtshilfe mit sonderpädagogischer Zusatzausbildung' korrekt ist, entfernen Sie bitte den Lehramtseintrag 'Sonstige pädagogische Unterrichtshilfe ohne sonderpädagogische Zusatzausbildung'.");
+			return false;
+		}
+
+		return true;
+	}
+}

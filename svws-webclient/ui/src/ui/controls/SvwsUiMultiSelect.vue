@@ -150,8 +150,9 @@
 
 	const rawModelValues = computed(() => {
 		const set = new Set<Item>();
-		for (const item of props.modelValue)
+		for (const item of props.modelValue) {
 			set.add(toRaw(item));
+		}
 		return set;
 	});
 
@@ -160,11 +161,13 @@
 	watch(rawModelValues, (value) => updateData(value, true), { immediate: false });
 
 	function updateData(newValueSet: Set<Item>, fromModelValue: boolean) {
-		if (((data.value.size === newValueSet.size) && (data.value.difference(newValueSet).size === 0)) || props.disabled)
+		if (((data.value.size === newValueSet.size) && (data.value.difference(newValueSet).size === 0)) || props.disabled) {
 			return;
+		}
 		data.value = newValueSet;
-		if (!fromModelValue)
+		if (!fromModelValue) {
 			emit("update:modelValue", [...newValueSet]);
+		}
 	}
 
 	const selectedItem = computed({
@@ -175,10 +178,11 @@
 		set: (item) => {
 			if ((item !== null) && (item !== undefined)) {
 				const newSelectedItems = new Set(data.value);
-				if (newSelectedItems.has(item))
+				if (newSelectedItems.has(item)) {
 					newSelectedItems.delete(item);
-				else
+				} else {
 					newSelectedItems.add(item);
+				}
 				updateData(newSelectedItems, false);
 			}
 		},
@@ -190,30 +194,34 @@
 
 	function selectItem(item: Item) {
 		selectedItem.value = item;
-		if (props.autocomplete)
+		if (props.autocomplete) {
 			searchText.value = "";
+		}
 		doFocus();
 	}
 
 	function removeTag(item: Item) {
-		if (data.value.has(item))
+		if (data.value.has(item)) {
 			selectedItem.value = item;
+		}
 	}
 
 	const sortedList = computed<Item[]>(() => {
 		let arr;
-		if (Array.isArray(props.items))
+		if (Array.isArray(props.items)) {
 			arr = props.items;
-		else if (props.items instanceof Map)
+		} else if (props.items instanceof Map) {
 			arr = [...props.items.values()];
-		else
+		} else {
 			arr = [...props.items];
+		}
 		return arr.sort(props.itemSort);
 	});
 
 	const filteredList = computed<Item[]>(() => {
-		if (props.autocomplete)
+		if (props.autocomplete) {
 			return props.itemFilter(sortedList.value, searchText.value);
+		}
 		return sortedList.value;
 	});
 
@@ -222,15 +230,17 @@
 	}
 
 	function toggleListBox() {
-		if (showList.value)
+		if (showList.value) {
 			closeListbox();
-		else
+		} else {
 			openListbox();
+		}
 	}
 
 	function openListbox() {
-		if (props.readonly)
+		if (props.readonly) {
 			return;
+		}
 		showList.value = true;
 		if ((selectedItem.value !== null) && (selectedItem.value !== undefined) && (refList.value !== undefined) && (refList.value !== null)) {
 			refList.value.activeItemIndex = filteredList.value.findIndex(item => item === selectedItem.value);
@@ -240,53 +250,61 @@
 	}
 
 	function closeListbox() {
-		if ((refList.value !== undefined) && (refList.value !== null))
+		if ((refList.value !== undefined) && (refList.value !== null)) {
 			refList.value.activeItemIndex = -1;
+		}
 		showList.value = false;
 	}
 
 	function selectCurrentActiveItem() {
 		if (showList.value && (refList.value !== undefined) && (refList.value !== null)) {
-			if (filteredList.value.length === 0)
+			if (filteredList.value.length === 0) {
 				toggleListBox();
+			}
 			selectItem(filteredList.value[refList.value.activeItemIndex]);
 		}
 	}
 
 	// Arrow Navigation
 	function onArrowDown() {
-		if ((!showList.value) || (refList.value === undefined) || (refList.value === null))
+		if ((!showList.value) || (refList.value === undefined) || (refList.value === null)) {
 			return openListbox();
+		}
 		const listLength = filteredList.value.length;
-		if (refList.value.activeItemIndex < listLength - 1)
+		if (refList.value.activeItemIndex < listLength - 1) {
 			refList.value.activeItemIndex++;
-		else
+		} else {
 			refList.value.activeItemIndex = 0;
+		}
 		scrollToActiveItem();
 	}
 
 	function onArrowUp() {
-		if ((!showList.value) || (refList.value === undefined) || (refList.value === null))
+		if ((!showList.value) || (refList.value === undefined) || (refList.value === null)) {
 			return openListbox();
+		}
 		const listLength = filteredList.value.length;
-		if (refList.value.activeItemIndex <= 0)
+		if (refList.value.activeItemIndex <= 0) {
 			refList.value.activeItemIndex = listLength - 1;
-		else if (refList.value.activeItemIndex >= 1)
+		} else if (refList.value.activeItemIndex >= 1) {
 			refList.value.activeItemIndex--;
+		}
 		scrollToActiveItem();
 	}
 
 	function onBackspace() {
-		if (showList.value === false)
+		if (showList.value === false) {
 			openListbox();
+		}
 	}
 
 	function onSpace(e: KeyboardEvent) {
 		if (!props.autocomplete) {
-			if (!showList.value)
+			if (!showList.value) {
 				openListbox();
-			else
+			} else {
 				selectCurrentActiveItem();
+			}
 			e.preventDefault();
 		}
 	}

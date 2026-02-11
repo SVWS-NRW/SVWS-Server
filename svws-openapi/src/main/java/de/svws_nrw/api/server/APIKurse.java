@@ -4,6 +4,8 @@ import de.svws_nrw.asd.data.kurse.KursLehrer;
 import de.svws_nrw.data.kurse.DataKursLehrer;
 import java.io.InputStream;
 
+import org.jboss.resteasy.annotations.GZIP;
+
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag;
@@ -60,6 +62,7 @@ public class APIKurse {
 	 * @return die Liste der Kurse aller Schuljahresabschniite
 	 */
 	@GET
+	@GZIP
 	@Path("/")
 	@Operation(summary = "Gibt eine Übersicht von allen Kursen zurück.",
 			description = "Erstellt eine Liste aller in der Datenbank vorhanden Kurse unter Angabe der ID, des Kürzels, "
@@ -87,6 +90,7 @@ public class APIKurse {
 	 * @return              die Liste der Kurse mit der jeweiligen ID im Datenbankschema
 	 */
 	@GET
+	@GZIP
 	@Path("/abschnitt/{abschnitt : \\d+}")
 	@Operation(summary = "Gibt eine Übersicht von allen Kursen eines Schuljahresabschnittes zurück.",
 			description = "Erstellt eine Liste aller in der Datenbank vorhanden Kurse eines Schuljahresabschnittes unter "
@@ -226,6 +230,7 @@ public class APIKurse {
 	 * @return              der Katalog der gültigen Kursarten
 	 */
 	@GET
+	@GZIP
 	@Path("/allgemein/kursarten")
 	@Operation(summary = "Gibt den Katalog der gültigen Kursarten zurück.",
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden gültigen Kursarten. "

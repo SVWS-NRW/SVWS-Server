@@ -298,12 +298,14 @@
 	 * Diese wird definiert durch die props: buttonContainer und buttonPosition.
 	 */
 	const buttonContainerId = computed(() => {
-		if (!showButtons.value)
+		if (!showButtons.value) {
 			return undefined;
-		if (props.buttonContainer === "content")
+		}
+		if (props.buttonContainer === "content") {
 			return (props.buttonPosition === "left") ? "#ui-card--button-content-left" : "#ui-card--button-content-right";
-		else
+		} else {
 			return (props.buttonPosition === "left") ? "#ui-card--button-footer-left" : "#ui-card--button-footer-right";
+		}
 	});
 
 	const ariaExpanded = computed(() => props.collapsible ? isActive.value : undefined);
@@ -323,26 +325,30 @@
 
 	const buttons = computed<ButtonConfig[]>(() => {
 		const buttons = new Array<ButtonConfig>();
-		if (props.onSave !== undefined)
+		if (props.onSave !== undefined) {
 			buttons.push({
 				type: 'primary', label: 'Speichern', icon: 'i-ri-check-line', iconType: 'icon-ui-brand', disabled: props.saveButtonDisabled,
 				disabledReason: props.saveButtonDisabledReason, click: props.onSave,
 			});
-		if (props.onCancel !== undefined)
+		}
+		if (props.onCancel !== undefined) {
 			buttons.push({
 				type: 'secondary', label: 'Abbrechen', icon: 'i-ri-close-line', iconType: 'icon-ui-brand', disabled: props.cancelButtonDisabled,
 				disabledReason: props.cancelButtonDisabledReason, click: props.onCancel,
 			});
-		if (props.onEdit !== undefined)
+		}
+		if (props.onEdit !== undefined) {
 			buttons.push({
 				type: 'primary', label: 'Bearbeiten', icon: 'i-ri-edit-2-line', iconType: 'icon-ui-brand', disabled: props.editButtonDisabled,
 				disabledReason: props.editButtonDisabledReason, click: props.onEdit,
 			});
-		if (props.onDelete !== undefined)
+		}
+		if (props.onDelete !== undefined) {
 			buttons.push({
 				type: 'danger', label: 'Löschen', icon: 'i-ri-delete-bin-line', iconType: 'icon-ui-danger', disabled: props.deleteButtonDisabled,
 				disabledReason: props.deleteButtonDisabledReason, click: props.onDelete,
 			});
+		}
 		return buttons;
 	});
 
@@ -366,8 +372,9 @@
 		}
 
 		// Setzt die initiale Größe des collapsible Wrappers, um Transitions korrekt ausführen zu können.
-		if (bodyWrapperRef.value !== undefined)
+		if (bodyWrapperRef.value !== undefined) {
 			bodyWrapperRef.value.style.maxHeight = isActive.value ? 'fit-content' : '0px';
+		}
 	});
 
 	/**
@@ -378,8 +385,9 @@
 	async function openCard(content: Element, done: () => void) {
 		const element = content as HTMLElement;
 		// Wenn die Card bereits geöffnet ist (zum Beispiel initial beim Mounting), dann darf die Funktion nicht ausgeführt werden
-		if (element.style.maxHeight === 'fit-content')
+		if (element.style.maxHeight === 'fit-content') {
 			return;
+		}
 		element.style.maxHeight = `${element.scrollHeight}px`;
 		element.addEventListener('transitionend', done, { once: true });
 	};
@@ -422,10 +430,11 @@
 	 * @param setActive   Der neue Wert von isActive. Falls nicht gesetzt, wird der Wert nur getoggelt.
 	 */
 	function setActive(setActive?: boolean): void {
-		if (setActive !== undefined)
+		if (setActive !== undefined) {
 			isActive.value = setActive;
-		else
+		} else {
 			isActive.value = !isActive.value;
+		}
 	}
 
 	/**
@@ -435,10 +444,11 @@
 	 * @param button Der Button, für den überprüft wird, ob er ein Tooltip benötigt.
 	 */
 	function tooltipDisabled(button: ButtonConfig) {
-		if (props.buttonMode === 'icon' || (button.disabled && (button.disabledReason !== undefined)))
+		if (props.buttonMode === 'icon' || (button.disabled && (button.disabledReason !== undefined))) {
 			return false;
-		else
+		} else {
 			return true;
+		}
 	}
 
 </script>

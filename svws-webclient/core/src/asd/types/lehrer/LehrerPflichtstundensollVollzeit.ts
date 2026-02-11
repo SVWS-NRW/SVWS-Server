@@ -55,7 +55,7 @@ export class LehrerPflichtstundensollVollzeit extends CoreTypeSimple<LehrerPflic
 		return ['de.svws_nrw.asd.types.lehrer.LehrerPflichtstundensollVollzeit', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.CoreTypeSimple'].includes(name);
 	}
 
-	public static class = new Class<LehrerPflichtstundensollVollzeit>('de.svws_nrw.asd.types.lehrer.LehrerPflichtstundensollVollzeit');
+	public static readonly class = new Class<LehrerPflichtstundensollVollzeit>('de.svws_nrw.asd.types.lehrer.LehrerPflichtstundensollVollzeit');
 
 }
 

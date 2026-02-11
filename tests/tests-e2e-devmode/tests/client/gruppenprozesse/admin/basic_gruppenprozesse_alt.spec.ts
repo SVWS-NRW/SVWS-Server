@@ -13,7 +13,6 @@ test('Smoke Test für alte Gruppenprozesse, anhand des Jahrgänge Katalogs', asy
 
 	// locators
 	const headlineLocator = page.locator('.svws-headline');
-	const subheadlineLocator = page.locator('.svws-subline');
 
 	const auswahlItem1Checkbox = page.getByRole('row', { name: '5. Jahrgang' }).getByRole('checkbox');
 	const auswahlItem2Checkbox = page.getByRole('row', { name: '6. Jahrgang' }).getByRole('checkbox');
@@ -23,11 +22,11 @@ test('Smoke Test für alte Gruppenprozesse, anhand des Jahrgänge Katalogs', asy
 
 	// Schule -> Jahrgänge Katalog aufrufen
 	await page.getByRole('link', { name: 'Schule' }).click();
+	await page.getByRole('row', { name: 'Kataloge' }).click();
 	await page.getByRole('link', { name: 'Jahrgänge' }).click();
 
 	// prüfen, ob Einzelansicht Individualdaten erscheint
 	await expect(headlineLocator).toContainText('5. Jahrgang');
-	await expect(subheadlineLocator).toContainText('05');
 
 	// zwei Schüler selektieren
 	await auswahlItem1Checkbox.check();
@@ -35,7 +34,6 @@ test('Smoke Test für alte Gruppenprozesse, anhand des Jahrgänge Katalogs', asy
 
 	// Prüfen, ob Mehrfachauswahl mit Schülern im Titel erscheint
 	await expect(headlineLocator).toContainText('Gruppenprozesse');
-	await expect(subheadlineLocator).toContainText('05, 06');
 
 	// Prüfe richtige URL
 	await expect(page).toHaveURL(new RegExp('.*/schule/jahrgaenge/gruppenprozesse'));
@@ -46,5 +44,4 @@ test('Smoke Test für alte Gruppenprozesse, anhand des Jahrgänge Katalogs', asy
 
 	// prüfen, ob Einzelansicht Individualdaten erscheint
 	await expect(headlineLocator).toContainText('5. Jahrgang');
-	await expect(subheadlineLocator).toContainText('05');
-})
+});

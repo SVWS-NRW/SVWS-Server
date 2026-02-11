@@ -60,5 +60,4 @@ public class BKGymLeistungenFachHalbjahr {
 	public BKGymLeistungenFachHalbjahr() {
 		// leer
 	}
-
 }

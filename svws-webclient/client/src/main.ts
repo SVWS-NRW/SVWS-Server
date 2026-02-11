@@ -11,11 +11,11 @@ app.use(router);
 
 app.directive('autofocus', {
 	mounted: (el: HTMLInputElement, binding) => {
-		if (<boolean>binding.instance?.$props.autofocus)
+		if (<boolean>binding.instance?.$props.autofocus) {
 			el.focus();
+		}
 	},
 });
 
-router.isReady()
-	.then(() => app.mount("#app"))
-	.catch((e: unknown) => { throw e });
+await router.isReady();
+app.mount("#app");

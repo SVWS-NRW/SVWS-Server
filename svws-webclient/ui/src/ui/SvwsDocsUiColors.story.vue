@@ -258,11 +258,7 @@
 			<div v-if="type === 'border'" class=" inline">
 				<h1>Borderfarben</h1>
 				<p>
-					Folgende Farben werden für Borders (Rahmen) verwendet. Es ist zu beachten, dass die Kontrastrichtlinien von WCAG eingehalten werden. Um
-					diese zu erreichen, müssen die <code class="bg-ui-selected">-on</code> Farben zu den passenden Hintergründen verwendet werden. Beispiel:
-					Für die Hintergrundfarbe <code class="bg-ui-selected">bg-ui-success</code> ist die Borderfarbe
-					<code class="bg-ui-selected">border-ui-onsuccess</code> zu verwenden. Für <code class="bg-ui-selected">bg-ui-success-hover</code> hingegen ist
-					die Borderfarbe <code class="bg-ui-selected">border-ui-onsuccess-hover</code> zu verwenden. <br>
+					Folgende Farben werden für Borders (Rahmen) verwendet.
 				</p>
 			</div>
 			<div v-if="type === 'accent'" class=" inline">
@@ -537,15 +533,6 @@
 		['caution', ['border-ui-caution', 'border-ui-caution-hover']],
 		['neutral', ['border-ui-neutral', 'border-ui-neutral-hover']],
 		['disabled', ['border-ui-disabled']],
-		['onbrand', ['border-ui-onbrand', 'border-ui-onbrand-hover']],
-		['onstatistic', ['border-ui-onstatistic', 'border-ui-onstatistic-hover']],
-		['onselected', ['border-ui-onselected', 'border-ui-onselected-hover']],
-		['ondanger', ['border-ui-ondanger', 'border-ui-ondanger-hover']],
-		['onsuccess', ['border-ui-onsuccess', 'border-ui-onsuccess-hover']],
-		['onwarning', ['border-ui-onwarning', 'border-ui-onwarning-hover']],
-		['oncaution', ['border-ui-oncaution', 'border-ui-oncaution-hover']],
-		['onneutral', ['border-ui-onneutral', 'border-ui-onneutral-hover']],
-		['ondisabled', ['border-ui-ondisabled']],
 		['uistatic', ['border-uistatic', 'border-uistatic-0', 'border-uistatic-10', 'border-uistatic-25', 'border-uistatic-50', 'border-uistatic-75', 'border-uistatic-100']],
 	]);
 
@@ -745,13 +732,15 @@
 	 * @returns die RGB-Definition der entsprechenden Farbe und des entsprechenden Themes
 	 */
 	function resolveLightDark(input: string, dark: boolean): string {
-		if (!input.includes('light-dark'))
+		if (!input.includes('light-dark')) {
 			return input;
+		}
 
 		const match = /light-dark\(((?:[^(),]+|\([^()]*\))+),\s*((?:[^(),]+|\([^()]*\))+)\)/.exec(input);
 
-		if (!match)
+		if (!match) {
 			return input;
+		}
 
 		const [, lightValue, darkValue] = match;
 
@@ -766,19 +755,22 @@
 	 * @returns die Hintergrundfarbe zur gegebenen Vordergrundfarbe
 	 */
 	function getBackgroundColor(color: string): string {
-		if (!color.includes('-on'))
+		if (!color.includes('-on')) {
 			return 'bg-ui';
+		}
 
 		return color
 			.split('-')
 			.map((part, index, parts) => {
 				// Erster Teil wird 'bg'
-				if (index === 0)
+				if (index === 0) {
 					return 'bg';
+				}
 
 				// Das 'on' am Anfang des dritten Teils entfernen
-				if (index === 2 && part.startsWith('on'))
+				if (index === 2 && part.startsWith('on')) {
 					return part.replace(/^on/, '');
+				}
 
 				// Wenn der String mit '-secondary-hover' endet, entferne '-secondary'
 				if (index === parts.length - 2 && part === 'secondary' && parts[parts.length - 1] === 'hover') {
@@ -852,8 +844,9 @@
 	 * @returns { r: number; g: number; b: number }   ein Objekt mit den RGB-Werten
 	 */
 	function parseColorToRGB(color: string): { r: number; g: number; b: number } {
-		if (typeof color !== 'string')
+		if (typeof color !== 'string') {
 			return { r: 0, g: 0, b: 0 };
+		}
 
 		color = color.trim().toLowerCase();
 
@@ -885,11 +878,13 @@
 		// entfernt das '#' Zeichen
 		let hex = color.slice(1);
 		// Wandelt 3-stellige Hexadezimalwerte in 6-stellige um, indem die Buchstaben verdoppelt werden
-		if (hex.length === 3)
+		if (hex.length === 3) {
 			hex = hex.split('').map(c => c + c).join('');
+		}
 		// Prüft, ob der Hexwert die richtige Zeichenlänge und die richtigen Zeichen beinhaltet.
-		if (hex.length !== 6 || !/^[0-9a-f]{6}$/i.test(hex))
+		if (hex.length !== 6 || !/^[0-9a-f]{6}$/i.test(hex)) {
 			return { r: 0, g: 0, b: 0 };
+		}
 		// Wandelt den Hexadezimalwert in einen RGB-Wert um
 		const bigint = parseInt(hex, 16);
 		return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
@@ -906,8 +901,9 @@
 		// Extrahiere die Zahlen aus dem RGB-Farbwert, der als string übergeben wird.
 		const match = color.match(/\d+/g);
 		// Prüft, ob ein gültiger Wert übergeben wurde
-		if (!match || match.length < 3)
+		if (!match || match.length < 3) {
 			return { r: 0, g: 0, b: 0 };
+		}
 		const [r, g, b] = match.map(Number).slice(0, 3);
 		return { r, g, b };
 	}
@@ -924,8 +920,9 @@
 		// Extrahiere die Zahlen aus dem HSL-Farbwert, der als string übergeben wird.
 		const match = color.match(/[\d.]+/g);
 		// Prüft, ob ein gültiger Wert übergeben wurde
-		if (!match || match.length < 3)
+		if (!match || match.length < 3) {
 			return { r: 0, g: 0, b: 0 };
+		}
 
 		// Konvertiere die extrahierten Strings in Zahlen (h, s, l)
 		const [h, s, l] = match.map(Number);
@@ -946,19 +943,24 @@
 		const hueToRGB = (p: number, q: number, tRaw: number): number => {
 			let t = tRaw;
 			// Bereinige t, wenn es außerhalb des [0, 1]-Bereichs liegt
-			if (t < 0)
+			if (t < 0) {
 				t += 1;
-			if (t > 1)
+			}
+			if (t > 1) {
 				t -= 1;
+			}
 
 			// Berechne RGB basierend auf dem Wert von t (Hue)
 			// Diese Berechnungen kommen aus den HSL-to-RGB Formeln
-			if (t < (1 / 6))
-				return p + ((q - p) * 6 * t); // Farbton zwischen 0 und 60°
-			if (t < (1 / 2))
-				return q; // Farbton zwischen 60° und 180°
-			if (t < (2 / 3))
-				return p + ((q - p) * ((2 / 3) - t) * 6); // Farbton zwischen 180° und 240°
+			if (t < (1 / 6)) {
+				return p + ((q - p) * 6 * t);
+			} // Farbton zwischen 0 und 60°
+			if (t < (1 / 2)) {
+				return q;
+			} // Farbton zwischen 60° und 180°
+			if (t < (2 / 3)) {
+				return p + ((q - p) * ((2 / 3) - t) * 6);
+			} // Farbton zwischen 180° und 240°
 			return p; // Farbton zwischen 240° und 360°
 		};
 
@@ -1001,14 +1003,15 @@
 		const contrast = getContrastLuminance(getContrastRelativeLuminance(bg), getContrastRelativeLuminance(fg));
 		// Bewerten des Kontrastverhältnisses gemäß WCAG-Richtlinien
 		let score = "";
-		if (contrast >= 7)
+		if (contrast >= 7) {
 			score = "AAA";
-		else if (contrast >= 4.5)
+		} else if (contrast >= 4.5) {
 			score = "AALargeAAA";
-		else if (contrast >= 3)
+		} else if (contrast >= 3) {
 			score = "noneLargeAA";
-		else
+		} else {
 			score = "none";
+		}
 		return { contrastRatio: contrast.toFixed(2), contrastLevel: score };
 	}
 

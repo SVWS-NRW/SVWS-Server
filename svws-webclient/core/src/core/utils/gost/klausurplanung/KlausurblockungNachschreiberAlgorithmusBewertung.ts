@@ -48,7 +48,7 @@ export class KlausurblockungNachschreiberAlgorithmusBewertung extends JavaObject
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungNachschreiberAlgorithmusBewertung'].includes(name);
 	}
 
-	public static class = new Class<KlausurblockungNachschreiberAlgorithmusBewertung>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungNachschreiberAlgorithmusBewertung');
+	public static readonly class = new Class<KlausurblockungNachschreiberAlgorithmusBewertung>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungNachschreiberAlgorithmusBewertung');
 
 }
 

@@ -17,7 +17,7 @@
 	});
 
 	const emit = defineEmits<{
-		(e: 'update:modelValue', event: string): void;
+		'update:modelValue': [value: string];
 	}>();
 
 	const text = computed<string>({

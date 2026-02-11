@@ -164,7 +164,7 @@ public final class DataFloskeln extends DataManagerRevised<Long, DTOFloskeln, Fl
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die Liste der neuen JahrgangIDs darf keine Duplikate enthalten.");
 
 		final Map<Long, FloskelJahrgangZuordnung> zuordnungenById = this.dataZuordnung
-				.getAll().stream()
+				.getListByIdFloskel(dto.ID).stream()
 				.collect(Collectors.toMap(
 						z -> z.idJahrgang,
 						Function.identity()

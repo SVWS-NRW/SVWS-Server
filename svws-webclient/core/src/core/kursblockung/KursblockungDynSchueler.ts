@@ -701,7 +701,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		return ['de.svws_nrw.core.kursblockung.KursblockungDynSchueler'].includes(name);
 	}
 
-	public static class = new Class<KursblockungDynSchueler>('de.svws_nrw.core.kursblockung.KursblockungDynSchueler');
+	public static readonly class = new Class<KursblockungDynSchueler>('de.svws_nrw.core.kursblockung.KursblockungDynSchueler');
 
 }
 

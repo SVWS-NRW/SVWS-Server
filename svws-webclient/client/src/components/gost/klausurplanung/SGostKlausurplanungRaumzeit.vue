@@ -84,8 +84,9 @@
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
 
 	const isDraggable = (object: any, termin: GostKlausurtermin) => {
-		if (!hatKompetenzUpdate.value)
+		if (!hatKompetenzUpdate.value) {
 			return false;
+		}
 		if (object instanceof GostKursklausur) {
 			// if (object.idTermin === props.terminauswahl.value.id)
 			return !props.kMan().isKursklausurAlleSchuelerklausurenVerplant(object, termin);
@@ -103,41 +104,48 @@
 		const data = dragData.value;
 		if (zone instanceof GostKlausurraum) {
 			const rRaum = new GostKlausurraumRich(zone, null);
-			if (data instanceof GostKursklausur && props.terminSelected.value)
+			if (data instanceof GostKursklausur && props.terminSelected.value) {
 				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausurMultijahrgang(props.terminSelected.value, data, true));
-			else if (data instanceof GostKlausurtermin && props.terminSelected.value)
+			} else if (data instanceof GostKlausurtermin && props.terminSelected.value) {
 				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurOhneRaumGetMengeByTermin(props.terminSelected.value));
-			else if (data instanceof GostSchuelerklausurTermin)
+			} else if (data instanceof GostSchuelerklausurTermin) {
 				rRaum.schuelerklausurterminIDs = ListUtils.create1(data.id);
-			if (!rRaum.schuelerklausurterminIDs.isEmpty())
+			}
+			if (!rRaum.schuelerklausurterminIDs.isEmpty()) {
 				await props.setzeRaumZuSchuelerklausuren(ListUtils.create1(rRaum), false);
+			}
 		} else if (zone instanceof GostKlausurtermin) {
 			const rRaum = new GostKlausurraumRich();
-			if (data instanceof GostKursklausur && props.terminSelected.value)
+			if (data instanceof GostKursklausur && props.terminSelected.value) {
 				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(props.terminSelected.value, data));
-			else if (data instanceof GostSchuelerklausurTermin)
+			} else if (data instanceof GostSchuelerklausurTermin) {
 				rRaum.schuelerklausurterminIDs = ListUtils.create1(data.id);
-			if (!rRaum.schuelerklausurterminIDs.isEmpty())
+			}
+			if (!rRaum.schuelerklausurterminIDs.isEmpty()) {
 				await props.setzeRaumZuSchuelerklausuren(ListUtils.create1(rRaum), true);
+			}
 		}
 	};
 
 	function mapIDs(skts: List<GostSchuelerklausurTermin>) {
 		const numList = new ArrayList<number>();
-		for (const skt of skts)
+		for (const skt of skts) {
 			numList.add(skt.id);
+		}
 		return numList;
 	}
 
 	function isDropZone(): boolean {
-		if ((dragData.value === undefined))
+		if ((dragData.value === undefined)) {
 			return false;
+		}
 		return true;
 	}
 
 	function checkDropZone(event: DragEvent) {
-		if (isDropZone())
+		if (isDropZone()) {
 			event.preventDefault();
+		}
 	}
 
 	const isMounted = ref(false);
@@ -146,8 +154,9 @@
 		isMounted.value = true;
 		if (props.terminSelected.value) {
 			const scrollToElement = document.getElementById("termin" + props.terminSelected.value.id);
-			if (scrollToElement)
+			if (scrollToElement) {
 				scrollToElement.scrollIntoView({ behavior: 'smooth', block: "nearest" });
+			}
 		}
 	});
 

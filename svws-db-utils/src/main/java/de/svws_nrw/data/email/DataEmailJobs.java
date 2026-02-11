@@ -103,7 +103,7 @@ public class DataEmailJobs {
 		final SimpleOperationResponse resp = new SimpleOperationResponse();
 		try {
 			final EmailJob job = getJobByID(conn, id);
-			resp.success = (job.getStatus() == EmailJobStatus.COMPLETED);
+			resp.success = (job.getStatus() == EmailJobStatus.COMPLETED_SUCCESSFULLY);
 			resp.log.add("Job-ID = " + job.getId());
 			resp.log.add("Status = " + job.getStatus());
 			resp.log.add("Gesamtzahl-Empfänger = " + job.getRecipients().size());
@@ -170,6 +170,8 @@ public class DataEmailJobs {
 		} catch (@SuppressWarnings("unused") final AESException e) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 					"Fehler beim Entschlüsseln des SMTP-Kennwortes, es kann keine SMTP-Session erstellt werden.");
+		} catch (final Exception e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen der SMTP-Session: " + e.getMessage());
 		}
 	}
 
@@ -188,8 +190,8 @@ public class DataEmailJobs {
 	public static @NotNull EmailJobManagerContext getDefaultJobManagerContext(final DBEntityManager conn) throws ApiOperationException {
 		final MailSmtpSession session = new MailSmtpSession(getSMTPConfig(conn));
 		return new EmailJobManagerContext(conn.getDBSchema(), conn.getUser().getId(), session)
-				.withForceMaxAttachementSize(false)
-				.withMaxAttachmentSize(8388608) // 8 KByte
+				.withForceMaxAttachmentSize(false)
+				.withMaxAttachmentSize(8388608) // 8 MByte
 				.withMaxEmailsPerMinute(20)
 				.withTimeToKeepCompletedJobs(60000); // 1 Minute
 	}

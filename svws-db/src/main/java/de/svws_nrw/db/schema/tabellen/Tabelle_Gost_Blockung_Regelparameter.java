@@ -23,7 +23,7 @@ public class Tabelle_Gost_Blockung_Regelparameter extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Nummer */
 	public final SchemaTabelleSpalte col_Nummer = add("Nummer", SchemaDatentypen.INT, true)
 			.setNotNull()
-			.setJavaComment("Die Nummer des Parameters der Regel, beginnend bei 1");
+			.setJavaComment("Die Nummer des Parameters der Regel, beginnend bei 0");
 
 	/** Die Definition der Tabellenspalte Parameter */
 	public final SchemaTabelleSpalte col_Parameter = add("Parameter", SchemaDatentypen.BIGINT, false)

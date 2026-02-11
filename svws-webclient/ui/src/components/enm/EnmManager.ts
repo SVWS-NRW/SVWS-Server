@@ -20,6 +20,8 @@ import { HashSet } from "../../../../core/src/java/util/HashSet";
 import { PairNN } from "../../../../core/src/asd/adt/PairNN";
 import { HashMap2D } from "../../../../core/src/core/adt/map/HashMap2D";
 import { Note } from "../../../../core/src/asd/types/Note";
+import { EnmSperrManager } from "./EnmSperrManager";
+import { EnmSpaltenManager } from "./EnmSpaltenManager";
 
 /**
  * Das Interface für die Einträge der Auswahlliste für die Lerngruppen
@@ -113,6 +115,12 @@ export class EnmManager {
 	/** Die Liste aller Klassen eines Klassenlehrers, sortiert nach Jahrgängen */
 	readonly listKlassenKlassenlehrer: List<ENMKlasse> = new ArrayList<ENMKlasse>();
 
+	/** Der Manager für die Konfiguration der Sperrung der Noteneingabe */
+	private managerSperrungen: EnmSperrManager = new EnmSperrManager("[]");
+
+	/** Der Manager für die Konfiguration der Spalten der Noteneingabe */
+	private managerSpalten: EnmSpaltenManager = new EnmSpaltenManager("[]");
+
 	/**
 	 * Erstellt einen neue Enm-Manager für die übergebenen ENM-Daten
 	 *
@@ -126,25 +134,30 @@ export class EnmManager {
 		this.halbjahr = daten.aktuellerAbschnitt;
 		this.listFloskelgruppen = daten.floskelgruppen;
 
-		for (const j of daten.jahrgaenge)
+		for (const j of daten.jahrgaenge) {
 			this.mapJahrgaenge.put(j.id, j);
+		}
 
 		for (const k of daten.klassen) {
 			this.mapKlassen.put(k.id, k);
 			this.mapKlassenSchueler.put(k.id, new ArrayList());
-			if ((this.idLehrer === null) || k.klassenlehrer.contains(this.idLehrer))
+			if ((this.idLehrer === null) || k.klassenlehrer.contains(this.idLehrer)) {
 				this.listKlassenKlassenlehrer.add(k);
+			}
 		}
 		this.listKlassenKlassenlehrer.sort(this.comparatorKlassen);
 
-		for (const l of daten.lehrer)
+		for (const l of daten.lehrer) {
 			this.mapLehrer.put(l.id, l);
+		}
 
-		for (const f of daten.faecher)
+		for (const f of daten.faecher) {
 			this.mapFaecher.put(f.id, f);
+		}
 
-		for (const t of daten.teilleistungsarten)
+		for (const t of daten.teilleistungsarten) {
 			this.mapTeilleistungsarten.put(t.id, t);
+		}
 
 		for (const l of daten.lerngruppen) {
 			this.mapLerngruppen.put(l.id, l);
@@ -161,19 +174,22 @@ export class EnmManager {
 			for (const leistung of s.leistungsdaten) {
 				const idLerngruppe = leistung.lerngruppenID;
 				const list = this.mapLerngruppenSchueler.get(idLerngruppe);
-				if (list === null)
+				if (list === null) {
 					throw new DeveloperNotificationException(`Die Lerngruppe mit der ID ${idLerngruppe} wird in Leistungsdaten angegeben, ist aber im Katalog der Lerngruppen nicht vorhanden.`);
+				}
 				list.add(s);
 				const set = this.mapLerngruppeTeilleistungsarten.get(leistung.lerngruppenID);
-				if (set !== null)
+				if (set !== null) {
 					for (const teilleistung of leistung.teilleistungen) {
 						set.add(teilleistung.artID);
 						this.mapLeistungTeilleistungsartTeilleistung.put(leistung.id, teilleistung.artID, teilleistung);
 					}
+				}
 			}
 			const klasse = this.mapKlassenSchueler.get(s.klasseID);
-			if (klasse === null)
+			if (klasse === null) {
 				throw new DeveloperNotificationException(`Die Klasse mit der ID ${s.klasseID} wird in Schülerdaten angegeben, ist aber im Katalog der Klassen nicht vorhanden.`);
+			}
 			klasse.add(s);
 		}
 
@@ -191,16 +207,18 @@ export class EnmManager {
 			}
 			for (const idKlasse of tmpKlassenIDs) {
 				const klasse = this.mapKlassen.get(idKlasse);
-				if (klasse === null)
+				if (klasse === null) {
 					continue;
+				}
 				listKlassen.add(klasse);
 			}
 			listKlassen.sort(this.comparatorKlassen);
 			this.mapLerngruppeKlassen.put(l.id, listKlassen);
 			for (const idJahrgang of tmpJahrgangIDs) {
 				const jg = this.mapJahrgaenge.get(idJahrgang);
-				if (jg === null)
+				if (jg === null) {
 					continue;
+				}
 				listJahrgaenge.add(jg);
 			}
 			listJahrgaenge.sort(this.comparatorJahrgaenge);
@@ -220,8 +238,9 @@ export class EnmManager {
 			}
 		}
 
-		for (const jg of this.mapLerngruppeJahrgaenge.values())
+		for (const jg of this.mapLerngruppeJahrgaenge.values()) {
 			jg.sort(this.comparatorJahrgaenge);
+		}
 
 		for (const s of daten.schueler) {
 			for (const l of s.leistungsdaten) {
@@ -248,51 +267,65 @@ export class EnmManager {
 		const aJgs = this.mapLerngruppeJahrgaenge.get(a.id);
 		const bJgs = this.mapLerngruppeJahrgaenge.get(b.id);
 		if (!(((aJgs === null) || (aJgs.size() !== 1)) && ((bJgs === null) || (bJgs.size() !== 1)))) {
-			if ((aJgs === null) || (aJgs.size() !== 1))
+			if ((aJgs === null) || (aJgs.size() !== 1)) {
 				return -1;
-			if ((bJgs === null) || (bJgs.size() !== 1))
+			}
+			if ((bJgs === null) || (bJgs.size() !== 1)) {
 				return 1;
+			}
 			const aJg = aJgs.get(0);
 			const bJg = bJgs.get(0);
 			const tmp = this.compareJahrgaenge(aJg, bJg);
-			if (tmp !== 0)
+			if (tmp !== 0) {
 				return tmp;
+			}
 		}
 		// ... dann anhand der Klassen, sofern es Klassenunterricht ist, Kurse ggf. dann weiter hinten
 		if ((a.kursartID === null) || (b.kursartID === null)) {
-			if ((a.kursartID === null) && (b.kursartID !== null))
+			if ((a.kursartID === null) && (b.kursartID !== null)) {
 				return 1;
-			if ((a.kursartID !== null) && (b.kursartID === null))
+			}
+			if ((a.kursartID !== null) && (b.kursartID === null)) {
 				return -1;
+			}
 			const aKl = this.mapKlassen.get(a.kID);
-			if (aKl === null)
+			if (aKl === null) {
 				throw new DeveloperNotificationException(`Die Klasse mit der ID ${a.kID} wird in einer Lerngruppe angegeben, ist aber im Katalog der Klassen nicht vorhanden.`);
+			}
 			const bKl = this.mapKlassen.get(b.kID);
-			if (bKl === null)
+			if (bKl === null) {
 				throw new DeveloperNotificationException(`Die Klasse mit der ID ${b.kID} wird in einer Lerngruppe angegeben, ist aber im Katalog der Klassen nicht vorhanden.`);
+			}
 			const tmp = this.compareKlassen(aKl, bKl);
-			if (tmp !== 0)
+			if (tmp !== 0) {
 				return tmp;
+			}
 		}
 		// ... vergleiche dann bei Gleichheit dann anhand der Fach-Sortierung
 		const aFach = this.mapFaecher.get(a.fachID);
 		const bFach = this.mapFaecher.get(b.fachID);
 		if (!((aFach === null) && (bFach === null))) {
-			if (aFach === null)
+			if (aFach === null) {
 				return -1;
-			if (bFach === null)
+			}
+			if (bFach === null) {
 				return 1;
+			}
 			const tmp = aFach.sortierung - bFach.sortierung;
-			if (tmp !== 0)
+			if (tmp !== 0) {
 				return tmp;
+			}
 		}
 		// ... dann anhand der Bezeichnung der Lerngruppe
-		if ((a.bezeichnung !== null) && (b.bezeichnung !== null))
+		if ((a.bezeichnung !== null) && (b.bezeichnung !== null)) {
 			return a.bezeichnung.localeCompare(b.bezeichnung);
-		if ((a.bezeichnung === null) && (b.bezeichnung !== null))
+		}
+		if ((a.bezeichnung === null) && (b.bezeichnung !== null)) {
 			return -1;
-		if ((a.bezeichnung !== null) && (b.bezeichnung === null))
+		}
+		if ((a.bezeichnung !== null) && (b.bezeichnung === null)) {
 			return 1;
+		}
 		// ... und ansonsten anhand der ID der Lerngruppe
 		return a.id - b.id;
 	};
@@ -311,15 +344,19 @@ export class EnmManager {
 	protected compareJahrgaenge = (a: ENMJahrgang, b: ENMJahrgang): number => {
 		// Vergleiche zuerst anhand der gesetzten Sortierung des Jahrgangs...
 		const tmp = a.sortierung - b.sortierung;
-		if (tmp !== 0)
+		if (tmp !== 0) {
 			return tmp;
+		}
 		// ... und ansonsten anhand des Anzeige-Kürzels der Jahrgänge
-		if ((a.kuerzelAnzeige !== null) && (b.kuerzelAnzeige !== null))
+		if ((a.kuerzelAnzeige !== null) && (b.kuerzelAnzeige !== null)) {
 			return a.kuerzelAnzeige.localeCompare(b.kuerzelAnzeige);
-		if (a.kuerzelAnzeige === null)
+		}
+		if (a.kuerzelAnzeige === null) {
 			return -1;
-		if (b.kuerzelAnzeige === null)
+		}
+		if (b.kuerzelAnzeige === null) {
 			return 1;
+		}
 		return 0;
 	};
 
@@ -337,15 +374,19 @@ export class EnmManager {
 	protected compareKlassen = (a: ENMKlasse, b: ENMKlasse): number => {
 		// Vergleiche zuerst anhand der gesetzten Sortierung der Klasse...
 		const tmp = a.sortierung - b.sortierung;
-		if (tmp !== 0)
+		if (tmp !== 0) {
 			return tmp;
+		}
 		// ... und ansonsten anhand des Anzeige-Kürzels der Klassen
-		if ((a.kuerzelAnzeige !== null) && (b.kuerzelAnzeige !== null))
+		if ((a.kuerzelAnzeige !== null) && (b.kuerzelAnzeige !== null)) {
 			return a.kuerzelAnzeige.localeCompare(b.kuerzelAnzeige);
-		if (a.kuerzelAnzeige === null)
+		}
+		if (a.kuerzelAnzeige === null) {
 			return -1;
-		if (b.kuerzelAnzeige === null)
+		}
+		if (b.kuerzelAnzeige === null) {
 			return 1;
+		}
 		return 0;
 	};
 
@@ -363,31 +404,38 @@ export class EnmManager {
 	protected compareSchueler = (a: ENMSchueler, b: ENMSchueler): number => {
 		const aKlasse = this.mapKlassen.get(a.klasseID);
 		const bKlasse = this.mapKlassen.get(b.klasseID);
-		if ((aKlasse === null) && (bKlasse !== null))
+		if ((aKlasse === null) && (bKlasse !== null)) {
 			return -1;
-		if ((aKlasse !== null) && (bKlasse === null))
+		}
+		if ((aKlasse !== null) && (bKlasse === null)) {
 			return 1;
+		}
 		if ((aKlasse !== null) && (bKlasse !== null)) {
 			const tmp = this.compareKlassen(aKlasse, bKlasse);
-			if (tmp !== 0)
+			if (tmp !== 0) {
 				return tmp;
+			}
 		}
 		if ((a.nachname !== null) && (b.nachname !== null)) {
 			let tmp = a.nachname.localeCompare(b.nachname);
-			if (tmp !== 0)
+			if (tmp !== 0) {
 				return tmp;
+			}
 			if ((a.vorname !== null) && (b.vorname !== null)) {
 				tmp = a.vorname.localeCompare(b.vorname);
-				if (tmp !== 0)
+				if (tmp !== 0) {
 					return tmp;
+				}
 				return a.id - b.id;
 			}
-			if ((a.vorname === null) && (b.vorname === null))
+			if ((a.vorname === null) && (b.vorname === null)) {
 				return a.id - b.id;
+			}
 			return (a.vorname === null) ? -1 : 1;
 		}
-		if ((a.nachname === null) && (b.nachname === null))
+		if ((a.nachname === null) && (b.nachname === null)) {
 			return a.id - b.id;
+		}
 		return (a.nachname === null) ? -1 : 1;
 	};
 
@@ -403,12 +451,15 @@ export class EnmManager {
 	 * @returns der Wert für den Vergleich (< 0, 0 oder >0)
 	 */
 	protected compareTeilleistungsarten = (a: ENMTeilleistungsart | null, b: ENMTeilleistungsart | null): number => {
-		if ((a === null) && (b === null))
+		if ((a === null) && (b === null)) {
 			return 0;
-		if ((a === null) || (a.sortierung === null))
+		}
+		if ((a === null) || (a.sortierung === null)) {
 			return -1;
-		if ((b === null) || (b.sortierung === null))
+		}
+		if ((b === null) || (b.sortierung === null)) {
 			return 1;
+		}
 		return a.sortierung - b.sortierung;
 	};
 
@@ -428,8 +479,9 @@ export class EnmManager {
 		const aArt = this.mapTeilleistungsarten.get(a.artID);
 		const bArt = this.mapTeilleistungsarten.get(b.artID);
 		const tmp = this.compareTeilleistungsarten(aArt, bArt);
-		if (tmp !== 0)
+		if (tmp !== 0) {
 			return tmp;
+		}
 		return a.id - b.id;
 	};
 
@@ -452,8 +504,9 @@ export class EnmManager {
 	 */
 	public lerngruppeByIDOrException(id: number): ENMLerngruppe {
 		const lerngruppe = this.mapLerngruppen.get(id);
-		if (lerngruppe === null)
+		if (lerngruppe === null) {
 			throw new DeveloperNotificationException("Fehler bei der Bestimmung der Bezeichnung der Lerngruppe.");
+		}
 		return lerngruppe;
 	}
 
@@ -467,8 +520,9 @@ export class EnmManager {
 	 */
 	public lerngruppeGetBezeichnung(id: number): string {
 		const lerngruppe = this.lerngruppeByIDOrException(id);
-		if (lerngruppe.bezeichnung === null)
+		if (lerngruppe.bezeichnung === null) {
 			throw new DeveloperNotificationException("Fehler bei der Bestimmung der Bezeichnung der Lerngruppe, die Bezeichnung in den ENM-Daten ist nicht gesetzt.");
+		}
 		return lerngruppe.bezeichnung;
 	}
 
@@ -481,10 +535,12 @@ export class EnmManager {
 	 */
 	public lerngruppeGetKlassenAsString(id: number): string {
 		const klassen = this.mapLerngruppeKlassen.get(id);
-		if (klassen === null)
+		if (klassen === null) {
 			throw new DeveloperNotificationException("Fehler bei der Bestimmung der zugeordneten Klassen für die Lerngruppe.");
-		if (klassen.isEmpty())
+		}
+		if (klassen.isEmpty()) {
 			return "—";
+		}
 		return [...klassen].map(k => k.kuerzelAnzeige).join(",");
 	}
 
@@ -509,12 +565,14 @@ export class EnmManager {
 	public lerngruppeGetFachlehrer(id: number): List<ENMLehrer> {
 		const result = new ArrayList<ENMLehrer>();
 		const lerngruppe = this.mapLerngruppen.get(id);
-		if (lerngruppe === null)
+		if (lerngruppe === null) {
 			return result;
+		}
 		for (const idLehrer of lerngruppe.lehrerID) {
 			const lehrer = this.mapLehrer.get(idLehrer);
-			if (lehrer !== null)
+			if (lehrer !== null) {
 				result.add(lehrer);
+			}
 		}
 		return result;
 	}
@@ -541,23 +599,28 @@ export class EnmManager {
 	public leistungGetKursartAsString(leistung: ENMLeistung): string {
 		// Bestimme die Lerngruppe zu der Leistung
 		const lerngruppe = this.mapLerngruppen.get(leistung.lerngruppenID);
-		if ((lerngruppe === null) || (lerngruppe.kursartID === null) || (lerngruppe.kursartKuerzel === null))
+		if ((lerngruppe === null) || (lerngruppe.kursartID === null) || (lerngruppe.kursartKuerzel === null)) {
 			return '';
+		}
 		// Bei Grundkursen muss die Schriftlichkeit mit angezeigt werden
 		let kuerzel = lerngruppe.kursartKuerzel;
-		if (kuerzel === 'GK')
+		if (kuerzel === 'GK') {
 			kuerzel = kuerzel + ((leistung.istSchriftlich ?? false) ? "S" : "M");
+		}
 		// Handelt es sich nicht um ein Abiturfach, so kann das allgemeine Kürzel zurückgegeben werden
-		if (leistung.abiturfach === null)
+		if (leistung.abiturfach === null) {
 			return kuerzel;
+		}
 		// Setze ggf. die Kursart anhand des Abiturfaches
 		const jahrgaenge = this.mapLerngruppeJahrgaenge.get(lerngruppe.id);
-		if (jahrgaenge === null)
+		if (jahrgaenge === null) {
 			return kuerzel;
+		}
 		if (jahrgaenge.size() === 1) {
 			const jahrgang = jahrgaenge.getFirst();
-			if ((jahrgang.kuerzel === 'EF') || (jahrgang.kuerzel === 'S1') || (jahrgang.kuerzel === 'S2'))
+			if ((jahrgang.kuerzel === 'EF') || (jahrgang.kuerzel === 'S1') || (jahrgang.kuerzel === 'S2')) {
 				return kuerzel;
+			}
 		}
 		return ((leistung.abiturfach < 3) ? "LK" + leistung.abiturfach : "AB" + leistung.abiturfach);
 	}
@@ -571,8 +634,9 @@ export class EnmManager {
 	 */
 	public lerngruppeGetKursbezeichnung(id: number): string {
 		const lerngruppe = this.mapLerngruppen.get(id);
-		if ((lerngruppe === null) || (lerngruppe.kursartID === null))
+		if ((lerngruppe === null) || (lerngruppe.kursartID === null)) {
 			return "";
+		}
 		return lerngruppe.bezeichnung ?? "";
 	}
 
@@ -585,11 +649,13 @@ export class EnmManager {
 	 */
 	public lerngruppeGetFachkuerzel(id: number): string {
 		const lerngruppe = this.mapLerngruppen.get(id);
-		if (lerngruppe === null)
+		if (lerngruppe === null) {
 			return "";
+		}
 		const fach = this.mapFaecher.get(lerngruppe.fachID);
-		if (fach === null)
+		if (fach === null) {
 			return "";
+		}
 		return fach.kuerzelAnzeige;
 	}
 
@@ -602,11 +668,13 @@ export class EnmManager {
 	 */
 	public schuelerGetKlasse(id: number): ENMKlasse {
 		const schueler = this.mapSchueler.get(id);
-		if (schueler === null)
+		if (schueler === null) {
 			throw new DeveloperNotificationException("Der Schüler mit der ID " + id + " exististiert nicht.");
+		}
 		const klasse = this.mapKlassen.get(schueler.klasseID);
-		if (klasse === null)
+		if (klasse === null) {
 			throw new DeveloperNotificationException("Der Klasse mit der ID " + schueler.klasseID + " des Schülers mit der ID " + id + " exististiert nicht.");
+		}
 		return klasse;
 	}
 
@@ -657,6 +725,43 @@ export class EnmManager {
 				&& (Number(leistung.fehlstundenUnentschuldigtFach) >= 0)
 				&& (!isNaN(Number(leistung.fehlstundenFach)))
 				&& (Number(leistung.fehlstundenUnentschuldigtFach) <= Number(leistung.fehlstundenFach));
+	}
+
+
+	/**
+	 * Setzt den Manager für Sperrungen bei der Noteneingabe auf den übergebenen Sperr-Manager.
+	 *
+	 * @param manager   der neue Manager
+	 */
+	public set sperrungen(manager: EnmSperrManager) {
+		this.managerSperrungen = manager;
+	}
+
+	/**
+	 * Holt den Manager für Sperrungen bei der Noteneingabe
+	 *
+	 * @returns der Manager
+	 */
+	public get sperrungen(): EnmSperrManager {
+		return this.managerSperrungen;
+	}
+
+	/**
+	 * Setzt den Manager für Spalten bei der Noteneingabe auf den übergebenen Sperr-Manager.
+	 *
+	 * @param manager   der neue Manager
+	 */
+	public set spalten(manager: EnmSpaltenManager) {
+		this.managerSpalten = manager;
+	}
+
+	/**
+	 * Holt den Manager für Spalten bei der Noteneingabe
+	 *
+	 * @returns der Manager
+	 */
+	public get spalten(): EnmSpaltenManager {
+		return this.managerSpalten;
 	}
 
 }

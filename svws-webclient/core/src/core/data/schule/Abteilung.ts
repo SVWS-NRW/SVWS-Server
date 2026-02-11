@@ -17,11 +17,6 @@ export class Abteilung extends JavaObject {
 	public bezeichnung: string = "";
 
 	/**
-	 * Die ID des Schuljahresabschnitts für den die Abteilung definiert ist.
-	 */
-	public idSchuljahresabschnitt: number = 0;
-
-	/**
 	 * Die Lehrer-ID des Abteilungsleiters, sofern die Abteilung einen zugewiesen hat.
 	 */
 	public idAbteilungsleiter: number | null = null;
@@ -42,9 +37,14 @@ export class Abteilung extends JavaObject {
 	public durchwahl: string | null = null;
 
 	/**
+	 * Gibt an, ob die Abteilung in der Anwendung sichtbar sein soll oder nicht
+	 */
+	public istSichtbar: boolean = false;
+
+	/**
 	 * Gibt einen Wert für die Sortierung der Abteilungen an.
 	 */
-	public sortierung: number = 32000;
+	public sortierung: number = 0;
 
 	/**
 	 * Die Zuordnung der Klassen zu der Abteilung.
@@ -67,7 +67,7 @@ export class Abteilung extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.Abteilung'].includes(name);
 	}
 
-	public static class = new Class<Abteilung>('de.svws_nrw.core.data.schule.Abteilung');
+	public static readonly class = new Class<Abteilung>('de.svws_nrw.core.data.schule.Abteilung');
 
 	public static transpilerFromJSON(json: string): Abteilung {
 		const obj = JSON.parse(json) as Partial<Abteilung>;
@@ -78,13 +78,13 @@ export class Abteilung extends JavaObject {
 		if (obj.bezeichnung === undefined)
 			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if (obj.idSchuljahresabschnitt === undefined)
-			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
-		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		result.idAbteilungsleiter = (obj.idAbteilungsleiter === undefined) ? null : obj.idAbteilungsleiter === null ? null : obj.idAbteilungsleiter;
 		result.raum = (obj.raum === undefined) ? null : obj.raum === null ? null : obj.raum;
 		result.email = (obj.email === undefined) ? null : obj.email === null ? null : obj.email;
 		result.durchwahl = (obj.durchwahl === undefined) ? null : obj.durchwahl === null ? null : obj.durchwahl;
+		if (obj.istSichtbar === undefined)
+			throw new Error('invalid json format, missing attribute istSichtbar');
+		result.istSichtbar = obj.istSichtbar;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -100,11 +100,11 @@ export class Abteilung extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
-		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		result += '"idAbteilungsleiter" : ' + ((obj.idAbteilungsleiter === null) ? 'null' : obj.idAbteilungsleiter.toString()) + ',';
 		result += '"raum" : ' + ((obj.raum === null) ? 'null' : JSON.stringify(obj.raum)) + ',';
 		result += '"email" : ' + ((obj.email === null) ? 'null' : JSON.stringify(obj.email)) + ',';
 		result += '"durchwahl" : ' + ((obj.durchwahl === null) ? 'null' : JSON.stringify(obj.durchwahl)) + ',';
+		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"klassenzuordnungen" : [ ';
 		for (let i = 0; i < obj.klassenzuordnungen.size(); i++) {
@@ -127,9 +127,6 @@ export class Abteilung extends JavaObject {
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
-		if (obj.idSchuljahresabschnitt !== undefined) {
-			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
-		}
 		if (obj.idAbteilungsleiter !== undefined) {
 			result += '"idAbteilungsleiter" : ' + ((obj.idAbteilungsleiter === null) ? 'null' : obj.idAbteilungsleiter.toString()) + ',';
 		}
@@ -141,6 +138,9 @@ export class Abteilung extends JavaObject {
 		}
 		if (obj.durchwahl !== undefined) {
 			result += '"durchwahl" : ' + ((obj.durchwahl === null) ? 'null' : JSON.stringify(obj.durchwahl)) + ',';
+		}
+		if (obj.istSichtbar !== undefined) {
+			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';

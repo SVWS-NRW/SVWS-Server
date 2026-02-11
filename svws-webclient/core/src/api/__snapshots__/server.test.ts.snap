@@ -15402,33 +15402,29 @@ JahrgangsDaten {
 }
 `;
 
-exports[`Server > getKatalogBetriebsart 1`] = `
+exports[`Server > getBetriebsarten 1`] = `
 ArrayList {
   "elementData": [
-    KatalogEintrag {
+    Betriebsart {
       "id": 1,
-      "istAenderbar": true,
       "istSichtbar": true,
       "kuerzel": "1",
       "text": "Einzelhandel",
     },
-    KatalogEintrag {
+    Betriebsart {
       "id": 4,
-      "istAenderbar": true,
       "istSichtbar": true,
       "kuerzel": "4",
       "text": "Handwerk",
     },
-    KatalogEintrag {
+    Betriebsart {
       "id": 2,
-      "istAenderbar": true,
       "istSichtbar": true,
       "kuerzel": "2",
       "text": "Industrie",
     },
-    KatalogEintrag {
+    Betriebsart {
       "id": 3,
-      "istAenderbar": true,
       "istSichtbar": true,
       "kuerzel": "3",
       "text": "Verwaltung",

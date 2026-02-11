@@ -1,7 +1,7 @@
 package de.svws_nrw.module.reporting.sortierung;
 
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
-import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public final class SortierungRegistryReportingKlasse {
 		reg.registiereString(reg.methodeToString(ReportingKlasse::kuerzel), ReportingKlasse::kuerzel);
 		reg.registiereString(reg.methodeToString(ReportingKlasse::beschreibung), ReportingKlasse::beschreibung);
 		reg.registiereString(reg.methodeToString(ReportingKlasse::parallelitaet), ReportingKlasse::parallelitaet);
-		reg.registiereString(reg.methodeToString(ReportingKlasse::auflistungKlassenleitung), ReportingKlasse::auflistungKlassenleitung);
+		reg.registiereString(reg.methodeToString(ReportingKlasse::auflistungKlassenlehrerkuerzel), ReportingKlasse::auflistungKlassenlehrerkuerzel);
 		reg.registiereString(reg.methodeToString(ReportingKlasse::teilstandort), ReportingKlasse::teilstandort);
 
 		// IDs und Kennungen (als Comparable)

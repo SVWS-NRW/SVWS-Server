@@ -14,6 +14,8 @@ dependencies {
 			'**/svws_nrw/schuldatei/*/data/**/*.java',
 			'**/svws_nrw/schuldatei/*/utils/**/*.java'
 		], excludes: [
+			'**/svws_nrw/core/adt/map/AVL*.java',
+			'**/svws_nrw/core/adt/set/AVL*.java',
 			'**/svws_nrw/core/data/schild3/reporting/SchildReportingDate.java',
 			'**/svws_nrw/core/data/schild3/reporting/SchildReportingMemo.java'
 		])
@@ -27,13 +29,15 @@ task cleanTranspiled(type: Delete) {
 }
 
 task prepareTranspile {
+	def fileTranspilerFiles = file("$buildDir/transpiler-files.txt")
+	def configTranspiler = configurations.transpiler
 	doLast {
-		file("$buildDir/transpiler-files.txt").text = configurations.transpiler.files.toString().replace("[", "").replace("]", "").trim()
+		fileTranspilerFiles.text = configTranspiler.files.toString().replace("[", "").replace("]", "").trim()
 	}
 	group = "build"
 	dependsOn compileJava
-	inputs.files configurations.transpiler
-	outputs.files "$buildDir/transpiler-files.txt"
+	inputs.files configTranspiler
+	outputs.files fileTranspilerFiles
 }
 
 task transpile(type: JavaExec) {
@@ -41,9 +45,6 @@ task transpile(type: JavaExec) {
 	dependsOn compileJava
 	dependsOn prepareTranspile
 	dependsOn project(':svws-transpile').tasks.assemble
-	doFirst {
-		delete fileTree(dir: "$buildDir/ts"), fileTree(dir: "$buildDir/tmp/transpiler/ts", includes: ["**/*.class"])
-	}
 	inputs.files "$buildDir/transpiler-files.txt", configurations.transpiler.files
 	outputs.dir "$buildDir/ts"
 	description = "Transpiliert den Java-Code nach Typescript"
@@ -54,6 +55,11 @@ task transpile(type: JavaExec) {
 		"--tmpdir", "$buildDir/tmp/transpiler/ts",
 		"--files", "$buildDir/transpiler-files.txt"
 	jvmArgs "--add-opens", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED"
+	doFirst {
+		def outputDir = file("$buildDir/ts")
+		if (outputDir.exists())
+			outputDir.deleteDir()
+	}
 }
 
 assemble.dependsOn transpile
@@ -62,13 +68,13 @@ assemble.dependsOn transpile
 apply from: "$rootDir/publish-helper.gradle"
 
 publishing {
-  publications {
-    publishJava(MavenPublication) {
-      artifactId = 'svws-core'
-      pom {
-        name = 'SVWS Core Library'
-        description = 'Diese Bibliothek stellt grundlegende Datenypen und Algorithmen der Server-Applikation der Schulverwaltungssoftware in NRW bereit'
-      }
-    }
-  }
+	publications {
+		publishJava(MavenPublication) {
+		artifactId = 'svws-core'
+			pom {
+				name = 'SVWS Core Library'
+				description = 'Diese Bibliothek stellt grundlegende Datenypen und Algorithmen der Server-Applikation der Schulverwaltungssoftware in NRW bereit'
+			}
+		}
+	}
 }

@@ -97,7 +97,7 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 		return ['de.svws_nrw.core.data.adressbuch.AdressbuchKontakt', 'de.svws_nrw.core.data.adressbuch.AdressbuchEintrag'].includes(name);
 	}
 
-	public static class = new Class<AdressbuchKontakt>('de.svws_nrw.core.data.adressbuch.AdressbuchKontakt');
+	public static readonly class = new Class<AdressbuchKontakt>('de.svws_nrw.core.data.adressbuch.AdressbuchKontakt');
 
 	public static transpilerFromJSON(json: string): AdressbuchKontakt {
 		const obj = JSON.parse(json) as Partial<AdressbuchKontakt>;

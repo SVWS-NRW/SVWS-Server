@@ -273,7 +273,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 		return ['de.svws_nrw.core.adt.map.HashMap2D'].includes(name);
 	}
 
-	public static class = new Class<HashMap2D<any, any, any>>('de.svws_nrw.core.adt.map.HashMap2D');
+	public static readonly class = new Class<HashMap2D<any, any, any>>('de.svws_nrw.core.adt.map.HashMap2D');
 
 }
 

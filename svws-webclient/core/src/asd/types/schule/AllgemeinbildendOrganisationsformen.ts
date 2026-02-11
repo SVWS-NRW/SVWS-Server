@@ -121,7 +121,7 @@ export class AllgemeinbildendOrganisationsformen extends JavaEnum<Allgemeinbilde
 		return ['de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<AllgemeinbildendOrganisationsformen>('de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen');
+	public static readonly class = new Class<AllgemeinbildendOrganisationsformen>('de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen');
 
 }
 

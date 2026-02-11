@@ -9,14 +9,24 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 	public id: number = 0;
 
 	/**
+	 * Der Name des Ortsteils.
+	 */
+	public ortsteil: string | null = null;
+
+	/**
 	 * Die ID des zugehörigen Ortes.
 	 */
 	public ort_id: number | null = null;
 
 	/**
-	 * Der Name des Ortsteils.
+	 * Die Bezeichnung des zugehörigen Ortes.
 	 */
-	public ortsteil: string | null = null;
+	public bezeichnungOrt: string | null = null;
+
+	/**
+	 * Die Postleitzahl des zugehörigen Ortes.
+	 */
+	public plzOrt: string | null = null;
 
 	/**
 	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
@@ -32,6 +42,11 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht.
 	 */
 	public istAenderbar: boolean = false;
+
+	/**
+	 * Gibt an, ob der Ortsteil in anderen Datenbanktabellen referenziert ist oder nicht.
+	 */
+	public referenziertInAnderenTabellen: boolean = false;
 
 
 	/**
@@ -49,7 +64,7 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<OrtsteilKatalogEintrag>('de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag');
+	public static readonly class = new Class<OrtsteilKatalogEintrag>('de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): OrtsteilKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<OrtsteilKatalogEintrag>;
@@ -57,8 +72,10 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.ort_id = (obj.ort_id === undefined) ? null : obj.ort_id === null ? null : obj.ort_id;
 		result.ortsteil = (obj.ortsteil === undefined) ? null : obj.ortsteil === null ? null : obj.ortsteil;
+		result.ort_id = (obj.ort_id === undefined) ? null : obj.ort_id === null ? null : obj.ort_id;
+		result.bezeichnungOrt = (obj.bezeichnungOrt === undefined) ? null : obj.bezeichnungOrt === null ? null : obj.bezeichnungOrt;
+		result.plzOrt = (obj.plzOrt === undefined) ? null : obj.plzOrt === null ? null : obj.plzOrt;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -68,17 +85,23 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 		if (obj.istAenderbar === undefined)
 			throw new Error('invalid json format, missing attribute istAenderbar');
 		result.istAenderbar = obj.istAenderbar;
+		if (obj.referenziertInAnderenTabellen === undefined)
+			throw new Error('invalid json format, missing attribute referenziertInAnderenTabellen');
+		result.referenziertInAnderenTabellen = obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
 	public static transpilerToJSON(obj: OrtsteilKatalogEintrag): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"ort_id" : ' + ((obj.ort_id === null) ? 'null' : obj.ort_id.toString()) + ',';
 		result += '"ortsteil" : ' + ((obj.ortsteil === null) ? 'null' : JSON.stringify(obj.ortsteil)) + ',';
+		result += '"ort_id" : ' + ((obj.ort_id === null) ? 'null' : obj.ort_id.toString()) + ',';
+		result += '"bezeichnungOrt" : ' + ((obj.bezeichnungOrt === null) ? 'null' : JSON.stringify(obj.bezeichnungOrt)) + ',';
+		result += '"plzOrt" : ' + ((obj.plzOrt === null) ? 'null' : JSON.stringify(obj.plzOrt)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"istAenderbar" : ' + obj.istAenderbar.toString() + ',';
+		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -89,11 +112,17 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
+		if (obj.ortsteil !== undefined) {
+			result += '"ortsteil" : ' + ((obj.ortsteil === null) ? 'null' : JSON.stringify(obj.ortsteil)) + ',';
+		}
 		if (obj.ort_id !== undefined) {
 			result += '"ort_id" : ' + ((obj.ort_id === null) ? 'null' : obj.ort_id.toString()) + ',';
 		}
-		if (obj.ortsteil !== undefined) {
-			result += '"ortsteil" : ' + ((obj.ortsteil === null) ? 'null' : JSON.stringify(obj.ortsteil)) + ',';
+		if (obj.bezeichnungOrt !== undefined) {
+			result += '"bezeichnungOrt" : ' + ((obj.bezeichnungOrt === null) ? 'null' : JSON.stringify(obj.bezeichnungOrt)) + ',';
+		}
+		if (obj.plzOrt !== undefined) {
+			result += '"plzOrt" : ' + ((obj.plzOrt === null) ? 'null' : JSON.stringify(obj.plzOrt)) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
@@ -103,6 +132,9 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 		}
 		if (obj.istAenderbar !== undefined) {
 			result += '"istAenderbar" : ' + obj.istAenderbar.toString() + ',';
+		}
+		if (obj.referenziertInAnderenTabellen !== undefined) {
+			result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

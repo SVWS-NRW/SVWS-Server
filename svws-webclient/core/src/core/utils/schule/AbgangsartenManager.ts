@@ -211,7 +211,7 @@ export class AbgangsartenManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.schule.AbgangsartenManager'].includes(name);
 	}
 
-	public static class = new Class<AbgangsartenManager>('de.svws_nrw.core.utils.schule.AbgangsartenManager');
+	public static readonly class = new Class<AbgangsartenManager>('de.svws_nrw.core.utils.schule.AbgangsartenManager');
 
 }
 

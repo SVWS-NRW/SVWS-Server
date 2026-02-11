@@ -108,7 +108,7 @@ export class Kindergartenbesuch extends JavaEnum<Kindergartenbesuch> implements 
 		return ['de.svws_nrw.asd.types.schule.Kindergartenbesuch', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Kindergartenbesuch>('de.svws_nrw.asd.types.schule.Kindergartenbesuch');
+	public static readonly class = new Class<Kindergartenbesuch>('de.svws_nrw.asd.types.schule.Kindergartenbesuch');
 
 }
 

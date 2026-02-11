@@ -19,7 +19,7 @@ export class LehrerAnrechnungsgrundKatalogEintrag extends CoreTypeDataNurSchulfo
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.lehrer.LehrerAnrechnungsgrundKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeDataNurSchulformen'].includes(name);
 	}
 
-	public static class = new Class<LehrerAnrechnungsgrundKatalogEintrag>('de.svws_nrw.asd.data.lehrer.LehrerAnrechnungsgrundKatalogEintrag');
+	public static readonly class = new Class<LehrerAnrechnungsgrundKatalogEintrag>('de.svws_nrw.asd.data.lehrer.LehrerAnrechnungsgrundKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): LehrerAnrechnungsgrundKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<LehrerAnrechnungsgrundKatalogEintrag>;

@@ -69,8 +69,9 @@
 
 	const kurseSubline = computed(() => {
 		const auswahlKurseList = props.manager().liste.auswahlSorted();
-		if (auswahlKurseList.size() > 5)
+		if (auswahlKurseList.size() > 5) {
 			return `${auswahlKurseList.size()} Kurse ausgewählt`;
+		}
 		return [...auswahlKurseList].map(k => k.kuerzel).join(', ');
 	});
 

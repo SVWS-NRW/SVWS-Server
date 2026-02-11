@@ -74,7 +74,7 @@ export class LehrerListeEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.lehrer.LehrerListeEintrag'].includes(name);
 	}
 
-	public static class = new Class<LehrerListeEintrag>('de.svws_nrw.core.data.lehrer.LehrerListeEintrag');
+	public static readonly class = new Class<LehrerListeEintrag>('de.svws_nrw.core.data.lehrer.LehrerListeEintrag');
 
 	public static transpilerFromJSON(json: string): LehrerListeEintrag {
 		const obj = JSON.parse(json) as Partial<LehrerListeEintrag>;

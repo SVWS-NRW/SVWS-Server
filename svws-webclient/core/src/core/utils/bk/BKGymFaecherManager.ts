@@ -6,45 +6,43 @@ import { java_util_Set_of } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import type { Comparator } from '../../../java/util/Comparator';
 import type { Collection } from '../../../java/util/Collection';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { FachKatalogEintrag } from '../../../asd/data/fach/FachKatalogEintrag';
+import { HashSet } from '../../../java/util/HashSet';
 
 export class BKGymFaecherManager extends JavaObject {
 
 	/**
 	 * Die Menge aller Fremdsprachen, welche am beruflichen Gymnasium ggf. vorkommen können
 	 */
-	public static readonly alleFremdsprachen: JavaSet<Fach> = java_util_Set_of(Fach.E, Fach.C, Fach.C0, Fach.C5, Fach.C6, Fach.C7, Fach.C8, Fach.C9, Fach.F, Fach.F0, Fach.F5, Fach.F6, Fach.F7, Fach.F8, Fach.F9, Fach.G, Fach.G0, Fach.G5, Fach.G6, Fach.G7, Fach.G8, Fach.G9, Fach.H, Fach.H0, Fach.H5, Fach.H6, Fach.H7, Fach.H8, Fach.H9, Fach.I, Fach.I0, Fach.I5, Fach.I6, Fach.I7, Fach.I8, Fach.I9, Fach.K, Fach.K0, Fach.K5, Fach.K6, Fach.K7, Fach.K8, Fach.K9, Fach.L, Fach.L0, Fach.L5, Fach.L6, Fach.L7, Fach.L8, Fach.L9, Fach.N, Fach.N0, Fach.N5, Fach.N6, Fach.N7, Fach.N8, Fach.N9, Fach.O, Fach.O0, Fach.O5, Fach.O6, Fach.O7, Fach.O8, Fach.O9, Fach.R, Fach.R0, Fach.R5, Fach.R6, Fach.R7, Fach.R8, Fach.R9, Fach.S, Fach.S0, Fach.S5, Fach.S6, Fach.S7, Fach.S8, Fach.S9, Fach.T, Fach.T0, Fach.T5, Fach.T6, Fach.T7, Fach.T8, Fach.T9, Fach.Z, Fach.Z0, Fach.Z5, Fach.Z6, Fach.Z7, Fach.Z8, Fach.Z9);
-
-	/**
-	 * Sortiert die Fächer anhand ihrer konfigurierten Sortierung
-	 */
-	public static readonly comp: Comparator<BKGymFach | null> = { compare: (a: BKGymFach | null, b: BKGymFach | null) => {
-		return -1;
-	} };
+	public static readonly alleFremdsprachen: JavaSet<Fach> = java_util_Set_of(Fach.E, Fach.C, Fach.F, Fach.G, Fach.H, Fach.I, Fach.K, Fach.L, Fach.N, Fach.O, Fach.R, Fach.S, Fach.T, Fach.Z);
 
 	/**
 	 * Die Liste der Fächer, die im Manager vorhanden sind.
 	 */
-	private readonly _faecher: List<BKGymFach> = new ArrayList<BKGymFach>();
+	private readonly faecher: List<BKGymFach> = new ArrayList<BKGymFach>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID
 	 */
-	private readonly _map: HashMap<number, BKGymFach> = new HashMap<number, BKGymFach>();
+	private readonly map: HashMap<number, BKGymFach> = new HashMap<number, BKGymFach>();
 
 	/**
 	 * Eine HashMap für den schnellen Zugriff auf die Fächer anhand der Bezeichnung des Faches
 	 */
-	private readonly _mapByBezeichnung: HashMap<string, List<BKGymFach>> = new HashMap<string, List<BKGymFach>>();
+	private readonly mapByBezeichnung: HashMap<string, BKGymFach> = new HashMap<string, BKGymFach>();
 
 	/**
 	 * das Schuljahr, für welches der Fächer-Manager die Fächer verwaltet - relevant wg. der Fächergültigkeit laut ASD
 	 */
 	private readonly schuljahr: number;
+
+	/**
+	 * Fachbezeichnungen, die doppelt in der Fächerliste eingetragen sind
+	 */
+	private readonly doppelteFaecher: JavaSet<string> = new HashSet<string>();
 
 
 	/**
@@ -70,7 +68,7 @@ export class BKGymFaecherManager extends JavaObject {
 	 */
 	private addFachInternal(fach: BKGymFach): boolean {
 		DeveloperNotificationException.ifSmaller("fach.id", fach.id, 0);
-		if (this._map.containsKey(fach.id))
+		if (this.map.containsKey(fach.id))
 			return false;
 		if (fach.bezeichnung === null)
 			return false;
@@ -78,14 +76,13 @@ export class BKGymFaecherManager extends JavaObject {
 		const fke: FachKatalogEintrag | null = zf.daten(this.schuljahr);
 		if (fke === null)
 			return false;
-		this._map.put(fach.id, fach);
-		let listForBezeichnung: List<BKGymFach> | null = this._mapByBezeichnung.get(fach.bezeichnung);
-		if (listForBezeichnung === null) {
-			listForBezeichnung = new ArrayList();
-			this._mapByBezeichnung.put(fach.bezeichnung, listForBezeichnung);
+		this.map.put(fach.id, fach);
+		if (this.mapByBezeichnung.get(fach.bezeichnung) !== null) {
+			this.doppelteFaecher.add(fach.bezeichnung);
+			return false;
 		}
-		listForBezeichnung.add(fach);
-		return this._faecher.add(fach);
+		this.mapByBezeichnung.put(fach.bezeichnung, fach);
+		return this.faecher.add(fach);
 	}
 
 	/**
@@ -100,15 +97,16 @@ export class BKGymFaecherManager extends JavaObject {
 		for (const fach of faecher)
 			if (!this.addFachInternal(fach))
 				result = false;
-		this.sort();
 		return result;
 	}
 
 	/**
-	 * Führt eine Sortierung der Fächer anhand des Sortierungsfeldes durch.
+	 * Getter für die doppelten Fächer als List
+	 *
+	 * @return die Liste der doppelten Fächer
 	 */
-	private sort(): void {
-		this._faecher.sort(BKGymFaecherManager.comp);
+	public getDoppelteFaecher(): List<string> {
+		return new ArrayList<string>(this.doppelteFaecher);
 	}
 
 	/**
@@ -117,7 +115,7 @@ export class BKGymFaecherManager extends JavaObject {
 	 * @return true, wenn die Liste der Fächer leer ist.
 	 */
 	public isEmpty(): boolean {
-		return this._faecher.isEmpty();
+		return this.faecher.isEmpty();
 	}
 
 	/**
@@ -126,8 +124,8 @@ export class BKGymFaecherManager extends JavaObject {
 	 *
 	 * @return die interne Liste der Fächer
 	 */
-	public faecher(): List<BKGymFach> {
-		return new ArrayList<BKGymFach>(this._faecher);
+	public getFaecher(): List<BKGymFach> {
+		return new ArrayList<BKGymFach>(this.faecher);
 	}
 
 	/**
@@ -138,7 +136,23 @@ export class BKGymFaecherManager extends JavaObject {
 	 * @return Das fach mit der angegebenen ID oder null, falls es das Fach nicht gibt.
 	 */
 	public get(id: number): BKGymFach | null {
-		return this._map.get(id);
+		return this.map.get(id);
+	}
+
+	/**
+	 * liefert zu einer fachID die Fachbezeichnung
+	 *
+	 * @param id   die ID des Fachs
+	 *
+	 * @return die Fachbezeichnung
+	 */
+	public getBezeichnungByFachID(id: number): string {
+		const fach: BKGymFach | null = this.map.get(id);
+		if (fach === null)
+			return "";
+		if (fach.bezeichnung === null)
+			return "";
+		return fach.bezeichnung;
 	}
 
 	/**
@@ -151,19 +165,7 @@ export class BKGymFaecherManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls ein Fach mit der ID nicht bekannt ist.
 	 */
 	public getOrException(idFach: number): BKGymFach {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map, idFach);
-	}
-
-	/**
-	 * Prüft, ob es auch bei dem Fach mit dem angegeben Statistik-Kürzel
-	 * um eine Fremdsprache handelt oder nicht
-	 *
-	 * @param kuerzel   das zu überprüfende Statistik-Kürzel
-	 *
-	 * @return true, falls es sich um eine Fremdsprache handelt und ansonsten null
-	 */
-	public static istFremdsprachenKuerzel(kuerzel: string): boolean {
-		return BKGymFaecherManager.alleFremdsprachen.contains(Fach.getBySchluesselOrDefault(kuerzel));
+		return DeveloperNotificationException.ifMapGetIsNull(this.map, idFach);
 	}
 
 	/**
@@ -190,6 +192,31 @@ export class BKGymFaecherManager extends JavaObject {
 		return fach.kuerzel.substring(0, 1).toUpperCase();
 	}
 
+	/**
+	 * Liefert das BKGymFach-Objekt für die gegebene Fachbezeichnung
+	 *
+	 * @param bezeichnung   die Bezeichnung des Fachs
+	 *
+	 * @return für vorhandene Fächer das Objekt sonst null
+	 */
+	public getFachByBezeichnung(bezeichnung: string): BKGymFach | null {
+		return this.mapByBezeichnung.get(bezeichnung);
+	}
+
+	/**
+	 * Liefert die FachID für die gegebene Fachbezeichnung
+	 *
+	 * @param bezeichnung   die Bezeichnung des Fachs
+	 *
+	 * @return die FachID für vorhandene Fächer sonst -1
+	 */
+	public getFachIDByBezeichnung(bezeichnung: string): number | null {
+		const fach: BKGymFach | null = this.mapByBezeichnung.get(bezeichnung);
+		if (fach === null)
+			return null;
+		return fach.id;
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.bk.BKGymFaecherManager';
 	}
@@ -198,7 +225,7 @@ export class BKGymFaecherManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.bk.BKGymFaecherManager'].includes(name);
 	}
 
-	public static class = new Class<BKGymFaecherManager>('de.svws_nrw.core.utils.bk.BKGymFaecherManager');
+	public static readonly class = new Class<BKGymFaecherManager>('de.svws_nrw.core.utils.bk.BKGymFaecherManager');
 
 }
 

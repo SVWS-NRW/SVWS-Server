@@ -138,7 +138,7 @@ export class Religion extends JavaEnum<Religion> implements CoreType<ReligionKat
 		return ['de.svws_nrw.asd.types.schule.Religion', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Religion>('de.svws_nrw.asd.types.schule.Religion');
+	public static readonly class = new Class<Religion>('de.svws_nrw.asd.types.schule.Religion');
 
 }
 

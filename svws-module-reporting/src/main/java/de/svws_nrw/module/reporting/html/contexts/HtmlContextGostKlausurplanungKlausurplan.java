@@ -87,7 +87,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext<
 
 		// In den idsHauptdaten der Reporting-Parameter werden im Wechsel das Abiturjahr und das GostHalbjahr (0 = EF.1 bis 5 = Q2.2) übergeben.
 		// Hier werden die Daten NICHT validiert. Die Daten aus den Parametern müssen vorab validiert worden sein (ReportingValidierung).
-		final List<Long> parameterDaten = reportingRepository.reportingParameter().idsHauptdaten.stream().filter(Objects::nonNull).toList();
+		final List<Long> parameterDaten = reportingRepository.reportingParameter().idsHauptdaten().stream().filter(Objects::nonNull).toList();
 		final List<GostKlausurenCollectionHjData> selection = new ArrayList<>();
 
 		if (!parameterDaten.isEmpty()) {

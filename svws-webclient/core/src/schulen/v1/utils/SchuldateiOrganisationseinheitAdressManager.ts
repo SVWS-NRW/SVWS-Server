@@ -310,7 +310,7 @@ export class SchuldateiOrganisationseinheitAdressManager extends JavaObject {
 		return ['de.svws_nrw.schulen.v1.utils.SchuldateiOrganisationseinheitAdressManager'].includes(name);
 	}
 
-	public static class = new Class<SchuldateiOrganisationseinheitAdressManager>('de.svws_nrw.schulen.v1.utils.SchuldateiOrganisationseinheitAdressManager');
+	public static readonly class = new Class<SchuldateiOrganisationseinheitAdressManager>('de.svws_nrw.schulen.v1.utils.SchuldateiOrganisationseinheitAdressManager');
 
 }
 

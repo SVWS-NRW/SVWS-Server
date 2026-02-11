@@ -6,7 +6,7 @@ import { CoreTypeData, cast_de_svws_nrw_asd_data_CoreTypeData } from '../../asd/
 export class CoreTypeDataNurSchulformen extends CoreTypeData {
 
 	/**
-	 * Die Kürzel der Schulformen, bei welchen der Jahrgang vorkommt.
+	 * Die Bezeichner der Schulformen, bei welchen der Jahrgang vorkommt.
 	 */
 	public schulformen: List<string> = new ArrayList<string>();
 
@@ -26,7 +26,7 @@ export class CoreTypeDataNurSchulformen extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.CoreTypeDataNurSchulformen'].includes(name);
 	}
 
-	public static class = new Class<CoreTypeDataNurSchulformen>('de.svws_nrw.asd.data.CoreTypeDataNurSchulformen');
+	public static readonly class = new Class<CoreTypeDataNurSchulformen>('de.svws_nrw.asd.data.CoreTypeDataNurSchulformen');
 
 	public static transpilerFromJSON(json: string): CoreTypeDataNurSchulformen {
 		const obj = JSON.parse(json) as Partial<CoreTypeDataNurSchulformen>;

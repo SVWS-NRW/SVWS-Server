@@ -93,7 +93,7 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 		return ['de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheit'].includes(name);
 	}
 
-	public static class = new Class<SchuldateiOrganisationseinheit>('de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheit');
+	public static readonly class = new Class<SchuldateiOrganisationseinheit>('de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheit');
 
 	public static transpilerFromJSON(json: string): SchuldateiOrganisationseinheit {
 		const obj = JSON.parse(json) as Partial<SchuldateiOrganisationseinheit>;

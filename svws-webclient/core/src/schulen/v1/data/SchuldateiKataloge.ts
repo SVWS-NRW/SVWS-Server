@@ -33,7 +33,7 @@ export class SchuldateiKataloge extends JavaObject {
 		return ['de.svws_nrw.schulen.v1.data.SchuldateiKataloge'].includes(name);
 	}
 
-	public static class = new Class<SchuldateiKataloge>('de.svws_nrw.schulen.v1.data.SchuldateiKataloge');
+	public static readonly class = new Class<SchuldateiKataloge>('de.svws_nrw.schulen.v1.data.SchuldateiKataloge');
 
 	public static transpilerFromJSON(json: string): SchuldateiKataloge {
 		const obj = JSON.parse(json) as Partial<SchuldateiKataloge>;

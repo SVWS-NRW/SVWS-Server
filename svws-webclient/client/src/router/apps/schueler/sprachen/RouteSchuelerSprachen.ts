@@ -23,10 +23,12 @@ export class RouteSchuelerSprachen extends RouteNode<RouteDataSchuelerSprachen, 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		try {
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
-			if (this.parent === undefined)
+			if (this.parent === undefined) {
 				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
-			if (id === undefined)
+			}
+			if (id === undefined) {
 				return await this.data.auswahlSchueler(null);
+			}
 			try {
 				await this.data.auswahlSchueler(routeSchueler.data.manager.liste.get(id));
 			} catch (error) {

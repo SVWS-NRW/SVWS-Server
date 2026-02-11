@@ -1,6 +1,6 @@
 <template>
 	<div class="page page-flex-row">
-		<enm-klassenleitung-uebersicht ref="gridRef" :enm-manager :patch-bemerkungen :patch-lernabschnitt :columns-visible :set-columns-visible :floskel-editor-visible :focus-floskel-editor :auswahl />
+		<enm-klassenleitung-uebersicht ref="gridRef" :enm-manager :patch-bemerkungen :patch-lernabschnitt :columns-visible :set-columns-visible :focus-floskel-editor :auswahl />
 		<enm-floskeleditor ref="gridRefFlosekeleditor" v-if="show" v-model="show" :patch="doPatchBemerkungen" :erlaubte-hauptgruppe :enm-manager :auswahl="auswahlZelle" :lerngruppen-auswahl="auswahl" :on-update :initial-row />
 	</div>
 </template>
@@ -24,24 +24,28 @@
 	const initialRow = ref<number | null>(null);
 
 	function focusGrid() {
-		if (gridRef.value !== null)
+		if (gridRef.value !== null) {
 			gridRef.value.gridManager.doFocus(true);
+		}
 	}
 
 	function onUpdate(row: number | null, focus: boolean) {
-		if ((gridRef.value === null) || (row === null))
+		if ((gridRef.value === null) || (row === null)) {
 			return;
+		}
 		gridRef.value.gridManager.focusRowLast = row;
 		const { b: schueler, a: klasse } = gridRef.value.gridManager.daten.get(row);
 		auswahlZelle.value = { klasse, schueler, leistung: null };
-		if (focus)
+		if (focus) {
 			focusGrid();
+		}
 	}
 	const erlaubteHauptgruppe = shallowRef<BemerkungenHauptgruppe>('ZB');
 
 	async function focusFloskelEditor(hauptgruppe: BemerkungenHauptgruppe | null, schueler: ENMSchueler | null, klasse: ENMKlasse | null, row: number | null, doFocus: boolean) {
-		if (hauptgruppe !== null)
+		if (hauptgruppe !== null) {
 			erlaubteHauptgruppe.value = hauptgruppe;
+		}
 		auswahlZelle.value = { klasse, schueler, leistung: null };
 		initialRow.value = row;
 		if (doFocus) {
@@ -51,8 +55,9 @@
 	}
 
 	async function doPatchBemerkungen(bemerkung: string | null) {
-		if ((auswahlZelle.value.schueler === null) || (auswahlZelle.value.klasse === null))
+		if ((auswahlZelle.value.schueler === null) || (auswahlZelle.value.klasse === null)) {
 			return;
+		}
 		const patch = <Partial<ENMLeistungBemerkungen>>{};
 		switch (erlaubteHauptgruppe.value) {
 			case 'ASV':

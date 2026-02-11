@@ -76,8 +76,9 @@
 	const activeItemIndex = ref(-1);
 
 	const listEmpty = computed(() => {
-		for (const _ of props.filteredList)
+		for (const _ of props.filteredList) {
 			return false;
+		}
 		return true;
 	});
 

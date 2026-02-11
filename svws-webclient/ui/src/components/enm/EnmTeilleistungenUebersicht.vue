@@ -62,7 +62,8 @@
 				<template v-for="teilleistung of enmManager().mapLeistungTeilleistungsartTeilleistung.getOrNull(pair.a.id, idArt) !== null ? [enmManager().mapLeistungTeilleistungsartTeilleistung.getOrNull(pair.a.id, idArt)!] : [ null ]" :key="teilleistung">
 					<template v-if="gridManager.isColVisible(enmManager().mapTeilleistungsarten.get(idArt)?.bezeichnung ?? '???') ?? true">
 						<td v-if="teilleistung === null" class="bg-ui-disabled" />
-						<td v-else-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)" :ref="inputNoteTeilleistung(pair, teilleistung, indexArt + 6, index)" class="ui-table-grid-input"
+						<td v-else-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istTeilleistungseingabeErlaubt(pair.b.klasseID, idArt)"
+							:ref="inputNoteTeilleistung(pair, teilleistung, indexArt + 6, index)" class="ui-table-grid-input"
 							:class="{
 								'bg-ui-selected': (gridManager.focusColumn === indexArt + 6),
 								'text-ui-danger': Note.fromKuerzel(teilleistung.note).istDefizitSekII(),
@@ -73,7 +74,8 @@
 				</template>
 			</template>
 			<template v-if="gridManager.isColVisible('Quartal') ?? true">
-				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)" :ref="inputNoteQuartal(pair, setTeilleistungsarten.size() + 6, index)" class="ui-table-grid-input"
+				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Quartalsnoten')"
+					:ref="inputNoteQuartal(pair, setTeilleistungsarten.size() + 6, index)" class="ui-table-grid-input"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === setTeilleistungsarten.size() + 6),
 						'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII(),
@@ -82,7 +84,8 @@
 				<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII() }">{{ pair.a.noteQuartal ?? "-" }}</td>
 			</template>
 			<template v-if="gridManager.isColVisible('Note') ?? true">
-				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID)" :ref="inputNote(pair, setTeilleistungsarten.size() + 7, index)" class="ui-table-grid-input"
+				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Note')"
+					:ref="inputNote(pair, setTeilleistungsarten.size() + 7, index)" class="ui-table-grid-input"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === setTeilleistungsarten.size() + 7),
 						'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII(),
@@ -110,6 +113,7 @@
 	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
 	import { Note } from '../../../../core/src/asd/types/Note';
 
+	type LocalElement = Element | ComponentPublicInstance<unknown> | null;
 	const props = defineProps<EnmTeilleistungenProps>();
 
 	const colsValidationTooltip = new Set(['Fach', 'Lehrer', 'Kurs', 'Kursart']);
@@ -119,8 +123,9 @@
 		const result = new HashSet<number>();
 		for (const lerngruppe of props.auswahl()) {
 			const arten = props.enmManager().mapLerngruppeTeilleistungsarten.get(lerngruppe.id);
-			if (arten !== null)
+			if (arten !== null) {
 				result.addAll(arten);
+			}
 		}
 		return result;
 	});
@@ -130,8 +135,9 @@
 			const result = new ArrayList<PairNN<ENMLeistung, ENMSchueler>>();
 			for (const lerngruppenAuswahl of props.auswahl()) {
 				const leistungen = props.enmManager().mapLerngruppeLeistungen.get(lerngruppenAuswahl.id);
-				if ((leistungen === null))
+				if ((leistungen === null)) {
 					continue;
+				}
 				result.addAll(leistungen);
 			}
 			return result;
@@ -153,13 +159,16 @@
 		];
 		for (const idArt of teilleistungsarten) {
 			const art = props.enmManager().mapTeilleistungsarten.get(idArt);
-			if (art === null)
+			if (art === null) {
 				continue;
+			}
 			cols.push({ kuerzel: art.bezeichnung ?? "???", name: art.bezeichnung ?? "???", width: "4rem", hideable: true });
 		}
-		cols.push({ kuerzel: "Quartal", name: "Quartalsnote", width: "6rem", hideable: true });
-		cols.push({ kuerzel: "Note", name: "Note", width: "6rem", hideable: true });
-		cols.push({ kuerzel: "", name: "", width: "3.25rem", hideable: false });
+		cols.push(
+			{ kuerzel: "Quartal", name: "Quartalsnote", width: "6rem", hideable: true },
+			{ kuerzel: "Note", name: "Note", width: "6rem", hideable: true },
+			{ kuerzel: "", name: "", width: "3.25rem", hideable: false }
+		);
 		gridManager.setColumns(cols);
 	}, { immediate: true });
 
@@ -167,30 +176,33 @@
 	function inputNoteTeilleistung(pair: PairNN<ENMLeistung, ENMSchueler>, teilleistung: ENMTeilleistung, col: number, index: number) {
 		const key = 'Teilleistung_' + teilleistung.id + '_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: string | null) => void props.patchTeilleistung(teilleistung, { note: value });
-		return (element: Element | ComponentPublicInstance<unknown> | null) => {
+		return (element: LocalElement) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
-			if (input !== null)
+			if (input !== null) {
 				gridManager.update(key, teilleistung.note);
+			}
 		};
 	}
 
 	function inputNoteQuartal(pair: PairNN<ENMLeistung, ENMSchueler>, col: number, index: number) {
 		const key = 'Quartalsnote_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: string | null) => void props.patchLeistung(pair.a, { noteQuartal: value });
-		return (element: Element | ComponentPublicInstance<unknown> | null) => {
+		return (element: LocalElement) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
-			if (input !== null)
+			if (input !== null) {
 				gridManager.update(key, pair.a.noteQuartal);
+			}
 		};
 	}
 
 	function inputNote(pair: PairNN<ENMLeistung, ENMSchueler>, col: number, index: number) {
 		const key = 'Note_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: string | null) => void props.patchLeistung(pair.a, { note: value });
-		return (element: Element | ComponentPublicInstance<unknown> | null) => {
+		return (element: LocalElement) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
-			if (input !== null)
+			if (input !== null) {
 				gridManager.update(key, pair.a.note);
+			}
 		};
 	}
 

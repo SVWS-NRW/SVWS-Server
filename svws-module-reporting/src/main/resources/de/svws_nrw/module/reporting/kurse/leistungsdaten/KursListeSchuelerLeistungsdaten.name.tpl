@@ -1,0 +1,10 @@
+[# th:if="${Kurse.isEmpty()}"]
+    Kurs-Liste-Schueler-Leistungsdaten
+[/]
+[# th:if="${!Kurse.isEmpty()}"]
+    [# th:each="kurs,iterState : ${Kurse}"]
+        [# th:if="${iterState.first}"]
+            Kurs-Liste-Schueler-Leistungsdaten_[(${ #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm') })]
+        [/]
+    [/]
+[/]

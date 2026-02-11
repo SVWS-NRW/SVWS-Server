@@ -15,7 +15,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.module.reporting.filterung.ReportingFilterDataType;
-import de.svws_nrw.module.reporting.proxytypes.kurs.ProxyReportingKurs;
+import de.svws_nrw.module.reporting.types.lerngruppen.ProxyReportingKurs;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.sortierung.ComparatorFactory;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingGostKlausurplanungSchuelerklausur;
@@ -24,7 +24,7 @@ import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlaus
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurtermin;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKursklausur;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausur;
-import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 
@@ -126,8 +126,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 		// 7. Sortiere alle Schülerklausuren, sowohl in der Gesamtliste als auch bei den Kursklausuren.
 		final Optional<Comparator<ReportingGostKlausurplanungSchuelerklausur>> optionalComparator =
 				ComparatorFactory.buildOptionalComparator(this.reportingRepository, ReportingGostKlausurplanungSchuelerklausur.class.getSimpleName(),
-						SortierungRegistryReportingGostKlausurplanungSchuelerklausur.sortierungRegistry(),
-						SortierungRegistryReportingGostKlausurplanungSchuelerklausur.standardsortierung());
+						SortierungRegistryReportingGostKlausurplanungSchuelerklausur.sortierungRegistry());
 
 		if (optionalComparator.isPresent()) {
 			super.schuelerklausuren.sort(optionalComparator.get());

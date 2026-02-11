@@ -68,7 +68,7 @@ export class UvRaum extends JavaObject {
 		return ['de.svws_nrw.core.data.uv.UvRaum'].includes(name);
 	}
 
-	public static class = new Class<UvRaum>('de.svws_nrw.core.data.uv.UvRaum');
+	public static readonly class = new Class<UvRaum>('de.svws_nrw.core.data.uv.UvRaum');
 
 	public static transpilerFromJSON(json: string): UvRaum {
 		const obj = JSON.parse(json) as Partial<UvRaum>;

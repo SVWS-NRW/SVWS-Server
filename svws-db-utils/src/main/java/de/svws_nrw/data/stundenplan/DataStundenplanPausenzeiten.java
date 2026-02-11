@@ -46,6 +46,10 @@ public final class DataStundenplanPausenzeiten extends DataManagerRevised<Long, 
 			DataStundenplan.getDTOStundenplan(conn, stundenplanID);
 	}
 
+	@Override
+	public Long getID(final Map<String, Object> attributes) throws ApiOperationException {
+		return JSONMapper.convertToLong(attributes.get("id"), false, "id");
+	}
 
 	@Override
 	protected void initDTO(final DTOStundenplanPausenzeit dto, final Long newId, final Map<String, Object> initAttributes) throws ApiOperationException {
@@ -71,9 +75,9 @@ public final class DataStundenplanPausenzeiten extends DataManagerRevised<Long, 
 			throws ApiOperationException {
 		switch (name) {
 			case "id" -> {
-				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-					throw new ApiOperationException(Status.BAD_REQUEST, "Die IDs der Daten des Patches stimmen nicht mit der ID des Aufrufs überein.");
+				final Long id = JSONMapper.convertToLong(value, false, name);
+				if ((id == null) || (id != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Patches stimmt nicht mit der ID des Objekts überein.");
 			}
 			case "wochentag" -> dto.Tag = JSONMapper.convertToIntegerInRange(value, false, 1, 8);
 			case "beginn" -> dto.Beginn = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);

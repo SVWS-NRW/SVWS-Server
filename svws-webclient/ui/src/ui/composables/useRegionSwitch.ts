@@ -22,29 +22,33 @@ export function useRegionSwitch() {
 	]);
 
 	function handleKeyEvent(event: KeyboardEvent) {
-		if (event.repeat || !event.altKey)
+		if (event.repeat || !event.altKey) {
 			return;
-		if (event.ctrlKey || event.shiftKey || event.metaKey)
+		}
+		if (event.ctrlKey || event.shiftKey || event.metaKey) {
 			return;
-		if (regionMap.has(event.code))
+		}
+		if (regionMap.has(event.code)) {
 			switchRegion(event);
-		else if (event.code === 'Digit0')
+		} else if (event.code === 'Digit0') {
 			toggleHelp(event);
+		}
 	}
 
 	function switchRegion(event: KeyboardEvent) {
 		event.preventDefault();
 		const htmlElements = document.getElementsByClassName(regionMap.get(event.code) ?? "");
-		if (event.code === 'Digit9')
+		if (event.code === 'Digit9') {
 			cycleFocusFields(htmlElements, currentModalIndex);
-		else if (event.code === 'Digit8')
+		} else if (event.code === 'Digit8') {
 			cycleFocusFields(htmlElements, currentContentIndex);
-		else if (event.code === 'Digit4')
+		} else if (event.code === 'Digit4') {
 			cycleFocusFields(htmlElements, currentListIndex);
-		else {
+		} else {
 			const focusField = htmlElements.item(0);
-			if (focusField !== null)
+			if (focusField !== null) {
 				(focusField as HTMLElement).focus();
+			}
 			currentModalIndex.value = 0;
 			currentContentIndex.value = 0;
 			currentListIndex.value = 0;
@@ -53,8 +57,9 @@ export function useRegionSwitch() {
 
 	function cycleFocusFields(focusFields: HTMLCollection, usedIdex: Ref<number>) {
 		const focusField = focusFields.item(usedIdex.value);
-		if (focusField !== null)
+		if (focusField !== null) {
 			(focusField as HTMLElement).focus();
+		}
 		usedIdex.value = (usedIdex.value + 1) % focusFields.length;
 	}
 

@@ -142,13 +142,17 @@
 			const kurse = new ArrayList<GostBlockungsergebnisKurs>();
 			if (filter.fach !== undefined) {
 				if (filter.kursart !== undefined) {
-					for (const kurs of props.getErgebnismanager().getOfFachKursmenge(filter.fach))
-						if (kurs.kursart === filter.kursart.id)
+					for (const kurs of props.getErgebnismanager().getOfFachKursmenge(filter.fach)) {
+						if (kurs.kursart === filter.kursart.id) {
 							kurse.add(kurs);
-				} else
+						}
+					}
+				} else {
 					kurse.addAll(props.getErgebnismanager().getOfFachKursmenge(filter.fach));
-			} else
+				}
+			} else {
 				kurse.addAll(props.getErgebnismanager().getKursmenge());
+			}
 			const k = (kurse.size() > 0) ? kurse.getFirst() : null;
 			if (k === null) {
 				if (filter.kursart !== undefined) {
@@ -159,24 +163,27 @@
 					filter.fach = undefined;
 					return setKurs();
 				}
-			}	else
+			}	else {
 				filter.kurs = props.getErgebnismanager().getKursG(k.id);
+			}
 		}
 		return filter.kurs;
 	}
 
 	const kursart = computed(() => {
 		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
+		if (kurs === undefined) {
 			return '—';
+		}
 		const kursart = GostKursart.fromIDorNull(kurs.kursart);
 		return kursart?.kuerzel ?? "—";
 	});
 
 	const kurse = computed<List<GostBlockungsergebnisKurs>>(() => {
 		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
+		if (kurs === undefined) {
 			return new ArrayList<GostBlockungsergebnisKurs>();
+		}
 		const fachart = GostKursart.getFachartID(kurs.fach_id, kurs.kursart);
 		return props.getErgebnismanager().getOfFachartKursmenge(fachart);
 	});
@@ -184,8 +191,9 @@
 	const listeKurseZurUbertragung = computed<List<GostBlockungsergebnisKurs>>(() => {
 		const result = new ArrayList<GostBlockungsergebnisKurs>();
 		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
+		if (kurs === undefined) {
 			return result;
+		}
 		// Erstelle einen Filter für das Fach, welches im Modal angezeigt wird und aller Fächer, von denen bereits Kurse für die Übertragung ausgewöhlt wurden
 		const setFachFilter = new Set<number>();
 		const ausgewaehlteKurse = new Set<number>();
@@ -197,16 +205,18 @@
 		// Erstelle die Liste aller Kurse, auf die noch übertragen werden kann, dass heißt Kurse aller Fächer, die nicht im zuvor erstellten Set sind
 		const alleKurse = props.getErgebnismanager().getKursmenge();
 		for (const k of alleKurse) {
-			if (!setFachFilter.has(k.fachID) || ausgewaehlteKurse.has(k.id))
+			if (!setFachFilter.has(k.fachID) || ausgewaehlteKurse.has(k.id)) {
 				result.add(k);
+			}
 		}
 		return result;
 	});
 
 	const fachname = computed(() => {
 		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
+		if (kurs === undefined) {
 			return '—';
+		}
 		const fach = props.getErgebnismanager().getFach(kurs.fach_id);
 		return fach.bezeichnung ?? '—';
 	});
@@ -215,30 +225,36 @@
 		const kurswahlschueler = props.schuelerFilter().filtered.value;
 		const arr: Schueler[] = [];
 		const liste = new Set();
-		for (const s of kurswahlschueler)
+		for (const s of kurswahlschueler) {
 			liste.add(s.id);
+		}
 		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
+		if (kurs === undefined) {
 			return arr;
+		}
 		const fachwahlen = props.getErgebnismanager().getOfSchuelerMengeGefiltert(-1, kurs.fach_id, kurs.kursart, 0, "");
-		for (const w of fachwahlen)
-			if (!liste.has(w.id))
+		for (const w of fachwahlen) {
+			if (!liste.has(w.id)) {
 				arr.push(w);
+			}
+		}
 		return arr;
 	});
 
 	async function remove(id: number) {
 		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
+		if (kurs === undefined) {
 			return;
+		}
 		const update = props.getErgebnismanager().kursSchuelerUpdate_02a_ENTFERNE_SCHUELERMENGE_AUS_KURS(SetUtils.create1(id), kurs.id, false);
 		await props.updateKursSchuelerZuordnungen(update);
 	}
 
 	async function leereKurs() {
 		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
+		if (kurs === undefined) {
 			return;
+		}
 		const update = props.getErgebnismanager().kursSchuelerUpdate_01b_LEERE_KURSMENGE(SetUtils.create1(kurs.id), false);
 		await props.updateKursSchuelerZuordnungen(update);
 	}
@@ -246,12 +262,14 @@
 	async function move(id: number) {
 		// Prüfe, ob der Schüler mit seiner Fachwahl bereits in einem anderen Kurs fixiert ist
 		const kurszuordnung = andererKurs(id).value;
-		if ((kurszuordnung !== null) && (props.getDatenmanager().schuelerGetIstFixiertInKurs(id, kurszuordnung.id)))
+		if ((kurszuordnung !== null) && (props.getDatenmanager().schuelerGetIstFixiertInKurs(id, kurszuordnung.id))) {
 			return;
+		}
 		// Ordne die Fachwahl dem aktuellen Kurs zu
 		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
+		if (kurs === undefined) {
 			return;
+		}
 		const zuordnung = DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs.id, id);
 		const update = props.getErgebnismanager().kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(SetUtils.create1(zuordnung));
 		await props.updateKursSchuelerZuordnungen(update);
@@ -259,8 +277,9 @@
 
 	async function updateZuordnung(schueler: Schueler, neuer_kurs: GostBlockungsergebnisKurs | undefined | null) {
 		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
+		if (kurs === undefined) {
 			return;
+		}
 		const alter_kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(schueler.id, kurs.fach_id);
 		if (((neuer_kurs === undefined) || (neuer_kurs === null)) && (alter_kurs !== null)) {
 			const update = props.getErgebnismanager().kursSchuelerUpdate_02a_ENTFERNE_SCHUELERMENGE_AUS_KURS(SetUtils.create1(schueler.id), alter_kurs.id, false);
@@ -274,15 +293,17 @@
 
 	function getKurs(schueler: Schueler): GostBlockungsergebnisKurs | undefined {
 		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
+		if (kurs === undefined) {
 			return;
+		}
 		const alter_kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(schueler.id, kurs.fach_id);
 		return alter_kurs ?? undefined;
 	}
 
 	function getKursBezeichnung(k: GostBlockungsergebnisKurs | undefined): string {
-		if (k === undefined)
+		if (k === undefined) {
 			return '———';
+		}
 		return props.getErgebnismanager().getOfKursName(k.id);
 	}
 
@@ -291,24 +312,28 @@
 	}
 
 	async function toggleFixierRegelKursSchueler(idKurs: number | null, idSchueler: number): Promise<void> {
-		if ((idKurs === null) || (props.apiStatus.pending))
+		if ((idKurs === null) || (props.apiStatus.pending)) {
 			return;
+		}
 		let update = new GostBlockungRegelUpdate();
-		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs))
+		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs)) {
 			update.listEntfernen.add(props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, idKurs));
-		else
+		} else {
 			update = props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(SetUtils.create1(idSchueler), SetUtils.create1(idKurs));
+		}
 		await props.regelnUpdate(update);
 	}
 
 	async function toggleFixierRegelAlleKursSchueler() {
 		const kurs = props.schuelerFilter().kurs;
 		const kursSchueler = props.schuelerFilter().filtered.value;
-		if ((kurs === undefined) || (kursSchueler.length === 0))
+		if ((kurs === undefined) || (kursSchueler.length === 0)) {
 			return;
+		}
 		const setSchueler = new HashSet<number>();
-		for (const s of kursSchueler)
+		for (const s of kursSchueler) {
 			setSchueler.add(s.id);
+		}
 		const update = (kursSchuelerFixierungen.value === true)
 			? props.getErgebnismanager().regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(setSchueler, SetUtils.create1(kurs.id))
 			: props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(setSchueler, SetUtils.create1(kurs.id));
@@ -317,51 +342,62 @@
 
 	const kursSchuelerFixierungen = computed<boolean | null>(() => {
 		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
+		if (kurs === undefined) {
 			return false;
+		}
 		const kursSchueler = props.schuelerFilter().filtered.value;
-		if (kursSchueler.length === 0)
+		if (kursSchueler.length === 0) {
 			return false;
+		}
 		let i = 0;
-		for (const schueler of kursSchueler)
-			if (props.getDatenmanager().schuelerGetIstFixiertInKurs(schueler.id, kurs.id))
+		for (const schueler of kursSchueler) {
+			if (props.getDatenmanager().schuelerGetIstFixiertInKurs(schueler.id, kurs.id)) {
 				i++;
+			}
+		}
 		return (i === 0) ? false : (i === kursSchueler.length) ? true : null;
 	});
 
 	const hatFixierRegelKurs = (idSchueler: number) => computed<boolean>(() => {
 		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
+		if (kurs === undefined) {
 			return false;
+		}
 		return props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, kurs.id);
 	});
 
 	const andererKurs = (idSchueler: number) => computed<GostBlockungsergebnisKurs | null>(() => {
 		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
+		if (kurs === undefined) {
 			return null;
+		}
 		return props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler, kurs.fach_id);
 	});
 
 	const hatFixierRegelAndererKurs = (idSchueler: number) => computed<boolean>(() => {
 		const kurs = props.schuelerFilter().kurs;
-		if (kurs === undefined)
+		if (kurs === undefined) {
 			return false;
-		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, kurs.id))
+		}
+		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, kurs.id)) {
 			return false;
+		}
 		const k = andererKurs(idSchueler).value;
-		if (k === null)
+		if (k === null) {
 			return false;
+		}
 		return props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, k.id);
 	});
 
 	async function uebertragen() {
 		const kurs = props.schuelerFilter().kurs;
 		const zielSet = new HashSet<number>();
-		for (const k of _kurseZurUebertragung.value)
+		for (const k of _kurseZurUebertragung.value) {
 			zielSet.add(k.id);
-		if (kurs === undefined || zielSet.isEmpty())
+		}
+		if (kurs === undefined || zielSet.isEmpty()) {
 			return;
+		}
 		const update = props.getErgebnismanager().kursSchuelerUpdate_04_BILDE_KERNGRUPPEN(kurs.id, zielSet, props.fixierteVerschieben(), props.inZielkursFixieren(), zielkurseLeeren.value);
 		await props.updateKursSchuelerZuordnungen(update);
 	}

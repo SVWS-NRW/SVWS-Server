@@ -132,7 +132,7 @@ export class PersonTyp extends JavaEnum<PersonTyp> {
 		return ['de.svws_nrw.core.types.schule.PersonTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<PersonTyp>('de.svws_nrw.core.types.schule.PersonTyp');
+	public static readonly class = new Class<PersonTyp>('de.svws_nrw.core.types.schule.PersonTyp');
 
 }
 

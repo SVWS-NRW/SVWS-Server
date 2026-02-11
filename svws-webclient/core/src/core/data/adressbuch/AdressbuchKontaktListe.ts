@@ -27,7 +27,7 @@ export class AdressbuchKontaktListe extends AdressbuchEintrag {
 		return ['de.svws_nrw.core.data.adressbuch.AdressbuchKontaktListe', 'de.svws_nrw.core.data.adressbuch.AdressbuchEintrag'].includes(name);
 	}
 
-	public static class = new Class<AdressbuchKontaktListe>('de.svws_nrw.core.data.adressbuch.AdressbuchKontaktListe');
+	public static readonly class = new Class<AdressbuchKontaktListe>('de.svws_nrw.core.data.adressbuch.AdressbuchKontaktListe');
 
 }
 

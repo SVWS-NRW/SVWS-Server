@@ -64,7 +64,7 @@ export class InvalidDateException extends Exception {
 		return ['java.lang.Throwable', 'de.svws_nrw.asd.validate.InvalidDateException', 'java.lang.Exception', 'java.io.Serializable'].includes(name);
 	}
 
-	public static class = new Class<InvalidDateException>('de.svws_nrw.asd.validate.InvalidDateException');
+	public static readonly class = new Class<InvalidDateException>('de.svws_nrw.asd.validate.InvalidDateException');
 
 }
 

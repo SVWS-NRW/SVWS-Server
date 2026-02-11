@@ -39,7 +39,7 @@ export class KatalogEintragStrassen extends JavaObject {
 		return ['de.svws_nrw.core.data.kataloge.KatalogEintragStrassen'].includes(name);
 	}
 
-	public static class = new Class<KatalogEintragStrassen>('de.svws_nrw.core.data.kataloge.KatalogEintragStrassen');
+	public static readonly class = new Class<KatalogEintragStrassen>('de.svws_nrw.core.data.kataloge.KatalogEintragStrassen');
 
 	public static transpilerFromJSON(json: string): KatalogEintragStrassen {
 		const obj = JSON.parse(json) as Partial<KatalogEintragStrassen>;

@@ -116,7 +116,7 @@ export class SprachBelegungSekI extends JavaEnum<SprachBelegungSekI> {
 		return ['de.svws_nrw.core.types.fach.SprachBelegungSekI', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<SprachBelegungSekI>('de.svws_nrw.core.types.fach.SprachBelegungSekI');
+	public static readonly class = new Class<SprachBelegungSekI>('de.svws_nrw.core.types.fach.SprachBelegungSekI');
 
 }
 

@@ -19,7 +19,7 @@ export class FloskelgruppenartKatalogEintrag extends CoreTypeData {
 		return ['de.svws_nrw.asd.data.schule.FloskelgruppenartKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<FloskelgruppenartKatalogEintrag>('de.svws_nrw.asd.data.schule.FloskelgruppenartKatalogEintrag');
+	public static readonly class = new Class<FloskelgruppenartKatalogEintrag>('de.svws_nrw.asd.data.schule.FloskelgruppenartKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): FloskelgruppenartKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<FloskelgruppenartKatalogEintrag>;

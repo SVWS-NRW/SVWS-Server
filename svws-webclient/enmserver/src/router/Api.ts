@@ -113,8 +113,9 @@ class Api {
 	 * @returns die Schulform
 	 */
 	public get schulform(): Schulform {
-		if (this.conn.schulform === null)
+		if (this.conn.schulform === null) {
 			throw new UserNotificationException("Die Schulform des Servers konnte nicht bestimmt werden.");
+		}
 		return this.conn.schulform;
 	}
 

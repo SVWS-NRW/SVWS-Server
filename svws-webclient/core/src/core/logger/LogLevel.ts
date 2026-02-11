@@ -86,7 +86,7 @@ export class LogLevel extends JavaEnum<LogLevel> {
 		return ['de.svws_nrw.core.logger.LogLevel', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<LogLevel>('de.svws_nrw.core.logger.LogLevel');
+	public static readonly class = new Class<LogLevel>('de.svws_nrw.core.logger.LogLevel');
 
 }
 

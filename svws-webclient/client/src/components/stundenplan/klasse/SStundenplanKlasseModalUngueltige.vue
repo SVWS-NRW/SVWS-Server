@@ -43,21 +43,24 @@
 	async function remove() {
 		await props.removeUnterrichte(selected.value);
 		selected.value = [];
-		if (props.stundenplanManager().unterrichtGetMengeUngueltigAsList().isEmpty())
+		if (props.stundenplanManager().unterrichtGetMengeUngueltigAsList().isEmpty()) {
 			show.value = false;
+		}
 	}
 
 	function klassen(unterricht: StundenplanUnterricht) {
 		const arr = [];
-		for (const id of unterricht.klassen)
+		for (const id of unterricht.klassen) {
 			arr.push(props.stundenplanManager().klasseGetByIdOrException(id).kuerzel);
+		}
 		return arr.join(', ');
 	}
 
 	function lehrer(unterricht: StundenplanUnterricht) {
 		const arr = [];
-		for (const id of unterricht.lehrer)
+		for (const id of unterricht.lehrer) {
 			arr.push(props.stundenplanManager().lehrerGetByIdOrException(id).kuerzel);
+		}
 		return arr.join(', ');
 	}
 
@@ -73,8 +76,9 @@
 
 	function raeume(unterricht: StundenplanUnterricht) {
 		const arr = [];
-		for (const id of unterricht.raeume)
+		for (const id of unterricht.raeume) {
 			arr.push(props.stundenplanManager().raumGetByIdOrException(id).kuerzel);
+		}
 		return arr.join(', ');
 	}
 

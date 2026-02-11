@@ -93,7 +93,7 @@ public final class DTOCreatorTable {
 	 * @return der Package-Name
 	 */
 	public String getPackageName(final long rev) {
-		String packagename = Schema.javaPackage + "." + Schema.javaDTOPackage;
+		String packagename = Schema.JAVA_PACKAGE + "." + Schema.JAVA_DTO_PACKAGE;
 		if (rev < 0) {
 			packagename += ".current." + tabelle.javaSubPackage();
 		} else if (rev == 0) {

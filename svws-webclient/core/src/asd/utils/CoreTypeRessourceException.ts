@@ -25,7 +25,7 @@ export class CoreTypeRessourceException extends RuntimeException {
 		return ['java.lang.Throwable', 'java.lang.RuntimeException', 'de.svws_nrw.asd.utils.CoreTypeRessourceException', 'java.lang.Exception', 'java.io.Serializable'].includes(name);
 	}
 
-	public static class = new Class<CoreTypeRessourceException>('de.svws_nrw.asd.utils.CoreTypeRessourceException');
+	public static readonly class = new Class<CoreTypeRessourceException>('de.svws_nrw.asd.utils.CoreTypeRessourceException');
 
 }
 

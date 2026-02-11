@@ -86,8 +86,9 @@
 	}>();
 
 	function autoCloseModal() {
-		if (props.autoClose)
+		if (props.autoClose) {
 			closeModal();
+		}
 	}
 
 	function closeModal() {

@@ -56,8 +56,9 @@ export class GridInputAbiturPruefungsreihenfolge<KEY> extends GridInputInnerText
 	 * @returns true, falls die Ziffer zulässig war und sonst false
 	 */
 	public check(ziffer: number): boolean {
-		if ((this._reihenfolge !== null) || (ziffer < 1) || (ziffer > 3))
+		if ((this._reihenfolge !== null) || (ziffer < 1) || (ziffer > 3)) {
 			return false;
+		}
 		this.update(ziffer);
 		return true;
 	}
@@ -70,8 +71,9 @@ export class GridInputAbiturPruefungsreihenfolge<KEY> extends GridInputInnerText
 	 * @returns true   es hat aufgrund des Tastaturereignisses eine Änderung am Zustand des Inputs stattgefunden
 	 */
 	public onKeyDown(event: KeyboardEvent): boolean {
-		if (super.onKeyDownNavigation(event))
+		if (super.onKeyDownNavigation(event)) {
 			return false;
+		}
 		// Lösche ggf. den aktuellen Wert
 		if ((event.key === "Delete") || (event.key === "Backspace")) {
 			this.update(null);
@@ -80,16 +82,18 @@ export class GridInputAbiturPruefungsreihenfolge<KEY> extends GridInputInnerText
 		// Speicher den aktuellen Wert im Input
 		if (event.key === "Enter") {
 			this.commit();
-			if (this.navigateOnEnter === "DOWN")
+			if (this.navigateOnEnter === "DOWN") {
 				this.navigateDown();
-			else if (this.navigateOnEnter === "RIGHT")
+			} else if (this.navigateOnEnter === "RIGHT") {
 				this.navigateRight();
+			}
 			return true;
 		}
 		// Prüfe, ob eine Ziffer eingegeben wurde
-		const ziffer = parseInt(event.key);
-		if (isNaN(ziffer))
-			return false; // Keine erfolgreiche Eingabe...
+		const ziffer = Number.parseInt(event.key);
+		if (Number.isNaN(ziffer)) {
+			return false;
+		} // Keine erfolgreiche Eingabe...
 		return this.check(ziffer);
 	}
 

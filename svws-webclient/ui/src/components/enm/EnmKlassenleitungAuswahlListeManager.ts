@@ -53,10 +53,12 @@ export class EnmKlassenleitungAuswahlListeManager extends AuswahlManager<number,
 			let cmp: number = 0;
 			if (JavaObject.equalsTranspiler("kuerzelAnzeige", (field))) {
 				cmp = JavaString.compareTo(a.kuerzelAnzeige ?? "", b.kuerzelAnzeige);
-			} else
+			} else {
 				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
-			if (cmp === 0)
+			}
+			if (cmp === 0) {
 				continue;
+			}
 			return asc ? cmp : -cmp;
 		}
 		return this.enmManager.comparatorKlassen.compare(a, b);

@@ -39,7 +39,7 @@ export class GostBlockungsergebnisComparator extends JavaObject implements Compa
 		return ['de.svws_nrw.core.utils.gost.GostBlockungsergebnisComparator', 'java.util.Comparator'].includes(name);
 	}
 
-	public static class = new Class<GostBlockungsergebnisComparator>('de.svws_nrw.core.utils.gost.GostBlockungsergebnisComparator');
+	public static readonly class = new Class<GostBlockungsergebnisComparator>('de.svws_nrw.core.utils.gost.GostBlockungsergebnisComparator');
 
 }
 

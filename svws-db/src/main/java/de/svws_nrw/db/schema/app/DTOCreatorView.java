@@ -43,8 +43,8 @@ public class DTOCreatorView {
 	public String getPackageName(final long rev) {
 		if (rev == 0)
 			throw new IllegalArgumentException("Java-DTOs für Views brauchen nicht für die Migration erstellt werden.");
-		return Schema.javaPackage + "."
-				+ Schema.javaDTOPackage
+		return Schema.JAVA_PACKAGE + "."
+				+ Schema.JAVA_DTO_PACKAGE
 				+ ((rev < 0) ? ".current." : ".dev.")
 				+ view.packageName;
 	}

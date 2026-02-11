@@ -60,7 +60,7 @@ export class GostStatistikFachwahl extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostStatistikFachwahl'].includes(name);
 	}
 
-	public static class = new Class<GostStatistikFachwahl>('de.svws_nrw.core.data.gost.GostStatistikFachwahl');
+	public static readonly class = new Class<GostStatistikFachwahl>('de.svws_nrw.core.data.gost.GostStatistikFachwahl');
 
 	public static transpilerFromJSON(json: string): GostStatistikFachwahl {
 		const obj = JSON.parse(json) as Partial<GostStatistikFachwahl>;

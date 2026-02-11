@@ -119,11 +119,13 @@
 
 	const fontSize = ref<string>('default');
 	const updateFontSize = (size: string | null) => {
-		if (size === null)
+		if (size === null) {
 			return;
+		}
 		document.documentElement.classList.remove('font-size-small', 'font-size-large');
-		if (size !== 'default')
+		if (size !== 'default') {
 			document.documentElement.classList.add(`font-size-${size}`);
+		}
 		localStorage.setItem('fontSize', size);
 		fontSize.value = size;
 	};

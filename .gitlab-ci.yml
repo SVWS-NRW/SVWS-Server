@@ -10,7 +10,7 @@
 # https://github.com/gradle/gradle
 
 
-image: 10.1.1.3/svwsnrw/docker-runner:21
+image: harbor.svws-nrw.de/svwsnrw/docker-runner:21
 
 # Disable the Gradle daemon for Continuous Integration servers as correctness
 # is usually a priority over speed in CI environments. Using a fresh
@@ -28,6 +28,7 @@ cache: &global_cache
         - .gradle
 
 stages:
+    - lint
     - build
     - test
     - cleanup
@@ -36,6 +37,55 @@ stages:
     - build_installer
     - sign
     - publish
+
+lint:eslint:full:
+    image: ${REGISTRY_HOST}/dockerhub_proxy/node:24-slim
+    stage: lint
+    interruptible: true
+    before_script:
+        - apt-get update
+        - apt-get install -y git
+        - rm -rf /var/lib/apt/lists/*
+
+        - npm ci
+    script:
+        - time echo -e "svws-webclient/admin\nsvws-webclient/client\nsvws-webclient/ui\nsvws-webclient/enmserver\nsvws-webclient/laufbahnplanung" \
+            | xargs -P5 -I{} npm --workspace {} run lint
+    allow_failure: true
+    rules:
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+          when: never
+        - if: '$CI_COMMIT_BRANCH == "dev"'
+        - when: manual
+
+lint:eslint:changed:
+    image: ${REGISTRY_HOST}/dockerhub_proxy/node:24-slim
+    stage: lint
+    interruptible: true
+    variables:
+        GIT_DEPTH: "0"
+    before_script:
+        - apt-get update
+        - apt-get install -y git
+        - rm -rf /var/lib/apt/lists/*
+
+        - npm ci
+    script:
+        - git fetch origin dev
+        - BASE=$(git merge-base HEAD origin/dev)
+        - CHANGED_FILES=$(git diff --diff-filter=d --name-only "$BASE" HEAD | grep -E '\.ts$|\.vue$' || true)
+        - |
+            if [ -n "$CHANGED_FILES" ]; then
+              echo "Starte ESLint für geänderte Dateien:"
+              echo "$CHANGED_FILES"
+              npx eslint --ignore-pattern '**/svws-webclient/core/**/*' $CHANGED_FILES
+            else
+              echo "Keine Änderungen an .ts/.vue Dateien – Skip ESLint"
+              exit 0
+            fi
+    except:
+        - dev
+        - master
 
 build:
     stage: build
@@ -52,17 +102,17 @@ build:
         reports:
             junit: ./**/build/test-results/test/**/TEST-*.xml
         paths:
-            - "./build/**"
             - "./**/build/**"
+        exclude:
+            - "./**/build/sonar/**"
         expire_in: "1 days"
-    when: always
 
 test:integration-tests:
     image: ${REGISTRY_HOST}/svws-ci/test-runner:jdk21-node22-playwright1.56
     dependencies:
         - build
     stage: test
-    interruptible: true
+    interruptible: false
     variables:
         USE_SYSTEM_NODE: "1" # Node aus dem Test-Runner Image wird verwendet und nicht erneut heruntergeladen
     before_script:
@@ -86,10 +136,13 @@ test:integration-tests:
 
 cleanup:integration-tests:
     stage: cleanup
+    needs:
+        - test:integration-tests
+    interruptible: false
     before_script:
         - chmod +x ./.gitlab/.script/*.sh
     script:
-        - ./.gitlab/.script/cleanup_integration_test_container.sh $CI_COMMIT_SHORT_SHA
+        - ./.gitlab/.script/cleanup_integration_test_container.sh ${CI_COMMIT_SHORT_SHA}
     when: always
     allow_failure: true
 
@@ -107,7 +160,7 @@ build_snapshot_windows:
     needs:
         - build
         - test:integration-tests
-    image: 10.1.1.3/svwsnrw/docker-runner-wine:21
+    image: harbor.svws-nrw.de/svwsnrw/docker-runner-wine:21
     script:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
@@ -141,7 +194,7 @@ build_windows:
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
     needs:
         - job: build
-    image: 10.1.1.3/svwsnrw/docker-runner-wine:21
+    image: harbor.svws-nrw.de/svwsnrw/docker-runner-wine:21
     script:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
@@ -154,7 +207,7 @@ build_windows:
 
 sign_artifacts:
     stage: sign
-    image: 10.1.1.3/svwsnrw/docker-runner:17
+    image: harbor.svws-nrw.de/svwsnrw/docker-runner:17
     rules:
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
     needs:

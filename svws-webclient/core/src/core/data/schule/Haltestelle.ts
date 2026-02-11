@@ -21,17 +21,17 @@ export class Haltestelle extends JavaObject {
 	/**
 	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
 	 */
-	public sortierung: number = 1;
+	public sortierung: number = 0;
 
 	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 */
-	public istSichtbar: boolean = true;
+	public istSichtbar: boolean = false;
 
 	/**
-	 * Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht.
+	 * Gibt an, ob die Haltestelle in anderen Datenbanktabellen referenziert ist oder nicht.
 	 */
-	public istAenderbar: boolean = true;
+	public referenziertInAnderenTabellen: boolean = false;
 
 
 	public constructor() {
@@ -46,7 +46,7 @@ export class Haltestelle extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.Haltestelle'].includes(name);
 	}
 
-	public static class = new Class<Haltestelle>('de.svws_nrw.core.data.schule.Haltestelle');
+	public static readonly class = new Class<Haltestelle>('de.svws_nrw.core.data.schule.Haltestelle');
 
 	public static transpilerFromJSON(json: string): Haltestelle {
 		const obj = JSON.parse(json) as Partial<Haltestelle>;
@@ -62,9 +62,9 @@ export class Haltestelle extends JavaObject {
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if (obj.istAenderbar === undefined)
-			throw new Error('invalid json format, missing attribute istAenderbar');
-		result.istAenderbar = obj.istAenderbar;
+		if (obj.referenziertInAnderenTabellen === undefined)
+			throw new Error('invalid json format, missing attribute referenziertInAnderenTabellen');
+		result.referenziertInAnderenTabellen = obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
@@ -75,7 +75,7 @@ export class Haltestelle extends JavaObject {
 		result += '"entfernungSchule" : ' + ((obj.entfernungSchule === null) ? 'null' : obj.entfernungSchule.toString()) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
-		result += '"istAenderbar" : ' + obj.istAenderbar.toString() + ',';
+		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -98,8 +98,8 @@ export class Haltestelle extends JavaObject {
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
-		if (obj.istAenderbar !== undefined) {
-			result += '"istAenderbar" : ' + obj.istAenderbar.toString() + ',';
+		if (obj.referenziertInAnderenTabellen !== undefined) {
+			result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

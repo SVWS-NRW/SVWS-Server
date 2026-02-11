@@ -3,7 +3,7 @@ package de.svws_nrw.db.schema.tabellen;
 import java.util.Arrays;
 import java.util.Collection;
 
-import de.svws_nrw.core.types.schule.BerufskollegBerufsebene1;
+import de.svws_nrw.asd.types.schule.BerufskollegBerufsebene1;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
@@ -49,10 +49,10 @@ public class Tabelle_Berufskolleg_Berufsebenen1 extends SchemaTabelle {
 		setJavaSubPackage("schild.schule");
 		setJavaClassName("DTOBerufskollegBerufsebenen1");
 		setJavaComment("Informationen Berufsebenen der Ebene 1 des Berufskollegs");
-		setCoreType(new SchemaTabelleCoreType(this, BerufskollegBerufsebene1.class, BerufskollegBerufsebene1.VERSION, rev -> Arrays
+		setCoreType(new SchemaTabelleCoreType(this, BerufskollegBerufsebene1.class, BerufskollegBerufsebene1.data().getVersion(), rev -> Arrays
 				.stream(BerufskollegBerufsebene1.values())
-				.map(a -> Arrays.stream(a.historie)
-						.map(h -> h.id + ",'" + h.kuerzel + "'" + ",'" + h.bezeichnung + "'" + "," + h.gueltigVon + "," + h.gueltigBis)
+				.map(a -> a.historie().stream()
+						.map(h -> h.id + ",'" + h.kuerzel + "'" + ",'" + h.text + "'" + "," + h.gueltigVon + "," + h.gueltigBis)
 						.toList())
 				.flatMap(Collection::stream).toList()));
 	}

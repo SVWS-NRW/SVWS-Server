@@ -42,8 +42,9 @@
 	defineExpose({ openModal });
 
 	async function clickYes() {
-		if ((kurs1.value === undefined) || (kurs2.value === undefined))
+		if ((kurs1.value === undefined) || (kurs2.value === undefined)) {
 			return;
+		}
 		show.value = false;
 		await props.combineKurs(kurs1.value, kurs2.value);
 	}

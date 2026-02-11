@@ -36,10 +36,11 @@ export class RouteDataConfig {
 	}
 
 	public async setView(view: RouteNode<any, any>) {
-		if (routeSchema.children.includes(view))
+		if (routeSchema.children.includes(view)) {
 			this.setPatchedState({ view });
-		else
+		} else {
 			throw new Error("Diese für die Konfiguration gewählte Ansicht wird nicht unterstützt.");
+		}
 	}
 
 	getCert = async () => {

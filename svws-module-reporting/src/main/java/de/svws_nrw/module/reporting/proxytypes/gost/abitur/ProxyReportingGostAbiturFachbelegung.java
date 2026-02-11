@@ -61,7 +61,7 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 								try {
 									return new DataLehrerStammdaten(this.reportingRepository.conn()).getById(abiturFachbelegung.block2Pruefer);
 								} catch (final ApiOperationException e) {
-									ReportingExceptionUtils.putStacktraceInLog(
+									ReportingExceptionUtils.logException(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
 											reportingRepository.logger(), LogLevel.INFO, 0);
 									return new LehrerStammdaten();

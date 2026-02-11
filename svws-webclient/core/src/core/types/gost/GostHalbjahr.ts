@@ -4,6 +4,7 @@ import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { Arrays } from '../../../java/util/Arrays';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
@@ -239,6 +240,45 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 	/**
 	 * Gibt alle Halbjahre des übergebenen Jahrgangs zurück.
 	 *
+	 * @param ab   das GostHalbjahr
+	 *
+	 * @return ein Array mit den Halbjahren ab dem angegebenen
+	 */
+	public static getHalbjahreAbHalbjahr(ab: GostHalbjahr): Array<GostHalbjahr> {
+		switch (ab) {
+			case GostHalbjahr.EF1: {
+				const ef1: Array<GostHalbjahr> = [GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22]
+				return ef1;
+			}
+			case GostHalbjahr.EF2: {
+				const ef2: Array<GostHalbjahr> = [GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22]
+				return ef2;
+			}
+			case GostHalbjahr.Q11: {
+				const q11: Array<GostHalbjahr> = [GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22]
+				return q11;
+			}
+			case GostHalbjahr.Q12: {
+				const q12: Array<GostHalbjahr> = [GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22]
+				return q12;
+			}
+			case GostHalbjahr.Q21: {
+				const q21: Array<GostHalbjahr> = [GostHalbjahr.Q21, GostHalbjahr.Q22]
+				return q21;
+			}
+			case GostHalbjahr.Q22: {
+				const q22: Array<GostHalbjahr> = [GostHalbjahr.Q22]
+				return q22;
+			}
+			default: {
+				throw new IllegalArgumentException("Der angegebene Jahrgang ist kein gültiger Jahrgang der gymnasialen Oberstufe")
+			}
+		}
+	}
+
+	/**
+	 * Gibt alle Halbjahre ab dem angegebenen Halbjahres zurück.
+	 *
 	 * @param jahrgang     der Jahrgang
 	 *
 	 * @return ein Array mit den Halbjahren des Jahrgangs
@@ -294,6 +334,39 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 			}
 			default: {
 				return null;
+			}
+		}
+	}
+
+	/**
+	 * Gibt das Kürzel des Halbjahrs zurück, welches die übergebene ID hat.
+	 *
+	 * @param id   die ID des Halbjahres
+	 *
+	 * @return das Halbjahr oder Exception, falls die ID nicht gültig ist
+	 */
+	public static kuerzelFromIDOrException(id: number): string {
+		switch (id) {
+			case 0: {
+				return GostHalbjahr.EF1.kuerzel;
+			}
+			case 1: {
+				return GostHalbjahr.EF2.kuerzel;
+			}
+			case 2: {
+				return GostHalbjahr.Q11.kuerzel;
+			}
+			case 3: {
+				return GostHalbjahr.Q12.kuerzel;
+			}
+			case 4: {
+				return GostHalbjahr.Q21.kuerzel;
+			}
+			case 5: {
+				return GostHalbjahr.Q22.kuerzel;
+			}
+			default: {
+				throw new DeveloperNotificationException("Für die angegebene ID " + id + " existiert kein entsprechendes Halbjahr.")
 			}
 		}
 	}
@@ -467,6 +540,20 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 	}
 
 	/**
+	 * Prüft, ob dieses Halbjahr einer der übergebenen Halbjahre ist.
+	 *
+	 * @param halbjahre    die Halbjahre
+	 *
+	 * @return true oder false
+	 */
+	public istIn(...halbjahre: Array<GostHalbjahr>): boolean {
+		for (const h of halbjahre)
+			if (h as unknown === this as unknown)
+				return true;
+		return false;
+	}
+
+	/**
 	 * Prüft anhand der übergebenen Halbjahre, ob es sich um die beiden Halbjahre
 	 * der Einführungsphase handelt.
 	 *
@@ -526,7 +613,7 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 		return ['de.svws_nrw.core.types.gost.GostHalbjahr', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<GostHalbjahr>('de.svws_nrw.core.types.gost.GostHalbjahr');
+	public static readonly class = new Class<GostHalbjahr>('de.svws_nrw.core.types.gost.GostHalbjahr');
 
 }
 

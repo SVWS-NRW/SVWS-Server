@@ -248,7 +248,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 		return ['de.svws_nrw.core.utils.schule.BerufskollegFachklassenManager'].includes(name);
 	}
 
-	public static class = new Class<BerufskollegFachklassenManager>('de.svws_nrw.core.utils.schule.BerufskollegFachklassenManager');
+	public static readonly class = new Class<BerufskollegFachklassenManager>('de.svws_nrw.core.utils.schule.BerufskollegFachklassenManager');
 
 }
 

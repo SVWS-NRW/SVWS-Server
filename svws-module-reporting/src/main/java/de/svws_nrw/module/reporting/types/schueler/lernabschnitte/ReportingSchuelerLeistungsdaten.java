@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
-import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 
 
@@ -27,7 +27,7 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	protected ReportingFach fach;
 
 	/** Die zugehörige Fachlehrkraft. */
-	protected ReportingLehrer fachLehrkraft;
+	protected ReportingLehrer fachlehrer;
 
 	/** Die Gesamt-Anzahl der Fehlstunden für dieses Fach. */
 	protected int fehlstundenGesamt;
@@ -84,13 +84,13 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	protected String umfangLernstandsbericht;
 
 	/** Eine Map mit den Wochenstunden der Lehrkräfte zu deren ID. */
-	protected Map<Long, Double> wochenstundenLehrkraefte;
+	protected Map<Long, Double> wochenstundenLehrer;
 
 	/** Die dem Schüler angerechneten Wochenstunden des Faches. */
-	protected Double wochenstundenSchueler;
+	protected int wochenstundenSchueler;
 
 	/** Die Lehrkräfte, die das Fach neben der Fachlehrkraft unterrichten. */
-	protected List<ReportingLehrer> zusatzLehrkraefte;
+	protected List<ReportingLehrer> zusatzLehrer;
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
@@ -98,7 +98,7 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 * @param abifach Gibt an, ob es sich bei der Fachbelegung um ein Abiturfach des Schülers handelt und wenn ja, um welches (NULL, 1, 2, 3, 4).
 	 * @param aufZeugnis Gibt an, on das Fach auf dem Zeugnis erscheint oder nicht.
 	 * @param fach Das Fach, auf welches sich die Leistungsdaten beziehen.
-	 * @param fachLehrkraft Die zugehörige Fachlehrkraft.
+	 * @param fachlehrer Die zugehörige Fachlehrkraft.
 	 * @param fehlstundenGesamt Die Gesamt-Anzahl der Fehlstunden für dieses Fach.
 	 * @param fehlstundenUnentschuldigt Die Anzahl der unentschuldigten Fehlstunden für dieses Fach.
 	 * @param geholtJahrgangAbgeschlossen Gibt an, ob es sich um eine Leistung handelt, welche über das "Holen von abgeschlossenen Fächern" in diesem Leistungsabschnitt bereitstehen. Wenn ja, dann ist hier der Jahrgang angegeben, aus welchem die Daten geholt wurden.
@@ -117,20 +117,20 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 * @param schulnummerExtern Die Schulnummer einer externen Schule, sofern es sich um Unterricht an einer kooperierenden Schule handelt, ansonsten NULL.
 	 * @param textFachbezogeneLernentwicklung Der Text für die fachbezogene Lernentwicklung des Schülers.
 	 * @param umfangLernstandsbericht Die Facheigenschaft für die Lernstandberichte an Grundschulen (V = voller Umfang, R = reduzierter Umfang)
-	 * @param wochenstundenLehrkraefte Eine Map mit den Wochenstunden der Lehrkräfte zu deren ID.
+	 * @param wochenstundenLehrer Eine Map mit den Wochenstunden der Lehrkräfte zu deren ID.
 	 * @param wochenstundenSchueler Die dem Schüler angerechneten Wochenstunden des Faches.
-	 * @param zusatzLehrkraefte Die Lehrkräfte, die das Fach neben der Fachlehrkraft unterrichten.
+	 * @param zusatzLehrer Die Lehrkräfte, die das Fach neben der Fachlehrkraft unterrichten.
 	 */
-	public ReportingSchuelerLeistungsdaten(final Integer abifach, final boolean aufZeugnis, final ReportingFach fach, final ReportingLehrer fachLehrkraft,
+	public ReportingSchuelerLeistungsdaten(final Integer abifach, final boolean aufZeugnis, final ReportingFach fach, final ReportingLehrer fachlehrer,
 			final int fehlstundenGesamt, final int fehlstundenUnentschuldigt, final String geholtJahrgangAbgeschlossen, final int gewichtungAllgemeinbildend,
 			final long id, final boolean istEpochal, final boolean istGemahnt, final boolean istZP10oderZKEF, final ReportingKurs kurs, final String kursart,
 			final ReportingSchuelerLernabschnitt lernabschnitt, final String mahndatum, final Note note, final Note noteBerufsabschluss, final Note noteQuartal,
 			final Integer schulnummerExtern, final String textFachbezogeneLernentwicklung, final String umfangLernstandsbericht,
-			final Map<Long, Double> wochenstundenLehrkraefte, final Double wochenstundenSchueler, final List<ReportingLehrer> zusatzLehrkraefte) {
+			final Map<Long, Double> wochenstundenLehrer, final int wochenstundenSchueler, final List<ReportingLehrer> zusatzLehrer) {
 		this.abifach = abifach;
 		this.aufZeugnis = aufZeugnis;
 		this.fach = fach;
-		this.fachLehrkraft = fachLehrkraft;
+		this.fachlehrer = fachlehrer;
 		this.fehlstundenGesamt = fehlstundenGesamt;
 		this.fehlstundenUnentschuldigt = fehlstundenUnentschuldigt;
 		this.geholtJahrgangAbgeschlossen = geholtJahrgangAbgeschlossen;
@@ -149,9 +149,9 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 		this.schulnummerExtern = schulnummerExtern;
 		this.textFachbezogeneLernentwicklung = textFachbezogeneLernentwicklung;
 		this.umfangLernstandsbericht = umfangLernstandsbericht;
-		this.wochenstundenLehrkraefte = wochenstundenLehrkraefte;
+		this.wochenstundenLehrer = wochenstundenLehrer;
 		this.wochenstundenSchueler = wochenstundenSchueler;
-		this.zusatzLehrkraefte = zusatzLehrkraefte;
+		this.zusatzLehrer = zusatzLehrer;
 	}
 
 
@@ -187,12 +187,12 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 *
 	 * @return		Die Liste der Lehrkräfte im Faches, beginnend mit der Fachlehrkraft.
 	 */
-	public List<ReportingLehrer> lehrkraefte() {
+	public List<ReportingLehrer> lehrer() {
 		final List<ReportingLehrer> listeLehrkraefte = new ArrayList<>();
-		if (fachLehrkraft != null)
-			listeLehrkraefte.add(fachLehrkraft);
-		if ((zusatzLehrkraefte != null) && !zusatzLehrkraefte.isEmpty())
-			listeLehrkraefte.addAll(zusatzLehrkraefte);
+		if (fachlehrer != null)
+			listeLehrkraefte.add(fachlehrer);
+		if ((zusatzLehrer != null) && !zusatzLehrer.isEmpty())
+			listeLehrkraefte.addAll(zusatzLehrer);
 		return listeLehrkraefte;
 	}
 
@@ -201,10 +201,10 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 *
 	 * @return		Kommaseparierte Liste der Lehrkräfte, beginnend mit der Fachlehrkraft.
 	 */
-	public String auflistungLehrkraefte() {
-		if (lehrkraefte().isEmpty())
+	public String auflistungLehrerkuerzel() {
+		if (lehrer().isEmpty())
 			return "";
-		return this.lehrkraefte().stream().map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
+		return this.lehrer().stream().map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
 	}
 
 	/**
@@ -215,9 +215,9 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 * @return		Die Wochenstunden der Lehrkraft in diesem Kurs.
 	 */
 	public double wochenstundenLehrerZurID(final Long id) {
-		if ((id == null) || !wochenstundenLehrkraefte.containsKey(id))
+		if ((id == null) || !wochenstundenLehrer.containsKey(id))
 			return 0;
-		return wochenstundenLehrkraefte.get(id);
+		return wochenstundenLehrer.get(id);
 	}
 
 
@@ -254,10 +254,10 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	/**
 	 * Die zugehörige Fachlehrkraft.
 	 *
-	 * @return Inhalt des Feldes fachLehrkraft
+	 * @return Inhalt des Feldes fachlehrer
 	 */
-	public ReportingLehrer fachLehrkraft() {
-		return fachLehrkraft;
+	public ReportingLehrer fachlehrer() {
+		return fachlehrer;
 	}
 
 	/**
@@ -369,12 +369,52 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	}
 
 	/**
-	 * Das Kürzel der erteilten Note - es können auch Pseudonoten eingetragen werden (z.B. AT).
+	 * Die erteilte Note.
 	 *
 	 * @return Inhalt des Feldes note
 	 */
 	public Note note() {
 		return note;
+	}
+
+	/**
+	 * Das Kürzel der erteilten Note wie zum Beispiel '3+'
+	 *
+	 * @return Das Kürzel der Note.
+	 */
+	public String noteKuerzel() {
+		final String result = (this.note == null) ? null : this.note.getNoteKuerzel(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Die Punkte (zweistellig) der erteilten Note wie zum Beispiel '09'
+	 *
+	 * @return Die Punkte der Note.
+	 */
+	public String notePunkte() {
+		final String result = (this.note == null) ? null : this.note.getNotenpunkteZweistellig(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Der Text der erteilten Note mit Tendenz.
+	 *
+	 * @return Der Text der Note.
+	 */
+	public String noteText() {
+		final String result = (this.note == null) ? null : this.note.getNoteText(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Der Text der erteilten Note als ganze Note, z. B. für Zeugnisse.
+	 *
+	 * @return Der Text der ganzen Note
+	 */
+	public String noteTextZeugnis() {
+		final String result = (this.note == null) ? null : this.note.getNoteTextZeugnis(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
 	}
 
 	/**
@@ -387,12 +427,97 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	}
 
 	/**
+	 * Das Kürzel der Berufsabschlussnote wie zum Beispiel '3+'
+	 *
+	 * @return Das Kürzel der Note.
+	 */
+	public String noteBerufsabschlussKuerzel() {
+		final String result =
+				(this.noteBerufsabschluss == null) ? null : this.noteBerufsabschluss.getNoteKuerzel(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Die Punkte (zweistellig) der erteilten Berufsabschlussnote wie zum Beispiel '09'
+	 *
+	 * @return Die Punkte der Note.
+	 */
+	public String noteBerufsabschlussPunkte() {
+		final String result = (this.noteBerufsabschluss == null) ? null
+				: this.noteBerufsabschluss.getNotenpunkteZweistellig(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Der Text der Berufsabschlussnote mit Tendenz.
+	 *
+	 * @return Der Text der Note.
+	 */
+	public String noteBerufsabschlussText() {
+		final String result =
+				(this.noteBerufsabschluss == null) ? null : this.noteBerufsabschluss.getNoteText(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Der Text der Berufsabschlussnote als ganze Note, z. B. für Zeugnisse.
+	 *
+	 * @return Der Text der ganzen Note
+	 */
+	public String noteBerufsabschlussTextZeugnis() {
+		final String result = (this.noteBerufsabschluss == null) ? null
+				: this.noteBerufsabschluss.getNoteTextZeugnis(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
 	 * Das Kürzel der erteilten Quartalsnote - es können auch Pseudonoten eingetragen werden (z.B. AT).
 	 *
 	 * @return Inhalt des Feldes noteQuartal
 	 */
 	public Note noteQuartal() {
 		return noteQuartal;
+	}
+
+	/**
+	 * Das Kürzel der Quartalsnote wie zum Beispiel '3+'
+	 *
+	 * @return Das Kürzel der Note.
+	 */
+	public String noteQuartalKuerzel() {
+		final String result = (this.noteQuartal == null) ? null : this.noteQuartal.getNoteKuerzel(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Die Punkte (zweistellig) der erteilten Quartalsnote wie zum Beispiel '09'
+	 *
+	 * @return Die Punkte der Note.
+	 */
+	public String noteQuartalPunkte() {
+		final String result =
+				(this.noteQuartal == null) ? null : this.noteQuartal.getNotenpunkteZweistellig(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Der Text der Quartalsnote mit Tendenz.
+	 *
+	 * @return Der Text der Note.
+	 */
+	public String noteQuartalText() {
+		final String result = (this.noteQuartal == null) ? null : this.noteQuartal.getNoteText(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
+	}
+
+	/**
+	 * Der Text der Quartalsnote als ganze Note, z. B. für Zeugnisse.
+	 *
+	 * @return Der Text der ganzen Note
+	 */
+	public String noteQuartalTextZeugnis() {
+		final String result = (this.noteQuartal == null) ? null : this.noteQuartal.getNoteTextZeugnis(this.lernabschnitt().schuljahresabschnitt().schuljahr());
+		return (result != null) ? result : "";
 	}
 
 	/**
@@ -427,8 +552,8 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 *
 	 * @return Inhalt des Feldes wochenstundenLehrkraefte
 	 */
-	public Map<Long, Double> wochenstundenLehrkraefte() {
-		return wochenstundenLehrkraefte;
+	public Map<Long, Double> wochenstundenLehrer() {
+		return wochenstundenLehrer;
 	}
 
 	/**
@@ -436,7 +561,7 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 *
 	 * @return Inhalt des Feldes wochenstundenSchueler
 	 */
-	public Double wochenstundenSchueler() {
+	public int wochenstundenSchueler() {
 		return wochenstundenSchueler;
 	}
 
@@ -445,7 +570,23 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 *
 	 * @return Inhalt des Feldes zusatzLehrkraefte
 	 */
-	public List<ReportingLehrer> zusatzLehrkraefte() {
-		return zusatzLehrkraefte;
+	public List<ReportingLehrer> zusatzLehrer() {
+		return zusatzLehrer;
+	}
+
+	/**
+	 * Liefert die zugewiesene Kursart für dieses Fach.
+	 *
+	 * @return Die Kursart der Zuweisung oder einen leeren String.
+	 */
+	public String zuweisungKursart() {
+		if ((this.fach() == null) || (this.lernabschnitt() == null))
+			return "";
+
+		return this.lernabschnitt().zuweisungen().stream()
+				.filter(z -> ((z.fach() != null) && (z.fach().id() == this.fach().id())))
+				.map(ReportingSchuelerZuweisung::kursart)
+				.findFirst()
+				.orElse("");
 	}
 }

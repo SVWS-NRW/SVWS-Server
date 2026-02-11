@@ -219,18 +219,63 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 	}
 
 	/**
+	 * Prüft, ob die Fachwahl in dem Halbjahr zu den Leistungsdaten passt. Ist dies nicht der Fall, so wird eine Exception generiert.
+	 *
+	 * @param leistungen    die Leistungen die geprüft werden
+	 * @param halbjahr      das Halbjahr, auf welches sich der Patch bezieht
+	 * @param istSP         gibt an, ob das Fach für die Leistungsdaten Sport ist
+	 * @param fw            der Wert für die Fachwahl
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	private static void patchFachwahlHalbjahrCheckLeistungenAbi2030(final List<DTOSchuelerLeistungsdaten> leistungen, final GostHalbjahr halbjahr,
+			final boolean istSP,
+			final String fw) throws ApiOperationException {
+		for (final DTOSchuelerLeistungsdaten leistung : leistungen) {
+			final ZulaessigeKursart zulkursart = ZulaessigeKursart.data().getWertByKuerzel(leistung.Kursart);
+			final GostKursart kursart = GostKursart.fromKursart(zulkursart);
+			if (kursart == null)
+				continue;
+			// Keine Fachwahl -> Konflikt, da Leistungsdaten vorhanden sind
+			if (fw == null)
+				throw new ApiOperationException(Status.CONFLICT);
+			// Prüfe, ob Fachwahl mündlich passt
+			if (("M".equals(fw)) && ((kursart == GostKursart.VTF) || ((kursart == GostKursart.GK) && ((zulkursart == ZulaessigeKursart.GKM)
+					|| ((zulkursart == ZulaessigeKursart.AB4) && (halbjahr == GostHalbjahr.Q22))))))
+				return;
+			// Prüfe, ob Fachwahl schriftlich passt
+			if (("S".equals(fw)) && ((kursart == GostKursart.PJK)
+					|| ((kursart == GostKursart.GK) && ((zulkursart == ZulaessigeKursart.GKS) || (zulkursart == ZulaessigeKursart.AB3)
+							|| ((zulkursart == ZulaessigeKursart.AB4) && (halbjahr != GostHalbjahr.Q22))))))
+				return;
+			// Prüfe, ob Fachwahl Leistungskurs passt
+			if (("LK".equals(fw)) && (kursart == GostKursart.LK))
+				return;
+			// Prüfe, ob Fachwahl Zusatzkurs passt
+			if (("ZK".equals(fw)) && (kursart == GostKursart.ZK))
+				return;
+			// Prüfe, ob ein Sportattest passt
+			if (("AT".equals(fw)) && (istSP && (Note.data().getWertByKuerzel(leistung.NotenKrz) == Note.ATTEST)))
+				return;
+		}
+		if (fw != null)
+			throw new ApiOperationException(Status.CONFLICT);
+	}
+
+	/**
 	 * Prüft, ob die Fachwahl in dem Halbjahr zu den Leistungsdaten in den Lernabschnitten passt.
 	 * Ist dies nicht der Fall, so wird eine Exception generiert.
 	 *
 	 * @param schueler      der Schüler, für welchen die Fachwahl angepasst wird
+	 * @param abiturjahr    das Jahr des Abiturjahrgangs des Schülers
 	 * @param halbjahr      das Halbjahr, auf welches sich der Patch bezieht
 	 * @param fach          das Fach, für welches die Fachwahl angepasst werden soll
 	 * @param fw            der Wert für die Fachwahl
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	private void patchFachwahlHalbjahrCheckLernabschnitt(final DTOSchueler schueler, final GostHalbjahr halbjahr, final DTOFach fach, final String fw)
-			throws ApiOperationException {
+	private void patchFachwahlHalbjahrCheckLernabschnitt(final DTOSchueler schueler, final int abiturjahr, final GostHalbjahr halbjahr, final DTOFach fach,
+			final String fw) throws ApiOperationException {
 		// Prüfe, ob die eingebene Fachwahl den Leistungsdaten entspricht
 		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
 				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.ASDJahrgang = ?2 AND e.SemesterWertung = true AND e.WechselNr = 0",
@@ -252,7 +297,10 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 					throw new ApiOperationException(Status.CONFLICT);
 				return;
 			}
-			patchFachwahlHalbjahrCheckLeistungen(leistungen, halbjahr, "SP".equals(fach.StatistikKuerzel), fw);
+			if (AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), abiturjahr))
+				patchFachwahlHalbjahrCheckLeistungenAbi2030(leistungen, halbjahr, "SP".equals(fach.StatistikKuerzel), fw);
+			else
+				patchFachwahlHalbjahrCheckLeistungen(leistungen, halbjahr, "SP".equals(fach.StatistikKuerzel), fw);
 			return;
 		}
 		if (fw != null)
@@ -267,6 +315,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 	 * und Anpassungen über die Kurswahlen bzw. die Leistungsdaten erfolgen sollten.
 	 *
 	 * @param schueler      der Schüler, für welchen die Fachwahl angepasst wird
+	 * @param abiturjahr    das Jahr des Abiturjahrgangs des Schülers
 	 * @param fwDB          der Wert für die Fachwahl aus der DB
 	 * @param halbjahr      das Halbjahr, auf welches sich der Patch bezieht
 	 * @param aktHalbjahr   das Halbjahr, in welchem sich der Schüler befindet
@@ -277,8 +326,8 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 	 *
 	 * @throws ApiOperationException (CONFLICT) falls die Fachwahl ungültig ist
 	 */
-	private String patchFachwahlHalbjahr(final DTOSchueler schueler, final String fwDB, final GostHalbjahr halbjahr, final GostHalbjahr aktHalbjahr,
-			final DTOFach fach, final String fw) throws ApiOperationException {
+	private String patchFachwahlHalbjahr(final DTOSchueler schueler, final int abiturjahr, final String fwDB, final GostHalbjahr halbjahr,
+			final GostHalbjahr aktHalbjahr, final DTOFach fach, final String fw) throws ApiOperationException {
 		if ("".equals(fw))
 			return null;
 		if (((fw == null) && (fwDB == null)) || ((fw != null) && (fw.equals(fwDB))))
@@ -293,7 +342,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 			throw new ApiOperationException(Status.CONFLICT, "Die angegebene Fachwahl ist ungültig.");
 		// prüfe, ob eine Änderung bei diesem Schüler überhaupt erlaubt ist oder in das aktuelle Halbjahr des Schülers oder früher fällt...
 		if ((aktHalbjahr != null) && (aktHalbjahr.compareTo(halbjahr) >= 0)) {
-			patchFachwahlHalbjahrCheckLernabschnitt(schueler, halbjahr, fach, fw);
+			patchFachwahlHalbjahrCheckLernabschnitt(schueler, abiturjahr, halbjahr, fach, fw);
 			return fw;
 		}
 		return fw;
@@ -381,17 +430,17 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 						fachbelegung.Q22_Kursart = null;
 					} else {
 						fachbelegung.EF1_Kursart =
-								patchFachwahlHalbjahr(schueler, fachbelegung.EF1_Kursart, GostHalbjahr.EF1, aktHalbjahr, fach, wahlen[0]);
+								patchFachwahlHalbjahr(schueler, abiturjahr, fachbelegung.EF1_Kursart, GostHalbjahr.EF1, aktHalbjahr, fach, wahlen[0]);
 						fachbelegung.EF2_Kursart =
-								patchFachwahlHalbjahr(schueler, fachbelegung.EF2_Kursart, GostHalbjahr.EF2, aktHalbjahr, fach, wahlen[1]);
+								patchFachwahlHalbjahr(schueler, abiturjahr, fachbelegung.EF2_Kursart, GostHalbjahr.EF2, aktHalbjahr, fach, wahlen[1]);
 						fachbelegung.Q11_Kursart =
-								patchFachwahlHalbjahr(schueler, fachbelegung.Q11_Kursart, GostHalbjahr.Q11, aktHalbjahr, fach, wahlen[2]);
+								patchFachwahlHalbjahr(schueler, abiturjahr, fachbelegung.Q11_Kursart, GostHalbjahr.Q11, aktHalbjahr, fach, wahlen[2]);
 						fachbelegung.Q12_Kursart =
-								patchFachwahlHalbjahr(schueler, fachbelegung.Q12_Kursart, GostHalbjahr.Q12, aktHalbjahr, fach, wahlen[3]);
+								patchFachwahlHalbjahr(schueler, abiturjahr, fachbelegung.Q12_Kursart, GostHalbjahr.Q12, aktHalbjahr, fach, wahlen[3]);
 						fachbelegung.Q21_Kursart =
-								patchFachwahlHalbjahr(schueler, fachbelegung.Q21_Kursart, GostHalbjahr.Q21, aktHalbjahr, fach, wahlen[4]);
+								patchFachwahlHalbjahr(schueler, abiturjahr, fachbelegung.Q21_Kursart, GostHalbjahr.Q21, aktHalbjahr, fach, wahlen[4]);
 						fachbelegung.Q22_Kursart =
-								patchFachwahlHalbjahr(schueler, fachbelegung.Q22_Kursart, GostHalbjahr.Q22, aktHalbjahr, fach, wahlen[5]);
+								patchFachwahlHalbjahr(schueler, abiturjahr, fachbelegung.Q22_Kursart, GostHalbjahr.Q22, aktHalbjahr, fach, wahlen[5]);
 					}
 				}
 				case "abiturFach" -> {

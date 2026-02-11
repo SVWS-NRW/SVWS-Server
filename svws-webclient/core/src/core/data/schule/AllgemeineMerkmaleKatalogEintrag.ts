@@ -112,7 +112,7 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 		return ['de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag'].includes(name);
 	}
 
-	public static class = new Class<AllgemeineMerkmaleKatalogEintrag>('de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag');
+	public static readonly class = new Class<AllgemeineMerkmaleKatalogEintrag>('de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): AllgemeineMerkmaleKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<AllgemeineMerkmaleKatalogEintrag>;

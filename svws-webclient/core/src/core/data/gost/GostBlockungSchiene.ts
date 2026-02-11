@@ -39,7 +39,7 @@ export class GostBlockungSchiene extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostBlockungSchiene'].includes(name);
 	}
 
-	public static class = new Class<GostBlockungSchiene>('de.svws_nrw.core.data.gost.GostBlockungSchiene');
+	public static readonly class = new Class<GostBlockungSchiene>('de.svws_nrw.core.data.gost.GostBlockungSchiene');
 
 	public static transpilerFromJSON(json: string): GostBlockungSchiene {
 		const obj = JSON.parse(json) as Partial<GostBlockungSchiene>;

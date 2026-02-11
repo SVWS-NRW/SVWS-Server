@@ -50,9 +50,11 @@
 	const passwort2 = ref("");
 
 	function valid(value: string | null) {
-		for (const b of props.mapBenutzer.values())
-			if ((value === null) || (b.name.toLocaleLowerCase('de') === value.toLocaleLowerCase('de')) || (/\s/.exec(value) !== null))
+		for (const b of props.mapBenutzer.values()) {
+			if ((value === null) || (b.name.toLocaleLowerCase('de') === value.toLocaleLowerCase('de')) || (/\s/.exec(value) !== null)) {
 				return false;
+			}
+		}
 		return true;
 	}
 

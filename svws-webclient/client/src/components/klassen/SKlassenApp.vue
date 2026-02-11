@@ -47,19 +47,22 @@
 
 	const klassenSubline = computed(() => {
 		const auswahlKlassenList = props.manager().liste.auswahlSorted();
-		if (auswahlKlassenList.size() > 5)
+		if (auswahlKlassenList.size() > 5) {
 			return `${auswahlKlassenList.size()} Klassen ausgewählt`;
+		}
 		return [...auswahlKlassenList].map(k => k.kuerzel).join(', ');
 	});
 
 	const lehrerkuerzel = computed<string>(() => {
-		if (!props.manager().hasDaten())
+		if (!props.manager().hasDaten()) {
 			return '';
+		}
 		let lehrerkuerzelStr = '';
 		for (const lehrerId of props.manager().daten().klassenLeitungen) {
 			const lehrer = props.manager().lehrer.get(lehrerId);
-			if (lehrer === null)
+			if (lehrer === null) {
 				continue;
+			}
 			lehrerkuerzelStr += (lehrerkuerzelStr.length > 0) ? `, ${lehrer.kuerzel}` : lehrer.kuerzel;
 		}
 		return lehrerkuerzelStr;

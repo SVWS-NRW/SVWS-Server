@@ -1,4 +1,5 @@
 class ApiService {
+
 	private baseUrl: string;
 	private token: string;
 
@@ -16,7 +17,6 @@ class ApiService {
 		this.baseUrl = baseUrl;
 
 		process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
 	}
 
 	/**
@@ -28,7 +28,7 @@ class ApiService {
 	 */
 	private async request(endpoint: string, options: RequestInit = {}): Promise<Response> {
 		// Berechnet die Länge des Inhalts, wenn ein Body vorhanden ist.
-		let contentLength = 0
+		let contentLength = 0;
 		if (options.body !== null) {
 			contentLength = new TextEncoder().encode(options.body as string).length;
 		}
@@ -38,12 +38,12 @@ class ApiService {
 			headers: {
 				// eslint-disable-next-line @typescript-eslint/no-misused-spread
 				...options.headers,
-				...(contentLength > 0) && {'content-length': String(contentLength)},
+				...(contentLength > 0) && { 'content-length': String(contentLength) },
 				'accept': '*/*',
 				'authorization': `Basic ${this.token}`,
 			},
-			...(options.body !== undefined) && {body: options.body},
-		})
+			...(options.body !== undefined) && { body: options.body },
+		});
 	}
 
 	/**
@@ -54,7 +54,7 @@ class ApiService {
 	 * @returns {Promise<Response>} - Die Antwort der Anfrage.
 	 */
 	public async get(endpoint: string, options: RequestInit = {}): Promise<Response> {
-		return this.request(endpoint, {method: 'GET', headers: options.headers});
+		return this.request(endpoint, { method: 'GET', headers: options.headers });
 	}
 
 	/**
@@ -65,7 +65,7 @@ class ApiService {
 	 * @returns {Promise<Response>} - Die Antwort der Anfrage.
 	 */
 	public async post(endpoint: string, options: RequestInit = {}): Promise<Response> {
-		return this.request(endpoint, {method: 'POST', headers: options.headers, body: options.body});
+		return this.request(endpoint, { method: 'POST', headers: options.headers, body: options.body });
 	}
 
 	/**
@@ -76,7 +76,7 @@ class ApiService {
 	 * @returns {Promise<Response>} - Die Antwort der Anfrage.
 	 */
 	public async patch(endpoint: string, options: RequestInit = {}): Promise<Response> {
-		return this.request(endpoint, {method: 'PATCH', headers: options.headers, body: options.body});
+		return this.request(endpoint, { method: 'PATCH', headers: options.headers, body: options.body });
 	}
 
 	/**
@@ -87,7 +87,7 @@ class ApiService {
 	 * @returns {Promise<Response>} - Die Antwort der Anfrage.
 	 */
 	public async put(endpoint: string, options: RequestInit = {}): Promise<Response> {
-		return this.request(endpoint, {method: 'PUT', headers: options.headers, body: options.body});
+		return this.request(endpoint, { method: 'PUT', headers: options.headers, body: options.body });
 	}
 
 	/**
@@ -98,7 +98,7 @@ class ApiService {
 	 * @returns {Promise<Response>} - Die Antwort der Anfrage.
 	 */
 	public async delete(endpoint: string, options: RequestInit = {}): Promise<Response> {
-		return this.request(endpoint, {method: 'DELETE', headers: options.headers});
+		return this.request(endpoint, { method: 'DELETE', headers: options.headers });
 	}
 }
 

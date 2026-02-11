@@ -26,7 +26,7 @@ export class JahrgangsDaten extends JavaObject {
 	/**
 	 * Die dem Jahrgang zugeordnete schulinterne Bezeichnung.
 	 */
-	public bezeichnung: string = "";
+	public bezeichnung: string | null = null;
 
 	/**
 	 * Die Sortierreihenfolge des Jahrgangslisten-Eintrags.
@@ -34,7 +34,7 @@ export class JahrgangsDaten extends JavaObject {
 	public sortierung: number = 0;
 
 	/**
-	 * Die ID der Schulgliederung, der der Eintrag zugeordnet ist.
+	 * Das Kürzel der Schulgliederung, der der Eintrag zugeordnet ist.
 	 */
 	public kuerzelSchulgliederung: string | null = null;
 
@@ -42,6 +42,11 @@ export class JahrgangsDaten extends JavaObject {
 	 * Die ID des Folgejahrgangs, sofern einer definiert ist, ansonsten null
 	 */
 	public idFolgejahrgang: number | null = null;
+
+	/**
+	 * Die ID der Bildungsstufe, sofern eine definiert ist, ansonsten null
+	 */
+	public idBildungsstufe: number | null = null;
 
 	/**
 	 * Gibt die Anzahl der Restabschnitte bis zum Abschluss bei der Schulform an
@@ -84,7 +89,7 @@ export class JahrgangsDaten extends JavaObject {
 		return ['de.svws_nrw.core.data.jahrgang.JahrgangsDaten'].includes(name);
 	}
 
-	public static class = new Class<JahrgangsDaten>('de.svws_nrw.core.data.jahrgang.JahrgangsDaten');
+	public static readonly class = new Class<JahrgangsDaten>('de.svws_nrw.core.data.jahrgang.JahrgangsDaten');
 
 	public static transpilerFromJSON(json: string): JahrgangsDaten {
 		const obj = JSON.parse(json) as Partial<JahrgangsDaten>;
@@ -95,14 +100,13 @@ export class JahrgangsDaten extends JavaObject {
 		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.kurzbezeichnung = (obj.kurzbezeichnung === undefined) ? null : obj.kurzbezeichnung === null ? null : obj.kurzbezeichnung;
 		result.kuerzelStatistik = (obj.kuerzelStatistik === undefined) ? null : obj.kuerzelStatistik === null ? null : obj.kuerzelStatistik;
-		if (obj.bezeichnung === undefined)
-			throw new Error('invalid json format, missing attribute bezeichnung');
-		result.bezeichnung = obj.bezeichnung;
+		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
 		result.kuerzelSchulgliederung = (obj.kuerzelSchulgliederung === undefined) ? null : obj.kuerzelSchulgliederung === null ? null : obj.kuerzelSchulgliederung;
 		result.idFolgejahrgang = (obj.idFolgejahrgang === undefined) ? null : obj.idFolgejahrgang === null ? null : obj.idFolgejahrgang;
+		result.idBildungsstufe = (obj.idBildungsstufe === undefined) ? null : obj.idBildungsstufe === null ? null : obj.idBildungsstufe;
 		result.anzahlRestabschnitte = (obj.anzahlRestabschnitte === undefined) ? null : obj.anzahlRestabschnitte === null ? null : obj.anzahlRestabschnitte;
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
@@ -119,10 +123,11 @@ export class JahrgangsDaten extends JavaObject {
 		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"kurzbezeichnung" : ' + ((obj.kurzbezeichnung === null) ? 'null' : JSON.stringify(obj.kurzbezeichnung)) + ',';
 		result += '"kuerzelStatistik" : ' + ((obj.kuerzelStatistik === null) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"kuerzelSchulgliederung" : ' + ((obj.kuerzelSchulgliederung === null) ? 'null' : JSON.stringify(obj.kuerzelSchulgliederung)) + ',';
 		result += '"idFolgejahrgang" : ' + ((obj.idFolgejahrgang === null) ? 'null' : obj.idFolgejahrgang.toString()) + ',';
+		result += '"idBildungsstufe" : ' + ((obj.idBildungsstufe === null) ? 'null' : obj.idBildungsstufe.toString()) + ',';
 		result += '"anzahlRestabschnitte" : ' + ((obj.anzahlRestabschnitte === null) ? 'null' : obj.anzahlRestabschnitte.toString()) + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
@@ -148,7 +153,7 @@ export class JahrgangsDaten extends JavaObject {
 			result += '"kuerzelStatistik" : ' + ((obj.kuerzelStatistik === null) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
@@ -158,6 +163,9 @@ export class JahrgangsDaten extends JavaObject {
 		}
 		if (obj.idFolgejahrgang !== undefined) {
 			result += '"idFolgejahrgang" : ' + ((obj.idFolgejahrgang === null) ? 'null' : obj.idFolgejahrgang.toString()) + ',';
+		}
+		if (obj.idBildungsstufe !== undefined) {
+			result += '"idBildungsstufe" : ' + ((obj.idBildungsstufe === null) ? 'null' : obj.idBildungsstufe.toString()) + ',';
 		}
 		if (obj.anzahlRestabschnitte !== undefined) {
 			result += '"anzahlRestabschnitte" : ' + ((obj.anzahlRestabschnitte === null) ? 'null' : obj.anzahlRestabschnitte.toString()) + ',';

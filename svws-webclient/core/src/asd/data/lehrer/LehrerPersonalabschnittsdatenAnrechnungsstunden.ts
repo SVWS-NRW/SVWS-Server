@@ -16,7 +16,7 @@ export class LehrerPersonalabschnittsdatenAnrechnungsstunden extends JavaObject 
 	/**
 	 * Die ID des Anrechnungsgrundes.
 	 */
-	public idGrund: number = -1;
+	public idGrund: number | null = null;
 
 	/**
 	 * Die Anzahl der Anrechnungsstunden, welche dem Grund zugeordnet sind.
@@ -39,7 +39,7 @@ export class LehrerPersonalabschnittsdatenAnrechnungsstunden extends JavaObject 
 		return ['de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden'].includes(name);
 	}
 
-	public static class = new Class<LehrerPersonalabschnittsdatenAnrechnungsstunden>('de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden');
+	public static readonly class = new Class<LehrerPersonalabschnittsdatenAnrechnungsstunden>('de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden');
 
 	public static transpilerFromJSON(json: string): LehrerPersonalabschnittsdatenAnrechnungsstunden {
 		const obj = JSON.parse(json) as Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>;
@@ -50,9 +50,7 @@ export class LehrerPersonalabschnittsdatenAnrechnungsstunden extends JavaObject 
 		if (obj.idAbschnittsdaten === undefined)
 			throw new Error('invalid json format, missing attribute idAbschnittsdaten');
 		result.idAbschnittsdaten = obj.idAbschnittsdaten;
-		if (obj.idGrund === undefined)
-			throw new Error('invalid json format, missing attribute idGrund');
-		result.idGrund = obj.idGrund;
+		result.idGrund = (obj.idGrund === undefined) ? null : obj.idGrund === null ? null : obj.idGrund;
 		if (obj.anzahl === undefined)
 			throw new Error('invalid json format, missing attribute anzahl');
 		result.anzahl = obj.anzahl;
@@ -63,7 +61,7 @@ export class LehrerPersonalabschnittsdatenAnrechnungsstunden extends JavaObject 
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idAbschnittsdaten" : ' + obj.idAbschnittsdaten.toString() + ',';
-		result += '"idGrund" : ' + obj.idGrund.toString() + ',';
+		result += '"idGrund" : ' + ((obj.idGrund === null) ? 'null' : obj.idGrund.toString()) + ',';
 		result += '"anzahl" : ' + obj.anzahl.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -79,7 +77,7 @@ export class LehrerPersonalabschnittsdatenAnrechnungsstunden extends JavaObject 
 			result += '"idAbschnittsdaten" : ' + obj.idAbschnittsdaten.toString() + ',';
 		}
 		if (obj.idGrund !== undefined) {
-			result += '"idGrund" : ' + obj.idGrund.toString() + ',';
+			result += '"idGrund" : ' + ((obj.idGrund === null) ? 'null' : obj.idGrund.toString()) + ',';
 		}
 		if (obj.anzahl !== undefined) {
 			result += '"anzahl" : ' + obj.anzahl.toString() + ',';

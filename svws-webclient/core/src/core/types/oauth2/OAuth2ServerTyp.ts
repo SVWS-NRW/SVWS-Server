@@ -88,7 +88,7 @@ export class OAuth2ServerTyp extends JavaEnum<OAuth2ServerTyp> {
 		return ['de.svws_nrw.core.types.oauth2.OAuth2ServerTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<OAuth2ServerTyp>('de.svws_nrw.core.types.oauth2.OAuth2ServerTyp');
+	public static readonly class = new Class<OAuth2ServerTyp>('de.svws_nrw.core.types.oauth2.OAuth2ServerTyp');
 
 }
 

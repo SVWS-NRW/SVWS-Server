@@ -8,6 +8,4 @@ export interface NotenmodulKlassenleitungProps {
 	patchLernabschnitt: (data: ENMLernabschnitt, patch: Partial<ENMLernabschnitt>) => Promise<void>;
 	columnsVisible: () => Map<string, boolean | null>;
 	setColumnsVisible: (columns: Map<string, boolean | null>) => Promise<void>;
-	floskelEditorVisible: boolean;
-	setFloskelEditorVisible: (value: boolean) => Promise<void>;
 }

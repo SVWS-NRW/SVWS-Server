@@ -75,7 +75,7 @@ export class UvUnterricht extends JavaObject {
 		return ['de.svws_nrw.core.data.uv.UvUnterricht'].includes(name);
 	}
 
-	public static class = new Class<UvUnterricht>('de.svws_nrw.core.data.uv.UvUnterricht');
+	public static readonly class = new Class<UvUnterricht>('de.svws_nrw.core.data.uv.UvUnterricht');
 
 	public static transpilerFromJSON(json: string): UvUnterricht {
 		const obj = JSON.parse(json) as Partial<UvUnterricht>;

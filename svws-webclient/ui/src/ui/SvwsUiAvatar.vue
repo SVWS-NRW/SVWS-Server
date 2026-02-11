@@ -1,10 +1,10 @@
 <template>
 	<div class="svws-ui-avatar" :class="{'is-capturing': isCapturing}">
-		<div v-if="capture || upload || (src.length > 0)" tabindex="0" class="avatar--edit">
+		<div v-if="capture || upload || (src.length > 0)" class="avatar--edit">
 			<span class="avatar--edit-trigger">
 				<span class="icon i-ri-camera-line w-full h-full opacity-50" />
 			</span>
-			<svws-ui-button v-if="src && (src.split(',').length > 1)" type="icon" @click="deleteImage" tabindex="0" title="Bild löschen">
+			<svws-ui-button v-if="src && (src.split(',').length > 1)" type="icon" @click="deleteImage" tabindex="0" title="Bild löschen — 2 x klicken">
 				<span class="icon i-ri-delete-bin-line" :class="{'icon-ui-caution': stage}" />
 			</svws-ui-button>
 			<svws-ui-button v-if="upload && (uploadedImage === null) && (src.split(',').length < 2)" type="icon" @click="toggleUpload" tabindex="0" title="Bild hochladen">
@@ -81,9 +81,11 @@
 	onMounted(async () => {
 		// test if media device available
 		const list = await navigator.mediaDevices.enumerateDevices();
-		for (const device of list)
-			if (device.kind === 'videoinput')
+		for (const device of list) {
+			if (device.kind === 'videoinput') {
 				hasVideoDevice.value = true;
+			}
+		}
 	});
 
 	const fileInputEl = ref<null | HTMLInputElement>(null);
@@ -92,24 +94,27 @@
 
 	function deleteImage() {
 		stage.value = !stage.value;
-		if (stage.value)
+		if (stage.value) {
 			return;
+		}
 		emit('image:base64', null);
 		emit('image:captured', null);
 	}
 
 	function toggleUpload() {
-		if (uploadedImage.value !== null)
+		if (uploadedImage.value !== null) {
 			uploadedImage.value = null;
-		else
+		} else {
 			fileInputEl.value?.click();
+		}
 	}
 
 	function toggleSnapshot() {
-		if (capturedImage.value)
+		if (capturedImage.value) {
 			capturedImage.value = null;
-		else
+		} else {
 			takeSnapshot();
+		}
 	}
 
 	async function toggleCapturing() {
@@ -117,14 +122,16 @@
 			emit('image:captured', capturedImage.value);
 			emit('image:base64', canvasEl.value?.toDataURL('image/jpeg', 0.75).split(',').pop() ?? null);
 			stopCapturing();
-		} else
+		} else {
 			await startCapturing();
+		}
 	}
 
 	function onFileChanged(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if (target.files === null)
+		if (target.files === null) {
 			return;
+		}
 		file.value = target.files[0];
 		emit('image:captured', file.value);
 		const reader = new FileReader();
@@ -153,8 +160,9 @@
 	};
 
 	const currentSnapshot = computed(() => {
-		if (capturedImage.value !== null)
+		if (capturedImage.value !== null) {
 			return URL.createObjectURL(capturedImage.value);
+		}
 		return null;
 	});
 
@@ -163,8 +171,9 @@
 		isCapturing.value = true;
 		try {
 			stream.value = await navigator.mediaDevices.getUserMedia(constraints);
-			if (videoEl.value)
+			if (videoEl.value) {
 				videoEl.value.srcObject = stream.value;
+			}
 		} catch (err) {
 			console.log(err);
 			capturingError.value = (err as { message: string }).message;
@@ -178,8 +187,9 @@
 	}
 
 	function takeSnapshot() {
-		if ((videoEl.value === undefined) || (canvasEl.value === null))
+		if ((videoEl.value === undefined) || (canvasEl.value === null)) {
 			return;
+		}
 		canvasEl.value.width = constraints.video.width;
 		canvasEl.value.height = videoEl.value.videoHeight / (videoEl.value.videoWidth / constraints.video.width);
 		canvasEl.value.getContext("2d")?.drawImage(videoEl.value, 0, 0);

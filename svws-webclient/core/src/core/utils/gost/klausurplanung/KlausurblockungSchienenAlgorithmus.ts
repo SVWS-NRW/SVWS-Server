@@ -87,7 +87,7 @@ export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmus'].includes(name);
 	}
 
-	public static class = new Class<KlausurblockungSchienenAlgorithmus>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmus');
+	public static readonly class = new Class<KlausurblockungSchienenAlgorithmus>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmus');
 
 }
 

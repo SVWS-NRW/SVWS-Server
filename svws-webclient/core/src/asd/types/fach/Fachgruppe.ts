@@ -256,7 +256,7 @@ export class Fachgruppe extends JavaEnum<Fachgruppe> implements CoreType<Fachgru
 		return ['de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'de.svws_nrw.asd.types.fach.Fachgruppe', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Fachgruppe>('de.svws_nrw.asd.types.fach.Fachgruppe');
+	public static readonly class = new Class<Fachgruppe>('de.svws_nrw.asd.types.fach.Fachgruppe');
 
 }
 

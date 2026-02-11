@@ -19,7 +19,7 @@ export class BetreuungsartKatalogEintrag extends CoreTypeDataNurSchulformen {
 		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.schueler.BetreuungsartKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeDataNurSchulformen'].includes(name);
 	}
 
-	public static class = new Class<BetreuungsartKatalogEintrag>('de.svws_nrw.asd.data.schueler.BetreuungsartKatalogEintrag');
+	public static readonly class = new Class<BetreuungsartKatalogEintrag>('de.svws_nrw.asd.data.schueler.BetreuungsartKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): BetreuungsartKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<BetreuungsartKatalogEintrag>;

@@ -75,21 +75,25 @@
 	const primarschulformen = new Set([Schulform.FW, Schulform.HI, Schulform.WF, Schulform.G, Schulform.PS, Schulform.S, Schulform.KS, Schulform.V]);
 	const primarstufe = computed(() => primarschulformen.has(props.schulform));
 	const epJahre = computed<string | null>(() => {
-		if (!primarstufe.value)
+		if (!primarstufe.value) {
 			return null;
+		}
 		const ep = props.manager().auswahl().epJahre;
-		if (ep === null)
+		if (ep === null) {
 			return null;
+		}
 		const schuljahr = props.manager().getSchuljahr();
 		return PrimarstufeSchuleingangsphaseBesuchsjahre.data().getWertByIDOrNull(ep)?.daten(schuljahr)?.kuerzel ?? null;
 	});
 
 	const schuelerSubline = computed(() => {
 		const auswahlSchuelerList = props.manager().liste.auswahlSorted();
-		if (auswahlSchuelerList.isEmpty())
+		if (auswahlSchuelerList.isEmpty()) {
 			return 'Keine Schüler ausgewählt';
-		if (auswahlSchuelerList.size() > 3)
+		}
+		if (auswahlSchuelerList.size() > 3) {
 			return `${auswahlSchuelerList.size()} Schüler ausgewählt`;
+		}
 		return [...auswahlSchuelerList].map(k => `${k.vorname} ${k.nachname}`).join(', ');
 	});
 
@@ -98,8 +102,9 @@
 	const vorname = computed<string>(() => props.manager().daten().vorname);
 
 	const klasse = computed<KlassenDaten | null>(() => {
-		if (!props.manager().hasDaten())
+		if (!props.manager().hasDaten()) {
 			return null;
+		}
 		return props.manager().klassen.get(props.manager().auswahl().idKlasse);
 	});
 

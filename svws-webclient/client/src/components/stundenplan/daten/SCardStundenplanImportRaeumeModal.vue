@@ -69,8 +69,9 @@
 		for (const i of int) {
 			const a = mapStundenplan.value.get(i);
 			const b = mapVorlage.value.get(i);
-			if (a !== undefined && ((a.beschreibung !== b?.beschreibung) || (a.groesse !== b.groesse)))
+			if (a !== undefined && ((a.beschreibung !== b?.beschreibung) || (a.groesse !== b.groesse))) {
 				set.add(a.kuerzel);
+			}
 		}
 		return set;
 	});

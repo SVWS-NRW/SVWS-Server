@@ -8,6 +8,14 @@
 		<div role="cell" class="svws-ui-td select-all">
 			<div class="break-all line-clamp-1 leading-tight -my-0.5">
 				{{ fach.bezeichnung || '' }}
+				<template v-if="manager.getFachgruppe(fach) === Fachgruppe.FG_PX">
+					<svws-ui-tooltip>
+						<span class="icon-sm i-ri-information-line -my-0.5" />
+						<template #content>
+							<pre>{{ manager.getLeitfaecherTooltipText(fach) }}</pre>
+						</template>
+					</svws-ui-tooltip>
+				</template>
 			</div>
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center svws-divider">
@@ -133,6 +141,7 @@
 	import { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
 	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
+	import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 	import { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
 	import { GostKursart } from "../../../../../core/src/core/types/gost/GostKursart";
@@ -162,8 +171,9 @@
 
 	onUpdated(() => {
 		// Prüft, ob die Fach-Komponente aktuell den Fokus hat
-		if (props.activeFocus)
+		if (props.activeFocus) {
 			doFocusOnHalbjahr();
+		}
 	});
 
 	const halbjahrRefs = ref(new Map<number, HTMLElement>());
@@ -188,8 +198,9 @@
 	function getTooltipHalbjahr(halbjahr: GostHalbjahr): string {
 		if (istBewertet(halbjahr)) {
 			const note = props.manager.getNote(props.fach, halbjahr);
-			if (note === null)
+			if (note === null) {
 				return 'Es liegen keine Leistungsdaten vor!';
+			}
 			const schuljahr = props.abiturdatenManager().getSchuljahr();
 			return `Note ${note.daten(schuljahr)?.kuerzel ?? '-'} (keine Änderungen mehr möglich)`;
 		}
@@ -199,22 +210,26 @@
 
 	const abi_wahl = computed<string>(() => {
 		const fachbelegung = props.abiturdatenManager().getFachbelegungByID(props.fach.id);
-		if ((fachbelegung === null) || (fachbelegung.abiturFach === null))
+		if ((fachbelegung === null) || (fachbelegung.abiturFach === null)) {
 			return "";
+		}
 		return fachbelegung.abiturFach.toString();
 	});
 
 	const wahlen = computed<string[]>(() => {
 		const fachbelegung = props.abiturdatenManager().getFachbelegungByID(props.fach.id);
-		if (fachbelegung === null)
+		if (fachbelegung === null) {
 			return ["", "", "", "", "", ""];
+		}
 		return fachbelegung.belegungen.map((b: AbiturFachbelegungHalbjahr | null) => {
 			b = (b !== null) ? b : new AbiturFachbelegungHalbjahr();
-			if (AbiturdatenManager.istNullPunkteBelegungInQPhase(b))
+			if (AbiturdatenManager.istNullPunkteBelegungInQPhase(b)) {
 				return "6";
+			}
 			const kursart = GostKursart.fromKuerzel(b.kursartKuerzel);
-			if (!kursart)
+			if (!kursart) {
 				return b.kursartKuerzel;
+			}
 			switch (kursart) {
 				case GostKursart.ZK:
 				case GostKursart.LK:
@@ -226,13 +241,16 @@
 
 
 	function pruefeKombinationErforderlich(fachid: number, kombi: GostJahrgangFachkombination, hj: GostHalbjahr) {
-		if (fachid !== kombi.fachID2)
+		if (fachid !== kombi.fachID2) {
 			return false;
-		if (!kombi.gueltigInHalbjahr[hj.id])
+		}
+		if (!kombi.gueltigInHalbjahr[hj.id]) {
 			return false;
+		}
 		const fach1 = props.abiturdatenManager().faecher().get(kombi.fachID1);
-		if (fach1 === null)
+		if (fach1 === null) {
 			return false;
+		}
 		const f1 = props.abiturdatenManager().getFachbelegungByID(fach1.id);
 		const f2 = props.abiturdatenManager().getFachbelegungByID(fachid);
 		const kursart1 = GostKursart.fromKuerzel(kombi.kursart1);
@@ -243,36 +261,42 @@
 		const bel2 = kursart2
 			? props.abiturdatenManager().pruefeBelegungMitKursart(f2, kursart2, hj)
 			: props.abiturdatenManager().pruefeBelegung(f2, hj);
-		if (bel2)
+		if (bel2) {
 			return false;
+		}
 		return bel1 !== bel2;
 	}
 
 	function istFachkombiErforderlichHalbjahr(hj: GostHalbjahr): boolean {
-		for (const kombi of props.abiturdatenManager().faecher().getFachkombinationenErforderlich())
-			if (pruefeKombinationErforderlich(props.fach.id, kombi, hj))
+		for (const kombi of props.abiturdatenManager().faecher().getFachkombinationenErforderlich()) {
+			if (pruefeKombinationErforderlich(props.fach.id, kombi, hj)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
 	const istFachkombiErforderlich = computed<boolean[]>(() => {
 		const result = [];
-		for (const halbjahr of GostHalbjahr.values())
+		for (const halbjahr of GostHalbjahr.values()) {
 			result.push(istFachkombiErforderlichHalbjahr(halbjahr));
+		}
 		return result;
 	});
 
 	function pruefeKombinationVerboten(fachid: number, kombi: GostJahrgangFachkombination, hj: GostHalbjahr) {
-		if (((fachid !== kombi.fachID1) && (fachid !== kombi.fachID2)) || (!kombi.gueltigInHalbjahr[hj.id]))
+		if (((fachid !== kombi.fachID1) && (fachid !== kombi.fachID2)) || (!kombi.gueltigInHalbjahr[hj.id])) {
 			return false;
+		}
 		const fachID1 = (fachid === kombi.fachID2) ? kombi.fachID1 : fachid;
 		const fachID2 = (fachid === kombi.fachID2) ? fachid : kombi.fachID2;
 		const kursart1 = (fachid === kombi.fachID2) ? GostKursart.fromKuerzel(kombi.kursart1) : GostKursart.fromKuerzel(kombi.kursart2);
 		const kursart2 = (fachid === kombi.fachID2) ? GostKursart.fromKuerzel(kombi.kursart2) : GostKursart.fromKuerzel(kombi.kursart1);
 		const fach1 = props.abiturdatenManager().faecher().get(fachID1);
 		const fach2 = props.abiturdatenManager().faecher().get(fachID2);
-		if ((fach1 === null) || (fach2 === null))
+		if ((fach1 === null) || (fach2 === null)) {
 			return false;
+		}
 		const f1 = props.abiturdatenManager().getFachbelegungByID(fach1.id);
 		const f2 = props.abiturdatenManager().getFachbelegungByID(fach2.id);
 		const bel1 = kursart1
@@ -286,28 +310,33 @@
 
 	function istFachkombiVerbotenHalbjahr(hj: GostHalbjahr): boolean {
 		const fachkombis = props.abiturdatenManager().faecher().getFachkombinationenVerboten();
-		for (const kombi of fachkombis)
-			if (pruefeKombinationVerboten(props.fach.id, kombi, hj))
+		for (const kombi of fachkombis) {
+			if (pruefeKombinationVerboten(props.fach.id, kombi, hj)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
 	const istFachkombiVerboten = computed<boolean[]>(() => {
 		const result = [];
-		for (const halbjahr of GostHalbjahr.values())
+		for (const halbjahr of GostHalbjahr.values()) {
 			result.push(istFachkombiVerbotenHalbjahr(halbjahr));
+		}
 		return result;
 	});
 
 	async function stepperAbi() {
-		if (!props.hatUpdateKompetenz)
+		if (!props.hatUpdateKompetenz) {
 			return;
+		}
 		await props.manager.stepperAbitur(props.fach);
 	}
 
 	async function stepper(halbjahr: GostHalbjahr) {
-		if (!props.hatUpdateKompetenz)
+		if (!props.hatUpdateKompetenz) {
 			return;
+		}
 		await props.manager.stepper(props.fach, halbjahr);
 	}
 
@@ -335,35 +364,42 @@
 
 	// Gibt ein false zurück, falls ein Fach mit GE/SW an diesem HJ gesetzt ist
 	function zkMoeglich(halbjahr: GostHalbjahr): boolean {
-		if (wahlen.value[halbjahr.id] !== 'ZK')
+		if (wahlen.value[halbjahr.id] !== 'ZK') {
 			return true;
+		}
 		const sw = GostFachbereich.SOZIALWISSENSCHAFTEN.hat(props.fach);
 		const ge = GostFachbereich.GESCHICHTE.hat(props.fach);
-		if (!sw && !ge)
+		if (!sw && !ge) {
 			return true;
+		}
 		let beginn;
-		if (sw)
+		if (sw) {
 			beginn = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursSW ?? "");
-		if (ge)
+		}
+		if (ge) {
 			beginn = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursGE ?? "");
-		if (!beginn || (beginn === halbjahr) || (beginn.next() === halbjahr))
+		}
+		if (!beginn || (beginn === halbjahr) || (beginn.next() === halbjahr)) {
 			return true;
+		}
 		return false;
 	}
 
 
 	// Bei gedrückter ALT-Taste + ENTER-Taste direkt hochschreiben (handleHochschreiben), sonst Schritt weiter gehen (stepper)
 	async function handleKeyboardStep(event: KeyboardEvent, halbjahr: GostHalbjahr) {
-		if (event.altKey)
+		if (event.altKey) {
 			await handleHochschreiben(halbjahr);
-		else
+		} else {
 			await stepper(halbjahr);
+		}
 	}
 
 	// Unabhängig vom eingestellten Modus direkt "hochschreiben" ausführen
 	async function handleHochschreiben(halbjahr: GostHalbjahr) {
-		if (!props.hatUpdateKompetenz)
+		if (!props.hatUpdateKompetenz) {
 			return;
+		}
 		await props.manager.stepper(props.fach, halbjahr, 'hochschreiben');
 	}
 

@@ -43,13 +43,13 @@ export class GostKursklausur extends JavaObject {
 	}
 
 	/**
-	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 * Vergleicht, ob das aktuelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
 	 *
 	 * @param another     das zu vergleichende Objekt
-	 * @return true, falls die Objekte indentisch sind, sonst false
+	 * @return true, falls die Objekte identisch sind, sonst false
 	 */
 	public equals(another: unknown | null): boolean {
-		return (another !== null) && (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur')))) && (this.id === (another as unknown as GostKursklausur).id);
+		return (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur')))) && (this.id === (another as unknown as GostKursklausur).id);
 	}
 
 	/**
@@ -69,7 +69,7 @@ export class GostKursklausur extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur'].includes(name);
 	}
 
-	public static class = new Class<GostKursklausur>('de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur');
+	public static readonly class = new Class<GostKursklausur>('de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur');
 
 	public static transpilerFromJSON(json: string): GostKursklausur {
 		const obj = JSON.parse(json) as Partial<GostKursklausur>;

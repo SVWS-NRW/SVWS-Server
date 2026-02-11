@@ -20,8 +20,9 @@ export class RouteError extends RouteNode<any, any> {
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
-		if (to_params.error instanceof Array)
+		if (Array.isArray(to_params.error)) {
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		}
 	}
 
 	public getErrorRoute(error?: Error, errorcode?: number): RouteLocationRaw {

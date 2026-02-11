@@ -1,8 +1,8 @@
 package de.svws_nrw.core.kursblockung;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
-import de.svws_nrw.core.adt.set.AVLSet;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
@@ -124,7 +124,7 @@ public class KursblockungDynSchiene {
 	 *         für die Blockung verwendet.
 	 */
 	int gibAnzahlGleicherFacharten() {
-		final AVLSet<Integer> setFachart = new AVLSet<>(); // Gibt es bereits diese Fachart?
+		final HashSet<Integer> setFachart = new HashSet<>(); // Gibt es bereits diese Fachart?
 
 		int summe = 0;
 		for (final @NotNull KursblockungDynKurs kurs : kursMap.values())

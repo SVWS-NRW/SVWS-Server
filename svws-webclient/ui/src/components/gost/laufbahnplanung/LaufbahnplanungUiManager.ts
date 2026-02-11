@@ -23,6 +23,7 @@ import { Note } from "../../../../../core/src/asd/types/Note";
 import { RGBFarbe } from "../../../../../core/src/asd/data/RGBFarbe";
 import { SprachendatenUtils } from "../../../../../core/src/core/utils/schueler/SprachendatenUtils";
 import type { Config } from "../../../utils/Config";
+import { GostSchriftlichkeit } from "../../../../../core/src";
 
 
 /*
@@ -92,7 +93,7 @@ export class LaufbahnplanungUiManager {
 	public _modus = ref<'manuell' | 'normal' | 'hochschreiben'>('normal');
 
 	/** Der Pfad zum Speichern der Configdaten */
-	private _configPfade: { faecherZeigen: string, modus: string };
+	private readonly _configPfade: { faecherZeigen: string, modus: string };
 
 
 	/**
@@ -176,6 +177,19 @@ export class LaufbahnplanungUiManager {
 
 
 	/**
+	 * Gibt den Text für den Tooltip der anrechenbaren Kurse zurück.
+	 *
+	 * @returns der Tooltip-Text
+	 */
+	public getTooltipAnrechenbareKurse(): string {
+		if (this.isAbi30ff.value) {
+			return 'Die Anzahl der anrechenbaren Kurse. Vertiefungskurse werden mitgezählt.';
+		}
+		return 'Die Anzahl der anrechenbaren Kurse. Vertiefungskurse werden z.B. nicht mitgezählt.';
+	}
+
+
+	/**
 	 * Gibt die Anzahl der Kurs für das übergebene Halbjahr zurück.
 	 */
 	public getAnrechenbareKurse(hj: GostHalbjahr): number {
@@ -191,21 +205,48 @@ export class LaufbahnplanungUiManager {
 	 */
 	public getAnrechenbareKurseCSS(hj: GostHalbjahr): string {
 		const kurse = this.getAnrechenbareKurse(hj);
-		if (hj.istEinfuehrungsphase()) {
-			if (kurse < 10)
+		if (this.isAbi30ff.value) {
+			if (hj.istEinfuehrungsphase()) {
+				if (kurse < 10) {
+					return 'svws-ergebnis--not-enough';
+				}
+				if ((kurse > 9) && (kurse < 11)) {
+					return 'svws-ergebnis--good';
+				}
+				return 'svws-ergebnis--more';
+			}
+			if (kurse < 9) {
 				return 'svws-ergebnis--not-enough';
-			if ((kurse > 9) && (kurse < 11))
+			}
+			if ((kurse > 8) && (kurse < 10)) {
 				return 'svws-ergebnis--low';
-			if ((kurse > 10) && (kurse < 13))
+			}
+			if ((kurse > 9) && (kurse < 12)) {
 				return 'svws-ergebnis--good';
+			}
 			return 'svws-ergebnis--more';
 		}
-		if (kurse < 9)
+		if (hj.istEinfuehrungsphase()) {
+			if (kurse < 10) {
+				return 'svws-ergebnis--not-enough';
+			}
+			if ((kurse > 9) && (kurse < 11)) {
+				return 'svws-ergebnis--low';
+			}
+			if ((kurse > 10) && (kurse < 13)) {
+				return 'svws-ergebnis--good';
+			}
+			return 'svws-ergebnis--more';
+		}
+		if (kurse < 9) {
 			return 'svws-ergebnis--not-enough';
-		if ((kurse > 8) && (kurse < 10))
+		}
+		if ((kurse > 8) && (kurse < 10)) {
 			return 'svws-ergebnis--low';
-		if ((kurse > 9) && (kurse < 12))
+		}
+		if ((kurse > 9) && (kurse < 12)) {
 			return 'svws-ergebnis--good';
+		}
 		return 'svws-ergebnis--more';
 	}
 
@@ -224,13 +265,34 @@ export class LaufbahnplanungUiManager {
 	 * @returns die CSS-Klasse zur Einstufung
 	 */
 	public getSummeAnrechenbareKurseCSS(): string {
-		if (this.summeAnrechenbareKurse < 38)
+		if (this.isAbi30ff.value) {
+			if ((this.summeAnrechenbareKurse === 40)) {
+				return 'svws-ergebnis--good';
+			}
 			return 'svws-ergebnis--not-enough';
-		if ((this.summeAnrechenbareKurse > 37) && (this.summeAnrechenbareKurse < 40))
+		}
+		if (this.summeAnrechenbareKurse < 38) {
+			return 'svws-ergebnis--not-enough';
+		}
+		if ((this.summeAnrechenbareKurse > 37) && (this.summeAnrechenbareKurse < 40)) {
 			return 'svws-ergebnis--low';
-		if ((this.summeAnrechenbareKurse > 39) && (this.summeAnrechenbareKurse < 43))
+		}
+		if ((this.summeAnrechenbareKurse > 39) && (this.summeAnrechenbareKurse < 43)) {
 			return 'svws-ergebnis--good';
+		}
 		return 'svws-ergebnis--more';
+	}
+
+	/**
+	 * Gibt den Text für den Tooltip der Wochenstunden zurück.
+	 *
+	 * @returns der Tooltip-Text
+	 */
+	public getTooltipWochenstunden(): string {
+		if (this.isAbi30ff.value) {
+			return 'Die Anzahl der Wochenstunden.';
+		}
+		return 'Die Anzahl der Wochenstunden. Pro Halbjahr sollten etwa <strong>33—36</strong> Wochenstunden gewählt werden.';
 	}
 
 	/**
@@ -250,12 +312,19 @@ export class LaufbahnplanungUiManager {
 	 */
 	public getWochenstundenCSS(hj: GostHalbjahr): string {
 		const wst = this.getWochenstunden(hj);
-		if (wst < 30)
+		// TODO G8 beachten
+		if (this.isAbi30ff.value) {
+			return '';
+		}
+		if (wst < 30) {
 			return 'svws-ergebnis--not-enough';
-		if ((wst >= 30) && (wst < 33))
+		}
+		if ((wst >= 30) && (wst < 33)) {
 			return 'svws-ergebnis--low';
-		if ((wst >= 33) && (wst < 37))
+		}
+		if ((wst >= 33) && (wst < 37)) {
 			return 'svws-ergebnis--good';
+		}
 		return 'svws-ergebnis--more';
 	}
 
@@ -273,13 +342,30 @@ export class LaufbahnplanungUiManager {
 	 * @returns die CSS-Klasse zur Einstufung
 	 */
 	public getWochenstundenJahressummeCSS(): string {
-		if (this.wochenstundenJahressumme < 100)
+		// TODO G8 beachten
+		if (this.isAbi30ff.value) {
+			return '';
+		}
+		if (this.wochenstundenJahressumme < 100) {
 			return 'svws-ergebnis--not-enough';
-		if ((this.wochenstundenJahressumme >= 100) && (this.wochenstundenJahressumme < 101))
+		}
+		if ((this.wochenstundenJahressumme >= 100) && (this.wochenstundenJahressumme < 101)) {
 			return 'svws-ergebnis--low';
-		if ((this.wochenstundenJahressumme >= 101) && (this.wochenstundenJahressumme <= 106))
+		}
+		if ((this.wochenstundenJahressumme >= 101) && (this.wochenstundenJahressumme <= 106)) {
 			return 'svws-ergebnis--good';
+		}
 		return 'svws-ergebnis--more';
+	}
+
+
+	/**
+	 * Gibt zurück, ob die Zeile mit dem Wochenstundendurchschnitt angezeigt werden soll oder nicht.
+	 *
+	 * @returns true, wenn sie angezeigt werden soll, und ansonsten false
+	 */
+	public zeigeWochenstundenDurchschnitt(): boolean {
+		return !this.isAbi30ff.value;
 	}
 
 	/**
@@ -290,10 +376,12 @@ export class LaufbahnplanungUiManager {
 	 * @returns die CSS-Klasse zur Einstufung
 	 */
 	private getWochenstundenDurchschnittCSS(wst: number): string {
-		if (wst < 34)
+		if (wst < 34) {
 			return 'svws-ergebnis--not-enough';
-		if ((wst >= 34) && (wst < 37))
+		}
+		if ((wst >= 34) && (wst < 37)) {
 			return 'svws-ergebnis--good';
+		}
 		return 'svws-ergebnis--more';
 	}
 
@@ -398,9 +486,11 @@ export class LaufbahnplanungUiManager {
 	 */
 	private readonly _faecherWaehlbar = computed<List<GostFach>>(() => {
 		const result = new ArrayList<GostFach>();
-		for (const fach of this.alleFaecher)
-			if (fach.istMoeglichEF1 || fach.istMoeglichEF2 || fach.istMoeglichQ11 || fach.istMoeglichQ12 || fach.istMoeglichQ21 || fach.istMoeglichQ22)
+		for (const fach of this.alleFaecher) {
+			if (fach.istMoeglichEF1 || fach.istMoeglichEF2 || fach.istMoeglichQ11 || fach.istMoeglichQ12 || fach.istMoeglichQ21 || fach.istMoeglichQ22) {
 				result.add(fach);
+			}
+		}
 		return result;
 	});
 
@@ -411,8 +501,9 @@ export class LaufbahnplanungUiManager {
 		const result = new ArrayList<GostFach>();
 		for (const fach of this.alleFaecher) {
 			const fb = this.manager().getFachbelegungByID(fach.id);
-			if (fb === null)
+			if (fb === null) {
 				continue;
+			}
 			for (const halbjahr of GostHalbjahr.values()) {
 				const fbh: AbiturFachbelegungHalbjahr | null = fb.belegungen[halbjahr.id];
 				if ((fbh !== null)) {
@@ -513,12 +604,14 @@ export class LaufbahnplanungUiManager {
 		for (const fach of this.alleFaecher) {
 			if (this.isAbi30ff.value) {
 				const f = Fach.getBySchluesselOrDefault(fach.kuerzel);
-				if ((f === Fach.IN) || (f === Fach.VO))
+				if ((f === Fach.IN) || (f === Fach.VO)) {
 					continue;
+				}
 			}
 			const fg = Fach.getBySchluesselOrDefault(fach.kuerzel).getFachgruppe(this.manager().getSchuljahr()) ?? null;
-			if (fg === null)
+			if (fg === null) {
 				continue;
+			}
 			map.put(fach, fg);
 		}
 		return map;
@@ -555,12 +648,14 @@ export class LaufbahnplanungUiManager {
 		const map = new HashMap2D<GostFach, GostHalbjahr, Note>();
 		for (const fach of this.alleFaecher) {
 			const fachbelegung = this.manager().getFachbelegungByID(fach.id);
-			if (fachbelegung === null)
+			if (fachbelegung === null) {
 				continue;
+			}
 			for (const hj of GostHalbjahr.values()) {
 				const b = fachbelegung.belegungen[hj.id];
-				if ((b === null) || (b.notenkuerzel === null))
+				if ((b === null) || (b.notenkuerzel === null)) {
 					continue;
+				}
 				const note = Note.fromKuerzel(b.notenkuerzel);
 				/* Der Wert Note.KEINE muss hier erhalten bleiben, um den Zustand zu unterscheiden,
 				 * dass zwar Leistungsdaten vorhanden sind, aber noch keine Note gesetzt wurde */
@@ -603,25 +698,31 @@ export class LaufbahnplanungUiManager {
 		const map = new HashMap2D<GostFach, GostHalbjahr, boolean>();
 		for (const fach of this.alleFaecher) {
 			// Gehe bei dem Fach zunächst davon aus, dass keine Doppelbelegung vorkommt.
-			for (const hj of GostHalbjahr.values())
+			for (const hj of GostHalbjahr.values()) {
 				map.put(fach, hj, false);
+			}
 			// Prüfe, ob das Fach relevant für die Prüfungsordnung ist und auch kein Vertiefungskurs ist
-			if ((!fach.istPruefungsordnungsRelevant) || (this.getFachgruppe(fach) === Fachgruppe.FG_VX))
+			if ((!fach.istPruefungsordnungsRelevant) || (this.getFachgruppe(fach) === Fachgruppe.FG_VX)) {
 				continue;
+			}
 			// Gehe alle Fachbelegungen zu dem Statistik-Fach durch und prüfe, ob eine zweite Belegung existiert
 			const fachbelegungen = this.manager().getFachbelegungByFachkuerzel(fach.kuerzel);
 			for (const fachbelegung of fachbelegungen) {
 				// Ignoriere die eigene Belegung des Faches
-				if (fachbelegung.fachID === fach.id)
+				if (fachbelegung.fachID === fach.id) {
 					continue;
+				}
 				// Prüfe das zweite Fach, sofern es relevant für die Prüfungsordnung ist
 				const fach2 = this.manager().faecher().get(fachbelegung.fachID);
-				if ((fach2 === null) || !fach2.istPruefungsordnungsRelevant)
+				if ((fach2 === null) || !fach2.istPruefungsordnungsRelevant) {
 					continue;
+				}
 				// Aktualisiere die Map bei einer Doppelbelegung
-				for (const hj of GostHalbjahr.values())
-					if (this.manager().pruefeBelegung(fachbelegung, hj))
+				for (const hj of GostHalbjahr.values()) {
+					if (this.manager().pruefeBelegung(fachbelegung, hj)) {
 						map.put(fach, hj, true);
+					}
+				}
 			}
 		}
 		return map;
@@ -639,14 +740,48 @@ export class LaufbahnplanungUiManager {
 		return this._fachDoppelbelegungen.value.getOrNull(fach, halbjahr) ?? false;
 	}
 
+
+	/**
+	 * Gibt den Tooltip-Text für die Anzeige der Leitfächer zurück.
+	 *
+	 * @param fach   das Fach für den Vertiefungskurs bzw. den Projektkurs
+	 *
+	 * @returns der Tooltip-Text
+	 */
+	public getLeitfaecherTooltipText(fach: GostFach): string {
+		if ((this.getFachgruppe(fach) !== Fachgruppe.FG_PX) && (this.getFachgruppe(fach) !== Fachgruppe.FG_VX)) {
+			return "";
+		}
+		const textLeitfach = this.isAbi30ff.value ? "Referenzfach" : "Leitfach";
+		let result = "";
+		if (fach.projektKursLeitfach1ID !== null) {
+			const leitFach1 = this.manager().faecher().get(fach.projektKursLeitfach1ID);
+			if (leitFach1 !== null) {
+				result += textLeitfach + " " + leitFach1.kuerzel + ": " + leitFach1.bezeichnung;
+			}
+		}
+		if (fach.projektKursLeitfach2ID !== null) {
+			const leitFach2 = this.manager().faecher().get(fach.projektKursLeitfach2ID);
+			if (leitFach2 !== null) {
+				if (result.length > 0) {
+					result += "\n";
+				}
+				result += textLeitfach + " " + leitFach2.kuerzel + ": " + leitFach2.bezeichnung;
+			}
+		}
+		return result;
+	}
+
+
 	/**
 	 * Eine Map, welche zu einem Fach angibt, ob es sich um eine Fremdsprachen handelt oder nicht
 	 */
 	private readonly _mapFremdsprachen = computed<JavaMap<GostFach, boolean>>(() => {
 		const map = new HashMap<GostFach, boolean>();
 		const schuljahr = this.manager().getSchuljahr();
-		for (const fach of this.alleFaecher)
+		for (const fach of this.alleFaecher) {
 			map.put(fach, fach.istFremdsprache && (Fach.getBySchluesselOrDefault(fach.kuerzel).daten(schuljahr)?.istFremdsprache ?? false));
+		}
 		return map;
 	});
 
@@ -669,11 +804,14 @@ export class LaufbahnplanungUiManager {
 		const schuljahr = this.manager().getSchuljahr();
 		for (const fach of this.alleFaecher) {
 			const sprach_kuerzel = Fach.getBySchluesselOrDefault(fach.kuerzel).daten(schuljahr)?.kuerzel ?? null;
-			if (sprach_kuerzel === null)
+			if (sprach_kuerzel === null) {
 				continue;
-			for (const belegung of this.manager().getSprachendaten().belegungen)
-				if (belegung.sprache === sprach_kuerzel)
+			}
+			for (const belegung of this.manager().getSprachendaten().belegungen) {
+				if (belegung.sprache === sprach_kuerzel) {
 					map.put(fach, belegung);
+				}
+			}
 		}
 		return map;
 	});
@@ -686,11 +824,14 @@ export class LaufbahnplanungUiManager {
 		const schuljahr = this.manager().getSchuljahr();
 		for (const fach of this.alleFaecher) {
 			const sprach_kuerzel = Fach.getBySchluesselOrDefault(fach.kuerzel).daten(schuljahr)?.kuerzel ?? null;
-			if (sprach_kuerzel === null)
+			if (sprach_kuerzel === null) {
 				continue;
-			for (const pruefung of this.manager().getSprachendaten().pruefungen)
-				if ((pruefung.ersetzteSprache === sprach_kuerzel) && (SprachendatenUtils.istFeststellungspruefungEESAMSABestanden(pruefung)))
+			}
+			for (const pruefung of this.manager().getSprachendaten().pruefungen) {
+				if ((pruefung.ersetzteSprache === sprach_kuerzel) && (SprachendatenUtils.istFeststellungspruefungEESAMSABestanden(pruefung))) {
 					map.put(fach, pruefung);
+				}
+			}
 		}
 		return map;
 	});
@@ -703,8 +844,9 @@ export class LaufbahnplanungUiManager {
 	 * @returns true, wenn es für das übergebene Fach eine gültige Sprachbelegung gibt, und ansonsten false
 	 */
 	public hatSprachbelegung(fach: GostFach): boolean {
-		if (!this.istFremdspracheMoeglich(fach))
+		if (!this.istFremdspracheMoeglich(fach)) {
 			return false;
+		}
 		const sprachbelegung = this._mapSprachbelegung.value.get(fach);
 		if (sprachbelegung !== null) {
 			const rf = sprachbelegung.reihenfolge ?? 0;
@@ -712,8 +854,9 @@ export class LaufbahnplanungUiManager {
 			return (rf !== 0) && (jg !== "");
 		}
 		const sprachpruefung = this._mapSprachpruefungen.value.get(fach);
-		if (sprachpruefung !== null)
+		if (sprachpruefung !== null) {
 			return fach.istFremdSpracheNeuEinsetzend || SprachendatenUtils.istFeststellungspruefungEESAMSABestanden(sprachpruefung);
+		}
 		return false;
 	}
 
@@ -727,19 +870,24 @@ export class LaufbahnplanungUiManager {
 	 * @returns die Nummer in der Reihenfolge oder 0
 	 */
 	public getSprachenfolgeNr(fach: GostFach): number {
-		if (!this.istFremdspracheMoeglich(fach))
+		if (!this.istFremdspracheMoeglich(fach)) {
 			return 0;
+		}
 		const sprachbelegung = this._mapSprachbelegung.value.get(fach);
-		if (sprachbelegung !== null)
+		if (sprachbelegung !== null) {
 			return sprachbelegung.reihenfolge ?? 0;
+		}
 		const sprachpruefung = this._mapSprachpruefungen.value.get(fach);
 		if (sprachpruefung !== null) {
-			if (sprachpruefung.kannErstePflichtfremdspracheErsetzen)
+			if (sprachpruefung.kannErstePflichtfremdspracheErsetzen) {
 				return 1;
-			if (sprachpruefung.kannZweitePflichtfremdspracheErsetzen)
+			}
+			if (sprachpruefung.kannZweitePflichtfremdspracheErsetzen) {
 				return 2;
-			if (sprachpruefung.kannWahlpflichtfremdspracheErsetzen)
+			}
+			if (sprachpruefung.kannWahlpflichtfremdspracheErsetzen) {
 				return 3;
+			}
 		}
 		return 0;
 	}
@@ -754,11 +902,13 @@ export class LaufbahnplanungUiManager {
 	 * @returns das Kürzel des Jahrgangs oder ein leerer String
 	 */
 	public getSprachenfolgeJahrgang(fach: GostFach): string {
-		if (!this.istFremdspracheMoeglich(fach))
+		if (!this.istFremdspracheMoeglich(fach)) {
 			return "";
+		}
 		const sprachbelegung = this._mapSprachbelegung.value.get(fach);
-		if (sprachbelegung !== null)
+		if (sprachbelegung !== null) {
 			return sprachbelegung.belegungVonJahrgang ?? "";
+		}
 		const sprachpruefung = this._mapSprachpruefungen.value.get(fach);
 		if (sprachpruefung !== null) {
 			return "P";
@@ -810,10 +960,37 @@ export class LaufbahnplanungUiManager {
 				map.put(fach, GostHalbjahr.Q12, false);
 				map.put(fach, GostHalbjahr.Q21, false);
 				map.put(fach, GostHalbjahr.Q22, false);
+			} else if (this.getFachgruppe(fach) === Fachgruppe.FG_PX) {
+				// Prüfe, ob die Vorraussetzungen für die Projektkursbelegungen erfüllt sind.
+				map.put(fach, GostHalbjahr.EF1, false);
+				map.put(fach, GostHalbjahr.EF2, false);
+				if (this.isAbi30ff.value) { // experimenteller Code
+					map.put(fach, GostHalbjahr.Q11, false);
+					map.put(fach, GostHalbjahr.Q12, false);
+					// Prüfe Belegung des Referenzfaches
+					const belegungReferenzfach1 = (fach.projektKursLeitfach1ID === null) ? null : this.manager().getFachbelegungByID(fach.projektKursLeitfach1ID);
+					const belegungReferenzfach2 = (fach.projektKursLeitfach2ID === null) ? null : this.manager().getFachbelegungByID(fach.projektKursLeitfach2ID);
+					const hatBelegungReferenzfach1 = (this.manager().pruefeBelegung(belegungReferenzfach1, GostHalbjahr.EF1, GostHalbjahr.EF2) &&
+						this.manager().pruefeBelegungMitSchriftlichkeit(belegungReferenzfach1, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12));
+					const hatBelegungReferenzfach2 = (this.manager().pruefeBelegung(belegungReferenzfach2, GostHalbjahr.EF1, GostHalbjahr.EF2) &&
+						this.manager().pruefeBelegungMitSchriftlichkeit(belegungReferenzfach2, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12));
+					if (hatBelegungReferenzfach1 || hatBelegungReferenzfach2) {
+						map.put(fach, GostHalbjahr.Q21, (fach.istMoeglichQ21 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q21)));
+						map.put(fach, GostHalbjahr.Q22, (fach.istMoeglichQ22 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q22)));
+					} else {
+						map.put(fach, GostHalbjahr.Q21, false);
+						map.put(fach, GostHalbjahr.Q22, false);
+					}
+				} else {
+					map.put(fach, GostHalbjahr.Q11, (fach.istMoeglichQ11 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q11)));
+					map.put(fach, GostHalbjahr.Q12, (fach.istMoeglichQ12 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q12)));
+					map.put(fach, GostHalbjahr.Q21, (fach.istMoeglichQ21 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q21)));
+					map.put(fach, GostHalbjahr.Q22, (fach.istMoeglichQ22 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q22)));
+				}
 			} else {
-				const istNichtErsatzOderPjk = (this.getFachgruppe(fach) !== Fachgruppe.FG_ME) && (this.getFachgruppe(fach) !== Fachgruppe.FG_PX);
-				map.put(fach, GostHalbjahr.EF1, (fach.istMoeglichEF1 && !this.hatDoppelbelegung(fach, GostHalbjahr.EF1) && istNichtErsatzOderPjk));
-				map.put(fach, GostHalbjahr.EF2, (fach.istMoeglichEF2 && !this.hatDoppelbelegung(fach, GostHalbjahr.EF2) && istNichtErsatzOderPjk));
+				const istNichtErsatz = (this.getFachgruppe(fach) !== Fachgruppe.FG_ME);
+				map.put(fach, GostHalbjahr.EF1, (fach.istMoeglichEF1 && !this.hatDoppelbelegung(fach, GostHalbjahr.EF1) && istNichtErsatz));
+				map.put(fach, GostHalbjahr.EF2, (fach.istMoeglichEF2 && !this.hatDoppelbelegung(fach, GostHalbjahr.EF2) && istNichtErsatz));
 				map.put(fach, GostHalbjahr.Q11, (fach.istMoeglichQ11 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q11)));
 				map.put(fach, GostHalbjahr.Q12, (fach.istMoeglichQ12 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q12)));
 				map.put(fach, GostHalbjahr.Q21, (fach.istMoeglichQ21 && !this.hatDoppelbelegung(fach, GostHalbjahr.Q21)));
@@ -842,8 +1019,9 @@ export class LaufbahnplanungUiManager {
 		const map = new HashMap<GostFach, GostKursart>();
 		for (const fach of this.alleFaecher) {
 			const tmp = this.manager().getMoeglicheKursartAlsAbiturfach(fach.id);
-			if (tmp !== null)
+			if (tmp !== null) {
 				map.put(fach, tmp);
+			}
 		}
 		return map;
 	});
@@ -880,10 +1058,12 @@ export class LaufbahnplanungUiManager {
 	 * @param halbjahr das Halbjahr, für das die Fachwahl gelöscht werden soll
 	 */
 	public async deleteFachwahl(fach: GostFach, halbjahr: GostHalbjahr | undefined) {
-		if (halbjahr === undefined)
+		if (halbjahr === undefined) {
 			return;
-		if (this.istMoeglich(fach, halbjahr) && (!this.manager().istBewertet(halbjahr) || this.hatNote(fach, halbjahr)))
+		}
+		if (this.istMoeglich(fach, halbjahr) && (!this.manager().istBewertet(halbjahr) || this.hatNote(fach, halbjahr))) {
 			return;
+		}
 		const wahl = this.manager().getSchuelerFachwahl(fach.id);
 		wahl.halbjahre[halbjahr.id] = null;
 		await this.setWahl(fach.id, wahl);
@@ -911,11 +1091,13 @@ export class LaufbahnplanungUiManager {
 	 * @returns -
 	 */
 	private async stepperAbiturManuell(fach: GostFach): Promise<void> {
-		if (this.manager().istBewertet(GostHalbjahr.Q22))
+		if (this.manager().istBewertet(GostHalbjahr.Q22)) {
 			return;
+		}
 		const wahl = this.manager().getSchuelerFachwahl(fach.id);
-		if (wahl.halbjahre[GostHalbjahr.Q22.id] === null)
+		if (wahl.halbjahre[GostHalbjahr.Q22.id] === null) {
 			return;
+		}
 		switch (wahl.abiturFach) {
 			case null:
 				wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "LK") ? 1 : 3;
@@ -949,8 +1131,9 @@ export class LaufbahnplanungUiManager {
 	 */
 	private async stepperAbiturNormal(fach: GostFach) {
 		// Prüfe, ob die Wahl als Abiturfach überhaupt möglich ist
-		if (!this.istMoeglichAbi(fach))
+		if (!this.istMoeglichAbi(fach)) {
 			return;
+		}
 		// Bestimme die Fachwahl des Schüler und die mögliche Kursart im Abitur.
 		const wahl = this.manager().getSchuelerFachwahl(fach.id);
 		const abiMoeglicheKursart = this.getMoeglicheAbiKursart(fach);
@@ -966,14 +1149,16 @@ export class LaufbahnplanungUiManager {
 					wahl.abiturFach = 2;
 					break;
 				case 2:
-					if (GostFachUtils.istWaehlbarLeistungskurs1(fach))
+					if (GostFachUtils.istWaehlbarLeistungskurs1(fach)) {
 						wahl.abiturFach = 1;
+					}
 					break;
 				default:
-					if (GostFachUtils.istWaehlbarLeistungskurs1(fach) && !this.manager().hatAbiFach(GostAbiturFach.LK1))
+					if (GostFachUtils.istWaehlbarLeistungskurs1(fach) && !this.manager().hatAbiFach(GostAbiturFach.LK1)) {
 						wahl.abiturFach = 1;
-					else
+					} else {
 						wahl.abiturFach = 2;
+					}
 					break;
 			}
 		}
@@ -1006,11 +1191,13 @@ export class LaufbahnplanungUiManager {
 	 * @returns -
 	 */
 	private async stepperAbitur2030Manuell(fach: GostFach): Promise<void> {
-		if (this.manager().istBewertet(GostHalbjahr.Q22))
+		if (this.manager().istBewertet(GostHalbjahr.Q22)) {
 			return;
+		}
 		const wahl = this.manager().getSchuelerFachwahl(fach.id);
-		if (wahl.halbjahre[GostHalbjahr.Q22.id] === null)
+		if (wahl.halbjahre[GostHalbjahr.Q22.id] === null) {
 			return;
+		}
 		switch (wahl.abiturFach) {
 			case null:
 				wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "LK") ? 1 : 3;
@@ -1047,8 +1234,9 @@ export class LaufbahnplanungUiManager {
 	 */
 	private async stepperAbitur2030Normal(fach: GostFach) {
 		// Prüfe, ob die Wahl als Abiturfach überhaupt möglich ist
-		if (!this.istMoeglichAbi(fach))
+		if (!this.istMoeglichAbi(fach)) {
 			return;
+		}
 		// Bestimme die Fachwahl des Schüler und die mögliche Kursart im Abitur.
 		const wahl = this.manager().getSchuelerFachwahl(fach.id);
 		const abiMoeglicheKursart = this.getMoeglicheAbiKursart(fach);
@@ -1064,14 +1252,16 @@ export class LaufbahnplanungUiManager {
 					wahl.abiturFach = 2;
 					break;
 				case 2:
-					if (GostFachUtils.istWaehlbarLeistungskurs1(fach))
+					if (GostFachUtils.istWaehlbarLeistungskurs1(fach)) {
 						wahl.abiturFach = 1;
+					}
 					break;
 				default:
-					if (GostFachUtils.istWaehlbarLeistungskurs1(fach) && !this.manager().hatAbiFach(GostAbiturFach.LK1))
+					if (GostFachUtils.istWaehlbarLeistungskurs1(fach) && !this.manager().hatAbiFach(GostAbiturFach.LK1)) {
 						wahl.abiturFach = 1;
-					else
+					} else {
 						wahl.abiturFach = 2;
+					}
 					break;
 			}
 		}
@@ -1152,19 +1342,21 @@ export class LaufbahnplanungUiManager {
 		const istPJK = (this.getFachgruppe(fach) === Fachgruppe.FG_PX);
 		switch (wahl.halbjahre[GostHalbjahr.EF1.id]) {
 			case null:
-				if ((istVTF || istPJK) || (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK))
+				if ((istVTF || istPJK) || (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK)) {
 					wahl.halbjahre[GostHalbjahr.EF1.id] = "M";
-				else
+				} else {
 					wahl.halbjahre[GostHalbjahr.EF1.id] = "S";
+				}
 				break;
 			case "S":
 				wahl.halbjahre[GostHalbjahr.EF1.id] = "M";
 				break;
 			case "M":
-				if (GostFachbereich.SPORT.hat(fach))
+				if (GostFachbereich.SPORT.hat(fach)) {
 					wahl.halbjahre[GostHalbjahr.EF1.id] = "AT";
-				else
+				} else {
 					wahl.halbjahre[GostHalbjahr.EF1.id] = null;
+				}
 				break;
 			case "AT":
 				wahl.halbjahre[GostHalbjahr.EF1.id] = null;
@@ -1184,19 +1376,21 @@ export class LaufbahnplanungUiManager {
 		const istPJK = (this.getFachgruppe(fach) === Fachgruppe.FG_PX);
 		switch (wahl.halbjahre[GostHalbjahr.EF2.id]) {
 			case null:
-				if ((istVTF || istPJK) || (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK))
+				if ((istVTF || istPJK) || (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK)) {
 					wahl.halbjahre[GostHalbjahr.EF2.id] = "M";
-				else
+				} else {
 					wahl.halbjahre[GostHalbjahr.EF2.id] = "S";
+				}
 				break;
 			case "S":
 				wahl.halbjahre[GostHalbjahr.EF2.id] = "M";
 				break;
 			case "M":
-				if (GostFachbereich.SPORT.hat(fach))
+				if (GostFachbereich.SPORT.hat(fach)) {
 					wahl.halbjahre[GostHalbjahr.EF2.id] = "AT";
-				else
+				} else {
 					wahl.halbjahre[GostHalbjahr.EF2.id] = null;
+				}
 				break;
 			case "AT":
 				wahl.halbjahre[GostHalbjahr.EF2.id] = null;
@@ -1235,9 +1429,11 @@ export class LaufbahnplanungUiManager {
 	 * @returns true, wenn die Wahl übereinstimmt, und ansonsten false
 	 */
 	private stepperIstWahlInQPhase(fach: GostFach, wahl: GostSchuelerFachwahl, a: Array<string | null>): boolean {
-		for (const halbjahr of GostHalbjahr.getQualifikationsphase())
-			if ((wahl.halbjahre[halbjahr.id] !== a[halbjahr.id - 2]) && this.stepperFachIstWaehlbar(fach, halbjahr))
+		for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
+			if ((wahl.halbjahre[halbjahr.id] !== a[halbjahr.id - 2]) && this.stepperFachIstWaehlbar(fach, halbjahr)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -1251,9 +1447,11 @@ export class LaufbahnplanungUiManager {
 	 * @returns true, wenn die Wahl übereinstimmt, und ansonsten false
 	 */
 	private stepperIstWahl(fach: GostFach, wahl: GostSchuelerFachwahl, a: Array<string | null>) {
-		for (const halbjahr of GostHalbjahr.values())
-			if ((wahl.halbjahre[halbjahr.id] !== a[halbjahr.id]) && this.stepperFachIstWaehlbar(fach, halbjahr))
+		for (const halbjahr of GostHalbjahr.values()) {
+			if ((wahl.halbjahre[halbjahr.id] !== a[halbjahr.id]) && this.stepperFachIstWaehlbar(fach, halbjahr)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -1272,11 +1470,11 @@ export class LaufbahnplanungUiManager {
 					wahl.halbjahre[GostHalbjahr.EF1.id] = 'S';
 				// Prüfe, ob die Folgehalbjahre auch leer sind, dann setze auch diese
 				} else if (this.stepperIstWahl(fach, wahl, [null, null, null, null, null, null]) && !(istVTF || istPJK)) {
-					if ((GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK))
+					if ((GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK)) {
 						wahl.halbjahre = ['M', 'M', 'M', 'M', 'M', 'M'];
-					else if ((GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK))
+					} else if ((GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK)) {
 						wahl.halbjahre = ['S', 'S', 'LK', 'LK', 'LK', 'LK'];
-					else
+					} else {
 						wahl.halbjahre = [
 							fach.istMoeglichEF1 ? 'S' : null,
 							fach.istMoeglichEF2 ? 'S' : null,
@@ -1285,22 +1483,24 @@ export class LaufbahnplanungUiManager {
 							fach.istMoeglichQ21 ? 'S' : null,
 							fach.istMoeglichQ22 ? 'M' : null,
 						];
+					}
 				} else {
-					if (istVTF || istPJK || (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK))
+					if (istVTF || istPJK || (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK)) {
 						wahl.halbjahre[GostHalbjahr.EF1.id] = "M";
-					else
+					} else {
 						wahl.halbjahre[GostHalbjahr.EF1.id] = "S";
+					}
 				}
 				break;
 			}
 			case "S": {
-				if (wahl.abiturFach !== null)
+				if (wahl.abiturFach !== null) {
 					wahl.halbjahre[GostHalbjahr.EF1.id] = 'M';
-				// Prüfe, ob die Folgehalbjahre S,S,S,S,M sind und Abi-Fach nicht gesetzt (Spezialfälle berücksichtigen KU+MU+RE)
-				else if (this.stepperIstWahl(fach, wahl, ['S', 'S', 'S', 'S', 'S', 'M']) && !(istVTF || istPJK))
-					if (GostFachbereich.KUNST_MUSIK.hat(fach) || GostFachbereich.RELIGION.hat(fach))
+				} else if (this.stepperIstWahl(fach, wahl, ['S', 'S', 'S', 'S', 'S', 'M']) && !(istVTF || istPJK)) {
+					// Prüfe, ob die Folgehalbjahre S,S,S,S,M sind und Abi-Fach nicht gesetzt (Spezialfälle berücksichtigen KU+MU+RE)
+					if (GostFachbereich.KUNST_MUSIK.hat(fach) || GostFachbereich.RELIGION.hat(fach)) {
 						wahl.halbjahre = ['M', 'M', 'M', 'M', null, null];
-					else
+					} else {
 						wahl.halbjahre = [
 							fach.istMoeglichEF1 ? 'M' : null,
 							fach.istMoeglichEF2 ? 'M' : null,
@@ -1309,10 +1509,12 @@ export class LaufbahnplanungUiManager {
 							fach.istMoeglichQ21 ? 'M' : null,
 							fach.istMoeglichQ22 ? 'M' : null,
 						];
-				else if (this.stepperIstWahl(fach, wahl, ['S', 'S', 'LK', 'LK', 'LK', 'LK']) && (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK))
+					}
+				} else if (this.stepperIstWahl(fach, wahl, ['S', 'S', 'LK', 'LK', 'LK', 'LK']) && (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK)) {
 					wahl.halbjahre = ['M', 'M', 'M', 'M', 'M', 'M'];
-				else
+				} else {
 					wahl.halbjahre[GostHalbjahr.EF1.id] = "M";
+				}
 				break;
 			}
 			case "M": {
@@ -1320,15 +1522,17 @@ export class LaufbahnplanungUiManager {
 					wahl.halbjahre[GostHalbjahr.EF1.id] = 'S';
 				// Prüfe, ob die Folgehalbjahre M,M,M,M?,M? sind und passe diese an (Spezialfälle berücksichtigen KU+MU+RE)
 				} else if ((this.stepperIstWahl(fach, wahl, ['M', 'M', 'M', 'M', 'M', 'M']) || this.stepperIstWahl(fach, wahl, ['M', 'M', 'M', 'M', null, null])) && !(istVTF || istPJK)) {
-					if (GostFachbereich.SPORT.hat(fach))
+					if (GostFachbereich.SPORT.hat(fach)) {
 						wahl.halbjahre = ["AT", "AT", "AT", "AT", "AT", "AT"];
-					else
+					} else {
 						wahl.halbjahre = [null, null, null, null, null, null];
+					}
 				} else {
-					if (GostFachbereich.SPORT.hat(fach))
+					if (GostFachbereich.SPORT.hat(fach)) {
 						wahl.halbjahre[GostHalbjahr.EF1.id] = "AT";
-					else
+					} else {
 						wahl.halbjahre[GostHalbjahr.EF1.id] = null;
+					}
 				}
 				break;
 			}
@@ -1360,11 +1564,11 @@ export class LaufbahnplanungUiManager {
 				if (wahl.abiturFach !== null) {
 					wahl.halbjahre[GostHalbjahr.EF2.id] = 'S';
 				} else if (this.stepperIstWahlInQPhase(fach, wahl, [null, null, null, null]) && !(istVTF || istPJK)) {
-					if ((GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK))
+					if ((GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK)) {
 						wahl.halbjahre = [wahl.halbjahre[0], 'M', 'M', 'M', 'M', 'M'];
-					else if ((GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK))
+					} else if ((GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK)) {
 						wahl.halbjahre = [wahl.halbjahre[0], 'S', 'LK', 'LK', 'LK', 'LK'];
-					else
+					} else {
 						wahl.halbjahre = [
 							wahl.halbjahre[0],
 							fach.istMoeglichEF2 ? 'S' : null,
@@ -1373,22 +1577,24 @@ export class LaufbahnplanungUiManager {
 							fach.istMoeglichQ21 ? 'S' : null,
 							fach.istMoeglichQ22 ? 'M' : null,
 						];
+					}
 				} else {
-					if (istVTF || istPJK || (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK))
+					if (istVTF || istPJK || (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK)) {
 						wahl.halbjahre[GostHalbjahr.EF2.id] = "M";
-					else
+					} else {
 						wahl.halbjahre[GostHalbjahr.EF2.id] = "S";
+					}
 				}
 				break;
 			}
 			case "S": {
-				if (wahl.abiturFach !== null)
+				if (wahl.abiturFach !== null) {
 					wahl.halbjahre[GostHalbjahr.EF2.id] = 'M';
-				else if ((this.stepperIstWahlInQPhase(fach, wahl, [null, null, null, null])
-					|| this.stepperIstWahlInQPhase(fach, wahl, ['S', 'S', 'S', 'M'])) && !(istVTF || istPJK))
-					if (GostFachbereich.KUNST_MUSIK.hat(fach) || GostFachbereich.RELIGION.hat(fach))
+				} else if ((this.stepperIstWahlInQPhase(fach, wahl, [null, null, null, null])
+					|| this.stepperIstWahlInQPhase(fach, wahl, ['S', 'S', 'S', 'M'])) && !(istVTF || istPJK)) {
+					if (GostFachbereich.KUNST_MUSIK.hat(fach) || GostFachbereich.RELIGION.hat(fach)) {
 						wahl.halbjahre = [wahl.halbjahre[0], 'M', 'M', 'M', null, null];
-					else
+					} else {
 						wahl.halbjahre = [
 							wahl.halbjahre[0],
 							fach.istMoeglichEF2 ? 'M' : null,
@@ -1397,10 +1603,12 @@ export class LaufbahnplanungUiManager {
 							fach.istMoeglichQ21 ? 'M' : null,
 							fach.istMoeglichQ22 ? 'M' : null,
 						];
-				else if (this.stepperIstWahlInQPhase(fach, wahl, ['LK', 'LK', 'LK', 'LK']) && (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK))
+					}
+				} else if (this.stepperIstWahlInQPhase(fach, wahl, ['LK', 'LK', 'LK', 'LK']) && (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK)) {
 					wahl.halbjahre = [wahl.halbjahre[0], 'M', 'M', 'M', 'M', 'M'];
-				else
+				} else {
 					wahl.halbjahre[GostHalbjahr.EF2.id] = "M";
+				}
 				break;
 			}
 			case "M": {
@@ -1409,15 +1617,17 @@ export class LaufbahnplanungUiManager {
 				} else if ((this.stepperIstWahlInQPhase(fach, wahl, [null, null, null, null])
 					|| this.stepperIstWahlInQPhase(fach, wahl, ['M', 'M', 'M', 'M'])
 					|| this.stepperIstWahlInQPhase(fach, wahl, ['M', 'M', null, null])) && !(istVTF || istPJK)) {
-					if (GostFachbereich.SPORT.hat(fach))
+					if (GostFachbereich.SPORT.hat(fach)) {
 						wahl.halbjahre = [wahl.halbjahre[0], "AT", "AT", "AT", "AT", "AT"];
-					else
+					} else {
 						wahl.halbjahre = [wahl.halbjahre[0], null, null, null, null, null];
+					}
 				} else {
-					if (GostFachbereich.SPORT.hat(fach))
+					if (GostFachbereich.SPORT.hat(fach)) {
 						wahl.halbjahre[GostHalbjahr.EF2.id] = "AT";
-					else
+					} else {
 						wahl.halbjahre[GostHalbjahr.EF2.id] = null;
+					}
 				}
 				break;
 			}
@@ -1444,8 +1654,9 @@ export class LaufbahnplanungUiManager {
 	 * @returns true, wenn eine Belegung vorliegt und ansonsten false
 	 */
 	private stepperHatSchuelerFachwahl(fachwahl: GostSchuelerFachwahl | null, halbjahr: GostHalbjahr): boolean {
-		if (fachwahl === null)
+		if (fachwahl === null) {
 			return false;
+		}
 		return fachwahl.halbjahre[halbjahr.id] !== null;
 	}
 
@@ -1464,14 +1675,15 @@ export class LaufbahnplanungUiManager {
 				wahl.halbjahre[GostHalbjahr.Q11.id] = (GostFachbereich.DEUTSCH.hat(fach) || GostFachbereich.MATHEMATIK.hat(fach)) ? "S" : "M";
 				break;
 			case "M":
-				if (istVTF || istPJK || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach))
+				if (istVTF || istPJK || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
 					wahl.halbjahre[GostHalbjahr.Q11.id] = null;
-				else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK)
+				} else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK) {
 					wahl.halbjahre[GostHalbjahr.Q11.id] = null;
-				else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK)
+				} else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK) {
 					wahl.halbjahre[GostHalbjahr.Q11.id] = "LK";
-				else
+				} else {
 					wahl.halbjahre[GostHalbjahr.Q11.id] = "S";
+				}
 				break;
 			case "S":
 				// S->S ist richtig, weil DE und MA muss belegt sein, entweder S oder LK, anders geht es nicht.
@@ -1483,10 +1695,11 @@ export class LaufbahnplanungUiManager {
 				break;
 		}
 		// Sonderfall Sport - darf AT haben
-		if ((wahl.halbjahre[GostHalbjahr.Q11.id] === null) && GostFachbereich.SPORT.hat(fach))
+		if ((wahl.halbjahre[GostHalbjahr.Q11.id] === null) && GostFachbereich.SPORT.hat(fach)) {
 			wahl.halbjahre[GostHalbjahr.Q11.id] = "AT";
-		else if (wahl.halbjahre[GostHalbjahr.Q11.id] === "AT" && GostFachbereich.SPORT.hat(fach))
+		} else if (wahl.halbjahre[GostHalbjahr.Q11.id] === "AT" && GostFachbereich.SPORT.hat(fach)) {
 			wahl.halbjahre[GostHalbjahr.Q11.id] = null;
+		}
 		// Q11 wählt bis Q22
 		switch (wahl.halbjahre[GostHalbjahr.Q11.id]) {
 			case null:
@@ -1523,24 +1736,30 @@ export class LaufbahnplanungUiManager {
 				}
 				break;
 			case "M":
-				if (fach.istMoeglichQ12 && !istVTF)
+				if (fach.istMoeglichQ12 && !istVTF) {
 					wahl.halbjahre[GostHalbjahr.Q12.id] = wahl.halbjahre[GostHalbjahr.Q11.id];
+				}
 				if (!(istVTF || istPJK) && !GostFachbereich.KUNST_MUSIK.hat(fach) && !GostFachbereich.RELIGION.hat(fach)) {
-					if (fach.istMoeglichQ21)
+					if (fach.istMoeglichQ21) {
 						wahl.halbjahre[GostHalbjahr.Q21.id] = wahl.halbjahre[GostHalbjahr.Q11.id];
-					if (fach.istMoeglichQ22)
+					}
+					if (fach.istMoeglichQ22) {
 						wahl.halbjahre[GostHalbjahr.Q22.id] = wahl.halbjahre[GostHalbjahr.Q11.id];
+					}
 				}
 				break;
 			case "S":
-				if (fach.istMoeglichQ12)
+				if (fach.istMoeglichQ12) {
 					wahl.halbjahre[GostHalbjahr.Q12.id] = wahl.halbjahre[GostHalbjahr.Q11.id];
+				}
 				if (!(istVTF || istPJK)) {
-					if (fach.istMoeglichQ21)
+					if (fach.istMoeglichQ21) {
 						wahl.halbjahre[GostHalbjahr.Q21.id] = wahl.halbjahre[GostHalbjahr.Q11.id];
+					}
 					// "S" kann nur für drittes Abifach gewählt werden, Vorauswahl daher "M"
-					if (fach.istMoeglichQ22)
+					if (fach.istMoeglichQ22) {
 						wahl.halbjahre[GostHalbjahr.Q22.id] = "M";
+					}
 				}
 				break;
 			case "ZK":
@@ -1565,8 +1784,9 @@ export class LaufbahnplanungUiManager {
 				break;
 			}
 		}
-		if ((wahl.halbjahre[GostHalbjahr.Q11.id] === null) || (wahl.halbjahre[GostHalbjahr.Q11.id] === "M"))
+		if ((wahl.halbjahre[GostHalbjahr.Q11.id] === null) || (wahl.halbjahre[GostHalbjahr.Q11.id] === "M")) {
 			wahl.abiturFach = null;
+		}
 	}
 
 
@@ -1620,23 +1840,26 @@ export class LaufbahnplanungUiManager {
 						}
 					}
 					if ((beginn !== null) && (((beginn === GostHalbjahr.Q11) && (wahl.halbjahre[GostHalbjahr.EF2.id] === null)) || ((beginn === GostHalbjahr.Q12) && (wahl.halbjahre[GostHalbjahr.Q11.id] === null)))) {
-						if (beginn === GostHalbjahr.Q11)
+						if (beginn === GostHalbjahr.Q11) {
 							wahl.halbjahre[GostHalbjahr.Q11.id] = "ZK";
+						}
 						wahl.halbjahre[GostHalbjahr.Q12.id] = "ZK";
-						if (beginn === GostHalbjahr.Q12)
+						if (beginn === GostHalbjahr.Q12) {
 							wahl.halbjahre[GostHalbjahr.Q21.id] = "ZK";
+						}
 					}
 				}
 				break;
 			case "M":
-				if (istVTF || istPJK || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach))
+				if (istVTF || istPJK || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
 					wahl.halbjahre[GostHalbjahr.Q12.id] = null;
-				else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK)
+				} else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK) {
 					wahl.halbjahre[GostHalbjahr.Q12.id] = null;
-				else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK)
+				} else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK) {
 					wahl.halbjahre[GostHalbjahr.Q12.id] = "LK";
-				else
+				} else {
 					wahl.halbjahre[GostHalbjahr.Q12.id] = "S";
+				}
 				break;
 			case "S":
 				wahl.halbjahre[GostHalbjahr.Q12.id] = (wahl.halbjahre[GostHalbjahr.Q11.id] === "LK") ? "LK" : null;
@@ -1645,11 +1868,13 @@ export class LaufbahnplanungUiManager {
 				const beginn: GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach))
 					? GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursSW ?? "")
 					: GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursGE ?? "");
-				if ((beginn !== null) && (beginn === GostHalbjahr.Q11))
+				if ((beginn !== null) && (beginn === GostHalbjahr.Q11)) {
 					wahl.halbjahre[GostHalbjahr.Q11.id] = null;
+				}
 				wahl.halbjahre[GostHalbjahr.Q12.id] = null;
-				if ((beginn !== null) && (beginn === GostHalbjahr.Q12))
+				if ((beginn !== null) && (beginn === GostHalbjahr.Q12)) {
 					wahl.halbjahre[GostHalbjahr.Q21.id] = null;
+				}
 				break;
 				// TODO: Warum ist das so? Bis Q22. Was ist erlaubt: M, S, null?
 			}
@@ -1658,17 +1883,19 @@ export class LaufbahnplanungUiManager {
 				wahl.abiturFach = null;
 		}
 		// Sonderfall Sport - darf AT haben
-		if ((wahl.halbjahre[GostHalbjahr.Q12.id] === null) && GostFachbereich.SPORT.hat(fach))
+		if ((wahl.halbjahre[GostHalbjahr.Q12.id] === null) && GostFachbereich.SPORT.hat(fach)) {
 			wahl.halbjahre[GostHalbjahr.Q12.id] = "AT";
-		else if ((wahl.halbjahre[GostHalbjahr.Q12.id] === "AT") && GostFachbereich.SPORT.hat(fach))
+		} else if ((wahl.halbjahre[GostHalbjahr.Q12.id] === "AT") && GostFachbereich.SPORT.hat(fach)) {
 			wahl.halbjahre[GostHalbjahr.Q12.id] = null;
+		}
 		// Nachfolgende HJ ebenfalls setzen
 		if ((wahl.halbjahre[GostHalbjahr.Q12.id] === null) && !istVTF) {
 			wahl.halbjahre[GostHalbjahr.Q21.id] = null;
 			wahl.halbjahre[GostHalbjahr.Q22.id] = null;
 		}
-		if ((wahl.halbjahre[GostHalbjahr.Q12.id] === null) || (wahl.halbjahre[GostHalbjahr.Q12.id] === "M"))
+		if ((wahl.halbjahre[GostHalbjahr.Q12.id] === null) || (wahl.halbjahre[GostHalbjahr.Q12.id] === "M")) {
 			wahl.abiturFach = null;
+		}
 	}
 
 
@@ -1723,14 +1950,15 @@ export class LaufbahnplanungUiManager {
 				}
 				break;
 			case "M":
-				if (istVTF || istPJK || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach))
+				if (istVTF || istPJK || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
 					wahl.halbjahre[GostHalbjahr.Q21.id] = null;
-				else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK)
+				} else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK) {
 					wahl.halbjahre[GostHalbjahr.Q21.id] = null;
-				else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK)
+				} else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK) {
 					wahl.halbjahre[GostHalbjahr.Q21.id] = "LK";
-				else
+				} else {
 					wahl.halbjahre[GostHalbjahr.Q21.id] = "S";
+				}
 				break;
 			case "S":
 				wahl.halbjahre[GostHalbjahr.Q21.id] = (wahl.halbjahre[GostHalbjahr.Q12.id] === "LK") ? "LK" : null;
@@ -1739,11 +1967,13 @@ export class LaufbahnplanungUiManager {
 				const beginn: GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach))
 					? GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursSW ?? "")
 					: GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursGE ?? "");
-				if ((beginn !== null) && (beginn === GostHalbjahr.Q12))
+				if ((beginn !== null) && (beginn === GostHalbjahr.Q12)) {
 					wahl.halbjahre[GostHalbjahr.Q12.id] = null;
+				}
 				wahl.halbjahre[GostHalbjahr.Q21.id] = null;
-				if ((beginn !== null) && (beginn === GostHalbjahr.Q21))
+				if ((beginn !== null) && (beginn === GostHalbjahr.Q21)) {
 					wahl.halbjahre[GostHalbjahr.Q22.id] = null;
+				}
 				break;
 			}
 			case "LK":
@@ -1752,15 +1982,18 @@ export class LaufbahnplanungUiManager {
 				break;
 		}
 		// Sonderfall Sport - darf AT haben
-		if ((wahl.halbjahre[GostHalbjahr.Q21.id] === null) && GostFachbereich.SPORT.hat(fach))
+		if ((wahl.halbjahre[GostHalbjahr.Q21.id] === null) && GostFachbereich.SPORT.hat(fach)) {
 			wahl.halbjahre[GostHalbjahr.Q21.id] = "AT";
-		else if ((wahl.halbjahre[GostHalbjahr.Q21.id] === "AT") && GostFachbereich.SPORT.hat(fach))
+		} else if ((wahl.halbjahre[GostHalbjahr.Q21.id] === "AT") && GostFachbereich.SPORT.hat(fach)) {
 			wahl.halbjahre[GostHalbjahr.Q21.id] = null;
+		}
 		// Nachfolgende HJ ebenfalls setzen
-		if ((wahl.halbjahre[GostHalbjahr.Q21.id] === null) && !istVTF)
+		if ((wahl.halbjahre[GostHalbjahr.Q21.id] === null) && !istVTF) {
 			wahl.halbjahre[GostHalbjahr.Q22.id] = null;
-		if ((wahl.halbjahre[GostHalbjahr.Q21.id] === null) || (wahl.halbjahre[GostHalbjahr.Q21.id] === "ZK"))
+		}
+		if ((wahl.halbjahre[GostHalbjahr.Q21.id] === null) || (wahl.halbjahre[GostHalbjahr.Q21.id] === "ZK")) {
 			wahl.abiturFach = null;
+		}
 	}
 
 
@@ -1800,14 +2033,15 @@ export class LaufbahnplanungUiManager {
 				}
 				break;
 			case "M":
-				if (istVTF || istPJK || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach))
+				if (istVTF || istPJK || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
 					wahl.halbjahre[GostHalbjahr.Q22.id] = null;
-				else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK)
+				} else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK) {
 					wahl.halbjahre[GostHalbjahr.Q22.id] = null;
-				else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK)
+				} else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK) {
 					wahl.halbjahre[GostHalbjahr.Q22.id] = "LK";
-				else
+				} else {
 					wahl.halbjahre[GostHalbjahr.Q22.id] = "S";
+				}
 				break;
 			case "S":
 				wahl.halbjahre[GostHalbjahr.Q22.id] = (wahl.halbjahre[GostHalbjahr.Q21.id] === "LK") ? "LK" : null;
@@ -1827,17 +2061,21 @@ export class LaufbahnplanungUiManager {
 				wahl.abiturFach = null;
 		}
 		// Sonderfall Sport - darf AT haben
-		if ((wahl.halbjahre[GostHalbjahr.Q22.id] === null) && GostFachbereich.SPORT.hat(fach))
+		if ((wahl.halbjahre[GostHalbjahr.Q22.id] === null) && GostFachbereich.SPORT.hat(fach)) {
 			wahl.halbjahre[GostHalbjahr.Q22.id] = "AT";
-		else if ((wahl.halbjahre[GostHalbjahr.Q22.id] === "AT") && GostFachbereich.SPORT.hat(fach))
+		} else if ((wahl.halbjahre[GostHalbjahr.Q22.id] === "AT") && GostFachbereich.SPORT.hat(fach)) {
 			wahl.halbjahre[GostHalbjahr.Q22.id] = null;
+		}
 		// Nachfolgende HJ ebenfalls setzen
-		if ((wahl.halbjahre[GostHalbjahr.Q22.id] === null) || (wahl.halbjahre[GostHalbjahr.Q22.id] === "ZK"))
+		if ((wahl.halbjahre[GostHalbjahr.Q22.id] === null) || (wahl.halbjahre[GostHalbjahr.Q22.id] === "ZK")) {
 			wahl.abiturFach = null;
-		if (wahl.abiturFach === 3 && wahl.halbjahre[GostHalbjahr.Q22.id] === "M")
+		}
+		if (wahl.abiturFach === 3 && wahl.halbjahre[GostHalbjahr.Q22.id] === "M") {
 			wahl.abiturFach = this.manager().pruefeExistiertAbiFach(this.manager().getFachbelegungen(), GostAbiturFach.AB4) ? null : 4;
-		if (wahl.abiturFach === 4 && wahl.halbjahre[GostHalbjahr.Q22.id] === "S")
+		}
+		if (wahl.abiturFach === 4 && wahl.halbjahre[GostHalbjahr.Q22.id] === "S") {
 			wahl.abiturFach = this.manager().pruefeExistiertAbiFach(this.manager().getFachbelegungen(), GostAbiturFach.AB3) ? null : 3;
+		}
 	}
 
 
@@ -1893,14 +2131,15 @@ export class LaufbahnplanungUiManager {
 				}
 				break;
 			case "M":
-				if (istVTF || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach))
+				if (istVTF || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
 					wahl.halbjahre[GostHalbjahr.Q21.id] = null;
-				else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK)
+				} else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK) {
 					wahl.halbjahre[GostHalbjahr.Q21.id] = null;
-				else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK)
+				} else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK) {
 					wahl.halbjahre[GostHalbjahr.Q21.id] = "LK";
-				else
+				} else {
 					wahl.halbjahre[GostHalbjahr.Q21.id] = "S";
+				}
 				break;
 			case "S":
 				wahl.halbjahre[GostHalbjahr.Q21.id] = (wahl.halbjahre[GostHalbjahr.Q12.id] === "LK") ? "LK" : null;
@@ -1909,11 +2148,13 @@ export class LaufbahnplanungUiManager {
 				const beginn: GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach))
 					? GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursSW ?? "")
 					: GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursGE ?? "");
-				if ((beginn !== null) && (beginn === GostHalbjahr.Q12))
+				if ((beginn !== null) && (beginn === GostHalbjahr.Q12)) {
 					wahl.halbjahre[GostHalbjahr.Q12.id] = null;
+				}
 				wahl.halbjahre[GostHalbjahr.Q21.id] = null;
-				if ((beginn !== null) && (beginn === GostHalbjahr.Q21))
+				if ((beginn !== null) && (beginn === GostHalbjahr.Q21)) {
 					wahl.halbjahre[GostHalbjahr.Q22.id] = null;
+				}
 				break;
 			}
 			case "LK":
@@ -1922,15 +2163,18 @@ export class LaufbahnplanungUiManager {
 				break;
 		}
 		// Sonderfall Sport - darf AT haben
-		if ((wahl.halbjahre[GostHalbjahr.Q21.id] === null) && GostFachbereich.SPORT.hat(fach))
+		if ((wahl.halbjahre[GostHalbjahr.Q21.id] === null) && GostFachbereich.SPORT.hat(fach)) {
 			wahl.halbjahre[GostHalbjahr.Q21.id] = "AT";
-		else if ((wahl.halbjahre[GostHalbjahr.Q21.id] === "AT") && GostFachbereich.SPORT.hat(fach))
+		} else if ((wahl.halbjahre[GostHalbjahr.Q21.id] === "AT") && GostFachbereich.SPORT.hat(fach)) {
 			wahl.halbjahre[GostHalbjahr.Q21.id] = null;
+		}
 		// Nachfolgende HJ ebenfalls setzen
-		if ((wahl.halbjahre[GostHalbjahr.Q21.id] === null) && !istVTF)
+		if ((wahl.halbjahre[GostHalbjahr.Q21.id] === null) && !istVTF) {
 			wahl.halbjahre[GostHalbjahr.Q22.id] = null;
-		if ((wahl.halbjahre[GostHalbjahr.Q21.id] === null) || (wahl.halbjahre[GostHalbjahr.Q21.id] === "ZK"))
+		}
+		if ((wahl.halbjahre[GostHalbjahr.Q21.id] === null) || (wahl.halbjahre[GostHalbjahr.Q21.id] === "ZK")) {
 			wahl.abiturFach = null;
+		}
 	}
 
 
@@ -1946,8 +2190,9 @@ export class LaufbahnplanungUiManager {
 		switch (wahl.halbjahre[GostHalbjahr.Q22.id]) {
 			case null:
 				wahl.halbjahre[GostHalbjahr.Q22.id] = "M";
-				if (istPJK)
+				if (istPJK) {
 					wahl.halbjahre[GostHalbjahr.Q22.id] = "S";
+				}
 				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) && (this.jahrgang().hatZusatzkursSW)) {
 					const beginn: GostHalbjahr | null = GostHalbjahr.fromKuerzel(this.jahrgang().beginnZusatzkursSW);
 					if (beginn !== null) {
@@ -1972,14 +2217,15 @@ export class LaufbahnplanungUiManager {
 				}
 				break;
 			case "M":
-				if (istVTF || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach))
+				if (istVTF || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
 					wahl.halbjahre[GostHalbjahr.Q22.id] = null;
-				else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK)
+				} else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && !fach.istMoeglichAbiLK) {
 					wahl.halbjahre[GostHalbjahr.Q22.id] = null;
-				else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK)
+				} else if (GostFachbereich.SPORT.hat(fach) && !fach.istMoeglichAbiGK && fach.istMoeglichAbiLK) {
 					wahl.halbjahre[GostHalbjahr.Q22.id] = "LK";
-				else
+				} else {
 					wahl.halbjahre[GostHalbjahr.Q22.id] = "S";
+				}
 				break;
 			case "S":
 				wahl.halbjahre[GostHalbjahr.Q22.id] = (wahl.halbjahre[GostHalbjahr.Q21.id] === "LK") ? "LK" : null;
@@ -1999,17 +2245,21 @@ export class LaufbahnplanungUiManager {
 				wahl.abiturFach = null;
 		}
 		// Sonderfall Sport - darf AT haben
-		if ((wahl.halbjahre[GostHalbjahr.Q22.id] === null) && GostFachbereich.SPORT.hat(fach))
+		if ((wahl.halbjahre[GostHalbjahr.Q22.id] === null) && GostFachbereich.SPORT.hat(fach)) {
 			wahl.halbjahre[GostHalbjahr.Q22.id] = "AT";
-		else if ((wahl.halbjahre[GostHalbjahr.Q22.id] === "AT") && GostFachbereich.SPORT.hat(fach))
+		} else if ((wahl.halbjahre[GostHalbjahr.Q22.id] === "AT") && GostFachbereich.SPORT.hat(fach)) {
 			wahl.halbjahre[GostHalbjahr.Q22.id] = null;
+		}
 		// Nachfolgende HJ ebenfalls setzen
-		if ((wahl.halbjahre[GostHalbjahr.Q22.id] === null) || (wahl.halbjahre[GostHalbjahr.Q22.id] === "ZK"))
+		if ((wahl.halbjahre[GostHalbjahr.Q22.id] === null) || (wahl.halbjahre[GostHalbjahr.Q22.id] === "ZK")) {
 			wahl.abiturFach = null;
-		if (wahl.abiturFach === 3 && wahl.halbjahre[GostHalbjahr.Q22.id] === "M")
+		}
+		if (wahl.abiturFach === 3 && wahl.halbjahre[GostHalbjahr.Q22.id] === "M") {
 			wahl.abiturFach = this.manager().pruefeExistiertAbiFach(this.manager().getFachbelegungen(), GostAbiturFach.AB4) ? null : 4;
-		if (wahl.abiturFach === 4 && wahl.halbjahre[GostHalbjahr.Q22.id] === "S")
+		}
+		if (wahl.abiturFach === 4 && wahl.halbjahre[GostHalbjahr.Q22.id] === "S") {
 			wahl.abiturFach = this.manager().pruefeExistiertAbiFach(this.manager().getFachbelegungen(), GostAbiturFach.AB3) ? null : 3;
+		}
 	}
 
 
@@ -2023,10 +2273,13 @@ export class LaufbahnplanungUiManager {
 	 * @returns -
 	 */
 	private async stepperManuell(fach: GostFach, halbjahr: GostHalbjahr) {
-		for (const hj of GostHalbjahr.values())
-			if (hj.id >= halbjahr.id)
-				if (this.manager().istBewertet(hj))
+		for (const hj of GostHalbjahr.values()) {
+			if (hj.id >= halbjahr.id) {
+				if (this.manager().istBewertet(hj)) {
 					return;
+				}
+			}
+		}
 		const wahl = this.manager().getSchuelerFachwahl(fach.id);
 		const hj = halbjahr.id;
 		const istVTF = (this.getFachgruppe(fach) === Fachgruppe.FG_VX);
@@ -2042,27 +2295,31 @@ export class LaufbahnplanungUiManager {
 				wahl.halbjahre[hj] = "M";
 				break;
 			case "M":
-				if (!fach.istPruefungsordnungsRelevant || istVTF || istPJK || (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)))
+				if (!fach.istPruefungsordnungsRelevant || istVTF || istPJK || (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach))) {
 					wahl.halbjahre[hj] = null;
-				else
+				} else {
 					wahl.halbjahre[hj] = "S";
+				}
 				break;
 			case "S":
 				if ((hj <= 1) || (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach))) {
-					if (GostFachbereich.SPORT.hat(fach))
+					if (GostFachbereich.SPORT.hat(fach)) {
 						wahl.halbjahre[hj] = "AT";
-					else
+					} else {
 						wahl.halbjahre[hj] = null;
+					}
 				} else { // in der Q-Phase als LK möglich, allerdings nicht im Fachbereich des literarisch-künstlerischen Bereichs
 					wahl.halbjahre[hj] = "LK";
 				}
 				break;
 			case "LK": {
 				wahl.halbjahre[hj] = null;
-				if (GostFachbereich.SPORT.hat(fach))
+				if (GostFachbereich.SPORT.hat(fach)) {
 					wahl.halbjahre[hj] = "AT";
-				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) || GostFachbereich.GESCHICHTE.hat(fach))
+				}
+				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) || GostFachbereich.GESCHICHTE.hat(fach)) {
 					wahl.halbjahre[hj] = "ZK";
+				}
 				break;
 			}
 			default:
@@ -2082,25 +2339,30 @@ export class LaufbahnplanungUiManager {
 	 * @returns -
 	 */
 	private async stepperHochschreiben(fach: GostFach, halbjahr: GostHalbjahr) {
-		if (!this.istMoeglich(fach, halbjahr))
+		if (!this.istMoeglich(fach, halbjahr)) {
 			return;
-		for (const hj of GostHalbjahr.values())
-			if (hj.id >= halbjahr.id)
-				if (this.manager().istBewertet(hj))
+		}
+		for (const hj of GostHalbjahr.values()) {
+			if (hj.id >= halbjahr.id) {
+				if (this.manager().istBewertet(hj)) {
 					return;
+				}
+			}
+		}
 		const wahl = this.manager().getSchuelerFachwahl(fach.id);
-		if (halbjahr === GostHalbjahr.EF1)
+		if (halbjahr === GostHalbjahr.EF1) {
 			this.stepEF1WahlHochschreiben(fach, wahl);
-		else if (halbjahr === GostHalbjahr.EF2)
+		} else if (halbjahr === GostHalbjahr.EF2) {
 			this.stepEF2WahlHochschreiben(fach, wahl);
-		else if (halbjahr === GostHalbjahr.Q11)
+		} else if (halbjahr === GostHalbjahr.Q11) {
 			this.stepQ11Wahl(fach, wahl);
-		else if (halbjahr === GostHalbjahr.Q12)
+		} else if (halbjahr === GostHalbjahr.Q12) {
 			this.stepQ12Wahl(fach, wahl);
-		else if (halbjahr === GostHalbjahr.Q21)
+		} else if (halbjahr === GostHalbjahr.Q21) {
 			this.stepQ21Wahl(fach, wahl);
-		else if (halbjahr === GostHalbjahr.Q22)
+		} else if (halbjahr === GostHalbjahr.Q22) {
 			this.stepQ22Wahl(fach, wahl);
+		}
 		await this.setWahl(fach.id, wahl);
 	}
 
@@ -2114,25 +2376,30 @@ export class LaufbahnplanungUiManager {
 	 * @returns -
 	 */
 	private async stepperNormal(fach: GostFach, halbjahr: GostHalbjahr) {
-		if (!this.istMoeglich(fach, halbjahr))
+		if (!this.istMoeglich(fach, halbjahr)) {
 			return;
-		for (const hj of GostHalbjahr.values())
-			if (hj.id >= halbjahr.id)
-				if (this.manager().istBewertet(hj))
+		}
+		for (const hj of GostHalbjahr.values()) {
+			if (hj.id >= halbjahr.id) {
+				if (this.manager().istBewertet(hj)) {
 					return;
+				}
+			}
+		}
 		const wahl = this.manager().getSchuelerFachwahl(fach.id);
-		if (halbjahr === GostHalbjahr.EF1)
+		if (halbjahr === GostHalbjahr.EF1) {
 			this.stepEF1Wahl(fach, wahl);
-		else if (halbjahr === GostHalbjahr.EF2)
+		} else if (halbjahr === GostHalbjahr.EF2) {
 			this.stepEF2Wahl(fach, wahl);
-		else if (halbjahr === GostHalbjahr.Q11)
+		} else if (halbjahr === GostHalbjahr.Q11) {
 			this.stepQ11Wahl(fach, wahl);
-		else if (halbjahr === GostHalbjahr.Q12)
+		} else if (halbjahr === GostHalbjahr.Q12) {
 			this.stepQ12Wahl(fach, wahl);
-		else if (halbjahr === GostHalbjahr.Q21)
+		} else if (halbjahr === GostHalbjahr.Q21) {
 			this.stepQ21Wahl(fach, wahl);
-		else if (halbjahr === GostHalbjahr.Q22)
+		} else if (halbjahr === GostHalbjahr.Q22) {
 			this.stepQ22Wahl(fach, wahl);
+		}
 		await this.setWahl(fach.id, wahl);
 	}
 
@@ -2146,10 +2413,13 @@ export class LaufbahnplanungUiManager {
 	 * @returns -
 	 */
 	private async stepperManuellAbi2030(fach: GostFach, halbjahr: GostHalbjahr) {
-		for (const hj of GostHalbjahr.values())
-			if (hj.id >= halbjahr.id)
-				if (this.manager().istBewertet(hj))
+		for (const hj of GostHalbjahr.values()) {
+			if (hj.id >= halbjahr.id) {
+				if (this.manager().istBewertet(hj)) {
 					return;
+				}
+			}
+		}
 		const wahl = this.manager().getSchuelerFachwahl(fach.id);
 		const hj = halbjahr.id;
 		const istVTF = (this.getFachgruppe(fach) === Fachgruppe.FG_VX);
@@ -2162,35 +2432,40 @@ export class LaufbahnplanungUiManager {
 				wahl.halbjahre[hj] = null;
 				break;
 			case null:
-				if (istPJK)
+				if (istPJK) {
 					wahl.halbjahre[hj] = "S";
-				else
+				} else {
 					wahl.halbjahre[hj] = "M";
+				}
 				break;
 			case "M":
-				if (!fach.istPruefungsordnungsRelevant || istVTF || istPJK || (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)))
+				if (!fach.istPruefungsordnungsRelevant || istVTF || istPJK || (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach))) {
 					wahl.halbjahre[hj] = null;
-				else
+				} else {
 					wahl.halbjahre[hj] = "S";
+				}
 				break;
 			case "S":
-				if (istPJK)
+				if (istPJK) {
 					wahl.halbjahre[hj] = null;
-				else if ((hj <= 1) || (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach))) {
-					if (GostFachbereich.SPORT.hat(fach))
+				} else if ((hj <= 1) || (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach))) {
+					if (GostFachbereich.SPORT.hat(fach)) {
 						wahl.halbjahre[hj] = "AT";
-					else
+					} else {
 						wahl.halbjahre[hj] = null;
+					}
 				} else { // in der Q-Phase als LK möglich, allerdings nicht im Fachbereich des literarisch-künstlerischen Bereichs
 					wahl.halbjahre[hj] = "LK";
 				}
 				break;
 			case "LK": {
 				wahl.halbjahre[hj] = null;
-				if (GostFachbereich.SPORT.hat(fach))
+				if (GostFachbereich.SPORT.hat(fach)) {
 					wahl.halbjahre[hj] = "AT";
-				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) || GostFachbereich.GESCHICHTE.hat(fach))
+				}
+				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(fach) || GostFachbereich.GESCHICHTE.hat(fach)) {
 					wahl.halbjahre[hj] = "ZK";
+				}
 				break;
 			}
 			default:
@@ -2210,25 +2485,30 @@ export class LaufbahnplanungUiManager {
 	 * @returns -
 	 */
 	private async stepperHochschreibenAbi2030(fach: GostFach, halbjahr: GostHalbjahr) {
-		if (!this.istMoeglich(fach, halbjahr))
+		if (!this.istMoeglich(fach, halbjahr)) {
 			return;
-		for (const hj of GostHalbjahr.values())
-			if (hj.id >= halbjahr.id)
-				if (this.manager().istBewertet(hj))
+		}
+		for (const hj of GostHalbjahr.values()) {
+			if (hj.id >= halbjahr.id) {
+				if (this.manager().istBewertet(hj)) {
 					return;
+				}
+			}
+		}
 		const wahl = this.manager().getSchuelerFachwahl(fach.id);
-		if (halbjahr === GostHalbjahr.EF1)
+		if (halbjahr === GostHalbjahr.EF1) {
 			this.stepEF1WahlHochschreiben(fach, wahl);
-		else if (halbjahr === GostHalbjahr.EF2)
+		} else if (halbjahr === GostHalbjahr.EF2) {
 			this.stepEF2WahlHochschreiben(fach, wahl);
-		else if (halbjahr === GostHalbjahr.Q11)
+		} else if (halbjahr === GostHalbjahr.Q11) {
 			this.stepQ11Wahl(fach, wahl);
-		else if (halbjahr === GostHalbjahr.Q12)
+		} else if (halbjahr === GostHalbjahr.Q12) {
 			this.stepQ12Wahl(fach, wahl);
-		else if (halbjahr === GostHalbjahr.Q21)
+		} else if (halbjahr === GostHalbjahr.Q21) {
 			this.stepQ21WahlAbi2030(fach, wahl);
-		else if (halbjahr === GostHalbjahr.Q22)
+		} else if (halbjahr === GostHalbjahr.Q22) {
 			this.stepQ22WahlAbi2030(fach, wahl);
+		}
 		await this.setWahl(fach.id, wahl);
 	}
 
@@ -2242,25 +2522,30 @@ export class LaufbahnplanungUiManager {
 	 * @returns -
 	 */
 	private async stepperNormalAbi2030(fach: GostFach, halbjahr: GostHalbjahr) {
-		if (!this.istMoeglich(fach, halbjahr))
+		if (!this.istMoeglich(fach, halbjahr)) {
 			return;
-		for (const hj of GostHalbjahr.values())
-			if (hj.id >= halbjahr.id)
-				if (this.manager().istBewertet(hj))
+		}
+		for (const hj of GostHalbjahr.values()) {
+			if (hj.id >= halbjahr.id) {
+				if (this.manager().istBewertet(hj)) {
 					return;
+				}
+			}
+		}
 		const wahl = this.manager().getSchuelerFachwahl(fach.id);
-		if (halbjahr === GostHalbjahr.EF1)
+		if (halbjahr === GostHalbjahr.EF1) {
 			this.stepEF1Wahl(fach, wahl);
-		else if (halbjahr === GostHalbjahr.EF2)
+		} else if (halbjahr === GostHalbjahr.EF2) {
 			this.stepEF2Wahl(fach, wahl);
-		else if (halbjahr === GostHalbjahr.Q11)
+		} else if (halbjahr === GostHalbjahr.Q11) {
 			this.stepQ11Wahl(fach, wahl);
-		else if (halbjahr === GostHalbjahr.Q12)
+		} else if (halbjahr === GostHalbjahr.Q12) {
 			this.stepQ12Wahl(fach, wahl);
-		else if (halbjahr === GostHalbjahr.Q21)
+		} else if (halbjahr === GostHalbjahr.Q21) {
 			this.stepQ21WahlAbi2030(fach, wahl);
-		else if (halbjahr === GostHalbjahr.Q22)
+		} else if (halbjahr === GostHalbjahr.Q22) {
 			this.stepQ22WahlAbi2030(fach, wahl);
+		}
 		await this.setWahl(fach.id, wahl);
 	}
 

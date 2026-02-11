@@ -35,7 +35,7 @@ class TestKlassenart {
 	@Test
 	@DisplayName("Teste CoreType Klassenart: Anzahl der vorhandenen Werte.")
 	void testKlassenart_AnzahlEintraege() {
-		assertEquals(10, Klassenart.data().getWerte().size());
+		assertEquals(15, Klassenart.data().getWerte().size());
 	}
 
 	/**

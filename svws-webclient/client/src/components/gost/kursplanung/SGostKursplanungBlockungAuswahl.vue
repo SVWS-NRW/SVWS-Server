@@ -1,5 +1,7 @@
 <template>
-	<svws-ui-table clickable :clicked="auswahlBlockung" @update:clicked="select_blockungauswahl" :items="listBlockungen" :columns="[{ key: 'name', label: 'Blockungen' }]" no-data-text="Es liegt noch keine Planung für dieses Halbjahr vor.">
+	<svws-ui-table clickable :clicked="auswahlBlockung" @update:clicked="select_blockungauswahl" :items="listBlockungen"
+		:columns="[{ key: 'name', label: 'Blockungen' }]" no-data-text="Es liegt noch keine Planung für dieses Halbjahr vor."
+		:focus-switching-enabled :focus-help-visible allow-arrow-key-selection>
 		<template #noData v-if="istBlockungPersistiert">
 			<span class="inline-flex gap-1 leading-tight">
 				<span class="icon-sm icon-ui-danger i-ri-error-warning-line shrink-0" />
@@ -31,7 +33,6 @@
 										<span class="icon-sm i-ri-calculator-line -mx-0.5" /> Blocken…
 									</svws-ui-button>
 								</s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen>
-								<!-- <svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Schnelle Berechnung auf dem Server mit direkter Übernahme der Ergebnisse" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-ui-100"> <span class="icon-sm i-ri-calculator-line -mx-0.5" /> Schnell </svws-ui-button> -->
 							</template>
 							<svws-ui-tooltip position="top" v-else>
 								<svws-ui-button type="transparent" disabled> <span class="icon-sm i-ri-calculator-line -mx-0.5" />Blocken…</svws-ui-button>
@@ -89,6 +90,7 @@
 	import type { ApiStatus } from '~/components/ApiStatus';
 	import type { ServerMode, GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnis, GostHalbjahr, List, GostBlockungsergebnisManager } from "@core";
 	import { ArrayList, BlockungsUtils } from "@core";
+	import { useRegionSwitch } from '@ui';
 
 	const props = defineProps<{
 		addBlockung: () => Promise<void>;
@@ -103,7 +105,6 @@
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		patchErgebnis: (data: Partial<GostBlockungsergebnis>, idErgebnis: number) => Promise<boolean>;
-		rechneGostBlockung: () => Promise<List<number>>;
 		addErgebnisse: (ergebnisse: List<GostBlockungsergebnis>) => Promise<void>;
 		removeErgebnisse: (ergebnisse: GostBlockungsergebnis[]) => Promise<void>;
 		gotoErgebnis: (value: GostBlockungsergebnis | undefined) => Promise<void>;
@@ -118,21 +119,25 @@
 		mapCoreTypeNameJsonData: () => Map<string, string>;
 	}>();
 
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+
 	const edit_blockungsname = ref<boolean>(false);
 
 	const allow_berechne_blockung = computed(() => (props.getDatenmanager().fachwahlGetAnzahl() > 0) && (props.getDatenmanager().getFaecherAnzahl() > 0) && (props.getDatenmanager().kursGetAnzahl() > 0));
 
 	const listBlockungen = computed(() => {
 		const list: List<GostBlockungListeneintrag> = new ArrayList();
-		for (const i of props.mapBlockungen().values())
+		for (const i of props.mapBlockungen().values()) {
 			list.add(i);
+		}
 		BlockungsUtils.sortGostBlockungListeneintrag(list);
 		return list;
 	});
 
 	async function select_blockungauswahl(blockung: GostBlockungListeneintrag | null) {
-		if ((blockung === null) || props.apiStatus.pending)
+		if ((blockung === null) || props.apiStatus.pending) {
 			return;
+		}
 		await props.gotoBlockung(blockung);
 	}
 
@@ -140,17 +145,11 @@
 		return ((props.apiStatus.data !== undefined) && (props.apiStatus.data.name === "gost.kursblockung.berechnen") && (props.apiStatus.data.id === id));
 	}
 
-	async function do_create_blockungsergebnisse() {
-		const id = props.auswahlBlockung?.id;
-		if (id === undefined)
-			return;
-		await props.rechneGostBlockung();
-	}
-
 	async function patch_blockung(value: string, idBlockung: number) {
-		const result = await props.patchBlockung({ name: value.toString() }, idBlockung);
-		if (result && props.auswahlBlockung)
-			props.auswahlBlockung.name = value.toString();
+		const result = await props.patchBlockung({ name: value }, idBlockung);
+		if (result && props.auswahlBlockung) {
+			props.auswahlBlockung.name = value;
+		}
 		edit_blockungsname.value = false;
 	}
 

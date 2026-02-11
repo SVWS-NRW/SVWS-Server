@@ -39,12 +39,15 @@
 	const search = ref<string>("");
 
 	const rowsFiltered = computed<Map<number, BenutzergruppeListeEintrag>>(() => {
-		if (search.value === "")
+		if (search.value === "") {
 			return props.mapBenutzergruppe;
+		}
 		const result = new Map<number, BenutzergruppeListeEintrag>();
-		for (const l of props.mapBenutzergruppe.values())
-			if (l.bezeichnung.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
+		for (const l of props.mapBenutzergruppe.values()) {
+			if (l.bezeichnung.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
 				result.set(l.id, l);
+			}
+		}
 		return result;
 	});
 

@@ -4,8 +4,8 @@ import { RouteNode } from "~/router/RouteNode";
 
 import { type RouteApp } from "~/router/apps/RouteApp";
 
-import { RouteDataSchule } from "~/router/apps/schule/schulbezogen/stammdaten/RouteDataSchule";
-import { routeSchuleStammdaten } from "./schulbezogen/stammdaten/RouteSchuleStammdaten";
+import { RouteDataSchule } from "~/router/apps/schule/kataloge/stammdaten/RouteDataSchule";
+import { routeSchuleStammdaten } from "~/router/apps/schule/kataloge/stammdaten/RouteSchuleStammdaten";
 import { AppMenuGroup } from "@ui";
 
 
@@ -21,8 +21,9 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 	}
 
 	protected async update(to: RouteNode<any, any>) {
-		if (to.name === this.name)
+		if (to.name === this.name) {
 			return routeSchuleStammdaten.getRoute();
+		}
 	}
 
 	public async leave(): Promise<void> {

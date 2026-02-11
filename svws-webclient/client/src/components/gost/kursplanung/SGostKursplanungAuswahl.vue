@@ -1,6 +1,7 @@
 <template>
 	<template v-if="visible">
-		<svws-ui-table clickable :clicked="halbjahr" @update:clicked="select_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :items="GostHalbjahr.values()">
+		<svws-ui-table clickable :clicked="halbjahr" @update:clicked="select_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :items="GostHalbjahr.values()"
+			:focus-switching-enabled :focus-help-visible allow-arrow-key-selection>
 			<template #cell(kuerzel)="{ rowData: gostHalbjahr }">
 				<div class="flex justify-between w-full pr-1">
 					<span>{{ gostHalbjahr.kuerzel }}</span>
@@ -22,16 +23,18 @@
 		<s-gost-kursplanung-blockung-auswahl :ist-blockung-persistiert="istBlockungPersistiert(halbjahr)" :map-core-type-name-json-data
 			:halbjahr :patch-blockung :remove-blockung :ausfuehrliche-darstellung-kursdifferenz :set-ausfuehrliche-darstellung-kursdifferenz
 			:goto-blockung :auswahl-blockung :map-blockungen :api-status :get-datenmanager :add-ergebnisse :patch-ergebnis :remove-ergebnisse :add-blockung
-			:goto-ergebnis :hat-blockung :auswahl-ergebnis :rechne-gost-blockung :restore-blockung :mode :get-ergebnismanager :hat-update-kompetenz />
+			:goto-ergebnis :hat-blockung :auswahl-ergebnis :restore-blockung :mode :get-ergebnismanager :hat-update-kompetenz />
 	</template>
 </template>
 
 <script setup lang="ts">
-	import type { GostKursplanungAuswahlProps } from './SGostKursplanungAuswahlProps';
 	import { computed } from 'vue';
+	import type { GostKursplanungAuswahlProps } from './SGostKursplanungAuswahlProps';
+	import { useRegionSwitch } from '@ui';
 	import { BenutzerKompetenz, GostHalbjahr } from "@core";
 
 	const props = defineProps<GostKursplanungAuswahlProps>();
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		const abiturjahr = props.jahrgangsdaten()?.abiturjahr;
@@ -47,17 +50,20 @@
 
 	const istRueckgaengigMoeglich = computed<boolean[]>(() => {
 		const jgdaten = props.jahrgangsdaten();
-		if (jgdaten === undefined)
+		if (jgdaten === undefined) {
 			return [false, false, false, false, false, false];
+		}
 		const result: boolean[] = [];
-		for (const hj of GostHalbjahr.values())
+		for (const hj of GostHalbjahr.values()) {
 			result.push(!jgdaten.existierenNotenInLeistungsdaten[hj.id] && jgdaten.istBlockungFestgelegt[hj.id]);
+		}
 		return result;
 	});
 
 	async function select_hj(halbjahr: GostHalbjahr | null) {
-		if (halbjahr !== null)
+		if (halbjahr !== null) {
 			await props.setHalbjahr(halbjahr);
+		}
 	}
 
 	const visible = computed<boolean>(() => (props.jahrgangsdaten()?.abiturjahr ?? -1) > 0);

@@ -57,8 +57,9 @@
 	const activeVermerk = ref<SchuelerVermerke>();
 
 	const listVermerke = computed(() => {
-		if (!props.filterNurSichtbare)
+		if (!props.filterNurSichtbare) {
 			return props.schuelerVermerke();
+		}
 		const liste = new ArrayList<SchuelerVermerke>();
 		for (const item of props.schuelerVermerke()) {
 			if (item.idVermerkart === null) {
@@ -66,8 +67,9 @@
 				continue;
 			}
 			const art = props.mapVermerkArten.get(item.idVermerkart);
-			if ((art !== undefined) && art.istSichtbar)
+			if ((art !== undefined) && art.istSichtbar) {
 				liste.add(item);
+			}
 		}
 		return liste;
 	});

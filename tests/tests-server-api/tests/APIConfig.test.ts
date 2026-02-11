@@ -2,10 +2,10 @@ import { describe, expect, test } from "vitest";
 import { privilegedApiServer } from "../../utils/APIUtils";
 import { DBSchemaListeEintrag } from "../../../svws-webclient/core/src/core/data/db/DBSchemaListeEintrag";
 
-const allowDestructiveTests = process.env.MODE === 'allowDestructiveTests'
+const allowDestructiveTests = process.env.MODE === 'allowDestructiveTests';
 
 describe("Config Tests", () => {
-	describe.each([{schema: "GymAbi01"}])('gegen %s', ({schema}) => {
+	describe.each([{ schema: "GymAbi01" }])('gegen %s', ({ schema }) => {
 		const api = privilegedApiServer;
 
 		test.skip("setClientConfigGlobalKey", async () => {
@@ -38,5 +38,5 @@ describe("Config Tests", () => {
 			const result = await api.getConfigPublicKeyBase64();
 			expect(result).toBeDefined();
 		});
-	})
-})
+	});
+});

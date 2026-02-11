@@ -11,8 +11,8 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebeAnsprechpartner;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetrieb;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
@@ -36,9 +36,9 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 	}
 
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOAnsprechpartnerAllgemeineAdresse}
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOBetriebeAnsprechpartner}
 	 */
-	private final Function<DTOAnsprechpartnerAllgemeineAdresse, BetriebAnsprechpartner> dtoMapper = (final DTOAnsprechpartnerAllgemeineAdresse k) -> {
+	private final Function<DTOBetriebeAnsprechpartner, BetriebAnsprechpartner> dtoMapper = (final DTOBetriebeAnsprechpartner k) -> {
 		final BetriebAnsprechpartner eintrag = new BetriebAnsprechpartner();
 		eintrag.id = k.ID;
 		eintrag.betrieb_id = k.Adresse_ID;
@@ -55,7 +55,7 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 
 	@Override
 	public Response getAll() throws ApiOperationException {
-		final List<DTOAnsprechpartnerAllgemeineAdresse> katalog = conn.queryAll(DTOAnsprechpartnerAllgemeineAdresse.class);
+		final List<DTOBetriebeAnsprechpartner> katalog = conn.queryAll(DTOBetriebeAnsprechpartner.class);
 		if (katalog == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<BetriebAnsprechpartner> daten = katalog.stream().map(dtoMapper).toList();
@@ -77,8 +77,8 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response getBetriebansprechpartner(final Long betrieb_id) throws ApiOperationException {
-		final List<DTOAnsprechpartnerAllgemeineAdresse> liste =
-				conn.queryList(DTOAnsprechpartnerAllgemeineAdresse.QUERY_BY_ADRESSE_ID, DTOAnsprechpartnerAllgemeineAdresse.class, betrieb_id);
+		final List<DTOBetriebeAnsprechpartner> liste =
+				conn.queryList(DTOBetriebeAnsprechpartner.QUERY_BY_ADRESSE_ID, DTOBetriebeAnsprechpartner.class, betrieb_id);
 		if (liste == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final List<BetriebAnsprechpartner> daten = liste.stream().map(dtoMapper).toList();
@@ -89,7 +89,7 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Methode erwartet einen Wert für id. Sie ist nicht übergeben!!");
-		final DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, id);
+		final DTOBetriebeAnsprechpartner ansprechpartner = conn.queryByKey(DTOBetriebeAnsprechpartner.class, id);
 		final BetriebAnsprechpartner daten = dtoMapper.apply(ansprechpartner);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -98,7 +98,7 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
-			final DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, id);
+			final DTOBetriebeAnsprechpartner ansprechpartner = conn.queryByKey(DTOBetriebeAnsprechpartner.class, id);
 			if (ansprechpartner == null)
 				throw new ApiOperationException(Status.NOT_FOUND);
 			for (final Entry<String, Object> entry : map.entrySet()) {
@@ -114,7 +114,7 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 						final Long betrieb_id = JSONMapper.convertToLong(value, true);
 						if (betrieb_id == null)
 							throw new ApiOperationException(Status.BAD_REQUEST);
-						final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
+						final DTOBetrieb betrieb = conn.queryByKey(DTOBetrieb.class, betrieb_id);
 						if (betrieb == null)
 							throw new ApiOperationException(Status.NOT_FOUND);
 						ansprechpartner.Adresse_ID = betrieb.ID;
@@ -154,7 +154,7 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response create(final Long betrieb_id, final InputStream is) throws ApiOperationException {
-		DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = null;
+		DTOBetriebeAnsprechpartner ansprechpartner = null;
 		if (betrieb_id == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Parameter betrieb_id darf nicht leer sein.");
 		final Map<String, Object> map = JSONMapper.toMap(is);
@@ -162,11 +162,11 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 			// Bestimme die ID des neuen Ansprechpartners
 			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "AllgAdrAnsprechpartner");
 			final Long id = (lastID == null) ? 1 : (lastID.MaxID + 1);
-			final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
+			final DTOBetrieb betrieb = conn.queryByKey(DTOBetrieb.class, betrieb_id);
 			if (betrieb == null)
 				throw new ApiOperationException(Status.NOT_FOUND, "Ein Betrieb mit der ID " + betrieb_id + " existiert in der Datenbank nicht.");
 			// Ansprechpartner anlegen
-			ansprechpartner = new DTOAnsprechpartnerAllgemeineAdresse(id, betrieb_id);
+			ansprechpartner = new DTOBetriebeAnsprechpartner(id, betrieb_id);
 			for (final Entry<String, Object> entry : map.entrySet()) {
 				final String key = entry.getKey();
 				final Object value = entry.getValue();
@@ -217,9 +217,9 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 	* @throws ApiOperationException   im Fehlerfall
 	*/
 	public Response remove(final List<Long> bids) throws ApiOperationException {
-		final String strErrorAnsprechpartnerIDFehlt = "Der zu löschende Datensatz in DTOAnsprechpartnerAllgemeineAdresse mit der ID %d existiert nicht.";
+		final String strErrorAnsprechpartnerIDFehlt = "Der zu löschende Datensatz in DTOBetriebeAnsprechpartner mit der ID %d existiert nicht.";
 		for (final Long id : bids) {
-			final DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, id);
+			final DTOBetriebeAnsprechpartner ansprechpartner = conn.queryByKey(DTOBetriebeAnsprechpartner.class, id);
 			if (ansprechpartner == null)
 				throw new ApiOperationException(Status.NOT_FOUND, strErrorAnsprechpartnerIDFehlt.formatted(id));
 			conn.transactionRemove(ansprechpartner);

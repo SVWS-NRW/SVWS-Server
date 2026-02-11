@@ -26,7 +26,7 @@ export class ENMLehrerInitialKennwort extends JavaObject {
 		return ['de.svws_nrw.core.data.enm.ENMLehrerInitialKennwort'].includes(name);
 	}
 
-	public static class = new Class<ENMLehrerInitialKennwort>('de.svws_nrw.core.data.enm.ENMLehrerInitialKennwort');
+	public static readonly class = new Class<ENMLehrerInitialKennwort>('de.svws_nrw.core.data.enm.ENMLehrerInitialKennwort');
 
 	public static transpilerFromJSON(json: string): ENMLehrerInitialKennwort {
 		const obj = JSON.parse(json) as Partial<ENMLehrerInitialKennwort>;

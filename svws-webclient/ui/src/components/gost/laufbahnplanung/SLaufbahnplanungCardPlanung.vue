@@ -74,7 +74,7 @@
 					<svws-ui-tooltip>
 						<span class="icon i-ri-question-line -m-0.5 mx-0.5" />
 						<template #content>
-							Die Anzahl der anrechenbaren Kurse. Vertiefungskurse werden z.B. nicht mitgezählt.
+							{{ manager.getTooltipAnrechenbareKurse() }}
 						</template>
 					</svws-ui-tooltip>
 				</div>
@@ -97,6 +97,7 @@
 					<svws-ui-tooltip>
 						<span class="icon i-ri-question-line -m-0.5 mx-0.5" />
 						<template #content>
+							{{ manager.getTooltipWochenstunden() }}
 							Die Anzahl der Wochenstunden. Pro Halbjahr sollten etwa <strong>33—36</strong> Wochenstunden gewählt werden.
 						</template>
 					</svws-ui-tooltip>
@@ -114,7 +115,7 @@
 					</span>
 				</div>
 			</div>
-			<div role="row" class="svws-ui-tr">
+			<div role="row" class="svws-ui-tr" v-if="manager.zeigeWochenstundenDurchschnitt()">
 				<div role="rowheader" class="svws-ui-td font-bold svws-align-right col-span-5 svws-divider">
 					<span>Durchschnitt</span>
 					<svws-ui-tooltip>
@@ -168,7 +169,7 @@
 
 <script setup lang="ts">
 
-	import { ref, onMounted } from "vue";
+	import { ref, onMounted, computed } from "vue";
 	import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
@@ -217,22 +218,51 @@
 
 	onMounted(() => {
 		// Fächer-IDs zu statischer Liste hinzufügen um Fächer durchschalten zu können
-		for (const fach of props.manager.alleFaecher)
+		for (const fach of props.manager.alleFaecher) {
 			faecherIds.push(fach.id);
+		}
 	});
+
+	const faecherFilteredIds = computed<Array<number>>(() => {
+		const result = new Array<number>();
+		for (const fach of props.manager.faecherGefiltert) {
+			result.push(fach.id);
+		}
+		return result;
+	});
+
+	function switchFocusDown() {
+		const index = getFachFilteredIndexById(activeFachId.value);
+		const isLast = (index === null) || (index === faecherFilteredIds.value.length - 1);
+		activeFachId.value = isLast
+			? faecherFilteredIds.value[0]
+			: faecherFilteredIds.value[index + 1];
+	}
+
+	function switchFocusUp() {
+		const index = getFachFilteredIndexById(activeFachId.value);
+		const isFirst = (index === null) || (index === 0);
+		activeFachId.value = isFirst
+			? faecherFilteredIds.value[faecherFilteredIds.value.length - 1]
+			: faecherFilteredIds.value[index - 1];
+	}
 
 	// Fokus setzen: Fach wechseln (hoch/runter) oder Halbjahr wechseln (links/rechts)
 	function switchFocus(event: KeyboardEvent) {
-		if (!["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(event.key))
+		if (faecherFilteredIds.value.length === 0) {
 			return;
+		}
+		if (!["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(event.key)) {
+			return;
+		}
 		activeDirection.value = event.key;
 		event.preventDefault();
 		switch (event.key) {
 			case "ArrowDown":
-				activeFachId.value = (activeFachId.value === faecherIds[faecherIds.length - 1]) ? faecherIds[0] : faecherIds[getFachIndexById(activeFachId.value) + 1];
+				switchFocusDown();
 				break;
 			case "ArrowUp":
-				activeFachId.value = (activeFachId.value === faecherIds[0]) ? faecherIds[faecherIds.length - 1] : faecherIds[getFachIndexById(activeFachId.value) - 1];
+				switchFocusUp();
 				break;
 			case "ArrowRight":
 				activeHalbjahrId.value = (activeHalbjahrId.value + 1) % (GostHalbjahr.values().length + 1);
@@ -247,11 +277,11 @@
 	function retryFocus(fachId: number, halbjahrId: number) {
 		switch (activeDirection.value) {
 			case "ArrowDown":
-				activeFachId.value = (fachId === faecherIds[faecherIds.length - 1]) ? faecherIds[0] : faecherIds[getFachIndexById(fachId) + 1];
+				switchFocusDown();
 				activeHalbjahrId.value = halbjahrId;
 				break;
 			case "ArrowUp":
-				activeFachId.value = (fachId === faecherIds[0]) ? faecherIds[faecherIds.length - 1] : faecherIds[getFachIndexById(fachId) - 1];
+				switchFocusUp();
 				activeHalbjahrId.value = halbjahrId;
 				break;
 			case "ArrowRight":
@@ -266,10 +296,21 @@
 	}
 
 	function getFachIndexById(fachId: number): number {
-		for (let i = 0; i <= faecherIds.length; i++)
-			if (faecherIds[i] === fachId)
+		for (let i = 0; i <= faecherIds.length; i++) {
+			if (faecherIds[i] === fachId) {
 				return i;
+			}
+		}
 		return -1;
+	}
+
+	function getFachFilteredIndexById(fachId: number): number | null {
+		for (let i = 0; i <= faecherFilteredIds.value.length; i++) {
+			if (faecherFilteredIds.value[i] === fachId) {
+				return i;
+			}
+		}
+		return null;
 	}
 
 </script>

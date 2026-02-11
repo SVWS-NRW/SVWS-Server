@@ -593,7 +593,7 @@ export class KursblockungDynKurs extends JavaObject {
 		return ['de.svws_nrw.core.kursblockung.KursblockungDynKurs'].includes(name);
 	}
 
-	public static class = new Class<KursblockungDynKurs>('de.svws_nrw.core.kursblockung.KursblockungDynKurs');
+	public static readonly class = new Class<KursblockungDynKurs>('de.svws_nrw.core.kursblockung.KursblockungDynKurs');
 
 }
 

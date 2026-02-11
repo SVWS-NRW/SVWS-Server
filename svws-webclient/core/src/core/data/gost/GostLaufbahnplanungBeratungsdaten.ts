@@ -39,7 +39,7 @@ export class GostLaufbahnplanungBeratungsdaten extends JavaObject {
 		return ['de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten'].includes(name);
 	}
 
-	public static class = new Class<GostLaufbahnplanungBeratungsdaten>('de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten');
+	public static readonly class = new Class<GostLaufbahnplanungBeratungsdaten>('de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten');
 
 	public static transpilerFromJSON(json: string): GostLaufbahnplanungBeratungsdaten {
 		const obj = JSON.parse(json) as Partial<GostLaufbahnplanungBeratungsdaten>;

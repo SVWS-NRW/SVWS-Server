@@ -63,8 +63,9 @@
 	const defaultItem = ref<Item | undefined>(undefined);
 
 	for (const item of props.dropdownActions) {
-		if (defaultItem.value === undefined)
+		if (defaultItem.value === undefined) {
 			defaultItem.value = item;
+		}
 		if (item.default === true) {
 			defaultItem.value = item;
 			break;
@@ -72,8 +73,9 @@
 	}
 
 	const listEmpty = computed(() => {
-		for (const _ of props.dropdownActions)
+		for (const _ of props.dropdownActions) {
 			return false;
+		}
 		return true;
 	});
 

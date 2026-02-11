@@ -27,7 +27,7 @@ export class CoreTypeDataNurSchulformenUndSchulgliederungen extends CoreTypeData
 		return ['de.svws_nrw.asd.data.CoreTypeDataNurSchulformenUndSchulgliederungen', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<CoreTypeDataNurSchulformenUndSchulgliederungen>('de.svws_nrw.asd.data.CoreTypeDataNurSchulformenUndSchulgliederungen');
+	public static readonly class = new Class<CoreTypeDataNurSchulformenUndSchulgliederungen>('de.svws_nrw.asd.data.CoreTypeDataNurSchulformenUndSchulgliederungen');
 
 	public static transpilerFromJSON(json: string): CoreTypeDataNurSchulformenUndSchulgliederungen {
 		const obj = JSON.parse(json) as Partial<CoreTypeDataNurSchulformenUndSchulgliederungen>;

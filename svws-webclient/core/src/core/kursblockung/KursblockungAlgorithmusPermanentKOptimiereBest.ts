@@ -70,7 +70,7 @@ export class KursblockungAlgorithmusPermanentKOptimiereBest extends Kursblockung
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentK', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKOptimiereBest'].includes(name);
 	}
 
-	public static class = new Class<KursblockungAlgorithmusPermanentKOptimiereBest>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKOptimiereBest');
+	public static readonly class = new Class<KursblockungAlgorithmusPermanentKOptimiereBest>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKOptimiereBest');
 
 }
 

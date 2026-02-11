@@ -841,7 +841,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 		return ['de.svws_nrw.asd.types.jahrgang.Jahrgaenge', 'de.svws_nrw.asd.types.CoreType', 'java.lang.Comparable', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<Jahrgaenge>('de.svws_nrw.asd.types.jahrgang.Jahrgaenge');
+	public static readonly class = new Class<Jahrgaenge>('de.svws_nrw.asd.types.jahrgang.Jahrgaenge');
 
 }
 

@@ -1,5 +1,4 @@
 import { JavaObject } from '../../java/lang/JavaObject';
-import { AVLSet } from '../../core/adt/set/AVLSet';
 import { KursblockungDynStatistik } from '../../core/kursblockung/KursblockungDynStatistik';
 import { HashMap } from '../../java/util/HashMap';
 import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
@@ -9,6 +8,7 @@ import { GostKursart } from '../../core/types/gost/GostKursart';
 import { LogLevel } from '../../core/logger/LogLevel';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
 import { Class } from '../../java/lang/Class';
+import { HashSet } from '../../java/util/HashSet';
 
 export class KursblockungDynSchiene extends JavaObject {
 
@@ -119,7 +119,7 @@ export class KursblockungDynSchiene extends JavaObject {
 	 *         für die Blockung verwendet.
 	 */
 	gibAnzahlGleicherFacharten(): number {
-		const setFachart: AVLSet<number> | null = new AVLSet<number>();
+		const setFachart: HashSet<number> | null = new HashSet<number>();
 		let summe: number = 0;
 		for (const kurs of this.kursMap.values())
 			if (!setFachart.add(kurs.gibFachart().gibNr()))
@@ -198,7 +198,7 @@ export class KursblockungDynSchiene extends JavaObject {
 		return ['de.svws_nrw.core.kursblockung.KursblockungDynSchiene'].includes(name);
 	}
 
-	public static class = new Class<KursblockungDynSchiene>('de.svws_nrw.core.kursblockung.KursblockungDynSchiene');
+	public static readonly class = new Class<KursblockungDynSchiene>('de.svws_nrw.core.kursblockung.KursblockungDynSchiene');
 
 }
 

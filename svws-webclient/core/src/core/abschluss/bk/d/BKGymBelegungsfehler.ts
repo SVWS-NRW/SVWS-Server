@@ -1,7 +1,7 @@
-import { BKGymBelegungsfehlerArt } from '../../../../core/abschluss/bk/d/BKGymBelegungsfehlerArt';
+import { BKGymBelegungsfehlerArt } from '../../../../core/types/bk/BKGymBelegungsfehlerArt';
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { Class } from '../../../../java/lang/Class';
-import { BKGymBelegungsfehlerTyp } from '../../../../core/abschluss/bk/d/BKGymBelegungsfehlerTyp';
+import { BKGymBelegungsfehlerTyp } from '../../../../core/types/bk/BKGymBelegungsfehlerTyp';
 
 export class BKGymBelegungsfehler extends JavaObject {
 
@@ -27,7 +27,7 @@ export class BKGymBelegungsfehler extends JavaObject {
 
 
 	/**
-	 *  Konstruktor der den ausgefüllten Fehlertext erzeugt.
+	 *  Erstellt einen Belegungsfehler mit den angegebenen Daten
 	 *
 	 * @param fehlertyp   der Belegungsfehler, der mit den args präzisiert wird
 	 * @param args        die Parameter für den Belegungsfehler.
@@ -66,7 +66,7 @@ export class BKGymBelegungsfehler extends JavaObject {
 		return ['de.svws_nrw.core.abschluss.bk.d.BKGymBelegungsfehler'].includes(name);
 	}
 
-	public static class = new Class<BKGymBelegungsfehler>('de.svws_nrw.core.abschluss.bk.d.BKGymBelegungsfehler');
+	public static readonly class = new Class<BKGymBelegungsfehler>('de.svws_nrw.core.abschluss.bk.d.BKGymBelegungsfehler');
 
 }
 

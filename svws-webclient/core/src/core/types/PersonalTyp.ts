@@ -176,7 +176,7 @@ export class PersonalTyp extends JavaEnum<PersonalTyp> {
 		return ['de.svws_nrw.core.types.PersonalTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
-	public static class = new Class<PersonalTyp>('de.svws_nrw.core.types.PersonalTyp');
+	public static readonly class = new Class<PersonalTyp>('de.svws_nrw.core.types.PersonalTyp');
 
 }
 

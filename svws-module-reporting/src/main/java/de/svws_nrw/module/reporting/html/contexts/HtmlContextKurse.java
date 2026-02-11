@@ -12,7 +12,7 @@ import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
-import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
+import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import org.thymeleaf.context.Context;
 
@@ -47,7 +47,7 @@ public final class HtmlContextKurse extends HtmlContext<ReportingKurs> {
 	public HtmlContextKurse(final ReportingRepository reportingRepository) {
 		super(reportingRepository, true);
 		this.reportingRepository = reportingRepository;
-		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten);
+		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten());
 	}
 
 
@@ -88,7 +88,7 @@ public final class HtmlContextKurse extends HtmlContext<ReportingKurs> {
 					kursDaten = DataKurse.getKursdaten(reportingRepository.conn(), idKurs);
 					mapKurse.put(idKurs, this.reportingRepository.schuljahresabschnitt(kursDaten.idSchuljahresabschnitt).kurs(idKurs));
 				} catch (final ApiOperationException e) {
-					ReportingExceptionUtils.putStacktraceInLog(
+					ReportingExceptionUtils.logException(
 							"FEHLER: Fehler bei der Ermittlung der Daten des Kurses %s.".formatted(idKurs), e, reportingRepository.logger(), LogLevel.ERROR,
 							0);
 				}

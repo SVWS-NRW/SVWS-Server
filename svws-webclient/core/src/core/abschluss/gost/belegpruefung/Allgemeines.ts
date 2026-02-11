@@ -65,7 +65,7 @@ export class Allgemeines extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Allgemeines'].includes(name);
 	}
 
-	public static class = new Class<Allgemeines>('de.svws_nrw.core.abschluss.gost.belegpruefung.Allgemeines');
+	public static readonly class = new Class<Allgemeines>('de.svws_nrw.core.abschluss.gost.belegpruefung.Allgemeines');
 
 }
 

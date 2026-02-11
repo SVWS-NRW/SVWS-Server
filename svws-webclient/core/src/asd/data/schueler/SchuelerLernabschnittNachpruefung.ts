@@ -39,7 +39,7 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 		return ['de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefung'].includes(name);
 	}
 
-	public static class = new Class<SchuelerLernabschnittNachpruefung>('de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefung');
+	public static readonly class = new Class<SchuelerLernabschnittNachpruefung>('de.svws_nrw.asd.data.schueler.SchuelerLernabschnittNachpruefung');
 
 	public static transpilerFromJSON(json: string): SchuelerLernabschnittNachpruefung {
 		const obj = JSON.parse(json) as Partial<SchuelerLernabschnittNachpruefung>;

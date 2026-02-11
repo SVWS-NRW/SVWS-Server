@@ -34,7 +34,7 @@ export class LehrerPersonalabschnittsdatenLehrerfunktion extends JavaObject {
 		return ['de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenLehrerfunktion'].includes(name);
 	}
 
-	public static class = new Class<LehrerPersonalabschnittsdatenLehrerfunktion>('de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenLehrerfunktion');
+	public static readonly class = new Class<LehrerPersonalabschnittsdatenLehrerfunktion>('de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenLehrerfunktion');
 
 	public static transpilerFromJSON(json: string): LehrerPersonalabschnittsdatenLehrerfunktion {
 		const obj = JSON.parse(json) as Partial<LehrerPersonalabschnittsdatenLehrerfunktion>;

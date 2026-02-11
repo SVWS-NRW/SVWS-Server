@@ -1,24 +1,21 @@
 <!DOCTYPE html>
-<html lang="de" xmlns:th="http://www.thymeleaf.org">
-	<head th:with="mediaPrint = ${Parameter.ausgabeformat >= 2}">
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<title>Wahlbogen-GOSt-Laufbahnplanung</title>
-		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../../css/reporting-pdf.css" />
-		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-A4-hoch.css}" href="../../../css/reporting-A4-hoch.css" />
-		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../../css/reporting-styles.css" />
-		<link rel="stylesheet" th:href="@{schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungWahlbogen.css}" href="../../../schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungWahlbogen.css" />
+<html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
+	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
+				title='Wahlbogen-GOSt-Laufbahnplanung',
+				htmlTemplatePfad=${Parameter.htmlTemplateDefinition().getPfadHtmlTemplate()},
+				namePageCSS='reporting-A4-hoch.css')}">
+		<title></title>
 	</head>
 
-	<body th:with="mediaPrint = ${Parameter.ausgabeformat >= 2},
-                   nurBelegteFaecher = ${VorlageParameter.get('nurBelegteFaecher')}">
+	<body th:with="nurBelegteFaecher = ${VorlageParameter.get('nurBelegteFaecher')}">
 		<div class="reset-page-counter start-new-page" th:each="schueler,iterationVarSchueler : ${Schueler}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
-			<th:block th:if="${mediaPrint}">
-				<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-				<div class="pageTopRight" th:utext="'Abitur ' + ${schueler.gostLaufbahnplanung().abiturjahr()} + '<br/> Wahl ab ' +  ${schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr()} + '<br/>' + ${schueler.gostLaufbahnplanung().pruefungsordnung()}">Abitur 2023<br/>Wahl ab Q2.1<br/>APO-GOSt</div>
-				<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')} + ' von ' + ${Benutzer.benutzername()}">Gedruckt am 02.02.2022 von ABC</div>
-				<div class="pageBottomRight"><span class="page-nums-print" th:text="'Druck ' + ${iterationVarSchueler.count} + '/' + ${#lists.size(Schueler)} + ' - Seite '">Druck 13/57 - Seite </span></div>
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
+				headerRight='Abitur ' + ${schueler.gostLaufbahnplanung().abiturjahr()} +
+					'<br/>Wahl ab ' +  ${schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr()} +
+					'<br/>' + ${schueler.gostLaufbahnplanung().pruefungsordnung()},
+				footerRight='Druck ' + ${iterationVarSchueler.count} + '/' + ${#lists.size(Schueler)})}">
 			</th:block>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
@@ -29,8 +26,8 @@
 					<col style="width: 25%;" />
 				</colgroup>
 				<tr>
-					<td colspan="2" style="text-align: left; font-size: 8pt; vertical-align: top;" th:text="'Abitur ' + ${schueler.gostLaufbahnplanung().abiturjahr()} + ' - Wahl ab ' +  ${schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr()} + ' - ' + ${schueler.gostLaufbahnplanung().pruefungsordnung()}">Abitur 2023 - Wahl ab Q2.1 - APO-GOSt</td>
-					<td style="text-align: right; font-size: 8pt; vertical-align: top;" th:text="${schueler.gostLaufbahnplanung().aktuelleKlasse() != '' ? 'Klasse ' + schueler.gostLaufbahnplanung().aktuelleKlasse() : schueler.status().toString()}">Klasse: Q1</td>
+					<th colspan="2" style="text-align: left; font-size: 8pt; vertical-align: top;" th:text="'Abitur ' + ${schueler.gostLaufbahnplanung().abiturjahr()} + ' - Wahl ab ' +  ${schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr()} + ' - ' + ${schueler.gostLaufbahnplanung().pruefungsordnung()}">Abitur 2023 - Wahl ab Q2.1 - APO-GOSt</th>
+					<th style="text-align: right; font-size: 8pt; vertical-align: top;" th:text="${schueler.gostLaufbahnplanung().aktuelleKlasse() != '' ? 'Klasse ' + schueler.gostLaufbahnplanung().aktuelleKlasse() : schueler.status().toString()}">Klasse: Q1</th>
 				</tr>
 				<tr>
 					<td style="border-bottom: 1px grey solid; text-align: left; vertical-align: middle;"><h3>Wahlbogen <span th:if="${nurBelegteFaecher}" class="f-very-tiny">(nur belegte Fächer)</span></h3></td>
@@ -53,15 +50,15 @@
 				</colgroup>
 				<thead>
 				<tr>
-					<td colspan="2" class="ta-l f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">Fach</td>
-					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">Fremdsprache</td>
-					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">EF.1</td>
-					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">EF.2</td>
-					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">Q1.1</td>
-					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">Q1.2</td>
-					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">Q2.1</td>
-					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">Q2.2</td>
-					<td class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid; border-right: 1px grey solid;">Abitur</td>
+					<th colspan="2" class="ta-l f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">Fach</th>
+					<th class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">Fremdsprache</th>
+					<th class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">EF.1</th>
+					<th class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">EF.2</th>
+					<th class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid;">Q1.1</th>
+					<th class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">Q1.2</th>
+					<th class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">Q2.1</th>
+					<th class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0">Q2.2</th>
+					<th class="ta-c f-bold bo-b-black-strong p-tb-0 p-lr-1 m-0" style="border-left: 1px grey solid; border-right: 1px grey solid;">Abitur</th>
 				</tr>
 				</thead>
 				<tr th:each="Fachwahl : ${schueler.gostLaufbahnplanung().fachwahlen()}" th:if="${(!nurBelegteFaecher || Fachwahl.fachIstBelegtInGOSt()) && Fachwahl.fach().istPruefungsordnungsRelevant()}"  th:style="'background-color: ' + ${Fachwahl.fach().statistikfach().htmlFarbeRGB()} + ';'">
@@ -142,11 +139,11 @@
 				<p class="f-small" th:text="${schueler.gostLaufbahnplanung().letzteBeratungText()}">Die letzte Beratung wurde durchgeführt am 16.05.2022 von M. Mustermann.</p>
 				<table class="fixed-100 p-0" style="page-break-inside: avoid;">
 					<tr style="height: 3em;">
-						<td style="width: 30%;"> </td>
-						<td style="width: 5%;"> </td>
-						<td style="width: 30%;"> </td>
-						<td style="width: 5%;"> </td>
-						<td style="width: 30%;"> </td>
+						<th style="width: 30%;"> </th>
+						<th style="width: 5%;"> </th>
+						<th style="width: 30%;"> </th>
+						<th style="width: 5%;"> </th>
+						<th style="width: 30%;"> </th>
 					</tr>
 					<tr>
 						<td class="f-small" style="text-align: center; vertical-align: top; border: 0.5px black; border-style: solid none none none" th:utext="${schueler.gostLaufbahnplanung().unterschriftfeldBeratungslehrkraefteMehrzeiligHtml()}">M. Mustermann</td>

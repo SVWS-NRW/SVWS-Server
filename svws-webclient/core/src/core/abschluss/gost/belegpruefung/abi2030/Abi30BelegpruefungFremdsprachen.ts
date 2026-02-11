@@ -521,7 +521,7 @@ export class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungFremdsprachen'].includes(name);
 	}
 
-	public static class = new Class<Abi30BelegpruefungFremdsprachen>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungFremdsprachen');
+	public static readonly class = new Class<Abi30BelegpruefungFremdsprachen>('de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030.Abi30BelegpruefungFremdsprachen');
 
 }
 

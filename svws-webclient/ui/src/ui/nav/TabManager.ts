@@ -39,8 +39,9 @@ export class TabManager {
 		this._tab = shallowRef(tab);
 		this._setTab = setTab;
 		for (let i = 0; (i < this._tabs.length); i++) {
-			if ((hidden !== undefined) && (i < hidden.length))
+			if ((hidden !== undefined) && (i < hidden.length)) {
 				this._tabs[i].hide = hidden[i];
+			}
 			this._mapName.set(this._tabs[i].name, this._tabs[i]);
 			this._mapNameToIndex.set(this._tabs[i].name, i);
 			const groupname = this.tabs[i].tabgroup ?? "";
@@ -84,10 +85,12 @@ export class TabManager {
 		do {
 			i++;
 		} while ((i < this._tabs.length) && (this._tabs[i].hide === true));
-		if (i === this._tabs.length)
+		if (i === this._tabs.length) {
 			i = 0;
-		while ((i < this._tabs.length) && (this._tabs[i].hide === true))
+		}
+		while ((i < this._tabs.length) && (this._tabs[i].hide === true)) {
 			i++;
+		}
 		return (i < this._tabs.length) ? this._tabs[i] : this._tab.value;
 	}
 
@@ -101,10 +104,12 @@ export class TabManager {
 		do {
 			i--;
 		} while ((i > -1) && (this._tabs[i].hide === true));
-		if (i === this._tabs.length)
+		if (i === this._tabs.length) {
 			i = this._tabs.length - 1;
-		while ((i > -1) && (this._tabs[i].hide === true))
+		}
+		while ((i > -1) && (this._tabs[i].hide === true)) {
 			i++;
+		}
 		return (i > -1) ? this._tabs[i] : this._tab.value;
 	}
 
@@ -124,8 +129,9 @@ export class TabManager {
 	 * @param hidden   ein Array, mit dem das attribute hide bei den Tabs gesetzt werden kann
 	 */
 	public updateHidden(hidden: boolean[]): void {
-		for (let i = 0; (i < this._tabs.length) && i < (hidden.length); i++)
+		for (let i = 0; (i < this._tabs.length) && i < (hidden.length); i++) {
 			this._tabs[i].hide = hidden[i];
+		}
 	}
 
 	/**
@@ -137,8 +143,9 @@ export class TabManager {
 	 */
 	public getTab(name: string): TabData {
 		const result = this._mapName.get(name);
-		if (result === undefined)
+		if (result === undefined) {
 			throw new Error("Der Name des Tabs " + name + " ist nicht bekannt.");
+		}
 		return result;
 	}
 

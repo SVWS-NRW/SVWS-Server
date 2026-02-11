@@ -1,5 +1,5 @@
 <template>
-	<enm-leistungen :enm-manager :auswahl :patch-leistung :columns-visible :set-columns-visible :floskel-editor-visible :set-floskel-editor-visible />
+	<enm-leistungen :enm-manager :auswahl :patch-leistung :columns-visible :set-columns-visible />
 </template>
 
 <script setup lang="ts">

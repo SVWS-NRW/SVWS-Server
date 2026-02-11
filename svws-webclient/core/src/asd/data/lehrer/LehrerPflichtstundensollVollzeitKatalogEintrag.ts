@@ -20,7 +20,7 @@ export class LehrerPflichtstundensollVollzeitKatalogEintrag extends CoreTypeData
 		return ['de.svws_nrw.asd.data.CoreTypeDataNurSchulformenUndSchulgliederungen', 'de.svws_nrw.asd.data.lehrer.LehrerPflichtstundensollVollzeitKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
 	}
 
-	public static class = new Class<LehrerPflichtstundensollVollzeitKatalogEintrag>('de.svws_nrw.asd.data.lehrer.LehrerPflichtstundensollVollzeitKatalogEintrag');
+	public static readonly class = new Class<LehrerPflichtstundensollVollzeitKatalogEintrag>('de.svws_nrw.asd.data.lehrer.LehrerPflichtstundensollVollzeitKatalogEintrag');
 
 	public static transpilerFromJSON(json: string): LehrerPflichtstundensollVollzeitKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<LehrerPflichtstundensollVollzeitKatalogEintrag>;

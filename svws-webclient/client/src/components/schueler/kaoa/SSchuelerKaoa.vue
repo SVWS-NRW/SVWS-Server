@@ -191,8 +191,9 @@
 		() => Jahrgaenge.data().getWertByKuerzel(props.schuelerKaoaManager().getKuerzelJahrgangBySchuljahr(schuljahr.value))?.daten(schuljahr.value) ?? null);
 	const zusatzmerkmal = computed<KAOAZusatzmerkmalKatalogEintrag | null>(() => KAOAZusatzmerkmal.data().getEintragByID(schuelerKAoADaten.value.idZusatzmerkmal) ?? null);
 	const schuljahresabschnitt = computed<Schuljahresabschnitt | null>(() => {
-		if (schuelerKAoADaten.value.idSchuljahresabschnitt === -1)
+		if (schuelerKAoADaten.value.idSchuljahresabschnitt === -1) {
 			return props.schuelerKaoaManager().schuljahresabschnitte.get(props.auswahl().idSchuljahresabschnitt) ?? null;
+		}
 		return props.schuelerKaoaManager().schuljahresabschnitte.get(schuelerKAoADaten.value.idSchuljahresabschnitt) ?? null;
 	});
 
@@ -207,12 +208,15 @@
 			schuelerKAoADaten.value.idSchuljahresabschnitt = value;
 			schuelerKAoADaten.value.idJahrgang = jahrgang.value ? jahrgang.value.id : -1;
 		}
-		if (targetLevel <= 2)
+		if (targetLevel <= 2) {
 			schuelerKAoADaten.value.idKategorie = targetLevel === 2 ? value : -1;
-		if (targetLevel <= 3)
+		}
+		if (targetLevel <= 3) {
 			schuelerKAoADaten.value.idMerkmal = targetLevel === 3 ? value : -1;
-		if (targetLevel <= 4)
+		}
+		if (targetLevel <= 4) {
 			schuelerKAoADaten.value.idZusatzmerkmal = targetLevel === 4 ? value : -1;
+		}
 		if (targetLevel >= 1) {
 			schuelerKAoADaten.value.idEbene4 = null;
 			schuelerKAoADaten.value.idAnschlussoption = null;
@@ -244,12 +248,15 @@
 
 	// api call für Create und Patch
 	async function sendRequest(type: Mode) {
-		if (!validateRequiredFieldsFilled())
+		if (!validateRequiredFieldsFilled()) {
 			return;
-		if (type === Mode.ADD)
+		}
+		if (type === Mode.ADD) {
 			await props.add(createPartialWithoutId(), props.auswahl().id);
-		if (type === Mode.PATCH)
+		}
+		if (type === Mode.PATCH) {
 			await props.patch(createPartialWithoutId(), idPatchObject.value);
+		}
 		enterDefaultMode();
 	}
 
@@ -264,8 +271,9 @@
 	const optionsart = computed<string | null>(() => zusatzmerkmal.value?.optionsart ?? null);
 
 	function validateRequiredFieldsFilled() {
-		if ((schuelerKAoADaten.value.idKategorie === -1) || (schuelerKAoADaten.value.idMerkmal === -1) || (schuelerKAoADaten.value.idZusatzmerkmal === -1))
+		if ((schuelerKAoADaten.value.idKategorie === -1) || (schuelerKAoADaten.value.idMerkmal === -1) || (schuelerKAoADaten.value.idZusatzmerkmal === -1)) {
 			return false;
+		}
 		switch (optionsart.value) {
 			case 'SBO_EBENE_4':
 				return schuelerKAoADaten.value.idEbene4 !== null;
@@ -303,14 +311,15 @@
 
 	const dynamicHeader = computed<string>(() => {
 		let eintrag;
-		if (schuelerKAoADaten.value.idZusatzmerkmal !== -1)
+		if (schuelerKAoADaten.value.idZusatzmerkmal !== -1) {
 			eintrag = KAOAZusatzmerkmal.data().getEintragByID(schuelerKAoADaten.value.idZusatzmerkmal);
-		else if (schuelerKAoADaten.value.idMerkmal !== -1)
+		} else if (schuelerKAoADaten.value.idMerkmal !== -1) {
 			eintrag = KAOAMerkmal.data().getEintragByID(schuelerKAoADaten.value.idMerkmal);
-		else if (schuelerKAoADaten.value.idKategorie !== -1)
+		} else if (schuelerKAoADaten.value.idKategorie !== -1) {
 			eintrag = KAOAKategorie.data().getEintragByID(schuelerKAoADaten.value.idKategorie);
-		else if (schuelerKAoADaten.value.idSchuljahresabschnitt !== -1)
+		} else if (schuelerKAoADaten.value.idSchuljahresabschnitt !== -1) {
 			return "SBO";
+		}
 		return eintrag?.kuerzel ?? "";
 	});
 

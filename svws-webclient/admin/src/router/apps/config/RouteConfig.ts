@@ -25,8 +25,9 @@ export class RouteConfig extends RouteNode<RouteDataConfig, RouteApp> {
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		// Prüfe, ob diese Route von den Rechten des angemeldeten Benutzers überhaupt angesteuert werden darf
-		if (!api.isServerAdmin)
+		if (!api.isServerAdmin) {
 			return routeApp.getRoute();
+		}
 		// TODO
 	}
 

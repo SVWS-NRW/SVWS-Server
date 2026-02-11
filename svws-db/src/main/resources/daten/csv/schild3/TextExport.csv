@@ -52,6 +52,8 @@ Lehrer;Geburtsdatum;Geburtsdatum;D;;;;;ALLE
 Lehrer;Geschlecht;Geschlecht;S;;;;;ALLE
 Lehrer;Handy;Telefon (Mobil);S;;;;;ALLE
 Lehrer;Kuerzel;Kürzel;S;;;;;ALLE
+Lehrer;ID;Interne ID-Nummer;I;;;;;ALLE
+Lehrer;ID;Ident-Nr.;S;;;IdentNr1;SELECT CONCAT(IdentNr1,SerNr) AS IdentNr1 FROM K_Lehrer WHERE ID=%;ALLE
 Lehrer;LBVNr;LBV-Nummer;S;;;;;ALLE
 Lehrer;Nachname;Nachname;S;;;;;ALLE
 Lehrer;PANr;Personalnummer;S;;;;;ALLE
@@ -112,7 +114,7 @@ Schueler;Geloescht;Gelöscht?;B;;;;;ALLE
 Schueler;Geschlecht;Anrede;S;"3;4;5;6";"Herr;Frau;Hallo;Hallo";;;ALLE
 Schueler;Geschlecht;Briefanrede;S;"3;4;5;6";"Sehr geehrter Herr;Sehr geehrte Frau;Guten Tag;Guten Tag";;;ALLE
 Schueler;Geschlecht;Geschlecht;S;"3;4;5;6";"m;w;d;oA";;;ALLE
-Schueler;Haltestelle_ID;Haltestelle;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Haltstelle WHERE ID=%;ALLE
+Schueler;Haltestelle_ID;Haltestelle;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Haltestelle WHERE ID=%;ALLE
 Schueler;Hausnr;Hausnummer;S;;;;;ALLE
 Schueler;ID;ASV;S;;;ASV;SELECT L.ASV, A.ID FROM SchuelerLD_PSFachBem L, SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND L.Abschnitt_ID=A.ID;ALLE
 Schueler;ID;Aktuelles Halbjahr;I;;;AktHalbjahr;SELECT (SJA.Jahr*10+SJA.Abschnitt) as AktHalbjahr from Schuljahresabschnitte SJA, Schueler S where S.ID=% AND SJA.ID=S.Schuljahresabschnitts_ID;ALLE
@@ -200,7 +202,6 @@ Schueler;SchulwechselNr;Aufnehmende Schule: PLZ;S;;;PLZ;SELECT PLZ from K_Schule
 Schueler;SchulwechselNr;Aufnehmende Schule: Schulnr.;S;;;;;ALLE
 Schueler;SchulwechselNr;Aufnehmende Schule: Straße;S;;;Strasse;SELECT CONCAT(IFNULL(Strassenname,''),' ',IFNULL(HausNr,'')) as Strasse from K_Schule where SchulNr=%;ALLE
 Schueler;Schwerbehinderung;Schwerstbehinderung;B;;;;;ALLE
-Schueler;Sportbefreiung_ID;Sportbefreiung;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Sportbefreiung WHERE ID=%;ALLE
 Schueler;StaatKrz;Staatsangehörigkeit (Klartext);S;;;mtblStaat.bezeichnung;codeDEStatis=%;ALLE
 Schueler;StaatKrz;Staatsangehörigkeit (Klartext, Adjektiv);S;;;mtblStaat.staatsangehoerigkeit;codeDEStatis=%;ALLE
 Schueler;StaatKrz;Staatsangehörigkeit (Schlüssel);S;;;;;ALLE

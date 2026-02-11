@@ -90,7 +90,7 @@ export class KursblockungAlgorithmus extends Service {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmus', 'de.svws_nrw.core.Service'].includes(name);
 	}
 
-	public static class = new Class<KursblockungAlgorithmus>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmus');
+	public static readonly class = new Class<KursblockungAlgorithmus>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmus');
 
 }
 

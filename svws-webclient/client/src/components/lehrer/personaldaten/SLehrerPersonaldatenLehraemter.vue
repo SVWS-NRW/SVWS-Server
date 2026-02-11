@@ -137,10 +137,10 @@
 
 	import { computed, ref, shallowRef } from "vue";
 	import type { List, LehrerLehramtKatalogEintrag, JavaSet, LehrerLehrbefaehigungKatalogEintrag, LehrerFachrichtungKatalogEintrag } from "@core";
-	import { Arrays, ArrayList, HashSet } from "@core";
-	import { LehrerLehramt, LehrerLehrbefaehigung, LehrerFachrichtung } from "@core";
-	import { LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerFachrichtungEintrag } from "@core";
-	import { LehrerLehramtAnerkennung, LehrerLehrbefaehigungAnerkennung, LehrerFachrichtungAnerkennung } from "@core";
+	import { Arrays, ArrayList, HashSet,
+		LehrerLehramt, LehrerLehrbefaehigung, LehrerFachrichtung,
+		LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerFachrichtungEintrag,
+		LehrerLehramtAnerkennung, LehrerLehrbefaehigungAnerkennung, LehrerFachrichtungAnerkennung } from "@core";
 	import type { LehrerListeManager } from "@ui";
 	import { CoreTypeSelectManager, GridManager } from "@ui";
 
@@ -172,8 +172,9 @@
 	}));
 	const lehraemterVorhanden = computed<JavaSet<number>>(() => {
 		const vorhanden = new HashSet<number>();
-		for (const lehramt of personaldaten().lehraemter)
+		for (const lehramt of personaldaten().lehraemter) {
 			vorhanden.add(lehramt.idKatalogLehramt);
+		}
 		return vorhanden;
 	});
 
@@ -184,15 +185,18 @@
 
 	function filterLehraemter(options: List<LehrerLehramtKatalogEintrag>): List<LehrerLehramtKatalogEintrag> {
 		const result = new ArrayList<LehrerLehramtKatalogEintrag>();
-		for (const e of options)
-			if (!lehraemterVorhanden.value.contains(e.id))
+		for (const e of options) {
+			if (!lehraemterVorhanden.value.contains(e.id)) {
 				result.add(e);
+			}
+		}
 		return result;
 	}
 
 	async function createLehramt() {
-		if ((auswahlLehramtNeu.value === null) || (lehraemterVorhanden.value.contains(auswahlLehramtNeu.value.id)))
+		if ((auswahlLehramtNeu.value === null) || (lehraemterVorhanden.value.contains(auswahlLehramtNeu.value.id))) {
 			return;
+		}
 		await props.addLehramt({ idLehrer: personaldaten().id, idKatalogLehramt: auswahlLehramtNeu.value.id, idAnerkennungsgrund: null });
 		showLehramtHinzufuegen.value = false;
 	}
@@ -225,48 +229,60 @@
 	const lehrbefaehigungenVorhanden = computed<JavaSet<number>>(() => {
 		const vorhanden = new HashSet<number>();
 		const lehramt = auswahlLehrbefFachrNeuLehramt.value;
-		if (lehramt === null)
+		if (lehramt === null) {
 			return vorhanden;
-		for (const lehrbef of lehramt.lehrbefaehigungen)
+		}
+		for (const lehrbef of lehramt.lehrbefaehigungen) {
 			vorhanden.add(lehrbef.idLehrbefaehigung);
+		}
 		return vorhanden;
 	});
 
 	function filterLehrbefaehigungen(options: List<LehrerLehrbefaehigungKatalogEintrag>): List<LehrerLehrbefaehigungKatalogEintrag> {
 		const result = new ArrayList<LehrerLehrbefaehigungKatalogEintrag>();
-		for (const e of options)
-			if (!lehrbefaehigungenVorhanden.value.contains(e.id))
+		for (const e of options) {
+			if (!lehrbefaehigungenVorhanden.value.contains(e.id)) {
 				result.add(e);
+			}
+		}
 		return result;
 	}
 
 	const fachrichtungenVorhanden = computed<JavaSet<number>>(() => {
 		const vorhanden = new HashSet<number>();
 		const lehramt = auswahlLehrbefFachrNeuLehramt.value;
-		if (lehramt === null)
+		if (lehramt === null) {
 			return vorhanden;
-		for (const fachr of lehramt.fachrichtungen)
+		}
+		for (const fachr of lehramt.fachrichtungen) {
 			vorhanden.add(fachr.idFachrichtung);
+		}
 		return vorhanden;
 	});
 
 	function filterFachrichtungen(options: List<LehrerFachrichtungKatalogEintrag>): List<LehrerFachrichtungKatalogEintrag> {
 		const result = new ArrayList<LehrerFachrichtungKatalogEintrag>();
-		for (const e of options)
-			if (!fachrichtungenVorhanden.value.contains(e.id))
+		for (const e of options) {
+			if (!fachrichtungenVorhanden.value.contains(e.id)) {
 				result.add(e);
+			}
+		}
 		return result;
 	}
 
 	async function createLehrbefFachr() {
 		const lehramt = auswahlLehrbefFachrNeuLehramt.value;
 		if (lehramt !== null) {
-			for (const eintrag of auswahlLehrbefaehigungenNeu.value)
-				if (!lehrbefaehigungenVorhanden.value.contains(eintrag.id))
+			for (const eintrag of auswahlLehrbefaehigungenNeu.value) {
+				if (!lehrbefaehigungenVorhanden.value.contains(eintrag.id)) {
 					await props.addLehrbefaehigung({ idLehramt: lehramt.id, idLehrbefaehigung: eintrag.id, idAnerkennungsgrund: null });
-			for (const eintrag of auswahlFachrichtungenNeu.value)
-				if (!fachrichtungenVorhanden.value.contains(eintrag.id))
+				}
+			}
+			for (const eintrag of auswahlFachrichtungenNeu.value) {
+				if (!fachrichtungenVorhanden.value.contains(eintrag.id)) {
 					await props.addFachrichtung({ idLehramt: lehramt.id, idFachrichtung: eintrag.id, idAnerkennungsgrund: null });
+				}
+			}
 		}
 		showLehrbefFachrHinzufuegen.value = false;
 	}
@@ -279,20 +295,23 @@
 			const result = new ArrayList<GridDatenLehraemter>();
 			for (const lehramt of personaldaten().lehraemter) {
 				result.add(lehramt);
-				for (const l of lehramt.lehrbefaehigungen)
+				for (const l of lehramt.lehrbefaehigungen) {
 					result.add(l);
-				for (const f of lehramt.fachrichtungen)
+				}
+				for (const f of lehramt.fachrichtungen) {
 					result.add(f);
+				}
 			}
 			return result;
 		}),
 		getRowKey: row => {
-			if (row instanceof LehrerLehramtEintrag)
+			if (row instanceof LehrerLehramtEintrag) {
 				return "Lehramt_" + row.id;
-			else if (row instanceof LehrerLehrbefaehigungEintrag)
+			} else if (row instanceof LehrerLehrbefaehigungEintrag) {
 				return "Lehrbefaehigung_" + row.id;
-			else
+			} else {
 				return "Fachrichtung_" + row.id;
+			}
 		},
 		columns: [
 			{ kuerzel: "Indent", name: "Indent", width: "4rem", hideable: false },

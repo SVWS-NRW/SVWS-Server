@@ -173,7 +173,7 @@ export class LongArrayKey extends JavaObject implements Comparable<LongArrayKey>
 		return ['java.lang.Comparable', 'de.svws_nrw.core.adt.LongArrayKey'].includes(name);
 	}
 
-	public static class = new Class<LongArrayKey>('de.svws_nrw.core.adt.LongArrayKey');
+	public static readonly class = new Class<LongArrayKey>('de.svws_nrw.core.adt.LongArrayKey');
 
 }
 

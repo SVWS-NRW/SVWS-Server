@@ -43,7 +43,7 @@ export class BKGymLeistungenFach extends JavaObject {
 		return ['de.svws_nrw.core.data.bk.abi.BKGymLeistungenFach'].includes(name);
 	}
 
-	public static class = new Class<BKGymLeistungenFach>('de.svws_nrw.core.data.bk.abi.BKGymLeistungenFach');
+	public static readonly class = new Class<BKGymLeistungenFach>('de.svws_nrw.core.data.bk.abi.BKGymLeistungenFach');
 
 	public static transpilerFromJSON(json: string): BKGymLeistungenFach {
 		const obj = JSON.parse(json) as Partial<BKGymLeistungenFach>;

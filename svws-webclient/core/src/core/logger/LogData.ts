@@ -140,7 +140,7 @@ export class LogData extends JavaObject implements Comparable<LogData> {
 		return ['java.lang.Comparable', 'de.svws_nrw.core.logger.LogData'].includes(name);
 	}
 
-	public static class = new Class<LogData>('de.svws_nrw.core.logger.LogData');
+	public static readonly class = new Class<LogData>('de.svws_nrw.core.logger.LogData');
 
 }
 

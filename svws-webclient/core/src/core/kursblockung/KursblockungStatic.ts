@@ -53,7 +53,7 @@ export class KursblockungStatic extends JavaObject {
 		return ['de.svws_nrw.core.kursblockung.KursblockungStatic'].includes(name);
 	}
 
-	public static class = new Class<KursblockungStatic>('de.svws_nrw.core.kursblockung.KursblockungStatic');
+	public static readonly class = new Class<KursblockungStatic>('de.svws_nrw.core.kursblockung.KursblockungStatic');
 
 }
 
