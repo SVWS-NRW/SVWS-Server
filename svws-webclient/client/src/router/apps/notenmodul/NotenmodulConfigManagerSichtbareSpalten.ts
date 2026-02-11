@@ -15,7 +15,7 @@ export class NotenmodulConfigManagerSichtbareSpalten {
 	private readonly mapTeilleistungsarten: JavaMap<number, ENMTeilleistungsart>;
 
 	/** Ein Array mit den Namen aller ausblendbaren Spalten in den Ansichten des Notenmoduls */
-	private readonly spaltenAusblendbar = ["Kurs", "Kursart", "Lehrer", "Teilnoten", "Quartalsnoten", "Note", "Mahnung", "Fehlstunden", "FB", "ASV", "AUE", "ZB"];
+	private readonly spaltenAusblendbar = ["Kurs", "Kursart", "Lehrer", "Teilnoten", "Quartal", "Note", "Mahnung", "Fehlstunden", "FB", "ASV", "AUE", "ZB"];
 
 	/** Ein Array mit den allgemeinen Spalten */
 	public readonly spaltenAllgemein = ["Kurs", "Kursart", "Lehrer"];
@@ -24,7 +24,7 @@ export class NotenmodulConfigManagerSichtbareSpalten {
 	public readonly spaltenBemerkungen = ["FB", "ASV", "AUE", "ZB"];
 
 	/** Ein Array mit den Spalten für Leistungsdaten */
-	public readonly spaltenLeistungsdaten = ["Quartalsnoten", "Note", "Mahnung", "Fehlstunden"];
+	public readonly spaltenLeistungsdaten = ["Quartal", "Note", "Mahnung", "Fehlstunden"];
 
 	/** Die Teilnoten-Spalte */
 	public readonly spalteTeilleistungen = "Teilnoten";

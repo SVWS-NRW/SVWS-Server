@@ -83,7 +83,7 @@
 				{{ enmManager().lerngruppeGetFachlehrerOrNull(pair.a.lerngruppenID) }}
 			</td>
 			<template v-if="gridManager.isColVisible('Quartal') ?? true">
-				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Quartalsnoten')"
+				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Quartal')"
 					:ref="inputNoteQuartal(pair, 6, index)" class="ui-table-grid-input"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === 6),
@@ -212,7 +212,7 @@
 			{ kuerzel: "Mahnung", name: "Mahnung", width: "5rem", hideable: true },
 			{ kuerzel: "FS", name: "Fehlstunden", width: "4rem", hideable: true },
 			{ kuerzel: "FSU", name: "Fehlstunden (unentschuldigt)", width: "4rem", hideable: true },
-			{ kuerzel: "Bemerkung", name: "Fachbezogene Bemerkungen", width: "16rem", hideable: true },
+			{ kuerzel: "FB", name: "Fachbezogene Bemerkungen", width: "16rem", hideable: true },
 			{ kuerzel: "", name: "", width: "3.25rem", hideable: false },
 		],
 		colsVisible: computed<Map<string, boolean | null>>({
@@ -232,7 +232,7 @@
 	const notenKuerzel = computed(() => Note.values().map(e => e.daten(props.enmManager().schuljahr)?.kuerzel).filter(e => e !== ""));
 
 	function inputNoteQuartal(pair: PairNN<ENMLeistung, ENMSchueler>, col: number, index: number) {
-		const key = 'Quartalsnote_' + pair.a.id + "_" + pair.b.id;
+		const key = 'Quartal_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: string | null) => void props.patchLeistung(pair.a, { noteQuartal: value });
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);
@@ -265,10 +265,10 @@
 	}
 
 	function inputFehlstunden(pair: PairNN<ENMLeistung, ENMSchueler>, col: number, index: number) {
-		const key = 'Fehlstunden_' + pair.a.id + "_" + pair.b.id;
+		const key = 'FS_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: number | null) => {
 			const patch = <Partial<ENMLeistung>>{ fehlstundenFach: value };
-			const inputFSU = gridManager.getInputByKey('FehlstundenUnendschuldigt_' + pair.a.id + "_" + pair.b.id);
+			const inputFSU = gridManager.getInputByKey('FSU_' + pair.a.id + "_" + pair.b.id);
 			if (inputFSU !== null) {
 				const inputFSUTyped = inputFSU as GridInputIntegerDiv<string>;
 				inputFSUTyped.max = value ?? 0;
@@ -287,7 +287,7 @@
 	}
 
 	function inputFehlstundenUnendschuldigt(pair: PairNN<ENMLeistung, ENMSchueler>, col: number, index: number) {
-		const key = 'FehlstundenUnendschuldigt_' + pair.a.id + "_" + pair.b.id;
+		const key = 'FSU_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: number | null) => void props.patchLeistung(pair.a, { fehlstundenUnentschuldigtFach: value });
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputIntegerDiv(key, col, index, element, pair.a.fehlstundenFach ?? 0, setter);
@@ -299,8 +299,8 @@
 
 
 	function inputBemerkung(pair: PairNN<ENMLeistung, ENMSchueler>, col: number, index: number) {
-		const key = 'Bemerkung_' + pair.a.id + "_" + pair.b.id;
-		const setter = (value: boolean) => void props.focusFloskelEditor(pair.b, pair.a, index, true);
+		const key = 'FB' + pair.a.id + "_" + pair.b.id;
+		const setter = (_value: boolean) => void props.focusFloskelEditor(pair.b, pair.a, index, true);
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputToggle(key, col, index, element, setter);
 			if (input !== null) {

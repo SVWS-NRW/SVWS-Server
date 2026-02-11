@@ -74,7 +74,7 @@
 				</template>
 			</template>
 			<template v-if="gridManager.isColVisible('Quartal') ?? true">
-				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Quartalsnoten')"
+				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Quartal')"
 					:ref="inputNoteQuartal(pair, setTeilleistungsarten.size() + 6, index)" class="ui-table-grid-input"
 					:class="{
 						'bg-ui-selected': (gridManager.focusColumn === setTeilleistungsarten.size() + 6),
@@ -185,7 +185,7 @@
 	}
 
 	function inputNoteQuartal(pair: PairNN<ENMLeistung, ENMSchueler>, col: number, index: number) {
-		const key = 'Quartalsnote_' + pair.a.id + "_" + pair.b.id;
+		const key = 'Quartal_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: string | null) => void props.patchLeistung(pair.a, { noteQuartal: value });
 		return (element: LocalElement) => {
 			const input = gridManager.applyInputNote(key, col, index, element, setter, props.enmManager().schuljahr);

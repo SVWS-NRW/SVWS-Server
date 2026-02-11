@@ -310,37 +310,11 @@
 		}
 	}
 
-	const gruppenMap = computed(() => {
-		const map = new Map<ENMFloskelgruppe, ArrayList<ENMFloskel>>();
-		const auswahl = props.auswahl;
-		if ((auswahl.schueler === null) || (auswahl.leistung === null)) {
-			return map;
-		}
-		for (const gruppe of props.enmManager().listFloskelgruppen) {
-			if ((gruppe.hauptgruppe !== props.erlaubteHauptgruppe) && (gruppe.hauptgruppe !== 'ALLG')) {
-				continue;
-			}
-			const floskeln = new ArrayList<ENMFloskel>();
-			for (const floskel of gruppe.floskeln) {
-				if ((floskel.fachID === null) || ((props.enmManager().lerngruppeByIDOrException(auswahl.leistung.lerngruppenID).fachID === floskel.fachID)
-					&& ((floskel.jahrgangID === null) || (floskel.jahrgangID === auswahl.schueler.jahrgangID)))) {
-					floskeln.add(floskel);
-				}
-			}
-			if (!floskeln.isEmpty()) {
-				map.set(gruppe, floskeln);
-			}
-		}
-		return map;
-	});
-
 	const floskelMap = computed(() => {
 		const floskeln = new Map<string, ENMFloskel>();
-		for (const gruppe of gruppenMap.value.values()) {
-			for (const floskel of gruppe) {
-				if (floskel.kuerzel !== null) {
-					floskeln.set(floskel.kuerzel.toLocaleLowerCase(), floskel);
-				}
+		for (const row of gridManager.daten) {
+			if (typeof row.floskel?.kuerzel === 'string') {
+				floskeln.set(row.floskel.kuerzel.toLocaleLowerCase(), row.floskel);
 			}
 		}
 		return floskeln;
