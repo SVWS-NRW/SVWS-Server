@@ -7,7 +7,7 @@
 						:model-value="manager().daten().ortsteil"
 						@change="patchOrtsteil"
 						:valid="ortsteilIsValid" :min-len="1" :max-len="30" required :disabled="!hatKompetenzUpdate" />
-					<ui-select label="Wohnort"
+					<ui-select label="Ort"
 						v-model="selectedOrt"
 						:manager="ortSelectManager"
 						:readonly="!hatKompetenzUpdate" searchable required :removable="false" />
