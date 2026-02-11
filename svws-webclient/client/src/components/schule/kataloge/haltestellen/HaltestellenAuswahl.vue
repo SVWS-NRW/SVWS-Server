@@ -8,7 +8,7 @@
 			<svws-ui-table v-model="haltestellen"
 				v-model:clicked="selectedHaltestellen"
 				:items="props.manager().filtered()" :columns
-				clickable :selectable="hatKompetenzAendern" count :focus-help-visible :focus-switching-enabled scroll-into-view filter-open>
+				clickable :selectable="hatKompetenzAendern" count :focus-help-visible :focus-switching-enabled scroll scroll-into-view filter-open>
 				<template #search>
 					<svws-ui-text-input type="search" placeholder="Suchen"
 						v-model="searchTerm"

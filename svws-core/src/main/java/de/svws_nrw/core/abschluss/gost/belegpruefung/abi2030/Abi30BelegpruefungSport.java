@@ -1,7 +1,7 @@
 package de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
@@ -30,7 +30,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class Abi30BelegpruefungSport extends GostBelegpruefung {
 
-	/// Die Belegungen für das Fach Sport
+	/** Die Belegungen für das Fach Sport. */
 	private @NotNull List<AbiturFachbelegung> _sport = new ArrayList<>();
 
 	/**

@@ -2103,7 +2103,7 @@ public class StundenplanManager {
 				continue;
 
 			double wert = _wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.getOrException(pa.idLehrer, pab.wochentyp);
-			wert++;
+			wert += 1.0;
 			_wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.put(pa.idLehrer, pab.wochentyp, wert);
 		}
 
@@ -4162,18 +4162,21 @@ public class StundenplanManager {
 	}
 
 	private @NotNull String lehrerInfo(final @NotNull StundenplanLehrer lehrer) {
-		String s = "[StundenplanLehrer";
-		s += "(id=" + lehrer.id + ")";
-		s += "(kuerzel=" + lehrer.kuerzel + ")";
-		s += "(nachname=" + lehrer.nachname + ")";
-		s += "(vorname=" + lehrer.vorname + ")";
-		s += "(faecher=" + lehrer.faecher.size() + ":";
+		final @NotNull StringBuilder sb = new StringBuilder();
+		sb.append("[StundenplanLehrer");
+		sb.append("(id=" + lehrer.id + ")");
+		sb.append("(kuerzel=" + lehrer.kuerzel + ")");
+		sb.append("(nachname=" + lehrer.nachname + ")");
+		sb.append("(vorname=" + lehrer.vorname + ")");
+
+		sb.append("(faecher=" + lehrer.faecher.size() + ":");
 		for (final @NotNull long idFach : lehrer.faecher) {
-			s += fachInfoByID(idFach);
+			sb.append(fachInfoByID(idFach));
 		}
-		s += ")";
-		s += "]";
-		return s;
+		sb.append(")");
+
+		sb.append("]");
+		return sb.toString();
 	}
 
 	private int lehrerCompareByLehrerIDs(final @NotNull List<Long> a, final @NotNull List<Long> b) {
@@ -4432,17 +4435,20 @@ public class StundenplanManager {
 	}
 
 	private @NotNull String pausenaufsichtInfo(final @NotNull StundenplanPausenaufsicht pa) {
-		String s = "[StundenplanPausenaufsicht";
-		s += "(id=" + pa.id + ")";
-		s += "(idPausenzeit=" + pa.idPausenzeit + ")";
-		s += "(idLehrer=" + pa.idLehrer + ")";
-		s += "(bereiche=" + pa.bereiche.size() + " : ";
+		final @NotNull StringBuilder sb = new StringBuilder();
+		sb.append("[StundenplanPausenaufsicht");
+		sb.append("(id=" + pa.id + ")");
+		sb.append("(idPausenzeit=" + pa.idPausenzeit + ")");
+		sb.append("(idLehrer=" + pa.idLehrer + ")");
+
+		sb.append("(bereiche=" + pa.bereiche.size() + " : ");
 		for (final @NotNull StundenplanPausenaufsichtBereich a : pa.bereiche) {
-			s += pausenaufsichtbereichInfo(a);
+			sb.append(pausenaufsichtbereichInfo(a));
 		}
-		s += ")";
-		s += "]";
-		return s;
+		sb.append(")");
+
+		sb.append("]");
+		return sb.toString();
 	}
 
 	/**
@@ -6822,18 +6828,16 @@ public class StundenplanManager {
 	private String unterrichtGetBeschreibungKurz(final @NotNull StundenplanUnterricht u) {
 		if (u.idKurs == null) {
 			// Klassenunterricht
-			@NotNull String s = "";
+			final @NotNull StringBuilder sb = new StringBuilder();
 			final StundenplanFach fach = _fach_by_id.get(u.idFach);
-			s += (fach == null) ? "Fach ???" : fach.kuerzel;
-			s += " ";
+			sb.append(fach == null ? "Fach ???" : fach.kuerzel);
+			sb.append(" ");
 			for (final long idKlasse : u.klassen) {
 				final StundenplanKlasse klasse = _klasse_by_id.get(idKlasse);
-				s += (klasse == null) ? "Klasse ???" : klasse.kuerzel;
+				sb.append(klasse == null ? "Klasse ???" : klasse.kuerzel);
 			}
-
-			return s;
+			return sb.toString();
 		}
-
 		// Kursunterricht
 		final StundenplanKurs kurs = _kurs_by_id.get(u.idKurs);
 		return (kurs == null) ? "Kurs ???" : kurs.bezeichnung;

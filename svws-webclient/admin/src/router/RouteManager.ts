@@ -30,6 +30,8 @@ export class RouteManager {
 		error: undefined,
 	});
 
+	private sessionRestoreAttempted = false;
+
 	/**
 	 * Erstellt die Instanz des Managers für die übergebene Route
 	 *
@@ -137,6 +139,14 @@ export class RouteManager {
 		}
 		this.active = true; // Setze, dass ein Routing-Vorgang bearbeitet wird
 		api.status.start();
+		if (!api.authenticated && !this.sessionRestoreAttempted) {
+			this.sessionRestoreAttempted = true;
+			try {
+				await api.restoreSession();
+			} catch (e) {
+				console.warn("Automatische Anmeldung (Admin) konnte nicht durchgeführt werden:", e);
+			}
+		}
 		// Ist der Benutzer nicht authentifiziert, so wird er zur Login-Seite weitergeleitet
 		if (!api.authenticated && (to.name !== "login")) {
 			routeLogin.routepath = to.fullPath;

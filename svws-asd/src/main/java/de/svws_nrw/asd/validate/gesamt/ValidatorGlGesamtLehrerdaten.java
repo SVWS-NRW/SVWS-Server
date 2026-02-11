@@ -1,9 +1,9 @@
 package de.svws_nrw.asd.validate.gesamt;
 
 import java.util.List;
+import java.util.function.Supplier;
 
-import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
-import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.asd.data.statistik.LehrerStatistikGesamt;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import jakarta.validation.constraints.NotNull;
@@ -17,15 +17,12 @@ public final class ValidatorGlGesamtLehrerdaten extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param listStammdaten      die Liste aller Lehrerstammdaten
-	 * @param listPersonaldaten   die Liste aller Lehrerpersonaldaten
+	 * @param listLehrer          die Liste aller Lehrerdaten
 	 * @param kontext             der Kontext des Validators
 	 */
-	public ValidatorGlGesamtLehrerdaten(final @NotNull List<LehrerStammdaten> listStammdaten, final @NotNull List<LehrerPersonaldaten> listPersonaldaten,
-			final @NotNull ValidatorKontext kontext) {
+	public ValidatorGlGesamtLehrerdaten(final @NotNull Supplier<List<LehrerStatistikGesamt>> listLehrer, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_validatoren.add(new ValidatorGldGesamtLehrerdatenDuplikate(listStammdaten, kontext));
-		_validatoren.add(new ValidatorGlplGesamtLehrerPersonaldatenLehramt(listPersonaldaten, kontext));
+		_validatoren.add(new ValidatorGldGesamtLehrerdatenDuplikate(listLehrer, kontext));
 	}
 
 

@@ -1,22 +1,27 @@
 import { Schulform } from '../../../asd/types/schule/Schulform';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorSss01SchuleStammdatenSchulform extends Validator {
 
+	private readonly daten: Supplier<string>;
+
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
+	 * @param daten     die Schulform
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<string>, kontext: ValidatorKontext) {
 		super(kontext);
+		this.daten = daten;
 	}
 
 	protected pruefe(): boolean {
-		const schulformKrz: string | null = super.kontext().getSchuleStammdaten().schulform;
+		const schulformKrz: string = this.daten.get();
 		try {
 			return Schulform.data().getWertByKuerzel(schulformKrz) === null;
 		} catch(e : any) {

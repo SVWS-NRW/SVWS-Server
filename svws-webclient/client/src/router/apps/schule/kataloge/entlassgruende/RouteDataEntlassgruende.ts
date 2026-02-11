@@ -57,7 +57,7 @@ export class RouteDataEntlassgruende extends RouteDataAuswahl<EntlassgruendeList
 		await this.gotoDefaultView(entlassgrund.id);
 	};
 
-	deleteCheck = (): [boolean, List<string>] => {
+	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
@@ -72,7 +72,7 @@ export class RouteDataEntlassgruende extends RouteDataAuswahl<EntlassgruendeList
 			errorLog.add(this.getErrorMessageForReferencedEntlassgründe());
 		}
 
-		return [errorLog.isEmpty(), errorLog];
+		return { success: errorLog.isEmpty(), logs: errorLog };
 	};
 
 	private getErrorMessageForReferencedEntlassgründe(): string {

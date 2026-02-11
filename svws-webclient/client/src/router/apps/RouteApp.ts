@@ -22,7 +22,7 @@ import { routeJahrgaenge } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJ
 import { routeFaecher } from "~/router/apps/schule/kataloge/faecher/RouteFaecher";
 import { routeEinwilligungsarten } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsarten";
 import { routeKonfessionen } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionen";
-import { routeKatalogSchulen } from "~/router/apps/schule/kataloge/schulen/RouteKatalogSchulen";
+import { routeSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
 import { routeTelefonarten } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonarten";
 import { routeErzieherarten } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherarten";
 import { routeVermerkarten } from "~/router/apps/schule/kataloge/vermerkarten/RouteVermerkarten";
@@ -36,7 +36,7 @@ import { routeSchuleDatenaustauschENM } from "./schule/datenaustausch/enmNotenma
 import { routeSchuleDatenaustauschLaufbahnplanung } from "./schule/datenaustausch/laufbahnplanung/RouteSchuleDatenaustauschLupo";
 import { routeSchuleDatenaustauschSchulwechsel } from "./schule/datenaustausch/schulwechsel/RouteSchuleDatenaustauschSchulwechsel";
 import { routeSchuleDatenaustauschLernplattformen } from "~/router/apps/schule/datenaustausch/lernplattformenExport/RouteSchuleDatenaustauschLernplattformen";
-import { routeSchuleStammdaten } from "~/router/apps/schule/kataloge/stammdaten/RouteSchuleStammdaten";
+import { routeSchuleStammdaten } from "~/router/apps/schule/stammdaten/RouteSchuleStammdaten";
 import { routeSchuleReporting } from "./schule/reporting/RouteSchuleReporting";
 import { routeAbteilungen } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungen";
 import { routeEntlassgruende } from "~/router/apps/schule/kataloge/entlassgruende/RouteEntlassgruende";
@@ -144,8 +144,9 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeEinstellungenBenutzergruppe,
 		];
 		this._menuSchule = [
-			// Schulbezogen
+			// Stammdaten
 			routeSchuleStammdaten,
+			// Kataloge
 			routeAbteilungen,
 			routeBetriebe,
 			routeBeschaeftigungsarten,
@@ -165,7 +166,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeLernplattformen,
 			routeOrte,
 			routeOrtsteile,
-			routeKatalogSchulen,
+			routeSchulen,
 			routeTelefonarten,
 			routeVermerkarten,
 			// Datenaustausch

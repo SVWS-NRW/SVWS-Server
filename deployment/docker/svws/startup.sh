@@ -44,13 +44,13 @@ if [ "$IMPORT_TEST_DATA" = "true" ]; then
 	# Import (MigrateDB) der SQLite-Datenbank durchführen ...
 	SQLITEFILE="$CURRENT_DIR/databases/SVWS-TestMDBs-main/GOST_Abitur/Abi-Test-Daten-01/GymAbi.sqlite"
 	echo "Importiere Datenbank: ${SQLITEFILE} ..."
-	java -cp "../svws-server-app-*.jar:../*:../lib/*" de.svws_nrw.db.utils.app.ImportDB -j -r -1 -td "MARIA_DB" \
-   		-f ${SQLITEFILE} \
-   		-tl ${MARIADB_HOST} \
-   		-ts ${MARIADB_DATABASE} \
-   		-tu ${MARIADB_USER} \
-   		-tp ${MARIADB_PASSWORD} \
-   		-tr ${MARIADB_ROOT_PASSWORD}
+	java -cp "../svws-server-app.jar:../*:../lib/*" de.svws_nrw.db.utils.app.ImportDB -j -r -1 -td "MARIA_DB" \
+  		-f ${SQLITEFILE} \
+  		-tl ${MARIADB_HOST} \
+  		-ts ${MARIADB_DATABASE} \
+  		-tu ${MARIADB_USER} \
+  		-tp ${MARIADB_PASSWORD} \
+  		-tr ${MARIADB_ROOT_PASSWORD}
 
 	# Aufräumen
 	rm -rf $CURRENT_DIR/databases
@@ -58,4 +58,11 @@ fi
 
 # SVWS-Server starten
 echo "Starte SVWS-Server ..."
-java -cp "../svws-server-app-*.jar:../*:../lib/*" de.svws_nrw.server.jetty.Main
+JAR_FILE=$(ls /opt/app/svws/*.jar 2>/dev/null | head -n 1)
+
+if [[ -z "$JAR_FILE" ]]; then
+    echo "No JAR file found!"
+    exit 1
+fi
+
+java -cp "$JAR_FILE:../*:../lib/*" de.svws_nrw.server.jetty.Main

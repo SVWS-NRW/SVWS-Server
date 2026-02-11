@@ -39,16 +39,28 @@ public class BKGymAbiturMarkierungsregelDefizite extends BKGymAbiturMarkierungsr
 	 */
 	@Override
 	public void markiere(final @NotNull BKGymAbiturMarkierungsVariante variante) {
+		if (variante.sindDefizitregelnAbgeschlossen()) {
+			variante.addLogEintrag(1, "Die Defizitregel wurde bereits erfüllt.");
+			return;
+		}
 		if (variante.getDefizite() < erlaubteDefizite) {
 			variante.addLogEintrag(1, "Die erlaubte Anzahl von " + erlaubteDefizite + " Defiziten wurde nicht überschritten.");
 			return;
 		}
-		final @NotNull Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> bedingung = markierung -> true;
-		if (variante.getDefizite() == erlaubteDefizite)
-			variante.markiereKursanzahl(anzahlKurse, bedingung);
+		if (variante.getDefizite() == erlaubteDefizite) {
+			variante.setDefizitregelnAbgeschlossen(true);
+			if (variante.anzahlEingebrachteKurse() >= anzahlKurse) {
+				variante.addLogEintrag(1, "Die erlaubte Anzahl von " + erlaubteDefizite + " Defiziten wurde nicht überschritten.");
+				return;
+			}
+			final @NotNull Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> bedingung = markierung -> true;
+			variante.markiereKursanzahl(anzahlKurse - variante.anzahlEingebrachteKurse(), bedingung);
+		}
 		if (variante.getDefizite() > erlaubteDefizite) {
-			variante.addLogEintrag(1, "Fehler: Die Mindestpunktzahl konnte auch nicht durch Markieren weiterer Kurse erreicht werden.");
+			variante.addLogEintrag(1, "Fehler: Die Defizitregel konnte auch nicht durch Markieren weiterer Kurse erfüllt werden.");
 			variante.setHatZulassung(false);
+		} else {
+			variante.addLogEintrag(1, "Die Defizitregel konnte durch Markieren weiterer Kurse erfüllt werden.");
 		}
 	}
 }

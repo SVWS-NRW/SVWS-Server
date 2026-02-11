@@ -93,7 +93,7 @@ public final class AbschlussManager {
 			return "";
 		final StringBuilder sb = new StringBuilder();
 		for (final String fach : ergebnis.npFaecher) {
-			if (sb.length() > 0)
+			if (!sb.isEmpty())
 				sb.append(", ");
 			sb.append(fach);
 		}

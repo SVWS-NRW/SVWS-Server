@@ -18,12 +18,24 @@ import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegun
 
 export class Fremdsprachen extends GostBelegpruefung {
 
+	/**
+	 * Die Belegungen für alle Fächer der Fremdsprachen.
+	 */
 	private _fremdsprachen: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
+	/**
+	 * Die Belegungen für alle neu einsetzenden Fremdsprachen.
+	 */
 	private _fremdsprachenNeu: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
+	/**
+	 * Die Belegungen für alle fortgeführten Fremdsprachen.
+	 */
 	private _fremdsprachenFortgefuehrt: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
+	/**
+	 * Die Belegungen von bilingualen Sachfächern.
+	 */
 	private _biliSachfaecher: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
 	/**

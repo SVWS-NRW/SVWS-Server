@@ -81,7 +81,7 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 			});
 			await this.ladeListe();
 		}
-		const neueAuswahl = benutzerGruppe === undefined ? this.firstBenutzer(this.mapBenutzergruppe) : benutzerGruppe;
+		const neueAuswahl = benutzerGruppe ?? this.firstBenutzer(this.mapBenutzergruppe);
 		const daten = await this.ladeBenutzergruppenDaten(neueAuswahl);
 		const benutzergruppenManager = daten === undefined ? undefined : new BenutzergruppenManager(daten);
 		const listBenutzergruppenBenutzer = neueAuswahl === undefined ? undefined : await api.server.getBenutzerMitGruppenID(api.schema, neueAuswahl.id);
@@ -266,7 +266,6 @@ export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEin
 				kids.add(komp.daten.id);
 			}
 			await api.server.addBenutzergruppeKompetenzen(kids, api.schema, this.benutzergruppenManager.getID());
-			// const benutzergruppendaten = await api.server.getBenutzergruppeDaten(api.schema, this.benutzergruppenManager.getID())
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				if (!this.benutzergruppenManager.hatKompetenz(komp)) {
 					this.benutzergruppenManager.addKompetenz(komp);

@@ -6,7 +6,7 @@ export interface EinwilligungsartenGruppenprozesseProps {
 	schulform: Schulform;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => EinwilligungsartenListeManager;
-	deleteCheck: () => [boolean, List<string>];
+	deleteCheck: () => { success: boolean, logs: Iterable<string> };
 	delete: () => Promise<[boolean, List<string | null>]>;
 	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
 }

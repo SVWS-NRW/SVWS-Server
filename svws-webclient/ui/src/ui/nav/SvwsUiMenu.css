@@ -1,6 +1,7 @@
 .sidebar--menu {
 	@apply text-ui;
 	@apply flex min-h-full min-w-fit flex-1 flex-col w-full;
+	@apply overflow-hidden;
 
 	@media (orientation: portrait) {
 		@apply flex-row min-h-[unset] gap-x-5;
@@ -8,7 +9,7 @@
 }
 
 .sidebar--menu--body {
-	@apply flex-1;
+	@apply flex-1 overflow-y-auto;
 
 	@media (orientation: portrait) {
 		@apply gap-1;
@@ -25,7 +26,7 @@
 }
 
 .sidebar--menu--footer {
-	@apply pt-16;
+	@apply pt-2;
 
 	@media (orientation: portrait) {
 		@apply pt-0 items-center ml-12;

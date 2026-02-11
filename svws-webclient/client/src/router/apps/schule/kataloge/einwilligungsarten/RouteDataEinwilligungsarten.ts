@@ -52,7 +52,7 @@ export class RouteDataEinwilligungsarten extends RouteDataAuswahl<Einwilligungsa
 		await this.gotoDefaultView(res.id);
 	};
 
-	deleteCheck = (): [boolean, List<string>] => {
+	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
@@ -67,7 +67,7 @@ export class RouteDataEinwilligungsarten extends RouteDataAuswahl<Einwilligungsa
 			errorLog.add(this.getErrorMessageForReferencedEinwilligungsarten());
 		}
 
-		return [errorLog.isEmpty(), errorLog];
+		return { success: errorLog.isEmpty(), logs: errorLog };
 	};
 
 	private getErrorMessageForReferencedEinwilligungsarten(): string {

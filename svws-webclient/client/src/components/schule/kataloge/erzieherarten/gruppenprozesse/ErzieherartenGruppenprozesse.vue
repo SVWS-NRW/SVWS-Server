@@ -6,8 +6,8 @@
 		<div class="flex flex-col">
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Erzieherarten werden gelöscht." icon="i-ri-delete-bin-line">
 				<div>
-					<span v-if="preConditionCheck[0]">Alle ausgewählten Erzieherarten sind bereit zum Löschen.</span>
-					<template v-else v-for="message in preConditionCheck[1]" :key="message">
+					<span v-if="preConditionCheck.success">Alle ausgewählten Erzieherarten sind bereit zum Löschen.</span>
+					<template v-else v-for="message in preConditionCheck.logs" :key="message">
 						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
 					</template>
 				</div>
@@ -55,7 +55,7 @@
 <script setup lang="ts">
 
 	import { ref, computed } from "vue";
-	import { BenutzerKompetenz, type List, ServerMode } from "@core";
+	import { BenutzerKompetenz, type List } from "@core";
 	import type { ErzieherartenGruppenprozesseProps } from "~/components/schule/kataloge/erzieherarten/gruppenprozesse/ErzieherartenGruppenprozesseProps";
 
 	const props = defineProps<ErzieherartenGruppenprozesseProps>();
@@ -65,7 +65,7 @@
 	const status = ref<boolean | undefined>();
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatIrgendwelcheKompetenzen = computed<boolean>(() => hatKompetenzLoeschen.value);
-	const preConditionCheck = computed<[boolean, List<string>]>(() => props.deleteCheck());
+	const preConditionCheck = computed<{ success: boolean, logs: Iterable<string> }>(() => props.deleteCheck());
 	const hatReferenzen = computed<boolean>(() => !props.manager().idsReferencedErzieherarten.isEmpty());
 
 

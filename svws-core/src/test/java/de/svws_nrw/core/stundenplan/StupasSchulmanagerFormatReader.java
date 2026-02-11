@@ -448,10 +448,11 @@ public class StupasSchulmanagerFormatReader {
 	}
 
 	private static String linesToString(final List<StupasSchulmanagerFormatLine> list) {
-		String s = "";
-		for (final StupasSchulmanagerFormatLine line : list)
-			s += "\n" + lineToString(line);
-		return s;
+		final @NotNull StringBuilder sb = new StringBuilder();
+		for (final StupasSchulmanagerFormatLine line : list) {
+			sb.append("\n" + lineToString(line));
+		}
+		return sb.toString();
 	}
 
 }

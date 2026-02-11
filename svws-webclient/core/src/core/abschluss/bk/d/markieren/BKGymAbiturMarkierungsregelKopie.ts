@@ -34,7 +34,7 @@ export class BKGymAbiturMarkierungsregelKopie extends BKGymAbiturMarkierungsrege
 	 * Führt die Markierung entsprechend der Kursart durch.
 	 */
 	public markiere(variante: BKGymAbiturMarkierungsVariante): void {
-		if (this.facharbeit && !variante.varianten.manager.istFacharbeitVorhanden())
+		if (this.facharbeit && !variante.varianten.abiturdatenManager.istFacharbeitVorhanden())
 			return;
 		variante.varianten.addVariante(new BKGymAbiturMarkierungsVariante(variante, this.kennung, this.facharbeit));
 	}

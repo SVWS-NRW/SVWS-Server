@@ -11,5 +11,5 @@ export interface SLehrerAllgemeinesGruppenprozesseProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	lehrerListeManager: () => LehrerListeManager;
 	deleteLehrer: () => Promise<[boolean, List<string | null>]>;
-	deleteLehrerCheck: () => { success: boolean, logs: List<string> };
+	deleteCheck: () => { success: boolean, logs: Iterable<string> };
 }

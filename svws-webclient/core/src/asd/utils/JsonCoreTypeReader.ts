@@ -39,7 +39,6 @@ import { BildungsgangTypKatalogEintrag } from "../data/schule/BildungsgangTypKat
 import { FoerderschwerpunktKatalogEintrag } from "../data/schule/FoerderschwerpunktKatalogEintrag";
 import { KindergartenbesuchKatalogEintrag } from "../data/schule/KindergartenbesuchKatalogEintrag";
 import { OrganisationsformKatalogEintrag } from "../data/schule/OrganisationsformKatalogEintrag";
-import { ReligionKatalogEintrag } from "../data/schule/ReligionKatalogEintrag";
 import { SchulabschlussAllgemeinbildendKatalogEintrag } from "../data/schule/SchulabschlussAllgemeinbildendKatalogEintrag";
 import { SchulabschlussBerufsbildendKatalogEintrag } from "../data/schule/SchulabschlussBerufsbildendKatalogEintrag";
 import { SchulformKatalogEintrag } from "../data/schule/SchulformKatalogEintrag";
@@ -137,6 +136,7 @@ import { HerkunftsschulnummerKatalogEintrag } from "../data/schule/Herkunftsschu
 import { Herkunftsschulnummer } from "../types/schule/Herkunftsschulnummer";
 import { ReformpaedagogikKatalogEintrag } from "../data/schule/ReformpaedagogikKatalogEintrag";
 import { Reformpaedagogik } from "../types/schule/Reformpaedagogik";
+import {CoreTypeData} from "../data/CoreTypeData";
 
 interface JsonCoreTypeEntry<T> {
 	bezeichner: string;
@@ -295,8 +295,8 @@ export class JsonCoreTypeReader {
 	}
 
 	public readReligion() {
-		const data = this.read('Religion', (json) => ReligionKatalogEintrag.transpilerFromJSON(json));
-		const manager = new CoreTypeDataManager<ReligionKatalogEintrag, Religion>(data.version, Religion.class, Religion.values(), data.mapData, data.mapStatistikIDs);
+		const data = this.read('Religion', (json) => CoreTypeData.transpilerFromJSON(json));
+		const manager = new CoreTypeDataManager<CoreTypeData, Religion>(data.version, Religion.class, Religion.values(), data.mapData, data.mapStatistikIDs);
 		Religion.init(manager);
 	}
 

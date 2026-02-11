@@ -27,7 +27,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class Abi30BelegpruefungDeutsch extends GostBelegpruefung {
 
-	/// Die Belegung für das Fach Deutsch
+	/** Die Belegung für das Fach Deutsch. */
 	private AbiturFachbelegung _deutsch;
 
 	/**

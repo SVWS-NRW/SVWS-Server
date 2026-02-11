@@ -34,6 +34,9 @@ export class LogLevel extends JavaEnum<LogLevel> {
 	 */
 	public static readonly DEBUG: LogLevel = new LogLevel("DEBUG", 4, 10000);
 
+	/**
+	 * Der Integer-Wert des Log-Levels.
+	 */
 	private readonly level: number;
 
 	/**

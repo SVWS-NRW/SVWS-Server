@@ -1,4 +1,5 @@
 import { ValidatorSss00SchuleStammdatenSchulform } from '../../../asd/validate/schule/ValidatorSss00SchuleStammdatenSchulform';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
@@ -9,11 +10,12 @@ export class ValidatorSssSchuleStammdatenSchulform extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
+	 * @param daten     die Schulform
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<string | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorSss00SchuleStammdatenSchulform(kontext));
+		this._validatoren.add(new ValidatorSss00SchuleStammdatenSchulform(daten, kontext));
 	}
 
 	protected pruefe(): boolean {

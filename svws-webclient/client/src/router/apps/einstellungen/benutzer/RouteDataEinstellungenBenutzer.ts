@@ -79,7 +79,7 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 			});
 			await this.ladeListe();
 		}
-		const auswahl = benutzer === undefined ? this.firstBenutzer(this.mapBenutzer) : benutzer;
+		const auswahl = benutzer ?? this.firstBenutzer(this.mapBenutzer);
 		const daten = await this.ladeBenutzerDaten(auswahl);
 		const listBenutzergruppen = await api.server.getBenutzergruppenliste(api.schema);
 		const benutzerManager = (daten === undefined) ? undefined : new BenutzerManager(daten);
@@ -232,12 +232,7 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	 * @returns {Promise<void>}
 	 */
 	addBenutzerToBenutzergruppe = async (idGroup: number): Promise<void> => {
-		if (idGroup !== -1) {
-			const bg_ids = new ArrayList<number>();
-			bg_ids.add(this.benutzerManager.getID());
-			const result = await api.server.addBenutzergruppeBenutzer(bg_ids, api.schema, idGroup);
-			this.benutzerManager.addToGruppe(result);
-		} else {
+		if (idGroup === -1) {
 			const benutzer_id = new ArrayList<number>();
 			benutzer_id.add(this.benutzerManager.getID());
 			for (const bg of this.listBenutzergruppen) {
@@ -246,6 +241,11 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 					this.benutzerManager.addToGruppe(result);
 				}
 			}
+		} else {
+			const bg_ids = new ArrayList<number>();
+			bg_ids.add(this.benutzerManager.getID());
+			const result = await api.server.addBenutzergruppeBenutzer(bg_ids, api.schema, idGroup);
+			this.benutzerManager.addToGruppe(result);
 		}
 		this.setPatchedState({
 			benutzerManager: this._state.value.benutzerManager,
@@ -264,16 +264,16 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	removeBenutzerFromBenutzergruppe = async (idGroup: number): Promise<void> => {
 		const ids = new ArrayList<number>();
 		ids.add(this.benutzerManager.getID());
-		if (idGroup !== -1) {
-			const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema, idGroup);
-			this.benutzerManager.removeFromGruppe(result);
-		} else {
+		if (idGroup === -1) {
 			for (const eintrag of this.listBenutzergruppen) {
 				if (this.benutzerManager.istInGruppe(eintrag.id)) {
 					const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema, eintrag.id);
 					this.benutzerManager.removeFromGruppe(result);
 				}
 			}
+		} else {
+			const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema, idGroup);
+			this.benutzerManager.removeFromGruppe(result);
 		}
 		// TODO Durch eine entpsrechende Gruppenmitgliedschaft wird ein Benutzer administrativ und das wird in BenutzerView festgehalt.
 		// Die Entfernung dieser Mitgliedschaft wird im BenutzerManager nicht richtig umgesetzt. Die Gruppe wird zwar entfernt, jedoch muss auch im

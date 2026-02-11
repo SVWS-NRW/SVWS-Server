@@ -42,6 +42,8 @@ import de.svws_nrw.db.schema.revisionen.Revision4Updates;
 import de.svws_nrw.db.schema.revisionen.Revision51Updates;
 import de.svws_nrw.db.schema.revisionen.Revision52Updates;
 import de.svws_nrw.db.schema.revisionen.Revision53Updates;
+import de.svws_nrw.db.schema.revisionen.Revision55Updates;
+import de.svws_nrw.db.schema.revisionen.Revision56Updates;
 import de.svws_nrw.db.schema.revisionen.Revision6Updates;
 import de.svws_nrw.db.schema.revisionen.RevisionNoUpdates;
 
@@ -282,21 +284,32 @@ public enum SchemaRevisionen {
 	REV_52(52, "2025-10-14"),
 
 	/** Notenmodul: Anlegen von Tabellen zur Verwaltung der Konfiguration und von Verbindungen zu externen Servern */
-	REV_53(53, "2025-10-29");
+	REV_53(53, "2025-10-29"),
+
+	/** Sprachenfolge bzw. -prüfungen: Ergänzen einer Feldes für die Zeugnisbezeichnungen und eines Sprachnachweises am Weiterbildungskolleg */
+	REV_54(54, "2026-02-05"),
+
+	/** Neue Tabelle Zuordnung Ankreuzkompetenz Jahrgang */
+	REV_55(55, "2026-02-06"),
+
+	/** Fach_ID der Tabelle Katalog_Floskeln als Fremdschlüssel der Tabelle EigeneSchule_Faecher definieren */
+	REV_56(56, "2026-02-10");
+
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_53;
+	public static final SchemaRevisionen maxRevision = REV_56;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_53;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_56;
+
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;
@@ -395,6 +408,8 @@ public enum SchemaRevisionen {
 				case REV_51 -> new Revision51Updates();
 				case REV_52 -> new Revision52Updates();
 				case REV_53 -> new Revision53Updates();
+				case REV_55 -> new Revision55Updates();
+				case REV_56 -> new Revision56Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}

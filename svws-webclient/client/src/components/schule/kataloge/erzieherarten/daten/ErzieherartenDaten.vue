@@ -6,7 +6,11 @@
 					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
 						:model-value="manager().daten().bezeichnung"
 						readonly />
-					<svws-ui-spacing />
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<svws-ui-spacing :size="2" />
+			<svws-ui-content-card title="Ansicht & Sortierung">
+				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
 						:model-value="manager().daten().sortierung"
 						@change="patchSortierung"

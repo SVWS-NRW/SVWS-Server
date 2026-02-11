@@ -48,7 +48,7 @@ public class BKGymAbiturMarkierungsregelMinAnzahlpunkte extends BKGymAbiturMarki
 		final @NotNull Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> bedingung =
 				markierung -> (markierung != null) && (minPunkte < variante.getPunktzahlBlockI());
 		variante.markiereKursanzahl(maxKurse - vorherMarkiert, bedingung);
-		if (minPunkte < variante.getPunktzahlBlockI()) {
+		if (variante.getPunktzahlBlockI() < minPunkte) {
 			variante.addLogEintrag(1, "Fehler: Die Mindestpunktzahl konnte auch nicht durch Markieren weiterer Kurse erreicht werden.");
 			variante.setHatZulassung(false);
 			return;

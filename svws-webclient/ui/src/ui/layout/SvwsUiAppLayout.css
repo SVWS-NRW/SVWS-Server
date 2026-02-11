@@ -32,6 +32,15 @@ html {
 
 .app--menu {
 	@apply overflow-y-auto -mr-3 pr-3 -my-3 py-3 min-w-fit max-w-32;
+	@apply rounded-3xl text-ui;
+}
+
+html:not(.dark) .app--menu {
+	background-color: #fefbfc;
+}
+
+html.dark .app--menu {
+	background-color: transparent;
 }
 
 @-moz-document url-prefix() {

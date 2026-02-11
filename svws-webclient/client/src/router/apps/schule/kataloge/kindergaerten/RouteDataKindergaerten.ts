@@ -52,7 +52,7 @@ export class RouteDataKindergaerten extends RouteDataAuswahl<KindergaertenListeM
 		await this.gotoDefaultView(result.id);
 	};
 
-	deleteCheck = (): [boolean, List<string>] => {
+	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Kindergärten vor.');
@@ -63,7 +63,7 @@ export class RouteDataKindergaerten extends RouteDataAuswahl<KindergaertenListeM
 		if (!this.manager.idsOfReferencedKindergaerten.isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedKindergaerten());
 		}
-		return [errorLog.isEmpty(), errorLog];
+		return { success: errorLog.isEmpty(), logs: errorLog };
 	};
 
 	private getErrorMessageForReferencedKindergaerten(): string {

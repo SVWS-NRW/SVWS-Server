@@ -3,6 +3,8 @@ package de.svws_nrw.asd.validate.gesamt;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -10,7 +12,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
-import de.svws_nrw.asd.data.schule.SchuleStatistikdatenGesamt;
+import de.svws_nrw.asd.data.statistik.LehrerStatistikGesamt;
+import de.svws_nrw.asd.data.statistik.StatistikGesamt;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -40,9 +44,9 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 @DisplayName("Tests für ValidatorGesamtLehrerPersonaldatenLehramt (5 Lehrkräfte)")
 class TestValidatorGlpl01GesamtLehrerPersonaldatenLehramt {
 
-	/** Basis-Testdaten (5 Lehrkräfte, alle ohne Lehramt) laden*/
-	static final String gesamt = JsonReader.fromResourceOrEmptyString(
-			"de/svws_nrw/asd/validate/Testdaten_001_SchuleStatistikdatenGesamt_LehrerPersonaldaten_Lehramt.json");
+	/** Statistikdaten der Schule*/
+	static final StatistikGesamt testdaten_001 =
+			JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_StatistikGesamt.json", StatistikGesamt.class);
 
 	/**
 	 * Initialisiert die Core-Types, damit die Tests ausgeführt werden können.
@@ -77,25 +81,38 @@ class TestValidatorGlpl01GesamtLehrerPersonaldatenLehramt {
 			"FW, 1, false",
 			"FW, 5, false"
 	})
-	void testValidator(final String schulform, final int anzahlMitLehramt, final boolean result) throws IOException {
+	void testValidator(final String schulform, final int anzahlMitLehramt, final boolean result) {
+		testdaten_001.schule.schulform = schulform;
 
-		final SchuleStatistikdatenGesamt daten = JsonReader.mapper.readValue(gesamt, SchuleStatistikdatenGesamt.class);
+		// Testdatensatz setzen
 
-		// Schulform setzen
+		final LehrerStatistikGesamt lehrerStatistikGesamt1 = new LehrerStatistikGesamt();
+		final LehrerStatistikGesamt lehrerStatistikGesamt2 = new LehrerStatistikGesamt();
+		final LehrerStatistikGesamt lehrerStatistikGesamt3 = new LehrerStatistikGesamt();
+		final LehrerStatistikGesamt lehrerStatistikGesamt4 = new LehrerStatistikGesamt();
+		final LehrerStatistikGesamt lehrerStatistikGesamt5 = new LehrerStatistikGesamt();
 
-		daten.stammdaten.schulform = schulform;
+		final List<LehrerStatistikGesamt> listLehrerStatistikGesamt = new ArrayList<>();
+		listLehrerStatistikGesamt.add(lehrerStatistikGesamt1);
+		listLehrerStatistikGesamt.add(lehrerStatistikGesamt2);
+		listLehrerStatistikGesamt.add(lehrerStatistikGesamt3);
+		listLehrerStatistikGesamt.add(lehrerStatistikGesamt4);
+		listLehrerStatistikGesamt.add(lehrerStatistikGesamt5);
 
 		// Lehrämter dynamisch verteilen:
 		// Die ersten N Lehrkräfte erhalten je 1 Lehramt, der Rest 0
-		for (int i = 0; i < daten.lehrerPersonaldaten.size(); i++) {
-			daten.lehrerPersonaldaten.get(i).lehraemter.clear();
-			if (i < anzahlMitLehramt)
-				daten.lehrerPersonaldaten.get(i).lehraemter.add(new LehrerLehramtEintrag());
+		for (int i = 0; i < listLehrerStatistikGesamt.size(); i++) {
+			listLehrerStatistikGesamt.get(i).lehraemter.clear();
+			if (i < anzahlMitLehramt) {
+				listLehrerStatistikGesamt.get(i).lehraemter.add(new LehrerLehramtEintrag());
+			}
 		}
 
 		// Validator ausführen
-		final var kontext = new ValidatorKontext(daten.stammdaten, true);
-		final var validator = new ValidatorGlpl01GesamtLehrerPersonaldatenLehramt(daten.lehrerPersonaldaten, kontext);
+		final ValidatorKontext kontext =
+				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
+						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
+		final var validator = new ValidatorGlpl01GesamtLehrerPersonaldatenLehramt(() -> listLehrerStatistikGesamt, kontext);
 
 		// Ergebnis prüfen
 		assertEquals(result, validator.run());

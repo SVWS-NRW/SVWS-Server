@@ -14,7 +14,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionHjData;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurplan;
+import de.svws_nrw.module.reporting.types.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurplan;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurplan;
 import jakarta.ws.rs.core.Response;

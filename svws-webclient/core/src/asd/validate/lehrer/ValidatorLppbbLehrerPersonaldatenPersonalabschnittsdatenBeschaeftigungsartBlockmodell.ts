@@ -1,4 +1,4 @@
-import { ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell } from '../../../asd/validate/lehrer/ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell';
+import { ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell } from '../../../asd/validate/lehrer/ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell';
 import { LehrerPersonalabschnittsdatenAnrechnungsstunden } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdatenAnrechnungsstunden';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import type { List } from '../../../java/util/List';
@@ -19,9 +19,9 @@ export class ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftig
 	 * @param minderleistungen     die Liste mit den Einträgen zu Minderleistungen
 	 * @param kontext  der Kontext der Validierung
 	 */
-	public constructor(pflichtstundensoll: Supplier<number | null>, beschaeftigungsart: Supplier<string | null>, einsatzstatus: Supplier<string | null>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
+	public constructor(beschaeftigungsart: Supplier<string | null>, pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<string | null>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorLppbb01LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(pflichtstundensoll, beschaeftigungsart, einsatzstatus, mehrleistungen, minderleistungen, kontext));
+		this._validatoren.add(new ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(pflichtstundensoll, beschaeftigungsart, einsatzstatus, mehrleistungen, minderleistungen, kontext));
 	}
 
 	protected pruefe(): boolean {

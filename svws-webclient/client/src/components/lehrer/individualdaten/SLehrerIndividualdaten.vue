@@ -6,62 +6,49 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-wrapper>
-					<svws-ui-checkbox :readonly :model-value="data().istSichtbar"
-						@update:model-value="istSichtbar => patch({istSichtbar: istSichtbar === true})" focus-class-content>
+					<svws-ui-checkbox :readonly v-model="modelProxy.proxy.istSichtbar" focus-class-content>
 						Ist sichtbar
 					</svws-ui-checkbox>
-					<svws-ui-checkbox :readonly :model-value="data().istRelevantFuerStatistik" statistics
-						@update:model-value="istRelevantFuerStatistik => patch({istRelevantFuerStatistik: istRelevantFuerStatistik === true})">
-						Ist Relevant für Statistik
+					<svws-ui-checkbox :readonly v-model="modelProxy.proxy.istRelevantFuerStatistik" statistics>
+						Ist relevant für Statistik
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
-				<svws-ui-text-input placeholder="Kürzel" :readonly :model-value="data().kuerzel" statistics
-					@change="kuerzel => patch({kuerzel: kuerzel ?? undefined})" required focus />
+				<svws-ui-text-input placeholder="Kürzel" :readonly v-model="modelProxy.proxy.kuerzel" @commit="modelProxy.patch" statistics required focus />
 				<svws-ui-select title="Personal-Typ" :readonly v-model="inputPersonalTyp" :items="PersonalTyp.values()"
 					:item-text="i => i.bezeichnung" required />
-				<svws-ui-text-input placeholder="Nachname" :readonly :model-value="data().nachname"
-					@change="nachname => {if (nachname?.trim()) patch({nachname: nachname ?? undefined})}" required statistics :validator="() => validatorNachname"
-					:do-validate="validateNachname" />
-				<svws-ui-text-input placeholder="Rufname" :readonly :model-value="data().vorname"
-					@change="vorname => {if (vorname?.trim()) patch({vorname: vorname ?? undefined})}" required statistics :validator="() => validatorVorname"
-					:do-validate="validateVorname" />
+				<svws-ui-text-input placeholder="Nachname" :readonly v-model="modelProxy.proxy.nachname" @commit="modelProxy.patch" required statistics
+					:validation="() => modelProxy.getFehler('nachname')" />
+				<svws-ui-text-input placeholder="Rufname" :readonly v-model="modelProxy.proxy.vorname" @commit="modelProxy.patch" required statistics
+					:validation="() => modelProxy.getFehler('vorname')" />
 				<svws-ui-spacing />
 				<svws-ui-select title="Geschlecht" :readonly v-model="inputGeschlecht" :items="Geschlecht.values()" :item-text="i=>i.text"
 					required />
-				<svws-ui-text-input placeholder="Geburtsdatum" :readonly :model-value="data().geburtsdatum"
-					@change="geburtsdatum => geburtsdatum && patch({geburtsdatum})" type="date" required statistics :validator="() => validatorGeburtsdatum"
-					:do-validate="validateGeburtsdatum" />
+				<svws-ui-text-input placeholder="Geburtsdatum" :readonly v-model="modelProxy.proxy.geburtsdatum" @commit="modelProxy.patch" type="date" required statistics
+					:validation="() => modelProxy.getFehler('geburtsdatum')" />
 				<svws-ui-select title="Staatsangehörigkeit" :readonly v-model="inputStaatsangehoerigkeit" :items="Nationalitaeten.values()"
 					:item-text="i => i.historie().getLast().staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
 					:item-filter="staatsangehoerigkeitKatalogEintragFilter" required autocomplete statistics />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Akadademischer Grad" :readonly :model-value="data().titel" @change="titel => patch({titel})"
-					type="text" />
-				<svws-ui-text-input placeholder="Amtsbezeichnung" :readonly :model-value="data().amtsbezeichnung"
-					@change="amtsbezeichnung => patch({amtsbezeichnung})" />
+				<svws-ui-text-input placeholder="Akademischer Grad" :readonly v-model="modelProxy.proxy.titel" @commit="modelProxy.patch" />
+				<svws-ui-text-input placeholder="Amtsbezeichnung" :readonly v-model="modelProxy.proxy.amtsbezeichnung" @commit="modelProxy.patch" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Wohnort und Kontaktdaten">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly :model-value="strasse" @change="patchStrasse"
-					type="text" span="full" />
+				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly v-model="inputStrasse" @commit="modelProxy.patch" span="full" />
 				<svws-ui-select v-model="wohnortID" title="Wohnort" :readonly :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort"
 					:item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 				<svws-ui-select v-model="ortsteilID" title="Ortsteil" :readonly :items="ortsteile" :item-sort="ortsteilSort"
 					:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" removable />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Telefon" :readonly :model-value="data().telefon" @change="telefon => patch({telefon})"
-					type="tel" :max-len="20" />
-				<svws-ui-text-input placeholder="Mobil oder Fax" :readonly :model-value="data().telefonMobil"
-					@change="telefonMobil => patch({telefonMobil})" type="tel" :max-len="20" />
-				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :readonly :model-value="data().emailPrivat"
-					@change="emailPrivat => patch({emailPrivat})" type="email" verify-email />
-				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :readonly :model-value="data().emailDienstlich"
-					@change="emailDienstlich => patch({emailDienstlich})" type="email" verify-email />
+				<svws-ui-text-input placeholder="Telefon" :readonly v-model="modelProxy.proxy.telefon" @commit="modelProxy.patch" type="tel" :max-len="20" />
+				<svws-ui-text-input placeholder="Mobil oder Fax" :readonly v-model="modelProxy.proxy.telefonMobil" @commit="modelProxy.patch" type="tel" :max-len="20" />
+				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :readonly v-model="modelProxy.proxy.emailPrivat" @commit="modelProxy.patch" type="email" verify-email />
+				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :readonly v-model="modelProxy.proxy.emailDienstlich" @commit="modelProxy.patch" type="email" verify-email />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Leitungsfunktionen">
-			<svws-ui-table :columns="colsLeitungsfunktionen" :items="lehrerListeManager().daten().leitungsfunktionen" count>
+			<svws-ui-table :columns="colsLeitungsfunktionen" :items="dataNotPatched().leitungsfunktionen" count>
 				<template #cell(idLeitungsfunktion)="{ value }">
 					{{ LehrerLeitungsfunktion.data().getWertByID(value)?.daten(schuljahr)?.text ?? '—' }}
 				</template>
@@ -80,86 +67,61 @@
 
 	import { computed } from "vue";
 	import type { LehrerIndividualdatenProps } from "./SLehrerIndividualdatenProps";
-	import type { OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
-	import { Geschlecht, Nationalitaeten, PersonalTyp, AdressenUtils, DateUtils, JavaString, LehrerLeitungsfunktion, BenutzerKompetenz,
-		ValidatorLsnLehrerStammdatenNachname, ValidatorLsvLehrerStammdatenVorname, ValidatorLsdLehrerStammdatenGeburtsdatum } from "@core";
+	import type { LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+	import { Geschlecht, Nationalitaeten, PersonalTyp, AdressenUtils, DateUtils, JavaString, LehrerLeitungsfunktion, BenutzerKompetenz } from "@core";
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, orte_filter, orte_sort, ortsteilSort } from "~/utils/helfer";
+	import { LehrerIndividualdatenModelProxy } from "./LehrerIndividualdatenModelProxy";
 
 	const props = defineProps<LehrerIndividualdatenProps>();
 
-	const validatorNachname = computed(() => new ValidatorLsnLehrerStammdatenNachname({
-		get: () => props.lehrerListeManager().daten().nachname,
-	}, props.validatorKontext()));
-	function validateNachname(validator: ValidatorLsnLehrerStammdatenNachname, value: string | null): boolean {
-		const name = props.lehrerListeManager().daten().nachname;
-		props.lehrerListeManager().daten().nachname = value ?? "";
-		const res = validator.run();
-		props.lehrerListeManager().daten().nachname = name;
-		return res;
-	};
-
-	const validatorVorname = computed(() => new ValidatorLsvLehrerStammdatenVorname({
-		get: () => props.lehrerListeManager().daten().vorname,
-	}, props.validatorKontext()));
-	function validateVorname(validator: ValidatorLsvLehrerStammdatenVorname, value: string | null): boolean {
-		const name = props.lehrerListeManager().daten().vorname;
-		props.lehrerListeManager().daten().vorname = value ?? "";
-		const res = validator.run();
-		props.lehrerListeManager().daten().vorname = name;
-		return res;
-	};
-
-	const validatorGeburtsdatum = computed(() => new ValidatorLsdLehrerStammdatenGeburtsdatum({
-		get: () => props.lehrerListeManager().daten().geburtsdatum,
-	}, props.validatorKontext()));
-	function validateGeburtsdatum(validator: ValidatorLsdLehrerStammdatenGeburtsdatum, value: string | null): boolean {
-		const datum = props.lehrerListeManager().daten().geburtsdatum;
-		props.lehrerListeManager().daten().geburtsdatum = value ?? "";
-		const res = validator.run();
-		props.lehrerListeManager().daten().geburtsdatum = datum;
-		return res;
-	};
+	const dataNotPatched = () => props.lehrerListeManager().daten();
+	async function patchMethod(data: Partial<LehrerStammdaten>): Promise<boolean> {
+		await props.patch(data);
+		return true;
+	}
+	const modelProxy = new LehrerIndividualdatenModelProxy(dataNotPatched, () => props.validatorKontext(), patchMethod);
 
 	const schuljahr = computed<number>(() => props.lehrerListeManager().getSchuljahr());
 
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 
-	const data = () => props.lehrerListeManager().daten();
-
 	const inputGeschlecht = computed<Geschlecht>({
-		get: () => Geschlecht.fromValue(data().geschlecht) || Geschlecht.X,
-		set: (value) => void props.patch({ geschlecht: value.id }),
+		get: () => Geschlecht.fromValue(modelProxy.proxy.geschlecht) || Geschlecht.X,
+		set: (value) => modelProxy.proxy.geschlecht = value.id,
 	});
 
 	const inputPersonalTyp = computed<PersonalTyp>({
-		get: () => PersonalTyp.fromKuerzel(data().personalTyp) || PersonalTyp.SONSTIGE,
-		set: (value) => void props.patch({ personalTyp: value.kuerzel }),
+		get: () => PersonalTyp.fromKuerzel(modelProxy.proxy.personalTyp) || PersonalTyp.SONSTIGE,
+		set: (value) => modelProxy.proxy.personalTyp = value.kuerzel,
 	});
 
 	const inputStaatsangehoerigkeit = computed<Nationalitaeten>({
-		get: () => Nationalitaeten.getByISO3(data().staatsangehoerigkeitID) ?? Nationalitaeten.getDEU(),
-		set: (value) => void props.patch({ staatsangehoerigkeitID: value.historie().getLast().iso3 }),
+		get: () => Nationalitaeten.getByISO3(modelProxy.proxy.staatsangehoerigkeitID) ?? Nationalitaeten.getDEU(),
+		set: (value) => modelProxy.proxy.staatsangehoerigkeitID = value.historie().getLast().iso3,
 	});
 
-	const strasse = computed(() => AdressenUtils.combineStrasse(data().strassenname ?? "", data().hausnummer ?? "", data().hausnummerZusatz ?? ""));
-
-	async function patchStrasse(value: string | null) {
-		const vals = AdressenUtils.splitStrasse(value);
-		await props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] });
-	}
+	const inputStrasse = computed<string | null>({
+		get: () => AdressenUtils.combineStrasse(modelProxy.proxy.strassenname ?? "", modelProxy.proxy.hausnummer ?? "", modelProxy.proxy.hausnummerZusatz ?? ""),
+		set: (value) => {
+			const vals = AdressenUtils.splitStrasse(value);
+			modelProxy.proxy.strassenname = vals[0];
+			modelProxy.proxy.hausnummer = vals[1];
+			modelProxy.proxy.hausnummerZusatz = vals[2];
+		},
+	});
 
 	const wohnortID = computed<OrtKatalogEintrag | null>({
 		get: () => {
-			const idWohnort = data().wohnortID;
+			const idWohnort = modelProxy.proxy.wohnortID;
 			return (idWohnort === null) ? null : props.mapOrte.get(idWohnort) ?? null;
 		},
-		set: (val) => void props.patch({ wohnortID: val?.id ?? null }),
+		set: (val) => modelProxy.proxy.wohnortID = val?.id ?? null,
 	});
 
 	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
 		const result: Array<OrtsteilKatalogEintrag> = [];
 		for (const ortsteil of props.mapOrtsteile.values()) {
-			if (ortsteil.ort_id === data().wohnortID) {
+			if (ortsteil.ort_id === modelProxy.proxy.wohnortID) {
 				result.push(ortsteil);
 			}
 		}
@@ -168,10 +130,10 @@
 
 	const ortsteilID = computed<OrtsteilKatalogEintrag | null>({
 		get: () => {
-			const idOrtsteil = data().ortsteilID;
+			const idOrtsteil = modelProxy.proxy.ortsteilID;
 			return idOrtsteil === null ? null : props.mapOrtsteile.get(idOrtsteil) ?? null;
 		},
-		set: (val) => void props.patch({ ortsteilID: val?.id ?? null }),
+		set: (val) => modelProxy.proxy.ortsteilID = val?.id ?? null,
 	});
 
 	const colsLeitungsfunktionen = [

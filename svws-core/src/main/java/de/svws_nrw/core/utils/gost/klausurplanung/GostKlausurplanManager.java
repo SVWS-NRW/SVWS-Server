@@ -2857,14 +2857,14 @@ public class GostKlausurplanManager {
 	private @NotNull List<List<GostKlausurtermin>> gruppiereUeberschneidungen(
 			final @NotNull List<GostKlausurtermin> termine) {
 		final @NotNull List<List<GostKlausurtermin>> ergebnis = new ArrayList<>();
-		boolean added = false;
 		// Teste alle übergebenen Termine
 		for (final @NotNull GostKlausurtermin terminToAdd : termine) {
+			boolean added = false;
 			// Not supported by transpiler outerloop:
 			// Teste alle bereits gefundenen gruppierten Terminlisten
 			for (final @NotNull List<GostKlausurtermin> listToCheck : ergebnis) {
 				// Teste jeden Termin innerhalb einer gruppierten Terminliste
-				for (final @NotNull GostKlausurtermin terminInListe : termine) {
+				for (final @NotNull GostKlausurtermin terminInListe : listToCheck) {
 					if (checkTerminUeberschneidung(terminInListe, terminToAdd)) {
 						listToCheck.add(terminToAdd);
 						// Not supported by transpiler break outerloop;
@@ -4734,6 +4734,23 @@ public class GostKlausurplanManager {
 			return kursklausuren;
 		for (final GostSchuelerklausurTermin skt : _schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.get1(raum.id))
 			if ((skt.folgeNr == 0) || includeNachschreiber)
+				kursklausuren.add(kursklausurBySchuelerklausurTermin(skt));
+		return kursklausuren;
+	}
+
+	/**
+	 * Liefert die Menge aller {@link GostKursklausur}en zurück, die in einem {@link GostKlausurraum} geschrieben werden, wenn es sich um Nachschreibklausuren handelt.
+	 *
+	 * @param raum  der {@link GostKlausurraum}
+	 *
+	 * @return die Menge aller {@link GostKursklausur}en zurück, die in einem {@link GostKlausurraum} geschrieben werden, wenn es sich um Nachschreibklausuren handelt.
+	 */
+	public @NotNull Set<GostKursklausur> nachschreiberGetMengeByRaum(final @NotNull GostKlausurraum raum) {
+		final Set<GostKursklausur> kursklausuren = new HashSet<>();
+		if (!_schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.containsKey1(raum.id))
+			return kursklausuren;
+		for (final GostSchuelerklausurTermin skt : _schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.get1(raum.id))
+			if (skt.folgeNr > 0)
 				kursklausuren.add(kursklausurBySchuelerklausurTermin(skt));
 		return kursklausuren;
 	}

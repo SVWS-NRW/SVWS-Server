@@ -5,7 +5,7 @@ export interface OrtsteileGruppenprozesseProps {
 	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => OrtsteileListeManager;
-	deleteCheck: () => [boolean, List<string>];
+	deleteCheck: () => { success: boolean, logs: Iterable<string> };
 	delete: () => Promise<[boolean, List<string | null>]>;
 	goToDefaultView: (eintragId?: number | null) => Promise<void>;
 }

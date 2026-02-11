@@ -141,7 +141,8 @@ public final class DataTelefonarten extends DataManagerRevised<Long, DTOTelefonA
 
 	private void validateBezeichnung(final Long id, final String bezeichnung) throws ApiOperationException {
 		final boolean bezeichnungAlreadyUsed = this.conn
-				.queryAll(DTOTelefonArt.class).stream()
+				.queryAll(DTOTelefonArt.class)
+				.stream()
 				.anyMatch(t -> (t.ID != id) && Strings.CI.equals(bezeichnung, t.Bezeichnung));
 
 		if (bezeichnungAlreadyUsed) {

@@ -1,225 +1,70 @@
-import { JavaObject } from '../../../../../core/src/java/lang/JavaObject';
-import type { JavaSet } from '../../../../../core/src/java/util/JavaSet';
-import type { KAOAZusatzmerkmalKatalogEintrag } from '../../../../../core/src/asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag';
-import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
-import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
-import { JavaString } from '../../../../../core/src/java/lang/JavaString';
-import { DeveloperNotificationException } from '../../../../../core/src/core/exceptions/DeveloperNotificationException';
-import type { Comparator } from '../../../../../core/src/java/util/Comparator';
-import type { JavaFunction } from '../../../../../core/src/java/util/function/JavaFunction';
-import type { KAOAKategorieKatalogEintrag } from '../../../../../core/src/asd/data/kaoa/KAOAKategorieKatalogEintrag';
-import { KAOAEbene4 } from '../../../../../core/src/asd/types/kaoa/KAOAEbene4';
-import type { SchuelerKAoADaten } from '../../../../../core/src/core/data/schueler/SchuelerKAoADaten';
-import { KAOAKategorie } from '../../../../../core/src/asd/types/kaoa/KAOAKategorie';
-import type { KAOAEbene4KatalogEintrag } from '../../../../../core/src/asd/data/kaoa/KAOAEbene4KatalogEintrag';
+import { StateManager } from "../../../index";
 import type { List } from '../../../../../core/src/java/util/List';
-import { KAOAMerkmal } from '../../../../../core/src/asd/types/kaoa/KAOAMerkmal';
-import { IllegalArgumentException } from '../../../../../core/src/java/lang/IllegalArgumentException';
-import { HashSet } from '../../../../../core/src/java/util/HashSet';
-import { Pair } from '../../../../../core/src/asd/adt/Pair';
-import { KAOAAnschlussoptionen } from '../../../../../core/src/asd/types/kaoa/KAOAAnschlussoptionen';
+import type { JavaMap } from '../../../../../core/src/java/util/JavaMap';
+import type { JavaSet } from '../../../../../core/src/java/util/JavaSet';
+import type { SchuelerKAoADaten } from '../../../../../core/src/core/data/schueler/SchuelerKAoADaten';
 import type { SchuelerLernabschnittListeEintrag } from '../../../../../core/src/core/data/schueler/SchuelerLernabschnittListeEintrag';
-import { AuswahlManager } from '../../AuswahlManager';
-import { AttributMitAuswahl } from '../../AttributMitAuswahl';
-import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
-import type { KAOAAnschlussoptionenKatalogEintrag } from '../../../../../core/src/asd/data/kaoa/KAOAAnschlussoptionenKatalogEintrag';
-import { Class } from '../../../../../core/src/java/lang/Class';
-import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import type { KAOAMerkmalKatalogEintrag } from '../../../../../core/src/asd/data/kaoa/KAOAMerkmalKatalogEintrag';
-import { KAOAZusatzmerkmal } from '../../../../../core/src/asd/types/kaoa/KAOAZusatzmerkmal';
+import { SchuelerListeEintrag } from '../../../../../core/src/core/data/schueler/SchuelerListeEintrag';
+import { HashSet } from '../../../../../core/src/java/util/HashSet';
+import { HashMap } from '../../../../../core/src/java/util/HashMap';
+import { KAOAKategorie } from '../../../../../core/src/asd/types/kaoa/KAOAKategorie';
 
-export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADaten, SchuelerKAoADaten> {
 
-	/**
-	 * Ein Default-Comparator für den Vergleich von KAoA in KAoA-Listen.
-	 */
-	public static readonly comparator: Comparator<SchuelerKAoADaten> = { compare: (a: SchuelerKAoADaten, b: SchuelerKAoADaten) => {
-		let cmp: number = JavaLong.compare(a.idSchuljahresabschnitt, b.idSchuljahresabschnitt);
-		if (cmp !== 0) {
-			return cmp;
-		}
-		cmp = JavaLong.compare(a.idKategorie, b.idKategorie);
-		if (cmp !== 0) {
-			return cmp;
-		}
-		return JavaLong.compare(a.id, b.id);
-	} };
+interface SchuelerKaoaState {
+	auswahl: SchuelerListeEintrag;
+	kAoADatenById: JavaMap<number, SchuelerKAoADaten>;
+}
 
-	/**
-	 *  Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
-	 */
-	private static readonly _kaoaToId: JavaFunction<SchuelerKAoADaten, number> = { apply: (kaoa: SchuelerKAoADaten) => kaoa.id };
+const createDefaultState = (): SchuelerKaoaState => ({
+	auswahl: new SchuelerListeEintrag(),
+	kAoADatenById: new HashMap(),
+});
 
-	private readonly _kategorieToId: JavaFunction<KAOAKategorie, number> = { apply: (kategorie: KAOAKategorie) => {
-		const ke: KAOAKategorieKatalogEintrag | null = kategorie.daten(this.getSchuljahr());
-		if (ke === null) {
-			throw new IllegalArgumentException(JavaString.format("Die KAOA-Kategorie %s ist in dem Schuljahr %d nicht gültig.", kategorie.name(), this.getSchuljahr()));
-		}
-		return ke.id;
-	} };
+export class SchuelerKAoAManager extends StateManager<SchuelerKaoaState> {
 
-	private static readonly _comparatorKategorie: Comparator<KAOAKategorie> = { compare: (a: KAOAKategorie, b: KAOAKategorie) => a.ordinal() - b.ordinal() };
-
-	private readonly _merkmalToId: JavaFunction<KAOAMerkmal, number> = { apply: (merkmal: KAOAMerkmal) => {
-		const ke: KAOAMerkmalKatalogEintrag | null = merkmal.daten(this.getSchuljahr());
-		if (ke === null) {
-			throw new IllegalArgumentException(JavaString.format("Die KAOA-Merkmal %s ist in dem Schuljahr %d nicht gültig.", merkmal.name(), this.getSchuljahr()));
-		}
-		return ke.id;
-	} };
-
-	private static readonly _comparatorMerkmal: Comparator<KAOAMerkmal> = { compare: (a: KAOAMerkmal, b: KAOAMerkmal) => a.ordinal() - b.ordinal() };
-
-	private readonly _zusatzmerkmalToId: JavaFunction<KAOAZusatzmerkmal, number> = { apply: (zusatzmerkmal: KAOAZusatzmerkmal) => {
-		const ke: KAOAZusatzmerkmalKatalogEintrag | null = zusatzmerkmal.daten(this.getSchuljahr());
-		if (ke === null) {
-			throw new IllegalArgumentException(JavaString.format("Die KAOA-Zusatzmerkmal %s ist in dem Schuljahr %d nicht gültig.", zusatzmerkmal.name(), this.getSchuljahr()));
-		}
-		return ke.id;
-	} };
-
-	private static readonly _comparatorZusatzmerkmal: Comparator<KAOAZusatzmerkmal> = { compare: (a: KAOAZusatzmerkmal, b: KAOAZusatzmerkmal) => a.ordinal() - b.ordinal() };
-
-	private readonly _anschlussoptionToId: JavaFunction<KAOAAnschlussoptionen, number> = { apply: (anschlussoption: KAOAAnschlussoptionen) => {
-		const ke: KAOAAnschlussoptionenKatalogEintrag | null = anschlussoption.daten(this.getSchuljahr());
-		if (ke === null) {
-			throw new IllegalArgumentException(JavaString.format("Die KAOA-Anschlussoption %s ist in dem Schuljahr %d nicht gültig.", anschlussoption.name(), this.getSchuljahr()));
-		}
-		return ke.id;
-	} };
-
-	private static readonly _comparatorAnschlussoptionen: Comparator<KAOAAnschlussoptionen> = { compare: (a: KAOAAnschlussoptionen, b: KAOAAnschlussoptionen) => a.ordinal() - b.ordinal() };
-
-	private readonly _ebene4ToId: JavaFunction<KAOAEbene4, number> = { apply: (ebene4: KAOAEbene4) => {
-		const ke: KAOAEbene4KatalogEintrag | null = ebene4.daten(this.getSchuljahr());
-		if (ke === null) {
-			throw new IllegalArgumentException(JavaString.format("Die KAOA-Ebene 4 %s ist in dem Schuljahr %d nicht gültig.", ebene4.name(), this.getSchuljahr()));
-		}
-		return ke.id;
-	} };
-
-	private static readonly _comparatorEbene4: Comparator<KAOAEbene4> = { compare: (a: KAOAEbene4, b: KAOAEbene4) => a.ordinal() - b.ordinal() };
-
-	/**
-	 * Das Filter-Attribut für die Kategorien
-	 */
-	public readonly _kategorien: AttributMitAuswahl<number, KAOAKategorie>;
-
-	/**
-	 * Das Filter-Attribut für die Merkmale
-	 */
-	public readonly _merkmale: AttributMitAuswahl<number, KAOAMerkmal>;
-
-	/**
-	 * Das Filter-Attribut für die Zusatzmerkmale
-	 */
-	public readonly _zusatzmerkmale: AttributMitAuswahl<number, KAOAZusatzmerkmal>;
-
-	/**
-	 * Das Filter-Attribut für die Anschlussoptionen
-	 */
-	public readonly _anschlussoptionen: AttributMitAuswahl<number, KAOAAnschlussoptionen>;
-
-	/**
-	 * Das Filter-Attribut für die Ebene4
-	 */
-	public readonly _ebene4: AttributMitAuswahl<number, KAOAEbene4>;
-
-	/**
-	 * Die Lernabschnittsdaten
-	 */
-	public readonly _lernabschnitteAuswahl: List<SchuelerLernabschnittListeEintrag>;
-
-	/**
-	 *  Die Schuljahresabschnitte, in denen für den ausgewählten Schüler entsprechende Lernabschnitte und daraus resultierend anhand des Jahrgangs
-	 *  entsprechende KaoaKategorien vorhanden sind.
-	 */
-	public readonly _schuljahresabschnitteFiltered: JavaSet<Schuljahresabschnitt> = new HashSet<Schuljahresabschnitt>();
-
+	private readonly _schuljahresabschnitteById: Map<number, Schuljahresabschnitt> = new Map();
+	private readonly _lernabschnitteBySchuljahr: Map<number, SchuelerLernabschnittListeEintrag> = new Map();
+	private readonly _schuljahr: number;
+	private readonly _schuljahresabschnitteFiltered: JavaSet<Schuljahresabschnitt> = new HashSet<Schuljahresabschnitt>();
 
 	/**
 	 * Erstellt einen neuen Manager mit den übergebenen KAoA Daten
 	 *
-	 * @param schuljahresabschnitt            Der Schuljahresabschnitt, auf den sich die KAoA-Daten beziehen
-	 * @param schuljahresabschnittSchule      Die Liste der Schuljahresabschnitte
-	 * @param schuljahresabschnitte           Der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
-	 * @param schulform                       Die Schulform der Schule
-	 * @param schuelerKAoA                    KAoA Daten des Schülers
-	 * @param lernabschnitteAuswahl           die Lernabschnittsdaten des Schülers
+	 * @param kAoADaten                  	KAoA Daten des Schülers
+	 * @param schuljahresabschnitte			Der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
+	 * @param lernabschnitte         		Die Lernabschnittsdaten des Schülers
 	 */
-	public constructor(schuljahresabschnitt: number, schuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, schuelerKAoA: List<SchuelerKAoADaten>, lernabschnitteAuswahl: List<SchuelerLernabschnittListeEintrag>) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, schuelerKAoA, SchuelerKAoAManager.comparator, SchuelerKAoAManager._kaoaToId, SchuelerKAoAManager._kaoaToId, Arrays.asList(new Pair("schuljahr", true), new Pair("kategorie", true)));
-		const schuljahr = super.getSchuljahresabschnittAuswahl()?.schuljahr ?? super.getSchuljahr();
-		this._kategorien = new AttributMitAuswahl(Arrays.asList(...KAOAKategorie.data().getWerteBySchuljahr(schuljahr)), this._kategorieToId, SchuelerKAoAManager._comparatorKategorie, this._eventHandlerFilterChanged);
-		this._merkmale = new AttributMitAuswahl(Arrays.asList(...KAOAMerkmal.data().getWerteBySchuljahr(schuljahr)), this._merkmalToId, SchuelerKAoAManager._comparatorMerkmal, this._eventHandlerFilterChanged);
-		this._zusatzmerkmale = new AttributMitAuswahl(Arrays.asList(...KAOAZusatzmerkmal.data().getWerteBySchuljahr(schuljahr)), this._zusatzmerkmalToId, SchuelerKAoAManager._comparatorZusatzmerkmal, this._eventHandlerFilterChanged);
-		this._anschlussoptionen = new AttributMitAuswahl(Arrays.asList(...KAOAAnschlussoptionen.data().getWerteBySchuljahr(schuljahr)), this._anschlussoptionToId, SchuelerKAoAManager._comparatorAnschlussoptionen, this._eventHandlerFilterChanged);
-		this._lernabschnitteAuswahl = lernabschnitteAuswahl;
-		this._ebene4 = new AttributMitAuswahl(Arrays.asList(...KAOAEbene4.data().getWerteBySchuljahr(schuljahr)), this._ebene4ToId, SchuelerKAoAManager._comparatorEbene4, this._eventHandlerFilterChanged);
+	public constructor(kAoADaten: List<SchuelerKAoADaten>, schuljahresabschnitte: List<Schuljahresabschnitt>, lernabschnitte: List<SchuelerLernabschnittListeEintrag>) {
+		super(createDefaultState());
+		this.mapKAoADaten(kAoADaten);
+		this.mapSchuljahresabschnitte(schuljahresabschnitte);
+		this.mapLernabschnitte(lernabschnitte);
 		this.processSchuljahresabschnitte();
+		this._schuljahr = this.calcSchuljahr();
 	}
 
-	/**
-	 * Prüft, ob der angegebene KAoA-Eintrag durch den Filter durchgelassen wird oder nicht.
-	 *
-	 * @param eintrag Der zu prüfende KAoA-Eintrag
-	 *
-	 * @return true, wenn der Eintrag den Filter passiert, und ansonsten false
-	 */
-	protected checkFilter(eintrag: SchuelerKAoADaten): boolean {
-		if (this._kategorien.auswahlExists() && !this._kategorien.auswahlHasKey(eintrag.idKategorie)) {
-			return false;
+	private mapKAoADaten(kAoADaten: List<SchuelerKAoADaten>) {
+		for (const kaoa of kAoADaten) {
+			this._state.value.kAoADatenById.put(kaoa.id, kaoa);
 		}
-		if (this._merkmale.auswahlExists() && !this._merkmale.auswahlHasKey(eintrag.idMerkmal)) {
-			return false;
-		}
-		if (this._zusatzmerkmale.auswahlExists() && !this._zusatzmerkmale.auswahlHasKey(eintrag.idZusatzmerkmal)) {
-			return false;
-		}
-		if ((eintrag.idAnschlussoption !== null) && this._anschlussoptionen.auswahlExists() && !this._anschlussoptionen.auswahlHasKey(eintrag.idAnschlussoption)) {
-			return false;
-		}
-		return ((eintrag.idEbene4 !== null) && this._ebene4.auswahlExists() && !this._ebene4.auswahlHasKey(eintrag.idEbene4));
 	}
 
-	/**
-	 * Vergleicht zwei KAoA-Einträge anhand der spezifizierten Ordnung.
-	 *
-	 * @param a Der erste Eintrag
-	 * @param b Der zweite Eintrag
-	 *
-	 * @return Das Ergebnis des Vergleichs (-1 kleiner, 0 gleich und 1 größer)
-	 */
-	protected compareAuswahl(a: SchuelerKAoADaten, b: SchuelerKAoADaten): number {
-		for (const criteria of this._order) {
-			const field: string | null = criteria.a;
-			const asc: boolean = (criteria.b === null) || criteria.b;
-			if (!(JavaObject.equalsTranspiler("schuljahr", (field)) || JavaObject.equalsTranspiler("kategorie", (field)))) {
-				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom SchuelerKAoAManager nicht unterstützt.");
-			}
-			const cmp: number = SchuelerKAoAManager.comparator.compare(a, b);
-			if (cmp === 0) {
-				continue;
-			}
-			return asc ? cmp : -cmp;
+	private mapSchuljahresabschnitte(schuljahresabschnitte: List<Schuljahresabschnitt>) {
+		for (const schuljahresabschnitt of schuljahresabschnitte) {
+			this._schuljahresabschnitteById.set(schuljahresabschnitt.id, schuljahresabschnitt);
 		}
-		return JavaLong.compare(a.id, b.id);
 	}
 
-	/**
-	 * Passt bei Änderungen an den Daten ggf. das Auswahl-Objekt an.
-	 *
-	 * @param eintrag           Der Auswahl-Eintrag
-	 * @param schuelerKAoADaten Das neue KAoA-Daten-Objekt zu der Auswahl
-	 */
-	protected onSetDaten(eintrag: SchuelerKAoADaten, schuelerKAoADaten: SchuelerKAoADaten): boolean {
-		let updateEintrag: boolean = false;
-		if (schuelerKAoADaten.id !== eintrag.id) {
-			eintrag.id = schuelerKAoADaten.id;
-			updateEintrag = true;
+	private mapLernabschnitte(lernabschnitte: List<SchuelerLernabschnittListeEintrag>) {
+		for (const lernabschnitt of lernabschnitte) {
+			this._lernabschnitteBySchuljahr.set(lernabschnitt.schuljahr, lernabschnitt);
 		}
-		return updateEintrag;
+	}
+
+	private calcSchuljahr(): number {
+		const abschnitt = this._schuljahresabschnitteById.get(this._state.value.auswahl.idSchuljahresabschnitt);
+		return (abschnitt === undefined) ? -1 : abschnitt.schuljahr;
 	}
 
 	/**
@@ -227,64 +72,71 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 	 * entsprechend der dazugehörigen Jahrgänge KAOAKategorieEinträge gibt.
 	 */
 	private processSchuljahresabschnitte(): void {
-		const availableKuerzelJahrgang: JavaSet<string> | null = new HashSet<string>();
-		for (const kategorie of this._kategorien.list()) {
-			const daten: KAOAKategorieKatalogEintrag | null = kategorie.daten(this.getSchuljahr());
-			if (daten === null) {
-				return;
-			}
-			for (const jahrgang of daten.jahrgaenge) {
-				availableKuerzelJahrgang.add(jahrgang.substring(jahrgang.length - 2));
-			}
-		}
-		const filteredEintraege: List<SchuelerLernabschnittListeEintrag> | null = new ArrayList<SchuelerLernabschnittListeEintrag>();
-		for (const lernabschnitt of this._lernabschnitteAuswahl) {
-			if (availableKuerzelJahrgang.contains(lernabschnitt.jahrgang)) {
-				filteredEintraege.add(lernabschnitt);
-			}
-		}
-		if (filteredEintraege.isEmpty()) {
+		const availableJahrgaenge = this.getAvailableJahrgaenge();
+		if (availableJahrgaenge.isEmpty()) {
 			return;
 		}
-		const schuljahresabschnittIDs: JavaSet<number> | null = new HashSet<number>();
-		for (const lernabschnitt of filteredEintraege) {
-			schuljahresabschnittIDs.add(lernabschnitt.schuljahresabschnitt);
+
+		const idsSchuljahresabschnitte = this.getIdsSchuljahresabschnitte(availableJahrgaenge);
+		if (idsSchuljahresabschnitte.isEmpty()) {
+			return;
 		}
-		for (const schuljahresabschnitt of this.schuljahresabschnitte.list()) {
+
+		this.filterSchuljahresabschnitte(idsSchuljahresabschnitte);
+	}
+
+	private getAvailableJahrgaenge(): JavaSet<string> {
+		const availableJahrgaenge = new HashSet<string>();
+
+		for (const kategorie of KAOAKategorie.data().getWerteBySchuljahr(this._schuljahr)) {
+			const kategorieEintrag = kategorie.daten(this._schuljahr);
+			if (kategorieEintrag === null) {
+				return availableJahrgaenge;
+			}
+			for (const jahrgang of kategorieEintrag.jahrgaenge) {
+				availableJahrgaenge.add(jahrgang.substring(jahrgang.length - 2));
+			}
+		}
+
+		return availableJahrgaenge;
+	}
+
+	private getIdsSchuljahresabschnitte(availableKuerzelJahrgang: JavaSet<string>): JavaSet<number> {
+		const idsSchuljahresabschnitte = new HashSet<number>();
+
+		for (const lernabschnitt of this._lernabschnitteBySchuljahr.values()) {
+			if (availableKuerzelJahrgang.contains(lernabschnitt.jahrgang)) {
+				idsSchuljahresabschnitte.add(lernabschnitt.schuljahresabschnitt);
+			}
+		}
+
+		return idsSchuljahresabschnitte;
+	}
+
+	private filterSchuljahresabschnitte(schuljahresabschnittIDs: JavaSet<number>): void {
+		for (const schuljahresabschnitt of this._schuljahresabschnitteById.values()) {
 			if (schuljahresabschnittIDs.contains(schuljahresabschnitt.id)) {
 				this._schuljahresabschnitteFiltered.add(schuljahresabschnitt);
 			}
 		}
 	}
 
-	/**
-	 * Gibt das Kürzel vom Jahrgang abhängig vom Schuljahr und der LernabschnittsEinträge des ausgewählten Schülers zurück
-	 *
-	 * @param schuljahr   Schuljahr
-	 *
-	 * @return KürzelJahrgang
-	 */
-	public getKuerzelJahrgangBySchuljahr(schuljahr: number): string {
-		for (const eintrag of this._lernabschnitteAuswahl) {
-			if ((eintrag.schuljahr === schuljahr)) {
-				return eintrag.jahrgang;
-			}
-		}
-		throw new DeveloperNotificationException(JavaString.format("Kein Jahrgang für das Schuljahr %d gefunden.", schuljahr));
+	get schuljahresabschnitteById(): Map<number, Schuljahresabschnitt> {
+		return this._schuljahresabschnitteById;
 	}
 
-	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.utils.schueler.SchuelerKAoAManager';
+
+	get schuljahresabschnitteFiltered(): JavaSet<Schuljahresabschnitt> {
+		return this._schuljahresabschnitteFiltered;
 	}
 
-	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.schueler.SchuelerKAoAManager'].includes(name);
+	get lernabschnitteBySchuljahr(): Map<number, SchuelerLernabschnittListeEintrag> {
+		return this._lernabschnitteBySchuljahr;
 	}
 
-	public static class = new Class<SchuelerKAoAManager>('de.svws_nrw.core.utils.schueler.SchuelerKAoAManager');
+	/** Gibt die aktuell im Manager gespeicherten KAoADaten zurück. */
+	public get kAoADatenById(): JavaMap<number, SchuelerKAoADaten> {
+		return this._state.value.kAoADatenById;
+	}
 
-}
-
-export function cast_de_svws_nrw_core_utils_schueler_SchuelerKAoAManager(obj: unknown): SchuelerKAoAManager {
-	return obj as SchuelerKAoAManager;
 }

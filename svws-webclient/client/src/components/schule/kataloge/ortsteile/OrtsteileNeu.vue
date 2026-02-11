@@ -1,22 +1,30 @@
 <template>
 	<div class="page page-grid-cards">
-		<svws-ui-content-card title="Allgemein">
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Ortsteil"
-					v-model="data.ortsteil"
-					:valid="() => fieldIsValid('ortsteil')" :min-len="1" :max-len="30" required :disabled="!hatKompetenzUpdate" />
-				<ui-select label="Ort"
-					v-model="selectedOrt"
-					:manager="ortManager"
-					:disabled="!hatKompetenzUpdate" searchable required :removable="false" />
-				<svws-ui-input-number placeholder="Sortierung"
-					v-model="data.sortierung"
-					:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzUpdate" />
-				<svws-ui-spacing />
-				<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzUpdate">
-					Sichtbar
-				</svws-ui-checkbox>
-			</svws-ui-input-wrapper>
+		<svws-ui-content-card>
+			<svws-ui-content-card title="Allgemein">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-text-input placeholder="Ortsteil"
+						v-model="data.ortsteil"
+						:valid="() => fieldIsValid('ortsteil')" :min-len="1" :max-len="30" required :disabled="!hatKompetenzUpdate" />
+					<ui-select label="Ort"
+						v-model="selectedOrt"
+						:manager="ortManager"
+						:disabled="!hatKompetenzUpdate" searchable required :removable="false" />
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<svws-ui-spacing :size="2" />
+			<svws-ui-content-card title="Ansicht & Sortierung">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-input-number placeholder="Sortierung"
+						v-model="data.sortierung"
+						:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzUpdate" />
+					<svws-ui-spacing />
+					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzUpdate">
+						Sichtbar
+					</svws-ui-checkbox>
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel">
 					Abbrechen

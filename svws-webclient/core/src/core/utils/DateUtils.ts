@@ -358,8 +358,8 @@ export class DateUtils extends JavaObject {
 		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", sSplit.length !== 2);
 		const sStunden: string = sSplit[0].trim();
 		const sMinuten: string = sSplit[1].trim();
-		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", (sStunden.length < 1) || (sStunden.length > 2));
-		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", (sMinuten.length < 1) || (sMinuten.length > 2));
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", JavaString.isEmpty(sStunden) || (sStunden.length > 2));
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", JavaString.isEmpty(sMinuten) || (sMinuten.length > 2));
 		const stunden: number = JavaInteger.parseInt(sStunden);
 		const minuten: number = JavaInteger.parseInt(sMinuten);
 		DeveloperNotificationException.ifTrue("(stunden < 0) || (stunden > 23)", (stunden < 0) || (stunden > 23));

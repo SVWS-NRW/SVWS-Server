@@ -41,6 +41,7 @@ public class Tabelle_K_Ankreuzfloskeln extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Jahrgang */
 	public final SchemaTabelleSpalte col_Jahrgang = add("Jahrgang", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
 			.setNotNull()
+			.setVeraltet(SchemaRevisionen.REV_55)
 			.setJavaComment("ASD-Jahrgang zu der die Ankreuzfloskel gehört");
 
 	/** Die Definition der Tabellenspalte Gliederung */

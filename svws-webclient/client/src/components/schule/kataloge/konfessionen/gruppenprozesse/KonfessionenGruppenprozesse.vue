@@ -66,8 +66,8 @@
 	const logs = ref<List<string | null> | undefined>();
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatkeineErforderlicheKompetenz = computed(() => !hatKompetenzLoeschen.value);
-	const deleteCheckErrors = computed<List<string>>(() => props.checkBeforeDeletion()[1]);
-	const selectedAllowedToDelete = computed<boolean>(() => props.checkBeforeDeletion()[0]);
+	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck().success);
+	const deleteCheckErrors = computed<Iterable<string>>(() => props.deleteCheck().logs);
 	const hatReferenzen = computed<boolean>(() => !props.manager().idsReferencedKonfessionen.isEmpty());
 
 	function openWarningModal() {

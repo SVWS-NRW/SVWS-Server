@@ -230,8 +230,8 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 			throws ApiOperationException {
 		final GostHalbjahr ghj = (halbjahr < 0) ? null : DataGostKlausurenVorgabe.checkHalbjahr(halbjahr);
 
-		final String plusHJ = (ghj == null ? "" : " AND t.Halbjahr IN :hj");
-		final String plusTermine = ((plusTerminIds == null || plusTerminIds.isEmpty()) ? "" : " OR t.ID IN :plusIds");
+		final String plusHJ = ((ghj == null) ? "" : " AND t.Halbjahr IN :hj");
+		final String plusTermine = (((plusTerminIds == null) || plusTerminIds.isEmpty()) ? "" : " OR t.ID IN :plusIds");
 		final TypedQuery<DTOGostKlausurenTermine> query = conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid" + plusHJ + plusTermine, DTOGostKlausurenTermine.class)
 				.setParameter("jgid", abiturjahr);
 		if (ghj != null)
@@ -348,7 +348,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	    final Set<GostKlausurraum> neueRaumListe = new HashSet<>();
 
 	    for (final GostKlausurraum raum : raumDataOriginal.raeume) {
-	    	if (raum.idTermin == referenzTermin.id && raum.idStundenplanRaum != null) {
+	    	if ((raum.idTermin == referenzTermin.id) && (raum.idStundenplanRaum != null)) {
 	    	    final Map<String, Object> patchAttributes = new HashMap<>();
 	    	    patchAttributes.put("idStundenplanRaum", null);
 	    	    new DataGostKlausurenRaum(conn).patch(raum.id, patchAttributes);
@@ -370,11 +370,11 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	}
 
 	private static boolean istTerminraumMitTerminfremdenKlausuren(final GostKlausurraum raum, final long terminId, final GostKlausurplanManager manager) {
-	    return raum.idTermin == terminId && manager.raumEnthaeltTerminfremdeKlausuren(raum);
+	    return (raum.idTermin == terminId) && manager.raumEnthaeltTerminfremdeKlausuren(raum);
 	}
 
 	private static boolean istTerminfremderRaumMitTerminklausuren(final GostKlausurraum raum, final GostKlausurplanManager manager, final GostKlausurtermin referenzTermin) {
-	    return raum.idTermin != referenzTermin.id && !manager.schuelerklausurterminGetMengeByRaumAndTermin(raum, referenzTermin).isEmpty();
+	    return (raum.idTermin != referenzTermin.id) && !manager.schuelerklausurterminGetMengeByRaumAndTermin(raum, referenzTermin).isEmpty();
 	}
 
 	private void bearbeiteTerminraumMitTerminfremdenKlausuren(final GostKlausurraum raum, final GostKlausurplanManager manager,

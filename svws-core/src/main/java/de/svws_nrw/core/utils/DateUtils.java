@@ -369,8 +369,8 @@ public final class DateUtils {
 
 		final @NotNull String sStunden = sSplit[0].trim();
 		final @NotNull String sMinuten = sSplit[1].trim();
-		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", (sStunden.length() < 1) || (sStunden.length() > 2));
-		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", (sMinuten.length() < 1) || (sMinuten.length() > 2));
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", sStunden.isEmpty() || (sStunden.length() > 2));
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", sMinuten.isEmpty() || (sMinuten.length() > 2));
 
 		final int stunden = Integer.parseInt(sStunden);
 		final int minuten = Integer.parseInt(sMinuten);

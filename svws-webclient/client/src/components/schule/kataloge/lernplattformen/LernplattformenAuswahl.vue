@@ -5,28 +5,26 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<div class="container">
-				<svws-ui-table v-model="lernplattformen"
-					v-model:clicked="selectedLernplattformen"
-					:items="rowsFiltered" :columns
-					clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll-into-view filter-open>
-					<template #search>
-						<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
-					</template>
-					<template #actions v-if="!readonly">
-						<svws-ui-tooltip v-if="ServerMode.DEV.checkServerMode(serverMode)" position="bottom">
-							<svws-ui-button type="icon"
-								@click="gotoHinzufuegenView(true)"
-								:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
-								<span class="icon i-ri-add-line" />
-							</svws-ui-button>
-							<template #content>
-								Neue Lernplattform anlegen
-							</template>
-						</svws-ui-tooltip>
-					</template>
-				</svws-ui-table>
-			</div>
+			<svws-ui-table v-model="lernplattformen"
+				v-model:clicked="selectedLernplattformen"
+				:items="rowsFiltered" :columns
+				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
+				<template #search>
+					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
+				</template>
+				<template #actions v-if="!readonly">
+					<svws-ui-tooltip v-if="ServerMode.DEV.checkServerMode(serverMode)" position="bottom">
+						<svws-ui-button type="icon"
+							@click="gotoHinzufuegenView(true)"
+							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
+							<span class="icon i-ri-add-line" />
+						</svws-ui-button>
+						<template #content>
+							Neue Lernplattform anlegen
+						</template>
+					</svws-ui-tooltip>
+				</template>
+			</svws-ui-table>
 		</div>
 	</div>
 </template>

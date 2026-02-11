@@ -5,7 +5,7 @@
 	:root {
 		/* TODO color-scheme: light dark; -> Als default - Browser-Default...*/
 		/* color-scheme: light; */
-		color-scheme: light dark; 
+		color-scheme: light dark;
 
 		--color-text-ui: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-100));
 		--color-text-ui-0: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-900));
@@ -14,7 +14,7 @@
 		--color-text-ui-50: light-dark(var(--color-palette-neutral-700), var(--color-palette-neutral-300));
 		--color-text-ui-75: light-dark(var(--color-palette-neutral-800), var(--color-palette-neutral-200));
 		--color-text-ui-100: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-100));
-		--color-text-ui-hover: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-400));
+		--color-text-ui-hover: light-dark(var(--color-palette-neutral-100), var(--color-palette-brand-400));
 		--color-text-ui-secondary: light-dark(var(--color-palette-neutral-700), var(--color-palette-neutral-500));
 		--color-text-ui-secondary-hover: light-dark(var(--color-palette-brand-400), var(--color-palette-brand-300));
 		--color-text-ui-brand: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-400));
@@ -22,13 +22,13 @@
 		--color-text-ui-brand-secondary: light-dark(var(--color-palette-brand-300), var(--color-palette-brand-500));
 		--color-text-ui-brand-secondary-hover: light-dark(var(--color-palette-brand-400), var(--color-palette-brand-400));
 		--color-text-ui-statistic: light-dark(var(--color-palette-statistic-500), var(--color-palette-statistic-300));
-		--color-text-ui-statistic-hover: light-dark(var(--color-palette-statistic-600), var(--color-palette-statistic-200));
+		--color-text-ui-statistic-hover: light-dark(var(--color-palette-statistic-600), var(--color-palette-statistic-100));
 		--color-text-ui-statistic-secondary: light-dark(var(--color-palette-statistic-300), var(--color-palette-statistic-400));
 		--color-text-ui-statistic-secondary-hover: light-dark(var(--color-palette-statistic-400), var(--color-palette-statistic-300));
-		--color-text-ui-selected: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-400));
-		--color-text-ui-selected-hover: light-dark(var(--color-palette-brand-600), var(--color-palette-brand-300));
-		--color-text-ui-selected-secondary: light-dark(var(--color-palette-brand-300), var(--color-palette-brand-500));
-		--color-text-ui-selected-secondary-hover: light-dark(var(--color-palette-brand-400), var(--color-palette-brand-400));
+		--color-text-ui-selected: light-dark(var(--color-palette-schoolboost-secondary), var(--color-palette-schoolboost-secondary));
+		--color-text-ui-selected-hover: light-dark(#2aa0bc, #2aa0bc);
+		--color-text-ui-selected-secondary: light-dark(#a3e5f5, #a3e5f5);
+		--color-text-ui-selected-secondary-hover: light-dark(#7fd5ed, #7fd5ed);
 		--color-text-ui-danger: light-dark(var(--color-palette-danger-500), var(--color-palette-danger-400));
 		--color-text-ui-danger-hover: light-dark(var(--color-palette-danger-600), var(--color-palette-danger-300));
 		--color-text-ui-danger-secondary: light-dark(var(--color-palette-danger-300), var(--color-palette-danger-500));
@@ -49,17 +49,17 @@
 		--color-text-ui-neutral-hover: light-dark(var(--color-palette-neutral-600), var(--color-palette-neutral-100));
 		--color-text-ui-neutral-secondary: light-dark(var(--color-palette-neutral-700), var(--color-palette-neutral-600));
 		--color-text-ui-neutral-secondary-hover: light-dark(var(--color-palette-neutral-600), var(--color-palette-neutral-500));
-		--color-text-ui-disabled: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-850));
-		--color-text-ui-disabled-secondary: light-dark(var(--color-palette-neutral-850), var(--color-palette-neutral-900));
+		--color-text-ui-disabled: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-750));
+		--color-text-ui-disabled-secondary: light-dark(var(--color-palette-neutral-400), var(--color-palette-neutral-900));
 		--color-text-ui-onbrand: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
 		--color-text-ui-onbrand-hover: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-200));
 		--color-text-ui-onbrand-secondary: light-dark(var(--color-palette-brand-200), var(--color-palette-brand-200));
 		--color-text-ui-onstatistic: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
 		--color-text-ui-onstatistic-hover: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-200));
-		--color-text-ui-onstatistic-secondary: light-dark(var(--color-palette-statistic-200), var(--color-palette-statistic-200));
+		--color-text-ui-onstatistic-secondary: light-dark(var(--color-palette-statistic-600), var(--color-palette-statistic-200));
 		--color-text-ui-onselected: light-dark(var(--color-palette-brand-600), var(--color-palette-brand-200));
-		--color-text-ui-onselected-hover: light-dark(var(--color-palette-brand-600), var(--color-palette-brand-200));
-		--color-text-ui-onselected-secondary: light-dark(var(--color-palette-brand-900), var(--color-palette-brand-100));
+		--color-text-ui-onselected-hover: light-dark(var(--color-palette-brand-200), var(--color-palette-brand-200));
+		--color-text-ui-onselected-secondary: light-dark(var(--color-palette-brand-900), var(--color-palette-brand-300));
 		--color-text-ui-ondanger: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
 		--color-text-ui-ondanger-hover: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-200));
 		--color-text-ui-ondanger-secondary: light-dark(var(--color-palette-danger-200), var(--color-palette-danger-200));
@@ -68,10 +68,10 @@
 		--color-text-ui-oncaution-secondary: light-dark(var(--color-palette-danger-200), var(--color-palette-danger-200));
 		--color-text-ui-onsuccess: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
 		--color-text-ui-onsuccess-hover: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
-		--color-text-ui-onsuccess-secondary: light-dark(var(--color-palette-success-200), var(--color-palette-success-200));
+		--color-text-ui-onsuccess-secondary: light-dark(var(--color-palette-success-100), var(--color-palette-success-100));
 		--color-text-ui-onwarning: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-900));
 		--color-text-ui-onwarning-hover: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-900));
-		--color-text-ui-onwarning-secondary: light-dark(var(--color-palette-warning-900), var(--color-palette-warning-900));
+		--color-text-ui-onwarning-secondary: light-dark(var(--color-palette-warning-900), var(--color-palette-warning-600));
 		--color-text-ui-onneutral: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-100));
 		--color-text-ui-onneutral-hover: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-400));
 		--color-text-ui-onneutral-secondary: light-dark(var(--color-palette-neutral-700), var(--color-palette-neutral-400));
@@ -95,18 +95,18 @@
 		--color-icon-ui-hover: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-400));
 		--color-icon-ui-secondary: light-dark(var(--color-palette-neutral-700), var(--color-palette-neutral-500));
 		--color-icon-ui-secondary-hover: light-dark(var(--color-palette-brand-400), var(--color-palette-brand-300));
-		--color-icon-ui-brand: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-400));
+		--color-icon-ui-brand: light-dark(var(--color-palette-neutral-400), var(--color-palette-brand-400));
 		--color-icon-ui-brand-hover: light-dark(var(--color-palette-brand-600), var(--color-palette-brand-300));
 		--color-icon-ui-brand-secondary: light-dark(var(--color-palette-brand-300), var(--color-palette-brand-500));
 		--color-icon-ui-brand-secondary-hover: light-dark(var(--color-palette-brand-400), var(--color-palette-brand-400));
 		--color-icon-ui-statistic: light-dark(var(--color-palette-statistic-500), var(--color-palette-statistic-300));
-		--color-icon-ui-statistic-hover: light-dark(var(--color-palette-statistic-600), var(--color-palette-statistic-200));
+		--color-icon-ui-statistic-hover: light-dark(var(--color-palette-statistic-600), var(--color-palette-statistic-100));
 		--color-icon-ui-statistic-secondary: light-dark(var(--color-palette-statistic-300), var(--color-palette-statistic-400));
 		--color-icon-ui-statistic-secondary-hover: light-dark(var(--color-palette-statistic-400), var(--color-palette-statistic-300));
-		--color-icon-ui-selected: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-400));
-		--color-icon-ui-selected-hover: light-dark(var(--color-palette-brand-600), var(--color-palette-brand-300));
-		--color-icon-ui-selected-secondary: light-dark(var(--color-palette-brand-300), var(--color-palette-brand-500));
-		--color-icon-ui-selected-secondary-hover: light-dark(var(--color-palette-brand-400), var(--color-palette-brand-400));
+		--color-icon-ui-selected: light-dark(var(--color-palette-schoolboost-secondary), var(--color-palette-schoolboost-secondary));
+		--color-icon-ui-selected-hover: light-dark(#2aa0bc, #2aa0bc);
+		--color-icon-ui-selected-secondary: light-dark(#a3e5f5, #a3e5f5);
+		--color-icon-ui-selected-secondary-hover: light-dark(#7fd5ed, #7fd5ed);
 		--color-icon-ui-danger: light-dark(var(--color-palette-danger-500), var(--color-palette-danger-400));
 		--color-icon-ui-danger-hover: light-dark(var(--color-palette-danger-600), var(--color-palette-danger-300));
 		--color-icon-ui-danger-secondary: light-dark(var(--color-palette-danger-300), var(--color-palette-danger-500));
@@ -127,8 +127,8 @@
 		--color-icon-ui-neutral-hover: light-dark(var(--color-palette-neutral-600), var(--color-palette-neutral-100));
 		--color-icon-ui-neutral-secondary: light-dark(var(--color-palette-neutral-700), var(--color-palette-neutral-600));
 		--color-icon-ui-neutral-secondary-hover: light-dark(var(--color-palette-neutral-600), var(--color-palette-neutral-500));
-		--color-icon-ui-disabled: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-850));
-		--color-icon-ui-disabled-secondary: light-dark(var(--color-palette-neutral-850), var(--color-palette-neutral-900));
+		--color-icon-ui-disabled: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-750));
+		--color-icon-ui-disabled-secondary: light-dark(var(--color-palette-neutral-400), var(--color-palette-neutral-900));
 		--color-icon-ui-onbrand: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
 		--color-icon-ui-onbrand-hover: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-200));
 		--color-icon-ui-onbrand-secondary: light-dark(var(--color-palette-brand-200), var(--color-palette-brand-200));
@@ -136,8 +136,8 @@
 		--color-icon-ui-onstatistic-hover: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-200));
 		--color-icon-ui-onstatistic-secondary: light-dark(var(--color-palette-statistic-200), var(--color-palette-statistic-200));
 		--color-icon-ui-onselected: light-dark(var(--color-palette-brand-600), var(--color-palette-brand-200));
-		--color-icon-ui-onselected-hover: light-dark(var(--color-palette-brand-600), var(--color-palette-brand-200));
-		--color-icon-ui-onselected-secondary: light-dark(var(--color-palette-brand-900), var(--color-palette-brand-100));
+		--color-icon-ui-onselected-hover: light-dark(var(--color-palette-brand-200), var(--color-palette-brand-200));
+		--color-icon-ui-onselected-secondary: light-dark(var(--color-palette-brand-900), var(--color-palette-brand-300));
 		--color-icon-ui-ondanger: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
 		--color-icon-ui-ondanger-hover: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-200));
 		--color-icon-ui-ondanger-secondary: light-dark(var(--color-palette-danger-200), var(--color-palette-danger-200));
@@ -146,10 +146,10 @@
 		--color-icon-ui-oncaution-secondary: light-dark(var(--color-palette-danger-200), var(--color-palette-danger-200));
 		--color-icon-ui-onsuccess: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
 		--color-icon-ui-onsuccess-hover: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-100));
-		--color-icon-ui-onsuccess-secondary: light-dark(var(--color-palette-success-200), var(--color-palette-success-200));
+		--color-icon-ui-onsuccess-secondary: light-dark(var(--color-palette-success-100), var(--color-palette-success-100));
 		--color-icon-ui-onwarning: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-900));
 		--color-icon-ui-onwarning-hover: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-900));
-		--color-icon-ui-onwarning-secondary: light-dark(var(--color-palette-warning-900), var(--color-palette-warning-900));
+		--color-icon-ui-onwarning-secondary: light-dark(var(--color-palette-warning-900), var(--color-palette-warning-600));
 		--color-icon-ui-onneutral: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-100));
 		--color-icon-ui-onneutral-hover: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-400));
 		--color-icon-ui-onneutral-secondary: light-dark(var(--color-palette-neutral-700), var(--color-palette-neutral-400));
@@ -170,31 +170,31 @@
 		--color-bg-ui-50: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-700));
 		--color-bg-ui-75: light-dark(var(--color-palette-neutral-300), var(--color-palette-neutral-800));
 		--color-bg-ui-100: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-900));
-		--color-bg-ui-hover: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.13));
+		--color-bg-ui-hover: light-dark(var(--color-palette-schoolboost-primary), var(--color-palette-schoolboost-primary));
 		--color-bg-ui-brand: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-500));
 		--color-bg-ui-brand-hover: light-dark(var(--color-palette-brand-600), var(--color-palette-brand-400));
 		--color-bg-ui-brand-secondary: light-dark(var(--color-palette-brand-50), var(--color-palette-brand-900));
 		--color-bg-ui-statistic: light-dark(var(--color-palette-statistic-500), var(--color-palette-statistic-500));
 		--color-bg-ui-statistic-hover: light-dark(var(--color-palette-statistic-600), var(--color-palette-statistic-400));
-		--color-bg-ui-statistic-secondary: light-dark(var(--color-palette-statistic-50), var(--color-palette-statistic-50));
+		--color-bg-ui-statistic-secondary: light-dark(var(--color-palette-statistic-50), var(--color-palette-statistic-850));
 		--color-bg-ui-selected: light-dark(var(--color-palette-brand-50), var(--color-palette-brand-900));
 		--color-bg-ui-selected-hover: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-500));
 		--color-bg-ui-danger: light-dark(var(--color-palette-danger-500), var(--color-palette-danger-500));
 		--color-bg-ui-danger-hover: light-dark(var(--color-palette-danger-600), var(--color-palette-danger-400));
-		--color-bg-ui-danger-secondary: light-dark(var(--color-palette-danger-50), var(--color-palette-danger-50));
+		--color-bg-ui-danger-secondary: light-dark(var(--color-palette-danger-50), var(--color-palette-danger-950));
 		--color-bg-ui-success: light-dark(var(--color-palette-success-500), var(--color-palette-success-500));
 		--color-bg-ui-success-hover: light-dark(var(--color-palette-success-600), var(--color-palette-success-400));
 		--color-bg-ui-success-secondary: light-dark(var(--color-palette-success-300), var(--color-palette-success-300));
 		--color-bg-ui-warning: light-dark(var(--color-palette-warning-400), var(--color-palette-warning-500));
 		--color-bg-ui-warning-hover: light-dark(var(--color-palette-warning-600), var(--color-palette-warning-300));
-		--color-bg-ui-warning-secondary: light-dark(var(--color-palette-warning-50), var(--color-palette-warning-50));
+		--color-bg-ui-warning-secondary: light-dark(var(--color-palette-warning-50), var(--color-palette-warning-900));
 		--color-bg-ui-caution: light-dark(var(--color-palette-caution-400), var(--color-palette-caution-500));
 		--color-bg-ui-caution-hover: light-dark(var(--color-palette-caution-600), var(--color-palette-caution-300));
 		--color-bg-ui-caution-secondary: light-dark(var(--color-palette-caution-50), var(--color-palette-caution-900));
 		--color-bg-ui-neutral: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-750));
 		--color-bg-ui-neutral-hover: light-dark(var(--color-palette-neutral-400), var(--color-palette-neutral-700));
-		--color-bg-ui-neutral-secondary: light-dark(var(--color-palette-neutral-50), var(--color-palette-neutral-950));
-		--color-bg-ui-disabled: light-dark(var(--color-palette-neutral-300), var(--color-palette-neutral-850));
+		--color-bg-ui-neutral-secondary: light-dark(var(--color-palette-neutral-200), var(--color-palette-neutral-900));
+		--color-bg-ui-disabled: light-dark(var(--color-palette-neutral-300), var(--color-palette-neutral-750));
 		--color-bg-uistatic: var(--color-palette-neutral-100);
 		--color-bg-uistatic-0: var(--color-palette-neutral-900);
 		--color-bg-uistatic-10: var(--color-palette-neutral-800);
@@ -215,8 +215,8 @@
 		--color-border-ui-brand-hover: light-dark(var(--color-palette-brand-600), var(--color-palette-brand-300));
 		--color-border-ui-statistic: light-dark(var(--color-palette-statistic-500), var(--color-palette-statistic-400));
 		--color-border-ui-statistic-hover: light-dark(var(--color-palette-statistic-600), var(--color-palette-statistic-300));
-		--color-border-ui-selected: light-dark(var(--color-palette-brand-500), var(--color-palette-brand-400));
-		--color-border-ui-selected-hover: light-dark(var(--color-palette-brand-600), var(--color-palette-brand-300));
+		--color-border-ui-selected: light-dark(var(--color-palette-schoolboost-secondary), var(--color-palette-schoolboost-secondary));
+		--color-border-ui-selected-hover: light-dark(#2aa0bc, #2aa0bc);
 		--color-border-ui-danger: light-dark(var(--color-palette-danger-500), var(--color-palette-danger-400));
 		--color-border-ui-danger-hover: light-dark(var(--color-palette-danger-600), var(--color-palette-danger-300));
 		--color-border-ui-success: light-dark(var(--color-palette-success-500), var(--color-palette-success-400));
@@ -227,7 +227,7 @@
 		--color-border-ui-caution-hover: light-dark(var(--color-palette-caution-800), var(--color-palette-caution-600));
 		--color-border-ui-neutral: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-700));
 		--color-border-ui-neutral-hover: light-dark(var(--color-palette-neutral-600), var(--color-palette-neutral-500));
-		--color-border-ui-disabled: light-dark(var(--color-palette-neutral-850), var(--color-palette-neutral-850));
+		--color-border-ui-disabled: light-dark(var(--color-palette-neutral-400), var(--color-palette-neutral-750));
 		--color-border-uistatic: var(--color-palette-neutral-900);
 		--color-border-uistatic-0: var(--color-palette-neutral-100);
 		--color-border-uistatic-10: var(--color-palette-neutral-300);
@@ -257,13 +257,13 @@
 		--color-accent-ui-onneutral: light-dark(var(--color-palette-neutral-900), var(--color-palette-neutral-100));
 		--color-accent-ui-ondisabled: light-dark(var(--color-palette-neutral-500), var(--color-palette-neutral-700));
 
-		--color-ring-ui: light-dark(var(--color-palette-brand-100), var(--color-palette-brand-100));
-		--color-ring-ui-brand: light-dark(var(--color-palette-brand-100), var(--color-palette-brand-100));
-		--color-ring-ui-statistic: light-dark(var(--color-palette-statistic-100), var(--color-palette-statistic-100));
-		--color-ring-ui-danger: light-dark(var(--color-palette-danger-100), var(--color-palette-danger-100));
-		--color-ring-ui-success: light-dark(var(--color-palette-success-100), var(--color-palette-success-100));
-		--color-ring-ui-warning: light-dark(var(--color-palette-warning-100), var(--color-palette-warning-100));
-		--color-ring-ui-caution: light-dark(var(--color-palette-caution-100), var(--color-palette-caution-100));
+		--color-ring-ui: light-dark(var(--color-palette-brand-200), var(--color-palette-brand-600));
+		--color-ring-ui-brand: light-dark(var(--color-palette-brand-200), var(--color-palette-brand-600));
+		--color-ring-ui-statistic: light-dark(var(--color-palette-statistic-200), var(--color-palette-statistic-600));
+		--color-ring-ui-danger: light-dark(var(--color-palette-danger-200), var(--color-palette-danger-800));
+		--color-ring-ui-success: light-dark(var(--color-palette-success-200), var(--color-palette-success-600));
+		--color-ring-ui-warning: light-dark(var(--color-palette-warning-200), var(--color-palette-warning-800));
+		--color-ring-ui-caution: light-dark(var(--color-palette-caution-200), var(--color-palette-caution-100));
 		--color-ring-ui-neutral: light-dark(rgba(0, 0, 0, 0.1),rgba(255, 255, 255, 0.2));
 
 		--color-shadow-ui-0: light-dark(var(--color-palette-neutral-100), var(--color-palette-neutral-900));
@@ -556,5 +556,5 @@
 	--shadow-ui-50: var(--color-shadow-ui-50);
 	--shadow-ui-75: var(--color-shadow-ui-75);
 	--shadow-ui-100: var(--color-shadow-ui-100);
-	
+
 }

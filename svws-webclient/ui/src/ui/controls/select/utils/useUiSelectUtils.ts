@@ -1,16 +1,14 @@
 import { computed, nextTick, ref, watch, type ComputedRef, type Ref } from 'vue';
 import type { UiSelectDropdown, UiSelectHTMLElements, UiSelectSelectionMethods, UiSelectState } from "../manager/UiSelectTypes";
-import type { BasicValidator } from "../../../../../../core/src/asd/validate/BasicValidator";
 import type { List } from "../../../../../../core/src/java/util/List";
 import { useElementBounding, useWindowSize } from "@vueuse/core";
 import { useUiSelectFocusHandler } from "./useUiSelectFocusHandler";
 import { useUiSelectInputHandler } from "./useUiSelectInputHandler";
 import { useUiSelectStyles } from "./useUiSelectStyles";
-import type { ValidatorFehlerart } from "../../../../../../core/src/asd/validate/ValidatorFehlerart";
 import type { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
 
-export function useUiSelectUtils<T, V extends BasicValidator>(
-	state: ComputedRef<UiSelectState<T, V>>,
+export function useUiSelectUtils<T>(
+	state: ComputedRef<UiSelectState<T>>,
 	attrs: Record<string, any>,
 	elements: UiSelectHTMLElements,
 	search: Ref<string>,
@@ -36,12 +34,9 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 	getSecondaryTextColor: (color: string) => string,
 	searchInputAriaAttrs: ComputedRef,
 	getOptionClasses: (option: T, optionIndex: number) => string[],
-	validatorErrorIcon: ComputedRef<string[] | null>,
-	validatorErrorBgClasses: (fehler: ValidatorFehlerart) => {},
 	// Anzeige
-	showValidatorError: ComputedRef<boolean>,
-	showValidatorErrorMessage: ComputedRef<boolean>,
 	showLabel: ComputedRef<boolean>,
+	showValidatorError: ComputedRef<boolean>,
 	// Suche
 	splitTextIntoHits: (text: string) => { text: string, hit: boolean; }[],
 	resetSearch: () => void,
@@ -119,10 +114,7 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 		getSecondaryTextColor,
 		searchInputAriaAttrs,
 		getOptionClasses,
-		validatorErrorIcon,
-		validatorErrorBgClasses,
 		showValidatorError,
-		showValidatorErrorMessage,
 		showLabel } = useUiSelectStyles(state, attrs, selectionMethods, dropdown);
 
 	watch(highlightedIndex, async () => {
@@ -352,12 +344,9 @@ export function useUiSelectUtils<T, V extends BasicValidator>(
 		getSecondaryTextColor,
 		searchInputAriaAttrs,
 		getOptionClasses,
-		validatorErrorIcon,
-		validatorErrorBgClasses,
 		// Anzeige
-		showValidatorError,
-		showValidatorErrorMessage,
 		showLabel,
+		showValidatorError,
 		// Suche
 		splitTextIntoHits,
 		resetSearch,

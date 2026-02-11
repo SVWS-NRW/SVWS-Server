@@ -1,56 +1,63 @@
 <template>
 	<div class="page page-grid-cards">
-		<svws-ui-content-card title="Allgemein">
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
-					:model-value="manager().daten().kuerzel"
-					@change="patchKuerzel"
-					:valid="kuerzelIsValid" :min-len="1" :max-len="20" :readonly="!hatKompetenzUpdate" required />
-				<svws-ui-text-input placeholder="Bezeichnung"
-					:model-value="manager().daten().bezeichnung"
-					@change="patchBezeichnung"
-					:valid="bezeichnungIsValid" :min-len="1" :max-len="100" :readonly="!hatKompetenzUpdate" required />
-				<svws-ui-text-input placeholder="Kurzbezeichnung"
-					:model-value="manager().daten().kurzbezeichnung"
-					@change="patchKurzbezeichnung"
-					:valid="kurzbezeichnungIsValid" :max-len="2" :readonly="!hatKompetenzUpdate" />
-				<ui-select label="Folgejahrgang"
-					v-model="selectedFolgejahrgang"
-					:manager="folgeJahrgangManager"
-					:readonly="!hatKompetenzUpdate" />
-				<ui-select label="Schulgliederung ASD-Kürzel"
-					v-model="selectedSchulgliederung"
-					:manager="schulgliederungKuerzelSelectManager"
-					statistics :readonly="!hatKompetenzUpdate" />
-				<ui-select label="Schulgliederung ASD-Text"
-					v-model="selectedSchulgliederung"
-					:manager="schulgliederungTextSelectManager"
-					statistics :readonly="!hatKompetenzUpdate" />
-				<ui-select label="Jahrgang ASD-Kürzel"
-					:manager="jahrgangKuerzelSelectManager"
-					v-model="selectedStatistikJahrgang"
-					statistics :readonly="!hatKompetenzUpdate" required :removable="false" />
-				<ui-select label="Jahrgang ASD-Text"
-					:manager="jahrgangTextSelectManager"
-					v-model="selectedStatistikJahrgang"
-					statistics :readonly="!hatKompetenzUpdate" required :removable="false" />
-				<svws-ui-input-number placeholder="Anzahl der Restabschnitte"
-					:model-value="manager().daten().anzahlRestabschnitte"
-					@change="patchAnzahlRestabschnitte"
-					:valid="anzahlRestabschnitteIsValid" :min="0" :max="40" :readonly="!hatKompetenzUpdate" />
-				<ui-select label="Bildungsstufe"
-					:manager="bildungsstufeSelectManager"
-					v-model="selectedBildungsstufe"
-					:readonly="!hatKompetenzUpdate" />
-				<svws-ui-input-number placeholder="Sortierung"
-					:model-value="manager().daten().sortierung"
-					@change="patchSortierung"
-					:valid="sortierungIsValid" :min="0" :max="32000" :readonly="!hatKompetenzUpdate" :removable="false" />
-				<svws-ui-spacing />
-				<svws-ui-checkbox :model-value="manager().daten().istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })" :readonly="!hatKompetenzUpdate">
-					Sichtbar
-				</svws-ui-checkbox>
-			</svws-ui-input-wrapper>
+		<svws-ui-content-card>
+			<svws-ui-content-card title="Allgemein">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
+						:model-value="manager().daten().kuerzel"
+						@change="patchKuerzel"
+						:valid="kuerzelIsValid" :min-len="1" :max-len="20" :readonly="!hatKompetenzUpdate" required />
+					<svws-ui-text-input placeholder="Bezeichnung"
+						:model-value="manager().daten().bezeichnung"
+						@change="patchBezeichnung"
+						:valid="bezeichnungIsValid" :min-len="1" :max-len="100" :readonly="!hatKompetenzUpdate" required />
+					<svws-ui-text-input placeholder="Kurzbezeichnung"
+						:model-value="manager().daten().kurzbezeichnung"
+						@change="patchKurzbezeichnung"
+						:valid="kurzbezeichnungIsValid" :max-len="2" :readonly="!hatKompetenzUpdate" />
+					<ui-select label="Folgejahrgang"
+						v-model="selectedFolgejahrgang"
+						:manager="folgeJahrgangManager"
+						:readonly="!hatKompetenzUpdate" />
+					<ui-select label="Schulgliederung ASD-Kürzel"
+						v-model="selectedSchulgliederung"
+						:manager="schulgliederungKuerzelSelectManager"
+						searchable statistics :readonly="!hatKompetenzUpdate" />
+					<ui-select label="Schulgliederung ASD-Text"
+						v-model="selectedSchulgliederung"
+						:manager="schulgliederungTextSelectManager"
+						searchable statistics :readonly="!hatKompetenzUpdate" />
+					<ui-select label="Jahrgang ASD-Kürzel"
+						:manager="jahrgangKuerzelSelectManager"
+						v-model="selectedStatistikJahrgang"
+						searchable statistics :readonly="!hatKompetenzUpdate" required :removable="false" />
+					<ui-select label="Jahrgang ASD-Text"
+						:manager="jahrgangTextSelectManager"
+						v-model="selectedStatistikJahrgang"
+						searchable statistics :readonly="!hatKompetenzUpdate" required :removable="false" />
+					<svws-ui-input-number placeholder="Anzahl der Restabschnitte"
+						:model-value="manager().daten().anzahlRestabschnitte"
+						@change="patchAnzahlRestabschnitte"
+						:valid="anzahlRestabschnitteIsValid" :min="0" :max="40" :readonly="!hatKompetenzUpdate" />
+					<ui-select label="Bildungsstufe"
+						:manager="bildungsstufeSelectManager"
+						v-model="selectedBildungsstufe"
+						:readonly="!hatKompetenzUpdate" />
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<svws-ui-spacing :size="2" />
+			<svws-ui-content-card title="Ansicht & Sortierung">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-input-number placeholder="Sortierung"
+						:model-value="manager().daten().sortierung"
+						@change="patchSortierung"
+						:valid="sortierungIsValid" :min="0" :max="32000" :readonly="!hatKompetenzUpdate" :removable="false" />
+					<svws-ui-spacing />
+					<svws-ui-checkbox :model-value="manager().daten().istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })" :readonly="!hatKompetenzUpdate">
+						Sichtbar
+					</svws-ui-checkbox>
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
 		</svws-ui-content-card>
 	</div>
 </template>

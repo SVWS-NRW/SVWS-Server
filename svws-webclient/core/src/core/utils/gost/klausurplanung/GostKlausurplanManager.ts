@@ -2669,10 +2669,10 @@ export class GostKlausurplanManager extends JavaObject {
 
 	private gruppiereUeberschneidungen(termine: List<GostKlausurtermin>): List<List<GostKlausurtermin>> {
 		const ergebnis: List<List<GostKlausurtermin>> = new ArrayList<List<GostKlausurtermin>>();
-		let added: boolean = false;
 		for (const terminToAdd of termine) {
+			let added: boolean = false;
 			for (const listToCheck of ergebnis) {
-				for (const terminInListe of termine) {
+				for (const terminInListe of listToCheck) {
 					if (this.checkTerminUeberschneidung(terminInListe, terminToAdd)) {
 						listToCheck.add(terminToAdd);
 						added = true;
@@ -4418,6 +4418,23 @@ export class GostKlausurplanManager extends JavaObject {
 			return kursklausuren;
 		for (const skt of this._schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.get1(raum.id))
 			if ((skt.folgeNr === 0) || includeNachschreiber)
+				kursklausuren.add(this.kursklausurBySchuelerklausurTermin(skt));
+		return kursklausuren;
+	}
+
+	/**
+	 * Liefert die Menge aller {@link GostKursklausur}en zurück, die in einem {@link GostKlausurraum} geschrieben werden, wenn es sich um Nachschreibklausuren handelt.
+	 *
+	 * @param raum  der {@link GostKlausurraum}
+	 *
+	 * @return die Menge aller {@link GostKursklausur}en zurück, die in einem {@link GostKlausurraum} geschrieben werden, wenn es sich um Nachschreibklausuren handelt.
+	 */
+	public nachschreiberGetMengeByRaum(raum: GostKlausurraum): JavaSet<GostKursklausur> {
+		const kursklausuren: JavaSet<GostKursklausur> | null = new HashSet<GostKursklausur>();
+		if (!this._schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.containsKey1(raum.id))
+			return kursklausuren;
+		for (const skt of this._schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur.get1(raum.id))
+			if (skt.folgeNr > 0)
 				kursklausuren.add(this.kursklausurBySchuelerklausurTermin(skt));
 		return kursklausuren;
 	}

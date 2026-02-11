@@ -26,10 +26,6 @@ import org.apache.commons.lang3.Strings;
  */
 public final class DataErzieherarten extends DataManagerRevised<Long, DTOErzieherart, Erzieherart> {
 
-	/**
-	 * patching or deleting these entries is not aloud according to SchILDzentral
-	 */
-	private static final Set<Long> IDS_OF_NON_PATCHABLE_ENTRIES = Set.of(1L, 2L, 3L, 4L, 5L);
 	private static final String BEZEICHNUNG = "bezeichnung";
 
 	/**
@@ -129,7 +125,7 @@ public final class DataErzieherarten extends DataManagerRevised<Long, DTOErziehe
 	protected void checkBeforeDeletionWithSimpleOperationResponse(final List<DTOErzieherart> erzieherarten, final Map<Long, SimpleOperationResponse> responses) {
 		erzieherarten
 				.stream()
-				.filter(e -> IDS_OF_NON_PATCHABLE_ENTRIES.contains(e.ID))
+				.filter(e -> Boolean.FALSE.equals(e.Aenderbar))
 				.forEach(e -> markResponseAsFailed(responses.get(e.ID), e.ID));
 	}
 

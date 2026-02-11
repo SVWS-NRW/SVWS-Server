@@ -5,13 +5,19 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<svws-ui-table clickable :clicked="selectedEntry" @update:clicked="v => gotoDefaultView(v.id)" :items="props.manager().filtered()" :columns
-				:model-value="[...props.manager().liste.auswahl()]" @update:model-value="v => setAuswahl(v)" selectable scroll-into-view
-				:focus-switching-enabled :focus-help-visible>
-				<template #actions v-if="hatKompetenzAendern">
+			<svws-ui-table v-model="floskelgruppen"
+				v-model:clicked="selectedFloskelgruppe"
+				:items="manager().filtered()" :columns
+				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
+				<template #search>
+					<svws-ui-text-input placeholder="Suchen" v-model="searchTerm" type="search" removable />
+				</template>
+				<template #actions>
 					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
-						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)"
-							:has-focus="manager().filtered().size() === 0">
+						<svws-ui-button type="icon"
+							@click="gotoHinzufuegenView(true)"
+							:has-focus="noFilteredEntries"
+							:disabled="isHinzufuegenView">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
 						<template #content>
@@ -35,25 +41,47 @@
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const props = defineProps<FloskelgruppenAuswahlProps>();
-	const hatKompetenzAendern = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const selectedEntry = computed(() => {
-		if ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) {
-			return null;
-		}
-		return (props.manager().hasDaten()) ? props.manager().auswahl() : null;
-	});
+	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const isHinzufuegenView = computed<boolean>(() => props.activeViewType === ViewType.HINZUFUEGEN);
+	const isGruppenprozesseorHinhzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
+	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);
+
 	const columns: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2, defaultSort: 'asc' },
 	];
+	const searchTerm = computed<string>({
+		get: () => props.manager().searchTerm,
+		set: (v: string) => {
+			props.manager().searchTerm = v;
+			void props.setFilter();
+		},
+	});
 
-	async function setAuswahl(floskelgruppen: Floskelgruppe[]) {
+	const floskelgruppen = computed<Floskelgruppe[]>({
+		get: () => [...props.manager().liste.auswahl()],
+		set: (v: Floskelgruppe[]) => {
+			setAuswahl(v);
+			void navigateToView();
+		},
+	});
+
+	const selectedFloskelgruppe = computed<Floskelgruppe | null>({
+		get: () => (!isGruppenprozesseorHinhzufuegenView.value && props.manager().hasDaten()) ? props.manager().auswahl() : null,
+		set: (v: Floskelgruppe | null) => void props.gotoDefaultView(v?.id ?? null),
+	});
+
+
+	function setAuswahl(items: Floskelgruppe[]) {
 		props.manager().liste.auswahlClear();
-		for (const floskelgruppe of floskelgruppen) {
-			if (props.manager().liste.hasValue(floskelgruppe)) {
-				props.manager().liste.auswahlAdd(floskelgruppe);
+		for (const item of items) {
+			if (props.manager().liste.hasValue(item)) {
+				props.manager().liste.auswahlAdd(item);
 			}
 		}
+	}
+
+	async function navigateToView() {
 		if (props.manager().liste.auswahlExists()) {
 			await props.gotoGruppenprozessView(true);
 		} else {

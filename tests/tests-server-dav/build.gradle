@@ -1,9 +1,7 @@
-// Initialisierung der Plugins
 plugins {
 	id 'svws.gradle.node.plugin'
 }
 
-// Führt alle Tasks von subproject-plugin.gradle in diesem Verzeichnis aus
 apply from: ('../subproject-plugin.gradle')
 
 /**
@@ -33,18 +31,19 @@ ext {
 tasks.register('testAgainstDockerEnv', NpmRun) {
 	description = 'Startet die Integrationstests gegen die Docker Umgebung'
 	group = 'testing'
+
 	dependsOn ':svws-webclient:core:assemble'
 	dependsOn ':svws-webclient:client:assemble'
 	dependsOn 'starteDockerContainerMitTestUmgebung'
 
+	ignoreExitValue = true
+	outputs.upToDateWhen { false }
+
 	// Vite darf gegen Server laufen mit selbst signierten Zertifikaten
 	environment NODE_TLS_REJECT_UNAUTHORIZED: 0
 
-	// Falls Exceptions auftreten führen diese nicht zum Abbruch des Scripts
-	ignoreExitValue = true
-
-	doFirst {
-		mkdir file("$projectDir/build/test-results")
+	if (!rootProject.ext.CONFIG.keepContainerAfterTestRun) {
+		finalizedBy 'removeTestEnvironmentEntryPoint'
 	}
 
 	// Die Ziel-url vom Container mit der Application
@@ -54,10 +53,6 @@ tasks.register('testAgainstDockerEnv', NpmRun) {
 		environment VITE_targetHost: "https://localhost:$project.ext.FORWARDED_APP_PORT"
 	}
 
-	outputs.dir file("$projectDir/build/test-results")
-	outputs.upToDateWhen { false }
-
-	// npm Kommando
 	args = ['test:tempDockerEnv']
 }
 
@@ -72,6 +67,5 @@ tasks.register('no_auto_docker_test_DAV', NpmRun) {
 	inputs.files fileTree("$projectDir/tests"),
 			fileTree("$rootDir").matching { exclude 'build', 'dist' }
 
-	// npm Kommando
-	args = ['test:local']
+	args = ['test']
 }

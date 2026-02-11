@@ -16,7 +16,7 @@
 					<svws-ui-text-input placeholder="Branche"
 						v-model="data.branche"
 						:valid="() => fieldIsValid('branche')" :max-len="50" :disabled="!hatKompetenzAdd" />
-					<svws-ui-textarea-input placeholder="Bemerkungen" class="h-42 max-h-42 overflow-y-auto"
+					<svws-ui-textarea-input placeholder="Bemerkungen"
 						:model-value="data.bemerkungen"
 						@input="value => data.bemerkungen = value"
 						:valid="() => fieldIsValid('bemerkungen')" resizeable="none" :max-len="255" />
@@ -65,13 +65,15 @@
 						v-model="data.fax"
 						:valid="() => fieldIsValid('fax')" :max-len="20" :disabled="!hatKompetenzAdd" />
 					<svws-ui-spacing :size="2" />
-					<svws-ui-input-number placeholder="Sortierung"
-						v-model="data.sortierung"
-						:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" :removable="false" />
-					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
-						Sichtbar
-					</svws-ui-checkbox>
+					<svws-ui-content-card title="Ansicht & Sortierung">
+						<svws-ui-input-number placeholder="Sortierung"
+							v-model="data.sortierung"
+							:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" :removable="false" />
+						<svws-ui-spacing />
+						<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
+							Sichtbar
+						</svws-ui-checkbox>
+					</svws-ui-content-card>
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<div class="mt-7 flex flex-row gap-4 justify-end">

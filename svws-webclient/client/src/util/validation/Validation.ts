@@ -21,15 +21,11 @@ export function phoneNumberIsValid(input: string | null, maxLength: number) {
 	return /^\+?\d+([-/]?\d+)*$/.test(input) && input.length <= maxLength;
 }
 
-export function mandatoryInputIsValid(value: string | null, maxLength: number) {
-	if (value === null) {
-		return false;
-	}
-
-	return (!JavaString.isBlank(value)) && (value.length <= maxLength);
+export function mandatoryInputIsValid(value: string | null, maxLength: number): value is string {
+	return isNotNull(value) && (!JavaString.isBlank(value)) && (value.length <= maxLength);
 }
 
-export function optionalInputIsValid(input: string | null, maxLength: number) {
+export function optionalInputIsValid(input: string | null, maxLength: number): boolean {
 	if ((input === null) || (JavaString.isBlank(input))) {
 		return true;
 	}
@@ -126,11 +122,8 @@ export function numberIsValid(value: number | null, required: boolean, min?: num
  * @param value die zu prüfende Zahl oder `null`
  * @return `true`, wenn die Zahl Dezimalstellen hat; sonst `false`
  */
-export function numberHasDecimals(value: number | null): boolean {
-	if (value === null) {
-		return false;
-	}
-	return value.toString().includes(".");
+export function numberHasDecimals(value: number | null): value is number {
+	return isNotNull(value) && value.toString().includes(".");
 }
 
 /**
@@ -138,10 +131,11 @@ export function numberHasDecimals(value: number | null): boolean {
  *
  * @param value     Der zu prüfende Zahlenwert
  */
-export function stringIsNumeric(value: string | null) {
-	if (value === null) {
-		return false;
-	}
-	return /^\d+$/.test(value);
+export function stringIsNumeric(value: string | null): value is string {
+	return isNotNull(value) && /^\d+$/.test(value);
+}
+
+function isNotNull(value: string | number | null): value is string | number {
+	return value !== null;
 }
 

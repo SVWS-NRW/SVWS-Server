@@ -137,19 +137,19 @@
 					<ui-select label="SelectManager mit Muss-Validator" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]"
 						v-model="mussValidatorSelection"
 						:manager="sMussValidatorSelectManager"
-						:validator="() => validatorMuss"
+						:validation="validateMuss"
 						:searchable="state.searchable" :removable="state.removable" :disabled="state.disabled" :statistics="state.statistics"
 						:headless="state.headless" :readonly="state.readonly" :required="state.required" />
 					<ui-select label="SelectManager mit Kann-Validator" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]"
 						v-model="kannValidatorSelection"
 						:manager="sKannValidatorSelectManager"
-						:validator="() => validatorKann"
+						:validation="validateKann"
 						:searchable="state.searchable" :removable="state.removable" :disabled="state.disabled" :statistics="state.statistics"
 						:headless="state.headless" :readonly="state.readonly" :required="state.required" />
 					<ui-select label="SelectManager mit Hinweis-Validator" :class="[state.bgColor, state.textColor, state.iconColor, state.borderColor]"
 						v-model="hinweisValidatorSelection"
 						:manager="sHinweisValidatorSelectManager"
-						:validator="() => validatorHinweis"
+						:validation="validateHinweis"
 						:searchable="state.searchable" :removable="state.removable" :disabled="state.disabled" :statistics="state.statistics"
 						:headless="state.headless" :readonly="state.readonly" :required="state.required" />
 				</svws-ui-input-wrapper>
@@ -220,7 +220,9 @@
 	import { CoreTypeSelectManager } from "./manager/CoreTypeSelectManager";
 	import { SelectManager } from "./manager/SelectManager";
 	import Docs from "./UiSelect.story.md";
-	import { ValidatorFehlerart } from "../../../../../core/src";
+	import { ValidatorFehlerart } from "../../../../../core/src/asd/validate/ValidatorFehlerart";
+	import type { List } from "../../../../../core/src/java/util/List";
+	import type { ValidatorFehler } from "../../../../../core/src/asd/validate/ValidatorFehler";
 
 	const state = reactive({
 		searchable: false,
@@ -378,6 +380,18 @@
 			}
 			return (result === null);
 		}
+	}
+	function validateHinweis(): List<ValidatorFehler> {
+		validatorHinweis.value.run();
+		return validatorHinweis.value.getFehler();
+	}
+	function validateKann(): List<ValidatorFehler> {
+		validatorKann.value.run();
+		return validatorKann.value.getFehler();
+	}
+	function validateMuss(): List<ValidatorFehler> {
+		validatorMuss.value.run();
+		return validatorMuss.value.getFehler();
 	}
 
 	const validatorHinweis = computed(() => new ValidatorTest(() => (hinweisValidatorSelection.value === "Anna") ? null : "Hier ist die Eintragung von Anna gewünscht.", ValidatorFehlerart.HINWEIS));

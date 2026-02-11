@@ -13,6 +13,7 @@ import jakarta.ws.rs.core.Response.Status;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +65,9 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 	public List<FoerderschwerpunktEintrag> getAll() {
 		final List<DTOFoerderschwerpunkt> foerderschwerpunkte = this.conn.queryAll(DTOFoerderschwerpunkt.class);
 		final Set<Long> idsFoerderschwerpunkte = mapToIds(foerderschwerpunkte);
-		final Set<Long> idsOfReferencedFoerderschwerpunkte = this.getIdsOfReferencedFoerderschwerpunkte(idsFoerderschwerpunkte);
+		final Set<Long> idsOfReferencedFoerderschwerpunkte = idsFoerderschwerpunkte.isEmpty()
+				? Collections.emptySet()
+				: this.getIdsOfReferencedFoerderschwerpunkte(idsFoerderschwerpunkte);
 
 		return foerderschwerpunkte
 				.stream()

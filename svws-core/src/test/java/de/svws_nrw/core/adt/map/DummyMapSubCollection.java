@@ -30,14 +30,13 @@ public final class DummyMapSubCollection implements Collection<@NotNull Integer>
 
 	@Override
 	public @NotNull String toString() {
-		String s = "";
+		// TODO: Transpiler kann "for (Integer value : this)" noch nicht.
+		final @NotNull StringBuilder sb = new StringBuilder();
 		final Iterator<Integer> iter = this.iterator();
-		while (iter.hasNext())
-			s += (s.isEmpty() ? "" : ", ") + iter.next();
-		// Transpieler kann diese FOR-Schleife (nocht) nicht.
-		// for (Integer value : this)
-		// s += (s.isEmpty() ? "" : ", ") + value;
-		return "values = [" + s + "], size = " + size() + " --> " + _sub.toString();
+		while (iter.hasNext()) {
+			sb.append((sb.isEmpty() ? "" : ", ") + iter.next());
+		}
+		return "values = [" + sb.toString() + "], size = " + size() + " --> " + _sub.toString();
 	}
 
 	@Override

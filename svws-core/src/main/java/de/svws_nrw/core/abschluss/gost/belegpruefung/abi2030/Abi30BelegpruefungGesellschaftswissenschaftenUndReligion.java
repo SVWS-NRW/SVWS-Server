@@ -1,8 +1,9 @@
 package de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
@@ -10,7 +11,6 @@ import de.svws_nrw.core.abschluss.gost.GostBelegungsfehler;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -37,27 +37,26 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 
-	/// Die Belegungen für alle Fächer der Gesellschaftswissenschaften
+	/** Die Belegungen für alle Fächer der Gesellschaftswissenschaften. */
 	private List<AbiturFachbelegung> gesellschaftswissenschaften;
 
-	/// Die Belegung des Faches Geschichte - oder null, falls es nicht belegt wurde
+	/** Die Belegung des Faches Geschichte - oder null, falls es nicht belegt wurde. */
 	private List<AbiturFachbelegung> geschichte;
 
-	/// Die Belegung des Faches Sozialwissenschaften - oder null, falls es nicht belegt wurde
+	/** Die Belegung des Faches Sozialwissenschaften - oder null, falls es nicht belegt wurde. */
 	private List<AbiturFachbelegung> sozialwissenschaften;
 
-	/// Die Belegung des Faches Philosophie - oder null, falls es nicht belegt wurde
+	/** Die Belegung des Faches Philosophie - oder null, falls es nicht belegt wurde. */
 	private AbiturFachbelegung philosophie;
 
-	/// Die Belegungen für die Fächer Gesellschaftswissenschaften außer Geschichte, Sozialwissenschaften und Philosophie
+	/** Die Belegungen für die Fächer Gesellschaftswissenschaften außer Geschichte, Sozialwissenschaften und Philosophie. */
 	private List<AbiturFachbelegung> sonstige_gesellschaftswissenschaften;
 
-	/// Die Belegung des Faches Religion - oder null, falls es nicht belegt wurde
+	/** Die Belegung des Faches Religion - oder null, falls es nicht belegt wurde. */
 	private List<AbiturFachbelegung> religion;
 
-	/// Alle Fachbelegungen bei denen Zusatzkurse in zwei aufeinanderfolgenden Halbjahren in der Qualifikationsphase belegt wurden.
+	/** Alle Fachbelegungen bei denen Zusatzkurse in zwei aufeinanderfolgenden Halbjahren in der Qualifikationsphase belegt wurden.. */
 	private ArrayList<AbiturFachbelegung> zusatzkursFachbelegungen;
-
 
 
 	/**

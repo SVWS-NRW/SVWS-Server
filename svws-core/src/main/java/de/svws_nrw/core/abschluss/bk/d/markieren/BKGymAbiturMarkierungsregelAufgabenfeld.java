@@ -46,7 +46,8 @@ public class BKGymAbiturMarkierungsregelAufgabenfeld extends BKGymAbiturMarkieru
 			throw new DeveloperNotificationException("Die Prüfbedingung " + kuerzel + "spezifiziert ein nicht vorhandenes Aufgabenfeld.");
 
 		final @NotNull Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> bedingung =
-				markierung -> (markierung != null) && feld.hatFachbezeichnung(variante.varianten.manager.getBezeichnungByFachID(markierung.fachID));
+				markierung -> (markierung != null)
+				&& feld.hatFachbezeichnung(variante.varianten.abiturdatenManager.getFaecherManager().getBezeichnungByFachID(markierung.fachID));
 		final int anzBereitsMarkiert = variante.zaehleMarkierte(bedingung);
 		int verbleibend = anzahl;
 		if (anzBereitsMarkiert > 0) {

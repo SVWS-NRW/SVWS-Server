@@ -6,7 +6,7 @@
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
 			<svws-ui-table clickable :clicked="selectedEntry" @update:clicked="v => gotoDefaultView(v.id)" :items="props.manager().filtered()" :columns
-				:model-value="[...props.manager().liste.auswahl()]" @update:model-value="v => setAuswahl(v)" selectable scroll-into-view
+				:model-value="[...props.manager().liste.auswahl()]" @update:model-value="v => setAuswahl(v)" selectable scroll scroll-into-view
 				:focus-switching-enabled :focus-help-visible>
 				<template #actions v-if="hatKompetenzAendern">
 					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">

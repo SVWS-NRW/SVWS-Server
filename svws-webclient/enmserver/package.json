@@ -9,7 +9,7 @@
 	"files": [ "./dist/**/*" ],
 	"scripts": {
 		"dev": "vite",
-		"lint": "eslint \"src/**/*.{ts,vue}\" --cache",
+		"lint": "eslint \"src/**/*.{ts,vue}\" --cache --max-warnings=0",
 		"lint-tsc": "vue-tsc --noEmit",
 		"serve": "vite preview",
 		"build": "vite build",
@@ -22,6 +22,6 @@
 	},
 	"dependencies": {
 		"vue": "^3.3",
-		"vue-router": "^4.1.5"
+		"vue-router": "^5.0.1"
 	}
 }

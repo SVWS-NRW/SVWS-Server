@@ -43,8 +43,8 @@
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Lehrer werden gelöscht."
 				:is-open="currentAction === 'delete'" @update:is-open="isOpen => setCurrentAction('delete', isOpen)">
 				<div>
-					<span v-if="preConditionCheck[0]">Alle ausgewählten Lehrer sind bereit zum Löschen.</span>
-					<template v-else v-for="message, i in preConditionCheck[1]" :key="i">
+					<span v-if="preConditionCheck.success">Alle ausgewählten Lehrer sind bereit zum Löschen.</span>
+					<template v-else v-for="message, i in preConditionCheck.logs" :key="i">
 						<span class="text-ui-danger"> {{ message }} <br> </span>
 					</template>
 					<span v-if="loeschbareLehrerVorhanden">Einige Lehrer sind noch an anderer Stelle referenziert, die Übrigen können gelöscht werden.</span>
@@ -104,9 +104,9 @@
 
 	const preConditionCheck = computed(() => {
 		if (currentAction.value === 'delete') {
-			return props.deleteLehrerCheck();
+			return props.deleteCheck();
 		}
-		return [true, []];
+		return { success: true, logs: new ArrayList<string>() };
 	});
 
 	function setCurrentAction(newAction: Action, open: boolean) {

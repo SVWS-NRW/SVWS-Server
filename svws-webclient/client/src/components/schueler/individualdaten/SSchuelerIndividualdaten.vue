@@ -6,12 +6,18 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input class="contentFocusField" v-autofocus placeholder="Nachname" :readonly :model-value="schuelerListeManager().daten().nachname"
-					@change="nachname => patch({ nachname: nachname ?? undefined })" type="text" />
-				<svws-ui-text-input placeholder="Rufname" :readonly :model-value="schuelerListeManager().daten().vorname"
-					@change="vorname => patch({ vorname: vorname ?? undefined })" type="text" />
-				<svws-ui-text-input placeholder="Alle Vornamen" :readonly :model-value="schuelerListeManager().daten().alleVornamen"
-					@change="alleVornamen => patch({ alleVornamen: alleVornamen ?? undefined })" type="text" />
+				<svws-ui-text-input placeholder="Nachname" class="contentFocusField"
+					:model-value="schuelerListeManager().daten().nachname"
+					@change="patchNachname"
+					:valid="v => mandatoryInputIsValid(v, 120)" :min-len="1" :max-len="120" required :readonly v-autofocus />
+				<svws-ui-text-input placeholder="Rufname"
+					:model-value="schuelerListeManager().daten().vorname"
+					@change="patchVorname"
+					:valid="v => mandatoryInputIsValid(v, 80)" :min-len="1" :max-len="80" required :readonly />
+				<svws-ui-text-input placeholder="Alle Vornamen"
+					:model-value="schuelerListeManager().daten().alleVornamen"
+					@change="patchAlleVornamen"
+					:valid="v => optionalInputIsValid(v, 255)" :max-len="255" :readonly />
 				<svws-ui-spacing />
 				<svws-ui-select title="Geschlecht" :readonly v-model="geschlecht" :items="Geschlecht.values()"
 					statistics :item-text="(i: Geschlecht)=>i.text" />
@@ -79,10 +85,14 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly :model-value="strasse"
 					@change="patchStrasse" type="text" span="full" />
-				<svws-ui-select title="Wohnort" :readonly v-model="wohnortID" :items="mapOrte"
-					:item-filter="orte_filter" :item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`" autocomplete statistics />
-				<svws-ui-select title="Ortsteil" :readonly v-model="ortsteilID" :items="ortsteile"
-					:item-text="i => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" removable />
+				<ui-select label="Wohnort"
+					v-model="selectedOrt"
+					:manager="orteManager"
+					searchable :readonly statistics :removable="false" />
+				<ui-select label="Ortsteil"
+					v-model="selectedOrtsteil"
+					:manager="ortsteilManager"
+					searchable :readonly statistics :disabled="selectedOrt === null" />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Telefon" :readonly :model-value="schuelerListeManager().daten().telefon"
 					@change="telefon => patch({ telefon })" type="tel" :max-len="20" />
@@ -132,7 +142,7 @@
 				<template #modalContent>
 					<svws-ui-input-wrapper :grid="2" class="text-left">
 						<svws-ui-select title="Telefonart" :items="mapTelefonArten.values()" v-model="selectedTelefonArt" :item-text="i => i.bezeichnung" />
-						<svws-ui-text-input v-model="newEntryTelefonnummer.telefonnummer" type="text" placeholder="Telefonnummer" :max-len="20" />
+						<svws-ui-text-input v-model="newEntryTelefonnummer.telefonnummer" type="tel" placeholder="Telefonnummer" :max-len="20" />
 						<svws-ui-tooltip class="col-span-full">
 							<svws-ui-text-input v-model="newEntryTelefonnummer.bemerkung" type="text" placeholder="Bemerkung" />
 							<template #content>
@@ -157,7 +167,7 @@
 		<svws-ui-content-card title="Migrationshintergrund" v-if="hatKompetenzAnsehen">
 			<template #actions>
 				<svws-ui-checkbox :readonly class="mt-3 xl:mt-0" :model-value="hatMigrationshintergrund" statistics
-					@update:model-value="hatMigrationshintergrund => patch({hatMigrationshintergrund})" focus-class-content>
+					@update:model-value="value => patch({hatMigrationshintergrund: value})" focus-class-content>
 					Migrationshintergrund vorhanden
 				</svws-ui-checkbox>
 			</template>
@@ -186,10 +196,13 @@
 	import { computed, ref } from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SSchuelerIndividualdatenProps";
 	import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, Telefonart, Haltestelle, Fahrschuelerart } from "@core";
-	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode, ArrayList, ReportingParameter, ReportingSortierungDefinition, ReportingReportvorlage } from "@core";
+	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode,
+		ArrayList, ReportingParameter, ReportingSortierungDefinition, ReportingReportvorlage } from "@core";
 	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort,
-		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, orte_filter, ortsteilSort, ortsteilFilter } from "~/utils/helfer";
+		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, ortsteilSort } from "~/utils/helfer";
 	import type { DataTableColumn } from "@ui";
+	import { SelectManager } from "@ui";
+	import { mandatoryInputIsValid, optionalInputIsValid } from "~/util/validation/Validation";
 
 	const props = defineProps<SchuelerIndividualdatenProps>();
 
@@ -198,6 +211,16 @@
 	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN));
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const hatKompetenzDrucken = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
+	const orte = computed(() => props.mapOrte.values());
+	const ortsteile = computed(() => {
+		const filtered = new ArrayList<OrtsteilKatalogEintrag>();
+		for (const ortsteil of props.mapOrtsteile.values()) {
+			if (ortsteil.ort_id === props.schuelerListeManager().daten().wohnortID) {
+				filtered.add(ortsteil);
+			}
+		}
+		return filtered;
+	});
 
 	function enterDefaultMode() {
 		setMode(Mode.DEFAULT);
@@ -209,7 +232,7 @@
 	const newEntryTelefonnummer = ref<SchuelerTelefon>(new SchuelerTelefon());
 
 	const columns: DataTableColumn[] = [
-		{ key: "idTelefonArt", label: "Ansprechpartner" },
+		{ key: "idTelefonArt", label: "Telefonart" },
 		{ key: "telefonnummer", label: "Telefonnummern" },
 		{ key: "bemerkung", label: "Bemerkung", span: 2 },
 		{ key: "istGesperrt", label: "Gesperrt", span: 1, align: "right" },
@@ -280,7 +303,7 @@
 	}
 
 	function setMode(newMode: Mode) {
-		return currentMode.value = newMode;
+		currentMode.value = newMode;
 	}
 
 	function resetTelefonnummer() {
@@ -292,7 +315,7 @@
 	}
 
 	function istGeburtsdatumGueltig(strDate: string | null) {
-		if (strDate === null || typeof strDate === 'number') {
+		if (strDate === null) {
 			return true;
 		}
 		try {
@@ -318,33 +341,6 @@
 			await props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] });
 		}
 	}
-
-	const wohnortID = computed<OrtKatalogEintrag | undefined>({
-		get: () => {
-			const id = props.schuelerListeManager().daten().wohnortID;
-			return id === null ? undefined : props.mapOrte.get(id);
-		},
-		set: (value) => void props.patch({ wohnortID: value === undefined ? null : value.id }),
-	});
-
-	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
-		const result: Array<OrtsteilKatalogEintrag> = [];
-		for (const ortsteil of props.mapOrtsteile.values()) {
-			if ((ortsteil.ort_id === null) || (ortsteil.ort_id === props.schuelerListeManager().daten().wohnortID)) {
-				result.push(ortsteil);
-			}
-		}
-		return result;
-	});
-
-	const ortsteilID = computed<OrtsteilKatalogEintrag | undefined>({
-		get: () => {
-			const id = props.schuelerListeManager().daten().ortsteilID;
-			return id === null ? undefined : props.mapOrtsteile.get(id);
-		},
-		set: (value) => void props.patch({ ortsteilID: value === undefined ? null : value.id }),
-	});
-
 
 	const staatsangehoerigkeit = computed<Nationalitaeten>({
 		get: () => Nationalitaeten.getByISO3(props.schuelerListeManager().daten().staatsangehoerigkeitID) ?? Nationalitaeten.getDEU(),
@@ -415,6 +411,36 @@
 		set: (value) => void props.patch({ haltestelleID: value === undefined ? null : value.id }),
 	});
 
+	const selectedOrt = computed<OrtKatalogEintrag | null>({
+		get: () => {
+			const id = props.schuelerListeManager().daten().wohnortID;
+			return props.mapOrte.get(id ?? -1) ?? null;
+		},
+		set: (value: OrtKatalogEintrag | null) => void props.patch({ wohnortID: value?.id ?? null }),
+	});
+
+	const selectedOrtsteil = computed<OrtsteilKatalogEintrag | null>({
+		get: () => {
+			const id = props.schuelerListeManager().daten().ortsteilID;
+			return props.mapOrtsteile.get(id ?? -1) ?? null;
+		},
+		set: (value: OrtsteilKatalogEintrag | null) => void props.patch({ ortsteilID: value?.id ?? null }),
+	});
+
+	const orteManager = new SelectManager({
+		options: orte,
+		sort: orte_sort,
+		optionDisplayText: v => v.plz + ' ' + v.ortsname,
+		selectionDisplayText: v => v.plz + ' ' + v.ortsname,
+	});
+
+	const ortsteilManager = new SelectManager({
+		options: ortsteile,
+		sort: ortsteilSort,
+		optionDisplayText: v => v.ortsteil ?? '',
+		selectionDisplayText: v => v.ortsteil ?? '',
+	});
+
 	const loading = ref<boolean>(false);
 
 	async function downloadPDF() {
@@ -461,5 +487,24 @@
 		URL.revokeObjectURL(link.href);
 		loading.value = false;
 	}
+
+	async function patchVorname(vorname: string | null) {
+		if (mandatoryInputIsValid(vorname, 80)) {
+			await props.patch({ vorname: vorname });
+		}
+	}
+
+	async function patchNachname(nachname: string | null) {
+		if (mandatoryInputIsValid(nachname, 120)) {
+			await props.patch({ nachname: nachname });
+		}
+	}
+
+	async function patchAlleVornamen(alleVornamen: string | null) {
+		if (optionalInputIsValid(alleVornamen, 255)) {
+			await props.patch({ alleVornamen: alleVornamen ?? undefined });
+		}
+	}
+
 
 </script>

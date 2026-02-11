@@ -30,11 +30,6 @@ export class BKGymFaecherManager extends JavaObject {
 	private readonly map: HashMap<number, BKGymFach> = new HashMap<number, BKGymFach>();
 
 	/**
-	 * Eine HashMap für den schnellen Zugriff auf die Fächer anhand der Bezeichnung des Faches
-	 */
-	private readonly mapByBezeichnung: HashMap<string, BKGymFach> = new HashMap<string, BKGymFach>();
-
-	/**
 	 * das Schuljahr, für welches der Fächer-Manager die Fächer verwaltet - relevant wg. der Fächergültigkeit laut ASD
 	 */
 	private readonly schuljahr: number;
@@ -58,6 +53,27 @@ export class BKGymFaecherManager extends JavaObject {
 	}
 
 	/**
+	 * Fügt die Fächer in der übergeben Liste zu diesem Manager hinzu.
+	 *
+	 * @param faecher   die hinzuzufügenden Fächer
+	 *
+	 * @return true, falls <i>alle</i> Fächer eingefügt wurden, sonst false
+	 */
+	private addAll(faecher: Collection<BKGymFach>): boolean {
+		const setOfBezeichnung: JavaSet<string> | null = new HashSet<string>();
+		let result: boolean = true;
+		for (const fach of faecher) {
+			if (!this.addFachInternal(fach))
+				result = false;
+			if (setOfBezeichnung.contains(fach.bezeichnung))
+				this.doppelteFaecher.add(fach.bezeichnung);
+			else
+				setOfBezeichnung.add(fach.bezeichnung);
+		}
+		return result;
+	}
+
+	/**
 	 * Fügt das übergebene Fach zu diesem Manager hinzu. Die interne Sortierung wird nicht korrigiert.
 	 *
 	 * @param fach   das hinzuzufügende Fach
@@ -77,27 +93,7 @@ export class BKGymFaecherManager extends JavaObject {
 		if (fke === null)
 			return false;
 		this.map.put(fach.id, fach);
-		if (this.mapByBezeichnung.get(fach.bezeichnung) !== null) {
-			this.doppelteFaecher.add(fach.bezeichnung);
-			return false;
-		}
-		this.mapByBezeichnung.put(fach.bezeichnung, fach);
-		return this.faecher.add(fach);
-	}
-
-	/**
-	 * Fügt die Fächer in der übergeben Liste zu diesem Manager hinzu.
-	 *
-	 * @param faecher   die hinzuzufügenden Fächer
-	 *
-	 * @return true, falls <i>alle</i> Fächer eingefügt wurden, sonst false
-	 */
-	private addAll(faecher: Collection<BKGymFach>): boolean {
-		let result: boolean = true;
-		for (const fach of faecher)
-			if (!this.addFachInternal(fach))
-				result = false;
-		return result;
+		return true;
 	}
 
 	/**
@@ -190,31 +186,6 @@ export class BKGymFaecherManager extends JavaObject {
 		if ((JavaObject.equalsTranspiler("", (fach.kuerzel))) || !BKGymFaecherManager.istFremdsprache(fach))
 			return null;
 		return fach.kuerzel.substring(0, 1).toUpperCase();
-	}
-
-	/**
-	 * Liefert das BKGymFach-Objekt für die gegebene Fachbezeichnung
-	 *
-	 * @param bezeichnung   die Bezeichnung des Fachs
-	 *
-	 * @return für vorhandene Fächer das Objekt sonst null
-	 */
-	public getFachByBezeichnung(bezeichnung: string): BKGymFach | null {
-		return this.mapByBezeichnung.get(bezeichnung);
-	}
-
-	/**
-	 * Liefert die FachID für die gegebene Fachbezeichnung
-	 *
-	 * @param bezeichnung   die Bezeichnung des Fachs
-	 *
-	 * @return die FachID für vorhandene Fächer sonst -1
-	 */
-	public getFachIDByBezeichnung(bezeichnung: string): number | null {
-		const fach: BKGymFach | null = this.mapByBezeichnung.get(bezeichnung);
-		if (fach === null)
-			return null;
-		return fach.id;
 	}
 
 	transpilerCanonicalName(): string {

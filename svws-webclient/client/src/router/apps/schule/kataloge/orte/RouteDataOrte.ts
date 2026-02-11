@@ -58,7 +58,7 @@ export class RouteDataOrte extends RouteDataAuswahl<OrteListeManager, RouteState
 		return `Ort ${ort?.ortsname ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
-	deleteCheck = (): [boolean, List<string>] => {
+	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
@@ -74,7 +74,7 @@ export class RouteDataOrte extends RouteDataAuswahl<OrteListeManager, RouteState
 			errorLog.add(this.getErrorMessageForReferencedOrte(idsOfReferencedOrte));
 		}
 
-		return [errorLog.isEmpty(), errorLog];
+		return { success: errorLog.isEmpty(), logs: errorLog };
 	};
 
 	private getErrorMessageForReferencedOrte(idsOfReferencedOrte: JavaSet<number>): string {

@@ -20,7 +20,7 @@ export default defineConfig({
 	// Reporter to use
 	outputDir: './build/test-results',
 
-	reporter: [['line'], ['junit', { outputFile: './build/test-results/zusammenfassung/e2e-results.xml' }]],
+	reporter: [['line'], ['junit', { outputFile: './build/test-results/e2e-stable-test-results.xml' }]],
 
 	// For expect calls
 	expect: {

@@ -20,19 +20,5 @@ describe("Kataloge Tests", () => {
 			expect(result).toMatchSnapshot();
 		});
 
-		test("getKatalogOrte", async () => {
-			const result = await api.getKatalogOrte(schema);
-			expect(result).toMatchSnapshot();
-		});
-
-		test("getKatalogOrtsteile", async () => {
-			const result = await api.getKatalogOrtsteile(schema);
-			expect(result).toMatchSnapshot();
-		});
-
-		test("getKatalogReligionen", async () => {
-			const result = await api.getKatalogReligionen(schema);
-			expect(result).toMatchSnapshot();
-		});
 	});
 });

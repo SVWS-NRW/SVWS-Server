@@ -1,4 +1,4 @@
-import { LehrerPersonalabschnittsdaten } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdaten';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { LehrerEinsatzstatus } from '../../../asd/types/lehrer/LehrerEinsatzstatus';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -7,25 +7,32 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll extends Validator {
 
 	/**
-	 * Die Lehrer-Personalabschnittsdaten
+	 * Das Pflichtstundensoll
 	 */
-	private readonly daten: LehrerPersonalabschnittsdaten;
+	private readonly pflichtstundensoll: Supplier<number | null>;
+
+	/**
+	 * Der Einsatzstatus
+	 */
+	private readonly einsatzstatus: Supplier<string | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param pflichtstundensoll    das Pflichtstundensoll
+	 * @param einsatzstatus    		Der Einsatzstatus
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: LehrerPersonalabschnittsdaten, kontext: ValidatorKontext) {
+	public constructor(pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<string | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.daten = daten;
+		this.pflichtstundensoll = pflichtstundensoll;
+		this.einsatzstatus = einsatzstatus;
 	}
 
 	protected pruefe(): boolean {
-		const pflichtstundensoll: number | null = this.daten.pflichtstundensoll;
-		const einsatzstatus: LehrerEinsatzstatus | null = LehrerEinsatzstatus.getBySchluessel(this.daten.einsatzstatus);
+		const pflichtstundensoll: number | null = this.pflichtstundensoll.get();
+		const einsatzstatus: LehrerEinsatzstatus | null = LehrerEinsatzstatus.getBySchluessel(this.einsatzstatus.get());
 		if (einsatzstatus as unknown === LehrerEinsatzstatus.B as unknown && pflichtstundensoll === 0.0) {
 			this.addFehler(2, "Bei Lehrkräften, die von einer anderen Schule abgeordnet wurden (Einsatzstatus = 'B'), darf das Pflichtstundensoll nicht 0,00 betragen.");
 			return false;

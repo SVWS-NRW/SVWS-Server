@@ -12,7 +12,7 @@
 							<span>{{ ValidatorFehlerart.MUSS }}</span>
 						</div>
 						<div v-for="f in mussNonStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
-							<span class="fehler-arrow-icon" />
+							<span class="fehler-icon" />
 							<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
 						</div>
 					</div>
@@ -22,7 +22,7 @@
 							<span>{{ ValidatorFehlerart.KANN }}</span>
 						</div>
 						<div v-for="f in kannNonStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
-							<span class="fehler-arrow-icon" />
+							<span class="fehler-icon" />
 							<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
 						</div>
 					</div>
@@ -32,7 +32,7 @@
 							<span>{{ ValidatorFehlerart.HINWEIS }}</span>
 						</div>
 						<div v-for="f in hinweisNonStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
-							<span class="fehler-arrow-icon" />
+							<span class="fehler-icon" />
 							<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
 						</div>
 					</div>
@@ -52,8 +52,7 @@
 							<span>{{ ValidatorFehlerart.MUSS }}</span>
 						</div>
 						<div v-for="f in mussStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
-							<span class="fehler-arrow-icon" />
-							<svws-ui-badge type="light" class="mr-2">{{ f.getFehlercode() }}</svws-ui-badge>
+							<div type="light" class="fehler-badge">{{ f.getFehlercode() }}</div>
 							<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
 						</div>
 					</div>
@@ -63,8 +62,7 @@
 							<span>{{ ValidatorFehlerart.KANN }}</span>
 						</div>
 						<div v-for="f in kannStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
-							<span class="fehler-arrow-icon" />
-							<svws-ui-badge type="light" class="mr-2">{{ f.getFehlercode() }}</svws-ui-badge>
+							<div type="light" class="fehler-badge">{{ f.getFehlercode() }}</div>
 							<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
 						</div>
 					</div>
@@ -74,8 +72,7 @@
 							<span>{{ ValidatorFehlerart.HINWEIS }}</span>
 						</div>
 						<div v-for="f in hinweisStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
-							<span class="fehler-arrow-icon" />
-							<svws-ui-badge type="light" class="mr-2">{{ f.getFehlercode() }}</svws-ui-badge>
+							<div type="light" class="fehler-badge">{{ f.getFehlercode() }}</div>
 							<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
 						</div>
 					</div>

@@ -31,7 +31,7 @@ export class BKGymAbiturMarkierungsregelFremdspracheZweiteNur extends BKGymAbitu
 	 * oder nur die 4 Kurse der zweiten Fremdsprache. Englisch wird erstmal nicht eingebracht.
 	 */
 	public markiere(variante: BKGymAbiturMarkierungsVariante): void {
-		const zweiteFremdsprache: string | null = variante.varianten.manager.getZweiteFremdspracheBezeichnung();
+		const zweiteFremdsprache: string | null = variante.varianten.abiturdatenManager.getFachbelegungManager().getZweiteFremdspracheBezeichnung();
 		if (zweiteFremdsprache === null) {
 			variante.addLogEintrag(1, "Fehler: Eine zweite Fremdsprache wurde nicht belegt.");
 			variante.setHatZulassung(false);

@@ -12,7 +12,7 @@
 		<div class="reset-page-counter start-new-page" th:each="lehrer,iterationVarLehrer : ${Lehrer}">
 
 			<!-- Innere Schleife über die Klassenunterrichte des Lehrers -->
-			<div th:if="${VorlageParameter.get('mitKlassenunterricht')}" class="start-new-page" th:each="klassenunterricht,iterationVarKlasse : ${lehrer.klassenunterrichtAlsFachlehrer()}" >
+			<div th:if="${VorlageParameter.get('mitKlassenunterricht')}" th:each="klassenunterricht,iterationVarKlasse : ${lehrer.klassenunterrichtAlsFachlehrer()}" >
 				<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 				<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
 				<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
@@ -21,7 +21,7 @@
 				</th:block>
 				<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
-				<table class="fixed-100 mp-0">
+				<table class="fixed-100 mp-0 m-b-6" style="page-break-inside: avoid;">
 					<colgroup>
 						<col style="width: 7mm;"/> <!-- lfd. Nr. -->
 						<col style="width: 56mm;"/> <!-- Name. Vorname (Ges.) -->
@@ -91,7 +91,7 @@
 				</table>
 
 				<th:block th:if="${VorlageParameter.get('mitBemerkungen') && klassenunterricht.hatSchuelerMitFachbezogenerBemerkung()}">
-					<table class="fixed-100 mp-0 m-t-6">
+					<table class="fixed-100 mp-0 m-b-6" style="page-break-inside: avoid;">
 						<colgroup>
 							<col style="width: 7mm;"/> <!-- lfd. Nr. -->
 							<col style="width: 56mm;"/> <!-- Name, Vorname (Ges.) -->
@@ -102,7 +102,7 @@
 								<th colspan="3">
 									<table class="fixed-100 mp-0">
 										<tr>
-											<th class="ta-lb bo-b-grey" style="width: 100%; font-size: 13pt; font-weight: bold;">
+											<th class="ta-lb bo-b-grey" style="width: 100%; font-size: 11pt; font-weight: bold;">
 												Fachbezogene Bemerkungen
 											</th>
 										</tr>
@@ -134,7 +134,7 @@
 			</div>
 
 			<!-- Innere Schleife über die Kursunterrichte des Lehrers -->
-			<div th:if="${VorlageParameter.get('mitKursunterricht')}" class="start-new-page" th:each="kursunterricht,iterationVarKursunterricht : ${lehrer.kursunterrichtAlsFachlehrer()}" >
+			<div th:if="${VorlageParameter.get('mitKursunterricht')}" th:each="kursunterricht,iterationVarKursunterricht : ${lehrer.kursunterrichtAlsFachlehrer()}" >
 				<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 				<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
 				<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
@@ -143,7 +143,7 @@
 				</th:block>
 				<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
-				<table class="fixed-100 mp-0">
+				<table class="fixed-100 mp-0 m-b-6" style="page-break-inside: avoid;">
 					<colgroup>
 						<col style="width: 7mm;"/> <!-- lfd. Nr. -->
 						<col style="width: 56mm;"/> <!-- Name. Vorname (Ges.) -->
@@ -213,7 +213,7 @@
 				</table>
 
 				<th:block th:if="${VorlageParameter.get('mitBemerkungen') && kursunterricht.hatSchuelerMitFachbezogenerBemerkung()}">
-					<table class="fixed-100 mp-0 m-t-6">
+					<table class="fixed-100 mp-0 m-b-6" style="page-break-inside: avoid;">
 						<colgroup>
 							<col style="width: 7mm;"/> <!-- lfd. Nr. -->
 							<col style="width: 56mm;"/> <!-- Name, Vorname (Ges.) -->
@@ -224,7 +224,7 @@
 								<th colspan="3">
 									<table class="fixed-100 mp-0">
 										<tr>
-											<th class="ta-lb bo-b-grey" style="width: 100%; font-size: 13pt; font-weight: bold;">
+											<th class="ta-lb bo-b-grey" style="width: 100%; font-size: 11pt; font-weight: bold;">
 												Fachbezogene Bemerkungen
 											</th>
 										</tr>

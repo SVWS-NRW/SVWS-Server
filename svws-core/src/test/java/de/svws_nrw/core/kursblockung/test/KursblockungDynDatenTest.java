@@ -68,8 +68,7 @@ class KursblockungDynDatenTest {
 
 		// GostBlockungsdatenManager --> KursblockungDynDaten
 		final Random random = new Random(seed);
-		final KursblockungDynDaten dyndaten = new KursblockungDynDaten(random, log, manager);
-		return dyndaten;
+		return new KursblockungDynDaten(random, log, manager);
 	}
 
 
@@ -113,8 +112,7 @@ class KursblockungDynDatenTest {
 
 		// GostBlockungsdatenManager --> KursblockungDynDaten
 		final Random random = new Random(seed);
-		final KursblockungDynDaten dyndaten = new KursblockungDynDaten(random, log, manager);
-		return dyndaten;
+		return new KursblockungDynDaten(random, log, manager);
 	}
 
 	private static void assertKeineNegativeBewertung(final KursblockungDynDaten dd1) {

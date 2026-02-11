@@ -26,7 +26,7 @@ public final class ValidatorLsv00LehrerStammdatenVorname extends Validator {
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
-		_validatoren.add(new ValidatorLsv01LehrerStammdatenVorname(getNotNullSupplier(daten), kontext));
+		_validatoren.add(new ValidatorLsv10LehrerStammdatenVorname(getNotNullSupplier(daten), kontext));
 
 	}
 

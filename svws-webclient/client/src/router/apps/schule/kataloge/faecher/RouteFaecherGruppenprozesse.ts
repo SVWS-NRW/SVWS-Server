@@ -20,23 +20,20 @@ export class RouteFaecherGruppenprozesse extends RouteNode<any, RouteFaecher> {
 		super.text = "Gruppenprozesse";
 	}
 
-	protected async update(): Promise<void | Error | RouteLocationRaw> {
-		await routeFaecher.data.updateMapStundenplaene();
-	}
-
 	public getRoute(): RouteLocationRaw {
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
 	}
 
-	public getProps(to: RouteLocationNormalized): FaecherGruppenprozesseProps {
+	public getProps(_: RouteLocationNormalized): FaecherGruppenprozesseProps {
 		return {
 			getPDF: routeFaecher.data.getPDF,
-			stundenplaeneById: routeFaecher.data.stundenplaeneById,
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeFaecher.data.manager,
-			deleteFaecher: routeFaecher.data.delete,
-			deleteFaecherCheck: routeFaecher.data.deleteFaecherCheck,
+			delete: routeFaecher.data.delete,
+			deleteCheck: routeFaecher.data.deleteCheck,
+			sortFaecher: routeFaecher.data.sortFaecher,
+			schuljahr: api.abschnitt.schuljahr,
 		};
 	}
 

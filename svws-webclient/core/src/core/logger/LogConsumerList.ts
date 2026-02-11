@@ -113,19 +113,19 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 		} else if (((__param0 !== undefined) && (typeof __param0 === "string"))) {
 			const indent: string = __param0;
 			const result: ArrayList<string> | null = new ArrayList<string>();
-			let temp: string = indent;
+			let sb: StringBuilder = new StringBuilder(indent);
 			for (let i: number = 0; i < this.logData.size(); i++) {
 				const data: LogData = this.logData.get(i);
 				if (data === null)
 					continue;
-				temp += data.getText();
+				sb.append(data.getText());
 				if (data.isNewLine()) {
-					result.add(temp);
-					temp = indent;
+					result.add(sb.toString());
+					sb = new StringBuilder(indent);
 				}
 			}
-			if (!JavaObject.equalsTranspiler(indent, (temp)))
-				result.add(temp);
+			if (!JavaObject.equalsTranspiler(indent, (sb.toString())))
+				result.add(sb.toString());
 			return result;
 		} else throw new Error('invalid method overload');
 	}
@@ -145,7 +145,7 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 	 * Gibt die gesammelten Log-Informationen als Text zurück, bei dem
 	 * die einzelnen Log-Informationen durch Zeilenumbrüche voneinander
 	 * getrennt werden. Dabei werden Informationen ausgelassen,
-	 * die aufgrund des angebenen Log-Levels nicht berücksichtigt werden
+	 * die aufgrund des angegebenen Log-Levels nicht berücksichtigt werden
 	 * sollen.
 	 *
 	 * @param level    das Log-Level, welches mindestens geben sein muss, damit die
@@ -159,7 +159,7 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 	 * Gibt die gesammelten Log-Informationen als Text zurück, bei dem
 	 * die einzelnen Log-Informationen durch Zeilenumbrüche voneinander
 	 * getrennt werden. Dabei werden Informationen ausgelassen,
-	 * die aufgrund des angebenen Log-Levels nicht berücksichtigt werden
+	 * die aufgrund des angegebenen Log-Levels nicht berücksichtigt werden
 	 * sollen.
 	 *
 	 * @param level    das Log-Level, welches mindestens geben sein muss, damit die

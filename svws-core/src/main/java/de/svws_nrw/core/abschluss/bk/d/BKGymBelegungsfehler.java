@@ -27,12 +27,13 @@ public class BKGymBelegungsfehler {
 	 * @param fehlertyp   der Belegungsfehler, der mit den args präzisiert wird
 	 * @param args        die Parameter für den Belegungsfehler.
 	 */
-	public BKGymBelegungsfehler(@NotNull final BKGymBelegungsfehlerTyp fehlertyp, final Object... args) {
+	public BKGymBelegungsfehler(final @NotNull BKGymBelegungsfehlerTyp fehlertyp, final Object... args) {
 		this.code = fehlertyp.code;
 		this.art = fehlertyp.art;
 		this.wert = fehlertyp.wert;
 		this.text = fehlertyp.format(args);
 	}
+
 
 	/**
 	 * Reicht die Information, ob es ein Fehler ist, durch
@@ -42,6 +43,7 @@ public class BKGymBelegungsfehler {
 	public boolean istFehler() {
 		return (this.art != BKGymBelegungsfehlerArt.HINWEIS);
 	}
+
 
 	/**
 	 * Reicht die Information, ob die Fehlerart HINWEIS vorliegt

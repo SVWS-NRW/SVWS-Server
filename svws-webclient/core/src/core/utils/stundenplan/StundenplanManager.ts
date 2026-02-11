@@ -34,6 +34,7 @@ import { StundenplanKomplett, cast_de_svws_nrw_core_data_stundenplan_Stundenplan
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { StundenplanUnterrichtsverteilung, cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterrichtsverteilung } from '../../../core/data/stundenplan/StundenplanUnterrichtsverteilung';
 import type { JavaSet } from '../../../java/util/JavaSet';
+import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { LongArrayKey } from '../../../core/adt/LongArrayKey';
 import { Map3DUtils } from '../../../core/utils/Map3DUtils';
 import { StringUtils } from '../../../core/utils/StringUtils';
@@ -1984,7 +1985,7 @@ export class StundenplanManager extends JavaObject {
 			if (pz.ende === null)
 				continue;
 			let wert: number = this._wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.getOrException(pa.idLehrer, pab.wochentyp).valueOf();
-			wert++;
+			wert += 1.0;
 			this._wertPausenaufsichtAnzahl_by_idLehrkraft_and_wochentyp.put(pa.idLehrer, pab.wochentyp, wert);
 		}
 		for (const lehrer of this._lehrermenge_sortiert) {
@@ -3765,18 +3766,19 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private lehrerInfo(lehrer: StundenplanLehrer): string {
-		let s: string | null = "[StundenplanLehrer";
-		s += "(id=" + lehrer.id + ")";
-		s += "(kuerzel=" + lehrer.kuerzel + ")";
-		s += "(nachname=" + lehrer.nachname + ")";
-		s += "(vorname=" + lehrer.vorname + ")";
-		s += "(faecher=" + lehrer.faecher.size() + ":";
+		const sb: StringBuilder = new StringBuilder();
+		sb.append("[StundenplanLehrer");
+		sb.append("(id=" + lehrer.id + ")");
+		sb.append("(kuerzel=" + lehrer.kuerzel + ")");
+		sb.append("(nachname=" + lehrer.nachname + ")");
+		sb.append("(vorname=" + lehrer.vorname + ")");
+		sb.append("(faecher=" + lehrer.faecher.size() + ":");
 		for (const idFach of lehrer.faecher) {
-			s += this.fachInfoByID(idFach);
+			sb.append(this.fachInfoByID(idFach));
 		}
-		s += ")";
-		s += "]";
-		return s;
+		sb.append(")");
+		sb.append("]");
+		return sb.toString();
 	}
 
 	private lehrerCompareByLehrerIDs(a: List<number>, b: List<number>): number {
@@ -3995,17 +3997,18 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private pausenaufsichtInfo(pa: StundenplanPausenaufsicht): string {
-		let s: string | null = "[StundenplanPausenaufsicht";
-		s += "(id=" + pa.id + ")";
-		s += "(idPausenzeit=" + pa.idPausenzeit + ")";
-		s += "(idLehrer=" + pa.idLehrer + ")";
-		s += "(bereiche=" + pa.bereiche.size() + " : ";
+		const sb: StringBuilder = new StringBuilder();
+		sb.append("[StundenplanPausenaufsicht");
+		sb.append("(id=" + pa.id + ")");
+		sb.append("(idPausenzeit=" + pa.idPausenzeit + ")");
+		sb.append("(idLehrer=" + pa.idLehrer + ")");
+		sb.append("(bereiche=" + pa.bereiche.size() + " : ");
 		for (const a of pa.bereiche) {
-			s += StundenplanManager.pausenaufsichtbereichInfo(a);
+			sb.append(StundenplanManager.pausenaufsichtbereichInfo(a));
 		}
-		s += ")";
-		s += "]";
-		return s;
+		sb.append(")");
+		sb.append("]");
+		return sb.toString();
 	}
 
 	/**
@@ -6116,15 +6119,15 @@ export class StundenplanManager extends JavaObject {
 
 	private unterrichtGetBeschreibungKurz(u: StundenplanUnterricht): string | null {
 		if (u.idKurs === null) {
-			let s: string = "";
+			const sb: StringBuilder = new StringBuilder();
 			const fach: StundenplanFach | null = this._fach_by_id.get(u.idFach);
-			s += (fach === null) ? "Fach ???" : fach.kuerzel;
-			s += " ";
+			sb.append(fach === null ? "Fach ???" : fach.kuerzel);
+			sb.append(" ");
 			for (const idKlasse of u.klassen) {
 				const klasse: StundenplanKlasse | null = this._klasse_by_id.get(idKlasse);
-				s += (klasse === null) ? "Klasse ???" : klasse.kuerzel;
+				sb.append(klasse === null ? "Klasse ???" : klasse.kuerzel);
 			}
-			return s;
+			return sb.toString();
 		}
 		const kurs: StundenplanKurs | null = this._kurs_by_id.get(u.idKurs);
 		return (kurs === null) ? "Kurs ???" : kurs.bezeichnung;

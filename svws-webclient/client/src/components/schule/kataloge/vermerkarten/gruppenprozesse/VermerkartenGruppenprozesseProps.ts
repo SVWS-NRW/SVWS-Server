@@ -6,5 +6,5 @@ export interface VermerkartenGruppenprozesseProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => VermerkartenListeManager;
 	delete: () => Promise<[boolean, List<string | null>]>;
-	deleteCheck: () => [boolean, List<string>];
+	deleteCheck: () => { success: boolean, logs: Iterable<string> };
 }

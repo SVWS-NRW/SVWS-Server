@@ -164,7 +164,7 @@
 	const cols = computed(() => {
 		const arr = [{ key: "idKlasse", label: "Klasse", sortable: true, span: 1 },
 			{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
-			{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
+			{ key: "vorname", label: "Rufname", sortable: true, span: 2 },
 		];
 		// if (primarstufe.value)
 		// 	arr.push({ key: "epJahre", label: "Jg", sortable: false, span: 1 });

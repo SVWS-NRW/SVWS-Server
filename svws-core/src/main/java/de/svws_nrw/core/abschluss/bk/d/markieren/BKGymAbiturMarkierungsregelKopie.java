@@ -38,7 +38,7 @@ public class BKGymAbiturMarkierungsregelKopie extends BKGymAbiturMarkierungsrege
 	 */
 	@Override
 	public void markiere(final @NotNull BKGymAbiturMarkierungsVariante variante) {
-		if (facharbeit && !variante.varianten.manager.istFacharbeitVorhanden())
+		if (facharbeit && !variante.varianten.abiturdatenManager.istFacharbeitVorhanden())
 			return;
 		variante.varianten.addVariante(new BKGymAbiturMarkierungsVariante(variante, kennung, facharbeit));
 	}

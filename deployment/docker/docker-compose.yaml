@@ -1,0 +1,94 @@
+version: "3.9"
+
+volumes:
+  svws_keystore:
+  svws_logs:
+  mariadb_data:
+  svws_db_backups:
+    # persistent volume for backups
+
+services:
+  # -----------------------------
+  # MariaDB Database
+  # -----------------------------
+  mariadb:
+    image: mariadb:11.7
+    restart: unless-stopped
+    command: >
+      --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --bind-address=0.0.0.0
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - coolify
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # -----------------------------
+  # SVWS Backend
+  # -----------------------------
+  svws:
+    build:
+      dockerfile: deployment/docker/svws/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    environment:
+      MARIADB_HOST: mariadb
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      SVWS_TLS_KEYSTORE_PATH: /etc/app/svws/conf/keystore
+      SVWS_TLS_KEYSTORE_PASSWORD: ${SVWS_TLS_KEYSTORE_PASSWORD}
+      SVWS_TLS_KEY_ALIAS: ${SVWS_TLS_KEY_ALIAS}
+      IMPORT_TEST_DATA: "false"
+    volumes:
+      - svws_keystore:/etc/app/svws/conf/keystore
+      - svws_logs:/opt/app/svws/logs
+    networks:
+      - coolify
+    labels:
+      - "traefik.enable=true"
+      # HTTP Router
+      - "traefik.http.routers.svws-http.rule=Host(`svws.schoolboost.de`)"
+      - "traefik.http.routers.svws-http.entrypoints=http"
+      - "traefik.http.routers.svws-http.middlewares=svws-redirect-to-https"
+      # HTTPS Router
+      - "traefik.http.routers.svws-https.rule=Host(`svws.schoolboost.de`)"
+      - "traefik.http.routers.svws-https.entrypoints=https"
+      - "traefik.http.routers.svws-https.tls=true"
+      - "traefik.http.routers.svws-https.tls.certresolver=letsencrypt"
+      # Middleware
+      - "traefik.http.middlewares.svws-redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.svws-redirect-to-https.redirectscheme.permanent=true"
+      # Service port
+      - "traefik.http.services.svws.loadbalancer.server.port=8443"
+      - "traefik.http.services.svws.loadbalancer.server.scheme=https"
+
+  # -----------------------------
+  # Backup Container
+  # -----------------------------
+  svws_backup:
+    build:
+      dockerfile: deployment/docker/backup/Dockerfile
+    depends_on:
+      - mariadb
+    environment:
+      MARIADB_USER: root
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - svws_db_backups:/backups
+    networks:
+      - coolify
+    restart: unless-stopped
+
+networks:
+  coolify:
+    external: true

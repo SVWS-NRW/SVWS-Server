@@ -1,11 +1,15 @@
 package de.svws_nrw.data.schueler;
 
 
-import de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.schueler.SchuelerKAoADaten;
-
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
@@ -17,74 +21,39 @@ import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatException;
 import static org.assertj.core.api.Assertions.catchThrowable;
-
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 /**
  * Diese Klasse testet die Klasse {@link DataSchuelerKAoADaten}.
  */
 @DisplayName("Diese Klasse testet die Klasse DataSchuelerKAoADaten")
-@TestMethodOrder(MethodOrderer.MethodName.class)
 class DataSchuelerKAoADatenTest {
 
-	/** Definition STATUS */
-	static final String STATUS = "status";
-
-	/** Definition ID */
-	static final String ID = "id";
-
-	/** Definition SCHULJAHRESABSCHNTT */
-	static final String SCHULJAHRESABSCHNTT = "idSchuljahresabschnitt";
-
-	/** Definition JAHRGANG */
-	static final String JAHRGANG = "idJahrgang";
-
-	/** Definition KATEGORIE */
-	static final String KATEGORIE = "idKategorie";
-
-	/** Definition MERKMAL */
-	static final String MERKMAL = "idMerkmal";
-
-	/** Definition ZUSATZMERKMAL */
-	static final String ZUSATZMERKMAL = "idZusatzmerkmal";
-
-	/** Definition ANSCHLUSSOPTION */
-	static final String ANSCHLUSSOPTION = "idAnschlussoption";
-
-	/** Definition BERUFSFELD */
-	static final String BERUFSFELD = "idBerufsfeld";
-
-	/** Definition EBENE_4 */
-	static final String EBENE_4 = "idEbene4";
-
-	/** Definition BEMERKUNG */
-	static final String BEMERKUNG = "bemerkung";
-
+	private static final String STATUS = "status";
+	private static final String ID = "id";
+	private static final String SCHULJAHRESABSCHNTT = "idSchuljahresabschnitt";
+	private static final String JAHRGANG = "idJahrgang";
+	private static final String KATEGORIE = "idKategorie";
+	private static final String MERKMAL = "idMerkmal";
+	private static final String ZUSATZMERKMAL = "idZusatzmerkmal";
+	private static final String ANSCHLUSSOPTION = "idAnschlussoption";
+	private static final String BERUFSFELD = "idBerufsfeld";
+	private static final String EBENE_4 = "idEbene4";
+	private static final String BEMERKUNG = "bemerkung";
 	private final DBEntityManager conn = mock(DBEntityManager.class);
-
-	private DataSchuelerKAoADaten dataSchuelerKAoADaten;
+	private DataSchuelerKAoADaten data;
 
 	@BeforeAll
 	static void setUpAll() {
@@ -95,7 +64,75 @@ class DataSchuelerKAoADatenTest {
 	void setUp() throws ApiOperationException {
 		final Long schuelerId = 123L;
 		when(conn.queryByKey(DTOSchueler.class, schuelerId)).thenReturn(mock(DTOSchueler.class));
-		dataSchuelerKAoADaten = new DataSchuelerKAoADaten(conn, schuelerId);
+		data = new DataSchuelerKAoADaten(conn, schuelerId);
+	}
+
+	@Test
+	@DisplayName("constructor | wrong schuelerID")
+	void constructorTest_WrongSchuelerID() {
+		when(conn.queryByKey(DTOSchueler.class, 1L)).thenReturn(null);
+
+		assertThatException()
+				.isThrownBy(() -> new DataSchuelerKAoADaten(conn, 1L))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Kein Schueler mit der ID 1 gefunden.")
+				.hasFieldOrPropertyWithValue(STATUS, Response.Status.NOT_FOUND);
+	}
+
+	@ParameterizedTest
+	@DisplayName("checkBeforeCreation | Erfolg")
+	@MethodSource("provideSchuelerKAoADatenForSuccess")
+	void checkBeforeCreation_Success(final Map<String, Object> initAttributes) {
+		final var schuljahresabschnitt = new Schuljahresabschnitt();
+		schuljahresabschnitt.schuljahr = 2024;
+		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
+		when(this.conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(7L)).thenReturn(schuljahresabschnitt);
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
+		lernabschnittsdaten.WechselNr = 0;
+		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L)).thenReturn(lernabschnittsdaten);
+		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
+				.thenReturn(List.of(lernabschnittsdaten));
+
+		assertDoesNotThrow(() -> data.checkBeforeCreation(1L, initAttributes));
+	}
+
+	@Test
+	@DisplayName("checkBeforePatch | Erfolg")
+	void checkBeforePatch() {
+		final var schuljahresabschnitt = new Schuljahresabschnitt();
+		schuljahresabschnitt.schuljahr = 2024;
+		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
+		when(this.conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(7L)).thenReturn(schuljahresabschnitt);
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
+		lernabschnittsdaten.WechselNr = 0;
+		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L)).thenReturn(lernabschnittsdaten);
+		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
+				.thenReturn(List.of(lernabschnittsdaten));
+		final var dto = new DTOSchuelerKAoADaten(1L, 7L, 10L);
+		dto.jahrgang = "08";
+		dto.idMerkmal = 51L;
+		dto.idZusatzmerkmal = 68L;
+		dto.bemerkung = "schule ist toll!";
+
+		assertDoesNotThrow(() -> data.checkBeforePatch(dto, Map.of("bemerkung", "Freizeit aber auch!")));
+	}
+
+	@Test
+	@DisplayName("patchCoreDTo - wrong field")
+	void patchCoreDtoTest() {
+		final var initAttributes = new HashMap<String, Object>();
+		initAttributes.put(SCHULJAHRESABSCHNTT, 7L);
+		initAttributes.put(JAHRGANG, 8000000L);
+		initAttributes.put("hakuna matata", 10L);
+		initAttributes.put(MERKMAL, 51L);
+		initAttributes.put(ZUSATZMERKMAL, 68);
+		initAttributes.put(BEMERKUNG, "schule ist toll!");
+
+		assertThatException()
+				.isThrownBy(() -> data.checkBeforeCreation(1L, initAttributes))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die Daten des Patches enthalten das unbekannte Attribut hakuna matata.")
+				.hasFieldOrPropertyWithValue(STATUS, Response.Status.BAD_REQUEST);
 	}
 
 	@Test
@@ -103,95 +140,139 @@ class DataSchuelerKAoADatenTest {
 	void initDTOTest() throws ApiOperationException {
 		final var schuelerKAoADaten = new DTOSchuelerKAoADaten(1L, 1L, 1L);
 
-		this.dataSchuelerKAoADaten.initDTO(schuelerKAoADaten, 2L, null);
+		this.data.initDTO(schuelerKAoADaten, 2L, null);
 
 		assertThat(schuelerKAoADaten.id).isEqualTo(2L);
 	}
 
 	@Test
-	@DisplayName("constructor | wrong schuelerID")
-	void constructorTest_WrongSchuelerID() {
-		when(conn.queryByKey(DTOSchueler.class, 1L)).thenReturn(null);
-		final var throwable = catchThrowable(() -> dataSchuelerKAoADaten = new DataSchuelerKAoADaten(conn, 1L));
-
-		assertThat(throwable)
+	@DisplayName("getByID | ID can't be null")
+	void getByIdNull() {
+		assertThatException()
+				.isThrownBy(() -> this.data.getById(null))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Keine SchuelerDaten mit der ID 1 gefunden")
-				.hasFieldOrPropertyWithValue(STATUS, Response.Status.NOT_FOUND);
-	}
-
-	@Test
-	@DisplayName("getById | Erfolg")
-	void getByIdTest() throws ApiOperationException {
-		dataSchuelerKAoADaten = spy(dataSchuelerKAoADaten);
-		final var data = new DTOSchuelerKAoADaten(123L, 7L, 10L);
-		data.jahrgang = "08";
-		data.idMerkmal = 51L;
-		data.idZusatzmerkmal = 68L;
-		data.idAnschlussoption = 22L;
-		data.idBerufsfeld = 12L;
-		data.idEbene4 = 11L;
-		data.bemerkung = "schule ist toll";
-		when(this.conn.queryByKey(DTOSchuelerKAoADaten.class, 123L)).thenReturn(data);
-		final var jahrgaengeKatalogEintrag = new JahrgaengeKatalogEintrag();
-		jahrgaengeKatalogEintrag.id = 1L;
-		doReturn(jahrgaengeKatalogEintrag).when(dataSchuelerKAoADaten).getJahrgaengeKatalogEintrag(any());
-		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
-		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L))
-				.thenReturn(lernabschnittsdaten);
-
-		assertThat(dataSchuelerKAoADaten.getById(123L))
-				.isInstanceOf(SchuelerKAoADaten.class)
-				.hasFieldOrPropertyWithValue(ID, 123L);
+				.withMessage("Die ID darf nicht null sein.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
 	@DisplayName("getById | wrong Id")
 	void getByIdTest_wrongId() {
-		when(this.conn.queryByKey(any(), any())).thenReturn(null);
-
-		final var throwable = catchThrowable(() -> dataSchuelerKAoADaten.getById(123L));
-
-		assertThat(throwable)
+		assertThatException()
+				.isThrownBy(() -> this.data.getById(123L))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Keine SchuelerKAoADaten mit der ID 123 gefunden")
+				.withMessage("Keine KAoADaten mit der ID 123 gefunden")
 				.hasFieldOrPropertyWithValue(STATUS, Response.Status.NOT_FOUND);
 	}
 
 	@Test
-	@DisplayName("map | erfolgreiches mapping")
-	void mapTest() throws ApiOperationException {
-		dataSchuelerKAoADaten = spy(dataSchuelerKAoADaten);
-		final var dtoSchuelerKAoADaten = new DTOSchuelerKAoADaten(123L, 123L, 10L);
-		dtoSchuelerKAoADaten.idMerkmal = 51L;
-		dtoSchuelerKAoADaten.idZusatzmerkmal = 68L;
-		dtoSchuelerKAoADaten.idAnschlussoption = 22L;
-		dtoSchuelerKAoADaten.idBerufsfeld = 12L;
-		dtoSchuelerKAoADaten.idEbene4 = 11L;
-		dtoSchuelerKAoADaten.jahrgang = "08";
-		dtoSchuelerKAoADaten.bemerkung = "schule ist toll";
-		final var jahrgaengeKatalogEintrag = new JahrgaengeKatalogEintrag();
-		jahrgaengeKatalogEintrag.id = 8000000L;
-		doReturn(jahrgaengeKatalogEintrag).when(dataSchuelerKAoADaten).getJahrgaengeKatalogEintrag(any());
-		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
-		lernabschnittsdaten.WechselNr = 0;
-		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
-				.thenReturn(List.of(lernabschnittsdaten));
-		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 123L))
-				.thenReturn(lernabschnittsdaten);
+	@DisplayName("map | erfolg")
+	void map() throws ApiOperationException {
+		final var lernabschnitt = new DTOSchuelerLernabschnittsdaten(1L, 1L, 789L, true, true);
+		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 456L)).thenReturn(lernabschnitt);
+		final var schuljahresabschnitt = new Schuljahresabschnitt();
+		schuljahresabschnitt.schuljahr = 2024;
+		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
+		when(this.conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(789L)).thenReturn(schuljahresabschnitt);
 
-		assertThat(this.dataSchuelerKAoADaten.map(dtoSchuelerKAoADaten))
+		final var dto = new DTOSchuelerKAoADaten(1L, 456L, 3L);
+		dto.idMerkmal = 4L;
+		dto.idZusatzmerkmal = 5L;
+		dto.idAnschlussoption = 6L;
+		dto.idEbene4 = 7L;
+		dto.idBerufsfeld = 8L;
+		dto.jahrgang = Jahrgaenge.data().getWerte().getFirst().historie().getFirst().schluessel;
+		dto.bemerkung = "Test Bemerkung";
+
+		final var result = this.data.map(dto);
+
+		assertThat(result)
+				.isNotNull()
 				.isInstanceOf(SchuelerKAoADaten.class)
-				.hasFieldOrPropertyWithValue(ID, 123L)
-				.hasFieldOrPropertyWithValue(SCHULJAHRESABSCHNTT, 7L)
-				.hasFieldOrPropertyWithValue(KATEGORIE, 10L)
-				.hasFieldOrPropertyWithValue(MERKMAL, 51L)
-				.hasFieldOrPropertyWithValue(ZUSATZMERKMAL, 68L)
-				.hasFieldOrPropertyWithValue(ANSCHLUSSOPTION, 22L)
-				.hasFieldOrPropertyWithValue(BERUFSFELD, 12L)
-				.hasFieldOrPropertyWithValue(EBENE_4, 11L)
-				.hasFieldOrPropertyWithValue(JAHRGANG, 8000000L)
-				.hasFieldOrPropertyWithValue(BEMERKUNG, "schule ist toll");
+				.hasFieldOrPropertyWithValue("id", 1L)
+				.hasFieldOrPropertyWithValue("idKategorie", 3L)
+				.hasFieldOrPropertyWithValue("idMerkmal", 4L)
+				.hasFieldOrPropertyWithValue("idZusatzmerkmal", 5L)
+				.hasFieldOrPropertyWithValue("idAnschlussoption", 6L)
+				.hasFieldOrPropertyWithValue("idEbene4", 7L)
+				.hasFieldOrPropertyWithValue("idBerufsfeld", 8L)
+				.hasFieldOrPropertyWithValue("idSchuljahresabschnitt", 789L)
+				.hasFieldOrPropertyWithValue("bemerkung", "Test Bemerkung");
+	}
+
+	@Test
+	@DisplayName("map | field null")
+	void mapFieldsNull() throws ApiOperationException {
+		final var lernabschnitt = new DTOSchuelerLernabschnittsdaten(1L, 1L, 789L, true, true);
+		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 456L)).thenReturn(lernabschnitt);
+		final var schuljahresabschnitt = new Schuljahresabschnitt();
+		schuljahresabschnitt.schuljahr = 2024;
+		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
+		when(this.conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(789L)).thenReturn(schuljahresabschnitt);
+
+		final var dto = new DTOSchuelerKAoADaten(1L, 456L, 3L);
+		dto.idMerkmal = null;
+		dto.idZusatzmerkmal = null;
+		dto.jahrgang = Jahrgaenge.data().getWerte().getFirst().historie().getFirst().schluessel;
+
+		final var result = this.data.map(dto);
+
+		assertThat(result)
+				.isNotNull()
+				.isInstanceOf(SchuelerKAoADaten.class)
+				.hasFieldOrPropertyWithValue("idMerkmal", -1L)
+				.hasFieldOrPropertyWithValue("idZusatzmerkmal", -1L);
+	}
+
+	@Test
+	@DisplayName("map | jahrgang null")
+	void mapJahrgangNull() {
+		assertThatException()
+				.isThrownBy(() -> this.data.map(new DTOSchuelerKAoADaten(1L, 456L, 3L)))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Jahrgang ist null.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("getAll")
+	void getAll() throws ApiOperationException {
+		final var lernabschnitt = new DTOSchuelerLernabschnittsdaten(1L, 1L, 789L, true, true);
+		final var dto = new DTOSchuelerKAoADaten(1L, 456L, 3L);
+		dto.idMerkmal = 4L;
+		dto.idZusatzmerkmal = 5L;
+		dto.idAnschlussoption = 6L;
+		dto.idEbene4 = 7L;
+		dto.idBerufsfeld = 8L;
+		dto.jahrgang = Jahrgaenge.data().getWerte().getFirst().historie().getFirst().schluessel;
+		dto.bemerkung = "Test Bemerkung";
+		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHUELER_ID, DTOSchuelerLernabschnittsdaten.class, 123L))
+				.thenReturn(List.of(lernabschnitt));
+		when(this.conn.queryList(DTOSchuelerKAoADaten.QUERY_LIST_BY_IDLERNABSCHNITT, DTOSchuelerKAoADaten.class, List.of(1L)))
+				.thenReturn(List.of(dto));
+
+		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 456L)).thenReturn(lernabschnitt);
+		final var schuljahresabschnitt = new Schuljahresabschnitt();
+		schuljahresabschnitt.schuljahr = 2024;
+		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
+		when(this.conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(789L)).thenReturn(schuljahresabschnitt);
+
+
+		assertThat(this.data.getAll())
+				.hasSize(1)
+				.satisfiesExactly(
+						s -> assertThat(s)
+								.isNotNull()
+								.isInstanceOf(SchuelerKAoADaten.class)
+								.hasFieldOrPropertyWithValue("id", 1L)
+								.hasFieldOrPropertyWithValue("idKategorie", 3L)
+								.hasFieldOrPropertyWithValue("idMerkmal", 4L)
+								.hasFieldOrPropertyWithValue("idZusatzmerkmal", 5L)
+								.hasFieldOrPropertyWithValue("idAnschlussoption", 6L)
+								.hasFieldOrPropertyWithValue("idEbene4", 7L)
+								.hasFieldOrPropertyWithValue("idBerufsfeld", 8L)
+								.hasFieldOrPropertyWithValue("idSchuljahresabschnitt", 789L)
+								.hasFieldOrPropertyWithValue("bemerkung", "Test Bemerkung"));
 	}
 
 	@ParameterizedTest
@@ -204,7 +285,7 @@ class DataSchuelerKAoADatenTest {
 		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 2L))
 				.thenReturn(List.of(lernabschnittsdaten));
 
-		final var throwable = catchThrowable(() -> this.dataSchuelerKAoADaten.mapAttribute(expectedDTO, key, value, null));
+		final var throwable = catchThrowable(() -> this.data.mapAttribute(expectedDTO, key, value, null));
 
 		switch (key) {
 			case JAHRGANG -> assertThat(expectedDTO.jahrgang).isEqualTo("08");
@@ -226,95 +307,10 @@ class DataSchuelerKAoADatenTest {
 	@Test
 	@DisplayName("mapAttribute | Value null -> Exception")
 	void mapAttributeTest_ValueNull() {
-		final var throwable = catchThrowable(() -> this.dataSchuelerKAoADaten.mapAttribute(mock(DTOSchuelerKAoADaten.class), KATEGORIE, null, null));
-
-		assertThat(throwable)
+		assertThatException()
+				.isThrownBy(() -> this.data.mapAttribute(mock(DTOSchuelerKAoADaten.class), KATEGORIE, null, null))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Attribut Kategorie: Der Wert null ist nicht erlaubt")
-				.hasFieldOrPropertyWithValue(STATUS, Response.Status.BAD_REQUEST);
-	}
-
-	@Test
-	@DisplayName("getAll | erfolg")
-	void getAllTest() throws ApiOperationException {
-		dataSchuelerKAoADaten = spy(dataSchuelerKAoADaten);
-		final var dtoSchuelerKAoADaten = new DTOSchuelerKAoADaten(123L, 7L, 10L);
-		dtoSchuelerKAoADaten.idMerkmal = 51L;
-		dtoSchuelerKAoADaten.idZusatzmerkmal = 51L;
-		final DTOSchuelerLernabschnittsdaten lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
-		lernabschnittsdaten.WechselNr = 0;
-		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L))
-				.thenReturn(lernabschnittsdaten);
-		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHUELER_ID, DTOSchuelerLernabschnittsdaten.class, 123L))
-				.thenReturn(List.of(lernabschnittsdaten));
-		when(this.conn.queryList(any(), eq(DTOSchuelerKAoADaten.class), any())).thenReturn(List.of(dtoSchuelerKAoADaten));
-		final var jahrgaengeKatalogEintrag = new JahrgaengeKatalogEintrag();
-		jahrgaengeKatalogEintrag.id = 8000000L;
-		doReturn(jahrgaengeKatalogEintrag).when(dataSchuelerKAoADaten).getJahrgaengeKatalogEintrag(any());
-
-		assertThat(((List<?>) this.dataSchuelerKAoADaten.getAll()).getFirst())
-				.isInstanceOf(SchuelerKAoADaten.class)
-				.hasFieldOrPropertyWithValue(ID, 123L)
-				.hasFieldOrPropertyWithValue(SCHULJAHRESABSCHNTT, 7L)
-				.hasFieldOrPropertyWithValue(KATEGORIE, 10L)
-				.hasFieldOrPropertyWithValue(MERKMAL, 51L);
-	}
-
-	@ParameterizedTest
-	@DisplayName("checkBeforeCreation | Erfolg")
-	@MethodSource("provideSchuelerKAoADatenForSuccess")
-	void checkBeforeCreation_Success(final Map<String, Object> initAttributes) {
-		final var schuljahresabschnitt = new Schuljahresabschnitt();
-		schuljahresabschnitt.schuljahr = 2024;
-		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
-		when(this.conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(7L)).thenReturn(schuljahresabschnitt);
-		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
-		lernabschnittsdaten.WechselNr = 0;
-		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L))
-				.thenReturn(lernabschnittsdaten);
-		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
-				.thenReturn(List.of(lernabschnittsdaten));
-		assertDoesNotThrow(() -> dataSchuelerKAoADaten.checkBeforeCreation(1L, initAttributes));
-	}
-
-	@Test
-	@DisplayName("checkBeforePatch | Erfolg")
-	void checkBeforePatch() {
-		final var schuljahresabschnitt = new Schuljahresabschnitt();
-		schuljahresabschnitt.schuljahr = 2024;
-		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
-		when(this.conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(7L)).thenReturn(schuljahresabschnitt);
-		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
-		lernabschnittsdaten.WechselNr = 0;
-		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L))
-				.thenReturn(lernabschnittsdaten);
-		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
-				.thenReturn(List.of(lernabschnittsdaten));
-		final var dto = new DTOSchuelerKAoADaten(1L, 7L, 10L);
-		dto.jahrgang = "08";
-		dto.idMerkmal = 51L;
-		dto.idZusatzmerkmal = 68L;
-		dto.bemerkung = "schule ist toll!";
-
-		assertDoesNotThrow(() -> dataSchuelerKAoADaten.checkBeforePatch(dto, Map.of("bemerkung", "Freizeit aber auch!")));
-	}
-
-	@Test
-	@DisplayName("patchCoreDTo - wrong field")
-	void patchCoreDtoTest() {
-		final var initAttributes = new HashMap<String, Object>();
-		initAttributes.put(SCHULJAHRESABSCHNTT, 7L);
-		initAttributes.put(JAHRGANG, 8000000L);
-		initAttributes.put("hakuna matata", 10L);
-		initAttributes.put(MERKMAL, 51L);
-		initAttributes.put(ZUSATZMERKMAL, 68);
-		initAttributes.put(BEMERKUNG, "schule ist toll!");
-
-		final var throwable = catchThrowable(() -> dataSchuelerKAoADaten.checkBeforeCreation(1L, initAttributes));
-
-		assertThat(throwable)
-				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Fehler beim patchen des CoreDto: hakuna matata")
+				.withMessage("Attribut idKategorie: Der Wert null ist nicht erlaubt")
 				.hasFieldOrPropertyWithValue(STATUS, Response.Status.BAD_REQUEST);
 	}
 
@@ -322,11 +318,10 @@ class DataSchuelerKAoADatenTest {
 	@DisplayName("validateOptionalAttributes | Exception")
 	@MethodSource("provideSchuelerKAoADatenForValidateOptionalAttributesException")
 	void validateOptionalAttributesTest_Exception(final Map<String, Object> initAttributes) {
-		final var throwable = catchThrowable(() -> dataSchuelerKAoADaten.checkBeforeCreation(1L, initAttributes));
-
-		assertThat(throwable)
+		assertThatException()
+				.isThrownBy(() -> data.checkBeforeCreation(1L, initAttributes))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessageStartingWith("Die Anzahl vorhandener optionaler Attribute ist größer 1")
+				.withMessageStartingWith("Es darf nur eines der folgenden Felder gefüllt sein: idAnschlussoption, idEbene4, idBerufsfeld, bemerkung")
 				.hasFieldOrPropertyWithValue(STATUS, Response.Status.BAD_REQUEST);
 	}
 
@@ -344,17 +339,14 @@ class DataSchuelerKAoADatenTest {
 		lernabschnittsdaten.WechselNr = 0;
 		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
 				.thenReturn(List.of(lernabschnittsdaten));
-
 		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 123L)).thenReturn(null);
 
-		final var throwable = catchThrowable(() -> this.dataSchuelerKAoADaten.checkBeforeCreation(123L, initAttributes));
-
-		assertThat(throwable)
+		assertThatException()
+				.isThrownBy(() -> this.data.checkBeforeCreation(123L, initAttributes))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Keine Lernabschnittsdaten mit der ID 7 vorhanden.")
+				.withMessage("Keine Lernabschnittsdaten mit der ID 7 vorhanden.")
 				.hasFieldOrPropertyWithValue(STATUS, Response.Status.NOT_FOUND);
 	}
-
 
 	@ParameterizedTest
 	@DisplayName("validateKategorie | falsche KategorieId -> Exception")
@@ -374,11 +366,10 @@ class DataSchuelerKAoADatenTest {
 		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
 				.thenReturn(List.of(lernabschnittsdaten));
 
-		final var throwable = catchThrowable(() -> dataSchuelerKAoADaten.checkBeforeCreation(123L, initAttributes));
-
-		assertThat(throwable)
+		assertThatException()
+				.isThrownBy(() -> data.checkBeforeCreation(123L, initAttributes))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessageStartingWith("Keine KAoAKategorie mit der ID")
+				.withMessageStartingWith("Keine KAoAKategorie mit der ID")
 				.hasFieldOrPropertyWithValue(STATUS, Response.Status.NOT_FOUND);
 	}
 
@@ -396,16 +387,14 @@ class DataSchuelerKAoADatenTest {
 		when(this.conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(7L)).thenThrow(DeveloperNotificationException.class);
 		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
 		lernabschnittsdaten.WechselNr = 0;
-		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L))
-				.thenReturn(lernabschnittsdaten);
+		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L)).thenReturn(lernabschnittsdaten);
 		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
 				.thenReturn(List.of(lernabschnittsdaten));
 
-		final var throwable = catchThrowable(() -> dataSchuelerKAoADaten.checkBeforeCreation(123L, initAttributes));
-
-		assertThat(throwable)
+		assertThatException()
+				.isThrownBy(() -> data.checkBeforeCreation(123L, initAttributes))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessageStartingWith("Kein Schuljahresabschnitt zur ID")
+				.withMessageStartingWith("Kein Schuljahresabschnitt zur ID")
 				.hasFieldOrPropertyWithValue(STATUS, Response.Status.NOT_FOUND);
 	}
 
@@ -424,11 +413,10 @@ class DataSchuelerKAoADatenTest {
 		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
 		when(this.conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(7L)).thenReturn(schuljahresabschnitt);
 
-		final var throwable = catchThrowable(() -> dataSchuelerKAoADaten.checkBeforeCreation(123L, initAttributes));
-
-		assertThat(throwable)
+		assertThatException()
+				.isThrownBy(() -> data.checkBeforeCreation(123L, initAttributes))
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage(errorMessage)
+				.withMessage(errorMessage)
 				.hasFieldOrPropertyWithValue(STATUS, errorCode);
 	}
 
@@ -641,10 +629,9 @@ class DataSchuelerKAoADatenTest {
 		idEbene4DoesntMatch.put(EBENE_4, 12L);
 
 		return Stream.of(
-				arguments(wrongIdJahrgang, "Kein Jahrgangseintrag mit der ID 1 vorhanden.", Response.Status.NOT_FOUND),
-				arguments(jahrgangAndKategorieDoesntMatch, "Der Jahrgang mit der ID 8000000 ist nicht in der Kategorie SBO_10 für das Schuljahr 2024 "
-						+ "enthalten.", Response.Status.BAD_REQUEST),
-				arguments(noJahrgangWithThisIdExists, "Kein Jahrgangseintrag mit der ID 123456 vorhanden.", Response.Status.NOT_FOUND),
+				arguments(wrongIdJahrgang, "Keine Jahrgang mit der ID 1 vorhanden.", Response.Status.NOT_FOUND),
+				arguments(jahrgangAndKategorieDoesntMatch, "Der Jahrgang mit der ID 8000000 für die Kategorie SBO_10 im Schuljahr 2024 enthalten.", Response.Status.BAD_REQUEST),
+				arguments(noJahrgangWithThisIdExists,  "Keine Jahrgang mit der ID 123456 vorhanden.", Response.Status.NOT_FOUND),
 				arguments(merkmalDoesntMatchKategorie, "Das KAoAZusatzmerkmal mit der ID 68 passt nicht zum KAoAMerkmal mit der ID 55.",
 						Response.Status.BAD_REQUEST),
 				arguments(wrongIdMerkmal, "Kein KAoAMerkmal mit der ID 1000 vorhanden.", Response.Status.NOT_FOUND),
@@ -655,7 +642,7 @@ class DataSchuelerKAoADatenTest {
 				arguments(wrongIdBerufsfeld, "Kein Berufsfeld mit der ID 370000 vorhanden.", Response.Status.NOT_FOUND),
 				arguments(idAnschlussoptionNull, "idAnschlussoption darf nicht null sein.", Response.Status.BAD_REQUEST),
 				arguments(wrongIdAnschlussOption, "Keine Anschlussoption mit der ID 3551545 vorhanden.", Response.Status.NOT_FOUND),
-				arguments(idAnschlussoptionDoesntMatch, "Die Anschlussoption mit der ID 33 passt nicht zum KAoAZusatzmerkmal mit der ID 117.",
+				arguments(idAnschlussoptionDoesntMatch, "Die Anschlussoption 33 passt nicht zum KAoAZusatzmerkmal  117.",
 						Response.Status.BAD_REQUEST),
 				arguments(idEbene4Null, "idEbene4 darf nicht null sein.", Response.Status.BAD_REQUEST),
 				arguments(wrongIdEbene4, "Keine Ebene4 mit der ID 987654321 vorhanden.", Response.Status.NOT_FOUND),

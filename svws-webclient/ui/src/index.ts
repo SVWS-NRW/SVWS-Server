@@ -126,7 +126,8 @@ export type { EnmKlassenleitungProps } from "./components/enm/EnmKlassenleitungP
 export { AppMenuGroup } from "./ui/nav/AppMenuGroup";
 export { ViewType } from "./ui/nav/ViewType";
 
-// Validator Classes
+// Validierung
+export { ModelProxy, type ModelProxyConfiguration } from "./model/ModelProxy";
 export { ValidationResult } from "./validation/ValidationResult";
 export { ValidatorBenutzerAnmeldenameNeu } from "./validation/ValidatorBenutzerAnmeldenameNeu";
 export { ValidatorEmail } from "./validation/ValidatorEmail";
@@ -145,6 +146,7 @@ export { ValidatorStringHasNoWhitespaces } from "./validation/ValidatorStringHas
 export { ValidatorStringLength } from "./validation/ValidatorStringLength";
 export { ValidatorStringNotEmpty } from "./validation/ValidatorStringNotEmpty";
 export { ValidatorStringNotIn } from "./validation/ValidatorStringNotIn";
+export { ValidatorNumberLengthDecPlaces } from "./validation/ValidatorNumberLengthDecPlaces";
 export { ValidatorTelefon } from "./validation/ValidatorTelefon";
 
 // Manager
@@ -152,7 +154,7 @@ export { AuswahlManager } from "./ui/AuswahlManager";
 export { TelefonartenListeManager } from "./ui/manager/kataloge/TelefonartenListeManager";
 export { StundenplanListeManager } from "./ui/manager/stundenplan/StundenplanListeManager";
 export { StundenplanUnterrichtListeManager } from "./ui/manager/stundenplan/StundenplanUnterrichtListeManager";
-export { KatalogSchuleListeManager } from "./ui/manager/kataloge/KatalogSchuleListeManager";
+export { SchulenListeManager } from "./ui/manager/kataloge/SchulenListeManager";
 export { SchuelerListeManager } from "./ui/manager/schueler/SchuelerListeManager";
 export { SchuelerKAoAManager } from "./ui/manager/schueler/SchuelerKAoAManager";
 export { KonfessionenListeManager } from "./ui/manager/kataloge/KonfessionenListeManager";

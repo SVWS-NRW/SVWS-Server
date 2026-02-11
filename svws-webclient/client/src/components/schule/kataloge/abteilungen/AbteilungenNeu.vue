@@ -9,7 +9,7 @@
 					<svws-ui-text-input placeholder="Raum"
 						v-model="data.raum"
 						:valid="() => fieldIsValid('raum')" :max-len="20" :disabled="!hatKompetenzAdd" />
-					<svws-ui-text-input placeholder="Email" type="email"
+					<svws-ui-text-input placeholder="E-Mail-Adresse" type="email"
 						v-model="data.email"
 						:valid="() => fieldIsValid('email')" :max-len="100" :disabled="!hatKompetenzAdd" />
 					<svws-ui-text-input placeholder="Durchwahl" type="tel"
@@ -19,14 +19,16 @@
 						v-model="idLehrer"
 						:manager="lehrerSelectManager"
 						:disabled="!hatKompetenzAdd" searchable />
-					<svws-ui-spacing />
-					<svws-ui-input-number placeholder="Sortierung"
-						v-model="data.sortierung"
-						:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" :removable="false" />
-					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
-						Sichtbar
-					</svws-ui-checkbox>
+					<svws-ui-spacing :size="2" />
+					<svws-ui-content-card title="Ansicht & Sortierung">
+						<svws-ui-input-number placeholder="Sortierung"
+							v-model="data.sortierung"
+							:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" :removable="false" />
+						<svws-ui-spacing />
+						<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
+							Sichtbar
+						</svws-ui-checkbox>
+					</svws-ui-content-card>
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<div class="mt-7 flex flex-row gap-4 justify-end">
@@ -93,7 +95,7 @@
 				return sortierungIsValid(data.value.sortierung);
 			default:
 				return true;
-		};
+		}
 	};
 
 	function sortierungIsValid(sortierung: number): boolean {

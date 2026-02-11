@@ -1,124 +1,243 @@
 <template>
 	<div class="page page-grid-cards">
-		<svws-ui-content-card title="Allgemein">
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Kürzel" required :max-len="20" :valid="(v) => manager().validateKuerzel(v)" v-model="data.kuerzel" :disabled />
-				<svws-ui-select title="Statistik-Fach" required :items="statistikFachEintraege" :item-filter="coreTypeDataFilter"
-					v-model="selectedStatistikFach" :item-text="getStatistikfachText" autocomplete />
-				<svws-ui-text-input placeholder="Bezeichnung" required :max-len="255" :valid="(v) => manager().validateBezeichnung(v)" v-model="data.bezeichnung" :disabled />
-				<svws-ui-text-input placeholder="Fachgruppe" :model-value="fachgruppe" disabled />
-				<svws-ui-select removable title="Bilinguale Sachfachsprache" :items="BilingualeSprache.values()" v-model="selectedBilingualeSprache"
-					:item-text="b => b.daten(schuljahr)?.text ?? '—'" :disabled />
-				<svws-ui-input-number placeholder="Sortierung" :valid="(v) => manager().validateSortierung(v)" v-model="data.sortierung" :disabled />
-			</svws-ui-input-wrapper>
-		</svws-ui-content-card>
-		<svws-ui-content-card title="Zeugnis">
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-checkbox v-model="data.aufZeugnis" :disabled>Auf Zeugnis</svws-ui-checkbox>
-				<div />
-				<svws-ui-text-input placeholder="Bezeichnung (Zeugnis)" required v-model="data.bezeichnungZeugnis" :disabled />
-				<svws-ui-text-input placeholder="Bezeichnung (Überweisungszeugnis)" required v-model="data.bezeichnungUeberweisungszeugnis" :disabled />
-			</svws-ui-input-wrapper>
-		</svws-ui-content-card>
-		<svws-ui-content-card title="Sonstiges">
-			<svws-ui-input-wrapper :grid="1">
-				<svws-ui-checkbox v-model="data.istSichtbar" :disabled>Sichtbar</svws-ui-checkbox>
-				<template v-if="manager().schulform().daten(schuljahr)?.hatGymOb ?? false">
-					<svws-ui-checkbox v-model="data.istOberstufenFach" :disabled>Fach der Oberstufe</svws-ui-checkbox>
-					<svws-ui-checkbox v-model="data.istPruefungsordnungsRelevant" :disabled>Ist Prüfungsordnungs-Relevant (z.B. bei Belegprüfungen)</svws-ui-checkbox>
-				</template>
-				<template v-if="manager().schulform() !== Schulform.G">
-					<svws-ui-checkbox v-model="data.istNachpruefungErlaubt" :disabled>Nachprüfung erlaubt</svws-ui-checkbox>
-					<svws-ui-checkbox v-model="data.istSchriftlichZK" :disabled>Schriftliches Fach für ZK</svws-ui-checkbox>
-					<svws-ui-checkbox v-model="data.istSchriftlichBA" :disabled>Schriftliches Fach für BA</svws-ui-checkbox>
-					<svws-ui-checkbox v-model="data.holeAusAltenLernabschnitten" :disabled>Berücksichtigen beim Holen von abgeschlossenen Fächern</svws-ui-checkbox>
-				</template>
-				<svws-ui-input-number placeholder="maximale Zeichenanzahl in Fachbemerkungen" v-model="data.maxZeichenInFachbemerkungen" :min="0"
-					:max="JavaInteger.MAX_VALUE" :valid="(v) => manager().validateMaxZeichenInFachbemerkungen(v)" :disabled />
-			</svws-ui-input-wrapper>
+		<svws-ui-content-card>
+			<svws-ui-content-card title="Allgemein">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
+						v-model="data.kuerzel"
+						:valid="() => fieldIsValid('kuerzel')"
+						:min-len="1" :max-len="20" required :disabled />
+					<svws-ui-text-input placeholder="Bezeichnung"
+						v-model="data.bezeichnung"
+						:valid="() => fieldIsValid('bezeichnung')"
+						:min-len="1" :max-len="255" required :disabled />
+					<ui-select label="Fach ASD-Kürzel"
+						v-model="selectedFach"
+						:manager="fachKuerzelSelectManager"
+						required :removable="false" statistics :disabled="!hatKompetenzAdd" searchable />
+					<ui-select label="Fach ASD-Text"
+						v-model="selectedFach"
+						:manager="fachTextSelectManager"
+						required :removable="false" statistics :disabled="!hatKompetenzAdd" searchable />
+					<ui-select label="Bilinguale Sachfachsprache"
+						v-model="selectedSachfachsprache"
+						:manager="sachfachspracheManager"
+						statistics :disabled searchable />
+					<svws-ui-text-input placeholder="Fachgruppe"
+						:model-value="fachgruppe"
+						readonly />
+					<ui-select label="Aufgabenfeld" v-if="istBerufskolleg"
+						v-model="data.aufgabenfeld"
+						:manager="aufgabenfeldManager"
+						:disabled searchable />
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<svws-ui-spacing :size="2" />
+			<svws-ui-content-card title="Zeugnis">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-checkbox v-model="data.aufZeugnis" :disabled focus-class-content>
+						Auf Zeugnis
+					</svws-ui-checkbox>
+					<svws-ui-spacing />
+					<svws-ui-text-input placeholder="Bezeichnung (Zeugnis)"
+						v-model="data.bezeichnungZeugnis"
+						:valid="() => fieldIsValid('bezeichnungZeugnis')"
+						:max-len="255" :disabled />
+					<svws-ui-text-input placeholder="Bezeichnung (Überweisungszeugnis)"
+						v-model="data.bezeichnungUeberweisungszeugnis"
+						:valid="() => fieldIsValid('bezeichnungUeberweisungszeugnis')"
+						:max-len="255" :disabled />
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<svws-ui-spacing :size="2" />
+			<svws-ui-content-card title="Sonstiges">
+				<svws-ui-input-wrapper :grid="1">
+					<template v-if="hatGymnasialeOberstufe">
+						<svws-ui-checkbox v-model="data.istOberstufenFach" :disabled>
+							Fach der Oberstufe
+						</svws-ui-checkbox>
+						<svws-ui-checkbox v-model="data.istPruefungsordnungsRelevant" :disabled>
+							Ist Prüfungsordnungs-relevant (z.B. bei Belegprüfungen)
+						</svws-ui-checkbox>
+						<svws-ui-checkbox v-model="data.istMoeglichAlsNeueFremdspracheInSekII" :disabled>
+							Ist in der Oberstufe eine neu einsetzende Fremdsprache
+						</svws-ui-checkbox>
+					</template>
+					<svws-ui-checkbox v-model="data.istFremdsprache" :disabled>
+						Ist eine Fremdsprache
+					</svws-ui-checkbox>
+					<template v-if="!istGrundschule">
+						<svws-ui-checkbox v-model="data.istNachpruefungErlaubt" :disabled>
+							Nachprüfung erlaubt
+						</svws-ui-checkbox>
+						<svws-ui-checkbox v-model="data.istSchriftlichZK" :disabled>
+							Schriftliches Fach für ZK
+						</svws-ui-checkbox>
+						<svws-ui-checkbox v-model="data.holeAusAltenLernabschnitten" :disabled>
+							Berücksichtigen beim Holen von abgeschlossenen Fächern
+						</svws-ui-checkbox>
+					</template>
+					<svws-ui-input-wrapper :grid="2">
+						<svws-ui-input-number placeholder="maximale Zeichenanzahl in Fachbemerkungen"
+							v-model="data.maxZeichenInFachbemerkungen"
+							:valid="() => fieldIsValid('maxZeichenInFachbemerkungen')"
+							:min="0" :max="JavaInteger.MAX_VALUE" :disabled />
+					</svws-ui-input-wrapper>
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<svws-ui-spacing :size="2" />
+			<svws-ui-content-card title="Ansicht & Sortierung">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-input-number placeholder="Sortierung"
+						v-model="data.sortierung"
+						:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled :removable="false" />
+					<svws-ui-spacing />
+					<svws-ui-checkbox v-model="data.istSichtbar" :disabled>
+						Sichtbar
+					</svws-ui-checkbox>
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
 			<div class="mt-7 flex flex-row gap-4 justify-end">
-				<svws-ui-button type="secondary" @click="cancel">Abbrechen</svws-ui-button>
-				<svws-ui-button @click="addFachDaten" :disabled="!isValid || !hatKompetenzUpdate">Speichern</svws-ui-button>
+				<svws-ui-button type="secondary" @click="cancel">
+					Abbrechen
+				</svws-ui-button>
+				<svws-ui-button @click="addFach" :disabled="!formIsValid">
+					Speichern
+				</svws-ui-button>
 			</div>
 		</svws-ui-content-card>
-		<svws-ui-checkpoint-modal :checkpoint :continue-routing="continueRoutingAfterCheckpoint" />
+		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
 	</div>
 </template>
 
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import { BenutzerKompetenz, BilingualeSprache, Fach, FachDaten, GostFachbereich, JavaInteger, Schulform } from "@core";
-	import type { FachKatalogEintrag, CoreTypeData } from "@core";
+	import type { BilingualeSpracheKatalogEintrag, FachKatalogEintrag } from "@core";
+	import { BenutzerKompetenz, BilingualeSprache, Fach, FachDaten, JavaInteger, Schulform } from "@core";
 	import type { FaecherNeuProps } from "./FaecherNeuProps";
-	import { coreTypeDataFilter } from "~/utils/helfer";
+	import { isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid, optionalInputIsValid } from "~/util/validation/Validation";
+	import { CoreTypeSelectManager, SelectManager } from "@ui";
 
 	const props = defineProps<FaecherNeuProps>();
-
-	const schuljahr = computed<number>(() => props.manager().getSchuljahr());
-	const data = ref<FachDaten>(new FachDaten());
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const data = ref<FachDaten>(Object.assign(new FachDaten(), { sortierung: 32000, istSichtbar: true }));
 	const isLoading = ref<boolean>(false);
-	const isValid = ref<boolean>(false);
+	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const disabled = computed(() => (data.value.kuerzelStatistik === "") || !hatKompetenzAdd.value);
+	const istGrundschule = computed(() => props.manager().schulform() === Schulform.G);
+	const istBerufskolleg = computed(() => props.manager().schulform() === Schulform.BK || props.manager().schulform() === Schulform.SB);
+	const hatGymnasialeOberstufe = computed(() => props.manager().schulform().daten(schuljahr.value)?.hatGymOb ?? false);
+	const schuljahr = computed<number>(() => props.manager().getSchuljahr());
+	const fachgruppe = computed(() => Fach.getBySchluesselOrDefault(data.value.kuerzelStatistik).getFachgruppe(schuljahr.value)?.daten(schuljahr.value)?.text ?? '—');
 
-	watch(() => data.value, async () => {
+	const selectedFach = computed<FachKatalogEintrag | null>({
+		get: () => Fach.data().getEintragBySchuljahrUndSchluessel(props.schuljahr, data.value.kuerzelStatistik),
+		set: (eintrag: FachKatalogEintrag | null) => data.value.kuerzelStatistik = eintrag?.schluessel ?? '',
+	});
+
+	const selectedSachfachsprache = computed<BilingualeSpracheKatalogEintrag | null>({
+		get: () => BilingualeSprache.data().getEintragBySchuljahrUndSchluessel(props.schuljahr, data.value.bilingualeSprache ?? ''),
+		set: (value: BilingualeSpracheKatalogEintrag | null) => data.value.bilingualeSprache = value?.schluessel ?? null,
+	});
+
+	const fachKuerzelSelectManager = new CoreTypeSelectManager({
+		clazz: Fach.class,
+		schuljahr: props.schuljahr,
+		schulformen: props.schulform,
+		optionDisplayText: "kuerzel",
+		selectionDisplayText: "kuerzel",
+	});
+
+	const fachTextSelectManager = new CoreTypeSelectManager({
+		clazz: Fach.class,
+		schuljahr: props.schuljahr,
+		schulformen: props.schulform,
+		optionDisplayText: "text",
+		selectionDisplayText: "text",
+	});
+
+	const sachfachspracheManager = new CoreTypeSelectManager({
+		clazz: BilingualeSprache.class,
+		schuljahr: props.schuljahr,
+		schulformen: props.schulform,
+		optionDisplayText: "text",
+		selectionDisplayText: "text",
+	});
+
+	const aufgabenfeldManager = new SelectManager({
+		options: ["1", "2", "3"],
+		optionDisplayText: (v: string) => getTextAufgabenfeld(v),
+		selectionDisplayText: (v: string) => getTextAufgabenfeld(v),
+	});
+
+	function getTextAufgabenfeld(aufgabenfeld: string | null): string {
+		switch (aufgabenfeld) {
+			case '1': return 'Aufgabenfeld I';
+			case '2': return 'Aufgabenfeld II';
+			case '3': return 'Aufgabenfeld III';
+			default: return '';
+		}
+	}
+
+	// --- validate ---
+
+	function kuerzelIsValid(kuerzel: string | null): boolean {
+		return mandatoryInputIsValid(kuerzel, 20)
+			&& isUniqueInList(kuerzel, props.manager().liste.list(), "kuerzel");
+	}
+
+	function bezeichnungIsValid(bezeichnung: string | null): boolean {
+		return mandatoryInputIsValid(bezeichnung, 255)
+			&& isUniqueInList(bezeichnung, props.manager().liste.list(), "bezeichnung");
+	}
+
+	function sortierungIsValid(sortierung: number): boolean {
+		return !numberHasDecimals(sortierung)
+			&& numberIsValid(sortierung, true, 0, 32000);
+	}
+
+	function maxZeichenInFachbemerkungenIsValid(value: number | null): boolean {
+		return !numberHasDecimals(value)
+			&& numberIsValid(value, false, 0, JavaInteger.MAX_VALUE);
+	}
+
+	const formIsValid = computed(() => {
+		return Object.keys(data.value)
+			.every((field: string) => fieldIsValid(field as keyof FachDaten));
+	});
+
+	const fieldIsValid = (field: keyof FachDaten): boolean => {
+		switch (field) {
+			case "kuerzel":
+				return kuerzelIsValid(data.value.kuerzel);
+			case "bezeichnung":
+				return bezeichnungIsValid(data.value.bezeichnung);
+			case 'kuerzelStatistik':
+				return mandatoryInputIsValid(data.value.kuerzelStatistik, 2);
+			case 'bezeichnungZeugnis':
+				return optionalInputIsValid(data.value.bezeichnungZeugnis, 255);
+			case 'bezeichnungUeberweisungszeugnis':
+				return optionalInputIsValid(data.value.bezeichnungUeberweisungszeugnis, 255);
+			case 'maxZeichenInFachbemerkungen':
+				return maxZeichenInFachbemerkungenIsValid(data.value.maxZeichenInFachbemerkungen);
+			case 'sortierung':
+				return sortierungIsValid(data.value.sortierung);
+			default:
+				return true;
+		}
+	};
+
+	// --- util ---
+
+	async function addFach() {
 		if (isLoading.value) {
 			return;
 		}
-
-		props.checkpoint.active = true;
-		validateAll();
-	}, { immediate: false, deep: true });
-
-	const validateAll = () => isValid.value = (data.value.kuerzelStatistik !== "") &&
-		props.manager().validateKuerzel(data.value.kuerzel) &&
-		props.manager().validateBezeichnung(data.value.bezeichnung) &&
-		props.manager().validateMaxZeichenInFachbemerkungen(data.value.maxZeichenInFachbemerkungen) &&
-		props.manager().validateSortierung(data.value.sortierung);
-
-	const disabled = computed(() => (data.value.kuerzelStatistik === "") || !hatKompetenzUpdate.value);
-
-	const fachgruppe = computed(() => Fach.getBySchluesselOrDefault(data.value.kuerzelStatistik).getFachgruppe(schuljahr.value)?.daten(schuljahr.value)?.text ?? '—');
-
-	const statistikFachEintraege = computed(() => {
-		const list = Fach.data().getListBySchuljahrAndSchulform(schuljahr.value, props.manager().schulform());
-		return Array.from(list).map(item => Fach.data().getEintragBySchuljahrUndWert(schuljahr.value, item)).filter((eintrag) => eintrag !== null);
-	});
-
-	const selectedStatistikFach = computed({
-		get: () => {
-			const wert = Fach.data().getWertByKuerzel(data.value.kuerzelStatistik);
-			if (wert === null) {
-				return null;
-			}
-			return Fach.data().getEintragBySchuljahrUndWert(schuljahr.value, wert);
-		},
-		set: (eintrag: FachKatalogEintrag) => {
-			data.value.kuerzelStatistik = eintrag.kuerzel;
-			data.value.aufgabenfeld = eintrag.aufgabenfeld?.toString() ?? '';
-			data.value.kuerzel = eintrag.kuerzel;
-			data.value.bezeichnung = eintrag.text;
-			data.value.istOberstufenFach = GostFachbereich.getAlleFaecherSortiert().contains(eintrag);
-			data.value.istPruefungsordnungsRelevant = GostFachbereich.getAlleFaecherSortiert().contains(eintrag);
-			data.value.istSichtbar = true;
-			data.value.bezeichnungZeugnis = eintrag.text;
-			data.value.bezeichnungUeberweisungszeugnis = eintrag.text;
-			data.value.maxZeichenInFachbemerkungen = JavaInteger.MAX_VALUE;
-		},
-	});
-
-	const selectedBilingualeSprache = computed({
-		get: () => data.value.bilingualeSprache !== null ? BilingualeSprache.data().getWertByKuerzel(data.value.bilingualeSprache) : null,
-		set: (val: BilingualeSprache) => {
-			const eintrag = BilingualeSprache.data().getEintragBySchuljahrUndWert(schuljahr.value, val);
-			if (eintrag !== null) {
-				data.value.bilingualeSprache = eintrag.kuerzel;
-			}
-		},
-	});
-
-	function getStatistikfachText(fachEintrag: CoreTypeData) {
-		return `${fachEintrag.schluessel} : ${fachEintrag.text}`;
+		props.checkpoint.active = false;
+		isLoading.value = true;
+		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
+		await props.add(partialData);
+		isLoading.value = false;
 	}
 
 	async function cancel() {
@@ -126,16 +245,11 @@
 		await props.gotoDefaultView(null);
 	}
 
-	async function addFachDaten() {
+	watch(() => data.value, async () => {
 		if (isLoading.value) {
 			return;
 		}
-
-		props.checkpoint.active = false;
-		isLoading.value = true;
-		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
-		await props.add(partialData);
-		isLoading.value = false;
-	}
+		props.checkpoint.active = true;
+	}, { immediate: false, deep: true });
 
 </script>

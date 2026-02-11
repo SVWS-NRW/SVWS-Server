@@ -36,7 +36,7 @@ public class BKGymAbiturMarkierungsregelFremdspracheZweiteNur extends BKGymAbitu
 	 */
 	@Override
 	public void markiere(final @NotNull BKGymAbiturMarkierungsVariante variante) {
-		final String zweiteFremdsprache = variante.varianten.manager.getZweiteFremdspracheBezeichnung();
+		final String zweiteFremdsprache = variante.varianten.abiturdatenManager.getFachbelegungManager().getZweiteFremdspracheBezeichnung();
 		if (zweiteFremdsprache == null) {
 			variante.addLogEintrag(1, "Fehler: Eine zweite Fremdsprache wurde nicht belegt.");
 			variante.setHatZulassung(false);

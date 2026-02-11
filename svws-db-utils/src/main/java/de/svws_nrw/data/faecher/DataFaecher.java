@@ -102,7 +102,7 @@ public final class DataFaecher extends DataManagerRevised<Long, DTOFach, FachDat
 		fach.istSchriftlichBA = Boolean.TRUE.equals(dto.IstSchriftlichBA);
 		fach.istFHRFach = (dto.GewichtungFHR != null) && (dto.GewichtungFHR != 0);
 		fach.holeAusAltenLernabschnitten = Boolean.TRUE.equals(dto.AbgeschlFaecherHolen);
-		fach.maxZeichenInFachbemerkungen = Objects.requireNonNullElse(dto.MaxBemZeichen, Integer.MAX_VALUE);
+		fach.maxZeichenInFachbemerkungen = dto.MaxBemZeichen;
 		fach.istSichtbar = Boolean.TRUE.equals(dto.Sichtbar);
 		fach.sortierung = Objects.requireNonNullElse(dto.SortierungAllg, 32000);
 		return fach;
@@ -122,9 +122,9 @@ public final class DataFaecher extends DataManagerRevised<Long, DTOFach, FachDat
 					JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule_Faecher.col_Unterichtssprache.datenlaenge(), name);
 			case "aufZeugnis" -> dto.AufZeugnis = JSONMapper.convertToBoolean(value, true, name);
 			case "bezeichnungZeugnis" -> dto.BezeichnungZeugnis =
-					JSONMapper.convertToString(value, false, true, Schema.tab_EigeneSchule_Faecher.col_ZeugnisBez.datenlaenge(), name);
+					JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule_Faecher.col_ZeugnisBez.datenlaenge(), name);
 			case "bezeichnungUeberweisungszeugnis" -> dto.BezeichnungUeberweisungsZeugnis =
-					JSONMapper.convertToString(value, false, true, Schema.tab_EigeneSchule_Faecher.col_UeZeugnisBez.datenlaenge(), name);
+					JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule_Faecher.col_UeZeugnisBez.datenlaenge(), name);
 			case "istOberstufenFach" -> dto.IstOberstufenFach = JSONMapper.convertToBoolean(value, true, name);
 			case "istPruefungsordnungsRelevant" -> dto.IstPruefungsordnungsRelevant = JSONMapper.convertToBoolean(value, true, name);
 			case "istFremdsprache" -> dto.IstFremdsprache = JSONMapper.convertToBoolean(value, true, name);
@@ -134,7 +134,7 @@ public final class DataFaecher extends DataManagerRevised<Long, DTOFach, FachDat
 			case "istSchriftlichBA" -> dto.IstSchriftlichBA = JSONMapper.convertToBoolean(value, true, name);
 			case "istFHRFach" -> dto.GewichtungFHR = Boolean.TRUE.equals(JSONMapper.convertToBoolean(value, true, name)) ? 1 : 0;
 			case "holeAusAltenLernabschnitten" -> dto.AbgeschlFaecherHolen = JSONMapper.convertToBoolean(value, true, name);
-			case "maxZeichenInFachbemerkungen" -> dto.MaxBemZeichen = JSONMapper.convertToIntegerInRange(value, false, 1, null, name);
+			case "maxZeichenInFachbemerkungen" -> dto.MaxBemZeichen = JSONMapper.convertToIntegerInRange(value, true, 0, null, name);
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
 			case "sortierung" -> dto.SortierungAllg = JSONMapper.convertToInteger(value, false, name);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));

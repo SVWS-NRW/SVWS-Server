@@ -118,7 +118,12 @@ export class EnmSperrManager {
 		if (config === null) {
 			return true; // Wert nicht relevant, da die Eingabe ja komplett gesperrt ist
 		}
-		return config.istFehlstundenEingabeKlassenweise;
+		/**
+		 * die Semantik des Attributs und der anderen Sperren ist hier nicht ideal:
+		 * Sperren ist immer true, hier wird bei klassenweise auch true gesetzt, obwohl das Gegenteil gemeint ist.
+		 * Wird an dieser Stelle erstmal nur negiert.
+		 */
+		return !config.istFehlstundenEingabeKlassenweise;
 	}
 
 	/**
@@ -144,7 +149,7 @@ export class EnmSperrManager {
 	 * Gibt zurück, ob die Fehlstundeneingabe für die Klasse in der Konfiguration freigeschaltet ist.
 	 *
 	 * @param idKlasse    die ID der Klasse
-	 * @param istGesamt   gibt dabei an, ob für die Anfrage für die Eingabe bei Klassen (true) oder Lerngruppen (false) erfolgt
+	 * @param istGesamt   gibt dabei an, ob die Anfrage für die Eingabe bei Klassen (true) oder Lerngruppen (false) erfolgt
 	 *
 	 * @returns true, wenn die Fehlstundeneingabe erlaubt ist, und ansonsten false
 	 */

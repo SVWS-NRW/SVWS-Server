@@ -1,5 +1,4 @@
 :root {
-	--color-palette-neutral-50: rgba(255, 255, 255, 0.9);
 	--color-palette-neutral-100: rgba(255, 255, 255, 1);
 	--color-palette-neutral-200: rgba(244, 244, 245, 1);
 	--color-palette-neutral-300: rgba(234, 234, 236, 1);
@@ -8,14 +7,12 @@
 	--color-palette-neutral-600: rgba(165, 165, 167, 1);
 	--color-palette-neutral-700: rgba(91, 91, 93, 1);
 	--color-palette-neutral-750: rgba(65, 65, 67, 1);
-	--color-palette-neutral-800: rgb(38, 38, 39);
-	--color-palette-neutral-850: rgba(165, 165, 167, 0.2);
+	--color-palette-neutral-800: rgba(38, 38, 39, 1);
 	--color-palette-neutral-900: rgba(0, 0, 0, 1);
-	--color-palette-neutral-950: rgba(0, 0, 0, 0.8);
 
-	--color-palette-brand-50: rgba(27, 119, 193, 0.15);
-	--color-palette-brand-100: rgba(27, 119, 193, 0.5);
-	--color-palette-brand-200: rgba(166, 206, 247, 1);
+	--color-palette-brand-50: rgba(221, 235, 246, 1);
+	--color-palette-brand-100: rgba(166, 206, 247, 1);
+	--color-palette-brand-200: rgba(141, 187, 224, 1);
 	--color-palette-brand-300: rgba(121, 180, 238, 1);
 	--color-palette-brand-400: rgba(66, 146, 217, 1);
 	--color-palette-brand-500: rgba(27, 119, 193, 1);
@@ -24,20 +21,21 @@
 	--color-palette-brand-800: rgba(0, 60, 109, 1);
 	--color-palette-brand-900: rgba(0, 42, 81, 1);
 
-	--color-palette-statistic-50: rgba(159, 55, 254, 0.15);
-	--color-palette-statistic-100: rgba(159, 55, 254, 0.5);
-	--color-palette-statistic-200: rgba(224, 188, 255, 1);
+	--color-palette-statistic-50: rgba(245, 242, 254, 1);
+	--color-palette-statistic-100: rgba(224, 188, 255, 1);
+	--color-palette-statistic-200: rgba(207, 155, 254, 1);
 	--color-palette-statistic-300: rgba(208, 151, 255, 1);
 	--color-palette-statistic-400: rgba(184, 101, 255, 1);
 	--color-palette-statistic-500: rgba(159, 55, 254, 1);
 	--color-palette-statistic-600: rgba(118, 8, 199, 1);
 	--color-palette-statistic-700: rgba(102, 0, 174, 1);
 	--color-palette-statistic-800: rgba(88, 0, 152, 1);
+	--color-palette-statistic-850: rgba(79, 63, 94, 1);
 	--color-palette-statistic-900: rgba(63, 0, 112, 1);
 
-	--color-palette-success-50: rgba(43, 133, 0, 0.15);
-	--color-palette-success-100: rgba(43, 133, 0, 0.5);
-	--color-palette-success-200: rgba(189, 241, 136, 1);
+	--color-palette-success-50: rgba(242, 244, 243, 1);
+	--color-palette-success-100: rgba(189, 241, 136, 1);
+	--color-palette-success-200: rgba(149, 194, 127, 1);
 	--color-palette-success-300: rgba(134, 226, 41, 1);
 	--color-palette-success-400: rgba(91, 180, 0, 1);
 	--color-palette-success-500: rgba(43, 133, 0, 1);
@@ -45,9 +43,9 @@
 	--color-palette-success-700: rgba(0, 69, 0, 1);
 	--color-palette-success-900: rgba(0, 50, 0, 1);
 
-	--color-palette-danger-50: rgba(225, 28, 72, 0.15);
-	--color-palette-danger-100: rgba(225, 28, 72, 0.4);
-	--color-palette-danger-200: rgba(255, 200, 201, 1);
+	--color-palette-danger-50: rgba(252, 241, 245, 1);
+	--color-palette-danger-100: rgba(255, 200, 201, 1);
+	--color-palette-danger-200: rgba(243, 164, 182, 1);
 	--color-palette-danger-300: rgba(255, 142, 150, 1);
 	--color-palette-danger-400: rgba(254, 87, 107, 1);
 	--color-palette-danger-500: rgba(225, 28, 72, 1);
@@ -55,10 +53,11 @@
 	--color-palette-danger-700: rgba(165, 0, 40, 1);
 	--color-palette-danger-800: rgba(142, 0, 32, 1);
 	--color-palette-danger-900: rgba(106, 0, 20, 1);
+	--color-palette-danger-950: rgba(66, 36, 44, 1);
 
-	--color-palette-warning-50: rgba(232, 191, 0, 0.15);
-	--color-palette-warning-100: rgba(232, 191, 0, 0.5);
-	--color-palette-warning-200: rgba(254, 235, 149, 1);
+	--color-palette-warning-50: rgba(243, 236, 208, 1);
+	--color-palette-warning-100: rgba(254, 235, 149, 1);
+	--color-palette-warning-200: rgba(244, 223, 128, 1);
 	--color-palette-warning-300: rgba(246, 215, 76, 1);
 	--color-palette-warning-400: rgba(232, 191, 0, 1);
 	--color-palette-warning-500: rgba(208, 172, 7, 1);
@@ -77,5 +76,11 @@
 	--color-palette-caution-700: rgba(204, 66, 2, 1);
 	--color-palette-caution-800: rgba(161, 51, 11, 1);
 	--color-palette-caution-900: rgba(130, 45, 12, 1);
+
+	--color-palette-schoolboost-primary: #e2007a;
+	--color-palette-schoolboost-secondary: #49c1db;
+	--color-palette-schoolboost-orange: #ff8f00;
+
+
 
 }

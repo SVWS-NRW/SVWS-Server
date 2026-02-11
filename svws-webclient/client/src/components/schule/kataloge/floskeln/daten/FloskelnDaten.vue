@@ -26,8 +26,8 @@
 	const readonly = computed<boolean>(() => !hatKompetenzUpdate.value);
 	const floskelgruppen = computed<List<Floskelgruppe>>(() => props.manager().getFloskelgruppen());
 
-	const floskelgruppenManager = new SelectManager({	options: floskelgruppen, optionDisplayText: v => v.bezeichnung ?? "",
-		selectionDisplayText: v => v.bezeichnung ?? "",
+	const floskelgruppenManager = new SelectManager({	options: floskelgruppen, optionDisplayText: v => v.bezeichnung,
+		selectionDisplayText: v => v.bezeichnung,
 	});
 
 	const selectedFloskelgruppe = computed({

@@ -33,11 +33,11 @@ export class BKGymAbiturMarkierungsregelFremdsprachePruefeNeue extends BKGymAbit
 	 * belegten Kurse der in der Jahrgangsstufe 11 neu einsetzenden Fremdsprache mit null Punkten bewertet worden sein.
 	 */
 	public markiere(variante: BKGymAbiturMarkierungsVariante): void {
-		if (variante.varianten.manager.getZweiteFremdspracheInSekIErfuellt()) {
+		if (variante.varianten.abiturdatenManager.getZweiteFremdspracheInSekIErfuellt()) {
 			variante.addLogEintrag(1, "Ausreichende Belegung einer zweiten Fremdsprache in der SekI liegt vor.");
 			return;
 		}
-		const zweiteFremdspracheID: number | null = variante.varianten.manager.getZweiteFremdspracheID();
+		const zweiteFremdspracheID: number | null = variante.varianten.abiturdatenManager.getFachbelegungManager().getZweiteFremdspracheID();
 		if (zweiteFremdspracheID === null) {
 			variante.addLogEintrag(1, "Fehler: Es fehlt die Belegung der zweiten Fremdsprache, da nicht in der SekI abgedeckt.");
 			variante.setHatZulassung(false);

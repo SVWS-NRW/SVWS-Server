@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import de.svws_nrw.asd.data.CoreTypeData;
 import de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag;
-import de.svws_nrw.asd.data.schule.ReligionKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.types.fach.Fach;
@@ -625,7 +625,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		final ArrayList<DTOKonfession> dtoKonfession = new ArrayList<>();
 		int i = 1;
 		for (final Religion kon : Religion.values()) {
-			final ReligionKatalogEintrag eintrag = kon.daten(schuljahr);
+			final CoreTypeData eintrag = kon.daten(schuljahr);
 			if (eintrag == null)
 				continue;
 			final DTOKonfession dto = new DTOKonfession(i, eintrag.text);

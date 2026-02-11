@@ -1,5 +1,5 @@
 import { DateManager } from '../../../asd/validate/DateManager';
-import { LehrerPersonalabschnittsdaten } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdaten';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis } from '../../../asd/validate/lehrer/ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
@@ -7,29 +7,18 @@ import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
 
-	/**
-	 * Die Lehrer-Personalabschnittdaten
-	 */
-	private readonly daten: LehrerPersonalabschnittsdaten;
-
-	/**
-	 * Das Geburtsdatum des Lehrers
-	 */
-	private readonly geburtsdatum: DateManager;
-
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten          die Personalabschnittsdaten für den Validator
-	 * @param geburtsdatum   das Geburtsdatum des Lehrers
-	 * @param kontext        der Kontext des Validators
+	 * @param idSchuljahresabschnitt  die ID des Schuljahresabschnittes
+	 * @param rechtsverhaeltnis       das Rechtsverhältnis
+	 * @param geburtsdatum            das Geburtsdatum des Lehrers
+	 * @param kontext                 der Kontext des Validators
 	 */
-	public constructor(daten: LehrerPersonalabschnittsdaten, geburtsdatum: DateManager, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number>, rechtsverhaeltnis: Supplier<string | null>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.daten = daten;
-		this.geburtsdatum = geburtsdatum;
-		this._validatoren.add(new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(daten, geburtsdatum, kontext));
+		this._validatoren.add(new ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnis, geburtsdatum, kontext));
 	}
 
 	protected pruefe(): boolean {

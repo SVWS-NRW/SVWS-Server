@@ -138,6 +138,7 @@ class TestBKGymMarkierungsalgorithmus {
 		final ArrayList<DynamicTest> tests = new ArrayList<>();
 		testAbiturdaten.forEach((jahrgang, mapSchuelerJahrgang) -> {
 			mapSchuelerJahrgang.forEach((schueler_id, abidaten) -> {
+//				if (schueler_id.equals("0392")) {
 				// Lese BKGymFaecher
 				final List<BKGymFach> bkGymFaecher = testJahrgaengeFaecher.get(jahrgang);
 				assert bkGymFaecher != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + schueler_id
@@ -181,7 +182,8 @@ class TestBKGymMarkierungsalgorithmus {
 							}
 							System.out.println("  Test erfolgreich beendet.");
 						}));
-			});
+//				}
+				});
 		});
 		return tests.stream();
 	}
@@ -235,7 +237,7 @@ class TestBKGymMarkierungsalgorithmus {
 
 		// restliche neu → added
 		while (j < neu.size()) {
-			neuhinzu.add(markierungAlsString(neu.get(i++), faecherManager));
+			neuhinzu.add(markierungAlsString(neu.get(j++), faecherManager));
 		}
 
 		if (!fehlend.isEmpty() || !neuhinzu.isEmpty())

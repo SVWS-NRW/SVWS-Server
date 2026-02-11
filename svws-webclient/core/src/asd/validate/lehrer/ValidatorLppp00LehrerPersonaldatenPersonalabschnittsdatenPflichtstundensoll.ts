@@ -1,35 +1,37 @@
 import { ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll } from '../../../asd/validate/lehrer/ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll';
-import { LehrerPersonalabschnittsdaten } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdaten';
-import { ValidatorLppp03LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll } from '../../../asd/validate/lehrer/ValidatorLppp03LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll';
+import { ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll } from '../../../asd/validate/lehrer/ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll';
+import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
-import { ValidatorLppp01LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll } from '../../../asd/validate/lehrer/ValidatorLppp01LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll';
+import { ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll } from '../../../asd/validate/lehrer/ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll';
 import { Validator } from '../../../asd/validate/Validator';
 
 export class ValidatorLppp00LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll extends Validator {
 
 	/**
-	 * Die Lehrer-Personalabschnittsdaten
+	 * Das Pflichtstundensoll
 	 */
-	private readonly daten: LehrerPersonalabschnittsdaten;
+	private readonly pflichtstundensoll: Supplier<number | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
-	 * @param kontext   der Kontext des Validators
+	 * @param pflichtstundensoll    das Pflichtstundensoll
+	 * @param einsatzstatus    		Der Einsatzstatus
+	 * @param beschaeftigungsart    Die Beschaeftigungsart
+	 * @param kontext   			der Kontext des Validators
 	 */
-	public constructor(daten: LehrerPersonalabschnittsdaten, kontext: ValidatorKontext) {
+	public constructor(pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<string | null>, beschaeftigungsart: Supplier<string | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.daten = daten;
-		this._validatoren.add(new ValidatorLppp01LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(daten, kontext));
-		this._validatoren.add(new ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(daten, kontext));
-		this._validatoren.add(new ValidatorLppp03LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(daten, kontext));
+		this.pflichtstundensoll = pflichtstundensoll;
+		this._validatoren.add(new ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, kontext));
+		this._validatoren.add(new ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, kontext));
+		this._validatoren.add(new ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, beschaeftigungsart, kontext));
 	}
 
 	protected pruefe(): boolean {
-		const pflichtstundensoll: number | null = this.daten.pflichtstundensoll;
+		const pflichtstundensoll: number | null = this.pflichtstundensoll.get();
 		if (pflichtstundensoll === null) {
 			this.addFehler(0, "Kein Wert im Feld 'pflichtstundensoll'.");
 			return false;

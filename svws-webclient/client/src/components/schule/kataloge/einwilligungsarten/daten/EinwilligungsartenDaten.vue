@@ -1,31 +1,38 @@
 <template>
 	<div class="page page-grid-cards">
-		<svws-ui-content-card title="Allgemein">
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
-					:model-value="manager().auswahl().bezeichnung"
-					@change="patchBezeichnung"
-					:valid="bezeichnungIsValid" :min-len="1" :max-len="250" required :readonly="!hatKompetenzUpdate" />
-				<ui-select label="Einwilligungsschlüssel" class="col-span-full"
-					v-model="selectedEinwilligungsschluessel"
-					:manager="einwilligungsschluesselCoreTypeManager"
-					searchable :readonly="!hatKompetenzUpdate" />
-				<svws-ui-textarea-input placeholder="Beschreibung" span="full"
-					:model-value="manager().auswahl().beschreibung"
-					@change="patchBeschreibung"
-					:readonly="!hatKompetenzUpdate" />
-				<svws-ui-text-input placeholder="Personenart" span="2"
-					:model-value="textPersonTyp(manager().auswahl().idPersonTyp)"
-					readonly />
-				<svws-ui-input-number placeholder="Sortierung"
-					:model-value="manager().daten().sortierung"
-					@change="patchSortierung"
-					:valid="sortierungIsValid" :min="0" :max="32000" :readonly="!hatKompetenzUpdate" />
-				<svws-ui-spacing />
-				<svws-ui-checkbox v-model="istSichtbar" :readonly="!hatKompetenzUpdate">
-					Sichtbar
-				</svws-ui-checkbox>
-			</svws-ui-input-wrapper>
+		<svws-ui-content-card>
+			<svws-ui-content-card title="Allgemein">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
+						:model-value="manager().auswahl().bezeichnung"
+						@change="patchBezeichnung"
+						:valid="bezeichnungIsValid" :min-len="1" :max-len="250" required :readonly="!hatKompetenzUpdate" />
+					<ui-select label="Einwilligungsschlüssel" class="col-span-full"
+						v-model="selectedEinwilligungsschluessel"
+						:manager="einwilligungsschluesselCoreTypeManager"
+						searchable :readonly="!hatKompetenzUpdate" />
+					<svws-ui-textarea-input placeholder="Beschreibung" span="full"
+						:model-value="manager().auswahl().beschreibung"
+						@change="patchBeschreibung"
+						:readonly="!hatKompetenzUpdate" />
+					<svws-ui-text-input placeholder="Personenart" span="2"
+						:model-value="textPersonTyp(manager().auswahl().idPersonTyp)"
+						readonly />
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<svws-ui-spacing :size="2" />
+			<svws-ui-content-card title="Ansicht & Sortierung">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-input-number placeholder="Sortierung"
+						:model-value="manager().daten().sortierung"
+						@change="patchSortierung"
+						:valid="sortierungIsValid" :min="0" :max="32000" :readonly="!hatKompetenzUpdate" />
+					<svws-ui-spacing />
+					<svws-ui-checkbox v-model="istSichtbar" :readonly="!hatKompetenzUpdate">
+						Sichtbar
+					</svws-ui-checkbox>
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
 		</svws-ui-content-card>
 	</div>
 </template>
@@ -92,7 +99,7 @@
 		for (const einwilligungsart of props.manager().liste.list()) {
 			if ((einwilligungsart.id !== props.manager().daten().id)
 				&& (einwilligungsart.idPersonTyp === props.manager().daten().idPersonTyp)
-				&& (einwilligungsart.bezeichnung.toLowerCase() === value?.toLowerCase())) {
+				&& (einwilligungsart.bezeichnung.toLowerCase() === value.toLowerCase())) {
 				return false;
 			}
 		}

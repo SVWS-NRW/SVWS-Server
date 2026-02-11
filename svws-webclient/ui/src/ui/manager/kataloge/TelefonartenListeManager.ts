@@ -17,7 +17,7 @@ export class TelefonartenListeManager extends AuswahlManager<number, Telefonart,
 	 */
 	private static readonly _telefonArtenToId: JavaFunction<Telefonart, number> = { apply: (ta: Telefonart) => ta.id };
 	private readonly _idsOfReferencedTelefonarten: HashSet<number> = new HashSet<number>();
-	private _filterNurSichtbar: boolean = false;
+	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
 	/**
 	 * Sets der Ids der Telefonarten, die von Personen verwendet und daher nicht gelöscht werden können.

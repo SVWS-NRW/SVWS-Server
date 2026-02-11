@@ -24,7 +24,7 @@ public enum CommandLineExceptionType {
 	LONG_TAG_NOT_DEFINED("The long tag of the command line option is not defined.");
 
 
-	/// Die Nachricht, die bei der Exception angezeigt wird
+	/** Die Nachricht, die bei der Exception angezeigt wird. */
 	private final String message;
 
 

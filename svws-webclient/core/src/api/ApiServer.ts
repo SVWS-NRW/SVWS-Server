@@ -106,8 +106,6 @@ import { KAOAEbene4KatalogEintrag } from '../asd/data/kaoa/KAOAEbene4KatalogEint
 import { KAOAKategorieKatalogEintrag } from '../asd/data/kaoa/KAOAKategorieKatalogEintrag';
 import { KAOAMerkmalKatalogEintrag } from '../asd/data/kaoa/KAOAMerkmalKatalogEintrag';
 import { KAOAZusatzmerkmalKatalogEintrag } from '../asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag';
-import { KatalogEintragOrte } from '../core/data/kataloge/KatalogEintragOrte';
-import { KatalogEintragOrtsteile } from '../core/data/kataloge/KatalogEintragOrtsteile';
 import { KatalogEintragStrassen } from '../core/data/kataloge/KatalogEintragStrassen';
 import { KatalogEntlassgrund } from '../core/data/kataloge/KatalogEntlassgrund';
 import { Kindergarten } from '../core/data/schule/Kindergarten';
@@ -156,7 +154,6 @@ import { OrtsteilKatalogEintrag } from '../core/data/kataloge/OrtsteilKatalogEin
 import { PruefungsordnungKatalogEintrag } from '../core/data/schule/PruefungsordnungKatalogEintrag';
 import { Raum } from '../core/data/schule/Raum';
 import { ReligionEintrag } from '../core/data/schule/ReligionEintrag';
-import { ReligionKatalogEintrag } from '../asd/data/schule/ReligionKatalogEintrag';
 import { ReportingParameter } from '../core/data/reporting/ReportingParameter';
 import { Schild3KatalogEintragAbiturInfos } from '../core/data/schild3/Schild3KatalogEintragAbiturInfos';
 import { Schild3KatalogEintragDatenart } from '../core/data/schild3/Schild3KatalogEintragDatenart';
@@ -203,6 +200,7 @@ import { Sprachbelegung } from '../asd/data/schueler/Sprachbelegung';
 import { Sprachpruefung } from '../asd/data/schueler/Sprachpruefung';
 import { SprachpruefungsniveauKatalogEintrag } from '../core/data/fach/SprachpruefungsniveauKatalogEintrag';
 import { SprachreferenzniveauKatalogEintrag } from '../asd/data/fach/SprachreferenzniveauKatalogEintrag';
+import { StatistikGesamt } from '../asd/data/statistik/StatistikGesamt';
 import { Stundenplan } from '../core/data/stundenplan/Stundenplan';
 import { StundenplanAufsichtsbereich } from '../core/data/stundenplan/StundenplanAufsichtsbereich';
 import { StundenplanKalenderwochenzuordnung } from '../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
@@ -383,60 +381,6 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = FoerderschwerpunktEintrag.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getKatalogOrte für den Zugriff auf die URL https://{hostname}/db/{schema}/allgemein/orte
-	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhandenen Orte. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Orts-Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KatalogEintragOrte>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Orts-Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Orts-Katalog-Einträgen
-	 */
-	public async getKatalogOrte(schema : string) : Promise<List<KatalogEintragOrte>> {
-		const path = "/db/{schema}/allgemein/orte"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<KatalogEintragOrte>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintragOrte.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getKatalogOrtsteile für den Zugriff auf die URL https://{hostname}/db/{schema}/allgemein/ortsteile
-	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhandenen Ortsteile. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Ortsteil-Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KatalogEintragOrtsteile>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Ortsteil-Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Ortsteil-Katalog-Einträgen
-	 */
-	public async getKatalogOrtsteile(schema : string) : Promise<List<KatalogEintragOrtsteile>> {
-		const path = "/db/{schema}/allgemein/ortsteile"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<KatalogEintragOrtsteile>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KatalogEintragOrtsteile.transpilerFromJSON(text)); });
-		return ret;
 	}
 
 
@@ -14387,33 +14331,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKatalogReligionen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/religionen
-	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhanden Relgionen bzw. Konfessionen, welche im Rahmen der amtlichen Schulstatistik verwendet werden. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<ReligionKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Katalog-Einträgen
-	 */
-	public async getKatalogReligionen(schema : string) : Promise<List<ReligionKatalogEintrag>> {
-		const path = "/db/{schema}/schule/allgemein/religionen"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<ReligionKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ReligionKatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getSchulabschluesseAllgemeinbildend für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/schulabschluesse/allgemeinbildend
 	 *
 	 * Erstellt eine Liste aller in dem Katalog vorhanden allgemeinbildenden Schulabschlüsse. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -16746,7 +16663,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Einträge wurde erfolgreich entfernt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchulEintrag>
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
 	 *   Code 404: Räume nicht vorhanden
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -16757,14 +16674,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Einträge wurde erfolgreich entfernt.
 	 */
-	public async deleteSchulenVonKatalog(data : List<number>, schema : string) : Promise<List<SchulEintrag>> {
+	public async deleteSchulenVonKatalog(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/schulen/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<SchulEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -17318,6 +17235,30 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getStatistikGesamt für den Zugriff auf die URL https://{hostname}/db/{schema}/statistik/gesamt
+	 *
+	 * Gibt die Statistikdaten für die Schule zurück.Es wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Statistikdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Statistikdaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StatistikGesamt
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Statistikdaten anzusehen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Statistikdaten
+	 */
+	public async getStatistikGesamt(schema : string) : Promise<StatistikGesamt> {
+		const path = "/db/{schema}/statistik/gesamt"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return StatistikGesamt.transpilerFromJSON(text);
 	}
 
 

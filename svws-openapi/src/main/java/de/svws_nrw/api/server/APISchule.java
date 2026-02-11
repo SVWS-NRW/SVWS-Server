@@ -42,7 +42,6 @@ import de.svws_nrw.core.data.schule.PruefungsordnungKatalogEintrag;
 import de.svws_nrw.core.data.schule.Raum;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.data.schule.VermerkartEintrag;
-import de.svws_nrw.asd.data.schule.ReligionKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
@@ -76,7 +75,6 @@ import de.svws_nrw.data.schule.DataKatalogNationalitaeten;
 import de.svws_nrw.data.schule.DataKatalogNoten;
 import de.svws_nrw.data.schule.DataKatalogOrganisationsformen;
 import de.svws_nrw.data.schule.DataKatalogPruefungsordnungen;
-import de.svws_nrw.data.schule.DataKatalogReligionen;
 import de.svws_nrw.data.schule.DataKatalogSchulabschluesseAllgemeinbildend;
 import de.svws_nrw.data.schule.DataKatalogSchulabschluesseBerufsbildend;
 import de.svws_nrw.data.schule.DataKatalogSchulen;
@@ -611,32 +609,6 @@ public class APISchule {
 				ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage des Kataloges für die Relgionen bzw. Konfessionen,
-	 * welche im Rahmen der amtlichen Schulstatistik verwendet werden.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Liste mit dem Katalog der Relgionen bzw. Konfessionen
-	 */
-	@GET
-	@Path("/allgemein/religionen")
-	@Operation(summary = "Gibt den Katalog der Relgionen bzw. Konfessionen zurück, welche im Rahmen der amtlichen Schulstatistik verwendet werden.",
-			description = "Erstellt eine Liste aller in dem Katalog vorhanden Relgionen bzw. Konfessionen, welche "
-					+ "im Rahmen der amtlichen Schulstatistik verwendet werden. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ReligionKatalogEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-	public Response getKatalogReligionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogReligionen().getList(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
 
 	/**
 	 * Die OpenAPI-Methode für das Erstellen einer neuen Religion.
@@ -2261,7 +2233,6 @@ public class APISchule {
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
-
 	/**
 	 * Die OpenAPI-Methode für das Entfernen mehrerer Einträge aus dem schulspezifischen Katalog der Schulen.
 	 *
@@ -2277,21 +2248,20 @@ public class APISchule {
 			description = "Entfernt mehrere Einträge aus dem schulspezifischen Katalog der Schulen."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
 	@ApiResponse(responseCode = "200", description = "Die Einträge wurde erfolgreich entfernt.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchulEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
 	@ApiResponse(responseCode = "404", description = "Räume nicht vorhanden")
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteSchulenVonKatalog(@PathParam("schema") final String schema,
-			@RequestBody(description = "Die IDs der zu löschenden Einträge", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@RequestBody(description = "Die IDs der zu löschenden Schulen", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulen(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
-
-
 	/**
 	 * Die OpenAPI-Methode für die Abfrage aller Leitungsfunktionen der Schule.
 	 *

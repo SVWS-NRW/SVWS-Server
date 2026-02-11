@@ -1,0 +1,19 @@
+FROM eclipse-temurin:21 AS builder
+
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    bash \
+    docker.io \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY . /build
+WORKDIR /build
+
+RUN chmod +x ./gradlew
+
+# Debug output first
+RUN ./gradlew --version
+
+# Run your build task with full logs
+RUN ./gradlew :deployment:docker:copyDockerClientArtifacts --stacktrace --info

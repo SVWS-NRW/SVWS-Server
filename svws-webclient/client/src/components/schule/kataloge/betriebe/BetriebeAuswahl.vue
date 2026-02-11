@@ -5,31 +5,29 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<div class="container">
-				<svws-ui-table v-model="betriebe"
-					v-model:clicked="selectedBetriebe"
-					:items="props.manager().filtered()" :columns
-					clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll-into-view filter-open>
-					<template #search>
-						<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
-					</template>
-					<template #filterAdvanced>
-						<svws-ui-checkbox type="toggle" v-model="showOnlyVisibleBetriebe">Nur Sichtbare</svws-ui-checkbox>
-					</template>
-					<template #actions v-if="!readonly">
-						<svws-ui-tooltip position="bottom">
-							<svws-ui-button type="icon"
-								@click="gotoHinzufuegenView(true)"
-								:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
-								<span class="icon i-ri-add-line" />
-							</svws-ui-button>
-							<template #content>
-								Neuen Betrieb anlegen
-							</template>
-						</svws-ui-tooltip>
-					</template>
-				</svws-ui-table>
-			</div>
+			<svws-ui-table v-model="betriebe"
+				v-model:clicked="selectedBetriebe"
+				:items="props.manager().filtered()" :columns
+				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
+				<template #search>
+					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
+				</template>
+				<template #filterAdvanced>
+					<svws-ui-checkbox type="toggle" v-model="showOnlyVisibleBetriebe">Nur Sichtbare</svws-ui-checkbox>
+				</template>
+				<template #actions v-if="!readonly">
+					<svws-ui-tooltip position="bottom">
+						<svws-ui-button type="icon"
+							@click="gotoHinzufuegenView(true)"
+							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
+							<span class="icon i-ri-add-line" />
+						</svws-ui-button>
+						<template #content>
+							Neuen Betrieb anlegen
+						</template>
+					</svws-ui-tooltip>
+				</template>
+			</svws-ui-table>
 		</div>
 	</div>
 </template>
@@ -38,7 +36,7 @@
 
 	import { computed } from "vue";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import type { Betrieb } from "@core";
 	import type { BetriebeAuswahlProps } from "~/components/schule/kataloge/betriebe/BetriebeAuswahlProps";
 

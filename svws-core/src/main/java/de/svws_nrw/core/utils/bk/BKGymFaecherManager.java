@@ -29,9 +29,6 @@ public class BKGymFaecherManager {
 	/** Eine HashMap für den schnellen Zugriff auf ein Fach anhand der ID */
 	private final @NotNull HashMap<Long, BKGymFach> map = new HashMap<>();
 
-	/** Eine HashMap für den schnellen Zugriff auf die Fächer anhand der Bezeichnung des Faches */
-	private final @NotNull HashMap<String, BKGymFach> mapByBezeichnung = new HashMap<>();
-
 	/** das Schuljahr, für welches der Fächer-Manager die Fächer verwaltet - relevant wg. der Fächergültigkeit laut ASD */
 	private final int schuljahr;
 
@@ -49,6 +46,28 @@ public class BKGymFaecherManager {
 	public BKGymFaecherManager(final int schuljahr, final @NotNull List<BKGymFach> faecher) {
 		this.schuljahr = schuljahr;
 		addAll(faecher);
+	}
+
+
+	/**
+	 * Fügt die Fächer in der übergeben Liste zu diesem Manager hinzu.
+	 *
+	 * @param faecher   die hinzuzufügenden Fächer
+	 *
+	 * @return true, falls <i>alle</i> Fächer eingefügt wurden, sonst false
+	 */
+	private boolean addAll(final @NotNull Collection<BKGymFach> faecher) {
+		final Set<String> setOfBezeichnung = new HashSet<>();
+		boolean result = true;
+		for (final @NotNull BKGymFach fach : faecher) {
+			if (!addFachInternal(fach))
+				result = false;
+			if (setOfBezeichnung.contains(fach.bezeichnung))
+				doppelteFaecher.add(fach.bezeichnung);
+			else
+				setOfBezeichnung.add(fach.bezeichnung);
+		}
+		return result;
 	}
 
 
@@ -73,29 +92,7 @@ public class BKGymFaecherManager {
 		if (fke == null)
 			return false;
 		map.put(fach.id, fach);
-
-		if (mapByBezeichnung.get(fach.bezeichnung) != null) {
-			doppelteFaecher.add(fach.bezeichnung);
-			return false;
-		}
-		mapByBezeichnung.put(fach.bezeichnung, fach);
-		return faecher.add(fach);
-	}
-
-
-	/**
-	 * Fügt die Fächer in der übergeben Liste zu diesem Manager hinzu.
-	 *
-	 * @param faecher   die hinzuzufügenden Fächer
-	 *
-	 * @return true, falls <i>alle</i> Fächer eingefügt wurden, sonst false
-	 */
-	private boolean addAll(final @NotNull Collection<BKGymFach> faecher) {
-		boolean result = true;
-		for (final @NotNull BKGymFach fach : faecher)
-			if (!addFachInternal(fach))
-				result = false;
-		return result;
+		return true;
 	}
 
 
@@ -196,32 +193,5 @@ public class BKGymFaecherManager {
 		if (("".equals(fach.kuerzel)) || !istFremdsprache(fach))
 			return null;
 		return fach.kuerzel.substring(0, 1).toUpperCase();
-	}
-
-
-	/**
-	 * Liefert das BKGymFach-Objekt für die gegebene Fachbezeichnung
-	 *
-	 * @param bezeichnung   die Bezeichnung des Fachs
-	 *
-	 * @return für vorhandene Fächer das Objekt sonst null
-	 */
-	public BKGymFach getFachByBezeichnung(final @NotNull String bezeichnung) {
-		return mapByBezeichnung.get(bezeichnung);
-	}
-
-
-	/**
-	 * Liefert die FachID für die gegebene Fachbezeichnung
-	 *
-	 * @param bezeichnung   die Bezeichnung des Fachs
-	 *
-	 * @return die FachID für vorhandene Fächer sonst -1
-	 */
-	public Long getFachIDByBezeichnung(final @NotNull String bezeichnung) {
-		final BKGymFach fach = mapByBezeichnung.get(bezeichnung);
-		if (fach == null)
-			return null;
-		return fach.id;
 	}
 }

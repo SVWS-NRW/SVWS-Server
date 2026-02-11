@@ -30,9 +30,9 @@
 }
 
 .badge--light {
-	@apply bg-ui-neutral;
-	@apply border-ui;
-	@apply text-ui-onneutral;
+	background-color: var(--color-palette-schoolboost-secondary);
+	border-color: var(--color-palette-schoolboost-secondary);
+	color: var(--color-palette-neutral-900);
 }
 
 .badge--success {

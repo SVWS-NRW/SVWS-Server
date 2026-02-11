@@ -32,6 +32,12 @@ public class BKGymAbiturMarkierungsVariante {
 	/** Gibt an, ob die Zulassung mit diesem Ergebnis erreicht wurde oder nicht. */
 	private boolean hatZulassung;
 
+	/** Markierung stoppen */
+	private boolean gestoppt;
+
+	/** Defizitregeln abschließend geprüft */
+	private boolean defizitregelnAbgeschlossen;
+
 	/** Die Summe der Notenpunkte aller Markierungen, LKs sind doppelt gezählt */
 	private int summeNotenpunkte;
 
@@ -68,6 +74,7 @@ public class BKGymAbiturMarkierungsVariante {
 		this.varianten = v;
 		this.kennung = "Root";
 		this.facharbeitEinbeziehen = false;
+		this.defizitregelnAbgeschlossen = false;
 		init();
 	}
 
@@ -83,6 +90,8 @@ public class BKGymAbiturMarkierungsVariante {
 	public BKGymAbiturMarkierungsVariante(final @NotNull BKGymAbiturMarkierungsVariante other, final @NotNull String kennung,
 			final boolean facharbeit) {
 		this.varianten = other.varianten;
+		this.gestoppt = other.gestoppt;
+		this.defizitregelnAbgeschlossen = other.defizitregelnAbgeschlossen;
 		this.kennung = other.kennung + "#" + kennung;
 		this.summeNotenpunkte = other.summeNotenpunkte;
 		this.anzahlKurse = other.anzahlKurse;
@@ -90,11 +99,11 @@ public class BKGymAbiturMarkierungsVariante {
 		this.defiziteGK = other.defiziteGK;
 		if (facharbeit) {
 			this.facharbeitEinbeziehen = true;
-			final Integer punkte = varianten.manager.getAbidaten().facharbeitNotenpunkte;
+			final Integer punkte = varianten.abiturdatenManager.getAbidaten().facharbeitNotenpunkte;
 			anzahlKurse += 2;
 			if (punkte != null)
 				summeNotenpunkte += 2 * punkte;
-			if (!varianten.manager.getIstFacharbeitLK())
+			if (!varianten.abiturdatenManager.getFachbelegungManager().getIstFacharbeitLK())
 				setHatZulassung(false);
 		} else {
 			this.facharbeitEinbeziehen = other.facharbeitEinbeziehen;
@@ -112,9 +121,10 @@ public class BKGymAbiturMarkierungsVariante {
 	 * absteigend nach erreichter Punktzahl
 	 */
 	public void init() {
-		final @NotNull List<BKGymAbiturFachbelegung> fachbelegungen = varianten.manager.getAbidaten().fachbelegungen;
-		final int schuljahr = varianten.manager.getSchuljahrAbitur();
+		final @NotNull List<BKGymAbiturFachbelegung> fachbelegungen = varianten.abiturdatenManager.getAbidaten().fachbelegungen;
+		final int schuljahr = varianten.abiturdatenManager.getSchuljahrAbitur();
 		this.hatZulassung = true;
+		this.gestoppt = false;
 		this.summeNotenpunkte = 0;
 		this.anzahlKurse = 0;
 		this.defiziteLK = 0;
@@ -158,6 +168,39 @@ public class BKGymAbiturMarkierungsVariante {
 		return kennung;
 	}
 
+	/**
+	 * Setter für gestoppt
+	 * @param gestoppt   ob fortgesetzt werden soll oder nicht.
+	 */
+	public void setGestoppt(final boolean gestoppt) {
+		this.gestoppt = gestoppt;
+	}
+
+	/**
+	 * Getter für gestoppt
+	 *
+	 * @return gestoppt
+	 */
+	public boolean istGestoppt() {
+		return gestoppt;
+	}
+
+	/** Getter für defizitregelnAbgeschlossen
+	 *
+	 * @return defizitregelnAbgeschlossen
+	 */
+	public boolean sindDefizitregelnAbgeschlossen() {
+		return defizitregelnAbgeschlossen;
+	}
+
+	/**
+	 * Setter für defizitregelnAbgeschlossen
+	 *
+	 * @param defizitregelnAbgeschlossen   ob die Defizitregeln bereits geprüft wurden
+	 */
+	public void setDefizitregelnAbgeschlossen(final boolean defizitregelnAbgeschlossen) {
+		this.defizitregelnAbgeschlossen = defizitregelnAbgeschlossen;
+	}
 
 	/**
 	 * Liefert die Gesamtanzahl der eingebrachten Defizite
@@ -202,8 +245,8 @@ public class BKGymAbiturMarkierungsVariante {
 		markiert.add(markierung);
 		anzahlKurse++;
 		summeNotenpunkte += (markierung.punkte == null ? 0 : markierung.punkte);
-		final Long fachIDLK1 = varianten.manager.getAbiFachID(GostAbiturFach.LK1);
-		final Long fachIDLK2 = varianten.manager.getAbiFachID(GostAbiturFach.LK2);
+		final Long fachIDLK1 = varianten.abiturdatenManager.getFachbelegungManager().getAbiFachID(GostAbiturFach.LK1);
+		final Long fachIDLK2 = varianten.abiturdatenManager.getFachbelegungManager().getAbiFachID(GostAbiturFach.LK2);
 		if ((markierung.punkte != null)
 				&& (((fachIDLK1 != null) && (fachIDLK1 == markierung.fachID)) || ((fachIDLK2 != null) && (fachIDLK2 == markierung.fachID)))) {
 			//LKs werden doppelt gewichtet
@@ -225,6 +268,8 @@ public class BKGymAbiturMarkierungsVariante {
 	 * @return die Anzahl verbleibender Kurse, die nicht markiert werden konnte
 	 */
 	public int markiereKursanzahl(final int kursanzahl, final Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> bedingung) {
+		if (kursanzahl <= 0)
+			return 0;
 		if (bedingung == null)
 			return kursanzahl;
 		int verbleibend = kursanzahl;
@@ -255,6 +300,9 @@ public class BKGymAbiturMarkierungsVariante {
 		if (bedingung == null)
 			return kursanzahl;
 		int verbleibend = kursanzahl;
+		for (final @NotNull BKGymAbiturMarkierungsalgorithmusMarkierung marked : markiert)
+			if ((verbleibend > 0) && bedingung.test(marked))
+				verbleibend--;
 		for (final @NotNull BKGymAbiturMarkierungsalgorithmusMarkierung unmarked : unmarkiert)
 			if ((verbleibend > 0) && bedingung.test(unmarked))
 				verbleibend--;
@@ -354,11 +402,12 @@ public class BKGymAbiturMarkierungsVariante {
 
 	/**
 	 * Berechnet die normierte Punktezahl in Block I.
+	 * ab 0.5 wird aufgerundet.
 	 *
 	 * @return die Punktanzahl
 	 */
 	public int getPunktzahlBlockI() {
-		return (int) (getDurchschnitt() * 40);
+		return (int) (getDurchschnitt() * 40 + 0.5);
 	}
 
 
@@ -369,8 +418,8 @@ public class BKGymAbiturMarkierungsVariante {
 	public static final @NotNull Comparator<BKGymAbiturMarkierungsVariante> comparator =
 			(final @NotNull BKGymAbiturMarkierungsVariante a, final @NotNull BKGymAbiturMarkierungsVariante b) -> {
 				if (a.istErfolgreich() != b.istErfolgreich())
-					return a.istErfolgreich() ? 1 : -1;
-				return a.getPunktzahlBlockI() - b.getPunktzahlBlockI();
+					return a.istErfolgreich() ? -1 : 1;
+				return b.getPunktzahlBlockI() - a.getPunktzahlBlockI();
 			};
 
 
@@ -382,9 +431,36 @@ public class BKGymAbiturMarkierungsVariante {
 	public BKGymAbiturMarkierungsalgorithmusErgebnis getErgebnis() {
 		final BKGymAbiturMarkierungsalgorithmusErgebnis ergebnis = new BKGymAbiturMarkierungsalgorithmusErgebnis();
 		ergebnis.erfolgreich = istErfolgreich();
+		ergebnis.eingebrachteKurse = anzahlEingebrachteKurse();
+		ergebnis.gesamtDefizite = getDefizite();
+		ergebnis.lkDefizite = defiziteLK;
+		ergebnis.punkteBlockI = getPunktzahlBlockI();
+		erzeugeFehlerlog(ergebnis.fehlerLog);
 		ergebnis.log.addAll(log);
 		ergebnis.markierungen.addAll(markiert);
 		return ergebnis;
+	}
+
+
+	/**
+	 * Extrahiert die Fehlermeldungen aus dem log
+	 * Einträge, die mit Hinweis: beginnen, werden übernommen
+	 * Einträge, die mit Fehler: beginnen, werden übernommen und zusätzlich die Zeile davor.
+	 * 	 *
+	 * @param fehlerLog   die Liste, in die die Fehler eingetragen werden
+	 */
+	private void erzeugeFehlerlog(final @NotNull List<String> fehlerLog) {
+		@NotNull String vorherigeZeile = "";
+		for (final @NotNull String zeile : log) {
+			if (zeile.startsWith("Hinweis:"))
+				fehlerLog.add(zeile);
+			else if (zeile.contains("Fehler:")) {
+				fehlerLog.add(vorherigeZeile);
+				fehlerLog.add(zeile);
+			}
+			if (zeile.startsWith("Regel"))
+				vorherigeZeile = zeile;
+		}
 	}
 
 

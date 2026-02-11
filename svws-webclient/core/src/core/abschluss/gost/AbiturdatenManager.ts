@@ -2686,7 +2686,7 @@ export class AbiturdatenManager extends JavaObject {
 				punktSummeEinfach += nke.notenpunkte;
 				const notenpunkte: number = nke.notenpunkte * (istLK ? 2 : 1);
 				fachbelegung.block1PunktSumme += notenpunkte;
-				summeKurseFach++;
+				summeKurseFach += 1.0;
 				this.abidaten.block1AnzahlKurse++;
 				if (istLK) {
 					this.abidaten.block1PunktSummeLK += notenpunkte;
@@ -2700,7 +2700,8 @@ export class AbiturdatenManager extends JavaObject {
 			}
 			fachbelegung.block1NotenpunkteDurchschnitt = (summeKurseFach === 0.0) ? null : (punktSummeEinfach / summeKurseFach);
 		}
-		const summeNotenpunkte: number = this.abidaten.block1PunktSummeLK + this.abidaten.block1PunktSummeGK;
+		const summeNotenpunkteGanzzahl: number = this.abidaten.block1PunktSummeLK + this.abidaten.block1PunktSummeGK;
+		const summeNotenpunkte: number = summeNotenpunkteGanzzahl;
 		const anzahlKurse: number = (this.abidaten.block1AnzahlKurse + 8.0);
 		this.abidaten.block1PunktSummeNormiert = Math.round((40.0 * summeNotenpunkte) / anzahlKurse) as number;
 		this.abidaten.block1NotenpunkteDurchschnitt = Math.round((summeNotenpunkte / anzahlKurse) * 100.0) / 100.0;

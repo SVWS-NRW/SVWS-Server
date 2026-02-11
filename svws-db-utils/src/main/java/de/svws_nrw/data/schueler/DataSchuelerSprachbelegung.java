@@ -62,6 +62,7 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoSchueler.Schuljahresabschnitts_ID);
 		final Sprachbelegung daten = new Sprachbelegung();
 		daten.sprache = dto.Sprache;
+		daten.istNachweis = (dto.IstNachweis != null) && dto.IstNachweis;
 		daten.reihenfolge = dto.ReihenfolgeNr;
 		daten.belegungVonJahrgang = dto.ASDJahrgangVon;
 		daten.belegungVonAbschnitt = dto.AbschnittVon;
@@ -160,6 +161,7 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 			case "hatLatinum" -> dto.LatinumErreicht = JSONMapper.convertToBoolean(value, false);
 			case "hatGraecum" -> dto.GraecumErreicht = JSONMapper.convertToBoolean(value, false);
 			case "hatHebraicum" -> dto.HebraicumErreicht = JSONMapper.convertToBoolean(value, false);
+			case "istNachweis" -> dto.IstNachweis = JSONMapper.convertToBoolean(value, false, "istNachweis");
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten ein unbekanntes Attribut.");
 		}
 	}

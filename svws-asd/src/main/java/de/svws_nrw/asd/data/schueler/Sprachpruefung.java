@@ -48,6 +48,10 @@ public class Sprachpruefung {
 	/** Die Note, die in der Sprachprüfung erreicht wurde (1,2,3,4,5,6 oder null, wenn keine Note angegeben ist) */
 	public Integer note;
 
+	/** Die Bezeichnung der Sprache auf dem Zeugnis (z.B. nötig für einen Eintrag "Sonstige Sprache") */
+	public @NotNull String zeugnisbezeichnung = "";
+
+
 	/**
 	 * Leerer Standardkonstruktor.
 	 */

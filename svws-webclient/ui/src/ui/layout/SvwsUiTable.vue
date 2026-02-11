@@ -161,7 +161,7 @@
 						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="(typeof noData !== 'undefined' ? noData : noDataCalculated) || lockSelectable" />
 					</div>
 					<div v-if="count" class="text-sm svws-ui-td font-medium" role="cell">
-						<template v-if="allRowsSelected && modelValue">Alle {{ modelValue.length - selectedItemsNotListed.length - unselectable.size }} ausgewählt<template v-if="selectedItemsNotListed.length > 0">, <svws-ui-button class="m-0.5" type="transparent" size="small" title="Weitere ausgewählte Einträge, die nicht angezeigt werden. Klicken entfernt aus der Liste." @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Weitere nicht angezeigt</svws-ui-button>, <svws-ui-button type="transparent" size="small" title="Alle ausgwählten Einträge. Klicken, um alle aus der Auswahl zu entfernen." @click="unselectAllRows"><span class="icon-sm i-ri-close-line" />{{ modelValue.length - unselectable.size }}</svws-ui-button> insgesamt</template></template>
+						<template v-if="allRowsSelected && modelValue">{{ numberOfSelectedEntriesText }}<template v-if="selectedItemsNotListed.length > 0">, <svws-ui-button class="m-0.5" type="transparent" size="small" title="Weitere ausgewählte Einträge, die nicht angezeigt werden. Klicken entfernt aus der Liste." @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Weitere nicht angezeigt</svws-ui-button>, <svws-ui-button type="transparent" size="small" title="Alle ausgwählten Einträge. Klicken, um alle aus der Auswahl zu entfernen." @click="unselectAllRows"><span class="icon-sm i-ri-close-line" />{{ modelValue.length - unselectable.size }}</svws-ui-button> insgesamt</template></template>
 						<template v-else-if="someNotAllRowsSelected && modelValue">{{ modelValue.length - selectedItemsNotListed.length }}/<span class="text-ui-secondary">{{ sortedRows.length - unselectable.size }}</span> ausgewählt<template v-if="selectedItemsNotListed.length > 0"><svws-ui-button class="m-0.5" type="transparent" size="small" title="Weitere ausgewählte Einträge, die nicht angezeigt werden. Klicken entfernt aus der Liste." @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Weitere</svws-ui-button><svws-ui-button type="transparent" size="small" title="Alle ausgwählten Einträge. Klicken, um alle aus der Auswahl zu entfernen." @click="unselectAllRows"><span class="icon-sm i-ri-close-line" />{{ modelValue.length - unselectable.size }} insgesamt</svws-ui-button></template></template>
 						<template v-else><span class="text-ui-secondary">{{ (sortedRows.length - unselectable.size) === 1 ? '1 Eintrag': `${sortedRows.length - unselectable.size} Einträge` }}</span><template v-if="selectedItemsNotListed.length > 0">, <svws-ui-button class="m-0.5" type="transparent" size="small" @click="unselectAllNotListedRows"><span class="icon-sm i-ri-close-line" />{{ selectedItemsNotListed.length }} Ausgewählte nicht angezeigt</svws-ui-button></template></template>
 					</div>
@@ -315,6 +315,14 @@
 		}, {});
 		return Object.keys(accumulatedObject);
 	}
+
+	const numberOfSelectedEntriesText = computed<string>(() => {
+		if (props.modelValue === undefined) {
+			return "";
+		}
+		const numberOfSelectedEntries = props.modelValue.length - selectedItemsNotListed.value.length - props.unselectable.size;
+		return (numberOfSelectedEntries === 1) ? "Alle ausgewählt" : "Alle " + numberOfSelectedEntries + " ausgewählt";
+	});
 
 	function switchElement(event: KeyboardEvent, list: Map<number, HTMLElement | null>, index: number, backwards: boolean) {
 		if (!props.allowArrowKeySelection) {

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -55,6 +56,7 @@ import de.svws_nrw.core.utils.enm.ENMDatenManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.katalog.DTOAnkreuzkompetenzJahrgang;
 import de.svws_nrw.db.dto.current.katalog.DTOFloskelnJahrgaenge;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulKonfigurationClient;
@@ -186,6 +188,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		if ((id != null) && (dtoLehrer == null))
 			throw new ApiOperationException(Status.NOT_FOUND);
 		final Map<Long, DTOAnkreuzfloskeln> mapKatalogAnkreuzkompetenzen = getAnkreuzkompetenzenListe(conn);
+		final Map<Long, List<DTOAnkreuzkompetenzJahrgang>> kompetenzZuordnungenByJahrgang = getKompetenzZuordnungenByJahrgang(conn);
 		final Map<Long, DTOFoerderschwerpunkt> mapFoerderschwerpunkte = getFoerderschwerpunktListe(conn);
 		final Map<Long, DTOSchueler> mapSchueler = getSchuelerListe(conn, abschnitt);
 		final Map<Long, DTOFach> mapFaecher = getFaecherListe(conn);
@@ -466,10 +469,11 @@ public final class DataENMDaten extends DataManager<Long> {
 							|| ((dtoAnkreuzkompetenz.Fach_ID != null) && !leistungenFachIDs.contains(dtoAnkreuzkompetenz.Fach_ID))))
 						continue;
 					// Prüfe die Ankreuzfloskel und ergänze sie ggf.
+					final String jahrgang = getJahrgang(ankreuzkompetenz.ID, lernabschnitt.Fachklasse_ID, mapKlassen, kompetenzZuordnungenByJahrgang, mapJahrgaenge);
 					final ENMAnkreuzkompetenz enmAnkreuzkompetenz = manager.getAnkreuzkompetenz(ankreuzkompetenz.Floskel_ID);
 					if (enmAnkreuzkompetenz == null)
 						manager.addAnkreuzkompetenz(dtoAnkreuzkompetenz.ID, (dtoAnkreuzkompetenz.IstASV == 0), dtoAnkreuzkompetenz.Fach_ID,
-								dtoAnkreuzkompetenz.Jahrgang, dtoAnkreuzkompetenz.FloskelText, dtoAnkreuzkompetenz.Sortierung);
+								jahrgang, dtoAnkreuzkompetenz.FloskelText, dtoAnkreuzkompetenz.Sortierung);
 					// Füge die Schueler-Ankreuzkompetenz hinzu
 					final DTOTimestampsSchuelerAnkreuzkompetenzen ankreuzkompetenzTimestamps = mapAnkreuzkompetenzenTimestamps.get(ankreuzkompetenz.ID);
 					if (ankreuzkompetenzTimestamps == null)
@@ -487,6 +491,28 @@ public final class DataENMDaten extends DataManager<Long> {
 		getFloskeln(conn, manager);
 
 		return manager.daten;
+	}
+
+	private static String getJahrgang(final long idAnkreuzkompetenz, final Long idKlasse, final Map<Long, DTOKlassen> klassenById,
+			final Map<Long, List<DTOAnkreuzkompetenzJahrgang>> zuordnungenByIdJahrgang, final Map<Long, DTOJahrgang> jahrgaengeById) {
+		if (idKlasse == null) {
+			return "";
+		}
+		final DTOKlassen klasse = klassenById.get(idKlasse);
+		if ((klasse == null) || (klasse.Jahrgang_ID == null)) {
+			return "";
+		}
+		final long idJahrgang = klasse.Jahrgang_ID;
+		final boolean exists = zuordnungenByIdJahrgang
+				.getOrDefault(idJahrgang, List.of())
+				.stream()
+				.anyMatch(dto -> dto.idAnkreuzkompetenz == idAnkreuzkompetenz);
+		if (!exists) {
+			return "";
+		}
+		return Optional.ofNullable(jahrgaengeById.get(idJahrgang))
+				.map(dto -> dto.ASDJahrgang)
+				.orElse("");
 	}
 
 
@@ -1095,6 +1121,14 @@ public final class DataENMDaten extends DataManager<Long> {
 		return ankreuzkompetenzen.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 	}
 
+	private static Map<Long, List<DTOAnkreuzkompetenzJahrgang>> getKompetenzZuordnungenByJahrgang(final DBEntityManager conn) {
+		final List<DTOAnkreuzkompetenzJahrgang> ankreuzkompetenzen = conn.queryAll(DTOAnkreuzkompetenzJahrgang.class);
+		if (ankreuzkompetenzen.isEmpty()) {
+			return new HashMap<>();
+		}
+		return ankreuzkompetenzen.stream().collect(Collectors.groupingBy(dto -> dto.idJahrgang));
+	}
+
 	private static Map<Long, DTOFoerderschwerpunkt> getFoerderschwerpunktListe(final DBEntityManager conn) {
 		final List<DTOFoerderschwerpunkt> foerderschwerpunkte = conn.queryAll(DTOFoerderschwerpunkt.class);
 		if (foerderschwerpunkte.isEmpty())
@@ -1218,7 +1252,7 @@ public final class DataENMDaten extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static Response getNotenmodulLocalConfig(final DBEntityManager conn) throws ApiOperationException {
+	public static Response getNotenmodulLocalConfig(final DBEntityManager conn) {
 		final ENMServerConfig res = new ENMServerConfig();
 		res.server.addAll(conn.queryAll(DTONotenmodulKonfigurationServer.class)
 				.stream().map(e -> new BenutzerConfigElement(e.schluessel, e.wert)).toList());

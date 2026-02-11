@@ -12,19 +12,19 @@ export class BKGymBelegungsfehlerTyp extends JavaEnum<BKGymBelegungsfehlerTyp> {
 	static readonly all_values_by_name: Map<string, BKGymBelegungsfehlerTyp> = new Map<string, BKGymBelegungsfehlerTyp>();
 
 	/**
-	 * BelegungsfehlerArt LK_1
+	 * BelegungsfehlerArt LK_1 | Parameter: Fachbezeichnung
 	 */
-	public static readonly LK_1: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("LK_1", 0, "LK_1", BKGymBelegungsfehlerArt.BELEGUNG, 10, "Es muss ein erster Leistungskurs gewählt werden.");
+	public static readonly LK_1: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("LK_1", 0, "LK_1", BKGymBelegungsfehlerArt.BELEGUNG, 10, "Das Fach %s ist nicht der erste Leistungskurs.");
 
 	/**
-	 * BelegungsfehlerArt LK_2
+	 * BelegungsfehlerArt LK_2 | Parameter: Fachbezeichnung
 	 */
-	public static readonly LK_2: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("LK_2", 1, "LK_2", BKGymBelegungsfehlerArt.BELEGUNG, 10, "Es muss ein zweiter Leistungskurs gewählt werden.");
+	public static readonly LK_2: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("LK_2", 1, "LK_2", BKGymBelegungsfehlerArt.BELEGUNG, 10, "Das Fach %s ist nicht der zweite Leistungskurs.");
 
 	/**
-	 * BelegungsfehlerArt LK_3 | Parameter: Fachkürzel von LK1, Fachkürzel von LK2, Gliederung, Fachklassenschlüssel
+	 * BelegungsfehlerArt LK_3 | Parameter: Fachbezeichnung
 	 */
-	public static readonly LK_3: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("LK_3", 2, "LK_3", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Die Kombination aus erstem LK (%s) und zweiten LK (%s) ist für den Bildungsgang %s%s nicht zulässig.");
+	public static readonly LK_3: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("LK_3", 2, "LK_3", BKGymBelegungsfehlerArt.BELEGUNG, 10, "Das Grundkursfach %s ist als Leistungskurs markiert.");
 
 	/**
 	 * BelegungsfehlerArt AB_3
@@ -39,7 +39,7 @@ export class BKGymBelegungsfehlerTyp extends JavaEnum<BKGymBelegungsfehlerTyp> {
 	/**
 	 * BelegungsfehlerArt AB_5 | Parameter: Fachkürzel von AB3, Fachkürzel von AB4, Gliederung, Fachklassenschlüssel
 	 */
-	public static readonly AB_5: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("AB_5", 5, "AB_5", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Die gewählte Kombination aus 3. Abiturfach (%s) und 4. Abiturfach (%s& ist in dem Bildungsgang %s%s nicht zulässig.");
+	public static readonly AB_5: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("AB_5", 5, "AB_5", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Die gewählte Kombination aus 3. Abiturfach (%s) und 4. Abiturfach (%s) ist in dem Bildungsgang %s%s nicht zulässig.");
 
 	/**
 	 * BelegungsfehlerArt ST_1 | Parameter: Fachbezeichnung
@@ -90,6 +90,21 @@ export class BKGymBelegungsfehlerTyp extends JavaEnum<BKGymBelegungsfehlerTyp> {
 	 * BelegungsfehlerArt KL_4 Klausur | Parameter: Fachbezeichnung, Halbjahr
 	 */
 	public static readonly KL_4: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("KL_4", 15, "KL_4", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 2, "Im Abiturfach %s fehlt die Klausurbelegung im Halbjahr %s.");
+
+	/**
+	 * BelegungsfehlerArt KL_1_INFO Klausur | Parameter: Fachbezeichnung, Halbjahr
+	 */
+	public static readonly KL_1_INFO: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("KL_1_INFO", 16, "KL_1_INFO", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 0, "Hinweis: Im Fach %s fehlt die Klausurbelegung im Halbjahr %s.");
+
+	/**
+	 * BelegungsfehlerArt KL_3_INFO Klausur | Parameter: Fachbezeichnung, Halbjahr
+	 */
+	public static readonly KL_3_INFO: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("KL_3_INFO", 17, "KL_3_INFO", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 0, "Hinweis: In der Fremdsprache %s fehlt die Klausurbelegung im Halbjahr %s.");
+
+	/**
+	 * BelegungsfehlerArt HJ_1_INFO Belegung | Parameter: Halbjahr
+	 */
+	public static readonly HJ_1_INFO: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("HJ_1_INFO", 18, "KL_3_INFO", BKGymBelegungsfehlerArt.BELEGUNG, 0, "Hinweis: Das Halbjahr %s ist nicht bewertet. Bedingungen müssen manuell geprüft werden.");
 
 	/**
 	 * Der eindeutige Code des Belegungsfehlers

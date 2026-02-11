@@ -6,7 +6,7 @@ export interface HaltestellenGruppenprozesseProps {
 	schulform: Schulform;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	delete: () => Promise<[boolean, List<string | null>]>;
-	deleteCheck: () => [boolean, List<string>];
+	deleteCheck: () => { success: boolean, logs: Iterable<string> };
 	manager: () => HaltestellenListeManager;
 	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
 }

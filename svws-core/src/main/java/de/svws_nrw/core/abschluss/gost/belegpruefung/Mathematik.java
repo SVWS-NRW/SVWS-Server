@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class Mathematik extends GostBelegpruefung {
 
-	/// Die Belegung für das Fach Mathematik
+	/** Die Belegung für das Fach Mathematik. */
 	private AbiturFachbelegung _mathematik;
 
 	/**

@@ -442,20 +442,6 @@ class DataFaecherTest {
 	}
 
 	@Test
-	@DisplayName("patch | maxZeichenInFachbemerkungen is null")
-	void patchMaxZeichenInFachbemerkungenNull() {
-		when(this.conn.queryByKey(DTOFach.class, 1L)).thenReturn(mock(DTOFach.class));
-		final var map = new HashMap<String, Object>();
-		map.put("maxZeichenInFachbemerkungen", null);
-
-		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, map))
-				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Attribut maxZeichenInFachbemerkungen: Der Wert null ist nicht erlaubt.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
-
-	@Test
 	@DisplayName("patch | maxZeichenInFachbemerkungen")
 	void patchMaxZeichenInFachbemerkungen() throws ApiOperationException {
 		final var dto = new DTOFach(1L, true);

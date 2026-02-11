@@ -1,4 +1,4 @@
-import { ValidatorLsk00LehrerStammdatenKuerzel } from '../../../asd/validate/lehrer/ValidatorLsk00LehrerStammdatenKuerzel';
+import { ValidatorLsk10LehrerStammdatenKuerzel } from '../../../asd/validate/lehrer/ValidatorLsk10LehrerStammdatenKuerzel';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -21,7 +21,7 @@ export class ValidatorLskLehrerStammdatenKuerzel extends Validator {
 	public constructor(daten: Supplier<string | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
-		this._validatoren.add(new ValidatorLsk00LehrerStammdatenKuerzel(daten, kontext));
+		this._validatoren.add(new ValidatorLsk10LehrerStammdatenKuerzel(daten, kontext));
 	}
 
 	protected pruefe(): boolean {

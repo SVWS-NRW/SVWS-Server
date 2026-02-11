@@ -1,0 +1,70 @@
+# Schüler hinzufügen
+
+## Frontend-Ablauf
+
+- Die Komponente `SSchuelerNeu.vue` (`svws-webclient/client/src/components/schueler/SSchuelerNeu.vue:1`) stellt das Formular für neue Schüler bereit.
+- Beim Klick auf „Anlegen“ ruft `addSchuelerStammdaten()` (`SSchuelerNeu.vue:303`) die Route-Funktion `RouteDataSchueler.addSchueler` auf (`svws-webclient/client/src/router/apps/schueler/RouteDataSchueler.ts:129`).
+- `addSchueler` erzeugt den REST-Request über `api.server.addSchuelerStammdaten(...)` (`svws-webclient/core/src/api/ApiServer.ts:12358`).
+- Nach erfolgreicher Erstellung wird zusätzlich `patchSchuelerSchulbesuchdaten` aufgerufen, um optionale Schulbesuchsdaten (z. B. Einschulungsart) zu hinterlegen (`SSchuelerNeu.vue:310`).
+
+## REST-Endpunkt
+
+- **Methode:** `POST`
+- **Pfad:** `/db/{schema}/schueler/{idSchuljahresabschnitt}/stammdaten/create`
+- **Implementierung:** `APISchueler.addSchuelerStammdaten` (`svws-openapi/src/main/java/de/svws_nrw/api/server/APISchueler.java:251`).
+- **Berechtigung:** Benutzer benötigt `SCHUELER_INDIVIDUALDATEN_AENDERN`.
+- **Antwort:** `201 Created` mit dem erzeugten Objekt `SchuelerStammdaten`.
+
+## Request-Body
+
+Der Body wird aus `SchuelerStammdatenNeu` serialisiert (`svws-webclient/core/src/asd/data/schueler/SchuelerStammdatenNeu.ts:4`). Pflichtfelder werden im Frontend validiert.
+
+| Feld | Typ | Pflicht | Beschreibung |
+| --- | --- | --- | --- |
+| `nachname` | string | ja | Nachname, max. 120 Zeichen |
+| `vorname` | string | ja | Rufname |
+| `alleVornamen` | string | ja (kann leerer String sein) | Alle Vornamen |
+| `geschlecht` | number | ja | ID aus dem Geschlechtskatalog |
+| `geburtsdatum` | string (ISO) | ja | Muss zwischen 4 und 50 Jahren in der Vergangenheit liegen |
+| `status` | number | ja | Schülerstatus (Standard: aktiv) |
+| `schuljahresabschnitt` | number | ja | Zielabschnitt für den neuen Datensatz |
+| `jahrgangID` | number/null | ja (>=0) | Jahrgang im gewählten Abschnitt |
+| `klassenID` | number/null | ja (>=0) | Klasse im gewählten Abschnitt |
+| `anmeldedatum` | string/null | nein | Darf nicht in der Zukunft liegen |
+| `aufnahmedatum` | string/null | nein | Nicht vor `anmeldedatum` |
+| `beginnBildungsgang` | string/null | nein | Nur bei BK/SK, nicht vor Aufnahmedatum |
+| `dauerBildungsgang` | number/null | nein | Dauer des Bildungsgangs |
+
+Alle weiteren Felder (`id`, etc.) werden vor dem POST entfernt (`SSchuelerNeu.vue:307`).
+
+### Beispiel-Payload
+
+```json
+{
+  "nachname": "Muster",
+  "vorname": "Max",
+  "alleVornamen": "Maximilian",
+  "geschlecht": 3,
+  "geburtsdatum": "2012-05-14",
+  "status": 2,
+  "schuljahresabschnitt": 20241,
+  "jahrgangID": 17,
+  "klassenID": 54,
+  "anmeldedatum": "2024-08-19",
+  "aufnahmedatum": "2024-08-22"
+}
+```
+
+## Folge-Update Schulbesuchsdaten
+
+Unmittelbar nach dem POST führt das Frontend einen `PATCH /db/{schema}/schueler/{id}/schulbesuch` aus (`ApiServer.patchSchuelerSchulbesuch`, `svws-webclient/core/src/api/ApiServer.ts:11760`).
+
+Payload-Beispiel:
+
+```json
+{
+  "grundschuleEinschulungsartID": 5
+}
+```
+
+Dieser Schritt ist optional und wird aktuell genutzt, um die gewählte Einschulungsart zu setzen.

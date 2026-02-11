@@ -28,7 +28,7 @@
 		</template>
 	</svws-ui-modal>
 	<div class="page page-flex-row">
-		<div class="min-w-fit max-w-fit flex flex-col gap-2" @drop="onDrop($event, undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostKursklausur && dragData.idTermin !== null) ? 'ring-offset-8 ring-4 ring-ui-danger/20 rounded-xl' : '' ]">
+		<div class="min-w-fit max-w-fit h-full overflow-y-auto flex flex-col gap-2" @drop="onDrop($event, undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostKursklausur && dragData.idTermin !== null) ? 'ring-offset-8 ring-4 ring-ui-danger/20 rounded-xl' : '' ]">
 			<h3 class="text-headline-md" title="In Planung">In Planung</h3>
 			<svws-ui-table selectable v-model="selected" :items="props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" :columns="cols"
 				:row-draggable="draggable" :row-dragstart="onDrag" :row-dragend="() => onDrag(undefined, undefined)">
@@ -50,11 +50,6 @@
 						<template #content>Dauer in Minuten</template>
 					</svws-ui-tooltip>
 				</template>
-				<!-- { key: "kurs", label: "Kurs", minWidth: 6.25 },
-			{ key: "kuerzel", label: "Lehrkraft" },
-			{ key: "schriftlich", label: "Schriftlich", span: 0.5, align: "center", minWidth: 3.25 },
-			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", minWidth: 3.25 },
-			{ key: "kursSchiene", label: "S", tooltip: "Schiene", span: 0.25, align: "right", minWidth: 2.75 }, -->
 				<template #cell(kurs)="{ rowData }">
 					<div class="-ml-2" :data="rowData" :draggable="draggable(rowData)" @dragstart="($event) => onDrag($event, rowData)" @dragend="onDrag($event, undefined)">
 						<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable" />

@@ -53,7 +53,7 @@ export class RouteDataLernplattformen extends RouteDataAuswahl<LernplattformList
 		await this.gotoDefaultView(res.id);
 	};
 
-	deleteCheck = (): [boolean, List<string>] => {
+	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
@@ -68,7 +68,7 @@ export class RouteDataLernplattformen extends RouteDataAuswahl<LernplattformList
 			errorLog.add(this.getErrorMessageForReferencedLernplattformen());
 		}
 
-		return [errorLog.isEmpty(), errorLog];
+		return { success: errorLog.isEmpty(), logs: errorLog };
 	};
 
 	private getErrorMessageForReferencedLernplattformen(): string {

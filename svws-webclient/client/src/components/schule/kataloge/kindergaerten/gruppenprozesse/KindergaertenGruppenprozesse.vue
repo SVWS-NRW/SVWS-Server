@@ -6,7 +6,7 @@
 		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Kindergärten werden gelöscht">
 				<div>
-					<span v-if="selectedAreNotReferenced">Alle ausgewählten Kindergärten sind bereit zum Löschen.</span>
+					<span v-if="selectedAllowedToDelete">Alle ausgewählten Kindergärten sind bereit zum Löschen.</span>
 					<template v-else v-for="message in deleteCheckErrors" :key="message">
 						<span class="text-ui-danger whitespace-pre-line"> {{ message }} <br> </span>
 					</template>
@@ -53,7 +53,7 @@
 
 	import type { KindergaertenGruppenprozesseProps } from "~/components/schule/kataloge/kindergaerten/gruppenprozesse/KindergaertenGruppenprozesseProps";
 	import type { List } from "@core";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { computed, ref } from "vue";
 
 	const props = defineProps<KindergaertenGruppenprozesseProps>();
@@ -62,8 +62,8 @@
 	const status = ref<boolean | undefined>();
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
 	const hatkeineErforderlicheKompetenz = computed(() => !hatKompetenzLoeschen.value);
-	const deleteCheckErrors = computed<List<string>>(() => props.deleteCheck()[1]);
-	const selectedAreNotReferenced = computed<boolean>(() => props.deleteCheck()[0]);
+	const selectedAllowedToDelete = computed<boolean>(() => props.deleteCheck().success);
+	const deleteCheckErrors = computed<Iterable<string>>(() => props.deleteCheck().logs);
 	const warningModalIsShown = ref<boolean>(false);
 
 
@@ -76,7 +76,7 @@
 	}
 
 	function handleDeleteClick() {
-		if (selectedAreNotReferenced.value) {
+		if (selectedAllowedToDelete.value) {
 			void deleteSelectedKindergaerten();
 		} else {
 			openWarningModal();

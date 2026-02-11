@@ -28,6 +28,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import org.apache.commons.lang3.Strings;
 
 
 /**
@@ -204,7 +205,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		switch (name) {
 			// Persönliche Daten
 			case "id" -> mapID(dto, value);
-			case "foto" -> mapSchuelerFoto(dto, value);
+			case "foto" -> updateSchuelerFoto(dto, value);
 			case "nachname" -> dto.Nachname = JSONMapper.convertToString(value, false, false, Schema.tab_Schueler.col_Name.datenlaenge(), "nachname");
 			case "vorname" -> dto.Vorname = JSONMapper.convertToString(value, false, false, Schema.tab_Schueler.col_Vorname.datenlaenge(), "vorname");
 			case "alleVornamen" -> dto.AlleVornamen = JSONMapper.convertToString(value, false, true, Schema.tab_Schueler.col_Zusatz.datenlaenge(),
@@ -423,24 +424,38 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 	/**
-	 * Setzt das Schüler-Foto für den übergebenen Schüler.
+	 * CRUD für das Schüler-Foto des übergebenen Schülers.
 	 *
-	 * @param dto     das DB-DTO des Schülers
+	 * @param schuelerDto     das DB-DTO des Schülers
 	 * @param value   das Schüler-Foto in Base64-Kodierung
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	void mapSchuelerFoto(final DTOSchueler dto, final Object value) throws ApiOperationException {
-		final String schuelerFotoNeu = JSONMapper.convertToString(value, true, true, null);
-		DTOSchuelerFoto schuelerFotoOldDto = conn.queryByKey(DTOSchuelerFoto.class, dto.ID);
-		if (schuelerFotoOldDto == null)
-			schuelerFotoOldDto = new DTOSchuelerFoto(dto.ID);
-		if ((schuelerFotoNeu != null) && !schuelerFotoNeu.equals(schuelerFotoOldDto.FotoBase64)) {
-			schuelerFotoOldDto.FotoBase64 = schuelerFotoNeu;
-			conn.transactionPersist(schuelerFotoOldDto);
+	void updateSchuelerFoto(final DTOSchueler schuelerDto, final Object value) throws ApiOperationException {
+		final String fotoPayloadNeu = JSONMapper.convertToString(value, true, true, null);
+		final DTOSchuelerFoto schuelerFotoOldDto = conn.queryByKey(DTOSchuelerFoto.class, schuelerDto.ID);
+		if (isFotoUnchanged(schuelerFotoOldDto, fotoPayloadNeu)) {
+			return;
+		}
+
+		if (fotoPayloadNeu == null) {
+			conn.transactionRemove(schuelerFotoOldDto);
+		} else {
+			persistFoto(schuelerDto.ID, schuelerFotoOldDto, fotoPayloadNeu);
 		}
 	}
 
+	private static boolean isFotoUnchanged(final DTOSchuelerFoto schuelerFotoOldDto, final String schuelerFotoNeu) {
+		final boolean isInvalidUpdate = (schuelerFotoOldDto == null) && (schuelerFotoNeu == null);
+		final boolean isIdenticalUpdate = (schuelerFotoOldDto != null) && Strings.CS.equals(schuelerFotoNeu, schuelerFotoOldDto.FotoBase64);
+		return isInvalidUpdate || isIdenticalUpdate;
+	}
+
+	private void persistFoto(final Long dtoID, final DTOSchuelerFoto existingDto, final String schuelerFotoNeu) {
+		final var newFoto = (existingDto != null) ? existingDto : new DTOSchuelerFoto(dtoID);
+		newFoto.FotoBase64 = schuelerFotoNeu;
+		conn.transactionPersist(newFoto);
+	}
 
 	/**
 	 * Setzt den Wohnort bei den Schülerdaten und prüft dabei die Angabe des Ortsteils auf Korrektheit in Bezug auf die Ortsteile

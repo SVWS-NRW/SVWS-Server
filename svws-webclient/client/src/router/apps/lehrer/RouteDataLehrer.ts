@@ -381,7 +381,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		return `Lehrer ${(lehrer?.vorname ?? '???') + ' ' + (lehrer?.nachname ?? '???')} (ID: ${id.toString()}) wurde erfolgreich gelöscht.`;
 	}
 
-	deleteLehrerCheck = (): { success: boolean, logs: List<string> } => {
+	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Lehrern vor.');

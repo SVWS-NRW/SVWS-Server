@@ -1,9 +1,10 @@
 import type { Ref } from "vue";
-import type { BasicValidator } from "../../../../../../core/src/asd/validate/BasicValidator";
 import type { BaseSelectManager } from "./BaseSelectManager";
 import type { List } from "../../../../../../core/src/java/util/List";
+import type { ValidatorFehler } from "../../../../../../core/src/asd/validate/ValidatorFehler";
+import type { ValidationResult } from "../../../../validation/ValidationResult";
 
-export interface UiSelectProps<T, V extends BasicValidator> {
+export interface UiSelectProps<T> {
 	label?: string;
 	manager?: BaseSelectManager<T>;
 	searchable?: boolean;
@@ -15,19 +16,17 @@ export interface UiSelectProps<T, V extends BasicValidator> {
 	readonly?: boolean;
 	statistics?: boolean;
 	headless?: boolean;
-	validator?: () => V;
+	validation?: () => List<ValidatorFehler>;
 }
-export interface UiSelectSingleProps<T, V extends BasicValidator> extends UiSelectProps<T, V> {
-	doValidate?: (validator: V, value: T | null) => boolean;
+export interface UiSelectSingleProps<T> extends UiSelectProps<T> {
 }
 
-export interface UiSelectMultiProps<T, V extends BasicValidator> extends UiSelectProps<T, V> {
+export interface UiSelectMultiProps<T> extends UiSelectProps<T> {
 	minOptions?: number;
 	maxOptions?: number;
-	doValidate?: (validator: V, value: Iterable<T> | null) => boolean;
 }
 
-export interface UiSelectState<T, V extends BasicValidator> {
+export interface UiSelectState<T> {
 	instanceId: string;
 	multi: boolean;
 	label: string;
@@ -40,9 +39,8 @@ export interface UiSelectState<T, V extends BasicValidator> {
 	disabled: boolean;
 	readonly: boolean;
 	headless: boolean;
-	validator?: () => V;
-	isValid: boolean,
-	isValidatorValid: boolean,
+	isValid: boolean;
+	validationResult: ValidationResult;
 }
 
 // Interface für alle HTML Elemente, deren Styling und Events gesetzt werden müssen

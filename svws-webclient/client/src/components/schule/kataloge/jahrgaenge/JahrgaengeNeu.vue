@@ -1,51 +1,59 @@
 <template>
 	<div class="page page-grid-cards">
-		<svws-ui-content-card title="Allgemein">
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
-					v-model="data.kuerzel"
-					:valid="() => fieldIsValid('kuerzel')" :min-len="1" :max-len="20" :disabled="!hatKompetenzAdd" required />
-				<svws-ui-text-input placeholder="Bezeichnung"
-					v-model="data.bezeichnung"
-					:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="100" :disabled="!hatKompetenzAdd" required />
-				<svws-ui-text-input placeholder="Kurzbezeichnung"
-					v-model="data.kurzbezeichnung"
-					:valid="() => fieldIsValid('kurzbezeichnung')" :max-len="2" :disabled="!hatKompetenzAdd" />
-				<ui-select label="Folgejahrgang"
-					v-model="selectedFolgejahrgang"
-					:manager="folgeJahrgangManager"
-					:disabled="!hatKompetenzAdd" />
-				<ui-select label="Schulgliederung ASD-Kürzel"
-					v-model="selectedSchulgliederung"
-					:manager="schulgliederungKuerzelSelectManager"
-					statistics :disabled="!hatKompetenzAdd" />
-				<ui-select label="Schulgliederung ASD-Text"
-					v-model="selectedSchulgliederung"
-					:manager="schulgliederungTextSelectManager"
-					statistics :disabled="!hatKompetenzAdd" />
-				<ui-select label="Jahrgang ASD-Kürzel"
-					:manager="jahrgangKuerzelSelectManager"
-					v-model="selectedStatistikJahrgang"
-					:valid="fieldIsValid('kuerzelStatistik')" statistics :disabled="!hatKompetenzAdd" required :removable="false" />
-				<ui-select label="Jahrgang ASD-Text"
-					:manager="jahrgangTextSelectManager"
-					v-model="selectedStatistikJahrgang"
-					statistics :disabled="!hatKompetenzAdd" required :removable="false" />
-				<svws-ui-input-number placeholder="Anzahl der Restabschnitte"
-					v-model="data.anzahlRestabschnitte"
-					:valid="() => fieldIsValid('anzahlRestabschnitte')" :min="0" :max="40" :disabled="!hatKompetenzAdd" />
-				<ui-select label="Bildungsstufe"
-					:manager="bildungsstufeSelectManager"
-					v-model="selectedBildungsstufe"
-					:readonly="!hatKompetenzAdd" />
-				<svws-ui-input-number placeholder="Sortierung"
-					v-model="data.sortierung"
-					:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" :removable="false" />
-				<svws-ui-spacing />
-				<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
-					Sichtbar
-				</svws-ui-checkbox>
-			</svws-ui-input-wrapper>
+		<svws-ui-content-card>
+			<svws-ui-content-card title="Allgemein">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
+						v-model="data.kuerzel"
+						:valid="() => fieldIsValid('kuerzel')" :min-len="1" :max-len="20" :disabled="!hatKompetenzAdd" required />
+					<svws-ui-text-input placeholder="Bezeichnung"
+						v-model="data.bezeichnung"
+						:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="100" :disabled="!hatKompetenzAdd" required />
+					<svws-ui-text-input placeholder="Kurzbezeichnung"
+						v-model="data.kurzbezeichnung"
+						:valid="() => fieldIsValid('kurzbezeichnung')" :max-len="2" :disabled="!hatKompetenzAdd" />
+					<ui-select label="Folgejahrgang"
+						v-model="selectedFolgejahrgang"
+						:manager="folgeJahrgangManager"
+						:disabled="!hatKompetenzAdd" />
+					<ui-select label="Schulgliederung ASD-Kürzel"
+						v-model="selectedSchulgliederung"
+						:manager="schulgliederungKuerzelSelectManager"
+						searchable statistics :disabled="!hatKompetenzAdd" />
+					<ui-select label="Schulgliederung ASD-Text"
+						v-model="selectedSchulgliederung"
+						:manager="schulgliederungTextSelectManager"
+						searchable statistics :disabled="!hatKompetenzAdd" />
+					<ui-select label="Jahrgang ASD-Kürzel"
+						:manager="jahrgangKuerzelSelectManager"
+						v-model="selectedStatistikJahrgang"
+						:valid="fieldIsValid('kuerzelStatistik')" searchable statistics :disabled="!hatKompetenzAdd" required :removable="false" />
+					<ui-select label="Jahrgang ASD-Text"
+						:manager="jahrgangTextSelectManager"
+						v-model="selectedStatistikJahrgang"
+						statistics searchable :disabled="!hatKompetenzAdd" required :removable="false" />
+					<svws-ui-input-number placeholder="Anzahl der Restabschnitte"
+						v-model="data.anzahlRestabschnitte"
+						:valid="() => fieldIsValid('anzahlRestabschnitte')" :min="0" :max="40" :disabled="!hatKompetenzAdd" />
+					<ui-select label="Bildungsstufe"
+						:manager="bildungsstufeSelectManager"
+						v-model="selectedBildungsstufe"
+						:readonly="!hatKompetenzAdd" />
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+			<svws-ui-spacing :size="2" />
+			<svws-ui-content-card title="Ansicht & Sortierung">
+				<svws-ui-input-wrapper :grid="2">
+					<svws-ui-input-number placeholder="Sortierung"
+						v-model="data.sortierung"
+						:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" :removable="false" />
+					<svws-ui-spacing />
+					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
+						Sichtbar
+					</svws-ui-checkbox>
+				</svws-ui-input-wrapper>
+			</svws-ui-content-card>
+
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel">
 					Abbrechen

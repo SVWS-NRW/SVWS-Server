@@ -6,6 +6,7 @@ import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.InvalidDateException;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
+import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -15,38 +16,38 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLsd01LehrerStammdatenGeburtsdatum extends Validator {
 
 	/** Die Lehrer-Stammdaten */
-	private final @NotNull Supplier<String> daten;
+	private final @NotNull Supplier<@AllowNull String> daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     das Geburtsdatum des Lehrers
+	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLsd01LehrerStammdatenGeburtsdatum(final @NotNull Supplier<String> daten,
+	public ValidatorLsd01LehrerStammdatenGeburtsdatum(final @NotNull Supplier<@AllowNull String> daten,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
+		_validatoren.add(new ValidatorLsd10LehrerStammdatenGeburtsdatum(getNotNullSupplier(daten), kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
 		// Bestimme das Geburtsdatum
 		DateManager geburtsdatum = null;
-			try {
-				geburtsdatum = DateManager.from(daten.get());
-			} catch (InvalidDateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		@NotNull String errorMsg = "";
+		try {
+			geburtsdatum = DateManager.from(daten.get());
+		} catch (final InvalidDateException e) {
+			errorMsg = e.getMessage();
+		}
 		final DateManager finalGeburtsdatum = geburtsdatum; //wegen Lambda hier nochmal als final.
 
-		final int schuljahr = kontext().getSchuljahr();
-
-		if (finalGeburtsdatum == null || !finalGeburtsdatum.istInJahren(schuljahr - 80, schuljahr - 18)) {
-			this.addFehler(1, "Unzulässige Eintragung im Feld Jahr (Geburtsdatum). Zulässig sind die Werte " + (schuljahr - 80) + " bis " + (schuljahr - 18) + ".");
+		if (finalGeburtsdatum == null) {
+			this.addFehler(0, "Das Geburtsdatum ist ungültig: " + errorMsg);
 			return false;
 		}
+
 		return true;
 	}
 

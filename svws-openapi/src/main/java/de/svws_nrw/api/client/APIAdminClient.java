@@ -383,6 +383,22 @@ public class APIAdminClient {
 
 
 	/**
+	 * Gibt eine avif-Datei aus dem Ordner "/assets" zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
+	 *
+	 * @param name   der Name der Datei ohne ".avif"
+	 *
+	 * @return die HTTP-Response mit der Datei oder {@link Status#NOT_FOUND}, falls die Datei
+	 *         nicht gefunden wurde
+	 */
+	@GET
+	@Produces("image/avif")
+	@Path("/assets/{name}.avif")
+	public Response getClientFileAssetsAVIF(@PathParam("name") final String name) {
+		return getFile("assets/" + name + ".avif");
+	}
+
+
+	/**
 	 * Gibt eine jpg-Datei aus dem Ordner "/assets" zurück, welche in den Ressourcen des SVWS-Clients vorhanden ist.
 	 *
 	 * @param name   der Name der Datei ohne ".jpg"

@@ -87,7 +87,7 @@ export class AbschlussManager extends JavaObject {
 			return "";
 		const sb: StringBuilder | null = new StringBuilder();
 		for (const fach of ergebnis.npFaecher) {
-			if (sb.length() > 0)
+			if (!sb.isEmpty())
 				sb.append(", ");
 			sb.append(fach);
 		}

@@ -12,7 +12,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
-import de.svws_nrw.asd.data.schule.SchuleStammdaten;
+import de.svws_nrw.asd.data.statistik.StatistikGesamt;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -23,28 +24,22 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
  *   <li> {@link TestValidatorLplk10LehrerPersonaldatenLehramtKombination},
  * </ul>
  * </p>
- *
- * <p> Testdaten:
- *   <ul>
- *     <li> de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json
- *   </ul>
- * </p>
- *
  */
 @DisplayName("Tests für TestValidatorLplk10LehrerPersonaldatenLehramtKombination")
 class TestValidatorLplk10LehrerPersonaldatenLehramtKombination {
 
 	// id1 (Lehramt), idLehrer1, idKatalogLehramt1, id2 (Lehramt), idLehrer2, idKatalogLehramt2, id3 (Lehramt), idLehrer3, idKatalogLehramt3, result
-	// idKatalogLehramt = 131 entspricht ID_90
+	// idKatalogLehramt = 122 entspricht ID_70
 	private static final String TESTDATEN_LEHRAMT_KOMBINATIONEN = """
-			111,   1,    119,	112,   1,    120,	113,   1,    131,	false
-			111,   1,    119,	112,   1,    120,	113,   1,    124,	true
-			111,   1,    131,	112,   1,    131,	113,   1,    131,	true
-		""";
+	111,   1,    119,	112,   1,    120,	113,   1,    122,	false
+	111,   1,    119,	112,   1,    120,	113,   1,    124,	true
+	111,   1,    122,	112,   1,    122,	113,   1,    122,	true
+""";
+
 
 	/** Stammdaten der Schule */
-	static final SchuleStammdaten schuleTestdaten_001 =
-			JsonReader.fromResource("de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten_LPLK07.json", SchuleStammdaten.class);
+	static final StatistikGesamt testdaten_001 =
+			JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_StatistikGesamt.json", StatistikGesamt.class);
 
 	/**
 	 * Initialisiert die Core-Types, damit die Tests ausgeführt werden können.
@@ -73,15 +68,16 @@ class TestValidatorLplk10LehrerPersonaldatenLehramtKombination {
 	@DisplayName("Tests für ValidatorLplk10LehrerPersonaldatenLehramtKombination")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN_LEHRAMT_KOMBINATIONEN)
-	void testValidatorLplk10LehrerPersonaldatenLehramtKombination(final long id1, final long idLehrer1, final long idKatalogLehramt1, final long id2, final long idLehrer2, final long idKatalogLehramt2, final long id3, final long idLehrer3, final long idKatalogLehramt3, final boolean result) {
+	void testValidatorLplk10LehrerPersonaldatenLehramtKombination(final long id1, final long idLehrer1, final long idKatalogLehramt1, final long id2,
+			final long idLehrer2, final long idKatalogLehramt2, final long id3, final long idLehrer3, final long idKatalogLehramt3, final boolean result) {
 
 		// Testdaten setzen
-		LehrerPersonaldaten lehrerPersonaldaten = new LehrerPersonaldaten();
+		final LehrerPersonaldaten lehrerPersonaldaten = new LehrerPersonaldaten();
 		lehrerPersonaldaten.id = 1;
 
-		LehrerLehramtEintrag lehrerLehramtEintrag1 = new LehrerLehramtEintrag();
-		LehrerLehramtEintrag lehrerLehramtEintrag2 = new LehrerLehramtEintrag();
-		LehrerLehramtEintrag lehrerLehramtEintrag3 = new LehrerLehramtEintrag();
+		final LehrerLehramtEintrag lehrerLehramtEintrag1 = new LehrerLehramtEintrag();
+		final LehrerLehramtEintrag lehrerLehramtEintrag2 = new LehrerLehramtEintrag();
+		final LehrerLehramtEintrag lehrerLehramtEintrag3 = new LehrerLehramtEintrag();
 
 		lehrerLehramtEintrag1.idKatalogLehramt = idKatalogLehramt1;
 
@@ -91,7 +87,7 @@ class TestValidatorLplk10LehrerPersonaldatenLehramtKombination {
 		lehrerLehramtEintrag3.idKatalogLehramt = idKatalogLehramt3;
 		lehrerLehramtEintrag3.idLehrer = idLehrer3;
 
-		List<LehrerLehramtEintrag> listLehrerLehramtEintrag = new ArrayList<>();
+		final List<LehrerLehramtEintrag> listLehrerLehramtEintrag = new ArrayList<>();
 		listLehrerLehramtEintrag.add(lehrerLehramtEintrag1);
 		listLehrerLehramtEintrag.add(lehrerLehramtEintrag2);
 		listLehrerLehramtEintrag.add(lehrerLehramtEintrag3);
@@ -99,8 +95,12 @@ class TestValidatorLplk10LehrerPersonaldatenLehramtKombination {
 		lehrerPersonaldaten.lehraemter.addAll(listLehrerLehramtEintrag);
 
 		// Erzeuge den Kontext für die Validierung
-		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
-		final ValidatorLplk10LehrerPersonaldatenLehramtKombination validator = new ValidatorLplk10LehrerPersonaldatenLehramtKombination(lehrerPersonaldaten, kontext);
+		final ValidatorKontext kontext =
+				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
+						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
+		final ValidatorLplk10LehrerPersonaldatenLehramtKombination validator = new ValidatorLplk10LehrerPersonaldatenLehramtKombination(
+				() -> listLehrerLehramtEintrag,
+				kontext);
 		assertEquals(result, validator.run());
 	}
 

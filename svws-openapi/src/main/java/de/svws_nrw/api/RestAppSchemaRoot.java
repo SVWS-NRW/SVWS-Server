@@ -2,6 +2,8 @@ package de.svws_nrw.api;
 
 import java.util.Set;
 
+import de.svws_nrw.api.common.ApiOperationExceptionMapper;
+import de.svws_nrw.api.common.GenericExceptionMapper;
 import de.svws_nrw.api.common.OpenAPICorsFilter;
 import de.svws_nrw.api.common.PathUtils;
 import de.svws_nrw.api.privileged.APIPrivilegedConfig;
@@ -23,6 +25,8 @@ public final class RestAppSchemaRoot extends Application {
 	/// Enthält die API-Klassen für diese Applikation
 	private final Set<Class<?>> classes = Set.of(
 			OpenAPICorsFilter.class,
+			ApiOperationExceptionMapper.class,
+			GenericExceptionMapper.class,
 			APIPrivilegedConfig.class,
 			APIPrivilegedSchema.class,
 			OpenApiSchemaRoot.class);

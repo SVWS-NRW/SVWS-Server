@@ -1,53 +1,58 @@
 <template>
 	<svws-ui-app-layout ref="appLayout" :no-secondary-menu="!menu.hasSubmenu" :tertiary-menu="menu.hasAuswahlliste" secondary-menu-small>
 		<template #sidebar>
-			<svws-ui-menu :focus-switching-enabled :focus-help-visible>
-				<template #header>
-					<svws-ui-menu-header v-if="menu.benutzerprofil !== null" :user="username" :schule="schulname" :schema="schemaname" @click="startSetApp(menu.benutzerprofil)" class="cursor-pointer" />
-				</template>
-				<template #default>
-					<template v-for="item in menu.main" :key="item.name">
-						<svws-ui-menu-item :active="menu.mainEntry.name === item.name" @click="startSetApp(item)">
-							<template #icon><span class="icon-lg" :class="getIcon(item)" /></template>
-							<template #label><span class="text-xs"> {{ item.text }}</span> </template>
+			<div class="flex h-full flex-col">
+				<a class="px-4 py-3 flex justify-center" href="https://schoolboost.de/" target="_blank" rel="noopener noreferrer">
+					<img :src="schoolboostLogo" alt="Schoolboost" class="max-h-12 w-auto object-contain" />
+				</a>
+				<svws-ui-menu :focus-switching-enabled :focus-help-visible class="flex-1">
+					<template #header>
+						<svws-ui-menu-header v-if="menu.benutzerprofil !== null" :user="username" :schule="schulname" :schema="schemaname" @click="startSetApp(menu.benutzerprofil)" class="cursor-pointer" />
+					</template>
+					<template #default>
+						<template v-for="item in menu.main" :key="item.name">
+							<svws-ui-menu-item :active="menu.mainEntry.name === item.name" @click="startSetApp(item)">
+								<template #icon><span class="icon-lg" :class="getIcon(item)" /></template>
+								<template #label><span class="text-xs"> {{ item.text }}</span> </template>
+							</svws-ui-menu-item>
+						</template>
+					</template>
+					<template #footer>
+						<template v-if="menu.einstellungen !== null">
+							<svws-ui-menu-item :active="menu.mainEntry.name === menu.einstellungen.name" @click="startSetApp(menu.einstellungen)">
+								<template #icon><span class="icon-lg" :class="getIcon(menu.einstellungen)" /></template>
+								<template #label><span class="text-xs"> {{ menu.einstellungen.text }}</span> </template>
+							</svws-ui-menu-item>
+						</template>
+						<svws-ui-menu-item subline="" @click="doLogout">
+							<template #label>Abmelden</template>
+							<template #icon><span class="icon-lg i-ri-logout-circle-line" /></template>
 						</svws-ui-menu-item>
 					</template>
-				</template>
-				<template #footer>
-					<template v-if="menu.einstellungen !== null">
-						<svws-ui-menu-item :active="menu.mainEntry.name === menu.einstellungen.name" @click="startSetApp(menu.einstellungen)">
-							<template #icon><span class="icon-lg" :class="getIcon(menu.einstellungen)" /></template>
-							<template #label><span class="text-xs"> {{ menu.einstellungen.text }}</span> </template>
-						</svws-ui-menu-item>
+					<template #version>
+						<div class="flex gap-1">
+							<div class="mt-1">{{ version }}<span v-if="version.includes('SNAPSHOT')">&nbsp;{{ servermode.name() }}-Mode&nbsp;<a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`">{{ githash.substring(0, 8) }}</a></span></div>
+							<svws-ui-button type="transparent" @click="copyToClipboard">
+								<span class="icon i-ri-file-copy-line" v-if="copied === null" />
+								<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
+								<span class="icon i-ri-check-line icon-ui-brand" v-else />
+							</svws-ui-button>
+						</div>
 					</template>
-					<svws-ui-menu-item subline="" @click="doLogout">
-						<template #label>Abmelden</template>
-						<template #icon><span class="icon-lg i-ri-logout-circle-line" /></template>
-					</svws-ui-menu-item>
-				</template>
-				<template #version>
-					<div class="flex gap-1">
-						<div class="mt-1">{{ version }}<span v-if="version.includes('SNAPSHOT')">&nbsp;{{ servermode.name() }}-Mode&nbsp;<a :href="`https://github.com/SVWS-NRW/SVWS-Server/commit/${githash}`">{{ githash.substring(0, 8) }}</a></span></div>
-						<svws-ui-button type="transparent" @click="copyToClipboard">
-							<span class="icon i-ri-file-copy-line" v-if="copied === null" />
-							<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
-							<span class="icon i-ri-check-line icon-ui-brand" v-else />
-						</svws-ui-button>
-					</div>
-				</template>
-				<template #metaNavigation>
-					<a href="https://www.svws.nrw.de/faq/impressum">
-						<svws-ui-button type="transparent">
-							Impressum
-						</svws-ui-button>
-					</a>
-					<datenschutz-modal v-slot="{ openModal }">
-						<svws-ui-button type="transparent" @click="openModal()">
-							Datenschutz
-						</svws-ui-button>
-					</datenschutz-modal>
-				</template>
-			</svws-ui-menu>
+					<template #metaNavigation>
+						<a href="https://www.svws.nrw.de/faq/impressum">
+							<svws-ui-button type="transparent">
+								Impressum
+							</svws-ui-button>
+						</a>
+						<datenschutz-modal v-slot="{ openModal }">
+							<svws-ui-button type="transparent" @click="openModal()">
+								Datenschutz
+							</svws-ui-button>
+						</datenschutz-modal>
+					</template>
+				</svws-ui-menu>
+			</div>
 		</template>
 		<template #secondaryMenu v-if="menu.hasSubmenu">
 			<template v-if="pendingSetApp">
@@ -142,6 +147,7 @@
 	import { githash } from '../../githash';
 	import { version } from '../../version';
 	import { api } from '~/router/Api';
+	const schoolboostLogo = new URL('../../images/schoolboost_logo.avif', import.meta.url).href;
 
 	const props = defineProps<AppProps>();
 

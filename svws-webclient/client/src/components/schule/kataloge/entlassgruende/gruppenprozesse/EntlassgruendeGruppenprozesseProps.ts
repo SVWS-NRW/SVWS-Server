@@ -5,6 +5,6 @@ export interface EntlassgruendeGruppenprozesseProps {
 	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => EntlassgruendeListeManager;
-	deleteCheck: () => [boolean, List<string>];
+	deleteCheck: () => { success: boolean, logs: Iterable<string> };
 	delete: () => Promise<[boolean, List<string | null>]>;
 }

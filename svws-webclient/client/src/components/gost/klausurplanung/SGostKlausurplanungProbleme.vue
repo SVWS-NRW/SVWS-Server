@@ -38,7 +38,7 @@
 			</template>
 			<svws-ui-table :items="vorgaben()" :columns="addStatusColumn(colsVorgaben, '')">
 				<template #cell(idFach)="{ value }">
-					<span class="svws-ui-badge" :style="`color: var(--color-text-uistatic); background-color: ${getBgColor(value)}`">{{ kMan().getFaecherManager(jahrgangsdaten!.abiturjahr-1).get(value)?.bezeichnung }}</span>
+					<span class="svws-ui-badge" :style="`color: var(--color-text-uistatic); background-color: ${getBgColor(value)}`">{{ kMan().getFaecherManager(jahrgangsdaten!.abiturjahr).get(value)?.bezeichnung }}</span>
 				</template>
 				<template #cell(quartal)="{ value }">
 					{{ value }}
@@ -507,7 +507,7 @@
 			return input;
 		}
 		if (typeof input === "number") {
-			const fach = props.kMan().getFaecherManager(props.jahrgangsdaten!.abiturjahr - 1).get(input);
+			const fach = props.kMan().getFaecherManager(props.jahrgangsdaten!.abiturjahr).get(input);
 			return fach?.kuerzel ?? null;
 		}
 		let vorgabe;
@@ -518,7 +518,7 @@
 		} else {
 			vorgabe = props.kMan().vorgabeByKursklausur(input);
 		}
-		const fach = props.kMan().getFaecherManager(props.jahrgangsdaten!.abiturjahr - 1).get(vorgabe.idFach);
+		const fach = props.kMan().getFaecherManager(props.jahrgangsdaten!.abiturjahr).get(vorgabe.idFach);
 		return fach?.kuerzel ?? null;
 	}
 

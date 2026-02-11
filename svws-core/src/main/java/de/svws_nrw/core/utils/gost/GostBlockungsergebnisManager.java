@@ -1327,6 +1327,10 @@ public class GostBlockungsergebnisManager {
 		return ListUtils.getCountFiltered(_parent.daten().schueler, (final @NotNull Schueler schueler) -> getOfSchuelerHatStatusExtern(schueler.id));
 	}
 
+	private static double dividiereUndScheideNachZweiNachkommastellenAb(final int zaehler, final int nenner) {
+		long hochskaliert = (zaehler * 100L) / nenner;
+		return hochskaliert / 100.0;
+	}
 
 	/**
 	 * Liefert die Kursfrequenz als String, berechnet als (Summe aller Fachwahlen) / (interne Kurse).
@@ -1341,7 +1345,7 @@ public class GostBlockungsergebnisManager {
 			return "Kursfrequenz = ?";
 		// Berechne die 1. Formel
 		int nFachwahlen = _parent.fachwahlGetAnzahl();
-		double avg1 = ((nFachwahlen * 100) / nKurse) / 100.0;
+		double avg1 = dividiereUndScheideNachZweiNachkommastellenAb(nFachwahlen, nKurse);
 		return  ("" + avg1).replace('.', ',');
 	}
 
@@ -1361,7 +1365,7 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostBlockungKurs gKurs : _parent.daten().kurse)
 			if (!gKurs.istKoopKurs)
 				nVerteilt += getOfKursAnzahlSchueler(gKurs.id);
-		double avg2 = ((nVerteilt * 100) / nKurse) / 100.0;
+		double avg2 = dividiereUndScheideNachZweiNachkommastellenAb(nVerteilt, nKurse);
 		return  ("" + avg2).replace('.', ',');
 	}
 
@@ -2453,7 +2457,7 @@ public class GostBlockungsergebnisManager {
 		if ((konfliktTyp == 3) && ((!getOfSchuelerHatKollision(idSchueler)) && (!getOfSchuelerHatNichtwahl(idSchueler))))
 			return false;
 
-		if ((subString.length() > 0) && (!getOfSchuelerHatImNamenSubstring(idSchueler, subString)))
+		if (!subString.isEmpty() && (!getOfSchuelerHatImNamenSubstring(idSchueler, subString)))
 			return false;
 
 		if ((geschlecht != null) && (getOfSchuelerGeschlechtOrException(idSchueler).id != geschlecht.id))

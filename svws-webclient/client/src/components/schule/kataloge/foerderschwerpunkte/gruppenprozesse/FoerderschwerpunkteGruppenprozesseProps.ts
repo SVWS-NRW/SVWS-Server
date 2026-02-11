@@ -6,6 +6,6 @@ export interface FoerderschwerpunkteGruppenprozesseProps {
 	schulform: Schulform;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => FoerderschwerpunkteListeManager;
-	deleteCheck: () => [boolean, List<string>];
+	deleteCheck: () => { success: boolean, logs: Iterable<string> };
 	delete: () => Promise<[boolean, List<string | null>]>;
 }

@@ -3,11 +3,10 @@ import { computed, ref, type ComputedRef, type Ref } from 'vue';
 import type { List } from "../../../../../../core/src/java/util/List";
 import type { UiSelectDropdown, UiSelectState } from "../manager/UiSelectTypes";
 import { ArrayList } from "../../../../../../core/src/java/util/ArrayList";
-import type { BasicValidator } from "../../../../../../core/src/asd/validate/BasicValidator";
 import type { BaseSelectManager } from "../manager/BaseSelectManager";
 
-export function useUiSelectInputHandler<T, V extends BasicValidator>(
-	state: ComputedRef<UiSelectState<T, V>>,
+export function useUiSelectInputHandler<T>(
+	state: ComputedRef<UiSelectState<T>>,
 	search: Ref<string>,
 	dropdown: UiSelectDropdown<T>
 ): {

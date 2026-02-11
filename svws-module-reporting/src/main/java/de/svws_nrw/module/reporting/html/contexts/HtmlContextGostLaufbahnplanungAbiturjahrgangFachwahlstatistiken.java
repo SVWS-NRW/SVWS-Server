@@ -7,11 +7,11 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
-import de.svws_nrw.module.reporting.proxytypes.gost.ProxyReportingGostFachwahlstatistikenAbiturjahrgang;
+import de.svws_nrw.module.reporting.types.gost.fachwahlstatistik.ProxyReportingGostFachwahlstatistikenAbiturjahrgang;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
-import de.svws_nrw.module.reporting.types.gost.ReportingGostFachwahlstatistik;
-import de.svws_nrw.module.reporting.types.gost.ReportingGostFachwahlstatistikenAbiturjahrgang;
-import de.svws_nrw.module.reporting.types.gost.ReportingGostFachwahlstatistikHalbjahr;
+import de.svws_nrw.module.reporting.types.gost.fachwahlstatistik.ReportingGostFachwahlstatistik;
+import de.svws_nrw.module.reporting.types.gost.fachwahlstatistik.ReportingGostFachwahlstatistikenAbiturjahrgang;
+import de.svws_nrw.module.reporting.types.gost.fachwahlstatistik.ReportingGostFachwahlstatistikHalbjahr;
 import org.thymeleaf.context.Context;
 
 

@@ -3,7 +3,10 @@ package de.svws_nrw.core.abschluss.bk.d;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,6 +19,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
+
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
@@ -42,6 +50,9 @@ class TestBKGymBelegpruefung {
 	/** Eine Map mit den Belegprüfungsergebnissen von Schülern des Beruflichen Gymnasiums aus den zugehörigen JSON-Dateien mit den Testfällen */
 	static HashMap<String, HashMap<String, BKGymBelegpruefungErgebnis>> testBelegpruefungsergebnisse = new HashMap<>();
 
+	/** Der Pfad zum Resource-Verzeichnis mit den Testdaten */
+	static String pfadTestdaten = "";
+
 
 	/**
 	 * Initialisiert den Test und lädt dafür die Jahrgänge und die Abiturdaten aus den
@@ -51,6 +62,14 @@ class TestBKGymBelegpruefung {
 	 */
 	@BeforeAll
 	static void setup() throws IOException {
+		Path projectRoot;
+		try {
+			projectRoot = Paths.get("").toAbsolutePath();
+		} catch (final Exception e) {
+			throw new IOException("Fehler beim Ermitteln des Projektpfades!", e);
+		}
+		pfadTestdaten = projectRoot.resolve("src/test/resources/de/svws_nrw/core/abschluss/bk/d/").toString();
+
 		ASDCoreTypeUtils.initAll();
 		System.out.println("- Lade die Fächer der Jahrgänge aus den JSON-Resourcen...");
 		final Map<String, BKGymFach[]> tempTestJahrgaengeFaecher =
@@ -80,6 +99,8 @@ class TestBKGymBelegpruefung {
 		System.out.println("- Lade die Belegprüfungsergebnisse aus den JSON-Resourcen und ordne sie den Jahrgängen zu...");
 		final Map<String, BKGymBelegpruefungErgebnis> tempTestBelegpruefungsergebnisse =
 				ResourceUtils.json2Classes("de.svws_nrw.core.abschluss.bk.d", "Jahrgang_", "_Belegpruefungsergebnis", BKGymBelegpruefungErgebnis.class);
+		if ((tempTestBelegpruefungsergebnisse == null) || (tempTestBelegpruefungsergebnisse.size() == 0))
+			return;
 		assert (tempTestBelegpruefungsergebnisse != null) && (tempTestBelegpruefungsergebnisse.size() != 0)
 				: "Fehler beim Laden der Belegprüfungsergebnisse!";
 		for (final Map.Entry<String, BKGymBelegpruefungErgebnis> entry : tempTestBelegpruefungsergebnisse.entrySet()) {
@@ -106,20 +127,22 @@ class TestBKGymBelegpruefung {
 	@TestFactory
 	@DisplayName("Teste Belegprüfungsalgorithmus im Beruflichen Gymnasium...")
 	Stream<DynamicTest> testBelegpruefung() {
+		final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+		final DefaultPrettyPrinter pp = new DefaultPrettyPrinter();
+		pp.indentArraysWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
+		pp.indentObjectsWith(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
+
 		final ArrayList<DynamicTest> tests = new ArrayList<>();
 		testAbiturdaten.forEach((jahrgang, mapSchuelerJahrgang) -> {
 			mapSchuelerJahrgang.forEach((schueler_id, abidaten) -> {
+//			  if (schueler_id.equals("0286")) {
 				// Lese BKGymFaecher
 				final List<BKGymFach> bkGymFaecher = testJahrgaengeFaecher.get(jahrgang);
 				assert bkGymFaecher != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + schueler_id
 						+ "' wurden keine Test-Fächerdaten des beruflichen Gymnasiums gefunden.";
 				// Lese Belegprüfungsergebnis
 				final var testJahrgangBelegpruefungsergebnisse = testBelegpruefungsergebnisse.get(jahrgang);
-				assert testJahrgangBelegpruefungsergebnisse != null : "Es konnte kein Jahrgang " + jahrgang
-						+ " mit Belegprüfungsergebnissen als json-Dateien für den Vergleich bei den Abiturdaten " + schueler_id + " gefunden werden.";
-				final var vergleichErgebnis = testJahrgangBelegpruefungsergebnisse.get(schueler_id);
-				assert vergleichErgebnis != null : "Es konnte kein Gesamt-Belegprüfungsergebnis für die Abiturdaten " + schueler_id + " (Jahrgang "
-						+ jahrgang + ") als json-Datei für den Vergleich gefunden werden.";
+				final var vergleichErgebnisBelegpruefungsalgorithmus = testJahrgangBelegpruefungsergebnisse == null ? null : testJahrgangBelegpruefungsergebnisse.get(schueler_id);
 				// Füge Test für die Belegprüfung hinzu
 				tests.add(DynamicTest.dynamicTest(
 						"Testjahrgang " + jahrgang + " - Abiturdaten " + schueler_id + " - Belegprüfung",
@@ -143,23 +166,31 @@ class TestBKGymBelegpruefung {
 								}
 							}
 
-							// Prüfe den Erfolg der Belegprüfung
-							assertEquals(vergleichErgebnis.erfolgreich, ergebnis.erfolgreich, ergebnis.erfolgreich
-									? "Fehler: Belegprüfung war erfolgreich, obwohl der Testfall vorgibt, dass sie fehlschlagen muss!"
-									: "Fehler: Belegprüfung war nicht erfolgreich, obwohl der Testfall vorgibt, dass sie erfolgreich sein muss!");
+							if (vergleichErgebnisBelegpruefungsalgorithmus == null) {
+								//erzeuge JSON mit Markierungsergebnis
+								mapper.writer(pp).writeValue(new File(pfadTestdaten + "/Jahrgang_" + jahrgang + "_" + schueler_id + "_Belegpruefungsergebnis.json"), ergebnis);
+								System.out.println("Neuer Testfall " + jahrgang + "_" + schueler_id + ": Das Ergebnis der Belegprüfung wurde erstmalig erzeugt. Bitte prüfen und ggfs. korrigieren.");
+								fail("Neuer Testfall: Das Ergebnis der Belegprüfung wurde erstmalig erzeugt. Bitte prüfen und ggfs. korrigieren. " + System.lineSeparator());
+							} else {
+								// Prüfe den Erfolg der Belegprüfung
+								assertEquals(vergleichErgebnisBelegpruefungsalgorithmus.erfolgreich, ergebnis.erfolgreich, ergebnis.erfolgreich
+										? "Fehler: Belegprüfung war erfolgreich, obwohl der Testfall vorgibt, dass sie fehlschlagen muss!"
+										: "Fehler: Belegprüfung war nicht erfolgreich, obwohl der Testfall vorgibt, dass sie erfolgreich sein muss!");
 
-							// Prüfe, ob sich die dokumentierten Fehler des Testfalls von den gefundenen unterscheiden.
-							final List<String> testfallFehler =
-									vergleichErgebnis.fehlercodes.stream().map(error -> error.beschreibung).toList();
-							final List<String> ergebnisFehler = ergebnis.fehlercodes.stream().map(error -> error.beschreibung).toList();
-							final String zuwenig = testfallFehler.stream().filter(error -> !ergebnisFehler.contains(error)).collect(Collectors.joining(", "));
-							final String zuviele = ergebnisFehler.stream().filter(error -> !testfallFehler.contains(error)).collect(Collectors.joining(", "));
-							if ((!"".equals(zuwenig)) || (!"".equals(zuviele)))
-								fail("Fehler: Die Fehlercodes der Belegprüfung stimmen nicht mit dem Testfall überein: " + System.lineSeparator()
-										+ "  - zuviel gefundene Fehler: " + (("".equals(zuviele)) ? "---" : zuviele) + System.lineSeparator()
-										+ "  - zu wenig gefunden Fehler:" + (("".equals(zuwenig)) ? "---" : zuwenig));
-							System.out.println("  Test erfolgreich beendet.");
+								// Prüfe, ob sich die dokumentierten Fehler des Testfalls von den gefundenen unterscheiden.
+								final List<String> testfallFehler =
+										vergleichErgebnisBelegpruefungsalgorithmus.fehlercodes.stream().map(error -> error.beschreibung).toList();
+								final List<String> ergebnisFehler = ergebnis.fehlercodes.stream().map(error -> error.beschreibung).toList();
+								final String zuwenig = testfallFehler.stream().filter(error -> !ergebnisFehler.contains(error)).collect(Collectors.joining(", "));
+								final String zuviele = ergebnisFehler.stream().filter(error -> !testfallFehler.contains(error)).collect(Collectors.joining(", "));
+								if ((!"".equals(zuwenig)) || (!"".equals(zuviele)))
+									fail("Fehler: Die Fehlercodes der Belegprüfung stimmen nicht mit dem Testfall überein: " + System.lineSeparator()
+											+ "  - zuviel gefundene Fehler: " + (("".equals(zuviele)) ? "---" : zuviele) + System.lineSeparator()
+											+ "  - zu wenig gefunden Fehler:" + (("".equals(zuwenig)) ? "---" : zuwenig));
+								System.out.println("  Test erfolgreich beendet.");
+							}
 						}));
+//			  }
 			});
 		});
 		return tests.stream();

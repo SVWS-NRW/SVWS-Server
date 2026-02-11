@@ -1,38 +1,43 @@
 <template>
 	<svws-ui-app-layout :no-secondary-menu="app.name === 'config'">
 		<template #sidebar>
-			<svws-ui-menu>
-				<template #header>
-					<svws-ui-menu-header :user="username" schule="Admin-Client" is-admin-client />
-				</template>
-				<template #default>
-					<template v-for="item in apps" :key="item.name">
-						<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)" v-if="isVisible(item)">
-							<template #label> {{ item.text }} </template>
-							<template #icon> <span class="icon-lg i-ri-archive-stack-line" /> </template>
+			<div class="flex h-full flex-col">
+				<a class="px-4 py-3 flex justify-center" href="https://schoolboost.de/" target="_blank" rel="noopener noreferrer">
+					<img :src="schoolboostLogo" alt="Schoolboost" class="max-h-12 w-auto object-contain" />
+				</a>
+				<svws-ui-menu class="flex-1">
+					<template #header>
+						<svws-ui-menu-header :user="username" schule="Admin-Client" is-admin-client />
+					</template>
+					<template #default>
+						<template v-for="item in apps" :key="item.name">
+							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)" v-if="isVisible(item)">
+								<template #label> {{ item.text }} </template>
+								<template #icon> <span class="icon-lg i-ri-archive-stack-line" /> </template>
+							</svws-ui-menu-item>
+						</template>
+					</template>
+					<template #footer>
+						<svws-ui-menu-item subline="" @click="doLogout">
+							<template #label>Abmelden</template>
+							<template #icon> <span class="icon-lg i-ri-logout-circle-line" /> </template>
 						</svws-ui-menu-item>
 					</template>
-				</template>
-				<template #footer>
-					<svws-ui-menu-item subline="" @click="doLogout">
-						<template #label>Abmelden</template>
-						<template #icon> <span class="icon-lg i-ri-logout-circle-line" /> </template>
-					</svws-ui-menu-item>
-				</template>
-				<template #version>{{ version }}</template>
-				<template #metaNavigation>
-					<a href="https://www.svws.nrw.de/faq/impressum">
-						<svws-ui-button type="transparent">
-							Impressum
-						</svws-ui-button>
-					</a>
-					<datenschutz-modal v-slot="{ openModal }">
-						<svws-ui-button type="transparent" @click="openModal()">
-							Datenschutz
-						</svws-ui-button>
-					</datenschutz-modal>
-				</template>
-			</svws-ui-menu>
+					<template #version>{{ version }}</template>
+					<template #metaNavigation>
+						<a href="https://www.svws.nrw.de/faq/impressum">
+							<svws-ui-button type="transparent">
+								Impressum
+							</svws-ui-button>
+						</a>
+						<datenschutz-modal v-slot="{ openModal }">
+							<svws-ui-button type="transparent" @click="openModal()">
+								Datenschutz
+							</svws-ui-button>
+						</datenschutz-modal>
+					</template>
+				</svws-ui-menu>
+			</div>
 		</template>
 		<template #secondaryMenu>
 			<template v-if="pendingSetApp">
@@ -75,6 +80,7 @@
 	import type { AppProps } from './SAppProps';
 	import type { TabData } from '@ui/ui/nav/TabData';
 	import { version } from '../../version';
+	const schoolboostLogo = new URL('../../images/schoolboost_logo.avif', import.meta.url).href;
 
 	const props = defineProps<AppProps>();
 

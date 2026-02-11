@@ -2,6 +2,8 @@ package de.svws_nrw.core.abschluss.gost.belegpruefung;
 
 import java.util.List;
 
+import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
@@ -10,8 +12,6 @@ import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.asd.types.Note;
-import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -23,43 +23,43 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 
-	/// Die Kurszahlen der einzelnen Halbjahre
+	/** Die Kurszahlen der einzelnen Halbjahre. */
 	private ArrayMap<GostHalbjahr, ArrayMap<GostKursart, Integer>> kurszahlen;
 
-	/// Die Kurszahlen der einzelnen Halbjahre
+	/** Die Kurszahlen der einzelnen Halbjahre. */
 	private ArrayMap<GostHalbjahr, Integer> kurszahlenGrundkurse;
 
-	/// Die Kurszahlen der einzelnen Halbjahre
+	/** Die Kurszahlen der einzelnen Halbjahre. */
 	private ArrayMap<GostHalbjahr, Integer> kurszahlenLeistungskurse;
 
-	/// Die Kurszahlen der anrechenbaren Kurse für die einzelnen Halbjahre
+	/** Die Kurszahlen der anrechenbaren Kurse für die einzelnen Halbjahre. */
 	private ArrayMap<GostHalbjahr, Integer> kurszahlenAnrechenbar;
 
-	/// Die Kurszahlen der Einführungsphase
+	/** Die Kurszahlen der Einführungsphase. */
 	private ArrayMap<GostKursart, Integer> kurszahlenEinfuehrungsphase;
 
-	/// Die Kurszahlen der Qualifikationsphase
+	/** Die Kurszahlen der Qualifikationsphase. */
 	private ArrayMap<GostKursart, Integer> kurszahlenQualifikationsphase;
 
-	/// Die Gesamtzahl der Grundkurse der Qualifikationsphase (auch Zusatzkurse und ggf. Projektkurse, die zu keiner besonderen Lernleistung zählen)
+	/** Die Gesamtzahl der Grundkurse der Qualifikationsphase (auch Zusatzkurse und ggf. Projektkurse, die zu keiner besonderen Lernleistung zählen). */
 	private int blockIAnzahlGrundkurse;
 
-	/// Die Anzahl der belegten LK-Fächer (sollten 2 sein)
+	/** Die Anzahl der belegten LK-Fächer (sollten 2 sein). */
 	private int anzahlLKFaecher;
 
-	/// Die Gesamtzahl der Leistungskurse der Qualifikationsphase (sollten 8 sein)
+	/** Die Gesamtzahl der Leistungskurse der Qualifikationsphase (sollten 8 sein). */
 	private int blockIAnzahlLeistungskurse;
 
-	/// Die Gesamtzahl der anrechenbaren Kurse der Qualifikationsphase
+	/** Die Gesamtzahl der anrechenbaren Kurse der Qualifikationsphase. */
 	private int blockIAnzahlAnrechenbar;
 
-	/// Die Anzahl der Wochenstunden in dem entsprechenden Halbjahr
+	/** Die Anzahl der Wochenstunden in dem entsprechenden Halbjahr. */
 	private ArrayMap<GostHalbjahr, Integer> wochenstunden;
 
-	/// Die Anzahl der WochenStunden in der Einführungsphase
+	/** Die Anzahl der WochenStunden in der Einführungsphase. */
 	private int wochenstundenEinfuehrungsphase;
 
-	/// Die Anzahl der WochenStunden in der Qualifikationsphase
+	/** Die Anzahl der WochenStunden in der Qualifikationsphase. */
 	private int wochenstundenQualifikationsphase;
 
 

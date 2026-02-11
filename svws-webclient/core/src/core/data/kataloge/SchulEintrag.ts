@@ -88,6 +88,11 @@ export class SchulEintrag extends JavaObject {
 	 */
 	public istSichtbar: boolean = false;
 
+	/**
+	 * Gibt an, ob der Eintrag in anderen Datenbanktabellen referenziert ist oder nicht.
+	 */
+	public referenziertInAnderenTabellen: boolean = false;
+
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -134,6 +139,9 @@ export class SchulEintrag extends JavaObject {
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
+		if (obj.referenziertInAnderenTabellen === undefined)
+			throw new Error('invalid json format, missing attribute referenziertInAnderenTabellen');
+		result.referenziertInAnderenTabellen = obj.referenziertInAnderenTabellen;
 		return result;
 	}
 
@@ -156,6 +164,7 @@ export class SchulEintrag extends JavaObject {
 		result += '"schulleiter" : ' + ((obj.schulleiter === null) ? 'null' : JSON.stringify(obj.schulleiter)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -213,6 +222,9 @@ export class SchulEintrag extends JavaObject {
 		}
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		}
+		if (obj.referenziertInAnderenTabellen !== undefined) {
+			result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

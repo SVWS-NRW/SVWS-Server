@@ -5,31 +5,29 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<div class="container">
-				<svws-ui-table v-model="ortsteile"
-					v-model:clicked="selectedOrtsteile"
-					:items="props.manager().filtered()" :columns
-					clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll-into-view filter-open>
-					<template #search>
-						<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
-					</template>
-					<template #filterAdvanced>
-						<svws-ui-checkbox type="toggle" v-model="showOnlyVisibleOrtsteile">Nur Sichtbare</svws-ui-checkbox>
-					</template>
-					<template #actions v-if="!readonly">
-						<svws-ui-tooltip position="bottom">
-							<svws-ui-button type="icon"
-								@click="gotoHinzufuegenView(true)"
-								:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
-								<span class="icon i-ri-add-line" />
-							</svws-ui-button>
-							<template #content>
-								Neuen Ortsteil anlegen
-							</template>
-						</svws-ui-tooltip>
-					</template>
-				</svws-ui-table>
-			</div>
+			<svws-ui-table v-model="ortsteile"
+				v-model:clicked="selectedOrtsteile"
+				:items="props.manager().filtered()" :columns
+				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
+				<template #search>
+					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
+				</template>
+				<template #filterAdvanced>
+					<svws-ui-checkbox type="toggle" v-model="showOnlyVisibleOrtsteile">Nur Sichtbare</svws-ui-checkbox>
+				</template>
+				<template #actions v-if="!readonly">
+					<svws-ui-tooltip position="bottom">
+						<svws-ui-button type="icon"
+							@click="gotoHinzufuegenView(true)"
+							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
+							<span class="icon i-ri-add-line" />
+						</svws-ui-button>
+						<template #content>
+							Neuen Ortsteil anlegen
+						</template>
+					</svws-ui-tooltip>
+				</template>
+			</svws-ui-table>
 		</div>
 	</div>
 </template>
@@ -39,7 +37,7 @@
 	import { computed } from "vue";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import type { OrtsteilKatalogEintrag } from "@core";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import type { OrtsteileAuswahlProps } from "~/components/schule/kataloge/ortsteile/OrtsteileAuswahlProps";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

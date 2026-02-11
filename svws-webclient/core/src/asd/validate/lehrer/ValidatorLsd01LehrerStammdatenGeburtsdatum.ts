@@ -1,3 +1,4 @@
+import { ValidatorLsd10LehrerStammdatenGeburtsdatum } from '../../../asd/validate/lehrer/ValidatorLsd10LehrerStammdatenGeburtsdatum';
 import { DateManager } from '../../../asd/validate/DateManager';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
@@ -9,31 +10,32 @@ export class ValidatorLsd01LehrerStammdatenGeburtsdatum extends Validator {
 	/**
 	 * Die Lehrer-Stammdaten
 	 */
-	private readonly daten: Supplier<string>;
+	private readonly daten: Supplier<string | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     das Geburtsdatum des Lehrers
+	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: Supplier<string>, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<string | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
+		this._validatoren.add(new ValidatorLsd10LehrerStammdatenGeburtsdatum(this.getNotNullSupplier(daten), kontext));
 	}
 
 	protected pruefe(): boolean {
 		let geburtsdatum: DateManager | null = null;
+		let errorMsg: string = "";
 		try {
 			geburtsdatum = DateManager.from(this.daten.get());
 		} catch(e : any) {
-			e.printStackTrace();
+			errorMsg = e.getMessage();
 		}
 		const finalGeburtsdatum: DateManager | null = geburtsdatum;
-		const schuljahr: number = this.kontext().getSchuljahr();
-		if (finalGeburtsdatum === null || !finalGeburtsdatum.istInJahren(schuljahr - 80, schuljahr - 18)) {
-			this.addFehler(1, "Unzulässige Eintragung im Feld Jahr (Geburtsdatum). Zulässig sind die Werte " + (schuljahr - 80) + " bis " + (schuljahr - 18) + ".");
+		if (finalGeburtsdatum === null) {
+			this.addFehler(0, "Das Geburtsdatum ist ungültig: " + errorMsg);
 			return false;
 		}
 		return true;

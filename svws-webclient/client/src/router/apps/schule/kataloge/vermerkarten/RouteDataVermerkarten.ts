@@ -60,7 +60,7 @@ export class RouteDataVermerkarten extends RouteDataAuswahl<VermerkartenListeMan
 		return `Vermerkart ${vermerkart?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
-	deleteCheck = (): [boolean, List<string>] => {
+	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
@@ -75,7 +75,7 @@ export class RouteDataVermerkarten extends RouteDataAuswahl<VermerkartenListeMan
 			errorLog.add(this.getErrorMessageForReferencedVermerkarten());
 		}
 
-		return [errorLog.isEmpty(), errorLog];
+		return { success: errorLog.isEmpty(), logs: errorLog };
 	};
 
 	private getErrorMessageForReferencedVermerkarten(): string {

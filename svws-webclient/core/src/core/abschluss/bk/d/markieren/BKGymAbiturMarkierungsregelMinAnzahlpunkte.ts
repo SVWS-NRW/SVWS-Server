@@ -44,7 +44,7 @@ export class BKGymAbiturMarkierungsregelMinAnzahlpunkte extends BKGymAbiturMarki
 		const vorherMarkiert: number = variante.anzahlEingebrachteKurse();
 		const bedingung: Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> = { test: (markierung: BKGymAbiturMarkierungsalgorithmusMarkierung | null) => (markierung !== null) && (this.minPunkte < variante.getPunktzahlBlockI()) };
 		variante.markiereKursanzahl(this.maxKurse - vorherMarkiert, bedingung);
-		if (this.minPunkte < variante.getPunktzahlBlockI()) {
+		if (variante.getPunktzahlBlockI() < this.minPunkte) {
 			variante.addLogEintrag(1, "Fehler: Die Mindestpunktzahl konnte auch nicht durch Markieren weiterer Kurse erreicht werden.");
 			variante.setHatZulassung(false);
 			return;
