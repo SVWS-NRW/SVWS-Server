@@ -25,7 +25,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
  */
 @DisplayName("Teste {@link StundenplanManager} mit Testdaten")
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class TestStundenplanManager {
+class TestStundenplanManager {
 
 	/** Eine Map mit den vollständigen Stundenplandaten  */
 	static Map<String, StundenplanKomplett> testStundenplaene = new HashMap<>();
