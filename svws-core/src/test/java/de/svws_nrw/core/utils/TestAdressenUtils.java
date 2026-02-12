@@ -47,7 +47,7 @@ class TestAdressenUtils {
 	Stream<DynamicTest> pruefePrognose() {
 		System.out.println("  - Prüfe Aufteilung für " + testdatenSplitStrasse.size() + " Strassen:");
 		final ArrayList<DynamicTest> tests = new ArrayList<>();
-		testdatenSplitStrasse.forEach((data) -> {
+		testdatenSplitStrasse.forEach(data -> {
 			tests.add(DynamicTest.dynamicTest(
 					"Strasse \"" + data.strasse + "\"",
 					() -> {
