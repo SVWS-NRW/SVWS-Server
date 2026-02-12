@@ -11,6 +11,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernplattform;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,7 +46,7 @@ class DataSchuelerLernplattformenTest {
 	@Test
 	@DisplayName("initDTO | setzt die Felder korrekt")
 	void initDTOTest() {
-		dataSchuelerLernplattformen = new DataSchuelerLernplattformen(conn, 1L);
+		dataSchuelerLernplattformen = new DataSchuelerLernplattformen(conn);
 		final DTOSchuelerLernplattform dto = getDTOSchuelerLernplattform();
 		final Long[] idArray = new Long[]{1L, 2L};
 		final Map<String, Object> initAttributes = new HashMap<>();
@@ -95,12 +96,15 @@ class DataSchuelerLernplattformenTest {
 	}
 
 	@Test
-	@DisplayName("getAll | Erfolg")
-	void getAllTest() throws ApiOperationException {
+	@DisplayName("getAllByIdSchueler | Erfolg")
+	void getAllByIdSchueler() throws ApiOperationException {
 		final DTOSchuelerLernplattform dto = getDTOSchuelerLernplattform();
-		when(conn.queryAll(DTOSchuelerLernplattform.class)).thenReturn(List.of(dto));
+		when(conn.queryList(DTOSchuelerLernplattform.QUERY_BY_SCHUELERID, DTOSchuelerLernplattform.class, 1L)).thenReturn(List.of(dto));
 
-		assertThat(dataSchuelerLernplattformen.getAll())
+		assertThat(dataSchuelerLernplattformen.getAllByIdSchueler(1L))
+				.isInstanceOf(Response.class)
+				.extracting(r -> r.getEntity())
+				.asInstanceOf(InstanceOfAssertFactories.LIST)
 				.isNotNull()
 				.hasSize(1)
 				.first()

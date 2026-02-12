@@ -2,7 +2,6 @@ package de.svws_nrw.data.schueler;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import de.svws_nrw.core.data.schueler.SchuelerLernplattform;
 import de.svws_nrw.data.DataManagerRevised;
@@ -11,6 +10,8 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernplattform;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentialsLernplattformen;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -18,94 +19,78 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataSchuelerLernplattformen extends DataManagerRevised<Long[], DTOSchuelerLernplattform, SchuelerLernplattform> {
 
-	private final Long idSchueler;
+	private static final String ID_SCHUELER = "idSchueler";
+	private static final String ID_LERNPLATTFORM = "idLernplattform";
+
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link SchuelerLernplattform}.
 	 *
 	 * @param conn         die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param idSchueler   die ID des Schülerdatensatzes auf dem die Datenbankoperationen ausgeführt werden
 	 */
-	public DataSchuelerLernplattformen(final DBEntityManager conn, final Long idSchueler) {
+	public DataSchuelerLernplattformen(final DBEntityManager conn) {
 		super(conn);
-		this.idSchueler = idSchueler;
-		setAttributesNotPatchable("idSchueler", "idLernplattform");
-		setAttributesRequiredOnCreation("idLernplattform");
+		setAttributesNotPatchable(ID_SCHUELER, ID_LERNPLATTFORM);
+		setAttributesRequiredOnCreation(ID_SCHUELER, ID_LERNPLATTFORM);
+	}
+
+	@Override
+	protected void initDTO(final DTOSchuelerLernplattform dto, final Long[] id, final Map<String, Object> initAttributes) {
+		dto.SchuelerID = id[0];
+		dto.LernplattformID = id[1];
+	}
+
+	@Override
+	public SchuelerLernplattform map(final DTOSchuelerLernplattform dto) {
+		final SchuelerLernplattform daten = new SchuelerLernplattform();
+		daten.idSchueler = dto.SchuelerID;
+		daten.idLernplattform = dto.LernplattformID;
+		daten.einwilligungAbgefragt = Boolean.TRUE.equals(dto.EinwilligungAbgefragt);
+		daten.einwilligungNutzung = Boolean.TRUE.equals(dto.EinwilligungNutzung);
+		daten.einwilligungAudiokonferenz = Boolean.TRUE.equals(dto.EinwilligungAudiokonferenz);
+		daten.einwilligungVideokonferenz = Boolean.TRUE.equals(dto.EinwilligungVideokonferenz);
+		this.mapCredentials(dto.CredentialID, daten);
+		return daten;
 	}
 
 
 	@Override
-	public SchuelerLernplattform map(final DTOSchuelerLernplattform dtoLernplattform) {
-		final SchuelerLernplattform daten = new SchuelerLernplattform();
-		daten.idSchueler = dtoLernplattform.SchuelerID;
-		daten.idLernplattform = dtoLernplattform.LernplattformID;
-		daten.einwilligungAbgefragt = dtoLernplattform.EinwilligungAbgefragt;
-		daten.einwilligungNutzung = dtoLernplattform.EinwilligungNutzung;
-		daten.einwilligungAudiokonferenz = dtoLernplattform.EinwilligungAudiokonferenz;
-		daten.einwilligungVideokonferenz = dtoLernplattform.EinwilligungVideokonferenz;
-		return daten;
+	public SchuelerLernplattform getById(final Long[] id) throws ApiOperationException {
+		if (id == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID der Lernplattform darf nicht null sein.");
+		}
+		final DTOSchuelerLernplattform lernplattform = conn.queryByKey(DTOSchuelerLernplattform.class, id[0], id[1]);
+		if (lernplattform == null) {
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Eine Lernplattform mit SchuelerID %d und der LernplattformID %d wurde nicht gefunden.".formatted(id[0], id[1]));
+		}
+		return map(lernplattform);
 	}
 
 	/**
-	 * Konvertiert ein DTOLernplattformen-Objekt in ein Lernplattform-Objekt und setzt den Benutzernamen und das Initialkennwort.
+	 * Liefert die Liste der Lernplattformen eines Schülers
 	 *
-	 * @param dtoLernplattform Das DTOLernplattformen-Objekt, das konvertiert werden soll.
-	 * @param benutzername     Der Benutzername zu der Lernplattform, das gesetzt werden sollen.
-	 * @param initialkennwort  Das Initialkennwort zu der Lernplattform, das gesetzt werden sollen.
-	 *
-	 * @return Ein Lernplattform-Objekt, das aus dem DTOLernplattformen-Objekt konvertiert und mit den der Benutzername und das Initialkennwort gesetzt wurde.
+	 * @param idSchueler        id des Schülers
+	 * @return Response			Liste von Lernplattformen des Schülers
 	 */
-	public SchuelerLernplattform map(final DTOSchuelerLernplattform dtoLernplattform, final String benutzername, final String initialkennwort) {
-		final SchuelerLernplattform daten = map(dtoLernplattform);
-		daten.benutzername = benutzername;
-		daten.initialKennwort = initialkennwort;
-		return daten;
-	}
+	public Response getAllByIdSchueler(final Long idSchueler) {
+		final List<SchuelerLernplattform> result = this.conn
+				.queryList(DTOSchuelerLernplattform.QUERY_BY_SCHUELERID, DTOSchuelerLernplattform.class, idSchueler)
+				.stream()
+				.map(this::map)
+				.toList();
 
-	@Override
-	public List<SchuelerLernplattform> getAll() throws ApiOperationException {
-		final List<DTOSchuelerLernplattform> lernplattformen = conn.queryAll(DTOSchuelerLernplattform.class);
-		return lernplattformen.stream().map(this::map).toList();
-	}
-
-	@Override
-	public List<SchuelerLernplattform> getList() {
-		final List<DTOSchuelerLernplattform> dtos = conn.queryList(DTOSchuelerLernplattform.QUERY_BY_SCHUELERID, DTOSchuelerLernplattform.class, idSchueler);
-		return dtos.stream().map(dto -> {
-			String benutzername = null;
-			String initialKennwort = null;
-			if (dto.CredentialID != null) {
-				final DTOCredentialsLernplattformen credentials = conn.queryByKey(DTOCredentialsLernplattformen.class, dto.CredentialID);
-				if (credentials != null) {
-					benutzername = credentials.Benutzername;
-					initialKennwort = credentials.Initialkennwort;
-				}
-			}
-			return map(dto, benutzername, initialKennwort);
-		}).toList();
-	}
-
-	@Override
-	protected Long[] getID(final Map<String, Object> attributes) throws ApiOperationException {
-		final Long idSchueler = JSONMapper.convertToLong(attributes.get("idSchueler"), false, "idSchueler");
-		final Long idLernplattform = JSONMapper.convertToLong(attributes.get("idLernplattform"), false, "idLernplattform");
-		return new Long[]{idSchueler, idLernplattform};
-	}
-
-	@Override
-	protected void initDTO(final DTOSchuelerLernplattform dto, final Long[] idArray, final Map<String, Object> initAttributes) {
-		dto.SchuelerID = this.idSchueler;
-		dto.LernplattformID = idArray[1];
-		dto.EinwilligungAbgefragt = false;
-		dto.EinwilligungNutzung = false;
-		dto.EinwilligungAudiokonferenz = false;
-		dto.EinwilligungVideokonferenz = false;
+		return Response
+				.status(Status.OK)
+				.type(MediaType.APPLICATION_JSON)
+				.entity(result)
+				.build();
 	}
 
 	@Override
 	public void checkBeforeCreation(final Long[] newID, final Map<String, Object> initAttributes) throws ApiOperationException {
-		final Long idSchueler = JSONMapper.convertToLong(initAttributes.get("idSchueler"), false, "idSchueler");
-		final Long idLernplattform = JSONMapper.convertToLong(initAttributes.get("idLernplattform"), false, "idLernplattform");
+		final Long idSchueler = JSONMapper.convertToLong(initAttributes.get(ID_SCHUELER), false, ID_SCHUELER);
+		final Long idLernplattform = JSONMapper.convertToLong(initAttributes.get(ID_LERNPLATTFORM), false, ID_LERNPLATTFORM);
 		final DTOSchuelerLernplattform existingEntry = conn.queryByKey(DTOSchuelerLernplattform.class, idSchueler, idLernplattform);
 		if (existingEntry != null)
 			throw new ApiOperationException(
@@ -116,40 +101,43 @@ public final class DataSchuelerLernplattformen extends DataManagerRevised<Long[]
 	}
 
 	@Override
-	protected void mapAttribute(final DTOSchuelerLernplattform dto, final String name, final Object value,
-			final Map<String, Object> map) throws ApiOperationException {
+	protected void mapAttribute(final DTOSchuelerLernplattform dto, final String name, final Object value, final Map<String, Object> map)
+			throws ApiOperationException {
 		switch (name) {
-			case "idSchueler" -> {
-				final Long idSchueler = JSONMapper.convertToLong(value, false, "idSchueler");
-				if (!Objects.equals(dto.SchuelerID, idSchueler))
-					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(idSchueler, dto.SchuelerID));
-			}
-			case "idLernplattform" -> {
-				final Long idLernplattform = JSONMapper.convertToLong(value, false, "idLernplattform");
-				if (!Objects.equals(dto.LernplattformID, idLernplattform))
-					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(idLernplattform, dto.LernplattformID));
-			}
-			case "einwilligungAbgefragt" -> dto.EinwilligungAbgefragt = JSONMapper.convertToBoolean(value, false, "einwilligungAbgefragt");
-			case "einwilligungNutzung" -> dto.EinwilligungNutzung = JSONMapper.convertToBoolean(value, false, "einwilligungNutzung");
-			case "einwilligungAudiokonferenz" -> dto.EinwilligungAudiokonferenz = JSONMapper.convertToBoolean(value, false, "einwilligungAudiokonferenz");
-			case "einwilligungVideokonferenz" -> dto.EinwilligungVideokonferenz = JSONMapper.convertToBoolean(value, false, "einwilligungVideokonferenz");
-			default -> throw new ApiOperationException(Status.BAD_REQUEST,  "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
+			case ID_SCHUELER -> dto.SchuelerID = JSONMapper.convertToLong(value, false, ID_SCHUELER);
+			case ID_LERNPLATTFORM -> dto.LernplattformID = JSONMapper.convertToLong(value, false, ID_LERNPLATTFORM);
+			case "einwilligungAbgefragt" -> dto.EinwilligungAbgefragt = JSONMapper.convertToBoolean(value, false, name);
+			case "einwilligungNutzung" -> dto.EinwilligungNutzung = JSONMapper.convertToBoolean(value, false, name);
+			case "einwilligungAudiokonferenz" -> dto.EinwilligungAudiokonferenz = JSONMapper.convertToBoolean(value, false, name);
+			case "einwilligungVideokonferenz" -> dto.EinwilligungVideokonferenz = JSONMapper.convertToBoolean(value, false, name);
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
-	}
-
-	@Override
-	public SchuelerLernplattform getById(final Long[] id) throws ApiOperationException {
-		if (id == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einer Lernplattform mit der ID null ist unzulässig.");
-		final DTOSchuelerLernplattform lernplattform = conn.queryByKey(DTOSchuelerLernplattform.class, id[0], id[1]);
-		if (lernplattform == null)
-			throw new ApiOperationException(Status.NOT_FOUND,
-					"Eine Lernplattform mit SchuelerID %d und der LernplattformID %d wurde nicht gefunden.".formatted(id[0], id[1]));
-		return map(lernplattform);
 	}
 
 	@Override
 	public DTOSchuelerLernplattform getDatabaseDTOByID(final Long[] id) {
 		return conn.queryByKey(DTOSchuelerLernplattform.class, id[0], id[1]);
 	}
+
+	@Override
+	protected Long[] getID(final Map<String, Object> attributes) throws ApiOperationException {
+		final Long idSchueler = JSONMapper.convertToLong(attributes.get(ID_SCHUELER), false, ID_SCHUELER);
+		final Long idLernplattform = JSONMapper.convertToLong(attributes.get(ID_LERNPLATTFORM), false, ID_LERNPLATTFORM);
+		return new Long[] { idSchueler, idLernplattform };
+	}
+
+	private void mapCredentials(final Long id, final SchuelerLernplattform daten) {
+		if (id == null) {
+			return;
+		}
+		final DTOCredentialsLernplattformen credentials = conn.queryByKey(DTOCredentialsLernplattformen.class, id);
+		if (credentials == null) {
+			return;
+		}
+		daten.benutzername = credentials.Benutzername;
+		daten.initialKennwort = credentials.Initialkennwort;
+	}
 }
+
+
+

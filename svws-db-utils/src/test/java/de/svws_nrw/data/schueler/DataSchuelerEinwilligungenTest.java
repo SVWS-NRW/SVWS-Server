@@ -1,5 +1,6 @@
 package de.svws_nrw.data.schueler;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerDatenschutz;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,8 +25,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatException;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @DisplayName("Diese Testklasse testet die Klasse DataSchuelerEinwilligungen")
@@ -43,20 +47,60 @@ class DataSchuelerEinwilligungenTest {
 	}
 
 	@Test
+	@DisplayName("setAttributesRequiredOnCreation: idSchueler")
+	void setAttributesRequiredOnCreationIdSchueler() {
+		assertThatException()
+				.isThrownBy(() -> this.dataSchuelerEinwilligungen.add(Map.of("test", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut idSchueler: Der Wert null ist nicht erlaubt")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("setAttributesRequiredOnCreation: idEinwilligungsart")
+	void setAttributesRequiredOnCreationIdEinwilligungsart() {
+		assertThatException()
+				.isThrownBy(() -> this.dataSchuelerEinwilligungen.add(Map.of("idSchueler", 1L)))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut idEinwilligungsart: Der Wert null ist nicht erlaubt")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("setAttributesNotPatchable: idSchueler")
+	void setAttributesNotPatchableIdSchueler() {
+		when(this.conn.queryByKey(DTOSchuelerDatenschutz.class, (Object) new Long[]{1L, 2L})).thenReturn(mock(DTOSchuelerDatenschutz.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.dataSchuelerEinwilligungen.patch(new Long[]{1L, 2L}, Map.of("idSchueler", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Folgende Attribute werden für ein Patch nicht zugelassen: idSchueler.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("setAttributesNotPatchable: idEinwilligungsart")
+	void setAttributesNotPatchableIdEinwilligungsart() {
+		when(this.conn.queryByKey(DTOSchuelerDatenschutz.class, (Object) new Long[]{1L, 2L})).thenReturn(mock(DTOSchuelerDatenschutz.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.dataSchuelerEinwilligungen.patch(new Long[]{1L, 2L}, Map.of("idEinwilligungsart", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Folgende Attribute werden für ein Patch nicht zugelassen: idEinwilligungsart.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
 	@DisplayName("initDTO | setzt die Felder korrekt")
 	void initDTOTest() {
-		dataSchuelerEinwilligungen = new DataSchuelerEinwilligungen(conn, 1L);
 		final DTOSchuelerDatenschutz dto = getDTOSchuelerDatenschutz();
-		final Long[] idArray = new Long[] { 1L, 2L };
-		final Map<String, Object> initAttributes = new HashMap<>();
+		final Long[] idArray = new Long[] { 3L, 4L };
 
-		dataSchuelerEinwilligungen.initDTO(dto, idArray, initAttributes);
+		this.dataSchuelerEinwilligungen.initDTO(dto, idArray, Collections.emptyMap());
 
 		assertThat(dto)
-				.hasFieldOrPropertyWithValue("Schueler_ID", 1L)
-				.hasFieldOrPropertyWithValue("Datenschutz_ID", 2L)
-				.hasFieldOrPropertyWithValue("Status", false)
-				.hasFieldOrPropertyWithValue("Abgefragt", false);
+				.hasFieldOrPropertyWithValue("Schueler_ID", 3L)
+				.hasFieldOrPropertyWithValue("Datenschutz_ID", 4L);
 	}
 
 
@@ -86,6 +130,16 @@ class DataSchuelerEinwilligungenTest {
 	}
 
 	@Test
+	@DisplayName("getByID | ID can't be null")
+	void getByIdNull() {
+		assertThatException()
+				.isThrownBy(() -> this.dataSchuelerEinwilligungen.getById(null))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Die ID der Einwilligungsart darf nicht null sein.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
 	@DisplayName("getID | Erfolg")
 	void getIDTest() throws ApiOperationException {
 		final Long[] idArray = dataSchuelerEinwilligungen.getID(attributesMap);
@@ -94,68 +148,15 @@ class DataSchuelerEinwilligungenTest {
 	}
 
 	@Test
-	@DisplayName("getAll | Erfolg")
-	void getAllTest() throws ApiOperationException {
+	@DisplayName("getAllByIdSchueler | Erfolg")
+	void getAllByIdSchueler() throws ApiOperationException {
 		final DTOSchuelerDatenschutz dto = new DTOSchuelerDatenschutz(1L, 1L, false, false);
-		when(conn.queryAll(DTOSchuelerDatenschutz.class)).thenReturn(List.of(dto));
+		when(conn.queryList(DTOSchuelerDatenschutz.QUERY_BY_SCHUELER_ID, DTOSchuelerDatenschutz.class, 1L)).thenReturn(List.of(dto));
 
-		assertThat(dataSchuelerEinwilligungen.getAll())
-				.isNotNull()
-				.hasSize(1)
-				.first()
-				.satisfies(schuelerEinwilligung -> assertThat(schuelerEinwilligung)
-						.hasFieldOrPropertyWithValue("idSchueler", 1L)
-						.hasFieldOrPropertyWithValue("idEinwilligungsart", 1L)
-						.hasFieldOrPropertyWithValue("status", false)
-						.hasFieldOrPropertyWithValue("abgefragt", false));
-	}
-
-	@Test
-	@DisplayName("getListBySchuelerIdsTest(Long[]) | Erfolg mit IDs aller Schüler")
-	void getListBySchuelerIdsTest() throws ApiOperationException {
-		final DTOSchuelerDatenschutz dto1 = new DTOSchuelerDatenschutz(1L, 1L, false, false);
-		final DTOSchuelerDatenschutz dto2 = new DTOSchuelerDatenschutz(2L, 1L, false, false);
-		final List<Long> ids = List.of(1L, 2L);
-		when(conn.queryList(DTOSchuelerDatenschutz.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerDatenschutz.class, ids)).thenReturn(List.of(dto1, dto2));
-
-		assertThat(dataSchuelerEinwilligungen.getListBySchuelerIds(ids))
-				.isNotNull()
-				.hasSize(2)
-				.first()
-				.satisfies(schuelerEinwilligung -> assertThat(schuelerEinwilligung)
-						.hasFieldOrPropertyWithValue("idSchueler", 1L)
-						.hasFieldOrPropertyWithValue("idEinwilligungsart", 1L)
-						.hasFieldOrPropertyWithValue("status", false)
-						.hasFieldOrPropertyWithValue("abgefragt", false));
-	}
-
-	@Test
-	@DisplayName("getAll(Long[]) | Erfolg mit IDs, die nicht existieren (diese werden ignoriert)")
-	void getListBySchuelerIdsWithIdsButAtLeastOneNonExistentIdTest() throws ApiOperationException {
-		final DTOSchuelerDatenschutz dto1 = new DTOSchuelerDatenschutz(1L, 1L, false, false);
-		final DTOSchuelerDatenschutz dto2 = new DTOSchuelerDatenschutz(2L, 1L, false, false);
-		final List<Long> ids = List.of(1L, 2L, 3L);
-		when(conn.queryList(DTOSchuelerDatenschutz.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerDatenschutz.class, ids)).thenReturn(List.of(dto1, dto2));
-
-		assertThat(dataSchuelerEinwilligungen.getListBySchuelerIds(ids))
-				.isNotNull()
-				.hasSize(2)
-				.first()
-				.satisfies(schuelerEinwilligung -> assertThat(schuelerEinwilligung)
-						.hasFieldOrPropertyWithValue("idSchueler", 1L)
-						.hasFieldOrPropertyWithValue("idEinwilligungsart", 1L)
-						.hasFieldOrPropertyWithValue("status", false)
-						.hasFieldOrPropertyWithValue("abgefragt", false));
-	}
-
-	@Test
-	@DisplayName("getAll(Long[]) | Erfolg")
-	void getListBySchuelerIdsWithIdsSimpleFilterTest() throws ApiOperationException {
-		final DTOSchuelerDatenschutz dto = new DTOSchuelerDatenschutz(1L, 1L, false, false);
-		final List<Long> ids = List.of(1L);
-		when(conn.queryList(DTOSchuelerDatenschutz.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerDatenschutz.class, ids)).thenReturn(List.of(dto));
-
-		assertThat(dataSchuelerEinwilligungen.getListBySchuelerIds(List.of(1L)))
+		assertThat(dataSchuelerEinwilligungen.getAllByIdSchueler(1L))
+				.isInstanceOf(Response.class)
+				.extracting(r -> r.getEntity())
+				.asInstanceOf(InstanceOfAssertFactories.LIST)
 				.isNotNull()
 				.hasSize(1)
 				.first()

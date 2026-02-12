@@ -1058,7 +1058,7 @@ public class APISchueler {
 	@GET
 	@Path("/{id : \\d+}/betriebsstammdaten")
 	@Operation(summary = "Gibt eine Liste der Betriebsstammdaten eines Schülers zurück.",
-			description = "Erstellt eine Liste aller in der Datenbank vorhandenen Betriebe eines Schülers unter Angabe der ID," // TODO Beschreibung anpassen.
+			description = "Erstellt eine Liste aller in der Datenbank vorhandenen Betriebe eines Schülers unter Angabe der ID,"
 					+ "ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsdaten des Schülers besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von von Betriebsstammdaten eines Schülers",
@@ -1336,35 +1336,9 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Keine Einwilligungen für den Schüler mit der angegebenen ID gefunden")
 	public Response getSchuelerEinwilligungen(@PathParam("schema") final String schema, @PathParam("idSchueler") final long idSchueler,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerEinwilligungen(conn, idSchueler).getListAsResponse(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerEinwilligungen(conn).getAllByIdSchueler(idSchueler),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
-	}
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage der Einwilligungen mehrerer Schüler.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param is        Inputstream mit einer Liste von Schüler IDs
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Einwilligungen der Schüler
-	 */
-	@POST
-	@Path("/einwilligungen")
-	@Operation(summary = "Liefert zu den Schüler IDs die zugehörigen Einwilligungen.",
-			description = "Liest die Einwilligungen der Schüler zu der angegebenen IDs aus der Datenbank und liefert diese zurück. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Einwilligungen des Schülers",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerEinwilligung.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
-	public Response getSchuelerEinwilligungenBySchuelerIds(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der Schüler", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerEinwilligungen(conn, 0L).getListBySchuelerIdsAsResponse(JSONMapper.toListOfLong(is)),
-				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
 	/**
@@ -1397,7 +1371,7 @@ public class APISchueler {
 							schema = @Schema(implementation = SchuelerEinwilligung.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataSchuelerEinwilligungen(conn, idSchueler).patchAsResponse(new Long[] { idSchueler, idEinwilligungsart },
+				conn -> new DataSchuelerEinwilligungen(conn).patchAsResponse(new Long[] { idSchueler, idEinwilligungsart },
 						is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_EINWILLIGUNGEN_AENDERN);
@@ -1838,7 +1812,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Keine Lernplattform für den Schüler mit der angegebenen ID gefunden")
 	public Response getSchuelerLernplattformen(@PathParam("schema") final String schema, @PathParam("id") final long idSchueler,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLernplattformen(conn, idSchueler).getListAsResponse(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLernplattformen(conn).getAllByIdSchueler(idSchueler),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
@@ -1873,7 +1847,7 @@ public class APISchueler {
 							schema = @Schema(implementation = SchuelerLernplattform.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataSchuelerLernplattformen(conn, idSchueler).patchAsResponse(new Long[] { idSchueler, idLernplattform },
+				conn -> new DataSchuelerLernplattformen(conn).patchAsResponse(new Long[] { idSchueler, idLernplattform },
 						is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);

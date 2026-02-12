@@ -187,6 +187,18 @@ class DataLernplattformenTest {
 	}
 
 	@Test
+	@DisplayName("getAllIds")
+	void getAllIds() {
+		final var dto1 = new DTOLernplattformen(1L, "123");
+		final var dto2 = new DTOLernplattformen(2L, "123");
+		when(this.conn.queryAll(DTOLernplattformen.class)).thenReturn(List.of(dto1, dto2));
+
+		assertThat(this.data.getAllIds())
+				.hasSize(2)
+				.containsAll(List.of(1L, 2L));
+	}
+
+	@Test
 	@DisplayName("map | Erfolg")
 	void map() {
 		final var dto = new DTOLernplattformen(1L, "bez1");

@@ -81,6 +81,19 @@ public final class DataLernplattformen extends DataManagerRevised<Long, DTOLernp
 				.toList();
 	}
 
+	/**
+	 * Liefert eine Liste der IDS aller vorhandenen Lernplattformen des Katalogs.
+	 *
+	 * @return Liste der IDS aller vorhandenen Lernplattformen des Katalogs.
+	 */
+	public List<Long> getAllIds() {
+		return this.conn.queryAll(DTOLernplattformen.class)
+				.stream()
+				.map(l -> l.ID)
+				.sorted()
+				.toList();
+	}
+
 	@Override
 	protected Lernplattform addBasic(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		final Lernplattform lernplattform = super.addBasic(newID, initAttributes);
