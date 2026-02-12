@@ -870,6 +870,32 @@ public class APIPrivilegedSchema {
 	}
 
 
+
+	/**
+	 * Die OpenAPI-Methode für den Export einer ZIP-Datei aus einem Schema. Der Aufruf erfordert
+	 * einen Datenbank-Benutzer mit den entsprechenden Rechten.
+	 *
+	 * @param schemaname    Name des Schemas, welches exportiert werden soll.
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return Die ZIP-Datei der SQLite-Datei
+	 */
+	@GET
+	@Produces("application/zip")
+	@Path("/api/schema/export/{schema}/zip")
+	@Operation(summary = "Exportiert das angegebene Schema in eine ZIP-Datei.",
+	    description = "Exportiert das angegebene Schema in eine ZIP-Datei. Der Aufruf erfordert "
+	        + "einen Datenbank-Benutzer mit den entsprechenden Rechten.")
+	@ApiResponse(responseCode = "200", description = "Der Export der ZIP-Datei der SQLite-Datenbank",
+	    content = @Content(mediaType = "application/zip", schema = @Schema(type = "string", format = "binary", description = "Die ZIP-Datei")))
+	@ApiResponse(responseCode = "403", description = "Das Schema darf nicht exportiert werden.")
+	public Response exportZipFrom(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
+	    return DBBenutzerUtils.runWithoutTransaction(conn -> DataSQLite.exportZip(conn, schemaname), request,
+	        ServerMode.STABLE,
+	        BenutzerKompetenz.KEINE);
+	}
+
+
 	/**
 	 * Die OpenAPI-Methode für den Import einer SQLite-Datenbank aus dem angegebenen Schema. Der Aufruf erfordert
 	 * einen Datenbank-Benutzer mit den entsprechenden Rechten. Die existierenden Daten in diesem Schema werden dabei entfernt

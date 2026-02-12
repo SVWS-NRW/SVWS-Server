@@ -89,6 +89,11 @@ export class BaseApi {
 	}
 
 
+	public getZip(path: string): Promise<ApiFile> {
+		return this.getBinary(path, 'application/zip');
+	}
+
+
 	public getOctetStream(path: string): Promise<ApiFile> {
 		return this.getBinary(path, 'application/octet-stream');
 	}

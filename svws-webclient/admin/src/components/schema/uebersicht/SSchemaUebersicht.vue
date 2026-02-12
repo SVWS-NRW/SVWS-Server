@@ -12,8 +12,15 @@
 							<svws-ui-button :disabled="loading" title="Backup starten" @click="getBackupSchema" :is-loading="loading">
 								<svws-ui-spinner v-if="loading" spinning />
 								<span v-else class="icon i-ri-play-line" />
-								Backup starten
+								Backup starten (.sqlite)
 							</svws-ui-button>
+							<template #buttonFooterLeft>
+								<svws-ui-button :disabled="loading" title="Backup starten (Zip)" @click="getBackupSchemaZip" :is-loading="loading">
+									<svws-ui-spinner v-if="loading" spinning />
+									<span v-else class="icon i-ri-play-line" />
+									Backup starten (.zip)
+								</svws-ui-button>
+							</template>
 						</ui-card>
 						<ui-card v-if="revisionNotUpToDate" icon="i-ri-speed-line" title="Aktualisieren" :subtitle="`Setzt das Schema auf die aktuelle Revision ${revision} hoch`" :is-open="currentAction === 'upgrade'" @update:is-open="(isOpen) => setCurrentAction('upgrade', isOpen)">
 							<div class="flex flex-col gap-2">
@@ -155,6 +162,18 @@
 	async function getBackupSchema() {
 		loading.value = true;
 		const { data, name } = await props.backupSchema();
+		loading.value = false;
+		const link = document.createElement("a");
+		link.href = URL.createObjectURL(data);
+		link.download = name;
+		link.target = "_blank";
+		link.click();
+		URL.revokeObjectURL(link.href);
+	}
+
+	async function getBackupSchemaZip() {
+		loading.value = true;
+		const { data, name } = await props.backupSchemaZip();
 		loading.value = false;
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);

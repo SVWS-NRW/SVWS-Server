@@ -39,7 +39,7 @@ public enum ApiMimeType {
 	/** PDF */
 	PDF("", "application/pdf"),
 
-	/** PDF */
+	/** ZIP */
 	ZIP("", "application/zip");
 
 
@@ -76,7 +76,7 @@ public enum ApiMimeType {
 
 
 	/**
-	 * Bestimmt die Mime-Types, welche durch die angebene Annotation bei einer Klasse spezifiziert wurden.
+	 * Bestimmt die Mime-Types, welche durch die angegebene Annotation bei einer Klasse spezifiziert wurden.
 	 *
 	 * @param transpiler   der für die Analyse zu verwendende Transpiler
 	 * @param classTree    die Java-API-Klasse
@@ -89,7 +89,7 @@ public enum ApiMimeType {
 	}
 
 	/**
-	 * Bestimmt die Mime-Types, welche durch die angebene Annotation bei einer Methode spezifiziert wurden.
+	 * Bestimmt die Mime-Types, welche durch die angegebene Annotation bei einer Methode spezifiziert wurden.
 	 *
 	 * @param transpiler   der für die Analyse zu verwendende Transpiler
 	 * @param methodTree   die Java-API-Methode

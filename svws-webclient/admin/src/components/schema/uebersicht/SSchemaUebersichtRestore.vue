@@ -1,8 +1,8 @@
 <template>
 	<ui-card icon="i-ri-device-recover-line" title="Backup wiederherstellen" subtitle="Daten werden aus einem Backup wiederhergestellt" :is-open @update:is-open="(open) => emit('opened', open)">
 		<div class="space-y-4">
-			<div class="font-bold text-button">Quell-Datenbank: SQLite-Datenbank (.sqlite) hochladen</div>
-			<input type="file" @change="onFileChanged" :disabled="loading" accept=".sqlite">
+			<div class="font-bold text-button">Quell-Datenbank: SQLite-Datenbank (.sqlite oder .zip) hochladen</div>
+			<input type="file" @change="onFileChanged" :disabled="loading" accept=".sqlite,.zip">
 		</div>
 		<template #buttonFooterLeft>
 			<svws-ui-button :disabled="!file || loading" :is-loading="loading" title="Wiederherstellen" @click="actionFunction" class="mt-4 w-fit">

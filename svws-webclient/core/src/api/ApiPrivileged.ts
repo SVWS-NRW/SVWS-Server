@@ -236,6 +236,29 @@ export class ApiPrivileged extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode exportZipFrom für den Zugriff auf die URL https://{hostname}/api/schema/export/{schema}/zip
+	 *
+	 * Exportiert das angegebene Schema in eine ZIP-Datei. Der Aufruf erfordert einen Datenbank-Benutzer mit den entsprechenden Rechten.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Export der ZIP-Datei der SQLite-Datenbank
+	 *     - Mime-Type: application/zip
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 403: Das Schema darf nicht exportiert werden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Export der ZIP-Datei der SQLite-Datenbank
+	 */
+	public async exportZipFrom(schema : string) : Promise<ApiFile> {
+		const path = "/api/schema/export/{schema}/zip"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const data : ApiFile = await super.getZip(path);
+		return data;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode importSQLiteInto für den Zugriff auf die URL https://{hostname}/api/schema/import/{schema}/sqlite
 	 *
 	 * Importiert die übergebene Datenbank in dieses Schema. Das Schema wird dabei zunächst geleert und vorhanden Daten gehen dabei verloren.

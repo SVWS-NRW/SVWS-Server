@@ -508,6 +508,10 @@ public final class ApiMethod {
 				sb.append("\t\tconst data : ApiFile = await super.getSQLite(path);" + System.lineSeparator());
 				sb.append("\t\treturn data;" + System.lineSeparator());
 			}
+	        case ApiMimeType.ZIP -> {
+	            sb.append("\t\tconst data : ApiFile = await super.getZip(path);" + System.lineSeparator());
+	            sb.append("\t\treturn data;" + System.lineSeparator());
+	        }
 			default -> throw new TranspilerException("Transpiler Error: GET which produces " + producesType + " not yet implemented in the transpiler.");
 		}
 	}

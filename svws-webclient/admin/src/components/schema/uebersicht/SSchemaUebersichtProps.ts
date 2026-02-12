@@ -14,6 +14,7 @@ export interface SchemaUebersichtProps {
 	data: () => SchemaListeEintrag | undefined;
 	admins: () => List<BenutzerListeEintrag>;
 	backupSchema: () => Promise<ApiFile>;
+	backupSchemaZip: () => Promise<ApiFile>;
 	restoreSchema: (data: FormData) => Promise<SimpleOperationResponse>;
 	migrateSchema: (data: FormData) => Promise<SimpleOperationResponse>;
 	upgradeSchema: () => Promise<SimpleOperationResponse>;

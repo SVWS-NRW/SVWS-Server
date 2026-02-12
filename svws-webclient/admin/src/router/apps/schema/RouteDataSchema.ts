@@ -290,6 +290,16 @@ export class RouteDataSchema {
 		return data;
 	};
 
+	backupSchemaZip = async () => {
+		if (this.auswahl === undefined) {
+			throw new DeveloperNotificationException("Es soll ein Backup angelegt werden, aber es ist kein Schema ausgewählt.");
+		}
+		api.status.start();
+		const data = await api.privileged.exportZipFrom(this.auswahl.name);
+		api.status.stop();
+		return data;
+	};
+
 	restoreSchema = async (data: FormData) => {
 		if (this.auswahl === undefined) {
 			throw new DeveloperNotificationException("Es soll ein Backup wiederhergestellt werden, aber es ist kein Schema ausgewählt.");
