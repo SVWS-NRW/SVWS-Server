@@ -22,6 +22,7 @@ import { JavaString } from "@core/java/lang/JavaString";
 import { ArrayList } from "@core/java/util/ArrayList";
 import type { Comparator } from "@core/java/util/Comparator";
 import type { List } from "@core/java/util/List";
+import type { ApiFile } from "@core/api/BaseApi";
 
 
 interface RouteStateSchema {
@@ -33,6 +34,7 @@ interface RouteStateSchema {
 	schulen: List<SchulenKatalogEintrag>;
 	admins: List<BenutzerListeEintrag>;
 	view: RouteNode<any, any>;
+	backupFiles: ApiFile[];
 }
 
 export class RouteDataSchema {
@@ -46,6 +48,7 @@ export class RouteDataSchema {
 		schulen: new ArrayList<SchulenKatalogEintrag>(),
 		admins: new ArrayList<BenutzerListeEintrag>(),
 		view: routeSchemaUebersicht,
+		backupFiles: [],
 	};
 
 	private readonly _state = shallowRef(RouteDataSchema._defaultState);
@@ -132,6 +135,10 @@ export class RouteDataSchema {
 		return this._state.value.schulen;
 	}
 
+	get backupFiles(): ApiFile[] {
+		return this._state.value.backupFiles;
+	}
+
 	private getEmpty(name: string): SchemaListeEintrag {
 		const entry = new SchemaListeEintrag();
 		entry.name = name;
@@ -184,7 +191,7 @@ export class RouteDataSchema {
 			try {
 				// ... versuche die Informationen zur Schule zu laden
 				schuleInfo = await api.privileged.getSchuleInfo(auswahl.name);
-			} catch (e) {
+			} catch {
 				console.log("Die Information zur Schule konnten für das Schema " + auswahl.name + " nicht gefunden werden.");
 			}
 			// Wenn die Revision des Schemas aktuell ist, dann lade auch die Informationen zu den Admin-Benutzern
@@ -245,6 +252,20 @@ export class RouteDataSchema {
 		api.status.stop();
 		await this.init(this.auswahl.name, true);
 		return result;
+	};
+
+	backupSchemata = async (): Promise<void> => {
+		api.status.start();
+		this.setPatchedState({ backupFiles: new Array(this.auswahlGruppe.length) });
+		const backupFiles = this.backupFiles;
+		let i = 0;
+		for (const schema of this.auswahlGruppe) {
+			const file = await api.privileged.exportSQLiteFrom(schema.name);
+			backupFiles[i] = file;
+			this.setPatchedState({ backupFiles });
+			i++;
+		}
+		api.status.stop();
 	};
 
 	removeSchemata = async () => {
@@ -313,7 +334,7 @@ export class RouteDataSchema {
 				try {
 					const json = await error.response.text();
 					result = SimpleOperationResponse.transpilerFromJSON(json);
-				} catch (e) {
+				} catch {
 					result = new SimpleOperationResponse();
 					result.success = false;
 					result.log.add("Fehler beim Aufruf der API-Methode " + error.response.statusText + " (" + error.response.status + ")");
@@ -428,7 +449,7 @@ export class RouteDataSchema {
 				try {
 					const json = await error.response.text();
 					result = SimpleOperationResponse.transpilerFromJSON(json);
-				} catch (e) {
+				} catch {
 					result = new SimpleOperationResponse();
 					result.success = false;
 					result.log.add("Fehler beim Aufruf der API-Methode " + error.response.statusText + " (" + error.response.status + ")");

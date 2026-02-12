@@ -44,6 +44,8 @@ export class RouteSchemagruppe extends RouteNode<unknown, RouteApp> {
 			apiUsername: api.username,
 			auswahlGruppe: routeSchema.data.auswahlGruppe,
 			removeSchemata: routeSchema.data.removeSchemata,
+			backupSchemata: routeSchema.data.backupSchemata,
+			backupFiles: () => routeSchema.data.backupFiles,
 		};
 	}
 
