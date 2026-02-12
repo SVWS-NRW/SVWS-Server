@@ -7,6 +7,7 @@ import java.util.Map;
 import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.adt.map.HashMap2D;
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
 import de.svws_nrw.core.data.stundenplan.StundenplanJahrgang;
@@ -16,6 +17,8 @@ import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
+import de.svws_nrw.core.logger.LogConsumerList;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
@@ -294,11 +297,15 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response addStundenplanAsCopy(final InputStream isStundenplanNeu, final long idAlt) throws ApiOperationException {
+		final Logger logger = new Logger();
+		final LogConsumerList log = new LogConsumerList();
+		logger.addConsumer(log);
 		final Stundenplan alt = getById(idAlt);
 		if (alt == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Kein Stundenplan mit der ID %d gefunden.".formatted(idAlt));
-		final Stundenplan neu = super.addFromStream(isStundenplanNeu);
-		neu.wochenTypModell = alt.wochenTypModell;
+			throw new ApiOperationException(Status.NOT_FOUND, "Stundenplan-Kopiervorlage mit ID %d nicht gefunden.".formatted(idAlt));
+		final Map<String, Object> initAttributes = JSONMapper.toMap(isStundenplanNeu);
+		initAttributes.put("wochenTypModell",  alt.wochenTypModell);
+		final Stundenplan neu = super.add(initAttributes);
 		final Long idSchuljahresabschnittNeu = getIdSchuljahresabschnittNeuIfDifferent(alt, neu);
 		final Map<Long, Long> aufsichtsbereichMapping = StundenplanCopyHelper.kopiereAufsichtsbereiche(conn, idAlt, neu);
 		StundenplanCopyHelper.kopiereKalenderwochenZuordnungen(conn, idAlt, neu);
@@ -307,18 +314,22 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 		final Map<Long, Long> raeumeMapping = StundenplanCopyHelper.kopiereRaeume(conn, idAlt,  neu);
 		final Map<Long, Long> schienenMapping = StundenplanCopyHelper.kopiereSchienen(conn, idAlt, neu);
 		conn.transactionFlush();
-		final Map<Long, DTOStundenplanUnterricht> unterrichteMapping = StundenplanCopyHelper.kopiereUnterrichte(conn, zeitrasterMapping, idSchuljahresabschnittNeu);
-		final Map<Long, Long> pausenaufsichtMapping = StundenplanCopyHelper.kopierePausenaufsichten(conn, pausenzeitMapping);
-		StundenplanCopyHelper.kopierePausenzeitenKlassenzuordnungen(conn, pausenzeitMapping, idSchuljahresabschnittNeu);
-		StundenplanCopyHelper.kopiereUnterrichteKlassen(conn, unterrichteMapping,
-				idSchuljahresabschnittNeu);
-		StundenplanCopyHelper.kopiereUnterrichteRaeume(conn, unterrichteMapping, raeumeMapping);
-		StundenplanCopyHelper.kopiereUnterrichteSchienen(conn, unterrichteMapping, schienenMapping);
+		final Map<Long, DTOStundenplanUnterricht> unterrichteMapping =
+				StundenplanCopyHelper.kopiereUnterrichte(conn, zeitrasterMapping, idSchuljahresabschnittNeu, logger);
+		final Map<Long, Long> pausenaufsichtMapping = StundenplanCopyHelper.kopierePausenaufsichten(conn, pausenzeitMapping, neu, logger);
+		StundenplanCopyHelper.kopierePausenzeitenKlassenzuordnungen(conn, pausenzeitMapping, idSchuljahresabschnittNeu, logger);
+		StundenplanCopyHelper.kopiereUnterrichteKlassen(conn, unterrichteMapping, idSchuljahresabschnittNeu, logger);
+		StundenplanCopyHelper.kopiereUnterrichteRaeume(conn, unterrichteMapping, raeumeMapping, logger);
+		StundenplanCopyHelper.kopiereUnterrichteSchienen(conn, unterrichteMapping, schienenMapping, logger);
 		conn.transactionFlush();
 		// erst hier möglich
-		StundenplanCopyHelper.kopiereUnterrichteLehrer(conn, unterrichteMapping, idSchuljahresabschnittNeu, neu);
-		StundenplanCopyHelper.kopierePausenaufsichtenBereiche(conn, pausenaufsichtMapping, aufsichtsbereichMapping);
-		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(neu).build();
+		StundenplanCopyHelper.kopiereUnterrichteLehrer(conn, unterrichteMapping, idSchuljahresabschnittNeu, neu, logger);
+		StundenplanCopyHelper.kopierePausenaufsichtenBereiche(conn, pausenaufsichtMapping, aufsichtsbereichMapping, logger);
+		final SimpleOperationResponse response = new SimpleOperationResponse();
+		response.success = true;
+		response.log = log.getStrings();
+		response.id = neu.id;
+		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(response).build();
 	}
 
 	private Long getIdSchuljahresabschnittNeuIfDifferent(final Stundenplan alt, final Stundenplan neu) throws ApiOperationException {

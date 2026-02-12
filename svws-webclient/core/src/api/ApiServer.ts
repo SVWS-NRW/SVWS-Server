@@ -18317,7 +18317,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 201: Der Stundenplan wurde erfolgreich erstellt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Stundenplan
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan anzulegen.
 	 *   Code 404: Benötigte Daten wurden nicht gefunden
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
@@ -18328,14 +18328,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Stundenplan wurde erfolgreich erstellt.
 	 */
-	public async addStundenplanAsCopy(data : Partial<Stundenplan>, schema : string, copyof : number) : Promise<Stundenplan> {
+	public async addStundenplanAsCopy(data : Partial<Stundenplan>, schema : string, copyof : number) : Promise<SimpleOperationResponse> {
 		const path = "/db/{schema}/stundenplan/create/from/{copyof : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{copyof\s*(:[^{}]+({[^{}]+})*)?}/g, copyof.toString());
 		const body : string = Stundenplan.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
-		return Stundenplan.transpilerFromJSON(text);
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 

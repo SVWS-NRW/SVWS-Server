@@ -28,7 +28,9 @@ export class RouteStundenplanNeu extends RouteNode<any, RouteStundenplan> {
 	public getProps(to: RouteLocationNormalized): StundenplanNeuProps {
 		return {
 			manager: () => routeStundenplan.data.manager,
+			add: routeStundenplan.data.add,
 			addAsCopy: routeStundenplan.data.addAsCopy,
+			loadAfterAdd: routeStundenplan.data.loadAfterAdd,
 			gotoDefaultView: routeStundenplan.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),

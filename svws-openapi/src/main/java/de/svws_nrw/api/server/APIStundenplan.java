@@ -254,7 +254,7 @@ public class APIStundenplan {
 			description = "Erstellt einen neuen Stundenplan und gibt die zugehörigen Daten zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Stundenplans besitzt.")
 	@ApiResponse(responseCode = "201", description = "Der Stundenplan wurde erfolgreich erstellt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Stundenplan.class)))
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan anzulegen.")
 	@ApiResponse(responseCode = "404", description = "Benötigte Daten wurden nicht gefunden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")

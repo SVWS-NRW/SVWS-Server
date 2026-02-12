@@ -1,4 +1,4 @@
-import type { List, Raum, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate, StundenplanKalenderwochenzuordnung, SimpleOperationResponse, StundenplanListeEintrag, ApiFile, ReportingParameter } from "@core";
+import type { List, Raum, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate, StundenplanKalenderwochenzuordnung, StundenplanListeEintrag, ApiFile, ReportingParameter, SimpleOperationResponse } from "@core";
 import { StundenplanUnterrichtListeManager, StundenplanListeManager, ViewType } from "@ui";
 import { Stundenplan, StundenplanManager, StundenplanKonfiguration, StundenplanPausenaufsicht, Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException } from "@core";
 
@@ -205,7 +205,8 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 	};
 
 	add = async (partial: Partial<Stundenplan>): Promise<void> => {
-		await this.addAsCopy(partial, undefined);
+		const neu = await api.server.addStundenplan({ ...partial, idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }, api.schema);
+		await this.loadAfterAdd(neu.id);
 	};
 
 	getStundenplanListeEintragVorgaengerabschnitt = async () => {
@@ -215,15 +216,13 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		return new ArrayList<StundenplanListeEintrag>(await api.server.getStundenplanlisteFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.idVorigerAbschnitt));
 	};
 
-	addAsCopy = async (partial: Partial<Stundenplan>, idFromStundenplan: number | undefined): Promise<void> => {
-		let neu = null;
-		if (idFromStundenplan === undefined) {
-			neu = await api.server.addStundenplan({ ...partial, idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }, api.schema);
-		} else {
-			neu = await api.server.addStundenplanAsCopy({ ...partial, idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }, api.schema, idFromStundenplan);
-		}
+	addAsCopy = async (partial: Partial<Stundenplan>, idFromStundenplan: number): Promise<SimpleOperationResponse> => {
+		return await api.server.addStundenplanAsCopy({ ...partial, idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }, api.schema, idFromStundenplan);
+	};
+
+	loadAfterAdd = async (idNeu: number): Promise<void> => {
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
-		await this.gotoDefaultView(neu.id);
+		await this.gotoDefaultView(idNeu);
 	};
 
 

@@ -28,13 +28,26 @@
 			</div>
 		</div>
 		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
+		<svws-ui-modal v-model:show="warningModalIsShown"
+			:auto-close="false" :close-in-title="false"
+			size="medium" type="default">
+			<template #modalTitle>Achtung</template>
+			<template #modalDescription>
+				<div class="text-left flex flex-col gap-1">
+					<div class="mb-3">Beim Anlegen des Stundenplans sind Warnungen aufgetreten:</div>
+					<div v-for="(line, index) in warningLog" :key="index" class="whitespace-pre-wrap">{{ line }}</div>
+				</div>
+			</template>
+			<template #modalActions>
+				<svws-ui-button type="primary" @click="confirmWarningModal">Bestägigen</svws-ui-button>
+			</template>
+		</svws-ui-modal>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import type { StundenplanListeEintrag } from "@core";
-	import { DateUtils, type Stundenplan, DeveloperNotificationException, ValidatorFehlerart } from "@core";
+	import { DateUtils, type Stundenplan, type StundenplanListeEintrag, DeveloperNotificationException, ValidatorFehlerart } from "@core";
 	import { StundenplanListeManager } from "@ui";
 
 	import { ref, onMounted, watch, computed } from "vue";
@@ -43,6 +56,9 @@
 	const props = defineProps<StundenplanNeuProps>();
 
 	const isLoading = ref<boolean>(false);
+	const warningModalIsShown = ref<boolean>(false);
+	const warningLog = ref<string[]>([]);
+	const pendingStundenplanId = ref<number | null>(null);
 
 	type PartialExcept<T, K extends keyof T> = Partial<T> & Required<Pick<T, K>>;
 
@@ -64,18 +80,24 @@
 			throw new DeveloperNotificationException("SchuljahresabschnittAuswahl ist null");
 		}
 
-		watch(() => data.value, async () => {
-			if (isLoading.value) {
-				return;
-			}
-
-			props.checkpoint.active = true;
-		}, { immediate: false, deep: true });
+		const istErsterAbschnitt = abschnitt.abschnitt === 1;
 
 		data.value = {
-			gueltigAb: lastValidStundenplan === null ? ((abschnitt.abschnitt === 1) ? `${abschnitt.schuljahr}-08-01` : `${abschnitt.schuljahr + 1}-02-01`) : DateUtils.gibDatumFolgetag(lastValidStundenplan.gueltigBis),
-			gueltigBis: (abschnitt.abschnitt === 1) ? `${abschnitt.schuljahr + 1}-01-31` : `${abschnitt.schuljahr + 1}-07-31`,
-			wochenTypModell: lastValidStundenplan === null ? 0 : lastValidStundenplan.wochenTypModell,
+			gueltigAb: (() => {
+				if (lastValidStundenplan) {
+					return DateUtils.gibDatumFolgetag(lastValidStundenplan.gueltigBis);
+				}
+
+				return istErsterAbschnitt
+					? `${abschnitt.schuljahr}-08-01`
+					: `${abschnitt.schuljahr + 1}-02-01`;
+			})(),
+
+			gueltigBis: istErsterAbschnitt
+				? `${abschnitt.schuljahr + 1}-01-31`
+				: `${abschnitt.schuljahr + 1}-07-31`,
+
+			wochenTypModell: lastValidStundenplan?.wochenTypModell ?? 0,
 			aktiv: false,
 			bezeichnungStundenplan: "Neuer Stundenplan",
 		};
@@ -102,6 +124,8 @@
 			}
 			return 0;
 		});
+
+		watch(() => data.value, () => props.checkpoint.active = true, { immediate: false, deep: true });
 	});
 
 	const validateAll = computed(() => {
@@ -128,11 +152,52 @@
 		if (isLoading.value === true) {
 			return;
 		}
+		if (pendingStundenplanId.value !== null) {
+			warningModalIsShown.value = true;
+			return;
+		}
 
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		await props.addAsCopy(data.value, copyOf.value.id === props.manager().getStundenplanVorlage().id ? undefined : copyOf.value.id);
-		isLoading.value = false;
+		try {
+
+			if (copyOf.value.id === props.manager().getStundenplanVorlage().id) {
+				await props.add(data.value);
+			} else {
+				const res = await props.addAsCopy(data.value, copyOf.value.id);
+				if (res.log.size() > 0) {
+					const lines: string[] = [];
+					for (let i = 0; i < res.log.size(); i++) {
+						lines.push(res.log.get(i));
+					}
+					warningLog.value = lines;
+					pendingStundenplanId.value = res.id;
+					warningModalIsShown.value = true;
+					return;
+				}
+				if (res.id !== null) {
+					await props.loadAfterAdd(res.id);
+				}
+			}
+		} finally {
+			isLoading.value = false;
+		}
+	}
+
+	async function confirmWarningModal() {
+		if (pendingStundenplanId.value === null) {
+			warningModalIsShown.value = false;
+			return;
+		}
+		warningModalIsShown.value = false;
+		isLoading.value = true;
+		try {
+			await props.loadAfterAdd(pendingStundenplanId.value);
+			pendingStundenplanId.value = null;
+			warningLog.value = [];
+		} finally {
+			isLoading.value = false;
+		}
 	}
 
 </script>
