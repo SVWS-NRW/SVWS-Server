@@ -646,10 +646,7 @@ public final class DateUtils {
 	// Hilfsmethode, um die Anzahl der Tage in einem Monat zu bestimmen
 	private static int daysInMonth(final int year, final int month) {
 		switch (month) {
-			case 4:
-			case 6:
-			case 9:
-			case 11:
+			case 4, 6, 9, 11:
 				return 30;
 			case 2:
 				// Schaltjahrüberprüfung

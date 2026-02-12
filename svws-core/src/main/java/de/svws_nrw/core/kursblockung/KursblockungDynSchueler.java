@@ -761,13 +761,12 @@ public class KursblockungDynSchueler {
 		for (int fachartIndex = 0; fachartIndex < fachartArr.length; fachartIndex++) {
 			final @NotNull KursblockungDynFachart fachart = fachartArr[fachartIndex];
 			for (final @NotNull KursblockungDynKurs kurs : fachart.gibKurse())
-				if (kurs.gibDatenbankID() == idKursDB)
-					if (kurs.gibIstErlaubtFuerSchueler(this)) {
-						final KursblockungDynKurs kursVorher = fachartZuKurs[fachartIndex];
-						if (kursVorher != null)
-							aktionKursEntfernen(fachartIndex, kursVorher);
-						aktionKursHinzufuegen(fachartIndex, kurs);
-					}
+				if ((kurs.gibDatenbankID() == idKursDB) && (kurs.gibIstErlaubtFuerSchueler(this))) {
+					final KursblockungDynKurs kursVorher = fachartZuKurs[fachartIndex];
+					if (kursVorher != null)
+						aktionKursEntfernen(fachartIndex, kursVorher);
+					aktionKursHinzufuegen(fachartIndex, kurs);
+				}
 		}
 	}
 

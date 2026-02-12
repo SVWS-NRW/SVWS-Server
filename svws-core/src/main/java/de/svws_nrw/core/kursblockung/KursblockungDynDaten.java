@@ -1299,11 +1299,11 @@ public class KursblockungDynDaten {
 	 */
 	public boolean gibIstKursInSchiene(final int idKursDB, final int schieneDB) {
 		for (final @NotNull KursblockungDynKurs k : _kursArr)
-			if (k.gibDatenbankID() == idKursDB)
-				if (k.gibIstInSchiene(schieneDB - 1))
-					return true;
+			if ((k.gibDatenbankID() == idKursDB) && (k.gibIstInSchiene(schieneDB - 1)))
+				return true;
 		return false;
 	}
+
 	/**
 	 * Liefert true, falls der Schüler im Kurs ist.
 	 *
@@ -1315,9 +1315,8 @@ public class KursblockungDynDaten {
 		for (final @NotNull KursblockungDynKurs k : _kursArr)
 			if (k.gibDatenbankID() == idKursDB)
 				for (final @NotNull KursblockungDynSchueler s : _schuelerArr)
-					if (s.gibDatenbankID() == idSchuelerDB)
-						if (s.gibIstInKurs(k))
-							return true;
+					if ((s.gibDatenbankID() == idSchuelerDB) && (s.gibIstInKurs(k)))
+						return true;
 		return false;
 	}
 
@@ -1554,7 +1553,7 @@ public class KursblockungDynDaten {
 		if (_fachartArr.length == 0)
 			return;
 
-		int fachgruppenIndex = _random.nextInt(_fachartArr.length);
+		final int fachgruppenIndex = _random.nextInt(_fachartArr.length);
 		for (final @NotNull KursblockungDynKurs kurs: _fachartArr[fachgruppenIndex].gibKurse())
 			kurs.aktionZufaelligVerteilen();
 	}
@@ -1597,7 +1596,7 @@ public class KursblockungDynDaten {
 			// Berechne die Nichtwahlen des Schülers.
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 			schueler.aktionKurseVerteilenMitBipartiteMatching();
-			int nichtwahlen = schueler.gibNichtwahlen();
+			final int nichtwahlen = schueler.gibNichtwahlen();
 			schueler.aktionKurseAlleEntfernen();
 
 			if (nichtwahlen > 0) {

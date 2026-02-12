@@ -199,11 +199,9 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 					kurszahlenAnrechenbar.put(halbjahr, (kurszahlAnrechenbar == null) ? 1 : (kurszahlAnrechenbar + 1));
 					final Integer kurszahlGK = kurszahlenGrundkurse.get(halbjahr);
 					kurszahlenGrundkurse.put(halbjahr, (kurszahlGK == null) ? 1 : (kurszahlGK + 1));
-					if (istAnrechenbar) {
-						if (halbjahr.istQualifikationsphase()) {
-							blockIAnzahlGrundkurse++;
-							blockIAnzahlAnrechenbar++;
-						}
+					if (istAnrechenbar && halbjahr.istQualifikationsphase()) {
+						blockIAnzahlGrundkurse++;
+						blockIAnzahlAnrechenbar++;
 					}
 				}
 

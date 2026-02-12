@@ -197,9 +197,8 @@ class TestDequeRandom {
 
 		Integer old = null;
 		for (final Integer value : temp1) {
-			if (old != null)
-				if (old.compareTo(value) > 0)
-					fail("old.compareTo(value) > 0 --> LinkedCollection IST NICHT SORTIERT");
+			if ((old != null) && (old.compareTo(value) > 0))
+				fail("old.compareTo(value) > 0 --> LinkedCollection IST NICHT SORTIERT");
 			old = value;
 		}
 

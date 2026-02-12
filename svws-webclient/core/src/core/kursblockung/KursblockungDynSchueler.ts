@@ -683,13 +683,12 @@ export class KursblockungDynSchueler extends JavaObject {
 		for (let fachartIndex: number = 0; fachartIndex < this.fachartArr.length; fachartIndex++) {
 			const fachart: KursblockungDynFachart = this.fachartArr[fachartIndex];
 			for (const kurs of fachart.gibKurse())
-				if (kurs.gibDatenbankID() === idKursDB)
-					if (kurs.gibIstErlaubtFuerSchueler(this)) {
-						const kursVorher: KursblockungDynKurs | null = this.fachartZuKurs[fachartIndex];
-						if (kursVorher !== null)
-							this.aktionKursEntfernen(fachartIndex, kursVorher);
-						this.aktionKursHinzufuegen(fachartIndex, kurs);
-					}
+				if ((kurs.gibDatenbankID() === idKursDB) && (kurs.gibIstErlaubtFuerSchueler(this))) {
+					const kursVorher: KursblockungDynKurs | null = this.fachartZuKurs[fachartIndex];
+					if (kursVorher !== null)
+						this.aktionKursEntfernen(fachartIndex, kursVorher);
+					this.aktionKursHinzufuegen(fachartIndex, kurs);
+				}
 		}
 	}
 

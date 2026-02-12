@@ -1744,22 +1744,17 @@ export class GostBlockungsdatenManager extends JavaObject {
 		if (paramCount !== r.parameter.size())
 			return this.toStringRegel(r.id) + " hat falsche Parameter-Anzahl!";
 		for (let i: number = 0; i < paramCount; i++) {
-			let value: number = r.parameter.get(i).valueOf();
-			if (typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.SCHUELER_ID as unknown)
-				if (this.schuelerGetOrNull(value) === null)
-					return this.toStringRegel(r.id) + " hat falsche Schüler-ID-Referenz " + value + "!";
-			if (typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.KURS_ID as unknown)
-				if (!this.kursGetExistiert(value))
-					return this.toStringRegel(r.id) + " hat falsche Kurs-ID-Referenz " + value + "!";
-			if (typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.SCHIENEN_NR as unknown)
-				if ((value < 1) || (value > this.schieneGetAnzahl()))
-					return this.toStringRegel(r.id) + " hat falsche Schienen-Nr-Referenz " + value + "!";
-			if (typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.FACH_ID as unknown)
-				if (this._faecherManager.get(value) === null)
-					return this.toStringRegel(r.id) + " hat falsche Fach-ID-Referenz " + value + "!";
-			if (typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.KURSART as unknown)
-				if (GostKursart.fromIDorNull(value as number) === null)
-					return this.toStringRegel(r.id) + " hat falsche Kursart-Referenz " + value + "!";
+			const value: number = r.parameter.get(i).valueOf();
+			if ((typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.SCHUELER_ID as unknown) && (this.schuelerGetOrNull(value) === null))
+				return this.toStringRegel(r.id) + " hat falsche Schüler-ID-Referenz " + value + "!";
+			if ((typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.KURS_ID as unknown) && (!this.kursGetExistiert(value)))
+				return this.toStringRegel(r.id) + " hat falsche Kurs-ID-Referenz " + value + "!";
+			if ((typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.SCHIENEN_NR as unknown) && ((value < 1) || (value > this.schieneGetAnzahl())))
+				return this.toStringRegel(r.id) + " hat falsche Schienen-Nr-Referenz " + value + "!";
+			if ((typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.FACH_ID as unknown) && (this._faecherManager.get(value) === null))
+				return this.toStringRegel(r.id) + " hat falsche Fach-ID-Referenz " + value + "!";
+			if ((typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.KURSART as unknown) && (GostKursart.fromIDorNull(value as number) === null))
+				return this.toStringRegel(r.id) + " hat falsche Kursart-Referenz " + value + "!";
 		}
 		return "";
 	}
@@ -1832,19 +1827,19 @@ export class GostBlockungsdatenManager extends JavaObject {
 		if (!setMultiKey.add(multikey) || this._map_multikey_regeln.containsKey(multikey))
 			return this.toStringRegel(r.id) + " existiert bereits als gleiche  (nicht als selbe) Regel im MultiMap!";
 		if (r.typ === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ) {
-			for (let rAlt of menge1)
+			for (const rAlt of menge1)
 				if (GostBlockungsdatenManager.regelKursartIntervallSchnitt(rAlt, r))
 					return "Intervallschnitt bei " + this.toStringRegel(r.id) + " und " + this.toStringRegel(rAlt.id) + "!";
 			menge1.add(r);
 		}
 		if (r.typ === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ) {
-			for (let rAlt of menge6)
+			for (const rAlt of menge6)
 				if (GostBlockungsdatenManager.regelKursartIntervallSchnitt(rAlt, r))
 					return "Intervallschnitt bei " + this.toStringRegel(r.id) + " und " + this.toStringRegel(rAlt.id) + "!";
 			menge6.add(r);
 		}
 		if (r.typ === GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ) {
-			for (let rAlt of menge9)
+			for (const rAlt of menge9)
 				if (JavaObject.equalsTranspiler(rAlt.parameter.get(0), (r.parameter.get(0))))
 					return this.toStringRegel(r.id) + " Regel-Dopplung!";
 			menge9.add(r);
@@ -1855,7 +1850,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 			menge10.add(r);
 		}
 		if (r.typ === GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ) {
-			for (let rAlt of menge15)
+			for (const rAlt of menge15)
 				if (JavaObject.equalsTranspiler(rAlt.parameter.get(0), (r.parameter.get(0))))
 					return this.toStringRegel(r.id) + " Regel-Dopplung!";
 			menge15.add(r);
@@ -2066,8 +2061,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	private regelRemoveListeByIDsOhneRevalidierung(regelmengeGesamt: JavaSet<number>): void {
-		let regelnUngueltig: ArrayList<number> | null = new ArrayList<number>();
-		let regelnGueltig: ArrayList<number> | null = new ArrayList<number>();
+		const regelnUngueltig: ArrayList<number> | null = new ArrayList<number>();
+		const regelnGueltig: ArrayList<number> | null = new ArrayList<number>();
 		for (const idRegel of regelmengeGesamt) {
 			if (this._map_idRegel_regelUngueltig.containsKey(idRegel)) {
 				regelnUngueltig.add(idRegel);
@@ -2113,7 +2108,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	private static regelToMultikey(regel: GostBlockungRegel): LongArrayKey {
-		let a: Array<number> | null = Array(regel.parameter.size() + 1).fill(0);
+		const a: Array<number> | null = Array(regel.parameter.size() + 1).fill(0);
 		a[0] = regel.typ;
 		for (let i: number = 1; i < a.length; i++)
 			a[i] = regel.parameter.get(i - 1).valueOf();

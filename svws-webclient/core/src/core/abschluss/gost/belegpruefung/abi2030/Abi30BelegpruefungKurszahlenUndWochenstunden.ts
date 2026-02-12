@@ -195,11 +195,9 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 					this.kurszahlenAnrechenbar.put(halbjahr, (kurszahlAnrechenbar === null) ? 1 : (kurszahlAnrechenbar + 1));
 					const kurszahlGK: number | null = this.kurszahlenGrundkurse.get(halbjahr);
 					this.kurszahlenGrundkurse.put(halbjahr, (kurszahlGK === null) ? 1 : (kurszahlGK + 1));
-					if (istAnrechenbar) {
-						if (halbjahr.istQualifikationsphase()) {
-							this.blockIAnzahlGrundkurse++;
-							this.blockIAnzahlAnrechenbar++;
-						}
+					if (istAnrechenbar && halbjahr.istQualifikationsphase()) {
+						this.blockIAnzahlGrundkurse++;
+						this.blockIAnzahlAnrechenbar++;
 					}
 				}
 				if (halbjahr.istQualifikationsphase() && !istNullPunkteBelegungInQPhase && (kursart as unknown === GostKursart.LK as unknown)) {

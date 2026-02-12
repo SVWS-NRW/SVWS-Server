@@ -1822,22 +1822,17 @@ public class GostBlockungsdatenManager {
 
 		// Ist eine Referenz falsch?
 		for (int i = 0; i < paramCount; i++) {
-			long value = r.parameter.get(i);
-			if (typ.getParamType(i) == GostKursblockungRegelParameterTyp.SCHUELER_ID)
-				if (schuelerGetOrNull(value) == null)
-					return toStringRegel(r.id) + " hat falsche Schüler-ID-Referenz " + value + "!";
-			if (typ.getParamType(i) == GostKursblockungRegelParameterTyp.KURS_ID)
-				if (!kursGetExistiert(value))
-					return toStringRegel(r.id) + " hat falsche Kurs-ID-Referenz " + value + "!";
-			if (typ.getParamType(i) == GostKursblockungRegelParameterTyp.SCHIENEN_NR)
-				if ((value < 1) || (value > schieneGetAnzahl()))
-					return toStringRegel(r.id) + " hat falsche Schienen-Nr-Referenz " + value + "!";
-			if (typ.getParamType(i) == GostKursblockungRegelParameterTyp.FACH_ID)
-				if (_faecherManager.get(value) == null)
-					return toStringRegel(r.id) + " hat falsche Fach-ID-Referenz " + value + "!";
-			if (typ.getParamType(i) == GostKursblockungRegelParameterTyp.KURSART)
-				if (GostKursart.fromIDorNull((int) value) == null)
-					return toStringRegel(r.id) + " hat falsche Kursart-Referenz " + value + "!";
+			final long value = r.parameter.get(i);
+			if ((typ.getParamType(i) == GostKursblockungRegelParameterTyp.SCHUELER_ID) && (schuelerGetOrNull(value) == null))
+				return toStringRegel(r.id) + " hat falsche Schüler-ID-Referenz " + value + "!";
+			if ((typ.getParamType(i) == GostKursblockungRegelParameterTyp.KURS_ID) && (!kursGetExistiert(value)))
+				return toStringRegel(r.id) + " hat falsche Kurs-ID-Referenz " + value + "!";
+			if ((typ.getParamType(i) == GostKursblockungRegelParameterTyp.SCHIENEN_NR) && ((value < 1) || (value > schieneGetAnzahl())))
+				return toStringRegel(r.id) + " hat falsche Schienen-Nr-Referenz " + value + "!";
+			if ((typ.getParamType(i) == GostKursblockungRegelParameterTyp.FACH_ID) && (_faecherManager.get(value) == null))
+				return toStringRegel(r.id) + " hat falsche Fach-ID-Referenz " + value + "!";
+			if ((typ.getParamType(i) == GostKursblockungRegelParameterTyp.KURSART) && (GostKursart.fromIDorNull((int) value) == null))
+				return toStringRegel(r.id) + " hat falsche Kursart-Referenz " + value + "!";
 		}
 
 		// Keine Warnung
@@ -1926,7 +1921,7 @@ public class GostBlockungsdatenManager {
 
 		// Regel  1 "KURSART_SPERRE_SCHIENEN_VON_BIS" Intervall-Überschneidung prüfen.
 		if (r.typ == GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ) {
-			for (GostBlockungRegel rAlt : menge1)
+			for (final GostBlockungRegel rAlt : menge1)
 				if (regelKursartIntervallSchnitt(rAlt, r))
 					return "Intervallschnitt bei " + toStringRegel(r.id) + " und " + toStringRegel(rAlt.id) + "!";
 			menge1.add(r);
@@ -1934,7 +1929,7 @@ public class GostBlockungsdatenManager {
 
 		// Regel  6 "KURSART_ALLEIN_IN_SCHIENEN_VON_BIS" Intervall-Überschneidung prüfen.
 		if (r.typ == GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ) {
-			for (GostBlockungRegel rAlt : menge6)
+			for (final GostBlockungRegel rAlt : menge6)
 				if (regelKursartIntervallSchnitt(rAlt, r))
 					return "Intervallschnitt bei " + toStringRegel(r.id) + " und " + toStringRegel(rAlt.id) + "!";
 			menge6.add(r);
@@ -1942,7 +1937,7 @@ public class GostBlockungsdatenManager {
 
 		// Regel  9 "KURS_MIT_DUMMY_SUS_AUFFUELLEN" darf es nur ein Mal pro Kurs geben.
 		if (r.typ == GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ) {
-			for (GostBlockungRegel rAlt : menge9)
+			for (final GostBlockungRegel rAlt : menge9)
 				if (rAlt.parameter.get(0).equals(r.parameter.get(0)))
 					return toStringRegel(r.id) + " Regel-Dopplung!";
 			menge9.add(r);
@@ -1957,7 +1952,7 @@ public class GostBlockungsdatenManager {
 
 		// Regel 15 "KURS_MAXIMALE_SCHUELERANZAHL" darf es nur ein Mal pro Kurs geben.
 		if (r.typ == GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ) {
-			for (GostBlockungRegel rAlt : menge15)
+			for (final GostBlockungRegel rAlt : menge15)
 				if (rAlt.parameter.get(0).equals(r.parameter.get(0)))
 					return toStringRegel(r.id) + " Regel-Dopplung!";
 			menge15.add(r);
@@ -2181,8 +2176,8 @@ public class GostBlockungsdatenManager {
 
 	private void regelRemoveListeByIDsOhneRevalidierung(final @NotNull Set<Long> regelmengeGesamt) throws DeveloperNotificationException {
 		// Trenne die Regel-Menge in "ungültig" und "gültig".
-		ArrayList<Long> regelnUngueltig = new ArrayList<>();
-		ArrayList<Long> regelnGueltig = new ArrayList<>();
+		final ArrayList<Long> regelnUngueltig = new ArrayList<>();
+		final ArrayList<Long> regelnGueltig = new ArrayList<>();
 		for (final long idRegel : regelmengeGesamt) {
 			if (_map_idRegel_regelUngueltig.containsKey(idRegel)) {
 				regelnUngueltig.add(idRegel);
@@ -2241,7 +2236,7 @@ public class GostBlockungsdatenManager {
 	}
 
 	private static @NotNull LongArrayKey regelToMultikey(final @NotNull GostBlockungRegel regel) {
-		long[] a = new long[regel.parameter.size() + 1];
+		final long[] a = new long[regel.parameter.size() + 1];
 		a[0] = regel.typ;
 		for (int i = 1; i < a.length; i++)
 			a[i] = regel.parameter.get(i - 1);

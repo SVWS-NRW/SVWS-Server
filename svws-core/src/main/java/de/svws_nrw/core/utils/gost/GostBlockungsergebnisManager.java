@@ -2421,12 +2421,14 @@ public class GostBlockungsergebnisManager {
 	public @NotNull List<Schueler> getOfSchuelerMengeMitAbweichendemAbijahrgang() {
 		final @NotNull List<Schueler> menge = new ArrayList<>();
 
-		for (final @NotNull Schueler schueler : _parent.schuelerGetListe())
-			if (schueler.abschlussjahrgang != _parent.daten().abijahrgang)
-				// Nur dann den Schüler hinzufügen, wenn es überhaupt eine Kurszuordnung oder eine Regel noch gibt.
-				if (!kursSchuelerUpdate_02b_ENTFERNE_SCHUELERMENGE_AUS_ALLEN_KURSEN(SetUtils.create1(schueler.id)).listEntfernen.isEmpty()
-						|| !regelupdateCreate_19_SCHUELERMENGE_ENTFERNEN(SetUtils.create1(schueler.id)).listEntfernen.isEmpty())
-					menge.add(schueler);
+		for (final @NotNull Schueler schueler : _parent.schuelerGetListe()) {
+			if (schueler.abschlussjahrgang == _parent.daten().abijahrgang)
+				continue;
+			// Nur dann den Schüler hinzufügen, wenn es überhaupt eine Kurszuordnung oder eine Regel noch gibt.
+			if (!kursSchuelerUpdate_02b_ENTFERNE_SCHUELERMENGE_AUS_ALLEN_KURSEN(SetUtils.create1(schueler.id)).listEntfernen.isEmpty()
+					|| !regelupdateCreate_19_SCHUELERMENGE_ENTFERNEN(SetUtils.create1(schueler.id)).listEntfernen.isEmpty())
+				menge.add(schueler);
+		}
 
 		return menge;
 	}

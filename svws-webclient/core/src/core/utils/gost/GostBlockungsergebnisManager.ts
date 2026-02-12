@@ -2229,10 +2229,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public getOfSchuelerMengeMitAbweichendemAbijahrgang(): List<Schueler> {
 		const menge: List<Schueler> = new ArrayList<Schueler>();
-		for (const schueler of this._parent.schuelerGetListe())
-			if (schueler.abschlussjahrgang !== this._parent.daten().abijahrgang)
-				if (!this.kursSchuelerUpdate_02b_ENTFERNE_SCHUELERMENGE_AUS_ALLEN_KURSEN(SetUtils.create1(schueler.id)).listEntfernen.isEmpty() || !this.regelupdateCreate_19_SCHUELERMENGE_ENTFERNEN(SetUtils.create1(schueler.id)).listEntfernen.isEmpty())
-					menge.add(schueler);
+		for (const schueler of this._parent.schuelerGetListe()) {
+			if (schueler.abschlussjahrgang === this._parent.daten().abijahrgang)
+				continue;
+			if (!this.kursSchuelerUpdate_02b_ENTFERNE_SCHUELERMENGE_AUS_ALLEN_KURSEN(SetUtils.create1(schueler.id)).listEntfernen.isEmpty() || !this.regelupdateCreate_19_SCHUELERMENGE_ENTFERNEN(SetUtils.create1(schueler.id)).listEntfernen.isEmpty())
+				menge.add(schueler);
+		}
 		return menge;
 	}
 

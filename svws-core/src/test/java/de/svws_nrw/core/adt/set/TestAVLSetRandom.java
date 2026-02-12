@@ -41,15 +41,13 @@ class TestAVLSetRandom {
 	private void testeEineRunde() {
 		switch (RANDOM.nextInt(21)) {
 			case 0 -> { // first
-				if (set1.size() > 0)
-					if (unequal(set1.first(), set2.first()))
-						fail("set1.first() != set2.first() --> " + set1.first() + " != " + set2.first());
+				if ((set1.size() > 0) && (unequal(set1.first(), set2.first())))
+					fail("set1.first() != set2.first() --> " + set1.first() + " != " + set2.first());
 			}
 			case 1 -> { // last
-				if (set1.size() > 0)
-					if (unequal(set1.last(), set2.last()))
-						fail("set1.last() != set2.last() --> " + set1.last() + " != " + set2.last() + " BUT "
-								+ set1.last().equals(set2.last()));
+				if ((set1.size()) > 0 && (unequal(set1.last(), set2.last())))
+					fail("set1.last() != set2.last() --> " + set1.last() + " != " + set2.last() + " BUT "
+							+ set1.last().equals(set2.last()));
 			}
 			case 2 -> { // size
 				if (set1.size() != set2.size())

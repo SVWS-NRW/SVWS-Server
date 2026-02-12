@@ -1082,9 +1082,8 @@ export class KursblockungDynDaten extends JavaObject {
 	 */
 	public gibIstKursInSchiene(idKursDB: number, schieneDB: number): boolean {
 		for (const k of this._kursArr)
-			if (k.gibDatenbankID() === idKursDB)
-				if (k.gibIstInSchiene(schieneDB - 1))
-					return true;
+			if ((k.gibDatenbankID() === idKursDB) && (k.gibIstInSchiene(schieneDB - 1)))
+				return true;
 		return false;
 	}
 
@@ -1099,9 +1098,8 @@ export class KursblockungDynDaten extends JavaObject {
 		for (const k of this._kursArr)
 			if (k.gibDatenbankID() === idKursDB)
 				for (const s of this._schuelerArr)
-					if (s.gibDatenbankID() === idSchuelerDB)
-						if (s.gibIstInKurs(k))
-							return true;
+					if ((s.gibDatenbankID() === idSchuelerDB) && (s.gibIstInKurs(k)))
+						return true;
 		return false;
 	}
 
@@ -1295,7 +1293,7 @@ export class KursblockungDynDaten extends JavaObject {
 	public aktionKursVerteilenEineZufaelligeFachgruppe(): void {
 		if (this._fachartArr.length === 0)
 			return;
-		let fachgruppenIndex: number = this._random.nextInt(this._fachartArr.length);
+		const fachgruppenIndex: number = this._random.nextInt(this._fachartArr.length);
 		for (const kurs of this._fachartArr[fachgruppenIndex].gibKurse())
 			kurs.aktionZufaelligVerteilen();
 	}
@@ -1331,7 +1329,7 @@ export class KursblockungDynDaten extends JavaObject {
 			const schueler: KursblockungDynSchueler | null = this._schuelerArr[p];
 			schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 			schueler.aktionKurseVerteilenMitBipartiteMatching();
-			let nichtwahlen: number = schueler.gibNichtwahlen();
+			const nichtwahlen: number = schueler.gibNichtwahlen();
 			schueler.aktionKurseAlleEntfernen();
 			if (nichtwahlen > 0) {
 				schueler.aktionKurseVerteilenNurMultikurseZufaellig();
