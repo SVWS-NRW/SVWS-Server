@@ -1373,7 +1373,7 @@ export class GostKlausurplanManager extends JavaObject {
 	private update_vorgabefehlendmenge(): void {
 		this._vorgabenfehlendmenge.clear();
 		this._vorgabenfehlendmenge.addAll(this._vorgabefehlend_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach.getNonNullValuesAsList());
-		this._vorgabenmenge.sort(this._compVorgabe);
+		this._vorgabenfehlendmenge.sort(this._compVorgabe);
 	}
 
 	/**
@@ -1610,7 +1610,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return eine Liste aller {@link GostKursklausur}-Objekte.
 	 */
 	public kursklausurfehlendGetMengeAsList(): List<GostKursklausur> {
-		return this._kursklausurmenge;
+		return this._kursklausurfehlendmenge;
 	}
 
 	private kursklausurfehlendRemoveOhneUpdate(kursklausur: GostKursklausur): void {
@@ -2690,11 +2690,30 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	private checkTerminUeberschneidung(t1: GostKlausurtermin, t2: GostKlausurtermin): boolean {
-		const s1: number = this.minKlausurstartzeitByTermin(t1, true);
-		const s2: number = this.minKlausurstartzeitByTermin(t2, true);
-		const e1: number = this.maxKlausurendzeitByTermin(t1, true);
-		const e2: number = this.maxKlausurendzeitByTermin(t2, true);
+		const s1: number | null = this.minKlausurstartzeitByTerminOrNull(t1, true);
+		const s2: number | null = this.minKlausurstartzeitByTerminOrNull(t2, true);
+		const e1: number | null = this.maxKlausurendzeitByTerminOrNull(t1, true);
+		const e2: number | null = this.maxKlausurendzeitByTerminOrNull(t2, true);
+		if ((s1 === null) || (s2 === null) || (e1 === null) || (e2 === null))
+			return false;
 		return (e1 >= s2) && (e2 >= s1);
+	}
+
+	private minKlausurstartzeitByTerminOrNull(termin: GostKlausurtermin, includeNachschreiber: boolean): number | null {
+		const skts: List<GostSchuelerklausurTermin> = this.schuelerklausurterminAktuellGetMengeByTermin(termin);
+		if (skts.isEmpty())
+			return termin.startzeit;
+		const minStart: number | null = this.minKlausurstartzeitBySchuelerklausurterminMengeOrNull(skts, includeNachschreiber);
+		return (minStart !== null) ? minStart : termin.startzeit;
+	}
+
+	private maxKlausurendzeitByTerminOrNull(termin: GostKlausurtermin, includeNachschreiber: boolean): number | null {
+		const skts: List<GostSchuelerklausurTermin> = this.schuelerklausurterminAktuellGetMengeByTermin(termin);
+		const maxEnd: number | null = this.maxKlausurendzeitBySchuelerklausurterminMengeOrNull(skts, includeNachschreiber);
+		if (maxEnd !== null)
+			return maxEnd;
+		const start: number | null = this.minKlausurstartzeitByTerminOrNull(termin, includeNachschreiber);
+		return (start !== null) ? (start + 1) : null;
 	}
 
 	private kursklausurGetMengeByTerminid(idTermin: number | null): List<GostKursklausur> {
@@ -3011,13 +3030,24 @@ export class GostKlausurplanManager extends JavaObject {
 	public minKlausurstartzeitBySchuelerklausurterminMenge(skts: List<GostSchuelerklausurTermin>, includeNachschreiber: boolean): number {
 		if (skts.isEmpty())
 			throw new DeveloperNotificationException("Keine Schülerklausurtermine zur Ermittlung der minimalen Klausurstartzeit gefunden.")
-		let minStart: number = 1440;
+		return DeveloperNotificationException.ifNull("Fehler bei der Ermittlung der minimalen Klausurstartzeit.", this.minKlausurstartzeitBySchuelerklausurterminMengeIntern(skts, includeNachschreiber, true));
+	}
+
+	private minKlausurstartzeitBySchuelerklausurterminMengeOrNull(skts: List<GostSchuelerklausurTermin>, includeNachschreiber: boolean): number | null {
+		if (skts.isEmpty())
+			return null;
+		return this.minKlausurstartzeitBySchuelerklausurterminMengeIntern(skts, includeNachschreiber, false);
+	}
+
+	private minKlausurstartzeitBySchuelerklausurterminMengeIntern(skts: List<GostSchuelerklausurTermin>, includeNachschreiber: boolean, strict: boolean): number | null {
+		let minStart: number | null = strict ? 1440 : null;
 		for (const skt of skts) {
 			if (!includeNachschreiber && (skt.folgeNr > 0))
 				continue;
-			const skStartzeit: number = this.startzeitBySchuelerklausurterminOrException(skt);
-			if (skStartzeit < minStart)
-				minStart = skStartzeit;
+			const skStartzeit: number | null = strict ? this.startzeitBySchuelerklausurterminOrException(skt) : this.startzeitBySchuelerklausurterminOrNull(skt);
+			if (skStartzeit === null)
+				continue;
+			minStart = ((minStart === null) || (skStartzeit < minStart)) ? skStartzeit : minStart;
 		}
 		return minStart;
 	}
@@ -3057,14 +3087,30 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return die maximale Endzeit der {@link GostSchuelerklausurTermin}e in Minuten ggf. unter Berücksichtigung der Nachschreibklausuren in der Menge
 	 */
 	public maxKlausurendzeitBySchuelerklausurterminMenge(skts: List<GostSchuelerklausurTermin>, includeNachschreiber: boolean): number {
-		let maxEnd: number = this.minKlausurstartzeitBySchuelerklausurterminMenge(skts, includeNachschreiber) + 1;
 		if (skts.isEmpty())
-			return maxEnd;
+			throw new DeveloperNotificationException("Keine Schülerklausurtermine zur Ermittlung der maximalen Klausurendzeit gefunden.")
+		return DeveloperNotificationException.ifNull("Fehler bei der Ermittlung der maximalen Klausurendzeit.", this.maxKlausurendzeitBySchuelerklausurterminMengeIntern(skts, includeNachschreiber, true));
+	}
+
+	private maxKlausurendzeitBySchuelerklausurterminMengeOrNull(skts: List<GostSchuelerklausurTermin>, includeNachschreiber: boolean): number | null {
+		if (skts.isEmpty())
+			return null;
+		return this.maxKlausurendzeitBySchuelerklausurterminMengeIntern(skts, includeNachschreiber, false);
+	}
+
+	private maxKlausurendzeitBySchuelerklausurterminMengeIntern(skts: List<GostSchuelerklausurTermin>, includeNachschreiber: boolean, strict: boolean): number | null {
+		const minStart: number | null = this.minKlausurstartzeitBySchuelerklausurterminMengeIntern(skts, includeNachschreiber, strict);
+		if (minStart === null)
+			return null;
+		let maxEnd: number = minStart + 1;
 		for (const skt of skts) {
 			if (!includeNachschreiber && (skt.folgeNr > 0))
 				continue;
+			const skStartzeit: number | null = strict ? this.startzeitBySchuelerklausurterminOrException(skt) : this.startzeitBySchuelerklausurterminOrNull(skt);
+			if (skStartzeit === null)
+				continue;
 			const vorgabe: GostKlausurvorgabe = this.vorgabeBySchuelerklausurTermin(skt);
-			const endzeit: number = this.startzeitBySchuelerklausurterminOrException(skt) + vorgabe.dauer + vorgabe.auswahlzeit;
+			const endzeit: number = skStartzeit + vorgabe.dauer + vorgabe.auswahlzeit;
 			if (endzeit > maxEnd)
 				maxEnd = endzeit;
 		}
@@ -3100,8 +3146,15 @@ export class GostKlausurplanManager extends JavaObject {
 	public maxKlausurdauerGetByTermin(termin: GostKlausurtermin, includeNachschreiber: boolean): number {
 		let maxDauer: number = 0;
 		const skts: List<GostSchuelerklausurTermin> = this.schuelerklausurterminAktuellGetMengeByTermin(termin);
-		for (const skt of skts) {
-			const vorgabe: GostKlausurvorgabe = this.vorgabeBySchuelerklausurTermin(skt);
+		if (!skts.isEmpty()) {
+			for (const skt of skts) {
+				const vorgabe: GostKlausurvorgabe = this.vorgabeBySchuelerklausurTermin(skt);
+				maxDauer = (vorgabe.dauer > maxDauer) ? vorgabe.dauer : maxDauer;
+			}
+			return maxDauer;
+		}
+		for (const klausur of this.kursklausurGetMengeByTermin(termin)) {
+			const vorgabe: GostKlausurvorgabe = this.vorgabeByKursklausur(klausur);
 			maxDauer = (vorgabe.dauer > maxDauer) ? vorgabe.dauer : maxDauer;
 		}
 		return maxDauer;
@@ -3815,7 +3868,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public schuelerklausurterminAktuellGetMengeByTerminAndKursklausurMultijahrgang(termin: GostKlausurtermin, kursklausur: GostKursklausur, multijahrgang: boolean): List<GostSchuelerklausurTermin> {
 		const ergebnis: List<GostSchuelerklausurTermin> | null = new ArrayList<GostSchuelerklausurTermin>(this._schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.get12(termin.id, kursklausur.id));
-		if (termin.datum !== null)
+		if (multijahrgang && (termin.datum !== null))
 			for (const terminMulti of this.terminSelbesDatumGetMengeByTermin(termin, false))
 				ergebnis.addAll(this._schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.get12(terminMulti.id, kursklausur.id));
 		return ergebnis;
@@ -4606,12 +4659,12 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return die gemeinsame Klausurdauer aller {@link GostKursklausur}en oder <code>null</code>, falls keine solche existiert.
 	 */
 	public getGemeinsameKursklausurdauerByKlausurraum(raum: GostKlausurraum): number | null {
-		let dauer: number = -1;
+		let dauer: number | null = null;
 		for (const klausur of this.kursklausurGetMengeByRaum(raum, true)) {
 			const vorgabe: GostKlausurvorgabe = this.vorgabeByKursklausur(klausur);
-			if (dauer === -1)
+			if (dauer === null)
 				dauer = vorgabe.dauer;
-			if (dauer !== vorgabe.dauer)
+			if (!JavaObject.equalsTranspiler(dauer, (vorgabe.dauer)))
 				return null;
 		}
 		return dauer;
@@ -4626,14 +4679,18 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return die gemeinsame Klausurstartzeit aller {@link GostKursklausur}en oder <code>null</code>, falls keine solche existiert.
 	 */
 	public getGemeinsamerKursklausurstartByKlausurraum(raum: GostKlausurraum): number | null {
-		let start: number | null = -1;
+		let start: number | null = null;
 		for (const klausur of this.kursklausurGetMengeByRaum(raum, true)) {
-			if ((start !== null) && (start === -1))
-				start = klausur.startzeit;
-			if (this.hatAbweichendeStartzeitByKursklausur(klausur))
+			const effStart: number | null = this.startzeitByKursklausurOrNull(klausur);
+			if (effStart === null)
 				return null;
+			if (start === null)
+				start = effStart;
+			else
+				if (!JavaObject.equalsTranspiler(start, (effStart)))
+					return null;
 		}
-		return (start === null) ? this.terminGetByIdOrException(raum.idTermin).startzeit : start;
+		return start;
 	}
 
 	/**

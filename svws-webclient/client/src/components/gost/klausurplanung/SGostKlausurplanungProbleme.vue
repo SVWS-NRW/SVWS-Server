@@ -423,7 +423,7 @@
 			if (value > kwErrorLimit.value) {
 				kwErrorLimit.value = value;
 			}
-			void props.setConfigValue("kwWarnLimit", value);
+			props.setConfigValue("kwWarnLimit", value).catch(() => {});
 		},
 	});
 
@@ -433,7 +433,7 @@
 			if (value < kwWarnLimit.value) {
 				kwWarnLimit.value = value;
 			}
-			void props.setConfigValue("kwErrorLimit", value);
+			props.setConfigValue("kwErrorLimit", value).catch(() => {});
 		},
 	});
 

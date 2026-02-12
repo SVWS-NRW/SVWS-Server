@@ -73,7 +73,7 @@
 					return props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(a)).localeCompare(props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(b)), "de-DE");
 				case 'datum': {
 					const ord = props.kMan().terminGetByIdOrException(a.idTermin!).datum!.localeCompare(props.kMan().terminGetByIdOrException(b.idTermin!).datum!, "de-DE");
-					return ord !== 0 ? ord : props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(a)).localeCompare(props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(b)), "de-DE");
+					return ord === 0 ? props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(a)).localeCompare(props.kMan().kursKurzbezeichnungByKursklausur(props.kMan().kursklausurBySchuelerklausurTermin(b)), "de-DE") : ord;
 				}
 				default:
 					return 0;

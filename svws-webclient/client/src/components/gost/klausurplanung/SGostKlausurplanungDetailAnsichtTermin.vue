@@ -8,7 +8,6 @@
 					<tr>
 						<th class="px-3 py-1.5 border-r border-ui-25" style="width:8%">Raum</th>
 						<th colspan="3" class="px-3 py-1.5 border-r border-ui-25" style="width:45%">Kursinfos</th>
-						<!--<th class="border-r" style="width:15%">Aufsichten</th>-->
 						<th class="px-3 py-1.5">Bemerkungen</th>
 					</tr>
 				</thead>
@@ -33,14 +32,6 @@
 							</td>
 							<td class="border-r border-ui-25 text-center" v-if="kMan().getGemeinsamerKursklausurstartByKlausurraum(raum) !== null">{{ DateUtils.getStringOfUhrzeitFromMinuten(kMan().getGemeinsamerKursklausurstartByKlausurraum(raum)!) }} Uhr</td>
 							<td class="border-r border-ui-25 text-center" v-if="kMan().getGemeinsameKursklausurdauerByKlausurraum(raum) !== null">{{ kMan().getGemeinsameKursklausurdauerByKlausurraum(raum) }} Min.</td>
-							<!--<td class="border-r p-2s">
-								<table class="mx-auto">
-									<tr v-for="stunde in raummanager.klausurraumstundeGetMengeByRaumid(raum.id)" :key="stunde.id">
-										<td class="text-right pr-1">{{ stundenplanmanager.zeitrasterGetByIdOrException(stunde.idZeitraster).unterrichtstunde }}.</td>
-										<td class="pl-1">N.N.</td>
-									</tr>
-								</table>
-							</td>-->
 						</template>
 						<td v-else colspan="3" class="border-ui-25 border-r text-center text-ui-danger p-2">
 							Keine Klausuren in diesem Raum
@@ -87,8 +78,8 @@
 
 	const kursInfoColspan = (raum: GostKlausurraum) => {
 		let colspan = 1;
-		colspan += props.kMan().getGemeinsameKursklausurdauerByKlausurraum(raum) !== null ? 0 : 1;
-		colspan += props.kMan().getGemeinsamerKursklausurstartByKlausurraum(raum) !== null ? 0 : 1;
+		colspan += props.kMan().getGemeinsameKursklausurdauerByKlausurraum(raum) === null ? 1 : 0;
+		colspan += props.kMan().getGemeinsamerKursklausurstartByKlausurraum(raum) === null ? 1 : 0;
 		return colspan;
 	};
 

@@ -168,7 +168,7 @@
 				await props.erzeugeKlausurvorgabe(activeVorgabe.value);
 				activeVorgabe.value = new GostKlausurvorgabe();
 			} catch (error) {
-				console.log("Vorgabe konnte nicht erzeugt werden, wahrscheinlich existiert sie schon.", activeVorgabe.value); // TODO
+				console.log("Vorgabe konnte nicht erzeugt werden, wahrscheinlich existiert sie schon.", activeVorgabe.value);
 			}
 		}
 	};
@@ -195,15 +195,14 @@
 		}
 	};
 
-	// Check if component is mounted
 	const isMounted = ref(false);
 	onMounted(() => {
 		isMounted.value = true;
-		window.addEventListener('click', handleClick);
+		globalThis.addEventListener('click', handleClick);
 	});
 
 	onUnmounted(() => {
-		window.removeEventListener('click', handleClick);
+		globalThis.removeEventListener('click', handleClick);
 	});
 
 	const cols: DataTableColumn[] = [
@@ -223,7 +222,7 @@
 		if (kuerzel === null) {
 			return 'rgb(220,220,220)';
 		}
-		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(props.jahrgangsdaten!.abiturjahr - 1, 1.0);
+		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(props.jahrgangsdaten!.abiturjahr - 1, 1);
 	}
 
 	function handleClick(e: MouseEvent) {

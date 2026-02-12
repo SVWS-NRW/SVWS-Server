@@ -234,7 +234,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	quartalsauswahl = computed<0 | 1 | 2>({
 		get: () => {
-			const value = parseInt(this.getConfigValue("quartal"));
+			const value = Number.parseInt(this.getConfigValue("quartal"));
 			return (value === 1 || value === 2) ? value : 0;
 		},
 		set: (value) => {
@@ -286,14 +286,14 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	gotoKalenderdatum = async (datum: string | undefined, termin: GostKlausurtermin | undefined) => {
 		if (termin !== undefined) {
 			if (datum === undefined) {
-				await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: termin.abijahr, halbjahr: termin.halbjahr, datum: (termin.datum === null ? -1 : termin.datum.replace(/-/g, "")), idtermin: termin.id }));
+				await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: termin.abijahr, halbjahr: termin.halbjahr, datum: (termin.datum === null ? -1 : termin.datum.replaceAll("-", "")), idtermin: termin.id }));
 			} else {
-				await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: termin.abijahr, halbjahr: termin.halbjahr, datum: datum.replace(/-/g, ""), idtermin: termin.id }));
+				await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: termin.abijahr, halbjahr: termin.halbjahr, datum: datum.replaceAll("-", ""), idtermin: termin.id }));
 			}
 		} else if (datum === undefined) {
 			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, datum: -1, idtermin: undefined }));
 		} else {
-			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, datum: datum.replace(/-/g, ""), idtermin: undefined }));
+			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, datum: datum.replaceAll("-", ""), idtermin: undefined }));
 		}
 	};
 

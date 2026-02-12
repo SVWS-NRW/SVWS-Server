@@ -25,7 +25,6 @@
 						</template>
 						<span class="icon icon-ui-danger i-ri-alert-fill" />
 					</svws-ui-tooltip>
-					<!--<span v-if="multijahrgang()" class="text-button">{{ GostHalbjahr.fromIDorException(kMan().terminGetByIdOrException(raum.idTermin).halbjahr).jahrgang }}</span>-->
 					<template v-if="multijahrgang()">
 						<span class="border rounded-md p-1 text-button" v-if="raum.idTermin === terminSelected.id">{{ GostHalbjahr.fromIDorException(termin().halbjahr).jahrgang }}</span>
 						<svws-ui-button v-else type="secondary" class="p-1" @click="gotoTermin(termin().abijahr, GostHalbjahr.fromIDorException(termin().halbjahr), termin().id)" :title="`Zur Raumplanung des Jahrgangs`" size="small">{{ GostHalbjahr.fromIDorException(termin().halbjahr).jahrgang }}</svws-ui-button>
@@ -171,7 +170,7 @@
 				startzeit = startzeitRaum;
 			}
 		}
-		return startzeit !== -1 ? DateUtils.getStringOfUhrzeitFromMinuten(startzeit) : undefined;
+		return startzeit === -1 ? undefined : DateUtils.getStringOfUhrzeitFromMinuten(startzeit);
 	};
 
 	const anzahlRaumstunden = computed(() => {
@@ -203,18 +202,14 @@
 		if (event === null) {
 			return;
 		}
-		try {
-			const startzeit = event.trim().length > 0 ? DateUtils.gibMinutenOfZeitAsString(event) : null;
-			if (nk === true) {
-				const nachschreiberSkts = props.kMan().schuelerklausurterminGetMengeByRaumAndKursklausur(props.raum, klausur);
-				for (const nachSkt of nachschreiberSkts) {
-					await props.patchKlausur(nachSkt, { startzeit });
-				}
-			} else {
-				await props.patchKlausur(klausur, { startzeit });
+		const startzeit = event.trim().length > 0 ? DateUtils.gibMinutenOfZeitAsString(event) : null;
+		if (nk === true) {
+			const nachschreiberSkts = props.kMan().schuelerklausurterminGetMengeByRaumAndKursklausur(props.raum, klausur);
+			for (const nachSkt of nachschreiberSkts) {
+				await props.patchKlausur(nachSkt, { startzeit });
 			}
-		} catch (e) {
-			// Do nothing
+		} else {
+			await props.patchKlausur(klausur, { startzeit });
 		}
 	}
 

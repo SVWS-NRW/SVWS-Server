@@ -54,9 +54,7 @@
 <script setup lang="ts">
 
 	import type { List } from '@core';
-	import { ArrayList, BenutzerKompetenz, GostHalbjahr, GostKlausurraumRich, GostSchuelerklausurTermin, ListUtils } from '@core';
-	import { GostKlausurtermin } from '@core';
-	import { GostKlausurraum, GostKursklausur } from '@core';
+	import { GostKlausurraum, GostKursklausur, GostKlausurtermin, ArrayList, BenutzerKompetenz, GostHalbjahr, GostKlausurraumRich, GostSchuelerklausurTermin, ListUtils } from '@core';
 	import { ref, onMounted, computed } from 'vue';
 	import type { GostKlausurplanungRaumzeitProps } from './SGostKlausurplanungRaumzeitProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';

@@ -338,11 +338,11 @@
 				scrollToElement.scrollIntoView({ behavior: 'smooth', block: "nearest" });
 			}
 		}
-		window.addEventListener('click', handleClick);
+		globalThis.addEventListener('click', handleClick);
 	});
 
 	onUnmounted(() => {
-		window.removeEventListener('click', handleClick);
+		globalThis.removeEventListener('click', handleClick);
 	});
 
 	function calculateColumns() {
@@ -376,7 +376,7 @@
 			target = target.parentElement;
 		}
 		if (!isInsideTermin) {
-			void props.gotoSchienen(undefined);
+			props.gotoSchienen(undefined).catch(() => {});
 		}
 	}
 

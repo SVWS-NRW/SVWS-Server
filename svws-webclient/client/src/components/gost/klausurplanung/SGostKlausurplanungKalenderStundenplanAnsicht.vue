@@ -146,6 +146,8 @@
 		dragData: () => undefined,
 	});
 
+	const DEFAULT_TERMIN_DAUER_MINUTEN = 135;
+
 	const stundenplanManager = (datum: string) => props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, datum);
 
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
@@ -165,7 +167,6 @@
 
 	const kursInfos = (idKurs: number) => {
 		return props.kMan().getKursManager().get(idKurs)?.kuerzel;
-		// return test?.kuerzel || '' /* + " " + props.kMan().getKursklausurByTerminKurs(dragTermin.value.id, idKurs)!.schuelerIds.size() + "/??"*/;
 	};
 
 	const beginn = computed(() => {
@@ -237,7 +238,6 @@
 	}
 
 	function getPausenaufsichtenPausenzeit(pause: StundenplanPausenzeit): List<StundenplanPausenaufsicht> {
-		// TODO Pausenaufsicht zusätzlich pro "wochentyp" UND "inklWoche0=true"
 		if (props.mode === 'schueler') {
 			return props.manager().pausenaufsichtGetMengeBySchuelerIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
 		}
@@ -261,10 +261,8 @@
 				}
 			}
 		}
-		let rowStart = 0;
-		let rowEnd = 10;
-		rowStart = (zbeginn - beginn.value) / 5;
-		rowEnd = (zende - beginn.value) / 5;
+		const rowStart = (zbeginn - beginn.value) / 5;
+		const rowEnd = (zende - beginn.value) / 5;
 		return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";
 	}
 
@@ -282,8 +280,16 @@
 	function posKlausurtermin(termin: GostKlausurtermin): string {
 		let rowStart = 0;
 		let rowEnd = 10;
-		const terminBeginn = props.kMan().minKlausurstartzeitByTermin(termin, true);
-		const terminEnde = Math.ceil(props.kMan().maxKlausurendzeitByTermin(termin, true) / 5) * 5;
+		const terminBeginn = (termin.startzeit === null) ? -1 : props.kMan().minKlausurstartzeitByTermin(termin, true);
+		let terminEnde = -1;
+		if (terminBeginn !== -1) {
+			if (props.kMan().schuelerklausurterminAktuellGetMengeByTermin(termin).isEmpty()) {
+				const dauer = props.kMan().maxKlausurdauerGetByTermin(termin, true);
+				terminEnde = Math.ceil((terminBeginn + ((dauer > 0) ? dauer : DEFAULT_TERMIN_DAUER_MINUTEN)) / 5) * 5;
+			} else {
+				terminEnde = Math.ceil(props.kMan().maxKlausurendzeitByTermin(termin, true) / 5) * 5;
+			}
+		}
 		if ((terminBeginn !== -1) && (terminEnde !== -1)) {
 			rowStart = (terminBeginn - beginn.value) / 5;
 			rowEnd = (terminEnde - beginn.value) / 5;
@@ -304,7 +310,7 @@
 		}
 
 		const klausuren = [...props.kMan().kursklausurGetMengeByTermin(termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k).split('-')[0]);
-		const colors = klausuren.map(kuerzel => Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(props.jahrgangsdaten.abiturjahr - 1, 1.0));
+		const colors = klausuren.map(kuerzel => Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(props.jahrgangsdaten.abiturjahr - 1, 1));
 
 		let gradient = '';
 

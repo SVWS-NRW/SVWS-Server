@@ -1410,7 +1410,7 @@ public class GostKlausurplanManager {
 	private void update_vorgabefehlendmenge() {
 		_vorgabenfehlendmenge.clear();
 		_vorgabenfehlendmenge.addAll(_vorgabefehlend_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach.getNonNullValuesAsList());
-		_vorgabenmenge.sort(_compVorgabe);
+		_vorgabenfehlendmenge.sort(_compVorgabe);
 	}
 
 	/**
@@ -1673,7 +1673,7 @@ public class GostKlausurplanManager {
 	 * @return eine Liste aller {@link GostKursklausur}-Objekte.
 	 */
 	public @NotNull List<GostKursklausur> kursklausurfehlendGetMengeAsList() {
-		return _kursklausurmenge;
+		return _kursklausurfehlendmenge;
 	}
 
 	private void kursklausurfehlendRemoveOhneUpdate(final @NotNull GostKursklausur kursklausur) {
@@ -2867,8 +2867,7 @@ public class GostKlausurplanManager {
 				for (final @NotNull GostKlausurtermin terminInListe : listToCheck) {
 					if (checkTerminUeberschneidung(terminInListe, terminToAdd)) {
 						listToCheck.add(terminToAdd);
-						// Not supported by transpiler break outerloop;
-						added = true;
+						added = true; // Not supported by transpiler break outerloop;
 					}
 					// Transpiler-Workaround
 					if (added)
@@ -2887,11 +2886,30 @@ public class GostKlausurplanManager {
 
 	private boolean checkTerminUeberschneidung(final @NotNull GostKlausurtermin t1,
 			final @NotNull GostKlausurtermin t2) {
-		final int s1 = minKlausurstartzeitByTermin(t1, true);
-		final int s2 = minKlausurstartzeitByTermin(t2, true);
-		final int e1 = maxKlausurendzeitByTermin(t1, true);
-		final int e2 = maxKlausurendzeitByTermin(t2, true);
+		final Integer s1 = minKlausurstartzeitByTerminOrNull(t1, true);
+		final Integer s2 = minKlausurstartzeitByTerminOrNull(t2, true);
+		final Integer e1 = maxKlausurendzeitByTerminOrNull(t1, true);
+		final Integer e2 = maxKlausurendzeitByTerminOrNull(t2, true);
+		if ((s1 == null) || (s2 == null) || (e1 == null) || (e2 == null))
+			return false;
 		return (e1 >= s2) && (e2 >= s1);
+	}
+
+	private Integer minKlausurstartzeitByTerminOrNull(final @NotNull GostKlausurtermin termin, final boolean includeNachschreiber) {
+		final @NotNull List<GostSchuelerklausurTermin> skts = schuelerklausurterminAktuellGetMengeByTermin(termin);
+		if (skts.isEmpty())
+			return termin.startzeit;
+		final Integer minStart = minKlausurstartzeitBySchuelerklausurterminMengeOrNull(skts, includeNachschreiber);
+		return (minStart != null) ? minStart : termin.startzeit;
+	}
+
+	private Integer maxKlausurendzeitByTerminOrNull(final @NotNull GostKlausurtermin termin, final boolean includeNachschreiber) {
+		final @NotNull List<GostSchuelerklausurTermin> skts = schuelerklausurterminAktuellGetMengeByTermin(termin);
+		final Integer maxEnd = maxKlausurendzeitBySchuelerklausurterminMengeOrNull(skts, includeNachschreiber);
+		if (maxEnd != null)
+			return maxEnd;
+		final Integer start = minKlausurstartzeitByTerminOrNull(termin, includeNachschreiber);
+		return (start != null) ? (start + 1) : null;
 	}
 
 	private @NotNull List<GostKursklausur> kursklausurGetMengeByTerminid(final Long idTermin) {
@@ -3227,13 +3245,27 @@ public class GostKlausurplanManager {
 	public int minKlausurstartzeitBySchuelerklausurterminMenge(final @NotNull List<GostSchuelerklausurTermin> skts, final boolean includeNachschreiber) {
 		if (skts.isEmpty())
 			throw new DeveloperNotificationException("Keine Schülerklausurtermine zur Ermittlung der minimalen Klausurstartzeit gefunden.");
-		int minStart = 1440;
+		return DeveloperNotificationException.ifNull("Fehler bei der Ermittlung der minimalen Klausurstartzeit.",
+				minKlausurstartzeitBySchuelerklausurterminMengeIntern(skts, includeNachschreiber, true));
+	}
+
+	private Integer minKlausurstartzeitBySchuelerklausurterminMengeOrNull(final @NotNull List<GostSchuelerklausurTermin> skts,
+			final boolean includeNachschreiber) {
+		if (skts.isEmpty())
+			return null;
+		return minKlausurstartzeitBySchuelerklausurterminMengeIntern(skts, includeNachschreiber, false);
+	}
+
+	private Integer minKlausurstartzeitBySchuelerklausurterminMengeIntern(final @NotNull List<GostSchuelerklausurTermin> skts,
+			final boolean includeNachschreiber, final boolean strict) {
+		Integer minStart = strict ? 1440 : null;
 		for (final @NotNull GostSchuelerklausurTermin skt : skts) {
 			if (!includeNachschreiber && (skt.folgeNr > 0))
 				continue;
-			final int skStartzeit = startzeitBySchuelerklausurterminOrException(skt);
-			if (skStartzeit < minStart)
-				minStart = skStartzeit;
+			final Integer skStartzeit = strict ? startzeitBySchuelerklausurterminOrException(skt) : startzeitBySchuelerklausurterminOrNull(skt);
+			if (skStartzeit == null)
+				continue;
+			minStart = ((minStart == null) || (skStartzeit < minStart)) ? skStartzeit : minStart;
 		}
 		return minStart;
 	}
@@ -3273,14 +3305,33 @@ public class GostKlausurplanManager {
 	 * @return die maximale Endzeit der {@link GostSchuelerklausurTermin}e in Minuten ggf. unter Berücksichtigung der Nachschreibklausuren in der Menge
 	 */
 	public int maxKlausurendzeitBySchuelerklausurterminMenge(final @NotNull List<GostSchuelerklausurTermin> skts, final boolean includeNachschreiber) {
-		int maxEnd = minKlausurstartzeitBySchuelerklausurterminMenge(skts, includeNachschreiber) + 1;
 		if (skts.isEmpty())
-			return maxEnd;
+			throw new DeveloperNotificationException("Keine Schülerklausurtermine zur Ermittlung der maximalen Klausurendzeit gefunden.");
+		return DeveloperNotificationException.ifNull("Fehler bei der Ermittlung der maximalen Klausurendzeit.",
+				maxKlausurendzeitBySchuelerklausurterminMengeIntern(skts, includeNachschreiber, true));
+	}
+
+	private Integer maxKlausurendzeitBySchuelerklausurterminMengeOrNull(final @NotNull List<GostSchuelerklausurTermin> skts,
+			final boolean includeNachschreiber) {
+		if (skts.isEmpty())
+			return null;
+		return maxKlausurendzeitBySchuelerklausurterminMengeIntern(skts, includeNachschreiber, false);
+	}
+
+	private Integer maxKlausurendzeitBySchuelerklausurterminMengeIntern(final @NotNull List<GostSchuelerklausurTermin> skts,
+			final boolean includeNachschreiber, final boolean strict) {
+		final Integer minStart = minKlausurstartzeitBySchuelerklausurterminMengeIntern(skts, includeNachschreiber, strict);
+		if (minStart == null)
+			return null;
+		int maxEnd = minStart + 1;
 		for (final @NotNull GostSchuelerklausurTermin skt : skts) {
 			if (!includeNachschreiber && (skt.folgeNr > 0))
 				continue;
+			final Integer skStartzeit = strict ? startzeitBySchuelerklausurterminOrException(skt) : startzeitBySchuelerklausurterminOrNull(skt);
+			if (skStartzeit == null)
+				continue;
 			final @NotNull GostKlausurvorgabe vorgabe = vorgabeBySchuelerklausurTermin(skt);
-			final int endzeit = startzeitBySchuelerklausurterminOrException(skt) + vorgabe.dauer + vorgabe.auswahlzeit;
+			final int endzeit = skStartzeit + vorgabe.dauer + vorgabe.auswahlzeit;
 			if (endzeit > maxEnd)
 				maxEnd = endzeit;
 		}
@@ -3316,8 +3367,15 @@ public class GostKlausurplanManager {
 	public int maxKlausurdauerGetByTermin(final @NotNull GostKlausurtermin termin, final boolean includeNachschreiber) {
 		int maxDauer = 0;
 		final @NotNull List<GostSchuelerklausurTermin> skts = schuelerklausurterminAktuellGetMengeByTermin(termin);
-		for (final @NotNull GostSchuelerklausurTermin skt : skts) {
-			final @NotNull GostKlausurvorgabe vorgabe = vorgabeBySchuelerklausurTermin(skt);
+		if (!skts.isEmpty()) {
+			for (final @NotNull GostSchuelerklausurTermin skt : skts) {
+				final @NotNull GostKlausurvorgabe vorgabe = vorgabeBySchuelerklausurTermin(skt);
+				maxDauer = (vorgabe.dauer > maxDauer) ? vorgabe.dauer : maxDauer;
+			}
+			return maxDauer;
+		}
+		for (final @NotNull GostKursklausur klausur : kursklausurGetMengeByTermin(termin)) {
+			final @NotNull GostKlausurvorgabe vorgabe = vorgabeByKursklausur(klausur);
 			maxDauer = (vorgabe.dauer > maxDauer) ? vorgabe.dauer : maxDauer;
 		}
 		return maxDauer;
@@ -3347,7 +3405,7 @@ public class GostKlausurplanManager {
 		// Erstelle Map von Schueler-ID -> GostSchuelerklausurTermin
 		final @NotNull Map<Long, GostSchuelerklausurTermin> map1 = new HashMap<>();
 		for (final @NotNull GostSchuelerklausurTermin termin1 : menge1)
-//			DeveloperNotificationException.ifMapPutOverwrites(map1, schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
+			// DeveloperNotificationException.ifMapPutOverwrites(map1, schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
 			// TODO ifMapPutOverwrites geht nicht, weil innerhalb der Schiene schon Konflikte sein können, so dass hier 1 Schüler regulär mehrfach am selben Termin sein kann.
 			map1.put(schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
 		// Erstellen der Konflikt-Map
@@ -4105,7 +4163,7 @@ public class GostKlausurplanManager {
 	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurterminAktuellGetMengeByTerminAndKursklausurMultijahrgang(
 			final @NotNull GostKlausurtermin termin, final @NotNull GostKursklausur kursklausur, final boolean multijahrgang) {
 		final List<GostSchuelerklausurTermin> ergebnis = new ArrayList<>(_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.get12(termin.id, kursklausur.id));
-		if (termin.datum != null)
+		if (multijahrgang && (termin.datum != null))
 			for (final GostKlausurtermin terminMulti : terminSelbesDatumGetMengeByTermin(termin, false))
 				ergebnis.addAll(_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.get12(terminMulti.id, kursklausur.id));
 		return ergebnis;
@@ -4925,12 +4983,12 @@ public class GostKlausurplanManager {
 	 * @return die gemeinsame Klausurdauer aller {@link GostKursklausur}en oder <code>null</code>, falls keine solche existiert.
 	 */
 	public Integer getGemeinsameKursklausurdauerByKlausurraum(final @NotNull GostKlausurraum raum) {
-		int dauer = -1;
+		Integer dauer = null;
 		for (final @NotNull GostKursklausur klausur : kursklausurGetMengeByRaum(raum, true)) {
 			final @NotNull GostKlausurvorgabe vorgabe = vorgabeByKursklausur(klausur);
-			if (dauer == -1)
+			if (dauer == null)
 				dauer = vorgabe.dauer;
-			if (dauer != vorgabe.dauer)
+			if (!dauer.equals(vorgabe.dauer))
 				return null;
 		}
 		return dauer;
@@ -4945,14 +5003,17 @@ public class GostKlausurplanManager {
 	 * @return die gemeinsame Klausurstartzeit aller {@link GostKursklausur}en oder <code>null</code>, falls keine solche existiert.
 	 */
 	public Integer getGemeinsamerKursklausurstartByKlausurraum(final @NotNull GostKlausurraum raum) {
-		Integer start = -1;
+		Integer start = null;
 		for (final @NotNull GostKursklausur klausur : kursklausurGetMengeByRaum(raum, true)) {
-			if ((start != null) && (start == -1))
-				start = klausur.startzeit;
-			if (hatAbweichendeStartzeitByKursklausur(klausur))
+			final Integer effStart = startzeitByKursklausurOrNull(klausur);
+			if (effStart == null)
+				return null;
+			if (start == null)
+				start = effStart;
+			else if (!start.equals(effStart))
 				return null;
 		}
-		return (start == null) ? terminGetByIdOrException(raum.idTermin).startzeit : start;
+		return start;
 	}
 
 	/**

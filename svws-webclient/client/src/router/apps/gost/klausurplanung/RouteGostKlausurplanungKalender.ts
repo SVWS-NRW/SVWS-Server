@@ -19,7 +19,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN,
-		], "gost.klausurplanung.kalender", "kalender/:datum(\\d+)?/:idtermin(\\d+)?", SGostKlausurplanungKalender);
+		], "gost.klausurplanung.kalender", String.raw`kalender/:datum(\d+)?/:idtermin(\d+)?`, SGostKlausurplanungKalender);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kalender";
@@ -59,13 +59,13 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 				throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen definiert sein.");
 			}
 			if ((datum === undefined) && (datumFrom === undefined)) {
-				let datumNeu = routeGostKlausurplanung.data.kalenderdatum.value === undefined ? new Date().toISOString().slice(0, 10) : routeGostKlausurplanung.data.kalenderdatum.value;
+				let datumNeu = routeGostKlausurplanung.data.kalenderdatum.value ?? new Date().toISOString().slice(0, 10);
 				const stundenplan = routeGostKlausurplanung.data.manager.stundenplanManagerGetByAbschnittAndDatumOrClosest(routeGostKlausurplanung.data.abschnitt!.id, datumNeu);
 				const kwClosest = stundenplan.kalenderwochenzuordnungGetByDatum(datumNeu);
 				datumNeu = DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(kwClosest.jahr, kwClosest.kw);
-				return this.getRoute({ datum: datumNeu.replace(/-/g, ""), idtermin: termin === undefined ? undefined : termin.id });
+				return this.getRoute({ datum: datumNeu.replaceAll("-", ""), idtermin: termin === undefined ? undefined : termin.id });
 			} else if ((datum === undefined) && (datumFrom !== undefined)) {
-				return this.getRoute({ datum: datumFrom.replace(/-/g, ""), idtermin: termin === undefined ? undefined : termin.id });
+				return this.getRoute({ datum: datumFrom.replaceAll("-", ""), idtermin: termin === undefined ? undefined : termin.id });
 			} else if (datum !== undefined) {
 				const stundenplan = routeGostKlausurplanung.data.manager.stundenplanManagerGetByAbschnittAndDatumOrNull(routeGostKlausurplanung.data.abschnitt!.id, datum);
 				routeGostKlausurplanung.data.kalenderdatum.value = stundenplan === null ? routeGostKlausurplanung.data.manager.stundenplanManagerGetByAbschnittAndDatumOrClosest(routeGostKlausurplanung.data.abschnitt!.id, datum).getGueltigAb() : datum;
@@ -76,7 +76,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 	}
 
 	public addRouteParamsFromState(): RouteParamsRawGeneric {
-		const datum = routeGostKlausurplanung.data.kalenderdatum.value?.replace(/-/g, "") ?? undefined;
+		const datum = routeGostKlausurplanung.data.kalenderdatum.value?.replaceAll("-", "") ?? undefined;
 		const idtermin = routeGostKlausurplanung.data.terminSelected.value?.id ?? undefined;
 		return { datum, idtermin };
 	}

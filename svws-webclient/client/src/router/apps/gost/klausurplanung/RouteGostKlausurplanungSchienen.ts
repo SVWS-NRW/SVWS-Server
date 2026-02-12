@@ -19,7 +19,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<any, RouteGostKla
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN,
-		], "gost.klausurplanung.schienen", "schienen/:idtermin(\\d+)?", SGostKlausurplanungSchienen);
+		], "gost.klausurplanung.schienen", String.raw`schienen/:idtermin(d+)?`, SGostKlausurplanungSchienen);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schienen";

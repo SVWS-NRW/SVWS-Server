@@ -1,5 +1,4 @@
 <template>
-	<!--<template v-if="kMan().stundenplanManagerExistsByAbschnitt(abschnitt!.id) && props.kMan().stundenplanManagerExistsByAbschnittAndKW(props.abschnitt!.id, kalenderwoche().jahr, kalenderwoche().kw)">-->
 	<template v-if="abschnitt !== undefined && kMan().stundenplanManagerGeladenByAbschnitt(abschnitt.id) && kMan().stundenplanManagerExistsByAbschnitt(abschnitt.id) && kMan().stundenplanManagerGetByAbschnittAndDatumOrNull(abschnitt.id, props.kalenderdatum.value!) !== null">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-kalender-hilfe /> </svws-ui-modal-hilfe>
@@ -166,8 +165,7 @@
 	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { Wochentag, StundenplanKalenderwochenzuordnung, List, GostKursklausur, JavaMapEntry, JavaSet, GostSchuelerklausurTermin } from "@core";
-	import { StundenplanZeitraster } from "@core";
-	import { GostKlausurtermin, DateUtils, ArrayList, BenutzerKompetenz } from "@core";
+	import { GostKlausurtermin, DateUtils, ArrayList, BenutzerKompetenz, StundenplanZeitraster } from "@core";
 
 	const props = defineProps<GostKlausurplanungKalenderProps>();
 
@@ -191,7 +189,7 @@
 			return props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, props.kalenderdatum.value!).kalenderwochenzuordnungGetByDatum(props.kalenderdatum.value!);
 		},
 		set: (value) => {
-			void props.gotoKalenderdatum(DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(value.jahr, value.kw), props.terminSelected.value);
+			props.gotoKalenderdatum(DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(value.jahr, value.kw), props.terminSelected.value).catch(() => {});
 		},
 	});
 
@@ -237,7 +235,7 @@
 	const berechneKwzDatum = (by: number) => {
 		const datum = new Date(props.kalenderdatum.value!);
 		datum.setDate(datum.getDate() + by);
-		const datumStr = datum.getFullYear() + "-" + (datum.getMonth() + 1).toString().padStart(2, '0') + "-" + datum.getDate().toString().padStart(2, '0');// datum.toLocaleDateString("de-DE").slice(0, 10);
+		const datumStr = datum.getFullYear() + "-" + (datum.getMonth() + 1).toString().padStart(2, '0') + "-" + datum.getDate().toString().padStart(2, '0');
 		const stundenplan = props.kMan().stundenplanManagerGetByAbschnittAndKwOrNull(props.abschnitt!.id, DateUtils.gibKwJahrDesDatumsISO8601(datumStr), DateUtils.gibKwDesDatumsISO8601(datumStr));
 		if (stundenplan === null) {
 			return undefined;
@@ -269,7 +267,7 @@
 			}
 		}
 		const sManager = props.kMan().stundenplanManagerGetByAbschnittAndDatumOrNull(props.abschnitt!.id, datum);
-		return sManager !== null ? sManager.kursGetMengeGefiltertByWochentypAndWochentagAndStunde(kursIds, kalenderwoche(datum).wochentyp, day, stunde) : new ArrayList<number>() as List<number>;
+		return sManager === null ? (new ArrayList<number>() as List<number>) : sManager.kursGetMengeGefiltertByWochentypAndWochentagAndStunde(kursIds, kalenderwoche(datum).wochentyp, day, stunde);
 	}
 
 	function sumSchreiber(datum: string, day: Wochentag, stunde: number) {
@@ -289,10 +287,10 @@
 
 	const onDrag = (data: GostKlausurplanungDragData) => {
 		if (data instanceof GostKlausurtermin) {
-			void props.gotoKalenderdatum(undefined, data);
+			props.gotoKalenderdatum(undefined, data).catch(() => {});
 			zeitrasterSelected.value = undefined;
 		} else if (data === undefined) {
-			void props.gotoKalenderdatum(undefined, undefined);
+			props.gotoKalenderdatum(undefined, undefined).catch(() => {});
 		}
 	};
 

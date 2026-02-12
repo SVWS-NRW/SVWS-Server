@@ -37,11 +37,6 @@
 				</div>
 				<div class="svws-ui-td svws-align-left" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) }}</div>
 				<div class="svws-ui-td svws-align-center" role="cell">{{ kMan().vorgabeBySchuelerklausurTermin(schuelertermin).dauer }}</div>
-				<!-- <div class="svws-ui-td svws-align-center" role="cell">
-					<slot name="actions">
-						<svws-ui-button v-if="patchKlausur !== undefined" type="icon" size="small" class="-mr-1" @click="patchKlausur(schuelertermin, {idTermin: null});$event.stopPropagation()"><span class="icon i-ri-delete-bin-line -mx-1.5" /></svws-ui-button>
-					</slot>
-				</div> -->
 			</div>
 		</template>
 	</svws-ui-table>
@@ -51,7 +46,7 @@
 <script setup lang="ts">
 
 	import { DateUtils, GostHalbjahr } from "@core";
-	import type { GostKlausurplanManager, GostSchuelerklausurTermin, List, JavaSet, GostKursklausur, GostKlausurenCollectionSkrsKrsData, GostKlausurtermin } from "@core";
+	import type { GostKlausurplanManager, GostSchuelerklausurTermin, List, JavaSet, GostKursklausur, GostKlausurtermin } from "@core";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { DataTableColumn } from "@ui";
 
