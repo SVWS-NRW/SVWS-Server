@@ -1,6 +1,6 @@
 <template>
-	<ui-table-grid name="Übersicht zu Anrechnungsstunden, Mehr- und Minderleistungsgründe" :manager="() => gridManager">
-		<template #header v-if="gridManager.daten.size() !== 0">
+	<ui-table-grid v-if="gridManager.daten.size() !== 0" name="Übersicht zu Anrechnungsstunden, Mehr- und Minderleistungsgründe" :manager="() => gridManager">
+		<template #header>
 			<th class="text-left">Typ</th>
 			<th class="text-left">Grund</th>
 			<th class="">Stunden</th>
@@ -14,7 +14,7 @@
 				{{ getGrundText(row) }}
 			</td>
 			<td class="ui-table-grid-input" :ref="inputAnzahl(row, index)">
-				{{ row.data.anzahl }}
+				{{ row.data.proxy.anzahl }}
 			</td>
 			<td>
 				<div v-if="hatUpdateKompetenz" class="inline-flex gap-4">
@@ -40,6 +40,9 @@
 			</template>
 		</template>
 	</ui-table-grid>
+	<div v-else>
+		<svws-ui-button @click="openHinzufuegen" type="secondary">Anrechnungs-, Mehr- oder Minderleistungsgründe hinzufügen</svws-ui-button>
+	</div>
 	<svws-ui-modal v-model:show="showHinzufuegen" size="medium" class="hidden">
 		<template #modalTitle> Anrechnungs-, Mehr- oder Minderleistungsgründe hinzufügen </template>
 		<template #modalContent>
@@ -60,19 +63,20 @@
 
 <script setup lang="ts">
 
-	import { GridManager, CoreTypeSelectManager } from "@ui";
 	import type { ComponentPublicInstance } from "vue";
 	import { computed, ref, shallowRef } from "vue";
-	import type { LehrerPersonalabschnittsdaten, LehrerPersonalabschnittsdatenAnrechnungsstunden, Schulform, List, JavaSet, LehrerAnrechnungsgrundKatalogEintrag,
-		LehrerMehrleistungsartKatalogEintrag, LehrerMinderleistungsartKatalogEintrag,
-		Comparator } from "@core";
+	import { GridManager, CoreTypeSelectManager } from "@ui";
+	import type { LehrerPersonalabschnittsdatenAnrechnungsstunden, Schulform, List, JavaSet, LehrerAnrechnungsgrundKatalogEintrag,
+		LehrerMehrleistungsartKatalogEintrag, LehrerMinderleistungsartKatalogEintrag, Comparator } from "@core";
 	import { LehrerMehrleistungsarten, LehrerMinderleistungsarten, LehrerAnrechnungsgrund, ArrayList, HashSet } from "@core";
+	import { LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy } from "./LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy";
+	import type { LehrerPersonalabschnittsdatenModelProxy } from "./LehrerPersonalabschnittsdatenModelProxy";
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;
-		personalabschnittsdaten: () => LehrerPersonalabschnittsdaten | null,
 		schuljahr: number,
 		schulform: Schulform;
+		personalabschnittsdatenModelProxy: () => LehrerPersonalabschnittsdatenModelProxy,
 		addMehrleistung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => Promise<void>;
 		patchMehrleistung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => Promise<void>;
 		removeMehrleistung: (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => Promise<void>;
@@ -84,21 +88,21 @@
 		removeAnrechnung: (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => Promise<void>;
 	}>();
 
-	type Eintrag = { typ: 'mehrleistung' | 'minderleistung' | 'anrechnung', data: LehrerPersonalabschnittsdatenAnrechnungsstunden };
+	type Eintrag = { typ: 'mehrleistung' | 'minderleistung' | 'anrechnung', data: LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy };
 
 	const comparatorEintrag: Comparator<Eintrag> = {
 		compare: (a: Eintrag, b: Eintrag): number => {
-			if ((a.data.idGrund === null) && (b.data.idGrund !== null)) {
+			if ((a.data.proxy.idGrund === null) && (b.data.proxy.idGrund !== null)) {
 				return -1;
 			}
-			if ((a.data.idGrund !== null) && (b.data.idGrund === null)) {
+			if ((a.data.proxy.idGrund !== null) && (b.data.proxy.idGrund === null)) {
 				return 1;
 			}
-			if ((a.data.idGrund !== null) && (b.data.idGrund !== null)) {
-				if (a.data.idGrund < b.data.idGrund) {
+			if ((a.data.proxy.idGrund !== null) && (b.data.proxy.idGrund !== null)) {
+				if (a.data.proxy.idGrund < b.data.proxy.idGrund) {
 					return -1;
 				}
-				if (a.data.idGrund > b.data.idGrund) {
+				if (a.data.proxy.idGrund > b.data.proxy.idGrund) {
 					return 1;
 				}
 			}
@@ -108,10 +112,10 @@
 			if (a.typ < b.typ) {
 				return 1;
 			}
-			if (a.data.id < b.data.id) {
+			if (a.data.proxy.id < b.data.proxy.id) {
 				return -1;
 			}
-			if (a.data.id > b.data.id) {
+			if (a.data.proxy.id > b.data.proxy.id) {
 				return 1;
 			}
 			return 0;
@@ -121,24 +125,36 @@
 	const gridManager = new GridManager<string, Eintrag, List<Eintrag>>({
 		daten: computed<List<Eintrag>>(() => {
 			const result = new ArrayList<Eintrag>();
-			const abschnittsdaten = props.personalabschnittsdaten();
-			if (abschnittsdaten === null) {
-				return result;
-			}
-			// Füge Mehrleistungen, Minderleistung und Anrechngen hinzu
+			const abschnittsdaten = props.personalabschnittsdatenModelProxy().data;
+			// Füge Mehrleistungen, Minderleistung und Anrechnungen hinzu
 			for (const data of abschnittsdaten.mehrleistung) {
-				result.add({ typ: 'mehrleistung', data });
+				const patchMethod = async (proxy: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
+					await props.patchMehrleistung(proxy, data.id);
+					return true;
+				};
+				const modelProxy = new LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy(() => data, patchMethod);
+				result.add({ typ: 'mehrleistung', data: modelProxy });
 			}
 			for (const data of abschnittsdaten.minderleistung) {
-				result.add({ typ: 'minderleistung', data });
+				const patchMethod = async (proxy: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
+					await props.patchMinderleistung(proxy, data.id);
+					return true;
+				};
+				const modelProxy = new LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy(() => data, patchMethod);
+				result.add({ typ: 'minderleistung', data: modelProxy });
 			}
 			for (const data of abschnittsdaten.anrechnungen) {
-				result.add({ typ: 'anrechnung', data });
+				const patchMethod = async (proxy: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
+					await props.patchAnrechnung(proxy, data.id);
+					return true;
+				};
+				const modelProxy = new LehrerPersonalabschnittsdatenAnrechnungsstundenModelProxy(() => data, patchMethod);
+				result.add({ typ: 'anrechnung', data: modelProxy });
 			}
 			result.sort(comparatorEintrag);
 			return result;
 		}),
-		getRowKey: row => "-" + row.data.idGrund + "-" + row.data.id + "-" + row.typ,
+		getRowKey: row => `${row.typ}-${row.data.proxy.idGrund}-${row.data.proxy.id}`,
 		columns: [
 			{ kuerzel: "typ", name: "Typ", width: "8rem", hideable: false },
 			{ kuerzel: "grund", name: "Grund", width: "minmax(40%,100%)", hideable: false },
@@ -151,45 +167,40 @@
 		if (anzahl === null) {
 			return;
 		}
-		if (row.typ === 'mehrleistung') {
-			void props.patchMehrleistung({ anzahl }, row.data.id);
-		} else if (row.typ === 'minderleistung') {
-			void props.patchMinderleistung({ anzahl }, row.data.id);
-		} else {
-			void props.patchAnrechnung({ anzahl }, row.data.id);
-		}
+		row.data.proxy.anzahl = anzahl;
+		void row.data.patch();
 	}
 
 	function inputAnzahl(row: Eintrag, index: number) {
-		const key = row.typ + "-" + row.data.idGrund + "-" + row.data.id;
+		const key = `${row.typ}-${row.data.proxy.idGrund}-${row.data.proxy.id}`;
 		const setter = (value: number | null) => updateAnzahl(row, value);
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
 			const input = gridManager.applyInputNumberFixed(key, 4, index, element, 100, 2, setter);
 			if (input !== null) {
-				gridManager.update(key, row.data.anzahl);
+				gridManager.update(key, row.data.proxy.anzahl);
 			}
 		};
 	}
 
-	function removeDaten(row: Eintrag): void {
+	async function removeDaten(row: Eintrag): Promise<void> {
 		if (row.typ === 'mehrleistung') {
-			void props.removeMehrleistung(row.data);
+			await props.removeMehrleistung(row.data.data);
 		} else if (row.typ === 'minderleistung') {
-			void props.removeMinderleistung(row.data);
+			await props.removeMinderleistung(row.data.data);
 		} else {
-			void props.removeAnrechnung(row.data);
+			await props.removeAnrechnung(row.data.data);
 		}
 	}
 
 	function getGrundText(row: Eintrag): string {
 		let data = null;
-		if (row.data.idGrund !== null) {
+		if (row.data.proxy.idGrund !== null) {
 			if (row.typ === 'mehrleistung') {
-				data = LehrerMehrleistungsarten.data().getEintragByID(row.data.idGrund);
+				data = LehrerMehrleistungsarten.data().getEintragByID(row.data.proxy.idGrund);
 			} else if (row.typ === 'minderleistung') {
-				data = LehrerMinderleistungsarten.data().getEintragByID(row.data.idGrund);
+				data = LehrerMinderleistungsarten.data().getEintragByID(row.data.proxy.idGrund);
 			} else {
-				data = LehrerAnrechnungsgrund.data().getEintragByID(row.data.idGrund);
+				data = LehrerAnrechnungsgrund.data().getEintragByID(row.data.proxy.idGrund);
 			}
 		}
 		return (data === null) ? "???" : data.kuerzel + " - " + data.text;
@@ -228,10 +239,7 @@
 
 	const mehrleistungenVorhanden = computed<JavaSet<number>>(() => {
 		const vorhanden = new HashSet<number>();
-		const abschnittsdaten = props.personalabschnittsdaten();
-		if (abschnittsdaten === null) {
-			return vorhanden;
-		}
+		const abschnittsdaten = props.personalabschnittsdatenModelProxy().proxy;
 		for (const mehrleistung of abschnittsdaten.mehrleistung) {
 			if (mehrleistung.idGrund !== null) {
 				vorhanden.add(mehrleistung.idGrund);
@@ -252,10 +260,7 @@
 
 	const minderleistungenVorhanden = computed<JavaSet<number>>(() => {
 		const vorhanden = new HashSet<number>();
-		const abschnittsdaten = props.personalabschnittsdaten();
-		if (abschnittsdaten === null) {
-			return vorhanden;
-		}
+		const abschnittsdaten = props.personalabschnittsdatenModelProxy().proxy;
 		for (const minderleistung of abschnittsdaten.minderleistung) {
 			if (minderleistung.idGrund !== null) {
 				vorhanden.add(minderleistung.idGrund);
@@ -276,10 +281,7 @@
 
 	const anrechnungenVorhanden = computed<JavaSet<number>>(() => {
 		const vorhanden = new HashSet<number>();
-		const abschnittsdaten = props.personalabschnittsdaten();
-		if (abschnittsdaten === null) {
-			return vorhanden;
-		}
+		const abschnittsdaten = props.personalabschnittsdatenModelProxy().proxy;
 		for (const anrechnung of abschnittsdaten.anrechnungen) {
 			if (anrechnung.idGrund !== null) {
 				vorhanden.add(anrechnung.idGrund);
@@ -299,22 +301,30 @@
 	}
 
 	async function create() {
+		const data: Partial <LehrerPersonalabschnittsdatenAnrechnungsstunden> = {
+			idAbschnittsdaten: props.personalabschnittsdatenModelProxy().proxy.id,
+			anzahl: 1,
+		};
 		for (const eintrag of auswahlMehrleistungenNeu.value) {
+			data.idGrund = eintrag.id;
 			if (!mehrleistungenVorhanden.value.contains(eintrag.id)) {
-				await props.addMehrleistung({ idAbschnittsdaten: props.personalabschnittsdaten()?.id ?? -1, idGrund: eintrag.id, anzahl: 1 });
+				await props.addMehrleistung(data);
 			}
 		}
 		for (const eintrag of auswahlMinderleistungenNeu.value) {
+			data.idGrund = eintrag.id;
 			if (!minderleistungenVorhanden.value.contains(eintrag.id)) {
-				await props.addMinderleistung({ idAbschnittsdaten: props.personalabschnittsdaten()?.id ?? -1, idGrund: eintrag.id, anzahl: 1 });
+				await props.addMinderleistung(data);
 			}
 		}
 		for (const eintrag of auswahlAnrechnungenNeu.value) {
+			data.idGrund = eintrag.id;
 			if (!anrechnungenVorhanden.value.contains(eintrag.id)) {
-				await props.addAnrechnung({ idAbschnittsdaten: props.personalabschnittsdaten()?.id ?? -1, idGrund: eintrag.id, anzahl: 1 });
+				await props.addAnrechnung(data);
 			}
 		}
 		showHinzufuegen.value = false;
+		props.personalabschnittsdatenModelProxy().validate();
 	}
 
 </script>

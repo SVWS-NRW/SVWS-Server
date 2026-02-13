@@ -47,7 +47,7 @@
 	import { useRegionSwitch, ViewType } from "@ui";
 	import type { PersonalTyp, LehrerListeEintrag } from "@core";
 	import { ServerMode, BenutzerKompetenz } from "@core";
-	import type { LehrerAuswahlProps } from "./SLehrerAuswahlProps";
+	import type { LehrerAuswahlProps } from "./LehrerAuswahlProps";
 
 	const props = defineProps<LehrerAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

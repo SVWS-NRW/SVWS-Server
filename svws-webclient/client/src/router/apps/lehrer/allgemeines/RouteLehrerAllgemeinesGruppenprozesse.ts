@@ -6,15 +6,15 @@ import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { api } from "~/router/Api";
 import type { RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import type { SLehrerAllgemeinesGruppenprozesseProps } from "~/components/lehrer/allgemeines/SLehrerAllgemeinesGruppenprozesseProps";
+import type { LehrerAllgemeinesGruppenprozesseProps } from "~/components/lehrer/allgemeines/LehrerAllgemeinesGruppenprozesseProps";
 
-const SLehrerAllgemeinesGruppenprozesse = () => import("~/components/lehrer/allgemeines/SLehrerAllgemeinesGruppenprozesse.vue");
+const LehrerAllgemeinesGruppenprozesse = () => import("~/components/lehrer/allgemeines/LehrerAllgemeinesGruppenprozesse.vue");
 
 
 export class RouteLehrerAllgemeinesGruppenprozesse extends RouteNode<any, RouteLehrer> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KEINE], "lehrer.gruppenprozesse.allgemeines", "gruppenprozesse/allgemeines", SLehrerAllgemeinesGruppenprozesse);
+		super(Schulform.values(), [BenutzerKompetenz.KEINE], "lehrer.gruppenprozesse.allgemeines", "gruppenprozesse/allgemeines", LehrerAllgemeinesGruppenprozesse);
 		super.types = new Set([ViewType.GRUPPENPROZESSE]);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
@@ -25,7 +25,7 @@ export class RouteLehrerAllgemeinesGruppenprozesse extends RouteNode<any, RouteL
 		await routeLehrer.data.updateMapStundenplaene();
 	}
 
-	public getProps(to: RouteLocationNormalized): SLehrerAllgemeinesGruppenprozesseProps {
+	public getProps(to: RouteLocationNormalized): LehrerAllgemeinesGruppenprozesseProps {
 		return {
 			apiStatus: api.status,
 			serverMode: api.mode,

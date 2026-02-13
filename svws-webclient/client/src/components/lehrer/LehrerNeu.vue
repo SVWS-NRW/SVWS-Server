@@ -55,7 +55,7 @@
 
 <script setup lang="ts">
 	import { computed, ref, watch } from "vue";
-	import type { LehrerNeuProps } from './SLehrerNeuProps';
+	import type { LehrerNeuProps } from './LehrerNeuProps';
 	import { BenutzerKompetenz, type OrtsteilKatalogEintrag } from "@core";
 	import { Geschlecht, JavaObject, JavaString, LehrerStammdaten, Nationalitaeten, PersonalTyp, AdressenUtils } from "@core";
 	import { orte_filter, orte_sort, ortsteilSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "~/utils/helfer";

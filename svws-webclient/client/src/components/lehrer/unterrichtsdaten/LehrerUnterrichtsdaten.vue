@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 
-	import type { LehrerUnterrichtsdatenProps } from './SLehrerUnterrichtsdatenProps';
+	import type { LehrerUnterrichtsdatenProps } from './LehrerUnterrichtsdatenProps';
 
 	const props = defineProps<LehrerUnterrichtsdatenProps>();
 

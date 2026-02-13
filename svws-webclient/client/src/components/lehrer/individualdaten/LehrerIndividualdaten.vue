@@ -37,9 +37,9 @@
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly v-model="inputStrasse" @commit="modelProxy.patch" span="full" />
 				<svws-ui-select v-model="wohnortID" title="Wohnort" :readonly :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort"
-					:item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
+					:item-text="i => `${i.plz ?? '—'} ${i.ortsname ?? '—'}`" autocomplete />
 				<svws-ui-select v-model="ortsteilID" title="Ortsteil" :readonly :items="ortsteile" :item-sort="ortsteilSort"
-					:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" removable />
+					:item-text="i => i.ortsteil ?? '—'" removable />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Telefon" :readonly v-model="modelProxy.proxy.telefon" @commit="modelProxy.patch" type="tel" :max-len="20" />
 				<svws-ui-text-input placeholder="Mobil oder Fax" :readonly v-model="modelProxy.proxy.telefonMobil" @commit="modelProxy.patch" type="tel" :max-len="20" />
@@ -66,7 +66,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { LehrerIndividualdatenProps } from "./SLehrerIndividualdatenProps";
+	import type { LehrerIndividualdatenProps } from "./LehrerIndividualdatenProps";
 	import type { LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 	import { Geschlecht, Nationalitaeten, PersonalTyp, AdressenUtils, DateUtils, JavaString, LehrerLeitungsfunktion, BenutzerKompetenz } from "@core";
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, orte_filter, orte_sort, ortsteilSort } from "~/utils/helfer";
@@ -86,12 +86,12 @@
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 
 	const inputGeschlecht = computed<Geschlecht>({
-		get: () => Geschlecht.fromValue(modelProxy.proxy.geschlecht) || Geschlecht.X,
+		get: () => Geschlecht.fromValue(modelProxy.proxy.geschlecht) ?? Geschlecht.X,
 		set: (value) => modelProxy.proxy.geschlecht = value.id,
 	});
 
 	const inputPersonalTyp = computed<PersonalTyp>({
-		get: () => PersonalTyp.fromKuerzel(modelProxy.proxy.personalTyp) || PersonalTyp.SONSTIGE,
+		get: () => PersonalTyp.fromKuerzel(modelProxy.proxy.personalTyp) ?? PersonalTyp.SONSTIGE,
 		set: (value) => modelProxy.proxy.personalTyp = value.kuerzel,
 	});
 

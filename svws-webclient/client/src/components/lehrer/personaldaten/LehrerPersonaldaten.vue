@@ -3,74 +3,54 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Identnummer" span="full" class="contentFocusField"
-					v-model="personaldatenProxy.proxy.identNrTeil1" @commit="personaldatenProxy.patch"
-					:readonly focus statistics :max-len="10" />
+					v-model="personaldatenModelProxy.proxy.identNrTeil1" @commit="personaldatenModelProxy.patch" :readonly focus statistics :max-len="10" />
 				<svws-ui-text-input placeholder="Seriennummer"
-					v-model="personaldatenProxy.proxy.identNrTeil2SerNr" @commit="personaldatenProxy.patch"
-					:readonly statistics :max-len="5" />
+					v-model="personaldatenModelProxy.proxy.identNrTeil2SerNr" @commit="personaldatenModelProxy.patch" :readonly statistics :max-len="5" />
 				<svws-ui-text-input placeholder="Vergütungsschlüssel"
-					v-model="personaldatenProxy.proxy.lbvVerguetungsschluessel" @commit="personaldatenProxy.patch"
-					:readonly :max-len="1" />
+					v-model="personaldatenModelProxy.proxy.lbvVerguetungsschluessel" @commit="personaldatenModelProxy.patch" :readonly :max-len="1" />
 				<svws-ui-text-input placeholder="PA-Nummer"
-					v-model="personaldatenProxy.proxy.personalaktennummer" @commit="personaldatenProxy.patch"
-					:readonly :max-len="20" />
+					v-model="personaldatenModelProxy.proxy.personalaktennummer" @commit="personaldatenModelProxy.patch" :readonly :max-len="20" />
 				<svws-ui-text-input placeholder="LBV-Personalnummer"
-					v-model="personaldatenProxy.proxy.lbvPersonalnummer" @commit="personaldatenProxy.patch"
-					:readonly :max-len="15" />
+					v-model="personaldatenModelProxy.proxy.lbvPersonalnummer" @commit="personaldatenModelProxy.patch" :readonly :max-len="15" />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Zugangsdatum" type="date"
-					v-model="personaldatenProxy.proxy.zugangsdatum" @commit="personaldatenProxy.patch"
-					:readonly />
+					v-model="personaldatenModelProxy.proxy.zugangsdatum" @commit="personaldatenModelProxy.patch" :readonly />
 				<svws-ui-text-input placeholder="Abgangsdatum" type="date"
-					v-model="personaldatenProxy.proxy.abgangsdatum" @commit="personaldatenProxy.patch"
-					:readonly />
-				<ui-select label="Zugangsgrund" v-model="personaldatenProxy.zugangsgrund.value" :manager="zugangsgrundManager"
-					:readonly searchable />
-				<ui-select label="Abgangsgrund" v-model="personaldatenProxy.abgangsgrund.value" :manager="abgangsgrundManager"
-					:readonly searchable />
+					v-model="personaldatenModelProxy.proxy.abgangsdatum" @commit="personaldatenModelProxy.patch" :readonly />
+				<ui-select label="Zugangsgrund" v-model="personaldatenModelProxy.zugangsgrund.value" :manager="zugangsgrundManager" :readonly searchable />
+				<ui-select label="Abgangsgrund" v-model="personaldatenModelProxy.abgangsgrund.value" :manager="abgangsgrundManager" :readonly searchable />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Beschäftigungsdaten">
 			<svws-ui-input-wrapper :grid="2">
 				<ui-select label="Rechtsverhältnis" class="contentFocusField"
-					v-model="personalabschnittsdatenProxy.rechtsverhaeltnis.value"
-					:manager="rechtsverhaeltnisSelectManager"
-					:validation="() => personalabschnittsdatenProxy.getFehler('rechtsverhaeltnis')"
-					:removable="false" :readonly required statistics />
+					v-model="personalabschnittsdatenModelProxy.rechtsverhaeltnis.value" :validation="() => personalabschnittsdatenModelProxy.getFehler('rechtsverhaeltnis')"
+					:manager="rechtsverhaeltnisSelectManager" :removable="false" :readonly required statistics />
 				<ui-select label="Beschäftigungsart"
-					v-model="personalabschnittsdatenProxy.beschaeftigungsart.value"
-					:manager="beschaeftigungsartSelectManager"
-					:validation="() => personalabschnittsdatenProxy.getFehler('beschaeftigungsart')"
-					:removable="false" required :readonly statistics />
+					v-model="personalabschnittsdatenModelProxy.beschaeftigungsart.value" :validation="() => personalabschnittsdatenModelProxy.getFehler('beschaeftigungsart')"
+					:manager="beschaeftigungsartSelectManager" :removable="false" required :readonly statistics />
 				<svws-ui-input-number placeholder="Pflichtstundensoll"
-					v-model="personalabschnittsdatenProxy.proxy.pflichtstundensoll" @commit="personalabschnittsdatenProxy.patch"
-					:readonly statistics />
+					v-model="personalabschnittsdatenModelProxy.proxy.pflichtstundensoll" @commit="personalabschnittsdatenModelProxy.patch" :readonly statistics />
 				<ui-select label="Einsatzstatus"
-					v-model="personalabschnittsdatenProxy.einsatzstatus.value"
-					:manager="einsatzstatusSelectManager"
-					:validation="() => personalabschnittsdatenProxy.getFehler('einsatzstatus')"
-					:readonly statistics :removable="false" required />
+					v-model="personalabschnittsdatenModelProxy.einsatzstatus.value" :validation="() => personalabschnittsdatenModelProxy.getFehler('einsatzstatus')"
+					:manager="einsatzstatusSelectManager" :readonly statistics :removable="false" required />
 				<ui-select label="Stammschule"
-					v-model="stammschulnummer"
-					:manager="stammschuleSelectManager"
-					:removable="true" :readonly required statistics />
+					v-model="personalabschnittsdatenModelProxy.proxy.stammschulnummer"
+					:manager="stammschuleSelectManager" :removable="true" :readonly required statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Lehrämter">
 			<svws-ui-input-wrapper>
-				<s-lehrer-personaldaten-lehraemter :hat-update-kompetenz="!readonly" :schuljahr :lehrer-liste-manager
-					:patch-lehramt :add-lehramt :remove-lehraemter
-					:patch-lehrbefaehigung :add-lehrbefaehigung :remove-lehrbefaehigungen
+				<lehrer-personaldaten-lehraemter :personaldaten-model-proxy="() => personaldatenModelProxy" :hat-update-kompetenz="!readonly" :schuljahr
+					:lehrer-liste-manager :patch-lehramt :add-lehramt :remove-lehraemter :patch-lehrbefaehigung :add-lehrbefaehigung :remove-lehrbefaehigungen
 					:patch-fachrichtung :add-fachrichtung :remove-fachrichtungen />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Mehr- und Minderleistung, Anrechnungsstunden">
 			<svws-ui-input-wrapper>
-				<s-lehrer-personaldaten-anrechnungen :hat-update-kompetenz="!readonly"
-					:personalabschnittsdaten :schuljahr :schulform :add-mehrleistung
-					:patch-mehrleistung :remove-mehrleistung
-					:add-minderleistung :patch-minderleistung :remove-minderleistung :add-anrechnung :patch-anrechnung
-					:remove-anrechnung />
+				<lehrer-personaldaten-anrechnungen :hat-update-kompetenz="!readonly" :personalabschnittsdaten-model-proxy="() => personalabschnittsdatenModelProxy"
+					:schuljahr :schulform :add-mehrleistung :patch-mehrleistung :remove-mehrleistung :add-minderleistung :patch-minderleistung :remove-minderleistung
+					:add-anrechnung :patch-anrechnung :remove-anrechnung />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>
@@ -87,14 +67,12 @@
 	import { LehrerPersonaldatenModelProxy } from "./LehrerPersonaldatenModelProxy";
 
 	const props = defineProps<LehrerPersonaldatenProps>();
-	const personaldaten = () => props.lehrerListeManager().personalDaten();
 	const schuljahr = computed<number>(() => props.aktAbschnitt.schuljahr);
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN));
 	const eigeneSchulnummer = computed<string>(() => `${props.validatorKontext().getSchulnummer()}`);
-	const personalabschnittsdaten = () => props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(props.aktAbschnitt.id);
 
 	async function patchMethodLehrerPersonalabschnittsdaten(data: Partial<LehrerPersonalabschnittsdaten>): Promise<boolean> {
-		const id = personalabschnittsdaten()?.id ?? null;
+		const id = props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(props.aktAbschnitt.id)?.id ?? null;
 		if (id !== null) {
 			await props.patchAbschnittsdaten(data, id);
 		}
@@ -104,25 +82,8 @@
 		await props.patch(data);
 		return true;
 	}
-	const personalabschnittsdatenProxy = new LehrerPersonalabschnittsdatenModelProxy(personalabschnittsdaten, () => props.validatorKontext(), () => props.lehrerListeManager(), patchMethodLehrerPersonalabschnittsdaten);
-	const personaldatenProxy = new LehrerPersonaldatenModelProxy(personaldaten, () => props.validatorKontext(), () => props.lehrerListeManager(), patchMethodLehrerPersonaldaten);
-
-	const stammschulnummer = computed<string | null | undefined>({
-		get(): string | null | undefined {
-			return personalabschnittsdaten()?.stammschulnummer ?? null;
-		},
-		set(val: string | null | undefined) {
-			// Bugfix: Wenn dieser Check auf undefined nicht vorhanden ist, dann kommt es zu einem Fehler, wenn die Schulnummer nicht
-			//         im Katalog enthalten ist und zu einem anderen Lehrer gewechselt wird
-			if (val === undefined) {
-				return;
-			}
-			const daten = personalabschnittsdaten();
-			if (daten !== null) {
-				void props.patchAbschnittsdaten({ stammschulnummer: val }, daten.id);
-			}
-		},
-	});
+	const personalabschnittsdatenModelProxy = new LehrerPersonalabschnittsdatenModelProxy(() => props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(props.aktAbschnitt.id), () => props.validatorKontext(), () => props.lehrerListeManager(), patchMethodLehrerPersonalabschnittsdaten);
+	const personaldatenModelProxy = new LehrerPersonaldatenModelProxy(() => props.lehrerListeManager().personalDaten(), () => props.validatorKontext(), () => props.lehrerListeManager(), patchMethodLehrerPersonaldaten);
 
 	const moeglicheStammschulnummern = computed<JavaSet<string>>(() => {
 		// Füge zunächst alle Schulnummern mit eingetragenen Kürzeln im Schul-Katalog hinzu
@@ -135,7 +96,7 @@
 		// Ergänze die eigene Schule, sofern diese nicht bereits im Katalog enthalten ist
 		result.add(eigeneSchulnummer.value);
 		// Ergänze ggf. noch den Eintrag aus der Datenbank
-		const daten = personalabschnittsdaten();
+		const daten = props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(props.aktAbschnitt.id);
 		if ((daten === null) || (daten.stammschulnummer === null)) {
 			return result;
 		}

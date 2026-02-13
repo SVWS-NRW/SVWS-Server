@@ -77,7 +77,7 @@
 	import { ref, computed } from "vue";
 	import type { List, StundenplanListeEintrag } from "@core";
 	import { BenutzerKompetenz, DateUtils, ReportingParameter, ReportingReportvorlage, ServerMode, ArrayList } from "@core";
-	import type { LehrerGruppenprozesseProps } from "~/components/lehrer/gruppenprozesse/SLehrerGruppenprozesseProps";
+	import type { LehrerGruppenprozesseProps } from "~/components/lehrer/gruppenprozesse/LehrerGruppenprozesseProps";
 
 	type Action = 'print' | 'delete' | '';
 

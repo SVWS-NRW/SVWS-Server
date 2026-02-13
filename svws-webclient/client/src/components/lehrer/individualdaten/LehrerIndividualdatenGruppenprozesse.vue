@@ -25,7 +25,7 @@
 </template>
 <script setup lang="ts">
 
-	import type { LehrerIndividualdatenGruppenprozesseProps } from "~/components/lehrer/individualdaten/SLehrerIndividualdatenGruppenprozesseProps";
+	import type { LehrerIndividualdatenGruppenprozesseProps } from "~/components/lehrer/individualdaten/LehrerIndividualdatenGruppenprozesseProps";
 	import { computed, ref } from "vue";
 	import { BenutzerKompetenz } from "@core";
 

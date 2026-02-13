@@ -117,14 +117,14 @@
 <script setup lang="ts">
 
 	import { ref, computed } from "vue";
-	import type { SLehrerAllgemeinesGruppenprozesseProps } from "./SLehrerAllgemeinesGruppenprozesseProps";
+	import type { LehrerAllgemeinesGruppenprozesseProps } from "./LehrerAllgemeinesGruppenprozesseProps";
 	import type { List, StundenplanListeEintrag } from "@core";
 	import { DateUtils, ReportingParameter, ReportingReportvorlage, ReportingVorlageParameterTyp, ListUtils, ArrayList, BenutzerKompetenz, ReportingSortierungDefinition, ReportingEMailDaten, ReportingEMailEmpfaengerTyp, ReportingAusgabeformat, ServerMode } from "@core";
 	import { SelectManager } from "@ui";
 
 	type Action = 'druckLehrerStundenplan' | 'druckLehrerListeSchuelerLeistungsdaten' | 'delete' | '';
 
-	const props = defineProps<SLehrerAllgemeinesGruppenprozesseProps>();
+	const props = defineProps<LehrerAllgemeinesGruppenprozesseProps>();
 
 	const hatKompetenzDrucken = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
 	const hatKompetenzDruckenStundenplan = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN) && hatKompetenzDrucken.value));

@@ -7,14 +7,14 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import { type LehrerIndividualdatenGruppenprozesseProps } from "~/components/lehrer/individualdaten/SLehrerIndividualdatenGruppenprozesseProps";
+import { type LehrerIndividualdatenGruppenprozesseProps } from "~/components/lehrer/individualdaten/LehrerIndividualdatenGruppenprozesseProps";
 
-const SLehrerIndividualdatenGruppenprozesse = () => import("~/components/lehrer/individualdaten/SLehrerIndividualdatenGruppenprozesse.vue");
+const LehrerIndividualdatenGruppenprozesse = () => import("~/components/lehrer/individualdaten/LehrerIndividualdatenGruppenprozesse.vue");
 
 export class RouteLehrerIndividualdatenGruppenprozesse extends RouteNode<any, RouteLehrer> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KEINE], "lehrer.gruppenprozesse.daten", "gruppenprozesse/daten", SLehrerIndividualdatenGruppenprozesse);
+		super(Schulform.values(), [BenutzerKompetenz.KEINE], "lehrer.gruppenprozesse.daten", "gruppenprozesse/daten", LehrerIndividualdatenGruppenprozesse);
 		super.types = new Set([ViewType.GRUPPENPROZESSE]);
 		super.propHandler = (props) => this.getProps(props);
 		super.mode = ServerMode.DEV;

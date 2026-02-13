@@ -28,23 +28,23 @@
 				Anerkennungsgrund
 			</th>
 		</template>
-		<template #default="{ row }">
-			<template v-if="row instanceof LehrerLehramtEintrag">
+		<template #default="{ row: { proxy, data } }">
+			<template v-if="(proxy instanceof LehrerLehramtEintrag) && (data instanceof LehrerLehramtEintrag)">
 				<td class="w-full text-left col-span-2">
-					{{ getLehramt(row).daten(schuljahr)?.text ?? '—' }}
+					{{ getLehramt(proxy).daten(schuljahr)?.text ?? '—' }}
 				</td>
 				<td class="w-full">
-					<svws-ui-select title="Anerkennungsgrund Lehramt" v-if="hatUpdateKompetenz" :model-value="getLehramtAnerkennung(row)"
-						@update:model-value="anerkennung => patchLehramt(row, { idAnerkennungsgrund: anerkennung?.daten(schuljahr)?.id ?? null })"
+					<svws-ui-select title="Anerkennungsgrund Lehramt" v-if="hatUpdateKompetenz" :model-value="getLehramtAnerkennung(proxy)"
+						@update:model-value="anerkennung => patchLehramt(proxy, { idAnerkennungsgrund: anerkennung?.daten(schuljahr)?.id ?? null })"
 						:items="LehrerLehramtAnerkennung.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
-					<div v-else class="text-left"> {{ getLehramtAnerkennung(row)?.daten(schuljahr)?.text ?? '—' }} </div>
+					<div v-else class="text-left"> {{ getLehramtAnerkennung(proxy)?.daten(schuljahr)?.text ?? '—' }} </div>
 				</td>
 				<td class="text-left">
 					<div v-if="hatUpdateKompetenz" class="inline-flex gap-1">
-						<svws-ui-button @click="removeLehraemter(Arrays.asList(row))" type="trash" />
+						<svws-ui-button @click="removeLehraemter(Arrays.asList(data))" type="trash" />
 						<svws-ui-tooltip>
 							<svws-ui-button type="icon" size="small">
-								<span class="icon-sm i-ri-add-line" @click="() => openLehrbefFachrHinzufuegen(row)" />
+								<span class="icon-sm i-ri-add-line" @click="() => openLehrbefFachrHinzufuegen(proxy)" />
 							</svws-ui-button>
 							<template #content>
 								Lehrbefähigung oder Fachrichtung hinzufügen
@@ -53,37 +53,37 @@
 					</div>
 				</td>
 			</template>
-			<template v-else-if="row instanceof LehrerLehrbefaehigungEintrag">
+			<template v-else-if="(proxy instanceof LehrerLehrbefaehigungEintrag) && (data instanceof LehrerLehrbefaehigungEintrag)">
 				<td />
 				<td class="w-full text-left">
-					{{ getLehrbefaehigungText(row) }}
+					{{ getLehrbefaehigungText(proxy) }}
 				</td>
 				<td class="w-full">
-					<svws-ui-select title="Anerkennungsgrund Lehrbefähigung" v-if="hatUpdateKompetenz" :model-value="getLehrbefaehigungAnerkennung(row)"
-						@update:model-value="anerkennung => patchLehrbefaehigung(row, { idAnerkennungsgrund: anerkennung?.daten(schuljahr)?.id ?? null })"
+					<svws-ui-select title="Anerkennungsgrund Lehrbefähigung" v-if="hatUpdateKompetenz" :model-value="getLehrbefaehigungAnerkennung(proxy)"
+						@update:model-value="anerkennung => patchLehrbefaehigung(proxy, { idAnerkennungsgrund: anerkennung?.daten(schuljahr)?.id ?? null })"
 						:items="LehrerLehrbefaehigungAnerkennung.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
-					<div v-else class="text-left"> {{ getLehrbefaehigungAnerkennung(row)?.daten(schuljahr)?.text ?? '—' }} </div>
+					<div v-else class="text-left"> {{ getLehrbefaehigungAnerkennung(proxy)?.daten(schuljahr)?.text ?? '—' }} </div>
 				</td>
 				<td class="text-left">
 					<div v-if="hatUpdateKompetenz" class="inline-flex gap-4">
-						<svws-ui-button @click="removeLehrbefaehigungen(Arrays.asList(row))" type="trash" />
+						<svws-ui-button @click="removeLehrbefaehigungen(Arrays.asList(data))" type="trash" />
 					</div>
 				</td>
 			</template>
-			<template v-else-if="row instanceof LehrerFachrichtungEintrag">
+			<template v-else-if="(proxy instanceof LehrerFachrichtungEintrag) && (data instanceof LehrerFachrichtungEintrag)">
 				<td />
 				<td class="w-full text-left">
-					<span>Fachrichtung:</span> {{ getFachrichtung(row).daten(schuljahr)?.text ?? '—' }}
+					<span>Fachrichtung:</span> {{ getFachrichtung(proxy).daten(schuljahr)?.text ?? '—' }}
 				</td>
 				<td class="w-full">
-					<svws-ui-select title="Anerkennungsgrund Fachrichtung" v-if="hatUpdateKompetenz" :model-value="getFachrichtungAnerkennung(row)"
-						@update:model-value="anerkennung => patchFachrichtung(row, { idAnerkennungsgrund: anerkennung?.daten(schuljahr)?.id ?? null })"
+					<svws-ui-select title="Anerkennungsgrund Fachrichtung" v-if="hatUpdateKompetenz" :model-value="getFachrichtungAnerkennung(proxy)"
+						@update:model-value="anerkennung => patchFachrichtung(proxy, { idAnerkennungsgrund: anerkennung?.daten(schuljahr)?.id ?? null })"
 						:items="LehrerFachrichtungAnerkennung.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
-					<div v-else class="text-left"> {{ getFachrichtungAnerkennung(row)?.daten(schuljahr)?.text ?? '—' }} </div>
+					<div v-else class="text-left"> {{ getFachrichtungAnerkennung(proxy)?.daten(schuljahr)?.text ?? '—' }} </div>
 				</td>
 				<td class="text-left">
 					<div v-if="hatUpdateKompetenz" class="inline-flex gap-4">
-						<svws-ui-button @click="removeFachrichtungen(Arrays.asList(row))" type="trash" />
+						<svws-ui-button @click="removeFachrichtungen(Arrays.asList(proxy))" type="trash" />
 					</div>
 				</td>
 			</template>
@@ -137,16 +137,19 @@
 
 	import { computed, ref, shallowRef } from "vue";
 	import type { List, LehrerLehramtKatalogEintrag, JavaSet, LehrerLehrbefaehigungKatalogEintrag, LehrerFachrichtungKatalogEintrag } from "@core";
-	import { Arrays, ArrayList, HashSet,
-		LehrerLehramt, LehrerLehrbefaehigung, LehrerFachrichtung,
-		LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerFachrichtungEintrag,
-		LehrerLehramtAnerkennung, LehrerLehrbefaehigungAnerkennung, LehrerFachrichtungAnerkennung } from "@core";
+	import { Arrays, ArrayList, HashSet, LehrerLehramt, LehrerLehrbefaehigung, LehrerFachrichtung, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag,
+		LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehrbefaehigungAnerkennung, LehrerFachrichtungAnerkennung } from "@core";
 	import type { LehrerListeManager } from "@ui";
 	import { CoreTypeSelectManager, GridManager } from "@ui";
+	import { LehrerLehramtEintragModelProxy } from "./LehrerLehramtEintragModelProxy";
+	import type { LehrerPersonaldatenModelProxy } from "./LehrerPersonaldatenModelProxy";
+	import { LehrerLehrbefaehigungEintragModelProxy } from "./LehrerLehrbefaehigungEintragModelProxy";
+	import { LehrerFachrichtungEintragModelProxy } from "./LehrerFachrichtungEintragModelProxy";
 
 	const props = defineProps<{
 		hatUpdateKompetenz: boolean;
 		schuljahr: number;
+		personaldatenModelProxy: () => LehrerPersonaldatenModelProxy,
 		lehrerListeManager: () => LehrerListeManager;
 		patchLehramt: (eintrag: LehrerLehramtEintrag, patch: Partial<LehrerLehramtEintrag>) => Promise<void>;
 		addLehramt: (eintrag: Partial<LehrerLehramtEintrag>) => Promise<void>;
@@ -159,10 +162,6 @@
 		removeFachrichtungen: (eintraege: List<LehrerFachrichtungEintrag>) => Promise<void>;
 	}>();
 
-	function personaldaten() {
-		return props.lehrerListeManager().personalDaten();
-	}
-
 	const showLehramtHinzufuegen = ref<boolean>(false);
 	const auswahlLehramtNeu = shallowRef<LehrerLehramtKatalogEintrag | null>(null);
 	const lehraemterSelectManager = computed(() => new CoreTypeSelectManager({
@@ -172,7 +171,7 @@
 	}));
 	const lehraemterVorhanden = computed<JavaSet<number>>(() => {
 		const vorhanden = new HashSet<number>();
-		for (const lehramt of personaldaten().lehraemter) {
+		for (const lehramt of props.personaldatenModelProxy().proxy.lehraemter) {
 			vorhanden.add(lehramt.idKatalogLehramt);
 		}
 		return vorhanden;
@@ -197,8 +196,9 @@
 		if ((auswahlLehramtNeu.value === null) || (lehraemterVorhanden.value.contains(auswahlLehramtNeu.value.id))) {
 			return;
 		}
-		await props.addLehramt({ idLehrer: personaldaten().id, idKatalogLehramt: auswahlLehramtNeu.value.id, idAnerkennungsgrund: null });
+		await props.addLehramt({ idLehrer: props.personaldatenModelProxy().proxy.id, idKatalogLehramt: auswahlLehramtNeu.value.id, idAnerkennungsgrund: null });
 		showLehramtHinzufuegen.value = false;
+		props.personaldatenModelProxy().validate();
 	}
 
 	const showLehrbefFachrHinzufuegen = ref<boolean>(false);
@@ -285,32 +285,36 @@
 			}
 		}
 		showLehrbefFachrHinzufuegen.value = false;
+		props.personaldatenModelProxy().validate();
 	}
 
-
-	type GridDatenLehraemter = LehrerLehramtEintrag | LehrerLehrbefaehigungEintrag | LehrerFachrichtungEintrag;
+	type GridDatenLehraemter = LehrerLehramtEintragModelProxy | LehrerLehrbefaehigungEintragModelProxy | LehrerFachrichtungEintragModelProxy;
 
 	const gridManager = new GridManager<string, GridDatenLehraemter, List<GridDatenLehraemter>>({
 		daten: computed<List<GridDatenLehraemter>>(() => {
 			const result = new ArrayList<GridDatenLehraemter>();
-			for (const lehramt of personaldaten().lehraemter) {
-				result.add(lehramt);
-				for (const l of lehramt.lehrbefaehigungen) {
-					result.add(l);
+			for (const lehramt of props.personaldatenModelProxy().data.lehraemter) {
+				const modelProxy = new LehrerLehramtEintragModelProxy(() => lehramt);
+				result.add(modelProxy);
+				for (const lehrbefaehigung of lehramt.lehrbefaehigungen) {
+					const modelProxy = new LehrerLehrbefaehigungEintragModelProxy(() => lehrbefaehigung);
+					result.add(modelProxy);
 				}
-				for (const f of lehramt.fachrichtungen) {
-					result.add(f);
+				for (const fachrichtung of lehramt.fachrichtungen) {
+					const modelProxy = new LehrerFachrichtungEintragModelProxy(() => fachrichtung);
+					result.add(modelProxy);
 				}
 			}
 			return result;
 		}),
 		getRowKey: row => {
-			if (row instanceof LehrerLehramtEintrag) {
-				return "Lehramt_" + row.id;
-			} else if (row instanceof LehrerLehrbefaehigungEintrag) {
-				return "Lehrbefaehigung_" + row.id;
+			const { proxy } = row;
+			if (proxy instanceof LehrerLehramtEintrag) {
+				return "Lehramt_" + proxy.id;
+			} else if (proxy instanceof LehrerLehrbefaehigungEintrag) {
+				return "Lehrbefaehigung_" + proxy.id;
 			} else {
-				return "Fachrichtung_" + row.id;
+				return "Fachrichtung_" + proxy.id;
 			}
 		},
 		columns: [

@@ -1,23 +1,19 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
-import type { LehrerStundenplanProps } from "~/components/lehrer/stundenplan/SLehrerStundenplanProps";
-
-import { DeveloperNotificationException } from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
+import type { LehrerStundenplanProps } from "~/components/lehrer/stundenplan/LehrerStundenplanProps";
+import { BenutzerKompetenz, Schulform, ServerMode, DeveloperNotificationException } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeLehrer, type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { RouteDataLehrerStundenplan } from "~/router/apps/lehrer/stundenplan/RouteDataLehrerStundenplan";
-
 import { ConfigElement } from "../../../../../../ui/src/utils/Config";
 import { api } from "~/router/Api";
 
-const SLehrerStundenplan = () => import("~/components/lehrer/stundenplan/SLehrerStundenplan.vue");
+const SLehrerStundenplan = () => import("~/components/lehrer/stundenplan/LehrerStundenplan.vue");
 
 export class RouteLehrerStundenplan extends RouteNode<RouteDataLehrerStundenplan, RouteLehrer> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN], "lehrer.stundenplan", "stundenplan/:idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", SLehrerStundenplan, new RouteDataLehrerStundenplan());
+		super(Schulform.values(), [BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN], "lehrer.stundenplan", String.raw`stundenplan/:idStundenplan(\d+)?/:wochentyp(\d+)?/:kw(\d+\.\d+)?`, SLehrerStundenplan, new RouteDataLehrerStundenplan());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
@@ -41,8 +37,8 @@ export class RouteLehrerStundenplan extends RouteNode<RouteDataLehrerStundenplan
 				if (tmpKW.length !== 2) {
 					throw new DeveloperNotificationException("Die Angabe der Kalenderwoche muss die Form 'Jahr.KW' haben.");
 				}
-				kwjahr = parseInt(tmpKW[0]);
-				kw = parseInt(tmpKW[1]);
+				kwjahr = Number.parseInt(tmpKW[0]);
+				kw = Number.parseInt(tmpKW[1]);
 			}
 			// Prüfe, ob ein Lehrer ausgewählt ist. Wenn nicht dann wechsele in die Lehrer-Route zurück.
 			if (idLehrer === undefined) {

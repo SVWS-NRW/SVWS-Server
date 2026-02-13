@@ -13,21 +13,21 @@ import { routeLehrerStundenplan } from "./stundenplan/RouteLehrerStundenplan";
 import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
 import { api } from "~/router/Api";
 import { ConfigElement } from "../../../../../ui/src/utils/Config";
-import type { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
+import type { LehrerAuswahlProps } from "~/components/lehrer/LehrerAuswahlProps";
 import { AppMenuGroup } from "@ui";
 import { routeLehrerEinwilligungen } from "~/router/apps/lehrer/einwilligungen/RouteLehrerEinwilligungen";
 import { routeLehrerLernplattformen } from "~/router/apps/lehrer/lernplattformen/RouteLehrerLernplattformen";
 import { routeLehrerAllgemeinesGruppenprozesse } from "~/router/apps/lehrer/allgemeines/RouteLehrerAllgemeinesGruppenprozesse";
 import { routeLehrerIndividualdatenGruppenprozesse } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdatenGruppenprozesse";
-import type { LehrerAppProps } from "~/components/lehrer/SLehrerAppProps";
+import type { LehrerAppProps } from "~/components/lehrer/LehrerAppProps";
 
-const SLehrerAuswahl = () => import("~/components/lehrer/SLehrerAuswahl.vue");
-const SLehrerApp = () => import("~/components/lehrer/SLehrerApp.vue");
+const LehrerAuswahl = () => import("~/components/lehrer/LehrerAuswahl.vue");
+const LehrerApp = () => import("~/components/lehrer/LehrerApp.vue");
 
 export class RouteLehrer extends RouteAuswahlNode<LehrerListeManager, RouteDataLehrer, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.LEHRERDATEN_ANSEHEN], "lehrer", "lehrkraefte/:id(\\d+)?", SLehrerApp, SLehrerAuswahl,
+		super(Schulform.values(), [BenutzerKompetenz.LEHRERDATEN_ANSEHEN], "lehrer", String.raw`lehrkraefte/:id(\d+)?`, LehrerApp, LehrerAuswahl,
 			new RouteDataLehrer());
 		super.mode = ServerMode.STABLE;
 		super.text = "Lehrkräfte";

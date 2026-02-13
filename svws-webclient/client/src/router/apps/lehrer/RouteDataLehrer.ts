@@ -203,9 +203,19 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		Object.assign(abschnittsdaten, data);
 		this.commit();
 	};
+
+	private getAbschnitt(id: number): LehrerPersonalabschnittsdaten {
+		const abschnitt = this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt);
+		if (abschnitt === null) {
+			throw new DeveloperNotificationException("Es konnten keine gültigen Lehrerabschnittsdaten mit der ID " + id.toString() + " geladen werden.");
+		}
+		return abschnitt;
+	};
+
 	addMehrleistung = async (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
+		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
 		const result = await api.server.addLehrerPersonalabschnittsdatenMehrleistung(data, api.schema);
-		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.mehrleistung.add(result);
+		abschnitt.mehrleistung.add(result);
 		this.commit();
 	};
 
@@ -215,14 +225,16 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	};
 
 	removeMehrleistung = async (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => {
+		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
 		await api.server.deleteLehrerPersonalabschnittsdatenMehrleistung(api.schema, data.id);
-		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.mehrleistung.remove(data);
+		abschnitt.mehrleistung.remove(data);
 		this.commit();
 	};
 
 	addMinderleistung = async (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
+		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
 		const result = await api.server.addLehrerPersonalabschnittsdatenMinderleistung(data, api.schema);
-		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.minderleistung.add(result);
+		abschnitt.minderleistung.add(result);
 		this.commit();
 	};
 
@@ -232,14 +244,16 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	};
 
 	removeMinderleistung = async (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => {
+		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
 		await api.server.deleteLehrerPersonalabschnittsdatenMinderleistung(api.schema, data.id);
-		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.minderleistung.remove(data);
+		abschnitt.minderleistung.remove(data);
 		this.commit();
 	};
 
 	addAnrechnung = async (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => {
+		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
 		const result = await api.server.addLehrerPersonalabschnittsdatenAllgemeineAnrechnung(data, api.schema);
-		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.anrechnungen.add(result);
+		abschnitt.anrechnungen.add(result);
 		this.commit();
 	};
 
@@ -249,8 +263,9 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	};
 
 	removeAnrechnung = async (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => {
+		const abschnitt = this.getAbschnitt(this.idSchuljahresabschnitt);
 		await api.server.deleteLehrerPersonalabschnittsdatenAllgemeineAnrechnung(api.schema, data.id);
-		this.manager.getAbschnittBySchuljahresabschnittsId(this.idSchuljahresabschnitt)?.anrechnungen.remove(data);
+		abschnitt.anrechnungen.remove(data);
 		this.commit();
 	};
 

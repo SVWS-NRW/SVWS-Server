@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized, RouteParamsRawGeneric } from "vue-router";
-import type { LehrerNeuProps } from "~/components/lehrer/SLehrerNeuProps";
+import type { LehrerNeuProps } from "~/components/lehrer/LehrerNeuProps";
 import type { RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
@@ -9,12 +9,12 @@ import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeApp } from "~/router/apps/RouteApp";
 import { api } from "~/router/Api";
 
-const SLehrerNeu = () => import("~/components/lehrer/SLehrerNeu.vue");
+const LehrerNeu = () => import("~/components/lehrer/LehrerNeu.vue");
 
 export class RouteLehrerNeu extends RouteNode<any, RouteLehrer> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.LEHRERDATEN_AENDERN], "lehrer.neu", "neu", SLehrerNeu);
+		super(Schulform.values(), [BenutzerKompetenz.LEHRERDATEN_AENDERN], "lehrer.neu", "neu", LehrerNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);

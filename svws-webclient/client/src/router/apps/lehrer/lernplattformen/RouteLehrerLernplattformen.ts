@@ -11,12 +11,12 @@ import type { RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import type { LehrerLernplattformenProps } from "~/components/lehrer/lernplattformen/LehrerLernplattformenProps";
 
-const SLehrerLernplattformen = () => import("~/components/lehrer/lernplattformen/SLehrerLernplattformen.vue");
+const LehrerLernplattformen = () => import("~/components/lehrer/lernplattformen/LehrerLernplattformen.vue");
 
 export class RouteLehrerLernplattformen extends RouteNode<RouteDataLehrerLernplattformen, RouteLehrer> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN], "lehrer.lernplattformen", "lernplattformen", SLehrerLernplattformen, new RouteDataLehrerLernplattformen());
+		super(Schulform.values(), [BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN], "lehrer.lernplattformen", "lernplattformen", LehrerLernplattformen, new RouteDataLehrerLernplattformen());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Lernplattformen";

@@ -2,7 +2,7 @@ import type { List, BenutzerKompetenz, ApiFile, ReportingParameter, StundenplanL
 import type { LehrerListeManager } from "@ui";
 import type { ApiStatus } from "~/components/ApiStatus";
 
-export interface SLehrerAllgemeinesGruppenprozesseProps {
+export interface LehrerAllgemeinesGruppenprozesseProps {
 	apiStatus: ApiStatus;
 	serverMode: ServerMode;
 	getPDF: (parameter: ReportingParameter) => Promise<ApiFile>;

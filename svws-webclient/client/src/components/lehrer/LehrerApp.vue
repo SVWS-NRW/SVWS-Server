@@ -49,7 +49,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { LehrerAppProps } from "./SLehrerAppProps";
+	import type { LehrerAppProps } from "./LehrerAppProps";
 	import { useRegionSwitch, ViewType } from "@ui";
 
 	const props = defineProps<LehrerAppProps>();

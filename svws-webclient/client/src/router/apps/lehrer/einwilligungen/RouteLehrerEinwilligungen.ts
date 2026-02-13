@@ -11,12 +11,12 @@ import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { RouteDataLehrerEinwilligungen } from "~/router/apps/lehrer/einwilligungen/RouteDataLehrerEinwilligungen";
 import type { LehrerEinwilligungenProps } from "~/components/lehrer/einwilligungen/LehrerEinwilligungenProps";
 
-const SLehrerEinwilligungen = () => import("~/components/lehrer/einwilligungen/SLehrerEinwilligungen.vue");
+const LehrerEinwilligungen = () => import("~/components/lehrer/einwilligungen/LehrerEinwilligungen.vue");
 
 export class RouteLehrerEinwilligungen extends RouteNode<RouteDataLehrerEinwilligungen, RouteLehrer> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN], "lehrer.einwilligungen", "einwilligungen", SLehrerEinwilligungen, new RouteDataLehrerEinwilligungen());
+		super(Schulform.values(), [BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN], "lehrer.einwilligungen", "einwilligungen", LehrerEinwilligungen, new RouteDataLehrerEinwilligungen());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Einwilligungen";
