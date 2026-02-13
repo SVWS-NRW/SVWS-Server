@@ -51,8 +51,8 @@ import de.svws_nrw.db.dto.migration.schild.erzieher.MigrationDTOSchuelerErzieher
 import de.svws_nrw.db.dto.migration.schild.faecher.MigrationDTOFach;
 import de.svws_nrw.db.dto.migration.schild.grundschule.MigrationDTOAnkreuzdaten;
 import de.svws_nrw.db.dto.migration.schild.grundschule.MigrationDTOKindergarten;
+import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOBetrieb;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogAdressart;
-import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKatalogAllgemeineAdresse;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKursarten;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOOrt;
 import de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOSchuleNRW;
@@ -2066,9 +2066,9 @@ public final class DBMigrationManager {
 	 *
 	 * @return true, falls die Daten ohne schwerwiegenden Fehler geprüft wurden
 	 */
-	private boolean checkKatalogAllgAdresse(final List<MigrationDTOKatalogAllgemeineAdresse> entities) {
+	private boolean checkKatalogAllgAdresse(final List<MigrationDTOBetrieb> entities) {
 		for (int i = entities.size() - 1; i >= 0; i--) {
-			final MigrationDTOKatalogAllgemeineAdresse daten = entities.get(i);
+			final MigrationDTOBetrieb daten = entities.get(i);
 			if (daten.strasse != null) {
 				final String[] aufgeteilt = AdressenUtils.splitStrasse(daten.strasse);
 				daten.strassenname = aufgeteilt[0];
@@ -2331,8 +2331,8 @@ public final class DBMigrationManager {
 			return checkSchuelerKAoADaten((List<MigrationDTOSchuelerKAoADaten>) entities);
 		if (firstObject instanceof MigrationDTOSchuelerBKFach)
 			return checkSchuelerBKFaecher((List<MigrationDTOSchuelerBKFach>) entities);
-		if (firstObject instanceof MigrationDTOKatalogAllgemeineAdresse)
-			return checkKatalogAllgAdresse((List<MigrationDTOKatalogAllgemeineAdresse>) entities);
+		if (firstObject instanceof MigrationDTOBetrieb)
+			return checkKatalogAllgAdresse((List<MigrationDTOBetrieb>) entities);
 		if (firstObject instanceof MigrationDTOSchuelerAllgemeineAdresse)
 			return checkSchuelerAllgAdr((List<MigrationDTOSchuelerAllgemeineAdresse>) entities);
 		if (firstObject instanceof MigrationDTOOrt)
