@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
  */
 class EmailJobManagerCompletedJobs {
 
-	/** Der Email-Job-Manager, dessen abegschlossenen Jobs hier verwaltet werden */
+	/** Der Email-Job-Manager, dessen abgeschlossenen Jobs hier verwaltet werden */
 	private final @NotNull EmailJobManager manager;
 
 	/** Die Menge der abgeschlossenen Jobs */
@@ -36,7 +36,7 @@ class EmailJobManagerCompletedJobs {
 
 
 	/**
-	 * Fügt einen job als abgeschlossen hinzu und setzt den übergenen Status und
+	 * Fügt einen job als abgeschlossen hinzu und setzt den übergebenen Status und
 	 * den aktuellen Zeitstempel bei dem Job
 	 *
 	 * @param job      der Email-Job
@@ -59,18 +59,26 @@ class EmailJobManagerCompletedJobs {
 
 
 	/**
-	 * Wird von der add-Methode augerufen und wartet die vorgebene Zeit bevor
+	 * Wird von der add-Methode aufgerufen und wartet die vorgegebene Zeit bevor
 	 * der abgeschlossene Job endgültig aus dem Manager entfernt wird.
 	 *
-	 * @param job   der abegschlossene Job
+	 * @param job   der abgeschlossene Job
 	 */
 	private void waitForRemoval(final @NotNull EmailJob job) {
 		synchronized (this) {
-			try {
-				this.wait(manager.getContext().getTimeToKeepCompletedJobs());
-			} catch (@SuppressWarnings("unused") final InterruptedException e) {
-				Thread.currentThread().interrupt();
+			final long zeitEnde = System.currentTimeMillis() + manager.getContext().getTimeToKeepCompletedJobs();
+
+			long zeitRest = zeitEnde - System.currentTimeMillis();
+			while ((zeitRest > 0) && (jobsCompleted.contains(job))) {
+				try {
+					this.wait(zeitRest);
+				} catch (@SuppressWarnings("unused") final InterruptedException e) {
+					Thread.currentThread().interrupt();
+					return; // "Job" bleibt in der Liste, da er ja nicht fertig wurde.
+				}
+				zeitRest = zeitEnde - System.currentTimeMillis();
 			}
+
 			this.jobsCompleted.remove(job);
 			this.manager.removeCompletedJob(job.getId());
 		}
