@@ -107,7 +107,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("getById | Erfolg")
-	void getById() throws ApiOperationException {
+	void getById() {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "", true, 1);
 		dto.personTyp = PersonTyp.ERZIEHER;
 
@@ -138,6 +138,35 @@ class DataEinwilligungsartenTest {
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Die Einwilligungsart mit der ID 99 wurde nicht gefunden.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
+	}
+
+	@Test
+	@DisplayName("getAllIdsByPersonTyp")
+	void getAllIdsByPersonTyp() {
+		final var dto1 = new DTOKatalogEinwilligungsart(1L, "2", true, 1);
+		final var dto2 = new DTOKatalogEinwilligungsart(2L, "2", true, 1);
+		final var dto3 = new DTOKatalogEinwilligungsart(3L, "2", true, 1);
+		final var dto4 = new DTOKatalogEinwilligungsart(4L, "2", true, 1);
+
+		when(this.conn.queryList(DTOKatalogEinwilligungsart.QUERY_BY_PERSONTYP, DTOKatalogEinwilligungsart.class, PersonTyp.SCHUELER))
+				.thenReturn(List.of(dto1, dto2, dto3, dto4));
+
+		assertThat(this.data.getAllIdsByPersonTyp(PersonTyp.SCHUELER))
+				.isInstanceOf(List.class)
+				.hasSize(4)
+				.containsAll(List.of(1L, 2L, 3L, 4L));
+	}
+
+	@Test
+	@DisplayName("getAllIdsByPersonTyp | emptyList")
+	void getAllIdsByPersonTypEmptyList() {
+		when(this.conn.queryList(DTOKatalogEinwilligungsart.QUERY_BY_PERSONTYP, DTOKatalogEinwilligungsart.class, PersonTyp.SCHUELER))
+				.thenReturn(List.of());
+
+		assertThat(this.data.getAllIdsByPersonTyp(PersonTyp.SCHUELER))
+				.isInstanceOf(List.class)
+				.isNotNull()
+				.isEmpty();
 	}
 
 	@Test
@@ -287,7 +316,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("addBasic | lehrerEinwilligung")
-	void addBasicLehrerEinwilligung() throws ApiOperationException {
+	void addBasicLehrerEinwilligung() {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
 		dto.personTyp = PersonTyp.LEHRER;
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
@@ -302,7 +331,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("addBasic | schuelerEinwilligung")
-	void addBasicSchuelerEinwilligung() throws ApiOperationException {
+	void addBasicSchuelerEinwilligung() {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
 		dto.personTyp = PersonTyp.SCHUELER;
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
@@ -384,7 +413,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("patch | bezeichnung is blank")
-	void patchBezeichnungIsBlank() throws ApiOperationException {
+	void patchBezeichnungIsBlank() {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
@@ -397,7 +426,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("patch | bezeichnung doesn't change")
-	void patchBezeichnungDoesNotChange() throws ApiOperationException {
+	void patchBezeichnungDoesNotChange() {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
@@ -436,7 +465,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("patch | bezeichnung used with different personTyp")
-	void patchBezeichnungUsedWithDifferentPersonTyp() throws ApiOperationException {
+	void patchBezeichnungUsedWithDifferentPersonTyp() {
 		final var differentDtoInDataBase = new DTOKatalogEinwilligungsart(2L, "test", true, 123);
 		differentDtoInDataBase.personTyp = PersonTyp.LEHRER;
 		final var dtoToPatch = new  DTOKatalogEinwilligungsart(1L, "dtoToPatch", true, 123);
@@ -495,7 +524,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("patch | bezeichnung change case in same object")
-	void patchBezeichnungChangeCase() throws ApiOperationException {
+	void patchBezeichnungChangeCase() {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
 		when(conn.queryAll(DTOKatalogEinwilligungsart.class)).thenReturn(List.of(dto));
 		final var newDto = new DTOKatalogEinwilligungsart(2L, "abc", true, 123);
@@ -523,7 +552,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("patch | bezeichnung")
-	void patchBezeichnung() throws ApiOperationException {
+	void patchBezeichnung() {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
@@ -547,7 +576,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("patch | schluessel is null")
-	void patchSchluesselIsNull() throws ApiOperationException {
+	void patchSchluesselIsNull() {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
 		dto.Schluessel = "toBeChanged";
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
@@ -562,7 +591,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("patch | schluessel is blank")
-	void patchSchluesselIsBlank() throws ApiOperationException {
+	void patchSchluesselIsBlank() {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
 		dto.Schluessel = "notToBeChanged";
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
@@ -575,7 +604,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("patch | schluessel | value has not changes")
-	void patchSchluesselHasNotChanged() throws ApiOperationException {
+	void patchSchluesselHasNotChanged() {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
 		dto.Schluessel = "oldValue";
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
@@ -618,7 +647,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("patch | schluessel used from different personTyp")
-	void patchSchluesselAlreadyUsedFromDifferentPersonTyp() throws ApiOperationException {
+	void patchSchluesselAlreadyUsedFromDifferentPersonTyp() {
 		final String schluessel = Einwilligungsschluessel.data().getWerte().getFirst().historie().getFirst().schluessel;
 		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
 		dto.personTyp = PersonTyp.getByID(1);
@@ -637,7 +666,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("patch | schluessel")
-	void patchSchluessel() throws ApiOperationException {
+	void patchSchluessel() {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
 		dto.Schluessel = "oldValue";
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
@@ -651,7 +680,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("patch | beschreibung is null ")
-	void patchBeschreibungIsNull() throws ApiOperationException {
+	void patchBeschreibungIsNull() {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
 		dto.Beschreibung = "oldValue";
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
@@ -666,7 +695,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("patch | beschreibung")
-	void patchBeschreibung() throws ApiOperationException {
+	void patchBeschreibung() {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
 		dto.Beschreibung = "oldValue";
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
@@ -717,7 +746,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("patch | personTyp")
-	void patchPersonTyp() throws ApiOperationException {
+	void patchPersonTyp() {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "test", true, 123);
 		dto.personTyp = PersonTyp.LEHRER;
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
@@ -744,7 +773,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("patch | istSichtbar")
-	void patchIstSichtbar() throws ApiOperationException {
+	void patchIstSichtbar() {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
 		dto.Sichtbar = false;
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);
@@ -771,7 +800,7 @@ class DataEinwilligungsartenTest {
 
 	@Test
 	@DisplayName("patch | Sortierung")
-	void patchSortierung() throws ApiOperationException {
+	void patchSortierung() {
 		final var dto = new DTOKatalogEinwilligungsart(1L, "bezeichnung", true, 123);
 		dto.Sortierung = 123;
 		when(this.conn.queryByKey(DTOKatalogEinwilligungsart.class, 1L)).thenReturn(dto);

@@ -41,7 +41,7 @@ public class SchuelerStammdaten {
 	public int geschlecht;
 
 	/** Das Geburtsdatum des Schülerdatensatzes. */
-	@Schema(description = "das Geburtsdatum", example = "11.11.1911")
+	@Schema(description = "das Geburtsdatum", example = "1911-11-11")
 	public String geburtsdatum;
 
 	/** Der Geburtsort des Schülerdatensatzes. */
@@ -111,11 +111,11 @@ public class SchuelerStammdaten {
 	public boolean druckeKonfessionAufZeugnisse;
 
 	/** Das Datum der Religionsabmeldung des Schülerdatensatzes. */
-	@Schema(description = "das Datum der Religionsabmeldung", example = "11.11.1911")
+	@Schema(description = "das Datum der Religionsabmeldung", example = "1911-11-11")
 	public String religionabmeldung;
 
 	/** Das Datum der Religionsanmeldung des Schülerdatensatzes. */
-	@Schema(description = "das Datum der Religionsanmeldung", example = "12.12.1912")
+	@Schema(description = "das Datum der Religionsanmeldung", example = "1912-12-12")
 	public String religionanmeldung;
 
 
@@ -173,11 +173,11 @@ public class SchuelerStammdaten {
 	public Long haltestelleID;
 
 	/** Das Anmeldedatum des Schülerdatensatzes. */
-	@Schema(description = "das Anmeldedatum", example = "11.11.1911")
+	@Schema(description = "das Anmeldedatum", example = "1911-11-11")
 	public String anmeldedatum;
 
 	/** Das Aufnahmedatum des Schülerdatensatzes. */
-	@Schema(description = "das Aufnahmedatum", example = "11.11.1911")
+	@Schema(description = "das Aufnahmedatum", example = "1911-11-11")
 	public String aufnahmedatum;
 
 	/** Gibt an, ob der Schüler volljährig ist oder nicht. */
@@ -211,7 +211,7 @@ public class SchuelerStammdaten {
 
 
 	/** Der Beginn des Bildungsgangs eines Schülers. */
-	@Schema(description = "der Beginn des Bildungsgangs eines Schülers", example = "null")
+	@Schema(description = "der Beginn des Bildungsgangs eines Schülers", example = "1911-11-11")
 	public String beginnBildungsgang;
 
 	/** Dauer des Bildungsgangs am BK eines Schülers. */

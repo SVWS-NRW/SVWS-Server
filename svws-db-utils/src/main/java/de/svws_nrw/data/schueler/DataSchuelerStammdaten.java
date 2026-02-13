@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
@@ -37,6 +38,10 @@ import org.apache.commons.lang3.Strings;
  */
 public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSchueler, SchuelerStammdaten> {
 
+	private static final String ID_SCHULJAHRESABSCHNITT = "idSchuljahresabschnitt";
+	private static final String WOHNORT_ID = "wohnortID";
+	private static final String ORTSTEIL_ID = "ortsteilID";
+
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link SchuelerStammdaten}.
 	 *
@@ -47,7 +52,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 	@Override
-	public SchuelerStammdaten getById(final Long id) throws ApiOperationException {
+	public SchuelerStammdaten getById(final Long id) {
 		final DTOSchueler dto = getDTO(id);
 		final DTOSchuelerFoto dtoSchuelerFoto = conn.queryByKey(DTOSchuelerFoto.class, id);
 		final SchuelerStammdaten schuelerStammdaten = map(dto);
@@ -55,6 +60,22 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		return schuelerStammdaten;
 	}
 
+	@Override
+	protected void initDTO(final DTOSchueler dto, final Long newID, final Map<String, Object> initAttributes) {
+		dto.ID = newID;
+		dto.GU_ID = String.format("{%s}", UUID.randomUUID());
+		dto.Schuljahresabschnitts_ID = JSONMapper.convertToLong(initAttributes.get(ID_SCHULJAHRESABSCHNITT), false, ID_SCHULJAHRESABSCHNITT);
+		dto.Migrationshintergrund = false;
+		dto.KonfDruck = false;
+		dto.Duplikat = false;
+		dto.Volljaehrig = false;
+		dto.KeineAuskunft = false;
+		dto.SchulpflichtErf = false;
+		dto.BerufsschulpflErf = false;
+		dto.MasernImpfnachweis = false;
+		dto.Bafoeg = false;
+		dto.MeisterBafoeg = false;
+	}
 
 	/**
 	 * Liefert eine Response mit einer Liste mit {@link SchuelerStammdaten} Objekten zu den übergebenen IDs.
@@ -65,7 +86,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public Response getListByIdsAsResponse(final List<Long> ids) throws ApiOperationException {
+	public Response getListByIdsAsResponse(final List<Long> ids) {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getListByIds(ids)).build();
 	}
 
@@ -79,14 +100,14 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	 *
 	 * @throws ApiOperationException - Im Fehlerfall
 	 */
-	public List<SchuelerStammdaten> getListByIds(final List<Long> ids) throws ApiOperationException {
+	public List<SchuelerStammdaten> getListByIds(final List<Long> ids) {
 		final List<DTOSchueler> dtos = getDTOList(ids);
 		final Map<Long, DTOSchuelerFoto> fotoDtosById = conn.queryByKeyList(DTOSchuelerFoto.class, ids).stream()
 				.collect(Collectors.toMap(sf -> sf.Schueler_ID, sf -> sf));
 		final List<SchuelerStammdaten> schuelerStammdatenListe = new ArrayList<>();
 		for (final DTOSchueler dto : dtos) {
 			final SchuelerStammdaten schuelerStammdaten = map(dto);
-			schuelerStammdaten.foto = Optional.ofNullable(fotoDtosById)
+			schuelerStammdaten.foto = Optional.of(fotoDtosById)
 					.map(sf -> sf.get(schuelerStammdaten.id))
 					.map(foto -> foto.FotoBase64)
 					.orElse(null);
@@ -105,7 +126,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public DTOSchueler getDTO(final Long id) throws ApiOperationException {
+	public DTOSchueler getDTO(final Long id) {
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den Schüler darf nicht null sein.");
 		final DTOSchueler dto = conn.queryByKey(DTOSchueler.class, id);
@@ -124,7 +145,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public List<DTOSchueler> getDTOList(final List<Long> ids) throws ApiOperationException {
+	public List<DTOSchueler> getDTOList(final List<Long> ids) {
 		if (ids == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Liste der IDs für die Schüler darf nicht null sein.");
 		return (ids.isEmpty()) ? new ArrayList<>() : conn.queryByKeyList(DTOSchueler.class, ids);
@@ -132,17 +153,17 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 
 
 	@Override
-	protected long getLongId(final DTOSchueler dto) throws ApiOperationException {
+	protected long getLongId(final DTOSchueler dto) {
 		return dto.ID;
 	}
 
 	@Override
-	protected Long getID(final Map<String, Object> attributes) throws ApiOperationException {
+	protected Long getID(final Map<String, Object> attributes) {
 		return JSONMapper.convertToLong(attributes.get("id"), false);
 	}
 
 	@Override
-	protected SchuelerStammdaten map(final DTOSchueler dto) throws ApiOperationException {
+	protected SchuelerStammdaten map(final DTOSchueler dto) {
 		final SchuelerStammdaten daten = new SchuelerStammdaten();
 		// Basisdaten
 		daten.id = dto.ID;
@@ -201,7 +222,8 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 
 
 	@Override
-	protected void mapAttribute(final DTOSchueler dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
+	@SuppressWarnings("java:S1479")
+	protected void mapAttribute(final DTOSchueler dto, final String name, final Object value, final Map<String, Object> map) {
 		switch (name) {
 			// Persönliche Daten
 			case "id" -> mapID(dto, value);
@@ -222,10 +244,10 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 			case "hausnummer" -> dto.HausNr = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_HausNr.datenlaenge(), "hausnummer");
 			case "hausnummerZusatz" -> dto.HausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_HausNrZusatz.datenlaenge(),
 					"hausnummerZusatz");
-			case "wohnortID" -> setWohnort(dto, JSONMapper.convertToLong(value, true, "wohnortID"),
-					Optional.ofNullable(JSONMapper.convertToLong(map.get("ortsteilID"), true, "ortsteilID")).orElse(dto.Ortsteil_ID));
-			case "ortsteilID" -> setWohnort(dto, Optional.ofNullable(JSONMapper.convertToLong(map.get("wohnortID"), true, "wohnortID")).orElse(dto.Ort_ID),
-					JSONMapper.convertToLong(value, true, "ortsteilID"));
+			case WOHNORT_ID -> setWohnort(dto, JSONMapper.convertToLong(value, true, WOHNORT_ID),
+					Optional.ofNullable(JSONMapper.convertToLong(map.get(ORTSTEIL_ID), true, ORTSTEIL_ID)).orElse(dto.Ortsteil_ID));
+			case ORTSTEIL_ID -> setWohnort(dto, Optional.ofNullable(JSONMapper.convertToLong(map.get(WOHNORT_ID), true, WOHNORT_ID)).orElse(dto.Ort_ID),
+					JSONMapper.convertToLong(value, true, ORTSTEIL_ID));
 			case "telefon" -> dto.Telefon = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Telefon.datenlaenge(), "telefon");
 			case "telefonMobil" -> dto.Fax = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Fax.datenlaenge(), "telefonMobil");
 			case "emailPrivat" -> dto.Email = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Email.datenlaenge(), "emailPrivat");
@@ -271,19 +293,22 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 				dto.BeginnBildungsgang = JSONMapper.convertToString(value, true, false, Schema.tab_Schueler.col_BeginnBildungsgang.datenlaenge(),
 						"beginnBildungsgang");
 			case "dauerBildungsgang" -> dto.DauerBildungsgang = JSONMapper.convertToInteger(value, true, "dauerBildungsgang");
+			case ID_SCHULJAHRESABSCHNITT -> {
+				//do nothing
+			}
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s ist nicht implementiert.".formatted(name));
 		}
 	}
 
 
-	private static void mapID(final DTOSchueler dto, final Object value) throws ApiOperationException {
+	private static void mapID(final DTOSchueler dto, final Object value) {
 		final Long id = JSONMapper.convertToLong(value, true, "id");
 		if ((id == null) || (id != dto.ID))
 			throw new ApiOperationException(Status.BAD_REQUEST);
 	}
 
 
-	private static void mapGeschlecht(final DTOSchueler dto, final Object value) throws ApiOperationException {
+	private static void mapGeschlecht(final DTOSchueler dto, final Object value) {
 		final Integer geschlechtId = JSONMapper.convertToInteger(value, false, "geschlecht");
 		final Geschlecht geschlecht = Geschlecht.fromValue(geschlechtId);
 		if (geschlecht == null)
@@ -292,7 +317,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 
-	private static void mapStaatsangehoerigkeitID(final DTOSchueler dto, final Object value) throws ApiOperationException {
+	private static void mapStaatsangehoerigkeitID(final DTOSchueler dto, final Object value) {
 		final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true, null, "staatsangehoerigkeitID");
 		if ((staatsangehoerigkeitID == null) || staatsangehoerigkeitID.isEmpty()) {
 			dto.StaatKrz = null;
@@ -305,7 +330,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 
-	private static void mapStaatsangehoerigkeit2ID(final DTOSchueler dto, final Object value) throws ApiOperationException {
+	private static void mapStaatsangehoerigkeit2ID(final DTOSchueler dto, final Object value) {
 		final String staatsangehoerigkeit2ID = JSONMapper.convertToString(value, true, true, null, "staatsangehoerigkeit2ID");
 		if ((staatsangehoerigkeit2ID == null) || staatsangehoerigkeit2ID.isEmpty()) {
 			dto.StaatKrz2 = null;
@@ -318,7 +343,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 
-	private void mapReligionID(final DTOSchueler dto, final Object value) throws ApiOperationException {
+	private void mapReligionID(final DTOSchueler dto, final Object value) {
 		final Long religionID = JSONMapper.convertToLongInRange(value, true, 0L, null, "religionID");
 		if (religionID != null) {
 			final DTOKonfession religionDto = conn.queryByKey(DTOKonfession.class, religionID);
@@ -329,7 +354,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 
-	private static void mapGeburtsland(final DTOSchueler dto, final Object value) throws ApiOperationException {
+	private static void mapGeburtsland(final DTOSchueler dto, final Object value) {
 		final String geburtsland = JSONMapper.convertToString(value, true, true, null, "geburtsland");
 		if ((geburtsland == null) || geburtsland.isBlank()) {
 			dto.GeburtslandSchueler = null;
@@ -342,7 +367,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 
-	private static void mapVerkehrspracheFamilie(final DTOSchueler dto, final Object value) throws ApiOperationException {
+	private static void mapVerkehrspracheFamilie(final DTOSchueler dto, final Object value) {
 		final String verkehrspracheFamilie = JSONMapper.convertToString(value, true, true, null, "verkehrspracheFamilie");
 		if ((verkehrspracheFamilie == null) || verkehrspracheFamilie.isBlank()) {
 			dto.VerkehrsspracheFamilie = null;
@@ -355,7 +380,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 
-	private static void mapGeburtslandVater(final DTOSchueler dto, final Object value) throws ApiOperationException {
+	private static void mapGeburtslandVater(final DTOSchueler dto, final Object value) {
 		final String geburtslandVater = JSONMapper.convertToString(value, true, true, null, "geburtslandVater");
 		if ((geburtslandVater == null) || geburtslandVater.isBlank()) {
 			dto.GeburtslandVater = null;
@@ -368,7 +393,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 
-	private static void mapGeburtslandMutter(final DTOSchueler dto, final Object value) throws ApiOperationException {
+	private static void mapGeburtslandMutter(final DTOSchueler dto, final Object value) {
 		final String geburtslandMutter = JSONMapper.convertToString(value, true, true, null, "geburtslandMutter");
 		if ((geburtslandMutter == null) || geburtslandMutter.isBlank()) {
 			dto.GeburtslandMutter = null;
@@ -381,7 +406,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 
-	private void mapStatus(final DTOSchueler dto, final Object value) throws ApiOperationException {
+	private void mapStatus(final DTOSchueler dto, final Object value) {
 		final int status = JSONMapper.convertToInteger(value, false, "status");
 		final SchuelerStatus schuelerStatus = SchuelerStatus.data().getWertBySchluessel(String.valueOf(status));
 		if (schuelerStatus == null)
@@ -394,7 +419,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 
-	private static void mapExterneSchulNr(final DTOSchueler dto, final Object value) throws ApiOperationException {
+	private static void mapExterneSchulNr(final DTOSchueler dto, final Object value) {
 		final String externeSchulNr = JSONMapper.convertToString(value, true, true, 6, "externeSchulNr");
 		if ((externeSchulNr != null) && (externeSchulNr.length() != 6))
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Anzahl der Ziffern einer Schulnummer aus NRW muss 6 betragen.");
@@ -402,7 +427,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 
-	private void mapFahrschuelerArtID(final DTOSchueler dto, final Object value) throws ApiOperationException {
+	private void mapFahrschuelerArtID(final DTOSchueler dto, final Object value) {
 		final Long fahrschuelerArtId = JSONMapper.convertToLongInRange(value, true, 0L, null, "fahrschuelerArtID");
 		if (fahrschuelerArtId != null) {
 			final DTOFahrschuelerart fahrschuelerArtDto = conn.queryByKey(DTOFahrschuelerart.class, fahrschuelerArtId);
@@ -413,7 +438,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	}
 
 
-	private void mapHaltestelleID(final DTOSchueler dto, final Object value) throws ApiOperationException {
+	private void mapHaltestelleID(final DTOSchueler dto, final Object value) {
 		final Long haltestelleId = JSONMapper.convertToLongInRange(value, true, 0L, null, "haltestelleID");
 		if (haltestelleId != null) {
 			final DTOHaltestellen haltestellenDto = conn.queryByKey(DTOHaltestellen.class, haltestelleId);
@@ -431,7 +456,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	void updateSchuelerFoto(final DTOSchueler schuelerDto, final Object value) throws ApiOperationException {
+	void updateSchuelerFoto(final DTOSchueler schuelerDto, final Object value) {
 		final String fotoPayloadNeu = JSONMapper.convertToString(value, true, true, null);
 		final DTOSchuelerFoto schuelerFotoOldDto = conn.queryByKey(DTOSchuelerFoto.class, schuelerDto.ID);
 		if (isFotoUnchanged(schuelerFotoOldDto, fotoPayloadNeu)) {
@@ -467,7 +492,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	 *
 	 * @throws ApiOperationException eine Exception mit dem HTTP-Fehlercode 409, falls die ID negative und damit ungültig ist
 	 */
-	void setWohnort(final DTOSchueler dto, final Long wohnortID, final Long ortsteilID) throws ApiOperationException {
+	void setWohnort(final DTOSchueler dto, final Long wohnortID, final Long ortsteilID) {
 		if ((wohnortID != null) && (wohnortID < 0))
 			throw new ApiOperationException(Status.CONFLICT);
 		if ((ortsteilID != null) && (ortsteilID < 0))

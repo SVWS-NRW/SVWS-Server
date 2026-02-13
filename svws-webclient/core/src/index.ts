@@ -183,6 +183,7 @@ export { Sprachbelegung } from './asd/data/schueler/Sprachbelegung';
 export { Sprachendaten } from './asd/data/schueler/Sprachendaten';
 export { Sprachpruefung } from './asd/data/schueler/Sprachpruefung';
 export { UebergangsempfehlungKatalogEintrag } from './asd/data/schueler/UebergangsempfehlungKatalogEintrag';
+export { SchuelerNeuanlage } from './asd/data/schueler/neuanlage/SchuelerNeuanlage';
 export { BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag } from './asd/data/schule/BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag';
 export { BeruflichesGymnasiumStundentafel } from './asd/data/schule/BeruflichesGymnasiumStundentafel';
 export { BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit } from './asd/data/schule/BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit';

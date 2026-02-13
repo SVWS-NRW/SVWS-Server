@@ -44,7 +44,7 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 	}
 
 	@Override
-	public void checkBeforeCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
+	public void checkBeforeCreation(final Long newID, final Map<String, Object> initAttributes) {
 		validateBezeichnungisUniqueForThisPersonTypOnCreation(newID, initAttributes);
 	}
 
@@ -66,6 +66,22 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 		return daten;
 	}
 
+	/**
+	 * Liefert die Liste der Ids der Einwilligungsarten gefiltert nach PersonTyp.
+	 *
+	 * @param personTyp PersonTyp
+	 *
+	 * @return die Liste der Ids der Einwilligungsarten gefiltert nach PersonTyp.
+	 */
+	public List<Long> getAllIdsByPersonTyp(final PersonTyp personTyp) {
+		return this.conn
+				.queryList(DTOKatalogEinwilligungsart.QUERY_BY_PERSONTYP, DTOKatalogEinwilligungsart.class, personTyp)
+				.stream()
+				.map(e -> e.ID)
+				.sorted()
+				.toList();
+	}
+
 	@Override
 	public List<Einwilligungsart> getAll() {
 		final List<DTOKatalogEinwilligungsart> einwilligungsarten = this.conn.queryAll(DTOKatalogEinwilligungsart.class);
@@ -81,7 +97,7 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 	}
 
 	@Override
-	public Einwilligungsart getById(final Long id) throws ApiOperationException {
+	public Einwilligungsart getById(final Long id) {
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID der Einwilligungsart darf nicht null sein.");
 
@@ -99,7 +115,7 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 	}
 
 	@Override
-	protected Einwilligungsart addBasic(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
+	protected Einwilligungsart addBasic(final Long newID, final Map<String, Object> initAttributes) {
 		final Einwilligungsart ea = super.addBasic(newID, initAttributes);
 
 		if (ea.idPersonTyp == PersonTyp.LEHRER.id)
@@ -118,8 +134,7 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 	}
 
 	@Override
-	protected void mapAttribute(final DTOKatalogEinwilligungsart dto, final String name, final Object value, final Map<String, Object> map)
-			throws ApiOperationException {
+	protected void mapAttribute(final DTOKatalogEinwilligungsart dto, final String name, final Object value, final Map<String, Object> map) {
 		switch (name) {
 			case "id" -> validateId(dto, name, value);
 			case BEZEICHNUNG -> updateBezeichnung(dto, value, name);
@@ -132,29 +147,29 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 		}
 	}
 
-	private void validateBezeichnungisUniqueForThisPersonTypOnCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
+	private void validateBezeichnungisUniqueForThisPersonTypOnCreation(final Long newID, final Map<String, Object> initAttributes) {
 		final Integer idPersonTyp = JSONMapper.convertToInteger(initAttributes.get(ID_PERSON_TYP), false, ID_PERSON_TYP);
 		final PersonTyp personTyp = PersonTyp.getByID(idPersonTyp);
 		if (personTyp == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Für die idPersonTyp %d existiert kein PersonTyp".formatted(idPersonTyp));
 
-		final String bezeichnung = JSONMapper.convertToString(initAttributes.get(BEZEICHNUNG), false, false, Schema.tab_K_Datenschutz.col_Bezeichnung.datenlaenge(), BEZEICHNUNG);
+		final String bezeichnung =
+				JSONMapper.convertToString(initAttributes.get(BEZEICHNUNG), false, false, Schema.tab_K_Datenschutz.col_Bezeichnung.datenlaenge(), BEZEICHNUNG);
 		validateBezeichnung(newID, personTyp, bezeichnung);
 	}
 
-	private static void updateBeschreibung(final DTOKatalogEinwilligungsart dto, final Object value, final String name) throws ApiOperationException {
+	private static void updateBeschreibung(final DTOKatalogEinwilligungsart dto, final Object value, final String name) {
 		dto.Beschreibung = JSONMapper.convertToString(value, true, true, null, name);
 	}
 
-	private static void validateId(final DTOKatalogEinwilligungsart dto, final String name, final Object value) throws ApiOperationException {
+	private static void validateId(final DTOKatalogEinwilligungsart dto, final String name, final Object value) {
 		final Long id = JSONMapper.convertToLong(value, false, name);
 		if (!Objects.equals(dto.ID, id))
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 	}
 
-	private void updateBezeichnung(final DTOKatalogEinwilligungsart dto, final Object value, final String name)
-			throws ApiOperationException {
+	private void updateBezeichnung(final DTOKatalogEinwilligungsart dto, final Object value, final String name) {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Datenschutz.col_Bezeichnung.datenlaenge(), name);
 		if (valueIsBlankOrHasNotChanged(dto.Bezeichnung, bezeichnung))
 			return;
@@ -164,7 +179,7 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 		dto.Bezeichnung = bezeichnung;
 	}
 
-	private void updateSchluessel(final DTOKatalogEinwilligungsart dto, final Object value, final String name, final Object idPersonTyp) throws ApiOperationException {
+	private void updateSchluessel(final DTOKatalogEinwilligungsart dto, final Object value, final String name, final Object idPersonTyp) {
 		final String schluessel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Datenschutz.col_Schluessel.datenlaenge(), name);
 		if (schluessel == null) {
 			dto.Schluessel = null;
@@ -184,8 +199,7 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 		dto.Schluessel = schluessel;
 	}
 
-	private void updatePersonTyp(final DTOKatalogEinwilligungsart dto, final Object value, final String name)
-			throws ApiOperationException {
+	private void updatePersonTyp(final DTOKatalogEinwilligungsart dto, final Object value, final String name) {
 		final int id = JSONMapper.convertToInteger(value, false, name);
 		final PersonTyp personTyp = PersonTyp.getByID(id);
 		if (personTyp == null)
@@ -196,7 +210,7 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 		dto.personTyp = personTyp;
 	}
 
-	private void validateBezeichnung(final Long id, final PersonTyp personTyp, final String bezeichnung) throws ApiOperationException {
+	private void validateBezeichnung(final Long id, final PersonTyp personTyp, final String bezeichnung) {
 		final boolean isAlreadyUsed = this.conn.queryAll(DTOKatalogEinwilligungsart.class).stream()
 				.anyMatch(e -> (e.ID != id) && (e.personTyp == personTyp) && bezeichnung.equalsIgnoreCase(e.Bezeichnung));
 		if (isAlreadyUsed)
@@ -207,11 +221,11 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 		return (Einwilligungsschluessel.data().getWertBySchluessel(schluessel) == null);
 	}
 
-	private static void updateSichtbar(final DTOKatalogEinwilligungsart dto, final Object value, final String name) throws ApiOperationException {
+	private static void updateSichtbar(final DTOKatalogEinwilligungsart dto, final Object value, final String name) {
 		dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
 	}
 
-	private static void updateSortierung(final DTOKatalogEinwilligungsart dto, final Object value, final String name) throws ApiOperationException {
+	private static void updateSortierung(final DTOKatalogEinwilligungsart dto, final Object value, final String name) {
 		dto.Sortierung = JSONMapper.convertToInteger(value, false, name);
 	}
 
@@ -242,7 +256,7 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 		return new HashSet<>(results);
 	}
 
-	private boolean schluesselIsAlreadyUsed(final Long id, final Object idPersonTyp, final String schluessel) throws ApiOperationException {
+	private boolean schluesselIsAlreadyUsed(final Long id, final Object idPersonTyp, final String schluessel) {
 		if (idPersonTyp == null)
 			return false;
 

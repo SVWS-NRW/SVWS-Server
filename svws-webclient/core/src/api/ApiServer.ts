@@ -176,6 +176,7 @@ import { SchuelerLernabschnittsdaten } from '../asd/data/schueler/SchuelerLernab
 import { SchuelerLernplattform } from '../core/data/schueler/SchuelerLernplattform';
 import { SchuelerListe } from '../core/data/schueler/SchuelerListe';
 import { SchuelerListeEintrag } from '../core/data/schueler/SchuelerListeEintrag';
+import { SchuelerNeuanlage } from '../asd/data/schueler/neuanlage/SchuelerNeuanlage';
 import { SchuelerSchulbesuchMerkmal } from '../asd/data/schueler/SchuelerSchulbesuchMerkmal';
 import { SchuelerSchulbesuchSchule } from '../asd/data/schueler/SchuelerSchulbesuchSchule';
 import { SchuelerSchulbesuchsdaten } from '../asd/data/schueler/SchuelerSchulbesuchsdaten';
@@ -12661,6 +12662,35 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
 		const body : string = SchuelerStammdatenNeu.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SchuelerStammdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addSchuelerStammdatenNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{idSchuljahresabschnitt : \d+}/stammdaten/create/neu
+	 *
+	 * Erstellt neue SchülerStammdaten und gibt das erstellte Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer SchülerStammdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die SchülerStammdaten wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerStammdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um SchülerStammdaten anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchuelerNeuanlage>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchuljahresabschnitt - der Pfad-Parameter idSchuljahresabschnitt
+	 *
+	 * @returns Die SchülerStammdaten wurden erfolgreich hinzugefügt.
+	 */
+	public async addSchuelerStammdatenNeu(data : Partial<SchuelerNeuanlage>, schema : string, idSchuljahresabschnitt : number) : Promise<SchuelerStammdaten> {
+		const path = "/db/{schema}/schueler/{idSchuljahresabschnitt : \\d+}/stammdaten/create/neu"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
+		const body : string = SchuelerNeuanlage.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return SchuelerStammdaten.transpilerFromJSON(text);

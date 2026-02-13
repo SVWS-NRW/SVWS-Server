@@ -1,10 +1,15 @@
 package de.svws_nrw.api.server;
 
 import de.svws_nrw.asd.data.schueler.SchuelerStammdatenNeu;
+import de.svws_nrw.asd.data.schueler.neuanlage.SchuelerNeuanlage;
 import de.svws_nrw.core.data.schule.Fahrschuelerart;
 import de.svws_nrw.data.kataloge.DataFahrschuelerarten;
+
 import java.io.InputStream;
 
+import de.svws_nrw.data.schueler.DataSchuelerNeuanlageNeu;
+import de.svws_nrw.data.schule.DataEinwilligungsarten;
+import de.svws_nrw.data.schule.DataLernplattformen;
 import org.jboss.resteasy.annotations.GZIP;
 
 import de.svws_nrw.asd.data.schueler.SchuelerBetriebsdaten;
@@ -260,10 +265,44 @@ public class APISchueler {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addSchuelerStammdaten(@PathParam("schema") final String schema, @PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt,
 			@RequestBody(description = "Die Daten der zu erstellenden SchülerStammdaten ohne ID, da diese automatisch generiert wird", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerStammdatenNeu.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = SchuelerStammdatenNeu.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataSchuelerneuanlage(conn, idSchuljahresabschnitt, new DataSchuelerLernabschnittsdaten(conn)).addNewSchuelerWithLernabschnitt(is),
+				conn -> new DataSchuelerneuanlage(conn, idSchuljahresabschnitt, new DataSchuelerLernabschnittsdaten(conn))
+						.addNewSchuelerWithLernabschnitt(is),
+				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen neuer SchülerStammdaten.
+	 *
+	 * @param schema                     das Datenbankschema
+	 * @param idSchuljahresabschnitt     der Schuljahresabschnitt
+	 * @param is                         der Input-Stream mit den Daten der SchülerStammdaten
+	 * @param request                    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit den erstellen SchülerStammdaten
+	 */
+	@POST
+	@Path("/{idSchuljahresabschnitt : \\d+}/stammdaten/create/neu")
+
+	@Operation(summary = "Erstellt SchülerStammdaten neu",
+			description = "Erstellt neue SchülerStammdaten und gibt das erstellte Objekt zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer SchülerStammdaten besitzt.")
+	@ApiResponse(responseCode = "201", description = "Die SchülerStammdaten wurden erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerStammdaten.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um SchülerStammdaten anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addSchuelerStammdatenNeu(@PathParam("schema") final String schema, @PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt,
+			@RequestBody(description = "Die Daten der zu erstellenden SchülerStammdaten ohne ID, da diese automatisch generiert wird", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = SchuelerNeuanlage.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataSchuelerNeuanlageNeu(new DataSchuelerStammdaten(conn), new DataSchuelerLernabschnittsdaten(conn),
+						new DataSchuelerSchulbesuchsdaten(conn), new DataSchuelerEinwilligungen(conn), new DataSchuelerLernplattformen(conn),
+				new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).add(is, idSchuljahresabschnitt),
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 
