@@ -15,7 +15,7 @@ public final class SchuleRepositoryImpl extends RepositoryImpl<DTOEigeneSchule> 
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public SchuleRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOEigeneSchule.class, (o, id) -> o.ID = id);
+		super(conn, DTOEigeneSchule.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
 

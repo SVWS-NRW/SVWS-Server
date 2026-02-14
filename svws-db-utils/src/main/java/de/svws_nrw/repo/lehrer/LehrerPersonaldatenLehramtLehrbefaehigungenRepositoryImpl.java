@@ -23,7 +23,7 @@ public final class LehrerPersonaldatenLehramtLehrbefaehigungenRepositoryImpl ext
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public LehrerPersonaldatenLehramtLehrbefaehigungenRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOLehrerPersonaldatenLehramtBefaehigung.class, (o, id) -> o.ID = id);
+		super(conn, DTOLehrerPersonaldatenLehramtBefaehigung.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
 	@Override

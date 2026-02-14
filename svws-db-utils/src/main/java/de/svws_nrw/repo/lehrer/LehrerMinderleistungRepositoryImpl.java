@@ -22,7 +22,7 @@ public final class LehrerMinderleistungRepositoryImpl extends RepositoryImpl<DTO
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public LehrerMinderleistungRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOLehrerEntlastungsstunde.class, (o, id) -> o.ID = id);
+		super(conn, DTOLehrerEntlastungsstunde.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
 	@Override

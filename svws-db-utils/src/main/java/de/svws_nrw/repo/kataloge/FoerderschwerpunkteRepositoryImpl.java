@@ -15,7 +15,7 @@ public final class FoerderschwerpunkteRepositoryImpl extends RepositoryImpl<DTOF
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public FoerderschwerpunkteRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOFoerderschwerpunkt.class, (o, id) -> o.ID = id);
+		super(conn, DTOFoerderschwerpunkt.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
 }

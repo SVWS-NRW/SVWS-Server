@@ -15,7 +15,7 @@ public final class JahrgaengeRepositoryImpl extends RepositoryImpl<DTOJahrgang> 
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public JahrgaengeRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOJahrgang.class, (o, id) -> o.ID = id);
+		super(conn, DTOJahrgang.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
 }

@@ -19,7 +19,7 @@ public final class LehrerAbschnittsdatenRepositoryImpl extends RepositoryImpl<DT
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public LehrerAbschnittsdatenRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOLehrerAbschnittsdaten.class, (o, id) -> o.ID = id);
+		super(conn, DTOLehrerAbschnittsdaten.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
 	@Override

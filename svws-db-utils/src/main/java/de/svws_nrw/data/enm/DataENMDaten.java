@@ -53,7 +53,6 @@ import de.svws_nrw.core.data.enm.ENMTeilleistungsart;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.utils.enm.ENMDatenManager;
-import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.katalog.DTOAnkreuzkompetenzJahrgang;
@@ -93,25 +92,34 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link ENMDaten}.
+ * Eine Klassen für die Handhabung der {@link ENMDaten}.
  */
-public final class DataENMDaten extends DataManager<Long> {
+public final class DataENMDaten {
 
 	private static final DateTimeFormatter ofPattern =
 			new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss").appendFraction(ChronoField.MILLI_OF_SECOND, 0, 3, true).toFormatter();
 
+
+	/** Die Datenbank-Verbindung */
+	private final DBEntityManager conn;
+
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link ENMDaten}.
+	 * Erstellt einen neue Instanz dieser Klasse.
 	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
 	public DataENMDaten(final DBEntityManager conn) {
-		super(conn);
+		this.conn = conn;
 	}
 
 
-	@Override
+	/**
+	 * Gibt die aktuellen Daten für das externe Notenmodul zurück.
+	 *
+	 * @return die ENM-Daten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
 	public Response getAll() throws ApiOperationException {
 		final ENMDaten daten = getDaten(conn, null);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
@@ -150,13 +158,15 @@ public final class DataENMDaten extends DataManager<Long> {
 	}
 
 
-	@Override
-	public Response getList() {
-		throw new UnsupportedOperationException();
-	}
-
-
-	@Override
+	/**
+	 * Gibt die Daten für das externe Notenmodul in Bezug auf eine einzelne Lehrkraft zurück.
+	 *
+	 * @param id   die ID der Lehrkraft, für welche die ENM-Daten aggregiert werden.
+	 *
+	 * @return die Information mit der angebenen ID
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
 	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -513,12 +523,6 @@ public final class DataENMDaten extends DataManager<Long> {
 		return Optional.ofNullable(jahrgaengeById.get(idJahrgang))
 				.map(dto -> dto.ASDJahrgang)
 				.orElse("");
-	}
-
-
-	@Override
-	public Response patch(final Long id, final InputStream is) {
-		throw new UnsupportedOperationException();
 	}
 
 

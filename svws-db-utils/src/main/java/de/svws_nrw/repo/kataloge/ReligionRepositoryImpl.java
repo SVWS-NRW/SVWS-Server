@@ -15,7 +15,7 @@ public final class ReligionRepositoryImpl extends RepositoryImpl<DTOKonfession> 
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public ReligionRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOKonfession.class, (o, id) -> o.ID = id);
+		super(conn, DTOKonfession.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
 }

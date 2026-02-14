@@ -1,7 +1,9 @@
 package de.svws_nrw.repo;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -57,6 +59,16 @@ public interface RepositoryBase<T, P> {
 	 * @return die Liste mit den Datenbank-Entitäten
 	 */
 	List<T> getAll();
+
+	/**
+	 * Erstellt eine Map mit allen Datenbank-Entitäten und ordnet diese dem übergebenen Key zu.
+	 *
+	 * @param <K>      der Typ der Schlüsselwerte
+	 * @param getKey   eine Methode, welche aus einer Entität den Schlüsselwert für die Map liefert
+	 *
+	 * @return die Map mit der Zuordnung der Datenbank-Entitäten zu ihren Schlüsselwerten
+	 */
+	<K> Map<K, T> getMap(Function<T, K> getKey);
 
 	/**
 	 * Persistiert die Datenbank-Entität in der Datenbank. Für den Fall,

@@ -15,7 +15,7 @@ public final class OrteRepositoryImpl extends RepositoryImpl<DTOOrt> implements 
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public OrteRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOOrt.class, (o, id) -> o.ID = id);
+		super(conn, DTOOrt.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
 }

@@ -1,8 +1,10 @@
 package de.svws_nrw.repo.schueler;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -100,6 +102,48 @@ class SchuelerRepositoryImplTest {
 		assertEquals(testSchueler1, result.get(1L));
 		assertEquals(testSchueler2, result.get(2L));
 		verify(conn).queryList(query, DTOSchueler.class, idAbschnitt, idStatus, false);
+	}
+
+
+	@Test
+	@DisplayName("Test: getListByStatusAndSchuljahresabschnitt liefert die Schüler mit einer der angegebenen Status-IDs und dem angegebenen Schuljahresabschnitt.")
+	void testGetListByStatusAndSchuljahresabschnitt() {
+		final String query = "SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.idStatus IN ?2 AND e.Geloescht = ?3";
+		final long idAbschnitt = 42L;
+		final List<Long> statusIds = List.of(2L, 6L);
+
+		when(conn.queryList(query, DTOSchueler.class, idAbschnitt, statusIds, false))
+				.thenReturn(List.of(testSchueler1, testSchueler2));
+
+		final List<DTOSchueler> result = repository.getListByStatusAndSchuljahresabschnitt(idAbschnitt, statusIds);
+
+		assertThat(result).hasSize(2).containsExactlyInAnyOrder(testSchueler1, testSchueler2);
+		verify(conn).queryList(query, DTOSchueler.class, idAbschnitt, statusIds, false);
+	}
+
+	@Test
+	@DisplayName("Test: getListByStatusAndSchuljahresabschnitt gibt bei fehlenden Status-IDs ohne DB-Zugriff eine leere Liste zurück.")
+	void testGetListByStatusAndSchuljahresabschnittEmptyStatus() {
+		final List<DTOSchueler> result = repository.getListByStatusAndSchuljahresabschnitt(42L, List.of());
+		assertThat(result).isEmpty();
+		verifyNoInteractions(conn);
+	}
+
+	@Test
+	@DisplayName("Test: getMapByStatusAndSchuljahresabschnitt liefert eine Map der Schüler mit einer der angegebenen Status-IDs und dem angegebenen Schuljahresabschnitt indiziert nach den Schüler-IDs")
+	void testGetMapByStatusAndSchuljahresabschnitt() {
+		final String query = "SELECT e FROM DTOSchueler e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.idStatus IN ?2 AND e.Geloescht = ?3";
+		final long idAbschnitt = 42L;
+		final List<Long> statusIds = List.of(2L);
+
+		when(conn.queryList(query, DTOSchueler.class, idAbschnitt, statusIds, false))
+				.thenReturn(List.of(testSchueler1));
+
+		final Map<Long, DTOSchueler> result = repository.getMapByStatusAndSchuljahresabschnitt(idAbschnitt, statusIds);
+
+		assertThat(result)
+				.hasSize(1)
+				.containsEntry(testSchueler1.ID, testSchueler1);
 	}
 
 

@@ -44,7 +44,15 @@ class SchuelerRepositoryFactoryTest {
 		assertNotNull(factory);
 
 		assertNotNull(factory.getSchuelerRepository());
+		assertNotNull(factory.getSchuelerAnkreuzkompetenzenRepository());
+		assertNotNull(factory.getSchuelerAnkreuzkompetenzenTimestampsRepository());
+		assertNotNull(factory.getSchuelerLeistungsdatenRepository());
+		assertNotNull(factory.getSchuelerLeistungsdatenTimestampsRepository());
 		assertNotNull(factory.getSchuelerLernabschnittRepository());
+		assertNotNull(factory.getSchuelerLernabschnittTimestampsRepository());
+		assertNotNull(factory.getSchuelerLernabschnittBemerkungenRepository());
+		assertNotNull(factory.getSchuelerTeilleistungenRepository());
+		assertNotNull(factory.getSchuelerTeilleistungenTimestampsRepository());
 		assertNotNull(factory.getSchuelerAbiturRepository());
 		assertNotNull(factory.getSchuelerAbiturFachRepository());
 	}

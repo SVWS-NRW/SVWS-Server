@@ -1,5 +1,7 @@
 package de.svws_nrw.repo;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -138,6 +141,37 @@ class RepositoryBaseImplTest {
 	void testGetAll() {
 		repository.getAll();
 		verify(conn).queryAll(TestEntity.class);
+	}
+
+	@Test
+	@DisplayName("Test: getMap(getKey) transformiert die Liste aller Entitäten in eine Map mit dem übergebenen Key-Mapper.")
+	void testGetMapWithMapper() {
+	    final TestEntity e1 = new TestEntity();
+	    e1.id = 100L;
+	    final TestEntity e2 = new TestEntity();
+	    e2.id = 200L;
+
+	    when(conn.queryAll(TestEntity.class)).thenReturn(List.of(e1, e2));
+
+	    final Map<Long, TestEntity> resultMap = repository.getMap(e -> e.id);
+
+	    assertThat(resultMap)
+	        .as("Die resultierende Map muss die korrekte Größe und Zuordnung haben")
+	        .isNotNull()
+	        .hasSize(2)
+	        .containsOnly(
+	            entry(100L, e1),
+	            entry(200L, e2)
+	        );
+	    verify(conn).queryAll(TestEntity.class);
+	}
+
+	@Test
+	@DisplayName("Test: getMap(getKey) liefert eine leere Map, wenn keine Entitäten in der Datenbank vorhanden sind.")
+	void testGetMapWithEmptyResult() {
+	    when(conn.queryAll(TestEntity.class)).thenReturn(List.of());
+	    final Map<Long, TestEntity> resultMap = repository.getMap(e -> e.id);
+	    assertThat(resultMap).isEmpty();
 	}
 
 	@Test

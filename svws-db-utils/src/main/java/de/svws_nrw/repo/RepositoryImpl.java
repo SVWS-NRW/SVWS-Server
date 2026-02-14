@@ -3,7 +3,10 @@ package de.svws_nrw.repo;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.ObjLongConsumer;
+import java.util.function.ToLongFunction;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.db.DBEntityManager;
 import jakarta.validation.constraints.NotNull;
@@ -15,8 +18,11 @@ import jakarta.validation.constraints.NotNull;
  */
 public abstract class RepositoryImpl<T> extends RepositoryBaseImpl<T, Long> implements Repository<T> {
 
-	/** eine optionale Methode, um die Long-ID automatisch zu setzen, wenn ein Objekt neu erstellt wird */
+	/** eine Methode, um die Long-ID automatisch zu setzen, u.a. wenn ein Objekt neu erstellt wird */
 	protected final @NotNull ObjLongConsumer<T> setId;
+
+	/** eine Methode, um die Long-ID auszulesen */
+	protected final @NotNull ToLongFunction<T> getId;
 
 
 	/**
@@ -24,12 +30,15 @@ public abstract class RepositoryImpl<T> extends RepositoryBaseImpl<T, Long> impl
 	 *
 	 * @param conn          die Datenbank-Verbindung
 	 * @param entityClass   die Klasse der Datenbank-Entitäten
-	 * @param setId         eine Methode, um die ID automatisch zu setzen, wenn ein Objekt neu erstellt wird
+	 * @param getId         eine Methode, um die ID auszulesen
+	 * @param setId         eine Methode, um die ID automatisch zu setzen, z.B. wenn ein Objekt neu erstellt wird
 	 */
-	protected RepositoryImpl(final DBEntityManager conn, final Class<T> entityClass, final ObjLongConsumer<T> setId) {
+	protected RepositoryImpl(final DBEntityManager conn, final Class<T> entityClass,
+			final ToLongFunction<T> getId, final ObjLongConsumer<T> setId) {
 		super(conn, entityClass);
 		if (setId == null)
 			throw new IllegalArgumentException("Ein Consumer setId ist für ein Repository erforderlich.");
+		this.getId = getId;
 		this.setId = setId;
 	}
 
@@ -37,6 +46,17 @@ public abstract class RepositoryImpl<T> extends RepositoryBaseImpl<T, Long> impl
 	@Override
 	protected final Object[] mapIdToParameter(final Long id) {
 		return new Object[]{ id };
+	}
+
+
+	/**
+	 * Erstellt eine Map mit allen Datenbank-Entitäten und ordnet diese ihrer ID zu.
+	 *
+	 * @return die Map mit der Zuordnung der Datenbank-Entitäten zu ihren IDs
+	 */
+	@Override
+	public Map<Long, T> getMap() {
+		return super.getMap(this.getId::applyAsLong);
 	}
 
 
@@ -53,6 +73,20 @@ public abstract class RepositoryImpl<T> extends RepositoryBaseImpl<T, Long> impl
 		if ((ids == null) || (ids.isEmpty()))
 			return Collections.emptyList();
 		return conn.queryByKeyList(entityClass, ids);
+	}
+
+
+	/**
+	 * Erstellt eine Map mit den zu den übergebenen IDs gehörenden Datenbank-Entitäten und ordnet
+	 * diese ihrer jeweiligen ID zu.
+	 *
+	 * @param ids   die IDs
+	 *
+	 * @return die Map mit der Zuordnung der Datenbank-Entitäten zu ihren IDs
+	 */
+	@Override
+	public Map<Long, T> findMapByIds(final Collection<Long> ids) {
+		return this.findListByIds(ids).stream().collect(Collectors.toMap(this.getId::applyAsLong, e -> e));
 	}
 
 

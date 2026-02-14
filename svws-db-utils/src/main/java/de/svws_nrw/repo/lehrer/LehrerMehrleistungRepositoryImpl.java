@@ -22,7 +22,7 @@ public final class LehrerMehrleistungRepositoryImpl extends RepositoryImpl<DTOLe
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public LehrerMehrleistungRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOLehrerMehrleistung.class, (o, id) -> o.ID = id);
+		super(conn, DTOLehrerMehrleistung.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
 	@Override

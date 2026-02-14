@@ -22,7 +22,7 @@ public final class LehrerAnrechnungRepositoryImpl extends RepositoryImpl<DTOLehr
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public LehrerAnrechnungRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOLehrerAnrechnungsstunde.class, (o, id) -> o.ID = id);
+		super(conn, DTOLehrerAnrechnungsstunde.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
 	@Override

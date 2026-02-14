@@ -17,7 +17,7 @@ public final class LehrerRepositoryImpl extends RepositoryImpl<DTOLehrer> implem
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public LehrerRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOLehrer.class, (o, id) -> o.ID = id);
+		super(conn, DTOLehrer.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
 

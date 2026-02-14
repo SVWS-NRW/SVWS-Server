@@ -15,7 +15,7 @@ public final class SchuljahresabschnitteRepositoryImpl extends RepositoryImpl<DT
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public SchuljahresabschnitteRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOSchuljahresabschnitte.class, (o, id) -> o.ID = id);
+		super(conn, DTOSchuljahresabschnitte.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
 }

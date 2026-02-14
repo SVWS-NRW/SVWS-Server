@@ -19,7 +19,7 @@ public final class SchuelerAbiturFachRepositoryImpl extends RepositoryImpl<DTOSc
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public SchuelerAbiturFachRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOSchuelerAbiturFach.class, (o, id) -> o.ID = id);
+		super(conn, DTOSchuelerAbiturFach.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
 	@Override

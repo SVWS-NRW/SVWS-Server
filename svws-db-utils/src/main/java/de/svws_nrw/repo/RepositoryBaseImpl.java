@@ -1,7 +1,10 @@
 package de.svws_nrw.repo;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.db.DBEntityManager;
 import jakarta.validation.constraints.NotNull;
@@ -9,8 +12,8 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Diese Repository-Klasse dient dem Datenbank-Zugriff.
  *
- * @param <P> der Typ der Primary-Key-Klasse zu den Datenbank-Entitäten
  * @param <T> der Typ der verwalteten Datenbank-Entitäten
+ * @param <P> der Typ der Primary-Key-Klasse zu den Datenbank-Entitäten
  */
 public abstract class RepositoryBaseImpl<T, P> implements RepositoryBase<T, P> {
 
@@ -112,6 +115,21 @@ public abstract class RepositoryBaseImpl<T, P> implements RepositoryBase<T, P> {
 	public List<T> getAll() {
 		return conn.queryAll(entityClass);
 	}
+
+
+	/**
+	 * Erstellt eine Map mit allen Datenbank-Entitäten und ordnet diese dem übergebenen Key zu.
+	 *
+	 * @param <K>      der Typ der Schlüsselwerte
+	 * @param getKey   eine Methode, welche aus einer Entität den Schlüsselwert für die Map liefert
+	 *
+	 * @return die Map mit der Zuordnung der Datenbank-Entitäten zu ihren Schlüsselwerten
+	 */
+	@Override
+	public <K> Map<K, T> getMap(final Function<T, K> getKey) {
+		return this.getAll().stream().collect(Collectors.toMap(getKey::apply, e -> e));
+	}
+
 
 
 	/**

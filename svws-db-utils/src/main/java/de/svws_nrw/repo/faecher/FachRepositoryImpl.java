@@ -15,7 +15,7 @@ public final class FachRepositoryImpl extends RepositoryImpl<DTOFach> implements
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public FachRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOFach.class, (o, id) -> o.ID = id);
+		super(conn, DTOFach.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
 }

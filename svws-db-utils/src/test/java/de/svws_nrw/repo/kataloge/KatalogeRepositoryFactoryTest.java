@@ -48,6 +48,13 @@ class KatalogeRepositoryFactoryTest {
 		assertNotNull(factory.getFoerderschwerpunkteRepository());
 		assertNotNull(factory.getOrteRepository());
 		assertNotNull(factory.getReligionRepository());
+		assertNotNull(factory.getAnkreuzkompetenzenKonfigurationRepository());
+		assertNotNull(factory.getAnkreuzkompetenzenRepository());
+		assertNotNull(factory.getAnkreuzkompetenzenJahrgaengeRepository());
+		assertNotNull(factory.getFloskelRepository());
+		assertNotNull(factory.getFloskelgruppenRepository());
+		assertNotNull(factory.getFloskelJahrgaengeRepository());
+		assertNotNull(factory.getTeilleistungsartenRepository());
 	}
 
 }

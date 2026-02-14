@@ -25,7 +25,7 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 	 * @param conn   die aktuelle Datenbank-Verbindung
 	 */
 	public SchuelerLernabschnittRepositoryImpl(final DBEntityManager conn) {
-		super(conn, DTOSchuelerLernabschnittsdaten.class, (o, id) -> o.ID = id);
+		super(conn, DTOSchuelerLernabschnittsdaten.class, o -> o.ID, (o, id) -> o.ID = id);
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package de.svws_nrw.repo;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -12,6 +14,7 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +48,7 @@ class RepositoryImplTest {
 	 */
 	private static class TestRepository extends RepositoryImpl<TestEntity> {
 		protected TestRepository(final DBEntityManager conn) {
-			super(conn, TestEntity.class, (o, id) -> o.id = id);
+			super(conn, TestEntity.class, o -> o.id, (o, id) -> o.id = id);
 		}
 	}
 
@@ -66,7 +69,7 @@ class RepositoryImplTest {
 	@SuppressWarnings("unused")
 	void testConstructorRequiresSetId() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			new RepositoryImpl<TestEntity>(conn, TestEntity.class, null) {
+			new RepositoryImpl<TestEntity>(conn, TestEntity.class, null, null) {
 				// Anonyme Klasse zum Testen des abstrakten RepositoryImpl
 			};
 		});
@@ -148,4 +151,58 @@ class RepositoryImplTest {
 		// Wenn einmal auf die ID zugegriffen wurde, so kann davon ausgegangen werden, dass auch mapIdToParameter verwendet wurde.
 		verify(conn, times(1)).queryByKey(TestEntity.class, id);
 	}
+
+	@Test
+	@DisplayName("Test: getMap() liefert eine Map aller Entitäten, indiziert durch ihre ID.")
+	void testGetMap() {
+	    final TestEntity e1 = new TestEntity();
+	    e1.id = 10L;
+	    final TestEntity e2 = new TestEntity();
+	    e2.id = 20L;
+
+	    when(conn.queryAll(TestEntity.class)).thenReturn(Arrays.asList(e1, e2));
+
+	    final Map<Long, TestEntity> resultMap = repository.getMap();
+
+	    assertThat(resultMap)
+	        .isNotNull()
+	        .hasSize(2)
+	        .containsOnly(
+	            entry(10L, e1),
+	            entry(20L, e2)
+	        );
+	    verify(conn).queryAll(TestEntity.class);
+	}
+
+	@Test
+	@DisplayName("Test: findMapByIds() liefert eine Map der gefundenen Entitäten für die gegebenen IDs.")
+	void testFindMapByIds() {
+	    // Arrange
+	    final List<Long> ids = Arrays.asList(1L, 3L);
+	    final TestEntity e1 = new TestEntity();
+	    e1.id = 1L;
+	    final TestEntity e2 = new TestEntity();
+	    e2.id = 3L;
+
+	    when(conn.queryByKeyList(TestEntity.class, ids)).thenReturn(Arrays.asList(e1, e2));
+
+	    final Map<Long, TestEntity> resultMap = repository.findMapByIds(ids);
+
+	    assertThat(resultMap)
+	        .isNotNull()
+	        .hasSize(2)
+	        .containsEntry(1L, e1)
+	        .containsEntry(3L, e2);
+
+	    verify(conn).queryByKeyList(TestEntity.class, ids);
+	}
+
+	@Test
+	@DisplayName("Test: findMapByIds() gibt bei leeren IDs eine leere Map zurück.")
+	void testFindMapByIds_EmptyInput() {
+	    final Map<Long, TestEntity> resultMap = repository.findMapByIds(Collections.emptyList());
+	    assertThat(resultMap).isEmpty();
+	    verifyNoInteractions(conn);
+	}
+
 }

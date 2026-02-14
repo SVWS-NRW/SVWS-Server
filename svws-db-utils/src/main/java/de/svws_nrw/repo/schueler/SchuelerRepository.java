@@ -1,5 +1,6 @@
 package de.svws_nrw.repo.schueler;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -31,5 +32,29 @@ public interface SchuelerRepository extends Repository<DTOSchueler> {
 	 * @return die Map mit den Schülern zugeordnet zu ihrer ID
 	 */
 	Map<Long, DTOSchueler> getMapAktiveBySchuljahresabschnitt(long idSchuljahresabschnitt);
+
+
+	/**
+	 * Gibt die Liste aller nicht gelöschten Schüler mit einem angegebenen Status zurück,
+	 * welche in dem übergebenen Schuljahresabschnitt sind.
+	 *
+	 * @param idSchuljahresabschnitt   die ID des aktuellen Lernabschnittes
+	 * @param status                   eine Menge mit den erlaubten Status-Ids
+	 *
+	 * @return die Liste der Schüler
+	 */
+	List<DTOSchueler> getListByStatusAndSchuljahresabschnitt(long idSchuljahresabschnitt, Collection<Long> status);
+
+
+	/**
+	 * Gibt die Map aller nicht gelöschten Schüler mit einem angegebenen Status zugeordnet
+	 * zu ihrer ID zurück, welche in dem übergebenen Schuljahresabschnitt sind.
+	 *
+	 * @param idSchuljahresabschnitt   die ID des aktuellen Lernabschnittes
+	 * @param status                   eine Menge mit den erlaubten Status-Ids
+	 *
+	 * @return die Map mit den Schülern zugeordnet zu ihrer ID
+	 */
+	Map<Long, DTOSchueler> getMapByStatusAndSchuljahresabschnitt(long idSchuljahresabschnitt, Collection<Long> status);
 
 }
