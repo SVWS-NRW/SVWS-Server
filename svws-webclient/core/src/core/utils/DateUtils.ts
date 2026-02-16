@@ -12,6 +12,8 @@ import { Wochentag } from '../../core/types/Wochentag';
 
 export class DateUtils extends JavaObject {
 
+	private static readonly DATUMSFORMAT: string = "%04d-%02d-%02d";
+
 	/**
 	 * Die Anzahl der Tage zwischen dem Jahr 0 und dem Jahr 1.1.1970
 	 */
@@ -23,7 +25,7 @@ export class DateUtils extends JavaObject {
 	public static readonly DAYS_PER_400_YEARS: number = 146097;
 
 	/**
-	 * Die Anzahl an Tagen in 100 Jahren, nicht der Speziallfall, wenn ein Jahrhundert mit einem Schaltjahr beginnt
+	 * Die Anzahl an Tagen in 100 Jahren, nicht der Spezialfall, wenn ein Jahrhundert mit einem Schaltjahr beginnt
 	 */
 	public static readonly DAYS_PER_100_YEARS: number = 36524;
 
@@ -101,11 +103,11 @@ export class DateUtils extends JavaObject {
 		const split: Array<string | null> = datumISO8601.split("-");
 		DeveloperNotificationException.ifTrue("Datumsformat von " + datumISO8601 + " ist nicht ISO8601 konform!", split.length !== 3);
 		const jahr: number = DeveloperNotificationException.ifNotInt(split[0]);
-		DeveloperNotificationException.ifTrue("Das Jahr von " + datumISO8601 + " ist ungültig!", DateUtils.gibIstJahrUngueltig(jahr));
+		DeveloperNotificationException.ifTrue(JavaString.format("Das Jahr von %s ist ungültig!", datumISO8601), DateUtils.gibIstJahrUngueltig(jahr));
 		const monat: number = DeveloperNotificationException.ifNotInt(split[1]);
-		DeveloperNotificationException.ifTrue("Der Monat von " + datumISO8601 + " ist ungültig!", (monat < 1) || (monat > 12));
+		DeveloperNotificationException.ifTrue(JavaString.format("Der Monat von %s ist ungültig!", datumISO8601), (monat < 1) || (monat > 12));
 		const tagImMonat: number = DeveloperNotificationException.ifNotInt(split[2]);
-		DeveloperNotificationException.ifTrue("Der Tag von " + datumISO8601 + " ist ungültig!", (tagImMonat < 1) || (tagImMonat > 31));
+		DeveloperNotificationException.ifTrue(JavaString.format("Der Tag von %s ist ungültig!", datumISO8601), (tagImMonat < 1) || (tagImMonat > 31));
 		const schalttage1: number = ((Math.trunc((jahr - 1) / 4)) - (Math.trunc((jahr - 1) / 100))) + (Math.trunc((jahr - 1) / 400));
 		const schalttage2: number = ((Math.trunc(jahr / 4)) - (Math.trunc(jahr / 100))) + (Math.trunc(jahr / 400));
 		const schaltjahr: number = schalttage2 - schalttage1;
@@ -355,15 +357,15 @@ export class DateUtils extends JavaObject {
 		let sSplit: Array<string> = zeit.split(":");
 		if (sSplit.length !== 2)
 			sSplit = zeit.split(".");
-		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", sSplit.length !== 2);
+		DeveloperNotificationException.ifTrue(JavaString.format("gibMinutenOfZeitAsString(%s): Zeit muss im Format hh:mm oder hh.mm sein!", zeit), sSplit.length !== 2);
 		const sStunden: string = sSplit[0].trim();
 		const sMinuten: string = sSplit[1].trim();
-		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", JavaString.isEmpty(sStunden) || (sStunden.length > 2));
-		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", JavaString.isEmpty(sMinuten) || (sMinuten.length > 2));
+		DeveloperNotificationException.ifTrue(JavaString.format("gibMinutenOfZeitAsString(%s): Die Stunden sind ungültig!", zeit), JavaString.isEmpty(sStunden) || (sStunden.length > 2));
+		DeveloperNotificationException.ifTrue(JavaString.format("gibMinutenOfZeitAsString(%s): Die Minuten sind ungültig!", zeit), JavaString.isEmpty(sMinuten) || (sMinuten.length > 2));
 		const stunden: number = JavaInteger.parseInt(sStunden);
 		const minuten: number = JavaInteger.parseInt(sMinuten);
-		DeveloperNotificationException.ifTrue("(stunden < 0) || (stunden > 23)", (stunden < 0) || (stunden > 23));
-		DeveloperNotificationException.ifTrue("(minuten < 0) || (minuten > 59)", (minuten < 0) || (minuten > 59));
+		DeveloperNotificationException.ifTrue(JavaString.format("gibMinutenOfZeitAsString(%s): Die Stunden sind ungültig mit (stunden < 0) || (stunden > 23)!", zeit), (stunden < 0) || (stunden > 23));
+		DeveloperNotificationException.ifTrue(JavaString.format("gibMinutenOfZeitAsString(%s): Die Minuten sind ungültig mit (minuten < 0) || (minuten > 59)!", zeit), (minuten < 0) || (minuten > 59));
 		return (stunden * 60) + minuten;
 	}
 
@@ -568,7 +570,7 @@ export class DateUtils extends JavaObject {
 		const endDateArray: Array<number> = DateUtils.extractFromDateISO8601(endDate);
 		const dateList: ArrayList<string> = new ArrayList<string>();
 		while ((startDateArray[0] < endDateArray[0]) || ((startDateArray[0] === endDateArray[0]) && ((startDateArray[1] < endDateArray[1]) || ((startDateArray[1] === endDateArray[1]) && (startDateArray[2] <= endDateArray[2]))))) {
-			dateList.add(JavaString.format("%04d-%02d-%02d", startDateArray[0], startDateArray[1], startDateArray[2]));
+			dateList.add(JavaString.format(DateUtils.DATUMSFORMAT, startDateArray[0], startDateArray[1], startDateArray[2]));
 			startDateArray[2]++;
 			if (startDateArray[2] > DateUtils.daysInMonth(startDateArray[0], startDateArray[1])) {
 				startDateArray[2] = 1;
@@ -641,12 +643,12 @@ export class DateUtils extends JavaObject {
 		const tagImMonat: number = info[2];
 		const tageImMonat: number = DateUtils.daysInMonth(jahr, monat);
 		if (tagImMonat < tageImMonat) {
-			return JavaString.format("%04d-%02d-%02d", jahr, monat, tagImMonat + 1);
+			return JavaString.format(DateUtils.DATUMSFORMAT, jahr, monat, tagImMonat + 1);
 		} else
 			if (monat < 12) {
-				return JavaString.format("%04d-%02d-%02d", jahr, monat + 1, 1);
+				return JavaString.format(DateUtils.DATUMSFORMAT, jahr, monat + 1, 1);
 			} else {
-				return JavaString.format("%04d-%02d-%02d", jahr + 1, 1, 1);
+				return JavaString.format(DateUtils.DATUMSFORMAT, jahr + 1, 1, 1);
 			}
 	}
 

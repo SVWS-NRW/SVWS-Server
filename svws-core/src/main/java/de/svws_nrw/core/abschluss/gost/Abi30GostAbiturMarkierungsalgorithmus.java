@@ -488,33 +488,32 @@ public final class Abi30GostAbiturMarkierungsalgorithmus {
 		final AbiturFachbelegungHalbjahr hjBelegung = belegung.belegungen[hj.id];
 		// Prüfe ob die Halbjahresbelegung existiert
 		if (hjBelegung == null) {
-			log(istAbiturbereich, "  Im Halbjahr " + hj.kuerzel + " fehlt eine Belegung des Abiturfaches");
+			log(istAbiturbereich, "  Im Halbjahr %s fehlt eine Belegung des Abiturfaches.".formatted(hj.kuerzel));
 			return false;
 		}
 		// Prüfe, ob eine Note gesetzt wurde
 		if ((hjBelegung.notenkuerzel == null) || (hjBelegung.notenkuerzel.isBlank())) {
-			log("  Im Halbjahr " + hj.kuerzel + " wurde für das Fach keine gültige Note erteilt. Der Kurs kann daher nicht anrechenbar sein");
+			log("  Im Halbjahr %s wurde für das Fach keine gültige Note erteilt. Der Kurs kann daher nicht anrechenbar sein.".formatted(hj.kuerzel));
 			return false;
 		}
 		final @NotNull Note note = Note.fromKuerzel(hjBelegung.notenkuerzel);
 		if (!note.istNote(manager.getSchuljahr())) {
-			log("  Im Halbjahr " + hj.kuerzel + " wurde für das Fach eine Pseudonote erteilt. Der Kurs kann daher nicht anrechenbar sein.");
+			log("  Im Halbjahr %s wurde für das Fach eine Pseudonote erteilt. Der Kurs kann daher nicht anrechenbar sein.".formatted(hj.kuerzel));
 			return false;
 		}
 		// Prüfe, ob es sich bei der Note um ein Ungenügend handelt oder nicht
 		if (note == Note.UNGENUEGEND) {
-			log(istAbiturbereich, "  Im Halbjahr " + hj.kuerzel
-					+ " wurde die Note ungenügend für das Abiturfach erteilt. Somit ist keine Zulassung mehr möglich, da der Kurs somit als nicht belegt gilt.");
+			log(istAbiturbereich, "  Im Halbjahr %s wurde die Note ungenügend für das Abiturfach erteilt. Somit ist keine Zulassung mehr möglich, da der Kurs somit als nicht belegt gilt.".formatted(hj.kuerzel));
 			return false;
 		}
 		// Prüfe LK-Bereich bzw. GK-Bereich
 		final boolean istLKBelegung = GostKursart.LK.kuerzel.equals(hjBelegung.kursartKuerzel);
 		if ((note == Note.AUSREICHEND_MINUS) || (note == Note.MANGELHAFT_PLUS) || (note == Note.MANGELHAFT) || (note == Note.MANGELHAFT_MINUS)) {
 			if (istLKBelegung) {
-				log("  Im Halbjahr " + hj.kuerzel + " liegt ein Defizit im LK-Bereich vor.");
+				log("  Im Halbjahr %s liegt ein Defizit im LK-Bereich vor.".formatted(hj.kuerzel));
 				defiziteLK++;
 			} else {
-				log("  Im Halbjahr " + hj.kuerzel + " liegt ein einbringungspflichtiges Defizit im GK-Bereich vor.");
+				log("  Im Halbjahr %s liegt ein einbringungspflichtiges Defizit im GK-Bereich vor.".formatted(hj.kuerzel));
 				defiziteGK++;
 			}
 		}
@@ -584,23 +583,31 @@ public final class Abi30GostAbiturMarkierungsalgorithmus {
 
 			// Prüfe, ob eine Note gesetzt wurde
 			if (current == null) {
-				log("  Im Halbjahr " + hj.kuerzel + " wurde für das Fach keine gültige Belegung gefunden.");
+				log("  Im Halbjahr %s wurde für das Fach keine gültige Belegung gefunden.".formatted(
+						hj.kuerzel
+				));
 				return false;
 			}
 			final AbiturFachbelegungHalbjahr hjBelegung = current.belegungen[hj.id];
 			if ((hjBelegung == null) || (hjBelegung.notenkuerzel == null) || (hjBelegung.notenkuerzel.isBlank())) {
-				log("  Im Halbjahr " + hj.kuerzel + " wurde für das Fach keine gültige Note erteilt.");
+				log("  Im Halbjahr %s wurde für das Fach keine gültige Note erteilt.".formatted(
+						hj.kuerzel
+				));
 				return false;
 			}
 			final @NotNull Note note = Note.fromKuerzel(hjBelegung.notenkuerzel);
 			if (!note.istNote(manager.getSchuljahr())) {
-				log(logIndent + "  Im Halbjahr " + hj.kuerzel + " wurde für das Fach eine Pseudonote erteilt. Das ist nicht zulässig.");
+				log(logIndent + "  Im Halbjahr %s wurde für das Fach eine Pseudonote erteilt. Das ist nicht zulässig.".formatted(
+						hj.kuerzel
+				));
 				return false;
 			}
 			// Prüfe, ob es sich bei der Note um ein Ungenügend handelt oder nicht
 			if (note == Note.UNGENUEGEND) {
-				log("  Im Halbjahr " + hj.kuerzel
-						+ " wurde die Note ungenügend für das Fach erteilt. Somit ist keine Zulassung mehr möglich, da das Fach somit als nicht belegt gilt.");
+				log("  Im Halbjahr %s wurde die Note ungenügend für das Fach erteilt."
+						+ " Somit ist keine Zulassung mehr möglich, da das Fach somit als nicht belegt gilt.".formatted(
+								hj.kuerzel
+						));
 				return false;
 			}
 
@@ -660,17 +667,21 @@ public final class Abi30GostAbiturMarkierungsalgorithmus {
 
 		if ((resBelegung[0] == null) || (resBelegung[1] == null) || (resHalbjahre[0] == null) || (resHalbjahre[1] == null)
 				|| (resFach[0] == null) || (resFach[1] == null)) {
-			log("  Fehler: Konnte keine Bewertung für zwei Halbjahre bestimmen.");
+			log("  Fehler in 'markiereZweiBeste': Konnte keine Bewertung für zwei Halbjahre bestimmen.");
 			return false;
 		}
 		// Erzeuge einen neuen State, bei welchem die beiden besten Halbjahresmarkierungen markiert sind
-		log("  Markiere die beiden Kurse in "
-				+ resHalbjahre[0].kuerzel + " (" + resNotenpunkte[0] + " Punkte) für " + resFach[0].kuerzelAnzeige + " und "
-				+ resHalbjahre[1].kuerzel + " (" + resNotenpunkte[1] + " Punkte) für " + resFach[1].kuerzelAnzeige + "...");
+		log("  Markiere die beiden Kurse in %s (%d Punkte) für %s und %s (%d Punkte) für %s...".formatted(
+				resHalbjahre[0].kuerzel,
+				resNotenpunkte[0],
+				resFach[0].kuerzelAnzeige,
+				resHalbjahre[1].kuerzel,
+				resNotenpunkte[1],
+				resFach[1].kuerzelAnzeige
+		));
 
 		return markiereHalbjahresbelegung(resBelegung[0], resHalbjahre[0]) && markiereHalbjahresbelegung(resBelegung[1], resHalbjahre[1]);
 	}
-
 
 
 	private boolean markiereAbiturfaecher() {
@@ -1281,22 +1292,19 @@ public final class Abi30GostAbiturMarkierungsalgorithmus {
 
 			// Prüfe, falls das Projektkursfach als Abiturfach verwendet wurde, ob die Belegung des Referenzfaches im Abiturbereich genutzt wurde
 			if ((projektkurs.abiturFach != null) && (referenzfachBelegung.abiturFach != null)) {
-				log("  Das Fach " + referenzfach.kuerzelAnzeige
-						+ " wurde als Abiturfach belegt und ist daher nicht als Referenzfach für einen Projektkurs im Abiturbereich zulässig.");
+				log("  Das Fach %s wurde als Abiturfach belegt und ist daher nicht als Referenzfach für einen Projektkurs im Abiturbereich zulässig.".formatted(referenzfach.kuerzelAnzeige));
 				continue;
 			}
 
 			// Prüfe die Belegung des Referenzfaches in der EF und Q1
 			if (!manager.pruefeBelegung(referenzfachBelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
-				log("  Das Fach " + referenzfach.kuerzelAnzeige
-						+ " wurde nicht von EF.1 bis Q1.2 belegt und ist daher nicht als Referenzfach für einen Projektkurs zulässig.");
+				log("  Das Fach %s wurde nicht von EF.1 bis Q1.2 belegt und ist daher nicht als Referenzfach für einen Projektkurs zulässig.".formatted(referenzfach.kuerzelAnzeige));
 				continue;
 			}
 
 			// Prüfe die schriftliche Belegung des Referenzfaches in der Q1
 			if (!manager.pruefeBelegungMitSchriftlichkeit(referenzfachBelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
-				log("  Das Fach " + referenzfach.kuerzelAnzeige
-						+ " wurde in der Q1 nicht schriftlich belegt und ist daher nicht als Referenzfach für einen Projektkurs zulässig.");
+				log("  Das Fach %s wurde in der Q1 nicht schriftlich belegt und ist daher nicht als Referenzfach für einen Projektkurs zulässig.".formatted(referenzfach.kuerzelAnzeige));
 				continue;
 			}
 

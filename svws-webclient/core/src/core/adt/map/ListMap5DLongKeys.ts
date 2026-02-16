@@ -506,7 +506,7 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 	}
 
 	private getSingleOrNullHelperLong(map: JavaMap<number, List<V>>, key: number): V | null {
-		let list: List<V> | null = map.get(key);
+		const list: List<V> | null = map.get(key);
 		if (list === null)
 			return null;
 		if (list.size() !== 1)
@@ -515,7 +515,7 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 	}
 
 	private getSingleOrNullHelperLongArray(map: JavaMap<LongArrayKey, List<V>>, key: LongArrayKey): V | null {
-		let list: List<V> | null = map.get(key);
+		const list: List<V> | null = map.get(key);
 		if (list === null)
 			return null;
 		if (list.size() !== 1)
@@ -2154,7 +2154,7 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
 	public getSingle1OrException(key1: number): V {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", this.getSingle1OrNull(key1));
+		return DeveloperNotificationException.ifNull("getSingle1OrException: Das Element ist nicht eindeutig!", this.getSingle1OrNull(key1));
 	}
 
 	/**
@@ -2166,7 +2166,7 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
 	public getSingle2OrException(key2: number): V {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", this.getSingle2OrNull(key2));
+		return DeveloperNotificationException.ifNull("getSingle2OrException: Dem Key %d ist keine Liste zugeordnet.", this.getSingle2OrNull(key2));
 	}
 
 	/**
@@ -2178,7 +2178,7 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
 	public getSingle3OrException(key3: number): V {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", this.getSingle3OrNull(key3));
+		return DeveloperNotificationException.ifNull("Dem Key %d ist keine Liste zugeordnet.", this.getSingle3OrNull(key3));
 	}
 
 	/**
@@ -2190,7 +2190,7 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
 	public getSingle4OrException(key4: number): V {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", this.getSingle4OrNull(key4));
+		return DeveloperNotificationException.ifNull("Dem Key %d ist keine Liste zugeordnet.", this.getSingle4OrNull(key4));
 	}
 
 	/**
@@ -2202,7 +2202,7 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
 	public getSingle5OrException(key5: number): V {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", this.getSingle5OrNull(key5));
+		return DeveloperNotificationException.ifNull("Dem Key %d ist keine Liste zugeordnet.", this.getSingle5OrNull(key5));
 	}
 
 	/**
@@ -2914,7 +2914,7 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
 	 */
 	public get1OrException(key1: number): List<V> {
-		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !this.containsKey1(key1));
+		DeveloperNotificationException.ifTrue("get1OrException: Es keine Liste zugeordnet.", !this.containsKey1(key1));
 		return this.get1(key1);
 	}
 
@@ -2927,7 +2927,7 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
 	 */
 	public get2OrException(key2: number): List<V> {
-		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !this.containsKey2(key2));
+		DeveloperNotificationException.ifTrue("get2OrException: Es keine Liste zugeordnet.", !this.containsKey2(key2));
 		return this.get2(key2);
 	}
 

@@ -1282,8 +1282,8 @@ export class GostKlausurplanManager extends JavaObject {
 		const setOfIDs: HashSet<number> = new HashSet<number>();
 		for (const vorgabe of list) {
 			GostKlausurplanManager.vorgabeCheck(vorgabe);
-			DeveloperNotificationException.ifTrue("vorgabeAddAllOhneUpdate: ID=" + vorgabe.id + " existiert bereits!", this._vorgabe_by_id.containsKey(vorgabe.id));
-			DeveloperNotificationException.ifTrue("vorgabeAddAllOhneUpdate: ID=" + vorgabe.id + " doppelt in der Liste!", !setOfIDs.add(vorgabe.id));
+			DeveloperNotificationException.ifTrue(JavaString.format("vorgabeAddAllOhneUpdate: ID=%d existiert bereits!", vorgabe.id), this._vorgabe_by_id.containsKey(vorgabe.id));
+			DeveloperNotificationException.ifTrue(JavaString.format("vorgabeAddAllOhneUpdate: ID=%d doppelt in der Liste!", vorgabe.id), !setOfIDs.add(vorgabe.id));
 		}
 		for (const vorgabe of list) {
 			DeveloperNotificationException.ifMapPutOverwrites(this._vorgabe_by_id, vorgabe.id, vorgabe);
@@ -1459,8 +1459,8 @@ export class GostKlausurplanManager extends JavaObject {
 		const setOfIDs: HashSet<number> = new HashSet<number>();
 		for (const klausur of list) {
 			GostKlausurplanManager.kursklausurCheck(klausur);
-			DeveloperNotificationException.ifTrue("kursklausurAddAllOhneUpdate: ID=" + klausur.id + " existiert bereits!", this._kursklausur_by_id.containsKey(klausur.id));
-			DeveloperNotificationException.ifTrue("kursklausurAddAllOhneUpdate: ID=" + klausur.id + " doppelt in der Liste!", !setOfIDs.add(klausur.id));
+			DeveloperNotificationException.ifTrue(JavaString.format("kursklausurAddAllOhneUpdate: ID=%d existiert bereits!", klausur.id), this._kursklausur_by_id.containsKey(klausur.id));
+			DeveloperNotificationException.ifTrue(JavaString.format("kursklausurAddAllOhneUpdate: ID=%d doppelt in der Liste!", klausur.id), !setOfIDs.add(klausur.id));
 		}
 		for (const klausur of list) {
 			DeveloperNotificationException.ifMapPutOverwrites(this._kursklausur_by_id, klausur.id, klausur);
@@ -1648,8 +1648,8 @@ export class GostKlausurplanManager extends JavaObject {
 		const setOfIDs: HashSet<number> = new HashSet<number>();
 		for (const termin of list) {
 			GostKlausurplanManager.terminCheck(termin);
-			DeveloperNotificationException.ifTrue("terminAddAllOhneUpdate: ID=" + termin.id + " existiert bereits!", this._termin_by_id.containsKey(termin.id));
-			DeveloperNotificationException.ifTrue("terminAddAllOhneUpdate: ID=" + termin.id + " doppelt in der Liste!", !setOfIDs.add(termin.id));
+			DeveloperNotificationException.ifTrue(JavaString.format("terminAddAllOhneUpdate: ID=%d existiert bereits!", termin.id), this._termin_by_id.containsKey(termin.id));
+			DeveloperNotificationException.ifTrue(JavaString.format("terminAddAllOhneUpdate: ID=%d doppelt in der Liste!", termin.id), !setOfIDs.add(termin.id));
 		}
 		for (const termin of list)
 			DeveloperNotificationException.ifMapPutOverwrites(this._termin_by_id, termin.id, termin);
@@ -1788,8 +1788,8 @@ export class GostKlausurplanManager extends JavaObject {
 		const setOfIDs: HashSet<number> = new HashSet<number>();
 		for (const klausur of list) {
 			GostKlausurplanManager.schuelerklausurCheck(klausur);
-			DeveloperNotificationException.ifTrue("schuelerklausurAddAllOhneUpdate: ID=" + klausur.id + " existiert bereits!", this._schuelerklausur_by_id.containsKey(klausur.id));
-			DeveloperNotificationException.ifTrue("schuelerklausurAddAllOhneUpdate: ID=" + klausur.id + " doppelt in der Liste!", !setOfIDs.add(klausur.id));
+			DeveloperNotificationException.ifTrue(JavaString.format("schuelerklausurAddAllOhneUpdate: ID=%d existiert bereits!", klausur.id), this._schuelerklausur_by_id.containsKey(klausur.id));
+			DeveloperNotificationException.ifTrue(JavaString.format("schuelerklausurAddAllOhneUpdate: ID=%d doppelt in der Liste!", klausur.id), !setOfIDs.add(klausur.id));
 		}
 		for (const klausur of list) {
 			DeveloperNotificationException.ifMapPutOverwrites(this._schuelerklausur_by_id, klausur.id, klausur);
@@ -1988,8 +1988,8 @@ export class GostKlausurplanManager extends JavaObject {
 		const setOfIDs: HashSet<number> = new HashSet<number>();
 		for (const schuelerklausurtermin of list) {
 			GostKlausurplanManager.schuelerklausurterminCheck(schuelerklausurtermin);
-			DeveloperNotificationException.ifTrue("schuelerklausurterminAddAllOhneUpdate: ID=" + schuelerklausurtermin.id + " existiert bereits!", this._schuelerklausurtermin_by_id.containsKey(schuelerklausurtermin.id));
-			DeveloperNotificationException.ifTrue("schuelerklausurterminAddAllOhneUpdate: ID=" + schuelerklausurtermin.id + " doppelt in der Liste!", !setOfIDs.add(schuelerklausurtermin.id));
+			DeveloperNotificationException.ifTrue(JavaString.format("schuelerklausurterminAddAllOhneUpdate: ID=%d existiert bereits!", schuelerklausurtermin.id), this._schuelerklausurtermin_by_id.containsKey(schuelerklausurtermin.id));
+			DeveloperNotificationException.ifTrue(JavaString.format("schuelerklausurterminAddAllOhneUpdate: ID=%d doppelt in der Liste!", schuelerklausurtermin.id), !setOfIDs.add(schuelerklausurtermin.id));
 		}
 		for (const schuelerklausurtermin of list)
 			DeveloperNotificationException.ifMapPutOverwrites(this._schuelerklausurtermin_by_id, schuelerklausurtermin.id, schuelerklausurtermin);

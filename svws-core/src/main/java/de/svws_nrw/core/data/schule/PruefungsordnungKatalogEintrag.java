@@ -34,7 +34,7 @@ public class PruefungsordnungKatalogEintrag {
 			example = "Verordnung über den Bildungsgang und die Abiturprüfung in der gymnasialen Oberstufe (APO-GOSt)")
 	public @NotNull String bezeichnung = "";
 
-	/** Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlich wurde */
+	/** Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlicht wurde */
 	@Schema(description = "Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlich wurde", example = "1998")
 	public Integer gvJahr = null;
 
@@ -71,9 +71,9 @@ public class PruefungsordnungKatalogEintrag {
 	 *
 	 * @param id                 die ID
 	 * @param kuerzel            das Kürzel
-	 * @param kuerzelSchild      das Kürzel der Ausbildungs und/oder Prüfungsordnung, wie es in Schild NRW verwendet wird
+	 * @param kuerzelSchild      das Kürzel der Ausbildungs- und/oder Prüfungsordnung, wie es in Schild NRW verwendet wird
 	 * @param bezeichnung        die Bezeichnung
-	 * @param gvJahr             Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlich wurde
+	 * @param gvJahr             Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlicht wurde
 	 * @param gvNr               Gesetz- und Verordnungsblatt: Die Nummer im Jahr der Veröffentlichung
 	 * @param gvSeiten           Gesetz- und Verordnungsblatt: ggf. die Seitenangaben im Jahr der Veröffentlichung
 	 * @param link               ggf. ein Link zu einer Version der Verordnung

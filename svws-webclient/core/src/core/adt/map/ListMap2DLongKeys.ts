@@ -251,7 +251,7 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 * @return eine Liste aller Values in dieser Zuordnung.
 	 */
 	public get1(key1: number): List<V> {
-		let list: List<V> | null = this.getMap1().get(key1);
+		const list: List<V> | null = this.getMap1().get(key1);
 		if (list === null)
 			return new ArrayList();
 		return new ArrayList<V>(list);
@@ -265,7 +265,7 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 * @return eine Liste aller Values in dieser Zuordnung.
 	 */
 	public get2(key2: number): List<V> {
-		let list: List<V> | null = this.getMap2().get(key2);
+		const list: List<V> | null = this.getMap2().get(key2);
 		if (list === null)
 			return new ArrayList();
 		return new ArrayList<V>(list);
@@ -281,7 +281,7 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 */
 	public get12(key1: number, key2: number): List<V> {
 		const key12: LongArrayKey = new LongArrayKey(key1, key2);
-		let list: List<V> | null = this._map12.get(key12);
+		const list: List<V> | null = this._map12.get(key12);
 		if (list === null)
 			return new ArrayList();
 		return new ArrayList<V>(list);
@@ -295,7 +295,7 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 * @return das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public getSingle1OrNull(key1: number): V | null {
-		let list: List<V> | null = this.getMap1().get(key1);
+		const list: List<V> | null = this.getMap1().get(key1);
 		if (list === null)
 			return null;
 		if (list.size() !== 1)
@@ -311,7 +311,7 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 * @return das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public getSingle2OrNull(key2: number): V | null {
-		let list: List<V> | null = this.getMap2().get(key2);
+		const list: List<V> | null = this.getMap2().get(key2);
 		if (list === null)
 			return null;
 		if (list.size() !== 1)
@@ -329,7 +329,7 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 */
 	public getSingle12OrNull(key1: number, key2: number): V | null {
 		const key12: LongArrayKey = new LongArrayKey(key1, key2);
-		let list: List<V> | null = this._map12.get(key12);
+		const list: List<V> | null = this._map12.get(key12);
 		if (list === null)
 			return null;
 		if (list.size() !== 1)
@@ -346,7 +346,7 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
 	public getSingle1OrException(key1: number): V {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", this.getSingle1OrNull(key1));
+		return DeveloperNotificationException.ifNull("getSingle1OrException: Dem Key %d ist keine Liste zugeordnet.", this.getSingle1OrNull(key1));
 	}
 
 	/**
@@ -358,7 +358,7 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
 	public getSingle2OrException(key2: number): V {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", this.getSingle2OrNull(key2));
+		return DeveloperNotificationException.ifNull("getSingle2OrException: Dem Key %d ist keine Liste zugeordnet.", this.getSingle2OrNull(key2));
 	}
 
 	/**
@@ -410,7 +410,7 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
 	 */
 	public get1OrException(key1: number): List<V> {
-		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !this.containsKey1(key1));
+		DeveloperNotificationException.ifTrue("get1OrException: Dem Key %d ist keine Liste zugeordnet.", !this.containsKey1(key1));
 		return this.get1(key1);
 	}
 
@@ -423,7 +423,7 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
 	 */
 	public get2OrException(key2: number): List<V> {
-		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !this.containsKey2(key2));
+		DeveloperNotificationException.ifTrue("get2OrException: Dem Key %d ist keine Liste zugeordnet.", !this.containsKey2(key2));
 		return this.get2(key2);
 	}
 
@@ -437,7 +437,7 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
 	 */
 	public get12OrException(key1: number, key2: number): List<V> {
-		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !this.containsKey12(key1, key2));
+		DeveloperNotificationException.ifTrue("Dem Key %d ist keine Liste zugeordnet.", !this.containsKey12(key1, key2));
 		return this.get12(key1, key2);
 	}
 

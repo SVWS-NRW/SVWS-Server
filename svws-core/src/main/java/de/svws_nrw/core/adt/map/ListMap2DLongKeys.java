@@ -268,7 +268,7 @@ public class ListMap2DLongKeys<V> {
 	 * @return eine Liste aller Values in dieser Zuordnung.
 	 */
 	public @NotNull List<V> get1(final long key1) {
-		List<V> list = getMap1().get(key1);
+		final List<V> list = getMap1().get(key1);
 		if (list == null)
 			return new ArrayList<>();
 		return new ArrayList<>(list);
@@ -282,7 +282,7 @@ public class ListMap2DLongKeys<V> {
 	 * @return eine Liste aller Values in dieser Zuordnung.
 	 */
 	public @NotNull List<V> get2(final long key2) {
-		List<V> list = getMap2().get(key2);
+		final List<V> list = getMap2().get(key2);
 		if (list == null)
 			return new ArrayList<>();
 		return new ArrayList<>(list);
@@ -298,7 +298,7 @@ public class ListMap2DLongKeys<V> {
 	 */
 	public @NotNull List<V> get12(final long key1, final long key2) {
 		final @NotNull LongArrayKey key12 = new LongArrayKey(key1, key2);
-		List<V> list = _map12.get(key12);
+		final List<V> list = _map12.get(key12);
 		if (list == null)
 			return new ArrayList<>();
 		return new ArrayList<>(list);
@@ -312,7 +312,7 @@ public class ListMap2DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public V getSingle1OrNull(final long key1) {
-		List<V> list = getMap1().get(key1);
+		final List<V> list = getMap1().get(key1);
 		if (list == null)
 			return null;
 		if (list.size() != 1)
@@ -328,7 +328,7 @@ public class ListMap2DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public V getSingle2OrNull(final long key2) {
-		List<V> list = getMap2().get(key2);
+		final List<V> list = getMap2().get(key2);
 		if (list == null)
 			return null;
 		if (list.size() != 1)
@@ -346,7 +346,7 @@ public class ListMap2DLongKeys<V> {
 	 */
 	public V getSingle12OrNull(final long key1, final long key2) {
 		final @NotNull LongArrayKey key12 = new LongArrayKey(key1, key2);
-		List<V> list = _map12.get(key12);
+		final List<V> list = _map12.get(key12);
 		if (list == null)
 			return null;
 		if (list.size() != 1)
@@ -363,7 +363,7 @@ public class ListMap2DLongKeys<V> {
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
 	public @NotNull V getSingle1OrException(final long key1) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle1OrNull(key1));
+		return DeveloperNotificationException.ifNull("getSingle1OrException: Dem Key %d ist keine Liste zugeordnet.", getSingle1OrNull(key1));
 	}
 
 	/**
@@ -375,7 +375,7 @@ public class ListMap2DLongKeys<V> {
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
 	public @NotNull V getSingle2OrException(final long key2) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle2OrNull(key2));
+		return DeveloperNotificationException.ifNull("getSingle2OrException: Dem Key %d ist keine Liste zugeordnet.", getSingle2OrNull(key2));
 	}
 
 	/**
@@ -427,7 +427,7 @@ public class ListMap2DLongKeys<V> {
 	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
 	 */
 	public @NotNull List<V> get1OrException(final long key1) {
-		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey1(key1));
+		DeveloperNotificationException.ifTrue("get1OrException: Dem Key %d ist keine Liste zugeordnet.", !containsKey1(key1));
 		return get1(key1);
 	}
 
@@ -440,7 +440,7 @@ public class ListMap2DLongKeys<V> {
 	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
 	 */
 	public @NotNull List<V> get2OrException(final long key2) {
-		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey2(key2));
+		DeveloperNotificationException.ifTrue("get2OrException: Dem Key %d ist keine Liste zugeordnet.", !containsKey2(key2));
 		return get2(key2);
 	}
 
@@ -454,7 +454,7 @@ public class ListMap2DLongKeys<V> {
 	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
 	 */
 	public @NotNull List<V> get12OrException(final long key1, final long key2) {
-		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey12(key1, key2));
+		DeveloperNotificationException.ifTrue("Dem Key %d ist keine Liste zugeordnet.", !containsKey12(key1, key2));
 		return get12(key1, key2);
 	}
 

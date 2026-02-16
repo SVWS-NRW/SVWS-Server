@@ -157,10 +157,14 @@ public class KursblockungDynStatistik {
 	 */
 	void debug(final @NotNull String pPrefix) {
 		_logger.modifyIndent(+4);
-		_logger.logLn(pPrefix + ", RV = " + bewertungRegelverletzungen
-				+ ", NW = " + bewertungNichtwahlen
-				+ ", FW = " + bewertungFachartPaar
-				+ ", KDs = " + bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(bewertungKursdifferenzen));
+		_logger.logLn("%s, RV = %d, NW = %d, FW = %d, KDs = %d = %s".formatted(
+				pPrefix,
+				bewertungRegelverletzungen,
+				bewertungNichtwahlen,
+				bewertungFachartPaar,
+				bewertungKursdifferenzenMaxIndex,
+				Arrays.toString(bewertungKursdifferenzen)
+		));
 		_logger.modifyIndent(-4);
 	}
 
@@ -550,14 +554,14 @@ public class KursblockungDynStatistik {
 		regelVerletzungKursMitKurs[nr1][nr2] -= 1;
 		regelVerletzungKursMitKurs[nr2][nr1] -= 1;
 
-		int maximaleSchnittmenge = Math.max(kurs1.gibSchienenAnzahl(), kurs2.gibSchienenAnzahl());
+		final int maximaleSchnittmenge = Math.max(kurs1.gibSchienenAnzahl(), kurs2.gibSchienenAnzahl());
 		bewertungRegelverletzungen += maximaleSchnittmenge - gibAnzahlGemeinsamerSchienen(kurs1, kurs2);
 	}
 
 	private static int gibAnzahlGemeinsamerSchienen(final @NotNull KursblockungDynKurs kurs1, final @NotNull KursblockungDynKurs kurs2) {
 		int summe = 0;
-		for (int schienenNr1 : kurs1.gibSchienenLage())
-			for (int schienenNr2 : kurs2.gibSchienenLage())
+		for (final int schienenNr1 : kurs1.gibSchienenLage())
+			for (final int schienenNr2 : kurs2.gibSchienenLage())
 				if (schienenNr1 == schienenNr2)
 					summe++;
 		return summe;

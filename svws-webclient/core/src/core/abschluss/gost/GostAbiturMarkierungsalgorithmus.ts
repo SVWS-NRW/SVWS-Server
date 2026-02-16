@@ -464,30 +464,30 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 		const hjBelegung: AbiturFachbelegungHalbjahr | null = belegung.belegungen[hj.id];
 		if (hjBelegung === null) {
 			if (istAbiturbereich)
-				this.ergebnis.log.add(this.logIndent + "  Im Halbjahr " + hj.kuerzel + " fehlt eine Belegung des Abiturfaches");
+				this.ergebnis.log.add(this.logIndent + JavaString.format("  Im Halbjahr %s fehlt eine Belegung des Abiturfaches.", hj.kuerzel));
 			return false;
 		}
 		if ((hjBelegung.notenkuerzel === null) || (JavaString.isBlank(hjBelegung.notenkuerzel))) {
-			this.ergebnis.log.add(this.logIndent + "  Im Halbjahr " + hj.kuerzel + " wurde für das Fach keine gültige Note erteilt. Der Kurs kann daher nicht anrechenbar sein");
+			this.ergebnis.log.add(this.logIndent + "  Im Halbjahr %s wurde für das Fach keine gültige Note erteilt. " + JavaString.format("Der Kurs kann daher nicht anrechenbar sein.", hj.kuerzel));
 			return false;
 		}
 		const note: Note = Note.fromKuerzel(hjBelegung.notenkuerzel);
 		if (!note.istNote(this.manager.getSchuljahr())) {
-			this.ergebnis.log.add(this.logIndent + "  Im Halbjahr " + hj.kuerzel + " wurde für das Fach eine Pseudonote erteilt. Der Kurs kann daher nicht anrechenbar sein.");
+			this.ergebnis.log.add(this.logIndent + "  Im Halbjahr %s wurde für das Fach eine Pseudonote erteilt. " + JavaString.format("Der Kurs kann daher nicht anrechenbar sein.", hj.kuerzel));
 			return false;
 		}
 		if (note as unknown === Note.UNGENUEGEND as unknown) {
 			if (istAbiturbereich)
-				this.ergebnis.log.add(this.logIndent + "  Im Halbjahr " + hj.kuerzel + " wurde die Note ungenügend für das Abiturfach erteilt. Somit ist keine Zulassung mehr möglich, da der Kurs somit als nicht belegt gilt.");
+				this.ergebnis.log.add(this.logIndent + "  Im Halbjahr %s wurde die Note ungenügend für das Abiturfach erteilt." + JavaString.format(" Somit ist keine Zulassung mehr möglich, da der Kurs somit als nicht belegt gilt.", hj.kuerzel));
 			return false;
 		}
 		const istLKBelegung: boolean = JavaObject.equalsTranspiler(GostKursart.LK.kuerzel, (hjBelegung.kursartKuerzel));
 		if ((note as unknown === Note.AUSREICHEND_MINUS as unknown) || (note as unknown === Note.MANGELHAFT_PLUS as unknown) || (note as unknown === Note.MANGELHAFT as unknown) || (note as unknown === Note.MANGELHAFT_MINUS as unknown)) {
 			if (istLKBelegung) {
-				this.ergebnis.log.add(this.logIndent + "  Im Halbjahr " + hj.kuerzel + " liegt ein Defizit im LK-Bereich vor.");
+				this.ergebnis.log.add(this.logIndent + JavaString.format("  Im Halbjahr %s liegt ein Defizit im LK-Bereich vor.", hj.kuerzel));
 				this.defiziteLK++;
 			} else {
-				this.ergebnis.log.add(this.logIndent + "  Im Halbjahr " + hj.kuerzel + " liegt ein einbringungspflichtiges Defizit im GK-Bereich vor.");
+				this.ergebnis.log.add(this.logIndent + JavaString.format("  Im Halbjahr %s liegt ein einbringungspflichtiges Defizit im GK-Bereich vor.", hj.kuerzel));
 				this.defiziteGK++;
 			}
 		}
@@ -546,21 +546,21 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 				}
 			}
 			if (current === null) {
-				this.ergebnis.log.add(this.logIndent + "  Im Halbjahr " + hj.kuerzel + " wurde für das Fach keine gültige Belegung gefunden.");
+				this.ergebnis.log.add(JavaString.format("%s  Im Halbjahr %s wurde für das Fach keine gültige Belegung gefunden.", this.logIndent, hj.kuerzel));
 				return false;
 			}
 			const hjBelegung: AbiturFachbelegungHalbjahr | null = current.belegungen[hj.id];
 			if ((hjBelegung === null) || (hjBelegung.notenkuerzel === null) || (JavaString.isBlank(hjBelegung.notenkuerzel))) {
-				this.ergebnis.log.add(this.logIndent + "  Im Halbjahr " + hj.kuerzel + " wurde für das Fach keine gültige Note erteilt.");
+				this.ergebnis.log.add(JavaString.format("%s  Im Halbjahr %s wurde für das Fach keine gültige Note erteilt.", this.logIndent, hj.kuerzel));
 				return false;
 			}
 			const note: Note = Note.fromKuerzel(hjBelegung.notenkuerzel);
 			if (!note.istNote(this.manager.getSchuljahr())) {
-				this.ergebnis.log.add(this.logIndent + "  Im Halbjahr " + hj.kuerzel + " wurde für das Fach eine Pseudonote erteilt. Das ist nicht zulässig.");
+				this.ergebnis.log.add(JavaString.format("%s  Im Halbjahr %s wurde für das Fach eine Pseudonote erteilt. Das ist nicht zulässig.", this.logIndent, hj.kuerzel));
 				return false;
 			}
 			if (note as unknown === Note.UNGENUEGEND as unknown) {
-				this.ergebnis.log.add(this.logIndent + "  Im Halbjahr " + hj.kuerzel + " wurde die Note ungenügend für das Fach erteilt. Somit ist keine Zulassung mehr möglich, da das Fach somit als nicht belegt gilt.");
+				this.ergebnis.log.add("%s  Im Halbjahr %s wurde die Note ungenügend für das Fach erteilt. " + JavaString.format("Somit ist keine Zulassung mehr möglich, da das Fach somit als nicht belegt gilt.", this.logIndent, hj.kuerzel));
 				return false;
 			}
 			if ((this.markiert.getOrNull(fach.id, hj.id) === null) && (!this.markiereHalbjahresbelegung(current, hj)))
@@ -614,10 +614,10 @@ export class GostAbiturMarkierungsalgorithmus extends JavaObject {
 			}
 		}
 		if ((resBelegung[0] === null) || (resBelegung[1] === null) || (resHalbjahre[0] === null) || (resHalbjahre[1] === null) || (resFach[0] === null) || (resFach[1] === null)) {
-			this.ergebnis.log.add(this.logIndent + "  Fehler: Konnte keine Bewertung für zwei Halbjahre bestimmen.");
+			this.ergebnis.log.add(this.logIndent + "  Fehler in 'markiereZweiBeste': Konnte keine Bewertung für zwei Halbjahre bestimmen.");
 			return false;
 		}
-		this.ergebnis.log.add(this.logIndent + "  Markiere die beiden Kurse in " + resHalbjahre[0].kuerzel + " (" + resNotenpunkte[0] + " Punkte) für " + resFach[0].kuerzelAnzeige + " und " + resHalbjahre[1].kuerzel + " (" + resNotenpunkte[1] + " Punkte) für " + resFach[1].kuerzelAnzeige + "...");
+		this.ergebnis.log.add(JavaString.format("%s  Markiere die beiden Kurse in %s (%d Punkte) für %s und %s (%d Punkte) für %s...", this.logIndent, resHalbjahre[0].kuerzel, resNotenpunkte[0], resFach[0].kuerzelAnzeige, resHalbjahre[1].kuerzel, resNotenpunkte[1], resFach[1].kuerzelAnzeige));
 		return this.markiereHalbjahresbelegung(resBelegung[0], resHalbjahre[0]) && this.markiereHalbjahresbelegung(resBelegung[1], resHalbjahre[1]);
 	}
 

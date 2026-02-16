@@ -2174,14 +2174,17 @@ public class StundenplanManager {
 		update_all();
 	}
 
+
 	private void aufsichtsbereichAddAllOhneUpdate(final @NotNull List<StundenplanAufsichtsbereich> list) {
 		// check all
 		final @NotNull Set<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : list) {
 			aufsichtsbereichCheckAttributes(aufsichtsbereich);
-			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + aufsichtsbereichInfo(aufsichtsbereich),
+			DeveloperNotificationException.ifTrue(
+					"ID existiert bereits bei %s".formatted(aufsichtsbereichInfo(aufsichtsbereich)),
 					_aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id));
-			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei " + aufsichtsbereichInfo(aufsichtsbereich),
+			DeveloperNotificationException.ifTrue(
+					"ID Dopplung in Liste bei %s".formatted(aufsichtsbereichInfo(aufsichtsbereich)),
 					!setOfIDs.add(aufsichtsbereich.id));
 		}
 
@@ -2190,23 +2193,23 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifMapPutOverwrites(_aufsichtsbereich_by_id, aufsichtsbereich.id, aufsichtsbereich);
 	}
 
+
 	private static void aufsichtsbereichCheckAttributes(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
-		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + aufsichtsbereichInfo(aufsichtsbereich),
+		DeveloperNotificationException.ifInvalidID(
+				"Ungültige ID bei %s".formatted(aufsichtsbereichInfo(aufsichtsbereich)),
 				aufsichtsbereich.id);
-		DeveloperNotificationException.ifStringIsBlank("Leeres Kürzel bei " + aufsichtsbereichInfo(aufsichtsbereich),
+		DeveloperNotificationException.ifStringIsBlank(
+				"Leeres Kürzel bei %s".formatted(aufsichtsbereichInfo(aufsichtsbereich)),
 				aufsichtsbereich.kuerzel);
 		// aufsicht.beschreibung darf "blank" sein
 	}
 
+
 	private static @NotNull String aufsichtsbereichInfo(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
-		String s = "";
-		s += "[StundenplanAufsichtsbereich";
-		s += "(id=" + aufsichtsbereich.id + ")";
-		s += "(kuerzel=" + aufsichtsbereich.kuerzel + ")";
-		s += "(nachname=" + aufsichtsbereich.beschreibung + ")";
-		s += "]";
-		return s;
+	    return "[StundenplanAufsichtsbereich(id=%d)(kuerzel=%s)(nachname=%s)]"
+	        .formatted(aufsichtsbereich.id, aufsichtsbereich.kuerzel, aufsichtsbereich.beschreibung);
 	}
+
 
 	/**
 	 * Liefert TRUE, falls ein {@link StundenplanAufsichtsbereich}-Objekt mit dem Kürzel existiert.
@@ -2373,14 +2376,17 @@ public class StundenplanManager {
 		update_all();
 	}
 
+
 	private void fachAddAllOhneUpdate(final @NotNull List<StundenplanFach> list) {
 		// check all
 		final @NotNull Set<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanFach fach : list) {
 			fachCheckAttributes(fach);
-			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + fachInfo(fach),
+			DeveloperNotificationException.ifTrue(
+					"ID existiert bereits bei %s".formatted(fachInfo(fach)),
 					_fach_by_id.containsKey(fach.id));
-			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei " + fachInfo(fach),
+			DeveloperNotificationException.ifTrue(
+					"ID Dopplung in Liste bei %s".formatted(fachInfo(fach)),
 					!setOfIDs.add(fach.id));
 		}
 
@@ -2389,12 +2395,18 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifMapPutOverwrites(_fach_by_id, fach.id, fach);
 	}
 
+
 	private static void fachCheckAttributes(final @NotNull StundenplanFach fach) {
-		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + fachInfo(fach),
+		DeveloperNotificationException.ifInvalidID(
+				"fachCheckAttributes(%d): Ungültige ID bei %s"
+						.formatted(fach.id, fachInfo(fach)),
 				fach.id);
-		DeveloperNotificationException.ifTrue("Leeres Kürzel bei " + fachInfo(fach),
+		DeveloperNotificationException.ifTrue(
+				"fachCheckAttributes(%d): Leeres Kürzel bei %s"
+						.formatted(fach.id, fachInfo(fach)),
 				fach.kuerzel.isBlank());
 	}
+
 
 	private @NotNull String fachInfoByID(final long idFach) {
 		final StundenplanFach fach = _fach_by_id.get(idFach);
@@ -2403,15 +2415,8 @@ public class StundenplanManager {
 	}
 
 	private static @NotNull String fachInfo(final @NotNull StundenplanFach fach) {
-		String s = "";
-		s += "[StundenplanFach";
-		s += "(id=" + fach.id + ")";
-		s += "(kuerzel=" + fach.kuerzel + ")";
-		s += "(kuerzelStatistik=" + fach.kuerzelStatistik + ")";
-		s += "(bezeichnung=" + fach.bezeichnung + ")";
-		s += "(farbe=" + fach.farbe + ")";
-		s += "]";
-		return s;
+	    return "[StundenplanFach(id=%d)(kuerzel=%s)(kuerzelStatistik=%s)(bezeichnung=%s)(farbe=%s)]"
+	        .formatted(fach.id, fach.kuerzel, fach.kuerzelStatistik, fach.bezeichnung, fach.farbe);
 	}
 
 	/**
@@ -2491,15 +2496,12 @@ public class StundenplanManager {
 				jahrgang.kuerzel.isBlank());
 	}
 
+
 	private static @NotNull String jahrgangInfo(final @NotNull StundenplanJahrgang jahrgang) {
-		String s = "";
-		s += "[StundenplanJahrgang";
-		s += "(id=" + jahrgang.id + ")";
-		s += "(kuerzel=" + jahrgang.kuerzel + ")";
-		s += "(bezeichnung=" + jahrgang.bezeichnung + ")";
-		s += "]";
-		return s;
+	    return "[StundenplanJahrgang(id=%d)(kuerzel=%s)(bezeichnung=%s)]"
+	        .formatted(jahrgang.id, jahrgang.kuerzel, jahrgang.bezeichnung);
 	}
+
 
 	/**
 	 * Liefert das {@link StundenplanJahrgang}-Objekt mit der übergebenen ID.
@@ -2707,16 +2709,12 @@ public class StundenplanManager {
 				kwz.wochentyp < 0);
 	}
 
+
 	private static @NotNull String kalenderwochenzuordnungInfo(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
-		String s = "";
-		s += "[StundenplanKalenderwochenzuordnung";
-		s += "(id=" + kwz.id + ")";
-		s += "(jahr=" + kwz.jahr + ")";
-		s += "(kw=" + kwz.kw + ")";
-		s += "(wochentyp=" + kwz.wochentyp + ")";
-		s += "]";
-		return s;
+	    return "[StundenplanKalenderwochenzuordnung(id=%d)(jahr=%d)(kw=%d)(wochentyp=%d)]"
+	        .formatted(kwz.id, kwz.jahr, kwz.kw, kwz.wochentyp);
 	}
+
 
 	/**
 	 * Liefert die Anzahl aller vom Default abweichenden {@link StundenplanKalenderwochenzuordnung}-Objekte.
@@ -2951,10 +2949,22 @@ public class StundenplanManager {
 	 */
 	public int kalenderwochenzuordnungGetWochentypOrDefault(final int jahr, final int kalenderwoche) {
 		// Überprüfen
-		DeveloperNotificationException.ifSmaller("jahr", jahr, DateUtils.MIN_GUELTIGES_JAHR);
-		DeveloperNotificationException.ifGreater("jahr", jahr, DateUtils.MAX_GUELTIGES_JAHR);
-		DeveloperNotificationException.ifSmaller("kalenderwoche", kalenderwoche, 1);
-		DeveloperNotificationException.ifGreater("kalenderwoche", kalenderwoche, DateUtils.gibKalenderwochenOfJahr(jahr));
+		DeveloperNotificationException.ifSmaller(
+				"kalenderwochenzuordnungGetWochentypOrDefault(%d, %d): Jahr zu klein!"
+						.formatted(jahr, kalenderwoche),
+				jahr, DateUtils.MIN_GUELTIGES_JAHR);
+		DeveloperNotificationException.ifGreater(
+				"kalenderwochenzuordnungGetWochentypOrDefault(%d, %d): Jahr zu groß!"
+						.formatted(jahr, kalenderwoche),
+				jahr, DateUtils.MAX_GUELTIGES_JAHR);
+		DeveloperNotificationException.ifSmaller(
+				"kalenderwochenzuordnungGetWochentypOrDefault(%d, %d): Kalenderwoche zu klein!"
+						.formatted(jahr, kalenderwoche),
+				kalenderwoche, 1);
+		DeveloperNotificationException.ifGreater(
+				"kalenderwochenzuordnungGetWochentypOrDefault(%d, %d): Kalenderwoche zu groß!"
+						.formatted(jahr, kalenderwoche),
+				kalenderwoche, DateUtils.gibKalenderwochenOfJahr(jahr));
 
 		// Fall: Das globale Modell hat keine Multiwochen.
 		if (_stundenplanWochenTypModell == 0)
@@ -3107,31 +3117,32 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifMapPutOverwrites(_klasse_by_id, klasse.id, klasse);
 	}
 
+
 	private void klasseCheckAttributes(final @NotNull StundenplanKlasse klasse) {
-		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + klasseInfo(klasse),
+		DeveloperNotificationException.ifInvalidID(
+				"Ungültige ID bei %s".formatted(klasseInfo(klasse)),
 				klasse.id);
-		DeveloperNotificationException.ifTrue("Leeres Kürzel bei " + klasseInfo(klasse),
+		DeveloperNotificationException.ifTrue(
+				"Leeres Kürzel bei %s".formatted(klasseInfo(klasse)),
 				klasse.kuerzel.isBlank());
 		for (final long idJahrgang : klasse.jahrgaenge)
-			DeveloperNotificationException.ifMapNotContains("_jahrgang_by_id fehlende Referenz bei " + klasseInfo(klasse),
+			DeveloperNotificationException.ifMapNotContains(
+					"_jahrgang_by_id fehlende Referenz bei %s".formatted(klasseInfo(klasse)),
 					_jahrgang_by_id, idJahrgang);
 		// Folgende zwei Zeilen nicht mehr nötig, sobald aus DTO entfernt.
 		for (final long idSchueler : klasse.schueler)
-			DeveloperNotificationException.ifMapNotContains("_schueler_by_id fehlende Referenz bei " + klasseInfo(klasse),
+			DeveloperNotificationException.ifMapNotContains(
+					"_schueler_by_id fehlende Referenz bei %s".formatted(klasseInfo(klasse)),
 					_schueler_by_id, idSchueler);
 	}
 
+
+
 	private static @NotNull String klasseInfo(final @NotNull StundenplanKlasse klasse) {
-		String s = "";
-		s += "[StundenplanKlasse";
-		s += "(kuerzel=" + klasse.kuerzel + ")";
-		s += "(bezeichnung=" + klasse.bezeichnung + ")";
-		s += "(sortierung=" + klasse.sortierung + ")";
-		s += "(jahrgaenge=" + klasse.jahrgaenge + ")";
-		s += "(schueler=" + klasse.schueler + ")";
-		s += "]";
-		return s;
+	    return "[StundenplanKlasse(kuerzel=%s)(bezeichnung=%s)(sortierung=%d)(jahrgaenge=%s)(schueler=%s)]"
+	        .formatted(klasse.kuerzel, klasse.bezeichnung, klasse.sortierung, klasse.jahrgaenge, klasse.schueler);
 	}
+
 
 	/**
 	 * Liefert das {@link StundenplanKlasse}-Objekt mit der übergebenen ID.
@@ -3145,6 +3156,7 @@ public class StundenplanManager {
 		return DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, idKlasse);
 	}
 
+
 	/**
 	 * Liefert eine Beschreibung des {@link StundenplanKlasse}-Objekts in der Form "7b".
 	 * <br>Hinweis: Diese Methode liefert niemals eine Exception, stattdessen enthält der String eine Fehlermeldung.
@@ -3157,10 +3169,11 @@ public class StundenplanManager {
 		final StundenplanKlasse kl = _klasse_by_id.get(idKlasse);
 
 		if (kl == null)
-			return "Klassen-Objekt [" + idKlasse + "] ???";
+			return "Klassen-Objekt [%d] ???".formatted(idKlasse);
 
 		return kl.kuerzel;
 	}
+
 
 	/**
 	 * Liefert eine Liste aller {@link StundenplanKlasse}-Objekte.
@@ -3285,34 +3298,36 @@ public class StundenplanManager {
 					klassenunterricht.idKlasse, klassenunterricht.idFach, klassenunterricht);
 	}
 
+
 	private void klassenunterrichtCheckAttributes(final @NotNull StundenplanKlassenunterricht klassenunterricht) {
-		DeveloperNotificationException.ifMapNotContains("_klasse_by_id fehlende Referenz bei " + klassenunterrichtInfo(klassenunterricht),
+		DeveloperNotificationException.ifMapNotContains(
+				"_klasse_by_id fehlende Referenz bei %s".formatted(klassenunterrichtInfo(klassenunterricht)),
 				_klasse_by_id, klassenunterricht.idKlasse);
-		DeveloperNotificationException.ifMapNotContains("_fach_by_id fehlende Referenz bei " + klassenunterrichtInfo(klassenunterricht),
+
+		DeveloperNotificationException.ifMapNotContains(
+				"_fach_by_id fehlende Referenz bei %s".formatted(klassenunterrichtInfo(klassenunterricht)),
 				_fach_by_id, klassenunterricht.idFach);
 
 		for (final long idSchiene : klassenunterricht.schienen)
-			DeveloperNotificationException.ifMapNotContains("_schiene_by_id fehlende Referenz bei " + klassenunterrichtInfo(klassenunterricht),
+			DeveloperNotificationException.ifMapNotContains(
+					"_schiene_by_id fehlende Referenz bei %s".formatted(klassenunterrichtInfo(klassenunterricht)),
 					_schiene_by_id, idSchiene);
 
 		for (final long idLehrkraft : klassenunterricht.lehrer)
-			if (!_lehrer_by_id.containsKey(idLehrkraft))
-				lehrerAddPseudoLehrkraftOhneUpdate(idLehrkraft,
-						"Klasseunterricht " + klassenunterrichtGetBeschreibungKlasseAndFach(klassenunterricht) + " hat ungültige Lehrerreferenz.");
+			if (!_lehrer_by_id.containsKey(idLehrkraft)) {
+				final @NotNull String warnung =
+						"Klasseunterricht %s hat ungültige Lehrerreferenz.".formatted(klassenunterrichtGetBeschreibungKlasseAndFach(klassenunterricht));
+				lehrerAddPseudoLehrkraftOhneUpdate(idLehrkraft, warnung);
+			}
 	}
 
+
+
 	private static @NotNull String klassenunterrichtInfo(final @NotNull StundenplanKlassenunterricht ku) {
-		String s = "";
-		s += "[StundenplanKlassenunterricht";
-		s += "(idKlasse=" + ku.idKlasse + ")";
-		s += "(idFach=" + ku.idFach + ")";
-		s += "(bezeichnung=" + ku.bezeichnung + ")";
-		s += "(wochenstunden=" + ku.wochenstunden + ")";
-		s += "(schueler=" + ku.schueler + ")";
-		s += "(lehrer=" + ku.lehrer + ")";
-		s += "]";
-		return s;
+	    return "[StundenplanKlassenunterricht(idKlasse=%d)(idFach=%d)(bezeichnung=%s)(wochenstunden=%d)(schueler=%s)(lehrer=%s)]"
+	        .formatted(ku.idKlasse, ku.idFach, ku.bezeichnung, ku.wochenstunden, ku.schueler, ku.lehrer);
 	}
+
 
 	private @NotNull Comparator<@NotNull StundenplanKlassenunterricht> klassenunterrichtCreateComparator() {
 
@@ -3747,21 +3762,12 @@ public class StundenplanManager {
 				lehrerAddPseudoLehrkraftOhneUpdate(idLehrerDesKurses, "_lehrer_by_id fehlende Lehrer-Referenz bei " + kursInfo(kurs));
 	}
 
+
 	private static @NotNull String kursInfo(final @NotNull StundenplanKurs ku) {
-		String s = "";
-		s += "[StundenplanKurs";
-		s += "(id=" + ku.id + ")";
-		s += "(idFach=" + ku.idFach + ")";
-		s += "(bezeichnung=" + ku.bezeichnung + ")";
-		s += "(wochenstunden=" + ku.wochenstunden + ")";
-		s += "(sortierung=" + ku.sortierung + ")";
-		s += "(schienen=" + ku.schienen + ")";
-		s += "(jahrgaenge=" + ku.jahrgaenge + ")";
-		s += "(schueler=" + ku.schueler + ")";
-		s += "(lehrer=" + ku.lehrer + ")";
-		s += "]";
-		return s;
+		return "[StundenplanKurs(id=%d)(idFach=%d)(bezeichnung=%s)(wochenstunden=%d)(sortierung=%d)(schienen=%s)(jahrgaenge=%s)(schueler=%s)(lehrer=%s)]"
+			.formatted(ku.id, ku.idFach, ku.bezeichnung, ku.wochenstunden, ku.sortierung, ku.schienen, ku.jahrgaenge, ku.schueler, ku.lehrer);
 	}
+
 
 	/**
 	 * Liefert TRUE, falls der Kurs in das jeweilige Zeitraster gesetzt oder verschoben werden darf.
@@ -4220,10 +4226,11 @@ public class StundenplanManager {
 		final StundenplanLehrer l = _lehrer_by_id.get(idLehrer);
 
 		if (l == null)
-			return "Lehrer-Objekt [" + idLehrer + "] ???";
+			return "Lehrer-Objekt [%d] ???".formatted(idLehrer);
 
 		return l.kuerzel;
 	}
+
 
 	/**
 	 * Liefert eine Liste aller {@link StundenplanLehrer}-Objekte.
@@ -5573,10 +5580,11 @@ public class StundenplanManager {
 		final StundenplanRaum ra = _raum_by_id.get(idRaum);
 
 		if (ra == null)
-			return "Raum-Objekt [" + idRaum + "] ???";
+			return "Raum-Objekt [%d] ???".formatted(idRaum);
 
 		return ra.kuerzel;
 	}
+
 
 	/**
 	 * Liefert das zum Kürzel zugehörige {@link StundenplanRaum}-Objekt.
@@ -6083,6 +6091,7 @@ public class StundenplanManager {
 		return s;
 	}
 
+
 	/**
 	 * Liefert eine Beschreibung des {@link StundenplanSchueler}-Objekts in der Form "Peter Pan".
 	 * <br>Hinweis: Diese Methode liefert niemals eine Exception, stattdessen enthält der String eine Fehlermeldung.
@@ -6095,10 +6104,11 @@ public class StundenplanManager {
 		final StundenplanSchueler s = _schueler_by_id.get(idSchueler);
 
 		if (s == null)
-			return "Schüler-Objekt [" + idSchueler + "] ???";
+			return "Schüler-Objekt [%d] ???".formatted(idSchueler);
 
-		return s.vorname + " " + s.nachname;
+		return "%s %s".formatted(s.vorname, s.nachname);
 	}
+
 
 	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanSchueler}-Objekt.
@@ -6937,7 +6947,10 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<StundenplanUnterricht> unterrichtGetMengeByKlasseIdAndWochentyp(final long idKlasse, final int wochentyp) {
 		// Überprüfen
-		DeveloperNotificationException.ifTrue("wochentyp > stundenplanWochenTypModell", wochentyp > _stundenplanWochenTypModell);
+		DeveloperNotificationException.ifTrue(
+				"unterrichtGetMengeByKlasseIdAndWochentyp(%d, %d): wochentyp(%d) > stundenplanWochenTypModell(%d)"
+						.formatted(idKlasse, wochentyp, wochentyp, _stundenplanWochenTypModell),
+				wochentyp > _stundenplanWochenTypModell);
 		// Filtern
 		final @NotNull List<StundenplanUnterricht> listU = MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idKlasse, idKlasse);
 		return CollectionUtils.toFilteredArrayList(listU, (final @NotNull StundenplanUnterricht u) -> (u.wochentyp == 0) || (u.wochentyp == wochentyp));
@@ -6982,8 +6995,10 @@ public class StundenplanManager {
 	public @NotNull List<StundenplanUnterricht> unterrichtGetMengeByKlasseIdAndFachIdAndWochentyp(final long idKlasse, final long idFach,
 			final int wochentyp) {
 		// Überprüfen
-		DeveloperNotificationException.ifTrue("wochentyp > stundenplanWochenTypModell", wochentyp > _stundenplanWochenTypModell);
-
+		DeveloperNotificationException.ifTrue(
+				"unterrichtGetMengeByKlasseIdAndFachIdAndWochentyp(%d, %d, %d): wochentyp(%d) > stundenplanWochenTypModell(%d)"
+						.formatted(idKlasse, idFach, wochentyp, wochentyp, _stundenplanWochenTypModell),
+				wochentyp > _stundenplanWochenTypModell);
 		// Filtern
 		final @NotNull List<StundenplanUnterricht> listU =
 				DeveloperNotificationException.ifMap2DGetIsNull(_unterrichtmenge_by_idKlasse_and_idFach, idKlasse, idFach);
@@ -7027,8 +7042,10 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<StundenplanUnterricht> unterrichtGetMengeByKursIdAndWochentyp(final long idkurs, final int wochentyp) {
 		// Überprüfen
-		DeveloperNotificationException.ifTrue("wochentyp > stundenplanWochenTypModell", wochentyp > _stundenplanWochenTypModell);
-
+		DeveloperNotificationException.ifTrue(
+				"unterrichtGetMengeByKursIdAndWochentyp(%d, %d): wochentyp(%d) > stundenplanWochenTypModell(%d)"
+						.formatted(idkurs, wochentyp, wochentyp, _stundenplanWochenTypModell),
+				wochentyp > _stundenplanWochenTypModell);
 		// Filtern
 		final @NotNull List<StundenplanUnterricht> listU = MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idKurs, idkurs);
 		return CollectionUtils.toFilteredArrayList(listU, (final @NotNull StundenplanUnterricht u) -> (u.wochentyp == 0) || (u.wochentyp == wochentyp));

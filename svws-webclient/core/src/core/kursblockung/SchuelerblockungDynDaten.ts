@@ -98,26 +98,26 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		if (pInput.kurse === null)
 			throw new DeveloperNotificationException("pInput.kurse == NULL")
 		const tmpNFachwahlen: number = pInput.fachwahlen.size();
-		DeveloperNotificationException.ifTrue("Der Schüler hat zu wenig Fachwahlen (" + tmpNFachwahlen + "), ein Blocken sollte gar nicht angeboten werden!", tmpNFachwahlen < 1);
+		DeveloperNotificationException.ifTrue(JavaString.format("Der Schüler hat zu wenig Fachwahlen (%d), ein Blocken sollte gar nicht angeboten werden!", tmpNFachwahlen), tmpNFachwahlen < 1);
 		const tmpNSchienen: number = pInput.schienen;
-		DeveloperNotificationException.ifTrue("Die Schienenanzahl (" + tmpNSchienen + ") ist zu gering!", tmpNSchienen < 1);
+		DeveloperNotificationException.ifTrue(JavaString.format("Die Schienenanzahl (%d) ist zu gering!", tmpNSchienen), tmpNSchienen < 1);
 		const nKurse: number = pInput.kurse.size();
-		DeveloperNotificationException.ifTrue("Die Kursanzahl (" + nKurse + ") ist zu gering!", nKurse < 1);
+		DeveloperNotificationException.ifTrue(JavaString.format("Die Kursanzahl (%d) ist zu gering!", nKurse), nKurse < 1);
 		const setKursID: HashSet<number> | null = new HashSet<number>();
 		for (const kurs of pInput.kurse) {
 			DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
 			DeveloperNotificationException.ifSetAddsDuplicate("setKursID", setKursID, kurs.id);
 			DeveloperNotificationException.ifInvalidID("kurs.fach", kurs.fach);
-			DeveloperNotificationException.ifTrue("kurs.kursart (" + kurs.kursart + ") ist zu gering!", kurs.kursart < 0);
-			DeveloperNotificationException.ifTrue("kurs.anzahlSuS (" + kurs.anzahlSuS + ") ist zu gering!", kurs.anzahlSuS < 0);
-			DeveloperNotificationException.ifTrue("kurs.schienen == (" + kurs.schienen + ") ist nicht definiert!", kurs.schienen === null);
-			DeveloperNotificationException.ifTrue("kurs.schienen.length (" + kurs.schienen.length + ") ist zu gering!", kurs.schienen.length <= 0);
-			DeveloperNotificationException.ifTrue("kurs.schienen.length (" + kurs.schienen.length + ") ist zu groß!", kurs.schienen.length > tmpNSchienen);
+			DeveloperNotificationException.ifTrue(JavaString.format("kurs.kursart (%d) ist zu gering!", kurs.kursart), kurs.kursart < 0);
+			DeveloperNotificationException.ifTrue(JavaString.format("kurs.anzahlSuS (%d) ist zu gering!", kurs.anzahlSuS), kurs.anzahlSuS < 0);
+			DeveloperNotificationException.ifTrue(JavaString.format("kurs.schienen == (%s) ist nicht definiert!", kurs.schienen), kurs.schienen === null);
+			DeveloperNotificationException.ifTrue(JavaString.format("kurs.schienen.length (%d) ist zu gering!", kurs.schienen.length), kurs.schienen.length <= 0);
+			DeveloperNotificationException.ifTrue(JavaString.format("kurs.schienen.length (%d) ist zu groß!", kurs.schienen.length), kurs.schienen.length > tmpNSchienen);
 			for (const schiene1 of kurs.schienen) {
-				DeveloperNotificationException.ifTrue("Kurs " + kurs.id + " ist in zu kleiner Schiene (" + schiene1 + ")!", schiene1 < 1);
-				DeveloperNotificationException.ifTrue("Kurs " + kurs.id + " ist in zu großer Schiene (" + schiene1 + ")!", schiene1 > tmpNSchienen);
+				DeveloperNotificationException.ifTrue(JavaString.format("Kurs %d ist in zu kleiner Schiene (%d)!", kurs.id, schiene1), schiene1 < 1);
+				DeveloperNotificationException.ifTrue(JavaString.format("Kurs %d ist in zu großer Schiene (%d)!", kurs.id, schiene1), schiene1 > tmpNSchienen);
 			}
-			DeveloperNotificationException.ifTrue("Kurs " + kurs.id + " ist fixiert und gesperrt, das sollte nicht möglich sein!", kurs.istFixiert && kurs.istGesperrt);
+			DeveloperNotificationException.ifTrue(JavaString.format("Kurs %d ist fixiert und gesperrt, das sollte nicht möglich sein!", kurs.id), kurs.istFixiert && kurs.istGesperrt);
 		}
 		for (const fachwahl of pInput.fachwahlen) {
 			DeveloperNotificationException.ifInvalidID("fachwahl.schuelerID", fachwahl.schuelerID);
@@ -125,7 +125,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			DeveloperNotificationException.ifInvalidID("fachwahl.kursartID", fachwahl.kursartID);
 		}
 		for (let iFachwahl: number = 0; iFachwahl < tmpNFachwahlen; iFachwahl++) {
-			DeveloperNotificationException.ifTrue("pInput.fachwahlenText: Es fehlt der Text zur Fachwahl (" + iFachwahl + ")!", iFachwahl >= pInput.fachwahlenText.size());
+			DeveloperNotificationException.ifTrue(JavaString.format("pInput.fachwahlenText: Es fehlt der Text zur Fachwahl (%d)!", iFachwahl), iFachwahl >= pInput.fachwahlenText.size());
 			const representation: string = pInput.fachwahlenText.get(iFachwahl);
 			const fachwahl: GostFachwahl = pInput.fachwahlen.get(iFachwahl);
 			let kursWurdeFixiert: boolean = false;
@@ -134,7 +134,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 					if (kurs.istGesperrt)
 						continue;
 					if (kurs.istFixiert) {
-						DeveloperNotificationException.ifTrue("Die Fachart/Fachwahl (" + representation + ") hat mehr als eine Fixierung!", kursWurdeFixiert);
+						DeveloperNotificationException.ifTrue(JavaString.format("Die Fachart/Fachwahl (%s) hat mehr als eine Fixierung!", representation), kursWurdeFixiert);
 						kursWurdeFixiert = true;
 					}
 				}
@@ -146,7 +146,7 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				if ((fachwahl.fachID === kurs.fach) && (fachwahl.kursartID === kurs.kursart))
 					gefunden++;
 			}
-			DeveloperNotificationException.ifTrue("Der Kurs (" + kurs.id + ") konnte keiner Fachart/Fachwahl zugeordnet werden!", gefunden === 0);
+			DeveloperNotificationException.ifTrue(JavaString.format("Der Kurs (%d) konnte keiner Fachart/Fachwahl zugeordnet werden!", kurs.id), gefunden === 0);
 		}
 	}
 

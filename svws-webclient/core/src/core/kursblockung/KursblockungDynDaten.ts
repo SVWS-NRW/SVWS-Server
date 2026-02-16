@@ -11,6 +11,7 @@ import { ArrayList } from '../../java/util/ArrayList';
 import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
 import { LongArrayKey } from '../../core/adt/LongArrayKey';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
+import { JavaString } from '../../java/lang/JavaString';
 import { Logger } from '../../core/logger/Logger';
 import { GostBlockungRegel } from '../../core/data/gost/GostBlockungRegel';
 import { GostKursart } from '../../core/types/gost/GostKursart';
@@ -164,11 +165,6 @@ export class KursblockungDynDaten extends JavaObject {
 		DeveloperNotificationException.ifNull("pInput.daten().kurse", input.daten().kurse);
 		DeveloperNotificationException.ifNull("pInput.daten().regeln", input.daten().regeln);
 		DeveloperNotificationException.ifInvalidID("pInput.getID()", input.getID());
-		DeveloperNotificationException.ifNull("pInput", input);
-		DeveloperNotificationException.ifNull("pInput", input);
-		DeveloperNotificationException.ifNull("pInput", input);
-		DeveloperNotificationException.ifNull("pInput", input);
-		DeveloperNotificationException.ifNull("pInput", input);
 		DeveloperNotificationException.ifArrayIsEmpty("GostKursart.values()", GostKursart.values());
 		DeveloperNotificationException.ifCollectionIsEmpty("pInput.daten().fachwahlen", input.daten().fachwahlen);
 		DeveloperNotificationException.ifCollectionIsEmpty("pInput.faecherManager().faecher()", input.faecherManager().faecher());
@@ -177,40 +173,40 @@ export class KursblockungDynDaten extends JavaObject {
 		DeveloperNotificationException.ifSmaller("schienenAnzahl", schienenAnzahl, 1);
 		const usedSchiene: HashSet<number> | null = new HashSet<number>();
 		for (const gSchiene of input.daten().schienen) {
-			DeveloperNotificationException.ifInvalidID("gSchiene.id", gSchiene.id);
-			DeveloperNotificationException.ifSmaller("gSchiene.id", gSchiene.nummer, 1);
-			DeveloperNotificationException.ifGreater("gSchiene.id", gSchiene.nummer, schienenAnzahl);
+			DeveloperNotificationException.ifInvalidID(JavaString.format("Die G-Schiene %s hat keine gültige ID.", gSchiene), gSchiene.id);
+			DeveloperNotificationException.ifSmaller(JavaString.format("Die G-Schiene %s ist zu klein!", gSchiene), gSchiene.nummer, 1);
+			DeveloperNotificationException.ifGreater(JavaString.format("Die G-Schiene %s ist zu groß!", gSchiene), gSchiene.nummer, schienenAnzahl);
 			DeveloperNotificationException.ifSetAddsDuplicate("usedSchiene", usedSchiene, gSchiene.nummer);
 		}
 		const setKursarten: HashSet<number> = new HashSet<number>();
 		for (const iKursart of GostKursart.values()) {
 			DeveloperNotificationException.ifNull("iKursart", iKursart);
 			DeveloperNotificationException.ifInvalidID("iKursart.id", iKursart.id);
-			DeveloperNotificationException.ifSetAddsDuplicate("setKursarten", setKursarten, iKursart.id);
+			DeveloperNotificationException.ifSetAddsDuplicate(JavaString.format("Doppelte ID=%d in 'setKursarten'.", iKursart.id), setKursarten, iKursart.id);
 		}
 		const setFaecher: HashSet<number> = new HashSet<number>();
 		for (const iFach of input.faecherManager().faecher()) {
 			DeveloperNotificationException.ifNull("iFach", iFach);
 			DeveloperNotificationException.ifInvalidID("iFach.id", iFach.id);
-			DeveloperNotificationException.ifSetAddsDuplicate("setFaecher", setFaecher, iFach.id);
+			DeveloperNotificationException.ifSetAddsDuplicate(JavaString.format("Doppele ID=%d in 'setFaecher'.", iFach.id), setFaecher, iFach.id);
 		}
 		const setKurse: HashSet<number> = new HashSet<number>();
 		for (const iKurs of input.daten().kurse) {
 			DeveloperNotificationException.ifNull("iKurs", iKurs);
 			DeveloperNotificationException.ifInvalidID("iKurs.id", iKurs.id);
-			DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, iKurs.fach_id);
-			DeveloperNotificationException.ifSetNotContains("setKursarten", setKursarten, iKurs.kursart);
-			DeveloperNotificationException.ifSetAddsDuplicate("setKurse", setKurse, iKurs.id);
+			DeveloperNotificationException.ifSetNotContains(JavaString.format("Kurs ID=%d/NR=%d referenziert das Fach %d, aber es fehlt in 'setFaecher'.", iKurs.id, iKurs.nummer, iKurs.fach_id), setFaecher, iKurs.fach_id);
+			DeveloperNotificationException.ifSetNotContains(JavaString.format("Kurs ID=%d/NR=%d referenziert die Kursart Fach %d, aber es fehlt in 'setKursarten'.", iKurs.id, iKurs.nummer, iKurs.kursart), setKursarten, iKurs.kursart);
+			DeveloperNotificationException.ifSetAddsDuplicate(JavaString.format("Kurs ID=%d/NR=%d ist bereits vorhanden in 'setKurse'.", iKurs.id, iKurs.nummer), setKurse, iKurs.id);
 		}
 		const setSchueler: HashSet<number> = new HashSet<number>();
 		for (const gSchueler of input.daten().schueler)
-			DeveloperNotificationException.ifSetAddsDuplicate("setSchueler", setSchueler, gSchueler.id);
+			DeveloperNotificationException.ifSetAddsDuplicate(JavaString.format("Schüler ID=%d ist bereits vorhanden in 'setSchueler'.", gSchueler.id), setSchueler, gSchueler.id);
 		for (const iFachwahl of input.daten().fachwahlen) {
 			DeveloperNotificationException.ifNull("iFachwahl", iFachwahl);
 			DeveloperNotificationException.ifInvalidID("iFachwahl.schuelerID", iFachwahl.schuelerID);
-			DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, iFachwahl.fachID);
-			DeveloperNotificationException.ifSetNotContains("setKursarten", setKursarten, iFachwahl.kursartID);
-			DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, iFachwahl.schuelerID);
+			DeveloperNotificationException.ifSetNotContains(JavaString.format("Fachwahl (%d,%d,%d) referenziert Fach ID=%d, aber es fehlt in 'setFaecher'.", iFachwahl.fachID, iFachwahl.kursartID, iFachwahl.schuelerID, iFachwahl.fachID), setFaecher, iFachwahl.fachID);
+			DeveloperNotificationException.ifSetNotContains(JavaString.format("Fachwahl (%d,%d,%d) referenziert Kursart ID=%d, aber es fehlt in 'setKursarten'.", iFachwahl.fachID, iFachwahl.kursartID, iFachwahl.schuelerID, iFachwahl.kursartID), setKursarten, iFachwahl.kursartID);
+			DeveloperNotificationException.ifSetNotContains(JavaString.format("Fachwahl (%d,%d,%d) referenziert Schüler ID=%d, aber es fehlt in 'setSchueler'.", iFachwahl.fachID, iFachwahl.kursartID, iFachwahl.schuelerID, iFachwahl.schuelerID), setSchueler, iFachwahl.schuelerID);
 		}
 		for (const iRegel of input.daten().regeln) {
 			DeveloperNotificationException.ifNull("iRegel", iRegel);
@@ -302,44 +298,44 @@ export class KursblockungDynDaten extends JavaObject {
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp1(daten: Array<number>, setKursarten: HashSet<number>, schienenAnzahl: number): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("KURSART_SPERRE_SCHIENEN_VON_BIS daten.length=" + length + ", statt 3!", length !== 3);
+		DeveloperNotificationException.ifTrue(JavaString.format("KURSART_SPERRE_SCHIENEN_VON_BIS daten.length=%d, statt 3!", length), length !== 3);
 		const kursartID: number = daten[0];
-		DeveloperNotificationException.ifSetNotContains("setKursarten", setKursarten, kursartID);
 		const von: number = daten[1];
 		const bis: number = daten[2];
-		DeveloperNotificationException.ifTrue("KURSART_SPERRE_SCHIENEN_VON_BIS (" + kursartID + ", " + von + ", " + bis + ") ist unlogisch!", !((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)));
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("KURSART_SPERRE_SCHIENEN_VON_BIS(%d, %d, %d) Kursart fehlt in 'setKursarten'.", kursartID, von, bis), setKursarten, kursartID);
+		DeveloperNotificationException.ifTrue(JavaString.format("KURSART_SPERRE_SCHIENEN_VON_BIS(%d,%d,%d) Parameter sind unlogisch!", kursartID, von, bis), !((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)));
 	}
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp2(daten: Array<number>, setKurse: HashSet<number>, schienenAnzahl: number): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("KURS_FIXIERE_IN_SCHIENE daten.length=" + length + ", statt 2!", length !== 2);
+		DeveloperNotificationException.ifTrue(JavaString.format("KURS_FIXIERE_IN_SCHIENE daten.length=%d, statt 2!", length), length !== 2);
 		const kursID: number = daten[0].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
 		const schiene: number = daten[1];
-		DeveloperNotificationException.ifTrue("KURS_FIXIERE_IN_SCHIENE (" + kursID + ", " + schiene + ") ist unlogisch!", !((schiene >= 1) && (schiene <= schienenAnzahl)));
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("KURS_FIXIERE_IN_SCHIENE(%d, %d): KursID fehlt in 'setKurse'.", kursID, schiene), setKurse, kursID);
+		DeveloperNotificationException.ifTrue(JavaString.format("KURS_FIXIERE_IN_SCHIENE(%d, %d) ist unlogisch!", kursID, schiene), !((schiene >= 1) && (schiene <= schienenAnzahl)));
 	}
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp3(daten: Array<number>, setKurse: HashSet<number>, schienenAnzahl: number): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("KURS_SPERRE_IN_SCHIENE daten.length=" + length + ", statt 2!", length !== 2);
+		DeveloperNotificationException.ifTrue(JavaString.format("KURS_SPERRE_IN_SCHIENE daten.length=%d, statt 2!", length), length !== 2);
 		const kursID: number = daten[0].valueOf();
 		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
 		const schiene: number = daten[1];
-		DeveloperNotificationException.ifTrue("KURS_SPERRE_IN_SCHIENE (" + kursID + ", " + schiene + ") ist unlogisch!", !((schiene >= 1) && (schiene <= schienenAnzahl)));
+		DeveloperNotificationException.ifTrue(JavaString.format("KURS_SPERRE_IN_SCHIENE (%d, %d) ist unlogisch!", kursID, schiene), !((schiene >= 1) && (schiene <= schienenAnzahl)));
 	}
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp4(daten: Array<number>, setSchueler: HashSet<number>, setKurse: HashSet<number>): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("SCHUELER_FIXIEREN_IN_KURS daten.length=" + length + ", statt 2!", length !== 2);
+		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_FIXIEREN_IN_KURS daten.length=%d, statt 2!", length), length !== 2);
 		const schuelerID: number = daten[0].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID);
 		const kursID: number = daten[1].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_FIXIEREN_IN_KURS(%d, %d): Schüler-ID fehlt in 'setSchueler'.", schuelerID, kursID), setSchueler, schuelerID);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_FIXIEREN_IN_KURS(%d, %d): Kurs-ID fehlt in 'setKurse'.", schuelerID, kursID), setKurse, kursID);
 	}
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp5(daten: Array<number>, setSchueler: HashSet<number>, setKurse: HashSet<number>): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("SCHUELER_VERBIETEN_IN_KURS daten.length=" + length + ", statt 2!", length !== 2);
+		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_VERBIETEN_IN_KURS daten.length=%d, statt 2!", length), length !== 2);
 		const schuelerID: number = daten[0].valueOf();
 		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID);
 		const kursID: number = daten[1].valueOf();
@@ -348,37 +344,37 @@ export class KursblockungDynDaten extends JavaObject {
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp6(daten: Array<number>, setKursarten: HashSet<number>, schienenAnzahl: number): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS daten.length=" + length + ", statt 3!", length !== 3);
+		DeveloperNotificationException.ifTrue(JavaString.format("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS daten.length=%d, statt 3!", length), length !== 3);
 		const kursartID: number = daten[0];
 		DeveloperNotificationException.ifSetNotContains("setKursarten", setKursarten, kursartID);
 		const von: number = daten[1];
 		const bis: number = daten[2];
-		DeveloperNotificationException.ifTrue("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS (" + kursartID + ", " + von + ", " + bis + ") ist unlogisch!", !((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)));
+		DeveloperNotificationException.ifTrue(JavaString.format("KURSART_ALLEIN_IN_SCHIENEN_VON_BIS (%d, %d, %d) ist unlogisch!", kursartID, von, bis), !((von >= 1) && (von <= bis) && (bis <= schienenAnzahl)));
 	}
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp7(daten: Array<number>, setKurse: HashSet<number>): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("KURS_VERBIETEN_MIT_KURS daten.length=" + length + ", statt 2!", length !== 2);
+		DeveloperNotificationException.ifTrue(JavaString.format("KURS_VERBIETEN_MIT_KURS daten.length=%d, statt 2!", length), length !== 2);
 		const kursID1: number = daten[0].valueOf();
 		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID1);
 		const kursID2: number = daten[1].valueOf();
 		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID2);
-		DeveloperNotificationException.ifTrue("Die Regel 'KURS_VERBIETEN_MIT_KURS' wurde mit einem Kurs (" + kursID1 + ") und sich selbst kombiniert!", kursID1 === kursID2);
+		DeveloperNotificationException.ifTrue(JavaString.format("Die Regel 'KURS_VERBIETEN_MIT_KURS' wurde mit einem Kurs (%d) und sich selbst kombiniert!", kursID1), kursID1 === kursID2);
 	}
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp8(daten: Array<number>, setKurse: HashSet<number>): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("KURS_ZUSAMMEN_MIT_KURS daten.length=" + length + ", statt 2!", length !== 2);
+		DeveloperNotificationException.ifTrue(JavaString.format("KURS_ZUSAMMEN_MIT_KURS daten.length=%d, statt 2!", length), length !== 2);
 		const kursID1: number = daten[0].valueOf();
 		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID1);
 		const kursID2: number = daten[1].valueOf();
 		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID2);
-		DeveloperNotificationException.ifTrue("Die Regel 'KURS_ZUSAMMEN_MIT_KURS' wurde mit einem Kurs (" + kursID1 + ") und sich selbst kombiniert!", kursID1 === kursID2);
+		DeveloperNotificationException.ifTrue(JavaString.format("Die Regel 'KURS_ZUSAMMEN_MIT_KURS' wurde mit einem Kurs (%d) und sich selbst kombiniert!", kursID1), kursID1 === kursID2);
 	}
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp9(daten: Array<number>, setKurse: HashSet<number>): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("KURS_MIT_DUMMY_SUS_AUFFUELLEN daten.length=" + length + ", statt 2!", length !== 2);
+		DeveloperNotificationException.ifTrue(JavaString.format("KURS_MIT_DUMMY_SUS_AUFFUELLEN daten.length=%d, statt 2!", length), length !== 2);
 		const kursID: number = daten[0].valueOf();
 		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
 		const dummySuS: number = daten[1];
@@ -388,23 +384,23 @@ export class KursblockungDynDaten extends JavaObject {
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp10(daten: Array<number>): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("LEHRKRAEFTE_BEACHTEN daten.length=" + length + ", statt 0!", length !== 0);
+		DeveloperNotificationException.ifTrue(JavaString.format("LEHRKRAEFTE_BEACHTEN daten.length=%d, statt 0!", length), length !== 0);
 	}
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp11(daten: Array<number>, setSchueler: HashSet<number>, setFaecher: HashSet<number>): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH daten.length=" + length + ", statt 3!", length !== 3);
+		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH daten.length=%d, statt 3!", length), length !== 3);
 		const schuelerID1: number = daten[0].valueOf();
 		const schuelerID2: number = daten[1].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
-		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID2);
 		const fachID: number = daten[2].valueOf();
-		DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, fachID);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Schüler-ID1 fehlt in 'setSchueler'.", schuelerID1, schuelerID2, fachID), setSchueler, schuelerID1);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Schüler-ID2 fehlt in 'setSchueler'.", schuelerID1, schuelerID2, fachID), setSchueler, schuelerID2);
+		DeveloperNotificationException.ifSetNotContains(JavaString.format("SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(%d, %d, %d): Fach-ID fehlt in 'setFaecher'.", schuelerID1, schuelerID2, fachID), setFaecher, fachID);
 	}
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp12(daten: Array<number>, setSchueler: HashSet<number>, setFaecher: HashSet<number>): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH daten.length=" + length + ", statt 3!", length !== 3);
+		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH daten.length=%d, statt 3!", length), length !== 3);
 		const schuelerID1: number = daten[0].valueOf();
 		const schuelerID2: number = daten[1].valueOf();
 		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
@@ -415,7 +411,7 @@ export class KursblockungDynDaten extends JavaObject {
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp13(daten: Array<number>, setSchueler: HashSet<number>): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("SCHUELER_ZUSAMMEN_MIT_SCHUELER daten.length=" + length + ", statt 2!", length !== 2);
+		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_ZUSAMMEN_MIT_SCHUELER daten.length=%d, statt 2!", length), length !== 2);
 		const schuelerID1: number = daten[0].valueOf();
 		const schuelerID2: number = daten[1].valueOf();
 		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
@@ -424,7 +420,7 @@ export class KursblockungDynDaten extends JavaObject {
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp14(daten: Array<number>, setSchueler: HashSet<number>): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("SCHUELER_VERBIETEN_MIT_SCHUELER daten.length=" + length + ", statt 2!", length !== 2);
+		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_VERBIETEN_MIT_SCHUELER daten.length=%d, statt 2!", length), length !== 2);
 		const schuelerID1: number = daten[0].valueOf();
 		const schuelerID2: number = daten[1].valueOf();
 		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID1);
@@ -433,7 +429,7 @@ export class KursblockungDynDaten extends JavaObject {
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp15(daten: Array<number>, setKurse: HashSet<number>): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("KURS_MAXIMALE_SCHUELERANZAHL daten.length=" + length + ", statt 2!", length !== 2);
+		DeveloperNotificationException.ifTrue(JavaString.format("KURS_MAXIMALE_SCHUELERANZAHL daten.length=%d, statt 2!", length), length !== 2);
 		const kursID: number = daten[0].valueOf();
 		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
 		const anzahlSus: number = daten[1];
@@ -443,21 +439,21 @@ export class KursblockungDynDaten extends JavaObject {
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp16(daten: Array<number>, setSchueler: HashSet<number>): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("SCHUELER_IGNORIEREN daten.length=" + length + ", statt 1!", length !== 1);
+		DeveloperNotificationException.ifTrue(JavaString.format("SCHUELER_IGNORIEREN daten.length=%d, statt 1!", length), length !== 1);
 		const schuelerID: number = daten[0].valueOf();
 		DeveloperNotificationException.ifSetNotContains("setSchueler", setSchueler, schuelerID);
 	}
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp17(daten: Array<number>, setKurse: HashSet<number>): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN daten.length=" + length + ", statt 1!", length !== 1);
+		DeveloperNotificationException.ifTrue(JavaString.format("KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN daten.length=%d, statt 1!", length), length !== 1);
 		const kursID: number = daten[0].valueOf();
 		DeveloperNotificationException.ifSetNotContains("setKurse", setKurse, kursID);
 	}
 
 	private static schritt01FehlerBeiReferenzen_Regeltyp18(daten: Array<number>, setFaecher: HashSet<number>, setKursarten: HashSet<number>): void {
 		const length: number = daten.length;
-		DeveloperNotificationException.ifTrue("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE daten.length=" + length + ", statt 3!", length !== 3);
+		DeveloperNotificationException.ifTrue(JavaString.format("FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE daten.length=%d, statt 3!", length), length !== 3);
 		const fachID: number = daten[0].valueOf();
 		DeveloperNotificationException.ifSetNotContains("setFaecher", setFaecher, fachID);
 		const kursartID: number = daten[1];
@@ -595,8 +591,8 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	private schritt08FehlerBeiKursErstellungErzeuge(input: GostBlockungsdatenManager, kurs: GostBlockungKurs, nSchienen: number, kursNr: number, nSchueler: number): KursblockungDynKurs {
-		DeveloperNotificationException.ifSmaller("kurs.anzahlSchienen", kurs.anzahlSchienen, 1);
-		DeveloperNotificationException.ifGreater("kurs.anzahlSchienen", kurs.anzahlSchienen, this._schienenArr.length);
+		DeveloperNotificationException.ifSmaller(JavaString.format("Der Kurs mit ID=%d und NR=%d belegt zu wenig (%d) Schienen!", kurs.id, kursNr, kurs.anzahlSchienen), kurs.anzahlSchienen, 1);
+		DeveloperNotificationException.ifGreater(JavaString.format("Der Kurs mit ID=%d und NR=%d belegt zu viele (%d) Schienen!", kurs.id, kursNr, kurs.anzahlSchienen), kurs.anzahlSchienen, this._schienenArr.length);
 		const schieneLage: List<KursblockungDynSchiene> = new ArrayList<KursblockungDynSchiene>();
 		const schieneFrei: List<KursblockungDynSchiene> = ListUtils.getCopyAsArrayListPermuted(this._schienenArr, this._random);
 		for (const regel1 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
@@ -762,14 +758,15 @@ export class KursblockungDynDaten extends JavaObject {
 
 	private fehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(input: GostBlockungsdatenManager): void {
 		const setSSF: HashSet<LongArrayKey> = new HashSet<LongArrayKey>();
+		const fehlermeldungDopplung: string = "Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!";
 		for (const regel11 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH)) {
 			const idS1: number = regel11.parameter.get(0).valueOf();
 			const idS2: number = regel11.parameter.get(1).valueOf();
 			const idF: number = regel11.parameter.get(2).valueOf();
 			const key12F: LongArrayKey = new LongArrayKey(idS1, idS2, idF);
 			const key21F: LongArrayKey = new LongArrayKey(idS2, idS1, idF);
-			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key12F));
-			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key21F));
+			DeveloperNotificationException.ifTrue(fehlermeldungDopplung, !setSSF.add(key12F));
+			DeveloperNotificationException.ifTrue(fehlermeldungDopplung, !setSSF.add(key21F));
 			const sch1: KursblockungDynSchueler = this.gibSchueler(idS1);
 			const sch2: KursblockungDynSchueler = this.gibSchueler(idS2);
 			sch1.regel_11_zusammen_mit_schueler_in_fach(sch2, idF);
@@ -780,8 +777,8 @@ export class KursblockungDynDaten extends JavaObject {
 			const idF: number = regel12.parameter.get(2).valueOf();
 			const key12F: LongArrayKey = new LongArrayKey(idS1, idS2, idF);
 			const key21F: LongArrayKey = new LongArrayKey(idS2, idS1, idF);
-			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key12F));
-			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key21F));
+			DeveloperNotificationException.ifTrue(fehlermeldungDopplung, !setSSF.add(key12F));
+			DeveloperNotificationException.ifTrue(fehlermeldungDopplung, !setSSF.add(key21F));
 			const sch1: KursblockungDynSchueler = this.gibSchueler(idS1);
 			const sch2: KursblockungDynSchueler = this.gibSchueler(idS2);
 			sch1.regel_12_verbieten_mit_schueler_in_fach(sch2, idF);
@@ -792,8 +789,8 @@ export class KursblockungDynDaten extends JavaObject {
 			for (const fach of input.schuelerGetFachListeGemeinsamerFacharten(idS1, idS2)) {
 				const key12F: LongArrayKey = new LongArrayKey(idS1, idS2, fach.id);
 				const key21F: LongArrayKey = new LongArrayKey(idS2, idS1, fach.id);
-				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key12F));
-				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key21F));
+				DeveloperNotificationException.ifTrue(fehlermeldungDopplung, !setSSF.add(key12F));
+				DeveloperNotificationException.ifTrue(fehlermeldungDopplung, !setSSF.add(key21F));
 				const sch1: KursblockungDynSchueler = this.gibSchueler(idS1);
 				const sch2: KursblockungDynSchueler = this.gibSchueler(idS2);
 				sch1.regel_13_zusammen_mit_schueler(sch2);
@@ -805,8 +802,8 @@ export class KursblockungDynDaten extends JavaObject {
 			for (const fach of input.schuelerGetFachListeGemeinsamerFacharten(idS1, idS2)) {
 				const key12F: LongArrayKey = new LongArrayKey(idS1, idS2, fach.id);
 				const key21F: LongArrayKey = new LongArrayKey(idS2, idS1, fach.id);
-				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key12F));
-				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key21F));
+				DeveloperNotificationException.ifTrue(fehlermeldungDopplung, !setSSF.add(key12F));
+				DeveloperNotificationException.ifTrue(fehlermeldungDopplung, !setSSF.add(key21F));
 			}
 			const sch1: KursblockungDynSchueler = this.gibSchueler(idS1);
 			const sch2: KursblockungDynSchueler = this.gibSchueler(idS2);

@@ -15,13 +15,15 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class DateUtils {
 
+	private static final @NotNull String DATUMSFORMAT = "%04d-%02d-%02d";
+
 	/** Die Anzahl der Tage zwischen dem Jahr 0 und dem Jahr 1.1.1970 */
 	public static final long DAYS_FROM_0_TO_1970 = 719528L;
 
 	/** Die Anzahl an Tagen in 400 Jahren */
 	public static final long DAYS_PER_400_YEARS = 146097L;
 
-	/** Die Anzahl an Tagen in 100 Jahren, nicht der Speziallfall, wenn ein Jahrhundert mit einem Schaltjahr beginnt */
+	/** Die Anzahl an Tagen in 100 Jahren, nicht der Spezialfall, wenn ein Jahrhundert mit einem Schaltjahr beginnt */
 	public static final long DAYS_PER_100_YEARS = 36524L;
 
 	/** Die Anzahl an Tagen in 4 Jahren */
@@ -88,11 +90,11 @@ public final class DateUtils {
 		final @NotNull String[] split = datumISO8601.split("-");
 		DeveloperNotificationException.ifTrue("Datumsformat von " + datumISO8601 + " ist nicht ISO8601 konform!", split.length != 3);
 		final int jahr = DeveloperNotificationException.ifNotInt(split[0]);
-		DeveloperNotificationException.ifTrue("Das Jahr von " + datumISO8601 + " ist ungültig!", gibIstJahrUngueltig(jahr));
+		DeveloperNotificationException.ifTrue("Das Jahr von %s ist ungültig!".formatted(datumISO8601), gibIstJahrUngueltig(jahr));
 		final int monat = DeveloperNotificationException.ifNotInt(split[1]);
-		DeveloperNotificationException.ifTrue("Der Monat von " + datumISO8601 + " ist ungültig!", (monat < 1) || (monat > 12));
+		DeveloperNotificationException.ifTrue("Der Monat von %s ist ungültig!".formatted(datumISO8601), (monat < 1) || (monat > 12));
 		final int tagImMonat = DeveloperNotificationException.ifNotInt(split[2]);
-		DeveloperNotificationException.ifTrue("Der Tag von " + datumISO8601 + " ist ungültig!", (tagImMonat < 1) || (tagImMonat > 31));
+		DeveloperNotificationException.ifTrue("Der Tag von %s ist ungültig!".formatted(datumISO8601), (tagImMonat < 1) || (tagImMonat > 31));
 
 		final int schalttage1 = (((jahr - 1) / 4) - ((jahr - 1) / 100)) + ((jahr - 1) / 400);
 		final int schalttage2 = ((jahr / 4) - (jahr / 100)) + (jahr / 400);
@@ -362,23 +364,35 @@ public final class DateUtils {
 	 * @return die Minuten einer Zeitangabe im Format hh:mm oder hh.mm.
 	 */
 	public static int gibMinutenOfZeitAsString(final @NotNull String zeit) {
+
 		@NotNull String @NotNull [] sSplit = zeit.split(":");
 		if (sSplit.length != 2)
 			sSplit = zeit.split(".");
-		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", sSplit.length != 2);
+		DeveloperNotificationException.ifTrue(
+				"gibMinutenOfZeitAsString(%s): Zeit muss im Format hh:mm oder hh.mm sein!".formatted(zeit),
+				sSplit.length != 2);
 
 		final @NotNull String sStunden = sSplit[0].trim();
 		final @NotNull String sMinuten = sSplit[1].trim();
-		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", sStunden.isEmpty() || (sStunden.length() > 2));
-		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", sMinuten.isEmpty() || (sMinuten.length() > 2));
+		DeveloperNotificationException.ifTrue(
+				"gibMinutenOfZeitAsString(%s): Die Stunden sind ungültig!".formatted(zeit),
+				sStunden.isEmpty() || (sStunden.length() > 2));
+		DeveloperNotificationException.ifTrue(
+				"gibMinutenOfZeitAsString(%s): Die Minuten sind ungültig!".formatted(zeit),
+				sMinuten.isEmpty() || (sMinuten.length() > 2));
 
 		final int stunden = Integer.parseInt(sStunden);
 		final int minuten = Integer.parseInt(sMinuten);
-		DeveloperNotificationException.ifTrue("(stunden < 0) || (stunden > 23)", (stunden < 0) || (stunden > 23));
-		DeveloperNotificationException.ifTrue("(minuten < 0) || (minuten > 59)", (minuten < 0) || (minuten > 59));
+		DeveloperNotificationException.ifTrue(
+				"gibMinutenOfZeitAsString(%s): Die Stunden sind ungültig mit (stunden < 0) || (stunden > 23)!".formatted(zeit),
+				(stunden < 0) || (stunden > 23));
+		DeveloperNotificationException.ifTrue(
+				"gibMinutenOfZeitAsString(%s): Die Minuten sind ungültig mit (minuten < 0) || (minuten > 59)!".formatted(zeit),
+				(minuten < 0) || (minuten > 59));
 
 		return (stunden * 60) + minuten;
 	}
+
 
 	/**
 	 * Liefert den ZeitString im Format hh:mm zu einer vorgegebenen Minutenanzahl.
@@ -595,7 +609,7 @@ public final class DateUtils {
 		while ((startDateArray[0] < endDateArray[0]) || ((startDateArray[0] == endDateArray[0])
 				&& ((startDateArray[1] < endDateArray[1]) || ((startDateArray[1] == endDateArray[1]) && (startDateArray[2] <= endDateArray[2]))))) {
 			// Füge das aktuelle Datum zur Liste hinzu
-			dateList.add(String.format("%04d-%02d-%02d", startDateArray[0], startDateArray[1], startDateArray[2]));
+			dateList.add(String.format(DATUMSFORMAT, startDateArray[0], startDateArray[1], startDateArray[2]));
 
 			// Inkrementiere das Datum
 			startDateArray[2]++;
@@ -681,11 +695,11 @@ public final class DateUtils {
 		final int tagImMonat = info[2];
 		final int tageImMonat = daysInMonth(jahr, monat);
 		if (tagImMonat < tageImMonat) {
-			return String.format("%04d-%02d-%02d", jahr, monat, tagImMonat + 1);
+			return String.format(DATUMSFORMAT, jahr, monat, tagImMonat + 1);
 		} else if (monat < 12) {
-			return String.format("%04d-%02d-%02d", jahr, monat + 1, 1);
+			return String.format(DATUMSFORMAT, jahr, monat + 1, 1);
 		} else {
-			return String.format("%04d-%02d-%02d", jahr + 1, 1, 1);
+			return String.format(DATUMSFORMAT, jahr + 1, 1, 1);
 		}
 	}
 

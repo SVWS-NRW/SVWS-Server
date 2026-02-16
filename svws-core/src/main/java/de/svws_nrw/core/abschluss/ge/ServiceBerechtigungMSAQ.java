@@ -200,7 +200,11 @@ public class ServiceBerechtigungMSAQ extends Service {
 			final @NotNull GEAbschlussFach ausgleichsFach = fg1_ausgleichsfaecher.get(0);
 			defizitFach.ausgeglichen = true;
 			ausgleichsFach.ausgleich = true;
-			logger.logLn(LogLevel.DEBUG, logIndent + " -> Ausgleich von " + defizitFach.kuerzel + " durch " + ausgleichsFach.kuerzel);
+			logger.logLn(LogLevel.DEBUG, "%s -> Ausgleich von %s durch %s.".formatted(
+					logIndent,
+					defizitFach.kuerzel,
+					ausgleichsFach.kuerzel
+			));
 			// Nachprüfung in WP nötig
 			nachpruefung_genutzt = true;
 			npFaecher.add(wp_defizit);

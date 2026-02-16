@@ -24,7 +24,7 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 	public bezeichnung: string = "";
 
 	/**
-	 * Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlich wurde
+	 * Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlicht wurde
 	 */
 	public gvJahr: number | null = null;
 
@@ -64,9 +64,9 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 	 *
 	 * @param id                 die ID
 	 * @param kuerzel            das Kürzel
-	 * @param kuerzelSchild      das Kürzel der Ausbildungs und/oder Prüfungsordnung, wie es in Schild NRW verwendet wird
+	 * @param kuerzelSchild      das Kürzel der Ausbildungs- und/oder Prüfungsordnung, wie es in Schild NRW verwendet wird
 	 * @param bezeichnung        die Bezeichnung
-	 * @param gvJahr             Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlich wurde
+	 * @param gvJahr             Gesetz- und Verordnungsblatt: Das Jahr in dem die Verordnung veröffentlicht wurde
 	 * @param gvNr               Gesetz- und Verordnungsblatt: Die Nummer im Jahr der Veröffentlichung
 	 * @param gvSeiten           Gesetz- und Verordnungsblatt: ggf. die Seitenangaben im Jahr der Veröffentlichung
 	 * @param link               ggf. ein Link zu einer Version der Verordnung

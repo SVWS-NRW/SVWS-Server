@@ -2045,26 +2045,20 @@ export class StundenplanManager extends JavaObject {
 		const setOfIDs: JavaSet<number> = new HashSet<number>();
 		for (const aufsichtsbereich of list) {
 			StundenplanManager.aufsichtsbereichCheckAttributes(aufsichtsbereich);
-			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + StundenplanManager.aufsichtsbereichInfo(aufsichtsbereich), this._aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id));
-			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei " + StundenplanManager.aufsichtsbereichInfo(aufsichtsbereich), !setOfIDs.add(aufsichtsbereich.id));
+			DeveloperNotificationException.ifTrue(JavaString.format("ID existiert bereits bei %s", StundenplanManager.aufsichtsbereichInfo(aufsichtsbereich)), this._aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id));
+			DeveloperNotificationException.ifTrue(JavaString.format("ID Dopplung in Liste bei %s", StundenplanManager.aufsichtsbereichInfo(aufsichtsbereich)), !setOfIDs.add(aufsichtsbereich.id));
 		}
 		for (const aufsichtsbereich of list)
 			DeveloperNotificationException.ifMapPutOverwrites(this._aufsichtsbereich_by_id, aufsichtsbereich.id, aufsichtsbereich);
 	}
 
 	private static aufsichtsbereichCheckAttributes(aufsichtsbereich: StundenplanAufsichtsbereich): void {
-		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + StundenplanManager.aufsichtsbereichInfo(aufsichtsbereich), aufsichtsbereich.id);
-		DeveloperNotificationException.ifStringIsBlank("Leeres Kürzel bei " + StundenplanManager.aufsichtsbereichInfo(aufsichtsbereich), aufsichtsbereich.kuerzel);
+		DeveloperNotificationException.ifInvalidID(JavaString.format("Ungültige ID bei %s", StundenplanManager.aufsichtsbereichInfo(aufsichtsbereich)), aufsichtsbereich.id);
+		DeveloperNotificationException.ifStringIsBlank(JavaString.format("Leeres Kürzel bei %s", StundenplanManager.aufsichtsbereichInfo(aufsichtsbereich)), aufsichtsbereich.kuerzel);
 	}
 
 	private static aufsichtsbereichInfo(aufsichtsbereich: StundenplanAufsichtsbereich): string {
-		let s: string | null = "";
-		s += "[StundenplanAufsichtsbereich";
-		s += "(id=" + aufsichtsbereich.id + ")";
-		s += "(kuerzel=" + aufsichtsbereich.kuerzel + ")";
-		s += "(nachname=" + aufsichtsbereich.beschreibung + ")";
-		s += "]";
-		return s;
+		return JavaString.format("[StundenplanAufsichtsbereich(id=%d)(kuerzel=%s)(nachname=%s)]", aufsichtsbereich.id, aufsichtsbereich.kuerzel, aufsichtsbereich.beschreibung);
 	}
 
 	/**
@@ -2215,16 +2209,16 @@ export class StundenplanManager extends JavaObject {
 		const setOfIDs: JavaSet<number> = new HashSet<number>();
 		for (const fach of list) {
 			StundenplanManager.fachCheckAttributes(fach);
-			DeveloperNotificationException.ifTrue("ID existiert bereits bei " + StundenplanManager.fachInfo(fach), this._fach_by_id.containsKey(fach.id));
-			DeveloperNotificationException.ifTrue("ID Dopplung in Liste bei " + StundenplanManager.fachInfo(fach), !setOfIDs.add(fach.id));
+			DeveloperNotificationException.ifTrue(JavaString.format("ID existiert bereits bei %s", StundenplanManager.fachInfo(fach)), this._fach_by_id.containsKey(fach.id));
+			DeveloperNotificationException.ifTrue(JavaString.format("ID Dopplung in Liste bei %s", StundenplanManager.fachInfo(fach)), !setOfIDs.add(fach.id));
 		}
 		for (const fach of list)
 			DeveloperNotificationException.ifMapPutOverwrites(this._fach_by_id, fach.id, fach);
 	}
 
 	private static fachCheckAttributes(fach: StundenplanFach): void {
-		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + StundenplanManager.fachInfo(fach), fach.id);
-		DeveloperNotificationException.ifTrue("Leeres Kürzel bei " + StundenplanManager.fachInfo(fach), JavaString.isBlank(fach.kuerzel));
+		DeveloperNotificationException.ifInvalidID(JavaString.format("fachCheckAttributes(%d): Ungültige ID bei %s", fach.id, StundenplanManager.fachInfo(fach)), fach.id);
+		DeveloperNotificationException.ifTrue(JavaString.format("fachCheckAttributes(%d): Leeres Kürzel bei %s", fach.id, StundenplanManager.fachInfo(fach)), JavaString.isBlank(fach.kuerzel));
 	}
 
 	private fachInfoByID(idFach: number): string {
@@ -2233,15 +2227,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private static fachInfo(fach: StundenplanFach): string {
-		let s: string | null = "";
-		s += "[StundenplanFach";
-		s += "(id=" + fach.id + ")";
-		s += "(kuerzel=" + fach.kuerzel + ")";
-		s += "(kuerzelStatistik=" + fach.kuerzelStatistik + ")";
-		s += "(bezeichnung=" + fach.bezeichnung + ")";
-		s += "(farbe=" + fach.farbe + ")";
-		s += "]";
-		return s;
+		return JavaString.format("[StundenplanFach(id=%d)(kuerzel=%s)(kuerzelStatistik=%s)(bezeichnung=%s)(farbe=%s)]", fach.id, fach.kuerzel, fach.kuerzelStatistik, fach.bezeichnung, fach.farbe);
 	}
 
 	/**
@@ -2311,13 +2297,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private static jahrgangInfo(jahrgang: StundenplanJahrgang): string {
-		let s: string | null = "";
-		s += "[StundenplanJahrgang";
-		s += "(id=" + jahrgang.id + ")";
-		s += "(kuerzel=" + jahrgang.kuerzel + ")";
-		s += "(bezeichnung=" + jahrgang.bezeichnung + ")";
-		s += "]";
-		return s;
+		return JavaString.format("[StundenplanJahrgang(id=%d)(kuerzel=%s)(bezeichnung=%s)]", jahrgang.id, jahrgang.kuerzel, jahrgang.bezeichnung);
 	}
 
 	/**
@@ -2493,14 +2473,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private static kalenderwochenzuordnungInfo(kwz: StundenplanKalenderwochenzuordnung): string {
-		let s: string | null = "";
-		s += "[StundenplanKalenderwochenzuordnung";
-		s += "(id=" + kwz.id + ")";
-		s += "(jahr=" + kwz.jahr + ")";
-		s += "(kw=" + kwz.kw + ")";
-		s += "(wochentyp=" + kwz.wochentyp + ")";
-		s += "]";
-		return s;
+		return JavaString.format("[StundenplanKalenderwochenzuordnung(id=%d)(jahr=%d)(kw=%d)(wochentyp=%d)]", kwz.id, kwz.jahr, kwz.kw, kwz.wochentyp);
 	}
 
 	/**
@@ -2719,10 +2692,10 @@ export class StundenplanManager extends JavaObject {
 	 * @return den zugeordneten Wochentyp, oder den Default-Wochentyp, welcher sich aus der Kalenderwoche berechnet.
 	 */
 	public kalenderwochenzuordnungGetWochentypOrDefault(jahr: number, kalenderwoche: number): number {
-		DeveloperNotificationException.ifSmaller("jahr", jahr, DateUtils.MIN_GUELTIGES_JAHR);
-		DeveloperNotificationException.ifGreater("jahr", jahr, DateUtils.MAX_GUELTIGES_JAHR);
-		DeveloperNotificationException.ifSmaller("kalenderwoche", kalenderwoche, 1);
-		DeveloperNotificationException.ifGreater("kalenderwoche", kalenderwoche, DateUtils.gibKalenderwochenOfJahr(jahr));
+		DeveloperNotificationException.ifSmaller(JavaString.format("kalenderwochenzuordnungGetWochentypOrDefault(%d, %d): Jahr zu klein!", jahr, kalenderwoche), jahr, DateUtils.MIN_GUELTIGES_JAHR);
+		DeveloperNotificationException.ifGreater(JavaString.format("kalenderwochenzuordnungGetWochentypOrDefault(%d, %d): Jahr zu groß!", jahr, kalenderwoche), jahr, DateUtils.MAX_GUELTIGES_JAHR);
+		DeveloperNotificationException.ifSmaller(JavaString.format("kalenderwochenzuordnungGetWochentypOrDefault(%d, %d): Kalenderwoche zu klein!", jahr, kalenderwoche), kalenderwoche, 1);
+		DeveloperNotificationException.ifGreater(JavaString.format("kalenderwochenzuordnungGetWochentypOrDefault(%d, %d): Kalenderwoche zu groß!", jahr, kalenderwoche), kalenderwoche, DateUtils.gibKalenderwochenOfJahr(jahr));
 		if (this._stundenplanWochenTypModell === 0)
 			return 0;
 		const z: StundenplanKalenderwochenzuordnung | null = this._kwz_by_jahr_and_kw.getOrNull(jahr, kalenderwoche);
@@ -2849,24 +2822,16 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private klasseCheckAttributes(klasse: StundenplanKlasse): void {
-		DeveloperNotificationException.ifInvalidID("Ungültige ID bei " + StundenplanManager.klasseInfo(klasse), klasse.id);
-		DeveloperNotificationException.ifTrue("Leeres Kürzel bei " + StundenplanManager.klasseInfo(klasse), JavaString.isBlank(klasse.kuerzel));
+		DeveloperNotificationException.ifInvalidID(JavaString.format("Ungültige ID bei %s", StundenplanManager.klasseInfo(klasse)), klasse.id);
+		DeveloperNotificationException.ifTrue(JavaString.format("Leeres Kürzel bei %s", StundenplanManager.klasseInfo(klasse)), JavaString.isBlank(klasse.kuerzel));
 		for (const idJahrgang of klasse.jahrgaenge)
-			DeveloperNotificationException.ifMapNotContains("_jahrgang_by_id fehlende Referenz bei " + StundenplanManager.klasseInfo(klasse), this._jahrgang_by_id, idJahrgang);
+			DeveloperNotificationException.ifMapNotContains(JavaString.format("_jahrgang_by_id fehlende Referenz bei %s", StundenplanManager.klasseInfo(klasse)), this._jahrgang_by_id, idJahrgang);
 		for (const idSchueler of klasse.schueler)
-			DeveloperNotificationException.ifMapNotContains("_schueler_by_id fehlende Referenz bei " + StundenplanManager.klasseInfo(klasse), this._schueler_by_id, idSchueler);
+			DeveloperNotificationException.ifMapNotContains(JavaString.format("_schueler_by_id fehlende Referenz bei %s", StundenplanManager.klasseInfo(klasse)), this._schueler_by_id, idSchueler);
 	}
 
 	private static klasseInfo(klasse: StundenplanKlasse): string {
-		let s: string | null = "";
-		s += "[StundenplanKlasse";
-		s += "(kuerzel=" + klasse.kuerzel + ")";
-		s += "(bezeichnung=" + klasse.bezeichnung + ")";
-		s += "(sortierung=" + klasse.sortierung + ")";
-		s += "(jahrgaenge=" + klasse.jahrgaenge + ")";
-		s += "(schueler=" + klasse.schueler + ")";
-		s += "]";
-		return s;
+		return JavaString.format("[StundenplanKlasse(kuerzel=%s)(bezeichnung=%s)(sortierung=%d)(jahrgaenge=%s)(schueler=%s)]", klasse.kuerzel, klasse.bezeichnung, klasse.sortierung, klasse.jahrgaenge, klasse.schueler);
 	}
 
 	/**
@@ -2892,7 +2857,7 @@ export class StundenplanManager extends JavaObject {
 	public klasseGetBeschreibungKuerzel(idKlasse: number): string {
 		const kl: StundenplanKlasse | null = this._klasse_by_id.get(idKlasse);
 		if (kl === null)
-			return "Klassen-Objekt [" + idKlasse + "] ???";
+			return JavaString.format("Klassen-Objekt [%d] ???", idKlasse);
 		return kl.kuerzel;
 	}
 
@@ -2996,26 +2961,19 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private klassenunterrichtCheckAttributes(klassenunterricht: StundenplanKlassenunterricht): void {
-		DeveloperNotificationException.ifMapNotContains("_klasse_by_id fehlende Referenz bei " + StundenplanManager.klassenunterrichtInfo(klassenunterricht), this._klasse_by_id, klassenunterricht.idKlasse);
-		DeveloperNotificationException.ifMapNotContains("_fach_by_id fehlende Referenz bei " + StundenplanManager.klassenunterrichtInfo(klassenunterricht), this._fach_by_id, klassenunterricht.idFach);
+		DeveloperNotificationException.ifMapNotContains(JavaString.format("_klasse_by_id fehlende Referenz bei %s", StundenplanManager.klassenunterrichtInfo(klassenunterricht)), this._klasse_by_id, klassenunterricht.idKlasse);
+		DeveloperNotificationException.ifMapNotContains(JavaString.format("_fach_by_id fehlende Referenz bei %s", StundenplanManager.klassenunterrichtInfo(klassenunterricht)), this._fach_by_id, klassenunterricht.idFach);
 		for (const idSchiene of klassenunterricht.schienen)
-			DeveloperNotificationException.ifMapNotContains("_schiene_by_id fehlende Referenz bei " + StundenplanManager.klassenunterrichtInfo(klassenunterricht), this._schiene_by_id, idSchiene);
+			DeveloperNotificationException.ifMapNotContains(JavaString.format("_schiene_by_id fehlende Referenz bei %s", StundenplanManager.klassenunterrichtInfo(klassenunterricht)), this._schiene_by_id, idSchiene);
 		for (const idLehrkraft of klassenunterricht.lehrer)
-			if (!this._lehrer_by_id.containsKey(idLehrkraft))
-				this.lehrerAddPseudoLehrkraftOhneUpdate(idLehrkraft, "Klasseunterricht " + this.klassenunterrichtGetBeschreibungKlasseAndFach(klassenunterricht) + " hat ungültige Lehrerreferenz.");
+			if (!this._lehrer_by_id.containsKey(idLehrkraft)) {
+				const warnung: string = JavaString.format("Klasseunterricht %s hat ungültige Lehrerreferenz.", this.klassenunterrichtGetBeschreibungKlasseAndFach(klassenunterricht));
+				this.lehrerAddPseudoLehrkraftOhneUpdate(idLehrkraft, warnung);
+			}
 	}
 
 	private static klassenunterrichtInfo(ku: StundenplanKlassenunterricht): string {
-		let s: string | null = "";
-		s += "[StundenplanKlassenunterricht";
-		s += "(idKlasse=" + ku.idKlasse + ")";
-		s += "(idFach=" + ku.idFach + ")";
-		s += "(bezeichnung=" + ku.bezeichnung + ")";
-		s += "(wochenstunden=" + ku.wochenstunden + ")";
-		s += "(schueler=" + ku.schueler + ")";
-		s += "(lehrer=" + ku.lehrer + ")";
-		s += "]";
-		return s;
+		return JavaString.format("[StundenplanKlassenunterricht(idKlasse=%d)(idFach=%d)(bezeichnung=%s)(wochenstunden=%d)(schueler=%s)(lehrer=%s)]", ku.idKlasse, ku.idFach, ku.bezeichnung, ku.wochenstunden, ku.schueler, ku.lehrer);
 	}
 
 	private klassenunterrichtCreateComparator(): Comparator<StundenplanKlassenunterricht> {
@@ -3393,19 +3351,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private static kursInfo(ku: StundenplanKurs): string {
-		let s: string | null = "";
-		s += "[StundenplanKurs";
-		s += "(id=" + ku.id + ")";
-		s += "(idFach=" + ku.idFach + ")";
-		s += "(bezeichnung=" + ku.bezeichnung + ")";
-		s += "(wochenstunden=" + ku.wochenstunden + ")";
-		s += "(sortierung=" + ku.sortierung + ")";
-		s += "(schienen=" + ku.schienen + ")";
-		s += "(jahrgaenge=" + ku.jahrgaenge + ")";
-		s += "(schueler=" + ku.schueler + ")";
-		s += "(lehrer=" + ku.lehrer + ")";
-		s += "]";
-		return s;
+		return JavaString.format("[StundenplanKurs(id=%d)(idFach=%d)(bezeichnung=%s)(wochenstunden=%d)(sortierung=%d)(schienen=%s)(jahrgaenge=%s)(schueler=%s)(lehrer=%s)]", ku.id, ku.idFach, ku.bezeichnung, ku.wochenstunden, ku.sortierung, ku.schienen, ku.jahrgaenge, ku.schueler, ku.lehrer);
 	}
 
 	/**
@@ -3821,7 +3767,7 @@ export class StundenplanManager extends JavaObject {
 	public lehrerGetBeschreibungKuerzel(idLehrer: number): string {
 		const l: StundenplanLehrer | null = this._lehrer_by_id.get(idLehrer);
 		if (l === null)
-			return "Lehrer-Objekt [" + idLehrer + "] ???";
+			return JavaString.format("Lehrer-Objekt [%d] ???", idLehrer);
 		return l.kuerzel;
 	}
 
@@ -5030,7 +4976,7 @@ export class StundenplanManager extends JavaObject {
 	public raumGetBeschreibungKuerzel(idRaum: number): string {
 		const ra: StundenplanRaum | null = this._raum_by_id.get(idRaum);
 		if (ra === null)
-			return "Raum-Objekt [" + idRaum + "] ???";
+			return JavaString.format("Raum-Objekt [%d] ???", idRaum);
 		return ra.kuerzel;
 	}
 
@@ -5474,8 +5420,8 @@ export class StundenplanManager extends JavaObject {
 	public schuelerGetBeschreibungVornameNachname(idSchueler: number): string {
 		const s: StundenplanSchueler | null = this._schueler_by_id.get(idSchueler);
 		if (s === null)
-			return "Schüler-Objekt [" + idSchueler + "] ???";
-		return s.vorname + " " + s.nachname;
+			return JavaString.format("Schüler-Objekt [%d] ???", idSchueler);
+		return JavaString.format("%s %s", s.vorname, s.nachname);
 	}
 
 	/**
@@ -6224,7 +6170,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte einer Klasse mit einem bestimmten Wochentyp.
 	 */
 	public unterrichtGetMengeByKlasseIdAndWochentyp(idKlasse: number, wochentyp: number): List<StundenplanUnterricht> {
-		DeveloperNotificationException.ifTrue("wochentyp > stundenplanWochenTypModell", wochentyp > this._stundenplanWochenTypModell);
+		DeveloperNotificationException.ifTrue(JavaString.format("unterrichtGetMengeByKlasseIdAndWochentyp(%d, %d): wochentyp(%d) > stundenplanWochenTypModell(%d)", idKlasse, wochentyp, wochentyp, this._stundenplanWochenTypModell), wochentyp > this._stundenplanWochenTypModell);
 		const listU: List<StundenplanUnterricht> = MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKlasse, idKlasse);
 		return CollectionUtils.toFilteredArrayList(listU, { test: (u: StundenplanUnterricht) => (u.wochentyp === 0) || (u.wochentyp === wochentyp) });
 	}
@@ -6265,7 +6211,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte eines Klassenunterrichts (Klasse, Fach) mit einem bestimmten Wochentyp.
 	 */
 	public unterrichtGetMengeByKlasseIdAndFachIdAndWochentyp(idKlasse: number, idFach: number, wochentyp: number): List<StundenplanUnterricht> {
-		DeveloperNotificationException.ifTrue("wochentyp > stundenplanWochenTypModell", wochentyp > this._stundenplanWochenTypModell);
+		DeveloperNotificationException.ifTrue(JavaString.format("unterrichtGetMengeByKlasseIdAndFachIdAndWochentyp(%d, %d, %d): wochentyp(%d) > stundenplanWochenTypModell(%d)", idKlasse, idFach, wochentyp, wochentyp, this._stundenplanWochenTypModell), wochentyp > this._stundenplanWochenTypModell);
 		const listU: List<StundenplanUnterricht> = DeveloperNotificationException.ifMap2DGetIsNull(this._unterrichtmenge_by_idKlasse_and_idFach, idKlasse, idFach);
 		return CollectionUtils.toFilteredArrayList(listU, { test: (u: StundenplanUnterricht) => (u.wochentyp === 0) || (u.wochentyp === wochentyp) });
 	}
@@ -6305,7 +6251,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
 	 */
 	public unterrichtGetMengeByKursIdAndWochentyp(idkurs: number, wochentyp: number): List<StundenplanUnterricht> {
-		DeveloperNotificationException.ifTrue("wochentyp > stundenplanWochenTypModell", wochentyp > this._stundenplanWochenTypModell);
+		DeveloperNotificationException.ifTrue(JavaString.format("unterrichtGetMengeByKursIdAndWochentyp(%d, %d): wochentyp(%d) > stundenplanWochenTypModell(%d)", idkurs, wochentyp, wochentyp, this._stundenplanWochenTypModell), wochentyp > this._stundenplanWochenTypModell);
 		const listU: List<StundenplanUnterricht> = MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKurs, idkurs);
 		return CollectionUtils.toFilteredArrayList(listU, { test: (u: StundenplanUnterricht) => (u.wochentyp === 0) || (u.wochentyp === wochentyp) });
 	}

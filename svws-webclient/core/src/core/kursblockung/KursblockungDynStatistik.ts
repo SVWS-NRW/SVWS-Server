@@ -1,6 +1,7 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
 import { Class } from '../../java/lang/Class';
+import { JavaString } from '../../java/lang/JavaString';
 import { Logger } from '../../core/logger/Logger';
 import { Arrays } from '../../java/util/Arrays';
 import { JavaMath } from '../../java/lang/JavaMath';
@@ -180,7 +181,7 @@ export class KursblockungDynStatistik extends JavaObject {
 	 */
 	debug(pPrefix: string): void {
 		this._logger.modifyIndent(+4);
-		this._logger.logLn(pPrefix + ", RV = " + this.bewertungRegelverletzungen + ", NW = " + this.bewertungNichtwahlen + ", FW = " + this.bewertungFachartPaar + ", KDs = " + this.bewertungKursdifferenzenMaxIndex + " = " + Arrays.toString(this.bewertungKursdifferenzen));
+		this._logger.logLn(JavaString.format("%s, RV = %d, NW = %d, FW = %d, KDs = %d = %s", pPrefix, this.bewertungRegelverletzungen, this.bewertungNichtwahlen, this.bewertungFachartPaar, this.bewertungKursdifferenzenMaxIndex, Arrays.toString(this.bewertungKursdifferenzen)));
 		this._logger.modifyIndent(-4);
 	}
 
@@ -512,14 +513,14 @@ export class KursblockungDynStatistik extends JavaObject {
 		const nr2: number = kurs2.gibInternalID();
 		this.regelVerletzungKursMitKurs[nr1][nr2] -= 1;
 		this.regelVerletzungKursMitKurs[nr2][nr1] -= 1;
-		let maximaleSchnittmenge: number = Math.max(kurs1.gibSchienenAnzahl(), kurs2.gibSchienenAnzahl());
+		const maximaleSchnittmenge: number = Math.max(kurs1.gibSchienenAnzahl(), kurs2.gibSchienenAnzahl());
 		this.bewertungRegelverletzungen += maximaleSchnittmenge - KursblockungDynStatistik.gibAnzahlGemeinsamerSchienen(kurs1, kurs2);
 	}
 
 	private static gibAnzahlGemeinsamerSchienen(kurs1: KursblockungDynKurs, kurs2: KursblockungDynKurs): number {
 		let summe: number = 0;
-		for (let schienenNr1 of kurs1.gibSchienenLage())
-			for (let schienenNr2 of kurs2.gibSchienenLage())
+		for (const schienenNr1 of kurs1.gibSchienenLage())
+			for (const schienenNr2 of kurs2.gibSchienenLage())
 				if (schienenNr1 === schienenNr2)
 					summe++;
 		return summe;

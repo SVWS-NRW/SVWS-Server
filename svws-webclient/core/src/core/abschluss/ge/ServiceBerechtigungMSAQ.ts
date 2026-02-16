@@ -160,7 +160,7 @@ export class ServiceBerechtigungMSAQ extends Service {
 					const ausgleichsFach: GEAbschlussFach = fg1_ausgleichsfaecher.get(0);
 					defizitFach.ausgeglichen = true;
 					ausgleichsFach.ausgleich = true;
-					this.logger.logLn(LogLevel.DEBUG, logIndent + " -> Ausgleich von " + defizitFach.kuerzel + " durch " + ausgleichsFach.kuerzel);
+					this.logger.logLn(LogLevel.DEBUG, JavaString.format("%s -> Ausgleich von %s durch %s.", logIndent, defizitFach.kuerzel, ausgleichsFach.kuerzel));
 					nachpruefung_genutzt = true;
 					npFaecher.add(wp_defizit);
 					const abschlussergebnis: AbschlussErgebnis = this.pruefeFG2(faecher, logIndent, npFaecher, nachpruefung_genutzt);

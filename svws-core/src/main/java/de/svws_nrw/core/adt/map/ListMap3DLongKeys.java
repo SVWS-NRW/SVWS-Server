@@ -128,7 +128,7 @@ public class ListMap3DLongKeys<V> {
 	}
 
 	private V getSingleOrNullHelperLong(final @NotNull Map<Long, List<V>> map, final long key) {
-		List<V> list = map.get(key);
+		final List<V> list = map.get(key);
 		if (list == null)
 			return null;
 		if (list.size() != 1)
@@ -137,7 +137,7 @@ public class ListMap3DLongKeys<V> {
 	}
 
 	private V getSingleOrNullHelperLongArray(final @NotNull Map<LongArrayKey, List<V>> map, final @NotNull LongArrayKey key) {
-		List<V> list = map.get(key);
+		final List<V> list = map.get(key);
 		if (list == null)
 			return null;
 		if (list.size() != 1)
@@ -511,7 +511,7 @@ public class ListMap3DLongKeys<V> {
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
 	public @NotNull V getSingle1OrException(final long key1) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle1OrNull(key1));
+		return DeveloperNotificationException.ifNull("getSingle1OrException: Dem Key %d ist keine Liste zugeordnet.", getSingle1OrNull(key1));
 	}
 
 	/**
@@ -523,7 +523,7 @@ public class ListMap3DLongKeys<V> {
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
 	public @NotNull V getSingle2OrException(final long key2) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle2OrNull(key2));
+		return DeveloperNotificationException.ifNull("getSingle2OrException: Dem Key %d ist keine Liste zugeordnet.", getSingle2OrNull(key2));
 	}
 
 	/**
@@ -535,7 +535,7 @@ public class ListMap3DLongKeys<V> {
 	 * @throws DeveloperNotificationException falls nicht genau ein Element zugeordnet ist.
 	 */
 	public @NotNull V getSingle3OrException(final long key3) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifNull("Das Element ist nicht eindeutig!", getSingle3OrNull(key3));
+		return DeveloperNotificationException.ifNull("Dem Key %d ist keine Liste zugeordnet.", getSingle3OrNull(key3));
 	}
 
 	/**
@@ -675,7 +675,7 @@ public class ListMap3DLongKeys<V> {
 	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
 	 */
 	public @NotNull List<V> get1OrException(final long key1) {
-		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey1(key1));
+		DeveloperNotificationException.ifTrue("get1OrException: Es keine Liste zugeordnet.", !containsKey1(key1));
 		return get1(key1);
 	}
 
@@ -688,7 +688,7 @@ public class ListMap3DLongKeys<V> {
 	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
 	 */
 	public @NotNull List<V> get2OrException(final long key2) {
-		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey2(key2));
+		DeveloperNotificationException.ifTrue("get2OrException: Dem Key %d ist keine Liste zugeordnet.", !containsKey2(key2));
 		return get2(key2);
 	}
 
@@ -701,7 +701,7 @@ public class ListMap3DLongKeys<V> {
 	 * @throws DeveloperNotificationException falls es kein Mapping gibt.
 	 */
 	public @NotNull List<V> get3OrException(final long key3) {
-		DeveloperNotificationException.ifTrue("Es keine Liste zugeordnet.", !containsKey3(key3));
+		DeveloperNotificationException.ifTrue("Dem Key %d ist keine Liste zugeordnet.", !containsKey3(key3));
 		return get3(key3);
 	}
 

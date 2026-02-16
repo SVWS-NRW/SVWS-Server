@@ -575,26 +575,26 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._schienenNRset = new HashSet();
 		for (const gSchiene of this._parent.daten().schienen) {
 			if (gSchiene.id < 0)
-				this._fehlermeldungen.add("Die Schienen-ID " + gSchiene.id + " ist ungültig!");
+				this._fehlermeldungen.add(JavaString.format("Die Schienen-ID %d ist ungültig!", gSchiene.id));
 			if (!this._schienenIDset.add(gSchiene.id))
-				this._fehlermeldungen.add("Die Schienen-ID " + gSchiene.id + " ist doppelt!");
+				this._fehlermeldungen.add(JavaString.format("Die Schienen-ID %d ist doppelt!", gSchiene.id));
 			if (gSchiene.nummer <= 0)
-				this._fehlermeldungen.add("Die Schienen-NR " + gSchiene.nummer + " ist ungültig!");
+				this._fehlermeldungen.add(JavaString.format("Die Schienen-NR %d ist ungültig!", gSchiene.nummer));
 			if (!this._schienenNRset.add(gSchiene.nummer))
-				this._fehlermeldungen.add("Die Schienen-NR " + gSchiene.nummer + " ist doppelt!");
+				this._fehlermeldungen.add(JavaString.format("Die Schienen-NR %d ist doppelt!", gSchiene.nummer));
 		}
 		for (let schienenNr: number = 1; schienenNr <= this._schienenNRset.size(); schienenNr++)
 			if (!this._schienenNRset.contains(schienenNr))
-				this._fehlermeldungen.add("Es gibt " + this._schienenNRset.size() + " Schienen, aber es fehlt die Schienen-Nr. " + schienenNr + "!");
+				this._fehlermeldungen.add(JavaString.format("Es gibt %d Schienen, aber es fehlt die Schienen-Nr. %d!", this._schienenNRset.size(), schienenNr));
 	}
 
 	private update_0_kursIDset(): void {
 		this._kursIDset = new HashSet();
 		for (const gKurs of this._parent.daten().kurse) {
 			if (gKurs.id < 0)
-				this._fehlermeldungen.add("Die Kurs-ID " + gKurs.id + " ist ungültig!");
+				this._fehlermeldungen.add(JavaString.format("Die Kurs-ID %d ist ungültig!", gKurs.id));
 			if (!this._kursIDset.add(gKurs.id))
-				this._fehlermeldungen.add("Die Kurs-ID " + gKurs.id + " ist doppelt!");
+				this._fehlermeldungen.add(JavaString.format("Die Kurs-ID %d ist doppelt!", gKurs.id));
 		}
 	}
 
@@ -602,25 +602,25 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		this._fachIDset = new HashSet();
 		for (const gFach of this._parent.faecherManager().faecher()) {
 			if (gFach.id < 0)
-				this._fehlermeldungen.add("Die Fach-ID " + gFach.id + " ist ungültig!");
+				this._fehlermeldungen.add(JavaString.format("Die Fach-ID %d ist ungültig!", gFach.id));
 			if (!this._fachIDset.add(gFach.id))
-				this._fehlermeldungen.add("Die Fach-ID " + gFach.id + " ist doppelt!");
+				this._fehlermeldungen.add(JavaString.format("Die Fach-ID %d ist doppelt!", gFach.id));
 		}
 		for (const gKurs of this._parent.daten().kurse)
 			if (this._fachIDset.add(gKurs.fach_id))
-				this._fehlermeldungen.add("Kurs " + this._parent.toStringKursSimple(gKurs.id) + " hat ein undefiniertes Fach (im Fächer-Manager)!");
+				this._fehlermeldungen.add(JavaString.format("Kurs %s hat ein undefiniertes Fach (im Fächer-Manager)!", this._parent.toStringKursSimple(gKurs.id)));
 		for (const gFachwahl of this._parent.daten().fachwahlen)
 			if (this._fachIDset.add(gFachwahl.fachID))
-				this._fehlermeldungen.add("Fachwahl " + this._parent.toStringFachwahlSimple(gFachwahl) + " hat ein undefiniertes Fach (im Fächer-Manager)!");
+				this._fehlermeldungen.add(JavaString.format("Fachwahl %s hat ein undefiniertes Fach (im Fächer-Manager)!", this._parent.toStringFachwahlSimple(gFachwahl)));
 	}
 
 	private update_0_schuelerIDset(): void {
 		this._schuelerIDset = new HashSet();
 		for (const schueler of this._parent.daten().schueler) {
 			if (schueler.id < 0)
-				this._fehlermeldungen.add("Die Schüler-ID " + schueler.id + " ist ungültig!");
+				this._fehlermeldungen.add(JavaString.format("Die Schüler-ID %d ist ungültig!", schueler.id));
 			if (!this._schuelerIDset.add(schueler.id))
-				this._fehlermeldungen.add("Die Schüler-ID " + schueler.id + " ist doppelt!");
+				this._fehlermeldungen.add(JavaString.format("Die Schüler-ID %d ist doppelt!", schueler.id));
 		}
 	}
 
@@ -717,15 +717,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			const idKurs: number = r.parameter.get(0).valueOf();
 			const anzahl: number = r.parameter.get(1);
 			if (!this._kursIDset.contains(idKurs)) {
-				this._fehlermeldungen.add("Kurs " + this._parent.toStringKursSimple(idKurs) + " soll " + anzahl + " externe SuS haben, aber den Kurs gibt es nicht!");
+				this._fehlermeldungen.add(JavaString.format("Kurs %s soll %d externe SuS haben, aber den Kurs gibt es nicht!", this._parent.toStringKursSimple(idKurs), anzahl));
 				continue;
 			}
 			if ((anzahl < 1) || (anzahl > 99)) {
-				this._fehlermeldungen.add("Kurs " + this._parent.toStringKursSimple(idKurs) + " mit " + anzahl + " externen SuS ist ungültig!");
+				this._fehlermeldungen.add(JavaString.format("Kurs %s mit %d externen SuS ist ungültig!", this._parent.toStringKursSimple(idKurs), anzahl));
 				continue;
 			}
 			if (this._kursID_to_dummySuS.containsKey(idKurs)) {
-				this._fehlermeldungen.add("Kurs " + this._parent.toStringKursSimple(idKurs) + " mit " + anzahl + " externen SuS. Doppelte Regel gefunden!");
+				this._fehlermeldungen.add(JavaString.format("Kurs %s mit %d externen SuS. Doppelte Regel gefunden!", this._parent.toStringKursSimple(idKurs), anzahl));
 				continue;
 			}
 			this._kursID_to_dummySuS.put(idKurs, anzahl);
@@ -968,7 +968,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				const b2: boolean = (schienenNrVon <= nr) && (nr <= schienenNrBis);
 				if (b1 !== b2) {
 					this._ergebnis.bewertung.regelVerletzungen.add(r.id);
-					const beschreibung: string = "Kursart von " + this.getOfKursName(eKurs.id) + " sollte innerhalb der Schienen " + schienenNrVon + " bis " + schienenNrBis + " sein.";
+					const beschreibung: string = JavaString.format("Kursart von %s sollte innerhalb der Schienen %d bis %d sein.", this.getOfKursName(eKurs.id), schienenNrVon, schienenNrBis);
 					MapUtils.addToList(this._regelTyp_to_verletzungList, 6, beschreibung);
 					this._regelID_to_verletzungString.put(r.id, beschreibung);
 				}
@@ -983,7 +983,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				if (schiene1 as unknown === schiene2 as unknown) {
 					this._ergebnis.bewertung.regelVerletzungen.add(r.id);
 					const nr: number = this.getSchieneG(schiene1.id).nummer;
-					const beschreibung: string = "Kurs " + this.getOfKursName(idKurs1) + " und Kurs " + this.getOfKursName(idKurs2) + " sollten nicht gemeinsam in einer Schiene (" + nr + ") sein.";
+					const beschreibung: string = JavaString.format("Kurs %s und Kurs %s sollten nicht gemeinsam in einer Schiene (%d) sein.", this.getOfKursName(idKurs1), this.getOfKursName(idKurs2), nr);
 					MapUtils.addToList(this._regelTyp_to_verletzungList, 7, beschreibung);
 					this._regelID_to_verletzungString.put(r.id, beschreibung);
 				}
@@ -998,7 +998,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			for (const schiene1 of set1)
 				if (!set2.contains(schiene1)) {
 					this._ergebnis.bewertung.regelVerletzungen.add(r.id);
-					const beschreibung: string = "Kurs " + this.getOfKursName(idKurs1) + " und Kurs " + this.getOfKursName(idKurs2) + " sollten gemeinsam in einer Schiene sein.";
+					const beschreibung: string = JavaString.format("Kurs %s und Kurs %s sollten gemeinsam in einer Schiene sein.", this.getOfKursName(idKurs1), this.getOfKursName(idKurs2));
 					MapUtils.addToList(this._regelTyp_to_verletzungList, 8, beschreibung);
 					this._regelID_to_verletzungString.put(r.id, beschreibung);
 				}
@@ -1006,7 +1006,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			for (const schiene2 of set2)
 				if (!set1.contains(schiene2)) {
 					this._ergebnis.bewertung.regelVerletzungen.add(r.id);
-					const beschreibung: string = "Kurs " + this.getOfKursName(idKurs1) + " und Kurs " + this.getOfKursName(idKurs2) + " sollten gemeinsam in einer Schiene sein.";
+					const beschreibung: string = JavaString.format("Kurs %s und Kurs %s sollten gemeinsam in einer Schiene sein.", this.getOfKursName(idKurs1), this.getOfKursName(idKurs2));
 					MapUtils.addToList(this._regelTyp_to_verletzungList, 8, beschreibung);
 					this._regelID_to_verletzungString.put(r.id, beschreibung);
 				}
@@ -1036,28 +1036,28 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const fach: GostFach = this.getFach(idFach);
 		if (!this._parent.schuelerGetHatFach(idSchueler1, idFach)) {
 			this._ergebnis.bewertung.regelVerletzungen.add(r.id);
-			const beschreibung: string = this.getOfSchuelerNameVorname(idSchueler1) + " hat keine Fachwahl " + fach.kuerzelAnzeige + ", aber eine Regel, die das Fach definiert.";
+			const beschreibung: string = JavaString.format("%s hat keine Fachwahl %s, aber eine Regel, die das Fach definiert.", this.getOfSchuelerNameVorname(idSchueler1), fach.kuerzelAnzeige);
 			MapUtils.addToList(this._regelTyp_to_verletzungList, 11, beschreibung);
 			this._regelID_to_verletzungString.put(r.id, beschreibung);
 			return;
 		}
 		if (!this._parent.schuelerGetHatFach(idSchueler2, idFach)) {
 			this._ergebnis.bewertung.regelVerletzungen.add(r.id);
-			const beschreibung: string = this.getOfSchuelerNameVorname(idSchueler2) + " hat keine Fachwahl " + fach.kuerzelAnzeige + ", aber eine Regel, die das Fach definiert.";
+			const beschreibung: string = JavaString.format("%s hat keine Fachwahl %s, aber eine Regel, die das Fach definiert.", this.getOfSchuelerNameVorname(idSchueler2), fach.kuerzelAnzeige);
 			MapUtils.addToList(this._regelTyp_to_verletzungList, 11, beschreibung);
 			this._regelID_to_verletzungString.put(r.id, beschreibung);
 			return;
 		}
 		if (!this._parent.schuelerGetHatDieSelbeKursartMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			this._ergebnis.bewertung.regelVerletzungen.add(r.id);
-			const beschreibung: string = this.getOfSchuelerNameVorname(idSchueler1) + " und " + this.getOfSchuelerNameVorname(idSchueler2) + " haben nicht die selbe Kursart bei " + fach.kuerzelAnzeige + ".";
+			const beschreibung: string = JavaString.format("%s und %s haben nicht die selbe Kursart bei %s.", this.getOfSchuelerNameVorname(idSchueler1), this.getOfSchuelerNameVorname(idSchueler2), fach.kuerzelAnzeige);
 			MapUtils.addToList(this._regelTyp_to_verletzungList, 11, beschreibung);
 			this._regelID_to_verletzungString.put(r.id, beschreibung);
 			return;
 		}
 		if (!this.getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			this._ergebnis.bewertung.regelVerletzungen.add(r.id);
-			const beschreibung: string = this.getOfSchuelerNameVorname(idSchueler1) + " und " + this.getOfSchuelerNameVorname(idSchueler2) + " sollten gemeinsam in " + fach.kuerzelAnzeige + " sein.";
+			const beschreibung: string = JavaString.format("%s und %s sollten gemeinsam in %s sein.", this.getOfSchuelerNameVorname(idSchueler1), this.getOfSchuelerNameVorname(idSchueler2), fach.kuerzelAnzeige);
 			MapUtils.addToList(this._regelTyp_to_verletzungList, 11, beschreibung);
 			this._regelID_to_verletzungString.put(r.id, beschreibung);
 		}
@@ -1070,28 +1070,28 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const fach: GostFach = this.getFach(idFach);
 		if (!this._parent.schuelerGetHatFach(idSchueler1, idFach)) {
 			this._ergebnis.bewertung.regelVerletzungen.add(r.id);
-			const beschreibung: string = this.getOfSchuelerNameVorname(idSchueler1) + " hat keine Fachwahl " + fach.kuerzelAnzeige + ", hat aber eine Regel, die das Fach definiert.";
+			const beschreibung: string = JavaString.format("%s hat keine Fachwahl %s, hat aber eine Regel, die das Fach definiert.", this.getOfSchuelerNameVorname(idSchueler1), fach.kuerzelAnzeige);
 			MapUtils.addToList(this._regelTyp_to_verletzungList, 12, beschreibung);
 			this._regelID_to_verletzungString.put(r.id, beschreibung);
 			return;
 		}
 		if (!this._parent.schuelerGetHatFach(idSchueler2, idFach)) {
 			this._ergebnis.bewertung.regelVerletzungen.add(r.id);
-			const beschreibung: string = this.getOfSchuelerNameVorname(idSchueler2) + " hat keine Fachwahl " + fach.kuerzelAnzeige + ", hat aber eine Regel, die das Fach definiert.";
+			const beschreibung: string = JavaString.format("%s hat keine Fachwahl %s, hat aber eine Regel, die das Fach definiert.", this.getOfSchuelerNameVorname(idSchueler2), fach.kuerzelAnzeige);
 			MapUtils.addToList(this._regelTyp_to_verletzungList, 12, beschreibung);
 			this._regelID_to_verletzungString.put(r.id, beschreibung);
 			return;
 		}
 		if (!this._parent.schuelerGetHatDieSelbeKursartMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			this._ergebnis.bewertung.regelVerletzungen.add(r.id);
-			const beschreibung: string = this.getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + this.getOfSchuelerNameVorname(idSchueler2) + " haben nicht die selbe Kursart bei " + fach.kuerzelAnzeige + ".";
+			const beschreibung: string = JavaString.format("%s und SchülerIn %s haben nicht die selbe Kursart bei %s.", this.getOfSchuelerNameVorname(idSchueler1), this.getOfSchuelerNameVorname(idSchueler2), fach.kuerzelAnzeige);
 			MapUtils.addToList(this._regelTyp_to_verletzungList, 12, beschreibung);
 			this._regelID_to_verletzungString.put(r.id, beschreibung);
 			return;
 		}
 		if (this.getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			this._ergebnis.bewertung.regelVerletzungen.add(r.id);
-			const beschreibung: string = this.getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + this.getOfSchuelerNameVorname(idSchueler2) + " sollten nicht gemeinsam in " + fach.kuerzelAnzeige + " sein.";
+			const beschreibung: string = JavaString.format("%s und SchülerIn %s sollten nicht gemeinsam in %s sein.", this.getOfSchuelerNameVorname(idSchueler1), this.getOfSchuelerNameVorname(idSchueler2), fach.kuerzelAnzeige);
 			MapUtils.addToList(this._regelTyp_to_verletzungList, 12, beschreibung);
 			this._regelID_to_verletzungString.put(r.id, beschreibung);
 		}
@@ -1213,7 +1213,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	private static dividiereUndScheideNachZweiNachkommastellenAb(zaehler: number, nenner: number): number {
-		let hochskaliert: number = Math.trunc((zaehler * 100) / nenner);
+		const hochskaliert: number = Math.trunc((zaehler * 100) / nenner);
 		return hochskaliert / 100.0;
 	}
 
@@ -1225,11 +1225,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Kursfrequenz als String, berechnet als (Summe aller Fachwahlen) / (interne Kurse).
 	 */
 	public getKursfrequenz1AsString(): string {
-		let nKurse: number = this._parent.kursGetAnzahlIntener();
+		const nKurse: number = this._parent.kursGetAnzahlIntener();
 		if (nKurse === 0)
 			return "Kursfrequenz = ?";
-		let nFachwahlen: number = this._parent.fachwahlGetAnzahl();
-		let avg1: number = GostBlockungsergebnisManager.dividiereUndScheideNachZweiNachkommastellenAb(nFachwahlen, nKurse);
+		const nFachwahlen: number = this._parent.fachwahlGetAnzahl();
+		const avg1: number = GostBlockungsergebnisManager.dividiereUndScheideNachZweiNachkommastellenAb(nFachwahlen, nKurse);
 		return JavaString.replace(("" + avg1), '.', ',');
 	}
 
@@ -1241,14 +1241,14 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Kursfrequenz als String, berechnet als (Summe aller auf interne Kurse verteilten SuS) / (interne Kurse).
 	 */
 	public getKursfrequenz2AsString(): string {
-		let nKurse: number = this._parent.kursGetAnzahlIntener();
+		const nKurse: number = this._parent.kursGetAnzahlIntener();
 		if (nKurse === 0)
 			return "Kursfrequenz = ?";
 		let nVerteilt: number = 0;
 		for (const gKurs of this._parent.daten().kurse)
 			if (!gKurs.istKoopKurs)
 				nVerteilt += this.getOfKursAnzahlSchueler(gKurs.id);
-		let avg2: number = GostBlockungsergebnisManager.dividiereUndScheideNachZweiNachkommastellenAb(nVerteilt, nKurse);
+		const avg2: number = GostBlockungsergebnisManager.dividiereUndScheideNachZweiNachkommastellenAb(nVerteilt, nKurse);
 		return JavaString.replace(("" + avg2), '.', ',');
 	}
 

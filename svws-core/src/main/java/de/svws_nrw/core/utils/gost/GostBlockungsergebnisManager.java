@@ -564,60 +564,67 @@ public class GostBlockungsergebnisManager {
 		return sb.toString();
 	}
 
+
 	private void update_0_schienenIDset_schienenNRset() {
 		_schienenIDset = new HashSet<>();
 		_schienenNRset = new HashSet<>();
 		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
 			if (gSchiene.id < 0)
-				_fehlermeldungen.add("Die Schienen-ID " + gSchiene.id + " ist ungültig!");
+				_fehlermeldungen.add("Die Schienen-ID %d ist ungültig!".formatted(gSchiene.id));
 			if (!_schienenIDset.add(gSchiene.id))
-				_fehlermeldungen.add("Die Schienen-ID " + gSchiene.id + " ist doppelt!");
+				_fehlermeldungen.add("Die Schienen-ID %d ist doppelt!".formatted(gSchiene.id));
 			if (gSchiene.nummer <= 0)
-				_fehlermeldungen.add("Die Schienen-NR " + gSchiene.nummer + " ist ungültig!");
+				_fehlermeldungen.add("Die Schienen-NR %d ist ungültig!".formatted(gSchiene.nummer));
 			if (!_schienenNRset.add(gSchiene.nummer))
-				_fehlermeldungen.add("Die Schienen-NR " + gSchiene.nummer + " ist doppelt!");
+				_fehlermeldungen.add("Die Schienen-NR %d ist doppelt!".formatted(gSchiene.nummer));
 		}
 		for (int schienenNr = 1; schienenNr <= _schienenNRset.size(); schienenNr++)
 			if (!_schienenNRset.contains(schienenNr))
-				_fehlermeldungen.add("Es gibt " + _schienenNRset.size() + " Schienen, aber es fehlt die Schienen-Nr. " + schienenNr + "!");
+				_fehlermeldungen.add("Es gibt %d Schienen, aber es fehlt die Schienen-Nr. %d!".formatted(
+						_schienenNRset.size(),
+						schienenNr
+				));
 	}
+
 
 	private void update_0_kursIDset() {
-		_kursIDset = new HashSet<>();
-		for (final @NotNull GostBlockungKurs gKurs : _parent.daten().kurse) {
-			if (gKurs.id < 0)
-				_fehlermeldungen.add("Die Kurs-ID " + gKurs.id + " ist ungültig!");
-			if (!_kursIDset.add(gKurs.id))
-				_fehlermeldungen.add("Die Kurs-ID " + gKurs.id + " ist doppelt!");
-		}
+	    _kursIDset = new HashSet<>();
+	    for (final @NotNull GostBlockungKurs gKurs : _parent.daten().kurse) {
+	        if (gKurs.id < 0)
+	            _fehlermeldungen.add("Die Kurs-ID %d ist ungültig!".formatted(gKurs.id));
+	        if (!_kursIDset.add(gKurs.id))
+	            _fehlermeldungen.add("Die Kurs-ID %d ist doppelt!".formatted(gKurs.id));
+	    }
 	}
+
 
 	private void update_0_fachIDset() {
-		_fachIDset = new HashSet<>();
-		for (final @NotNull GostFach gFach : _parent.faecherManager().faecher()) {
-			if (gFach.id < 0)
-				_fehlermeldungen.add("Die Fach-ID " + gFach.id + " ist ungültig!");
-			if (!_fachIDset.add(gFach.id))
-				_fehlermeldungen.add("Die Fach-ID " + gFach.id + " ist doppelt!");
-		}
-		// Gibt es Kurse ohne definiertes Fach?
-		for (final @NotNull GostBlockungKurs gKurs : _parent.daten().kurse)
-			if (_fachIDset.add(gKurs.fach_id))
-				_fehlermeldungen.add("Kurs " + _parent.toStringKursSimple(gKurs.id) + " hat ein undefiniertes Fach (im Fächer-Manager)!");
-		// Gibt es Fachwahlen  ohne definiertes Fach?
-		for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen)
-			if (_fachIDset.add(gFachwahl.fachID))
-				_fehlermeldungen.add("Fachwahl " + _parent.toStringFachwahlSimple(gFachwahl) + " hat ein undefiniertes Fach (im Fächer-Manager)!");
+	    _fachIDset = new HashSet<>();
+	    for (final @NotNull GostFach gFach : _parent.faecherManager().faecher()) {
+	        if (gFach.id < 0)
+	            _fehlermeldungen.add("Die Fach-ID %d ist ungültig!".formatted(gFach.id));
+	        if (!_fachIDset.add(gFach.id))
+	            _fehlermeldungen.add("Die Fach-ID %d ist doppelt!".formatted(gFach.id));
+	    }
+	    // Gibt es Kurse ohne definiertes Fach?
+	    for (final @NotNull GostBlockungKurs gKurs : _parent.daten().kurse)
+	        if (_fachIDset.add(gKurs.fach_id))
+	            _fehlermeldungen.add("Kurs %s hat ein undefiniertes Fach (im Fächer-Manager)!".formatted(_parent.toStringKursSimple(gKurs.id)));
+	    // Gibt es Fachwahlen ohne definiertes Fach?
+	    for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen)
+	        if (_fachIDset.add(gFachwahl.fachID))
+	            _fehlermeldungen.add("Fachwahl %s hat ein undefiniertes Fach (im Fächer-Manager)!".formatted(_parent.toStringFachwahlSimple(gFachwahl)));
 	}
 
+
 	private void update_0_schuelerIDset() {
-		_schuelerIDset = new HashSet<>();
-		for (final @NotNull Schueler schueler : _parent.daten().schueler) {
-			if (schueler.id < 0)
-				_fehlermeldungen.add("Die Schüler-ID " + schueler.id + " ist ungültig!");
-			if (!_schuelerIDset.add(schueler.id))
-				_fehlermeldungen.add("Die Schüler-ID " + schueler.id + " ist doppelt!");
-		}
+	    _schuelerIDset = new HashSet<>();
+	    for (final @NotNull Schueler schueler : _parent.daten().schueler) {
+	        if (schueler.id < 0)
+	            _fehlermeldungen.add("Die Schüler-ID %d ist ungültig!".formatted(schueler.id));
+	        if (!_schuelerIDset.add(schueler.id))
+	            _fehlermeldungen.add("Die Schüler-ID %d ist doppelt!".formatted(schueler.id));
+	    }
 	}
 
 
@@ -727,6 +734,7 @@ public class GostBlockungsergebnisManager {
 
 	}
 
+
 	private void update_1_kursID_to_dummySuS() {
 		// Leeren und hinzufügen.
 		_kursID_to_dummySuS = new HashMap<>();
@@ -734,15 +742,15 @@ public class GostBlockungsergebnisManager {
 			final long idKurs = r.parameter.get(0);
 			final int anzahl = r.parameter.get(1).intValue();
 			if (!_kursIDset.contains(idKurs)) {
-				_fehlermeldungen.add("Kurs " + _parent.toStringKursSimple(idKurs) + " soll " + anzahl + " externe SuS haben, aber den Kurs gibt es nicht!");
+				_fehlermeldungen.add("Kurs %s soll %d externe SuS haben, aber den Kurs gibt es nicht!".formatted(_parent.toStringKursSimple(idKurs), anzahl));
 				continue;
 			}
 			if ((anzahl < 1) || (anzahl > 99)) {
-				_fehlermeldungen.add("Kurs " + _parent.toStringKursSimple(idKurs) + " mit " + anzahl + " externen SuS ist ungültig!");
+				_fehlermeldungen.add("Kurs %s mit %d externen SuS ist ungültig!".formatted(_parent.toStringKursSimple(idKurs), anzahl));
 				continue;
 			}
 			if (_kursID_to_dummySuS.containsKey(idKurs)) {
-				_fehlermeldungen.add("Kurs " + _parent.toStringKursSimple(idKurs) + " mit " + anzahl + " externen SuS. Doppelte Regel gefunden!");
+				_fehlermeldungen.add("Kurs %s mit %d externen SuS. Doppelte Regel gefunden!".formatted(_parent.toStringKursSimple(idKurs), anzahl));
 				continue;
 			}
 			_kursID_to_dummySuS.put(idKurs, anzahl);
@@ -751,6 +759,7 @@ public class GostBlockungsergebnisManager {
 		for (final long idKurs : _kursIDset)
 			MapUtils.putNonNullIfNotExists(_kursID_to_dummySuS, idKurs, 0);
 	}
+
 
 	private void update_1_fachID_to_kurseList() {
 		// Leeren und hinzufügen.
@@ -1045,8 +1054,11 @@ public class GostBlockungsergebnisManager {
 				final boolean b2 = (schienenNrVon <= nr) && (nr <= schienenNrBis);
 				if (b1 != b2) {
 					_ergebnis.bewertung.regelVerletzungen.add(r.id);
-					final @NotNull String beschreibung =
-							"Kursart von " + getOfKursName(eKurs.id) + " sollte innerhalb der Schienen " + schienenNrVon + " bis " + schienenNrBis + " sein.";
+					final @NotNull String beschreibung = "Kursart von %s sollte innerhalb der Schienen %d bis %d sein.".formatted(
+							getOfKursName(eKurs.id),
+							schienenNrVon,
+							schienenNrBis
+					);
 					MapUtils.addToList(_regelTyp_to_verletzungList, 6, beschreibung);
 					_regelID_to_verletzungString.put(r.id, beschreibung);
 				}
@@ -1061,40 +1073,45 @@ public class GostBlockungsergebnisManager {
 				if (schiene1 == schiene2) {
 					_ergebnis.bewertung.regelVerletzungen.add(r.id);
 					final int nr = getSchieneG(schiene1.id).nummer;
-					final @NotNull String beschreibung = "Kurs " + getOfKursName(idKurs1) + " und Kurs " + getOfKursName(idKurs2)
-							+ " sollten nicht gemeinsam in einer Schiene (" + nr + ") sein.";
+					final @NotNull String beschreibung = "Kurs %s und Kurs %s sollten nicht gemeinsam in einer Schiene (%d) sein.".formatted(
+							getOfKursName(idKurs1),
+							getOfKursName(idKurs2),
+							nr
+					);
 					MapUtils.addToList(_regelTyp_to_verletzungList, 7, beschreibung);
 					_regelID_to_verletzungString.put(r.id, beschreibung);
 				}
 	}
 
+
 	private void stateRegelvalidierung8_kurs_zusammen_mit_kurs(final @NotNull GostBlockungRegel r) {
-		final long idKurs1 = r.parameter.get(0);
-		final long idKurs2 = r.parameter.get(1);
-		final @NotNull Set<GostBlockungsergebnisSchiene> set1 = getOfKursSchienenmenge(idKurs1);
-		final @NotNull Set<GostBlockungsergebnisSchiene> set2 = getOfKursSchienenmenge(idKurs2);
-		if (set1.size() < set2.size()) {
-			// "set1" muss in "set2" enthalten sein (da es dass kleinere ist).
-			for (final @NotNull GostBlockungsergebnisSchiene schiene1 : set1)
-				if (!set2.contains(schiene1)) {
-					_ergebnis.bewertung.regelVerletzungen.add(r.id);
-					final @NotNull String beschreibung =
-							"Kurs " + getOfKursName(idKurs1) + " und Kurs " + getOfKursName(idKurs2) + " sollten gemeinsam in einer Schiene sein.";
-					MapUtils.addToList(_regelTyp_to_verletzungList, 8, beschreibung);
-					_regelID_to_verletzungString.put(r.id, beschreibung);
-				}
-		} else {
-			// "set2" muss in "set1" enthalten sein, da es dass kleinere ist.
-			for (final @NotNull GostBlockungsergebnisSchiene schiene2 : set2)
-				if (!set1.contains(schiene2)) {
-					_ergebnis.bewertung.regelVerletzungen.add(r.id);
-					final @NotNull String beschreibung =
-							"Kurs " + getOfKursName(idKurs1) + " und Kurs " + getOfKursName(idKurs2) + " sollten gemeinsam in einer Schiene sein.";
-					MapUtils.addToList(_regelTyp_to_verletzungList, 8, beschreibung);
-					_regelID_to_verletzungString.put(r.id, beschreibung);
-				}
-		}
+	    final long idKurs1 = r.parameter.get(0);
+	    final long idKurs2 = r.parameter.get(1);
+	    final @NotNull Set<GostBlockungsergebnisSchiene> set1 = getOfKursSchienenmenge(idKurs1);
+	    final @NotNull Set<GostBlockungsergebnisSchiene> set2 = getOfKursSchienenmenge(idKurs2);
+	    if (set1.size() < set2.size()) {
+	        // "set1" muss in "set2" enthalten sein (da es dass kleinere ist).
+	        for (final @NotNull GostBlockungsergebnisSchiene schiene1 : set1)
+	            if (!set2.contains(schiene1)) {
+	                _ergebnis.bewertung.regelVerletzungen.add(r.id);
+	                final @NotNull String beschreibung = "Kurs %s und Kurs %s sollten gemeinsam in einer Schiene sein."
+	                		.formatted(getOfKursName(idKurs1), getOfKursName(idKurs2));
+	                MapUtils.addToList(_regelTyp_to_verletzungList, 8, beschreibung);
+	                _regelID_to_verletzungString.put(r.id, beschreibung);
+	            }
+	    } else {
+	        // "set2" muss in "set1" enthalten sein, da es dass kleinere ist.
+	        for (final @NotNull GostBlockungsergebnisSchiene schiene2 : set2)
+	            if (!set1.contains(schiene2)) {
+	                _ergebnis.bewertung.regelVerletzungen.add(r.id);
+	                final @NotNull String beschreibung = "Kurs %s und Kurs %s sollten gemeinsam in einer Schiene sein."
+	                		.formatted(getOfKursName(idKurs1), getOfKursName(idKurs2));
+	                MapUtils.addToList(_regelTyp_to_verletzungList, 8, beschreibung);
+	                _regelID_to_verletzungString.put(r.id, beschreibung);
+	            }
+	    }
 	}
+
 
 	private void stateRegelvalidierung10_lehrkraefte_beachten(final @NotNull GostBlockungRegel r) {
 		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _schienenID_to_schiene.values())
@@ -1121,8 +1138,10 @@ public class GostBlockungsergebnisManager {
 
 		if (!_parent.schuelerGetHatFach(idSchueler1, idFach)) {
 			_ergebnis.bewertung.regelVerletzungen.add(r.id);
-			final @NotNull String beschreibung =
-					getOfSchuelerNameVorname(idSchueler1) + " hat keine Fachwahl " + fach.kuerzelAnzeige + ", aber eine Regel, die das Fach definiert.";
+			final @NotNull String beschreibung = "%s hat keine Fachwahl %s, aber eine Regel, die das Fach definiert.".formatted(
+					getOfSchuelerNameVorname(idSchueler1),
+					fach.kuerzelAnzeige
+			);
 			MapUtils.addToList(_regelTyp_to_verletzungList, 11, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 			return;
@@ -1130,8 +1149,10 @@ public class GostBlockungsergebnisManager {
 
 		if (!_parent.schuelerGetHatFach(idSchueler2, idFach)) {
 			_ergebnis.bewertung.regelVerletzungen.add(r.id);
-			final @NotNull String beschreibung =
-					getOfSchuelerNameVorname(idSchueler2) + " hat keine Fachwahl " + fach.kuerzelAnzeige + ", aber eine Regel, die das Fach definiert.";
+			final @NotNull String beschreibung = "%s hat keine Fachwahl %s, aber eine Regel, die das Fach definiert.".formatted(
+					getOfSchuelerNameVorname(idSchueler2),
+					fach.kuerzelAnzeige
+			);
 			MapUtils.addToList(_regelTyp_to_verletzungList, 11, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 			return;
@@ -1139,8 +1160,11 @@ public class GostBlockungsergebnisManager {
 
 		if (!_parent.schuelerGetHatDieSelbeKursartMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			_ergebnis.bewertung.regelVerletzungen.add(r.id);
-			final @NotNull String beschreibung = getOfSchuelerNameVorname(idSchueler1) + " und " + getOfSchuelerNameVorname(idSchueler2)
-					+ " haben nicht die selbe Kursart bei " + fach.kuerzelAnzeige + ".";
+			final @NotNull String beschreibung = "%s und %s haben nicht die selbe Kursart bei %s.".formatted(
+					getOfSchuelerNameVorname(idSchueler1),
+					getOfSchuelerNameVorname(idSchueler2),
+					fach.kuerzelAnzeige
+			);
 			MapUtils.addToList(_regelTyp_to_verletzungList, 11, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 			return;
@@ -1148,56 +1172,58 @@ public class GostBlockungsergebnisManager {
 
 		if (!getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
 			_ergebnis.bewertung.regelVerletzungen.add(r.id);
-			final @NotNull String beschreibung = getOfSchuelerNameVorname(idSchueler1) + " und " + getOfSchuelerNameVorname(idSchueler2)
-					+ " sollten gemeinsam in " + fach.kuerzelAnzeige + " sein.";
+			final @NotNull String beschreibung = "%s und %s sollten gemeinsam in %s sein."
+					.formatted(getOfSchuelerNameVorname(idSchueler1), getOfSchuelerNameVorname(idSchueler2), fach.kuerzelAnzeige);
 			MapUtils.addToList(_regelTyp_to_verletzungList, 11, beschreibung);
 			_regelID_to_verletzungString.put(r.id, beschreibung);
 		}
 
 	}
 
+
 	private void stateRegelvalidierung12_schueler_verbieten_mit_schueler_in_fach(final @NotNull GostBlockungRegel r) {
-		final long idSchueler1 = r.parameter.get(0);
-		final long idSchueler2 = r.parameter.get(1);
-		final long idFach = r.parameter.get(2);
-		final @NotNull GostFach fach = getFach(idFach);
+	    final long idSchueler1 = r.parameter.get(0);
+	    final long idSchueler2 = r.parameter.get(1);
+	    final long idFach = r.parameter.get(2);
+	    final @NotNull GostFach fach = getFach(idFach);
 
-		if (!_parent.schuelerGetHatFach(idSchueler1, idFach)) {
-			_ergebnis.bewertung.regelVerletzungen.add(r.id);
-			final @NotNull String beschreibung =
-					getOfSchuelerNameVorname(idSchueler1) + " hat keine Fachwahl " + fach.kuerzelAnzeige + ", hat aber eine Regel, die das Fach definiert.";
-			MapUtils.addToList(_regelTyp_to_verletzungList, 12, beschreibung);
-			_regelID_to_verletzungString.put(r.id, beschreibung);
-			return;
-		}
+	    if (!_parent.schuelerGetHatFach(idSchueler1, idFach)) {
+	        _ergebnis.bewertung.regelVerletzungen.add(r.id);
+	        final @NotNull String beschreibung = "%s hat keine Fachwahl %s, hat aber eine Regel, die das Fach definiert."
+	        		.formatted(getOfSchuelerNameVorname(idSchueler1), fach.kuerzelAnzeige);
+	        MapUtils.addToList(_regelTyp_to_verletzungList, 12, beschreibung);
+	        _regelID_to_verletzungString.put(r.id, beschreibung);
+	        return;
+	    }
 
-		if (!_parent.schuelerGetHatFach(idSchueler2, idFach)) {
-			_ergebnis.bewertung.regelVerletzungen.add(r.id);
-			final @NotNull String beschreibung =
-					getOfSchuelerNameVorname(idSchueler2) + " hat keine Fachwahl " + fach.kuerzelAnzeige + ", hat aber eine Regel, die das Fach definiert.";
-			MapUtils.addToList(_regelTyp_to_verletzungList, 12, beschreibung);
-			_regelID_to_verletzungString.put(r.id, beschreibung);
-			return;
-		}
+	    if (!_parent.schuelerGetHatFach(idSchueler2, idFach)) {
+	        _ergebnis.bewertung.regelVerletzungen.add(r.id);
+	        final @NotNull String beschreibung = "%s hat keine Fachwahl %s, hat aber eine Regel, die das Fach definiert."
+	        		.formatted(getOfSchuelerNameVorname(idSchueler2), fach.kuerzelAnzeige);
+	        MapUtils.addToList(_regelTyp_to_verletzungList, 12, beschreibung);
+	        _regelID_to_verletzungString.put(r.id, beschreibung);
+	        return;
+	    }
 
-		if (!_parent.schuelerGetHatDieSelbeKursartMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
-			_ergebnis.bewertung.regelVerletzungen.add(r.id);
-			final @NotNull String beschreibung = getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2)
-					+ " haben nicht die selbe Kursart bei " + fach.kuerzelAnzeige + ".";
-			MapUtils.addToList(_regelTyp_to_verletzungList, 12, beschreibung);
-			_regelID_to_verletzungString.put(r.id, beschreibung);
-			return;
-		}
+	    if (!_parent.schuelerGetHatDieSelbeKursartMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
+	        _ergebnis.bewertung.regelVerletzungen.add(r.id);
+	        final @NotNull String beschreibung = "%s und SchülerIn %s haben nicht die selbe Kursart bei %s."
+	        		.formatted(getOfSchuelerNameVorname(idSchueler1), getOfSchuelerNameVorname(idSchueler2), fach.kuerzelAnzeige);
+	        MapUtils.addToList(_regelTyp_to_verletzungList, 12, beschreibung);
+	        _regelID_to_verletzungString.put(r.id, beschreibung);
+	        return;
+	    }
 
-		if (getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
-			_ergebnis.bewertung.regelVerletzungen.add(r.id);
-			final @NotNull String beschreibung = getOfSchuelerNameVorname(idSchueler1) + " und SchülerIn " + getOfSchuelerNameVorname(idSchueler2)
-					+ " sollten nicht gemeinsam in " + fach.kuerzelAnzeige + " sein.";
-			MapUtils.addToList(_regelTyp_to_verletzungList, 12, beschreibung);
-			_regelID_to_verletzungString.put(r.id, beschreibung);
-		}
+	    if (getOfSchuelerIstZusammenMitSchuelerInFach(idSchueler1, idSchueler2, idFach)) {
+	        _ergebnis.bewertung.regelVerletzungen.add(r.id);
+	        final @NotNull String beschreibung = "%s und SchülerIn %s sollten nicht gemeinsam in %s sein."
+	        		.formatted(getOfSchuelerNameVorname(idSchueler1), getOfSchuelerNameVorname(idSchueler2), fach.kuerzelAnzeige);
+	        MapUtils.addToList(_regelTyp_to_verletzungList, 12, beschreibung);
+	        _regelID_to_verletzungString.put(r.id, beschreibung);
+	    }
 
 	}
+
 
 	private void stateRegelvalidierung13_schueler_zusammen_mit_schueler(final @NotNull GostBlockungRegel r) {
 		final long idSchueler1 = r.parameter.get(0);
@@ -1328,7 +1354,7 @@ public class GostBlockungsergebnisManager {
 	}
 
 	private static double dividiereUndScheideNachZweiNachkommastellenAb(final int zaehler, final int nenner) {
-		long hochskaliert = (zaehler * 100L) / nenner;
+		final long hochskaliert = (zaehler * 100L) / nenner;
 		return hochskaliert / 100.0;
 	}
 
@@ -1340,12 +1366,12 @@ public class GostBlockungsergebnisManager {
 	 * @return die Kursfrequenz als String, berechnet als (Summe aller Fachwahlen) / (interne Kurse).
 	 */
 	public @NotNull String getKursfrequenz1AsString() {
-		int nKurse = _parent.kursGetAnzahlIntener();
+		final int nKurse = _parent.kursGetAnzahlIntener();
 		if (nKurse == 0)
 			return "Kursfrequenz = ?";
 		// Berechne die 1. Formel
-		int nFachwahlen = _parent.fachwahlGetAnzahl();
-		double avg1 = dividiereUndScheideNachZweiNachkommastellenAb(nFachwahlen, nKurse);
+		final int nFachwahlen = _parent.fachwahlGetAnzahl();
+		final double avg1 = dividiereUndScheideNachZweiNachkommastellenAb(nFachwahlen, nKurse);
 		return  ("" + avg1).replace('.', ',');
 	}
 
@@ -1357,7 +1383,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Kursfrequenz als String, berechnet als (Summe aller auf interne Kurse verteilten SuS) / (interne Kurse).
 	 */
 	public @NotNull String getKursfrequenz2AsString() {
-		int nKurse = _parent.kursGetAnzahlIntener();
+		final int nKurse = _parent.kursGetAnzahlIntener();
 		if (nKurse == 0)
 			return "Kursfrequenz = ?";
 		// Berechne die 2. Formel
@@ -1365,7 +1391,7 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostBlockungKurs gKurs : _parent.daten().kurse)
 			if (!gKurs.istKoopKurs)
 				nVerteilt += getOfKursAnzahlSchueler(gKurs.id);
-		double avg2 = dividiereUndScheideNachZweiNachkommastellenAb(nVerteilt, nKurse);
+		final double avg2 = dividiereUndScheideNachZweiNachkommastellenAb(nVerteilt, nKurse);
 		return  ("" + avg2).replace('.', ',');
 	}
 

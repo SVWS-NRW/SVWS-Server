@@ -1305,9 +1305,11 @@ public class GostKlausurplanManager {
 		final @NotNull HashSet<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull GostKlausurvorgabe vorgabe : list) {
 			vorgabeCheck(vorgabe);
-			DeveloperNotificationException.ifTrue("vorgabeAddAllOhneUpdate: ID=" + vorgabe.id + " existiert bereits!",
+			DeveloperNotificationException.ifTrue(
+					"vorgabeAddAllOhneUpdate: ID=%d existiert bereits!".formatted(vorgabe.id),
 					_vorgabe_by_id.containsKey(vorgabe.id));
-			DeveloperNotificationException.ifTrue("vorgabeAddAllOhneUpdate: ID=" + vorgabe.id + " doppelt in der Liste!",
+			DeveloperNotificationException.ifTrue(
+					"vorgabeAddAllOhneUpdate: ID=%d doppelt in der Liste!".formatted(vorgabe.id),
 					!setOfIDs.add(vorgabe.id));
 		}
 
@@ -1506,10 +1508,10 @@ public class GostKlausurplanManager {
 		for (final @NotNull GostKursklausur klausur : list) {
 			kursklausurCheck(klausur);
 			DeveloperNotificationException.ifTrue(
-					"kursklausurAddAllOhneUpdate: ID=" + klausur.id + " existiert bereits!",
+					"kursklausurAddAllOhneUpdate: ID=%d existiert bereits!".formatted(klausur.id),
 					_kursklausur_by_id.containsKey(klausur.id));
 			DeveloperNotificationException.ifTrue(
-					"kursklausurAddAllOhneUpdate: ID=" + klausur.id + " doppelt in der Liste!",
+					"kursklausurAddAllOhneUpdate: ID=%d doppelt in der Liste!".formatted(klausur.id),
 					!setOfIDs.add(klausur.id));
 		}
 
@@ -1717,10 +1719,15 @@ public class GostKlausurplanManager {
 		final @NotNull HashSet<Long> setOfIDs = new HashSet<>();
 		for (final @NotNull GostKlausurtermin termin : list) {
 			terminCheck(termin);
-			DeveloperNotificationException.ifTrue("terminAddAllOhneUpdate: ID=" + termin.id + " existiert bereits!",
-					_termin_by_id.containsKey(termin.id));
-			DeveloperNotificationException.ifTrue("terminAddAllOhneUpdate: ID=" + termin.id + " doppelt in der Liste!",
-					!setOfIDs.add(termin.id));
+			DeveloperNotificationException.ifTrue(
+					"terminAddAllOhneUpdate: ID=%d existiert bereits!".formatted(termin.id),
+					_termin_by_id.containsKey(termin.id)
+			);
+			DeveloperNotificationException.ifTrue(
+					"terminAddAllOhneUpdate: ID=%d doppelt in der Liste!".formatted(termin.id),
+					!setOfIDs.add(termin.id)
+			);
+
 		}
 
 		// add all
@@ -1868,24 +1875,25 @@ public class GostKlausurplanManager {
 	}
 
 	private void schuelerklausurAddAllOhneUpdate(final @NotNull Collection<GostSchuelerklausur> list) {
-		// check all
-		final @NotNull HashSet<Long> setOfIDs = new HashSet<>();
-		for (final @NotNull GostSchuelerklausur klausur : list) {
-			schuelerklausurCheck(klausur);
-			DeveloperNotificationException.ifTrue(
-					"schuelerklausurAddAllOhneUpdate: ID=" + klausur.id + " existiert bereits!",
-					_schuelerklausur_by_id.containsKey(klausur.id));
-			DeveloperNotificationException.ifTrue(
-					"schuelerklausurAddAllOhneUpdate: ID=" + klausur.id + " doppelt in der Liste!",
-					!setOfIDs.add(klausur.id));
-		}
+	    // check all
+	    final @NotNull HashSet<Long> setOfIDs = new HashSet<>();
+	    for (final @NotNull GostSchuelerklausur klausur : list) {
+	        schuelerklausurCheck(klausur);
+	        DeveloperNotificationException.ifTrue(
+	            "schuelerklausurAddAllOhneUpdate: ID=%d existiert bereits!".formatted(klausur.id),
+	            _schuelerklausur_by_id.containsKey(klausur.id));
+	        DeveloperNotificationException.ifTrue(
+	            "schuelerklausurAddAllOhneUpdate: ID=%d doppelt in der Liste!".formatted(klausur.id),
+	            !setOfIDs.add(klausur.id));
+	    }
 
-		// add all
-		for (final @NotNull GostSchuelerklausur klausur : list) {
-			DeveloperNotificationException.ifMapPutOverwrites(_schuelerklausur_by_id, klausur.id, klausur);
-			schuelerklausurfehlendRemoveOhneUpdate(klausur);
-		}
+	    // add all
+	    for (final @NotNull GostSchuelerklausur klausur : list) {
+	        DeveloperNotificationException.ifMapPutOverwrites(_schuelerklausur_by_id, klausur.id, klausur);
+	        schuelerklausurfehlendRemoveOhneUpdate(klausur);
+	    }
 	}
+
 
 	/**
 	 * Fügt alle {@link GostKursklausur}-Objekte hinzu.
@@ -2099,18 +2107,19 @@ public class GostKlausurplanManager {
 		for (final @NotNull GostSchuelerklausurTermin schuelerklausurtermin : list) {
 			schuelerklausurterminCheck(schuelerklausurtermin);
 			DeveloperNotificationException.ifTrue(
-					"schuelerklausurterminAddAllOhneUpdate: ID=" + schuelerklausurtermin.id + " existiert bereits!",
-					_schuelerklausurtermin_by_id.containsKey(schuelerklausurtermin.id));
+				"schuelerklausurterminAddAllOhneUpdate: ID=%d existiert bereits!".formatted(schuelerklausurtermin.id),
+				_schuelerklausurtermin_by_id.containsKey(schuelerklausurtermin.id));
 			DeveloperNotificationException.ifTrue(
-					"schuelerklausurterminAddAllOhneUpdate: ID=" + schuelerklausurtermin.id + " doppelt in der Liste!",
-					!setOfIDs.add(schuelerklausurtermin.id));
+				"schuelerklausurterminAddAllOhneUpdate: ID=%d doppelt in der Liste!".formatted(schuelerklausurtermin.id),
+				!setOfIDs.add(schuelerklausurtermin.id));
 		}
 
 		// add all
 		for (final @NotNull GostSchuelerklausurTermin schuelerklausurtermin : list)
 			DeveloperNotificationException.ifMapPutOverwrites(_schuelerklausurtermin_by_id, schuelerklausurtermin.id,
-					schuelerklausurtermin);
+				schuelerklausurtermin);
 	}
+
 
 	/**
 	 * Fügt alle {@link GostSchuelerklausurTermin}-Objekte hinzu.

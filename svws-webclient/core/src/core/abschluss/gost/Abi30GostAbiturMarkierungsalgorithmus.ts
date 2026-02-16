@@ -494,29 +494,29 @@ export class Abi30GostAbiturMarkierungsalgorithmus extends JavaObject {
 			return false;
 		const hjBelegung: AbiturFachbelegungHalbjahr | null = belegung.belegungen[hj.id];
 		if (hjBelegung === null) {
-			this.log(istAbiturbereich, "  Im Halbjahr " + hj.kuerzel + " fehlt eine Belegung des Abiturfaches");
+			this.log(istAbiturbereich, JavaString.format("  Im Halbjahr %s fehlt eine Belegung des Abiturfaches.", hj.kuerzel));
 			return false;
 		}
 		if ((hjBelegung.notenkuerzel === null) || (JavaString.isBlank(hjBelegung.notenkuerzel))) {
-			this.log("  Im Halbjahr " + hj.kuerzel + " wurde für das Fach keine gültige Note erteilt. Der Kurs kann daher nicht anrechenbar sein");
+			this.log(JavaString.format("  Im Halbjahr %s wurde für das Fach keine gültige Note erteilt. Der Kurs kann daher nicht anrechenbar sein.", hj.kuerzel));
 			return false;
 		}
 		const note: Note = Note.fromKuerzel(hjBelegung.notenkuerzel);
 		if (!note.istNote(this.manager.getSchuljahr())) {
-			this.log("  Im Halbjahr " + hj.kuerzel + " wurde für das Fach eine Pseudonote erteilt. Der Kurs kann daher nicht anrechenbar sein.");
+			this.log(JavaString.format("  Im Halbjahr %s wurde für das Fach eine Pseudonote erteilt. Der Kurs kann daher nicht anrechenbar sein.", hj.kuerzel));
 			return false;
 		}
 		if (note as unknown === Note.UNGENUEGEND as unknown) {
-			this.log(istAbiturbereich, "  Im Halbjahr " + hj.kuerzel + " wurde die Note ungenügend für das Abiturfach erteilt. Somit ist keine Zulassung mehr möglich, da der Kurs somit als nicht belegt gilt.");
+			this.log(istAbiturbereich, JavaString.format("  Im Halbjahr %s wurde die Note ungenügend für das Abiturfach erteilt. Somit ist keine Zulassung mehr möglich, da der Kurs somit als nicht belegt gilt.", hj.kuerzel));
 			return false;
 		}
 		const istLKBelegung: boolean = JavaObject.equalsTranspiler(GostKursart.LK.kuerzel, (hjBelegung.kursartKuerzel));
 		if ((note as unknown === Note.AUSREICHEND_MINUS as unknown) || (note as unknown === Note.MANGELHAFT_PLUS as unknown) || (note as unknown === Note.MANGELHAFT as unknown) || (note as unknown === Note.MANGELHAFT_MINUS as unknown)) {
 			if (istLKBelegung) {
-				this.log("  Im Halbjahr " + hj.kuerzel + " liegt ein Defizit im LK-Bereich vor.");
+				this.log(JavaString.format("  Im Halbjahr %s liegt ein Defizit im LK-Bereich vor.", hj.kuerzel));
 				this.defiziteLK++;
 			} else {
-				this.log("  Im Halbjahr " + hj.kuerzel + " liegt ein einbringungspflichtiges Defizit im GK-Bereich vor.");
+				this.log(JavaString.format("  Im Halbjahr %s liegt ein einbringungspflichtiges Defizit im GK-Bereich vor.", hj.kuerzel));
 				this.defiziteGK++;
 			}
 		}
@@ -575,21 +575,21 @@ export class Abi30GostAbiturMarkierungsalgorithmus extends JavaObject {
 				}
 			}
 			if (current === null) {
-				this.log("  Im Halbjahr " + hj.kuerzel + " wurde für das Fach keine gültige Belegung gefunden.");
+				this.log(JavaString.format("  Im Halbjahr %s wurde für das Fach keine gültige Belegung gefunden.", hj.kuerzel));
 				return false;
 			}
 			const hjBelegung: AbiturFachbelegungHalbjahr | null = current.belegungen[hj.id];
 			if ((hjBelegung === null) || (hjBelegung.notenkuerzel === null) || (JavaString.isBlank(hjBelegung.notenkuerzel))) {
-				this.log("  Im Halbjahr " + hj.kuerzel + " wurde für das Fach keine gültige Note erteilt.");
+				this.log(JavaString.format("  Im Halbjahr %s wurde für das Fach keine gültige Note erteilt.", hj.kuerzel));
 				return false;
 			}
 			const note: Note = Note.fromKuerzel(hjBelegung.notenkuerzel);
 			if (!note.istNote(this.manager.getSchuljahr())) {
-				this.log(this.logIndent + "  Im Halbjahr " + hj.kuerzel + " wurde für das Fach eine Pseudonote erteilt. Das ist nicht zulässig.");
+				this.log(this.logIndent + JavaString.format("  Im Halbjahr %s wurde für das Fach eine Pseudonote erteilt. Das ist nicht zulässig.", hj.kuerzel));
 				return false;
 			}
 			if (note as unknown === Note.UNGENUEGEND as unknown) {
-				this.log("  Im Halbjahr " + hj.kuerzel + " wurde die Note ungenügend für das Fach erteilt. Somit ist keine Zulassung mehr möglich, da das Fach somit als nicht belegt gilt.");
+				this.log("  Im Halbjahr %s wurde die Note ungenügend für das Fach erteilt." + JavaString.format(" Somit ist keine Zulassung mehr möglich, da das Fach somit als nicht belegt gilt.", hj.kuerzel));
 				return false;
 			}
 			if ((this.markiert.getOrNull(fach.id, hj.id) === null) && (!this.markiereHalbjahresbelegung(current, hj)))
@@ -643,10 +643,10 @@ export class Abi30GostAbiturMarkierungsalgorithmus extends JavaObject {
 			}
 		}
 		if ((resBelegung[0] === null) || (resBelegung[1] === null) || (resHalbjahre[0] === null) || (resHalbjahre[1] === null) || (resFach[0] === null) || (resFach[1] === null)) {
-			this.log("  Fehler: Konnte keine Bewertung für zwei Halbjahre bestimmen.");
+			this.log("  Fehler in 'markiereZweiBeste': Konnte keine Bewertung für zwei Halbjahre bestimmen.");
 			return false;
 		}
-		this.log("  Markiere die beiden Kurse in " + resHalbjahre[0].kuerzel + " (" + resNotenpunkte[0] + " Punkte) für " + resFach[0].kuerzelAnzeige + " und " + resHalbjahre[1].kuerzel + " (" + resNotenpunkte[1] + " Punkte) für " + resFach[1].kuerzelAnzeige + "...");
+		this.log(JavaString.format("  Markiere die beiden Kurse in %s (%d Punkte) für %s und %s (%d Punkte) für %s...", resHalbjahre[0].kuerzel, resNotenpunkte[0], resFach[0].kuerzelAnzeige, resHalbjahre[1].kuerzel, resNotenpunkte[1], resFach[1].kuerzelAnzeige));
 		return this.markiereHalbjahresbelegung(resBelegung[0], resHalbjahre[0]) && this.markiereHalbjahresbelegung(resBelegung[1], resHalbjahre[1]);
 	}
 
@@ -1153,15 +1153,15 @@ export class Abi30GostAbiturMarkierungsalgorithmus extends JavaObject {
 				continue;
 			}
 			if ((projektkurs.abiturFach !== null) && (referenzfachBelegung.abiturFach !== null)) {
-				this.log("  Das Fach " + referenzfach.kuerzelAnzeige + " wurde als Abiturfach belegt und ist daher nicht als Referenzfach für einen Projektkurs im Abiturbereich zulässig.");
+				this.log(JavaString.format("  Das Fach %s wurde als Abiturfach belegt und ist daher nicht als Referenzfach für einen Projektkurs im Abiturbereich zulässig.", referenzfach.kuerzelAnzeige));
 				continue;
 			}
 			if (!this.manager.pruefeBelegung(referenzfachBelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
-				this.log("  Das Fach " + referenzfach.kuerzelAnzeige + " wurde nicht von EF.1 bis Q1.2 belegt und ist daher nicht als Referenzfach für einen Projektkurs zulässig.");
+				this.log(JavaString.format("  Das Fach %s wurde nicht von EF.1 bis Q1.2 belegt und ist daher nicht als Referenzfach für einen Projektkurs zulässig.", referenzfach.kuerzelAnzeige));
 				continue;
 			}
 			if (!this.manager.pruefeBelegungMitSchriftlichkeit(referenzfachBelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
-				this.log("  Das Fach " + referenzfach.kuerzelAnzeige + " wurde in der Q1 nicht schriftlich belegt und ist daher nicht als Referenzfach für einen Projektkurs zulässig.");
+				this.log(JavaString.format("  Das Fach %s wurde in der Q1 nicht schriftlich belegt und ist daher nicht als Referenzfach für einen Projektkurs zulässig.", referenzfach.kuerzelAnzeige));
 				continue;
 			}
 			const newState: Abi30GostAbiturMarkierungsalgorithmus = new Abi30GostAbiturMarkierungsalgorithmus(this);
