@@ -75,7 +75,7 @@ describe("Tests für die CSS-Props", () => {
 		expect(wrapper.find(idComponent).classes()).not.toContain("y");
 
 		// Aktion
-		const c = x !== 'full' ? parseInt(x) : x;
+		const c = x === 'full' ? x : Number.parseInt(x);
 		await wrapper.setProps({ span: c as 1 | 2 | 'full' });
 
 		// Testen

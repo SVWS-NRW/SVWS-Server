@@ -211,7 +211,7 @@ describe("Computed values in SvwsUiInputNumber", () => {
 		const wrapper = mount(SvwsUiInputNumber, {
 			props: {
 				modelValue: 10,
-				valid: (value) => (value !== null ? value > 0 : true),
+				valid: (value) => (value === null ? true : value > 0),
 			},
 		});
 		const input = wrapper.find("input");

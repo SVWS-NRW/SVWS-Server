@@ -173,9 +173,9 @@ test("Event-> löst update:modelValue aus, wenn checkbox geklickt wird.", async 
 	const emittedEvents = wrapper.emitted("update:modelValue");
 	expect(emittedEvents).toBeTruthy(); // Überprüft, ob Events emittiert wurden
 	expect(emittedEvents?.length).toBeGreaterThan(0);
-	if (emittedEvents !== undefined) {
-		expect(emittedEvents[0][0]).toEqual(true);
-	} else {
+	if (emittedEvents === undefined) {
 		throw new Error("Keine Ereignisse ausgesendet");
+	} else {
+		expect(emittedEvents[0][0]).toEqual(true);
 	}
 });

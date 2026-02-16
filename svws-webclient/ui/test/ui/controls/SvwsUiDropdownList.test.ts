@@ -224,14 +224,14 @@ describe("Bedingtes Rendern mit CSS-Prüfung ", () => {
 		// Vorbereiten
 		await wrapper.setProps({
 			filteredList: items,
-			itemText: (value: item) => {
+			itemText: (_value: item) => {
 				return "";
 			},
 		});
 
 		// Testen
 		const span = wrapper.get("li").find(".opacity-25");
-		expect(span.classes().some((e) => e === "font-bold")).toBe(false);
+		expect(span.classes().includes("font-bold")).toBe(false);
 		expect(span.text()).toContain("—");
 	});
 
@@ -253,7 +253,7 @@ describe("Bedingtes Rendern mit CSS-Prüfung ", () => {
 		let i = 1;
 		for (const span of spans) {
 			expect(span.text()).toBe("Item " + i);
-			expect(span.classes().some((e) => e === "font-bold")).toBe(false);
+			expect(span.classes().includes("font-bold")).toBe(false);
 			i++;
 		}
 	});

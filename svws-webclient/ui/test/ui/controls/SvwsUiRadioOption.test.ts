@@ -96,11 +96,6 @@ describe("Tests für die CSS-Props", () => {
 				await wrapper.setProps({ statistics: true });
 				break;
 			case "forceChecked":
-				await wrapper.setProps({
-					modelValue: undefined,
-					value: "Test2",
-				});
-				break;
 			case "modelValue":
 				await wrapper.setProps({
 					modelValue: undefined,

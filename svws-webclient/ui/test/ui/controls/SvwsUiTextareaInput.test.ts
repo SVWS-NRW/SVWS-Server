@@ -40,12 +40,6 @@ test("Rendert HTML korrekt", async () => {
 	expect(wrapper.find("textarea").exists()).toBeTruthy();
 });
 
-// test.only("Prüfe die default-Props", () => {
-// 	const props:prop_names[] = ["modelValue","disabled","valid","statistics","resizeable","span","required"] ;
-// 	console.log(wrapper.props())
-// 	props.forEach((item) => console.log(item,"--",wrapper.props(item)));
-// })
-
 // CSS-Props data, isValid, disabled, statisctics, resizeable-none, ,
 
 describe.concurrent("Tests für die CSS-Props", () => {
@@ -363,7 +357,6 @@ describe("computed/functions tests", () => {
 
 		// Aktion
 		wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.dataOrEmpty = "";
-		// await wrapper.vm.$nextTick();
 
 		// Testen
 		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.dataOrEmpty).toBe("");
@@ -518,7 +511,6 @@ describe("computed/functions tests", () => {
 		expect(wrapper.emitted("blur")?.at(0)?.at(0)).toBe("Test+23");
 	});
 
-	// TODO
 	test("functions->onBlur emittiert change- und blur-Event, weil props-modelValue sich von data unterscheidet.", async () => {
 		// Vorbereiten
 		await wrapper.setProps({ modelValue: "Test+23" });
@@ -545,8 +537,6 @@ describe("computed/functions tests", () => {
 		// Aktion
 		await textarea.trigger("input");
 		await textarea.trigger("keydown.enter");
-		// await wrapper.vm.$nextTick();
-		// await wrapper.get("textarea").trigger("blur");
 
 		// Testen
 		expect(wrapper.emitted("change")).toBeUndefined();
