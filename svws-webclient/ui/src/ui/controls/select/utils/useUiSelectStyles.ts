@@ -25,7 +25,6 @@ export function useUiSelectStyles<T>(
 	getOptionClasses: (option: T, optionIndex: number) => string[],
 	moveLabel: ComputedRef<boolean>,
 	showLabel: ComputedRef<boolean>,
-	showValidatorError: ComputedRef<boolean>,
 	focusClass: ComputedRef<"" | "contentFocusField" | "subNavigationFocusField">,
 	getSecondaryTextColor: (color: string) => string,
 } {
@@ -70,10 +69,6 @@ export function useUiSelectStyles<T>(
 					return `${prefix}-ui-caution`;
 				case ValidatorFehlerart.MUSS:
 					return `${prefix}-ui-danger`;
-			}
-
-			if (!state.value.isValid) {
-				return `${prefix}-ui-danger`;
 			}
 
 			const classString = attrs.class;
@@ -188,10 +183,6 @@ export function useUiSelectStyles<T>(
 		!state.value.headless || !moveLabel.value
 	);
 
-	const showValidatorError = computed((): boolean =>
-		!state.value.isValid && (!state.value.required || selectionMethods.hasSelection())
-	);
-
 	const focusClass = computed(() => {
 		const result = { ...attrs };
 		const stringClass = result.class;
@@ -223,7 +214,6 @@ export function useUiSelectStyles<T>(
 		getOptionClasses,
 		moveLabel,
 		showLabel,
-		showValidatorError,
 		focusClass,
 		getSecondaryTextColor,
 	};

@@ -35,8 +35,8 @@
 					<span v-if="required" class="ui-select-multi--label--required cursor-pointer flex items-end" aria-label="erforderlich">
 						<span :class="[iconColorClass, 'icon-xs i-ri-asterisk font-normal relative -top-0.5']" />
 					</span>
-					<span v-if="!validation().isEmpty()" class="cursor-pointer flex justify-center items-center">
-						<ui-validation-tooltip :validation-result />
+					<span v-if="validationResult.hasFehler">
+						<ui-validation-tooltip :validation-result :disabled />
 					</span>
 					<svws-ui-tooltip position="right" v-if="readonly" class="ui-select-multi--label--readonly cursor-pointer pointer-events-auto">
 						<span :class="[labelIconClass, 'icon-xs i-ri-lock-line shrink-0']" aria-label="schreibgeschützt" />
@@ -119,6 +119,9 @@
 	import type { ValidatorFehler } from '../../../../../core/src/asd/validate/ValidatorFehler';
 	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 	import { ValidationResult } from "../../../validation/ValidationResult";
+	import { ValidatorSelectMultiRequired } from "../../../validation/ValidatorSelectMultiRequired";
+	import { ValidatorSelectMultiMinOptions } from "../../../validation/ValidatorSelectMultiMinOptions";
+	import { ValidatorSelectMultiMaxOptions } from "../../../validation/ValidatorSelectMultiMaxOptions";
 
 	const props = withDefaults(defineProps<UiSelectMultiProps<T>>(), {
 		label: '',
@@ -135,6 +138,7 @@
 		minOptions: undefined,
 		maxOptions: undefined,
 		validation: (): List<ValidatorFehler> => new ArrayList<ValidatorFehler>(),
+		skipDefaultValidation: false,
 	});
 
 
@@ -191,7 +195,55 @@
 	const uiSelectSearch = ref<HTMLElement | null>(null);
 	const uiSelectDropdown = ref<HTMLDivElement | null>(null);
 
-	const validationResult = computed(() => new ValidationResult(props.validation()));
+	const validationResult = computed(() => new ValidationResult(validierungFehler.value));
+
+	const validatorRequired = computed<ValidatorSelectMultiRequired<T> | null>(() => {
+		if (props.required && (!skipValidator('required'))) {
+			return new ValidatorSelectMultiRequired(() => modelArray.value);
+		}
+		return null;
+	});
+
+	const validatorMinOptions = computed<ValidatorSelectMultiMinOptions<T> | null>(() => {
+		if ((props.minOptions !== undefined) && (!skipValidator('minOptions'))) {
+			return new ValidatorSelectMultiMinOptions(() => modelArray.value, props.minOptions);
+		}
+		return null;
+	});
+
+	const validatorMaxOptions = computed<ValidatorSelectMultiMaxOptions<T> | null>(() => {
+		if ((props.maxOptions !== undefined) && (!skipValidator('maxOptions'))) {
+			return new ValidatorSelectMultiMaxOptions(() => modelArray.value, props.maxOptions);
+		}
+		return null;
+	});
+
+	const validierungFehler = computed<List<ValidatorFehler>>(() => {
+		const fehler = new ArrayList<ValidatorFehler>();
+		const defaultValidators = [validatorRequired.value, validatorMinOptions.value, validatorMaxOptions.value];
+
+		for (const validator of defaultValidators) {
+			if (validator !== null) {
+				validator.run();
+				fehler.addAll(validator.getFehler());
+			}
+		}
+
+		fehler.addAll(props.validation());
+		return fehler;
+	});
+
+	/**
+	 * Berechnet, ob der gegebene Default-Validator nicht ausgeführt werden soll
+	 *
+	 * @param defaultValidator   Name des Validators, der geprüft wird
+	 */
+	function skipValidator(defaultValidator: 'required' | 'minOptions' | 'maxOptions'): boolean {
+		if (typeof props.skipDefaultValidation === 'boolean') {
+			return props.skipDefaultValidation;
+		}
+		return props.skipDefaultValidation[defaultValidator] ?? false;
+	}
 
 	/**
 	 * Berechnet die Farbe der Selektion-Bubbles abhängig davon, ob sie disabled sind
@@ -200,37 +252,6 @@
 		const colors = props.disabled ? 'bg-ui-disabled text-ui-ondisabled border-ui-disabled' : 'bg-ui-selected text-ui-onselected border-ui-selected';
 		const height = props.headless ? '' : 'mt-[0.35rem]';
 		return `${colors} ${height}`;
-	});
-
-
-	/**
-	 * Prüft, ob die Eingaben valide sind
-	 */
-	const isValid = computed((): boolean => {
-		if (props.required && !hasSelection()) {
-			return false;
-		}
-		return minOptionsValid.value && maxOptionsValid.value;
-	});
-
-	/**
-	 * Prüft, ob die gewählte Optionenanzahl im Falle von MultiSelects dem Minimum entspricht
-	 */
-	const minOptionsValid = computed((): boolean => {
-		if ((props.minOptions === undefined) || (!hasSelection() && (props.minOptions <= 0))) {
-			return true;
-		}
-		return (hasSelection() && (modelArray.value.length >= props.minOptions));
-	});
-
-	/**
-	 * Prüft, ob die gewählte Optionenanzahl im Falle von MultiSelects dem Maximum entspricht
-	 */
-	const maxOptionsValid = computed((): boolean => {
-		if ((props.maxOptions === undefined) || (!hasSelection() && (props.maxOptions <= 0))) {
-			return true;
-		}
-		return modelArray.value.length <= props.maxOptions;
 	});
 
 	/**
@@ -358,7 +379,6 @@
 			disabled: destructedProps.disabled.value,
 			readonly: destructedProps.readonly.value,
 			headless: destructedProps.headless.value,
-			isValid: isValid.value,
 			validationResult: validationResult.value,
 			search: search.value,
 		};

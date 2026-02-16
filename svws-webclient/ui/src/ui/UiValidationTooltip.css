@@ -1,8 +1,12 @@
-.validation-tooltip-icon {
-	@apply cursor-pointer pointer-events-auto;
+.validation-tooltip {
+	@apply flex;
 
-	&.disabled {
-		@apply cursor-default;
+	.validation-tooltip-icon {
+		@apply cursor-pointer pointer-events-auto flex;
+
+		&.disabled {
+			@apply cursor-default;
+		}
 	}
 }
 
@@ -34,5 +38,5 @@
 	.fehler-icon {
 		@apply icon-ui-onselected i-ri-checkbox-blank-circle-fill icon-xs mt-1.5 mr-2;
 	}
-
 }
+

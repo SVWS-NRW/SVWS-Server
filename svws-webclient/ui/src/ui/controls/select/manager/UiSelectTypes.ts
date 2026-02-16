@@ -19,11 +19,15 @@ export interface UiSelectProps<T> {
 	validation?: () => List<ValidatorFehler>;
 }
 export interface UiSelectSingleProps<T> extends UiSelectProps<T> {
+	skipDefaultValidation?: boolean;
 }
+
+type SkippedMultiDefaultValidators = { required?: boolean; minOptions?: boolean; maxOptions?: boolean };
 
 export interface UiSelectMultiProps<T> extends UiSelectProps<T> {
 	minOptions?: number;
 	maxOptions?: number;
+	skipDefaultValidation?: boolean | SkippedMultiDefaultValidators;
 }
 
 export interface UiSelectState<T> {
@@ -39,7 +43,6 @@ export interface UiSelectState<T> {
 	disabled: boolean;
 	readonly: boolean;
 	headless: boolean;
-	isValid: boolean;
 	validationResult: ValidationResult;
 }
 

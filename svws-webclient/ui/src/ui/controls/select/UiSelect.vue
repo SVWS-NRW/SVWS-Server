@@ -33,11 +33,8 @@
 					<span v-if="required" class="ui-select--label--required cursor-pointer flex items-end" aria-label="erforderlich">
 						<span :class="[iconColorClass, 'icon-xs i-ri-asterisk font-normal relative -top-0.5']" />
 					</span>
-					<span v-if="showValidatorError" class="cursor-pointer flex items-end justify-center">
-						<span :class="[iconColorClass, 'icon i-ri-alert-line']" />
-					</span>
-					<span v-if="!validation().isEmpty()" class="cursor-pointer flex justify-center items-center">
-						<ui-validation-tooltip :validation-result />
+					<span v-if="validationResult.hasFehler">
+						<ui-validation-tooltip :validation-result :disabled />
 					</span>
 					<svws-ui-tooltip position="right" v-if="readonly" class="ui-select--label--readonly cursor-pointer pointer-events-auto">
 						<span :class="[labelIconClass, 'icon-xs i-ri-lock-line shrink-0']" aria-label="schreibgeschützt" />
@@ -112,6 +109,7 @@
 	import type { ValidatorFehler } from '../../../../../core/src/asd/validate/ValidatorFehler';
 	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 	import { ValidationResult } from "../../../validation/ValidationResult";
+	import { ValidatorSelectRequired } from "../../../validation/ValidatorSelectRequired";
 
 	const props = withDefaults(defineProps<UiSelectSingleProps<T>>(), {
 		label: '',
@@ -126,6 +124,7 @@
 		statistics: false,
 		headless: false,
 		validation: (): List<ValidatorFehler> => new ArrayList<ValidatorFehler>(),
+		skipDefaultValidation: false,
 	});
 
 	// model mit der aktuellen Selektion
@@ -180,14 +179,27 @@
 	const uiSelectSearch = ref<HTMLElement | null>(null);
 	const uiSelectDropdown = ref<HTMLDivElement | null>(null);
 
-	/**
-	 * Prüft, ob die Eingaben valide sind
-	 */
-	const isValid = computed((): boolean => {
-		return !props.required || hasSelection();
+	const validationResult = computed(() => new ValidationResult(validierungFehler.value));
+
+	const validatorRequired = computed<ValidatorSelectRequired<T> | null>(() => {
+		if (props.required && !props.skipDefaultValidation) {
+			return new ValidatorSelectRequired(() => model.value);
+		}
+		return null;
 	});
 
-	const validationResult = computed(() => new ValidationResult(props.validation()));
+	const validierungFehler = computed<List<ValidatorFehler>>(() => {
+		const fehler = new ArrayList<ValidatorFehler>();
+
+		if (validatorRequired.value !== null) {
+			validatorRequired.value.run();
+			fehler.addAll(validatorRequired.value.getFehler());
+		}
+
+		// Validierung mit einer weiteren Validierung über die validate-Methode bei den props
+		fehler.addAll(props.validation());
+		return fehler;
+	});
 
 	/**
 	 * Die aktuelle Selektion wird nicht angezeigt, falls gerade ein Suchbegriff eingegeben ist
@@ -270,7 +282,6 @@
 			disabled: destructedProps.disabled.value,
 			readonly: destructedProps.readonly.value,
 			headless: destructedProps.headless.value,
-			isValid: isValid.value,
 			validationResult: validationResult.value,
 			search: search.value,
 		};
@@ -300,7 +311,6 @@
 		searchInputAriaAttrs,
 		getOptionClasses,
 		// Anzeige
-		showValidatorError,
 		showLabel,
 		// Suche
 		splitTextIntoHits,

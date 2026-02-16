@@ -36,7 +36,6 @@ export function useUiSelectUtils<T>(
 	getOptionClasses: (option: T, optionIndex: number) => string[],
 	// Anzeige
 	showLabel: ComputedRef<boolean>,
-	showValidatorError: ComputedRef<boolean>,
 	// Suche
 	splitTextIntoHits: (text: string) => { text: string, hit: boolean; }[],
 	resetSearch: () => void,
@@ -114,7 +113,6 @@ export function useUiSelectUtils<T>(
 		getSecondaryTextColor,
 		searchInputAriaAttrs,
 		getOptionClasses,
-		showValidatorError,
 		showLabel } = useUiSelectStyles(state, attrs, selectionMethods, dropdown);
 
 	watch(highlightedIndex, async () => {
@@ -346,7 +344,6 @@ export function useUiSelectUtils<T>(
 		getOptionClasses,
 		// Anzeige
 		showLabel,
-		showValidatorError,
 		// Suche
 		splitTextIntoHits,
 		resetSearch,

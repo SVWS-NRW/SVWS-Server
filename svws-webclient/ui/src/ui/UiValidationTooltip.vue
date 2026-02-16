@@ -1,85 +1,87 @@
 <template>
-	<svws-ui-tooltip position="right" :disabled>
-		<span class="validation-tooltip-icon" :class="{'disabled': disabled}">
-			<span class="icon" :class="tooltipIconClasses" />
-		</span>
-		<template #content>
-			<div class="validation-tooltip-content">
-				<!-- Nicht-Statistik Fehlergruppen -->
-				<div v-if="hasNonStatisticFehler">
-					<div v-if="!mussNonStatisticFehler.isEmpty()" class="pt-2 pb-2">
-						<div class="fehlergruppe-headline-muss">
-							<span>{{ ValidatorFehlerart.MUSS }}</span>
+	<div class="validation-tooltip">
+		<svws-ui-tooltip position="right" :disabled>
+			<span class="validation-tooltip-icon" :class="{'disabled': disabled}">
+				<span class="icon" :class="tooltipIconClasses" />
+			</span>
+			<template #content>
+				<div class="validation-tooltip-content">
+					<!-- Nicht-Statistik Fehlergruppen -->
+					<div v-if="hasNonStatisticFehler">
+						<div v-if="!mussNonStatisticFehler.isEmpty()" class="pt-2 pb-2">
+							<div class="fehlergruppe-headline-muss">
+								<span>{{ ValidatorFehlerart.MUSS }}</span>
+							</div>
+							<div v-for="f in mussNonStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
+								<span class="fehler-icon" />
+								<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
+							</div>
 						</div>
-						<div v-for="f in mussNonStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
-							<span class="fehler-icon" />
-							<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
-						</div>
-					</div>
 
-					<div v-if="!kannNonStatisticFehler.isEmpty()" class="pt-2 pb-2">
-						<div class="fehlergruppe-headline-kann">
-							<span>{{ ValidatorFehlerart.KANN }}</span>
+						<div v-if="!kannNonStatisticFehler.isEmpty()" class="pt-2 pb-2">
+							<div class="fehlergruppe-headline-kann">
+								<span>{{ ValidatorFehlerart.KANN }}</span>
+							</div>
+							<div v-for="f in kannNonStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
+								<span class="fehler-icon" />
+								<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
+							</div>
 						</div>
-						<div v-for="f in kannNonStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
-							<span class="fehler-icon" />
-							<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
-						</div>
-					</div>
 
-					<div v-if="!hinweisNonStatisticFehler.isEmpty()" class="pt-2 pb-2">
-						<div class="fehlergruppe-headline-hinweis">
-							<span>{{ ValidatorFehlerart.HINWEIS }}</span>
+						<div v-if="!hinweisNonStatisticFehler.isEmpty()" class="pt-2 pb-2">
+							<div class="fehlergruppe-headline-hinweis">
+								<span>{{ ValidatorFehlerart.HINWEIS }}</span>
+							</div>
+							<div v-for="f in hinweisNonStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
+								<span class="fehler-icon" />
+								<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
+							</div>
 						</div>
-						<div v-for="f in hinweisNonStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
-							<span class="fehler-icon" />
-							<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
-						</div>
-					</div>
-				</div>
-
-				<!-- Statistik Fehlergruppen -->
-				<div v-if="hasStatisticFehler">
-					<!-- Statistik Headline -->
-					<div class="statistic-headline">
-						<span class="icon i-ri-bar-chart-2-line icon-ui-statistic pointer-events-auto mt-0.5" />
-						<span class="text-headline-md font-medium">Statistik</span>
 					</div>
 
 					<!-- Statistik Fehlergruppen -->
-					<div v-if="!mussStatisticFehler.isEmpty()" class="pt-2 pb-2">
-						<div class="fehlergruppe-headline-muss">
-							<span>{{ ValidatorFehlerart.MUSS }}</span>
+					<div v-if="hasStatisticFehler">
+						<!-- Statistik Headline -->
+						<div class="statistic-headline">
+							<span class="icon i-ri-bar-chart-2-line icon-ui-statistic pointer-events-auto mt-0.5" />
+							<span class="text-headline-md font-medium">Statistik</span>
 						</div>
-						<div v-for="f in mussStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
-							<div type="light" class="fehler-badge">{{ f.getFehlercode() }}</div>
-							<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
-						</div>
-					</div>
 
-					<div v-if="!kannStatisticFehler.isEmpty()" class="pt-2 pb-2">
-						<div class="fehlergruppe-headline-kann">
-							<span>{{ ValidatorFehlerart.KANN }}</span>
+						<!-- Statistik Fehlergruppen -->
+						<div v-if="!mussStatisticFehler.isEmpty()" class="pt-2 pb-2">
+							<div class="fehlergruppe-headline-muss">
+								<span>{{ ValidatorFehlerart.MUSS }}</span>
+							</div>
+							<div v-for="f in mussStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
+								<div type="light" class="fehler-badge">{{ f.getFehlercode() }}</div>
+								<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
+							</div>
 						</div>
-						<div v-for="f in kannStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
-							<div type="light" class="fehler-badge">{{ f.getFehlercode() }}</div>
-							<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
-						</div>
-					</div>
 
-					<div v-if="!hinweisStatisticFehler.isEmpty()" class="pt-2 pb-2">
-						<div class="fehlergruppe-headline-hinweis">
-							<span>{{ ValidatorFehlerart.HINWEIS }}</span>
+						<div v-if="!kannStatisticFehler.isEmpty()" class="pt-2 pb-2">
+							<div class="fehlergruppe-headline-kann">
+								<span>{{ ValidatorFehlerart.KANN }}</span>
+							</div>
+							<div v-for="f in kannStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
+								<div type="light" class="fehler-badge">{{ f.getFehlercode() }}</div>
+								<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
+							</div>
 						</div>
-						<div v-for="f in hinweisStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
-							<div type="light" class="fehler-badge">{{ f.getFehlercode() }}</div>
-							<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
+
+						<div v-if="!hinweisStatisticFehler.isEmpty()" class="pt-2 pb-2">
+							<div class="fehlergruppe-headline-hinweis">
+								<span>{{ ValidatorFehlerart.HINWEIS }}</span>
+							</div>
+							<div v-for="f in hinweisStatisticFehler" :key="f.getFehlermeldung() + f.getFehlercode()" class="fehlergruppe-item">
+								<div type="light" class="fehler-badge">{{ f.getFehlercode() }}</div>
+								<span class="fehler-text">{{ f.getFehlermeldung() }}</span>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</template>
-	</svws-ui-tooltip>
+			</template>
+		</svws-ui-tooltip>
+	</div>
 </template>
 <script setup lang="ts">
 

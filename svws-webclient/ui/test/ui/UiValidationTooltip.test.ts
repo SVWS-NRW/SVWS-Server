@@ -29,15 +29,6 @@ describe("UiValidationTooltip", () => {
 		expect(wrapper.findAll(".icon-ui-danger").length).toBe(1);
 	});
 
-	test("Validation Tooltip wird nicht gerendert, wenn keine Fehler da sind", () => {
-		const validationResult = createValidationResult([]);
-		const wrapper = mount(UiValidationTooltip, {
-			props: { validationResult: validationResult },
-		});
-
-		expect(wrapper.find(".validation-tooltip").exists()).toBe(false);
-	});
-
 	test("Validation Tooltip wird gerendert, wenn Fehler da sind", () => {
 		const validationResult = createValidationResult([ASDMussValidatorMock, MussValidatorMock]);
 		const wrapper = mount(UiValidationTooltip, {

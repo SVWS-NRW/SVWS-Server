@@ -3,6 +3,10 @@ import UiSelectMulti from "../../../../src/ui/controls/select/UiSelectMulti.vue"
 import { describe, test, expect, vi, beforeAll } from "vitest";
 import { SelectManager } from "../../../../src/ui/controls/select/manager/SelectManager";
 import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
+import { BasicValidator } from "../../../../../core/src/asd/validate/BasicValidator";
+import type { ValidatorFehler } from "../../../../../core/src/asd/validate/ValidatorFehler";
+import { ValidatorFehlerart } from "../../../../../core/src/asd/validate/ValidatorFehlerart";
+import UiSelect from "../../../../src/ui/controls/select/UiSelect.vue";
 
 beforeAll(() => {
 	HTMLElement.prototype.showPopover = vi.fn(function(this: HTMLElement) {
@@ -70,9 +74,13 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 			expect(props.headless).toBe(false);
 		});
 
-		test("props.doValidate ist definiert und eine Funktion", () => {
+		test("props.validation ist definiert und eine Funktion", () => {
 			expect(props.validation).toBeDefined();
 			expect(typeof props.validation).toBe('function');
+		});
+
+		test("props.skipDefaultValidation entspricht false", () => {
+			expect(props.skipDefaultValidation).toBe(false);
 		});
 	});
 
@@ -108,21 +116,34 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		expect(options[0].find('span').text()).toBe('Audi');
 	});
 
-	test("Mit Prop 'required = false' wird die Komponente ohne Stern-Icon angezeigt", () => {
-		const { manager } = createTestData();
-		const wrapper = mount(UiSelectMulti<cars>, { props: { manager, required: false } });
-		const labelRequired = wrapper.find('.ui-select-multi--label--required');
+	describe.concurrent("Mit Prop 'required = false'", () => {
+		test("wird die Komponente ohne Stern-Icon angezeigt", () => {
+			const { manager } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, required: false } });
+			const labelRequired = wrapper.find('.ui-select-multi--label--required');
 
-		expect(labelRequired.exists()).toBeFalsy();
+			expect(labelRequired.exists()).toBeFalsy();
+		});
 
 	});
 
-	test("Mit Prop 'required = true' wird die Komponente mit Stern-Icon angezeigt", () => {
-		const { manager } = createTestData();
-		const wrapper = mount(UiSelectMulti<cars>, { props: { manager, required: true } });
-		const labelRequired = wrapper.find(".ui-select-multi--label--required");
+	describe.concurrent("Mit Prop 'required = true'", () => {
 
-		expect(labelRequired.find('span.i-ri-asterisk').exists()).toBeTruthy();
+		test("wird die Komponente mit Stern-Icon angezeigt", () => {
+			const { manager } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, required: true } });
+			const labelRequired = wrapper.find(".ui-select-multi--label--required");
+
+			expect(labelRequired.find('span.i-ri-asterisk').exists()).toBeTruthy();
+		});
+
+		test("und 'skipDefaultValidation = true' wird ein Stern-Icon im Label angezeigt", () => {
+			const { manager, validationFehler } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, validation: () => validationFehler, required: true, skipDefaultValidation: true } });
+			const labelRequired = wrapper.find(".ui-select-multi--label--required");
+
+			expect(labelRequired.find('span.i-ri-asterisk').exists()).toBeTruthy();
+		});
 	});
 
 	describe.concurrent("Mit Prop 'readonly = false'", () => {
@@ -226,8 +247,8 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		});
 
 		test("bei zwei selektierten Elementen ist ein Element löschbar", async () => {
-			const { manager, multiSelection } = createTestData();
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, removable: false, modelValue: multiSelection } });
+			const { manager, twoSelections } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, removable: false, modelValue: twoSelections } });
 
 			const firstOption = wrapper.find('.ui-select-multi--dropdown li');
 
@@ -239,8 +260,8 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		});
 
 		test("bei zwei selektierten Elementen werden Löschenbuttons in den Selektionen angezeigt", () => {
-			const { manager, multiSelection } = createTestData();
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, removable: false, modelValue: multiSelection } });
+			const { manager, twoSelections } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, removable: false, modelValue: twoSelections } });
 
 			const selectionRemoveButtons = wrapper.findAll('.ui-select-multi--selection--removebutton');
 
@@ -381,7 +402,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 	});
 
 	describe.concurrent("Mit Prop 'headless = false'", () => {
-		const { manager, multiSelection } = createTestData();
+		const { manager, twoSelections } = createTestData();
 		const wrapper = mount(UiSelectMulti<cars>, { props: { manager, label: "Mein Label", headless: false } });
 
 		test("werden die Icons nicht links angezeigt", () => {
@@ -409,7 +430,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		});
 
 		test("wird das Label mit Selektion angezeigt", async () => {
-			await wrapper.setProps({ modelValue: multiSelection });
+			await wrapper.setProps({ modelValue: twoSelections });
 			await wrapper.vm.$nextTick();
 
 			const label = wrapper.find('.ui-select-multi--label');
@@ -460,6 +481,301 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 	});
 });
 
+describe.concurrent("Validierung", () => {
+
+	test("Mit Prop 'validation' wird eine Validierung von außen ausgeführt", () => {
+		const { manager, validationFehler } = createTestData();
+		const wrapper = mount(UiSelectMulti<cars>, { props: { manager, validation: () => validationFehler } });
+		const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+		expect(validatorResult.fehler.size()).toBe(1);
+		expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
+	});
+
+	describe.concurrent("required", () => {
+
+		test("Mit Prop 'required = false' wird kein Required-Validator hinzugefügt", () => {
+			const { manager } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, required: false } });
+			const validatorRequired = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorRequired;
+
+			expect(validatorRequired).toBeNull();
+		});
+
+		test("Mit Prop 'required = false' wird keine Validierung für 'required' ausgeführt", () => {
+			const { manager } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, required: false } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
+		});
+
+
+		test("Mit Prop 'required = true' wird ein Required-Validator hinzugefügt", () => {
+			const { manager } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, required: true } });
+			const validatorRequired = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorRequired;
+
+			expect(validatorRequired).not.toBeNull();
+			expect(validatorRequired).toBeInstanceOf(BasicValidator);
+		});
+
+		test("Mit Prop 'required = true' ohne Selektion wird ein Fehler für die Required-Validierung generiert", () => {
+			const { manager } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, required: true } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(1);
+			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Eine Option muss ausgewählt werden.");
+		});
+
+		test("Mit Prop 'required = true' und Selektion ergibt die Validierung keine Fehler", () => {
+			const { manager, singleSelection } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, required: true, modelValue: singleSelection } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
+		});
+
+		test("Mit Prop 'required = true' und 'validation' wird eine Validierung von außen ausgeführt und um die Required-Validierung ergänzt", () => {
+			const { manager, validationFehler } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, validation: () => validationFehler, required: true } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(2);
+			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Eine Option muss ausgewählt werden.");
+			expect(validatorResult.fehler.get(1).getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
+		});
+
+		test("Mit Prop 'required = true' und 'skipDefaultValidation = true' wird keine Validierung für 'required' ausgeführt", () => {
+			const { manager, validationFehler } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, required: true, skipDefaultValidation: true } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
+		});
+
+		test("Mit Prop 'required = true' und 'skipDefaultValidation = { required: true }' wird keine Validierung für 'required' ausgeführt", () => {
+			const { manager, validationFehler } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, required: true, skipDefaultValidation: { required: true } } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
+		});
+
+		test("Mit Prop 'required = true' und 'skipDefaultValidation = { required: false }' wird eine Validierung für 'required' ausgeführt", () => {
+			const { manager, validationFehler } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, required: true, skipDefaultValidation: { required: false } } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(1);
+			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Eine Option muss ausgewählt werden.");
+		});
+	});
+
+	describe.concurrent("minOptions", () => {
+		test("Mit Prop 'minOptions = undefined' wird kein MinOptions-Validator hinzugefügt", () => {
+			const { manager } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, minOptions: undefined } });
+			const validatorMinOptions = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorMinOptions;
+
+			expect(validatorMinOptions).toBeNull();
+		});
+
+		test("Mit Prop 'minOptions = undefined' wird keine Validierung für 'minOptions' ausgeführt", () => {
+			const { manager } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, minOptions: undefined } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
+		});
+
+		test("Mit Prop 'minOptions = 2' wird ein MinOptions-Validator hinzugefügt", () => {
+			const { manager } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, minOptions: 2 } });
+			const validatorMinOptions = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorMinOptions;
+
+			expect(validatorMinOptions).not.toBeNull();
+			expect(validatorMinOptions).toBeInstanceOf(BasicValidator);
+		});
+
+		test("Mit Prop 'minOptions = 2' und nur einer selektierten Option wird ein Fehler für die MinOptions-Validierung generiert", async () => {
+			const { manager, singleSelection } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, minOptions: 2, modelValue: singleSelection } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(1);
+			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Es müssen mindestens 2 Optionen ausgewählt sein.");
+		});
+
+		test("Mit Prop 'minOptions = 1' ohne Selektion wird ein Fehler für die MinOptions-Validierung generiert", () => {
+			const { manager, singleSelection } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, minOptions: 1 } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(1);
+			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Es muss mindestens eine Option ausgewählt sein.");
+		});
+
+		test("Mit Prop 'minOptions = 2' und 2 selektierten Optionen ergibt die Validierung keine Fehler", () => {
+			const { manager, twoSelections } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, minOptions: 2, modelValue: twoSelections } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
+		});
+
+		test("Mit Prop 'minOptions = 2' und 'validation' wird eine Validierung von außen ausgeführt und um die MinOptions-Validierung ergänzt", () => {
+			const { manager, validationFehler } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, validation: () => validationFehler, minOptions: 2 } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(2);
+			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Es müssen mindestens 2 Optionen ausgewählt sein.");
+			expect(validatorResult.fehler.get(1).getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
+		});
+
+		test("Mit Prop 'minOptions = 2' und 'skipDefaultValidation = true' wird keine Validierung für 'minOptions' ausgeführt", () => {
+			const { manager } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, minOptions: 2, skipDefaultValidation: true } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
+		});
+
+		test("Mit Prop 'minOptions = 2' und 'skipDefaultValidation = { minOptions: true }' wird keine Validierung für 'minOptions' ausgeführt", () => {
+			const { manager } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, minOptions: 2, skipDefaultValidation: { minOptions: true } } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
+		});
+
+		test("Mit Prop 'minOptions = 2' und 'skipDefaultValidation = { minOptions: false }' wird eine Validierung für 'minOptions' ausgeführt", () => {
+			const { manager, validationFehler } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, minOptions: 2, skipDefaultValidation: { minOptions: false } } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(1);
+			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Es müssen mindestens 2 Optionen ausgewählt sein.");
+		});
+	});
+
+	describe.concurrent("maxOptions", () => {
+		test("Mit Prop 'maxOptions = undefined' wird kein MaxOptions-Validator hinzugefügt", () => {
+			const { manager } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, maxOptions: undefined } });
+			const validatorMaxOptions = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorMaxOptions;
+
+			expect(validatorMaxOptions).toBeNull();
+		});
+
+		test("Mit Prop 'maxOptions = undefined' wird keine Validierung für 'maxOptions' ausgeführt", () => {
+			const { manager } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, maxOptions: undefined } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
+		});
+
+		test("Mit Prop 'maxOptions = 2' wird ein MaxOptions-Validator hinzugefügt", () => {
+			const { manager } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, maxOptions: 2 } });
+			const validatorMaxOptions = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorMaxOptions;
+
+			expect(validatorMaxOptions).not.toBeNull();
+			expect(validatorMaxOptions).toBeInstanceOf(BasicValidator);
+		});
+
+		test("Mit Prop 'maxOptions = 2' und nur einer selektierten Option wird ein Fehler für die MaxOptions-Validierung generiert", () => {
+			const { manager, threeSelections } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, maxOptions: 2, modelValue: threeSelections } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(1);
+			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Es dürfen maximal 2 Optionen ausgewählt sein.");
+		});
+
+		test("Mit Prop 'maxOptions = 1' ohne Selektion wird ein Fehler für die MaxOptions-Validierung generiert", () => {
+			const { manager, twoSelections } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, maxOptions: 1, modelValue: twoSelections } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(1);
+			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Es darf maximal eine Option ausgewählt sein.");
+		});
+
+		test("Mit Prop 'maxOptions = 2' und 2 selektierten Optionen ergibt die Validierung keine Fehler", () => {
+			const { manager, twoSelections } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, maxOptions: 2, modelValue: twoSelections } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
+		});
+
+		test("Mit Prop 'maxOptions = 2' und 'validation' wird eine Validierung von außen ausgeführt und um die MaxOptions-Validierung ergänzt", () => {
+			const { manager, validationFehler, threeSelections } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>,
+				{ props: { manager, validation: () => validationFehler, maxOptions: 2, modelValue: threeSelections } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(2);
+			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Es dürfen maximal 2 Optionen ausgewählt sein.");
+			expect(validatorResult.fehler.get(1).getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
+		});
+
+		test("Mit Prop 'maxOptions' und 'skipDefaultValidation = true' wird keine Validierung für 'maxOptions' ausgeführt", () => {
+			const { manager } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, maxOptions: 2, skipDefaultValidation: true } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
+		});
+
+		test("Mit Prop 'maxOptions = 2' und 'skipDefaultValidation = { maxOptions: true }' wird keine Validierung für 'maxOptions' ausgeführt", () => {
+			const { manager, threeSelections } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>,
+				{ props: { manager, maxOptions: 2, skipDefaultValidation: { maxOptions: true }, modelValue: threeSelections } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
+		});
+
+		test("Mit Prop 'maxOptions = 2' und 'skipDefaultValidation = { maxOptions: false }' wird eine Validierung für 'maxOptions' ausgeführt", () => {
+			const { manager, threeSelections } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>,
+				{ props: { manager, maxOptions: 2, skipDefaultValidation: { maxOptions: false }, modelValue: threeSelections } });
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(1);
+			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Es dürfen maximal 2 Optionen ausgewählt sein.");
+		});
+	});
+
+	test("Mit prop 'skipDefaultValidation' lassen sich einzele Defaultvalidatoren abschalten", () => {
+		const { manager, threeSelections } = createTestData();
+		const wrapper = mount(UiSelectMulti<cars>, {
+			props: {
+				manager,
+				required: true,
+				minOptions: 1,
+				maxOptions: 2,
+				skipDefaultValidation: { required: true, minOptions: false, maxOptions: false },
+				modelValue: threeSelections,
+			},
+		});
+		const validatorMinOptions = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorMinOptions;
+		const validatorMaxOptions = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorMaxOptions;
+		const validatorRequired = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorRequired;
+
+		expect(validatorMaxOptions).not.toBeNull();
+		expect(validatorMaxOptions).toBeInstanceOf(BasicValidator);
+		expect(validatorMinOptions).not.toBeNull();
+		expect(validatorMinOptions).toBeInstanceOf(BasicValidator);
+		expect(validatorRequired).toBeNull();
+	});
+});
+
 describe.concurrent("Teste Watcher und Computeds", () => {
 
 	describe.concurrent("Watcher auf model.value:", () => {
@@ -496,8 +812,8 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 		});
 
 		test("Die Selektion wird nicht angepasst, wenn alle Elemente in manager.filteredOptions enthalten sind", async () => {
-			const { manager, multiSelection } = createTestData();
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, modelValue: multiSelection } });
+			const { manager, twoSelections } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, modelValue: twoSelections } });
 
 			await wrapper.vm.$nextTick();
 
@@ -507,25 +823,25 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 		});
 
 		test("Die Selektion wird angepasst, wenn nicht alle Elemente in manager.filteredOptions enthalten sind", async () => {
-			const { manager, multiSelection, nonExistingOption } = createTestData();
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, modelValue: [...multiSelection, ...nonExistingOption] } });
+			const { manager, twoSelections, nonExistingOption } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, modelValue: [...twoSelections, ...nonExistingOption] } });
 
 			await wrapper.vm.$nextTick();
 
 			const emits = wrapper.emitted("update:modelValue");
 			expect(emits).toBeDefined();
-			expect(emits![0][0]).toEqual(multiSelection);
+			expect(emits![0][0]).toEqual(twoSelections);
 		});
 	});
 
 	describe.concurrent("Watcher auf props.manager.filteredOptions:", () => {
 		test("Die Selektion wird nicht angepasst, wenn alle Elemente im neuen manager.filteredOptions enthalten sind", async () => {
-			const { manager, multiSelection } = createTestData();
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, modelValue: multiSelection } });
+			const { manager, twoSelections } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, modelValue: twoSelections } });
 
 			const newFilteredOptions = new ArrayList<cars>();
-			newFilteredOptions.add(multiSelection[0]);
-			newFilteredOptions.add(multiSelection[1]);
+			newFilteredOptions.add(twoSelections[0]);
+			newFilteredOptions.add(twoSelections[1]);
 			manager.unfilteredOptions = newFilteredOptions;
 
 			await wrapper.vm.$nextTick();
@@ -536,8 +852,8 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 		});
 
 		test("Die Selektion wird angepasst, wenn nicht alle Elemente im neuen manager.filteredOptions enthalten sind", async () => {
-			const { manager, multiSelection, nonExistingOption } = createTestData();
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, modelValue: multiSelection } });
+			const { manager, twoSelections, nonExistingOption } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, modelValue: twoSelections } });
 
 			const newFilteredOptions = new ArrayList<cars>();
 			newFilteredOptions.add(nonExistingOption[0]);
@@ -574,22 +890,22 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 	});
 
 	test("computed->modelArray ist model.value (kein Proxy) als Array", () => {
-		const { manager, multiSelection } = createTestData();
+		const { manager, twoSelections } = createTestData();
 		const selectionAsArrayList = new ArrayList<cars>();
-		selectionAsArrayList.add(multiSelection[0]);
-		selectionAsArrayList.add(multiSelection[1]);
+		selectionAsArrayList.add(twoSelections[0]);
+		selectionAsArrayList.add(twoSelections[1]);
 
 		const wrapper = mount(UiSelectMulti<cars>, { props: { manager, modelValue: selectionAsArrayList } });
 		expect(Array.isArray(selectionAsArrayList)).toBeFalsy();
 
 		const modelArray = wrapper.findComponent({ name: "UiSelectMulti" }).vm.modelArray;
 
-		expect(modelArray).toEqual(multiSelection);
+		expect(modelArray).toEqual(twoSelections);
 		expect(Array.isArray(modelArray)).toBeTruthy();
 	});
 
 	describe.concurrent("computed->state bildet alle relevanten Eigenschaften korrekt ab", () => {
-		const { manager, multiSelection } = createTestData();
+		const { manager, twoSelections } = createTestData();
 		const wrapper = mount(UiSelectMulti<cars>, {
 			props: {
 				manager,
@@ -601,8 +917,8 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 				readonly: false,
 				headless: false,
 				label: "Car",
-				validator: undefined,
-				modelValue: multiSelection,
+				validation: () => new ArrayList<ValidatorFehler>(),
+				modelValue: twoSelections,
 			},
 		});
 
@@ -654,12 +970,9 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 			expect(state.headless).toBe(false);
 		});
 
-		test("state.validator entspricht props.validation", () => {
-			expect(state.validation).toBe(undefined);
-		});
-
-		test("state.isValid entspricht true", () => {
-			expect(state.isValid).toBe(true);
+		test("state.validationResult entspricht validationResult der Komponente", () => {
+			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
+			expect(state.validationResult).toBe(validatorResult);
 		});
 
 		test("state.search entspricht ''", () => {
@@ -812,8 +1125,8 @@ describe.concurrent("Teste Funktionen", () => {
 	});
 
 	test("function->selectOption(option) wenn die Option schon selektiert ist erzeugt eine Fehlermeldung", () => {
-		const { manager, multiSelection } = createTestData();
-		const wrapper = mount(UiSelectMulti<cars>, { props: { manager, modelValue: multiSelection } });
+		const { manager, twoSelections } = createTestData();
+		const wrapper = mount(UiSelectMulti<cars>, { props: { manager, modelValue: twoSelections } });
 
 		const selectOption = wrapper.findComponent({ name: "UiSelectMulti" }).vm.selectOption;
 		expect(() => selectOption(manager.filteredOptions.get(0))).toThrow("Die Option BMW ist bereits selektiert.");
@@ -876,16 +1189,16 @@ describe.concurrent("Teste Funktionen", () => {
 	describe.concurrent("function->clearSelection()", () => {
 
 		test("wirft Exception, wenn removable=false", () => {
-			const { manager, multiSelection } = createTestData();
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, removable: false, modelValue: multiSelection } });
+			const { manager, twoSelections } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, removable: false, modelValue: twoSelections } });
 
 			const clearSelection = wrapper.findComponent({ name: "UiSelectMulti" }).vm.clearSelection;
 			expect(() => clearSelection()).toThrow("Das Select ist auf removable=false gesetzt, daher kann die komplette Selektion nicht gelöscht werden.");
 		});
 
 		test("setzt model.value auf [], wenn 'removable=true'", async () => {
-			const { manager, multiSelection } = createTestData();
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, removable: true, modelValue: multiSelection } });
+			const { manager, twoSelections } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, removable: true, modelValue: twoSelections } });
 
 			const clearSelection = wrapper.findComponent({ name: "UiSelectMulti" }).vm.clearSelection;
 			clearSelection();
@@ -897,8 +1210,8 @@ describe.concurrent("Teste Funktionen", () => {
 		});
 
 		test("setzt search zurück, wenn 'removable=true'", async () => {
-			const { manager, multiSelection } = createTestData();
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, removable: true, searchable: true, modelValue: multiSelection } });
+			const { manager, twoSelections } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, removable: true, searchable: true, modelValue: twoSelections } });
 
 			const vm = wrapper.findComponent({ name: "UiSelectMulti" }).vm;
 
@@ -941,8 +1254,8 @@ describe.concurrent("Teste Funktionen", () => {
 		});
 
 		test("ist true wenn 'removable=false' und mehr als eine Option selektiert ist", () => {
-			const { manager, multiSelection } = createTestData();
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, removable: false, modelValue: multiSelection } });
+			const { manager, twoSelections } = createTestData();
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, removable: false, modelValue: twoSelections } });
 
 			const deselectAllowed = wrapper.findComponent({ name: "UiSelectMulti" }).vm.deselectAllowed;
 			expect(deselectAllowed()).toBe(true);
@@ -958,8 +1271,8 @@ describe.concurrent("Teste Funktionen", () => {
 	});
 
 	test("function->hasSelection() ist true, wenn model.value Optionen enthält", () => {
-		const { manager, multiSelection } = createTestData();
-		const wrapper = mount(UiSelectMulti<cars>, { props: { manager, modelValue: multiSelection } });
+		const { manager, twoSelections } = createTestData();
+		const wrapper = mount(UiSelectMulti<cars>, { props: { manager, modelValue: twoSelections } });
 
 		const hasSelection = wrapper.findComponent({ name: "UiSelectMulti" }).vm.hasSelection;
 		expect(hasSelection()).toBe(true);
@@ -1006,11 +1319,28 @@ function createTestData() {
 	const optionDisplayText = (option: cars) => option.marke;
 	const selectionDisplayText = (option: cars) => option.marke;
 	const manager = new SelectManager<{ marke: string, color: string, baujahr: number }>({ options: options, optionDisplayText: optionDisplayText, selectionDisplayText: selectionDisplayText });
-	const multiSelection = [manager.filteredOptions.get(0), manager.filteredOptions.get(1)];
+	const twoSelections = [manager.filteredOptions.get(0), manager.filteredOptions.get(1)];
+	const threeSelections = [manager.filteredOptions.get(0), manager.filteredOptions.get(1), manager.filteredOptions.get(2)];
 	const singleSelection = [manager.filteredOptions.get(0)];
 	const nonExistingOption = [{ marke: "VW", color: "schwarz", baujahr: 2012 }];
-	return { manager, singleSelection, multiSelection, nonExistingOption };
+	const customValidator = new CustomValidatorSelectRequired();
+	customValidator.run();
+	const validationFehler = customValidator.getFehler();
+	return { manager, singleSelection, twoSelections, threeSelections, nonExistingOption, validationFehler };
 }
 
 type cars = { marke: string, color: string, baujahr: number };
+
+class CustomValidatorSelectRequired extends BasicValidator {
+
+	constructor() {
+		super(ValidatorFehlerart.MUSS);
+		this.run();
+	}
+
+	protected pruefe(): boolean {
+		this.addFehler(0, "Custom-Validierung fehlgeschlagen");
+		return false;
+	}
+}
 
