@@ -509,6 +509,18 @@ describe.concurrent("Validierung", () => {
 
 		expect(validatorResult.fehler.size()).toBe(0);
 	});
+
+	test("Bei Validierungsfehlern wird ein Validation-Icon angezeigt", () => {
+		const { manager } = createTestData();
+		const wrapper = mount(UiSelect<cars>, { props: { manager, required: true } });
+		expect(wrapper.find(".validation-tooltip-icon").exists()).toBeTruthy();
+	});
+
+	test("Bei keinen Validierungsfehlern wird kein Validation-Icon angezeigt", () => {
+		const { manager, selection } = createTestData();
+		const wrapper = mount(UiSelect<cars>, { props: { manager, required: true, modelValue: selection } });
+		expect(wrapper.find(".validation-tooltip-icon").exists()).toBeFalsy();
+	});
 });
 describe.concurrent("Teste Watcher und Computeds", () => {
 
