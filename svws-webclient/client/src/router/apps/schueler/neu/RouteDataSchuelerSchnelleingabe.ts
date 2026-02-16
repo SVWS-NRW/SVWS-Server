@@ -1,8 +1,9 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import type { Fahrschuelerart, Haltestelle, Kindergarten, ReligionEintrag, SchuelerListeEintrag, SchuelerStammdaten, SchulEintrag,
+import type {
+	Fahrschuelerart, Haltestelle, Kindergarten, ReligionEintrag, SchuelerListeEintrag, SchuelerStammdaten, SchulEintrag,
 	SchulformKatalogEintrag, Telefonart, EinschulungsartKatalogEintrag, Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag,
 	SchuelerLernabschnittListeEintrag, VermerkartEintrag, Merkmal, KatalogEntlassgrund, List } from "@core";
-import { ArrayList, DeveloperNotificationException, Schulform, SchuelerStammdatenNeu } from "@core";
+import { ArrayList, DeveloperNotificationException, Schulform, SchuelerNeu } from "@core";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { SchuelerSchulbesuchManager } from "~/components/schueler/schulbesuch/SchuelerSchulbesuchManager";
@@ -186,11 +187,11 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		return schuelerStammdaten;
 	}
 
-	public async ladeInitialeDatenFuerWeiterenSchueler(auswahl: SchuelerListeEintrag | null): Promise<SchuelerStammdatenNeu | null> {
+	public async ladeInitialeDatenFuerWeiterenSchueler(auswahl: SchuelerListeEintrag | null): Promise<any> {
 		if (auswahl === null) {
 			return null;
 		}
-		const schuelerDaten: SchuelerStammdatenNeu = new SchuelerStammdatenNeu();
+		const schuelerDaten: SchuelerNeu = new SchuelerNeu();
 		const [schuelerStammdaten, listAbschnitte] =
 			await Promise.all([
 				api.server.getSchuelerStammdaten(api.schema, auswahl.id),
@@ -206,9 +207,9 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		const found = this.selectBevorzugtenAbschnitt(listAbschnitte);
 		if (found !== null) {
 			const daten = await api.server.getSchuelerLernabschnittsdatenByID(api.schema, found.id);
-			schuelerDaten.schuljahresabschnitt = daten.schuljahresabschnitt;
-			schuelerDaten.jahrgangID = daten.jahrgangID;
-			schuelerDaten.klassenID = daten.klassenID;
+			schuelerDaten.idSchuljahresabschnitt = daten.schuljahresabschnitt;
+			schuelerDaten.idJjahrgang = daten.jahrgangID;
+			schuelerDaten.idKlasse = daten.klassenID;
 		}
 		return schuelerDaten;
 	}

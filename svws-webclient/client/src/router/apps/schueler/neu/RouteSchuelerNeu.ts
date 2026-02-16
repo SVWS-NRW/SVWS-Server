@@ -1,25 +1,25 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
-import type { DeveloperNotificationException, SchuelerStammdatenNeu } from "@core";
+import type { DeveloperNotificationException, SchuelerNeu } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import type { SchuelerNeuanlageProps } from "~/components/schueler/neuanlage/SchuelerNeuanlageProps";
+import type { SchuelerNeuProps } from "~/components/schueler/neuanlage/SchuelerNeuProps";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeApp } from "~/router/apps/RouteApp";
 import { api } from "~/router/Api";
 import { routeError } from "~/router/error/RouteError";
-import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neuanlage/RouteSchuelerSchnelleingabe";
+import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteSchuelerSchnelleingabe";
 
-const SchuelerNeuanlage = () => import("~/components/schueler/neuanlage/SchuelerNeuanlage.vue");
+const SSchuelerNeu = () => import("~/components/schueler/neuanlage/SchuelerNeu.vue");
 
-export class RouteSchuelerNeuanlage extends RouteNode<any, RouteSchueler> {
+export class RouteSchuelerNeu extends RouteNode<any, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN], "schueler.neu", "neu", SchuelerNeuanlage);
+		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN], "schueler.neu", "neu", SSchuelerNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
@@ -45,7 +45,7 @@ export class RouteSchuelerNeuanlage extends RouteNode<any, RouteSchueler> {
 		}
 	}
 
-	private initialeSchuelerDaten: SchuelerStammdatenNeu | null = null;
+	private initialeSchuelerDaten: SchuelerNeu | null = null;
 
 	public async getSchuelerDaten(idSchueler: number): Promise<void> {
 		const auswahl = routeSchueler.data.manager.liste.get(idSchueler);
@@ -69,10 +69,10 @@ export class RouteSchuelerNeuanlage extends RouteNode<any, RouteSchueler> {
 		return { id: "" };
 	}
 
-	public getProps(to: RouteLocationNormalized): SchuelerNeuanlageProps {
+	public getProps(to: RouteLocationNormalized): SchuelerNeuProps {
 		return {
 			schuelerListeManager: () => routeSchueler.data.manager,
-			addSchueler: routeSchueler.data.addSchueler,
+			add: routeSchueler.data.add,
 			getSchuelerKlassenFuerAbschnitt: routeSchueler.data.getSchuelerKlassenFuerAbschnitt,
 			patchSchuelerSchulbesuchdaten: routeSchueler.data.patchSchuelerSchulbesuchdaten,
 			mapKindergaerten: routeApp.data.mapKindergaerten,
@@ -90,4 +90,4 @@ export class RouteSchuelerNeuanlage extends RouteNode<any, RouteSchueler> {
 
 }
 
-export const routeSchuelerNeuanlage = new RouteSchuelerNeuanlage();
+export const routeSchuelerNeu = new RouteSchuelerNeu();

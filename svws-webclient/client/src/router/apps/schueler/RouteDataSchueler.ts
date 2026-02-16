@@ -1,15 +1,16 @@
-import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse, StundenplanListeEintrag, SchuelerTelefon, SchuelerSchulbesuchsdaten, ErzieherStammdaten, SchuelerStammdatenNeu, SchuelerLernabschnittsdaten, KlassenDaten, SchuelerVermerke } from "@core";
+import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse, StundenplanListeEintrag,
+	SchuelerTelefon, SchuelerSchulbesuchsdaten, ErzieherStammdaten, SchuelerLernabschnittsdaten, KlassenDaten, SchuelerVermerke, SchuelerNeu } from "@core";
 import { BenutzerKompetenz, ArrayList, SchuelerStatus, ServerMode, UserNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
 import { ViewType, SchuelerListeManager, type PendingStateManager } from "@ui";
-import { routeSchuelerNeuanlage } from "~/router/apps/schueler/neuanlage/RouteSchuelerNeuanlage";
+import { routeSchuelerNeu } from "~/router/apps/schueler/neu/RouteSchuelerNeu";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { routeSchuelerIndividualdatenGruppenprozesse } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdatenGruppenprozesse";
 import { routeSchuelerAllgemeinesGruppenprozesse } from "~/router/apps/schueler/allgemeines/RouteSchuelerAllgemeinesGruppenprozesse";
-import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neuanlage/RouteSchuelerSchnelleingabe";
+import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteSchuelerSchnelleingabe";
 
 
 interface RouteStateSchueler extends RouteStateAuswahlInterface<SchuelerListeManager> {
@@ -35,7 +36,7 @@ const defaultState = <RouteStateSchueler> {
 export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, RouteStateSchueler> {
 
 	public constructor() {
-		super(defaultState, { hinzufuegen: routeSchuelerNeuanlage, schnelleingabe: routeSchuelerSchnelleingabe });
+		super(defaultState, { hinzufuegen: routeSchuelerNeu, schnelleingabe: routeSchuelerSchnelleingabe });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {
@@ -105,13 +106,11 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		for (const eintrag of auswahlList) {
 			ids.add(eintrag.id);
 		}
-		const response = await api.server.getSchuelerStammdatenMultiple(ids, api.schema);
+		return await api.server.getSchuelerStammdatenMultiple(ids, api.schema);
 		// TODO: derzeit müsste bei einem Bulk selekt zu jedem Schüler einzeln ein API Call für Telefone gemacht werden, muss umgebaut werden
 		// const schuelerTelefone = await api.server.getSchuelerTelefone(api.schema, auswahl.id);
 		// this.manager.schuelerstatus.auswahlAdd(SchuelerStatus.data().getWertByID(response.status));
 		// state.listSchuelerTelefoneintraege = schuelerTelefone;
-
-		return response;
 	}
 	public async updateMapStundenplaene() {
 		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
@@ -124,20 +123,13 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		this.setPatchedState({ mapStundenplaene });
 	}
 
-	// /**
-	//  * Gebe einen Dummy-Manager zurück, wenn noch keine Initialisierung des Managers stattgefunden hat.
-	//  *
-	//  * @returns der Dummy-Manager
-	//  */
-	// protected getDummyManager() : SchuelerListeManager | undefined {
-	// 	return new SchuelerListeManager(api.schulform, new SchuelerListe(), new ArrayList(), api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
-	// }
-
-	addSchueler = async (data: Partial<SchuelerStammdatenNeu>, idSchulJahresabschnitt: number): Promise<SchuelerStammdaten> => {
-		const schuelerStammdaten = await api.server.addSchuelerStammdaten(data, api.schema, idSchulJahresabschnitt);
-		await this.setSchuljahresabschnitt(idSchulJahresabschnitt, true);
-		this.manager.setDaten(schuelerStammdaten);
-		return schuelerStammdaten;
+	add = async (data: Partial<SchuelerNeu>): Promise<SchuelerStammdaten> => {
+		const result = await api.server.addSchueler(data, api.schema);
+		await this.setSchuljahresabschnitt(data.idSchuljahresabschnitt ?? -1, true);
+		this.manager.setDaten(result);
+		this.commit();
+		await this.gotoDefaultView(result.id);
+		return result;
 	};
 
 	getSchuelerKlassenFuerAbschnitt = async (idAbschnitt: number): Promise<List<KlassenDaten>> => {

@@ -230,7 +230,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 			case "foto" -> updateSchuelerFoto(dto, value);
 			case "nachname" -> dto.Nachname = JSONMapper.convertToString(value, false, false, Schema.tab_Schueler.col_Name.datenlaenge(), "nachname");
 			case "vorname" -> dto.Vorname = JSONMapper.convertToString(value, false, false, Schema.tab_Schueler.col_Vorname.datenlaenge(), "vorname");
-			case "alleVornamen" -> dto.AlleVornamen = JSONMapper.convertToString(value, false, true, Schema.tab_Schueler.col_Zusatz.datenlaenge(),
+			case "alleVornamen" -> dto.AlleVornamen = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler.col_Zusatz.datenlaenge(),
 					"alleVornamen");
 			case "geschlecht" -> mapGeschlecht(dto, value);
 			case "geburtsdatum" -> dto.Geburtsdatum = JSONMapper.convertToString(value, false, false, null, "geburtsdatum");
@@ -311,8 +311,9 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 	private static void mapGeschlecht(final DTOSchueler dto, final Object value) {
 		final Integer geschlechtId = JSONMapper.convertToInteger(value, false, "geschlecht");
 		final Geschlecht geschlecht = Geschlecht.fromValue(geschlechtId);
-		if (geschlecht == null)
-			throw new ApiOperationException(Status.CONFLICT);
+		if (geschlecht == null) {
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Geschlecht darf nicht null sein.");
+		}
 		dto.Geschlecht = geschlecht;
 	}
 

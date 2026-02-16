@@ -4,10 +4,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
-import de.svws_nrw.asd.data.schueler.neuanlage.SchuelerNeuanlage;
+import de.svws_nrw.asd.data.schueler.SchuelerNeu;
 import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
@@ -16,7 +14,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
 
 /** DataManager zum Erstellen eines Schülers. */
-public final class DataSchuelerNeuanlageNeu {
+public final class DataSchuelerNeu {
 
 	private final DataSchuelerStammdaten dataSchuelerStammdaten;
 	private final DataSchuelerLernabschnittsdaten dataSchuelerLernabschnittsdaten;
@@ -27,7 +25,7 @@ public final class DataSchuelerNeuanlageNeu {
 	private final DataEinwilligungsarten dataEinwilligungsarten;
 
 	/**
-	 * Erstellt einen neuen {@link DataSchuelerNeuanlageNeu} für das Core-DTO {@link SchuelerNeuanlage}
+	 * Erstellt einen neuen {@link DataSchuelerNeu} für das Core-DTO {@link SchuelerNeu}
 	 *
 	 * @param dataSchuelerStammdaten			DataSchuelerStammdaten
 	 * @param dataSchuelerLernabschnittsdaten	DataSchuelerLernabschnittsdaten
@@ -37,7 +35,7 @@ public final class DataSchuelerNeuanlageNeu {
 	 * @param dataLernplattformen				DataLernplattformen
 	 * @param dataEinwilligungsarten			DataEinwilligungsarten
 	 */
-	public DataSchuelerNeuanlageNeu(
+	public DataSchuelerNeu(
 			final DataSchuelerStammdaten dataSchuelerStammdaten,
 			final DataSchuelerLernabschnittsdaten dataSchuelerLernabschnittsdaten,
 			final DataSchuelerSchulbesuchsdaten dataSchuelerSchulbesuchsdaten,
@@ -58,13 +56,15 @@ public final class DataSchuelerNeuanlageNeu {
 	 *	Erzeugt einen neuen Schüler und den entsprechenden Lernabschnitt, die Einwilligungen und die Lernplattformen für diesen Schüler
 	 *
 	 *    @param is							Inputstream
-	 *    @param idSchuljahresabschnitt		idSchuljahresabschnitt
 	 *
 	 *    @return							Response mit dem erstellen Schüler
 	 */
-	public Response add(final InputStream is, final Long idSchuljahresabschnitt) {
+	public Response add(final InputStream is) {
 		final Map<String, Object> initAttributes = JSONMapper.toMap(is);
-		final SchuelerStammdaten createdSchueler = addSchueler(initAttributes, idSchuljahresabschnitt);
+		final SchuelerStammdaten createdSchueler = addSchueler(initAttributes);
+		if (createdSchueler == null) {
+			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Keine Daten zum Schüler vorhanden.");
+		}
 		final long idSchueler = createdSchueler.id;
 		addLernabschnitt(initAttributes, idSchueler);
 		patchSchulbesuch(initAttributes, idSchueler);
@@ -74,21 +74,42 @@ public final class DataSchuelerNeuanlageNeu {
 		return Response.status(Response.Status.CREATED).entity(createdSchueler).build();
 	}
 
-	private SchuelerStammdaten addSchueler(final Map<String, Object> initAttributes, final Long idSchuljahresabschnitt) {
-		final Map<String, Object> schuelerAttributes = extractMap(initAttributes, "schuelerStammdaten");
-		schuelerAttributes.put("idSchuljahresabschnitt", idSchuljahresabschnitt);
+	private SchuelerStammdaten addSchueler(final Map<String, Object> initAttributes) {
+		final Map<String, Object> schuelerAttributes = new HashMap<>();
+		putIfPresent(schuelerAttributes, "nachname", initAttributes.get("nachname"));
+		putIfPresent(schuelerAttributes, "vorname", initAttributes.get("vorname"));
+		putIfPresent(schuelerAttributes, "alleVornamen", initAttributes.get("alleVornamen"));
+		putIfPresent(schuelerAttributes, "geschlecht", initAttributes.get("geschlecht"));
+		putIfPresent(schuelerAttributes, "geburtsdatum", initAttributes.get("geburtsdatum"));
+		putIfPresent(schuelerAttributes, "status", initAttributes.get("status"));
+		putIfPresent(schuelerAttributes, "anmeldedatum", initAttributes.get("anmeldedatum"));
+		putIfPresent(schuelerAttributes, "aufnahmedatum", initAttributes.get("aufnahmedatum"));
+		putIfPresent(schuelerAttributes, "beginnBildungsgang", initAttributes.get("beginnBildungsgang"));
+		putIfPresent(schuelerAttributes, "dauerBildungsgang", initAttributes.get("dauerBildungsgang"));
+		putIfPresent(schuelerAttributes, "religionID", initAttributes.get("idReligion"));
+		final Object schuljahresabschnitt = initAttributes.get("idSchuljahresabschnitt");
+		if (schuljahresabschnitt != null) {
+			schuelerAttributes.put("schuljahresabschnitt", schuljahresabschnitt);
+		}
 		return this.dataSchuelerStammdaten.add(schuelerAttributes);
 	}
 
 	private void addLernabschnitt(final Map<String, Object> initAttributes, final long idSchueler) {
-		final Map<String, Object> lernabschnittAttributes = extractMap(initAttributes, "schuelerLernabschnittsdaten");
+		final Map<String, Object> lernabschnittAttributes = new HashMap<>();
+		putIfPresent(lernabschnittAttributes, "schuljahresabschnitt", initAttributes.get("idSchuljahresabschnitt"));
+		putIfPresent(lernabschnittAttributes, "jahrgangID", initAttributes.get("idJahrgang"));
+		putIfPresent(lernabschnittAttributes, "klassenID", initAttributes.get("idKlasse"));
 		lernabschnittAttributes.put("schuelerID", idSchueler);
 		this.dataSchuelerLernabschnittsdaten.add(lernabschnittAttributes);
 	}
 
 	private void patchSchulbesuch(final Map<String, Object> initAttributes, final long idSchueler) {
-		final Map<String, Object> lernabschnittAttributes = extractMap(initAttributes, "schuelerSchulbesuchsdaten");
-		this.dataSchuelerSchulbesuchsdaten.patch(idSchueler, lernabschnittAttributes);
+		final Map<String, Object> schulbesuchAttributes = new HashMap<>();
+		putIfPresent(schulbesuchAttributes, "grundschuleEinschulungsartID", initAttributes.get("idGrundschuleEinschulungsart"));
+		if (schulbesuchAttributes.isEmpty()) {
+			return;
+		}
+		this.dataSchuelerSchulbesuchsdaten.patch(idSchueler, schulbesuchAttributes);
 	}
 
 	private void addLernplattformen(final long idSchueler) {
@@ -109,16 +130,17 @@ public final class DataSchuelerNeuanlageNeu {
 				});
 	}
 
-	private Map<String, Object> extractMap(final Map<String, Object> source, final String key) {
-		final Object value = source.get(key);
-		if (value == null) {
-			return new HashMap<>();
+	/**
+	 * Adds the key-value pair to the target map if the value is not {@code null}.
+	 *
+	 * @param target the target map
+	 * @param key the key to insert
+	 * @param value the value to insert; ignored if {@code null}
+	 */
+	private void putIfPresent(final Map<String, Object> target, final String key, final Object value) {
+		if (value != null) {
+			target.put(key, value);
 		}
-		if (!(value instanceof Map)) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Attribut '%s' ist keine Map.".formatted(key));
-		}
-
-		return new ObjectMapper().convertValue(value, new TypeReference<>() { });
 	}
 
 }

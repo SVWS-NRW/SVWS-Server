@@ -9,7 +9,7 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { api } from "~/router/Api";
 import type { SchuelerSchnelleingabeProps } from "~/components/schueler/neuanlage/SchuelerSchnelleingabeProps.js";
 import { ViewType } from "@ui";
-import { RouteDataSchuelerSchnelleingabe } from "~/router/apps/schueler/neuanlage/RouteDataSchuelerSchnelleingabe";
+import { RouteDataSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteDataSchuelerSchnelleingabe";
 import { routeError } from "~/router/error/RouteError";
 
 const SchuelerSchnelleingabe = () => import("~/components/schueler/neuanlage/SchuelerSchnelleingabe.vue");

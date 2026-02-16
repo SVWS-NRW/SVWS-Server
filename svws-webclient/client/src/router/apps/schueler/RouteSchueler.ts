@@ -8,7 +8,7 @@ import type { RouteNode } from "~/router/RouteNode";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { RouteDataSchueler } from "~/router/apps/schueler/RouteDataSchueler";
-import { routeSchuelerNeuanlage } from "~/router/apps/schueler/neuanlage/RouteSchuelerNeuanlage";
+import { routeSchuelerNeu } from "~/router/apps/schueler/neu/RouteSchuelerNeu";
 import { routeSchuelerAusbildungsbetriebe } from "~/router/apps/schueler/ausbildungsbetriebe/RouteSchuelerAusbildungsbetriebe";
 import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/erziehungsberechtigte/RouteSchuelerErziehungsberechtigte";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
@@ -25,7 +25,7 @@ import { routeSchuelerSonstiges } from "./sonstiges/RouteSchuelerSonstiges";
 import { routeSchuelerAllgemeinesGruppenprozesse } from "~/router/apps/schueler/allgemeines/RouteSchuelerAllgemeinesGruppenprozesse";
 import { routeSchuelerIndividualdatenGruppenprozesse } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdatenGruppenprozesse";
 import { routeSchuelerAbitur } from "./abitur/RouteSchuelerAbitur";
-import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neuanlage/RouteSchuelerSchnelleingabe";
+import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteSchuelerSchnelleingabe";
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue");
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue");
@@ -61,7 +61,7 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 			routeSchuelerSchnelleingabe,
 			routeSchuelerAllgemeinesGruppenprozesse,
 			routeSchuelerIndividualdatenGruppenprozesse,
-			routeSchuelerNeuanlage,
+			routeSchuelerNeu,
 		];
 		super.defaultChild = routeSchuelerIndividualdaten;
 		super.updateIfTarget = this.doUpdateIfTarget;
