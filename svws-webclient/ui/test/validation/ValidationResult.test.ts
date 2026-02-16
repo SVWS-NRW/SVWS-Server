@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vitest";
-import { ArrayList } from "../../../../svws-webclient/core/src/java/util/ArrayList";
-import { ValidatorFehler } from "../../../../svws-webclient/core/src/asd/validate/ValidatorFehler";
-import { BasicValidator } from "../../../../svws-webclient/core/src/asd/validate/BasicValidator";
-import { ValidatorFehlerart } from "../../../../svws-webclient/core/src/asd/validate/ValidatorFehlerart";
 import { ValidationResult } from "../../src/validation/ValidationResult";
+import { ArrayList } from "../../../core/src/java/util/ArrayList";
+import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
+import { ValidatorFehler } from "../../../core/src/asd/validate/ValidatorFehler";
+import { BasicValidator } from "../../../core/src/asd/validate/BasicValidator";
 
 
 describe("initialize ValidationResult", () => {

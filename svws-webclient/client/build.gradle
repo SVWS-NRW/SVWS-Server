@@ -4,8 +4,7 @@ plugins {
 
 task assembleClient(type: NpmRun) {
 	dependsOn rootProject.npmPrepare
-	dependsOn project(':svws-webclient:core').tasks.assemble
-	dependsOn project(':svws-webclient:ui').tasks.assemble
+	dependsOn ':svws-openapi:assembleTranspiled'
 	group = "build"
 	args = ['build']
 	inputs.files fileTree("$rootDir/svws-webclient/core").matching { exclude "build", "dist" },
@@ -17,16 +16,16 @@ task assembleClient(type: NpmRun) {
 assemble.dependsOn assembleClient
 
 task lint(type: NpmRun) {
-    dependsOn assembleClient
+	dependsOn assembleClient
 	group = "build"
-    args = ["lint-tsc"]
+	args = ["lint-tsc"]
 }
 
 task doZip(type: Zip) {
 	dependsOn assembleClient
-    archiveFileName = "SVWS-Client.zip"
-    destinationDirectory = file("$buildDir")
-    from "$buildDir/output"
+	archiveFileName = "SVWS-Client.zip"
+	destinationDirectory = file("$buildDir")
+	from "$buildDir/output"
 }
 
 build.dependsOn lint
@@ -37,68 +36,3 @@ task cleanClient(type: Delete) {
 }
 
 clean.dependsOn cleanClient
-
-task publishNexusClient(type: NpmPublish) {
-	dependsOn doZip
-	group = "publishing"
-	npmrc = "$rootDir/.npmrc.nexus"
-	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
-	actor = project.ext.getNexusActor()
-	token = project.ext.getNexusToken()
-	scopePublic = false
-}
-
-task publishNpmClient(type: NpmPublish) {
-	dependsOn doZip
-	group = "publishing"
-	npmrc = "$rootDir/.npmrc.npm"
-	repository = "https://registry.npmjs.org/"
-	token = project.ext.getNpmToken()
-	scopePublic = true
-	tokenOnly = true
-}
-
-publishReleaseAll.dependsOn publishNexusClient
-publishReleaseAll.dependsOn publishNpmClient
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackagesSVWSClient"
-            url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Server"
-            credentials {
-            	username = getGithubActor()
-                password = getGithubToken()
-            }
-        }
-    }
-    publications {
-        mavenClientZip(MavenPublication) {
-            artifact doZip
-            artifactId = 'svws-client'
-            pom {
-                name = 'SVWS-Client'
-                description = 'Stellt den SVWS-Client zur Verfügung.'
-                url = 'http://www.svws.nrw.de'
-                licenses {
-                    license {
-                        name = 'BSD-3-Clause'
-                        url = 'https://opensource.org/licenses/BSD-3-Clause'
-                    }
-                }
-                scm {
-                    connection = 'scm:git@github.com/SVWS-NRW/SVWS-Server'
-                    developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Server.git'
-                    url = 'https://github.com/SVWS-NRW/SVWS-Server.git'
-                }
-                developers {
-                    developer {
-                        id = 'svws-nrw'
-                        name = 'Schulverwaltung NRW'
-                        email = 'npm@svws-nrw.de'
-                    }
-                }
-            }
-        }
-    }
-}

@@ -2,7 +2,7 @@ import { describe, test, expect, beforeEach, afterEach, vi } from "vitest";
 import { mount } from "@vue/test-utils";
 import UiCard from "../../../src/ui/layout/UiCard.vue";
 import SvwsUiButton from "../../../src/ui/controls/SvwsUiButton.vue";
-import { fail } from "assert";
+import { fail } from "node:assert";
 import { ValidatorFehlerart } from '../../../../core/src/asd/validate/ValidatorFehlerart';
 
 beforeEach(() => {

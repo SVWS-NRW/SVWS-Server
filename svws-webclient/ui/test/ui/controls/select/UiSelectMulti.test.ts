@@ -6,7 +6,6 @@ import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 import { BasicValidator } from "../../../../../core/src/asd/validate/BasicValidator";
 import type { ValidatorFehler } from "../../../../../core/src/asd/validate/ValidatorFehler";
 import { ValidatorFehlerart } from "../../../../../core/src/asd/validate/ValidatorFehlerart";
-import UiSelect from "../../../../src/ui/controls/select/UiSelect.vue";
 
 beforeAll(() => {
 	HTMLElement.prototype.showPopover = vi.fn(function(this: HTMLElement) {

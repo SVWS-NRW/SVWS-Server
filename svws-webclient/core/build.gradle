@@ -12,8 +12,6 @@ task assembleCore(type: NpmRun) {
 	outputs.dir file("$projectDir/dist")
 }
 
-assemble.dependsOn assembleCore
-
 task cleanCore(type: Delete) {
 	delete file("$projectDir/dist")
 }

@@ -4,29 +4,28 @@ plugins {
 
 task assembleAdminClient(type: NpmRun) {
 	dependsOn rootProject.npmPrepare
-	dependsOn project(':svws-webclient:core').tasks.assemble
-	dependsOn ':svws-webclient:ui:assemble'
+	dependsOn ':svws-openapi:assembleTranspiled'
 	group = "build"
 	args = ['build']
 	inputs.files fileTree("$rootDir/svws-webclient/core").matching { exclude "build", "dist" },
-		fileTree("$rootDir/svws-webclient/ui").matching { exclude "build", "dist", ".histoire" },
-		fileTree("$projectDir").matching { exclude "build" }
+				 fileTree("$rootDir/svws-webclient/ui").matching { exclude "build", "dist", ".histoire" },
+				 fileTree("$projectDir").matching { exclude "build" }
 	outputs.dir file("$buildDir/output")
 }
 
 assemble.dependsOn assembleAdminClient
 
 task lint(type: NpmRun) {
-    dependsOn assembleAdminClient
+	dependsOn assembleAdminClient
 	group = "build"
-    args = ["lint-tsc"]
+	args = ["lint-tsc"]
 }
 
 task doZip(type: Zip) {
 	dependsOn assembleAdminClient
-    archiveFileName = "SVWS-Admin-Client.zip"
-    destinationDirectory = file("$buildDir")
-    from "$buildDir/output"
+	archiveFileName = "SVWS-Admin-Client.zip"
+	destinationDirectory = file("$buildDir")
+	from "$buildDir/output"
 }
 
 build.dependsOn lint
@@ -37,70 +36,3 @@ task cleanAdminClient(type: Delete) {
 }
 
 clean.dependsOn cleanAdminClient
-
-task publishNexusAdminClient(type: NpmPublish) {
-	dependsOn doZip
-	group = "publishing"
-	npmrc = "$rootDir/.npmrc.nexus"
-	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
-	actor = project.ext.getNexusActor()
-	token = project.ext.getNexusToken()
-	scopePublic = false
-}
-
-task publishNpmAdminClient(type: NpmPublish) {
-	dependsOn doZip
-	group = "publishing"
-	npmrc = "$rootDir/.npmrc.npm"
-	repository = "https://registry.npmjs.org/"
-	token = project.ext.getNpmToken()
-	scopePublic = true
-	tokenOnly = true
-}
-
-publishReleaseAll.dependsOn publishNexusAdminClient
-publishReleaseAll.dependsOn publishNpmAdminClient
-
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackagesSVWSClient"
-            url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Server"
-            credentials {
-            	username = getGithubActor()
-                password = getGithubToken()
-            }
-        }
-    }
-    publications {
-        mavenClientZip(MavenPublication) {
-            artifact doZip
-            artifactId = 'svws-admin-client'
-            pom {
-                name = 'SVWS-Admin-Client'
-                description = 'Stellt den SVWS-Client für die administrative Verwaltung der Datenbank-Schemata zur Verfügung.'
-                url = 'http://www.svws.nrw.de'
-                licenses {
-                    license {
-                        name = 'BSD-3-Clause'
-                        url = 'https://opensource.org/licenses/BSD-3-Clause'
-                    }
-                }
-                scm {
-                    connection = 'scm:git@github.com/SVWS-NRW/SVWS-Server'
-                    developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Server.git'
-                    url = 'https://github.com/SVWS-NRW/SVWS-Server.git'
-                }
-                developers {
-                    developer {
-                        id = 'svws-nrw'
-                        name = 'Schulverwaltung NRW'
-                        email = 'npm@svws-nrw.de'
-                    }
-                }
-            }
-        }
-    }
-}
-

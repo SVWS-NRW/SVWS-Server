@@ -6,8 +6,7 @@ def svwsArtifactVersion = project.ext.latestRelease
 
 task assembleLaufbahnplanung(type: NpmRun) {
 	dependsOn rootProject.npmPrepare
-	dependsOn project(':svws-webclient:core').tasks.assemble
-	dependsOn ':svws-webclient:ui:assemble'
+	dependsOn ':svws-openapi:assembleTranspiled'
 	group = "build"
 	args = ['build']
 	inputs.files fileTree("$rootDir/svws-webclient/core").matching { exclude "build", "dist" },
@@ -19,16 +18,16 @@ task assembleLaufbahnplanung(type: NpmRun) {
 assemble.dependsOn assembleLaufbahnplanung
 
 task lint(type: NpmRun) {
-    dependsOn assembleLaufbahnplanung
+	dependsOn assembleLaufbahnplanung
 	group = "build"
-    args = ["lint-tsc"]
+	args = ["lint-tsc"]
 }
 
 task doZip(type: Zip) {
 	dependsOn assembleLaufbahnplanung
-    archiveFileName = "SVWS-Laufbahnplanung-"+svwsArtifactVersion+".zip"
-    destinationDirectory = file("$buildDir")
-    from "$buildDir/output"
+	archiveFileName = "SVWS-Laufbahnplanung-"+svwsArtifactVersion+".zip"
+	destinationDirectory = file("$buildDir")
+	from "$buildDir/output"
 }
 
 build.dependsOn lint
@@ -39,69 +38,3 @@ task cleanLaufbahnplanung(type: Delete) {
 }
 
 clean.dependsOn cleanLaufbahnplanung
-
-task publishNexusLaufbahnplanung(type: NpmPublish) {
-	dependsOn doZip
-	group = "publishing"
-	npmrc = "$rootDir/.npmrc.nexus"
-	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
-	actor = project.ext.getNexusActor()
-	token = project.ext.getNexusToken()
-	scopePublic = false
-}
-
-task publishNpmLaufbahnplanung(type: NpmPublish) {
-	dependsOn doZip
-	group = "publishing"
-	npmrc = "$rootDir/.npmrc.npm"
-	repository = "https://registry.npmjs.org/"
-	token = project.ext.getNpmToken()
-	scopePublic = true
-	tokenOnly = true
-}
-
-publishReleaseAll.dependsOn publishNexusLaufbahnplanung
-publishReleaseAll.dependsOn publishNpmLaufbahnplanung
-
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackagesSVWSLaufbahnplanung"
-            url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Server"
-            credentials {
-            	username = getGithubActor()
-                password = getGithubToken()
-            }
-        }
-    }
-    publications {
-        mavenClientZip(MavenPublication) {
-            artifact doZip
-            artifactId = 'svws-laufbahnplanung'
-            pom {
-                name = 'SVWS-Laufbahnplanung'
-                description = 'Stellt die SVWS-Laufbahnplanung als Webanwendung zur Verfügung.'
-                url = 'http://www.svws.nrw.de'
-                licenses {
-                    license {
-                        name = 'BSD-3-Clause'
-                        url = 'https://opensource.org/licenses/BSD-3-Clause'
-                    }
-                }
-                scm {
-                    connection = 'scm:git@github.com/SVWS-NRW/SVWS-Server'
-                    developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Server.git'
-                    url = 'https://github.com/SVWS-NRW/SVWS-Server.git'
-                }
-                developers {
-                    developer {
-                        id = 'svws-nrw'
-                        name = 'Schulverwaltung NRW'
-                        email = 'npm@svws-nrw.de'
-                    }
-                }
-            }
-        }
-    }
-}
