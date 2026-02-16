@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { useLoginUtils } from "../../utils/LoginUtils";
-import { frontendURL } from '../../../../../utils/APIUtils'
+import { frontendURL } from '../../../../../utils/APIUtils';
 
 test.use({
 	ignoreHTTPSErrors: true,
@@ -54,8 +54,8 @@ test('Admins können entsprechende Bereiche im STABLE Mode einsehen', async ({ p
 	await page.getByRole('button', { name: 'Sprachen' }).click();
 	await page.waitForURL('**/#/**/schueler/1010/sprachen', { timeout: 20_000 });
 	await expect(page.getByText('Sprachenfolge')).toBeVisible();
-	await expect(page.getByText('Sprachprüfungen – Herkunftsprachlicher Unterricht')).toBeVisible();
-	await expect(page.getByText('Sprachprüfungen – Feststellungsprüfungen')).toBeVisible()
+	await expect(page.getByText('Sprachprüfungen — Herkunftsprachlicher Unterricht')).toBeVisible();
+	await expect(page.getByText('Sprachprüfungen — Feststellungsprüfungen')).toBeVisible();
 
 
 	await expect(page.getByRole('button', { name: 'Laufbahnplanung' })).toBeVisible();
@@ -100,7 +100,7 @@ test('Admins können entsprechende Bereiche bei den Lehrern im STABLE Mode sehen
 	await expect(page.getByRole('button', { name: 'Unterricht' })).toHaveCount(0);
 	await expect(page.getByRole('button', { name: 'Einwilligungen' })).toHaveCount(0);
 	await expect(page.getByRole('button', { name: 'Lernplattform' })).toHaveCount(0);
-})
+});
 
 test('Admins können Oberstufe bearbeiten', async ({ page }) => {
 	const { loginAdmin } = useLoginUtils(targetHost, page);

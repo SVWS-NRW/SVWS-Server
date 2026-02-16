@@ -9,7 +9,7 @@ export function useLoginUtils(targetHost: string, page: Page) {
 		await page.getByLabel('Benutzername').fill('Admin');
 		await page.getByRole('button', { name: 'Anmelden' }).click();
 		await page.waitForURL('**/#/**/schueler/**/daten', { timeout: 20_000 });
-	}
+	};
 
 	const loginBISZ = async () => {
 		await page.goto(targetHost);
@@ -20,16 +20,16 @@ export function useLoginUtils(targetHost: string, page: Page) {
 		await page.getByLabel('Passwort').fill('BISZ');
 		await page.getByRole('button', { name: 'Anmelden' }).click();
 		await page.waitForURL('**/#/**/schueler/**/daten', { timeout: 20_000 });
-	}
+	};
 
 	const logout = async () => {
 		await page.getByRole('link', { name: 'Abmelden' }).click();
 		await expect(page.getByRole('button', { name: 'Anmelden' })).toContainText('Anmelden');
-	}
+	};
 
 	return {
 		loginAdmin,
 		loginBISZ,
 		logout,
-	}
+	};
 }

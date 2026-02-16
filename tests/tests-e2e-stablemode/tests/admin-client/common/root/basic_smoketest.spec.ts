@@ -13,12 +13,12 @@ test('Smoke-Test - Basic', async ({ page }) => {
 
 	await loginRoot();
 
-	///////////////////////////////////
+	/// ////////////////////////////////
 	// ***** App Schema (Default) *****
-	///////////////////////////////////
+	/// ////////////////////////////////
 	const menuHeadlineLocator = page.locator('.secondary-menu--headline');
 	// prüfen, ob Auswahlliste eingeblendet ist
-	await expect(menuHeadlineLocator).toContainText("Schema")
+	await expect(menuHeadlineLocator).toContainText("Schema");
 
 	const headlineLocator = page.locator('.svws-headline-wrapper');
 	// prüfen, ob App Headline eingeblendet ist
@@ -30,9 +30,9 @@ test('Smoke-Test - Basic', async ({ page }) => {
 	await expect(schemaUiCardsLocator).toHaveCount(3);
 
 
-	///////////////////////////////////
+	/// ////////////////////////////////
 	// ***** App Schema Neu *****
-	///////////////////////////////////
+	/// ////////////////////////////////
 	const addBtnLocator = page.locator('.i-ri-add-line').locator('..');
 	await addBtnLocator.click();
 	const subHeadlineLocator = page.locator('.svws-subline');
@@ -43,9 +43,9 @@ test('Smoke-Test - Basic', async ({ page }) => {
 	await expect(schemaNeuUiCardsLocator).toHaveCount(4);
 
 
-	///////////////////////////////////
+	/// ////////////////////////////////
 	// ***** App Konfiguration *****
-	///////////////////////////////////
+	/// ////////////////////////////////
 	await page.getByRole('link', { name: 'Konfiguration' }).click();
 	await expect(page.locator('.svws-headline')).toContainText('Konfiguration des SVWS-Servers');
 	// prüfen ob Zertifikat exportieren Button angezeigt wird
@@ -53,5 +53,5 @@ test('Smoke-Test - Basic', async ({ page }) => {
 	await expect(certificateBtnLocator).toContainText("Zertifikat exportieren");
 
 	// Logout prüfen
-	await logout()
+	await logout();
 });

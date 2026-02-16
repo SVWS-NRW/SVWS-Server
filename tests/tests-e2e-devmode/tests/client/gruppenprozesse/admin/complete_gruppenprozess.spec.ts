@@ -26,15 +26,15 @@ test('Weitere Felder zu Migrationshintergrund nur aktiv, wenn Migrationshintergr
 	expect(await page.locator("#Card-Migrationshintergrund").ariaSnapshot()).not.toContain('disabled');
 	await page.locator('#tooltip-hatMigrationshintergrund').click();
 	expect(await page.locator("#Card-Migrationshintergrund").ariaSnapshot()).toContain('combobox "Geburtsland" [disabled]');
-})
+});
 
 test.skip('Clear Button entfernt aktuelle Daten', async ({ page }) => {
 	// Destruktiv und daher nicht implementiert.
-})
+});
 
 test.skip('Gruppenänderung findet sich bei einzelnem Schüler wieder', async ({ page }) => {
 	// Destruktiv und daher nicht implementiert.
-})
+});
 
 test('Beim Zurücksetzen der Änderungen wird die Auswahl der Schüler reaktiviert', async ({ page }) => {
 	const { loginAdmin } = useLoginUtils(targetHost, page);
@@ -49,7 +49,7 @@ test('Beim Zurücksetzen der Änderungen wird die Auswahl der Schüler reaktivie
 	expect(await page.getByRole('row', { name: '09a Arens Matthias' }).getByRole('cell').first().ariaSnapshot()).toContain(`checkbox [disabled]`);
 	await page.locator(tooltipFahrschuelerId).click();
 	expect(await page.getByRole('row', { name: '09a Arens Matthias' }).getByRole('cell').first().ariaSnapshot()).not.toContain(`disabled`);
-})
+});
 
 test('Bei ausstehenden Änderungen wird die Auswahl der Schüler deaktiviert', async ({ page }) => {
 	const { loginAdmin } = useLoginUtils(targetHost, page);
@@ -62,7 +62,7 @@ test('Bei ausstehenden Änderungen wird die Auswahl der Schüler deaktiviert', a
 	await page.getByRole('option', { name: 'Rheingold' }).click();
 
 	expect(await page.getByRole('row', { name: '09a Arens Matthias' }).getByRole('cell').first().ariaSnapshot()).toContain(`checkbox [disabled]`);
-})
+});
 
 test('Modal bei Routenwechsel wird aktiv, bei Fortsetzen werden Änderungen zurückgesetzt', async ({ page }) => {
 	const { loginAdmin } = useLoginUtils(targetHost, page);
@@ -86,7 +86,7 @@ test('Modal bei Routenwechsel wird aktiv, bei Fortsetzen werden Änderungen zur�
 	await page.getByRole('link', { name: 'Schüler', exact: true }).click();
 
 	await expect(page.locator(tooltipFahrschuelerId)).toHaveCount(0);
-})
+});
 
 test('Modal bei Routenwechsel wird aktiv, bei Abbrechen werden Pending States behalten und angezeigt', async ({ page }) => {
 	const { loginAdmin } = useLoginUtils(targetHost, page);
@@ -107,7 +107,7 @@ test('Modal bei Routenwechsel wird aktiv, bei Abbrechen werden Pending States be
     `);
 	await page.getByRole('button', { name: 'Abbrechen' }).click();
 	await expect(page.locator(tooltipFahrschuelerId)).toHaveCount(1);
-})
+});
 
 test('Clear Button ist disabled, wenn keine Daten vorhanden sind', async ({ page }) => {
 	const { loginAdmin } = useLoginUtils(targetHost, page);
@@ -116,9 +116,9 @@ test('Clear Button ist disabled, wenn keine Daten vorhanden sind', async ({ page
 
 	await startGruppenprozessMitSchuelern(page, ['09a Arens Matthias']);
 
-	expect(await page.locator(clearButtonHaltestelleId).innerHTML()).toContain("icon-ui-disabled")
+	expect(await page.locator(clearButtonHaltestelleId).innerHTML()).toContain("icon-ui-disabled");
 	await page.getByRole('button', { name: 'Auswahl aufheben' }).click();
-})
+});
 
 test('Clear Button ist enabled, wenn Daten vorhanden sind', async ({ page }) => {
 	const { loginAdmin } = useLoginUtils(targetHost, page);
@@ -126,8 +126,8 @@ test('Clear Button ist enabled, wenn Daten vorhanden sind', async ({ page }) => 
 	await loginAdmin();
 
 	await startGruppenprozessMitSchuelern(page, ['08c Testschueler TestLisa']);
-	expect(await page.locator(clearButtonHaltestelleId).innerHTML()).not.toContain("icon-ui-disabled")
-})
+	expect(await page.locator(clearButtonHaltestelleId).innerHTML()).not.toContain("icon-ui-disabled");
+});
 
 test('Clear Button ist enabled, wenn Daten für mindestens einen Schüler vorhanden sind', async ({ page }) => {
 	const { loginAdmin } = useLoginUtils(targetHost, page);
@@ -135,8 +135,8 @@ test('Clear Button ist enabled, wenn Daten für mindestens einen Schüler vorhan
 	await loginAdmin();
 
 	await startGruppenprozessMitSchuelern(page, ['09a Arens Matthias', '08c Testschueler TestLisa']);
-	expect(await page.locator(clearButtonHaltestelleId).innerHTML()).toContain("icon-ui-danger")
-})
+	expect(await page.locator(clearButtonHaltestelleId).innerHTML()).toContain("icon-ui-danger");
+});
 
 test('Während des Hoverns des Tooltips, wird ein X im Button angezeigt', async ({ page }) => {
 	const { loginAdmin } = useLoginUtils(targetHost, page);
@@ -149,7 +149,7 @@ test('Während des Hoverns des Tooltips, wird ein X im Button angezeigt', async 
 	await page.getByRole('option', { name: '628 Fingscheid' }).click();
 
 	const innerHtml = await page.locator(tooltipHaltestelleId).innerHTML();
-	expect(innerHtml).toContain("i-ri-information-line")
+	expect(innerHtml).toContain("i-ri-information-line");
 	expect(innerHtml).not.toContain("i-ri-close-line");
 
 	await page.locator(tooltipHaltestelleId).hover();
@@ -157,7 +157,7 @@ test('Während des Hoverns des Tooltips, wird ein X im Button angezeigt', async 
 	const innerHtmlHovered = await page.locator(tooltipHaltestelleId).innerHTML();
 	expect(innerHtmlHovered).not.toContain("i-ri-information-line");
 	expect(innerHtmlHovered).toContain("i-ri-close-line");
-})
+});
 
 test('Auswahl aufheben (Ja), schließt Gruppenprozess und reaktiviert Schülerauswahl', async ({ page }) => {
 	const { loginAdmin } = useLoginUtils(targetHost, page);
@@ -187,7 +187,7 @@ test('Auswahl aufheben (Ja), schließt Gruppenprozess und reaktiviert Schülerau
 	expect(await page.getByRole('row', { name: '09a Arens Matthias' }).getByRole('cell').first().ariaSnapshot()).not.toContain(`disabled`);
 
 	await expect(page.locator(tooltipFahrschuelerId)).toHaveCount(0);
-})
+});
 
 test('Auswahl aufheben (Nein), bleibt in Gruppenprozess und aktuelle Änderungen bleiben bestehen', async ({ page }) => {
 	const { loginAdmin } = useLoginUtils(targetHost, page);
@@ -217,7 +217,7 @@ test('Auswahl aufheben (Nein), bleibt in Gruppenprozess und aktuelle Änderungen
 	expect(await page.getByRole('row', { name: '09a Arens Matthias' }).getByRole('cell').first().ariaSnapshot()).toContain(`checkbox [disabled]`);
 
 	await expect(page.locator(tooltipFahrschuelerId)).toHaveCount(1);
-})
+});
 
 test('Button Zurücksetzen, setzt Pending State bei allen Feldern zurück', async ({ page }) => {
 	const { loginAdmin } = useLoginUtils(targetHost, page);
@@ -389,7 +389,7 @@ test.skip('Mehrere Schüler auswählen und Staatsangehörigkeit ändern und ansc
 
 	await startGruppenprozessMitSchuelern(page, ['09a Arens Matthias', '09a Batta Dominik']);
 
-	const staatsangehoerigkeitSelect = page.locator('.ui-select').filter({ has: page.getByLabel('1. Staatsangehörigkeit') })
+	const staatsangehoerigkeitSelect = page.locator('.ui-select').filter({ has: page.getByLabel('1. Staatsangehörigkeit') });
 	await staatsangehoerigkeitSelect.click();
 	await staatsangehoerigkeitSelect.locator('li').filter({ hasText: 'AFG - Afghanistan' }).click();
 
@@ -399,7 +399,7 @@ test.skip('Mehrere Schüler auswählen und Staatsangehörigkeit ändern und ansc
 	await page.waitForTimeout(1000);
 
 	await page.getByRole('row', { name: '09a Arens Matthias' }).click();
-	await expect(page.locator('[role="combobox"][aria-label="1. Staatsangehörigkeit"]')).toHaveValue('afghanisch')
+	await expect(page.locator('[role="combobox"][aria-label="1. Staatsangehörigkeit"]')).toHaveValue('afghanisch');
 	await page.getByRole('row', { name: '09a Batta Dominik' }).click();
-	await expect(page.locator('[role="combobox"][aria-label="1. Staatsangehörigkeit"]')).toHaveValue('afghanisch')
+	await expect(page.locator('[role="combobox"][aria-label="1. Staatsangehörigkeit"]')).toHaveValue('afghanisch');
 });

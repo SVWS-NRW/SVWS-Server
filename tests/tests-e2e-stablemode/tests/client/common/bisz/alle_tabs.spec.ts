@@ -42,8 +42,8 @@ test('Nicht privilegierte Nutzer können nur entsprechende Bereiche im STABLE Mo
 	await expect(page.getByRole('button', { name: 'Sprachen' })).toBeVisible();
 	await page.getByRole('button', { name: 'Sprachen' }).click();
 	await expect(page.getByText('Sprachenfolge')).toBeVisible();
-	await expect(page.getByText('Sprachprüfungen – Herkunftsprachlicher Unterricht')).toBeVisible();
-	await expect(page.getByText('Sprachprüfungen – Feststellungsprüfungen')).toBeVisible()
+	await expect(page.getByText('Sprachprüfungen — Herkunftsprachlicher Unterricht')).toBeVisible();
+	await expect(page.getByText('Sprachprüfungen — Feststellungsprüfungen')).toBeVisible();
 
 
 	await expect(page.getByRole('button', { name: 'Stundenplan' })).toBeVisible();
@@ -80,7 +80,7 @@ test('Nicht privilegierte Nutzer können nur entsprechende Bereiche bei den Lehr
 	await expect(page.getByRole('button', { name: 'Personaldaten' })).toHaveCount(0);
 	await expect(page.getByRole('button', { name: 'Einwilligungen' })).toHaveCount(0);
 	await expect(page.getByRole('button', { name: 'Lernplattformen' })).toHaveCount(0);
-})
+});
 
 test('Nicht privilegierter User können Oberstufe nicht bearbeiten', async ({ page }) => {
 	test.setTimeout(60_000);

@@ -21,7 +21,7 @@ test('Smoke Test Gruppenprozesse', async ({ page }) => {
 
 	const auswahlItemCheckbox = page.getByRole('row', { name: '09a Bechtel Kerstin' }).getByRole('checkbox');
 
-	const statusSelectFieldLocator = page.locator('.ui-select').filter({ has: page.getByLabel('Status') })
+	const statusSelectFieldLocator = page.locator('.ui-select').filter({ has: page.getByLabel('Status') });
 
 	// loginAdmin
 	await loginAdmin();
@@ -30,14 +30,14 @@ test('Smoke Test Gruppenprozesse', async ({ page }) => {
 	await expect(headlineLocator).toContainText('Eleonora Externa');
 	await expect(subheadlineLocator).toBeHidden();
 
-	await startGruppenprozessMitSchuelern(page, ['09a Ankel Matthias', '09a Bechtel Kerstin'])
+	await startGruppenprozessMitSchuelern(page, ['09a Ankel Matthias', '09a Bechtel Kerstin']);
 
 	// Prüfen, ob Mehrfachauswahl mit Schülern im Titel erscheint
 	await expect(headlineLocator).toContainText('Mehrfachauswahl');
 	await expect(subheadlineLocator).toContainText('Matthias Ankel, Kerstin Bechtel');
 
 	// Prüfe richtige URL
-	await expect(page).toHaveURL(new RegExp('.*/schueler/gruppenprozesse/daten'));
+	await expect(page).toHaveURL(/.*\/schueler\/gruppenprozesse\/daten/);
 
 	// Prüfen, ob alle Tabs angezeigt werden und der richtige Tab als Default selektiert wurde
 	const tabsLocator = page.locator('.svws-ui-tab-button');
@@ -46,7 +46,7 @@ test('Smoke Test Gruppenprozesse', async ({ page }) => {
 
 	// Prüfen ob alle Individualdaten Content-Cards angezeigt werden
 	await expect(page.locator('.content-card--header'))
-		.toContainText(['Statusdaten', 'Staatsangehörigkeit und Konfession', 'Migrationshintergrund'])
+		.toContainText(['Statusdaten', 'Staatsangehörigkeit und Konfession', 'Migrationshintergrund']);
 	// Prüfen, ob Status initial leer
 	await expect(statusSelectFieldLocator).toContainText("");
 
@@ -55,11 +55,11 @@ test('Smoke Test Gruppenprozesse', async ({ page }) => {
 	await statusSelectFieldLocator.locator('li').filter({ hasText: '2 - Aktiv' }).click();
 
 	// Prüfen, ob Änderung im Feld angezeigt wird und Auswahl nicht mehr möglich ist
-	await expect(statusSelectFieldLocator).toContainText('2 - Aktiv')
+	await expect(statusSelectFieldLocator).toContainText('2 - Aktiv');
 	await expect(auswahlItemCheckbox).toBeDisabled();
 
 	// Änderungen zurücksetzen
-	await resetBtnLocator.click()
+	await resetBtnLocator.click();
 
 	// Prüfen, ob ohne offene Änderungen Auswahl möglich ist
 	await expect(auswahlItemCheckbox).toBeEnabled();
@@ -82,4 +82,4 @@ test('Smoke Test Gruppenprozesse', async ({ page }) => {
 	// prüfen, ob Einzelansicht Individualdaten erscheint
 	await expect(headlineLocator).toContainText('Eleonora Externa');
 	await expect(subheadlineLocator).toBeHidden();
-})
+});

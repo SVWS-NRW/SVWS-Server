@@ -36,7 +36,7 @@ test('Smoke Test für alte Gruppenprozesse, anhand des Jahrgänge Katalogs', asy
 	await expect(headlineLocator).toContainText('Gruppenprozesse');
 
 	// Prüfe richtige URL
-	await expect(page).toHaveURL(new RegExp('.*/schule/jahrgaenge/gruppenprozesse'));
+	await expect(page).toHaveURL(/.*\/schule\/jahrgaenge\/gruppenprozesse/);
 
 	// Selektion der Schüler zurücknehmen
 	await auswahlItem1Checkbox.uncheck();

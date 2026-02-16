@@ -6,15 +6,15 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerSprachen } from "~/router/apps/schueler/sprachen/RouteDataSchuelerSprachen";
-import { type SchuelerSprachenProps } from "~/components/schueler/sprachen/SSchuelerSprachenProps";
+import { type SchuelerSprachenProps } from "~/components/schueler/sprachen/SchuelerSprachenProps";
 import { api } from "~/router/Api";
 
-const SSchuelerSprachen = () => import("~/components/schueler/sprachen/SSchuelerSprachen.vue");
+const SchuelerSprachen = () => import("~/components/schueler/sprachen/SchuelerSprachen.vue");
 
 export class RouteSchuelerSprachen extends RouteNode<RouteDataSchuelerSprachen, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values().filter(f => !f.equals(Schulform.G)), [BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN], "schueler.sprachen", "sprachen", SSchuelerSprachen, new RouteDataSchuelerSprachen());
+		super(Schulform.values().filter(f => !f.equals(Schulform.G)), [BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN], "schueler.sprachen", "sprachen", SchuelerSprachen, new RouteDataSchuelerSprachen());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Sprachen";
@@ -31,7 +31,7 @@ export class RouteSchuelerSprachen extends RouteNode<RouteDataSchuelerSprachen, 
 			}
 			try {
 				await this.data.auswahlSchueler(routeSchueler.data.manager.liste.get(id));
-			} catch (error) {
+			} catch {
 				return routeSchueler.getRouteDefaultChild({ id });
 			}
 		} catch (e) {
