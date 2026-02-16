@@ -7,19 +7,19 @@ import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import type { SchuelerNeuProps } from "~/components/schueler/SSchuelerNeuProps";
+import type { SchuelerNeuanlageProps } from "~/components/schueler/neuanlage/SchuelerNeuanlageProps";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeApp } from "~/router/apps/RouteApp";
 import { api } from "~/router/Api";
 import { routeError } from "~/router/error/RouteError";
-import { routeSchuelerNeuSchnelleingabe } from "~/router/apps/schueler/RouteSchuelerNeuSchnelleingabe";
+import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neuanlage/RouteSchuelerSchnelleingabe";
 
-const SSchuelerNeu = () => import("~/components/schueler/SSchuelerNeu.vue");
+const SchuelerNeuanlage = () => import("~/components/schueler/neuanlage/SchuelerNeuanlage.vue");
 
-export class RouteSchuelerNeu extends RouteNode<any, RouteSchueler> {
+export class RouteSchuelerNeuanlage extends RouteNode<any, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN], "schueler.neu", "neu", SSchuelerNeu);
+		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN], "schueler.neu", "neu", SchuelerNeuanlage);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
@@ -49,7 +49,7 @@ export class RouteSchuelerNeu extends RouteNode<any, RouteSchueler> {
 
 	public async getSchuelerDaten(idSchueler: number): Promise<void> {
 		const auswahl = routeSchueler.data.manager.liste.get(idSchueler);
-		this.initialeSchuelerDaten = await routeSchuelerNeuSchnelleingabe.data.ladeInitialeDatenFuerWeiterenSchueler(auswahl) ?? null;
+		this.initialeSchuelerDaten = await routeSchuelerSchnelleingabe.data.ladeInitialeDatenFuerWeiterenSchueler(auswahl) ?? null;
 	}
 
 	public clearInitialeSchuelerDaten(): void {
@@ -57,7 +57,7 @@ export class RouteSchuelerNeu extends RouteNode<any, RouteSchueler> {
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
-		if (from === routeSchuelerNeuSchnelleingabe) {
+		if (from === routeSchuelerSchnelleingabe) {
 			const idSchueler = routeSchueler.data.manager.daten().id;
 			await this.getSchuelerDaten(idSchueler);
 		} else {
@@ -69,7 +69,7 @@ export class RouteSchuelerNeu extends RouteNode<any, RouteSchueler> {
 		return { id: "" };
 	}
 
-	public getProps(to: RouteLocationNormalized): SchuelerNeuProps {
+	public getProps(to: RouteLocationNormalized): SchuelerNeuanlageProps {
 		return {
 			schuelerListeManager: () => routeSchueler.data.manager,
 			addSchueler: routeSchueler.data.addSchueler,
@@ -90,4 +90,4 @@ export class RouteSchuelerNeu extends RouteNode<any, RouteSchueler> {
 
 }
 
-export const routeSchuelerNeu = new RouteSchuelerNeu();
+export const routeSchuelerNeuanlage = new RouteSchuelerNeuanlage();

@@ -327,13 +327,13 @@
 	import type { SchuelerStammdaten, Telefonart, OrtsteilKatalogEintrag, EinschulungsartKatalogEintrag, NationalitaetenKatalogEintrag, SchuelerStatusKatalogEintrag, VerkehrsspracheKatalogEintrag, KlassenDaten, VermerkartEintrag } from "@core";
 	import { BenutzerKompetenz, SchuelerTelefon, ArrayList, ErzieherStammdaten, AdressenUtils, Geschlecht, Kindergartenbesuch, Nationalitaeten, SchuelerStatus, Schulform, Verkehrssprache, ServerMode, DateUtils, SchuelerVermerke } from "@core";
 	import { computed, ref, watch } from "vue";
-	import type { SchuelerNeuSchnelleingabeProps } from "~/components/schueler/SSchuelerNeuSchnelleingabeProps";
+	import type { SchuelerSchnelleingabeProps } from "~/components/schueler/neuanlage/SchuelerSchnelleingabeProps";
 	import { erzieherArtSort, orte_sort, ortsteilSort } from "~/utils/helfer";
 	import type { DataTableColumn } from "@ui";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
 	import { emailIsValid, mandatoryInputIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
 
-	const props = defineProps<SchuelerNeuSchnelleingabeProps>();
+	const props = defineProps<SchuelerSchnelleingabeProps>();
 
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));

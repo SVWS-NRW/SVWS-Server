@@ -9,7 +9,7 @@ import { SchuelerSchulbesuchManager } from "~/components/schueler/schulbesuch/Sc
 import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/RouteSchuelerSchulbesuch";
 import { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
 
-interface RouteStateDataSchuelerNeuSchnelleingabe extends RouteStateInterface {
+interface RouteStateDataSchuelerSchnelleingabe extends RouteStateInterface {
 	mapKindergaerten: Map<number, Kindergarten>;
 	mapFahrschuelerarten: Map<number, Fahrschuelerart>;
 	mapHaltestellen: Map<number, Haltestelle>;
@@ -25,7 +25,7 @@ interface RouteStateDataSchuelerNeuSchnelleingabe extends RouteStateInterface {
 	schuelerLernabschnittsManager: SchuelerLernabschnittManager | undefined;
 }
 
-const defaultState = <RouteStateDataSchuelerNeuSchnelleingabe> {
+const defaultState = <RouteStateDataSchuelerSchnelleingabe> {
 	mapKindergaerten: new Map(),
 	mapFahrschuelerarten: new Map(),
 	mapHaltestellen: new Map(),
@@ -41,7 +41,7 @@ const defaultState = <RouteStateDataSchuelerNeuSchnelleingabe> {
 	schuelerLernabschnittsManager: undefined,
 };
 
-export class RouteDataSchuelerNeuSchnelleingabe extends RouteData<RouteStateDataSchuelerNeuSchnelleingabe> {
+export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSchuelerSchnelleingabe> {
 
 	public constructor() {
 		super(defaultState);

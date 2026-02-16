@@ -2,7 +2,7 @@ import type { Checkpoint, SchuelerListeManager } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 import type { SchuelerStammdaten, Kindergarten, EinschulungsartKatalogEintrag, Schuljahresabschnitt, Schulform, SchuelerSchulbesuchsdaten, BenutzerKompetenz, SchuelerStammdatenNeu, KlassenDaten, List } from "@core";
 
-export interface SchuelerNeuProps {
+export interface SchuelerNeuanlageProps {
 	schuelerListeManager: () => SchuelerListeManager;
 	addSchueler: (addObject: Partial<SchuelerStammdatenNeu>, idSchuljahresabscnitt: number) => Promise<SchuelerStammdaten>;
 	getSchuelerKlassenFuerAbschnitt: (idAbschnitt: number) => Promise<List<KlassenDaten>>;

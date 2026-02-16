@@ -64,14 +64,14 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerNeuProps } from "~/components/schueler/SSchuelerNeuProps";
+	import type { SchuelerNeuanlageProps } from "~/components/schueler/neuanlage/SchuelerNeuanlageProps";
 	import type { KlassenDaten, SchuelerStatusKatalogEintrag } from "@core";
 	import { Geschlecht, SchuelerStatus, Schulform, SchuelerSchulbesuchsdaten, BenutzerKompetenz, SchuelerStammdatenNeu, DateUtils } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
 	import { mandatoryInputIsValid, optionalInputIsValid } from "~/util/validation/Validation";
 
-	const props = defineProps<SchuelerNeuProps>();
+	const props = defineProps<SchuelerNeuanlageProps>();
 
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 

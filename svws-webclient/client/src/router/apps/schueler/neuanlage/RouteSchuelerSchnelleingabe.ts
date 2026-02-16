@@ -7,17 +7,17 @@ import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeApp } from "~/router/apps/RouteApp";
 import { api } from "~/router/Api";
-import type { SchuelerNeuSchnelleingabeProps } from "~/components/schueler/SSchuelerNeuSchnelleingabeProps.js";
+import type { SchuelerSchnelleingabeProps } from "~/components/schueler/neuanlage/SchuelerSchnelleingabeProps.js";
 import { ViewType } from "@ui";
-import { RouteDataSchuelerNeuSchnelleingabe } from "~/router/apps/schueler/RouteDataSchuelerNeuSchnelleingabe";
+import { RouteDataSchuelerSchnelleingabe } from "~/router/apps/schueler/neuanlage/RouteDataSchuelerSchnelleingabe";
 import { routeError } from "~/router/error/RouteError";
 
-const SSchuelerNeuSchnelleingabe = () => import("~/components/schueler/SSchuelerNeuSchnelleingabe.vue");
+const SchuelerSchnelleingabe = () => import("~/components/schueler/neuanlage/SchuelerSchnelleingabe.vue");
 
-export class RouteSchuelerNeuSchnelleingabe extends RouteNode<RouteDataSchuelerNeuSchnelleingabe, RouteSchueler> {
+export class RouteSchuelerSchnelleingabe extends RouteNode<RouteDataSchuelerSchnelleingabe, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN], "schueler.schnelleingabe", "schnelleingabe", SSchuelerNeuSchnelleingabe, new RouteDataSchuelerNeuSchnelleingabe());
+		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN], "schueler.schnelleingabe", "schnelleingabe", SchuelerSchnelleingabe, new RouteDataSchuelerSchnelleingabe());
 		super.types = new Set([ViewType.NEU]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
@@ -39,7 +39,7 @@ export class RouteSchuelerNeuSchnelleingabe extends RouteNode<RouteDataSchuelerN
 		}
 	}
 
-	public getProps(to: RouteLocationNormalized): SchuelerNeuSchnelleingabeProps {
+	public getProps(to: RouteLocationNormalized): SchuelerSchnelleingabeProps {
 		return {
 			schuelerListeManager: () => routeSchueler.data.manager,
 			schuelerSchulbesuchsManager: () => this.data.schuelerSchulbesuchManager,
@@ -83,4 +83,4 @@ export class RouteSchuelerNeuSchnelleingabe extends RouteNode<RouteDataSchuelerN
 
 }
 
-export const routeSchuelerNeuSchnelleingabe = new RouteSchuelerNeuSchnelleingabe();
+export const routeSchuelerSchnelleingabe = new RouteSchuelerSchnelleingabe();

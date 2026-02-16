@@ -5,7 +5,7 @@ import type { BenutzerKompetenz, EinschulungsartKatalogEintrag, Erzieherart, Erz
 import type { SchuelerSchulbesuchManager } from "~/components/schueler/schulbesuch/SchuelerSchulbesuchManager";
 import type { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
 
-export interface SchuelerNeuSchnelleingabeProps {
+export interface SchuelerSchnelleingabeProps {
 	schuelerListeManager: () => SchuelerListeManager;
 	schuelerSchulbesuchsManager: () => SchuelerSchulbesuchManager;
 	schuelerLernabschnittManager: () => SchuelerLernabschnittManager;

@@ -5,11 +5,11 @@ import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
 import { ViewType, SchuelerListeManager, type PendingStateManager } from "@ui";
-import { routeSchuelerNeu } from "~/router/apps/schueler/RouteSchuelerNeu";
+import { routeSchuelerNeuanlage } from "~/router/apps/schueler/neuanlage/RouteSchuelerNeuanlage";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { routeSchuelerIndividualdatenGruppenprozesse } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdatenGruppenprozesse";
 import { routeSchuelerAllgemeinesGruppenprozesse } from "~/router/apps/schueler/allgemeines/RouteSchuelerAllgemeinesGruppenprozesse";
-import { routeSchuelerNeuSchnelleingabe } from "~/router/apps/schueler/RouteSchuelerNeuSchnelleingabe";
+import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neuanlage/RouteSchuelerSchnelleingabe";
 
 
 interface RouteStateSchueler extends RouteStateAuswahlInterface<SchuelerListeManager> {
@@ -35,7 +35,7 @@ const defaultState = <RouteStateSchueler> {
 export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, RouteStateSchueler> {
 
 	public constructor() {
-		super(defaultState, { hinzufuegen: routeSchuelerNeu, schnelleingabe: routeSchuelerNeuSchnelleingabe });
+		super(defaultState, { hinzufuegen: routeSchuelerNeuanlage, schnelleingabe: routeSchuelerSchnelleingabe });
 	}
 
 	public addID(param: RouteParamsRawGeneric, id: number): void {
