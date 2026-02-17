@@ -42,9 +42,9 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 			addErzieher: this.data.addErzieher,
 			deleteErzieher: this.data.deleteErzieher,
 			data: () => this.data.daten,
-			mapErzieherarten: this.data.mapErzieherarten,
-			mapOrte: routeApp.data.mapOrte,
-			mapOrtsteile: routeApp.data.mapOrtsteile,
+			erzieherartenById: routeApp.cache.kataloge.erzieherartenById,
+			orteById: routeApp.cache.kataloge.orteById,
+			ortsteileById: routeApp.cache.kataloge.ortsteileById,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 		};

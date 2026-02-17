@@ -7,12 +7,12 @@ import type { PendingStateManagerSchuelerIndividualdaten } from "~/router/apps/s
 export interface SchuelerIndividualdatenGruppenprozesseProps {
 	schuelerListeManager: () => SchuelerListeManager;
 	mapSchulen: Map<string, SchulEintrag>;
-	mapOrte: Map<number, OrtKatalogEintrag>;
-	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
-	mapFahrschuelerarten: Map<number, Fahrschuelerart>;
-	mapFoerderschwerpunkte: Map<number, FoerderschwerpunktEintrag>;
-	mapHaltestellen: Map<number, Haltestelle>
-	mapReligionen: Map<number, ReligionEintrag>;
+	orteById: Map<number, OrtKatalogEintrag>;
+	ortsteileById: Map<number, OrtsteilKatalogEintrag>;
+	fahrschuelerartenById: Map<number, Fahrschuelerart>;
+	foerderschwerpunkteById: Map<number, FoerderschwerpunktEintrag>;
+	haltestellenById: Map<number, Haltestelle>
+	religionenById: Map<number, ReligionEintrag>;
 	schulform: Schulform;
 	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;

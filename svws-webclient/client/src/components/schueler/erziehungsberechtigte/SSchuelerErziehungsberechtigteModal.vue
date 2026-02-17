@@ -42,14 +42,14 @@
 					<ui-select label="Staatsangehörigkeit" v-model="zweiteErzStaatsangehoerigkeit" :manager="staatsangehoerigkeitManager" searchable />
 				</svws-ui-input-wrapper>
 			</div>
-			<svws-ui-notification type="warning" v-if="mapErzieherarten.size === 0">
+			<svws-ui-notification type="warning" v-if="erzieherartenById.size === 0">
 				Die Liste der Erzieherarten ist leer, es sollte mindestens eine Erzieherart unter Schule/Kataloge angelegt werden, damit zusätzliche Erzieher eine gültige Zuordnung haben.
 			</svws-ui-notification>
 			<div class="mt-7 flex flex-row gap-4 justify-between">
 				<!-- Erstellt den ersten Erziehungsberechtigten und erweitert das Modal, um einen zweiten Erzieher hinzuzufügen -->
 				<svws-ui-tooltip class="col-span-full" v-if="!istErsterErzGespeichert">
 					<svws-ui-button
-						@click="emit('save-and-show-second')" :disabled="(selectedErzieherart === null) || (mapErzieherarten.size === 0) || (!formIsValid)">
+						@click="emit('save-and-show-second')" :disabled="(selectedErzieherart === null) || (erzieherartenById.size === 0) || (!formIsValid)">
 						+ 2. Person
 					</svws-ui-button>
 					<template #content>
@@ -61,7 +61,7 @@
 					<svws-ui-button type="secondary" @click="emit('close-modal')">Abbrechen</svws-ui-button>
 					<!-- Erstellt den ersten Erziehungsberechtigten -->
 					<svws-ui-button v-if="!istErsterErzGespeichert" @click="emit('send-request')" :disabled="(selectedErzieherart === null)
-						|| (mapErzieherarten.size === 0) || (!formIsValid)">
+						|| (erzieherartenById.size === 0) || (!formIsValid)">
 						Speichern
 					</svws-ui-button>
 					<!-- Erstellt den zweiten Erzieher -->
@@ -87,11 +87,11 @@
 		ersterErz: ErzieherStammdaten;
 		zweiterErz: ErzieherStammdaten;
 		showModal: boolean;
-		mapErzieherarten: Map<number, Erzieherart>;
+		erzieherartenById: Map<number, Erzieherart>;
 		hatKompetenzUpdate: boolean;
 		istErsterErzGespeichert: boolean;
-		mapOrte: Map<number, OrtKatalogEintrag>;
-		mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
+		orteById: Map<number, OrtKatalogEintrag>;
+		ortsteileById: Map<number, OrtsteilKatalogEintrag>;
 		schuljahr: number;
 	}>();
 
@@ -100,12 +100,12 @@
 		(e: 'send-request' | 'save-and-show-second' | 'save-second-erzieher' | 'close-modal'): void;
 	}>();
 
-	const erzieherarten = computed(() => props.mapErzieherarten.values());
+	const erzieherarten = computed(() => props.erzieherartenById.values());
 
 	const erzieherartenManager = new SelectManager({ options: erzieherarten, sort: erzieherArtSort, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
 
 	const selectedErzieherart = computed<Erzieherart | null>({
-		get: () => props.mapErzieherarten.get(props.ersterErz.idErzieherArt ?? -1) ?? null,
+		get: () => props.erzieherartenById.get(props.ersterErz.idErzieherArt ?? -1) ?? null,
 		set: (erzieherart) => props.ersterErz.idErzieherArt = (erzieherart !== null) ? erzieherart.id : 0,
 	});
 
@@ -141,16 +141,16 @@
 		},
 	});
 
-	const orte = computed(() => props.mapOrte.values());
+	const orte = computed(() => props.orteById.values());
 
 	const wohnortManager = new SelectManager({ options: orte, sort: orte_sort, optionDisplayText: i => `${i.plz} ${i.ortsname}`, selectionDisplayText: i => `${i.plz} ${i.ortsname}` });
 
 	const wohnort = computed<OrtKatalogEintrag | undefined>({
-		get: () => ((props.ersterErz.wohnortID === null)) ? undefined : props.mapOrte.get(props.ersterErz.wohnortID),
+		get: () => ((props.ersterErz.wohnortID === null)) ? undefined : props.orteById.get(props.ersterErz.wohnortID),
 		set: (value) => props.ersterErz.wohnortID = (value === undefined) ? null : value.id,
 	});
 
-	const ortsteile = computed(() => Array.from(props.mapOrtsteile.values()));
+	const ortsteile = computed(() => Array.from(props.ortsteileById.values()));
 
 	const erzOrtsteileFiltered = computed(() => {
 		const wohnortID = props.ersterErz.wohnortID;
@@ -165,7 +165,7 @@
 	const ortsteilManager = new SelectManager({ options: erzItems, sort: ortsteilSort, optionDisplayText: i => i.ortsteil ?? '', selectionDisplayText: i => i.ortsteil ?? '' });
 
 	const ortsteil = computed<OrtsteilKatalogEintrag | null>({
-		get: () => props.mapOrtsteile.get(props.ersterErz.ortsteilID ?? -1) ?? null,
+		get: () => props.ortsteileById.get(props.ersterErz.ortsteilID ?? -1) ?? null,
 		set: (value: OrtsteilKatalogEintrag | null) => props.ersterErz.ortsteilID = value ? value.id : null,
 	});
 

@@ -45,9 +45,9 @@
 						@change="value => patch({ idSchuelerausweis : value ?? null })" removable />
 					<div />
 				</template>
-				<svws-ui-select title="Fahrschüler" :readonly v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten"
+				<svws-ui-select title="Fahrschüler" :readonly v-model="inputFahrschuelerArtID" :items="fahrschuelerartenById"
 					:item-text="i => i.bezeichnung ?? ''" removable />
-				<svws-ui-select title="Haltestelle" :readonly v-model="inputHaltestelleID" :items="mapHaltestellen"
+				<svws-ui-select title="Haltestelle" :readonly v-model="inputHaltestelleID" :items="haltestellenById"
 					:item-text="i => i.bezeichnung ?? ''" removable />
 				<svws-ui-text-input placeholder="Anmeldedatum" :readonly :model-value="schuelerListeManager().daten().anmeldedatum"
 					@change="anmeldedatum => patch({ anmeldedatum : anmeldedatum ?? null })" type="date" removable />
@@ -112,7 +112,7 @@
 				<svws-ui-select title="2. Staatsangehörigkeit" :readonly v-model="staatsangehoerigkeit2" autocomplete removable
 					:items="Nationalitaeten.values()" :item-text="i => i.historie().getLast().staatsangehoerigkeit"
 					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
-				<svws-ui-select title="Konfession" :readonly v-model="religion" :items="mapReligionen" :item-text="i => i.bezeichnung ?? ''" required statistics />
+				<svws-ui-select title="Konfession" :readonly v-model="religion" :items="religionenById" :item-text="i => i.bezeichnung ?? ''" required statistics />
 				<div class="flex items-center pl-2">
 					<svws-ui-checkbox v-model="druckeKonfessionAufZeugnisse" :readonly>Konfession aufs Zeugnis</svws-ui-checkbox>
 				</div>
@@ -141,7 +141,7 @@
 				<template #modalTitle>Telefonnummer hinzufügen</template>
 				<template #modalContent>
 					<svws-ui-input-wrapper :grid="2" class="text-left">
-						<svws-ui-select title="Telefonart" :items="mapTelefonArten.values()" v-model="selectedTelefonArt" :item-text="i => i.bezeichnung" />
+						<svws-ui-select title="Telefonart" :items="telefonartenById.values()" v-model="selectedTelefonArt" :item-text="i => i.bezeichnung" />
 						<svws-ui-text-input v-model="newEntryTelefonnummer.telefonnummer" type="tel" placeholder="Telefonnummer" :max-len="20" />
 						<svws-ui-tooltip class="col-span-full">
 							<svws-ui-text-input v-model="newEntryTelefonnummer.bemerkung" type="text" placeholder="Bemerkung" />
@@ -154,10 +154,10 @@
 							Für Weitergabe gesperrt
 						</svws-ui-checkbox>
 					</svws-ui-input-wrapper>
-					<svws-ui-notification type="warning" v-if="mapTelefonArten.size === 0">Die Liste der Telefonarten ist leer, es sollte mindestens eine Telefonart unter Schule/Kataloge angelegt werden, damit zusätzliche Telefonnummern eine gültige Zuordnung haben. </svws-ui-notification>
+					<svws-ui-notification type="warning" v-if="telefonartenById.size === 0">Die Liste der Telefonarten ist leer, es sollte mindestens eine Telefonart unter Schule/Kataloge angelegt werden, damit zusätzliche Telefonnummern eine gültige Zuordnung haben. </svws-ui-notification>
 					<div class="mt-7 flex flex-row gap-4 justify end">
 						<svws-ui-button type="secondary" @click="closeModalTelefonnummer">Abbrechen</svws-ui-button>
-						<svws-ui-button @click="sendRequestTelefonnummer" :disabled="(selectedTelefonArt === null) || (mapTelefonArten.size === 0) || (newEntryTelefonnummer.telefonnummer === null) || (newEntryTelefonnummer.telefonnummer.length === 0)">
+						<svws-ui-button @click="sendRequestTelefonnummer" :disabled="(selectedTelefonArt === null) || (telefonartenById.size === 0) || (newEntryTelefonnummer.telefonnummer === null) || (newEntryTelefonnummer.telefonnummer.length === 0)">
 							Speichern
 						</svws-ui-button>
 					</div>
@@ -211,10 +211,10 @@
 	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN));
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const hatKompetenzDrucken = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
-	const orte = computed(() => props.mapOrte.values());
+	const orte = computed(() => props.orteById.values());
 	const ortsteile = computed(() => {
 		const filtered = new ArrayList<OrtsteilKatalogEintrag>();
-		for (const ortsteil of props.mapOrtsteile.values()) {
+		for (const ortsteil of props.ortsteileById.values()) {
 			if (ortsteil.ort_id === props.schuelerListeManager().daten().wohnortID) {
 				filtered.add(ortsteil);
 			}
@@ -239,11 +239,11 @@
 	];
 
 	function getBezeichnungTelefonart(idTelefonArt: number): string {
-		return props.mapTelefonArten.get(idTelefonArt)?.bezeichnung ?? "";
+		return props.telefonartenById.get(idTelefonArt)?.bezeichnung ?? "";
 	}
 
 	const selectedTelefonArt = computed<Telefonart | null>({
-		get: () => props.mapTelefonArten.get(newEntryTelefonnummer.value.idTelefonArt) ?? null,
+		get: () => props.telefonartenById.get(newEntryTelefonnummer.value.idTelefonArt) ?? null,
 		set: (selected) => newEntryTelefonnummer.value.idTelefonArt = (selected === null) ? 0 : selected.id,
 	});
 
@@ -309,7 +309,7 @@
 	function resetTelefonnummer() {
 		const defaultTelefon = new SchuelerTelefon();
 		defaultTelefon.telefonnummer = '+49';
-		const ersteTelefonArt = props.mapTelefonArten.values().next().value;
+		const ersteTelefonArt = props.telefonartenById.values().next().value;
 		defaultTelefon.idTelefonArt = ersteTelefonArt?.id ?? 0;
 		newEntryTelefonnummer.value = defaultTelefon;
 	}
@@ -355,7 +355,7 @@
 	const religion = computed<ReligionEintrag | undefined>({
 		get: () => {
 			const id = props.schuelerListeManager().daten().religionID;
-			return id === null ? undefined : props.mapReligionen.get(id);
+			return id === null ? undefined : props.religionenById.get(id);
 		},
 		set: (value) => void props.patch({ religionID: value === undefined ? null : value.id }),
 	});
@@ -398,7 +398,7 @@
 	const inputFahrschuelerArtID = computed<Fahrschuelerart | undefined>({
 		get: () => {
 			const id = props.schuelerListeManager().daten().fahrschuelerArtID;
-			return id === null ? undefined : props.mapFahrschuelerarten.get(id);
+			return id === null ? undefined : props.fahrschuelerartenById.get(id);
 		},
 		set: (value) => void props.patch({ fahrschuelerArtID: value === undefined ? null : value.id }),
 	});
@@ -406,7 +406,7 @@
 	const inputHaltestelleID = computed<Haltestelle | undefined>({
 		get: () => {
 			const id = props.schuelerListeManager().daten().haltestelleID;
-			return id === null ? undefined : props.mapHaltestellen.get(id);
+			return id === null ? undefined : props.haltestellenById.get(id);
 		},
 		set: (value) => void props.patch({ haltestelleID: value === undefined ? null : value.id }),
 	});
@@ -414,7 +414,7 @@
 	const selectedOrt = computed<OrtKatalogEintrag | null>({
 		get: () => {
 			const id = props.schuelerListeManager().daten().wohnortID;
-			return props.mapOrte.get(id ?? -1) ?? null;
+			return props.orteById.get(id ?? -1) ?? null;
 		},
 		set: (value: OrtKatalogEintrag | null) => void props.patch({ wohnortID: value?.id ?? null }),
 	});
@@ -422,7 +422,7 @@
 	const selectedOrtsteil = computed<OrtsteilKatalogEintrag | null>({
 		get: () => {
 			const id = props.schuelerListeManager().daten().ortsteilID;
-			return props.mapOrtsteile.get(id ?? -1) ?? null;
+			return props.ortsteileById.get(id ?? -1) ?? null;
 		},
 		set: (value: OrtsteilKatalogEintrag | null) => void props.patch({ ortsteilID: value?.id ?? null }),
 	});

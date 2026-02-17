@@ -1,14 +1,16 @@
 import type { RouteParams } from "vue-router";
 
 import type { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
+import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
 import type { SchuelerListeManager } from "@ui";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { AppMenuGroup } from "@ui";
 
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
 import { RouteDataSchueler } from "~/router/apps/schueler/RouteDataSchueler";
-import { routeSchuelerNeu } from "~/router/apps/schueler/neu/RouteSchuelerNeu";
 import { routeSchuelerAusbildungsbetriebe } from "~/router/apps/schueler/ausbildungsbetriebe/RouteSchuelerAusbildungsbetriebe";
 import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/erziehungsberechtigte/RouteSchuelerErziehungsberechtigte";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
@@ -18,14 +20,14 @@ import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/Rou
 import { routeSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplan";
 import { routeSchuelerKAoA } from "~/router/apps/schueler/kaoa/RouteSchuelerKAoA";
 import { routeSchuelerSprachen } from "./sprachen/RouteSchuelerSprachen";
-import { AppMenuGroup } from "@ui";
-import { api } from "~/router/Api";
-import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
 import { routeSchuelerSonstiges } from "./sonstiges/RouteSchuelerSonstiges";
 import { routeSchuelerAllgemeinesGruppenprozesse } from "~/router/apps/schueler/allgemeines/RouteSchuelerAllgemeinesGruppenprozesse";
 import { routeSchuelerIndividualdatenGruppenprozesse } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdatenGruppenprozesse";
 import { routeSchuelerAbitur } from "./abitur/RouteSchuelerAbitur";
 import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteSchuelerSchnelleingabe";
+import { routeSchuelerNeu } from "~/router/apps/schueler/neu/RouteSchuelerNeu";
+import { api } from "~/router/Api";
+import { Katalog } from "~/cache/Katalog";
 
 const SSchuelerAuswahl = () => import("~/components/schueler/SSchuelerAuswahl.vue");
 const SSchuelerApp = () => import("~/components/schueler/SSchuelerApp.vue");
@@ -70,6 +72,9 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 	}
 
 	protected doUpdateIfTarget = async (to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined) => {
+		await routeApp.cache.refreshKataloge(Katalog.BESCHAEFTIGUNGSARTEN, Katalog.EINSCHULUNGSARTEN, Katalog.ERZIEHERARTEN, Katalog.FAHRSCHUELERARTEN,
+			Katalog.FOERDERSCHWERPUNKTE, Katalog.HALTESTELLEN, Katalog.KINDERGAERTEN, Katalog.KINDERGAERTEN, Katalog.ORTE, Katalog.ORTSTEILE,
+			Katalog.RELIGIONEN, Katalog.SCHULEN, Katalog.TELEFONARTEN, Katalog.VERMERKARTEN);
 		if (!this.data.manager.hasDaten()) {
 			return;
 		}

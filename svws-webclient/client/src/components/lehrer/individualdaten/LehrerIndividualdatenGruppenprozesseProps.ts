@@ -9,8 +9,8 @@ export interface LehrerIndividualdatenGruppenprozesseProps {
 	schulform: Schulform;
 	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
-	mapOrte: Map<number, OrtKatalogEintrag>;
-	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
+	orteById: Map<number, OrtKatalogEintrag>;
+	ortsteileById: Map<number, OrtsteilKatalogEintrag>;
 	autofocus: boolean;
 	patchMultiple: () => Promise<void>;
 	pendingStateManager: () => PendingStateManagerLehrerIndividualdaten

@@ -36,7 +36,7 @@
 		<svws-ui-content-card title="Wohnort und Kontaktdaten">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input class="contentFocusField" placeholder="Straße" :readonly v-model="inputStrasse" @commit="modelProxy.patch" span="full" />
-				<svws-ui-select v-model="wohnortID" title="Wohnort" :readonly :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort"
+				<svws-ui-select v-model="wohnortID" title="Wohnort" :readonly :items="orteById" :item-filter="orte_filter" :item-sort="orte_sort"
 					:item-text="i => `${i.plz ?? '—'} ${i.ortsname ?? '—'}`" autocomplete />
 				<svws-ui-select v-model="ortsteilID" title="Ortsteil" :readonly :items="ortsteile" :item-sort="ortsteilSort"
 					:item-text="i => i.ortsteil ?? '—'" removable />
@@ -113,14 +113,14 @@
 	const wohnortID = computed<OrtKatalogEintrag | null>({
 		get: () => {
 			const idWohnort = modelProxy.proxy.wohnortID;
-			return (idWohnort === null) ? null : props.mapOrte.get(idWohnort) ?? null;
+			return (idWohnort === null) ? null : props.orteById.get(idWohnort) ?? null;
 		},
 		set: (val) => modelProxy.proxy.wohnortID = val?.id ?? null,
 	});
 
 	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
 		const result: Array<OrtsteilKatalogEintrag> = [];
-		for (const ortsteil of props.mapOrtsteile.values()) {
+		for (const ortsteil of props.ortsteileById.values()) {
 			if (ortsteil.ort_id === modelProxy.proxy.wohnortID) {
 				result.push(ortsteil);
 			}
@@ -131,7 +131,7 @@
 	const ortsteilID = computed<OrtsteilKatalogEintrag | null>({
 		get: () => {
 			const idOrtsteil = modelProxy.proxy.ortsteilID;
-			return idOrtsteil === null ? null : props.mapOrtsteile.get(idOrtsteil) ?? null;
+			return idOrtsteil === null ? null : props.ortsteileById.get(idOrtsteil) ?? null;
 		},
 		set: (val) => modelProxy.proxy.ortsteilID = val?.id ?? null,
 	});

@@ -114,7 +114,11 @@
 					{{ eMail ? eMail : '—' }}
 				</template>
 				<template #cell(adresse)="{ rowData }">
-					{{ strasseErzieher(rowData) }}{{ rowData.wohnortID && mapOrte?.get(rowData.wohnortID) ? `, ${mapOrte.get(rowData.wohnortID)?.plz} ${mapOrte?.get(rowData.wohnortID)?.ortsname}` : '' }}
+					{{
+						strasseErzieher(rowData)
+					}}{{
+						rowData.wohnortID && orteById?.get(rowData.wohnortID) ? `, ${orteById.get(rowData.wohnortID)?.plz} ${orteById?.get(rowData.wohnortID)?.ortsname}` : ''
+					}}
 				</template>
 				<template #cell(erhaeltAnschreiben)="{ value: erhaeltAnschreiben }">
 					{{ erhaeltAnschreiben ? '&check;' : '&times;' }}
@@ -190,11 +194,11 @@
 			<SSchuelerErziehungsberechtigteModal v-model:erster-erz="ersterErz"
 				v-model:zweiter-erz="zweiterErz"
 				:show-modal="showModalErzieher"
-				:map-erzieherarten="mapErzieherarten"
+				:erzieherarten-by-id="erzieherartenById"
 				:hat-kompetenz-update="hatKompetenzUpdate"
 				:ist-erster-erz-gespeichert="istErsterErzGespeichert"
-				:map-orte="mapOrte"
-				:map-ortsteile="mapOrtsteile"
+				:orte-by-id="orteById"
+				:ortsteile-by-id="ortsteileById"
 				:schuljahr="schuljahr"
 				@close-modal="closeModalErzieher"
 				@send-request="sendRequestErzieher"
@@ -245,13 +249,13 @@
 							Für Weitergabe gesperrt
 						</svws-ui-checkbox>
 					</svws-ui-input-wrapper>
-					<svws-ui-notification type="warning" v-if="mapTelefonArten.size === 0">
+					<svws-ui-notification type="warning" v-if="telefonartenById.size === 0">
 						Die Liste der Telefonarten ist leer, es sollte mindestens eine Telefonart unter Schule/Kataloge angelegt werden, damit zusätzliche Telefonnummern eine gültige Zuordnung haben.
 					</svws-ui-notification>
 					<div class="mt-7 flex flex-row gap-4 justify-end">
 						<svws-ui-button type="secondary" @click="closeModalTelefonnummer">Abbrechen</svws-ui-button>
 						<svws-ui-button @click="sendRequestTelefonnummer"
-							:disabled="(telefonArt === null) || (mapTelefonArten.size === 0) || (newEntryTelefonnummer.telefonnummer === null) ||
+							:disabled="(telefonArt === null) || (telefonartenById.size === 0) || (newEntryTelefonnummer.telefonnummer === null) ||
 								(newEntryTelefonnummer.telefonnummer.length === 0) || (!hatKompetenzUpdate)">
 							Speichern
 						</svws-ui-button>
@@ -298,13 +302,13 @@
 				<template #modalContent>
 					<ui-select label="Vermerkart" v-model="vermerkArt" :manager="VermerkArtManager" :removable="false" searchable />
 					<svws-ui-textarea-input class="col-span-full" :model-value="newEntryVermerk.bemerkung" @input="v => newEntryVermerk.bemerkung = v ?? ''" placeholder="Bemerkung" :autoresize="true" />
-					<svws-ui-notification type="warning" v-if="mapVermerkArten.size === 0">
+					<svws-ui-notification type="warning" v-if="vermerkartenById.size === 0">
 						Die Liste der Vermerkarten ist leer. Es sollte mindestens eine Vermerkart unter Schule/Kataloge angelegt werden, damit zusätzliche Vermerke eine gültige Zuordnung haben.
 					</svws-ui-notification>
 					<div class="mt-7 flex flex-row gap-4 justify-end">
 						<svws-ui-button type="secondary" @click="closeModalVermerke">Abbrechen</svws-ui-button>
 						<svws-ui-button @click="sendRequestVermerk"
-							:disabled="(vermerkArt === null) || (mapVermerkArten.size === 0) || (newEntryVermerk.bemerkung === '') || (!hatKompetenzUpdate)">
+							:disabled="(vermerkArt === null) || (vermerkartenById.size === 0) || (newEntryVermerk.bemerkung === '') || (!hatKompetenzUpdate)">
 							Speichern
 						</svws-ui-button>
 					</div>
@@ -411,7 +415,7 @@
 		set: (value) => void props.patchSchuelerLernabschnittsdaten({ hatSchwerbehinderungsNachweis: value }, dataSchuelerLernabschnittdaten.value.id),
 	});
 
-	const kindergaerten = computed(() => props.mapKindergaerten.values());
+	const kindergaerten = computed(() => props.kindergaertenById.values());
 
 	const nameKindergartenManager = new SelectManager({ options: kindergaerten, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
 
@@ -420,7 +424,7 @@
 	const kindergarten = computed({
 		get: () => {
 			const id = auswahlKindergartenID.value ?? -1;
-			return props.mapKindergaerten.get(id);
+			return props.kindergaertenById.get(id);
 		},
 		set: (value) => {
 			auswahlKindergartenID.value = value?.id ?? -1;
@@ -428,7 +432,7 @@
 		},
 	});
 
-	const orte = computed(() => props.mapOrte.values());
+	const orte = computed(() => props.orteById.values());
 
 	const wohnortManager = new SelectManager({ options: orte, optionDisplayText: i => `${i.plz} ${i.ortsname}`, sort: orte_sort, selectionDisplayText: i => `${i.plz} ${i.ortsname}` });
 
@@ -437,7 +441,7 @@
 	const wohnortID = computed({
 		get: () => {
 			const id = auswahlWohnortID.value ?? -1;
-			return props.mapOrte.get(id) ?? null;
+			return props.orteById.get(id) ?? null;
 		},
 		set: (value) => {
 
@@ -446,7 +450,7 @@
 		},
 	});
 
-	const ortsteile = computed(() => Array.from(props.mapOrtsteile.values()));
+	const ortsteile = computed(() => Array.from(props.ortsteileById.values()));
 
 	const ortsteileFiltered = computed(() => {
 		const wohnortID = auswahlWohnortID.value;
@@ -466,7 +470,7 @@
 	const ortsteilSelected = computed<OrtsteilKatalogEintrag | null>({
 		get: () => {
 			const id = auswahlOrtsteilID.value ?? -1;
-			return props.mapOrtsteile.get(id) ?? null;
+			return props.ortsteileById.get(id) ?? null;
 		},
 		set: (value: OrtsteilKatalogEintrag | null | undefined) => {
 			if (value === null || value === undefined) {
@@ -490,7 +494,7 @@
 		await props.patch({ geschlecht: value?.id }, data().id);
 	}
 
-	const einschulungsarten = computed(() => props.mapEinschulungsarten.values());
+	const einschulungsarten = computed(() => props.einschulungsartenById.values());
 
 	const einschulungsartManager = new SelectManager({ options: einschulungsarten, optionDisplayText: i => i.text, selectionDisplayText: i => i.text });
 
@@ -499,7 +503,7 @@
 	const einschulungsart = computed({
 		get: () => {
 			const id = auswahlEinschulungsart.value ?? -1;
-			return props.mapEinschulungsarten.get(id) ?? null;
+			return props.einschulungsartenById.get(id) ?? null;
 		},
 		set: (value: EinschulungsartKatalogEintrag) => {
 			auswahlEinschulungsart.value = value.id;
@@ -566,7 +570,7 @@
 		},
 	});
 
-	const religionen = computed(() => props.mapReligionen.values());
+	const religionen = computed(() => props.religionenById.values());
 
 	const religionManager = new SelectManager({ options: religionen, optionDisplayText: i => i.bezeichnungZeugnis ?? '', selectionDisplayText: i => i.bezeichnungZeugnis ?? '' });
 
@@ -575,7 +579,7 @@
 	const religion = computed({
 		get: () => {
 			const id = auswahlReligionID.value ?? -1;
-			return props.mapReligionen.get(id);
+			return props.religionenById.get(id);
 		},
 		set: (value) => {
 
@@ -636,7 +640,7 @@
 		},
 	});
 
-	const externeIDNummern = computed(() => props.mapSchulen.values());
+	const externeIDNummern = computed(() => props.schulenById.values());
 
 	const externeIDNrManager = new SelectManager({ options: externeIDNummern, optionDisplayText: i => i.kuerzel ?? i.schulnummerStatistik ?? i.kurzbezeichnung ?? i.name,
 		selectionDisplayText: i => i.kuerzel ?? i.schulnummerStatistik ?? i.kurzbezeichnung ?? i.name });
@@ -644,21 +648,21 @@
 	const auswahlExterneIDNr = ref(data().externeSchulNr ?? null);
 
 	const externeSchulNr = computed({
-		get: () => props.mapSchulen.get(auswahlExterneIDNr.value ?? "") ?? null,
+		get: () => props.schulenById.get(auswahlExterneIDNr.value ?? "") ?? null,
 		set: (value) => {
 			auswahlExterneIDNr.value = value?.schulnummerStatistik ?? null;
 			void props.patch({ externeSchulNr: value?.schulnummerStatistik }, data().id);
 		},
 	});
 
-	const fahrschuelerarten = computed(() => props.mapFahrschuelerarten.values());
+	const fahrschuelerarten = computed(() => props.fahrschuelerartenById.values());
 
 	const fahrschuelerartManager = new SelectManager({ options: fahrschuelerarten, optionDisplayText: i => i.bezeichnung ?? '', selectionDisplayText: i => i.bezeichnung ?? '' });
 
 	const auswahlfahrschuelerartID = ref(data().fahrschuelerArtID ?? null);
 
 	const fahrschuelerart = computed({
-		get: () => props.mapFahrschuelerarten.get(auswahlfahrschuelerartID.value ?? -1) ?? null,
+		get: () => props.fahrschuelerartenById.get(auswahlfahrschuelerartID.value ?? -1) ?? null,
 		set: (value) => {
 			const id = value?.id ?? null;
 			auswahlfahrschuelerartID.value = id;
@@ -666,14 +670,14 @@
 		},
 	});
 
-	const haltestellen = computed(() => props.mapHaltestellen.values());
+	const haltestellen = computed(() => props.haltestellenById.values());
 
 	const haltestellenManager = new SelectManager({ options: haltestellen, optionDisplayText: i => i.bezeichnung ?? '', selectionDisplayText: i => i.bezeichnung ?? '' });
 
 	const auswahlHaltestellenID = ref(data().haltestelleID ?? null);
 
 	const haltestelle = computed({
-		get: () => props.mapHaltestellen.get(auswahlHaltestellenID.value ?? -1) ?? null,
+		get: () => props.haltestellenById.get(auswahlHaltestellenID.value ?? -1) ?? null,
 		set: (value) => {
 			const id = value?.id ?? null;
 			auswahlHaltestellenID.value = id;
@@ -922,12 +926,12 @@
 		{ key: "actions", label: "2. Person", tooltip: "Weiteres Elternteil hinzufügen", fixedWidth: 10, align: "center" },
 	];
 
-	const erzieherarten = computed(() => props.mapErzieherarten.values());
+	const erzieherarten = computed(() => props.erzieherartenById.values());
 
 	const erzieherartenManager = new SelectManager({ options: erzieherarten, sort: erzieherArtSort, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
 
 	const erzieherart = computed({
-		get: () => props.mapErzieherarten.get(erzieher.value?.idErzieherArt ?? -1) ?? null,
+		get: () => props.erzieherartenById.get(erzieher.value?.idErzieherArt ?? -1) ?? null,
 		set: (value) => {
 			const id = value?.id ?? undefined;
 			if (erzieher.value === undefined) {
@@ -939,7 +943,7 @@
 	});
 
 	const erzWohnort = computed({
-		get: () => props.mapOrte.get(erzieher.value?.wohnortID ?? -1) ?? null,
+		get: () => props.orteById.get(erzieher.value?.wohnortID ?? -1) ?? null,
 		set: (value) => {
 			if (erzieher.value === undefined) {
 				return;
@@ -993,7 +997,7 @@
 	const erzOrtsteil = computed<OrtsteilKatalogEintrag | null>({
 		get: () => {
 			const id = erzieher.value?.ortsteilID ?? -1;
-			return props.mapOrtsteile.get(id) ?? null;
+			return props.ortsteileById.get(id) ?? null;
 		},
 		set: (value: OrtsteilKatalogEintrag | null) => {
 			if (erzieher.value === undefined) {
@@ -1005,7 +1009,7 @@
 	});
 
 	function getBezeichnungErzieherart(idErzieherart: number): string {
-		return props.mapErzieherarten.get(idErzieherart)?.bezeichnung ?? "";
+		return props.erzieherartenById.get(idErzieherart)?.bezeichnung ?? "";
 	}
 
 	function strasseErzieher(erzieher: ErzieherStammdaten) {
@@ -1074,7 +1078,7 @@
 
 	function resetErzieher() {
 		const defaultErzieherStammdaten = new ErzieherStammdaten();
-		const ersteErzieherart = props.mapErzieherarten.values().next().value;
+		const ersteErzieherart = props.erzieherartenById.values().next().value;
 		defaultErzieherStammdaten.idErzieherArt = ersteErzieherart?.id ?? 0;
 		ersterErz.value = defaultErzieherStammdaten;
 		ersterErz.value.erhaeltAnschreiben = false;
@@ -1175,12 +1179,12 @@
 		{ key: "istGesperrt", label: "Gesperrt", span: 1, align: "right" },
 	];
 
-	const telefonArten = computed(() => props.mapTelefonArten.values());
+	const telefonArten = computed(() => props.telefonartenById.values());
 
 	const telefonArtManager = new SelectManager({ options: telefonArten, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
 
 	const telefonArt = computed<Telefonart | null>({
-		get: () => props.mapTelefonArten.get(newEntryTelefonnummer.value.idTelefonArt) ?? null,
+		get: () => props.telefonartenById.get(newEntryTelefonnummer.value.idTelefonArt) ?? null,
 		set: (value) => newEntryTelefonnummer.value.idTelefonArt = value === null ? -1 : value.id,
 	});
 
@@ -1242,13 +1246,13 @@
 	function resetTelefonnummer() {
 		const defaultTelefon = new SchuelerTelefon();
 		defaultTelefon.telefonnummer = '+49';
-		const ersteTelefonArt = props.mapTelefonArten.values().next().value;
+		const ersteTelefonArt = props.telefonartenById.values().next().value;
 		defaultTelefon.idTelefonArt = ersteTelefonArt?.id ?? 0;
 		newEntryTelefonnummer.value = defaultTelefon;
 	}
 
 	function getBezeichnungTelefonart(idTelefonArt: number): string {
-		return props.mapTelefonArten.get(idTelefonArt)?.bezeichnung ?? "";
+		return props.telefonartenById.get(idTelefonArt)?.bezeichnung ?? "";
 	}
 
 	// Anlegen von Vermerken
@@ -1264,7 +1268,7 @@
 		{ key: "datum", label: "Erstellt am", span: 1, align: "right" },
 	];
 
-	const vermerkArten = computed(() => props.mapVermerkArten.values());
+	const vermerkArten = computed(() => props.vermerkartenById.values());
 
 	const VermerkArtManager = new SelectManager({
 		options: vermerkArten,
@@ -1272,7 +1276,7 @@
 		selectionDisplayText: i => i.bezeichnung ?? "" });
 
 	const vermerkArt = computed<VermerkartEintrag | undefined>({
-		get: () => props.mapVermerkArten.get(newEntryVermerk.value.idVermerkart ?? -1),
+		get: () => props.vermerkartenById.get(newEntryVermerk.value.idVermerkart ?? -1),
 		set: (value) => newEntryVermerk.value.idVermerkart = value?.id ?? -1,
 	});
 
@@ -1328,14 +1332,14 @@
 
 	function resetVermerk() {
 		const defaultVermerk = new SchuelerVermerke();
-		const ersteVermerkArt = props.mapVermerkArten.values().next().value;
+		const ersteVermerkArt = props.vermerkartenById.values().next().value;
 		defaultVermerk.idVermerkart = ersteVermerkArt?.id ?? 0;
 		defaultVermerk.bemerkung = '';
 		newEntryVermerk.value = defaultVermerk;
 	}
 
 	function getBezeichnungVermerkArt(idVermerkArt: number): string {
-		return props.mapVermerkArten.get(idVermerkArt)?.bezeichnung ?? "";
+		return props.vermerkartenById.get(idVermerkArt)?.bezeichnung ?? "";
 	}
 
 

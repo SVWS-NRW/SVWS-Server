@@ -221,9 +221,9 @@
 
 	const schuljahr = computed(() => props.schuelerListeManager().getSchuljahr());
 	const schulform = computed(() => props.schuelerListeManager().schulform());
-	const religionen = computed(() => props.mapReligionen.values());
-	const fahrschuelerArten = computed(() => props.mapFahrschuelerarten.values());
-	const haltestellen = computed(() => props.mapHaltestellen.values());
+	const religionen = computed(() => props.religionenById.values());
+	const fahrschuelerArten = computed(() => props.fahrschuelerartenById.values());
+	const haltestellen = computed(() => props.haltestellenById.values());
 	const schulen = computed(() => props.mapSchulen.values());
 
 	watch(() => props.pendingStateManager().pendingStateExists(), (somethingPending: boolean) => {

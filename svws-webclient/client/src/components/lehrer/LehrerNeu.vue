@@ -33,11 +33,11 @@
 		<svws-ui-content-card title="Wohnort und Kontaktdaten">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Straße" v-model="adresse" :valid="fieldIsValid('strassenname')" span="full" :max-len="55" :disabled />
-				<svws-ui-select title="Wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`"
-					:model-value="mapOrte.get(data.wohnortID?? -1)" @update:model-value="v => data.wohnortID = v?.id ?? null" autocomplete removable
+				<svws-ui-select title="Wohnort" :items="orteById" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="i => `${i.plz} ${i.ortsname}`"
+					:model-value="orteById.get(data.wohnortID ?? -1)" @update:model-value="v => data.wohnortID = v?.id ?? null" autocomplete removable
 					:valid="fieldIsValid('wohnortID')" :disabled />
 				<svws-ui-select title="Ortsteil" :items="ortsteile" :item-sort="ortsteilSort" :item-text="i => i.ortsteil ?? ''"
-					:model-value="mapOrtsteile.get(data.ortsteilID?? -1)" @update:model-value="v => data.ortsteilID = v?.id ?? null" removable
+					:model-value="ortsteileById.get(data.ortsteilID ?? -1)" @update:model-value="v => data.ortsteilID = v?.id ?? null" removable
 					:disabled="(data.wohnortID === null) || !hatKompetenzAdd" :valid="fieldIsValid('ortsteilID')" />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Telefon" type="tel" v-model="data.telefon" :valid="fieldIsValid('telefon')" :max-len="20" :disabled />
@@ -68,7 +68,7 @@
 	);
 	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
 		const result: Array<OrtsteilKatalogEintrag> = [];
-		for (const ortsteil of props.mapOrtsteile.values()) {
+		for (const ortsteil of props.ortsteileById.values()) {
 			if (ortsteil.ort_id === data.value.wohnortID) {
 				result.push(ortsteil);
 			}
@@ -108,9 +108,9 @@
 				case 'strassenname':
 					return adresseIsValid();
 				case 'wohnortID':
-					return (data.value.wohnortID === null) || (props.mapOrte.get(data.value.wohnortID) !== undefined);
+					return (data.value.wohnortID === null) || (props.orteById.get(data.value.wohnortID) !== undefined);
 				case 'ortsteilID':
-					return (data.value.ortsteilID === null) || (props.mapOrtsteile.get(data.value.ortsteilID) !== undefined);
+					return (data.value.ortsteilID === null) || (props.ortsteileById.get(data.value.ortsteilID) !== undefined);
 				case 'telefon':
 					return phoneNumberIsValid(data.value.telefon, false, 20);
 				case 'telefonMobil':

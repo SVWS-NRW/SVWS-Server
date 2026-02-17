@@ -1,9 +1,10 @@
 import type { AuswahlManager } from "@ui";
 import { PendingStateManager } from "@ui";
-import type { Fahrschuelerart, Haltestelle, ReligionEintrag, NationalitaetenKatalogEintrag, SchuelerStammdaten, SchulEintrag, SchuelerStatusKatalogEintrag,
-	VerkehrsspracheKatalogEintrag } from "@core";
+import type { NationalitaetenKatalogEintrag, SchuelerStammdaten, SchulEintrag, SchuelerStatusKatalogEintrag, VerkehrsspracheKatalogEintrag, ReligionEintrag,
+	Fahrschuelerart, Haltestelle } from "@core";
 import { Nationalitaeten, SchuelerStatus, Verkehrssprache } from "@core";
 import { computed } from "vue";
+import { routeApp } from "~/router/apps/RouteApp";
 
 /**
  * Die Klasse `PendingStateManagerSchuelerIndividualdaten` erweitert den `PendingStateManager`
@@ -11,10 +12,6 @@ import { computed } from "vue";
  *
  */
 export class PendingStateManagerSchuelerIndividualdaten extends PendingStateManager<SchuelerStammdaten> {
-	/**
-	 * Maps, die Religion-IDs zu entsprechenden Religionseinträgen zuordnet.
-	 */
-	private readonly _mapReligionen: Map<number, ReligionEintrag>;
 
 	/**
 	 * Maps, die Schulnummern zu entsprechenden Schuleinträgen zuordnet.
@@ -22,33 +19,18 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	private readonly _mapSchulen: Map<string, SchulEintrag>;
 
 	/**
-	 * Maps, die Haltestellen-IDs zu entsprechenden Katalogeinträgen zuordnet.
-	 */
-	private readonly _mapHaltestellen: Map<number, Haltestelle>;
-
-	/**
-	 * Maps, die Fahrschülerarten zu entsprechenden Katalogeinträgen zuordnet.
-	 */
-	private readonly _mapFahrschuelerarten: Map<number, Fahrschuelerart>;
-
-	/**
 	 * Konstruktor, der einen neuen PendingState für Schülerstammdaten erstellt.
 	 * @param idFieldName Der Name des Attributs, welches Änderungen hält.
 	 * @param auswahlManager Funktion, die einen AuswahlManager bereitstellt.
-	 * @param mapReligionen Map der Religionen.
 	 * @param mapSchulen Map der Schulen.
-	 * @param mapHaltestellen Map der Haltestellen.
-	 * @param mapFahrschuelerarten Map der Fahrschülerarten.
 	 */
-	public constructor(idFieldName: any, auswahlManager: () => AuswahlManager<any, any, SchuelerStammdaten>, mapReligionen: Map<number, ReligionEintrag>,
-		mapSchulen: Map<string, SchulEintrag>, mapHaltestellen: Map<number, Haltestelle>, mapFahrschuelerarten: Map<number, Fahrschuelerart>) {
+	public constructor(idFieldName: any, auswahlManager: () => AuswahlManager<any, any, SchuelerStammdaten>, mapSchulen: Map<string, SchulEintrag>) {
 		super(idFieldName, auswahlManager);
-		this._mapReligionen = mapReligionen;
 		this._mapSchulen = mapSchulen;
-		this._mapHaltestellen = mapHaltestellen;
-		this._mapFahrschuelerarten = mapFahrschuelerarten;
 		this.initializeAttributeDisplayMappers();
 	}
+
+
 
 	/**
 	 * Initialisiert die Mapper für die Attributanzeige und ordnet
@@ -58,9 +40,9 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 		this._attributeDisplayMappers.set('status', (value: any) => SchuelerStatus.data().getWertByKuerzel('' + value)?.daten(this.auswahlManager.getSchuljahr())?.text);
 		this._attributeDisplayMappers.set('staatsangehoerigkeitID', (value: any) => Nationalitaeten.getByISO3(value)?.daten(this.auswahlManager.getSchuljahr())?.bezeichnung);
 		this._attributeDisplayMappers.set('staatsangehoerigkeit2ID', (value: any) => Nationalitaeten.getByISO3(value)?.daten(this.auswahlManager.getSchuljahr())?.bezeichnung);
-		this._attributeDisplayMappers.set('religionID', (value: any) => this._mapReligionen.get(Number(value))?.bezeichnung);
-		this._attributeDisplayMappers.set('fahrschuelerArtID', (value: any) => this._mapFahrschuelerarten.get(Number(value))?.bezeichnung);
-		this._attributeDisplayMappers.set('haltestelleID', (value: any) => this._mapHaltestellen.get(Number(value))?.bezeichnung);
+		this._attributeDisplayMappers.set('religionID', (value: any) => routeApp.cache.kataloge.religionenById.get(Number(value))?.bezeichnung);
+		this._attributeDisplayMappers.set('fahrschuelerArtID', (value: any) => routeApp.cache.kataloge.fahrschuelerartenById.get(Number(value))?.bezeichnung);
+		this._attributeDisplayMappers.set('haltestelleID', (value: any) => routeApp.cache.kataloge.haltestellenById.get(Number(value))?.bezeichnung);
 		this._attributeDisplayMappers.set('verkehrspracheFamilie', (value: any) => Verkehrssprache.getByIsoKuerzel(value)?.daten(this.auswahlManager.getSchuljahr())?.text);
 		this._attributeDisplayMappers.set('geburtsland', (value: any) => Nationalitaeten.data().getWertByKuerzel('' + value)?.daten(this.auswahlManager.getSchuljahr())?.text);
 		this._attributeDisplayMappers.set('geburtslandMutter', (value: any) => Nationalitaeten.data().getWertByKuerzel('' + value)?.daten(this.auswahlManager.getSchuljahr())?.text);
@@ -98,7 +80,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	 * Erzeugt das Attribut konfession als computed value.
 	 */
 	public konfession = this.genComputed<ReligionEintrag | null>('religionID', null,
-		(id: number) => this._mapReligionen.get(id) ?? null,
+		(id: number) => routeApp.cache.kataloge.religionenById.get(id) ?? null,
 		(value: ReligionEintrag | null) => value?.id
 	);
 
@@ -159,7 +141,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	 * Erzeugt das Attribut fahrschuelerArtID als computed value.
 	 */
 	public fahrschuelerArtID = this.genComputed<Fahrschuelerart | null>('fahrschuelerArtID', null,
-		(value: number | null | undefined) => ((value === null) || (value === undefined)) ? null : this._mapFahrschuelerarten.get(value) ?? null,
+		(value: number | null | undefined) => ((value === null) || (value === undefined)) ? null : routeApp.cache.kataloge.fahrschuelerartenById.get(value) ?? null,
 		(value: Fahrschuelerart | null) => value?.id ?? null
 	);
 
@@ -167,7 +149,7 @@ export class PendingStateManagerSchuelerIndividualdaten extends PendingStateMana
 	 * Erzeugt das Attribut haltestelleID als computed value.
 	 */
 	public haltestelleID = this.genComputed<Haltestelle | null>('haltestelleID', null,
-		(value: number | null | undefined) => ((value === null) || (value === undefined)) ? null : this._mapHaltestellen.get(value) ?? null,
+		(value: number | null | undefined) => ((value === null) || (value === undefined)) ? null : routeApp.cache.kataloge.haltestellenById.get(value) ?? null,
 		(value: Haltestelle | null) => value?.id ?? null
 	);
 

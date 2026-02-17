@@ -1,10 +1,12 @@
 import type { RouteParams } from "vue-router";
 
 import type { LehrerListeManager } from "@ui";
+import { AppMenuGroup } from "@ui";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
 import { RouteDataLehrer } from "~/router/apps/lehrer/RouteDataLehrer";
 import { routeLehrerNeu } from "~/router/apps/lehrer/RouteLehrerNeu";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdaten";
@@ -14,12 +16,12 @@ import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnt
 import { api } from "~/router/Api";
 import { ConfigElement } from "../../../../../ui/src/utils/Config";
 import type { LehrerAuswahlProps } from "~/components/lehrer/LehrerAuswahlProps";
-import { AppMenuGroup } from "@ui";
 import { routeLehrerEinwilligungen } from "~/router/apps/lehrer/einwilligungen/RouteLehrerEinwilligungen";
 import { routeLehrerLernplattformen } from "~/router/apps/lehrer/lernplattformen/RouteLehrerLernplattformen";
 import { routeLehrerAllgemeinesGruppenprozesse } from "~/router/apps/lehrer/allgemeines/RouteLehrerAllgemeinesGruppenprozesse";
 import { routeLehrerIndividualdatenGruppenprozesse } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdatenGruppenprozesse";
 import type { LehrerAppProps } from "~/components/lehrer/LehrerAppProps";
+import { Katalog } from "~/cache/Katalog";
 
 const LehrerAuswahl = () => import("~/components/lehrer/LehrerAuswahl.vue");
 const LehrerApp = () => import("~/components/lehrer/LehrerApp.vue");
@@ -62,6 +64,7 @@ export class RouteLehrer extends RouteAuswahlNode<LehrerListeManager, RouteDataL
 	}
 
 	protected doUpdateIfTarget = async (to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined) => {
+		await routeApp.cache.refreshKataloge(Katalog.ORTE, Katalog.ORTSTEILE);
 		if (!this.data.manager.hasDaten()) {
 			return;
 		}

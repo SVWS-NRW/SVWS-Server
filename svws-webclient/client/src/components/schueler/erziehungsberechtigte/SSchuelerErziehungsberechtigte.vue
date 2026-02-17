@@ -15,7 +15,7 @@
 					</svws-ui-tooltip>
 				</template>
 				<template #cell(idErzieherArt)="{ value }">
-					{{ erzieherart ? mapErzieherarten.get(value)?.bezeichnung : '' }}
+					{{ erzieherart ? erzieherartenById.get(value)?.bezeichnung : '' }}
 				</template>
 				<template #cell(name)="{ rowData }">
 					{{ rowData.vorname }} {{ rowData.nachname }}
@@ -24,7 +24,11 @@
 					{{ eMail ? eMail : '—' }}
 				</template>
 				<template #cell(adresse)="{ rowData }">
-					{{ strasse(rowData) }}{{ rowData.wohnortID && mapOrte?.get(rowData.wohnortID) ? `, ${mapOrte.get(rowData.wohnortID)?.plz} ${mapOrte?.get(rowData.wohnortID)?.ortsname}` : '' }}
+					{{
+						strasse(rowData)
+					}}{{
+						rowData.wohnortID && orteById?.get(rowData.wohnortID) ? `, ${orteById.get(rowData.wohnortID)?.plz} ${orteById?.get(rowData.wohnortID)?.ortsname}` : ''
+					}}
 				</template>
 				<template #cell(erhaeltAnschreiben)="{ value: erhaeltAnschreiben }">
 					{{ erhaeltAnschreiben ? '&check;' : '&times;' }}
@@ -97,11 +101,11 @@
 			<s-schueler-erziehungsberechtigte-modal v-model:erster-erz="ersterErz"
 				v-model:zweiter-erz="zweiterErz"
 				:show-modal="showModal"
-				:map-erzieherarten="mapErzieherarten"
+				:erzieherarten-by-id="erzieherartenById"
 				:hat-kompetenz-update="hatKompetenzUpdate"
 				:ist-erster-erz-gespeichert="istErsterErzGespeichert"
-				:map-orte="mapOrte"
-				:map-ortsteile="mapOrtsteile"
+				:orte-by-id="orteById"
+				:ortsteile-by-id="ortsteileById"
 				:schuljahr="schuljahr"
 				@close-modal="closeModal"
 				@send-request="sendRequest"
@@ -153,12 +157,12 @@
 		});
 	});
 
-	const erzieherarten = computed(() => props.mapErzieherarten.values());
+	const erzieherarten = computed(() => props.erzieherartenById.values());
 
 	const erzieherartenManager = new SelectManager({ options: erzieherarten, sort: erzieherArtSort, optionDisplayText: i => i.bezeichnung, selectionDisplayText: i => i.bezeichnung });
 
 	const erzieherart = computed({
-		get: () => props.mapErzieherarten.get(erzieher.value?.idErzieherArt ?? -1),
+		get: () => props.erzieherartenById.get(erzieher.value?.idErzieherArt ?? -1),
 		set: (value) => {
 			const id = value?.id ?? undefined;
 			if (erzieher.value === undefined) {
@@ -169,12 +173,12 @@
 		},
 	});
 
-	const orte = computed(() => props.mapOrte.values());
+	const orte = computed(() => props.orteById.values());
 
 	const wohnortManager = new SelectManager({ options: orte, optionDisplayText: i => `${i.plz} ${i.ortsname}`, sort: orte_sort, selectionDisplayText: i => `${i.plz} ${i.ortsname}` });
 
 	const erzWohnort = computed({
-		get: () => props.mapOrte.get(erzieher.value?.wohnortID ?? -1) ?? null,
+		get: () => props.orteById.get(erzieher.value?.wohnortID ?? -1) ?? null,
 		set: (value) => {
 			if (erzieher.value === undefined) {
 				return;
@@ -214,7 +218,7 @@
 		},
 	});
 
-	const ortsteile = computed(() => Array.from(props.mapOrtsteile.values()));
+	const ortsteile = computed(() => Array.from(props.ortsteileById.values()));
 
 	const erzOrtsteileFiltered = computed(() => {
 		const wohnortID = erzieher.value?.wohnortID;
@@ -232,7 +236,7 @@
 	const erzOrtsteil = computed<OrtsteilKatalogEintrag | null>({
 		get: () => {
 			const id = erzieher.value?.ortsteilID ?? -1;
-			return props.mapOrtsteile.get(id) ?? null;
+			return props.ortsteileById.get(id) ?? null;
 		},
 		set: (value: OrtsteilKatalogEintrag | null) => {
 			if (erzieher.value === undefined) {
@@ -323,7 +327,7 @@
 
 	function resetForm() {
 		const defaultErzieherStammdaten = new ErzieherStammdaten();
-		const ersteErzieherart = props.mapErzieherarten.values().next().value;
+		const ersteErzieherart = props.erzieherartenById.values().next().value;
 		defaultErzieherStammdaten.idErzieherArt = ersteErzieherart?.id ?? 0;
 		ersterErz.value = defaultErzieherStammdaten;
 		ersterErz.value.erhaeltAnschreiben = false;

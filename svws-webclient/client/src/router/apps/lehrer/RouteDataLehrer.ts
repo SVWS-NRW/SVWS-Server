@@ -1,11 +1,10 @@
-import type {
-	ApiFile, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdatenAnrechnungsstunden,
-	LehrerPersonaldaten, LehrerPersonalabschnittsdaten, LehrerStammdaten, List, SimpleOperationResponse, StundenplanListeEintrag,
-	ReportingParameter, SchulEintrag } from "@core";
-import { ArrayList, UserNotificationException, DeveloperNotificationException, BenutzerKompetenz, ServerMode } from "@core";
+import type { ApiFile, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten,
+	LehrerPersonalabschnittsdatenAnrechnungsstunden, LehrerPersonaldaten, LehrerStammdaten, List, ReportingParameter, SchulEintrag, SimpleOperationResponse,
+	StundenplanListeEintrag } from "@core";
+import { ArrayList, BenutzerKompetenz, DeveloperNotificationException, ServerMode, UserNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdaten";
-import { type PendingStateManager, ViewType, LehrerListeManager } from "@ui";
+import { LehrerListeManager, type PendingStateManager, ViewType } from "@ui";
 import { routeLehrerNeu } from "~/router/apps/lehrer/RouteLehrerNeu";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";

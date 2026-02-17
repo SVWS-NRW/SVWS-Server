@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { RouteManager, routerManager } from "~/router/RouteManager";
 import { RoutingStatus } from "~/router/RoutingStatus";
 import { RouteDataApp } from "~/router/apps/RouteDataApp";
+import { AppCache } from "~/cache/AppCache";
 import { api } from "~/router/Api";
 import { routeBenutzerprofil } from "./benutzerprofil/RouteBenutzerprofil";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
@@ -65,6 +66,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	/** Die Knoten, welche im Haupt-Menu zur Verfügung gestellt werden */
 	private readonly _menuMain: RouteNode<any, any>[];
+	private readonly _cache = new AppCache();
 
 	public menuHidden(): boolean[] {
 		return super.menu.map(c => c.hidden(routerManager.getRouteParams()) !== false);
@@ -199,9 +201,6 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
 		try {
-			if (isEntering) {
-				await this.data.init();
-			}
 			const { idSchuljahresabschnitt } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt"]);
 			// Prüfe, ob der Schuljahresabschnitt gültig gesetzt ist
 			if (idSchuljahresabschnitt === undefined) {
@@ -334,6 +333,10 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			this.data.setView(node, this.children);
 		}
 	};
+
+	get cache(): AppCache {
+		return this._cache;
+	}
 
 }
 

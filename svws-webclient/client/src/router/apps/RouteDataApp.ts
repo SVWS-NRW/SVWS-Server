@@ -1,6 +1,5 @@
 import { computed } from "vue";
 import type { RouteLocationRaw } from "vue-router";
-import type { Kindergarten, EinschulungsartKatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 import { Schuljahresabschnitt } from "@core";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { api } from "~/router/Api";
@@ -8,20 +7,13 @@ import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteManager, routerManager } from "../RouteManager";
 import type { AbschnittAuswahlDaten } from "@ui";
 
-interface RouteStateApp extends RouteStateInterface {
-	idSchuljahresabschnitt: number,
-	mapOrte: Map<number, OrtKatalogEintrag>;
-	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
-	mapKindergaerten: Map<number, Kindergarten>;
-	mapEinschulungsarten: Map<number, EinschulungsartKatalogEintrag>;
+export interface RouteStateApp extends RouteStateInterface {
+	idSchuljahresabschnitt: number;
+	view: any;
 }
 
 const defaultState = <RouteStateApp>{
 	idSchuljahresabschnitt: -1,
-	mapOrte: new Map(),
-	mapOrtsteile: new Map(),
-	mapKindergaerten: new Map(),
-	mapEinschulungsarten: new Map(),
 	view: routeSchueler,
 };
 
@@ -29,40 +21,6 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 
 	public constructor() {
 		super(defaultState);
-	}
-
-	public async init() {
-		// Erstelle eine Promise, für die parallele Abfrage der einzelnen Kataloge
-		const [orte, ortsteile, kindergaerten, einschulungsarten] =
-			await Promise.all([
-				api.server.getOrte(api.schema),
-				api.server.getOrtsteile(api.schema),
-				api.server.getKindergaerten(api.schema),
-				api.server.getEinschulungsarten(api.schema),
-			]);
-
-		// Lade den Katalog der Orte
-		const mapOrte = new Map();
-		for (const o of orte) {
-			mapOrte.set(o.id, o);
-		}
-		// Lade den Katalog der Ortsteile
-		const mapOrtsteile = new Map();
-		for (const o of ortsteile) {
-			mapOrtsteile.set(o.id, o);
-		}
-		// Lade den Katalog der Kindergärten
-		const mapKindergaerten = new Map();
-		for (const k of kindergaerten) {
-			mapKindergaerten.set(k.id, k);
-		}
-		// Lade den Katalog der Einschulungsarten
-		const mapEinschulungsarten = new Map();
-		for (const e of einschulungsarten) {
-			mapEinschulungsarten.set(e.id, e);
-		}
-		// Und aktualisiere den internen State
-		this.setPatchedDefaultStateKeepView({ mapOrte, mapOrtsteile, mapKindergaerten, mapEinschulungsarten });
 	}
 
 	public async leave() {
@@ -107,22 +65,6 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		}
 		// Setze den Schuljahresabschnitt
 		this.setPatchedState({ idSchuljahresabschnitt });
-	}
-
-	public get mapOrte() {
-		return this._state.value.mapOrte;
-	}
-
-	public get mapOrtsteile() {
-		return this._state.value.mapOrtsteile;
-	}
-
-	get mapKindergaerten(): Map<number, Kindergarten> {
-		return this._state.value.mapKindergaerten;
-	}
-
-	get mapEinschulungsarten(): Map<number, EinschulungsartKatalogEintrag> {
-		return this._state.value.mapEinschulungsarten;
 	}
 
 	public get idSchuljahresabschnitt() {

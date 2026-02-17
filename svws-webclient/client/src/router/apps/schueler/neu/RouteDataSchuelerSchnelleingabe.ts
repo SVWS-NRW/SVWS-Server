@@ -1,8 +1,6 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import type {
-	Fahrschuelerart, Haltestelle, Kindergarten, ReligionEintrag, SchuelerListeEintrag, SchuelerStammdaten, SchulEintrag,
-	SchulformKatalogEintrag, Telefonart, EinschulungsartKatalogEintrag, Erzieherart, OrtKatalogEintrag, OrtsteilKatalogEintrag,
-	SchuelerLernabschnittListeEintrag, VermerkartEintrag, Merkmal, KatalogEntlassgrund, List } from "@core";
+import type { SchuelerListeEintrag, SchuelerStammdaten, SchulEintrag, SchulformKatalogEintrag, SchuelerLernabschnittListeEintrag, Merkmal, KatalogEntlassgrund,
+	List } from "@core";
 import { ArrayList, DeveloperNotificationException, Schulform, SchuelerNeu } from "@core";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
@@ -11,33 +9,13 @@ import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/Rou
 import { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
 
 interface RouteStateDataSchuelerSchnelleingabe extends RouteStateInterface {
-	mapKindergaerten: Map<number, Kindergarten>;
-	mapFahrschuelerarten: Map<number, Fahrschuelerart>;
-	mapHaltestellen: Map<number, Haltestelle>;
-	mapReligionen: Map<number, ReligionEintrag>;
-	mapSchulen: Map<string, SchulEintrag>;
-	mapTelefonArten: Map<number, Telefonart>;
-	mapErzieherarten: Map<number, Erzieherart>;
-	mapVermerkArten: Map<number, VermerkartEintrag>;
-	mapEinschulungsarten: Map<number, EinschulungsartKatalogEintrag>;
-	mapOrte: Map<number, OrtKatalogEintrag>;
-	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
+	schulenById: Map<string, SchulEintrag>;
 	schuelerSchulbesuchManager: SchuelerSchulbesuchManager | undefined;
 	schuelerLernabschnittsManager: SchuelerLernabschnittManager | undefined;
 }
 
 const defaultState = <RouteStateDataSchuelerSchnelleingabe> {
-	mapKindergaerten: new Map(),
-	mapFahrschuelerarten: new Map(),
-	mapHaltestellen: new Map(),
-	mapReligionen: new Map(),
-	mapSchulen: new Map<string, SchulEintrag>(),
-	mapTelefonArten: new Map(),
-	mapErzieherarten: new Map(),
-	mapVermerkArten: new Map(),
-	mapEinschulungsarten: new Map(),
-	mapOrte: new Map(),
-	mapOrtsteile: new Map(),
+	schulenById: new Map<string, SchulEintrag>(),
 	schuelerSchulbesuchManager: undefined,
 	schuelerLernabschnittsManager: undefined,
 };
@@ -49,71 +27,8 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 	}
 
 	public async ladeKataloge(): Promise<void> {
-		const [fahrschuelerarten, haltestellen, religionen, kindergaerten, telefonArten, erzieherarten, vermerkArten, einschulungsarten, orte, ortsteile, schulen] =
-			await Promise.all([
-				api.server.getFahrschuelerarten(api.schema),
-				api.server.getHaltestellen(api.schema),
-				api.server.getReligionen(api.schema),
-				api.server.getKindergaerten(api.schema),
-				api.server.getTelefonarten(api.schema),
-				api.server.getErzieherArten(api.schema),
-				api.server.getVermerkarten(api.schema),
-				api.server.getEinschulungsarten(api.schema),
-				api.server.getOrte(api.schema),
-				api.server.getOrtsteile(api.schema),
-				api.server.getSchulen(api.schema),
-			]);
-		const mapFahrschuelerarten = new Map();
-		for (const fa of fahrschuelerarten) {
-			mapFahrschuelerarten.set(fa.id, fa);
-		}
-		// Lade den Katalog der Haltestellen
-		const mapHaltestellen = new Map();
-		for (const h of haltestellen) {
-			mapHaltestellen.set(h.id, h);
-		}
-		// Lade den Katalog der Religionen
-		const mapReligionen = new Map();
-		for (const r of religionen) {
-			mapReligionen.set(r.id, r);
-		}
-		// Lade den Katalog der Kindergärten
-		const mapKindergaerten = new Map();
-		for (const k of kindergaerten) {
-			mapKindergaerten.set(k.id, k);
-		}
-		// Lade den Katalog der TelefonArten
-		const mapTelefonArten = new Map();
-		for (const ta of telefonArten) {
-			mapTelefonArten.set(ta.id, ta);
-		}
-		// Lade den Katalog der Erzieherarten
-		const mapErzieherarten = new Map();
-		for (const ea of erzieherarten) {
-			mapErzieherarten.set(ea.id, ea);
-		}
-		// Lade den Katalog der Vermerkarten
-		const mapVermerkArten = new Map();
-		for (const va of vermerkArten) {
-			mapVermerkArten.set(va.id, va);
-		}
-		// Lade den Katalog der Einschulungsarten
-		const mapEinschulungsarten = new Map();
-		for (const e of einschulungsarten) {
-			mapEinschulungsarten.set(e.id, e);
-		}
-		// Lade den Katalog der Orte
-		const mapOrte = new Map();
-		for (const o of orte) {
-			mapOrte.set(o.id, o);
-		}
-		// Lade den Katalog der Ortsteile
-		const mapOrtsteile = new Map();
-		for (const o of ortsteile) {
-			mapOrtsteile.set(o.id, o);
-		}
-		// Ermittle den Katalog der Schulen, welche ein Kürzel haben und als Stammschulen für Schüler infrage kommen
-		const mapSchulen = new Map<string, SchulEintrag>();
+		const schulen = await api.server.getSchulen(api.schema);
+		const schulenById = new Map<string, SchulEintrag>();
 		for (const schule of schulen) {
 			if (schule.schulnummerStatistik === null) {
 				continue;
@@ -121,10 +36,10 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 			const sfEintrag: SchulformKatalogEintrag | null = schule.idSchulform === null ? null : Schulform.data().getEintragByID(schule.idSchulform);
 			const sf: Schulform | null = sfEintrag === null ? null : Schulform.data().getWertBySchluessel(sfEintrag.schluessel);
 			if (sf === api.schulform) {
-				mapSchulen.set(schule.schulnummerStatistik, schule);
+				schulenById.set(schule.schulnummerStatistik, schule);
 			}
 		}
-		this.setPatchedState({ mapFahrschuelerarten, mapKindergaerten, mapHaltestellen, mapReligionen, mapTelefonArten, mapSchulen, mapErzieherarten, mapEinschulungsarten, mapOrte, mapOrtsteile, mapVermerkArten });
+		this.setPatchedState({ schulenById });
 
 	}
 
@@ -214,48 +129,8 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		return schuelerDaten;
 	}
 
-	get mapFahrschuelerarten(): Map<number, Fahrschuelerart> {
-		return this._state.value.mapFahrschuelerarten;
-	}
-
-	get mapHaltestellen(): Map<number, Haltestelle> {
-		return this._state.value.mapHaltestellen;
-	}
-
-	get mapReligionen(): Map<number, ReligionEintrag> {
-		return this._state.value.mapReligionen;
-	}
-
 	get mapSchulen(): Map<string, SchulEintrag> {
-		return this._state.value.mapSchulen;
-	}
-
-	get mapTelefonArten(): Map<number, Telefonart> {
-		return this._state.value.mapTelefonArten;
-	}
-
-	get mapErzieherarten(): Map<number, Erzieherart> {
-		return this._state.value.mapErzieherarten;
-	}
-
-	get mapVermerkArten(): Map<number, VermerkartEintrag> {
-		return this._state.value.mapVermerkArten;
-	}
-
-	get mapKindergaerten(): Map<number, Kindergarten> {
-		return this._state.value.mapKindergaerten;
-	}
-
-	get mapEinschulungsarten(): Map<number, EinschulungsartKatalogEintrag> {
-		return this._state.value.mapEinschulungsarten;
-	}
-
-	public get mapOrte(): Map<number, OrtKatalogEintrag> {
-		return this._state.value.mapOrte;
-	}
-
-	public get mapOrtsteile(): Map<number, OrtsteilKatalogEintrag> {
-		return this._state.value.mapOrtsteile;
+		return this._state.value.schulenById;
 	}
 
 	get schuelerLernabschnittManager(): SchuelerLernabschnittManager {

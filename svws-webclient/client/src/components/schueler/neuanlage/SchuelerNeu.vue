@@ -242,11 +242,11 @@
 		set: (value: KlassenDaten | null | undefined) => data.value.idKlasse = value?.id ?? -1,
 	});
 
-	const einschulungsarten = computed(() => props.mapEinschulungsarten.values());
+	const einschulungsarten = computed(() => props.einschulungsartenById.values());
 	const einschulungsartManager = new SelectManager({ options: einschulungsarten, optionDisplayText: i => i.text, selectionDisplayText: i => i.text });
 
 	const einschulungsart = computed({
-		get: () => props.mapEinschulungsarten.get(dataSchulbesuchsdaten.value.grundschuleEinschulungsartID ?? -1) ?? null,
+		get: () => props.einschulungsartenById.get(dataSchulbesuchsdaten.value.grundschuleEinschulungsartID ?? -1) ?? null,
 		set: (value) => dataSchulbesuchsdaten.value.grundschuleEinschulungsartID = value?.id ?? -1,
 	});
 

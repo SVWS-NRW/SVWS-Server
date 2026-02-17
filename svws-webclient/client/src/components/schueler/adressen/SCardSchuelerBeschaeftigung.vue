@@ -11,7 +11,7 @@
 			</template>
 			<template #body>
 				<div class="svws-ui-tr" role="row" v-for="(betrieb, index) in listSchuelerbetriebe()" :key="betrieb.id" @click="select(betrieb)" :class="{'svws-clicked': clickedBetrieb ? clickedBetrieb === betrieb.id : index === 0}">
-					<s-card-schueler-beschaeftigung-tabelle :betrieb :map-beschaeftigungsarten :map-lehrer :map-betriebe :map-ansprechpartner="getAnsprechpartnervonBetrieb(betrieb.betrieb_id)" :patch-schueler-betriebsdaten />
+					<s-card-schueler-beschaeftigung-tabelle :betrieb :beschaeftigungsarten-by-id :map-lehrer :betriebe-by-id :map-ansprechpartner="getAnsprechpartnervonBetrieb(betrieb.betrieb_id)" :patch-schueler-betriebsdaten />
 				</div>
 			</template>
 		</svws-ui-table>
@@ -28,9 +28,9 @@
 		patchSchuelerBetriebsdaten: (data: Partial<SchuelerBetriebsdaten>, id: number) => Promise<void>;
 		setSchuelerBetrieb: (betrieb: SchuelerBetriebsdaten | undefined) => Promise<void>;
 		listSchuelerbetriebe: () => List<SchuelerBetriebsdaten>;
-		mapBeschaeftigungsarten: Map<number, Beschaeftigungsart>;
+		beschaeftigungsartenById: Map<number, Beschaeftigungsart>;
 		mapLehrer: Map<number, LehrerListeEintrag>;
-		mapBetriebe: Map<number, BetriebListeEintrag>;
+		betriebeById: Map<number, BetriebListeEintrag>;
 		mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
 
 	}>();

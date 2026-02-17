@@ -8,7 +8,7 @@ export interface LehrerNeuProps {
 	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
 	checkpoint: Checkpoint;
 	continueRoutingAfterCheckpoint: () => Promise<RoutingStatus>;
-	mapOrte: Map<number, OrtKatalogEintrag>;
-	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
+	orteById: Map<number, OrtKatalogEintrag>;
+	ortsteileById: Map<number, OrtsteilKatalogEintrag>;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 }

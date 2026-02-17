@@ -33,8 +33,8 @@ export class RouteLehrerNeu extends RouteNode<any, RouteLehrer> {
 			gotoDefaultView: routeLehrer.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
-			mapOrte: routeApp.data.mapOrte,
-			mapOrtsteile: routeApp.data.mapOrtsteile,
+			orteById: routeApp.cache.kataloge.orteById,
+			ortsteileById: routeApp.cache.kataloge.ortsteileById,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}

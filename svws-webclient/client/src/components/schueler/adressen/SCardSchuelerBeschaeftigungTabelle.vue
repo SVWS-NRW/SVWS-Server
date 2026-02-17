@@ -1,9 +1,9 @@
 <template>
 	<div class="svws-ui-td" role="cell">
-		<svws-ui-select title="—" headless v-model="inputBetrieb" :items="mapBetriebe" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" />
+		<svws-ui-select title="—" headless v-model="inputBetrieb" :items="betriebeById" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" />
 	</div>
 	<div class="svws-ui-td" role="cell">
-		<svws-ui-select v-model="beschaeftigungsart" :items="mapBeschaeftigungsarten" :item-text="(i: Beschaeftigungsart) => i.bezeichnung ?? ''" headless title="—" />
+		<svws-ui-select v-model="beschaeftigungsart" :items="beschaeftigungsartenById" :item-text="(i: Beschaeftigungsart) => i.bezeichnung ?? ''" headless title="—" />
 	</div>
 	<div class="svws-ui-td" role="cell">
 		<svws-ui-text-input :model-value="betrieb.vertragsbeginn" @change="vertragsbeginn=>patchSchuelerBetriebsdaten({vertragsbeginn}, betrieb.id)" type="date" />
@@ -39,9 +39,9 @@
 	const props = defineProps<{
 		patchSchuelerBetriebsdaten: (data: Partial<SchuelerBetriebsdaten>, id: number) => Promise<void>;
 		betrieb: SchuelerBetriebsdaten;
-		mapBeschaeftigungsarten: Map<number, Beschaeftigungsart>;
+		beschaeftigungsartenById: Map<number, Beschaeftigungsart>;
 		mapLehrer: Map<number, LehrerListeEintrag>;
-		mapBetriebe: Map<number, BetriebListeEintrag>;
+		betriebeById: Map<number, BetriebListeEintrag>;
 		mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
 	}>();
 
@@ -51,7 +51,7 @@
 	});
 
 	const inputBetrieb = computed<BetriebListeEintrag | undefined>({
-		get: () => props.mapBetriebe.get(props.betrieb.betrieb_id),
+		get: () => props.betriebeById.get(props.betrieb.betrieb_id),
 		set: (value) => {
 			if (value !== undefined) {
 				void props.patchSchuelerBetriebsdaten({ betrieb_id: value.id, ansprechpartner_id: null }, props.betrieb.id);
@@ -60,7 +60,7 @@
 	});
 
 	const beschaeftigungsart = computed<Beschaeftigungsart | undefined>({
-		get: () => (props.betrieb.beschaeftigungsart_id === null) ? undefined : props.mapBeschaeftigungsarten.get(props.betrieb.beschaeftigungsart_id),
+		get: () => (props.betrieb.beschaeftigungsart_id === null) ? undefined : props.beschaeftigungsartenById.get(props.betrieb.beschaeftigungsart_id),
 		set: (value) => void props.patchSchuelerBetriebsdaten({ beschaeftigungsart_id: value === undefined ? null : value.id }, props.betrieb.id),
 	});
 

@@ -23,13 +23,13 @@ export interface SchuelerIndividualdatenProps {
 	patch: (data: Partial<SchuelerStammdaten>) => Promise<void>;
 	schuelerListeManager: () => SchuelerListeManager;
 	mapSchulen: Map<string, SchulEintrag>;
-	mapOrte: Map<number, OrtKatalogEintrag>;
-	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
-	mapFahrschuelerarten: Map<number, Fahrschuelerart>;
-	mapFoerderschwerpunkte: Map<number, FoerderschwerpunktEintrag>;
-	mapHaltestellen: Map<number, Haltestelle>
-	mapReligionen: Map<number, ReligionEintrag>;
-	mapTelefonArten: Map<number, Telefonart>
+	orteById: Map<number, OrtKatalogEintrag>;
+	ortsteileById: Map<number, OrtsteilKatalogEintrag>;
+	fahrschuelerartenById: Map<number, Fahrschuelerart>;
+	foerderschwerpunkteById: Map<number, FoerderschwerpunktEintrag>;
+	haltestellenById: Map<number, Haltestelle>
+	religionenById: Map<number, ReligionEintrag>;
+	telefonartenById: Map<number, Telefonart>
 	getListSchuelerTelefoneintraege: () => List<SchuelerTelefon>;
 	addSchuelerTelefoneintrag: (data: Partial<SchuelerTelefon>, idSchueler: number) => Promise<void>;
 	patchSchuelerTelefoneintrag: (data: Partial<SchuelerTelefon>, idEintrag: number) => Promise<void>;

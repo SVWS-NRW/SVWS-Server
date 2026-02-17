@@ -8,6 +8,6 @@ export interface LehrerIndividualdatenProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	patch: (data: Partial<LehrerStammdaten>) => Promise<void>;
 	lehrerListeManager: () => LehrerListeManager;
-	mapOrte: Map<number, OrtKatalogEintrag>;
-	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
+	orteById: Map<number, OrtKatalogEintrag>;
+	ortsteileById: Map<number, OrtsteilKatalogEintrag>;
 }

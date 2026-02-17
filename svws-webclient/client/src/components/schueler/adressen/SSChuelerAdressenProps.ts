@@ -8,15 +8,15 @@ export interface SchuelerAdressenProps {
 	setSchuelerBetrieb: (betrieb: SchuelerBetriebsdaten | undefined) => Promise<void>;
 	createAnsprechpartner: (data: BetriebAnsprechpartner) => Promise<void>;
 	createSchuelerBetriebsdaten: (data: SchuelerBetriebsdaten) => Promise<void>;
-	mapOrte: Map<number, OrtKatalogEintrag>;
-	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
+	orteById: Map<number, OrtKatalogEintrag>;
+	ortsteileById: Map<number, OrtsteilKatalogEintrag>;
 	idSchueler: number;
 	listSchuelerbetriebe: () => List<SchuelerBetriebsdaten>;
 	betrieb: SchuelerBetriebsdaten | undefined;
 	betriebsStammdaten: BetriebStammdaten | undefined;
-	mapBeschaeftigungsarten: Map<number, Beschaeftigungsart>;
+	beschaeftigungsartenById: Map<number, Beschaeftigungsart>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
-	mapBetriebe: Map<number, BetriebListeEintrag>;
+	betriebeById: Map<number, BetriebListeEintrag>;
 	mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 }

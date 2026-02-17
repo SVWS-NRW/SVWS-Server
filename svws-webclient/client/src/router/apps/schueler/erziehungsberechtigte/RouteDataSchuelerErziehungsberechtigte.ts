@@ -7,13 +7,13 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 interface RouteStateDataSchuelerErziehungsberechtigte extends RouteStateInterface {
 	daten: List<ErzieherStammdaten> | undefined;
 	idSchueler: number | undefined;
-	mapErzieherarten: Map<number, Erzieherart>;
+	erzieherartenById: Map<number, Erzieherart>;
 }
 
 const defaultState = <RouteStateDataSchuelerErziehungsberechtigte> {
 	daten: undefined,
 	idSchueler: undefined,
-	mapErzieherarten: new Map(),
+	erzieherartenById: new Map(),
 };
 
 export class RouteDataSchuelerErziehungsberechtigte extends RouteData<RouteStateDataSchuelerErziehungsberechtigte> {
@@ -45,10 +45,10 @@ export class RouteDataSchuelerErziehungsberechtigte extends RouteData<RouteState
 	}
 
 	public get mapErzieherarten(): Map<number, Erzieherart> {
-		if (this._state.value.mapErzieherarten.size === 0) {
+		if (this._state.value.erzieherartenById.size === 0) {
 			throw new DeveloperNotificationException("Zugriff auf den Katalog der Erzieherarten, bevor dieser geladen werden konnte.");
 		}
-		return this._state.value.mapErzieherarten;
+		return this._state.value.erzieherartenById;
 	}
 
 	public async ladeListe() {
@@ -57,7 +57,7 @@ export class RouteDataSchuelerErziehungsberechtigte extends RouteData<RouteState
 		for (const e of listErzieherarten) {
 			mapErzieherarten.set(e.id, e);
 		}
-		this.setPatchedDefaultState({ mapErzieherarten });
+		this.setPatchedDefaultState({ erzieherartenById: mapErzieherarten });
 	}
 
 	patchErzieher = async (data: Partial<ErzieherStammdaten>, id: number) => {
