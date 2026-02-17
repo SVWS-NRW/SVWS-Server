@@ -38,12 +38,12 @@ export class Floskel extends JavaObject {
 	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 */
-	public istSichtbar: boolean = true;
+	public istSichtbar: boolean = false;
 
 	/**
 	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
 	 */
-	public sortierung: number = 32000;
+	public sortierung: number = 0;
 
 	/**
 	 * Die IDs der Jahrgänge, falls die Floskel auf bestimmte Jahrgänge eingeschränkt ist. Liegt keine Einschränkung vor so ist die Liste leer

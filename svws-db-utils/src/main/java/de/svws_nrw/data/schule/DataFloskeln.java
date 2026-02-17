@@ -37,14 +37,16 @@ public final class DataFloskeln extends DataManagerRevised<Long, DTOFloskeln, Fl
 	public DataFloskeln(final DBEntityManager conn, final DataFloskelJahrgangZuordnung dataZuordnung) {
 		super(conn);
 		this.dataZuordnung = dataZuordnung;
-		setAttributesRequiredOnCreation("kuerzel");
 		setAttributesNotPatchable("id");
 		setAttributesDelayedOnCreation("idsJahrgaenge");
+		setAttributesRequiredOnCreation("kuerzel");
 	}
 
 	@Override
 	protected void initDTO(final DTOFloskeln dto, final Long newID, final Map<String, Object> initAttributes) {
 		dto.ID = newID;
+		dto.Sichtbar = true;
+		dto.Sortierung = 32000;
 	}
 
 	@Override
@@ -54,13 +56,13 @@ public final class DataFloskeln extends DataManagerRevised<Long, DTOFloskeln, Fl
 
 	@Override
 	public Floskel getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die ID der Floskel darf nicht null sein.");
-
+		}
 		final DTOFloskeln dto = this.conn.queryByKey(DTOFloskeln.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde keine Floskel mit der ID %d gefunden.".formatted(id));
-
+		}
 		return map(dto);
 	}
 
@@ -83,7 +85,7 @@ public final class DataFloskeln extends DataManagerRevised<Long, DTOFloskeln, Fl
 		floskel.niveau = dto.Niveau;
 		floskel.idsJahrgaenge = getIdsJahrgaenge(dto.ID);
 		floskel.istSichtbar = Boolean.TRUE.equals(dto.Sichtbar);
-		floskel.sortierung = (dto.Sortierung == null) ? 32000 : dto.Sortierung;
+		floskel.sortierung = Objects.requireNonNullElse(dto.Sortierung, 32000);
 		return floskel;
 	}
 
@@ -112,16 +114,16 @@ public final class DataFloskeln extends DataManagerRevised<Long, DTOFloskeln, Fl
 
 	private void updateKuerzel(final DTOFloskeln dto, final Object value, final String name) throws ApiOperationException {
 		final String kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_Katalog_Floskeln.col_Kuerzel.datenlaenge(), name);
-		if (Objects.equals(dto.Kuerzel, kuerzel) || kuerzel.isBlank())
+		if (Objects.equals(dto.Kuerzel, kuerzel) || kuerzel.isBlank()) {
 			return;
-
+		}
 		final boolean alreadyUsed = this.conn
 				.queryAll(DTOFloskeln.class).stream()
 				.anyMatch(f -> (f.ID != dto.ID) && kuerzel.equalsIgnoreCase(f.Kuerzel));
 
-		if (alreadyUsed)
+		if (alreadyUsed) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Das Kürzel %s wird bereits verwendet.".formatted(kuerzel));
-
+		}
 		dto.Kuerzel = kuerzel;
 	}
 
@@ -131,11 +133,13 @@ public final class DataFloskeln extends DataManagerRevised<Long, DTOFloskeln, Fl
 
 	private void updateIdFloskelgruppe(final DTOFloskeln dto, final String name, final Object value) throws ApiOperationException {
 		final Long idFloskelgruppe = JSONMapper.convertToLong(value, false, name);
-		if (Objects.equals(idFloskelgruppe, dto.Gruppe_ID))
+		if (Objects.equals(idFloskelgruppe, dto.Gruppe_ID)) {
 			return;
+		}
 
-		if (matchingFloskelgruppeNotFound(idFloskelgruppe))
+		if (matchingFloskelgruppeNotFound(idFloskelgruppe)) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Keine Floskelgruppe mit der id %d vorhanden.".formatted(idFloskelgruppe));
+		}
 
 		dto.Gruppe_ID = idFloskelgruppe;
 	}
@@ -151,8 +155,10 @@ public final class DataFloskeln extends DataManagerRevised<Long, DTOFloskeln, Fl
 			return;
 		}
 
-		if (this.conn.queryByKey(DTOFach.class, idFach) == null)
+		final DTOFach result = this.conn.queryByKey(DTOFach.class, idFach);
+		if (result == null) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Kein Fach mit der ID %d gefunden.".formatted(idFach));
+		}
 
 		dto.Fach_ID = idFach;
 	}
@@ -160,8 +166,9 @@ public final class DataFloskeln extends DataManagerRevised<Long, DTOFloskeln, Fl
 	private void updateIdsJahrgaenge(final DTOFloskeln dto, final String name, final Object value) throws ApiOperationException {
 		final List<Long> ids = JSONMapper.convertToListOfLong(value, false, name);
 		final Set<Long> newIdsJahrgaenge = new HashSet<>(ids);
-		if (ids.size() != newIdsJahrgaenge.size())
+		if (ids.size() != newIdsJahrgaenge.size()) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die Liste der neuen JahrgangIDs darf keine Duplikate enthalten.");
+		}
 
 		final Map<Long, FloskelJahrgangZuordnung> zuordnungenById = this.dataZuordnung
 				.getListByIdFloskel(dto.ID).stream()
@@ -171,8 +178,9 @@ public final class DataFloskeln extends DataManagerRevised<Long, DTOFloskeln, Fl
 				));
 
 		final Set<Long> oldIdsJahrgaenge = Set.copyOf(zuordnungenById.keySet());
-		if (newIdsJahrgaenge.equals(oldIdsJahrgaenge))
+		if (newIdsJahrgaenge.equals(oldIdsJahrgaenge)) {
 			return;
+		}
 
 		deleteObsoleteZuordnungen(oldIdsJahrgaenge, newIdsJahrgaenge, zuordnungenById);
 		addNewZuordnungen(oldIdsJahrgaenge, newIdsJahrgaenge, dto.ID);
@@ -196,11 +204,11 @@ public final class DataFloskeln extends DataManagerRevised<Long, DTOFloskeln, Fl
 	}
 
 	private static void updateSortierung(final DTOFloskeln dto, final String name, final Object value) throws ApiOperationException {
-		dto.Sortierung = JSONMapper.convertToIntegerInRange(value, true, 0, null, name);
+		dto.Sortierung = JSONMapper.convertToInteger(value, false, name);
 	}
 
 	private static void updateSichtbar(final DTOFloskeln dto, final String name, final Object value) throws ApiOperationException {
-		dto.Sichtbar = JSONMapper.convertToBoolean(value, true, name);
+		dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
 	}
 
 	private static void updateNiveau(final DTOFloskeln dto, final String name, final Object value) throws ApiOperationException {

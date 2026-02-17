@@ -44,11 +44,11 @@ public class Floskel {
 
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
-	public boolean istSichtbar = true;
+	public boolean istSichtbar;
 
 	/** Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an. */
 	@Schema(description = "gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an", example = "1")
-	public int sortierung = 32000;
+	public int sortierung;
 
 	/** Die IDs der Jahrgänge, falls die Floskel auf bestimmte Jahrgänge eingeschränkt ist. Liegt keine Einschränkung vor so ist die Liste leer */
 	@ArraySchema(schema = @Schema(implementation = Long.class,

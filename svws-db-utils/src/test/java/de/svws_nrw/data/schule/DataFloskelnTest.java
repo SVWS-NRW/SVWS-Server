@@ -568,30 +568,29 @@ class DataFloskelnTest {
 
 	@Test
 	@DisplayName("patch | sortierung | null")
-	void patch_sortierungNull() throws ApiOperationException {
+	void patch_sortierungNull() {
 		final var dto = new DTOFloskeln(1L, "same", "bez");
-		dto.Sortierung = 99;
 		when(this.conn.queryByKey(DTOFloskeln.class, 1L)).thenReturn(dto);
-		when(this.conn.transactionPersist(dto)).thenReturn(true);
 		final var map = new HashMap<String, Object>();
 		map.put("sortierung", null);
 
-		this.data.patch(1L, map);
-
-		assertThat(dto.Sortierung).isNull();
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, map))
+				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
 	@DisplayName("patch | sortierung | below min value")
-	void patch_sortierungBelowMin() {
+	void patch_sortierungBelowMin() throws ApiOperationException {
 		final var dto = new DTOFloskeln(1L, "same", "bez");
+		dto.Sortierung = 99;
 		when(this.conn.queryByKey(DTOFloskeln.class, 1L)).thenReturn(dto);
+		when(this.conn.transactionPersist(dto)).thenReturn(true);
 
-		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("sortierung", -1)))
-				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Attribut sortierung: Fehler beim Konvertieren: Der Zahlwert liegt außerhalb des geforderten Bereichs.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+		this.data.patch(1L, Map.of("sortierung", -1));
+
+		assertThat(dto.Sortierung).isEqualTo(-1);
 	}
 
 	@Test
@@ -622,17 +621,17 @@ class DataFloskelnTest {
 
 	@Test
 	@DisplayName("patch | sichtbar | null")
-	void patch_sichtbarNull() throws ApiOperationException {
+	void patch_sichtbarNull() {
 		final var dto = new DTOFloskeln(1L, "same", "bez");
 		dto.Sichtbar = true;
 		when(this.conn.queryByKey(DTOFloskeln.class, 1L)).thenReturn(dto);
-		when(this.conn.transactionPersist(dto)).thenReturn(true);
 		final var map = new HashMap<String, Object>();
 		map.put("istSichtbar", null);
 
-		this.data.patch(1L, map);
-
-		assertThat(dto.Sichtbar).isNull();
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, map))
+				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test

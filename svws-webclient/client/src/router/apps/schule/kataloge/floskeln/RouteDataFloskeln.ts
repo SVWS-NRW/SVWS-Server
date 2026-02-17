@@ -11,7 +11,8 @@ import { routeFloskelnNeu } from "~/router/apps/schule/kataloge/floskeln/RouteFl
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
-	manager: new FloskelnListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList()),
+	manager: new FloskelnListeManager(-1, -1, new ArrayList(), new ArrayList(),
+		null, new ArrayList(), new ArrayList(), new ArrayList()),
 	view: routeFloskelnDaten,
 	activeViewType: ViewType.DEFAULT,
 	oldView: undefined,
@@ -26,8 +27,15 @@ export class RouteDataFloskeln extends RouteDataAuswahl<FloskelnListeManager, Ro
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<FloskelnListeManager>>> {
 		const floskeln = await api.server.getFloskeln(api.schema);
 		const floskelgruppen = await api.server.getFloskelgruppen(api.schema);
-		const manager = new FloskelnListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
-			api.schulform, floskeln, floskelgruppen);
+		const jahrgaenge = await api.server.getJahrgaenge(api.schema);
+		const faecher = await api.server.getFaecher(api.schema);
+
+		const manager = new FloskelnListeManager(
+			api.abschnitt.id,
+			api.schuleStammdaten.idSchuljahresabschnitt,
+			api.schuleStammdaten.abschnitte,
+			jahrgaenge,
+			api.schulform, floskeln, floskelgruppen, faecher);
 		return { manager };
 	}
 
