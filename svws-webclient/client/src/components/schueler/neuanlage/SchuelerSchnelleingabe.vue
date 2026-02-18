@@ -1351,6 +1351,6 @@
 		void props.gotoDefaultView(props.schuelerListeManager().auswahl().id);
 	}
 
-	await loadKlassenFuerAbschnitt(schuljahresabschnitt.value?.id ?? -1);
+	void loadKlassenFuerAbschnitt(schuljahresabschnitt.value?.id ?? -1);
 
 </script>
