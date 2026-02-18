@@ -14,6 +14,7 @@ import de.svws_nrw.core.data.schule.Betrieb;
 import de.svws_nrw.core.data.schule.BetriebeAnsprechpartner;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebsart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOBetrieb;
@@ -112,7 +113,7 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOBetrieb, Bet
 	protected void mapAttribute(final DTOBetrieb dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case "name" -> updateName(dto, name, value);
 			case "idBetriebsart" -> updateIdBetriebsart(dto, name, value);
 			case "idOrt" -> updateIdOrt(dto, name, value);
@@ -182,16 +183,12 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOBetrieb, Bet
 
 	private void updateName(final DTOBetrieb dto, final String name, final Object value) throws ApiOperationException {
 		final String newName = JSONMapper.convertToString(value, false, false, tab_K_AllgAdresse.col_AllgAdrName1.datenlaenge(), name);
-		if (valueIsBlankOrHasNotChanged(dto.name1, newName))
+		if (ValidationUtils.isBlankOrUnchanged(dto.name1, newName))
 			return;
 
 		validateNameIsUnique(dto.ID, newName);
 
 		dto.name1 = newName;
-	}
-
-	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
-		return Objects.equals(oldValue, newValue) || ((newValue != null) && newValue.isBlank());
 	}
 
 	private void validateNameIsUnique(final Long id, final String name) throws ApiOperationException {
@@ -232,13 +229,6 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOBetrieb, Bet
 		response.success = false;
 		response.log.add(
 				("Der Betrieb mit dem Name %s ist in der Datenbank referenziert und kann daher nicht gelöscht werden.").formatted(name));
-	}
-
-	private static void validateId(final DTOBetrieb dto, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (!Objects.equals(dto.ID, id))
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 	}
 
 }

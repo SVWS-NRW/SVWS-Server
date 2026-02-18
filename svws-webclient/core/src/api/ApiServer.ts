@@ -180,6 +180,7 @@ import { SchuelerNeu } from '../asd/data/schueler/SchuelerNeu';
 import { SchuelerSchulbesuchMerkmal } from '../asd/data/schueler/SchuelerSchulbesuchMerkmal';
 import { SchuelerSchulbesuchSchule } from '../asd/data/schueler/SchuelerSchulbesuchSchule';
 import { SchuelerSchulbesuchsdaten } from '../asd/data/schueler/SchuelerSchulbesuchsdaten';
+import { SchuelerSchwerpunkt } from '../core/data/kataloge/SchuelerSchwerpunkt';
 import { SchuelerStammdaten } from '../asd/data/schueler/SchuelerStammdaten';
 import { SchuelerStatusKatalogEintrag } from '../asd/data/schueler/SchuelerStatusKatalogEintrag';
 import { SchuelerTelefon } from '../core/data/schueler/SchuelerTelefon';
@@ -13777,6 +13778,142 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<SchuelerVermerke>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerVermerke.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addSchuelerSchwerpunkt für den Zugriff auf die URL https://{hostname}/db/{schema}/schuelerschwerpunkte
+	 *
+	 * Erstellt einen neuen Schüler-Schwerpunkt und gibt das erstellte Objekt zurück.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Schwerpunkt wurde erfolgreich erstellt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerSchwerpunkt
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Orte anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
+	 *
+	 * @param {Partial<SchuelerSchwerpunkt>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Schwerpunkt wurde erfolgreich erstellt.
+	 */
+	public async addSchuelerSchwerpunkt(data : Partial<SchuelerSchwerpunkt>, schema : string) : Promise<SchuelerSchwerpunkt> {
+		const path = "/db/{schema}/schuelerschwerpunkte"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = SchuelerSchwerpunkt.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SchuelerSchwerpunkt.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchuelerSchwerpunkte für den Zugriff auf die URL https://{hostname}/db/{schema}/schuelerschwerpunkte
+	 *
+	 * Liefert alle im System verfügbaren Schüler-Schwerpunkte.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lese Operation wurde erfolgreich ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchuelerSchwerpunkt>
+	 *   Code 403: Der SVWS-Benutzer besitzt nicht die benötigten Berechtigungen.
+	 *   Code 404: Resource nicht vorhanden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lese Operation wurde erfolgreich ausgeführt.
+	 */
+	public async getSchuelerSchwerpunkte(schema : string) : Promise<List<SchuelerSchwerpunkt>> {
+		const path = "/db/{schema}/schuelerschwerpunkte"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerSchwerpunkt>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerSchwerpunkt.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchuelerSchwerpunkte für den Zugriff auf die URL https://{hostname}/db/{schema}/schuelerschwerpunkte
+	 *
+	 * Löscht Schüler-Schwerpunkte anhand der ids.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer besitzt nicht die benötigten Berechtigungen.
+	 *   Code 404: Resource nicht vorhanden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteSchuelerSchwerpunkte(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schuelerschwerpunkte"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchuelerSchwerpunkt für den Zugriff auf die URL https://{hostname}/db/{schema}/schuelerschwerpunkte/{id : \d+}
+	 *
+	 * Liefert einen Schwerpunkt anhand der id.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lese Operation wurde erfolgreich ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerSchwerpunkt
+	 *   Code 403: Der SVWS-Benutzer besitzt nicht die benötigten Berechtigungen.
+	 *   Code 404: Resource nicht vorhanden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Lese Operation wurde erfolgreich ausgeführt.
+	 */
+	public async getSchuelerSchwerpunkt(schema : string, id : number) : Promise<SchuelerSchwerpunkt> {
+		const path = "/db/{schema}/schuelerschwerpunkte/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SchuelerSchwerpunkt.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchuelerSchwerpunkt für den Zugriff auf die URL https://{hostname}/db/{schema}/schuelerschwerpunkte/{id : \d+}
+	 *
+	 * Patched einen vorhandenen Schüler-Schwerpunkt anhand der übergebenen ID.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 403: Der SVWS-Benutzer besitzt nicht die benötigten Berechtigungen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
+	 *
+	 * @param {Partial<SchuelerSchwerpunkt>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchSchuelerSchwerpunkt(data : Partial<SchuelerSchwerpunkt>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schuelerschwerpunkte/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = SchuelerSchwerpunkt.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
 	}
 
 

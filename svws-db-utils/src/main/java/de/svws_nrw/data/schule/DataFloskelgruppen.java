@@ -13,6 +13,7 @@ import de.svws_nrw.asd.types.schule.Floskelgruppenart;
 import de.svws_nrw.core.data.schule.Floskelgruppe;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.katalog.DTOFloskelgruppen;
 import de.svws_nrw.db.schema.Schema;
@@ -86,7 +87,7 @@ public final class DataFloskelgruppen extends DataManagerRevised<Long, DTOFloske
 	protected void mapAttribute(final DTOFloskelgruppen dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case "kuerzel" -> updateKuerzel(dto, name, value);
 			case "bezeichnung" -> updateBezeichnung(dto, name, value);
 			case "idFloskelgruppenart" -> updateFloskelgruppenart(dto, name, value);
@@ -94,17 +95,9 @@ public final class DataFloskelgruppen extends DataManagerRevised<Long, DTOFloske
 		}
 	}
 
-	private static void validateId(final DTOFloskelgruppen dto, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (!Objects.equals(dto.ID, id)) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
-		}
-	}
-
 	private void updateBezeichnung(final DTOFloskelgruppen dto, final String name, final Object value) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_Floskelgruppen.col_Bezeichnung.datenlaenge(), name);
-		if (valueIsBlankOrHasNotChanged(dto.Bezeichnung, bezeichnung)) {
+		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung)) {
 			return;
 		}
 
@@ -114,7 +107,7 @@ public final class DataFloskelgruppen extends DataManagerRevised<Long, DTOFloske
 
 	private void updateKuerzel(final DTOFloskelgruppen dto, final String name, final Object value) throws ApiOperationException {
 		final String kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_Katalog_Floskeln_Gruppen.col_Kuerzel.datenlaenge(), name);
-		if (valueIsBlankOrHasNotChanged(dto.Kuerzel, kuerzel)) {
+		if (ValidationUtils.isBlankOrUnchanged(dto.Kuerzel, kuerzel)) {
 			return;
 		}
 
@@ -165,10 +158,6 @@ public final class DataFloskelgruppen extends DataManagerRevised<Long, DTOFloske
 	private Floskelgruppe setReferenceFlag(final Floskelgruppe floskelgruppe, final Set<Long> idsOfReferencedFloskelgruppen) {
 		floskelgruppe.referenziertInAnderenTabellen = idsOfReferencedFloskelgruppen.contains(floskelgruppe.id);
 		return floskelgruppe;
-	}
-
-	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
-		return Objects.equals(oldValue, newValue) || ((newValue != null) && newValue.isBlank());
 	}
 
 	private void validateKuerzel(final Long id, final String kuerzel) throws ApiOperationException {

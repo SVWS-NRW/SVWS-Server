@@ -13,6 +13,7 @@ import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.erzieher.Erzieherart;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOErzieherart;
 import de.svws_nrw.db.schema.Schema;
@@ -87,19 +88,12 @@ public final class DataErzieherarten extends DataManagerRevised<Long, DTOErziehe
 	@Override
 	protected void mapAttribute(final DTOErzieherart dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case BEZEICHNUNG -> validateBezeichnung(dto, value, name);
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
 			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, false, name);
 			default -> throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
-	}
-
-	private static void validateId(final DTOErzieherart dto, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (!Objects.equals(dto.ID, id))
-			throw new ApiOperationException(Response.Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 	}
 
 	private void validateBezeichnung(final DTOErzieherart dto, final Object value, final String name) throws ApiOperationException {

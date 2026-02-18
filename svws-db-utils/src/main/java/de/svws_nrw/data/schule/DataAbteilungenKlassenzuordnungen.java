@@ -6,6 +6,7 @@ import java.util.Map;
 import de.svws_nrw.core.data.schule.AbteilungKlassenzuordnung;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungen;
@@ -67,18 +68,10 @@ public final class DataAbteilungenKlassenzuordnungen extends DataManagerRevised<
 	protected void mapAttribute(final DTOAbteilungsKlassen dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case "idAbteilung" -> updateIdAbteilung(dto, value, name);
 			case "idKlasse" -> updateIdKlasse(dto, name, value);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
-		}
-	}
-
-	private static void validateId(final DTOAbteilungsKlassen dto, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (id != dto.ID) {
-			throw new ApiOperationException(
-					Status.BAD_REQUEST, "Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 		}
 	}
 

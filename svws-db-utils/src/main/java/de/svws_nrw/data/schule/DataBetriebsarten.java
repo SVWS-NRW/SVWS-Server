@@ -13,6 +13,7 @@ import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.Betriebsart;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebsart;
 import de.svws_nrw.db.schema.Schema;
@@ -86,7 +87,7 @@ public final class DataBetriebsarten extends DataManagerRevised<Long, DTOBetrieb
 	@Override
 	protected void mapAttribute(final DTOBetriebsart dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case "bezeichnung" -> updateBezeichnung(dto, value, name);
 			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, false, name);
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
@@ -101,14 +102,6 @@ public final class DataBetriebsarten extends DataManagerRevised<Long, DTOBetrieb
 		betriebsarten.stream()
 				.filter(f -> idsOfReferencedBetriebsarten.contains(f.ID))
 				.forEach(f -> markResponseAsFailed(responses.get(f.ID), f.Bezeichnung));
-	}
-
-	private static void validateId(final DTOBetriebsart dto, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (!Objects.equals(dto.ID, id)) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
-		}
 	}
 
 	private void updateBezeichnung(final DTOBetriebsart dto, final Object value, final String name) throws ApiOperationException {

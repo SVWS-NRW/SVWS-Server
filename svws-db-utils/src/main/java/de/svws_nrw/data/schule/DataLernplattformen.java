@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLernplattform;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernplattform;
@@ -116,17 +117,10 @@ public final class DataLernplattformen extends DataManagerRevised<Long, DTOLernp
 	protected void mapAttribute(final DTOLernplattformen dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case "bezeichnung" -> validateBezeichnung(dto, value, name);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
-	}
-
-	private static void validateId(final DTOLernplattformen dto, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (!Objects.equals(dto.ID, id))
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 	}
 
 	private Lernplattform setReferencedFlag(final Lernplattform lernplattform, final Set<Long> idsOfReferencedLernplattformen) {
@@ -155,7 +149,7 @@ public final class DataLernplattformen extends DataManagerRevised<Long, DTOLernp
 	private void validateBezeichnung(final DTOLernplattformen dto, final Object value, final String name) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(
 				value, false, false, Schema.tab_Lernplattformen.col_Bezeichnung.datenlaenge(), name);
-		if (valueIsBlankOrHasNotChanged(dto.Bezeichnung, bezeichnung))
+		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung))
 			return;
 
 		if (bezeichnungIsAlreadyUsed(dto.ID, bezeichnung))
@@ -168,10 +162,6 @@ public final class DataLernplattformen extends DataManagerRevised<Long, DTOLernp
 		return this.conn.queryAll(DTOLernplattformen.class)
 				.stream()
 				.anyMatch(l -> (l.ID != id) && bezeichnung.equalsIgnoreCase(l.Bezeichnung));
-	}
-
-	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
-		return Objects.equals(oldValue, newValue) || ((newValue != null) && newValue.isBlank());
 	}
 
 }

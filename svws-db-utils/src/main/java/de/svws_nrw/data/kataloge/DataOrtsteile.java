@@ -4,13 +4,13 @@ import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 
 import java.util.Collections;
@@ -109,7 +109,7 @@ public final class DataOrtsteile extends DataManagerRevised<Long, DTOOrtsteil, O
 	@Override
 	protected void mapAttribute(final DTOOrtsteil dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case "ortsteil" -> updateBezeichnung(dto, value, name);
 			case "ort_id" -> updateOrt(dto, value, name);
 			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, false, name);
@@ -134,16 +134,12 @@ public final class DataOrtsteile extends DataManagerRevised<Long, DTOOrtsteil, O
 
 	private void updateBezeichnung(final DTOOrtsteil dto, final Object value, final String name) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Ortsteil.col_Bezeichnung.datenlaenge(), name);
-		if (valueIsBlankOrHasNotChanged(dto.Bezeichnung, bezeichnung))
+		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung))
 			return;
 
 		validateBezeichnung(dto.ID, bezeichnung);
 
 		dto.Bezeichnung = bezeichnung;
-	}
-
-	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
-		return StringUtils.isBlank(newValue) || Strings.CS.equals(oldValue, newValue);
 	}
 
 	private void validateBezeichnung(final Long id, final String bezeichnung) throws ApiOperationException {
@@ -153,15 +149,6 @@ public final class DataOrtsteile extends DataManagerRevised<Long, DTOOrtsteil, O
 		if (isAlreadyUsed)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung des Ortsteil %s ist bereits vorhanden.".formatted(bezeichnung));
 	}
-
-
-	private static void validateId(final DTOOrtsteil dto, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (!Objects.equals(dto.ID, id))
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
-	}
-
 
 	private static Set<Long> mapToIds(final List<DTOOrtsteil> ortsteile) {
 		return ortsteile.stream()

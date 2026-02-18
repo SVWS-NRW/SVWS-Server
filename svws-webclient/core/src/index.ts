@@ -652,6 +652,7 @@ export { KatalogEintragStrassen } from './core/data/kataloge/KatalogEintragStras
 export { KatalogEntlassgrund } from './core/data/kataloge/KatalogEntlassgrund';
 export { OrtKatalogEintrag } from './core/data/kataloge/OrtKatalogEintrag';
 export { OrtsteilKatalogEintrag } from './core/data/kataloge/OrtsteilKatalogEintrag';
+export { SchuelerSchwerpunkt } from './core/data/kataloge/SchuelerSchwerpunkt';
 export { SchulEintrag } from './core/data/kataloge/SchulEintrag';
 export { SchuelerblockungInput } from './core/data/kursblockung/SchuelerblockungInput';
 export { SchuelerblockungInputFachwahl } from './core/data/kursblockung/SchuelerblockungInputFachwahl';

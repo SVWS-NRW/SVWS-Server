@@ -3,6 +3,7 @@ package de.svws_nrw.data.kataloge;
 import de.svws_nrw.core.data.schule.Fahrschuelerart;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOFahrschuelerart;
 import de.svws_nrw.db.schema.Schema;
@@ -86,20 +87,12 @@ public final class DataFahrschuelerarten extends DataManagerRevised<Long, DTOFah
 	protected void mapAttribute(final DTOFahrschuelerart dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case "bezeichnung" -> updateBezeichnung(dto, value, name);
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
 			case "istAenderbar" -> dto.Aenderbar = JSONMapper.convertToBoolean(value, false, name);
 			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, false, name);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
-		}
-	}
-
-	private static void validateId(final DTOFahrschuelerart dto, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (!Objects.equals(dto.ID, id)) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 		}
 	}
 

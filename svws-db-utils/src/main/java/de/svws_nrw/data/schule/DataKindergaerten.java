@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import de.svws_nrw.core.data.schule.Kindergarten;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOKindergarten;
 import de.svws_nrw.db.schema.Schema;
@@ -91,7 +92,7 @@ public final class DataKindergaerten extends DataManagerRevised<Long, DTOKinderg
 	@Override
 	protected void mapAttribute(final DTOKindergarten dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case "bezeichnung" -> updateBezeichnung(dto, name, value);
 			case "bemerkung" -> dto.Bemerkung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Kindergarten.col_Bemerkung.datenlaenge(), name);
 			case "tel" -> dto.Tel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Kindergarten.col_Tel.datenlaenge(), name);
@@ -109,17 +110,9 @@ public final class DataKindergaerten extends DataManagerRevised<Long, DTOKinderg
 		}
 	}
 
-	private static void validateId(final DTOKindergarten dto, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, true, name);
-		if (!Objects.equals(dto.ID, id)) {
-			throw new ApiOperationException(Response.Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
-		}
-	}
-
 	private void updateBezeichnung(final DTOKindergarten dto, final String name, final Object value) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Kindergarten.col_Bezeichnung.datenlaenge(), name);
-		if (valueIsBlankOrHasNotChanged(dto.Bezeichnung, bezeichnung)) {
+		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung)) {
 			return;
 		}
 		validateBezeichnungIsUnique(dto.ID, bezeichnung);
@@ -136,10 +129,6 @@ public final class DataKindergaerten extends DataManagerRevised<Long, DTOKinderg
 		if (bezeichnungAlreadyUsed) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
 		}
-	}
-
-	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
-		return Objects.equals(oldValue, newValue) || ((newValue != null) && newValue.isBlank());
 	}
 
 	private static Set<Long> mapToIds(final List<DTOKindergarten> kindergaerten) {

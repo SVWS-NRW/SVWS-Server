@@ -116,9 +116,9 @@
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOKursarten</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOOrt</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOOrtsteil</class>
+        <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOSchuelerSchwerpunkt</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOSchuleNRW</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOSchulfunktion</class>
-        <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOSchwerpunkt</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOTextDateien</class>
         <class>de.svws_nrw.db.dto.migration.schild.katalog.MigrationDTOVermerkArt</class>
         <class>de.svws_nrw.db.dto.migration.schild.klassen.MigrationDTOKlassen</class>
@@ -314,9 +314,9 @@
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOKursarten</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOOrt</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil</class>
+        <class>de.svws_nrw.db.dto.current.schild.katalog.DTOSchuelerSchwerpunkt</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOSchulfunktion</class>
-        <class>de.svws_nrw.db.dto.current.schild.katalog.DTOSchwerpunkt</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOTextDateien</class>
         <class>de.svws_nrw.db.dto.current.schild.katalog.DTOVermerkArt</class>
         <class>de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen</class>

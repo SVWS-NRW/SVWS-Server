@@ -15,6 +15,7 @@ import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.schema.Schema;
@@ -111,7 +112,7 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 	@Override
 	protected void mapAttribute(final DTOSchuleNRW dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case SCHULNUMMER_STATISTIK -> mapSchulnummer(dto, value, name);
 			case "kuerzel" -> updateKuerzel(dto, value, name);
 			case "kurzbezeichnung" -> updateKurzbezeichnung(dto, name, value);
@@ -152,14 +153,6 @@ public final class DataSchulen extends DataManagerRevised<Long, DTOSchuleNRW, Sc
 		final int schuljahr = conn.getUser().schuleGetSchuljahr();
 		final SchulformKatalogEintrag eintrag = schulform.daten(schuljahr);
 		return (eintrag != null) ? eintrag.id : null;
-	}
-
-	private static void validateId(final DTOSchuleNRW dto, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (id != dto.ID) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
-		}
 	}
 
 	private void mapSchulnummer(final DTOSchuleNRW dto, final Object value, final String name) throws ApiOperationException {

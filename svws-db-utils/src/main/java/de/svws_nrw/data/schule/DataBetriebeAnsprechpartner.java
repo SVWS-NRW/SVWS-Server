@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,6 +12,7 @@ import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.BetriebeAnsprechpartner;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebeAnsprechpartner;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOBetrieb;
@@ -87,7 +87,7 @@ public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, 
 	protected void mapAttribute(final DTOBetriebeAnsprechpartner dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case "idBetrieb" -> updateIdBetrieb(dto, name, value);
 			case "anrede" -> dto.Anrede = JSONMapper.convertToString(value, true, true, tab_AllgAdrAnsprechpartner.col_Anrede.datenlaenge(), name);
 			case "name" -> dto.Name = JSONMapper.convertToString(value, true, true, tab_AllgAdrAnsprechpartner.col_Name.datenlaenge(), name);
@@ -117,13 +117,6 @@ public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, 
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Kein Betrieb zur ID %d gefunden.".formatted(idBetrieb));
 
 		dto.Adresse_ID =  idBetrieb;
-	}
-
-	private static void validateId(final DTOBetriebeAnsprechpartner dto, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (!Objects.equals(dto.ID, id))
-			throw new ApiOperationException(Response.Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 	}
 
 	private static void markResponseAsFailed(final SimpleOperationResponse response, final String name) {

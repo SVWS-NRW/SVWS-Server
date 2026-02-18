@@ -15,6 +15,7 @@ import de.svws_nrw.core.data.schule.Einwilligungsart;
 import de.svws_nrw.core.types.schule.PersonTyp;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerDatenschutz;
@@ -136,7 +137,7 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 	@Override
 	protected void mapAttribute(final DTOKatalogEinwilligungsart dto, final String name, final Object value, final Map<String, Object> map) {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case BEZEICHNUNG -> updateBezeichnung(dto, value, name);
 			case SCHLUESSEL -> updateSchluessel(dto, value, name, map.get(ID_PERSON_TYP));
 			case ID_PERSON_TYP -> updatePersonTyp(dto, value, name);
@@ -160,13 +161,6 @@ public final class DataEinwilligungsarten extends DataManagerRevised<Long, DTOKa
 
 	private static void updateBeschreibung(final DTOKatalogEinwilligungsart dto, final Object value, final String name) {
 		dto.Beschreibung = JSONMapper.convertToString(value, true, true, null, name);
-	}
-
-	private static void validateId(final DTOKatalogEinwilligungsart dto, final String name, final Object value) {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (!Objects.equals(dto.ID, id))
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 	}
 
 	private void updateBezeichnung(final DTOKatalogEinwilligungsart dto, final Object value, final String name) {

@@ -3,6 +3,7 @@ package de.svws_nrw.data.betriebe;
 import de.svws_nrw.core.data.betrieb.Beschaeftigungsart;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOBeschaeftigungsart;
 import de.svws_nrw.db.schema.Schema;
@@ -86,19 +87,11 @@ public final class DataBeschaeftigungsarten extends DataManagerRevised<Long, DTO
 	protected void mapAttribute(final DTOBeschaeftigungsart dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case "bezeichnung" -> validateBezeichnung(dto, value, name);
 			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, true, name);
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, true, name);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
-		}
-	}
-
-	private static void validateId(final DTOBeschaeftigungsart dto, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (!Objects.equals(dto.ID, id)) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 		}
 	}
 

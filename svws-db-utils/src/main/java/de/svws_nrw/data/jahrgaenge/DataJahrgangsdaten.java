@@ -9,6 +9,7 @@ import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
@@ -110,7 +111,7 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 	protected void mapAttribute(final DTOJahrgang dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case "kuerzel" -> updateKuerzel(dto, name, value);
 			case "kuerzelStatistik" -> updateKuerzelStatistik(dto, value, name);
 			case "bezeichnung" -> updateBezeichnung(dto, name, value);
@@ -139,13 +140,6 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 			throw new ApiOperationException(Status.BAD_REQUEST, "Keine Bildungsstufe zur ID %d gefunden.".formatted(idBildungsstufe));
 
 		dto.Sekundarstufe = eintrag.schluessel;
-	}
-
-	private static void validateId(final DTOJahrgang dtoJahrgang, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (id != dtoJahrgang.ID)
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dtoJahrgang.ID));
 	}
 
 	private void updateBezeichnung(final DTOJahrgang dto, final String name, final Object value) throws ApiOperationException {

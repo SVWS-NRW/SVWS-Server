@@ -13,6 +13,7 @@ import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.schema.Schema;
@@ -86,7 +87,7 @@ public final class DataKatalogEntlassgruende extends DataManagerRevised<Long, DT
 	protected void mapAttribute(final DTOEntlassarten dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case BEZEICHNUNG -> updateBezeichnung(dto, value, name);
 			case "sortierung" -> updateSortierung(dto, value, name);
 			case "istSichtbar" -> updateSichtbar(dto, value, name);
@@ -108,13 +109,6 @@ public final class DataKatalogEntlassgruende extends DataManagerRevised<Long, DT
 		response.log.add(
 				"Der Entlassgrund mit der Bezeichnung %s ist in der Datenbank referenziert und kann daher nicht gelöscht werden.".formatted(bezeichnung)
 		);
-	}
-
-	private static void validateId(final DTOEntlassarten dto, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (!Objects.equals(dto.ID, id))
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 	}
 
 	private void updateBezeichnung(final DTOEntlassarten dto, final Object value, final String name) throws ApiOperationException {

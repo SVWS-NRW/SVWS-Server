@@ -37,8 +37,8 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogEinwilligungsart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKursarten;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuelerSchwerpunkt;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOSchwerpunkt;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEinschulungsart;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
@@ -655,11 +655,11 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		conn.transactionFlush();
 
 		// K_Schwerpunkte befüllen
-		final ArrayList<DTOSchwerpunkt> schwerpunkte = new ArrayList<>();
-		schwerpunkte.add(new DTOSchwerpunkt(1L, "naturwissenschaftlich-technisch"));
-		schwerpunkte.add(new DTOSchwerpunkt(2L, "sozialwissenschaftlich"));
-		schwerpunkte.add(new DTOSchwerpunkt(3L, "musisch-künstlerisch"));
-		schwerpunkte.add(new DTOSchwerpunkt(4L, "fremdsprachlich"));
+		final ArrayList<DTOSchuelerSchwerpunkt> schwerpunkte = new ArrayList<>();
+		schwerpunkte.add(new DTOSchuelerSchwerpunkt(1L, "naturwissenschaftlich-technisch"));
+		schwerpunkte.add(new DTOSchuelerSchwerpunkt(2L, "sozialwissenschaftlich"));
+		schwerpunkte.add(new DTOSchuelerSchwerpunkt(3L, "musisch-künstlerisch"));
+		schwerpunkte.add(new DTOSchuelerSchwerpunkt(4L, "fremdsprachlich"));
 		for (i = 0; i < schwerpunkte.size(); i++)
 			schwerpunkte.get(i).Sortierung = i + 1;
 		conn.transactionPersistAll(schwerpunkte);

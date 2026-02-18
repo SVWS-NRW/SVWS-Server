@@ -5,6 +5,7 @@ import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOFoerderschwerpunkt;
 import de.svws_nrw.db.schema.Schema;
@@ -89,7 +90,7 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 	protected void mapAttribute(final DTOFoerderschwerpunkt dto, final String name, final Object value, final Map<String, Object> attributes)
 			throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case "kuerzel" -> updateBezeichnung(dto, value, name);
 			case "kuerzelStatistik" -> updateKuerzelStatistik(dto, value, name);
 			case "istSichtbar" -> updateSichtbar(dto, name, value);
@@ -110,13 +111,6 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 				.forEach(f -> markResponseAsFailed(responses.get(f.ID), f.Bezeichnung));
 	}
 
-	private static void validateId(final DTOFoerderschwerpunkt dto, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (!Objects.equals(dto.ID, id))
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
-	}
-
 	private static void updateSortierung(final DTOFoerderschwerpunkt dto, final String name, final Object value) throws ApiOperationException {
 		dto.Sortierung = JSONMapper.convertToInteger(value, false, name);
 	}
@@ -127,7 +121,7 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 
 	private void updateBezeichnung(final DTOFoerderschwerpunkt dto, final Object value, final String name) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Foerderschwerpunkt.col_Bezeichnung.datenlaenge(), name);
-		if (valueIsBlankOrHasNotChanged(dto.Bezeichnung, bezeichnung))
+		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung))
 			return;
 
 		if (bezeichnungIsAlreadyUsed(dto.ID, bezeichnung))
@@ -138,7 +132,7 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 
 	private static void updateKuerzelStatistik(final DTOFoerderschwerpunkt dto, final Object value, final String name) throws ApiOperationException {
 		final String kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_K_Foerderschwerpunkt.col_StatistikKrz.datenlaenge(), name);
-		if (valueIsBlankOrHasNotChanged(dto.StatistikKrz, kuerzel))
+		if (ValidationUtils.isBlankOrUnchanged(dto.StatistikKrz, kuerzel))
 			return;
 
 		if (noMatchingCoreTypeFound(kuerzel))
@@ -179,10 +173,6 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 		return this.conn
 				.queryAll(DTOFoerderschwerpunkt.class).stream()
 				.anyMatch(f -> (f.ID != id) && bezeichnung.equalsIgnoreCase(f.Bezeichnung));
-	}
-
-	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
-		return Objects.equals(oldValue, newValue) || ((newValue != null) && newValue.isBlank());
 	}
 
 	private FoerderschwerpunktEintrag setReferencedFlag(final FoerderschwerpunktEintrag foerderschwerpunkt, final Set<Long> idsOfReferencedEntlassgruende) {

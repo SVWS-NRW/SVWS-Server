@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import de.svws_nrw.core.data.schule.VermerkartEintrag;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOVermerkArt;
 import de.svws_nrw.db.schema.Schema;
@@ -85,7 +86,7 @@ public final class DataVermerkarten extends DataManagerRevised<Long, DTOVermerkA
 	@Override
 	protected void mapAttribute(final DTOVermerkArt dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case "bezeichnung" -> updateBezeichnung(dto, value, name);
 			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, false, name);
 			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
@@ -93,16 +94,9 @@ public final class DataVermerkarten extends DataManagerRevised<Long, DTOVermerkA
 		}
 	}
 
-	private static void validateId(final DTOVermerkArt dto, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (!Objects.equals(dto.ID, id))
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
-	}
-
 	private void updateBezeichnung(final DTOVermerkArt dto, final Object value, final String name) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Vermerkart.col_Bezeichnung.datenlaenge(), name);
-		if (valueIsBlankOrHasNotChanged(dto.Bezeichnung, bezeichnung))
+		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung))
 			return;
 
 		validateBezeichnung(dto.ID, bezeichnung);
@@ -128,10 +122,6 @@ public final class DataVermerkarten extends DataManagerRevised<Long, DTOVermerkA
 		final String query = "SELECT DISTINCT a.VermerkArt_ID FROM DTOSchuelerVermerke a WHERE a.VermerkArt_ID IN :ids";
 		final List<Long> results = this.conn.query(query, Long.class).setParameter("ids", ids).getResultList();
 		return new HashSet<>(results);
-	}
-
-	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
-		return Objects.equals(oldValue, newValue) || ((newValue != null) && newValue.isBlank());
 	}
 
 	private void validateBezeichnung(final Long id, final String bezeichnung) throws ApiOperationException {

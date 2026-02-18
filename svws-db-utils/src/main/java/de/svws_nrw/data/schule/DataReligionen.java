@@ -13,6 +13,7 @@ import de.svws_nrw.asd.types.schule.Religion;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.schema.Schema;
@@ -89,7 +90,7 @@ public final class DataReligionen extends DataManagerRevised<Long, DTOKonfession
 	protected void mapAttribute(final DTOKonfession dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case "kuerzel" -> updateKuerzel(dto, name, value);
 			case "bezeichnung" -> updateBezeichnung(dto, name, value);
 			case "bezeichnungZeugnis" ->
@@ -98,13 +99,6 @@ public final class DataReligionen extends DataManagerRevised<Long, DTOKonfession
 			case "sortierung" -> dto.Sortierung = JSONMapper.convertToInteger(value, true, name);
 			default -> throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
-	}
-
-	private static void validateId(final DTOKonfession dto, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (!Objects.equals(dto.ID, id))
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
 	}
 
 	private void updateKuerzel(final DTOKonfession dto, final String name, final Object value) throws ApiOperationException {
@@ -118,7 +112,7 @@ public final class DataReligionen extends DataManagerRevised<Long, DTOKonfession
 
 	private void updateBezeichnung(final DTOKonfession dto, final String name, final Object value) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge(), name);
-		if (valueIsBlankOrHasNotChanged(dto.Bezeichnung, bezeichnung))
+		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung))
 			return;
 
 		validateBezeichnung(dto.ID, bezeichnung);
@@ -146,10 +140,6 @@ public final class DataReligionen extends DataManagerRevised<Long, DTOKonfession
 	private ReligionEintrag setReferenceFlag(final ReligionEintrag religionEintrag, final Set<Long> idsOfReferencedKonfessionen) {
 		religionEintrag.referenziertInAnderenTabellen = idsOfReferencedKonfessionen.contains(religionEintrag.id);
 		return religionEintrag;
-	}
-
-	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
-		return Objects.equals(oldValue, newValue) || ((newValue != null) && newValue.isBlank());
 	}
 
 	private void validateBezeichnung(final Long id, final String bezeichnung) throws ApiOperationException {

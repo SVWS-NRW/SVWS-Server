@@ -18,6 +18,7 @@ import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
@@ -112,7 +113,7 @@ public final class DataFaecher extends DataManagerRevised<Long, DTOFach, FachDat
 	protected void mapAttribute(final DTOFach dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-			case "id" -> validateId(dto, name, value);
+			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
 			case "kuerzel" -> updateKuerzel(dto, name, value);
 			case "bezeichnung" -> updateBezeichnung(dto, name, value);
 			case "kuerzelStatistik" -> updateKuerzelStatistik(dto, name, value);
@@ -149,17 +150,9 @@ public final class DataFaecher extends DataManagerRevised<Long, DTOFach, FachDat
 				.forEach(f -> markResponseAsFailed(responses.get(f.ID), f.Bezeichnung));
 	}
 
-	private static void validateId(final DTOFach dto, final String name, final Object value) throws ApiOperationException {
-		final Long id = JSONMapper.convertToLong(value, false, name);
-		if (!Objects.equals(dto.ID, id)) {
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.ID));
-		}
-	}
-
 	private void updateKuerzel(final DTOFach dto, final String name, final Object value) throws ApiOperationException {
 		final String kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_EigeneSchule_Faecher.col_FachKrz.datenlaenge(), name);
-		if (valueIsBlankOrHasNotChanged(dto.Kuerzel, kuerzel)) {
+		if (ValidationUtils.isBlankOrUnchanged(dto.Kuerzel, kuerzel)) {
 			return;
 		}
 		final boolean notUnqiue = this.conn.queryAll(DTOFach.class)
@@ -173,7 +166,7 @@ public final class DataFaecher extends DataManagerRevised<Long, DTOFach, FachDat
 
 	private void updateBezeichnung(final DTOFach dto, final String name, final Object value) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_EigeneSchule_Faecher.col_Bezeichnung.datenlaenge(), name);
-		if (valueIsBlankOrHasNotChanged(dto.Bezeichnung, bezeichnung)) {
+		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung)) {
 			return;
 		}
 		final boolean notUnqiue = this.conn.queryAll(DTOFach.class)
@@ -192,10 +185,6 @@ public final class DataFaecher extends DataManagerRevised<Long, DTOFach, FachDat
 			throw new ApiOperationException(Status.BAD_REQUEST, "Ein Fach mit dem Kuerzel %s wurde nicht gefunden.".formatted(kuerzel));
 		}
 		dto.StatistikKuerzel = kuerzel;
-	}
-
-	private static boolean valueIsBlankOrHasNotChanged(final String oldValue, final String newValue) {
-		return Objects.equals(oldValue, newValue) || ((newValue != null) && newValue.isBlank());
 	}
 
 	private static Set<Long> mapToIds(final List<DTOFach> faecher) {
@@ -241,7 +230,7 @@ public final class DataFaecher extends DataManagerRevised<Long, DTOFach, FachDat
 	/**
 	 * Setzt für die Fächer der Fächerliste Default-Werte in das Feld Sortierung.
 	 * Diese orientieren sich an der Sortierreihenfolge der Fächer der Oberstufe.
-	 * Fächer, die nicht der Oberstufe zugeordnet werden können werden mit
+	 * Fächer, die nicht der Oberstufe zugeordnet werden können, werden mit
 	 * der ursprünglichen Sortierung angehangen.
 	 *
 	 * @param conn                   die Datenbankverbindung

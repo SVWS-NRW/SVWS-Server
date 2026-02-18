@@ -1033,6 +1033,26 @@ public final class DBEntityManager implements AutoCloseable {
 		return q.getResultList();
 	}
 
+	/**
+	 * Prüft, ob mindestens ein Tupel des angegebenen Typs für die übergebene JPQL-Abfrage und Parameter existiert.
+	 *
+	 * @param <T>      die DTO-Klasse
+	 * @param query   der JPQL-String der Anfrage
+	 * @param cl       das Klassenobjekt der DTO-Klasse
+	 * @param params  die Parameter der JPQL-Anfrage
+	 *
+	 * @return die Liste mit DTO-Objekten
+	 */
+	public <T> boolean existsBy(final String query, final Class<T> cl, final Object... params) {
+		TypedQuery<T> q = em.createQuery(query, cl);
+		q.setMaxResults(1);
+		for (int i = 0; i < params.length; i++) {
+			q = q.setParameter(i + 1, params[i]);
+		}
+
+		return !q.getResultList()
+				.isEmpty();
+	}
 
 	/**
 	 * Führt eine Native SQL-Abfrage auf die Datenbank aus und gibt das Ergebnis als

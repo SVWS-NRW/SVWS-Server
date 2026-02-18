@@ -61,7 +61,7 @@ public class Tabelle_K_Schwerpunkt extends SchemaTabelle {
 		setImportExport(true);
 		setPKAutoIncrement();
 		setJavaSubPackage("schild.katalog");
-		setJavaClassName("DTOSchwerpunkt");
+		setJavaClassName("DTOSchuelerSchwerpunkt");
 		setJavaComment("Schwerpunkte, die einem Schüler auf Individualdaten I zugeordnet werden können (z.B. RS und GY)");
 	}
 

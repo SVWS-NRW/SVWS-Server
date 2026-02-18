@@ -27,49 +27,49 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Schwerpunkt")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar"})
-public final class DTOSchwerpunkt {
+public final class DTOSchuelerSchwerpunkt {
 
 	/** Die Datenbankabfrage für alle DTOs */
-	public static final String QUERY_ALL = "SELECT e FROM DTOSchwerpunkt e";
+	public static final String QUERY_ALL = "SELECT e FROM DTOSchuelerSchwerpunkt e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOSchwerpunkt e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOSchuelerSchwerpunkt e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchwerpunkt e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchuelerSchwerpunkt e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchwerpunkt e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchuelerSchwerpunkt e WHERE e.ID IS NOT NULL";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchwerpunkt e WHERE e.ID = ?1";
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchuelerSchwerpunkt e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchwerpunkt e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchuelerSchwerpunkt e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
-	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOSchwerpunkt e WHERE e.Bezeichnung = ?1";
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOSchuelerSchwerpunkt e WHERE e.Bezeichnung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
-	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOSchwerpunkt e WHERE e.Bezeichnung IN ?1";
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOSchuelerSchwerpunkt e WHERE e.Bezeichnung IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
-	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOSchwerpunkt e WHERE e.Sortierung = ?1";
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOSchuelerSchwerpunkt e WHERE e.Sortierung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
-	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOSchwerpunkt e WHERE e.Sortierung IN ?1";
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOSchuelerSchwerpunkt e WHERE e.Sortierung IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
-	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOSchwerpunkt e WHERE e.Sichtbar = ?1";
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOSchuelerSchwerpunkt e WHERE e.Sichtbar = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
-	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOSchwerpunkt e WHERE e.Sichtbar IN ?1";
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOSchuelerSchwerpunkt e WHERE e.Sichtbar IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Aenderbar */
-	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM DTOSchwerpunkt e WHERE e.Aenderbar = ?1";
+	public static final String QUERY_BY_AENDERBAR = "SELECT e FROM DTOSchuelerSchwerpunkt e WHERE e.Aenderbar = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aenderbar */
-	public static final String QUERY_LIST_BY_AENDERBAR = "SELECT e FROM DTOSchwerpunkt e WHERE e.Aenderbar IN ?1";
+	public static final String QUERY_LIST_BY_AENDERBAR = "SELECT e FROM DTOSchuelerSchwerpunkt e WHERE e.Aenderbar IN ?1";
 
 	/** ID des Schwerpunktes */
 	@Id
@@ -104,18 +104,18 @@ public final class DTOSchwerpunkt {
 	public Boolean Aenderbar;
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOSchwerpunkt ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOSchuelerSchwerpunkt ohne eine Initialisierung der Attribute.
 	 */
 	@SuppressWarnings("unused")
-	private DTOSchwerpunkt() {
+	private DTOSchuelerSchwerpunkt() {
 	}
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOSchwerpunkt ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOSchuelerSchwerpunkt ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
-	public DTOSchwerpunkt(final long ID, final String Bezeichnung) {
+	public DTOSchuelerSchwerpunkt(final long ID, final String Bezeichnung) {
 		this.ID = ID;
 		if (Bezeichnung == null) {
 			throw new NullPointerException("Bezeichnung must not be null");
@@ -132,7 +132,7 @@ public final class DTOSchwerpunkt {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DTOSchwerpunkt other = (DTOSchwerpunkt) obj;
+		DTOSchuelerSchwerpunkt other = (DTOSchuelerSchwerpunkt) obj;
 		return ID == other.ID;
 	}
 
@@ -152,7 +152,7 @@ public final class DTOSchwerpunkt {
 	 */
 	@Override
 	public String toString() {
-		return "DTOSchwerpunkt(ID=" + this.ID + ", Bezeichnung=" + this.Bezeichnung + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ")";
+		return "DTOSchuelerSchwerpunkt(ID=" + this.ID + ", Bezeichnung=" + this.Bezeichnung + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ")";
 	}
 
 }

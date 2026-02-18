@@ -7,6 +7,7 @@ import de.svws_nrw.core.data.kataloge.KatalogEintragStrassen;
 import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
+import de.svws_nrw.core.data.kataloge.SchuelerSchwerpunkt;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.core.data.schule.Haltestelle;
 import de.svws_nrw.core.data.schule.Kindergarten;
@@ -19,6 +20,7 @@ import de.svws_nrw.data.kataloge.DataHaltestellen;
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.kataloge.DataOrte;
 import de.svws_nrw.data.kataloge.DataOrtsteile;
+import de.svws_nrw.data.kataloge.DataSchuelerSchwerpunkte;
 import de.svws_nrw.data.kataloge.DataStrassen;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataKindergaerten;
@@ -129,7 +131,8 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
 	public Response patchOrt(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch eines Orts", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = OrtKatalogEintrag.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = OrtKatalogEintrag.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataOrte(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
@@ -154,7 +157,8 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addOrt(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten dem zu erstellenden Ort.", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = OrtKatalogEintrag.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = OrtKatalogEintrag.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataOrte(conn).addAsResponse(is), request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
@@ -179,7 +183,8 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteOrte(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Orte",
 			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
 				conn -> new DataOrte(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
@@ -229,7 +234,8 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
 	public Response patchOrtsteil(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch eines Ortsteils", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = OrtsteilKatalogEintrag.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = OrtsteilKatalogEintrag.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataOrtsteile(conn, new DataOrte(conn)).patchAsResponse(id, is),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
@@ -254,7 +260,8 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addOrtsteil(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des zu erstellenden Ortsteils ohne ID, da diese automatisch generiert wird", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = OrtsteilKatalogEintrag.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = OrtsteilKatalogEintrag.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataOrtsteile(conn, new DataOrte(conn)).addAsResponse(is),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
@@ -279,8 +286,10 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteOrtsteile(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Ortsteile",
 			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(conn -> new DataOrtsteile(conn, new DataOrte(conn)).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataOrtsteile(conn, new DataOrte(conn)).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
@@ -329,7 +338,8 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
 	public Response patchEntlassgrund(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch eines Entlassgrundes", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KatalogEntlassgrund.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = KatalogEntlassgrund.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEntlassgruende(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
@@ -354,7 +364,8 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addEntlassgrund(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des zu erstellenden Entlassgrundes ohne ID, da diese automatisch generiert wird", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KatalogEntlassgrund.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = KatalogEntlassgrund.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogEntlassgruende(conn).addAsResponse(is),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
@@ -371,16 +382,19 @@ public class APIKataloge {
 	 */
 	@DELETE
 	@Path("/entlassgruende/delete/multiple")
-	@Operation(summary = "Entfernt mehrere Entlassgründe.", description = "Entfernt mehrere Entlassgründe, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@Operation(summary = "Entfernt mehrere Entlassgründe.",
+			description = "Entfernt mehrere Entlassgründe, insofern die notwendigen Berechtigungen vorhanden sind.")
 	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Entlassgründe zu entfernen.")
 	@ApiResponse(responseCode = "404", description = "Entlassgründe nicht vorhanden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteEntlassgruende(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Entlassgründe",
-					required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(conn -> new DataKatalogEntlassgruende(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataKatalogEntlassgruende(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
@@ -479,7 +493,8 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteMerkmale(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Merkmale",
 			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
 				conn -> new DataMerkmale(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
@@ -581,7 +596,8 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteKindergaerten(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Kindergärten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKindergaerten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
@@ -628,7 +644,8 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addKatalogFoerderschwerpunkt(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten der zu erstellenden Förderschwerpunkte ohne ID, da diese automatisch generiert wird", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = FoerderschwerpunktEintrag.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = FoerderschwerpunktEintrag.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogSchuelerFoerderschwerpunkte(conn).addAsResponse(is),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
@@ -658,7 +675,8 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchKatalogFoerderschwerpunkt(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für den Förderschwerpunkt", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = FoerderschwerpunktEintrag.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = FoerderschwerpunktEintrag.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogSchuelerFoerderschwerpunkte(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
@@ -684,8 +702,10 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "404", description = "Förderschwerpunkte nicht vorhanden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteKatalogFoerderschwerpunkte(@PathParam("schema") final String schema,
-			@RequestBody(description = "Die IDs der zu löschenden Förderschwerpunkte", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+			@RequestBody(description = "Die IDs der zu löschenden Förderschwerpunkte", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogSchuelerFoerderschwerpunkte(conn).deleteMultipleAsSimpleResponseList(
 				JSONMapper.toListOfLong(is)), request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
@@ -804,7 +824,8 @@ public class APIKataloge {
 	 */
 	@DELETE
 	@Path("/haltestellen/delete/multiple")
-	@Operation(summary = "Entfernt mehrere Haltestellen.", description = "Entfernt mehrere Haltestellen, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@Operation(summary = "Entfernt mehrere Haltestellen.",
+			description = "Entfernt mehrere Haltestellen, insofern die notwendigen Berechtigungen vorhanden sind.")
 	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Haltestellen zu entfernen.")
@@ -812,10 +833,142 @@ public class APIKataloge {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteHaltestellen(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Haltestellen",
 			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
 				conn -> new DataHaltestellen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Anlegen eines Schwerpunktes
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten des Orts
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem erstellten {@link SchuelerSchwerpunkt}
+	 */
+	@POST
+	@Path("/schuelerschwerpunkte")
+	@Operation(summary = "Erstellt Schüler-Schwerpunkt.",
+			description = "Erstellt einen neuen Schüler-Schwerpunkt und gibt das erstellte Objekt zurück.")
+	@ApiResponse(responseCode = "201", description = "Der Schwerpunkt wurde erfolgreich erstellt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerSchwerpunkt.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Orte anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff).")
+	public Response addSchuelerSchwerpunkt(@PathParam("schema") final String schema,
+			@RequestBody(description = "Payload des zu erstellenden Schwerpunktes", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = SchuelerSchwerpunkt.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSchwerpunkte(conn).addAsResponse(is), request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Anzeigen von Schulschwerpunkten
+	 * wie z.B. RS (Realschule), BK (Berufskolleg) und SB (Förderberufskolleg)
+	 * @param schema das Datenbankschema
+	 * @param request HTTP Request
+	 * @return die HTTP-Antwort mit dem erstellten {@link SchuelerSchwerpunkt}
+	 */
+	@GET
+	@Path("/schuelerschwerpunkte")
+	@Operation(summary = "Liste verfügbarer Schüler-Schwerpunkte.",
+			description = "Liefert alle im System verfügbaren Schüler-Schwerpunkte.")
+	@ApiResponse(responseCode = "200", description = "Die Lese Operation wurde erfolgreich ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerSchwerpunkt.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer besitzt nicht die benötigten Berechtigungen.")
+	@ApiResponse(responseCode = "404", description = "Resource nicht vorhanden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff).")
+	public Response getSchuelerSchwerpunkte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataSchuelerSchwerpunkte(conn).getAllAsResponse(),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Anzeigen von Schulschwerpunkten
+	 * wie z.B. RS (Realschule), BK (Berufskolleg) und SB (Förderberufskolleg)
+	 * @param schema das Datenbankschema
+	 * @param id die Schwerpunkt id.
+	 * @param request HTTP Request
+	 * @return die HTTP-Antwort mit dem erstellten {@link SchuelerSchwerpunkt}
+	 */
+	@GET
+	@Path("/schuelerschwerpunkte/{id : \\d+}")
+	@Operation(summary = "Liefert Schwerpunkt.",
+			description = "Liefert einen Schwerpunkt anhand der id.")
+	@ApiResponse(responseCode = "200", description = "Die Lese Operation wurde erfolgreich ausgeführt.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerSchwerpunkt.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer besitzt nicht die benötigten Berechtigungen.")
+	@ApiResponse(responseCode = "404", description = "Resource nicht vorhanden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff).")
+	public Response getSchuelerSchwerpunkt(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataSchuelerSchwerpunkte(conn).getByIdAsResponse(id),
+				request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Updaten eines Schwerpunktes
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param id der Identifier des Objektes
+	 * @param is           der Input-Stream mit den Daten des Orts
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem erstellten {@link SchuelerSchwerpunkt}
+	 */
+	@PATCH
+	@Path("/schuelerschwerpunkte/{id : \\d+}")
+	@Operation(summary = "Patched einen Schüler-Schwerpunkt.",
+			description = "Patched einen vorhandenen Schüler-Schwerpunkt anhand der übergebenen ID.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer besitzt nicht die benötigten Berechtigungen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff).")
+	public Response patchSchuelerSchwerpunkt(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Payload des zu erstellenden Schwerpunktes", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = SchuelerSchwerpunkt.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSchwerpunkte(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Löschen von Schulschwerpunkten
+	 * wie z.B. RS (Realschule), BK (Berufskolleg) und SB (Förderberufskolleg)
+	 * @param schema das Datenbankschema
+	 * @param is die Schwerpunkt ids as Inputstream.
+	 * @param request HTTP Request
+	 * @return die HTTP-Antwort mit dem erstellten {@link SchuelerSchwerpunkt}
+	 */
+	@DELETE
+	@Path("/schuelerschwerpunkte")
+	@Operation(summary = "Löscht Schüler-Schwerpunkte.",
+			description = "Löscht Schüler-Schwerpunkte anhand der ids.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer besitzt nicht die benötigten Berechtigungen.")
+	@ApiResponse(responseCode = "404", description = "Resource nicht vorhanden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff).")
+	public Response deleteSchuelerSchwerpunkte(@PathParam("schema") final String schema,
+			@RequestBody(
+					description = "Die IDs der zu löschenden Schüler-Schwerpunkte",
+					required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataSchuelerSchwerpunkte(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 }
