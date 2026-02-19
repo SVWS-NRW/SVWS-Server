@@ -13,9 +13,9 @@
 			<th>⌀</th>
 		</template>
 		<template #default="{ row: fach, index }">
-			<td :style="{ 'background-color': getFachfarbe(fach) }">{{ fach.kuerzelAnzeige }}</td>
-			<td class="text-left" :style="{ 'background-color': getFachfarbe(fach) }">{{ fach.bezeichnung }}</td>
-			<td class="ui-divider" :style="{ 'background-color': getFachfarbe(fach) }">{{ getKursart(fach) }}</td>
+			<td class="text-uistatic" :style="{ 'background-color': getFachfarbe(fach) }">{{ fach.kuerzelAnzeige }}</td>
+			<td class="text-uistatic text-left" :style="{ 'background-color': getFachfarbe(fach) }">{{ fach.bezeichnung }}</td>
+			<td class="text-uistatic ui-divider" :style="{ 'background-color': getFachfarbe(fach) }">{{ getKursart(fach) }}</td>
 			<template v-for="hj in GostHalbjahr.getQualifikationsphase()" :key="hj.id">
 				<td :ref="(updateAbiturpruefungsdaten === null) || !hatBelegung(fach, hj) ? undefined : inputMarkierungToggle(fach, index, hj)" :class="{
 					'ui-table-grid-button': hatBelegung(fach, hj) && (updateAbiturpruefungsdaten !== null),

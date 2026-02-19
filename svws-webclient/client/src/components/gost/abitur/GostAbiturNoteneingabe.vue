@@ -46,10 +46,10 @@
 			<template #default="{ row }">
 				<template v-if="row.belegung.abiturFach !== null">
 					<td>{{ row.belegung.abiturFach }}.</td>
-					<td :style="{ 'background-color': getFachfarbe(row) }">
+					<td class="text-uistatic" :style="{ 'background-color': getFachfarbe(row) }">
 						{{ row.manager.faecher().get(row.belegung.fachID)?.kuerzelAnzeige ?? "???" }}
 					</td>
-					<td class="text-left ui-divider" :style="{ 'background-color': getFachfarbe(row) }">
+					<td class="text-uistatic text-left ui-divider" :style="{ 'background-color': getFachfarbe(row) }">
 						{{ row.manager.faecher().get(row.belegung.fachID)?.bezeichnung ?? "???" }}
 					</td>
 					<td class="text-left ui-divider">

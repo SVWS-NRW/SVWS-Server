@@ -37,10 +37,10 @@
 		<template #default="{ row: belegung, index: rowIndex }">
 			<template v-if="belegung.abiturFach !== null">
 				<td>{{ belegung.abiturFach }}.</td>
-				<td :style="{ 'background-color': getFachfarbe(belegung) }">
+				<td class="text-uistatic" :style="{ 'background-color': getFachfarbe(belegung) }">
 					{{ manager().faecher().get(belegung.fachID)?.kuerzelAnzeige ?? "???" }}
 				</td>
-				<td class="text-left ui-divider" :style="{ 'background-color': getFachfarbe(belegung) }">
+				<td class="text-uistatic text-left ui-divider" :style="{ 'background-color': getFachfarbe(belegung) }">
 					{{ manager().faecher().get(belegung.fachID)?.bezeichnung ?? "???" }}
 				</td>
 				<template v-for="hj in GostHalbjahr.getQualifikationsphase()" :key="hj.id">
