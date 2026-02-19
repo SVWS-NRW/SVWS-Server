@@ -98,7 +98,7 @@ class DataSchuelerNeuTest {
 					.add(argThat(map ->
 							map.get("nachname").equals("Test")
 									&& map.get("vorname").equals("Max")
-									&& map.get("schuljahresabschnitt").equals(8L)
+									&& map.get("idSchuljahresabschnitt").equals(8L)
 					));
 			verify(dataSchuelerLernabschnittsdaten)
 					.add(argThat(map ->
@@ -143,7 +143,7 @@ class DataSchuelerNeuTest {
 					.add(argThat(map ->
 							map.containsKey("nachname")
 									&& !map.containsKey("vorname")
-									&& map.containsKey("schuljahresabschnitt")
+									&& map.containsKey("idSchuljahresabschnitt")
 					));
 		}
 	}

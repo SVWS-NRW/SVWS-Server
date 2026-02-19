@@ -1,4 +1,4 @@
-import type { RouteParams } from "vue-router";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
 
 import type { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
 import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
@@ -66,24 +66,18 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 			routeSchuelerNeu,
 		];
 		super.defaultChild = routeSchuelerIndividualdaten;
-		super.updateIfTarget = this.doUpdateIfTarget;
 		super.menugroup = AppMenuGroup.MAIN;
 		super.icon = "i-ri-group-line";
 	}
 
-	protected doUpdateIfTarget = async (to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined) => {
-		await routeApp.cache.refreshKataloge(Katalog.BESCHAEFTIGUNGSARTEN, Katalog.EINSCHULUNGSARTEN, Katalog.ERZIEHERARTEN, Katalog.FAHRSCHUELERARTEN,
-			Katalog.FOERDERSCHWERPUNKTE, Katalog.HALTESTELLEN, Katalog.KINDERGAERTEN, Katalog.KINDERGAERTEN, Katalog.ORTE, Katalog.ORTSTEILE,
-			Katalog.RELIGIONEN, Katalog.SCHULEN, Katalog.TELEFONARTEN, Katalog.VERMERKARTEN);
-		if (!this.data.manager.hasDaten()) {
-			return;
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
+		if (isEntering) {
+			await routeApp.cache.refreshKataloge(Katalog.BESCHAEFTIGUNGSARTEN, Katalog.EINSCHULUNGSARTEN, Katalog.ERZIEHERARTEN, Katalog.FAHRSCHUELERARTEN,
+				Katalog.FOERDERSCHWERPUNKTE, Katalog.HALTESTELLEN, Katalog.KINDERGAERTEN, Katalog.KINDERGAERTEN, Katalog.JAHRGAENGE, Katalog.ORTE, Katalog.ORTSTEILE,
+				Katalog.RELIGIONEN, Katalog.SCHULEN, Katalog.TELEFONARTEN, Katalog.VERMERKARTEN);
 		}
-		if ((from !== undefined) && (/(\.|^)stundenplan/).test(from.name)) {
-			return this.getRouteView(routeSchuelerStundenplan);
-		}
-		return this.getRouteSelectedChild();
-	};
-
+		return super.update(to, to_params, from, from_params, isEntering, redirected);
+	}
 }
 
 export const routeSchueler = new RouteSchueler();

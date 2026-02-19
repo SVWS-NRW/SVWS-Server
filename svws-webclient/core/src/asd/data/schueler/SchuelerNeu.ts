@@ -66,7 +66,7 @@ export class SchuelerNeu extends JavaObject {
 	/**
 	 * Die ID des Jahrgangs des Schülers.
 	 */
-	public idJjahrgang: number | null = null;
+	public idJahrgang: number | null = null;
 
 	/**
 	 * Die ID der Klasse des Schülers.
@@ -114,7 +114,7 @@ export class SchuelerNeu extends JavaObject {
 		if (obj.idSchuljahresabschnitt === undefined)
 			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
-		result.idJjahrgang = (obj.idJjahrgang === undefined) ? null : obj.idJjahrgang === null ? null : obj.idJjahrgang;
+		result.idJahrgang = (obj.idJahrgang === undefined) ? null : obj.idJahrgang === null ? null : obj.idJahrgang;
 		result.idKlasse = (obj.idKlasse === undefined) ? null : obj.idKlasse === null ? null : obj.idKlasse;
 		result.idGrundschuleEinschulungsart = (obj.idGrundschuleEinschulungsart === undefined) ? null : obj.idGrundschuleEinschulungsart === null ? null : obj.idGrundschuleEinschulungsart;
 		return result;
@@ -134,7 +134,7 @@ export class SchuelerNeu extends JavaObject {
 		result += '"dauerBildungsgang" : ' + ((obj.dauerBildungsgang === null) ? 'null' : obj.dauerBildungsgang.toString()) + ',';
 		result += '"idReligion" : ' + ((obj.idReligion === null) ? 'null' : obj.idReligion.toString()) + ',';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
-		result += '"idJjahrgang" : ' + ((obj.idJjahrgang === null) ? 'null' : obj.idJjahrgang.toString()) + ',';
+		result += '"idJahrgang" : ' + ((obj.idJahrgang === null) ? 'null' : obj.idJahrgang.toString()) + ',';
 		result += '"idKlasse" : ' + ((obj.idKlasse === null) ? 'null' : obj.idKlasse.toString()) + ',';
 		result += '"idGrundschuleEinschulungsart" : ' + ((obj.idGrundschuleEinschulungsart === null) ? 'null' : obj.idGrundschuleEinschulungsart.toString()) + ',';
 		result = result.slice(0, -1);
@@ -180,8 +180,8 @@ export class SchuelerNeu extends JavaObject {
 		if (obj.idSchuljahresabschnitt !== undefined) {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		}
-		if (obj.idJjahrgang !== undefined) {
-			result += '"idJjahrgang" : ' + ((obj.idJjahrgang === null) ? 'null' : obj.idJjahrgang.toString()) + ',';
+		if (obj.idJahrgang !== undefined) {
+			result += '"idJahrgang" : ' + ((obj.idJahrgang === null) ? 'null' : obj.idJahrgang.toString()) + ',';
 		}
 		if (obj.idKlasse !== undefined) {
 			result += '"idKlasse" : ' + ((obj.idKlasse === null) ? 'null' : obj.idKlasse.toString()) + ',';

@@ -66,7 +66,7 @@ public class SchuelerNeu {
 
 	/** Die ID des Jahrgangs des Schülers. */
 	@Schema(description = "Die ID des Jahrgangs des Schülers.", example = "4")
-	public Long idJjahrgang;
+	public Long idJahrgang;
 
 	/** Die ID der Klasse des Schülers. */
 	@Schema(description = "Die ID der Klasse des Schülers.", example = "10")

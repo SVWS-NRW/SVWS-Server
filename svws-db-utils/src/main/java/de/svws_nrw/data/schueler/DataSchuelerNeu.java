@@ -16,6 +16,7 @@ import jakarta.ws.rs.core.Response;
 /** DataManager zum Erstellen eines Schülers. */
 public final class DataSchuelerNeu {
 
+	private static final String ID_SCHULJAHRESABSCHNITT = "idSchuljahresabschnitt";
 	private final DataSchuelerStammdaten dataSchuelerStammdaten;
 	private final DataSchuelerLernabschnittsdaten dataSchuelerLernabschnittsdaten;
 	private final DataSchuelerSchulbesuchsdaten dataSchuelerSchulbesuchsdaten;
@@ -87,16 +88,13 @@ public final class DataSchuelerNeu {
 		putIfPresent(schuelerAttributes, "beginnBildungsgang", initAttributes.get("beginnBildungsgang"));
 		putIfPresent(schuelerAttributes, "dauerBildungsgang", initAttributes.get("dauerBildungsgang"));
 		putIfPresent(schuelerAttributes, "religionID", initAttributes.get("idReligion"));
-		final Object schuljahresabschnitt = initAttributes.get("idSchuljahresabschnitt");
-		if (schuljahresabschnitt != null) {
-			schuelerAttributes.put("schuljahresabschnitt", schuljahresabschnitt);
-		}
+		putIfPresent(schuelerAttributes, ID_SCHULJAHRESABSCHNITT, initAttributes.get(ID_SCHULJAHRESABSCHNITT));
 		return this.dataSchuelerStammdaten.add(schuelerAttributes);
 	}
 
 	private void addLernabschnitt(final Map<String, Object> initAttributes, final long idSchueler) {
 		final Map<String, Object> lernabschnittAttributes = new HashMap<>();
-		putIfPresent(lernabschnittAttributes, "schuljahresabschnitt", initAttributes.get("idSchuljahresabschnitt"));
+		putIfPresent(lernabschnittAttributes, "schuljahresabschnitt", initAttributes.get(ID_SCHULJAHRESABSCHNITT));
 		putIfPresent(lernabschnittAttributes, "jahrgangID", initAttributes.get("idJahrgang"));
 		putIfPresent(lernabschnittAttributes, "klassenID", initAttributes.get("idKlasse"));
 		lernabschnittAttributes.put("schuelerID", idSchueler);

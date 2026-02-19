@@ -1,9 +1,6 @@
-import type { RouteParams } from "vue-router";
-
 import type { LehrerListeManager } from "@ui";
 import { AppMenuGroup } from "@ui";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import type { RouteNode } from "~/router/RouteNode";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
@@ -21,6 +18,8 @@ import { routeLehrerLernplattformen } from "~/router/apps/lehrer/lernplattformen
 import { routeLehrerAllgemeinesGruppenprozesse } from "~/router/apps/lehrer/allgemeines/RouteLehrerAllgemeinesGruppenprozesse";
 import { routeLehrerIndividualdatenGruppenprozesse } from "~/router/apps/lehrer/individualdaten/RouteLehrerIndividualdatenGruppenprozesse";
 import type { LehrerAppProps } from "~/components/lehrer/LehrerAppProps";
+import type { RouteNode } from "~/router/RouteNode";
+import type { RouteLocationRaw, RouteParams } from "vue-router";
 import { Katalog } from "~/cache/Katalog";
 
 const LehrerAuswahl = () => import("~/components/lehrer/LehrerAuswahl.vue");
@@ -47,7 +46,6 @@ export class RouteLehrer extends RouteAuswahlNode<LehrerListeManager, RouteDataL
 		super.defaultChild = routeLehrerIndividualdaten;
 		super.menugroup = AppMenuGroup.MAIN;
 		super.icon = "i-ri-briefcase-line";
-		super.updateIfTarget = this.doUpdateIfTarget;
 		super.getAuswahlListProps = (props) => (<LehrerAuswahlProps>{
 			...props,
 			setFilterNurSichtbar: this.data.setFilterNurSichtbar,
@@ -63,17 +61,12 @@ export class RouteLehrer extends RouteAuswahlNode<LehrerListeManager, RouteDataL
 		]);
 	}
 
-	protected doUpdateIfTarget = async (to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined) => {
-		await routeApp.cache.refreshKataloge(Katalog.ORTE, Katalog.ORTSTEILE);
-		if (!this.data.manager.hasDaten()) {
-			return;
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
+		if (isEntering) {
+			await routeApp.cache.refreshKataloge(Katalog.ORTE, Katalog.ORTSTEILE);
 		}
-		if ((from !== undefined) && (/(\.|^)stundenplan/).test(from.name)) {
-			return this.getRouteView(routeLehrerStundenplan);
-		}
-		return this.getRouteSelectedChild();
-	};
-
+		return super.update(to, to_params, from, from_params, isEntering, redirected);
+	}
 }
 
 export const routeLehrer = new RouteLehrer();

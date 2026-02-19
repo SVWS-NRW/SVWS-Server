@@ -123,7 +123,7 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		if (found !== null) {
 			const daten = await api.server.getSchuelerLernabschnittsdatenByID(api.schema, found.id);
 			schuelerDaten.idSchuljahresabschnitt = daten.schuljahresabschnitt;
-			schuelerDaten.idJjahrgang = daten.jahrgangID;
+			schuelerDaten.idJahrgang = daten.jahrgangID;
 			schuelerDaten.idKlasse = daten.klassenID;
 		}
 		return schuelerDaten;
