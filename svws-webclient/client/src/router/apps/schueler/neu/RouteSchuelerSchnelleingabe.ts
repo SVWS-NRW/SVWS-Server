@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, type DeveloperNotificationException, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
@@ -10,7 +10,6 @@ import { api } from "~/router/Api";
 import type { SchuelerSchnelleingabeProps } from "~/components/schueler/neuanlage/SchuelerSchnelleingabeProps.js";
 import { ViewType } from "@ui";
 import { RouteDataSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteDataSchuelerSchnelleingabe";
-import { routeError } from "~/router/error/RouteError";
 
 const SchuelerSchnelleingabe = () => import("~/components/schueler/neuanlage/SchuelerSchnelleingabe.vue");
 
@@ -26,36 +25,20 @@ export class RouteSchuelerSchnelleingabe extends RouteNode<RouteDataSchuelerSchn
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
-		try {
-			const { id } = RouteNode.getIntParams(to_params, ["id"]);
-			if (isEntering) {
-				await this.data.ladeKataloge();
-			}
-			if (id !== undefined) {
-				await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
-			}
-		} catch (e) {
-			return await routeError.getErrorRoute(e as DeveloperNotificationException);
-		}
+		await this.data.ladeDaten();
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerSchnelleingabeProps {
 		return {
-			schuelerListeManager: () => routeSchueler.data.manager,
-			schuelerSchulbesuchsManager: () => this.data.schuelerSchulbesuchManager,
-			schuelerLernabschnittManager: () => this.data.schuelerLernabschnittManager,
+			manager: () => this.data.manager,
+			gotoDefaultView: routeSchueler.data.gotoDefaultView,
+			gotoSchuelerNeuView: routeSchueler.data.gotoHinzufuegenView,
+			aktAbschnitt: routeApp.data.aktAbschnitt.value,
+			serverMode: api.mode,
+			schulform: api.schulform,
+			benutzerKompetenzen: api.benutzerKompetenzen,
+
 			patch: routeSchueler.data.patch,
-			schulenById: this.data.mapSchulen,
-			orteById: routeApp.cache.kataloge.orteById,
-			ortsteileById: routeApp.cache.kataloge.ortsteileById,
-			religionenById: routeApp.cache.kataloge.religionenById,
-			fahrschuelerartenById: routeApp.cache.kataloge.fahrschuelerartenById,
-			haltestellenById: routeApp.cache.kataloge.haltestellenById,
-			kindergaertenById: routeApp.cache.kataloge.kindergaertenById,
-			einschulungsartenById: routeApp.cache.kataloge.einschulungsartenById,
-			erzieherartenById: routeApp.cache.kataloge.erzieherartenById,
-			telefonartenById: routeApp.cache.kataloge.telefonartenById,
-			vermerkartenById: routeApp.cache.kataloge.vermerkartenById,
 			getListSchuelerErziehereintraege: () => routeSchueler.data.getListSchuelerErziehereintraege,
 			addSchuelerErziehereintrag: routeSchueler.data.addSchuelerErziehereintrag,
 			patchSchuelerErziehereintrag: routeSchueler.data.patchSchuelerErziehereintrag,
@@ -72,12 +55,6 @@ export class RouteSchuelerSchnelleingabe extends RouteNode<RouteDataSchuelerSchn
 			patchSchuelerSchulbesuchsdaten: routeSchueler.data.patchSchuelerSchulbesuchdaten,
 			patchSchuelerLernabschnittsdaten: routeSchueler.data.patchSchuelerLernabschnitt,
 			getSchuelerKlassenFuerAbschnitt: routeSchueler.data.getSchuelerKlassenFuerAbschnitt,
-			gotoDefaultView: routeSchueler.data.gotoDefaultView,
-			gotoSchuelerNeuView: routeSchueler.data.gotoHinzufuegenView,
-			aktAbschnitt: routeApp.data.aktAbschnitt.value,
-			serverMode: api.mode,
-			schulform: api.schulform,
-			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 

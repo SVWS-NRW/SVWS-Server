@@ -13421,6 +13421,37 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getSchuelerLernabschnittsdatenByIdSchuelerAndIdJahresabschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/lernabschnittsdaten/{idSchueler : \d+}/{idSchuljahresabschnitt : \d+}
+	 *
+	 * Liefert die zugehörigen Lernabschnittsdaten, insofern der SVWS-Benutzer die notwendige Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lernabschnittsdaten des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchuelerLernabschnittsdaten>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.
+	 *   Code 404: Kein Eintrag mit Schüler-Lernabschnittsdaten mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchueler - der Pfad-Parameter idSchueler
+	 * @param {number} idSchuljahresabschnitt - der Pfad-Parameter idSchuljahresabschnitt
+	 *
+	 * @returns Die Lernabschnittsdaten des Schülers
+	 */
+	public async getSchuelerLernabschnittsdatenByIdSchuelerAndIdJahresabschnitt(schema : string, idSchueler : number, idSchuljahresabschnitt : number) : Promise<List<SchuelerLernabschnittsdaten>> {
+		const path = "/db/{schema}/schueler/lernabschnittsdaten/{idSchueler : \\d+}/{idSchuljahresabschnitt : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString())
+			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerLernabschnittsdaten>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerLernabschnittsdaten.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode addFoerderempfehlung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/lernabschnittsdaten/foerderempfehlung/create
 	 *
 	 * Erstellt eine neue Förderempfehlung für einen Schüler-Lernabschnitts und gibt das erstellte Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen neuer Förderempfehlungen besitzt.

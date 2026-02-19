@@ -74,6 +74,30 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 		dto.WechselNr = 0;
 	}
 
+	/**
+	 * Liefert die Lernabschnittsdaten für einen bestimmten Schüler in einem bestimmten Schuljahresabschnitt
+	 *
+	 * @param idSchueler				idSchueler
+	 * @param idSchulejahresabschnitt	idSchulejahresabschnitt
+	 *
+	 * @return Lernabschnittsdaten für einen bestimmten Schüler in einem bestimmten Schuljahresabschnitt als Response
+	 */
+	public Response getAbschnittsdatenByIdSchuelerAndIdJahresabschnitt(final long idSchueler, final long idSchulejahresabschnitt) {
+		final List<SchuelerLernabschnittsdaten> payload = this.conn
+				.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHUELER_ID, DTOSchuelerLernabschnittsdaten.class, idSchueler)
+				.stream()
+				.filter(l -> l.Schuljahresabschnitts_ID == idSchulejahresabschnitt)
+				.map(this::map)
+				.sorted(Comparator.comparing(l -> l.id))
+				.toList();
+
+		return Response
+				.status(Status.OK)
+				.type(MediaType.APPLICATION_JSON)
+				.entity(payload)
+				.build();
+	}
+
 
 	@Override
 	public SchuelerLernabschnittsdaten map(final DTOSchuelerLernabschnittsdaten dto) throws ApiOperationException {

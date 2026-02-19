@@ -1,23 +1,18 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-import type { SchuelerListeEintrag, SchuelerStammdaten, SchulEintrag, SchulformKatalogEintrag, SchuelerLernabschnittListeEintrag, Merkmal, KatalogEntlassgrund,
-	List } from "@core";
-import { ArrayList, DeveloperNotificationException, Schulform, SchuelerNeu } from "@core";
+import type { EinschulungsartKatalogEintrag, Erzieherart, FachDaten, Fahrschuelerart, Haltestelle, JahrgangsDaten, Kindergarten, List,
+	OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchuelerLernabschnittsdaten, SchulEintrag, Telefonart, VermerkartEintrag } from "@core";
+import { DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { SchuelerSchulbesuchManager } from "~/components/schueler/schulbesuch/SchuelerSchulbesuchManager";
-import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/RouteSchuelerSchulbesuch";
-import { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
+import { routeApp } from "~/router/apps/RouteApp";
+import { SchuelerSchnelleingabeManager } from "../../../../../../ui/src/ui/manager/schueler/SchuelerSchnelleingabeManager";
 
 interface RouteStateDataSchuelerSchnelleingabe extends RouteStateInterface {
-	schulenById: Map<string, SchulEintrag>;
-	schuelerSchulbesuchManager: SchuelerSchulbesuchManager | undefined;
-	schuelerLernabschnittsManager: SchuelerLernabschnittManager | undefined;
+	manager: SchuelerSchnelleingabeManager | undefined;
 }
 
 const defaultState = <RouteStateDataSchuelerSchnelleingabe> {
-	schulenById: new Map<string, SchulEintrag>(),
-	schuelerSchulbesuchManager: undefined,
-	schuelerLernabschnittsManager: undefined,
+	manager: undefined,
 };
 
 export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSchuelerSchnelleingabe> {
@@ -26,124 +21,66 @@ export class RouteDataSchuelerSchnelleingabe extends RouteData<RouteStateDataSch
 		super(defaultState);
 	}
 
-	public async ladeKataloge(): Promise<void> {
-		const schulen = await api.server.getSchulen(api.schema);
-		const schulenById = new Map<string, SchulEintrag>();
-		for (const schule of schulen) {
-			if (schule.schulnummerStatistik === null) {
-				continue;
-			}
-			const sfEintrag: SchulformKatalogEintrag | null = schule.idSchulform === null ? null : Schulform.data().getEintragByID(schule.idSchulform);
-			const sf: Schulform | null = sfEintrag === null ? null : Schulform.data().getWertBySchluessel(sfEintrag.schluessel);
-			if (sf === api.schulform) {
-				schulenById.set(schule.schulnummerStatistik, schule);
-			}
+	public async ladeDaten() {
+		try {
+			const manager = await this.createManager();
+			this.setPatchedState({ manager });
+		} catch (error) {
+			throw new DeveloperNotificationException("Der SchuelerSchnelleingabeManager konnte nicht initialisiert werden.");
 		}
-		this.setPatchedState({ schulenById });
-
 	}
 
-	private async createSchuelerSchulbesuchManager(auswahl: SchuelerListeEintrag): Promise<SchuelerSchulbesuchManager> {
-		const [schuelerSchulbesuchsdaten, kindergaerten, jahrgaenge] =
+	private async createManager() {
+		const idSchueler = routeSchueler.data.manager.auswahlID() ?? -1;
+		const idSchuljahresabschnitt = routeSchueler.data.idSchuljahresabschnitt;
+		const [stammdaten, schulbesuchsdaten, lernabschnitte, schuelerListe] =
 			await Promise.all([
-				api.server.getSchuelerSchulbesuch(api.schema, auswahl.id),
-				api.server.getKindergaerten(api.schema),
-				api.server.getJahrgangsdaten(api.schema),
+				api.server.getSchuelerStammdaten(api.schema, idSchueler),
+				api.server.getSchuelerSchulbesuch(api.schema, idSchueler),
+				api.server.getSchuelerLernabschnittsdatenByIdSchuelerAndIdJahresabschnitt(api.schema, idSchueler, idSchuljahresabschnitt),
+				api.server.getSchuelerAuswahllisteFuerAbschnitt(api.schema, idSchuljahresabschnitt),
 			]);
-		const schulen = new ArrayList<SchulEintrag>();
-		const merkmale = new ArrayList<Merkmal>();
-		const entlassgruende = new ArrayList<KatalogEntlassgrund>();
-		return new SchuelerSchulbesuchManager(schuelerSchulbesuchsdaten, auswahl, api.schuleStammdaten.abschnitte, schulen, merkmale, entlassgruende,
-			kindergaerten, jahrgaenge, routeSchuelerSchulbesuch.data.patch);
+		const lernabschnitt = this.selectLernabschnitt(lernabschnitte);
+		if (lernabschnitt === null) {
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Schüler-Lernabschnittsdaten nicht initialisiert");
+		}
+		const schuljahresabschnitte = api.schuleStammdaten.abschnitte;
+		const einschulungsartenById: Map<number, EinschulungsartKatalogEintrag> = routeApp.cache.kataloge.einschulungsartenById;
+		const erzieherartenById: Map<number, Erzieherart> = routeApp.cache.kataloge.erzieherartenById;
+		const faecherById: Map<number, FachDaten> = routeApp.cache.kataloge.faecherById;
+		const fahrschuelerartenById: Map<number, Fahrschuelerart> = routeApp.cache.kataloge.fahrschuelerartenById;
+		const haltestellenById: Map<number, Haltestelle> = routeApp.cache.kataloge.haltestellenById;
+		const jahrgaengeById: Map<number, JahrgangsDaten> = routeApp.cache.kataloge.jahrgaengeById;
+		const kindergaertenById: Map<number, Kindergarten> = routeApp.cache.kataloge.kindergaertenById;
+		const orteById: Map<number, OrtKatalogEintrag> = routeApp.cache.kataloge.orteById;
+		const ortsteileById: Map<number, OrtsteilKatalogEintrag> = routeApp.cache.kataloge.ortsteileById;
+		const religionenById: Map<number, ReligionEintrag> = routeApp.cache.kataloge.religionenById;
+		const schulenById: Map<number, SchulEintrag> = routeApp.cache.kataloge.schulenById;
+		const telefonartenById: Map<number, Telefonart> = routeApp.cache.kataloge.telefonartenById;
+		const vermerkartenById: Map<number, VermerkartEintrag> = routeApp.cache.kataloge.vermerkartenById;
+
+		return new SchuelerSchnelleingabeManager(stammdaten, schulbesuchsdaten, lernabschnitt, schuelerListe, schuljahresabschnitte, einschulungsartenById, erzieherartenById,
+			faecherById, fahrschuelerartenById, haltestellenById, jahrgaengeById, kindergaertenById, orteById, ortsteileById, religionenById, schulenById,
+			telefonartenById, vermerkartenById);
 	}
 
-	private selectBevorzugtenAbschnitt(listAbschnitte: List<SchuelerLernabschnittListeEintrag>): SchuelerLernabschnittListeEintrag | null {
-		for (const a of listAbschnitte) {
-			if ((a.schuljahresabschnitt === routeSchueler.data.idSchuljahresabschnitt) && (a.wechselNr === 0)) {
-				return a;
+	private selectLernabschnitt(abschnitte: List<SchuelerLernabschnittsdaten>) {
+		for (const l of abschnitte) {
+			if (l.wechselNr === 0) {
+				return l;
 			}
 		}
-		if (!listAbschnitte.isEmpty()) {
-			return listAbschnitte.get(listAbschnitte.size() - 1);
+		if (!abschnitte.isEmpty()) {
+			return abschnitte.get(abschnitte.size() - 1);
 		}
 		return null;
 	}
 
-	public async ladeDaten(auswahl: SchuelerListeEintrag | null): Promise<SchuelerStammdaten | null> {
-		if (auswahl === null) {
-			return null;
+	get manager(): SchuelerSchnelleingabeManager {
+		if (this._state.value.manager === undefined) {
+			throw new DeveloperNotificationException("Unerwarteter Fehler: SchuelerSchnelleingabeManager nicht initialisiert");
 		}
-		const [schuelerStammdaten, schuelerSchulbesuchManager, listAbschnitte] =
-			await Promise.all([
-				api.server.getSchuelerStammdaten(api.schema, auswahl.id),
-				this.createSchuelerSchulbesuchManager(auswahl),
-				api.server.getSchuelerLernabschnittsliste(api.schema, auswahl.id),
-			]);
-		// wähle bevorzugt einen Eintrag für den aktuellen Schuljahresabschnitt, WechselNr = 0, sonst letzten Eintrag
-		let schuelerLernabschnittsManager: SchuelerLernabschnittManager | undefined = undefined;
-		const found = this.selectBevorzugtenAbschnitt(listAbschnitte);
-		if (found !== null) {
-			const [daten, listFaecher, listJahrgaenge] = await Promise.all([
-				api.server.getSchuelerLernabschnittsdatenByID(api.schema, found.id),
-				api.server.getFaecher(api.schema),
-				api.server.getJahrgaenge(api.schema),
-			]);
-			const schuljahresabschnitt = api.mapAbschnitte.value.get(daten.schuljahresabschnitt);
-			if (schuljahresabschnitt !== undefined) {
-				schuelerLernabschnittsManager = new SchuelerLernabschnittManager(
-					api.schulform, auswahl, daten, schuljahresabschnitt,
-					listFaecher, new ArrayList(), listJahrgaenge,
-					new ArrayList(), new ArrayList(), new ArrayList()
-				);
-			}
-		}
-
-		this.setPatchedState({ schuelerSchulbesuchManager, schuelerLernabschnittsManager });
-		return schuelerStammdaten;
+		return this._state.value.manager;
 	}
 
-	public async ladeInitialeDatenFuerWeiterenSchueler(auswahl: SchuelerListeEintrag | null): Promise<any> {
-		if (auswahl === null) {
-			return null;
-		}
-		const schuelerDaten: SchuelerNeu = new SchuelerNeu();
-		const [schuelerStammdaten, listAbschnitte] =
-			await Promise.all([
-				api.server.getSchuelerStammdaten(api.schema, auswahl.id),
-				api.server.getSchuelerLernabschnittsliste(api.schema, auswahl.id),
-			]);
-
-		schuelerDaten.anmeldedatum = schuelerStammdaten.anmeldedatum;
-		schuelerDaten.aufnahmedatum = schuelerStammdaten.aufnahmedatum;
-		schuelerDaten.beginnBildungsgang = schuelerStammdaten.beginnBildungsgang;
-		schuelerDaten.dauerBildungsgang = schuelerStammdaten.dauerBildungsgang;
-
-		// wähle bevorzugt einen Eintrag für den aktuellen Schuljahresabschnitt, WechselNr = 0, sonst letzten Eintrag
-		const found = this.selectBevorzugtenAbschnitt(listAbschnitte);
-		if (found !== null) {
-			const daten = await api.server.getSchuelerLernabschnittsdatenByID(api.schema, found.id);
-			schuelerDaten.idSchuljahresabschnitt = daten.schuljahresabschnitt;
-			schuelerDaten.idJahrgang = daten.jahrgangID;
-			schuelerDaten.idKlasse = daten.klassenID;
-		}
-		return schuelerDaten;
-	}
-
-	get mapSchulen(): Map<string, SchulEintrag> {
-		return this._state.value.schulenById;
-	}
-
-	get schuelerLernabschnittManager(): SchuelerLernabschnittManager {
-		if (this._state.value.schuelerLernabschnittsManager === undefined) {
-			throw new DeveloperNotificationException("Unerwarteter Fehler: Schüler-Lernabschnittsdaten nicht initialisiert");
-		}
-		return this._state.value.schuelerLernabschnittsManager;
-	}
-
-	get schuelerSchulbesuchManager(): SchuelerSchulbesuchManager {
-		if (this._state.value.schuelerSchulbesuchManager === undefined) {
-			throw new DeveloperNotificationException("SchülerSchulbesuchManager nicht initialisiert.");
-		}
-		return this._state.value.schuelerSchulbesuchManager;
-	}
 }

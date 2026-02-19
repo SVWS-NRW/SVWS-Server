@@ -715,6 +715,34 @@ public class APISchueler {
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
 	}
 
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Lernabschnittsdaten eines Schülers.
+	 *
+	 * @param schema     				das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param idSchueler 				die ID des Schülerlernabschnitts
+	 * @param idSchuljahresabschnitt  	die ID des Schülerlernabschnitts
+	 * @param request    				die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Lernabschnittsdaten des Schülers
+	 */
+	@GET
+	@Path("/lernabschnittsdaten/{idSchueler : \\d+}/{idSchuljahresabschnitt : \\d+}")
+	@Operation(summary = "Liefert zu der ID des Schülers und Schuljahresabschnitt die zugehörigen Lernabschnittsdaten.",
+			description = "Liefert die zugehörigen Lernabschnittsdaten, insofern der SVWS-Benutzer die notwendige Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Lernabschnittsdaten des Schülers", content = @Content(mediaType = "application/json",
+			array = @ArraySchema(schema = @Schema(implementation = SchuelerLernabschnittsdaten.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit Schüler-Lernabschnittsdaten mit der angegebenen ID gefunden")
+	public Response getSchuelerLernabschnittsdatenByIdSchuelerAndIdJahresabschnitt(@PathParam("schema") final String schema,
+			@PathParam("idSchueler") final long idSchueler,
+			@PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLernabschnittsdaten(conn)
+						.getAbschnittsdatenByIdSchuelerAndIdJahresabschnitt(idSchueler, idSchuljahresabschnitt),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
+	}
+
 
 	/**
 	 * Die OpenAPI-Methode für das Patchen von Schülerlernabschnittsdaten.

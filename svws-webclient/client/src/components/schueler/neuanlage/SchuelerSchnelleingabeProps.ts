@@ -1,26 +1,17 @@
-import type { SchuelerListeManager } from "@ui";
-import type { BenutzerKompetenz, EinschulungsartKatalogEintrag, Erzieherart, ErzieherStammdaten, Fahrschuelerart, Haltestelle, Kindergarten, KlassenDaten, List,
-	OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchuelerLernabschnittsdaten, SchuelerSchulbesuchsdaten, SchuelerStammdaten, SchuelerTelefon,
-	SchuelerVermerke, SchulEintrag, Schulform, Schuljahresabschnitt, ServerMode, Telefonart, VermerkartEintrag } from "@core";
-import type { SchuelerSchulbesuchManager } from "~/components/schueler/schulbesuch/SchuelerSchulbesuchManager";
-import type { SchuelerLernabschnittManager } from "~/components/schueler/lernabschnitte/SchuelerLernabschnittManager";
+import type { BenutzerKompetenz, SchuelerStammdaten, Schulform, Schuljahresabschnitt, ServerMode, ErzieherStammdaten, KlassenDaten, List,
+	SchuelerLernabschnittsdaten, SchuelerSchulbesuchsdaten, SchuelerTelefon, SchuelerVermerke } from "@core";
+import type { SchuelerSchnelleingabeManager } from "../../../../../ui/src/ui/manager/schueler/SchuelerSchnelleingabeManager";
 
 export interface SchuelerSchnelleingabeProps {
-	schuelerListeManager: () => SchuelerListeManager;
-	schuelerSchulbesuchsManager: () => SchuelerSchulbesuchManager;
-	schuelerLernabschnittManager: () => SchuelerLernabschnittManager;
+	manager: () => SchuelerSchnelleingabeManager;
+	gotoDefaultView: (idEintrag?: number | null) => Promise<void>;
+	gotoSchuelerNeuView: (navigate: boolean) => Promise<void>;
+	aktAbschnitt: Schuljahresabschnitt;
+	serverMode: ServerMode;
+	schulform: Schulform,
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
+
 	patch: (patchObject: Partial<SchuelerStammdaten>, id: number) => Promise<void>;
-	schulenById: Map<string, SchulEintrag>;
-	orteById: Map<number, OrtKatalogEintrag>;
-	ortsteileById: Map<number, OrtsteilKatalogEintrag>;
-	religionenById: Map<number, ReligionEintrag>;
-	fahrschuelerartenById: Map<number, Fahrschuelerart>;
-	haltestellenById: Map<number, Haltestelle>;
-	kindergaertenById: Map<number, Kindergarten>;
-	einschulungsartenById: Map<number, EinschulungsartKatalogEintrag>;
-	telefonartenById: Map<number, Telefonart>;
-	erzieherartenById: Map<number, Erzieherart>;
-	vermerkartenById: Map<number, VermerkartEintrag>;
 	getListSchuelerErziehereintraege: () => List<ErzieherStammdaten>;
 	addSchuelerErziehereintrag: (data: Partial<ErzieherStammdaten>, idEintrag: number, pos: number) => Promise<ErzieherStammdaten>;
 	patchSchuelerErziehereintrag: (data: Partial<ErzieherStammdaten>, idEintrag: number) => Promise<void>;
@@ -37,10 +28,4 @@ export interface SchuelerSchnelleingabeProps {
 	patchSchuelerSchulbesuchsdaten: (data: Partial<SchuelerSchulbesuchsdaten>, idSchueler: number) => Promise<void>;
 	patchSchuelerLernabschnittsdaten: (data: Partial<SchuelerLernabschnittsdaten>, idEintrag: number) => Promise<void>;
 	getSchuelerKlassenFuerAbschnitt: (idAbschnitt: number) => Promise<List<KlassenDaten>>;
-	gotoDefaultView: (idEintrag?: number | null) => Promise<void>;
-	gotoSchuelerNeuView: (navigate: boolean) => Promise<void>;
-	aktAbschnitt: Schuljahresabschnitt;
-	serverMode: ServerMode;
-	schulform: Schulform,
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
 }
