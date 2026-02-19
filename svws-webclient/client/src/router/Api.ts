@@ -76,13 +76,13 @@ class Api {
 	}
 
 	/** Gibt die Map der CoreTypeDaten zurück */
-	get mapCoreTypeNameJsonData(): Map<string, string> {
-		return this.conn.mapCoreTypeNameJsonData;
+	get mapCoreTypeData(): Map<string, any> {
+		return this.conn.mapCoreTypeData;
 	}
 
 	/** Setzt die Map der CoreTypeDaten zurück */
-	setMapCoreTypeNameJsonData = (map: Map<string, string>) => {
-		this.conn.mapCoreTypeNameJsonData = map;
+	setMapCoreTypeData = (map: Map<string, any>) => {
+		this.conn.mapCoreTypeData = map;
 	};
 
 	/**

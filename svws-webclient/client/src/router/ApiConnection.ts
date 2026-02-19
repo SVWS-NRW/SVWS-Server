@@ -67,7 +67,7 @@ export class ApiConnection {
 	protected _serverMode = shallowRef<ServerMode>(ServerMode.STABLE);
 
 	// Die Map mit den CoreTypeDaten
-	protected _mapCoreTypeNameJsonData = ref<Map<string, string> | undefined>(undefined);
+	protected _mapCoreTypeData = ref<Map<string, any> | undefined>(undefined);
 
 
 	/**
@@ -184,16 +184,16 @@ export class ApiConnection {
 	}
 
 	// gibt die Map mit den CoreType-Daten zurück
-	get mapCoreTypeNameJsonData(): Map<string, string> {
-		if (this._mapCoreTypeNameJsonData.value === undefined) {
+	get mapCoreTypeData(): Map<string, string> {
+		if (this._mapCoreTypeData.value === undefined) {
 			throw new DeveloperNotificationException("Eine Map mit den CoreType-Daten ist nicht vorhanden.");
 		}
-		return this._mapCoreTypeNameJsonData.value;
+		return this._mapCoreTypeData.value;
 	}
 
 	//* * Setzt die Map mit den CoreTypeDaten */
-	set mapCoreTypeNameJsonData(map: Map<string, string>) {
-		this._mapCoreTypeNameJsonData.value = map;
+	set mapCoreTypeData(map: Map<string, any>) {
+		this._mapCoreTypeData.value = map;
 	}
 
 	/**

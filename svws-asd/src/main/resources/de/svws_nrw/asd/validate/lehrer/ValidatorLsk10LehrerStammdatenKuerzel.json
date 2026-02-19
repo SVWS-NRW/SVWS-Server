@@ -1,0 +1,14 @@
+{
+  "version" : 1,
+  "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLsk10LehrerStammdatenKuerzel",
+  "historie" : [ {
+    "zebras" : true,
+    "svws" : true,
+    "praefix" : "LSK10",
+    "muss" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
+    "kann" : [ ],
+    "hinweis" : [ ],
+    "gueltigVon" : null,
+    "gueltigBis" : null
+  } ]
+}

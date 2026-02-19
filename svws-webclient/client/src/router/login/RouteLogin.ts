@@ -76,7 +76,7 @@ export class RouteLogin extends RouteNode<any, any> {
 			authenticated: api.authenticated,
 			hostname: api.hostname,
 			schemaPrevious: this.schema.value,
-			setMapCoreTypeNameJsonData: api.setMapCoreTypeNameJsonData,
+			setMapCoreTypeData: api.setMapCoreTypeData,
 		};
 	}
 

@@ -1,0 +1,14 @@
+{
+  "version" : 1,
+  "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLsn15LehrerStammdatenNachname",
+  "historie" : [ {
+    "zebras" : true,
+    "svws" : true,
+    "praefix" : "LSN15",
+    "muss" : [ ],
+    "kann" : [ ],
+    "hinweis" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
+    "gueltigVon" : null,
+    "gueltigBis" : null
+  } ]
+}

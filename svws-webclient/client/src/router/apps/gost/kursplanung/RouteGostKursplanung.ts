@@ -260,7 +260,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			mode: api.mode,
 			ausfuehrlicheDarstellungKursdifferenz: () => this.data.ausfuehrlicheDarstellungKursdifferenz,
 			setAusfuehrlicheDarstellungKursdifferenz: this.data.setAusfuehrlicheDarstellungKursdifferenz,
-			mapCoreTypeNameJsonData: () => api.mapCoreTypeNameJsonData,
+			mapCoreTypeData: () => api.mapCoreTypeData,
 		};
 	}
 

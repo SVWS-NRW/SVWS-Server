@@ -117,7 +117,7 @@
 		addErgebnisse: (ergebnisse: List<GostBlockungsergebnis>) => Promise<void>;
 		ausfuehrlicheDarstellungKursdifferenz: () => boolean;
 		setAusfuehrlicheDarstellungKursdifferenz: (value: boolean) => void;
-		mapCoreTypeNameJsonData: () => Map<string, string>;
+		mapCoreTypeData: () => Map<string, any>;
 	}>();
 
 	const columns = [
@@ -138,7 +138,7 @@
 			selected.value = [];
 		}
 		if (neu === true) {
-			workerManager.value = new WorkerManagerKursblockung(props.getDatenmanager(), toRaw(props.mapCoreTypeNameJsonData()));
+			workerManager.value = new WorkerManagerKursblockung(props.getDatenmanager(), toRaw(props.mapCoreTypeData()));
 		}
 	});
 

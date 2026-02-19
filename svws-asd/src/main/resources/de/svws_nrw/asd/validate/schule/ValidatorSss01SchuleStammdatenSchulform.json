@@ -1,0 +1,14 @@
+{
+  "version" : 1,
+  "validator" : "de.svws_nrw.asd.validate.schule.ValidatorSss01SchuleStammdatenSchulform",
+  "historie" : [ {
+    "zebras" : false,
+    "svws" : true,
+    "praefix" : "SSS01",
+    "muss" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
+    "kann" : [ ],
+    "hinweis" : [ ],
+    "gueltigVon" : null,
+    "gueltigBis" : null
+  } ]
+}

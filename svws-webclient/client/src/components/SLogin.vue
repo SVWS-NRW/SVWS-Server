@@ -88,7 +88,7 @@
 		const reader = new JsonCoreTypeReader(`https://${props.hostname}`);
 		await reader.loadAll();
 		reader.readAll();
-		props.setMapCoreTypeNameJsonData(reader.mapCoreTypeNameJsonData);
+		props.setMapCoreTypeData(reader.mapCoreTypeData);
 	}
 
 	async function connect() {

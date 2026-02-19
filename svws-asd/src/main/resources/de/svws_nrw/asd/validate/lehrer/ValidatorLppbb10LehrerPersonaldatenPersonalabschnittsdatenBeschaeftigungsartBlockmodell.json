@@ -1,0 +1,14 @@
+{
+  "version" : 1,
+  "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell",
+  "historie" : [ {
+    "zebras" : true,
+    "svws" : true,
+    "praefix" : "LPPBB10",
+    "muss" : [ ],
+    "kann" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "GY", "WB", "BK", "SR", "SG", "SB" ],
+    "hinweis" : [ ],
+    "gueltigVon" : null,
+    "gueltigBis" : null
+  } ]
+}

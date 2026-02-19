@@ -20,7 +20,7 @@
 				</div>
 			</template>
 		</svws-ui-table>
-		<s-gost-kursplanung-blockung-auswahl :ist-blockung-persistiert="istBlockungPersistiert(halbjahr)" :map-core-type-name-json-data
+		<s-gost-kursplanung-blockung-auswahl :ist-blockung-persistiert="istBlockungPersistiert(halbjahr)" :map-core-type-data
 			:halbjahr :patch-blockung :remove-blockung :ausfuehrliche-darstellung-kursdifferenz :set-ausfuehrliche-darstellung-kursdifferenz
 			:goto-blockung :auswahl-blockung :map-blockungen :api-status :get-datenmanager :add-ergebnisse :patch-ergebnis :remove-ergebnisse :add-blockung
 			:goto-ergebnis :hat-blockung :auswahl-ergebnis :restore-blockung :mode :get-ergebnismanager :hat-update-kompetenz />

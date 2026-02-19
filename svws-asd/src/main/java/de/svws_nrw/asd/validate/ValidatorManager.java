@@ -21,8 +21,8 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorManager {
 
-	/** Die Version der Fehlerart-Kontexte */
-	private static long _version;
+	/** Die Versionen der Fehlerart-Kontexte */
+	private static @NotNull Map<String, Long> _versions;
 
 	/** Die Fehlerart-Kontexte für jeden Validator als Historienliste */
 	private static @NotNull Map<String, List<ValidatorFehlerartKontext>> _data;
@@ -65,16 +65,14 @@ public final class ValidatorManager {
 	/**
 	 * Initialisierung des Validators mit den Daten, die aus einem json eingelesen wurden.
 	 *
-	 * @param version	Die Versionsnummer der Daten zu den Fehlerart-Kontexten.
-	 * @param data		Die aus der JSON-Datei eingelesenen Daten.
+	 * @param versions	 die Versionsnummern der Daten zu den Fehlerart-Kontexten.
+	 * @param data		 die aus der JSON-Datei eingelesenen Daten zu den Fehlerart-Kontexten.
 	 */
-	public static void init(final long version, @NotNull final Map<String, List<ValidatorFehlerartKontext>> data) {
-		_version = version;
+	public static void init(@NotNull final Map<String, Long> versions, @NotNull final Map<String, List<ValidatorFehlerartKontext>> data) {
+		_versions = versions;
 		_data = data;
 		_managerSVWS = new HashMap<>();
 		_managerZebras = new HashMap<>();
-
-		// TODO Überprüfung ob alle Validatoren in der Json aufgeführt sind
 
 		// Führe Prüfungen auf die einzelnen Einträge zu den Fehlerarten durch
 		for (final Entry<String, List<ValidatorFehlerartKontext>> entry : _data.entrySet()) {
@@ -134,10 +132,17 @@ public final class ValidatorManager {
 	/**
 	 * Gibt die Version der Fehler-Kontext-Daten zurück.
 	 *
+	 * @param <T>         der Typ des Validators
+	 * @param validator   die Klasse des Validators
+	 *
 	 * @return die Version
 	 */
-	public static long getVersion() {
-		return _version;
+	public static <T> long getVersion(final @NotNull Class<T> validator) {
+		final Long version = _versions.get(validator.getCanonicalName());
+		if (version == null) {
+			throw new ValidatorException("Für den Validator %s konnte keine Version bestimmt werden.".formatted(validator.getSimpleName()));
+		}
+		return version;
 	}
 
 

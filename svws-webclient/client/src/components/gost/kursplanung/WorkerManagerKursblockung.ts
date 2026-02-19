@@ -61,23 +61,23 @@ export class WorkerManagerKursblockung {
 	protected ergebnisResolvers: ((value: unknown) => void)[] = [];
 
 	/** Eine Map mit den CoreTypeDaten */
-	protected mapCoreTypeNameJsonData: Map<string, string> = new Map();
+	protected mapCoreTypeData: Map<string, any> = new Map();
 
 
 	/**
 	 * Erzeugt einen neuen nicht initialisierten Worker-Manager zur Berechnung von Kursblockungsergebnissen.
 	 *
-	 * @param faecherListe   die Liste der Fächer des Abiturjahrgangs
-	 * @param blockung       die Daten der Kursblockung
+	 * @param datenManager      der Blockungs-Datenmanager mit der Fächerliste des Abiturjahrgangs und den Blockungsdaten
+	 * @param mapCoreTypeData   die Core-Type-Daten zum Initialisieren der Core-Types in den Worker-Threads
 	 */
-	public constructor(datenManager: GostBlockungsdatenManager, mapCoreTypeNameJsonData: Map<string, string>) {
+	public constructor(datenManager: GostBlockungsdatenManager, mapCoreTypeData: Map<string, any>) {
 		this.faecherListe = datenManager.faecherManager().faecher();
 		this.blockung = datenManager.daten();
 		this.datenManager = datenManager;
 		// Teste, ob der Algorithmus überhaupt mit den aktuellen Regeln möglich ist
 		new KursblockungAlgorithmusPermanent(this.datenManager);
 		this.usedWorkerThreads.value = 1;
-		this.mapCoreTypeNameJsonData = mapCoreTypeNameJsonData;
+		this.mapCoreTypeData = mapCoreTypeData;
 	}
 
 	/**
@@ -182,7 +182,7 @@ export class WorkerManagerKursblockung {
 	protected initWorker(index: number) {
 		this.worker[index] = new Worker(new URL('./WorkerKursblockung.ts', import.meta.url), { type: 'module' });
 		this.worker[index].onmessage = (ev) => this.messageHandler(index, ev);
-		this.requestInit(index, this.faecherListe, this.blockung, this.mapCoreTypeNameJsonData);
+		this.requestInit(index, this.faecherListe, this.blockung, this.mapCoreTypeData);
 	}
 
 	/**
@@ -279,17 +279,18 @@ export class WorkerManagerKursblockung {
 	/**
 	 * Stellt eine Anfrage an den Worker zur Initialisierung mit den angegebenen Daten.
 	 *
-	 * @param index          der Index des Workers
-	 * @param faecherListe   die Liste der Fächer für den Abiturjahrgang der Blockung
-	 * @param blockung       die Daten der Blockung
+	 * @param index             der Index des Workers
+	 * @param faecherListe      die Liste der Fächer für den Abiturjahrgang der Blockung
+	 * @param blockung          die Daten der Blockung
+	 * @param mapCoreTypeData   die Core-Type-Daten für die Initialisierung der Core-Types in den Worker-Threads
 	 */
-	protected requestInit(index: number, faecherListe: List<GostFach>, blockung: GostBlockungsdaten, mapCoreTypeNameJsonData: Map<string, string>) {
+	protected requestInit(index: number, faecherListe: List<GostFach>, blockung: GostBlockungsdaten, mapCoreTypeData: Map<string, any>) {
 		const faecher = new Array<string>();
 		for (const f of faecherListe) {
 			faecher.push(GostFach.transpilerToJSON(f));
 		}
 		const blockungsdaten = GostBlockungsdaten.transpilerToJSON(blockung);
-		this.worker[index].postMessage(<WorkerKursblockungRequestInit>{ cmd: "init", faecher, blockungsdaten, mapCoreTypeNameJsonData });
+		this.worker[index].postMessage(<WorkerKursblockungRequestInit>{ cmd: "init", faecher, blockungsdaten, mapCoreTypeData });
 	}
 
 	/**

@@ -3,13 +3,18 @@ package de.svws_nrw.asd.utils.json;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -82,24 +87,6 @@ public final class JsonReader {
 		try {
 			final String json = fromResource(location);
 			return new JsonCoreTypeData<>(json, clazz);
-		} catch (final IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-
-	/**
-	 * Erzeugt zu der JSON-Ressource an der angebenen Stelle (location) die Informationen
-	 * zu den ValidatorLaufeigenschaften
-	 *
-	 * @param location   der Ort, an dem sich die CSV-Resource befindet
-	 *
-	 * @return die Daten des Core-Types aus der JSON-Ressource.
-	 */
-	public static JsonValidatorFehlerartKontextData fromResourceGetValidatorData(final String location) {
-		try {
-			final String json = fromResource(location);
-			return new JsonValidatorFehlerartKontextData(json);
 		} catch (final IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -183,6 +170,108 @@ public final class JsonReader {
 		} catch (IOException | URISyntaxException e) {
 			throw new IOException("Fehler beim Zugriff auf die Ressource '" + location + "'.", e);
 		}
+	}
+
+
+	/**
+	 * Ermittelt alle Dateien, die in dem angebenen Pfad path liegen und zu dem
+	 * Package mit dem Name packageName oder einem Sub-Package davon gehören
+	 * sowie die angegebene Dateiendung haben.
+	 *
+	 * @param fs              das Dateisystem, auf dem die Dateien gesucht werden.
+	 * @param path            der Pfad in den Classpath-Resourcen
+	 * @param packagePath     der relative Pfad für das Packages
+	 * @param fileextension   die Dateiendung
+	 *
+	 * @return eine List mit den Pfaden der gefundenen Dateien
+	 *
+	 * @throws IOException wenn ein Fehler beim Lesen der Dateien auftritt
+	 */
+	private static List<Path> getFilesInPath(final FileSystem fs, final String path, final String packagePath, final String fileextension) throws IOException {
+		final List<Path> found = new ArrayList<>();
+		final String separator = fs.getSeparator();
+		final String fullPathString = path + (path.endsWith(separator) ? "" : separator) + packagePath;
+		final Path fullPath = fs.getPath(fullPathString);
+		if (!Files.isDirectory(fullPath))
+			return found;
+		try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(fullPath)) {
+			for (final Path p : dirStream) {
+				if (Files.isDirectory(p)) {
+					found.addAll(getFilesInPath(fs, path, packagePath + "/" + p.getFileName(), fileextension));
+				} else if (Files.isRegularFile(p) && p.toString().endsWith(fileextension)) {
+					found.add(p);
+				}
+			}
+		} catch (final IOException e) {
+			throw new IOException("Fehler beim Lesen der Dateien im Pfad " + path, e);
+		}
+		return found;
+	}
+
+	/**
+	 * Hilfsmethode für {@link JsonReader#getFilesInPackage(String, String)}. Bestimmt
+	 * für die übergebene URL die entsprechenden Dateien und schreibt {@link Path}-Objekt
+	 * für diese in die Liste.
+	 *
+	 * @param url             die URL des Packages
+	 * @param packagePath     der Pfad für das Package
+	 * @param result          die Liste, wo die {@link Path}-Objekt für die Dateien ergänzt werden
+	 * @param fileextension   die Dateiendung
+	 *
+	 * @throws IOException    bei einem Fehler beim Zugriff auf das Package
+	 */
+	private static void getFilesInPackageFromURL(final URL url, final String packagePath, final List<Path> result, final String fileextension)
+			throws IOException {
+		final URI uri;
+		try {
+			uri = url.toURI();
+		} catch (@SuppressWarnings("unused") final URISyntaxException e) {
+			return;
+		}
+		final FileSystem fs;
+		final Path resPath;
+		if ("jar".equals(uri.getScheme())) {
+			final String[] array = uri.toString().split("!");
+			final String jarPath = array[0];
+			final String jarResource = array[1];
+			resPath = getJarPath(jarPath, jarResource);
+			fs = resPath.getFileSystem();
+		} else {
+			resPath = Paths.get(uri);
+			fs = FileSystems.getDefault();
+		}
+
+		// Bestimme den Teils des Pfad im Dateisystem vor dem Package-Teil
+		Path rootPath = resPath;
+		final int count = Paths.get(packagePath).getNameCount();
+		for (int i = 0; i < count; i++) {
+			rootPath = rootPath.getParent();
+		}
+		result.addAll(getFilesInPath(fs, rootPath.toString(), packagePath, fileextension));
+	}
+
+	/**
+	 * Ermittelt alle Dateien, die mit dem Classloader dieser Klasse in dem Classpath in
+	 * dem Package packageName oder einem Sub-Package davon verfügbar sind sowie
+	 * die angegebene Dateiendung haben.
+	 *
+	 * @param packageName     das Package
+	 * @param fileextension   die Dateiendung
+	 *
+	 * @return eine List mit den Pfaden der gefundenen Dateien
+	 */
+	public static List<Path> getFilesInPackage(final String packageName, final String fileextension) {
+		final List<Path> result = new ArrayList<>();
+		try {
+			final String packagePath = packageName.replace(".", "/");
+			final Enumeration<URL> res = JsonReader.class.getClassLoader().getResources(packagePath);
+			while (res.hasMoreElements()) {
+				getFilesInPackageFromURL(res.nextElement(), packagePath, result, fileextension);
+			}
+		} catch (final IOException e1) {
+			e1.printStackTrace();
+		}
+		return result;
 	}
 
 }

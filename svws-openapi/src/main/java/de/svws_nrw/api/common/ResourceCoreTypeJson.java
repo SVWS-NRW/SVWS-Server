@@ -3,10 +3,12 @@ package de.svws_nrw.api.common;
 import java.io.IOException;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import de.svws_nrw.asd.utils.json.JsonReader;
+import de.svws_nrw.asd.utils.json.JsonValidatorFehlerartKontextData;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
@@ -91,6 +93,36 @@ public class ResourceCoreTypeJson {
 
 
 	/**
+	 * Hilfsmethode zum Laden der zugehörigen JSON-Daten.
+	 *
+	 * @param name  der Name der angeforderten JSON-Resource
+	 *
+	 * @return die Json-Daten als {@link JsonNode}
+	 */
+	private static JsonNode getJsonNode(final String name) {
+		if ("ValidatorenFehlerartKontext".equals(name)) {
+			return new JsonValidatorFehlerartKontextData().getAsJsonNode();
+		}
+
+		final String path = mapNameToResourceFile.get(name);
+		if (path == null) {
+			throw new ApiOperationException(Status.NOT_FOUND, "Der Core-Type %s ist unbekannt.".formatted(name));
+		}
+
+		try {
+			final String json = JsonReader.fromResource(path);
+			if (json == null) {
+				throw new ApiOperationException(Status.NOT_FOUND, "JSON-Datei für %s nicht gefunden.".formatted(name));
+			}
+			return JsonReader.mapper.readTree(json);
+		} catch (final IOException e) {
+			Logger.global().logLn("Fehler beim Einlesen der Core-Type-JSON-Kataloge: " + e.getMessage());
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Einlesen von " + name);
+		}
+	}
+
+
+	/**
 	 * Ermittelt die JSON-Daten für den Core-Type mit dem übergebenen Namen.
 	 *
 	 * @param name   der Name des Core-Types
@@ -100,21 +132,10 @@ public class ResourceCoreTypeJson {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static @NotNull String get(final @NotNull String name) throws ApiOperationException {
-		if ("allinone".equals(name))
+		if ("allinone".equals(name)) {
 			return getAllInOne();
-		try {
-			final String path = mapNameToResourceFile.get(name);
-			if (path == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Der Name des Core-Types ist nicht bekannt.");
-			final String json = JsonReader.fromResource(path);
-			if (json == null)
-				throw new ApiOperationException(Status.NOT_FOUND, "Es konnte keine JSON-Datei für den angebenen Core-Type gefunden werden.");
-			return json;
-		} catch (final IOException e) {
-			Logger.global().logLn("Fehler beim Einlesen der Core-Type-JSON-Kataloge!");
-			Logger.global().logLn(e.getMessage());
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Einlesen von Core-Type-JSON-Katalogen.");
 		}
+		return getJsonNode(name).toString();
 	}
 
 
@@ -127,21 +148,13 @@ public class ResourceCoreTypeJson {
 	 */
 	public static @NotNull String getAllInOne() throws ApiOperationException {
 		final ObjectNode nodeResult = JsonReader.mapper.createObjectNode();
+		for (final String name : mapNameToResourceFile.keySet()) {
+			nodeResult.set(name, getJsonNode(name));
+		}
 		try {
-			for (final var entry : mapNameToResourceFile.entrySet()) {
-				final String name = entry.getKey();
-				final String path = entry.getValue();
-				final String json = JsonReader.fromResource(path);
-				if (json == null)
-					throw new ApiOperationException(Status.NOT_FOUND, "Es konnte keine JSON-Datei für den Core-Type " + name + " gefunden werden.");
-				final JsonNode node = JsonReader.mapper.readTree(json);
-				nodeResult.putPOJO(name, node);
-			}
 			return JsonReader.mapper.writeValueAsString(nodeResult);
-		} catch (final IOException e) {
-			Logger.global().logLn("Fehler beim Einlesen der Core-Type-JSON-Kataloge!");
-			Logger.global().logLn(e.getMessage());
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Einlesen von Core-Type-JSON-Katalogen.");
+		} catch (final JsonProcessingException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Serialisieren der JSON-Daten.");
 		}
 	}
 

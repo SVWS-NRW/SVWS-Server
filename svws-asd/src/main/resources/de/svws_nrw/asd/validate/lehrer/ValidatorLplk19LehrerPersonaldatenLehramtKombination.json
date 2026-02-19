@@ -1,0 +1,14 @@
+{
+  "version" : 1,
+  "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLplk19LehrerPersonaldatenLehramtKombination",
+  "historie" : [ {
+    "zebras" : true,
+    "svws" : true,
+    "praefix" : "LPLK19",
+    "muss" : [ ],
+    "kann" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
+    "hinweis" : [ ],
+    "gueltigVon" : null,
+    "gueltigBis" : null
+  } ]
+}

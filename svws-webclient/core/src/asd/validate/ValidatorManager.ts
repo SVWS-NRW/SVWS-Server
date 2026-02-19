@@ -20,9 +20,9 @@ import { HashSet } from '../../java/util/HashSet';
 export class ValidatorManager extends JavaObject {
 
 	/**
-	 * Die Version der Fehlerart-Kontexte
+	 * Die Versionen der Fehlerart-Kontexte
 	 */
-	private static _version: number = 0;
+	private static _versions: JavaMap<string, number>;
 
 	/**
 	 * Die Fehlerart-Kontexte für jeden Validator als Historienliste
@@ -76,11 +76,11 @@ export class ValidatorManager extends JavaObject {
 	/**
 	 * Initialisierung des Validators mit den Daten, die aus einem json eingelesen wurden.
 	 *
-	 * @param version	Die Versionsnummer der Daten zu den Fehlerart-Kontexten.
-	 * @param data		Die aus der JSON-Datei eingelesenen Daten.
+	 * @param versions	 die Versionsnummern der Daten zu den Fehlerart-Kontexten.
+	 * @param data		 die aus der JSON-Datei eingelesenen Daten zu den Fehlerart-Kontexten.
 	 */
-	public static init(version: number, data: JavaMap<string, List<ValidatorFehlerartKontext>>): void {
-		ValidatorManager._version = version;
+	public static init(versions: JavaMap<string, number>, data: JavaMap<string, List<ValidatorFehlerartKontext>>): void {
+		ValidatorManager._versions = versions;
 		ValidatorManager._data = data;
 		ValidatorManager._managerSVWS = new HashMap();
 		ValidatorManager._managerZebras = new HashMap();
@@ -134,10 +134,17 @@ export class ValidatorManager extends JavaObject {
 	/**
 	 * Gibt die Version der Fehler-Kontext-Daten zurück.
 	 *
+	 * @param <T>         der Typ des Validators
+	 * @param validator   die Klasse des Validators
+	 *
 	 * @return die Version
 	 */
-	public static getVersion(): number {
-		return ValidatorManager._version;
+	public static getVersion<T>(validator: Class<T>): number {
+		const version: number | null = ValidatorManager._versions.get(validator.getCanonicalName());
+		if (version === null) {
+			throw new ValidatorException(JavaString.format("Für den Validator %s konnte keine Version bestimmt werden.", validator.getSimpleName()))
+		}
+		return version;
 	}
 
 	/**
