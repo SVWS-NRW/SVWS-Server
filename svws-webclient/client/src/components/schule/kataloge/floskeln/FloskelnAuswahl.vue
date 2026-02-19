@@ -54,32 +54,24 @@
 <script setup lang="ts">
 
 	import type { DataTableColumn } from "@ui";
+	import { FloskelnListeManager } from "@ui";
 	import { SelectManager, useRegionSwitch, ViewType } from "@ui";
 	import type { FachDaten, Floskel, Floskelgruppe, JahrgangsDaten } from "@core";
 	import { BenutzerKompetenz, Floskelgruppenart, ServerMode } from "@core";
 	import { computed } from "vue";
 	import type { FloskelnAuswahlProps } from "./FloskelnAuswahlProps";
 
-	// --- Props & Composables ---
-
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const props = defineProps<FloskelnAuswahlProps>();
-
-	// --- View-State ---
-
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const isHinzufuegenView = computed<boolean>(() => props.activeViewType === ViewType.HINZUFUEGEN);
 	const isGruppenprozesseOrHinzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
 	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);
 
-	// --- Tabelle ---
-
 	const columns: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
 		{ key: "text", label: "Text", span: 4, sortable: true },
 	];
-
-	// --- Auswahl & Navigation ---
 
 	const floskeln = computed<Floskel[]>({
 		get: () => [...props.manager().liste.auswahl()],
@@ -111,8 +103,6 @@
 		}
 	}
 
-	// --- Suche ---
-
 	const searchTerm = computed<string>({
 		get: () => props.manager().searchTerm,
 		set: (v: string) => {
@@ -121,47 +111,31 @@
 		},
 	});
 
-	// --- Filter: Sichtbarkeit ---
-
 	const showOnlyVisibleFloskeln = computed<boolean>({
-		get: () => props.manager().filterNurSichtbar(),
+		get: () => props.manager().filterNurSichtbar,
 		set: (value: boolean) => {
-			props.manager().setFilterNurSichtbar(value);
+			props.manager().filterNurSichtbar = value;
 			void props.setFilter();
 		},
 	});
 
-	// --- Filter: Jahrgänge ---
-
-	const jahrgaenge = computed<JahrgangsDaten[]>(() => [...props.manager().getJahrgaenge().values()]);
-	const jahrgaengeManager = new SelectManager<JahrgangsDaten>({
-		options: jahrgaenge,
-		optionDisplayText: (jg: JahrgangsDaten) => jg.kuerzel ?? '',
-		selectionDisplayText: (jg: JahrgangsDaten) => jg.kuerzel ?? '',
-	});
+	const jahrgaenge = computed<JahrgangsDaten[]>(() => [...props.manager().jahrgaengeById.values()]);
 	const filterJahrgaenge = computed<JahrgangsDaten[]>({
-		get: () => props.manager().filterJahrgaenge(),
+		get: () => props.manager().filterJahrgaenge,
 		set: (value: JahrgangsDaten[]) => {
-			props.manager().setFilterJahrgang(value);
+			props.manager().filterJahrgaenge = value;
 			void props.setFilter();
 		},
 	});
 
-	// --- Filter: Floskelgruppen ---
-
-	const floskelgruppen = computed<Floskelgruppe[]>(() => [...props.manager().getFloskelgruppen()]);
-	const floskelgruppeManager = new SelectManager<Floskelgruppe>({
-		options: floskelgruppen,
-		optionDisplayText: (fg: Floskelgruppe) => fg.kuerzel,
-		selectionDisplayText: (fg: Floskelgruppe) => fg.kuerzel,
-	});
+	const floskelgruppen = computed<Floskelgruppe[]>(() => [...props.manager().floskelgruppenById.values()]);
 	const filterFloskelgruppe = computed<Floskelgruppe[]>({
-		get: () => props.manager().filterFloskelgruppe(),
+		get: () => props.manager().filterFloskelgruppen,
 		set: (values: Floskelgruppe[]) => {
-			props.manager().setFilterFloskelgruppe(values);
+			props.manager().filterFloskelgruppen = values;
 			const istNichtFachbezogen = !(values.some(fg => istFachbezogeneFloskelgruppe(fg)));
 			if (istNichtFachbezogen) {
-				props.manager().setFilterFaecher([]);
+				props.manager().filterFloskelgruppen = [];
 			}
 			void props.setFilter();
 		},
@@ -175,37 +149,47 @@
 		return Floskelgruppenart.data().getWertByIDOrNull(floskelgruppe.idFloskelgruppenart ?? -1)?.name() === 'FACH';
 	}
 
+	const faecher = computed<FachDaten[]>(() => [...props.manager().faecherById.values()]);
+	const filterFaecher = computed<FachDaten[]>({
+		get: () => props.manager().filterFaecher,
+		set: (value: FachDaten[]) => {
+			props.manager().filterFaecher = value;
+			void props.setFilter();
+		},
+	});
 
-	// --- Filter: Fächer ---
+	const filterNiveau = computed<number[]>({
+		get: () => props.manager().filterNiveaus,
+		set: (value: number[]) => {
+			props.manager().filterNiveaus = value;
+			void props.setFilter();
+		},
+	});
 
-	const faecher = computed<FachDaten[]>(() => [...props.manager().getFaecher().values()]);
+	// --- manager ---
+
+	const jahrgaengeManager = new SelectManager<JahrgangsDaten>({
+		options: jahrgaenge,
+		optionDisplayText: (jg: JahrgangsDaten) => jg.kuerzel ?? '',
+		selectionDisplayText: (jg: JahrgangsDaten) => jg.kuerzel ?? '',
+	});
+
+	const floskelgruppeManager = new SelectManager<Floskelgruppe>({
+		options: floskelgruppen,
+		optionDisplayText: (fg: Floskelgruppe) => fg.kuerzel,
+		selectionDisplayText: (fg: Floskelgruppe) => fg.kuerzel,
+	});
+
 	const faecherManager = new SelectManager<FachDaten>({
 		options: faecher,
 		optionDisplayText: (f: FachDaten) => f.bezeichnung,
 		selectionDisplayText: (f: FachDaten) => f.bezeichnung,
 	});
-	const filterFaecher = computed<FachDaten[]>({
-		get: () => props.manager().filterFaecher(),
-		set: (value: FachDaten[]) => {
-			props.manager().setFilterFaecher(value);
-			void props.setFilter();
-		},
-	});
 
-	// --- Filter: Niveaus ---
-
-	const niveaus = computed<number[]>(() => props.manager().niveaus);
 	const niveausManager = new SelectManager<number>({
-		options: niveaus,
+		options: FloskelnListeManager.NIVEAUS,
 		optionDisplayText: (n: number) => String(n),
 		selectionDisplayText: (n: number) => String(n),
-	});
-	const filterNiveau = computed<number[]>({
-		get: () => props.manager().filterNiveaus(),
-		set: (value: number[]) => {
-			props.manager().setFilterNiveau(value);
-			void props.setFilter();
-		},
 	});
 
 </script>

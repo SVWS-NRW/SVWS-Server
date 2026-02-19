@@ -19,7 +19,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import type { Floskelgruppe, List } from "@core";
+	import type { Floskelgruppe } from "@core";
 	import { BenutzerKompetenz, Floskel } from "@core";
 	import { isUniqueInList, mandatoryInputIsValid } from "~/util/validation/Validation";
 	import { SelectManager } from "@ui";
@@ -30,14 +30,14 @@
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed(() => !hatKompetenzAdd.value);
-	const floskelgruppen = computed<List<Floskelgruppe>>(() => props.manager().getFloskelgruppen());
+	const floskelgruppen = computed(() => props.manager().floskelgruppenById.values());
 
 	const floskelgruppenManager = new SelectManager({	options: floskelgruppen, optionDisplayText: v => v.bezeichnung,
 		selectionDisplayText: v => v.bezeichnung,
 	});
 
 	const selectedFloskelgruppe = computed<Floskelgruppe | null>({
-		get: (): Floskelgruppe | null => props.manager().getFloskelgruppenById().get(data.value.idFloskelgruppe ?? -1) ?? null,
+		get: (): Floskelgruppe | null => props.manager().floskelgruppenById.get(data.value.idFloskelgruppe ?? -1) ?? null,
 		set: (value: Floskelgruppe | null) => data.value.idFloskelgruppe = value?.id ?? null,
 	});
 

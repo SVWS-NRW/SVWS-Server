@@ -8,10 +8,12 @@
 							<span>
 								{{ manager().auswahl().kuerzel }}
 							</span>
+
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 								ID: {{ manager().daten().id }}
 							</svws-ui-badge>
 						</h2>
+						<span v-if="floskelgruppe !== null" class="svws-subline">{{ floskelgruppe.bezeichnung }}</span>
 					</template>
 					<template v-else-if="activeViewType === ViewType.HINZUFUEGEN">
 						<h2 class="svws-headline">Anlegen einer neuen Floskel</h2>
@@ -38,11 +40,15 @@
 	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
 	import type { FloskelnAppProps } from "./FloskelnAppProps";
-	import type { Floskel } from "@core";
+	import type { Floskel, Floskelgruppe } from "@core";
 
 	const props = defineProps<FloskelnAppProps>();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+
+	const floskelgruppe = computed<Floskelgruppe | null>(() =>
+		props.manager().floskelgruppenById.get(props.manager().auswahl().idFloskelgruppe ?? -1) ?? null
+	);
 
 	const floskelnSubline = computed(() => {
 		const list = props.manager().liste.auswahlSorted();

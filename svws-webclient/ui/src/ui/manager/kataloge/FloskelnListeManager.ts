@@ -12,11 +12,19 @@ import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import type { JahrgangsDaten } from '../../../../../core/src/core/data/jahrgang/JahrgangsDaten';
 import type { FachDaten } from '../../../../../core/src/core/data/fach/FachDaten';
 
-
 export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floskel> {
 
 	private static readonly toId: JavaFunction<Floskel, number> = { apply: (f: Floskel) => f.id };
-	private static readonly NIVEAUS: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+	private static readonly _NIVEAUS: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+	private readonly _floskelgruppenById: Map<number, Floskelgruppe> = new Map();
+	private readonly _jahrgaengeById: Map<number, JahrgangsDaten> = new Map();
+	private readonly _faecherById: Map<number, FachDaten> = new Map<number, FachDaten>();
+	private _searchTerm: string = "";
+	private _filterNurSichtbar: boolean = true;
+	private _filterJahrgaenge: JahrgangsDaten[] = [];
+	private _filterFloskelgruppen: Floskelgruppe[] = [];
+	private _filterFaecher: FachDaten[] = [];
+	private _filterNiveaus: number[] = [];
 
 	public static readonly comparator = {
 		compare: (a: Floskel, b: Floskel) => {
@@ -35,20 +43,6 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 		},
 	};
 
-	// --- Stammdaten ---
-	private readonly _floskelgruppen: List<Floskelgruppe>;
-	private readonly _floskelgruppenById: Map<number, Floskelgruppe> = new Map();
-	private readonly _jahrgaengeById: Map<number, JahrgangsDaten> = new Map();
-	private readonly _faecherById: Map<number, FachDaten> = new Map<number, FachDaten>();
-
-	// --- Filter-State ---
-	private _searchTerm: string = "";
-	private _filterNurSichtbar: boolean = true;
-	private _filterJahrgaenge: JahrgangsDaten[] = [];
-	private _filterFloskelgruppen: Floskelgruppe[] = [];
-	private _filterFaecher: FachDaten[] = [];
-	private _filterNiveaus: number[] = [];
-
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
@@ -61,11 +55,10 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 	 * @param jahrgaenge						die Liste der Jahrgänge
 	 * @param faecher							die Liste der Fächer
 	 */
-	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
-		jahrgaenge: List<JahrgangsDaten>, schulform: Schulform | null, floskeln: List<Floskel>, floskelgruppen: List<Floskelgruppe>, faecher: List<FachDaten>) {
+	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, jahrgaenge: List<JahrgangsDaten>,
+		schulform: Schulform | null, floskeln: List<Floskel>, floskelgruppen: List<Floskelgruppe>, faecher: List<FachDaten>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, floskeln, FloskelnListeManager.comparator,
 			FloskelnListeManager.toId, FloskelnListeManager.toId, ArrayList.of());
-		this._floskelgruppen = floskelgruppen;
 		this.mapFloskelgruppen(floskelgruppen);
 		this.mapJahrgaenge(jahrgaenge);
 		this.mapFaecher(faecher);
@@ -90,6 +83,7 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 		}
 	}
 
+
 	protected compareAuswahl(a: Floskel, b: Floskel): number {
 		return FloskelnListeManager.comparator.compare(a, b);
 	}
@@ -105,7 +99,7 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 			if (!ids || ids.isEmpty()) {
 				return false;
 			}
-			if (!this._filterJahrgaenge.some(jg => [...ids].includes(jg.id))) {
+			if (!this._filterJahrgaenge.some(jg => [...ids].some(id => id === jg.id))) {
 				return false;
 			}
 		}
@@ -140,10 +134,10 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 
 	private entryMatchesSearchTerm(eintrag: Floskel) {
 		const searchTermLower = this._searchTerm.toLocaleLowerCase();
-		if ((eintrag.kuerzel !== null) && eintrag.kuerzel.toLocaleLowerCase().includes(searchTermLower)) {
+		if ((eintrag.kuerzel !== null) && (eintrag.kuerzel.toLocaleLowerCase().includes(searchTermLower)) === true) {
 			return true;
 		}
-		return ((eintrag.text !== null) && eintrag.text.toLocaleLowerCase().includes(searchTermLower));
+		return ((eintrag.text !== null) && (eintrag.text.toLocaleLowerCase().includes(searchTermLower)) === true);
 	}
 
 	get searchTerm(): string {
@@ -155,69 +149,65 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 		this._eventHandlerFilterChanged.run();
 	}
 
-	public filterNurSichtbar(): boolean {
-		return this._filterNurSichtbar;
-	}
-
-	public setFilterNurSichtbar(value: boolean): void {
+	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
 		this._eventHandlerFilterChanged.run();
 	}
 
-	public getJahrgaenge(): Map<number, JahrgangsDaten> {
-		return this._jahrgaengeById;
+	get filterNurSichtbar(): boolean {
+		return this._filterNurSichtbar;
 	}
 
-	public filterJahrgaenge(): JahrgangsDaten[] {
+	get filterJahrgaenge(): JahrgangsDaten[] {
 		return this._filterJahrgaenge;
 	}
 
-	public setFilterJahrgang(value: JahrgangsDaten[]) {
+	set filterJahrgaenge(value: JahrgangsDaten[]) {
 		this._filterJahrgaenge = value;
 		this._eventHandlerFilterChanged.run();
 	}
 
-	public getFloskelgruppenById() {
-		return this._floskelgruppenById;
-	}
-
-	public getFloskelgruppen(): List<Floskelgruppe> {
-		return this._floskelgruppen;
-	}
-
-	public filterFloskelgruppe(): Floskelgruppe[] {
+	get filterFloskelgruppen(): Floskelgruppe[] {
 		return this._filterFloskelgruppen;
 	}
 
-	public setFilterFloskelgruppe(value: Floskelgruppe[]) {
+	set filterFloskelgruppen(value: Floskelgruppe[]) {
 		this._filterFloskelgruppen = value;
 		this._eventHandlerFilterChanged.run();
 	}
 
-	public getFaecher(): Map<number, FachDaten> {
-		return this._faecherById;
-	}
-
-	public filterFaecher(): FachDaten[] {
+	get filterFaecher(): FachDaten[] {
 		return this._filterFaecher;
 	}
 
-	public setFilterFaecher(value: FachDaten[]) {
+	set filterFaecher(value: FachDaten[]) {
 		this._filterFaecher = value;
 		this._eventHandlerFilterChanged.run();
 	}
 
-	public get niveaus(): number[] {
-		return FloskelnListeManager.NIVEAUS;
-	}
-
-	public filterNiveaus(): number[] {
+	get filterNiveaus(): number[] {
 		return this._filterNiveaus;
 	}
 
-	public setFilterNiveau(value: number[]) {
+	set filterNiveaus(value: number[]) {
 		this._filterNiveaus = value;
 		this._eventHandlerFilterChanged.run();
 	}
 
+
+	static get NIVEAUS(): number[] {
+		return this._NIVEAUS;
+	}
+
+	get floskelgruppenById(): Map<number, Floskelgruppe> {
+		return this._floskelgruppenById;
+	}
+
+	get jahrgaengeById(): Map<number, JahrgangsDaten> {
+		return this._jahrgaengeById;
+	}
+
+	get faecherById(): Map<number, FachDaten> {
+		return this._faecherById;
+	}
 }
