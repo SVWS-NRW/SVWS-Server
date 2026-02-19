@@ -21,11 +21,10 @@ export class StringUtils extends JavaObject {
 	 */
 	public static collectionToCommaSeparatedString(collection: Collection<string>): string {
 		const sb: StringBuilder = new StringBuilder();
-		for (const s of collection)
-			if (sb.isEmpty())
-				sb.append(s);
-			else
-				sb.append(", " + s);
+		for (const s of collection) {
+			sb.append(sb.isEmpty() ? "" : ", ");
+			sb.append(s);
+		}
 		return sb.toString();
 	}
 

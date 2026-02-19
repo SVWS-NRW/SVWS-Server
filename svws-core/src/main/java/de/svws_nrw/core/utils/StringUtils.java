@@ -29,11 +29,10 @@ public final class StringUtils {
 	public static @NotNull String collectionToCommaSeparatedString(final @NotNull Collection<String> collection) {
 		final @NotNull StringBuilder sb = new StringBuilder();
 
-		for (final @NotNull String s : collection)
-			if (sb.isEmpty())
-				sb.append(s);
-			else
-				sb.append(", " + s);
+		for (final @NotNull String s : collection) {
+			sb.append(sb.isEmpty() ? "" : ", ");
+			sb.append(s);
+		}
 
 		return sb.toString();
 	}

@@ -228,7 +228,7 @@ public class AbschlussFaecherGruppe {
 				continue;
 			if (!GELeistungsdifferenzierteKursart.Sonstige.hat(fach.kursart))
 				diffkursinfo += fach.kursart + ",";
-			sb.append(fach.kuerzel + "(" + diffkursinfo + fach.note + ")");
+			sb.append("%s(%s%s)".formatted(fach.kuerzel, diffkursinfo, fach.note));
 		}
 		return sb.toString();
 	}

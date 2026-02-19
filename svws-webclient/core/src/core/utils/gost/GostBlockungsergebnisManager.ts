@@ -408,19 +408,19 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateClearErgebnisTooltip1(): string {
 		const sb: StringBuilder = new StringBuilder();
 		let konflikte: number = 0;
-		let konflikte_ignored: number = 0;
+		let konflikteIgnoriert: number = 0;
 		for (const idRegeltyp of GostKursblockungRegelTyp.ANZEIGE_REIHENFOLGE)
 			for (const fehlermeldung of MapUtils.getOrCreateArrayList(this._regelTyp_to_verletzungList, idRegeltyp)) {
 				if (konflikte < 10) {
-					sb.append(fehlermeldung + "\n");
+					sb.append(JavaString.format("%s\n", fehlermeldung));
 				} else {
-					konflikte_ignored++;
+					konflikteIgnoriert++;
 				}
 				konflikte++;
 			}
 		if (konflikte === 0)
 			return "";
-		return konflikte + " Regelverletzungen\n" + sb.toString() + (konflikte_ignored === 0 ? "" : "+" + konflikte_ignored + " weitere Konflikte.");
+		return konflikte + " Regelverletzungen\n" + sb.toString() + (konflikteIgnoriert === 0 ? "" : "+" + konflikteIgnoriert + " weitere Konflikte.");
 	}
 
 	private stateClearErgebnisBewertung2(): void {
@@ -446,7 +446,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateClearErgebnisTooltip2(): string {
 		const sb: StringBuilder = new StringBuilder();
 		let wahlkonflikte: number = 0;
-		let wahlkonflikte_ignored: number = 0;
+		let wahlkonflikteIgnoriert: number = 0;
 		for (const idSchueler of this._schuelerID_fachID_to_kurs_or_null.getKeySet()) {
 			const entries = this._schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet();
 			for (const e of entries)
@@ -454,9 +454,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					if (wahlkonflikte < 10) {
 						const idFach: number = e.getKey().valueOf();
 						const kursart: number = this._parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
-						sb.append(this._parent.toStringSchuelerSimple(idSchueler) + " ist im Fach " + this._parent.toStringFachartSimple(idFach, kursart) + " keinem Kurs zugeordnet.\n");
+						sb.append(JavaString.format("%s ist im Fach %s keinem Kurs zugeordnet.\n", this._parent.toStringSchuelerSimple(idSchueler), this._parent.toStringFachartSimple(idFach, kursart)));
 					} else {
-						wahlkonflikte_ignored++;
+						wahlkonflikteIgnoriert++;
 					}
 					wahlkonflikte++;
 				}
@@ -468,16 +468,16 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					continue;
 				const list: ArrayList<GostBlockungsergebnisKurs> = new ArrayList<GostBlockungsergebnisKurs>(set);
 				if (wahlkonflikte < 10) {
-					sb.append(this._parent.toStringSchuelerSimple(idSchueler) + " ist in " + this._parent.toStringSchieneSimple(e.getKey()) + " in mehreren Kursen:");
+					sb.append(JavaString.format("%s ist in %s in mehreren Kursen:", this._parent.toStringSchuelerSimple(idSchueler), this._parent.toStringSchieneSimple(e.getKey())));
 					for (let i: number = 0; i < list.size(); i++)
-						sb.append((i === 0 ? "" : ", ") + this._parent.toStringKursSimple(list.get(i).id));
+						sb.append(JavaString.format("%s%s", i === 0 ? "" : ", ", this._parent.toStringKursSimple(list.get(i).id)));
 					sb.append("\n");
 				} else {
-					wahlkonflikte_ignored++;
+					wahlkonflikteIgnoriert++;
 				}
 				wahlkonflikte += list.size() - 1;
 			}
-		return "Wahlkonflikte = " + wahlkonflikte + "\n" + sb.toString() + (wahlkonflikte_ignored === 0 ? "" : "+" + wahlkonflikte_ignored + " weitere Konflikte.");
+		return "Wahlkonflikte = " + wahlkonflikte + "\n" + sb.toString() + (wahlkonflikteIgnoriert === 0 ? "" : "+" + wahlkonflikteIgnoriert + " weitere Konflikte.");
 	}
 
 	private stateClearErgebnisBewertung3(): void {
@@ -514,9 +514,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			if (histo[i] <= 0)
 				continue;
 			const listFacharten: List<string> = DeveloperNotificationException.ifMapGetIsNull(this._kursdifferenz_to_fachartenList, i);
-			sb.append("Differenz " + i + ": " + histo[i] + "x (" + listFacharten.get(0));
+			sb.append(JavaString.format("Differenz %d: %dx (%s", i, histo[i], listFacharten.get(0)));
 			for (let j: number = 1; j < listFacharten.size(); j++)
-				sb.append(", " + listFacharten.get(j));
+				sb.append(JavaString.format(", %s", listFacharten.get(j)));
 			sb.append(")\n");
 		}
 		return sb.toString();
@@ -539,7 +539,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			const schiene: GostBlockungsergebnisSchiene = this.getSchieneEmitNr(nr);
 			const proSchiene: string = this.stateClearErgebnisTooltip4proSchiene(schiene.id);
 			if (!JavaString.isEmpty(proSchiene))
-				sb.append("Schiene " + nr + ":\n" + proSchiene);
+				sb.append(JavaString.format("Schiene %d:\n%s", nr, proSchiene));
 		}
 		return sb.toString();
 	}
@@ -549,7 +549,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const idFachart of this._fachartIDList_sortiert) {
 			const proFachart: string = this.stateClearErgebnisTooltip4proSchieneUndFachart(idSchiene, idFachart);
 			if (!JavaString.isEmpty(proFachart))
-				sb.append(proFachart + "\n");
+				sb.append(JavaString.format("%s\n", proFachart));
 		}
 		return sb.toString();
 	}
@@ -563,7 +563,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				sb.append("  " + this.getOfFachartName(idFachart) + " (+" + (n - 1) + "):");
 				for (let i: number = 0; i < n; i++) {
 					const kurs: GostBlockungsergebnisKurs = ListUtils.getNonNullElementAtOrException(kursGruppe, i);
-					sb.append((i === 0 ? "" : ",") + " " + this.getOfKursName(kurs.id));
+					sb.append(JavaString.format("%s %s", i === 0 ? "" : ",", this.getOfKursName(kurs.id)));
 				}
 			}
 		}
@@ -5338,12 +5338,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					const anzahl: number = GostBlockungsergebnisManager.getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
 					if (anzahl > 0) {
 						summe += anzahl;
-						sbZeile.append((sbZeile.isEmpty() ? "" : ", ") + this.getOfKursName(kurs2.id) + "(" + anzahl + ")");
+						sbZeile.append(JavaString.format("%s%s(%d)", sbZeile.isEmpty() ? "" : ", ", this.getOfKursName(kurs2.id), anzahl));
 					}
 				}
 			}
 			if (summe > 0) {
-				sbZeilen.append(this.getOfKursName(kurs1.id) + "(" + summe + "): " + sbZeile.toString() + "\n");
+				sbZeilen.append(JavaString.format("%s(%d): %s\n", this.getOfKursName(kurs1.id), summe, sbZeile.toString()));
 			}
 		}
 		return sbZeilen.isEmpty() ? "Keine Kollisionen in der Schiene" : sbZeilen.toString();
@@ -5399,9 +5399,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				continue;
 			const list: ArrayList<GostBlockungsergebnisKurs> = new ArrayList<GostBlockungsergebnisKurs>(set);
 			if (zeilen < 10) {
-				sb.append(this._parent.toStringSchuelerSimple(idSchueler) + " ist in mehreren Kursen:");
+				sb.append(JavaString.format("%s ist in mehreren Kursen:", this._parent.toStringSchuelerSimple(idSchueler)));
 				for (let i: number = 0; i < list.size(); i++)
-					sb.append((i === 0 ? "" : ", ") + this._parent.toStringKursSimpleOhneID(list.get(i).id));
+					sb.append(JavaString.format("%s%s", i === 0 ? "" : ", ", this._parent.toStringKursSimpleOhneID(list.get(i).id)));
 				sb.append("\n");
 			} else {
 				zeilen_ignored++;
@@ -5739,12 +5739,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const sb: StringBuilder = new StringBuilder();
 		sb.append("\n\nSchienen-Fachart-Kurs-Zuordnungen");
 		for (const idSchiene of this._schienenIDset) {
-			sb.append("Schiene " + this._parent.toStringSchieneSimple(idSchiene) + "\n");
+			sb.append(JavaString.format("Schiene %s\n", this._parent.toStringSchieneSimple(idSchiene)));
 			for (const idFachart of this._schienenID_fachartID_to_kurseList.getKeySetOf(idSchiene)) {
 				if (!Map2DUtils.getOrCreateArrayList(this._schienenID_fachartID_to_kurseList, idSchiene, idFachart).isEmpty()) {
-					sb.append("    Fachart " + this._parent.toStringFachartSimpleByFachartID(idFachart) + "\n");
+					sb.append(JavaString.format("    Fachart %s\n", this._parent.toStringFachartSimpleByFachartID(idFachart)));
 					for (const eKurs of Map2DUtils.getOrCreateArrayList(this._schienenID_fachartID_to_kurseList, idSchiene, idFachart)) {
-						sb.append("        Kurs " + this._parent.toStringKursSimple(eKurs.id) + "\n");
+						sb.append(JavaString.format("        Kurs %s\n", this._parent.toStringKursSimple(eKurs.id)));
 					}
 				}
 			}

@@ -4,6 +4,7 @@ import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
+import { JavaString } from '../../../java/lang/JavaString';
 import { GELeistungsdifferenzierteKursart } from '../../../core/types/ge/GELeistungsdifferenzierteKursart';
 import { AbschlussManager } from '../../../core/abschluss/AbschlussManager';
 import type { Predicate } from '../../../java/util/function/Predicate';
@@ -205,7 +206,7 @@ export class AbschlussFaecherGruppe extends JavaObject {
 				continue;
 			if (!GELeistungsdifferenzierteKursart.Sonstige.hat(fach.kursart))
 				diffkursinfo += fach.kursart + ",";
-			sb.append(fach.kuerzel + "(" + diffkursinfo + fach.note + ")");
+			sb.append(JavaString.format("%s(%s%s)", fach.kuerzel, diffkursinfo, fach.note));
 		}
 		return sb.toString();
 	}

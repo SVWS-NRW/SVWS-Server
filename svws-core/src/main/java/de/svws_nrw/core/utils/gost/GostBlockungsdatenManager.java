@@ -2780,41 +2780,43 @@ public class GostBlockungsdatenManager {
 		return this._daten;
 	}
 
+
 	/**
 	 * Liefert eine String-Representation vieler Daten.
 	 *
 	 * @return eine String-Representation vieler Daten.
 	 */
 	public @NotNull String getDebugString() {
-		final @NotNull StringBuilder sb = new StringBuilder();
+	    final @NotNull StringBuilder sb = new StringBuilder();
 
-		sb.append("\nErgebnisse = " + _daten.ergebnisse.size() + "\n");
+	    sb.append("\nErgebnisse = %d\n".formatted(_daten.ergebnisse.size()));
 
-		sb.append("\nSchienen = " + _daten.schienen.size() + "\n");
-		for (final @NotNull GostBlockungSchiene s : _daten.schienen) {
-			sb.append("    ID=" + s.id + ", NR=" + s.nummer + ", BEZ=" + s.bezeichnung + ", W-STD=" + s.wochenstunden + "\n");
-			for (final @NotNull GostBlockungsergebnis e : ergebnisGetListeSortiertNachID())
-				sb.append("    Hat E " + e.id + " Schiene " + s.id + "--> " + ergebnisManagerGet(e.id).getOfSchieneExists(s.id) + "\n");
-		}
+	    sb.append("\nSchienen = %d\n".formatted(_daten.schienen.size()));
+	    for (final @NotNull GostBlockungSchiene s : _daten.schienen) {
+	        sb.append("    ID=%d, NR=%d, BEZ=%s, W-STD=%d\n".formatted(s.id, s.nummer, s.bezeichnung, s.wochenstunden));
+	        for (final @NotNull GostBlockungsergebnis e : ergebnisGetListeSortiertNachID())
+	            sb.append("    Hat E %d Schiene %d --> %b\n".formatted(e.id, s.id, ergebnisManagerGet(e.id).getOfSchieneExists(s.id)));
+	    }
 
-		sb.append("\nSchülermenge = " + _daten.schueler.size() + "\n");
-		for (final @NotNull Schueler s : _daten.schueler)
-			sb.append("    " + s.id + ", " + s.nachname + ", " + s.vorname + "\n");
+	    sb.append("\nSchülermenge = %d\n".formatted(_daten.schueler.size()));
+	    for (final @NotNull Schueler s : _daten.schueler)
+	        sb.append("    %d, %s, %s\n".formatted(s.id, s.nachname, s.vorname));
 
-		sb.append("\nKurse = " + _daten.kurse.size() + "\n");
-		for (final @NotNull GostBlockungKurs k : _daten.kurse)
-			sb.append("    " + k.id + ", " + k.fach_id + ", " + k.kursart + ", " + k.nummer + "\n");
+	    sb.append("\nKurse = %d\n".formatted(_daten.kurse.size()));
+	    for (final @NotNull GostBlockungKurs k : _daten.kurse)
+	        sb.append("    %d, %d, %d, %d\n".formatted(k.id, k.fach_id, k.kursart, k.nummer));
 
-		sb.append("\nFachwahlen = " + _daten.fachwahlen.size() + "\n");
-		for (final @NotNull GostFachwahl fw : _daten.fachwahlen)
-			sb.append("    " + fw.fachID + ", " + fw.kursartID + ", " + fw.schuelerID + ", " + fw.abiturfach + ", " + fw.istSchriftlich + "\n");
+	    sb.append("\nFachwahlen = %d\n".formatted(_daten.fachwahlen.size()));
+	    for (final @NotNull GostFachwahl fw : _daten.fachwahlen)
+	        sb.append("    %d, %d, %d, %d, %b\n".formatted(fw.fachID, fw.kursartID, fw.schuelerID, fw.abiturfach, fw.istSchriftlich));
 
-		sb.append("\nRegeln = " + _daten.regeln.size() + "\n");
-		for (final @NotNull GostBlockungRegel r : _daten.regeln)
-			sb.append("    " + r.id + ", " + r.typ + ", " + r.parameter + "\n");
+	    sb.append("\nRegeln = %d\n".formatted(_daten.regeln.size()));
+	    for (final @NotNull GostBlockungRegel r : _daten.regeln)
+	        sb.append("    %d, %d, %s\n".formatted(r.id, r.typ, r.parameter));
 
-		return sb.toString();
+	    return sb.toString();
 	}
+
 
 	/**
 	 * Liefert TRUE, falls die Multimap den Test erfolgreich besteht.

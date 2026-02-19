@@ -372,20 +372,20 @@ public class GostBlockungsergebnisManager {
 		final @NotNull StringBuilder sb = new StringBuilder();
 
 		int konflikte = 0;
-		int konflikte_ignored = 0;
+		int konflikteIgnoriert = 0;
 		for (final int idRegeltyp : GostKursblockungRegelTyp.ANZEIGE_REIHENFOLGE)
 			for (final @NotNull String fehlermeldung : MapUtils.getOrCreateArrayList(_regelTyp_to_verletzungList, idRegeltyp)) {
 				if (konflikte < 10) {
-					sb.append(fehlermeldung + "\n");
+					sb.append("%s\n".formatted(fehlermeldung));
 				} else {
-					konflikte_ignored++;
+					konflikteIgnoriert++;
 				}
 				konflikte++;
 			}
 		if (konflikte == 0)
 			return "";
 
-		return konflikte + " Regelverletzungen\n" + sb.toString() + (konflikte_ignored == 0 ? "" : "+" + konflikte_ignored + " weitere Konflikte.");
+		return konflikte + " Regelverletzungen\n" + sb.toString() + (konflikteIgnoriert == 0 ? "" : "+" + konflikteIgnoriert + " weitere Konflikte.");
 	}
 
 	private void stateClearErgebnisBewertung2() {
@@ -418,7 +418,7 @@ public class GostBlockungsergebnisManager {
 
 		// Nichtwahlen des Schülers.
 		int wahlkonflikte = 0;
-		int wahlkonflikte_ignored = 0;
+		int wahlkonflikteIgnoriert = 0;
 		for (final long idSchueler : _schuelerID_fachID_to_kurs_or_null.getKeySet()) {
 			final var entries = _schuelerID_fachID_to_kurs_or_null.getSubMapOrException(idSchueler).entrySet();
 			for (final @NotNull Entry<Long, GostBlockungsergebnisKurs> e : entries)
@@ -426,10 +426,10 @@ public class GostBlockungsergebnisManager {
 					if (wahlkonflikte < 10) {
 						final long idFach = e.getKey();
 						final int kursart = _parent.schuelerGetOfFachFachwahl(idSchueler, idFach).kursartID;
-						sb.append(_parent.toStringSchuelerSimple(idSchueler) + " ist im Fach " + _parent.toStringFachartSimple(idFach, kursart)
-								+ " keinem Kurs zugeordnet.\n");
+						sb.append("%s ist im Fach %s keinem Kurs zugeordnet.\n"
+								.formatted(_parent.toStringSchuelerSimple(idSchueler), _parent.toStringFachartSimple(idFach, kursart)));
 					} else {
-						wahlkonflikte_ignored++;
+						wahlkonflikteIgnoriert++;
 					}
 					wahlkonflikte++;
 				}
@@ -444,18 +444,19 @@ public class GostBlockungsergebnisManager {
 					continue;
 				final @NotNull ArrayList<GostBlockungsergebnisKurs> list = new ArrayList<>(set);
 				if (wahlkonflikte < 10) {
-					sb.append(_parent.toStringSchuelerSimple(idSchueler) + " ist in " + _parent.toStringSchieneSimple(e.getKey()) + " in mehreren Kursen:");
+					sb.append("%s ist in %s in mehreren Kursen:"
+							.formatted(_parent.toStringSchuelerSimple(idSchueler), _parent.toStringSchieneSimple(e.getKey())));
 					for (int i = 0; i < list.size(); i++)
-						sb.append((i == 0 ? "" : ", ") + _parent.toStringKursSimple(list.get(i).id));
+						sb.append("%s%s".formatted(i == 0 ? "" : ", ", _parent.toStringKursSimple(list.get(i).id)));
 					sb.append("\n");
 				} else {
-					wahlkonflikte_ignored++;
+					wahlkonflikteIgnoriert++;
 				}
 				wahlkonflikte += list.size() - 1;
 			}
 
 		return "Wahlkonflikte = " + wahlkonflikte + "\n" + sb.toString()
-				+ (wahlkonflikte_ignored == 0 ? "" : "+" + wahlkonflikte_ignored + " weitere Konflikte.");
+				+ (wahlkonflikteIgnoriert == 0 ? "" : "+" + wahlkonflikteIgnoriert + " weitere Konflikte.");
 	}
 
 	private void stateClearErgebnisBewertung3() {
@@ -500,9 +501,9 @@ public class GostBlockungsergebnisManager {
 				continue;
 
 			final @NotNull List<String> listFacharten = DeveloperNotificationException.ifMapGetIsNull(_kursdifferenz_to_fachartenList, i);
-			sb.append("Differenz " + i + ": " + histo[i] + "x (" + listFacharten.get(0));
+			sb.append("Differenz %d: %dx (%s".formatted(i, histo[i], listFacharten.get(0)));
 			for (int j = 1; j < listFacharten.size(); j++)
-				sb.append(", " + listFacharten.get(j));
+				sb.append(", %s".formatted(listFacharten.get(j)));
 			sb.append(")\n");
 		}
 
@@ -529,7 +530,7 @@ public class GostBlockungsergebnisManager {
 			final @NotNull GostBlockungsergebnisSchiene schiene = getSchieneEmitNr(nr);
 			final @NotNull String proSchiene = stateClearErgebnisTooltip4proSchiene(schiene.id);
 			if (!proSchiene.isEmpty())
-				sb.append("Schiene " + nr + ":\n" + proSchiene);
+				sb.append("Schiene %d:\n%s".formatted(nr, proSchiene));
 		}
 
 		return sb.toString();
@@ -541,7 +542,7 @@ public class GostBlockungsergebnisManager {
 		for (final long idFachart : _fachartIDList_sortiert) {
 			final @NotNull String proFachart = stateClearErgebnisTooltip4proSchieneUndFachart(idSchiene, idFachart);
 			if (!proFachart.isEmpty())
-				sb.append(proFachart + "\n");
+				sb.append("%s\n".formatted(proFachart));
 		}
 
 		return sb.toString();
@@ -557,7 +558,7 @@ public class GostBlockungsergebnisManager {
 				sb.append("  " + getOfFachartName(idFachart) + " (+" + (n - 1) + "):");
 				for (int i = 0; i < n; i++) {
 					final @NotNull GostBlockungsergebnisKurs kurs = ListUtils.getNonNullElementAtOrException(kursGruppe, i);
-					sb.append((i == 0 ? "" : ",") + " " + getOfKursName(kurs.id));
+					sb.append("%s %s".formatted(i == 0 ? "" : ",", getOfKursName(kurs.id)));
 				}
 			}
 		}
@@ -6201,13 +6202,13 @@ public class GostBlockungsergebnisManager {
 					final int anzahl = GostBlockungsergebnisManager.getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
 					if (anzahl > 0) {
 						summe += anzahl;
-						sbZeile.append((sbZeile.isEmpty() ? "" : ", ") + getOfKursName(kurs2.id) + "(" + anzahl + ")");
+						sbZeile.append("%s%s(%d)".formatted(sbZeile.isEmpty() ? "" : ", ", getOfKursName(kurs2.id), anzahl));
 					}
 				}
 			}
 
 			if (summe > 0) {
-				sbZeilen.append(getOfKursName(kurs1.id) + "(" + summe + "): " + sbZeile.toString() + "\n");
+				sbZeilen.append("%s(%d): %s\n".formatted(getOfKursName(kurs1.id), summe, sbZeile.toString()));
 			}
 		}
 
@@ -6276,9 +6277,9 @@ public class GostBlockungsergebnisManager {
 			// Sammle alle Kollisionen dieses Schülers.
 			final @NotNull ArrayList<GostBlockungsergebnisKurs> list = new ArrayList<>(set);
 			if (zeilen < 10) {
-				sb.append(_parent.toStringSchuelerSimple(idSchueler) + " ist in mehreren Kursen:");
+				sb.append("%s ist in mehreren Kursen:".formatted(_parent.toStringSchuelerSimple(idSchueler)));
 				for (int i = 0; i < list.size(); i++)
-					sb.append((i == 0 ? "" : ", ") + _parent.toStringKursSimpleOhneID(list.get(i).id));
+					sb.append("%s%s".formatted(i == 0 ? "" : ", ", _parent.toStringKursSimpleOhneID(list.get(i).id)));
 				sb.append("\n");
 			} else {
 				zeilen_ignored++;
@@ -6687,14 +6688,14 @@ public class GostBlockungsergebnisManager {
 
 		// Ergänze leere (Schienen, Fachart) Kombinationen
 		for (final long idSchiene : _schienenIDset) {
-			sb.append("Schiene " + _parent.toStringSchieneSimple(idSchiene) + "\n");
+			sb.append("Schiene %s\n".formatted(_parent.toStringSchieneSimple(idSchiene)));
 
 			for (final long idFachart : _schienenID_fachartID_to_kurseList.getKeySetOf(idSchiene)) {
 				if (!Map2DUtils.getOrCreateArrayList(_schienenID_fachartID_to_kurseList, idSchiene, idFachart).isEmpty()) {
-					sb.append("    Fachart " + _parent.toStringFachartSimpleByFachartID(idFachart) + "\n");
+					sb.append("    Fachart %s\n".formatted(_parent.toStringFachartSimpleByFachartID(idFachart)));
 					for (final @NotNull GostBlockungsergebnisKurs eKurs : Map2DUtils.getOrCreateArrayList(_schienenID_fachartID_to_kurseList, idSchiene,
 							idFachart)) {
-						sb.append("        Kurs " + _parent.toStringKursSimple(eKurs.id) + "\n");
+						sb.append("        Kurs %s\n".formatted(_parent.toStringKursSimple(eKurs.id)));
 					}
 				}
 			}

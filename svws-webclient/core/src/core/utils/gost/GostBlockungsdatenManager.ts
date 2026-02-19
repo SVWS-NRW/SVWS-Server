@@ -2625,25 +2625,25 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public getDebugString(): string {
 		const sb: StringBuilder = new StringBuilder();
-		sb.append("\nErgebnisse = " + this._daten.ergebnisse.size() + "\n");
-		sb.append("\nSchienen = " + this._daten.schienen.size() + "\n");
+		sb.append(JavaString.format("\nErgebnisse = %d\n", this._daten.ergebnisse.size()));
+		sb.append(JavaString.format("\nSchienen = %d\n", this._daten.schienen.size()));
 		for (const s of this._daten.schienen) {
-			sb.append("    ID=" + s.id + ", NR=" + s.nummer + ", BEZ=" + s.bezeichnung + ", W-STD=" + s.wochenstunden + "\n");
+			sb.append(JavaString.format("    ID=%d, NR=%d, BEZ=%s, W-STD=%d\n", s.id, s.nummer, s.bezeichnung, s.wochenstunden));
 			for (const e of this.ergebnisGetListeSortiertNachID())
-				sb.append("    Hat E " + e.id + " Schiene " + s.id + "--> " + this.ergebnisManagerGet(e.id).getOfSchieneExists(s.id) + "\n");
+				sb.append(JavaString.format("    Hat E %d Schiene %d --> %b\n", e.id, s.id, this.ergebnisManagerGet(e.id).getOfSchieneExists(s.id)));
 		}
-		sb.append("\nSchülermenge = " + this._daten.schueler.size() + "\n");
+		sb.append(JavaString.format("\nSchülermenge = %d\n", this._daten.schueler.size()));
 		for (const s of this._daten.schueler)
-			sb.append("    " + s.id + ", " + s.nachname + ", " + s.vorname + "\n");
-		sb.append("\nKurse = " + this._daten.kurse.size() + "\n");
+			sb.append(JavaString.format("    %d, %s, %s\n", s.id, s.nachname, s.vorname));
+		sb.append(JavaString.format("\nKurse = %d\n", this._daten.kurse.size()));
 		for (const k of this._daten.kurse)
-			sb.append("    " + k.id + ", " + k.fach_id + ", " + k.kursart + ", " + k.nummer + "\n");
-		sb.append("\nFachwahlen = " + this._daten.fachwahlen.size() + "\n");
+			sb.append(JavaString.format("    %d, %d, %d, %d\n", k.id, k.fach_id, k.kursart, k.nummer));
+		sb.append(JavaString.format("\nFachwahlen = %d\n", this._daten.fachwahlen.size()));
 		for (const fw of this._daten.fachwahlen)
-			sb.append("    " + fw.fachID + ", " + fw.kursartID + ", " + fw.schuelerID + ", " + fw.abiturfach + ", " + fw.istSchriftlich + "\n");
-		sb.append("\nRegeln = " + this._daten.regeln.size() + "\n");
+			sb.append(JavaString.format("    %d, %d, %d, %d, %b\n", fw.fachID, fw.kursartID, fw.schuelerID, fw.abiturfach, fw.istSchriftlich));
+		sb.append(JavaString.format("\nRegeln = %d\n", this._daten.regeln.size()));
 		for (const r of this._daten.regeln)
-			sb.append("    " + r.id + ", " + r.typ + ", " + r.parameter + "\n");
+			sb.append(JavaString.format("    %d, %d, %s\n", r.id, r.typ, r.parameter));
 		return sb.toString();
 	}
 
