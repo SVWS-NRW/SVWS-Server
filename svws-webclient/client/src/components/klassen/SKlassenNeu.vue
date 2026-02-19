@@ -48,13 +48,13 @@
 	import { ref, computed, onMounted, watch, shallowRef } from "vue";
 	import type { KlassenNeuProps } from "~/components/klassen/SKlassenNeuProps";
 	import { KlassenDaten, AllgemeinbildendOrganisationsformen, Klassenart, Schulgliederung, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, type JahrgangsDaten } from "@core";
-	import { KlassenModelProxy } from "./KlassenModelProxy";
+	import { KlassenDatenModelProxy } from "./KlassenDatenModelProxy";
 
 	const props = defineProps<KlassenNeuProps>();
 
 	const dataNotPatched = shallowRef(new KlassenDaten());
 
-	const modelProxy = new KlassenModelProxy(() => dataNotPatched.value, () => props.manager().liste.list(), props.manager, props.mapKlassenVorigerAbschnitt, props.mapKlassenFolgenderAbschnitt);
+	const modelProxy = new KlassenDatenModelProxy(() => dataNotPatched.value, () => props.manager().liste.list(), props.manager, props.mapKlassenVorigerAbschnitt, props.mapKlassenFolgenderAbschnitt);
 
 	onMounted(() => {
 		const proxy = modelProxy.proxy;

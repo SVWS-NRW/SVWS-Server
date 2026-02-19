@@ -5,7 +5,7 @@ import { ModelProxy, ValidatorKlassenKuerzel, ValidatorStringLength, type Klasse
 /**
  * Der spezielle ModelProxy für die Klassen-Daten
  */
-export class KlassenModelProxy extends ModelProxy<KlassenDaten> {
+export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 
 	protected manager: () => KlassenListeManager;
 	protected mapKlassenVorigerAbschnitt: () => Map<number, KlassenDaten>;

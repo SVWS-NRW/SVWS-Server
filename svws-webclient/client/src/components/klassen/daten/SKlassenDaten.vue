@@ -116,7 +116,7 @@
 	import type { KlassenDatenProps } from "./SKlassenDatenProps";
 	import type { LehrerListeEintrag, KlassenDaten, Klassenart, Schulgliederung, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, JahrgangsDaten } from "@core";
 	import { SchuelerStatus, Schulform, BenutzerKompetenz, Jahrgaenge } from "@core";
-	import { KlassenModelProxy } from "../KlassenModelProxy";
+	import { KlassenDatenModelProxy } from "../KlassenDatenModelProxy";
 
 	const props = defineProps<KlassenDatenProps>();
 
@@ -138,7 +138,7 @@
 	const listOfAutopatchProps: Iterable<keyof KlassenDaten> = ["idJahrgang", "parallelitaet", "idVorgaengerklasse",
 		"idFolgeklasse", "idSchulgliederung", "idKlassenart", "idBerufsbildendOrganisationsform", "idAllgemeinbildendOrganisationsform",
 		"idWeiterbildungOrganisationsform", "noteneingabeGesperrt", "verwendungAnkreuzkompetenzen", "beginnSommersemester"];
-	const modelProxy = new KlassenModelProxy(() => dataNotPatched(), () => listAndereKlassen.value, props.manager, props.mapKlassenVorigerAbschnitt, props.mapKlassenFolgenderAbschnitt, listOfAutopatchProps, patchMethod);
+	const modelProxy = new KlassenDatenModelProxy(() => dataNotPatched(), () => listAndereKlassen.value, props.manager, props.mapKlassenVorigerAbschnitt, props.mapKlassenFolgenderAbschnitt, listOfAutopatchProps, patchMethod);
 
 	watch(() => props.manager().daten().klassenLeitungen, () => {
 		klassenleitungClicked.value = null;

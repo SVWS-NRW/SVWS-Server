@@ -4,14 +4,14 @@
 			<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="hinzufuegen"
 				:items="verfuegbareSprachen" :item-text="getTextBySprache" ref="selectSprachen" autofocus focus-class-content />
 		</div>
-		<ui-table-grid v-if="!sprachbelegungen().isEmpty()" name="Sprachbelegungen" :manager="() => gridManager" hide-selection>
+		<ui-table-grid v-if="!gridManager.daten.isEmpty()" name="Sprachbelegungen" :manager="() => gridManager" hide-selection>
 			<template #header>
 				<template v-for="col of gridManager.cols.values()" :key="col.name">
 					<template v-if="col.kuerzel !== ''">
 						<th v-if="col.kuerzel === 'Auswahl'" class="flex h-10 items-center justify-center">
-							<svws-ui-checkbox :model-value="(auswahl.length === sprachbelegungen().size()) && (auswahl.length > 0)"
-								:indeterminate="(auswahl.length > 0) && (auswahl.length < sprachbelegungen().size())"
-								@update:model-value="value => auswahl = value ? [...sprachbelegungen()] : []" />
+							<svws-ui-checkbox :model-value="(auswahl.length === gridManager.daten.size()) && (auswahl.length > 0)"
+								:indeterminate="(auswahl.length > 0) && (auswahl.length < gridManager.daten.size())"
+								@update:model-value="value => auswahl = value ? [...gridManager.daten].map(d => d.data) : []" />
 						</th>
 						<th v-else-if="gridManager.isColVisible(col.kuerzel) ?? true" class="flex h-10" :class="{ 'text-left': ['Sprache'].includes(col.kuerzel) }">
 							<div class="h-full content-center">
@@ -29,68 +29,63 @@
 			</template>
 			<template #default="{ row }">
 				<td class="flex items-center justify-center">
-					<svws-ui-checkbox :model-value="auswahl.includes(row)" @update:model-value="toggleSelection(row)" />
+					<svws-ui-checkbox :model-value="auswahl.includes(row.data)" @update:model-value="toggleSelection(row.data)" />
 				</td>
-				<td class="text-left p-1"> {{ getTextBySprache(row.sprache) }} </td>
+				<td class="text-left p-1"> {{ getTextBySprache(row.proxy.sprache) }} </td>
 				<td v-if="hatSpalteNachweis">
-					<svws-ui-checkbox :model-value="row.istNachweis" @update:model-value="istNachweis => patchSprachbelegung({ istNachweis }, row.sprache)" headless :readonly />
+					<svws-ui-checkbox v-model="row.proxy.istNachweis" headless :readonly />
 				</td>
 				<td class="ui-divider">
-					<svws-ui-input-number v-if="!readonly" title="Reihenfolge" headless :model-value="row.reihenfolge"
-						@update:model-value="reihenfolge=>reihenfolge && patchSprachbelegung({reihenfolge}, row.sprache)" :min="1" :max="8" />
-					<span v-else> {{ row.reihenfolge ?? "-" }} </span>
+					<svws-ui-input-number v-if="!readonly" title="Reihenfolge" headless v-model="row.proxy.reihenfolge" @commit="row.patch" :min="1" :max="8" />
+					<span v-else> {{ row.proxy.reihenfolge ?? "-" }} </span>
 				</td>
 				<template v-if="hatSpaltenZeitraum">
 					<td>
-						<svws-ui-select v-if="!readonly" title="Von Jahrgang" headless :model-value="(row.belegungVonJahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(row.belegungVonJahrgang)"
-							@update:model-value="jahrgang => jahrgang?.daten(schuljahr)?.kuerzel && patchSprachbelegung({belegungVonJahrgang: jahrgang.daten(schuljahr)!.kuerzel, sprache: row.sprache}, row.sprache)"
-							:items="sprachJahrgaenge" :item-text="jahrgangText" />
-						<div v-else> {{ (row.belegungVonJahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(row.belegungVonJahrgang)?.daten(schuljahr)?.kuerzel ?? '—' }} </div>
+						<svws-ui-select v-if="!readonly" title="Von Jahrgang" headless v-model="row.belegungVonJahrgang.value" :items="sprachJahrgaenge" :item-text="jahrgangText" />
+						<div v-else> {{ row.belegungVonJahrgang.value }} </div>
 					</td>
 					<td class="ui-divider">
 						<div v-if="!readonly" class="flex items-center gap-0.5 border border-ui-25 border-dashed hover:border-ui-50 hover:border-solid hover:bg-ui-100 w-fit m-auto p-[0.1rem] rounded-sm cursor-pointer"
-							@click="patchSprachbelegung({belegungVonAbschnitt: row.belegungVonAbschnitt === 1 ? 2 : 1}, row.sprache)">
-							<span :class="{ 'opacity-100 font-bold': row.belegungVonAbschnitt === 1, 'opacity-25 hover:opacity-100 font-medium': row.belegungVonAbschnitt === 2}">1</span>
+							@click="row.belegungVonAbschnitt.value = row.belegungVonAbschnitt.value">
+							<span :class="{ 'opacity-100 font-bold': row.belegungVonAbschnitt.value === 1, 'opacity-25 hover:opacity-100 font-medium': row.belegungVonAbschnitt.value === 2}">1</span>
 							<span class="opacity-50">|</span>
-							<span :class="{ 'opacity-100 font-bold': row.belegungVonAbschnitt === 2, 'opacity-25 hover:opacity-100 font-medium': row.belegungVonAbschnitt === 1}">2</span>
+							<span :class="{ 'opacity-100 font-bold': row.belegungVonAbschnitt.value === 2, 'opacity-25 hover:opacity-100 font-medium': row.belegungVonAbschnitt.value === 1}">2</span>
 						</div>
 						<div v-else> {{ row.belegungVonAbschnitt ?? "?" }} </div>
 					</td>
 					<td>
-						<svws-ui-select v-if="!readonly" title="Bis Jahrgang" headless removable :model-value="(row.belegungBisJahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(row.belegungBisJahrgang)"
-							@update:model-value="jahrgang => patchSprachbelegung({belegungBisJahrgang: jahrgang?.daten(schuljahr)?.kuerzel ?? null}, row.sprache)"
-							:items="sprachJahrgaengeBis(row).value" :item-text="jahrgangText" />
-						<div v-else> {{ (row.belegungBisJahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(row.belegungBisJahrgang)?.daten(schuljahr)?.kuerzel ?? '—' }} </div>
+						<svws-ui-select v-if="!readonly" title="Bis Jahrgang" headless removable v-model="row.belegungBisJahrgang.value"
+							:items="sprachJahrgaengeBis(row.proxy).value" :item-text="jahrgangText" />
+						<div v-else> {{ row.belegungBisJahrgang.value }} </div>
 					</td>
 					<td class="ui-divider">
 						<div v-if="!readonly" class="flex items-center gap-0.5 border border-ui-25 border-dashed hover:border-ui-50 hover:border-solid hover:bg-ui-100 w-fit m-auto p-[0.1rem] rounded-sm cursor-pointer"
-							@click="patchSprachbelegung({belegungBisAbschnitt: row.belegungBisAbschnitt === 1 ? 2 : 1}, row.sprache)">
-							<span :class="{ 'opacity-100 font-bold': row.belegungBisAbschnitt === 1, 'opacity-25 hover:opacity-100 font-medium': row.belegungBisAbschnitt === 2}">1</span>
+							@click="row.belegungBisAbschnitt.value = row.belegungBisAbschnitt.value">
+							<span :class="{ 'opacity-100 font-bold': row.belegungBisAbschnitt.value === 1, 'opacity-25 hover:opacity-100 font-medium': row.belegungBisAbschnitt.value === 2}">1</span>
 							<span class="opacity-50">|</span>
-							<span :class="{ 'opacity-100 font-bold': row.belegungBisAbschnitt === 2, 'opacity-25 hover:opacity-100 font-medium': row.belegungBisAbschnitt === 1}">2</span>
+							<span :class="{ 'opacity-100 font-bold': row.belegungBisAbschnitt.value === 2, 'opacity-25 hover:opacity-100 font-medium': row.belegungBisAbschnitt.value === 1}">2</span>
 						</div>
 						<div v-else> {{ row.belegungBisAbschnitt ?? "?" }} </div>
 					</td>
 				</template>
 				<td>
-					<template v-if="row.sprache === 'G'">
+					<template v-if="row.proxy.sprache === 'G'">
 						<svws-ui-checkbox v-if="!readonly" v-model="hatGraecum" headless title="Graecum">Graecum</svws-ui-checkbox>
 						<div v-else-if="hatGraecum">Graecum</div>
 						<div v-else>-</div>
 					</template>
-					<template v-else-if="row.sprache === 'H'">
+					<template v-else-if="row.proxy.sprache === 'H'">
 						<svws-ui-checkbox v-if="!readonly" v-model="hatHebraicum" headless title="Hebraicum">Hebraicum</svws-ui-checkbox>
 						<div v-else-if="hatHebraicum">Hebraicum</div>
 						<div v-else>-</div>
 					</template>
-					<template v-else-if="row.sprache === 'L'">
-						<svws-ui-select v-if="!readonly" headless :items="latein" :model-value="latinum" :item-text="i => i.text" @update:model-value="patchLatinum" removable />
+					<template v-else-if="row.proxy.sprache === 'L'">
+						<svws-ui-select v-if="!readonly" headless :items="latein" removable :item-text="i => i.text"
+							:model-value="latinum" @update:model-value="val => patchLatinum(val ?? null, row)" />
 						<div v-else> {{ latinum?.text ?? '-' }} </div>
 					</template>
 					<template v-else>
-						<svws-ui-select v-if="!readonly" title="Referenzniveau" headless removable
-							:model-value="(row.referenzniveau === null) ? null : Sprachreferenzniveau.data().getWertBySchluessel(row.referenzniveau)"
-							@update:model-value="referenzniveau => patchSprachbelegung({referenzniveau: referenzniveau?.daten(schuljahr)?.schluessel ?? null}, row.sprache)"
+						<svws-ui-select v-if="!readonly" title="Referenzniveau" headless removable v-model="row.referenzniveau.value"
 							:items="Sprachreferenzniveau.values()" :item-text="i => i.daten(schuljahr)?.kuerzel ?? '—'" />
 						<div v-else> {{ row.referenzniveau }} </div>
 					</template>
@@ -122,11 +117,12 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from 'vue';
+	import { computed, ref, shallowRef, watch } from 'vue';
 	import type { ComponentExposed } from 'vue-component-type-helpers';
 	import type { List, Sprachbelegung } from '@core';
 	import { ArrayList, Fach, Jahrgaenge, Schulform, Schulgliederung, ServerMode, Sprachreferenzniveau } from '@core';
 	import { GridManager, type SchuelerListeManager, type SvwsUiSelect } from '@ui';
+	import { SchuelerSprachbelegungModelProxy } from './SchuelerSprachbelegungModelProxy';
 
 	const props = defineProps<{
 		sprachbelegungen: () => List<Sprachbelegung>;
@@ -142,7 +138,6 @@
 	const schuljahr = computed<number>(() => props.schuelerListeManager().schuelerGetSchuljahrOrException());
 	const auswahl = ref(new Array<Sprachbelegung>());
 	const selectSprachen = ref<ComponentExposed<typeof SvwsUiSelect<string[]>>>();
-
 	const schulgliederung = computed<Schulgliederung | null>(() => Schulgliederung.data().getWertByKuerzel(props.schuelerListeManager().auswahl().schulgliederung));
 	const hatSpalteNachweis = computed<boolean>(() => props.schulform === Schulform.WB);
 	const hatSpaltenZeitraum = computed(() => {
@@ -151,9 +146,24 @@
 		return !(istBKoderSB && !istSpezielleGliederung);
 	});
 
-	const gridManager = new GridManager<string, Sprachbelegung, List<Sprachbelegung>>({
-		daten: computed<List<Sprachbelegung>>(() => props.sprachbelegungen()),
-		getRowKey: belegung => belegung.sprache,
+	function createList(sprachbelegungen: List<Sprachbelegung>) {
+		const list = new ArrayList<SchuelerSprachbelegungModelProxy>();
+		for (const sprachbelegung of sprachbelegungen) {
+			const patchMethod = async (proxy: Partial<Sprachbelegung>) => {
+				await props.patchSprachbelegung(proxy, sprachbelegung.sprache);
+				return true;
+			};
+			const modelProxy = new SchuelerSprachbelegungModelProxy(() => sprachbelegung, props.schuelerListeManager, patchMethod);
+			list.add(modelProxy);
+		}
+		return list;
+	}
+	const gridList = shallowRef<List<SchuelerSprachbelegungModelProxy>>(new ArrayList());
+	watch(() => props.sprachbelegungen(), neu => gridList.value = createList(neu), { immediate: true });
+
+	const gridManager = new GridManager<string, SchuelerSprachbelegungModelProxy, List<SchuelerSprachbelegungModelProxy>>({
+		daten: computed(() => gridList.value),
+		getRowKey: belegung => belegung.data.sprache,
 		columns: [
 			{ kuerzel: "Auswahl", name: "Auswahl", width: "3rem", hideable: false },
 			{ kuerzel: "Sprache", name: "Sprache", width: "16rem", hideable: false },
@@ -187,8 +197,8 @@
 	const verfuegbareSprachen = computed(() => {
 		const belegungen = new Set();
 		const sprachen = [];
-		for (const b of props.sprachbelegungen()) {
-			belegungen.add(b.sprache);
+		for (const b of gridManager.daten) {
+			belegungen.add(b.data.sprache);
 		}
 		for (const k of Fach.getListFremdsprachenKuerzelAtomar(schuljahr.value)) {
 			const sprache = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(k);
@@ -246,7 +256,7 @@
 		}
 		const data: Partial<Sprachbelegung> = {};
 		data.sprache = sprache;
-		data.reihenfolge = props.sprachbelegungen().size() + 1;
+		data.reihenfolge = gridManager.daten.size() + 1;
 		data.belegungVonAbschnitt = 1;
 		data.belegungBisAbschnitt = 2;
 		const schulform = props.schuelerListeManager().schulform();
@@ -268,7 +278,7 @@
 		return jgDaten.kuerzel;
 	}
 
-	const latein = [{ text: 'Kleines Latinum' }, { text: 'Latinum' }];
+	const latein = [{ text: 'Kleines Latinum' }, { text: 'Latinum' }] as const;
 	const latinum = computed(() => {
 		if (hatKleinesLatinum.value) {
 			return latein[0];
@@ -276,35 +286,38 @@
 		if (hatLatinum.value) {
 			return latein[1];
 		}
-		return undefined;
+		return null;
 	});
 
-	async function patchLatinum(item: any) {
-		console.log(item);
-		if (item === undefined) {
-			await props.patchSprachbelegung({ hatKleinesLatinum: false, hatLatinum: false }, 'L');
+	async function patchLatinum(item: { text: 'Kleines Latinum' } | { text: 'Latinum' } | null, row: SchuelerSprachbelegungModelProxy) {
+		if (item === null) {
+			row.proxy.hatKleinesLatinum = false;
+			row.proxy.hatLatinum = false;
 		}
 		if (item === latein[0]) {
-			await props.patchSprachbelegung({ hatKleinesLatinum: true, hatLatinum: false }, 'L');
+			row.proxy.hatKleinesLatinum = true;
+			row.proxy.hatLatinum = false;
 		}
 		if (item === latein[1]) {
-			await props.patchSprachbelegung({ hatKleinesLatinum: false, hatLatinum: true }, 'L');
+			row.proxy.hatKleinesLatinum = false;
+			row.proxy.hatLatinum = true;
 		}
+		await row.patch();
 	}
 
 	const hatKleinesLatinum = computed<boolean>(() => {
-		for (const sprache of props.sprachbelegungen()) {
-			if (sprache.sprache === 'L') {
-				return sprache.hatKleinesLatinum;
+		for (const sprache of gridManager.daten) {
+			if (sprache.proxy.sprache === 'L') {
+				return sprache.proxy.hatKleinesLatinum;
 			}
 		}
 		return false;
 	});
 
 	const hatLatinum = computed<boolean>(() => {
-		for (const sprache of props.sprachbelegungen()) {
-			if (sprache.sprache === 'L') {
-				return sprache.hatLatinum;
+		for (const sprache of gridManager.daten) {
+			if (sprache.proxy.sprache === 'L') {
+				return sprache.proxy.hatLatinum;
 			}
 		}
 		return false;
@@ -312,29 +325,37 @@
 
 	const hatGraecum = computed<boolean>({
 		get: () => {
-			for (const sprache of props.sprachbelegungen()) {
-				if (sprache.sprache === 'G') {
-					return sprache.hatGraecum;
+			for (const sprache of gridManager.daten) {
+				if (sprache.proxy.sprache === 'G') {
+					return sprache.proxy.hatGraecum;
 				}
 			}
 			return false;
 		},
 		set: (hatGraecum) => {
-			props.patchSprachbelegung({ hatGraecum }, 'G').catch((err: unknown) => { /* nichts machen */ });
+			for (const sprache of gridManager.daten) {
+				if (sprache.proxy.sprache === 'G') {
+					sprache.proxy.hatGraecum = hatGraecum;
+				}
+			}
 		},
 	});
 
 	const hatHebraicum = computed<boolean>({
 		get: () => {
-			for (const sprache of props.sprachbelegungen()) {
-				if (sprache.sprache === 'H') {
-					return sprache.hatHebraicum;
+			for (const sprache of gridManager.daten) {
+				if (sprache.proxy.sprache === 'H') {
+					return sprache.proxy.hatHebraicum;
 				}
 			}
 			return false;
 		},
 		set: (hatHebraicum) => {
-			props.patchSprachbelegung({ hatHebraicum }, 'H').catch((err: unknown) => { /* nichts machen */ });
+			for (const sprache of gridManager.daten) {
+				if (sprache.proxy.sprache === 'H') {
+					sprache.proxy.hatHebraicum = hatHebraicum;
+				}
+			}
 		},
 	});
 

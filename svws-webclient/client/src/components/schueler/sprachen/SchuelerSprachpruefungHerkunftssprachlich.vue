@@ -11,7 +11,7 @@
 						<th v-if="col.kuerzel === 'Auswahl'" class="flex h-10 items-center justify-center">
 							<svws-ui-checkbox :model-value="(auswahl.length === gridManager.daten.size()) && (auswahl.length > 0)"
 								:indeterminate="(auswahl.length > 0) && (auswahl.length < gridManager.daten.size())"
-								@update:model-value="value => auswahl = value ? [...gridManager.daten] : []" />
+								@update:model-value="value => auswahl = value ? [...gridManager.daten].map(d => d.data) : []" />
 						</th>
 						<th v-else-if="gridManager.isColVisible(col.kuerzel) ?? true" class="flex h-10" :class="{ 'text-left': ['Sprache'].includes(col.kuerzel) }">
 							<div class="h-full content-center">
@@ -29,48 +29,37 @@
 			</template>
 			<template #default="{ row }">
 				<td class="flex items-center justify-center">
-					<svws-ui-checkbox :model-value="auswahl.includes(row)" @update:model-value="toggleSelection(row)" />
+					<svws-ui-checkbox :model-value="auswahl.includes(row.data)" @update:model-value="toggleSelection(row.data)" />
 				</td>
-				<td class="text-left p-1"> {{ getTextBySprache(row.sprache) }} </td>
+				<td class="text-left p-1"> {{ getTextBySprache(row.proxy.sprache) }} </td>
 				<td class="ui-divider">
-					<svws-ui-text-input v-if="!readonly" title="Zeugnisbezeichnung" headless :model-value="row.zeugnisbezeichnung"
-						@change="value => patchSprachpruefung({ zeugnisbezeichnung: value ?? '' }, row.sprache)" />
-					<div v-else>{{ row.zeugnisbezeichnung }}</div>
+					<svws-ui-text-input v-if="!readonly" title="Zeugnisbezeichnung" headless v-model="row.proxy.zeugnisbezeichnung" @commit="row.patch" />
+					<div v-else>{{ row.proxy.zeugnisbezeichnung }}</div>
 				</td>
 				<td>
-					<svws-ui-checkbox :disabled="readonly" :model-value="row.kannBelegungAlsFortgefuehrteSpracheErlauben"
-						@update:model-value="kannBelegungAlsFortgefuehrteSpracheErlauben => patchSprachpruefung({kannBelegungAlsFortgefuehrteSpracheErlauben}, row.sprache)" headless />
+					<svws-ui-checkbox :disabled="readonly" v-model="row.proxy.kannBelegungAlsFortgefuehrteSpracheErlauben" headless />
 				</td>
 				<td v-if="hatSpaltenJahrgang">
-					<svws-ui-select v-if="!readonly" title="Jahrgang" headless removable
-						:model-value="(row.jahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(row.jahrgang)"
-						@update:model-value="jahrgang => patchSprachpruefung({jahrgang: jahrgang?.daten(schuljahr)?.kuerzel ?? null}, row.sprache)" :items="sprachJahrgaenge"
-						:item-text="i => i?.daten(schuljahr)?.kuerzel ?? '—'" />
-					<div v-else>{{ (row.jahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(row.jahrgang)?.daten(schuljahr)?.kuerzel ?? '—' }}</div>
+					<svws-ui-select v-if="!readonly" title="Jahrgang" headless removable v-model="row.jahrgang.value" :items="sprachJahrgaenge"
+						:item-text="i => i.daten(schuljahr)?.kuerzel ?? '—'" />
+					<div v-else>{{ row.jahrgang.value?.daten(schuljahr)?.kuerzel ?? '—' }}</div>
 				</td>
 				<td>
-					<svws-ui-select v-if="!readonly" title="Sprachpruefungniveau" headless removable :model-value="Sprachpruefungniveau.getByID(row.anspruchsniveauId)"
-						@update:model-value="anspruchsniveau => patchSprachpruefung({anspruchsniveauId: anspruchsniveau?.daten.id || null}, row.sprache)"
-						:items="Sprachpruefungniveau.values()" :item-text="i => i.daten.beschreibung" />
-					<div v-else>{{ Sprachpruefungniveau.getByID(row.anspruchsniveauId)?.daten.kuerzel ?? '-' }}</div>
+					<svws-ui-select v-if="!readonly" title="Sprachpruefungniveau" headless removable v-model="row.anspruchsniveauId.value"
+						:items="Sprachpruefungniveau.values()" :item-text="i => i.daten.kuerzel" />
+					<div v-else>{{ Sprachpruefungniveau.getByID(row.anspruchsniveauId.value?.daten.id ?? null)?.daten.kuerzel ?? '-' }}</div>
 				</td>
 				<td>
-					<svws-ui-select v-if="!readonly" :items="Note.getNotenOhneTendenz()" :item-text="i => i.daten(schuljahr)?.kuerzel ?? '—'"
-						:model-value="Note.fromNoteSekI(row.note)"
-						@update:model-value="note => patchSprachpruefung({ note: ((note === null) || (note === undefined)) ? null : note.getNoteSekI(schuljahr) }, row.sprache)"
-						headless removable />
-					<div v-else>{{ Note.fromNoteSekI(row.note)?.daten(schuljahr)?.kuerzel ?? '—' }}</div>
+					<svws-ui-select v-if="!readonly" :items="Note.getNotenOhneTendenz()" :item-text="i => i.daten(schuljahr)?.kuerzel ?? '—'" v-model="row.note.value" headless removable />
+					<div v-else>{{ Note.fromNoteSekI(row.proxy.note)?.daten(schuljahr)?.kuerzel ?? '—' }}</div>
 				</td>
 				<td>
-					<svws-ui-select v-if="!readonly" title="Referenzniveau" headless removable
-						:model-value="(row.referenzniveau === null) ? null : Sprachreferenzniveau.data().getWertBySchluessel(row.referenzniveau)"
-						@update:model-value="referenzniveau => patchSprachpruefung({referenzniveau: referenzniveau?.daten(schuljahr)?.schluessel ?? null}, row.sprache)"
+					<svws-ui-select v-if="!readonly" title="Referenzniveau" headless removable v-model="row.referenzniveau.value"
 						:items="Sprachreferenzniveau.values()" :item-text="i => i.daten(schuljahr)?.kuerzel ?? '—'" />
-					<div v-else>{{ (row.referenzniveau === null) ? null : Sprachreferenzniveau.data().getWertByKuerzel(row.referenzniveau)?.daten(schuljahr)?.kuerzel ?? '—' }}</div>
+					<div v-else> {{ row.referenzniveau }} </div>
 				</td>
 				<td>
-					<svws-ui-text-input :disabled="readonly" placeholder="Prüfungsdatum" :model-value="row.pruefungsdatum"
-						@change="pruefungsdatum => pruefungsdatum && patchSprachpruefung({pruefungsdatum}, row.sprache)" type="date" headless />
+					<svws-ui-text-input :disabled="readonly" placeholder="Prüfungsdatum" v-model="row.proxy.pruefungsdatum" @commit="row.patch" type="date" headless />
 				</td>
 			</template>
 			<template #footer>
@@ -88,11 +77,12 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from 'vue';
+	import { computed, ref, shallowRef, watch } from 'vue';
 	import type { ComponentExposed } from 'vue-component-type-helpers';
 	import type { List, ServerMode, Sprachpruefung } from '@core';
 	import { ArrayList, Fach, Jahrgaenge, Schulform, Schulgliederung, Sprachpruefungniveau, Sprachreferenzniveau, Note } from '@core';
 	import { GridManager, type SchuelerListeManager, type SvwsUiSelect } from '@ui';
+	import { SchuelerSprachpruefungModelProxy } from './SchuelerSprachpruefungModelProxy';
 
 	const props = defineProps<{
 		sprachpruefungen: () => List<Sprachpruefung>;
@@ -115,17 +105,26 @@
 		return !(istBKoderSB && !istSpezielleGliederung);
 	});
 
-	const gridManager = new GridManager<string, Sprachpruefung, List<Sprachpruefung>>({
-		daten: computed<List<Sprachpruefung>>(() => {
-			const list = new ArrayList<Sprachpruefung>();
-			for (const s of props.sprachpruefungen()) {
-				if (s.istHSUPruefung) {
-					list.add(s);
-				}
+	function createList(sprachpruefungen: List<Sprachpruefung>) {
+		const list = new ArrayList<SchuelerSprachpruefungModelProxy>();
+		for (const sprachpruefung of sprachpruefungen) {
+			if (sprachpruefung.istHSUPruefung) {
+				const patchMethod = async (proxy: Partial<Sprachpruefung>) => {
+					await props.patchSprachpruefung(proxy, sprachpruefung.sprache);
+					return true;
+				};
+				const modelProxy = new SchuelerSprachpruefungModelProxy(() => sprachpruefung, props.schuelerListeManager, patchMethod);
+				list.add(modelProxy);
 			}
-			return list;
-		}),
-		getRowKey: belegung => belegung.sprache,
+		}
+		return list;
+	}
+	const gridList = shallowRef<List<SchuelerSprachpruefungModelProxy>>(new ArrayList());
+	watch(() => props.sprachpruefungen(), neu => gridList.value = createList(neu), { immediate: true });
+
+	const gridManager = new GridManager<string, SchuelerSprachpruefungModelProxy, List<SchuelerSprachpruefungModelProxy>>({
+		daten: computed(() => gridList.value),
+		getRowKey: belegung => belegung.data.sprache,
 		columns: [
 			{ kuerzel: "Auswahl", name: "Auswahl", width: "3rem", hideable: false },
 			{ kuerzel: "Sprache", name: "Kürzel der Sprache", width: "8rem", hideable: false },
@@ -167,8 +166,8 @@
 	const verfuegbareSprachpruefungen = computed(() => {
 		const pruefungenHKFS = new Set();
 		const sprachen = [];
-		for (const p of props.sprachpruefungen()) {
-			pruefungenHKFS.add(p.sprache);
+		for (const p of gridManager.daten) {
+			pruefungenHKFS.add(p.data.sprache);
 		}
 		for (const k of Fach.getListFremdsprachenKuerzelAtomar(schuljahr.value)) {
 			const sprache = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(k);

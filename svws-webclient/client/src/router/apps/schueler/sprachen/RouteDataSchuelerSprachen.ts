@@ -58,7 +58,7 @@ export class RouteDataSchuelerSprachen extends RouteData<RouteStateSchuelerSprac
 				return JavaInteger.compare(n1.reihenfolge ?? 0, n2.reihenfolge ?? 0);
 			} });
 			this.setPatchedState({ auswahl, sprachbelegungen, sprachpruefungen });
-		} catch (error) {
+		} catch {
 			throw new DeveloperNotificationException("Die Laufbahninformationen konnten nicht eingeholt werden.");
 		}
 		api.status.stop();
@@ -147,7 +147,7 @@ export class RouteDataSchuelerSprachen extends RouteData<RouteStateSchuelerSprac
 	addSprachpruefung = async (data: Partial<Sprachpruefung>): Promise<Sprachpruefung | null> => {
 		// Prüfe, ob bereits eine Sprachpruefung für das angegeben Sprach-Kürzel existiert
 		let pruefung: Sprachpruefung | null = this.getSprachpruefung(data);
-		if (pruefung !== null) {
+		if ((pruefung !== null) && (pruefung.istHSUPruefung === data.istHSUPruefung) && (pruefung.istFeststellungspruefung === data.istFeststellungspruefung)) {
 			return null;
 		}
 		// Füge die Sprachprüfung hinzu
