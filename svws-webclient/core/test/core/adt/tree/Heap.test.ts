@@ -3,7 +3,6 @@ import { MinHeap, LehrerListeEintrag, IllegalArgumentException, NoSuchElementExc
 import { TestMinComparator } from "../../../shared/TestComparator";
 
 const minComparator = new TestMinComparator();
-//const maxComparator = new TestMaxComparator();
 
 const l0 = new LehrerListeEintrag();
 const l1 = new LehrerListeEintrag();
@@ -23,24 +22,24 @@ const l = {
 };
 const s = {
 	name: "String",
-	data: ["5","5","4","3","2","7","1"],
-	data2: ["2","42","0","7","8","9"],
+	data: ["5", "5", "4", "3", "2", "7", "1"],
+	data2: ["2", "42", "0", "7", "8", "9"],
 };
 const n = {
 	name: "Number",
-	data: [5,5,4,3,2,7,1],
-	data2: [3,42,0,7,8,9],
+	data: [5, 5, 4, 3, 2, 7, 1],
+	data2: [3, 42, 0, 7, 8, 9],
 };
 
 let coll: MinHeap<unknown>;
 let empty: MinHeap<unknown>;
 
-//TODO: test for MaxHeap mit maxComparator
 describe.each([s, n, l])("MinHeap mit $name", ({ data }) => {
 	beforeEach(() => {
 		coll = new MinHeap<unknown>(minComparator, 1);
-		for (let index = 0; index < data.length; index++)
-			coll.add(data[index]);
+		for (const element of data) {
+			coll.add(element);
+		}
 		empty = new MinHeap<unknown>(minComparator, 1);
 	});
 	test("constructor: create Heap with capacity", () => {
@@ -63,7 +62,6 @@ describe.each([s, n, l])("MinHeap mit $name", ({ data }) => {
 	});
 	test("add: adds Elements to Heap", () => {
 		expect(empty.add(data[0])).toBe(true);
-		// expect(empty.add(null)).toBe(false);
 		expect(empty.capacity()).toBe(1);
 		empty.add(data[5]);
 		empty.add(data[4]);

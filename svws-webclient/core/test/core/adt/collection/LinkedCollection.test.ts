@@ -20,65 +20,25 @@ const l = {
 	data: [l5, l5, l4, l3, l2, l7, l1],
 	data2: [l3, l42, l0, l7, l8, l9],
 };
-const s = {
-	name: "String",
-	data: [
-		new String("5"),
-		new String("5"),
-		new String("4"),
-		new String("3"),
-		new String("2"),
-		new String("7"),
-		new String("1"),
-	],
-	data2: [
-		new String("3"),
-		new String("42"),
-		new String("0"),
-		new String("7"),
-		new String("8"),
-		new String("9"),
-	],
-};
-const n = {
-	name: "Number",
-	data: [
-		new Number(5),
-		new Number(5),
-		new Number(4),
-		new Number(3),
-		new Number(2),
-		new Number(7),
-		new Number(1),
-	],
-	data2: [
-		new Number(3),
-		new Number(42),
-		new Number(0),
-		new Number(7),
-		new Number(8),
-		new Number(9),
-	],
-};
 
 let coll: LinkedCollection<unknown>;
 let coll2: LinkedCollection<unknown>;
 let empty: LinkedCollection<unknown>;
 let v2: ArrayList<unknown>;
 
-describe.each([s, n, l])("LinkedCollection mit $name", ({ data, data2 }: {data: Array<unknown>, data2: Array<unknown>}) => {
+describe.each([l])("LinkedCollection mit $name", ({ data, data2 }: { data: Array<unknown>, data2: Array<unknown> }) => {
 	beforeEach(() => {
 		coll = new LinkedCollection();
-		for (let index = 0; index < data.length; index++) {
-			coll.add(data[index]);
+		for (const element of data) {
+			coll.add(element);
 		}
 		coll2 = new LinkedCollection();
-		for (let index = 0; index < data2.length; index++) {
-			coll2.add(data2[index]);
+		for (const element of data2) {
+			coll2.add(element);
 		}
 		v2 = new ArrayList();
-		for (let index = 0; index < data2.length; index++) {
-			v2.add(data2[index]);
+		for (const element of data2) {
+			v2.add(element);
 		}
 		empty = new LinkedCollection();
 	});

@@ -14,8 +14,9 @@ describe.each(files)("Testfall %s", (file) => {
 		const abschlussBerechnung = new ServicePrognose();
 		const output = abschlussBerechnung.berechne(testfall.input);
 		const testAbschluss = AbschlussManager.equalsAbschluesse(output.abschluss, testfall.prognose.abschluss);
-		if (testAbschluss === false)
+		if (testAbschluss === false) {
 			console.error(file + " -> " + JSON.stringify(output) + "\n" + JSON.stringify(testfall.input));
+		}
 		expect(testAbschluss).toBe(true);
 	});
 });
@@ -43,15 +44,20 @@ class GEAbschlussTestfall {
 	constructor(o: string) {
 		const testfall = JSON.parse(o);
 		this.input = GEAbschlussFaecher.transpilerFromJSON(JSON.stringify(testfall.input));
-		if (testfall.Prognose !== null)
+		if (testfall.Prognose !== null) {
 			this.prognose = AbschlussErgebnis.transpilerFromJSON(JSON.stringify(testfall.Prognose));
-		if (testfall.HA9 !== null)
+		}
+		if (testfall.HA9 !== null) {
 			this.ha9 = AbschlussErgebnis.transpilerFromJSON(JSON.stringify(testfall.HA9));
-		if (testfall.HA10 !== null)
+		}
+		if (testfall.HA10 !== null) {
 			this.ha10 = AbschlussErgebnis.transpilerFromJSON(JSON.stringify(testfall.HA10));
-		if (testfall.MSA !== null)
+		}
+		if (testfall.MSA !== null) {
 			this.msa = AbschlussErgebnis.transpilerFromJSON(JSON.stringify(testfall.MSA));
-		if (testfall.MSA_Q !== null)
+		}
+		if (testfall.MSA_Q !== null) {
 			this.msa_q = AbschlussErgebnis.transpilerFromJSON(JSON.stringify(testfall.MSA_Q));
+		}
 	}
 }

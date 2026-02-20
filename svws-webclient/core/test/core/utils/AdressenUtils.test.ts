@@ -10,16 +10,18 @@ const test_dir = resolve(__dirname, "../../../../../svws-core/src/test/resources
 describe('AdressenUtils', () => {
 	it('splitStrasse', () => {
 		const data_raw = readFileSync(resolve(test_dir, 'TestdatenSplitStrasse.csv'), 'utf8');
-		const data : Array<TestdatenSplitStrasse> = [];
+		const data: Array<TestdatenSplitStrasse> = [];
 		data_raw.split(/\r?\n/).forEach(line => {
 			if ((line.trim() !== '') && (line.trim() !== '"strasse";"name";"hausNr";"zusatz"')) {
 				const parts = line.trim().split(";");
-				const daten : TestdatenSplitStrasse = new TestdatenSplitStrasse();
+				const daten: TestdatenSplitStrasse = new TestdatenSplitStrasse();
 				for (let i = 0; i < parts.length; i++) {
-					if (parts[i].startsWith('"'))
+					if (parts[i].startsWith('"')) {
 						parts[i] = parts[i].slice(1);
-					if (parts[i].endsWith('"'))
-						parts[i] = parts[i].slice(0, parts[i].length - 1);
+					}
+					if (parts[i].endsWith('"')) {
+						parts[i] = parts[i].slice(0, -1);
+					}
 				}
 				daten.strasse = parts[0];
 				daten.name = parts[1];
@@ -34,8 +36,8 @@ describe('AdressenUtils', () => {
 			expect(aufgeteilt[1]).toBe(daten.hausNr);
 			expect(aufgeteilt[2]).toBe(daten.zusatz);
 		});
-	})
-})
+	});
+});
 
 /**
  * DTO-Klasse für das einlesen von Testdaten aus
@@ -45,15 +47,15 @@ describe('AdressenUtils', () => {
 class TestdatenSplitStrasse {
 
 	/** Die Strasseninformation als ein kombinierter String */
-	public strasse : string = "";
+	public strasse: string = "";
 
 	/** Der Namensteil der Strasseninformation */
-	public name : string = "";
+	public name: string = "";
 
 	/** Der Teil mit der Hausnummer der Strasseninformation */
-	public hausNr : string = "";
+	public hausNr: string = "";
 
 	/** Der Teil mit dem Hausnummerzusatz der Strasseninformation */
-	public zusatz : string = "";
+	public zusatz: string = "";
 
 }

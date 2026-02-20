@@ -29,7 +29,7 @@ describe("LogConsumerList: Working with Consumers", () => {
 		expect(logConsumer.getLogData()).toContainEqual(logData);
 	});
 	test("getLogData", () => {
-		const ld = logConsumer.getLogData()
+		const ld = logConsumer.getLogData();
 		expect(ld).toContainEqual(logData);
 	});
 	test.todo("getLogData: empty", () => {
@@ -144,7 +144,6 @@ describe("Logger: Working with logs", () => {
 		expect(firstlog.getText()).toBe("  Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.DEBUG);
 		expect(firstlog.isNewLine()).toBe(true);
-		//expect(firstlog.toString()).toBe("{kommt noch}");
 	});
 	test("log: LogLevel, indent, text", () => {
 		log.log(LogLevel.DEBUG, 4, "Test Data");
@@ -153,7 +152,6 @@ describe("Logger: Working with logs", () => {
 		expect(firstlog.getText()).toBe("    Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.DEBUG);
 		expect(firstlog.isNewLine()).toBe(false);
-		//expect(firstlog.toString()).toBe("{kommt noch}");
 	});
 	test("log: LogLevel, text", () => {
 		log.log(LogLevel.DEBUG, "Test Data");
@@ -162,7 +160,6 @@ describe("Logger: Working with logs", () => {
 		expect(firstlog.getText()).toBe("Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.DEBUG);
 		expect(firstlog.isNewLine()).toBe(false);
-		//expect(firstlog.toString()).toBe("{kommt noch}");
 	});
 	test("log: indent, text", () => {
 		log.log(3, "Test Data");
@@ -171,7 +168,6 @@ describe("Logger: Working with logs", () => {
 		expect(firstlog.getText()).toBe("   Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.INFO);
 		expect(firstlog.isNewLine()).toBe(false);
-		//expect(firstlog.toString()).toBe("{kommt noch}");
 	});
 	test("log: text", () => {
 		log.log("Test Data");
@@ -180,7 +176,6 @@ describe("Logger: Working with logs", () => {
 		expect(firstlog.getText()).toBe("Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.INFO);
 		expect(firstlog.isNewLine()).toBe(false);
-		//expect(firstlog.toString()).toBe("{kommt noch}");
 	});
 	test("logLn: LogLevel, indent, text", () => {
 		log.logLn(LogLevel.DEBUG, 4, "Test Data");
@@ -189,7 +184,6 @@ describe("Logger: Working with logs", () => {
 		expect(firstlog.getText()).toBe("    Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.DEBUG);
 		expect(firstlog.isNewLine()).toBe(true);
-		//expect(firstlog.toString()).toBe("{kommt noch}");
 	});
 	test("logLn: LogLevel, text", () => {
 		log.logLn(LogLevel.DEBUG, "Test Data");
@@ -198,7 +192,6 @@ describe("Logger: Working with logs", () => {
 		expect(firstlog.getText()).toBe("Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.DEBUG);
 		expect(firstlog.isNewLine()).toBe(true);
-		//expect(firstlog.toString()).toBe("{kommt noch}");
 	});
 	test("logLn: indent, text", () => {
 		log.logLn(3, "Test Data");
@@ -207,7 +200,6 @@ describe("Logger: Working with logs", () => {
 		expect(firstlog.getText()).toBe("   Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.INFO);
 		expect(firstlog.isNewLine()).toBe(true);
-		//expect(firstlog.toString()).toBe("{kommt noch}");
 	});
 	test("logLn: text", () => {
 		log.logLn("Test Data");
@@ -216,6 +208,5 @@ describe("Logger: Working with logs", () => {
 		expect(firstlog.getText()).toBe("Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.INFO);
 		expect(firstlog.isNewLine()).toBe(true);
-		//expect(firstlog.toString()).toBe("{kommt noch}");
 	});
 });

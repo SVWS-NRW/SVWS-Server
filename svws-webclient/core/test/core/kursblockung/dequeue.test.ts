@@ -8,80 +8,36 @@ const RND = new Random();
 const d1 = new LinkedCollection();
 const d2 = new LinkedCollection();
 
-describe("TestDequeRandom", () => {
-	function getListWithSomeElementsInCommon(): LinkedCollection<any> {
-		const temp = new LinkedCollection();
-		for (const value in d1)
-			if (RND.nextBoolean() === true)
-				temp.addLast(value);
-		const value = Object(RND.nextInt(MAX_VALUE));
-		temp.addLast(value);
-		return temp;
-	}
-
-	function testEquality(): boolean {
-		const i1 = d1.iterator();
-		const i2 = d2.iterator();
-
-		while ((i1.hasNext() === true) || (i2.hasNext() === true)) {
-			if (i1.hasNext() !== i2.hasNext()) return true;
-			const v1 = i1.next();
-			const v2 = i2.next();
-			if (v1 !== v2) return false;
+function getListWithSomeElementsInCommon(): LinkedCollection<any> {
+	const temp = new LinkedCollection();
+	for (const value in d1) {
+		if (RND.nextBoolean() === true) {
+			temp.addLast(value);
 		}
-		return true;
 	}
+	const value = new Object(RND.nextInt(MAX_VALUE));
+	temp.addLast(value);
+	return temp;
+}
 
-	/**
-	 * Folgende Methoden werden zufällig getestet. <br>
-	 *
-	 *
-	 * ----- interface Deque<E> ----- void <br>
-	 * addFirst(E e); <br>
-	 * void addLast(E e); <br>
-	 * boolean offerFirst(E e); <br>
-	 * boolean offerLast(E e); <br>
-	 * E removeFirst(); <br>
-	 * E removeLast(); <br>
-	 * E pollFirst(); <br>
-	 * E pollLast(); <br>
-	 * E getFirst(); <br>
-	 * E getLast(); <br>
-	 * E peekFirst(); <br>
-	 * E peekLast(); <br>
-	 * boolean removeFirstOccurrence(Object o); <br>
-	 * boolean removeLastOccurrence(Object o); <br>
-	 * void push(E e); <br>
-	 * E pop(); <br>
-	 * TODO iterator.remove() fails on {@link LinkedCollection} <br>
-	 *
-	 *
-	 * ----- interface Queue<E> ----- <br>
-	 * E remove(); <br>
-	 * E poll(); <br>
-	 * E element(); <br>
-	 * E peek(); <br>
-	 * Iterator<E> descendingIterator(); <br>
-	 * boolean offer(E e); <br>
-	 *
-	 *
-	 * ----- interface Collection<E> ----- <br>
-	 * int size(); <br>
-	 * boolean isEmpty(); <br>
-	 * boolean contains(Object o); <br>
-	 * Iterator<E> iterator(); --> testEquality <br>
-	 * Object[] toArray() as any[]; <br>
-	 * <T> T[] toArray(T[] a); <br>
-	 * boolean add(E e); <br>
-	 * boolean remove(Object o); <br>
-	 * boolean containsAll(Collection<?> c); boolean addAll(Collection<? extends E> c); <br>
-	 * boolean removeAll(Collection<?> c); <br>
-	 * boolean retainAll(Collection<?> c); <br>
-	 * clear(); <br>
-	 * boolean equals(Object o); <br>
-	 * public String toString(); <br>
-	 *
-	 */
+function testEquality(): boolean {
+	const i1 = d1.iterator();
+	const i2 = d2.iterator();
+
+	while ((i1.hasNext() === true) || (i2.hasNext() === true)) {
+		if (i1.hasNext() !== i2.hasNext()) {
+			return true;
+		}
+		const v1 = i1.next();
+		const v2 = i2.next();
+		if (v1 !== v2) {
+			return false;
+		}
+	}
+	return true;
+}
+
+describe("TestDequeRandom", () => {
 	describe.each(random_numbers)(
 		"Testet grundlegende Funktionen der {@link LinkedCollection}.",
 		({ a, b }) => {
@@ -89,16 +45,9 @@ describe("TestDequeRandom", () => {
 				// Adding
 				switch (b) {
 					case 0:
-						test("testAddFirst", () => {
-							const num = Object(RND.nextInt(MAX_VALUE));
-							d1.addFirst(num);
-							d2.addFirst(num);
-							expect(testEquality()).toBeTruthy();
-						});
-						break;
 					case 1:
 						test("testAddFirst", () => {
-							const num = Object(RND.nextInt(MAX_VALUE));
+							const num = new Object(RND.nextInt(MAX_VALUE));
 							d1.addFirst(num);
 							d2.addFirst(num);
 							expect(testEquality()).toBeTruthy();
@@ -106,7 +55,7 @@ describe("TestDequeRandom", () => {
 						break;
 					case 2:
 						test("testAddLast", () => {
-							const num = Object(RND.nextInt(MAX_VALUE));
+							const num = new Object(RND.nextInt(MAX_VALUE));
 							d1.addLast(num);
 							d2.addLast(num);
 							expect(testEquality()).toBeTruthy();
@@ -114,7 +63,7 @@ describe("TestDequeRandom", () => {
 						break;
 					case 3:
 						test("testOfferFirst", () => {
-							const num = Object(RND.nextInt(MAX_VALUE));
+							const num = new Object(RND.nextInt(MAX_VALUE));
 							const b1 = d1.offerFirst(num);
 							const b2 = d2.offerFirst(num);
 							expect(b1).toBe(b2);
@@ -123,7 +72,7 @@ describe("TestDequeRandom", () => {
 						break;
 					case 4:
 						test("testOfferLast", () => {
-							const num = Object(RND.nextInt(MAX_VALUE));
+							const num = new Object(RND.nextInt(MAX_VALUE));
 							const b1 = d1.offerLast(num);
 							const b2 = d2.offerLast(num);
 							expect(b1).toBe(b2);
@@ -132,7 +81,7 @@ describe("TestDequeRandom", () => {
 						break;
 					case 5:
 						test("testAdd", () => {
-							const obj = Object(RND.nextInt(MAX_VALUE));
+							const obj = new Object(RND.nextInt(MAX_VALUE));
 							const b1 = d1.add(obj);
 							const b2 = d2.add(obj);
 							expect(b1).toBe(b2);
@@ -140,7 +89,7 @@ describe("TestDequeRandom", () => {
 						break;
 					case 6:
 						test("testOffer", () => {
-							const obj = Object(RND.nextInt(MAX_VALUE));
+							const obj = new Object(RND.nextInt(MAX_VALUE));
 							const b1 = d1.offer(obj);
 							const b2 = d2.offer(obj);
 							expect(b1).toBe(b2);
@@ -152,7 +101,7 @@ describe("TestDequeRandom", () => {
 							let temp2 = new LinkedCollection();
 							if (RND.nextBoolean() === true) {
 								for (let i = 0; i < 10; i++) {
-									const value = Object(RND.nextInt(MAX_VALUE));
+									const value = new Object(RND.nextInt(MAX_VALUE));
 									temp1.addLast(value);
 									temp2.addLast(value);
 								}
@@ -170,7 +119,7 @@ describe("TestDequeRandom", () => {
 						break;
 					case 8:
 						test("testPush", () => {
-							const obj = Object(RND.nextInt(MAX_VALUE));
+							const obj = new Object(RND.nextInt(MAX_VALUE));
 							d1.push(obj);
 							d2.push(obj);
 							expect(testEquality()).toBeTruthy();
@@ -184,50 +133,50 @@ describe("TestDequeRandom", () => {
 					case 0:
 						test("testRemoveFirst", () => {
 							expect(d1.size()).toBe(d2.size());
-							if (d1.size() !== 0) {
-								expect(d1.removeFirst()).toBe(d2.removeFirst());
+							if (d1.size() === 0) {
+								expect(() => d1.removeFirst()).toThrow(NoSuchElementException);
+								expect(() => d2.removeFirst()).toThrow(NoSuchElementException);
 							} else {
-								expect(() => d1.removeFirst()).toThrow( NoSuchElementException)
-								expect(() => d2.removeFirst()).toThrow( NoSuchElementException);
+								expect(d1.removeFirst()).toBe(d2.removeFirst());
 							}
 						});
 						break;
 					case 1:
 						test("testRemoveLast", () => {
 							expect(d1.size()).toBe(d2.size());
-							if (d1.size() !== 0) {
-								expect(d1.removeLast()).toBe(d2.removeLast());
-							} else {
+							if (d1.size() === 0) {
 								expect(() => d1.removeLast()).toThrow(NoSuchElementException);
 								expect(() => d2.removeLast()).toThrow(NoSuchElementException);
+							} else {
+								expect(d1.removeLast()).toBe(d2.removeLast());
 							}
 						});
 						break;
 					case 2:
 						test("testPollFirst", () => {
 							expect(d1.size()).toBe(d2.size());
-							if (d1.size() !== 0) {
-								expect(d1.pollFirst()).toBe(d2.pollFirst());
-							} else {
+							if (d1.size() === 0) {
 								expect(d1.pollFirst()).toBe(null);
 								expect(d2.pollFirst()).toBe(null);
+							} else {
+								expect(d1.pollFirst()).toBe(d2.pollFirst());
 							}
 						});
 						break;
 					case 3:
 						test("testPollLast", () => {
 							expect(d1.size()).toBe(d2.size());
-							if (d1.size() !== 0) {
-								expect(d1.pollLast()).toBe(d2.pollLast());
-							} else {
+							if (d1.size() === 0) {
 								expect(d1.pollLast()).toBe(null);
 								expect(d2.pollLast()).toBe(null);
+							} else {
+								expect(d1.pollLast()).toBe(d2.pollLast());
 							}
 						});
 						break;
 					case 4:
 						test("testRemoveFirstOccurrence", () => {
-							const obj = Object(RND.nextInt(MAX_VALUE));
+							const obj = new Object(RND.nextInt(MAX_VALUE));
 							const b1 = d1.removeFirstOccurrence(obj);
 							const b2 = d2.removeFirstOccurrence(obj);
 							expect(b1).toBe(b2);
@@ -235,7 +184,7 @@ describe("TestDequeRandom", () => {
 						break;
 					case 5:
 						test("testRemoveLastOccurrence", () => {
-							const obj = Object(RND.nextInt(MAX_VALUE));
+							const obj = new Object(RND.nextInt(MAX_VALUE));
 							const b1 = d1.removeLastOccurrence(obj);
 							const b2 = d2.removeLastOccurrence(obj);
 							expect(b1).toBe(b2);
@@ -243,7 +192,7 @@ describe("TestDequeRandom", () => {
 						break;
 					case 6:
 						test("testRemoveToBoolean", () => {
-							const obj = Object(RND.nextInt(MAX_VALUE));
+							const obj = new Object(RND.nextInt(MAX_VALUE));
 							const b1 = d1.remove(obj);
 							const b2 = d2.remove(obj);
 							expect(b1).toBe(b2);
@@ -259,19 +208,19 @@ describe("TestDequeRandom", () => {
 					case 8:
 						test("testPop", () => {
 							expect(d1.size()).toBe(d2.size());
-							if (d1.size() !== 0) {
+							if (d1.size() === 0) {
+								expect(() => d1.pop()).toThrow(NoSuchElementException);
+								expect(() => d1.pop()).toThrow(NoSuchElementException);
+							} else {
 								const i1 = d1.pop();
 								const i2 = d2.pop();
 								expect(i1).toBe(i2);
-							} else {
-								expect(() => d1.pop()).toThrow(NoSuchElementException);
-								expect(() => d1.pop()).toThrow(NoSuchElementException);
 							}
 						});
 						break;
 					case 9:
 						test("testRemoveObject", () => {
-							const obj = Object(RND.nextInt(MAX_VALUE));
+							const obj = new Object(RND.nextInt(MAX_VALUE));
 							const b1 = d1.remove(obj);
 							const b2 = d2.remove(obj);
 							expect(b1).toBe(b2);
@@ -292,8 +241,9 @@ describe("TestDequeRandom", () => {
 					case 11:
 						test("testRetainAll", () => {
 							const temp = new LinkedCollection();
-							for (let i = 0; i < d1.size() / 4; i++)
-								temp.addLast(Object(RND.nextInt(MAX_VALUE)));
+							for (let i = 0; i < d1.size() / 4; i++) {
+								temp.addLast(new Object(RND.nextInt(MAX_VALUE)));
+							}
 
 							const b1 = d1.retainAll(temp);
 							const b2 = d2.retainAll(temp);
@@ -341,13 +291,13 @@ describe("TestDequeRandom", () => {
 					case 14:
 						test("testRemoveToElement", () => {
 							expect(d1.size()).toBe(d2.size());
-							if (d1.size() !== 0) {
+							if (d1.size() === 0) {
+								expect(() => d1.remove()).toThrow(NoSuchElementException);
+								expect(() => d2.remove()).toThrow(NoSuchElementException);
+							} else {
 								const i1 = d1.remove();
 								const i2 = d2.remove();
 								expect(i1).toBe(i2);
-							} else {
-								expect(() => d1.remove()).toThrow(NoSuchElementException);
-								expect(() => d2.remove()).toThrow(NoSuchElementException);
 							}
 						});
 						break;
@@ -396,13 +346,13 @@ describe("TestDequeRandom", () => {
 					case 5:
 						test("testElement", () => {
 							expect(d1.size()).toBe(d2.size());
-							if (d1.size() !== 0) {
+							if (d1.size() === 0) {
+								expect(() => d1.element()).toThrow(NoSuchElementException);
+								expect(() => d2.element()).toThrow(NoSuchElementException);
+							} else {
 								const i1 = d1.element();
 								const i2 = d1.element();
 								expect(i1).toBe(i2);
-							} else {
-								expect(() => d1.element()).toThrow(NoSuchElementException);
-								expect(() => d2.element()).toThrow(NoSuchElementException);
 							}
 						});
 						break;
@@ -415,7 +365,7 @@ describe("TestDequeRandom", () => {
 						break;
 					case 7:
 						test("testContains", () => {
-							const obj = Object(RND.nextInt(MAX_VALUE));
+							const obj = new Object(RND.nextInt(MAX_VALUE));
 							const b1 = d1.contains(obj);
 							const b2 = d2.contains(obj);
 							expect(b1).toBe(b2);
@@ -456,19 +406,20 @@ describe("TestDequeRandom", () => {
 
 							expect(o1.length).toBe(o2.length);
 
-							for (let i = 0; i < o1.length; i++)
+							for (let i = 0; i < o1.length; i++) {
 								expect(o1[i] === o2[i]).toBeTruthy();
+							}
 
 							const i1 = d1.iterator();
-							for (let i = 0; i < o1.length; i++) {
+							for (const element of o1) {
 								const value = i1.next();
-								expect(o1[i] === value).toBeTruthy();
+								expect(element === value).toBeTruthy();
 							}
 
 							const i2 = d2.iterator();
-							for (let i = 0; i < o2.length; i++) {
+							for (const element of o2) {
 								const value = i2.next();
-								expect(o2[i] === value).toBeTruthy();
+								expect(element === value).toBeTruthy();
 							}
 						});
 						break;
@@ -479,19 +430,20 @@ describe("TestDequeRandom", () => {
 
 							expect(o1.length).toBe(o2.length);
 
-							for (let i = 0; i < o1.length; i++)
+							for (let i = 0; i < o1.length; i++) {
 								expect(o1[i] === o2[i]).toBeTruthy();
+							}
 
 							const i1 = d1.iterator();
-							for (let i = 0; i < o1.length; i++) {
+							for (const element of o1) {
 								const value = i1.next();
-								expect(o1[i] === value).toBeTruthy();
+								expect(element === value).toBeTruthy();
 							}
 
 							const i2 = d2.iterator();
-							for (let i = 0; i < o2.length; i++) {
+							for (const element of o2) {
 								const value = i2.next();
-								expect(o2[i] === value).toBeTruthy();
+								expect(element === value).toBeTruthy();
 							}
 						});
 						break;
@@ -515,12 +467,13 @@ describe("TestDequeRandom", () => {
 						break;
 					case 15:
 						test("testSpecialIndex", () => {
-							if (d1.isEmpty() === true)
+							if (d1.isEmpty() === true) {
 								return;
+							}
 
 							const temp1 = new LinkedCollection(d1);
 							const index = RND.nextInt(d1.size());
-							const value2 = Object(RND.nextInt(MAX_VALUE));
+							const value2 = new Object(RND.nextInt(MAX_VALUE));
 							temp1.set(index, value2);
 							const value3 = temp1.get(index);
 
@@ -534,7 +487,9 @@ describe("TestDequeRandom", () => {
 
 							let old: any = null;
 							for (const value of temp1) {
-								if (old !== null) expect(old - value).toBeLessThanOrEqual(0);
+								if (old !== null) {
+									expect(old - value).toBeLessThanOrEqual(0);
+								}
 								old = value;
 							}
 						});

@@ -18,14 +18,14 @@ const belegpruefungsergebnisse_ef1: Record<string, any> = {};
 files
 	.filter((file) => file.includes("_GostJahrgangsdaten"))
 	.forEach((file) => {
-		const [_, jahrgang, nr] = basename(file, ".json").split("_");
+		const [_, jahrgang, _nr] = basename(file, ".json").split("_");
 		jahrgaenge[jahrgang] = GostJahrgangsdaten.transpilerFromJSON(readFileSync(resolve(test_dir, file), "utf8"));
 	});
 files
 	.filter((file) => file.includes("_GostFaecher"))
 	.forEach((file) => {
 		const json = JSON.parse(readFileSync(resolve(test_dir, file), "utf8"));
-		const [_, jahrgang, nr] = basename(file, ".json").split("_");
+		const [_, jahrgang, _nr] = basename(file, ".json").split("_");
 		jahrgaenge_faecher[jahrgang] ||= [];
 		json.forEach((fach: Record<string, any>) => jahrgaenge_faecher[jahrgang]?.push(GostFach.transpilerFromJSON(JSON.stringify(fach))));
 	});
@@ -33,7 +33,7 @@ files
 	.filter((file) => file.includes("_GostJahrgangFachkombination"))
 	.forEach((file) => {
 		const json = JSON.parse(readFileSync(resolve(test_dir, file), "utf8"));
-		const [_, jahrgang, nr] = basename(file, ".json").split("_");
+		const [_, jahrgang, _nr] = basename(file, ".json").split("_");
 		jahrgaenge_fachkombis[jahrgang] ||= [];
 		json.forEach((fachkombi: Record<string, any>) => jahrgaenge_fachkombis[jahrgang]?.push(GostJahrgangFachkombination.transpilerFromJSON(JSON.stringify(fachkombi))));
 	});
@@ -65,12 +65,14 @@ describe.each(Object.entries(abiturdaten))(
 		const jahrgangsdaten = jahrgaenge[jahrgang];
 		const gost_faecher = jahrgaenge_faecher[jahrgang] || [];
 		const list = new ArrayList<GostFach>();
-		for (let index = 0; index < gost_faecher.length; index++)
-			list.add(gost_faecher[index]);
+		for (const element of gost_faecher) {
+			list.add(element);
+		}
 		const gost_fachkombis = jahrgaenge_fachkombis[jahrgang] || [];
 		const listKombis = new ArrayList<GostJahrgangFachkombination>();
-		for (let index = 0; index < gost_fachkombis.length; index++)
-			listKombis.add(gost_fachkombis[index]);
+		for (const element of gost_fachkombis) {
+			listKombis.add(element);
+		}
 		describe.each(Object.entries(schueler!))("Testfall %s", (id, abitur) => {
 			test("EF1", () => {
 				const faecherManager = new GostFaecherManager(1, list, listKombis);
@@ -81,11 +83,11 @@ describe.each(Object.entries(abiturdaten))(
 				const fehlercodes_expected = expected.fehlercodes
 					.toArray<GostBelegpruefungErgebnisFehler>(new Array<GostBelegpruefungErgebnisFehler>())
 					.map((f) => f.code)
-					.sort();
+					.sort((a, b) => a.localeCompare(b));
 				const fehlercodes_ergebnis = ergebnis.fehlercodes
 					.toArray<GostBelegpruefungErgebnisFehler>(new Array<GostBelegpruefungErgebnisFehler>())
 					.map((f) => f.code)
-					.sort();
+					.sort((a, b) => a.localeCompare(b));
 				expect(fehlercodes_expected).toEqual(fehlercodes_ergebnis);
 			});
 			test("Gesamt", () => {
@@ -97,11 +99,11 @@ describe.each(Object.entries(abiturdaten))(
 				const fehlercodes_expected = expected.fehlercodes
 					.toArray<GostBelegpruefungErgebnisFehler>(new Array<GostBelegpruefungErgebnisFehler>())
 					.map((f) => f.code)
-					.sort();
+					.sort((a, b) => a.localeCompare(b));
 				const fehlercodes_ergebnis = ergebnis.fehlercodes
 					.toArray<GostBelegpruefungErgebnisFehler>(new Array<GostBelegpruefungErgebnisFehler>())
 					.map((f) => f.code)
-					.sort();
+					.sort((a, b) => a.localeCompare(b));
 				expect(fehlercodes_expected).toEqual(fehlercodes_ergebnis);
 			});
 		});
