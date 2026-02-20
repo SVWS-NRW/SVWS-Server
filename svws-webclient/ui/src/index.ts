@@ -182,3 +182,4 @@ export { WenomAuswahlListeManager } from './components/enm/WenomAuswahlListeMana
 export { BetriebeListeManager } from './ui/manager/kataloge/BetriebeListeManager';
 export { OrtsteileListeManager } from './ui/manager/kataloge/OrtsteileListeManager';
 export { OrteListeManager } from './ui/manager/kataloge/OrteListeManager';
+export { SchwerpunkteListeManager } from './ui/manager/kataloge/SchwerpunkteListeManager';

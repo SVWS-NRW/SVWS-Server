@@ -148,10 +148,15 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 		if (this._filtered !== null) {
 			return this._filtered;
 		}
+
 		this._filtered = new ArrayList();
+
 		const aktAuswahl: TAuswahl | null = (this._daten === null) ? null : this.auswahl();
+
 		for (const eintrag of this.liste.list()) {
-			if ((this._filterPermitAuswahl && (aktAuswahl !== null) && (this.compareAuswahl(aktAuswahl, eintrag) === 0)) || this.checkFilter(eintrag)) {
+			const keepAktuelleAuswahlInFiltered = this._filterPermitAuswahl && (aktAuswahl !== null) && (this.compareAuswahl(aktAuswahl, eintrag) === 0);
+
+			if (keepAktuelleAuswahlInFiltered || this.checkFilter(eintrag)) {
 				this._filtered.add(eintrag);
 			}
 		}

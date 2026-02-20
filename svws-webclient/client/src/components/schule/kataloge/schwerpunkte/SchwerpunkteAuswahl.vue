@@ -1,7 +1,7 @@
 <template>
 	<div class="h-full flex flex-col">
 		<div class="secondary-menu--headline">
-			<h1>Betriebsarten</h1>
+			<h1>Schwerpunkte</h1>
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
@@ -10,7 +10,7 @@
 				:items="filteredItems" :columns
 				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
 				<template #search>
-					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
+					<svws-ui-text-input v-model="searchTerm" placeholder="Suchen" removable />
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="showOnlyVisibleItems">Nur Sichtbare</svws-ui-checkbox>
@@ -24,7 +24,7 @@
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
 						<template #content>
-							Neue Betriebsart anlegen
+							Neuen Schwerpunkt anlegen
 						</template>
 					</svws-ui-tooltip>
 				</template>
@@ -34,18 +34,17 @@
 </template>
 
 <script setup lang="ts">
+	import { type SchuelerSchwerpunkt as Schwerpunkt, ServerMode } from "@core";
 	import { type DataTableColumn, useRegionSwitch } from "@ui";
-	import type { Betriebsart } from "@core";
-	import { ServerMode } from "@core";
 
-	import type { BetriebsartenAuswahlProps } from './BetriebsartenAuswahlProps';
+	import type { SchwerpunkteAuswahlProps } from "./SchwerpunkteAuswahlProps";
 	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
 
 	const columns: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc" },
 	];
 
-	const props = defineProps<BetriebsartenAuswahlProps>();
+	const props = defineProps<SchwerpunkteAuswahlProps>();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const {
@@ -57,5 +56,5 @@
 		searchTerm,
 		showOnlyVisibleItems,
 		noFilteredItems,
-	} = useKatalogAuswahl<Betriebsart>(props);
+	} = useKatalogAuswahl<Schwerpunkt>(props);
 </script>

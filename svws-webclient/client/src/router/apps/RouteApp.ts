@@ -59,6 +59,8 @@ import { routeOrte } from "~/router/apps/schule/kataloge/orte/RouteOrte";
 import { routeOrtsteile } from "~/router/apps/schule/kataloge/ortsteile/RouteOrtsteile";
 import { routeBetriebsarten } from "./schule/kataloge/betriebsarten/RouteBetriebsarten";
 import { routeEmailServer } from "~/router/apps/einstellungen/emailserver/RouteEmailServer";
+import { routeSchwerpunkte } from "~/router/apps/schule/kataloge/schwerpunkte/RouteSchwerpunkte";
+
 import SApp from "~/components/SApp.vue";
 
 
@@ -170,6 +172,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeOrte,
 			routeOrtsteile,
 			routeSchulen,
+			routeSchwerpunkte,
 			routeTelefonarten,
 			routeVermerkarten,
 			// Datenaustausch

@@ -5,15 +5,15 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<svws-ui-table v-model="floskeln"
-				v-model:clicked="selectedFloskeln"
-				:items="props.manager().filtered()" :columns
+			<svws-ui-table v-model="selectedItems"
+				v-model:clicked="focusedItem"
+				:items="filteredItems" :columns
 				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
 				<template #search>
 					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #filterAdvanced>
-					<svws-ui-checkbox type="toggle" v-model="showOnlyVisibleFloskeln">Nur Sichtbare</svws-ui-checkbox>
+					<svws-ui-checkbox type="toggle" v-model="showOnlyVisibleItems">Nur Sichtbare</svws-ui-checkbox>
 					<ui-select-multi label="Jahrgang"
 						v-model="filterJahrgaenge"
 						:manager="jahrgaengeManager"
@@ -38,7 +38,7 @@
 					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
 						<svws-ui-button type="icon"
 							@click="gotoHinzufuegenView(true)"
-							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
+							:has-focus="noFilteredItems" :disabled="isHinzufuegenView">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
 						<template #content>
@@ -52,72 +52,32 @@
 </template>
 
 <script setup lang="ts">
-
+	import { computed } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import { FloskelnListeManager } from "@ui";
-	import { SelectManager, useRegionSwitch, ViewType } from "@ui";
+	import { SelectManager, useRegionSwitch } from "@ui";
 	import type { FachDaten, Floskel, Floskelgruppe, JahrgangsDaten } from "@core";
-	import { BenutzerKompetenz, Floskelgruppenart, ServerMode } from "@core";
-	import { computed } from "vue";
+	import { Floskelgruppenart, ServerMode } from "@core";
 	import type { FloskelnAuswahlProps } from "./FloskelnAuswahlProps";
+	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
 
-	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const props = defineProps<FloskelnAuswahlProps>();
-	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const isHinzufuegenView = computed<boolean>(() => props.activeViewType === ViewType.HINZUFUEGEN);
-	const isGruppenprozesseOrHinzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
-	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+	const {
+		filteredItems,
+		selectedItems,
+		focusedItem,
+		readonly,
+		isHinzufuegenView,
+		searchTerm,
+		showOnlyVisibleItems,
+		noFilteredItems,
+	} = useKatalogAuswahl<Floskel>(props);
 
 	const columns: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
 		{ key: "text", label: "Text", span: 4, sortable: true },
 	];
-
-	const floskeln = computed<Floskel[]>({
-		get: () => [...props.manager().liste.auswahl()],
-		set: (v: Floskel[]) => {
-			setAuswahl(v);
-			void navigateToView();
-		},
-	});
-
-	const selectedFloskeln = computed<Floskel | null>({
-		get: () => (!isGruppenprozesseOrHinzufuegenView.value && props.manager().hasDaten()) ? props.manager().auswahl() : null,
-		set: (v: Floskel | null) => void props.gotoDefaultView(v?.id ?? null),
-	});
-
-	function setAuswahl(floskeln: Floskel[]) {
-		props.manager().liste.auswahlClear();
-		for (const floskel of floskeln) {
-			if (props.manager().liste.hasValue(floskel)) {
-				props.manager().liste.auswahlAdd(floskel);
-			}
-		}
-	}
-
-	async function navigateToView(): Promise<void> {
-		if (props.manager().liste.auswahlExists()) {
-			await props.gotoGruppenprozessView(true);
-		} else {
-			await props.gotoDefaultView(props.manager().getVorherigeAuswahl()?.id);
-		}
-	}
-
-	const searchTerm = computed<string>({
-		get: () => props.manager().searchTerm,
-		set: (v: string) => {
-			props.manager().searchTerm = v;
-			void props.setFilter();
-		},
-	});
-
-	const showOnlyVisibleFloskeln = computed<boolean>({
-		get: () => props.manager().filterNurSichtbar,
-		set: (value: boolean) => {
-			props.manager().filterNurSichtbar = value;
-			void props.setFilter();
-		},
-	});
 
 	const jahrgaenge = computed<JahrgangsDaten[]>(() => [...props.manager().jahrgaengeById.values()]);
 	const filterJahrgaenge = computed<JahrgangsDaten[]>({
