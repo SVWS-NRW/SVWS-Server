@@ -10,7 +10,7 @@
 	"types": "./dist/index.d.ts",
 	"scripts": {
 		"test": "vitest",
-		"test:run": "vitest run --coverage",
+		"test:coverage": "vitest run --coverage",
 		"test:runAgainstTestEnv": "vitest run --coverage.reporter=html",
 		"lint": "eslint \"src/**/*.{ts,vue}\" --cache --max-warnings=0",
 		"build": "tsc"

@@ -366,7 +366,8 @@
       "hatKleinesLatinum" : false,
       "hatLatinum" : false,
       "hatGraecum" : false,
-      "hatHebraicum" : false
+      "hatHebraicum" : false,
+      "istNachweis": false
     }, {
       "sprache" : "S",
       "reihenfolge" : 2,
@@ -378,7 +379,8 @@
       "hatKleinesLatinum" : false,
       "hatLatinum" : false,
       "hatGraecum" : false,
-      "hatHebraicum" : false
+      "hatHebraicum" : false,
+      "istNachweis": false
     } ],
     "pruefungen" : [ ]
   }

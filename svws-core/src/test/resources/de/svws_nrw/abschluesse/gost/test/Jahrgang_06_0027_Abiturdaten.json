@@ -366,7 +366,8 @@
       "hatKleinesLatinum" : false,
       "hatLatinum" : false,
       "hatGraecum" : false,
-      "hatHebraicum" : false
+      "hatHebraicum" : false,
+      "istNachweis": false
     } ],
     "pruefungen" : [ {
       "sprache" : "F",
@@ -379,6 +380,7 @@
       "kannZweitePflichtfremdspracheErsetzen" : true,
       "kannWahlpflichtfremdspracheErsetzen" : false,
       "kannBelegungAlsFortgefuehrteSpracheErlauben" : false,
+      "zeugnisbezeichnung": "Zeugnisbezeichnung",
       "referenzniveau" : null,
       "note" : 2
     }, {
@@ -392,6 +394,7 @@
       "kannZweitePflichtfremdspracheErsetzen" : true,
       "kannWahlpflichtfremdspracheErsetzen" : false,
       "kannBelegungAlsFortgefuehrteSpracheErlauben" : false,
+      "zeugnisbezeichnung": "Zeugnisbezeichnung",
       "referenzniveau" : null,
       "note" : 3
     } ]

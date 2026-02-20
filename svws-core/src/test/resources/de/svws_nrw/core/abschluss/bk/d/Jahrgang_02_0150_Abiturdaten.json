@@ -1029,7 +1029,8 @@
                 "hatKleinesLatinum": false,
                 "hatLatinum": false,
                 "hatGraecum": false,
-                "hatHebraicum": false
+                "hatHebraicum": false,
+                "istNachweis": false
             },
             {
                 "sprache": "I",
@@ -1042,7 +1043,8 @@
                 "hatKleinesLatinum": false,
                 "hatLatinum": false,
                 "hatGraecum": false,
-                "hatHebraicum": false
+                "hatHebraicum": false,
+                "istNachweis": false
             }
         ],
         "pruefungen": []

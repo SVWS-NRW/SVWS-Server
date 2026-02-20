@@ -29,6 +29,8 @@ task testCore(type: NpmRun) {
 	}
 }
 
+test.dependsOn testCore
+
 task publishNexusCore(type: NpmPublish) {
 	dependsOn assemble
 	group = "publishing"
