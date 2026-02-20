@@ -56,7 +56,8 @@ export class RouteDataSchwerpunkte extends RouteDataAuswahl<SchwerpunkteListeMan
 		return `Schwerpunkt ${schwerpunkt?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
-	public deleteCheck = (): [boolean, List<string>] => {
+	public	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
+
 		const errorLog = new ArrayList<string>();
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
 			errorLog.add('Es liegt keine Berechtigung zum Löschen von Schwerpunkte vor.');
@@ -67,7 +68,7 @@ export class RouteDataSchwerpunkte extends RouteDataAuswahl<SchwerpunkteListeMan
 		if (!this.manager.idsOfReferencedSchwerpunkte.isEmpty()) {
 			errorLog.add(this.getErrorMessageForReferencedSchwerpunkte());
 		}
-		return [errorLog.isEmpty(), errorLog];
+		return { success: errorLog.isEmpty(), logs: errorLog };
 	};
 
 	private getErrorMessageForReferencedSchwerpunkte(): string {

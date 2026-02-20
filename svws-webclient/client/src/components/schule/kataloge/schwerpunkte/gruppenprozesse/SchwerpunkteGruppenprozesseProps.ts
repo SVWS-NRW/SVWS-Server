@@ -6,7 +6,7 @@ export interface SchwerpunkteGruppenprozesseProps {
 	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => SchwerpunkteListeManager;
-	deleteCheck: () => [boolean, List<string>];
+	deleteCheck: () => { success: boolean, logs: Iterable<string> };
 	delete: () => Promise<[boolean, List<string | null>]>;
 	gotoDefaultView: (id: number | null) => Promise<void>;
 }
