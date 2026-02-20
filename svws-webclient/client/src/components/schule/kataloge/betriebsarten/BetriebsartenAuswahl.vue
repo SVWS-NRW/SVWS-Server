@@ -5,15 +5,15 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<svws-ui-table v-model="selectedItems"
-				v-model:clicked="focusedItem"
-				:items="filteredItems" :columns
+			<svws-ui-table v-model="selectedBetriebsarten"
+				v-model:clicked="clickedBetriebsart"
+				:items="filteredBetriebsarten" :columns
 				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
 				<template #search>
 					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #filterAdvanced>
-					<svws-ui-checkbox type="toggle" v-model="showOnlyVisibleItems">Nur Sichtbare</svws-ui-checkbox>
+					<svws-ui-checkbox type="toggle" v-model="showOnlyVisible">Nur Sichtbare</svws-ui-checkbox>
 				</template>
 				<template #actions>
 					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
@@ -49,13 +49,13 @@
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const {
-		filteredItems,
-		selectedItems,
-		focusedItem,
+		filteredItems: filteredBetriebsarten,
+		selectedItems: selectedBetriebsarten,
+		clickedItem: clickedBetriebsart,
 		readonly,
 		isHinzufuegenView,
 		searchTerm,
-		showOnlyVisibleItems,
+		showOnlyVisible,
 		noFilteredItems,
 	} = useKatalogAuswahl<Betriebsart>(props);
 </script>

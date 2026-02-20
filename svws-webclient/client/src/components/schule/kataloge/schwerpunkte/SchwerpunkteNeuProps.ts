@@ -1,4 +1,4 @@
-import type { BenutzerKompetenz, Schwerpunkt } from "@core";
+import type { BenutzerKompetenz, SchuelerSchwerpunkt as Schwerpunkt } from "@core";
 import type { SchwerpunkteListeManager, Checkpoint } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 

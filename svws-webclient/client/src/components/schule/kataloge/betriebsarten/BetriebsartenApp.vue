@@ -11,7 +11,7 @@
 							</span>
 							<svws-ui-badge type="light" title="ID" class="font-mono"
 								size="small">
-								{{ manager().daten().id }}
+								ID: {{ manager().daten().id }}
 							</svws-ui-badge>
 						</h2>
 					</template>

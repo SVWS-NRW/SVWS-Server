@@ -5,15 +5,15 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<svws-ui-table v-model="selectedItems"
-				v-model:clicked="focusedItem"
-				:items="filteredItems" :columns
+			<svws-ui-table v-model="selectedFloskeln"
+				v-model:clicked="clickedFloskel"
+				:items="filteredFloskeln" :columns
 				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
 				<template #search>
 					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #filterAdvanced>
-					<svws-ui-checkbox type="toggle" v-model="showOnlyVisibleItems">Nur Sichtbare</svws-ui-checkbox>
+					<svws-ui-checkbox type="toggle" v-model="showOnlyVisible">Nur Sichtbare</svws-ui-checkbox>
 					<ui-select-multi label="Jahrgang"
 						v-model="filterJahrgaenge"
 						:manager="jahrgaengeManager"
@@ -64,13 +64,13 @@
 	const props = defineProps<FloskelnAuswahlProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const {
-		filteredItems,
-		selectedItems,
-		focusedItem,
+		filteredItems: filteredFloskeln,
+		selectedItems: selectedFloskeln,
+		clickedItem: clickedFloskel,
 		readonly,
 		isHinzufuegenView,
 		searchTerm,
-		showOnlyVisibleItems,
+		showOnlyVisible,
 		noFilteredItems,
 	} = useKatalogAuswahl<Floskel>(props);
 

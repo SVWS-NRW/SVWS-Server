@@ -40,7 +40,7 @@ export function useKatalogAuswahl<KType extends Katalog>(props: RouteAuswahlList
 		},
 	});
 
-	const focusedItem = computed<KType | null>({
+	const clickedItem = computed<KType | null>({
 		get: () => {
 			return (!isGruppenprozesseOrHinzufuegenView.value && props.manager().hasDaten()) ? props.manager().auswahl() : null;
 		},
@@ -55,7 +55,7 @@ export function useKatalogAuswahl<KType extends Katalog>(props: RouteAuswahlList
 		},
 	});
 
-	const showOnlyVisibleItems = computed<boolean>({
+	const showOnlyVisible = computed<boolean>({
 		get: () => props.manager().filterNurSichtbar,
 		set: (value: boolean) => {
 			props.manager().filterNurSichtbar = value;
@@ -89,11 +89,11 @@ export function useKatalogAuswahl<KType extends Katalog>(props: RouteAuswahlList
 		readonly,
 		filteredItems,
 		selectedItems,
-		focusedItem,
+		clickedItem,
 		isHinzufuegenView,
 		isGruppenprozesseOrHinzufuegenView,
 		searchTerm,
-		showOnlyVisibleItems,
+		showOnlyVisible,
 		noFilteredItems,
 		navigateToView,
 	};
