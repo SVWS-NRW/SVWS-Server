@@ -39,7 +39,7 @@ export class JsonCoreTypeReaderStatic extends JsonCoreTypeReader {
 
 	private initCoreTypeData() {
 		// Lade alle Core-Type-JSONs aus dem Verzeichnis bzw. den Unterverzeichnissen
-		const modules = import.meta.glob('@json/**/*.json', { eager: true });
+		const modules = import.meta.glob('../../../../../svws-asd/src/main/resources/de/svws_nrw/asd/types/**/*.json', { eager: true });
 
 		// Erzeuge die Einträge in mapCoreTypeData der Basisklasse aus den JSON-Dateien.
 		for (const path in modules) {
@@ -56,7 +56,7 @@ export class JsonCoreTypeReaderStatic extends JsonCoreTypeReader {
 
 	private initValidatorContextData() {
 		// Importiere die Fehlerart-Kontext-JSONs aus dem Ordner validate und seinen Unterverzeichnissen
-		const validatorModules = import.meta.glob('@json/../validate/**/*.json', { eager: true });
+		const validatorModules = import.meta.glob('../../../../../svws-asd/src/main/resources/de/svws_nrw/asd/validate/**/*.json', { eager: true });
 
 		const allValidatorEntries: any[] = [];
 
