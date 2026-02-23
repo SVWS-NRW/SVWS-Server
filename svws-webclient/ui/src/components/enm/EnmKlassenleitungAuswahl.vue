@@ -5,7 +5,10 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<svws-ui-table :items="enmManager().listKlassenKlassenlehrer" :model-value="auswahlMehrfach()" @update:model-value="setMehrfachauswahl"
+			<div class="w-full px-2">
+				<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
+			</div>
+			<svws-ui-table :items="rowsFiltered" :model-value="auswahlMehrfach()" @update:model-value="setMehrfachauswahl"
 				:clickable="!enmManager().mapLerngruppenAuswahl.isEmpty()" :clicked="auswahlEinzel()" @update:clicked="setEinzelauswahl"
 				:columns :filter-open="false" selectable count scroll-into-view scroll allow-arrow-key-selection :focus-help-visible :focus-switching-enabled multi-select-focus-enabled />
 		</div>
@@ -14,18 +17,35 @@
 
 <script setup lang="ts">
 
-	import { onBeforeMount } from 'vue';
+	import { computed, onBeforeMount, ref } from 'vue';
 	import type { ENMKlasse } from '../../../../core/src/core/data/enm/ENMKlasse';
 	import { useRegionSwitch } from '../../ui/composables/useRegionSwitch';
 	import type { EnmKlassenleitungAuswahlProps } from './EnmKlassenleitungAuswahlProps';
+	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
 
 	const props = defineProps<EnmKlassenleitungAuswahlProps>();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+	const search = ref<string>("");
 
 	const columns = [{ key: "kuerzelAnzeige", label: "Klasse" }];
 
 	onBeforeMount(() => props.setAuswahlEinzel(getFirst()));
+
+	const rowsFiltered = computed<Iterable<ENMKlasse>>(() => {
+		const searchValueLowerCase = search.value.toLocaleLowerCase();
+		if (searchValueLowerCase === "") {
+			return props.enmManager().listKlassenKlassenlehrer;
+		}
+		const list = new ArrayList<ENMKlasse>();
+		for (const e of props.enmManager().listKlassenKlassenlehrer) {
+			if (((e.kuerzel !== null) && e.kuerzel.toLocaleLowerCase().includes(searchValueLowerCase))
+				|| (e.kuerzelAnzeige !== null && e.kuerzelAnzeige.toLocaleLowerCase().includes(searchValueLowerCase))) {
+				list.add(e);
+			}
+		}
+		return list;
+	});
 
 	function getFirst(): ENMKlasse | null {
 		const list = props.enmManager().listKlassenKlassenlehrer;

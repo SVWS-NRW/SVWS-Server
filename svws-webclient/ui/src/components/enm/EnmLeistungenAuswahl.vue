@@ -5,7 +5,10 @@
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<svws-ui-table :items="enmManager().mapLerngruppenAuswahl.values()" :model-value="auswahlMehrfach()" @update:model-value="setMehrfachauswahl"
+			<div class="w-full px-2">
+				<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
+			</div>
+			<svws-ui-table :items="rowsFiltered" :model-value="auswahlMehrfach()" @update:model-value="setMehrfachauswahl"
 				:clickable="!enmManager().mapLerngruppenAuswahl.isEmpty()" :clicked="auswahlEinzel()" @update:clicked="setEinzelauswahl"
 				:columns :filter-open="false" selectable count scroll-into-view scroll allow-arrow-key-selection :focus-help-visible :focus-switching-enabled multi-select-focus-enabled />
 		</div>
@@ -14,14 +17,16 @@
 
 <script setup lang="ts">
 
-	import { onBeforeMount } from 'vue';
+	import { computed, onBeforeMount, ref } from 'vue';
 	import { useRegionSwitch } from '../../ui/composables/useRegionSwitch';
 	import type { EnmLeistungenAuswahlProps } from './EnmLeistungenAuswahlProps';
 	import type { EnmLerngruppenAuswahlEintrag } from './EnmManager';
+	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
 
 	const props = defineProps<EnmLeistungenAuswahlProps>();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+	const search = ref<string>("");
 
 	const columns = [
 		{ key: "bezeichnung", label: "Lerngruppe" },
@@ -29,6 +34,20 @@
 	];
 
 	onBeforeMount(() => props.setAuswahlEinzel(getFirst()));
+
+	const rowsFiltered = computed<Iterable<EnmLerngruppenAuswahlEintrag>>(() => {
+		const searchValueLowerCase = search.value.toLocaleLowerCase();
+		if (searchValueLowerCase === "") {
+			return props.enmManager().mapLerngruppenAuswahl.values();
+		}
+		const list = new ArrayList<EnmLerngruppenAuswahlEintrag>();
+		for (const e of props.enmManager().mapLerngruppenAuswahl.values()) {
+			if (e.bezeichnung.toLocaleLowerCase().includes(searchValueLowerCase) || e.klassen.toLocaleLowerCase().includes(searchValueLowerCase)) {
+				list.add(e);
+			}
+		}
+		return list;
+	});
 
 	function getFirst(): EnmLerngruppenAuswahlEintrag | null {
 		const map = props.enmManager().mapLerngruppenAuswahl.values();
