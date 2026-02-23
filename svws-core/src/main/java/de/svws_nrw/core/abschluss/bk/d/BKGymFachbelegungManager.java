@@ -91,7 +91,7 @@ public class BKGymFachbelegungManager {
 	/**
 	 * Gibt das Abiturfachdaten für das geforderte Abiturfach zurück.
 	 *
-	 * @param abiFach Das n. Abiturfach, das gewünscht ist
+	 * @param abiFach   Das n. Abiturfach, das gewünscht ist
 	 *
 	 * @return die entsprechende Fachbelegung des Abiturfachs
 	 */
@@ -103,7 +103,7 @@ public class BKGymFachbelegungManager {
 	/**
 	 * Gibt die FachID für das geforderte Abiturfach zurück.
 	 *
-	 * @param abiFach Das n. Abiturfach, das gewünscht ist
+	 * @param abiFach   Das n. Abiturfach, das gewünscht ist
 	 *
 	 * @return die entsprechende FachID des Abiturfachs oder null wenn es nicht gefunden wird.
 	 */
@@ -219,17 +219,7 @@ public class BKGymFachbelegungManager {
 	 * @return true, wenn es sich um eine neu einsetzende Fremdsprachenbelegung handelt, und ansonsten false
 	 */
 	public boolean istZweiteFremdspracheNeuEinsetzend() {
-		// Wenn zweite Fremdsprache in SEK I erlernt wurde, dann ist diese nicht neu einsetzend
-		if (abidatenManager.getZweiteFremdspracheInSekIErfuellt())
-			return false;
-		// Prüfe, ob das Fach in der Fächerliste des Abiturjahrgangs überhaupt existiert
-		if (zweiteFremdspracheID == null)
-			return false;
-		final BKGymFach fbFach = faecherManager.get(zweiteFremdspracheID);
-		if ((fbFach == null) || (fbFach.bezeichnung == null))
-			return false;
-		final BKGymAbiturFachbelegung fb = getFachbelegungByBezeichnung(fbFach.bezeichnung);
-		return fbFach.istFremdSpracheNeuEinsetzend || (fb != null && fb.istFSNeu);
+		return !abidatenManager.getZweiteFremdspracheInSekIErfuellt();
 	}
 
 
@@ -336,5 +326,22 @@ public class BKGymFachbelegungManager {
 	 */
 	public @NotNull BKGymFachbelegungZuStundentafelfachManager newFachbelegungZuStundentafelfachManager(final int maxFachposition) {
 		return new BKGymFachbelegungZuStundentafelfachManager(this, new HashMap2D<>(mapBelegungByHalbjahrAndFachbezeichung), abidatenManager, maxFachposition);
+	}
+
+
+	/**
+	 * Prüft, ob die übergebenen Fachbelegung in dem angegebenen Halbjahr schriftlich belegt wurde.
+	 *
+	 * @param hj     das Halbjahr
+	 * @param fach   die Fachbelegung
+	 *
+	 * @return true, wenn die Fachbelegung im Halbjahr schriftlich belegt wurde, sonst false
+	 */
+	public boolean getSchriftlichBelegt(@NotNull final GostHalbjahr hj, @NotNull final BeruflichesGymnasiumStundentafelFach fach) {
+		final BKGymAbiturFachbelegung belegung = getFachbelegungByBezeichnung(fach.fachbezeichnung);
+		if (belegung == null)
+			return false;
+		final BKGymAbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[hj.id];
+		return (belegungHalbjahr != null) && (belegungHalbjahr.schriftlich);
 	}
 }

@@ -1,0 +1,16 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [
+    {
+      "code" : "AB_5",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Die gewählte Kombination aus 3. Abiturfach (Biologie) und 4. Abiturfach (Kunst) ist in dem Bildungsgang D0211000 nicht zulässig."
+    },
+    {
+      "code" : "ST_3",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Deutsch der Stundentafel wurde nicht im nötigen Stundenumfang belegt."
+    }
+  ],
+  "log" : [ ]
+}

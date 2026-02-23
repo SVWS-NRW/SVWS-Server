@@ -9,11 +9,9 @@ import de.svws_nrw.asd.data.schule.BeruflichesGymnasiumStundentafel;
 import de.svws_nrw.asd.types.schule.BeruflichesGymnasiumPruefungsordnungAnlage;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.abschluss.bk.d.markieren.BKGymAbiturMarkierungsalgorithmus;
-import de.svws_nrw.core.data.bk.abi.BKGymAbiturFachbelegung;
 import de.svws_nrw.core.data.bk.abi.BKGymAbiturMarkierungsalgorithmusErgebnis;
 import de.svws_nrw.core.data.bk.abi.BKGymAbiturdaten;
 import de.svws_nrw.core.data.bk.abi.BKGymBelegpruefungErgebnis;
-import de.svws_nrw.core.data.bk.abi.BKGymFach;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.bk.BKGymFaecherManager;
@@ -315,21 +313,6 @@ public class BKGymAbiturdatenManager {
 	 */
 	public @NotNull String getBezeichnungByFachID(final long id) {
 		return faecherManager.getBezeichnungByFachID(id);
-	}
-
-	/**
-	 * Prüft, ob es sich bei der Fachbelegung um eine Belegung einer Fremdsprache handelt.
-	 *
-	 * @param fb   die Fachbelegung
-	 *
-	 * @return true, wenn es sich um eine Fremdsprachenbelegung handelt, und ansonsten false
-	 */
-	public boolean istFremdsprachenbelegung(final @NotNull BKGymAbiturFachbelegung fb) {
-		// Prüfe, ob das Fach in der Fächerliste des Abiturjahrgangs überhaupt existiert
-		final BKGymFach fbFach = faecherManager.get(fb.fachID);
-		if ((fbFach == null) || (fbFach.bezeichnung == null))
-			return false;
-		return fbFach.istFremdsprache;
 	}
 
 

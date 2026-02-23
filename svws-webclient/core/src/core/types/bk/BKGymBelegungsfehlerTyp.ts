@@ -42,49 +42,49 @@ export class BKGymBelegungsfehlerTyp extends JavaEnum<BKGymBelegungsfehlerTyp> {
 	public static readonly AB_5: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("AB_5", 5, "AB_5", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Die gewählte Kombination aus 3. Abiturfach (%s) und 4. Abiturfach (%s) ist in dem Bildungsgang %s%s nicht zulässig.");
 
 	/**
-	 * BelegungsfehlerArt ST_1 | Parameter: Fachbezeichnung
-	 */
-	public static readonly ST_1: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("ST_1", 6, "ST_1", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Das Fach %s der Stundentafel wurde mehrfach belegt.");
-
-	/**
 	 * BelegungsfehlerArt ST_2 | Parameter: Fachbezeichnung, Halbjahr
 	 */
-	public static readonly ST_2: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("ST_2", 7, "ST_2", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Das Fach %s weist im Halbjahr %s keine Note auf, obwohl es belegt werden muss.");
+	public static readonly ST_2: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("ST_2", 6, "ST_2", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Das Fach %s weist im Halbjahr %s keine Note auf, obwohl es belegt werden muss.");
 
 	/**
 	 * BelegungsfehlerArt ST_3 | Parameter: Fachbezeichnung
 	 */
-	public static readonly ST_3: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("ST_3", 8, "ST_3", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Das Fach %s der Stundentafel wurde nicht im nötigen Stundenumfang belegt.");
+	public static readonly ST_3: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("ST_3", 7, "ST_3", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Das Fach %s der Stundentafel wurde nicht im nötigen Stundenumfang belegt.");
 
 	/**
 	 * BelegungsfehlerArt ST_4 | Parameter: Fachbezeichnung
 	 */
-	public static readonly ST_4: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("ST_4", 9, "ST_4", BKGymBelegungsfehlerArt.BELEGUNG, 10, "Das Fach %s der Stundentafel wurde überhaupt nicht belegt.");
+	public static readonly ST_4: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("ST_4", 8, "ST_4", BKGymBelegungsfehlerArt.BELEGUNG, 10, "Das Fach %s der Stundentafel wurde überhaupt nicht belegt.");
 
 	/**
 	 * BelegungsfehlerArt ST_5_INFO | Parameter: Fachbezeichnung
 	 */
-	public static readonly ST_5_INFO: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("ST_5_INFO", 10, "ST_5_INFO", BKGymBelegungsfehlerArt.HINWEIS, 0, "Der Stundenumfang des Fachs %s ist in der Summe erfüllt, aber nicht in allen Halbjahren.");
+	public static readonly ST_5_INFO: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("ST_5_INFO", 9, "ST_5_INFO", BKGymBelegungsfehlerArt.HINWEIS, 0, "Der Stundenumfang des Fachs %s ist in der Summe erfüllt, aber nicht in allen Halbjahren.");
 
 	/**
 	 * BelegungsfehlerArt ST_6 | Parameter: Fachbezeichnung, Halbjahr
 	 */
-	public static readonly ST_6: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("ST_6", 11, "ST_6", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Das Fach %s der Stundentafel wurde im Halbjahr %s nicht belegt.");
+	public static readonly ST_6: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("ST_6", 10, "ST_6", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Das Fach %s der Stundentafel wurde im Halbjahr %s nicht belegt.");
 
 	/**
 	 * BelegungsfehlerArt KL_1 Klausur | Parameter: Fachbezeichnung, Halbjahr
 	 */
-	public static readonly KL_1: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("KL_1", 12, "KL_1", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 2, "Im Fach %s fehlt die Klausurbelegung im Halbjahr %s.");
+	public static readonly KL_1: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("KL_1", 11, "KL_1", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 2, "Im Fach %s fehlt die Klausurbelegung im Halbjahr %s.");
 
 	/**
 	 * BelegungsfehlerArt KL_2 Klausur | Parameter: Fachbezeichnung, Halbjahr
 	 */
-	public static readonly KL_2: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("KL_2", 13, "KL_2", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 2, "Im LK-Fach %s fehlt die Klausurbelegung im Halbjahr %s.");
+	public static readonly KL_2: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("KL_2", 12, "KL_2", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 2, "Im LK-Fach %s fehlt die Klausurbelegung im Halbjahr %s.");
 
 	/**
-	 * BelegungsfehlerArt KL_3 Klausur | Parameter: Fachbezeichnung, Halbjahr
+	 * BelegungsfehlerArt KL_3 Klausur (QF)| Parameter: Fachbezeichnung, Halbjahr
 	 */
-	public static readonly KL_3: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("KL_3", 14, "KL_3", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 2, "In der Fremdsprache %s fehlt die Klausurbelegung im Halbjahr %s.");
+	public static readonly KL_3: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("KL_3", 13, "KL_3", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 2, "In der Fremdsprache %s fehlt die Klausurbelegung im Halbjahr %s.");
+
+	/**
+	 * BelegungsfehlerArt KL_3_INFO Klausur (EF) | Parameter: Fachbezeichnung, Halbjahr
+	 */
+	public static readonly KL_3_INFO: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("KL_3_INFO", 14, "KL_3_INFO", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 0, "Hinweis: In der Fremdsprache %s fehlt die Klausurbelegung im Halbjahr %s.");
 
 	/**
 	 * BelegungsfehlerArt KL_4 Klausur | Parameter: Fachbezeichnung, Halbjahr
@@ -97,14 +97,9 @@ export class BKGymBelegungsfehlerTyp extends JavaEnum<BKGymBelegungsfehlerTyp> {
 	public static readonly KL_1_INFO: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("KL_1_INFO", 16, "KL_1_INFO", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 0, "Hinweis: Im Fach %s fehlt die Klausurbelegung im Halbjahr %s.");
 
 	/**
-	 * BelegungsfehlerArt KL_3_INFO Klausur | Parameter: Fachbezeichnung, Halbjahr
-	 */
-	public static readonly KL_3_INFO: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("KL_3_INFO", 17, "KL_3_INFO", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 0, "Hinweis: In der Fremdsprache %s fehlt die Klausurbelegung im Halbjahr %s.");
-
-	/**
 	 * BelegungsfehlerArt HJ_1_INFO Belegung | Parameter: Halbjahr
 	 */
-	public static readonly HJ_1_INFO: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("HJ_1_INFO", 18, "KL_3_INFO", BKGymBelegungsfehlerArt.BELEGUNG, 0, "Hinweis: Das Halbjahr %s ist nicht bewertet. Bedingungen müssen manuell geprüft werden.");
+	public static readonly HJ_1_INFO: BKGymBelegungsfehlerTyp = new BKGymBelegungsfehlerTyp("HJ_1_INFO", 17, "HJ_1_INFO", BKGymBelegungsfehlerArt.BELEGUNG, 0, "Hinweis: Das Halbjahr %s ist nicht bewertet. Bedingungen müssen manuell geprüft werden.");
 
 	/**
 	 * Der eindeutige Code des Belegungsfehlers

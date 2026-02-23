@@ -2,12 +2,12 @@
   "erfolgreich" : true,
   "fehlercodes" : [
     {
-      "code" : "KL_3_INFO",
+      "code" : "HJ_1_INFO",
       "art" : "BELEGUNG",
       "beschreibung" : "Hinweis: Das Halbjahr EF.1 ist nicht bewertet. Bedingungen müssen manuell geprüft werden."
     },
     {
-      "code" : "KL_3_INFO",
+      "code" : "HJ_1_INFO",
       "art" : "BELEGUNG",
       "beschreibung" : "Hinweis: Das Halbjahr EF.2 ist nicht bewertet. Bedingungen müssen manuell geprüft werden."
     }

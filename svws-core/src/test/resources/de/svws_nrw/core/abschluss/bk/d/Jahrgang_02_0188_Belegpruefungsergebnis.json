@@ -1,0 +1,11 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [
+    {
+      "code" : "KL_2",
+      "art" : "SCHRIFTLICHKEIT",
+      "beschreibung" : "Im LK-Fach Biologie fehlt die Klausurbelegung im Halbjahr EF.1."
+    }
+  ],
+  "log" : [ ]
+}

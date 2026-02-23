@@ -1,0 +1,21 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [
+    {
+      "code" : "AB_5",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Die gewählte Kombination aus 3. Abiturfach (Mathematik) und 4. Abiturfach (Sport) ist in dem Bildungsgang D0210200 nicht zulässig."
+    },
+    {
+      "code" : "KL_4",
+      "art" : "SCHRIFTLICHKEIT",
+      "beschreibung" : "Im Abiturfach Sport fehlt die Klausurbelegung im Halbjahr Q1.1."
+    },
+    {
+      "code" : "KL_4",
+      "art" : "SCHRIFTLICHKEIT",
+      "beschreibung" : "Im Abiturfach Sport fehlt die Klausurbelegung im Halbjahr Q1.2."
+    }
+  ],
+  "log" : [ ]
+}

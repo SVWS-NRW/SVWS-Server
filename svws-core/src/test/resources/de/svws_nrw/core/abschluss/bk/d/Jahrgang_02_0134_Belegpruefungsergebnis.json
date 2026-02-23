@@ -1,0 +1,21 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [
+    {
+      "code" : "LK_3",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Grundkursfach Biologie ist als Leistungskurs markiert."
+    },
+    {
+      "code" : "ST_3",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Deutsch der Stundentafel wurde nicht im nötigen Stundenumfang belegt."
+    },
+    {
+      "code" : "LK_1",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Deutsch ist nicht der erste Leistungskurs."
+    }
+  ],
+  "log" : [ ]
+}

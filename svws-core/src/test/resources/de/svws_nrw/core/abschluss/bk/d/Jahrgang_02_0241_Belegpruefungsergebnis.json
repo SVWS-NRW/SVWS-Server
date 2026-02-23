@@ -1,0 +1,11 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [
+    {
+      "code" : "AB_5",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Die gewählte Kombination aus 3. Abiturfach (Wirtschaftsinformatik) und 4. Abiturfach (Deutsch) ist in dem Bildungsgang D0210200 nicht zulässig."
+    }
+  ],
+  "log" : [ ]
+}

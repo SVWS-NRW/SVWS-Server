@@ -1,0 +1,36 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [
+    {
+      "code" : "HJ_1_INFO",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Hinweis: Das Halbjahr EF.1 ist nicht bewertet. Bedingungen müssen manuell geprüft werden."
+    },
+    {
+      "code" : "HJ_1_INFO",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Hinweis: Das Halbjahr EF.2 ist nicht bewertet. Bedingungen müssen manuell geprüft werden."
+    },
+    {
+      "code" : "LK_1",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Englisch ist nicht der erste Leistungskurs."
+    },
+    {
+      "code" : "LK_3",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Grundkursfach Volkswirtschaftslehre ist als Leistungskurs markiert."
+    },
+    {
+      "code" : "KL_4",
+      "art" : "SCHRIFTLICHKEIT",
+      "beschreibung" : "Im Abiturfach Volkswirtschaftslehre fehlt die Klausurbelegung im Halbjahr Q1.1."
+    },
+    {
+      "code" : "KL_4",
+      "art" : "SCHRIFTLICHKEIT",
+      "beschreibung" : "Im Abiturfach Volkswirtschaftslehre fehlt die Klausurbelegung im Halbjahr Q1.2."
+    }
+  ],
+  "log" : [ ]
+}

@@ -1,6 +1,7 @@
 package de.svws_nrw.core.abschluss.bk.d;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class BKGymBelegpruefung {
 	 *
 	 * @param tafel       die Stundentafel
 	 * @param fehlerTyp   der hinzuzufügende Belegungsfehlertyp
-	 * @param params      die Parameter für den Belegungsfehlertyp
+	 * @param params	  die Parameter für den Belegungsfehlertyp
 	 *
 	 * @return true, falls ein Fehler vorliegt false, wenn nur ein Hinweis ausgegeben wurde.
 	 */
@@ -66,18 +67,11 @@ public class BKGymBelegpruefung {
 	 */
 	private void ermittleBesteTafel() {
 		if (dirty) {
-			int minFehlerZahl = Integer.MAX_VALUE;
-			for (final @NotNull List<BKGymBelegungsfehler> fehlerliste : mapBelegungsfehler.values()) {
-				int fehlerZahl = 0;
-				for (final @NotNull BKGymBelegungsfehler fehler : fehlerliste)
-					fehlerZahl += fehler.wert;
-				if (fehlerZahl < minFehlerZahl) {
-					minFehlerZahl = fehlerZahl;
-					besteFehlerliste = fehlerliste;
-				}
-			}
+			final @NotNull ArrayList<List<BKGymBelegungsfehler>> fehlerlisten = new ArrayList<>(mapBelegungsfehler.values());
+			fehlerlisten.sort(fehlerliste_comparator);
+			besteFehlerliste = fehlerlisten.get(0);
+			dirty = false;
 		}
-		dirty = false;
 	}
 
 
@@ -194,9 +188,9 @@ public class BKGymBelegpruefung {
 	 * später geprüft wird, ob ein Ersatzfach belegt wurde. Das muss direkt vor der Prüfung des Wahlfachs durchgeführt werden
 	 * und nach der Prüfung eines Ersatzfaches für Religion, da hier die möglichen Ersatzfächer eingeschränkt sind.
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param tafel           die zu überprüfende Stundentafel
-	 * @param fach            das zu prüfende Fach der Stundentafel
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die zu überprüfende Stundentafel
+	 * @param fach              das zu prüfende Fach der Stundentafel
 	 *
 	 * @return true, wenn die Belegung erfolgreich war, sonst false
 	 */
@@ -213,9 +207,9 @@ public class BKGymBelegpruefung {
 	/**
 	 * Führt die Belegung für die neue Fremdsprache durch.
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param tafel   die zu überprüfende Stundentafel
-	 * @param fach    das zu prüfende Fach der Stundentafel
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die zu überprüfende Stundentafel
+	 * @param fach              das zu prüfende Fach der Stundentafel
 	 */
 	private void pruefeBelegungNeueFremdsprache(@NotNull final BKGymFachbelegungZuStundentafelfachManager fb2TafelManager,
 			@NotNull final BeruflichesGymnasiumStundentafel tafel, @NotNull final BeruflichesGymnasiumStundentafelFach fach) {
@@ -233,8 +227,8 @@ public class BKGymBelegpruefung {
 	 * Führt die Belegung für das Ersatzfach der zweiten Fremdsprache durch. Dies ist beliebig muss aberfür Religion durch.
 	 * für alle vier Halbjahre belegt werden.
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param tafel      die zu überprüfende Stundentafel
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die zu überprüfende Stundentafel
 	 */
 	private void pruefeBelegungFremdsprachenErsatzfach(@NotNull final BKGymFachbelegungZuStundentafelfachManager fb2TafelManager,
 			@NotNull final BeruflichesGymnasiumStundentafel tafel) {
@@ -256,8 +250,8 @@ public class BKGymBelegpruefung {
 	/**
 	 * Führt die Belegung für das Fach Religion durch.
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param fach    das zu prüfende Fach der Stundentafel
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param fach              das zu prüfende Fach der Stundentafel
 	 *
 	 * @return true, wenn die Belegung erfolgreich war, sonst false
 	 */
@@ -272,8 +266,8 @@ public class BKGymBelegpruefung {
 	 * Führt die Belegung für das Ersatzfach für Religion durch. Dies ist beliebig muss aber
 	 * für alle vier Halbjahre belegt werden.
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param tafel      die zu überprüfende Stundentafel
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die zu überprüfende Stundentafel
 	 */
 	private void pruefeBelegungReligionErsatzfach(@NotNull final BKGymFachbelegungZuStundentafelfachManager fb2TafelManager, @NotNull final BeruflichesGymnasiumStundentafel tafel) {
 		final @NotNull BKGymStundentafelManager stManager = abidatenManager.getStundentafelManager();
@@ -371,8 +365,8 @@ public class BKGymBelegpruefung {
 	/**
 	 * Prüft d, ob das Fach als Leistungskurs belegt wurde, wenn dies in der Stundentafel gefordert ist.
 	 *
-	 * @param tafel             die zu überprüfende Stundentafel
-	 * @param fach              das zu prüfende Fach der Stundentafel
+	 * @param tafel   die zu überprüfende Stundentafel
+	 * @param fach    das zu prüfende Fach der Stundentafel
 	 *
 	 * @return true, wenn in Stundentafel und Belegung die Kursarten zueinander passen, sonst false
 	 */
@@ -407,9 +401,9 @@ public class BKGymBelegpruefung {
 	/**
 	 * Prüft, ob die Schriftlichkeit der Fächer korrekt erfüllt ist.
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param tafel         die Stundentafel der Anlage
-	 * @param fach          das zu prüfende Fach aus der Stundentafel
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die Stundentafel der Anlage
+	 * @param fach              das zu prüfende Fach aus der Stundentafel
 	 *
 	 * @return true, wenn die Prüfung keinen Fehler entdeckt, sonst false
 	 */
@@ -434,23 +428,23 @@ public class BKGymBelegpruefung {
 	 * Da es die LK-Kombination Mathe-Deutsch nicht gibt, sind mindestens vier Fächer gegeben, wenn die obligatorischen
 	 * Klausurfächer geprüft sind.
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param tafel           die Stundentafel der Anlage
-	 * @param fachBelegung    die Fachbelegung zur Halbjahresbelegung
-	 * @param fach            das zu prüfende Fach aus der Stundentafel
-	 * @param hj              das Oberstufenhalbjahr
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die Stundentafel der Anlage
+	 * @param fachBelegung      die Fachbelegung zur Halbjahresbelegung
+	 * @param fach              das zu prüfende Fach aus der Stundentafel
+	 * @param hj                das Oberstufenhalbjahr
 	 *
 	 * @return true, wenn die Prüfung keinen Fehler entdeckt, sonst false
 	 */
 	private boolean pruefeSchriftlichEF(final @NotNull BKGymFachbelegungZuStundentafelfachManager fb2TafelManager, final @NotNull BeruflichesGymnasiumStundentafel tafel,
 			@NotNull final BeruflichesGymnasiumStundentafelFach fach, @NotNull final BKGymAbiturFachbelegung fachBelegung, final @NotNull GostHalbjahr hj) {
-		if (fb2TafelManager.getSchriftlichBelegt(hj, fach))
+		if (!abidatenManager.istBewertet(hj) || fb2TafelManager.getSchriftlichBelegt(hj, fach))
 			return true;
 		if ("Deutsch".equals(fach.fachbezeichnung) || "Mathematik".equals(fach.fachbezeichnung))
 			return !addFehler(tafel, BKGymBelegungsfehlerTyp.KL_1_INFO, fach.fachbezeichnung, hj.kuerzel);
 		if ((fachBelegung.abiturFach != null) && (fachBelegung.abiturFach <= 2))
 			return !addFehler(tafel, BKGymBelegungsfehlerTyp.KL_2, fach.fachbezeichnung, hj.kuerzel);
-		if (abidatenManager.istFremdsprachenbelegung(fachBelegung))
+		if (abidatenManager.getFaecherManager().istFremdsprachenbelegung(fachBelegung.fachID))
 			return !addFehler(tafel, BKGymBelegungsfehlerTyp.KL_3_INFO, fach.fachbezeichnung, hj.kuerzel);
 		return true;
 	}
@@ -460,11 +454,11 @@ public class BKGymBelegpruefung {
 	 * In der Q1 müssen allen Abiturfächer schriftlich belegt sein. Deutsch, Mathematik,
 	 * Fremdsprachen und die Fächer der Berufsabschlussprüfung in jedem Fall
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param tafel           die Stundentafel der Anlage
-	 * @param fachBelegung    die Fachbelegung zur Halbjahresbelegung
-	 * @param fach            das zu prüfende Fach aus der Stundentafel
-	 * @param hj              das Oberstufenhalbjahr
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die Stundentafel der Anlage
+	 * @param fachBelegung      die Fachbelegung zur Halbjahresbelegung
+	 * @param fach              das zu prüfende Fach aus der Stundentafel
+	 * @param hj                das Oberstufenhalbjahr
 	 *
 	 * @return true, wenn die Prüfung keinen Fehler entdeckt, sonst false
 	 */
@@ -476,7 +470,7 @@ public class BKGymBelegpruefung {
 			return !addFehler(tafel, BKGymBelegungsfehlerTyp.KL_1, fach.fachbezeichnung, hj.kuerzel);
 		if ((fachBelegung.abiturFach != null) && (fachBelegung.abiturFach <= 4))
 			return !addFehler(tafel, BKGymBelegungsfehlerTyp.KL_4, fach.fachbezeichnung, hj.kuerzel);
-		if (abidatenManager.istFremdsprachenbelegung(fachBelegung))
+		if (abidatenManager.getFaecherManager().istFremdsprachenbelegung(fachBelegung.fachID))
 			return !addFehler(tafel, BKGymBelegungsfehlerTyp.KL_3, fach.fachbezeichnung, hj.kuerzel);
 		return true;
 	}
@@ -486,11 +480,11 @@ public class BKGymBelegpruefung {
 	 * In der Q2 müssen das erste bis dritte Abiturfach schriftlich belegt sein. Deutsch, Mathematik,
 	 * Nur in der Q21 auch die Fremdsprachen
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param tafel           die Stundentafel der Anlage
-	 * @param fachBelegung    die Fachbelegung zur Halbjahresbelegung
-	 * @param fach            das zu prüfende Fach aus der Stundentafel
-	 * @param hj              das Oberstufenhalbjahr
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die Stundentafel der Anlage
+	 * @param fachBelegung      die Fachbelegung zur Halbjahresbelegung
+	 * @param fach              das zu prüfende Fach aus der Stundentafel
+	 * @param hj                das Oberstufenhalbjahr
 	 *
 	 * @return true, wenn die Prüfung keinen Fehler entdeckt, sonst false
 	 */
@@ -500,7 +494,7 @@ public class BKGymBelegpruefung {
 			return true;
 		if ((fachBelegung.abiturFach != null) && (fachBelegung.abiturFach <= 3))
 			return !addFehler(tafel, BKGymBelegungsfehlerTyp.KL_4, fach.fachbezeichnung, hj.kuerzel);
-		if ((GostHalbjahr.Q21 == hj) && abidatenManager.istFremdsprachenbelegung(fachBelegung))
+		if ((GostHalbjahr.Q21 == hj) && abidatenManager.getFaecherManager().istFremdsprachenbelegung(fachBelegung.fachID))
 			return !addFehler(tafel, BKGymBelegungsfehlerTyp.KL_3, fach.fachbezeichnung, hj.kuerzel);
 		return true;
 	}
@@ -525,4 +519,36 @@ public class BKGymBelegpruefung {
 		copy.zeugnisbereich = fach.zeugnisbereich;
 		return copy;
 	}
+
+
+	/**
+	 * Ein Comparator für die Belegungsfehlerlisten, der zuerst die Summe der Fehlerwerte,
+	 * dann die Anzahl der Fehler und schließlich die Fehlertypen alphabetisch vergleicht.
+	 */
+	private static final @NotNull Comparator<List<BKGymBelegungsfehler>> fehlerliste_comparator =
+		(l1, l2) -> {
+			// Vergleich der Summe der Fehlerwerte
+			if (l1 == null || l2 == null)
+				throw new DeveloperNotificationException("Die Belegungsfehlerliste darf nicht null sein.");
+			int sum1 = 0;
+			for (final BKGymBelegungsfehler f : l1)
+				sum1 += f.wert;
+			int sum2 = 0;
+			for (final BKGymBelegungsfehler f : l2)
+				sum2 += f.wert;
+			if (sum1 != sum2) return Integer.compare(sum1, sum2);
+
+			// Vergleich der Anzahl der Fehler
+			if (l1.size() != l2.size())
+				return Integer.compare(l1.size(), l2.size());
+
+			// Vergleich der Fehlertypen alphabetisch
+			final int n = Math.min(l1.size(), l2.size());
+			for (int i = 0; i < n; i++) {
+				final int cmp = l1.get(i).text.compareTo(l2.get(i).text);
+				if (cmp != 0)
+					return cmp;
+			}
+			return 0;
+		};
 }

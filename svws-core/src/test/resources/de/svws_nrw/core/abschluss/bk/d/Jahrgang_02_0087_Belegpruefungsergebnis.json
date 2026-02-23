@@ -1,0 +1,11 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [
+    {
+      "code" : "AB_3",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Es muss ein drittes Abiturfach gewählt werden."
+    }
+  ],
+  "log" : [ ]
+}

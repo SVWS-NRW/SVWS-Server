@@ -85,7 +85,7 @@ public final class BKGymAbiturMarkierungsalgorithmus {
 			(BKGymAbiturMarkierungsregel) new BKGymAbiturMarkierungsregelMaxAnzahlkurse(39, "Root#2FS#FA", "M_WK_MAX_FS_FA",
 					"Markiere weitere Kurse um bestes Ergebnis zu erreichen (2. FS + FA),",
 					"APO-BK AnlageD § 15 Abs. 2 Nr. 1b (V4)"),
-			(BKGymAbiturMarkierungsregel) new BKGymAbiturMarkierungsregelMinAnzahlpunkte(200, 40, "M_WK_MAX",
+			(BKGymAbiturMarkierungsregel) new BKGymAbiturMarkierungsregelMinAnzahlpunkte(200, 40, "M_WK_MIN_PUNKTE",
 					"Markiere weitere Kurse um mindestens 200 Punkte im Block I zu erreichen,",
 					"APO-BK AnlageD § 15 Abs. 2 Nr. 2"),
 			(BKGymAbiturMarkierungsregel) new BKGymAbiturMarkierungsregelDefizite(38, 8, "M_WK_DEF8",

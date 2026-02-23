@@ -7,8 +7,11 @@ import { ArrayList } from '../../../../java/util/ArrayList';
 import { BKGymAbiturFachbelegung } from '../../../../core/data/bk/abi/BKGymAbiturFachbelegung';
 import { BeruflichesGymnasiumStundentafel } from '../../../../asd/data/schule/BeruflichesGymnasiumStundentafel';
 import { BKGymFachbelegungZuStundentafelfachManager } from '../../../../core/abschluss/bk/d/BKGymFachbelegungZuStundentafelfachManager';
+import { JavaString } from '../../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
+import { JavaMath } from '../../../../java/lang/JavaMath';
 import { BKGymBelegungsfehlerTyp } from '../../../../core/types/bk/BKGymBelegungsfehlerTyp';
+import type { Comparator } from '../../../../java/util/Comparator';
 import { BKGymBelegungsfehler } from '../../../../core/abschluss/bk/d/BKGymBelegungsfehler';
 import { JavaInteger } from '../../../../java/lang/JavaInteger';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
@@ -39,6 +42,32 @@ export class BKGymBelegpruefung extends JavaObject {
 	 */
 	private dirty: boolean = false;
 
+	/**
+	 *  Ein Comparator für die Belegungsfehlerlisten, der zuerst die Summe der Fehlerwerte,
+	 *  dann die Anzahl der Fehler und schließlich die Fehlertypen alphabetisch vergleicht.
+	 */
+	private static readonly fehlerliste_comparator: Comparator<List<BKGymBelegungsfehler>> = { compare: (l1: List<BKGymBelegungsfehler> | null, l2: List<BKGymBelegungsfehler> | null) => {
+		if (l1 === null || l2 === null)
+			throw new DeveloperNotificationException("Die Belegungsfehlerliste darf nicht null sein.")
+		let sum1: number = 0;
+		for (const f of l1)
+			sum1 += f.wert;
+		let sum2: number = 0;
+		for (const f of l2)
+			sum2 += f.wert;
+		if (sum1 !== sum2)
+			return JavaInteger.compare(sum1, sum2);
+		if (l1.size() !== l2.size())
+			return JavaInteger.compare(l1.size(), l2.size());
+		const n: number = Math.min(l1.size(), l2.size());
+		for (let i: number = 0; i < n; i++) {
+			const cmp: number = JavaString.compareTo(l1.get(i).text, l2.get(i).text);
+			if (cmp !== 0)
+				return cmp;
+		}
+		return 0;
+	} };
+
 
 	/**
 	 * Erzeugt eine neue Belegprüfung mit dem angegebenen Manager.
@@ -55,7 +84,7 @@ export class BKGymBelegpruefung extends JavaObject {
 	 *
 	 * @param tafel       die Stundentafel
 	 * @param fehlerTyp   der hinzuzufügende Belegungsfehlertyp
-	 * @param params      die Parameter für den Belegungsfehlertyp
+	 * @param params	  die Parameter für den Belegungsfehlertyp
 	 *
 	 * @return true, falls ein Fehler vorliegt false, wenn nur ein Hinweis ausgegeben wurde.
 	 */
@@ -74,18 +103,11 @@ export class BKGymBelegpruefung extends JavaObject {
 	 */
 	private ermittleBesteTafel(): void {
 		if (this.dirty) {
-			let minFehlerZahl: number = JavaInteger.MAX_VALUE;
-			for (const fehlerliste of this.mapBelegungsfehler.values()) {
-				let fehlerZahl: number = 0;
-				for (const fehler of fehlerliste)
-					fehlerZahl += fehler.wert;
-				if (fehlerZahl < minFehlerZahl) {
-					minFehlerZahl = fehlerZahl;
-					this.besteFehlerliste = fehlerliste;
-				}
-			}
+			const fehlerlisten: ArrayList<List<BKGymBelegungsfehler>> = new ArrayList<List<BKGymBelegungsfehler>>(this.mapBelegungsfehler.values());
+			fehlerlisten.sort(BKGymBelegpruefung.fehlerliste_comparator);
+			this.besteFehlerliste = fehlerlisten.get(0);
+			this.dirty = false;
 		}
-		this.dirty = false;
 	}
 
 	/**
@@ -191,9 +213,9 @@ export class BKGymBelegpruefung extends JavaObject {
 	 * später geprüft wird, ob ein Ersatzfach belegt wurde. Das muss direkt vor der Prüfung des Wahlfachs durchgeführt werden
 	 * und nach der Prüfung eines Ersatzfaches für Religion, da hier die möglichen Ersatzfächer eingeschränkt sind.
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param tafel           die zu überprüfende Stundentafel
-	 * @param fach            das zu prüfende Fach der Stundentafel
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die zu überprüfende Stundentafel
+	 * @param fach              das zu prüfende Fach der Stundentafel
 	 *
 	 * @return true, wenn die Belegung erfolgreich war, sonst false
 	 */
@@ -208,9 +230,9 @@ export class BKGymBelegpruefung extends JavaObject {
 	/**
 	 * Führt die Belegung für die neue Fremdsprache durch.
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param tafel   die zu überprüfende Stundentafel
-	 * @param fach    das zu prüfende Fach der Stundentafel
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die zu überprüfende Stundentafel
+	 * @param fach              das zu prüfende Fach der Stundentafel
 	 */
 	private pruefeBelegungNeueFremdsprache(fb2TafelManager: BKGymFachbelegungZuStundentafelfachManager, tafel: BeruflichesGymnasiumStundentafel, fach: BeruflichesGymnasiumStundentafelFach): void {
 		const bezeichnerFremdsprache: string | null = this.abidatenManager.getFachbelegungManager().getZweiteFremdspracheBezeichnung();
@@ -226,8 +248,8 @@ export class BKGymBelegpruefung extends JavaObject {
 	 * Führt die Belegung für das Ersatzfach der zweiten Fremdsprache durch. Dies ist beliebig muss aberfür Religion durch.
 	 * für alle vier Halbjahre belegt werden.
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param tafel      die zu überprüfende Stundentafel
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die zu überprüfende Stundentafel
 	 */
 	private pruefeBelegungFremdsprachenErsatzfach(fb2TafelManager: BKGymFachbelegungZuStundentafelfachManager, tafel: BeruflichesGymnasiumStundentafel): void {
 		const stManager: BKGymStundentafelManager = this.abidatenManager.getStundentafelManager();
@@ -245,8 +267,8 @@ export class BKGymBelegpruefung extends JavaObject {
 	/**
 	 * Führt die Belegung für das Fach Religion durch.
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param fach    das zu prüfende Fach der Stundentafel
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param fach              das zu prüfende Fach der Stundentafel
 	 *
 	 * @return true, wenn die Belegung erfolgreich war, sonst false
 	 */
@@ -259,8 +281,8 @@ export class BKGymBelegpruefung extends JavaObject {
 	 * Führt die Belegung für das Ersatzfach für Religion durch. Dies ist beliebig muss aber
 	 * für alle vier Halbjahre belegt werden.
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param tafel      die zu überprüfende Stundentafel
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die zu überprüfende Stundentafel
 	 */
 	private pruefeBelegungReligionErsatzfach(fb2TafelManager: BKGymFachbelegungZuStundentafelfachManager, tafel: BeruflichesGymnasiumStundentafel): void {
 		const stManager: BKGymStundentafelManager = this.abidatenManager.getStundentafelManager();
@@ -346,8 +368,8 @@ export class BKGymBelegpruefung extends JavaObject {
 	/**
 	 * Prüft d, ob das Fach als Leistungskurs belegt wurde, wenn dies in der Stundentafel gefordert ist.
 	 *
-	 * @param tafel             die zu überprüfende Stundentafel
-	 * @param fach              das zu prüfende Fach der Stundentafel
+	 * @param tafel   die zu überprüfende Stundentafel
+	 * @param fach    das zu prüfende Fach der Stundentafel
 	 *
 	 * @return true, wenn in Stundentafel und Belegung die Kursarten zueinander passen, sonst false
 	 */
@@ -384,9 +406,9 @@ export class BKGymBelegpruefung extends JavaObject {
 	/**
 	 * Prüft, ob die Schriftlichkeit der Fächer korrekt erfüllt ist.
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param tafel         die Stundentafel der Anlage
-	 * @param fach          das zu prüfende Fach aus der Stundentafel
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die Stundentafel der Anlage
+	 * @param fach              das zu prüfende Fach aus der Stundentafel
 	 *
 	 * @return true, wenn die Prüfung keinen Fehler entdeckt, sonst false
 	 */
@@ -409,22 +431,22 @@ export class BKGymBelegpruefung extends JavaObject {
 	 * Da es die LK-Kombination Mathe-Deutsch nicht gibt, sind mindestens vier Fächer gegeben, wenn die obligatorischen
 	 * Klausurfächer geprüft sind.
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param tafel           die Stundentafel der Anlage
-	 * @param fachBelegung    die Fachbelegung zur Halbjahresbelegung
-	 * @param fach            das zu prüfende Fach aus der Stundentafel
-	 * @param hj              das Oberstufenhalbjahr
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die Stundentafel der Anlage
+	 * @param fachBelegung      die Fachbelegung zur Halbjahresbelegung
+	 * @param fach              das zu prüfende Fach aus der Stundentafel
+	 * @param hj                das Oberstufenhalbjahr
 	 *
 	 * @return true, wenn die Prüfung keinen Fehler entdeckt, sonst false
 	 */
 	private pruefeSchriftlichEF(fb2TafelManager: BKGymFachbelegungZuStundentafelfachManager, tafel: BeruflichesGymnasiumStundentafel, fach: BeruflichesGymnasiumStundentafelFach, fachBelegung: BKGymAbiturFachbelegung, hj: GostHalbjahr): boolean {
-		if (fb2TafelManager.getSchriftlichBelegt(hj, fach))
+		if (!this.abidatenManager.istBewertet(hj) || fb2TafelManager.getSchriftlichBelegt(hj, fach))
 			return true;
 		if (JavaObject.equalsTranspiler("Deutsch", (fach.fachbezeichnung)) || JavaObject.equalsTranspiler("Mathematik", (fach.fachbezeichnung)))
 			return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.KL_1_INFO, fach.fachbezeichnung, hj.kuerzel);
 		if ((fachBelegung.abiturFach !== null) && (fachBelegung.abiturFach <= 2))
 			return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.KL_2, fach.fachbezeichnung, hj.kuerzel);
-		if (this.abidatenManager.istFremdsprachenbelegung(fachBelegung))
+		if (this.abidatenManager.getFaecherManager().istFremdsprachenbelegung(fachBelegung.fachID))
 			return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.KL_3_INFO, fach.fachbezeichnung, hj.kuerzel);
 		return true;
 	}
@@ -433,11 +455,11 @@ export class BKGymBelegpruefung extends JavaObject {
 	 * In der Q1 müssen allen Abiturfächer schriftlich belegt sein. Deutsch, Mathematik,
 	 * Fremdsprachen und die Fächer der Berufsabschlussprüfung in jedem Fall
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param tafel           die Stundentafel der Anlage
-	 * @param fachBelegung    die Fachbelegung zur Halbjahresbelegung
-	 * @param fach            das zu prüfende Fach aus der Stundentafel
-	 * @param hj              das Oberstufenhalbjahr
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die Stundentafel der Anlage
+	 * @param fachBelegung      die Fachbelegung zur Halbjahresbelegung
+	 * @param fach              das zu prüfende Fach aus der Stundentafel
+	 * @param hj                das Oberstufenhalbjahr
 	 *
 	 * @return true, wenn die Prüfung keinen Fehler entdeckt, sonst false
 	 */
@@ -448,7 +470,7 @@ export class BKGymBelegpruefung extends JavaObject {
 			return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.KL_1, fach.fachbezeichnung, hj.kuerzel);
 		if ((fachBelegung.abiturFach !== null) && (fachBelegung.abiturFach <= 4))
 			return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.KL_4, fach.fachbezeichnung, hj.kuerzel);
-		if (this.abidatenManager.istFremdsprachenbelegung(fachBelegung))
+		if (this.abidatenManager.getFaecherManager().istFremdsprachenbelegung(fachBelegung.fachID))
 			return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.KL_3, fach.fachbezeichnung, hj.kuerzel);
 		return true;
 	}
@@ -457,11 +479,11 @@ export class BKGymBelegpruefung extends JavaObject {
 	 * In der Q2 müssen das erste bis dritte Abiturfach schriftlich belegt sein. Deutsch, Mathematik,
 	 * Nur in der Q21 auch die Fremdsprachen
 	 *
-	 * @param fb2TafelManager der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
-	 * @param tafel           die Stundentafel der Anlage
-	 * @param fachBelegung    die Fachbelegung zur Halbjahresbelegung
-	 * @param fach            das zu prüfende Fach aus der Stundentafel
-	 * @param hj              das Oberstufenhalbjahr
+	 * @param fb2TafelManager   der Manager für die Zuordnung der Fachbelegungen zu Stundentafelfächern
+	 * @param tafel             die Stundentafel der Anlage
+	 * @param fachBelegung      die Fachbelegung zur Halbjahresbelegung
+	 * @param fach              das zu prüfende Fach aus der Stundentafel
+	 * @param hj                das Oberstufenhalbjahr
 	 *
 	 * @return true, wenn die Prüfung keinen Fehler entdeckt, sonst false
 	 */
@@ -470,7 +492,7 @@ export class BKGymBelegpruefung extends JavaObject {
 			return true;
 		if ((fachBelegung.abiturFach !== null) && (fachBelegung.abiturFach <= 3))
 			return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.KL_4, fach.fachbezeichnung, hj.kuerzel);
-		if ((GostHalbjahr.Q21 as unknown === hj as unknown) && this.abidatenManager.istFremdsprachenbelegung(fachBelegung))
+		if ((GostHalbjahr.Q21 as unknown === hj as unknown) && this.abidatenManager.getFaecherManager().istFremdsprachenbelegung(fachBelegung.fachID))
 			return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.KL_3, fach.fachbezeichnung, hj.kuerzel);
 		return true;
 	}

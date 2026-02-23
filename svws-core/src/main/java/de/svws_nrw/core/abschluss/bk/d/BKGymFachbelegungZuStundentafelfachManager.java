@@ -39,8 +39,8 @@ public class BKGymFachbelegungZuStundentafelfachManager {
 	 *
 	 * @param fachbelegungManager                      der Manager für eine Stundentafelvariante
 	 * @param mapBelegungByHalbjahrAndFachbezeichung   eine HashMap2D für den schnellen Zugriff auf die Halbjahresbelegungen
-	 * @param abidatenManager
-	 * @param maxFachposition
+	 * @param abidatenManager                          der Abiturdaten-Manager
+	 * @param maxFachposition                          die maximale Fachposition der Stundentafel
 	 */
 	public BKGymFachbelegungZuStundentafelfachManager(final @NotNull BKGymFachbelegungManager fachbelegungManager,
 			final @NotNull HashMap2D<@NotNull String, @NotNull Integer, @NotNull BKGymAbiturFachbelegungHalbjahr> mapBelegungByHalbjahrAndFachbezeichung,
@@ -69,12 +69,16 @@ public class BKGymFachbelegungZuStundentafelfachManager {
 	 * Falls es nicht belegt wurde, wird trotzdem true geliefert, damit nicht
 	 * zum Fehler des Faches noch die nicht erfüllte Schriftlichkeit ausgegeben wird.
 	 *
-	 * @param hj
-	 * @param fach
+	 * @param hj     das Halbjahr
+	 * @param fach   die Fach der Stundentafel
 	 *
 	 * @return true, wenn schriftlich belegt oder keine Belegung vorliegt, sonst false
 	 */
 	public boolean getSchriftlichBelegt(final @NotNull GostHalbjahr hj, final @NotNull BeruflichesGymnasiumStundentafelFach fach) {
+		//Die schriftliche Belegung in der EF kennt nur der BKGymFachbelegungManager, da hierher nur die Q-Phase übermittelt wird.
+		if (hj.istEinfuehrungsphase())
+			return abidatenManager.getFachbelegungManager().getSchriftlichBelegt(hj, fach);
+
 		BKGymAbiturFachbelegungHalbjahr belegungHj = mapBelegungByHalbjahrAndFachbezeichung.getOrNull(fach.fachbezeichnung, hj.id);
 		if (belegungHj == null)
 			belegungHj = mapUsedBelegungByHalbjahrAndFachbezeichung.getOrNull(fach.fachbezeichnung, hj.id);
@@ -85,7 +89,7 @@ public class BKGymFachbelegungZuStundentafelfachManager {
 	/**
 	 * Belegt das angegebene Fach mit den vorhandenen Belegungen in der Qualifikationsphase.
 	 *
-	 * @param fach   die Fach der Stundentafel
+	 * @param fach   das Fach der Stundentafel
 	 */
 	public void belegeFach(final @NotNull BeruflichesGymnasiumStundentafelFach fach) {
 		for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase()) {

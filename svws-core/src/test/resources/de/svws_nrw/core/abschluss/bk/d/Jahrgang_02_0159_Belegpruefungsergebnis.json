@@ -1,0 +1,11 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [
+    {
+      "code" : "KL_1",
+      "art" : "SCHRIFTLICHKEIT",
+      "beschreibung" : "Im Fach Mathematik fehlt die Klausurbelegung im Halbjahr Q1.2."
+    }
+  ],
+  "log" : [ ]
+}

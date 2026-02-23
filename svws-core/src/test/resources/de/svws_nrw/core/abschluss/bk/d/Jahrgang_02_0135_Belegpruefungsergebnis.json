@@ -1,0 +1,16 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [
+    {
+      "code" : "LK_2",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Betriebswirtschaftslehre ist nicht der zweite Leistungskurs."
+    },
+    {
+      "code" : "LK_3",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Grundkursfach Volkswirtschaftslehre ist als Leistungskurs markiert."
+    }
+  ],
+  "log" : [ ]
+}

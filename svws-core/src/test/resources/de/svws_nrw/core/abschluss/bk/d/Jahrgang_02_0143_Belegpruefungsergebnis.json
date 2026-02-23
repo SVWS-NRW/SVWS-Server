@@ -1,0 +1,16 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [
+    {
+      "code" : "AB_5",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Die gewählte Kombination aus 3. Abiturfach (Deutsch) und 4. Abiturfach (Spanisch) ist in dem Bildungsgang D0210200 nicht zulässig."
+    },
+    {
+      "code" : "ST_3",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Englisch der Stundentafel wurde nicht im nötigen Stundenumfang belegt."
+    }
+  ],
+  "log" : [ ]
+}

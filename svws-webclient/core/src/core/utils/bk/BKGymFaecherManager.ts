@@ -188,6 +188,20 @@ export class BKGymFaecherManager extends JavaObject {
 		return fach.kuerzel.substring(0, 1).toUpperCase();
 	}
 
+	/**
+	 * Prüft, ob es sich bei der Fachbelegung um eine Belegung einer Fremdsprache handelt.
+	 *
+	 * @param fachID   die ID des Fachs
+	 *
+	 * @return true, wenn es sich um eine Fremdsprachenbelegung handelt, und ansonsten false
+	 */
+	public istFremdsprachenbelegung(fachID: number): boolean {
+		const fbFach: BKGymFach | null = this.get(fachID);
+		if ((fbFach === null) || (fbFach.bezeichnung === null))
+			return false;
+		return fbFach.istFremdsprache;
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.bk.BKGymFaecherManager';
 	}

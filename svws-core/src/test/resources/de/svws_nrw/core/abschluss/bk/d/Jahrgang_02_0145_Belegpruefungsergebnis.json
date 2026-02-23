@@ -1,0 +1,11 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [
+    {
+      "code" : "LK_3",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Grundkursfach Wirtschaftsinformatik ist als Leistungskurs markiert."
+    }
+  ],
+  "log" : [ ]
+}

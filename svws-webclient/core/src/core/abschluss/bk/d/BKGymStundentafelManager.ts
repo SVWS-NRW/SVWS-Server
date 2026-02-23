@@ -178,12 +178,12 @@ export class BKGymStundentafelManager extends JavaObject {
 	/**
 	 * Rekursive Methode zur Permutation der Fächer.
 	 *
-	 * @param result            die Liste der Ergebnisse
-	 * @param eindeutigeFaecher die Liste der eindeutigen Fächer
-	 * @param map               die Map der Fächer mit mehreren Belegungsmöglichkeiten
-	 * @param keys              die sortierten Schlüssel der Map
-	 * @param index             der aktuelle Index in den Schlüsseln
-	 * @param current           die aktuelle Kombination von Fächern
+	 * @param result              die Liste der Ergebnisse
+	 * @param eindeutigeFaecher   die Liste der eindeutigen Fächer
+	 * @param map                 die Map der Fächer mit mehreren Belegungsmöglichkeiten
+	 * @param keys                die sortierten Schlüssel der Map
+	 * @param index               der aktuelle Index in den Schlüsseln
+	 * @param current             die aktuelle Kombination von Fächern
 	 */
 	private static permutiereFaecher(result: List<List<BeruflichesGymnasiumStundentafelFach>>, eindeutigeFaecher: List<BeruflichesGymnasiumStundentafelFach>, map: JavaMap<number, List<BeruflichesGymnasiumStundentafelFach>>, keys: List<number>, index: number, current: List<BeruflichesGymnasiumStundentafelFach>): void {
 		if (index === keys.size()) {
@@ -244,6 +244,7 @@ export class BKGymStundentafelManager extends JavaObject {
 
 	/**
 	 * Prüft ob es sich um die Bezeichnung für das symbolische Wahlfach handelt.
+	 *
 	 * @param bezeichnung   eine Fachbezeichnung aus der Stundentafel
 	 *
 	 * @return true wenn es die Repräsentation für das Wahlfach ist, sonst false
@@ -254,6 +255,7 @@ export class BKGymStundentafelManager extends JavaObject {
 
 	/**
 	 * Prüft ob es sich um die Bezeichnung für das symbolische Fach Zweite Fremdsprache handelt.
+	 *
 	 * @param bezeichnung   eine Fachbezeichnung aus der Stundentafel
 	 *
 	 * @return true wenn es die Repräsentation für die zweite Fremdsprache ist, sonst false
@@ -287,7 +289,7 @@ export class BKGymStundentafelManager extends JavaObject {
 	/**
 	 * Prüft ob die Fachkombination für das dritte und vierte Abiturfach gültig ist.
 	 *
-	 * @param tafel   die zu prüfende Stundentafel mit ihren Wahlmöglichkeiten
+	 * @param tafel            die zu prüfende Stundentafel mit ihren Wahlmöglichkeiten
 	 * @param ab3Bezeichnung   die Bezeichnung des dritten Abiturfaches
 	 * @param ab4Bezeichnung   die Bezeichnung vierten Abiturfaches
 	 *
@@ -306,7 +308,7 @@ export class BKGymStundentafelManager extends JavaObject {
 	 * Dabei werden die Spezialfälle für eine zweite Fremdsprache und ein mögliches Wahlfach (Zukunftstauglichkeit)
 	 * berücksichtigt
 	 *
-	 * @param wm    die Wahlmöglichkeit
+	 * @param wm               die Wahlmöglichkeit
 	 * @param ab3Bezeichnung   die Bezeichnung des dritten Abiturfaches
 	 * @param ab4Bezeichnung   die Bezeichnung vierten Abiturfaches
 	 *

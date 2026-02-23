@@ -194,4 +194,20 @@ public class BKGymFaecherManager {
 			return null;
 		return fach.kuerzel.substring(0, 1).toUpperCase();
 	}
+
+
+	/**
+	 * Prüft, ob es sich bei der Fachbelegung um eine Belegung einer Fremdsprache handelt.
+	 *
+	 * @param fachID   die ID des Fachs
+	 *
+	 * @return true, wenn es sich um eine Fremdsprachenbelegung handelt, und ansonsten false
+	 */
+	public boolean istFremdsprachenbelegung(final long fachID) {
+		// Prüfe, ob das Fach in der Fächerliste des Abiturjahrgangs überhaupt existiert
+		final BKGymFach fbFach = get(fachID);
+		if ((fbFach == null) || (fbFach.bezeichnung == null))
+			return false;
+		return fbFach.istFremdsprache;
+	}
 }

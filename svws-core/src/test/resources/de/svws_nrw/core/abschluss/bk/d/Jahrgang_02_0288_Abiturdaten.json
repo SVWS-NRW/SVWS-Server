@@ -1279,6 +1279,7 @@
         "belegungen": [
             {
                 "sprache": "E",
+                "istNachweis": false,
                 "reihenfolge": 1,
                 "belegungVonJahrgang": "05",
                 "belegungVonAbschnitt": 1,
@@ -1293,6 +1294,7 @@
             },
             {
                 "sprache": "F",
+                "istNachweis": false,
                 "reihenfolge": 2,
                 "belegungVonJahrgang": "EF",
                 "belegungVonAbschnitt": 1,

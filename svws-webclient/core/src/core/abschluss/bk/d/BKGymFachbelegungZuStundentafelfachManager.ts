@@ -40,8 +40,8 @@ export class BKGymFachbelegungZuStundentafelfachManager extends JavaObject {
 	 *
 	 * @param fachbelegungManager                      der Manager für eine Stundentafelvariante
 	 * @param mapBelegungByHalbjahrAndFachbezeichung   eine HashMap2D für den schnellen Zugriff auf die Halbjahresbelegungen
-	 * @param abidatenManager
-	 * @param maxFachposition
+	 * @param abidatenManager                          der Abiturdaten-Manager
+	 * @param maxFachposition                          die maximale Fachposition der Stundentafel
 	 */
 	public constructor(fachbelegungManager: BKGymFachbelegungManager, mapBelegungByHalbjahrAndFachbezeichung: HashMap2D<string, number, BKGymAbiturFachbelegungHalbjahr>, abidatenManager: BKGymAbiturdatenManager, maxFachposition: number) {
 		super();
@@ -67,12 +67,14 @@ export class BKGymFachbelegungZuStundentafelfachManager extends JavaObject {
 	 * Falls es nicht belegt wurde, wird trotzdem true geliefert, damit nicht
 	 * zum Fehler des Faches noch die nicht erfüllte Schriftlichkeit ausgegeben wird.
 	 *
-	 * @param hj
-	 * @param fach
+	 * @param hj     das Halbjahr
+	 * @param fach   die Fach der Stundentafel
 	 *
 	 * @return true, wenn schriftlich belegt oder keine Belegung vorliegt, sonst false
 	 */
 	public getSchriftlichBelegt(hj: GostHalbjahr, fach: BeruflichesGymnasiumStundentafelFach): boolean {
+		if (hj.istEinfuehrungsphase())
+			return this.abidatenManager.getFachbelegungManager().getSchriftlichBelegt(hj, fach);
 		let belegungHj: BKGymAbiturFachbelegungHalbjahr | null = this.mapBelegungByHalbjahrAndFachbezeichung.getOrNull(fach.fachbezeichnung, hj.id);
 		if (belegungHj === null)
 			belegungHj = this.mapUsedBelegungByHalbjahrAndFachbezeichung.getOrNull(fach.fachbezeichnung, hj.id);
@@ -82,7 +84,7 @@ export class BKGymFachbelegungZuStundentafelfachManager extends JavaObject {
 	/**
 	 * Belegt das angegebene Fach mit den vorhandenen Belegungen in der Qualifikationsphase.
 	 *
-	 * @param fach   die Fach der Stundentafel
+	 * @param fach   das Fach der Stundentafel
 	 */
 	public belegeFach(fach: BeruflichesGymnasiumStundentafelFach): void {
 		for (const hj of GostHalbjahr.getQualifikationsphase()) {

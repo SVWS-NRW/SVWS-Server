@@ -1,26 +1,24 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { BKGymStundentafelManager } from '../../../../core/abschluss/bk/d/BKGymStundentafelManager';
 import { BKGymAbiturMarkierungsalgorithmusErgebnis } from '../../../../core/data/bk/abi/BKGymAbiturMarkierungsalgorithmusErgebnis';
+import { BKGymFachbelegungManager } from '../../../../core/abschluss/bk/d/BKGymFachbelegungManager';
 import { ArrayList } from '../../../../java/util/ArrayList';
+import { BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag } from '../../../../asd/data/schule/BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag';
+import { BeruflichesGymnasiumStundentafel } from '../../../../asd/data/schule/BeruflichesGymnasiumStundentafel';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
+import { BKGymAbiturMarkierungsalgorithmus } from '../../../../core/abschluss/bk/d/markieren/BKGymAbiturMarkierungsalgorithmus';
+import { SprachendatenUtils } from '../../../../core/utils/schueler/SprachendatenUtils';
+import { BKGymBelegungsfehler } from '../../../../core/abschluss/bk/d/BKGymBelegungsfehler';
 import { BKGymAbiturdaten } from '../../../../core/data/bk/abi/BKGymAbiturdaten';
 import { BKGymBelegpruefungErgebnis } from '../../../../core/data/bk/abi/BKGymBelegpruefungErgebnis';
 import { BKGymFaecherManager } from '../../../../core/utils/bk/BKGymFaecherManager';
+import { BKGymBelegpruefung } from '../../../../core/abschluss/bk/d/BKGymBelegpruefung';
 import { BeruflichesGymnasiumPruefungsordnungAnlage } from '../../../../asd/types/schule/BeruflichesGymnasiumPruefungsordnungAnlage';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import { Schulgliederung } from '../../../../asd/types/schule/Schulgliederung';
 import type { List } from '../../../../java/util/List';
-import { BKGymBelegpruefungErgebnisFehler } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungErgebnisFehler';
-import { BKGymFach } from '../../../../core/data/bk/abi/BKGymFach';
-import { BKGymFachbelegungManager } from '../../../../core/abschluss/bk/d/BKGymFachbelegungManager';
-import { BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag } from '../../../../asd/data/schule/BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag';
-import { BKGymAbiturFachbelegung } from '../../../../core/data/bk/abi/BKGymAbiturFachbelegung';
-import { BeruflichesGymnasiumStundentafel } from '../../../../asd/data/schule/BeruflichesGymnasiumStundentafel';
-import { BKGymAbiturMarkierungsalgorithmus } from '../../../../core/abschluss/bk/d/markieren/BKGymAbiturMarkierungsalgorithmus';
-import { SprachendatenUtils } from '../../../../core/utils/schueler/SprachendatenUtils';
-import { BKGymBelegungsfehler } from '../../../../core/abschluss/bk/d/BKGymBelegungsfehler';
-import { BKGymBelegpruefung } from '../../../../core/abschluss/bk/d/BKGymBelegpruefung';
 import { Class } from '../../../../java/lang/Class';
+import { BKGymBelegpruefungErgebnisFehler } from '../../../../core/abschluss/bk/d/BKGymBelegpruefungErgebnisFehler';
 
 export class BKGymAbiturdatenManager extends JavaObject {
 
@@ -357,20 +355,6 @@ export class BKGymAbiturdatenManager extends JavaObject {
 	 */
 	public getBezeichnungByFachID(id: number): string {
 		return this.faecherManager.getBezeichnungByFachID(id);
-	}
-
-	/**
-	 * Prüft, ob es sich bei der Fachbelegung um eine Belegung einer Fremdsprache handelt.
-	 *
-	 * @param fb   die Fachbelegung
-	 *
-	 * @return true, wenn es sich um eine Fremdsprachenbelegung handelt, und ansonsten false
-	 */
-	public istFremdsprachenbelegung(fb: BKGymAbiturFachbelegung): boolean {
-		const fbFach: BKGymFach | null = this.faecherManager.get(fb.fachID);
-		if ((fbFach === null) || (fbFach.bezeichnung === null))
-			return false;
-		return fbFach.istFremdsprache;
 	}
 
 	/**

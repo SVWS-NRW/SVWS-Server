@@ -10,6 +10,16 @@
       "code" : "KL_4",
       "art" : "SCHRIFTLICHKEIT",
       "beschreibung" : "Im Abiturfach Biologie fehlt die Klausurbelegung im Halbjahr Q1.2."
+    },
+    {
+      "code" : "KL_1_INFO",
+      "art" : "SCHRIFTLICHKEIT",
+      "beschreibung" : "Hinweis: Im Fach Mathematik fehlt die Klausurbelegung im Halbjahr EF.2."
+    },
+    {
+      "code" : "KL_3_INFO",
+      "art" : "SCHRIFTLICHKEIT",
+      "beschreibung" : "Hinweis: In der Fremdsprache Französisch fehlt die Klausurbelegung im Halbjahr EF.2."
     }
   ],
   "log" : [ ]

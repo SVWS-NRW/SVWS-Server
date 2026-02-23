@@ -26,9 +26,6 @@ public enum BKGymBelegungsfehlerTyp {
 	/** BelegungsfehlerArt AB_5 | Parameter: Fachkürzel von AB3, Fachkürzel von AB4, Gliederung, Fachklassenschlüssel*/
 	AB_5("AB_5", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Die gewählte Kombination aus 3. Abiturfach (%s) und 4. Abiturfach (%s) ist in dem Bildungsgang %s%s nicht zulässig."),
 
-	/** BelegungsfehlerArt ST_1 | Parameter: Fachbezeichnung */
-	ST_1("ST_1", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Das Fach %s der Stundentafel wurde mehrfach belegt."),
-
 	/** BelegungsfehlerArt ST_2 | Parameter: Fachbezeichnung, Halbjahr */
 	ST_2("ST_2", BKGymBelegungsfehlerArt.BELEGUNG, 5, "Das Fach %s weist im Halbjahr %s keine Note auf, obwohl es belegt werden muss."),
 
@@ -50,8 +47,11 @@ public enum BKGymBelegungsfehlerTyp {
 	/** BelegungsfehlerArt KL_2 Klausur | Parameter: Fachbezeichnung, Halbjahr */
 	KL_2("KL_2", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 2, "Im LK-Fach %s fehlt die Klausurbelegung im Halbjahr %s."),
 
-	/** BelegungsfehlerArt KL_3 Klausur | Parameter: Fachbezeichnung, Halbjahr */
+	/** BelegungsfehlerArt KL_3 Klausur (QF)| Parameter: Fachbezeichnung, Halbjahr */
 	KL_3("KL_3", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 2, "In der Fremdsprache %s fehlt die Klausurbelegung im Halbjahr %s."),
+
+	/** BelegungsfehlerArt KL_3_INFO Klausur (EF) | Parameter: Fachbezeichnung, Halbjahr */
+	KL_3_INFO("KL_3_INFO", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 0, "Hinweis: In der Fremdsprache %s fehlt die Klausurbelegung im Halbjahr %s."),
 
 	/** BelegungsfehlerArt KL_4 Klausur | Parameter: Fachbezeichnung, Halbjahr */
 	KL_4("KL_4", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 2, "Im Abiturfach %s fehlt die Klausurbelegung im Halbjahr %s."),
@@ -59,11 +59,8 @@ public enum BKGymBelegungsfehlerTyp {
 	/** BelegungsfehlerArt KL_1_INFO Klausur | Parameter: Fachbezeichnung, Halbjahr */
 	KL_1_INFO("KL_1_INFO", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 0, "Hinweis: Im Fach %s fehlt die Klausurbelegung im Halbjahr %s."),
 
-	/** BelegungsfehlerArt KL_3_INFO Klausur | Parameter: Fachbezeichnung, Halbjahr */
-	KL_3_INFO("KL_3_INFO", BKGymBelegungsfehlerArt.SCHRIFTLICHKEIT, 0, "Hinweis: In der Fremdsprache %s fehlt die Klausurbelegung im Halbjahr %s."),
-
 	/** BelegungsfehlerArt HJ_1_INFO Belegung | Parameter: Halbjahr */
-	HJ_1_INFO("KL_3_INFO", BKGymBelegungsfehlerArt.BELEGUNG, 0, "Hinweis: Das Halbjahr %s ist nicht bewertet. Bedingungen müssen manuell geprüft werden.");
+	HJ_1_INFO("HJ_1_INFO", BKGymBelegungsfehlerArt.BELEGUNG, 0, "Hinweis: Das Halbjahr %s ist nicht bewertet. Bedingungen müssen manuell geprüft werden.");
 
 
 	/** Der eindeutige Code des Belegungsfehlers */
