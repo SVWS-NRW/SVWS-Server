@@ -356,6 +356,8 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 
 		// Erstelle bzw. aktualisiere dann die Klassenleitungen, welche in der neuen Liste der Klassenleitungen sind
 		for (int i = 0; i < klassenLeitungList.size(); i++) {
+			final int reihenfolge = i + 1;  // Der Wert für die Reihenfolge ist 1-indiziert
+
 			// Überprüfe, ob es bereits eine Klassenleitung mit der jeweiligen Klassen-ID und Lehrer-ID gibt
 			final List<DTOKlassenLeitung> persistierteKlassenleitung =
 					conn.queryList(DTOKlassenLeitung.QUERY_PK, DTOKlassenLeitung.class, dto.ID, klassenLeitungList.get(i));
@@ -364,15 +366,15 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 			if (!persistierteKlassenleitung.isEmpty()) {
 				// ... und aktualisiere diese bei Bedarf
 				final DTOKlassenLeitung dtoKlassenLeitung = persistierteKlassenleitung.getFirst();
-				if (dtoKlassenLeitung.Reihenfolge == i)
+				if (dtoKlassenLeitung.Reihenfolge == reihenfolge)
 					continue; // bereits aktuell
 				// Setze den Reihenfolgenwert anhand des Index in der neuen Liste und persistiere die Änderung
-				dtoKlassenLeitung.Reihenfolge = i;
+				dtoKlassenLeitung.Reihenfolge = reihenfolge;
 				if (!conn.transactionPersist(dtoKlassenLeitung))
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Klassenleitung konnte nicht aktualisiert werden");
 			} else {
 				// ... und erstelle eine neue Klassenleitung, welche dann persistiert wird
-				final DTOKlassenLeitung dtoKlassenLeitung = new DTOKlassenLeitung(dto.ID, klassenLeitungList.get(i), i);
+				final DTOKlassenLeitung dtoKlassenLeitung = new DTOKlassenLeitung(dto.ID, klassenLeitungList.get(i), reihenfolge);
 				if (!conn.transactionPersist(dtoKlassenLeitung))
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Klassenleitung konnte nicht persistiert werden");
 			}
