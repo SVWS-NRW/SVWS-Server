@@ -6,7 +6,9 @@
 		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Floskeln werden gelöscht">
 				<template #buttonFooterLeft>
-					<svws-ui-button title="Löschen" @click="deleteFloskeln" :is-loading class="mt-4">
+					<svws-ui-button title="Löschen" class="mt-4"
+						@click="deleteFloskeln"
+						:disabled="!props.manager().liste.auswahlExists()" :is-loading>
 						<svws-ui-spinner v-if="isLoading" spinning />
 						<span v-else class="icon i-ri-play-line" />
 						Löschen
@@ -15,7 +17,10 @@
 			</ui-card>
 			<log-box :logs :status>
 				<template #button>
-					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog">Log verwerfen</svws-ui-button>
+					<svws-ui-button v-if="status !== undefined" type="transparent"
+						@click="clearLog">
+						Log verwerfen
+					</svws-ui-button>
 				</template>
 			</log-box>
 		</div>
