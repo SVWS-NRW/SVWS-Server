@@ -282,8 +282,9 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 	test("symbol iterator:", () => {
 		v.add(b);
 		v.add(c);
-		for (const e of v)
+		for (const e of v) {
 			expect(e).toBeDefined();
+		}
 	});
 	test("listIterator: returns an Iterator for the Vector", () => {
 		v.add(b);

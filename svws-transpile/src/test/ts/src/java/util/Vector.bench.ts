@@ -13,22 +13,26 @@ describe.each([s, n, l])(
 		v.add(c);
 		v.add(d);
 		v.add(e);
-		bench( "Array from", () => {
+		bench("Array from", () => {
 			Array.from(v);
 		});
-		bench( "toArray", () => {
+		bench("toArray", () => {
 			v.toArray(new Array<typeof a>());
 		});
-		bench( "[...v] destructure", () => {
+		bench("[...v] destructure", () => {
 			void [...v];
 		});
-		bench( "for of loop", () => {
-			const arr = []
-			for (const e of v) arr.push(e)
+		bench("for of loop", () => {
+			const arr = [];
+			for (const e of v) {
+				arr.push(e);
+			}
 		});
-		bench( "for loop", () => {
-			const arr = []
-			for (let i = 0; i < v.size(); i++) arr.push(v.get(i))
+		bench("for loop", () => {
+			const arr = [];
+			for (let i = 0; i < v.size(); i++) {
+				arr.push(v.get(i));
+			}
 		});
 	}
 );

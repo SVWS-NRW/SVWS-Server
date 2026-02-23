@@ -1,26 +1,8 @@
 import { TestPerson } from "./TestPerson";
 
-export const s = {
-	name: "String",
-	a: "a",
-	b: "b",
-	c: "c",
-	d: "d",
-	e: "e",
-	aa: "a",
-	ab: "ab",
-};
+export const s = { name: "String", a: "a", b: "b", c: "c", d: "d", e: "e", aa: "a", ab: "ab" };
 
-export const n = {
-	name: "Number",
-	a: 1,
-	b: 2,
-	c: 3,
-	d: 4,
-	e: 5,
-	aa: 1,
-	ab: 12,
-};
+export const n = { name: "Number", a: 1, b: 2, c: 3, d: 4, e: 5, aa: 1, ab: 12 };
 
 export const l = {
 	name: "TestPerson",

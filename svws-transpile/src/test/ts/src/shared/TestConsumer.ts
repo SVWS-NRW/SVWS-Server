@@ -1,9 +1,10 @@
 import type { Consumer } from "../../../../main/resources/typescript/java/util/function/Consumer";
 import type { TestPerson } from "./TestPerson";
 
-export class TestConsumer implements Consumer<string | number | TestPerson> {
-	public value: (string | number | TestPerson)[] = [];
-	public accept(e: string | number | TestPerson): void {
+type TypeAlias = string | number | TestPerson;
+export class TestConsumer implements Consumer<TypeAlias> {
+	public value: (TypeAlias)[] = [];
+	public accept(e: TypeAlias): void {
 		this.value.push(e);
 	}
 }
