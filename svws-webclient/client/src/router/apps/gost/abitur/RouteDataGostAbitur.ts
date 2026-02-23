@@ -81,16 +81,16 @@ export class RouteDataGostAbitur extends RouteData<RouteStateDataGostAbitur> {
 					mapKurse.put(kurs.id, kurs);
 				}
 			}
-		} catch (error) {
+		} catch {
 			// Das Laden der Kurse kann fehlschlagen, wenn der Schuljahresabschnitt für die Q2.2 noch nicht existiert
 		}
 
-		let schuelerListe = undefined;
+		let schuelerListe;
 		const mapLehrer = new HashMap<number, LehrerListeEintrag>();
-		let gostJahrgangsdaten = undefined;
-		let listGostFaecher = undefined;
-		let faecherManager = undefined;
-		let listFachkombinationen = undefined;
+		let gostJahrgangsdaten;
+		let listGostFaecher;
+		let faecherManager;
+		let listFachkombinationen;
 		try {
 			schuelerListe = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiJahrgang.abiturjahr);
 			const listLehrer = await api.server.getLehrer(api.schema);
@@ -102,7 +102,7 @@ export class RouteDataGostAbitur extends RouteData<RouteStateDataGostAbitur> {
 			faecherManager = new GostFaecherManager(abiJahrgang.abiturjahr - 1, listGostFaecher);
 			listFachkombinationen = await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, abiJahrgang.abiturjahr);
 			faecherManager.addFachkombinationenAll(listFachkombinationen);
-		} catch (error) {
+		} catch {
 			throw new UserNotificationException("Die Informationen zum Abiturjahrgang " + abiJahrgang.abiturjahr +
 				", dessen Schüler und dessen Fächer konnten nicht vollständig ermittelt werden. Überpfüfen Sie diese Infromationen.");
 		}
@@ -119,7 +119,7 @@ export class RouteDataGostAbitur extends RouteData<RouteStateDataGostAbitur> {
 				newState.ergebnisBelegpruefungMap.put(abiturdaten.schuelerID, manager.getBelegpruefungErgebnis());
 				manager.applyErgebnisMarkierungsalgorithmus();
 			}
-		} catch (e) {
+		} catch {
 			// do nothing
 		}
 		try {
@@ -128,7 +128,7 @@ export class RouteDataGostAbitur extends RouteData<RouteStateDataGostAbitur> {
 			for (const abiturdaten of abiturdatenListe) {
 				newState.managerAbiturMap.put(abiturdaten.schuelerID, new AbiturdatenManager(api.mode, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT));
 			}
-		} catch (e) {
+		} catch {
 			// do nothing
 		}
 		this.setPatchedDefaultState(newState);

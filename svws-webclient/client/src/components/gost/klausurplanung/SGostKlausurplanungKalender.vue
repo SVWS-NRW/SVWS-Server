@@ -218,7 +218,7 @@
 	const zeitrasterSelected = ref<StundenplanZeitraster | undefined>(undefined);
 
 	const anzahlProKwKonflikte2 = (threshold: number, thresholdOnly: boolean) => {
-		let konflikte: JavaSet<JavaMapEntry<number, JavaSet<GostSchuelerklausurTermin>>> | null = null;
+		let konflikte: JavaSet<JavaMapEntry<number, JavaSet<GostSchuelerklausurTermin>>> | null;
 		if (props.terminSelected.value !== undefined && zeitrasterSelected.value !== undefined) {
 			konflikte = props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(props.terminSelected.value, stundenplanManager().datumGetByKwzAndZeitraster(kalenderwoche(), zeitrasterSelected.value), threshold, thresholdOnly).entrySet();
 		} else {

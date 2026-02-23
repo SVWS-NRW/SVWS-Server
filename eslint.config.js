@@ -1,4 +1,5 @@
 import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 import globals from "globals";
 import vueEslintParser from "vue-eslint-parser"
@@ -7,7 +8,7 @@ import eslintPluginStylistic from "@stylistic/eslint-plugin"
 import eslintTypeScriptPlugin from "@typescript-eslint/eslint-plugin"
 import typeScriptESlintParser from "@typescript-eslint/parser"
 
-export default tseslint.config(
+export default defineConfig(
 	// globale Einstellung für extends und ignores
 	// betrifft alle vue und ts-Dateien
   {

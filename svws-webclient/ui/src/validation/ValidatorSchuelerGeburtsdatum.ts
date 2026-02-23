@@ -49,7 +49,7 @@ export class ValidatorSchuelerGeburtsdatum extends BasicValidator {
 			this.addFehler(0, "Ein Geburtsdatum muss eingegeben werden.");
 			return false;
 		}
-		let geburtsdatum: DateManager | null = null;
+		let geburtsdatum: DateManager | null;
 		try {
 			geburtsdatum = DateManager.from(strGeburtsdatum);
 		} catch (e) {

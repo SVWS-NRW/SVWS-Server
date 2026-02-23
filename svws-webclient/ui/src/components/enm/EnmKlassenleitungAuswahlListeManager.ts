@@ -50,7 +50,7 @@ export class EnmKlassenleitungAuswahlListeManager extends AuswahlManager<number,
 		for (const criteria of this._order) {
 			const field: string | null = criteria.a;
 			const asc: boolean = (criteria.b === null) || criteria.b;
-			let cmp: number = 0;
+			let cmp: number;
 			if (JavaObject.equalsTranspiler("kuerzelAnzeige", (field))) {
 				cmp = JavaString.compareTo(a.kuerzelAnzeige ?? "", b.kuerzelAnzeige);
 			} else {

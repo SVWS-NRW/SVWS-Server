@@ -304,7 +304,7 @@
 		const kursart = (leistung.kursart === null) ? ZulaessigeKursart.PUK : ZulaessigeKursart.data().getWertByKuerzel(leistung.kursart);
 		if (kurs.kursartAllg !== kursart?.daten(schuljahr.value)?.kuerzelAllg) {
 			const kursarten: List<ZulaessigeKursart> = ZulaessigeKursart.getByAllgemeinerKursart(schuljahr.value, kurs.kursartAllg);
-			let neueKursart: ZulaessigeKursart | null = kursart;
+			let neueKursart: ZulaessigeKursart | null;
 			let neuesAbifach: number | null = leistung.abifach;
 			if (kurs.kursartAllg === ZulaessigeKursart.E.daten(schuljahr.value)?.kuerzel) { // Speziallfall Gesamtschule E-Kurs
 				neueKursart = ZulaessigeKursart.E;

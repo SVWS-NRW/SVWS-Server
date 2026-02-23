@@ -50,7 +50,7 @@ export class EnmLerngruppenAuswahlListeManager extends AuswahlManager<number, EN
 		for (const criteria of this._order) {
 			const field: string | null = criteria.a;
 			const asc: boolean = (criteria.b === null) || criteria.b;
-			let cmp: number = 0;
+			let cmp: number;
 			if (JavaObject.equalsTranspiler("bezeichnung", (field))) {
 				cmp = JavaString.compareTo(a.bezeichnung ?? "", b.bezeichnung);
 			} else {

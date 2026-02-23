@@ -34,7 +34,7 @@ export class ValidatorSchuelerAnmeldedatum extends BasicValidator {
 		if ((strAnmeldedatum === undefined) || (strAnmeldedatum === null)) {
 			return true;
 		}
-		let datumAnmeldung: DateManager | null = null;
+		let datumAnmeldung: DateManager | null;
 		try {
 			datumAnmeldung = DateManager.from(strAnmeldedatum);
 		} catch (e) {

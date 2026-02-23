@@ -199,7 +199,7 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 		for (const criteria of this._order) {
 			const field: string | null = criteria.a;
 			const asc: boolean = (criteria.b === null) || criteria.b;
-			let cmp: number = 0;
+			let cmp: number;
 			if (JavaObject.equalsTranspiler("kuerzel", (field))) {
 				cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
 			} else

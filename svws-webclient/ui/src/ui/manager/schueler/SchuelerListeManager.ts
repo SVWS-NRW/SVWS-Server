@@ -274,7 +274,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 		for (const criteria of this._order) {
 			const field: string | null = criteria.a;
 			const asc: boolean = (criteria.b === null) || criteria.b;
-			let cmp: number = 0;
+			let cmp: number;
 			if (JavaObject.equalsTranspiler("klassen", (field))) {
 				const aKlasse: KlassenDaten | null = this.klasseGetOrNull(a.idKlasse);
 				const bKlasse: KlassenDaten | null = this.klasseGetOrNull(b.idKlasse);
@@ -433,7 +433,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.schueler.SchuelerListeManager'].includes(name);
 	}
 
-	public static class = new Class<SchuelerListeManager>('de.svws_nrw.core.utils.schueler.SchuelerListeManager');
+	public static readonly class = new Class<SchuelerListeManager>('de.svws_nrw.core.utils.schueler.SchuelerListeManager');
 
 }
 

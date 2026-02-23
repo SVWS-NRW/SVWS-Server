@@ -39,7 +39,7 @@ export class ValidatorSchuelerDatumBeginnBildungsgang extends BasicValidator {
 		if ((strBeginnBildungsgang === undefined) || (strBeginnBildungsgang === null)) {
 			return true;
 		}
-		let datumBeginnBildungsgang: DateManager | null = null;
+		let datumBeginnBildungsgang: DateManager | null;
 		try {
 			datumBeginnBildungsgang = DateManager.from(strBeginnBildungsgang);
 		} catch (e) {
@@ -53,7 +53,7 @@ export class ValidatorSchuelerDatumBeginnBildungsgang extends BasicValidator {
 		if ((strAufnahmedatum === undefined) || (strAufnahmedatum === null)) {
 			return true;
 		}
-		let datumAufnahme: DateManager | null = null;
+		let datumAufnahme: DateManager | null;
 		try {
 			datumAufnahme = DateManager.from(strAufnahmedatum);
 		} catch (e) {

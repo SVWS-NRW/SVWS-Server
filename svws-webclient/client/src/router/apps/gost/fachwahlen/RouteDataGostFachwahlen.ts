@@ -120,9 +120,7 @@ export class RouteDataGostFachwahlen extends RouteData<RouteStateDataGostFachwah
 			}
 		}
 		// Wähle ggf. die Default-Route, um Fehler abzufangen...
-		if (route === undefined) {
-			route = route = routeGostFachwahlenAllgemein.getRoute();
-		}
+		route ??= routeGostFachwahlenAllgemein.getRoute();
 		// Führe das Routing durch
 		await RouteManager.doRoute(route);
 	};

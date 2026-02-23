@@ -263,7 +263,7 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 		for (const criteria of this._order) {
 			const field: string | null = criteria.a;
 			const asc: boolean = (criteria.b === null) || criteria.b;
-			let cmp: number = 0;
+			let cmp: number;
 			if (JavaObject.equalsTranspiler("kuerzel", (field))) {
 				cmp = KursUtils.comparator.compare(a, b);
 			} else
@@ -441,7 +441,7 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.kurse.KursListeManager'].includes(name);
 	}
 
-	public static class = new Class<KursListeManager>('de.svws_nrw.core.utils.kurse.KursListeManager');
+	public static readonly class = new Class<KursListeManager>('de.svws_nrw.core.utils.kurse.KursListeManager');
 
 }
 

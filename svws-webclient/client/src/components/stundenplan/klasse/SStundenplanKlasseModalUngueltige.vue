@@ -65,10 +65,10 @@
 	}
 
 	function fach(unterricht: StundenplanUnterricht) {
-		let fach: string = "";
+		let fach: string;
 		try {
 			fach = props.stundenplanManager().fachGetByIdOrException(unterricht.idFach).kuerzel;
-		} catch (e) {
+		} catch {
 			fach = "???";
 		}
 		return fach;

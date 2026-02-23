@@ -104,7 +104,7 @@ export class ApiConnection {
 	 */
 	connectTo = async (name: string): Promise<boolean> => {
 		let urlString = `https://${name}`;
-		let url = new URL(urlString);
+		const url = new URL(urlString);
 		const host = url.host;
 		console.log(`1. Versuch – Verbindung zum SVWS-Server unter https://${host} ...`);
 		try {
@@ -114,12 +114,11 @@ export class ApiConnection {
 			this._url = urlString;
 			console.log(`Verbindung erfolgreich hergestellt.`);
 			return true;
-		} catch (error) {
+		} catch {
 			console.log(`Verbindung zum SVWS-Server unter https://${host} fehlgeschlagen`);
 		}
 		const hostname = url.hostname;
 		urlString = `https://${hostname}`;
-		url = new URL(urlString);
 		if (host !== hostname) {
 			console.log(`2. Versuch – Verbindung zum SVWS-Server unter https://${hostname} ...`);
 			try {
@@ -129,7 +128,7 @@ export class ApiConnection {
 				this._url = urlString;
 				console.log(`Verbindung erfolgreich hergestellt.`);
 				return true;
-			} catch (error) {
+			} catch {
 				console.log(`Verbindung zum SVWS-Server unter https://${hostname} fehlgeschlagen.`);
 				console.log(`Bitte geben Sie einen anderen Hostnamen ein.`);
 			}
@@ -162,12 +161,12 @@ export class ApiConnection {
 					throw new UserNotificationException("Der Datenbank-Benutzer besitzt nicht die nötigen Privilegien.");
 				}
 				this._hasRootPrivileges = true;
-			} catch (error) {
+			} catch {
 				this._hasRootPrivileges = false;
 			}
 			try {
 				this._isServerAdmin = await api_priv.isPrivilegedUser();
-			} catch (error) {
+			} catch {
 				this._isServerAdmin = false;
 			}
 			this._schema_api_privileged = api_priv;
@@ -177,7 +176,7 @@ export class ApiConnection {
 			this._api = new ApiServer(this._url, "", "");
 			this._serverMode.value = ServerMode.getByText(await this._api.getServerModus());
 			return true;
-		} catch (error) {
+		} catch {
 			// TODO Anmelde-Fehler wird nur in der App angezeigt. Der konkrete Fehler könnte ggf. geloggt werden...
 			this._authenticated.value = false;
 			this._serverMode.value = ServerMode.STABLE;

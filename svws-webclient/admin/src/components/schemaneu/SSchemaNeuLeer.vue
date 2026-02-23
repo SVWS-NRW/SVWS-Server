@@ -20,9 +20,9 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
-	import { BenutzerKennwort } from "@core/core/data/BenutzerKennwort";
-	import { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import type { List } from "@core/java/util/List";
+	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
+	import { BenutzerKennwort } from "@core/core/data/BenutzerKennwort";
 	import { validatorSchemaName } from "~/utils/helfer";
 
 	const props = defineProps<{
@@ -46,7 +46,7 @@
 		const data = new BenutzerKennwort();
 		data.user = user.value;
 		data.password = password.value;
-		let result = new SimpleOperationResponse();
+		let result;
 		result = await props.addSchema(data, schemaname.value);
 		schemaname.value = '';
 		user.value = '';

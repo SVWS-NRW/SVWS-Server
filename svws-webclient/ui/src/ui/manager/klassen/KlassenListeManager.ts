@@ -216,7 +216,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 		for (const criteria of this._order) {
 			const field: string | null = criteria.a;
 			const asc: boolean = (criteria.b === null) || criteria.b;
-			let cmp: number = 0;
+			let cmp: number;
 			if (JavaObject.equalsTranspiler("klassen", (field))) {
 				cmp = KlassenUtils.comparator.compare(a, b);
 			} else

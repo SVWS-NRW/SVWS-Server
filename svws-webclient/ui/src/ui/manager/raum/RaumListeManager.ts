@@ -78,7 +78,7 @@ export class RaumListeManager extends AuswahlManager<number, Raum, Raum> {
 		for (const criteria of this._order) {
 			const field: string | null = criteria.a;
 			const asc: boolean = (criteria.b === null) || criteria.b;
-			let cmp: number = 0;
+			let cmp: number;
 			if (JavaObject.equalsTranspiler("kuerzel", (field))) {
 				cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
 			} else
@@ -122,7 +122,7 @@ export class RaumListeManager extends AuswahlManager<number, Raum, Raum> {
 		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.raum.RaumListeManager'].includes(name);
 	}
 
-	public static class = new Class<RaumListeManager>('de.svws_nrw.core.utils.raum.RaumListeManager');
+	public static readonly class = new Class<RaumListeManager>('de.svws_nrw.core.utils.raum.RaumListeManager');
 
 }
 

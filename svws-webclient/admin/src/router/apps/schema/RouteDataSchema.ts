@@ -326,7 +326,7 @@ export class RouteDataSchema {
 			throw new DeveloperNotificationException("Es soll ein Backup wiederhergestellt werden, aber es ist kein Schema ausgewählt.");
 		}
 		api.status.start();
-		let result = new SimpleOperationResponse();
+		let result;
 		try {
 			result = await api.privileged.importSQLiteInto(data, this.auswahl.name);
 		} catch (error: unknown) {
@@ -391,7 +391,7 @@ export class RouteDataSchema {
 			throw new DeveloperNotificationException("Es muss ein Schema und eine Datenbank für eine Migration angegeben werden.");
 		}
 		api.status.start();
-		let result = new SimpleOperationResponse();
+		let result;
 		try {
 			switch (db) {
 				case 'mariadb':

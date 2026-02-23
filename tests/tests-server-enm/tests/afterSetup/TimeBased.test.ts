@@ -9,8 +9,9 @@ const apiServiceNoAuth = getApiService('', '', targetUrlENMServer);
 async function multipleRequest(requestFunction: () => Promise<any>, interval: number, amount: number): Promise<void> {
 	for (let i = 0; i < amount; i++) {
 		await requestFunction();
-		if (i < amount - 1)
+		if (i < amount - 1) {
 			await new Promise(resolve => setTimeout(resolve, interval));
+		}
 	}
 }
 

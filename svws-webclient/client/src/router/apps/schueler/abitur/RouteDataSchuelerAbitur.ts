@@ -69,17 +69,17 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 		if (schueler.abiturjahrgang === null) {
 			throw new DeveloperNotificationException("Für den Schüler konnte kein Abiturjahrgang ermittelt werden.");
 		}
-		let gostJahrgangsdaten = undefined;
-		let listGostFaecher = undefined;
-		let faecherManager = undefined;
-		let listFachkombinationen = undefined;
+		let gostJahrgangsdaten;
+		let listGostFaecher;
+		let faecherManager;
+		let listFachkombinationen;
 		try {
 			gostJahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, schueler.abiturjahrgang);
 			listGostFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, schueler.abiturjahrgang);
 			faecherManager = new GostFaecherManager(schueler.abiturjahrgang - 1, listGostFaecher);
 			listFachkombinationen = await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, schueler.abiturjahrgang);
 			faecherManager.addFachkombinationenAll(listFachkombinationen);
-		} catch (error) {
+		} catch {
 			throw new UserNotificationException("Die Informationen zum Abiturjahrgang " + schueler.abiturjahrgang +
 				" und dessen Fächer konnten nicht vollständig ermittelt werden. Überpfüfen Sie diese Infromationen.");
 		}
@@ -90,14 +90,14 @@ export class RouteDataSchuelerAbitur extends RouteData<RouteStateDataSchuelerAbi
 			newState.managerLaufbahnplanung = new AbiturdatenManager(api.mode, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 			newState.ergebnisBelegpruefung = newState.managerLaufbahnplanung.getBelegpruefungErgebnis();
 			newState.managerLaufbahnplanung.applyErgebnisMarkierungsalgorithmus();
-		} catch (e) {
+		} catch {
 			// do nothing
 		}
 		try {
 			// TODO hole Abiturdaten für das spezielle Abiturjahr
 			const abiturdaten = await api.server.getGostSchuelerAbiturdaten(api.schema, schueler.id);
 			newState.managerAbitur = new AbiturdatenManager(api.mode, abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
-		} catch (e) {
+		} catch {
 			// do nothing
 		}
 		this.setPatchedDefaultState(newState);

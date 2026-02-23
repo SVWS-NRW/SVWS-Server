@@ -128,7 +128,7 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 		if (tmpJg === null) {
 			return result;
 		}
-		let schulgliederung: Schulgliederung | null = null;
+		let schulgliederung: Schulgliederung | null;
 		if (jg.kuerzelSchulgliederung === null) {
 			schulgliederung = Schulgliederung.getDefault(this.manager().schulform());
 		} else {
@@ -168,7 +168,7 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 		if (tmpJg === null) {
 			return result;
 		}
-		let schulgliederung: Schulgliederung | null = null;
+		let schulgliederung: Schulgliederung | null;
 		if (jg.kuerzelSchulgliederung === null) {
 			schulgliederung = Schulgliederung.getDefault(this.manager().schulform());
 		} else {

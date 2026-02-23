@@ -173,7 +173,7 @@
 	}
 
 	function posPause(wochentag: Wochentag | undefined, pause: StundenplanPausenzeit): string {
-		let rowStart = 0;
+		let rowStart;
 		let rowEnd = 10;
 		if ((pause.beginn === null) || (pause.ende === null)) {
 			rowStart = 1;
