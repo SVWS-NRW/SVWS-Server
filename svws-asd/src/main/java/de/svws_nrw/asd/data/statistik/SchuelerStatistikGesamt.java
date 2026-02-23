@@ -84,8 +84,6 @@ public class SchuelerStatistikGesamt {
 	@Schema(description = "ggf. das Geburtsland der Mutter", example = "Brasilien")
 	public String geburtslandMutter;
 
-	// ****
-
 	/** Die allgemeinen Angaben zu den Lernabschnitten der Schüler. */
 	@ArraySchema(schema = @Schema(implementation = SchuelerLernabschnittStatistikGesamt.class,
 			description = "Ein Array mit den allgemeinen Angaben zu den Lernabschnitten der Schüler."))
@@ -155,7 +153,6 @@ public class SchuelerStatistikGesamt {
 	 * Leerer Standardkonstruktor.
 	 */
 	public SchuelerStatistikGesamt() {
-		// leer
 	}
 
 }

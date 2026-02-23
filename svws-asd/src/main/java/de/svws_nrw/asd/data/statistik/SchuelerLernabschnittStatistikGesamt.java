@@ -68,7 +68,6 @@ public class SchuelerLernabschnittStatistikGesamt {
 	 * Leerer Standardkonstruktor.
 	 */
 	public SchuelerLernabschnittStatistikGesamt() {
-		// leer
 	}
 
 }
