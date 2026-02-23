@@ -1,16 +1,15 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { SchuleAdressenStatistikGesamt } from '../../../asd/data/statistik/SchuleAdressenStatistikGesamt';
+import { SchuleAdressenStatistikExport } from '../../../asd/export/data/SchuleAdressenStatistikExport';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
-import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 
-export class SchuleStatistikGesamt extends JavaObject {
+export class SchuleStatistikExport extends JavaObject {
 
 	/**
 	 * Die eindeutige Schulnummer der Schule
 	 */
-	public schulNr: number = 0;
+	public schulNr: number = -1;
 
 	/**
 	 * Die Schulform der Schule
@@ -25,72 +24,57 @@ export class SchuleStatistikGesamt extends JavaObject {
 	/**
 	 * Der zweite Teil (von dreien) der Bezeichnung der Schule
 	 */
-	public bezeichnung2: string | null = null;
+	public bezeichnung2: string | null = "";
 
 	/**
 	 * Der dritte Teil (von dreien) der Bezeichnung der Schule
 	 */
-	public bezeichnung3: string | null = null;
+	public bezeichnung3: string | null = "";
 
 	/**
 	 * Der Straßenname der Straße in der die Schule liegt.
 	 */
-	public strassenname: string | null = null;
-
-	/**
-	 * Die Hausnummer zur Straße in der die Schule liegt.
-	 */
-	public hausnummer: string | null = null;
-
-	/**
-	 * Ggf. der Hausnummerzusatz zur Straße in der die Schule liegt.
-	 */
-	public hausnummerZusatz: string | null = null;
+	public strassenname: string | null = "";
 
 	/**
 	 * Die Postleitzahl des Gebietes in dem die Schule liegt.
 	 */
-	public plz: string | null = null;
+	public plz: string | null = "";
 
 	/**
 	 * Der Ort in dem die Schule liegt.
 	 */
-	public ort: string | null = null;
+	public ort: string | null = "";
 
 	/**
 	 * Die Telefonnummer der Schule.
 	 */
-	public telefon: string | null = null;
+	public telefon: string | null = "";
 
 	/**
 	 * Die Faxnummer der Schule.
 	 */
-	public fax: string | null = null;
+	public fax: string | null = "";
 
 	/**
 	 * Die Mailadresse der Schule.
 	 */
-	public email: string | null = null;
+	public email: string | null = "";
 
 	/**
 	 * Die Adresse der Homepage der Schule (Domain-Name)
 	 */
-	public webAdresse: string | null = null;
+	public webAdresse: string | null = "";
 
 	/**
-	 * Die ID des Schuljahresabschnittes, in welchem sich die Schule befindet.
+	 * Das Zeitmodel (Unterrichtsstunden- (1) oder Unterrichtsminutenmodell (45)).
 	 */
-	public idSchuljahresabschnitt: number = 0;
-
-	/**
-	 * Die Dauer einer Unterrichsteinheit in Minuten.
-	 */
-	public dauerUnterrichtseinheit: number = 0;
+	public zeitmodel: number = 45;
 
 	/**
 	 * Gebundener Ganztag
 	 */
-	public idGebundenerGanztag: number = 0;
+	public gebundenerGanztag: number = 0;
 
 	/**
 	 * Offener Ganztag
@@ -100,7 +84,7 @@ export class SchuleStatistikGesamt extends JavaObject {
 	/**
 	 * Die Form des offenen Ganztag
 	 */
-	public idFormOffenerGanztag: number = 0;
+	public formOffenerGanztag: string | null = "";
 
 	/**
 	 * Ist JVA
@@ -110,7 +94,7 @@ export class SchuleStatistikGesamt extends JavaObject {
 	/**
 	 * Bilingualer Unterricht
 	 */
-	public idBilingualerUnterricht: number = 0;
+	public bilingualerUnterricht: number = 0;
 
 	/**
 	 * Hat Realschule Hauptbildungsgang
@@ -130,22 +114,17 @@ export class SchuleStatistikGesamt extends JavaObject {
 	/**
 	 * Talentschule Form
 	 */
-	public idTalentschule: number = 0;
+	public talentschule: number = 0;
 
 	/**
 	 * Reformpedagogik Schulebene
 	 */
-	public idReformpaedagogik: number = 0;
+	public reformpaedagogik: string | null = "";
 
 	/**
-	 * Die Liste der Schuljahresabschnitte, welche an der Schule definiert sind.
+	 * Die Adressen einer Schule (B02).
 	 */
-	public readonly abschnitte: List<Schuljahresabschnitt> = new ArrayList<Schuljahresabschnitt>();
-
-	/**
-	 * Die Liste der Adressen einer Schule.
-	 */
-	public readonly adressen: List<SchuleAdressenStatistikGesamt> = new ArrayList<SchuleAdressenStatistikGesamt>();
+	public adressenStatistikExport: List<SchuleAdressenStatistikExport> = new ArrayList<SchuleAdressenStatistikExport>();
 
 
 	/**
@@ -156,18 +135,18 @@ export class SchuleStatistikGesamt extends JavaObject {
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.asd.data.statistik.SchuleStatistikGesamt';
+		return 'de.svws_nrw.asd.export.data.SchuleStatistikExport';
 	}
 
 	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.asd.data.statistik.SchuleStatistikGesamt'].includes(name);
+		return ['de.svws_nrw.asd.export.data.SchuleStatistikExport'].includes(name);
 	}
 
-	public static readonly class = new Class<SchuleStatistikGesamt>('de.svws_nrw.asd.data.statistik.SchuleStatistikGesamt');
+	public static readonly class = new Class<SchuleStatistikExport>('de.svws_nrw.asd.export.data.SchuleStatistikExport');
 
-	public static transpilerFromJSON(json: string): SchuleStatistikGesamt {
-		const obj = JSON.parse(json) as Partial<SchuleStatistikGesamt>;
-		const result = new SchuleStatistikGesamt();
+	public static transpilerFromJSON(json: string): SchuleStatistikExport {
+		const obj = JSON.parse(json) as Partial<SchuleStatistikExport>;
+		const result = new SchuleStatistikExport();
 		if (obj.schulNr === undefined)
 			throw new Error('invalid json format, missing attribute schulNr');
 		result.schulNr = obj.schulNr;
@@ -180,35 +159,28 @@ export class SchuleStatistikGesamt extends JavaObject {
 		result.bezeichnung2 = (obj.bezeichnung2 === undefined) ? null : obj.bezeichnung2 === null ? null : obj.bezeichnung2;
 		result.bezeichnung3 = (obj.bezeichnung3 === undefined) ? null : obj.bezeichnung3 === null ? null : obj.bezeichnung3;
 		result.strassenname = (obj.strassenname === undefined) ? null : obj.strassenname === null ? null : obj.strassenname;
-		result.hausnummer = (obj.hausnummer === undefined) ? null : obj.hausnummer === null ? null : obj.hausnummer;
-		result.hausnummerZusatz = (obj.hausnummerZusatz === undefined) ? null : obj.hausnummerZusatz === null ? null : obj.hausnummerZusatz;
 		result.plz = (obj.plz === undefined) ? null : obj.plz === null ? null : obj.plz;
 		result.ort = (obj.ort === undefined) ? null : obj.ort === null ? null : obj.ort;
 		result.telefon = (obj.telefon === undefined) ? null : obj.telefon === null ? null : obj.telefon;
 		result.fax = (obj.fax === undefined) ? null : obj.fax === null ? null : obj.fax;
 		result.email = (obj.email === undefined) ? null : obj.email === null ? null : obj.email;
 		result.webAdresse = (obj.webAdresse === undefined) ? null : obj.webAdresse === null ? null : obj.webAdresse;
-		if (obj.idSchuljahresabschnitt === undefined)
-			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
-		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
-		if (obj.dauerUnterrichtseinheit === undefined)
-			throw new Error('invalid json format, missing attribute dauerUnterrichtseinheit');
-		result.dauerUnterrichtseinheit = obj.dauerUnterrichtseinheit;
-		if (obj.idGebundenerGanztag === undefined)
-			throw new Error('invalid json format, missing attribute idGebundenerGanztag');
-		result.idGebundenerGanztag = obj.idGebundenerGanztag;
+		if (obj.zeitmodel === undefined)
+			throw new Error('invalid json format, missing attribute zeitmodel');
+		result.zeitmodel = obj.zeitmodel;
+		if (obj.gebundenerGanztag === undefined)
+			throw new Error('invalid json format, missing attribute gebundenerGanztag');
+		result.gebundenerGanztag = obj.gebundenerGanztag;
 		if (obj.istOffenerGanztag === undefined)
 			throw new Error('invalid json format, missing attribute istOffenerGanztag');
 		result.istOffenerGanztag = obj.istOffenerGanztag;
-		if (obj.idFormOffenerGanztag === undefined)
-			throw new Error('invalid json format, missing attribute idFormOffenerGanztag');
-		result.idFormOffenerGanztag = obj.idFormOffenerGanztag;
+		result.formOffenerGanztag = (obj.formOffenerGanztag === undefined) ? null : obj.formOffenerGanztag === null ? null : obj.formOffenerGanztag;
 		if (obj.istJva === undefined)
 			throw new Error('invalid json format, missing attribute istJva');
 		result.istJva = obj.istJva;
-		if (obj.idBilingualerUnterricht === undefined)
-			throw new Error('invalid json format, missing attribute idBilingualerUnterricht');
-		result.idBilingualerUnterricht = obj.idBilingualerUnterricht;
+		if (obj.bilingualerUnterricht === undefined)
+			throw new Error('invalid json format, missing attribute bilingualerUnterricht');
+		result.bilingualerUnterricht = obj.bilingualerUnterricht;
 		if (obj.hatRealschuleHauptschulbildungsgang === undefined)
 			throw new Error('invalid json format, missing attribute hatRealschuleHauptschulbildungsgang');
 		result.hatRealschuleHauptschulbildungsgang = obj.hatRealschuleHauptschulbildungsgang;
@@ -218,26 +190,19 @@ export class SchuleStatistikGesamt extends JavaObject {
 		if (obj.hatKonfessionelleKooperation === undefined)
 			throw new Error('invalid json format, missing attribute hatKonfessionelleKooperation');
 		result.hatKonfessionelleKooperation = obj.hatKonfessionelleKooperation;
-		if (obj.idTalentschule === undefined)
-			throw new Error('invalid json format, missing attribute idTalentschule');
-		result.idTalentschule = obj.idTalentschule;
-		if (obj.idReformpaedagogik === undefined)
-			throw new Error('invalid json format, missing attribute idReformpaedagogik');
-		result.idReformpaedagogik = obj.idReformpaedagogik;
-		if (obj.abschnitte !== undefined) {
-			for (const elem of obj.abschnitte) {
-				result.abschnitte.add(Schuljahresabschnitt.transpilerFromJSON(JSON.stringify(elem)));
-			}
-		}
-		if (obj.adressen !== undefined) {
-			for (const elem of obj.adressen) {
-				result.adressen.add(SchuleAdressenStatistikGesamt.transpilerFromJSON(JSON.stringify(elem)));
+		if (obj.talentschule === undefined)
+			throw new Error('invalid json format, missing attribute talentschule');
+		result.talentschule = obj.talentschule;
+		result.reformpaedagogik = (obj.reformpaedagogik === undefined) ? null : obj.reformpaedagogik === null ? null : obj.reformpaedagogik;
+		if (obj.adressenStatistikExport !== undefined) {
+			for (const elem of obj.adressenStatistikExport) {
+				result.adressenStatistikExport.add(SchuleAdressenStatistikExport.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
 	}
 
-	public static transpilerToJSON(obj: SchuleStatistikGesamt): string {
+	public static transpilerToJSON(obj: SchuleStatistikExport): string {
 		let result = '{';
 		result += '"schulNr" : ' + obj.schulNr.toString() + ',';
 		result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
@@ -245,39 +210,28 @@ export class SchuleStatistikGesamt extends JavaObject {
 		result += '"bezeichnung2" : ' + ((obj.bezeichnung2 === null) ? 'null' : JSON.stringify(obj.bezeichnung2)) + ',';
 		result += '"bezeichnung3" : ' + ((obj.bezeichnung3 === null) ? 'null' : JSON.stringify(obj.bezeichnung3)) + ',';
 		result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
-		result += '"hausnummer" : ' + ((obj.hausnummer === null) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
-		result += '"hausnummerZusatz" : ' + ((obj.hausnummerZusatz === null) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
 		result += '"plz" : ' + ((obj.plz === null) ? 'null' : JSON.stringify(obj.plz)) + ',';
 		result += '"ort" : ' + ((obj.ort === null) ? 'null' : JSON.stringify(obj.ort)) + ',';
 		result += '"telefon" : ' + ((obj.telefon === null) ? 'null' : JSON.stringify(obj.telefon)) + ',';
 		result += '"fax" : ' + ((obj.fax === null) ? 'null' : JSON.stringify(obj.fax)) + ',';
 		result += '"email" : ' + ((obj.email === null) ? 'null' : JSON.stringify(obj.email)) + ',';
 		result += '"webAdresse" : ' + ((obj.webAdresse === null) ? 'null' : JSON.stringify(obj.webAdresse)) + ',';
-		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
-		result += '"dauerUnterrichtseinheit" : ' + obj.dauerUnterrichtseinheit.toString() + ',';
-		result += '"idGebundenerGanztag" : ' + obj.idGebundenerGanztag.toString() + ',';
+		result += '"zeitmodel" : ' + obj.zeitmodel.toString() + ',';
+		result += '"gebundenerGanztag" : ' + obj.gebundenerGanztag.toString() + ',';
 		result += '"istOffenerGanztag" : ' + obj.istOffenerGanztag.toString() + ',';
-		result += '"idFormOffenerGanztag" : ' + obj.idFormOffenerGanztag.toString() + ',';
+		result += '"formOffenerGanztag" : ' + ((obj.formOffenerGanztag === null) ? 'null' : JSON.stringify(obj.formOffenerGanztag)) + ',';
 		result += '"istJva" : ' + obj.istJva.toString() + ',';
-		result += '"idBilingualerUnterricht" : ' + obj.idBilingualerUnterricht.toString() + ',';
+		result += '"bilingualerUnterricht" : ' + obj.bilingualerUnterricht.toString() + ',';
 		result += '"hatRealschuleHauptschulbildungsgang" : ' + obj.hatRealschuleHauptschulbildungsgang.toString() + ',';
 		result += '"hatInternationaleKontakte" : ' + obj.hatInternationaleKontakte.toString() + ',';
 		result += '"hatKonfessionelleKooperation" : ' + obj.hatKonfessionelleKooperation.toString() + ',';
-		result += '"idTalentschule" : ' + obj.idTalentschule.toString() + ',';
-		result += '"idReformpaedagogik" : ' + obj.idReformpaedagogik.toString() + ',';
-		result += '"abschnitte" : [ ';
-		for (let i = 0; i < obj.abschnitte.size(); i++) {
-			const elem = obj.abschnitte.get(i);
-			result += Schuljahresabschnitt.transpilerToJSON(elem);
-			if (i < obj.abschnitte.size() - 1)
-				result += ',';
-		}
-		result += ' ]' + ',';
-		result += '"adressen" : [ ';
-		for (let i = 0; i < obj.adressen.size(); i++) {
-			const elem = obj.adressen.get(i);
-			result += SchuleAdressenStatistikGesamt.transpilerToJSON(elem);
-			if (i < obj.adressen.size() - 1)
+		result += '"talentschule" : ' + obj.talentschule.toString() + ',';
+		result += '"reformpaedagogik" : ' + ((obj.reformpaedagogik === null) ? 'null' : JSON.stringify(obj.reformpaedagogik)) + ',';
+		result += '"adressenStatistikExport" : [ ';
+		for (let i = 0; i < obj.adressenStatistikExport.size(); i++) {
+			const elem = obj.adressenStatistikExport.get(i);
+			result += SchuleAdressenStatistikExport.transpilerToJSON(elem);
+			if (i < obj.adressenStatistikExport.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -286,7 +240,7 @@ export class SchuleStatistikGesamt extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj: Partial<SchuleStatistikGesamt>): string {
+	public static transpilerToJSONPatch(obj: Partial<SchuleStatistikExport>): string {
 		let result = '{';
 		if (obj.schulNr !== undefined) {
 			result += '"schulNr" : ' + obj.schulNr.toString() + ',';
@@ -306,12 +260,6 @@ export class SchuleStatistikGesamt extends JavaObject {
 		if (obj.strassenname !== undefined) {
 			result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		}
-		if (obj.hausnummer !== undefined) {
-			result += '"hausnummer" : ' + ((obj.hausnummer === null) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
-		}
-		if (obj.hausnummerZusatz !== undefined) {
-			result += '"hausnummerZusatz" : ' + ((obj.hausnummerZusatz === null) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
-		}
 		if (obj.plz !== undefined) {
 			result += '"plz" : ' + ((obj.plz === null) ? 'null' : JSON.stringify(obj.plz)) + ',';
 		}
@@ -330,26 +278,23 @@ export class SchuleStatistikGesamt extends JavaObject {
 		if (obj.webAdresse !== undefined) {
 			result += '"webAdresse" : ' + ((obj.webAdresse === null) ? 'null' : JSON.stringify(obj.webAdresse)) + ',';
 		}
-		if (obj.idSchuljahresabschnitt !== undefined) {
-			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
+		if (obj.zeitmodel !== undefined) {
+			result += '"zeitmodel" : ' + obj.zeitmodel.toString() + ',';
 		}
-		if (obj.dauerUnterrichtseinheit !== undefined) {
-			result += '"dauerUnterrichtseinheit" : ' + obj.dauerUnterrichtseinheit.toString() + ',';
-		}
-		if (obj.idGebundenerGanztag !== undefined) {
-			result += '"idGebundenerGanztag" : ' + obj.idGebundenerGanztag.toString() + ',';
+		if (obj.gebundenerGanztag !== undefined) {
+			result += '"gebundenerGanztag" : ' + obj.gebundenerGanztag.toString() + ',';
 		}
 		if (obj.istOffenerGanztag !== undefined) {
 			result += '"istOffenerGanztag" : ' + obj.istOffenerGanztag.toString() + ',';
 		}
-		if (obj.idFormOffenerGanztag !== undefined) {
-			result += '"idFormOffenerGanztag" : ' + obj.idFormOffenerGanztag.toString() + ',';
+		if (obj.formOffenerGanztag !== undefined) {
+			result += '"formOffenerGanztag" : ' + ((obj.formOffenerGanztag === null) ? 'null' : JSON.stringify(obj.formOffenerGanztag)) + ',';
 		}
 		if (obj.istJva !== undefined) {
 			result += '"istJva" : ' + obj.istJva.toString() + ',';
 		}
-		if (obj.idBilingualerUnterricht !== undefined) {
-			result += '"idBilingualerUnterricht" : ' + obj.idBilingualerUnterricht.toString() + ',';
+		if (obj.bilingualerUnterricht !== undefined) {
+			result += '"bilingualerUnterricht" : ' + obj.bilingualerUnterricht.toString() + ',';
 		}
 		if (obj.hatRealschuleHauptschulbildungsgang !== undefined) {
 			result += '"hatRealschuleHauptschulbildungsgang" : ' + obj.hatRealschuleHauptschulbildungsgang.toString() + ',';
@@ -360,28 +305,18 @@ export class SchuleStatistikGesamt extends JavaObject {
 		if (obj.hatKonfessionelleKooperation !== undefined) {
 			result += '"hatKonfessionelleKooperation" : ' + obj.hatKonfessionelleKooperation.toString() + ',';
 		}
-		if (obj.idTalentschule !== undefined) {
-			result += '"idTalentschule" : ' + obj.idTalentschule.toString() + ',';
+		if (obj.talentschule !== undefined) {
+			result += '"talentschule" : ' + obj.talentschule.toString() + ',';
 		}
-		if (obj.idReformpaedagogik !== undefined) {
-			result += '"idReformpaedagogik" : ' + obj.idReformpaedagogik.toString() + ',';
+		if (obj.reformpaedagogik !== undefined) {
+			result += '"reformpaedagogik" : ' + ((obj.reformpaedagogik === null) ? 'null' : JSON.stringify(obj.reformpaedagogik)) + ',';
 		}
-		if (obj.abschnitte !== undefined) {
-			result += '"abschnitte" : [ ';
-			for (let i = 0; i < obj.abschnitte.size(); i++) {
-				const elem = obj.abschnitte.get(i);
-				result += Schuljahresabschnitt.transpilerToJSON(elem);
-				if (i < obj.abschnitte.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
-		}
-		if (obj.adressen !== undefined) {
-			result += '"adressen" : [ ';
-			for (let i = 0; i < obj.adressen.size(); i++) {
-				const elem = obj.adressen.get(i);
-				result += SchuleAdressenStatistikGesamt.transpilerToJSON(elem);
-				if (i < obj.adressen.size() - 1)
+		if (obj.adressenStatistikExport !== undefined) {
+			result += '"adressenStatistikExport" : [ ';
+			for (let i = 0; i < obj.adressenStatistikExport.size(); i++) {
+				const elem = obj.adressenStatistikExport.get(i);
+				result += SchuleAdressenStatistikExport.transpilerToJSON(elem);
+				if (i < obj.adressenStatistikExport.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -393,6 +328,6 @@ export class SchuleStatistikGesamt extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_asd_data_statistik_SchuleStatistikGesamt(obj: unknown): SchuleStatistikGesamt {
-	return obj as SchuleStatistikGesamt;
+export function cast_de_svws_nrw_asd_export_data_SchuleStatistikExport(obj: unknown): SchuleStatistikExport {
+	return obj as SchuleStatistikExport;
 }
