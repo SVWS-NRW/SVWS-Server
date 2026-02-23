@@ -4,6 +4,7 @@ export interface SchuleDatenaustauschLernplattformenProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	lernplattformen: List<Lernplattform>,
 	export: (lernplattform: Lernplattform, datenformat: string) => Promise<Blob | null>,
-	schuljahresabschnitt: Schuljahresabschnitt
+	abschnitteById: Map<number, Schuljahresabschnitt>,
+	idSelectedAbschnitt: number,
 }
 
