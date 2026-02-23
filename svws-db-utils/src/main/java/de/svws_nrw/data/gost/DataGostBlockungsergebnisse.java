@@ -1102,99 +1102,10 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 								DTOSchuelerLeistungsdaten.class, idLernabschnitt, kurs.fach_id);
 				if (leistungsDaten.size() != 1)
 					continue;  // TODO Hier könnten ggf. Leistungsdaten basierend auf dem Blockungskurs und den Fachwahlen ergänzt werden
-				// Bestimme die Kursart anhand der Fachwahlen. Sind diese nicht vorhanden so wird die Kursart aus den bestenden leistungsdaten genommen
-				final String tmpKursartNeu  = switch (halbjahr) {
-					case EF1 -> switch (fachwahl.EF1_Kursart) {
-						case null -> null;
-						case "M" -> "GKM";
-						case "S" -> "GKS";
-						case "AT" -> "GKM";
-						default -> null;
-					};
-					case EF2 -> switch (fachwahl.EF2_Kursart) {
-						case null -> null;
-						case "M" -> "GKM";
-						case "S" -> "GKS";
-						case "AT" -> "GKM";
-						default -> null;
-					};
-					case Q11 -> switch (fachwahl.Q11_Kursart) {
-						case null -> null;
-						case "M" -> "GKM";
-						case "S" -> "GKS";
-						case "LK" -> ((fachwahl.AbiturFach != null) && (fachwahl.AbiturFach == 1)) ? "LK1" : "LK2";
-						case "ZK" -> "ZK";
-						case "AT" -> "GKM";
-						default -> null;
-					};
-					case Q12 -> switch (fachwahl.Q12_Kursart) {
-						case null -> null;
-						case "M" -> "GKM";
-						case "S" -> "GKS";
-						case "LK" -> ((fachwahl.AbiturFach != null) && (fachwahl.AbiturFach == 1)) ? "LK1" : "LK2";
-						case "ZK" -> "ZK";
-						case "AT" -> "GKM";
-						default -> null;
-					};
-					case Q21 -> switch (fachwahl.Q21_Kursart) {
-						case null -> null;
-						case "M" -> "GKM";
-						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : ("AB" + fachwahl.AbiturFach);
-						case "LK" -> ((fachwahl.AbiturFach != null) && (fachwahl.AbiturFach == 1)) ? "LK1" : "LK2";
-						case "ZK" -> "ZK";
-						case "AT" -> "GKM";
-						default -> null;
-					};
-					case Q22 -> switch (fachwahl.Q22_Kursart) {
-						case null -> null;
-						case "M" -> (fachwahl.AbiturFach == null) ? "GKM" : ("AB" + fachwahl.AbiturFach);
-						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : ("AB" + fachwahl.AbiturFach);
-						case "LK" -> ((fachwahl.AbiturFach != null) && (fachwahl.AbiturFach == 1)) ? "LK1" : "LK2";
-						case "ZK" -> "ZK";
-						case "AT" -> "GKM";
-						default -> null;
-					};
-				};
-
 				final DTOSchuelerLeistungsdaten leistung = leistungsDaten.get(0);
 				leistung.Fachlehrer_ID = kursDTO.Lehrer_ID;
-				leistung.Kursart = (tmpKursartNeu == null) ? leistung.Kursart : tmpKursartNeu;
 				leistung.KursartAllg = kursart.kuerzel;
 				leistung.Kurs_ID = mapKursIDs.get(kurs.id);
-				if ((leistung.NotenKrz == null) || (Objects.equals(leistung.NotenKrz, Note.KEINE.daten(abschnitt.schuljahr).kuerzel))) {
-					leistung.NotenKrz = switch (halbjahr) {
-						case EF1 -> switch (fachwahl.EF1_Kursart) {
-							case null -> leistung.NotenKrz;
-							case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
-							default -> leistung.NotenKrz;
-						};
-						case EF2 -> switch (fachwahl.EF2_Kursart) {
-							case null -> leistung.NotenKrz;
-							case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
-							default -> leistung.NotenKrz;
-						};
-						case Q11 -> switch (fachwahl.Q11_Kursart) {
-							case null -> leistung.NotenKrz;
-							case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
-							default -> leistung.NotenKrz;
-						};
-						case Q12 -> switch (fachwahl.Q12_Kursart) {
-							case null -> leistung.NotenKrz;
-							case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
-							default -> leistung.NotenKrz;
-						};
-						case Q21 -> switch (fachwahl.Q21_Kursart) {
-							case null -> leistung.NotenKrz;
-							case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
-							default -> leistung.NotenKrz;
-						};
-						case Q22 -> switch (fachwahl.Q22_Kursart) {
-							case null -> leistung.NotenKrz;
-							case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
-							default -> leistung.NotenKrz;
-						};
-					};
-				}
 				leistung.AbiFach = (fachwahl.AbiturFach == null) ? null : ("" + fachwahl.AbiturFach);
 				leistung.Wochenstunden = kurs.wochenstunden;
 				conn.transactionPersist(leistung);

@@ -945,12 +945,12 @@
 		if ((value === undefined && lehrer === undefined) || (value !== undefined && props.getDatenmanager().kursGetLehrkraftMitIDExists(kurs.id, value.id))) {
 			return;
 		}
+		if (lehrer !== undefined) {
+			await props.removeKursLehrer(kurs.id, lehrer.id);
+		}
 		if (value !== undefined) {
 			await props.addKursLehrer(kurs.id, value.id);
 			await addLehrerRegel();
-		}
-		if (lehrer !== undefined) {
-			await props.removeKursLehrer(kurs.id, lehrer.id);
 		}
 	}
 
