@@ -4,6 +4,8 @@ import { Abiturdaten } from '../core/data/gost/Abiturdaten';
 import { Abteilung } from '../core/data/schule/Abteilung';
 import { AbteilungKlassenzuordnung } from '../core/data/schule/AbteilungKlassenzuordnung';
 import { AllgemeineMerkmaleKatalogEintrag } from '../core/data/schule/AllgemeineMerkmaleKatalogEintrag';
+import { Ankreuzkompetenz } from '../core/data/schule/Ankreuzkompetenz';
+import { AnkreuzkompetenzJahrgangszuordnung } from '../core/data/schule/AnkreuzkompetenzJahrgangszuordnung';
 import { ArrayList } from '../java/util/ArrayList';
 import { Aufsichtsbereich } from '../core/data/schule/Aufsichtsbereich';
 import { BenutzerAllgemeinCredentials } from '../core/data/benutzer/BenutzerAllgemeinCredentials';
@@ -14653,6 +14655,177 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<VerkehrsspracheKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(VerkehrsspracheKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getAnkreuzkompetenzen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/ankreuzkompetenzen/
+	 *
+	 * Erstellt eine Liste aller in der Datenbank vorhanden Ankreuzkompetenzen.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Ankreuzkompetenzen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Ankreuzkompetenz-Listen-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Ankreuzkompetenz>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Ankreuzkompetenzen anzusehen.
+	 *   Code 404: Keine Ankreuzkompetenz-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste von Ankreuzkompetenz-Listen-Einträgen
+	 */
+	public async getAnkreuzkompetenzen(schema : string) : Promise<List<Ankreuzkompetenz>> {
+		const path = "/db/{schema}/schule/ankreuzkompetenzen/"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Ankreuzkompetenz>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Ankreuzkompetenz.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchAnkreuzkompetenz für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/ankreuzkompetenzen/{id : \d+}
+	 *
+	 * Passt die Ankreuzkompetenz mit der angegebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Ankreuzkompetenzen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Ankreuzkompetenz>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchAnkreuzkompetenz(data : Partial<Ankreuzkompetenz>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/ankreuzkompetenzen/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = Ankreuzkompetenz.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addAnkreuzkompetenz für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/ankreuzkompetenzen/create
+	 *
+	 * Erstellt eine neue Ankreuzkompetenz und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Ankreuzkompetenzen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Ankreuzkompetenz wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Ankreuzkompetenz
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Ankreuzkompetenz>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Ankreuzkompetenz wurde erfolgreich hinzugefügt.
+	 */
+	public async addAnkreuzkompetenz(data : Partial<Ankreuzkompetenz>, schema : string) : Promise<Ankreuzkompetenz> {
+		const path = "/db/{schema}/schule/ankreuzkompetenzen/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Ankreuzkompetenz.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Ankreuzkompetenz.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteAnkreuzkompetenzen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/ankreuzkompetenzen/delete/multiple
+	 *
+	 * Entfernt Ankreuzkompetenzen, insofern die Berechtigungen vorhanden sind
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Ankreuzkompetenzen wurden erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 400: Für das Löschen müssen IDs angegeben werden. Null ist nicht zulässig.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Ankreuzkompetenzen zu löschen.
+	 *   Code 404: Es wurden keine Entitäten zu den IDs gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Ankreuzkompetenzen wurden erfolgreich entfernt.
+	 */
+	public async deleteAnkreuzkompetenzen(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schule/ankreuzkompetenzen/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addAnkreuzkompetenzJahrgangszuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/ankreuzkompetenzen/jahrgangzuordnung
+	 *
+	 * Erstellt eine neue AnkreuzkompetenzJahrgangszuordnungen und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von AnkreuzkompetenzJahrgangszuordnungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die AnkreuzkompetenzJahrgangszuordnungen wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<AnkreuzkompetenzJahrgangszuordnung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<AnkreuzkompetenzJahrgangszuordnung>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die AnkreuzkompetenzJahrgangszuordnungen wurde erfolgreich hinzugefügt.
+	 */
+	public async addAnkreuzkompetenzJahrgangszuordnung(data : List<Partial<AnkreuzkompetenzJahrgangszuordnung>>, schema : string) : Promise<List<AnkreuzkompetenzJahrgangszuordnung>> {
+		const path = "/db/{schema}/schule/ankreuzkompetenzen/jahrgangzuordnung"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<AnkreuzkompetenzJahrgangszuordnung>).map(d => AnkreuzkompetenzJahrgangszuordnung.transpilerToJSONPatch(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<AnkreuzkompetenzJahrgangszuordnung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(AnkreuzkompetenzJahrgangszuordnung.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteAnkreuzkompetenzJahrgangszuordnungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/ankreuzkompetenzen/jahrgangzuordnung/delete/multiple
+	 *
+	 * Entfernt AnkreuzkompetenzJahrgangszuordnungen, insofern der SVWS-Benutzer die notwendige Berechtigung hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die AnkreuzkompetenzJahrgangszuordnungen wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<AnkreuzkompetenzJahrgangszuordnung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Keine AnkreuzkompetenzJahrgangszuordnung vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die AnkreuzkompetenzJahrgangszuordnungen wurde erfolgreich entfernt.
+	 */
+	public async deleteAnkreuzkompetenzJahrgangszuordnungen(data : List<number>, schema : string) : Promise<List<AnkreuzkompetenzJahrgangszuordnung>> {
+		const path = "/db/{schema}/schule/ankreuzkompetenzen/jahrgangzuordnung/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<AnkreuzkompetenzJahrgangszuordnung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(AnkreuzkompetenzJahrgangszuordnung.transpilerFromJSON(text)); });
 		return ret;
 	}
 

@@ -713,6 +713,8 @@ export { AbgangsartKatalogEintrag } from './core/data/schule/AbgangsartKatalogEi
 export { Abteilung } from './core/data/schule/Abteilung';
 export { AbteilungKlassenzuordnung } from './core/data/schule/AbteilungKlassenzuordnung';
 export { AllgemeineMerkmaleKatalogEintrag } from './core/data/schule/AllgemeineMerkmaleKatalogEintrag';
+export { Ankreuzkompetenz } from './core/data/schule/Ankreuzkompetenz';
+export { AnkreuzkompetenzJahrgangszuordnung } from './core/data/schule/AnkreuzkompetenzJahrgangszuordnung';
 export { Aufsichtsbereich } from './core/data/schule/Aufsichtsbereich';
 export { BerufskollegFachklassenKatalog } from './core/data/schule/BerufskollegFachklassenKatalog';
 export { BerufskollegFachklassenKatalogDaten } from './core/data/schule/BerufskollegFachklassenKatalogDaten';
