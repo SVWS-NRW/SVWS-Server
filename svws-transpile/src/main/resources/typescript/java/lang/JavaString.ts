@@ -1,7 +1,6 @@
 import { IllegalFormatException } from '../util/IllegalFormatException';
 import { NullPointerException } from './NullPointerException';
 
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export abstract class JavaString {
 
 	public static contains(str: string, s: string | null): boolean {
@@ -56,10 +55,11 @@ export abstract class JavaString {
 			const replacement = args[i];
 			const hasLeftJustifiedResult = formatParams[0] !== undefined;
 			const paddingChar = (formatParams[1] !== undefined) && (formatParams[1][0] === '0') ? '0' : ' ';
-			const paddingSize = parseInt(formatParams[1]);
-			const precision = formatParams[2] === undefined ? undefined : parseInt(formatParams[2].substr(1));
-			const base = formatParams[3] === undefined ? undefined : parseInt(formatParams[3].substr(1));
+			const paddingSize = Number.parseInt(formatParams[1]);
+			const precision = formatParams[2] === undefined ? undefined : Number.parseInt(formatParams[2].substr(1));
+			const base = formatParams[3] === undefined ? undefined : Number.parseInt(formatParams[3].substr(1));
 			let result: string = "";
+
 			switch (formatParams[4]) {
 				case 's':
 					result = typeof (replacement) === 'object' ? JSON.stringify(replacement) : replacement.toString(base);
@@ -68,19 +68,22 @@ export abstract class JavaString {
 					result = typeof (replacement[0]) === 'object' ? JSON.stringify(replacement[0]) : replacement[0].toString(base);
 					break;
 				case 'f':
-					result = parseFloat(replacement).toFixed(precision);
+					result = Number.parseFloat(replacement).toFixed(precision);
 					break;
 				case 'p':
-					result = parseFloat(replacement).toPrecision(precision);
+					result = Number.parseFloat(replacement).toPrecision(precision);
 					break;
 				case 'e':
-					result = parseFloat(replacement).toExponential(precision);
+					result = Number.parseFloat(replacement).toExponential(precision);
 					break;
 				case 'x':
-					result = parseInt(replacement).toString(base === undefined ? 16 : base);
+					result = Number.parseInt(replacement).toString(base ?? 16);
 					break;
 				case 'd':
-					result = parseFloat(parseInt(replacement, base === undefined ? 10 : base).toPrecision(precision)).toFixed(0);
+					result = Number.parseFloat(Number.parseInt(replacement, base ?? 10).toPrecision(precision)).toFixed(0);
+					break;
+				case 'b':
+					result = String(replacement);
 					break;
 			}
 			while (result.length < paddingSize)
@@ -88,55 +91,21 @@ export abstract class JavaString {
 			return result;
 		}
 		// TODO Erweiterung der Methode um argument_index und weitere conversion - Möglichkeiten laut https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Formatter.html#syntax
-		const regex = /%(-)?(0?\d+)?([.]\d+)?(#\d+)?([scfpexd%])/g;
+		const regex = /%(-)?(0?\d+)?([.]\d+)?(#\d+)?([scfpexdb%])/g;
 
-		return s.replace(regex, handleParam);
+		return s.replaceAll(regex, handleParam);
 	}
 
 	public static compareToIgnoreCase(a: string, b: string | null): number {
 		if (b === null)
 			return -1;
 		return a.localeCompare(b, undefined, { sensitivity: 'accent' });
-		/*
-		const ca: string[] = a.split('');
-		const cb: string[] = b.split('');
-		const len = Math.min(ca.length, cb.length);
-		for (let i: number = 0; i < len; i++) {
-			const cmp = ca[i].localeCompare(cb[i], undefined, { sensitivity: 'accent' });
-			if (cmp !== 0) {
-				const cpa = ca[i].toLocaleLowerCase().codePointAt(0);
-				if (cpa === undefined)
-					return 1;
-				const cpb = cb[i].toLocaleLowerCase().codePointAt(0);
-				if (cpb === undefined)
-					return -1;
-				return cpa - cpb;
-			}
-		}
-		return ca.length - cb.length;
-		*/
 	}
 
 	public static compareTo(a: string, b: string | null): number {
 		if (b === null)
 			return -1;
 		return a.localeCompare(b, undefined, { sensitivity: 'variant' });
-		/*		const ca: string[] = a.split('');
-		const cb: string[] = b.split('');
-		const len = Math.min(ca.length, cb.length);
-		for (let i: number = 0; i < len; i++) {
-			const cmp = ca[i].localeCompare(cb[i], undefined, { sensitivity: 'variant' });
-			if (cmp !== 0) {
-				const cpa = ca[i].codePointAt(0);
-				if (cpa === undefined)
-					return 1;
-				const cpb = cb[i].codePointAt(0);
-				if (cpb === undefined)
-					return -1;
-				return cpa - cpb;
-			}
-		}
-		return ca.length - cb.length;*/
 	}
 
 
