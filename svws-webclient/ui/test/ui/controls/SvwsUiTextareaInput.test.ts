@@ -221,7 +221,7 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 			expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.isValid).toBeFalsy();
 
 			// Testen
-			const span_icon = wrapper.find("span.icon. i-ri-alert-line");
+			const span_icon = wrapper.find("span.icon.i-ri-alert-line");
 			expect(span_icon.exists()).toBeTruthy();
 			expect(span_icon.classes()).toContain("textarea-input--state-icon");
 		});
@@ -232,7 +232,7 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 			expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.isValid).toBeTruthy();
 
 			// Testen
-			expect(wrapper.find("span.icon. i-ri-alert-line").exists()).toBeFalsy();
+			expect(wrapper.find("span.icon.i-ri-alert-line").exists()).toBeFalsy();
 		});
 
 		test("Warnung für maxLen wird nicht gerendert, wenn maxLen undefiniert ist", async () => {
