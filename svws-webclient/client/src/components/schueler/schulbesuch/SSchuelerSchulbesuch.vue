@@ -82,7 +82,9 @@
 				<svws-ui-select title="Schule" :items="manager().schulenById.values()" :item-text="textSchule" autocomplete :readonly
 					:model-value="manager().schulenById.get(manager().daten.idAufnehmendeSchule ?? -1)" :item-filter="filterSchulenEintraege" removable
 					@update:model-value="v => manager().patchSchule(v, 'idAufnehmendeSchule')" />
-				<svws-ui-button type="transparent" @click="goToSchule(manager().daten.idAufnehmendeSchule ?? -1)" :readonly>
+				<svws-ui-button type="transparent"
+					@click="goToSchule(manager().daten.idAufnehmendeSchule ?? -1)"
+					:disabled="manager().daten.idAufnehmendeSchule === null" :readonly>
 					<span class="icon i-ri-link" />Zur Schule
 				</svws-ui-button>
 				<svws-ui-text-input placeholder="Wechseldatum" :model-value="manager().daten.aufnehmendWechseldatum" :readonly
