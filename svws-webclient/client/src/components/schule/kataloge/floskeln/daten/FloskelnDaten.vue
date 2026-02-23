@@ -26,7 +26,7 @@
 						<ui-select label="Jahrgang"
 							v-model="selectedJahrgang"
 							:manager="jahrgaengeManager"
-							searchable :readonly />
+							searchable removable />
 						<ui-select label="Niveau"
 							v-model="selectedNiveau"
 							:manager="niveauManager"
@@ -43,7 +43,7 @@
 						@change="patchSortierung"
 						:readonly :min="0" :max="32000" />
 					<svws-ui-spacing />
-					<svws-ui-checkbox :model-value="manager().daten().istSichtbar">
+					<svws-ui-checkbox v-model="selectedIstSichtbar" :readonly="!hatKompetenzUpdate">
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -59,21 +59,22 @@
 	import { ArrayList, BenutzerKompetenz, Floskelgruppenart } from "@core";
 	import type { FloskelnDatenProps } from "./FloskelnDatenProps";
 	import { isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid } from "~/util/validation/Validation";
-	import { FloskelnListeManager, SelectManager } from "@ui";
+	import { SelectManager } from "@ui";
 
 	const props = defineProps<FloskelnDatenProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const readonly = computed<boolean>(() => !hatKompetenzUpdate.value);
+	const manager = () => props.manager();
 
-	const floskelgruppen = computed(() => props.manager().floskelgruppenById.values());
+	const floskelgruppen = computed(() => manager().floskelgruppenById.values());
 	const selectedFloskelgruppe = computed<Floskelgruppe | null>({
-		get: () => props.manager().floskelgruppenById.get(props.manager().auswahl().idFloskelgruppe ?? -1) ?? null,
+		get: () => manager().floskelgruppenById.get(manager().auswahl().idFloskelgruppe ?? -1) ?? null,
 		set: (value: Floskelgruppe | null) => void props.patch({ idFloskelgruppe: value?.id ?? null }),
 	});
 
-	const faecher = computed<FachDaten[]>(() => [...props.manager().faecherById.values()]);
+	const faecher = computed<FachDaten[]>(() => [...manager().faecherById.values()]);
 	const selectedFach = computed<FachDaten | null>({
-		get: () => props.manager().faecherById.get(props.manager().auswahl().idFach ?? -1) ?? null,
+		get: () => manager().faecherById.get(manager().auswahl().idFach ?? -1) ?? null,
 		set: (value: FachDaten | null) => void props.patch({ idFach: value?.id ?? null }),
 	});
 	const hatFloskelgruppeArtFach = computed<boolean>(() => {
@@ -86,26 +87,28 @@
 	});
 
 
-	const jahrgaenge = computed<JahrgangsDaten[]>(() => [...props.manager().jahrgaengeById.values()]);
-	const selectedJahrgang = computed<JahrgangsDaten | null>({
+	const jahrgaenge = computed<JahrgangsDaten[]>(() => [...manager().jahrgaengeById.values()]);
+	const selectedJahrgang = computed<JahrgangsDaten | null | undefined>({
 		get: () => {
-			const ids = props.manager().auswahl().idsJahrgaenge;
+			const ids = manager().auswahl().idsJahrgaenge;
 			if (ids === null || ids.isEmpty()) {
 				return null;
 			}
 			return props.manager().jahrgaengeById.get(ids.get(0)) ?? null;
 		},
-		set: (value: JahrgangsDaten | null) => {
+		set: (value: JahrgangsDaten | null | undefined) => {
 			const list = new ArrayList<number>();
-			if (value !== null) {
+			if (value !== null && value !== undefined) {
 				list.add(value.id);
 			}
-			void props.patch({ idsJahrgaenge: list });
+			if (list.size() <= 1) {
+				void props.patch({ idsJahrgaenge: list });
+			}
 		},
 	});
 
 	const selectedNiveau = computed<number | null>({
-		get: () => props.manager().auswahl().niveau,
+		get: () => manager().auswahl().niveau,
 		set: (value: number | null) => void props.patch({ niveau: value }),
 	});
 
@@ -130,9 +133,14 @@
 	});
 
 	const niveauManager = new SelectManager<number>({
-		options: FloskelnListeManager.NIVEAUS,
+		options: manager().niveaus,
 		optionDisplayText: String,
 		selectionDisplayText: String,
+	});
+
+	const selectedIstSichtbar = computed<boolean>({
+		get: () => props.manager().daten().istSichtbar,
+		set: (istSichtbar: boolean) => void props.patch({ istSichtbar }),
 	});
 
 	// --- patch --
@@ -142,7 +150,6 @@
 			await props.patch({ kuerzel: value?.trim() });
 		}
 	}
-
 
 	async function patchText(value: string | null) {
 		if (textIsValid(value)) {
@@ -159,7 +166,7 @@
 
 	function kuerzelIsValid(value: string | null): boolean {
 		return (mandatoryInputIsValid(value, 10) &&
-			isUniqueInList(value, props.manager().liste.list(), "kuerzel", "id", props.manager().auswahlID()));
+			isUniqueInList(value, manager().liste.list(), "kuerzel", "id", manager().auswahlID()));
 	}
 
 	function textIsValid(value: string | null): boolean {

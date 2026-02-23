@@ -55,10 +55,27 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 	 * @param jahrgaenge						die Liste der Jahrgänge
 	 * @param faecher							die Liste der Fächer
 	 */
-	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, jahrgaenge: List<JahrgangsDaten>,
-		schulform: Schulform | null, floskeln: List<Floskel>, floskelgruppen: List<Floskelgruppe>, faecher: List<FachDaten>) {
-		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, floskeln, FloskelnListeManager.comparator,
-			FloskelnListeManager.toId, FloskelnListeManager.toId, ArrayList.of());
+	public constructor(
+		idSchuljahresabschnitt: number,
+		idSchuljahresabschnittSchule: number,
+		schuljahresabschnitte: List<Schuljahresabschnitt>,
+		jahrgaenge: List<JahrgangsDaten>,
+		schulform: Schulform | null,
+		floskeln: List<Floskel>,
+		floskelgruppen: List<Floskelgruppe>,
+		faecher: List<FachDaten>
+	) {
+		super(
+			idSchuljahresabschnitt,
+			idSchuljahresabschnittSchule,
+			schuljahresabschnitte,
+			schulform,
+			floskeln,
+			FloskelnListeManager.comparator,
+			FloskelnListeManager.toId,
+			FloskelnListeManager.toId,
+			ArrayList.of()
+		);
 		this.mapFloskelgruppen(floskelgruppen);
 		this.mapJahrgaenge(jahrgaenge);
 		this.mapFaecher(faecher);
@@ -82,7 +99,6 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 			this._faecherById.set(f.id, f);
 		}
 	}
-
 
 	protected compareAuswahl(a: Floskel, b: Floskel): number {
 		return FloskelnListeManager.comparator.compare(a, b);
@@ -194,9 +210,8 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 		this._eventHandlerFilterChanged.run();
 	}
 
-
-	static get NIVEAUS(): number[] {
-		return this._NIVEAUS;
+	get niveaus(): number[] {
+		return FloskelnListeManager._NIVEAUS;
 	}
 
 	get floskelgruppenById(): Map<number, Floskelgruppe> {
