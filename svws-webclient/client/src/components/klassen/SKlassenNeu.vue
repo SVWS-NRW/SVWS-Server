@@ -123,7 +123,14 @@
 
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		await props.add(modelProxy.pending);
+		// Erstelle einen create-patch, der die erforderten Attribute zusätzlich zum Pending-State beinhaltet
+		const result: Partial<KlassenDaten> = {
+			idSchuljahresabschnitt: modelProxy.proxy.idSchuljahresabschnitt,
+			kuerzel: modelProxy.proxy.kuerzel,
+			idJahrgang: modelProxy.proxy.idJahrgang,
+			...modelProxy.pending,
+		};
+		await props.add(result);
 		isLoading.value = false;
 	}
 
