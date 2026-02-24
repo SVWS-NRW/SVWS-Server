@@ -5,6 +5,8 @@
 		</div>
 		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Floskeln werden gelöscht">
+				<span v-if="manager().liste.auswahlExists()"> Alle ausgewählten Floskeln sind bereit zum Löschen.</span>
+				<span v-else class="text-ui-danger whitespace-pre-line">Es wurde keine Floskel zum Löschen ausgewählt.</span>
 				<template #buttonFooterLeft>
 					<svws-ui-button title="Löschen" class="mt-4"
 						@click="deleteFloskeln"
