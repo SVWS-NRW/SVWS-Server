@@ -47,8 +47,9 @@ export abstract class Validator extends BasicValidator {
 	protected getNotNullObjectSupplier<T>(supplier: Supplier<T | null>): Supplier<T> {
 		return { get: () => {
 			const value: T | null = supplier.get();
-			if (value === null)
+			if (value === null) {
 				throw new NullPointerException()
+			}
 			return value;
 		} };
 	}
@@ -69,6 +70,21 @@ export abstract class Validator extends BasicValidator {
 	}
 
 	/**
+	 * Wandelt einen Supplier für Integer in einen Supplier für Integer zurück, welcher keine null-Werte liefert,
+	 * sondern -1 falls der Integer-Wert null ist.
+	 *
+	 * @param supplier   der Supplier, welcher auch null-Werte für Integer liefern kann
+	 *
+	 * @return ein Supplier, welcher keine Null-Werte liefert.
+	 */
+	protected getNotNullSupplierInteger(supplier: Supplier<number | null>): Supplier<number> {
+		return { get: () => {
+			const value: number | null = supplier.get();
+			return (value === null) ? -1 : value;
+		} };
+	}
+
+	/**
 	 * Wandelt einen Supplier für Strings in einen Supplier für Strings zurück, welcher keine null-Werte liefert,
 	 * sondern nur leere Strings.
 	 *
@@ -79,8 +95,9 @@ export abstract class Validator extends BasicValidator {
 	protected getDateManagerSupplier(supplier: Supplier<string | null>): Supplier<DateManager | null> {
 		return { get: () => {
 			const value: string | null = supplier.get();
-			if (value === null)
+			if (value === null) {
 				return null;
+			}
 			try {
 				return DateManager.from(value);
 			} catch(e : any) {
@@ -118,21 +135,24 @@ export abstract class Validator extends BasicValidator {
 		this._fehler.clear();
 		if (this._kontext.getValidatorManager().isValidatorActiveInSchuljahr(this._kontext.getSchuljahr(), this.getClass().getCanonicalName())) {
 			try {
-				if (!this.pruefe())
+				if (!this.pruefe()) {
 					return false;
+				}
 			} catch(e : any) {
 				this.addFehler(-1, "Unerwarteter Fehler bei der Validierung: " + e.getMessage());
 				return false;
 			}
 			for (const validator of this._validatoren) {
-				if (!validator.run())
+				if (!validator.run()) {
 					success = false;
+				}
 				this._fehler.addAll(validator._fehler);
 				this.updateFehlerart(validator.getFehlerart());
 			}
 			try {
-				if (!this.pruefeAbschluss())
+				if (!this.pruefeAbschluss()) {
 					success = false;
+				}
 			} catch(e : any) {
 				this.addFehler(-1, "Unerwarteter Fehler bei der Validierung: " + e.getMessage());
 			}

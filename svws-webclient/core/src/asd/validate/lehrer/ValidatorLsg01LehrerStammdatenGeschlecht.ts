@@ -9,7 +9,7 @@ export class ValidatorLsg01LehrerStammdatenGeschlecht extends Validator {
 	/**
 	 * Die Lehrer-Stammdaten
 	 */
-	private readonly daten: Supplier<number | null>;
+	private readonly daten: Supplier<number>;
 
 
 	/**
@@ -18,16 +18,14 @@ export class ValidatorLsg01LehrerStammdatenGeschlecht extends Validator {
 	 * @param daten     das Geschlecht des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: Supplier<number | null>, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
 	}
 
 	protected pruefe(): boolean {
-		let geschlecht: Geschlecht | null = null;
-		geschlecht = Geschlecht.fromValue(this.daten.get());
-		const finalGeschlecht: Geschlecht | null = geschlecht;
-		if (finalGeschlecht === null) {
+		const geschlecht: Geschlecht | null = Geschlecht.fromValue(this.daten.get());
+		if (geschlecht === null) {
 			this.addFehler(0, "Unzulässiger Schlüssel '" + geschlecht + "' im Feld 'Geschlecht'. Die gültigen Schlüssel entnehmen Sie bitte dem Pulldownmenü.");
 			return false;
 		}

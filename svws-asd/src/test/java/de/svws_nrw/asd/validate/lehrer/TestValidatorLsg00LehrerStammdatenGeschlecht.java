@@ -16,7 +16,7 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 /**
  * <p> Testklasse für den Validator Geschlecht
  * <ul>
- *   <li> {@link ValidatorLsg01LehrerStammdatenGeschlecht},
+ *   <li> {@link ValidatorLsg00LehrerStammdatenGeschlecht},
  * </ul>
  * </p>
  *
@@ -32,20 +32,13 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
  *
  * CoreType: LehrerStammdaten
  */
-@DisplayName("Tests zur Validierung von Lsg01LehrerStammdatenGeschlecht")
-class TestValidatorLsg01LehrerStammdatenGeschlecht {
+@DisplayName("Tests zur Validierung von Lsg00LehrerStammdatenGeschlecht")
+class TestValidatorLsg00LehrerStammdatenGeschlecht {
 
 	private static final String TESTDATEN_GESCHLECHT = """
-	        3  , true
-	        4  , true
-	        5  , true
-	        6  , true
-	        0  , false
-	        1  , false
-	        2  , false
-	        7  , false
-	        -1 , false
-	        999, false
+	        null  , false
+	        4     , true
+	        7     , true
 	        """;
 
 	/** Stammdaten der Schule */
@@ -72,17 +65,17 @@ class TestValidatorLsg01LehrerStammdatenGeschlecht {
 	 */
 	@DisplayName("Tests für ValidatorLsg01LehrerStammdatenGeschlecht")
 	@ParameterizedTest
-	@CsvSource(textBlock = TESTDATEN_GESCHLECHT)
-	void testValidatorLehrerStammdatenGeschlecht(final int geschlecht, final boolean result) {
+	@CsvSource(textBlock = TESTDATEN_GESCHLECHT, nullValues = { "null" })
+	void testValidatorLehrerStammdatenGeschlecht(final Integer geschlecht, final boolean result) {
 
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext =
 				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
-		final ValidatorLsg01LehrerStammdatenGeschlecht validator =
-				new ValidatorLsg01LehrerStammdatenGeschlecht(() -> geschlecht, kontext);
+		final ValidatorLsg00LehrerStammdatenGeschlecht validator =
+				new ValidatorLsg00LehrerStammdatenGeschlecht(() -> geschlecht, kontext);
 
-		assertEquals(result, validator.run());
+		assertEquals(result, validator.pruefe());
 
 	}
 

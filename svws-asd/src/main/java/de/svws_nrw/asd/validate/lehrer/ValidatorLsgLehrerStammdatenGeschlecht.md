@@ -6,20 +6,34 @@
 **Anzeigebereich-UI:** Feld 'Geschlecht' <br>
 **Default-SVWS/ZeBrAS:** <br>
 "svws": true, <br>
-"zebras": true, <br>
-**Default-Fehlerhärte:**<br>
-"muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],<br>
-"kann": [],<br>
-"hinweis": []
+"zebras": true <br>
 
 ---
 
-**Fehlerkürzel:** LSG0 <br>
-**Altes-Fehlerkürzel:** AD344 <br>
+**Kürzel:** LSG00 <br>
+**Altes-Kürzel:** - <br>
+**SVWS/ZeBrAS:** Default <br>
+**Vorbedingung:** - <br>
+**Härte:** <br>
+"muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],<br>
+"kann": [],<br>
+"hinweis": []<br>
+**Text:** Das Feld 'Geschlecht' muss besetzt sein. <br>
+**Erläuterung:** - <br>
+**Bedingung:** LehrerStammdaten.geschlecht = @ 
+
+---
+
+**Kürzel:** LSG01 <br>
+**Altes-Kürzel:** AD344 <br>
 **SVWS/ZeBrAS**: Default <br>
-**Fehlerhärte:** default<br>
-**Fehlertext:** Unzulässiger Schlüssel '" + LehrerStammdaten.geschlecht + "' im Feld 'Geschlecht'. Die gültigen Schlüssel entnehmen Sie bitte dem Pulldownmenü. <br>
+**Vorbedingung:** LSG00 <br>
+**Härte:**<br>
+"muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],<br>
+"kann": [],<br>
+"hinweis": []
+**Text:** Unzulässiger Schlüssel '" + LehrerStammdaten.geschlecht + "' im Feld 'Geschlecht'. Die gültigen Schlüssel entnehmen Sie bitte dem Pulldownmenü. <br>
 **Erläuterung:** Der Prüfschritt soll anschlagen, wenn für das Feld Geschlecht ein unzulässiger Wert vorliegt. Die zulässigen Werte finden sich in der Klasse "Geschlecht.java". <br>
-**Bedingung:** - <br> 
+**Bedingung:** LehrerStammdaten.geschlecht ≠ einem Eintrag in der Klasse 'Geschlecht.java'  <br> 
 
 ---
