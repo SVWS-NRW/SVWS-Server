@@ -1,12 +1,12 @@
-import type { Checkpoint } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 import type { BenutzerKompetenz, SchuelerNeu, SchuelerStammdaten, Schulform } from "@core";
-import type { SchuelerNeuManager } from "../../../../../ui/src/ui/manager/schueler/SchuelerNeuManager";
+import type { SchuelerNeuManager, Checkpoint } from "@ui";
 
 export interface SchuelerNeuProps {
 	manager: () => SchuelerNeuManager;
 	add: (addObject: Partial<SchuelerNeu>) => Promise<SchuelerStammdaten>;
 	gotoDefaultView: (idEintrag?: number | null) => Promise<void>;
+	gotToSchnelleingabe: (idSchueler: number) => Promise<void>;
 	schulform: Schulform,
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	checkpoint: Checkpoint;

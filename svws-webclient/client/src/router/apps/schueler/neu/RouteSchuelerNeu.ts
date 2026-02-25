@@ -37,6 +37,7 @@ export class RouteSchuelerNeu extends RouteNode<RouteDataSchuelerNeu, RouteSchue
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
+			gotToSchnelleingabe: this.data.goToSchnelleingabe,
 		};
 	}
 

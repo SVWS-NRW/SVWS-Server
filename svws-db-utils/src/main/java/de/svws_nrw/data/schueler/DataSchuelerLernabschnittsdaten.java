@@ -39,6 +39,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -50,6 +51,8 @@ import java.util.stream.Collectors;
  */
 public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Long, DTOSchuelerLernabschnittsdaten, SchuelerLernabschnittsdaten> {
 
+	private static final String KLASSEN_ID = "klassenID";
+
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link SchuelerLernabschnittsdaten}.
 	 *
@@ -58,7 +61,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 	public DataSchuelerLernabschnittsdaten(final DBEntityManager conn) {
 		super(conn);
 		setAttributesRequiredOnCreation("schuelerID", "schuljahresabschnitt");
-		setAttributesDelayedOnCreation("klassenID", "jahrgangID");
+		setAttributesDelayedOnCreation(KLASSEN_ID, "jahrgangID");
 	}
 
 	@Override
@@ -315,10 +318,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 					throw new ApiOperationException(Status.CONFLICT);
 				dto.Tutor_ID = idLehrer;
 			}
-			case "klassenID" -> {
-				final Long idKlasse = JSONMapper.convertToLong(value, true);
-				validateKlassenID(dto, idKlasse);
-			}
+			case KLASSEN_ID -> updateIdKlasse(value, dto, name);
 			case "folgeklassenID" -> {
 				final Long idKlasse = JSONMapper.convertToLong(value, true);
 				if ((idKlasse != null) && (conn.queryByKey(DTOKlassen.class, idKlasse) == null))
@@ -337,10 +337,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 				}
 				dto.Schulgliederung = str;
 			}
-			case "jahrgangID" -> {
-				final Long idJahrgang = JSONMapper.convertToLong(value, true);
-				validateJahrgangID(dto, idJahrgang);
-			}
+			case "jahrgangID" -> updatIdJahrgang(value, dto, name);
 			case "epJahre" -> dto.EPJahre = JSONMapper.convertToIntegerInRange(value, true, 1, 4);
 			case "fachklasseID" -> {
 				final Long idFachklasse = JSONMapper.convertToLong(value, true);
@@ -465,58 +462,55 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 		}
 	}
 
-	private void validateKlassenID(final DTOSchuelerLernabschnittsdaten dto, final Long idKlasse) throws ApiOperationException {
-		if (idKlasse != null) {
-			final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, idKlasse);
-			if (klasse == null)
-				throw new ApiOperationException(Status.CONFLICT, "Die angegebene Klasse existiert nicht.");
-
-			// Klasse gehört zum aktuellen Schuljahresabschnitt
-			if (klasse.Schuljahresabschnitts_ID != dto.Schuljahresabschnitts_ID)
-				throw new ApiOperationException(Status.CONFLICT, "Die Klasse gehört nicht zum angegebenen Schuljahresabschnitt.");
-
-			// falls Jahrgang gesetzt, muss Klasse denselben Jahrgang haben (oder Klasse.Jahrgang_ID null)
-			if ((dto.Jahrgang_ID != null) && (klasse.Jahrgang_ID != null) && (!dto.Jahrgang_ID.equals(klasse.Jahrgang_ID)))
-				throw new ApiOperationException(Status.CONFLICT, "Die Klasse gehört nicht zum angegebenen Jahrgang.");
-
-			checkFunktionsbezogeneKompetenzAufKlasse(List.of(idKlasse));
+	private void updateIdKlasse(final Object value, final DTOSchuelerLernabschnittsdaten dto, final String name) throws ApiOperationException {
+		final Long idKlasse = JSONMapper.convertToLong(value, true, name);
+		if (idKlasse == null) {
+			dto.Klassen_ID = null;
+			return;
 		}
+		final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, idKlasse);
+		if (klasse == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert keine Klasse mit der id %d.".formatted(idKlasse));
+		}
+		if (klasse.Schuljahresabschnitts_ID != dto.Schuljahresabschnitts_ID) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Klasse gehört nicht zum angegebenen Schuljahresabschnitt.");
+		}
+
+		if ((dto.Jahrgang_ID != null) && !Objects.equals(dto.Jahrgang_ID, klasse.Jahrgang_ID)) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Klasse gehört nicht zum angegebenen Jahrgang.");
+		}
+		checkFunktionsbezogeneKompetenzAufKlasse(List.of(idKlasse));
 		dto.Klassen_ID = idKlasse;
 	}
 
-	private void validateJahrgangID(final DTOSchuelerLernabschnittsdaten dto, final Long idJahrgang) throws ApiOperationException {
+	private void updatIdJahrgang(final Object value, final DTOSchuelerLernabschnittsdaten dto, final String name) throws ApiOperationException {
+		final Long idJahrgang = JSONMapper.convertToLong(value, true, name);
+		if (idJahrgang == null) {
+			dto.Jahrgang_ID = null;
+			dto.ASDJahrgang = null;
+			return;
+		}
 		final DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, idJahrgang);
-		if ((idJahrgang != null) && (jahrgang == null))
-			throw new ApiOperationException(Status.CONFLICT, "Der angegebene Jahrgang existiert nicht.");
+		if (jahrgang == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Zur id %d exisiert kein Jahrgang.".formatted(idJahrgang));
+		}
+		if (dto.Klassen_ID == null) {
+			dto.Jahrgang_ID = idJahrgang;
+			dto.ASDJahrgang = jahrgang.ASDJahrgang;
+			return;
+		}
+		final DTOKlassen klasse = this.conn.queryByKey(DTOKlassen.class, dto.Klassen_ID);
+		if ((klasse != null) && !Objects.equals(klasse.Jahrgang_ID, idJahrgang)) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der ausgwählte Jahrgang gepasst nicht zur ausgewählten Klasse.");
+		}
 		dto.Jahrgang_ID = idJahrgang;
 		dto.ASDJahrgang = jahrgang.ASDJahrgang;
-
-		if ((dto.Klassen_ID == null) && (idJahrgang != null)) {
-			final List<DTOKlassen> matches = conn.queryList(
-					"SELECT e FROM DTOKlassen e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Jahrgang_ID = ?2",
-					DTOKlassen.class, dto.Schuljahresabschnitts_ID, idJahrgang);
-
-			if (matches.isEmpty()) {
-				throw new ApiOperationException(Status.CONFLICT,
-						"Keine passende Klasse für Jahrgang %d im Schuljahresabschnitt %d gefunden."
-								.formatted(idJahrgang, dto.Schuljahresabschnitts_ID));
-			}
-
-			final DTOKlassen ausgewaehlte = matches.stream().min(Comparator.comparingLong(k -> k.ID)).orElseThrow(() -> new ApiOperationException(Status.CONFLICT,
-					"Keine passende Klasse für Jahrgang %d im Schuljahresabschnitt %d gefunden.".formatted(idJahrgang, dto.Schuljahresabschnitts_ID)));
-			dto.Klassen_ID = ausgewaehlte.ID;
-		} else if ((dto.Klassen_ID != null) && (idJahrgang != null)) {
-			final DTOKlassen kl = conn.queryByKey(DTOKlassen.class, dto.Klassen_ID);
-
-			if ((kl != null) && (kl.Jahrgang_ID != null) && (!idJahrgang.equals(kl.Jahrgang_ID)))
-				throw new ApiOperationException(Status.CONFLICT, "Die gesetzte Klasse passt nicht zum neuen Jahrgang.");
-		}
 	}
 
 	@Override
 	public void checkBeforeCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der Klasse hat, um die Lernabschnittsdaten in dem Lernabschnitt zu erstellen
-		final Long idKlasse = JSONMapper.convertToLong(initAttributes.get("klassenID"), true);
+		final Long idKlasse = JSONMapper.convertToLong(initAttributes.get(KLASSEN_ID), true);
 		checkFunktionsbezogeneKompetenzAufKlasse((idKlasse == null) ? null : List.of(idKlasse));
 	}
 
@@ -524,8 +518,8 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 	@Override
 	public void checkBeforePatch(final DTOSchuelerLernabschnittsdaten dto, final Map<String, Object> patchAttributes) throws ApiOperationException {
 		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der Klasse hat, um die Lernabschnittsdaten in dem Lernabschnitt zu verändern
-		if (patchAttributes.get("klassenID") != null) {
-			final Long idKlasse = JSONMapper.convertToLong(patchAttributes.get("klassenID"), true);
+		if (patchAttributes.get(KLASSEN_ID) != null) {
+			final Long idKlasse = JSONMapper.convertToLong(patchAttributes.get(KLASSEN_ID), true);
 			checkFunktionsbezogeneKompetenzAufKlasse(List.of(idKlasse));
 		}
 		checkFunktionsbezogeneKompetenzAufKlasse((dto.Klassen_ID == null) ? null : List.of(dto.Klassen_ID));

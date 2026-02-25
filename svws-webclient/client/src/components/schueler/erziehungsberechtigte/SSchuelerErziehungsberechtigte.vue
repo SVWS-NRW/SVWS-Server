@@ -4,8 +4,11 @@
 	</Teleport>
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Erziehungsberechtigte" class="col-span-full">
-			<svws-ui-table class="contentFocusField" :items="sortedData" :columns :no-data="data().size() === 0" clickable :clicked="erzieher"
-				@update:clicked="value => erzieher = value" v-model="selectedErz" :selectable="hatKompetenzUpdate" focus-first-element>
+			<svws-ui-table class="contentFocusField"
+				:items="sortedData" :columns :no-data="data().size() === 0" clickable
+				:clicked="erzieher"
+				@update:clicked="value => erzieher = value"
+				v-model="selectedErz" :selectable="hatKompetenzUpdate" focus-first-element>
 				<template #header(erhaeltAnschreiben)>
 					<svws-ui-tooltip>
 						<span class="icon i-ri-mail-send-line" />
@@ -283,7 +286,7 @@
 	}
 
 	function setMode(newMode: Mode) {
-		return currentMode.value = newMode;
+		currentMode.value = newMode;
 	}
 
 	function addModal() {

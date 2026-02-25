@@ -183,3 +183,5 @@ export { BetriebeListeManager } from './ui/manager/kataloge/BetriebeListeManager
 export { OrtsteileListeManager } from './ui/manager/kataloge/OrtsteileListeManager';
 export { OrteListeManager } from './ui/manager/kataloge/OrteListeManager';
 export { SchwerpunkteListeManager } from './ui/manager/kataloge/SchwerpunkteListeManager';
+export { SchuelerSchnelleingabeManager } from './ui/manager/schueler/SchuelerSchnelleingabeManager';
+export { SchuelerNeuManager } from './ui/manager/schueler/SchuelerNeuManager';

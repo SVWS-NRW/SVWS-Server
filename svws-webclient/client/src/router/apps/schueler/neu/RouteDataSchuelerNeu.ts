@@ -3,8 +3,10 @@ import { RouteData } from "~/router/RouteData";
 import type { KlassenDaten, List } from "@core";
 import { DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
-import { SchuelerNeuManager } from "../../../../../../ui/src/ui/manager/schueler/SchuelerNeuManager";
 import { routeApp } from "~/router/apps/RouteApp";
+import { RouteManager } from "~/router/RouteManager";
+import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteSchuelerSchnelleingabe";
+import { SchuelerNeuManager } from "@ui";
 
 
 interface RouteStateDataSchuelerNeu extends RouteStateInterface {
@@ -22,12 +24,8 @@ export class RouteDataSchuelerNeu extends RouteData<RouteStateDataSchuelerNeu> {
 	}
 
 	public async ladeDaten() {
-		try {
-			const manager = await this.createManager();
-			this.setPatchedState({ manager });
-		} catch (error) {
-			throw new DeveloperNotificationException("Der SchuelerNeuManager konnten nicht aktualisiert werden.");
-		}
+		const manager = await this.createManager();
+		this.setPatchedState({ manager });
 	}
 
 	private async createManager() {
@@ -63,5 +61,9 @@ export class RouteDataSchuelerNeu extends RouteData<RouteStateDataSchuelerNeu> {
 		}
 		return this._state.value.manager;
 	}
+
+	goToSchnelleingabe = async (idSchueler: number): Promise<void> => {
+		await RouteManager.doRoute(routeSchuelerSchnelleingabe.getRoute({ id: idSchueler }));
+	};
 
 }

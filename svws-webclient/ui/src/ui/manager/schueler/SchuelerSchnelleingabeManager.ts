@@ -24,7 +24,6 @@ export class SchuelerSchnelleingabeManager {
 	private readonly _schulenByExterneSchulnummer: Map<string, SchulEintrag> = new Map();
 	private readonly _telefonartenById: Map<number, Telefonart>;
 	private readonly _vermerkartenById: Map<number, VermerkartEintrag>;
-	private readonly _klassenById: Map<number, KlassenDaten> = new Map();
 	private readonly _klassenAktuell: List<KlassenDaten> = new ArrayList();
 
 
@@ -66,13 +65,12 @@ export class SchuelerSchnelleingabeManager {
 		this._schulenById = schulenById;
 		this._telefonartenById = telefonartenById;
 		this._vermerkartenById = vermerkartenById;
-		this.processKlassen();
+		this.filterKlassen();
 		this.processSchulen();
 	}
 
-	private processKlassen() {
+	private filterKlassen() {
 		for (const klasse of this.schuelerliste.klassen) {
-			this._klassenById.set(klasse.id, klasse);
 			if (klasse.idSchuljahresabschnitt === this.schuelerliste.idSchuljahresabschnitt) {
 				this._klassenAktuell.add(klasse);
 			}
@@ -157,10 +155,6 @@ export class SchuelerSchnelleingabeManager {
 
 	get vermerkartenById(): Map<number, VermerkartEintrag> {
 		return this._vermerkartenById;
-	}
-
-	get klassenById(): Map<number, KlassenDaten> {
-		return this._klassenById;
 	}
 
 	get klassenAktuell(): List<KlassenDaten> {

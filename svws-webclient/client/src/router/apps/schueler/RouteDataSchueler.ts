@@ -1,11 +1,11 @@
-import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerStammdaten, SimpleOperationResponse, StundenplanListeEintrag,
-	SchuelerTelefon, SchuelerSchulbesuchsdaten, ErzieherStammdaten, SchuelerLernabschnittsdaten, KlassenDaten, SchuelerVermerke, SchuelerNeu } from "@core";
-import { BenutzerKompetenz, ArrayList, SchuelerStatus, ServerMode, UserNotificationException } from "@core";
+import type { ApiFile, List, ReportingParameter, SchuelerListeEintrag, SchuelerNeu, SchuelerStammdaten, SchuelerTelefon, SimpleOperationResponse,
+	StundenplanListeEintrag } from "@core";
+import { ArrayList, BenutzerKompetenz, SchuelerStatus, ServerMode, UserNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
-import { ViewType, SchuelerListeManager, type PendingStateManager } from "@ui";
+import { type PendingStateManager, SchuelerListeManager, ViewType } from "@ui";
 import { routeSchuelerNeu } from "~/router/apps/schueler/neu/RouteSchuelerNeu";
 import type { RouteParamsRawGeneric } from "vue-router";
 import { routeSchuelerIndividualdatenGruppenprozesse } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdatenGruppenprozesse";
@@ -15,9 +15,7 @@ import { routeSchuelerSchnelleingabe } from "~/router/apps/schueler/neu/RouteSch
 
 interface RouteStateSchueler extends RouteStateAuswahlInterface<SchuelerListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
-	listSchuelerErziehereintraege: List<ErzieherStammdaten>;
 	listSchuelerTelefoneintraege: List<SchuelerTelefon>;
-	listSchuelerVermerkeintraege: List<SchuelerVermerke>;
 }
 
 const defaultState = <RouteStateSchueler> {
@@ -27,10 +25,8 @@ const defaultState = <RouteStateSchueler> {
 	gruppenprozesseView: routeSchuelerIndividualdatenGruppenprozesse,
 	activeViewType: ViewType.DEFAULT,
 	mapStundenplaene: new Map(),
-	listSchuelerErziehereintraege: new ArrayList(),
-	listSchuelerTelefoneintraege: new ArrayList(),
-	listSchuelerVermerkeintraege: new ArrayList(),
 	pendingStateRegistry: undefined,
+	listSchuelerTelefoneintraege: new ArrayList(),
 };
 
 export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, RouteStateSchueler> {
@@ -84,16 +80,12 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		if (auswahl === null) {
 			return null;
 		}
-		const [res, listSchuelerTelefoneintraege, listSchuelerErziehereintraege, listSchuelerVermerkeintraege] = await Promise.all([
+		const [res, listSchuelerTelefoneintraege] = await Promise.all([
 			api.server.getSchuelerStammdaten(api.schema, auswahl.id),
 			api.server.getSchuelerTelefone(api.schema, auswahl.id),
-			api.server.getSchuelerErzieher(api.schema, auswahl.id),
-			api.server.getVermerkdaten(api.schema, auswahl.id),
 		]);
 		this.manager.schuelerstatus.auswahlAdd(SchuelerStatus.data().getWertByID(res.status));
-		state.listSchuelerErziehereintraege = listSchuelerErziehereintraege;
 		state.listSchuelerTelefoneintraege = listSchuelerTelefoneintraege;
-		state.listSchuelerVermerkeintraege = listSchuelerVermerkeintraege;
 		return res;
 	}
 
@@ -128,22 +120,7 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		await this.setSchuljahresabschnitt(data.idSchuljahresabschnitt ?? -1, true);
 		this.manager.setDaten(result);
 		this.commit();
-		await this.gotoDefaultView(result.id);
 		return result;
-	};
-
-	getSchuelerKlassenFuerAbschnitt = async (idAbschnitt: number): Promise<List<KlassenDaten>> => {
-		return await api.server.getKlassenFuerAbschnitt(api.schema, idAbschnitt);
-	};
-
-	patchSchuelerLernabschnitt = async (data: Partial<SchuelerLernabschnittsdaten>, idEintrag: number): Promise<void> => {
-		await api.server.patchSchuelerLernabschnittsdaten(data, api.schema, idEintrag);
-		Object.assign(idEintrag, data);
-		this.commit();
-	};
-
-	patchSchuelerSchulbesuchdaten = async (data: Partial<SchuelerSchulbesuchsdaten>, idEintrag: number): Promise<void> => {
-		await api.server.patchSchuelerSchulbesuch(data, api.schema, idEintrag);
 	};
 
 	get getListSchuelerTelefoneintraege(): List<SchuelerTelefon> {
@@ -151,59 +128,6 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		list.addAll(this._state.value.listSchuelerTelefoneintraege);
 		return list;
 	}
-
-	get getListSchuelerErziehereintraege(): List<ErzieherStammdaten> {
-		const list = new ArrayList<ErzieherStammdaten>();
-		list.addAll(this._state.value.listSchuelerErziehereintraege);
-		return list;
-	}
-
-	get getListSchuelerVermerkeintraege(): List<SchuelerVermerke> {
-		const list = new ArrayList<SchuelerVermerke>();
-		list.addAll(this._state.value.listSchuelerVermerkeintraege);
-		return list;
-	}
-
-	addSchuelerErziehereintrag = async (data: Partial<ErzieherStammdaten>, idEintrag: number, pos: number): Promise<ErzieherStammdaten> => {
-		const erzieher = await api.server.addSchuelerErzieher(data, api.schema, idEintrag, pos);
-		const listSchuelerErziehereintraege = this.getListSchuelerErziehereintraege;
-		listSchuelerErziehereintraege.add(erzieher);
-		this.setPatchedState({ listSchuelerErziehereintraege });
-		return erzieher;
-	};
-
-	patchSchuelerErziehereintrag = async (data: Partial<ErzieherStammdaten>, idEintrag: number) => {
-		await api.server.patchErzieherStammdaten(data, api.schema, idEintrag);
-		const listSchuelerErziehereintraege = this.getListSchuelerErziehereintraege;
-		for (const e of listSchuelerErziehereintraege) {
-			if (e.id === idEintrag) {
-				Object.assign(e, data);
-				break;
-			}
-		}
-		this.setPatchedState({ listSchuelerErziehereintraege });
-	};
-
-	patchSchuelerErzieherAnPosition = async (data: Partial<ErzieherStammdaten>, idEintrag: number, idSchueler: number, pos: number) => {
-		await api.server.patchErzieherStammdatenZweitePosition(data, api.schema, idEintrag, pos);
-		const listSchuelerErziehereintraege = await api.server.getSchuelerErzieher(api.schema, idSchueler);
-		this.setPatchedState({ listSchuelerErziehereintraege });
-	};
-
-	deleteSchuelerErziehereintrage = async (idsEintraege: List<number>): Promise<void> => {
-		await api.server.deleteErzieherStammdaten(idsEintraege, api.schema);
-		const listSchuelerErziehereintraege = this.getListSchuelerErziehereintraege;
-		for (const id of idsEintraege) {
-			for (let i = 0; i < listSchuelerErziehereintraege.size(); i++) {
-				const eintrag = listSchuelerErziehereintraege.get(i);
-				if (eintrag.id === id) {
-					listSchuelerErziehereintraege.removeElementAt(i);
-					break;
-				}
-			}
-		}
-		this.setPatchedState({ listSchuelerErziehereintraege });
-	};
 
 	addSchuelerTelefoneintrag = async (data: Partial<SchuelerTelefon>, idSchueler: number): Promise<void> => {
 		const telefon = await api.server.addSchuelerTelefon(data, api.schema, idSchueler);
@@ -237,40 +161,6 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 			}
 		}
 		this.setPatchedState({ listSchuelerTelefoneintraege });
-	};
-
-	addSchuelerVermerkeintrag = async (data: Partial<SchuelerVermerke>): Promise<void> => {
-		const vermerk = await api.server.addVermerk(data, api.schema);
-		const listSchuelerVermerkeintraege = this.getListSchuelerVermerkeintraege;
-		listSchuelerVermerkeintraege.add(vermerk);
-		this.setPatchedState({ listSchuelerVermerkeintraege });
-	};
-
-	patchSchuelerVermerkeintrag = async (data: Partial<SchuelerVermerke>, idEintrag: number): Promise<void> => {
-		await api.server.patchSchuelerVermerke(data, api.schema, idEintrag);
-		const listSchuelerVermerkeintraege = this.getListSchuelerVermerkeintraege;
-		for (const l of listSchuelerVermerkeintraege) {
-			if (l.id === idEintrag) {
-				Object.assign(l, data);
-				break;
-			}
-		}
-		this.setPatchedState({ listSchuelerVermerkeintraege });
-	};
-
-	deleteSchuelerVermerkeintrage = async (idsEintraege: List<number>): Promise<void> => {
-		await api.server.deleteSchuelerVermerke(idsEintraege, api.schema);
-		const listSchuelerVermerkeintraege = this.getListSchuelerVermerkeintraege;
-		for (const id of idsEintraege) {
-			for (let i = 0; i < listSchuelerVermerkeintraege.size(); i++) {
-				const eintrag = listSchuelerVermerkeintraege.get(i);
-				if (eintrag.id === id) {
-					listSchuelerVermerkeintraege.removeElementAt(i);
-					break;
-				}
-			}
-		}
-		this.setPatchedState({ listSchuelerVermerkeintraege });
 	};
 
 	protected async doPatch(data: Partial<SchuelerStammdaten>, id: number): Promise<void> {

@@ -83,8 +83,8 @@
 <script setup lang="ts">
 
 	import type { SchuelerNeuProps } from "~/components/schueler/neuanlage/SchuelerNeuProps";
-	import type { EinschulungsartKatalogEintrag, JahrgangsDaten, KlassenDaten, List, ReligionEintrag, Schuljahresabschnitt } from "@core";
-	import { BenutzerKompetenz, Geschlecht, SchuelerNeu, SchuelerStatus, Schulform } from "@core";
+	import type { EinschulungsartKatalogEintrag, JahrgangsDaten, KlassenDaten, ReligionEintrag, Schuljahresabschnitt } from "@core";
+	import { ArrayList, BenutzerKompetenz, Geschlecht, SchuelerNeu, SchuelerStatus, Schulform } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { SelectManager } from "@ui";
 	import { mandatoryInputIsValid, optionalInputIsValid } from "~/util/validation/Validation";
@@ -107,14 +107,23 @@
 
 	const abschnitteFiltered = computed(() => manager().schuljahresabschnitteFilteredById.values());
 	const jahrgaenge = computed(() => Array.from(manager().jahrgaengeById.values()));
-	const klassenByIdAbschnitt = computed<Map<number, List<KlassenDaten>>>(() => manager().klassenByIdAbschnitt);
-	const klassen = computed(() => klassenByIdAbschnitt.value.get(data.value.idSchuljahresabschnitt) ?? []);
 	const einschulungsarten = computed(() => manager().einschulungsartenById.values());
 	const religionen = computed(() => manager().religionenById.values());
 
 	const today = new Date().toISOString().split("T")[0];
 	const minGeburtsdatum = new Date(new Date().setFullYear(new Date().getFullYear() - 50)).toISOString().split("T")[0];
 	const maxGeburtsdatum = new Date(new Date().setFullYear(new Date().getFullYear() - 4)).toISOString().split("T")[0];
+
+	const klassen = computed(() => {
+		const klassen = manager().klassenByIdAbschnitt.get(data.value.idSchuljahresabschnitt) ?? [];
+		const result = new ArrayList<KlassenDaten>();
+		for (const klasse of klassen) {
+			if (klasse.idJahrgang === data.value.idJahrgang) {
+				result.add(klasse);
+			}
+		}
+		return result;
+	});
 
 	const selectedSchuljahresabschnitt = computed<Schuljahresabschnitt | null>({
 		get: () => manager().schuljahresabschnitteFilteredById.get(data.value.idSchuljahresabschnitt) ?? null,
@@ -278,8 +287,9 @@
 		}
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		await props.add(data.value);
+		const result = await props.add(data.value);
 		isLoading.value = false;
+		await props.gotToSchnelleingabe(result.id);
 	}
 
 	function cancel() {
