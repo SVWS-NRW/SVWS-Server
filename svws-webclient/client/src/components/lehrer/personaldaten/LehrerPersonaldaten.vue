@@ -60,7 +60,7 @@
 
 	import { computed } from "vue";
 	import type { LehrerPersonaldatenProps } from './LehrerPersonaldatenProps';
-	import type { JavaSet, LehrerPersonalabschnittsdaten, LehrerPersonaldaten } from "@core";
+	import type { JavaSet, LehrerPersonalabschnittsdaten } from "@core";
 	import { LehrerZugangsgrund, LehrerAbgangsgrund, BenutzerKompetenz, HashSet, LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis } from "@core";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
 	import { LehrerPersonalabschnittsdatenModelProxy } from "./LehrerPersonalabschnittsdatenModelProxy";
@@ -78,12 +78,8 @@
 		}
 		return true;
 	}
-	async function patchMethodLehrerPersonaldaten(data: Partial<LehrerPersonaldaten>): Promise<boolean> {
-		await props.patch(data);
-		return true;
-	}
 	const personalabschnittsdatenModelProxy = new LehrerPersonalabschnittsdatenModelProxy(() => props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(props.aktAbschnitt.id), () => props.validatorKontext(), () => props.lehrerListeManager(), patchMethodLehrerPersonalabschnittsdaten);
-	const personaldatenModelProxy = new LehrerPersonaldatenModelProxy(() => props.lehrerListeManager().personalDaten(), () => props.validatorKontext(), () => props.lehrerListeManager(), patchMethodLehrerPersonaldaten);
+	const personaldatenModelProxy = new LehrerPersonaldatenModelProxy(() => props.lehrerListeManager().personalDaten(), () => props.validatorKontext(), () => props.lehrerListeManager(), props.patch);
 
 	const moeglicheStammschulnummern = computed<JavaSet<string>>(() => {
 		// Füge zunächst alle Schulnummern mit eingetragenen Kürzeln im Schul-Katalog hinzu

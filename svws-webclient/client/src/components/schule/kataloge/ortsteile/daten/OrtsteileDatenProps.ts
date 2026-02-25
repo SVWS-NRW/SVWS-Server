@@ -4,5 +4,5 @@ import type { OrtsteileListeManager } from "@ui";
 export interface OrtsteileDatenProps {
 	manager: () => OrtsteileListeManager,
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
-	patch: (data: Partial<OrtsteilKatalogEintrag>) => Promise<void>;
+	patch: (data: Partial<OrtsteilKatalogEintrag>) => Promise<boolean>;
 }

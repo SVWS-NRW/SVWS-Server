@@ -44,8 +44,8 @@ export class RouteDataNotenmodulKlassenleitung extends RouteDataAuswahl<EnmKlass
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<ENMKlasse>, id: number): Promise<void> {
-		// nothing to do
+	protected async doPatch(data: Partial<ENMKlasse>, id: number): Promise<boolean> {
+		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {

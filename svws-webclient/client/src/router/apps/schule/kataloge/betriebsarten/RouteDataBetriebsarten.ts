@@ -1,7 +1,6 @@
-import type { Betriebsart } from "@core";
-import { ArrayList, BenutzerKompetenz, type List, type SimpleOperationResponse } from "@core";
-import { BetriebsartenListeManager } from "@ui";
-import { ViewType } from "@ui";
+import type { Betriebsart, List, SimpleOperationResponse } from "@core";
+import { ArrayList, BenutzerKompetenz } from "@core";
+import { ViewType, BetriebsartenListeManager } from "@ui";
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
@@ -38,8 +37,9 @@ export class RouteDataBetriebsarten extends RouteDataAuswahl<BetriebsartenListeM
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<Betriebsart>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<Betriebsart>, id: number): Promise<boolean> {
 		await api.server.patchBetriebsart(data, api.schema, id);
+		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {

@@ -4,5 +4,5 @@ import type { HaltestellenListeManager } from "@ui";
 export interface HaltestellenDatenProps {
 	manager: () => HaltestellenListeManager;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
-	patch: (data: Partial<Haltestelle>) => Promise<void>;
+	patch: (data: Partial<Haltestelle>) => Promise<boolean>;
 }

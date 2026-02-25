@@ -39,8 +39,9 @@ export class RouteDataLernplattformen extends RouteDataAuswahl<LernplattformList
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<Lernplattform>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<Lernplattform>, id: number): Promise<boolean> {
 		await api.server.patchLernplattform(data, api.schema, id);
+		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {

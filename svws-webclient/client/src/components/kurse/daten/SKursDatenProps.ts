@@ -5,7 +5,7 @@ export interface KursDatenProps {
 	schulform: Schulform;
 	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
-	patch: (data: Partial<KursDaten>) => Promise<void>;
+	patch: (data: Partial<KursDaten>) => Promise<boolean>;
 	manager: () => KursListeManager;
 	setFilter: () => Promise<void>;
 	gotoSchueler: (eintrag: Schueler) => Promise<void>,

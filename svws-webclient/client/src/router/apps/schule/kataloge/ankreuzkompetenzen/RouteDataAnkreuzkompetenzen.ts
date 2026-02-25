@@ -48,8 +48,9 @@ export class RouteDataAnkreuzkompetenzen extends RouteDataAuswahl<Ankreuzkompete
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<Ankreuzkompetenz>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<Ankreuzkompetenz>, id: number): Promise<boolean> {
 		await api.server.patchAnkreuzkompetenz(data, api.schema, id);
+		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {

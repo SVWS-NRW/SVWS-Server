@@ -20,7 +20,7 @@ import type {
 import type { SchuelerListeManager } from "@ui";
 
 export interface SchuelerIndividualdatenProps {
-	patch: (data: Partial<SchuelerStammdaten>) => Promise<void>;
+	patch: (data: Partial<SchuelerStammdaten>) => Promise<boolean>;
 	schuelerListeManager: () => SchuelerListeManager;
 	mapSchulen: Map<string, SchulEintrag>;
 	orteById: Map<number, OrtKatalogEintrag>;

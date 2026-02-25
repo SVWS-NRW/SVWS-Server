@@ -67,7 +67,7 @@
 
 	import { computed } from "vue";
 	import type { LehrerIndividualdatenProps } from "./LehrerIndividualdatenProps";
-	import type { LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
+	import type { OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 	import { Geschlecht, Nationalitaeten, PersonalTyp, AdressenUtils, DateUtils, JavaString, LehrerLeitungsfunktion, BenutzerKompetenz } from "@core";
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, orte_filter, orte_sort, ortsteilSort } from "~/utils/helfer";
 	import { LehrerIndividualdatenModelProxy } from "./LehrerIndividualdatenModelProxy";
@@ -75,11 +75,7 @@
 	const props = defineProps<LehrerIndividualdatenProps>();
 
 	const dataNotPatched = () => props.lehrerListeManager().daten();
-	async function patchMethod(data: Partial<LehrerStammdaten>): Promise<boolean> {
-		await props.patch(data);
-		return true;
-	}
-	const modelProxy = new LehrerIndividualdatenModelProxy(dataNotPatched, () => props.validatorKontext(), patchMethod);
+	const modelProxy = new LehrerIndividualdatenModelProxy(dataNotPatched, () => props.validatorKontext(), props.patch);
 
 	const schuljahr = computed<number>(() => props.lehrerListeManager().getSchuljahr());
 

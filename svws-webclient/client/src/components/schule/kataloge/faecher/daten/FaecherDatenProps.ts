@@ -3,7 +3,7 @@ import type { FaecherListeManager } from "@ui";
 
 export interface FaecherDatenProps {
 	schuljahr: number,
-	patch: (data: Partial<FachDaten>) => Promise<void>;
+	patch: (data: Partial<FachDaten>) => Promise<boolean>;
 	manager: () => FaecherListeManager;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	schulform: Schulform;

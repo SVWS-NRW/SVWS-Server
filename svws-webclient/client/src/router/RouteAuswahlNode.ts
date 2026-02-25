@@ -37,7 +37,7 @@ export interface RouteAuswahlListProps<TAuswahlManager extends AuswahlManager<an
  */
 export interface RouteAuswahlProps<TAuswahlManager extends AuswahlManager<number, TAuswahl, TDaten>, TAuswahl = any, TDaten = any> extends RouteTabProps {
 	manager: () => TAuswahlManager;
-	patch: (data: Partial<TDaten>) => Promise<void>;
+	patch: (data: Partial<TDaten>) => Promise<boolean>;
 	pendingStateManagerRegistry: () => PendingStateManagerRegistry;
 }
 

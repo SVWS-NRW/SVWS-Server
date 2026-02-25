@@ -40,8 +40,9 @@ export class RouteDataSchulen extends RouteDataAuswahl<SchulenListeManager, Rout
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<SchulEintrag>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<SchulEintrag>, id: number): Promise<boolean> {
 		await api.server.patchSchuleAusKatalog(data, api.schema, id);
+		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {

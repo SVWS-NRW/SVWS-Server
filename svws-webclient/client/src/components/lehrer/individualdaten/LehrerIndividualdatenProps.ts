@@ -6,7 +6,7 @@ export interface LehrerIndividualdatenProps {
 	schulform: Schulform;
 	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
-	patch: (data: Partial<LehrerStammdaten>) => Promise<void>;
+	patch: (data: Partial<LehrerStammdaten>) => Promise<boolean>;
 	lehrerListeManager: () => LehrerListeManager;
 	orteById: Map<number, OrtKatalogEintrag>;
 	ortsteileById: Map<number, OrtsteilKatalogEintrag>;

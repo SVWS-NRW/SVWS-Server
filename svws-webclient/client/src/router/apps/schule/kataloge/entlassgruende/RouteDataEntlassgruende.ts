@@ -38,8 +38,9 @@ export class RouteDataEntlassgruende extends RouteDataAuswahl<EntlassgruendeList
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<any>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<any>, id: number): Promise<boolean> {
 		await api.server.patchEntlassgrund(data, api.schema, id);
+		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {

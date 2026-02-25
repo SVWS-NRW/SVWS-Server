@@ -91,8 +91,9 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<KlassenDaten>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<KlassenDaten>, id: number): Promise<boolean> {
 		await api.server.patchKlasse(data, api.schema, id);
+		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {

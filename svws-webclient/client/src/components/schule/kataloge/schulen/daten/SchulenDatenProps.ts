@@ -3,7 +3,7 @@ import type { SchulenListeManager } from "@ui";
 
 export interface SchulenDatenProps {
 	schuljahr: number;
-	patch: (data: Partial<SchulEintrag>) => Promise<void>;
+	patch: (data: Partial<SchulEintrag>) => Promise<boolean>;
 	manager: () => SchulenListeManager;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	schulform: Schulform;

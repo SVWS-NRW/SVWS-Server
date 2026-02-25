@@ -114,7 +114,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 		return { listRaeume, listPausenzeiten, listAufsichtsbereiche, listJahrgaenge, listLehrer };
 	}
 
-	protected async doPatch(data: Partial<any>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<any>, id: number): Promise<boolean> {
 		await api.server.patchStundenplan(data, api.schema, this.manager.auswahl().id);
 		const daten = this.manager.daten().getStundenplan();
 		Object.assign(daten, data);
@@ -143,6 +143,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 			this.manager.daten().kalenderwochenzuordnungRemoveAll(res);
 		}
 		this.commit();
+		return true;
 	}
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
 		return await api.server.deleteStundenplaene(ids, api.schema);

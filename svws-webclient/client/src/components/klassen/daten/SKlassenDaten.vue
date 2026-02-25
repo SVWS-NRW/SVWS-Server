@@ -131,14 +131,10 @@
 	});
 
 	const dataNotPatched = () => props.manager().daten();
-	async function patchMethod(data: Partial<KlassenDaten>): Promise<boolean> {
-		await props.patch(data);
-		return true;
-	}
 	const listOfAutopatchProps: Iterable<keyof KlassenDaten> = ["idJahrgang", "parallelitaet", "idVorgaengerklasse",
 		"idFolgeklasse", "idSchulgliederung", "idKlassenart", "idBerufsbildendOrganisationsform", "idAllgemeinbildendOrganisationsform",
 		"idWeiterbildungOrganisationsform", "noteneingabeGesperrt", "verwendungAnkreuzkompetenzen", "beginnSommersemester"];
-	const modelProxy = new KlassenDatenModelProxy(() => dataNotPatched(), () => listAndereKlassen.value, props.manager, props.mapKlassenVorigerAbschnitt, props.mapKlassenFolgenderAbschnitt, listOfAutopatchProps, patchMethod);
+	const modelProxy = new KlassenDatenModelProxy(() => dataNotPatched(), () => listAndereKlassen.value, props.manager, props.mapKlassenVorigerAbschnitt, props.mapKlassenFolgenderAbschnitt, listOfAutopatchProps, props.patch);
 
 	watch(() => props.manager().daten().klassenLeitungen, () => {
 		klassenleitungClicked.value = null;

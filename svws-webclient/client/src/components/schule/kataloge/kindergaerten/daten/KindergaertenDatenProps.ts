@@ -4,5 +4,5 @@ import type { KindergaertenListeManager } from "@ui";
 export interface KindergaertenDatenProps {
 	manager: () => KindergaertenListeManager;
 	benutzerKompetenzen: Set<BenutzerKompetenz>
-	patch: (data: Partial<Kindergarten>) => Promise<void>;
+	patch: (data: Partial<Kindergarten>) => Promise<boolean>;
 }

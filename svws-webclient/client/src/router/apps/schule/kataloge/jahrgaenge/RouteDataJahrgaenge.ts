@@ -40,8 +40,9 @@ export class RouteDataJahrgaenge extends RouteDataAuswahl<JahrgaengeListeManager
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<JahrgangsDaten>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<JahrgangsDaten>, id: number): Promise<boolean> {
 		await api.server.patchJahrgang(data, api.schema, id);
+		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {

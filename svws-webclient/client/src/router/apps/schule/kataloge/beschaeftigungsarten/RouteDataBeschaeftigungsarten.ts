@@ -38,8 +38,9 @@ export class RouteDataBeschaeftigungsarten extends RouteDataAuswahl<Beschaeftigu
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<any>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<any>, id: number): Promise<boolean> {
 		await api.server.patchBeschaeftigungsart(data, api.schema, id);
+		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {

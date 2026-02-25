@@ -45,8 +45,9 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<Betrieb>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<Betrieb>, id: number): Promise<boolean> {
 		await api.server.patchBetriebeNeu(data, api.schema, id);
+		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {

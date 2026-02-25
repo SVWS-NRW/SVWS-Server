@@ -152,9 +152,10 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 		await this.createNotenmodulManager();
 	}
 
-	protected async doPatch(data: Partial<ENMServerConnection>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<ENMServerConnection>, id: number): Promise<boolean> {
 		await api.server.patchENMServerConnection(data, api.schema, id);
 		this.commit();
+		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {

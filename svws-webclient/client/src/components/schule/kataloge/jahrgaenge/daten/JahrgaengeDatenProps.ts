@@ -5,6 +5,6 @@ export interface JahrgaengeDatenProps {
 	schuljahr: number;
 	schulform: Schulform;
 	manager: () => JahrgaengeListeManager;
-	patch: (data: Partial<JahrgangsDaten>) => Promise<void>;
+	patch: (data: Partial<JahrgangsDaten>) => Promise<boolean>;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 }

@@ -286,14 +286,14 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	 * @param data   die Daten für den Patch
 	 * @param id     die ID der zu patchenden Daten
 	 */
-	protected abstract doPatch(data: Partial<TDaten>, id: number): Promise<void>;
+	protected abstract doPatch(data: Partial<TDaten>, id: number): Promise<boolean>;
 
 	/**
 	 * Führt einen Patch auf den aktuellen Eintrag mit den übergebenen Daten aus.
 	 *
 	 * @param data   die Daten für den Patch
 	 */
-	patch = async (data: Partial<TDaten>) => {
+	patch = async (data: Partial<TDaten>): Promise<boolean> => {
 		if (!this.manager.hasDaten()) {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		}
@@ -303,6 +303,7 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 		Object.assign(daten as object, data);
 		this.manager.setDaten(daten);
 		this.commit();
+		return true;
 	};
 
 

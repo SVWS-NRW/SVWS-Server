@@ -39,8 +39,9 @@ export class RouteDataOrte extends RouteDataAuswahl<OrteListeManager, RouteState
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<OrtKatalogEintrag>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<OrtKatalogEintrag>, id: number): Promise<boolean> {
 		await api.server.patchOrt(data, api.schema, id);
+		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {

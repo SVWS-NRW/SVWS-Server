@@ -1,7 +1,6 @@
-import type { SchuelerSchwerpunkt as Schwerpunkt } from "@core";
-import { ArrayList, BenutzerKompetenz, type List, type SimpleOperationResponse } from "@core";
-import { SchwerpunkteListeManager } from "@ui";
-import { ViewType } from "@ui";
+import type { SchuelerSchwerpunkt, List, SimpleOperationResponse } from "@core";
+import { ArrayList, BenutzerKompetenz } from "@core";
+import { SchwerpunkteListeManager, ViewType } from "@ui";
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
@@ -34,25 +33,26 @@ export class RouteDataSchwerpunkte extends RouteDataAuswahl<SchwerpunkteListeMan
 		return { manager };
 	}
 
-	async ladeDaten(auswahl: Schwerpunkt | null): Promise<Schwerpunkt | null> {
+	async ladeDaten(auswahl: SchuelerSchwerpunkt | null): Promise<SchuelerSchwerpunkt | null> {
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<Schwerpunkt>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<SchuelerSchwerpunkt>, id: number): Promise<boolean> {
 		await api.server.patchSchuelerSchwerpunkt(data, api.schema, id);
+		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
 		return await api.server.deleteSchuelerSchwerpunkte(ids, api.schema);
 	}
 
-	add = async (partial: Partial<Schwerpunkt>): Promise<void> => {
+	add = async (partial: Partial<SchuelerSchwerpunkt>): Promise<void> => {
 		const schwerpunkt = await api.server.addSchuelerSchwerpunkt(partial, api.schema);
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
 		await this.gotoDefaultView(schwerpunkt.id);
 	};
 
-	protected deleteMessage(id: number, schwerpunkt: Schwerpunkt | null): string {
+	protected deleteMessage(id: number, schwerpunkt: SchuelerSchwerpunkt | null): string {
 		return `Schwerpunkt ${schwerpunkt?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 

@@ -6,5 +6,5 @@ export interface FloskelgruppenDatenProps {
 	schuljahr: number,
 	schulform: Schulform,
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
-	patch: (data: Partial<Floskelgruppe>) => Promise<void>;
+	patch: (data: Partial<Floskelgruppe>) => Promise<boolean>;
 }

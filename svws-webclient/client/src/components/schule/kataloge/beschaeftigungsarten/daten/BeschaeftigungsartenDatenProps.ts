@@ -4,5 +4,5 @@ import type { BeschaeftigungsartenListeManager } from "@ui";
 export interface BeschaeftigungsartenDatenProps {
 	manager: () => BeschaeftigungsartenListeManager;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
-	patch: (data: Partial<Beschaeftigungsart>) => Promise<void>;
+	patch: (data: Partial<Beschaeftigungsart>) => Promise<boolean>;
 }

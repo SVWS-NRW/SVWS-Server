@@ -38,8 +38,9 @@ export class RouteDataFloskelgruppen extends RouteDataAuswahl<FloskelgruppenList
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<any>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<any>, id: number): Promise<boolean> {
 		await api.server.patchFloskelgruppe(data, api.schema, id);
+		return true;
 	}
 
 	add = async (data: Partial<Floskelgruppe>): Promise<void> => {

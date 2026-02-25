@@ -7,7 +7,7 @@ export interface StundenplanDatenProps {
 	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	manager: () => StundenplanListeManager;
-	patch: (daten: Partial<Stundenplan>) => Promise<void>;
+	patch: (daten: Partial<Stundenplan>) => Promise<boolean>;
 	patchRaum: (daten: Partial<StundenplanRaum>, id: number) => Promise<void>;
 	addRaum: (raum: StundenplanRaum) => Promise<void>;
 	removeRaeume: (raeume: StundenplanRaum[]) => Promise<void>;

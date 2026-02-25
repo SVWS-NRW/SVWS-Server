@@ -43,8 +43,9 @@ export class RouteDataAbteilungen extends RouteDataAuswahl<AbteilungenListeManag
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<Abteilung>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<Abteilung>, id: number): Promise<boolean> {
 		await api.server.patchAbteilung(data, api.schema, id);
+		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {

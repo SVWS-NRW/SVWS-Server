@@ -37,8 +37,9 @@ export class RouteDataTelefonarten extends RouteDataAuswahl<TelefonartenListeMan
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<Telefonart>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<Telefonart>, id: number): Promise<boolean> {
 		await api.server.patchTelefonart(data, api.schema, id);
+		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {

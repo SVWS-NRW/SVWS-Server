@@ -1,6 +1,5 @@
 import type { ApiFile, KursDaten, KursLehrer, List, ReportingParameter, Schueler, SimpleOperationResponse } from "@core";
-import { UserNotificationException } from "@core";
-import { DeveloperNotificationException } from "@core";
+import { UserNotificationException, DeveloperNotificationException } from "@core";
 import { KursListeManager } from "@ui";
 
 import { api } from "~/router/Api";
@@ -72,8 +71,9 @@ export class RouteDataKurse extends RouteDataAuswahl<KursListeManager, RouteStat
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<KursDaten>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<KursDaten>, id: number): Promise<boolean> {
 		await api.server.patchKurs(data, api.schema, id);
+		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {

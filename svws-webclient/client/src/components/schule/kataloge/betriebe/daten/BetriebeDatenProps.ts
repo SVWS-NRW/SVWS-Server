@@ -4,7 +4,7 @@ import type { BetriebeListeManager } from "../../../../../../../ui/src/ui/manage
 export interface BetriebeDatenProps {
 	manager: () => BetriebeListeManager,
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
-	patch: (data: Partial<Betrieb>) => Promise<void>;
+	patch: (data: Partial<Betrieb>) => Promise<boolean>;
 	addAnsprechpartner: (ansprechpartner: Partial<BetriebeAnsprechpartner>) => Promise<void>;
 	deleteAnsprechpartner: (ids: List<number>) => Promise<void>;
 	patchAnsprechpartner: (id: number, data: Partial<BetriebeAnsprechpartner>) => Promise<void>;

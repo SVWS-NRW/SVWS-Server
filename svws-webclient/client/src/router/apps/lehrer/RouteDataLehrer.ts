@@ -175,11 +175,12 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		this.commit();
 	}
 
-	protected async doPatch(data: Partial<LehrerStammdaten>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<LehrerStammdaten>, id: number): Promise<boolean> {
 		await api.server.patchLehrerStammdaten(data, api.schema, id);
+		return true;
 	}
 
-	patchPersonaldaten = async (data: Partial<LehrerPersonaldaten>) => {
+	patchPersonaldaten = async (data: Partial<LehrerPersonaldaten>): Promise<boolean> => {
 		if (!this.manager.hasPersonalDaten()) {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		}
@@ -188,6 +189,7 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		Object.assign(personaldaten, data);
 		this.manager.setPersonalDaten(personaldaten);
 		this.commit();
+		return true;
 	};
 
 	patchPersonalAbschnittsdaten = async (data: Partial<LehrerPersonalabschnittsdaten>, id: number) => {

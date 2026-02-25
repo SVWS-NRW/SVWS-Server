@@ -4,5 +4,5 @@ import type { FahrschuelerartenListeManager } from "@ui";
 export interface FahrschuelerartenDatenProps {
 	manager: () => FahrschuelerartenListeManager;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
-	patch: (data: Partial<Fahrschuelerart>) => Promise<void>;
+	patch: (data: Partial<Fahrschuelerart>) => Promise<boolean>;
 }

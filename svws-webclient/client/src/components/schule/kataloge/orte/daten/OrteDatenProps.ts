@@ -3,6 +3,6 @@ import type { OrteListeManager } from "@ui";
 
 export interface OrteDatenProps {
 	manager: () => OrteListeManager;
-	patch: (data: Partial<OrtKatalogEintrag>) => Promise<void>;
+	patch: (data: Partial<OrtKatalogEintrag>) => Promise<boolean>;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 }

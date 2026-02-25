@@ -163,8 +163,9 @@ export class RouteDataSchueler extends RouteDataAuswahl<SchuelerListeManager, Ro
 		this.setPatchedState({ listSchuelerTelefoneintraege });
 	};
 
-	protected async doPatch(data: Partial<SchuelerStammdaten>, id: number): Promise<void> {
+	protected async doPatch(data: Partial<SchuelerStammdaten>, id: number): Promise<boolean> {
 		await api.server.patchSchuelerStammdaten(data, api.schema, id);
+		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
