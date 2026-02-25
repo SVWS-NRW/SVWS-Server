@@ -7,7 +7,7 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLsd10LehrerStammdatenGeburtsdatum extends Validator {
 
 	/**
-	 * Die Lehrer-Stammdaten
+	 * Das Geburtsdatumm des Lehrers
 	 */
 	private readonly daten: Supplier<string>;
 

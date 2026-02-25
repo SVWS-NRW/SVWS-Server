@@ -6,7 +6,6 @@ import de.svws_nrw.asd.validate.DateManager;
 import de.svws_nrw.asd.validate.InvalidDateException;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
-import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -15,16 +14,16 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLsd01LehrerStammdatenGeburtsdatum extends Validator {
 
-	/** Die Lehrer-Stammdaten */
-	private final @NotNull Supplier<@AllowNull String> daten;
+	/** Das Geburtsdatumm des Lehrers */
+	private final @NotNull Supplier<String> daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param daten     das Geburtsdatumm des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLsd01LehrerStammdatenGeburtsdatum(final @NotNull Supplier<@AllowNull String> daten,
+	public ValidatorLsd01LehrerStammdatenGeburtsdatum(final @NotNull Supplier<String> daten,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;

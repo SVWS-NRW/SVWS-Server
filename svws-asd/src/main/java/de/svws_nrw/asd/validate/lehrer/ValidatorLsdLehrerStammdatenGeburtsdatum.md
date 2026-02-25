@@ -14,7 +14,21 @@
 
 ---
 
-**Fehlerkürzel:** LSD0 <br>
+**Kürzel:** LSD00 <br>
+**Altes-Kürzel:** - <br>
+**SVWS/ZeBrAS:** Default <br>
+**Vorbedingung:** - <br>
+**Härte:** <br>
+"muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],<br>
+"kann": [],<br>
+"hinweis": []<br>
+**Text:** Das Feld 'Geburtsdatum' muss besetzt sein. <br>
+**Erläuterung:** - <br>
+**Bedingung:** LehrerStammdaten.geburtsdatum = @ 
+
+---
+
+**Fehlerkürzel:** LSD01 <br>
 **Altes-Fehlerkürzel:** AD341, AD342 und AD343 <br>
 **SVWS/ZeBrAS**: Default <br>
 **Fehlerhärte:** <br>
@@ -27,7 +41,7 @@
 
 ---
 
-**Fehlerkürzel:** LSD1 <br>
+**Fehlerkürzel:** LSD10 <br>
 **Altes-Fehlerkürzel:** AD343 <br>
 **SVWS/ZeBrAS**: Default <br>
 **Fehlerhärte:** Default <br>

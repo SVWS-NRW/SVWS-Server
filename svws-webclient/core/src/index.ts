@@ -381,6 +381,7 @@ export { ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaelt
 export { ValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis } from './asd/validate/lehrer/ValidatorLppr04LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
 export { ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis } from './asd/validate/lehrer/ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
 export { ValidatorLsLehrerStammdaten } from './asd/validate/lehrer/ValidatorLsLehrerStammdaten';
+export { ValidatorLsd00LehrerStammdatenGeburtsdatum } from './asd/validate/lehrer/ValidatorLsd00LehrerStammdatenGeburtsdatum';
 export { ValidatorLsd01LehrerStammdatenGeburtsdatum } from './asd/validate/lehrer/ValidatorLsd01LehrerStammdatenGeburtsdatum';
 export { ValidatorLsd10LehrerStammdatenGeburtsdatum } from './asd/validate/lehrer/ValidatorLsd10LehrerStammdatenGeburtsdatum';
 export { ValidatorLsdLehrerStammdatenGeburtsdatum } from './asd/validate/lehrer/ValidatorLsdLehrerStammdatenGeburtsdatum';

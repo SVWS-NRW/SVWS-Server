@@ -1,4 +1,4 @@
-import { ValidatorLsd01LehrerStammdatenGeburtsdatum } from '../../../asd/validate/lehrer/ValidatorLsd01LehrerStammdatenGeburtsdatum';
+import { ValidatorLsd00LehrerStammdatenGeburtsdatum } from '../../../asd/validate/lehrer/ValidatorLsd00LehrerStammdatenGeburtsdatum';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
@@ -15,7 +15,7 @@ export class ValidatorLsdLehrerStammdatenGeburtsdatum extends Validator {
 	 */
 	public constructor(daten: Supplier<string | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorLsd01LehrerStammdatenGeburtsdatum(daten, kontext));
+		this._validatoren.add(new ValidatorLsd00LehrerStammdatenGeburtsdatum(daten, kontext));
 	}
 
 	protected pruefe(): boolean {

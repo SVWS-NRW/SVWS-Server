@@ -8,18 +8,18 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLsd01LehrerStammdatenGeburtsdatum extends Validator {
 
 	/**
-	 * Die Lehrer-Stammdaten
+	 * Das Geburtsdatumm des Lehrers
 	 */
-	private readonly daten: Supplier<string | null>;
+	private readonly daten: Supplier<string>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param daten     das Geburtsdatumm des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public constructor(daten: Supplier<string | null>, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<string>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.daten = daten;
 		this._validatoren.add(new ValidatorLsd10LehrerStammdatenGeburtsdatum(this.getNotNullSupplier(daten), kontext));

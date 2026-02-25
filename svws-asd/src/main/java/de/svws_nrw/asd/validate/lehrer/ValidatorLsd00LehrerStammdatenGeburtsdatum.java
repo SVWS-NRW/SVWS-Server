@@ -11,22 +11,33 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Validator führt eine Statistikprüfung auf das Geburtsdatum bei den Stammdaten
  * eines Lehrers einer Schule aus.
  */
-public final class ValidatorLsdLehrerStammdatenGeburtsdatum extends Validator {
+public final class ValidatorLsd00LehrerStammdatenGeburtsdatum extends Validator {
+
+	/** Das Geburtsdatumm des Lehrers */
+	private final @NotNull Supplier<@AllowNull String> daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     die Daten des Validators
+	 * @param daten     das Geburtsdatumm des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLsdLehrerStammdatenGeburtsdatum(final @NotNull Supplier<@AllowNull String> daten,
+	public ValidatorLsd00LehrerStammdatenGeburtsdatum(final @NotNull Supplier<@AllowNull String> daten,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_validatoren.add(new ValidatorLsd00LehrerStammdatenGeburtsdatum(daten, kontext));
+		this.daten = daten;
+		_validatoren.add(new ValidatorLsd01LehrerStammdatenGeburtsdatum(getNotNullSupplier(daten), kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
+		final String geburtsdatum = daten.get();
+
+		if ((geburtsdatum == null) || (geburtsdatum.isEmpty())) {
+			addFehler(0, "Das Feld 'Geburtsdatum' muss besetzt sein.");
+			return false;
+		}
+
 		return true;
 	}
 
