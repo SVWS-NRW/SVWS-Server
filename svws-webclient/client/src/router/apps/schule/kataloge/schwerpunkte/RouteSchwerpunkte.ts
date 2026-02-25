@@ -15,7 +15,7 @@ import SchwerpunkteAuswahl from "~/components/schule/kataloge/schwerpunkte/Schwe
 
 export class RouteSchwerpunkte extends RouteAuswahlNode<SchwerpunkteListeManager, RouteDataSchwerpunkte, RouteApp> {
 	public constructor() {
-		super([Schulform.BK, Schulform.SB, Schulform.WB], [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.schwerpunkte", "schule/schwerpunkte/:id(\\d+)?", SchwerpunkteApp, SchwerpunkteAuswahl, new RouteDataSchwerpunkte());
+		super([Schulform.BK, Schulform.SB, Schulform.WB, Schulform.R], [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.schwerpunkte", "schule/schwerpunkte/:id(\\d+)?", SchwerpunkteApp, SchwerpunkteAuswahl, new RouteDataSchwerpunkte());
 		super.mode = ServerMode.DEV;
 		super.text = "Schwerpunkte";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
@@ -29,9 +29,9 @@ export class RouteSchwerpunkte extends RouteAuswahlNode<SchwerpunkteListeManager
 	}
 
 	protected doUpdateIfTarget = async (to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined) => {
-		/*		if (!this.data.manager.hasDaten()) {
+		if (!this.data.manager.hasDaten()) {
 			return;
-		}*/
+		}
 		return this.getRouteSelectedChild();
 	};
 

@@ -9,7 +9,7 @@ const SchwerpunkteDaten = () => import("~/components/schule/kataloge/schwerpunkt
 
 class RouteSchwerpunkteDaten extends RouteNode<any, RouteSchwerpunkte> {
 	public constructor() {
-		super([Schulform.BK, Schulform.SB, Schulform.WB], [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.schwerpunkte.daten",
+		super([Schulform.BK, Schulform.SB, Schulform.WB, Schulform.R], [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.schwerpunkte.daten",
 			"daten", SchwerpunkteDaten);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);

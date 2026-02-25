@@ -12,7 +12,7 @@ const SchwerpunkteGruppenprozesse = () => import(
 
 class RouteSchwerpunkteGruppenprozesse extends RouteNode<any, RouteSchwerpunkte> {
 	public constructor() {
-		super([Schulform.BK, Schulform.SB, Schulform.WB], [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN], "schule.schwerpunkte.gruppenprozesse", "gruppenprozesse", SchwerpunkteGruppenprozesse);
+		super([Schulform.BK, Schulform.SB, Schulform.WB, Schulform.R], [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN], "schule.schwerpunkte.gruppenprozesse", "gruppenprozesse", SchwerpunkteGruppenprozesse);
 		super.types = new Set([ViewType.GRUPPENPROZESSE]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
