@@ -185,3 +185,4 @@ export { OrteListeManager } from './ui/manager/kataloge/OrteListeManager';
 export { SchwerpunkteListeManager } from './ui/manager/kataloge/SchwerpunkteListeManager';
 export { SchuelerSchnelleingabeManager } from './ui/manager/schueler/SchuelerSchnelleingabeManager';
 export { SchuelerNeuManager } from './ui/manager/schueler/SchuelerNeuManager';
+export { AnkreuzkompetenzenListeManager } from './ui/manager/kataloge/AnkreuzkompetenzenListeManager';

@@ -60,6 +60,7 @@ import { routeOrtsteile } from "~/router/apps/schule/kataloge/ortsteile/RouteOrt
 import { routeBetriebsarten } from "./schule/kataloge/betriebsarten/RouteBetriebsarten";
 import { routeEmailServer } from "~/router/apps/einstellungen/emailserver/RouteEmailServer";
 import { routeSchwerpunkte } from "~/router/apps/schule/kataloge/schwerpunkte/RouteSchwerpunkte";
+import { routeAnkreuzkompetenzen } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzen";
 
 import SApp from "~/components/SApp.vue";
 
@@ -153,6 +154,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeSchuleStammdaten,
 			// Kataloge
 			routeAbteilungen,
+			routeAnkreuzkompetenzen,
 			routeBetriebe,
 			routeBeschaeftigungsarten,
 			routeBetriebsarten,
