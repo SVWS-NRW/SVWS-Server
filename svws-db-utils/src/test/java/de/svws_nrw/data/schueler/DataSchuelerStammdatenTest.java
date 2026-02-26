@@ -115,7 +115,8 @@ class DataSchuelerStammdatenTest {
 				.hasFieldOrPropertyWithValue("istBerufsschulpflichtErfuellt", schuelerDto.BerufsschulpflErf)
 				.hasFieldOrPropertyWithValue("hatMasernimpfnachweis", schuelerDto.MasernImpfnachweis)
 				.hasFieldOrPropertyWithValue("erhaeltSchuelerBAFOEG", schuelerDto.Bafoeg)
-				.hasFieldOrPropertyWithValue("erhaeltMeisterBAFOEG", schuelerDto.MeisterBafoeg);
+				.hasFieldOrPropertyWithValue("erhaeltMeisterBAFOEG", schuelerDto.MeisterBafoeg)
+				.hasFieldOrPropertyWithValue("beruf", schuelerDto.Beruf);
 	}
 
 	private static Stream<Arguments> mapAttribute() {
@@ -336,6 +337,10 @@ class DataSchuelerStammdatenTest {
 						"Attribut istDuplikat: Der Wert null ist nicht erlaubt")),
 				arguments("istDuplikat", "abc", null, new ApiOperationException(Response.Status.BAD_REQUEST,
 						"Attribut istDuplikat: Fehler beim Konvertieren zu Boolean")),
+				arguments("beruf", "Tischler", "Tischler", null, null),
+				arguments("beruf", null, null, null, null),
+				arguments("beruf", RandomStringUtils.insecure().nextAscii(101), null,
+						new ApiOperationException(Response.Status.BAD_REQUEST, "Attribut beruf: Die Länge des Strings ist auf 100 Zeichen limitiert.")),
 				arguments("unknown", "oh oh ! das wollen wir auf keinen Fall!", null, new ApiOperationException(Response.Status.BAD_REQUEST,
 						"Das Patchen des Attributes unknown ist nicht implementiert."))
 		);
@@ -408,6 +413,7 @@ class DataSchuelerStammdatenTest {
 				case "erhaeltSchuelerBAFOEG" -> assertThat(schuelerDto.Bafoeg).isEqualTo(expectedValue);
 				case "erhaeltMeisterBAFOEG" -> assertThat(schuelerDto.MeisterBafoeg).isEqualTo(expectedValue);
 				case "istDuplikat" -> assertThat(schuelerDto.Duplikat).isEqualTo(expectedValue);
+				case "beruf" -> assertThat(schuelerDto.Beruf).isEqualTo(expectedValue);
 				default -> assertThat(throwable)
 						.isInstanceOf(ApiOperationException.class)
 						.hasMessageStartingWith("Das Patchen des Attributes %s ist nicht implementiert.".formatted(attributeName))
@@ -786,6 +792,7 @@ class DataSchuelerStammdatenTest {
 		dto.MasernImpfnachweis = true;
 		dto.Bafoeg = true;
 		dto.MeisterBafoeg = true;
+		dto.Beruf = "Tischler";
 
 		return dto;
 	}

@@ -41,10 +41,17 @@
 					title="Stammschule" v-model="inputStammschule" :items="mapSchulen.values()" :item-text="i => i.kuerzel ?? i.schulnummerStatistik ?? i.kurzbezeichnung ?? i.name" removable />
 				<div v-else />
 				<template v-if="props.serverMode === ServerMode.DEV">
-					<svws-ui-text-input placeholder="Schülerausweis-Nummer" :readonly :model-value="schuelerListeManager().daten().idSchuelerausweis"
-						@change="value => patch({ idSchuelerausweis : value ?? null })" removable />
-					<div />
+					<svws-ui-text-input placeholder="Schülerausweis-Nummer"
+						:model-value="schuelerListeManager().daten().idSchuelerausweis"
+						@change="value => patch({ idSchuelerausweis : value })"
+						:readonly />
+					<div v-if="!istSchulformBerufskolleg" />
 				</template>
+				<div v-if="props.serverMode !== ServerMode.DEV" />
+				<svws-ui-text-input v-if="istSchulformBerufskolleg" placeholder="Beruf"
+					:model-value="schuelerListeManager().daten().beruf"
+					@change="patchBeruf"
+					:readonly :max-len="100" />
 				<svws-ui-select title="Fahrschüler" :readonly v-model="inputFahrschuelerArtID" :items="fahrschuelerartenById"
 					:item-text="i => i.bezeichnung ?? ''" removable />
 				<svws-ui-select title="Haltestelle" :readonly v-model="inputHaltestelleID" :items="haltestellenById"
@@ -211,6 +218,7 @@
 	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN));
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const hatKompetenzDrucken = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
+	const istSchulformBerufskolleg = computed(() => [Schulform.BK, Schulform.SB, Schulform.WB].includes(props.schulform));
 	const orte = computed(() => props.orteById.values());
 	const ortsteile = computed(() => {
 		const filtered = new ArrayList<OrtsteilKatalogEintrag>();
@@ -506,5 +514,10 @@
 		}
 	}
 
+	async function patchBeruf(beruf: string | null) {
+		if (optionalInputIsValid(beruf, 100)) {
+			await props.patch({ beruf });
+		}
+	}
 
 </script>

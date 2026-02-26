@@ -238,6 +238,11 @@ export class SchuelerStammdaten extends JavaObject {
 	 */
 	public dauerBildungsgang: number | null = null;
 
+	/**
+	 * Der Beruf des Schülers (nur bei Schulform BK/SB/WB).
+	 */
+	public beruf: string | null = null;
+
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -338,6 +343,7 @@ export class SchuelerStammdaten extends JavaObject {
 		result.erhaeltMeisterBAFOEG = obj.erhaeltMeisterBAFOEG;
 		result.beginnBildungsgang = (obj.beginnBildungsgang === undefined) ? null : obj.beginnBildungsgang === null ? null : obj.beginnBildungsgang;
 		result.dauerBildungsgang = (obj.dauerBildungsgang === undefined) ? null : obj.dauerBildungsgang === null ? null : obj.dauerBildungsgang;
+		result.beruf = (obj.beruf === undefined) ? null : obj.beruf === null ? null : obj.beruf;
 		return result;
 	}
 
@@ -390,6 +396,7 @@ export class SchuelerStammdaten extends JavaObject {
 		result += '"erhaeltMeisterBAFOEG" : ' + obj.erhaeltMeisterBAFOEG.toString() + ',';
 		result += '"beginnBildungsgang" : ' + ((obj.beginnBildungsgang === null) ? 'null' : JSON.stringify(obj.beginnBildungsgang)) + ',';
 		result += '"dauerBildungsgang" : ' + ((obj.dauerBildungsgang === null) ? 'null' : obj.dauerBildungsgang.toString()) + ',';
+		result += '"beruf" : ' + ((obj.beruf === null) ? 'null' : JSON.stringify(obj.beruf)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -537,6 +544,9 @@ export class SchuelerStammdaten extends JavaObject {
 		}
 		if (obj.dauerBildungsgang !== undefined) {
 			result += '"dauerBildungsgang" : ' + ((obj.dauerBildungsgang === null) ? 'null' : obj.dauerBildungsgang.toString()) + ',';
+		}
+		if (obj.beruf !== undefined) {
+			result += '"beruf" : ' + ((obj.beruf === null) ? 'null' : JSON.stringify(obj.beruf)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

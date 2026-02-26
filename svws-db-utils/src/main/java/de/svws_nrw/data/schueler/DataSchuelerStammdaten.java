@@ -217,6 +217,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 		daten.erhaeltMeisterBAFOEG = dto.MeisterBafoeg;
 		daten.beginnBildungsgang = dto.BeginnBildungsgang; // Schulform BK und SB
 		daten.dauerBildungsgang = dto.DauerBildungsgang; // Schulform BK und SB
+		daten.beruf = dto.Beruf; // Schulform BK/SB/WB
 		return daten;
 	}
 
@@ -293,6 +294,7 @@ public final class DataSchuelerStammdaten extends DataManagerRevised<Long, DTOSc
 				dto.BeginnBildungsgang = JSONMapper.convertToString(value, true, false, Schema.tab_Schueler.col_BeginnBildungsgang.datenlaenge(),
 						"beginnBildungsgang");
 			case "dauerBildungsgang" -> dto.DauerBildungsgang = JSONMapper.convertToInteger(value, true, "dauerBildungsgang");
+			case "beruf" -> dto.Beruf = JSONMapper.convertToString(value, true, true, 100, name);
 			case ID_SCHULJAHRESABSCHNITT -> {
 				//do nothing
 			}

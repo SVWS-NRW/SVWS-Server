@@ -218,11 +218,9 @@ public class SchuelerStammdaten {
 	@Schema(description = "die Dauer des Bildungsgangs am BK eines Schülers", example = "null")
 	public Integer dauerBildungsgang;
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public SchuelerStammdaten() {
-		// leer
-	}
+	/** Der Beruf des Schülers (nur bei Schulform BK/SB/WB). */
+	@Schema(description = "Der Beruf des Schülers (nur bei Schulform BK/SB/WB)", example = "Tischler")
+	public String beruf;
+
 
 }

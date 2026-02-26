@@ -27938,6 +27938,7 @@ SchuelerStammdaten {
   "anmeldedatum": "2013-02-14",
   "aufnahmedatum": "2013-08-01",
   "beginnBildungsgang": null,
+  "beruf": null,
   "dauerBildungsgang": null,
   "druckeKonfessionAufZeugnisse": false,
   "emailPrivat": "S.Addens@smail.de",
