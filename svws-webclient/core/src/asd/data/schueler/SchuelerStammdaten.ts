@@ -244,9 +244,6 @@ export class SchuelerStammdaten extends JavaObject {
 	public beruf: string | null = null;
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}
