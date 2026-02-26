@@ -32,6 +32,16 @@
 							:model-value="strasse"
 							@change="patchStrasse"
 							:readonly />
+						<svws-ui-text-input placeholder="PLZ"
+							:model-value="schule().plz"
+							@change="patchPlz"
+							:valid="v => optionalInputIsValid(v, 10)"
+							:readonly :max-len="10" />
+						<svws-ui-text-input placeholder="Ort"
+							:model-value="schule().ort"
+							@change="patchOrt"
+							:valid="o => optionalInputIsValid(o, 50)"
+							:readonly :max-len="50" />
 						<svws-ui-text-input placeholder="Telefon" type="tel"
 							:model-value="schule().telefon"
 							@change="telefon => patch({ telefon })"
@@ -48,16 +58,6 @@
 							:model-value="schule().email"
 							@change="email => patch({ email })"
 							verify-email :readonly />
-						<svws-ui-text-input placeholder="Ort"
-							:model-value="schule().ort"
-							@change="patchOrt"
-							:valid="o => optionalInputIsValid(o, 50)"
-							:readonly :max-len="50" />
-						<svws-ui-text-input placeholder="PLZ"
-							:model-value="schule().plz"
-							@change="patchPlz"
-							:valid="v => optionalInputIsValid(v, 10)"
-							:readonly :max-len="10" />
 					</svws-ui-input-wrapper>
 				</svws-ui-content-card>
 				<svws-ui-spacing :size="2" />
