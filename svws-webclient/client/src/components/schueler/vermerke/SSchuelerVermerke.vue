@@ -80,7 +80,7 @@
 
 	async function addWrapper() {
 		await props.add();
-		activeVermerk.value = props.schuelerVermerke().getLast();
+		activeVermerk.value = props.schuelerVermerke().getFirst();
 	}
 
 	function getTitle(vermerk: SchuelerVermerke) {

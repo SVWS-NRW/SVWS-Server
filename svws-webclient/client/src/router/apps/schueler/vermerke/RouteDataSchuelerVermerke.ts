@@ -1,7 +1,7 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
-import type { List, SchuelerListeEintrag, SchuelerVermerke, VermerkartEintrag } from "@core";
-import { ArrayList, DeveloperNotificationException } from "@core";
+import type { Comparator, List, SchuelerListeEintrag, SchuelerVermerke, VermerkartEintrag } from "@core";
+import { ArrayList, DeveloperNotificationException, JavaLong, JavaString } from "@core";
 import { api } from "~/router/Api";
 
 
@@ -18,6 +18,19 @@ const defaultState = <RouteStateSchuelerVermerke> {
 };
 
 export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVermerke> {
+
+	private static readonly comparatorDatumDesc: Comparator<SchuelerVermerke> = {
+		compare: (a: SchuelerVermerke, b: SchuelerVermerke) => {
+			let cmp;
+			if ((a.datum !== null) && (b.datum !== null)) {
+				cmp = JavaString.compareTo(b.datum, a.datum);
+				if (cmp !== 0) {
+					return cmp;
+				}
+			}
+			return JavaLong.compare(b.id, a.id);
+		},
+	};
 
 	public constructor() {
 		super(defaultState);
@@ -63,6 +76,7 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 		api.status.start();
 		const vermerk = await api.server.addVermerk(addCanditate, api.schema);
 		this.schuelerVermerke.add(vermerk);
+		this.schuelerVermerke.sort(RouteDataSchuelerVermerke.comparatorDatumDesc);
 		this.commit();
 		api.status.stop();
 	};
@@ -86,6 +100,7 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 			this.setPatchedDefaultState({});
 		} else {
 			const schuelerVermerke = await api.server.getVermerkdaten(api.schema, auswahl.id);
+			schuelerVermerke.sort(RouteDataSchuelerVermerke.comparatorDatumDesc);
 			const vermerkArten = await api.server.getVermerkarten(api.schema);
 			const mapVermerkArten = new Map();
 			for (const va of vermerkArten) {
