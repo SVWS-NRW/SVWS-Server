@@ -14,7 +14,18 @@
 
 ---
 
-**Fehlerkürzel:** LSK0 <br>
+**Kürzel**: LSK00 <br>
+**Altes-Kürzel**: - <br>
+**SVWS/ZeBrAS**: Default <br>
+**Vorbedingung**: - <br>
+**Fehlerhärte:** Default <br>
+**Text:** Das Feld 'Kürzel' muss besetzt sein. <br>
+**Erläuterung:** - <br>
+**Bedingung:** LehrerStammdaten.Lehrerkürzel = @<br>
+
+---
+
+**Fehlerkürzel:** LSK10 <br>
 **Altes-Fehlerkürzel:** AD31 <br>
 **SVWS/ZeBrAS**: Default <br>
 **Fehlerhärte:** Default <br>

@@ -27,7 +27,7 @@ public final class ValidatorLskLehrerStammdatenKuerzel extends Validator {
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
-		_validatoren.add(new ValidatorLsk10LehrerStammdatenKuerzel(daten, kontext));
+		_validatoren.add(new ValidatorLsk00LehrerStammdatenKuerzel(daten, kontext));
 	}
 
 	@Override

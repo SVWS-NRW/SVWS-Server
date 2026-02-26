@@ -388,6 +388,7 @@ export { ValidatorLsdLehrerStammdatenGeburtsdatum } from './asd/validate/lehrer/
 export { ValidatorLsg00LehrerStammdatenGeschlecht } from './asd/validate/lehrer/ValidatorLsg00LehrerStammdatenGeschlecht';
 export { ValidatorLsg01LehrerStammdatenGeschlecht } from './asd/validate/lehrer/ValidatorLsg01LehrerStammdatenGeschlecht';
 export { ValidatorLsgLehrerStammdatenGeschlecht } from './asd/validate/lehrer/ValidatorLsgLehrerStammdatenGeschlecht';
+export { ValidatorLsk00LehrerStammdatenKuerzel } from './asd/validate/lehrer/ValidatorLsk00LehrerStammdatenKuerzel';
 export { ValidatorLsk10LehrerStammdatenKuerzel } from './asd/validate/lehrer/ValidatorLsk10LehrerStammdatenKuerzel';
 export { ValidatorLskLehrerStammdatenKuerzel } from './asd/validate/lehrer/ValidatorLskLehrerStammdatenKuerzel';
 export { ValidatorLsn00LehrerStammdatenNachname } from './asd/validate/lehrer/ValidatorLsn00LehrerStammdatenNachname';
