@@ -214,7 +214,7 @@ public final class DataGostKlausuren {
 			final List<DTOSchuelerLernabschnittsdaten> lernDaten) {
 		final List<DTOGostKlausurenSchuelerklausuren> listSchuelerklausuren = new ArrayList<>();
 		for (final DTOSchuelerLernabschnittsdaten lad : lernDaten) {
-			listSchuelerklausuren.add(new DTOGostKlausurenSchuelerklausuren(-1L, kursklausur.ID, lad.Schueler_ID));
+			listSchuelerklausuren.add(new DTOGostKlausurenSchuelerklausuren(-1L, kursklausur.ID, lad.Schueler_ID, true));
 		}
 		return listSchuelerklausuren;
 	}
@@ -353,7 +353,7 @@ public final class DataGostKlausuren {
 
 		  final Map<Long, GostSchuelerklausur> schuelerklausurenMap =
 		      manager.schuelerklausurGetMengeByKursklausur(kursklausur)
-		             .stream().collect(Collectors.toMap(sk -> sk.idSchueler, sk -> sk));
+		             .stream().filter(sk -> sk.aktiv).collect(Collectors.toMap(sk -> sk.idSchueler, sk -> sk));
 
 		  for (final DTOSchuelerLernabschnittsdaten la : lernabschnitte) {
 		    if (manager.schuelerklausurByKursklausurAndSchuelerid(kursklausur, la.Schueler_ID) == null) {

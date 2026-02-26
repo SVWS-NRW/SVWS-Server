@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteParams } from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
 
@@ -62,6 +62,7 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, Rout
 			createSchuelerklausurTermin: routeSchuelerLernabschnitte.data.createSchuelerklausurTermin,
 			deleteSchuelerklausurTermin: routeSchuelerLernabschnitte.data.deleteSchuelerklausurTermin,
 			patchSchuelerklausurTermin: routeSchuelerLernabschnitte.data.patchSchuelerklausurTermin,
+			patchSchuelerklausur: routeSchuelerLernabschnitte.data.patchSchuelerklausur,
 			gotoPlanung: routeSchuelerLernabschnitte.data.gotoPlanung,
 		};
 	}

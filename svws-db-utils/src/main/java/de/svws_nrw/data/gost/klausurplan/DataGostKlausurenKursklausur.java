@@ -380,7 +380,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 
 		final Map<Long, List<DTOGostKlausurenSchuelerklausuren>> mapSchuelerklausuren = conn.queryList(
 				DTOGostKlausurenSchuelerklausuren.QUERY_LIST_BY_KURSKLAUSUR_ID, DTOGostKlausurenSchuelerklausuren.class,
-				kursklausuren.stream().map(k -> k.id).toList()).stream().collect(Collectors.groupingBy(s -> s.Kursklausur_ID));
+				kursklausuren.stream().map(k -> k.id).toList()).stream().filter(sk -> sk.Aktiv).collect(Collectors.groupingBy(s -> s.Kursklausur_ID));
 		if (mapSchuelerklausuren.isEmpty())
 			return new ArrayList<>();
 

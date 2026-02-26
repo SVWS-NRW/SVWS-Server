@@ -20,6 +20,19 @@
 						{{ kMan().vorgabeBySchuelerklausur(rowData).quartal }}
 					</div>
 				</template>
+				<!-- Aktiv-Toggle -->
+				<template #cell(aktiv)="{ rowData }">
+					<div class="flex items-center min-h-12 justify-center">
+						<svws-ui-button type="transparent" @click="toggleAktiv(rowData)">
+							<svws-ui-tooltip>
+								<template #content>
+									{{ rowData.aktiv ? 'Klausurteilnahme deaktivieren' : 'Klausurteilnahme aktivieren' }}
+								</template>
+								<span class="icon" :class="rowData.aktiv ? 'i-ri-checkbox-circle-line text-green-600' : 'i-ri-close-line icon-ui-danger'" />
+							</svws-ui-tooltip>
+						</svws-ui-button>
+					</div>
+				</template>
 				<!-- Termin(e) -->
 				<template #cell(termin)="{ rowData }">
 					<div v-if="kMan().terminKursklausurBySchuelerklausur(rowData) !== null && kMan().terminKursklausurBySchuelerklausur(rowData)!.datum !== null" class="pl-4 border-l border-slate-300 space-y-2">
@@ -44,7 +57,7 @@
 							<!-- Aktionen / Bemerkung -->
 							<template #cell(button)="{ rowData: termin }">
 								<div v-if="kMan().istSchuelerklausurterminAktuell(termin)" class="flex gap-1">
-									<svws-ui-button v-if="kMan().terminOrNullBySchuelerklausurTermin(termin) !== null && kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum !== null" @click="terminSelected = termin; showModalTerminGrund = true">
+									<svws-ui-button v-if="kMan().terminOrNullBySchuelerklausurTermin(termin) !== null && kMan().terminOrExceptionBySchuelerklausurTermin(termin).datum !== null" :disabled="!rowData.aktiv" @click="terminSelected = termin; showModalTerminGrund = true">
 										<svws-ui-tooltip>
 											<template #content>
 												Klausur nicht mitgeschrieben
@@ -103,6 +116,7 @@
 	import { ref } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { SchuelerLernabschnittGostKlausurenProps } from "./SSchuelerLernabschnittGostKlausurenProps";
+	import type { GostSchuelerklausur } from "@core";
 	import { GostHalbjahr, GostSchuelerklausurTermin, DateUtils } from "@core";
 
 	const props = defineProps<SchuelerLernabschnittGostKlausurenProps>();
@@ -122,8 +136,13 @@
 		terminSelected.value = new GostSchuelerklausurTermin();
 	};
 
+	const toggleAktiv = async (sk: GostSchuelerklausur) => {
+		await props.patchSchuelerklausur(sk.id, { aktiv: !sk.aktiv });
+	};
+
 	const colsKlausuren: Array<DataTableColumn> = [
 		{ key: "quartal", label: "Quartal", tooltip: "Ursprüngliches Datum der Klausur", fixedWidth: 5 },
+		{ key: "aktiv", label: " ", tooltip: "Klausurteilnahme", fixedWidth: 2.5 },
 		{ key: "kurs", label: "Kurs", tooltip: "Kurs", fixedWidth: 7 },
 		{ key: "lehrer", label: "Fachlehrer", tooltip: "Fachlehrer", fixedWidth: 7 },
 		{ key: "termin", label: "Datum", tooltip: "Ursprüngliches Datum der Klausur", minWidth: 6 },

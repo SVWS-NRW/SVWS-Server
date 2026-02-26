@@ -24,6 +24,11 @@ export class GostSchuelerklausur extends JavaObject {
 	 */
 	public bemerkung: string | null = null;
 
+	/**
+	 * Gibt an, ob der Schüler bei dieser Klausur mitschreibt oder nicht.
+	 */
+	public aktiv: boolean = true;
+
 
 	/**
 	 * Default-Konstruktor
@@ -74,6 +79,9 @@ export class GostSchuelerklausur extends JavaObject {
 			throw new Error('invalid json format, missing attribute idSchueler');
 		result.idSchueler = obj.idSchueler;
 		result.bemerkung = (obj.bemerkung === undefined) ? null : obj.bemerkung === null ? null : obj.bemerkung;
+		if (obj.aktiv === undefined)
+			throw new Error('invalid json format, missing attribute aktiv');
+		result.aktiv = obj.aktiv;
 		return result;
 	}
 
@@ -83,6 +91,7 @@ export class GostSchuelerklausur extends JavaObject {
 		result += '"idKursklausur" : ' + obj.idKursklausur.toString() + ',';
 		result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
 		result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+		result += '"aktiv" : ' + obj.aktiv.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -101,6 +110,9 @@ export class GostSchuelerklausur extends JavaObject {
 		}
 		if (obj.bemerkung !== undefined) {
 			result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+		}
+		if (obj.aktiv !== undefined) {
+			result += '"aktiv" : ' + obj.aktiv.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -29,6 +29,10 @@ public class GostSchuelerklausur {
 	@Schema(description = "die textuelle Bemerkung zur Schülerklausur, sofern vorhanden", example = "Nachteilsausgleich!")
 	public String bemerkung = null;
 
+	/** Gibt an, ob der Schüler bei dieser Klausur mitschreibt oder nicht. */
+	@Schema(description = "gibt an, ob der Schüler bei dieser Klausur mitschreibt oder nicht.", example = "false")
+	public boolean aktiv = true;
+
 	/**
 	 * Vergleicht, ob das aktuelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
 	 *

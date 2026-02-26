@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Gost_Klausuren_Schuelerklausuren")
-@JsonPropertyOrder({"ID", "Kursklausur_ID", "Schueler_ID", "Bemerkungen"})
+@JsonPropertyOrder({"ID", "Kursklausur_ID", "Schueler_ID", "Bemerkungen", "Aktiv"})
 public final class DTOGostKlausurenSchuelerklausuren {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -57,6 +57,12 @@ public final class DTOGostKlausurenSchuelerklausuren {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bemerkungen */
 	public static final String QUERY_LIST_BY_BEMERKUNGEN = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Bemerkungen IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes Aktiv */
+	public static final String QUERY_BY_AKTIV = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Aktiv = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Aktiv */
+	public static final String QUERY_LIST_BY_AKTIV = "SELECT e FROM DTOGostKlausurenSchuelerklausuren e WHERE e.Aktiv IN ?1";
+
 	/** ID der Klausurvorgaben (generiert) */
 	@Id
 	@Column(name = "ID")
@@ -78,6 +84,11 @@ public final class DTOGostKlausurenSchuelerklausuren {
 	@JsonProperty
 	public String Bemerkungen;
 
+	/** Gibt an, ob der Schüler bei dieser Klausur mitschreibt */
+	@Column(name = "Aktiv")
+	@JsonProperty
+	public boolean Aktiv;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOGostKlausurenSchuelerklausuren ohne eine Initialisierung der Attribute.
 	 */
@@ -90,11 +101,13 @@ public final class DTOGostKlausurenSchuelerklausuren {
 	 * @param ID   der Wert für das Attribut ID
 	 * @param Kursklausur_ID   der Wert für das Attribut Kursklausur_ID
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
+	 * @param Aktiv   der Wert für das Attribut Aktiv
 	 */
-	public DTOGostKlausurenSchuelerklausuren(final long ID, final long Kursklausur_ID, final long Schueler_ID) {
+	public DTOGostKlausurenSchuelerklausuren(final long ID, final long Kursklausur_ID, final long Schueler_ID, final boolean Aktiv) {
 		this.ID = ID;
 		this.Kursklausur_ID = Kursklausur_ID;
 		this.Schueler_ID = Schueler_ID;
+		this.Aktiv = Aktiv;
 	}
 
 
@@ -126,7 +139,7 @@ public final class DTOGostKlausurenSchuelerklausuren {
 	 */
 	@Override
 	public String toString() {
-		return "DTOGostKlausurenSchuelerklausuren(ID=" + this.ID + ", Kursklausur_ID=" + this.Kursklausur_ID + ", Schueler_ID=" + this.Schueler_ID + ", Bemerkungen=" + this.Bemerkungen + ")";
+		return "DTOGostKlausurenSchuelerklausuren(ID=" + this.ID + ", Kursklausur_ID=" + this.Kursklausur_ID + ", Schueler_ID=" + this.Schueler_ID + ", Bemerkungen=" + this.Bemerkungen + ", Aktiv=" + this.Aktiv + ")";
 	}
 
 }

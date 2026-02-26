@@ -1098,7 +1098,7 @@ public class GostKlausurplanManager {
 	private void update_schuelerklausurterminaktuellmenge() {
 		_schuelerklausurterminaktuellmenge.clear();
 		for (final @NotNull GostSchuelerklausurTermin skt : _schuelerklausurterminmenge)
-			if (istSchuelerklausurterminAktuell(skt))
+			if (istSchuelerklausurterminAktuell(skt) && istSchuelerklausurAktiv(schuelerklausurBySchuelerklausurtermin(skt)))
 				_schuelerklausurterminaktuellmenge.add(skt);
 	}
 
@@ -1154,11 +1154,12 @@ public class GostKlausurplanManager {
 	private void update_schuelerklausurterminmenge_by_idTermin() {
 		_schuelerklausurterminmenge_by_idTermin.clear();
 		for (final @NotNull GostSchuelerklausurTermin skt : _schuelerklausurterminmenge) {
+			if (!schuelerklausurBySchuelerklausurtermin(skt).aktiv)
+				continue;
 			if (skt.folgeNr == 0) {
 				final Long idTermin = kursklausurBySchuelerklausurTermin(skt).idTermin;
 				if (idTermin != null)
-					MapUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idTermin,
-							kursklausurBySchuelerklausurTermin(skt).idTermin).add(skt);
+					MapUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idTermin, idTermin).add(skt);
 			} else if (skt.idTermin != null)
 				MapUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idTermin, skt.idTermin).add(skt);
 		}
@@ -1167,7 +1168,7 @@ public class GostKlausurplanManager {
 	private void update_schuelerklausurterminmenge_by_idKursklausur() {
 		_schuelerklausurterminmenge_by_idKursklausur.clear();
 		for (final @NotNull GostSchuelerklausurTermin skt : _schuelerklausurterminmenge) {
-			if (skt.folgeNr == 0)
+			if ((skt.folgeNr == 0) && schuelerklausurBySchuelerklausurtermin(skt).aktiv)
 				MapUtils.getOrCreateArrayList(_schuelerklausurterminmenge_by_idKursklausur,
 						schuelerklausurBySchuelerklausurtermin(skt).idKursklausur).add(skt);
 		}
@@ -1178,7 +1179,7 @@ public class GostKlausurplanManager {
 		for (final @NotNull Entry<Long, List<GostSchuelerklausurTermin>> e : _schuelerklausurterminmenge_by_idTermin
 				.entrySet())
 			for (final @NotNull GostSchuelerklausurTermin skt : e.getValue())
-				if (istSchuelerklausurterminAktuell(skt))
+				if (istSchuelerklausurterminAktuell(skt) && schuelerklausurBySchuelerklausurtermin(skt).aktiv)
 					_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.add(e.getKey(), schuelerklausurBySchuelerklausurtermin(skt).idKursklausur,
 							skt);
 	}
@@ -1186,6 +1187,8 @@ public class GostKlausurplanManager {
 	private void update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal() {
 		_schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin = new ListMap4DLongKeys<>();
 		for (final @NotNull GostSchuelerklausur sk : _schuelerklausurmenge) {
+			if (!sk.aktiv)
+				continue;
 			final @NotNull GostSchuelerklausurTermin sktLast = schuelerklausurterminAktuellBySchuelerklausur(sk);
 			if (sktLast.folgeNr > 0) {
 				final @NotNull GostKlausurvorgabe v = vorgabeBySchuelerklausurTermin(sktLast);
@@ -3413,10 +3416,13 @@ public class GostKlausurplanManager {
 			return new ArrayList<>();
 		// Erstelle Map von Schueler-ID -> GostSchuelerklausurTermin
 		final @NotNull Map<Long, GostSchuelerklausurTermin> map1 = new HashMap<>();
-		for (final @NotNull GostSchuelerklausurTermin termin1 : menge1)
-			// DeveloperNotificationException.ifMapPutOverwrites(map1, schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
-			// TODO ifMapPutOverwrites geht nicht, weil innerhalb der Schiene schon Konflikte sein können, so dass hier 1 Schüler regulär mehrfach am selben Termin sein kann.
-			map1.put(schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
+		for (final @NotNull GostSchuelerklausurTermin termin1 : menge1) {
+			final GostSchuelerklausur sk = schuelerklausurGetByIdOrException(termin1.idSchuelerklausur);
+			if (sk.aktiv)
+				// DeveloperNotificationException.ifMapPutOverwrites(map1, schuelerklausurGetByIdOrException(termin1.idSchuelerklausur).idSchueler, termin1);
+				// TODO ifMapPutOverwrites geht nicht, weil innerhalb der Schiene schon Konflikte sein können, so dass hier 1 Schüler regulär mehrfach am selben Termin sein kann.
+				map1.put(sk.idSchueler, termin1);
+		}
 		// Erstellen der Konflikt-Map
 		return konfliktPaarByMapSchuelerklausurterminToListSchuelerklausurterminGetMenge(map1, menge2);
 	}
@@ -3431,6 +3437,8 @@ public class GostKlausurplanManager {
 		// Prüfe jeden GostSchuelerklausurTermin aus menge2, ob der zugehörige Schüler mit einer anderen Klausur in map1 existiert, falls ja, Konflikt hinzufügen
 		for (final @NotNull GostSchuelerklausurTermin skt2 : menge2) {
 			final @NotNull GostSchuelerklausur sk = schuelerklausurBySchuelerklausurtermin(skt2);
+			if (!sk.aktiv)
+				continue;
 			final GostSchuelerklausurTermin skt1 = menge1.get(sk.idSchueler);
 			if ((skt1 != null) && (skt1.id != skt2.id))
 				ergebnis.add(new PairNN<>(skt1, skt2));
@@ -3463,10 +3471,10 @@ public class GostKlausurplanManager {
 	 */
 	public boolean konfliktZuKursklausurBySchuelerklausur(final @NotNull GostSchuelerklausurTermin schuelerklausurTermin,
 			final @NotNull GostKursklausur kursklausur) {
-		final @NotNull List<Long> schuelerids = new ArrayList<>();
 		for (final @NotNull GostSchuelerklausur sk : schuelerklausurGetMengeByKursklausur(kursklausur))
-			schuelerids.add(sk.idSchueler);
-		return schuelerids.contains(schuelerklausurBySchuelerklausurtermin(schuelerklausurTermin).idSchueler);
+			if (sk.aktiv && (sk.idSchueler == schuelerklausurBySchuelerklausurtermin(schuelerklausurTermin).idSchueler))
+				return true;
+		return false;
 	}
 
 	/**
@@ -3567,7 +3575,7 @@ public class GostKlausurplanManager {
 					MapUtils.getOrCreateHashSet(result, kk2).addAll(konflikte);
 				}
 				if (skts != null) {
-					final Set<Long> konflikte2 = berechneIdKonflikte(getSchuelerIDsFromKursklausur(kk1), skts);
+					final Set<Long> konflikte2 = berechneIdKonflikte(getSchuelerIDsAktivFromKursklausur(kk1), skts);
 					if (!konflikte2.isEmpty())
 						MapUtils.getOrCreateHashSet(result, kk1).addAll(konflikte2);
 				}
@@ -3578,7 +3586,7 @@ public class GostKlausurplanManager {
 
 	private @NotNull Set<Long> berechneKlausurKonflikte(final @NotNull GostKursklausur kk1,
 			final @NotNull GostKursklausur kk2) {
-		return berechneIdKonflikte(getSchuelerIDsFromKursklausur(kk1), getSchuelerIDsFromKursklausur(kk2));
+		return berechneIdKonflikte(getSchuelerIDsAktivFromKursklausur(kk1), getSchuelerIDsAktivFromKursklausur(kk2));
 	}
 
 	private static @NotNull Set<Long> berechneIdKonflikte(final @NotNull List<Long> kk1,
@@ -3674,16 +3682,23 @@ public class GostKlausurplanManager {
 
 		final @NotNull Map<Long, List<GostSchuelerklausurTermin>> addTerminMap = new HashMap<>();
 		if (addMenge != null)
-			for (final GostSchuelerklausurTermin addSkt : addMenge)
-				MapUtils.getOrCreateArrayList(addTerminMap, schuelerklausurBySchuelerklausurtermin(addSkt).idSchueler).add(addSkt);
+			for (final GostSchuelerklausurTermin addSkt : addMenge) {
+				final GostSchuelerklausur sk = schuelerklausurBySchuelerklausurtermin(addSkt);
+				if (sk.aktiv)
+					MapUtils.getOrCreateArrayList(addTerminMap, sk.idSchueler).add(addSkt);
+			}
 
 		final @NotNull Map<Long, Set<GostSchuelerklausurTermin>> ergebnis = new HashMap<>();
 		for (final @NotNull Entry<Long, List<GostSchuelerklausurTermin>> entry : schuelerklausurterminaktuellmenge_by_schuelerId.entrySet()) {
-			final Set<GostSchuelerklausurTermin> klausuren = new HashSet<>(entry.getValue());
+			final Set<GostSchuelerklausurTermin> klausuren = new HashSet<>();
+			for (final GostSchuelerklausurTermin skt : entry.getValue())
+				if (schuelerklausurBySchuelerklausurtermin(skt).aktiv)
+					klausuren.add(skt);
+
 			if (addMenge != null) {
 				final List<GostSchuelerklausurTermin> addSkts = addTerminMap.get(entry.getKey());
 				if (addSkts != null)
-					klausuren.addAll(addTerminMap.get(entry.getKey()));
+					klausuren.addAll(addSkts);
 			}
 			if ((klausuren.size() == threshold) || ((klausuren.size() > threshold) && !thresholdOnly))
 				ergebnis.put(entry.getKey(), klausuren);
@@ -3733,12 +3748,16 @@ public class GostKlausurplanManager {
 
 		for (final @NotNull Entry<Integer, Map<Long, List<GostSchuelerklausurTermin>>> kwEntry : schuelerklausurterminaktuellmenge_by_schuelerId.entrySet()) {
 			for (final @NotNull Entry<Long, List<GostSchuelerklausurTermin>> schuelerEntry : kwEntry.getValue().entrySet()) {
-				if ((schuelerEntry.getValue().size() >= threshold) && ((thresholdMinus < 0) || (schuelerEntry.getValue().size() < thresholdMinus)))
-					for (final @NotNull GostSchuelerklausurTermin skt : schuelerEntry.getValue()) {
+				final List<GostSchuelerklausurTermin> activeSkts = new ArrayList<>();
+				for (final GostSchuelerklausurTermin skt : schuelerEntry.getValue())
+					if (schuelerklausurBySchuelerklausurtermin(skt).aktiv)
+						activeSkts.add(skt);
+				if ((activeSkts.size() >= threshold) && ((thresholdMinus < 0) || (activeSkts.size() < thresholdMinus)))
+					for (final @NotNull GostSchuelerklausurTermin skt : activeSkts) {
 						final @NotNull GostKlausurvorgabe vorgabe = vorgabeBySchuelerklausurTermin(skt);
 						if ((vorgabe.abiJahrgang == abijahr) && (vorgabe.halbjahr == halbjahr.id) && ((quartal == 0) || (vorgabe.quartal == quartal))
 								&& !((vorgabe.halbjahr == 5) && (vorgabe.quartal == 2))) {
-							ergebnis.add(new PairNN<>(new PairNN<>(kwEntry.getKey(), schuelerEntry.getKey()), schuelerEntry.getValue()));
+							ergebnis.add(new PairNN<>(new PairNN<>(kwEntry.getKey(), schuelerEntry.getKey()), activeSkts));
 							break;
 						}
 					}
@@ -3759,7 +3778,7 @@ public class GostKlausurplanManager {
 	 *
 	 * @return die Liste der Schüler-IDs
 	 */
-	public @NotNull List<Long> getSchuelerIDsFromSchuelerklausurterminen(final @NotNull List<GostSchuelerklausurTermin> sks) {
+	private @NotNull List<Long> getSchuelerIDsFromSchuelerklausurterminen(final @NotNull List<GostSchuelerklausurTermin> sks) {
 		final @NotNull List<Long> ids = new ArrayList<>();
 		for (final @NotNull GostSchuelerklausurTermin sk : sks) {
 			ids.add(schuelerklausurBySchuelerklausurtermin(sk).idSchueler);
@@ -3790,8 +3809,8 @@ public class GostKlausurplanManager {
 	 *
 	 * @return die Liste der Schüler-IDs
 	 */
-	public @NotNull List<Long> getSchuelerIDsFromKursklausur(final @NotNull GostKursklausur kk) {
-		return getSchuelerIDsFromSchuelerklausuren(schuelerklausurGetMengeByKursklausur(kk));
+	private @NotNull List<Long> getSchuelerIDsAktivFromKursklausur(final @NotNull GostKursklausur kk) {
+		return getSchuelerIDsFromSchuelerklausurterminen(schuelerklausurterminAktuellByKursklausur(kk));
 	}
 
 	/**
@@ -4219,6 +4238,17 @@ public class GostKlausurplanManager {
 	}
 
 	/**
+	 * Gibt an, ob die übergebene {@link GostSchuelerklausur} aktiv ist, d.h. der Schüler mitschreibt.
+	 *
+	 * @param sk die zu prüfende {@link GostSchuelerklausur}
+	 *
+	 * @return true, falls der Schüler bei der Klausur mitschreibt
+	 */
+	public boolean istSchuelerklausurAktiv(final @NotNull GostSchuelerklausur sk) {
+		return sk.aktiv;
+	}
+
+	/**
 	 * Liefert den aktuellen {@link GostSchuelerklausurTermin} zu einer übergebenen
 	 * {@link GostSchuelerklausur}
 	 *
@@ -4230,6 +4260,11 @@ public class GostKlausurplanManager {
 	public @NotNull GostSchuelerklausurTermin schuelerklausurterminAktuellBySchuelerklausur(
 			final @NotNull GostSchuelerklausur schuelerklausur) {
 		return DeveloperNotificationException.ifMapGetIsNull(_schuelerklausurterminaktuell_by_idSchuelerklausur, schuelerklausur.id);
+	}
+
+	private @NotNull List<GostSchuelerklausurTermin> schuelerklausurterminAktuellByKursklausur(
+			final @NotNull GostKursklausur kursklausur) {
+		return _schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.get2(kursklausur.id);
 	}
 
 	/**
@@ -4575,8 +4610,7 @@ public class GostKlausurplanManager {
 	 * @return <code>true</code>, falls externe Schüler in der {@link GostKursklausur} enthalten sind, sonst <code>false</code>
 	 */
 	public boolean kursklausurMitExternenS(final @NotNull GostKursklausur k) {
-		final @NotNull List<GostSchuelerklausur> listSks = schuelerklausurGetMengeByKursklausur(k);
-		for (final @NotNull GostSchuelerklausur sk : listSks)
+		for (final @NotNull GostSchuelerklausur sk : schuelerklausurGetMengeByKursklausur(k))
 			if (DeveloperNotificationException.ifMapGetIsNull(_schuelerlisteeintrag_by_id,
 					sk.idSchueler).externeSchulNr != null)
 				return true;

@@ -1,6 +1,6 @@
 import type { List, FachDaten, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag,
 	SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsDaten, SchuelerLernabschnittBemerkungen,
-	GostSchuelerklausurTermin } from "@core";
+	GostSchuelerklausurTermin, GostSchuelerklausur } from "@core";
 import { ArrayList, DeveloperNotificationException, GostHalbjahr, GostKlausurplanManager } from "@core";
 
 import { api } from "~/router/Api";
@@ -278,6 +278,13 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		const sktAlt = this.klausurManager.schuelerklausurterminGetByIdOrException(id);
 		await api.server.patchGostKlausurenSchuelerklausurtermin(skt, api.schema, id);
 		this.klausurManager.schuelerklausurterminPatchAttributes(Object.assign(sktAlt, skt));
+	};
+
+	patchSchuelerklausur = async (id: number, sk: Partial<GostSchuelerklausur>) => {
+		const skAlt = this.klausurManager.schuelerklausurGetByIdOrException(id);
+		await api.server.patchGostKlausurenSchuelerklausur(sk, api.schema, id);
+		this.klausurManager.schuelerklausurPatchAttributes(Object.assign(skAlt, sk));
+		this.commit();
 	};
 
 	gotoPlanung = async () => {

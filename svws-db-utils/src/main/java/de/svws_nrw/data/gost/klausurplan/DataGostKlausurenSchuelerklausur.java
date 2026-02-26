@@ -89,6 +89,7 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 		daten.idSchueler = dto.Schueler_ID;
 		daten.id = dto.ID;
 		daten.bemerkung = dto.Bemerkungen;
+		daten.aktiv = dto.Aktiv;
 		return daten;
 	}
 
@@ -100,6 +101,7 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 			case "idSchueler" -> dto.Schueler_ID = JSONMapper.convertToLong(value, false, name);
 			case "bemerkung" -> dto.Bemerkungen =
 					JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Schuelerklausuren.col_Bemerkungen.datenlaenge(), name);
+			case "aktiv" -> dto.Aktiv = JSONMapper.convertToBoolean(value, false, name);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
 		}
 	}

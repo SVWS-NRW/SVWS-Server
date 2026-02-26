@@ -108,10 +108,10 @@
 										</svws-ui-tooltip>
 									</div>
 									<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
-									<div class="svws-ui-td flex" role="cell">
+									<div class="svws-ui-td flex justify-center" role="cell">
 										<div>
 											<span v-if="kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(termin, klausur).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur)" class="font-bold">{{ kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(termin, klausur).size() }}/</span>
-											<span :class="kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(termin, klausur).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) ? 'line-through' : ''">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) }}/</span>
+											<span><span :class="kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(termin, klausur).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) ? 'line-through' : ''">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) }}</span>/</span>
 											<span class="">{{ kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</span>
 										</div>
 										<svws-ui-tooltip :hover="true" :indicator="false">
@@ -234,7 +234,7 @@
 	};
 
 	const tableRowStyle = computed<string>(() => {
-		let result = "grid-template-columns: 1rem 2rem minmax(5rem, 1.25fr) 4rem minmax(4rem, 0.5fr) minmax(3.25rem, 0.5fr)";
+		let result = "grid-template-columns: 1rem 2rem minmax(5rem, 1.25fr) 4rem minmax(4rem, 0.6fr) minmax(3.25rem, 0.5fr)";
 		if (props.showKursschiene === true) {
 			result += " minmax(1.75rem, 0.25fr)";
 		}

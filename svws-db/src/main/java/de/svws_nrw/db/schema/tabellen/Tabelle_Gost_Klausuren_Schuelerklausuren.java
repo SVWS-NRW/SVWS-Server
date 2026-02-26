@@ -35,6 +35,13 @@ public class Tabelle_Gost_Klausuren_Schuelerklausuren extends SchemaTabelle {
 	public final SchemaTabelleSpalte col_Bemerkungen = add("Bemerkungen", SchemaDatentypen.TEXT, false)
 			.setJavaComment("Text für Bemerkungen zur Schuelerklausur");
 
+	/** Die Definition der Tabellenspalte Aktiv */
+	public final SchemaTabelleSpalte col_Aktiv = add("Aktiv", SchemaDatentypen.BOOLEAN, false)
+			.setDefault("1")
+			.setNotNull()
+			.setJavaComment("Gibt an, ob der Schüler bei dieser Klausur mitschreibt")
+			.setRevision(SchemaRevisionen.REV_57);
+
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Schuelerklausuren_Kursklausur_ID_FK */
 	public final SchemaTabelleFremdschluessel fk_Gost_Klausuren_Schuelerklausuren_Kursklausur_ID_FK = addForeignKey(

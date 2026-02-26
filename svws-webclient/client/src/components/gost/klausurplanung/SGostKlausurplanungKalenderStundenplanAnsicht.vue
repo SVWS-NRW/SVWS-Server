@@ -146,8 +146,6 @@
 		dragData: () => undefined,
 	});
 
-	const DEFAULT_TERMIN_DAUER_MINUTEN = 135;
-
 	const stundenplanManager = (datum: string) => props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, datum);
 
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
@@ -284,8 +282,11 @@
 		let terminEnde = -1;
 		if (terminBeginn !== -1) {
 			if (props.kMan().schuelerklausurterminAktuellGetMengeByTermin(termin).isEmpty()) {
-				const dauer = props.kMan().maxKlausurdauerGetByTermin(termin, true);
-				terminEnde = Math.ceil((terminBeginn + ((dauer > 0) ? dauer : DEFAULT_TERMIN_DAUER_MINUTEN)) / 5) * 5;
+				let dauer = props.kMan().maxKlausurdauerGetByTermin(termin, true);
+				if (dauer === 0) {
+					dauer = GostHalbjahr.fromIDorException(termin.halbjahr).istEinfuehrungsphase() ? 90 : 135;
+				}
+				terminEnde = Math.ceil((terminBeginn + dauer) / 5) * 5;
 			} else {
 				terminEnde = Math.ceil(props.kMan().maxKlausurendzeitByTermin(termin, true) / 5) * 5;
 			}
