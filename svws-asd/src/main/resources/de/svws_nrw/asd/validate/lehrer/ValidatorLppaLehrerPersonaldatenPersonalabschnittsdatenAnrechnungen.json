@@ -1,0 +1,14 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen",
+    "historie" : [ {
+      "praefix" : "LPPA",
+      "svws" : true,
+      "zebras" : true,
+      "muss": [],
+      "kann" : [],
+      "hinweis" : [],
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}

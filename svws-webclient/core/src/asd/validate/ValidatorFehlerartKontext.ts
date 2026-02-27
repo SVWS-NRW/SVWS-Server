@@ -45,6 +45,51 @@ export class ValidatorFehlerartKontext extends JavaObject {
 	 */
 	public gueltigBis: number | null = null;
 
+	/**
+	 * Das alte Kürzel des Prüfschritts
+	 */
+	public altes_kuerzel: string | null = "";
+
+	/**
+	 * Der Zweig/Bereich der Prüfung
+	 */
+	public zweig: string | null = "";
+
+	/**
+	 * Die beteiligten DTOs
+	 */
+	public dtos: string | null = "";
+
+	/**
+	 * UI-Bereich für die Ausführung
+	 */
+	public ausfuehrungsbereich_ui: string | null = "";
+
+	/**
+	 * UI-Bereich für die Anzeige
+	 */
+	public anzeigebereich_ui: string | null = "";
+
+	/**
+	 * Der Fehlertext
+	 */
+	public text: string | null = "";
+
+	/**
+	 * Zusätzliche Erläuterungen
+	 */
+	public erlaeuterung: string | null = "";
+
+	/**
+	 * Die fachliche Bedingung als String
+	 */
+	public bedingung: string | null = "";
+
+	/**
+	 * Vorbedingungen für die Prüfung
+	 */
+	public vorbedingung: List<string> = new ArrayList<string>();
+
 
 	/**
 	 * Erstellt einen ValidatorFehlerartKontext mit Standardwerten
@@ -92,6 +137,19 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		}
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
+		result.altes_kuerzel = (obj.altes_kuerzel === undefined) ? null : obj.altes_kuerzel === null ? null : obj.altes_kuerzel;
+		result.zweig = (obj.zweig === undefined) ? null : obj.zweig === null ? null : obj.zweig;
+		result.dtos = (obj.dtos === undefined) ? null : obj.dtos === null ? null : obj.dtos;
+		result.ausfuehrungsbereich_ui = (obj.ausfuehrungsbereich_ui === undefined) ? null : obj.ausfuehrungsbereich_ui === null ? null : obj.ausfuehrungsbereich_ui;
+		result.anzeigebereich_ui = (obj.anzeigebereich_ui === undefined) ? null : obj.anzeigebereich_ui === null ? null : obj.anzeigebereich_ui;
+		result.text = (obj.text === undefined) ? null : obj.text === null ? null : obj.text;
+		result.erlaeuterung = (obj.erlaeuterung === undefined) ? null : obj.erlaeuterung === null ? null : obj.erlaeuterung;
+		result.bedingung = (obj.bedingung === undefined) ? null : obj.bedingung === null ? null : obj.bedingung;
+		if (obj.vorbedingung !== undefined) {
+			for (const elem of obj.vorbedingung) {
+				result.vorbedingung.add(elem);
+			}
+		}
 		return result;
 	}
 
@@ -126,6 +184,22 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		result += ' ]' + ',';
 		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"altes_kuerzel" : ' + ((obj.altes_kuerzel === null) ? 'null' : JSON.stringify(obj.altes_kuerzel)) + ',';
+		result += '"zweig" : ' + ((obj.zweig === null) ? 'null' : JSON.stringify(obj.zweig)) + ',';
+		result += '"dtos" : ' + ((obj.dtos === null) ? 'null' : JSON.stringify(obj.dtos)) + ',';
+		result += '"ausfuehrungsbereich_ui" : ' + ((obj.ausfuehrungsbereich_ui === null) ? 'null' : JSON.stringify(obj.ausfuehrungsbereich_ui)) + ',';
+		result += '"anzeigebereich_ui" : ' + ((obj.anzeigebereich_ui === null) ? 'null' : JSON.stringify(obj.anzeigebereich_ui)) + ',';
+		result += '"text" : ' + ((obj.text === null) ? 'null' : JSON.stringify(obj.text)) + ',';
+		result += '"erlaeuterung" : ' + ((obj.erlaeuterung === null) ? 'null' : JSON.stringify(obj.erlaeuterung)) + ',';
+		result += '"bedingung" : ' + ((obj.bedingung === null) ? 'null' : JSON.stringify(obj.bedingung)) + ',';
+		result += '"vorbedingung" : [ ';
+		for (let i = 0; i < obj.vorbedingung.size(); i++) {
+			const elem = obj.vorbedingung.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.vorbedingung.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -177,6 +251,40 @@ export class ValidatorFehlerartKontext extends JavaObject {
 		}
 		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		}
+		if (obj.altes_kuerzel !== undefined) {
+			result += '"altes_kuerzel" : ' + ((obj.altes_kuerzel === null) ? 'null' : JSON.stringify(obj.altes_kuerzel)) + ',';
+		}
+		if (obj.zweig !== undefined) {
+			result += '"zweig" : ' + ((obj.zweig === null) ? 'null' : JSON.stringify(obj.zweig)) + ',';
+		}
+		if (obj.dtos !== undefined) {
+			result += '"dtos" : ' + ((obj.dtos === null) ? 'null' : JSON.stringify(obj.dtos)) + ',';
+		}
+		if (obj.ausfuehrungsbereich_ui !== undefined) {
+			result += '"ausfuehrungsbereich_ui" : ' + ((obj.ausfuehrungsbereich_ui === null) ? 'null' : JSON.stringify(obj.ausfuehrungsbereich_ui)) + ',';
+		}
+		if (obj.anzeigebereich_ui !== undefined) {
+			result += '"anzeigebereich_ui" : ' + ((obj.anzeigebereich_ui === null) ? 'null' : JSON.stringify(obj.anzeigebereich_ui)) + ',';
+		}
+		if (obj.text !== undefined) {
+			result += '"text" : ' + ((obj.text === null) ? 'null' : JSON.stringify(obj.text)) + ',';
+		}
+		if (obj.erlaeuterung !== undefined) {
+			result += '"erlaeuterung" : ' + ((obj.erlaeuterung === null) ? 'null' : JSON.stringify(obj.erlaeuterung)) + ',';
+		}
+		if (obj.bedingung !== undefined) {
+			result += '"bedingung" : ' + ((obj.bedingung === null) ? 'null' : JSON.stringify(obj.bedingung)) + ',';
+		}
+		if (obj.vorbedingung !== undefined) {
+			result += '"vorbedingung" : [ ';
+			for (let i = 0; i < obj.vorbedingung.size(); i++) {
+				const elem = obj.vorbedingung.get(i);
+				result += '"' + elem + '"';
+				if (i < obj.vorbedingung.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

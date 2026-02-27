@@ -45,8 +45,44 @@ public class ValidatorFehlerartKontext {
 	public Integer gueltigVon = null;
 
 	/** Gibt an, ab welchem Schuljahr die Laufeigenschaft des Validators gilt. Falls schon immer, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr der Fehlerart-Kontext des Validators gilt. Falls für immer, so ist null gesetzt.", example = "null")
+	@Schema(description = "gibt an, bis zu welchem Schuljahr der Fehlerart-Kontext des Validators gilt. Falls für immer, so ist null gesetzt.",
+			example = "null")
 	public Integer gueltigBis = null;
+	/** Das alte Kürzel des Prüfschritts */
+	@Schema(description = "das alte Kürzel des Prüfschritts")
+	public String altes_kuerzel = "";
+
+	/** Der Zweig/Bereich der Prüfung */
+	@Schema(description = "der Zweig bzw. Bereich der Prüfung")
+	public String zweig = "";
+
+	/** Die beteiligten DTOs */
+	@Schema(description = "die an der Prüfung beteiligten DTOs")
+	public String dtos = "";
+
+	/** UI-Bereich für die Ausführung */
+	@Schema(description = "der Bereich in der Benutzeroberfläche, in dem die Prüfung ausgeführt wird")
+	public String ausfuehrungsbereich_ui = "";
+
+	/** UI-Bereich für die Anzeige */
+	@Schema(description = "der Bereich in der Benutzeroberfläche, in dem das Ergebnis der Prüfung angezeigt wird")
+	public String anzeigebereich_ui = "";
+
+	/** Der Fehlertext */
+	@Schema(description = "der Text der Fehlermeldung")
+	public String text = "";
+
+	/** Zusätzliche Erläuterungen */
+	@Schema(description = "zusätzliche Erläuterungen zum Prüfschritt oder zum Fehler")
+	public String erlaeuterung = "";
+
+	/** Die fachliche Bedingung als String */
+	@Schema(description = "die fachliche Bedingung der Prüfung in Textform")
+	public String bedingung = "";
+
+	/** Vorbedingungen für die Prüfung */
+	@Schema(description = "eine Liste der Vorbedingungen, die für die Ausführung des Prüfschritts erfüllt sein müssen")
+	public @NotNull List<String> vorbedingung = new ArrayList<>();
 
 	/**
 	 * Erstellt einen ValidatorFehlerartKontext mit Standardwerten

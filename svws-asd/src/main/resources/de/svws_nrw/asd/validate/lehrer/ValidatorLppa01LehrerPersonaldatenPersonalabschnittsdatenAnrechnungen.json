@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen",
+    "historie" : [ {
+      "praefix" : "LPPA01",
+      "altes_kuerzel": "",
+      "zweig": "Lehrer-Personaldaten-Personalabschnittsdaten-Anrechnungsstunden",
+      "dtos": "LehrerPersonaldaten, LehrerPersonalabschnittsdaten, LehrerPersonalabschnittsdatenAnrechnungsstunden",
+      "ausfuehrungsbereich_ui": "Reiter 'Personaldaten'",
+      "anzeigebereich_ui": "Mehr- und Minderleistung, Anrechnungsstunden (bei der betroffenen Zeile)",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung": ["LPPA00"],
+      "muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text": "Das Feld 'Anrechnungsgründe' muss zulässig sein.",
+      "erlaeuterung": "",
+      "bedingung": "LehrerPersonaldaten.abschnittsdaten[].anrechnungen[].idGrund ≠ einem Eintrag in LehrerAnrechnungsgrund.json",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}

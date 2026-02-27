@@ -18,6 +18,7 @@ export class ValidatorLpLehrerPersonaldaten extends Validator {
 	 * @param idSchuljahresabschnitt  die ID des Schuljahresabschnittes
 	 * @param rechtsverhaeltnis       das Rechtsverhältnis
 	 * @param pflichtstundensoll      der Pflichtstundensoll
+	 * @param anrechnungen            die Anrechnungen
 	 * @param einsatzstatus           der Einsatz-Status
 	 * @param beschaeftigungsart      die Beschäftigungsart
 	 * @param geburtsdatum            das Geburtsdatum des Lehrers
@@ -26,9 +27,9 @@ export class ValidatorLpLehrerPersonaldaten extends Validator {
 	 * @param minderleistungen        die Liste mit den Einträgen zu Minderleistungen
 	 * @param kontext                 der Kontext des Validators
 	 */
-	public constructor(lehrerId: Supplier<number>, idSchuljahresabschnitt: Supplier<number>, rechtsverhaeltnis: Supplier<string | null>, pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<string | null>, beschaeftigungsart: Supplier<string | null>, geburtsdatum: Supplier<string | null>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
+	public constructor(lehrerId: Supplier<number>, idSchuljahresabschnitt: Supplier<number>, rechtsverhaeltnis: Supplier<string | null>, pflichtstundensoll: Supplier<number | null>, anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, einsatzstatus: Supplier<string | null>, beschaeftigungsart: Supplier<string | null>, geburtsdatum: Supplier<string | null>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(idSchuljahresabschnitt, rechtsverhaeltnis, pflichtstundensoll, einsatzstatus, beschaeftigungsart, geburtsdatum, mehrleistungen, minderleistungen, kontext));
+		this._validatoren.add(new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(idSchuljahresabschnitt, rechtsverhaeltnis, pflichtstundensoll, anrechnungen, einsatzstatus, beschaeftigungsart, geburtsdatum, lehraemter, mehrleistungen, minderleistungen, kontext));
 		this._validatoren.add(new ValidatorLplLehrerPersonaldatenLehramt(lehraemter, lehrerId, this.getDateManagerSupplier(geburtsdatum), kontext));
 	}
 

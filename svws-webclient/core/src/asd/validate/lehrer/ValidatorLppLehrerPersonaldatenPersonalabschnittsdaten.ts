@@ -1,7 +1,9 @@
+import { LehrerLehramtEintrag } from '../../../asd/data/lehrer/LehrerLehramtEintrag';
 import { ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll } from '../../../asd/validate/lehrer/ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll';
 import { ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell } from '../../../asd/validate/lehrer/ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { LehrerPersonalabschnittsdatenAnrechnungsstunden } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdatenAnrechnungsstunden';
+import { ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen } from '../../../asd/validate/lehrer/ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen';
 import { ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart } from '../../../asd/validate/lehrer/ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart';
 import { ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis } from '../../../asd/validate/lehrer/ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis';
 import { DateManager } from '../../../asd/validate/DateManager';
@@ -14,40 +16,42 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extends Validator {
 
 	/**
-	 * Eine Liste von Validatoren, die bei diesem Validator mitgeprüft werden.
+	 * Eine Liste von Einzel-Validatoren, die von diesem Sammel-Validator verwaltet werden.
 	 */
-	protected readonly validatoren: List<Validator> = new ArrayList<Validator>();
+	private readonly validatoren: List<Validator> = new ArrayList<Validator>();
 
 	/**
-	 * das Geburtsdatum des Lehrers
+	 * Das Geburtsdatum des Lehrers (aus den Stammdaten).
 	 */
-	protected readonly geburtsdatum: Supplier<string | null>;
+	private readonly geburtsdatum: Supplier<string | null>;
 
 	/**
-	 * Die ID des Schuljahresabschnittes
+	 * Die ID des Schuljahresabschnittes, auf den sich die Personalabschnittsdaten beziehen.
 	 */
-	protected readonly idSchuljahresabschnitt: Supplier<number>;
+	private readonly idSchuljahresabschnitt: Supplier<number>;
 
 	/**
-	 * Das Rechtsverhältnis
+	 * Das Rechtsverhältnis der Lehrkraft.
 	 */
-	protected readonly rechtsverhaeltnis: Supplier<string | null>;
+	private readonly rechtsverhaeltnis: Supplier<string | null>;
 
 
 	/**
-	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
+	 * Erstellt einen neuen Sammel-Validator für Personalabschnittsdaten.
 	 *
 	 * @param idSchuljahresabschnitt  die ID des Schuljahresabschnittes
-	 * @param rechtsverhaeltnis       das Rechtsverhältnis
-	 * @param pflichtstundensoll      der Pflichtstundensoll
+	 * @param rechtsverhaeltnis        das Rechtsverhältnis
+	 * @param pflichtstundensoll      das Pflichtstundensoll
+	 * @param anrechnungen            die Liste der Anrechnungsstunden
 	 * @param einsatzstatus           der Einsatz-Status
 	 * @param beschaeftigungsart      die Beschäftigungsart
 	 * @param geburtsdatum            das Geburtsdatum des Lehrers
-	 * @param mehrleistungen          die Liste mit den Einträgen zu Mehrleistungen
-	 * @param minderleistungen        die Liste mit den Einträgen zu Minderleistungen
+	 * @param lehraemter              die Liste der Lehrämter der Lehrkraft
+	 * @param mehrleistungen          die Liste der Mehrleistungen
+	 * @param minderleistungen        die Liste der Minderleistungen
 	 * @param kontext                 der Kontext des Validators
 	 */
-	public constructor(idSchuljahresabschnitt: Supplier<number>, rechtsverhaeltnis: Supplier<string | null>, pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<string | null>, beschaeftigungsart: Supplier<string | null>, geburtsdatum: Supplier<string | null>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number>, rechtsverhaeltnis: Supplier<string | null>, pflichtstundensoll: Supplier<number | null>, anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, einsatzstatus: Supplier<string | null>, beschaeftigungsart: Supplier<string | null>, geburtsdatum: Supplier<string | null>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.geburtsdatum = geburtsdatum;
 		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
@@ -55,6 +59,7 @@ export class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extends Vali
 		this.validatoren.add(new ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, beschaeftigungsart, kontext));
 		this.validatoren.add(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(this.getNotNullSupplier(beschaeftigungsart), this.getNotNullSupplier(einsatzstatus), pflichtstundensoll, kontext));
 		this.validatoren.add(new ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(beschaeftigungsart, pflichtstundensoll, einsatzstatus, mehrleistungen, minderleistungen, kontext));
+		this.validatoren.add(new ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, pflichtstundensoll, kontext));
 	}
 
 	protected pruefe(): boolean {

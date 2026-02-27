@@ -56,6 +56,7 @@ public final class ValidatorGesamt extends Validator {
 					() -> gesamt.schule.idSchuljahresabschnitt,
 					() -> lehrer.rechtsverhaeltnis,
 					() -> lehrer.pflichtstundensoll,
+					() -> lehrer.anrechnungen,
 					() -> lehrer.einsatzstatus,
 					() -> lehrer.beschaeftigungsart,
 					() -> lehrer.geburtsdatum,

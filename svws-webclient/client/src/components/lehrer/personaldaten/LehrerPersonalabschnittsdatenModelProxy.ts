@@ -1,7 +1,8 @@
-import type { ValidatorKontext, LehrerRechtsverhaeltnisKatalogEintrag, LehrerEinsatzstatusKatalogEintrag, LehrerBeschaeftigungsartKatalogEintrag } from "@core";
+import type { ValidatorKontext, LehrerLehramtEintrag, LehrerRechtsverhaeltnisKatalogEintrag, LehrerEinsatzstatusKatalogEintrag, LehrerBeschaeftigungsartKatalogEintrag } from "@core";
 import { LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerPersonalabschnittsdaten, LehrerRechtsverhaeltnis, ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart, ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten, ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll } from "@core";
 import { ModelProxy, type LehrerListeManager } from "@ui";
 import { computed } from "vue";
+import { ArrayList } from '@core';
 
 /**
  * Der spezielle ModelProxy für die Lehrerstammdaten
@@ -40,9 +41,11 @@ export class LehrerPersonalabschnittsdatenModelProxy extends ModelProxy<LehrerPe
 			{ get: () => this.proxy.idSchuljahresabschnitt },
 			{ get: () => this.proxy.rechtsverhaeltnis },
 			{ get: () => this.proxy.pflichtstundensoll },
+			{ get: () => this.proxy.anrechnungen },
 			{ get: () => this.proxy.einsatzstatus },
 			{ get: () => this.proxy.beschaeftigungsart },
 			{ get: () => manager().daten().geburtsdatum }, // Geburtsdatum aus Stammdaten holen
+			{ get: () => manager().hasPersonalDaten() ? manager().personalDaten().lehraemter : new ArrayList<LehrerLehramtEintrag>() },
 			{ get: () => this.proxy.mehrleistung }, // Listenfeld im DTO heißt 'mehrleistung' (Singular)
 			{ get: () => this.proxy.minderleistung }, // Listenfeld im DTO heißt 'minderleistung' (Singular)
 			validatorKontext()), "rechtsverhaeltnis");

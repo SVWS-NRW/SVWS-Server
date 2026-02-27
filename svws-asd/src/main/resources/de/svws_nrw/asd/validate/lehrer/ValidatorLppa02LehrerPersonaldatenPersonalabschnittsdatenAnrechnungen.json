@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen",
+    "historie" : [ {
+      "praefix" : "LPPA02",
+      "altes_kuerzel": "",
+      "zweig": "Lehrer-Personaldaten-Personalabschnittsdaten-Anrechnungsstunden",
+      "dtos": "LehrerPersonaldaten, LehrerPersonalabschnittsdaten, LehrerPersonalabschnittsdatenAnrechnungsstunden",
+      "ausfuehrungsbereich_ui": "Reiter 'Personaldaten'",
+      "anzeigebereich_ui": "Mehr- und Minderleistung, Anrechnungsstunden (bei der betroffenen Zeile)",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung": ["LPPA00","LPPA01"],
+      "muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [],
+      "hinweis" : [],
+      "text": "Der eingetragene Wert für das Feld 'Anrechnungsgründe' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+      "erlaeuterung": "",
+      "bedingung": "((LehrerPersonaldaten.abschnittsdaten[].anrechnungen[].bezeichner.gueltigVon ≠ NULL) ∧(LehrerPersonaldaten.abschnittsdaten[].anrechnungen[].bezeichner.gueltigVon > aktuellesSchuljahr ))∨((LehrerPersonaldaten.abschnittsdaten[].anrechnungen[].bezeichner.gueltigBis ≠ NULL) ∧(LehrerPersonaldaten.abschnittsdaten[].anrechnungen[].bezeichner.gueltigBis < aktuellesSchuljahr)) ",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}
