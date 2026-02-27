@@ -345,7 +345,6 @@ export { ValidatorGlGesamtLehrerdaten } from './asd/validate/gesamt/ValidatorGlG
 export { ValidatorGld10GesamtLehrerdatenDuplikate } from './asd/validate/gesamt/ValidatorGld10GesamtLehrerdatenDuplikate';
 export { ValidatorGld11GesamtLehrerdatenDuplikate } from './asd/validate/gesamt/ValidatorGld11GesamtLehrerdatenDuplikate';
 export { ValidatorGldGesamtLehrerdatenDuplikate } from './asd/validate/gesamt/ValidatorGldGesamtLehrerdatenDuplikate';
-export { ValidatorGlpl01GesamtLehrerPersonaldatenLehramt } from './asd/validate/gesamt/ValidatorGlpl01GesamtLehrerPersonaldatenLehramt';
 export { ValidatorLp00LehrerPersonaldatenLehramt } from './asd/validate/lehrer/ValidatorLp00LehrerPersonaldatenLehramt';
 export { ValidatorLpLehrerPersonaldaten } from './asd/validate/lehrer/ValidatorLpLehrerPersonaldaten';
 export { ValidatorLpl01LehrerPersonaldatenLehramt } from './asd/validate/lehrer/ValidatorLpl01LehrerPersonaldatenLehramt';
