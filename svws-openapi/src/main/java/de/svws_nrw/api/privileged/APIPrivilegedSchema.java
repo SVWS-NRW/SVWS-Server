@@ -261,19 +261,19 @@ public class APIPrivilegedSchema {
 
 
 	/**
-	 * Die OpenAPI-Methode für das angegebene Password für einen Datenbankuser korrekt ist.
+	 * Die OpenAPI-Methode prüft, ob das angegebene Password für einen Datenbankuser korrekt ist.
 	 *
 	 * @param kennwort    der Username und das Kennwort im json, das überprüft werden soll
 	 * @param request     die Informationen zur HTTP-Anfrage
 	 *
-	 * @return            Rückmeldung, ob das angegebene Kennwort korrekt ist
+	 * @return Rückmeldung, ob das angegebene Kennwort korrekt ist
 	 */
 	@POST
 	@Path("/api/schema/root/user/checkpwd")
 	@Operation(summary = "Prüft, ob das übergebene Kennwort für den Datenbankbenutzer gültig ist.",
 			description = "Prüft, ob das übergebene Kennwort für den Datenbankbenutzer gültig ist. Zur Prüfung werden root-Rechte auf der Datenbank benötigt")
 	@ApiResponse(responseCode = "200",
-			description = "true, wenn das Kennwort und der Benutzername korrekt sind und den priviligierten Zugriff auf die Datenbankschema erlauben.",
+			description = "true, wenn das Kennwort und der Benutzername korrekt sind und den Zugriff auf die Datenbankschema erlauben.",
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
 	@ApiResponse(responseCode = "403",
 			description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt")
@@ -285,6 +285,32 @@ public class APIPrivilegedSchema {
 		return DBUtilsSchema.checkDBPassword(kennwort);
 	}
 
+
+	/**
+	 * Die OpenAPI-Methode prüft, ob das angegebene Password für einen Datenbankuser korrekt ist und der Benutzer erweiterte Rechte für
+	 * das Anlegen von weiteren Datenbank-Schemata hat.
+	 *
+	 * @param kennwort    der Username und das Kennwort im json, das überprüft werden soll
+	 * @param request     die Informationen zur HTTP-Anfrage
+	 *
+	 * @return Rückmeldung, ob das angegebene Kennwort korrekt ist
+	 */
+	@POST
+	@Path("/api/schema/root/user/checkrootprivs")
+	@Operation(summary = "Prüft, ob das übergebene Kennwort für den Datenbankbenutzer gültig ist.",
+			description = "Prüft, ob das übergebene Kennwort für den Datenbankbenutzer gültig ist. Zur Prüfung werden root-Rechte auf der Datenbank benötigt")
+	@ApiResponse(responseCode = "200",
+			description = "true, wenn das Kennwort und der Benutzername korrekt sind und der priviligierte Zugriff auf die Datenbank erlaubt.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
+	@ApiResponse(responseCode = "403",
+			description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt")
+	public boolean checkDBPrivPassword(
+			@RequestBody(description = "Der Benutzername und das Kennwort für den Datenbankbenutzer", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = BenutzerKennwort.class))) final BenutzerKennwort kennwort,
+			@Context final HttpServletRequest request) {
+		return DBUtilsSchema.checkDBRootUser(kennwort);
+	}
 
 
 	/**

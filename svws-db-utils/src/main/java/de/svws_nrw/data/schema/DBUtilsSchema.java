@@ -74,6 +74,33 @@ public final class DBUtilsSchema {
 	}
 
 
+	/**
+	 * Prüft, ob die übergebenen Credentials den Zugriff auf die Schema-Informationen
+	 * der Datenbank zulassen.
+	 *
+	 * @param credentials   die Benutzer-Credentials
+	 *
+	 * @return true, falls die Credentials den Zugriff zulassen
+	 */
+	public static boolean checkDBRootUser(final BenutzerKennwort credentials) {
+		if (credentials == null)
+			return false;
+		DBConfig dbconfig = SVWSKonfiguration.get().getRootDBConfig(credentials.user, credentials.password);
+		switch (dbconfig.getDBDriver()) {
+			case MYSQL, MARIA_DB:
+				dbconfig = dbconfig.switchSchema(PersistenceUnits.SVWS_ROOT, "mysql");
+				break;
+			default:
+				return false;
+		}
+		final Benutzer user = Benutzer.create(dbconfig);
+		try (DBEntityManager em = user.getEntityManager()) {
+			return (em != null);
+		} catch (@SuppressWarnings("unused") final Exception pe) {
+			return false;
+		}
+	}
+
 
 	/**
 	 * Aktualisiert das Schema bei welchem der angebenene Benutzer angemeldet ist auf die angegebene Revision.

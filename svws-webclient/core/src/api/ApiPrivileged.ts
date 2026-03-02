@@ -1034,17 +1034,41 @@ export class ApiPrivileged extends BaseApi {
 	 * Prüft, ob das übergebene Kennwort für den Datenbankbenutzer gültig ist. Zur Prüfung werden root-Rechte auf der Datenbank benötigt
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: true, wenn das Kennwort und der Benutzername korrekt sind und den priviligierten Zugriff auf die Datenbankschema erlauben.
+	 *   Code 200: true, wenn das Kennwort und der Benutzername korrekt sind und den Zugriff auf die Datenbankschema erlauben.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: Boolean
 	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt
 	 *
 	 * @param {BenutzerKennwort} data - der Request-Body für die HTTP-Methode
 	 *
-	 * @returns true, wenn das Kennwort und der Benutzername korrekt sind und den priviligierten Zugriff auf die Datenbankschema erlauben.
+	 * @returns true, wenn das Kennwort und der Benutzername korrekt sind und den Zugriff auf die Datenbankschema erlauben.
 	 */
 	public async checkDBPassword(data : BenutzerKennwort) : Promise<boolean> {
 		const path = "/api/schema/root/user/checkpwd";
+		const body : string = BenutzerKennwort.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return (text === "true");
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode checkDBPrivPassword für den Zugriff auf die URL https://{hostname}/api/schema/root/user/checkrootprivs
+	 *
+	 * Prüft, ob das übergebene Kennwort für den Datenbankbenutzer gültig ist. Zur Prüfung werden root-Rechte auf der Datenbank benötigt
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: true, wenn das Kennwort und der Benutzername korrekt sind und der priviligierte Zugriff auf die Datenbank erlaubt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Boolean
+	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt
+	 *
+	 * @param {BenutzerKennwort} data - der Request-Body für die HTTP-Methode
+	 *
+	 * @returns true, wenn das Kennwort und der Benutzername korrekt sind und der priviligierte Zugriff auf die Datenbank erlaubt.
+	 */
+	public async checkDBPrivPassword(data : BenutzerKennwort) : Promise<boolean> {
+		const path = "/api/schema/root/user/checkrootprivs";
 		const body : string = BenutzerKennwort.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;

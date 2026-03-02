@@ -86,7 +86,9 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 		// Prüfe, ob eine Anmeldung über das root-Schema erfolgt oder über ein spezielle Schema
 		final boolean useRootSchema = path.matches("/api/schema/root/.*");
 		String schema = schemaname;
-		if (!useRootSchema) {
+		if (path.equals("/api/schema/root/user/checkpwd") || path.equals("/api/schema/root/user/checkrootprivs") || path.equals("/api/privileged/user/isprivileged")) {
+			schema = "information_schema";
+		} else if (!useRootSchema) {
 			final var pathelements = path.split("/");
 			if ((pathelements.length > 4) && ("".equals(pathelements[0])) && ("api".equals(pathelements[1])) && ("schema".equals(pathelements[2]))) {
 				if ("liste".equals(pathelements[3]))

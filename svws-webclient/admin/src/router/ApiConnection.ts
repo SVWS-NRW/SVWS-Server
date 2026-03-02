@@ -154,16 +154,7 @@ export class ApiConnection {
 			const data = new BenutzerKennwort();
 			data.user = username;
 			data.password = password;
-			await api_priv.getSchemaListe();
-			try {
-				const isPrivilegedRoot = await api_priv.checkDBPassword(data);
-				if ((isPrivilegedRoot === false)) {
-					throw new UserNotificationException("Der Datenbank-Benutzer besitzt nicht die nötigen Privilegien.");
-				}
-				this._hasRootPrivileges = true;
-			} catch {
-				this._hasRootPrivileges = false;
-			}
+			this._hasRootPrivileges = await api_priv.checkDBPrivPassword(data);
 			try {
 				this._isServerAdmin = await api_priv.isPrivilegedUser();
 			} catch {
