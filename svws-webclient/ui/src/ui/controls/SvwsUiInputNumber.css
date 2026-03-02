@@ -98,10 +98,6 @@
 	}
 }
 
-.input-number--rounded-sm {
-	@apply rounded-full;
-}
-
 .input-number-component:focus-within .input-number--control,
 .input-number--filled .input-number--control {
 	@apply border-ui;
@@ -116,12 +112,16 @@
 	@apply border-ui;
 }
 
-.input-number--invalid.input-number--filled:not(:focus-within):not(:hover) .input-number--control {
+.input-number--muss.input-number--filled:not(:focus-within) .input-number--control {
 	@apply border-ui-danger;
 }
 
-.input-number--invalid.input-number--filled:not(:focus-within):hover .input-number--control {
-	@apply border-ui-danger;
+.input-number--kann.input-number--filled:not(:focus-within) .input-number--control {
+	@apply border-ui-caution;
+}
+
+.input-number--hinweis.input-number--filled:not(:focus-within) .input-number--control {
+	@apply border-ui-warning;
 }
 
 .input-number--filled:not(:focus-within):hover .input-number--control {
@@ -198,23 +198,51 @@ input {
 
 }
 
-.input-number--invalid .input-number--placeholder,
-.input-number--invalid:not(:focus-within) .input-number--control {
+.input-number--muss:not(.input-number--disabled) .input-number--placeholder,
+.input-number--muss:not(.input-number--disabled):not(:focus-within) .input-number--control {
 	@apply text-ui-danger;
 }
 
-.input-number--invalid input {
+.input-number--kann:not(.input-number--disabled) .input-number--placeholder,
+.input-number--kann:not(.input-number--disabled):not(:focus-within) .input-number--control {
+	@apply text-ui-caution;
+}
+
+.input-number--hinweis:not(.input-number--disabled) .input-number--placeholder,
+.input-number--hinweis:not(.input-number--disabled):not(:focus-within) .input-number--control {
+	@apply text-ui-warning;
+}
+
+.input-number--muss:not(.input-number--disabled) input {
 	@apply border-ui-danger;
 }
 
-.input-number--invalid .input-number--state-icon {
+
+.input-number--kann:not(.input-number--disabled) input {
+	@apply border-ui-caution;
+}
+
+.input-number--hinweis:not(.input-number--disabled) input {
+	@apply border-ui-warning;
+}
+
+.input-number--muss:not(.input-number--disabled) .input-number--state-icon {
 	@apply icon-ui-danger;
+}
+
+.input-number--kann:not(.input-number--disabled) .input-number--state-icon {
+	@apply icon-ui-caution;
+}
+
+.input-number--hinweis:not(.input-number--disabled) .input-number--state-icon {
+	@apply icon-ui-warning;
 }
 
 .input-number--disabled {
 	@apply cursor-default pointer-events-none;
 
-	.input-number--placeholder {
+	.input-number--placeholder,
+	.input-number--limittext{
 		@apply text-ui-disabled;
 	}
 
@@ -237,6 +265,22 @@ input {
 .input-number--placeholder--required {
 	@apply inline-block font-normal relative;
 	top: -0.2em;
+}
+
+.input-number--limittext {
+	@apply text-ui-secondary;
+}
+
+.input-number--muss:not(.input-number--disabled) .input-number--limittext {
+	@apply text-ui-danger-secondary;
+}
+
+.input-number--kann:not(.input-number--disabled) .input-number--limittext {
+	@apply text-ui-caution-secondary;
+}
+
+.input-number--hinweis:not(.input-number--disabled) .input-number--limittext {
+	@apply text-ui-warning-secondary;
 }
 
 .input-number--headless,

@@ -3,7 +3,7 @@
 	<div>
 		{{ title }}
 		<SvwsUiRadioGroup>
-			<SvwsUiRadioOption v-for="option of options" v-model="checked" :label="option.label" :key="option.value" :value="option.value" />
+			<SvwsUiRadioOption v-for="option of options" v-model="checked" :label="option.label" :key="option.label" :value="option.value" />
 		</SvwsUiRadioGroup>
 	</div>
 </template>
@@ -16,7 +16,7 @@
 
 	interface Options {
 		label: string;
-		value: string;
+		value: Value;
 	}
 
 	const emit = defineEmits<{

@@ -2,7 +2,12 @@
 <template>
 	<slot />
 	<Teleport to="#source" v-if="($slots.source || (source.length > 0)) && !storyManager.variant.hasSource" defer>
-		<div class="text-2xl">Source</div>
+		<div class="flex items-center">
+			<div class="text-2xl">Source</div>
+			<svws-ui-button v-if="source !== ''" type="icon" @click="copyToClipboard(source)" class="mr-2">
+				<span class="icon i-ri-file-copy-line" />
+			</svws-ui-button>
+		</div>
 		<slot name="source">{{ source }}</slot>
 	</Teleport>
 	<Teleport to="#docs" v-if="$slots.docs" defer>
@@ -17,7 +22,7 @@
 	</Teleport>
 	<template v-if="$slots.controls && !storyManager.variant.hasSlot('controls')">
 		<Teleport to="#controls" defer>
-			<div class="text-2xl">Controls/Story</div>
+			<div class="text-2xl">{{ storyManager.variant.title }}</div>
 			<slot name="controls" />
 		</Teleport>
 	</template>
@@ -56,5 +61,17 @@
 		const ce = event as CustomEvent<string>;
 		storyManager.events.push(ce.detail);
 	});
+
+	/**
+	 * Kopiert den String in die Zwischenablage.
+	 *
+	 * @param string   zu kopierender String
+	 */
+	async function copyToClipboard(string: string | undefined) {
+		if (string === undefined) {
+			return;
+		}
+		await navigator.clipboard.writeText(string);
+	}
 
 </script>
