@@ -27,6 +27,8 @@ import org.apache.commons.lang3.Strings;
  */
 public final class DataAnkreuzkompetenzen extends DataManagerRevised<Long, DTOAnkreuzfloskeln, Ankreuzkompetenz> {
 
+	private static final String ID_FACH = "idFach";
+	private static final String IST_ASV = "istASV";
 	private final DataAnkreuzkompetenzJahrgangszuordnungen dataAnkreuzkompetenzJahrgangszuordnungen;
 
 	/**
@@ -39,7 +41,7 @@ public final class DataAnkreuzkompetenzen extends DataManagerRevised<Long, DTOAn
 		super(conn);
 		this.dataAnkreuzkompetenzJahrgangszuordnungen = data;
 		setAttributesNotPatchable("id");
-		setAttributesRequiredOnCreation("istASV", "floskelText");
+		setAttributesRequiredOnCreation(IST_ASV, "floskelText");
 	}
 
 	@Override
@@ -70,8 +72,8 @@ public final class DataAnkreuzkompetenzen extends DataManagerRevised<Long, DTOAn
 	protected Ankreuzkompetenz map(final DTOAnkreuzfloskeln dto) {
 		final Ankreuzkompetenz ankreuzkompetenz = new Ankreuzkompetenz();
 		ankreuzkompetenz.id = dto.ID;
-		ankreuzkompetenz.istASV = dto.IstASV;
-		ankreuzkompetenz.idFach = (ankreuzkompetenz.istASV == 1) ? null : dto.Fach_ID;
+		ankreuzkompetenz.istASV = (dto.IstASV == 1);
+		ankreuzkompetenz.idFach = ankreuzkompetenz.istASV ? null : dto.Fach_ID;
 		ankreuzkompetenz.schulgliederung = dto.Gliederung;
 		ankreuzkompetenz.floskelText = Objects.requireNonNullElse(dto.FloskelText, "");
 		ankreuzkompetenz.abschnitt = Objects.requireNonNullElse(dto.Abschnitt, 0);
@@ -98,8 +100,8 @@ public final class DataAnkreuzkompetenzen extends DataManagerRevised<Long, DTOAn
 	protected void mapAttribute(final DTOAnkreuzfloskeln dto, final String name, final Object value, final Map<String, Object> attributes) {
 		switch (name) {
 			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
-			case "idFach" -> updateIdFach(dto, name, value);
-			case "istASV" -> updateASV(dto, name, value);
+			case ID_FACH -> updateIdFach(dto, name, value, attributes);
+			case IST_ASV -> updateASV(dto, name, value, attributes);
 			case "schulgliederung" -> updateKuerzelSchulgliederung(dto, name, value);
 			case "floskelText" -> updateFloskelText(dto, name, value);
 			case "abschnitt" -> updateAbschnitt(dto, name, value);
@@ -111,36 +113,55 @@ public final class DataAnkreuzkompetenzen extends DataManagerRevised<Long, DTOAn
 		}
 	}
 
-	private void updateIdFach(final DTOAnkreuzfloskeln dto, final String name, final Object value) {
+	private void updateIdFach(final DTOAnkreuzfloskeln dto, final String name, final Object value, final Map<String, Object> attributes) {
 		final Long idFach = JSONMapper.convertToLong(value, true, name);
+		final boolean patchContainsIstASV = attributes.containsKey(IST_ASV);
 
-		// Wenn ASV aktiv(1) ist, muss Fach_ID null sein
-		if (dto.IstASV == 1) {
-			if (idFach != null) {
-				throw new ApiOperationException(Status.BAD_REQUEST, "Einer ASV-Ankreuzkompetenz kann kein Fach zugeordnet werden.");
-			}
-			dto.Fach_ID = null;
-			return;
+		final boolean istASV = patchContainsIstASV ? JSONMapper.convertToBoolean(attributes.get(IST_ASV), false, IST_ASV) : (dto.IstASV == 1);
+
+		// Wenn ASV aktiv(1) ist, darf kein Fach gesetzt sein
+		if ((idFach != null) && istASV) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Einer ASV-Ankreuzkompetenz kann kein Fach zugeordnet werden.");
 		}
 
-		if (idFach == null) {
+		// Wenn ASV inaktiv(0), muss ein Fach gesetzt sein
+		if ((idFach == null) && !istASV) {
+			if (patchContainsIstASV) {
+				throw new ApiOperationException(Status.BAD_REQUEST, "Wenn ASV deaktiviert wird, muss ein gültiges Fach ausgewählt werden.");
+			}
+
 			throw new ApiOperationException(Status.BAD_REQUEST, "Für diese Ankreuzkompetenz muss ein Fach ausgewählt werden.");
 		}
 
-		final DTOFach fach = this.conn.queryByKey(DTOFach.class, idFach);
-		if (fach == null) {
-			throw new ApiOperationException(Response.Status.NOT_FOUND, "Kein Fach mit der ID %d gefunden.".formatted(idFach));
+		if (idFach != null) {
+			checkFachExists(idFach);
 		}
 
 		dto.Fach_ID = idFach;
 	}
 
-	private static void updateASV(final DTOAnkreuzfloskeln dto, final String name, final Object value) {
-		dto.IstASV = JSONMapper.convertToInteger(value, false, name);
-
-		if (dto.IstASV == 1) {
-			dto.Fach_ID = null;
+	private void checkFachExists(final Long idFach) {
+		final DTOFach fach = this.conn.queryByKey(DTOFach.class, idFach);
+		if (fach == null) {
+			throw new ApiOperationException(Response.Status.NOT_FOUND, "Kein Fach mit der ID %d gefunden.".formatted(idFach));
 		}
+	}
+
+	private static void updateASV(final DTOAnkreuzfloskeln dto, final String name, final Object value, final Map<String, Object> attributes) {
+		final boolean istASV = JSONMapper.convertToBoolean(value, false, name);
+		final boolean patchContainsFach = attributes.containsKey(ID_FACH);
+
+		final Long idFach = patchContainsFach ? JSONMapper.convertToLong(attributes.get(ID_FACH), true, ID_FACH) : dto.Fach_ID;
+
+		if (istASV && (idFach != null)) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Umstellung auf ASV nicht möglich: Es ist noch ein Fach zugeordnet.");
+		}
+
+		if (!istASV && (idFach == null)) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Bei Deaktivierung von ASV muss gleichzeitig ein Fach im Patch übergeben werden.");
+		}
+
+		dto.IstASV = istASV ? 1 : 0;
 	}
 
 	private void updateKuerzelSchulgliederung(final DTOAnkreuzfloskeln dto, final String name, final Object value) {
@@ -155,6 +176,7 @@ public final class DataAnkreuzkompetenzen extends DataManagerRevised<Long, DTOAn
 		if (schulgliederung == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schulgliederung mit dem Schlüssel %s gefunden.".formatted(kuerzelSchuldgliederung));
 		}
+
 		if (!schulgliederung.hatSchulform(conn.getUser().schuleGetSchuljahr(), conn.getUser().schuleGetSchulform())) {
 			throw new ApiOperationException(Status.CONFLICT, "Die Schulgliederung ist für diese Schulform nicht gültig.");
 		}

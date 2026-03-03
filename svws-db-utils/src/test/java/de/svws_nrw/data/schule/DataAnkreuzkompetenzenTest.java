@@ -74,7 +74,7 @@ class DataAnkreuzkompetenzenTest {
 	@DisplayName("setAttributesRequiredOnCreation: floskelText")
 	void setAttributesRequiredOnCreationFloskelText() {
 		assertThatException()
-				.isThrownBy(() -> this.data.add(Map.of("istASV", 0)))
+				.isThrownBy(() -> this.data.add(Map.of("istASV", false)))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Es werden weitere Attribute (floskelText) benötigt, damit die Entität erstellt werden kann.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -150,7 +150,7 @@ class DataAnkreuzkompetenzenTest {
 				.isInstanceOf(Ankreuzkompetenz.class)
 				.hasFieldOrPropertyWithValue("id", dto.ID)
 				.hasFieldOrPropertyWithValue("idFach", dto.Fach_ID)
-				.hasFieldOrPropertyWithValue("istASV", dto.IstASV)
+				.hasFieldOrPropertyWithValue("istASV", dto.IstASV == 1)
 				.hasFieldOrPropertyWithValue("schulgliederung", dto.Gliederung)
 				.hasFieldOrPropertyWithValue("floskelText", dto.FloskelText)
 				.hasFieldOrPropertyWithValue("abschnitt", dto.Abschnitt)
@@ -222,10 +222,79 @@ class DataAnkreuzkompetenzenTest {
 		when(this.conn.queryByKey(DTOAnkreuzfloskeln.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(1L, Map.of("istASV", 1));
+		final Map<String, Object> patchData = new HashMap<>();
+		patchData.put("istASV", true);
+		patchData.put("idFach", null);
+
+		this.data.patch(1L, patchData);
 
 		assertThat(dto.IstASV).isEqualTo(1);
 		assertThat(dto.Fach_ID).isNull();
+	}
+
+	@Test
+	@DisplayName("patch | istASV | Aktivierung schlägt fehl, wenn noch ein Fach zugeordnet ist")
+	void patchIstASVActivationWithFach() {
+		final var dto = new DTOAnkreuzfloskeln(1L, 0, "test");
+		dto.Fach_ID = 10L;
+		when(this.conn.queryByKey(DTOAnkreuzfloskeln.class, 1L)).thenReturn(dto);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("istASV", true)))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Umstellung auf ASV nicht möglich: Es ist noch ein Fach zugeordnet.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | istASV | Deaktivierung schlägt fehl, wenn idFach im Patch fehlt")
+	void patchIstASVDeactivationWithoutFach() {
+		final var dto = new DTOAnkreuzfloskeln(1L, 1, "test");
+		dto.Fach_ID = null;
+		when(this.conn.queryByKey(DTOAnkreuzfloskeln.class, 1L)).thenReturn(dto);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("istASV", false)))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Bei Deaktivierung von ASV muss gleichzeitig ein Fach im Patch übergeben werden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | istASV | Deaktivierung schlägt fehl, wenn idFach im Patch null ist")
+	void patchIstASVDeactivationWithFachNull() {
+		final var dto = new DTOAnkreuzfloskeln(1L, 1, "test");
+		when(this.conn.queryByKey(DTOAnkreuzfloskeln.class, 1L)).thenReturn(dto);
+
+		final Map<String, Object> patchData = new HashMap<>();
+		patchData.put("istASV", false);
+		patchData.put("idFach", null);
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, patchData))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Wenn ASV deaktiviert wird, muss ein gültiges Fach ausgewählt werden.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("patch | Erfolg | ASV deaktivieren und Fach gleichzeitig setzen")
+	void patchIstASVDeactivationAndSetFach() throws ApiOperationException {
+		final var dto = new DTOAnkreuzfloskeln(1L, 1, "test");
+		final var fachDto = new DTOFach(20L, false);
+
+		when(this.conn.queryByKey(DTOAnkreuzfloskeln.class, 1L)).thenReturn(dto);
+		when(this.conn.queryByKey(DTOFach.class, 20L)).thenReturn(fachDto);
+		when(this.conn.transactionPersist(any())).thenReturn(true);
+
+		final Map<String, Object> patchData = new HashMap<>();
+		patchData.put("istASV", false);
+		patchData.put("idFach", 20L);
+
+		assertDoesNotThrow(() -> this.data.patch(1L, patchData));
+
+		assertThat(dto.IstASV).isZero();
+		assertThat(dto.Fach_ID).isEqualTo(20L);
 	}
 
 	@Test

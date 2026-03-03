@@ -12,14 +12,14 @@ export class Ankreuzkompetenz extends JavaObject {
 	public id: number = -1;
 
 	/**
-	 * Die ID des Faches, die zur Ankreuzkompetenz gehört, sofern IstASV den Wert 0 hat. Ansonsten wird diese ID des Faches ein null übergeben
+	 * Die ID des Faches, die zur Ankreuzkompetenz gehört, sofern IstASV den Wert false hat. Ansonsten wird diese ID des Faches ein null übergeben
 	 */
 	public idFach: number | null = null;
 
 	/**
-	 * Gibt an, falls die Fach_ID null ist, ob es sich bei der Ankreuzkompetenz um eine Floskel zum Arbeits- und Sozialverhalten handelt (1) oder nicht (0).
+	 * Gibt an, falls die Fach_ID null ist, ob es sich bei der Ankreuzkompetenz um eine Floskel zum Arbeits- und Sozialverhalten handelt (true) oder nicht (false).
 	 */
-	public istASV: number = 0;
+	public istASV: boolean = false;
 
 	/**
 	 * Schulgliederung zu der die Ankreuzkompetenz gehört (nur wichtig bei BK)

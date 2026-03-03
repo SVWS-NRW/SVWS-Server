@@ -21,13 +21,13 @@ public class Ankreuzkompetenz {
 	@Schema(description = "die ID des Eintrags für die Ankreuzkompetenz", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id = -1;
 
-	/** Die ID des Faches, die zur Ankreuzkompetenz gehört, sofern IstASV den Wert 0 hat. Ansonsten wird diese ID des Faches ein null übergeben */
+	/** Die ID des Faches, die zur Ankreuzkompetenz gehört, sofern IstASV den Wert false hat. Ansonsten wird diese ID des Faches ein null übergeben */
 	@Schema(description = "die ID des Faches, die zur Ankreuzkompetenz gehört, sofern IstASV den Wert 0 hat. Ansonsten wird diese ID des Faches ein null übergeben", example = "null")
 	public Long idFach;
 
-	/** Gibt an, falls die Fach_ID null ist, ob es sich bei der Ankreuzkompetenz um eine Floskel zum Arbeits- und Sozialverhalten handelt (1) oder nicht (0). */
-	@Schema(description = "gibt an, falls die Fach_ID null ist, ob es sich bei der Ankreuzkompetenz um eine Floskel zum Arbeits- und Sozialverhalten handelt (1) oder nicht (0)", example = "32000")
-	public @NotNull int istASV = 0;
+	/** Gibt an, falls die Fach_ID null ist, ob es sich bei der Ankreuzkompetenz um eine Floskel zum Arbeits- und Sozialverhalten handelt (true) oder nicht (false). */
+	@Schema(description = "gibt an, falls die Fach_ID null ist, ob es sich bei der Ankreuzkompetenz um eine Floskel zum Arbeits- und Sozialverhalten handelt (true) oder nicht (false)", example = "32000")
+	public boolean istASV = false;
 
 	/** Schulgliederung zu der die Ankreuzkompetenz gehört (nur wichtig bei BK) */
 	@Schema(description = "schulgliederung zu der die Ankreuzkompetenz gehört (nur wichtig bei BK)", example = "A02")

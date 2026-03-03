@@ -1,4 +1,4 @@
-import type { Ankreuzkompetenz, SimpleOperationResponse, List } from "@core";
+import type { Ankreuzkompetenz, SimpleOperationResponse, List, AnkreuzkompetenzJahrgangszuordnung } from "@core";
 import { AnkreuzkompetenzenListeManager, ViewType } from "@ui";
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
@@ -57,10 +57,24 @@ export class RouteDataAnkreuzkompetenzen extends RouteDataAuswahl<Ankreuzkompete
 		return await api.server.deleteAnkreuzkompetenzen(ids, api.schema);
 	}
 
-	add = async (partial: Partial<Ankreuzkompetenz>): Promise<void> => {
+	addAnkreuzkompetenz = async (partial: Partial<Ankreuzkompetenz>): Promise<Ankreuzkompetenz> => {
 		const ankreuzkompetenz = await api.server.addAnkreuzkompetenz(partial, api.schema);
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
-		await this.gotoDefaultView(ankreuzkompetenz.id);
+		this.manager.liste.add(ankreuzkompetenz);
+		return ankreuzkompetenz;
+	};
+
+	addJahrgaengezuordnungen = async (data: List<Partial<AnkreuzkompetenzJahrgangszuordnung>>, idAnkreuzkompetenz: number): Promise<void> => {
+		const result = await api.server.addAnkreuzkompetenzJahrgangszuordnung(data, api.schema);
+		this.manager.addJahrgaengeToAuswahl(result);
+		this.commit();
+		await this.gotoDefaultView(idAnkreuzkompetenz);
+	};
+
+	deleteJahrgaengezuordnungen = async (ids: List<number>): Promise<void> => {
+		await api.server.deleteAnkreuzkompetenzJahrgangszuordnungen(ids, api.schema);
+		this.manager.deleteJahrgaengezuordnungen(ids);
+		this.commit();
 	};
 
 	protected deleteMessage(id: number, ankreuzkompetenz: Ankreuzkompetenz | null): string {

@@ -24,7 +24,10 @@ export class RouteAnkreuzkompetenzenNeu extends RouteNode<any, RouteAnkreuzkompe
 	public getProps(to: RouteLocationNormalized): AnkreuzkompetenzenNeuProps {
 		return {
 			manager: () => routeAnkreuzkompetenzen.data.manager,
-			add: routeAnkreuzkompetenzen.data.add,
+			addAnkreuzkompetenz: routeAnkreuzkompetenzen.data.addAnkreuzkompetenz,
+			addJahrgaengezuordnungen: routeAnkreuzkompetenzen.data.addJahrgaengezuordnungen,
+			schuljahr: api.abschnitt.schuljahr,
+			schulform: api.schulform,
 			gotoDefaultView: routeAnkreuzkompetenzen.data.gotoDefaultView,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			checkpoint: this.checkpoint,

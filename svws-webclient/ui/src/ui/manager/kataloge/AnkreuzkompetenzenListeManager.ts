@@ -12,6 +12,8 @@ import type { Comparator } from '../../../../../core/src/java/util/Comparator';
 import type { FachDaten } from '../../../../../core/src/core/data/fach/FachDaten';
 import type { Schulgliederung } from "../../../../../core/src/asd/types/schule/Schulgliederung";
 import type { JahrgangsDaten } from '../../../../../core/src/core/data/jahrgang/JahrgangsDaten';
+import type { AnkreuzkompetenzJahrgangszuordnung } from "../../../../../core/src/core/data/schule//AnkreuzkompetenzJahrgangszuordnung";
+import { HashMap } from '../../../../../core/src/java/util/HashMap';
 
 export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankreuzkompetenz, Ankreuzkompetenz> {
 
@@ -76,6 +78,107 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 		this.mapJahrgaenge(jahrgaenge);
 	}
 
+	/**
+	 * Ein Getter der Jahrgänge für die aktuelle Auswahl
+	 *
+	 * @return jahrgaenge
+	 */
+	public getJahrgaengeByAuswahl(): List<JahrgangsDaten> {
+		const result: List<JahrgangsDaten> | null = new ArrayList<JahrgangsDaten>();
+		if ((this._daten === null) || (this._daten.jahrgaengezuordnung.isEmpty())) {
+			return result;
+		}
+
+		for (const jahrgangzuordnung of this._daten.jahrgaengezuordnung) {
+			const jahrgang: JahrgangsDaten | undefined = this._jahrgaengeById.get(jahrgangzuordnung.idJahrgang);
+			if (jahrgang !== undefined) {
+				result.add(jahrgang);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Liefert alle Jahrgänge, die der aktuellen Auswahl nicht zugeordnet sind.
+	 */
+	public getAddableJahrgaenge(): JahrgangsDaten[] {
+		const alreadyAdded = new Set(this.getJahrgaengeByAuswahl());
+		return [...this._jahrgaengeById.values()].filter(v => !alreadyAdded.has(v));
+	}
+
+	/**
+	 * Gibt eine Map von idJahrgang auf AnkreuzkompetenzJahrgangszuordnung für die aktuelle Auswahl zurück.
+	 */
+	public getJahrgaengezuordnungenByIdJahrgang(): HashMap<number, AnkreuzkompetenzJahrgangszuordnung> {
+		const result = new HashMap<number, AnkreuzkompetenzJahrgangszuordnung>();
+		if (this._daten === null) {
+			return result;
+		}
+		for (const jahrgangzuordnung of this._daten.jahrgaengezuordnung) {
+			result.put(jahrgangzuordnung.idJahrgang, jahrgangzuordnung);
+		}
+		return result;
+	}
+
+	/**
+	 * Fügt die Liste der AnkreuzkompetnezenJahrgaengezuordnungen der ausgewählten Ankreuzkompetenz hinzu
+	 *
+	 * @param zuordnungen    Liste der AnkreuzkompetnezenJahrgaengezuordnungen
+	 */
+	public addJahrgaengeToAuswahl(zuordnungen: List<AnkreuzkompetenzJahrgangszuordnung>): void {
+		if (this._daten !== null) {
+			this._daten.jahrgaengezuordnung.addAll(zuordnungen);
+			this._daten.jahrgaengezuordnung.sort(this.comparatorJahrgaengezuordnung);
+		}
+	}
+
+	/**
+	 * Löscht Jahrgängezuordnungen anhand der IDs
+	 *
+	 * @param ids    Ids der Jahrgängezuordnungen
+	 */
+	public deleteJahrgaengezuordnungen(ids: List<number>): void {
+		if (this._daten === null) {
+			return;
+		}
+
+		for (const id of ids) {
+			for (const jahrgangzuordnung of this._daten.jahrgaengezuordnung) {
+				if (jahrgangzuordnung.id === id) {
+					this._daten.jahrgaengezuordnung.remove(jahrgangzuordnung);
+				}
+			}
+		}
+	}
+
+	private readonly comparatorJahrgaengezuordnung: Comparator<AnkreuzkompetenzJahrgangszuordnung> = {
+		compare: (a: AnkreuzkompetenzJahrgangszuordnung, b: AnkreuzkompetenzJahrgangszuordnung) => {
+			const jahrgang1: JahrgangsDaten | undefined = this._jahrgaengeById.get(a.idJahrgang);
+			const jahrgang2: JahrgangsDaten | undefined = this._jahrgaengeById.get(b.idJahrgang);
+
+			if ((jahrgang1 === undefined) || (jahrgang2 === undefined)) {
+				return 0;
+			}
+
+			const kuerzel1 = jahrgang1.kuerzel;
+			const kuerzel2 = jahrgang2.kuerzel;
+
+			if ((kuerzel1 === null) && (kuerzel2 === null)) {
+				return 0;
+			}
+
+			if (kuerzel1 === null) {
+				return 1;
+			}
+
+			if (kuerzel2 === null) {
+				return -1;
+			}
+
+			return JavaString.compareTo(kuerzel1, kuerzel2);
+		},
+	};
+
 	private mapFaecher(faecher: List<FachDaten>) {
 		for (const f of faecher) {
 			this._faecherById.set(f.id, f);
@@ -135,7 +238,7 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 			eintrag.floskelText,
 			fach?.kuerzel,
 			fach?.bezeichnung,
-			(eintrag.istASV === 1) ? "ASV" : null,
+			eintrag.istASV ? "ASV" : null,
 		];
 
 		return searchableFields.some(field =>

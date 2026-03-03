@@ -10,9 +10,8 @@ const AnkreuzkompetenzenDaten = () => import("~/components/schule/kataloge/ankre
 
 class RouteAnkreuzkompetenzenDaten extends RouteNode<any, RouteAnkreuzkompetenzen> {
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN,
-			BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.ankreuzkompetenzen.daten",
-		"daten", AnkreuzkompetenzenDaten);
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN],
+			"schule.ankreuzkompetenzen.daten", "daten", AnkreuzkompetenzenDaten);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Ankreuzkompetenzen";
@@ -22,6 +21,10 @@ class RouteAnkreuzkompetenzenDaten extends RouteNode<any, RouteAnkreuzkompetenze
 		return {
 			patch: routeAnkreuzkompetenzen.data.patch,
 			manager: () => routeAnkreuzkompetenzen.data.manager,
+			addJahrgaengezuordnungen: routeAnkreuzkompetenzen.data.addJahrgaengezuordnungen,
+			deleteJahrgaengezuordnungen: routeAnkreuzkompetenzen.data.deleteJahrgaengezuordnungen,
+			schuljahr: api.abschnitt.schuljahr,
+			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}

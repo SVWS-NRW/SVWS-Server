@@ -8,10 +8,10 @@ import type { RouteParams } from "vue-router";
 import { routeAnkreuzkompetenzenDaten } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzenDaten";
 import { routeAnkreuzkompetenzenNeu } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzenNeu";
 import { routeAnkreuzkompetenzenGruppenprozesse } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzenGruppenprozesse";
+import { RouteDataAnkreuzkompetenzen } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteDataAnkreuzkompetenzen";
 
 import AnkreuzkompetenzenApp from "~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzenApp.vue";
 import AnkreuzkompetenzenAuswahl from "~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzenAuswahl.vue";
-import { RouteDataAnkreuzkompetenzen } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteDataAnkreuzkompetenzen";
 
 export class RouteAnkreuzkompetenzen extends RouteAuswahlNode<AnkreuzkompetenzenListeManager, RouteDataAnkreuzkompetenzen, RouteApp> {
 	public constructor() {

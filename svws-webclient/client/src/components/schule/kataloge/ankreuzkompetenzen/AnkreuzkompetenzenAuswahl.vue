@@ -33,7 +33,7 @@
 				</template>
 
 				<template #cell(fach)="{ rowData }">
-					<span v-if="rowData.istASV === 1">ASV</span>
+					<span v-if="rowData.istASV">ASV</span>
 					<span v-else>{{ manager().faecherById.get(rowData.idFach ?? -1)?.kuerzel || '—' }}</span>
 				</template>
 				<template #cell(floskelText)="{ value }">
