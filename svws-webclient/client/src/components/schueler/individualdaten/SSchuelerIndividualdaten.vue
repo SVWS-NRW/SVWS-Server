@@ -95,11 +95,14 @@
 				<ui-select label="Wohnort"
 					v-model="selectedOrt"
 					:manager="orteManager"
-					searchable :readonly statistics :removable="false" />
+					:removable="selectedOrt !== null"
+					searchable :readonly statistics />
 				<ui-select label="Ortsteil"
 					v-model="selectedOrtsteil"
 					:manager="ortsteilManager"
-					searchable :readonly statistics :disabled="selectedOrt === null" />
+					:disabled="istOrtsteilDisabled"
+					:removable="selectedOrtsteil !== null"
+					searchable :readonly statistics />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Telefon" :readonly :model-value="schuelerListeManager().daten().telefon"
 					@change="telefon => patch({ telefon })" type="tel" :max-len="20" />
@@ -130,7 +133,7 @@
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Weitere Telefonnummern" v-if="serverMode === ServerMode.DEV">
-			<svws-ui-table :clickable="!readonly" @update:clicked="v => patchTelefonnummer(v)" :items="getListSchuelerTelefoneintraege()" :columns :selectable="!readonly" v-model="selected">
+			<svws-ui-table :clickable="!readonly" @update:clicked="v => patchTelefonnummer(v)" :items="getListSchuelerTelefoneintraege()" :columns :selectable="!readonly" v-model="selectedTelefon">
 				<template #cell(idTelefonArt)="{ value }">
 					{{ getBezeichnungTelefonart(value) }}
 				</template>
@@ -139,7 +142,7 @@
 				</template>
 				<template #actions v-if="!readonly">
 					<div class="inline-flex gap-4">
-						<svws-ui-button @click="deleteTelefonnummern" type="trash" :disabled="selected.length === 0" />
+						<svws-ui-button @click="deleteTelefonnummern" type="trash" :disabled="selectedTelefon.length === 0" />
 						<svws-ui-button @click="addTelefonnummer" type="icon" title="Telefonnummer hinzufügen"><span class="icon i-ri-add-line" /></svws-ui-button>
 					</div>
 				</template>
@@ -184,7 +187,7 @@
 				<svws-ui-select title="Geburtsland" v-model="geburtsland" :items="Nationalitaeten.values()" :item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`"
 					:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter"
 					:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && readonly" autocomplete statistics />
-				<svws-ui-select title="Verkehrssprache" v-model="verkehrsprache" autocomplete :items="Verkehrssprache.values()"
+				<svws-ui-select title="Verkehrssprache" v-model="verkehrssprache" autocomplete :items="Verkehrssprache.values()"
 					:item-text="i => `${i.historie().getLast().text} (${i.historie().getLast().iso3})`" :item-sort="verkehrsspracheKatalogEintragSort"
 					:item-filter="verkehrsspracheKatalogEintragFilter" :disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && readonly" class="col-span-full" statistics />
 				<svws-ui-select title="Geburtsland Mutter" v-model="geburtslandMutter" :items="Nationalitaeten.values()"
@@ -213,17 +216,21 @@
 
 	const props = defineProps<SchuelerIndividualdatenProps>();
 
-	const schuljahr = computed<number>(() => props.schuelerListeManager().schuelerGetSchuljahrOrException());
+	const selectedTelefon = ref<SchuelerTelefon[]>([]);
+	const newEntryTelefonnummer = ref<SchuelerTelefon>(new SchuelerTelefon());
 
+	const schuljahr = computed<number>(() => props.schuelerListeManager().schuelerGetSchuljahrOrException());
 	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN));
 	const readonly = computed<boolean>(() => !props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 	const hatKompetenzDrucken = computed(() => (props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_ALLE_FORMULARE_DRUCKEN) || props.benutzerKompetenzen.has(BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)));
 	const istSchulformBerufskolleg = computed(() => [Schulform.BK, Schulform.SB, Schulform.WB].includes(props.schulform));
+	const istOrtsteilDisabled = computed(() => (selectedOrt.value === null) && (selectedOrtsteil.value === null));
 	const orte = computed(() => props.orteById.values());
 	const ortsteile = computed(() => {
 		const filtered = new ArrayList<OrtsteilKatalogEintrag>();
 		for (const ortsteil of props.ortsteileById.values()) {
-			if (ortsteil.ort_id === props.schuelerListeManager().daten().wohnortID) {
+			if (((ortsteil.ort_id === null) && (ortsteil.id === props.schuelerListeManager().daten().ortsteilID))
+				|| (ortsteil.ort_id === props.schuelerListeManager().daten().wohnortID)) {
 				filtered.add(ortsteil);
 			}
 		}
@@ -235,10 +242,6 @@
 		resetTelefonnummer();
 		closeModalTelefonnummer();
 	}
-
-	const selected = ref<SchuelerTelefon[]>([]);
-	const newEntryTelefonnummer = ref<SchuelerTelefon>(new SchuelerTelefon());
-
 	const columns: DataTableColumn[] = [
 		{ key: "idTelefonArt", label: "Telefonart" },
 		{ key: "telefonnummer", label: "Telefonnummern" },
@@ -289,15 +292,15 @@
 	}
 
 	async function deleteTelefonnummern() {
-		if (selected.value.length === 0) {
+		if (selectedTelefon.value.length === 0) {
 			return;
 		}
 		const ids = new ArrayList<number>();
-		for (const s of selected.value) {
+		for (const s of selectedTelefon.value) {
 			ids.add(s.id);
 		}
 		await props.deleteSchuelerTelefoneintrage(ids);
-		selected.value = [];
+		selectedTelefon.value = [];
 	}
 
 	function openModalTelefonnummer() {
@@ -393,14 +396,14 @@
 		set: (value) => void props.patch({ geburtslandVater: value.historie().getLast().iso3 }),
 	});
 
-	const verkehrsprache = computed<Verkehrssprache>({
+	const verkehrssprache = computed<Verkehrssprache>({
 		get: () => Verkehrssprache.getByIsoKuerzel(props.schuelerListeManager().daten().verkehrspracheFamilie) ?? Verkehrssprache.data().getWertBySchluesselOrException("de"),
 		set: (value) => void props.patch({ verkehrspracheFamilie: value.historie().getLast().iso3 }),
 	});
 
 	const inputStammschule = computed<SchulEintrag | undefined>({
 		get: () => (props.schuelerListeManager().daten().externeSchulNr === null) ? undefined : (props.mapSchulen.get(props.schuelerListeManager().daten().externeSchulNr ?? "") ?? undefined),
-		set: (value) => void props.patch({ externeSchulNr: value === undefined ? null : value.schulnummerStatistik }),
+		set: (value) => void props.patch({ externeSchulNr: (value === undefined) ? null : value.schulnummerStatistik }),
 	});
 
 	const inputFahrschuelerArtID = computed<Fahrschuelerart | undefined>({
@@ -408,32 +411,37 @@
 			const id = props.schuelerListeManager().daten().fahrschuelerArtID;
 			return id === null ? undefined : props.fahrschuelerartenById.get(id);
 		},
-		set: (value) => void props.patch({ fahrschuelerArtID: value === undefined ? null : value.id }),
+		set: (value) => void props.patch({ fahrschuelerArtID: (value === undefined) ? null : value.id }),
 	});
 
 	const inputHaltestelleID = computed<Haltestelle | undefined>({
 		get: () => {
 			const id = props.schuelerListeManager().daten().haltestelleID;
-			return id === null ? undefined : props.haltestellenById.get(id);
+			return (id === null) ? undefined : props.haltestellenById.get(id);
 		},
-		set: (value) => void props.patch({ haltestelleID: value === undefined ? null : value.id }),
+		set: (value) => void props.patch({ haltestelleID: (value === undefined) ? null : value.id }),
 	});
 
-	const selectedOrt = computed<OrtKatalogEintrag | null>({
-		get: () => {
-			const id = props.schuelerListeManager().daten().wohnortID;
-			return props.orteById.get(id ?? -1) ?? null;
-		},
-		set: (value: OrtKatalogEintrag | null) => void props.patch({ wohnortID: value?.id ?? null }),
+	const selectedOrt = computed<OrtKatalogEintrag | null | undefined>({
+		get: () => props.orteById.get(props.schuelerListeManager().daten().wohnortID ?? -1) ?? null,
+		set: (value: OrtKatalogEintrag | null | undefined) => setAndPatchOrtAndOrtsteil(value?.id ?? null, null),
 	});
 
-	const selectedOrtsteil = computed<OrtsteilKatalogEintrag | null>({
-		get: () => {
-			const id = props.schuelerListeManager().daten().ortsteilID;
-			return props.ortsteileById.get(id ?? -1) ?? null;
+	const selectedOrtsteil = computed<OrtsteilKatalogEintrag | null | undefined>({
+		get: () => props.ortsteileById.get(props.schuelerListeManager().daten().ortsteilID ?? -1) ?? null,
+		set: (value: OrtsteilKatalogEintrag | null | undefined) => {
+			const isOrtsteilSelected = (value !== null) && (value !== undefined);
+			const wohnortId = isOrtsteilSelected ? (props.orteById.get(value.ort_id ?? -1)?.id ?? null) : props.schuelerListeManager().daten().wohnortID;
+			const ortsteilId = (!isOrtsteilSelected || (wohnortId === null)) ? null : value.id;
+			setAndPatchOrtAndOrtsteil(wohnortId, ortsteilId);
 		},
-		set: (value: OrtsteilKatalogEintrag | null) => void props.patch({ ortsteilID: value?.id ?? null }),
 	});
+
+	function setAndPatchOrtAndOrtsteil(wohnortID: number | null, ortsteilID: number | null) {
+		props.schuelerListeManager().daten().wohnortID = wohnortID;
+		props.schuelerListeManager().daten().ortsteilID = ortsteilID;
+		void props.patch({ wohnortID, ortsteilID });
+	}
 
 	const orteManager = new SelectManager({
 		options: orte,
