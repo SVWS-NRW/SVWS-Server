@@ -59,7 +59,7 @@ export class NotenmodulConfigManagerSperrungen {
 	private readonly datum = ref<Date>(new Date());
 
 	/** Ein Array mit den Namen aller sperrbaren Spalten in den Ansichten des Notenmoduls */
-	private readonly spaltenSperrbar = ["Quartalsnoten", "Note", "Mahnung", "Fehlstunden", "FB", "ASV", "AUE", "ZB", "Teilnoten"];
+	private readonly spaltenSperrbar = ["Quartal", "Note", "Mahnung", "Fehlstunden", "FB", "ASV", "AUE", "ZB", "Teilnoten"];
 
 	/** Legt die Art der Gruppierung fest, welche vom Manager vorgenommen wird */
 	private readonly _gruppierung = shallowRef<NotenmodulConfigManagerSperrungenGruppierung>('Keine');
