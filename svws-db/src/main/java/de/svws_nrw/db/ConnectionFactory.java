@@ -220,6 +220,7 @@ public class ConnectionFactory {
 		propertyMap.put("eclipselink.persistence-context.flush-mode", "commit");
 		propertyMap.put("eclipselink.allow-zero-id", "true");
 		propertyMap.put("eclipselink.logging.level", config.useDBLogging() ? "WARNING" : "OFF");
+		propertyMap.put("eclipselink.logging.logger", "de.svws_nrw.db.SvwsEclipseLinkLogger");
 		// propertyMap.put("eclipselink.logging.level", config.useDBLogging() ? "INFO" : "OFF");
 		// propertyMap.put("eclipselink.logging.level", "ALL");
 		// propertyMap.put("eclipselink.logging.level.sql", "FINE");

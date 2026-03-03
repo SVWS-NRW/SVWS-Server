@@ -1,5 +1,7 @@
 package de.svws_nrw.base.slf4j;
 
+import java.util.regex.Matcher;
+
 import org.slf4j.Marker;
 import org.slf4j.event.Level;
 import org.slf4j.helpers.LegacyAbstractLogger;
@@ -62,9 +64,12 @@ public final class SvwsSlf4jLoggerAdapter extends LegacyAbstractLogger {
 	protected void handleNormalizedLoggingCall(final Level level, final Marker marker, final String messagePattern, final Object[] arguments,
 			final Throwable throwable) {
 		String message = messagePattern;
-		if (arguments != null)
-			for (final Object arg : arguments)
-				message = message.replaceFirst("\\{\\}", (arg == null) ? "null" : arg.toString());
+		if (arguments != null) {
+			for (final Object arg : arguments) {
+				final String replacement = (arg == null) ? "null" : arg.toString();
+				message = message.replaceFirst("\\{\\}", Matcher.quoteReplacement(replacement));
+			}
+		}
 		final LogLevel logLevel = switch (level) {
 			case ERROR -> LogLevel.ERROR;
 			case WARN -> LogLevel.WARNING;

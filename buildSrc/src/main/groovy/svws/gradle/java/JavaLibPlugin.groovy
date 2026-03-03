@@ -28,12 +28,12 @@ class JavaLibPlugin implements Plugin<Project> {
 
 	void addDatabase() {
 		def versionPersistenceAPI = '3.2.0';
-		def versionEclipselink = '4.0.6';
-		def versionMariaDB = '3.5.3';
-		def versionSQLite = '3.49.1.0';
-		def versionUCanAccess = '5.1.3';
-		def versionJackcess = '5.1.0';
-		def versionMySQL = '9.3.0';
+		def versionEclipselink = '4.0.9';
+		def versionMariaDB = '3.5.7';
+		def versionSQLite = '3.51.2.0';
+		def versionUCanAccess = '5.1.5';
+		def versionJackcess = '5.1.2';
+		def versionMySQL = '9.6.0';
 		def versionMSSQL = '13.2.1.jre11';
 		project.configurations.create('database');
 		project.dependencies.add('database', 'jakarta.persistence:jakarta.persistence-api:' + versionPersistenceAPI);
@@ -50,9 +50,10 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addJacksonConfiguration() {
-		def version = "2.19.1";
+		def version = "2.21.1";
+		def version_annotations = "2.21";
 		project.configurations.create('jackson');
-		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-annotations:' + version);
+		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-annotations:' + version_annotations);
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-core:' + version);
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-databind:' + version);
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:' + version);
@@ -62,7 +63,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addJettyConfiguration() {
-		def version = "12.0.25";
+		def version = "12.1.6";
 		def versionServletApi = "6.1.0";
 		project.configurations.create('jetty');
 		project.dependencies.add('jetty', 'jakarta.servlet:jakarta.servlet-api:' + versionServletApi);
@@ -76,8 +77,8 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addPdfConfiguration() {
-		def version = "3.0.5";
-		def openHtmlToPdfVersion = "1.1.28";
+		def version = "3.0.6";
+		def openHtmlToPdfVersion = "1.1.37";
 		project.configurations.create('pdf');
 		project.dependencies.add('pdf', 'org.apache.pdfbox:pdfbox:' + version);
 		project.dependencies.add('pdf', 'io.github.openhtmltopdf:openhtmltopdf-core:' + openHtmlToPdfVersion);
@@ -94,7 +95,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addRestEasyConfiguration() {
-		def version = "6.2.12.Final";
+		def version = "7.0.1.Final";
 		project.configurations.create('resteasy');
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-core:' + version);
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-jackson2-provider:' + version);
@@ -106,8 +107,8 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addSwagger() {
-		def version = "2.2.34";
-		def versionUI = "5.26.2";
+		def version = "2.2.43";
+		def versionUI = "5.32.0";
 		project.configurations.create('swagger');
 		project.dependencies.add('swagger', 'io.swagger.core.v3:swagger-jaxrs2-jakarta:' + version);
 		project.dependencies.add('swagger', 'io.swagger.core.v3:swagger-annotations-jakarta:' + version);
@@ -125,15 +126,15 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addEmail() {
-		def version = "2.0.4";
+		def version = "2.0.5";
 		project.configurations.create('email');
 		project.dependencies.add('email', 'org.eclipse.angus:angus-mail:' + version);
 	}
 
 
 	void addJaxbRuntime() {
-		def jaxbVersion = "4.0.5";
-		def jakartaVersion = "4.0.2";
+		def jaxbVersion = "4.0.6";
+		def jakartaVersion = "4.0.5";
 		project.configurations.create('jaxbRuntime');
 		project.dependencies.add('jaxbRuntime', 'org.glassfish.jaxb:jaxb-runtime:' + jaxbVersion);
 		project.dependencies.add('jaxbRuntime', 'jakarta.xml.bind:jakarta.xml.bind-api:' + jakartaVersion);
@@ -141,7 +142,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addXjc() {
-		def version = "4.0.5";
+		def version = "4.0.6";
 		project.configurations.create('xjc');
 		project.dependencies.add('xjc', 'org.glassfish.jaxb:jaxb-xjc:' + version);
 	}
@@ -152,11 +153,11 @@ class JavaLibPlugin implements Plugin<Project> {
 		this.project = project;
 		project.pluginManager.apply "java"
 
-		project.dependencies.add('testImplementation', 'org.junit.jupiter:junit-jupiter:5.12.2');
-		project.dependencies.add('testImplementation', 'org.junit.platform:junit-platform-launcher:1.12.2');
-		project.dependencies.add('testImplementation', 'org.mockito:mockito-inline:5.2.0');
-		project.dependencies.add('testImplementation', 'org.mockito:mockito-junit-jupiter:5.2.0');
-		project.dependencies.add('testImplementation', 'org.assertj:assertj-core:3.25.3');
+		project.dependencies.add('testImplementation', 'org.junit.jupiter:junit-jupiter:6.0.3');
+		project.dependencies.add('testImplementation', 'org.junit.platform:junit-platform-launcher:6.0.3');
+		project.dependencies.add('testImplementation', 'org.mockito:mockito-core:5.22.0');
+		project.dependencies.add('testImplementation', 'org.mockito:mockito-junit-jupiter:5.22.0');
+		project.dependencies.add('testImplementation', 'org.assertj:assertj-core:3.27.7');
 		project.dependencies.add('testImplementation', 'org.awaitility:awaitility:4.3.0');
 
 		project.java.sourceCompatibility = JavaVersion.VERSION_21
