@@ -15,10 +15,6 @@ public abstract class Validator extends BasicValidator {
 	/** Der vom Validator genutzte Kontext */
 	private final @NotNull ValidatorKontext _kontext;
 
-	/** Eine Liste von Validatoren, die bei diesem Validator mitgeprüft werden. */
-	protected final @NotNull List<Validator> _validatoren = new ArrayList<>();
-
-
 
 	/**
 	 * Erstellt einen neuen Validator in dem übegebenen Kontext
@@ -131,56 +127,13 @@ public abstract class Validator extends BasicValidator {
 
 
 	/**
-	 * Führt die Prüfungen des Validators aus. Dabei wird zunächst die Fehlerliste
-	 * geleert und durch die ausführenden Prüfroutinen befüllt.
+	 * Prüft, ob der Validator aktiv ist.
 	 *
-	 * @return true, falls alle Prüfroutinen erfolgreich waren, und ansonsten false
+	 * @return true, falls der Validator aktiv ist
 	 */
 	@Override
-	public final boolean run() {
-		boolean success = true;
-		_fehler.clear();
-		if (_kontext.getValidatorManager().isValidatorActiveInSchuljahr(_kontext.getSchuljahr(), this.getClass().getCanonicalName())) {
-			// Führe die Prüfung dieses Validators aus - Erzeuge bei Exceptions einen unerwarteten Fehler
-			try {
-				if (!this.pruefe()) {
-					return false;
-				}
-			} catch (final Exception e) {
-				addFehler(-1, "Unerwarteter Fehler bei der Validierung: " + e.getMessage());
-				return false;
-			}
-			// Führe die Prüfungen der Subvalidatoren durch
-			for (final @NotNull Validator validator : _validatoren) {
-				if (!validator.run()) {
-					success = false;
-				}
-				_fehler.addAll(validator._fehler);
-				updateFehlerart(validator.getFehlerart());
-			}
-			// Führe die Abschluss-Prüfung dieses Validators aus - Erzeuge bei Exceptions einen unerwarteten Fehler
-			try {
-				if (!this.pruefeAbschluss()) {
-					success = false;
-				}
-			} catch (final Exception e) {
-				addFehler(-1, "Unerwarteter Fehler bei der Validierung: " + e.getMessage());
-			}
-		}
-		return success;
-	}
-
-
-	/**
-	 * Führt ggf. eine Prüfung der Daten nach der Überprüfung der Subvalidatoren als Abschluss
-	 * der Prüfung aus. Dabei wird die Fehlerliste, falls es zu Fehlern kommt.
-	 * Diese Methode ist bei Bedarf in dem konkreten Fall zu überschreiben.
-	 *
-	 * @return true, falls die Prüfung erfolgreich war, und ansonsten false
-	 */
-	protected boolean pruefeAbschluss() {
-		// Diese Methode ist bei Bedarf zu überschreiben
-		return true;
+	protected boolean isActive() {
+		return _kontext.getValidatorManager().isValidatorActiveInSchuljahr(_kontext.getSchuljahr(), this.getClass().getCanonicalName());
 	}
 
 

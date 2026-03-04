@@ -73,9 +73,9 @@
 	import type { ValidatorFehler } from '../../../../core/src/asd/validate/ValidatorFehler';
 	import { ValidatorFehlerart } from '../../../../core/src/asd/validate/ValidatorFehlerart';
 	import { ValidationResult } from "../../validation/ValidationResult";
-	import { ValidatorNumberRequired } from "../../validation/ValidatorNumberRequired";
-	import { ValidatorNumberMin } from "../../validation/ValidatorNumberMin";
-	import { ValidatorNumberMax } from "../../validation/ValidatorNumberMax";
+	import { ValidatorNumberRequired } from "../../validation/common/ValidatorNumberRequired";
+	import { ValidatorNumberMin } from "../../validation/common/ValidatorNumberMin";
+	import { ValidatorNumberMax } from "../../validation/common/ValidatorNumberMax";
 
 	defineOptions({
 		inheritAttrs: false,

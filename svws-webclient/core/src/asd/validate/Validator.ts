@@ -1,13 +1,12 @@
 import { ValidatorManager } from '../../asd/validate/ValidatorManager';
 import { BasicValidator } from '../../asd/validate/BasicValidator';
-import { ArrayList } from '../../java/util/ArrayList';
 import { ValidatorFehler } from '../../asd/validate/ValidatorFehler';
-import { Exception } from '../../java/lang/Exception';
+import { ArrayList } from '../../java/util/ArrayList';
 import { ValidatorFehlerart } from '../../asd/validate/ValidatorFehlerart';
 import { DateManager } from '../../asd/validate/DateManager';
 import { NullPointerException } from '../../java/lang/NullPointerException';
-import type { List } from '../../java/util/List';
 import type { Supplier } from '../../java/util/function/Supplier';
+import type { List } from '../../java/util/List';
 import { Class } from '../../java/lang/Class';
 import { ValidatorKontext } from '../../asd/validate/ValidatorKontext';
 
@@ -17,11 +16,6 @@ export abstract class Validator extends BasicValidator {
 	 * Der vom Validator genutzte Kontext
 	 */
 	private readonly _kontext: ValidatorKontext;
-
-	/**
-	 * Eine Liste von Validatoren, die bei diesem Validator mitgeprüft werden.
-	 */
-	protected readonly _validatoren: List<Validator> = new ArrayList<Validator>();
 
 
 	/**
@@ -125,50 +119,12 @@ export abstract class Validator extends BasicValidator {
 	}
 
 	/**
-	 * Führt die Prüfungen des Validators aus. Dabei wird zunächst die Fehlerliste
-	 * geleert und durch die ausführenden Prüfroutinen befüllt.
+	 * Prüft, ob der Validator aktiv ist.
 	 *
-	 * @return true, falls alle Prüfroutinen erfolgreich waren, und ansonsten false
+	 * @return true, falls der Validator aktiv ist
 	 */
-	public run(): boolean {
-		let success: boolean = true;
-		this._fehler.clear();
-		if (this._kontext.getValidatorManager().isValidatorActiveInSchuljahr(this._kontext.getSchuljahr(), this.getClass().getCanonicalName())) {
-			try {
-				if (!this.pruefe()) {
-					return false;
-				}
-			} catch(e : any) {
-				this.addFehler(-1, "Unerwarteter Fehler bei der Validierung: " + e.getMessage());
-				return false;
-			}
-			for (const validator of this._validatoren) {
-				if (!validator.run()) {
-					success = false;
-				}
-				this._fehler.addAll(validator._fehler);
-				this.updateFehlerart(validator.getFehlerart());
-			}
-			try {
-				if (!this.pruefeAbschluss()) {
-					success = false;
-				}
-			} catch(e : any) {
-				this.addFehler(-1, "Unerwarteter Fehler bei der Validierung: " + e.getMessage());
-			}
-		}
-		return success;
-	}
-
-	/**
-	 * Führt ggf. eine Prüfung der Daten nach der Überprüfung der Subvalidatoren als Abschluss
-	 * der Prüfung aus. Dabei wird die Fehlerliste, falls es zu Fehlern kommt.
-	 * Diese Methode ist bei Bedarf in dem konkreten Fall zu überschreiben.
-	 *
-	 * @return true, falls die Prüfung erfolgreich war, und ansonsten false
-	 */
-	protected pruefeAbschluss(): boolean {
-		return true;
+	protected isActive(): boolean {
+		return this._kontext.getValidatorManager().isValidatorActiveInSchuljahr(this._kontext.getSchuljahr(), this.getClass().getCanonicalName());
 	}
 
 	/**

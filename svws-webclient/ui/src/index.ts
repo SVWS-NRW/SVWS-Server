@@ -130,7 +130,7 @@ export { ViewType } from "./ui/nav/ViewType";
 export { ModelProxy, type ModelProxyConfiguration } from "./model/ModelProxy";
 export { ValidationResult } from "./validation/ValidationResult";
 export { ValidatorBenutzerAnmeldenameNeu } from "./validation/ValidatorBenutzerAnmeldenameNeu";
-export { ValidatorEmail } from "./validation/ValidatorEmail";
+export { ValidatorEmail } from "./validation/common/ValidatorEmail";
 export { ValidatorKlassenKuerzel } from "./validation/ValidatorKlassenKuerzel";
 export { ValidatorKursKuerzel } from "./validation/ValidatorKursKuerzel";
 export { ValidatorLehrerKuerzel } from "./validation/ValidatorLehrerKuerzel";
@@ -139,15 +139,13 @@ export { ValidatorSchuelerAnmeldedatum } from "./validation/ValidatorSchuelerAnm
 export { ValidatorSchuelerAufnahmedatum } from "./validation/ValidatorSchuelerAufnahmedatum";
 export { ValidatorSchuelerDatumBeginnBildungsgang } from "./validation/ValidatorSchuelerDatumBeginnBildungsgang";
 export { ValidatorSchuelerGeburtsdatum } from "./validation/ValidatorSchuelerGeburtsdatum";
-export { ValidatorSortierung } from "./validation/ValidatorSortierung";
-export { ValidatorStringEquals } from "./validation/ValidatorStringEquals";
-export { ValidatorStringExistsIn } from "./validation/ValidatorStringExistsIn";
-export { ValidatorStringHasNoWhitespaces } from "./validation/ValidatorStringHasNoWhitespaces";
-export { ValidatorStringLength } from "./validation/ValidatorStringLength";
-export { ValidatorStringNotEmpty } from "./validation/ValidatorStringNotEmpty";
-export { ValidatorStringNotIn } from "./validation/ValidatorStringNotIn";
+export { ValidatorSortierung } from "./validation/common/ValidatorSortierung";
+export { ValidatorStringEquals } from "./validation/common/ValidatorStringEquals";
+export { ValidatorStringMatchesPattern } from "./validation/common/ValidatorStringMatchesPattern";
+export { ValidatorStringLength } from "./validation/common/ValidatorStringLength";
+export { ValidatorStringNotBlank } from "./validation/common/ValidatorStringNotBlank";
+export { ValidatorStringIsUniqueInList } from "./validation/common/ValidatorStringIsUniqueInList";
 export { ValidatorNumberLengthDecPlaces } from "./validation/ValidatorNumberLengthDecPlaces";
-export { ValidatorTelefon } from "./validation/ValidatorTelefon";
 
 // Manager
 export { AuswahlManager } from "./ui/AuswahlManager";

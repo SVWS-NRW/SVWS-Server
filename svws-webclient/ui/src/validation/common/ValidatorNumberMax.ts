@@ -1,11 +1,13 @@
-import { BasicValidator } from "../../../core/src/asd/validate/BasicValidator";
-import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
+import { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
 
 /**
  * Ein Validator, welcher prüft, ob ein Wert für das Input unter dem angegebenen Maximum liegt.
  */
 export class ValidatorNumberMax extends BasicValidator {
 
+
+	// TODO:remove and replace with ValidatorNumberRange
 	/** Eine Funktion, um auf die zu validierenden Daten zugreifen zu können. */
 	private readonly data: () => number | null;
 

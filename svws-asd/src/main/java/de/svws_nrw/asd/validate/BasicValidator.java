@@ -12,6 +12,9 @@ import jakarta.validation.constraints.NotNull;
  */
 public abstract class BasicValidator {
 
+	/** Eine Liste von Validatoren, die bei diesem Validator mitgeprüft werden. */
+	protected final @NotNull List<BasicValidator> _validatoren = new ArrayList<>();
+
 	/** Eine Liste mit Fehlern bei der Validierung */
 	protected final @NotNull List<ValidatorFehler> _fehler;
 
@@ -32,6 +35,14 @@ public abstract class BasicValidator {
 		this._defaultValidatorFehlerart = defaultValidatorFehlerart;
 	}
 
+	/**
+	 * Prüft, ob der Validator aktiv ist.
+	 *
+	 * @return true, falls der Validator aktiv ist
+	 */
+	protected boolean isActive() {
+		return true;
+	}
 
 	/**
 	 * Führt die Prüfungen des Validators aus. Dabei wird zunächst die Fehlerliste
@@ -39,17 +50,37 @@ public abstract class BasicValidator {
 	 *
 	 * @return true, falls alle Prüfroutinen erfolgreich waren, und ansonsten false
 	 */
-	public boolean run() {
+	public final boolean run() {
 		boolean success = true;
 		_fehler.clear();
 		_fehlerart = ValidatorFehlerart.UNGENUTZT;
-		// Berücksichtige auch Exceptions bei der Prüfung dieses Validators
+		if (!isActive()) {
+			return success;
+		}
+		// Führe die Prüfung dieses Validators aus - Erzeuge bei Exceptions einen unerwarteten Fehler
 		try {
-			if (!this.pruefe())
-				success = false;
+			if (!this.pruefe()) {
+				return false;
+			}
 		} catch (final Exception e) {
 			addFehler(-1, "Unerwarteter Fehler bei der Validierung: " + e.getMessage());
-			success = false;
+			return false;
+		}
+		// Führe die Prüfungen der Subvalidatoren durch
+		for (final @NotNull BasicValidator validator : _validatoren) {
+			if (!validator.run()) {
+				success = false;
+			}
+			_fehler.addAll(validator._fehler);
+			updateFehlerart(validator.getFehlerart());
+		}
+		// Führe die Abschluss-Prüfung dieses Validators aus - Erzeuge bei Exceptions einen unerwarteten Fehler
+		try {
+			if (!this.pruefeAbschluss()) {
+				success = false;
+			}
+		} catch (final Exception e) {
+			addFehler(-1, "Unerwarteter Fehler bei der Validierung: " + e.getMessage());
 		}
 		return success;
 	}
@@ -129,5 +160,17 @@ public abstract class BasicValidator {
 	 * @return true, falls die Prüfung erfolgreich war, und ansonsten false
 	 */
 	protected abstract boolean pruefe();
+
+	/**
+	 * Führt ggf. eine Prüfung der Daten nach der Überprüfung der Subvalidatoren als Abschluss
+	 * der Prüfung aus. Dabei wird die Fehlerliste, falls es zu Fehlern kommt.
+	 * Diese Methode ist bei Bedarf in dem konkreten Fall zu überschreiben.
+	 *
+	 * @return true, falls die Prüfung erfolgreich war, und ansonsten false
+	 */
+	protected boolean pruefeAbschluss() {
+		// Diese Methode ist bei Bedarf zu überschreiben
+		return true;
+	}
 
 }

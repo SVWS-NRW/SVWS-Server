@@ -83,9 +83,9 @@
 	import type { List } from "../../../../core/src/java/util/List";
 	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
 	import { ValidatorFehler } from "../../../../core/src/asd/validate/ValidatorFehler";
-	import { ValidatorStringNotEmpty } from "../../validation/ValidatorStringNotEmpty";
-	import { ValidatorStringLength } from "../../validation/ValidatorStringLength";
-	import { ValidatorEmail } from "../../validation/ValidatorEmail";
+	import { ValidatorStringNotBlank } from "../../validation/common/ValidatorStringNotBlank";
+	import { ValidatorStringLength } from "../../validation/common/ValidatorStringLength";
+	import { ValidatorEmail } from "../../validation/common/ValidatorEmail";
 	import { ValidationResult } from "../../validation/ValidationResult";
 
 	defineOptions({
@@ -172,9 +172,9 @@
 
 	const validationResult = computed(() => new ValidationResult(validierungFehler.value));
 
-	const validatorRequired = computed<ValidatorStringNotEmpty | null>(() => {
+	const validatorRequired = computed<ValidatorStringNotBlank | null>(() => {
 		if (props.required && !props.skipDefaultValidation) {
-			return new ValidatorStringNotEmpty(() => data.value);
+			return new ValidatorStringNotBlank(() => data.value);
 		}
 		return null;
 	});
@@ -193,7 +193,7 @@
 		return null;
 	});
 
-	const validatorDummy = new ValidatorStringNotEmpty(() => "dummy");
+	const validatorDummy = new ValidatorStringNotBlank(() => "dummy");
 
 	const validierungFehler = computed<List<ValidatorFehler>>(() => {
 		const result = new ArrayList<ValidatorFehler>();

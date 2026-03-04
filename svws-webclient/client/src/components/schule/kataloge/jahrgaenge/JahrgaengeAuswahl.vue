@@ -17,7 +17,7 @@
 				</template>
 				<template #actions v-if="!readonly">
 					<svws-ui-tooltip v-if="ServerMode.DEV.checkServerMode(serverMode)" position="bottom">
-						<svws-ui-button type="icon"
+						<svws-ui-button type="icon" v-if="benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)"
 							@click="gotoHinzufuegenView(true)"
 							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
 							<span class="icon i-ri-add-line" />

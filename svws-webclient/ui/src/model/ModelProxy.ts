@@ -110,8 +110,6 @@ export class ModelProxy<T extends object> {
 	/**
 	 * Erstellt für die Daten einen neuen Proxy mit dem zugehörigen ModelProxyHandler
 	 *
-	 * @param data   die Daten, in diesem Fall identisch zu this.config.data()
-	 *
 	 * @returns der neue Proxy
 	 */
 	private createNewProxy(): T {
@@ -162,7 +160,9 @@ export class ModelProxy<T extends object> {
 			return false;
 		}
 		const result = await this._config.patch(pending);
-		this._pending.value = {};
+		if (result) {
+			this._pending.value = {};
+		}
 		return result;
 	};
 
@@ -202,7 +202,7 @@ export class ModelProxy<T extends object> {
 	 * Setzt den Pending-State und führt anschließend die Validierungen.
 	 * Es wird in keinem Fall eine Patch-Methode ausgeführt.
 	 *
-	 * @param update   das Update für den Pending-State
+	 * @param state   das Update für den Pending-State
 	 */
 	public set pending(state: Partial<T>) {
 		this._pending.value = state;

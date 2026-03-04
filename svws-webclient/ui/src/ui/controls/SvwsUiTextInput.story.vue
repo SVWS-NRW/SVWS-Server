@@ -92,7 +92,7 @@
 
 <script setup lang="ts">
 
-	import { ValidatorStringLength } from '../../validation/ValidatorStringLength';
+	import { ValidatorStringLength } from '../../validation/common/ValidatorStringLength';
 	import { logEvent } from '../../stories/helper';
 	import type { List } from '../../../../core/src/java/util/List';
 	import type { ValidatorFehler } from '../../../../core/src/asd/validate/ValidatorFehler';

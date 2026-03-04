@@ -1,11 +1,12 @@
-import { BasicValidator } from "../../../core/src/asd/validate/BasicValidator";
-import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
+import { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
 
 /**
  * Ein Validator, welcher prüft, ob ein String eine gültige Email beinhaltet.
  */
 export class ValidatorEmail extends BasicValidator {
 
+	// TODO:remove and replace with ValidatorStringMatchesPattern
 	/** Eine Funktion, um auf die zu validierenden Daten zugreifen zu können. */
 	private readonly data: () => string | null | undefined;
 

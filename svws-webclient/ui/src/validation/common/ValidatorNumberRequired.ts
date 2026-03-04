@@ -1,5 +1,5 @@
-import { BasicValidator } from "../../../core/src/asd/validate/BasicValidator";
-import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
+import { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
 
 /**
  * Ein Validator, welcher prüft, ob ein Wert für das Input vorhanden ist (nicht null und nicht undefined)

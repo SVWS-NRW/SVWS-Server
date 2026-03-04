@@ -1,11 +1,16 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { ValidatorFehlerart } from '../../asd/validate/ValidatorFehlerart';
-import { ValidatorFehler } from '../../asd/validate/ValidatorFehler';
 import { ArrayList } from '../../java/util/ArrayList';
+import { ValidatorFehler } from '../../asd/validate/ValidatorFehler';
 import type { List } from '../../java/util/List';
 import { Class } from '../../java/lang/Class';
 
 export abstract class BasicValidator extends JavaObject {
+
+	/**
+	 * Eine Liste von Validatoren, die bei diesem Validator mitgeprüft werden.
+	 */
+	protected readonly _validatoren: List<BasicValidator> = new ArrayList<BasicValidator>();
 
 	/**
 	 * Eine Liste mit Fehlern bei der Validierung
@@ -35,6 +40,15 @@ export abstract class BasicValidator extends JavaObject {
 	}
 
 	/**
+	 * Prüft, ob der Validator aktiv ist.
+	 *
+	 * @return true, falls der Validator aktiv ist
+	 */
+	protected isActive(): boolean {
+		return true;
+	}
+
+	/**
 	 * Führt die Prüfungen des Validators aus. Dabei wird zunächst die Fehlerliste
 	 * geleert und durch die ausführenden Prüfroutinen befüllt.
 	 *
@@ -44,12 +58,30 @@ export abstract class BasicValidator extends JavaObject {
 		let success: boolean = true;
 		this._fehler.clear();
 		this._fehlerart = ValidatorFehlerart.UNGENUTZT;
+		if (!this.isActive()) {
+			return success;
+		}
 		try {
-			if (!this.pruefe())
-				success = false;
+			if (!this.pruefe()) {
+				return false;
+			}
 		} catch(e : any) {
 			this.addFehler(-1, "Unerwarteter Fehler bei der Validierung: " + e.getMessage());
-			success = false;
+			return false;
+		}
+		for (const validator of this._validatoren) {
+			if (!validator.run()) {
+				success = false;
+			}
+			this._fehler.addAll(validator._fehler);
+			this.updateFehlerart(validator.getFehlerart());
+		}
+		try {
+			if (!this.pruefeAbschluss()) {
+				success = false;
+			}
+		} catch(e : any) {
+			this.addFehler(-1, "Unerwarteter Fehler bei der Validierung: " + e.getMessage());
 		}
 		return success;
 	}
@@ -122,6 +154,17 @@ export abstract class BasicValidator extends JavaObject {
 	 * @return true, falls die Prüfung erfolgreich war, und ansonsten false
 	 */
 	protected abstract pruefe(): boolean;
+
+	/**
+	 * Führt ggf. eine Prüfung der Daten nach der Überprüfung der Subvalidatoren als Abschluss
+	 * der Prüfung aus. Dabei wird die Fehlerliste, falls es zu Fehlern kommt.
+	 * Diese Methode ist bei Bedarf in dem konkreten Fall zu überschreiben.
+	 *
+	 * @return true, falls die Prüfung erfolgreich war, und ansonsten false
+	 */
+	protected pruefeAbschluss(): boolean {
+		return true;
+	}
 
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.asd.validate.BasicValidator';
