@@ -9,7 +9,7 @@ import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenLehrerfunktion;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOSchulfunktion;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOLeitungsfunktion;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFunktion;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -131,7 +131,7 @@ public final class DataLehrerPersonalabschnittsdatenLehrerfunktionen extends Dat
 	}
 
 	private long updateIdFunktion(final Long idFunktion) throws ApiOperationException {
-		final DTOSchulfunktion f = conn.queryByKey(DTOSchulfunktion.class, idFunktion);
+		final DTOLeitungsfunktion f = conn.queryByKey(DTOLeitungsfunktion.class, idFunktion);
 		if (f == null)
 			throw new ApiOperationException(Status.NOT_FOUND,  "Keine Funktion mit der ID  %d gefunden.".formatted(idFunktion));
 		return f.ID;

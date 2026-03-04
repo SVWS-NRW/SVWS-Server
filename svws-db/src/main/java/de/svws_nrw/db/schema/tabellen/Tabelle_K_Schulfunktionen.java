@@ -46,7 +46,7 @@ public class Tabelle_K_Schulfunktionen extends SchemaTabelle {
 		setImportExport(true);
 		setPKAutoIncrement();
 		setJavaSubPackage("schild.katalog");
-		setJavaClassName("DTOSchulfunktion");
+		setJavaClassName("DTOLeitungsfunktion");
 		setJavaComment("frei definierbarer Katalog für Schulfunktionen, die dann im Lehrerkatalog den Lehrern zugewiesen werden können");
 	}
 

@@ -27,43 +27,43 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Schulfunktionen")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar"})
-public final class DTOSchulfunktion {
+public final class DTOLeitungsfunktion {
 
 	/** Die Datenbankabfrage für alle DTOs */
-	public static final String QUERY_ALL = "SELECT e FROM DTOSchulfunktion e";
+	public static final String QUERY_ALL = "SELECT e FROM DTOLeitungsfunktion e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOSchulfunktion e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOLeitungsfunktion e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOSchulfunktion e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOLeitungsfunktion e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOSchulfunktion e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOLeitungsfunktion e WHERE e.ID IS NOT NULL";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOSchulfunktion e WHERE e.ID = ?1";
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOLeitungsfunktion e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOSchulfunktion e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOLeitungsfunktion e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
-	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOSchulfunktion e WHERE e.Bezeichnung = ?1";
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM DTOLeitungsfunktion e WHERE e.Bezeichnung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
-	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOSchulfunktion e WHERE e.Bezeichnung IN ?1";
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM DTOLeitungsfunktion e WHERE e.Bezeichnung IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
-	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOSchulfunktion e WHERE e.Sortierung = ?1";
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM DTOLeitungsfunktion e WHERE e.Sortierung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
-	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOSchulfunktion e WHERE e.Sortierung IN ?1";
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM DTOLeitungsfunktion e WHERE e.Sortierung IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
-	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOSchulfunktion e WHERE e.Sichtbar = ?1";
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM DTOLeitungsfunktion e WHERE e.Sichtbar = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
-	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOSchulfunktion e WHERE e.Sichtbar IN ?1";
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM DTOLeitungsfunktion e WHERE e.Sichtbar IN ?1";
 
 	/** ID der schulinternen Funktion */
 	@Id
@@ -90,17 +90,17 @@ public final class DTOSchulfunktion {
 	public Boolean Sichtbar;
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOSchulfunktion ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOLeitungsfunktion ohne eine Initialisierung der Attribute.
 	 */
 	@SuppressWarnings("unused")
-	private DTOSchulfunktion() {
+	private DTOLeitungsfunktion() {
 	}
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOSchulfunktion ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOLeitungsfunktion ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 */
-	public DTOSchulfunktion(final long ID) {
+	public DTOLeitungsfunktion(final long ID) {
 		this.ID = ID;
 	}
 
@@ -113,7 +113,7 @@ public final class DTOSchulfunktion {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DTOSchulfunktion other = (DTOSchulfunktion) obj;
+		DTOLeitungsfunktion other = (DTOLeitungsfunktion) obj;
 		return ID == other.ID;
 	}
 
@@ -133,7 +133,7 @@ public final class DTOSchulfunktion {
 	 */
 	@Override
 	public String toString() {
-		return "DTOSchulfunktion(ID=" + this.ID + ", Bezeichnung=" + this.Bezeichnung + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ")";
+		return "DTOLeitungsfunktion(ID=" + this.ID + ", Bezeichnung=" + this.Bezeichnung + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ")";
 	}
 
 }

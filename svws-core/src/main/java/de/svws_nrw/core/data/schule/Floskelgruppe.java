@@ -30,7 +30,7 @@ public class Floskelgruppe {
 	@Schema(description = "Die ID der Floskelgruppenart", example = "1")
 	public Long idFloskelgruppenart;
 
-	/** Gibt an, ob die Telefonart in anderen Datenbanktabellen referenziert ist oder nicht. */
-	@Schema(description = "Gibt an, ob die Telefonart in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
+	/** Gibt an, ob die Floskelgruppe in anderen Datenbanktabellen referenziert ist oder nicht. */
+	@Schema(description = "Gibt an, ob die Floskelgruppe in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
 	public boolean referenziertInAnderenTabellen;
 }

@@ -27,49 +27,49 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "K_Schulfunktionen")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "SchulnrEigner"})
-public final class MigrationDTOSchulfunktion {
+public final class MigrationDTOLeitungsfunktion {
 
 	/** Die Datenbankabfrage für alle DTOs */
-	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOSchulfunktion e";
+	public static final String QUERY_ALL = "SELECT e FROM MigrationDTOLeitungsfunktion e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM MigrationDTOSchulfunktion e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM MigrationDTOLeitungsfunktion e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOSchulfunktion e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM MigrationDTOLeitungsfunktion e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOSchulfunktion e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM MigrationDTOLeitungsfunktion e WHERE e.ID IS NOT NULL";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOSchulfunktion e WHERE e.ID = ?1";
+	public static final String QUERY_BY_ID = "SELECT e FROM MigrationDTOLeitungsfunktion e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOSchulfunktion e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM MigrationDTOLeitungsfunktion e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Bezeichnung */
-	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOSchulfunktion e WHERE e.Bezeichnung = ?1";
+	public static final String QUERY_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOLeitungsfunktion e WHERE e.Bezeichnung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Bezeichnung */
-	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOSchulfunktion e WHERE e.Bezeichnung IN ?1";
+	public static final String QUERY_LIST_BY_BEZEICHNUNG = "SELECT e FROM MigrationDTOLeitungsfunktion e WHERE e.Bezeichnung IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Sortierung */
-	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM MigrationDTOSchulfunktion e WHERE e.Sortierung = ?1";
+	public static final String QUERY_BY_SORTIERUNG = "SELECT e FROM MigrationDTOLeitungsfunktion e WHERE e.Sortierung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sortierung */
-	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM MigrationDTOSchulfunktion e WHERE e.Sortierung IN ?1";
+	public static final String QUERY_LIST_BY_SORTIERUNG = "SELECT e FROM MigrationDTOLeitungsfunktion e WHERE e.Sortierung IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes Sichtbar */
-	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM MigrationDTOSchulfunktion e WHERE e.Sichtbar = ?1";
+	public static final String QUERY_BY_SICHTBAR = "SELECT e FROM MigrationDTOLeitungsfunktion e WHERE e.Sichtbar = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sichtbar */
-	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM MigrationDTOSchulfunktion e WHERE e.Sichtbar IN ?1";
+	public static final String QUERY_LIST_BY_SICHTBAR = "SELECT e FROM MigrationDTOLeitungsfunktion e WHERE e.Sichtbar IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
-	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchulfunktion e WHERE e.SchulnrEigner = ?1";
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOLeitungsfunktion e WHERE e.SchulnrEigner = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
-	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOSchulfunktion e WHERE e.SchulnrEigner IN ?1";
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOLeitungsfunktion e WHERE e.SchulnrEigner IN ?1";
 
 	/** ID der schulinternen Funktion */
 	@Id
@@ -101,17 +101,17 @@ public final class MigrationDTOSchulfunktion {
 	public Integer SchulnrEigner;
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse MigrationDTOSchulfunktion ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse MigrationDTOLeitungsfunktion ohne eine Initialisierung der Attribute.
 	 */
 	@SuppressWarnings("unused")
-	private MigrationDTOSchulfunktion() {
+	private MigrationDTOLeitungsfunktion() {
 	}
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOLeitungsfunktion ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 */
-	public MigrationDTOSchulfunktion(final Long ID) {
+	public MigrationDTOLeitungsfunktion(final Long ID) {
 		if (ID == null) {
 			throw new NullPointerException("ID must not be null");
 		}
@@ -127,7 +127,7 @@ public final class MigrationDTOSchulfunktion {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		MigrationDTOSchulfunktion other = (MigrationDTOSchulfunktion) obj;
+		MigrationDTOLeitungsfunktion other = (MigrationDTOLeitungsfunktion) obj;
 		if (ID == null) {
 			if (other.ID != null)
 				return false;

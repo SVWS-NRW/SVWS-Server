@@ -6,6 +6,7 @@ import de.svws_nrw.core.data.schule.BetriebeAnsprechpartner;
 import de.svws_nrw.core.data.schule.Betriebsart;
 import de.svws_nrw.core.data.schule.Floskel;
 import de.svws_nrw.core.data.schule.Floskelgruppe;
+import de.svws_nrw.core.data.schule.Leitungsfunktion;
 import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.core.data.schule.Telefonart;
 import de.svws_nrw.data.erzieher.DataErzieherarten;
@@ -15,6 +16,7 @@ import de.svws_nrw.data.schule.DataBetriebsarten;
 import de.svws_nrw.data.schule.DataFloskelJahrgangZuordnung;
 import de.svws_nrw.data.schule.DataFloskelgruppen;
 import de.svws_nrw.data.schule.DataFloskeln;
+import de.svws_nrw.data.schule.DataLeitungsfunktionen;
 import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.data.schule.DataTelefonarten;
 import java.io.InputStream;
@@ -3327,5 +3329,113 @@ public class APISchule {
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste der Leitungsfunktionen.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Leitungsfunktionen
+	 */
+	@GET
+	@Path("/leitungsfunktionen")
+	@Operation(summary = "Gibt eine Liste der Leitungsfunktionen im Katalog zurück.",
+			description = "Gibt die Leitungsfunktionen zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste der Leitungsfunktionen.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Leitungsfunktion.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	public Response getLeitungsfunktionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataLeitungsfunktionen(conn).getAllAsResponse(),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Leitungsfunktion.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die ID zur Identifikation der Leitungsfunktion
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/leitungsfunktionen/{id : \\d+}")
+	@Operation(summary = "Patched die Leitungsfunktion mit der angegebenen ID.",
+			description = "Patched die Leitungsfunktion mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
+	public Response patchLeitungsfunktion(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch einer Leitungsfunktion", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Leitungsfunktion.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataLeitungsfunktionen(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen einer Leitungsfunktion.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten der Leitungsfunktion
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit der erstellten Leitungsfunktion
+	 */
+	@POST
+	@Path("/leitungsfunktionen/create")
+	@Operation(summary = "Erstellt eine neue Leitungsfunktion und gibt das erstellte Objekt zurück.",
+			description = "Erstellt eine neue Leitungsfunktion, insofern die notwendigen Berechtigungen vorliegen")
+	@ApiResponse(responseCode = "201", description = "Die Leitungsfunktion wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Leitungsfunktion.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Leitungsfunktionen anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addLeitungsfunktion(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten der zu erstellenden Leitungsfunktion", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Leitungsfunktion.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataLeitungsfunktionen(conn).addAsResponse(is), request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Leitungsfunktionen.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste der zu löschenden ids
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/leitungsfunktionen/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Leitungsfunktionen.", description = "Entfernt mehrere Leitungsfunktionen, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Leitungsfunktionen zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Leitungsfunktionen nicht vorhanden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteLeitungsfunktionen(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden Leitungsfunktionen",
+					required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataLeitungsfunktionen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+	}
+
+
+
 
 }

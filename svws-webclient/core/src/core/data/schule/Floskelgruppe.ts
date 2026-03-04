@@ -24,7 +24,7 @@ export class Floskelgruppe extends JavaObject {
 	public idFloskelgruppenart: number | null = null;
 
 	/**
-	 * Gibt an, ob die Telefonart in anderen Datenbanktabellen referenziert ist oder nicht.
+	 * Gibt an, ob die Floskelgruppe in anderen Datenbanktabellen referenziert ist oder nicht.
 	 */
 	public referenziertInAnderenTabellen: boolean = false;
 

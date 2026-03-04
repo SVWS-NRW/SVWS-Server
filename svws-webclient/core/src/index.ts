@@ -771,6 +771,7 @@ export { FoerderschwerpunktEintrag } from './core/data/schule/Foerderschwerpunkt
 export { Haltestelle } from './core/data/schule/Haltestelle';
 export { HerkunftKatalogEintrag } from './core/data/schule/HerkunftKatalogEintrag';
 export { Kindergarten } from './core/data/schule/Kindergarten';
+export { Leitungsfunktion } from './core/data/schule/Leitungsfunktion';
 export { Lernplattform } from './core/data/schule/Lernplattform';
 export { Merkmal } from './core/data/schule/Merkmal';
 export { PruefungsordnungKatalogEintrag } from './core/data/schule/PruefungsordnungKatalogEintrag';
