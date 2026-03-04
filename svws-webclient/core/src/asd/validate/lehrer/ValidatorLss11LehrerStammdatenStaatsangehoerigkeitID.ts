@@ -18,7 +18,7 @@ export class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends Valida
 
 	private static readonly setStaatsangehoerigkeit: JavaSet<string> = java_util_Set_of("DEU", "BEL", "BGR", "DNK", "EST", "FIN", "FRA", "HRV", "SVN", "GRC", "IRL", "ISL", "ITA", "LVA", "LIE", "LTU", "LUX", "MLT", "NLD", "NOR", "AUT", "POL", "PRT", "ROU", "SVK", "SWE", "CHE", "ESP", "CZE", "HUN", "GBR", "CYP");
 
-	private static readonly fehlertext: string = "Zu dieser verbeamteten Lehrkraft ist die Staatsangehörigkeit '\" + LehrerStammdaten.staatsangehoerigkeitID + \"' angegeben. Dabei handelt es sich jedoch nicht um eine Staatsangehörigkeit eines Mitgliedsstaats der Europäischen Union (EU) oder des Europäischen Wirtschaftsraums (EWR). Die vorgenommene Eintragung kann nur in Ausnahmefällen korrekt sein. Für Lehrkräfte, die neben einer ausländischen Staatsangehörigkeit auch die deutsche Staatsangehörigkeit besitzen, erfassen Sie bitte die Staatsangehörigkeit 'deutsch'. ";
+	private static readonly FEHLERTEXT: string = "Zu dieser verbeamteten Lehrkraft ist die Staatsangehörigkeit '\" + LehrerStammdaten.staatsangehoerigkeitID + \"' angegeben. Dabei handelt es sich jedoch nicht um eine Staatsangehörigkeit eines Mitgliedsstaats der Europäischen Union (EU) oder des Europäischen Wirtschaftsraums (EWR). Die vorgenommene Eintragung kann nur in Ausnahmefällen korrekt sein. Für Lehrkräfte, die neben einer ausländischen Staatsangehörigkeit auch die deutsche Staatsangehörigkeit besitzen, erfassen Sie bitte die Staatsangehörigkeit 'deutsch'. ";
 
 
 	/**
@@ -36,7 +36,7 @@ export class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends Valida
 
 	protected pruefe(): boolean {
 		if (ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.setRechtsverhaeltnis.contains(this.rechtsverhaeltnis.get()) && !ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.setStaatsangehoerigkeit.contains(this.daten.get())) {
-			this.addFehler(0, ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.fehlertext);
+			this.addFehler(0, ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.FEHLERTEXT);
 			return false;
 		}
 		return true;
