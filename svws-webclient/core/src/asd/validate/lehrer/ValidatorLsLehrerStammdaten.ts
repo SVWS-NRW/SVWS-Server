@@ -1,6 +1,7 @@
 import { ValidatorLsgLehrerStammdatenGeschlecht } from '../../../asd/validate/lehrer/ValidatorLsgLehrerStammdatenGeschlecht';
 import { ValidatorLskLehrerStammdatenKuerzel } from '../../../asd/validate/lehrer/ValidatorLskLehrerStammdatenKuerzel';
 import { ValidatorLsdLehrerStammdatenGeburtsdatum } from '../../../asd/validate/lehrer/ValidatorLsdLehrerStammdatenGeburtsdatum';
+import { ValidatorLssLehrerStammdatenStaatsangehoerigkeitID } from '../../../asd/validate/lehrer/ValidatorLssLehrerStammdatenStaatsangehoerigkeitID';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorLsnLehrerStammdatenNachname } from '../../../asd/validate/lehrer/ValidatorLsnLehrerStammdatenNachname';
@@ -14,20 +15,23 @@ export class ValidatorLsLehrerStammdaten extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param nachname        die Daten des Validators
-	 * @param vorname         die Daten des Validators
-	 * @param geburtsdatum    die Daten des Validators
-	 * @param geschlecht      die Daten des Validators
-	 * @param kuerzel         die Daten des Validators
-	 * @param kontext         der Kontext des Validators
+	 * @param nachname                die Daten des Validators
+	 * @param vorname                 die Daten des Validators
+	 * @param geburtsdatum            die Daten des Validators
+	 * @param geschlecht              die Daten des Validators
+	 * @param kuerzel                 die Daten des Validators
+	 * @param staatsangehoerigkeitID  die Daten des Validators
+	 * @param rechtsverhaeltnis       die Daten des Validators
+	 * @param kontext                 der Kontext des Validators
 	 */
-	public constructor(nachname: Supplier<string | null>, vorname: Supplier<string | null>, geburtsdatum: Supplier<string | null>, geschlecht: Supplier<number | null>, kuerzel: Supplier<string | null>, kontext: ValidatorKontext) {
+	public constructor(nachname: Supplier<string | null>, vorname: Supplier<string | null>, geburtsdatum: Supplier<string | null>, geschlecht: Supplier<number | null>, kuerzel: Supplier<string | null>, staatsangehoerigkeitID: Supplier<string | null>, rechtsverhaeltnis: Supplier<string | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this._validatoren.add(new ValidatorLsnLehrerStammdatenNachname(nachname, kontext));
 		this._validatoren.add(new ValidatorLsvLehrerStammdatenVorname(vorname, kontext));
 		this._validatoren.add(new ValidatorLsdLehrerStammdatenGeburtsdatum(geburtsdatum, kontext));
 		this._validatoren.add(new ValidatorLsgLehrerStammdatenGeschlecht(geschlecht, kontext));
 		this._validatoren.add(new ValidatorLskLehrerStammdatenKuerzel(kuerzel, kontext));
+		this._validatoren.add(new ValidatorLssLehrerStammdatenStaatsangehoerigkeitID(staatsangehoerigkeitID, rechtsverhaeltnis, kontext));
 	}
 
 	protected pruefe(): boolean {

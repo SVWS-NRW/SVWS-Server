@@ -406,6 +406,11 @@ export { ValidatorLsn15LehrerStammdatenNachname } from './asd/validate/lehrer/Va
 export { ValidatorLsn16LehrerStammdatenNachname } from './asd/validate/lehrer/ValidatorLsn16LehrerStammdatenNachname';
 export { ValidatorLsn17LehrerStammdatenNachname } from './asd/validate/lehrer/ValidatorLsn17LehrerStammdatenNachname';
 export { ValidatorLsnLehrerStammdatenNachname } from './asd/validate/lehrer/ValidatorLsnLehrerStammdatenNachname';
+export { ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID } from './asd/validate/lehrer/ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID';
+export { ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID } from './asd/validate/lehrer/ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID';
+export { ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID } from './asd/validate/lehrer/ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID';
+export { ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID } from './asd/validate/lehrer/ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID';
+export { ValidatorLssLehrerStammdatenStaatsangehoerigkeitID } from './asd/validate/lehrer/ValidatorLssLehrerStammdatenStaatsangehoerigkeitID';
 export { ValidatorLsv00LehrerStammdatenVorname } from './asd/validate/lehrer/ValidatorLsv00LehrerStammdatenVorname';
 export { ValidatorLsv10LehrerStammdatenVorname } from './asd/validate/lehrer/ValidatorLsv10LehrerStammdatenVorname';
 export { ValidatorLsv11LehrerStammdatenVorname } from './asd/validate/lehrer/ValidatorLsv11LehrerStammdatenVorname';

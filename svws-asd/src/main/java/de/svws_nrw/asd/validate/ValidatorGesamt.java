@@ -50,6 +50,8 @@ public final class ValidatorGesamt extends Validator {
 					() -> lehrer.geburtsdatum,
 					() -> lehrer.geschlecht,
 					() -> lehrer.kuerzel,
+					() -> lehrer.staatsangehoerigkeitID,
+					() -> lehrer.rechtsverhaeltnis,
 					this.kontext()));
 			_validatoren.add(new ValidatorLpLehrerPersonaldaten(
 					() -> lehrer.id,
