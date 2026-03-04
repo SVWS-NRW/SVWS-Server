@@ -1,4 +1,4 @@
-import type { ENMKlasse, ENMLeistung, ENMLeistungBemerkungen, ENMLernabschnitt, ENMTeilleistung } from "@core";
+import type { ENMKlasse, ENMLeistung, ENMLeistungBemerkungen, ENMLernabschnitt, ENMSchuelerAnkreuzkompetenz, ENMTeilleistung } from "@core";
 import { BenutzerKompetenz, BenutzerTyp, DeveloperNotificationException, ENMDaten, OpenApiError } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -107,6 +107,13 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 			throw new DeveloperNotificationException("Die ENM-Daten wurden nicht geladen.");
 		}
 		return this._state.value.manager;
+	}
+
+	public get hideAnkreuzkompetenzen(): boolean {
+		if (this._state.value.manager === null) {
+			return true;
+		}
+		return this._state.value.manager.listKlassenMitAnkreuzkompetenzen.isEmpty();
 	}
 
 	/**
@@ -262,6 +269,21 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	public patchLernabschnitt = async (data: ENMLernabschnitt, patch: Partial<ENMLernabschnitt>): Promise<void> => {
 		patch.id = data.id;
 		await api.server.patchENMSchuelerLernabschnitt(patch, api.schema);
+		Object.assign(data, patch);
+		this.commit();
+	};
+
+	/**
+	 * Passt die übergebenen Ankreuzkompetenzen an.
+	 *
+	 * @param patch   der Patch für die Ankreuzkompetenzen
+	 *
+	 * @returns true im Erfolgsfall und ansonsten false
+	 */
+	public patchAnkreuzkompetenz = async (data: ENMSchuelerAnkreuzkompetenz, patch: Partial<ENMSchuelerAnkreuzkompetenz>): Promise<void> => {
+		patch.id = data.id;
+		console.log(patch, 'für ID', data.id);
+		// await api.server.patchENMSchuelerAnkreuzkompetenz(patch, api.schema);
 		Object.assign(data, patch);
 		this.commit();
 	};

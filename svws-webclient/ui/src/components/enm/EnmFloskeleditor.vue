@@ -1,11 +1,11 @@
 <template>
 	<svws-ui-modal :show type="default" size="big" @update:show="show = $event">
 		<template #modalTitle>
-			<div class="text-right w-full">{{ schueler?.nachname }}, {{ schueler?.vorname }}<br>{{ hauptgruppenBezeichnung[erlaubteHauptgruppe] }}</div>
+			<div class="text-right w-full">{{ schueler?.nachname }}, {{ schueler?.vorname }}<br>{{ hauptgruppenBezeichnung[erlaubteHauptgruppe] }} {{ fachbezeichnung ? `für ${fachbezeichnung}` : '' }}</div>
 		</template>
 		<template #modalContent>
 			<div class="flex overflow-hidden gap-6">
-				<div class="min-w-fit overflow-auto border rounded-md border-uistatic-50">
+				<div v-if="!disableSchuelerGrid" class="min-w-fit overflow-auto border rounded-md border-uistatic-50">
 					<ui-table-grid name="Schüler" :manager="() => gridManagerSchueler">
 						<template #default="{ row, index }">
 							<td :ref="auswahlSchueler(index)" :class="[
@@ -105,6 +105,7 @@
 		erlaubteHauptgruppe: BemerkungenHauptgruppe;
 		initialRow: number | null;
 		onUpdate: (row: number | null, focus: boolean) => void;
+		disableSchuelerGrid?: boolean;
 	}>();
 
 	const show = defineModel<boolean>({ default: true });
@@ -292,6 +293,13 @@
 			default:
 				return null;
 		}
+	});
+
+	const fachbezeichnung = computed(() => {
+		if (props.auswahl.leistung === null) {
+			return null;
+		}
+		return props.enmManager().lerngruppeByIDOrException(props.auswahl.leistung.lerngruppenID).bezeichnung;
 	});
 
 	const text = ref<string | null>(null);

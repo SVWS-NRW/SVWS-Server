@@ -1,3 +1,4 @@
+import type { ENMAnkreuzkompetenz } from "../../../../core/src/core/data/enm/ENMAnkreuzkompetenz";
 import type { ENMDaten } from "../../../../core/src/core/data/enm/ENMDaten";
 import type { ENMFach } from "../../../../core/src/core/data/enm/ENMFach";
 import type { ENMFloskelgruppe } from "../../../../core/src/core/data/enm/ENMFloskelgruppe";
@@ -7,6 +8,7 @@ import type { ENMLehrer } from "../../../../core/src/core/data/enm/ENMLehrer";
 import type { ENMLeistung } from "../../../../core/src/core/data/enm/ENMLeistung";
 import type { ENMLerngruppe } from "../../../../core/src/core/data/enm/ENMLerngruppe";
 import type { ENMSchueler } from "../../../../core/src/core/data/enm/ENMSchueler";
+import type { ENMSchuelerAnkreuzkompetenz } from "../../../../core/src/core/data/enm/ENMSchuelerAnkreuzkompetenz";
 import type { ENMTeilleistung } from "../../../../core/src/core/data/enm/ENMTeilleistung";
 import type { ENMTeilleistungsart } from "../../../../core/src/core/data/enm/ENMTeilleistungsart";
 import type { Comparator } from "../../../../core/src/java/util/Comparator";
@@ -65,6 +67,9 @@ export class EnmManager {
 	/** Die Liste aller Floskelgruppen */
 	readonly listFloskelgruppen: List<ENMFloskelgruppe>;
 
+	/** Die Liste aller Ankreuzkompetenzen */
+	readonly listAnkreuzkompetenzen: List<ENMAnkreuzkompetenz>;
+
 	/** Eine Map von der ID der Jahrgänge auf deren Objekte */
 	readonly mapJahrgaenge: JavaMap<number, ENMJahrgang> = new HashMap<number, ENMJahrgang>();
 
@@ -83,8 +88,14 @@ export class EnmManager {
 	/** Eine Map von der ID der Lerngruppen auf deren Objekte */
 	readonly mapLerngruppen: JavaMap<number, ENMLerngruppe> = new HashMap<number, ENMLerngruppe>();
 
+	/** Eine Map mit den Ankreuzkompetenzen */
+	readonly mapAnkreuzkompetenzen: JavaMap<number, ENMAnkreuzkompetenz> = new HashMap();
+
 	/** Eine Map von der ID der Schüler auf deren Objekte */
 	readonly mapSchueler: JavaMap<number, ENMSchueler> = new HashMap<number, ENMSchueler>();
+
+	/** Eine Map mit den Ankreuzkompetenzen, zugeordnet zu den Schülern */
+	readonly mapSchuelerAnkreuzkompetenzen: JavaMap<number, List<ENMSchuelerAnkreuzkompetenz>> = new HashMap();
 
 	/** Eine Map, welcher Lerngruppen-ID die Menge der zugehörigen Schüler-Objekte zuordnet */
 	readonly mapLerngruppenSchueler: JavaMap<number, List<ENMSchueler>> = new HashMap<number, List<ENMSchueler>>();
@@ -104,6 +115,7 @@ export class EnmManager {
 	/** Eine HahMap2D der Leistungen und Teilleistungsarten sowie der Teilleistung */
 	readonly mapLeistungTeilleistungsartTeilleistung: HashMap2D<number, number, ENMTeilleistung> = new HashMap2D();
 
+	/** Eine Map mit den Zuordnungen von Leistungen zu Pairs mit Leistung und Schueler */
 	readonly mapLerngruppeLeistungen: JavaMap<number, List<PairNN<ENMLeistung, ENMSchueler>>> = new HashMap();
 
 	/** Die Menge aller Lerngruppen-IDs, wo der Lehrer bei der Lerngruppe als Fachlehrer eingetragen ist. */
@@ -114,6 +126,12 @@ export class EnmManager {
 
 	/** Die Liste aller Klassen eines Klassenlehrers, sortiert nach Jahrgängen */
 	readonly listKlassenKlassenlehrer: List<ENMKlasse> = new ArrayList<ENMKlasse>();
+
+	/** Ein Set mit allen Klassen, die min. einen Schüler mit Ankreuzkompetenz haben */
+	readonly setKlassenMitAnkreuzkompetenzen: JavaSet<number> = new HashSet<number>();
+
+	/** Die Liste aller Klassen eines Lehrers, sortiert nach Jahrgängen und nur mit Ankreuzkompetenzen */
+	readonly listKlassenMitAnkreuzkompetenzen: List<ENMKlasse> = new ArrayList<ENMKlasse>();
 
 	/** Der Manager für die Konfiguration der Sperrung der Noteneingabe */
 	private managerSperrungen: EnmSperrManager = new EnmSperrManager("[]");
@@ -186,6 +204,9 @@ export class EnmManager {
 					}
 				}
 			}
+			const ankreuzkompetenzen = new ArrayList<ENMSchuelerAnkreuzkompetenz>(s.ankreuzkompetenzen);
+			ankreuzkompetenzen.sort(this.comparatorSchuelerAnkreuzkompetenzen);
+			this.mapSchuelerAnkreuzkompetenzen.put(s.id, ankreuzkompetenzen);
 			const klasse = this.mapKlassenSchueler.get(s.klasseID);
 			if (klasse === null) {
 				throw new DeveloperNotificationException(`Die Klasse mit der ID ${s.klasseID} wird in Schülerdaten angegeben, ist aber im Katalog der Klassen nicht vorhanden.`);
@@ -243,6 +264,9 @@ export class EnmManager {
 		}
 
 		for (const s of daten.schueler) {
+			if (!s.ankreuzkompetenzen.isEmpty()) {
+				this.setKlassenMitAnkreuzkompetenzen.add(s.klasseID);
+			}
 			for (const l of s.leistungsdaten) {
 				if (this.setLerngruppenLehrer.contains(l.lerngruppenID)) {
 					const pair = new PairNN(l, s);
@@ -250,6 +274,20 @@ export class EnmManager {
 					list?.add(pair);
 				}
 			}
+		}
+
+		for (const id of this.setKlassenMitAnkreuzkompetenzen) {
+			const klasse = this.mapKlassen.get(id);
+			if (klasse !== null) {
+				this.listKlassenMitAnkreuzkompetenzen.add(klasse);
+			}
+		}
+		this.listKlassenMitAnkreuzkompetenzen.sort(this.comparatorKlassen);
+
+		this.listAnkreuzkompetenzen = new ArrayList(daten.ankreuzkompetenzen.kompetenzen);
+		this.listAnkreuzkompetenzen.sort(this.comparatorAnkreuzkompetenzen);
+		for (const a of this.listAnkreuzkompetenzen) {
+			this.mapAnkreuzkompetenzen.put(a.id, a);
 		}
 	}
 
@@ -467,6 +505,30 @@ export class EnmManager {
 	public comparatorTeilleistungsarten = <Comparator<ENMTeilleistungsart>>{ compare: this.compareTeilleistungsarten };
 
 	/**
+	 * Vergleicht zwei Fächer miteinander und sortiert diese.
+	 *
+	 * @param a   die erste Fach
+	 * @param b   die zweite Fach
+	 *
+	 * @returns der Wert für den Vergleich (< 0, 0 oder >0)
+	 */
+	protected compareFaecher = (a: ENMFach | null, b: ENMFach | null): number => {
+		if ((a === null) && (b === null)) {
+			return 0;
+		}
+		if (a === null) {
+			return -1;
+		}
+		if (b === null) {
+			return 1;
+		}
+		return a.sortierung - b.sortierung;
+	};
+
+	/** Definition des Comparators für zwei Fächer */
+	public comparatorFaecher = <Comparator<ENMFach>>{ compare: this.compareFaecher };
+
+	/**
 	 * Vergleicht zwei Teilleistungen miteinander und sortiert diese.
 	 *
 	 * @param a   die erste Teilleistung
@@ -485,13 +547,70 @@ export class EnmManager {
 		return a.id - b.id;
 	};
 
+	/** Definition des Comparators für zwei Teilleistungen */
+	public comparatorTeilleistungen = <Comparator<ENMTeilleistung>>{ compare: this.compareTeilleistungen };
+
+	/**
+	 * Vergleicht zwei Ankreuzkompetenzen miteinander und sortiert diese.
+	 *
+	 * @param a   die erste Ankreuzkompetenz
+	 * @param b   die zweite Ankreuzkompetenz
+	 *
+	 * @returns der Wert für den Vergleich (< 0, 0 oder >0)
+	 */
+	protected compareAnkreuzkompetenzen = (a: ENMAnkreuzkompetenz | null, b: ENMAnkreuzkompetenz | null): number => {
+		if ((a === null) && (b === null)) {
+			return 0;
+		}
+		if (a === null) {
+			return -1;
+		}
+		if (b === null) {
+			return 1;
+		}
+		// Vergleiche zuerst anhand der gesetzten Fächer der Ankreuzkompetenzen...
+		const fachA = this.mapFaecher.get(a.fachID);
+		const fachB = this.mapFaecher.get(b.fachID);
+		const tmp = this.compareFaecher(fachA, fachB);
+		if (tmp !== 0) {
+			return tmp;
+		}
+		const tmp2 = a.sortierung - b.sortierung;
+		if (tmp2 !== 0) {
+			return tmp;
+		}
+		return a.text.localeCompare(b.text);
+	};
+
+	/** Definition des Comparators für zwei SchuelerAnkreuzkompetenzen */
+	public comparatorAnkreuzkompetenzen = <Comparator<ENMAnkreuzkompetenz>>{ compare: this.compareAnkreuzkompetenzen };
+
+	/**
+	 * Vergleicht zwei SchuelerAnkreuzkompetenzen miteinander und sortiert diese.
+	 *
+	 * @param a   die erste SchuelerAnkreuzkompetenz
+	 * @param b   die zweite SchuelerAnkreuzkompetenz
+	 *
+	 * @returns der Wert für den Vergleich (< 0, 0 oder >0)
+	 */
+	protected compareSchuelerAnkreuzkompetenzen = (a: ENMSchuelerAnkreuzkompetenz, b: ENMSchuelerAnkreuzkompetenz): number => {
+		const aa = this.mapAnkreuzkompetenzen.get(a.kompetenzID);
+		const bb = this.mapAnkreuzkompetenzen.get(b.kompetenzID);
+		const tmp = this.compareAnkreuzkompetenzen(aa, bb);
+		if (tmp !== 0) {
+			return tmp;
+		}
+		return a.id - b.id;
+	};
+
+	/** Definition des Comparators für zwei SchuelerAnkreuzkompetenzen */
+	public comparatorSchuelerAnkreuzkompetenzen = <Comparator<ENMSchuelerAnkreuzkompetenz>>{ compare: this.compareSchuelerAnkreuzkompetenzen };
+
+
 	/** Vergleicht zwei Auswahlelemente. Sie sind verschieden, wenn die Schüler- oder Leistungsindizes oder die Leistungs-Id verschieden sind.  */
 	public compareAuswahlLeistung(a: PairNN<ENMLeistung, ENMSchueler> | null, b: PairNN<ENMLeistung, ENMSchueler> | null): boolean {
 		return (a === b);
 	}
-
-	/** Definition des Comparators für zwei Teilleistungen */
-	public comparatorTeilleistungen = <Comparator<ENMTeilleistung>>{ compare: this.compareTeilleistungen };
 
 
 	/**
@@ -541,7 +660,7 @@ export class EnmManager {
 		if (klassen.isEmpty()) {
 			return "—";
 		}
-		return [...klassen].map(k => k.kuerzelAnzeige).join(",");
+		return [...klassen].map(k => k.kuerzelAnzeige).join(", "); // thin space als Trennzeichen: https://unicode-explorer.com/c/2009
 	}
 
 	/**
@@ -634,10 +753,25 @@ export class EnmManager {
 	 */
 	public lerngruppeGetKursbezeichnung(id: number): string {
 		const lerngruppe = this.mapLerngruppen.get(id);
-		if ((lerngruppe === null) || (lerngruppe.kursartID === null)) {
+		if (lerngruppe?.kursartID === null) {
 			return "";
 		}
-		return lerngruppe.bezeichnung ?? "";
+		return lerngruppe?.bezeichnung ?? "";
+	}
+
+	/**
+	 * Gibt das Fach für die Lerngruppe zurück
+	 *
+	 * @param id   die ID der Lerngruppe
+	 *
+	 * @returns    das Fach
+	 */
+	public lerngruppeGetFach(id: number): ENMFach | null {
+		const lerngruppe = this.mapLerngruppen.get(id);
+		if (lerngruppe === null) {
+			return null;
+		}
+		return this.mapFaecher.get(lerngruppe.fachID);
 	}
 
 	/**
@@ -648,15 +782,8 @@ export class EnmManager {
 	 * @returns das Fachkürzel
 	 */
 	public lerngruppeGetFachkuerzel(id: number): string {
-		const lerngruppe = this.mapLerngruppen.get(id);
-		if (lerngruppe === null) {
-			return "";
-		}
-		const fach = this.mapFaecher.get(lerngruppe.fachID);
-		if (fach === null) {
-			return "";
-		}
-		return fach.kuerzelAnzeige;
+		const fach = this.lerngruppeGetFach(id);
+		return fach?.kuerzelAnzeige ?? '';
 	}
 
 	/**
@@ -713,17 +840,17 @@ export class EnmManager {
 	}
 
 	public isValidFehlstunden(leistung: ENMLeistung) {
-		return (!isNaN(Number(leistung.fehlstundenFach)))
+		return (!Number.isNaN(Number(leistung.fehlstundenFach)))
 				&& (Number(leistung.fehlstundenFach) <= 999)
 				&& (Number(leistung.fehlstundenFach) >= 0)
-				&& ((isNaN(Number(leistung.fehlstundenUnentschuldigtFach))) || (Number(leistung.fehlstundenFach) >= Number(leistung.fehlstundenUnentschuldigtFach)));
+				&& ((Number.isNaN(Number(leistung.fehlstundenUnentschuldigtFach))) || (Number(leistung.fehlstundenFach) >= Number(leistung.fehlstundenUnentschuldigtFach)));
 	}
 
 	public isValidFehlstundenUnentschuldigt(leistung: ENMLeistung) {
-		return (!isNaN(Number(leistung.fehlstundenUnentschuldigtFach)))
+		return (!Number.isNaN(Number(leistung.fehlstundenUnentschuldigtFach)))
 				&& (Number(leistung.fehlstundenUnentschuldigtFach) <= 999)
 				&& (Number(leistung.fehlstundenUnentschuldigtFach) >= 0)
-				&& (!isNaN(Number(leistung.fehlstundenFach)))
+				&& (!Number.isNaN(Number(leistung.fehlstundenFach)))
 				&& (Number(leistung.fehlstundenUnentschuldigtFach) <= Number(leistung.fehlstundenFach));
 	}
 

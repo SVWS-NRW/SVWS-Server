@@ -63,6 +63,7 @@ import { routeSchwerpunkte } from "~/router/apps/schule/kataloge/schwerpunkte/Ro
 import { routeAnkreuzkompetenzen } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzen";
 
 import SApp from "~/components/SApp.vue";
+import { routeNotenmodulAnkreuzkompetenzen } from "./notenmodul/RouteNotenmodulAnkreuzkompetenzen";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -192,6 +193,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeNotenmodulZugangsdaten,
 			routeNotenmodulLeistungen,
 			routeNotenmodulTeilleistungen,
+			routeNotenmodulAnkreuzkompetenzen,
 			routeNotenmodulKlassenleitung,
 		];
 		super.children = [
