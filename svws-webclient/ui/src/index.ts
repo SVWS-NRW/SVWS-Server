@@ -165,6 +165,7 @@ export { AbteilungenListeManager } from './ui/manager/kataloge/AbteilungenListeM
 export { BeschaeftigungsartenListeManager } from './ui/manager/kataloge/BeschaeftigungsartenListeManager';
 export { BetriebsartenListeManager } from './ui/manager/kataloge/BetriebsartenListeManager';
 export { EntlassgruendeListeManager } from './ui/manager/kataloge/EntlassgruendeListeManager';
+export { LeitungsfunktionenListeManager } from './ui/manager/kataloge/LeitungsfunktionenListeManager';
 export { FahrschuelerartenListeManager } from './ui/manager/kataloge/FahrschuelerartenListeManager';
 export { FoerderschwerpunkteListeManager } from './ui/manager/kataloge/FoerderschwerpunkteListeManager';
 export { HaltestellenListeManager } from './ui/manager/kataloge/HaltestellenListeManager';

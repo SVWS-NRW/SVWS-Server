@@ -1,0 +1,29 @@
+import type { LeitungsfunktionenDatenProps } from "~/components/schule/kataloge/leitungsfunktionen/daten/LeitungsfunktionenDatenProps";
+import type { RouteLocationNormalized } from "vue-router";
+import type { RouteLeitungsfunktionen } from "./RouteLeitungsfunktionen";
+import { BenutzerKompetenz, Schulform } from "@core";
+import { RouteNode } from "~/router/RouteNode";
+import { api } from "~/router/Api";
+import { routeLeitungsfunktionen } from "./RouteLeitungsfunktionen";
+
+const LeitungsfunktionenDaten = () => import("~/components/schule/kataloge/leitungsfunktionen/daten/LeitungsfunktionenDaten.vue");
+
+export class RouteLeitungsfunktionenDaten extends RouteNode<any, RouteLeitungsfunktionen> {
+
+	public constructor() {
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.leitungsfunktionen.daten",
+			"daten", LeitungsfunktionenDaten);
+		super.propHandler = (route) => this.getProps(route);
+		super.text = "Leitungsfunktion";
+	}
+
+	public getProps(to: RouteLocationNormalized): LeitungsfunktionenDatenProps {
+		return {
+			manager: () => routeLeitungsfunktionen.data.manager,
+			benutzerKompetenzen: api.benutzerKompetenzen,
+			patch: routeLeitungsfunktionen.data.patch,
+		};
+	}
+}
+
+export const routeLeitungsfunktionenDaten = new RouteLeitungsfunktionenDaten();

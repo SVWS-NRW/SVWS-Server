@@ -1,0 +1,61 @@
+<template>
+	<div class="h-full flex flex-col">
+		<div class="secondary-menu--headline">
+			<h1>Leitungsfunktionen</h1>
+		</div>
+		<div class="secondary-menu--header" />
+		<div class="secondary-menu--content">
+			<svws-ui-table v-model="selectedLeitungsfunktionen"
+				v-model:clicked="clickedLeitungsfunktion"
+				:items="filteredLeitungsfunktionen" :columns
+				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
+				<template #search>
+					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
+				</template>
+				<template #filterAdvanced>
+					<svws-ui-checkbox type="toggle" v-model="showOnlyVisible">Nur Sichtbare</svws-ui-checkbox>
+				</template>
+				<template #actions>
+					<svws-ui-tooltip position="bottom">
+						<svws-ui-button type="icon"
+							@click="gotoHinzufuegenView(true)"
+							:has-focus="noFilteredItems"
+							:disabled="isHinzufuegenView">
+							<span class="icon i-ri-add-line" />
+						</svws-ui-button>
+						<template #content>
+							Neue Leitungsfunktion anlegen
+						</template>
+					</svws-ui-tooltip>
+				</template>
+			</svws-ui-table>
+		</div>
+	</div>
+</template>
+
+<script setup lang="ts">
+
+	import { type Leitungsfunktion } from "@core";
+	import type { LeitungsfunktionenAuswahlProps } from "./LeitungsfunktionenAuswahlProps";
+	import { useRegionSwitch, type DataTableColumn } from "@ui";
+	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
+
+	const columns: DataTableColumn[] = [
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 },
+		{ key: "sortierung", label: "Sortierung", sortable: true },
+	];
+
+	const props = defineProps<LeitungsfunktionenAuswahlProps>();
+
+	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
+	const {
+		filteredItems: filteredLeitungsfunktionen,
+		selectedItems: selectedLeitungsfunktionen,
+		clickedItem: clickedLeitungsfunktion,
+		readonly,
+		isHinzufuegenView,
+		searchTerm,
+		showOnlyVisible,
+		noFilteredItems,
+	} = useKatalogAuswahl<Leitungsfunktion>(props);
+</script>

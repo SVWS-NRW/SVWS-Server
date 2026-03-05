@@ -23,6 +23,7 @@ import { routeJahrgaenge } from "~/router/apps/schule/kataloge/jahrgaenge/RouteJ
 import { routeFaecher } from "~/router/apps/schule/kataloge/faecher/RouteFaecher";
 import { routeEinwilligungsarten } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteEinwilligungsarten";
 import { routeKonfessionen } from "~/router/apps/schule/kataloge/konfessionen/RouteKonfessionen";
+import { routeLeitungsfunktionen } from "~/router/apps/schule/kataloge/leitungsfunktionen/RouteLeitungsfunktionen";
 import { routeSchulen } from "~/router/apps/schule/kataloge/schulen/RouteSchulen";
 import { routeTelefonarten } from "~/router/apps/schule/kataloge/telefonarten/RouteTelefonarten";
 import { routeErzieherarten } from "~/router/apps/schule/kataloge/erzieherarten/RouteErzieherarten";
@@ -171,6 +172,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeJahrgaenge,
 			routeKindergaerten,
 			routeKonfessionen,
+			routeLeitungsfunktionen,
 			routeLernplattformen,
 			routeOrte,
 			routeOrtsteile,
