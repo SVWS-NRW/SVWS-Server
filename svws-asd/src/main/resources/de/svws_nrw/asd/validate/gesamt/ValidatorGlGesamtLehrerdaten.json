@@ -2,9 +2,9 @@
   "version" : 1,
   "validator" : "de.svws_nrw.asd.validate.gesamt.ValidatorGlGesamtLehrerdaten",
   "historie" : [ {
-    "zebras" : true,
-    "svws" : true,
     "praefix" : "GL",
+    "svws" : true,
+    "zebras" : true,
     "muss" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
     "kann" : [ ],
     "hinweis" : [ ],

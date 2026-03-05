@@ -2,12 +2,21 @@
   "version" : 1,
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLsg01LehrerStammdatenGeschlecht",
   "historie" : [ {
-    "zebras" : true,
-    "svws" : true,
     "praefix" : "LSG01",
+    "altes_kuerzel" :"AD344",
+    "zweig" : "Lehrer-Stammdaten-Geschlecht",
+    "dtos" : "LehrerStammdaten",
+    "ausfuehrungsbereich_ui" : "Lehrkräfte, Reiter 'Individualdaten' ",
+    "anzeigebereich_ui" : "Feld 'Geschlecht' ",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : ["LSG00"],
     "muss" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
     "kann" : [ ],
     "hinweis" : [ ],
+    "text" : "Unzulässiger Schlüssel '' + LehrerStammdaten.geschlecht + '' im Feld 'Geschlecht'. Die gültigen Schlüssel entnehmen Sie bitte dem Pulldownmenü. ",
+    "erlaeuterung" : " Der Prüfschritt soll anschlagen, wenn für das Feld Geschlecht ein unzulässiger Wert vorliegt. Die zulässigen Werte finden sich in der Klasse Geschlecht.java",
+    "bedingung" : "LehrerStammdaten.geschlecht ≠ einem Eintrag in der Klasse 'Geschlecht.java' ",
     "gueltigVon" : null,
     "gueltigBis" : null
   } ]

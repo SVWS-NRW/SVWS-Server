@@ -2,12 +2,21 @@
   "version" : 1,
   "validator" : "de.svws_nrw.asd.validate.gesamt.ValidatorGld11GesamtLehrerdatenDuplikate",
   "historie" : [ {
-    "zebras" : true,
-    "svws" : true,
     "praefix" : "GLD11",
+    "altes_kuerzel" : "",
+    "zweig" : "Gesamt-Lehrerdaten-Duplikate",
+    "dtos" : "",
+    "ausfuehrungsbereich_ui" : "Statistik, Gesamtprüfung",
+    "anzeigebereich_ui" : "Statistik",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : [ ],
     "muss" : [ ],
     "kann" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
     "hinweis" : [ ],
+    "text" : "Lehrkäfte: Bei den IDs ' + LehrerStammdaten.id(i) + ' und ' + LehrerStammdaten.id(j) + ' kommt die Kombination aus Nachname '' + LehrerStammdaten.nachname(i) + '', Vorname '' + LehrerStammdaten.vorname(i) + '', Geburtsdatum '' + LehrerStammdaten.geburtsdatum(i) '' und Geschlecht '' + LehrerStammdaten.geschlecht(i) + '' mehrmals vor. Falls es sich hierbei um eine Person handelt, fassen Sie die Datensätze bitte zusammen.",
+    "erlaeuterung" : "Diese Gesamtprüfung soll anschlagen, wenn es zwei Lehrkräfte-Sätze mit gleichem Nachname, Vorname, Geburtsdatum und Geschlecht gibt. Im Fehlertext sollen die IDs der Lehrkräftesätze sowie Nachname, Vorname, Geburtsdatum und Geschlecht genannt werden.",
+    "bedingung" : "[LehrerStammdaten.nachname(i) = LehrerStammdaten.nachname(j)] ∧ [LehrerStammdaten.vorname(i) = LehrerStammdaten.vorname(j)] ∧ [LehrerStammdaten.geburtsdatum(i) = LehrerStammdaten.geburtsdatum(j)] ∧ [LehrerStammdaten.geschlecht(i) = LehrerStammdaten.geschlecht(j)]; i = beliebiger Lehrkräfte-Satz; j = beliebiger Lehrkräfte-Satz; i ≠ j",
     "gueltigVon" : null,
     "gueltigBis" : null
   } ]

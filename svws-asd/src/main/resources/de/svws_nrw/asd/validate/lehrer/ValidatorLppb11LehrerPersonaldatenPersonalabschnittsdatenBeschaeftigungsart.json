@@ -2,12 +2,21 @@
   "version" : 1,
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart",
   "historie" : [ {
-    "zebras" : true,
-    "svws" : true,
     "praefix" : "LPPB11",
+    "altes_kuerzel" : "BW15",
+    "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Beschaeftigungsart",
+    "dtos" : "LehrerPersonalabschnittsdaten",
+    "ausfuehrungsbereich_ui" : "Lehrkräfte, Reiter 'Personaldaten'",
+    "anzeigebereich_ui" : "Feld 'Beschäftigungsart'",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : [ ],
     "muss" : [ ],
     "kann" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
     "hinweis" : [ ],
+    "text" : "Laut Ihren Angaben handelt es sich um eine voll abgeordnete Lehrkraft mit Gestellungsvertrag. Es ist zu erwarten, dass eine Lehrkraft mit Gestellungsvertrag Unterricht an Ihrer Schule erteilt. Bitte überprüfen Sie Ihre Angaben.",
+    "erlaeuterung" : "",
+    "bedingung" : "LehrerPersonaldatenPersonalabschnittsdaten.beschaeftigungsart = 'G' ∧ LehrerPersonaldatenPersonalabschnittsdaten.einsatzstatus = 'A' ∧ LehrerPersonaldatenPersonalabschnittsdaten.pflichtstundensoll =  0 <br>",
     "gueltigVon" : null,
     "gueltigBis" : null
   } ]

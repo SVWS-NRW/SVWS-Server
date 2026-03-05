@@ -1,6 +1,0 @@
-### ValidatorLehrerStammdaten.java
-
-**Default-Fehlerhärte:**<br>
-"muss": [],<br>
-"kann": [],<br>
-"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"]

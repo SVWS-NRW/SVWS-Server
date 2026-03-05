@@ -2,12 +2,21 @@
   "version" : 1,
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLsn12LehrerStammdatenNachname",
   "historie" : [ {
-    "zebras" : true,
-    "svws" : true,
     "praefix" : "LSN12",
+    "altes_kuerzel" : "AD32",
+    "zweig" : "Lehrer-Stammdaten-Nachname",
+    "dtos" : "LehrerStammdaten",
+    "ausfuehrungsbereich_ui" : "Lehrkräfte, Reiter 'Individualdaten'",
+    "anzeigebereich_ui" : "Feld 'Nachname'",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : ["LSN00"],
     "muss" : [ ],
     "kann" : [ ],
     "hinweis" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
+    "text" : "Nachname der Lehrkraft: Die Eintragung des Nachnamens muss linksbündig erfolgen (ohne vorangestellte Leerzeichen oder Tabs).",
+    "erlaeuterung" : "",
+    "bedingung" : "LehrerStammdaten.nachname: 1. Stelle = @",
     "gueltigVon" : null,
     "gueltigBis" : null
   } ]

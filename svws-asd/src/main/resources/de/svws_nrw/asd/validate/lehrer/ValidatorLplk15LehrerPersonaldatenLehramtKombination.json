@@ -2,12 +2,21 @@
   "version" : 1,
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLplk15LehrerPersonaldatenLehramtKombination",
   "historie" : [ {
-    "zebras" : true,
-    "svws" : true,
     "praefix" : "LPLK15",
+    "altes_kuerzel" : "AD418",
+    "zweig" : "Lehrer-Personaldaten-Lehramt",
+    "dtos" : "LehrerPersonaldaten",
+    "ausfuehrungsbereich_ui" : "Lehrkräfte, Reiter 'Personaldaten'",
+    "anzeigebereich_ui" : "Lehrämter (an der betroffenen Zeile)",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : [ ],
     "muss" : [ ],
     "kann" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
     "hinweis" : [ ],
+    "text" : "Die Lehramtseinträge 'Sonstige pädagogische Unterrichtshilfe ohne sonderpädagogische Zusatzausbildung' und 'Sonstige pädagogische Unterrichtshilfe mit sonderpädagogischer Zusatzausbildung' sollten nicht zusammen vorliegen. Falls der Lehramtseintrag 'Sonstige pädagogische Unterrichtshilfe mit sonderpädagogischer Zusatzausbildung' korrekt ist, entfernen Sie bitte den Lehramtseintrag 'Sonstige pädagogische Unterrichtshilfe ohne sonderpädagogische Zusatzausbildung'. ",
+    "erlaeuterung" : "",
+    "bedingung" : "LehrerPersonaldaten.lehraemter[].bezeichner(i) ∈ 'ID_59' ∧ LehrerPersonaldaten.lehraemter[].bezeichner(j) = 'ID_62' ; i = beliebiger Lehramtseintrag einer Lehrkraft; j = beliebiger Lehramtseintrag einer Lehrkraft; i ≠ j ",
     "gueltigVon" : null,
     "gueltigBis" : null
   } ]

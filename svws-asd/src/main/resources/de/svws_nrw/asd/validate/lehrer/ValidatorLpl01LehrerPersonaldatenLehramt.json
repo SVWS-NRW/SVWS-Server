@@ -2,12 +2,21 @@
   "version" : 1,
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLpl01LehrerPersonaldatenLehramt",
   "historie" : [ {
-    "zebras" : true,
-    "svws" : true,
     "praefix" : "LPL01",
+    "altes_kuerzel" : "",
+    "zweig" : "LehrerPersonaldatenLehramt",
+    "dtos" : "",
+    "ausfuehrungsbereich_ui" : "Statistik, Gesamtprüfung",
+    "anzeigebereich_ui" : "Statistik ",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : [],
     "muss" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
     "kann" : [ ],
     "hinweis" : [ ],
+    "text" : "Bei Freien Waldorfschulen darf kein Lehramt erfasst sein.",
+    "erlaeuterung" : "Der Validator muss noch in den Gesamt Bereich umgezogen werden",
+    "bedingung" : "?",
     "gueltigVon" : null,
     "gueltigBis" : null
   } ]

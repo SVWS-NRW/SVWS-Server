@@ -2,12 +2,21 @@
   "version" : 1,
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLsd10LehrerStammdatenGeburtsdatum",
   "historie" : [ {
-    "zebras" : true,
-    "svws" : true,
     "praefix" : "LSD10",
+    "altes_kuerzel" : "AD341, AD342 und AD343",
+    "zweig" : "Lehrer-Stammdaten-Geburtsdatum",
+    "dtos" : "LehrerStammdaten",
+    "ausfuehrungsbereich_ui" : "Lehrkräfte, Reiter 'Individualdaten'",
+    "anzeigebereich_ui" : "Feld 'Geburtsdatum'",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : ["LSD01"],
     "muss" : [ ],
     "kann" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
     "hinweis" : [ ],
+    "text" : "Unzulässige Eintragung im Feld Jahr (Geburtsdatum). Zulässig sind die Werte {aktuellesSchuljahr} - 80 bis {aktuellesSchuljahr} - 18}. ",
+    "erlaeuterung" : "Die zulässigen Werte liegen zwischen dem aktuellen Schuljahr minus 80 und dem aktuellen Schuljahr minus 18. ",
+    "bedingung" : "¬ LehrerStammdaten.geburtsdatum (format: JJJJ) > aktuellesSchuljahr - 80 ∧ LehrerStammdaten.geburtsdatum (format: JJJJ) < aktuellesSchuljahr - 18 ",
     "gueltigVon" : null,
     "gueltigBis" : null
   } ]

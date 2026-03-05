@@ -2,12 +2,12 @@
   "version" : 1,
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis",
   "historie" : [ {
-    "zebras" : true,
-    "svws" : true,
     "praefix" : "LPPR",
-    "muss" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
+    "svws" : true,
+    "zebras" : true,
+    "muss" : [ ],
     "kann" : [ ],
-    "hinweis" : [ ],
+    "hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
     "gueltigVon" : null,
     "gueltigBis" : null
   } ]

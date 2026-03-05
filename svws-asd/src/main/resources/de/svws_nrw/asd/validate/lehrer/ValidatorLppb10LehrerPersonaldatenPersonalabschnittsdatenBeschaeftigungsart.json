@@ -2,12 +2,21 @@
   "version" : 1,
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart",
   "historie" : [ {
-    "zebras" : true,
-    "svws" : true,
     "praefix" : "LPPB10",
+    "altes_kuerzel" : "",
+    "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Beschaeftigungsart",
+    "dtos" : "LehrerPersonalabschnittsdaten",
+    "ausfuehrungsbereich_ui" : "Lehrkräfte, Reiter 'Personaldaten'",
+    "anzeigebereich_ui" : "Feld 'Beschäftigungsart'",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : [ ],
     "muss" : [ ],
     "kann" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
     "hinweis" : [ ],
+    "text" : "Bei einer unentgeltlich beschäftigten Lehrkraft (Feld 'Beschäftigungsart' = 'Unentgeltlich Beschäftigte') dürfen im Feld 'Einsatzstatus' nicht die Einträge 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' oder 'nicht Stammschule, aber auch hier tätig' eingetragen sein.",
+    "erlaeuterung" : "",
+    "bedingung" : "LehrerPersonaldatenPersonalabschnittsdaten.einsatzstatus = 'A', 'B' ∧ LehrerPersonaldatenPersonalabschnittsdaten.beschaeftigungsart = 'X'",
     "gueltigVon" : null,
     "gueltigBis" : null
   } ]

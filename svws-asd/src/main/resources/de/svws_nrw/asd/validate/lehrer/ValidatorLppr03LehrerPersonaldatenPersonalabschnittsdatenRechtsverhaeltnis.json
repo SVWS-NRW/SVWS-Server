@@ -2,12 +2,21 @@
   "version" : 1,
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis",
   "historie" : [ {
-    "zebras" : true,
-    "svws" : true,
     "praefix" : "LPPR03",
+    "altes_kuerzel" : "BB",
+    "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Rechtsverhaeltnis",
+    "dtos" : "LehrerPersonalabschnittsdaten",
+    "ausfuehrungsbereich_ui" : "Reiter Personaldaten",
+    "anzeigebereich_ui" : "Feld 'Rechtsverhaeltnis'",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : ["LPPR00"],
     "muss" : [ ],
     "kann" : [ ],
     "hinweis" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
+    "text" : "Der Wert für das Geburtsjahr sollte bei Lehramtsanwärtern/-innen (Rechtsverhältnis = W)' + ' zwischen ' + {aktuellesSchuljahr - 50} + ' und ' + {aktuellesSchuljahr - 18} + ' liegen. Bitte prüfen!' ",
+    "erlaeuterung" : "",
+    "bedingung" : "LehrerPersonalabschnittsdaten.rechtsverhaeltnis = 'W'  ∧ LehrerStammdaten.geburtsdatum (Format: YYYY) < aktuellesSchuljahr - 50  ∧ LehrerStammdaten.geburtsdatum (Format: YYYY) > aktuellesSchuljahr - 18",
     "gueltigVon" : null,
     "gueltigBis" : null
   } ]

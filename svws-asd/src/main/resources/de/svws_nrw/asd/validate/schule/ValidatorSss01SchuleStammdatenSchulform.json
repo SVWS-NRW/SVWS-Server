@@ -2,12 +2,21 @@
   "version" : 1,
   "validator" : "de.svws_nrw.asd.validate.schule.ValidatorSss01SchuleStammdatenSchulform",
   "historie" : [ {
-    "zebras" : false,
-    "svws" : true,
     "praefix" : "SSS01",
+    "altes_kuerzel" : "",
+    "zweig" : "Schule-Stammdaten-Schulform",
+    "dtos" : "",
+    "ausfuehrungsbereich_ui" : "",
+    "anzeigebereich_ui" : "",
+    "svws" : true,
+    "zebras" : false,
+    "vorbedingung" : ["SSS00"],
     "muss" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
     "kann" : [ ],
     "hinweis" : [ ],
+    "text" : "Das Kürzel für die Schulform ist ungültig.",
+    "erlaeuterung" : "",
+    "bedingung" : "?",
     "gueltigVon" : null,
     "gueltigBis" : null
   } ]

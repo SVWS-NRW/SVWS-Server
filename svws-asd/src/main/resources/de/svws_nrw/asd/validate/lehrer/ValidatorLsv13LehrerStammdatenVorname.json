@@ -2,12 +2,21 @@
   "version" : 1,
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLsv13LehrerStammdatenVorname",
   "historie" : [ {
-    "zebras" : true,
-    "svws" : true,
     "praefix" : "LSV13",
+    "altes_kuerzel" : "AD33",
+    "zweig" : "Lehrer-Stammdaten-Vorname",
+    "dtos" : "LehrerStammdaten",
+    "ausfuehrungsbereich_ui" : "Lehrkräfte, Reiter 'Individualdaten'",
+    "anzeigebereich_ui" : "Feld 'Vorname'",
+    "svws" : true,
+    "zebras" : true,
     "muss" : [ ],
     "kann" : [ ],
+    "vorbedingung" : ["LSV00"],
     "hinweis" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
+    "text" : "Vorname der Lehrkraft: Die erste Stelle des Vornamens muss mit einem Großbuchstaben besetzt sein.",
+    "erlaeuterung" : "",
+    "bedingung" : "LehrerStammdaten.vorname: 1. Stelle = Großbuchstabe",
     "gueltigVon" : null,
     "gueltigBis" : null
   } ]

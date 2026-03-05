@@ -2,12 +2,21 @@
   "version" : 1,
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLplk17LehrerPersonaldatenLehramtKombination",
   "historie" : [ {
-    "zebras" : true,
-    "svws" : true,
     "praefix" : "LPLK17",
+    "altes_kuerzel" : "AD420",
+    "zweig" : "Lehrer-Personaldaten-Lehramt",
+    "dtos" : "LehrerPersonaldaten",
+    "ausfuehrungsbereich_ui" : "Lehrkräfte, Reiter 'Personaldaten'",
+    "anzeigebereich_ui" : "Lehrämter (an der betroffenen Zeile)",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : [ ],
     "muss" : [ ],
     "kann" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
     "hinweis" : [ ],
+    "text" : "Neben dem Lehramtseintrag 'Handwerksmeistern/-innen' sollten keine weiteren Lehramtseinträge vorliegen. Bitte korrigieren Sie Ihre Angaben.",
+    "erlaeuterung" : "",
+    "bedingung" : "LehrerPersonaldaten.lehraemter[].bezeichner(i) ∈ 'ID_64' ∧ LehrerPersonaldaten.lehraemter[].bezeichner(j) ≠ 'ID_64' ; i = beliebiger Lehramtseintrag einer Lehrkraft; j = beliebiger Lehramtseintrag einer Lehrkraft; i ≠ j",
     "gueltigVon" : null,
     "gueltigBis" : null
   } ]
