@@ -41,8 +41,7 @@
 	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
 
 	const columns: DataTableColumn[] = [
-		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 },
-		{ key: "sortierung", label: "Sortierung", sortable: true },
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true },
 	];
 
 	const props = defineProps<LeitungsfunktionenAuswahlProps>();
