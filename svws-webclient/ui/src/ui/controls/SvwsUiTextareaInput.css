@@ -47,8 +47,16 @@ span.textarea-input--control {
 	@apply border-ui;
 }
 
-.textarea-input--invalid:not(.textarea-input--disabled) .textarea-input--control{
+.textarea-input--muss:not(.textarea-input--disabled) .textarea-input--control{
 	@apply border-ui-danger;
+}
+
+.textarea-input--kann:not(.textarea-input--disabled) .textarea-input--control{
+	@apply border-ui-caution;
+}
+
+.textarea-input--hinweis:not(.textarea-input--disabled) .textarea-input--control{
+	@apply border-ui-warning;
 }
 
 .textarea-input--resize-none .textarea-input--control {
@@ -87,10 +95,6 @@ span.textarea-input--control {
 	@apply opacity-80;
 }
 
-.textarea-input--statistics.textarea-input--invalid:not(.textarea-input--disabled) .textarea-input--control {
-	@apply border-ui-danger;
-}
-
 .textarea-input--placeholder--required {
 	@apply inline-block font-normal relative;
 	top: -0.2em;
@@ -113,13 +117,31 @@ span.textarea-input--control {
 	@apply opacity-0;
 }
 
-.textarea-input--invalid .textarea-input--placeholder,
-.textarea-input--invalid:not(:focus-within):not(.textarea-input--disabled) .textarea-input--control {
+.textarea-input--muss .textarea-input--placeholder,
+.textarea-input--muss:not(:focus-within):not(.textarea-input--disabled) .textarea-input--control {
 	@apply text-ui-danger;
 }
 
-.textarea-input--invalid .textarea-input--state-icon {
+.textarea-input--muss .textarea-input--state-icon {
 	@apply icon-ui-danger
+}
+
+.textarea-input--kann .textarea-input--placeholder,
+.textarea-input--kann:not(:focus-within):not(.textarea-input--disabled) .textarea-input--control {
+	@apply text-ui-caution;
+}
+
+.textarea-input--kann .textarea-input--state-icon {
+	@apply icon-ui-caution
+}
+
+.textarea-input--hinweis .textarea-input--placeholder,
+.textarea-input--hinweis:not(:focus-within):not(.textarea-input--disabled) .textarea-input--control {
+	@apply text-ui-warning;
+}
+
+.textarea-input--hinweis .textarea-input--state-icon {
+	@apply icon-ui-warning
 }
 
 .textarea-input--statistic-icon {

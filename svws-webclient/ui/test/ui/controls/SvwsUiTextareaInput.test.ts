@@ -40,7 +40,7 @@ test("Rendert HTML korrekt", async () => {
 	expect(wrapper.find("textarea").exists()).toBeTruthy();
 });
 
-// CSS-Props data, isValid, disabled, statisctics, resizeable-none, ,
+// CSS-Props data, disabled, statisctics, resizeable-none, ,
 
 describe.concurrent("Tests für die CSS-Props", () => {
 	// [Propname, Klassen- oder Stylename, Beschreibung, Class(0)Style(1)]
@@ -215,24 +215,20 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 			expect(wrapper.find(idPlaceholder).text()).toBe("Placeholder");
 		});
 
-		test("Icon alert-line wird gerendert, wenn isValid() false liefert", async () => {
+		test("Bei Validierungsfehlern wird ein Validation-Icon angezeigt", async () => {
 			// Vorbereiten
-			await wrapper.setProps({ placeholder: "Placeholder", valid: (v) => false, modelValue: null });
-			expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.isValid).toBeFalsy();
+			await wrapper.setProps({ required: true, modelValue: "", placeholder: "Placeholder" });
 
 			// Testen
-			const span_icon = wrapper.find("span.icon.i-ri-alert-line");
-			expect(span_icon.exists()).toBeTruthy();
-			expect(span_icon.classes()).toContain("textarea-input--state-icon");
+			expect(wrapper.find(".validation-tooltip-icon").exists()).toBeTruthy();
 		});
 
-		test("Icon alert-line wird nicht gerendert, wenn isValid() true liefert", async () => {
+		test("Bei keinen Validierungsfehlern wird kein Validation-Icon angezeigt", async () => {
 			// Vorbereiten
-			await wrapper.setProps({ placeholder: "Placeholder", valid: (v) => true });
-			expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.isValid).toBeTruthy();
+			await wrapper.setProps({ required: true, modelValue: "Test", placeholder: "Placeholder" });
 
 			// Testen
-			expect(wrapper.find("span.icon.i-ri-alert-line").exists()).toBeFalsy();
+			expect(wrapper.find(".validation-tooltip-icon").exists()).toBeFalsy();
 		});
 
 		test("Warnung für maxLen wird nicht gerendert, wenn maxLen undefiniert ist", async () => {
@@ -249,24 +245,6 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 			expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).props('maxLen')).toBeDefined();
 			// Testen
 			expect(wrapper.find("span.inline-flex.gap-1").exists()).toBeTruthy();
-		});
-
-		test("text-ui-danger wird an CSS übergeben, wenn maxLenValid() false liefert", async () => {
-			// Vorbereiten
-			await wrapper.setProps({ placeholder: "Placeholder", maxLen: 2, modelValue: "Test" });
-			expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.maxLenValid).toBeFalsy();
-
-			// Testen
-			expect(wrapper.find("span.inline-flex.gap-1.text-ui-danger").exists()).toBeTruthy();
-		});
-
-		test("text-ui-danger wird an CSS nicht übergeben, wenn maxLenValid() true liefert", async () => {
-			// Vorbereiten
-			await wrapper.setProps({ placeholder: "Placeholder" });
-			expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.maxLenValid).toBeTruthy();
-
-			// Testen
-			expect(wrapper.find("span.inline-flex.ml-1.gap-1.text-ui-danger").exists()).toBeFalsy();
 		});
 
 		// TODO - Tests für den angezeigten Text der Warnung
@@ -301,34 +279,6 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 			expect(statistic_icon.classes()).toContain("textarea-input--statistic-icon");
 			// TODO #content-Slot testen ?????
 		});
-
-		test("span-icon-alert-fill wird gerendert, wenn data leer ist (statistics: true, required: true)", async () => {
-			// Vorbereiten
-			await wrapper.setProps({ placeholder: "Placeholder", statistics: true, required: true, modelValue: '' });
-			expect(wrapper.vm.$props.modelValue).toBe("");
-
-			// Testen
-			expect(wrapper.find("span.i-ri-alert-fill.textarea-input--state-icon").exists()).toBeTruthy();
-		});
-
-		test("span-icon-alert-fill wird gerendert, wenn data null ist (statistics: true, required: true)", async () => {
-			// Vorbereiten
-			await wrapper.setProps({ placeholder: "Placeholder", statistics: true, required: true, modelValue: null });
-			expect(wrapper.vm.$props.modelValue).toBeNull();
-
-			// Testen
-			expect(wrapper.find("span.i-ri-alert-fill.textarea-input--state-icon").exists()).toBeTruthy();
-		});
-
-		test("span-icon-alert-fill wird nicht gerendert, wenn data nicht null oder nicht leer ist (statistics: true, required: true)", async () => {
-			// Vorbereiten
-			await wrapper.setProps({ placeholder: "Placeholder", statistics: true, required: true, modelValue: "Test" });
-			expect(wrapper.vm.$props.modelValue).toBe("Test");
-
-			// Testen
-			expect(wrapper.find("span.i-ri-alert-fill.textarea-input--state-icon").exists()).toBeFalsy();
-		});
-
 	});
 });
 
@@ -372,42 +322,6 @@ describe("computed/functions tests", () => {
 		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.dataOrEmpty).toBe("Test2");
 	});
 
-	test("computed->isValid->get liefert false, wenn prop-required true und data null ist.", async () => {
-		// Vorereiten
-		await wrapper.setProps({ required: true, modelValue: null });
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data).toBeNull();
-
-		// Testen
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.isValid).toBeFalsy();
-	});
-
-	test("computed->isValid->get liefert false, wenn data-länge größer als props-maxLen ist.", async () => {
-		// Vorereiten
-		await wrapper.setProps({ maxLen: 2, modelValue: "ModelValue" });
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data).toBeDefined();
-		expect(typeof (await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data)).toBe("string");
-		// Testen
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.isValid).toBeFalsy();
-	});
-
-	test("computed->isValid->get liefert den Rückgabewert true der props-Methode valid, wenn data ungleich null und ungleich leer ist.", async () => {
-		// Vorereiten
-		await wrapper.setProps({ required: true, modelValue: "Test", valid: () => true });
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data).toBe("Test");
-
-		// Testen
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.isValid).toBeTruthy();
-	});
-
-	test("computed->isValid->get liefert den Rückgabewert false der props-Methode valid, wenn data ungleich null und ungleich leer ist.", async () => {
-		// Vorereiten
-		await wrapper.setProps({ required: true, modelValue: "Test", valid: () => false });
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data).toBe("Test");
-
-		// Testen
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.isValid).toBeFalsy();
-	});
-
 	test("function->updateData aktualisiert data und modelValue nicht, wenn der übergebene Wert gleich ist", async () => {
 		// Vorbereiten
 		await wrapper.setProps({ modelValue: "Test" });
@@ -428,46 +342,12 @@ describe("computed/functions tests", () => {
 		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data).toBe("Test");
 
 		// Aktion
-		wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.updateData("Test2"); await wrapper.vm.$nextTick();
+		wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.updateData("Test2");
+		await wrapper.vm.$nextTick();
 		// Testen
 		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data).toBe("Test2");
 		expect(wrapper.emitted("update:modelValue")?.at(0)?.at(0)).toBe("Test");
 		expect(wrapper.emitted("update:modelValue")?.at(1)?.at(0)).toBe("Test2");
-	});
-
-	test("computed->maxLenValid->get liefert true, wenn prop-maxLen undefined ist.", () => {
-		// Vorereiten
-		expect(wrapper.props("maxLen")).toBeUndefined();
-
-		// Testen
-		expect(wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.maxLenValid).toBeTruthy();
-	});
-
-	test("computed->maxLenValid->get liefert true, wenn prop-maxLen undefined ist.", async () => {
-		// Vorereiten
-		await wrapper.setProps({ maxLen: 12 });
-		expect(wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data).toBe("");
-
-		// Testen
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.maxLenValid).toBeTruthy();
-	});
-
-	test("computed->maxLenValid->get liefert true, wenn data-Länge kleiner gleich props-maxLen ist.", async () => {
-		// Vorereiten
-		await wrapper.setProps({ maxLen: 12, modelValue: "Test" });
-		expect(wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data).toBe("Test");
-
-		// Testen
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.maxLenValid).toBeTruthy();
-	});
-
-	test("computed->maxLenValid->get liefert false, wenn data-Länge nicht kleiner gleich props-maxLen ist.", async () => {
-		// Vorereiten
-		await wrapper.setProps({ maxLen: 1, modelValue: "Test" });
-		expect(wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data).toBe("Test");
-
-		// Testen
-		expect(wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.maxLenValid).toBeFalsy();
 	});
 
 	test("functions->onInput aktualisiert den data-Wert beim Eintippen in textarea.", async () => {
