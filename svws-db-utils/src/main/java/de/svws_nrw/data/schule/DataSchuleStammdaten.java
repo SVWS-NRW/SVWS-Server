@@ -434,7 +434,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 			case BK, SB -> Arrays.asList(Fach.D, Fach.E, Fach.M);
 			case G -> Arrays.asList(Fach.KR, Fach.ER, Fach.D, Fach.D, Fach.D,
 					Fach.E, Fach.M, Fach.SU, Fach.SP, Fach.MU, Fach.KU);
-			case GE, GY -> Arrays.asList(Fach.D, Fach.E, Fach.F, Fach.L, Fach.S,
+			case GE, GY -> Arrays.asList(Fach.D, Fach.E, Fach.F7, Fach.L7, Fach.S7,
 					Fach.KU, Fach.MU, Fach.LI, Fach.EK, Fach.GE,
 					Fach.SW, Fach.PL, Fach.PA, Fach.ER, Fach.KR,
 					Fach.M, Fach.BI, Fach.CH, Fach.PH, Fach.IF, Fach.SP);
