@@ -2,10 +2,9 @@
 	<label class="text-input-component"
 		:class="{
 			'text-input--filled': (`${data}`.length > 0 && data !== null) || (type === 'date') || (type === 'datetime-local'),
-			'text-input--invalid': !validierungFehler.isEmpty(),
-			'text-input--statistic-muss': !validierungFehler.isEmpty() && (validierungFehlerart === ValidatorFehlerart.MUSS),
-			'text-input--statistic-kann': !validierungFehler.isEmpty() && (validierungFehlerart === ValidatorFehlerart.KANN),
-			'text-input--statistic-hinweis': !validierungFehler.isEmpty() && (validierungFehlerart === ValidatorFehlerart.HINWEIS),
+			'text-input--muss': ((validationResult.fehlerart === ValidatorFehlerart.MUSS) || !valid(data)),
+			'text-input--kann': (validationResult.fehlerart === ValidatorFehlerart.KANN),
+			'text-input--hinweis': (validationResult.fehlerart === ValidatorFehlerart.HINWEIS),
 			'text-input--disabled': disabled,
 			'text-input--readonly': readonly,
 			'text-input--select': isSelectInput,
@@ -61,10 +60,10 @@
 				{{ (minLen !== undefined) && (maxLen !== undefined) && (minLen !== maxLen) ? ` (zwischen ${minLen} und ${maxLen} Zeichen)` : '' }}
 				{{ (minLen !== undefined) && (maxLen !== undefined) && (minLen === maxLen) ? ` (genau ${maxLen} Zeichen)` : '' }}
 			</span>
-			<span v-if="required" class="icon-xs i-ri-asterisk text-input--placeholder--required text-input--state-icon" aria-hidden />
+			<span v-if="required" class="icon-xs i-ri-asterisk text-input--placeholder--required text-input--state-icon" aria-hidden="true" />
 			<span v-if="required" class="sr-only">erforderlich</span>
 			<span class="cursor-pointer inline-block -my-1">
-				<ui-validation-tooltip v-if="!validierungFehler.isEmpty()" :validation-result />
+				<ui-validation-tooltip v-if="!validierungFehler.isEmpty()" :validation-result :disabled />
 			</span>
 			<span v-if="readonly && !isSelectInput" class="icon-xs i-ri-lock-line" />
 		</span>
@@ -82,11 +81,12 @@
 	import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
 	import type { List } from "../../../../core/src/java/util/List";
 	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
-	import { ValidatorFehler } from "../../../../core/src/asd/validate/ValidatorFehler";
+	import { ValidationResult } from "../../validation/ValidationResult";
+	import type { ValidatorFehler } from "../../../../core/src/asd/validate/ValidatorFehler";
 	import { ValidatorStringNotBlank } from "../../validation/common/ValidatorStringNotBlank";
 	import { ValidatorStringLength } from "../../validation/common/ValidatorStringLength";
 	import { ValidatorEmail } from "../../validation/common/ValidatorEmail";
-	import { ValidationResult } from "../../validation/ValidationResult";
+	import { ValidatorDateRange } from "../../validation/common/ValidatorDateRange";
 
 	defineOptions({
 		inheritAttrs: false,
@@ -96,6 +96,8 @@
 		return globalThis.navigator.userAgent.includes('Firefox/');
 	}
 	const input = ref<null | HTMLInputElement>(null);
+
+	type SkippedDefaultValidators = { required?: boolean; length?: boolean; email?: boolean, dateRange?: boolean };
 
 	const props = withDefaults(defineProps<{
 		type?: InputTypeHTMLAttribute
@@ -119,7 +121,7 @@
 		minLen?: number;
 		span?: 'full' | '2';
 		removable?: boolean;
-		skipDefaultValidation?: boolean;
+		skipDefaultValidation?: boolean | SkippedDefaultValidators;
 	}>(), {
 		type: "text",
 		minDate: undefined,
@@ -173,70 +175,62 @@
 	const validationResult = computed(() => new ValidationResult(validierungFehler.value));
 
 	const validatorRequired = computed<ValidatorStringNotBlank | null>(() => {
-		if (props.required && !props.skipDefaultValidation) {
+		if (props.required && (!skipValidator('required'))) {
 			return new ValidatorStringNotBlank(() => data.value);
 		}
 		return null;
 	});
 
 	const validatorLength = computed<ValidatorStringLength | null>(() => {
-		if (props.skipDefaultValidation) {
-			return null;
+		if (((props.minLen !== undefined) || (props.maxLen !== undefined)) && (!skipValidator('length'))) {
+			return new ValidatorStringLength(() => data.value, props.maxLen, props.minLen);
 		}
-		return new ValidatorStringLength(() => data.value, props.maxLen, props.minLen);
+		return null;
 	});
 
 	const validatorEmail = computed<ValidatorEmail | null>(() => {
-		if (props.type === "email" && !props.skipDefaultValidation) {
+		if ((props.type === "email") && (!skipValidator('email'))) {
 			return new ValidatorEmail(() => data.value, props.maxLen ?? 255);
 		}
 		return null;
 	});
 
-	const validatorDummy = new ValidatorStringNotBlank(() => "dummy");
+	const validatorDateRange = computed<ValidatorDateRange | null>(() => {
+		const typeIsDate = (props.type === "date") || (props.type === "datetime-local");
+		const dateRangeDefined = (props.minDate !== undefined) || (props.maxDate !== undefined);
+
+		if (typeIsDate && dateRangeDefined && (!skipValidator('dateRange'))) {
+			return new ValidatorDateRange(() => data.value, props.minDate, props.maxDate);
+		}
+		return null;
+	});
 
 	const validierungFehler = computed<List<ValidatorFehler>>(() => {
-		const result = new ArrayList<ValidatorFehler>();
+		const fehler = new ArrayList<ValidatorFehler>();
+		const defaultValidators = [validatorRequired.value, validatorDateRange.value, validatorEmail.value, validatorLength.value];
 
-		// Validierung, wenn required gesetz ist
-		if (validatorRequired.value !== null) {
-			validatorRequired.value.run();
-			result.addAll(validatorRequired.value.getFehler());
-		}
-
-		// Validierung der Textlänge anhand der bei den props gesetzten Werte
-		if (validatorLength.value !== null) {
-			validatorLength.value.run();
-			result.addAll(validatorLength.value.getFehler());
-		}
-
-		// Validiere eine Email-Adresse, wenn dies der Eingabe-Typ ist
-		if (validatorEmail.value !== null) {
-			validatorEmail.value.run();
-			result.addAll(validatorEmail.value.getFehler());
-		}
-
-		// Validiere übergangsweise auf dem alten Prop `valid`, TODO entfernen inklusive Prop
-		if (!props.valid(data.value) && !props.skipDefaultValidation) {
-			const fehler = new ValidatorFehler(validatorDummy, 0, "Die Eingabe ist ungültig oder fehlerhaft");
-			result.add(fehler);
-		}
-
-		// Validierung mit einer weiteren Validierung über die validate-Methode bei den props
-		result.addAll(props.validation());
-		return result;
-	});
-
-	const validierungFehlerart = computed<ValidatorFehlerart>(() => {
-		let result = ValidatorFehlerart.UNGENUTZT;
-		for (const fehler of validierungFehler.value) {
-			const art = fehler.getFehlerart();
-			if (art.ordinal() < result.ordinal()) {
-				result = art;
+		for (const validator of defaultValidators) {
+			if (validator !== null) {
+				validator.run();
+				fehler.addAll(validator.getFehler());
 			}
 		}
-		return result;
+
+		fehler.addAll(props.validation());
+		return fehler;
 	});
+
+	/**
+	 * Berechnet, ob der gegebene Default-Validator nicht ausgeführt werden soll
+	 *
+	 * @param defaultValidator   Name des Validators, der geprüft wird
+	 */
+	function skipValidator(defaultValidator: 'required' | 'length' | 'dateRange' | 'email'): boolean {
+		if (typeof props.skipDefaultValidation === 'boolean') {
+			return props.skipDefaultValidation;
+		}
+		return props.skipDefaultValidation[defaultValidator] ?? false;
+	}
 
 	function updateData(value: string | null) {
 		if (data.value !== value) {
@@ -252,7 +246,7 @@
 		}
 	}
 
-	function onBlur(event: Event) {
+	function onBlur() {
 		emit("commit", data.value);
 		if (props.modelValue !== data.value) {
 			emit("change", data.value);
@@ -260,7 +254,7 @@
 		emit("blur", data.value);
 	}
 
-	function onKeyEnter(event: Event) {
+	function onKeyEnter() {
 		emit("commit", data.value);
 		if (props.modelValue !== data.value) {
 			emit("change", data.value);

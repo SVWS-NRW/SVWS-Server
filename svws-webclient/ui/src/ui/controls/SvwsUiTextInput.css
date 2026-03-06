@@ -72,29 +72,16 @@
 	}
 }
 
-.text-input-component {
-	.text-input--muss-icon {
-		@apply icon-ui-danger;
-	}
-
-	.text-input--kann-icon {
-		@apply icon-ui-caution;
-	}
-
-	.text-input--hinweis-icon {
-		@apply icon-ui-warning;
-	}
-}
-
-.text-input--invalid .svws-icon {
+.text-input--muss .svws-icon,
+.text-input--muss .text-input--state-icon {
 	@apply text-ui-danger icon-ui-danger;
 }
 
-.text-input--statistic-kann .svws-icon {
+.text-input--kann .svws-icon {
 	@apply text-ui-caution icon-ui-caution;
 }
 
-.text-input--statistic-hinweis .svws-icon {
+.text-input--hinweis .svws-icon {
 	@apply text-ui-warning icon-ui-warning;
 }
 
@@ -139,30 +126,30 @@
 	@apply ring-2 ring-ui-neutral;
 }
 
-.text-input--invalid.text-input-component:focus-within .text-input--control,
-.text-input--invalid .text-input--control {
+.text-input--muss.text-input-component:focus-within .text-input--control,
+.text-input--muss .text-input--control {
 	@apply border-ui-danger;
 }
 
-.text-input--statistic-kann.text-input-component:focus-within .text-input--control,
-.text-input--statistic-kann .text-input--control {
+.text-input--kann.text-input-component:focus-within .text-input--control,
+.text-input--kann .text-input--control {
 	@apply border-ui-caution;
 }
 
-.text-input--statistic-hinweis.text-input-component:focus-within .text-input--control,
-.text-input--statistic-hinweis .text-input--control {
+.text-input--hinweis.text-input-component:focus-within .text-input--control,
+.text-input--hinweis .text-input--control {
 	@apply border-ui-warning;
 }
 
-.text-input--invalid.text-input--filled:not(:focus-within) .text-input--control {
+.text-input--muss.text-input--filled:not(:focus-within) .text-input--control {
 	@apply border-ui-danger;
 }
 
-.text-input--statistic-kann.text-input--filled:not(:focus-within) .text-input--control {
+.text-input--kann.text-input--filled:not(:focus-within) .text-input--control {
 	@apply border-ui-caution;
 }
 
-.text-input--statistic-hinweis.text-input--filled:not(:focus-within) .text-input--control {
+.text-input--hinweis.text-input--filled:not(:focus-within) .text-input--control {
 	@apply border-ui-warning;
 }
 
@@ -258,18 +245,18 @@
 	font-size: 0.78rem;
 }
 
-.text-input--invalid .text-input--placeholder,
-.text-input--invalid:not(:focus-within) .text-input--control {
+.text-input--muss .text-input--placeholder,
+.text-input--muss:not(:focus-within) .text-input--control {
 	@apply text-ui-danger;
 }
 
-.text-input--statistic-kann .text-input--placeholder,
-.text-input--statistic-kann:not(:focus-within) .text-input--control {
+.text-input--kann .text-input--placeholder,
+.text-input--kann:not(:focus-within) .text-input--control {
 	@apply text-ui-caution;
 }
 
-.text-input--statistic-hinweis .text-input--placeholder,
-.text-input--statistic-hinweis:not(:focus-within) .text-input--control {
+.text-input--hinweis .text-input--placeholder,
+.text-input--hinweis:not(:focus-within) .text-input--control {
 	@apply text-ui-warning;
 }
 
@@ -282,7 +269,7 @@
 .text-input--disabled {
 	.text-input--control {
 		@apply bg-ui text-ui-disabled border-ui-disabled;
-		@apply pointer-events-none;	
+		@apply pointer-events-none;
 	}
 	.svws-icon,
 	.text-input--statistic-icon,
@@ -303,23 +290,6 @@
 .text-input--placeholder--required {
 	@apply inline-block font-normal relative;
 	top: -0.2em;
-}
-
-.text-input--invalid {
-	.text-input--statistic-kann .text-input--state-icon {
-		@apply icon-ui-caution;
-	}
-	
-	&.text-input--statistic-hinweis .text-input--state-icon {
-		@apply icon-ui-warning;
-	}
-	
-	&.text-input--statistic-muss .text-input--state-icon {
-		@apply icon-ui-danger;
-	}
-	.text-input--state-icon {
-		@apply icon-ui-danger;
-	}
 }
 
 .text-input-component--headless .text-input--control {

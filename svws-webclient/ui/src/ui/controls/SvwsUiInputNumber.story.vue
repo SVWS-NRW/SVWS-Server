@@ -143,7 +143,7 @@
 			</div>
 			<div class="flex items-start gap-2 text-headline-sm">
 				<HstRadio title="span"
-					v-model="activeStateSpan" :options="[
+					v-model="activeState.span.value" :options="[
 						{ label: 'undefined', value: 'undefined' },
 						{ label: 'full', value: 'full' },
 						{ label: '2', value: '2' },
@@ -271,7 +271,7 @@
 		public headless = ref(false);
 		public focus = ref(false);
 		public hideStepper = ref(false);
-		public span = ref<"full" | "2" | undefined>(undefined);
+		public span = ref<"full" | "2" | "undefined">("2");
 		public min = ref<number | undefined>(undefined);
 		public max = ref<number | undefined>(undefined);
 		public muss = ref(false);
@@ -303,6 +303,14 @@
 			return () => validatorFehler;
 		});
 
+		private spanValue = computed(() => {
+			if (this.span.value === "undefined") {
+				return undefined;
+			} else {
+				return this.span.value;
+			}
+		});
+
 		public props = reactive({
 			placeholder: this.placeholder,
 			statistics: this.statistics,
@@ -312,7 +320,7 @@
 			headless: this.headless,
 			focus: this.focus,
 			hideStepper: this.hideStepper,
-			span: this.span,
+			span: this.spanValue,
 			min: this.min,
 			max: this.max,
 			validation: this.validation,
@@ -329,7 +337,7 @@
 			this.headless.value = state.headless ?? this.headless.value;
 			this.focus.value = state.focus ?? this.focus.value;
 			this.hideStepper.value = state.hideStepper ?? this.hideStepper.value;
-			this.span.value = state.span;
+			this.span.value = state.span ?? this.span.value;
 			this.min.value = state.min;
 			this.max.value = state.max;
 			this.muss.value = state.muss ?? this.muss.value;
@@ -368,15 +376,6 @@
 		min: 2, max: 6,
 	});
 
-	const activeStateSpan = computed({
-		get: () => {
-			return activeState.value.span.value ?? "undefined";
-		},
-		set: (val: "full" | "2" | "undefined") => {
-			activeState.value.span.value = (val === "undefined") ? undefined : val;
-		},
-	});
-
 	const variantControlsMap = new Map<string, VariantState>();
 	variantControlsMap.set('Default', defaultState);
 	variantControlsMap.set('Disabled', disabledState);
@@ -403,7 +402,7 @@
 			activeState.value.headless.value ? `headless` : "",
 			activeState.value.focus.value ? `focus` : "",
 			activeState.value.hideStepper.value ? `hideStepper` : "",
-			(activeState.value.span.value === undefined) ? "" : `span="${activeState.value.span.value}"`,
+			(activeState.value.span.value === "undefined") ? "" : `span="${activeState.value.span.value}"`,
 			(activeState.value.min.value === undefined) ? "" : `:min="${activeState.value.min.value}"`,
 			(activeState.value.max.value === undefined) ? "" : `:max="${activeState.value.max.value}"`,
 			(activeState.value.muss.value || activeState.value.kann.value || activeState.value.hinweis.value) ? `:validation="() => getFehler()"` : "",
@@ -427,7 +426,7 @@ ${lines}
 
 		const requiredString = activeState.value.skipDefaultValidation.value.required ? 'required: ' + activeState.value.skipDefaultValidation.value.required : '';
 		const minString = activeState.value.skipDefaultValidation.value.min ? 'min: ' + activeState.value.skipDefaultValidation.value.min : '';
-		const maxString = activeState.value.skipDefaultValidation.value.max ? 'max: ' + activeState.value.skipDefaultValidation.value.min : '';
+		const maxString = activeState.value.skipDefaultValidation.value.max ? 'max: ' + activeState.value.skipDefaultValidation.value.max : '';
 		const parts = [requiredString, minString, maxString].filter(v => v !== '');
 		return `:skipDefaultValidation="{ ${parts.join(', ')} }"`;
 	});

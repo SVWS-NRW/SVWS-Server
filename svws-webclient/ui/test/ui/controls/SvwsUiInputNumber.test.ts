@@ -380,7 +380,7 @@ describe.concurrent("Validierung", () => {
 		});
 
 		test("Mit Prop 'min = 3' wird ein min-Validator hinzugefügt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 2, min: 2 } });
+			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 2, min: 3 } });
 			const validatorMin = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validatorMin;
 
 			expect(validatorMin).not.toBeNull();
@@ -440,15 +440,15 @@ describe.concurrent("Validierung", () => {
 			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Der Wert muss mindestens 3 sein.");
 		});
 
-		test("Mit Prop 'min = 2' und 'skipDefaultValidation = true' wird keine Validierung für 'min' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 1, min: 2, skipDefaultValidation: true } });
+		test("Mit Prop 'min = 3' und 'skipDefaultValidation = true' wird keine Validierung für 'min' ausgeführt", () => {
+			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 1, min: 3, skipDefaultValidation: true } });
 			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
 
 			expect(validatorResult.fehler.size()).toBe(0);
 		});
 
-		test("Mit Prop 'min = 2' und 'skipDefaultValidation = { min: true }' wird keine Validierung für 'min' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 1, min: 2, skipDefaultValidation: { min: true } } });
+		test("Mit Prop 'min = 3' und 'skipDefaultValidation = { min: true }' wird keine Validierung für 'min' ausgeführt", () => {
+			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 1, min: 3, skipDefaultValidation: { min: true } } });
 			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
 
 			expect(validatorResult.fehler.size()).toBe(0);
@@ -694,12 +694,12 @@ describe("Funktionen in SvwsUiInputNumber", () => {
 });
 
 function getValidatorFehler(haertegrad: ValidatorFehlerart = ValidatorFehlerart.MUSS): List<ValidatorFehler> {
-	const customValidator = new CustomValidatorSelectRequired(haertegrad);
+	const customValidator = new CustomValidatorRequired(haertegrad);
 	customValidator.run();
 	return customValidator.getFehler();
 }
 
-class CustomValidatorSelectRequired extends BasicValidator {
+class CustomValidatorRequired extends BasicValidator {
 
 	constructor(haertegrad: ValidatorFehlerart) {
 		super(haertegrad);
