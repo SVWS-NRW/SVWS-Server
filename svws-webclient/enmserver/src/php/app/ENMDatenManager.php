@@ -276,6 +276,21 @@ class ENMDatenManager {
     }
 
     /**
+     * Ermittelt die ID der Klasse des Schülers für eine ID von einer Ankreuzkompetenz
+     *
+     * @param int $idAnkreuzkompetenz   die ID der Ankreuzkompetenz
+     *
+     * @return int   die ID der Klasse
+     */
+    public function getKlassenIdByAnkreuzkompetenzId(int $idAnkreuzkompetenz): int {
+        $map = $this->getMapsSchueler();
+        if (!array_key_exists($idAnkreuzkompetenz, $map->ankreuzkompetenzSchueler)) {
+            Http::exit500("Die ENM-Daten sind inkonsistent. Zu der Ankreuzkompetenz-ID {$idAnkreuzkompetenz} konnte kein Schüler bestimmt werden.");
+        }
+        return $map->ankreuzkompetenzSchueler[$idAnkreuzkompetenz]->klasseID;
+    }
+
+    /**
      * Ermittelt die ID der Klasse des Schülers für eine ID von einer Teilleistung
      *
      * @param int $idTeilleistung   die ID der Teilleistung
@@ -335,6 +350,30 @@ class ENMDatenManager {
         return $map->schueler[$idSchueler]->klasseID;
     }
 
+    public function istAnkreuzkompetenzFachlehrer(object $lehrer, object $schueler, object $ankreuzkompetenz): bool {
+        $mapAnkreuzkompetenzen = $this->getMapAnkreuzkompetenzen();
+        $mapLerngruppen = $this->getMapLerngruppen();
+        $mapLerngruppenFachlehrer = $this->getMapLerngruppenFachlehrer($lehrer);
+
+        // Prüfe, ob es sich um eine ASV-Kompetenz handelt. Dann ist der Klassenlehrer verantwortlich.
+        $kompetenz = $mapAnkreuzkompetenzen[$ankreuzkompetenz->kompetenzID];
+        if ($kompetenz->fachID === null) {
+            return false;
+        }
+
+        // Durchwandere die Leistungsdaten und prüfe, ob der Lehrer für das Fach der Ankreuzkompetenz Fachlehrer bei der Lerngruppe ist
+        foreach ($schueler->leistungsdaten as $leistung) {
+            $istFachlehrer = array_key_exists($leistung->lerngruppenID, $mapLerngruppenFachlehrer);
+            if ($istFachlehrer) {
+                $tmpLerngruppe = $mapLerngruppen[$leistung->lerngruppenID];
+                if (($tmpLerngruppe != null) && ($tmpLerngruppe->fachID === $kompetenz->fachID)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     /**
      * Erstellt die ENM-Daten angepasst für den den übergebenen Lehrer
      *
@@ -379,8 +418,7 @@ class ENMDatenManager {
                     continue;
                 }
                 $kompetenz = $mapAnkreuzkompetenzen[$schuelerkompetenz->kompetenzID];
-                if ((($kompetenz->istFachkompetenz === true) && ($istKlassenlehrer))
-                    || (($kompetenz->fachID != null) && (array_key_exists($kompetenz->fachID, $setFachIDs)))) {
+                if ($istKlassenlehrer || (($kompetenz->fachID != null) && (array_key_exists($kompetenz->fachID, $setFachIDs)))) {
                     $kompetenzen[] = $schuelerkompetenz;
                 }
             }

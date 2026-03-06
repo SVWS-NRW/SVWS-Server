@@ -340,10 +340,13 @@ class PatchManager {
         $schueler = $mapsSchueler->ankreuzkompetenzSchueler[$patch->id];
         // Prüfe, ob der Lehrer Klassenlehrer für den Schüler der Ankreuzkompetenz ist
         $mapKlassen = $this->enmManager->getMapKlassen($lehrer);
-        if (!array_key_exists($schueler->klasseID, $mapKlassen)) {
+        if (array_key_exists($schueler->klasseID, $mapKlassen) || $this->enmManager->istAnkreuzkompetenzFachlehrer($lehrer, $schueler, $ankreuzkompetenz)) {
+            $this->dbPatchENMSchuelerAnkreuzkompetenzen($ankreuzkompetenz, $patch);
+        } elseif (!array_key_exists($schueler->klasseID, $mapKlassen)) {
             Http::exit403Forbidden("Der angemeldete Lehrer ist kein Klassenlehrer der Klasse mit der ID ".$schueler->klasseID.".");
+        } elseif (!$this->enmManager->istAnkreuzkompetenzFachlehrer($lehrer, $schueler, $ankreuzkompetenz)) {
+            Http::exit403Forbidden("Der angemeldete Lehrer ist kein Fachlehrer in der Klasse mit der ID ".$schueler->klasseID.".");
         }
-        $this->dbPatchENMSchuelerAnkreuzkompetenzen($ankreuzkompetenz, $patch);
     }
 
     /**
@@ -641,11 +644,11 @@ class PatchManager {
      *
      */
     protected function dbPatchENMSchuelerAnkreuzkompetenzen(object $daten, object $patch): void {
-        // TODO Sperr-Konfiguration um Ankreuzkompetenzen erweitern und nachfolge Zeile ersetzen und bei der Property den Spalten-Check ergänzen
-        Http::exit403Forbidden("Ankreuzkompetenzen werden aktuell noch nicht von der Konfiguration für Sperrungen unterstützt. Dies muss noch implementiert werden bevor patches erlaubt werden.");
+        $idKlasse = $this->enmManager->getKlassenIdByAnkreuzkompetenzId($patch->id);
         $ts = PatchManager::now();
         $update = "";
         if (property_exists($patch, 'stufen') && PatchManager::diffArraySimple($patch->stufen, $daten->stufen) && ($ts > $daten->tsStufe)) {
+            $this->pruefeSperrungSpalte($idKlasse, 'Note');
             foreach ($patch->stufen as $index=>$stufe) {
                 if (!is_bool($stufe)) {
                     Http::exit500("Fehler beim Ausführen des Patch-Statements. Stufe mit Index ".$index." in der Ankreuzkompetenz ist kein Boolean-Wert. Patch wurde abgebrochen.");

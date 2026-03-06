@@ -15,6 +15,7 @@ import { shallowRef } from "vue";
 import { Config, ConfigElement } from "@ui/utils/Config";
 import { EnmSperrManager } from "@ui/components/enm/EnmSperrManager";
 import { EnmSpaltenManager } from "@ui/components/enm/EnmSpaltenManager";
+import type { ENMSchuelerAnkreuzkompetenz } from "@core/core/data/enm/ENMSchuelerAnkreuzkompetenz";
 
 
 /**
@@ -459,4 +460,17 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		this.commit();
 	};
 
+	/**
+	 * Passt die übergebenen Ankreuzkompetenzen an.
+	 *
+	 * @param data    die ursprünglichen Daten
+	 * @param patch   der Patch für die Ankreuzkompetenzen
+	 */
+	public patchAnkreuzkompetenz = async (data: ENMSchuelerAnkreuzkompetenz, patch: Partial<ENMSchuelerAnkreuzkompetenz>): Promise<void> => {
+		patch.id = data.id;
+		console.log(patch, 'für ID', data.id);
+		await api.server.patchENMSchuelerAnkreuzkompetenzen(patch);
+		Object.assign(data, patch);
+		this.commit();
+	};
 }

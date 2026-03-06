@@ -16,12 +16,13 @@ import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import type { TabData } from "@ui/ui/nav/TabData";
 import { routeTeilleistungen } from "./RouteTeilleistungen";
 import { routeKlassenleitung } from "./RouteKlassenleitung";
+import { routeAnkreuzkompetenzen } from "./RouteAnkreuzkompetenzen";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	/** Die Knoten, welche im Haupt-Menu zur Verfügung gestellt werden */
-	private _menuMain: RouteNode<any, any>[];
+	private readonly _menuMain: RouteNode<any, any>[];
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KEINE], "app", "/", SApp, new RouteDataApp());
@@ -31,6 +32,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		this._menuMain = [
 			routeLeistungen,
 			routeTeilleistungen,
+			routeAnkreuzkompetenzen,
 			routeKlassenleitung,
 		];
 		super.children = [
@@ -101,7 +103,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return result;
 	}
 
-	private setApp = async (value: TabData) => {
+	private readonly setApp = async (value: TabData) => {
 		if (value.name === this.data.view.name) {
 			return;
 		}
