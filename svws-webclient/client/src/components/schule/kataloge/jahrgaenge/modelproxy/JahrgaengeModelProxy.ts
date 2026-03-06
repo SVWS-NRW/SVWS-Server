@@ -1,11 +1,11 @@
 import type { BildungsstufeKatalogEintrag, JahrgaengeKatalogEintrag, JahrgangsDaten, SchulgliederungKatalogEintrag } from "@core";
 import { Bildungsstufe, Jahrgaenge, Schulgliederung } from "@core";
-import { ModelProxy, ValidatorSortierung } from "@ui";
+import { ModelProxy } from "@ui";
 import { ValidatorNumberRange } from "../../../../../../../ui/src/validation/common/ValidatorNumberRange";
 import { ValidatorJahrgangBezeichnung } from "~/components/schule/kataloge/jahrgaenge/modelproxy/validation/ValidatorJahrgangBezeichnung";
 import { ValidatorJahrgangKuerzel } from "~/components/schule/kataloge/jahrgaenge/modelproxy/validation/ValidatorJahrgangKuerzel";
 import { ValidatorJahrgangKurzbezeichnung } from "~/components/schule/kataloge/jahrgaenge/modelproxy/validation/ValidatorJahrgangKurzbezeichnung";
-import { ValidatorSelectRequired } from "../../../../../../../ui/src/validation/ValidatorSelectRequired";
+import { ValidatorInputRequired } from "../../../../../../../ui/src/validation/common/ValidatorInputRequired";
 import { computed } from "vue";
 
 /**
@@ -51,11 +51,11 @@ export class JahrgaengeModelProxy extends ModelProxy<JahrgangsDaten> {
 		this.addValidator(new ValidatorJahrgangBezeichnung(() => this.proxy, liste), "bezeichnung");
 		this.addValidator(new ValidatorJahrgangKurzbezeichnung(() => this.proxy, liste), "kurzbezeichnung");
 		// ASD-Jahrgang
-		this.addValidator(new ValidatorSelectRequired(() => this.proxy.kuerzelStatistik), "kuerzelStatistik");
+		this.addValidator(new ValidatorInputRequired(() => this.proxy.kuerzelStatistik), "kuerzelStatistik");
 		// anzahlRestabschnitte
-		this.addValidator(new ValidatorNumberRange(() => this.proxy.anzahlRestabschnitte, 40, 0), "anzahlRestabschnitte");
+		this.addValidator(new ValidatorNumberRange(() => this.proxy.anzahlRestabschnitte, 0, 40), "anzahlRestabschnitte");
 		// sortierung
-		this.addValidator(new ValidatorSortierung(() => this.proxy.sortierung), "sortierung");
+		this.addValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
 	}
 
 	schulgliederung = computed<SchulgliederungKatalogEintrag | null>({

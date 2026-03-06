@@ -1,5 +1,6 @@
 import { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
 import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
+import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
 
 
 /**
@@ -8,7 +9,7 @@ import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorF
 export class ValidatorStringLength extends BasicValidator {
 
 	/** Eine Funktion, um auf die zu validierenden Daten zugreifen zu können. */
-	private readonly data: () => string | null | undefined;
+	private readonly data: () => string | null;
 
 	/** Die maximale Länge für den String, sofern festgelegt (null bedeutet beliebige maximale Länge) */
 	private readonly maxLen: number | null;
@@ -23,12 +24,17 @@ export class ValidatorStringLength extends BasicValidator {
 	 * @param maxLen   die maximale Länge für den String, sofern festgelegt (null oder undefined bedeutet beliebig)
 	 * @param minLen   die minimale Länge für den String, sofern festgelegt (null oder undefined bedeutet beliebig)
 	 */
-	constructor(data: () => string | null | undefined, maxLen?: number | null, minLen?: number | null) {
+	constructor(data: () => string | null | undefined, minLen: number | null | undefined, maxLen: number | null | undefined) {
 		super(ValidatorFehlerart.MUSS);
-		this.data = data;
-		this.maxLen = maxLen ?? null;
+		this.data = () => data() ?? null;
+		if ((minLen !== undefined) && (minLen !== null) && (minLen <= 0)) {
+			throw new DeveloperNotificationException("Der Parameter minLen muss größer als 0 sein");
+		}
+		if ((maxLen !== undefined) && (maxLen !== null) && (maxLen <= 0)) {
+			throw new DeveloperNotificationException("Der Parameter maxLen muss größer als 0 sein");
+		}
 		this.minLen = minLen ?? null;
-		this.run();
+		this.maxLen = maxLen ?? null;
 	}
 
 	/**
@@ -40,17 +46,10 @@ export class ValidatorStringLength extends BasicValidator {
 	protected pruefe(): boolean {
 		const data = this.data();
 
-		// Prüfe, ob der String gültig belegt ist. Dies kann ggf. mit der minimalen Länge einen Fehler ergeben
-		if ((data === undefined) || (data === null) || (data === '')) {
-			if ((this.minLen !== null) && (this.minLen > 0)) {
-				this.addFehler(0, "Der Wert muss angeben sein und darf nicht leer sein. Weiterhin muss die minimale Länge " + this.minLen + " betragen.");
-				return false;
-			}
-			return true;
-		}
+		const hasData = ((data !== null) && (data !== ''));
 
 		// Prüfe die minimale Länge des Strings
-		const len = data.toLocaleString().length;
+		const len = hasData ? data.toLocaleString().length : -1;
 		if ((this.minLen !== null) && (len < this.minLen)) {
 			this.addFehler(0, "Der Wert muss mindestens " + this.minLen + " Zeichen lang sein.");
 			return false;

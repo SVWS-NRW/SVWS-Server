@@ -77,15 +77,15 @@
 
 <script setup lang="ts">
 
-	import { ref, computed, watch, onBeforeMount, onMounted, onBeforeUnmount, useId, type InputTypeHTMLAttribute } from "vue";
+	import { computed, type InputTypeHTMLAttribute, onBeforeMount, onBeforeUnmount, onMounted, ref, useId, watch } from "vue";
 	import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
 	import type { List } from "../../../../core/src/java/util/List";
 	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
 	import { ValidationResult } from "../../validation/ValidationResult";
 	import type { ValidatorFehler } from "../../../../core/src/asd/validate/ValidatorFehler";
-	import { ValidatorStringNotBlank } from "../../validation/common/ValidatorStringNotBlank";
+	import { ValidatorInputRequired } from "../../validation/common/ValidatorInputRequired";
 	import { ValidatorStringLength } from "../../validation/common/ValidatorStringLength";
-	import { ValidatorEmail } from "../../validation/common/ValidatorEmail";
+	import { StringPattern, ValidatorStringMatchesPattern } from "../../validation/common/ValidatorStringMatchesPattern";
 	import { ValidatorDateRange } from "../../validation/common/ValidatorDateRange";
 
 	defineOptions({
@@ -97,7 +97,7 @@
 	}
 	const input = ref<null | HTMLInputElement>(null);
 
-	type SkippedDefaultValidators = { required?: boolean; length?: boolean; email?: boolean, dateRange?: boolean };
+	type SkippedDefaultValidators = { required?: boolean; length?: boolean; email?: boolean, dateRange?: boolean, tel?: boolean };
 
 	const props = withDefaults(defineProps<{
 		type?: InputTypeHTMLAttribute
@@ -174,23 +174,30 @@
 
 	const validationResult = computed(() => new ValidationResult(validierungFehler.value));
 
-	const validatorRequired = computed<ValidatorStringNotBlank | null>(() => {
+	const validatorRequired = computed<ValidatorInputRequired<string> | null>(() => {
 		if (props.required && (!skipValidator('required'))) {
-			return new ValidatorStringNotBlank(() => data.value);
+			return new ValidatorInputRequired(() => data.value);
 		}
 		return null;
 	});
 
 	const validatorLength = computed<ValidatorStringLength | null>(() => {
 		if (((props.minLen !== undefined) || (props.maxLen !== undefined)) && (!skipValidator('length'))) {
-			return new ValidatorStringLength(() => data.value, props.maxLen, props.minLen);
+			return new ValidatorStringLength(() => data.value, props.minLen, props.maxLen);
 		}
 		return null;
 	});
 
-	const validatorEmail = computed<ValidatorEmail | null>(() => {
+	const validatorEmail = computed<ValidatorStringMatchesPattern | null>(() => {
 		if ((props.type === "email") && (!skipValidator('email'))) {
-			return new ValidatorEmail(() => data.value, props.maxLen ?? 255);
+			return new ValidatorStringMatchesPattern(() => data.value, StringPattern.IS_EMAIL);
+		}
+		return null;
+	});
+
+	const validatorTelefon = computed<ValidatorStringMatchesPattern | null>(() => {
+		if ((props.type === "tel") && (!skipValidator('tel'))) {
+			return new ValidatorStringMatchesPattern(() => data.value, StringPattern.IS_PHONE_NUMBER);
 		}
 		return null;
 	});
@@ -207,7 +214,7 @@
 
 	const validierungFehler = computed<List<ValidatorFehler>>(() => {
 		const fehler = new ArrayList<ValidatorFehler>();
-		const defaultValidators = [validatorRequired.value, validatorDateRange.value, validatorEmail.value, validatorLength.value];
+		const defaultValidators = [validatorRequired.value, validatorDateRange.value, validatorEmail.value, validatorLength.value, validatorTelefon.value];
 
 		for (const validator of defaultValidators) {
 			if (validator !== null) {
@@ -225,7 +232,7 @@
 	 *
 	 * @param defaultValidator   Name des Validators, der geprüft wird
 	 */
-	function skipValidator(defaultValidator: 'required' | 'length' | 'dateRange' | 'email'): boolean {
+	function skipValidator(defaultValidator: 'required' | 'length' | 'dateRange' | 'email' | 'tel'): boolean {
 		if (typeof props.skipDefaultValidation === 'boolean') {
 			return props.skipDefaultValidation;
 		}

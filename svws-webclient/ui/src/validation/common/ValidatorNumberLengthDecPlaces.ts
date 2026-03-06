@@ -1,5 +1,6 @@
-import { BasicValidator } from "../../../core/src/asd/validate/BasicValidator";
-import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
+import { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
+import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
+
 
 /**
  * Ein Validator, welcher prüft, ob ein String - sofern definiert - die gewünschte Länge hat oder nicht.
@@ -26,7 +27,6 @@ export class ValidatorNumberLengthDecPlaces extends BasicValidator {
 		this.data = data;
 		this.maxLen = maxLen ?? null;
 		this.minLen = minLen ?? null;
-		this.run();
 	}
 
 	/**

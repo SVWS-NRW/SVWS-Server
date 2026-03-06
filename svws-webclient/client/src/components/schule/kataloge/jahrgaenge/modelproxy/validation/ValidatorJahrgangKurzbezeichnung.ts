@@ -8,7 +8,7 @@ export class ValidatorJahrgangKurzbezeichnung extends BasicValidator {
 		super(ValidatorFehlerart.MUSS);
 		this._validatoren.add(new ValidatorStringIsUniqueInList<JahrgangsDaten>(data, (data) => data.id, (data) => data.kurzbezeichnung, liste, false));
 		this._validatoren.add(new ValidatorStringMatchesPattern(() => data().kurzbezeichnung, StringPattern.NO_WHITESPACES));
-		this._validatoren.add(new ValidatorStringLength(() => data().kurzbezeichnung, 2));
+		this._validatoren.add(new ValidatorStringLength(() => data().kurzbezeichnung, null, 2));
 	}
 
 	protected pruefe(): boolean {

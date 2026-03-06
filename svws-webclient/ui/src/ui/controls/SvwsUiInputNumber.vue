@@ -73,9 +73,8 @@
 	import type { ValidatorFehler } from '../../../../core/src/asd/validate/ValidatorFehler';
 	import { ValidatorFehlerart } from '../../../../core/src/asd/validate/ValidatorFehlerart';
 	import { ValidationResult } from "../../validation/ValidationResult";
-	import { ValidatorNumberRequired } from "../../validation/common/ValidatorNumberRequired";
-	import { ValidatorNumberMin } from "../../validation/common/ValidatorNumberMin";
-	import { ValidatorNumberMax } from "../../validation/common/ValidatorNumberMax";
+	import { ValidatorInputRequired } from "../../validation/common/ValidatorInputRequired";
+	import { ValidatorNumberRange } from "../../validation/common/ValidatorNumberRange";
 
 	defineOptions({
 		inheritAttrs: false,
@@ -86,7 +85,7 @@
 	const btnMinus = ref<null | HTMLButtonElement>(null);
 	const id = useId();
 
-	type SkippedDefaultValidators = { required?: boolean; min?: boolean; max?: boolean };
+	type SkippedDefaultValidators = { required?: boolean; range?: boolean; };
 
 	const props = withDefaults(defineProps<{
 		modelValue: number | null;
@@ -144,30 +143,23 @@
 
 	const validationResult = computed(() => new ValidationResult(validierungFehler.value));
 
-	const validatorRequired = computed<ValidatorNumberRequired | null>(() => {
+	const validatorRequired = computed<ValidatorInputRequired<number> | null>(() => {
 		if (props.required && (!skipValidator('required'))) {
-			return new ValidatorNumberRequired(() => props.modelValue);
+			return new ValidatorInputRequired(() => props.modelValue);
 		}
 		return null;
 	});
 
-	const validatorMin = computed<ValidatorNumberMin | null>(() => {
-		if ((props.min !== undefined) && (!skipValidator('min'))) {
-			return new ValidatorNumberMin(() => props.modelValue, props.min);
-		}
-		return null;
-	});
-
-	const validatorMax = computed<ValidatorNumberMax | null>(() => {
-		if ((props.max !== undefined) && (!skipValidator('max'))) {
-			return new ValidatorNumberMax(() => props.modelValue, props.max);
+	const validatorRange = computed<ValidatorNumberRange | null>(() => {
+		if (((props.min !== undefined) || (props.max !== undefined)) && (!skipValidator('range'))) {
+			return new ValidatorNumberRange(() => props.modelValue, props.min, props.max);
 		}
 		return null;
 	});
 
 	const validierungFehler = computed<List<ValidatorFehler>>(() => {
 		const fehler = new ArrayList<ValidatorFehler>();
-		const defaultValidators = [validatorRequired.value, validatorMin.value, validatorMax.value];
+		const defaultValidators = [validatorRequired.value, validatorRange.value];
 
 		for (const validator of defaultValidators) {
 			if (validator !== null) {
@@ -185,7 +177,7 @@
 	 *
 	 * @param defaultValidator   Name des Validators, der geprüft wird
 	 */
-	function skipValidator(defaultValidator: 'required' | 'min' | 'max'): boolean {
+	function skipValidator(defaultValidator: 'required' | 'range'): boolean {
 		if (typeof props.skipDefaultValidation === 'boolean') {
 			return props.skipDefaultValidation;
 		}

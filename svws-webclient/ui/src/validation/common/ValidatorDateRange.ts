@@ -10,10 +10,10 @@ export class ValidatorDateRange extends BasicValidator {
 	private readonly data: () => string | null;
 
 	/** Das minimale Datum */
-	private readonly minDate: string | undefined;
+	private readonly minDate: string | null;
 
 	/** Das maximale Datum */
-	private readonly maxDate: string | undefined;
+	private readonly maxDate: string | null;
 
 	/**
 	 * Erzeugt einen neuen Validator mit der Funktion zum Zugriff auf den String
@@ -22,12 +22,11 @@ export class ValidatorDateRange extends BasicValidator {
 	 * @param minDate   das minimale Datum
 	 * @param maxDate   das maximale Datum
 	 */
-	constructor(data: () => string | null | undefined, minDate: string | undefined, maxDate: string | undefined) {
+	constructor(data: () => string | null | undefined, minDate: string | null | undefined, maxDate: string | null | undefined) {
 		super(ValidatorFehlerart.MUSS);
 		this.data = () => data() ?? null;
-		this.minDate = minDate;
-		this.maxDate = maxDate;
-		this.run();
+		this.minDate = (minDate !== undefined) && (minDate !== '') ? minDate : null;
+		this.maxDate = (maxDate !== undefined) && (maxDate !== '') ? maxDate : null;
 	}
 
 	/**
@@ -37,22 +36,25 @@ export class ValidatorDateRange extends BasicValidator {
 	 */
 	protected pruefe(): boolean {
 		const data = this.data();
-		const noDateRange = (this.minDate === undefined) && (this.maxDate === undefined);
 
-		if ((data === null) || (data === "") || noDateRange) {
+		if ((data === null) || ((this.minDate === null) && (this.maxDate === null))) {
 			return true;
 		}
 
-		if ((this.minDate !== undefined) && data < this.minDate) {
-			this.addFehler(0, `Das Datum muss mindestens ${this.minDate} entsprechen.`);
+		if ((this.minDate !== null) && (data < this.minDate)) {
+			this.addFehler(0, `Das frühestmögliche Datum ist der ${this.formatDate(this.minDate)}.`);
 			return false;
 		}
 
-		if ((this.maxDate !== undefined) && data > this.maxDate) {
-			this.addFehler(0, `Das Datum darf maximal ${this.maxDate} entsprechen.`);
+		if ((this.maxDate !== null) && (this.maxDate !== '') && (data > this.maxDate)) {
+			this.addFehler(0, `Das spätestmögliche Datum ist der ${this.formatDate(this.maxDate)}.`);
 			return false;
 		}
 		return true;
 	};
 
+	private formatDate(date: string) {
+		const [year, month, day] = date.split("-");
+		return `${day}.${month}.${year}`;
+	}
 }

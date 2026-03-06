@@ -540,8 +540,8 @@
 			(activeState.value.span.value === "undefined") ? "" : `span="${activeState.value.span.value}"`,
 			(activeState.value.minLen.value === undefined) ? "" : `:minLen="${activeState.value.minLen.value}"`,
 			(activeState.value.maxLen.value === undefined) ? "" : `:maxLen="${activeState.value.maxLen.value}"`,
-			(activeState.value.minDate.value === undefined) ? "" : `minDate="${activeState.value.minDate.value}"`,
-			(activeState.value.maxDate.value === undefined) ? "" : `maxDate="${activeState.value.maxDate.value}"`,
+			((activeState.value.minDate.value === undefined) || (activeState.value.minDate.value === "")) ? "" : `minDate="${activeState.value.minDate.value}"`,
+			((activeState.value.maxDate.value === undefined) || (activeState.value.maxDate.value === "")) ? "" : `maxDate="${activeState.value.maxDate.value}"`,
 			(activeState.value.muss.value || activeState.value.kann.value || activeState.value.hinweis.value) ? `:validation="() => getFehler()"` : "",
 			skipValidationString.value,
 		].filter(Boolean).map(l => indent + l).join("\n");

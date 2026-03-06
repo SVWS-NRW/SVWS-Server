@@ -29,7 +29,6 @@ export class ValidatorStringIsUniqueInList<T> extends BasicValidator {
 		this.getField = getField;
 		this.list = list;
 		this.caseSensitive = caseSensitive;
-		this.run();
 	}
 
 	/**

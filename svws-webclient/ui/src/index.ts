@@ -130,7 +130,6 @@ export { ViewType } from "./ui/nav/ViewType";
 export { ModelProxy, type ModelProxyConfiguration } from "./model/ModelProxy";
 export { ValidationResult } from "./validation/ValidationResult";
 export { ValidatorBenutzerAnmeldenameNeu } from "./validation/ValidatorBenutzerAnmeldenameNeu";
-export { ValidatorEmail } from "./validation/common/ValidatorEmail";
 export { ValidatorKlassenKuerzel } from "./validation/ValidatorKlassenKuerzel";
 export { ValidatorKursKuerzel } from "./validation/ValidatorKursKuerzel";
 export { ValidatorLehrerKuerzel } from "./validation/ValidatorLehrerKuerzel";
@@ -139,13 +138,15 @@ export { ValidatorSchuelerAnmeldedatum } from "./validation/ValidatorSchuelerAnm
 export { ValidatorSchuelerAufnahmedatum } from "./validation/ValidatorSchuelerAufnahmedatum";
 export { ValidatorSchuelerDatumBeginnBildungsgang } from "./validation/ValidatorSchuelerDatumBeginnBildungsgang";
 export { ValidatorSchuelerGeburtsdatum } from "./validation/ValidatorSchuelerGeburtsdatum";
-export { ValidatorSortierung } from "./validation/common/ValidatorSortierung";
 export { ValidatorStringEquals } from "./validation/common/ValidatorStringEquals";
 export { ValidatorStringMatchesPattern } from "./validation/common/ValidatorStringMatchesPattern";
 export { ValidatorStringLength } from "./validation/common/ValidatorStringLength";
-export { ValidatorStringNotBlank } from "./validation/common/ValidatorStringNotBlank";
+export { ValidatorInputRequired } from "./validation/common/ValidatorInputRequired";
 export { ValidatorStringIsUniqueInList } from "./validation/common/ValidatorStringIsUniqueInList";
-export { ValidatorNumberLengthDecPlaces } from "./validation/ValidatorNumberLengthDecPlaces";
+export { ValidatorNumberLengthDecPlaces } from "./validation/common/ValidatorNumberLengthDecPlaces";
+export { ValidatorDateRange } from "./validation/common/ValidatorDateRange";
+export { ValidatorNumberRange } from "./validation/common/ValidatorNumberRange";
+export { ValidatorSelectMultiOptionsRange } from "./validation/common/ValidatorSelectMultiOptionsRange";
 
 // Manager
 export { AuswahlManager } from "./ui/AuswahlManager";

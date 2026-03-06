@@ -472,7 +472,7 @@ describe.concurrent("Validierung", () => {
 		const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
 
 		expect(validatorResult.fehler.size()).toBe(1);
-		expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Eine Option muss ausgewählt werden.");
+		expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Bitte geben Sie einen Wert an.");
 	});
 
 	test("Mit Prop 'required = true' und Selektion ergibt die Validierung keine Fehler", () => {
@@ -498,7 +498,7 @@ describe.concurrent("Validierung", () => {
 		const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
 
 		expect(validatorResult.fehler.size()).toBe(2);
-		expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Eine Option muss ausgewählt werden.");
+		expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Bitte geben Sie einen Wert an.");
 		expect(validatorResult.fehler.get(1).getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
 	});
 

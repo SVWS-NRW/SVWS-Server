@@ -27,7 +27,7 @@ export class KlassenDatenModelProxy extends ModelProxy<KlassenDaten> {
 		this.mapKlassenVorigerAbschnitt = mapKlassenVorigerAbschnitt;
 		this.mapKlassenFolgenderAbschnitt = mapKlassenFolgenderAbschnitt;
 		this.addValidator(new ValidatorKlassenKuerzel(() => this.proxy.kuerzel ?? null, vorhanden), "kuerzel");
-		this.addValidator(new ValidatorStringLength(() => this.proxy.beschreibung, 150, 1), "beschreibung");
+		this.addValidator(new ValidatorStringLength(() => this.proxy.beschreibung, 1, 150), "beschreibung");
 		this.validate();
 	}
 

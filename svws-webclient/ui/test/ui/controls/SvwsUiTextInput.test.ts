@@ -265,7 +265,7 @@ describe.concurrent("Validierung", () => {
 			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validationResult;
 
 			expect(validatorResult.fehler.size()).toBe(1);
-			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Der Wert muss angeben sein und darf nicht leer sein.");
+			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Bitte geben Sie einen Wert an.");
 		});
 
 		test("Mit Prop 'required = true' und Eingabe = null wird ein Fehler für die Required-Validierung generiert", () => {
@@ -273,7 +273,7 @@ describe.concurrent("Validierung", () => {
 			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validationResult;
 
 			expect(validatorResult.fehler.size()).toBe(1);
-			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Der Wert muss angeben sein und darf nicht leer sein.");
+			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Bitte geben Sie einen Wert an.");
 		});
 
 		test("Mit Prop 'required = true' mit Eingabe ergibt die Validierung keine Fehler", () => {
@@ -288,7 +288,7 @@ describe.concurrent("Validierung", () => {
 			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validationResult;
 
 			expect(validatorResult.fehler.size()).toBe(2);
-			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Der Wert muss angeben sein und darf nicht leer sein.");
+			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Bitte geben Sie einen Wert an.");
 			expect(validatorResult.fehler.get(1).getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
 		});
 
@@ -311,7 +311,7 @@ describe.concurrent("Validierung", () => {
 			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validationResult;
 
 			expect(validatorResult.fehler.size()).toBe(1);
-			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Der Wert muss angeben sein und darf nicht leer sein.");
+			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Bitte geben Sie einen Wert an.");
 		});
 
 		test("Mit Prop 'required = true' und 'skipDefaultValidation = { required: true }' wird keine Validierung für 'required' ausgeführt", () => {
@@ -367,8 +367,7 @@ describe.concurrent("Validierung", () => {
 			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validationResult;
 
 			expect(validatorResult.fehler.size()).toBe(1);
-			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Der Wert muss angeben sein und darf nicht leer sein. Weiterhin muss die " +
-					"minimale Länge 3 betragen.");
+			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Der Wert muss mindestens 3 Zeichen lang sein.");
 		});
 
 		test("Mit Prop 'minLen = 3' und 'validation' wird eine Validierung von außen ausgeführt und um die length-Validierung ergänzt", () => {
@@ -579,7 +578,7 @@ describe.concurrent("Validierung", () => {
 				const validatorResult = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validationResult;
 
 				expect(validatorResult.fehler.size()).toBe(1);
-				expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Das Datum muss mindestens 2026-05-05 entsprechen.");
+				expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Das frühestmögliche Datum ist der 05.05.2026.");
 			}
 		);
 
@@ -602,7 +601,7 @@ describe.concurrent("Validierung", () => {
 				const validatorResult = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validationResult;
 
 				expect(validatorResult.fehler.size()).toBe(2);
-				expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Das Datum muss mindestens 2026-05-05 entsprechen.");
+				expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Das frühestmögliche Datum ist der 05.05.2026.");
 				expect(validatorResult.fehler.get(1).getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
 			}
 		);
@@ -633,7 +632,7 @@ describe.concurrent("Validierung", () => {
 				const validatorResult = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validationResult;
 
 				expect(validatorResult.fehler.size()).toBe(1);
-				expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Das Datum muss mindestens 2026-05-05 entsprechen.");
+				expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Das frühestmögliche Datum ist der 05.05.2026.");
 			}
 		);
 
@@ -693,7 +692,7 @@ describe.concurrent("Validierung", () => {
 				const validatorResult = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validationResult;
 
 				expect(validatorResult.fehler.size()).toBe(1);
-				expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Das Datum darf maximal 2026-05-04 entsprechen.");
+				expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Das spätestmögliche Datum ist der 04.05.2026.");
 			}
 		);
 
@@ -716,7 +715,7 @@ describe.concurrent("Validierung", () => {
 				const validatorResult = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validationResult;
 
 				expect(validatorResult.fehler.size()).toBe(2);
-				expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Das Datum darf maximal 2026-05-04 entsprechen.");
+				expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Das spätestmögliche Datum ist der 04.05.2026.");
 				expect(validatorResult.fehler.get(1).getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
 			}
 		);
@@ -747,7 +746,7 @@ describe.concurrent("Validierung", () => {
 				const validatorResult = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validationResult;
 
 				expect(validatorResult.fehler.size()).toBe(1);
-				expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Das Datum darf maximal 2026-05-04 entsprechen.");
+				expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Das spätestmögliche Datum ist der 04.05.2026.");
 			}
 		);
 	});
@@ -804,7 +803,7 @@ describe.concurrent("Validierung", () => {
 			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validationResult;
 
 			expect(validatorResult.fehler.size()).toBe(1);
-			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Die angegebene Email-Adresse hat ein ungültiges Format.");
+			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Die angegebene E-Mail-Adresse hat ein ungültiges Format.");
 		});
 
 		test("Mit Prop 'type = %s' und Eingabe 'test@example.com' wird kein Fehler erzeugt", () => {

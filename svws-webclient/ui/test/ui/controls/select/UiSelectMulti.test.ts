@@ -573,12 +573,12 @@ describe.concurrent("Validierung", () => {
 	});
 
 	describe.concurrent("minOptions", () => {
-		test("Mit Prop 'minOptions = undefined' wird kein MinOptions-Validator hinzugefügt", () => {
+		test("Mit Prop 'minOptions = undefined' wird kein optionsRange-Validator hinzugefügt", () => {
 			const { manager } = createTestData();
 			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, minOptions: undefined } });
-			const validatorMinOptions = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorMinOptions;
+			const validatorOptionsRange = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorOptionsRange;
 
-			expect(validatorMinOptions).toBeNull();
+			expect(validatorOptionsRange).toBeNull();
 		});
 
 		test("Mit Prop 'minOptions = undefined' wird keine Validierung für 'minOptions' ausgeführt", () => {
@@ -589,13 +589,13 @@ describe.concurrent("Validierung", () => {
 			expect(validatorResult.fehler.size()).toBe(0);
 		});
 
-		test("Mit Prop 'minOptions = 2' wird ein MinOptions-Validator hinzugefügt", () => {
+		test("Mit Prop 'minOptions = 2' wird ein optionsRange-Validator hinzugefügt", () => {
 			const { manager } = createTestData();
 			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, minOptions: 2 } });
-			const validatorMinOptions = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorMinOptions;
+			const validatorOptionsRange = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorOptionsRange;
 
-			expect(validatorMinOptions).not.toBeNull();
-			expect(validatorMinOptions).toBeInstanceOf(BasicValidator);
+			expect(validatorOptionsRange).not.toBeNull();
+			expect(validatorOptionsRange).toBeInstanceOf(BasicValidator);
 		});
 
 		test("Mit Prop 'minOptions = 2' und nur einer selektierten Option wird ein Fehler für die MinOptions-Validierung generiert", async () => {
@@ -642,17 +642,17 @@ describe.concurrent("Validierung", () => {
 			expect(validatorResult.fehler.size()).toBe(0);
 		});
 
-		test("Mit Prop 'minOptions = 2' und 'skipDefaultValidation = { minOptions: true }' wird keine Validierung für 'minOptions' ausgeführt", () => {
+		test("Mit Prop 'minOptions = 2' und 'skipDefaultValidation = { optionsRange: true }' wird keine Validierung für 'minOptions' ausgeführt", () => {
 			const { manager } = createTestData();
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, minOptions: 2, skipDefaultValidation: { minOptions: true } } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, minOptions: 2, skipDefaultValidation: { optionsRange: true } } });
 			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
 
 			expect(validatorResult.fehler.size()).toBe(0);
 		});
 
-		test("Mit Prop 'minOptions = 2' und 'skipDefaultValidation = { minOptions: false }' wird eine Validierung für 'minOptions' ausgeführt", () => {
+		test("Mit Prop 'minOptions = 2' und 'skipDefaultValidation = { optionsRange: false }' wird eine Validierung für 'minOptions' ausgeführt", () => {
 			const { manager, validationFehler } = createTestData();
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, minOptions: 2, skipDefaultValidation: { minOptions: false } } });
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, minOptions: 2, skipDefaultValidation: { optionsRange: false } } });
 			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
 
 			expect(validatorResult.fehler.size()).toBe(1);
@@ -661,12 +661,12 @@ describe.concurrent("Validierung", () => {
 	});
 
 	describe.concurrent("maxOptions", () => {
-		test("Mit Prop 'maxOptions = undefined' wird kein MaxOptions-Validator hinzugefügt", () => {
+		test("Mit Prop 'maxOptions = undefined' wird kein optionsRange-Validator hinzugefügt", () => {
 			const { manager } = createTestData();
 			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, maxOptions: undefined } });
-			const validatorMaxOptions = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorMaxOptions;
+			const validatorOptionsRange = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorOptionsRange;
 
-			expect(validatorMaxOptions).toBeNull();
+			expect(validatorOptionsRange).toBeNull();
 		});
 
 		test("Mit Prop 'maxOptions = undefined' wird keine Validierung für 'maxOptions' ausgeführt", () => {
@@ -677,13 +677,13 @@ describe.concurrent("Validierung", () => {
 			expect(validatorResult.fehler.size()).toBe(0);
 		});
 
-		test("Mit Prop 'maxOptions = 2' wird ein MaxOptions-Validator hinzugefügt", () => {
+		test("Mit Prop 'maxOptions = 2' wird ein optionsRange-Validator hinzugefügt", () => {
 			const { manager } = createTestData();
 			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager, maxOptions: 2 } });
-			const validatorMaxOptions = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorMaxOptions;
+			const validatorOptionsRange = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorOptionsRange;
 
-			expect(validatorMaxOptions).not.toBeNull();
-			expect(validatorMaxOptions).toBeInstanceOf(BasicValidator);
+			expect(validatorOptionsRange).not.toBeNull();
+			expect(validatorOptionsRange).toBeInstanceOf(BasicValidator);
 		});
 
 		test("Mit Prop 'maxOptions = 2' und nur einer selektierten Option wird ein Fehler für die MaxOptions-Validierung generiert", () => {
@@ -731,19 +731,19 @@ describe.concurrent("Validierung", () => {
 			expect(validatorResult.fehler.size()).toBe(0);
 		});
 
-		test("Mit Prop 'maxOptions = 2' und 'skipDefaultValidation = { maxOptions: true }' wird keine Validierung für 'maxOptions' ausgeführt", () => {
+		test("Mit Prop 'maxOptions = 2' und 'skipDefaultValidation = { optionsRange: true }' wird keine Validierung für 'maxOptions' ausgeführt", () => {
 			const { manager, threeSelections } = createTestData();
 			const wrapper = mount(UiSelectMulti<cars>,
-				{ props: { manager, maxOptions: 2, skipDefaultValidation: { maxOptions: true }, modelValue: threeSelections } });
+				{ props: { manager, maxOptions: 2, skipDefaultValidation: { optionsRange: true }, modelValue: threeSelections } });
 			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
 
 			expect(validatorResult.fehler.size()).toBe(0);
 		});
 
-		test("Mit Prop 'maxOptions = 2' und 'skipDefaultValidation = { maxOptions: false }' wird eine Validierung für 'maxOptions' ausgeführt", () => {
+		test("Mit Prop 'maxOptions = 2' und 'skipDefaultValidation = { optionsRange: false }' wird eine Validierung für 'maxOptions' ausgeführt", () => {
 			const { manager, threeSelections } = createTestData();
 			const wrapper = mount(UiSelectMulti<cars>,
-				{ props: { manager, maxOptions: 2, skipDefaultValidation: { maxOptions: false }, modelValue: threeSelections } });
+				{ props: { manager, maxOptions: 2, skipDefaultValidation: { optionsRange: false }, modelValue: threeSelections } });
 			const validatorResult = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validationResult;
 
 			expect(validatorResult.fehler.size()).toBe(1);
@@ -751,7 +751,7 @@ describe.concurrent("Validierung", () => {
 		});
 	});
 
-	test("Mit prop 'skipDefaultValidation' lassen sich einzele Defaultvalidatoren abschalten", () => {
+	test("Mit prop 'skipDefaultValidation' lassen sich einzelne Defaultvalidatoren abschalten", () => {
 		const { manager, threeSelections } = createTestData();
 		const wrapper = mount(UiSelectMulti<cars>, {
 			props: {
@@ -759,18 +759,15 @@ describe.concurrent("Validierung", () => {
 				required: true,
 				minOptions: 1,
 				maxOptions: 2,
-				skipDefaultValidation: { required: true, minOptions: false, maxOptions: false },
+				skipDefaultValidation: { required: true, optionsRange: false },
 				modelValue: threeSelections,
 			},
 		});
-		const validatorMinOptions = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorMinOptions;
-		const validatorMaxOptions = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorMaxOptions;
+		const validatorOptionsRange = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorOptionsRange;
 		const validatorRequired = wrapper.findComponent({ name: "UiSelectMulti" }).vm.validatorRequired;
 
-		expect(validatorMaxOptions).not.toBeNull();
-		expect(validatorMaxOptions).toBeInstanceOf(BasicValidator);
-		expect(validatorMinOptions).not.toBeNull();
-		expect(validatorMinOptions).toBeInstanceOf(BasicValidator);
+		expect(validatorOptionsRange).not.toBeNull();
+		expect(validatorOptionsRange).toBeInstanceOf(BasicValidator);
 		expect(validatorRequired).toBeNull();
 	});
 
@@ -1002,18 +999,6 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 
 		test("gibt null zurück, wenn minOptions und maxOptions nicht gesetzt sind", () => {
 			const wrapper = mount(UiSelectMulti<cars>, { props: { manager } });
-			const vm = wrapper.findComponent({ name: "UiSelectMulti" }).vm;
-			expect(vm.selectionLimitText).toBeNull();
-		});
-
-		test("gibt null zurück, wenn minOptions <= 0 ist", () => {
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, minOptions: -1 } });
-			const vm = wrapper.findComponent({ name: "UiSelectMulti" }).vm;
-			expect(vm.selectionLimitText).toBeNull();
-		});
-
-		test("gibt null zurück, wenn maxOptions <= 0 ist", () => {
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, maxOptions: -1 } });
 			const vm = wrapper.findComponent({ name: "UiSelectMulti" }).vm;
 			expect(vm.selectionLimitText).toBeNull();
 		});

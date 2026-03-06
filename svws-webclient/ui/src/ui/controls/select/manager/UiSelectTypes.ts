@@ -22,7 +22,7 @@ export interface UiSelectSingleProps<T> extends UiSelectProps<T> {
 	skipDefaultValidation?: boolean;
 }
 
-type SkippedMultiDefaultValidators = { required?: boolean; minOptions?: boolean; maxOptions?: boolean };
+type SkippedMultiDefaultValidators = { required?: boolean; optionsRange?: boolean };
 
 export interface UiSelectMultiProps<T> extends UiSelectProps<T> {
 	minOptions?: number;

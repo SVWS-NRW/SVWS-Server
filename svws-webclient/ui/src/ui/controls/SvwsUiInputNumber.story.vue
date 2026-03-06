@@ -209,9 +209,7 @@
 				<HstCheckbox title="required"
 					v-model="activeState.skipDefaultValidation.value.required" />
 				<HstCheckbox title="min"
-					v-model="activeState.skipDefaultValidation.value.min" />
-				<HstCheckbox title="max"
-					v-model="activeState.skipDefaultValidation.value.max" />
+					v-model="activeState.skipDefaultValidation.value.range" />
 				<svws-ui-tooltip position="top">
 					<span class="icon i-ri-question-line" />
 					<template #content>
@@ -257,7 +255,7 @@
 		muss?: boolean;
 		kann?: boolean;
 		hinweis?: boolean;
-		skipDefaultValidation?: { required: boolean; min: boolean; max: boolean };
+		skipDefaultValidation?: { required: boolean; range: boolean };
 	};
 
 	class VariantState {
@@ -277,7 +275,7 @@
 		public muss = ref(false);
 		public kann = ref(false);
 		public hinweis = ref(false);
-		public skipDefaultValidation = ref({ required: false, min: false, max: false });
+		public skipDefaultValidation = ref({ required: false, range: false });
 
 		public validatorMuss = new ValidatorTest(() => (this.modelValue.value === 4) ? null : "Hier ist die Eintragung von 4 gewünscht", ValidatorFehlerart.MUSS);
 		public validatorKann = new ValidatorTest(() => (this.modelValue.value === 4) ? null : "Hier ist die Eintragung von 4 gewünscht", ValidatorFehlerart.KANN);
@@ -372,7 +370,7 @@
 	const requiredState = new VariantState({ modelValue: null, required: true });
 	const validationState = new VariantState({
 		muss: true, kann: true, hinweis: true,
-		skipDefaultValidation: { required: false, min: true, max: true },
+		skipDefaultValidation: { required: false, range: true },
 		min: 2, max: 6,
 	});
 
@@ -416,18 +414,17 @@ ${lines}
 	const skipValidationString = computed(() => {
 		const v = activeState.value.skipDefaultValidation.value;
 
-		if (v.required && v.min && v.max) {
+		if (v.required && v.range) {
 			return ':skipDefaultValidation="true"';
 		}
 
-		if (!v.required && !v.min && !v.max) {
+		if (!v.required && !v.range) {
 			return "";
 		}
 
 		const requiredString = activeState.value.skipDefaultValidation.value.required ? 'required: ' + activeState.value.skipDefaultValidation.value.required : '';
-		const minString = activeState.value.skipDefaultValidation.value.min ? 'min: ' + activeState.value.skipDefaultValidation.value.min : '';
-		const maxString = activeState.value.skipDefaultValidation.value.max ? 'max: ' + activeState.value.skipDefaultValidation.value.max : '';
-		const parts = [requiredString, minString, maxString].filter(v => v !== '');
+		const rangeString = activeState.value.skipDefaultValidation.value.range ? 'range: ' + activeState.value.skipDefaultValidation.value.range : '';
+		const parts = [requiredString, rangeString].filter(v => v !== '');
 		return `:skipDefaultValidation="{ ${parts.join(', ')} }"`;
 	});
 

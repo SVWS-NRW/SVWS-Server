@@ -59,7 +59,6 @@ export class ValidatorStringMatchesPattern extends BasicValidator {
 		super(ValidatorFehlerart.MUSS);
 		this.pattern = STRING_PATTERN_MAP[pattern];
 		this.data = data;
-		this.run();
 	}
 
 	/**

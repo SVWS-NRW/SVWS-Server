@@ -119,9 +119,8 @@
 	import type { ValidatorFehler } from '../../../../../core/src/asd/validate/ValidatorFehler';
 	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 	import { ValidationResult } from "../../../validation/ValidationResult";
-	import { ValidatorSelectMultiRequired } from "../../../validation/ValidatorSelectMultiRequired";
-	import { ValidatorSelectMultiMinOptions } from "../../../validation/ValidatorSelectMultiMinOptions";
-	import { ValidatorSelectMultiMaxOptions } from "../../../validation/ValidatorSelectMultiMaxOptions";
+	import { ValidatorInputRequired } from "../../../validation/common/ValidatorInputRequired";
+	import { ValidatorSelectMultiOptionsRange } from "../../../validation/common/ValidatorSelectMultiOptionsRange";
 
 	const props = withDefaults(defineProps<UiSelectMultiProps<T>>(), {
 		label: '',
@@ -197,30 +196,23 @@
 
 	const validationResult = computed(() => new ValidationResult(validierungFehler.value));
 
-	const validatorRequired = computed<ValidatorSelectMultiRequired<T> | null>(() => {
+	const validatorRequired = computed<ValidatorInputRequired<T[]> | null>(() => {
 		if (props.required && (!skipValidator('required'))) {
-			return new ValidatorSelectMultiRequired(() => modelArray.value);
+			return new ValidatorInputRequired(() => modelArray.value);
 		}
 		return null;
 	});
 
-	const validatorMinOptions = computed<ValidatorSelectMultiMinOptions<T> | null>(() => {
-		if ((props.minOptions !== undefined) && (!skipValidator('minOptions'))) {
-			return new ValidatorSelectMultiMinOptions(() => modelArray.value, props.minOptions);
-		}
-		return null;
-	});
-
-	const validatorMaxOptions = computed<ValidatorSelectMultiMaxOptions<T> | null>(() => {
-		if ((props.maxOptions !== undefined) && (!skipValidator('maxOptions'))) {
-			return new ValidatorSelectMultiMaxOptions(() => modelArray.value, props.maxOptions);
+	const validatorOptionsRange = computed<ValidatorSelectMultiOptionsRange<T> | null>(() => {
+		if (((props.minOptions !== undefined) || (props.maxOptions !== undefined)) && (!skipValidator('optionsRange'))) {
+			return new ValidatorSelectMultiOptionsRange(() => modelArray.value, props.minOptions, props.maxOptions);
 		}
 		return null;
 	});
 
 	const validierungFehler = computed<List<ValidatorFehler>>(() => {
 		const fehler = new ArrayList<ValidatorFehler>();
-		const defaultValidators = [validatorRequired.value, validatorMinOptions.value, validatorMaxOptions.value];
+		const defaultValidators = [validatorRequired.value, validatorOptionsRange.value];
 
 		for (const validator of defaultValidators) {
 			if (validator !== null) {
@@ -238,7 +230,7 @@
 	 *
 	 * @param defaultValidator   Name des Validators, der geprüft wird
 	 */
-	function skipValidator(defaultValidator: 'required' | 'minOptions' | 'maxOptions'): boolean {
+	function skipValidator(defaultValidator: 'required' | 'optionsRange'): boolean {
 		if (typeof props.skipDefaultValidation === 'boolean') {
 			return props.skipDefaultValidation;
 		}

@@ -109,7 +109,7 @@
 	import type { ValidatorFehler } from '../../../../../core/src/asd/validate/ValidatorFehler';
 	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 	import { ValidationResult } from "../../../validation/ValidationResult";
-	import { ValidatorSelectRequired } from "../../../validation/ValidatorSelectRequired";
+	import { ValidatorInputRequired } from "../../../validation/common/ValidatorInputRequired";
 
 	const props = withDefaults(defineProps<UiSelectSingleProps<T>>(), {
 		label: '',
@@ -181,9 +181,9 @@
 
 	const validationResult = computed(() => new ValidationResult(validierungFehler.value));
 
-	const validatorRequired = computed<ValidatorSelectRequired<T> | null>(() => {
+	const validatorRequired = computed<ValidatorInputRequired<T> | null>(() => {
 		if (props.required && !props.skipDefaultValidation) {
-			return new ValidatorSelectRequired(() => model.value);
+			return new ValidatorInputRequired(() => model.value);
 		}
 		return null;
 	});

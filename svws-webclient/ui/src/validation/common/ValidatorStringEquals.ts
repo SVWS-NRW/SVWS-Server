@@ -23,7 +23,6 @@ export class ValidatorStringEquals extends BasicValidator {
 		super(ValidatorFehlerart.MUSS);
 		this.data = data;
 		this.other = other;
-		this.run();
 	}
 
 	/**
