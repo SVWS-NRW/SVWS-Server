@@ -1,6 +1,6 @@
 package de.svws_nrw.asd.validate.lehrer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
 import de.svws_nrw.asd.types.schule.Schulform;
@@ -63,11 +64,18 @@ class TestValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen 
 		eintrag.idGrund = idGrund;
 		anrechnungenListe.add(eintrag);
 
+		//Leere Einträge, da die Signatur des Validators die Parameter erwartet, aber nicht testet
+		final List<LehrerLehramtEintrag> lehraemter = new ArrayList<>();
+		final Double soll = null;
+
 		final ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen validator =
 				new ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(
 						() -> anrechnungenListe,
+						() -> lehraemter,
+						() -> soll,
 						kontext);
 
-		assertEquals(expectedResult, validator.pruefe(), "Fehler bei der Prüfung von idGrund: " + idGrund);
+		assertThat(validator.pruefe())
+				.isEqualTo(expectedResult);
 	}
 }

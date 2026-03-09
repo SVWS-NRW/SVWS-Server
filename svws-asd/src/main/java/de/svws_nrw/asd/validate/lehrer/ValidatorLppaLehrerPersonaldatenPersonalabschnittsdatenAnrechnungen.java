@@ -30,11 +30,7 @@ public final class ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrech
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 
-		_validatoren.add(new ValidatorLppa00LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, kontext));
-		_validatoren.add(new ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, kontext));
-		_validatoren.add(new ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, kontext));
-		_validatoren.add(new ValidatorLppa10LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, kontext));
-		_validatoren.add(new ValidatorLppa11LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, pflichtstundensoll, kontext));
+		_validatoren.add(new ValidatorLppa00LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, pflichtstundensoll, kontext));
 	}
 
 	@Override

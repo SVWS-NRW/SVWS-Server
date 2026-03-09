@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
 import de.svws_nrw.asd.types.schule.Schulform;
@@ -63,9 +64,15 @@ class TestValidatorLppa00LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen 
 		eintrag.anzahl = 1.0;
 		anrechnungenListe.add(eintrag);
 
+		//Leere Einträge, da die Signatur des Validators die Parameter erwartet, aber nicht testet
+		final List<LehrerLehramtEintrag> lehraemter = new ArrayList<>();
+		final Double soll = null;
+
 		final ValidatorLppa00LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen validator =
 				new ValidatorLppa00LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(
 						() -> anrechnungenListe,
+						() -> lehraemter,
+						() -> soll,
 						kontext);
 
 		assertEquals(result, validator.pruefe());

@@ -1,3 +1,5 @@
+import { LehrerLehramtEintrag } from '../../../asd/data/lehrer/LehrerLehramtEintrag';
+import { ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen } from '../../../asd/validate/lehrer/ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen';
 import { LehrerAnrechnungsgrund } from '../../../asd/types/lehrer/LehrerAnrechnungsgrund';
 import { LehrerPersonalabschnittsdatenAnrechnungsstunden } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdatenAnrechnungsstunden';
 import type { Supplier } from '../../../java/util/function/Supplier';
@@ -17,12 +19,15 @@ export class ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnung
 	/**
 	 * Erstellt einen neuen Validator für die Existenzprüfung der Anrechnungsgründe im Katalog.
 	 *
-	 * @param anrechnungen  die Liste der Anrechnungsstunden
-	 * @param kontext       der Kontext des Validators
+	 * @param anrechnungen       die Liste der Anrechnungsstunden
+	 * @param lehraemter         die Liste der Lehrämter
+	 * @param pflichtstundensoll das Pflichtstundensoll
+	 * @param kontext            der Kontext des Validators
 	 */
-	public constructor(anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
+	public constructor(anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, pflichtstundensoll: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.anrechnungen = anrechnungen;
+		this._validatoren.add(new ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, pflichtstundensoll, kontext));
 	}
 
 	protected pruefe(): boolean {
