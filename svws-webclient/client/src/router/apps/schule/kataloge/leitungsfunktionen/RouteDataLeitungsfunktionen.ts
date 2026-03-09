@@ -60,7 +60,7 @@ export class RouteDataLeitungsfunktionen extends RouteDataAuswahl<Leitungsfunkti
 		return `Leitungsfunktion ${leitungsfunktion?.bezeichnung ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
-	deleteCheck = (): [boolean, List<string>] => {
+	deleteCheck = (): { success: boolean, logs: Iterable<string> } => {
 		const errorLog = new ArrayList<string>();
 
 		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
@@ -75,7 +75,7 @@ export class RouteDataLeitungsfunktionen extends RouteDataAuswahl<Leitungsfunkti
 			errorLog.add(this.getErrorMessageForReferencedLeitungsfunktionen());
 		}
 
-		return [errorLog.isEmpty(), errorLog];
+		return { success: errorLog.isEmpty(), logs: errorLog };
 	};
 
 	private getErrorMessageForReferencedLeitungsfunktionen(): string {
