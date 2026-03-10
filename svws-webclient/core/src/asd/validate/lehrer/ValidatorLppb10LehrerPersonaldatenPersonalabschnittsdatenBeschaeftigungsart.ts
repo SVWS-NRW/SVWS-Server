@@ -20,7 +20,7 @@ export class ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 
 	private static readonly setEinsatzstatus2: JavaSet<string> = java_util_Set_of("A", "B");
 
-	private static readonly fehlertext: string = "Bei einer unentgeltlich beschäftigten Lehrkraft (Feld 'Beschäftigungsart' = 'Unentgeltlich Beschäftigte') dürfen im Feld 'Einsatzstatus' nicht die Einträge 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' oder 'nicht Stammschule, aber auch hier tätig' eingetragen sein.";
+	private static readonly FEHLERTEXT: string = "Bei einer unentgeltlich beschäftigten Lehrkraft (Feld 'Beschäftigungsart' = 'Unentgeltlich Beschäftigte') dürfen im Feld 'Einsatzstatus' nicht die Einträge 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' oder 'nicht Stammschule, aber auch hier tätig' eingetragen sein.";
 
 
 	/**
@@ -40,7 +40,7 @@ export class ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaefti
 		const beschaeftigungsart: string | null = this.beschaeftigungsart.get();
 		const einsatzstatus: string | null = this.einsatzstatus.get();
 		if (ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.setEinsatzstatus2.contains(einsatzstatus) && JavaObject.equalsTranspiler("X", (beschaeftigungsart))) {
-			this.addFehler(2, ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.fehlertext);
+			this.addFehler(2, ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart.FEHLERTEXT);
 			return false;
 		}
 		return true;
