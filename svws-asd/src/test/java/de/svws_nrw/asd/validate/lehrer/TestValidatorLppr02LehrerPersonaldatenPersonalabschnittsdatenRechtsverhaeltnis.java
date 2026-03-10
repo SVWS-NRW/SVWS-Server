@@ -75,7 +75,7 @@ class TestValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhael
 					() -> rechtsverhaeltnis,
 					() -> geburtsdatum,
 					kontext);
-			assertEquals(false, validator.run());
+			assertEquals(false, validator.pruefe());
 
 		} catch (@SuppressWarnings("unused") final InvalidDateException e) {
 			assertEquals(true, false); // darf hier nicht hin

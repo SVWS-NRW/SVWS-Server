@@ -60,7 +60,7 @@ class TestValidatorLpp01LehrerPersonalabschnittsdatenPflichtstundensoll {
 		final ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll validator = new ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(
 				() -> pflichtstundensoll,
 				kontext);
-		assertEquals(result, validator.run());
+		assertEquals(result, validator.pruefe());
 	}
 
 }

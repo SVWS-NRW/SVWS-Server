@@ -23,6 +23,11 @@ public final class ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPfli
 
 	/** Die Beschäftigungsart */
 	private final @NotNull Supplier<@AllowNull String> beschaeftigungsart;
+	private static final @NotNull Set<String> setBeschaeftigungsart = Set.of("WV", "WT");
+	private static final @NotNull String FEHLERTEXT =
+			"Ist bei einer Lehrkraft im Feld 'Pflichtstundensoll' der Wert = 0.00 eingetragen, so muss das Feld 'Einsatzstatus' den Schlüssel"
+					+ " 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' oder die 'Beschäftigungsart' den Schlüssel 'Beamte auf"
+					+ " Widerruf (LAA) in Vollzeit' bzw. 'Beamte auf Widerruf (LAA) in Teilzeit' aufweisen.";
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -50,16 +55,11 @@ public final class ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPfli
 		final LehrerEinsatzstatus einsatzstatus = LehrerEinsatzstatus.getBySchluessel(this.einsatzstatus.get());
 
 		final String beschaeftigungsart = this.beschaeftigungsart.get();
-		final @NotNull Set<String> setBeschaeftigungsart = Set.of("WV", "WT");
-		final String fehlertext3 =
-				"Ist bei einer Lehrkraft im Feld 'Pflichtstundensoll' der Wert = 0.00 eingetragen, so muss das Feld 'Einsatzstatus' den Schlüssel"
-						+ " 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' oder die 'Beschäftigungsart' den Schlüssel 'Beamte auf"
-						+ " Widerruf (LAA) in Vollzeit' bzw. 'Beamte auf Widerruf (LAA) in Teilzeit' aufweisen.";
 
 		if (pflichtstundensoll == 0.0
 				&& !LehrerEinsatzstatus.A.equals(einsatzstatus)
 				&& !setBeschaeftigungsart.contains(beschaeftigungsart)) {
-			this.addFehler(3, fehlertext3);
+			this.addFehler(3, FEHLERTEXT);
 			return false;
 		}
 

@@ -102,7 +102,7 @@ class TestValidatorLp00LehrerPersonaldatenLehramt {
 		final ValidatorKontext kontext = new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 				testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLp00LehrerPersonaldatenLehramt validator = new ValidatorLp00LehrerPersonaldatenLehramt(() -> listLehrerLehramtEintrag, () -> idLehrer, kontext);
-		assertEquals(result, validator.run());
+		assertEquals(result, validator.pruefe());
 	}
 
 }

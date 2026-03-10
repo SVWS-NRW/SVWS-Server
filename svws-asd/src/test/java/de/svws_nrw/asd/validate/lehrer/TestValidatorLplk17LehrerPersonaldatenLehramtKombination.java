@@ -50,7 +50,7 @@ class TestValidatorLplk17LehrerPersonaldatenLehramtKombination {
 		final ValidatorLplk17LehrerPersonaldatenLehramtKombination validator =
 				new ValidatorLplk17LehrerPersonaldatenLehramtKombination(() -> liste, kontext);
 
-		assertEquals(result, validator.run());
+		assertEquals(result, validator.pruefe());
 	}
 
 	@Test

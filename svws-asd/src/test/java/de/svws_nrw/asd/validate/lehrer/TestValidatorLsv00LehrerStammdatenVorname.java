@@ -65,7 +65,7 @@ class TestValidatorLsv00LehrerStammdatenVorname {
 		final ValidatorKontext kontext = new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 				testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLsv00LehrerStammdatenVorname validator = new ValidatorLsv00LehrerStammdatenVorname(() -> vorname, kontext);
-		assertEquals(result, validator.run());
+		assertEquals(result, validator.pruefe());
 	}
 
 

@@ -82,7 +82,7 @@ class TestValidatorLsg01LehrerStammdatenGeschlecht {
 		final ValidatorLsg01LehrerStammdatenGeschlecht validator =
 				new ValidatorLsg01LehrerStammdatenGeschlecht(() -> geschlecht, kontext);
 
-		assertEquals(result, validator.run());
+		assertEquals(result, validator.pruefe());
 
 	}
 

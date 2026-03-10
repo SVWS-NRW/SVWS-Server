@@ -101,7 +101,7 @@ class TestValidatorLplk10LehrerPersonaldatenLehramtKombination {
 		final ValidatorLplk10LehrerPersonaldatenLehramtKombination validator = new ValidatorLplk10LehrerPersonaldatenLehramtKombination(
 				() -> listLehrerLehramtEintrag,
 				kontext);
-		assertEquals(result, validator.run());
+		assertEquals(result, validator.pruefe());
 	}
 
 

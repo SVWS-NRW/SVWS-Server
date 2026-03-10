@@ -4,7 +4,6 @@ import java.util.function.Supplier;
 
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
-import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -14,7 +13,7 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLsk10LehrerStammdatenKuerzel extends Validator {
 
 	/** Die Lehrer-Stammdaten */
-	private final @NotNull Supplier<@AllowNull String> daten;
+	private final @NotNull Supplier<String> daten;
 
 
 	/**
@@ -23,7 +22,7 @@ public final class ValidatorLsk10LehrerStammdatenKuerzel extends Validator {
 	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLsk10LehrerStammdatenKuerzel(final @NotNull Supplier<@AllowNull String> daten,
+	public ValidatorLsk10LehrerStammdatenKuerzel(final @NotNull Supplier<String> daten,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
@@ -31,10 +30,7 @@ public final class ValidatorLsk10LehrerStammdatenKuerzel extends Validator {
 
 	@Override
 	protected boolean pruefe() {
-		// Prüfe zunächst, ob überhaupt ein Kürzel vorhanden ist
 		final String kuerzel = daten.get();
-		if ((kuerzel == null) || kuerzel.trim().isBlank())
-			return true; // Dieser Fall wird von anderen Validatoren gehandhabt, weshalb die Prüfung hier nicht fehlschlägt
 
 		String fehlertext0 = "Der Eintrag " + kuerzel + " ist als Lehrerkürzel unzulässig."
 				+ " Zulässig sind: 1. Stelle: A-Z, Ä, Ö, Ü; 2.-4. Stelle: A-Z, Ä, Ö, Ü, -, 'kein Eintrag'."

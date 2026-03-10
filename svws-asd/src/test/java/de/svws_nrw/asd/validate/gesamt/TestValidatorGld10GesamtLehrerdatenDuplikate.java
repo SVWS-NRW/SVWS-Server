@@ -78,7 +78,7 @@ class TestValidatorGld10GesamtLehrerdatenDuplikate {
 				new ValidatorGld10GesamtLehrerdatenDuplikate(
 						() -> listLehrerStatistikGesamt,
 						kontext);
-		assertEquals(result, validator.run());
+		assertEquals(result, validator.pruefe());
 	}
 
 }

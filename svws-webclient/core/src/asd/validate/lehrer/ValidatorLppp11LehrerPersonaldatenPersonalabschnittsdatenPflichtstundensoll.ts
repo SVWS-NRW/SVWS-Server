@@ -24,6 +24,10 @@ export class ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 	 */
 	private readonly beschaeftigungsart: Supplier<string | null>;
 
+	private static readonly setBeschaeftigungsart: JavaSet<string> = java_util_Set_of("WV", "WT");
+
+	private static readonly fehlertext: string = "Ist bei einer Lehrkraft im Feld 'Pflichtstundensoll' der Wert = 0.00 eingetragen, so muss das Feld 'Einsatzstatus' den Schlüssel 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' oder die 'Beschäftigungsart' den Schlüssel 'Beamte auf Widerruf (LAA) in Vollzeit' bzw. 'Beamte auf Widerruf (LAA) in Teilzeit' aufweisen.";
+
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -44,10 +48,8 @@ export class ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 		const pflichtstundensoll: number | null = this.pflichtstundensoll.get();
 		const einsatzstatus: LehrerEinsatzstatus | null = LehrerEinsatzstatus.getBySchluessel(this.einsatzstatus.get());
 		const beschaeftigungsart: string | null = this.beschaeftigungsart.get();
-		const setBeschaeftigungsart: JavaSet<string> = java_util_Set_of("WV", "WT");
-		const fehlertext3: string | null = "Ist bei einer Lehrkraft im Feld 'Pflichtstundensoll' der Wert = 0.00 eingetragen, so muss das Feld 'Einsatzstatus' den Schlüssel 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' oder die 'Beschäftigungsart' den Schlüssel 'Beamte auf Widerruf (LAA) in Vollzeit' bzw. 'Beamte auf Widerruf (LAA) in Teilzeit' aufweisen.";
-		if (pflichtstundensoll === 0.0 && !JavaObject.equalsTranspiler(LehrerEinsatzstatus.A, (einsatzstatus)) && !setBeschaeftigungsart.contains(beschaeftigungsart)) {
-			this.addFehler(3, fehlertext3);
+		if (pflichtstundensoll === 0.0 && !JavaObject.equalsTranspiler(LehrerEinsatzstatus.A, (einsatzstatus)) && !ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll.setBeschaeftigungsart.contains(beschaeftigungsart)) {
+			this.addFehler(3, ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll.fehlertext);
 			return false;
 		}
 		return true;

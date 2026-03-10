@@ -53,16 +53,18 @@ class TestValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigu
 	}
 
 	private static void addGrund(final LehrerPersonalabschnittsdaten d, final Long idGrund) {
-		if (idGrund == null)
+		if (idGrund == null) {
 			return;
+		}
 
 		final var lpa = new LehrerPersonalabschnittsdatenAnrechnungsstunden();
 		lpa.idGrund = idGrund;
 
-		if (idGrund == 100L && d.mehrleistung != null)
+		if (idGrund == 100L && d.mehrleistung != null) {
 			d.mehrleistung.add(lpa);
-		else if ((idGrund == 240L || idGrund == 290L) && d.minderleistung != null)
+		} else if ((idGrund == 240L || idGrund == 290L) && d.minderleistung != null) {
 			d.minderleistung.add(lpa);
+		}
 	}
 
 	@DisplayName("Tests für ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell: pflichtstundensoll, beschaeftigungsart, einsatzstatus, idGrund, erwartet")
@@ -74,10 +76,12 @@ class TestValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigu
 		LehrerPersonalabschnittsdaten_Plausibel.beschaeftigungsart = beschaeftigungsart == null ? "" : beschaeftigungsart.trim();
 		LehrerPersonalabschnittsdaten_Plausibel.einsatzstatus = einsatzstatus;
 
-		if (LehrerPersonalabschnittsdaten_Plausibel.mehrleistung != null)
+		if (LehrerPersonalabschnittsdaten_Plausibel.mehrleistung != null) {
 			LehrerPersonalabschnittsdaten_Plausibel.mehrleistung.clear();
-		if (LehrerPersonalabschnittsdaten_Plausibel.minderleistung != null)
+		}
+		if (LehrerPersonalabschnittsdaten_Plausibel.minderleistung != null) {
 			LehrerPersonalabschnittsdaten_Plausibel.minderleistung.clear();
+		}
 
 		addGrund(LehrerPersonalabschnittsdaten_Plausibel, idGrund);
 
@@ -92,6 +96,6 @@ class TestValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigu
 				() -> LehrerPersonalabschnittsdaten_Plausibel.mehrleistung,
 				() -> LehrerPersonalabschnittsdaten_Plausibel.minderleistung,
 				kontext);
-		assertEquals(result, validator.run());
+		assertEquals(result, validator.pruefe());
 	}
 }

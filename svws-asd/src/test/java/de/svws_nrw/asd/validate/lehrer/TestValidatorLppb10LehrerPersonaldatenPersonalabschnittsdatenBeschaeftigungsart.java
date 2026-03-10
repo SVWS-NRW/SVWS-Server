@@ -82,7 +82,7 @@ class TestValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigun
 						() -> einsatzstatus,
 						kontext);
 
-		assertEquals(result, validator.run());
+		assertEquals(result, validator.pruefe());
 
 	}
 

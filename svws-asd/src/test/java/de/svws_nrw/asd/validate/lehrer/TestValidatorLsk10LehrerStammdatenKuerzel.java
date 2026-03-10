@@ -87,7 +87,7 @@ class TestValidatorLsk10LehrerStammdatenKuerzel {
 				testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLsk10LehrerStammdatenKuerzel validator = new ValidatorLsk10LehrerStammdatenKuerzel(() -> kuerzel, kontext);
 
-		assertEquals(result, validator.run());
+		assertEquals(result, validator.pruefe());
 	}
 
 }

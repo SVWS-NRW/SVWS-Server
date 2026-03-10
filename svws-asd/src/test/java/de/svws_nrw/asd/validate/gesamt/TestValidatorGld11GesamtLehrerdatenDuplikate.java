@@ -121,7 +121,7 @@ class TestValidatorGld11GesamtLehrerdatenDuplikate {
 						() -> listLehrerStatistikGesamt,
 						kontext);
 
-		assertEquals(result, validator.run());
+		assertEquals(result, validator.pruefe());
 	}
 
 }

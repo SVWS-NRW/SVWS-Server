@@ -95,7 +95,7 @@ class TestValidatorLpl11LehrerPersonaldatenLehramt {
 						},
 						kontext
 				);
-		assertEquals(result, validator.run());
+		assertEquals(result, validator.pruefe());
 	}
 
 }

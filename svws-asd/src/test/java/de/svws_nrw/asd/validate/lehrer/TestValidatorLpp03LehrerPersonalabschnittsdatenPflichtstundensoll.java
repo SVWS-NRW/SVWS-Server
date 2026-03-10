@@ -77,7 +77,7 @@ class TestValidatorLpp03LehrerPersonalabschnittsdatenPflichtstundensoll {
 						() -> beschaeftigungsart,
 						kontext);
 
-		assertEquals(result, validator.run());
+		assertEquals(result, validator.pruefe());
 
 	}
 

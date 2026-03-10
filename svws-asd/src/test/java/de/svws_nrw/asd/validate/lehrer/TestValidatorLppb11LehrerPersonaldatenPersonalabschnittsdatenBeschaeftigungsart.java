@@ -94,7 +94,7 @@ class TestValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigun
 						() -> pflichtstundensoll,
 						kontext);
 
-		assertEquals(result, validator.run());
+		assertEquals(result, validator.pruefe());
 
 	}
 

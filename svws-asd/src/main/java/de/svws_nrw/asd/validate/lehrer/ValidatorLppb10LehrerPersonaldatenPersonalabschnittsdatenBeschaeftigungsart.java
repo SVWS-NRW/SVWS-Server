@@ -18,6 +18,10 @@ public final class ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBesc
 
 	/** Der Einsatzstatus */
 	private final @NotNull Supplier<String> einsatzstatus;
+	private static final @NotNull Set<String> setEinsatzstatus2 = Set.of("A", "B");
+	private static final @NotNull String FEHLERTEXT = "Bei einer unentgeltlich beschäftigten Lehrkraft (Feld 'Beschäftigungsart' = 'Unentgeltlich Beschäftigte') "
+			+ "dürfen im Feld 'Einsatzstatus' nicht die Einträge 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' oder "
+			+ "'nicht Stammschule, aber auch hier tätig' eingetragen sein.";
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -42,13 +46,9 @@ public final class ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBesc
 		final String einsatzstatus = this.einsatzstatus.get();
 
 		// LPPB2 ex BI7
-		final Set<String> setEinsatzstatus2 = Set.of("A", "B");
-		final String fehlertext2 = "Bei einer unentgeltlich beschäftigten Lehrkraft (Feld 'Beschäftigungsart' = 'Unentgeltlich Beschäftigte') "
-				+ "dürfen im Feld 'Einsatzstatus' nicht die Einträge 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' oder "
-				+ "'nicht Stammschule, aber auch hier tätig' eingetragen sein.";
 
 		if (setEinsatzstatus2.contains(einsatzstatus) && "X".equals(beschaeftigungsart)) {
-			this.addFehler(2, fehlertext2);
+			this.addFehler(2, FEHLERTEXT);
 			return false;
 		}
 

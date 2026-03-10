@@ -63,7 +63,7 @@ class TestValidatorSss00SchuleStammdatenSchulform {
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorSss00SchuleStammdatenSchulform validator = new ValidatorSss00SchuleStammdatenSchulform(() -> schulform, kontext);
 
-		assertEquals(result, validator.run());
+		assertEquals(result, validator.pruefe());
 	}
 
 
