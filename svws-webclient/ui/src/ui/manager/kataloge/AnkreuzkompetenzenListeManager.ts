@@ -125,7 +125,7 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 	 *
 	 * @param zuordnungen    Liste der AnkreuzkompetnezenJahrgaengezuordnungen
 	 */
-	public addJahrgaengeToAuswahl(zuordnungen: List<AnkreuzkompetenzJahrgangszuordnung>): void {
+	public addJahrgaengezuordnungen(zuordnungen: List<AnkreuzkompetenzJahrgangszuordnung>): void {
 		if (this._daten !== null) {
 			this._daten.jahrgaengezuordnung.addAll(zuordnungen);
 			this._daten.jahrgaengezuordnung.sort(this.comparatorJahrgaengezuordnung);
@@ -142,13 +142,16 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 			return;
 		}
 
+		const zuordnungenToRemove = new ArrayList<AnkreuzkompetenzJahrgangszuordnung>();
 		for (const id of ids) {
 			for (const jahrgangzuordnung of this._daten.jahrgaengezuordnung) {
 				if (jahrgangzuordnung.id === id) {
-					this._daten.jahrgaengezuordnung.remove(jahrgangzuordnung);
+					zuordnungenToRemove.add(jahrgangzuordnung);
 				}
 			}
 		}
+
+		this._daten.jahrgaengezuordnung.removeAll(zuordnungenToRemove);
 	}
 
 	private readonly comparatorJahrgaengezuordnung: Comparator<AnkreuzkompetenzJahrgangszuordnung> = {

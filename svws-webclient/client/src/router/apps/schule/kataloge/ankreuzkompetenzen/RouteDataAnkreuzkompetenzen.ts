@@ -1,4 +1,5 @@
-import type { Ankreuzkompetenz, SimpleOperationResponse, List, AnkreuzkompetenzJahrgangszuordnung } from "@core";
+import type { Ankreuzkompetenz, SimpleOperationResponse, List } from "@core";
+import { AnkreuzkompetenzJahrgangszuordnung, ArrayList } from "@core";
 import { AnkreuzkompetenzenListeManager, ViewType } from "@ui";
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
@@ -57,18 +58,30 @@ export class RouteDataAnkreuzkompetenzen extends RouteDataAuswahl<Ankreuzkompete
 		return await api.server.deleteAnkreuzkompetenzen(ids, api.schema);
 	}
 
-	addAnkreuzkompetenz = async (partial: Partial<Ankreuzkompetenz>): Promise<Ankreuzkompetenz> => {
+	addAnkreuzkompetenz = async (partial: Partial<Ankreuzkompetenz>, idsJahrgaenge: List<number>): Promise<Ankreuzkompetenz> => {
 		const ankreuzkompetenz = await api.server.addAnkreuzkompetenz(partial, api.schema);
-		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
+
+		if (!idsJahrgaenge.isEmpty()) {
+			const zuordnungen = await this.internalAddJahrgaengezuordnungen(ankreuzkompetenz.id, idsJahrgaenge);
+			ankreuzkompetenz.jahrgaengezuordnung.addAll(zuordnungen);
+		}
+
 		this.manager.liste.add(ankreuzkompetenz);
+		this.manager.setDaten(ankreuzkompetenz);
+		this.commit();
+
 		return ankreuzkompetenz;
 	};
 
-	addJahrgaengezuordnungen = async (data: List<Partial<AnkreuzkompetenzJahrgangszuordnung>>, idAnkreuzkompetenz: number): Promise<void> => {
-		const result = await api.server.addAnkreuzkompetenzJahrgangszuordnung(data, api.schema);
-		this.manager.addJahrgaengeToAuswahl(result);
+	addJahrgaengezuordnungen = async (idAnkreuzkompetenz: number, idsJahrgaenge: List<number>): Promise<void> => {
+		if (idsJahrgaenge.isEmpty()) {
+			return;
+		}
+
+		const zuordnungen = await this.internalAddJahrgaengezuordnungen(idAnkreuzkompetenz, idsJahrgaenge);
+
+		this.manager.addJahrgaengezuordnungen(zuordnungen);
 		this.commit();
-		await this.gotoDefaultView(idAnkreuzkompetenz);
 	};
 
 	deleteJahrgaengezuordnungen = async (ids: List<number>): Promise<void> => {
@@ -80,4 +93,22 @@ export class RouteDataAnkreuzkompetenzen extends RouteDataAuswahl<Ankreuzkompete
 	protected deleteMessage(id: number, ankreuzkompetenz: Ankreuzkompetenz | null): string {
 		return `Ankreuzkompetenz ${ankreuzkompetenz?.floskelText ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
+
+	private createJahrgaengezuordnungen(idAnkreuzkompetenz: number, idsJahrgaenge: List<number>) {
+		const jahrgaengezuordnungen = new ArrayList<AnkreuzkompetenzJahrgangszuordnung>();
+		for (const idJahrgang of idsJahrgaenge) {
+			const zuordnung = new AnkreuzkompetenzJahrgangszuordnung();
+			zuordnung.idAnkreuzkompetenz = idAnkreuzkompetenz;
+			zuordnung.idJahrgang = idJahrgang;
+			const { id, ...partialData } = zuordnung;
+			jahrgaengezuordnungen.add(partialData as AnkreuzkompetenzJahrgangszuordnung);
+		}
+		return jahrgaengezuordnungen;
+	}
+
+	private async internalAddJahrgaengezuordnungen(idAnkreuzkompetenz: number, idsJahrgaenge: List<number>): Promise<List<AnkreuzkompetenzJahrgangszuordnung>> {
+		const zuordnungenToCreate = this.createJahrgaengezuordnungen(idAnkreuzkompetenz, idsJahrgaenge);
+		return await api.server.addAnkreuzkompetenzJahrgangszuordnung(zuordnungenToCreate, api.schema);
+	}
+
 }

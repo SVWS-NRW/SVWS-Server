@@ -100,8 +100,8 @@
 
 	import type { AnkreuzkompetenzenDatenProps } from "~/components/schule/kataloge/ankreuzkompetenzen/daten/AnkreuzkompetenzenDatenProps";
 	import { computed, ref } from "vue";
-	import type { FachDaten, JahrgangsDaten, SchulgliederungKatalogEintrag, List } from "@core";
-	import { AnkreuzkompetenzJahrgangszuordnung, ArrayList, BenutzerKompetenz, Schulgliederung } from "@core";
+	import type { FachDaten, JahrgangsDaten, SchulgliederungKatalogEintrag } from "@core";
+	import { ArrayList, BenutzerKompetenz, Schulgliederung, Arrays } from "@core";
 	import { isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid } from "~/util/validation/Validation";
 	import { CoreTypeSelectManager, type DataTableColumn, SelectManager } from "@ui";
 	import { AnkreuzkompetenzAbschnitt } from "~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzAbschnitt";
@@ -225,22 +225,11 @@
 			return;
 		}
 
-		const zuordnungen = createJahrgaengezuordnungen();
-		await props.addJahrgaengezuordnungen(zuordnungen, manager().daten().id);
+		const idsJahrgaenge = Arrays.asList(jahrgaengeToBeAdded.value.map(jahrgang => jahrgang.id));
+		await props.addJahrgaengezuordnungen(manager().daten().id, idsJahrgaenge);
+
 		isLoading.value = false;
 		closeModal();
-	}
-
-	function createJahrgaengezuordnungen(): List<AnkreuzkompetenzJahrgangszuordnung> {
-		const jahrgaengezuordnungen = new ArrayList<AnkreuzkompetenzJahrgangszuordnung>();
-		for (const jahrgang of jahrgaengeToBeAdded.value) {
-			const zuordnung = new AnkreuzkompetenzJahrgangszuordnung();
-			zuordnung.idAnkreuzkompetenz = manager().daten().id;
-			zuordnung.idJahrgang = jahrgang.id;
-			const { id, ...partialData } = zuordnung;
-			jahrgaengezuordnungen.add(partialData as AnkreuzkompetenzJahrgangszuordnung);
-		}
-		return jahrgaengezuordnungen;
 	}
 
 	async function deleteSelectedJahrgaenge() {
