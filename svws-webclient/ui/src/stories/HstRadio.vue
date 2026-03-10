@@ -2,7 +2,7 @@
 <template>
 	<div>
 		{{ title }}
-		<SvwsUiRadioGroup>
+		<SvwsUiRadioGroup :row>
 			<SvwsUiRadioOption v-for="option of options" v-model="checked" :label="option.label" :key="option.label" :value="option.value" />
 		</SvwsUiRadioGroup>
 	</div>
@@ -32,8 +32,10 @@
 		title?: string;
 		options: Options[];
 		modelValue: Value;
+		row?: boolean;
 	}>(), {
 		title: '',
+		row: false,
 	});
 
 </script>
