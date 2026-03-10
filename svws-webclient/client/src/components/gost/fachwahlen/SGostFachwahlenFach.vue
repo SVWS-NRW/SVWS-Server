@@ -15,7 +15,7 @@
 					<span>Grundkurs</span>
 				</div>
 				<div role="cell" class="svws-ui-td">
-					<span class="icon i-ri-speak-line -my-0.5" />
+					<span class="icon i-ri-chat-1-line -my-0.5" />
 					<span>Grundkurs</span>
 				</div>
 				<div role="cell" class="svws-ui-td">
@@ -23,7 +23,7 @@
 					<span>Leistungskurs</span>
 				</div>
 				<div v-if="istZKMoeglich" role="cell" class="svws-ui-td">
-					<span class="icon i-ri-speak-line -my-0.5" />
+					<span class="icon i-ri-chat-1-line -my-0.5" />
 					<span>Zusatzkurs</span>
 				</div>
 			</div>

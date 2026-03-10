@@ -16,7 +16,7 @@
 					<span>Grundkurs</span>
 				</div>
 				<div role="cell" class="svws-ui-td" :class="{'opacity-25': !aktuell.fachwahl?.id}">
-					<span class="icon i-ri-speak-line -my-0.5" />
+					<span class="icon i-ri-chat-1-line -my-0.5" />
 					<span>Grundkurs</span>
 				</div>
 				<div role="cell" class="svws-ui-td" :class="{'opacity-25': !aktuell.fachwahl?.id}">
@@ -24,7 +24,7 @@
 					<span>Leistungskurs</span>
 				</div>
 				<div role="cell" class="svws-ui-td" :class="{'opacity-25': !aktuell.fachwahl?.id}">
-					<span class="icon i-ri-speak-line -my-0.5" />
+					<span class="icon i-ri-chat-1-line -my-0.5" />
 					<span>Zusatzkurs</span>
 				</div>
 			</div>

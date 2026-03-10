@@ -31,7 +31,7 @@
 									<span v-else class="opacity-25">Schriftlich (—)</span>
 								</div>
 								<div role="cell" class="svws-ui-td svws-align-center">
-									<span class="icon i-ri-speak-line -my-0.5 mr-0.5" />
+									<span class="icon i-ri-chat-1-line -my-0.5 mr-0.5" />
 									<span v-if="fws.fachwahlen[halbjahr.id].wahlenGKMuendlich > 0"> Mündlich ({{ fws.fachwahlen[halbjahr.id].wahlenGKMuendlich }}) </span>
 									<span v-else class="opacity-25">Mündlich (—)</span>
 								</div>

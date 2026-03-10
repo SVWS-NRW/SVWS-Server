@@ -16,17 +16,17 @@
 			<template v-if="fws !== undefined && hatAbiFachwahl(fws)">
 				<div role="row" class="svws-ui-tr text-ui">
 					<div role="cell" class="svws-ui-td svws-align-center">
-						<span class="icon i-ri-draft-line  -my-0.5" />
+						<span class="icon i-ri-draft-line -my-0.5" />
 						<span v-if="fws.fachwahlen[5].wahlenLK > 0">Leistungskurs ({{ fws.fachwahlen[5].wahlenLK }})</span>
 						<span v-else class="opacity-25">Leistungskurs (—)</span>
 					</div>
 					<div role="cell" class="svws-ui-td svws-align-center">
-						<span class="icon i-ri-draft-line  -my-0.5" />
+						<span class="icon i-ri-draft-line -my-0.5" />
 						<span v-if="fws.wahlenAB3 > 0">3. Abiturfach ({{ fws.wahlenAB3 }})</span>
 						<span v-else class="opacity-25">3. Abiturfach (—)</span>
 					</div>
 					<div role="cell" class="svws-ui-td svws-align-center">
-						<span class="icon i-ri-speak-line  -my-0.5" />
+						<span class="icon i-ri-chat-1-line -my-0.5" />
 						<span v-if="fws.wahlenAB4 > 0">4. Abiturfach ({{ fws.wahlenAB4 }})</span>
 						<span v-else class="opacity-25">4. Abiturfach (—)</span>
 					</div>
