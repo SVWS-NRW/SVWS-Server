@@ -3,6 +3,10 @@ import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
 import SvwsUiTextareaInput from "../../../src/ui/controls/SvwsUiTextareaInput.vue";
 import SvwsUiTooltip from "../../../src/ui/SvwsUiTooltip.vue";
+import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
+import type { ValidatorFehler } from "../../../../core/src/asd/validate/ValidatorFehler";
+import type { List } from "../../../../core/src/java/util/List";
+import { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
 
 type prop_names = "modelValue" | "disabled" | "valid" | "statistics" | "resizeable" | "span" | "required";
 
@@ -206,7 +210,7 @@ describe("Bedingtes Rendern der HTML-Elemenete", () => {
 			expect(wrapper.find(idPlaceholder).exists()).toBeTruthy();
 		});
 
-		test("Html-Element span wird  gerendert, wenn placeholder gesetzt ist", async () => {
+		test("Html-Element span wird gerendert, wenn placeholder gesetzt ist", async () => {
 			// Vorbereiten
 			await wrapper.setProps({ placeholder: "Placeholder" });
 
@@ -331,7 +335,7 @@ describe("computed/functions tests", () => {
 		wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.updateData("Test");
 
 		// Testen
-		// Länge ist deswegen 1, weil durch watch  updateData bereits bei der Konstruktion einmal aufgerufen wird
+		// Länge ist deswegen 1, weil durch watch updateData bereits bei der Konstruktion einmal aufgerufen wird
 		// Jedoch wird die Methode beim nächsten Aufruf mit dem gleichen Wert nicht aufgerufen.
 		expect(wrapper.emitted("update:modelValue")).toHaveLength(1);
 	});
@@ -437,8 +441,156 @@ test('sollte die textarea-Referenz korrekt setzen', async () => {
 	expect(textareaElement.classList).toContain("textarea-input--control");
 });
 
+describe.concurrent("Validierung", () => {
+
+	test("Mit Prop 'validation' wird eine Validierung von außen ausgeführt", () => {
+		const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: "Test", validation: () => getValidatorFehler() } });
+		const validatorResult = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult;
+
+		expect(validatorResult.fehler.size()).toBe(1);
+		expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
+	});
+
+	test.each([
+		["textarea-input--muss", ValidatorFehlerart.MUSS],
+		["textarea-input--kann", ValidatorFehlerart.KANN],
+		["textarea-input--hinweis", ValidatorFehlerart.HINWEIS],
+	])(
+		"Wird mit der Klasse '%s' wiedergegeben, wenn Validierungsfehler vom Härtegrad %s vorhanden sind",
+		(expectedClass, fehlerart) => {
+			const wrapper = mount(SvwsUiTextareaInput, {
+				props: { modelValue: "Test", validation: () => getValidatorFehler(fehlerart) },
+			});
+			expect(wrapper.find(`.${expectedClass}`).exists()).toBe(true);
+		}
+	);
+
+	test("Bei Validierungsfehlern wird ein Validation-Icon angezeigt", () => {
+		const wrapper = mount(SvwsUiTextareaInput, { props: { placeholder: "Titel", validation: () => getValidatorFehler() } });
+		expect(wrapper.find(".validation-tooltip-icon").exists()).toBeTruthy();
+	});
+
+	describe.concurrent("required", () => {
+
+		test("Mit Prop 'required = false' und ohne Prop 'validation' wird kein Required-Validator hinzugefügt", () => {
+			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: null, required: false } });
+			const validatorRequired = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorRequired;
+
+			expect(validatorRequired).toBeNull();
+		});
+
+		test("Mit Prop 'required = false' und Prop 'validation' wird kein Required-Validator hinzugefügt", () => {
+			const wrapper = mount(SvwsUiTextareaInput, {
+				props: { modelValue: null, required: false, validation: () => getValidatorFehler() },
+			});
+			const validatorRequired = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorRequired;
+
+			expect(validatorRequired).toBeNull();
+		});
+
+		test("Mit Prop 'required = true' und Prop 'validation' wird kein Required-Validator hinzugefügt", () => {
+			const wrapper = mount(SvwsUiTextareaInput, {
+				props: { modelValue: null, required: true, validation: () => getValidatorFehler() },
+			});
+			const validatorRequired = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorRequired;
+
+			expect(validatorRequired).toBeNull();
+		});
+
+		test("Mit Prop 'required = true' und ohne Prop 'validation' wird ein Required-Validator hinzugefügt", () => {
+			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: null, required: true } });
+			const validatorRequired = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorRequired;
+
+			expect(validatorRequired).not.toBeNull();
+			expect(validatorRequired).toBeInstanceOf(BasicValidator);
+		});
+
+		test("Mit Prop 'required = true' ohne Eingabe wird ein Fehler für die Required-Validierung generiert", () => {
+			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: null, required: true } });
+			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(1);
+			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Bitte geben Sie einen Wert an.");
+		});
+
+		test("Mit Prop 'required = true' mit Eingabe ergibt die Validierung keine Fehler", () => {
+			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: "Test", required: true } });
+			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
+		});
+	});
+	describe.concurrent("maxLen", () => {
+
+		test("Mit Prop 'maxLen = undefined' mit Eingabe = 'Test' und ohne Prop 'validation' wird kein Length-Validator hinzugefügt", () => {
+			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: "Test", maxLen: undefined } });
+			const validatorLength = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorLength;
+
+			expect(validatorLength).toBeNull();
+		});
+
+		test("Mit Prop 'maxLen = undefined' mit Eingabe = 'Test' und Prop 'validation' wird kein Length-Validator hinzugefügt", () => {
+			const wrapper = mount(SvwsUiTextareaInput, {
+				props: { modelValue: "Test", maxLen: undefined, validation: () => getValidatorFehler() },
+			});
+			const validatorLength = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorLength;
+
+			expect(validatorLength).toBeNull();
+		});
+
+		test("Mit Prop 'maxLen = 3' mit Eingabe = 'Test' und Prop 'validation' wird kein Length-Validator hinzugefügt", () => {
+			const wrapper = mount(SvwsUiTextareaInput, {
+				props: { modelValue: "Test", maxLen: 3, validation: () => getValidatorFehler() },
+			});
+			const validatorLength = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorLength;
+
+			expect(validatorLength).toBeNull();
+		});
+
+		test("Mit Prop 'maxLen = 3' mit Eingabe = 'Test' und ohne Prop 'validation' wird ein Length-Validator hinzugefügt", () => {
+			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: "Test", maxLen: 3 } });
+			const validatorLength = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorLength;
+
+			expect(validatorLength).not.toBeNull();
+		});
+
+		test("Mit Prop 'maxLen = 3' mit Eingabe = 'Test' wird ein Fehler für die maxLen-Validierung generiert", () => {
+			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: "Test", maxLen: 3 } });
+			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(1);
+			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Der Wert darf maximal 3 Zeichen lang sein.");
+		});
+
+		test("Mit Prop 'maxLen = 8' mit Eingabe = 'Test' wird kein Fehler für die maxLen-Validierung generiert", () => {
+			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: "Test", maxLen: 8 } });
+			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
+		});
+	});
+});
 
 afterEach(() => {
 	wrapper.unmount();
 	document.body.innerHTML = "";
 });
+
+function getValidatorFehler(haertegrad: ValidatorFehlerart = ValidatorFehlerart.MUSS): List<ValidatorFehler> {
+	const customValidator = new CustomValidatorRequired(haertegrad);
+	customValidator.run();
+	return customValidator.getFehler();
+}
+
+class CustomValidatorRequired extends BasicValidator {
+
+	constructor(haertegrad: ValidatorFehlerart) {
+		super(haertegrad);
+		this.run();
+	}
+
+	protected pruefe(): boolean {
+		this.addFehler(0, "Custom-Validierung fehlgeschlagen");
+		return false;
+	}
+}
