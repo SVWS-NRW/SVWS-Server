@@ -795,7 +795,7 @@ public final class DataENMDaten {
 				case "id" -> {
 					/* do nothing */ }
 				case "noteQuartal" -> {
-					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Quartalsnoten");
+					pruefeKonfigurationPatchErlaubt(lernabschnitt.Klassen_ID, "Quartal");
 					final String kuerzel = JSONMapper.convertToString(p.getValue(), true, false, null, "noteQuartal");
 					if ((kuerzel != null) && (Note.fromKuerzel(kuerzel) == Note.KEINE))
 						throw new ApiOperationException(Status.BAD_REQUEST, "Die Zeichenkette '%s' ist keine gültige Note.".formatted(kuerzel));

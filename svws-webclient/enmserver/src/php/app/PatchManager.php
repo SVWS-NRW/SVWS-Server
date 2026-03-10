@@ -397,7 +397,7 @@ class PatchManager {
             $daten->tsNote = $ts;
         }
         if (property_exists($patch, 'noteQuartal') && PatchManager::diffStringNullable($patch->noteQuartal, $daten->noteQuartal) && ($ts > $daten->tsNoteQuartal)) {
-            $this->pruefeSperrungSpalte($idKlasse, 'Quartalsnoten');
+            $this->pruefeSperrungSpalte($idKlasse, 'Quartal');
             $istNote = array_key_exists($patch->noteQuartal, $mapNoten);
             if (!$istNote && ($patch->noteQuartal !== null)) {
                 Http::exit400BadRequest("Der Patch-Methode wurde eine ungültige Quartals-Note übergeben.");

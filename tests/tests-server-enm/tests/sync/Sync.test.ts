@@ -111,7 +111,7 @@ describe("Teste die WeNoM-Verbindung zwischen dem ENM-Server und dem WeNoM-Serve
 				{ "gesperrt": false, "idTeilleistung": 6, "name": "Mitarbeit 2" },
 				{ "gesperrt": false, "idTeilleistung": 7, "name": "Mitarbeit 3" },
 				{ "gesperrt": false, "idTeilleistung": null, "name": "Teilnoten" },
-				{ "gesperrt": false, "idTeilleistung": null, "name": "Quartalsnoten" },
+				{ "gesperrt": false, "idTeilleistung": null, "name": "Quartal" },
 				{ "gesperrt": false, "idTeilleistung": null, "name": "Note" },
 				{ "gesperrt": false, "idTeilleistung": null, "name": "Mahnung" },
 				{ "gesperrt": false, "idTeilleistung": null, "name": "Fehlstunden" },
