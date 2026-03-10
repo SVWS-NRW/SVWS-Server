@@ -39,34 +39,6 @@ describe("HTML Tests SvwsUiInputNumber", () => {
 		expect(wrapper.find(".input-number--filled").exists()).toBe(true);
 	});
 
-	test("Wird mit der Klasse 'input-number--muss' wiedergegeben, wenn valid falsch ist", () => {
-		const wrapper = mount(SvwsUiInputNumber, {
-			props: { modelValue: 10, valid: () => false },
-		});
-		expect(wrapper.find(".input-number--muss").exists()).toBe(true);
-	});
-
-	test("Wird mit der Klasse 'input-number--muss' wiedergegeben, wenn Validierungsfehler vom Härtegrad MUSS vorhanden sind", () => {
-		const wrapper = mount(SvwsUiInputNumber, {
-			props: { modelValue: 10, validation: () => getValidatorFehler(ValidatorFehlerart.MUSS) },
-		});
-		expect(wrapper.find(".input-number--muss").exists()).toBe(true);
-	});
-
-	test("Wird mit der Klasse 'input-number--kann' wiedergegeben, wenn Validierungsfehler vom Härtegrad KANN vorhanden sind", () => {
-		const wrapper = mount(SvwsUiInputNumber, {
-			props: { modelValue: 10, validation: () => getValidatorFehler(ValidatorFehlerart.KANN) },
-		});
-		expect(wrapper.find(".input-number--kann").exists()).toBe(true);
-	});
-
-	test("Wird mit der Klasse 'input-number--hinweis' wiedergegeben, wenn Validierungsfehler vom Härtegrad HINWEIS vorhanden sind", () => {
-		const wrapper = mount(SvwsUiInputNumber, {
-			props: { modelValue: 10, validation: () => getValidatorFehler(ValidatorFehlerart.HINWEIS) },
-		});
-		expect(wrapper.find(".input-number--hinweis").exists()).toBe(true);
-	});
-
 	test("Rendert mit der Klasse 'input-number--disabled', wenn disabled wahr ist", () => {
 		const wrapper = mount(SvwsUiInputNumber, {
 			props: { modelValue: 10, disabled: true },
@@ -147,18 +119,6 @@ describe("HTML Tests SvwsUiInputNumber", () => {
 		).toBe(true);
 	});
 
-	test("Gibt ein Fehlersymbol aus, wenn valid false ist", () => {
-		const wrapper = mount(SvwsUiInputNumber, {
-			props: {
-				modelValue: 10,
-				placeholder: "Enter number",
-				valid: () => false,
-				headless: false,
-			},
-		});
-		expect(wrapper.find(".i-ri-alert-line").exists()).toBe(true);
-	});
-
 	test("Zeigt das Statistiksymbol an, wenn die Statistik true ist", () => {
 		const wrapper = mount(SvwsUiInputNumber, {
 			props: {
@@ -190,6 +150,7 @@ describe("HTML Tests SvwsUiInputNumber", () => {
 			props: {
 				modelValue: 10,
 				min: 2,
+				placeholder: "Enter Number",
 			},
 		});
 		const limitText = wrapper.find(".input-number--limittext");
@@ -202,6 +163,7 @@ describe("HTML Tests SvwsUiInputNumber", () => {
 			props: {
 				modelValue: 10,
 				max: 2,
+				placeholder: "Enter Number",
 			},
 		});
 		const limitText = wrapper.find(".input-number--limittext");
@@ -215,6 +177,7 @@ describe("HTML Tests SvwsUiInputNumber", () => {
 				modelValue: 10,
 				min: 2,
 				max: 4,
+				placeholder: "Enter Number",
 			},
 		});
 		const limitText = wrapper.find(".input-number--limittext");
@@ -276,6 +239,34 @@ describe.concurrent("Validierung", () => {
 
 		expect(validatorResult.fehler.size()).toBe(1);
 		expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
+	});
+
+	test("Wird mit der Klasse 'input-number--muss' wiedergegeben, wenn valid falsch ist", () => {
+		const wrapper = mount(SvwsUiInputNumber, {
+			props: { modelValue: 10, valid: () => false },
+		});
+		expect(wrapper.find(".input-number--muss").exists()).toBe(true);
+	});
+
+	test.each([
+		["input-number--muss", ValidatorFehlerart.MUSS],
+		["input-number--kann", ValidatorFehlerart.KANN],
+		["input-number--hinweis", ValidatorFehlerart.HINWEIS],
+	])(
+		"Wird mit der Klasse '%s' wiedergegeben, wenn Validierungsfehler vom Härtegrad %s vorhanden sind",
+		(expectedClass, fehlerart) => {
+			const wrapper = mount(SvwsUiInputNumber, {
+				props: { modelValue: 4, validation: () => getValidatorFehler(fehlerart) },
+			});
+			expect(wrapper.find(`.${expectedClass}`).exists()).toBe(true);
+		}
+	);
+
+	test("Bei Validierungsfehlern wird ein Validation-Icon angezeigt", () => {
+		const wrapper = mount(SvwsUiInputNumber, {
+			props: { modelValue: 4, placeholder: "Enter Number", validation: () => getValidatorFehler() }
+		});
+		expect(wrapper.find(".validation-tooltip-icon").exists()).toBeTruthy();
 	});
 
 	describe.concurrent("required", () => {

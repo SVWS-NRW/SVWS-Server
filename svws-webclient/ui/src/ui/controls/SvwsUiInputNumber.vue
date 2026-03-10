@@ -34,7 +34,7 @@
 			@input="onInput"
 			@keyup.enter="onKeyEnter"
 			@blur="onBlur">
-		<span v-if="(placeholder && !headless) || numberLimitText || validationResult.hasFehler" :id="labelId" class="input-number--placeholder gap-1">
+		<span v-if="placeholder && !headless" :id="labelId" class="input-number--placeholder gap-1">
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
 					<span class="icon i-ri-bar-chart-2-line input-number--statistic-icon" />
@@ -47,12 +47,8 @@
 			</span>
 			<span v-if="required" class="icon-xs i-ri-asterisk input-number--placeholder--required input-number--state-icon" aria-hidden="true" />
 			<span v-if="required" class="sr-only">erforderlich</span>
-			<span v-if="!valid(data)" class="icon i-ri-alert-line input-number--state-icon" />
 			<span v-if="validationResult.hasFehler">
 				<ui-validation-tooltip :validation-result :disabled />
-			</span>
-			<span v-if="statistics" class="cursor-pointer">
-				<span class="icon i-ri-alert-fill input-number--state-icon" v-if="required && (data === null)" />
 			</span>
 			<span v-if="readonly" class="icon-xs i-ri-lock-line" />
 		</span>
@@ -223,7 +219,7 @@
 		emit("blur", data.value);
 	}
 
-	function onKeyEnter(event: Event) {
+	function onKeyEnter() {
 		emit("commit", data.value);
 		if (props.modelValue !== data.value) {
 			emit("change", data.value);
