@@ -35,17 +35,14 @@
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
-			<!-- Ansicht & Sortierung -->
-			<svws-ui-content-card title="Ansicht & Sortierung">
+			<!-- Sortierung -->
+			<svws-ui-content-card title="Sortierung">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
 						:model-value="manager().daten().sortierung"
 						@change="patchSortierung"
 						:readonly :min="0" :max="32000" />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="selectedIstSichtbar" :readonly="!hatKompetenzUpdate">
-						Sichtbar
-					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 		</svws-ui-input-wrapper>
@@ -136,11 +133,6 @@
 		options: manager().niveaus,
 		optionDisplayText: String,
 		selectionDisplayText: String,
-	});
-
-	const selectedIstSichtbar = computed<boolean>({
-		get: () => props.manager().daten().istSichtbar,
-		set: (istSichtbar: boolean) => void props.patch({ istSichtbar }),
 	});
 
 	// --- patch --

@@ -36,11 +36,6 @@ export class Floskel extends JavaObject {
 	public niveau: number | null = null;
 
 	/**
-	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
-	 */
-	public istSichtbar: boolean = false;
-
-	/**
 	 * Gibt die Position in der Sortierreihenfolge für die Katalog-Einträge an.
 	 */
 	public sortierung: number = 0;
@@ -76,9 +71,6 @@ export class Floskel extends JavaObject {
 		result.idFloskelgruppe = (obj.idFloskelgruppe === undefined) ? null : obj.idFloskelgruppe === null ? null : obj.idFloskelgruppe;
 		result.idFach = (obj.idFach === undefined) ? null : obj.idFach === null ? null : obj.idFach;
 		result.niveau = (obj.niveau === undefined) ? null : obj.niveau === null ? null : obj.niveau;
-		if (obj.istSichtbar === undefined)
-			throw new Error('invalid json format, missing attribute istSichtbar');
-		result.istSichtbar = obj.istSichtbar;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -101,7 +93,6 @@ export class Floskel extends JavaObject {
 		result += '"idFloskelgruppe" : ' + ((obj.idFloskelgruppe === null) ? 'null' : obj.idFloskelgruppe.toString()) + ',';
 		result += '"idFach" : ' + ((obj.idFach === null) ? 'null' : obj.idFach.toString()) + ',';
 		result += '"niveau" : ' + ((obj.niveau === null) ? 'null' : obj.niveau.toString()) + ',';
-		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		if (!obj.idsJahrgaenge) {
 			result += '"idsJahrgaenge" : null' + ',';
@@ -139,9 +130,6 @@ export class Floskel extends JavaObject {
 		}
 		if (obj.niveau !== undefined) {
 			result += '"niveau" : ' + ((obj.niveau === null) ? 'null' : obj.niveau.toString()) + ',';
-		}
-		if (obj.istSichtbar !== undefined) {
-			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';

@@ -20,7 +20,6 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 	private readonly _jahrgaengeById: Map<number, JahrgangsDaten> = new Map();
 	private readonly _faecherById: Map<number, FachDaten> = new Map<number, FachDaten>();
 	private _searchTerm: string = "";
-	private _filterNurSichtbar: boolean = true;
 	private _filterJahrgaenge: JahrgangsDaten[] = [];
 	private _filterFloskelgruppen: Floskelgruppe[] = [];
 	private _filterFaecher: FachDaten[] = [];
@@ -105,10 +104,6 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 	}
 
 	protected checkFilter(eintrag: Floskel): boolean {
-		if (this._filterNurSichtbar && !eintrag.istSichtbar) {
-			return false;
-		}
-
 		// Jahrgangfilter: wenn gesetzt, prüfe ob Floskel den Jahrgang enthält.
 		if (this._filterJahrgaenge.length > 0) {
 			const ids = eintrag.idsJahrgaenge;
@@ -150,10 +145,10 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 
 	private entryMatchesSearchTerm(eintrag: Floskel) {
 		const searchTermLower = this._searchTerm.toLocaleLowerCase();
-		if ((eintrag.kuerzel !== null) && (eintrag.kuerzel.toLocaleLowerCase().includes(searchTermLower)) === true) {
+		if ((eintrag.kuerzel !== null) && (eintrag.kuerzel.toLocaleLowerCase().includes(searchTermLower))) {
 			return true;
 		}
-		return ((eintrag.text !== null) && (eintrag.text.toLocaleLowerCase().includes(searchTermLower)) === true);
+		return ((eintrag.text !== null) && (eintrag.text.toLocaleLowerCase().includes(searchTermLower)));
 	}
 
 	get searchTerm(): string {
@@ -163,15 +158,6 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 	set searchTerm(value: string) {
 		this._searchTerm = value;
 		this._eventHandlerFilterChanged.run();
-	}
-
-	set filterNurSichtbar(value: boolean) {
-		this._filterNurSichtbar = value;
-		this._eventHandlerFilterChanged.run();
-	}
-
-	get filterNurSichtbar(): boolean {
-		return this._filterNurSichtbar;
 	}
 
 	get filterJahrgaenge(): JahrgangsDaten[] {

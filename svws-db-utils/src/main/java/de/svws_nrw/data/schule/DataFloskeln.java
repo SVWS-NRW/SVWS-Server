@@ -84,7 +84,6 @@ public final class DataFloskeln extends DataManagerRevised<Long, DTOFloskeln, Fl
 		floskel.idFach = dto.Fach_ID;
 		floskel.niveau = dto.Niveau;
 		floskel.idsJahrgaenge = getIdsJahrgaenge(dto.ID);
-		floskel.istSichtbar = Boolean.TRUE.equals(dto.Sichtbar);
 		floskel.sortierung = Objects.requireNonNullElse(dto.Sortierung, 32000);
 		return floskel;
 	}
@@ -99,7 +98,6 @@ public final class DataFloskeln extends DataManagerRevised<Long, DTOFloskeln, Fl
 			case "idFach" -> updateFach(dto, name, value);
 			case "niveau" -> updateNiveau(dto, name, value);
 			case "idsJahrgaenge" -> updateIdsJahrgaenge(dto, name, value);
-			case "istSichtbar" -> updateSichtbar(dto, name, value);
 			case "sortierung" -> updateSortierung(dto, name, value);
 			default -> throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
@@ -205,10 +203,6 @@ public final class DataFloskeln extends DataManagerRevised<Long, DTOFloskeln, Fl
 
 	private static void updateSortierung(final DTOFloskeln dto, final String name, final Object value) throws ApiOperationException {
 		dto.Sortierung = JSONMapper.convertToInteger(value, false, name);
-	}
-
-	private static void updateSichtbar(final DTOFloskeln dto, final String name, final Object value) throws ApiOperationException {
-		dto.Sichtbar = JSONMapper.convertToBoolean(value, false, name);
 	}
 
 	private static void updateNiveau(final DTOFloskeln dto, final String name, final Object value) throws ApiOperationException {

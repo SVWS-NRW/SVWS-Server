@@ -196,7 +196,6 @@ class DataFloskelnTest {
 				.hasFieldOrPropertyWithValue("idFach", 2L)
 				.hasFieldOrPropertyWithValue("niveau", 3)
 				.hasFieldOrPropertyWithValue("idsJahrgaenge", List.of(11L, 22L, 33L))
-				.hasFieldOrPropertyWithValue("istSichtbar", true)
 				.hasFieldOrPropertyWithValue("sortierung", 123);
 	}
 
@@ -211,17 +210,6 @@ class DataFloskelnTest {
 		assertThat(result.idsJahrgaenge)
 				.isNotNull()
 				.isEmpty();
-	}
-
-	@Test
-	@DisplayName("map | sichtbar null")
-	void mapTest_sichtbarNull() {
-		final var dto = new DTOFloskeln(1L, "kue", "t");
-		dto.Sichtbar = null;
-
-		final var result = this.data.map(dto);
-
-		assertThat(result.istSichtbar).isFalse();
 	}
 
 	@Test
@@ -632,19 +620,6 @@ class DataFloskelnTest {
 				.isThrownBy(() -> this.data.patch(1L, map))
 				.isInstanceOf(ApiOperationException.class)
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
-
-	@Test
-	@DisplayName("patch | sichtbar")
-	void patch_sichtbar() throws ApiOperationException {
-		final var dto = new DTOFloskeln(1L, "same", "bez");
-		dto.Sichtbar = null;
-		when(this.conn.queryByKey(DTOFloskeln.class, 1L)).thenReturn(dto);
-		when(this.conn.transactionPersist(dto)).thenReturn(true);
-
-		this.data.patch(1L, Map.of("istSichtbar", true));
-
-		assertThat(dto.Sichtbar).isTrue();
 	}
 
 	@Test

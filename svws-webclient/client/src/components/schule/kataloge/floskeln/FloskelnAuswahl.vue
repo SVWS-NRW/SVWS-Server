@@ -13,7 +13,6 @@
 					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #filterAdvanced>
-					<svws-ui-checkbox type="toggle" v-model="showOnlyVisibleFloskeln">Nur Sichtbare</svws-ui-checkbox>
 					<ui-select-multi label="Jahrgang"
 						v-model="filterJahrgaenge"
 						:manager="jahrgaengeManager"
@@ -107,14 +106,6 @@
 		get: () => manager().searchTerm,
 		set: (v: string) => {
 			manager().searchTerm = v;
-			void props.setFilter();
-		},
-	});
-
-	const showOnlyVisibleFloskeln = computed<boolean>({
-		get: () => manager().filterNurSichtbar,
-		set: (value: boolean) => {
-			manager().filterNurSichtbar = value;
 			void props.setFilter();
 		},
 	});

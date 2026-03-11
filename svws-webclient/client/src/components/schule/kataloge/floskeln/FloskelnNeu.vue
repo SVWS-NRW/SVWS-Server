@@ -33,18 +33,14 @@
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
-			<!-- Ansicht & Sortierung -->
-			<svws-ui-content-card title="Ansicht & Sortierung">
+			<!-- Sortierung -->
+			<svws-ui-content-card title="Sortierung">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="data.sortierung"
 						:valid="() => fieldIsValid('sortierung')"
 						:min="0" :max="32000" :disabled="!hatKompetenzAdd" :removable="false" />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="data.istSichtbar"
-						:disabled="!hatKompetenzAdd">
-						Sichtbar
-					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<div class="mt-7 flex flex-row gap-4 justify-end">
