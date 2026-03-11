@@ -16,7 +16,7 @@ export class RouteSchuelerEinwilligungen extends RouteNode<RouteDataSchuelerEinw
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN], "schueler.einwilligungen", "einwilligungen", SchuelerEinwilligungen, new RouteDataSchuelerEinwilligungen());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Einwilligungen";
 	}
