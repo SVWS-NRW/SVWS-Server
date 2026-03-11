@@ -16,7 +16,7 @@ export class RouteLernplattformenNeu extends RouteNode<any, RouteLernplattformen
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.lernplattformen.neu", "neu", LernplattformenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Lernplattformen Neu";
 		super.setCheckpoint = true;

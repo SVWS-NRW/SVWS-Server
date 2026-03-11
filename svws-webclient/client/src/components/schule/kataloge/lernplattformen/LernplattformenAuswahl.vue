@@ -13,7 +13,7 @@
 					<svws-ui-text-input v-model="searchTerm" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #actions v-if="!readonly">
-					<svws-ui-tooltip v-if="ServerMode.DEV.checkServerMode(serverMode)" position="bottom">
+					<svws-ui-tooltip position="bottom">
 						<svws-ui-button type="icon"
 							@click="gotoHinzufuegenView(true)"
 							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
@@ -33,7 +33,7 @@
 
 	import { computed, ref } from "vue";
 	import type { Lernplattform } from "@core";
-	import { ServerMode, BenutzerKompetenz } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import type { LernplattformenAuswahlProps } from "~/components/schule/kataloge/lernplattformen/LernplattformenAuswahlProps";

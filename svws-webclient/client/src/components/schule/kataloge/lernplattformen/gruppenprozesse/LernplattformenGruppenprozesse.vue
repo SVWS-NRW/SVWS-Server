@@ -3,7 +3,7 @@
 		<div v-if="!hatIrgendwelcheKompetenzen">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col">
+		<div class="flex flex-col">
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Lernplattformen werden gelöscht." icon="i-ri-delete-bin-line">
 				<div>
 					<span v-if="preConditionCheck.success">Alle ausgewählten Lernplattformen sind bereit zum Löschen.</span>
@@ -55,7 +55,7 @@
 <script setup lang="ts">
 
 	import { ref, computed } from "vue";
-	import { BenutzerKompetenz, type List, ServerMode } from "@core";
+	import { BenutzerKompetenz, type List } from "@core";
 	import type { LernplattformenGruppenprozesseProps } from "~/components/schule/kataloge/lernplattformen/gruppenprozesse/LernplattformenGruppenprozesseProps";
 
 	const props = defineProps<LernplattformenGruppenprozesseProps>();

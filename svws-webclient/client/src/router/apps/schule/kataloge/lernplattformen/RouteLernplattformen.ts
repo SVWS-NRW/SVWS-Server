@@ -20,7 +20,7 @@ export class RouteLernplattformen extends RouteAuswahlNode<LernplattformListeMan
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN],
 			"schule.lernplattformen", "schule/lernplattformen/:id(\\d+)?", LernplattformenApp, LernplattformenAuswahl, new RouteDataLernplattformen());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Lernplattformen";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [

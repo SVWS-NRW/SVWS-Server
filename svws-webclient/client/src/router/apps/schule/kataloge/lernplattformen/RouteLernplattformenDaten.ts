@@ -14,7 +14,7 @@ export class RouteLernplattformenDaten extends RouteNode<any, RouteLernplattform
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN],
 			"schule.lernplattformen.daten", "daten", LernplattformenDaten);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Lernplattform";
 	}
