@@ -103,6 +103,7 @@ class JavaLibPlugin implements Plugin<Project> {
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-jaxb-provider:' + version);
 		// vulnerability fix for: org.jboss.resteasy:resteasy-multipart-provider:6.2.12.Final -> pin org.eclipse.angus:angus-mail:2.0.4
 		project.dependencies.add('resteasy', 'org.eclipse.angus:angus-mail:2.0.5');
+		project.dependencies.add('resteasy', 'org.openapitools:jackson-databind-nullable:0.2.9')
 	}
 
 
@@ -122,6 +123,8 @@ class JavaLibPlugin implements Plugin<Project> {
 		def version = "3.1.1";
 		project.configurations.create('validation');
 		project.dependencies.add('validation', 'jakarta.validation:jakarta.validation-api:' + version);
+		project.dependencies.add('validation', 'org.hibernate.validator:hibernate-validator:9.1.0.Final')
+		project.dependencies.add('validation', 'org.glassfish.expressly:expressly:6.0.0')
 	}
 
 
