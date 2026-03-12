@@ -1,5 +1,5 @@
 import type { Ankreuzkompetenz, SimpleOperationResponse, List } from "@core";
-import { AnkreuzkompetenzJahrgangszuordnung, ArrayList } from "@core";
+import { AnkreuzkompetenzJahrgangszuordnung, ArrayList, BenutzerKompetenz } from "@core";
 import { AnkreuzkompetenzenListeManager, ViewType } from "@ui";
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
@@ -87,6 +87,7 @@ export class RouteDataAnkreuzkompetenzen extends RouteDataAuswahl<Ankreuzkompete
 	deleteJahrgaengezuordnungen = async (ids: List<number>): Promise<void> => {
 		await api.server.deleteAnkreuzkompetenzJahrgangszuordnungen(ids, api.schema);
 		this.manager.deleteJahrgaengezuordnungen(ids);
+		this.manager.daten().referenziertInAnderenTabellen = !this.manager.daten().jahrgaengezuordnung.isEmpty();
 		this.commit();
 	};
 
@@ -109,6 +110,35 @@ export class RouteDataAnkreuzkompetenzen extends RouteDataAuswahl<Ankreuzkompete
 	private async internalAddJahrgaengezuordnungen(idAnkreuzkompetenz: number, idsJahrgaenge: List<number>): Promise<List<AnkreuzkompetenzJahrgangszuordnung>> {
 		const zuordnungenToCreate = this.createJahrgaengezuordnungen(idAnkreuzkompetenz, idsJahrgaenge);
 		return await api.server.addAnkreuzkompetenzJahrgangszuordnung(zuordnungenToCreate, api.schema);
+	}
+
+	deleteCheck = (): [boolean, List<string>] => {
+		const errorLog = new ArrayList<string>();
+
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN)) {
+			errorLog.add('Es liegt keine Berechtigung zum Löschen von Ankreuzkompetenzen vor.');
+		}
+
+		if (!this.manager.liste.auswahlExists()) {
+			errorLog.add('Es wurde keine Ankreuzkompetenz zum Löschen ausgewählt.');
+		}
+
+		if (!this.manager.idsReferencedAnkreuzkompetenzen.isEmpty()) {
+			errorLog.add(this.getErrorMessageForReferencedAnkreuzkompetenzen());
+		}
+
+		return [errorLog.isEmpty(), errorLog];
+	};
+
+	private getErrorMessageForReferencedAnkreuzkompetenzen(): string {
+		let errorMessage = 'Die folgenden Ankreuzkompetenzen sind an anderer Stelle referenziert und können daher nicht gelöscht werden:\n\n';
+		for (const id of this.manager.idsReferencedAnkreuzkompetenzen) {
+			const ankreuzkompetenz = this.manager.liste.get(id);
+			if (ankreuzkompetenz) {
+				errorMessage += `- ${ankreuzkompetenz.floskelText} \n`;
+			}
+		}
+		return errorMessage;
 	}
 
 }

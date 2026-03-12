@@ -30,6 +30,7 @@ class RouteAnkreuzkompetenzenGruppenprozesse extends RouteNode<any, RouteAnkreuz
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeAnkreuzkompetenzen.data.manager,
 			delete: routeAnkreuzkompetenzen.data.delete,
+			deleteCheck: routeAnkreuzkompetenzen.data.deleteCheck,
 			gotoDefaultView: routeAnkreuzkompetenzen.data.gotoDefaultView,
 		};
 	}

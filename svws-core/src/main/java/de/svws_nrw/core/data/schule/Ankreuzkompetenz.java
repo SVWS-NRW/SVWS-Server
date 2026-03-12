@@ -57,6 +57,10 @@ public class Ankreuzkompetenz {
 	@Schema(description = "gibt einen Wert für die Sortierung der Ankreuzkompetenz an", example = "32000")
 	public int sortierung;
 
+	/** Gibt an, ob der Eintrag in anderen Datenbanktabellen referenziert ist oder nicht. */
+	@Schema(description = "Gibt an, ob der Eintrag in anderen Datenbanktabellen referenziert ist oder nicht.", example = "true", accessMode = Schema.AccessMode.READ_ONLY)
+	public boolean referenziertInAnderenTabellen;
+
 	/** Die Zuordnung der Jahrgänge zu der Ankreuzkompetenzen. */
 	@ArraySchema(
 			schema = @Schema(implementation = AnkreuzkompetenzJahrgangszuordnung.class,

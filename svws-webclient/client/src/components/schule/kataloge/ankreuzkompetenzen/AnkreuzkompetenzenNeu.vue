@@ -176,7 +176,7 @@
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		const { id, jahrgaengezuordnung, ...partialData } = data.value;
+		const { id, jahrgaengezuordnung, referenziertInAnderenTabellen, ...partialData } = data.value;
 		const ankreuzkompetenz = await props.addAnkreuzkompetenz(partialData, jahrgaengeIdsToBeAdded.value);
 
 		await props.gotoDefaultView(ankreuzkompetenz.id);

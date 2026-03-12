@@ -1,13 +1,17 @@
 package de.svws_nrw.data.schule;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.Ankreuzkompetenz;
 import de.svws_nrw.core.data.schule.AnkreuzkompetenzJahrgangszuordnung;
 import de.svws_nrw.data.DataManagerRevised;
@@ -40,7 +44,7 @@ public final class DataAnkreuzkompetenzen extends DataManagerRevised<Long, DTOAn
 	public DataAnkreuzkompetenzen(final DBEntityManager conn, final DataAnkreuzkompetenzJahrgangszuordnungen data) {
 		super(conn);
 		this.dataAnkreuzkompetenzJahrgangszuordnungen = data;
-		setAttributesNotPatchable("id");
+		setAttributesNotPatchable("id", "referenziertInAnderenTabellen");
 		setAttributesRequiredOnCreation(IST_ASV, "floskelText");
 	}
 
@@ -86,12 +90,20 @@ public final class DataAnkreuzkompetenzen extends DataManagerRevised<Long, DTOAn
 
 	@Override
 	public List<Ankreuzkompetenz> getList() {
+		final List<DTOAnkreuzfloskeln> allAnkreuzkompetenzen = this.conn.queryAll(DTOAnkreuzfloskeln.class);
+
+		final Set<Long> idsOfReferencedAnkreuzkompetenzen = getIdsOfReferencedAnkreuzkompetenzen(allAnkreuzkompetenzen
+				.stream()
+				.map(a -> a.ID)
+				.collect(Collectors.toSet()));
+
 		final Map<Long, List<AnkreuzkompetenzJahrgangszuordnung>> zuordnungenById = this.mapZuordnungenByIdAnkreuzkompetenz();
-		return this.conn
-				.queryAll(DTOAnkreuzfloskeln.class)
+
+		return allAnkreuzkompetenzen
 				.stream()
 				.map(this::map)
 				.map(a -> addJahrgangszuordnungen(a, zuordnungenById))
+				.map(a -> setReferencedFlag(a, idsOfReferencedAnkreuzkompetenzen))
 				.sorted(Comparator.comparing(a -> a.id))
 				.toList();
 	}
@@ -246,5 +258,35 @@ public final class DataAnkreuzkompetenzen extends DataManagerRevised<Long, DTOAn
 		if (isAlreadyUsed) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Der Floskeltext %s ist bereits vorhanden.".formatted(floskelText));
 		}
+	}
+
+	@Override
+	protected void checkBeforeDeletionWithSimpleOperationResponse(final List<DTOAnkreuzfloskeln> ankreuzkompetenzen,
+			final Map<Long, SimpleOperationResponse> mapResponses) {
+		final Set<Long> result = getIdsOfReferencedAnkreuzkompetenzen(ankreuzkompetenzen.stream().map(a -> a.ID).collect(Collectors.toSet()));
+		ankreuzkompetenzen.stream()
+				.filter(a -> result.contains(a.ID))
+				.forEach(a -> markResponseAsFailed(mapResponses.get(a.ID), a.FloskelText));
+	}
+
+	private static void markResponseAsFailed(final SimpleOperationResponse response, final String bezeichnung) {
+		response.success = false;
+		response.log.add("Die Ankreuzkompetenz mit der Kompetenzbeschreibung %s ist in der Datenbank referenziert und kann daher nicht gelöscht werden"
+				.formatted(bezeichnung));
+	}
+
+	private Set<Long> getIdsOfReferencedAnkreuzkompetenzen(final Set<Long> ids) {
+		if ((ids == null) || ids.isEmpty()) {
+			return Collections.emptySet();
+		}
+
+		final String query = "SELECT DISTINCT a.Floskel_ID FROM DTOSchuelerAnkreuzfloskeln a WHERE a.Floskel_ID IN :ids";
+		final List<Long> results = conn.query(query, Long.class).setParameter("ids", ids).getResultList();
+		return new HashSet<>(results);
+	}
+
+	private Ankreuzkompetenz setReferencedFlag(final Ankreuzkompetenz ankreuzkompetenz, final Set<Long> idsOfReferencedAnkreuzkompetenzen) {
+		ankreuzkompetenz.referenziertInAnderenTabellen = idsOfReferencedAnkreuzkompetenzen.contains(ankreuzkompetenz.id);
+		return ankreuzkompetenz;
 	}
 }

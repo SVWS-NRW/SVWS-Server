@@ -57,6 +57,11 @@ export class Ankreuzkompetenz extends JavaObject {
 	public sortierung: number = 0;
 
 	/**
+	 * Gibt an, ob der Eintrag in anderen Datenbanktabellen referenziert ist oder nicht.
+	 */
+	public referenziertInAnderenTabellen: boolean = false;
+
+	/**
 	 * Die Zuordnung der Jahrgänge zu der Ankreuzkompetenzen.
 	 */
 	public readonly jahrgaengezuordnung: List<AnkreuzkompetenzJahrgangszuordnung> = new ArrayList<AnkreuzkompetenzJahrgangszuordnung>();
@@ -105,6 +110,9 @@ export class Ankreuzkompetenz extends JavaObject {
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
+		if (obj.referenziertInAnderenTabellen === undefined)
+			throw new Error('invalid json format, missing attribute referenziertInAnderenTabellen');
+		result.referenziertInAnderenTabellen = obj.referenziertInAnderenTabellen;
 		if (obj.jahrgaengezuordnung !== undefined) {
 			for (const elem of obj.jahrgaengezuordnung) {
 				result.jahrgaengezuordnung.add(AnkreuzkompetenzJahrgangszuordnung.transpilerFromJSON(JSON.stringify(elem)));
@@ -125,6 +133,7 @@ export class Ankreuzkompetenz extends JavaObject {
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"fachSortierung" : ' + obj.fachSortierung.toString() + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		result += '"jahrgaengezuordnung" : [ ';
 		for (let i = 0; i < obj.jahrgaengezuordnung.size(); i++) {
 			const elem = obj.jahrgaengezuordnung.get(i);
@@ -169,6 +178,9 @@ export class Ankreuzkompetenz extends JavaObject {
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		}
+		if (obj.referenziertInAnderenTabellen !== undefined) {
+			result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
 		}
 		if (obj.jahrgaengezuordnung !== undefined) {
 			result += '"jahrgaengezuordnung" : [ ';

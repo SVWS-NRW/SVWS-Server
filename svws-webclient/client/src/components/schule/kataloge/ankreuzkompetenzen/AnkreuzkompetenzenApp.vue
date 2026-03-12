@@ -44,6 +44,9 @@
 
 	const ankreuzkompetenzenSubline = computed(() => {
 		const list = props.manager().liste.auswahlSorted();
+		if (list.size() <= 1) {
+			return `${list.size()} Ankreuzkompetenz ausgewählt`;
+		}
 		return `${list.size()} Ankreuzkompetenzen ausgewählt`;
 	});
 

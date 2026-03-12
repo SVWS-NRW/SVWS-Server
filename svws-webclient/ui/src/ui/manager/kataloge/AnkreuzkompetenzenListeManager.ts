@@ -13,11 +13,12 @@ import type { FachDaten } from '../../../../../core/src/core/data/fach/FachDaten
 import type { Schulgliederung } from "../../../../../core/src/asd/types/schule/Schulgliederung";
 import type { JahrgangsDaten } from '../../../../../core/src/core/data/jahrgang/JahrgangsDaten';
 import type { AnkreuzkompetenzJahrgangszuordnung } from "../../../../../core/src/core/data/schule//AnkreuzkompetenzJahrgangszuordnung";
-import { HashMap } from '../../../../../core/src/java/util/HashMap';
+import { HashMap, HashSet } from '../../../../../core/src';
 
 export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankreuzkompetenz, Ankreuzkompetenz> {
 
 	private static readonly _ankreuzkompetenzToId: JavaFunction<Ankreuzkompetenz, number> = { apply: (a: Ankreuzkompetenz) => a.id };
+	private readonly _idsReferencedAnkreuzkompetenzen: HashSet<number> = new HashSet<number>();
 	private readonly _faecherById: Map<number, FachDaten> = new Map();
 	private _filterNurSichtbar: boolean = true;
 	private _filterFaecher: FachDaten[] = [];
@@ -249,6 +250,15 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 		);
 	}
 
+	protected onMehrfachauswahlChanged(): void {
+		this._idsReferencedAnkreuzkompetenzen.clear();
+		for (const a of this.liste.auswahl()) {
+			if (a.referenziertInAnderenTabellen) {
+				this._idsReferencedAnkreuzkompetenzen.add(a.id);
+			}
+		}
+	}
+
 	get faecherById(): Map<number, FachDaten> {
 		return this._faecherById;
 	}
@@ -301,4 +311,7 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 		this._eventHandlerFilterChanged.run();
 	}
 
+	get idsReferencedAnkreuzkompetenzen(): HashSet<number> {
+		return this._idsReferencedAnkreuzkompetenzen;
+	}
 }

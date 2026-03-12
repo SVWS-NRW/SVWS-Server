@@ -1,5 +1,6 @@
 package de.svws_nrw.data.schule;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.stream.Stream;
 
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.Ankreuzkompetenz;
 import de.svws_nrw.core.data.schule.AnkreuzkompetenzJahrgangszuordnung;
 import de.svws_nrw.db.Benutzer;
@@ -14,6 +16,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.InstanceOfAssertFactories;
@@ -34,6 +37,8 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -58,6 +63,30 @@ class DataAnkreuzkompetenzenTest {
 	@BeforeAll
 	static void setup() {
 		ASDCoreTypeUtils.initAll();
+	}
+
+	@Test
+	@DisplayName("setAttributesNotPatchable: id")
+	void setAttributesNotPatchableIdTest() {
+		when(this.conn.queryByKey(DTOAnkreuzfloskeln.class, 1L)).thenReturn(mock(DTOAnkreuzfloskeln.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("id", 1L)))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Folgende Attribute werden für ein Patch nicht zugelassen: id.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("setAttributesNotPatchable: referenziertInAnderenTabellen")
+	void setAttributesNotPatchableReferenziertInAnderenTabellen() {
+		when(this.conn.queryByKey(DTOAnkreuzfloskeln.class, 1L)).thenReturn(mock(DTOAnkreuzfloskeln.class));
+
+		assertThatException()
+				.isThrownBy(() -> this.data.patch(1L, Map.of("referenziertInAnderenTabellen", "test")))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Folgende Attribute werden für ein Patch nicht zugelassen: referenziertInAnderenTabellen.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
@@ -173,6 +202,10 @@ class DataAnkreuzkompetenzenTest {
 		zuordnung.idAnkreuzkompetenz = 1L;
 		zuordnung.idJahrgang = 1L;
 		when(this.dataAnkreuzkompetenzJahrgangszuordnungen.getAll()).thenReturn(List.of(zuordnung));
+		@SuppressWarnings("unchecked") final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(1L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
 
 		assertThat(dataAnkreuzkompetenzen.getList())
 				.hasSize(2)
@@ -180,6 +213,7 @@ class DataAnkreuzkompetenzenTest {
 						f1 -> assertThat(f1)
 								.isInstanceOf(Ankreuzkompetenz.class)
 								.hasFieldOrPropertyWithValue("floskelText", dto1.FloskelText)
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", true)
 								.extracting(e -> e.jahrgaengezuordnung)
 								.asInstanceOf(InstanceOfAssertFactories.LIST)
 								.hasSize(1)
@@ -193,6 +227,7 @@ class DataAnkreuzkompetenzenTest {
 						f2 -> assertThat(f2)
 								.isInstanceOf(Ankreuzkompetenz.class)
 								.hasFieldOrPropertyWithValue("floskelText", dto2.FloskelText)
+								.hasFieldOrPropertyWithValue("referenziertInAnderenTabellen", false)
 				);
 	}
 
@@ -652,6 +687,47 @@ class DataAnkreuzkompetenzenTest {
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Die Daten des Patches enthalten das unbekannte Attribut unknown.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("checkBeforeDeletionWithSimpleOperationResponse | referenziert")
+	void checkBeforeDeletionWithSimpleOperationResponseReferenziert() {
+		@SuppressWarnings("unchecked") final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(List.of(1L));
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
+		final var response = new SimpleOperationResponse();
+		response.id = 1L;
+		response.success = true;
+		final var responses = Map.of(response.id, response);
+		final var dto = new DTOAnkreuzfloskeln(1L, 0, "test");
+
+		this.data.checkBeforeDeletionWithSimpleOperationResponse(List.of(dto), responses);
+
+		assertThat(responses.get(1L))
+				.hasFieldOrPropertyWithValue("success", false)
+				.extracting(r -> r.log.getFirst())
+				.isEqualTo("Die Ankreuzkompetenz mit der Kompetenzbeschreibung test ist in der Datenbank referenziert und kann daher nicht gelöscht werden");
+	}
+
+	@Test
+	@DisplayName("checkBeforeDeletionWithSimpleOperationResponse | nicht referenziert")
+	void checkBeforeDeletionWithSimpleOperationResponseNichtReferenziert() {
+		@SuppressWarnings("unchecked") final TypedQuery<Long> queryMock = mock(TypedQuery.class);
+		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);
+		when(queryMock.getResultList()).thenReturn(Collections.emptyList());
+		when(conn.query(anyString(), eq(Long.class))).thenReturn(queryMock);
+		final var response = new SimpleOperationResponse();
+		response.id = 1L;
+		response.success = true;
+		final var responses = Map.of(response.id, response);
+		final var dto = new DTOAnkreuzfloskeln(1L, 0, "test");
+
+		this.data.checkBeforeDeletionWithSimpleOperationResponse(List.of(dto), responses);
+
+		assertThat(responses.get(1L))
+				.hasFieldOrPropertyWithValue("success", true);
+		assertThat(responses.get(1L).log).isEmpty();
 	}
 
 }
