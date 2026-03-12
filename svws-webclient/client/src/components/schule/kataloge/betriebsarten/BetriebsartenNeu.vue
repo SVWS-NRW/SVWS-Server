@@ -4,18 +4,23 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="1">
 					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
-						v-model="data.bezeichnung"
-						:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="30" :disabled required />
+						v-model="data.proxy.bezeichnung"
+						:validation="() => data.getFehler('bezeichnung')"
+						skip-default-validation
+						:max-len="30" :disabled required />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
 			<svws-ui-content-card title="Ansicht & Sortierung">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
-						v-model="data.sortierung"
-						:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled :removable="false" />
+						v-model="data.proxy.sortierung"
+						:validation="() => data.getFehler('sortierung')"
+						skip-default-validation
+						:min="0" :max="32000" :disabled :removable="false" />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="data.istSichtbar" :disabled>
+					<svws-ui-checkbox v-model="data.proxy.istSichtbar"
+						:disabled>
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -24,7 +29,7 @@
 				<svws-ui-button type="secondary" @click="cancel">
 					Abbrechen
 				</svws-ui-button>
-				<svws-ui-button @click="addBetriebsart" :disabled="!formIsValid || !hatKompetenzUpdate">
+				<svws-ui-button @click="addBetriebsart" :disabled="!isValid|| !hatKompetenzUpdate">
 					Speichern
 				</svws-ui-button>
 			</div>
@@ -37,40 +42,17 @@
 	import type { BetriebsartenNeuProps } from './BetriebsartenNeuProps';
 	import { BenutzerKompetenz, Betriebsart } from "@core";
 	import { computed, ref, watch } from "vue";
-	import { isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid } from "~/util/validation/Validation";
+	import { BetriebsartenModelProxy } from "~/components/schule/kataloge/betriebsarten/modelproxy/BetriebsartenModelProxy";
 
 	const props = defineProps<BetriebsartenNeuProps>();
+	const initialData = ref<Betriebsart>(Object.assign(new Betriebsart(), { istSichtbar: true, sortierung: 32000 }));
+	const data = new BetriebsartenModelProxy(() => initialData.value, () => props.manager().liste.list());
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed(() => !hatKompetenzUpdate.value);
-	const data = ref<Betriebsart>(Object.assign(new Betriebsart(), { istSichtbar: true, sortierung: 32000 }));
+
 	const isLoading = ref<boolean>(false);
 
-	// validate
-	const formIsValid = computed(() => {
-		return Object.keys(data.value)
-			.every((field: string) => fieldIsValid(field as keyof Betriebsart));
-	});
-
-	const fieldIsValid = (field: keyof Betriebsart | null): boolean => {
-		switch (field) {
-			case 'bezeichnung':
-				return bezeichnungIsValid(data.value.bezeichnung);
-			case 'sortierung':
-				return sortierungIsValid(data.value.sortierung);
-			default:
-				return true;
-		}
-	};
-
-	function bezeichnungIsValid(value: string | null) {
-		return mandatoryInputIsValid(value, 30)
-			&& isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
-	}
-
-	function sortierungIsValid(sortierung: number | null): boolean {
-		return !numberHasDecimals(sortierung)
-			&& numberIsValid(sortierung, true, 0, 32000);
-	}
+	const isValid = computed<boolean>(() => data.getAlleFehler().isEmpty());
 
 	// util
 	async function addBetriebsart() {
@@ -80,7 +62,7 @@
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
+		const { id, referenziertInAnderenTabellen, ...partialData } = data.proxy;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
@@ -90,7 +72,7 @@
 		await props.gotoDefaultView(null);
 	}
 
-	watch(() => data.value, async () => {
+	watch(() => data.proxy, async () => {
 		if (isLoading.value) {
 			return;
 		}
