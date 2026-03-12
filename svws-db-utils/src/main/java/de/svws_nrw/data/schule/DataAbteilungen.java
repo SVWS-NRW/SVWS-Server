@@ -1,5 +1,6 @@
 package de.svws_nrw.data.schule;
 
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungen;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -24,28 +26,40 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataAbteilungen extends DataManagerRevised<Long, DTOAbteilungen, Abteilung> {
 
-	private final Long idSchuljahresabschnitt;
+	private static final String ID_SCHULJAHRESABSCHNITT = "idSchuljahresabschnitt";
+
 	private final DataAbteilungenKlassenzuordnungen dataAbteilungenKlassenzuordnungen;
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link Abteilung}.
 	 *
-	 * @param conn						die Datenbankverbindung
-	 * @param idSchuljahresabschnitt	die ID des Schuljahresabschnittes, auf den sich die Anfragen beziehen
-	 * @param data						DataAbteilungenKlassenzuordnungen
+	 * @param conn                        die Datenbankverbindung
+	 * @param data                        DataAbteilungenKlassenzuordnungen
 	 */
-	public DataAbteilungen(final DBEntityManager conn, final Long idSchuljahresabschnitt, final DataAbteilungenKlassenzuordnungen data) {
+	public DataAbteilungen(final DBEntityManager conn, final DataAbteilungenKlassenzuordnungen data) {
 		super(conn);
-		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
 		this.dataAbteilungenKlassenzuordnungen = data;
-		setAttributesNotPatchable("id");
-		setAttributesRequiredOnCreation("bezeichnung");
+		setAttributesNotPatchable("id", ID_SCHULJAHRESABSCHNITT);
+		setAttributesRequiredOnCreation("bezeichnung", ID_SCHULJAHRESABSCHNITT);
 	}
 
 	@Override
 	protected void initDTO(final DTOAbteilungen dto, final Long newId, final Map<String, Object> initAttributes) {
-		dto.Schuljahresabschnitts_ID = this.idSchuljahresabschnitt;
 		dto.ID = newId;
+	}
+
+	/**
+	 * Es wird eine neue Abteilung im übergebenen Schuljahresabschnitt angelegt.
+	 *
+	 * @param is InputStream
+	 * @param idSchuljahresabschnitt ID des Schuljahresabschnittes
+	 *
+	 * @return neue Abteilung
+	 */
+	public Response addAsResponse(final InputStream is, final Long idSchuljahresabschnitt) {
+		final Map<String, Object> attributes = JSONMapper.toMap(is);
+		attributes.put(ID_SCHULJAHRESABSCHNITT, idSchuljahresabschnitt);
+		return this.addFromMapAsResponse(attributes);
 	}
 
 	@Override
@@ -70,6 +84,7 @@ public final class DataAbteilungen extends DataManagerRevised<Long, DTOAbteilung
 		final Abteilung abteilung = new Abteilung();
 		abteilung.id = dto.ID;
 		abteilung.bezeichnung = dto.Bezeichnung;
+		abteilung.idSchuljahresabschnitt = dto.Schuljahresabschnitts_ID;
 		abteilung.idAbteilungsleiter = dto.AbteilungsLeiter_ID;
 		abteilung.raum = dto.Raum;
 		abteilung.email = dto.Email;
@@ -79,19 +94,27 @@ public final class DataAbteilungen extends DataManagerRevised<Long, DTOAbteilung
 		return abteilung;
 	}
 
-	@Override
-	public List<Abteilung> getList() {
-		if (this.idSchuljahresabschnitt == null) {
-			return Collections.emptyList();
+	/**
+	 * Gibt eine Liste mit allen Abteilungen zum übergebenen Schuljahresabschnitt zurück.
+	 *
+	 * @param idSchuljahresabschnitt ID des Schuljahresabschnittes
+	 *
+	 * @return List von Abteilungen
+	 */
+	public Response getListBySchuljahresabschnittAsResponse(final Long idSchuljahresabschnitt) {
+		if (idSchuljahresabschnitt == null) {
+			return Response.ok(Collections.emptyList()).build();
 		}
 		final Map<Long, List<AbteilungKlassenzuordnung>> zuordnungenByIdAbteilung = this.mapZuordnungenByIdAbteilung();
-		return this.conn
+		final var abteilungen = this.conn
 				.queryList(DTOAbteilungen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOAbteilungen.class, idSchuljahresabschnitt)
 				.stream()
 				.map(this::map)
 				.map(a -> addKlassenzuordnungen(a, zuordnungenByIdAbteilung))
 				.sorted(Comparator.comparing(a -> a.id))
 				.toList();
+
+		return Response.ok(abteilungen).build();
 	}
 
 	@Override
@@ -99,6 +122,7 @@ public final class DataAbteilungen extends DataManagerRevised<Long, DTOAbteilung
 			throws ApiOperationException {
 		switch (name) {
 			case "id" -> ValidationUtils.validateId(dto.ID, name, value);
+			case ID_SCHULJAHRESABSCHNITT -> dto.Schuljahresabschnitts_ID = JSONMapper.convertToLong(value, false, name);
 			case "bezeichnung" -> updateBezeichnung(dto, name, value);
 			case "idAbteilungsleiter" -> dto.AbteilungsLeiter_ID = JSONMapper.convertToLong(value, true, name);
 			case "raum" -> dto.Raum =
@@ -118,7 +142,6 @@ public final class DataAbteilungen extends DataManagerRevised<Long, DTOAbteilung
 		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung)) {
 			return;
 		}
-		validateBezeichnung(dto.ID, bezeichnung);
 
 		dto.Bezeichnung = bezeichnung;
 	}
@@ -139,17 +162,6 @@ public final class DataAbteilungen extends DataManagerRevised<Long, DTOAbteilung
 			abteilung.klassenzuordnungen.addAll(zuordnungenByIdAbteilung.get(abteilung.id));
 		}
 		return abteilung;
-	}
-
-	private void validateBezeichnung(final Long id, final String bezeichnung) throws ApiOperationException {
-		final boolean isAlreadyUsed = this.conn
-				.queryAll(DTOAbteilungen.class)
-				.stream()
-				.anyMatch(e -> (e.ID != id) && bezeichnung.equalsIgnoreCase(e.Bezeichnung));
-
-		if (isAlreadyUsed) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
-		}
 	}
 
 }

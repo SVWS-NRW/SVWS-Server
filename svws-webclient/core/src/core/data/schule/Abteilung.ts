@@ -12,6 +12,11 @@ export class Abteilung extends JavaObject {
 	public id: number = -1;
 
 	/**
+	 * Die ID des Schuljahresabschnittes zu dem die Abteilung gehört.
+	 */
+	public idSchuljahresabschnitt: number = -1;
+
+	/**
 	 * Die Bezeichnung der Abteilung (max. 50 Zeichen)
 	 */
 	public bezeichnung: string = "";
@@ -75,6 +80,9 @@ export class Abteilung extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
+		if (obj.idSchuljahresabschnitt === undefined)
+			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
+		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		if (obj.bezeichnung === undefined)
 			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
@@ -99,6 +107,7 @@ export class Abteilung extends JavaObject {
 	public static transpilerToJSON(obj: Abteilung): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"idAbteilungsleiter" : ' + ((obj.idAbteilungsleiter === null) ? 'null' : obj.idAbteilungsleiter.toString()) + ',';
 		result += '"raum" : ' + ((obj.raum === null) ? 'null' : JSON.stringify(obj.raum)) + ',';
@@ -123,6 +132,9 @@ export class Abteilung extends JavaObject {
 		let result = '{';
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.idSchuljahresabschnitt !== undefined) {
+			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';

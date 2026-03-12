@@ -6,5 +6,5 @@ export interface AbteilungenGruppenprozesseProps {
 	schulform: Schulform;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => AbteilungenListeManager;
-	deleteAbteilungen: () => Promise<[boolean, List<string | null>]>;
+	delete: () => Promise<[boolean, List<string | null>]>;
 }

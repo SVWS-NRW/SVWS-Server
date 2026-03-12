@@ -45,22 +45,21 @@ export class ValidatorStringLength extends BasicValidator {
 	 */
 	protected pruefe(): boolean {
 		const data = this.data();
-
-		const hasData = ((data !== null) && (data !== ''));
-
+		const noData = ((data === null) || (data === ''));
+		if (noData) {
+			return true;
+		}
 		// Prüfe die minimale Länge des Strings
-		const len = hasData ? data.toLocaleString().length : -1;
+		const len = data.toLocaleString().length;
 		if ((this.minLen !== null) && (len < this.minLen)) {
 			this.addFehler(0, "Der Wert muss mindestens " + this.minLen + " Zeichen lang sein.");
 			return false;
 		}
-
 		// Prüfe die maximale Länge des Strings
 		if ((this.maxLen !== null) && (len > this.maxLen)) {
 			this.addFehler(0, "Der Wert darf maximal " + this.maxLen + " Zeichen lang sein.");
 			return false;
 		}
-
 		// Die Prüfung hat keinen Fehler ergeben...
 		return true;
 	}

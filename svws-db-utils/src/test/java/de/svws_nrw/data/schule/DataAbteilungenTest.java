@@ -24,6 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatException;
 import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -45,7 +46,7 @@ class DataAbteilungenTest {
 	private DataAbteilungenKlassenzuordnungen dataAbteilungenKlassenzuordnungen;
 
 	@InjectMocks
-	private DataAbteilungen data;
+	private DataAbteilungen cut;
 
 	@BeforeAll
 	static void setup() {
@@ -56,23 +57,21 @@ class DataAbteilungenTest {
 	@DisplayName("setAttributesRequiredOnCreation: bezeichnung")
 	void setAttributesRequiredOnCreationBezeichnung() {
 		assertThatException()
-				.isThrownBy(() -> this.data.add(Map.of("test", "test")))
+				.isThrownBy(() -> this.cut.add(Map.of("test", "test")))
 				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Es werden weitere Attribute (bezeichnung) benötigt, damit die Entität erstellt werden kann.")
+				.withMessage("Es werden weitere Attribute (bezeichnung,idSchuljahresabschnitt) benötigt, damit die Entität erstellt werden kann.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test
 	@DisplayName("initDTO | Erfolg")
 	void initDTO() {
-		final var data = new DataAbteilungen(this.conn, 22L, this.dataAbteilungenKlassenzuordnungen);
 		final var dto = new DTOAbteilungen(1L, "", 1L);
 
-		data.initDTO(dto, 2L, null);
+		cut.initDTO(dto, 2L, null);
 
 		assertThat(dto)
-				.hasFieldOrPropertyWithValue("ID", 2L)
-				.hasFieldOrPropertyWithValue("Schuljahresabschnitts_ID", 22L);
+				.hasFieldOrPropertyWithValue("ID", 2L);
 	}
 
 	@Test
@@ -80,7 +79,7 @@ class DataAbteilungenTest {
 	void getLongId() {
 		final var dto = new DTOAbteilungen(1L, "", 1L);
 
-		assertThat(this.data.getLongId(dto)).isEqualTo(1L);
+		assertThat(this.cut.getLongId(dto)).isEqualTo(1L);
 	}
 
 	@Test
@@ -90,7 +89,7 @@ class DataAbteilungenTest {
 
 		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
 
-		assertThat(this.data.getById(1L))
+		assertThat(this.cut.getById(1L))
 				.isInstanceOf(Abteilung.class)
 				.hasFieldOrPropertyWithValue("id", dto.ID);
 	}
@@ -99,7 +98,7 @@ class DataAbteilungenTest {
 	@DisplayName("getByID | ID can't be null")
 	void getByIdNull() {
 		assertThatException()
-				.isThrownBy(() -> this.data.getById(null))
+				.isThrownBy(() -> this.cut.getById(null))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Die ID der Abteilung darf nicht null sein.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -111,7 +110,7 @@ class DataAbteilungenTest {
 		when(this.conn.queryByKey(DTOAbteilungen.class, 99L)).thenReturn(null);
 
 		assertThatException()
-				.isThrownBy(() -> this.data.getById(99L))
+				.isThrownBy(() -> this.cut.getById(99L))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Die Abteilung mit der ID 99 wurde nicht gefunden.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.NOT_FOUND);
@@ -127,7 +126,7 @@ class DataAbteilungenTest {
 		dto.Sortierung = 42;
 		dto.Sichtbar = true;
 
-		assertThat(this.data.map(dto))
+		assertThat(this.cut.map(dto))
 				.isInstanceOf(Abteilung.class)
 				.hasFieldOrPropertyWithValue("id", dto.ID)
 				.hasFieldOrPropertyWithValue("bezeichnung", dto.Bezeichnung)
@@ -144,7 +143,7 @@ class DataAbteilungenTest {
 		final var dto = new DTOAbteilungen(1L, "", 1L);
 		dto.Sortierung = null;
 
-		assertThat(this.data.map(dto)).hasFieldOrPropertyWithValue("sortierung", 32000);
+		assertThat(this.cut.map(dto)).hasFieldOrPropertyWithValue("sortierung", 32000);
 	}
 
 	@Test
@@ -153,13 +152,12 @@ class DataAbteilungenTest {
 		final var dto = new DTOAbteilungen(1L, "", 1L);
 		dto.Sichtbar = null;
 
-		assertThat(this.data.map(dto)).hasFieldOrPropertyWithValue("istSichtbar", false);
+		assertThat(this.cut.map(dto)).hasFieldOrPropertyWithValue("istSichtbar", false);
 	}
 
 	@Test
-	@DisplayName("getList | Erfolg")
+	@DisplayName("getListBySchuljahresabschnittAsResponse | Erfolg")
 	void getList() {
-		final var data = new DataAbteilungen(this.conn, 22L, this.dataAbteilungenKlassenzuordnungen);
 		final var dto1 = new DTOAbteilungen(1L, "1", 22L);
 		final var dto2 = new DTOAbteilungen(2L, "2", 22L);
 
@@ -170,7 +168,11 @@ class DataAbteilungenTest {
 		zuordnung.idAbteilung = 1L;
 		when(this.dataAbteilungenKlassenzuordnungen.getAll()).thenReturn(List.of(zuordnung));
 
-		assertThat(data.getList())
+		final Response result = cut.getListBySchuljahresabschnittAsResponse(22L);
+
+		assertThat(result).isNotNull()
+				.hasFieldOrPropertyWithValue("status", Response.Status.OK.getStatusCode())
+				.extracting(Response::getEntity).asInstanceOf(InstanceOfAssertFactories.list(Abteilung.class))
 				.hasSize(2)
 				.satisfiesExactly(
 						f1 -> assertThat(f1)
@@ -193,17 +195,20 @@ class DataAbteilungenTest {
 	}
 
 	@Test
-	@DisplayName("getList | idSchuljahresabschnitt null")
+	@DisplayName("getListBySchuljahresabschnittAsResponse | idSchuljahresabschnitt null")
 	void getListIdSchuljahresabschnittNull() {
-		assertThat(this.data.getList()).isEmpty();
-		verify(this.conn, never()).queryList(any(), any(), any());
+		final Response result = this.cut.getListBySchuljahresabschnittAsResponse(null);
+		assertThat(result).isNotNull()
+				.hasFieldOrPropertyWithValue("status", Response.Status.OK.getStatusCode())
+				.extracting(Response::getEntity).asInstanceOf(InstanceOfAssertFactories.list(Abteilung.class))
+				.isEmpty();
 	}
 
 	@Test
 	@DisplayName("mapAttribute | idWrong")
 	void mapAttributeIdIsWrong() {
 		assertThatException()
-				.isThrownBy(() -> this.data.mapAttribute(mock(DTOAbteilungen.class), "id", 2L, null))
+				.isThrownBy(() -> this.cut.mapAttribute(mock(DTOAbteilungen.class), "id", 2L, null))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Die ID 2 des Patches ist null oder stimmt nicht mit der ID 0 in der Datenbank überein.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -214,7 +219,7 @@ class DataAbteilungenTest {
 	void mapAttributeId() {
 		final var dto = new DTOAbteilungen(1L, "1", 1L);
 
-		assertDoesNotThrow(() -> this.data.mapAttribute(dto, "id", 1L, null));
+		assertDoesNotThrow(() -> this.cut.mapAttribute(dto, "id", 1L, null));
 	}
 
 	@Test
@@ -224,7 +229,7 @@ class DataAbteilungenTest {
 		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", RandomStringUtils.insecure().nextAscii(51))))
+				.isThrownBy(() -> this.cut.patch(1L, Map.of("bezeichnung", RandomStringUtils.insecure().nextAscii(51))))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Attribut bezeichnung: Die Länge des Strings ist auf 50 Zeichen limitiert.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -238,7 +243,7 @@ class DataAbteilungenTest {
 		map.put("bezeichnung", null);
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, map))
+				.isThrownBy(() -> this.cut.patch(1L, map))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Attribut bezeichnung: Der Wert null ist nicht erlaubt.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -250,7 +255,7 @@ class DataAbteilungenTest {
 		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(mock(DTOAbteilungen.class));
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "")))
+				.isThrownBy(() -> this.cut.patch(1L, Map.of("bezeichnung", "")))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Attribut bezeichnung: Ein leerer String ist hier nicht erlaubt.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -264,7 +269,7 @@ class DataAbteilungenTest {
 		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(1L, Map.of("bezeichnung", "    "));
+		this.cut.patch(1L, Map.of("bezeichnung", "    "));
 
 		verify(this.conn, never()).queryAll(DTOAbteilungen.class);
 		assertThat(dto.Bezeichnung).isEqualTo("bezeichnung");
@@ -277,48 +282,20 @@ class DataAbteilungenTest {
 		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(1L, Map.of("bezeichnung", "bezeichnung"));
+		this.cut.patch(1L, Map.of("bezeichnung", "bezeichnung"));
 
 		verify(this.conn, never()).queryAll(DTOAbteilungen.class);
 		assertThat(dto.Bezeichnung).isEqualTo("bezeichnung");
 	}
 
 	@Test
-	@DisplayName("patch | bezeichnung already used")
-	void patchBezeichnungAlreadyUsed() {
-		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(mock(DTOAbteilungen.class));
-		when(this.conn.queryAll(DTOAbteilungen.class)).thenReturn(List.of(new DTOAbteilungen(1L, "test", 1L)));
-
-		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "test")))
-				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Die Bezeichnung test ist bereits vorhanden.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
-
-	@Test
-	@DisplayName("patch | bezeichnung already used different case")
-	void patchBezeichnungAlreadyUsedWithDifferentCase() {
-		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(mock(DTOAbteilungen.class));
-		when(this.conn.queryAll(DTOAbteilungen.class)).thenReturn(List.of(new DTOAbteilungen(2L, "TEST", 1L)));
-
-		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("bezeichnung", "test")))
-				.isInstanceOf(ApiOperationException.class)
-				.withMessage("Die Bezeichnung test ist bereits vorhanden.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
-	}
-
-	@Test
 	@DisplayName("patch | bezeichnung change case in same object")
 	void patchBezeichnungChangeCase() throws ApiOperationException {
-		final var dto = new DTOAbteilungen(1L, "bezeichnung", 1L);
-		when(conn.queryAll(DTOAbteilungen.class)).thenReturn(List.of(dto));
 		final var newDto = new DTOAbteilungen(2L, "abc", 1L);
 		when(this.conn.queryByKey(DTOAbteilungen.class, 2L)).thenReturn(newDto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(2L, Map.of("bezeichnung", "ABC"));
+		this.cut.patch(2L, Map.of("bezeichnung", "ABC"));
 
 		assertThat(newDto.Bezeichnung).isEqualTo("ABC");
 	}
@@ -326,15 +303,12 @@ class DataAbteilungenTest {
 	@Test
 	@DisplayName("patch | bezeichnung dto is null | make sure no Nullpointer is thrown in equalsIgnoreCase check")
 	void patchBezeichnungInDtoISNull() {
-		final var dto = new DTOAbteilungen(1L, "123", 1L);
-		dto.Bezeichnung = null;
-		when(conn.queryAll(DTOAbteilungen.class)).thenReturn(List.of(dto));
 		final var newDto = new DTOAbteilungen(2L, "abc", 1L);
 		when(this.conn.queryByKey(DTOAbteilungen.class, 2L)).thenReturn(newDto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
 		assertThatNoException()
-				.isThrownBy(() -> this.data.patch(2L, Map.of("bezeichnung", "test")));
+				.isThrownBy(() -> this.cut.patch(2L, Map.of("bezeichnung", "test")));
 	}
 
 	@Test
@@ -344,9 +318,22 @@ class DataAbteilungenTest {
 		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(1L, Map.of("bezeichnung", "neu"));
+		this.cut.patch(1L, Map.of("bezeichnung", "neu"));
 
 		assertThat(dto.Bezeichnung).isEqualTo("neu");
+	}
+
+	@Test
+	@DisplayName("patch | idSchuljahresabschnitt | Exception")
+	void patchIdSchuljahresabschnitt() {
+		final var dto = new DTOAbteilungen(1L, "bezeichnung", 1L);
+		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
+
+		final Map<String, Object> patchAttributes = Map.of("idSchuljahresabschnitt", 2L);
+		assertThatThrownBy(() -> this.cut.patch(1L, patchAttributes))
+				.isInstanceOf(ApiOperationException.class)
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST)
+				.hasMessage("Folgende Attribute werden für ein Patch nicht zugelassen: idSchuljahresabschnitt.");
 	}
 
 	@Test
@@ -359,7 +346,7 @@ class DataAbteilungenTest {
 		final var map = new HashMap<String, Object>();
 		map.put("idAbteilungsleiter", null);
 
-		this.data.patch(1L, map);
+		this.cut.patch(1L, map);
 
 		assertThat(dto.AbteilungsLeiter_ID).isNull();
 	}
@@ -372,7 +359,7 @@ class DataAbteilungenTest {
 		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(1L, Map.of("idAbteilungsleiter", 99L));
+		this.cut.patch(1L, Map.of("idAbteilungsleiter", 99L));
 
 		assertThat(dto.AbteilungsLeiter_ID).isEqualTo(99L);
 	}
@@ -387,7 +374,7 @@ class DataAbteilungenTest {
 		final var map = new HashMap<String, Object>();
 		map.put("raum", null);
 
-		this.data.patch(1L, map);
+		this.cut.patch(1L, map);
 
 		assertThat(dto.Raum).isNull();
 	}
@@ -400,7 +387,7 @@ class DataAbteilungenTest {
 		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(1L, Map.of("raum", "neuerRaum"));
+		this.cut.patch(1L, Map.of("raum", "neuerRaum"));
 
 		assertThat(dto.Raum).isEqualTo("neuerRaum");
 	}
@@ -412,7 +399,7 @@ class DataAbteilungenTest {
 		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("raum", RandomStringUtils.insecure().nextAscii(21))))
+				.isThrownBy(() -> this.cut.patch(1L, Map.of("raum", RandomStringUtils.insecure().nextAscii(21))))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Attribut raum: Die Länge des Strings ist auf 20 Zeichen limitiert.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -428,7 +415,7 @@ class DataAbteilungenTest {
 		final var map = new HashMap<String, Object>();
 		map.put("email", null);
 
-		this.data.patch(1L, map);
+		this.cut.patch(1L, map);
 
 		assertThat(dto.Email).isNull();
 	}
@@ -441,7 +428,7 @@ class DataAbteilungenTest {
 		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(1L, Map.of("email", "neueEmail"));
+		this.cut.patch(1L, Map.of("email", "neueEmail"));
 
 		assertThat(dto.Email).isEqualTo("neueEmail");
 	}
@@ -453,7 +440,7 @@ class DataAbteilungenTest {
 		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("email", RandomStringUtils.insecure().nextAscii(101))))
+				.isThrownBy(() -> this.cut.patch(1L, Map.of("email", RandomStringUtils.insecure().nextAscii(101))))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Attribut email: Die Länge des Strings ist auf 100 Zeichen limitiert.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -469,7 +456,7 @@ class DataAbteilungenTest {
 		final var map = new HashMap<String, Object>();
 		map.put("durchwahl", null);
 
-		this.data.patch(1L, map);
+		this.cut.patch(1L, map);
 
 		assertThat(dto.Durchwahl).isNull();
 	}
@@ -482,7 +469,7 @@ class DataAbteilungenTest {
 		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(1L, Map.of("durchwahl", "neueDurchwahl"));
+		this.cut.patch(1L, Map.of("durchwahl", "neueDurchwahl"));
 
 		assertThat(dto.Durchwahl).isEqualTo("neueDurchwahl");
 	}
@@ -494,7 +481,7 @@ class DataAbteilungenTest {
 		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("durchwahl", RandomStringUtils.insecure().nextAscii(21))))
+				.isThrownBy(() -> this.cut.patch(1L, Map.of("durchwahl", RandomStringUtils.insecure().nextAscii(21))))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Attribut durchwahl: Die Länge des Strings ist auf 20 Zeichen limitiert.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -508,7 +495,7 @@ class DataAbteilungenTest {
 		map.put("istSichtbar", null);
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, map))
+				.isThrownBy(() -> this.cut.patch(1L, map))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Attribut istSichtbar: Der Wert null ist nicht erlaubt")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -522,7 +509,7 @@ class DataAbteilungenTest {
 		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(1L, Map.of("istSichtbar", true));
+		this.cut.patch(1L, Map.of("istSichtbar", true));
 
 		assertThat(dto.Sichtbar).isTrue();
 	}
@@ -535,7 +522,7 @@ class DataAbteilungenTest {
 		map.put("sortierung", null);
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, map))
+				.isThrownBy(() -> this.cut.patch(1L, map))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Attribut sortierung: Der Wert null ist nicht erlaubt")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
@@ -549,7 +536,7 @@ class DataAbteilungenTest {
 		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(dto);
 		when(this.conn.transactionPersist(any())).thenReturn(true);
 
-		this.data.patch(1L, Map.of("sortierung", 345));
+		this.cut.patch(1L, Map.of("sortierung", 345));
 
 		assertThat(dto.Sortierung).isEqualTo(345);
 	}
@@ -560,7 +547,7 @@ class DataAbteilungenTest {
 		when(this.conn.queryByKey(DTOAbteilungen.class, 1L)).thenReturn(mock(DTOAbteilungen.class));
 
 		assertThatException()
-				.isThrownBy(() -> this.data.patch(1L, Map.of("unknown", "unknown")))
+				.isThrownBy(() -> this.cut.patch(1L, Map.of("unknown", "unknown")))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Die Daten des Patches enthalten das unbekannte Attribut unknown.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);

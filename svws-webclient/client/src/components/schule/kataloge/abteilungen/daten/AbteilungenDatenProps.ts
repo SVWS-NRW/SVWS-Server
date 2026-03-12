@@ -5,7 +5,9 @@ export interface AbteilungenDatenProps {
 	goToLehrer: (idAbteilungsleiter: number) => Promise<void>;
 	manager: () => AbteilungenListeManager;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
+	isReadonly: boolean;
+	isAbteilungImZukuenftigenAbschnitt: boolean;
 	patch: (data: Partial<Abteilung>) => Promise<boolean>;
-	deleteKlassenzuordnungen: (ids: List<number>) => Promise<void>;
-	addKlassenzuordnungen: (data: List<AbteilungKlassenzuordnung>, idAbteilung: number) => Promise<void>;
+	deleteKlassenzuordnungen: (klassenzuordnungen: List<AbteilungKlassenzuordnung>) => Promise<void>;
+	addKlassenzuordnungen: (idAbteilung: number, idsKlassen: List<number>) => Promise<void>;
 }

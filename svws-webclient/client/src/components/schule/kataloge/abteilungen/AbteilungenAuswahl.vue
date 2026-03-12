@@ -1,7 +1,8 @@
 <template>
 	<div class="h-full flex flex-col">
-		<div class="secondary-menu--headline">
+		<div class="secondary-menu--headline gap-1">
 			<h1>Abteilungen</h1>
+			<div class="opacity-50 font-bold text-base">{{ getTextFolgeAbschnitt() }}</div>
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
@@ -16,10 +17,10 @@
 					<svws-ui-checkbox type="toggle" v-model="showOnlyVisibleAbteilungen">Nur Sichtbare</svws-ui-checkbox>
 				</template>
 				<template #actions v-if="!readonly">
-					<svws-ui-tooltip v-if="ServerMode.DEV.checkServerMode(serverMode)" position="bottom">
+					<svws-ui-tooltip v-if="ServerMode.DEV.checkServerMode(serverMode)" position="top">
 						<svws-ui-button type="icon"
 							@click="gotoHinzufuegenView(true)"
-							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
+							:has-focus="noFilteredEntries" :disabled="isHinzufuegenDisabled">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
 						<template #content>
@@ -46,6 +47,9 @@
 	const isHinzufuegenView = computed<boolean>(() => props.activeViewType === ViewType.HINZUFUEGEN);
 	const isGruppenprozesseOrHinzufuegenView = computed<boolean>(() => (props.activeViewType === ViewType.GRUPPENPROZESSE) || isHinzufuegenView.value);
 	const noFilteredEntries = computed<boolean>(() => props.manager().filtered().size() === 0);
+	const isHinzufuegenDisabled = computed(() => isHinzufuegenView.value
+		|| ((props.schuljahresabschnittsauswahl().aktuell.id !== props.schuljahresabschnittsauswahl().schule.id)
+			&& (props.schuljahresabschnittsauswahl().aktuell.id !== props.schuljahresabschnittsauswahl().schule.idFolgeAbschnitt)));
 	const searchTerm = computed<string>({
 		get: () => props.manager().searchTerm,
 		set: (v: string) => {
@@ -95,4 +99,8 @@
 		}
 	}
 
+	function getTextFolgeAbschnitt() {
+		const aktAbschnitt = props.schuljahresabschnittsauswahl().aktuell;
+		return aktAbschnitt.schuljahr > 0 ? `${aktAbschnitt.schuljahr}/${(aktAbschnitt.schuljahr + 1) % 100}.${aktAbschnitt.abschnitt}` : "Abschnitt";
+	}
 </script>

@@ -1,0 +1,46 @@
+import type { Abteilung, LehrerListeEintrag } from "@core";
+import type { AbteilungenListeManager, ViewType } from "@ui";
+import { ModelProxy, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
+import { ValidatorAbteilungBezeichnung } from "~/components/schule/kataloge/abteilungen/modelproxy/validation/ValidatorAbteilungBezeichnung";
+import { computed } from "vue";
+import { StringPattern } from "../../../../../../../ui/src/validation/common/ValidatorStringMatchesPattern";
+
+/**
+ * ModelProxy für Abteilungen.
+ */
+export class AbteilungenModelProxy extends ModelProxy<Abteilung> {
+
+	private readonly manager: () => AbteilungenListeManager;
+	private readonly viewType: ViewType;
+
+	constructor(data: () => Abteilung, manager: () => AbteilungenListeManager, viewType: ViewType, patch?: (data: Partial<Abteilung>) => Promise<boolean>) {
+		const listOfAutopatchProps: Iterable<keyof Abteilung> = ["idAbteilungsleiter", "istSichtbar"];
+		super({ data, patch, checkValidBeforePatch: true, listOfAutopatchProps });
+		this.manager = manager;
+		this.viewType = viewType;
+
+		this.addValidatoren();
+
+		this.validate();
+	}
+
+	private addValidatoren() {
+		this.addValidator(new ValidatorAbteilungBezeichnung(() => this.proxy, () => this.manager().liste.list(),
+			() => this.manager().abteilungenFolgeAbschnittById.values(), this.viewType), "bezeichnung");
+
+		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.raum, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), 'raum');
+		this.addValidator(new ValidatorStringLength(() => this.proxy.raum, null, 20), 'raum');
+
+		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.email, StringPattern.IS_EMAIL), 'email');
+		this.addValidator(new ValidatorStringLength(() => this.proxy.email, null, 100), 'email');
+
+		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.durchwahl, StringPattern.IS_PHONE_NUMBER), 'durchwahl');
+		this.addValidator(new ValidatorStringLength(() => this.proxy.durchwahl, null, 20), 'durchwahl');
+	}
+
+	abteilungsleiter = computed<LehrerListeEintrag | null>({
+		get: () => this.manager().lehrerById.get(this.proxy.idAbteilungsleiter ?? -1) ?? null,
+		set: (value: LehrerListeEintrag | null) => this.proxy.idAbteilungsleiter = value?.id ?? null,
+	});
+
+}

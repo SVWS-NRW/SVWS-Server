@@ -2,6 +2,11 @@
 	<div class="page page-grid-cards">
 		<div class="flex flex-col gap-4" v-if="ServerMode.DEV.checkServerMode(serverMode)">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Abteilungen werden gelöscht">
+				<div class="w-full">
+					<svws-ui-checkbox v-model="deleteAbteilungenInFolgeAbschnitt">
+						Zusätzlich im Folgeabschnitt ({{ getTextFolgeAbschnitt() }}) löschen.
+					</svws-ui-checkbox>
+				</div>
 				<template #buttonFooterLeft>
 					<svws-ui-button title="Löschen" @click="entferneAbteilungen" :is-loading class="mt-4">
 						<svws-ui-spinner v-if="isLoading" spinning />
@@ -28,14 +33,18 @@
 
 	const props = defineProps<AbteilungenGruppenprozesseProps>();
 
-	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const isLoading = ref<boolean>(false);
 	const logs = ref<List<string | null> | undefined>();
 	const status = ref<boolean | undefined>();
+	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const deleteAbteilungenInFolgeAbschnitt = computed({
+		get: () => props.manager().deleteAbteilungenInFolgeAbschnitt,
+		set: (value: boolean) => props.manager().deleteAbteilungenInFolgeAbschnitt = value,
+	});
 
 	async function entferneAbteilungen() {
 		isLoading.value = true;
-		const [delStatus, logMessages] = await props.deleteAbteilungen();
+		const [delStatus, logMessages] = await props.delete();
 		logs.value = logMessages;
 		status.value = delStatus;
 		isLoading.value = false;
@@ -45,6 +54,14 @@
 		isLoading.value = false;
 		logs.value = undefined;
 		status.value = undefined;
+	}
+
+	function getTextFolgeAbschnitt() {
+		const folgeAbschnitt = props.manager().schuljahresabschnitte.get(props.manager().getSchuljahresabschnittAuswahl()?.idFolgeAbschnitt ?? -1);
+		if ((folgeAbschnitt === null) || (folgeAbschnitt.schuljahr <= 0)) {
+			return '';
+		}
+		return `${folgeAbschnitt.schuljahr}/${(folgeAbschnitt.schuljahr + 1) % 100}.${folgeAbschnitt.abschnitt}`;
 	}
 
 </script>

@@ -32,7 +32,7 @@ const STRING_PATTERN_MAP: Record<StringPattern, StringPatternDefinition> = {
 		errorMessage: "Der Wert darf keine führenden oder nachgestellten Leerzeichen enthalten.",
 	},
 	[StringPattern.IS_PHONE_NUMBER]: {
-		regex: /^\+?\d+([-/]?\d+)*$/,
+		regex: /^\+?\d+(?:[-/]\d+)*$/,
 		errorMessage: "Die angegebene Telefonnummer hat ein ungültiges Format.",
 	},
 	[StringPattern.IS_EMAIL]: {
@@ -67,8 +67,8 @@ export class ValidatorStringMatchesPattern extends BasicValidator {
 	 */
 	protected pruefe(): boolean {
 		const data = this.data();
-		if ((data === null)) {
-			return false;
+		if ((data === null) || (data === '')) {
+			return true;
 		}
 		if (!this.pattern.regex.test(data)) {
 			this.addFehler(0, this.pattern.errorMessage);

@@ -31,7 +31,7 @@ export class RouteAbteilungenGruppenprozesse extends RouteNode<any, RouteAbteilu
 			schulform: api.schulform,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			manager: () => routeAbteilungen.data.manager,
-			deleteAbteilungen: routeAbteilungen.data.delete,
+			delete: routeAbteilungen.data.delete,
 		};
 	};
 }

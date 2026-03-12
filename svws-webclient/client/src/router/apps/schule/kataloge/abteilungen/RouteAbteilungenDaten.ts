@@ -23,6 +23,8 @@ export class RouteAbteilungenDaten extends RouteNode<any, RouteAbteilungen> {
 			goToLehrer: routeAbteilungen.data.goToLehrer,
 			manager: () => routeAbteilungen.data.manager,
 			benutzerKompetenzen: api.benutzerKompetenzen,
+			isReadonly: routeAbteilungen.data.isReadonly,
+			isAbteilungImZukuenftigenAbschnitt: routeAbteilungen.data.isAbteilungImZukuenftigenAbschnitt,
 			patch: routeAbteilungen.data.patch,
 			deleteKlassenzuordnungen: routeAbteilungen.data.deleteKlassenzuordnungen,
 			addKlassenzuordnungen: routeAbteilungen.data.addKlassenzuordnungen,

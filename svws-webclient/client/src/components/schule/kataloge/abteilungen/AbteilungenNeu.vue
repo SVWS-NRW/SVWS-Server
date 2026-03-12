@@ -3,48 +3,70 @@
 		<svws-ui-content-card>
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input placeholder="Bezeichnung"
-						v-model="data.bezeichnung"
-						:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="50" required :disabled="!hatKompetenzAdd" />
+					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField"
+						v-model="modelProxy.proxy.bezeichnung"
+						:validation="() => modelProxy.getFehler('bezeichnung')"
+						required :max-len="50" skip-default-validation />
 					<svws-ui-text-input placeholder="Raum"
-						v-model="data.raum"
-						:valid="() => fieldIsValid('raum')" :max-len="20" :disabled="!hatKompetenzAdd" />
+						v-model="modelProxy.proxy.raum"
+						:validation="() => modelProxy.getFehler('raum')"
+						:max-len="20" skip-default-validation />
 					<svws-ui-text-input placeholder="E-Mail-Adresse" type="email"
-						v-model="data.email"
-						:valid="() => fieldIsValid('email')" :max-len="100" :disabled="!hatKompetenzAdd" />
+						v-model="modelProxy.proxy.email"
+						:validation="() => modelProxy.getFehler('email')"
+						:max-len="100" skip-default-validation />
 					<svws-ui-text-input placeholder="Durchwahl" type="tel"
-						v-model="data.durchwahl"
-						:valid="() => fieldIsValid('durchwahl')" :max-len="20" :disabled="!hatKompetenzAdd" />
-					<ui-select label="Lehrer"
-						v-model="idLehrer"
+						v-model="modelProxy.proxy.durchwahl"
+						:validation="() => modelProxy.getFehler('durchwahl')"
+						:max-len="20" skip-default-validation />
+					<ui-select label="Abteilungsleitung"
 						:manager="lehrerSelectManager"
-						:disabled="!hatKompetenzAdd" searchable />
+						v-model="modelProxy.abteilungsleiter.value" />
+					<div />
 					<svws-ui-spacing :size="2" />
 					<svws-ui-content-card title="Ansicht & Sortierung">
 						<svws-ui-input-number placeholder="Sortierung"
-							v-model="data.sortierung"
-							:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" :removable="false" />
+							v-model="modelProxy.proxy.sortierung"
+							:validation="() => modelProxy.getFehler('sortierung')"
+							:min="0" :max="32000" skip-default-validation />
 						<svws-ui-spacing />
-						<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
+						<svws-ui-checkbox v-model="modelProxy.proxy.istSichtbar">
 							Sichtbar
 						</svws-ui-checkbox>
 					</svws-ui-content-card>
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
-			<div class="mt-7 flex flex-row gap-4 justify-end">
-				<svws-ui-button type="secondary" @click="cancel">
-					Abbrechen
-				</svws-ui-button>
-				<svws-ui-button @click="add" :disabled="!formIsValid">
+			<svws-ui-input-wrapper class="mt-7" :grid="2">
+				<div />
+				<div class="flex justify-end">
+					<svws-ui-checkbox v-model="addAbteilungInFolgeAbschnitt">
+						<div class="pt-0.5">
+							Zusätzlich im Folgeabschnitt ({{ getTextFolgeAbschnitt() }}) anlegen
+						</div>
+					</svws-ui-checkbox>
+				</div>
+			</svws-ui-input-wrapper>
+			<div class="mt-4 flex flex-row gap-4 justify-end">
+				<svws-ui-tooltip>
+					<svws-ui-button type="secondary" @click="cancel">
+						Abbrechen
+					</svws-ui-button>
+					<template #content>
+						Anlage abbrechen
+					</template>
+				</svws-ui-tooltip>
+				<svws-ui-button @click="addAbteilungAndZuordnungen" :disabled="mussFehlerExists">
 					Speichern
 				</svws-ui-button>
 			</div>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Klassen zuordnen">
-			<svws-ui-table :columns
-				:items="manager().klassenById.values()"
-				v-model="klassenToBeAdded"
-				:selectable="hatKompetenzAdd" count scroll />
+			<div class="flex flex-col max-h-125">
+				<svws-ui-table class="max-h-125" :columns
+					:items="manager().klassenByIdAktAbschnitt.values()"
+					v-model="klassenToAdd"
+					:selectable="hatKompetenzAdd" count scroll />
+			</div>
 		</svws-ui-content-card>
 		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
 	</div>
@@ -53,94 +75,60 @@
 <script setup lang="ts">
 
 	import type { AbteilungenNeuProps } from "~/components/schule/kataloge/abteilungen/AbteilungenNeuProps";
-	import type { DataTableColumn } from "@ui";
-	import type { KlassenDaten, LehrerListeEintrag, List } from "@core";
-	import { BenutzerKompetenz, Abteilung, AbteilungKlassenzuordnung, ArrayList } from "@core";
-	import { SelectManager } from "@ui";
+	import { type DataTableColumn, ViewType, SelectManager } from "@ui";
+	import type { KlassenDaten, List } from "@core";
+	import { ValidatorFehlerart, Abteilung, Arrays, BenutzerKompetenz } from "@core";
 	import { computed, ref, watch } from "vue";
-	import { emailIsValid, isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid, optionalInputIsValid, phoneNumberIsValid } from "~/util/validation/Validation";
+	import { AbteilungenModelProxy } from "~/components/schule/kataloge/abteilungen/modelproxy/AbteilungenModelProxy";
 
 	const props = defineProps<AbteilungenNeuProps>();
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
-	const data = ref<Abteilung>(Object.assign(new Abteilung(), { istSichtbar: true, sortierung: 32000 }));
-	const columns: DataTableColumn[] = [{ key: "kuerzel", label: "Klasse" }];
-	const isLoading = ref<boolean>(false);
-	const klassenToBeAdded = ref<KlassenDaten[]>([]);
 
-	const idLehrer = computed({
-		get: () => props.manager().lehrerById.get(data.value.idAbteilungsleiter),
-		set: (v: LehrerListeEintrag | null) => data.value.idAbteilungsleiter = v?.id ?? null,
-	});
-	const lehrer = computed(() => props.manager().lehrerById.values());
-	const lehrerSelectManager = new SelectManager({	options: lehrer, optionDisplayText: v => v.vorname + ' ' + v.nachname,
+	const columns: DataTableColumn[] = [{ key: "kuerzel", label: "Klasse" }];
+
+	const data = ref<Abteilung>(Object.assign(new Abteilung(), { istSichtbar: true, sortierung: 32000 }));
+	const isLoading = ref<boolean>(false);
+	const addAbteilungInFolgeAbschnitt = ref<boolean>(true);
+
+	const klassenToAdd = ref<KlassenDaten[]>([]);
+	const klassenIdsToAdd = computed<List<number>>(() => Arrays.asList(klassenToAdd.value.map(klasse => klasse.id)));
+	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
+	const availableLehrer = computed(() => props.manager().lehrerById.values());
+	const mussFehlerExists = computed(() => [...modelProxy.getAlleFehler()].some(fehler => fehler.getFehlerart().ordinal() === ValidatorFehlerart.MUSS.ordinal()));
+
+	const modelProxy = new AbteilungenModelProxy(() => data.value, props.manager, ViewType.HINZUFUEGEN);
+
+	const lehrerSelectManager = new SelectManager({
+		options: availableLehrer,
+		optionDisplayText: v => v.vorname + ' ' + v.nachname,
 		selectionDisplayText: v => v.vorname + ' ' + v.nachname,
 	});
-
-	const formIsValid = computed(() => {
-		return Object.keys(data.value)
-			.every((field: string) => fieldIsValid(field as keyof Abteilung));
-	});
-
-	const fieldIsValid = (field: keyof Abteilung): boolean => {
-		switch (field) {
-			case 'bezeichnung':
-				return bezeichnungIsValid(data.value.bezeichnung);
-			case 'raum':
-				return optionalInputIsValid(data.value.raum, 20);
-			case 'email':
-				return emailIsValid(data.value.email, 100);
-			case 'durchwahl':
-				return phoneNumberIsValid(data.value.durchwahl, 20);
-			case 'sortierung':
-				return sortierungIsValid(data.value.sortierung);
-			default:
-				return true;
-		}
-	};
-
-	function sortierungIsValid(sortierung: number): boolean {
-		return !numberHasDecimals(sortierung)
-			&& numberIsValid(sortierung, true, 0, 32000);
-	}
-
-	function bezeichnungIsValid(value: string | null) {
-		return mandatoryInputIsValid(value, 50)
-			&& isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
-	}
-
-	function createKlassenzuordnungen(idAbteilung: number): List<AbteilungKlassenzuordnung> {
-		if (klassenToBeAdded.value.length === 0) {
-			return new ArrayList<AbteilungKlassenzuordnung>();
-		}
-
-		const klassenzuordnungen = new ArrayList<AbteilungKlassenzuordnung>();
-		for (const klasse of klassenToBeAdded.value) {
-			const zuordnung = new AbteilungKlassenzuordnung();
-			zuordnung.idAbteilung = idAbteilung;
-			zuordnung.idKlasse = klasse.id;
-			const { id, ...partialData } = zuordnung;
-			klassenzuordnungen.add(partialData as AbteilungKlassenzuordnung);
-		}
-		return klassenzuordnungen;
-	}
 
 	async function cancel() {
 		props.checkpoint.active = false;
 		await props.goToDefaultView(null);
 	}
 
-	async function add() {
+	async function addAbteilungAndZuordnungen() {
 		if (isLoading.value) {
 			return;
 		}
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		const { id, klassenzuordnungen, ...partialData } = data.value;
-		const idAbteilung = await props.addAbteilung(partialData);
-		const zuordnungen = createKlassenzuordnungen(idAbteilung);
-		await props.addKlassenzuordnungen(zuordnungen, idAbteilung);
+
+		const { id, idSchuljahresabschnitt, klassenzuordnungen, ...partialData } = modelProxy.proxy;
+		const idAbteilungNeu = await props.add(partialData, klassenIdsToAdd.value, addAbteilungInFolgeAbschnitt.value);
+
 		isLoading.value = false;
+		await props.goToDefaultView(idAbteilungNeu);
+	}
+
+	function getTextFolgeAbschnitt() {
+		const folgeAbschnitt = props.manager().schuljahresabschnitte.get(props.manager().getSchuljahresabschnittAuswahl()?.idFolgeAbschnitt ?? -1);
+		if ((folgeAbschnitt === null) || folgeAbschnitt.schuljahr <= 0) {
+			return '';
+		}
+		return `${folgeAbschnitt.schuljahr}/${(folgeAbschnitt.schuljahr + 1) % 100}.${folgeAbschnitt.abschnitt}`;
 	}
 
 	watch(() => data.value, async () => {

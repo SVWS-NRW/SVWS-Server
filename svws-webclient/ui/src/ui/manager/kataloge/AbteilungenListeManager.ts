@@ -14,112 +14,184 @@ import { JavaLong } from '../../../../../core/src/java/lang/JavaLong';
 import type { List } from '../../../../../core/src/java/util/List';
 import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { JavaMap } from '../../../../../core/src/java/util/JavaMap';
+import { HashSet } from "../../../../../core/src/java/util/HashSet";
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 
 export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, Abteilung> {
 
 	private static readonly _abteilungToId: JavaFunction<Abteilung, number> = { apply: (a: Abteilung) => a.id };
+
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
+	private _deleteAbteilungenInFolgeAbschnitt: boolean = true;
+
+	private readonly _abteilungenFolgeAbschnittByBezeichnung: JavaMap<string, Abteilung> = new HashMap();
+	private readonly _abteilungenFolgeAbschnittById: JavaMap<number, Abteilung> = new HashMap();
 	private readonly _lehrerById: JavaMap<number, LehrerListeEintrag>;
-	private readonly _klassenById: JavaMap<number, KlassenDaten>;
+	private readonly _klassenByIdAktAbschnitt: JavaMap<number, KlassenDaten>;
+	private readonly _klassenByIdFolgeAbschnitt: JavaMap<number, KlassenDaten>;
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Abteilungen.
 	 */
-	public static readonly comparator: Comparator<Abteilung> = { compare: (a: Abteilung, b: Abteilung) => {
-		let cmp: number = JavaInteger.compare(a.sortierung, b.sortierung);
-		if (cmp !== 0) {
-			return cmp;
-		}
-		cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-		if (cmp !== 0) {
-			return cmp;
-		}
-		return JavaLong.compare(a.id, b.id);
-	} };
+	public static readonly COMPARATOR_ABTEILUNGEN_DEFAULT: Comparator<Abteilung> = {
+		compare: (a: Abteilung, b: Abteilung) => {
+			let cmp: number = JavaInteger.compare(a.sortierung, b.sortierung);
+			if (cmp !== 0) {
+				return cmp;
+			}
+			cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
+			if (cmp !== 0) {
+				return cmp;
+			}
+			return JavaLong.compare(a.id, b.id);
+		},
+	};
+
+	private static readonly COMPARATOR_KLASSEN_BY_KUERZEL_ASC: Comparator<KlassenDaten> = {
+		compare: (klasse1: KlassenDaten, klasse2: KlassenDaten) => {
+			if (klasse1.kuerzel === null) {
+				return 0;
+			}
+			return JavaString.compareTo(klasse1.kuerzel, klasse2.kuerzel);
+		},
+	};
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
-	 * @param idSchuljahresabschnittAuswahl    	  der Schuljahresabschnitt, auf den sich die Abteilungsauswahl bezieht
+	 * @param idSchuljahresabschnittAuswahl   der Schuljahresabschnitt, auf den sich die Abteilungsauswahl bezieht
 	 * @param idSchuljahresabschnittSchule    der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
-	 * @param schuljahresabschnitte           die Liste der Schuljahresabschnitte
+	 * @param schuljahresabschnitte           die Liste aller Schuljahresabschnitte
 	 * @param schulform     				  die Schulform der Schule
-	 * @param abteilungen     				  die Liste der Abteilungen
+	 * @param abteilungenAktAbschnitt     	  die Liste der Abteilungen im aktuellen Schuljahresabschnitt
 	 * @param lehrer     					  die Liste der Lehrer
-	 * @param klassen						  die Liste der Klassen
+	 * @param klassenAktAbschnitt			  die Liste der Klassen des aktuellen Schuljahresabschnittes
+	 * @param klassenFolgeAbschnitt			  die Liste der Klassen des folgenden Schuljahresabschnittes
 	 */
-	public constructor(idSchuljahresabschnittAuswahl: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>, schulform: Schulform | null, abteilungen: List<Abteilung>, lehrer: List<LehrerListeEintrag>, klassen: List<KlassenDaten>) {
-		super(idSchuljahresabschnittAuswahl, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, abteilungen, AbteilungenListeManager.comparator, AbteilungenListeManager._abteilungToId, AbteilungenListeManager._abteilungToId, Arrays.asList());
-		this._lehrerById = AbteilungenListeManager.mapLehrer(lehrer);
-		this._klassenById = AbteilungenListeManager.mapKlassen(klassen);
+	public constructor(idSchuljahresabschnittAuswahl: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
+		schulform: Schulform | null, abteilungenAktAbschnitt: List<Abteilung>, abteilungenFolgeAbschnitt: List<Abteilung>, lehrer: List<LehrerListeEintrag>,
+		klassenAktAbschnitt: List<KlassenDaten>, klassenFolgeAbschnitt: List<KlassenDaten>) {
+		super(idSchuljahresabschnittAuswahl, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, abteilungenAktAbschnitt,
+			AbteilungenListeManager.COMPARATOR_ABTEILUNGEN_DEFAULT, AbteilungenListeManager._abteilungToId, AbteilungenListeManager._abteilungToId, Arrays.asList());
+		this.mapAbteilungenFolgeAbschnitt(abteilungenFolgeAbschnitt);
+		this._lehrerById = this.mapLehrer(lehrer);
+		this._klassenByIdAktAbschnitt = this.mapKlassen(klassenAktAbschnitt);
+		this._klassenByIdFolgeAbschnitt = this.mapKlassen(klassenFolgeAbschnitt);
 	}
 
-	/**
-	 * Ein Getter der Klassen für die aktuelle Auswahl
-	 *
-	 * @return klassen
-	 */
+	protected checkFilter(eintrag: Abteilung): boolean {
+		if (this._filterNurSichtbar && !eintrag.istSichtbar) {
+			return false;
+		}
+		return this.entryMatchesSearchterm(eintrag);
+	}
+
+	protected compareAuswahl(a: Abteilung, b: Abteilung): number {
+		return AbteilungenListeManager.COMPARATOR_ABTEILUNGEN_DEFAULT.compare(a, b);
+	}
+
 	public getKlassenByAuswahl(): List<KlassenDaten> {
 		const result: List<KlassenDaten> | null = new ArrayList<KlassenDaten>();
 		if ((this._daten === null) || (this._daten.klassenzuordnungen.isEmpty())) {
 			return result;
 		}
 		for (const a of this._daten.klassenzuordnungen) {
-			const klasse: KlassenDaten | null = this._klassenById.get(a.idKlasse);
+			const klasse: KlassenDaten | null = this._klassenByIdAktAbschnitt.get(a.idKlasse);
 			if (klasse !== null) {
 				result.add(klasse);
 			}
 		}
+		result.sort(AbteilungenListeManager.COMPARATOR_KLASSEN_BY_KUERZEL_ASC);
 		return result;
 	}
 
-	/**
-	 * Fügt die Liste der AbteilungsKlassenzuordnungen der ausgewählten Abteilung hinzu
-	 *
-	 * @param zuordnungen    Liste der AbteilungsKlassenzuordnungen
-	 */
-	public addKlassenToAuswahl(zuordnungen: List<AbteilungKlassenzuordnung>): void {
+	public addKlassenzuordnungen(klassenzuordnungen: List<AbteilungKlassenzuordnung>): void {
 		if (this._daten !== null) {
-			this._daten.klassenzuordnungen.addAll(zuordnungen);
-			this._daten.klassenzuordnungen.sort(this.comparatorKlassenzuordnung);
+			this._daten.klassenzuordnungen.addAll(klassenzuordnungen);
 		}
 	}
 
-	/**
-	 * Löscht Klassenzuordnungen anhand der IDs
-	 *
-	 * @param ids    Ids der Klassenzuordnungen
-	 */
-	public deleteKlassenzuordnungen(ids: List<number>): void {
+	public deleteKlassenzuordnungen(klassenzuordnungen: List<AbteilungKlassenzuordnung>): void {
 		if (this._daten === null) {
 			return;
 		}
-		for (const id of ids) {
-			let toBeDeleted: AbteilungKlassenzuordnung | null = null;
-			for (const v of this._daten.klassenzuordnungen) {
-				if (v.id === id) {
-					toBeDeleted = v;
+
+		for (const klassenzuordnungToDelete of klassenzuordnungen) {
+			for (const zuordnung of this._daten.klassenzuordnungen) {
+				if (zuordnung.id === klassenzuordnungToDelete.id) {
+					this._daten.klassenzuordnungen.remove(zuordnung);
 					break;
 				}
-			}
-			if (toBeDeleted !== null) {
-				this._daten.klassenzuordnungen.remove(toBeDeleted);
 			}
 		}
 	}
 
-	private readonly comparatorKlassenzuordnung: Comparator<AbteilungKlassenzuordnung> = { compare: (a: AbteilungKlassenzuordnung, b: AbteilungKlassenzuordnung) => {
-		const firstClass: KlassenDaten | null = this._klassenById.get(a.idKlasse);
-		const secondClass: KlassenDaten | null = this._klassenById.get(b.idKlasse);
-		if ((firstClass === null) || (firstClass.kuerzel === null) || (secondClass === null) || (secondClass.kuerzel === null)) {
-			return 0;
-		}
-		return JavaString.compareTo(firstClass.kuerzel, secondClass.kuerzel);
-	} };
+	public getAbteilungFolgeAbschnitt(abteilungAktAbschnitt: Abteilung): Abteilung | null {
+		return this._abteilungenFolgeAbschnittByBezeichnung.get(abteilungAktAbschnitt.bezeichnung);
+	}
 
-	private static mapLehrer(lehrerListe: List<LehrerListeEintrag>): JavaMap<number, LehrerListeEintrag> {
+	public getKlassenzuordnungenIdsFolgeAbschnitt(abteilungFolgeAbschnitt: Abteilung, klassenzuordnungenAktAbschnitt: List<AbteilungKlassenzuordnung>): List<number> {
+		const idsKlassenAktAbschnitt = Arrays.asList([...klassenzuordnungenAktAbschnitt].map(zuordnung => zuordnung.idKlasse));
+		const idsKlassenFolgeAbschnitt = this.getKlassenIdsFuerFolgeAbschnitt(idsKlassenAktAbschnitt);
+
+		const idsKlassenzuordnungenFolgeAbschnitt = new ArrayList<number>();
+		for (const zuordnungFolgeAbschnitt of abteilungFolgeAbschnitt.klassenzuordnungen) {
+			for (const idKlasseFolgeAbschnitt of idsKlassenFolgeAbschnitt) {
+				if (idKlasseFolgeAbschnitt === zuordnungFolgeAbschnitt.idKlasse) {
+					idsKlassenzuordnungenFolgeAbschnitt.add(zuordnungFolgeAbschnitt.id);
+				}
+			}
+		}
+
+		return idsKlassenzuordnungenFolgeAbschnitt;
+	}
+
+	public addAbteilungFolgeAbschnitt(abteilung: Abteilung): void {
+		this._abteilungenFolgeAbschnittById.put(abteilung.id, abteilung);
+		if (this._abteilungenFolgeAbschnittByBezeichnung.containsKey(abteilung.bezeichnung)) {
+			this._abteilungenFolgeAbschnittByBezeichnung.remove(abteilung.bezeichnung);
+		} else {
+			this._abteilungenFolgeAbschnittByBezeichnung.put(abteilung.bezeichnung, abteilung);
+		}
+	}
+
+	public getAvailableKlassenToAdd(): List<KlassenDaten> {
+		const alleKlassen = [...this._klassenByIdAktAbschnitt.values()];
+		const alreadyAdded = new Set(this.getKlassenByAuswahl());
+		return Arrays.asList(alleKlassen.filter(v => !alreadyAdded.has(v)));
+	}
+
+	public getKlassenIdsFuerFolgeAbschnitt(klassenIds: List<number>): List<number> {
+		const assignedKlassenIdsFolgeAbschnitt = new ArrayList<number>();
+		for (const idKlasse of klassenIds) {
+			const idKlasseFolgeAbschnitt = this.getKlassenIdFuerFolgeAbschnitt(idKlasse);
+			if (idKlasseFolgeAbschnitt !== null) {
+				assignedKlassenIdsFolgeAbschnitt.add(idKlasseFolgeAbschnitt);
+			}
+		}
+		return assignedKlassenIdsFolgeAbschnitt;
+	}
+
+	private getKlassenIdFuerFolgeAbschnitt(idKlasse: number): number | null {
+		const klasse = this._klassenByIdAktAbschnitt.get(idKlasse);
+		if (klasse === null) {
+			return null;
+		}
+
+		let idKlasseFolgeAbschnitt: number | null = null;
+		for (const klasseFolgeAbschnitt of this._klassenByIdFolgeAbschnitt.values()) {
+			if (this.klassenEquals(klasseFolgeAbschnitt, klasse)) {
+				if (idKlasseFolgeAbschnitt !== null) {
+					return null;
+				}
+				idKlasseFolgeAbschnitt = klasseFolgeAbschnitt.id;
+			}
+		}
+		return idKlasseFolgeAbschnitt;
+	}
+
+	private mapLehrer(lehrerListe: List<LehrerListeEintrag>): JavaMap<number, LehrerListeEintrag> {
 		const result: JavaMap<number, LehrerListeEintrag> | null = new HashMap<number, LehrerListeEintrag>();
 		for (const v of lehrerListe) {
 			result.put(v.id, v);
@@ -127,7 +199,7 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 		return result;
 	}
 
-	private static mapKlassen(klassen: List<KlassenDaten>): JavaMap<number, KlassenDaten> {
+	private mapKlassen(klassen: List<KlassenDaten>): JavaMap<number, KlassenDaten> {
 		const result: JavaMap<number, KlassenDaten> | null = new HashMap<number, KlassenDaten>();
 		for (const v of klassen) {
 			result.put(v.id, v);
@@ -135,29 +207,39 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 		return result;
 	}
 
-	protected checkFilter(eintrag: Abteilung): boolean {
-		if (this._filterNurSichtbar && !eintrag.istSichtbar) {
-			return false;
-		}
-
-		return this.entryMatchesSearchterm(eintrag);
+	private klassenEquals(klasse1: KlassenDaten, klasse2: KlassenDaten): boolean {
+		return (klasse1.kuerzel === klasse2.kuerzel)
+				&& (klasse1.idJahrgang === klasse2.idJahrgang)
+				&& (klasse1.parallelitaet === klasse2.parallelitaet);
 	}
 
-	private entryMatchesSearchterm(eintrag: Abteilung) {
+	private entryMatchesSearchterm(eintrag: Abteilung): boolean {
 		const searchTermLower = this._searchTerm.toLocaleLowerCase();
 		return (eintrag.bezeichnung.toLocaleLowerCase().includes(searchTermLower));
 	}
 
-	protected compareAuswahl(a: Abteilung, b: Abteilung): number {
-		return AbteilungenListeManager.comparator.compare(a, b);
+	private mapAbteilungenFolgeAbschnitt(abteilungenFolgeAbschnitt: List<Abteilung>): void {
+		this._abteilungenFolgeAbschnittByBezeichnung.clear();
+		this._abteilungenFolgeAbschnittById.clear();
+
+		const abteilungenToSkipByBezeichnung = new HashSet<string>();
+		for (const abteilung of abteilungenFolgeAbschnitt) {
+			this._abteilungenFolgeAbschnittById.put(abteilung.id, abteilung);
+			if (this._abteilungenFolgeAbschnittByBezeichnung.containsKey(abteilung.bezeichnung) || abteilungenToSkipByBezeichnung.contains(abteilung.bezeichnung)) {
+				this._abteilungenFolgeAbschnittByBezeichnung.remove(abteilung.bezeichnung);
+				abteilungenToSkipByBezeichnung.add(abteilung.bezeichnung);
+			} else {
+				this._abteilungenFolgeAbschnittByBezeichnung.put(abteilung.bezeichnung, abteilung);
+			}
+		}
 	}
 
 	get lehrerById(): JavaMap<number, LehrerListeEintrag> {
 		return this._lehrerById;
 	}
 
-	get klassenById(): JavaMap<number, KlassenDaten> {
-		return this._klassenById;
+	get klassenByIdAktAbschnitt(): JavaMap<number, KlassenDaten> {
+		return this._klassenByIdAktAbschnitt;
 	}
 
 	get searchTerm(): string {
@@ -169,14 +251,29 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 		this._eventHandlerFilterChanged.run();
 	}
 
+	get filterNurSichtbar(): boolean {
+		return this._filterNurSichtbar;
+	}
+
 	set filterNurSichtbar(value: boolean) {
 		this._filterNurSichtbar = value;
 		this._eventHandlerFilterChanged.run();
 	}
 
-	get filterNurSichtbar(): boolean {
-		return this._filterNurSichtbar;
+	get abteilungenFolgeAbschnittByBezeichnung(): JavaMap<string, Abteilung> {
+		return this._abteilungenFolgeAbschnittByBezeichnung;
 	}
 
+	get abteilungenFolgeAbschnittById(): JavaMap<number, Abteilung> {
+		return this._abteilungenFolgeAbschnittById;
+	}
+
+	get deleteAbteilungenInFolgeAbschnitt(): boolean {
+		return this._deleteAbteilungenInFolgeAbschnitt;
+	}
+
+	set deleteAbteilungenInFolgeAbschnitt(value: boolean) {
+		this._deleteAbteilungenInFolgeAbschnitt = value;
+	}
 }
 

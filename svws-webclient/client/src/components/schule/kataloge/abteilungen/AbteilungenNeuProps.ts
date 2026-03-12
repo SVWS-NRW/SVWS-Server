@@ -1,11 +1,10 @@
-import type { Abteilung, AbteilungKlassenzuordnung, BenutzerKompetenz, List } from "@core";
+import type { Abteilung, BenutzerKompetenz, List } from "@core";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 import type { Checkpoint, AbteilungenListeManager } from "@ui";
 
 export interface AbteilungenNeuProps {
 	manager: () => AbteilungenListeManager;
-	addAbteilung: (patchObject: Partial<Abteilung>) => Promise<number>;
-	addKlassenzuordnungen: (data: List<AbteilungKlassenzuordnung>, idAbteilung: number) => Promise<void>;
+	add: (abteilung: Partial<Abteilung>, assignedKlassenIds: List<number>, addAbteilungFolgeAbschnitt: boolean) => Promise<number>;
 	goToDefaultView: (idEintrag?: number | null) => Promise<void>;
 	checkpoint: Checkpoint;
 	continueRoutingAfterCheckpoint: () => Promise<RoutingStatus>;

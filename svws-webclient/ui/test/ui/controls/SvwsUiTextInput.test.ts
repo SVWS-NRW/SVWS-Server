@@ -362,12 +362,11 @@ describe.concurrent("Validierung", () => {
 			expect(validatorResult.fehler.size()).toBe(0);
 		});
 
-		test("Mit Prop 'minLen = 3' ohne Eingabe wird ein Fehler für die length-Validierung generiert", () => {
+		test("Mit Prop 'minLen = 3' ohne Eingabe ergibt die Validierung keine Fehler", () => {
 			const wrapper = mount(SvwsUiTextInput, { props: { modelValue: null, minLen: 3 } });
 			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.validationResult;
 
-			expect(validatorResult.fehler.size()).toBe(1);
-			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Der Wert muss mindestens 3 Zeichen lang sein.");
+			expect(validatorResult.fehler.isEmpty()).toBe(true);
 		});
 
 		test("Mit Prop 'minLen = 3' und 'validation' wird eine Validierung von außen ausgeführt und um die length-Validierung ergänzt", () => {

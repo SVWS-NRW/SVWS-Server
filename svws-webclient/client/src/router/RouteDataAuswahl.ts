@@ -324,33 +324,35 @@ export abstract class RouteDataAuswahl<TAuswahlManager extends AuswahlManager<nu
 	}
 
 	public delete = async (): Promise<[boolean, List<string | null>]> => {
-		let ids: List<number> = new ArrayList();
-		for (const eintrag of this.manager.liste.auswahlSorted()) {
-			ids.add(this.manager.getIdByEintrag(eintrag));
+		const idsEntries = new ArrayList<number>();
+		for (const entry of this.manager.liste.auswahlSorted()) {
+			idsEntries.add(this.manager.getIdByEintrag(entry));
 		}
-		ids = this.filterOnDelete(ids);
 
-		const operationResponses = await this.doDelete(ids);
+		const filteredIds = this.filterOnDelete(idsEntries);
 
-		const eintraegeToRemove = new ArrayList<TAuswahl>();
-		const logMessages = new ArrayList<string | null>();
-		let status = true;
-		for (const response of operationResponses) {
-			if (response.success && (response.id !== null)) {
-				const eintrag = this.manager.liste.get(response.id);
-				logMessages.add(this.deleteMessage(response.id, eintrag));
-				eintraegeToRemove.add(eintrag);
+		const deleteResponses = await this.doDelete(filteredIds);
+
+		let anyEntryRemoved = false;
+		let allEntriesRemoved = true;
+		const logMessages = new ArrayList<string>();
+		for (const deleteResponse of deleteResponses) {
+			if (deleteResponse.success && (deleteResponse.id !== null)) {
+				const entry = this.manager.liste.get(deleteResponse.id);
+				logMessages.add(this.deleteMessage(deleteResponse.id, entry));
+				anyEntryRemoved = true;
 			} else {
-				status = false;
-				logMessages.addAll(response.log);
+				allEntriesRemoved = false;
+				logMessages.addAll(deleteResponse.log);
 			}
 		}
-		if (!eintraegeToRemove.isEmpty()) {
+
+		if (anyEntryRemoved) {
 			this.manager.liste.auswahlClear();
 			await this.ladeSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt);
 		}
 
-		return [status, logMessages];
+		return [allEntriesRemoved, logMessages];
 	};
 
 

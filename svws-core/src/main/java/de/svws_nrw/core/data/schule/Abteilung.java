@@ -21,6 +21,10 @@ public class Abteilung {
 	@Schema(description = "die ID des Eintrags für die Abteilung", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id = -1;
 
+	/** Die ID des Schuljahresabschnittes zu dem die Abteilung gehört. */
+	@Schema(description = "Die ID des Schuljahresabschnittes, dem die Abteilung zugeordnet ist", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
+	public long idSchuljahresabschnitt = -1;
+
 	/** Die Bezeichnung der Abteilung (max. 50 Zeichen) */
 	@Schema(description = "die Bezeichnung der Abteilung (max. 50 Zeichen)", example = "4712")
 	public @NotNull String bezeichnung = "";
