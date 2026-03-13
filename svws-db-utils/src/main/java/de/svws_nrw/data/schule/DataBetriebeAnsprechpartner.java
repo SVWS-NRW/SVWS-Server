@@ -129,7 +129,7 @@ public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, 
 		if ((ids == null) || ids.isEmpty())
 			return Collections.emptySet();
 
-		final String query = "SELECT DISTINCT a.Ansprechpartner_ID FROM DTOSchuelerAllgemeineAdresse a WHERE a.Ansprechpartner_ID IN :ids";
+		final String query = "SELECT DISTINCT a.idAnsprechpartner FROM DTOSchuelerBetrieb a WHERE a.idAnsprechpartner IN :ids";
 		final List<Long> results = this.conn.query(query, Long.class).setParameter("ids", ids).getResultList();
 		return new HashSet<>(results);
 	}

@@ -149,7 +149,7 @@
         <class>de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOFoerderschwerpunkt</class>
         <class>de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchueler</class>
         <class>de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerAbgaenge</class>
-        <class>de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerAllgemeineAdresse</class>
+        <class>de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerBetrieb</class>
         <class>de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerDatenschutz</class>
         <class>de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerFehlstunden</class>
         <class>de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerFoerderempfehlung</class>
@@ -347,7 +347,7 @@
         <class>de.svws_nrw.db.dto.current.schild.schueler.DTOFoerderschwerpunkt</class>
         <class>de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler</class>
         <class>de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAbgaenge</class>
-        <class>de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAllgemeineAdresse</class>
+        <class>de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerBetrieb</class>
         <class>de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerDatenschutz</class>
         <class>de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerFehlstunden</class>
         <class>de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerFoerderempfehlung</class>

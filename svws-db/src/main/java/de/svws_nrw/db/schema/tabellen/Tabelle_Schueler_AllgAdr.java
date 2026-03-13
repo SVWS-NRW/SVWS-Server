@@ -20,59 +20,71 @@ public class Tabelle_Schueler_AllgAdr extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ID */
 	public final SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 			.setNotNull()
-			.setJavaComment("ID des Betriebeeintrags beim Schüler");
+			.setJavaName("id")
+			.setJavaComment("Die ID des Betriebseintrags beim Schüler");
 
 	/** Die Definition der Tabellenspalte Schueler_ID */
 	public final SchemaTabelleSpalte col_Schueler_ID = add("Schueler_ID", SchemaDatentypen.BIGINT, false)
 			.setNotNull()
-			.setJavaComment("SchülerID des Betriebeeintrags beim Schüler");
+			.setJavaName("idSchueler")
+			.setJavaComment("Die ID des Schülers");
 
 	/** Die Definition der Tabellenspalte Adresse_ID */
 	public final SchemaTabelleSpalte col_Adresse_ID = add("Adresse_ID", SchemaDatentypen.BIGINT, false)
 			.setNotNull()
-			.setJavaComment("AdressID des Betriebeeintrags beim Schüler");
+			.setJavaName("idBetrieb")
+			.setJavaComment("Die ID des Betriebs");
 
 	/** Die Definition der Tabellenspalte Vertragsart_ID */
 	public final SchemaTabelleSpalte col_Vertragsart_ID = add("Vertragsart_ID", SchemaDatentypen.BIGINT, false)
-			.setJavaComment("VertragsArtID des Betriebeeintrags beim Schüler");
+			.setJavaName("idBeschaeftigungsart")
+			.setJavaComment("Die ID der Beschäftigungsart");
 
 	/** Die Definition der Tabellenspalte Vertragsbeginn */
 	public final SchemaTabelleSpalte col_Vertragsbeginn = add("Vertragsbeginn", SchemaDatentypen.DATE, false)
 			.setConverter(DatumConverter.class)
-			.setJavaComment("Datum Vertragsbeginn des Betriebeeintrags beim Schüler");
+			.setJavaName("vertragsbeginn")
+			.setJavaComment("Das Datum des Vertragsbeginns");
 
 	/** Die Definition der Tabellenspalte Vertragsende */
 	public final SchemaTabelleSpalte col_Vertragsende = add("Vertragsende", SchemaDatentypen.DATE, false)
 			.setConverter(DatumConverter.class)
-			.setJavaComment("Datum des Vertragsende des Betriebeeintrags beim Schüler");
+			.setJavaName("vertragende")
+			.setJavaComment("Das Datum des Vertragsendes");
 
 	/** Die Definition der Tabellenspalte Ausbilder */
 	public final SchemaTabelleSpalte col_Ausbilder = add("Ausbilder", SchemaDatentypen.VARCHAR, false).setDatenlaenge(30)
-			.setJavaComment("Ausbildername des Betriebeeintrags beim Schüler");
+			.setJavaName("nameAusbilder")
+			.setJavaComment("Der Name des Ausbilders");
 
 	/** Die Definition der Tabellenspalte AllgAdrAnschreiben */
 	public final SchemaTabelleSpalte col_AllgAdrAnschreiben = add("AllgAdrAnschreiben", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 			.setDefault("-")
 			.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
-			.setJavaComment("Betrieb erhält Anschreiben Ja/Nein");
+			.setJavaName("erhaeltAnschreiben")
+			.setJavaComment("Betrieb erhält Anschreiben");
 
 	/** Die Definition der Tabellenspalte Praktikum */
 	public final SchemaTabelleSpalte col_Praktikum = add("Praktikum", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 			.setDefault("-")
 			.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
-			.setJavaComment("Gibt an ob es ein Praktikum ist beim Betriebeeintrags beim Schüler");
+			.setJavaName("istPraktikum")
+			.setJavaComment("Gibt an ob es ein Praktikum ist");
 
 	/** Die Definition der Tabellenspalte Sortierung */
 	public final SchemaTabelleSpalte col_Sortierung = add("Sortierung", SchemaDatentypen.INT, false)
-			.setJavaComment("Sortierung des Betriebeeintrags beim Schüler");
+			.setJavaName("sortierung")
+			.setJavaComment("Die Sortierung des Betriebseintrags");
 
 	/** Die Definition der Tabellenspalte Ansprechpartner_ID */
 	public final SchemaTabelleSpalte col_Ansprechpartner_ID = add("Ansprechpartner_ID", SchemaDatentypen.BIGINT, false)
-			.setJavaComment("AnsprechpartnerID des Betriebeeintrags beim Schüler");
+			.setJavaName("idAnsprechpartner")
+			.setJavaComment("Die ID des Ansprechpartners");
 
 	/** Die Definition der Tabellenspalte Betreuungslehrer_ID */
 	public final SchemaTabelleSpalte col_Betreuungslehrer_ID = add("Betreuungslehrer_ID", SchemaDatentypen.BIGINT, false)
-			.setJavaComment("BetreuungslehrerID des Betriebeeintrags beim Schüler");
+			.setJavaName("idBetreuungslehrer")
+			.setJavaComment("Die ID des Betreuungslehrers");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public final SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
@@ -129,8 +141,8 @@ public class Tabelle_Schueler_AllgAdr extends SchemaTabelle {
 		setImportExport(true);
 		setPKAutoIncrement();
 		setJavaSubPackage("schild.schueler");
-		setJavaClassName("DTOSchuelerAllgemeineAdresse");
-		setJavaComment("weitere Adressen und Betriebe zum Schüler");
+		setJavaClassName("DTOSchuelerBetrieb");
+		setJavaComment("Betriebsdaten eines Schülers");
 	}
 
 }

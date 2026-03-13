@@ -6,16 +6,16 @@
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2" class="mb-9">
 				<svws-ui-select title="Betrieb" v-model="betrieb" :items="betriebeById" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" class="col-span-full" />
-				<svws-ui-text-input placeholder="Ausbilder" v-model="schuelerBetriebsdaten.ausbilder" type="text" />
+				<svws-ui-text-input placeholder="Ausbilder" v-model="schuelerBetriebsdaten.nameAusbilder" type="text" />
 				<svws-ui-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="beschaeftigungsartenById" :item-text="(i: Beschaeftigungsart) => i.bezeichnung ?? ''" />
-				<svws-ui-checkbox v-model="schuelerBetriebsdaten.praktikum"> Praktikum </svws-ui-checkbox>
+				<svws-ui-checkbox v-model="schuelerBetriebsdaten.istPraktikum"> Praktikum </svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Vertragsbeginn" v-model="schuelerBetriebsdaten.vertragsbeginn" type="date" statistics />
 				<svws-ui-text-input placeholder="Vertragsende" v-model="schuelerBetriebsdaten.vertragsende" type="date" statistics />
 				<svws-ui-select title="Betreuungslehrer" v-model="betreuungslehrer" :items="mapLehrer" :item-text="(i: LehrerListeEintrag) => i.nachname" />
 				<svws-ui-select title="Ansprechpartner" removable :disabled="betrieb === undefined" v-model="ansprechpartner" :items="listAnpsrechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name ?? ''" />
-				<svws-ui-checkbox v-model="schuelerBetriebsdaten.allgadranschreiben"> Erhält Anschreiben </svws-ui-checkbox>
+				<svws-ui-checkbox v-model="schuelerBetriebsdaten.erhaeltAnschreiben"> Erhält Anschreiben </svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
@@ -29,10 +29,10 @@
 
 	import { computed, ref } from "vue";
 	import type { Beschaeftigungsart, BetriebAnsprechpartner, BetriebListeEintrag, LehrerListeEintrag } from "@core";
-	import { DeveloperNotificationException, SchuelerBetriebsdaten } from "@core";
+	import { DeveloperNotificationException, SchuelerBetriebe } from "@core";
 
 	const props = defineProps<{
-		createSchuelerBetriebsdaten: (data: SchuelerBetriebsdaten) => Promise<void>;
+		createSchuelerBetriebsdaten: (data: SchuelerBetriebe) => Promise<void>;
 		idSchueler: number;
 		beschaeftigungsartenById: Map<number, Beschaeftigungsart>;
 		mapLehrer: Map<number, LehrerListeEintrag>;
@@ -42,19 +42,19 @@
 
 	const show = ref<boolean>(false);
 
-	const schuelerBetriebsdaten = ref<SchuelerBetriebsdaten>(new SchuelerBetriebsdaten());
+	const schuelerBetriebsdaten = ref<SchuelerBetriebe>(new SchuelerBetriebe());
 
 	const betrieb = computed<BetriebListeEintrag | undefined>({
-		get: () => props.betriebeById.get(schuelerBetriebsdaten.value.betrieb_id),
+		get: () => props.betriebeById.get(schuelerBetriebsdaten.value.idBetrieb),
 		set: (value) => {
 			if (value === undefined) {
 				throw new DeveloperNotificationException("Ungültiger Betrieb ausgewählt");
 			}
-			schuelerBetriebsdaten.value.betrieb_id = value.id;
-			schuelerBetriebsdaten.value.ansprechpartner_id = null;
+			schuelerBetriebsdaten.value.idBetrieb = value.id;
+			schuelerBetriebsdaten.value.idAnsprechpartner = null;
 			for (const ap of props.mapAnsprechpartner.values()) {
-				if (ap.betrieb_id === schuelerBetriebsdaten.value.betrieb_id) {
-					schuelerBetriebsdaten.value.ansprechpartner_id = ap.id;
+				if (ap.betrieb_id === schuelerBetriebsdaten.value.idBetrieb) {
+					schuelerBetriebsdaten.value.idAnsprechpartner = ap.id;
 					break;
 				}
 			}
@@ -62,22 +62,22 @@
 	});
 
 	const ansprechpartner = computed<BetriebAnsprechpartner | undefined>({
-		get: () => (schuelerBetriebsdaten.value.ansprechpartner_id === null) ? undefined : props.mapAnsprechpartner.get(schuelerBetriebsdaten.value.ansprechpartner_id),
-		set: (value) => schuelerBetriebsdaten.value.ansprechpartner_id = (value === undefined) ? null : value.id,
+		get: () => (schuelerBetriebsdaten.value.idAnsprechpartner === null) ? undefined : props.mapAnsprechpartner.get(schuelerBetriebsdaten.value.idAnsprechpartner),
+		set: (value) => schuelerBetriebsdaten.value.idAnsprechpartner = (value === undefined) ? null : value.id,
 	});
 
 	const beschaeftigungsart = computed<Beschaeftigungsart | undefined>({
-		get: () => (schuelerBetriebsdaten.value.beschaeftigungsart_id === null) ? undefined : props.beschaeftigungsartenById.get(schuelerBetriebsdaten.value.beschaeftigungsart_id),
-		set: (value) => schuelerBetriebsdaten.value.beschaeftigungsart_id = (value === undefined) ? null : value.id,
+		get: () => (schuelerBetriebsdaten.value.idBeschaeftigungsart === null) ? undefined : props.beschaeftigungsartenById.get(schuelerBetriebsdaten.value.idBeschaeftigungsart),
+		set: (value) => schuelerBetriebsdaten.value.idBeschaeftigungsart = (value === undefined) ? null : value.id,
 	});
 
 	const betreuungslehrer = computed<LehrerListeEintrag | undefined>({
-		get: () => (schuelerBetriebsdaten.value.betreuungslehrer_id === null) ? undefined : props.mapLehrer.get(schuelerBetriebsdaten.value.betreuungslehrer_id),
-		set: (value) => schuelerBetriebsdaten.value.betreuungslehrer_id = (value === undefined) ? null : value.id,
+		get: () => (schuelerBetriebsdaten.value.idBetreuungslehrer === null) ? undefined : props.mapLehrer.get(schuelerBetriebsdaten.value.idBetreuungslehrer),
+		set: (value) => schuelerBetriebsdaten.value.idBetreuungslehrer = (value === undefined) ? null : value.id,
 	});
 
 	async function save() {
-		schuelerBetriebsdaten.value.schueler_id = props.idSchueler;
+		schuelerBetriebsdaten.value.idSchueler = props.idSchueler;
 		await props.createSchuelerBetriebsdaten(schuelerBetriebsdaten.value);
 		show.value = false;
 	}

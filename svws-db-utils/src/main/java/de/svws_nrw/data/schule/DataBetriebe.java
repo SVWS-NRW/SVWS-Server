@@ -208,7 +208,7 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOBetrieb, Bet
 		if ((ids == null) || ids.isEmpty())
 			return Collections.emptySet();
 
-		final String query = "SELECT DISTINCT a.Adresse_ID FROM DTOSchuelerAllgemeineAdresse a WHERE a.Adresse_ID IN :ids";
+		final String query = "SELECT DISTINCT a.idBetrieb FROM DTOSchuelerBetrieb a WHERE a.idBetrieb IN :ids";
 		final List<Long> results = this.conn.query(query, Long.class).setParameter("ids", ids).getResultList();
 		return new HashSet<>(results);
 	}

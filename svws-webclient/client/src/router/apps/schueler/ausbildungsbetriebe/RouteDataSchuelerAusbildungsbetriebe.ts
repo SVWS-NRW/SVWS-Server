@@ -1,4 +1,4 @@
-import type { Beschaeftigungsart, BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, LehrerListeEintrag, List, SchuelerBetriebsdaten } from "@core";
+import type { Beschaeftigungsart, BetriebAnsprechpartner, BetriebListeEintrag, BetriebStammdaten, LehrerListeEintrag, List, SchuelerBetriebe } from "@core";
 import { ArrayList, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
@@ -7,8 +7,8 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 interface RouteStateDataSchuelerAusbildungsbetriebe extends RouteStateInterface {
 	daten: BetriebStammdaten | undefined;
 	idSchueler: number | undefined;
-	betrieb: SchuelerBetriebsdaten | undefined;
-	listSchuelerbetriebe: List<SchuelerBetriebsdaten>;
+	betrieb: SchuelerBetriebe | undefined;
+	listSchuelerbetriebe: List<SchuelerBetriebe>;
 	mapBeschaeftigungsarten: Map<number, Beschaeftigungsart>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapBetriebe: Map<number, BetriebListeEintrag>;
@@ -42,7 +42,7 @@ export class RouteDataSchuelerAusbildungsbetriebe extends RouteData<RouteStateDa
 		return this._state.value.daten;
 	}
 
-	get listSchuelerbetriebe(): List<SchuelerBetriebsdaten> {
+	get listSchuelerbetriebe(): List<SchuelerBetriebe> {
 		return this._state.value.listSchuelerbetriebe;
 	}
 
@@ -66,7 +66,7 @@ export class RouteDataSchuelerAusbildungsbetriebe extends RouteData<RouteStateDa
 		return this._state.value.mapAnsprechpartner;
 	}
 
-	get betrieb(): SchuelerBetriebsdaten | undefined {
+	get betrieb(): SchuelerBetriebe | undefined {
 		return this._state.value.betrieb;
 	}
 
@@ -103,11 +103,11 @@ export class RouteDataSchuelerAusbildungsbetriebe extends RouteData<RouteStateDa
 		this.setPatchedState({ idSchueler, listSchuelerbetriebe });
 	}
 
-	public setSchuelerBetrieb = async (betriebsdaten?: SchuelerBetriebsdaten) => {
+	public setSchuelerBetrieb = async (betriebsdaten?: SchuelerBetriebe) => {
 		let betrieb, daten;
 		if (this.listSchuelerbetriebe.size() > 0) {
 			betrieb = betriebsdaten || this.listSchuelerbetriebe.get(0);
-			daten = await api.server.getBetriebStammdaten(api.schema, betrieb.betrieb_id);
+			daten = await api.server.getBetriebStammdaten(api.schema, betrieb.idBetrieb);
 		}
 		this.setPatchedState({ daten, betrieb });
 	};
@@ -116,30 +116,30 @@ export class RouteDataSchuelerAusbildungsbetriebe extends RouteData<RouteStateDa
 		await api.server.patchBetriebStammdaten(data, api.schema, id);
 	};
 
-	patchSchuelerBetriebsdaten = async (data: Partial<SchuelerBetriebsdaten>, id: number) => {
+	patchSchuelerBetriebsdaten = async (data: Partial<SchuelerBetriebe>, id: number) => {
 		let daten;
 		// TODO  Beim Klicken der anderen Zellen wir bei der Patch-Methode anpsrechpartner_wert übergeben.
 		await api.server.patchSchuelerBetriebsdaten(data, api.schema, id);
-		if ((data.betrieb_id !== undefined) && (this.idSchueler !== undefined)) {
-			daten = await api.server.getBetriebStammdaten(api.schema, data.betrieb_id);
+		if ((data.idBetrieb !== undefined) && (this.idSchueler !== undefined)) {
+			daten = await api.server.getBetriebStammdaten(api.schema, data.idBetrieb);
 			const listSchuelerbetriebe = await api.server.getSchuelerBetriebe(api.schema, this.idSchueler);
 			const betrieb = await api.server.getSchuelerBetriebsdaten(api.schema, id);
 			this.setPatchedState({ daten, listSchuelerbetriebe, betrieb });
 		}
 
-		if ((data.ansprechpartner_id !== undefined) && (this.idSchueler !== undefined)) {
+		if ((data.idAnsprechpartner !== undefined) && (this.idSchueler !== undefined)) {
 			const listSchuelerbetriebe = await api.server.getSchuelerBetriebe(api.schema, this.idSchueler);
 			const betrieb = await api.server.getSchuelerBetriebsdaten(api.schema, id);
 			this.setPatchedState({ listSchuelerbetriebe, betrieb });
 		}
 
-		if ((data.allgadranschreiben !== undefined) && (this.idSchueler !== undefined)) {
+		if ((data.erhaeltAnschreiben !== undefined) && (this.idSchueler !== undefined)) {
 			const listSchuelerbetriebe = await api.server.getSchuelerBetriebe(api.schema, this.idSchueler);
 			const betrieb = await api.server.getSchuelerBetriebsdaten(api.schema, id);
 			this.setPatchedState({ listSchuelerbetriebe, betrieb });
 		}
 
-		if ((data.betreuungslehrer_id !== undefined) && (this.idSchueler !== undefined)) {
+		if ((data.idBetreuungslehrer !== undefined) && (this.idSchueler !== undefined)) {
 			const listSchuelerbetriebe = await api.server.getSchuelerBetriebe(api.schema, this.idSchueler);
 			const betrieb = await api.server.getSchuelerBetriebsdaten(api.schema, id);
 			this.setPatchedState({ listSchuelerbetriebe, betrieb });
@@ -166,8 +166,8 @@ export class RouteDataSchuelerAusbildungsbetriebe extends RouteData<RouteStateDa
 		this.setPatchedState({ listAnsprechpartner, mapAnsprechpartner });
 	};
 
-	createSchuelerBetriebsdaten = async (data: SchuelerBetriebsdaten) => {
-		const betrieb = await api.server.createSchuelerbetrieb(data, api.schema, data.schueler_id, data.betrieb_id);
+	createSchuelerBetriebsdaten = async (data: SchuelerBetriebe) => {
+		const betrieb = await api.server.createSchuelerbetrieb(data, api.schema, data.idSchueler, data.idBetrieb);
 		this.listSchuelerbetriebe.add(betrieb);
 		console.log(this.listSchuelerbetriebe);
 		this.setPatchedState({ listSchuelerbetriebe: this.listSchuelerbetriebe });

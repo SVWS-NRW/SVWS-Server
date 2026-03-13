@@ -1,6 +1,6 @@
 package de.svws_nrw.api.server;
 
-import de.svws_nrw.asd.data.schueler.SchuelerBetriebsdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerBetriebe;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.betrieb.Beschaeftigungsart;
 import de.svws_nrw.core.data.betrieb.BetriebAnsprechpartner;
@@ -14,7 +14,7 @@ import de.svws_nrw.data.betriebe.DataBetriebAnsprechpartner;
 import de.svws_nrw.data.betriebe.DataBetriebsStammdaten;
 import de.svws_nrw.data.betriebe.DataBetriebsliste;
 import de.svws_nrw.data.betriebe.DataBeschaeftigungsarten;
-import de.svws_nrw.data.schueler.DataSchuelerBetriebsdaten;
+import de.svws_nrw.data.schueler.DataSchuelerBetriebe;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -212,7 +212,7 @@ public class APIBetrieb {
 			description = "Erstellt einen neuen Schülerbetrieb und gibt ihn zurück."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Schülerbetriebs besitzt.")
 	@ApiResponse(responseCode = "200", description = "Schülerbetrieb wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON,
-			schema = @Schema(implementation = SchuelerBetriebsdaten.class)))
+			schema = @Schema(implementation = SchuelerBetriebe.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Schülerbetrieb anzulegen.")
 	@ApiResponse(responseCode = "404", description = "Kein Betrieb  mit der angegebenen ID gefunden")
 	@ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
@@ -222,9 +222,9 @@ public class APIBetrieb {
 			@PathParam("schueler_id") final long schueler_id,
 			@PathParam("betrieb_id") final long betrieb_id,
 			@RequestBody(description = "Der Post für die Schülerbetrieb-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = SchuelerBetriebsdaten.class))) final InputStream is,
+					schema = @Schema(implementation = SchuelerBetriebe.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerBetriebsdaten(conn).create(schueler_id, betrieb_id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerBetriebe(conn).create(schueler_id, betrieb_id, is),
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 
@@ -255,9 +255,9 @@ public class APIBetrieb {
 			@PathParam("schema") final String schema,
 			@PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die Schulbesuchsdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = SchuelerBetriebsdaten.class))) final InputStream is,
+					schema = @Schema(implementation = SchuelerBetriebe.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerBetriebsdaten(conn).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerBetriebe(conn).patch(id, is),
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 
@@ -276,12 +276,12 @@ public class APIBetrieb {
 			description = "Liest die Daten des Schülerbetriebs zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen vom Schülerbetrieb besitzt.")
 	@ApiResponse(responseCode = "200", description = "Stammdaten des Schülerbetriebs.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerBetriebsdaten.class)))
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerBetriebe.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerbetreibe anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Schülerbetrieb gefunden")
 	public Response getSchuelerBetriebsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerBetriebsdaten(conn).get(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerBetriebe(conn).get(id),
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 

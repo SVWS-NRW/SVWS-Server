@@ -119,7 +119,7 @@ public final class DataBeschaeftigungsarten extends DataManagerRevised<Long, DTO
 		if ((ids == null) || ids.isEmpty()) {
 			return Collections.emptySet();
 		}
-		final String query = "SELECT DISTINCT a.Vertragsart_ID FROM DTOSchuelerAllgemeineAdresse a WHERE a.Vertragsart_ID IN :ids";
+		final String query = "SELECT DISTINCT a.idBeschaeftigungsart FROM DTOSchuelerBetrieb a WHERE a.idBeschaeftigungsart IN :ids";
 		final List<Long> results = this.conn
 				.query(query, Long.class)
 				.setParameter("ids", ids)

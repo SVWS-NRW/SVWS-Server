@@ -11,7 +11,7 @@
 			</template>
 			<template #body>
 				<div class="svws-ui-tr" role="row" v-for="(betrieb, index) in listSchuelerbetriebe()" :key="betrieb.id" @click="select(betrieb)" :class="{'svws-clicked': clickedBetrieb ? clickedBetrieb === betrieb.id : index === 0}">
-					<s-card-schueler-beschaeftigung-tabelle :betrieb :beschaeftigungsarten-by-id :map-lehrer :betriebe-by-id :map-ansprechpartner="getAnsprechpartnervonBetrieb(betrieb.betrieb_id)" :patch-schueler-betriebsdaten />
+					<s-card-schueler-beschaeftigung-tabelle :betrieb :beschaeftigungsarten-by-id :map-lehrer :betriebe-by-id :map-ansprechpartner="getAnsprechpartnervonBetrieb(betrieb.idBetrieb)" :patch-schueler-betriebsdaten />
 				</div>
 			</template>
 		</svws-ui-table>
@@ -21,13 +21,13 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
-	import type { Beschaeftigungsart, BetriebAnsprechpartner, BetriebListeEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten } from "@core";
+	import type { Beschaeftigungsart, BetriebAnsprechpartner, BetriebListeEintrag, LehrerListeEintrag, List, SchuelerBetriebe } from "@core";
 	import type { DataTableColumn } from "@ui";
 
 	const props = defineProps<{
-		patchSchuelerBetriebsdaten: (data: Partial<SchuelerBetriebsdaten>, id: number) => Promise<void>;
-		setSchuelerBetrieb: (betrieb: SchuelerBetriebsdaten | undefined) => Promise<void>;
-		listSchuelerbetriebe: () => List<SchuelerBetriebsdaten>;
+		patchSchuelerBetriebsdaten: (data: Partial<SchuelerBetriebe>, id: number) => Promise<void>;
+		setSchuelerBetrieb: (betrieb: SchuelerBetriebe | undefined) => Promise<void>;
+		listSchuelerbetriebe: () => List<SchuelerBetriebe>;
 		beschaeftigungsartenById: Map<number, Beschaeftigungsart>;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		betriebeById: Map<number, BetriebListeEintrag>;
@@ -49,7 +49,7 @@
 		{ key: "Anschreiben", label: "Anschreiben", tooltip: "Betrieb erhält Anschreiben", fixedWidth: 3, align: "center" },
 	];
 
-	async function select(betrieb: SchuelerBetriebsdaten) {
+	async function select(betrieb: SchuelerBetriebe) {
 		await props.setSchuelerBetrieb(betrieb);
 		clickedBetrieb.value = betrieb.id;
 	}

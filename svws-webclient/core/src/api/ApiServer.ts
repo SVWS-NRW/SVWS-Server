@@ -168,7 +168,7 @@ import { Schild3KatalogEintragPruefungsordnung } from '../core/data/schild3/Schi
 import { Schild3KatalogEintragPruefungsordnungOption } from '../core/data/schild3/Schild3KatalogEintragPruefungsordnungOption';
 import { Schild3KatalogEintragUnicodeUmwandlung } from '../core/data/schild3/Schild3KatalogEintragUnicodeUmwandlung';
 import { Schild3KatalogEintragVersetzungsvermerke } from '../core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
-import { SchuelerBetriebsdaten } from '../asd/data/schueler/SchuelerBetriebsdaten';
+import { SchuelerBetriebe } from '../asd/data/schueler/SchuelerBetriebe';
 import { SchuelerEinwilligung } from '../core/data/schueler/SchuelerEinwilligung';
 import { SchuelerFoerderempfehlung } from '../asd/data/schueler/SchuelerFoerderempfehlung';
 import { SchuelerKAoADaten } from '../core/data/schueler/SchuelerKAoADaten';
@@ -1248,15 +1248,15 @@ export class ApiServer extends BaseApi {
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Partial<SchuelerBetriebsdaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<SchuelerBetriebe>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchSchuelerBetriebsdaten(data : Partial<SchuelerBetriebsdaten>, schema : string, id : number) : Promise<void> {
+	public async patchSchuelerBetriebsdaten(data : Partial<SchuelerBetriebe>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/betriebe/{id : \\d+}/betrieb"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = SchuelerBetriebsdaten.transpilerToJSONPatch(data);
+		const body : string = SchuelerBetriebe.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -1269,7 +1269,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Stammdaten des Schülerbetriebs.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerBetriebsdaten
+	 *     - Rückgabe-Typ: SchuelerBetriebe
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerbetreibe anzusehen.
 	 *   Code 404: Kein Schülerbetrieb gefunden
 	 *
@@ -1278,13 +1278,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Stammdaten des Schülerbetriebs.
 	 */
-	public async getSchuelerBetriebsdaten(schema : string, id : number) : Promise<SchuelerBetriebsdaten> {
+	public async getSchuelerBetriebsdaten(schema : string, id : number) : Promise<SchuelerBetriebe> {
 		const path = "/db/{schema}/betriebe/{id : \\d+}/betrieb"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return SchuelerBetriebsdaten.transpilerFromJSON(text);
+		return SchuelerBetriebe.transpilerFromJSON(text);
 	}
 
 
@@ -1647,28 +1647,28 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Schülerbetrieb wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerBetriebsdaten
+	 *     - Rückgabe-Typ: SchuelerBetriebe
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Schülerbetrieb anzulegen.
 	 *   Code 404: Kein Betrieb  mit der angegebenen ID gefunden
 	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {SchuelerBetriebsdaten} data - der Request-Body für die HTTP-Methode
+	 * @param {SchuelerBetriebe} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} schueler_id - der Pfad-Parameter schueler_id
 	 * @param {number} betrieb_id - der Pfad-Parameter betrieb_id
 	 *
 	 * @returns Schülerbetrieb wurde erfolgreich angelegt.
 	 */
-	public async createSchuelerbetrieb(data : SchuelerBetriebsdaten, schema : string, schueler_id : number, betrieb_id : number) : Promise<SchuelerBetriebsdaten> {
+	public async createSchuelerbetrieb(data : SchuelerBetriebe, schema : string, schueler_id : number, betrieb_id : number) : Promise<SchuelerBetriebe> {
 		const path = "/db/{schema}/betriebe/schuelerbetrieb/new/schueler/{schueler_id : \\d+}/betrieb/{betrieb_id: \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{schueler_id\s*(:[^{}]+({[^{}]+})*)?}/g, schueler_id.toString())
 			.replace(/{betrieb_id\s*(:[^{}]+({[^{}]+})*)?}/g, betrieb_id.toString());
-		const body : string = SchuelerBetriebsdaten.transpilerToJSON(data);
+		const body : string = SchuelerBetriebe.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
-		return SchuelerBetriebsdaten.transpilerFromJSON(text);
+		return SchuelerBetriebe.transpilerFromJSON(text);
 	}
 
 
@@ -11716,7 +11716,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Schülerbetrieben
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchuelerBetriebsdaten>
+	 *     - Rückgabe-Typ: List<SchuelerBetriebe>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Erzieherdaten anzusehen.
 	 *   Code 404: Keine Erzieher-Einträge gefunden
 	 *
@@ -11725,14 +11725,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Schülerbetrieben
 	 */
-	public async getSchuelerBetriebe(schema : string, id : number) : Promise<List<SchuelerBetriebsdaten>> {
+	public async getSchuelerBetriebe(schema : string, id : number) : Promise<List<SchuelerBetriebe>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/betriebe"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<SchuelerBetriebsdaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerBetriebsdaten.transpilerFromJSON(text)); });
+		const ret = new ArrayList<SchuelerBetriebe>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerBetriebe.transpilerFromJSON(text)); });
 		return ret;
 	}
 

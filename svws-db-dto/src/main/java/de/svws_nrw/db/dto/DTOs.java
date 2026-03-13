@@ -136,7 +136,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOFoerderschwerpunkt;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAbgaenge;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAllgemeineAdresse;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerBetrieb;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerDatenschutz;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerFehlstunden;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerFoerderempfehlung;
@@ -434,7 +434,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOFoerderschwerpunkt.class.getSimpleName(), DTOFoerderschwerpunkt.class);
              mapDTOName2DTOClass.put(DTOSchueler.class.getSimpleName(), DTOSchueler.class);
              mapDTOName2DTOClass.put(DTOSchuelerAbgaenge.class.getSimpleName(), DTOSchuelerAbgaenge.class);
-             mapDTOName2DTOClass.put(DTOSchuelerAllgemeineAdresse.class.getSimpleName(), DTOSchuelerAllgemeineAdresse.class);
+             mapDTOName2DTOClass.put(DTOSchuelerBetrieb.class.getSimpleName(), DTOSchuelerBetrieb.class);
              mapDTOName2DTOClass.put(DTOSchuelerDatenschutz.class.getSimpleName(), DTOSchuelerDatenschutz.class);
              mapDTOName2DTOClass.put(DTOSchuelerFehlstunden.class.getSimpleName(), DTOSchuelerFehlstunden.class);
              mapDTOName2DTOClass.put(DTOSchuelerFoerderempfehlung.class.getSimpleName(), DTOSchuelerFoerderempfehlung.class);
@@ -727,7 +727,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("K_Foerderschwerpunkt", DTOFoerderschwerpunkt.class);
              mapTablename2DTOClass.put("Schueler", DTOSchueler.class);
              mapTablename2DTOClass.put("SchuelerAbgaenge", DTOSchuelerAbgaenge.class);
-             mapTablename2DTOClass.put("Schueler_AllgAdr", DTOSchuelerAllgemeineAdresse.class);
+             mapTablename2DTOClass.put("Schueler_AllgAdr", DTOSchuelerBetrieb.class);
              mapTablename2DTOClass.put("SchuelerDatenschutz", DTOSchuelerDatenschutz.class);
              mapTablename2DTOClass.put("SchuelerFehlstunden", DTOSchuelerFehlstunden.class);
              mapTablename2DTOClass.put("SchuelerFoerderempfehlungen", DTOSchuelerFoerderempfehlung.class);

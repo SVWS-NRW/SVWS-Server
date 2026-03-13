@@ -48,15 +48,15 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { BetriebAnsprechpartner, BetriebStammdaten, LehrerListeEintrag, OrtKatalogEintrag, SchuelerBetriebsdaten } from "@core";
+	import type { BetriebAnsprechpartner, BetriebStammdaten, LehrerListeEintrag, OrtKatalogEintrag, SchuelerBetriebe } from "@core";
 	import { orte_filter, orte_sort } from "~/utils/helfer";
 
 	const props = defineProps<{
 		patchBetrieb: (data: Partial<BetriebStammdaten>, id: number) => Promise<void>;
-		patchSchuelerBetriebsdaten: (data: Partial<SchuelerBetriebsdaten>, id: number) => Promise<void>;
+		patchSchuelerBetriebsdaten: (data: Partial<SchuelerBetriebe>, id: number) => Promise<void>;
 		patchAnsprechpartner: (data: Partial<BetriebAnsprechpartner>, id: number) => Promise<void>;
 		createAnsprechpartner: (data: BetriebAnsprechpartner) => Promise<void>;
-		betrieb: SchuelerBetriebsdaten;
+		betrieb: SchuelerBetriebe;
 		betriebsStammdaten: BetriebStammdaten ;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
@@ -65,13 +65,13 @@
 
 
 	const ansprechpartner = computed<BetriebAnsprechpartner | undefined>({
-		get: () => props.betrieb.ansprechpartner_id === null ? undefined : props.mapAnsprechpartner.get(props.betrieb.ansprechpartner_id),
-		set: (value) => void props.patchSchuelerBetriebsdaten({ ansprechpartner_id: value === undefined ? null : value.id }, props.betrieb.id),
+		get: () => props.betrieb.idAnsprechpartner === null ? undefined : props.mapAnsprechpartner.get(props.betrieb.idAnsprechpartner),
+		set: (value) => void props.patchSchuelerBetriebsdaten({ idAnsprechpartner: value === undefined ? null : value.id }, props.betrieb.id),
 	});
 
 	const inputBetreuungslehrer = computed<LehrerListeEintrag | undefined>({
-		get: () => props.betrieb.betreuungslehrer_id === null ? undefined : props.mapLehrer.get(props.betrieb.betreuungslehrer_id),
-		set: (value) => void props.patchSchuelerBetriebsdaten({ betreuungslehrer_id: value === undefined ? null : value.id }, props.betrieb.id),
+		get: () => props.betrieb.idBetreuungslehrer === null ? undefined : props.mapLehrer.get(props.betrieb.idBetreuungslehrer),
+		set: (value) => void props.patchSchuelerBetriebsdaten({ idBetreuungslehrer: value === undefined ? null : value.id }, props.betrieb.id),
 	});
 
 	/** Adresse */
@@ -83,8 +83,8 @@
 
 
 	const anschreiben = computed<boolean>({
-		get: () => props.betrieb.allgadranschreiben,
-		set: (value) => void props.patchSchuelerBetriebsdaten({ allgadranschreiben: value }, props.betrieb.id),
+		get: () => props.betrieb.erhaeltAnschreiben,
+		set: (value) => void props.patchSchuelerBetriebsdaten({ erhaeltAnschreiben: value }, props.betrieb.id),
 	});
 
 	function getAnsprechpartnervonBetrieb(): Map<number, BetriebAnsprechpartner> {

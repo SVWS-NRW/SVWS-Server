@@ -164,7 +164,7 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Id des Schülers darf nicht leer sein.");
 
 		final List<DTOBetrieb> betriebe = conn.queryList(
-				"SELECT dtoa FROM DTOBetrieb dtoa, DTOSchuelerAllgemeineAdresse dtos WHERE dtoa.ID=dtos.Adresse_ID and dtos.Schueler_ID = ?1 ",
+				"SELECT dtoa FROM DTOBetrieb dtoa, DTOSchuelerBetrieb dtos WHERE dtoa.ID=dtos.idBetrieb and dtos.Schueler_ID = ?1 ",
 				DTOBetrieb.class, schueler_id);
 
 		if ((betriebe == null) || betriebe.isEmpty())

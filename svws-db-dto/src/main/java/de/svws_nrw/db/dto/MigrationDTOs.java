@@ -104,7 +104,7 @@ import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOEntlassarten;
 import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOFoerderschwerpunkt;
 import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchueler;
 import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerAbgaenge;
-import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerAllgemeineAdresse;
+import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerBetrieb;
 import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerDatenschutz;
 import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerFehlstunden;
 import de.svws_nrw.db.dto.migration.schild.schueler.MigrationDTOSchuelerFoerderempfehlung;
@@ -301,7 +301,7 @@ public final class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOFoerderschwerpunkt.class.getSimpleName(), MigrationDTOFoerderschwerpunkt.class);
              mapDTOName2DTOClass.put(MigrationDTOSchueler.class.getSimpleName(), MigrationDTOSchueler.class);
              mapDTOName2DTOClass.put(MigrationDTOSchuelerAbgaenge.class.getSimpleName(), MigrationDTOSchuelerAbgaenge.class);
-             mapDTOName2DTOClass.put(MigrationDTOSchuelerAllgemeineAdresse.class.getSimpleName(), MigrationDTOSchuelerAllgemeineAdresse.class);
+             mapDTOName2DTOClass.put(MigrationDTOSchuelerBetrieb.class.getSimpleName(), MigrationDTOSchuelerBetrieb.class);
              mapDTOName2DTOClass.put(MigrationDTOSchuelerDatenschutz.class.getSimpleName(), MigrationDTOSchuelerDatenschutz.class);
              mapDTOName2DTOClass.put(MigrationDTOSchuelerFehlstunden.class.getSimpleName(), MigrationDTOSchuelerFehlstunden.class);
              mapDTOName2DTOClass.put(MigrationDTOSchuelerFoerderempfehlung.class.getSimpleName(), MigrationDTOSchuelerFoerderempfehlung.class);
@@ -493,7 +493,7 @@ public final class MigrationDTOs {
              mapTablename2DTOClass.put("K_Foerderschwerpunkt", MigrationDTOFoerderschwerpunkt.class);
              mapTablename2DTOClass.put("Schueler", MigrationDTOSchueler.class);
              mapTablename2DTOClass.put("SchuelerAbgaenge", MigrationDTOSchuelerAbgaenge.class);
-             mapTablename2DTOClass.put("Schueler_AllgAdr", MigrationDTOSchuelerAllgemeineAdresse.class);
+             mapTablename2DTOClass.put("Schueler_AllgAdr", MigrationDTOSchuelerBetrieb.class);
              mapTablename2DTOClass.put("SchuelerDatenschutz", MigrationDTOSchuelerDatenschutz.class);
              mapTablename2DTOClass.put("SchuelerFehlstunden", MigrationDTOSchuelerFehlstunden.class);
              mapTablename2DTOClass.put("SchuelerFoerderempfehlungen", MigrationDTOSchuelerFoerderempfehlung.class);
