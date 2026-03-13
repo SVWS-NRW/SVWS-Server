@@ -7,57 +7,47 @@
 						v-model="model.proxy.kuerzel"
 						:validation="() => model.getFehler('kuerzel')"
 						@commit="model.patch"
-						skip-default-validation
 						:max-len="20" required :readonly />
 					<svws-ui-text-input placeholder="Bezeichnung"
 						v-model="model.proxy.bezeichnung"
 						:validation="() => model.getFehler('bezeichnung')"
 						@commit="model.patch"
-						skip-default-validation
 						:max-len="100" required :readonly />
 					<svws-ui-text-input placeholder="Kurzbezeichnung"
 						v-model="model.proxy.kurzbezeichnung"
 						:validation="() => model.getFehler('kurzbezeichnung')"
 						@commit="model.patch"
-						skip-default-validation
 						:max-len="2" :readonly />
 					<ui-select label="Folgejahrgang"
 						v-model="model.folgejahrgang.value"
 						:manager="folgeJahrgangManager"
-						skip-default-validation
 						:readonly />
 					<ui-select label="Schulgliederung ASD-Kürzel"
 						v-model="model.schulgliederung.value"
 						:manager="schulgliederungKuerzelSelectManager"
-						skip-default-validation
 						searchable statistics :readonly />
 					<ui-select label="Schulgliederung ASD-Text"
 						v-model="model.schulgliederung.value"
 						:manager="schulgliederungTextSelectManager"
-						skip-default-validation
 						searchable statistics :readonly />
 					<ui-select label="Jahrgang ASD-Kürzel"
 						:manager="jahrgangKuerzelSelectManager"
 						v-model="model.statistikJahrgang.value"
 						:validation="() => model.getFehler('kuerzelStatistik')"
-						skip-default-validation
 						searchable statistics :readonly required :removable="false" />
 					<ui-select label="Jahrgang ASD-Text"
 						:manager="jahrgangTextSelectManager"
 						v-model="model.statistikJahrgang.value"
 						:validation="() => model.getFehler('kuerzelStatistik')"
-						skip-default-validation
 						searchable statistics :readonly required :removable="false" />
 					<svws-ui-input-number placeholder="Anzahl der Restabschnitte"
 						v-model="model.proxy.anzahlRestabschnitte"
 						:validation="() => model.getFehler('anzahlRestabschnitte')"
 						@commit="model.patch"
-						skip-default-validation
 						:min="0" :max="40" :readonly />
 					<ui-select label="Bildungsstufe"
 						:manager="bildungsstufeSelectManager"
 						v-model="model.bildungsstufe.value"
-						skip-default-validation
 						:readonly />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
@@ -68,13 +58,11 @@
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
 						@commit="model.patch"
-						skip-default-validation
 						:min="0" :max="32000" :readonly :removable="false" />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar"
 						:validation="() => model.getFehler('istSichtbar')"
 						@commit="model.patch"
-						skip-default-validation
 						:readonly>
 						Sichtbar
 					</svws-ui-checkbox>

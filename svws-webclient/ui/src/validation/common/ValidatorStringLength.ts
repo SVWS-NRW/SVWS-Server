@@ -45,10 +45,11 @@ export class ValidatorStringLength extends BasicValidator {
 	 */
 	protected pruefe(): boolean {
 		const data = this.data();
-		const noData = ((data === null) || (data === ''));
-		if (noData) {
+
+		if ((data === null) || (data === '')) {
 			return true;
 		}
+
 		// Prüfe die minimale Länge des Strings
 		const len = data.toLocaleString().length;
 		if ((this.minLen !== null) && (len < this.minLen)) {

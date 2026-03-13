@@ -6,6 +6,7 @@ import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 import { BasicValidator } from "../../../../../core/src/asd/validate/BasicValidator";
 import type { ValidatorFehler } from "../../../../../core/src/asd/validate/ValidatorFehler";
 import { ValidatorFehlerart } from "../../../../../core/src/asd/validate/ValidatorFehlerart";
+import type { List } from "../../../../../core/src/java/util/List";
 
 beforeAll(() => {
 	HTMLElement.prototype.showPopover = vi.fn(function(this: HTMLElement) {
@@ -73,15 +74,9 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 			expect(props.headless).toBe(false);
 		});
 
-		test("props.validation ist definiert und eine Funktion", () => {
-			expect(props.validation).toBeDefined();
-			expect(typeof props.validation).toBe('function');
+		test("props.validation ist undefined", () => {
+			expect(props.validation).toBeUndefined();
 		});
-
-		test("props.skipDefaultValidation entspricht false", () => {
-			expect(props.skipDefaultValidation).toBe(false);
-		});
-
 	});
 
 	test("Mit Prop 'label = Mein Label' wird 'Mein Label' als Label angezeigt", () => {
@@ -134,16 +129,6 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 
 			expect(labelWrapper.find('span.i-ri-asterisk').exists()).toBeTruthy();
 		});
-
-		test("und 'skipDefaultValidation = true' wird ein Stern-Icon im Label angezeigt", () => {
-			const { manager, validationFehler } = createTestData();
-			const wrapper = mount(UiSelect<cars>, { props: { manager, validation: () => validationFehler, required: true, skipDefaultValidation: true } });
-			const labelSpan = wrapper.find('[id^="uiSelectLabel_"]');
-			const labelWrapper = new DOMWrapper(labelSpan.element.parentElement);
-
-			expect(labelWrapper.find('span.i-ri-asterisk').exists()).toBeTruthy();
-		});
-
 	});
 
 	describe.concurrent("Mit Prop 'readonly = false'", () => {
@@ -441,21 +426,39 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 });
 
 describe.concurrent("Validierung", () => {
-	test("Mit Prop 'required = false' wird kein Required-Validator hinzugefügt", () => {
+	test("Mit Prop 'validation' wird eine Validierung von außen ausgeführt", () => {
 		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager: manager, required: false } });
-		const validatorRequired = wrapper.findComponent({ name: "UiSelect" }).vm.validatorRequired;
-
-		expect(validatorRequired).toBeNull();
-	});
-
-	test("Mit Prop 'required = false' wird keine Validierung für 'required' ausgeführt", () => {
-		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager: manager, required: false } });
+		const wrapper = mount(UiSelect<cars>, {
+			props: { manager, validation: () => getValidatorFehler() },
+		});
 		const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
 
-		expect(validatorResult.fehler.size()).toBe(0);
+		expect(validatorResult.fehler.size()).toBe(1);
+		expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
 	});
+
+	test("Bei Validierungsfehlern wird ein Validation-Icon angezeigt", () => {
+		const { manager } = createTestData();
+		const wrapper = mount(UiSelect<cars>, {
+			props: { manager, placeholder: "Enter Number", validation: () => getValidatorFehler() },
+		});
+		expect(wrapper.find(".validation-tooltip-icon").exists()).toBeTruthy();
+	});
+
+	test.each([
+		[false, "ohne Prop 'validation'", undefined],
+		[false, "mit Prop 'validation'", () => getValidatorFehler()],
+		[true, "mit Prop 'validation'", () => getValidatorFehler()],
+	])(
+		"Mit Prop 'required = %s' und %s wird kein Required-Validator hinzugefügt",
+		(required, _vString, validation) => {
+			const { manager } = createTestData();
+			const wrapper = mount(UiSelect<cars>, { props: { manager, required, validation } });
+			const validatorRequired = wrapper.findComponent({ name: "UiSelect" }).vm.validatorRequired;
+
+			expect(validatorRequired).toBeNull();
+		}
+	);
 
 	test("Mit Prop 'required = true' wird ein Required-Validator hinzugefügt", () => {
 		const { manager } = createTestData();
@@ -482,46 +485,8 @@ describe.concurrent("Validierung", () => {
 
 		expect(validatorResult.fehler.size()).toBe(0);
 	});
-
-	test("Mit Prop 'validation' wird eine Validierung von außen ausgeführt", () => {
-		const { manager, validationFehler } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager, validation: () => validationFehler } });
-		const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
-
-		expect(validatorResult.fehler.size()).toBe(1);
-		expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
-	});
-
-	test("Mit Prop 'validation' und 'required = true' wird eine Validierung von außen ausgeführt und um die Required-Validierung ergänzt", () => {
-		const { manager, validationFehler } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager, validation: () => validationFehler, required: true } });
-		const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
-
-		expect(validatorResult.fehler.size()).toBe(2);
-		expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Bitte geben Sie einen Wert an.");
-		expect(validatorResult.fehler.get(1).getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
-	});
-
-	test("Mit Prop 'required = true' und 'skipDefaultValidation = true' wird keine Validierung für 'required' ausgeführt", () => {
-		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager, required: true, skipDefaultValidation: true } });
-		const validatorResult = wrapper.findComponent({ name: "UiSelect" }).vm.validationResult;
-
-		expect(validatorResult.fehler.size()).toBe(0);
-	});
-
-	test("Bei Validierungsfehlern wird ein Validation-Icon angezeigt", () => {
-		const { manager } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager, required: true } });
-		expect(wrapper.find(".validation-tooltip-icon").exists()).toBeTruthy();
-	});
-
-	test("Bei keinen Validierungsfehlern wird kein Validation-Icon angezeigt", () => {
-		const { manager, selection } = createTestData();
-		const wrapper = mount(UiSelect<cars>, { props: { manager, required: true, modelValue: selection } });
-		expect(wrapper.find(".validation-tooltip-icon").exists()).toBeFalsy();
-	});
 });
+
 describe.concurrent("Teste Watcher und Computeds", () => {
 
 	describe.concurrent("Watcher auf model.value:", () => {
@@ -907,15 +872,12 @@ function createTestData() {
 	const manager = new SelectManager<{ marke: string, color: string, baujahr: number }>({ options: options, optionDisplayText: optionDisplayText, selectionDisplayText: selectionDisplayText });
 	const selection = manager.filteredOptions.get(0);
 	const nonExistingOption = { marke: "VW", color: "schwarz", baujahr: 2012 };
-	const customValidator = new CustomValidatorSelectRequired();
-	customValidator.run();
-	const validationFehler = customValidator.getFehler();
-	return { manager, selection, nonExistingOption, validationFehler };
+	return { manager, selection, nonExistingOption };
 }
 
 type cars = { marke: string, color: string, baujahr: number };
 
-class CustomValidatorSelectRequired extends BasicValidator {
+class CustomValidatorRequired extends BasicValidator {
 
 	constructor() {
 		super(ValidatorFehlerart.MUSS);
@@ -926,5 +888,11 @@ class CustomValidatorSelectRequired extends BasicValidator {
 		this.addFehler(0, "Custom-Validierung fehlgeschlagen");
 		return false;
 	}
+}
+
+function getValidatorFehler(): List<ValidatorFehler> {
+	const customValidator = new CustomValidatorRequired();
+	customValidator.run();
+	return customValidator.getFehler();
 }
 

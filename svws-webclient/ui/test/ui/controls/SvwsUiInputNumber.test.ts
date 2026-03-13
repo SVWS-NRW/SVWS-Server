@@ -264,29 +264,27 @@ describe.concurrent("Validierung", () => {
 
 	test("Bei Validierungsfehlern wird ein Validation-Icon angezeigt", () => {
 		const wrapper = mount(SvwsUiInputNumber, {
-			props: { modelValue: 4, placeholder: "Enter Number", validation: () => getValidatorFehler() }
+			props: { modelValue: 4, placeholder: "Enter Number", validation: () => getValidatorFehler() },
 		});
 		expect(wrapper.find(".validation-tooltip-icon").exists()).toBeTruthy();
 	});
 
 	describe.concurrent("required", () => {
+		test.each([
+			[false, "ohne Prop 'validation'", undefined],
+			[false, "mit Prop 'validation'", () => getValidatorFehler()],
+			[true, "mit Prop 'validation'", () => getValidatorFehler()],
+		])(
+			"Mit Prop 'required = %s' und %s wird kein Required-Validator hinzugefügt",
+			(required, _vString, validation) => {
+				const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: null, required, validation } });
+				const validatorRequired = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validatorRequired;
 
-		test("Mit Prop 'required = false' wird kein Required-Validator hinzugefügt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: null, required: false } });
-			const validatorRequired = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validatorRequired;
+				expect(validatorRequired).toBeNull();
+			}
+		);
 
-			expect(validatorRequired).toBeNull();
-		});
-
-		test("Mit Prop 'required = false' wird keine Validierung für 'required' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: null, required: false } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
-
-
-		test("Mit Prop 'required = true' wird ein Required-Validator hinzugefügt", () => {
+		test("Mit Prop 'required = true' und ohne Prop 'validation' wird ein Required-Validator hinzugefügt", () => {
 			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: null, required: true } });
 			const validatorRequired = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validatorRequired;
 
@@ -309,73 +307,37 @@ describe.concurrent("Validierung", () => {
 			expect(validatorResult.fehler.size()).toBe(0);
 		});
 
-		test("Mit Prop 'required = true' und 'validation' wird eine Validierung von außen ausgeführt und um die Required-Validierung ergänzt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: null, validation: () => getValidatorFehler(), required: true } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(2);
-			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Bitte geben Sie einen Wert an.");
-			expect(validatorResult.fehler.get(1).getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
-		});
-
-		test("Mit Prop 'required = true' und 'skipDefaultValidation = true' wird keine Validierung für 'required' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: null, required: true, skipDefaultValidation: true } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
-
-		test("Mit Prop 'required = true' und 'skipDefaultValidation = { required: true }' wird keine Validierung für 'required' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: null, required: true, skipDefaultValidation: { required: true } } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
-
-		test("Mit Prop 'required = true' und 'skipDefaultValidation = { required: false }' wird eine Validierung für 'required' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: null, required: true, skipDefaultValidation: { required: false } } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(1);
-			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Bitte geben Sie einen Wert an.");
-		});
-
-		test("Mit Prop 'required = true' und 'skipDefaultValidation = true' wird keine Validierung für 'required' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: null, required: true, skipDefaultValidation: true } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
-
-		test("Mit Prop 'required = true' und 'skipDefaultValidation = { required: true }' wird keine Validierung für 'required' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: null, required: true, skipDefaultValidation: { required: true } } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
 	});
 
 	describe.concurrent("min", () => {
-		test("Mit Prop 'min = undefined' wird kein range-Validator hinzugefügt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 2, min: undefined } });
+		test.each([
+			[undefined, "ohne Prop 'validation'", undefined],
+			[undefined, "mit Prop 'validation'", () => getValidatorFehler()],
+			[3, "mit Prop 'validation'", () => getValidatorFehler()],
+		])("Mit Prop 'min = %s' und %s wird kein Length-Validator hinzugefügt", (min, _validationString, validation) => {
+			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: null, min, validation } });
 			const validatorRange = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validatorRange;
 
 			expect(validatorRange).toBeNull();
 		});
 
-		test("Mit Prop 'min = undefined' und Eingabe '2' wird keine Validierung für 'min' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 2, min: undefined } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
-
-		test("Mit Prop 'min = 3' wird ein range-Validator hinzugefügt", () => {
+		test("Mit Prop 'min = 3' und ohne Prop 'validation' wird ein range-Validator hinzugefügt", () => {
 			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 2, min: 3 } });
 			const validatorRange = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validatorRange;
 
 			expect(validatorRange).not.toBeNull();
 			expect(validatorRange).toBeInstanceOf(BasicValidator);
+		});
+
+		test.each([
+			[undefined, 2],
+			[3, null],
+			[3, 3],
+		])("Mit Prop 'min = %s' und Eingabe = %s wird kein Fehler für die Length-Validierung generiert", (min, modelValue) => {
+			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue, min } });
+			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
 		});
 
 		test("Mit Prop 'min = 3' und Eingabe '2' wird ein Fehler für die range-Validierung generiert", () => {
@@ -385,177 +347,46 @@ describe.concurrent("Validierung", () => {
 			expect(validatorResult.fehler.size()).toBe(1);
 			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Der Wert muss mindestens 3 sein.");
 		});
-
-		test("Mit Prop 'min = 3' und Eingabe '3' ergibt die Validierung keine Fehler", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 3, min: 3 } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
-
-		test("Mit Prop 'min = 3' ohne Eingabe wird kein Fehler für die range-Validierung generiert", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 3, min: 3 } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
-
-		test("Mit Prop 'min = 3' und 'validation' wird eine Validierung von außen ausgeführt und um die range-Validierung ergänzt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 2, validation: () => getValidatorFehler(), min: 3 } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(2);
-			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Der Wert muss mindestens 3 sein.");
-			expect(validatorResult.fehler.get(1).getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
-		});
-
-		test("Mit Prop 'min = 3' und 'skipDefaultValidation = true' wird keine Validierung für 'min' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 2, min: 3, skipDefaultValidation: true } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
-
-		test("Mit Prop 'min = 3' und 'skipDefaultValidation = { range: true }' wird keine Validierung für 'min' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 2, min: 3, skipDefaultValidation: { range: true } } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
-
-		test("Mit Prop 'min = 3' und 'skipDefaultValidation = { range: false }' wird eine Validierung für 'min' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 2, min: 3, skipDefaultValidation: { range: false } } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(1);
-			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Der Wert muss mindestens 3 sein.");
-		});
-
-		test("Mit Prop 'min = 3' und 'skipDefaultValidation = true' wird keine Validierung für 'min' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 1, min: 3, skipDefaultValidation: true } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
-
-		test("Mit Prop 'min = 3' und 'skipDefaultValidation = { range: true }' wird keine Validierung für 'min' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 1, min: 3, skipDefaultValidation: { range: true } } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
 	});
 
 	describe.concurrent("max", () => {
-		test("Mit Prop 'max = undefined' wird kein range-Validator hinzugefügt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 8, max: undefined } });
+		test.each([
+			[undefined, "ohne Prop 'validation'", undefined],
+			[undefined, "mit Prop 'validation'", () => getValidatorFehler()],
+			[3, "mit Prop 'validation'", () => getValidatorFehler()],
+		])("Mit Prop 'max = %s' und %s wird kein Length-Validator hinzugefügt", (max, _validationString, validation) => {
+			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: null, max, validation } });
 			const validatorRange = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validatorRange;
 
 			expect(validatorRange).toBeNull();
 		});
 
-		test("Mit Prop 'max = undefined' wird keine Validierung für 'max' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 8, max: undefined } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
-
-		test("Mit Prop 'max = 5' wird ein range-Validator hinzugefügt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 8, max: 5 } });
+		test("Mit Prop 'max = 3' und ohne Prop 'validation' wird ein range-Validator hinzugefügt", () => {
+			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 2, max: 3 } });
 			const validatorRange = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validatorRange;
 
 			expect(validatorRange).not.toBeNull();
 			expect(validatorRange).toBeInstanceOf(BasicValidator);
 		});
 
-		test("Mit Prop 'max = 5' und Eingabe '8' wird ein Fehler für die range-Validierung generiert", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 8, max: 5 } });
+		test.each([
+			[undefined, 3],
+			[5, null],
+			[5, 3],
+		])("Mit Prop 'max = %s' und Eingabe = %s wird kein Fehler für die Length-Validierung generiert", (max, modelValue) => {
+			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue, max } });
+			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
+		});
+
+		test("Mit Prop 'max = 3' und Eingabe '5' wird ein Fehler für die range-Validierung generiert", () => {
+			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 5, max: 3 } });
 			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
 
 			expect(validatorResult.fehler.size()).toBe(1);
-			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Der Wert darf höchstens 5 sein.");
+			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Der Wert darf höchstens 3 sein.");
 		});
-
-		test("Mit Prop 'max = 5' ohne Eingabe wird kein Fehler für die range-Validierung generiert", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: null, max: 5 } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
-
-		test("Mit Prop 'max = 5' und Eingabe '4' ergibt die Validierung keine Fehler", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 4, max: 5 } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
-
-		test("Mit Prop 'max = 5' und 'validation' wird eine Validierung von außen ausgeführt und um die range-Validierung ergänzt", () => {
-			const wrapper = mount(SvwsUiInputNumber,
-				{ props: { modelValue: 8, validation: () => getValidatorFehler(), max: 5 } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(2);
-			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Der Wert darf höchstens 5 sein.");
-			expect(validatorResult.fehler.get(1).getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
-		});
-
-		test("Mit Prop 'max = 5' und 'skipDefaultValidation = true' wird keine Validierung für 'max' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 8, max: 5, skipDefaultValidation: true } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
-
-		test("Mit Prop 'max = 5' und 'skipDefaultValidation = { range: true }' wird keine Validierung für 'max' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber,
-				{ props: { modelValue: 8, max: 5, skipDefaultValidation: { range: true } } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
-
-		test("Mit Prop 'max = 5' und 'skipDefaultValidation = { range: false }' wird eine Validierung für 'max' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber,
-				{ props: { modelValue: 10, max: 5, skipDefaultValidation: { range: false } } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(1);
-			expect(validatorResult.fehler.get(0).getFehlermeldung()).toBe("Der Wert darf höchstens 5 sein.");
-		});
-
-		test("Mit Prop 'max = 2' und 'skipDefaultValidation = true' wird keine Validierung für 'max' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 4, max: 2, skipDefaultValidation: true } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
-
-		test("Mit Prop 'max = 2' und 'skipDefaultValidation = { range: true }' wird keine Validierung für 'max' ausgeführt", () => {
-			const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: 4, max: 2, skipDefaultValidation: { range: true } } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
-		});
-	});
-
-	test("Mit prop 'skipDefaultValidation' lassen sich einzelne Defaultvalidatoren abschalten", () => {
-		const wrapper = mount(SvwsUiInputNumber, {
-			props: {
-				modelValue: 2,
-				required: true,
-				min: 1,
-				max: 2,
-				skipDefaultValidation: { required: true, range: false },
-			},
-		});
-		const validatorRange = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validatorRange;
-		const validatorRequired = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.validatorRequired;
-
-		expect(validatorRange).not.toBeNull();
-		expect(validatorRange).toBeInstanceOf(BasicValidator);
-		expect(validatorRequired).toBeNull();
 	});
 });
 

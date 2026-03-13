@@ -194,9 +194,8 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, type Ref, type ComputedRef, reactive } from 'vue';
+	import { computed, ref, type Ref, reactive } from 'vue';
 	import storyManager from '../../stories/StoryManager';
-	import type { List } from '../../../../core/src/java/util/List';
 	import type { ValidatorFehler } from '../../../../core/src/asd/validate/ValidatorFehler';
 	import { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
 	import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
@@ -245,8 +244,12 @@
 		public validatorHinweis = new ValidatorTest(() => (this.modelValue.value === "Test") ? null : "Hier ist die Eintragung von 'Test' gewünscht", ValidatorFehlerart.HINWEIS);
 
 
-		public validation: ComputedRef<() => List<ValidatorFehler>> = computed(() => {
+		public validation = computed(() => {
 			const validatorFehler = new ArrayList<ValidatorFehler>();
+
+			if (!this.muss.value && !this.kann.value && !this.hinweis.value) {
+				return undefined;
+			}
 
 			if (this.muss.value) {
 				this.validatorMuss.run();

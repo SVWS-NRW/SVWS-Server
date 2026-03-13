@@ -87,7 +87,7 @@
 		span: undefined,
 		headless: false,
 		isContentFocusField: false,
-		validation: (): List<ValidatorFehler> => new ArrayList<ValidatorFehler>(),
+		validation: undefined,
 	});
 
 	const emit = defineEmits<{
@@ -119,33 +119,38 @@
 	const validationResult = computed(() => new ValidationResult(validierungFehler.value));
 
 	const validatorRequired = computed<ValidatorInputRequired<string> | null>(() => {
-		if (props.required && props.validation().isEmpty()) {
+		if (props.required && (props.validation === undefined)) {
 			return new ValidatorInputRequired(() => props.modelValue);
 		}
 		return null;
 	});
 
 	const validatorLength = computed<ValidatorStringLength | null>(() => {
-		if ((props.maxLen !== undefined) && props.validation().isEmpty()) {
+		if ((props.maxLen !== undefined) && (props.validation === undefined)) {
 			return new ValidatorStringLength(() => data.value, null, props.maxLen);
 		}
 		return null;
 	});
 
 	const validierungFehler = computed<List<ValidatorFehler>>(() => {
+		if (props.validation === undefined) {
+			return getDefaultValidatorErrors();
+		}
+		return props.validation();
+
+	});
+
+	function getDefaultValidatorErrors() {
 		const fehler = new ArrayList<ValidatorFehler>();
 		const defaultValidators = [validatorRequired.value, validatorLength.value];
-
 		for (const validator of defaultValidators) {
 			if (validator !== null) {
 				validator.run();
 				fehler.addAll(validator.getFehler());
 			}
 		}
-
-		fehler.addAll(props.validation());
 		return fehler;
-	});
+	}
 
 	function updateData(value: string | null) {
 		if (data.value !== value) {

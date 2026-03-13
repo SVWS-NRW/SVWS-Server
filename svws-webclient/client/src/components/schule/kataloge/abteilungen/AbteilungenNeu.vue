@@ -6,19 +6,19 @@
 					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField"
 						v-model="modelProxy.proxy.bezeichnung"
 						:validation="() => modelProxy.getFehler('bezeichnung')"
-						required :max-len="50" skip-default-validation />
+						required :max-len="50" />
 					<svws-ui-text-input placeholder="Raum"
 						v-model="modelProxy.proxy.raum"
 						:validation="() => modelProxy.getFehler('raum')"
-						:max-len="20" skip-default-validation />
+						:max-len="20" />
 					<svws-ui-text-input placeholder="E-Mail-Adresse" type="email"
 						v-model="modelProxy.proxy.email"
 						:validation="() => modelProxy.getFehler('email')"
-						:max-len="100" skip-default-validation />
+						:max-len="100" />
 					<svws-ui-text-input placeholder="Durchwahl" type="tel"
 						v-model="modelProxy.proxy.durchwahl"
 						:validation="() => modelProxy.getFehler('durchwahl')"
-						:max-len="20" skip-default-validation />
+						:max-len="20" />
 					<ui-select label="Abteilungsleitung"
 						:manager="lehrerSelectManager"
 						v-model="modelProxy.abteilungsleiter.value" />
@@ -28,7 +28,7 @@
 						<svws-ui-input-number placeholder="Sortierung"
 							v-model="modelProxy.proxy.sortierung"
 							:validation="() => modelProxy.getFehler('sortierung')"
-							:min="0" :max="32000" skip-default-validation />
+							:min="0" :max="32000" />
 						<svws-ui-spacing />
 						<svws-ui-checkbox v-model="modelProxy.proxy.istSichtbar">
 							Sichtbar

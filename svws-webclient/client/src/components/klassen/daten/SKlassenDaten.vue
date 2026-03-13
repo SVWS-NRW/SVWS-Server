@@ -7,9 +7,9 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Kürzel" :disabled="!hatKompetenzUpdate" :required="true" :max-len="15" v-model="modelProxy.proxy.kuerzel" @commit="modelProxy.patch"
-						:validation="() => modelProxy.getFehler('kuerzel')" skip-default-validation focus />
+						:validation="() => modelProxy.getFehler('kuerzel')" focus />
 					<svws-ui-text-input placeholder="Beschreibung" :disabled="!hatKompetenzUpdate" :max-len="150" v-model="modelProxy.proxy.beschreibung" @commit="modelProxy.patch"
-						:validation="() => modelProxy.getFehler('beschreibung')" skip-default-validation />
+						:validation="() => modelProxy.getFehler('beschreibung')" />
 					<svws-ui-spacing />
 
 					<svws-ui-select title="Klassen-Jahrgang" v-model="modelProxy.jahrgang.value" :items="modelProxy.jahrgaenge.value" :item-text="getSelectTextJahrgang"

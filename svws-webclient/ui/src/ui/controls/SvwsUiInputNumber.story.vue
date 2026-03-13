@@ -90,8 +90,9 @@
 				<svws-ui-tooltip position="top">
 					<span class="icon i-ri-question-line" />
 					<template #content>
-						Gibt an, ob das Input einen Wert enthalten muss. Falls ja wird automatisch ein Validator hinzugefügt, der dies prüft und ggf. Fehler anzeigt.
-						Das automatische Hinzufügen des Validators kann mit der prop <code class="bg-ui-selected">skipDefaultValidation</code> unterbunden werden. <br>
+						Gibt an, ob das Input einen Wert enthalten muss. Falls true und es werden keine Validatorfehler über die prop
+						<code class="bg-ui-selected">validation</code> von außen in die Komponente gegeben, dann wird automatisch ein Validator hinzugefügt,
+						der dies prüft und ggf. Fehler anzeigt, ohne diese nach außen weiterzureichen. <br>
 						<span class="font-bold">Default:</span>  <code class="bg-ui-selected">required: false</code>
 					</template>
 				</svws-ui-tooltip>
@@ -163,8 +164,9 @@
 				<svws-ui-tooltip position="top">
 					<span class="icon i-ri-question-line" />
 					<template #content>
-						Setzt die Untergrenze für den Wert des Inputs. Beim setzen dieser prop wird automatisch ein Validator hinzugefügt, der die Plausibilität des Wertes prüft.
-						Dieses automatische Hinzufügen des Validators kann mit der prop <code class="bg-ui-selected">skipDefaultValidation</code> unterbunden werden. <br>
+						Setzt die Untergrenze für den Wert des Inputs. Falls gesetzt und es werden keine Validatorfehler über die prop
+						<code class="bg-ui-selected">validation</code> von außen in die Komponente gegeben, dann wird automatisch ein Validator hinzugefügt,
+						der dies prüft und ggf. Fehler anzeigt, ohne diese nach außen weiterzureichen. <br>
 						<span class="font-bold">Default:</span>  <code class="bg-ui-selected">min: undefined</code>
 					</template>
 				</svws-ui-tooltip>
@@ -175,8 +177,9 @@
 				<svws-ui-tooltip position="top">
 					<span class="icon i-ri-question-line" />
 					<template #content>
-						Setzt die Obergrenze für den Wert des Inputs. Beim setzen dieser prop wird automatisch ein Validator hinzugefügt, der die Plausibilität des Wertes prüft.
-						Dieses automatische Hinzufügen des Validators kann mit der prop <code class="bg-ui-selected">skipDefaultValidation</code> unterbunden werden. <br>
+						Setzt die Obergrenze für den Wert des Inputs. Falls gesetzt und es werden keine Validatorfehler über die prop
+						<code class="bg-ui-selected">validation</code> von außen in die Komponente gegeben, dann wird automatisch ein Validator hinzugefügt,
+						der dies prüft und ggf. Fehler anzeigt, ohne diese nach außen weiterzureichen. <br>
 						<span class="font-bold">Default:</span>  <code class="bg-ui-selected">max: undefined</code>
 					</template>
 				</svws-ui-tooltip>
@@ -201,42 +204,19 @@
 				<HstCheckbox title="Hinweis"
 					v-model="activeState.hinweis.value" />
 			</div>
-
-			<div class="text-headline-sm">
-				skipDefaultValidation
-			</div>
-			<div class="flex items-start gap-2">
-				<HstCheckbox title="required"
-					v-model="activeState.skipDefaultValidation.value.required" />
-				<HstCheckbox title="min"
-					v-model="activeState.skipDefaultValidation.value.range" />
-				<svws-ui-tooltip position="top">
-					<span class="icon i-ri-question-line" />
-					<template #content>
-						Diese prop kann die Generierung von allen oder von einzelnen Defaulvalidatoren überspringen.
-						Defaultvalidatoren werden automatisch gesetzt, wenn <code class="bg-ui-selected">required</code>, <code class="bg-ui-selected">min</code>
-						oder <code class="bg-ui-selected">max</code> gesetzt ist. Soll kein Defaultvalidator gesetzt werden, um zum Beispiel eigene Validatoren
-						über die prop <code class="bg-ui-selected">validation</code> zu definieren oder die Validierung ganz abzustellen, muss diese prop auf
-						<code class="bg-ui-selected">true</code> gesetzt werden. Um einzelne abzuschalten muss ein Objekt mit der entsprechenden Konfiguration
-						gesetzt werden. <br>
-						<span class="font-bold">Default:</span>  <code class="bg-ui-selected">skipDefaultValidation: false</code>
-					</template>
-				</svws-ui-tooltip>
-			</div>
 		</template>
 	</Story>
 </template>
 
 <script setup lang="ts">
 
-	import { computed, ref, reactive, type Ref, type ComputedRef } from "vue";
+	import { computed, ref, reactive, type Ref } from "vue";
 	import storyManager from '../../stories/StoryManager';
 	import { logEvent } from '../../stories/helper';
 	import { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
 	import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
 	import type { ValidatorFehler } from "../../../../core/src/asd/validate/ValidatorFehler";
 	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
-	import type { List } from "../../../../core/src/java/util/List";
 	const activeState = computed(() => variantControlsMap.get(storyManager.variant.id) ?? defaultState);
 
 	type State = {
@@ -255,7 +235,6 @@
 		muss?: boolean;
 		kann?: boolean;
 		hinweis?: boolean;
-		skipDefaultValidation?: { required: boolean; range: boolean };
 	};
 
 	class VariantState {
@@ -275,15 +254,18 @@
 		public muss = ref(false);
 		public kann = ref(false);
 		public hinweis = ref(false);
-		public skipDefaultValidation = ref({ required: false, range: false });
 
 		public validatorMuss = new ValidatorTest(() => (this.modelValue.value === 4) ? null : "Hier ist die Eintragung von 4 gewünscht", ValidatorFehlerart.MUSS);
 		public validatorKann = new ValidatorTest(() => (this.modelValue.value === 4) ? null : "Hier ist die Eintragung von 4 gewünscht", ValidatorFehlerart.KANN);
 		public validatorHinweis = new ValidatorTest(() => (this.modelValue.value === 4) ? null : "Hier ist die Eintragung von 4 gewünscht", ValidatorFehlerart.HINWEIS);
 
 
-		public validation: ComputedRef<() => List<ValidatorFehler>> = computed(() => {
+		public validation = computed(() => {
 			const validatorFehler = new ArrayList<ValidatorFehler>();
+
+			if (!this.muss.value && !this.kann.value && !this.hinweis.value) {
+				return undefined;
+			}
 
 			if (this.muss.value) {
 				this.validatorMuss.run();
@@ -322,7 +304,6 @@
 			min: this.min,
 			max: this.max,
 			validation: this.validation,
-			skipDefaultValidation: this.skipDefaultValidation,
 		});
 
 		constructor(state: State) {
@@ -341,7 +322,6 @@
 			this.muss.value = state.muss ?? this.muss.value;
 			this.kann.value = state.kann ?? this.kann.value;
 			this.hinweis.value = state.hinweis ?? this.hinweis.value;
-			this.skipDefaultValidation.value = state.skipDefaultValidation ?? this.skipDefaultValidation.value;
 		}
 
 	}
@@ -368,11 +348,7 @@
 	const headlessState = new VariantState({ headless: true });
 	const readonlyState = new VariantState({ readonly: true });
 	const requiredState = new VariantState({ modelValue: null, required: true });
-	const validationState = new VariantState({
-		muss: true, kann: true, hinweis: true,
-		skipDefaultValidation: { required: false, range: true },
-		min: 2, max: 6,
-	});
+	const validationState = new VariantState({ muss: false, kann: true, hinweis: false	});
 
 	const variantControlsMap = new Map<string, VariantState>();
 	variantControlsMap.set('Default', defaultState);
@@ -404,29 +380,10 @@
 			(activeState.value.min.value === undefined) ? "" : `:min="${activeState.value.min.value}"`,
 			(activeState.value.max.value === undefined) ? "" : `:max="${activeState.value.max.value}"`,
 			(activeState.value.muss.value || activeState.value.kann.value || activeState.value.hinweis.value) ? `:validation="() => getFehler()"` : "",
-			skipValidationString.value,
 		].filter(Boolean).map(l => indent + l).join("\n");
 		return `<svws-ui-input-number
 ${lines}
  />`;
 	});
-
-	const skipValidationString = computed(() => {
-		const v = activeState.value.skipDefaultValidation.value;
-
-		if (v.required && v.range) {
-			return ':skipDefaultValidation="true"';
-		}
-
-		if (!v.required && !v.range) {
-			return "";
-		}
-
-		const requiredString = activeState.value.skipDefaultValidation.value.required ? 'required: ' + activeState.value.skipDefaultValidation.value.required : '';
-		const rangeString = activeState.value.skipDefaultValidation.value.range ? 'range: ' + activeState.value.skipDefaultValidation.value.range : '';
-		const parts = [requiredString, rangeString].filter(v => v !== '');
-		return `:skipDefaultValidation="{ ${parts.join(', ')} }"`;
-	});
-
 
 </script>

@@ -7,7 +7,6 @@
 						v-model="data.proxy.bezeichnung"
 						:validation="() => data.getFehler('bezeichnung')"
 						@commit="data.patch"
-						skip-default-validation
 						:max-len="50" :readonly />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
@@ -18,7 +17,6 @@
 						v-model="data.proxy.sortierung"
 						:validation="() => data.getFehler('sortierung')"
 						@commit="data.patch"
-						skip-default-validation
 						:min="0" :max="32000" :readonly :removable="false" />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="data.proxy.istSichtbar" :readonly>

@@ -152,8 +152,9 @@
 				<svws-ui-tooltip position="top">
 					<span class="icon i-ri-question-line" />
 					<template #content>
-						Gibt an, ob das Input einen Wert enthalten muss. Falls ja wird automatisch ein Validator hinzugefügt, der dies prüft und ggf. Fehler anzeigt.
-						Das automatische Hinzufügen des Validators kann mit der prop <code class="bg-ui-selected">skipDefaultValidation</code> unterbunden werden. <br>
+						Gibt an, ob das Input einen Wert enthalten muss. Falls true und es werden keine Validatorfehler über die prop
+						<code class="bg-ui-selected">validation</code> von außen in die Komponente gegeben, dann wird automatisch ein Validator hinzugefügt,
+						der dies prüft und ggf. Fehler anzeigt, ohne diese nach außen weiterzureichen. <br>
 						<span class="font-bold">Default:</span>  <code class="bg-ui-selected">required: false</code>
 					</template>
 				</svws-ui-tooltip>
@@ -238,9 +239,9 @@
 				<svws-ui-tooltip position="top">
 					<span class="icon i-ri-question-line" />
 					<template #content>
-						Setzt die Untergrenze für die Zeichenlänge des Inputs. Beim setzen dieser prop wird automatisch ein Validator hinzugefügt, der die
-						Plausibilität des Wertes prüft. Dieses automatische Hinzufügen des Validators kann mit der prop
-						<code class="bg-ui-selected">skipDefaultValidation</code> unterbunden werden. <br>
+						Setzt die Untergrenze für die Zeichenlänge des Inputs. Falls gesetzt und es werden keine Validatorfehler über die prop
+						<code class="bg-ui-selected">validation</code> von außen in die Komponente gegeben, dann wird automatisch ein Validator hinzugefügt,
+						der dies prüft und ggf. Fehler anzeigt, ohne diese nach außen weiterzureichen. <br>
 						<span class="font-bold">Default:</span>  <code class="bg-ui-selected">minLen: undefined</code>
 					</template>
 				</svws-ui-tooltip>
@@ -251,9 +252,9 @@
 				<svws-ui-tooltip position="top">
 					<span class="icon i-ri-question-line" />
 					<template #content>
-						Setzt die Obergrenze für die Zeichenlänge des Inputs. Beim setzen dieser prop wird automatisch ein Validator hinzugefügt, der die
-						Plausibilität des Wertes prüft. Dieses automatische Hinzufügen des Validators kann mit der prop
-						<code class="bg-ui-selected">skipDefaultValidation</code> unterbunden werden. <br>
+						Setzt die Obergrenze für die Zeichenlänge des Inputs. Falls gesetzt und es werden keine Validatorfehler über die prop
+						<code class="bg-ui-selected">validation</code> von außen in die Komponente gegeben, dann wird automatisch ein Validator hinzugefügt,
+						der dies prüft und ggf. Fehler anzeigt, ohne diese nach außen weiterzureichen. <br>
 						<span class="font-bold">Default:</span>  <code class="bg-ui-selected">maxLen: undefined</code>
 					</template>
 				</svws-ui-tooltip>
@@ -304,46 +305,15 @@
 				<HstCheckbox title="Hinweis"
 					v-model="activeState.hinweis.value" />
 			</div>
-
-			<div class="flex items-start gap-2">
-				<div class="text-headline-sm">
-					skipDefaultValidation
-				</div>
-
-				<svws-ui-tooltip position="top">
-					<span class="icon i-ri-question-line" />
-					<template #content>
-						Diese prop kann die Generierung von allen oder von einzelnen Defaultvalidatoren überspringen.
-						Defaultvalidatoren werden automatisch gesetzt, wenn <code class="bg-ui-selected">required</code>,
-						<code class="bg-ui-selected">minLen</code>, <code class="bg-ui-selected">maxLen</code>, <code class="bg-ui-selected">minDate</code>,
-						<code class="bg-ui-selected">maxDate</code> oder <code class="bg-ui-selected">type: email</code> gesetzt ist. Soll kein
-						Defaultvalidator gesetzt werden, um zum Beispiel eigene Validatoren	über die prop <code class="bg-ui-selected">validation</code> zu
-						definieren oder die Validierung ganz abzustellen, muss diese prop auf <code class="bg-ui-selected">true</code> gesetzt werden. Um
-						einzelne abzuschalten muss ein Objekt mit der entsprechenden Konfiguration gesetzt werden. <br>
-						<span class="font-bold">Default:</span>  <code class="bg-ui-selected">skipDefaultValidation: false</code>
-					</template>
-				</svws-ui-tooltip>
-			</div>
-			<div class="flex">
-				<HstCheckbox title="required"
-					v-model="activeState.skipDefaultValidation.value.required" />
-				<HstCheckbox title="length"
-					v-model="activeState.skipDefaultValidation.value.length" />
-				<HstCheckbox title="email"
-					v-model="activeState.skipDefaultValidation.value.email" />
-				<HstCheckbox title="date"
-					v-model="activeState.skipDefaultValidation.value.dateRange" />
-			</div>
 		</template>
 	</Story>
 </template>
 
 <script setup lang="ts">
 
-	import { computed, reactive, ref, type ComputedRef, type Ref, type InputTypeHTMLAttribute } from "vue";
+	import { computed, reactive, ref, type Ref, type InputTypeHTMLAttribute } from "vue";
 	import storyManager from '../../stories/StoryManager';
 	import { logEvent } from '../../stories/helper';
-	import type { List } from '../../../../core/src/java/util/List';
 	import type { ValidatorFehler } from '../../../../core/src/asd/validate/ValidatorFehler';
 	import { BasicValidator } from "../../../../core/src/asd/validate/BasicValidator";
 	import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
@@ -372,7 +342,6 @@
 		muss?: boolean;
 		kann?: boolean;
 		hinweis?: boolean;
-		skipDefaultValidation?: { required: boolean, length: boolean, email: boolean, dateRange: boolean };
 	};
 
 	class VariantState {
@@ -396,15 +365,18 @@
 		public muss = ref(false);
 		public kann = ref(false);
 		public hinweis = ref(false);
-		public skipDefaultValidation = ref({ required: false, length: false, email: false, dateRange: false });
 
 		public validatorMuss = new ValidatorTest(() => (this.modelValue.value === "Test") ? null : "Hier ist die Eintragung von 'Test' gewünscht", ValidatorFehlerart.MUSS);
 		public validatorKann = new ValidatorTest(() => (this.modelValue.value === "Test") ? null : "Hier ist die Eintragung von 'Test' gewünscht", ValidatorFehlerart.KANN);
 		public validatorHinweis = new ValidatorTest(() => (this.modelValue.value === "Test") ? null : "Hier ist die Eintragung von 'Test' gewünscht", ValidatorFehlerart.HINWEIS);
 
 
-		public validation: ComputedRef<() => List<ValidatorFehler>> = computed(() => {
+		public validation = computed(() => {
 			const validatorFehler = new ArrayList<ValidatorFehler>();
+
+			if (!this.muss.value && !this.kann.value && !this.hinweis.value) {
+				return undefined;
+			}
 
 			if (this.muss.value) {
 				this.validatorMuss.run();
@@ -447,7 +419,6 @@
 			maxDate: this.maxDate,
 			url: this.url,
 			validation: this.validation,
-			skipDefaultValidation: this.skipDefaultValidation,
 		});
 
 		constructor(state: State) {
@@ -470,7 +441,6 @@
 			this.muss.value = state.muss ?? this.muss.value;
 			this.kann.value = state.kann ?? this.kann.value;
 			this.hinweis.value = state.hinweis ?? this.hinweis.value;
-			this.skipDefaultValidation.value = state.skipDefaultValidation ?? this.skipDefaultValidation.value;
 		}
 	}
 
@@ -502,7 +472,7 @@
 	const telState = new VariantState({ type: "tel" });
 	const dateTimeState = new VariantState({ type: "datetime-local" });
 	const urlState = new VariantState({ type: "text", url: true, placeholder: "my-website.de" });
-	const validationState = new VariantState({ kann: true, minLen: 2, skipDefaultValidation: { required: false, dateRange: true, email: false, length: true } });
+	const validationState = new VariantState({ kann: true });
 
 	const variantControlsMap = new Map<string, VariantState>();
 	variantControlsMap.set('Default', defaultState);
@@ -543,29 +513,9 @@
 			((activeState.value.minDate.value === undefined) || (activeState.value.minDate.value === "")) ? "" : `minDate="${activeState.value.minDate.value}"`,
 			((activeState.value.maxDate.value === undefined) || (activeState.value.maxDate.value === "")) ? "" : `maxDate="${activeState.value.maxDate.value}"`,
 			(activeState.value.muss.value || activeState.value.kann.value || activeState.value.hinweis.value) ? `:validation="() => getFehler()"` : "",
-			skipValidationString.value,
 		].filter(Boolean).map(l => indent + l).join("\n");
 		return `<svws-ui-text-input
 ${lines} />`;
-	});
-
-	const skipValidationString = computed(() => {
-		const v = activeState.value.skipDefaultValidation.value;
-
-		if (v.required && v.dateRange && v.email && v.length) {
-			return ':skipDefaultValidation="true"';
-		}
-
-		if (!v.required && !v.dateRange && !v.email && !v.length) {
-			return "";
-		}
-
-		const requiredString = activeState.value.skipDefaultValidation.value.required ? 'required: ' + activeState.value.skipDefaultValidation.value.required : '';
-		const dateRange = activeState.value.skipDefaultValidation.value.dateRange ? 'dateRange: ' + activeState.value.skipDefaultValidation.value.dateRange : '';
-		const length = activeState.value.skipDefaultValidation.value.length ? 'len: ' + activeState.value.skipDefaultValidation.value.length : '';
-		const email = activeState.value.skipDefaultValidation.value.email ? 'email: ' + activeState.value.skipDefaultValidation.value.email : '';
-		const parts = [requiredString, dateRange, length, email].filter(v => v !== '');
-		return `:skipDefaultValidation="{ ${parts.join(', ')} }"`;
 	});
 
 	function onInput(event: Event) {

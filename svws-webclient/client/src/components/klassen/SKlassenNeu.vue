@@ -4,9 +4,9 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Kürzel" :required="true" :max-len="15" v-model="modelProxy.proxy.kuerzel"
-						:validation="() => modelProxy.getFehler('kuerzel')" skip-default-validation />
+						:validation="() => modelProxy.getFehler('kuerzel')" />
 					<svws-ui-text-input placeholder="Beschreibung" :max-len="150" v-model="modelProxy.proxy.beschreibung"
-						:validation="() => modelProxy.getFehler('beschreibung')" skip-default-validation />
+						:validation="() => modelProxy.getFehler('beschreibung')" />
 					<svws-ui-spacing />
 
 					<svws-ui-select title="Klassen-Jahrgang" v-model="modelProxy.jahrgang.value" :items="modelProxy.jahrgaenge.value" :item-text="getSelectTextJahrgang"

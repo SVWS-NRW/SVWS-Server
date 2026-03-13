@@ -33,9 +33,7 @@
 					<span v-if="required" class="ui-select--label--required cursor-pointer flex items-end" aria-label="erforderlich">
 						<span :class="[iconColorClass, 'icon-xs i-ri-asterisk font-normal relative -top-0.5']" />
 					</span>
-					<span v-if="validationResult.hasFehler">
-						<ui-validation-tooltip :validation-result :disabled />
-					</span>
+					<ui-validation-tooltip v-if="validationResult.hasFehler" :validation-result :disabled />
 					<svws-ui-tooltip position="right" v-if="readonly" class="ui-select--label--readonly cursor-pointer pointer-events-auto">
 						<span :class="[labelIconClass, 'icon-xs i-ri-lock-line shrink-0']" aria-label="schreibgeschützt" />
 						<template #content>
@@ -123,8 +121,7 @@
 		disabled: false,
 		statistics: false,
 		headless: false,
-		validation: (): List<ValidatorFehler> => new ArrayList<ValidatorFehler>(),
-		skipDefaultValidation: false,
+		validation: undefined,
 	});
 
 	// model mit der aktuellen Selektion
@@ -182,24 +179,30 @@
 	const validationResult = computed(() => new ValidationResult(validierungFehler.value));
 
 	const validatorRequired = computed<ValidatorInputRequired<T> | null>(() => {
-		if (props.required && !props.skipDefaultValidation) {
+		if (props.required && (props.validation === undefined)) {
 			return new ValidatorInputRequired(() => model.value);
 		}
 		return null;
 	});
 
 	const validierungFehler = computed<List<ValidatorFehler>>(() => {
-		const fehler = new ArrayList<ValidatorFehler>();
-
-		if (validatorRequired.value !== null) {
-			validatorRequired.value.run();
-			fehler.addAll(validatorRequired.value.getFehler());
+		if (props.validation === undefined) {
+			return getDefaultValidatorErrors();
 		}
-
-		// Validierung mit einer weiteren Validierung über die validate-Methode bei den props
-		fehler.addAll(props.validation());
-		return fehler;
+		return props.validation();
 	});
+
+	function getDefaultValidatorErrors() {
+		const fehler = new ArrayList<ValidatorFehler>();
+		const defaultValidators = [validatorRequired.value];
+		for (const validator of defaultValidators) {
+			if (validator !== null) {
+				validator.run();
+				fehler.addAll(validator.getFehler());
+			}
+		}
+		return fehler;
+	}
 
 	/**
 	 * Die aktuelle Selektion wird nicht angezeigt, falls gerade ein Suchbegriff eingegeben ist

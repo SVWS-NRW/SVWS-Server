@@ -46,6 +46,11 @@ export class ValidatorSelectMultiOptionsRange<T> extends BasicValidator {
 	 */
 	protected pruefe(): boolean {
 		const data = this.data();
+
+		if (data.length === 0) {
+			return true;
+		}
+
 		if ((this.minOptions === null) && (this.maxOptions === null)) {
 			return true;
 		}

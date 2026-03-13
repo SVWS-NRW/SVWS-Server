@@ -8,9 +8,9 @@
 			<svws-ui-input-wrapper>
 				<svws-ui-text-input v-model="modelProxy.proxy.anzeigename" placeholder="Anzeigename (z.B. Tim Taler)" />
 				<svws-ui-spacing />
-				<svws-ui-text-input v-model.trim="modelProxy.proxy.name" placeholder="Anmeldename (z.B. tim)" :validation="() => modelProxy.getFehler('name')" skip-default-validation />
+				<svws-ui-text-input v-model.trim="modelProxy.proxy.name" placeholder="Anmeldename (z.B. tim)" :validation="() => modelProxy.getFehler('name')" />
 				<svws-ui-text-input v-model.trim="modelProxy.proxy.passwort1" type="password" placeholder="Passwort" />
-				<svws-ui-text-input v-model.trim="modelProxy.proxy.passwort2" type="password" placeholder="Passwort wiederholen" :validation="() => modelProxy.getFehler('passwort2')" skip-default-validation />
+				<svws-ui-text-input v-model.trim="modelProxy.proxy.passwort2" type="password" placeholder="Passwort wiederholen" :validation="() => modelProxy.getFehler('passwort2')" />
 			</svws-ui-input-wrapper>
 		</template>
 

@@ -451,6 +451,13 @@ describe.concurrent("Validierung", () => {
 		expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
 	});
 
+	test("Wird mit der Klasse 'textarea-input--muss' wiedergegeben, wenn valid falsch ist", () => {
+		const wrapper = mount(SvwsUiTextareaInput, {
+			props: { modelValue: "Test", valid: () => false },
+		});
+		expect(wrapper.find(".textarea-input--muss").exists()).toBe(true);
+	});
+
 	test.each([
 		["textarea-input--muss", ValidatorFehlerart.MUSS],
 		["textarea-input--kann", ValidatorFehlerart.KANN],
@@ -472,30 +479,19 @@ describe.concurrent("Validierung", () => {
 
 	describe.concurrent("required", () => {
 
-		test("Mit Prop 'required = false' und ohne Prop 'validation' wird kein Required-Validator hinzugefügt", () => {
-			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: null, required: false } });
-			const validatorRequired = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorRequired;
+		test.each([
+			[false, "ohne Prop 'validation'", undefined],
+			[false, "mit Prop 'validation'", () => getValidatorFehler()],
+			[true, "mit Prop 'validation'", () => getValidatorFehler()],
+		])(
+			"Mit Prop 'required = %s' und %s wird kein Required-Validator hinzugefügt",
+			(required, _vString, validation) => {
+				const wrapper = mount(SvwsUiTextareaInput, { props: { required, validation } });
+				const validatorRequired = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorRequired;
 
-			expect(validatorRequired).toBeNull();
-		});
-
-		test("Mit Prop 'required = false' und Prop 'validation' wird kein Required-Validator hinzugefügt", () => {
-			const wrapper = mount(SvwsUiTextareaInput, {
-				props: { modelValue: null, required: false, validation: () => getValidatorFehler() },
-			});
-			const validatorRequired = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorRequired;
-
-			expect(validatorRequired).toBeNull();
-		});
-
-		test("Mit Prop 'required = true' und Prop 'validation' wird kein Required-Validator hinzugefügt", () => {
-			const wrapper = mount(SvwsUiTextareaInput, {
-				props: { modelValue: null, required: true, validation: () => getValidatorFehler() },
-			});
-			const validatorRequired = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorRequired;
-
-			expect(validatorRequired).toBeNull();
-		});
+				expect(validatorRequired).toBeNull();
+			}
+		);
 
 		test("Mit Prop 'required = true' und ohne Prop 'validation' wird ein Required-Validator hinzugefügt", () => {
 			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: null, required: true } });
@@ -505,8 +501,11 @@ describe.concurrent("Validierung", () => {
 			expect(validatorRequired).toBeInstanceOf(BasicValidator);
 		});
 
-		test("Mit Prop 'required = true' ohne Eingabe wird ein Fehler für die Required-Validierung generiert", () => {
-			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: null, required: true } });
+		test.each([
+			["''", ""],
+			[null, null],
+		])("Mit Prop 'required = true' und Eingabe = %s wird ein Fehler für die Required-Validierung generiert", (_, input) => {
+			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: input, required: true } });
 			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult;
 
 			expect(validatorResult.fehler.size()).toBe(1);
@@ -521,52 +520,44 @@ describe.concurrent("Validierung", () => {
 		});
 	});
 	describe.concurrent("maxLen", () => {
-
-		test("Mit Prop 'maxLen = undefined' mit Eingabe = 'Test' und ohne Prop 'validation' wird kein Length-Validator hinzugefügt", () => {
-			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: "Test", maxLen: undefined } });
+		test.each([
+			[undefined, "ohne Prop 'validation'", undefined],
+			[undefined, "mit Prop 'validation'", () => getValidatorFehler()],
+			[3, "mit Prop 'validation'", () => getValidatorFehler()],
+		])("Mit Prop 'maxLen = %s' und %s wird kein Length-Validator hinzugefügt", (maxLen, _validationString, validation) => {
+			const wrapper = mount(SvwsUiTextareaInput, { props: { maxLen, validation } });
 			const validatorLength = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorLength;
 
 			expect(validatorLength).toBeNull();
 		});
 
-		test("Mit Prop 'maxLen = undefined' mit Eingabe = 'Test' und Prop 'validation' wird kein Length-Validator hinzugefügt", () => {
-			const wrapper = mount(SvwsUiTextareaInput, {
-				props: { modelValue: "Test", maxLen: undefined, validation: () => getValidatorFehler() },
-			});
-			const validatorLength = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorLength;
-
-			expect(validatorLength).toBeNull();
-		});
-
-		test("Mit Prop 'maxLen = 3' mit Eingabe = 'Test' und Prop 'validation' wird kein Length-Validator hinzugefügt", () => {
-			const wrapper = mount(SvwsUiTextareaInput, {
-				props: { modelValue: "Test", maxLen: 3, validation: () => getValidatorFehler() },
-			});
-			const validatorLength = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorLength;
-
-			expect(validatorLength).toBeNull();
-		});
-
-		test("Mit Prop 'maxLen = 3' mit Eingabe = 'Test' und ohne Prop 'validation' wird ein Length-Validator hinzugefügt", () => {
-			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: "Test", maxLen: 3 } });
+		test("Mit Prop 'maxLen = 3' und ohne Prop 'validation' wird ein Length-Validator hinzugefügt", () => {
+			const wrapper = mount(SvwsUiTextareaInput, { props: { maxLen: 3 } });
 			const validatorLength = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorLength;
 
 			expect(validatorLength).not.toBeNull();
+			expect(validatorLength).toBeInstanceOf(BasicValidator);
 		});
 
-		test("Mit Prop 'maxLen = 3' mit Eingabe = 'Test' wird ein Fehler für die maxLen-Validierung generiert", () => {
-			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: "Test", maxLen: 3 } });
+		test.each([
+			[undefined, "'Hallo'", "Hallo"],
+			[3, "'Hal'", "Hal"],
+			[3, "''", ""],
+			[3, null, null],
+		])("Mit Prop 'maxLen = %s' und Eingabe = %s wird kein Fehler für die Length-Validierung generiert", (maxLen, _inputString, modelValue) => {
+			const wrapper = mount(SvwsUiTextareaInput, { props: { maxLen, modelValue } });
+			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult;
+
+			expect(validatorResult.fehler.size()).toBe(0);
+		});
+
+		test("Mit Prop 'maxLen = 3' und Eingabe = 'Hallo' wird ein Fehler für die Length-Validierung generiert", () => {
+			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: "Hallo", maxLen: 3 } });
 			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult;
 
 			expect(validatorResult.fehler.size()).toBe(1);
 			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Der Wert darf maximal 3 Zeichen lang sein.");
-		});
 
-		test("Mit Prop 'maxLen = 8' mit Eingabe = 'Test' wird kein Fehler für die maxLen-Validierung generiert", () => {
-			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: "Test", maxLen: 8 } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
 		});
 	});
 });

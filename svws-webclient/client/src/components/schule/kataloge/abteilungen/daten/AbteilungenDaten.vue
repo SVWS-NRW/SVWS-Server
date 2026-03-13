@@ -6,25 +6,25 @@
 					v-model="modelProxy.proxy.bezeichnung"
 					@commit="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('bezeichnung')"
-					required :max-len="50" skip-default-validation
+					required :max-len="50"
 					:readonly="readonly || isAbteilungImZukuenftigenAbschnitt" />
 				<svws-ui-text-input placeholder="Raum"
 					v-model="modelProxy.proxy.raum"
 					@commit="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('raum')"
-					:max-len="20" skip-default-validation
+					:max-len="20"
 					:readonly />
 				<svws-ui-text-input placeholder="E-Mail-Adresse" type="email"
 					v-model="modelProxy.proxy.email"
 					@commit="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('email')"
-					:max-len="100" skip-default-validation
+					:max-len="100"
 					:readonly />
 				<svws-ui-text-input placeholder="Durchwahl" type="tel"
 					v-model="modelProxy.proxy.durchwahl"
 					@commit="modelProxy.patch"
 					:validation="() => modelProxy.getFehler('durchwahl')"
-					:max-len="20" skip-default-validation
+					:max-len="20"
 					:readonly />
 				<ui-select label="Abteilungsleitung"
 					:manager="lehrerSelectManager"
@@ -43,7 +43,7 @@
 						v-model="modelProxy.proxy.sortierung"
 						@commit="modelProxy.patch"
 						:validation="() => modelProxy.getFehler('sortierung')"
-						:min="0" :max="32000" skip-default-validation
+						:min="0" :max="32000"
 						:readonly />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="modelProxy.proxy.istSichtbar" :readonly>

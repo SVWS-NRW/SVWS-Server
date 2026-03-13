@@ -6,54 +6,44 @@
 					<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
 						v-model="model.proxy.kuerzel"
 						:validation="() => model.getFehler('kuerzel')"
-						skip-default-validation
 						:min-len="1" :max-len="20" required />
 					<svws-ui-text-input placeholder="Bezeichnung"
 						v-model="model.proxy.bezeichnung"
 						:validation="() => model.getFehler('bezeichnung')"
-						skip-default-validation
 						:min-len="1" :max-len="100" required />
 					<svws-ui-text-input placeholder="Kurzbezeichnung"
 						v-model="model.proxy.kurzbezeichnung"
 						:validation="() => model.getFehler('kurzbezeichnung')"
-						skip-default-validation
 						:max-len="2" />
 					<ui-select label="Folgejahrgang"
 						v-model="model.folgejahrgang.value"
 						:manager="folgeJahrgangManager"
-						skip-default-validation
 						searchable />
 					<ui-select label="Schulgliederung ASD-Kürzel"
 						v-model="model.schulgliederung.value"
 						:manager="schulgliederungKuerzelSelectManager"
-						skip-default-validation
 						searchable statistics />
 					<ui-select label="Schulgliederung ASD-Text"
 						v-model="model.schulgliederung.value"
 						:manager="schulgliederungTextSelectManager"
-						skip-default-validation
 						searchable statistics />
 					<ui-select label="Jahrgang ASD-Kürzel"
 						:manager="jahrgangKuerzelSelectManager"
 						v-model="model.statistikJahrgang.value"
 						:validation="() => model.getFehler('kuerzelStatistik')"
-						skip-default-validation
 						searchable statistics required :removable="false" />
 					<ui-select label="Jahrgang ASD-Text"
 						:manager="jahrgangTextSelectManager"
 						v-model="model.statistikJahrgang.value"
 						:validation="() => model.getFehler('kuerzelStatistik')"
-						skip-default-validation
 						statistics searchable required :removable="false" />
 					<svws-ui-input-number placeholder="Anzahl der Restabschnitte"
 						v-model="model.proxy.anzahlRestabschnitte"
 						:validation="() => model.getFehler('anzahlRestabschnitte')"
-						skip-default-validation
 						:min="0" :max="40" />
 					<ui-select label="Bildungsstufe"
 						:manager="bildungsstufeSelectManager"
-						v-model="model.bildungsstufe.value"
-						skip-default-validation />
+						v-model="model.bildungsstufe.value" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
@@ -62,7 +52,6 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						skip-default-validation
 						:min="0" :max="32000" :removable="false" />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar"

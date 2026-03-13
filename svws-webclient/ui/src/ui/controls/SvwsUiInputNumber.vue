@@ -81,8 +81,6 @@
 	const btnMinus = ref<null | HTMLButtonElement>(null);
 	const id = useId();
 
-	type SkippedDefaultValidators = { required?: boolean; range?: boolean; };
-
 	const props = withDefaults(defineProps<{
 		modelValue: number | null;
 		placeholder?: string;
@@ -98,8 +96,7 @@
 		span?: 'full' | '2';
 		min?: number | undefined;
 		max?: number | undefined;
-		validation?: () => List<ValidatorFehler>;
-		skipDefaultValidation?: boolean | SkippedDefaultValidators;
+		validation?: (() => List<ValidatorFehler>) | undefined;
 	}>(), {
 		placeholder: "",
 		statistics: false,
@@ -113,8 +110,7 @@
 		span: undefined,
 		min: undefined,
 		max: undefined,
-		validation: () => new ArrayList<ValidatorFehler>,
-		skipDefaultValidation: false,
+		validation: undefined,
 	});
 
 	const emit = defineEmits<{
@@ -140,44 +136,37 @@
 	const validationResult = computed(() => new ValidationResult(validierungFehler.value));
 
 	const validatorRequired = computed<ValidatorInputRequired<number> | null>(() => {
-		if (props.required && (!skipValidator('required'))) {
+		if (props.required && (props.validation === undefined)) {
 			return new ValidatorInputRequired(() => props.modelValue);
 		}
 		return null;
 	});
 
 	const validatorRange = computed<ValidatorNumberRange | null>(() => {
-		if (((props.min !== undefined) || (props.max !== undefined)) && (!skipValidator('range'))) {
+		if (((props.min !== undefined) || (props.max !== undefined)) && (props.validation === undefined)) {
 			return new ValidatorNumberRange(() => props.modelValue, props.min, props.max);
 		}
 		return null;
 	});
 
 	const validierungFehler = computed<List<ValidatorFehler>>(() => {
+		if (props.validation === undefined) {
+			return getDefaultValidatorErrors();
+		}
+		return props.validation();
+
+	});
+
+	function getDefaultValidatorErrors() {
 		const fehler = new ArrayList<ValidatorFehler>();
 		const defaultValidators = [validatorRequired.value, validatorRange.value];
-
 		for (const validator of defaultValidators) {
 			if (validator !== null) {
 				validator.run();
 				fehler.addAll(validator.getFehler());
 			}
 		}
-
-		fehler.addAll(props.validation());
 		return fehler;
-	});
-
-	/**
-	 * Berechnet, ob der gegebene Default-Validator nicht ausgeführt werden soll
-	 *
-	 * @param defaultValidator   Name des Validators, der geprüft wird
-	 */
-	function skipValidator(defaultValidator: 'required' | 'range'): boolean {
-		if (typeof props.skipDefaultValidation === 'boolean') {
-			return props.skipDefaultValidation;
-		}
-		return props.skipDefaultValidation[defaultValidator] ?? false;
 	}
 
 	function updateData(value: number | null) {

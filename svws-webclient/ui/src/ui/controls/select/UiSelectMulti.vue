@@ -136,8 +136,7 @@
 		headless: false,
 		minOptions: undefined,
 		maxOptions: undefined,
-		validation: (): List<ValidatorFehler> => new ArrayList<ValidatorFehler>(),
-		skipDefaultValidation: false,
+		validation: undefined,
 	});
 
 
@@ -197,44 +196,36 @@
 	const validationResult = computed(() => new ValidationResult(validierungFehler.value));
 
 	const validatorRequired = computed<ValidatorInputRequired<T[]> | null>(() => {
-		if (props.required && (!skipValidator('required'))) {
+		if (props.required && (props.validation === undefined)) {
 			return new ValidatorInputRequired(() => modelArray.value);
 		}
 		return null;
 	});
 
 	const validatorOptionsRange = computed<ValidatorSelectMultiOptionsRange<T> | null>(() => {
-		if (((props.minOptions !== undefined) || (props.maxOptions !== undefined)) && (!skipValidator('optionsRange'))) {
+		if (((props.minOptions !== undefined) || (props.maxOptions !== undefined)) && (props.validation === undefined)) {
 			return new ValidatorSelectMultiOptionsRange(() => modelArray.value, props.minOptions, props.maxOptions);
 		}
 		return null;
 	});
 
 	const validierungFehler = computed<List<ValidatorFehler>>(() => {
+		if (props.validation === undefined) {
+			return getDefaultValidatorErrors();
+		}
+		return props.validation();
+	});
+
+	function getDefaultValidatorErrors() {
 		const fehler = new ArrayList<ValidatorFehler>();
 		const defaultValidators = [validatorRequired.value, validatorOptionsRange.value];
-
 		for (const validator of defaultValidators) {
 			if (validator !== null) {
 				validator.run();
 				fehler.addAll(validator.getFehler());
 			}
 		}
-
-		fehler.addAll(props.validation());
 		return fehler;
-	});
-
-	/**
-	 * Berechnet, ob der gegebene Default-Validator nicht ausgeführt werden soll
-	 *
-	 * @param defaultValidator   Name des Validators, der geprüft wird
-	 */
-	function skipValidator(defaultValidator: 'required' | 'optionsRange'): boolean {
-		if (typeof props.skipDefaultValidation === 'boolean') {
-			return props.skipDefaultValidation;
-		}
-		return props.skipDefaultValidation[defaultValidator] ?? false;
 	}
 
 	/**
