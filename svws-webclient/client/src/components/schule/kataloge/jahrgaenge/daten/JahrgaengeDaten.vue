@@ -4,59 +4,59 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
-						v-model="data.proxy.kuerzel"
-						:validation="() => data.getFehler('kuerzel')"
-						@commit="data.patch"
+						v-model="model.proxy.kuerzel"
+						:validation="() => model.getFehler('kuerzel')"
+						@commit="model.patch"
 						skip-default-validation
 						:max-len="20" required :readonly />
 					<svws-ui-text-input placeholder="Bezeichnung"
-						v-model="data.proxy.bezeichnung"
-						:validation="() => data.getFehler('bezeichnung')"
-						@commit="data.patch"
+						v-model="model.proxy.bezeichnung"
+						:validation="() => model.getFehler('bezeichnung')"
+						@commit="model.patch"
 						skip-default-validation
 						:max-len="100" required :readonly />
 					<svws-ui-text-input placeholder="Kurzbezeichnung"
-						v-model="data.proxy.kurzbezeichnung"
-						:validation="() => data.getFehler('kurzbezeichnung')"
-						@commit="data.patch"
+						v-model="model.proxy.kurzbezeichnung"
+						:validation="() => model.getFehler('kurzbezeichnung')"
+						@commit="model.patch"
 						skip-default-validation
 						:max-len="2" :readonly />
 					<ui-select label="Folgejahrgang"
-						v-model="data.folgejahrgang.value"
+						v-model="model.folgejahrgang.value"
 						:manager="folgeJahrgangManager"
 						skip-default-validation
 						:readonly />
 					<ui-select label="Schulgliederung ASD-Kürzel"
-						v-model="data.schulgliederung.value"
+						v-model="model.schulgliederung.value"
 						:manager="schulgliederungKuerzelSelectManager"
 						skip-default-validation
 						searchable statistics :readonly />
 					<ui-select label="Schulgliederung ASD-Text"
-						v-model="data.schulgliederung.value"
+						v-model="model.schulgliederung.value"
 						:manager="schulgliederungTextSelectManager"
 						skip-default-validation
 						searchable statistics :readonly />
 					<ui-select label="Jahrgang ASD-Kürzel"
 						:manager="jahrgangKuerzelSelectManager"
-						v-model="data.statistikJahrgang.value"
-						:validation="() => data.getFehler('kuerzelStatistik')"
+						v-model="model.statistikJahrgang.value"
+						:validation="() => model.getFehler('kuerzelStatistik')"
 						skip-default-validation
 						searchable statistics :readonly required :removable="false" />
 					<ui-select label="Jahrgang ASD-Text"
 						:manager="jahrgangTextSelectManager"
-						v-model="data.statistikJahrgang.value"
-						:validation="() => data.getFehler('kuerzelStatistik')"
+						v-model="model.statistikJahrgang.value"
+						:validation="() => model.getFehler('kuerzelStatistik')"
 						skip-default-validation
 						searchable statistics :readonly required :removable="false" />
 					<svws-ui-input-number placeholder="Anzahl der Restabschnitte"
-						v-model="data.proxy.anzahlRestabschnitte"
-						:validation="() => data.getFehler('anzahlRestabschnitte')"
-						@commit="data.patch"
+						v-model="model.proxy.anzahlRestabschnitte"
+						:validation="() => model.getFehler('anzahlRestabschnitte')"
+						@commit="model.patch"
 						skip-default-validation
 						:min="0" :max="40" :readonly />
 					<ui-select label="Bildungsstufe"
 						:manager="bildungsstufeSelectManager"
-						v-model="data.bildungsstufe.value"
+						v-model="model.bildungsstufe.value"
 						skip-default-validation
 						:readonly />
 				</svws-ui-input-wrapper>
@@ -65,15 +65,15 @@
 			<svws-ui-content-card title="Ansicht & Sortierung">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
-						v-model="data.proxy.sortierung"
-						:validation="() => data.getFehler('sortierung')"
-						@commit="data.patch"
+						v-model="model.proxy.sortierung"
+						:validation="() => model.getFehler('sortierung')"
+						@commit="model.patch"
 						skip-default-validation
 						:min="0" :max="32000" :readonly :removable="false" />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="data.proxy.istSichtbar"
-						:validation="() => data.getFehler('istSichtbar')"
-						@commit="data.patch"
+					<svws-ui-checkbox v-model="model.proxy.istSichtbar"
+						:validation="() => model.getFehler('istSichtbar')"
+						@commit="model.patch"
 						skip-default-validation
 						:readonly>
 						Sichtbar
@@ -91,10 +91,10 @@
 	import type { JahrgangsDaten } from "@core";
 	import type { JahrgaengeDatenProps } from "./JahrgaengeDatenProps";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
-	import { JahrgaengeModelProxy } from "~/components/schule/kataloge/jahrgaenge/modelproxy/JahrgaengeModelProxy";
+	import { JahrgangModelProxy } from "~/components/schule/kataloge/jahrgaenge/modelproxy/JahrgangModelProxy";
 
 	const props = defineProps<JahrgaengeDatenProps>();
-	const data = new JahrgaengeModelProxy(() => props.manager().daten(), () => props.manager().liste.list(), props.schuljahr, props.patch);
+	const model = new JahrgangModelProxy(() => props.manager().daten(), () => props.manager().liste.list(), props.schuljahr, props.patch);
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const readonly = computed(() => !hatKompetenzUpdate.value);
 

@@ -11,7 +11,7 @@ import { computed } from "vue";
 /**
  * ModelProxy für Jahrgangsdaten.
  */
-export class JahrgaengeModelProxy extends ModelProxy<JahrgangsDaten> {
+export class JahrgangModelProxy extends ModelProxy<JahrgangsDaten> {
 
 	private readonly schuljahr: number;
 	private readonly jahrgaengeById: Map<number, JahrgangsDaten>;

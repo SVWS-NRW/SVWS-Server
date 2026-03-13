@@ -4,30 +4,36 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Bezeichnung" span="2"
-						v-model="data.bezeichnung"
-						:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="250" required :disabled="!hatKompetenzUpdate" />
+						v-model="model.proxy.bezeichnung"
+						:validation="() => model.getFehler('bezeichnung')"
+						skip-default-validation
+						:max-len="250" required />
 					<ui-select label="Einwilligungsschlüssel" class="col-span-full"
-						v-model="selectedEinwilligungsschluessel"
+						v-model="model.einwilligungsschluessel.value"
 						:manager="einwilligungsschluesselCoreTypeManager"
-						searchable :disabled="!hatKompetenzUpdate" />
+						skip-default-validation
+						searchable />
 					<svws-ui-textarea-input placeholder="Beschreibung" span="full"
-						v-model="data.beschreibung"
-						@change="value => data.beschreibung = value"
-						:disabled="!hatKompetenzUpdate" />
+						:model-value="model.proxy.beschreibung"
+						@input="value => model.proxy.beschreibung = value"
+						skip-default-validation />
 					<ui-select label="Personenart" class="col-span-full"
-						v-model="selectedPersonTyp"
+						v-model="model.personTyp.value"
 						:manager="personTypManager"
-						:disabled="!hatKompetenzUpdate" :removable="false" />
+						skip-default-validation
+						:removable="false" searchable />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
 			<svws-ui-content-card title="Ansicht & Sortierung">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
-						v-model="data.sortierung"
-						:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzUpdate" />
+						v-model="model.proxy.sortierung"
+						:validation="() => model.getFehler('sortierung')"
+						skip-default-validation
+						:min="0" :max="32000" :removable="false" />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzUpdate">
+					<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -49,89 +55,16 @@
 
 	import type { EinwilligungsartenNeuProps } from "~/components/schule/kataloge/einwilligungsarten/EinwilligungsartenNeuProps";
 	import { computed, ref, watch } from "vue";
-	import { ArrayList, BenutzerKompetenz, Einwilligungsart, Einwilligungsschluessel, PersonTyp } from "@core";
 	import type { EinwilligungsschluesselKatalogEintrag, List } from "@core";
-	import { mandatoryInputIsValid, numberIsValid } from "~/util/validation/Validation";
+	import { ArrayList, Einwilligungsart, Einwilligungsschluessel, PersonTyp } from "@core";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
+	import { EinwilligungsartModelProxy } from "~/components/schule/kataloge/einwilligungsarten/modelproxy/EinwilligungsartModelProxy";
 
 	const props = defineProps<EinwilligungsartenNeuProps>();
-	const data = ref<Einwilligungsart>(Object.assign(new Einwilligungsart(), { istSichtbar: true, idPersonTyp: PersonTyp.SCHUELER.id }));
 	const isLoading = ref<boolean>(false);
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-
-	const selectedEinwilligungsschluessel = computed<EinwilligungsschluesselKatalogEintrag | null>({
-		get: () => Einwilligungsschluessel.data().getEintragBySchuljahrUndSchluessel(props.schuljahr, data.value.schluessel ?? ''),
-		set: (v: EinwilligungsschluesselKatalogEintrag | null) => data.value.schluessel = v?.schluessel ?? null,
-	});
-
-	const personTypManager = new SelectManager({	options: [PersonTyp.SCHUELER, PersonTyp.LEHRER], optionDisplayText: v => v.bezeichnung, selectionDisplayText: v => v.bezeichnung });
-	const selectedPersonTyp = computed<PersonTyp>({
-		get: () => PersonTyp.getByID(data.value.idPersonTyp) ?? PersonTyp.SCHUELER,
-		set: (value: PersonTyp) => data.value.idPersonTyp = value.id,
-	});
-
-	const formIsValid = computed(() => {
-		return Object.keys(data.value)
-			.every((field: string) => fieldIsValid(field as keyof Einwilligungsart));
-	});
-
-	const fieldIsValid = (field: keyof Einwilligungsart): boolean => {
-		switch (field) {
-			case 'bezeichnung':
-				return bezeichnungIsValid(data.value.bezeichnung);
-			case 'sortierung':
-				return numberIsValid(data.value.sortierung, true, 0, 32000);
-			case 'idPersonTyp':
-				return idPersonTypeIsValid(data.value.idPersonTyp);
-			default:
-				return true;
-		}
-	};
-
-	function bezeichnungIsValid(value: string | null): boolean {
-		if (!mandatoryInputIsValid(value, 250)) {
-			return false;
-		}
-		if (data.value.idPersonTyp === -1) {
-			return true;
-		}
-		for (const einwilligungsart of props.manager().liste.list()) {
-			if (einwilligungsart.idPersonTyp === data.value.idPersonTyp && einwilligungsart.bezeichnung.toLowerCase() === value.toLowerCase()) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	function idPersonTypeIsValid(idPersonTyp: number) {
-		return (idPersonTyp === PersonTyp.LEHRER.id) || (idPersonTyp === PersonTyp.SCHUELER.id);
-	}
-
-
-	async function addEinwilligungsart(): Promise<void> {
-		if (isLoading.value) {
-			return;
-		}
-
-		isLoading.value = true;
-		props.checkpoint.active = false;
-		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
-		await props.add(partialData);
-		isLoading.value = false;
-	}
-
-	async function cancel(): Promise<void> {
-		props.checkpoint.active = false;
-		await props.gotoDefaultView(null);
-	}
-
-	watch(() => data.value, async () => {
-		if (isLoading.value) {
-			return;
-		}
-
-		props.checkpoint.active = true;
-	}, { immediate: false, deep: true });
+	const initialData = ref<Einwilligungsart>(Object.assign(new Einwilligungsart(), { istSichtbar: true, idPersonTyp: PersonTyp.SCHUELER.id }));
+	const model = new EinwilligungsartModelProxy(() => initialData.value, props.manager, props.schuljahr);
+	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 
 	const einwilligungsschluesselFilter = {
 		key: "isNotUsed",
@@ -148,7 +81,7 @@
 
 	function einwilligungsschluesselIsUsed(einwilligungsschluessel: EinwilligungsschluesselKatalogEintrag) {
 		for (const einwilligungsart of props.manager().liste.list()) {
-			if ((einwilligungsart.idPersonTyp === data.value.idPersonTyp)
+			if ((einwilligungsart.idPersonTyp === model.proxy.idPersonTyp)
 				&& (einwilligungsart.schluessel === einwilligungsschluessel.schluessel)) {
 				return true;
 			}
@@ -165,8 +98,39 @@
 		selectionDisplayText: "text",
 	});
 
-	watch(() => data.value.idPersonTyp, async () => {
+	const personTypManager = new SelectManager({
+		options: [PersonTyp.SCHUELER, PersonTyp.LEHRER],
+		optionDisplayText: v => v.bezeichnung,
+		selectionDisplayText: v => v.bezeichnung,
+	});
+
+	async function addEinwilligungsart(): Promise<void> {
+		if (isLoading.value) {
+			return;
+		}
+
+		isLoading.value = true;
+		props.checkpoint.active = false;
+		const { id, referenziertInAnderenTabellen, ...partialData } = model.proxy;
+		await props.add(partialData);
+		isLoading.value = false;
+	}
+
+	async function cancel(): Promise<void> {
+		props.checkpoint.active = false;
+		await props.gotoDefaultView(null);
+	}
+
+	watch(() => model.proxy.idPersonTyp, async () => {
 		einwilligungsschluesselCoreTypeManager.updateFilteredOptions();
 	}, { immediate: true });
+
+
+	watch(() => model.proxy, async () => {
+		if (isLoading.value) {
+			return;
+		}
+		props.checkpoint.active = true;
+	}, { immediate: false, deep: true });
 
 </script>

@@ -11,9 +11,8 @@ import jakarta.validation.ValidatorFactory;
 import jakarta.ws.rs.core.Response;
 
 /**
- * Utility Klasse für manuelle jakarta bean validation
- *
- * @see  jakarta.validation.constraints
+ * Utility Klasse für manuelle jakarta bean validation mit Hilfe von Jakarta Validation Constraints.
+ * Siehe <a href="https://jakarta.ee/specifications/bean-validation/3.1/apidocs/jakarta/validation/constraints/package-summary">Jakarta Validation Constraints</a>
  */
 public final class BeanValidator {
 

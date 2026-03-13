@@ -4,54 +4,55 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
-						v-model="data.proxy.kuerzel"
-						:validation="() => data.getFehler('kuerzel')"
+						v-model="model.proxy.kuerzel"
+						:validation="() => model.getFehler('kuerzel')"
 						skip-default-validation
 						:min-len="1" :max-len="20" required />
 					<svws-ui-text-input placeholder="Bezeichnung"
-						v-model="data.proxy.bezeichnung"
-						:validation="() => data.getFehler('bezeichnung')"
+						v-model="model.proxy.bezeichnung"
+						:validation="() => model.getFehler('bezeichnung')"
 						skip-default-validation
 						:min-len="1" :max-len="100" required />
 					<svws-ui-text-input placeholder="Kurzbezeichnung"
-						v-model="data.proxy.kurzbezeichnung"
-						:validation="() => data.getFehler('kurzbezeichnung')"
+						v-model="model.proxy.kurzbezeichnung"
+						:validation="() => model.getFehler('kurzbezeichnung')"
 						skip-default-validation
 						:max-len="2" />
 					<ui-select label="Folgejahrgang"
-						v-model="data.folgejahrgang.value"
+						v-model="model.folgejahrgang.value"
 						:manager="folgeJahrgangManager"
-						skip-default-validation />
+						skip-default-validation
+						searchable />
 					<ui-select label="Schulgliederung ASD-Kürzel"
-						v-model="data.schulgliederung.value"
+						v-model="model.schulgliederung.value"
 						:manager="schulgliederungKuerzelSelectManager"
 						skip-default-validation
 						searchable statistics />
 					<ui-select label="Schulgliederung ASD-Text"
-						v-model="data.schulgliederung.value"
+						v-model="model.schulgliederung.value"
 						:manager="schulgliederungTextSelectManager"
 						skip-default-validation
 						searchable statistics />
 					<ui-select label="Jahrgang ASD-Kürzel"
 						:manager="jahrgangKuerzelSelectManager"
-						v-model="data.statistikJahrgang.value"
-						:validation="() => data.getFehler('kuerzelStatistik')"
+						v-model="model.statistikJahrgang.value"
+						:validation="() => model.getFehler('kuerzelStatistik')"
 						skip-default-validation
 						searchable statistics required :removable="false" />
 					<ui-select label="Jahrgang ASD-Text"
 						:manager="jahrgangTextSelectManager"
-						v-model="data.statistikJahrgang.value"
-						:validation="() => data.getFehler('kuerzelStatistik')"
+						v-model="model.statistikJahrgang.value"
+						:validation="() => model.getFehler('kuerzelStatistik')"
 						skip-default-validation
 						statistics searchable required :removable="false" />
 					<svws-ui-input-number placeholder="Anzahl der Restabschnitte"
-						v-model="data.proxy.anzahlRestabschnitte"
-						:validation="() => data.getFehler('anzahlRestabschnitte')"
+						v-model="model.proxy.anzahlRestabschnitte"
+						:validation="() => model.getFehler('anzahlRestabschnitte')"
 						skip-default-validation
 						:min="0" :max="40" />
 					<ui-select label="Bildungsstufe"
 						:manager="bildungsstufeSelectManager"
-						v-model="data.bildungsstufe.value"
+						v-model="model.bildungsstufe.value"
 						skip-default-validation />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
@@ -59,13 +60,13 @@
 			<svws-ui-content-card title="Ansicht & Sortierung">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
-						v-model="data.proxy.sortierung"
-						:validation="() => data.getFehler('sortierung')"
+						v-model="model.proxy.sortierung"
+						:validation="() => model.getFehler('sortierung')"
 						skip-default-validation
 						:min="0" :max="32000" :removable="false" />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="data.proxy.istSichtbar"
-						:validation="() => data.getFehler('istSichtbar')">
+					<svws-ui-checkbox v-model="model.proxy.istSichtbar"
+						:validation="() => model.getFehler('istSichtbar')">
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -89,11 +90,11 @@
 	import { computed, ref, watch } from "vue";
 	import { Bildungsstufe, Jahrgaenge, JahrgangsDaten, Schulgliederung } from "@core";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
-	import { JahrgaengeModelProxy } from "~/components/schule/kataloge/jahrgaenge/modelproxy/JahrgaengeModelProxy";
+	import { JahrgangModelProxy } from "~/components/schule/kataloge/jahrgaenge/modelproxy/JahrgangModelProxy";
 
 	const props = defineProps<JahrgaengeNeuProps>();
 	const initialData = ref<JahrgangsDaten>(Object.assign(new JahrgangsDaten(), { istSichtbar: true, sortierung: 32000, anzahlRestabschnitte: 0 }));
-	const data = new JahrgaengeModelProxy(() => initialData.value, () => props.manager().liste.list(), props.schuljahr);
+	const model = new JahrgangModelProxy(() => initialData.value, () => props.manager().liste.list(), props.schuljahr);
 	const isLoading = ref<boolean>(false);
 	const jahrgaenge = computed<JahrgangsDaten[]>(() => [...props.manager().liste.list()]);
 	const folgeJahrgangManager = new SelectManager({
@@ -142,7 +143,7 @@
 		selectionDisplayText: "text",
 	});
 
-	const isValid = computed<boolean>(() => data.getAlleFehler().isEmpty());
+	const isValid = computed<boolean>(() => model.getAlleFehler().isEmpty());
 
 	// --- util ---
 	async function addJahrgangsdaten() {
@@ -152,7 +153,7 @@
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		const { id, referenziertInAnderenTabellen, ...partialData } = data.proxy;
+		const { id, referenziertInAnderenTabellen, ...partialData } = model.proxy;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
@@ -162,7 +163,7 @@
 		await props.goToDefaultView(null);
 	}
 
-	watch(() => data.proxy, async () => {
+	watch(() => model.proxy, async () => {
 		if (isLoading.value) {
 			return;
 		}
