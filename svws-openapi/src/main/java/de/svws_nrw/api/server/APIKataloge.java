@@ -3,6 +3,7 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.schule.Beschaeftigungsart;
 import de.svws_nrw.core.data.kataloge.KatalogEintragStrassen;
 import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
@@ -23,6 +24,7 @@ import de.svws_nrw.data.kataloge.DataOrtsteile;
 import de.svws_nrw.data.kataloge.DataSchuelerSchwerpunkte;
 import de.svws_nrw.data.kataloge.DataStrassen;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
+import de.svws_nrw.data.schule.DataBeschaeftigungsarten;
 import de.svws_nrw.data.schule.DataKindergaerten;
 import de.svws_nrw.data.schule.DataMerkmale;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,6 +46,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.jboss.resteasy.annotations.GZIP;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf allgemeine Kataloge aus der SVWS-Datenbank.
@@ -971,4 +974,113 @@ public class APIKataloge {
 				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste der Beschäftigungsarten im angegebenen Schema.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return              die Liste der Beschäftigungsarten
+	 */
+	@GET
+	@GZIP
+	@Path("/beschaeftigungsarten")
+	@Operation(summary = "Gibt eine Übersicht der Beschäftigungsarten im Katalog zurück.",
+			description = "Gibt die Beschäftigungsarten zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste der Beschäftigungsarten.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Beschaeftigungsart.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	public Response getBeschaeftigungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBeschaeftigungsarten(conn).getAllAsResponse(),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Erstellen einer neuen Beschäftigungsart.
+	 *
+	 * @param schema       das Datenbankschema, in welchem die Beschäftigungsart erstellt wird
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param is           das JSON-Objekt
+	 *
+	 * @return die HTTP-Antwort mit der neuen Beschäftigungsart
+	 */
+	@POST
+	@Path("/beschaeftigungsarten/create")
+	@Operation(summary = "Erstellt eine neue Beschäftigungsart und gibt sie zurück.",
+			description = "Erstellt eine neue Beschäftigungsart, insofern die notwendigen Berechtigungen vorliegen."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Beschäftigungsart besitzt.")
+	@ApiResponse(responseCode = "201", description = "Beschäftigungsart wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Beschaeftigungsart.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Beschäftigungsart anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addBeschaeftigungsart(
+			@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten der zu erstellenden Beschäftigungsart ohne ID, da diese automatisch generiert wird", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Beschaeftigungsart.class))) final InputStream is,
+			@Context final HttpServletRequest request
+	) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBeschaeftigungsarten(conn).addAsResponse(is),
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen einer Beschäftigungsart im angegebenen Schema
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation der Beschäftigungsart
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/beschaeftigungsarten/{id : \\d+}")
+	@Operation(summary = "Patched die Beschäftigungsart mit der angegebenen ID.",
+			description = "Patched die Beschäftigungsart mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Beschäftigungsart-Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Keine Beschäftigungsart mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchBeschaeftigungsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch einer Beschäftigungsart", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Beschaeftigungsart.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBeschaeftigungsarten(conn).patchAsResponse(id, is), request,
+				ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Beschäftigungsarten.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/beschaeftigungsarten/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Beschäftigungsarten.", description = "Entfernt mehrere Beschäftigungsarten, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Beschäftigungsarten zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Beschäftigungsarten nicht vorhanden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteBeschaeftigungsarten(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Beschäftigungsarten",
+			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataBeschaeftigungsarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+	}
+
+
 }

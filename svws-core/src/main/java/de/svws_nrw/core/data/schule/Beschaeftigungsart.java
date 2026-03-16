@@ -1,4 +1,4 @@
-package de.svws_nrw.core.data.betrieb;
+package de.svws_nrw.core.data.schule;
 
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;

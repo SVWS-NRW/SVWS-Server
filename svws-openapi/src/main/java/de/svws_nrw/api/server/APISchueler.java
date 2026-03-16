@@ -11,7 +11,6 @@ import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
 import org.jboss.resteasy.annotations.GZIP;
 
-import de.svws_nrw.asd.data.schueler.SchuelerBetriebe;
 import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittBemerkungen;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
@@ -24,7 +23,6 @@ import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.asd.data.schueler.Sprachpruefung;
 import de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag;
 import de.svws_nrw.core.data.SimpleOperationResponse;
-import de.svws_nrw.core.data.betrieb.BetriebStammdaten;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.schueler.SchuelerKAoADaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittListeEintrag;
@@ -40,12 +38,10 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.data.betriebe.DataBetriebsStammdaten;
 import de.svws_nrw.data.erzieher.DataErzieherStammdaten;
 import de.svws_nrw.data.schueler.DataKatalogHerkuenfte;
 import de.svws_nrw.data.schueler.DataKatalogHerkunftsarten;
 import de.svws_nrw.data.schueler.DataKatalogUebergangsempfehlung;
-import de.svws_nrw.data.schueler.DataSchuelerBetriebe;
 import de.svws_nrw.data.schueler.DataSchuelerEinwilligungen;
 import de.svws_nrw.data.schueler.DataSchuelerKAoADaten;
 import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
@@ -1052,59 +1048,6 @@ public class APISchueler {
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage der Liste aller Betriebe.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 * @param id		die ID des Schülers, dessen Betriebe zurückegeben werden.
-	 *
-	 * @return die Liste mit den einzelnen Betrieben
-	 */
-	@GET
-	@Path("/{id : \\d+}/betriebe")
-	@Operation(summary = "Gibt die Betriebe eines Schülers zurück.",
-			description = "Erstellt eine Liste aller in der Datenbank vorhandenen Betriebe unter Angabe der Schüler-ID"
-					+ "des Vor- und Nachnamens, Erzieherart, Kontaktdaten, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Schülerbetrieben",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerBetriebe.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Erzieherdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Erzieher-Einträge gefunden")
-	public Response getSchuelerBetriebe(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerBetriebe(conn).getListFromSchueler(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage der Liste aller Betriebsstammdaten eines Schülers.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 * @param id        die ID des Schülers
-	 *
-	 * @return die Liste der Betriebsstammdaten eines Schülers
-	 */
-	@GET
-	@Path("/{id : \\d+}/betriebsstammdaten")
-	@Operation(summary = "Gibt eine Liste der Betriebsstammdaten eines Schülers zurück.",
-			description = "Erstellt eine Liste aller in der Datenbank vorhandenen Betriebe eines Schülers unter Angabe der ID,"
-					+ "ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsdaten des Schülers besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von von Betriebsstammdaten eines Schülers",
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = BetriebStammdaten.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Betrieb-Einträge gefunden")
-	public Response getSchuelerBetriebsstammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebsStammdaten(conn).getSchuelerBetriebe(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
-	}
-
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage des Katalogs der Übergangsempfehlungen der

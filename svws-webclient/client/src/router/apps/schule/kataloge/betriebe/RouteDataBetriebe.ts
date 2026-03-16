@@ -31,7 +31,7 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 
 	protected async createManager(_: number): Promise<Partial<RouteStateAuswahlInterface<BetriebeListeManager>>> {
 		const [betriebe, betriebsarten, orte] = await Promise.all([
-			api.server.getBetriebeNeu(api.schema),
+			api.server.getBetriebe(api.schema),
 			api.server.getBetriebsarten(api.schema),
 			api.server.getOrte(api.schema),
 		]);
@@ -46,16 +46,16 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 	}
 
 	protected async doPatch(data: Partial<Betrieb>, id: number): Promise<boolean> {
-		await api.server.patchBetriebeNeu(data, api.schema, id);
+		await api.server.patchBetrieb(data, api.schema, id);
 		return true;
 	}
 
 	protected async doDelete(ids: List<number>): Promise<List<SimpleOperationResponse>> {
-		return await api.server.deleteBetriebeNeu(ids, api.schema);
+		return await api.server.deleteBetriebe(ids, api.schema);
 	}
 
 	add = async (data: Partial<Betrieb>): Promise<void> => {
-		const result = await api.server.addBetriebNeu(data, api.schema);
+		const result = await api.server.addBetrieb(data, api.schema);
 		this.manager.liste.add(result);
 		this.commit();
 		await this.gotoDefaultView(result.id);
@@ -96,13 +96,13 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 	}
 
 	addAnsprechpartner = async (data: Partial<BetriebeAnsprechpartner>): Promise<void> => {
-		const result = await api.server.addBetriebeAnsprechpartnerNeu(data, api.schema);
+		const result = await api.server.addBetriebAnsprechpartner(data, api.schema);
 		this.manager.addAnsprechpartner(result);
 		this.commit();
 	};
 
 	deleteAnsprechpartner = async (ids: List<number>): Promise<void> => {
-		await api.server.deleteBetriebeAnsprechpartnerNeu(ids, api.schema);
+		await api.server.deleteBetriebAnsprechpartner(ids, api.schema);
 		for (const id of ids) {
 			this.manager.deleteAnsprechpartner(id);
 		}
@@ -110,7 +110,7 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 	};
 
 	patchAnsprechpartner = async (id: number, data: Partial<BetriebeAnsprechpartner>): Promise<void> => {
-		await api.server.patchBetriebeAnsprechpartnerNeu(data, api.schema, id);
+		await api.server.patchBetriebAnsprechpartner(data, api.schema, id);
 		this.manager.patchAnsprechpartner(id, data);
 		this.commit();
 	};

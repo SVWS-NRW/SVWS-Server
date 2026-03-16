@@ -529,10 +529,6 @@ export { BenutzerLehrerCredentials } from './core/data/benutzer/BenutzerLehrerCr
 export { BenutzerListeEintrag } from './core/data/benutzer/BenutzerListeEintrag';
 export { BenutzergruppeDaten } from './core/data/benutzer/BenutzergruppeDaten';
 export { BenutzergruppeListeEintrag } from './core/data/benutzer/BenutzergruppeListeEintrag';
-export { Beschaeftigungsart } from './core/data/betrieb/Beschaeftigungsart';
-export { BetriebAnsprechpartner } from './core/data/betrieb/BetriebAnsprechpartner';
-export { BetriebListeEintrag } from './core/data/betrieb/BetriebListeEintrag';
-export { BetriebStammdaten } from './core/data/betrieb/BetriebStammdaten';
 export { BKBildungsplan } from './core/data/bk/BKBildungsplan';
 export { BKBildungsplanKatalog } from './core/data/bk/BKBildungsplanKatalog';
 export { BKBildungsplanKatalogEintrag } from './core/data/bk/BKBildungsplanKatalogEintrag';
@@ -733,6 +729,7 @@ export { BerufskollegFachklassenKatalog } from './core/data/schule/BerufskollegF
 export { BerufskollegFachklassenKatalogDaten } from './core/data/schule/BerufskollegFachklassenKatalogDaten';
 export { BerufskollegFachklassenKatalogEintrag } from './core/data/schule/BerufskollegFachklassenKatalogEintrag';
 export { BerufskollegFachklassenKatalogIndex } from './core/data/schule/BerufskollegFachklassenKatalogIndex';
+export { Beschaeftigungsart } from './core/data/schule/Beschaeftigungsart';
 export { Betrieb } from './core/data/schule/Betrieb';
 export { BetriebeAnsprechpartner } from './core/data/schule/BetriebeAnsprechpartner';
 export { Betriebsart } from './core/data/schule/Betriebsart';

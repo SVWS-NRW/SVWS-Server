@@ -12,7 +12,6 @@ import de.svws_nrw.api.server.APIAlgoGostAbschluss;
 import de.svws_nrw.api.server.APIAnkreuzkompetenzen;
 import de.svws_nrw.api.server.APIBKGym;
 import de.svws_nrw.api.server.APIBenutzer;
-import de.svws_nrw.api.server.APIBetrieb;
 import de.svws_nrw.api.server.APIClientConfig;
 import de.svws_nrw.api.server.APIConfig;
 import de.svws_nrw.api.server.APIDatabase;
@@ -76,7 +75,6 @@ public final class RestAppServer extends Application {
 			APIBKGym.class,
 			APILehrer.class,
 			APIErzieher.class,
-			APIBetrieb.class,
 			APIKataloge.class,
 			APISchema.class,
 			APIDatabase.class,

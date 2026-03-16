@@ -54,7 +54,7 @@ class DataBetriebeTest {
 	private DBEntityManager conn;
 
 	@Mock
-	private DataBetriebeAnsprechpartner dataBetriebeAnsprechpartner;
+	private DataBetriebAnsprechpartner dataBetriebAnsprechpartner;
 
 	@InjectMocks
 	private DataBetriebe data;
@@ -152,7 +152,7 @@ class DataBetriebeTest {
 		ansprechpartner.id = 42L;
 		ansprechpartner.idBetrieb = 1L;
 		ansprechpartner.name = "test";
-		when(this.dataBetriebeAnsprechpartner.getAll()).thenReturn(List.of(ansprechpartner));
+		when(this.dataBetriebAnsprechpartner.getAll()).thenReturn(List.of(ansprechpartner));
 		@SuppressWarnings("unchecked")
 		final TypedQuery<Long> queryMock = mock(TypedQuery.class);
 		when(queryMock.setParameter(eq("ids"), any())).thenReturn(queryMock);

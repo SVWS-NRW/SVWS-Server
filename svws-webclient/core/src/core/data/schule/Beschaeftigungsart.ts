@@ -34,14 +34,14 @@ export class Beschaeftigungsart extends JavaObject {
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.data.betrieb.Beschaeftigungsart';
+		return 'de.svws_nrw.core.data.schule.Beschaeftigungsart';
 	}
 
 	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.data.betrieb.Beschaeftigungsart'].includes(name);
+		return ['de.svws_nrw.core.data.schule.Beschaeftigungsart'].includes(name);
 	}
 
-	public static readonly class = new Class<Beschaeftigungsart>('de.svws_nrw.core.data.betrieb.Beschaeftigungsart');
+	public static readonly class = new Class<Beschaeftigungsart>('de.svws_nrw.core.data.schule.Beschaeftigungsart');
 
 	public static transpilerFromJSON(json: string): Beschaeftigungsart {
 		const obj = JSON.parse(json) as Partial<Beschaeftigungsart>;
@@ -98,6 +98,6 @@ export class Beschaeftigungsart extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_betrieb_Beschaeftigungsart(obj: unknown): Beschaeftigungsart {
+export function cast_de_svws_nrw_core_data_schule_Beschaeftigungsart(obj: unknown): Beschaeftigungsart {
 	return obj as Beschaeftigungsart;
 }

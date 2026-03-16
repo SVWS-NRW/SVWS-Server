@@ -7,9 +7,9 @@ import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 import type { List } from '../../../../../core/src/java/util/List';
 import { JavaString } from '../../../../../core/src/java/lang/JavaString';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import type { Beschaeftigungsart } from '../../../../../core/src/core/data/betrieb/Beschaeftigungsart';
 import type { Comparator } from '../../../../../core/src/java/util/Comparator';
-import { HashSet, type JavaSet } from "../../../../../core/src";
+import { HashSet } from "../../../../../core/src";
+import type { Beschaeftigungsart, JavaSet } from "../../../../../core/src";
 
 export class BeschaeftigungsartenListeManager extends AuswahlManager<number, Beschaeftigungsart, Beschaeftigungsart> {
 

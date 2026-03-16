@@ -53,7 +53,7 @@ export class KatalogCache {
 		});
 
 		this._katalogCacheUpdater.set(Katalog.BETRIEBE, async () => {
-			const result = await api.server.getBetriebeNeu(api.schema);
+			const result = await api.server.getBetriebe(api.schema);
 			return { betriebeById: this.convertToMap(result) };
 		});
 

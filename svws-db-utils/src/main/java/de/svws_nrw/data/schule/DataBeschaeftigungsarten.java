@@ -1,6 +1,6 @@
-package de.svws_nrw.data.betriebe;
+package de.svws_nrw.data.schule;
 
-import de.svws_nrw.core.data.betrieb.Beschaeftigungsart;
+import de.svws_nrw.core.data.schule.Beschaeftigungsart;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.util.ValidationUtils;

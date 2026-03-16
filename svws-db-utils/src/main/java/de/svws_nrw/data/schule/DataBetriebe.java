@@ -27,17 +27,17 @@ import static de.svws_nrw.db.schema.Schema.tab_K_AllgAdresse;
 /** Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das CoreDTO {@link Betrieb} */
 public final class DataBetriebe extends DataManagerRevised<Long, DTOBetrieb, Betrieb> {
 
-	private final DataBetriebeAnsprechpartner dataBetriebeAnsprechpartner;
+	private final DataBetriebAnsprechpartner dataBetriebAnsprechpartner;
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link Betrieb}.
 	 *
 	 * @param conn   						die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param dataBetriebeAnsprechpartner   DataBetriebeAnsprechpartner
+	 * @param dataBetriebAnsprechpartner   DataBetriebeAnsprechpartner
 	 */
-	public DataBetriebe(final DBEntityManager conn, final DataBetriebeAnsprechpartner dataBetriebeAnsprechpartner) {
+	public DataBetriebe(final DBEntityManager conn, final DataBetriebAnsprechpartner dataBetriebAnsprechpartner) {
 		super(conn);
-		this.dataBetriebeAnsprechpartner = dataBetriebeAnsprechpartner;
+		this.dataBetriebAnsprechpartner = dataBetriebAnsprechpartner;
 		setAttributesRequiredOnCreation("name");
 		setAttributesNotPatchable("id");
 	}
@@ -68,7 +68,7 @@ public final class DataBetriebe extends DataManagerRevised<Long, DTOBetrieb, Bet
 	public List<Betrieb> getAll() {
 		final List<DTOBetrieb> betriebe = this.conn.queryAll(DTOBetrieb.class);
 		final Set<Long> idsOfReferencedBetriebe = this.getIdsOfReferencedBetriebe(mapToIds(betriebe));
-		final Map<Long, List<BetriebeAnsprechpartner>> ansprechpartnerByIdBetrieb = this.dataBetriebeAnsprechpartner
+		final Map<Long, List<BetriebeAnsprechpartner>> ansprechpartnerByIdBetrieb = this.dataBetriebAnsprechpartner
 				.getAll()
 				.stream()
 				.collect(Collectors.groupingBy(a -> a.idBetrieb));

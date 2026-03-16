@@ -21,13 +21,10 @@ import { BenutzerListeEintrag } from '../core/data/benutzer/BenutzerListeEintrag
 import { BerufskollegAnlageKatalogEintrag } from '../asd/data/schule/BerufskollegAnlageKatalogEintrag';
 import { BerufskollegBerufsebeneKatalogEintrag } from '../asd/data/schule/BerufskollegBerufsebeneKatalogEintrag';
 import { BerufskollegFachklassenKatalog } from '../core/data/schule/BerufskollegFachklassenKatalog';
-import { Beschaeftigungsart } from '../core/data/betrieb/Beschaeftigungsart';
+import { Beschaeftigungsart } from '../core/data/schule/Beschaeftigungsart';
 import { Betrieb } from '../core/data/schule/Betrieb';
-import { BetriebAnsprechpartner } from '../core/data/betrieb/BetriebAnsprechpartner';
 import { BetriebeAnsprechpartner } from '../core/data/schule/BetriebeAnsprechpartner';
-import { BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
 import { Betriebsart } from '../core/data/schule/Betriebsart';
-import { BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
 import { BilingualeSpracheKatalogEintrag } from '../asd/data/fach/BilingualeSpracheKatalogEintrag';
 import { BKGymAbiturdaten } from '../core/data/bk/abi/BKGymAbiturdaten';
 import { BKGymLeistungen } from '../core/data/bk/abi/BKGymLeistungen';
@@ -168,7 +165,6 @@ import { Schild3KatalogEintragPruefungsordnung } from '../core/data/schild3/Schi
 import { Schild3KatalogEintragPruefungsordnungOption } from '../core/data/schild3/Schild3KatalogEintragPruefungsordnungOption';
 import { Schild3KatalogEintragUnicodeUmwandlung } from '../core/data/schild3/Schild3KatalogEintragUnicodeUmwandlung';
 import { Schild3KatalogEintragVersetzungsvermerke } from '../core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
-import { SchuelerBetriebe } from '../asd/data/schueler/SchuelerBetriebe';
 import { SchuelerEinwilligung } from '../core/data/schueler/SchuelerEinwilligung';
 import { SchuelerFoerderempfehlung } from '../asd/data/schueler/SchuelerFoerderempfehlung';
 import { SchuelerKAoADaten } from '../core/data/schueler/SchuelerKAoADaten';
@@ -1178,255 +1174,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getBetriebe für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/
-	 *
-	 * Erstellt eine Liste aller in der Datenbank vorhandenen Betriebe unter Angabe der ID, der Betriebsart , des Betriebnamens, Kontaktdaten, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Betrieb-Listen-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<BetriebListeEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Betriebdaten anzusehen.
-	 *   Code 404: Keine Betrieb-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Betrieb-Listen-Einträgen
-	 */
-	public async getBetriebe(schema : string) : Promise<List<BetriebListeEintrag>> {
-		const path = "/db/{schema}/betriebe/"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<BetriebListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BetriebListeEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode createBetriebansprechpartner für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/{betrieb_id : \d+}/ansprechpartner/new
-	 *
-	 * Erstellt einen neuen Betriebansprechpartner und gibt die dazugehörige ID zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Betriebansprechpartners besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Ansprechpartner wurde erfolgreich angelegt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: BetriebAnsprechpartner
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Ansprechpartner anzulegen.
-	 *   Code 404: Kein Betrieb  mit der angegebenen ID gefunden
-	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {BetriebAnsprechpartner} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} betrieb_id - der Pfad-Parameter betrieb_id
-	 *
-	 * @returns Ansprechpartner wurde erfolgreich angelegt.
-	 */
-	public async createBetriebansprechpartner(data : BetriebAnsprechpartner, schema : string, betrieb_id : number) : Promise<BetriebAnsprechpartner> {
-		const path = "/db/{schema}/betriebe/{betrieb_id : \\d+}/ansprechpartner/new"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{betrieb_id\s*(:[^{}]+({[^{}]+})*)?}/g, betrieb_id.toString());
-		const body : string = BetriebAnsprechpartner.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return BetriebAnsprechpartner.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der PATCH-Methode patchSchuelerBetriebsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/{id : \d+}/betrieb
-	 *
-	 * Passt die Schüler-Betriebsdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerbetreibsdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Schüler-Betriebsdaten integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten zu ändern.
-	 *   Code 404: Kein Schülerbetrieb-Eintrag mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<SchuelerBetriebe>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async patchSchuelerBetriebsdaten(data : Partial<SchuelerBetriebe>, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/betriebe/{id : \\d+}/betrieb"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = SchuelerBetriebe.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getSchuelerBetriebsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/{id : \d+}/betrieb
-	 *
-	 * Liest die Daten des Schülerbetriebs zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen vom Schülerbetrieb besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Stammdaten des Schülerbetriebs.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerBetriebe
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerbetreibe anzusehen.
-	 *   Code 404: Kein Schülerbetrieb gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Stammdaten des Schülerbetriebs.
-	 */
-	public async getSchuelerBetriebsdaten(schema : string, id : number) : Promise<SchuelerBetriebe> {
-		const path = "/db/{schema}/betriebe/{id : \\d+}/betrieb"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return SchuelerBetriebe.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getBetriebAnsprechpartnerdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/{id : \d+}/betriebansprechpartner
-	 *
-	 * Liest die Daten des Betriebanpsrechpartners zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen vom Betriebanpsrechpartner besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Stammdaten des Betriebanpsrechpartners.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<BetriebAnsprechpartner>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Betriebanpsrechpartner anzusehen.
-	 *   Code 404: Kein Betriebanpsrechpartner gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Stammdaten des Betriebanpsrechpartners.
-	 */
-	public async getBetriebAnsprechpartnerdaten(schema : string, id : number) : Promise<List<BetriebAnsprechpartner>> {
-		const path = "/db/{schema}/betriebe/{id : \\d+}/betriebansprechpartner"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<BetriebAnsprechpartner>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BetriebAnsprechpartner.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der PATCH-Methode patchBetriebanpsrechpartnerdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/{id : \d+}/betriebansprechpartner
-	 *
-	 * Passt die Betriebanpsrechpartner-Daten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern vom Betriebanpsrechpartner besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Betriebanpsrechpartner-Daten integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Betriebanpsrechpartner-Datenn zu ändern.
-	 *   Code 404: Kein Betriebanpsrechpartner-Eintrag mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<BetriebAnsprechpartner>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async patchBetriebanpsrechpartnerdaten(data : Partial<BetriebAnsprechpartner>, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/betriebe/{id : \\d+}/betriebansprechpartner"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = BetriebAnsprechpartner.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getBetriebStammdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/{id : \d+}/stammdaten
-	 *
-	 * Liest die Stammdaten des Betriebs zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Stammdaten eines Betriebs
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: BetriebStammdaten
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Betriebsdaten anzusehen.
-	 *   Code 404: Kein Betrieb-Eintrag mit der angegebenen ID gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Stammdaten eines Betriebs
-	 */
-	public async getBetriebStammdaten(schema : string, id : number) : Promise<BetriebStammdaten> {
-		const path = "/db/{schema}/betriebe/{id : \\d+}/stammdaten"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return BetriebStammdaten.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der PATCH-Methode patchBetriebStammdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/{id : \d+}/stammdaten
-	 *
-	 * Passt die Betrieb-Stammdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Erzieherdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Betrieb-Stammdaten integriert.
-	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Betriebdaten zu ändern.
-	 *   Code 404: Kein Betrieb-Eintrag mit der angegebenen ID gefunden
-	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<BetriebStammdaten>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async patchBetriebStammdaten(data : Partial<BetriebStammdaten>, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/betriebe/{id : \\d+}/stammdaten"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = BetriebStammdaten.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getBetriebAnsprechpartner für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/{id : \d+}betriebansprechpartnerliste
-	 *
-	 * Erstellt eine Liste aller in der Datenbank vorhandenen Betriebansprechpartner , des Ansprechpartnername, Kontaktdaten, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsansprechpartnern besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Betriebansprechpartnern
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<BetriebAnsprechpartner>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Betriebdaten anzusehen.
-	 *   Code 404: Keine Betrieb-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Eine Liste von Betriebansprechpartnern
-	 */
-	public async getBetriebAnsprechpartner(schema : string, id : number) : Promise<List<BetriebAnsprechpartner>> {
-		const path = "/db/{schema}/betriebe/{id : \\d+}betriebansprechpartnerliste"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<BetriebAnsprechpartner>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BetriebAnsprechpartner.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getBeschaeftigungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsarten
+	 * Implementierung der GET-Methode getBeschaeftigungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/beschaeftigungsarten
 	 *
 	 * Gibt die Beschäftigungsarten zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
 	 *
@@ -1442,7 +1190,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Eine Liste der Beschäftigungsarten.
 	 */
 	public async getBeschaeftigungsarten(schema : string) : Promise<List<Beschaeftigungsart>> {
-		const path = "/db/{schema}/betriebe/beschaeftigungsarten"
+		const path = "/db/{schema}/beschaeftigungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
@@ -1453,7 +1201,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchBeschaeftigungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsarten/{id : \d+}
+	 * Implementierung der PATCH-Methode patchBeschaeftigungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/beschaeftigungsarten/{id : \d+}
 	 *
 	 * Patched die Beschäftigungsart mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
 	 *
@@ -1470,7 +1218,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} id - der Pfad-Parameter id
 	 */
 	public async patchBeschaeftigungsart(data : Partial<Beschaeftigungsart>, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/betriebe/beschaeftigungsarten/{id : \\d+}"
+		const path = "/db/{schema}/beschaeftigungsarten/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = Beschaeftigungsart.transpilerToJSONPatch(data);
@@ -1479,7 +1227,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode addBeschaeftigungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsarten/create
+	 * Implementierung der POST-Methode addBeschaeftigungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/beschaeftigungsarten/create
 	 *
 	 * Erstellt eine neue Beschäftigungsart, insofern die notwendigen Berechtigungen vorliegen.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Beschäftigungsart besitzt.
 	 *
@@ -1496,7 +1244,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Beschäftigungsart wurde erfolgreich hinzugefügt.
 	 */
 	public async addBeschaeftigungsart(data : Partial<Beschaeftigungsart>, schema : string) : Promise<Beschaeftigungsart> {
-		const path = "/db/{schema}/betriebe/beschaeftigungsarten/create"
+		const path = "/db/{schema}/beschaeftigungsarten/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = Beschaeftigungsart.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
@@ -1506,7 +1254,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteBeschaeftigungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/beschaeftigungsarten/delete/multiple
+	 * Implementierung der DELETE-Methode deleteBeschaeftigungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/beschaeftigungsarten/delete/multiple
 	 *
 	 * Entfernt mehrere Beschäftigungsarten, insofern die notwendigen Berechtigungen vorhanden sind.
 	 *
@@ -1524,7 +1272,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
 	public async deleteBeschaeftigungsarten(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
-		const path = "/db/{schema}/betriebe/beschaeftigungsarten/delete/multiple"
+		const path = "/db/{schema}/beschaeftigungsarten/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.deleteJSON(path, body);
@@ -1532,143 +1280,6 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<SimpleOperationResponse>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
 		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getBetriebeAnsprechpartner für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebansprechpartner
-	 *
-	 * Erstellt eine Liste aller in der Datenbank vorhandenen Betriebansprechpartner, des Ansprechpartnername, Kontaktdaten, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsansprechpartnern besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Betriebansprechpartnern
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<BetriebAnsprechpartner>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Betriebdaten anzusehen.
-	 *   Code 404: Keine Betrieb-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Betriebansprechpartnern
-	 */
-	public async getBetriebeAnsprechpartner(schema : string) : Promise<List<BetriebAnsprechpartner>> {
-		const path = "/db/{schema}/betriebe/betriebansprechpartner"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<BetriebAnsprechpartner>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BetriebAnsprechpartner.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode removeBetriebansprechpartner für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/betriebansprechpartner/remove
-	 *
-	 * Löscht einen oder mehrere Betriebsansprechpartner.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Die Betriebsansprechpartner wurden erfolgreich gelöscht.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Betriebsansprechpartner zu löschen.
-	 *   Code 404: Benötigte Information zum Betriebsansprechpartner wurden nicht in der DB gefunden.
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 */
-	public async removeBetriebansprechpartner(data : List<number>, schema : string) : Promise<void> {
-		const path = "/db/{schema}/betriebe/betriebansprechpartner/remove"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		await super.deleteJSON(path, body);
-		return;
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode createBetrieb für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/new
-	 *
-	 * Erstellt einen neuen Betrieb und gibt den neuen Datensatz zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Betriebes besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Betieb wurde erfolgreich angelegt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: BetriebStammdaten
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Betrieb anzulegen.
-	 *   Code 404: Keine Betriebart oder kein Ort  mit der angegebenen ID gefunden
-	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {BetriebStammdaten} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Betieb wurde erfolgreich angelegt.
-	 */
-	public async createBetrieb(data : BetriebStammdaten, schema : string) : Promise<BetriebStammdaten> {
-		const path = "/db/{schema}/betriebe/new"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = BetriebStammdaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return BetriebStammdaten.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode removeBetrieb für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/remove
-	 *
-	 * Löscht einen oder mehrere Betriebe.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Die Betriebe wurden erfolgreich gelöscht.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Betriebe zu löschen.
-	 *   Code 404: Benötigte Information zum Betrieb wurden nicht in der DB gefunden.
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 */
-	public async removeBetrieb(data : List<number>, schema : string) : Promise<void> {
-		const path = "/db/{schema}/betriebe/remove"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		await super.deleteJSON(path, body);
-		return;
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode createSchuelerbetrieb für den Zugriff auf die URL https://{hostname}/db/{schema}/betriebe/schuelerbetrieb/new/schueler/{schueler_id : \d+}/betrieb/{betrieb_id: \d+}
-	 *
-	 * Erstellt einen neuen Schülerbetrieb und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Schülerbetriebs besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Schülerbetrieb wurde erfolgreich angelegt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerBetriebe
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Schülerbetrieb anzulegen.
-	 *   Code 404: Kein Betrieb  mit der angegebenen ID gefunden
-	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {SchuelerBetriebe} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} schueler_id - der Pfad-Parameter schueler_id
-	 * @param {number} betrieb_id - der Pfad-Parameter betrieb_id
-	 *
-	 * @returns Schülerbetrieb wurde erfolgreich angelegt.
-	 */
-	public async createSchuelerbetrieb(data : SchuelerBetriebe, schema : string, schueler_id : number, betrieb_id : number) : Promise<SchuelerBetriebe> {
-		const path = "/db/{schema}/betriebe/schuelerbetrieb/new/schueler/{schueler_id : \\d+}/betrieb/{betrieb_id: \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{schueler_id\s*(:[^{}]+({[^{}]+})*)?}/g, schueler_id.toString())
-			.replace(/{betrieb_id\s*(:[^{}]+({[^{}]+})*)?}/g, betrieb_id.toString());
-		const body : string = SchuelerBetriebe.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return SchuelerBetriebe.transpilerFromJSON(text);
 	}
 
 
@@ -11709,64 +11320,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getSchuelerBetriebe für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/betriebe
-	 *
-	 * Erstellt eine Liste aller in der Datenbank vorhandenen Betriebe unter Angabe der Schüler-IDdes Vor- und Nachnamens, Erzieherart, Kontaktdaten, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Schülerbetrieben
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchuelerBetriebe>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Erzieherdaten anzusehen.
-	 *   Code 404: Keine Erzieher-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Eine Liste von Schülerbetrieben
-	 */
-	public async getSchuelerBetriebe(schema : string, id : number) : Promise<List<SchuelerBetriebe>> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/betriebe"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<SchuelerBetriebe>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerBetriebe.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getSchuelerBetriebsstammdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/betriebsstammdaten
-	 *
-	 * Erstellt eine Liste aller in der Datenbank vorhandenen Betriebe eines Schülers unter Angabe der ID,ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Betriebsdaten des Schülers besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von von Betriebsstammdaten eines Schülers
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<BetriebStammdaten>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Betriebdaten anzusehen.
-	 *   Code 404: Keine Betrieb-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Eine Liste von von Betriebsstammdaten eines Schülers
-	 */
-	public async getSchuelerBetriebsstammdaten(schema : string, id : number) : Promise<List<BetriebStammdaten>> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/betriebsstammdaten"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<BetriebStammdaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BetriebStammdaten.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getSchuelerErzieher für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/erzieher
 	 *
 	 * Erstellt eine Liste aller in der Datenbank vorhandenen Erzieher unter Angabe der Schüler-IDdes Vor- und Nachnamens, Erzieherart, Kontaktdaten, ob sie in der Anwendung sichtbar bzw. änderbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Erzieherdaten besitzt.
@@ -15030,7 +14583,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getBetriebeNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe
+	 * Implementierung der GET-Methode getBetriebe für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe
 	 *
 	 * Gibt die Betriebe zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
 	 *
@@ -15045,7 +14598,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Betriebe.
 	 */
-	public async getBetriebeNeu(schema : string) : Promise<List<Betrieb>> {
+	public async getBetriebe(schema : string) : Promise<List<Betrieb>> {
 		const path = "/db/{schema}/schule/betriebe"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -15057,7 +14610,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchBetriebeNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe/{id : \d+}
+	 * Implementierung der PATCH-Methode patchBetrieb für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe/{id : \d+}
 	 *
 	 * Patched die Betriebe mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
 	 *
@@ -15073,7 +14626,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchBetriebeNeu(data : Partial<Betrieb>, schema : string, id : number) : Promise<void> {
+	public async patchBetrieb(data : Partial<Betrieb>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/schule/betriebe/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -15083,7 +14636,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode addBetriebNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe/create
+	 * Implementierung der POST-Methode addBetrieb für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe/create
 	 *
 	 * Erstellt einen neuen Betrieb, insofern die notwendigen Berechtigungen vorliegen
 	 *
@@ -15099,7 +14652,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Betrieb wurde erfolgreich hinzugefügt.
 	 */
-	public async addBetriebNeu(data : Partial<Betrieb>, schema : string) : Promise<Betrieb> {
+	public async addBetrieb(data : Partial<Betrieb>, schema : string) : Promise<Betrieb> {
 		const path = "/db/{schema}/schule/betriebe/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = Betrieb.transpilerToJSONPatch(data);
@@ -15110,7 +14663,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteBetriebeNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe/delete/multiple
+	 * Implementierung der DELETE-Methode deleteBetriebe für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe/delete/multiple
 	 *
 	 * Entfernt mehrere Betriebe, insofern die notwendigen Berechtigungen vorhanden sind.
 	 *
@@ -15127,7 +14680,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteBetriebeNeu(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteBetriebe(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/betriebe/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
@@ -15140,7 +14693,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getBetriebeAnsprechpartnerNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe-ansprechpartner
+	 * Implementierung der GET-Methode getBetriebAnsprechpartner für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe-ansprechpartner
 	 *
 	 * Gibt die Ansprechpartner zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
 	 *
@@ -15155,7 +14708,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Ansprechpartner.
 	 */
-	public async getBetriebeAnsprechpartnerNeu(schema : string) : Promise<List<BetriebeAnsprechpartner>> {
+	public async getBetriebAnsprechpartner(schema : string) : Promise<List<BetriebeAnsprechpartner>> {
 		const path = "/db/{schema}/schule/betriebe-ansprechpartner"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
@@ -15167,7 +14720,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchBetriebeAnsprechpartnerNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe-ansprechpartner/{id : \d+}
+	 * Implementierung der PATCH-Methode patchBetriebAnsprechpartner für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe-ansprechpartner/{id : \d+}
 	 *
 	 * Patched die Ansprechpartner mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
 	 *
@@ -15183,7 +14736,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchBetriebeAnsprechpartnerNeu(data : Partial<BetriebeAnsprechpartner>, schema : string, id : number) : Promise<void> {
+	public async patchBetriebAnsprechpartner(data : Partial<BetriebeAnsprechpartner>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/schule/betriebe-ansprechpartner/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -15193,7 +14746,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode addBetriebeAnsprechpartnerNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe-ansprechpartner/create
+	 * Implementierung der POST-Methode addBetriebAnsprechpartner für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe-ansprechpartner/create
 	 *
 	 * Erstellt einen neuen Betrieb, insofern die notwendigen Berechtigungen vorliegen
 	 *
@@ -15209,7 +14762,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Betrieb wurde erfolgreich hinzugefügt.
 	 */
-	public async addBetriebeAnsprechpartnerNeu(data : Partial<BetriebeAnsprechpartner>, schema : string) : Promise<BetriebeAnsprechpartner> {
+	public async addBetriebAnsprechpartner(data : Partial<BetriebeAnsprechpartner>, schema : string) : Promise<BetriebeAnsprechpartner> {
 		const path = "/db/{schema}/schule/betriebe-ansprechpartner/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = BetriebeAnsprechpartner.transpilerToJSONPatch(data);
@@ -15220,7 +14773,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteBetriebeAnsprechpartnerNeu für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe-ansprechpartner/delete/multiple
+	 * Implementierung der DELETE-Methode deleteBetriebAnsprechpartner für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/betriebe-ansprechpartner/delete/multiple
 	 *
 	 * Entfernt mehrere Ansprechpartner, insofern die notwendigen Berechtigungen vorhanden sind.
 	 *
@@ -15237,7 +14790,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteBetriebeAnsprechpartnerNeu(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteBetriebAnsprechpartner(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schule/betriebe-ansprechpartner/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";

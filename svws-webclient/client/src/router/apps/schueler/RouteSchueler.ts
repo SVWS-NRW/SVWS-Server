@@ -11,7 +11,7 @@ import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
 import { RouteDataSchueler } from "~/router/apps/schueler/RouteDataSchueler";
-import { routeSchuelerAusbildungsbetriebe } from "~/router/apps/schueler/ausbildungsbetriebe/RouteSchuelerAusbildungsbetriebe";
+import { routeSchuelerAusbildungsbetriebe } from "~/router/apps/schueler/betriebe/RouteSchuelerBetriebe";
 import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/erziehungsberechtigte/RouteSchuelerErziehungsberechtigte";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";

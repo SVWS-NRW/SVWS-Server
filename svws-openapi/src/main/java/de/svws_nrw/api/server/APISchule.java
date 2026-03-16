@@ -11,7 +11,7 @@ import de.svws_nrw.core.data.schule.Lernplattform;
 import de.svws_nrw.core.data.schule.Telefonart;
 import de.svws_nrw.data.erzieher.DataErzieherarten;
 import de.svws_nrw.data.schule.DataBetriebe;
-import de.svws_nrw.data.schule.DataBetriebeAnsprechpartner;
+import de.svws_nrw.data.schule.DataBetriebAnsprechpartner;
 import de.svws_nrw.data.schule.DataBetriebsarten;
 import de.svws_nrw.data.schule.DataFloskelJahrgangZuordnung;
 import de.svws_nrw.data.schule.DataFloskelgruppen;
@@ -3038,8 +3038,8 @@ public class APISchule {
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Betrieb.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-	public Response getBetriebeNeu(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebe(conn, new DataBetriebeAnsprechpartner(conn)).getAllAsResponse(),
+	public Response getBetriebe(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebe(conn, new DataBetriebAnsprechpartner(conn)).getAllAsResponse(),
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
@@ -3064,11 +3064,11 @@ public class APISchule {
 	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
 			+ " (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
-	public Response patchBetriebeNeu(@PathParam("schema") final String schema, @PathParam("id") final long id,
+	public Response patchBetrieb(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch eines Betriebs", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebe(conn, new DataBetriebeAnsprechpartner(conn)).patchAsResponse(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebe(conn, new DataBetriebAnsprechpartner(conn)).patchAsResponse(id, is),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -3089,11 +3089,11 @@ public class APISchule {
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebe anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response addBetriebNeu(@PathParam("schema") final String schema,
+	public Response addBetrieb(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des zu erstellenden Betriebs.", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Betrieb.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebe(conn, new DataBetriebeAnsprechpartner(conn)).addAsResponse(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebe(conn, new DataBetriebAnsprechpartner(conn)).addAsResponse(is),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -3114,11 +3114,11 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebe zu entfernen.")
 	@ApiResponse(responseCode = "404", description = "Betriebe nicht vorhanden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteBetriebeNeu(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Betriebe",
+	public Response deleteBetriebe(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Betriebe",
 			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataBetriebe(conn, new DataBetriebeAnsprechpartner(conn)).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				conn -> new DataBetriebe(conn, new DataBetriebAnsprechpartner(conn)).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
@@ -3138,8 +3138,8 @@ public class APISchule {
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BetriebeAnsprechpartner.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-	public Response getBetriebeAnsprechpartnerNeu(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebeAnsprechpartner(conn).getAllAsResponse(),
+	public Response getBetriebAnsprechpartner(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataBetriebAnsprechpartner(conn).getAllAsResponse(),
 				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
@@ -3164,12 +3164,12 @@ public class APISchule {
 	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
 			+ " (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
-	public Response patchBetriebeAnsprechpartnerNeu(@PathParam("schema") final String schema, @PathParam("id") final long id,
+	public Response patchBetriebAnsprechpartner(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch eines Betriebs", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebeAnsprechpartner.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataBetriebeAnsprechpartner(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
+				conn -> new DataBetriebAnsprechpartner(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -3190,12 +3190,12 @@ public class APISchule {
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebeAnsprechpartner.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Ansprechpartner anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response addBetriebeAnsprechpartnerNeu(@PathParam("schema") final String schema,
+	public Response addBetriebAnsprechpartner(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des zu erstellenden Betriebs.", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebeAnsprechpartner.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataBetriebeAnsprechpartner(conn).addAsResponse(is), request, ServerMode.STABLE,
+				conn -> new DataBetriebAnsprechpartner(conn).addAsResponse(is), request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -3216,12 +3216,12 @@ public class APISchule {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Ansprechpartner zu entfernen.")
 	@ApiResponse(responseCode = "404", description = "Ansprechpartner nicht vorhanden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteBetriebeAnsprechpartnerNeu(@PathParam("schema") final String schema,
+	public Response deleteBetriebAnsprechpartner(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden Ansprechpartner",
 			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 			array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataBetriebeAnsprechpartner(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				conn -> new DataBetriebAnsprechpartner(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
@@ -3434,8 +3434,5 @@ public class APISchule {
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
-
-
-
 
 }

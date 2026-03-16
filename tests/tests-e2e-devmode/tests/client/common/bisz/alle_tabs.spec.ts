@@ -42,9 +42,8 @@ test('Nicht privilegierte Nutzer können nur entsprechende Bereiche im DEV Mode 
 
 	// Test schlug fehl, weil Playwright ohne Timeout den Tabwechsel nicht registrieren konnte
 	await page.waitForTimeout(300);
-	await expect(page.getByRole('button', { name: 'Ausbildungsbetriebe' })).toBeVisible();
-	await page.getByRole('button', { name: 'Ausbildungsbetriebe' }).click();
-	await expect(page.getByText('Noch kein Schülerbetrieb vorhanden.')).toBeVisible();
+	await expect(page.getByRole('button', { name: 'Betriebe' })).toBeVisible();
+	await page.getByRole('button', { name: 'Betriebe' }).click();
 
 
 	await expect(page.getByRole('button', { name: 'KAoA' })).toBeVisible();

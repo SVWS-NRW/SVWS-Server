@@ -22,14 +22,14 @@ import jakarta.ws.rs.core.Response;
 import static de.svws_nrw.db.schema.Schema.tab_AllgAdrAnsprechpartner;
 
 /** Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das CoreDTO {@link BetriebeAnsprechpartner} */
-public final class DataBetriebeAnsprechpartner extends DataManagerRevised<Long, DTOBetriebeAnsprechpartner, BetriebeAnsprechpartner> {
+public final class DataBetriebAnsprechpartner extends DataManagerRevised<Long, DTOBetriebeAnsprechpartner, BetriebeAnsprechpartner> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link BetriebeAnsprechpartner}.
 	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
-	public DataBetriebeAnsprechpartner(final DBEntityManager conn) {
+	public DataBetriebAnsprechpartner(final DBEntityManager conn) {
 		super(conn);
 		setAttributesRequiredOnCreation("idBetrieb", "name");
 		setAttributesNotPatchable("id");

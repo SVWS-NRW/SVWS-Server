@@ -44,13 +44,13 @@ import static org.mockito.Mockito.when;
 
 @DisplayName("Diese Klasse testet die Klasse DataBetriebeAnsprechpartner")
 @ExtendWith(MockitoExtension.class)
-class DataBetriebeAnsprechpartnerTest {
+class DataBetriebAnsprechpartnerTest {
 
 	@Mock
 	private DBEntityManager conn;
 
 	@InjectMocks
-	private DataBetriebeAnsprechpartner data;
+	private DataBetriebAnsprechpartner data;
 
 	@BeforeAll
 	static void setUp() {
