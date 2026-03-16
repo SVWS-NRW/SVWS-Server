@@ -20,13 +20,13 @@ export class JahrgangModelProxy extends ModelProxy<JahrgangsDaten> {
 	 * ModelProxy für Jahrgangsdaten.
 	 *
 	 * @param data Lambda für den Zugriff auf die Original-Daten
-	 * @param liste Lambda zur Liste aller Jahrgangsdaten
+	 * @param jahrgaenge Lambda zur Liste aller Jahrgangsdaten
 	 * @param schuljahr Das aktuelle Schuljahr
 	 * @param patch Methode zum Patchen einzelner Attribute
 	 */
 	constructor(
 		data: () => JahrgangsDaten,
-		liste: () => Iterable<JahrgangsDaten>,
+		jahrgaenge: () => Iterable<JahrgangsDaten>,
 		schuljahr: number,
 		patch?: (data: Partial<JahrgangsDaten>) => Promise<boolean>
 	) {
@@ -34,22 +34,23 @@ export class JahrgangModelProxy extends ModelProxy<JahrgangsDaten> {
 			["idFolgejahrgang", "kuerzelSchulgliederung", "kuerzelStatistik", "idBildungsstufe", "istSichtbar"];
 		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
 		this.schuljahr = schuljahr;
-		this.jahrgaengeById = this.mapJahrgaenge(liste());
-		this.addValidatoren(liste);
+		this.jahrgaengeById = this.mapJahrgaenge(jahrgaenge());
+		this.addValidatoren(jahrgaenge);
 		this.validate();
 	}
-	private mapJahrgaenge(liste: Iterable<JahrgangsDaten>) {
+
+	private mapJahrgaenge(jahrgaenge: Iterable<JahrgangsDaten>) {
 		const result = new Map<number, JahrgangsDaten>();
-		for (const jahrgang of liste) {
+		for (const jahrgang of jahrgaenge) {
 			result.set(jahrgang.id, jahrgang);
 		}
 		return result;
 	}
 
-	private addValidatoren(liste: () => Iterable<JahrgangsDaten>) {
-		this.addValidator(new ValidatorJahrgangKuerzel(() => this.proxy, liste), "kuerzel");
-		this.addValidator(new ValidatorJahrgangBezeichnung(() => this.proxy, liste), "bezeichnung");
-		this.addValidator(new ValidatorJahrgangKurzbezeichnung(() => this.proxy, liste), "kurzbezeichnung");
+	private addValidatoren(jahrgaenge: () => Iterable<JahrgangsDaten>) {
+		this.addValidator(new ValidatorJahrgangKuerzel(() => this.proxy, jahrgaenge), "kuerzel");
+		this.addValidator(new ValidatorJahrgangBezeichnung(() => this.proxy, jahrgaenge), "bezeichnung");
+		this.addValidator(new ValidatorJahrgangKurzbezeichnung(() => this.proxy, jahrgaenge), "kurzbezeichnung");
 		// ASD-Jahrgang
 		this.addValidator(new ValidatorInputRequired(() => this.proxy.kuerzelStatistik), "kuerzelStatistik");
 		// anzahlRestabschnitte

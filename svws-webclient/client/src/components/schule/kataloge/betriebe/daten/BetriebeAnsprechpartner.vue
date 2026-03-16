@@ -34,27 +34,42 @@
 			<template #modalContent>
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Anrede"
-						v-model="data.anrede"
-						:valid="() => fieldIsValid('anrede')" :max-len="10" :readonly="!hatKompetenzUpdate" />
+						v-model="data.proxy.anrede"
+						:validation="() => data.getFehler('anrede')"
+						@commit="data.patch"
+						skip-default-validation
+						:max-len="10" :readonly />
 					<svws-ui-spacing />
 					<svws-ui-text-input placeholder="Rufname"
-						v-model="data.rufname"
-						:valid="() => fieldIsValid('rufname')" :max-len="80" :readonly="!hatKompetenzUpdate" />
+						v-model="data.proxy.rufname"
+						:validation="() => data.getFehler('rufname')"
+						@commit="data.patch"
+						skip-default-validation
+						:max-len="80" :readonly />
 					<svws-ui-text-input placeholder="Name"
-						v-model="data.name"
-						:valid="() => fieldIsValid('name')" :max-len="120" :readonly="!hatKompetenzUpdate" required />
+						v-model="data.proxy.name"
+						:validation="() => data.getFehler('name')"
+						@commit="data.patch"
+						skip-default-validation
+						:max-len="120" :readonly required />
 					<svws-ui-text-input placeholder="Telefon" type="tel"
-						v-model="data.telefon"
-						:valid="() => fieldIsValid('telefon')" :max-len="20" :readonly="!hatKompetenzUpdate" />
+						v-model="data.proxy.telefon"
+						:validation="() => data.getFehler('telefon')"
+						@commit="data.patch"
+						skip-default-validation
+						:max-len="20" :readonly />
 					<svws-ui-text-input placeholder="Email" type="email"
-						v-model="data.eMail"
-						:valid="() => fieldIsValid('eMail')" :max-len="100" :readonly="!hatKompetenzUpdate" />
+						v-model="data.proxy.eMail"
+						:validation="() => data.getFehler('eMail')"
+						@commit="data.patch"
+						skip-default-validation
+						:max-len="100" :readonly />
 				</svws-ui-input-wrapper>
 				<div class="mt-7 flex gap-4 justify-end">
 					<svws-ui-button type="secondary" @click="closeEditingModal">
 						Abbrechen
 					</svws-ui-button>
-					<svws-ui-button @click="sendRequest(currentMode)" :disabled="!formIsValid">
+					<svws-ui-button @click="sendRequest(currentMode)" :disabled="!isValid">
 						Speichern
 					</svws-ui-button>
 				</div>
@@ -67,20 +82,27 @@
 
 	import { computed, ref } from "vue";
 	import { ArrayList, BetriebeAnsprechpartner, type List } from "@core";
-	import type { DataTableColumn, BetriebeListeManager } from "@ui";
-	import { phoneNumberIsValid, optionalInputIsValid, emailIsValid, mandatoryInputIsValid } from "~/util/validation/Validation";
+	import type { BetriebeListeManager, DataTableColumn } from "@ui";
+	import { BetriebeAnsprechpartnerModelProxy } from "~/components/schule/kataloge/betriebe/modelproxy/BetriebeAnsprechpartnerModelProxy";
 
 	const props = defineProps<{
 		manager: () => BetriebeListeManager,
 		hatKompetenzUpdate: boolean,
 		addAnsprechpartner: (ansprechpartner: Partial<BetriebeAnsprechpartner>) => Promise<void>;
 		deleteAnsprechpartner: (ids: List<number>) => Promise<void>;
-		patchAnsprechpartner: (id: number, data: Partial<BetriebeAnsprechpartner>) => Promise<void>;
+		patchAnsprechpartner: (data: Partial<BetriebeAnsprechpartner>) => Promise<boolean>;
 	}>();
-	const data = ref<BetriebeAnsprechpartner>(new BetriebeAnsprechpartner());
+
+	let data = new BetriebeAnsprechpartnerModelProxy(() => new BetriebeAnsprechpartner(), props.patchAnsprechpartner);
+	const isValid = computed<boolean>(() => data.getAlleFehler().isEmpty());
+	const readonly = !props.hatKompetenzUpdate;
 
 	function resetData(): void {
-		data.value = Object.assign(new BetriebeAnsprechpartner(), { idBetrieb: props.manager().auswahlID() });
+		data = new BetriebeAnsprechpartnerModelProxy(() => new BetriebeAnsprechpartner(), props.patchAnsprechpartner);
+		const idBetrieb = props.manager().auswahlID();
+		if (idBetrieb !== null) {
+			data.proxy.idBetrieb = props.manager().auswahlID() ?? -1;
+		}
 	}
 
 	// --- table ---
@@ -109,18 +131,6 @@
 
 	// --- add | patch ---
 
-	const editingModalIsOpen = ref<boolean>(false);
-
-	function openEditingModal() {
-		editingModalIsOpen.value = true;
-	}
-
-	function closeEditingModal() {
-		editingModalIsOpen.value = false;
-		setMode(Mode.DEFAULT);
-		resetData();
-	}
-
 	function addNewEntry() {
 		setMode(Mode.ADD);
 		resetData();
@@ -130,19 +140,20 @@
 	function patchEntry(ansprechpartner: BetriebeAnsprechpartner) {
 		setMode(Mode.PATCH);
 		resetData();
-		data.value = Object.assign(data.value, ansprechpartner);
+		data = new BetriebeAnsprechpartnerModelProxy(() => ansprechpartner);
 		openEditingModal();
 	}
 
 	// --- api ---
 
 	async function sendRequest(type: Mode) {
-		const { id, referenziertInAnderenTabellen, ...partial } = data.value;
 		if (type === Mode.ADD) {
+			const { id, referenziertInAnderenTabellen, ...partial } = data.proxy;
 			await props.addAnsprechpartner(partial);
 		}
 		if (type === Mode.PATCH) {
-			await props.patchAnsprechpartner(data.value.id, partial);
+			const { referenziertInAnderenTabellen, ...partial } = data.proxy;
+			await props.patchAnsprechpartner(partial);
 		}
 		setMode(Mode.DEFAULT);
 		closeEditingModal();
@@ -168,28 +179,16 @@
 		currentMode.value = newMode;
 	}
 
-	// --- validation ---
+	const editingModalIsOpen = ref<boolean>(false);
 
-	const formIsValid = computed(() => {
-		return Object.keys(data.value)
-			.every((field: string) => fieldIsValid(field as keyof BetriebeAnsprechpartner));
-	});
+	function openEditingModal() {
+		editingModalIsOpen.value = true;
+	}
 
-	const fieldIsValid = (field: keyof BetriebeAnsprechpartner): boolean => {
-		switch (field) {
-			case 'anrede':
-				return optionalInputIsValid(data.value.anrede, 10);
-			case 'rufname':
-				return optionalInputIsValid(data.value.rufname, 80);
-			case 'name':
-				return mandatoryInputIsValid(data.value.name, 120);
-			case 'telefon':
-				return phoneNumberIsValid(data.value.telefon, 20);
-			case 'eMail':
-				return emailIsValid(data.value.eMail, 100);
-			default:
-				return true;
-		}
-	};
+	function closeEditingModal() {
+		editingModalIsOpen.value = false;
+		setMode(Mode.DEFAULT);
+		resetData();
+	}
 
 </script>

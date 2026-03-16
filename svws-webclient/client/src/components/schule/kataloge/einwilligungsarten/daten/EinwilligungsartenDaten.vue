@@ -7,12 +7,10 @@
 						v-model="model.proxy.bezeichnung"
 						:validation="() => model.getFehler('bezeichnung')"
 						@commit="model.patch"
-						skip-default-validation
 						:max-len="250" required :readonly="!hatKompetenzUpdate" />
 					<ui-select label="Einwilligungsschlüssel" class="col-span-full"
 						v-model="model.einwilligungsschluessel.value"
 						:manager="einwilligungsschluesselManager"
-						skip-default-validation
 						:readonly searchable />
 					<svws-ui-textarea-input placeholder="Beschreibung" span="full"
 						:model-value="model.proxy.beschreibung"
@@ -29,11 +27,9 @@
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
 						@commit="model.patch"
-						skip-default-validation
 						:min="0" :max="32000" :readonly :removable="false" />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar"
-						skip-default-validation
 						:readonly>
 						Sichtbar
 					</svws-ui-checkbox>

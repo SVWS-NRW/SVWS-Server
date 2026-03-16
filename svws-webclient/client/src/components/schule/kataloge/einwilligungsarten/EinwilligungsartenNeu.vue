@@ -6,21 +6,17 @@
 					<svws-ui-text-input placeholder="Bezeichnung" span="2"
 						v-model="model.proxy.bezeichnung"
 						:validation="() => model.getFehler('bezeichnung')"
-						skip-default-validation
 						:max-len="250" required />
 					<ui-select label="Einwilligungsschlüssel" class="col-span-full"
 						v-model="model.einwilligungsschluessel.value"
 						:manager="einwilligungsschluesselCoreTypeManager"
-						skip-default-validation
 						searchable />
 					<svws-ui-textarea-input placeholder="Beschreibung" span="full"
 						:model-value="model.proxy.beschreibung"
-						@input="value => model.proxy.beschreibung = value"
-						skip-default-validation />
+						@input="value => model.proxy.beschreibung = value" />
 					<ui-select label="Personenart" class="col-span-full"
 						v-model="model.personTyp.value"
 						:manager="personTypManager"
-						skip-default-validation
 						:removable="false" searchable />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
@@ -30,7 +26,6 @@
 					<svws-ui-input-number placeholder="Sortierung"
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
-						skip-default-validation
 						:min="0" :max="32000" :removable="false" />
 					<svws-ui-spacing />
 					<svws-ui-checkbox v-model="model.proxy.istSichtbar">

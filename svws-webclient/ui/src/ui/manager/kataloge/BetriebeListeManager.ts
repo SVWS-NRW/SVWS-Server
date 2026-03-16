@@ -149,8 +149,11 @@ export class BetriebeListeManager extends AuswahlManager<number, Betrieb, Betrie
 	}
 
 	/** Eintrag der Ansprechpartner patchen */
-	public patchAnsprechpartner(id: number, data: Partial<BetriebeAnsprechpartner>) {
-		const index = this.getIndexAnsprechpartnerById(id);
+	public patchAnsprechpartner(data: Partial<BetriebeAnsprechpartner>) {
+		if (data.id === undefined) {
+			return;
+		}
+		const index = this.getIndexAnsprechpartnerById(data.id);
 		if (index === undefined) {
 			return;
 		}

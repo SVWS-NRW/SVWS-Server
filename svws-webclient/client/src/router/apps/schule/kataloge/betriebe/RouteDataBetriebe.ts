@@ -1,9 +1,8 @@
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { Betrieb, BetriebeAnsprechpartner, JavaSet, List, SimpleOperationResponse } from "@core";
 import { ArrayList, BenutzerKompetenz } from "@core";
-import { ViewType } from "@ui";
 import { api } from "~/router/Api";
-import { BetriebeListeManager } from "../../../../../../../ui/src/ui/manager/kataloge/BetriebeListeManager";
+import { BetriebeListeManager, ViewType } from "@ui";
 import { routeBetriebeGruppenprozesse } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebeGruppenprozesse";
 import { routeBetriebeNeu } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebeNeu";
 import { routeBetriebeDaten } from "~/router/apps/schule/kataloge/betriebe/RouteBetriebeDaten";
@@ -109,11 +108,15 @@ export class RouteDataBetriebe extends RouteDataAuswahl<BetriebeListeManager, Ro
 		this.commit();
 	};
 
-	patchAnsprechpartner = async (id: number, data: Partial<BetriebeAnsprechpartner>): Promise<void> => {
-		await api.server.patchBetriebAnsprechpartner(data, api.schema, id);
-		this.manager.patchAnsprechpartner(id, data);
+	patchAnsprechpartner = async (data: Partial<BetriebeAnsprechpartner>): Promise<boolean> => {
+		if (data.id === undefined) {
+			return false;
+		}
+		const { id, ...partial } = data;
+		await api.server.patchBetriebAnsprechpartner(partial, api.schema, data.id);
+		this.manager.patchAnsprechpartner(data);
 		this.commit();
+		return true;
 	};
-
 
 }
