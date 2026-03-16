@@ -11,7 +11,7 @@ export class BetriebsartenModelProxy extends ModelProxy<Betriebsart> {
 	 * ModelProxy für Betriebsarten
 	 *
 	 * @param data Lambda für den Zugriff auf die Original-Daten
-	 * @param liste Lambda zur Lister aller Betriebsarten
+	 * @param liste Lambda zur Liste aller Betriebsarten
 	 * @param patch Methode zum Patchen einzelner Attribute
 	 */
 	constructor(

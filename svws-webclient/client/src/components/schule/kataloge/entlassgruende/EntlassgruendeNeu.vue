@@ -4,18 +4,20 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="1">
 					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
-						v-model="data.bezeichnung"
-						:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="30" :disabled="!hatKompetenzAdd" required />
+						v-model="model.proxy.bezeichnung"
+						:validation="() => model.getFehler('bezeichnung')"
+						:max-len="30" :disabled required />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
 			<svws-ui-content-card title="Ansicht & Sortierung">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
-						v-model="data.sortierung"
-						:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" />
+						v-model="model.proxy.sortierung"
+						:validation="() => model.getFehler('sortierung')"
+						:min="0" :max="32000" :disabled :removable="false" />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
+					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :disabled>
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -24,7 +26,7 @@
 				<svws-ui-button type="secondary" @click="cancel">
 					Abbrechen
 				</svws-ui-button>
-				<svws-ui-button @click="addEntlassgrund" :disabled="!formIsValid || !hatKompetenzAdd">
+				<svws-ui-button @click="addEntlassgrund" :disabled="!isValid || !hatKompetenzAdd">
 					Speichern
 				</svws-ui-button>
 			</div>
@@ -38,35 +40,16 @@
 	import type { EntlassgruendeNeuProps } from "~/components/schule/kataloge/entlassgruende/EntlassgruendeNeuProps";
 	import { BenutzerKompetenz, KatalogEntlassgrund } from "@core";
 	import { ref, computed, watch } from "vue";
-	import { isUniqueInList, mandatoryInputIsValid, numberIsValid } from "~/util/validation/Validation";
+	import { EntlassgruendeModelProxy } from "~/components/schule/kataloge/entlassgruende/modelproxy/EntlassgruendeModelProxy";
 
 	const props = defineProps<EntlassgruendeNeuProps>();
-	const data = ref<KatalogEntlassgrund>(new KatalogEntlassgrund());
+	const initialData = ref<KatalogEntlassgrund>(Object.assign(new KatalogEntlassgrund(), { istSichtbar: true, sortierung: 32000 }));
+	const model = new EntlassgruendeModelProxy(() => initialData.value, () => props.manager().liste.list());
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const disabled = computed(() => !hatKompetenzAdd.value);
 
-	const formIsValid = computed(() => {
-		return Object.keys(data.value)
-			.every((field: string) => fieldIsValid(field as keyof KatalogEntlassgrund));
-	});
-
-	const fieldIsValid = (field: keyof KatalogEntlassgrund): boolean => {
-		switch (field) {
-			case 'bezeichnung':
-				return bezeichnungIsValid(data.value.bezeichnung);
-			case 'sortierung':
-				return numberIsValid(data.value.sortierung, true, 0, 32000);
-			default:
-				return true;
-		}
-	};
-
-	function bezeichnungIsValid(value: string | null) {
-		if (!mandatoryInputIsValid(value, 30)) {
-			return false;
-		}
-		return isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
-	}
+	const isValid = computed<boolean>(() => model.getAlleFehler().isEmpty());
 
 	async function addEntlassgrund() {
 		if (isLoading.value) {
@@ -75,7 +58,7 @@
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
+		const { id, referenziertInAnderenTabellen, ...partialData } = model.proxy;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
@@ -85,7 +68,7 @@
 		await props.goToDefaultView(null);
 	}
 
-	watch(() => data.value, async () => {
+	watch(() => model.proxy, async () => {
 		if (isLoading.value) {
 			return;
 		}
