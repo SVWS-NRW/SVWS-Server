@@ -11,11 +11,17 @@ require_once dirname(__DIR__).'/../autoload.php';
 
 use wenom\Application;
 use wenom\ENMDatenManager;
+use wenom\Http;
 
 $app = new Application();
 
 // Prüfe die HTTP-Methode
 $app->auth->pruefeHTTPMethod([ "GET" ]);
+
+// Prüfe, ob der Client die GZip-Komprimierung unterstützt
+if (!Http::checkAcceptGZipEncoding()) {
+	Http::exit400BadRequest("Der Client unterstützt laut Header (accept-encoding) keine GZip-Komprimierung.");
+}
 
 // Prüfe, ob eine Authentifizierung mit einem gültigen Json-Web-Token vorliegt
 $lehrer = $app->auth->pruefeLehrerSession();
@@ -24,6 +30,7 @@ $lehrer = $app->auth->pruefeLehrerSession();
 $enmDatenManager = ENMDatenManager::createFromDatabase($app->db);
 $content = $enmDatenManager->getENMDatenForLehrer($lehrer);
 
-// Exportieren des Inhaltes als gzip-Datei
-header('Content-Type: application/octet-stream;');
+// Exportieren des Inhaltes als gzip
+header('Content-Encoding: gzip');
+header('Content-Type: application/json; charset=utf-8');
 echo gzencode($content, 5);

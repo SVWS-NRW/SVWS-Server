@@ -55,6 +55,7 @@ class ApiService {
 				...options.headers,
 				...(contentLength > 0) && { 'content-length': String(contentLength) },
 				'accept': '*/*',
+				'accept-encoding': 'gzip',
 				'authorization': this.authHeader,
 			},
 			...(options.body !== undefined) && { body: options.body },

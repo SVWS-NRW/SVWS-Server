@@ -6,7 +6,8 @@ import { ENMLernabschnitt } from "@core/core/data/enm/ENMLernabschnitt";
 import { ENMSchuelerAnkreuzkompetenz } from "@core/core/data/enm/ENMSchuelerAnkreuzkompetenz";
 import { ENMTeilleistung } from "@core/core/data/enm/ENMTeilleistung";
 import { ServerMode } from "@core/core/types/ServerMode";
-import { type ApiFile, BaseApi } from "./BaseApi";
+import { BaseApi } from "./BaseApi";
+import { ENMDaten } from "@core/core/data/enm/ENMDaten";
 
 export class ApiEnmServer extends BaseApi {
 
@@ -78,17 +79,17 @@ export class ApiEnmServer extends BaseApi {
 	 * und liefert diese GZip-komprimiert zurück.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die GZip-komprimierte ENM-JSON-Datei
-	 *     - Mime-Type: application/octet-stream
-	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 200: Die GZip-komprimierten ENM-Daten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ENMDaten
 	 *   Code 401: Die Authentifzierung des Benutzers ist fehlgeschlagen
 	 *   Code 404: Es wurden nicht alle benötigten ENM-Daten gefunden.
 	 *   Code 500: Ein interner Fehler im ENM-Server ist aufgetreten.
 	 *
 	 * @returns die GZip-komprimierte ENM-JSON-Datei
 	 */
-	public async getLehrerENMDaten(): Promise<ApiFile> {
-		return await super.getBinary("/api/daten", "*/*");
+	public async getLehrerENMDaten(): Promise<ENMDaten> {
+		return ENMDaten.transpilerFromJSON(await super.getTextBased('/api/daten', 'application/json'));
 	}
 
 	/**

@@ -226,6 +226,17 @@ class Http {
         return $content;
     }
 
+
+    /**
+     * Prüft, ob der HTTP-Request-Header angibt, dass eine GZip-Komprimierung unterstützt oder nicht.
+     *
+     * @return bool true, wenn der Header angibt, dass GZip unterstützt wird
+     */
+    public static function checkAcceptGZipEncoding(): bool {
+        return strpos($_SERVER['HTTP_ACCEPT_ENCODING'] ?? '', 'gzip') !== false;
+    }
+
+
     /**
      * Prüft on die HTTP-Methode von Typ OPTIONS
      */

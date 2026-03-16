@@ -1,14 +1,24 @@
 import { beforeAll, describe, expect, test } from "vitest";
 import { getApiService } from "../../utils/RequestBuilder.js";
-import { parse } from "../../utils/ENMApiDataParser.js";
-import type { ENMLeistung, ENMSchuelerAnkreuzkompetenz } from "@core";
-import { ENMSchueler } from "@core";
+import type { ENMLeistung } from "@core";
+import { ENMDaten, ENMSchueler, ENMSchuelerAnkreuzkompetenz } from "@core";
 import { enmURL } from "../../../utils/APIUtils";
 
 const targetUrlENMServer: string = enmURL;
 
 const apiServiceAuth = getApiService('T.Giesen@lmail.de', 'UD73Js0Uro', targetUrlENMServer);
 const apiServiceAuthWrongTeacher = getApiService('D.Berthold@lmail.de', 'uXkpaRLY', targetUrlENMServer);
+
+function findSchueler(data: ENMDaten, id: number): ENMSchueler {
+	let schueler = new ENMSchueler();
+	for (const s of data.schueler) {
+		if (s.id === id) {
+			schueler = s;
+			break;
+		}
+	}
+	return schueler;
+}
 
 beforeAll(async () => {
 	await apiServiceAuth.login();
@@ -22,7 +32,7 @@ describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child A
 		expect(response.status).toBe(200);
 
 		// Extrahier einen Schüler aus den Daten
-		const _data = await parse(await response.blob());
+		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
 		let schueler = new ENMSchueler();
 		for (const s of _data.schueler) {
 			if (s.id === 3029) {
@@ -53,7 +63,7 @@ describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child A
 
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
 		expect(responseAfterEdit.status).toBe(200);
-		const _dataAfterEdit = await parse(await responseAfterEdit.blob());
+		const _dataAfterEdit = ENMDaten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
 		// Extrahier einen Schüler aus den Daten
 		let schuelerAfterEdit = new ENMSchueler();
 		for (const s of _dataAfterEdit.schueler) {
@@ -82,10 +92,8 @@ describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child A
 		expect(response.status).toBe(200);
 
 		// Extrahier einen Schüler aus den Daten
-		const _data = await parse(await response.blob());
-		const schueler = _data.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === 3029;
-		});
+		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
+		const schueler = findSchueler(_data, 3029);
 
 		// Überprüfe das die entsprechenden Daten vom Schüler passen
 		expect(schueler.nachname).toBe("Lindemann");
@@ -109,17 +117,15 @@ describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child A
 
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
 		expect(responseAfterEdit.status).toBe(200);
-		const _dataAfterEdit = await parse(await responseAfterEdit.blob());
+		const _dataAfterEdit = ENMDaten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
 		// Extrahier einen Schüler aus den Daten
-		const schuelerAfterEdit = _dataAfterEdit.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === 3029;
-		});
+		const schuelerAfterEdit = findSchueler(_dataAfterEdit, 3029);
 
-		const ankreuzkompetenzenDaten = schuelerAfterEdit.ankreuzkompetenzen.elementData;
+		const ankreuzkompetenzenDaten = [...schuelerAfterEdit.ankreuzkompetenzen];
 
-		const prevalences: number [] = [];
-		ankreuzkompetenzenDaten.forEach((ak: ENMLeistung) => {
-			const prevalence = ankreuzkompetenzenDaten.filter((akk: ENMLeistung) => {
+		const prevalences: number[] = [];
+		ankreuzkompetenzenDaten.forEach(ak => {
+			const prevalence = ankreuzkompetenzenDaten.filter(akk => {
 				return akk.id === ak.id;
 			}).length;
 			prevalences.push(prevalence);
@@ -136,16 +142,14 @@ describe("Das Bearbeiten von Leistungen führt zu keinen Redundanzen im Child Ar
 		expect(response.status).toBe(200);
 
 		// Extrahier einen Schüler aus den Daten
-		const _data = await parse(await response.blob());
-		const schueler = _data.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === 3014;
-		});
+		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
+		const schueler = findSchueler(_data, 3014);
 
 		// Überprüfe das die entsprechenden Daten vom Schüler passen
 		expect(schueler.nachname).toBe("Steuber");
 		expect(schueler.vorname).toBe("Andreas");
 
-		const leistungsId = schueler.leistungsdaten.elementData[0].id;
+		const leistungsId = schueler.leistungsdaten.getFirst().id;
 		expect(leistungsId).toBe(4048);
 
 		const bodyData = {
@@ -165,18 +169,16 @@ describe("Das Bearbeiten von Leistungen führt zu keinen Redundanzen im Child Ar
 
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
 		expect(responseAfterEdit.status).toBe(200);
-		const _dataAfterEdit = await parse(await responseAfterEdit.blob());
+		const _dataAfterEdit = ENMDaten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
 
 		// Extrahier einen Schüler aus den Daten
-		const schuelerAfterEdit = _dataAfterEdit.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === 3014;
-		});
+		const schuelerAfterEdit = findSchueler(_dataAfterEdit, 3014);
 
-		const teilLeistungsDaten = schuelerAfterEdit.leistungsdaten.elementData[0].teilleistungen.elementData;
+		const teilLeistungsDaten = [...schuelerAfterEdit.leistungsdaten.getFirst().teilleistungen];
 
 		const prevalences: number [] = [];
-		teilLeistungsDaten.forEach((ld: ENMLeistung) => {
-			const prevalence = teilLeistungsDaten.filter((ldd: ENMLeistung) => {
+		teilLeistungsDaten.forEach(ld => {
+			const prevalence = teilLeistungsDaten.filter(ldd => {
 				return ldd.id === ld.id;
 			}).length;
 			prevalences.push(prevalence);
@@ -191,19 +193,17 @@ describe("Leistung und Teilleistung können bearbeitet werden", () => {
 	test("Leistungen", async () => {
 		const response = await apiServiceAuth.get(`/api/daten`);
 		expect(response.status).toBe(200);
-		const _data = await parse(await response.blob());
+		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
 
-		const schueler = _data.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === 2889;
-		});
+		const schueler = findSchueler(_data, 2889);
 
 		expect(schueler.nachname).toBe("Winter");
 		expect(schueler.vorname).toBe("Jessika");
 
-		const leistungsId = schueler.leistungsdaten.elementData[0].id;
+		const leistungsId = schueler.leistungsdaten.getFirst().id;
 		expect(leistungsId).toBe(4060);
 
-		const data = schueler.leistungsdaten.elementData[0];
+		const data = schueler.leistungsdaten.getFirst();
 		const strippedData = [data.id, data.noteQuartal, data.note, data.istGemahnt, data.fehlstundenFach, data.fachbezogeneBemerkungen];
 
 		expect(strippedData).toMatchSnapshot();
@@ -223,29 +223,14 @@ describe("Leistung und Teilleistung können bearbeitet werden", () => {
 		expect(responsePost.status).toBe(200);
 		//
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
-		const _dataAfterEdit = await parse(await responseAfterEdit.blob());
+		const _dataAfterEdit = ENMDaten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
 
-		const testLisaAfterEdit = _dataAfterEdit.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === 2889;
-		});
+		const testLisaAfterEdit = findSchueler(_dataAfterEdit, 2889);
 
-		const dataAfterEdit = testLisaAfterEdit.leistungsdaten.elementData[0];
+		const dataAfterEdit = testLisaAfterEdit.leistungsdaten.getFirst();
 		const strippedDataAfterEdit = [dataAfterEdit.id, dataAfterEdit.noteQuartal, dataAfterEdit.note, dataAfterEdit.istGemahnt, dataAfterEdit.fehlstundenFach, dataAfterEdit.fachbezogeneBemerkungen];
 
 		expect(strippedDataAfterEdit).toMatchSnapshot();
-	});
-
-
-	test("Doppelte IDs für Teilleistungen tauchen nicht auf", async () => {
-		const response = await apiServiceAuth.get(`/api/daten`);
-
-		// Request war erfolgreich
-		expect(response.status).toBe(200);
-		const _data = await parse(await response.blob());
-
-		const testSchueler = _data.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === 3029;
-		});
 	});
 
 
@@ -254,20 +239,19 @@ describe("Leistung und Teilleistung können bearbeitet werden", () => {
 
 		// Request war erfolgreich
 		expect(response.status).toBe(200);
-		const _data = await parse(await response.blob());
+		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
 
-		const testSchueler = _data.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === 3029;
-		});
+		const testSchueler = findSchueler(_data, 3029);
 
 		// Überprüfe das die entsprechende ID zum Schüler passt
 		expect(testSchueler.nachname).toBe("Lindemann");
 		expect(testSchueler.vorname).toBe("Stefanie");
 
 		// Überprüfe den Snapshot der Leistungsdaten
-		const strippedData = testSchueler.leistungsdaten.elementData[8].teilleistungen.elementData.map((ed: ENMLeistung) => {
-			return { id: ed.id, note: ed.note };
-		});
+		const strippedData: { id: number; note: string | null }[] = [];
+		for (const tl of testSchueler.leistungsdaten.get(8).teilleistungen) {
+			strippedData.push({ id: tl.id, note: tl.note });
+		}
 
 		expect(strippedData).toMatchSnapshot();
 
@@ -288,15 +272,14 @@ describe("Leistung und Teilleistung können bearbeitet werden", () => {
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
 		expect(responseAfterEdit).toBeDefined();
 		expect(responseAfterEdit.status).toBe(200);
-		const _dataAfterEdit = await parse(await responseAfterEdit.blob());
+		const _dataAfterEdit = ENMDaten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
 
-		const testSchuelerAfterEdit = _dataAfterEdit.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === 3029;
-		});
+		const testSchuelerAfterEdit = findSchueler(_dataAfterEdit, 3029);
 
-		const strippedDataAfterEdit = testSchuelerAfterEdit.leistungsdaten.elementData[8].teilleistungen.elementData.map((ed: ENMLeistung) => {
-			return { id: ed.id, note: ed.note };
-		});
+		const strippedDataAfterEdit: { id: number; note: string | null }[] = [];
+		for (const tl of testSchuelerAfterEdit.leistungsdaten.get(8).teilleistungen) {
+			strippedDataAfterEdit.push({ id: tl.id, note: tl.note });
+		}
 
 		expect(strippedDataAfterEdit).toMatchSnapshot();
 	});
@@ -333,11 +316,9 @@ describe("Bemerkungen können bearbeitet werden", () => {
 	test("Anpassung von Bemerkungen von Schueler der nicht der gleichen Klasse wie Lehrer zugeordnet ist, ist verboten", async () => {
 		const response = await apiServiceAuthWrongTeacher.get(`/api/daten`);
 		expect(response.status).toBe(200);
-		const _data = await parse(await response.blob());
+		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
 
-		const schueler = _data.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === 3029;
-		});
+		const schueler = findSchueler(_data, 3029);
 
 		// Diese Daten werden patched
 		const bodyData = {
@@ -360,11 +341,9 @@ describe("Bemerkungen können bearbeitet werden", () => {
 	test("Bemerkungen", async () => {
 		const response = await apiServiceAuth.get(`/api/daten`);
 		expect(response.status).toBe(200);
-		const _data = await parse(await response.blob());
+		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
 
-		const schueler = _data.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === 3074;
-		});
+		const schueler = findSchueler(_data, 3074);
 
 		// Überprüfe das die entsprechende ID zum Schüler passt
 		expect(schueler.nachname).toBe("Fusenig");
@@ -391,11 +370,9 @@ describe("Bemerkungen können bearbeitet werden", () => {
 		expect(responsePost.status).toBe(200);
 
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
-		const _dataAfterEdit = await parse(await responseAfterEdit.blob());
+		const _dataAfterEdit = ENMDaten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
 
-		const testSchuelerAfterEdit = _dataAfterEdit.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === 3074;
-		});
+		const testSchuelerAfterEdit = findSchueler(_dataAfterEdit, 3074);
 
 		const dataAfterEdit = testSchuelerAfterEdit.bemerkungen;
 		const strippedDataAfterEdit = [dataAfterEdit.ASV, dataAfterEdit.AUE, dataAfterEdit.LELS, dataAfterEdit.ZB, dataAfterEdit.foerderbemerkungen, dataAfterEdit.individuelleVersetzungsbemerkungen, dataAfterEdit.schulformEmpf];
@@ -430,17 +407,21 @@ describe("Ankreuzkompetenzen können bearbeitet werden", () => {
 
 		expect(response.status).toBe(200);
 
-		const _data = await parse(await response.blob());
+		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
 
-		const schueler = _data.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === 3074;
-		});
+		const schueler = findSchueler(_data, 3074);
 
 		// Überprüfe das die entsprechenden Daten vom Schüler passen
 		expect(schueler.nachname).toBe("Fusenig");
 		expect(schueler.vorname).toBe("Kristin");
 
-		const data = schueler.ankreuzkompetenzen.elementData.find((ak: ENMSchuelerAnkreuzkompetenz) => ak.id === targetAnkreuzKompetenzId);
+		let data = new ENMSchuelerAnkreuzkompetenz();
+		for (const ak of schueler.ankreuzkompetenzen) {
+			if (ak.id === targetAnkreuzKompetenzId) {
+				data = ak;
+				break;
+			}
+		}
 
 		const strippedData = [data.id, data.kompetenzID, data.stufen];
 		expect(strippedData).toMatchSnapshot();
@@ -457,13 +438,17 @@ describe("Ankreuzkompetenzen können bearbeitet werden", () => {
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
 		expect(responseAfterEdit.status).toBe(200);
 
-		const _dataAfterEdit = await parse(await responseAfterEdit.blob());
+		const _dataAfterEdit = ENMDaten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
 
-		const schuelerAfterEdit = _dataAfterEdit.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === 3074;
-		});
+		const schuelerAfterEdit = findSchueler(_dataAfterEdit, 3074);
 
-		const dataAfterEdit = schuelerAfterEdit.ankreuzkompetenzen.elementData.find((ak: ENMSchuelerAnkreuzkompetenz) => ak.id === targetAnkreuzKompetenzId);
+		let dataAfterEdit = new ENMSchuelerAnkreuzkompetenz();
+		for (const ak of schuelerAfterEdit.ankreuzkompetenzen) {
+			if (ak.id === targetAnkreuzKompetenzId) {
+				dataAfterEdit = ak;
+				break;
+			}
+		}
 		const strippedDataAfterEdit = [dataAfterEdit.id, dataAfterEdit.kompetenzID, dataAfterEdit.stufen];
 
 		expect(strippedDataAfterEdit).toMatchSnapshot();
@@ -521,13 +506,11 @@ describe("Test Lernabschnitte", () => {
 	test("Post Lernabschnitte", async () => {
 		const response = await apiServiceAuth.get(`/api/daten`);
 		expect(response.status).toBe(200);
-		const _data = await parse(await response.blob());
+		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
 
 		const schuelerID = 3029;
 
-		const schueler = _data.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === schuelerID;
-		});
+		const schueler = findSchueler(_data, schuelerID);
 
 		const lernabschnittID = 12452;
 		expect(schueler.lernabschnitt.id).toBe(lernabschnittID);
@@ -546,11 +529,9 @@ describe("Test Lernabschnitte", () => {
 
 		const responseAfterPost = await apiServiceAuth.get(`/api/daten`);
 		expect(responseAfterPost.status).toBe(200);
-		const _dataAfterPost = await parse(await responseAfterPost.blob());
+		const _dataAfterPost = ENMDaten.transpilerFromJSON(await (await responseAfterPost.blob()).text());
 
-		const schuelerAfterPost = _dataAfterPost.schueler.elementData.find((s: ENMSchueler) => {
-			return s.id === schuelerID;
-		});
+		const schuelerAfterPost = findSchueler(_dataAfterPost, schuelerID);
 
 		expect(schuelerAfterPost.lernabschnitt.fehlstundenGesamt).toBe(1337);
 

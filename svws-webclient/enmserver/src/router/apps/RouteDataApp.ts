@@ -6,7 +6,7 @@ import type { ENMLeistungBemerkungen } from "@core/core/data/enm/ENMLeistungBeme
 import type { ENMLernabschnitt } from "@core/core/data/enm/ENMLernabschnitt";
 import type { ENMTeilleistung } from "@core/core/data/enm/ENMTeilleistung";
 import type { ENMKlasse } from "@core/core/data/enm/ENMKlasse";
-import { ENMDaten } from "@core/core/data/enm/ENMDaten";
+import type { ENMDaten } from "@core/core/data/enm/ENMDaten";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { EnmManager } from "@ui/components/enm/EnmManager";
@@ -73,12 +73,6 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 		});
 	}
 
-	private async ladeLehrerENMDaten(): Promise<ENMDaten> {
-		const file = await api.server.getLehrerENMDaten();
-		const blob = await new Response(file.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
-		return ENMDaten.transpilerFromJSON(await blob.text());
-	}
-
 	private initAuswahl(manager: EnmManager) {
 		const lerngruppen = manager.mapLerngruppenAuswahl.values();
 		this._auswahlLerngruppe.value = lerngruppen.isEmpty() ? null : lerngruppen.iterator().next();
@@ -134,7 +128,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 			const newState = <Partial<RouteStateApp>>{};
 
 			// Lade die ENM-Daten vom Server...
-			newState.daten = await this.ladeLehrerENMDaten();
+			newState.daten = await api.server.getLehrerENMDaten();
 
 			// Erstellen des Enm-Managers
 			newState.manager = new EnmManager(newState.daten, newState.daten.lehrerID ?? -1);

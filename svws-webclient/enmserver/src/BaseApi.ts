@@ -1,10 +1,5 @@
 import { OpenApiError } from "@core/api/OpenApiError";
 
-export interface ApiFile {
-	name: string,
-	data: Blob,
-}
-
 export class BaseApi {
 
 	/** Die URL des Servers. Alle Pfadangaben sind relativ zu dieser URL. */
@@ -62,27 +57,6 @@ export class BaseApi {
 	protected getURL(path: string): string {
 		return this.url + path;
 	}
-
-	protected async getBinary(path: string, mimetype: string): Promise<ApiFile> {
-		const requestInit: RequestInit = { ...this.requestinit };
-		requestInit.headers = { ...this.headers };
-		requestInit.headers.Accept = mimetype;
-		requestInit.body = null;
-		requestInit.method = 'GET';
-		try {
-			const response = await fetch(this.getURL(path), requestInit);
-			if (!response.ok) {
-				throw new OpenApiError(response, 'Fetch failed for GET: ' + path);
-			}
-			return { name: "", data: await response.blob() };
-		} catch (e) {
-			if (e instanceof Error) {
-				throw (e instanceof OpenApiError) ? e : new OpenApiError(e, 'Fetch failed for GET: ' + path);
-			}
-			throw new Error("Unexpected Error: " + String(e), { cause: e });
-		}
-	}
-
 
 	protected async getTextBased(path: string, mimetype: string): Promise<string> {
 		const requestInit: RequestInit = { ...this.requestinit };
