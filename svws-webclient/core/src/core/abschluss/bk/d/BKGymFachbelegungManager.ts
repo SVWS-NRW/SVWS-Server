@@ -36,9 +36,9 @@ export class BKGymFachbelegungManager extends JavaObject {
 	private readonly zweiteFremdspracheID: number | null;
 
 	/**
-	 * Ob das Fach der Facharbeit ein LK ist
+	 * Ob das Fach der Facharbeit ein berufsbezogener LK ist
 	 */
-	private readonly istFacharbeitLK: boolean;
+	private istFacharbeitBerufsbezogenerLK: boolean | null = null;
 
 	/**
 	 * Eine HashMap, welche den schnellen Zugriff auf die Fachbelegungen für ein Fach anhand der Bezeichnung ermöglicht
@@ -67,7 +67,6 @@ export class BKGymFachbelegungManager extends JavaObject {
 		this.faecherManager = abidatenManager.getFaecherManager();
 		this.init();
 		this.zweiteFremdspracheID = this.ermittleZweiteFremdspracheID();
-		this.istFacharbeitLK = this.pruefeIstFacharbeitLK();
 	}
 
 	/**
@@ -230,12 +229,16 @@ export class BKGymFachbelegungManager extends JavaObject {
 	 *
 	 * @return false wenn Facharbeit vorhanden und nicht einem LK zugeordnet sonst true
 	 */
-	private pruefeIstFacharbeitLK(): boolean {
+	private pruefeIstFacharbeitBerufsbezogenerLK(): boolean {
 		if (this.abidatenManager.getAbidaten().facharbeitFachbezeichnung === null)
 			return true;
 		const fachbezeichnung: string | null = this.abidatenManager.getAbidaten().facharbeitFachbezeichnung;
-		const facharbeitFachID: number | null = fachbezeichnung === null ? null : this.getFachIDByBezeichnung(fachbezeichnung);
+		if (fachbezeichnung === null)
+			return false;
+		const facharbeitFachID: number | null = this.getFachIDByBezeichnung(fachbezeichnung);
 		if (facharbeitFachID === null)
+			return false;
+		if (!this.abidatenManager.getStundentafelManager().istBerufsbezogenesFach(fachbezeichnung))
 			return false;
 		const fachIDLK1: number | null = this.getAbiFachID(GostAbiturFach.LK1);
 		if (fachIDLK1 !== null && JavaObject.equalsTranspiler(facharbeitFachID, (fachIDLK1)))
@@ -247,12 +250,14 @@ export class BKGymFachbelegungManager extends JavaObject {
 	}
 
 	/**
-	 * Getter für den Zugriff auf istFacharbeitLK
+	 * Getter für den Zugriff auf istFacharbeitBerufsbezogenerLK
 	 *
-	 * @return ob ggfs. die Facharbeit einem LK-Fach zugeordnet ist
+	 * @return ob ggfs. die Facharbeit einem berufsbezogenen LK-Fach zugeordnet ist
 	 */
-	public getIstFacharbeitLK(): boolean {
-		return this.istFacharbeitLK;
+	public getIstFacharbeitBerufsbezogenerLK(): boolean {
+		if (this.istFacharbeitBerufsbezogenerLK === null)
+			this.istFacharbeitBerufsbezogenerLK = this.pruefeIstFacharbeitBerufsbezogenerLK();
+		return this.istFacharbeitBerufsbezogenerLK;
 	}
 
 	/**

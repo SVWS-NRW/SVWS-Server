@@ -32,8 +32,8 @@ public class BKGymFachbelegungManager {
 	/** FachID der zweiten Fremdsprache */
 	private final Long zweiteFremdspracheID;
 
-	/** Ob das Fach der Facharbeit ein LK ist */
-	private final boolean istFacharbeitLK;
+	/** Ob das Fach der Facharbeit ein berufsbezogener LK ist */
+	private Boolean istFacharbeitBerufsbezogenerLK = null;
 
 	// Datenstrukturen zum schnellen Zugriff auf Fachbelegungen
 
@@ -58,7 +58,6 @@ public class BKGymFachbelegungManager {
 		this.faecherManager = abidatenManager.getFaecherManager();
 		init();
 		zweiteFremdspracheID = ermittleZweiteFremdspracheID();
-		this.istFacharbeitLK = pruefeIstFacharbeitLK();
 	}
 
 
@@ -245,12 +244,16 @@ public class BKGymFachbelegungManager {
 	 *
 	 * @return false wenn Facharbeit vorhanden und nicht einem LK zugeordnet sonst true
 	 */
-	private boolean pruefeIstFacharbeitLK() {
+	private boolean pruefeIstFacharbeitBerufsbezogenerLK() {
 		if (abidatenManager.getAbidaten().facharbeitFachbezeichnung == null)
 			return true;
 		final String fachbezeichnung = abidatenManager.getAbidaten().facharbeitFachbezeichnung;
-		final Long facharbeitFachID = fachbezeichnung == null ? null : getFachIDByBezeichnung(fachbezeichnung);
+		if (fachbezeichnung == null)
+			return false;
+		final Long facharbeitFachID = getFachIDByBezeichnung(fachbezeichnung);
 		if (facharbeitFachID == null)
+			return false;
+		if (!abidatenManager.getStundentafelManager().istBerufsbezogenesFach(fachbezeichnung))
 			return false;
 		final Long fachIDLK1 = getAbiFachID(GostAbiturFach.LK1);
 		if (fachIDLK1 != null && facharbeitFachID.equals(fachIDLK1))
@@ -263,12 +266,14 @@ public class BKGymFachbelegungManager {
 
 
 	/**
-	 * Getter für den Zugriff auf istFacharbeitLK
+	 * Getter für den Zugriff auf istFacharbeitBerufsbezogenerLK
 	 *
-	 * @return ob ggfs. die Facharbeit einem LK-Fach zugeordnet ist
+	 * @return ob ggfs. die Facharbeit einem berufsbezogenen LK-Fach zugeordnet ist
 	 */
-	public boolean getIstFacharbeitLK() {
-		return istFacharbeitLK;
+	public boolean getIstFacharbeitBerufsbezogenerLK() {
+		if (istFacharbeitBerufsbezogenerLK == null)
+			istFacharbeitBerufsbezogenerLK = pruefeIstFacharbeitBerufsbezogenerLK();
+		return istFacharbeitBerufsbezogenerLK;
 	}
 
 

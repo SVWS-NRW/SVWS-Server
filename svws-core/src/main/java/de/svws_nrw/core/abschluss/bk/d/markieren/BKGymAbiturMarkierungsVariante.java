@@ -103,7 +103,7 @@ public class BKGymAbiturMarkierungsVariante {
 			anzahlKurse += 2;
 			if (punkte != null)
 				summeNotenpunkte += 2 * punkte;
-			if (!varianten.abiturdatenManager.getFachbelegungManager().getIstFacharbeitLK())
+			if (!varianten.abiturdatenManager.getFachbelegungManager().getIstFacharbeitBerufsbezogenerLK())
 				setHatZulassung(false);
 		} else {
 			this.facharbeitEinbeziehen = other.facharbeitEinbeziehen;
@@ -112,7 +112,7 @@ public class BKGymAbiturMarkierungsVariante {
 		this.markiert.addAll(other.markiert);
 		this.unmarkiert.addAll(other.unmarkiert);
 		this.log.addAll(other.log);
-		addLogEintrag(1, "Die Variante " + this.kennung + " wurde erzeugt.");
+		addLogEintrag(1, "Variante ist: " + this.kennung + ".");
 	}
 
 
@@ -435,6 +435,7 @@ public class BKGymAbiturMarkierungsVariante {
 		ergebnis.gesamtDefizite = getDefizite();
 		ergebnis.lkDefizite = defiziteLK;
 		ergebnis.punkteBlockI = getPunktzahlBlockI();
+		ergebnis.facharbeitEinbringen = facharbeitEinbeziehen;
 		erzeugeFehlerlog(ergebnis.fehlerLog);
 		ergebnis.log.addAll(log);
 		ergebnis.markierungen.addAll(markiert);

@@ -1,0 +1,11 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [
+    {
+      "code" : "ST_3",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Spanisch Pflicht der Stundentafel wurde nicht im nötigen Stundenumfang belegt."
+    }
+  ],
+  "log" : [ ]
+}

@@ -35,6 +35,7 @@ import de.svws_nrw.core.data.bk.abi.BKGymFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.bk.BKGymAbiturUtils;
 import de.svws_nrw.core.utils.bk.BKGymFaecherManager;
+import jakarta.validation.constraints.NotNull;
 
 
 /**
@@ -138,7 +139,7 @@ class TestBKGymMarkierungsalgorithmus {
 		final ArrayList<DynamicTest> tests = new ArrayList<>();
 		testAbiturdaten.forEach((jahrgang, mapSchuelerJahrgang) -> {
 			mapSchuelerJahrgang.forEach((schueler_id, abidaten) -> {
-//				if (schueler_id.equals("0392")) {
+//				if (schueler_id.equals("0098")) {
 				// Lese BKGymFaecher
 				final List<BKGymFach> bkGymFaecher = testJahrgaengeFaecher.get(jahrgang);
 				assert bkGymFaecher != null : "Fehler bei den Testfällen: Für den Abiturjahrgang '" + jahrgang + "' der Test-Abiturdaten '" + schueler_id
@@ -173,12 +174,19 @@ class TestBKGymMarkierungsalgorithmus {
 								assertEquals(vergleichErgebnisMarkierungsalgorithmus.erfolgreich, ergebnis.erfolgreich, ergebnis.erfolgreich
 										? "Fehler: Der Markierungsalgorithmus war erfolgreich, obwohl der Testfall vorgibt, dass sie fehlschlagen muss!"
 										: "Fehler: Der Markierungsalgorithmus war nicht erfolgreich, obwohl der Testfall vorgibt, dass sie erfolgreich sein muss!");
-
+								// Prüfe, ob die Einbringung der Facharbeit gleich ist
+								assertEquals(vergleichErgebnisMarkierungsalgorithmus.facharbeitEinbringen, ergebnis.facharbeitEinbringen, ergebnis.facharbeitEinbringen
+										? "Fehler: Die Facharbeit wurde eingebracht, obwohl der Testfall vorgibt, dass sie nicht eingebracht werden soll!"
+										: "Fehler: Die Facharbeit wurde nicht eingebracht, obwohl der Testfall vorgibt, dass sie eingebracht werden soll!");
 								// Prüfe, ob sich die dokumentierten Markierungen des Testfalls von den gefundenen unterscheiden.
 								final String vergleichsergebnis = vergleicheMarkierungsergebnisse(new ArrayList<>(vergleichErgebnisMarkierungsalgorithmus.markierungen),
 										new ArrayList<>(ergebnis.markierungen), faecherManager);
 								if (!vergleichsergebnis.isEmpty())
 									fail("Fehler: Die Markierung des Markierungsalgorithmus stimmen nicht mit dem Testfall überein: " + System.lineSeparator() + vergleichsergebnis);
+								// prüfe, ob die Logeinträge identisch sind
+								final String vergleichLog = vergleicheLogs(vergleichErgebnisMarkierungsalgorithmus.log, ergebnis.log);
+								if (!vergleichLog.isEmpty())
+									fail("Fehler: Die Log-Einträge des Markierungsalgorithmus stimmen nicht mit dem Testfall überein: " + System.lineSeparator() + vergleichLog);
 							}
 							System.out.println("  Test erfolgreich beendet.");
 						}));
@@ -243,6 +251,42 @@ class TestBKGymMarkierungsalgorithmus {
 		if (!fehlend.isEmpty() || !neuhinzu.isEmpty())
 			return "Fehlende Einträge: " + fehlend + System.lineSeparator() + "Hinzugekommene Markierungen: " + neuhinzu;
 
+		return "";
+	}
+
+
+	/**
+	 * Ermittelt ggfs den ersten Unterschied der Logeinträge und liefert beide zurück.
+	 *
+	 * @param alt   die Logeinträge der Referenz
+	 * @param neu   die Logeinträge des aktuellen Testlaufs
+	 *
+	 * @return der String mit den Unterschieden oder ein leerer String , wenn es keine Unterschiede gibt.
+	 */
+	private static String vergleicheLogs(final @NotNull List<String> alt, final @NotNull List<String> neu) {
+		int i = 0;
+		int j = 0;
+
+		while ((i < alt.size()) && (j < neu.size())) {
+			final var a = alt.get(i);
+			final var n = neu.get(j);
+			if (a.equals(n)) {
+				// gleich → weiter
+				i++;
+				j++;
+			} else {
+				// Unterschied gefunden
+				return "Unterschiedliche Logeinträge: " + System.lineSeparator() + "Alt: " + a + System.lineSeparator() + "Neu: " + n;
+			}
+		}
+		if (i < alt.size()) {
+			// Alt hat zusätzliche Einträge
+			return "Unterschiedliche Logeinträge: " + System.lineSeparator() + "Alt: " + alt.get(i) + System.lineSeparator() + "Neu: <keine weiteren Einträge>";
+		}
+		if (j < neu.size()) {
+			// Neu hat zusätzliche Einträge
+			return "Unterschiedliche Logeinträge: " + System.lineSeparator() + "Alt: <keine weiteren Einträge>" + System.lineSeparator() + "Neu: " + neu.get(j);
+		}
 		return "";
 	}
 

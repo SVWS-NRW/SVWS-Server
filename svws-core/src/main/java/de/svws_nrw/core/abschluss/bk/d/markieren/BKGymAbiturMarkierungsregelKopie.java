@@ -38,8 +38,13 @@ public class BKGymAbiturMarkierungsregelKopie extends BKGymAbiturMarkierungsrege
 	 */
 	@Override
 	public void markiere(final @NotNull BKGymAbiturMarkierungsVariante variante) {
-		if (facharbeit && !variante.varianten.abiturdatenManager.istFacharbeitVorhanden())
+		if (facharbeit
+				&& (!variante.varianten.abiturdatenManager.istFacharbeitVorhanden()
+						|| !variante.varianten.abiturdatenManager.getFachbelegungManager().getIstFacharbeitBerufsbezogenerLK())) {
+			variante.addLogEintrag(1, "Variante ist: " + variante.getKennung() + ".");
 			return;
+		}
 		variante.varianten.addVariante(new BKGymAbiturMarkierungsVariante(variante, kennung, facharbeit));
+		variante.addLogEintrag(1, "Variante ist: " + variante.getKennung() + ".");
 	}
 }

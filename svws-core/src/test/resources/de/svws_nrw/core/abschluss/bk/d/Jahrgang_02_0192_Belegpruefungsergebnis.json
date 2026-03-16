@@ -1,0 +1,11 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [
+    {
+      "code" : "LK_2",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Erziehungswissenschaften ist nicht der zweite Leistungskurs."
+    }
+  ],
+  "log" : [ ]
+}

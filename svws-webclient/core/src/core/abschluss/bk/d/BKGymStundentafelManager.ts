@@ -39,6 +39,11 @@ export class BKGymStundentafelManager extends JavaObject {
 	public static readonly WAHLFACH: string = "Wahlfach";
 
 	/**
+	 * Berufsbezogener Lernbereich
+	 */
+	public static readonly BERUFSBEZOGENER_LERNBEREICH: string = "Berufsbezogener Lernbereich";
+
+	/**
 	 * Die möglichen Ersatzfächer für Religion
 	 */
 	public static readonly ERSATZ_FUER_RELIGION: List<string> = ArrayList.of("Erziehungswissenschaften", "Geschichte", "Gesellschaftslehre mit Geschichte", "Philosophie", "Politik/Geschichte", "Psychologie", "Soziologie");
@@ -368,6 +373,22 @@ export class BKGymStundentafelManager extends JavaObject {
 		for (const hj of GostHalbjahr.getQualifikationsphase())
 			summeStunden += fach.stundenumfang[hj.id];
 		return summeStunden > 0;
+	}
+
+	/**
+	 * Prüft, ob es sich bei dem Fach um ein berufsbezogenes Fach handelt.
+	 *
+	 * @param fachbezeichnung   die Bezeichnung des Faches
+	 *
+	 * @return true, wenn es sich um ein berufsbezogenes Fach handelt, sonst false
+	 */
+	public istBerufsbezogenesFach(fachbezeichnung: string): boolean {
+		for (const t of this.stundentafeln) {
+			const fach: BeruflichesGymnasiumStundentafelFach | null = this.getFachByTafelAndBezeichnung(t, fachbezeichnung);
+			if (fach !== null)
+				return JavaObject.equalsTranspiler(fach.zeugnisbereich, (BKGymStundentafelManager.BERUFSBEZOGENER_LERNBEREICH));
+		}
+		return false;
 	}
 
 	transpilerCanonicalName(): string {

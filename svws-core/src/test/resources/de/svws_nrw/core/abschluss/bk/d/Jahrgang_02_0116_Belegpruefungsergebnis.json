@@ -1,0 +1,16 @@
+{
+  "erfolgreich" : false,
+  "fehlercodes" : [
+    {
+      "code" : "LK_2",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Betriebswirtschaftslehre ist nicht der zweite Leistungskurs."
+    },
+    {
+      "code" : "LK_1",
+      "art" : "BELEGUNG",
+      "beschreibung" : "Das Fach Englisch ist nicht der erste Leistungskurs."
+    }
+  ],
+  "log" : [ ]
+}

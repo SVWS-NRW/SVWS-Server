@@ -58,13 +58,13 @@ export class BKGymAbiturMarkierungsVarianten extends JavaObject {
 	}
 
 	/**
-	 * gibt den Hinweis aus, wenn das der Facharbeit zugeordnete Fach kein Leistungskurs ist
+	 * gibt den Hinweis aus, wenn das der Facharbeit zugeordnete Fach kein berufsbezogenerLeistungskurs ist
 	 *
 	 * @param root   die Markierungsvariante
 	 */
 	private reportFehlerFacharbeit(root: BKGymAbiturMarkierungsVariante): void {
-		if (!this.abiturdatenManager.getFachbelegungManager().getIstFacharbeitLK())
-			root.addLogEintrag(0, "Hinweis: Die Facharbeit ist nicht einem der beiden Leistungkursfächer zugeordnet.");
+		if (!this.abiturdatenManager.getFachbelegungManager().getIstFacharbeitBerufsbezogenerLK())
+			root.addLogEintrag(0, "Hinweis: Die Facharbeit ist nicht einem berufsbezogenen Leistungkursfach zugeordnet.");
 	}
 
 	/**

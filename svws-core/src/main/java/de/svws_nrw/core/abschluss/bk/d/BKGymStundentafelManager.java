@@ -37,6 +37,9 @@ public class BKGymStundentafelManager {
 	/** Das Wahlfach */
 	public static final @NotNull String WAHLFACH = "Wahlfach";
 
+	/** Berufsbezogener Lernbereich */
+	public static final @NotNull String BERUFSBEZOGENER_LERNBEREICH = "Berufsbezogener Lernbereich";
+
 	/** Die möglichen Ersatzfächer für Religion */
 	public static final @NotNull List<String> ERSATZ_FUER_RELIGION = List.of(
 			"Erziehungswissenschaften", "Geschichte", "Gesellschaftslehre mit Geschichte",
@@ -406,5 +409,22 @@ public class BKGymStundentafelManager {
 		for (final GostHalbjahr hj : GostHalbjahr.getQualifikationsphase())
 			summeStunden += fach.stundenumfang[hj.id];
 		return summeStunden > 0;
+	}
+
+
+	/**
+	 * Prüft, ob es sich bei dem Fach um ein berufsbezogenes Fach handelt.
+	 *
+	 * @param fachbezeichnung   die Bezeichnung des Faches
+	 *
+	 * @return true, wenn es sich um ein berufsbezogenes Fach handelt, sonst false
+	 */
+	public boolean istBerufsbezogenesFach(final @NotNull String fachbezeichnung) {
+		for (final BeruflichesGymnasiumStundentafel t : stundentafeln) {
+			final BeruflichesGymnasiumStundentafelFach fach = getFachByTafelAndBezeichnung(t, fachbezeichnung);
+			if (fach != null)
+				return fach.zeugnisbereich.equals(BERUFSBEZOGENER_LERNBEREICH);
+		}
+		return false;
 	}
 }

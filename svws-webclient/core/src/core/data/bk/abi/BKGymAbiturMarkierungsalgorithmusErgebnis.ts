@@ -32,6 +32,11 @@ export class BKGymAbiturMarkierungsalgorithmusErgebnis extends JavaObject {
 	public punkteBlockI: number = 0;
 
 	/**
+	 * Facharbeit einbringen
+	 */
+	public facharbeitEinbringen: boolean = false;
+
+	/**
 	 * eine Liste von Hinweisen und Meldungen zu verletzten Zulassungsbedingungen
 	 */
 	public fehlerLog: List<string> = new ArrayList<string>();
@@ -82,6 +87,9 @@ export class BKGymAbiturMarkierungsalgorithmusErgebnis extends JavaObject {
 		if (obj.punkteBlockI === undefined)
 			throw new Error('invalid json format, missing attribute punkteBlockI');
 		result.punkteBlockI = obj.punkteBlockI;
+		if (obj.facharbeitEinbringen === undefined)
+			throw new Error('invalid json format, missing attribute facharbeitEinbringen');
+		result.facharbeitEinbringen = obj.facharbeitEinbringen;
 		if (obj.fehlerLog !== undefined) {
 			for (const elem of obj.fehlerLog) {
 				result.fehlerLog.add(elem);
@@ -107,6 +115,7 @@ export class BKGymAbiturMarkierungsalgorithmusErgebnis extends JavaObject {
 		result += '"gesamtDefizite" : ' + obj.gesamtDefizite.toString() + ',';
 		result += '"lkDefizite" : ' + obj.lkDefizite.toString() + ',';
 		result += '"punkteBlockI" : ' + obj.punkteBlockI.toString() + ',';
+		result += '"facharbeitEinbringen" : ' + obj.facharbeitEinbringen.toString() + ',';
 		result += '"fehlerLog" : [ ';
 		for (let i = 0; i < obj.fehlerLog.size(); i++) {
 			const elem = obj.fehlerLog.get(i);
@@ -152,6 +161,9 @@ export class BKGymAbiturMarkierungsalgorithmusErgebnis extends JavaObject {
 		}
 		if (obj.punkteBlockI !== undefined) {
 			result += '"punkteBlockI" : ' + obj.punkteBlockI.toString() + ',';
+		}
+		if (obj.facharbeitEinbringen !== undefined) {
+			result += '"facharbeitEinbringen" : ' + obj.facharbeitEinbringen.toString() + ',';
 		}
 		if (obj.fehlerLog !== undefined) {
 			result += '"fehlerLog" : [ ';

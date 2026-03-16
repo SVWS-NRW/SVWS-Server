@@ -143,7 +143,7 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 				this.anzahlKurse += 2;
 				if (punkte !== null)
 					this.summeNotenpunkte += 2 * punkte;
-				if (!this.varianten.abiturdatenManager.getFachbelegungManager().getIstFacharbeitLK())
+				if (!this.varianten.abiturdatenManager.getFachbelegungManager().getIstFacharbeitBerufsbezogenerLK())
 					this.setHatZulassung(false);
 			} else {
 				this.facharbeitEinbeziehen = other.facharbeitEinbeziehen;
@@ -152,7 +152,7 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 			this.markiert.addAll(other.markiert);
 			this.unmarkiert.addAll(other.unmarkiert);
 			this.log.addAll(other.log);
-			this.addLogEintrag(1, "Die Variante " + this.kennung + " wurde erzeugt.");
+			this.addLogEintrag(1, "Variante ist: " + this.kennung + ".");
 		} else throw new Error('invalid method overload');
 	}
 
@@ -459,6 +459,7 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 		ergebnis.gesamtDefizite = this.getDefizite();
 		ergebnis.lkDefizite = this.defiziteLK;
 		ergebnis.punkteBlockI = this.getPunktzahlBlockI();
+		ergebnis.facharbeitEinbringen = this.facharbeitEinbeziehen;
 		this.erzeugeFehlerlog(ergebnis.fehlerLog);
 		ergebnis.log.addAll(this.log);
 		ergebnis.markierungen.addAll(this.markiert);

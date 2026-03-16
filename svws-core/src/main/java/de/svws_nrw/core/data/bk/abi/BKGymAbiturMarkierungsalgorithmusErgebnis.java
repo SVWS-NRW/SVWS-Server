@@ -38,6 +38,10 @@ public class BKGymAbiturMarkierungsalgorithmusErgebnis {
 	@Schema(description = "die Punktanzahl normiert auf 40 Kurse.", example = "421")
 	public int punkteBlockI = 0;
 
+	/** Facharbeit einbringen */
+	@Schema(description = "Facharbeit einbringen.", example = "true")
+	public boolean facharbeitEinbringen = false;
+
 	/** eine Liste von Hinweisen und Meldungen zu verletzten Zulassungsbedingungen*/
 	@ArraySchema(schema = @Schema(implementation = BKGymAbiturMarkierungsalgorithmusMarkierung.class,
 			description = "eine Liste von Hinweisen und Meldungen zu verletzten Zulassungsbedingungen."))
