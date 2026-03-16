@@ -10,7 +10,7 @@ dependencies {
 
 	transpiler fileTree(dir: "$projectDir/src/main/java", includes: ['**/svws_nrw/asd/**/*.java' ],
 			excludes: ['**/svws_nrw/asd/utils/json/**/*.java', '**/svws_nrw/asd/utils/ASDCoreTypeUtils.java', '**/svws_nrw/asd/utils/CoreTypeRessource.java',
-					'**/svws_nrw/asd/utils/docs/**/*.java'] )
+					'**/svws_nrw/asd/export/**/*.java', '**/svws_nrw/asd/utils/docs/**/*.java'] )
 
 	transpilerClasspath project(':svws-transpile')
 
