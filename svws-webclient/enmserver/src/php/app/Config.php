@@ -136,6 +136,16 @@ class Config {
         return $this->secret;
     }
 
+
+    /**
+     * Erzeugt einen neuen, vom Client-Secret abgeleiteten, Schlüssel für Client-Sessions.
+     * Dies ist eine zusätzliche Schutz-Maßnahme für das Client-Secret.
+     */
+    public function getClientSessionKey(): string {
+        return hash_hmac('sha256', 'WeNoM-Client-Session', $this->getClientSecret());
+    }
+
+
     /**
      * Erzeugt einen zufälligen, URL-sicheren String, der für Kennwörter verwendet werden kann.
      *

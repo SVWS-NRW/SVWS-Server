@@ -1,4 +1,3 @@
-import { BaseApi, type ApiFile } from "@core/api/BaseApi";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerConfig } from "@core/core/data/benutzer/BenutzerConfig";
 import { ENMLeistung } from "@core/core/data/enm/ENMLeistung";
@@ -7,6 +6,7 @@ import { ENMLernabschnitt } from "@core/core/data/enm/ENMLernabschnitt";
 import { ENMSchuelerAnkreuzkompetenz } from "@core/core/data/enm/ENMSchuelerAnkreuzkompetenz";
 import { ENMTeilleistung } from "@core/core/data/enm/ENMTeilleistung";
 import { ServerMode } from "@core/core/types/ServerMode";
+import { type ApiFile, BaseApi } from "./BaseApi";
 
 export class ApiEnmServer extends BaseApi {
 
@@ -19,6 +19,20 @@ export class ApiEnmServer extends BaseApi {
 	 */
 	public constructor(url: string, username: string, password: string) {
 		super(url, username, password);
+	}
+
+	/**
+	 * Führt den Server-Login durch. Hierzu wird zunächst ein Basic-Auth bei der Connection verwendet.
+	 * War der Aufruf erfolgreich, so wird der Json-Web-Token zurückgegeben und für die weiteren API-Zugriffe
+	 * verwendet.
+	 *
+	 * @returns die ID des angemeldeten Lehrers
+	 */
+	public async login(): Promise<number> {
+		const response = await super.postTextBased("/api/login", 'application/json', 'application/json', null);
+		const data = JSON.parse(response) as { token: string, id: number };
+		this.setBearerToken(data.token); // Umstellung auf Auth über den Json-Web-Token
+		return data.id;
 	}
 
 	/**
@@ -87,7 +101,6 @@ export class ApiEnmServer extends BaseApi {
 	 */
 	public async isAlive(): Promise<void> {
 		await super.postTextBased("/api/alive", 'application/json', '*/*', "");
-		return;
 	}
 
 	/**
@@ -104,7 +117,6 @@ export class ApiEnmServer extends BaseApi {
 	 */
 	public async patchENMLeistung(patch: Partial<ENMLeistung>): Promise<void> {
 		await super.postTextBased("/api/leistung", 'application/json', '*/*', ENMLeistung.transpilerToJSONPatch(patch));
-		return;
 	}
 
 	/**
@@ -121,7 +133,6 @@ export class ApiEnmServer extends BaseApi {
 	 */
 	public async patchENMSchuelerLernabschnitt(patch: Partial<ENMLernabschnitt>): Promise<void> {
 		await super.postTextBased("/api/lernabschnitt", 'application/json', '*/*', ENMLernabschnitt.transpilerToJSONPatch(patch));
-		return;
 	}
 
 	/**
@@ -140,7 +151,6 @@ export class ApiEnmServer extends BaseApi {
 	public async patchENMSchuelerBemerkungen(idSchueler: number, patch: Partial<ENMLeistungBemerkungen>): Promise<void> {
 		const body = `{ "id": ${idSchueler}, "patch": ${ENMLeistungBemerkungen.transpilerToJSONPatch(patch)}}`;
 		await super.postTextBased("/api/bemerkungen", 'application/json', '*/*', body);
-		return;
 	}
 
 	/**
@@ -157,7 +167,6 @@ export class ApiEnmServer extends BaseApi {
 	 */
 	public async patchENMTeilleistung(patch: Partial<ENMTeilleistung>): Promise<void> {
 		await super.postTextBased("/api/teilleistung", 'application/json', '*/*', ENMTeilleistung.transpilerToJSONPatch(patch));
-		return;
 	}
 
 	/**
@@ -174,7 +183,6 @@ export class ApiEnmServer extends BaseApi {
 	 */
 	public async patchENMSchuelerAnkreuzkompetenzen(patch: Partial<ENMSchuelerAnkreuzkompetenz>): Promise<void> {
 		await super.postTextBased("/api/ankreuzkompetenz", 'application/json', '*/*', ENMSchuelerAnkreuzkompetenz.transpilerToJSONPatch(patch));
-		return;
 	}
 
 
@@ -207,7 +215,7 @@ export class ApiEnmServer extends BaseApi {
 	 */
 	public async setClientConfigUserKey(data: string | null, key: string): Promise<void> {
 		const body = `{ "key": ${JSON.stringify(key)}, "value": ${JSON.stringify(data)} }`;
-		return super.putJSON("/api/clientconfig", body);
+		return super.putTextBased("/api/clientconfig", 'application/json', body);
 	}
 
 }

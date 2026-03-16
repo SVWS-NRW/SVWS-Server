@@ -6,7 +6,7 @@
  * Bei "PUT" wird ein Eintrag in der benutzerspezifischen Konfiguration gesetzt oder entfernt.
  *
  * @httpMethod GET, PUT
- * @auth (Basic) Lehrer Username und Kennwort benötigt
+ * @auth (Bearer) Json-Web-Token für einen Lehrer benötigt
  * @param {key: der Key, value: die Value} Das Patch-Objekt, das die neue Konfiguration enthält.
  *
  * @return void (bei PUT)
@@ -27,8 +27,8 @@ $app = new Application();
 // Prüfe die HTTP-Methode
 $app->auth->pruefeHTTPMethod([ "GET", "PUT" ]);
 
-// Prüfe, ob eine Authentifizierung mit einem gültigen Lehrer-Kennwort vorliegt
-$lehrer = $app->auth->pruefeLehrerBasicAuth();
+// Prüfe, ob eine Authentifizierung mit einem gültigen Json-Web-Token vorliegt
+$lehrer = $app->auth->pruefeLehrerSession();
 
 // Reagiere auf die Anfrage je nach HTTP-Methode
 if (strcmp($app->auth->getHTTPMethod(), "GET") === 0) {

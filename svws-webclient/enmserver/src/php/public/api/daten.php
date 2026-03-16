@@ -3,7 +3,7 @@
  * Endpunkt zum exportieren der ENM-Daten Lehrer aus der Datenbank.
  *
  * @httpMethod GET
- * @auth (Basic) Lehrer Username und Kennwort benötigt
+ * @auth (Bearer) Json-Web-Token für einen Lehrer benötigt
  *
  * @return GZIP mit allen ENM Daten für diesen Lehrer
  */
@@ -17,8 +17,8 @@ $app = new Application();
 // Prüfe die HTTP-Methode
 $app->auth->pruefeHTTPMethod([ "GET" ]);
 
-// Prüfe, ob eine Authentifizierung mit einem gültigen Lehrer-Kennwort vorliegt
-$lehrer = $app->auth->pruefeLehrerBasicAuth();
+// Prüfe, ob eine Authentifizierung mit einem gültigen Json-Web-Token vorliegt
+$lehrer = $app->auth->pruefeLehrerSession();
 
 // Erstelle für die Durchführung ein ENMDaten-Objekt aus der Datenbank und rufe dieses auf
 $enmDatenManager = ENMDatenManager::createFromDatabase($app->db);

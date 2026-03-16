@@ -134,6 +134,7 @@ export class ApiConnection {
 			this._username = username;
 			this._password = password;
 			this._api = new ApiEnmServer(this._url, this._username, this._password);
+			await this._api.login();
 			this._serverMode.value = await this._api.getServerMode();
 			// Prüfe, ob die Anmeldedaten korrekt sind, indem die Schulform abgefragt wird
 			this._schulform.value = await this._api.getSchulform();

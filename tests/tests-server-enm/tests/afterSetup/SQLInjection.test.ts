@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 import { getApiService } from "../../utils/RequestBuilder.js";
 import { parse } from "../../utils/ENMApiDataParser.js";
 import type { ENMSchueler } from "@core";
@@ -8,6 +8,11 @@ const targetUrlENMServer: string = enmURL;
 
 const apiServiceAuth = getApiService('T.Giesen@lmail.de', 'UD73Js0Uro', targetUrlENMServer);
 const apiServiceAuthInjected = getApiService('M.Gehring@lmail.de', 'uTdNE7EUIb', targetUrlENMServer);
+
+beforeAll(async () => {
+	await apiServiceAuth.login();
+	await apiServiceAuthInjected.login();
+});
 
 // Durch gezieltes Setzen von Anführungszeichen kann außerhalb der JSON in der DB-Spalte daten weitere SQL-Befehle ausgeführt werden.
 // Diese SQL-Befehle werden auf Ebene des Admins ausgeführt und können z. B. Tabellen löschen oder Daten manipuliert werden.

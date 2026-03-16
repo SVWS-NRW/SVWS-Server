@@ -1,7 +1,7 @@
 class ApiService {
 
-	private baseUrl: string;
-	private token: string;
+	private readonly baseUrl: string;
+	private authHeader: string;
 
 	/**
 	 * Erstellt eine neue Instanz von ApiService.
@@ -11,12 +11,27 @@ class ApiService {
 	 * @param {string} baseUrl - Die Basis-URL für die API.
 	 */
 	constructor(username: string, password: string, baseUrl: string) {
+		this.baseUrl = baseUrl;
 		// Kodiert den Benutzernamen und das Passwort in Base64 für die HTTP-Basic-Authentifizierung.
 		const tmp = new TextEncoder().encode(`${username}:${password}`);
-		this.token = btoa(String.fromCodePoint(...tmp));
-		this.baseUrl = baseUrl;
+		this.authHeader = `Basic ${btoa(String.fromCodePoint(...tmp))}`;
 
 		process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+	}
+
+	/**
+	 * Führt den Login aus und stellt den Service auf JWT (Bearer) um.
+	 */
+	public async login(): Promise<void> {
+		// Führe den Login mit BasicAuth durch
+		const response = await this.post('/api/login');
+		if (!response.ok) {
+			throw new Error("Login im Test fehlgeschlagen");
+		}
+		const data = await response.json();
+
+		// Und setze den Auth-Header auf den JWT-Token
+		this.authHeader = `Bearer ${data.token}`;
 	}
 
 	/**
@@ -40,7 +55,7 @@ class ApiService {
 				...options.headers,
 				...(contentLength > 0) && { 'content-length': String(contentLength) },
 				'accept': '*/*',
-				'authorization': `Basic ${this.token}`,
+				'authorization': this.authHeader,
 			},
 			...(options.body !== undefined) && { body: options.body },
 		});

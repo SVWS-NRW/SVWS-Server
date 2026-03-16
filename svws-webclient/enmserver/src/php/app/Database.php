@@ -300,6 +300,22 @@ class Database {
     }
 
     /**
+     * Ermittelt die Lehrerdaten anhand der ID.
+     *
+     * @param int $id   die ID des Lehrers
+     *
+     * @return ?object die Lehrer-Daten
+     */
+    public function getENMLehrerByID(int $id): ?object {
+        $result = $this->conn->querySingleOrNull("SELECT daten FROM Lehrer WHERE id = $id");
+        if ($result === null) {
+            return null;
+        }
+        return json_decode($result->daten);
+    }
+
+
+    /**
      * Ermittelt die Lehrerdaten aus der Datenbank und gibt diese in einem Array zurück.
      *
      * @return ?object die Lehrer-Daten

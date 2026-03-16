@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 import { getApiService } from "../../utils/RequestBuilder.js";
 import { parse } from "../../utils/ENMApiDataParser.js";
 import type { ENMLeistung, ENMSchuelerAnkreuzkompetenz } from "@core";
@@ -10,7 +10,13 @@ const targetUrlENMServer: string = enmURL;
 const apiServiceAuth = getApiService('T.Giesen@lmail.de', 'UD73Js0Uro', targetUrlENMServer);
 const apiServiceAuthWrongTeacher = getApiService('D.Berthold@lmail.de', 'uXkpaRLY', targetUrlENMServer);
 
+beforeAll(async () => {
+	await apiServiceAuth.login();
+	await apiServiceAuthWrongTeacher.login();
+});
+
 describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child Array", async () => {
+
 	test("Keine Duplikate in Leistungen", async () => {
 		const response = await apiServiceAuth.get(`/api/daten`);
 		expect(response.status).toBe(200);

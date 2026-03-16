@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
 import { getApiService } from "../../utils/RequestBuilder.js";
 import { enmURL } from "../../../utils/APIUtils";
 
@@ -6,6 +6,10 @@ const targetUrlENMServer: string = enmURL;
 
 const apiServiceAuth = getApiService('D.Berthold@lmail.de', 'uXkpaRLY', targetUrlENMServer);
 const apiServiceNoAuth = getApiService('', '', targetUrlENMServer);
+
+beforeAll(async () => {
+	await apiServiceAuth.login();
+});
 
 describe("POST Requests ohne Auth gegen den ENM Server", () => {
 	test("alive > 204", async () => {

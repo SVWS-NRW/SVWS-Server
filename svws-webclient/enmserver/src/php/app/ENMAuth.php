@@ -91,6 +91,32 @@ class ENMAuth {
         return $lehrer;
     }
 
+
+    /**
+     * Prüft das Json-Web-Token und gibt bei erfolgreicher Authentifizierung das Lehrer-Objekt des
+     * angemeldeten Benutzers zurück.
+     *
+     * @return object   das Lehrer-Objekt des angemeldeten Benutzer
+     */
+    public function pruefeLehrerSession(): object {
+        if (strcasecmp(($this->authMethod ?? ''), "Bearer") !== 0) {
+            Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="WeNoM"');
+        }
+
+        $payload = Http::verifyJsonWebToken($this->authToken, $this->config->getClientSessionKey());
+        if (!$payload || ($payload->exp < time())) {
+            Http::exit401Unauthorized("Sitzung abgelaufen.");
+        }
+
+        // Schneller ID-Lookup statt teurem Passwort-Hash-Vergleich
+        $lehrer = $this->db->getENMLehrerByID((int) $payload->sub);
+        if (!$lehrer) {
+            Http::exit401Unauthorized();
+        }
+        return $lehrer;
+    }
+
+
     /**
      * Prüft, ob das Access-Token der Anfrage zu einem Client gehört und gültig ist.
      * Tritt ein Fehler bei der Prüfung auf, so wird ein Fehlercode 401 zurückgegeben.
