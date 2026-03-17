@@ -131,7 +131,9 @@
 			return;
 		}
 		gridManagerSchueler.focusRowLast = row;
-		auswahlZelle.value = gridManagerSchueler.daten.get(row);
+		if (!gridManagerSchueler.daten.isEmpty()) {
+			auswahlZelle.value = gridManagerSchueler.daten.get(row);
+		}
 	}
 
 	function auswahlSchueler(index: number) {

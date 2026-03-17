@@ -16,8 +16,8 @@
 		</svws-ui-header>
 		<div class="page ">
 			<div class="h-full overflow-auto">
-				<table class="svws-ui-table svws-clickable min-w-320 max-w-320" role="table" aria-label="Tabelle">
-					<thead class="svws-ui-thead cursor-pointer mb-1" aria-label="Tabellenkopf">
+				<table class="svws-ui-table min-w-320 max-w-320" role="table" aria-label="Tabelle">
+					<thead class="svws-ui-thead mb-1" aria-label="Tabellenkopf">
 						<tr class="svws-ui-tr" role="row" style="grid-template-columns: 1fr 5fr 5fr 3fr 1rem; min-height: auto;">
 							<th id="kuerzel" class="svws-ui-td" role="columnheader">Kürzel</th>
 							<th id="name" class="svws-ui-td" role="columnheader">Nachname, Vorname</th>
@@ -49,16 +49,18 @@
 											Diese dienstliche Email-Adresse ist bei mehreren Lehrern eingetragen. Dies ist für den Web-Noten-Manager nicht zulässig.
 										</template>
 									</svws-ui-tooltip>
-									<span>{{ lehrer.eMailDienstlich ?? 'fehlt' }}</span>
-									<div v-if="lehrer.eMailDienstlich !== null" @click="copyToClipboard(lehrer.eMailDienstlich)" class="cursor-pointer place-items-center">
-										<span class="icon-sm i-ri-file-copy-line" />
+									<div v-if="lehrer.eMailDienstlich !== null" @click="copyToClipboard(lehrer, 'mail')" class="cursor-pointer place-items-center">
+										<span>{{ lehrer.eMailDienstlich }}</span>
+										<span class="icon-sm i-ri-file-copy-line" :class="{ 'ping-normal': ((ping?.id === lehrer.id) && (pingType === 'mail')) }" />
 									</div>
+									<div v-else> fehlt </div>
 								</td>
 								<td class="svws-ui-td">
-									{{ mapEnmInitialKennwoerter().get(lehrer.id) ?? 'kein Kennwort gesetzt' }}
-									<div v-if="mapEnmInitialKennwoerter().get(lehrer.id) !== null" @click="copyToClipboard(mapEnmInitialKennwoerter().get(lehrer.id))" class="cursor-pointer place-items-center">
-										<span class="icon-sm i-ri-file-copy-line" />
+									<div v-if="mapEnmInitialKennwoerter().get(lehrer.id) !== null" @click="copyToClipboard(lehrer, 'kennwort')" class="cursor-pointer place-items-center">
+										{{ mapEnmInitialKennwoerter().get(lehrer.id) }}
+										<span class="icon-sm i-ri-file-copy-line" :class="{ 'ping-normal': ((ping?.id === lehrer.id) && (pingType === 'kennwort')) }" />
 									</div>
+									<div v-else>kein Kennwort gesetzt</div>
 								</td>
 							</tr>
 						</template>
@@ -73,7 +75,8 @@
 
 	import { computed, ref } from 'vue';
 	import type { NotenmodulZugangsdatenProps } from './NotenmodulZugangsdatenProps';
-	import { ArrayList, DeveloperNotificationException, type ENMLehrer, type List } from "@core";
+	import type { ENMLehrer, List } from "@core";
+	import { ArrayList, DeveloperNotificationException } from "@core";
 
 	const props = defineProps<NotenmodulZugangsdatenProps>();
 	const search = ref<string>("");
@@ -145,12 +148,25 @@
 		return duplikate;
 	});
 
-	async function copyToClipboard(text: string | null) {
+	const ping = ref<ENMLehrer | null>(null);
+	const pingType = ref<'mail' | 'kennwort'>();
+
+	function pingTimer(lehrer: ENMLehrer, type: 'mail' | 'kennwort') {
+		ping.value = lehrer;
+		pingType.value = type;
+		setTimeout(() => {
+			ping.value = null;
+		}, 300);
+	}
+
+	async function copyToClipboard(lehrer: ENMLehrer, type: 'mail' | 'kennwort') {
+		const text = type === 'mail' ? lehrer.eMailDienstlich : props.mapEnmInitialKennwoerter().get(lehrer.id);
 		try {
 			if (text === null) {
 				throw new DeveloperNotificationException("Initial-Kennwort ist nicht vorhanden und kann daher nicht in die Zwischenablage kopiert werden.");
 			} else {
 				await navigator.clipboard.writeText(text);
+				pingTimer(lehrer, type);
 			}
 		} catch {
 			throw new DeveloperNotificationException("Benutzername oder Initial-Kennwort konnte nicht in die Zwischenablage kopiert werden.");
@@ -189,3 +205,17 @@
 		return { lehrerOhneEmail, lehrerDoppelteEmail, lehrerFehlerhafteEmail, lehrerEmailProbleme };
 	}).value;
 </script>
+
+<style lang="css" scoped>
+
+	@keyframes ping-normal {
+		0% { transform: scale(0.2); opacity: 0.8; }
+		80% { transform: scale(1.2); opacity: 0; }
+		100% { transform: scale(2.2); opacity: 0; }
+	}
+
+	.ping-normal {
+		animation: ping-normal 1s ease 0s 1 normal none;
+	}
+
+</style>
