@@ -18,9 +18,9 @@ public class ReligionStatistikGesamt {
 	@Schema(description = "die ID des Katalog-Eintrags", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id = -1;
 
-	/** Das Kürzel des Eintrages für die Statistik. */
-	@Schema(description = "das Kürzel des Eintrages für die Statistik", example = "KR")
-	public String kuerzel = "";
+	/** Die ID des Eintrages für die Statistik. */
+	@Schema(description = "die ID des Eintrages für die Statistik", example = "3000")
+	public long idKatalog = -1;
 
 	/**
 	 * Leerer Standardkonstruktor.

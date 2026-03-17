@@ -2,7 +2,6 @@ package de.svws_nrw.asd.data.statistik;
 
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -18,9 +17,9 @@ public class FoerderschwerpunktStatistikGesamt {
 	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id;
 
-	/** Das Kürzel des Eintrags im Rahmen der amtlichen Schulstatisik. */
-	@Schema(description = "das Kürzel des Eintrags im Rahmen der amtlichen Schulstatisik", example = "EZ")
-	public @NotNull String kuerzelStatistik = "";
+	/** Die ID des Eintrags im Rahmen der amtlichen Schulstatisik. */
+	@Schema(description = "die ID des Eintrags im Rahmen der amtlichen Schulstatisik", example = "1000")
+	public long idKatalog = -1;
 
 	/**
 	 * Leerer Standardkonstruktor.

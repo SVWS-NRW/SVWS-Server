@@ -94,7 +94,8 @@ public final class StatistikServiceFactory {
 	 * @return der Service für den Zugriff auf die Daten zu den Förderschwerpunkten
 	 */
 	public FoerderschwerpunkteStatistikService getFoerderschwerpunkteStatistikService() {
-		return new FoerderschwerpunkteStatistikService(katalogeRepositoryFactory.getFoerderschwerpunkteRepository());
+		return new FoerderschwerpunkteStatistikService(schuleRepositoryFactory.getSchuleRepository(), schuleServiceFactory.getSchuljahresabschnittService(),
+				katalogeRepositoryFactory.getFoerderschwerpunkteRepository());
 	}
 
 
@@ -104,7 +105,8 @@ public final class StatistikServiceFactory {
 	 * @return der Service für den Zugriff auf die Daten zu den Jahrgängen
 	 */
 	public JahrgaengeStatistikService getJahrgaengeStatistikService() {
-		return new JahrgaengeStatistikService(katalogeRepositoryFactory.getJahrgaengeRepository());
+		return new JahrgaengeStatistikService(schuleRepositoryFactory.getSchuleRepository(), schuleServiceFactory.getSchuljahresabschnittService(),
+				katalogeRepositoryFactory.getJahrgaengeRepository());
 	}
 
 
@@ -151,7 +153,8 @@ public final class StatistikServiceFactory {
 	 * @return der Service für den Zugriff auf die Daten zu den Religionen
 	 */
 	public ReligionStatistikService getReligionStatistikService() {
-		return new ReligionStatistikService(katalogeRepositoryFactory.getReligionRepository());
+		return new ReligionStatistikService(schuleRepositoryFactory.getSchuleRepository(), schuleServiceFactory.getSchuljahresabschnittService(),
+				katalogeRepositoryFactory.getReligionRepository());
 	}
 
 

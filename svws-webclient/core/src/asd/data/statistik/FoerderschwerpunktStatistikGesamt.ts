@@ -9,9 +9,9 @@ export class FoerderschwerpunktStatistikGesamt extends JavaObject {
 	public id: number = 0;
 
 	/**
-	 * Das Kürzel des Eintrags im Rahmen der amtlichen Schulstatisik.
+	 * Die ID des Eintrags im Rahmen der amtlichen Schulstatisik.
 	 */
-	public kuerzelStatistik: string = "";
+	public idKatalog: number = -1;
 
 
 	/**
@@ -37,16 +37,16 @@ export class FoerderschwerpunktStatistikGesamt extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (obj.kuerzelStatistik === undefined)
-			throw new Error('invalid json format, missing attribute kuerzelStatistik');
-		result.kuerzelStatistik = obj.kuerzelStatistik;
+		if (obj.idKatalog === undefined)
+			throw new Error('invalid json format, missing attribute idKatalog');
+		result.idKatalog = obj.idKatalog;
 		return result;
 	}
 
 	public static transpilerToJSON(obj: FoerderschwerpunktStatistikGesamt): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik) + ',';
+		result += '"idKatalog" : ' + obj.idKatalog.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -57,8 +57,8 @@ export class FoerderschwerpunktStatistikGesamt extends JavaObject {
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
-		if (obj.kuerzelStatistik !== undefined) {
-			result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik) + ',';
+		if (obj.idKatalog !== undefined) {
+			result += '"idKatalog" : ' + obj.idKatalog.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

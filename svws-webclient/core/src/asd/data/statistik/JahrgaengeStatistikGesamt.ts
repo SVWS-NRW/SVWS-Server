@@ -14,9 +14,9 @@ export class JahrgaengeStatistikGesamt extends JavaObject {
 	public kuerzel: string | null = null;
 
 	/**
-	 * Das dem Jahrgang zugeordnete Statistik-Kürzel.
+	 * Die ID des dem Jahrgang zugeordneten Statistik-Kürzels.
 	 */
-	public kuerzelStatistik: string | null = null;
+	public idKatalog: number | null = null;
 
 	/**
 	 * Die Sortierreihenfolge des Jahrgangslisten-Eintrags.
@@ -48,7 +48,7 @@ export class JahrgaengeStatistikGesamt extends JavaObject {
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
-		result.kuerzelStatistik = (obj.kuerzelStatistik === undefined) ? null : obj.kuerzelStatistik === null ? null : obj.kuerzelStatistik;
+		result.idKatalog = (obj.idKatalog === undefined) ? null : obj.idKatalog === null ? null : obj.idKatalog;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -59,7 +59,7 @@ export class JahrgaengeStatistikGesamt extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
-		result += '"kuerzelStatistik" : ' + ((obj.kuerzelStatistik === null) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
+		result += '"idKatalog" : ' + ((obj.idKatalog === null) ? 'null' : obj.idKatalog.toString()) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -74,8 +74,8 @@ export class JahrgaengeStatistikGesamt extends JavaObject {
 		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
-		if (obj.kuerzelStatistik !== undefined) {
-			result += '"kuerzelStatistik" : ' + ((obj.kuerzelStatistik === null) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
+		if (obj.idKatalog !== undefined) {
+			result += '"idKatalog" : ' + ((obj.idKatalog === null) ? 'null' : obj.idKatalog.toString()) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';

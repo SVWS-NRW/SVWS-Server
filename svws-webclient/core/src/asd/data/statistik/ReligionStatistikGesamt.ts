@@ -9,9 +9,9 @@ export class ReligionStatistikGesamt extends JavaObject {
 	public id: number = -1;
 
 	/**
-	 * Das Kürzel des Eintrages für die Statistik.
+	 * Die ID des Eintrages für die Statistik.
 	 */
-	public kuerzel: string | null = "";
+	public idKatalog: number = -1;
 
 
 	/**
@@ -37,14 +37,16 @@ export class ReligionStatistikGesamt extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
+		if (obj.idKatalog === undefined)
+			throw new Error('invalid json format, missing attribute idKatalog');
+		result.idKatalog = obj.idKatalog;
 		return result;
 	}
 
 	public static transpilerToJSON(obj: ReligionStatistikGesamt): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		result += '"idKatalog" : ' + obj.idKatalog.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -55,8 +57,8 @@ export class ReligionStatistikGesamt extends JavaObject {
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
-		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		if (obj.idKatalog !== undefined) {
+			result += '"idKatalog" : ' + obj.idKatalog.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

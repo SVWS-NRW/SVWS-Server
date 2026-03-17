@@ -21,9 +21,9 @@ public class JahrgaengeStatistikGesamt {
 	@Schema(description = "Das schulinterne Kürzel des Jahrgangs.", example = "ABC")
 	public String kuerzel;
 
-	/** Das dem Jahrgang zugeordnete Statistik-Kürzel. */
-	@Schema(description = "das dem Jahrgang zugeordnete Statistik-Kürzel", example = "EF")
-	public String kuerzelStatistik;
+	/** Die ID des dem Jahrgang zugeordneten Statistik-Kürzels. */
+	@Schema(description = "die ID des dem Jahrgang zugeordneten Statistik-Kürzels", example = "21000001")
+	public Long idKatalog;
 
 	/** Die Sortierreihenfolge des Jahrgangslisten-Eintrags. */
 	@Schema(description = "die Sortierreihenfolge des Jahrgangslisten-Eintrags", example = "1")
