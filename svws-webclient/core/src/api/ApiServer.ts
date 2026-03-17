@@ -165,6 +165,7 @@ import { Schild3KatalogEintragPruefungsordnung } from '../core/data/schild3/Schi
 import { Schild3KatalogEintragPruefungsordnungOption } from '../core/data/schild3/Schild3KatalogEintragPruefungsordnungOption';
 import { Schild3KatalogEintragUnicodeUmwandlung } from '../core/data/schild3/Schild3KatalogEintragUnicodeUmwandlung';
 import { Schild3KatalogEintragVersetzungsvermerke } from '../core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
+import { SchuelerBetrieb } from '../asd/data/schueler/SchuelerBetrieb';
 import { SchuelerEinwilligung } from '../core/data/schueler/SchuelerEinwilligung';
 import { SchuelerFoerderempfehlung } from '../asd/data/schueler/SchuelerFoerderempfehlung';
 import { SchuelerKAoADaten } from '../core/data/schueler/SchuelerKAoADaten';
@@ -13115,6 +13116,118 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchuelerSchulbesuchMerkmal>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerSchulbesuchMerkmal.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchuelerBetrieb für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/schueler-betriebe/{id : \d+}
+	 *
+	 * Patched den SchuelerBetrieb mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchuelerBetrieb>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchSchuelerBetrieb(data : Partial<SchuelerBetrieb>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schueler/schueler-betriebe/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = SchuelerBetrieb.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchuelerBetriebe für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/schueler-betriebe/{idSchueler: \d+}
+	 *
+	 * Gibt die SchuelerBetriebe zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste der SchuelerBetriebe.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchuelerBetrieb>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchueler - der Pfad-Parameter idSchueler
+	 *
+	 * @returns Eine Liste der SchuelerBetriebe.
+	 */
+	public async getSchuelerBetriebe(schema : string, idSchueler : number) : Promise<List<SchuelerBetrieb>> {
+		const path = "/db/{schema}/schueler/schueler-betriebe/{idSchueler: \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchuelerBetrieb>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerBetrieb.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addSchuelerBetrieb für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/schueler-betriebe/create
+	 *
+	 * Erstellt einen neuen SchuelerBetrieb, insofern die notwendigen Berechtigungen vorliegen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der SchuelerBetrieb wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerBetrieb
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um SchuelerBetriebe anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchuelerBetrieb>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der SchuelerBetrieb wurde erfolgreich hinzugefügt.
+	 */
+	public async addSchuelerBetrieb(data : Partial<SchuelerBetrieb>, schema : string) : Promise<SchuelerBetrieb> {
+		const path = "/db/{schema}/schueler/schueler-betriebe/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = SchuelerBetrieb.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SchuelerBetrieb.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchuelrBetriebe für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/schueler-betriebe/delete/multiple
+	 *
+	 * Entfernt mehrere SchuelerBetriebe, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um SchuelerBetriebe zu entfernen.
+	 *   Code 404: SchuelerBetriebe nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteSchuelrBetriebe(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schueler/schueler-betriebe/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
 		return ret;
 	}
 

@@ -1,5 +1,6 @@
 package de.svws_nrw.api.server;
 
+import de.svws_nrw.asd.data.schueler.SchuelerBetrieb;
 import de.svws_nrw.asd.data.schueler.SchuelerNeu;
 import de.svws_nrw.core.data.schule.Fahrschuelerart;
 import de.svws_nrw.data.kataloge.DataFahrschuelerarten;
@@ -7,6 +8,7 @@ import de.svws_nrw.data.kataloge.DataFahrschuelerarten;
 import java.io.InputStream;
 
 import de.svws_nrw.data.schueler.DataSchuelerNeu;
+import de.svws_nrw.data.schueler.betriebe.DataSchuelerBetriebe;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
 import org.jboss.resteasy.annotations.GZIP;
@@ -2199,5 +2201,113 @@ public class APISchueler {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerFoerderempfehlung(conn).deleteAsResponse(guid),
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste der SchuelerBetriebe.
+	 *
+	 * @param idSchueler	die Id des Schülers
+	 * @param schema    	das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   	die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der SchuelerBetriebe
+	 */
+	@GET
+	@Path("/schueler-betriebe/{idSchueler: \\d+}")
+	@Operation(summary = "Gibt eine Liste der SchuelerBetriebe zurück.",
+			description = "Gibt die SchuelerBetriebe zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste der SchuelerBetriebe.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerBetrieb.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+	public Response getSchuelerBetriebe(@PathParam("schema") final String schema, @PathParam("idSchueler") final long idSchueler,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerBetriebe(conn).getAllAsResponseByIdSchueler(idSchueler),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen eines SchuelerBetriebs.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id		die ID zur Identifikation des SchuelerBetriebs
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/schueler-betriebe/{id : \\d+}")
+	@Operation(summary = "Patched den SchuelerBetrieb mit der angegebenen ID",
+			description = "Patched den SchuelerBetrieb mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
+	public Response patchSchuelerBetrieb(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Der Patch eines SchuelerBetriebs", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerBetrieb.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataSchuelerBetriebe(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
+				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen eines Betriebs.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten des Betriebs
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem erstellten Betrieb
+	 */
+	@POST
+	@Path("/schueler-betriebe/create")
+	@Operation(summary = "Erstellt einen neuen SchuelerBetrieb und gibt das erstellte Objekt zurück.",
+			description = "Erstellt einen neuen SchuelerBetrieb, insofern die notwendigen Berechtigungen vorliegen")
+	@ApiResponse(responseCode = "201", description = "Der SchuelerBetrieb wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerBetrieb.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um SchuelerBetriebe anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addSchuelerBetrieb(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten des zu erstellenden SchuelerBetriebs.", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerBetrieb.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataSchuelerBetriebe(conn).addAsResponse(is), request, ServerMode.STABLE,
+				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer SchuelerBetriebe.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/schueler-betriebe/delete/multiple")
+	@Operation(summary = "Entfernt mehrere SchuelerBetriebe.", description = "Entfernt mehrere SchuelerBetriebe, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um SchuelerBetriebe zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "SchuelerBetriebe nicht vorhanden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteSchuelrBetriebe(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden SchuelerBetriebe",
+					required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataSchuelerBetriebe(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
+	}
+
 }
 

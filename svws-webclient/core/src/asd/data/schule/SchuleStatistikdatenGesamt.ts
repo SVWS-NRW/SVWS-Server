@@ -1,10 +1,10 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { LehrerPersonaldaten } from '../../../asd/data/lehrer/LehrerPersonaldaten';
 import { SchuleStammdaten } from '../../../asd/data/schule/SchuleStammdaten';
-import { SchuelerBetriebe } from '../../../asd/data/schueler/SchuelerBetriebe';
 import { SchuelerLernabschnittsdaten } from '../../../asd/data/schueler/SchuelerLernabschnittsdaten';
 import { SchuelerSchulbesuchsdaten } from '../../../asd/data/schueler/SchuelerSchulbesuchsdaten';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { SchuelerBetrieb } from '../../../asd/data/schueler/SchuelerBetrieb';
 import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
@@ -40,7 +40,7 @@ export class SchuleStatistikdatenGesamt extends JavaObject {
 	/**
 	 * Die Betriebsdaten der Schüler in einem Betrieb.
 	 */
-	public schuelerBetriebe: List<SchuelerBetriebe> = new ArrayList<SchuelerBetriebe>();
+	public schuelerBetrieb: List<SchuelerBetrieb> = new ArrayList<SchuelerBetrieb>();
 
 	/**
 	 * Die Informationen zu den Sprachbelegungen und den Sprachprüfungen der Schüler.
@@ -91,9 +91,9 @@ export class SchuleStatistikdatenGesamt extends JavaObject {
 				result.schuelerSchulbesuchsdaten.add(SchuelerSchulbesuchsdaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (obj.schuelerBetriebe !== undefined) {
-			for (const elem of obj.schuelerBetriebe) {
-				result.schuelerBetriebe.add(SchuelerBetriebe.transpilerFromJSON(JSON.stringify(elem)));
+		if (obj.schuelerBetrieb !== undefined) {
+			for (const elem of obj.schuelerBetrieb) {
+				result.schuelerBetrieb.add(SchuelerBetrieb.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if (obj.schuelerSprachendaten !== undefined) {
@@ -139,11 +139,11 @@ export class SchuleStatistikdatenGesamt extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"schuelerBetriebe" : [ ';
-		for (let i = 0; i < obj.schuelerBetriebe.size(); i++) {
-			const elem = obj.schuelerBetriebe.get(i);
-			result += SchuelerBetriebe.transpilerToJSON(elem);
-			if (i < obj.schuelerBetriebe.size() - 1)
+		result += '"schuelerBetrieb" : [ ';
+		for (let i = 0; i < obj.schuelerBetrieb.size(); i++) {
+			const elem = obj.schuelerBetrieb.get(i);
+			result += SchuelerBetrieb.transpilerToJSON(elem);
+			if (i < obj.schuelerBetrieb.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -205,12 +205,12 @@ export class SchuleStatistikdatenGesamt extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (obj.schuelerBetriebe !== undefined) {
-			result += '"schuelerBetriebe" : [ ';
-			for (let i = 0; i < obj.schuelerBetriebe.size(); i++) {
-				const elem = obj.schuelerBetriebe.get(i);
-				result += SchuelerBetriebe.transpilerToJSON(elem);
-				if (i < obj.schuelerBetriebe.size() - 1)
+		if (obj.schuelerBetrieb !== undefined) {
+			result += '"schuelerBetrieb" : [ ';
+			for (let i = 0; i < obj.schuelerBetrieb.size(); i++) {
+				const elem = obj.schuelerBetrieb.get(i);
+				result += SchuelerBetrieb.transpilerToJSON(elem);
+				if (i < obj.schuelerBetrieb.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

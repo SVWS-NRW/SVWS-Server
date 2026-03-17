@@ -166,7 +166,7 @@ export { HerkunftSchulformKatalogEintrag } from './asd/data/schueler/HerkunftSch
 export { HerkunftSonstigeKatalogEintrag } from './asd/data/schueler/HerkunftSonstigeKatalogEintrag';
 export { HerkunftsartenKatalogEintrag } from './asd/data/schueler/HerkunftsartenKatalogEintrag';
 export { Schueler } from './asd/data/schueler/Schueler';
-export { SchuelerBetriebe } from './asd/data/schueler/SchuelerBetriebe';
+export { SchuelerBetrieb } from './asd/data/schueler/SchuelerBetrieb';
 export { SchuelerFoerderempfehlung } from './asd/data/schueler/SchuelerFoerderempfehlung';
 export { SchuelerLeistungsdaten } from './asd/data/schueler/SchuelerLeistungsdaten';
 export { SchuelerLernabschnittBemerkungen } from './asd/data/schueler/SchuelerLernabschnittBemerkungen';

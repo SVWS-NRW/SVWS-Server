@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
-import de.svws_nrw.asd.data.schueler.SchuelerBetriebe;
+import de.svws_nrw.asd.data.schueler.SchuelerBetrieb;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.data.schueler.Sprachendaten;
@@ -49,9 +49,9 @@ public class SchuleStatistikdatenGesamt {
 	public @NotNull List<SchuelerSchulbesuchsdaten> schuelerSchulbesuchsdaten = new ArrayList<>();
 
 	/** Die Betriebsdaten der Schüler in einem Betrieb. */
-	@ArraySchema(schema = @Schema(implementation = SchuelerBetriebe.class,
+	@ArraySchema(schema = @Schema(implementation = SchuelerBetrieb.class,
 			description = "Ein Array mit den Betriebsdaten der Schüler in einem Betrieb."))
-	public @NotNull List<SchuelerBetriebe> schuelerBetriebe = new ArrayList<>();
+	public @NotNull List<SchuelerBetrieb> schuelerBetrieb = new ArrayList<>();
 
 	/** Die Informationen zu den Sprachbelegungen und den Sprachprüfungen der Schüler. */
 	@ArraySchema(schema = @Schema(implementation = Sprachendaten.class,

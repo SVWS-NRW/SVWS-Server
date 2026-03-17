@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Class } from '../../../java/lang/Class';
 
-export class SchuelerBetriebe extends JavaObject {
+export class SchuelerBetrieb extends JavaObject {
 
 	/**
 	 * Die ID des Betriebseintrags beim Schüler
@@ -19,9 +19,24 @@ export class SchuelerBetriebe extends JavaObject {
 	public idBetrieb: number = 0;
 
 	/**
+	 * Die ID des Ansprechpartners
+	 */
+	public idAnsprechpartner: number | null = null;
+
+	/**
+	 * Die ID des Betreuungslehrers
+	 */
+	public idBetreuungslehrer: number | null = null;
+
+	/**
 	 * ID der Beschäftigungsart des Schülers
 	 */
 	public idBeschaeftigungsart: number | null = null;
+
+	/**
+	 * Der Name des Ausbilders
+	 */
+	public nameAusbilder: string | null = null;
 
 	/**
 	 * Das Datum des Vertragsbeginns
@@ -34,56 +49,38 @@ export class SchuelerBetriebe extends JavaObject {
 	public vertragsende: string | null = null;
 
 	/**
-	 * Der Name des Ausbilders
-	 */
-	public nameAusbilder: string | null = null;
-
-	/**
 	 * Betrieb erhält Anschreiben
 	 */
-	public erhaeltAnschreiben: boolean = false;
+	public erhaeltAnschreiben: boolean | null = null;
 
 	/**
 	 * Gibt an ob es ein Praktikum ist
 	 */
-	public istPraktikum: boolean = false;
+	public istPraktikum: boolean | null = null;
 
 	/**
 	 * Die Sortierung des Betriebseintrags
 	 */
 	public sortierung: number | null = null;
 
-	/**
-	 * Die ID des Ansprechpartners
-	 */
-	public idAnsprechpartner: number | null = null;
 
-	/**
-	 * Die ID des Betreuungslehrers
-	 */
-	public idBetreuungslehrer: number | null = null;
-
-
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.asd.data.schueler.SchuelerBetriebe';
+		return 'de.svws_nrw.asd.data.schueler.SchuelerBetrieb';
 	}
 
 	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.asd.data.schueler.SchuelerBetriebe'].includes(name);
+		return ['de.svws_nrw.asd.data.schueler.SchuelerBetrieb'].includes(name);
 	}
 
-	public static readonly class = new Class<SchuelerBetriebe>('de.svws_nrw.asd.data.schueler.SchuelerBetriebe');
+	public static readonly class = new Class<SchuelerBetrieb>('de.svws_nrw.asd.data.schueler.SchuelerBetrieb');
 
-	public static transpilerFromJSON(json: string): SchuelerBetriebe {
-		const obj = JSON.parse(json) as Partial<SchuelerBetriebe>;
-		const result = new SchuelerBetriebe();
+	public static transpilerFromJSON(json: string): SchuelerBetrieb {
+		const obj = JSON.parse(json) as Partial<SchuelerBetrieb>;
+		const result = new SchuelerBetrieb();
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
@@ -93,42 +90,38 @@ export class SchuelerBetriebe extends JavaObject {
 		if (obj.idBetrieb === undefined)
 			throw new Error('invalid json format, missing attribute idBetrieb');
 		result.idBetrieb = obj.idBetrieb;
-		result.idBeschaeftigungsart = (obj.idBeschaeftigungsart === undefined) ? null : obj.idBeschaeftigungsart === null ? null : obj.idBeschaeftigungsart;
-		result.vertragsbeginn = (obj.vertragsbeginn === undefined) ? null : obj.vertragsbeginn === null ? null : obj.vertragsbeginn;
-		result.vertragsende = (obj.vertragsende === undefined) ? null : obj.vertragsende === null ? null : obj.vertragsende;
-		result.nameAusbilder = (obj.nameAusbilder === undefined) ? null : obj.nameAusbilder === null ? null : obj.nameAusbilder;
-		if (obj.erhaeltAnschreiben === undefined)
-			throw new Error('invalid json format, missing attribute erhaeltAnschreiben');
-		result.erhaeltAnschreiben = obj.erhaeltAnschreiben;
-		if (obj.istPraktikum === undefined)
-			throw new Error('invalid json format, missing attribute istPraktikum');
-		result.istPraktikum = obj.istPraktikum;
-		result.sortierung = (obj.sortierung === undefined) ? null : obj.sortierung === null ? null : obj.sortierung;
 		result.idAnsprechpartner = (obj.idAnsprechpartner === undefined) ? null : obj.idAnsprechpartner === null ? null : obj.idAnsprechpartner;
 		result.idBetreuungslehrer = (obj.idBetreuungslehrer === undefined) ? null : obj.idBetreuungslehrer === null ? null : obj.idBetreuungslehrer;
+		result.idBeschaeftigungsart = (obj.idBeschaeftigungsart === undefined) ? null : obj.idBeschaeftigungsart === null ? null : obj.idBeschaeftigungsart;
+		result.nameAusbilder = (obj.nameAusbilder === undefined) ? null : obj.nameAusbilder === null ? null : obj.nameAusbilder;
+		result.vertragsbeginn = (obj.vertragsbeginn === undefined) ? null : obj.vertragsbeginn === null ? null : obj.vertragsbeginn;
+		result.vertragsende = (obj.vertragsende === undefined) ? null : obj.vertragsende === null ? null : obj.vertragsende;
+		result.erhaeltAnschreiben = (obj.erhaeltAnschreiben === undefined) ? null : obj.erhaeltAnschreiben === null ? null : obj.erhaeltAnschreiben;
+		result.istPraktikum = (obj.istPraktikum === undefined) ? null : obj.istPraktikum === null ? null : obj.istPraktikum;
+		result.sortierung = (obj.sortierung === undefined) ? null : obj.sortierung === null ? null : obj.sortierung;
 		return result;
 	}
 
-	public static transpilerToJSON(obj: SchuelerBetriebe): string {
+	public static transpilerToJSON(obj: SchuelerBetrieb): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
 		result += '"idBetrieb" : ' + obj.idBetrieb.toString() + ',';
-		result += '"idBeschaeftigungsart" : ' + ((obj.idBeschaeftigungsart === null) ? 'null' : obj.idBeschaeftigungsart.toString()) + ',';
-		result += '"vertragsbeginn" : ' + ((obj.vertragsbeginn === null) ? 'null' : JSON.stringify(obj.vertragsbeginn)) + ',';
-		result += '"vertragsende" : ' + ((obj.vertragsende === null) ? 'null' : JSON.stringify(obj.vertragsende)) + ',';
-		result += '"nameAusbilder" : ' + ((obj.nameAusbilder === null) ? 'null' : JSON.stringify(obj.nameAusbilder)) + ',';
-		result += '"erhaeltAnschreiben" : ' + obj.erhaeltAnschreiben + ',';
-		result += '"istPraktikum" : ' + obj.istPraktikum + ',';
-		result += '"sortierung" : ' + ((obj.sortierung === null) ? 'null' : obj.sortierung.toString()) + ',';
 		result += '"idAnsprechpartner" : ' + ((obj.idAnsprechpartner === null) ? 'null' : obj.idAnsprechpartner.toString()) + ',';
 		result += '"idBetreuungslehrer" : ' + ((obj.idBetreuungslehrer === null) ? 'null' : obj.idBetreuungslehrer.toString()) + ',';
+		result += '"idBeschaeftigungsart" : ' + ((obj.idBeschaeftigungsart === null) ? 'null' : obj.idBeschaeftigungsart.toString()) + ',';
+		result += '"nameAusbilder" : ' + ((obj.nameAusbilder === null) ? 'null' : JSON.stringify(obj.nameAusbilder)) + ',';
+		result += '"vertragsbeginn" : ' + ((obj.vertragsbeginn === null) ? 'null' : JSON.stringify(obj.vertragsbeginn)) + ',';
+		result += '"vertragsende" : ' + ((obj.vertragsende === null) ? 'null' : JSON.stringify(obj.vertragsende)) + ',';
+		result += '"erhaeltAnschreiben" : ' + ((obj.erhaeltAnschreiben === null) ? 'null' : obj.erhaeltAnschreiben.toString()) + ',';
+		result += '"istPraktikum" : ' + ((obj.istPraktikum === null) ? 'null' : obj.istPraktikum.toString()) + ',';
+		result += '"sortierung" : ' + ((obj.sortierung === null) ? 'null' : obj.sortierung.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj: Partial<SchuelerBetriebe>): string {
+	public static transpilerToJSONPatch(obj: Partial<SchuelerBetrieb>): string {
 		let result = '{';
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
@@ -139,8 +132,17 @@ export class SchuelerBetriebe extends JavaObject {
 		if (obj.idBetrieb !== undefined) {
 			result += '"idBetrieb" : ' + obj.idBetrieb.toString() + ',';
 		}
+		if (obj.idAnsprechpartner !== undefined) {
+			result += '"idAnsprechpartner" : ' + ((obj.idAnsprechpartner === null) ? 'null' : obj.idAnsprechpartner.toString()) + ',';
+		}
+		if (obj.idBetreuungslehrer !== undefined) {
+			result += '"idBetreuungslehrer" : ' + ((obj.idBetreuungslehrer === null) ? 'null' : obj.idBetreuungslehrer.toString()) + ',';
+		}
 		if (obj.idBeschaeftigungsart !== undefined) {
 			result += '"idBeschaeftigungsart" : ' + ((obj.idBeschaeftigungsart === null) ? 'null' : obj.idBeschaeftigungsart.toString()) + ',';
+		}
+		if (obj.nameAusbilder !== undefined) {
+			result += '"nameAusbilder" : ' + ((obj.nameAusbilder === null) ? 'null' : JSON.stringify(obj.nameAusbilder)) + ',';
 		}
 		if (obj.vertragsbeginn !== undefined) {
 			result += '"vertragsbeginn" : ' + ((obj.vertragsbeginn === null) ? 'null' : JSON.stringify(obj.vertragsbeginn)) + ',';
@@ -148,23 +150,14 @@ export class SchuelerBetriebe extends JavaObject {
 		if (obj.vertragsende !== undefined) {
 			result += '"vertragsende" : ' + ((obj.vertragsende === null) ? 'null' : JSON.stringify(obj.vertragsende)) + ',';
 		}
-		if (obj.nameAusbilder !== undefined) {
-			result += '"nameAusbilder" : ' + ((obj.nameAusbilder === null) ? 'null' : JSON.stringify(obj.nameAusbilder)) + ',';
-		}
 		if (obj.erhaeltAnschreiben !== undefined) {
-			result += '"erhaeltAnschreiben" : ' + obj.erhaeltAnschreiben + ',';
+			result += '"erhaeltAnschreiben" : ' + ((obj.erhaeltAnschreiben === null) ? 'null' : obj.erhaeltAnschreiben.toString()) + ',';
 		}
 		if (obj.istPraktikum !== undefined) {
-			result += '"istPraktikum" : ' + obj.istPraktikum + ',';
+			result += '"istPraktikum" : ' + ((obj.istPraktikum === null) ? 'null' : obj.istPraktikum.toString()) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + ((obj.sortierung === null) ? 'null' : obj.sortierung.toString()) + ',';
-		}
-		if (obj.idAnsprechpartner !== undefined) {
-			result += '"idAnsprechpartner" : ' + ((obj.idAnsprechpartner === null) ? 'null' : obj.idAnsprechpartner.toString()) + ',';
-		}
-		if (obj.idBetreuungslehrer !== undefined) {
-			result += '"idBetreuungslehrer" : ' + ((obj.idBetreuungslehrer === null) ? 'null' : obj.idBetreuungslehrer.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
@@ -173,6 +166,6 @@ export class SchuelerBetriebe extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_asd_data_schueler_SchuelerBetriebe(obj: unknown): SchuelerBetriebe {
-	return obj as SchuelerBetriebe;
+export function cast_de_svws_nrw_asd_data_schueler_SchuelerBetrieb(obj: unknown): SchuelerBetrieb {
+	return obj as SchuelerBetrieb;
 }
