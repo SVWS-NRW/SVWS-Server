@@ -24,7 +24,7 @@ public final class KurseRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public KurseRepository getKurseRepository() {
-		return new KurseRepositoryImpl(conn);
+		return getOrCreate(KurseRepository.class, () -> new KurseRepositoryImpl(conn));
 	}
 
 }

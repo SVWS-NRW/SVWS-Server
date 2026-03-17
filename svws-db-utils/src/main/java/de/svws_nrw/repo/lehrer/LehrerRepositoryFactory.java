@@ -31,7 +31,7 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public LehrerRepository getLehrerRepository() {
-		return new LehrerRepositoryImpl(conn);
+		return getOrCreate(LehrerRepository.class, () -> new LehrerRepositoryImpl(conn));
 	}
 
 
@@ -41,7 +41,7 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public LehrerAbschnittsdatenRepository getLehrerAbschnittsdatenRepository() {
-		return new LehrerAbschnittsdatenRepositoryImpl(conn);
+		return getOrCreate(LehrerAbschnittsdatenRepository.class, () -> new LehrerAbschnittsdatenRepositoryImpl(conn));
 	}
 
 
@@ -51,7 +51,7 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public LehrerAnrechnungRepository getLehrerAnrechnungRepository() {
-		return new LehrerAnrechnungRepositoryImpl(conn);
+		return getOrCreate(LehrerAnrechnungRepository.class, () -> new LehrerAnrechnungRepositoryImpl(conn));
 	}
 
 
@@ -61,7 +61,7 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public LehrerMehrleistungRepository getLehrerMehrleistungRepository() {
-		return new LehrerMehrleistungRepositoryImpl(conn);
+		return getOrCreate(LehrerMehrleistungRepository.class, () -> new LehrerMehrleistungRepositoryImpl(conn));
 	}
 
 
@@ -71,7 +71,7 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public LehrerMinderleistungRepository getLehrerMinderleistungRepository() {
-		return new LehrerMinderleistungRepositoryImpl(conn);
+		return getOrCreate(LehrerMinderleistungRepository.class, () -> new LehrerMinderleistungRepositoryImpl(conn));
 	}
 
 
@@ -81,7 +81,7 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public LehrerPersonaldatenLehramtRepository getLehrerPersonaldatenLehramtRepository() {
-		return new LehrerPersonaldatenLehramtRepositoryImpl(conn);
+		return getOrCreate(LehrerPersonaldatenLehramtRepository.class, () -> new LehrerPersonaldatenLehramtRepositoryImpl(conn));
 	}
 
 
@@ -91,7 +91,7 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public LehrerPersonaldatenLehramtFachrichtungRepository getLehrerPersonaldatenLehramtFachrichtungRepository() {
-		return new LehrerPersonaldatenLehramtFachrichtungRepositoryImpl(conn);
+		return getOrCreate(LehrerPersonaldatenLehramtFachrichtungRepository.class, () -> new LehrerPersonaldatenLehramtFachrichtungRepositoryImpl(conn));
 	}
 
 
@@ -101,7 +101,7 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public LehrerPersonaldatenLehramtLehrbefaehigungenRepository getLehrerPersonaldatenLehramtLehrbefaehigungenRepository() {
-		return new LehrerPersonaldatenLehramtLehrbefaehigungenRepositoryImpl(conn);
+		return getOrCreate(LehrerPersonaldatenLehramtLehrbefaehigungenRepository.class, () -> new LehrerPersonaldatenLehramtLehrbefaehigungenRepositoryImpl(conn));
 	}
 
 }

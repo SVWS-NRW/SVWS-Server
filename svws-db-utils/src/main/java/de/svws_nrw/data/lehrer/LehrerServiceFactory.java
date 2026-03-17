@@ -83,4 +83,16 @@ public final class LehrerServiceFactory {
 				lehrerRepositoryFactory.getLehrerAnrechnungRepository());
 	}
 
+	/**
+	 * Erstellt einen neuen Service für den Zugriff auf Eiträge zu den Anrechnungsstunden bei Lehrern.
+	 *
+	 * @return der Service für die Fachrichtungen von Lehrern.
+	 */
+	public LehrerAnrechnungsstundenService getLehrerAnrechnungsstundenService() {
+		return new LehrerAnrechnungsstundenService(LehrerAnrechnungsstundenServiceKontext.of(
+				schuleRepositoryFactory.getSchuljahresabschnitteRepository(),
+				lehrerRepositoryFactory.getLehrerAbschnittsdatenRepository(),
+				lehrerRepositoryFactory.getLehrerAnrechnungRepository()));
+	}
+
 }

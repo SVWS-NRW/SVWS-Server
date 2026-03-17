@@ -6,6 +6,8 @@ import de.svws_nrw.api.common.ApiOperationExceptionMapper;
 import de.svws_nrw.api.common.GenericExceptionMapper;
 import de.svws_nrw.api.common.OpenAPICorsFilter;
 import de.svws_nrw.api.common.PathUtils;
+import de.svws_nrw.api.common.SvwsObjectMapperResolver;
+import de.svws_nrw.api.common.ValidationExceptionMapper;
 import de.svws_nrw.api.server.APIAbteilungen;
 import de.svws_nrw.api.server.APIAlgoGesamtschuleAbschluss;
 import de.svws_nrw.api.server.APIAlgoGostAbschluss;
@@ -91,6 +93,8 @@ public final class RestAppServer extends Application {
 			APIAbteilungen.class,
 			APIStatistik.class,
 			APIAnkreuzkompetenzen.class,
+			ValidationExceptionMapper.class,
+			SvwsObjectMapperResolver.class,
 			ApiOperationExceptionMapper.class,
 			GenericExceptionMapper.class,
 			OpenAPICorsFilter.class,

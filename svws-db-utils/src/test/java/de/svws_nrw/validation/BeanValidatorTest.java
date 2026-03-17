@@ -3,6 +3,7 @@ package de.svws_nrw.validation;
 import java.util.Locale;
 
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -67,6 +68,43 @@ class BeanValidatorTest {
 				.hasMessage("intValidation: muss kleiner-gleich 50 sein. stringValidation: darf nicht null sein.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
+
+
+	@Test
+	@DisplayName("validate | JsonNullable mit explizitem null (sollte fehlschlagen)")
+	void testValidateJsonNullableExplicitNull() {
+		final var invalidRecord = new TestValidationJsonNullable(JsonNullable.of(null), JsonNullable.undefined());
+		final var throwable = ThrowableAssert.catchThrowable(() -> BeanValidator.validate(invalidRecord));
+
+		assertThat(throwable)
+				.isInstanceOf(ApiOperationException.class)
+				.hasMessageContaining("stringValidation: darf nicht null sein")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("validate | JsonNullable undefined (sollte erfolgreich sein)")
+	void testValidateJsonNullableUndefined() {
+		assertDoesNotThrow(() -> BeanValidator.validate(new TestValidationJsonNullable(JsonNullable.undefined(), JsonNullable.undefined())));
+	}
+
+
+	@Test
+	@DisplayName("validate | @Valid auf verschachteltem Objekt")
+	void testValidationWithValidAnnotation() {
+	    record Wrapper(@Valid TestValidationJsonNullable patch) { /* empty*/ }
+
+	    final var invalidPatch = new TestValidationJsonNullable(JsonNullable.of(null), JsonNullable.of(110));
+	    final var container = new Wrapper(invalidPatch);
+
+	    final var throwable = ThrowableAssert.catchThrowable(() -> BeanValidator.validate(container));
+
+	    assertThat(throwable)
+	            .isInstanceOf(ApiOperationException.class)
+	            .hasMessageContaining("patch.stringValidation: darf nicht null sein")
+	            .hasMessageContaining("patch.intValidation: muss kleiner-gleich 50 sein");
+	}
+
 
 	private record TestValidation(@NotNull @Size(min = 1, max = 50) String stringValidation, @Max(50) int intValidation) {
 	}

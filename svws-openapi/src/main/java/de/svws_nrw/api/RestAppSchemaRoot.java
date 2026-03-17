@@ -6,6 +6,8 @@ import de.svws_nrw.api.common.ApiOperationExceptionMapper;
 import de.svws_nrw.api.common.GenericExceptionMapper;
 import de.svws_nrw.api.common.OpenAPICorsFilter;
 import de.svws_nrw.api.common.PathUtils;
+import de.svws_nrw.api.common.SvwsObjectMapperResolver;
+import de.svws_nrw.api.common.ValidationExceptionMapper;
 import de.svws_nrw.api.privileged.APIPrivilegedConfig;
 import de.svws_nrw.api.privileged.APIPrivilegedSchema;
 import jakarta.ws.rs.core.Application;
@@ -25,6 +27,8 @@ public final class RestAppSchemaRoot extends Application {
 	/// Enthält die API-Klassen für diese Applikation
 	private final Set<Class<?>> classes = Set.of(
 			OpenAPICorsFilter.class,
+			ValidationExceptionMapper.class,
+			SvwsObjectMapperResolver.class,
 			ApiOperationExceptionMapper.class,
 			GenericExceptionMapper.class,
 			APIPrivilegedConfig.class,

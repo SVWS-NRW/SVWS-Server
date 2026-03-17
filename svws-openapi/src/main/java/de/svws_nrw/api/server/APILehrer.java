@@ -2,6 +2,8 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
+import org.jboss.resteasy.annotations.GZIP;
+
 import de.svws_nrw.asd.data.lehrer.LehrerAbgangsgrundKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerAnrechnungsgrundKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerBeschaeftigungsartKatalogEintrag;
@@ -54,13 +56,15 @@ import de.svws_nrw.data.lehrer.DataLehrerLehramt;
 import de.svws_nrw.data.lehrer.DataLehrerLehrbefaehigung;
 import de.svws_nrw.data.lehrer.DataLehrerLernplattformen;
 import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdaten;
-import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdatenAnrechungen;
 import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdatenLehrerfunktionen;
 import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdatenMehrleistungen;
 import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdatenMinderleistungen;
 import de.svws_nrw.data.lehrer.DataLehrerPersonaldaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
+import de.svws_nrw.data.lehrer.LehrerAnrechnungsstundenCreateRequest;
+import de.svws_nrw.data.lehrer.LehrerAnrechnungsstundenPatchRequest;
+import de.svws_nrw.data.lehrer.LehrerPersonaldatenControllerFactory;
 import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
 import io.swagger.v3.oas.annotations.Operation;
@@ -71,6 +75,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -82,7 +87,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.jboss.resteasy.annotations.GZIP;
 
 
 /**
@@ -207,7 +211,8 @@ public class APILehrer {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
 	public Response getLehrerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getByIdAsResponse(id),
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
 	}
@@ -236,7 +241,9 @@ public class APILehrer {
 			content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getListByIdsAsResponse(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn))
+						.getListByIdsAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
 	}
 
@@ -263,7 +270,9 @@ public class APILehrer {
 			@RequestBody(description = "Die Daten der zu erstellenden LehrerStammdaten ohne ID, da diese automatisch generiert wird", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerStammdaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn ->  new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).addAsResponse(is), request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_AENDERN);
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).addAsResponse(is), request,
+				ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_AENDERN);
 	}
 
 	/**
@@ -292,7 +301,8 @@ public class APILehrer {
 			@RequestBody(description = "Der Patch für die Lehrer-Stammdaten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerStammdaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).patchAsResponse(id, is),
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.LEHRERDATEN_AENDERN);
 	}
@@ -1112,18 +1122,18 @@ public class APILehrer {
 	@ApiResponse(responseCode = "404", description = "Keine allgemeine Anrechnung mit der angegebenen ID gefunden")
 	public Response getLehrerPersonalabschnittsdatenAllgemeineAnrechnung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdatenAnrechungen(conn).getByIdAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
+		return LehrerPersonaldatenControllerFactory.withReadAccess(request)
+				.getLehrerAnrechnungsstundenController()
+				.get(id);
 	}
 
 
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen einer allgemeinen Anrechnung zu den Personalabschnittsdaten eines Lehrers.
 	 *
-	 * @param schema       das Datenbankschema
-	 * @param is           der Input-Stream mit den Daten der allgemeinen Anrechnung
-	 * @param request      die Informationen zur HTTP-Anfrage
+	 * @param schema    das Datenbankschema
+	 * @param patch     die Daten der allgemeinen Anrechnung
+	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit der neuen allgemeinen Anrechnung
 	 */
@@ -1139,16 +1149,14 @@ public class APILehrer {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine allgemeine Anrechnung anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addLehrerPersonalabschnittsdatenAllgemeineAnrechnung(@PathParam("schema") final String schema,
-			@RequestBody(description = "Die Daten der zu erstellenden allgemeinen Anrechnung ohne ID, welche automatisch generiert wird", required = true,
+			@Valid @RequestBody(description = "Die Daten der zu erstellenden allgemeinen Anrechnung ohne ID, welche automatisch generiert wird", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final InputStream is,
+							schema = @Schema(
+									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final LehrerAnrechnungsstundenCreateRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataLehrerPersonalabschnittsdatenAnrechungen(conn).addAsResponse(is),
-				request,
-				ServerMode.STABLE,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN
-		);
+		return LehrerPersonaldatenControllerFactory.withWriteAccess(request)
+				.getLehrerAnrechnungsstundenController()
+				.create(patch);
 	}
 
 
@@ -1173,9 +1181,9 @@ public class APILehrer {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteLehrerPersonalabschnittsdatenAllgemeineAnrechnung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataLehrerPersonalabschnittsdatenAnrechungen(conn).deleteAsResponse(id), request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+		return LehrerPersonaldatenControllerFactory.withWriteAccess(request)
+				.getLehrerAnrechnungsstundenController()
+				.delete(id);
 	}
 
 
@@ -1184,7 +1192,7 @@ public class APILehrer {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation der allgemeinen Anrechnung
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     der Patch
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -1194,7 +1202,8 @@ public class APILehrer {
 	@Operation(summary = "Passt die allgemeine Anrechnung zu der angegebenen ID an.",
 			description = "Passt die allgemeine Anrechnung zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die allgemeine Anrechnung integriert.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die allgemeine Anrechnung integriert.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class)))
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Keine allgemeine Anrechnung mit der angegebenen ID gefunden")
@@ -1202,13 +1211,14 @@ public class APILehrer {
 			+ " (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchLehrerPersonalabschnittsdatenAllgemeineAnrechnung(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@RequestBody(description = "Der Patch für die allgemeine Anrechnung", required = true,
+			@Valid @RequestBody(description = "Der Patch für die allgemeine Anrechnung", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final InputStream is,
+							schema = @Schema(
+									implementation = LehrerPersonalabschnittsdatenAnrechnungsstunden.class))) final LehrerAnrechnungsstundenPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdatenAnrechungen(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
+		return LehrerPersonaldatenControllerFactory.withWriteAccess(request)
+				.getLehrerAnrechnungsstundenController()
+				.patch(id, patch);
 	}
 
 	/**

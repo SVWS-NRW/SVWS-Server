@@ -29,6 +29,22 @@ class LehrerServiceFactoryTest {
 	@InjectMocks
 	private LehrerServiceFactory serviceFactory;
 
+
+	@Test
+	@DisplayName("Test: Prüfe, ob getNewInstance die Factory korrekt initialisiert")
+	void testGetNewInstance() {
+	    // Da der Konstruktor private ist, testen wir über die statische Methode
+	    final var factory = LehrerServiceFactory.getNewInstance(repoLehrerFactory, repoSchuleFactory);
+
+	    assertNotNull(factory);
+
+	    // Um zu prüfen, ob die Repositories intern korrekt gesetzt wurden,
+	    // rufen wir eine Methode auf, die diese nutzt.
+	    factory.getLehrerLehrbefaehigungService();
+
+	    verify(repoLehrerFactory).getLehrerPersonaldatenLehramtLehrbefaehigungenRepository();
+	}
+
 	@Test
 	@DisplayName("Test: Prüfe, on getLehrerLehramtService den Service korrekt erstellt")
 	void testGetLehrerLehramtService() {
@@ -72,6 +88,18 @@ class LehrerServiceFactoryTest {
 		verify(repoLehrerFactory).getLehrerMehrleistungRepository();
 		verify(repoLehrerFactory).getLehrerMinderleistungRepository();
 		verify(repoLehrerFactory).getLehrerAnrechnungRepository();
+	}
+
+
+	@Test
+	@DisplayName("Test: Prüfe, ob getLehrerAnrechnungsstundenService den Service mit dem Kontext korrekt erstellt")
+	void testGetLehrerAnrechnungsstundenService() {
+	    final var service = serviceFactory.getLehrerAnrechnungsstundenService();
+	    assertNotNull(service);
+
+	    verify(repoSchuleFactory).getSchuljahresabschnitteRepository();
+	    verify(repoLehrerFactory).getLehrerAbschnittsdatenRepository();
+	    verify(repoLehrerFactory).getLehrerAnrechnungRepository();
 	}
 
 }

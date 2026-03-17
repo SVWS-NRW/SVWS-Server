@@ -33,8 +33,9 @@ export class BaseApi {
 		this.url = url;
 		this.username = username;
 		const tmp = (new TextEncoder()).encode(username + ":" + password);
-		if (username !== '')
+		if (username !== '') {
 			this.headers.Authorization = "Basic " + btoa(String.fromCodePoint(...tmp));
+		}
 	}
 
 
@@ -48,10 +49,12 @@ export class BaseApi {
 		const match = nameRegex.exec(header);
 		if (match !== null) {
 			const { filename, filenameUTF8 } = match.groups as { filename?: string; filenameUTF8?: string };
-			if (filenameUTF8 !== undefined)
+			if (filenameUTF8 !== undefined) {
 				return decodeURIComponent(filenameUTF8);
-			if (filename !== undefined)
+			}
+			if (filename !== undefined) {
 				return decodeURIComponent(filename);
+			}
 		}
 		throw new Error('Failed to extract file name from Header');
 	}
@@ -64,17 +67,20 @@ export class BaseApi {
 		requestInit.method = 'GET';
 		try {
 			const response = await fetch(this.getURL(path), requestInit);
-			if (!response.ok)
+			if (!response.ok) {
 				throw new OpenApiError(response, 'Fetch failed for GET: ' + path);
+			}
 			const file: ApiFile = { name: "", data: await response.blob() };
 			const header = response.headers.get('content-disposition');
-			if (header !== null)
+			if (header !== null) {
 				file.name = this.decodeFilename(header);
+			}
 			return file;
 		} catch (e) {
-			if (e instanceof Error)
+			if (e instanceof Error) {
 				throw (e instanceof OpenApiError) ? e : new OpenApiError(e, 'Fetch failed for GET: ' + path);
-			throw new Error("Unexpected Error: " + e);
+			}
+			throw new Error("GET failed for: " + path, { cause: e });
 		}
 	}
 
@@ -106,13 +112,15 @@ export class BaseApi {
 		requestInit.method = 'POST';
 		try {
 			const response = await fetch(this.getURL(path), requestInit);
-			if (!response.ok)
+			if (!response.ok) {
 				throw new OpenApiError(response, 'Fetch failed for POST: ' + path);
+			}
 			return await response.text();
 		} catch (e) {
-			if (e instanceof Error)
+			if (e instanceof Error) {
 				throw (e instanceof OpenApiError) ? e : new OpenApiError(e, 'Fetch failed for POST: ' + path);
-			throw new Error("Unexpected Error: " + e);
+			}
+			throw new Error("POST failed for: " + path, { cause: e });
 		}
 	}
 
@@ -130,13 +138,15 @@ export class BaseApi {
 		requestInit.method = 'GET';
 		try {
 			const response = await fetch(this.getURL(path), requestInit);
-			if (!response.ok)
+			if (!response.ok) {
 				throw new OpenApiError(response, 'Fetch failed for GET: ' + path);
+			}
 			return await response.text();
 		} catch (e) {
-			if (e instanceof Error)
+			if (e instanceof Error) {
 				throw (e instanceof OpenApiError) ? e : new OpenApiError(e, 'Fetch failed for GET: ' + path);
-			throw new Error("Unexpected Error: " + e);
+			}
+			throw new Error("POST failed for: " + path, { cause: e });
 		}
 	}
 
@@ -158,13 +168,15 @@ export class BaseApi {
 		requestInit.method = 'POST';
 		try {
 			const response = await fetch(this.getURL(path), requestInit);
-			if (!response.ok)
+			if (!response.ok) {
 				throw new OpenApiError(response, 'Fetch failed for POST: ' + path);
+			}
 			return await response.text();
 		} catch (e) {
-			if (e instanceof Error)
+			if (e instanceof Error) {
 				throw (e instanceof OpenApiError) ? e : new OpenApiError(e, 'Fetch failed for POST: ' + path);
-			throw new Error("Unexpected Error: " + e);
+			}
+			throw new Error("POST failed for: " + path, { cause: e });
 		}
 	}
 
@@ -185,17 +197,20 @@ export class BaseApi {
 		requestInit.method = 'POST';
 		try {
 			const response = await fetch(this.getURL(path), requestInit);
-			if (!response.ok)
+			if (!response.ok) {
 				throw new OpenApiError(response, 'Fetch failed for GET: ' + path);
+			}
 			const file: ApiFile = { name: "", data: await response.blob() };
 			const header = response.headers.get('content-disposition');
-			if (header !== null)
+			if (header !== null) {
 				file.name = this.decodeFilename(header);
+			}
 			return file;
 		} catch (e) {
-			if (e instanceof Error)
+			if (e instanceof Error) {
 				throw (e instanceof OpenApiError) ? e : new OpenApiError(e, 'Fetch failed for POST: ' + path);
-			throw new Error("Unexpected Error: " + e);
+			}
+			throw new Error("POST failed for: " + path, { cause: e });
 		}
 	}
 
@@ -211,30 +226,39 @@ export class BaseApi {
 		return this.postTextBasedToBinary(path, 'application/json', 'application/zip', body);
 	}
 
-	protected async patchTextBased(path: string, mimetype: string, body: string): Promise<void> {
+	protected async patchTextBased(path: string, mimetype_send: string, mimetype_receive: string | null, body: string): Promise<string> {
 		const requestInit: RequestInit = { ...this.requestinit };
 		requestInit.headers = { ...this.headers };
-		requestInit.headers["Content-Type"] = mimetype;
+		requestInit.headers["Content-Type"] = mimetype_send;
+		if (mimetype_receive !== null) {
+			requestInit.headers.Accept = mimetype_receive;
+		}
 		requestInit.body = body;
 		requestInit.method = 'PATCH';
 		try {
 			const response = await fetch(this.getURL(path), requestInit);
-			if (!response.ok)
+			if (!response.ok) {
 				throw new OpenApiError(response, 'Fetch failed for PATCH: ' + path);
-			return;
+			}
+			return (mimetype_receive === null) ? "" : await response.text();
 		} catch (e) {
-			if (e instanceof Error)
+			if (e instanceof Error) {
 				throw (e instanceof OpenApiError) ? e : new OpenApiError(e, 'Fetch failed for PATCH: ' + path);
-			throw new Error("Unexpected Error: " + e);
+			}
+			throw new Error("PATCH failed for: " + path, { cause: e });
 		}
 	}
 
-	public patchText(path: string, body: string): Promise<void> {
-		return this.patchTextBased(path, 'text/plain', body);
+	public async patchText(path: string, body: string): Promise<void> {
+		await this.patchTextBased(path, 'text/plain', null, body);
 	}
 
-	public patchJSON(path: string, body: string): Promise<void> {
-		return this.patchTextBased(path, 'application/json', body);
+	public async patchJSON(path: string, body: string): Promise<void> {
+		await this.patchTextBased(path, 'application/json', null, body);
+	}
+
+	public async patchJSONWithResponse(path: string, body: string): Promise<string> {
+		return await this.patchTextBased(path, 'application/json', 'application/json', body);
 	}
 
 
@@ -246,13 +270,15 @@ export class BaseApi {
 		requestInit.method = 'PUT';
 		try {
 			const response = await fetch(this.getURL(path), requestInit);
-			if (!response.ok)
+			if (!response.ok) {
 				throw new OpenApiError(response, 'Fetch failed for PUT: ' + path);
+			}
 			return;
 		} catch (e) {
-			if (e instanceof Error)
+			if (e instanceof Error) {
 				throw (e instanceof OpenApiError) ? e : new OpenApiError(e, 'Fetch failed for PUT: ' + path);
-			throw new Error("Unexpected Error: " + e);
+			}
+			throw new Error("PUT failed for: " + path, { cause: e });
 		}
 	}
 
@@ -267,20 +293,23 @@ export class BaseApi {
 	protected async deleteTextBased(path: string, mimetype_send: string | null, mimetype_receive: string, body: string | null): Promise<string> {
 		const requestInit: RequestInit = { ...this.requestinit };
 		requestInit.headers = { ...this.headers };
-		if (mimetype_send !== null)
+		if (mimetype_send !== null) {
 			requestInit.headers["Content-Type"] = mimetype_send;
+		}
 		requestInit.headers.Accept = mimetype_receive;
 		requestInit.body = body;
 		requestInit.method = 'DELETE';
 		try {
 			const response = await fetch(this.getURL(path), requestInit);
-			if (!response.ok)
+			if (!response.ok) {
 				throw new OpenApiError(response, 'Fetch failed for DELETE: ' + path);
+			}
 			return await response.text();
 		} catch (e) {
-			if (e instanceof Error)
+			if (e instanceof Error) {
 				throw (e instanceof OpenApiError) ? e : new OpenApiError(e, 'Fetch failed for DELETE: ' + path);
-			throw new Error("Unexpected Error: " + e);
+			}
+			throw new Error("DELETE failed for: " + path, { cause: e });
 		}
 	}
 

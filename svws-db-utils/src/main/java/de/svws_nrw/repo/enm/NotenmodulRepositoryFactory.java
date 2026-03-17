@@ -28,7 +28,7 @@ public final class NotenmodulRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public NotenmodulCredentialsRepository getNotenmodulCredentialsRepository() {
-		return new NotenmodulCredentialsRepositoryImpl(conn);
+		return getOrCreate(NotenmodulCredentialsRepository.class, () -> new NotenmodulCredentialsRepositoryImpl(conn));
 	}
 
 	/**
@@ -37,7 +37,7 @@ public final class NotenmodulRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public NotenmodulCredentialsTimestampsRepository getNotenmodulCredentialsTimestampsRepository() {
-		return new NotenmodulCredentialsTimestampsRepositoryImpl(conn);
+		return getOrCreate(NotenmodulCredentialsTimestampsRepository.class, () -> new NotenmodulCredentialsTimestampsRepositoryImpl(conn));
 	}
 
 	/**
@@ -46,7 +46,7 @@ public final class NotenmodulRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public NotenmodulKonfigurationClientRepository getNotenmodulKonfigurationClientRepository() {
-		return new NotenmodulKonfigurationClientRepositoryImpl(conn);
+		return getOrCreate(NotenmodulKonfigurationClientRepository.class, () -> new NotenmodulKonfigurationClientRepositoryImpl(conn));
 	}
 
 	/**
@@ -55,7 +55,7 @@ public final class NotenmodulRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public NotenmodulKonfigurationServerRepository getNotenmodulKonfigurationServerRepository() {
-		return new NotenmodulKonfigurationServerRepositoryImpl(conn);
+		return getOrCreate(NotenmodulKonfigurationServerRepository.class, () -> new NotenmodulKonfigurationServerRepositoryImpl(conn));
 	}
 
 	/**
@@ -64,7 +64,7 @@ public final class NotenmodulRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public NotenmodulVerbindungenRepository getNotenmodulVerbindungenRepository() {
-		return new NotenmodulVerbindungenRepositoryImpl(conn);
+		return getOrCreate(NotenmodulVerbindungenRepository.class, () -> new NotenmodulVerbindungenRepositoryImpl(conn));
 	}
 
 }

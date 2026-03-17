@@ -25,7 +25,7 @@ public final class KlassenRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public KlassenRepository getKlassenRepository() {
-		return new KlassenRepositoryImpl(conn);
+		return getOrCreate(KlassenRepository.class, () -> new KlassenRepositoryImpl(conn));
 	}
 
 
@@ -35,7 +35,7 @@ public final class KlassenRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public KlassenleitungenRepository getKlassenleitungenRepository() {
-		return new KlassenleitungenRepositoryImpl(conn);
+		return getOrCreate(KlassenleitungenRepository.class, () -> new KlassenleitungenRepositoryImpl(conn));
 	}
 
 }

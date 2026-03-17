@@ -28,4 +28,30 @@ public final class Responses {
 				.build();
 	}
 
+
+	/**
+	 * Erzeugt eine neue Http-Response 201 mit den übergebenen Datenobjekt als JSON.
+	 *
+	 * @param <T>     der Typ der Daten
+	 * @param daten   die Daten
+	 *
+	 * @return die HTTP-Response
+	 */
+	public static <T> Response created(final T daten) {
+		return Response.status(Status.CREATED)
+				.type(MediaType.APPLICATION_JSON)
+				.entity(daten)
+				.build();
+	}
+
+
+	/**
+	 * Erzeugt eine neue Http-Response 204.
+	 *
+	 * @return die HTTP-Response
+	 */
+	public static Response noContent() {
+		return Response.status(Status.NO_CONTENT).build();
+	}
+
 }

@@ -35,7 +35,7 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public SchuelerRepository getSchuelerRepository() {
-		return new SchuelerRepositoryImpl(conn);
+		return getOrCreate(SchuelerRepository.class, () -> new SchuelerRepositoryImpl(conn));
 	}
 
 
@@ -45,7 +45,7 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public SchuelerAnkreuzkompetenzenRepository getSchuelerAnkreuzkompetenzenRepository() {
-		return new SchuelerAnkreuzkompetenzenRepositoryImpl(conn);
+		return getOrCreate(SchuelerAnkreuzkompetenzenRepository.class, () -> new SchuelerAnkreuzkompetenzenRepositoryImpl(conn));
 	}
 
 
@@ -55,7 +55,7 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public SchuelerAnkreuzkompetenzenTimestampsRepository getSchuelerAnkreuzkompetenzenTimestampsRepository() {
-		return new SchuelerAnkreuzkompetenzenTimestampsRepositoryImpl(conn);
+		return getOrCreate(SchuelerAnkreuzkompetenzenTimestampsRepository.class, () -> new SchuelerAnkreuzkompetenzenTimestampsRepositoryImpl(conn));
 	}
 
 
@@ -65,7 +65,7 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public SchuelerLeistungsdatenRepository getSchuelerLeistungsdatenRepository() {
-		return new SchuelerLeistungsdatenRepositoryImpl(conn);
+		return getOrCreate(SchuelerLeistungsdatenRepository.class, () -> new SchuelerLeistungsdatenRepositoryImpl(conn));
 	}
 
 
@@ -75,7 +75,7 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public SchuelerLeistungsdatenTimestampsRepository getSchuelerLeistungsdatenTimestampsRepository() {
-		return new SchuelerLeistungsdatenTimestampsRepositoryImpl(conn);
+		return getOrCreate(SchuelerLeistungsdatenTimestampsRepository.class, () -> new SchuelerLeistungsdatenTimestampsRepositoryImpl(conn));
 	}
 
 
@@ -85,7 +85,7 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public SchuelerLernabschnittRepository getSchuelerLernabschnittRepository() {
-		return new SchuelerLernabschnittRepositoryImpl(conn);
+		return getOrCreate(SchuelerLernabschnittRepository.class, () -> new SchuelerLernabschnittRepositoryImpl(conn));
 	}
 
 
@@ -95,7 +95,7 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public SchuelerLernabschnittTimestampsRepository getSchuelerLernabschnittTimestampsRepository() {
-		return new SchuelerLernabschnittTimestampsRepositoryImpl(conn);
+		return getOrCreate(SchuelerLernabschnittTimestampsRepository.class, () -> new SchuelerLernabschnittTimestampsRepositoryImpl(conn));
 	}
 
 
@@ -105,7 +105,7 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public SchuelerLernabschnittBemerkungenRepository getSchuelerLernabschnittBemerkungenRepository() {
-		return new SchuelerLernabschnittBemerkungenRepositoryImpl(conn);
+		return getOrCreate(SchuelerLernabschnittBemerkungenRepository.class, () -> new SchuelerLernabschnittBemerkungenRepositoryImpl(conn));
 	}
 
 
@@ -115,7 +115,7 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public SchuelerTeilleistungenRepository getSchuelerTeilleistungenRepository() {
-		return new SchuelerTeilleistungenRepositoryImpl(conn);
+		return getOrCreate(SchuelerTeilleistungenRepository.class, () -> new SchuelerTeilleistungenRepositoryImpl(conn));
 	}
 
 
@@ -125,7 +125,7 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public SchuelerTeilleistungenTimestampsRepository getSchuelerTeilleistungenTimestampsRepository() {
-		return new SchuelerTeilleistungenTimestampsRepositoryImpl(conn);
+		return getOrCreate(SchuelerTeilleistungenTimestampsRepository.class, () -> new SchuelerTeilleistungenTimestampsRepositoryImpl(conn));
 	}
 
 
@@ -135,7 +135,7 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public SchuelerAbiturRepository getSchuelerAbiturRepository() {
-		return new SchuelerAbiturRepositoryImpl(conn);
+		return getOrCreate(SchuelerAbiturRepository.class, () -> new SchuelerAbiturRepositoryImpl(conn));
 	}
 
 
@@ -145,7 +145,7 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public SchuelerAbiturFachRepository getSchuelerAbiturFachRepository() {
-		return new SchuelerAbiturFachRepositoryImpl(conn);
+		return getOrCreate(SchuelerAbiturFachRepository.class, () -> new SchuelerAbiturFachRepositoryImpl(conn));
 	}
 
 }

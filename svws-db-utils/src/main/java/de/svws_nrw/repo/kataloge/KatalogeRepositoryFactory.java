@@ -39,7 +39,7 @@ public final class KatalogeRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public FachRepository getFachRepository() {
-		return new FachRepositoryImpl(conn);
+		return getOrCreate(FachRepository.class, () -> new FachRepositoryImpl(conn));
 	}
 
 
@@ -49,7 +49,7 @@ public final class KatalogeRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public JahrgaengeRepository getJahrgaengeRepository() {
-		return new JahrgaengeRepositoryImpl(conn);
+		return getOrCreate(JahrgaengeRepository.class, () -> new JahrgaengeRepositoryImpl(conn));
 	}
 
 
@@ -59,7 +59,7 @@ public final class KatalogeRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public FoerderschwerpunkteRepository getFoerderschwerpunkteRepository() {
-		return new FoerderschwerpunkteRepositoryImpl(conn);
+		return getOrCreate(FoerderschwerpunkteRepository.class, () -> new FoerderschwerpunkteRepositoryImpl(conn));
 	}
 
 
@@ -69,7 +69,7 @@ public final class KatalogeRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public OrteRepository getOrteRepository() {
-		return new OrteRepositoryImpl(conn);
+		return getOrCreate(OrteRepository.class, () -> new OrteRepositoryImpl(conn));
 	}
 
 
@@ -79,7 +79,7 @@ public final class KatalogeRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public ReligionRepository getReligionRepository() {
-		return new ReligionRepositoryImpl(conn);
+		return getOrCreate(ReligionRepository.class, () -> new ReligionRepositoryImpl(conn));
 	}
 
 	/**
@@ -88,7 +88,7 @@ public final class KatalogeRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public AnkreuzkompetenzenKonfigurationRepository getAnkreuzkompetenzenKonfigurationRepository() {
-		return new AnkreuzkompetenzenKonfigurationRepositoryImpl(conn);
+		return getOrCreate(AnkreuzkompetenzenKonfigurationRepository.class, () -> new AnkreuzkompetenzenKonfigurationRepositoryImpl(conn));
 	}
 
 	/**
@@ -97,7 +97,7 @@ public final class KatalogeRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public AnkreuzkompetenzenRepository getAnkreuzkompetenzenRepository() {
-		return new AnkreuzkompetenzenRepositoryImpl(conn);
+		return getOrCreate(AnkreuzkompetenzenRepository.class, () -> new AnkreuzkompetenzenRepositoryImpl(conn));
 	}
 
 
@@ -107,7 +107,7 @@ public final class KatalogeRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public AnkreuzkompetenzenJahrgaengeRepository getAnkreuzkompetenzenJahrgaengeRepository() {
-		return new AnkreuzkompetenzenJahrgaengeRepositoryImpl(conn);
+		return getOrCreate(AnkreuzkompetenzenJahrgaengeRepository.class, () -> new AnkreuzkompetenzenJahrgaengeRepositoryImpl(conn));
 	}
 
 	/**
@@ -116,7 +116,7 @@ public final class KatalogeRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public FloskelRepository getFloskelRepository() {
-		return new FloskelRepositoryImpl(conn);
+		return getOrCreate(FloskelRepository.class, () -> new FloskelRepositoryImpl(conn));
 	}
 
 	/**
@@ -125,7 +125,7 @@ public final class KatalogeRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public FloskelgruppenRepository getFloskelgruppenRepository() {
-		return new FloskelgruppenRepositoryImpl(conn);
+		return getOrCreate(FloskelgruppenRepository.class, () -> new FloskelgruppenRepositoryImpl(conn));
 	}
 
 	/**
@@ -134,7 +134,7 @@ public final class KatalogeRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public FloskelJahrgaengeRepository getFloskelJahrgaengeRepository() {
-		return new FloskelJahrgaengeRepositoryImpl(conn);
+		return getOrCreate(FloskelJahrgaengeRepository.class, () -> new FloskelJahrgaengeRepositoryImpl(conn));
 	}
 
 	/**
@@ -143,7 +143,7 @@ public final class KatalogeRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public TeilleistungsartenRepository getTeilleistungsartenRepository() {
-		return new TeilleistungsartenRepositoryImpl(conn);
+		return getOrCreate(TeilleistungsartenRepository.class, () -> new TeilleistungsartenRepositoryImpl(conn));
 	}
 
 }

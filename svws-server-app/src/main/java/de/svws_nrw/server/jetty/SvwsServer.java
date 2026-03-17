@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
-import de.svws_nrw.api.RestAppExternal;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.ServletHandler;
@@ -38,6 +37,7 @@ import de.svws_nrw.api.RestAppAdminClient;
 import de.svws_nrw.api.RestAppClient;
 import de.svws_nrw.api.RestAppDav;
 import de.svws_nrw.api.RestAppDebug;
+import de.svws_nrw.api.RestAppExternal;
 import de.svws_nrw.api.RestAppSchemaRoot;
 import de.svws_nrw.api.RestAppServer;
 import de.svws_nrw.config.SVWSKonfiguration;

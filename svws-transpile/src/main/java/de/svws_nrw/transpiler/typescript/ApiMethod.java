@@ -518,14 +518,25 @@ public final class ApiMethod {
 
 
 	private void transpileBodyForPatchMethod(final StringBuilder sb) {
-		switch (this.consumesFirst) {
-			case ApiMimeType.APPLICATION_JSON ->
-				sb.append("\t\treturn super.patchJSON(path, body);" + System.lineSeparator());
-			case ApiMimeType.TEXT_PLAIN ->
-				sb.append("\t\treturn super.patchText(path, body);" + System.lineSeparator());
-			default ->
-				throw new TranspilerException("Transpiler Error: PATCH which consumes " + this.consumesFirst + " not yet implemented in the transpiler.");
+		if (returnResponse.content == null) {
+			switch (this.consumesFirst) {
+				case ApiMimeType.APPLICATION_JSON ->
+					sb.append("\t\treturn super.patchJSON(path, body);" + System.lineSeparator());
+				case ApiMimeType.TEXT_PLAIN ->
+					sb.append("\t\treturn super.patchText(path, body);" + System.lineSeparator());
+				default ->
+					throw new TranspilerException("Transpiler Error: PATCH which consumes " + this.consumesFirst + " not yet implemented in the transpiler.");
+			}
+			return;
 		}
+		final ApiMimeType producesType = (returnResponse.content == null) ? this.producesFirst : returnResponse.content.mimetype;
+		if ((producesType == ApiMimeType.APPLICATION_JSON) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
+			sb.append("\t\tconst result : string = await super.patchJSONWithResponse(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
+			transpileCodeForJsonResult(sb);
+			return;
+		}
+		throw new TranspilerException("Transpiler Error: POST which produces " + producesType + " and consumes " + this.consumesFirst
+				+ " not yet implemented in the transpiler.");
 	}
 
 

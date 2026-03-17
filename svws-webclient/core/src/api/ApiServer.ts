@@ -9522,6 +9522,8 @@ export class ApiServer extends BaseApi {
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Patch wurde erfolgreich in die allgemeine Anrechnung integriert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerPersonalabschnittsdatenAnrechnungsstunden
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.
 	 *   Code 404: Keine allgemeine Anrechnung mit der angegebenen ID gefunden
@@ -9531,13 +9533,17 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Patch wurde erfolgreich in die allgemeine Anrechnung integriert.
 	 */
-	public async patchLehrerPersonalabschnittsdatenAllgemeineAnrechnung(data : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema : string, id : number) : Promise<void> {
+	public async patchLehrerPersonalabschnittsdatenAllgemeineAnrechnung(data : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, schema : string, id : number) : Promise<LehrerPersonalabschnittsdatenAnrechnungsstunden> {
 		const path = "/db/{schema}/lehrer/personalabschnittsdaten/anrechnung/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const body : string = LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
+		const result : string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(text);
 	}
 
 

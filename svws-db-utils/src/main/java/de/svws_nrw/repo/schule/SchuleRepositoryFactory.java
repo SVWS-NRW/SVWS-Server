@@ -25,7 +25,7 @@ public final class SchuleRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public SchuleRepository getSchuleRepository() {
-		return new SchuleRepositoryImpl(conn);
+		return getOrCreate(SchuleRepository.class, () -> new SchuleRepositoryImpl(conn));
 	}
 
 
@@ -35,7 +35,7 @@ public final class SchuleRepositoryFactory extends RepositoryFactory {
 	 * @return das Repository-Objekt
 	 */
 	public SchuljahresabschnitteRepository getSchuljahresabschnitteRepository() {
-		return new SchuljahresabschnitteRepositoryImpl(conn);
+		return getOrCreate(SchuljahresabschnitteRepository.class, () -> new SchuljahresabschnitteRepositoryImpl(conn));
 	}
 
 }
