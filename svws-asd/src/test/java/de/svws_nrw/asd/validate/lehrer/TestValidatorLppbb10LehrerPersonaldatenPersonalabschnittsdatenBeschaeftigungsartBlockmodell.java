@@ -36,16 +36,16 @@ class TestValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigu
 	 * Testdaten
 	 */
 	private static final String LPPPBB_TESTDATEN = """
-		18.5, 'TS', ' ', 100, true
-		20.0, 'TS', 'A', 290, true
-		12.0, 'TS', ' ', 240, true
-		15.0, 'TS', 'A', 	, false
-		0.0 , 'TS', ' ', 	, true
-		18.0, 'TS', 'B',	, true
-		18.0, 'T' , ' ', 	, true
-		18.0, 'TS', 'A', 	, false
-		18.0, 'TS', ' ', 	, false
-	""";
+			18.5, 6,  , 100, true
+			20.0, 6, 1, 290, true
+			12.0, 6,  , 240, true
+			15.0, 6, 1,    , false
+			 0.0, 6,  ,    , true
+			18.0, 6, 2,    , true
+			18.0, 2,  ,    , true
+			18.0, 6, 1,    , false
+			18.0, 6,  ,    , false
+			""";
 
 	@BeforeAll
 	static void setup() {
@@ -70,11 +70,11 @@ class TestValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigu
 	@DisplayName("Tests für ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell: pflichtstundensoll, beschaeftigungsart, einsatzstatus, idGrund, erwartet")
 	@ParameterizedTest
 	@CsvSource(textBlock = LPPPBB_TESTDATEN)
-	void testLabb(final double pflichtstundensoll, final String beschaeftigungsart, final String einsatzstatus, final Long idGrund, final boolean result) {
+	void testLabb(final double pflichtstundensoll, final Long idBeschaeftigungsart, final Long idEinsatzstatus, final Long idGrund, final boolean result) {
 
 		LehrerPersonalabschnittsdaten_Plausibel.pflichtstundensoll = pflichtstundensoll;
-		LehrerPersonalabschnittsdaten_Plausibel.beschaeftigungsart = beschaeftigungsart == null ? "" : beschaeftigungsart.trim();
-		LehrerPersonalabschnittsdaten_Plausibel.einsatzstatus = einsatzstatus;
+		LehrerPersonalabschnittsdaten_Plausibel.idBeschaeftigungsart = idBeschaeftigungsart;
+		LehrerPersonalabschnittsdaten_Plausibel.idEinsatzstatus = idEinsatzstatus;
 
 		if (LehrerPersonalabschnittsdaten_Plausibel.mehrleistung != null) {
 			LehrerPersonalabschnittsdaten_Plausibel.mehrleistung.clear();
@@ -91,8 +91,8 @@ class TestValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigu
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final var validator = new ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(
 				() -> LehrerPersonalabschnittsdaten_Plausibel.pflichtstundensoll,
-				() -> LehrerPersonalabschnittsdaten_Plausibel.beschaeftigungsart,
-				() -> LehrerPersonalabschnittsdaten_Plausibel.einsatzstatus,
+				() -> LehrerPersonalabschnittsdaten_Plausibel.idBeschaeftigungsart,
+				() -> LehrerPersonalabschnittsdaten_Plausibel.idEinsatzstatus,
 				() -> LehrerPersonalabschnittsdaten_Plausibel.mehrleistung,
 				() -> LehrerPersonalabschnittsdaten_Plausibel.minderleistung,
 				kontext);

@@ -19,21 +19,22 @@ public final class ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID extends 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten              die StaatsangehörigkeitID des Lehrers
-	 * @param rechtsverhaeltnis  das Rechtsverhaeltnis des Lehrers
-	 * @param kontext            der Kontext des Validators
+	 * @param daten                 die StaatsangehörigkeitID des Lehrers
+	 * @param idRechtsverhaeltnis   das Rechtsverhaeltnis des Lehrers
+	 * @param kontext               der Kontext des Validators
 	 */
-	public ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID(final @NotNull Supplier<@AllowNull String> daten, final @NotNull Supplier<@AllowNull String> rechtsverhaeltnis, final @NotNull ValidatorKontext kontext) {
+	public ValidatorLss00LehrerStammdatenStaatsangehoerigkeitID(final @NotNull Supplier<@AllowNull String> daten,
+			final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis, final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.daten = daten;
-		_validatoren.add(new ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID(getNotNullSupplier(daten), getNotNullSupplier(rechtsverhaeltnis), kontext));
+		_validatoren.add(new ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID(getNotNullSupplier(daten), getNotNullSupplierLong(idRechtsverhaeltnis), kontext));
 	}
 
 	@Override
 	protected boolean pruefe() {
 		final String staatsangehoerigkeitID = daten.get();
 
-		if (staatsangehoerigkeitID == null || staatsangehoerigkeitID.isEmpty())  {
+		if (staatsangehoerigkeitID == null || staatsangehoerigkeitID.isEmpty()) {
 			addFehler(0, "Das Feld 'Staatsangehörigkeit' muss besetzt sein.");
 			return false;
 		}

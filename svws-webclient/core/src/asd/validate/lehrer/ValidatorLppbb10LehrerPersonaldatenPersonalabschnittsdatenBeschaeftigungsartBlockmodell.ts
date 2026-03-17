@@ -1,4 +1,3 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
 import { LehrerBeschaeftigungsart } from '../../../asd/types/lehrer/LehrerBeschaeftigungsart';
 import { LehrerPersonalabschnittsdatenAnrechnungsstunden } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdatenAnrechnungsstunden';
 import type { Supplier } from '../../../java/util/function/Supplier';
@@ -15,9 +14,9 @@ export class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeft
 	 */
 	private readonly pflichtstundensoll: Supplier<number | null>;
 
-	private readonly beschaeftigungsart: Supplier<string | null>;
+	private readonly idBeschaeftigungsart: Supplier<number | null>;
 
-	private readonly einsatzstatus: Supplier<string | null>;
+	private readonly idEinsatzstatus: Supplier<number | null>;
 
 	private readonly mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>;
 
@@ -27,19 +26,19 @@ export class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeft
 	/**
 	 * Erstellt einen neuen Validator.
 	 *
-	 * @param pflichtstundensoll   der Pflichtstundensoll
-	 * @param beschaeftigungsart   die Beschäftigungsart
-	 * @param einsatzstatus        der Einsatz-Status
-	 * @param mehrleistungen       die Liste mit den Einträgen zu Mehrleistungen
-	 * @param minderleistungen     die Liste mit den Einträgen zu Minderleistungen
+	 * @param pflichtstundensoll     der Pflichtstundensoll
+	 * @param idBeschaeftigungsart   die Beschäftigungsart
+	 * @param idEinsatzstatus        der Einsatz-Status
+	 * @param mehrleistungen         die Liste mit den Einträgen zu Mehrleistungen
+	 * @param minderleistungen       die Liste mit den Einträgen zu Minderleistungen
 	 *
 	 * @param kontext  der Kontext der Validierung
 	 */
-	public constructor(pflichtstundensoll: Supplier<number | null>, beschaeftigungsart: Supplier<string | null>, einsatzstatus: Supplier<string | null>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
+	public constructor(pflichtstundensoll: Supplier<number | null>, idBeschaeftigungsart: Supplier<number | null>, idEinsatzstatus: Supplier<number | null>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
 		super(kontext);
 		this.pflichtstundensoll = pflichtstundensoll;
-		this.beschaeftigungsart = beschaeftigungsart;
-		this.einsatzstatus = einsatzstatus;
+		this.idBeschaeftigungsart = idBeschaeftigungsart;
+		this.idEinsatzstatus = idEinsatzstatus;
 		this.mehrleistungen = mehrleistungen;
 		this.minderleistungen = minderleistungen;
 	}
@@ -53,10 +52,10 @@ export class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeft
 	 * @return {@code true}, wenn ein Eintrag mit {@code idGrund} enthalten ist; sonst {@code false}
 	 */
 	private static hatGrund(liste: List<LehrerPersonalabschnittsdatenAnrechnungsstunden> | null, idGrund: number): boolean {
-		if (liste === null || liste.isEmpty())
+		if ((liste === null) || liste.isEmpty())
 			return false;
 		for (const lpa of liste)
-			if (lpa !== null && lpa.idGrund === idGrund)
+			if ((lpa !== null) && (lpa.idGrund === idGrund))
 				return true;
 		return false;
 	}
@@ -78,17 +77,11 @@ export class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeft
 		const pss: number | null = this.pflichtstundensoll.get();
 		if (pss === null || pss <= 0.0)
 			return true;
-		let ba: string | null = this.beschaeftigungsart.get();
-		if (ba === null)
-			ba = "";
-		ba = ba.trim();
-		if (LehrerBeschaeftigungsart.data().getWertBySchluessel(ba) as unknown !== LehrerBeschaeftigungsart.TS as unknown)
+		const ba: number | null = this.idBeschaeftigungsart.get();
+		if ((ba === null) || (LehrerBeschaeftigungsart.data().getWertByID(ba) as unknown !== LehrerBeschaeftigungsart.TS as unknown))
 			return true;
-		let es: string | null = this.einsatzstatus.get();
-		if (es === null)
-			es = "";
-		es = es.trim();
-		if (!JavaObject.equalsTranspiler("", (es.trim())) && LehrerEinsatzstatus.data().getWertBySchluessel(es) as unknown !== LehrerEinsatzstatus.A as unknown)
+		const es: number | null = this.idEinsatzstatus.get();
+		if ((es !== null) && (LehrerEinsatzstatus.data().getWertByID(es) as unknown !== LehrerEinsatzstatus.A as unknown))
 			return true;
 		const hatMehr100: boolean = ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell.hatGrund(this.mehrleistungen.get(), 100);
 		const hatMinder240: boolean = ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell.hatGrund(this.minderleistungen.get(), 240);

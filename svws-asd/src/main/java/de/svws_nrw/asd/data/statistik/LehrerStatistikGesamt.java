@@ -58,16 +58,16 @@ public class LehrerStatistikGesamt {
 	/** Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit) - siehe Statistik-Katalog. */
 	@Schema(description = "Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit) - siehe Statistik-Katalog.",
 			example = "L")
-	public String rechtsverhaeltnis;
+	public Long idRechtsverhaeltnis;
 
 	/** Die Art der Beschäftigung (Vollzeit, Teilzeit, etc.) - siehe Statistik-Katalog. */
 	@Schema(description = "Die Art der Beschäftigung (Vollzeit, Teilzeit, etc.) - siehe Statistik-Katalog.", example = "T")
-	public String beschaeftigungsart;
+	public Long idBeschaeftigungsart;
 
 	/** [ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig) */
 	@Schema(description = "[ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig) - siehe Statistik-Katalog. Ein leerer Eintrag wird als DEFAULT interpretiert, und bedeutet \"Nur an Stammschule tätig.\"",
 			example = "A")
-	public String einsatzstatus;
+	public Long idEinsatzstatus;
 
 	/** Das Pflichtstundensoll des Lehrers. */
 	@Schema(description = "Das Pflichtstundensoll des Lehrers.", example = "18.5")

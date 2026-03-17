@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
+import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
@@ -67,11 +68,11 @@ class TestValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhael
 
 		try {
 			final @NotNull DateManager geburtsdatum = DateManager.from("2025-01-01");
-			String rechtsverhaeltnis = "L";
-			Long idSchuljahresabschnitt = kontext.getSchuljahresabschnitt().id;
+			final Long idRechtsverhaeltnis = LehrerRechtsverhaeltnis.L.historie().getLast().id;
+			final Long idSchuljahresabschnitt = kontext.getSchuljahresabschnitt().id;
 			final ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis validator = new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
 					() -> idSchuljahresabschnitt,
-					() -> rechtsverhaeltnis,
+					() -> idRechtsverhaeltnis,
 					() -> geburtsdatum,
 					kontext);
 			assertEquals(false, validator.pruefe());

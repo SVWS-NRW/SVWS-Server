@@ -3,6 +3,7 @@ package de.svws_nrw.asd.validate.lehrer;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
 import de.svws_nrw.asd.types.lehrer.LehrerEinsatzstatus;
 import de.svws_nrw.asd.validate.Validator;
 import de.svws_nrw.asd.validate.ValidatorKontext;
@@ -16,14 +17,14 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll extends Validator {
 
 	/** Das Pflichtstundensoll */
-	private final @NotNull Supplier<@AllowNull Double> pflichtstundensoll;
+	private final @NotNull Supplier<@AllowNull Double> _pflichtstundensoll;
 
 	/** Der Einsatzstatus */
-	private final @NotNull Supplier<@AllowNull String> einsatzstatus;
+	private final @NotNull Supplier<@AllowNull Long> _idEinsatzstatus;
 
 	/** Die Beschäftigungsart */
-	private final @NotNull Supplier<@AllowNull String> beschaeftigungsart;
-	private static final @NotNull Set<String> setBeschaeftigungsart = Set.of("WV", "WT");
+	private final @NotNull Supplier<@AllowNull Long> _idBeschaeftigungsart;
+	private static final @NotNull Set<LehrerBeschaeftigungsart> setBeschaeftigungsart = Set.of(LehrerBeschaeftigungsart.WV, LehrerBeschaeftigungsart.WT);
 	private static final @NotNull String FEHLERTEXT =
 			"Ist bei einer Lehrkraft im Feld 'Pflichtstundensoll' der Wert = 0.00 eingetragen, so muss das Feld 'Einsatzstatus' den Schlüssel"
 					+ " 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' oder die 'Beschäftigungsart' den Schlüssel 'Beamte auf"
@@ -32,33 +33,33 @@ public final class ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPfli
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param pflichtstundensoll    das Pflichtstundensoll
-	 * @param einsatzstatus    		Der Einsatzstatus
-	 * @param beschaeftigungsart    Die Beschäftigungsart
-	 * @param kontext   			der Kontext des Validators
+	 * @param pflichtstundensoll     das Pflichtstundensoll
+	 * @param idEinsatzstatus        der Einsatzstatus
+	 * @param idBeschaeftigungsart   die Beschäftigungsart
+	 * @param kontext                der Kontext des Validators
 	 */
 	public ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
-			final @NotNull Supplier<@AllowNull String> einsatzstatus,
-			final @NotNull Supplier<@AllowNull String> beschaeftigungsart,
+			final @NotNull Supplier<@AllowNull Long> idEinsatzstatus,
+			final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this.pflichtstundensoll = pflichtstundensoll;
-		this.einsatzstatus = einsatzstatus;
-		this.beschaeftigungsart = beschaeftigungsart;
+		this._pflichtstundensoll = pflichtstundensoll;
+		this._idEinsatzstatus = idEinsatzstatus;
+		this._idBeschaeftigungsart = idBeschaeftigungsart;
 	}
 
 
 	@Override
 	protected boolean pruefe() {
-		final Double pflichtstundensoll = this.pflichtstundensoll.get();
-		final LehrerEinsatzstatus einsatzstatus = LehrerEinsatzstatus.getBySchluessel(this.einsatzstatus.get());
+		final Double pflichtstundensoll = this._pflichtstundensoll.get();
+		final Long idEinsatzstatus = this._idEinsatzstatus.get();
+		final LehrerEinsatzstatus einsatzstatus = (idEinsatzstatus == null) ? null : LehrerEinsatzstatus.data().getWertByID(idEinsatzstatus);
+		final Long idBeschaeftigungsart = this._idBeschaeftigungsart.get();
+		final LehrerBeschaeftigungsart beschaeftigungsart =
+				(idBeschaeftigungsart == null) ? null : LehrerBeschaeftigungsart.data().getWertByID(idBeschaeftigungsart);
 
-		final String beschaeftigungsart = this.beschaeftigungsart.get();
-
-		if (pflichtstundensoll == 0.0
-				&& !LehrerEinsatzstatus.A.equals(einsatzstatus)
-				&& !setBeschaeftigungsart.contains(beschaeftigungsart)) {
+		if ((pflichtstundensoll == 0.0) && (!LehrerEinsatzstatus.A.equals(einsatzstatus)) && (!setBeschaeftigungsart.contains(beschaeftigungsart))) {
 			this.addFehler(3, FEHLERTEXT);
 			return false;
 		}

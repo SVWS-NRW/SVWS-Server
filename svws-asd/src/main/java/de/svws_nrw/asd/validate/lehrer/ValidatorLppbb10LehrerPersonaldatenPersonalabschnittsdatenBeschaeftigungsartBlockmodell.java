@@ -26,33 +26,33 @@ public final class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBes
 
 	/** Die Lehrer-Personalabschnittsdaten, die geprüft werden. */
 	private final @NotNull Supplier<@AllowNull Double> pflichtstundensoll;
-	private final @NotNull Supplier<@AllowNull String> beschaeftigungsart;
-	private final @NotNull Supplier<@AllowNull String> einsatzstatus;
+	private final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart;
+	private final @NotNull Supplier<@AllowNull Long> idEinsatzstatus;
 	private final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> mehrleistungen;
 	private final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> minderleistungen;
 
 	/**
 	 * Erstellt einen neuen Validator.
 	 *
-	 * @param pflichtstundensoll   der Pflichtstundensoll
-	 * @param beschaeftigungsart   die Beschäftigungsart
-	 * @param einsatzstatus        der Einsatz-Status
-	 * @param mehrleistungen       die Liste mit den Einträgen zu Mehrleistungen
-	 * @param minderleistungen     die Liste mit den Einträgen zu Minderleistungen
+	 * @param pflichtstundensoll     der Pflichtstundensoll
+	 * @param idBeschaeftigungsart   die Beschäftigungsart
+	 * @param idEinsatzstatus        der Einsatz-Status
+	 * @param mehrleistungen         die Liste mit den Einträgen zu Mehrleistungen
+	 * @param minderleistungen       die Liste mit den Einträgen zu Minderleistungen
 	 *
 	 * @param kontext  der Kontext der Validierung
 	 */
 	public ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
-			final @NotNull Supplier<@AllowNull String> beschaeftigungsart,
-			final @NotNull Supplier<@AllowNull String> einsatzstatus,
+			final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart,
+			final @NotNull Supplier<@AllowNull Long> idEinsatzstatus,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> mehrleistungen,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> minderleistungen,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		this.pflichtstundensoll = pflichtstundensoll;
-		this.beschaeftigungsart = beschaeftigungsart;
-		this.einsatzstatus = einsatzstatus;
+		this.idBeschaeftigungsart = idBeschaeftigungsart;
+		this.idEinsatzstatus = idEinsatzstatus;
 		this.mehrleistungen = mehrleistungen;
 		this.minderleistungen = minderleistungen;
 	}
@@ -68,10 +68,10 @@ public final class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBes
 	 * @return {@code true}, wenn ein Eintrag mit {@code idGrund} enthalten ist; sonst {@code false}
 	 */
 	private static boolean hatGrund(final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> liste, final long idGrund) {
-		if (liste == null || liste.isEmpty())
+		if ((liste == null) || liste.isEmpty())
 			return false;
 		for (final LehrerPersonalabschnittsdatenAnrechnungsstunden lpa : liste)
-			if (lpa != null && lpa.idGrund == idGrund)
+			if ((lpa != null) && (lpa.idGrund == idGrund))
 				return true;
 		return false;
 	}
@@ -95,18 +95,12 @@ public final class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBes
 		if (pss == null || pss <= 0.0)
 			return true;
 
-		String ba = beschaeftigungsart.get();
-		if (ba == null)
-			ba = "";
-		ba = ba.trim();
-		if (LehrerBeschaeftigungsart.data().getWertBySchluessel(ba) != LehrerBeschaeftigungsart.TS)
+		final Long ba = idBeschaeftigungsart.get();
+		if ((ba == null) || (LehrerBeschaeftigungsart.data().getWertByID(ba) != LehrerBeschaeftigungsart.TS))
 			return true;
 
-		String es = einsatzstatus.get();
-		if (es == null)
-			es = "";
-		es = es.trim();
-		if (!"".equals(es.trim()) && LehrerEinsatzstatus.data().getWertBySchluessel(es) != LehrerEinsatzstatus.A)
+		final Long es = idEinsatzstatus.get();
+		if ((es != null) && (LehrerEinsatzstatus.data().getWertByID(es) != LehrerEinsatzstatus.A))
 			return true;
 
 		final boolean hatMehr100 = hatGrund(mehrleistungen.get(), 100L);

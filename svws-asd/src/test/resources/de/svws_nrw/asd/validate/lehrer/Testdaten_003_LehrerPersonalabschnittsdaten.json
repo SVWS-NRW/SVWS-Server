@@ -3,9 +3,9 @@
   "idLehrer": 4711,
   "idSchuljahresabschnitt": 1,
   "pflichtstundensoll": 25.5,
-  "rechtsverhaeltnis": "L",
-  "beschaeftigungsart": "V",
-  "einsatzstatus": null,
+  "idRechtsverhaeltnis": 3,
+  "idBeschaeftigungsart": 1,
+  "idEinsatzstatus": null,
   "stammschulnummer": null,
    "anrechnungen": [ { 
 		"id": 1,

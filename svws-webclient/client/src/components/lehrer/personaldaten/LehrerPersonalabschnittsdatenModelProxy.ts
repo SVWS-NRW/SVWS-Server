@@ -32,50 +32,50 @@ export class LehrerPersonalabschnittsdatenModelProxy extends ModelProxy<LehrerPe
 			pseudo.idSchuljahresabschnitt = manager().getSchuljahresabschnittAuswahl()?.id ?? -1;
 			return pseudo;
 		};
-		const listOfAutopatchProps: Iterable<keyof LehrerPersonalabschnittsdaten> = ["rechtsverhaeltnis", "beschaeftigungsart", "einsatzstatus", "stammschulnummer"];
+		const listOfAutopatchProps: Iterable<keyof LehrerPersonalabschnittsdaten> = ["idRechtsverhaeltnis", "idBeschaeftigungsart", "idEinsatzstatus", "stammschulnummer"];
 		super({ data: daten, patch, listOfAutopatchProps });
 
 		this.manager = manager;
 
 		this.addValidator(new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(
 			{ get: () => this.proxy.idSchuljahresabschnitt },
-			{ get: () => this.proxy.rechtsverhaeltnis },
+			{ get: () => this.proxy.idRechtsverhaeltnis },
 			{ get: () => this.proxy.pflichtstundensoll },
 			{ get: () => this.proxy.anrechnungen },
-			{ get: () => this.proxy.einsatzstatus },
-			{ get: () => this.proxy.beschaeftigungsart },
+			{ get: () => this.proxy.idEinsatzstatus },
+			{ get: () => this.proxy.idBeschaeftigungsart },
 			{ get: () => manager().daten().geburtsdatum }, // Geburtsdatum aus Stammdaten holen
 			{ get: () => manager().hasPersonalDaten() ? manager().personalDaten().lehraemter : new ArrayList<LehrerLehramtEintrag>() },
 			{ get: () => this.proxy.mehrleistung }, // Listenfeld im DTO heißt 'mehrleistung' (Singular)
 			{ get: () => this.proxy.minderleistung }, // Listenfeld im DTO heißt 'minderleistung' (Singular)
-			validatorKontext()), "rechtsverhaeltnis");
+			validatorKontext()), "idRechtsverhaeltnis");
 		this.addValidator(new ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(
 			{ get: () => this.proxy.pflichtstundensoll },
-			{ get: () => this.proxy.einsatzstatus },
-			{ get: () => this.proxy.beschaeftigungsart },
+			{ get: () => this.proxy.idEinsatzstatus },
+			{ get: () => this.proxy.idBeschaeftigungsart },
 			validatorKontext()), "pflichtstundensoll");
 		this.addValidator(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
-			{ get: () => this.proxy.beschaeftigungsart ?? "" },
-			{ get: () => this.proxy.einsatzstatus ?? "" },
+			{ get: () => this.proxy.idBeschaeftigungsart ?? -1 },
+			{ get: () => this.proxy.idEinsatzstatus ?? -1 },
 			{ get: () => this.proxy.pflichtstundensoll },
-			validatorKontext()), "beschaeftigungsart");
+			validatorKontext()), "idBeschaeftigungsart");
 		this.validate();
 	}
 
 	rechtsverhaeltnis = computed<LehrerRechtsverhaeltnisKatalogEintrag | null>({
 		get: () => LehrerRechtsverhaeltnis.values().map(r => r.daten(this.manager().getSchuljahr()) ?? undefined)
-			.find(d => d?.schluessel === this.proxy.rechtsverhaeltnis) ?? null,
-		set: (value) => this.proxy.rechtsverhaeltnis = value?.schluessel ?? null,
+			.find(d => d?.id === this.proxy.idRechtsverhaeltnis) ?? null,
+		set: (value) => this.proxy.idRechtsverhaeltnis = value?.id ?? null,
 	});
 
 	einsatzstatus = computed<LehrerEinsatzstatusKatalogEintrag | null>({
-		get: () => LehrerEinsatzstatus.data().getEintragBySchuljahrUndSchluessel(this.manager().getSchuljahr(), this.proxy.einsatzstatus ?? ''),
-		set: (value: LehrerEinsatzstatusKatalogEintrag | null) => this.proxy.einsatzstatus = value?.schluessel ?? null,
+		get: () => (this.proxy.idEinsatzstatus === null) ? null : LehrerEinsatzstatus.data().getEintragByID(this.proxy.idEinsatzstatus),
+		set: (value: LehrerEinsatzstatusKatalogEintrag | null) => this.proxy.idEinsatzstatus = value?.id ?? null,
 	});
 
 	beschaeftigungsart = computed<LehrerBeschaeftigungsartKatalogEintrag | null>({
-		get: () => LehrerBeschaeftigungsart.data().getEintragBySchuljahrUndSchluessel(this.manager().getSchuljahr(), this.proxy.beschaeftigungsart ?? ''),
-		set: (value: LehrerBeschaeftigungsartKatalogEintrag | null) => this.proxy.beschaeftigungsart = value?.schluessel ?? null,
+		get: () => (this.proxy.idBeschaeftigungsart === null) ? null : LehrerBeschaeftigungsart.data().getEintragByID(this.proxy.idBeschaeftigungsart),
+		set: (value: LehrerBeschaeftigungsartKatalogEintrag | null) => this.proxy.idBeschaeftigungsart = value?.id ?? null,
 	});
 
 }

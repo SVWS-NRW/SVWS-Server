@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { LehrerBeschaeftigungsart } from '../../../asd/types/lehrer/LehrerBeschaeftigungsart';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { java_util_Set_of } from '../../../java/util/JavaSet';
 import type { Supplier } from '../../../java/util/function/Supplier';
@@ -12,19 +13,19 @@ export class ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 	/**
 	 * Das Pflichtstundensoll
 	 */
-	private readonly pflichtstundensoll: Supplier<number | null>;
+	private readonly _pflichtstundensoll: Supplier<number | null>;
 
 	/**
 	 * Der Einsatzstatus
 	 */
-	private readonly einsatzstatus: Supplier<string | null>;
+	private readonly _idEinsatzstatus: Supplier<number | null>;
 
 	/**
 	 * Die Beschäftigungsart
 	 */
-	private readonly beschaeftigungsart: Supplier<string | null>;
+	private readonly _idBeschaeftigungsart: Supplier<number | null>;
 
-	private static readonly setBeschaeftigungsart: JavaSet<string> = java_util_Set_of("WV", "WT");
+	private static readonly setBeschaeftigungsart: JavaSet<LehrerBeschaeftigungsart> = java_util_Set_of(LehrerBeschaeftigungsart.WV, LehrerBeschaeftigungsart.WT);
 
 	private static readonly FEHLERTEXT: string = "Ist bei einer Lehrkraft im Feld 'Pflichtstundensoll' der Wert = 0.00 eingetragen, so muss das Feld 'Einsatzstatus' den Schlüssel 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig' oder die 'Beschäftigungsart' den Schlüssel 'Beamte auf Widerruf (LAA) in Vollzeit' bzw. 'Beamte auf Widerruf (LAA) in Teilzeit' aufweisen.";
 
@@ -32,23 +33,25 @@ export class ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param pflichtstundensoll    das Pflichtstundensoll
-	 * @param einsatzstatus    		Der Einsatzstatus
-	 * @param beschaeftigungsart    Die Beschäftigungsart
-	 * @param kontext   			der Kontext des Validators
+	 * @param pflichtstundensoll     das Pflichtstundensoll
+	 * @param idEinsatzstatus        der Einsatzstatus
+	 * @param idBeschaeftigungsart   die Beschäftigungsart
+	 * @param kontext                der Kontext des Validators
 	 */
-	public constructor(pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<string | null>, beschaeftigungsart: Supplier<string | null>, kontext: ValidatorKontext) {
+	public constructor(pflichtstundensoll: Supplier<number | null>, idEinsatzstatus: Supplier<number | null>, idBeschaeftigungsart: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.pflichtstundensoll = pflichtstundensoll;
-		this.einsatzstatus = einsatzstatus;
-		this.beschaeftigungsart = beschaeftigungsart;
+		this._pflichtstundensoll = pflichtstundensoll;
+		this._idEinsatzstatus = idEinsatzstatus;
+		this._idBeschaeftigungsart = idBeschaeftigungsart;
 	}
 
 	protected pruefe(): boolean {
-		const pflichtstundensoll: number | null = this.pflichtstundensoll.get();
-		const einsatzstatus: LehrerEinsatzstatus | null = LehrerEinsatzstatus.getBySchluessel(this.einsatzstatus.get());
-		const beschaeftigungsart: string | null = this.beschaeftigungsart.get();
-		if (pflichtstundensoll === 0.0 && !JavaObject.equalsTranspiler(LehrerEinsatzstatus.A, (einsatzstatus)) && !ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll.setBeschaeftigungsart.contains(beschaeftigungsart)) {
+		const pflichtstundensoll: number | null = this._pflichtstundensoll.get();
+		const idEinsatzstatus: number | null = this._idEinsatzstatus.get();
+		const einsatzstatus: LehrerEinsatzstatus | null = (idEinsatzstatus === null) ? null : LehrerEinsatzstatus.data().getWertByID(idEinsatzstatus);
+		const idBeschaeftigungsart: number | null = this._idBeschaeftigungsart.get();
+		const beschaeftigungsart: LehrerBeschaeftigungsart | null = (idBeschaeftigungsart === null) ? null : LehrerBeschaeftigungsart.data().getWertByID(idBeschaeftigungsart);
+		if ((pflichtstundensoll === 0.0) && (!JavaObject.equalsTranspiler(LehrerEinsatzstatus.A, (einsatzstatus))) && (!ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll.setBeschaeftigungsart.contains(beschaeftigungsart))) {
 			this.addFehler(3, ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll.FEHLERTEXT);
 			return false;
 		}

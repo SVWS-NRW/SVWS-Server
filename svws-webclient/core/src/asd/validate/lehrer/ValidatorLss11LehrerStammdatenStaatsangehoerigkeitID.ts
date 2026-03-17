@@ -2,6 +2,7 @@ import type { JavaSet } from '../../../java/util/JavaSet';
 import { java_util_Set_of } from '../../../java/util/JavaSet';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
+import { LehrerRechtsverhaeltnis } from '../../../asd/types/lehrer/LehrerRechtsverhaeltnis';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
@@ -10,11 +11,11 @@ export class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends Valida
 	/**
 	 * Die Lehrer-Stammdaten
 	 */
-	private readonly daten: Supplier<string>;
+	private readonly _daten: Supplier<string>;
 
-	private readonly rechtsverhaeltnis: Supplier<string>;
+	private readonly _idRechtsverhaeltnis: Supplier<number>;
 
-	private static readonly setRechtsverhaeltnis: JavaSet<string> = java_util_Set_of("L", "N", "P", "W");
+	private static readonly setRechtsverhaeltnis: JavaSet<LehrerRechtsverhaeltnis> = java_util_Set_of(LehrerRechtsverhaeltnis.L, LehrerRechtsverhaeltnis.N, LehrerRechtsverhaeltnis.P, LehrerRechtsverhaeltnis.W);
 
 	private static readonly setStaatsangehoerigkeit: JavaSet<string> = java_util_Set_of("DEU", "BEL", "BGR", "DNK", "EST", "FIN", "FRA", "HRV", "SVN", "GRC", "IRL", "ISL", "ITA", "LVA", "LIE", "LTU", "LUX", "MLT", "NLD", "NOR", "AUT", "POL", "PRT", "ROU", "SVK", "SWE", "CHE", "ESP", "CZE", "HUN", "GBR", "CYP");
 
@@ -24,18 +25,18 @@ export class ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID extends Valida
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten              die StaatsangehoerigkeitID des Lehrers
-	 * @param rechtsverhaeltnis  das Rechtsverhaeltnis des Lehrers
-	 * @param kontext            der Kontext des Validators
+	 * @param daten                 die StaatsangehoerigkeitID des Lehrers
+	 * @param idRechtsverhaeltnis   das Rechtsverhaeltnis des Lehrers
+	 * @param kontext               der Kontext des Validators
 	 */
-	public constructor(daten: Supplier<string>, rechtsverhaeltnis: Supplier<string>, kontext: ValidatorKontext) {
+	public constructor(daten: Supplier<string>, idRechtsverhaeltnis: Supplier<number>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.daten = daten;
-		this.rechtsverhaeltnis = rechtsverhaeltnis;
+		this._daten = daten;
+		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
 	}
 
 	protected pruefe(): boolean {
-		if (ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.setRechtsverhaeltnis.contains(this.rechtsverhaeltnis.get()) && !ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.setStaatsangehoerigkeit.contains(this.daten.get())) {
+		if (ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.setRechtsverhaeltnis.contains(LehrerRechtsverhaeltnis.data().getWertByID(this._idRechtsverhaeltnis.get())) && !ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.setStaatsangehoerigkeit.contains(this._daten.get())) {
 			this.addFehler(0, ValidatorLss11LehrerStammdatenStaatsangehoerigkeitID.FEHLERTEXT);
 			return false;
 		}

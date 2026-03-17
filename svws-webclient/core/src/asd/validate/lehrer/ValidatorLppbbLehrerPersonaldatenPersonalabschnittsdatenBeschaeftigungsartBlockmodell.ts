@@ -12,16 +12,16 @@ export class ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftig
 	/**
 	 * Erstellt einen neuen Validator.
 	 *
-	 * @param pflichtstundensoll   der Pflichtstundensoll
-	 * @param beschaeftigungsart   die Beschäftigungsart
-	 * @param einsatzstatus        der Einsatz-Status
-	 * @param mehrleistungen       die Liste mit den Einträgen zu Mehrleistungen
-	 * @param minderleistungen     die Liste mit den Einträgen zu Minderleistungen
-	 * @param kontext  der Kontext der Validierung
+	 * @param pflichtstundensoll     der Pflichtstundensoll
+	 * @param idBeschaeftigungsart   die Beschäftigungsart
+	 * @param idEinsatzstatus        der Einsatz-Status
+	 * @param mehrleistungen         die Liste mit den Einträgen zu Mehrleistungen
+	 * @param minderleistungen       die Liste mit den Einträgen zu Minderleistungen
+	 * @param kontext                der Kontext der Validierung
 	 */
-	public constructor(beschaeftigungsart: Supplier<string | null>, pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<string | null>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
+	public constructor(idBeschaeftigungsart: Supplier<number | null>, pflichtstundensoll: Supplier<number | null>, idEinsatzstatus: Supplier<number | null>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
 		super(kontext);
-		this._validatoren.add(new ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(pflichtstundensoll, beschaeftigungsart, einsatzstatus, mehrleistungen, minderleistungen, kontext));
+		this._validatoren.add(new ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(pflichtstundensoll, idBeschaeftigungsart, idEinsatzstatus, mehrleistungen, minderleistungen, kontext));
 	}
 
 	protected pruefe(): boolean {

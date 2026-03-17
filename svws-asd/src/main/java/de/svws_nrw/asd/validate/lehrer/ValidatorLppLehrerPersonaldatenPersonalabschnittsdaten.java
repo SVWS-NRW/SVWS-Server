@@ -24,23 +24,23 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 	private final @NotNull List<Validator> validatoren = new ArrayList<>();
 
 	/** Das Geburtsdatum des Lehrers (aus den Stammdaten). */
-	private final @NotNull Supplier<@AllowNull String> geburtsdatum;
+	private final @NotNull Supplier<@AllowNull String> _geburtsdatum;
 
 	/** Die ID des Schuljahresabschnittes, auf den sich die Personalabschnittsdaten beziehen. */
-	private final @NotNull Supplier<Long> idSchuljahresabschnitt;
+	private final @NotNull Supplier<Long> _idSchuljahresabschnitt;
 
 	/** Das Rechtsverhältnis der Lehrkraft. */
-	private final @NotNull Supplier<@AllowNull String> rechtsverhaeltnis;
+	private final @NotNull Supplier<@AllowNull Long> _idRechtsverhaeltnis;
 
 	/**
 	 * Erstellt einen neuen Sammel-Validator für Personalabschnittsdaten.
 	 *
 	 * @param idSchuljahresabschnitt  die ID des Schuljahresabschnittes
-	 * @param rechtsverhaeltnis        das Rechtsverhältnis
+	 * @param idRechtsverhaeltnis     das Rechtsverhältnis
 	 * @param pflichtstundensoll      das Pflichtstundensoll
 	 * @param anrechnungen            die Liste der Anrechnungsstunden
-	 * @param einsatzstatus           der Einsatz-Status
-	 * @param beschaeftigungsart      die Beschäftigungsart
+	 * @param idEinsatzstatus         der Einsatz-Status
+	 * @param idBeschaeftigungsart    die Beschäftigungsart
 	 * @param geburtsdatum            das Geburtsdatum des Lehrers
 	 * @param lehraemter              die Liste der Lehrämter der Lehrkraft
 	 * @param mehrleistungen          die Liste der Mehrleistungen
@@ -49,30 +49,31 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 	 */
 	public ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(
 			final @NotNull Supplier<Long> idSchuljahresabschnitt,
-			final @NotNull Supplier<@AllowNull String> rechtsverhaeltnis,
+			final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis,
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> anrechnungen,
-			final @NotNull Supplier<@AllowNull String> einsatzstatus,
-			final @NotNull Supplier<@AllowNull String> beschaeftigungsart,
+			final @NotNull Supplier<@AllowNull Long> idEinsatzstatus,
+			final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart,
 			final @NotNull Supplier<@AllowNull String> geburtsdatum,
 			final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> mehrleistungen,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> minderleistungen,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this.geburtsdatum = geburtsdatum;
-		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
-		this.rechtsverhaeltnis = rechtsverhaeltnis;
+		this._geburtsdatum = geburtsdatum;
+		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
+		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
 
 		// Hinzufügen der fachspezifischen Validatoren
 		validatoren.add(
-				new ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, beschaeftigungsart, kontext));
+				new ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, idEinsatzstatus, idBeschaeftigungsart,
+						kontext));
 
-		validatoren.add(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(getNotNullSupplier(beschaeftigungsart),
-				getNotNullSupplier(einsatzstatus), pflichtstundensoll, kontext));
+		validatoren.add(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(getNotNullSupplierLong(idBeschaeftigungsart),
+				getNotNullSupplierLong(idEinsatzstatus), pflichtstundensoll, kontext));
 
-		validatoren.add(new ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(beschaeftigungsart, pflichtstundensoll,
-				einsatzstatus, mehrleistungen, minderleistungen, kontext));
+		validatoren.add(new ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(idBeschaeftigungsart, pflichtstundensoll,
+				idEinsatzstatus, mehrleistungen, minderleistungen, kontext));
 
 		validatoren.add(new ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, pflichtstundensoll, kontext));
 	}
@@ -84,11 +85,11 @@ public final class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extend
 
 		try {
 			// Prüfung des Rechtsverhältnisses erfordert ein gültiges Geburtsdatum
-			final @NotNull DateManager datum = DateManager.from(this.geburtsdatum.get());
+			final @NotNull DateManager datum = DateManager.from(this._geburtsdatum.get());
 			final @NotNull Supplier<@AllowNull DateManager> supplierGeburtsdatumNullable = () -> datum;
 			final @NotNull Supplier<DateManager> supplierGeburtsdatum = this.getNotNullObjectSupplier(supplierGeburtsdatumNullable);
 
-			_validatoren.add(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnis,
+			_validatoren.add(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(_idSchuljahresabschnitt, _idRechtsverhaeltnis,
 					supplierGeburtsdatum, this.kontext()));
 		} catch (@SuppressWarnings("unused") final InvalidDateException e) {
 			// Falls kein gültiges Geburtsdatum vorliegt, wird die spezifische Altersprüfung

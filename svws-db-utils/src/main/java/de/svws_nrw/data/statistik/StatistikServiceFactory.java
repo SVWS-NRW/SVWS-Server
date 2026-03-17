@@ -129,7 +129,7 @@ public final class StatistikServiceFactory {
 	 * @return der Service für den Zugriff auf die Lehrerdaten
 	 */
 	public LehrerStatistikService getLehrerStatistikService() {
-		return new LehrerStatistikService(schuleRepositoryFactory.getSchuleRepository(),
+		return new LehrerStatistikService(schuleRepositoryFactory.getSchuleRepository(), schuleRepositoryFactory.getSchuljahresabschnitteRepository(),
 				lehrerRepositoryFactory.getLehrerRepository(),
 				lehrerRepositoryFactory.getLehrerAbschnittsdatenRepository(),
 				lehrerServiceFactory.getLehrerLehramtService(),

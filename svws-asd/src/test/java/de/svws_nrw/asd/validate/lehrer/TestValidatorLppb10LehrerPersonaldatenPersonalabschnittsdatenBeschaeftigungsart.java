@@ -36,11 +36,11 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart {
 
 	private static final String TESTDATEN_LPPB10 = """
-		'X', 'r'  , true
-		'tr', 'A' , true
-		'tr', 't' , true
-		'X', 'A'  , false
-		'X', 'B'  , false
+		15, 3, true
+		 1, 1, true
+		 1, 3, true
+		15, 1, false
+		15, 2, false
 		""";
 
 	/** Stammdaten der Schule */
@@ -62,14 +62,14 @@ class TestValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigun
 	 *
 	 * CoreType: LehrerPersonalabschnittsdaten
 	 *
-	 * @param beschaeftigungsart
-	 * @param einsatzstatus
+	 * @param idBeschaeftigungsart
+	 * @param idEinsatzstatus
 	 * @param result     gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
 	@DisplayName("Tests für ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN_LPPB10)
-	void testValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(final String beschaeftigungsart, final String einsatzstatus,
+	void testValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(final Long idBeschaeftigungsart, final Long idEinsatzstatus,
 			final boolean result) {
 
 		// Erzeuge den Kontext für die Validierung
@@ -78,8 +78,8 @@ class TestValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigun
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart validator =
 				new ValidatorLppb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
-						() -> beschaeftigungsart,
-						() -> einsatzstatus,
+						() -> idBeschaeftigungsart,
+						() -> idEinsatzstatus,
 						kontext);
 
 		assertEquals(result, validator.pruefe());

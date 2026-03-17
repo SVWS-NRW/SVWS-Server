@@ -16,56 +16,56 @@ import jakarta.validation.constraints.NotNull;
 public final class ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis extends Validator {
 
 	/** Das Geburtsdatum des Lehrers */
-	private final @NotNull Supplier<DateManager> geburtsdatum;
+	private final @NotNull Supplier<DateManager> _geburtsdatum;
 
 	/** Die ID des Schuljahresabschnittes */
-	private final @NotNull Supplier<Long> idSchuljahresabschnitt;
+	private final @NotNull Supplier<Long> _idSchuljahresabschnitt;
 
 	/** Das Rechtsverhältnis */
-	private final @NotNull Supplier<String> rechtsverhaeltnis;
+	private final @NotNull Supplier<Long> _idRechtsverhaeltnis;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idSchuljahresabschnitt  die ID des Schuljahresabschnittes
-	 * @param rechtsverhaeltnis       das Rechtsverhältnis
-	 * @param geburtsdatum            das Geburtsdatum des Lehrers
-	 * @param kontext                 der Kontext des Validators
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 * @param idRechtsverhaeltnis      das Rechtsverhältnis
+	 * @param geburtsdatum             das Geburtsdatum des Lehrers
+	 * @param kontext                  der Kontext des Validators
 	 */
 	public ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(
 			final @NotNull Supplier<Long> idSchuljahresabschnitt,
-			final @NotNull Supplier<String> rechtsverhaeltnis,
+			final @NotNull Supplier<Long> idRechtsverhaeltnis,
 			final @NotNull Supplier<DateManager> geburtsdatum,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
-		this.rechtsverhaeltnis = rechtsverhaeltnis;
-		this.geburtsdatum = geburtsdatum;
+		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
+		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
+		this._geburtsdatum = geburtsdatum;
 	}
 
 	@Override
 	protected boolean pruefe() {
 		// Bestimme das Schuljahr über den Schuljahresabschnitt. Treten dabei Fehler auf, so ist dieser durch einen übergeordneten Validator zu prüfen.
-		final Schuljahresabschnitt schuljahresabschnitt = kontext().getSchuljahresabschnittByID(this.idSchuljahresabschnitt.get());
+		final Schuljahresabschnitt schuljahresabschnitt = kontext().getSchuljahresabschnittByID(this._idSchuljahresabschnitt.get());
 		if (schuljahresabschnitt == null)
 			return false;
 		final int schuljahr = schuljahresabschnitt.schuljahr;
 
 		// Bestimme das Rechtsverhältnis. Ist dieses nicht angegeben, so wird im Folgenden von einem sonstigen Rechtsverhältnis ausgegangen
-		final LehrerRechtsverhaeltnis rv = LehrerRechtsverhaeltnis.getBySchluessel(this.rechtsverhaeltnis.get());
+		final LehrerRechtsverhaeltnis rv = LehrerRechtsverhaeltnis.data().getWertByID(this._idRechtsverhaeltnis.get());
 
 		// Prüfe das Geburtsdatum bzw. das Alter bei den folgenden Rechtsverhältnissen...
-		if (rv.equals(LehrerRechtsverhaeltnis.P))  {
+		if (rv.equals(LehrerRechtsverhaeltnis.P)) {
 			// Beamtet auf Probe
 			final int minJahr = schuljahr - 55; // das erste akzeptierte Geburtsjahr: vor 55 Jahren
 			final int maxJahr = schuljahr - 20; // das letzte akzeptierte Geburtsjahr: vor 20 Jahren
 
-			if (!geburtsdatum.get().istInJahren(minJahr, maxJahr)) {
+			if (!_geburtsdatum.get().istInJahren(minJahr, maxJahr)) {
 				this.addFehler(2, "Der Wert für das Geburtsjahr sollte bei Beamten/-innen auf Probe (Rechtsverhältnis = P)"
 						+ " zwischen " + minJahr + " und " + maxJahr + " liegen. Bitte prüfen!");
 			}
 			return false;
-	}
-	return true;
+		}
+		return true;
 	}
 }

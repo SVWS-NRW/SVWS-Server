@@ -14,21 +14,21 @@ export class ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	/**
 	 * Das Rechtsverhältnis
 	 */
-	private readonly rechtsverhaeltnis: Supplier<string | null>;
+	private readonly _idRechtsverhaeltnis: Supplier<number | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idSchuljahresabschnitt  die ID des Schuljahresabschnittes
-	 * @param rechtsverhaeltnis       das Rechtsverhältnis
-	 * @param geburtsdatum            das Geburtsdatum des Lehrers
-	 * @param kontext                 der Kontext des Validators
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 * @param idRechtsverhaeltnis      das Rechtsverhältnis
+	 * @param geburtsdatum             das Geburtsdatum des Lehrers
+	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idSchuljahresabschnitt: Supplier<number>, rechtsverhaeltnis: Supplier<string | null>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number>, idRechtsverhaeltnis: Supplier<number | null>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.rechtsverhaeltnis = rechtsverhaeltnis;
-		const rechtsverhaeltnisNotNull: Supplier<string> = this.getNotNullSupplier(rechtsverhaeltnis);
+		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
+		const rechtsverhaeltnisNotNull: Supplier<number> = this.getNotNullSupplierLong(idRechtsverhaeltnis);
 		this._validatoren.add(new ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
 		this._validatoren.add(new ValidatorLppr02LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
 		this._validatoren.add(new ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(idSchuljahresabschnitt, rechtsverhaeltnisNotNull, geburtsdatum, kontext));
@@ -36,7 +36,8 @@ export class ValidatorLppr00LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	}
 
 	protected pruefe(): boolean {
-		const rv: LehrerRechtsverhaeltnis | null = LehrerRechtsverhaeltnis.getBySchluessel(this.rechtsverhaeltnis.get());
+		const idRechtsverhaeltnis: number | null = this._idRechtsverhaeltnis.get();
+		const rv: LehrerRechtsverhaeltnis | null = (idRechtsverhaeltnis === null) ? null : LehrerRechtsverhaeltnis.data().getWertByID(idRechtsverhaeltnis);
 		if (rv === null) {
 			this.addFehler(0, "Kein gültiger Wert im Feld 'rechtsverhaeltnis'.");
 			return false;

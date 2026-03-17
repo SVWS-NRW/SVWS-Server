@@ -24,15 +24,15 @@
 		<svws-ui-content-card title="Beschäftigungsdaten">
 			<svws-ui-input-wrapper :grid="2">
 				<ui-select label="Rechtsverhältnis" class="contentFocusField"
-					v-model="personalabschnittsdatenModelProxy.rechtsverhaeltnis.value" :validation="() => personalabschnittsdatenModelProxy.getFehler('rechtsverhaeltnis')"
+					v-model="personalabschnittsdatenModelProxy.rechtsverhaeltnis.value" :validation="() => personalabschnittsdatenModelProxy.getFehler('idRechtsverhaeltnis')"
 					:manager="rechtsverhaeltnisSelectManager" :removable="false" :readonly required statistics />
 				<ui-select label="Beschäftigungsart"
-					v-model="personalabschnittsdatenModelProxy.beschaeftigungsart.value" :validation="() => personalabschnittsdatenModelProxy.getFehler('beschaeftigungsart')"
+					v-model="personalabschnittsdatenModelProxy.beschaeftigungsart.value" :validation="() => personalabschnittsdatenModelProxy.getFehler('idBeschaeftigungsart')"
 					:manager="beschaeftigungsartSelectManager" :removable="false" required :readonly statistics />
 				<svws-ui-input-number placeholder="Pflichtstundensoll"
 					v-model="personalabschnittsdatenModelProxy.proxy.pflichtstundensoll" @commit="personalabschnittsdatenModelProxy.patch" :readonly statistics />
 				<ui-select label="Einsatzstatus"
-					v-model="personalabschnittsdatenModelProxy.einsatzstatus.value" :validation="() => personalabschnittsdatenModelProxy.getFehler('einsatzstatus')"
+					v-model="personalabschnittsdatenModelProxy.einsatzstatus.value" :validation="() => personalabschnittsdatenModelProxy.getFehler('idEinsatzstatus')"
 					:manager="einsatzstatusSelectManager" :readonly statistics :removable="false" required />
 				<ui-select label="Stammschule"
 					v-model="personalabschnittsdatenModelProxy.proxy.stammschulnummer"

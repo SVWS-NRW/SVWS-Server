@@ -3,7 +3,9 @@ package de.svws_nrw.data.lehrer;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
+import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -32,14 +34,27 @@ class DataLehrerPersonalabschnittsdatenTest {
 	@InjectMocks
 	private DataLehrerPersonalabschnittsdaten data;
 
+	@Mock
+	private Benutzer user;
+
 	@BeforeEach
 	void setUp() {
 		ASDCoreTypeUtils.initAll();
 	}
 
+
+	private void mockSchuljahr(final int schuljahr) {
+		when(conn.getUser()).thenReturn(user);
+		final var abschnitt = new Schuljahresabschnitt();
+		abschnitt.schuljahr = schuljahr;
+		when(user.schuleGetSchuljahresabschnittByIdOrDefault(3L)).thenReturn(abschnitt);
+	}
+
+
 	@Test
 	@DisplayName("patch | pflichtstundensoll | null")
 	void patch_pflichtstundensollIsNull() throws ApiOperationException {
+		mockSchuljahr(2023);
 		final var dto = new DTOLehrerAbschnittsdaten(1L, 2L, 3L);
 		dto.PflichtstdSoll = 42D;
 		when(this.conn.queryByKey(DTOLehrerAbschnittsdaten.class, 1L)).thenReturn(dto);
@@ -67,6 +82,7 @@ class DataLehrerPersonalabschnittsdatenTest {
 	@Test
 	@DisplayName("patch | pflichtstundensoll")
 	void patch_pflichtstundensoll() throws ApiOperationException {
+		mockSchuljahr(2023);
 		final var dto = new DTOLehrerAbschnittsdaten(1L, 2L, 3L);
 		dto.PflichtstdSoll = 42D;
 		when(this.conn.queryByKey(DTOLehrerAbschnittsdaten.class, 1L)).thenReturn(dto);

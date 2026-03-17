@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden;
 import de.svws_nrw.asd.data.statistik.LehrerStatistikGesamt;
+import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
+import de.svws_nrw.asd.types.lehrer.LehrerEinsatzstatus;
+import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.data.lehrer.LehrerLehramtService;
 import de.svws_nrw.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstundenService;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
@@ -15,6 +18,7 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.repo.lehrer.LehrerAbschnittsdatenRepository;
 import de.svws_nrw.repo.lehrer.LehrerRepository;
 import de.svws_nrw.repo.schule.SchuleRepository;
+import de.svws_nrw.repo.schule.SchuljahresabschnitteRepository;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -22,8 +26,11 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class LehrerStatistikService {
 
-	/** Das Repository für den Zugriff auf die Klassen-Daten */
+	/** Das Repository für den Zugriff auf die Schuldaten */
 	private final SchuleRepository schuleRepository;
+
+	/** Das Repository für den Zugriff auf die Schuljahresabschnitte */
+	private final SchuljahresabschnitteRepository schuljahresabschnitteRepository;
 
 	/** Das Repository für den Zugriff auf die Lehrer-Daten */
 	private final LehrerRepository lehrerRepository;
@@ -42,17 +49,20 @@ public final class LehrerStatistikService {
 	 * Erstellt einen neuen Service.
 	 *
 	 * @param schuleRepository                                         das Repository für die Schuldaten
+	 * @param schuljahresabschnitteRepository                          das Repository für die Schuljahresabschnitte
 	 * @param lehrerRepository                                         das Repository für die Lehrerdaten
 	 * @param lehrerAbschnittsdatenRepository                          das Repository für den die Lehrerabschnittsdaten
 	 * @param lehrerLehramtService                                     der Service für die Lehrämter
 	 * @param lehrerPersonalabschnittsdatenAnrechnungsstundenService   der Service für die Lehrer-Anrechnungsstunden
 	 */
 	public LehrerStatistikService(final SchuleRepository schuleRepository,
+			final SchuljahresabschnitteRepository schuljahresabschnitteRepository,
 			final LehrerRepository lehrerRepository,
 			final LehrerAbschnittsdatenRepository lehrerAbschnittsdatenRepository,
 			final LehrerLehramtService lehrerLehramtService,
 			final LehrerPersonalabschnittsdatenAnrechnungsstundenService lehrerPersonalabschnittsdatenAnrechnungsstundenService) {
 		this.schuleRepository = schuleRepository;
+		this.schuljahresabschnitteRepository = schuljahresabschnitteRepository;
 		this.lehrerRepository = lehrerRepository;
 		this.lehrerAbschnittsdatenRepository = lehrerAbschnittsdatenRepository;
 		this.lehrerLehramtService = lehrerLehramtService;
@@ -60,7 +70,7 @@ public final class LehrerStatistikService {
 	}
 
 
-	private static LehrerStatistikGesamt map(final DTOLehrer dtoLehrer, final DTOLehrerAbschnittsdaten dtoAbschnittsdaten,
+	private static LehrerStatistikGesamt map(final DTOLehrer dtoLehrer, final int schuljahr, final DTOLehrerAbschnittsdaten dtoAbschnittsdaten,
 			final List<LehrerLehramtEintrag> lehraemter, final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> anrechnungen,
 			final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> mehrleistung,
 			final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> minderleistung) {
@@ -76,9 +86,17 @@ public final class LehrerStatistikService {
 		daten.lehraemter.addAll(lehraemter);
 
 		// Hänge die abschnittsrelevanten Lehrer-Daten an
-		daten.rechtsverhaeltnis = dtoAbschnittsdaten.Rechtsverhaeltnis;
-		daten.beschaeftigungsart = dtoAbschnittsdaten.Beschaeftigungsart;
-		daten.einsatzstatus = dtoAbschnittsdaten.Einsatzstatus;
+		final var rechtsverhaeltnis = LehrerRechtsverhaeltnis.data().getWertBySchluessel(dtoAbschnittsdaten.Rechtsverhaeltnis);
+		final var rechtsverhaeltnisEintrag = (rechtsverhaeltnis == null) ? null : rechtsverhaeltnis.daten(schuljahr);
+		daten.idRechtsverhaeltnis = (rechtsverhaeltnisEintrag == null) ? null : rechtsverhaeltnisEintrag.id;
+		final var beschaeftigungsart = LehrerBeschaeftigungsart.data().getWertBySchluessel(dtoAbschnittsdaten.Beschaeftigungsart);
+		final var beschaeftigungsartEintrag = (beschaeftigungsart == null) ? null : beschaeftigungsart.daten(schuljahr);
+		daten.idBeschaeftigungsart = (beschaeftigungsartEintrag == null) ? null : beschaeftigungsartEintrag.id;
+		final var einsatzstatus = LehrerEinsatzstatus.data().getWertBySchluessel(dtoAbschnittsdaten.Einsatzstatus);
+		final var einsatzstatusEintrag = (einsatzstatus == null) ? null : einsatzstatus.daten(schuljahr);
+		daten.idEinsatzstatus = (einsatzstatusEintrag == null) ? null : einsatzstatusEintrag.id;
+
+
 		daten.pflichtstundensoll = dtoAbschnittsdaten.PflichtstdSoll;
 		daten.anrechnungen.addAll(anrechnungen);
 		daten.mehrleistung.addAll(mehrleistung);
@@ -95,6 +113,7 @@ public final class LehrerStatistikService {
 	public @NotNull List<LehrerStatistikGesamt> getList() {
 		// Bestimme den aktuellen Schuljahresabschnitt der Schule
 		final long idSchuljahresabschnitt = schuleRepository.getSchuljahresabschnitt();
+		final var schuljahresabschnitt = schuljahresabschnitteRepository.getById(idSchuljahresabschnitt);
 
 		// Bestimme zunächst die Statistik-Relevanten Lehrkräfte und deren IDs
 		final List<DTOLehrer> listLehrer = lehrerRepository.getAllStatistikRelevant();
@@ -120,7 +139,7 @@ public final class LehrerStatistikService {
 			final var anrechnungen = mapAnrechnungen.getOrDefault(dtoAbschnitt.ID, Collections.emptyList());
 			final var mehrleistungen = mapMehrleistungen.getOrDefault(dtoAbschnitt.ID, Collections.emptyList());
 			final var minderleistungen = mapMinderleistungen.getOrDefault(dtoAbschnitt.ID, Collections.emptyList());
-			return map(dtoLehrer, dtoAbschnitt, lehraemter, anrechnungen, mehrleistungen, minderleistungen);
+			return map(dtoLehrer, schuljahresabschnitt.Jahr, dtoAbschnitt, lehraemter, anrechnungen, mehrleistungen, minderleistungen);
 		}).toList();
 	}
 

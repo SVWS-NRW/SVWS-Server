@@ -31,15 +31,13 @@ class TestValidatorLpp03LehrerPersonalabschnittsdatenPflichtstundensoll {
 			JsonReader.fromResource("de/svws_nrw/asd/validate/Testdaten_001_StatistikGesamt.json", StatistikGesamt.class);
 
 	private static final String TESTDATEN_LPP03 = """
-0, 'A', 'WV'  , true
-0, 'A', 'WT'  , true
-1.5, 'A', 'WT'  , true
-0, 'X', 'WT'  , true
-0, 'A', 'XX'  , true
-0, 'X', 'XX'  , false
-0, 'X', 'XX'  , false
-0, 'X', 'wr'  , false
-""";
+			0.0, 1, 17, true
+			0.0, 1, 16, true
+			1.5, 1, 16, true
+			0.0, 3, 16, true
+			0.0, 1,  1, true
+			0.0, 3,  1, false
+			""";
 
 
 	/**
@@ -58,23 +56,25 @@ class TestValidatorLpp03LehrerPersonalabschnittsdatenPflichtstundensoll {
 	 * CoreType: LehrerPersonalabschnittsdaten
 	 *
 	 * @param pflichtstundensoll der Doublewert für die Stunden (z. B. 27.5)
-	 * @param einsatzstatus
-	 * @param beschaeftigungsart
+	 * @param idEinsatzstatus
+	 * @param idBeschaeftigungsart
 	 * @param result     gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
 	@DisplayName("Tests für ValidatorLpp03LehrerPersonalabschnittsdatenPflichtstundensoll")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN_LPP03)
-	void testValidatorLpp3LehrerPersonalabschnittsdaten(final double pflichtstundensoll, final String einsatzstatus, final String beschaeftigungsart, final boolean result) {
+	void testValidatorLpp3LehrerPersonalabschnittsdaten(final double pflichtstundensoll, final Long idEinsatzstatus, final Long idBeschaeftigungsart,
+			final boolean result) {
 
 		// Erzeuge den Kontext für die Validierung
-		final ValidatorKontext kontext = new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
-				testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
+		final ValidatorKontext kontext =
+				new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
+						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll validator =
 				new ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(
 						() -> pflichtstundensoll,
-						() -> einsatzstatus,
-						() -> beschaeftigungsart,
+						() -> idEinsatzstatus,
+						() -> idBeschaeftigungsart,
 						kontext);
 
 		assertEquals(result, validator.pruefe());

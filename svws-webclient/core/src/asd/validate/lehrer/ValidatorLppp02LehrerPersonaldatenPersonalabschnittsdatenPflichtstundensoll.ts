@@ -9,31 +9,32 @@ export class ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 	/**
 	 * Das Pflichtstundensoll
 	 */
-	private readonly pflichtstundensoll: Supplier<number | null>;
+	private readonly _pflichtstundensoll: Supplier<number | null>;
 
 	/**
 	 * Der Einsatzstatus
 	 */
-	private readonly einsatzstatus: Supplier<string | null>;
+	private readonly _idEinsatzstatus: Supplier<number | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param pflichtstundensoll    das Pflichtstundensoll
-	 * @param einsatzstatus    		Der Einsatzstatus
-	 * @param kontext   der Kontext des Validators
+	 * @param idEinsatzstatus       der Einsatzstatus
+	 * @param kontext               der Kontext des Validators
 	 */
-	public constructor(pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<string | null>, kontext: ValidatorKontext) {
+	public constructor(pflichtstundensoll: Supplier<number | null>, idEinsatzstatus: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.pflichtstundensoll = pflichtstundensoll;
-		this.einsatzstatus = einsatzstatus;
+		this._pflichtstundensoll = pflichtstundensoll;
+		this._idEinsatzstatus = idEinsatzstatus;
 	}
 
 	protected pruefe(): boolean {
-		const pflichtstundensoll: number | null = this.pflichtstundensoll.get();
-		const einsatzstatus: LehrerEinsatzstatus | null = LehrerEinsatzstatus.getBySchluessel(this.einsatzstatus.get());
-		if (einsatzstatus as unknown === LehrerEinsatzstatus.B as unknown && pflichtstundensoll === 0.0) {
+		const pflichtstundensoll: number | null = this._pflichtstundensoll.get();
+		const idEinsatzstatus: number | null = this._idEinsatzstatus.get();
+		const einsatzstatus: LehrerEinsatzstatus | null = (idEinsatzstatus === null) ? null : LehrerEinsatzstatus.data().getWertByID(idEinsatzstatus);
+		if ((einsatzstatus as unknown === LehrerEinsatzstatus.B as unknown) && (pflichtstundensoll === 0.0)) {
 			this.addFehler(2, "Bei Lehrkräften, die von einer anderen Schule abgeordnet wurden (Einsatzstatus = 'B'), darf das Pflichtstundensoll nicht 0,00 betragen.");
 			return false;
 		}

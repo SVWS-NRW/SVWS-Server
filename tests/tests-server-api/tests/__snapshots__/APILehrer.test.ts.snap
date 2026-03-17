@@ -1197,8 +1197,6 @@ LehrerPersonaldaten {
           "removeFirst": [Function],
           "removeLast": [Function],
         },
-        "beschaeftigungsart": "V",
-        "einsatzstatus": "*",
         "funktionen": ArrayList {
           "addFirst": [Function],
           "addLast": [Function],
@@ -1210,7 +1208,10 @@ LehrerPersonaldaten {
           "removeLast": [Function],
         },
         "id": 76,
+        "idBeschaeftigungsart": 1,
+        "idEinsatzstatus": 3,
         "idLehrer": 76,
+        "idRechtsverhaeltnis": 3,
         "idSchuljahresabschnitt": 1,
         "mehrleistung": ArrayList {
           "addFirst": [Function],
@@ -1233,7 +1234,6 @@ LehrerPersonaldaten {
           "removeLast": [Function],
         },
         "pflichtstundensoll": 25.5,
-        "rechtsverhaeltnis": "L",
         "stammschulnummer": "123456",
       },
     ],

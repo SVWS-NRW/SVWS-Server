@@ -19,37 +19,35 @@ public final class ValidatorLpLehrerPersonaldaten extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param lehrerId                die LehrerId
-	 * @param idSchuljahresabschnitt  die ID des Schuljahresabschnittes
-	 * @param rechtsverhaeltnis       das Rechtsverhältnis
-	 * @param pflichtstundensoll      der Pflichtstundensoll
-	 * @param anrechnungen            die Anrechnungen
-	 * @param einsatzstatus           der Einsatz-Status
-	 * @param beschaeftigungsart      die Beschäftigungsart
-	 * @param geburtsdatum            das Geburtsdatum des Lehrers
-	 * @param lehraemter              die Liste der Lehrämter, die geprüft werden sollen
-	 * @param mehrleistungen          die Liste mit den Einträgen zu Mehrleistungen
-	 * @param minderleistungen        die Liste mit den Einträgen zu Minderleistungen
-	 * @param kontext                 der Kontext des Validators
+	 * @param lehrerId                 die LehrerId
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 * @param idRechtsverhaeltnis      das Rechtsverhältnis
+	 * @param pflichtstundensoll       der Pflichtstundensoll
+	 * @param anrechnungen             die Anrechnungen
+	 * @param idEinsatzstatus          der Einsatz-Status
+	 * @param idBeschaeftigungsart     die Beschäftigungsart
+	 * @param geburtsdatum             das Geburtsdatum des Lehrers
+	 * @param lehraemter               die Liste der Lehrämter, die geprüft werden sollen
+	 * @param mehrleistungen           die Liste mit den Einträgen zu Mehrleistungen
+	 * @param minderleistungen         die Liste mit den Einträgen zu Minderleistungen
+	 * @param kontext                  der Kontext des Validators
 	 */
 	public ValidatorLpLehrerPersonaldaten(
 			final @NotNull Supplier<Long> lehrerId,
 			final @NotNull Supplier<Long> idSchuljahresabschnitt,
-			final @NotNull Supplier<@AllowNull String> rechtsverhaeltnis,
+			final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis,
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> anrechnungen,
-			final @NotNull Supplier<@AllowNull String> einsatzstatus,
-			final @NotNull Supplier<@AllowNull String> beschaeftigungsart,
+			final @NotNull Supplier<@AllowNull Long> idEinsatzstatus,
+			final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart,
 			final @NotNull Supplier<@AllowNull String> geburtsdatum,
 			final @NotNull Supplier<List<LehrerLehramtEintrag>> lehraemter,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> mehrleistungen,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> minderleistungen,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_validatoren
-				.add(new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(idSchuljahresabschnitt, rechtsverhaeltnis, pflichtstundensoll, anrechnungen,
-						einsatzstatus,
-						beschaeftigungsart, geburtsdatum, lehraemter, mehrleistungen, minderleistungen, kontext));
+		_validatoren.add(new ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten(idSchuljahresabschnitt, idRechtsverhaeltnis, pflichtstundensoll,
+				anrechnungen, idEinsatzstatus, idBeschaeftigungsart, geburtsdatum, lehraemter, mehrleistungen, minderleistungen, kontext));
 
 		_validatoren.add(new ValidatorLplLehrerPersonaldatenLehramt(lehraemter, lehrerId, getDateManagerSupplier(geburtsdatum), kontext));
 	}

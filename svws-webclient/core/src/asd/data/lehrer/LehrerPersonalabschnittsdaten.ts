@@ -30,17 +30,17 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 	/**
 	 * Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit) - siehe Statistik-Katalog.
 	 */
-	public rechtsverhaeltnis: string | null = null;
+	public idRechtsverhaeltnis: number | null = null;
 
 	/**
 	 * Die Art der Beschäftigung (Vollzeit, Teilzeit, etc.) - siehe Statistik-Katalog.
 	 */
-	public beschaeftigungsart: string | null = null;
+	public idBeschaeftigungsart: number | null = null;
 
 	/**
 	 * [ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig)
 	 */
-	public einsatzstatus: string | null = null;
+	public idEinsatzstatus: number | null = null;
 
 	/**
 	 * Die Schulnummer der Stammschule, sofern diese abweicht.
@@ -98,9 +98,9 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		result.pflichtstundensoll = (obj.pflichtstundensoll === undefined) ? null : obj.pflichtstundensoll === null ? null : obj.pflichtstundensoll;
-		result.rechtsverhaeltnis = (obj.rechtsverhaeltnis === undefined) ? null : obj.rechtsverhaeltnis === null ? null : obj.rechtsverhaeltnis;
-		result.beschaeftigungsart = (obj.beschaeftigungsart === undefined) ? null : obj.beschaeftigungsart === null ? null : obj.beschaeftigungsart;
-		result.einsatzstatus = (obj.einsatzstatus === undefined) ? null : obj.einsatzstatus === null ? null : obj.einsatzstatus;
+		result.idRechtsverhaeltnis = (obj.idRechtsverhaeltnis === undefined) ? null : obj.idRechtsverhaeltnis === null ? null : obj.idRechtsverhaeltnis;
+		result.idBeschaeftigungsart = (obj.idBeschaeftigungsart === undefined) ? null : obj.idBeschaeftigungsart === null ? null : obj.idBeschaeftigungsart;
+		result.idEinsatzstatus = (obj.idEinsatzstatus === undefined) ? null : obj.idEinsatzstatus === null ? null : obj.idEinsatzstatus;
 		result.stammschulnummer = (obj.stammschulnummer === undefined) ? null : obj.stammschulnummer === null ? null : obj.stammschulnummer;
 		if (obj.anrechnungen !== undefined) {
 			for (const elem of obj.anrechnungen) {
@@ -131,9 +131,9 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 		result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		result += '"pflichtstundensoll" : ' + ((obj.pflichtstundensoll === null) ? 'null' : obj.pflichtstundensoll.toString()) + ',';
-		result += '"rechtsverhaeltnis" : ' + ((obj.rechtsverhaeltnis === null) ? 'null' : JSON.stringify(obj.rechtsverhaeltnis)) + ',';
-		result += '"beschaeftigungsart" : ' + ((obj.beschaeftigungsart === null) ? 'null' : JSON.stringify(obj.beschaeftigungsart)) + ',';
-		result += '"einsatzstatus" : ' + ((obj.einsatzstatus === null) ? 'null' : JSON.stringify(obj.einsatzstatus)) + ',';
+		result += '"idRechtsverhaeltnis" : ' + ((obj.idRechtsverhaeltnis === null) ? 'null' : obj.idRechtsverhaeltnis.toString()) + ',';
+		result += '"idBeschaeftigungsart" : ' + ((obj.idBeschaeftigungsart === null) ? 'null' : obj.idBeschaeftigungsart.toString()) + ',';
+		result += '"idEinsatzstatus" : ' + ((obj.idEinsatzstatus === null) ? 'null' : obj.idEinsatzstatus.toString()) + ',';
 		result += '"stammschulnummer" : ' + ((obj.stammschulnummer === null) ? 'null' : JSON.stringify(obj.stammschulnummer)) + ',';
 		result += '"anrechnungen" : [ ';
 		for (let i = 0; i < obj.anrechnungen.size(); i++) {
@@ -186,14 +186,14 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 		if (obj.pflichtstundensoll !== undefined) {
 			result += '"pflichtstundensoll" : ' + ((obj.pflichtstundensoll === null) ? 'null' : obj.pflichtstundensoll.toString()) + ',';
 		}
-		if (obj.rechtsverhaeltnis !== undefined) {
-			result += '"rechtsverhaeltnis" : ' + ((obj.rechtsverhaeltnis === null) ? 'null' : JSON.stringify(obj.rechtsverhaeltnis)) + ',';
+		if (obj.idRechtsverhaeltnis !== undefined) {
+			result += '"idRechtsverhaeltnis" : ' + ((obj.idRechtsverhaeltnis === null) ? 'null' : obj.idRechtsverhaeltnis.toString()) + ',';
 		}
-		if (obj.beschaeftigungsart !== undefined) {
-			result += '"beschaeftigungsart" : ' + ((obj.beschaeftigungsart === null) ? 'null' : JSON.stringify(obj.beschaeftigungsart)) + ',';
+		if (obj.idBeschaeftigungsart !== undefined) {
+			result += '"idBeschaeftigungsart" : ' + ((obj.idBeschaeftigungsart === null) ? 'null' : obj.idBeschaeftigungsart.toString()) + ',';
 		}
-		if (obj.einsatzstatus !== undefined) {
-			result += '"einsatzstatus" : ' + ((obj.einsatzstatus === null) ? 'null' : JSON.stringify(obj.einsatzstatus)) + ',';
+		if (obj.idEinsatzstatus !== undefined) {
+			result += '"idEinsatzstatus" : ' + ((obj.idEinsatzstatus === null) ? 'null' : obj.idEinsatzstatus.toString()) + ',';
 		}
 		if (obj.stammschulnummer !== undefined) {
 			result += '"stammschulnummer" : ' + ((obj.stammschulnummer === null) ? 'null' : JSON.stringify(obj.stammschulnummer)) + ',';

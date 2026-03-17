@@ -37,12 +37,12 @@ import de.svws_nrw.asd.validate.ValidatorKontext;
 class TestValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart {
 
 	private static final String TESTDATEN_LPPB11 = """
-'G',  'A'  , 0, false
-'G',  'tr' , 0, true
-'G',  'A'  , 1, true
-'tr', 'A'  , 0, true
-'tr', 'tr' , 7, true
-""";
+			13,  1, 0, false
+			13,  2, 0, true
+			13,  1, 1, true
+			 1,  1, 0, true
+			 1,  2, 7, true
+			""";
 
 	/** Stammdaten der Schule */
 	static final StatistikGesamt testdaten_001 =
@@ -68,19 +68,19 @@ class TestValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigun
 	 *
 	 * CoreType: LehrerPersonalabschnittsdaten
 	 *
-	 * @param beschaeftigungsart
-	 * @param einsatzstatus
+	 * @param idBeschaeftigungsart
+	 * @param idEinsatzstatus
 	 * @param pflichtstundensoll
 	 * @param result     gibt an, welches Ergebnis bei den Testdaten erwartet wird
 	 */
 	@DisplayName("Tests für ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart")
 	@ParameterizedTest
 	@CsvSource(textBlock = TESTDATEN_LPPB11)
-	void testValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(final String beschaeftigungsart, final String einsatzstatus,
+	void testValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(final Long idBeschaeftigungsart, final Long idEinsatzstatus,
 			final double pflichtstundensoll, final boolean result) {
 		// Testdaten setzen
-		LehrerPersonalabschnittsdaten_Plausibel.beschaeftigungsart = beschaeftigungsart;
-		LehrerPersonalabschnittsdaten_Plausibel.einsatzstatus = einsatzstatus;
+		LehrerPersonalabschnittsdaten_Plausibel.idBeschaeftigungsart = idBeschaeftigungsart;
+		LehrerPersonalabschnittsdaten_Plausibel.idEinsatzstatus = idEinsatzstatus;
 		LehrerPersonalabschnittsdaten_Plausibel.pflichtstundensoll = pflichtstundensoll;
 
 		// Erzeuge den Kontext für die Validierung
@@ -89,8 +89,8 @@ class TestValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigun
 						testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		final ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart validator =
 				new ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(
-						() -> beschaeftigungsart,
-						() -> einsatzstatus,
+						() -> idBeschaeftigungsart,
+						() -> idEinsatzstatus,
 						() -> pflichtstundensoll,
 						kontext);
 

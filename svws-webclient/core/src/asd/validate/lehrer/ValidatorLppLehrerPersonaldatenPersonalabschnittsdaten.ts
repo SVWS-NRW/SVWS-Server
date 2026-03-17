@@ -23,42 +23,42 @@ export class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extends Vali
 	/**
 	 * Das Geburtsdatum des Lehrers (aus den Stammdaten).
 	 */
-	private readonly geburtsdatum: Supplier<string | null>;
+	private readonly _geburtsdatum: Supplier<string | null>;
 
 	/**
 	 * Die ID des Schuljahresabschnittes, auf den sich die Personalabschnittsdaten beziehen.
 	 */
-	private readonly idSchuljahresabschnitt: Supplier<number>;
+	private readonly _idSchuljahresabschnitt: Supplier<number>;
 
 	/**
 	 * Das Rechtsverhältnis der Lehrkraft.
 	 */
-	private readonly rechtsverhaeltnis: Supplier<string | null>;
+	private readonly _idRechtsverhaeltnis: Supplier<number | null>;
 
 
 	/**
 	 * Erstellt einen neuen Sammel-Validator für Personalabschnittsdaten.
 	 *
 	 * @param idSchuljahresabschnitt  die ID des Schuljahresabschnittes
-	 * @param rechtsverhaeltnis        das Rechtsverhältnis
+	 * @param idRechtsverhaeltnis     das Rechtsverhältnis
 	 * @param pflichtstundensoll      das Pflichtstundensoll
 	 * @param anrechnungen            die Liste der Anrechnungsstunden
-	 * @param einsatzstatus           der Einsatz-Status
-	 * @param beschaeftigungsart      die Beschäftigungsart
+	 * @param idEinsatzstatus         der Einsatz-Status
+	 * @param idBeschaeftigungsart    die Beschäftigungsart
 	 * @param geburtsdatum            das Geburtsdatum des Lehrers
 	 * @param lehraemter              die Liste der Lehrämter der Lehrkraft
 	 * @param mehrleistungen          die Liste der Mehrleistungen
 	 * @param minderleistungen        die Liste der Minderleistungen
 	 * @param kontext                 der Kontext des Validators
 	 */
-	public constructor(idSchuljahresabschnitt: Supplier<number>, rechtsverhaeltnis: Supplier<string | null>, pflichtstundensoll: Supplier<number | null>, anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, einsatzstatus: Supplier<string | null>, beschaeftigungsart: Supplier<string | null>, geburtsdatum: Supplier<string | null>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number>, idRechtsverhaeltnis: Supplier<number | null>, pflichtstundensoll: Supplier<number | null>, anrechnungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, idEinsatzstatus: Supplier<number | null>, idBeschaeftigungsart: Supplier<number | null>, geburtsdatum: Supplier<string | null>, lehraemter: Supplier<List<LehrerLehramtEintrag>>, mehrleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, minderleistungen: Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.geburtsdatum = geburtsdatum;
-		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
-		this.rechtsverhaeltnis = rechtsverhaeltnis;
-		this.validatoren.add(new ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, beschaeftigungsart, kontext));
-		this.validatoren.add(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(this.getNotNullSupplier(beschaeftigungsart), this.getNotNullSupplier(einsatzstatus), pflichtstundensoll, kontext));
-		this.validatoren.add(new ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(beschaeftigungsart, pflichtstundensoll, einsatzstatus, mehrleistungen, minderleistungen, kontext));
+		this._geburtsdatum = geburtsdatum;
+		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
+		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
+		this.validatoren.add(new ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, idEinsatzstatus, idBeschaeftigungsart, kontext));
+		this.validatoren.add(new ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart(this.getNotNullSupplierLong(idBeschaeftigungsart), this.getNotNullSupplierLong(idEinsatzstatus), pflichtstundensoll, kontext));
+		this.validatoren.add(new ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(idBeschaeftigungsart, pflichtstundensoll, idEinsatzstatus, mehrleistungen, minderleistungen, kontext));
 		this.validatoren.add(new ValidatorLppaLehrerPersonaldatenPersonalabschnittsdatenAnrechnungen(anrechnungen, lehraemter, pflichtstundensoll, kontext));
 	}
 
@@ -66,10 +66,10 @@ export class ValidatorLppLehrerPersonaldatenPersonalabschnittsdaten extends Vali
 		this._validatoren.clear();
 		this._validatoren.addAll(this.validatoren);
 		try {
-			const datum: DateManager = DateManager.from(this.geburtsdatum.get());
+			const datum: DateManager = DateManager.from(this._geburtsdatum.get());
 			const supplierGeburtsdatumNullable: Supplier<DateManager | null> = { get: () => datum };
 			const supplierGeburtsdatum: Supplier<DateManager> = this.getNotNullObjectSupplier(supplierGeburtsdatumNullable);
-			this._validatoren.add(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(this.idSchuljahresabschnitt, this.rechtsverhaeltnis, supplierGeburtsdatum, this.kontext()));
+			this._validatoren.add(new ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis(this._idSchuljahresabschnitt, this._idRechtsverhaeltnis, supplierGeburtsdatum, this.kontext()));
 		} catch(e : any) {
 			// empty block
 		}

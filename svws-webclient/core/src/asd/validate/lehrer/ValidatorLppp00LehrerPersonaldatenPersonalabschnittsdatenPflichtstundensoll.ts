@@ -11,27 +11,27 @@ export class ValidatorLppp00LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 	/**
 	 * Das Pflichtstundensoll
 	 */
-	private readonly pflichtstundensoll: Supplier<number | null>;
+	private readonly _pflichtstundensoll: Supplier<number | null>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param pflichtstundensoll    das Pflichtstundensoll
-	 * @param einsatzstatus    		Der Einsatzstatus
-	 * @param beschaeftigungsart    Die Beschaeftigungsart
-	 * @param kontext   			der Kontext des Validators
+	 * @param pflichtstundensoll     das Pflichtstundensoll
+	 * @param idEinsatzstatus        der Einsatzstatus
+	 * @param idBeschaeftigungsart   die Beschaeftigungsart
+	 * @param kontext                der Kontext des Validators
 	 */
-	public constructor(pflichtstundensoll: Supplier<number | null>, einsatzstatus: Supplier<string | null>, beschaeftigungsart: Supplier<string | null>, kontext: ValidatorKontext) {
+	public constructor(pflichtstundensoll: Supplier<number | null>, idEinsatzstatus: Supplier<number | null>, idBeschaeftigungsart: Supplier<number | null>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.pflichtstundensoll = pflichtstundensoll;
+		this._pflichtstundensoll = pflichtstundensoll;
 		this._validatoren.add(new ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, kontext));
-		this._validatoren.add(new ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, kontext));
-		this._validatoren.add(new ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, beschaeftigungsart, kontext));
+		this._validatoren.add(new ValidatorLppp02LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, idEinsatzstatus, kontext));
+		this._validatoren.add(new ValidatorLppp11LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, idEinsatzstatus, idBeschaeftigungsart, kontext));
 	}
 
 	protected pruefe(): boolean {
-		const pflichtstundensoll: number | null = this.pflichtstundensoll.get();
+		const pflichtstundensoll: number | null = this._pflichtstundensoll.get();
 		if (pflichtstundensoll === null) {
 			this.addFehler(0, "Kein Wert im Feld 'pflichtstundensoll'.");
 			return false;

@@ -12,44 +12,44 @@ export class ValidatorLppr01LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 	/**
 	 * Das Geburtsdatum des Lehrers
 	 */
-	private readonly geburtsdatum: Supplier<DateManager>;
+	private readonly _geburtsdatum: Supplier<DateManager>;
 
 	/**
 	 * Die ID des Schuljahresabschnittes
 	 */
-	private readonly idSchuljahresabschnitt: Supplier<number>;
+	private readonly _idSchuljahresabschnitt: Supplier<number>;
 
 	/**
 	 * Das Rechtsverhältnis
 	 */
-	private readonly rechtsverhaeltnis: Supplier<string>;
+	private readonly _idRechtsverhaeltnis: Supplier<number>;
 
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param idSchuljahresabschnitt  die ID des Schuljahresabschnittes
-	 * @param rechtsverhaeltnis       das Rechtsverhältnis
-	 * @param geburtsdatum            das Geburtsdatum des Lehrers
-	 * @param kontext                 der Kontext des Validators
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 * @param idRechtsverhaeltnis      das Rechtsverhältnis
+	 * @param geburtsdatum             das Geburtsdatum des Lehrers
+	 * @param kontext                  der Kontext des Validators
 	 */
-	public constructor(idSchuljahresabschnitt: Supplier<number>, rechtsverhaeltnis: Supplier<string>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
+	public constructor(idSchuljahresabschnitt: Supplier<number>, idRechtsverhaeltnis: Supplier<number>, geburtsdatum: Supplier<DateManager>, kontext: ValidatorKontext) {
 		super(kontext);
-		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
-		this.rechtsverhaeltnis = rechtsverhaeltnis;
-		this.geburtsdatum = geburtsdatum;
+		this._idSchuljahresabschnitt = idSchuljahresabschnitt;
+		this._idRechtsverhaeltnis = idRechtsverhaeltnis;
+		this._geburtsdatum = geburtsdatum;
 	}
 
 	protected pruefe(): boolean {
-		const schuljahresabschnitt: Schuljahresabschnitt | null = this.kontext().getSchuljahresabschnittByID(this.idSchuljahresabschnitt.get());
+		const schuljahresabschnitt: Schuljahresabschnitt | null = this.kontext().getSchuljahresabschnittByID(this._idSchuljahresabschnitt.get());
 		if (schuljahresabschnitt === null)
 			return false;
 		const schuljahr: number = schuljahresabschnitt.schuljahr;
-		const rv: LehrerRechtsverhaeltnis | null = LehrerRechtsverhaeltnis.getBySchluessel(this.rechtsverhaeltnis.get());
+		const rv: LehrerRechtsverhaeltnis | null = LehrerRechtsverhaeltnis.data().getWertByID(this._idRechtsverhaeltnis.get());
 		if (JavaObject.equalsTranspiler(rv, (LehrerRechtsverhaeltnis.L))) {
 			const minJahr: number = schuljahr - ((schuljahr <= 2023) ? 65 : ((schuljahr <= 2030) ? 66 : 67));
 			const maxJahr: number = schuljahr - 27;
-			if (!this.geburtsdatum.get().istInJahren(minJahr, maxJahr)) {
+			if (!this._geburtsdatum.get().istInJahren(minJahr, maxJahr)) {
 				this.addFehler(1, "Der Wert für das Geburtsjahr sollte bei Beamten/-innen auf Lebenszeit (Rechtsverhältnis = L) zwischen " + minJahr + " und " + maxJahr + " liegen. Bitte prüfen!");
 			}
 			return false;

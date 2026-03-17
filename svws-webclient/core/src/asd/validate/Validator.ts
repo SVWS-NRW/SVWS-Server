@@ -79,6 +79,21 @@ export abstract class Validator extends BasicValidator {
 	}
 
 	/**
+	 * Wandelt einen Supplier für Long in einen Supplier für Long zurück, welcher keine null-Werte liefert,
+	 * sondern -1 falls der Long-Wert null ist.
+	 *
+	 * @param supplier   der Supplier, welcher auch null-Werte für Long liefern kann
+	 *
+	 * @return ein Supplier, welcher keine Null-Werte liefert.
+	 */
+	protected getNotNullSupplierLong(supplier: Supplier<number | null>): Supplier<number> {
+		return { get: () => {
+			const value: number | null = supplier.get();
+			return (value === null) ? -1 : value;
+		} };
+	}
+
+	/**
 	 * Wandelt einen Supplier für Strings in einen Supplier für Strings zurück, welcher keine null-Werte liefert,
 	 * sondern nur leere Strings.
 	 *

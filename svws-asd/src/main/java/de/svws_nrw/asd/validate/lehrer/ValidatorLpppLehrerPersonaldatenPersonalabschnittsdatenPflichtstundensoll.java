@@ -17,18 +17,18 @@ public final class ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflich
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param pflichtstundensoll    das Pflichtstundensoll
-	 * @param einsatzstatus    		der Einsatzstatus
-	 * @param beschaeftigungsart    Die Beschaeftigungsart
-	 * @param kontext   			der Kontext des Validators
+	 * @param pflichtstundensoll     das Pflichtstundensoll
+	 * @param idEinsatzstatus        der Einsatzstatus
+	 * @param idBeschaeftigungsart   die Beschaeftigungsart
+	 * @param kontext                der Kontext des Validators
 	 */
 	public ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
-			final @NotNull Supplier<@AllowNull String> einsatzstatus,
-			final @NotNull Supplier<@AllowNull String> beschaeftigungsart,
+			final @NotNull Supplier<@AllowNull Long> idEinsatzstatus,
+			final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
-		_validatoren.add(new ValidatorLppp00LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, einsatzstatus, beschaeftigungsart, kontext));
+		_validatoren.add(new ValidatorLppp00LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(pflichtstundensoll, idEinsatzstatus, idBeschaeftigungsart, kontext));
 	}
 
 

@@ -17,23 +17,23 @@ public final class ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBesch
 	/**
 	 * Erstellt einen neuen Validator.
 	 *
-	 * @param pflichtstundensoll   der Pflichtstundensoll
-	 * @param beschaeftigungsart   die Beschäftigungsart
-	 * @param einsatzstatus        der Einsatz-Status
-	 * @param mehrleistungen       die Liste mit den Einträgen zu Mehrleistungen
-	 * @param minderleistungen     die Liste mit den Einträgen zu Minderleistungen
-	 * @param kontext  der Kontext der Validierung
+	 * @param pflichtstundensoll     der Pflichtstundensoll
+	 * @param idBeschaeftigungsart   die Beschäftigungsart
+	 * @param idEinsatzstatus        der Einsatz-Status
+	 * @param mehrleistungen         die Liste mit den Einträgen zu Mehrleistungen
+	 * @param minderleistungen       die Liste mit den Einträgen zu Minderleistungen
+	 * @param kontext                der Kontext der Validierung
 	 */
 	public ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(
-			final @NotNull Supplier<@AllowNull String> beschaeftigungsart,
+			final @NotNull Supplier<@AllowNull Long> idBeschaeftigungsart,
 			final @NotNull Supplier<@AllowNull Double> pflichtstundensoll,
-			final @NotNull Supplier<@AllowNull String> einsatzstatus,
+			final @NotNull Supplier<@AllowNull Long> idEinsatzstatus,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> mehrleistungen,
 			final @NotNull Supplier<List<LehrerPersonalabschnittsdatenAnrechnungsstunden>> minderleistungen,
 			final @NotNull ValidatorKontext kontext) {
 		super(kontext);
 		_validatoren.add(new ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell(pflichtstundensoll,
-				beschaeftigungsart, einsatzstatus, mehrleistungen, minderleistungen, kontext));
+				idBeschaeftigungsart, idEinsatzstatus, mehrleistungen, minderleistungen, kontext));
 
 	}
 
