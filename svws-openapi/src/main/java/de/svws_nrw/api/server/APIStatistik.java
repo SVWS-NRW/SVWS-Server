@@ -3,7 +3,7 @@ package de.svws_nrw.api.server;
 import org.jboss.resteasy.annotations.GZIP;
 
 import de.svws_nrw.asd.data.statistik.StatistikGesamt;
-import de.svws_nrw.data.statistik.StatistikControllerFactory;
+import de.svws_nrw.controller.statistik.StatistikControllerFactory;
 import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

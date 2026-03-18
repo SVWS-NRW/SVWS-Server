@@ -23,6 +23,8 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.lehrer.LehrerAbschnittsdatenRepositoryImpl;
 import de.svws_nrw.repo.lehrer.LehrerAnrechnungRepositoryImpl;
 import de.svws_nrw.repo.schule.SchuljahresabschnitteRepositoryImpl;
+import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenService;
+import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenServiceKontext;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
