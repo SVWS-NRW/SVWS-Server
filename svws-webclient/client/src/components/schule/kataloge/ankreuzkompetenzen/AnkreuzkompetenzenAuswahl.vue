@@ -86,7 +86,8 @@
 		{ key: "floskelText", label: "Text", span: 4, sortable: true, defaultSort: 'asc' },
 	];
 
-	const faecher = computed<FachDaten[]>(() => [...manager().faecherById.values()]);
+	const ASV_FACH = { id: -1, kuerzel: 'ASV', bezeichnung: 'ASV' } as FachDaten;
+	const faecher = computed<FachDaten[]>(() => [ASV_FACH, ...manager().faecherById.values()]);
 	const jahrgaenge = computed<JahrgangsDaten[]>(() => [...manager().jahrgaengeById.values()]);
 
 	const filterFaecher = computed<FachDaten[]>({

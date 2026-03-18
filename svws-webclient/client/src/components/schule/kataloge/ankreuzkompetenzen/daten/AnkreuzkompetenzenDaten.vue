@@ -3,32 +3,37 @@
 		<svws-ui-content-card>
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-text-input placeholder="Kompetenzbeschreibung" class="contentFocusField"
-					:model-value="manager().daten().floskelText"
-					@change="patchFloskelText"
-					:valid="floskelTextIsValid" :min-len="1" :max-len="255" :readonly="!hatKompetenzUpdate" required />
+					v-model="model.proxy.floskelText"
+					:validation="() => model.getFehler('floskelText')"
+					@commit="model.patch"
+					:max-len="255" :readonly="!hatKompetenzUpdate" required />
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input v-if="istASVRef"
+					<svws-ui-text-input v-if="model.istASV.value"
 						placeholder="Fach"
 						model-value="ASV"
 						readonly />
 					<ui-select v-else
 						label="Fach"
+						v-model="model.fach.value"
 						:manager="faecherSelectManager"
-						v-model="selectedFach" :removable="false" required />
+						:removable="false" required />
 					<svws-ui-checkbox class="my-auto"
-						v-model="istASV"
+						v-model="model.istASV.value"
+						@commit="model.patch"
 						:readonly="!hatKompetenzUpdate">
 						ASV
 					</svws-ui-checkbox>
 					<ui-select label="Schulgliederung"
-						v-model="selectedSchulgliederung"
+						v-model="model.schulgliederung.value"
 						:manager="schulgliederungSelectManager"
 						:readonly="!hatKompetenzUpdate" />
 					<ui-select label="Abschnitt"
-						v-model="selectedAbschnitt"
+						v-model="model.abschnitt.value"
 						:manager="abschnittSelectManager"
 						:readonly="!hatKompetenzUpdate" :removable="false" required />
-					<svws-ui-checkbox v-model="istAktiv"
+					<svws-ui-checkbox v-model="model.proxy.istAktiv"
+						:validation="() => model.getFehler('istAktiv')"
+						@commit="model.patch"
 						:readonly="!hatKompetenzUpdate">
 						Aktiv
 					</svws-ui-checkbox>
@@ -38,11 +43,15 @@
 			<svws-ui-content-card title="Ansicht & Sortierung">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
-						:model-value="manager().daten().sortierung"
-						@change="patchSortierung"
-						:valid="sortierungIsValid" :min="0" :max="32000" :readonly="!hatKompetenzUpdate" :removable="false" />
+						v-model="model.proxy.sortierung"
+						:validation="() => model.getFehler('sortierung')"
+						@commit="model.patch"
+						:min="0" :max="32000" :readonly="!hatKompetenzUpdate" :removable="false" />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="istSichtbar" :readonly="!hatKompetenzUpdate">
+					<svws-ui-checkbox v-model="model.proxy.istSichtbar"
+						:validation="() => model.getFehler('istSichtbar')"
+						@commit="model.patch"
+						:readonly="!hatKompetenzUpdate">
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -100,41 +109,25 @@
 
 	import type { AnkreuzkompetenzenDatenProps } from "~/components/schule/kataloge/ankreuzkompetenzen/daten/AnkreuzkompetenzenDatenProps";
 	import { computed, ref } from "vue";
-	import type { FachDaten, JahrgangsDaten, SchulgliederungKatalogEintrag } from "@core";
+	import type { JahrgangsDaten } from "@core";
 	import { ArrayList, BenutzerKompetenz, Schulgliederung, Arrays } from "@core";
-	import { isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid } from "~/util/validation/Validation";
 	import { CoreTypeSelectManager, type DataTableColumn, SelectManager } from "@ui";
-	import { AnkreuzkompetenzAbschnitt } from "~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzAbschnitt";
+	import { AnkreuzkompetenzenModelProxy } from "~/components/schule/kataloge/ankreuzkompetenzen/modelproxy/AnkreuzkompetenzenModelProxy";
 
 	const manager = () => props.manager();
 	const props = defineProps<AnkreuzkompetenzenDatenProps>();
+	const model = new AnkreuzkompetenzenModelProxy(() => manager().daten(), () => manager().liste.list(), () => manager().faecherById, props.schuljahr, props.patch);
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
-	type AbschnittOption = { id: AnkreuzkompetenzAbschnitt; text: string };
 
 	const columns: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Jahrgang" },
 	];
-
-	const istASVRef = ref(manager().daten().istASV);
-	const istASV = computed<boolean>({
-		get: () => istASVRef.value,
-		set: (istASV: boolean) => void patchASV(istASV),
-	});
 
 	const faecher = computed(() => [...manager().faecherById.values()]);
 	const faecherSelectManager = new SelectManager({
 		options: faecher,
 		optionDisplayText: f => f.bezeichnung,
 		selectionDisplayText: f => f.bezeichnung,
-	});
-
-	const selectedFach = computed<FachDaten | null>({
-		get: () => manager().faecherById.get(manager().daten().idFach ?? -1) ?? null,
-		set: (fach: FachDaten | null) => {
-			if (fach !== null) {
-				void props.patch({ idFach: fach.id, istASV: istASV.value });
-			}
-		},
 	});
 
 	const schulgliederungSelectManager = new CoreTypeSelectManager({
@@ -145,68 +138,11 @@
 		selectionDisplayText: "text",
 	});
 
-	const selectedSchulgliederung = computed<SchulgliederungKatalogEintrag | null>({
-		get: () => Schulgliederung.data().getEintragBySchuljahrUndSchluessel(props.schuljahr, manager().daten().schulgliederung ?? ""),
-		set: (schulgliederung: SchulgliederungKatalogEintrag | null) => void props.patch({ schulgliederung: schulgliederung?.schluessel ?? null }),
-	});
-
-	const abschnittOptionen: AbschnittOption[] = [
-		{ id: AnkreuzkompetenzAbschnitt.HJ1, text: "1. HJ" },
-		{ id: AnkreuzkompetenzAbschnitt.HJ2, text: "2. HJ" },
-		{ id: AnkreuzkompetenzAbschnitt.BEIDE, text: "Beide" },
-	];
-
 	const abschnittSelectManager = new SelectManager({
-		options: abschnittOptionen,
+		options: AnkreuzkompetenzenModelProxy.abschnittOptionen,
 		optionDisplayText: a => a.text,
 		selectionDisplayText: a => a.text,
 	});
-
-	const selectedAbschnitt = computed<AbschnittOption | null>({
-		get: () => abschnittOptionen.find(a => a.id === manager().daten().abschnitt as AnkreuzkompetenzAbschnitt) ?? null,
-		set: (abschnitt: AbschnittOption | null) => abschnitt?.id !== undefined && void props.patch({ abschnitt: abschnitt.id }),
-	});
-
-	const istAktiv = computed<boolean>({
-		get: () => manager().auswahl().istAktiv,
-		set: (istAktiv: boolean) => void props.patch({ istAktiv }),
-	});
-
-	const istSichtbar = computed<boolean>({
-		get: () => manager().auswahl().istSichtbar,
-		set: (istSichtbar: boolean) => void props.patch({ istSichtbar }),
-	});
-
-	// --- patch ---
-	async function patchFloskelText(floskelText: string | null) {
-		if (floskelTextIsValid(floskelText)) {
-			await props.patch({ floskelText: floskelText.trim() });
-		}
-	}
-
-	async function patchASV(istASV: boolean) {
-		istASVRef.value = istASV;
-		if (istASV) {
-			await props.patch({ istASV, idFach: null });
-		}
-	}
-
-	async function patchSortierung(sortierung: number | null) {
-		if (sortierungIsValid(sortierung)) {
-			await props.patch({ sortierung });
-		}
-	}
-
-	// --- validate ---
-	function floskelTextIsValid(floskelText: string | null): floskelText is string {
-		return mandatoryInputIsValid(floskelText, 255)
-			&& isUniqueInList(floskelText, manager().liste.list(), "floskelText", "id", manager().auswahlID() ?? undefined);
-	}
-
-	function sortierungIsValid(sortierung: number | null): sortierung is number {
-		return !numberHasDecimals(sortierung)
-			&& numberIsValid(sortierung, true, 0, 32000);
-	}
 
 	// --- Jahrgangszuordnungen ---
 	const jahrgaengeToBeDeleted = ref<JahrgangsDaten[]>([]);

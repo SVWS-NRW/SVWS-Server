@@ -206,7 +206,15 @@ export class AnkreuzkompetenzenListeManager extends AuswahlManager<number, Ankre
 
 		// Faecherfilter: wenn gesetzt, prüfe ob Ankreuzkompetenz das Fach hat.
 		if (this._filterFaecher.length > 0) {
-			if ((eintrag.idFach === null) || !this._filterFaecher.some(fach => fach.id === eintrag.idFach)) {
+			const filterIncludesASV = this._filterFaecher.some(fach => fach.id === -1);
+			const filterFaecherWithoutASV = this._filterFaecher.filter(fach => fach.id !== -1);
+
+			const matchesASV = filterIncludesASV && eintrag.istASV;
+			const matchesFach = (filterFaecherWithoutASV.length > 0)
+			&& (eintrag.idFach !== null)
+			&& filterFaecherWithoutASV.some(fach => fach.id === eintrag.idFach);
+
+			if (!matchesASV && !matchesFach) {
 				return false;
 			}
 		}
