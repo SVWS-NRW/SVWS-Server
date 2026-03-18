@@ -12,9 +12,10 @@ describe(
 			for (const s of value) {
 				a.unshift(s);
 			}
-			a.join();
+			void a.join();
 		});
 		bench("destructure", () => {
+			// eslint-disable-next-line @typescript-eslint/no-misused-spread
 			void [...value].reverse().join();
 		});
 		bench("concat und charAt", () => {

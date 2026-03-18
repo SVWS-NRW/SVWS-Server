@@ -277,7 +277,7 @@ describe("ModelProxy Testsuite", () => {
 			const initialModel = ref<TestModel>({ id: 1, firstName: 'Max', lastName: 'Mustermann' });
 			const modelProxy = new ModelProxyMock({ data: () => initialModel.value }, false);
 
-			await expect(async () => modelProxy.applyToPending({}, "firstName")).rejects.toThrowError("Ist der Parameter prop gesetzt, so muss das update genau ein Attribut enthalten.");
+			await expect(async () => modelProxy.applyToPending({}, "firstName")).rejects.toThrow("Ist der Parameter prop gesetzt, so muss das update genau ein Attribut enthalten.");
 		});
 
 		test("Es wurden keine Änderung gemacht -> Die Patch-Action wird nicht aufgerufen, weil der PendingState leer ist", async () => {

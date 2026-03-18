@@ -21,7 +21,7 @@ describe("ModelProxyValidation Testsuite", () => {
 
 			const validatorFirstName = new FirstNameValidatorMock(() => initialModel.value.firstName);
 			modelValidation.addValidator(validatorFirstName, "firstName");
-			expect(() => modelValidation.addValidator(validatorFirstName, "firstName")).toThrowError("Ein Validator sollte nur einmalig zu der Konfiguration hinzugefügt werden. Bitte fassen sie die Aufrufe zusammen.");
+			expect(() => modelValidation.addValidator(validatorFirstName, "firstName")).toThrow("Ein Validator sollte nur einmalig zu der Konfiguration hinzugefügt werden. Bitte fassen sie die Aufrufe zusammen.");
 		});
 
 		test("ModelProxyValidation Initialisierung führt, wenn konfiguriert, eine initiale Validierung aus", () => {
