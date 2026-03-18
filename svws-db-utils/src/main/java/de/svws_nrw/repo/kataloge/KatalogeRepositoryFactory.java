@@ -142,8 +142,8 @@ public final class KatalogeRepositoryFactory extends RepositoryFactory {
 	 *
 	 * @return das Repository-Objekt
 	 */
-	public TeilleistungsartenRepository getTeilleistungsartenRepository() {
-		return getOrCreate(TeilleistungsartenRepository.class, () -> new TeilleistungsartenRepositoryImpl(conn));
+	public TeilleistungsartRepository getTeilleistungsartenRepository() {
+		return getOrCreate(TeilleistungsartRepository.class, () -> new TeilleistungsartRepositoryImpl(conn));
 	}
 
 }

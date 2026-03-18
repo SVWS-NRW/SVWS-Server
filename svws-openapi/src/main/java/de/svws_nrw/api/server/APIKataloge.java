@@ -1,14 +1,17 @@
 package de.svws_nrw.api.server;
 
 import java.io.InputStream;
+import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import de.svws_nrw.core.data.SimpleOperationResponse;
-import de.svws_nrw.core.data.schule.Beschaeftigungsart;
 import de.svws_nrw.core.data.kataloge.KatalogEintragStrassen;
 import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.SchuelerSchwerpunkt;
+import de.svws_nrw.core.data.kataloge.Teilleistungsart;
+import de.svws_nrw.core.data.schule.Beschaeftigungsart;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.core.data.schule.Haltestelle;
 import de.svws_nrw.core.data.schule.Kindergarten;
@@ -23,6 +26,9 @@ import de.svws_nrw.data.kataloge.DataOrte;
 import de.svws_nrw.data.kataloge.DataOrtsteile;
 import de.svws_nrw.data.kataloge.DataSchuelerSchwerpunkte;
 import de.svws_nrw.data.kataloge.DataStrassen;
+import de.svws_nrw.data.kataloge.teilleistungsarten.TeilLeistungsartControllerFactory;
+import de.svws_nrw.data.kataloge.teilleistungsarten.TeilleistungsartCreateRequest;
+import de.svws_nrw.data.kataloge.teilleistungsarten.TeilleistungsartPatchRequest;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schule.DataBeschaeftigungsarten;
 import de.svws_nrw.data.schule.DataKindergaerten;
@@ -1083,4 +1089,108 @@ public class APIKataloge {
 	}
 
 
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste der Teilleistungsarten.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Teilleistungsarten
+	 */
+	@GET
+	@Path("/teilleistungsarten")
+	@Operation(summary = "Gibt eine Liste der Teilleistungsarten im Katalog zurück.",
+			description = "Gibt die im System vorhanden Teilleistungsarten zurück.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste der Teilleistungsarten.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Teilleistungsart.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer besitzt nicht die benötigte Berechtigung.")
+	public Response getTeilleistungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return TeilLeistungsartControllerFactory.withReadAccess(request)
+				.getTeilLeistungsartenController()
+				.getAll();
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen einer Teilleistungsart.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param input        {@link Teilleistungsart}
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit der erstellten TeilLeistungsart
+	 */
+	@POST
+	@Path("/teilleistungsarten")
+	@Operation(summary = "Erstellt eine neue Teilleistungsart.",
+			description = "Erstellt eine neue Teilleistungsart und gibt das erstellte Objekt zurück.")
+	@ApiResponse(responseCode = "201", description = "Die Teilleistungsart wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Teilleistungsart.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer besitzt nicht die benötigten Berechtigungen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addTeilleistungsart(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten der zu erstellenden Teilleistungsart ohne ID, da diese automatisch generiert wird", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = Teilleistungsart.class))) final TeilleistungsartCreateRequest input,
+			@Context final HttpServletRequest request) {
+		return TeilLeistungsartControllerFactory.withWriteAccess(request)
+				.getTeilLeistungsartenController()
+				.create(input);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Updaten einer Teilleistungsart
+	 *
+	 * @param schema das Datenbankschema
+	 * @param id der Identifier des Objektes
+	 * @param patch das partielle Update als {@link JsonNode}
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem erstellten {@link Teilleistungsart}
+	 */
+	@PATCH
+	@Path("/teilleistungsarten/{id : \\d+}")
+	@Operation(summary = "Patched eine TeilLeistungsart.",
+			description = "Patched eine vorhandene TeilLeistungsart anhand der übergebenen ID.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer besitzt nicht die benötigten Berechtigungen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff).")
+	public Response patchTeilleistungsart(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Payload der zu erstellenden TeilLeistungsart", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(
+									implementation = Teilleistungsart.class))) final TeilleistungsartPatchRequest patch,
+			@Context final HttpServletRequest request) {
+		return TeilLeistungsartControllerFactory.withWriteAccess(request)
+				.getTeilLeistungsartenController()
+				.patch(id, patch);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Teilleistungsarten.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param ids        der InputStream, mit der Liste der zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/teilleistungsarten")
+	@Operation(summary = "Entfernt mehrere Teilleistungsarten.", description = "Entfernt mehrere TeilLeistungsarten, insofern die notwendigen Berechtigungen "
+			+ "vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer besitzt nicht die benötigten Berechtigungen.")
+	@ApiResponse(responseCode = "404", description = "Resource nicht vorhanden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff).")
+	public Response deleteTeilleistungsarten(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden TeilLeistungsarten",
+			required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> ids,
+			@Context final HttpServletRequest request) {
+		return TeilLeistungsartControllerFactory.withDeleteAccess(request)
+				.getTeilLeistungsartenController()
+				.delete(ids);
+	}
 }

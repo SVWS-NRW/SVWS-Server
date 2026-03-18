@@ -408,7 +408,6 @@ public final class DBEntityManager implements AutoCloseable {
 		}
 	}
 
-
 	/**
 	 * Persistiert die übergebenen Entities in der Datenbank. Die zugehörige Transaktion
 	 * darum muss manuell gehandhabt werden.

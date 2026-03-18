@@ -327,6 +327,7 @@ public final class SvwsServer {
 		mapping.setPathSpecs(pathSpecs);
 		Logger.global().logLn("Registriere API-Applikation " + c.getSimpleName() + ": " + Arrays.toString(mapping.getPathSpecs()));
 		servlet.setInitParameter("jakarta.ws.rs.Application", c.getCanonicalName());
+		servlet.setInitParameter("resteasy.providers", "de.svws_nrw.api.common.SvwsObjectMapperResolver");
 	}
 
 

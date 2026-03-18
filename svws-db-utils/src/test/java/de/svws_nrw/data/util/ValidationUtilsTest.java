@@ -12,39 +12,57 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 class ValidationUtilsTest {
 
 	@Test
-	@DisplayName("valueIsBlankOrHasNotChanged | blank value")
+	@DisplayName("isBlankOrUnchanged | blank value")
 	void testIsBlankOrUnchangedBlank() {
 		Assertions.assertThat(ValidationUtils.isBlankOrUnchanged("existing-value", "")).isTrue();
 	}
 
 	@Test
-	@DisplayName("valueIsBlankOrHasNotChanged | null value")
+	@DisplayName("isBlankOrUnchanged | null value")
 	void testIsBlankOrUnchangedNull() {
 		Assertions.assertThat(ValidationUtils.isBlankOrUnchanged(null, null)).isTrue();
 	}
 
 	@Test
-	@DisplayName("valueIsBlankOrHasNotChanged | no change")
+	@DisplayName("isBlankOrUnchanged | no change")
 	void testIsBlankOrUnchangedUnchanged() {
 		Assertions.assertThat(ValidationUtils.isBlankOrUnchanged("existing-value", "existing-value")).isTrue();
 	}
 
 	@Test
-	@DisplayName("valueIsBlankOrHasNotChanged | created value")
+	@DisplayName("isBlankOrUnchanged | created value")
 	void testIsBlankOrUnchangedCreate() {
 		Assertions.assertThat(ValidationUtils.isBlankOrUnchanged(null, "new-value")).isFalse();
 	}
 
 	@Test
-	@DisplayName("valueIsBlankOrHasNotChanged | updated value")
+	@DisplayName("isBlankOrUnchanged | updated value")
 	void testIsBlankOrUnchangedUpdate() {
 		Assertions.assertThat(ValidationUtils.isBlankOrUnchanged("existing-value", "new-value")).isFalse();
 	}
 
 	@Test
-	@DisplayName("valueIsBlankOrHasNotChanged | deleted value")
+	@DisplayName("isBlankOrUnchanged | deleted value")
 	void testIsBlankOrUnchangedDelete() {
 		Assertions.assertThat(ValidationUtils.isBlankOrUnchanged("existing-value", null)).isTrue();
+	}
+
+	@Test
+	@DisplayName("isRelevantUpdate | same value")
+	void testIsRelevantUpdateSameValue() {
+		Assertions.assertThat(ValidationUtils.isRelevantUpdate("existing-value", "existing-value")).isFalse();
+	}
+
+	@Test
+	@DisplayName("isRelevantUpdate | updated value")
+	void testIsRelevantUpdateUpdate() {
+		Assertions.assertThat(ValidationUtils.isRelevantUpdate("existing-value", "new-value")).isTrue();
+	}
+
+	@Test
+	@DisplayName("isRelevantUpdate | deleted value")
+	void testIsRelevantUpdateDelete() {
+		Assertions.assertThat(ValidationUtils.isRelevantUpdate(null, "existing-value")).isTrue();
 	}
 
 	@Test
@@ -70,6 +88,48 @@ class ValidationUtilsTest {
 				.isThrownBy(() -> ValidationUtils.validateId(2L, "id", 1L))
 				.isInstanceOf(ApiOperationException.class)
 				.withMessage("Die ID 1 des Patches ist null oder stimmt nicht mit der ID 2 in der Datenbank überein.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("validateRequiredNonEmpty | Erfolg")
+	void testValidateRequiredNonEmptySuccess() {
+		assertDoesNotThrow(() -> ValidationUtils.validateRequiredNonEmpty("bezeichnung", 11, "bezeichnung"));
+	}
+
+	@Test
+	@DisplayName("validateRequiredNonEmpty | Failed Max Length")
+	void testValidateRequiredNonEmptyFailedLength() {
+		assertThatException()
+				.isThrownBy(() -> ValidationUtils.validateRequiredNonEmpty("bezeichnung-length", 11, "bezeichnung"))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut bezeichnung: Die Länge des Strings ist auf 11 Zeichen limitiert.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("validateRequiredNonEmpty | Failed Empty")
+	void testValidateRequiredNonEmptyFailedEmpty() {
+		assertThatException()
+				.isThrownBy(() -> ValidationUtils.validateRequiredNonEmpty("bezeichnung-length", 11, "bezeichnung"))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut bezeichnung: Die Länge des Strings ist auf 11 Zeichen limitiert.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
+	}
+
+	@Test
+	@DisplayName("validateMaxInteger | Erfolg")
+	void testValidateMaxIntegerSuccess() {
+		assertDoesNotThrow(() -> ValidationUtils.validateMaxInteger(1, 2, "sortierung"));
+	}
+
+	@Test
+	@DisplayName("validateMaxInteger | Failed Max Length")
+	void testValidateMaxIntegerFailedMaxLength() {
+		assertThatException()
+				.isThrownBy(() -> ValidationUtils.validateMaxInteger(3, 2, "sortierung"))
+				.isInstanceOf(ApiOperationException.class)
+				.withMessage("Attribut sortierung: Fehler beim Konvertieren: Der Zahlwert liegt außerhalb des geforderten Bereichs.")
 				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 }

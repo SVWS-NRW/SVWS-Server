@@ -22,7 +22,8 @@ public interface RepositoryBase<T, P> {
 	 *
 	 * @throws RepositoryException wenn keine Entität existiert
 	 */
-	@NotNull T getFirst() throws RepositoryException;
+	@NotNull
+	T getFirst() throws RepositoryException;
 
 	/**
 	 * Bestimmt die erste Datenbank-Entität in einer Tabelle. Ist keine Entität
@@ -41,7 +42,8 @@ public interface RepositoryBase<T, P> {
 	 *
 	 * @throws RepositoryException wenn keine Entität mit der ID existiert
 	 */
-	@NotNull T getById(P id);
+	@NotNull
+	T getById(P id);
 
 	/**
 	 * Bestimmt eine Datenbank-Entität anhand der ID. Ist diese nicht

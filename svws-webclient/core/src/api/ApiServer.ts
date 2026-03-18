@@ -217,6 +217,7 @@ import { StundenplanSchiene } from '../core/data/stundenplan/StundenplanSchiene'
 import { StundenplanUnterricht } from '../core/data/stundenplan/StundenplanUnterricht';
 import { StundenplanUnterrichtsverteilung } from '../core/data/stundenplan/StundenplanUnterrichtsverteilung';
 import { StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
+import { Teilleistungsart } from '../core/data/kataloge/Teilleistungsart';
 import { Telefonart } from '../core/data/schule/Telefonart';
 import { UebergangsempfehlungKatalogEintrag } from '../asd/data/schueler/UebergangsempfehlungKatalogEintrag';
 import { UvFach } from '../core/data/uv/UvFach';
@@ -19228,6 +19229,112 @@ export class ApiServer extends BaseApi {
 		const path = "/db/{schema}/stundenplan/zeitraster/patch/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getTeilleistungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/teilleistungsarten
+	 *
+	 * Gibt die im System vorhanden Teilleistungsarten zurück.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste der Teilleistungsarten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Teilleistungsart>
+	 *   Code 403: Der SVWS-Benutzer besitzt nicht die benötigte Berechtigung.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste der Teilleistungsarten.
+	 */
+	public async getTeilleistungsarten(schema : string) : Promise<List<Teilleistungsart>> {
+		const path = "/db/{schema}/teilleistungsarten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Teilleistungsart>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Teilleistungsart.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addTeilleistungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/teilleistungsarten
+	 *
+	 * Erstellt eine neue Teilleistungsart und gibt das erstellte Objekt zurück.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Teilleistungsart wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Teilleistungsart
+	 *   Code 403: Der SVWS-Benutzer besitzt nicht die benötigten Berechtigungen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Teilleistungsart>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Teilleistungsart wurde erfolgreich hinzugefügt.
+	 */
+	public async addTeilleistungsart(data : Partial<Teilleistungsart>, schema : string) : Promise<Teilleistungsart> {
+		const path = "/db/{schema}/teilleistungsarten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Teilleistungsart.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Teilleistungsart.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteTeilleistungsarten für den Zugriff auf die URL https://{hostname}/db/{schema}/teilleistungsarten
+	 *
+	 * Entfernt mehrere TeilLeistungsarten, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer besitzt nicht die benötigten Berechtigungen.
+	 *   Code 404: Resource nicht vorhanden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteTeilleistungsarten(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/teilleistungsarten"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchTeilleistungsart für den Zugriff auf die URL https://{hostname}/db/{schema}/teilleistungsarten/{id : \d+}
+	 *
+	 * Patched eine vorhandene TeilLeistungsart anhand der übergebenen ID.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 403: Der SVWS-Benutzer besitzt nicht die benötigten Berechtigungen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff).
+	 *
+	 * @param {Partial<Teilleistungsart>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchTeilleistungsart(data : Partial<Teilleistungsart>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/teilleistungsarten/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = Teilleistungsart.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
