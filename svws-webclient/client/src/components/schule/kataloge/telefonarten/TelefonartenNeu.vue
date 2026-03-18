@@ -4,18 +4,20 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
-						v-model="data.bezeichnung"
-						:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="30" :disabled required />
+						v-model="model.proxy.bezeichnung"
+						:validation="() => model.getFehler('bezeichnung')"
+						:max-len="30" :disabled required />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
 			<svws-ui-content-card title="Ansicht & Sortierung">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
-						v-model="data.sortierung"
-						:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled :removable="false" />
+						v-model="model.proxy.sortierung"
+						:validation="() => model.getFehler('sortierung')"
+						:min="0" :max="32000" :disabled :removable="false" />
 					<svws-ui-input-wrapper />
-					<svws-ui-checkbox v-model="data.istSichtbar" :disabled>
+					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :disabled>
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -24,7 +26,7 @@
 				<svws-ui-button type="secondary" @click="cancel">
 					Abbrechen
 				</svws-ui-button>
-				<svws-ui-button @click="addTelefonart" :disabled="!formIsValid || !hatKompetenzUpdate">
+				<svws-ui-button @click="addTelefonart" :disabled="!isValid || !hatKompetenzUpdate">
 					Speichern
 				</svws-ui-button>
 			</div>
@@ -38,41 +40,16 @@
 	import type { TelefonartenNeuProps } from "~/components/schule/kataloge/telefonarten/TelefonartenNeuProps";
 	import { BenutzerKompetenz, Telefonart } from "@core";
 	import { computed, ref, watch } from "vue";
-	import { isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid } from "~/util/validation/Validation";
+	import { TelefonartenModelProxy } from "~/components/schule/kataloge/telefonarten/modelproxy/TelefonartenModelProxy";
 
 	const props = defineProps<TelefonartenNeuProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 	const disabled = computed(() => !hatKompetenzUpdate.value);
-	const data = ref<Telefonart>(Object.assign(new Telefonart(), { istSichtbar: true, sortierung: 32000 }));
+	const initialData = ref<Telefonart>(Object.assign(new Telefonart(), { istSichtbar: true, sortierung: 32000 }));
+	const model = new TelefonartenModelProxy(() => initialData.value, () => props.manager().liste.list());
 	const isLoading = ref<boolean>(false);
 
-	// validate
-	const formIsValid = computed(() => {
-		return Object.keys(data.value)
-			.every((field: string) => fieldIsValid(field as keyof Telefonart));
-
-	});
-
-	const fieldIsValid = (field: keyof Telefonart | null): boolean => {
-		switch (field) {
-			case 'bezeichnung':
-				return bezeichnungIsValid(data.value.bezeichnung);
-			case 'sortierung':
-				return sortierungIsValid(data.value.sortierung);
-			default:
-				return true;
-		}
-	};
-
-	function bezeichnungIsValid(value: string | null) {
-		return mandatoryInputIsValid(value, 30)
-			&& isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
-	}
-
-	function sortierungIsValid(sortierung: number | null): boolean {
-		return !numberHasDecimals(sortierung)
-			&& numberIsValid(sortierung, true, 0, 32000);
-	}
+	const isValid = computed<boolean>(() => model.getAlleFehler().isEmpty());
 
 	// util
 	async function addTelefonart() {
@@ -82,7 +59,7 @@
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
+		const { id, referenziertInAnderenTabellen, ...partialData } = model.proxy;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
@@ -92,7 +69,7 @@
 		await props.gotoDefaultView(null);
 	}
 
-	watch(() => data.value, async () => {
+	watch(() => model.proxy, async () => {
 		if (isLoading.value) {
 			return;
 		}
