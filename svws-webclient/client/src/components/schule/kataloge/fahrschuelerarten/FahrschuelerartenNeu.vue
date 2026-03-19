@@ -3,19 +3,21 @@
 		<svws-ui-content-card>
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
-						v-model="data.bezeichnung"
-						:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="30" :disabled="!hatKompetenzAdd" required />
+					<svws-ui-text-input placeholder="Bezeichnung" span="2"
+						v-model="model.proxy.bezeichnung"
+						:validation="() => model.getFehler('bezeichnung')"
+						:max-len="30" required />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
 			<svws-ui-content-card title="Ansicht & Sortierung">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
-						v-model="data.sortierung"
-						:valid="() => fieldIsValid('sortierung')" :disabled="!hatKompetenzAdd" />
+						v-model="model.proxy.sortierung"
+						:validation="() => model.getFehler('sortierung')"
+						:min="0" :max="32000" :removable="false" />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
+					<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -24,7 +26,7 @@
 				<svws-ui-button type="secondary" @click="cancel">
 					Abbrechen
 				</svws-ui-button>
-				<svws-ui-button @click="addFahrschuelerart" :disabled="!formIsValid || !hatKompetenzAdd">
+				<svws-ui-button @click="addFahrschuelerart" :disabled="!formIsValid">
 					Speichern
 				</svws-ui-button>
 			</div>
@@ -36,35 +38,17 @@
 <script setup lang="ts">
 
 	import type { FahrschuelerartenNeuProps } from "~/components/schule/kataloge/fahrschuelerarten/FahrschuelerartenNeuProps";
-	import { BenutzerKompetenz, Fahrschuelerart } from "@core";
+	import { Fahrschuelerart } from "@core";
 	import { computed, ref, watch } from "vue";
-	import { isUniqueInList, mandatoryInputIsValid, numberIsValid } from "~/util/validation/Validation";
+	import { FahrschuelerartenModelProxy } from "~/components/schule/kataloge/fahrschuelerarten/modelproxy/FahrschuelerartenModelProxy";
 
 	const props = defineProps<FahrschuelerartenNeuProps>();
-	const data = ref<Fahrschuelerart>(Object.assign(new Fahrschuelerart(), { istSichtbar: true, sortierung: 32000 }));
 	const isLoading = ref<boolean>(false);
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
 
-	const formIsValid = computed(() => {
-		return Object.keys(data.value)
-			.every((field: string) => fieldIsValid(field as keyof Fahrschuelerart));
-	});
+	const initialData = ref<Fahrschuelerart>(Object.assign(new Fahrschuelerart(), { istSichtbar: true }));
+	const model = new FahrschuelerartenModelProxy(() => initialData.value, props.manager);
+	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 
-	const fieldIsValid = (field: keyof Fahrschuelerart | null): boolean => {
-		switch (field) {
-			case 'bezeichnung':
-				return bezeichnungIsValid(data.value.bezeichnung);
-			case 'sortierung':
-				return numberIsValid(data.value.sortierung, true, 0, 32000);
-			default:
-				return true;
-		}
-	};
-
-	function bezeichnungIsValid(value: string | null) {
-		return mandatoryInputIsValid(value, 30)
-			&& isUniqueInList(value, props.manager().liste.list(), "bezeichnung");
-	}
 
 	async function addFahrschuelerart() {
 		if (isLoading.value) {
@@ -73,7 +57,7 @@
 
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
+		const { id, referenziertInAnderenTabellen, ...partialData } = model.proxy;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
@@ -83,7 +67,7 @@
 		await props.goToDefaultView(null);
 	}
 
-	watch(() => data.value, async () => {
+	watch(() => model.proxy, async () => {
 		if (isLoading.value) {
 			return;
 		}
