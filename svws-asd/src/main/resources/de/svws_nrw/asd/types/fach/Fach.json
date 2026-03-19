@@ -1,5 +1,5 @@
 {
-	"version": 9,
+	"version": 10,
 	"daten": [ {
 		"bezeichner": "AB",
 		"idStatistik": "1",
@@ -1729,7 +1729,7 @@
 			"aufgabenfeld": null,
 			"fachgruppe": null,
 			"abJahrgang": null,
-			"istFremdsprache": false,
+			"istFremdsprache": true,
 			"istHKFS": false,
 			"istAusRegUFach": false,
 			"istErsatzPflichtFS": false,
