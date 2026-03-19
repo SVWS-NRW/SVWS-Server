@@ -3,14 +3,16 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper>
 				<svws-ui-text-input placeholder="Bezeichnung"
-					v-model="data.bezeichnung"
-					:valid="bezeichnungIsValid" :min-len="1" :max-len="255" :disabled="!hatKompetenzUpdate" required />
+					v-model="model.proxy.bezeichnung"
+					:validation="() => model.getFehler('bezeichnung')"
+					skip-default-validation
+					:max-len="255" required />
 			</svws-ui-input-wrapper>
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel">
 					Abbrechen
 				</svws-ui-button>
-				<svws-ui-button @click="addLernplatfform" :disabled="!bezeichnungIsValid(data.bezeichnung)">
+				<svws-ui-button @click="addLernplatfform" :disabled="!formIsValid">
 					Speichern
 				</svws-ui-button>
 			</div>
@@ -21,22 +23,14 @@
 
 <script setup lang="ts">
 	import { computed, ref, watch } from "vue";
-	import { BenutzerKompetenz, Lernplattform } from "@core";
+	import { Lernplattform } from "@core";
 	import type { LernplattformenNeuProps } from "~/components/schule/kataloge/lernplattformen/LernplattformenNeuProps";
-	import { isUniqueInList, mandatoryInputIsValid } from "~/util/validation/Validation";
+	import { LernplattformenModelProxy } from "~/components/schule/kataloge/lernplattformen/modelproxy/LernplattformenModelProxy";
 
 	const props = defineProps<LernplattformenNeuProps>();
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const data = ref(new Lernplattform());
+	const model = new LernplattformenModelProxy(() => new Lernplattform(), props.manager);
 	const isLoading = ref<boolean>(false);
-
-	function bezeichnungIsValid(value: string | null) {
-		if (!mandatoryInputIsValid(value, 255)) {
-			return false;
-		}
-
-		return isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
-	}
+	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 
 	async function addLernplatfform() {
 		if (isLoading.value === true) {
@@ -45,7 +39,7 @@
 
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
+		const { id, referenziertInAnderenTabellen, ...partialData } = model.proxy;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
@@ -55,7 +49,7 @@
 		await props.gotoDefaultView(null);
 	}
 
-	watch(() => data.value, async () => {
+	watch(() => model.proxy, async () => {
 		if (isLoading.value) {
 			return;
 		}
