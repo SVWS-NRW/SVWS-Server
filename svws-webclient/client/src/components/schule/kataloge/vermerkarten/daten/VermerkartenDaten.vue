@@ -4,20 +4,22 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
-						:model-value="manager().daten().bezeichnung"
-						@change="patchBezeichnung"
-						:valid="bezeichnungIsValid" :min-len="1" :max-len="30" required :readonly="!hatKompetenzUpdate" />
+						v-model="model.proxy.bezeichnung"
+						:validation="() => model.getFehler('bezeichnung')"
+						@commit="model.patch"
+						:max-len="30" required />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
 			<svws-ui-content-card title="Ansicht & Sortierung">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
-						:model-value="manager().daten().sortierung"
-						@change="patchSortierung"
-						:valid="sortierungIsValid" :min="0" :max="32000" :readonly="!hatKompetenzUpdate" />
+						v-model="model.proxy.sortierung"
+						:validation="() => model.getFehler('sortierung')"
+						@commit="model.patch"
+						:min="0" :max="32000" :removable="false" />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="istSichtbar" :readonly="!hatKompetenzUpdate">
+					<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -46,16 +48,10 @@
 
 	import type { DataTableColumn } from "@ui";
 	import type { VermerkartenDatenProps } from "./VermerkartenDatenProps";
-	import { computed } from "vue";
-	import { BenutzerKompetenz } from "@core";
-	import { isUniqueInList, mandatoryInputIsValid, numberIsValid } from "~/util/validation/Validation";
+	import { VermerkartenModelProxy } from "~/components/schule/kataloge/vermerkarten/modelproxy/VermerkartenModelProxy";
 
 	const props = defineProps<VermerkartenDatenProps>();
-	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const istSichtbar = computed<boolean>({
-		get: () => props.manager().daten().istSichtbar,
-		set: (v: boolean) => void patchSichtbar(v),
-	});
+	const model = new VermerkartenModelProxy(() => props.manager().daten(), props.manager, props.patch);
 
 	const columns: DataTableColumn[] = [
 		{ key: "linkToSchueler", label: " ", fixedWidth: 1.75, align: "center" },
@@ -63,31 +59,5 @@
 		{ key: "vorname", label: "Rufname", sortable: true },
 		{ key: "anzahlVermerke", label: "Anzahl", fixedWidth: 8.75, sortable: true, span: 0.5 },
 	];
-
-	async function patchBezeichnung(bezeichnung: string | null): Promise<void> {
-		if (bezeichnungIsValid(bezeichnung)) {
-			await props.patch({ bezeichnung });
-		}
-	}
-
-	async function patchSortierung(value: number | null): Promise<void> {
-		if (sortierungIsValid(value)) {
-			await props.patch({ sortierung: value === null ? 32000 : value });
-		}
-	}
-
-	async function patchSichtbar(value: boolean): Promise<void> {
-		await props.patch({ istSichtbar: value });
-
-	}
-
-	function bezeichnungIsValid(value: string | null): boolean {
-		return mandatoryInputIsValid(value, 30)
-			&& isUniqueInList(value, props.manager().liste.list(), "bezeichnung", "id", props.manager().auswahlID());
-	}
-
-	function sortierungIsValid(value: number | null): boolean {
-		return numberIsValid(value, true, 0, 32000);
-	}
 
 </script>

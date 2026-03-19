@@ -3,19 +3,21 @@
 		<svws-ui-content-card>
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
-						v-model="data.bezeichnung"
-						:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="30" :disabled="!hatKompetenzAdd" required />
+					<svws-ui-text-input placeholder="Bezeichnung" span="2"
+						v-model="model.proxy.bezeichnung"
+						:validation="() => model.getFehler('bezeichnung')"
+						:max-len="30" required />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
 			<svws-ui-content-card title="Ansicht & Sortierung">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
-						v-model="data.sortierung"
-						:valid="() => fieldIsValid('sortierung')" :disabled="!hatKompetenzAdd" />
+						v-model="model.proxy.sortierung"
+						:validation="() => model.getFehler('sortierung')"
+						:min="0" :max="32000" :removable="false" />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
+					<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -25,7 +27,7 @@
 				<svws-ui-button type="secondary" @click="cancel">
 					Abbrechen
 				</svws-ui-button>
-				<svws-ui-button @click="addVermerkart" :disabled="!formIsValid || !hatKompetenzAdd">
+				<svws-ui-button @click="addVermerkart" :disabled="!formIsValid">
 					Speichern
 				</svws-ui-button>
 			</div>
@@ -37,45 +39,23 @@
 <script setup lang="ts">
 	import { computed, ref, watch } from "vue";
 	import type { VermerkartenNeuProps } from "./VermerkartenNeuProps";
-	import { BenutzerKompetenz, VermerkartEintrag } from "@core";
-	import { isUniqueInList, mandatoryInputIsValid, numberIsValid } from "~/util/validation/Validation";
+	import { VermerkartEintrag } from "@core";
+	import { VermerkartenModelProxy } from "~/components/schule/kataloge/vermerkarten/modelproxy/VermerkartenModelProxy";
 
 	const props = defineProps<VermerkartenNeuProps>();
-	const data = ref<VermerkartEintrag>(Object.assign(new VermerkartEintrag(), { istSichtbar: true, sortierung: 32000 }));
 	const isLoading = ref<boolean>(false);
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const initialData = ref<VermerkartEintrag>(Object.assign(new VermerkartEintrag(), { istSichtbar: true }));
+	const model = new VermerkartenModelProxy(() => initialData.value, props.manager);
+	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 
-	const formIsValid = computed(() => {
-		return Object.keys(data.value)
-			.every((field: string) => fieldIsValid(field as keyof VermerkartEintrag));
-	});
-
-	const fieldIsValid = (field: keyof VermerkartEintrag): boolean => {
-		switch (field) {
-			case 'bezeichnung':
-				return bezeichnungIsValid(data.value.bezeichnung);
-			case 'sortierung':
-				return numberIsValid(data.value.sortierung, true, 0, 32000);
-			default:
-				return true;
-		}
-	};
-
-	function bezeichnungIsValid(value: string | null) {
-		if (!mandatoryInputIsValid(value, 30)) {
-			return false;
-		}
-		return isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
-	}
 
 	async function addVermerkart() {
 		if (isLoading.value) {
 			return;
 		}
-
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
+		const { id, referenziertInAnderenTabellen, ...partialData } = model.proxy;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
@@ -85,7 +65,7 @@
 		await props.goToDefaultView(null);
 	}
 
-	watch(() => data.value, async () => {
+	watch(() => model.proxy, async () => {
 		if (isLoading.value) {
 			return;
 		}
