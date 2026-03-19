@@ -29,6 +29,7 @@
     <inspection_tool class="ConstantMathCall" enabled="false" level="TEXT ATTRIBUTES" enabled_by_default="false" editorAttributes="WARNING_ATTRIBUTES" />
     <inspection_tool class="ConstantOnWrongSideOfComparison" enabled="false" level="TEXT ATTRIBUTES" enabled_by_default="false" editorAttributes="WARNING_ATTRIBUTES" />
     <inspection_tool class="ConstantValueVariableUse" enabled="false" level="TEXT ATTRIBUTES" enabled_by_default="false" editorAttributes="WARNING_ATTRIBUTES" />
+    <inspection_tool class="ControlFlowStatementWithoutBraces" enabled="true" level="Cleanup" enabled_by_default="true" editorAttributes="Cleanup" />
     <inspection_tool class="DefaultNotLastCaseInSwitch" enabled="false" level="TEXT ATTRIBUTES" enabled_by_default="false" editorAttributes="WARNING_ATTRIBUTES" />
     <inspection_tool class="DoubleLiteralMayBeFloatLiteral" enabled="false" level="TEXT ATTRIBUTES" enabled_by_default="false" editorAttributes="WARNING_ATTRIBUTES" />
     <inspection_tool class="DoubleNegation" enabled="true" level="Cleanup" enabled_by_default="true" editorAttributes="Cleanup" />
