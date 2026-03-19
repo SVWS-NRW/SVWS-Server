@@ -1,0 +1,61 @@
+{
+    "version": 1,
+    "daten": [
+        {
+            "bezeichner": "NICHT_ERTEILT",
+            "idStatistik": "1",
+            "historie": [
+                {
+                    "id": 1,
+                    "schluessel": "0",
+                    "kuerzel": "0",
+                    "text": "nicht erteilt",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "INNERHALB_BILDUNGSGANG",
+            "idStatistik": "2",
+            "historie": [
+                {
+                    "id": 2,
+                    "schluessel": "1",
+                    "kuerzel": "1",
+                    "text": "nur innerhalb eines Bildungsgangs erteilt",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "AUSSERHALB_BILDUNGSGANG",
+            "idStatistik": "3",
+            "historie": [
+                {
+                    "id": 3,
+                    "schluessel": "2",
+                    "kuerzel": "2",
+                    "text": "nur außerhalb eines Bildungsgangs erteilt",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        },
+        {
+            "bezeichner": "INNERHALB_AUSSERHALB_BILDUNGSGANG",
+            "idStatistik": "4",
+            "historie": [
+                {
+                    "id": 4,
+                    "schluessel": "3",
+                    "kuerzel": "3",
+                    "text": "innerhalb und außerhalb eines Bildungsgangs erteilt",
+                    "gueltigVon": null,
+                    "gueltigBis": null
+                }
+            ]
+        }
+    ]
+}
