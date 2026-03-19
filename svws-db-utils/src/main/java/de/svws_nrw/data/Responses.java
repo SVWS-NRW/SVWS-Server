@@ -30,6 +30,23 @@ public final class Responses {
 
 
 	/**
+	 * Erzeugt eine neue Http-Response 200 mit den übergebenen Datenobjekt als Datei mit dem übergebenen Dateinamen.
+	 *
+	 * @param <T>        der Typ der Daten
+	 * @param daten      die Daten
+	 * @param filename   der Dateiname
+	 *
+	 * @return die HTTP-Response
+	 */
+	public static <T> Response okFile(final T daten, final String filename) {
+		return Response.status(Status.OK)
+				.header("Content-Disposition", "attachment; filename=\"" + filename + "\"")
+				.entity(daten)
+				.build();
+	}
+
+
+	/**
 	 * Erzeugt eine neue Http-Response 201 mit den übergebenen Datenobjekt als JSON.
 	 *
 	 * @param <T>     der Typ der Daten

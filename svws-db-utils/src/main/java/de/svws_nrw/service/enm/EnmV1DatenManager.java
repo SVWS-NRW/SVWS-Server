@@ -1,4 +1,4 @@
-package de.svws_nrw.core.utils.enm;
+package de.svws_nrw.service.enm;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +29,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Diese Klasse dien dem Verwalten von ENM-Daten (siehe auch {@link ENMDaten}).
  */
-public class ENMDatenManager {
+public class EnmV1DatenManager {
 
 	/** Die ENM-Daten, die von diesem Daten-Manager verwaltet werden. */
 	public final @NotNull ENMDaten daten;
@@ -71,19 +71,9 @@ public class ENMDatenManager {
 	 *
 	 * @param lehrerID   die ID des Lehrers für welchen die ENM-Daten erzeugt werden oder null für alle Lehrer
 	 */
-	public ENMDatenManager(final Long lehrerID) {
+	public EnmV1DatenManager(final Long lehrerID) {
 		this.daten = new ENMDaten();
 		this.daten.lehrerID = lehrerID;
-	}
-
-
-	/**
-	 * Erzeugt einen neuen ENM-Daten-Manager für die übergebenen Daten.
-	 *
-	 * @param daten   die ENM-Daten
-	 */
-	public ENMDatenManager(final @NotNull ENMDaten daten) {
-		this.daten = daten;
 	}
 
 
@@ -400,7 +390,7 @@ public class ENMDatenManager {
 
 	/**
 	 * Liefert das ENM-Lehrer-Objekt für die angegebene Lehrer-ID zurück,
-	 * sofern die Lehrer über die Methode {@link ENMDatenManager#addLehrer(long, String, String, String, Geschlecht, String, String, String)}
+	 * sofern die Lehrer über die Methode {@link EnmV1DatenManager#addLehrer(long, String, String, String, Geschlecht, String, String, String)}
 	 * hinzugefügt wurden.
 	 *
 	 * @param id   die ID des Lehrers
@@ -414,7 +404,7 @@ public class ENMDatenManager {
 
 	/**
 	 * Liefert das ENM-Schüler-Objekt für die angegebene Schüler-ID zurück,
-	 * sofern die Schüler über die Methode {@link ENMDatenManager#addSchueler(long, long, long, String, String, Geschlecht, String, boolean, boolean)}
+	 * sofern die Schüler über die Methode {@link EnmV1DatenManager#addSchueler(long, long, long, String, String, Geschlecht, String, boolean, boolean)}
 	 * hinzugefügt wurden.
 	 *
 	 * @param id   die ID des Schülers
@@ -428,7 +418,7 @@ public class ENMDatenManager {
 
 	/**
 	 * Liefert das ENM-Fächer-Objekt für die angegebene Fächer-ID zurück,
-	 * sofern die Fächer über die Methode {@link ENMDatenManager#addFach(long, String, String, int, boolean)}
+	 * sofern die Fächer über die Methode {@link EnmV1DatenManager#addFach(long, String, String, int, boolean)}
 	 * hinzugefügt wurden.
 	 *
 	 * @param id   die ID des Faches
@@ -442,7 +432,7 @@ public class ENMDatenManager {
 
 	/**
 	 * Liefert das ENM-Fächer-Objekt für das angegebene Fächer-Kürzel zurück,
-	 * sofern die Fächer über die Methode {@link ENMDatenManager#addFach(long, String, String, int, boolean)}
+	 * sofern die Fächer über die Methode {@link EnmV1DatenManager#addFach(long, String, String, int, boolean)}
 	 * hinzugefügt wurden.
 	 *
 	 * @param kuerzel   das Kürzel des Faches
@@ -456,7 +446,7 @@ public class ENMDatenManager {
 
 	/**
 	 * Liefert das ENM-Jahrgänge-Objekt für die angegebene Jahrgangs-ID zurück,
-	 * sofern die Jahrgänge über die Methode {@link ENMDatenManager#addJahrgang(long, String, String, String, String, int)}
+	 * sofern die Jahrgänge über die Methode {@link EnmV1DatenManager#addJahrgang(long, String, String, String, String, int)}
 	 * hinzugefügt wurden.
 	 *
 	 * @param id   die ID des Jahrgangs
@@ -470,7 +460,7 @@ public class ENMDatenManager {
 
 	/**
 	 * Liefert das ENM-Klassen-Objekt für die angegebene Klassen-ID zurück,
-	 * sofern die Klassen über die Methode {@link ENMDatenManager#addKlasse(long, String, String, Long, int)}
+	 * sofern die Klassen über die Methode {@link EnmV1DatenManager#addKlasse(long, String, String, Long, int)}
 	 * hinzugefügt wurden.
 	 *
 	 * @param id   die ID der Klasse

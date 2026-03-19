@@ -142,7 +142,7 @@ public final class KatalogeRepositoryFactory extends RepositoryFactory {
 	 *
 	 * @return das Repository-Objekt
 	 */
-	public TeilleistungsartRepository getTeilleistungsartenRepository() {
+	public TeilleistungsartRepository getTeilleistungsartRepository() {
 		return getOrCreate(TeilleistungsartRepository.class, () -> new TeilleistungsartRepositoryImpl(conn));
 	}
 

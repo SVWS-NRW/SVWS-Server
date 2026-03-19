@@ -29,6 +29,6 @@ public final class TeilLeistungsartServiceFactory {
 	 * @return {@link TeilleistungsartService} - neu erzeugter Service
 	 */
 	public TeilleistungsartService getTeilLeistungsartenService() {
-		return new TeilleistungsartService(repositoryFactory.getTeilleistungsartenRepository());
+		return new TeilleistungsartService(repositoryFactory.getTeilleistungsartRepository());
 	}
 }

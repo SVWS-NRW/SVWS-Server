@@ -29,6 +29,7 @@ describe("Teste die WeNoM-Verbindung zwischen dem ENM-Server und dem WeNoM-Serve
 	test.sequential("Die WeNoM-Verbindung kann erstellt werden", async () => {
 		const createBody = {
 			url: targetUrlENMServerFORSvwsApp,
+			bezeichnung: "Neue Verbindung",
 			clientID: "1",
 			clientSecret: CLIENT_SECRET,
 		};
@@ -53,7 +54,7 @@ describe("Teste die WeNoM-Verbindung zwischen dem ENM-Server und dem WeNoM-Serve
 			body: JSON.stringify(patchBody),
 			headers: { "Content-Type": "application/json" },
 		});
-		expect(responsePatch.status).toBe(204);
+		expect(responsePatch.status).toBe(200);
 	});
 
 	test.sequential("Es kann ein Setup für eine WeNoM-Verbindug ausgeführt werden > 200", async () => {

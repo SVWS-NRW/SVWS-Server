@@ -14,7 +14,7 @@ import static org.mockito.Mockito.verify;
 class TeilleistungsartServiceFactoryTest {
 
 	@Mock
-	private KatalogeRepositoryFactory teilleistungsartenRepository;
+	private KatalogeRepositoryFactory teilleistungsartRepository;
 	@InjectMocks
 	private TeilLeistungsartServiceFactory teilLeistungsartServiceFactory;
 
@@ -22,7 +22,7 @@ class TeilleistungsartServiceFactoryTest {
 	void testFactory() {
 		final var service = teilLeistungsartServiceFactory.getTeilLeistungsartenService();
 
-		verify(teilleistungsartenRepository).getTeilleistungsartenRepository();
+		verify(teilleistungsartRepository).getTeilleistungsartRepository();
 		assertNotNull(service);
 	}
 

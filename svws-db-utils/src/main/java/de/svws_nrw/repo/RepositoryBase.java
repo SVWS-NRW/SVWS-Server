@@ -1,5 +1,6 @@
 package de.svws_nrw.repo;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -88,11 +89,12 @@ public interface RepositoryBase<T, P> {
 	 * dass IDs automatisch vergeben werden, werden fortlaufend neue IDs bei der
 	 * Entität vergeben. Die Rückgabe enthält dann die Entitäten mit den neuen IDs.
 	 *
+	 * @param <C>        der Typ der Collection
 	 * @param entities   die zu persistierenden Datenbank-Entitäten
 	 *
 	 * @return die persistierten Datenbank-Entitäten
 	 */
-	List<T> create(List<T> entities);
+	<C extends Collection<T>> C create(C entities);
 
 	/**
 	 * Speichert bzw. aktualisiert die übergebene Datenbank-Entität.
@@ -106,11 +108,12 @@ public interface RepositoryBase<T, P> {
 	/**
 	 * Speichert bzw. aktualisiert die übergebenen Datenbank-Entitäten.
 	 *
+	 * @param <C>        der Typ der Collection
 	 * @param entities   die zu persistierenden Datenbank-Entitäten
 	 *
 	 * @return die persistierten Datenbank-Entitäten
 	 */
-	List<T> update(List<T> entities);
+	<C extends Collection<T>> C update(C entities);
 
 	/**
 	 * Löscht die übergebene Datenbank-Entität.
@@ -124,11 +127,12 @@ public interface RepositoryBase<T, P> {
 	/**
 	 * Löscht die übergebenen Datenbank-Entitäten.
 	 *
+	 * @param <C>        der Typ der Collection
 	 * @param entities   die zu löschenden Datenbank-Entitäten
 	 *
 	 * @return die gelöschten Datenbank-Entitäten
 	 */
-	List<T> delete(List<T> entities);
+	<C extends Collection<T>> C delete(C entities);
 
 	/**
 	 * Schreibt alle noch ausstehenden Änderungen in die Datenbank.

@@ -54,4 +54,16 @@ public final class SchuelerLernabschnittRepositoryImpl extends RepositoryImpl<DT
 		return listAbschnitte.stream().collect(Collectors.toMap(a -> a.Schueler_ID, a -> a));
 	}
 
+
+	@Override
+	public Map<Long, DTOSchuelerLernabschnittsdaten> getMapByLernabschnittIDAndSchuljahreabschnitt(final Collection<Long> idsSchueler,
+			final long idSchuljahresabschnitt) {
+		if ((idsSchueler == null) || (idsSchueler.isEmpty()))
+			return Collections.emptyMap();
+		final var listAbschnitte = conn.queryList(
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.WechselNr = ?2 AND e.Schuljahresabschnitts_ID = ?3",
+				DTOSchuelerLernabschnittsdaten.class, idsSchueler, 0, idSchuljahresabschnitt);
+		return listAbschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
+	}
+
 }

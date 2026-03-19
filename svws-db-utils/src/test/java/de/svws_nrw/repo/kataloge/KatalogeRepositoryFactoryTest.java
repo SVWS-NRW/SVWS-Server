@@ -54,7 +54,7 @@ class KatalogeRepositoryFactoryTest {
 		assertNotNull(factory.getFloskelRepository());
 		assertNotNull(factory.getFloskelgruppenRepository());
 		assertNotNull(factory.getFloskelJahrgaengeRepository());
-		assertNotNull(factory.getTeilleistungsartenRepository());
+		assertNotNull(factory.getTeilleistungsartRepository());
 	}
 
 }

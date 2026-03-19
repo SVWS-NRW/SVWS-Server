@@ -1,5 +1,6 @@
 package de.svws_nrw.repo;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -154,6 +155,7 @@ public abstract class RepositoryBaseImpl<T, P> implements RepositoryBase<T, P> {
 	 * dass IDs automatisch vergeben werden, werden fortlaufend neue IDs bei der
 	 * Entität vergeben. Die Rückgabe enthält dann die Entitäten mit den neuen IDs.
 	 *
+	 * @param <C>        der Typ der Collection
 	 * @param entities   die zu persistierenden Datenbank-Entitäten
 	 *
 	 * @return die persistierten Datenbank-Entitäten
@@ -161,7 +163,7 @@ public abstract class RepositoryBaseImpl<T, P> implements RepositoryBase<T, P> {
 	 * @throws RepositoryException im Fehlerfall
 	 */
 	@Override
-	public List<T> create(final List<T> entities) throws RepositoryException {
+	public <C extends Collection<T>> C create(final C entities) throws RepositoryException {
 		return this.update(entities);
 	}
 
@@ -185,6 +187,7 @@ public abstract class RepositoryBaseImpl<T, P> implements RepositoryBase<T, P> {
 	/**
 	 * Speichert bzw. aktualisiert die übergebenen Datenbank-Entitäten.
 	 *
+	 * @param <C>        der Typ der Collection
 	 * @param entities   die zu persistierenden Datenbank-Entitäten
 	 *
 	 * @return die persistierten Datenbank-Entitäten
@@ -192,7 +195,7 @@ public abstract class RepositoryBaseImpl<T, P> implements RepositoryBase<T, P> {
 	 * @throws RepositoryException im Fehlerfall
 	 */
 	@Override
-	public List<T> update(final List<T> entities) throws RepositoryException {
+	public <C extends Collection<T>> C update(final C entities) throws RepositoryException {
 		if (conn.transactionPersistAll(entities))
 			return entities;
 		throw new RepositoryException("Fehler beim Aktualisieren der Entitäten vom Typ " + entityClass.getCanonicalName());
@@ -217,12 +220,13 @@ public abstract class RepositoryBaseImpl<T, P> implements RepositoryBase<T, P> {
 	/**
 	 * Löscht die übergebenen Datenbank-Entitäten.
 	 *
+	 * @param <C>        der Typ der Collection
 	 * @param entities   die zu löschenden Datenbank-Entitäten
 	 *
 	 * @return die gelöschten Datenbank-Entitäten
 	 */
 	@Override
-	public List<T> delete(final List<T> entities) throws RepositoryException {
+	public <C extends Collection<T>> C delete(final C entities) throws RepositoryException {
 		if (conn.transactionRemoveAll(entities))
 			return entities;
 		throw new RepositoryException("Fehler beim Löschen der Entitäten vom Typ " + entityClass.getCanonicalName());

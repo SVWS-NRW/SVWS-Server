@@ -34,4 +34,16 @@ public interface SchuelerLernabschnittRepository extends Repository<DTOSchuelerL
 	 */
 	Map<Long, DTOSchuelerLernabschnittsdaten> getMapBySchuelerIDsAndSchuljahreabschnitt(Collection<Long> idsSchueler, long idSchuljahresabschnitt);
 
+	/**
+	 * Gibt eine Map der Lernabschnittsdaten für den Lernabschnitt mit der Wechsel-Nummer 0 aus dem Schuljahresabschnitt zugeordnet
+	 * zu der der ID der Lernabschnittsdaten für die Menge der angegebenen Schüler-IDs zurück. Sollte eine Schüler-ID nicht gefunden werden,
+	 * so ist für diese auch kein Lernabschnitt in der Map enthalten.
+	 *
+	 * @param idsSchueler              die IDs der Schüler
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes
+	 *
+	 * @return die Map mit den Lernabschnitten der Schüler
+	 */
+	Map<Long, DTOSchuelerLernabschnittsdaten> getMapByLernabschnittIDAndSchuljahreabschnitt(Collection<Long> idsSchueler, long idSchuljahresabschnitt);
+
 }

@@ -48,7 +48,7 @@
 		props.checkpoint.active = false;
 		isLoading.value = true;
 		const { url, bezeichnung } = data.value;
-		await props.addCredentials({ url: `https://${url}`, bezeichnung: bezeichnung === "" ? null : bezeichnung });
+		await props.addCredentials({ url: `https://${url}`, bezeichnung: bezeichnung === "" ? null : bezeichnung, clientID: "1", clientSecret: "" });
 		isLoading.value = false;
 	}
 

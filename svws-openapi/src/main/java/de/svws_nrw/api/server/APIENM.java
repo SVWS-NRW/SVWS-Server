@@ -5,6 +5,8 @@ import java.io.InputStream;
 import org.jboss.resteasy.annotations.GZIP;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
+import de.svws_nrw.controller.enm.EnmV1ControllerFactory;
+import de.svws_nrw.controller.enm.NotenmodulControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.enm.ENMConfigResponse;
 import de.svws_nrw.core.data.enm.ENMDaten;
@@ -16,14 +18,14 @@ import de.svws_nrw.core.data.enm.ENMServerConfig;
 import de.svws_nrw.core.data.enm.ENMServerConfigElement;
 import de.svws_nrw.core.data.enm.ENMServerConnection;
 import de.svws_nrw.core.data.enm.ENMTeilleistung;
-import de.svws_nrw.core.types.ServerMode;
-import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
-import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.data.enm.DataENMDaten;
-import de.svws_nrw.data.enm.DataENMServerConnection;
-import de.svws_nrw.data.enm.HttpENMServerConnection;
+import de.svws_nrw.service.enm.NotenmodulLocalLeistungBemerkungenPatchRequest;
+import de.svws_nrw.service.enm.NotenmodulLocalLeistungPatchRequest;
+import de.svws_nrw.service.enm.NotenmodulLocalLernabschnittPatchRequest;
+import de.svws_nrw.service.enm.NotenmodulLocalTeilleistungPatchRequest;
+import de.svws_nrw.service.enm.NotenmodulVerbindungenCreateRequest;
+import de.svws_nrw.service.enm.NotenmodulVerbindungenPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,6 +34,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -107,8 +110,9 @@ public class APIENM {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der ENM-Daten gefunden.")
 	public Response getENMDaten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMDaten(conn).getAll(),
-				request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN);
+		return EnmV1ControllerFactory.withReadAccess(request)
+				.getEnmV1Controller()
+				.get(null);
 	}
 
 
@@ -133,8 +137,9 @@ public class APIENM {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der ENM-Daten gefunden.")
 	public Response getENMDatenGZip(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMDaten(conn).getAllGZip(),
-				request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN);
+		return EnmV1ControllerFactory.withReadAccess(request)
+				.getEnmV1Controller()
+				.getGZip(null);
 	}
 
 
@@ -160,8 +165,9 @@ public class APIENM {
 	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
 	public Response getLehrerENMDaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMDaten(conn).get(id),
-				request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_FUNKTION, BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN);
+		return EnmV1ControllerFactory.withReadAccess(request)
+				.getEnmV1Controller()
+				.get(id);
 	}
 
 
@@ -169,7 +175,7 @@ public class APIENM {
 	 * Die OpenAPI-Methode für das Patchen von ENM-Leistungsdaten direkt auf dem SVWS-Server.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     der Patch
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -186,11 +192,12 @@ public class APIENM {
 	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchENMLeistung(@PathParam("schema") final String schema,
-			@RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = ENMLeistung.class))) final InputStream is,
+			@Valid @RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = ENMLeistung.class))) final NotenmodulLocalLeistungPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMDaten(conn).patchENMLeistung(is),
-				request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN, BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION);
+		return NotenmodulControllerFactory.withWriteAccess(request)
+				.getNotenmodulLocalController()
+				.patchLeistung(patch);
 	}
 
 
@@ -198,7 +205,7 @@ public class APIENM {
 	 * Die OpenAPI-Methode für das Patchen von ENM-Teilleistungsdaten direkt auf dem SVWS-Server.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     der Patch
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -215,11 +222,12 @@ public class APIENM {
 	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchENMTeilleistung(@PathParam("schema") final String schema,
-			@RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = ENMTeilleistung.class))) final InputStream is,
+			@Valid @RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = ENMTeilleistung.class))) final NotenmodulLocalTeilleistungPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMDaten(conn).patchENMTeilleistung(is),
-				request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN, BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION);
+		return NotenmodulControllerFactory.withWriteAccess(request)
+				.getNotenmodulLocalController()
+				.patchTeilleistung(patch);
 	}
 
 
@@ -228,7 +236,7 @@ public class APIENM {
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die ID des Schülers
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     der Patch
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -245,11 +253,12 @@ public class APIENM {
 	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchENMSchuelerBemerkungen(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = ENMLeistungBemerkungen.class))) final InputStream is,
+			@Valid @RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = ENMLeistungBemerkungen.class))) final NotenmodulLocalLeistungBemerkungenPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMDaten(conn).patchENMSchuelerBemerkungen(id, is),
-				request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN, BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION);
+		return NotenmodulControllerFactory.withWriteAccess(request)
+				.getNotenmodulLocalController()
+				.patchBemerkungen(id, patch);
 	}
 
 
@@ -257,7 +266,7 @@ public class APIENM {
 	 * Die OpenAPI-Methode für das Patchen von ENM-Lernabschnittsdaten direkt auf dem SVWS-Server.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
-	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch     der Patch
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -274,11 +283,12 @@ public class APIENM {
 	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchENMSchuelerLernabschnitt(@PathParam("schema") final String schema,
-			@RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = ENMLernabschnitt.class))) final InputStream is,
+			@Valid @RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = ENMLernabschnitt.class))) final NotenmodulLocalLernabschnittPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMDaten(conn).patchENMSchuelerlernabschnitt(is),
-				request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN, BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION);
+		return NotenmodulControllerFactory.withWriteAccess(request)
+				.getNotenmodulLocalController()
+				.patchLernabschnitt(patch);
 	}
 
 
@@ -299,8 +309,9 @@ public class APIENM {
 	@ApiResponse(responseCode = "404", description = "Keine Konfiguration gefunden.")
 	@ApiResponse(responseCode = "500", description = "Interner Serverfehler")
 	public Response getNotenmodulLocalConfig(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(DataENMDaten::getNotenmodulLocalConfig, request, ServerMode.STABLE,
-				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulLocalController()
+				.getConfig();
 	}
 
 
@@ -322,12 +333,13 @@ public class APIENM {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Operation auszuführen.")
 	@ApiResponse(responseCode = "500", description = "Interner Serverfehler")
 	public Response setNotenmodulLocalConfig(@PathParam("schema") final String schema,
-			@RequestBody(description = "Der zu setzende Konfigurationseintrag", required = true,
+			@Valid @RequestBody(description = "Der zu setzende Konfigurationseintrag", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = ENMServerConfigElement.class))) final @NotNull ENMServerConfigElement daten,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> DataENMDaten.setNotenmodulLocalConfigElement(conn, daten), request, ServerMode.STABLE,
-				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulLocalController()
+				.setConfigElement(daten);
 	}
 
 
@@ -350,8 +362,9 @@ public class APIENM {
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ENMLehrerInitialKennwort.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Initialkennwörter des ENM zu verwalten.")
 	public Response getENMLehrerInitialKennwoerter(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMDaten(conn).getLehrerInitialkennwoerter(),
-				request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulCredentialsController()
+				.getInitialkennwoerter();
 	}
 
 
@@ -371,10 +384,9 @@ public class APIENM {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte zum Erzeugen der Credentials.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response generateENMLehrerCredentials(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> {
-			DataENMDaten.generateInitialCredentials(conn);
-			return Response.status(Status.NO_CONTENT).build();
-		}, request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulCredentialsController()
+				.generateMissingCredentials();
 	}
 
 
@@ -399,10 +411,9 @@ public class APIENM {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response resetENMLehrerPasswordToInitial(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionAllowSelfLehrer(conn -> {
-			DataENMDaten.resetInitialPassword(conn, id);
-			return Response.status(Status.NO_CONTENT).build();
-		}, request, ServerMode.STABLE, id, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccessOrSelf(request, id)
+				.getNotenmodulCredentialsController()
+				.resetPassword(id);
 	}
 
 
@@ -432,11 +443,10 @@ public class APIENM {
 			@RequestBody(description = "Das Kennwort", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = String.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransactionAllowSelfLehrer(conn -> {
-			final String password = JSONMapper.toString(is);
-			DataENMDaten.setPassword(conn, id, password);
-			return Response.status(Status.NO_CONTENT).build();
-		}, request, ServerMode.STABLE, id, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		final String password = JSONMapper.toString(is);
+		return NotenmodulControllerFactory.withAdminAccessOrSelf(request, id)
+				.getNotenmodulCredentialsController()
+				.setPassword(id, password);
 	}
 
 
@@ -463,10 +473,9 @@ public class APIENM {
 	public Response importENMDaten(@PathParam("schema") final String schema, @RequestBody(description = "Die ENM-Daten", required = true,
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMDaten.class))) final ENMDaten enmDaten,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> {
-			DataENMDaten.importDaten(conn, enmDaten);
-			return Response.status(Status.NO_CONTENT).build();
-		}, request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return EnmV1ControllerFactory.withWriteAccess(request)
+				.getEnmV1Controller()
+				.applyLatest(enmDaten);
 	}
 
 
@@ -495,10 +504,9 @@ public class APIENM {
 			@RequestBody(description = "Die ENM-Daten", required = true,
 					content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> {
-			DataENMDaten.importDatenGZip(conn, multipart.data);
-			return Response.status(Status.NO_CONTENT).build();
-		}, request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return EnmV1ControllerFactory.withWriteAccess(request)
+				.getEnmV1Controller()
+				.applyLatestGZip(multipart.data);
 	}
 
 
@@ -530,9 +538,9 @@ public class APIENM {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response synchronizeENMDaten(@PathParam("schema") final String schema, @PathParam("idVerbindung") final long idVerbindung,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> HttpENMServerConnection.synchronize(conn, idVerbindung), request,
-				ServerMode.STABLE,
-				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulSynchronisationController()
+				.synchronize(idVerbindung);
 	}
 
 
@@ -563,9 +571,9 @@ public class APIENM {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response uploadENMDaten(@PathParam("schema") final String schema, @PathParam("idVerbindung") final long idVerbindung,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> HttpENMServerConnection.upload(conn, idVerbindung), request,
-				ServerMode.STABLE,
-				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulSynchronisationController()
+				.upload(idVerbindung);
 	}
 
 
@@ -596,9 +604,9 @@ public class APIENM {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response downloadENMDaten(@PathParam("schema") final String schema, @PathParam("idVerbindung") final long idVerbindung,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> HttpENMServerConnection.download(conn, idVerbindung), request,
-				ServerMode.STABLE,
-				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulSynchronisationController()
+				.download(idVerbindung);
 	}
 
 
@@ -629,9 +637,9 @@ public class APIENM {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response truncateENMServer(@PathParam("schema") final String schema, @PathParam("idVerbindung") final long idVerbindung,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> HttpENMServerConnection.truncate(conn, idVerbindung), request,
-				ServerMode.STABLE,
-				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulSynchronisationController()
+				.truncate(idVerbindung);
 	}
 
 	/**
@@ -660,9 +668,9 @@ public class APIENM {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response resetENMServer(@PathParam("schema") final String schema, @PathParam("idVerbindung") final long idVerbindung,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> HttpENMServerConnection.reset(conn, idVerbindung), request,
-				ServerMode.STABLE,
-				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulSynchronisationController()
+				.reset(idVerbindung);
 	}
 
 
@@ -693,9 +701,9 @@ public class APIENM {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response checkENMServer(@PathParam("schema") final String schema, @PathParam("idVerbindung") final long idVerbindung,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> HttpENMServerConnection.check(conn, idVerbindung), request,
-				ServerMode.STABLE,
-				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulSynchronisationController()
+				.check(idVerbindung);
 	}
 
 
@@ -725,9 +733,9 @@ public class APIENM {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMConfigResponse.class)))
 	public Response getENMServerConfig(@PathParam("schema") final String schema, @PathParam("idVerbindung") final long idVerbindung,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> HttpENMServerConnection.getENMServerConfig(conn, idVerbindung), request,
-				ServerMode.STABLE,
-				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulSynchronisationController()
+				.getENMServerConfig(idVerbindung);
 	}
 
 
@@ -763,9 +771,9 @@ public class APIENM {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = ENMServerConfigElement.class))) final InputStream daten,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> HttpENMServerConnection.setENMServerConfigElement(conn, idVerbindung, daten), request,
-				ServerMode.STABLE,
-				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulSynchronisationController()
+				.setENMServerConfigElement(idVerbindung, daten);
 	}
 
 
@@ -799,9 +807,9 @@ public class APIENM {
 			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response setupENMServer(@PathParam("schema") final String schema, @PathParam("idVerbindung") final long idVerbindung,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> HttpENMServerConnection.setup(conn, idVerbindung), request,
-				ServerMode.STABLE,
-				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulSynchronisationController()
+				.setup(idVerbindung);
 	}
 
 
@@ -810,7 +818,7 @@ public class APIENM {
 	 * Die OpenAPI-Methode für das Hinzufügen einer Verbindung zu einem Web-Notenmodul-Server
 	 *
 	 * @param schema    das Datenbankschema
-	 * @param is        der Input-Stream mit den Daten des Eintrags
+	 * @param daten     die Daten des Create-Requests
 	 * @param request   die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit der neuen Verbindung
@@ -826,12 +834,12 @@ public class APIENM {
 	@ApiResponse(responseCode = "400", description = "Der Eintrag enthält Fehler, bspw. eine invalide URL.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addENMServerConnection(@PathParam("schema") final String schema,
-			@RequestBody(description = "Die Daten der zu erstellenden Verbindung.", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = ENMServerConnection.class))) final InputStream is,
+			@Valid @RequestBody(description = "Die Daten der zu erstellenden Verbindung.", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = ENMServerConnection.class))) final NotenmodulVerbindungenCreateRequest daten,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMServerConnection(conn).addAsResponse(is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulVerbindungenController()
+				.create(daten);
 	}
 
 
@@ -840,7 +848,7 @@ public class APIENM {
 	 *
 	 * @param schema  das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id      die Datenbank-ID zur Identifikation der Verbindung zu einem Web-Notenmodul-Server
-	 * @param is      der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param patch   der Patch
 	 * @param request die Informationen zur HTTP-Anfrage
 	 *
 	 * @return das Ergebnis der Patch-Operation
@@ -858,13 +866,13 @@ public class APIENM {
 			description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchENMServerConnection(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@RequestBody(description = "Der Patch für die Verbindungsdaten", required = true,
+			@Valid @RequestBody(description = "Der Patch für die Verbindungsdaten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
-							schema = @Schema(implementation = ENMServerConnection.class))) final InputStream is,
+							schema = @Schema(implementation = ENMServerConnection.class))) final NotenmodulVerbindungenPatchRequest patch,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMServerConnection(conn).patchAsResponse(id, is),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulVerbindungenController()
+				.patch(id, patch);
 	}
 
 
@@ -889,9 +897,9 @@ public class APIENM {
 	@ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteENMServerConnection(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMServerConnection(conn).deleteAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulVerbindungenController()
+				.delete(id);
 	}
 
 
@@ -912,9 +920,9 @@ public class APIENM {
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ENMServerConnection.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Berechtigung zum Ansehen der Verbindungen.")
 	public Response getENMServerConnections(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMServerConnection(conn).getListAsResponse(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulVerbindungenController()
+				.getAll();
 	}
 
 
@@ -938,9 +946,9 @@ public class APIENM {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Verbindung anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Verbindung zu einem Web-Notenmodul-Server mit der ID gefunden")
 	public Response getENMServerConnection(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataENMServerConnection(conn).getByIdAsResponse(id),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return NotenmodulControllerFactory.withAdminAccess(request)
+				.getNotenmodulVerbindungenController()
+				.get(id);
 	}
 
 }
