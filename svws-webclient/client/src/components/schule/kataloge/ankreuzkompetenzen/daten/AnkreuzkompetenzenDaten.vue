@@ -48,10 +48,7 @@
 						@commit="model.patch"
 						:min="0" :max="32000" :readonly="!hatKompetenzUpdate" :removable="false" />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="model.proxy.istSichtbar"
-						:validation="() => model.getFehler('istSichtbar')"
-						@commit="model.patch"
-						:readonly="!hatKompetenzUpdate">
+					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :readonly="!hatKompetenzUpdate">
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>

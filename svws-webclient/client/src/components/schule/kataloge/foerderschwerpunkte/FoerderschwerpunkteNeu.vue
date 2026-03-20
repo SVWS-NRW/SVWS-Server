@@ -4,32 +4,32 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
 					<ui-select label="Förderschwerpunkt ASD-Kürzel"
-						v-model="selectedFoerderschwerpunkt"
+						v-model="model.foerderschwerpunkt.value"
 						:manager="foerderschwerpunktKuerzelManager"
-						:valid="fieldIsValid('kuerzel')" statistics
-						:disabled="!hatKompetenzAdd" searchable required :removable="false" />
+						statistics searchable required :removable="false" />
 					<ui-select label="Förderschwerpunkt ASD-Text"
-						v-model="selectedFoerderschwerpunkt"
+						v-model="model.foerderschwerpunkt.value"
 						:manager="foerderschwerpunktTextManager"
-						:valid="fieldIsValid('kuerzelStatistik')" searchable :removable="false" statistics :disabled="!hatKompetenzAdd" required />
+						searchable :removable="false" statistics required />
 					<svws-ui-text-input placeholder="Interne Bezeichnung" span="2"
-						v-model="data.kuerzel"
-						:valid="() => fieldIsValid('kuerzel')" :min-len="1" :max-len="50" :disabled="!hatKompetenzAdd" required />
+						v-model="model.proxy.kuerzel"
+						:validation="() => model.getFehler('kuerzel')"
+						:max-len="50" required />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
 			<svws-ui-content-card title="Ansicht & Sortierung">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
-						v-model="data.sortierung"
-						:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" />
+						v-model="model.proxy.sortierung"
+						:validation="() => model.getFehler('sortierung')"
+						:max="32000" :removable="false" />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
+					<svws-ui-checkbox v-model="model.proxy.istSichtbar">
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
-
 			<div class="mt-7 flex flex-row gap-4 justify-end">
 				<svws-ui-button type="secondary" @click="cancel">
 					Abbrechen
@@ -47,25 +47,15 @@
 
 	import { computed, ref, watch } from "vue";
 	import type { FoerderschwerpunkteNeuProps } from "~/components/schule/kataloge/foerderschwerpunkte/FoerderschwerpunkteNeuProps";
-	import type { FoerderschwerpunktKatalogEintrag } from "@core";
-	import { BenutzerKompetenz, Foerderschwerpunkt, FoerderschwerpunktEintrag, JavaString } from "@core";
-	import { isUniqueInList, mandatoryInputIsValid, numberIsValid } from "~/util/validation/Validation";
+	import { Foerderschwerpunkt, FoerderschwerpunktEintrag } from "@core";
 	import { CoreTypeSelectManager } from "@ui";
+	import { FoerderschwerpunkteModelProxy } from "~/components/schule/kataloge/foerderschwerpunkte/modelproxy/FoerderschwerpunkteModelProxy";
 
 	const props = defineProps<FoerderschwerpunkteNeuProps>();
-	const data = ref<FoerderschwerpunktEintrag>(Object.assign(new FoerderschwerpunktEintrag(), { istSichtbar: true, sortierung: 32000 }));
 	const isLoading = ref<boolean>(false);
-	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-
-	const selectedFoerderschwerpunkt = computed<FoerderschwerpunktKatalogEintrag | null>({
-		get: () => Foerderschwerpunkt.data().getEintragBySchuljahrUndSchluessel(props.schuljahr, data.value.kuerzelStatistik),
-		set: (v: FoerderschwerpunktKatalogEintrag | null) => data.value.kuerzelStatistik = v?.schluessel ?? "",
-	});
-
-	const formIsValid = computed(() => {
-		return Object.keys(data.value)
-			.every((field: string) => fieldIsValid(field as keyof FoerderschwerpunktEintrag));
-	});
+	const initialData = ref<FoerderschwerpunktEintrag>(Object.assign(new FoerderschwerpunktEintrag(), { istSichtbar: true, sortierung: 32000 }));
+	const model = new FoerderschwerpunkteModelProxy(() => initialData.value, () => props.manager(), props.schuljahr);
+	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 
 	const foerderschwerpunktKuerzelManager = new CoreTypeSelectManager({
 		clazz: Foerderschwerpunkt.class,
@@ -83,39 +73,13 @@
 		selectionDisplayText: "text",
 	});
 
-	const fieldIsValid = (field: keyof FoerderschwerpunktEintrag): boolean => {
-		switch (field) {
-			case 'kuerzelStatistik':
-				return foerderschwerpunktIsValid();
-			case 'kuerzel':
-				return kuerzelIsValid(data.value.kuerzel);
-			case 'sortierung':
-				return numberIsValid(data.value.sortierung, true, 0, 32000);
-			default:
-				return true;
-		}
-	};
-
-	function foerderschwerpunktIsValid(): boolean {
-		return !JavaString.isBlank(data.value.kuerzelStatistik);
-	}
-
-	function kuerzelIsValid(value: string | null): boolean {
-		if (!mandatoryInputIsValid(value, 50)) {
-			return false;
-		}
-
-		return isUniqueInList(value, props.manager().liste.list(), "kuerzel");
-	}
-
 	async function addFoerderschwerpunkt(): Promise<void> {
 		if (isLoading.value) {
 			return;
 		}
-
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
+		const { id, referenziertInAnderenTabellen, ...partialData } = model.proxy;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
@@ -125,7 +89,7 @@
 		await props.goToDefaultView(null);
 	}
 
-	watch(() => data.value, async () => {
+	watch(() => model.proxy, async () => {
 		if (isLoading.value) {
 			return;
 		}

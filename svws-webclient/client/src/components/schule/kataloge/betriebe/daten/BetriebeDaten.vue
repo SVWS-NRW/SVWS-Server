@@ -101,13 +101,9 @@
 						v-model="model.proxy.sortierung"
 						:validation="() => model.getFehler('sortierung')"
 						@commit="model.patch"
-						skip-default-validation
 						:max="32000" :readonly :removable="false" />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="model.proxy.istSichtbar"
-						:validation="() => model.getFehler('istSichtbar')"
-						skip-default-validation
-						:readonly>
+					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :readonly>
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
