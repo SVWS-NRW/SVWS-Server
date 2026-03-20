@@ -20,7 +20,7 @@ import de.svws_nrw.data.gost.DataGostAbiturdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
-import de.svws_nrw.data.klassen.DataKlassendaten;
+import de.svws_nrw.data.klassen.DataKlasse;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.DBEntityManager;
@@ -184,7 +184,7 @@ public final class ReportingValidierung {
 		// Schuljahresabschnitte zu  vermeiden, prüfe nur anhand der DTOs zu den IDs, ob diese vorhanden sind.
 		try {
 
-			final List<DTOKlassen> dtoKlassen = new DataKlassendaten(reportingRepository.conn()).getDTOsByIds(idsNonNull);
+			final List<DTOKlassen> dtoKlassen = new DataKlasse(reportingRepository.conn()).getDTOsByIds(idsNonNull);
 			if (dtoKlassen.size() != idsNonNull.size())
 				throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Klassen-IDs übergeben.");
 		} catch (final ApiOperationException aoe) {

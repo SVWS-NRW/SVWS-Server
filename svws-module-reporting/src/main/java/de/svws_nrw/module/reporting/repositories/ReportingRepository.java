@@ -12,7 +12,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.asd.data.klassen.KlassenDaten;
+import de.svws_nrw.asd.data.klassen.KlasseDetails;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
@@ -55,7 +55,7 @@ import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.kataloge.DataKatalogEntlassgruende;
 import de.svws_nrw.data.kataloge.DataOrte;
 import de.svws_nrw.data.kataloge.DataOrtsteile;
-import de.svws_nrw.data.klassen.DataKlassendaten;
+import de.svws_nrw.data.klassen.DataKlasse;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataKatalogSchuelerFoerderschwerpunkte;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
@@ -884,11 +884,11 @@ public class ReportingRepository {
 	 */
 	private void ergaenzeKlasseInMapKlassen(final long idKlasse) {
 		if (!mapKlassen.containsKey(idKlasse)) {
-			final KlassenDaten klassenDaten;
+			final KlasseDetails klasse;
 			try {
 				// Wenn nicht, lade alle Klassen des Schuljahresabschnitts aus der DB nach.
-				klassenDaten = new DataKlassendaten(this.conn()).getById(idKlasse);
-				this.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(idKlasse);
+				klasse = new DataKlasse(this.conn()).getById(idKlasse);
+				this.schuljahresabschnitt(klasse.idSchuljahresabschnitt).klasse(idKlasse);
 			} catch (final ApiOperationException e) {
 				ReportingExceptionUtils.logException(
 						"FEHLER: Fehler bei der Ermittlung der Daten für des Klassen %s.".formatted(idKlasse), e, this.logger(),

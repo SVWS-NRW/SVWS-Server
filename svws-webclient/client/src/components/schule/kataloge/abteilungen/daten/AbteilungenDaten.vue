@@ -116,7 +116,7 @@
 	import type { AbteilungenDatenProps } from "~/components/schule/kataloge/abteilungen/daten/AbteilungenDatenProps";
 	import type { DataTableColumn } from "@ui";
 	import { SelectManager, ViewType } from "@ui";
-	import type { AbteilungKlassenzuordnung, KlassenDaten, List } from "@core";
+	import type { AbteilungKlassenzuordnung, KlasseListItem, List } from "@core";
 	import { Arrays, BenutzerKompetenz, HashMap } from "@core";
 	import { computed, ref } from "vue";
 	import { AbteilungenModelProxy } from "~/components/schule/kataloge/abteilungen/modelproxy/AbteilungenModelProxy";
@@ -126,12 +126,12 @@
 
 	const isLoading = ref<boolean>(false);
 	const modalIsOpen = ref<boolean>(false);
-	const klassenToDelete = ref<KlassenDaten[]>([]);
-	const klassenToAdd = ref<KlassenDaten[]>([]);
+	const klassenToDelete = ref<KlasseListItem[]>([]);
+	const klassenToAdd = ref<KlasseListItem[]>([]);
 
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const readonly = computed(() => props.isReadonly || !hatKompetenzUpdate.value);
-	const availableKlassenToAdd = computed<List<KlassenDaten>>(() => props.manager().getAvailableKlassenToAdd());
+	const availableKlassenToAdd = computed<List<KlasseListItem>>(() => props.manager().getAvailableKlassenToAdd());
 
 	const modelProxy = new AbteilungenModelProxy(() => props.manager().daten(), props.manager, ViewType.DEFAULT, props.patch);
 

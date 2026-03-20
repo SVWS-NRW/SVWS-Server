@@ -122,7 +122,7 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 
 	get daten(): BenutzerDaten {
 		if (this._state.value.daten === undefined) {
-			throw new DeveloperNotificationException("Unerwarteter Fehler: Klassendaten nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: KlasseDetails nicht initialisiert");
 		}
 		return this._state.value.daten;
 	}

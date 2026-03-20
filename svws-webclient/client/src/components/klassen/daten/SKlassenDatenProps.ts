@@ -1,4 +1,4 @@
-import type { LehrerListeEintrag, Schulform, KlassenDaten, Schueler, List, Schulgliederung, ServerMode, BenutzerKompetenz } from "@core";
+import type { LehrerListeEintrag, Schulform, KlasseDetails, Schueler, List, Schulgliederung, ServerMode, BenutzerKompetenz } from "@core";
 import type { KlassenListeManager } from "@ui";
 
 export interface KlassenDatenProps {
@@ -6,10 +6,10 @@ export interface KlassenDatenProps {
 	schulgliederungen: List<Schulgliederung>;
 	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
-	patch: (data: Partial<KlassenDaten>) => Promise<boolean>;
+	patch: (data: Partial<KlasseDetails>) => Promise<boolean>;
 	manager: () => KlassenListeManager;
-	mapKlassenVorigerAbschnitt: () => Map<number, KlassenDaten>;
-	mapKlassenFolgenderAbschnitt: () => Map<number, KlassenDaten>;
+	mapKlassenVorigerAbschnitt: () => Map<number, KlasseDetails>;
+	mapKlassenFolgenderAbschnitt: () => Map<number, KlasseDetails>;
 	setFilter: () => Promise<void>;
 	gotoSchueler: (eintrag: Schueler) => Promise<void>;
 	gotoLehrer: (eintrag: LehrerListeEintrag) => Promise<void>;

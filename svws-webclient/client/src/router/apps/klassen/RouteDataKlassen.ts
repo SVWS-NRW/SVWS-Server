@@ -1,5 +1,5 @@
 
-import type { KlassenDaten, Schueler, List, LehrerListeEintrag, SimpleOperationResponse, ApiFile, ReportingParameter, StundenplanListeEintrag } from "@core";
+import type { KlasseDetails, Schueler, List, LehrerListeEintrag, SimpleOperationResponse, ApiFile, ReportingParameter, StundenplanListeEintrag } from "@core";
 import { BenutzerKompetenz, UserNotificationException, ArrayList, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
@@ -18,8 +18,8 @@ import type { RouteParamsRawGeneric } from "vue-router";
 
 interface RouteStateKlassen extends RouteStateAuswahlInterface<KlassenListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
-	mapKlassenVorigerAbschnitt: Map<number, KlassenDaten>;
-	mapKlassenFolgenderAbschnitt: Map<number, KlassenDaten>;
+	mapKlassenVorigerAbschnitt: Map<number, KlasseDetails>;
+	mapKlassenFolgenderAbschnitt: Map<number, KlasseDetails>;
 	oldView?: RouteNode<any, any>;
 }
 
@@ -27,8 +27,8 @@ const defaultState: RouteStateKlassen = {
 	idSchuljahresabschnitt: -1,
 	manager: undefined,
 	mapStundenplaene: new Map(),
-	mapKlassenVorigerAbschnitt: new Map<number, KlassenDaten>(),
-	mapKlassenFolgenderAbschnitt: new Map<number, KlassenDaten>(),
+	mapKlassenVorigerAbschnitt: new Map<number, KlasseDetails>(),
+	mapKlassenFolgenderAbschnitt: new Map<number, KlasseDetails>(),
 	view: routeKlassenDaten,
 	oldView: undefined,
 	activeViewType: ViewType.DEFAULT,
@@ -48,11 +48,11 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		return this._state.value.idSchuljahresabschnitt;
 	}
 
-	get mapKlassenVorigerAbschnitt(): Map<number, KlassenDaten> {
+	get mapKlassenVorigerAbschnitt(): Map<number, KlasseDetails> {
 		return this._state.value.mapKlassenVorigerAbschnitt;
 	}
 
-	get mapKlassenFolgenderAbschnitt(): Map<number, KlassenDaten> {
+	get mapKlassenFolgenderAbschnitt(): Map<number, KlasseDetails> {
 		return this._state.value.mapKlassenFolgenderAbschnitt;
 	}
 
@@ -66,12 +66,12 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 			throw new DeveloperNotificationException('Es ist kein gültiger Schuljahresabschnitt ausgewählt');
 		}
 		// Lade die Kataloge und erstelle den Manager
-		const listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, idSchuljahresabschnitt);
+		const listKlassen = await api.server.getKlassenDetailsBySchuljahresabschnitt(api.schema, idSchuljahresabschnitt);
 		const mapKlassenVorigerAbschnitt = schuljahresabschnitt.idVorigerAbschnitt === null
-			? new Map<number, KlassenDaten>()
+			? new Map<number, KlasseDetails>()
 			: await api.getKlassenListe(schuljahresabschnitt.idVorigerAbschnitt);
 		const mapKlassenFolgenderAbschnitt = schuljahresabschnitt.idFolgeAbschnitt === null
-			? new Map<number, KlassenDaten>()
+			? new Map<number, KlasseDetails>()
 			: await api.getKlassenListe(schuljahresabschnitt.idFolgeAbschnitt);
 		const listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
@@ -86,12 +86,12 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		return { manager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt };
 	}
 
-	public async ladeDaten(auswahl: KlassenDaten | null): Promise<KlassenDaten | null> {
+	public async ladeDaten(auswahl: KlasseDetails | null): Promise<KlasseDetails | null> {
 		// Die Daten sind vollständig in der Liste enthalten, kein Aufruf der API notwendig
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<KlassenDaten>, id: number): Promise<boolean> {
+	protected async doPatch(data: Partial<KlasseDetails>, id: number): Promise<boolean> {
 		await api.server.patchKlasse(data, api.schema, id);
 		return true;
 	}
@@ -111,7 +111,7 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		return neueIDs;
 	}
 
-	protected deleteMessage(id: number, klasse: KlassenDaten | null): string {
+	protected deleteMessage(id: number, klasse: KlasseDetails | null): string {
 		return `Klasse ${klasse?.kuerzel ?? '???'} (ID: ${id}) wurde erfolgreich gelöscht.`;
 	}
 
@@ -137,7 +137,7 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		listKlassenleitungenNeu.add(idLehrer);
 
 		// Führe den API-Aufruf durch
-		const requestBody: Partial<KlassenDaten> = { klassenLeitungen: listKlassenleitungenNeu };
+		const requestBody: Partial<KlasseDetails> = { klassenLeitungen: listKlassenleitungenNeu };
 		await api.server.patchKlasse(requestBody, api.schema, idKlasse);
 
 		// Aktualisiere die Liste der Klassenleitungen im Erfolgsfall
@@ -152,7 +152,7 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		listKlassenleitungenNeu.removeElementAt(lehrerIndex);
 
 		// Führe den API-Aufruf durch
-		const requestBody: Partial<KlassenDaten> = { klassenLeitungen: listKlassenleitungenNeu };
+		const requestBody: Partial<KlasseDetails> = { klassenLeitungen: listKlassenleitungenNeu };
 		const klassenId: number | null = this.manager.auswahlID();
 		if (klassenId === null) {
 			throw new DeveloperNotificationException("Keine Klasse ausgewählt, Klassenleitung kann nicht entfernt werden");
@@ -177,7 +177,7 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		}
 
 		// Führe den API-Aufruf durch
-		const requestBody: Partial<KlassenDaten> = { klassenLeitungen: listKlassenleitungenNeu };
+		const requestBody: Partial<KlasseDetails> = { klassenLeitungen: listKlassenleitungenNeu };
 		await api.server.patchKlasse(requestBody, api.schema, idKlasse);
 
 		// Aktualisiere die Liste der Klassenleitungen im Erfolgsfall
@@ -193,7 +193,7 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 		await this.setDaten(this.manager.liste.get(auswahl_id));
 	};
 
-	add = async (partialKlasse: Partial<KlassenDaten>): Promise<void> => {
+	add = async (partialKlasse: Partial<KlasseDetails>): Promise<void> => {
 		const neueKlasse = await api.server.addKlasse({ ...partialKlasse, idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }, api.schema);
 		await this.setSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt, true);
 		await this.gotoDefaultView(neueKlasse.id);

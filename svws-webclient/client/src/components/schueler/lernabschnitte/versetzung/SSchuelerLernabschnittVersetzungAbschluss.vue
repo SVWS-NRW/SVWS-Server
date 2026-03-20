@@ -29,7 +29,7 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import { BenutzerKompetenz, type KlassenDaten } from "@core";
+	import { BenutzerKompetenz, type KlasseDetails } from "@core";
 	import type { SchuelerLernabschnittVersetzungAbschlussProps } from "./SSchuelerLernabschnittVersetzungAbschlussProps";
 
 	const props = defineProps<SchuelerLernabschnittVersetzungAbschlussProps>();
@@ -37,7 +37,7 @@
 		|| props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))
 	);
 
-	const folgeklasse = computed<KlassenDaten | undefined>({
+	const folgeklasse = computed<KlasseDetails | undefined>({
 		get: () => {
 			const id = props.manager().lernabschnittGet().folgeklassenID;
 			if (id === null) {

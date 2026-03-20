@@ -109,8 +109,9 @@ import { KatalogEintragStrassen } from '../core/data/kataloge/KatalogEintragStra
 import { KatalogEntlassgrund } from '../core/data/kataloge/KatalogEntlassgrund';
 import { Kindergarten } from '../core/data/schule/Kindergarten';
 import { KindergartenbesuchKatalogEintrag } from '../asd/data/schule/KindergartenbesuchKatalogEintrag';
+import { KlasseDetails } from '../asd/data/klassen/KlasseDetails';
+import { KlasseListItem } from '../asd/data/klassen/KlasseListItem';
 import { KlassenartKatalogEintrag } from '../asd/data/klassen/KlassenartKatalogEintrag';
-import { KlassenDaten } from '../asd/data/klassen/KlassenDaten';
 import { KursDaten } from '../asd/data/kurse/KursDaten';
 import { KursLehrer } from '../asd/data/kurse/KursLehrer';
 import { LehrerAbgangsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerAbgangsgrundKatalogEintrag';
@@ -8092,7 +8093,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Daten der Klasse
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: KlassenDaten
+	 *     - Rückgabe-Typ: KlasseDetails
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.
 	 *   Code 404: Kein Klassen-Eintrag mit der angegebenen ID gefunden
 	 *
@@ -8101,13 +8102,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Daten der Klasse
 	 */
-	public async getKlasse(schema : string, id : number) : Promise<KlassenDaten> {
+	public async getKlasse(schema : string, id : number) : Promise<KlasseDetails> {
 		const path = "/db/{schema}/klassen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return KlassenDaten.transpilerFromJSON(text);
+		return KlasseDetails.transpilerFromJSON(text);
 	}
 
 
@@ -8124,45 +8125,16 @@ export class ApiServer extends BaseApi {
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Partial<KlassenDaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<KlasseDetails>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchKlasse(data : Partial<KlassenDaten>, schema : string, id : number) : Promise<void> {
+	public async patchKlasse(data : Partial<KlasseDetails>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/klassen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = KlassenDaten.transpilerToJSONPatch(data);
+		const body : string = KlasseDetails.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getKlassenFuerAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/abschnitt/{abschnitt : \d+}
-	 *
-	 * Erstellt eine Liste aller in der Datenbank vorhanden Klassen unter Angabe der ID, des Kürzels, der Parallelität, der Kürzel des Klassenlehrers und des zweiten Klassenlehrers, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Klassen-Listen-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KlassenDaten>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.
-	 *   Code 404: Keine Klassen-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abschnitt - der Pfad-Parameter abschnitt
-	 *
-	 * @returns Eine Liste von Klassen-Listen-Einträgen
-	 */
-	public async getKlassenFuerAbschnitt(schema : string, abschnitt : number) : Promise<List<KlassenDaten>> {
-		const path = "/db/{schema}/klassen/abschnitt/{abschnitt : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{abschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, abschnitt.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<KlassenDaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KlassenDaten.transpilerFromJSON(text)); });
-		return ret;
 	}
 
 
@@ -8223,23 +8195,23 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 201: Die Klasse wurde erfolgreich erstellt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: KlassenDaten
+	 *     - Rückgabe-Typ: KlasseDetails
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Klasse anzulegen.
 	 *   Code 404: Benötigte Daten wurden nicht gefunden
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Partial<KlassenDaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<KlasseDetails>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Die Klasse wurde erfolgreich erstellt.
 	 */
-	public async addKlasse(data : Partial<KlassenDaten>, schema : string) : Promise<KlassenDaten> {
+	public async addKlasse(data : Partial<KlasseDetails>, schema : string) : Promise<KlasseDetails> {
 		const path = "/db/{schema}/klassen/create"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = KlassenDaten.transpilerToJSONPatch(data);
+		const body : string = KlasseDetails.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
-		return KlassenDaten.transpilerFromJSON(text);
+		return KlasseDetails.transpilerFromJSON(text);
 	}
 
 
@@ -8268,6 +8240,64 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SimpleOperationResponse>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKlassenDetailsBySchuljahresabschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/details/abschnitt/{idSchuljahresabschnitt : \d+}
+	 *
+	 * Erstellt eine Liste aller in der Datenbank vorhanden Klassen unter Angabe der ID, des Kürzels, der Parallelität, der Kürzel des Klassenlehrers und des zweiten Klassenlehrers, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Klassen-Listen-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<KlasseDetails>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.
+	 *   Code 404: Keine Klassen-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchuljahresabschnitt - der Pfad-Parameter idSchuljahresabschnitt
+	 *
+	 * @returns Eine Liste von Klassen-Listen-Einträgen
+	 */
+	public async getKlassenDetailsBySchuljahresabschnitt(schema : string, idSchuljahresabschnitt : number) : Promise<List<KlasseDetails>> {
+		const path = "/db/{schema}/klassen/details/abschnitt/{idSchuljahresabschnitt : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<KlasseDetails>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KlasseDetails.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKlassenListItemsBySchuljahresabschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/klassen/list-item/abschnitt/{idSchuljahresabschnitt : \d+}
+	 *
+	 * Erstellt eine Liste aller in der Datenbank vorhanden Klassen unter Angabe der ID, des Kürzels, der Parallelität, der Kürzel des Klassenlehrers und des zweiten Klassenlehrers, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar sein sollen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Klassen-Listen-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<KlasseListItem>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.
+	 *   Code 404: Keine Klassen-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchuljahresabschnitt - der Pfad-Parameter idSchuljahresabschnitt
+	 *
+	 * @returns Eine Liste von Klassen-Listen-Einträgen
+	 */
+	public async getKlassenListItemsBySchuljahresabschnitt(schema : string, idSchuljahresabschnitt : number) : Promise<List<KlasseListItem>> {
+		const path = "/db/{schema}/klassen/list-item/abschnitt/{idSchuljahresabschnitt : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idSchuljahresabschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idSchuljahresabschnitt.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<KlasseListItem>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KlasseListItem.transpilerFromJSON(text)); });
 		return ret;
 	}
 

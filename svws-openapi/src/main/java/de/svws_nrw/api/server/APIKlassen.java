@@ -2,17 +2,16 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
-import org.jboss.resteasy.annotations.GZIP;
-
-import de.svws_nrw.core.data.SimpleOperationResponse;
-import de.svws_nrw.asd.data.klassen.KlassenDaten;
+import de.svws_nrw.asd.data.klassen.KlasseDetails;
+import de.svws_nrw.asd.data.klassen.KlasseListItem;
 import de.svws_nrw.asd.data.klassen.KlassenartKatalogEintrag;
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.klassen.DataKatalogKlassenarten;
-import de.svws_nrw.data.klassen.DataKlassendaten;
+import de.svws_nrw.data.klassen.DataKlasse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,6 +31,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.jboss.resteasy.annotations.GZIP;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die grundlegenden Klassendaten aus der SVWS-Datenbank.
@@ -54,27 +54,53 @@ public class APIKlassen {
 	 * Die OpenAPI-Methode für die Abfrage der Liste der Klassen im angegebenen Schema.
 	 *
 	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param abschnitt     die ID des Schuljahresabschnitts
+	 * @param idSchuljahresabschnitt     die ID des Schuljahresabschnitts
 	 * @param request       die Informationen zur HTTP-Anfrage
 	 *
 	 * @return              die Liste der Klassen mit ID des Datenbankschemas
 	 */
 	@GET
 	@GZIP
-	@Path("/abschnitt/{abschnitt : \\d+}")
+	@Path("/details/abschnitt/{idSchuljahresabschnitt : \\d+}")
 	@Operation(summary = "Gibt eine Übersicht von allen Klassen zurück.",
 			description = "Erstellt eine Liste aller in der Datenbank vorhanden Klassen unter Angabe der ID, des Kürzels, der Parallelität, der Kürzel des "
 					+ "Klassenlehrers und des zweiten Klassenlehrers, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar sein sollen. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Klassen-Listen-Einträgen",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KlassenDaten.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KlasseDetails.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Klassen-Einträge gefunden")
-	public Response getKlassenFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).getListBySchuljahresabschnittIDAsResponse(abschnitt),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+	public Response getKlassenDetailsBySchuljahresabschnitt(@PathParam("schema") final String schema,
+			@PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlasse(conn).getAllDetailsBySchuljahresabschnittId(idSchuljahresabschnitt),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste der Klassen im angegebenen Schema.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param idSchuljahresabschnitt     die ID des Schuljahresabschnitts
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return              die Liste der Klassen mit ID des Datenbankschemas
+	 */
+	@GET
+	@GZIP
+	@Path("/list-item/abschnitt/{idSchuljahresabschnitt : \\d+}")
+	@Operation(summary = "Gibt eine Übersicht von allen Klassen zurück.",
+			description = "Erstellt eine Liste aller in der Datenbank vorhanden Klassen unter Angabe der ID, des Kürzels, der Parallelität, der Kürzel des "
+					+ "Klassenlehrers und des zweiten Klassenlehrers, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar sein sollen. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Klassen-Listen-Einträgen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KlasseListItem.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Klassen-Einträge gefunden")
+	public Response getKlassenListItemsBySchuljahresabschnitt(@PathParam("schema") final String schema,
+			@PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlasse(conn).getAllListItemsBySchuljahresabschnittId(idSchuljahresabschnitt),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
 
@@ -95,12 +121,12 @@ public class APIKlassen {
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten "
 					+ "besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Daten der Klasse",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = KlassenDaten.class)))
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = KlasseDetails.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Kein Klassen-Eintrag mit der angegebenen ID gefunden")
 	public Response getKlasse(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).getByIdAsResponse(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlasse(conn).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN);
 	}
@@ -130,9 +156,9 @@ public class APIKlassen {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchKlasse(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@RequestBody(description = "Der Patch für die Daten der Klasse", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KlassenDaten.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KlasseDetails.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).patchAsResponse(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlasse(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}
@@ -153,14 +179,14 @@ public class APIKlassen {
 			description = "Erstellt eine neue Klasse und gibt die zugehörigen Daten zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Klasse besitzt.")
 	@ApiResponse(responseCode = "201", description = "Die Klasse wurde erfolgreich erstellt.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = KlassenDaten.class)))
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = KlasseDetails.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Klasse anzulegen.")
 	@ApiResponse(responseCode = "404", description = "Benötigte Daten wurden nicht gefunden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response addKlasse(@PathParam("schema") final String schema, @RequestBody(description = "Die Daten der Klasse", required = true,
-			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KlassenDaten.class))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KlasseDetails.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).addAsResponse(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlasse(conn).addAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}
@@ -184,11 +210,11 @@ public class APIKlassen {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klassen zu entfernen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteKlassen(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Klassen", required = true,
-			content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataKlassendaten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
+				conn -> new DataKlasse(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}
@@ -239,7 +265,7 @@ public class APIKlassen {
 	@ApiResponse(responseCode = "404", description = "Keine Jahrgangs- oder Klassen-Einträge gefunden")
 	public Response setKlassenSortierungFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).setDefaultSortierung(abschnitt),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlasse(conn).setDefaultSortierung(abschnitt),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}

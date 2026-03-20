@@ -7,9 +7,9 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.svws_nrw.asd.data.klassen.KlassenDaten;
+import de.svws_nrw.asd.data.klassen.KlasseDetails;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.data.klassen.DataKlassendaten;
+import de.svws_nrw.data.klassen.DataKlasse;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
@@ -83,10 +83,10 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> {
 				mapKlassen.put(idKlasse, reportingRepository.mapKlassen().get(idKlasse));
 			else {
 				// Die ID der Klasse ist bekannt, aber sie wurde noch nicht aus der DB geladen. Lade dessen Daten und lade dabei alle Klassen des Lernabschnitts.
-				final KlassenDaten klassenDaten;
+				final KlasseDetails klasseDetails;
 				try {
-					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getById(idKlasse);
-					mapKlassen.put(idKlasse, this.reportingRepository.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(idKlasse));
+					klasseDetails = new DataKlasse(reportingRepository.conn()).getById(idKlasse);
+					mapKlassen.put(idKlasse, this.reportingRepository.schuljahresabschnitt(klasseDetails.idSchuljahresabschnitt).klasse(idKlasse));
 				} catch (final ApiOperationException e) {
 					ReportingExceptionUtils.logException(
 							"FEHLER: Fehler bei der Ermittlung der Daten für des Klassen %s.".formatted(idKlasse), e, reportingRepository.logger(),

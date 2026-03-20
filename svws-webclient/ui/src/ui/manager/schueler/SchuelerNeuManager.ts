@@ -1,17 +1,18 @@
-import type { KlassenDaten } from "../../../../../core/src/asd/data/klassen/KlassenDaten";
+import type { KlasseListItem } from "../../../../../core/src/asd/data/klassen/KlasseListItem";
 import type { EinschulungsartKatalogEintrag } from "../../../../../core/src/asd/data/schueler/EinschulungsartKatalogEintrag";
 import type { Schuljahresabschnitt } from "../../../../../core/src/asd/data/schule/Schuljahresabschnitt";
 import type { JahrgangsDaten } from "../../../../../core/src/core/data/jahrgang/JahrgangsDaten";
 import type { Kindergarten } from "../../../../../core/src/core/data/schule/Kindergarten";
 import type { ReligionEintrag } from "../../../../../core/src/core/data/schule/ReligionEintrag";
 import type { List } from "../../../../../core/src/java/util/List";
+import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
 
 
 export class SchuelerNeuManager {
 
 	private readonly _kindergaertenById: Map<number, Kindergarten>;
 	private readonly _einschulungsartenById: Map<number, EinschulungsartKatalogEintrag>;
-	private readonly _klassenByIdAbschnitt: Map<number, List<KlassenDaten>>;
+	private readonly _klassenByIdAbschnitt: Map<number, List<KlasseListItem>>;
 	private readonly _jahrgaengeById: Map<number, JahrgangsDaten>;
 	private readonly _religionenById: Map<number, ReligionEintrag>;
 	private readonly _schuljahresabschnitte: List<Schuljahresabschnitt>;
@@ -35,7 +36,7 @@ export class SchuelerNeuManager {
 		jahrgaengeById: Map<number, JahrgangsDaten>,
 		religionenById: Map<number, ReligionEintrag>,
 		schuljahresabschnitte: List<Schuljahresabschnitt>,
-		klassenByIdAbschnitt: Map<number, List<KlassenDaten>>,
+		klassenByIdAbschnitt: Map<number, List<KlasseListItem>>,
 		aktuellerAbschnitt: Schuljahresabschnitt
 	) {
 		this._kindergaertenById = kindergaertenById;
@@ -73,7 +74,7 @@ export class SchuelerNeuManager {
 		return this._einschulungsartenById;
 	}
 
-	get klassenByIdAbschnitt(): Map<number, List<KlassenDaten>> {
+	get klassenByIdAbschnitt(): Map<number, List<KlasseListItem>> {
 		return this._klassenByIdAbschnitt;
 	}
 
@@ -97,9 +98,9 @@ export class SchuelerNeuManager {
 		return this._schuljahresabschnitteFilteredById;
 	}
 
-	getKlassenByIdFuerAbschnitt(idAbschnitt: number): Map<number, KlassenDaten> {
-		const klassen = this.klassenByIdAbschnitt.get(idAbschnitt) ?? [];
-		const result = new Map<number, KlassenDaten>();
+	getKlassenByIdFuerAbschnitt(idAbschnitt: number): Map<number, KlasseListItem> {
+		const klassen = this.klassenByIdAbschnitt.get(idAbschnitt) ?? new ArrayList<KlasseListItem>();
+		const result = new Map<number, KlasseListItem>();
 		for (const klasse of klassen) {
 			result.set(klasse.id, klasse);
 		}

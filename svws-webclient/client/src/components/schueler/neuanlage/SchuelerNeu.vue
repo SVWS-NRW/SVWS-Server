@@ -83,7 +83,7 @@
 <script setup lang="ts">
 
 	import type { SchuelerNeuProps } from "~/components/schueler/neuanlage/SchuelerNeuProps";
-	import type { EinschulungsartKatalogEintrag, JahrgangsDaten, KlassenDaten, ReligionEintrag, Schuljahresabschnitt } from "@core";
+	import type { EinschulungsartKatalogEintrag, JahrgangsDaten, KlasseListItem, ReligionEintrag, Schuljahresabschnitt } from "@core";
 	import { ArrayList, BenutzerKompetenz, Geschlecht, SchuelerNeu, SchuelerStatus, Schulform } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { SelectManager } from "@ui";
@@ -115,8 +115,8 @@
 	const maxGeburtsdatum = new Date(new Date().setFullYear(new Date().getFullYear() - 4)).toISOString().split("T")[0];
 
 	const klassen = computed(() => {
-		const klassen = manager().klassenByIdAbschnitt.get(data.value.idSchuljahresabschnitt) ?? [];
-		const result = new ArrayList<KlassenDaten>();
+		const klassen = manager().klassenByIdAbschnitt.get(data.value.idSchuljahresabschnitt) ?? new ArrayList<KlasseListItem>();
+		const result = new ArrayList<KlasseListItem>();
 		for (const klasse of klassen) {
 			if (klasse.idJahrgang === data.value.idJahrgang) {
 				result.add(klasse);
@@ -141,9 +141,9 @@
 		},
 	});
 
-	const selectedKlasse = computed<KlassenDaten | null>({
+	const selectedKlasse = computed<KlasseListItem | null>({
 		get: () => manager().getKlassenByIdFuerAbschnitt(data.value.idSchuljahresabschnitt).get(data.value.idKlasse ?? -1) ?? null,
-		set: (value: KlassenDaten | null) => data.value.idKlasse = value?.id ?? -1,
+		set: (value: KlasseListItem | null) => data.value.idKlasse = value?.id ?? -1,
 	});
 
 	const einschulungsart = computed<EinschulungsartKatalogEintrag | null>({

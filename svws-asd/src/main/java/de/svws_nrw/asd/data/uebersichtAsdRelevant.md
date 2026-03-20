@@ -123,7 +123,7 @@
 | OrtKatalogEintrag                              | ?                        |
 | OrtsteilKatalogEintrag                         | ?                        |
 | KlassenartKatalogEintrag                       | Ja                       |
-| KlassenDaten                                   | Ja                       |
+| KlasseDetails                               | Ja                       |
 | KlassenListeEintrag                            | Nein                     |
 | KursartKatalogEintrag                          | Ja                       |
 | KursDaten                                      | Ja                       |

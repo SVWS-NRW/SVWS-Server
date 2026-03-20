@@ -3,7 +3,7 @@ package de.svws_nrw.core.data.schueler;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.svws_nrw.asd.data.klassen.KlassenDaten;
+import de.svws_nrw.asd.data.klassen.KlasseDetails;
 import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.core.data.gost.GostJahrgang;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
@@ -31,8 +31,8 @@ public class SchuelerListe {
 	public final @NotNull List<SchuelerListeEintrag> schueler = new ArrayList<>();
 
 	/** Die Klassen-Daten */
-	@ArraySchema(schema = @Schema(implementation = KlassenDaten.class))
-	public final @NotNull List<KlassenDaten> klassen = new ArrayList<>();
+	@ArraySchema(schema = @Schema(implementation = KlasseDetails.class))
+	public final @NotNull List<KlasseDetails> klassen = new ArrayList<>();
 
 	/** Die Kurs-Daten */
 	@ArraySchema(schema = @Schema(implementation = KursDaten.class))

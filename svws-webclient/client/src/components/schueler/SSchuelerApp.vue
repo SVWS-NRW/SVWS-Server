@@ -66,7 +66,7 @@
 	import { computed } from "vue";
 	import type { SchuelerAppProps } from "./SSchuelerAppProps";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import { PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, type KlassenDaten } from "@core";
+	import { PrimarstufeSchuleingangsphaseBesuchsjahre, Schulform, type KlasseDetails } from "@core";
 
 	const props = defineProps<SchuelerAppProps>();
 
@@ -101,7 +101,7 @@
 	const nachname = computed<string>(() => props.manager().daten().nachname);
 	const vorname = computed<string>(() => props.manager().daten().vorname);
 
-	const klasse = computed<KlassenDaten | null>(() => {
+	const klasse = computed<KlasseDetails | null>(() => {
 		if (!props.manager().hasDaten()) {
 			return null;
 		}

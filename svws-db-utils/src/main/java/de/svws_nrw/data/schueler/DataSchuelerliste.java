@@ -24,7 +24,7 @@ import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.gost.DataGostJahrgangsliste;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsliste;
-import de.svws_nrw.data.klassen.DataKlassendaten;
+import de.svws_nrw.data.klassen.DataKlasse;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
@@ -236,9 +236,9 @@ public final class DataSchuelerliste extends DataManager<Long> {
 						.collect(Collectors.groupingBy(ks -> ks.Schueler_ID));
 			}
 			for (final SchuelerListeEintrag eintrag : schuelerListe) {
-				final List<DTOKursSchueler> kurs_schueler = kursSchueler.get(eintrag.id);
-				if ((kurs_schueler != null) && (!kurs_schueler.isEmpty()))
-					for (final DTOKursSchueler ks : kurs_schueler)
+				final List<DTOKursSchueler> schuelerKurse = kursSchueler.get(eintrag.id);
+				if ((schuelerKurse != null) && (!schuelerKurse.isEmpty()))
+					for (final DTOKursSchueler ks : schuelerKurse)
 						eintrag.kurse.add(ks.Kurs_ID);
 			}
 		}
@@ -347,13 +347,13 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Schuljahresabschnitt mit der ID %d gefunden werden"
 					.formatted(idSchuljahresabschnitt));
 
-		final DataKlassendaten dataKlassendaten = new DataKlassendaten(conn);
+		final DataKlasse dataKlasse = new DataKlasse(conn);
 
 		// Erstelle das Ergebnis-DTO
 		final SchuelerListe result = new SchuelerListe();
 		result.idSchuljahresabschnitt = idSchuljahresabschnitt;
 		result.schueler.addAll(getListeSchueler(conn, idSchuljahresabschnitt, false));
-		result.klassen.addAll(dataKlassendaten.getListBySchuljahresabschnittID(idSchuljahresabschnitt, false));
+		result.klassen.addAll(dataKlasse.getListBySchuljahresabschnittID(idSchuljahresabschnitt, false));
 		result.kurse.addAll(DataKurse.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, true));
 		result.jahrgaenge.addAll(DataJahrgangsliste.getJahrgangsliste(conn));
 
@@ -367,7 +367,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 				.distinct().toList();
 
 		if (!idsFehlendeKlassen.isEmpty())
-			result.klassen.addAll(dataKlassendaten.getListByIdsOhneSchueler(idsFehlendeKlassen, idSchuljahresabschnitt));
+			result.klassen.addAll(dataKlasse.getListByIdsOhneSchueler(idsFehlendeKlassen, idSchuljahresabschnitt));
 
 		return result;
 	}

@@ -1997,12 +1997,23 @@ ArrayList {
 }
 `;
 
-exports[`APIKlassen Tests > gegen { schema: 'GymAbi01' } > GET: Alle Klassen zu einem Schuljahresabschnitt, der nicht existiert 1`] = `undefined`;
+exports[`APIKlassen Tests > gegen { schema: 'GymAbi01' } > GET: Alle Klassen zu einem Schuljahresabschnitt, der nicht existiert 1`] = `
+ArrayList {
+  "addFirst": [Function],
+  "addLast": [Function],
+  "elementData": [],
+  "getFirst": [Function],
+  "getLast": [Function],
+  "modCount": 0,
+  "removeFirst": [Function],
+  "removeLast": [Function],
+}
+`;
 
 exports[`APIKlassen Tests > gegen { schema: 'GymAbi01' } > GET: Alle Klassen zum Schuljahresabschnitt 1 1`] = `23`;
 
 exports[`APIKlassen Tests > gegen { schema: 'GymAbi01' } > GET: Klasse 1`] = `
-KlassenDaten {
+KlasseDetails {
   "beginnSommersemester": false,
   "beschreibung": "",
   "id": 13,
@@ -2409,7 +2420,7 @@ exports[`APIKlassen Tests > gegen { schema: 'GymAbi01' } > GET: Klasse, die nich
 exports[`APIKlassen Tests > gegen { schema: 'GymAbi01' } > GET: Klasse, die nicht existiert 2`] = `404`;
 
 exports[`APIKlassen Tests > gegen { schema: 'GymAbi01' } > PATCH: Alle erlaubten Attribute einer Klasse 1`] = `
-KlassenDaten {
+KlasseDetails {
   "beginnSommersemester": true,
   "beschreibung": "Test Test",
   "id": 3,

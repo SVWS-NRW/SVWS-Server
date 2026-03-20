@@ -1,6 +1,6 @@
 import type { RouteStateInterface } from "~/router/RouteData";
 import { RouteData } from "~/router/RouteData";
-import type { KlassenDaten, List } from "@core";
+import type { KlasseListItem, List } from "@core";
 import { DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { routeApp } from "~/router/apps/RouteApp";
@@ -31,7 +31,7 @@ export class RouteDataSchuelerNeu extends RouteData<RouteStateDataSchuelerNeu> {
 	private async createManager() {
 		const kindergaertenById = routeApp.cache.kataloge.kindergaertenById;
 		const einschulungsartenById = routeApp.cache.kataloge.einschulungsartenById;
-		const klassenFuerAbschnitt = await this.getKlassenFuerAbschnitt();
+		const klassenFuerAbschnitt = await this.getKlassenBySchuljahresabschnitt();
 		const jahrgaengeById = routeApp.cache.kataloge.jahrgaengeById;
 		const religionenById = routeApp.cache.kataloge.religionenById;
 		const schuljahresabschnitte = api.schuleStammdaten.abschnitte;
@@ -41,15 +41,15 @@ export class RouteDataSchuelerNeu extends RouteData<RouteStateDataSchuelerNeu> {
 			aktuellerAbschnitt);
 	}
 
-	private async getKlassenFuerAbschnitt(): Promise<Map<number, List<KlassenDaten>>> {
+	private async getKlassenBySchuljahresabschnitt(): Promise<Map<number, List<KlasseListItem>>> {
 		const klassenByIdAbschnitt = new Map();
 		const idAktuellerAbschnitt = routeApp.data.aktAbschnitt.value.id;
-		const klassenAktuellerAbschnitt = await api.server.getKlassenFuerAbschnitt(api.schema, idAktuellerAbschnitt);
+		const klassenAktuellerAbschnitt = await api.server.getKlassenListItemsBySchuljahresabschnitt(api.schema, idAktuellerAbschnitt);
 		klassenByIdAbschnitt.set(idAktuellerAbschnitt, klassenAktuellerAbschnitt);
 
 		const idFolgeabschnitt = routeApp.data.aktAbschnitt.value.idFolgeAbschnitt;
 		if (idFolgeabschnitt !== null) {
-			const klassenFolgeAbschnitt = await api.server.getKlassenFuerAbschnitt(api.schema, idFolgeabschnitt);
+			const klassenFolgeAbschnitt = await api.server.getKlassenListItemsBySchuljahresabschnitt(api.schema, idFolgeabschnitt);
 			klassenByIdAbschnitt.set(idFolgeabschnitt, klassenFolgeAbschnitt);
 		}
 		return klassenByIdAbschnitt;

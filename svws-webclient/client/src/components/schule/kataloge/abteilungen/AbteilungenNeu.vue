@@ -76,7 +76,7 @@
 
 	import type { AbteilungenNeuProps } from "~/components/schule/kataloge/abteilungen/AbteilungenNeuProps";
 	import { type DataTableColumn, ViewType, SelectManager } from "@ui";
-	import type { KlassenDaten, List } from "@core";
+	import type { KlasseListItem, List } from "@core";
 	import { ValidatorFehlerart, Abteilung, Arrays, BenutzerKompetenz } from "@core";
 	import { computed, ref, watch } from "vue";
 	import { AbteilungenModelProxy } from "~/components/schule/kataloge/abteilungen/modelproxy/AbteilungenModelProxy";
@@ -89,7 +89,7 @@
 	const isLoading = ref<boolean>(false);
 	const addAbteilungInFolgeAbschnitt = ref<boolean>(true);
 
-	const klassenToAdd = ref<KlassenDaten[]>([]);
+	const klassenToAdd = ref<KlasseListItem[]>([]);
 	const klassenIdsToAdd = computed<List<number>>(() => Arrays.asList(klassenToAdd.value.map(klasse => klasse.id)));
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 	const availableLehrer = computed(() => props.manager().lehrerById.values());

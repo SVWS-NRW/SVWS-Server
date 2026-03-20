@@ -32,7 +32,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class DataKlassendatenTest {
+class DataKlasseTest {
 
 	/**
 	 * Initialisierung der Core-Types
@@ -47,7 +47,7 @@ class DataKlassendatenTest {
 	private DBEntityManager conn;
 
 	@InjectMocks
-	private DataKlassendaten cut;
+	private DataKlasse cut;
 
 	@Test
 	@DisplayName("getDTOTeilstandort | Es existiert ein Teilstandort => DTOTeilstandort")

@@ -4,7 +4,7 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 
-export class KlassenDaten extends JavaObject {
+export class KlasseDetails extends JavaObject {
 
 	/**
 	 * Die ID der Klasse.
@@ -127,26 +127,23 @@ export class KlassenDaten extends JavaObject {
 	public beginnSommersemester: boolean = false;
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.asd.data.klassen.KlassenDaten';
+		return 'de.svws_nrw.asd.data.klassen.KlasseDetails';
 	}
 
 	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.asd.data.klassen.KlassenDaten'].includes(name);
+		return ['de.svws_nrw.asd.data.klassen.KlasseDetails'].includes(name);
 	}
 
-	public static readonly class = new Class<KlassenDaten>('de.svws_nrw.asd.data.klassen.KlassenDaten');
+	public static readonly class = new Class<KlasseDetails>('de.svws_nrw.asd.data.klassen.KlasseDetails');
 
-	public static transpilerFromJSON(json: string): KlassenDaten {
-		const obj = JSON.parse(json) as Partial<KlassenDaten>;
-		const result = new KlassenDaten();
+	public static transpilerFromJSON(json: string): KlasseDetails {
+		const obj = JSON.parse(json) as Partial<KlasseDetails>;
+		const result = new KlasseDetails();
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
@@ -202,7 +199,7 @@ export class KlassenDaten extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSON(obj: KlassenDaten): string {
+	public static transpilerToJSON(obj: KlasseDetails): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
@@ -247,7 +244,7 @@ export class KlassenDaten extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj: Partial<KlassenDaten>): string {
+	public static transpilerToJSONPatch(obj: Partial<KlasseDetails>): string {
 		let result = '{';
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
@@ -342,6 +339,6 @@ export class KlassenDaten extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_asd_data_klassen_KlassenDaten(obj: unknown): KlassenDaten {
-	return obj as KlassenDaten;
+export function cast_de_svws_nrw_asd_data_klassen_KlasseDetails(obj: unknown): KlasseDetails {
+	return obj as KlasseDetails;
 }
