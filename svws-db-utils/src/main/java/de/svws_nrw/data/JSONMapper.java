@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -993,7 +994,13 @@ public final class JSONMapper {
 	 */
 	public static Response gzipFileResponseFromObject(final Object obj, final String filename) throws ApiOperationException {
 		try {
-			return Response.ok(gzipByteArrayFromObject(obj)).header("Content-Disposition", "attachment; filename=\"" + filename + "\"").build();
+			final String encodedFilename = URLEncoder.encode(filename, StandardCharsets.UTF_8)
+                .replace("+", "%20");
+			return Response.ok(gzipByteArrayFromObject(obj))
+                .header("Content-Disposition", "attachment; filename=\"" + filename.replaceAll("[^\\x20-\\x7e]", "_") + "\"; "
+					+ "filename*=UTF-8''" + encodedFilename)
+                .header("Content-Encoding", "gzip")
+                .build();
 		} catch (final CompressionException ce) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, ce);
 		}
