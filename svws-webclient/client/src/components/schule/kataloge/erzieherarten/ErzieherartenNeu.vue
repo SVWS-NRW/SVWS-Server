@@ -4,18 +4,20 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Bezeichnung" span="2"
-						v-model="data.bezeichnung"
-						:valid="() => fieldIsValid('bezeichnung')" :min-len="1" :max-len="30" :disabled required />
+						v-model="model.proxy.bezeichnung"
+						:validation="() => model.getFehler('bezeichnung')"
+						:min-len="1" :max-len="30" required :disabled="!hatKompetenzAdd" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
 			<svws-ui-content-card title="Ansicht & Sortierung">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
-						v-model="data.sortierung"
-						:valid="() => fieldIsValid('sortierung')" :min="0" :max="32000" :disabled="!hatKompetenzAdd" :removable="false" />
+						v-model="model.proxy.sortierung"
+						:validation="() => model.getFehler('sortierung')"
+						:min="0" :max="32000" :removable="false" :readonly="!hatKompetenzAdd" />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="data.istSichtbar" :disabled="!hatKompetenzAdd">
+					<svws-ui-checkbox v-model="model.proxy.istSichtbar" :disabled="!hatKompetenzAdd">
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -38,40 +40,14 @@
 	import type { ErzieherartenNeuProps } from "~/components/schule/kataloge/erzieherarten/ErzieherartenNeuProps";
 	import { computed, ref, watch } from "vue";
 	import { BenutzerKompetenz, Erzieherart } from "@core";
-	import { isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid } from "~/util/validation/Validation";
+	import { ErzieherartenModelProxy } from "~/components/schule/kataloge/erzieherarten/modelproxy/ErzieherartenModelProxy";
 
 	const props = defineProps<ErzieherartenNeuProps>();
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const disabled = computed(() => !hatKompetenzAdd.value);
-	const data = ref<Erzieherart>(Object.assign(new Erzieherart(), { istSichtbar: true, sortierung: 32000 }));
-
+	const initialData = ref<Erzieherart>(Object.assign(new Erzieherart(), { istSichtbar: true, sortierung: 32000 }));
+	const model = new ErzieherartenModelProxy(() => initialData.value, () => props.manager());
+	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 	const isLoading = ref<boolean>(false);
-
-	function bezeichnungIsValid(value: string | null) {
-		return mandatoryInputIsValid(value, 30)
-			&& isUniqueInList(value, props.manager().liste.list(), 'bezeichnung');
-	}
-
-	function sortierungIsValid(sortierung: number): boolean {
-		return !numberHasDecimals(sortierung)
-			&& numberIsValid(sortierung, true, 0, 32000);
-	}
-
-	const formIsValid = computed(() => {
-		return Object.keys(data.value)
-			.every((field: string) => fieldIsValid(field as keyof Erzieherart));
-	});
-
-	const fieldIsValid = (field: keyof Erzieherart): boolean => {
-		switch (field) {
-			case 'bezeichnung':
-				return bezeichnungIsValid(data.value.bezeichnung);
-			case 'sortierung':
-				return sortierungIsValid(data.value.sortierung);
-			default:
-				return true;
-		}
-	};
 
 	async function addErzieherart() {
 		if (isLoading.value === true) {
@@ -79,7 +55,7 @@
 		}
 		isLoading.value = true;
 		props.checkpoint.active = false;
-		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
+		const { id, referenziertInAnderenTabellen, ...partialData } = model.proxy;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
@@ -89,7 +65,7 @@
 		await props.gotoDefaultView(null);
 	}
 
-	watch(() => data.value, async () => {
+	watch(() => model.proxy, async () => {
 		if (isLoading.value) {
 			return;
 		}
