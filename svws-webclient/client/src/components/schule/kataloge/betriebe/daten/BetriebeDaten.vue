@@ -27,7 +27,6 @@
 						:model-value="model.proxy.bemerkungen"
 						@change="patchBemerkung"
 						:validation="() => model.getFehler('bemerkungen')"
-						skip-default-validation
 						resizeable="none" :max-len="255" />
 					<div>
 						<svws-ui-input-wrapper :grid="1">
@@ -148,7 +147,8 @@
 	});
 
 	async function patchBemerkung(v: string | null) {
-		await props.patch({ bemerkungen: v });
+		model.proxy.bemerkungen = v;
+		await model.patch();
 	}
 
 </script>

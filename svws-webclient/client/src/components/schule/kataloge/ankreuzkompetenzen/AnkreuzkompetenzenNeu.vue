@@ -2,10 +2,11 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card>
 			<svws-ui-content-card title="Allgemein">
-				<svws-ui-text-input placeholder="Kompetenzbeschreibung" class="contentFocusField"
-					v-model="model.proxy.floskelText"
+				<svws-ui-textarea-input placeholder="Kompetenzbeschreibung" class="contentFocusField"
+					:model-value="model.proxy.floskelText"
+					@input="value => model.proxy.floskelText = value"
 					:validation="() => model.getFehler('floskelText')"
-					:min-len="1" :max-len="255" :disabled="!hatKompetenzAdd" required />
+					:max-len="255" :disabled="!hatKompetenzAdd" required />
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input v-if="model.istASV.value" placeholder="Fach"
 						model-value="ASV"

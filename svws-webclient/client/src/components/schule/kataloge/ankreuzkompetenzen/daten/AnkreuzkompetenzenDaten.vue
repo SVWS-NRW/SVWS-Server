@@ -2,10 +2,10 @@
 	<div class="page page-grid-cards">
 		<svws-ui-content-card>
 			<svws-ui-content-card title="Allgemein">
-				<svws-ui-text-input placeholder="Kompetenzbeschreibung" class="contentFocusField"
-					v-model="model.proxy.floskelText"
+				<svws-ui-textarea-input placeholder="Kompetenzbeschreibung" class="contentFocusField"
+					:model-value="model.proxy.floskelText"
+					@change="patchFloskeltext"
 					:validation="() => model.getFehler('floskelText')"
-					@commit="model.patch"
 					:max-len="255" :readonly="!hatKompetenzUpdate" required />
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input v-if="model.istASV.value"
@@ -198,4 +198,10 @@
 		jahrgaengeToBeAdded.value = [];
 		modalIsOpen.value = true;
 	}
+
+	async function patchFloskeltext(v: string | null) {
+		model.proxy.floskelText = v ?? '';
+		await model.patch();
+	}
+
 </script>
