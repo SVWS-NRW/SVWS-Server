@@ -15,7 +15,7 @@
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="showOnlyVisible">Nur Sichtbare</svws-ui-checkbox>
 				</template>
-				<template #actions>
+				<template #actions v-if="!readonly">
 					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
 						<svws-ui-button type="icon"
 							@click="gotoHinzufuegenView(true)"

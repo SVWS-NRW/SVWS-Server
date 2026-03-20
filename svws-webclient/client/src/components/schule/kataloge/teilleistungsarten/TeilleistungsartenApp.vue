@@ -1,6 +1,5 @@
 <template>
-	<template v-if="(manager().hasDaten() && (activeViewType === ViewType.DEFAULT)) ||
-		(activeViewType !== ViewType.DEFAULT)">
+	<template v-if="dataLoaded">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
@@ -9,48 +8,53 @@
 							<span>
 								{{ manager().daten().bezeichnung }}
 							</span>
-							<svws-ui-badge type="light" title="ID" class="font-mono"
+							<svws-ui-badge type="light"
+								title="ID"
+								class="font-mono"
 								size="small">
 								ID: {{ manager().daten().id }}
 							</svws-ui-badge>
 						</h2>
 					</template>
 					<template v-else-if="activeViewType === ViewType.HINZUFUEGEN">
-						<h2 class="svws-headline">Anlegen einer neuen Betriebsart</h2>
+						<h2 class="svws-headline">Anlegen einer neuen Teilleistungsart</h2>
 					</template>
 					<template v-else-if="activeViewType === ViewType.GRUPPENPROZESSE">
-						<h2 class="svws-headline"> Gruppenprozesse </h2>
-						<span class="svws-subline">{{ betriebsartenSubline }}</span>
+						<h2 class="svws-headline">Gruppenprozesse</h2>
+						<span class="svws-subline">{{ sublineSelected }}</span>
 					</template>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
 
-		<svws-ui-tab-bar :tab-manager :focus-switching-enabled :focus-help-visible>
+		<svws-ui-tab-bar :tab-manager :focus-switching-enabled="focusSwitchingEnabled" :focus-help-visible="focusHelpVisible">
 			<router-view />
 		</svws-ui-tab-bar>
 	</template>
+
 	<div v-else>
 		<span class="icon i-ri-team-line" />
 	</div>
 </template>
 
-	<script setup lang="ts">
-	import { useRegionSwitch, ViewType } from '@ui';
-	import type { BetriebsartenAppProps } from './BetriebsartenAppProps';
+<script setup lang="ts">
 	import { computed } from 'vue';
+	import { useRegionSwitch, ViewType } from '@ui';
+	import type { TeilleistungsartenAppProps } from './TeilleistungsartenAppProps';
 
-
-	const props = defineProps<BetriebsartenAppProps>();
+	const props = defineProps<TeilleistungsartenAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
-	const betriebsartenSubline = computed(() => {
+	const dataLoaded = computed(() =>
+		props.activeViewType !== ViewType.DEFAULT || props.manager().hasDaten()
+	);
+
+	const sublineSelected = computed(() => {
 		const list = props.manager().liste.auswahlSorted();
 		if (list.size() > 5) {
-			return `${list.size()} Betriebsarten ausgewählt`;
+			return `${list.size()} Teilleistungsarten ausgewählt`;
 		}
 		return [...list].map(k => k.bezeichnung).join(', ');
 	});
-
 </script>

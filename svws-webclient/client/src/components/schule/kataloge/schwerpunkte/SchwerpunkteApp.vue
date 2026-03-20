@@ -33,9 +33,9 @@
 		</svws-ui-tab-bar>
 	</template>
 
-	<div v-else class="appcontent--placeholder">
+	<div v-else>
 		<span class="icon i-ri-team-line" />
-	</div>"
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -46,10 +46,9 @@
 	const props = defineProps<SchwerpunkteAppProps>();
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
-	const dataLoaded = computed(() => {
-		return (props.manager().hasDaten() && (props.activeViewType === ViewType.DEFAULT))
-			|| (props.activeViewType !== ViewType.DEFAULT);
-	});
+	const dataLoaded = computed(() =>
+		props.activeViewType !== ViewType.DEFAULT || props.manager().hasDaten()
+	);
 
 	const schwerpunkteSubline = computed(() => {
 		const list = props.manager().liste.auswahlSorted();

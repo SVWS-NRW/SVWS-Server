@@ -62,6 +62,7 @@ import { routeBetriebsarten } from "./schule/kataloge/betriebsarten/RouteBetrieb
 import { routeEmailServer } from "~/router/apps/einstellungen/emailserver/RouteEmailServer";
 import { routeSchwerpunkte } from "~/router/apps/schule/kataloge/schwerpunkte/RouteSchwerpunkte";
 import { routeAnkreuzkompetenzen } from "~/router/apps/schule/kataloge/ankreuzkompetenzen/RouteAnkreuzkompetenzen";
+import { routeTeilleistungsarten } from "~/router/apps/schule/kataloge/teilleistungsarten/RouteTeilleistungsarten";
 
 import SApp from "~/components/SApp.vue";
 import { routeNotenmodulAnkreuzkompetenzen } from "./notenmodul/RouteNotenmodulAnkreuzkompetenzen";
@@ -180,6 +181,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeSchwerpunkte,
 			routeTelefonarten,
 			routeVermerkarten,
+			routeTeilleistungsarten,
 			// Datenaustausch
 			routeSchuleDatenaustauschENM,
 			routeSchuleDatenaustauschSchulwechsel,

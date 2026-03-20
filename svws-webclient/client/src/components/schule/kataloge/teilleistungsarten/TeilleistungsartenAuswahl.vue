@@ -1,13 +1,13 @@
 <template>
 	<div class="h-full flex flex-col">
 		<div class="secondary-menu--headline">
-			<h1>Schwerpunkte</h1>
+			<h1>Teilleistungsarten</h1>
 		</div>
 		<div class="secondary-menu--header" />
 		<div class="secondary-menu--content">
-			<svws-ui-table v-model="selectedSchwerpunkte"
-				v-model:clicked="clickedSchwerpunkt"
-				:items="filteredSchwerpunkte" :columns
+			<svws-ui-table v-model="selectedItems"
+				v-model:clicked="clickedItem"
+				:items="filteredItems" :columns
 				clickable :selectable="!readonly" count :focus-switching-enabled :focus-help-visible scroll scroll-into-view filter-open>
 				<template #search>
 					<svws-ui-text-input v-model="searchTerm" placeholder="Suchen" removable />
@@ -24,7 +24,7 @@
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
 						<template #content>
-							Neuen Schwerpunkt anlegen
+							Neue Teilleistungsart anlegen
 						</template>
 					</svws-ui-tooltip>
 				</template>
@@ -34,27 +34,27 @@
 </template>
 
 <script setup lang="ts">
-	import { type SchuelerSchwerpunkt as Schwerpunkt, ServerMode } from "@core";
+	import { type Teilleistungsart, ServerMode } from "@core";
 	import { type DataTableColumn, useRegionSwitch } from "@ui";
 
-	import type { SchwerpunkteAuswahlProps } from "./SchwerpunkteAuswahlProps";
+	import type { TeilleistungsartenAuswahlProps } from "./TeilleistungsartenAuswahlProps";
 	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
 
 	const columns: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc" },
 	];
 
-	const props = defineProps<SchwerpunkteAuswahlProps>();
+	const props = defineProps<TeilleistungsartenAuswahlProps>();
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 	const {
-		filteredItems: filteredSchwerpunkte,
-		selectedItems: selectedSchwerpunkte,
-		clickedItem: clickedSchwerpunkt,
+		filteredItems,
+		selectedItems,
+		clickedItem,
 		readonly,
 		isHinzufuegenView,
 		searchTerm,
 		showOnlyVisible,
 		noFilteredItems,
-	} = useKatalogAuswahl<Schwerpunkt>(props);
+	} = useKatalogAuswahl<Teilleistungsart>(props);
 </script>
