@@ -2,11 +2,11 @@ package de.svws_nrw.module.reporting.types.lerngruppen;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.svws_nrw.asd.data.klassen.KlasseDetails;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
+import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
-import de.svws_nrw.data.klassen.DataKlasse;
+import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ProxyReportingSchuelerLeistungsdatenMatrix;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLeistungsdatenMatrix;
@@ -35,43 +35,43 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingKlasse}.
 	 *
 	 * @param reportingRepository Repository für das Reporting.
-	 * @param klasseDetails Stammdaten-Objekt aus der DB.
+	 * @param klassenDaten Stammdaten-Objekt aus der DB.
 	 */
-	public ProxyReportingKlasse(final ReportingRepository reportingRepository, final KlasseDetails klasseDetails) {
-		super(klasseDetails.id,
+	public ProxyReportingKlasse(final ReportingRepository reportingRepository, final KlassenDaten klassenDaten) {
+		super(klassenDaten.id,
 				null,
-				ersetzeNullBlankTrim(klasseDetails.kuerzel),
+				ersetzeNullBlankTrim(klassenDaten.kuerzel),
 				new ArrayList<>(),
-				klasseDetails.sortierung,
-				klasseDetails.beginnSommersemester,
-				ersetzeNullBlankTrim(klasseDetails.beschreibung),
+				klassenDaten.sortierung,
+				klassenDaten.beginnSommersemester,
+				ersetzeNullBlankTrim(klassenDaten.beschreibung),
 				null,
-				klasseDetails.idAllgemeinbildendOrganisationsform,
-				klasseDetails.idBerufsbildendOrganisationsform,
-				klasseDetails.idFachklasse,
-				klasseDetails.idFolgeklasse,
-				klasseDetails.idJahrgang,
-				klasseDetails.idKlassenart,
-				new ArrayList<>(reportingRepository.lehrer(klasseDetails.klassenLeitungen.stream().filter(Objects::nonNull).toList(), false)),
+				klassenDaten.idAllgemeinbildendOrganisationsform,
+				klassenDaten.idBerufsbildendOrganisationsform,
+				klassenDaten.idFachklasse,
+				klassenDaten.idFolgeklasse,
+				klassenDaten.idJahrgang,
+				klassenDaten.idKlassenart,
+				new ArrayList<>(reportingRepository.lehrer(klassenDaten.klassenLeitungen.stream().filter(Objects::nonNull).toList(), false)),
 				new ArrayList<>(),
-				klasseDetails.idSchulgliederung,
-				klasseDetails.idVorgaengerklasse,
-				klasseDetails.idWeiterbildungOrganisationsform,
+				klassenDaten.idSchulgliederung,
+				klassenDaten.idVorgaengerklasse,
+				klassenDaten.idWeiterbildungOrganisationsform,
 				null,
-				ersetzeNullBlankTrim(klasseDetails.kuerzelFolgeklasse),
-				ersetzeNullBlankTrim(klasseDetails.kuerzelVorgaengerklasse),
-				ersetzeNullBlankTrim(klasseDetails.parallelitaet),
-				ersetzeNullBlankTrim(klasseDetails.pruefungsordnung),
-				ersetzeNullBlankTrim(klasseDetails.teilstandort),
-				klasseDetails.verwendungAnkreuzkompetenzen,
+				ersetzeNullBlankTrim(klassenDaten.kuerzelFolgeklasse),
+				ersetzeNullBlankTrim(klassenDaten.kuerzelVorgaengerklasse),
+				ersetzeNullBlankTrim(klassenDaten.parallelitaet),
+				ersetzeNullBlankTrim(klassenDaten.pruefungsordnung),
+				ersetzeNullBlankTrim(klassenDaten.teilstandort),
+				klassenDaten.verwendungAnkreuzkompetenzen,
 				null);
 
 		this.reportingRepository = reportingRepository;
-		this.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(klasseDetails.idSchuljahresabschnitt);
+		this.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt);
 		// Schüler setzen. Fülle nur die Liste der IDs. Die ReportingSchueler-Liste wird per lazy-Loading gefüllt, da nicht immer die Klassenschüler benötigt
 		// werden.
-		if ((klasseDetails.schueler != null) && !klasseDetails.schueler.isEmpty())
-			idsSchueler.addAll(klasseDetails.schueler.stream().map(s -> s.id).toList());
+		if ((klassenDaten.schueler != null) && !klassenDaten.schueler.isEmpty())
+			idsSchueler.addAll(klassenDaten.schueler.stream().map(s -> s.id).toList());
 	}
 
 
@@ -118,9 +118,9 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 			if (!this.reportingRepository.mapKlassen().containsKey(super.idFolgeklasse())) {
 				// Die ID der Folgeklasse ist bekannt, aber sie wurde noch nicht aus der DB geladen. Lade deren Daten und lade dann alle Klassen des
 				// Lernabschnitts.
-				final KlasseDetails klasseDetails;
+				final KlassenDaten klassenDaten;
 				try {
-					klasseDetails = new DataKlasse(reportingRepository.conn()).getByIdOhneSchueler(super.idFolgeklasse());
+					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idFolgeklasse());
 				} catch (final ApiOperationException e) {
 					ReportingExceptionUtils.logException(
 							"FEHLER: Fehler bei der Ermittlung der Daten für die Folgeklasse der Klasse %s in %s."
@@ -128,7 +128,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 							e, reportingRepository.logger(), LogLevel.ERROR, 0);
 					return super.folgeklasse();
 				}
-				super.folgeklasse = this.reportingRepository.schuljahresabschnitt(klasseDetails.idSchuljahresabschnitt).klasse(super.idFolgeklasse());
+				super.folgeklasse = this.reportingRepository.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(super.idFolgeklasse());
 			} else {
 				// Die ID der Folgeklasse ist bekannt und die Klasse wurde in einem Lernabschnitt bereits erzeugt, sie kann aus dem Lernabschnitt geholt werden.
 				super.folgeklasse = this.reportingRepository.mapKlassen().get(super.idFolgeklasse()).schuljahresabschnitt().klasse(super.idFolgeklasse());
@@ -200,9 +200,9 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 			if (!this.reportingRepository.mapKlassen().containsKey(super.idVorgaengerklasse())) {
 				// Die ID der Vorgängerklasse ist bekannt, aber sie wurde noch nicht aus der DB geladen. Lade deren Daten und lade dann alle Klassen des
 				// Lernabschnitts.
-				final KlasseDetails klasseDetails;
+				final KlassenDaten klassenDaten;
 				try {
-					klasseDetails = new DataKlasse(reportingRepository.conn()).getByIdOhneSchueler(super.idVorgaengerklasse());
+					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idVorgaengerklasse());
 				} catch (final ApiOperationException e) {
 					ReportingExceptionUtils.logException(
 							"FEHLER: Fehler bei der Ermittlung der Daten für die Vorgängerklasse der Klasse %s in %s."
@@ -210,7 +210,7 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 							e, reportingRepository.logger(), LogLevel.ERROR, 0);
 					return super.vorgaengerklasse();
 				}
-				super.vorgaengerklasse = this.reportingRepository.schuljahresabschnitt(klasseDetails.idSchuljahresabschnitt).klasse(super.idVorgaengerklasse());
+				super.vorgaengerklasse = this.reportingRepository.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(super.idVorgaengerklasse());
 			} else {
 				// Die ID der Vorgängerklasse ist bekannt und die Klasse wurde in einem Lernabschnitt bereits erzeugt, sie kann aus dem Lernabschnitt geholt
 				// werden.

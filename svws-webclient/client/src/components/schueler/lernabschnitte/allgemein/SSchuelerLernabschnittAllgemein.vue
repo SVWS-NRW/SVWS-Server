@@ -67,7 +67,7 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { FoerderschwerpunktEintrag, JahrgangsDaten, KlasseDetails, LehrerListeEintrag, List, OrganisationsformKatalogEintrag,
+	import type { FoerderschwerpunktEintrag, JahrgangsDaten, KlassenDaten, LehrerListeEintrag, List, OrganisationsformKatalogEintrag,
 		PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag } from "@core";
 	import { Foerderschwerpunkt, BilingualeSprache, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, Klassenart, Schulform, Schulgliederung, ArrayList,
 		WeiterbildungskollegOrganisationsformen, DeveloperNotificationException, BenutzerKompetenz,
@@ -105,7 +105,7 @@
 		return `${lehrer.nachname}, ${lehrer.vorname} (${lehrer.kuerzel})`;
 	}
 
-	const klasse = computed<KlasseDetails | null>(() => {
+	const klasse = computed<KlassenDaten | null>(() => {
 		const id = props.manager().lernabschnittGet().klassenID;
 		if (id === null) {
 			return null;

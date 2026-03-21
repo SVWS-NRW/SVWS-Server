@@ -1,9 +1,9 @@
-import { Jahrgaenge, Note, JavaLong, KursUtils, HashMap, Fach, ArrayList,
+import { Jahrgaenge, Note, JavaLong, KursUtils, HashMap, Fach, KlassenUtils, ArrayList,
 	DeveloperNotificationException, Schulgliederung, JavaString, HashSet } from '@core';
 import type { Schuljahresabschnitt, SchuelerLernabschnittsdaten, SchuelerLeistungsdaten, Schulform, JahrgangsDaten,
-	KlasseDetails, SchuelerListeEintrag, KursDaten, LehrerListeEintrag, FachDaten, FoerderschwerpunktEintrag, List,
+	KlassenDaten, SchuelerListeEintrag, KursDaten, LehrerListeEintrag, FachDaten, FoerderschwerpunktEintrag, List,
 	Comparator, JavaMap, JavaSet } from '@core';
-import { FoerderschwerpunkteListeManager, KlassenListeManager } from "@ui";
+import { FoerderschwerpunkteListeManager } from "@ui";
 
 /**
  * Ein Manager zum Verwalten der Schüler-Lernabschnittsdaten eines Schülers.
@@ -44,10 +44,10 @@ export class SchuelerLernabschnittManager {
 	private readonly _mapJahrgangByID: JavaMap<number, JahrgangsDaten> = new HashMap<number, JahrgangsDaten>();
 
 	// Der Katalog der Klassen in dem Schuljahresabschnitt
-	private readonly _klassen: List<KlasseDetails> = new ArrayList<KlasseDetails>();
+	private readonly _klassen: List<KlassenDaten> = new ArrayList<KlassenDaten>();
 
 	// Eine Map für den schnellen Zugriff auf die Klassen anhand ihrer ID
-	private readonly _mapKlasseByID: JavaMap<number, KlasseDetails> = new HashMap<number, KlasseDetails>();
+	private readonly _mapKlasseByID: JavaMap<number, KlassenDaten> = new HashMap<number, KlassenDaten>();
 
 	// Der Katalog der Kurse in dem Schuljahresabschnitt
 	private readonly _kurse: List<KursDaten> = new ArrayList<KursDaten>();
@@ -128,7 +128,7 @@ export class SchuelerLernabschnittManager {
 	 * @param lehrer                der Katalog der Lehrer
 	 * @param foerderschwerpunkte   der Katalog der Förderschwerpunkte
 	 */
-	public constructor(schulform: Schulform, schueler: SchuelerListeEintrag, lernabschnittsdaten: SchuelerLernabschnittsdaten, schuljahresabschnitt: Schuljahresabschnitt, faecher: List<FachDaten>, foerderschwerpunkte: List<FoerderschwerpunktEintrag>, jahrgaenge: List<JahrgangsDaten>, klassen: List<KlasseDetails>, kurse: List<KursDaten>, lehrer: List<LehrerListeEintrag>) {
+	public constructor(schulform: Schulform, schueler: SchuelerListeEintrag, lernabschnittsdaten: SchuelerLernabschnittsdaten, schuljahresabschnitt: Schuljahresabschnitt, faecher: List<FachDaten>, foerderschwerpunkte: List<FoerderschwerpunktEintrag>, jahrgaenge: List<JahrgangsDaten>, klassen: List<KlassenDaten>, kurse: List<KursDaten>, lehrer: List<LehrerListeEintrag>) {
 		this._schulform = schulform;
 		this._schueler = schueler;
 		this._lernabschnittsdaten = lernabschnittsdaten;
@@ -207,10 +207,10 @@ export class SchuelerLernabschnittManager {
 	 *
 	 * @param klassen   die Liste der Klassen für die Initialisierung
 	 */
-	private initKlassen(klassen: List<KlasseDetails>): void {
+	private initKlassen(klassen: List<KlassenDaten>): void {
 		this._klassen.clear();
 		this._klassen.addAll(klassen);
-		this._klassen.sort(KlassenListeManager.COMPARATOR_KLASSEN_DEFAULT);
+		this._klassen.sort(KlassenUtils.comparator);
 		this._mapKlasseByID.clear();
 		for (const k of klassen) {
 			this._mapKlasseByID.put(k.id, k);
@@ -545,7 +545,7 @@ export class SchuelerLernabschnittManager {
 	 *
 	 * @return die Klassen-Informationen oder null, falls die ID ungültig ist
 	 */
-	public klasseGetByIdOrNull(id: number): KlasseDetails | null {
+	public klasseGetByIdOrNull(id: number): KlassenDaten | null {
 		return this._mapKlasseByID.get(id);
 	}
 
@@ -557,7 +557,7 @@ export class SchuelerLernabschnittManager {
 	 * @return die Klassen-Informationen
 	 * @throws DeveloperNotificationException falls keine Klasse mit der ID existiert
 	 */
-	public klasseGetByIdOrException(id: number): KlasseDetails {
+	public klasseGetByIdOrException(id: number): KlassenDaten {
 		return DeveloperNotificationException.ifMapGetIsNull(this._mapKlasseByID, id);
 	}
 
@@ -566,7 +566,7 @@ export class SchuelerLernabschnittManager {
 	 *
 	 * @return die Liste der Klassen
 	 */
-	public klasseGetMenge(): List<KlasseDetails> {
+	public klasseGetMenge(): List<KlassenDaten> {
 		return this._klassen;
 	}
 

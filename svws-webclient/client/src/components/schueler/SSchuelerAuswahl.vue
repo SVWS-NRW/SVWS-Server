@@ -90,7 +90,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef } from "vue";
-	import type { JahrgangsDaten, KlasseDetails, KursDaten, SchuelerListeEintrag, Schulgliederung } from "@core";
+	import type { JahrgangsDaten, KlassenDaten, KursDaten, SchuelerListeEintrag, Schulgliederung } from "@core";
 	import { BenutzerKompetenz, SchuelerStatus, ServerMode } from "@core";
 	import type { SortByAndOrder } from "@ui";
 	import { useRegionSwitch, ViewType } from "@ui";
@@ -225,7 +225,7 @@
 		},
 	});
 
-	const filterKlassen = computed<KlasseDetails[]>({
+	const filterKlassen = computed<KlassenDaten[]>({
 		get: () => [...props.manager().klassen.auswahl()],
 		set: (value) => {
 			props.manager().klassen.auswahlClear();
@@ -287,7 +287,7 @@
 		return `${kurs.kuerzel} (${jahrgaenge})`;
 	}
 
-	function find(klassen: Iterable<JahrgangsDaten | KlasseDetails>, search: string) {
+	function find(klassen: Iterable<JahrgangsDaten | KlassenDaten>, search: string) {
 		const matchedKlassen = [];
 		for (const klasse of klassen) {
 			if ((klasse.kuerzel !== null) && klasse.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {

@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import de.svws_nrw.asd.data.klassen.KlasseDetails;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeAll;
@@ -46,6 +45,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.db.Benutzer;
@@ -69,7 +69,7 @@ class DataManagerRevisedTest {
 	@Mock
 	private DBEntityManager conn;
 
-	private static KlasseDetails klasseDetails;
+	private static KlassenDaten klassenDaten;
 
 	/**
 	 * Initialisierung der Core-Types
@@ -80,11 +80,11 @@ class DataManagerRevisedTest {
 	}
 
 	@BeforeEach
-	void setUpBeforeEach() {
-		klasseDetails = new KlasseDetails();
-		klasseDetails.id = 1L;
-		klasseDetails.kuerzel = "55a";
-		klasseDetails.idJahrgang = 1L;
+	public void setUpBeforeEach() {
+		klassenDaten = new KlassenDaten();
+		klassenDaten.id = 1L;
+		klassenDaten.kuerzel = "55a";
+		klassenDaten.idJahrgang = 1L;
 	}
 
 
@@ -102,9 +102,9 @@ class DataManagerRevisedTest {
 
 	@Test
 	void constructor_ClassDTOKlassen() {
-		final DataManagerRevised<Long, DTOKlassen, KlasseDetails> result = new DataManagerRevised<>(mock(DBEntityManager.class)) {
+		final DataManagerRevised<Long, DTOKlassen, KlassenDaten> result = new DataManagerRevised<>(mock(DBEntityManager.class)) {
 			@Override
-			protected KlasseDetails map(final DTOKlassen dtoKlassen) {
+			protected KlassenDaten map(final DTOKlassen dtoKlassen) {
 				return null;
 			}
 		};
@@ -114,9 +114,9 @@ class DataManagerRevisedTest {
 
 	@Test
 	void mapAttribute() {
-		final DataManagerRevised<Long, DTOKlassen, KlasseDetails> dmr = new DataManagerRevised<>(mock(DBEntityManager.class)) {
+		final DataManagerRevised<Long, DTOKlassen, KlassenDaten> dmr = new DataManagerRevised<>(mock(DBEntityManager.class)) {
 			@Override
-			protected KlasseDetails map(final DTOKlassen dtoKlassen) {
+			protected KlassenDaten map(final DTOKlassen dtoKlassen) {
 				return null;
 			}
 		};
@@ -129,9 +129,9 @@ class DataManagerRevisedTest {
 
 	@Test
 	void initDTO() {
-		final DataManagerRevised<Long, DTOKlassen, KlasseDetails> dmr = new DataManagerRevised<>(mock(DBEntityManager.class)) {
+		final DataManagerRevised<Long, DTOKlassen, KlassenDaten> dmr = new DataManagerRevised<>(mock(DBEntityManager.class)) {
 			@Override
-			protected KlasseDetails map(final DTOKlassen dtoKlassen) {
+			protected KlassenDaten map(final DTOKlassen dtoKlassen) {
 				return null;
 			}
 		};
@@ -144,9 +144,9 @@ class DataManagerRevisedTest {
 
 	@Test
 	void getID() {
-		final DataManagerRevised<Long, DTOKlassen, KlasseDetails> dmr = new DataManagerRevised<>(mock(DBEntityManager.class)) {
+		final DataManagerRevised<Long, DTOKlassen, KlassenDaten> dmr = new DataManagerRevised<>(mock(DBEntityManager.class)) {
 			@Override
-			protected KlasseDetails map(final DTOKlassen dtoKlassen) {
+			protected KlassenDaten map(final DTOKlassen dtoKlassen) {
 				return null;
 			}
 		};
@@ -159,9 +159,9 @@ class DataManagerRevisedTest {
 
 	@Test
 	void getAll() {
-		final DataManagerRevised<Long, DTOKlassen, KlasseDetails> dmr = new DataManagerRevised<>(mock(DBEntityManager.class)) {
+		final DataManagerRevised<Long, DTOKlassen, KlassenDaten> dmr = new DataManagerRevised<>(mock(DBEntityManager.class)) {
 			@Override
-			protected KlasseDetails map(final DTOKlassen dtoKlassen) {
+			protected KlassenDaten map(final DTOKlassen dtoKlassen) {
 				return null;
 			}
 		};
@@ -174,9 +174,9 @@ class DataManagerRevisedTest {
 
 	@Test
 	void getList() {
-		final DataManagerRevised<Long, DTOKlassen, KlasseDetails> dmr = new DataManagerRevised<>(mock(DBEntityManager.class)) {
+		final DataManagerRevised<Long, DTOKlassen, KlassenDaten> dmr = new DataManagerRevised<>(mock(DBEntityManager.class)) {
 			@Override
-			protected KlasseDetails map(final DTOKlassen dtoKlassen) {
+			protected KlassenDaten map(final DTOKlassen dtoKlassen) {
 				return null;
 			}
 		};
@@ -189,9 +189,9 @@ class DataManagerRevisedTest {
 
 	@Test
 	void getById() {
-		final DataManagerRevised<Long, DTOKlassen, KlasseDetails> dmr = new DataManagerRevised<>(mock(DBEntityManager.class)) {
+		final DataManagerRevised<Long, DTOKlassen, KlassenDaten> dmr = new DataManagerRevised<>(mock(DBEntityManager.class)) {
 			@Override
-			protected KlasseDetails map(final DTOKlassen dtoKlassen) {
+			protected KlassenDaten map(final DTOKlassen dtoKlassen) {
 				return null;
 			}
 		};
@@ -395,7 +395,7 @@ class DataManagerRevisedTest {
 			verify(cut, times(1)).checkBeforeCreation(any(), any());
 
 			assertThat(result.getStatus()).isEqualTo(Response.Status.CREATED.getStatusCode());
-			assertThat(result.getEntity()).isEqualTo(klasseDetails);
+			assertThat(result.getEntity()).isEqualTo(klassenDaten);
 			assertThat(result.getMediaType()).isEqualTo(MediaType.APPLICATION_JSON_TYPE);
 		}
 	}
@@ -478,7 +478,7 @@ class DataManagerRevisedTest {
 		verify(conn, times(1)).transactionFlush();
 
 		assertThat(result.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
-		assertThat(result.getEntity()).isEqualTo(klasseDetails);
+		assertThat(result.getEntity()).isEqualTo(klassenDaten);
 		assertThat(result.getMediaType()).isEqualTo(MediaType.APPLICATION_JSON_TYPE);
 	}
 
@@ -544,7 +544,7 @@ class DataManagerRevisedTest {
 	void getByIdAsResponse() throws ApiOperationException {
 		final Response result = cut.getByIdAsResponse(1L);
 
-		assertThat(result.getEntity()).isEqualTo(klasseDetails);
+		assertThat(result.getEntity()).isEqualTo(klassenDaten);
 		assertThat(result.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 		assertThat(result.getMediaType()).isEqualTo(MediaType.APPLICATION_JSON_TYPE);
 	}
@@ -553,7 +553,7 @@ class DataManagerRevisedTest {
 	void getAllAsResponse() throws ApiOperationException {
 		final Response result = cut.getAllAsResponse();
 
-		assertThat(result.getEntity()).asInstanceOf(InstanceOfAssertFactories.LIST).hasSize(1).containsExactly(klasseDetails);
+		assertThat(result.getEntity()).asInstanceOf(InstanceOfAssertFactories.LIST).hasSize(1).containsExactly(klassenDaten);
 		assertThat(result.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 		assertThat(result.getMediaType()).isEqualTo(MediaType.APPLICATION_JSON_TYPE);
 	}
@@ -562,7 +562,7 @@ class DataManagerRevisedTest {
 	void getListAsResponse() throws ApiOperationException {
 		final Response result = cut.getListAsResponse();
 
-		assertThat(result.getEntity()).asInstanceOf(InstanceOfAssertFactories.LIST).hasSize(1).containsExactly(klasseDetails);
+		assertThat(result.getEntity()).asInstanceOf(InstanceOfAssertFactories.LIST).hasSize(1).containsExactly(klassenDaten);
 		assertThat(result.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 		assertThat(result.getMediaType()).isEqualTo(MediaType.APPLICATION_JSON_TYPE);
 	}
@@ -677,7 +677,7 @@ class DataManagerRevisedTest {
 	 * Diese Klasse dient als Mock um die Funktionalitäten des DataManagerRevised testen zu können. Der Mock orientiert sich dabei an den Implementierungen
 	 * von DataKlassendaten, weicht jedoch in seiner Komplexität stark ab.
 	 */
-	static class DataManagerRevisedMock extends DataManagerRevised<Long, DTOKlassen, KlasseDetails> {
+	static class DataManagerRevisedMock extends DataManagerRevised<Long, DTOKlassen, KlassenDaten> {
 
 		DataManagerRevisedMock(final DBEntityManager conn) {
 			super(conn);
@@ -687,8 +687,8 @@ class DataManagerRevisedTest {
 		}
 
 		@Override
-		protected KlasseDetails map(final DTOKlassen dtoKlassen) {
-			return klasseDetails;
+		protected KlassenDaten map(final DTOKlassen dtoKlassen) {
+			return klassenDaten;
 		}
 
 		@Override
@@ -712,18 +712,18 @@ class DataManagerRevisedTest {
 		}
 
 		@Override
-		public KlasseDetails getById(final Long id) {
-			return klasseDetails;
+		public KlassenDaten getById(final Long id) {
+			return klassenDaten;
 		}
 
 		@Override
-		public List<KlasseDetails> getAll() {
-			return List.of(klasseDetails);
+		public List<KlassenDaten> getAll() {
+			return List.of(klassenDaten);
 		}
 
 		@Override
-		public List<KlasseDetails> getList() {
-			return List.of(klasseDetails);
+		public List<KlassenDaten> getList() {
+			return List.of(klassenDaten);
 		}
 	}
 }

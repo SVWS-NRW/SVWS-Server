@@ -46,7 +46,7 @@
 <script setup lang="ts">
 
 	import type { SchuelerSchnelleingabeManager } from "@ui";
-	import type { EinschulungsartKatalogEintrag, KlasseDetails, SchuelerSchulbesuchsdaten, SchuelerStammdaten, SchuelerStatusKatalogEintrag,
+	import type { EinschulungsartKatalogEintrag, KlassenDaten, SchuelerSchulbesuchsdaten, SchuelerStammdaten, SchuelerStatusKatalogEintrag,
 		SchuelerLernabschnittsdaten } from "@core";
 	import { SchuelerStatus, Schulform } from "@core";
 	import { computed } from "vue";
@@ -93,9 +93,9 @@
 	const jahrgang = computed<string | null>(
 		() => jahrgaenge.value.find(i => i.id === (manager().lernabschnittsdaten.jahrgangID))?.kuerzel ?? null);
 
-	const klasse = computed<KlasseDetails | null>({
+	const klasse = computed<KlassenDaten | null>({
 		get: () => klassen.value.find(i => i.id === (manager().lernabschnittsdaten.klassenID)) ?? null,
-		set: (value: KlasseDetails | null) => {
+		set: (value: KlassenDaten | null) => {
 			void props.patchLernabschnittsdaten({ klassenID: value?.id ?? null }, manager().lernabschnittsdaten.id);
 			manager().lernabschnittsdaten.klassenID = value?.id ?? -1;
 		},

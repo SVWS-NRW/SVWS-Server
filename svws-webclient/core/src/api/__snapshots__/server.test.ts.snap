@@ -24564,7 +24564,7 @@ ArrayList {
 `;
 
 exports[`Server > getKlasse 1`] = `
-KlasseDetails {
+KlassenDaten {
   "id": 10,
   "idJahrgang": 4,
   "istSichtbar": true,
@@ -24581,10 +24581,10 @@ KlasseDetails {
 }
 `;
 
-exports[`Server > getKlassenDetailsBySchuljahresabschnitt 1`] = `
+exports[`Server > getKlassenFuerAbschnitt 1`] = `
 ArrayList {
   "elementData": [
-    KlasseDetails {
+    KlassenDaten {
       "id": 323,
       "idJahrgang": 1,
       "istSichtbar": true,
@@ -24596,7 +24596,7 @@ ArrayList {
       "parallelitaet": "A",
       "sortierung": 50,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 53,
       "idJahrgang": 1,
       "istSichtbar": true,
@@ -24608,7 +24608,7 @@ ArrayList {
       "parallelitaet": "B",
       "sortierung": 51,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 71,
       "idJahrgang": 1,
       "istSichtbar": true,
@@ -24620,7 +24620,7 @@ ArrayList {
       "parallelitaet": "C",
       "sortierung": 52,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 89,
       "idJahrgang": 1,
       "istSichtbar": true,
@@ -24632,7 +24632,7 @@ ArrayList {
       "parallelitaet": "D",
       "sortierung": 53,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 107,
       "idJahrgang": 2,
       "istSichtbar": true,
@@ -24644,7 +24644,7 @@ ArrayList {
       "parallelitaet": "A",
       "sortierung": 60,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 125,
       "idJahrgang": 2,
       "istSichtbar": true,
@@ -24656,7 +24656,7 @@ ArrayList {
       "parallelitaet": "B",
       "sortierung": 61,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 143,
       "idJahrgang": 2,
       "istSichtbar": true,
@@ -24668,7 +24668,7 @@ ArrayList {
       "parallelitaet": "C",
       "sortierung": 62,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 341,
       "idJahrgang": 2,
       "istSichtbar": true,
@@ -24680,7 +24680,7 @@ ArrayList {
       "parallelitaet": "D",
       "sortierung": 63,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 161,
       "idJahrgang": 3,
       "istSichtbar": true,
@@ -24692,7 +24692,7 @@ ArrayList {
       "parallelitaet": "A",
       "sortierung": 70,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 179,
       "idJahrgang": 3,
       "istSichtbar": true,
@@ -24704,7 +24704,7 @@ ArrayList {
       "parallelitaet": "B",
       "sortierung": 71,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 197,
       "idJahrgang": 3,
       "istSichtbar": true,
@@ -24716,7 +24716,7 @@ ArrayList {
       "parallelitaet": "C",
       "sortierung": 72,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 359,
       "idJahrgang": 3,
       "istSichtbar": true,
@@ -24728,7 +24728,7 @@ ArrayList {
       "parallelitaet": "D",
       "sortierung": 73,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 215,
       "idJahrgang": 4,
       "istSichtbar": true,
@@ -24740,7 +24740,7 @@ ArrayList {
       "parallelitaet": "A",
       "sortierung": 80,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 233,
       "idJahrgang": 4,
       "istSichtbar": true,
@@ -24752,7 +24752,7 @@ ArrayList {
       "parallelitaet": "B",
       "sortierung": 81,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 251,
       "idJahrgang": 4,
       "istSichtbar": true,
@@ -24764,7 +24764,7 @@ ArrayList {
       "parallelitaet": "C",
       "sortierung": 82,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 431,
       "idJahrgang": 4,
       "istSichtbar": true,
@@ -24776,7 +24776,7 @@ ArrayList {
       "parallelitaet": "D",
       "sortierung": 83,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 269,
       "idJahrgang": 5,
       "istSichtbar": true,
@@ -24788,7 +24788,7 @@ ArrayList {
       "parallelitaet": "A",
       "sortierung": 90,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 287,
       "idJahrgang": 5,
       "istSichtbar": true,
@@ -24800,7 +24800,7 @@ ArrayList {
       "parallelitaet": "B",
       "sortierung": 91,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 305,
       "idJahrgang": 5,
       "istSichtbar": true,
@@ -24812,7 +24812,7 @@ ArrayList {
       "parallelitaet": "C",
       "sortierung": 92,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 449,
       "idJahrgang": 5,
       "istSichtbar": true,
@@ -24824,7 +24824,7 @@ ArrayList {
       "parallelitaet": "D",
       "sortierung": 93,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 377,
       "idJahrgang": 10,
       "istSichtbar": true,
@@ -24836,7 +24836,7 @@ ArrayList {
       "parallelitaet": null,
       "sortierung": 200,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 395,
       "idJahrgang": 11,
       "istSichtbar": true,
@@ -24848,7 +24848,7 @@ ArrayList {
       "parallelitaet": null,
       "sortierung": 210,
     },
-    KlasseDetails {
+    KlassenDaten {
       "id": 413,
       "idJahrgang": 12,
       "istSichtbar": true,

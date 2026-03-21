@@ -114,7 +114,7 @@
 	import { computed, ref, watch } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { KlassenDatenProps } from "./SKlassenDatenProps";
-	import type { LehrerListeEintrag, KlasseDetails, Klassenart, Schulgliederung, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, JahrgangsDaten } from "@core";
+	import type { LehrerListeEintrag, KlassenDaten, Klassenart, Schulgliederung, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, JahrgangsDaten } from "@core";
 	import { SchuelerStatus, Schulform, BenutzerKompetenz, Jahrgaenge } from "@core";
 	import { KlassenDatenModelProxy } from "../KlassenDatenModelProxy";
 
@@ -131,7 +131,7 @@
 	});
 
 	const dataNotPatched = () => props.manager().daten();
-	const listOfAutopatchProps: Iterable<keyof KlasseDetails> = ["idJahrgang", "parallelitaet", "idVorgaengerklasse",
+	const listOfAutopatchProps: Iterable<keyof KlassenDaten> = ["idJahrgang", "parallelitaet", "idVorgaengerklasse",
 		"idFolgeklasse", "idSchulgliederung", "idKlassenart", "idBerufsbildendOrganisationsform", "idAllgemeinbildendOrganisationsform",
 		"idWeiterbildungOrganisationsform", "noteneingabeGesperrt", "verwendungAnkreuzkompetenzen", "beginnSommersemester"];
 	const modelProxy = new KlassenDatenModelProxy(() => dataNotPatched(), () => listAndereKlassen.value, props.manager, props.mapKlassenVorigerAbschnitt, props.mapKlassenFolgenderAbschnitt, listOfAutopatchProps, props.patch);

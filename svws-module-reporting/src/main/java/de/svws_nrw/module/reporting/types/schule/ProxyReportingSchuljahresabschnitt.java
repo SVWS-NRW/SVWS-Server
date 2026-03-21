@@ -7,11 +7,11 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.svws_nrw.asd.data.klassen.KlasseDetails;
+import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.data.klassen.DataKlasse;
+import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.module.reporting.types.fach.ProxyReportingFach;
 import de.svws_nrw.module.reporting.types.jahrgang.ProxyReportingJahrgang;
@@ -104,20 +104,20 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	public Map<Long, ReportingKlasse> mapKlassen() {
 		if ((super.mapKlassen == null) || super.mapKlassen.isEmpty()) {
 			super.mapKlassen = new HashMap<>();
-			List<KlasseDetails> klassen = new ArrayList<>();
+			List<KlassenDaten> klassendaten = new ArrayList<>();
 			try {
 				this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Klassendaten.");
-				klassen = new DataKlasse(this.reportingRepository.conn()).getListBySchuljahresabschnittID(this.id(), true);
+				klassendaten = new DataKlassendaten(this.reportingRepository.conn()).getListBySchuljahresabschnittID(this.id(), true);
 			} catch (final Exception e) {
 				ReportingExceptionUtils.logException(
 						"FEHLER: Fehler bei der Erstellung der Klassenliste für den Schuljahresabschnitt %s.".formatted(this.textSchuljahresabschnittKurz()), e,
 						reportingRepository.logger(), LogLevel.ERROR, 0);
 			}
-			if (klassen.isEmpty())
+			if (klassendaten.isEmpty())
 				return super.mapKlassen;
 
-			for (final KlasseDetails klasseDetails : klassen) {
-				final ReportingKlasse reportingKlasse = new ProxyReportingKlasse(this.reportingRepository, klasseDetails);
+			for (final KlassenDaten klasse : klassendaten) {
+				final ReportingKlasse reportingKlasse = new ProxyReportingKlasse(this.reportingRepository, klasse);
 				super.mapKlassen.put(reportingKlasse.id(), reportingKlasse);
 				this.reportingRepository.mapKlassen().put(reportingKlasse.id(), reportingKlasse);
 			}

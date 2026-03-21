@@ -55,7 +55,7 @@
 
 	import { computed, ref } from "vue";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
-	import type { JahrgangsDaten, KlasseDetails, LehrerListeEintrag, Schulgliederung } from "@core";
+	import type { JahrgangsDaten, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
 	import { BenutzerKompetenz } from "@core";
 	import { useRegionSwitch, ViewType } from "@ui";
 
@@ -125,7 +125,7 @@
 
 	const search = ref<string>("");
 
-	const rowsFiltered = computed<KlasseDetails[]>(() => {
+	const rowsFiltered = computed<KlassenDaten[]>(() => {
 		const arr = [];
 		for (const e of props.manager().filtered()) {
 			if ((e.kuerzel !== null) && e.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())) {
@@ -156,7 +156,7 @@
 		return props.manager().hasDaten() ? props.manager().auswahl() : null;
 	});
 
-	async function setAuswahl(items: KlasseDetails[]) {
+	async function setAuswahl(items: KlassenDaten[]) {
 		props.manager().liste.auswahlClear();
 		for (const item of items) {
 			if (props.manager().liste.hasValue(item)) {

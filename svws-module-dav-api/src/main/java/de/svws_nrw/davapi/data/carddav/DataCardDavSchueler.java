@@ -16,7 +16,7 @@ import de.svws_nrw.core.data.adressbuch.AdressbuchKontakt;
 import de.svws_nrw.core.data.adressbuch.Telefonnummer;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.data.klassen.DataKlasse;
+import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.db.DBEntityManager;
@@ -199,7 +199,7 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 
 		// Kategorie zur Jahrgangs- und Klassenzugehörigkeit anhand des Lernabschnittes
 		final Map<Long, String> mapJahrgangById = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j.InternKrz));
-		final Map<Long, DTOKlassen> mapKlassenById = new DataKlasse(conn).getDTOsBySchuljahresabschnittId(schuljahresabschnitt.id)
+		final Map<Long, DTOKlassen> mapKlassenById = new DataKlassendaten(conn).getDTOsBySchuljahresabschnittId(schuljahresabschnitt.id)
 				.stream().collect(Collectors.toMap(s -> s.ID, Function.identity()));
 		final List<DTOSchuelerLernabschnittsdaten> listLernabschnitte =
 				conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.Schuljahresabschnitts_ID = ?2",

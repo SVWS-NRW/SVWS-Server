@@ -129,8 +129,7 @@ export { KAOAMerkmalKatalogEintrag } from './asd/data/kaoa/KAOAMerkmalKatalogEin
 export { KAOAMerkmaleOptionsartenKatalogEintrag } from './asd/data/kaoa/KAOAMerkmaleOptionsartenKatalogEintrag';
 export { KAOAZusatzmerkmalKatalogEintrag } from './asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag';
 export { KAOAZusatzmerkmaleOptionsartenKatalogEintrag } from './asd/data/kaoa/KAOAZusatzmerkmaleOptionsartenKatalogEintrag';
-export { KlasseDetails } from './asd/data/klassen/KlasseDetails';
-export { KlasseListItem } from './asd/data/klassen/KlasseListItem';
+export { KlassenDaten } from './asd/data/klassen/KlassenDaten';
 export { KlassenartKatalogEintrag } from './asd/data/klassen/KlassenartKatalogEintrag';
 export { KursDaten } from './asd/data/kurse/KursDaten';
 export { KursLehrer } from './asd/data/kurse/KursLehrer';
@@ -952,6 +951,7 @@ export { KlausurterminblockungAlgorithmusGreedy2b } from './core/utils/gost/klau
 export { KlausurterminblockungAlgorithmusGreedy3 } from './core/utils/gost/klausurplanung/KlausurterminblockungAlgorithmusGreedy3';
 export { KlausurterminblockungDynDaten } from './core/utils/gost/klausurplanung/KlausurterminblockungDynDaten';
 export { JahrgaengeUtils } from './core/utils/kataloge/jahrgaenge/JahrgaengeUtils';
+export { KlassenUtils } from './core/utils/klassen/KlassenUtils';
 export { KursUtils } from './core/utils/kurse/KursUtils';
 export { LehrerUtils } from './core/utils/lehrer/LehrerUtils';
 export { RaumUtils } from './core/utils/raum/RaumUtils';

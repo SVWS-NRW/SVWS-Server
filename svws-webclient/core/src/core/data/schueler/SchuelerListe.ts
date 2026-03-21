@@ -1,11 +1,11 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { KursDaten } from '../../../asd/data/kurse/KursDaten';
+import { KlassenDaten } from '../../../asd/data/klassen/KlassenDaten';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
 import { Class } from '../../../java/lang/Class';
-import { KlasseDetails } from '../../../asd/data/klassen/KlasseDetails';
 import { GostJahrgang } from '../../../core/data/gost/GostJahrgang';
 
 export class SchuelerListe extends JavaObject {
@@ -23,7 +23,7 @@ export class SchuelerListe extends JavaObject {
 	/**
 	 * Die Klassen-Daten
 	 */
-	public readonly klassen: List<KlasseDetails> = new ArrayList<KlasseDetails>();
+	public readonly klassen: List<KlassenDaten> = new ArrayList<KlassenDaten>();
 
 	/**
 	 * Die Kurs-Daten
@@ -71,7 +71,7 @@ export class SchuelerListe extends JavaObject {
 		}
 		if (obj.klassen !== undefined) {
 			for (const elem of obj.klassen) {
-				result.klassen.add(KlasseDetails.transpilerFromJSON(JSON.stringify(elem)));
+				result.klassen.add(KlassenDaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if (obj.kurse !== undefined) {
@@ -106,7 +106,7 @@ export class SchuelerListe extends JavaObject {
 		result += '"klassen" : [ ';
 		for (let i = 0; i < obj.klassen.size(); i++) {
 			const elem = obj.klassen.get(i);
-			result += KlasseDetails.transpilerToJSON(elem);
+			result += KlassenDaten.transpilerToJSON(elem);
 			if (i < obj.klassen.size() - 1)
 				result += ',';
 		}
@@ -159,7 +159,7 @@ export class SchuelerListe extends JavaObject {
 			result += '"klassen" : [ ';
 			for (let i = 0; i < obj.klassen.size(); i++) {
 				const elem = obj.klassen.get(i);
-				result += KlasseDetails.transpilerToJSON(elem);
+				result += KlassenDaten.transpilerToJSON(elem);
 				if (i < obj.klassen.size() - 1)
 					result += ',';
 			}

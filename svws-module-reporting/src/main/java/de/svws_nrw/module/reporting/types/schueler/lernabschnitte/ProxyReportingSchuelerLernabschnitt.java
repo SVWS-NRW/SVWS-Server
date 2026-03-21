@@ -5,12 +5,12 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import de.svws_nrw.asd.data.klassen.KlasseDetails;
+import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.data.klassen.DataKlasse;
+import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 
 import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
@@ -161,9 +161,9 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 		if ((super.folgeklasse() == null) && (super.idFolgeklasse() != null) && (super.idFolgeklasse() >= 0)) {
 			if (!this.reportingRepository.mapKlassen().containsKey(super.idFolgeklasse())) {
 				// ID der Folgeklasse ist bekannt, aber sie wurde noch nicht aus der DB geladen. Lade deren Daten und lade dann alle Klassen des Lernabschnitts.
-				final KlasseDetails klasseDetails;
+				final KlassenDaten klassenDaten;
 				try {
-					klasseDetails = new DataKlasse(reportingRepository.conn()).getByIdOhneSchueler(super.idFolgeklasse());
+					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idFolgeklasse());
 				} catch (final ApiOperationException e) {
 					ReportingExceptionUtils.logException(
 							"FEHLER: Fehler bei der Ermittlung der Daten für die Folgeklasse des Schülers %s in %s."
@@ -171,7 +171,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 							e, reportingRepository.logger(), LogLevel.ERROR, 0);
 					return super.folgeklasse();
 				}
-				super.folgeklasse = this.reportingRepository.schuljahresabschnitt(klasseDetails.idSchuljahresabschnitt).klasse(super.idFolgeklasse());
+				super.folgeklasse = this.reportingRepository.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(super.idFolgeklasse());
 			} else {
 				// ID der Folgeklasse ist bekannt und die Klasse wurde in einem Lernabschnitt bereits erzeugt, hole sie aus Lernabschnitt.
 				super.folgeklasse = this.reportingRepository.mapKlassen().get(super.idFolgeklasse()).schuljahresabschnitt().klasse(super.idFolgeklasse());

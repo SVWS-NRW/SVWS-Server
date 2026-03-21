@@ -9,13 +9,13 @@ describe("APIKlassen Tests", () => {
 		const api = privilegedApiServer;
 
 		test('GET: Alle Klassen zum Schuljahresabschnitt 1', async () => {
-			const result = await handleRequest(api, api.getKlassenDetailsBySchuljahresabschnitt, schema, 1);
+			const result = await handleRequest(api, api.getKlassenFuerAbschnitt, schema, 1);
 			expect(result.content).toBeTruthy();
 			expect(result.content?.size()).toMatchSnapshot();
 		});
 
 		test('GET: Alle Klassen zu einem Schuljahresabschnitt, der nicht existiert', async () => {
-			const result = await handleRequest(api, api.getKlassenDetailsBySchuljahresabschnitt, schema, 0);
+			const result = await handleRequest(api, api.getKlassenFuerAbschnitt, schema, 0);
 			expect(result.content).toMatchSnapshot();
 		});
 

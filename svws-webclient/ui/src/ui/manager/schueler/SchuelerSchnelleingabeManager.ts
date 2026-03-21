@@ -1,4 +1,4 @@
-import type { EinschulungsartKatalogEintrag, Erzieherart, FachDaten, Fahrschuelerart, Haltestelle, JahrgangsDaten, Kindergarten, KlasseDetails, List,
+import type { EinschulungsartKatalogEintrag, Erzieherart, FachDaten, Fahrschuelerart, Haltestelle, JahrgangsDaten, Kindergarten, KlassenDaten, List,
 	OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchuelerLernabschnittsdaten, SchuelerListe, SchuelerSchulbesuchsdaten, SchuelerStammdaten,
 	SchulEintrag, Schuljahresabschnitt, Telefonart, VermerkartEintrag } from "../../../../../core/src";
 import { ArrayList } from "../../../../../core/src";
@@ -24,7 +24,7 @@ export class SchuelerSchnelleingabeManager {
 	private readonly _schulenByExterneSchulnummer: Map<string, SchulEintrag> = new Map();
 	private readonly _telefonartenById: Map<number, Telefonart>;
 	private readonly _vermerkartenById: Map<number, VermerkartEintrag>;
-	private readonly _klassenAktuell: List<KlasseDetails> = new ArrayList();
+	private readonly _klassenAktuell: List<KlassenDaten> = new ArrayList();
 
 
 	constructor(
@@ -157,7 +157,7 @@ export class SchuelerSchnelleingabeManager {
 		return this._vermerkartenById;
 	}
 
-	get klassenAktuell(): List<KlasseDetails> {
+	get klassenAktuell(): List<KlassenDaten> {
 		return this._klassenAktuell;
 	}
 

@@ -2,7 +2,7 @@ import { computed } from "vue";
 
 import type { AES } from "~/utils/crypto/aes";
 import type { Config } from "../../../ui/src/utils/Config";
-import type { List, DBSchemaListeEintrag, ApiServer, ApiExternal, LehrerListeEintrag, SchuelerListeEintrag, KlasseDetails, KursDaten, JahrgangsDaten, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode, ValidatorKontext } from "@core";
+import type { List, DBSchemaListeEintrag, ApiServer, ApiExternal, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursDaten, JahrgangsDaten, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode, ValidatorKontext } from "@core";
 import { Schulform, Schulgliederung, BenutzerTyp, DeveloperNotificationException } from "@core";
 
 import { ApiConnection } from "~/router/ApiConnection";
@@ -424,9 +424,9 @@ class Api {
 	 *
 	 * @returns die Map mit den Klassen
 	 */
-	public async getKlassenListe(idSchuljahresabschnitt: number): Promise<Map<number, KlasseDetails>> {
-		const listKlassen = await this.server.getKlassenDetailsBySchuljahresabschnitt(this.schema, idSchuljahresabschnitt);
-		const mapKlassen = new Map<number, KlasseDetails>();
+	public async getKlassenListe(idSchuljahresabschnitt: number): Promise<Map<number, KlassenDaten>> {
+		const listKlassen = await this.server.getKlassenFuerAbschnitt(this.schema, idSchuljahresabschnitt);
+		const mapKlassen = new Map<number, KlassenDaten>();
 		for (const k of listKlassen) {
 			mapKlassen.set(k.id, k);
 		}

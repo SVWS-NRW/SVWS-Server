@@ -82,7 +82,7 @@ import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
-import de.svws_nrw.data.klassen.DataKlasse;
+import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKurse;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
@@ -708,7 +708,7 @@ public final class DataUntis {
 		logger.logLn("-> bestimme die zugehörigen Jahrgänge...");
 		final Map<Long, DTOJahrgang> mapJahrgaengeByKlassenId = DataJahrgangsdaten.getDTOMapByKlassen(conn, klassen);
 		logger.logLn("-> bestimme die zugehörigen Klassenlehrer...");
-		final Map<Long, List<DTOLehrer>> mapKlassenlehrerByKlassenId = DataKlasse.getDTOMapKlassenlehrerByKlassenID(conn, idsKlassen);
+		final Map<Long, List<DTOLehrer>> mapKlassenlehrerByKlassenId = DataKlassendaten.getDTOMapKlassenlehrerByKlassenID(conn, idsKlassen);
 		return getGPU003(logger, klassen, mapJahrgaengeByKlassenId, mapKlassenlehrerByKlassenId);
 	}
 

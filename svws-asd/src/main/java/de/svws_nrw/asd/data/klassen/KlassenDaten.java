@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @XmlRootElement
 @Schema(description = "Die Daten einer Klasse.")
 @TranspilerDTO
-public class KlasseDetails {
+public class KlassenDaten {
 
 	/** Die ID der Klasse. */
 	@Schema(description = "die ID der Klasse", example = "4709")
@@ -116,5 +116,12 @@ public class KlasseDetails {
 	/** Gibt am WBK an, ob die Klassen im Sommersemester angefangen hat. */
 	@Schema(description = "gibt am WBK an, ob die Klassen im Sommersemester angefangen hat", example = "false")
 	public boolean beginnSommersemester = false;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public KlassenDaten() {
+		// leer
+	}
 
 }

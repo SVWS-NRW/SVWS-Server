@@ -1,7 +1,7 @@
 import { describe, expect, test, beforeAll } from "vitest";
 import { JsonCoreTypeReaderStatic } from "../../../../../core/src/asd/utils/JsonCoreTypeReaderStatic";
 import { Schuljahresabschnitt } from "../../../../../core/src/asd/data/schule/Schuljahresabschnitt";
-import { KlasseDetails } from "../../../../../core/src/asd/data/klassen/KlasseDetails";
+import { KlassenDaten } from "../../../../../core/src/asd/data/klassen/KlassenDaten";
 import { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
 import { Schulgliederung } from "../../../../../core/src/asd/types/schule/Schulgliederung";
 import type { SchuelerListeEintrag } from "../../../../../core/src/core/data/schueler/SchuelerListeEintrag";
@@ -16,11 +16,15 @@ import { KlassenListeManager } from "../../../../src/ui/manager/klassen/KlassenL
 describe("Tests für KlassenListeManager", () => {
 	// Testet, ob das HTML korrekt gerendert wird
 	const schulform: Schulform = Schulform.GY;
-	let schuljahresabschnitte: ArrayList<Schuljahresabschnitt> = new ArrayList<Schuljahresabschnitt>();
-	const klassen: ArrayList<KlasseDetails> = new ArrayList<KlasseDetails>();
-	const schueler: ArrayList<SchuelerListeEintrag> = new ArrayList<SchuelerListeEintrag>();
-	const jahrgaenge: ArrayList<JahrgangsDaten> = new ArrayList<JahrgangsDaten>();
-	const lehrer: ArrayList<LehrerListeEintrag> = new ArrayList<LehrerListeEintrag>();
+	let schuljahresabschnitte: ArrayList<Schuljahresabschnitt> =
+		new ArrayList<Schuljahresabschnitt>();
+	const klassen: ArrayList<KlassenDaten> = new ArrayList<KlassenDaten>();
+	const schueler: ArrayList<SchuelerListeEintrag> =
+		new ArrayList<SchuelerListeEintrag>();
+	const jahrgaenge: ArrayList<JahrgangsDaten> =
+		new ArrayList<JahrgangsDaten>();
+	const lehrer: ArrayList<LehrerListeEintrag> =
+		new ArrayList<LehrerListeEintrag>();
 
 	beforeAll(async () => {
 		const reader = new JsonCoreTypeReaderStatic();
@@ -68,8 +72,8 @@ describe("Tests für KlassenListeManager", () => {
 	});
 
 	test("Initialization | Klasse not in Jahrgänge throws Exception", () => {
-		const _klassen: ArrayList<KlasseDetails> = new ArrayList<KlasseDetails>();
-		const k = new KlasseDetails();
+		const _klassen: ArrayList<KlassenDaten> = new ArrayList<KlassenDaten>();
+		const k = new KlassenDaten();
 		k.id = -1;
 		k.idJahrgang = 2;
 		_klassen.add(k);
@@ -91,14 +95,14 @@ describe("Tests für KlassenListeManager", () => {
 	test("Initialization | Klasse in Jahrgänge throws no Exception", () => {
 		const _jahrgaenge: ArrayList<JahrgangsDaten> =
 			new ArrayList<JahrgangsDaten>();
-		const _klassen: ArrayList<KlasseDetails> = new ArrayList<KlasseDetails>();
+		const _klassen: ArrayList<KlassenDaten> = new ArrayList<KlassenDaten>();
 
 		const jgd = new JahrgangsDaten();
 		jgd.id = 1;
 		_jahrgaenge.add(jgd);
 
 		for (let i = 0; i < 10; i++) {
-			const k = new KlasseDetails();
+			const k = new KlassenDaten();
 			k.id = -1;
 			k.idJahrgang = 1;
 			_klassen.add(k);
@@ -122,13 +126,13 @@ describe("Tests für KlassenListeManager", () => {
 	test("Initialization | Klasse not in Jahrgänge throws no Exception if klassen.jahrgaenge is null", () => {
 		const _jahrgaenge: ArrayList<JahrgangsDaten> =
 			new ArrayList<JahrgangsDaten>();
-		const _klassen: ArrayList<KlasseDetails> = new ArrayList<KlasseDetails>();
+		const _klassen: ArrayList<KlassenDaten> = new ArrayList<KlassenDaten>();
 
 		const jgd = new JahrgangsDaten();
 		jgd.id = 1;
 		_jahrgaenge.add(jgd);
 
-		const k = new KlasseDetails();
+		const k = new KlassenDaten();
 		k.id = -1;
 		// k.idJahrgang bleibt undefined/null
 		_klassen.add(k);
@@ -159,10 +163,10 @@ describe("Tests für KlassenListeManager", () => {
 			lehrer
 		);
 
-		const originalData = new KlasseDetails();
+		const originalData = new KlassenDaten();
 		originalData.kuerzel = "A";
 
-		const newData = new KlasseDetails();
+		const newData = new KlassenDaten();
 		newData.kuerzel = "B";
 
 		// access private method
@@ -186,7 +190,7 @@ describe("Tests für KlassenListeManager", () => {
 
 		manager.auswahlKlassenLeitung = new LehrerListeEintrag();
 
-		const originalData = new KlasseDetails();
+		const originalData = new KlassenDaten();
 		originalData.kuerzel = "A";
 
 		// access private method
@@ -275,7 +279,7 @@ describe("Tests für KlassenListeManager", () => {
 		expect(schuelerListe).not.toBeNull();
 	});
 
-	test("Compare | KlasseDetails should be compared correctly based on 'klassen' criteria", () => {
+	test("Compare | KlassenDaten should be compared correctly based on 'klassen' criteria", () => {
 		const manager = new KlassenListeManager(
 			1,
 			1,
@@ -287,7 +291,7 @@ describe("Tests für KlassenListeManager", () => {
 			lehrer
 		);
 
-		const klasse1 = new KlasseDetails();
+		const klasse1 = new KlassenDaten();
 		klasse1.id = 1;
 		klasse1.kuerzel = "A";
 		klasse1.schueler = ArrayList.of(
@@ -295,7 +299,7 @@ describe("Tests für KlassenListeManager", () => {
 			new Schueler()
 		);
 
-		const klasse2 = new KlasseDetails();
+		const klasse2 = new KlassenDaten();
 		klasse2.id = 2;
 		klasse2.kuerzel = "B";
 		klasse2.schueler = ArrayList.of(new Schueler());
@@ -308,7 +312,7 @@ describe("Tests für KlassenListeManager", () => {
 		expect(result).toBeLessThan(0);
 	});
 
-	test("Compare | KlasseDetails should be compared correctly based on 'schueleranzahl' criteria ascending", () => {
+	test("Compare | KlassenDaten should be compared correctly based on 'schueleranzahl' criteria ascending", () => {
 		const manager = new KlassenListeManager(
 			1,
 			1,
@@ -320,7 +324,7 @@ describe("Tests für KlassenListeManager", () => {
 			lehrer
 		);
 
-		const klasse1 = new KlasseDetails();
+		const klasse1 = new KlassenDaten();
 		klasse1.id = 1;
 		klasse1.kuerzel = "A";
 		klasse1.schueler = ArrayList.of(
@@ -328,7 +332,7 @@ describe("Tests für KlassenListeManager", () => {
 			new Schueler()
 		);
 
-		const klasse2 = new KlasseDetails();
+		const klasse2 = new KlassenDaten();
 		klasse2.id = 2;
 		klasse2.kuerzel = "B";
 		klasse2.schueler = ArrayList.of(new Schueler());
@@ -341,7 +345,7 @@ describe("Tests für KlassenListeManager", () => {
 		expect(result).toBeGreaterThan(0);
 	});
 
-	test("Compare | KlasseDetails should be compared correctly based on 'schueleranzahl' criteria descending", () => {
+	test("Compare | KlassenDaten should be compared correctly based on 'schueleranzahl' criteria descending", () => {
 		const manager = new KlassenListeManager(
 			1,
 			1,
@@ -353,7 +357,7 @@ describe("Tests für KlassenListeManager", () => {
 			lehrer
 		);
 
-		const klasse1 = new KlasseDetails();
+		const klasse1 = new KlassenDaten();
 		klasse1.id = 1;
 		klasse1.kuerzel = "A";
 		klasse1.schueler = ArrayList.of(
@@ -361,7 +365,7 @@ describe("Tests für KlassenListeManager", () => {
 			new Schueler()
 		);
 
-		const klasse2 = new KlasseDetails();
+		const klasse2 = new KlassenDaten();
 		klasse2.id = 2;
 		klasse2.kuerzel = "B";
 		klasse2.schueler = ArrayList.of(new Schueler());
@@ -386,7 +390,7 @@ describe("Tests für KlassenListeManager", () => {
 			lehrer
 		);
 
-		const klasse1 = new KlasseDetails();
+		const klasse1 = new KlassenDaten();
 		klasse1.id = 1;
 		klasse1.kuerzel = "A";
 		klasse1.schueler = ArrayList.of(
@@ -394,7 +398,7 @@ describe("Tests für KlassenListeManager", () => {
 			new Schueler()
 		);
 
-		const klasse2 = new KlasseDetails();
+		const klasse2 = new KlassenDaten();
 		klasse2.id = 2;
 		klasse2.kuerzel = "B";
 		klasse2.schueler = ArrayList.of(new Schueler());

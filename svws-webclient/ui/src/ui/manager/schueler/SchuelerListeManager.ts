@@ -1,10 +1,11 @@
 import { JavaObject } from '../../../../../core/src/java/lang/JavaObject';
 import { HashMap2D } from '../../../../../core/src/core/adt/map/HashMap2D';
-import type { KlasseDetails } from '../../../../../core/src/asd/data/klassen/KlasseDetails';
+import type { KlassenDaten } from '../../../../../core/src/asd/data/klassen/KlassenDaten';
 import type { SchuelerListeEintrag } from '../../../../../core/src/core/data/schueler/SchuelerListeEintrag';
 import type { SchuelerStatusKatalogEintrag } from '../../../../../core/src/asd/data/schueler/SchuelerStatusKatalogEintrag';
 import { HashMap } from '../../../../../core/src/java/util/HashMap';
 import type { Schulform } from '../../../../../core/src/asd/types/schule/Schulform';
+import { KlassenUtils } from '../../../../../core/src/core/utils/klassen/KlassenUtils';
 import { SchuelerUtils } from '../../../../../core/src/core/utils/schueler/SchuelerUtils';
 import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 import type { JahrgangsDaten } from '../../../../../core/src/core/data/jahrgang/JahrgangsDaten';
@@ -35,7 +36,6 @@ import { KursUtils } from '../../../../../core/src/core/utils/kurse/KursUtils';
 import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { JavaMap } from '../../../../../core/src/java/util/JavaMap';
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import { KlassenListeManager } from "../klassen/KlassenListeManager";
 
 export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEintrag, SchuelerStammdaten> {
 
@@ -75,11 +75,11 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	/**
 	 * Das Filter-Attribut für die Klassen
 	 */
-	public readonly klassen: AttributMitAuswahl<number, KlasseDetails>;
+	public readonly klassen: AttributMitAuswahl<number, KlassenDaten>;
 
-	private static readonly _klasseToId: JavaFunction<KlasseDetails, number> = { apply: (k: KlasseDetails) => k.id };
+	private static readonly _klasseToId: JavaFunction<KlassenDaten, number> = { apply: (k: KlassenDaten) => k.id };
 
-	private readonly _mapKlassenAlle: JavaMap<number, KlasseDetails> = new HashMap<number, KlasseDetails>();
+	private readonly _mapKlassenAlle: JavaMap<number, KlassenDaten> = new HashMap<number, KlassenDaten>();
 
 	/**
 	 * Das Filter-Attribut für die Lehrer
@@ -115,7 +115,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 		return sglke.kuerzel;
 	} };
 
-	private static readonly COMPARATOR_SCHULGLIEDERUNG: Comparator<Schulgliederung> = { compare: (a: Schulgliederung, b: Schulgliederung) => a.ordinal() - b.ordinal() };
+	private static readonly _comparatorSchulgliederung: Comparator<Schulgliederung> = { compare: (a: Schulgliederung, b: Schulgliederung) => a.ordinal() - b.ordinal() };
 
 	/**
 	 * Das Filter-Attribut für den Schüler-Status
@@ -149,19 +149,19 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 */
 	public constructor(schulform: Schulform | null, daten: SchuelerListe, lehrer: List<LehrerListeEintrag>, schuljahresabschnitte: List<Schuljahresabschnitt>, schuljahresabschnittSchule: number) {
 		super(daten.idSchuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, daten.schueler, SchuelerUtils.comparator, SchuelerListeManager._schuelerToId, SchuelerListeManager._stammdatenToId, Arrays.asList(new Pair("klassen", true), new Pair("nachname", true), new Pair("vorname", true)));
-		const aktuelleKlassen: List<KlasseDetails> = new ArrayList<KlasseDetails>();
+		const aktuelleKlassen: List<KlassenDaten> = new ArrayList<KlassenDaten>();
 		for (const klasse of daten.klassen) {
 			this._mapKlassenAlle.put(klasse.id, klasse);
 			if (klasse.idSchuljahresabschnitt === daten.idSchuljahresabschnitt) {
 				aktuelleKlassen.add(klasse);
 			}
 		}
-		this.klassen = new AttributMitAuswahl(aktuelleKlassen, SchuelerListeManager._klasseToId, KlassenListeManager.COMPARATOR_KLASSEN_DEFAULT, this._eventHandlerFilterChanged);
+		this.klassen = new AttributMitAuswahl(aktuelleKlassen, SchuelerListeManager._klasseToId, KlassenUtils.comparator, this._eventHandlerFilterChanged);
 		this.jahrgaenge = new AttributMitAuswahl(daten.jahrgaenge, SchuelerListeManager._jahrgangToId, JahrgaengeListeManager.comparator, this._eventHandlerFilterChanged);
 		this.kurse = new AttributMitAuswahl(daten.kurse, SchuelerListeManager._kursToId, KursUtils.comparator, this._eventHandlerFilterChanged);
 		this.abiturjahrgaenge = new AttributMitAuswahl(daten.jahrgaengeGost, SchuelerListeManager._abiturjahrgangToId, GostAbiturjahrUtils.comparator, this._eventHandlerFilterChanged);
 		const gliederungen: List<Schulgliederung> = (schulform === null) ? Arrays.asList(...Schulgliederung.values()) : Schulgliederung.getBySchuljahrAndSchulform(this.getSchuljahr(), schulform);
-		this.schulgliederungen = new AttributMitAuswahl(gliederungen, this._schulgliederungToId, SchuelerListeManager.COMPARATOR_SCHULGLIEDERUNG, this._eventHandlerFilterChanged);
+		this.schulgliederungen = new AttributMitAuswahl(gliederungen, this._schulgliederungToId, SchuelerListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
 		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), this._schuelerstatusToId, SchuelerListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
 		this.lehrer = new AttributMitAuswahl(lehrer, SchuelerListeManager._lehrerToId, LehrerUtils.comparator, this._eventHandlerFilterChanged);
 		this.setFilterAuswahlPermitted(false);
@@ -171,7 +171,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	private initSchueler(): void {
 		for (const s of this.liste.list()) {
 			this._mapSchuelerMitStatus.put(s.status, s.id, s);
-			const klasse: KlasseDetails | null = this._mapKlassenAlle.get(s.idKlasse);
+			const klasse: KlassenDaten | null = this._mapKlassenAlle.get(s.idKlasse);
 			if (s.idJahrgang >= 0) {
 				this._mapSchuelerInJahrgang.put(s.idJahrgang, s.id, s);
 			}
@@ -276,8 +276,8 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 			const asc: boolean = (criteria.b === null) || criteria.b;
 			let cmp: number;
 			if (JavaObject.equalsTranspiler("klassen", (field))) {
-				const aKlasse: KlasseDetails | null = this.klasseGetOrNull(a.idKlasse);
-				const bKlasse: KlasseDetails | null = this.klasseGetOrNull(b.idKlasse);
+				const aKlasse: KlassenDaten | null = this.klasseGetOrNull(a.idKlasse);
+				const bKlasse: KlassenDaten | null = this.klasseGetOrNull(b.idKlasse);
 				if ((aKlasse === null) && (bKlasse === null)) {
 					cmp = 0;
 				} else
@@ -287,7 +287,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 						if (bKlasse === null) {
 							cmp = 1;
 						} else {
-							cmp = KlassenListeManager.COMPARATOR_KLASSEN_DEFAULT.compare(aKlasse, bKlasse);
+							cmp = KlassenUtils.comparator.compare(aKlasse, bKlasse);
 						}
 			} else
 				if (JavaObject.equalsTranspiler("nachname", (field))) {
@@ -344,7 +344,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 *
 	 * @return die Daten der Klasse
 	 */
-	public klasseGetOrNull(idKlasse: number): KlasseDetails | null {
+	public klasseGetOrNull(idKlasse: number): KlassenDaten | null {
 		return this._mapKlassenAlle.get(idKlasse);
 	}
 

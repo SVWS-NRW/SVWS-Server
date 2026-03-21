@@ -47,12 +47,12 @@
 
 	import { ref, computed, onMounted, watch, shallowRef } from "vue";
 	import type { KlassenNeuProps } from "~/components/klassen/SKlassenNeuProps";
-	import { KlasseDetails, AllgemeinbildendOrganisationsformen, Klassenart, Schulgliederung, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, type JahrgangsDaten } from "@core";
+	import { KlassenDaten, AllgemeinbildendOrganisationsformen, Klassenart, Schulgliederung, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, type JahrgangsDaten } from "@core";
 	import { KlassenDatenModelProxy } from "./KlassenDatenModelProxy";
 
 	const props = defineProps<KlassenNeuProps>();
 
-	const dataNotPatched = shallowRef(new KlasseDetails());
+	const dataNotPatched = shallowRef(new KlassenDaten());
 
 	const modelProxy = new KlassenDatenModelProxy(() => dataNotPatched.value, () => props.manager().liste.list(), props.manager, props.mapKlassenVorigerAbschnitt, props.mapKlassenFolgenderAbschnitt);
 
@@ -88,7 +88,7 @@
 	 *
 	 * @param daten   die zu initialisierenden Daten
 	 */
-	function initWithDefaults(daten: KlasseDetails) {
+	function initWithDefaults(daten: KlassenDaten) {
 		const schulgliederungDefault = Schulgliederung.getDefault(props.schulform);
 		const schulgliederung = (schulgliederungDefault === null)
 			? Schulgliederung.getBySchuljahrAndSchulform(props.manager().getSchuljahr(), props.schulform).getFirst()
@@ -124,7 +124,7 @@
 		isLoading.value = true;
 		props.checkpoint.active = false;
 		// Erstelle einen create-patch, der die erforderten Attribute zusätzlich zum Pending-State beinhaltet
-		const result: Partial<KlasseDetails> = {
+		const result: Partial<KlassenDaten> = {
 			idSchuljahresabschnitt: modelProxy.proxy.idSchuljahresabschnitt,
 			kuerzel: modelProxy.proxy.kuerzel,
 			idJahrgang: modelProxy.proxy.idJahrgang,
