@@ -1,6 +1,7 @@
 package de.svws_nrw.controller.enm;
 
 import de.svws_nrw.core.data.enm.ENMServerConfigElement;
+import de.svws_nrw.service.enm.NotenmodulLocalAnkreuzkompetenzPatchRequest;
 import de.svws_nrw.service.enm.NotenmodulLocalLeistungBemerkungenPatchRequest;
 import de.svws_nrw.service.enm.NotenmodulLocalLeistungPatchRequest;
 import de.svws_nrw.service.enm.NotenmodulLocalLernabschnittPatchRequest;
@@ -73,5 +74,15 @@ public interface NotenmodulLocalController {
 	 * @return die HTTP-Response
 	 */
 	Response patchLernabschnitt(NotenmodulLocalLernabschnittPatchRequest patch);
+
+	/**
+	 * Prüft, ob ein Patchen einer Schüler-Ankreuzkompetenz durch den aktuell angemeldeten
+	 * Benutzer erlaubt ist und passt diese dann ggf. an.
+	 *
+	 * @param patch               der Patch zu der Ankreuzkompetenz
+	 *
+	 * @return die HTTP-Response
+	 */
+	Response patchAnkreuzkompetenz(NotenmodulLocalAnkreuzkompetenzPatchRequest patch);
 
 }

@@ -25,6 +25,8 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulKonfigurationClient;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulKonfigurationServer;
+import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
+import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
@@ -33,6 +35,8 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerTeilleistung;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.enm.NotenmodulKonfigurationClientRepository;
 import de.svws_nrw.repo.enm.NotenmodulKonfigurationServerRepository;
+import de.svws_nrw.repo.kataloge.AnkreuzkompetenzenRepository;
+import de.svws_nrw.repo.schueler.SchuelerAnkreuzkompetenzenRepository;
 import de.svws_nrw.repo.schueler.SchuelerLeistungsdatenRepository;
 import de.svws_nrw.repo.schueler.SchuelerLernabschnittBemerkungenRepository;
 import de.svws_nrw.repo.schueler.SchuelerLernabschnittRepository;
@@ -57,6 +61,8 @@ public class NotenmodulLocalService {
 	private final SchuelerLernabschnittBemerkungenRepository schuelerLernabschnittBemerkungenRepository;
 	private final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository;
 	private final SchuelerTeilleistungenRepository schuelerTeilleistungenRepository;
+	private final SchuelerAnkreuzkompetenzenRepository schuelerAnkreuzkompetenzenRepository;
+	private final AnkreuzkompetenzenRepository ankreuzkompetenzenRepository;
 
 	/**
 	 * Erstellt einen neuen Service für die Notenmodul-Credentials
@@ -68,6 +74,8 @@ public class NotenmodulLocalService {
 	 * @param schuelerLernabschnittBemerkungenRepository   das Repository für den Zugriff auf die Bemerkungen zu den Schüler-Lernabschnitten
 	 * @param schuelerLeistungsdatenRepository             das Repository für den Zugriff auf die Schüler-Leistungsdaten
 	 * @param schuelerTeilleistungenRepository             das Repository für den Zugriff auf die Schüler-Teilleistungen
+	 * @param schuelerAnkreuzkompetenzenRepository         das Repository für den Zugriff auf die Schüler-Ankreuzkompetenten
+	 * @param ankreuzkompetenzenRepository                 das Repository für den Zugriff auf die Ankreuzkompetenzen
 	 */
 	public NotenmodulLocalService(final NotenmodulKonfigurationClientRepository notenmodulKonfigurationClientRepository,
 			final NotenmodulKonfigurationServerRepository notenmodulKonfigurationServerRepository,
@@ -75,7 +83,9 @@ public class NotenmodulLocalService {
 			final SchuelerLernabschnittRepository schuelerLernabschnittRepository,
 			final SchuelerLernabschnittBemerkungenRepository schuelerLernabschnittBemerkungenRepository,
 			final SchuelerLeistungsdatenRepository schuelerLeistungsdatenRepository,
-			final SchuelerTeilleistungenRepository schuelerTeilleistungenRepository) {
+			final SchuelerTeilleistungenRepository schuelerTeilleistungenRepository,
+			final SchuelerAnkreuzkompetenzenRepository schuelerAnkreuzkompetenzenRepository,
+			final AnkreuzkompetenzenRepository ankreuzkompetenzenRepository) {
 		this.notenmodulKonfigurationClientRepository = notenmodulKonfigurationClientRepository;
 		this.notenmodulKonfigurationServerRepository = notenmodulKonfigurationServerRepository;
 		this.schuelerRepository = schuelerRepository;
@@ -83,6 +93,8 @@ public class NotenmodulLocalService {
 		this.schuelerLernabschnittBemerkungenRepository = schuelerLernabschnittBemerkungenRepository;
 		this.schuelerLeistungsdatenRepository = schuelerLeistungsdatenRepository;
 		this.schuelerTeilleistungenRepository = schuelerTeilleistungenRepository;
+		this.schuelerAnkreuzkompetenzenRepository = schuelerAnkreuzkompetenzenRepository;
+		this.ankreuzkompetenzenRepository = ankreuzkompetenzenRepository;
 	}
 
 
@@ -318,14 +330,14 @@ public class NotenmodulLocalService {
 	/**
 	 * Prüft, ob der angemeldete Benutzer eine Berechtigung zum Patchen von Leistungsdaten hat oder nicht.
 	 *
-	 * @param leistung            die Leistungsdaten.
+	 * @param leistungen          die Leistungsdaten.
 	 * @param lernabschnitt       der Lenrabschnitt der Leistungsdaten
 	 * @param authenticatedUser   der angemeldete Benutzer
 	 *
 	 * @return der Grund für die Berechtigung (0 - allgemeine Kompetenz, 1 - funktionsbezogen als Fachlehrer,
 	 *                                         2 - funktionsbezogen als Klassenlehrer oder Abteilungsleiter)
 	 */
-	private static int pruefeBerechtigungPatchLeistung(final DTOSchuelerLeistungsdaten leistung, final DTOSchuelerLernabschnittsdaten lernabschnitt,
+	private static int pruefeBerechtigungPatchLeistung(final List<DTOSchuelerLeistungsdaten> leistungen, final DTOSchuelerLernabschnittsdaten lernabschnitt,
 			final Benutzer authenticatedUser) {
 		// Prüfe, ob der Lernabschnitt im aktuellen Schuljahresabschnitt der Schule liegt
 		if (authenticatedUser.schuleGetSchuljahresabschnitt().id != lernabschnitt.Schuljahresabschnitts_ID) {
@@ -342,7 +354,8 @@ public class NotenmodulLocalService {
 			throw new ApiOperationException(Status.FORBIDDEN, "Ein funktionsbezogener Zugriff ist nur für Lehrer-Benutzer möglich.");
 
 		// Prüfe, ob er diese als Fachlehrer besitzt
-		if ((leistung.Fachlehrer_ID != null) && (leistung.Fachlehrer_ID.longValue() == idLehrer.longValue()))
+		final List<Long> setFachlehrer = leistungen.stream().map(l -> l.Fachlehrer_ID).filter(l -> l != null).toList();
+		if ((!setFachlehrer.isEmpty()) && (setFachlehrer.contains(idLehrer.longValue())))
 			return 1;
 
 		// Prüfe, ob der angemeldete Lehrer als Klassenlehrer oder Abteilungsleiter die nötigen Rechte besitzt.
@@ -404,13 +417,14 @@ public class NotenmodulLocalService {
 
 			// Bestimme den Lernabschnitt und die Klasse des Lernabschnittes
 			final DTOSchuelerLernabschnittsdaten lernabschnitt = schuelerLernabschnittRepository.findById(leistung.Abschnitt_ID)
-					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Der Lernabschnitt-ID %d existiert nicht.".formatted(leistung.Abschnitt_ID)));
+					.orElseThrow(
+							() -> new ApiOperationException(Status.NOT_FOUND, "Der Lernabschnitt-ID %d existiert nicht.".formatted(leistung.Abschnitt_ID)));
 			if (lernabschnitt.Klassen_ID == null) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Der Lernabschnitt %d ist keiner Klasse zugeordnet.".formatted(leistung.Abschnitt_ID));
 			}
 
 			// Prüfe die Berechtigung für das Patchen der Leistungsdaten
-			pruefeBerechtigungPatchLeistung(leistung, lernabschnitt, authenticatedUser); // final int berechtigung =
+			pruefeBerechtigungPatchLeistung(List.of(leistung), lernabschnitt, authenticatedUser); // final int berechtigung =
 
 			// Durchführen des Patches
 			patch.noteQuartal.ifPresent(val -> {
@@ -477,17 +491,19 @@ public class NotenmodulLocalService {
 			// Bestimme die zugehörigen Leistungsdaten anhand der ID aus den Daten der Teilleistung
 			final DTOSchuelerLeistungsdaten leistung = schuelerLeistungsdatenRepository.findById(teilleistung.Leistung_ID)
 					.orElseThrow(
-							() -> new ApiOperationException(Status.NOT_FOUND, "Die ID %d ist für Leistungsdaten ungültig.".formatted(teilleistung.Leistung_ID)));
+							() -> new ApiOperationException(Status.NOT_FOUND,
+									"Die ID %d ist für Leistungsdaten ungültig.".formatted(teilleistung.Leistung_ID)));
 
 			// Bestimme den Lernabschnitt und die Klasse des Lernabschnittes
 			final DTOSchuelerLernabschnittsdaten lernabschnitt = schuelerLernabschnittRepository.findById(leistung.Abschnitt_ID)
-					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Der Lernabschnitt-ID %d existiert nicht.".formatted(leistung.Abschnitt_ID)));
+					.orElseThrow(
+							() -> new ApiOperationException(Status.NOT_FOUND, "Der Lernabschnitt-ID %d existiert nicht.".formatted(leistung.Abschnitt_ID)));
 			if (lernabschnitt.Klassen_ID == null) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Der Lernabschnitt %d ist keiner Klasse zugeordnet.".formatted(leistung.Abschnitt_ID));
 			}
 
 			// Prüfe die Berechtigung für das Patchen der Teilleistungsdaten anhand der zugehörigen Leistungsdaten
-			pruefeBerechtigungPatchLeistung(leistung, lernabschnitt, authenticatedUser); // final int berechtigung =
+			pruefeBerechtigungPatchLeistung(List.of(leistung), lernabschnitt, authenticatedUser); // final int berechtigung =
 
 			// Durchführen des Patches
 			patch.note.ifPresent(val -> {
@@ -635,6 +651,44 @@ public class NotenmodulLocalService {
 
 			schuelerLernabschnittRepository.update(lernabschnitt);
 			schuelerLernabschnittRepository.flush();
+		});
+	}
+
+
+	/**
+	 * Prüft, ob ein Patchen einer Schüler-Ankreuzkompetenz durch den aktuell angemeldeten
+	 * Benutzer erlaubt ist und passt diese dann ggf. an.
+	 *
+	 * @param patch               der Patch zu der Ankreuzkompetenz
+	 * @param authenticatedUser   der angemeldete Benutzer
+	 */
+	public void patchAnkreuzkompetenz(final NotenmodulLocalAnkreuzkompetenzPatchRequest patch, final Benutzer authenticatedUser) {
+		transactional(() -> {
+			// Bestimme die Ankreuzkompetenz des Schülers im aktuellen Schuljahresabschnitt der Schule.
+			final DTOSchuelerAnkreuzfloskeln schuelerankreuzkompetenz = schuelerAnkreuzkompetenzenRepository.findById(patch.id)
+					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Die Schüler-Ankreuzkompetenz-ID %d existiert nicht.".formatted(patch.id)));
+
+			final DTOAnkreuzfloskeln ankreuzkompetenz = ankreuzkompetenzenRepository.findById(schuelerankreuzkompetenz.Floskel_ID)
+					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND,
+							"Die Ankreuzkompetenz-ID %d existiert nicht.".formatted(schuelerankreuzkompetenz.Floskel_ID)));
+
+			final DTOSchuelerLernabschnittsdaten lernabschnitt = schuelerLernabschnittRepository.findById(schuelerankreuzkompetenz.Abschnitt_ID)
+					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Der Lernabschnitt-ID %d existiert nicht.".formatted(patch.id)));
+
+			final List<DTOSchuelerLeistungsdaten> leistungsdaten =
+					schuelerLeistungsdatenRepository.findListByLernabschnittAndFach(List.of(lernabschnitt.ID), List.of(ankreuzkompetenz.Fach_ID));
+
+			// Prüfe die Berechtigung für das Patchen der Bemerkungen anhand des Lernabschnittes des Schülers
+			pruefeBerechtigungPatchLeistung(leistungsdaten, lernabschnitt, authenticatedUser); // final int berechtigung =
+
+			// Durchführen des Patches
+			schuelerankreuzkompetenz.Stufe1 = patch.stufen[0];
+			schuelerankreuzkompetenz.Stufe2 = patch.stufen[1];
+			schuelerankreuzkompetenz.Stufe3 = patch.stufen[2];
+			schuelerankreuzkompetenz.Stufe4 = patch.stufen[3];
+			schuelerankreuzkompetenz.Stufe5 = patch.stufen[4];
+			schuelerAnkreuzkompetenzenRepository.update(schuelerankreuzkompetenz);
+			schuelerAnkreuzkompetenzenRepository.flush();
 		});
 	}
 

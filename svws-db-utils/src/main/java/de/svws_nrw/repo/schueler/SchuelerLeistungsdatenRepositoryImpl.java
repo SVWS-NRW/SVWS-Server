@@ -41,4 +41,13 @@ public final class SchuelerLeistungsdatenRepositoryImpl extends RepositoryImpl<D
 				DTOSchuelerLeistungsdaten.class, idsLernabschnitte, idsFachlehrer);
 	}
 
+	@Override
+	public List<DTOSchuelerLeistungsdaten> findListByLernabschnittAndFach(final Collection<Long> idsLernabschnitte, final Collection<Long> idsFaecher) {
+		if (idsLernabschnitte.isEmpty() || idsFaecher.isEmpty()) {
+			return new ArrayList<>();
+		}
+		return conn.queryList("SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID IN ?1 AND e.Fach_ID IN ?2",
+				DTOSchuelerLeistungsdaten.class, idsLernabschnitte, idsFaecher);
+	}
+
 }

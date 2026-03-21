@@ -14,12 +14,14 @@ import de.svws_nrw.core.data.enm.ENMLehrerInitialKennwort;
 import de.svws_nrw.core.data.enm.ENMLeistung;
 import de.svws_nrw.core.data.enm.ENMLeistungBemerkungen;
 import de.svws_nrw.core.data.enm.ENMLernabschnitt;
+import de.svws_nrw.core.data.enm.ENMSchuelerAnkreuzkompetenz;
 import de.svws_nrw.core.data.enm.ENMServerConfig;
 import de.svws_nrw.core.data.enm.ENMServerConfigElement;
 import de.svws_nrw.core.data.enm.ENMServerConnection;
 import de.svws_nrw.core.data.enm.ENMTeilleistung;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
+import de.svws_nrw.service.enm.NotenmodulLocalAnkreuzkompetenzPatchRequest;
 import de.svws_nrw.service.enm.NotenmodulLocalLeistungBemerkungenPatchRequest;
 import de.svws_nrw.service.enm.NotenmodulLocalLeistungPatchRequest;
 import de.svws_nrw.service.enm.NotenmodulLocalLernabschnittPatchRequest;
@@ -289,6 +291,36 @@ public class APIENM {
 		return NotenmodulControllerFactory.withWriteAccess(request)
 				.getNotenmodulLocalController()
 				.patchLernabschnitt(patch);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen von ENM-Schüler-Ankreuzkompetenzen direkt auf dem SVWS-Server.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param patch     der Patch
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/ankreuzkompetenz")
+	@Operation(summary = "Patch für die ENM-Schüler-Ankreuzkompetenz.",
+			description = "Passt die Ankreuzkompetenz eines Schüler anhand der ENM-Daten an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung im Rahmen der Notenmodul-Konfiguration besitzt.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der, im Patch angegebenen, ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchENMSchuelerAnkreuzkompetenz(@PathParam("schema") final String schema,
+			@Valid @RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = ENMSchuelerAnkreuzkompetenz.class))) final NotenmodulLocalAnkreuzkompetenzPatchRequest patch,
+			@Context final HttpServletRequest request) {
+		return NotenmodulControllerFactory.withWriteAccess(request)
+				.getNotenmodulLocalController()
+				.patchAnkreuzkompetenz(patch);
 	}
 
 

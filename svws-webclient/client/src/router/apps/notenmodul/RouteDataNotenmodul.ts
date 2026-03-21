@@ -283,7 +283,7 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	public patchAnkreuzkompetenz = async (data: ENMSchuelerAnkreuzkompetenz, patch: Partial<ENMSchuelerAnkreuzkompetenz>): Promise<void> => {
 		patch.id = data.id;
 		console.log(patch, 'für ID', data.id);
-		// await api.server.patchENMSchuelerAnkreuzkompetenz(patch, api.schema);
+		await api.server.patchENMSchuelerAnkreuzkompetenz(patch, api.schema);
 		Object.assign(data, patch);
 		this.commit();
 	};

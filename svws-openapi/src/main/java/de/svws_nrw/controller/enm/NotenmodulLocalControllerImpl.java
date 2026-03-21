@@ -3,6 +3,7 @@ package de.svws_nrw.controller.enm;
 import de.svws_nrw.core.data.enm.ENMServerConfigElement;
 import de.svws_nrw.data.Responses;
 import de.svws_nrw.db.Benutzer;
+import de.svws_nrw.service.enm.NotenmodulLocalAnkreuzkompetenzPatchRequest;
 import de.svws_nrw.service.enm.NotenmodulLocalLeistungBemerkungenPatchRequest;
 import de.svws_nrw.service.enm.NotenmodulLocalLeistungPatchRequest;
 import de.svws_nrw.service.enm.NotenmodulLocalLernabschnittPatchRequest;
@@ -66,6 +67,12 @@ public final class NotenmodulLocalControllerImpl implements NotenmodulLocalContr
 	@Override
 	public Response patchLernabschnitt(final NotenmodulLocalLernabschnittPatchRequest patch) {
 		service.patchLernabschnitt(patch, authenticatedUser);
+		return Responses.noContent();
+	}
+
+	@Override
+	public Response patchAnkreuzkompetenz(final NotenmodulLocalAnkreuzkompetenzPatchRequest patch) {
+		service.patchAnkreuzkompetenz(patch, authenticatedUser);
 		return Responses.noContent();
 	}
 

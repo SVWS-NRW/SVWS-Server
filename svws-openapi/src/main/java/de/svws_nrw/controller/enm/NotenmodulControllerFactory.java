@@ -55,8 +55,9 @@ public final class NotenmodulControllerFactory {
 		final var notenmodulRepositoryFactory = NotenmodulRepositoryFactory.getNewInstance();
 		final var lehrerRepositoryFactory = LehrerRepositoryFactory.getNewInstance();
 		final var schuelerRepositoryFactory = SchuelerRepositoryFactory.getNewInstance();
+		final var katalogeRepositoryFactory = KatalogeRepositoryFactory.getNewInstance();
 		this.notenmodulServiceFactory = NotenmodulServiceFactory.getNewInstance(notenmodulRepositoryFactory, this.enmV1ServiceFactory, lehrerRepositoryFactory,
-				schuelerRepositoryFactory);
+				schuelerRepositoryFactory, katalogeRepositoryFactory);
 	}
 
 

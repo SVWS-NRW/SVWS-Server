@@ -38,6 +38,7 @@ import { ENMLehrerInitialKennwort } from '../core/data/enm/ENMLehrerInitialKennw
 import { ENMLeistung } from '../core/data/enm/ENMLeistung';
 import { ENMLeistungBemerkungen } from '../core/data/enm/ENMLeistungBemerkungen';
 import { ENMLernabschnitt } from '../core/data/enm/ENMLernabschnitt';
+import { ENMSchuelerAnkreuzkompetenz } from '../core/data/enm/ENMSchuelerAnkreuzkompetenz';
 import { ENMServerConfig } from '../core/data/enm/ENMServerConfig';
 import { ENMServerConfigElement } from '../core/data/enm/ENMServerConfigElement';
 import { ENMServerConnection } from '../core/data/enm/ENMServerConnection';
@@ -2073,6 +2074,30 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<ENMLehrerInitialKennwort>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ENMLehrerInitialKennwort.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchENMSchuelerAnkreuzkompetenz für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/ankreuzkompetenz
+	 *
+	 * Passt die Ankreuzkompetenz eines Schüler anhand der ENM-Daten an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung im Rahmen der Notenmodul-Konfiguration besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der, im Patch angegebenen, ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<ENMSchuelerAnkreuzkompetenz>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async patchENMSchuelerAnkreuzkompetenz(data : Partial<ENMSchuelerAnkreuzkompetenz>, schema : string) : Promise<void> {
+		const path = "/db/{schema}/enm/ankreuzkompetenz"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = ENMSchuelerAnkreuzkompetenz.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
 	}
 
 

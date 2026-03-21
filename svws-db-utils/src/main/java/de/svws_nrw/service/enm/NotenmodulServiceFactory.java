@@ -1,6 +1,7 @@
 package de.svws_nrw.service.enm;
 
 import de.svws_nrw.repo.enm.NotenmodulRepositoryFactory;
+import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 
@@ -13,6 +14,7 @@ public final class NotenmodulServiceFactory {
 	private final EnmV1ServiceFactory enmV1ServiceFactory;
 	private final LehrerRepositoryFactory lehrerRepositoryFactory;
 	private final SchuelerRepositoryFactory schuelerRepositoryFactory;
+	private final KatalogeRepositoryFactory katalogeRepositoryFactory;
 
 	/**
 	 * Erstellt eine neue Service-Factory
@@ -21,13 +23,16 @@ public final class NotenmodulServiceFactory {
 	 * @param enmV1ServiceFactory           die Service-Factory für Services zu ENM-Daten in der Version 1
 	 * @param lehrerRepositoryFactory       die Factory für Lehrer-Repositories
 	 * @param schuelerRepositoryFactory     die Factory für Schüler-Repositories
+	 * @param katalogeRepositoryFactory     die Factory für Katalog-Repositories
 	 */
 	private NotenmodulServiceFactory(final NotenmodulRepositoryFactory notenmodulRepositoryFactory, final EnmV1ServiceFactory enmV1ServiceFactory,
-			final LehrerRepositoryFactory lehrerRepositoryFactory, final SchuelerRepositoryFactory schuelerRepositoryFactory) {
+			final LehrerRepositoryFactory lehrerRepositoryFactory, final SchuelerRepositoryFactory schuelerRepositoryFactory,
+			final KatalogeRepositoryFactory katalogeRepositoryFactory) {
 		this.notenmodulRepositoryFactory = notenmodulRepositoryFactory;
 		this.enmV1ServiceFactory = enmV1ServiceFactory;
 		this.lehrerRepositoryFactory = lehrerRepositoryFactory;
 		this.schuelerRepositoryFactory = schuelerRepositoryFactory;
+		this.katalogeRepositoryFactory = katalogeRepositoryFactory;
 	}
 
 
@@ -38,13 +43,15 @@ public final class NotenmodulServiceFactory {
 	 * @param enmV1ServiceFactory           die Service-Factory für Services zu ENM-Daten in der Version 1
 	 * @param lehrerRepositoryFactory       die Factory für Lehrer-Repositories
 	 * @param schuelerRepositoryFactory     die Factory für Schüler-Repositories
+	 * @param katalogeRepositoryFactory     die Factory für Katalog-Repositories
 	 *
 	 * @return die neue Factory-Instanz
 	 */
 	public static NotenmodulServiceFactory getNewInstance(final NotenmodulRepositoryFactory notenmodulRepositoryFactory,
 			final EnmV1ServiceFactory enmV1ServiceFactory, final LehrerRepositoryFactory lehrerRepositoryFactory,
-			final SchuelerRepositoryFactory schuelerRepositoryFactory) {
-		return new NotenmodulServiceFactory(notenmodulRepositoryFactory, enmV1ServiceFactory, lehrerRepositoryFactory, schuelerRepositoryFactory);
+			final SchuelerRepositoryFactory schuelerRepositoryFactory, final KatalogeRepositoryFactory katalogeRepositoryFactory) {
+		return new NotenmodulServiceFactory(notenmodulRepositoryFactory, enmV1ServiceFactory, lehrerRepositoryFactory, schuelerRepositoryFactory,
+				katalogeRepositoryFactory);
 	}
 
 
@@ -95,7 +102,9 @@ public final class NotenmodulServiceFactory {
 				schuelerRepositoryFactory.getSchuelerLernabschnittRepository(),
 				schuelerRepositoryFactory.getSchuelerLernabschnittBemerkungenRepository(),
 				schuelerRepositoryFactory.getSchuelerLeistungsdatenRepository(),
-				schuelerRepositoryFactory.getSchuelerTeilleistungenRepository()
+				schuelerRepositoryFactory.getSchuelerTeilleistungenRepository(),
+				schuelerRepositoryFactory.getSchuelerAnkreuzkompetenzenRepository(),
+				katalogeRepositoryFactory.getAnkreuzkompetenzenRepository()
 		);
 	}
 
