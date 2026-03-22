@@ -14,7 +14,15 @@ import jakarta.ws.rs.core.Response;
 public interface NotenmodulLocalController {
 
 	/**
-	 * Liest die Konfiguration des lokalen Notenmoduls aus der Datenbank.
+	 * Liest die Konfiguration des lokalen Notenmoduls für den Client aus der Datenbank.
+	 *
+	 * @return die HTTP-Response
+	 */
+	Response getClientConfig();
+
+
+	/**
+	 * Liest die Client- und Server-Konfiguration des lokalen Notenmoduls aus der Datenbank.
 	 *
 	 * @return die HTTP-Response
 	 */

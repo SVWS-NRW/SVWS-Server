@@ -70,6 +70,23 @@ public final class NotenmodulControllerFactory {
 	 *
 	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
 	 */
+	public static NotenmodulControllerFactory withReadAccess(final HttpServletRequest request) throws ApiOperationException {
+		// Die Datenbank-Verbindung muss aufgebaut werden, bevor auf Respositories zugegriffen wird
+		final var conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN,
+				BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_FUNKTION);
+		return new NotenmodulControllerFactory(conn.getUser());
+	}
+
+
+	/**
+	 * Diese statische Methode dient dem Zugriff auf die in der API-Schicht.
+	 *
+	 * @param request  der HTTP-Request mit welchem der spezielle Controller erzeugt wird
+	 *
+	 * @return der spezielle Servlet-Controller
+	 *
+	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
+	 */
 	public static NotenmodulControllerFactory withWriteAccess(final HttpServletRequest request) throws ApiOperationException {
 		// Die Datenbank-Verbindung muss aufgebaut werden, bevor auf Respositories zugegriffen wird
 		final var conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN,

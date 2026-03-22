@@ -32,6 +32,11 @@ public final class NotenmodulLocalControllerImpl implements NotenmodulLocalContr
 
 
 	@Override
+	public Response getClientConfig() {
+		return Responses.ok(service.getClientConfig());
+	}
+
+	@Override
 	public Response getConfig() {
 		return Responses.ok(service.getConfig());
 	}

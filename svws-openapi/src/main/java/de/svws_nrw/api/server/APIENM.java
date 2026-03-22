@@ -8,6 +8,7 @@ import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import de.svws_nrw.controller.enm.EnmV1ControllerFactory;
 import de.svws_nrw.controller.enm.NotenmodulControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.benutzer.BenutzerConfigElement;
 import de.svws_nrw.core.data.enm.ENMConfigResponse;
 import de.svws_nrw.core.data.enm.ENMDaten;
 import de.svws_nrw.core.data.enm.ENMLehrerInitialKennwort;
@@ -321,6 +322,29 @@ public class APIENM {
 		return NotenmodulControllerFactory.withWriteAccess(request)
 				.getNotenmodulLocalController()
 				.patchAnkreuzkompetenz(patch);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Laden der lokalen Notenmodul-Konfiguration.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Response mit einer ENMConfigResponse
+	 */
+	@GET
+	@Path("/local/config/")
+	@Operation(summary = "Holt die lokale Notenmodul-Konfiguration für den Client.", description = "Ein Getter für die Notenmodul-Client-Konfiguration.")
+	@ApiResponse(responseCode = "200", description = "Die Konfiguration konnte erfolgreich abgerufen werden.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BenutzerConfigElement.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Operation auszuführen.")
+	@ApiResponse(responseCode = "404", description = "Keine Konfiguration gefunden.")
+	@ApiResponse(responseCode = "500", description = "Interner Serverfehler")
+	public Response getNotenmodulLocalClientConfig(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return NotenmodulControllerFactory.withReadAccess(request)
+				.getNotenmodulLocalController()
+				.getClientConfig();
 	}
 
 

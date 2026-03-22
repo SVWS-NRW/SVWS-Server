@@ -10,6 +10,7 @@ import { ArrayList } from '../java/util/ArrayList';
 import { Aufsichtsbereich } from '../core/data/schule/Aufsichtsbereich';
 import { BenutzerAllgemeinCredentials } from '../core/data/benutzer/BenutzerAllgemeinCredentials';
 import { BenutzerConfig } from '../core/data/benutzer/BenutzerConfig';
+import { BenutzerConfigElement } from '../core/data/benutzer/BenutzerConfigElement';
 import { BenutzerDaten } from '../core/data/benutzer/BenutzerDaten';
 import { BenutzerEMailDaten } from '../core/data/benutzer/BenutzerEMailDaten';
 import { BenutzergruppeDaten } from '../core/data/benutzer/BenutzergruppeDaten';
@@ -2844,6 +2845,34 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = ENMServerConfigElement.transpilerToJSON(data);
 		return super.putJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getNotenmodulLocalClientConfig für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/local/config/
+	 *
+	 * Ein Getter für die Notenmodul-Client-Konfiguration.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Konfiguration konnte erfolgreich abgerufen werden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<BenutzerConfigElement>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Operation auszuführen.
+	 *   Code 404: Keine Konfiguration gefunden.
+	 *   Code 500: Interner Serverfehler
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Konfiguration konnte erfolgreich abgerufen werden.
+	 */
+	public async getNotenmodulLocalClientConfig(schema : string) : Promise<List<BenutzerConfigElement>> {
+		const path = "/db/{schema}/enm/local/config/"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<BenutzerConfigElement>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BenutzerConfigElement.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

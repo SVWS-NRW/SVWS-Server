@@ -99,6 +99,17 @@ public class NotenmodulLocalService {
 
 
 	/**
+	 * Liest die Konfiguration des lokalen Notenmoduls für den Client aus der Datenbank.
+	 *
+	 * @return die Konfiguration des Notenmoduls für den Client
+	 */
+	public List<BenutzerConfigElement> getClientConfig() {
+		return transactional(
+				() -> notenmodulKonfigurationClientRepository.getAll().stream().map(e -> new BenutzerConfigElement(e.schluessel, e.wert)).toList());
+	}
+
+
+	/**
 	 * Liest die Konfiguration des lokalen Notenmoduls aus der Datenbank.
 	 *
 	 * @return die Konfiguration des Notenmoduls
@@ -157,8 +168,9 @@ public class NotenmodulLocalService {
 	 * @return der Timestamp oder null, falls der ISO-String ungültig ist
 	 */
 	private static Timestamp getTimeStampFromIso(final String iso) {
-		if ((iso == null) || iso.isBlank())
+		if ((iso == null) || iso.isBlank()) {
 			return null;
+		}
 		return Timestamp.valueOf(LocalDateTime.parse(iso, ofPattern));
 	}
 
@@ -182,16 +194,19 @@ public class NotenmodulLocalService {
 	 * @throws ApiOperationException   falls die Eingabe von der Zeiteinschränkung her nicht erlaubt ist
 	 */
 	private static void pruefeEingabebeginn(final @NotNull ENMConfigKlasse config, final @NotNull Timestamp now) throws ApiOperationException {
-		if (config.tsEingabeAb == null)
+		if (config.tsEingabeAb == null) {
 			return;
+		}
 		try {
 			final Timestamp beginn = getTimeStampFromIso(config.tsEingabeAb);
-			if (beginn == null)
+			if (beginn == null) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 						"Fehlerhaftes Datumsformat beim Eingabebeginn für die Klasse mit der ID " + config.id);
-			if (!now.after(beginn))
+			}
+			if (!now.after(beginn)) {
 				throw new ApiOperationException(Status.FORBIDDEN,
 						"Die Eingabe ist noch nicht freigegeben. (Das Datum für den Eingabebeginn liegt in der Zukunft).");
+			}
 		} catch (final DateTimeParseException e) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
 					"Fehlerhaftes Datumsformat beim Eingabebeginn für die Klasse mit der ID " + config.id);
@@ -208,16 +223,19 @@ public class NotenmodulLocalService {
 	 * @throws ApiOperationException   falls die Eingabe von der Zeiteinschränkung her nicht erlaubt ist
 	 */
 	private static void pruefeEingabeende(final @NotNull ENMConfigKlasse config, final @NotNull Timestamp now) throws ApiOperationException {
-		if (config.tsEingabeBis == null)
+		if (config.tsEingabeBis == null) {
 			return;
+		}
 		try {
 			final Timestamp ende = getTimeStampFromIso(config.tsEingabeBis);
-			if (ende == null)
+			if (ende == null) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 						"Fehlerhaftes Datumsformat beim Eingabeende für die Klasse mit der ID " + config.id);
-			if (!now.before(ende))
+			}
+			if (!now.before(ende)) {
 				throw new ApiOperationException(Status.FORBIDDEN,
 						"Die Eingabe ist nicht mehr freigegeben. (Das Datum für das Eingabeende liegt in der Vergangenheit).");
+			}
 		} catch (final DateTimeParseException e) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
 					"Fehlerhaftes Datumsformat beim Eingabeende für die Klasse mit der ID " + config.id);
@@ -345,22 +363,26 @@ public class NotenmodulLocalService {
 		}
 
 		// Prüfe, ob der angemeldete Benutzer eine allgemeine Berechtigung hat, um die Leistungsdaten anzupassen
-		if (authenticatedUser.istAdmin() || authenticatedUser.hatVerwendeteKompetenz(BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN))
+		if (authenticatedUser.istAdmin() || authenticatedUser.hatVerwendeteKompetenz(BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN)) {
 			return 0;
+		}
 
 		// Prüfe, ob der angemeldete Benutzer eine funktionsbezogene Berechtigung hat, um die Leistungsdaten anzupassen
 		final Long idLehrer = authenticatedUser.getIdLehrer();
-		if (idLehrer == null)
+		if (idLehrer == null) {
 			throw new ApiOperationException(Status.FORBIDDEN, "Ein funktionsbezogener Zugriff ist nur für Lehrer-Benutzer möglich.");
+		}
 
 		// Prüfe, ob er diese als Fachlehrer besitzt
 		final List<Long> setFachlehrer = leistungen.stream().map(l -> l.Fachlehrer_ID).filter(l -> l != null).toList();
-		if ((!setFachlehrer.isEmpty()) && (setFachlehrer.contains(idLehrer.longValue())))
+		if ((!setFachlehrer.isEmpty()) && (setFachlehrer.contains(idLehrer.longValue()))) {
 			return 1;
+		}
 
 		// Prüfe, ob der angemeldete Lehrer als Klassenlehrer oder Abteilungsleiter die nötigen Rechte besitzt.
-		if (authenticatedUser.getKlassenIDs().contains(lernabschnitt.Klassen_ID))
+		if (authenticatedUser.getKlassenIDs().contains(lernabschnitt.Klassen_ID)) {
 			return 2;
+		}
 
 		// ... ansonsten ist kein funktionsbezogener Zugriff erlaubt.
 		throw new ApiOperationException(Status.FORBIDDEN, "Der Lehrer hat keinen funktionsbezogenen Zugriff auf die ENM-Daten.");

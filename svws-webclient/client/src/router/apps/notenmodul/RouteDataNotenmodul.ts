@@ -69,10 +69,10 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 			const klassen = patchedState.manager.listKlassenKlassenlehrer;
 			patchedState.auswahlKlasse = klassen.isEmpty() ? null : klassen.getFirst();
 
-			const config = await api.server.getNotenmodulLocalConfig(api.schema);
+			const config = await api.server.getNotenmodulLocalClientConfig(api.schema);
 			let jsonSperrungen = "[]";
 			let jsonSpalten = "[]";
-			for (const element of config.global) {
+			for (const element of config) {
 				if (element.key === "noteneingabe.gesperrt") {
 					jsonSperrungen = element.value;
 				}	else if (element.key === "table.columns") {
