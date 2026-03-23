@@ -429,7 +429,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		}
 		if (!transpiler.isClassMember(node)) {
 			final VariableTree varTree = transpiler.getDeclaration(node);
-			if ((varTree != null) && (transpiler.getParent(varTree) instanceof BindingPatternTree bpt)) {
+			if ((varTree != null) && (transpiler.getParent(varTree) instanceof final BindingPatternTree bpt)) {
 				return switch (transpiler.getParent(bpt)) {
 					case final PatternCaseLabelTree pclt -> node.getName().toString();
 					case final InstanceOfTree iot -> {
@@ -760,12 +760,12 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	public String convertMemberReference(final MemberReferenceTree node) {
 		final Element elem = transpiler.getElement(node);
 		final Tree parent = transpiler.getParent(node);
-		if ((node.getMode() == ReferenceMode.INVOKE) && (parent instanceof MethodInvocationTree mit)) {
+		if ((node.getMode() == ReferenceMode.INVOKE) && (parent instanceof final MethodInvocationTree mit)) {
 			// TODO find type of invocation parameter in argument list of the MethodInvocationTree (parent)
 			// transpile invocation parameter
-			if (elem instanceof ExecutableElement ee) {
+			if (elem instanceof final ExecutableElement ee) {
 				final Element owner = ee.getEnclosingElement();
-				if (owner instanceof TypeElement ownerType) {
+				if (owner instanceof final TypeElement ownerType) {
 					switch ("" + ownerType.getQualifiedName()) {
 						case "java.lang.Number" -> {
 							transpiler.getTranspilerUnit(node).imports.put("Number", "java.lang");
@@ -1650,7 +1650,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					final String expression = convertExpression(ms.getExpression());
 					final Set<String> strMethods = Set.of(
 							"contains", "indexOf", "compareTo", "compareToIgnoreCase", "equalsIgnoreCase",
-							"replaceAll", "replace", "replaceFirst", "formatted", "format", "length", "isBlank", "isEmpty", "matches"
+							"replaceAll", "replace", "replaceFirst", "formatted", "format", "length", "getBytes", "isBlank", "isEmpty", "matches"
 					);
 					if (strMethods.contains(ms.getIdentifier().toString())) {
 						transpiler.getTranspilerUnit(node).imports.put("String", "java.lang");
@@ -1676,6 +1676,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 								"JavaString.format(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
 							case "format" -> "JavaString.format(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
 							case "length" -> expression + ".length"; // in typescript it is not a method...
+							case "getBytes" -> "JavaString.getBytes(" + expression + ")";
 							case "isBlank" -> "JavaString.isBlank(" + expression + ")";
 							case "isEmpty" -> "JavaString.isEmpty(" + expression + ")";
 							case "matches" ->

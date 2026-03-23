@@ -915,6 +915,8 @@ export { BenutzerManager } from './core/utils/benutzer/BenutzerManager';
 export { BenutzergruppenManager } from './core/utils/benutzer/BenutzergruppenManager';
 export { BKGymAbiturUtils } from './core/utils/bk/BKGymAbiturUtils';
 export { BKGymFaecherManager } from './core/utils/bk/BKGymFaecherManager';
+export { Base32 } from './core/utils/encoding/Base32';
+export { Base45 } from './core/utils/encoding/Base45';
 export { GostAbiturjahrUtils } from './core/utils/gost/GostAbiturjahrUtils';
 export { GostBlockungsdatenManager } from './core/utils/gost/GostBlockungsdatenManager';
 export { GostBlockungsergebnisBewertungComparator } from './core/utils/gost/GostBlockungsergebnisBewertungComparator';

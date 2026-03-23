@@ -4,30 +4,34 @@ import { NullPointerException } from './NullPointerException';
 export abstract class JavaString {
 
 	public static contains(str: string, s: string | null): boolean {
-		if (s === null)
+		if (s === null) {
 			return false;
+		}
 		return str.includes(s);
 	}
 
 	public static isBlank(s: string | null): boolean {
-		if (s === null)
+		if (s === null) {
 			throw new NullPointerException();
+		}
 		return s.trim().length === 0;
 	}
 
 	public static isEmpty(s: string | null): boolean {
-		if (s === null)
+		if (s === null) {
 			throw new NullPointerException();
+		}
 		return s.length === 0;
 	}
 
 	public static indexOf(s: string, str: string | null, fromIndex?: number): number {
-		if (str === null)
+		if (str === null) {
 			return -1;
+		}
 		return s.indexOf(str, fromIndex);
 	}
 
-	public static matches(s : string, regex : string): boolean {
+	public static matches(s: string, regex: string): boolean {
 		const regexp = new RegExp(regex);
 		return regexp.test(s);
 	}
@@ -47,11 +51,13 @@ export abstract class JavaString {
 	public static format(s: string, ...args: any[]): string {
 		let i = -1;
 		function handleParam(expression: string, ...formatParams: any[]): string {
-			if (expression === '%%')
+			if (expression === '%%') {
 				return '%';
+			}
 			// Bestimme den Wert, der für den Parameter eingesetzt wird
-			if (args[++i] === undefined)
+			if (args[++i] === undefined) {
 				throw new IllegalFormatException();
+			}
 			const replacement = args[i];
 			const hasLeftJustifiedResult = formatParams[0] !== undefined;
 			const paddingChar = (formatParams[1] !== undefined) && (formatParams[1][0] === '0') ? '0' : ' ';
@@ -86,8 +92,9 @@ export abstract class JavaString {
 					result = String(replacement);
 					break;
 			}
-			while (result.length < paddingSize)
+			while (result.length < paddingSize) {
 				result = hasLeftJustifiedResult ? result + paddingChar : paddingChar + result;
+			}
 			return result;
 		}
 		// TODO Erweiterung der Methode um argument_index und weitere conversion - Möglichkeiten laut https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Formatter.html#syntax
@@ -96,15 +103,24 @@ export abstract class JavaString {
 		return s.replaceAll(regex, handleParam);
 	}
 
+	public static getBytes(s: string | null): Array<number> {
+		if (s === null) {
+			throw new NullPointerException();
+		}
+		return Array.from(new TextEncoder().encode(s));
+	}
+
 	public static compareToIgnoreCase(a: string, b: string | null): number {
-		if (b === null)
+		if (b === null) {
 			return -1;
+		}
 		return a.localeCompare(b, undefined, { sensitivity: 'accent' });
 	}
 
 	public static compareTo(a: string, b: string | null): number {
-		if (b === null)
+		if (b === null) {
 			return -1;
+		}
 		return a.localeCompare(b, undefined, { sensitivity: 'variant' });
 	}
 
