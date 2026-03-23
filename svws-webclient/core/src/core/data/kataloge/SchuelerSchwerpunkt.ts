@@ -11,17 +11,17 @@ export class SchuelerSchwerpunkt extends JavaObject {
 	/**
 	 *  Die Bezeichnung des Schwerpunktes.
 	 */
-	public bezeichnung: string | null = null;
+	public bezeichnung: string = "";
 
 	/**
 	 *  Die Sortierung des Schwerpunktes.
 	 */
-	public sortierung: number = 0;
+	public sortierung: number = 32000;
 
 	/**
 	 *  Gibt an, ob der Schwerpunkt in der UI sichtbar ist.
 	 */
-	public istSichtbar: boolean = false;
+	public istSichtbar: boolean = true;
 
 	/**
 	 *  Gibt an, ob der Schwerpunkt in anderen Datenbanktabellen referenziert ist oder nicht.
@@ -29,6 +29,9 @@ export class SchuelerSchwerpunkt extends JavaObject {
 	public referenziertInAnderenTabellen: boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
@@ -49,7 +52,9 @@ export class SchuelerSchwerpunkt extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
+		if (obj.bezeichnung === undefined)
+			throw new Error('invalid json format, missing attribute bezeichnung');
+		result.bezeichnung = obj.bezeichnung;
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -65,7 +70,7 @@ export class SchuelerSchwerpunkt extends JavaObject {
 	public static transpilerToJSON(obj: SchuelerSchwerpunkt): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"referenziertInAnderenTabellen" : ' + obj.referenziertInAnderenTabellen.toString() + ',';
@@ -80,7 +85,7 @@ export class SchuelerSchwerpunkt extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';

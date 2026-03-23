@@ -1,14 +1,13 @@
 import { AuswahlManager } from "../../AuswahlManager";
-import { JavaInteger } from "../../../../../core/src";
-import type { Comparator, JavaFunction, List, Schulform, Schuljahresabschnitt, SchuelerSchwerpunkt as Schwerpunkt } from "../../../../../core/src";
-import { Arrays, HashSet, JavaLong, JavaString } from "../../../../../core/src";
+import type { Comparator, JavaFunction, List, Schulform, Schuljahresabschnitt, SchuelerSchwerpunkt } from "../../../../../core/src";
+import { JavaInteger, Arrays, HashSet, JavaLong, JavaString } from "../../../../../core/src";
 
-export class SchwerpunkteListeManager extends AuswahlManager<number, Schwerpunkt, Schwerpunkt> {
+export class SchwerpunkteListeManager extends AuswahlManager<number, SchuelerSchwerpunkt, SchuelerSchwerpunkt> {
 
 	/**
      * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
      */
-	private static readonly _schwerpunkteToId: JavaFunction<Schwerpunkt, number> = { apply: (ba: Schwerpunkt) => ba.id };
+	private static readonly _schwerpunkteToId: JavaFunction<SchuelerSchwerpunkt, number> = { apply: (ba: SchuelerSchwerpunkt) => ba.id };
 	private readonly _idsOfReferencedSchwerpunkte: HashSet<number> = new HashSet<number>();
 	private _filterNurSichtbar: boolean = true;
 	private _searchTerm: string = "";
@@ -16,17 +15,15 @@ export class SchwerpunkteListeManager extends AuswahlManager<number, Schwerpunkt
 	/**
 	 * Ein Default-Comparator für den Vergleich von Schwerpunkte in Schwerpunktlisten.
 	 */
-	public static readonly comparator: Comparator<Schwerpunkt> = { compare: (a: Schwerpunkt, b: Schwerpunkt) => {
+	public static readonly comparator: Comparator<SchuelerSchwerpunkt> = { compare: (a: SchuelerSchwerpunkt, b: SchuelerSchwerpunkt) => {
 		let cmp;
 		cmp = JavaInteger.compare(a.sortierung, b.sortierung);
 		if (cmp !== 0) {
 			return cmp;
 		}
-		if ((a.bezeichnung !== null) && (b.bezeichnung !== null)) {
-			cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-			if (cmp !== 0) {
-				return cmp;
-			}
+		cmp = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
+		if (cmp !== 0) {
+			return cmp;
 		}
 		return JavaLong.compare(a.id, b.id);
 	} };
@@ -41,7 +38,7 @@ export class SchwerpunkteListeManager extends AuswahlManager<number, Schwerpunkt
 	 * @param schwerpunkte     	           die Liste der Schwerpunkte
 	 */
 	public constructor(idSchuljahresabschnitt: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
-		schulform: Schulform | null, schwerpunkte: List<Schwerpunkt>) {
+		schulform: Schulform | null, schwerpunkte: List<SchuelerSchwerpunkt>) {
 		super(idSchuljahresabschnitt, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, schwerpunkte, SchwerpunkteListeManager.comparator,
 			SchwerpunkteListeManager._schwerpunkteToId, SchwerpunkteListeManager._schwerpunkteToId, Arrays.asList());
 	}
@@ -55,7 +52,7 @@ export class SchwerpunkteListeManager extends AuswahlManager<number, Schwerpunkt
 		this._eventHandlerFilterChanged.run();
 	}
 
-	protected compareAuswahl(a: Schwerpunkt, b: Schwerpunkt): number {
+	protected compareAuswahl(a: SchuelerSchwerpunkt, b: SchuelerSchwerpunkt): number {
 		return SchwerpunkteListeManager.comparator.compare(a, b);
 	}
 
@@ -72,7 +69,7 @@ export class SchwerpunkteListeManager extends AuswahlManager<number, Schwerpunkt
 		}
 	}
 
-	protected checkFilter(eintrag: Schwerpunkt): boolean {
+	protected checkFilter(eintrag: SchuelerSchwerpunkt): boolean {
 		if (this._filterNurSichtbar && !eintrag.istSichtbar) {
 			return false;
 		}
@@ -85,9 +82,9 @@ export class SchwerpunkteListeManager extends AuswahlManager<number, Schwerpunkt
 		return true;
 	}
 
-	private entryMatchesSearchterm(eintrag: Schwerpunkt) {
+	private entryMatchesSearchterm(eintrag: SchuelerSchwerpunkt) {
 		const searchTermLower = this._searchTerm.toLocaleLowerCase();
-		return eintrag.bezeichnung !== null ? eintrag.bezeichnung.toLocaleLowerCase().includes(searchTermLower) : false;
+		return eintrag.bezeichnung.toLocaleLowerCase().includes(searchTermLower);
 	}
 
 	get searchTerm(): string {

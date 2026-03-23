@@ -11,7 +11,7 @@ import { api } from "~/router/Api";
 
 const defaultState = {
 	idSchuljahresabschnitt: -1,
-	manager: undefined,
+	manager: new SchwerpunkteListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
 	view: routeSchwerpunkteDaten,
 	activeViewType: ViewType.DEFAULT,
 };

@@ -1,0 +1,33 @@
+import { ModelProxy, ValidatorInputRequired, ValidatorNumberRange } from "@ui";
+import type { SchuelerSchwerpunkt } from "@core";
+import { ValidatorSchwerpunktBezeichnung } from "~/components/schule/kataloge/schwerpunkte/modelproxy/validation/ValidatorSchwerpunktBezeichnung";
+
+/**
+ * ModelProxy für Schwerpunkte.
+ */
+export class SchwerpunkteModelProxy extends ModelProxy<SchuelerSchwerpunkt> {
+
+	/**
+	 * ModelProxy für Schwerpunkte
+	 *
+	 * @param data Lambda für den Zugriff auf die Original-Daten
+	 * @param alleSchwerpunkte Lambda zur Liste aller Schwerpunkte
+	 * @param patch Methode zum Patchen einzelner Attribute
+	 */
+	constructor(
+		data: () => SchuelerSchwerpunkt,
+		alleSchwerpunkte: () => Iterable<SchuelerSchwerpunkt>,
+		patch?: (data: Partial<SchuelerSchwerpunkt>) => Promise<boolean>
+	) {
+		const listOfAutopatchProps: Iterable<keyof SchuelerSchwerpunkt> = ["istSichtbar"];
+		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		this.addValidatoren(alleSchwerpunkte);
+		this.validate();
+	}
+
+	private addValidatoren(liste: () => Iterable<SchuelerSchwerpunkt>) {
+		this.addValidator(new ValidatorSchwerpunktBezeichnung((): SchuelerSchwerpunkt => this.proxy, liste), "bezeichnung");
+		this.addValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), 'sortierung');
+	}
+}
