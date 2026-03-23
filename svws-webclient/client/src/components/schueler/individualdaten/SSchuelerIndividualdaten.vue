@@ -183,7 +183,7 @@
 			</template>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-number placeholder="Zuzugsjahr" :model-value="schuelerListeManager().daten().zuzugsjahr" @change="zuzugsjahr => patch({zuzugsjahr})"
-					:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && readonly" statistics hide-stepper :min :max />
+					:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && readonly" statistics :steps="false" :min :max />
 				<svws-ui-select title="Geburtsland" v-model="geburtsland" :items="Nationalitaeten.values()" :item-text="i => `${i.historie().getLast().bezeichnung} (${i.historie().getLast().iso3})`"
 					:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter"
 					:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && readonly" autocomplete statistics />

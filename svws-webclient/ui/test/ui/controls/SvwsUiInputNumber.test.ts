@@ -15,7 +15,7 @@ describe("HTML Tests SvwsUiInputNumber", () => {
 		wrapper.unmount();
 	});
 
-	test("Das Drücken auf die Buttons löst du Methode onInputNumber aus", async () => {
+	test("Das Drücken auf die Buttons löst du Methode onStepperClick aus", async () => {
 		const wrapper = mount(SvwsUiInputNumber, {
 			props: { modelValue: 10 },
 		});
@@ -131,20 +131,6 @@ describe("HTML Tests SvwsUiInputNumber", () => {
 		expect(wrapper.find(".i-ri-bar-chart-2-line").exists()).toBe(true);
 	});
 
-	test("Gibt ein Warnsymbol aus, wenn die Daten null oder undefiniert sind und die Statistik und Required true ist", () => {
-		const wrapper = mount(SvwsUiInputNumber, {
-			props: {
-				modelValue: null,
-				placeholder: "Enter number",
-				statistics: true,
-				required: true,
-				headless: false,
-			},
-		});
-
-		expect(wrapper.find(".i-ri-alert-fill").exists()).toBe(true);
-	});
-
 	test("Zeigt einen Limittext an, wenn min gesetzt wurde", () => {
 		const wrapper = mount(SvwsUiInputNumber, {
 			props: {
@@ -186,7 +172,7 @@ describe("HTML Tests SvwsUiInputNumber", () => {
 	});
 });
 
-describe("Prop Tests für onInputNumber()", async () => {
+describe("Prop Tests", async () => {
 	test("Props werden korrekt weitergegeben", () => {
 		const wrapper = mount(SvwsUiInputNumber, {
 			props: {
@@ -196,7 +182,6 @@ describe("Prop Tests für onInputNumber()", async () => {
 				required: true,
 				headless: true,
 				rounded: true,
-				hideStepper: true,
 				span: "full",
 			},
 		});
@@ -228,6 +213,91 @@ describe("Prop Tests für onInputNumber()", async () => {
 		const input = wrapper.find("input");
 		await input.setValue("20");
 		expect(wrapper.emitted()["update:modelValue"][0]).toEqual([20]);
+	});
+});
+
+describe("Parsing und Synchronisation zwischen data und visualData", () => {
+	test.each([
+		["4", "4", 4],
+		["4,", "4,", 4],
+		["4.", "4.", 4],
+		["4,5", "4,5", 4.5],
+		["4.5", "4.5", 4.5],
+		["45-", "45", 45],
+		["-45", "-45", -45],
+		["abc123cde:;", "123", 123],
+		[null, null, null],
+	])("Mit der Input-Eingabe %s ist visualData = %s und data = %s", async (input, visualData, data) => {
+		const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: null, decimalPlaces: 4 } });
+		const inputElement = wrapper.find("input");
+		await inputElement.setValue(input);
+
+		const dataRef = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.data;
+		const visualDataRef = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.visualData;
+
+		expect(visualDataRef).toBe(visualData);
+		expect(dataRef).toBe(data);
+	});
+
+	test.each([
+		[4, "4", 4],
+		[4.5, "4,5", 4.5],
+		[null, null, null],
+	])("Mit modelValue %s ist visualData = %s und data = %s", (modelValue, visualData, data) => {
+		const wrapper = mount(SvwsUiInputNumber, { props: { modelValue, decimalPlaces: 4  } });
+
+		const dataRef = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.data;
+		const visualDataRef = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.visualData;
+
+		expect(visualDataRef).toBe(visualData);
+		expect(dataRef).toBe(data);
+	});
+
+	test.each([
+		[0, "4,123456789", "4123456789", 4123456789],
+		[1, "4,123456789", "4,1", 4.1],
+		[2, "4,123456789", "4,12", 4.12],
+		[3, "4,123456789", "4,123", 4.123],
+		[4, "4,123456789", "4,1234", 4.1234],
+		[0, "4", "4", 4],
+		[1, "4", "4", 4],
+		[2, "4", "4", 4],
+		[3, "4", "4", 4],
+		[4, "4", "4", 4],
+	])("Mit Prop 'decimalPlaces = %s' und der Input-Eingabe %s ist visualData = %s und data = %s (Sprache: %s)", async (decimalPlaces, input, visualData, data) => {
+		const wrapper = mount(SvwsUiInputNumber, { props: { modelValue: null, decimalPlaces: decimalPlaces as 0 | 1 | 2 | 3 | 4  } });
+		const inputElement = wrapper.find("input");
+		await inputElement.setValue(input);
+
+		const dataRef = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.data;
+		const visualDataRef = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.visualData;
+
+		expect(visualDataRef).toBe(visualData);
+		expect(dataRef).toBe(data);
+	});
+
+	test.each([
+		[0, 4.111111, "4"],
+		[1, 4.111111, "4,1"],
+		[1, 4.555555, "4,6"],
+		[1, 4, "4"],
+		[2, 4.111111, "4,11"],
+		[2, 4.555555, "4,56"],
+		[2, 4, "4"],
+		[3, 4.111111, "4,111"],
+		[3, 4.555555, "4,556"],
+		[3, 4, "4"],
+		[4, 4.111111, "4,1111"],
+		[4, 4.555555, "4,5556"],
+		[4, 4, "4"],
+	])("Mit Prop 'decimalPlaces = %s' und modelValue %s ist visualData = %s und data = %s", async (decimalPlaces, modelValue, visualData) => {
+		const wrapper = mount(SvwsUiInputNumber, { props: { modelValue, decimalPlaces: decimalPlaces as 0 | 1 | 2 | 3 | 4 } });
+
+		const dataRef = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.data;
+		const visualDataRef = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.visualData;
+
+		expect(visualDataRef).toBe(visualData);
+		expect(dataRef).toBe(modelValue);
 	});
 });
 
@@ -410,40 +480,34 @@ describe("Computed values in SvwsUiInputNumber", () => {
 });
 
 describe("Funktionen in SvwsUiInputNumber", () => {
-	test("inInputNumber mit Argument up erhöht den Wert", async () => {
+	test.each([
+		["up", undefined, 11],
+		["up", false as false, 10],
+		["up", 1, 11],
+		["up", 0.1, 10.1],
+		["down", undefined, 9],
+		["down", false as false, 10],
+		["down", 1, 9],
+		["down", 0.1, 9.9],
+	])("onStepperClick mit Argument %s und steps = %s verändert den Wert auf %s", async (direction, steps, result) => {
 		const wrapper = mount(SvwsUiInputNumber, {
-			props: { modelValue: 10 },
+			props: { modelValue: 10, steps, decimalPlaces: 4  },
 		});
 
-		// extrahier die Funktion validator Email von der Komponente
-		const onInputNumber = await wrapper.findComponent({
+		const onStepperClick = await wrapper.findComponent({
 			name: "SvwsUiInputNumber",
-		}).vm.onInputNumber;
-		onInputNumber("up");
+		}).vm.onStepperClick;
+		onStepperClick(direction);
 
-		const input = wrapper.find<HTMLInputElement>({
-			ref: "input",
-		});
+		const dataRef = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.data;
 
-		expect(input.element.value).toBe("11");
+		expect(dataRef).toBe(result);
 	});
 
-	test("inInputNumber mit Argument down verringert den Wert", async () => {
-		const wrapper = mount(SvwsUiInputNumber, {
-			props: { modelValue: 10 },
-		});
-
-		// extrahier die Funktion validator Email von der Komponente
-		const onInputNumber = await wrapper.findComponent({
-			name: "SvwsUiInputNumber",
-		}).vm.onInputNumber;
-		onInputNumber("down");
-
-		const input = wrapper.find<HTMLInputElement>({
-			ref: "input",
-		});
-
-		expect(input.element.value).toBe("9");
+	test("Wenn prop steps = 0.1 und decimalPlaces = 0 wird eine Fehlermeldung generiert", () => {
+		expect(() => mount(SvwsUiInputNumber, { props: { placeholder: "Titel", modelValue: 10, steps: 0.1, decimalPlaces: 0 } }))
+			.toThrow("Für das Input mit dem Label 'Titel' wurde mit der prop 'steps = 0.1' eine Schrittweite mit mehr " +
+						"Nachkommastellen definiert, als die prop 'decimalPlaces = 0' zulässt.");
 	});
 
 	test("onBlur wird korrekt ausgelöst", async () => {
@@ -456,6 +520,25 @@ describe("Funktionen in SvwsUiInputNumber", () => {
 		await input.trigger("blur");
 		expect(wrapper.emitted().blur).toBeTruthy();
 		expect(wrapper.emitted().blur[0]).toEqual([10]);
+	});
+
+	test("onBlur korrigiert visualData wieder auf data aber mit Komma", async () => {
+		const wrapper = mount(SvwsUiInputNumber, {
+			props: {
+				modelValue: 100,
+			},
+		});
+		const input = wrapper.find("input");
+		await input.setValue("10,");
+		await input.trigger("blur");
+
+		const dataRef = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.data;
+		const visualDataRef = wrapper.findComponent({ name: "SvwsUiInputNumber" }).vm.visualData;
+		expect(wrapper.emitted().blur).toBeTruthy();
+		expect(wrapper.emitted().blur[0]).toEqual([10]);
+		expect(dataRef).toBe(10);
+		expect(visualDataRef).toBe("10");
+		expect(input.element.value).toBe("10");
 	});
 
 	test("onBlur wird nicht ausgelöst, wenn der Fokus zwischen Button und Input switched", async () => {

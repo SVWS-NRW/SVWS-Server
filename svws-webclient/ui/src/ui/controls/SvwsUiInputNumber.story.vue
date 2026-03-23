@@ -1,53 +1,59 @@
 <template>
 	<Story title="Input Number" id="svws-ui-input-number" icon="ri:pencil-line" :layout="{type: 'grid', width: '45%'}" :source="sourceCode">
 		<Variant title="Default" id="Default">
-			<div class="p-4">
-				<svws-ui-input-wrapper :grid="4">
-					<svws-ui-input-number v-model="defaultState.modelValue.value" v-bind="defaultState.props" @input="onInput" />
-				</svws-ui-input-wrapper>
-			</div>
+			<svws-ui-input-wrapper :grid="4">
+				<svws-ui-input-number v-model="defaultState.modelValue.value" v-bind="defaultState.props" @input="onInput" />
+			</svws-ui-input-wrapper>
+			modelValue: {{ defaultState.modelValue.value }}
 		</Variant>
 
 		<Variant title="Disabled" id="Disabled">
 			<svws-ui-input-wrapper :grid="4">
 				<svws-ui-input-number v-model="disabledState.modelValue.value" v-bind="disabledState.props" @input="onInput" />
 			</svws-ui-input-wrapper>
+			modelValue: {{ disabledState.modelValue.value }}
 		</Variant>
 
 		<Variant title="Range" id="Range">
 			<svws-ui-input-wrapper :grid="4">
 				<svws-ui-input-number v-model="rangeState.modelValue.value" v-bind="rangeState.props" @input="onInput" />
 			</svws-ui-input-wrapper>
+			modelValue: {{ rangeState.modelValue.value }}
 		</Variant>
 
 		<Variant title="Statistik" id="Statistik">
 			<svws-ui-input-wrapper :grid="4">
 				<svws-ui-input-number v-model="statisticState.modelValue.value" v-bind="statisticState.props" @input="onInput" />
 			</svws-ui-input-wrapper>
+			modelValue: {{ statisticState.modelValue.value }}
 		</Variant>
 
 		<Variant title="Headless" id="Headless">
 			<svws-ui-input-wrapper :grid="4">
 				<svws-ui-input-number v-model="headlessState.modelValue.value" v-bind="headlessState.props" @input="onInput" />
 			</svws-ui-input-wrapper>
+			modelValue: {{ headlessState.modelValue.value }}
 		</Variant>
 
 		<Variant title="Readonly" id="Readonly">
 			<svws-ui-input-wrapper :grid="4">
 				<svws-ui-input-number v-model="readonlyState.modelValue.value" v-bind="readonlyState.props" @input="onInput" />
 			</svws-ui-input-wrapper>
+			modelValue: {{ readonlyState.modelValue.value }}
 		</Variant>
 
 		<Variant title="Required" id="Required">
 			<svws-ui-input-wrapper :grid="4">
 				<svws-ui-input-number v-model="requiredState.modelValue.value" v-bind="requiredState.props" @input="onInput" />
 			</svws-ui-input-wrapper>
+			modelValue: {{ requiredState.modelValue.value }}
 		</Variant>
 
 		<Variant title="Validation" id="Validation">
 			<svws-ui-input-wrapper :grid="4">
 				<svws-ui-input-number v-model="validationState.modelValue.value" v-bind="validationState.props" @input="onInput" />
 			</svws-ui-input-wrapper>
+			modelValue: {{ validationState.modelValue.value }}
 		</Variant>
 
 		<template #controls>
@@ -131,33 +137,24 @@
 					</template>
 				</svws-ui-tooltip>
 			</div>
-			<div class="flex">
-				<HstCheckbox title="hideStepper"
-					v-model="activeState.hideStepper.value" />
-				<svws-ui-tooltip position="top">
-					<span class="icon i-ri-question-line" />
-					<template #content>
-						Gibt an, ob die Knöpfe zum Anpassen des Wertes versteckt werden sollen.<br>
-						<span class="font-bold">Default:</span>  <code class="bg-ui-selected">hideStepper: false</code>
-					</template>
-				</svws-ui-tooltip>
-			</div>
-			<div class="flex items-start gap-2 text-headline-sm">
-				<HstRadio title="span"
+			<div class="flex flex-col border p-1 rounded border-ui-50">
+				<div class="text-headline-sm">
+					span
+					<svws-ui-tooltip position="top">
+						<span class="icon i-ri-question-line" />
+						<template #content>
+							Setzt die Klasse <code class="bg-ui-selected">col-span-2</code> bei "2" bzw. <code class="bg-ui-selected">col-span-full</code> bei "full". Dadurch können Inputs eine automatisch passende Breite in Zum Beispiel Grids oder dem InputWrapper erhalten.<br>
+							<span class="font-bold">Default:</span>  <code class="bg-ui-selected">span: undefined</code>
+						</template>
+					</svws-ui-tooltip>
+				</div>
+				<HstRadio row
 					v-model="activeState.span.value" :options="[
 						{ label: 'undefined', value: 'undefined' },
 						{ label: 'full', value: 'full' },
 						{ label: '2', value: '2' },
 					]" />
-				<svws-ui-tooltip position="top">
-					<span class="icon i-ri-question-line" />
-					<template #content>
-						Setzt die Klasse <code class="bg-ui-selected">col-span-2</code> bei "2" bzw. <code class="bg-ui-selected">col-span-full</code> bei "full". Dadurch können Inputs eine automatisch passende Breite in Zum Beispiel Grids oder dem InputWrapper erhalten.<br>
-						<span class="font-bold">Default:</span>  <code class="bg-ui-selected">span: undefined</code>
-					</template>
-				</svws-ui-tooltip>
 			</div>
-
 			<div class="flex">
 				<HstNumber title="min"
 					v-model="activeState.min.value" />
@@ -184,25 +181,60 @@
 					</template>
 				</svws-ui-tooltip>
 			</div>
-			<div class="text-headline-sm">
-				validation: Validatorfehler mit Härtegrad
+			<div class="flex flex-col border p-1 rounded border-ui-50">
+				<div class="text-headline-sm">
+					steps
+					<svws-ui-tooltip position="top">
+						<span class="icon i-ri-question-line" />
+						<template #content>
+							Definiert die Zahl, die beim Drücken des Plus- und Minus-Buttons addiert/subtrahiert wird. Bei
+							<code class="bg-ui-selected">false</code> werden keine Buttons gerendert. <br>
+							Ist für steps eine Zahl definiert, so muss diese mit <code class="bg-ui-selected">decimalPlaces</code> kompatibel sein. Bedeutet
+							eine Angabe von steps mit mehr Nachkommastellen, als durch <code class="bg-ui-selected">decimalPlaces</code> erlaubt ist führt zu
+							einer Fehlermeldung. <br>
+							<span class="font-bold">Default:</span>  <code class="bg-ui-selected">steps: 1</code>
+						</template>
+					</svws-ui-tooltip>
+				</div>
+				<HstCheckbox title="false"
+					v-model="activeState.hideStepper.value" />
+				<HstNumber title="Schrittweite (bei true)"
+					v-model="activeState.steps.value" :disabled="activeState.hideStepper.value" />
+			</div>
+			<div class="flex">
+				<HstNumber title="decimalPlaces"
+					v-model="activeState.decimalPlaces.value" :min="0" :max="4" />
 				<svws-ui-tooltip position="top">
-					<span class="icon i-ri-question-line inline" />
+					<span class="icon i-ri-question-line" />
 					<template #content>
-						Erstellt eine Liste mit ValidatorFehlern der entsprechenden Härtegrade.
-						Diese wird dann per <code class="bg-ui-selected">() => validatorFehler</code> an die prop
-						<code class="bg-ui-selected">validation</code> übergeben. <br>
-						<span class="font-bold">Default:</span> <code class="bg-ui-selected">validation: leere ArrayList&lt;ValidatorFehler&gt;</code>
+						Definiert die Anzahl der Nachkommastellen, die für die eingegebene Zahl erlaubt sind. Bei <code class="bg-ui-selected">0</code>
+						sind nur ganze Zahlen erlaubt und die Eingabe von Komma oder Punkt wird unterbunden. Bei <code class="bg-ui-selected">&gt; 0</code>
+						werden die Nachkommastellen automatisch auf die angegebene Länge gekürzt. Es sind nur Zahlen von 0 bis 4 erlaubt<br>
+						<span class="font-bold">Default:</span>  <code class="bg-ui-selected">decimalPlaces: 0</code>
 					</template>
 				</svws-ui-tooltip>
 			</div>
-			<div class="flex items-start gap-2">
-				<HstCheckbox title="Muss"
-					v-model="activeState.muss.value" />
-				<HstCheckbox title="Kann"
-					v-model="activeState.kann.value" />
-				<HstCheckbox title="Hinweis"
-					v-model="activeState.hinweis.value" />
+			<div class="flex flex-col border p-1 rounded border-ui-50">
+				<div class="text-headline-sm">
+					validation: Validatorfehler mit Härtegrad
+					<svws-ui-tooltip position="top">
+						<span class="icon i-ri-question-line inline" />
+						<template #content>
+							Erstellt eine Liste mit ValidatorFehlern der entsprechenden Härtegrade.
+							Diese wird dann per <code class="bg-ui-selected">() => validatorFehler</code> an die prop
+							<code class="bg-ui-selected">validation</code> übergeben. <br>
+							<span class="font-bold">Default:</span> <code class="bg-ui-selected">validation: leere ArrayList&lt;ValidatorFehler&gt;</code>
+						</template>
+					</svws-ui-tooltip>
+				</div>
+				<div class="flex items-start gap-2">
+					<HstCheckbox title="Muss"
+						v-model="activeState.muss.value" />
+					<HstCheckbox title="Kann"
+						v-model="activeState.kann.value" />
+					<HstCheckbox title="Hinweis"
+						v-model="activeState.hinweis.value" />
+				</div>
 			</div>
 		</template>
 	</Story>
@@ -228,10 +260,12 @@
 		readonly?: boolean;
 		headless?: boolean;
 		focus?: boolean;
+		span?: "full" | "2";
+		min?: number;
+		max?: number;
 		hideStepper?: boolean;
-		span?: "full" | "2" | undefined;
-		min?: number | undefined;
-		max?: number | undefined;
+		steps?: number;
+		decimalPlaces?: 0 | 1 | 2 | 3 | 4;
 		muss?: boolean;
 		kann?: boolean;
 		hinweis?: boolean;
@@ -251,6 +285,8 @@
 		public span = ref<"full" | "2" | "undefined">("2");
 		public min = ref<number | undefined>(undefined);
 		public max = ref<number | undefined>(undefined);
+		public steps = ref<number>();
+		public decimalPlaces = ref<0 | 1 | 2 | 3 | 4>(0);
 		public muss = ref(false);
 		public kann = ref(false);
 		public hinweis = ref(false);
@@ -283,6 +319,14 @@
 			return () => validatorFehler;
 		});
 
+		public stepsProp = computed(() => {
+			if (this.hideStepper.value === true) {
+				return false;
+			}
+
+			return this.steps.value;
+		});
+
 		private spanValue = computed(() => {
 			if (this.span.value === "undefined") {
 				return undefined;
@@ -299,10 +343,11 @@
 			readonly: this.readonly,
 			headless: this.headless,
 			focus: this.focus,
-			hideStepper: this.hideStepper,
 			span: this.spanValue,
 			min: this.min,
 			max: this.max,
+			steps: this.stepsProp,
+			decimalPlaces: this.decimalPlaces,
 			validation: this.validation,
 		});
 
@@ -319,6 +364,8 @@
 			this.span.value = state.span ?? this.span.value;
 			this.min.value = state.min;
 			this.max.value = state.max;
+			this.steps.value = state.steps ?? this.steps.value;
+			this.decimalPlaces.value = state.decimalPlaces ?? this.decimalPlaces.value;
 			this.muss.value = state.muss ?? this.muss.value;
 			this.kann.value = state.kann ?? this.kann.value;
 			this.hinweis.value = state.hinweis ?? this.hinweis.value;
@@ -366,8 +413,8 @@
 
 	const sourceCode = computed(() => {
 		const indent = "\t";
-		const lines = [
-			`v-model="${activeState.value.modelValue.value}"`,
+		const attrs = [
+			'v-model="inputValueRef"',
 			activeState.value.placeholder.value === "" ? "" : `placeholder="${activeState.value.placeholder.value}"`,
 			activeState.value.statistics.value ? `statistics` : "",
 			activeState.value.disabled.value ? `disabled` : "",
@@ -375,15 +422,20 @@
 			activeState.value.readonly.value ? `readonly` : "",
 			activeState.value.headless.value ? `headless` : "",
 			activeState.value.focus.value ? `focus` : "",
-			activeState.value.hideStepper.value ? `hideStepper` : "",
+			(activeState.value.stepsProp.value === undefined) || (activeState.value.stepsProp.value === 1) ? "" : `:steps="${activeState.value.stepsProp.value}"`,
+			(activeState.value.decimalPlaces.value === 0) ? "" : `:decimal-places="${activeState.value.decimalPlaces.value}"`,
 			(activeState.value.span.value === "undefined") ? "" : `span="${activeState.value.span.value}"`,
 			(activeState.value.min.value === undefined) ? "" : `:min="${activeState.value.min.value}"`,
 			(activeState.value.max.value === undefined) ? "" : `:max="${activeState.value.max.value}"`,
 			(activeState.value.muss.value || activeState.value.kann.value || activeState.value.hinweis.value) ? `:validation="() => getFehler()"` : "",
-		].filter(Boolean).map(l => indent + l).join("\n");
-		return `<svws-ui-input-number
-${lines}
- />`;
+		].filter(Boolean);
+
+		const lines = attrs.map(l => indent + l).join("\n");
+
+		return [
+			"<svws-ui-input-number",
+			lines,
+		].join("\n") + " />";
 	});
 
 </script>

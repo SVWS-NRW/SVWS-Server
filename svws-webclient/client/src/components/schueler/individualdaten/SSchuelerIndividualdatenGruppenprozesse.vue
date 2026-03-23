@@ -145,7 +145,7 @@
 				<svws-ui-input-wrapper :grid="2">
 					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="zuzugsjahr" :nullable="hatMigrationshintergrund">
 						<svws-ui-input-number placeholder="Zuzugsjahr" :model-value="zuzugsjahr" @update:model-value="setZuzugsjahr"
-							:disabled="!hatMigrationshintergrund" statistics hide-stepper :readonly="hatMigrationshintergrund && !hatKompetenzUpdate"
+							:disabled="!hatMigrationshintergrund" statistics :steps="false" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate"
 							:min="minZuzugsjahr" :max="maxZuzugsjahr" />
 					</ui-gruppenprozesse-wrapper>
 					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="geburtsland" :nullable="hatMigrationshintergrund">

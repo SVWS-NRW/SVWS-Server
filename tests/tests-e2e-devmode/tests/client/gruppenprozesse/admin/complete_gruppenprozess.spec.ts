@@ -355,8 +355,8 @@ test('Jedes Feld erzeugt bei einer Änderung einen korrekten Pending State Toolt
 	await page.locator('#tooltip-hatMigrationshintergrund').hover();
 	expect(await getContentOfActiveTooltip(page)).toBe("Aktuell: Nein (2)  Nachher: Ja (2)");
 
-	await page.getByRole('spinbutton', { name: 'Zuzugsjahr' }).click();
-	await page.getByRole('spinbutton', { name: 'Zuzugsjahr' }).fill('2020');
+	await page.getByRole('textbox', { name: 'Zuzugsjahr' }).click();
+	await page.getByRole('textbox', { name: 'Zuzugsjahr' }).fill('2020');
 	await page.locator('#tooltip-zuzugsjahr').hover();
 	expect(await getContentOfActiveTooltip(page)).toBe("Aktuell: Keine Daten (2)  Nachher: 2020 (2)");
 

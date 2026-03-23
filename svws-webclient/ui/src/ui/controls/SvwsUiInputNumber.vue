@@ -1,7 +1,7 @@
 <template>
 	<div class="input-number-component"
 		:class="{
-			'input-number--filled': (data !== null) && (data !== undefined),
+			'input-number--filled': (visualData !== null) && (visualData !== undefined),
 			'input-number--muss': ((validationResult.fehlerart === ValidatorFehlerart.MUSS) || !valid(data)),
 			'input-number--kann': (validationResult.fehlerart === ValidatorFehlerart.KANN),
 			'input-number--hinweis': (validationResult.fehlerart === ValidatorFehlerart.HINWEIS),
@@ -15,20 +15,18 @@
 		}">
 		<label :for="id" />
 		<div v-if="readonly" :class="{ 'input-number--control': !headless, 'input-number--headless': headless }">
-			{{ data }}
+			{{ visualData }}
 		</div>
-		<input v-else ref="input" :name="id"
+		<input v-else ref="input" :name="id" lang="de"
 			v-focus
 			:class="[{ 'input-number--control': !headless, 'input-number--headless': headless }, 'appearance-none']"
 			v-bind="{ ...$attrs }"
-			type="number"
-			inputmode="numeric"
-			:value="data"
+			type="text"
+			inputmode="decimal"
+			v-model="visualData"
 			:disabled
 			:required
 			:readonly
-			:min
-			:max
 			:aria-labelledby="labelId"
 			:placeholder="headless ? placeholder : ''"
 			@input="onInput"
@@ -53,24 +51,24 @@
 			<span v-if="readonly" class="icon-xs i-ri-lock-line" />
 		</span>
 
-		<span v-if="data !== null && !hideStepper && !disabled && !readonly" class="svws-input-stepper">
-			<button ref="btnMinus" role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': String(min) === String(data)}"><span class="icon i-ri-subtract-line" /></button>
-			<button ref="btnPlus" role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': String(max) === String(data)}"><span class="icon i-ri-add-line" /></button>
+		<span v-if="visualData !== null && (steps !== false) && !disabled && !readonly" class="svws-input-stepper">
+			<button ref="btnMinus" @click="onStepperClick('down')" @blur="onBlur" :class="{'svws-disabled': disableMinusButton}"><span class="icon i-ri-subtract-line" /></button>
+			<button ref="btnPlus" @click="onStepperClick('up')" @blur="onBlur" :class="{'svws-disabled': disablePlusButton}"><span class="icon i-ri-add-line" /></button>
 		</span>
 	</div>
 </template>
 
-
 <script setup lang="ts">
 
-	import { ref, computed, watch, type ComputedRef, type Ref, useId } from "vue";
+	import { ref, computed, watch, type ComputedRef, type Ref, useId, onMounted } from "vue";
 	import type { List } from "../../../../core/src/java/util/List";
 	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
-	import type { ValidatorFehler } from '../../../../core/src/asd/validate/ValidatorFehler';
-	import { ValidatorFehlerart } from '../../../../core/src/asd/validate/ValidatorFehlerart';
+	import type { ValidatorFehler } from "../../../../core/src/asd/validate/ValidatorFehler";
+	import { ValidatorFehlerart } from "../../../../core/src/asd/validate/ValidatorFehlerart";
 	import { ValidationResult } from "../../validation/ValidationResult";
 	import { ValidatorInputRequired } from "../../validation/common/ValidatorInputRequired";
 	import { ValidatorNumberRange } from "../../validation/common/ValidatorNumberRange";
+	import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
 
 	defineOptions({
 		inheritAttrs: false,
@@ -92,7 +90,8 @@
 		readonly?: boolean;
 		headless?: boolean;
 		focus?: boolean;
-		hideStepper?: boolean;
+		steps?: false | number;
+		decimalPlaces?: 0 | 1 | 2 | 3 | 4;
 		span?: 'full' | '2';
 		min?: number | undefined;
 		max?: number | undefined;
@@ -106,7 +105,8 @@
 		readonly: false,
 		headless: false,
 		focus: false,
-		hideStepper: false,
+		steps: 1,
+		decimalPlaces: 0,
 		span: undefined,
 		min: undefined,
 		max: undefined,
@@ -128,10 +128,60 @@
 		},
 	};
 
+	onMounted(() => {
+		if (typeof props.steps === "number") {
+			warnIfStepsNotCompatible(props.steps);
+		}
+		syncVisualData();
+	});
+
 	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
 	const data = ref<number | null>(props.modelValue);
 
-	watch(() => props.modelValue, (value: number | null) => updateData(value), { immediate: false });
+	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
+	const visualData = ref<string | null>(props.modelValue === null ? null : String(props.modelValue).replaceAll(".", ","));
+
+	const labelId = useId();
+
+	watch(() => props.modelValue, (value: number | null) => {
+		if (value !== data.value) {
+			updateData(value);
+			syncVisualData();
+		}
+	}, { immediate: true });
+
+	const disablePlusButton = computed(() => {
+		if ((data.value === null) || (props.max === undefined)) {
+			return false;
+		}
+		return data.value >= props.max;
+	});
+
+	const disableMinusButton = computed(() => {
+		if ((data.value === null) || (props.min === undefined)) {
+			return false;
+		}
+		return data.value <= props.min;
+	});
+
+	/**
+	 * Generiert den Text im Label, wenn es eine Ober-/Untergrenze für den Wert gibt
+	 */
+	const numberLimitText = computed(() => {
+		if ((props.min === undefined) && (props.max === undefined)) {
+			return null;
+		}
+		if ((props.min !== undefined) && (props.max !== undefined)) {
+			const lower = Math.min(props.min, props.max);
+			const upper = Math.max(props.min, props.max);
+			return lower === upper ? `(${lower})` : `(zwischen ${lower} und ${upper})` ;
+		}
+		return (props.min === undefined) ? `(max. ${props.max})` : `(min. ${props.min})`;
+	});
+
+	/**
+	 * Validatoren
+	 */
 
 	const validationResult = computed(() => new ValidationResult(validierungFehler.value));
 
@@ -169,31 +219,68 @@
 		return fehler;
 	}
 
-	function updateData(value: number | null) {
-		if (data.value !== value) {
-			data.value = value;
-			emit("update:modelValue", data.value);
-		}
-	}
+	/**
+	 * Datenverarbeitung
+	 */
 
-	function onInput(event: Event) {
-		const strValue = (event.target as HTMLInputElement).value;
-		const value = (strValue === "") ? null : Number(strValue);
-		if (value !== data.value) {
-			updateData(value);
-		}
-	}
+	function updateData(value: string | number | null) {
+		const numberValue = getNumberFromInput(value);
 
-	function onInputNumber(stepDirection: string) {
-		if (input.value === null) {
+		if (numberValue !== null && Number.isNaN(numberValue)) {
 			return;
 		}
-		if (stepDirection === 'up') {
-			input.value.stepUp();
-		} else if (stepDirection === 'down') {
-			input.value.stepDown();
+
+		if (data.value !== numberValue) {
+			data.value = numberValue;
+			emit("update:modelValue", numberValue);
 		}
-		updateData(Number(input.value.value));
+	}
+
+	function onInput() {
+		if ((input.value === null) || (visualData.value === null)) {
+			return;
+		}
+
+		const cursorPositionBeforeParse = input.value.selectionStart ?? 0;
+		const inputLengthBeforeParse = input.value.value.length;
+
+		visualData.value = parseInput(visualData.value);
+		input.value.value = visualData.value ?? ""; // Synchronisation mit der Anzeige im Input
+		setCursorPosition(inputLengthBeforeParse, cursorPositionBeforeParse);
+
+		const value = (visualData.value === null) ? null : Number(visualData.value.replaceAll(",", "."));
+		updateData(value);
+	}
+
+	function syncVisualData(): void {
+		if (data.value === null) {
+			visualData.value = null;
+			return;
+		}
+
+		const factor = Math.pow(10, props.decimalPlaces);
+		const rounded = Math.round(data.value * factor) / factor;
+		visualData.value = String(rounded).replaceAll(".", ",");
+	}
+
+	function onStepperClick(stepDirection: string) {
+		if ((props.steps === false) || (data.value === null) || (visualData.value === null)) {
+			return;
+		}
+		warnIfStepsNotCompatible(props.steps);
+
+		// Nutze, wenn möglich den Wert aus visualData, da es sein kann, dass dieser nur ein gerundeter Wert von data ist.
+		// In dem Fall würde es so aussehen, als würde die falsche Zahl addiert/subtrahiert werden
+		const visualNumber = Number(visualData.value.replaceAll(",", "."));
+		let newValue = (Number.isNaN(visualNumber)) ? data.value : visualNumber;
+
+		if (stepDirection === 'up') {
+			newValue = Math.round((newValue + props.steps) * 1e10) / 1e10;
+		} else if (stepDirection === 'down') {
+			newValue = Math.round((newValue - props.steps) * 1e10) / 1e10;
+		}
+		updateData(newValue);
+		syncVisualData();
 	}
 
 	function onBlur(event: Event) {
@@ -201,6 +288,7 @@
 		if (event instanceof FocusEvent && ([input.value, btnPlus.value, btnMinus.value] as Array<HTMLElement>).includes(event.relatedTarget as HTMLElement)) {
 			return;
 		}
+		syncVisualData();
 		emit("commit", data.value);
 		if (props.modelValue !== data.value) {
 			emit("change", data.value);
@@ -217,24 +305,105 @@
 
 	function reset() {
 		data.value = props.modelValue;
+		visualData.value = String(props.modelValue);
 	}
 
-	const labelId = useId();
+	/**
+	 * Input Parsing
+	 */
+
+	function parseInput(input: string): string | null {
+		// Erlaubte Zeichen sind Zahlen, Minus und bei Dezimalzahlen Komma und Punkt
+		const allowed = (props.decimalPlaces === 0) ? /[^0-9-]/g : /[^0-9\-,.]/g;
+
+		let parsedString = input
+			.replaceAll(allowed, "") // Unerlaubte Zeichen entfernen
+			.replaceAll(/(?!^)-/g, ""); // Minus nur am Anfang erlauben
+		parsedString = removeExtraSeparators(parsedString);
+		parsedString = removeTooManyDecimals(parsedString);
+
+		return (parsedString === "") ? null : parsedString;
+	}
+
+	function removeExtraSeparators(value: string): string {
+		const match = /[,.]/.exec(value);
+		const first = (match === null) ? -1 : match.index;
+		if (first === -1) {
+			return value;
+		}
+		const prefix = value.slice(0, first + 1);
+		const suffix = value.slice(first + 1)
+			.replaceAll(",", "")
+			.replaceAll(".", "");
+		return prefix + suffix;
+	}
+
+	function removeTooManyDecimals(value: string): string {
+		const separator = getSeparator(value);
+		if (separator === null) {
+			return value;
+		}
+		const parts = value.split(separator);
+		if (hasTooManyDecimals(parts)) {
+			return parts[0] + separator + (parts[1].slice(0, props.decimalPlaces));
+		}
+		return value;
+	}
 
 	/**
-	 * Generiert den Text im Label, wenn es eine Ober-/Untergrenze für den Wert gibt
+	 * Hilfsfunktionen
 	 */
-	const numberLimitText = computed(() => {
-		if ((props.min === undefined) && (props.max === undefined)) {
+
+	function getSeparator(value: string): string | null {
+		if (value.includes(("."))) {
+			return ".";
+		}
+		if (value.includes(",")) {
+			return ",";
+		}
+		return null;
+	}
+
+	function getNumberFromInput(value: string | number | null): number | null {
+		if (value === "") {
 			return null;
 		}
-		if ((props.min !== undefined) && (props.max !== undefined)) {
-			const lower = Math.min(props.min, props.max);
-			const upper = Math.max(props.min, props.max);
-			return lower === upper ? `(${lower})` : `(zwischen ${lower} und ${upper})` ;
+
+		if (typeof value === "string") {
+			return Number(value.replaceAll(",", ".").trim());
 		}
-		return (props.min === undefined) ? `(max. ${props.max})` : `(min. ${props.min})`;
-	});
+
+		return value;
+	}
+
+	function setCursorPosition(inputLengthBeforeParse: any, cursorPosition: any) {
+		if ((visualData.value !== null) && (input.value !== null)) {
+			const inputLengthAfterParse = visualData.value.length;
+			const diff = inputLengthBeforeParse - inputLengthAfterParse;
+
+			// zurücksetzen der Cursorposition, da diese beim Neusetzen des Inputs nach dem Parsen automatisch verschoben wird
+			input.value.setSelectionRange(cursorPosition - diff, cursorPosition - diff);
+		}
+	}
+
+	function hasTooManyDecimals(parts: string[]) {
+		const hasDecimals = parts.length === 2;
+		return hasDecimals && (parts[1].length > props.decimalPlaces);
+	}
+
+	function warnIfStepsNotCompatible(steps: number) {
+		const partsOfSteps = String(steps).split(".");
+		if ((partsOfSteps.length === 2) && (partsOfSteps[1].length > props.decimalPlaces)) {
+			throw new DeveloperNotificationException(
+				"Für das Input mit dem Label '" + props.placeholder + "' wurde mit der prop 'steps = " + props.steps + "' eine Schrittweite " +
+					"mit mehr Nachkommastellen definiert, als die prop 'decimalPlaces = " + props.decimalPlaces + "' zulässt."
+			);
+		}
+	}
+
+	/**
+	 * Expose
+	 */
 
 	const content = computed<number | null>(() => data.value);
 

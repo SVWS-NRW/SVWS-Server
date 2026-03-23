@@ -14,12 +14,12 @@ import type { KlassenartKatalogEintrag } from "../../../../../../core/src/asd/da
 import { LehrerZugangsgrund } from "../../../../../../core/src/asd/types/lehrer/LehrerZugangsgrund";
 
 const reader = new JsonCoreTypeReaderStatic();
+vi.mock("../../../../../../../svws-asd/src/main/resources/de/svws_nrw/asd/types/klassen/Klassenart.json", async () => ({
+	default: (await import("./Klassenart.mock.json")).default,
+}));
 
 beforeAll(async () => {
 	reader.readAll();
-	vi.mock("../../../../../../../svws-asd/src/main/resources/de/svws_nrw/asd/types/klassen/Klassenart.json", async () => ({
-		default: (await import("./Klassenart.mock.json")).default,
-	}));
 });
 
 describe("UiSelect CoreTypeSelectManager Tests", () => {
