@@ -29,7 +29,8 @@
 					<template #default="{ row, index }">
 						<template v-if="row.kompetenz instanceof ENMLeistung">
 							<td class="text-left bg-ui-50"> {{ row.gruppe.kuerzelAnzeige }} </td>
-							<td	:ref="inputBemerkung(mapLeistungen.get(row.gruppe.id), 1, index)" class="ui-table-grid-button col-span-6 text-left"
+							<td v-if="auswahlZelle?.b.klasseID && enmManager().sperrungen.istSpalteneingabeErlaubt(auswahlZelle.b.klasseID, 'FB')"
+								:ref="inputBemerkung(mapLeistungen.get(row.gruppe.id), 1, index)" class="ui-table-grid-button col-span-6 text-left"
 								:class="{
 									'bg-ui-selected': ((gridManager.focusColumn === 1) && (gridManager.focusRow === index)),
 									'contentFocusField': gridManager.isFocusLast(1, index),
@@ -42,16 +43,30 @@
 								</svws-ui-tooltip>
 								<span v-else class="text-ui-50"> Fachbemerkung </span>
 							</td>
+							<td v-else class="ui-table-grid-button col-span-6 text-left">
+								<svws-ui-tooltip v-if="(row.kompetenz.fachbezogeneBemerkungen !== null) && (row.kompetenz.fachbezogeneBemerkungen.length > 20)" class="h-full w-full">
+									<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ row.kompetenz.fachbezogeneBemerkungen }}</span>
+									<template #content>
+										{{ row.kompetenz.fachbezogeneBemerkungen }}
+									</template>
+								</svws-ui-tooltip>
+								<span v-else class="text-ui-50"> kein Fachbemerkung hinterlegt </span>
+							</td>
 						</template>
 						<template v-else>
 							<td />
 							<td class="text-left"> {{ enmManager().mapAnkreuzkompetenzen.get(row.kompetenz.kompetenzID)?.text }} </td>
 							<template v-for="stufe, col of row.kompetenz.stufen" :key="col+2">
-								<td :ref="inputStufe(row.kompetenz, col+2, index)" class="ui-table-grid-button"
+								<td v-if="auswahlZelle?.b.klasseID && enmManager().sperrungen.istSpalteneingabeErlaubt(auswahlZelle.b.klasseID, 'Note')"
+									:ref="inputStufe(row.kompetenz, col+2, index)" class="ui-table-grid-button"
 									:class="{
 										'bg-ui-selected': (gridManager.focusColumn === col+2),
 										'contentFocusField': gridManager.isFocusLast(col+2, index),
 									}">
+									<span v-if="stufe" class="icon-sm align-middle i-ri-checkbox-line" />
+									<span v-else class="icon-sm align-middle i-ri-checkbox-blank-line" />
+								</td>
+								<td v-else>
 									<span v-if="stufe" class="icon-sm align-middle i-ri-checkbox-line" />
 									<span v-else class="icon-sm align-middle i-ri-checkbox-blank-line" />
 								</td>
