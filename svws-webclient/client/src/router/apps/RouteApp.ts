@@ -179,9 +179,9 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeOrtsteile,
 			routeSchulen,
 			routeSchwerpunkte,
+			routeTeilleistungsarten,
 			routeTelefonarten,
 			routeVermerkarten,
-			routeTeilleistungsarten,
 			// Datenaustausch
 			routeSchuleDatenaustauschENM,
 			routeSchuleDatenaustauschSchulwechsel,
