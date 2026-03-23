@@ -1,4 +1,4 @@
-import { ModelProxy, ValidatorNumberRange } from "@ui";
+import { ModelProxy, ValidatorInputRequired, ValidatorNumberRange } from "@ui";
 import type { Telefonart } from "@core";
 import { ValidatorTelefonartBezeichnung } from "~/components/schule/kataloge/telefonarten/modelproxy/validation/ValidatorTelefonartBezeichnung";
 
@@ -28,5 +28,7 @@ export class TelefonartenModelProxy extends ModelProxy<Telefonart> {
 	private addValidatoren(liste: () => Iterable<Telefonart>) {
 		this.addValidator(new ValidatorTelefonartBezeichnung((): Telefonart => this.proxy, liste), "bezeichnung");
 		this.addValidator(new ValidatorNumberRange((): number => this.proxy.sortierung, 0, 32000), "sortierung");
+		this.addValidator(new ValidatorInputRequired((): number => this.proxy.sortierung), "sortierung");
+
 	}
 }
