@@ -13,7 +13,7 @@
 						@change="patchBezeichnung"
 						:valid="bezeichnungIsValid"
 						:min-len="1" :max-len="255" required :readonly />
-					<ui-select label="Fach ASD-Kürzel"
+					<ui-select label="Fach ASD-Schlüssel"
 						v-model="selectedFach"
 						:manager="fachKuerzelSelectManager"
 						:readonly required :removable="false" statistics searchable />
@@ -192,8 +192,8 @@
 		clazz: Fach.class,
 		schuljahr: props.schuljahr,
 		schulformen: props.schulform,
-		optionDisplayText: "kuerzel",
-		selectionDisplayText: "kuerzel",
+		optionDisplayText: v => v.schluessel,
+		selectionDisplayText: v => v.schluessel,
 	});
 
 	const fachTextSelectManager = new CoreTypeSelectManager({
