@@ -11,7 +11,7 @@ import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
 import { RouteDataSchueler } from "~/router/apps/schueler/RouteDataSchueler";
-import { routeSchuelerAusbildungsbetriebe } from "~/router/apps/schueler/betriebe/RouteSchuelerBetriebe";
+import { routeSchuelerBetriebe } from "~/router/apps/schueler/betriebe/RouteSchuelerBetriebe";
 import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/erziehungsberechtigte/RouteSchuelerErziehungsberechtigte";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
@@ -52,7 +52,7 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 			routeSchuelerIndividualdaten,
 			routeSchuelerSonstiges,
 			routeSchuelerErziehungsberechtigte,
-			routeSchuelerAusbildungsbetriebe,
+			routeSchuelerBetriebe,
 			routeSchuelerKAoA,
 			routeSchuelerSchulbesuch,
 			routeSchuelerLernabschnitte,
@@ -72,9 +72,9 @@ export class RouteSchueler extends RouteAuswahlNode<SchuelerListeManager, RouteD
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined): Promise<void | Error | RouteLocationRaw> {
 		if (isEntering) {
-			await routeApp.cache.refreshKataloge(Katalog.BESCHAEFTIGUNGSARTEN, Katalog.EINSCHULUNGSARTEN, Katalog.ERZIEHERARTEN, Katalog.FAHRSCHUELERARTEN,
-				Katalog.FOERDERSCHWERPUNKTE, Katalog.HALTESTELLEN, Katalog.KINDERGAERTEN, Katalog.JAHRGAENGE, Katalog.ORTE, Katalog.ORTSTEILE,
-				Katalog.RELIGIONEN, Katalog.SCHULEN, Katalog.TELEFONARTEN, Katalog.VERMERKARTEN);
+			await routeApp.cache.refreshKataloge(Katalog.BETRIEBE, Katalog.BESCHAEFTIGUNGSARTEN, Katalog.EINSCHULUNGSARTEN, Katalog.ERZIEHERARTEN,
+				Katalog.FAHRSCHUELERARTEN, Katalog.FOERDERSCHWERPUNKTE, Katalog.HALTESTELLEN, Katalog.KINDERGAERTEN, Katalog.JAHRGAENGE, Katalog.ORTE,
+				Katalog.ORTSTEILE, Katalog.RELIGIONEN, Katalog.SCHULEN, Katalog.TELEFONARTEN, Katalog.VERMERKARTEN);
 		}
 		return super.update(to, to_params, from, from_params, isEntering, redirected);
 	}

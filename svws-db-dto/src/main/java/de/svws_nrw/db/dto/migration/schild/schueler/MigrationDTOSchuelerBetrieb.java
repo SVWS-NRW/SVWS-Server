@@ -29,7 +29,7 @@ import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Schueler_AllgAdr")
-@JsonPropertyOrder({"id", "idSchueler", "idBetrieb", "idBeschaeftigungsart", "vertragsbeginn", "vertragende", "nameAusbilder", "erhaeltAnschreiben", "istPraktikum", "sortierung", "idAnsprechpartner", "idBetreuungslehrer", "SchulnrEigner"})
+@JsonPropertyOrder({"id", "idSchueler", "idBetrieb", "idBeschaeftigungsart", "vertragsbeginn", "vertragsende", "nameAusbilder", "erhaeltAnschreiben", "istPraktikum", "sortierung", "idAnsprechpartner", "idBetreuungslehrer", "SchulnrEigner"})
 public final class MigrationDTOSchuelerBetrieb {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -74,11 +74,11 @@ public final class MigrationDTOSchuelerBetrieb {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes vertragsbeginn */
 	public static final String QUERY_LIST_BY_VERTRAGSBEGINN = "SELECT e FROM MigrationDTOSchuelerBetrieb e WHERE e.vertragsbeginn IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes vertragende */
-	public static final String QUERY_BY_VERTRAGENDE = "SELECT e FROM MigrationDTOSchuelerBetrieb e WHERE e.vertragende = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes vertragsende */
+	public static final String QUERY_BY_VERTRAGSENDE = "SELECT e FROM MigrationDTOSchuelerBetrieb e WHERE e.vertragsende = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes vertragende */
-	public static final String QUERY_LIST_BY_VERTRAGENDE = "SELECT e FROM MigrationDTOSchuelerBetrieb e WHERE e.vertragende IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes vertragsende */
+	public static final String QUERY_LIST_BY_VERTRAGSENDE = "SELECT e FROM MigrationDTOSchuelerBetrieb e WHERE e.vertragsende IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes nameAusbilder */
 	public static final String QUERY_BY_NAMEAUSBILDER = "SELECT e FROM MigrationDTOSchuelerBetrieb e WHERE e.nameAusbilder = ?1";
@@ -157,7 +157,7 @@ public final class MigrationDTOSchuelerBetrieb {
 	@Convert(converter = MigrationDatumConverter.class)
 	@JsonSerialize(using = MigrationDatumConverterSerializer.class)
 	@JsonDeserialize(using = MigrationDatumConverterDeserializer.class)
-	public String vertragende;
+	public String vertragsende;
 
 	/** Der Name des Ausbilders */
 	@Column(name = "Ausbilder")
@@ -262,7 +262,7 @@ public final class MigrationDTOSchuelerBetrieb {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOSchuelerBetrieb(id=" + this.id + ", idSchueler=" + this.idSchueler + ", idBetrieb=" + this.idBetrieb + ", idBeschaeftigungsart=" + this.idBeschaeftigungsart + ", vertragsbeginn=" + this.vertragsbeginn + ", vertragende=" + this.vertragende + ", nameAusbilder=" + this.nameAusbilder + ", erhaeltAnschreiben=" + this.erhaeltAnschreiben + ", istPraktikum=" + this.istPraktikum + ", sortierung=" + this.sortierung + ", idAnsprechpartner=" + this.idAnsprechpartner + ", idBetreuungslehrer=" + this.idBetreuungslehrer + ", SchulnrEigner=" + this.SchulnrEigner + ")";
+		return "MigrationDTOSchuelerBetrieb(id=" + this.id + ", idSchueler=" + this.idSchueler + ", idBetrieb=" + this.idBetrieb + ", idBeschaeftigungsart=" + this.idBeschaeftigungsart + ", vertragsbeginn=" + this.vertragsbeginn + ", vertragsende=" + this.vertragsende + ", nameAusbilder=" + this.nameAusbilder + ", erhaeltAnschreiben=" + this.erhaeltAnschreiben + ", istPraktikum=" + this.istPraktikum + ", sortierung=" + this.sortierung + ", idAnsprechpartner=" + this.idAnsprechpartner + ", idBetreuungslehrer=" + this.idBetreuungslehrer + ", SchulnrEigner=" + this.SchulnrEigner + ")";
 	}
 
 }

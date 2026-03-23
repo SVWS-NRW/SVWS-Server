@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -77,10 +78,10 @@ public final class DataSchuelerBetriebe extends DataManagerRevised<Long, DTOSchu
 		result.idBeschaeftigungsart = dto.idBeschaeftigungsart;
 		result.nameAusbilder = dto.nameAusbilder;
 		result.vertragsbeginn = dto.vertragsbeginn;
-		result.vertragsende = dto.vertragende;
-		result.erhaeltAnschreiben = dto.erhaeltAnschreiben;
-		result.istPraktikum = dto.istPraktikum;
-		result.sortierung = dto.sortierung;
+		result.vertragsende = dto.vertragsende;
+		result.erhaeltAnschreiben = Boolean.TRUE.equals(dto.erhaeltAnschreiben);
+		result.istPraktikum = Boolean.TRUE.equals(dto.istPraktikum);
+		result.sortierung = Objects.requireNonNullElse(dto.sortierung, 32000);
 		return result;
 	}
 
@@ -115,7 +116,7 @@ public final class DataSchuelerBetriebe extends DataManagerRevised<Long, DTOSchu
 			case "idBetreuungslehrer" -> this.updateNonRequiredForeignKey(name, value, DTOLehrer.class, "Kein Lehrer mit der id %d gefunden.", id -> dto.idBetreuungslehrer = id);
 			case "idBeschaeftigungsart" -> this.updateNonRequiredForeignKey(name, value, DTOBeschaeftigungsart.class, "Keine Beschäftigungsart mit der id %d gefunden.", id -> dto.idBeschaeftigungsart = id);
 			case "vertragsbeginn" -> updateDatum(dto, name, value,  d -> d.vertragsbeginn, (d, v) -> d.vertragsbeginn = v);
-			case "vertragsende" -> updateDatum(dto, name, value, d -> d.vertragende, (d, v) -> d.vertragende = v);
+			case "vertragsende" -> updateDatum(dto, name, value, d -> d.vertragsende, (d, v) -> d.vertragsende = v);
 			case "nameAusbilder" -> dto.nameAusbilder = JSONMapper.convertToString(value, true, true, tab_Schueler_AllgAdr.col_Ausbilder.datenlaenge(), name);
 			case "erhaeltAnschreiben" -> dto.erhaeltAnschreiben = JSONMapper.convertToBoolean(value, true, name);
 			case "istPraktikum" -> dto.istPraktikum = JSONMapper.convertToBoolean(value, true, name);
@@ -133,6 +134,7 @@ public final class DataSchuelerBetriebe extends DataManagerRevised<Long, DTOSchu
 		dtoSetter.accept(id);
 	}
 
+	@SuppressWarnings("java:S4276") // LongConsumer cannot handle null values, which are valid here
 	private void updateNonRequiredForeignKey(final String name, final Object value, final Class<?> dtoClass, final String errorMessage,
 			final Consumer<Long> dtoSetter) {
 		final Long id = JSONMapper.convertToLong(value, true, name);
@@ -145,18 +147,18 @@ public final class DataSchuelerBetriebe extends DataManagerRevised<Long, DTOSchu
 	private void updateDatum(final DTOSchuelerBetrieb dto, final String name, final Object value,
 			final Function<DTOSchuelerBetrieb, String> getter, final BiConsumer<DTOSchuelerBetrieb, String> setter) {
 		final String datum = JSONMapper.convertToString(value, true, true, null, name);
-		this.valiDate(getter.apply(dto), datum);
+		this.valiDate(getter.apply(dto), datum, name);
 		setter.accept(dto, datum);
 	}
 
-	private void valiDate(final String oldDate, final String newDate) throws ApiOperationException {
+	private void valiDate(final String oldDate, final String newDate, final String name) throws ApiOperationException {
 		if (ValidationUtils.isBlankOrUnchanged(oldDate, newDate)) {
 			return;
 		}
 		try {
 			LocalDate.parse(newDate);
 		} catch (final Exception ignored) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Das Datumsformat für %s ist ungültig".formatted(newDate));
+			throw new ApiOperationException(Status.BAD_REQUEST, "Feld: %s: Das Datumsformat für %s ist ungültig".formatted(name, newDate));
 		}
 	}
 }

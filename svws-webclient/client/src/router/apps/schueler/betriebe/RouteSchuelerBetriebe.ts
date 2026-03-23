@@ -1,24 +1,49 @@
-import type { RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, type DeveloperNotificationException, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerBetriebe } from "~/router/apps/schueler/betriebe/RouteDataSchuelerBetriebe";
+import { routeError } from "~/router/error/RouteError";
+import type { SchuelerBetriebeProps } from "~/components/schueler/betriebe/SchuelerBetriebeProps";
+import { api } from "~/router/Api";
 
 const SchuelerBetriebe = () => import("~/components/schueler/betriebe/SchuelerBetriebe.vue");
 
 export class RouteSchuelerBetriebe extends RouteNode<RouteDataSchuelerBetriebe, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN], "schueler.ausbildungsbetriebe", "ausbildungsbetriebe", SchuelerBetriebe, new RouteDataSchuelerBetriebe());
+		super(Schulform.values(), [BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN],
+			"schueler.betriebe", "betriebe", SchuelerBetriebe, new RouteDataSchuelerBetriebe());
 		super.mode = ServerMode.ALPHA;
+		super.propHandler = (route) => this.getProps(route);
 		super.text = "Betriebe";
+		super.setCheckpoint = true;
 	}
 
-	public async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean): Promise<void | Error | RouteLocationRaw> {
-
+	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
+		try {
+			const { id } = RouteNode.getIntParams(to_params, ["id"]);
+			if (id !== undefined) {
+				await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
+			}
+		} catch (e) {
+			return await routeError.getErrorRoute(e as DeveloperNotificationException);
+		}
 	}
+
+	public getProps(_: RouteLocationNormalized): SchuelerBetriebeProps {
+		return {
+			manager: () => this.data.manager,
+			add: this.data.add,
+			patch: this.data.patch,
+			deleteEntries: this.data.delete,
+			goToBetrieb: routeSchuelerBetriebe.data.goToBetrieb,
+			schulform: api.schulform,
+		};
+	}
+
 }
 
-export const routeSchuelerAusbildungsbetriebe = new RouteSchuelerBetriebe();
+export const routeSchuelerBetriebe = new RouteSchuelerBetriebe();
 

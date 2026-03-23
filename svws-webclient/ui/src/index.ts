@@ -156,6 +156,7 @@ export { StundenplanUnterrichtListeManager } from "./ui/manager/stundenplan/Stun
 export { SchulenListeManager } from "./ui/manager/kataloge/SchulenListeManager";
 export { SchuelerListeManager } from "./ui/manager/schueler/SchuelerListeManager";
 export { SchuelerKAoAManager } from "./ui/manager/schueler/SchuelerKAoAManager";
+export { SchuelerBetriebeManager } from "./ui/manager/schueler/SchuelerBetriebeManager";
 export { KonfessionenListeManager } from "./ui/manager/kataloge/KonfessionenListeManager";
 export { RaumListeManager } from "./ui/manager/raum/RaumListeManager";
 export { LernplattformListeManager } from "./ui/manager/kataloge/LernplattformListeManager";

@@ -49,7 +49,7 @@ public class Tabelle_Schueler_AllgAdr extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Vertragsende */
 	public final SchemaTabelleSpalte col_Vertragsende = add("Vertragsende", SchemaDatentypen.DATE, false)
 			.setConverter(DatumConverter.class)
-			.setJavaName("vertragende")
+			.setJavaName("vertragsende")
 			.setJavaComment("Das Datum des Vertragsendes");
 
 	/** Die Definition der Tabellenspalte Ausbilder */

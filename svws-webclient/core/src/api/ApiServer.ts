@@ -13264,7 +13264,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteSchuelrBetriebe für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/schueler-betriebe/delete/multiple
+	 * Implementierung der DELETE-Methode deleteSchuelerBetriebe für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/schueler-betriebe/delete/multiple
 	 *
 	 * Entfernt mehrere SchuelerBetriebe, insofern die notwendigen Berechtigungen vorhanden sind.
 	 *
@@ -13281,7 +13281,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Lösch-Operationen wurden ausgeführt.
 	 */
-	public async deleteSchuelrBetriebe(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+	public async deleteSchuelerBetriebe(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
 		const path = "/db/{schema}/schueler/schueler-betriebe/delete/multiple"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";

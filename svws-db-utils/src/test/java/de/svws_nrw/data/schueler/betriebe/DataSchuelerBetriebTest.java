@@ -167,7 +167,7 @@ class DataSchuelerBetriebTest {
 		dto.idBeschaeftigungsart = 6L;
 		dto.nameAusbilder = "mueller";
 		dto.vertragsbeginn = "12-12-2020";
-		dto.vertragende = "01-01-2025";
+		dto.vertragsende = "01-01-2025";
 		dto.erhaeltAnschreiben = true;
 		dto.istPraktikum = true;
 		dto.sortierung = 12345;
@@ -349,7 +349,7 @@ class DataSchuelerBetriebTest {
 
 		assertThatException()
 				.isThrownBy(() -> this.data.patch(1L, Map.of("vertragsbeginn", "123")))
-				.withMessage("Das Datumsformat für 123 ist ungültig");
+				.withMessage("Feld: vertragsbeginn: Das Datumsformat für 123 ist ungültig");
 	}
 
 	@Test
@@ -368,12 +368,12 @@ class DataSchuelerBetriebTest {
 	@DisplayName("patch | vertragsende")
 	void patchVertragsende() {
 		final var dto = new DTOSchuelerBetrieb(1L, 1L, 1L);
-		dto.vertragende = "2022-22-05";
+		dto.vertragsende = "2022-22-05";
 		when(this.conn.queryByKey(DTOSchuelerBetrieb.class, 1L)).thenReturn(dto);
 
 		this.data.patch(1L, Map.of("vertragsende", "2010-10-10"));
 
-		assertThat(dto.vertragende).isEqualTo("2010-10-10");
+		assertThat(dto.vertragsende).isEqualTo("2010-10-10");
 	}
 
 	@Test
@@ -383,7 +383,7 @@ class DataSchuelerBetriebTest {
 
 		assertThatException()
 				.isThrownBy(() -> this.data.patch(1L, Map.of("vertragsende", "123")))
-				.withMessage("Das Datumsformat für 123 ist ungültig");
+				.withMessage("Feld: vertragsende: Das Datumsformat für 123 ist ungültig");
 	}
 
 	@Test

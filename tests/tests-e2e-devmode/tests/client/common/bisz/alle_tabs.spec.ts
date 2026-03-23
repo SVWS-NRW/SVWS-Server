@@ -41,23 +41,24 @@ test('Nicht privilegierte Nutzer können nur entsprechende Bereiche im DEV Mode 
 	await expect(page.getByText('Daten zu Caroline Triebel')).toBeVisible();
 
 	// Test schlug fehl, weil Playwright ohne Timeout den Tabwechsel nicht registrieren konnte
-	await page.waitForTimeout(300);
+	await page.waitForTimeout(500);
 	await expect(page.getByRole('button', { name: 'Betriebe' })).toBeVisible();
 	await page.getByRole('button', { name: 'Betriebe' }).click();
-
+	await page.waitForTimeout(500);
 
 	await expect(page.getByRole('button', { name: 'KAoA' })).toBeVisible();
 	await page.getByRole('button', { name: 'KAoA' }).click();
 	await expect(page.getByRole('button', { name: 'Neuen Eintrag anlegen' })).toBeVisible();
 
-
+	await page.waitForTimeout(500);
 	await expect(page.getByRole('button', { name: 'Schulbesuch' })).toBeVisible();
 	await page.getByRole('button', { name: 'Schulbesuch' }).click();
 	await expect(page.getByText('Vor der Aufnahme besucht')).toBeVisible();
 
-
+	await page.waitForTimeout(500);
 	await expect(page.getByRole('button', { name: 'Lernabschnitte' })).toBeVisible();
 	await page.getByRole('button', { name: 'Lernabschnitte' }).click();
+	await page.waitForTimeout(500);
 	await expect(page.getByRole('button', { name: 'Allgemein' })).toBeVisible();
 	await expect(page.getByRole('button', { name: 'Leistungsdaten', exact: true })).toBeVisible();
 	await expect(page.getByRole('button', { name: 'Versetzung/Abschluss' })).toBeVisible();

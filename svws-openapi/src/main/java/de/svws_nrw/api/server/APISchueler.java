@@ -2299,7 +2299,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um SchuelerBetriebe zu entfernen.")
 	@ApiResponse(responseCode = "404", description = "SchuelerBetriebe nicht vorhanden")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response deleteSchuelrBetriebe(@PathParam("schema") final String schema,
+	public Response deleteSchuelerBetriebe(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der zu löschenden SchuelerBetriebe",
 					required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {

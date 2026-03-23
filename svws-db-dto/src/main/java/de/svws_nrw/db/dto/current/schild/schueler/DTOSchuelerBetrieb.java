@@ -29,7 +29,7 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Schueler_AllgAdr")
-@JsonPropertyOrder({"id", "idSchueler", "idBetrieb", "idBeschaeftigungsart", "vertragsbeginn", "vertragende", "nameAusbilder", "erhaeltAnschreiben", "istPraktikum", "sortierung", "idAnsprechpartner", "idBetreuungslehrer"})
+@JsonPropertyOrder({"id", "idSchueler", "idBetrieb", "idBeschaeftigungsart", "vertragsbeginn", "vertragsende", "nameAusbilder", "erhaeltAnschreiben", "istPraktikum", "sortierung", "idAnsprechpartner", "idBetreuungslehrer"})
 public final class DTOSchuelerBetrieb {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -74,11 +74,11 @@ public final class DTOSchuelerBetrieb {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes vertragsbeginn */
 	public static final String QUERY_LIST_BY_VERTRAGSBEGINN = "SELECT e FROM DTOSchuelerBetrieb e WHERE e.vertragsbeginn IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes vertragende */
-	public static final String QUERY_BY_VERTRAGENDE = "SELECT e FROM DTOSchuelerBetrieb e WHERE e.vertragende = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes vertragsende */
+	public static final String QUERY_BY_VERTRAGSENDE = "SELECT e FROM DTOSchuelerBetrieb e WHERE e.vertragsende = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes vertragende */
-	public static final String QUERY_LIST_BY_VERTRAGENDE = "SELECT e FROM DTOSchuelerBetrieb e WHERE e.vertragende IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes vertragsende */
+	public static final String QUERY_LIST_BY_VERTRAGSENDE = "SELECT e FROM DTOSchuelerBetrieb e WHERE e.vertragsende IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes nameAusbilder */
 	public static final String QUERY_BY_NAMEAUSBILDER = "SELECT e FROM DTOSchuelerBetrieb e WHERE e.nameAusbilder = ?1";
@@ -151,7 +151,7 @@ public final class DTOSchuelerBetrieb {
 	@Convert(converter = DatumConverter.class)
 	@JsonSerialize(using = DatumConverterSerializer.class)
 	@JsonDeserialize(using = DatumConverterDeserializer.class)
-	public String vertragende;
+	public String vertragsende;
 
 	/** Der Name des Ausbilders */
 	@Column(name = "Ausbilder")
@@ -237,7 +237,7 @@ public final class DTOSchuelerBetrieb {
 	 */
 	@Override
 	public String toString() {
-		return "DTOSchuelerBetrieb(id=" + this.id + ", idSchueler=" + this.idSchueler + ", idBetrieb=" + this.idBetrieb + ", idBeschaeftigungsart=" + this.idBeschaeftigungsart + ", vertragsbeginn=" + this.vertragsbeginn + ", vertragende=" + this.vertragende + ", nameAusbilder=" + this.nameAusbilder + ", erhaeltAnschreiben=" + this.erhaeltAnschreiben + ", istPraktikum=" + this.istPraktikum + ", sortierung=" + this.sortierung + ", idAnsprechpartner=" + this.idAnsprechpartner + ", idBetreuungslehrer=" + this.idBetreuungslehrer + ")";
+		return "DTOSchuelerBetrieb(id=" + this.id + ", idSchueler=" + this.idSchueler + ", idBetrieb=" + this.idBetrieb + ", idBeschaeftigungsart=" + this.idBeschaeftigungsart + ", vertragsbeginn=" + this.vertragsbeginn + ", vertragsende=" + this.vertragsende + ", nameAusbilder=" + this.nameAusbilder + ", erhaeltAnschreiben=" + this.erhaeltAnschreiben + ", istPraktikum=" + this.istPraktikum + ", sortierung=" + this.sortierung + ", idAnsprechpartner=" + this.idAnsprechpartner + ", idBetreuungslehrer=" + this.idBetreuungslehrer + ")";
 	}
 
 }
