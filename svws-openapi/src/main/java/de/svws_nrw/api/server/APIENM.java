@@ -334,7 +334,7 @@ public class APIENM {
 	 * @return die HTTP-Response mit einer ENMConfigResponse
 	 */
 	@GET
-	@Path("/local/config/")
+	@Path("/local/config/client/")
 	@Operation(summary = "Holt die lokale Notenmodul-Konfiguration für den Client.", description = "Ein Getter für die Notenmodul-Client-Konfiguration.")
 	@ApiResponse(responseCode = "200", description = "Die Konfiguration konnte erfolgreich abgerufen werden.",
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BenutzerConfigElement.class))))
