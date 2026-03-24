@@ -93,7 +93,7 @@ export class ApiEnmServer extends BaseApi {
 	}
 
 	/**
-	 * Implementierung der POST-Methode isAlive für den Zugriff auf die URL https://{hostname}/api/alive
+	 * Implementierung der GET-Methode isAlive für den Zugriff auf die URL https://{hostname}/api/alive
 	 *
 	 * Eine Test-Methode zum Prüfen, ob der ENM-Server erreichbar ist.
 	 *
@@ -101,7 +101,7 @@ export class ApiEnmServer extends BaseApi {
 	 *   Code 204: Der Server wurde gefunden
 	 */
 	public async isAlive(): Promise<void> {
-		await super.postTextBased("/api/alive", 'application/json', '*/*', "");
+		await super.getTextBased("/api/alive", 'application/json');
 	}
 
 	/**

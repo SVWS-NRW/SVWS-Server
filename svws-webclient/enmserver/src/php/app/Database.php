@@ -23,9 +23,9 @@ class Database {
     public function __construct(Config $config) {
         $this->config = $config;
         // Prüfe, ob die Datenbank bereits existiert. Wenn nicht, dann lege eine neue mit Default-Werten an
-        $dbPath = $config->getAppRoot()."/".$config->getDatabaseFile();
+        $dbPath = $config->getDatabasePath()."/".$config->getDatabaseFilename();
         $dbNeedsInitialization = file_exists($dbPath);
-        $this->conn = new DBConnection($config->getAppRoot(), $config->getDatabaseFile());
+        $this->conn = new DBConnection($config->getDatabasePath(), $config->getDatabaseFilename());
         if (!$dbNeedsInitialization) {
             $this->initDatabase();
         }

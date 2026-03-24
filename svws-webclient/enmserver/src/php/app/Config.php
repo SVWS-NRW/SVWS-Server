@@ -44,14 +44,20 @@ class Config {
         $this->appRoot = Config::determineAppRoot();
 
         // ersetze dbfolder durch $_SERVER['ENM_DB_DIR'] sofern gesetzt.
-        if (isset($_SERVER['ENM_DB_DIR'])) {
-            $this->dbfolder = $_SERVER['ENM_DB_DIR'];
-        } else {
-            $this->dbfolder = Config::$defaultDBFolder;
+        $this->dbfolder = $_SERVER['ENM_DB_DIR'] ?? Config::$defaultDBFolder;
+        $dbDir = $this->appRoot."/".$this->dbfolder;
+        if (!is_dir($dbDir) && !@mkdir($dbDir, 0755, true)) {
+            Http::exit500("Konnte den Ordner $dbDir nicht automatisch erstellen. Bitte legen Sie diesen manuell an und vergeben Sie Schreibrechte.");
+        }
+
+        $testFile = $dbDir . '/.write_test';
+        $isReallyWritable = is_writable($dbDir) || ((@file_put_contents($testFile, 'test') !== false) && @unlink($testFile));
+        if (!$isReallyWritable) {
+            Http::exit500("Der Ordner $dbDir ist nicht beschreibbar. Bitte vergeben Sie Schreibrechte.");
         }
 
         // Lese das Client-Secret ein. Wenn nich keines existiert, dann erzeuge es zuvor
-        $secretfile = $this->appRoot."/".$this->dbfolder.'/'.Config::$secretfile;
+        $secretfile = $dbDir."/".Config::$secretfile;
         if (!file_exists($secretfile)) {
             // Versuche eine neues Secret anzulegen anzulegen...
             $secret = Config::generateRandomSecret();
@@ -63,10 +69,11 @@ class Config {
         $this->secret = file_get_contents($secretfile);
 
         // Setze den Server-Mode, welcher auch an den Client weitergegeben wird
-        $servermodefile = $this->appRoot.'/'.$this->dbfolder.'/'.Config::$servermodefile;
+        $servermodefile = $dbDir."/".Config::$servermodefile;
         $serverMode = file_exists($servermodefile) ? file_get_contents($servermodefile) : 'stable';
         $serverMode = strtolower($serverMode);
-        if ((strcmp($serverMode, 'stable') !== 0) && (strcmp($serverMode, 'beta') !== 0) && (strcmp($serverMode, 'alpha') !== 0) && (strcmp($serverMode, 'dev') !== 0)) {
+        $validModes = ['stable', 'beta', 'alpha', 'dev'];
+        if (!in_array($serverMode, $validModes)) {
             Http::exit500("Der konfigurierte Server-Mode ist ungültig. Überprüfen Sie, die Datei $servermodefile auf dem Web-Server");
         }
         $this->serverMode = $serverMode;
@@ -74,7 +81,12 @@ class Config {
         // Initialisiere Debugging-Einstellung anhand des Server-Mode
         $this->debugMode = (strcmp($serverMode, 'stable') !== 0);
         if ($this->debugMode) {
-            ini_set('display_errors', '1');
+            @ini_set('display_errors', '1');
+            error_reporting(E_ALL);
+        } else {
+            @ini_set('display_errors', '0');
+            @ini_set('log_errors', '0');
+            error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
         }
     }
 
@@ -84,7 +96,7 @@ class Config {
      * @return string der absolute Pfad, wo sich die Applikation befindet
      */
     protected static function determineAppRoot(): string {
-        return __DIR__.'/..';
+        return dirname(__DIR__, 1);
     }
 
     /**
@@ -92,12 +104,10 @@ class Config {
      * das Client-Secret und die SQLite-Datenbank beide vorliegen.
      */
     public static function isAppInitialized() : bool {
-        if (isset($_SERVER['ENM_DB_DIR'])) {
-            $dbfolder = $_SERVER['ENM_DB_DIR'];
-        } else {
-            $dbfolder = Config::$defaultDBFolder;
-        }
-        return file_exists(Config::determineAppRoot().'/'.$dbfolder.'/'.Config::$secretfile) && file_exists(Config::determineAppRoot()."/".$dbfolder.'/'.Config::$dbfile);
+        $dbfolder = $_SERVER['ENM_DB_DIR'] ?? Config::$defaultDBFolder;
+        $appRoot = self::determineAppRoot();
+        $dbDir = $appRoot."/".$dbfolder;
+        return file_exists($dbDir."/".Config::$secretfile) && file_exists($dbDir."/".Config::$dbfile);
     }
 
     /**
@@ -114,8 +124,17 @@ class Config {
      *
      * @return string der Speicherort
      */
-    public function getDatabaseFile(): string {
-        return $this->dbfolder.'/'.Config::$dbfile;
+    public function getDatabasePath(): string {
+        return $this->appRoot."/".$this->dbfolder;
+    }
+
+    /**
+     * Gibt den Speicherort der SQLite-Datenbank zurück
+     *
+     * @return string der Speicherort
+     */
+    public function getDatabaseFilename(): string {
+        return Config::$dbfile;
     }
 
     /**

@@ -10,4 +10,5 @@
  * @responseCode 200
  */
 
+header("Content-Length: 0");
 http_response_code(204);

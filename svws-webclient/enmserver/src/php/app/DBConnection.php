@@ -17,7 +17,7 @@ class DBConnection {
     private string $dsn;
 
     // Die PDO-Instanz für den Zugriff auf die SQLite-Datenbank
-    private PDO | null $pdo;
+    private PDO $pdo;
 
     /**
      * Erstellt eine neue Datenbankverbindung für den Zugriff auf die SQLite-Datenbank an der übergebene Stelle
@@ -33,21 +33,12 @@ class DBConnection {
     }
 
     /**
-     * Beendet die Datenbankverbindung.
-     *
-     * @return void
-     */
-    public function __destruct() {
-        $this->pdo = null;
-    }
-
-    /**
      * Beendet die Anfrage mit einem internen Server-Error (Code 500) und gibt dabei die übergebene Fehlermeldung
      * hinter dem Datenbanknamen aus.
      *
      * @param string $msg   die Fehlermeldung
      */
-    private function exit500(string $msg) {
+    private function exit500(string $msg): never {
         Http::exit500("Database ($this->filename) - ".$msg);
     }
 
@@ -58,7 +49,7 @@ class DBConnection {
      *
      * @return PDO   das PHP Data Object für die Datenbank-Verbindung
      */
-    private function connectTo(string $dsn): PDO | string {
+    private function connectTo(string $dsn): PDO {
         try {
             $pdo = new PDO($dsn);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

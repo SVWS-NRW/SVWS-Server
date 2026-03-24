@@ -33,13 +33,26 @@ class ENMAuth {
     public function __construct(Database $db, Config $config) {
         $this->db = $db;
         $this->config = $config;
-        if (!array_key_exists("HTTP_AUTHORIZATION", $_SERVER)) {
+
+        $authHeader = $_SERVER["HTTP_AUTHORIZATION"] ?? $_SERVER["REDIRECT_HTTP_AUTHORIZATION"] ?? null;
+        if (($authHeader === null) && function_exists('apache_request_headers')) {
+            $requestHeaders = array_change_key_case(apache_request_headers(), CASE_LOWER);
+            if (isset($requestHeaders['authorization'])) {
+                $authHeader = $requestHeaders['authorization'];
+            }
+        }
+
+        if ($authHeader === null) {
             Http::exit500("HTTP-Authorization-Header kann nicht gelesen werden. Überprüfen sie die Anfrage oder die Server-Konfiguration.");
         }
-        $parts = explode(" ", $_SERVER["HTTP_AUTHORIZATION"], 2);
+        $parts = explode(" ", $authHeader, 2);
         if (strcasecmp($parts[0], "Basic") == 0) {
             $this->authMethod = "Basic";
-            $creds = explode(":", base64_decode($parts[1]));
+            $decoded = base64_decode($parts[1]);
+            if ($decoded === false) {
+                Http::exit400BadRequest("Fehler beim Base64-Dekodieren der Credentials.");
+            }
+            $creds = explode(":", $decoded);
             if (count($creds) != 2) {
                 Http::exit500("Fehler bei dem HTTP-Authorization-Header. Die Kodierung von Benutzername und Kennwort ist fehlerhaft.");
             }

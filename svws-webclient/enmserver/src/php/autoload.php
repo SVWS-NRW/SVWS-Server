@@ -22,8 +22,8 @@ if (!defined('PHPWENOM_VERSION')) {
 
         // Der letzte Teil beinhaltet den Klassennamen, die anderen Teile die einzelnen Verzeichnisse. Bestimme daraus den Dateinamen.
         $classfile = array_pop($parts).'.php';
-        $path = implode(DIRECTORY_SEPARATOR, $parts);
-        $file = $mapNamespaces[$namespace].$path.DIRECTORY_SEPARATOR.$classfile;
+        $path = implode("/", $parts);
+        $file = $mapNamespaces[$namespace].$path."/".$classfile;
 
         // Wenn die Datei nicht existiert und ein andere autoload-Funktion über class_exists die Klasse finden kann, dann kann sie nicht geladen werden
         if (!file_exists($file) && !class_exists($classname)) {

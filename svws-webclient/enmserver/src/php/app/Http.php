@@ -4,13 +4,13 @@ namespace wenom;
 
 use \ValueError as ValueError;
 
-$inc_memory_limit_success = ini_set('memory_limit', '1024M');
+$inc_memory_limit_success = @ini_set('memory_limit', '1024M');
 if ($inc_memory_limit_success === false) {
-    $inc_memory_limit_success = ini_set('memory_limit', '768M');
+    $inc_memory_limit_success = @ini_set('memory_limit', '768M');
     if ($inc_memory_limit_success === false) {
-        $inc_memory_limit_success = ini_set('memory_limit', '512M');
+        $inc_memory_limit_success = @ini_set('memory_limit', '512M');
         if ($inc_memory_limit_success === false) {
-            $inc_memory_limit_success = ini_set('memory_limit', '256M');
+            $inc_memory_limit_success = @ini_set('memory_limit', '256M');
         }
     }
 }
@@ -124,7 +124,7 @@ class Http {
             }
             return $obj;
         } catch (ValueError $e) {
-            Http::exit400BadRequest("Fehler beim Dekodieren des JSON-Strings des HTTP-Body (" + $e->getCode() + "): " + $e->getMessage());
+            Http::exit400BadRequest("Fehler beim Dekodieren des JSON-Strings des HTTP-Body (".$e->getCode()."): ".$e->getMessage());
         }
     }
 
@@ -176,7 +176,7 @@ class Http {
      * @return string der Pfad zu der temporären Datei, in dem die Datei zwischengespeichert ist
      */
     public static function getMultipartTmpFilename(string $name) : string {
-        $contentType = $_SERVER["CONTENT_TYPE"];
+        $contentType = $_SERVER["CONTENT_TYPE"] ?? null;
         if ($contentType == null) {
             Http::exit400BadRequest("Fehler im HTTP-Header: Content Type ist nicht angegeben.");
         }
@@ -185,7 +185,7 @@ class Http {
             Http::exit400BadRequest("Fehler im HTTP-Header: Content Type ist nicht 'multipart/form-data'.");
         }
 
-        $file = $_FILES[$name];
+        $file = $_FILES[$name] ?? null;
         if ($file == null) {
             Http::exit400BadRequest("Fehler in der Anfrage: Die Anfrage muss einen Datei-Anhang mit dem Namen '$name' enthalten.");
         }
@@ -209,14 +209,20 @@ class Http {
     public static function getMultipartGzipFileContent(string $name) : string {
         $tmpFilename = Http::getMultipartTmpFilename($name);
         $content = "";
-        $zd = gzopen($tmpFilename, "r");
-        if ($zd == false) {
+        $zd = @gzopen($tmpFilename, "r");
+        if ($zd === false) {
             Http::exit400BadRequest("Fehler beim Upload der Datei: Die Datei ist nicht im gzip-Format.");
         }
+
+        $content = "";
         while (!gzeof($zd)) {
-            $content .= gzread($zd, 1000000);
+            $data = gzread($zd, 1000000);
+            if ($data === false) {
+                break;
+            }
+            $content .= $data;
         }
-        if (strcmp($content, "") === 0) {
+        if ($content === "") {
             Http::exit400BadRequest("Fehler beim Upload der Datei: Die gzip-Datei konnte nicht gelesen werden.");
         }
         $success = gzclose($zd);
@@ -238,21 +244,31 @@ class Http {
 
 
     /**
+     * In manchen Systemen steht getallheaders() nicht zur Verfügung. Daher wird hier ein Workaround
+     * für die Kompatibilität für den CGI-Mode eingebaut. Dabei werden die HTTP-Header aus der SERVER-Variable
+     * extrahiert
+     */
+    private static function getAllRequestHeaders() : array {
+        if (function_exists('getallheaders')) {
+            return getallheaders();
+        }
+        $headers = [];
+        foreach ($_SERVER as $name => $value) {
+            if (substr($name, 0, 5) == 'HTTP_') {
+                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+            }
+        }
+        return $headers;
+    }
+
+    /**
      * Prüft on die HTTP-Methode von Typ OPTIONS
      */
     public static function checkCORS() {
-        if (strcasecmp($_SERVER['REQUEST_METHOD'], "OPTIONS") === 0) {
-            $cors_sec_fetch_site = null;
-            $cors_sec_fetch_mode = null;
-            foreach (getallheaders() as $name => $value) {
-                if (strcasecmp($name, "Sec-Fetch-Mode") === 0) {
-                    $cors_sec_fetch_mode = $value;
-                }
-                if (strcasecmp($name, "Sec-Fetch-Site") === 0) {
-                    $cors_sec_fetch_site = $value;
-                }
-            }
-            if (strcasecmp($cors_sec_fetch_mode, "cors") === 0) {
+        if (strcasecmp($_SERVER['REQUEST_METHOD'] ?? "", "OPTIONS") === 0) {
+            $headers = self::getAllRequestHeaders();
+            $cors_sec_fetch_mode = $headers['Sec-Fetch-Mode'] ?? null;
+            if ($cors_sec_fetch_mode && strcasecmp($cors_sec_fetch_mode, "cors") === 0) {
                 http_response_code(204);
                 exit;
             }
@@ -264,7 +280,7 @@ class Http {
      *
      * @param ?string msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
      */
-    public static function exit400BadRequest(?string $msg = null) {
+    public static function exit400BadRequest(?string $msg = null): never {
         http_response_code(400);
         if ($msg != null) {
             header('Content-Type: text/plain; charset=utf-8');
@@ -276,7 +292,7 @@ class Http {
     /**
      * Gibt einen UNAUTHORIZED (401) zurück und beendet das PHP-Skript.
      */
-    public static function exit401Unauthorized(?string $headerinfo = null) {
+    public static function exit401Unauthorized(?string $headerinfo = null): never {
         http_response_code(401);
         if ($headerinfo != null) {
             header($headerinfo);
@@ -294,7 +310,7 @@ class Http {
     /**
      * Gibt einen FORBIDDEN (403) zurück und beendet das PHP-Skript.
      */
-    public static function exit403Forbidden() {
+    public static function exit403Forbidden(): never {
         http_response_code(403);
         exit;
     }
@@ -304,7 +320,7 @@ class Http {
      *
      * @param string msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
      */
-    public static function exit404NotFound(?string $msg = null) {
+    public static function exit404NotFound(?string $msg = null): never {
         http_response_code(404);
         if ($msg != null) {
             header('Content-Type: text/plain; charset=utf-8');
@@ -319,8 +335,11 @@ class Http {
      *
      * @param string $err   die Fehlermeldung
      */
-    public static function exit500(string $err) {
-        http_response_code(500);
+    public static function exit500(string $err): never {
+        if (!headers_sent()) {
+            http_response_code(500);
+            header('Content-Type: text/plain; charset=utf-8');
+        }
         echo $err;
         exit;
     }
