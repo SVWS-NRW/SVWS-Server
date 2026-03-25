@@ -3,15 +3,15 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper>
 				<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
-					v-model="data.kuerzel"
-					:valid="() => fieldIsValid('kuerzel')"
-					:min-len="1" :max-len="10" :disabled required />
+					v-model="model.proxy.kuerzel"
+					:validation="() => model.getFehler('kuerzel')"
+					:max-len="10" required />
 				<svws-ui-text-input placeholder="Bezeichnung"
-					v-model="data.bezeichnung"
-					:valid="() => fieldIsValid('bezeichnung')"
-					:min-len="1" :max-len="50" :disabled required />
+					v-model="model.proxy.bezeichnung"
+					:validation="() => model.getFehler('bezeichnung')"
+					:max-len="50" required />
 				<ui-select label="Floskelgruppenart"
-					v-model="selectedFloskelgruppenart"
+					v-model="model.selectedFloskelgruppenart.value"
 					:manager="floskelgruppenartManager"
 					:removable="false" searchable required />
 			</svws-ui-input-wrapper>
@@ -32,16 +32,21 @@
 
 	import type { FloskelgruppenNeuProps } from "./FloskelgruppenNeuProps";
 	import { computed, ref, watch } from "vue";
-	import { Floskelgruppenart, type FloskelgruppenartKatalogEintrag } from "@core";
-	import { BenutzerKompetenz, Floskelgruppe } from "@core";
-	import { isUniqueInList, mandatoryInputIsValid } from "~/util/validation/Validation";
+	import { Floskelgruppenart, BenutzerKompetenz, Floskelgruppe } from "@core";
 	import { CoreTypeSelectManager } from "@ui";
+	import { FloskelgruppeModelProxy } from "~/components/schule/kataloge/floskelgruppen/modelproxy/FloskelgruppeModelProxy";
 
 	const props = defineProps<FloskelgruppenNeuProps>();
-	const data = ref<Floskelgruppe>(new Floskelgruppe());
+	const initialData = ref<Floskelgruppe>(new Floskelgruppe());
+	const model = new FloskelgruppeModelProxy(
+		() => initialData.value,
+		() => props.manager().liste.list(),
+		props.schuljahr
+	);
 	const isLoading = ref<boolean>(false);
 	const hatKompetenzAdd = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const disabled = computed(() => !hatKompetenzAdd.value);
+
+	const formIsValid = computed(() => model.getAlleFehler().isEmpty());
 
 	const floskelgruppenartManager = new CoreTypeSelectManager({
 		clazz: Floskelgruppenart.class,
@@ -51,38 +56,6 @@
 		selectionDisplayText: "text",
 	});
 
-	const selectedFloskelgruppenart = computed<FloskelgruppenartKatalogEintrag | null>({
-		get: (): FloskelgruppenartKatalogEintrag | null => Floskelgruppenart.data().getWertByIDOrNull(data.value.idFloskelgruppenart ?? -1)?.daten(props.schuljahr) ?? null,
-		set: (value: FloskelgruppenartKatalogEintrag | null) => data.value.idFloskelgruppenart = value?.id ?? null,
-	});
-
-	// ---validate---
-
-	const fieldIsValid = (field: keyof Floskelgruppe): boolean => {
-		switch (field) {
-			case 'bezeichnung':
-				return bezeichnungIsValid(data.value.bezeichnung);
-			case 'kuerzel':
-				return kuerzelIsValid(data.value.kuerzel);
-			default:
-				return true;
-		}
-	};
-
-	const formIsValid = computed(() => {
-		return Object.keys(data.value)
-			.every((field: string) => fieldIsValid(field as keyof Floskelgruppe));
-	});
-
-	function kuerzelIsValid(value: string | null): boolean {
-		return (mandatoryInputIsValid(value, 10)
-			&& isUniqueInList(value, props.manager().liste.list(), "kuerzel"));
-	}
-
-	function bezeichnungIsValid(value: string | null): boolean {
-		return (mandatoryInputIsValid(value, 50)
-			&& isUniqueInList(value, props.manager().liste.list(), "bezeichnung"));
-	}
 
 	// --- util ---
 
@@ -92,8 +65,7 @@
 		}
 		props.checkpoint.active = false;
 		isLoading.value = true;
-		const { id, referenziertInAnderenTabellen, ...partialData } = data.value;
-		console.log(partialData);
+		const { id, referenziertInAnderenTabellen, ...partialData } = model.proxy;
 		await props.add(partialData);
 		isLoading.value = false;
 	}
@@ -103,7 +75,7 @@
 		await props.goToDefaultView(null);
 	}
 
-	watch(() => data.value, async () => {
+	watch(() => model.proxy, async () => {
 		if (isLoading.value) {
 			return;
 		}
