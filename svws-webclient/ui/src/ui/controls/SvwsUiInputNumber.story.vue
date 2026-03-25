@@ -198,8 +198,8 @@
 				</div>
 				<HstCheckbox title="false"
 					v-model="activeState.hideStepper.value" />
-				<HstNumber title="Schrittweite (bei true)"
-					v-model="activeState.steps.value" :disabled="activeState.hideStepper.value" />
+				<HstNumber title="Schrittweite"
+					v-model="activeState.steps.value" :disabled="activeState.hideStepper.value" :decimal-places="4" />
 			</div>
 			<div class="flex">
 				<HstNumber title="decimalPlaces"

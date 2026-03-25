@@ -30,7 +30,8 @@
 					v-model="personalabschnittsdatenModelProxy.beschaeftigungsart.value" :validation="() => personalabschnittsdatenModelProxy.getFehler('idBeschaeftigungsart')"
 					:manager="beschaeftigungsartSelectManager" :removable="false" required :readonly statistics />
 				<svws-ui-input-number placeholder="Pflichtstundensoll"
-					v-model="personalabschnittsdatenModelProxy.proxy.pflichtstundensoll" @commit="personalabschnittsdatenModelProxy.patch" :readonly statistics />
+					v-model="personalabschnittsdatenModelProxy.proxy.pflichtstundensoll" @commit="personalabschnittsdatenModelProxy.patch"
+					:decimal-places="1" :steps="0.5" :readonly statistics />
 				<ui-select label="Einsatzstatus"
 					v-model="personalabschnittsdatenModelProxy.einsatzstatus.value" :validation="() => personalabschnittsdatenModelProxy.getFehler('idEinsatzstatus')"
 					:manager="einsatzstatusSelectManager" :readonly statistics :removable="false" required />
