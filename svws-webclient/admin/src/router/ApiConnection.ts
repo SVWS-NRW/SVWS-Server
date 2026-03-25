@@ -2,7 +2,6 @@ import { ref, shallowRef } from "vue";
 import { ApiPrivileged } from "@core/api/ApiPrivileged";
 import { ApiServer } from "@core/api/ApiServer";
 import { BenutzerKennwort } from "@core/core/data/BenutzerKennwort";
-import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 import { ServerMode } from "@core/core/types/ServerMode";
 
 
@@ -33,10 +32,10 @@ export class ApiConnection {
 	protected _serverMode = shallowRef<ServerMode>(ServerMode.STABLE);
 
 	// Gibt an, ob es sich um einen Benutzer mit priviligierten Rechten auf der Datenbank handelt oder nicht
-	protected _hasRootPrivileges: boolean = false;
+	protected _hasRootPrivileges = false;
 
 	// Gibt an, ob es sich um den Datenbank-Benutzer handelt, der priviligiert ist, um auch die SVWS-Server-Konfiguration zu bearbeiten
-	protected _isServerAdmin: boolean = false;
+	protected _isServerAdmin = false;
 
 
 	// Gibt die Server-API zurück.

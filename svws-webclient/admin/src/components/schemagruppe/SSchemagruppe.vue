@@ -76,7 +76,7 @@
 
 	const checkDeletable = computed<[boolean, List<string>]>(() => {
 		const log: List<string> = new ArrayList();
-		let result: boolean = true;
+		let result = true;
 		if (currentAction.value === 'delete') {
 			for (const schema of props.auswahlGruppe) {
 				if (schema.username === props.apiUsername) {
@@ -90,7 +90,7 @@
 		return [result, log];
 	});
 
-	async function getBackupFile(i: number) {
+	function getBackupFile(i: number) {
 		const { data, name } = props.backupFiles()[i];
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);

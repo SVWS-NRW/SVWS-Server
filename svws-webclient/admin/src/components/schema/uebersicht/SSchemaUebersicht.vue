@@ -96,7 +96,7 @@
 	const props = defineProps<SchemaUebersichtProps>();
 
 	const eintrag = computed(() => props.data());
-	watch(eintrag, async (newEintrag, oldEintrag) => {
+	watch(eintrag, (newEintrag, oldEintrag) => {
 		if ((newEintrag === undefined) && (oldEintrag === undefined)) {
 			return;
 		}

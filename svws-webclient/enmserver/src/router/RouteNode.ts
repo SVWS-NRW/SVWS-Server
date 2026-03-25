@@ -152,8 +152,8 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @returns die Routen-Parameter für diese Route
 	 */
 	public getRouteParams(params?: RouteParamsRawGeneric): RouteParamsRawGeneric {
-		let result = {};
-		let cur: RouteNode<any, any> | undefined = this;
+		let result = this.addRouteParamsFromState();
+		let cur: RouteNode<any, any> | undefined = this.parent;
 		while (cur !== undefined) {
 			result = Object.assign(result, cur.addRouteParamsFromState());
 			cur = cur.parent;

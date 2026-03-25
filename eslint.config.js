@@ -120,12 +120,12 @@ export default defineConfig(
 			"no-extra-boolean-cast": "error",
 
 			// TypeScript-spezifische Regeln
-			"@typescript-eslint/no-this-alias": "off",
+			// "@typescript-eslint/no-this-alias": "off",
 			"@typescript-eslint/require-await": "off",
 			"@typescript-eslint/no-unused-vars": "off",
 			"@typescript-eslint/no-explicit-any": "off",
 			"@typescript-eslint/no-empty-function": "off",
-			"@typescript-eslint/no-inferrable-types": "off",
+			"@typescript-eslint/no-inferrable-types": "warn",
 			"@typescript-eslint/no-non-null-assertion": "off",
 			"@typescript-eslint/consistent-type-assertions": "off",
 			"@typescript-eslint/no-confusing-void-expression": "off",
