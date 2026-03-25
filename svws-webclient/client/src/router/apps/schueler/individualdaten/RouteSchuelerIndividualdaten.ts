@@ -38,7 +38,7 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 			foerderschwerpunkteById: routeApp.cache.kataloge.foerderschwerpunkteById,
 			haltestellenById: routeApp.cache.kataloge.haltestellenById,
 			religionenById: routeApp.cache.kataloge.religionenById,
-			telefonartenById: routeApp.cache.kataloge.telefonartenById,
+			mapTelefonArten: routeApp.cache.kataloge.telefonartenById,
 			getListSchuelerTelefoneintraege: () => routeSchueler.data.getListSchuelerTelefoneintraege,
 			addSchuelerTelefoneintrag: routeSchueler.data.addSchuelerTelefoneintrag,
 			patchSchuelerTelefoneintrag: routeSchueler.data.patchSchuelerTelefoneintrag,

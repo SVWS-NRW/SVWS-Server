@@ -29,7 +29,7 @@ export interface SchuelerIndividualdatenProps {
 	foerderschwerpunkteById: Map<number, FoerderschwerpunktEintrag>;
 	haltestellenById: Map<number, Haltestelle>
 	religionenById: Map<number, ReligionEintrag>;
-	telefonartenById: Map<number, Telefonart>
+	mapTelefonArten: Map<number, Telefonart>
 	getListSchuelerTelefoneintraege: () => List<SchuelerTelefon>;
 	addSchuelerTelefoneintrag: (data: Partial<SchuelerTelefon>, idSchueler: number) => Promise<void>;
 	patchSchuelerTelefoneintrag: (data: Partial<SchuelerTelefon>, idEintrag: number) => Promise<void>;
