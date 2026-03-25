@@ -1,10 +1,10 @@
-import type { ENMAbteilung } from "../../../../../core/src/core/data/enm/ENMAbteilung";
-import type { ENMJahrgang } from "../../../../../core/src/core/data/enm/ENMJahrgang";
-import type { ENMKlasse } from "../../../../../core/src/core/data/enm/ENMKlasse";
+import type { ENMv2Abteilung } from "../../../../../core/src/core/data/enm/v2/ENMv2Abteilung";
+import type { ENMv1Jahrgang } from "../../../../../core/src/core/data/enm/v1/ENMv1Jahrgang";
+import type { ENMv1Klasse } from "../../../../../core/src/core/data/enm/v1/ENMv1Klasse";
 import type { Comparator } from "../../../../../core/src/java/util/Comparator";
 
 /** Ein Java-Comparator für den Vergleich zweier ENM-Klassen-Objekte zur Sortierung in Listen und anderen Datenstrukturen */
-export const comparatorENMKlasse = <Comparator<ENMKlasse>>{ compare: (a: ENMKlasse, b: ENMKlasse): number => {
+export const comparatorENMKlasse = <Comparator<ENMv1Klasse>>{ compare: (a: ENMv1Klasse, b: ENMv1Klasse): number => {
 	// Vergleiche zuerst anhand der gesetzten Sortierung der Klasse...
 	const tmp = a.sortierung - b.sortierung;
 	if (tmp !== 0) {
@@ -24,7 +24,7 @@ export const comparatorENMKlasse = <Comparator<ENMKlasse>>{ compare: (a: ENMKlas
 } };
 
 /** Ein Java-Comparator für den Vergleich zweier ENM-Abteilungs-Objekte zur Sortierung in Listen und anderen Datenstrukturen */
-export const comparatorENMAbteilung = <Comparator<ENMAbteilung>>{ compare: (a: ENMAbteilung, b: ENMAbteilung): number => {
+export const comparatorENMAbteilung = <Comparator<ENMv2Abteilung>>{ compare: (a: ENMv2Abteilung, b: ENMv2Abteilung): number => {
 	// Vergleiche zuerst anhand der gesetzten Sortierung der Abteilung...
 	const tmp = a.sortierung - b.sortierung;
 	if (tmp !== 0) {
@@ -34,7 +34,7 @@ export const comparatorENMAbteilung = <Comparator<ENMAbteilung>>{ compare: (a: E
 } };
 
 /** Ein Java-Comparator für den Vergleich zweier ENM-Jahrgangs-Objekte zur Sortierung in Listen und anderen Datenstrukturen */
-export const comparatorENMJahrgang = <Comparator<ENMJahrgang>>{ compare: (a: ENMJahrgang, b: ENMJahrgang): number => {
+export const comparatorENMJahrgang = <Comparator<ENMv1Jahrgang>>{ compare: (a: ENMv1Jahrgang, b: ENMv1Jahrgang): number => {
 	// Vergleiche zuerst anhand der gesetzten Sortierung der Jahrgänge...
 	const tmp = a.sortierung - b.sortierung;
 	if (tmp !== 0) {

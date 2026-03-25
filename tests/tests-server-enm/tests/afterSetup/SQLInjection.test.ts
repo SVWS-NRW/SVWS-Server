@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, test } from "vitest";
 import { getApiService } from "../../utils/RequestBuilder.js";
-import { ENMDaten, ENMSchueler } from "@core";
+import { ENMv1Daten, ENMv1Schueler } from "@core";
 import { enmURL } from "../../../utils/APIUtils";
 
 const targetUrlENMServer: string = enmURL;
@@ -8,8 +8,8 @@ const targetUrlENMServer: string = enmURL;
 const apiServiceAuth = getApiService('T.Giesen@lmail.de', 'UD73Js0Uro', targetUrlENMServer);
 const apiServiceAuthInjected = getApiService('M.Gehring@lmail.de', 'uTdNE7EUIb', targetUrlENMServer);
 
-function findSchueler(data: ENMDaten, id: number): ENMSchueler {
-	let schueler = new ENMSchueler();
+function findSchueler(data: ENMv1Daten, id: number): ENMv1Schueler {
+	let schueler = new ENMv1Schueler();
 	for (const s of data.schueler) {
 		if (s.id === id) {
 			schueler = s;
@@ -33,7 +33,7 @@ describe(`SQL-Injections der POST-Endpunkte des ENM-Servers.`, () => {
 	test("Eine SQL-Injection auf POST Leistungen um Daten einer anderen Id zu manipulieren. Der Angriff ist nicht erfolgreich.", async () => {
 		const response = await apiServiceAuthInjected.get(`/api/daten`);
 		expect(response.status).toBe(200);
-		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
+		const _data = ENMv1Daten.transpilerFromJSON(await (await response.blob()).text());
 
 		// aktueller Lehrer (auth) M.Gehring@lmail.de ist für diesen Schüler zuständig
 		const schuelerSQLInjectionTargetID = 2832;
@@ -76,7 +76,7 @@ describe(`SQL-Injections der POST-Endpunkte des ENM-Servers.`, () => {
 		// rufe Daten als M.Gehring@lmail.de ab
 		const responseAfterInjection = await apiServiceAuthInjected.get(`/api/daten`);
 		expect(responseAfterInjection.status).toBe(200);
-		const _dataAfterInjection = ENMDaten.transpilerFromJSON(await (await responseAfterInjection.blob()).text());
+		const _dataAfterInjection = ENMv1Daten.transpilerFromJSON(await (await responseAfterInjection.blob()).text());
 
 		const schuelerAfterInjection = findSchueler(_dataAfterInjection, schuelerSQLInjectionTargetID);
 
@@ -91,7 +91,7 @@ describe(`SQL-Injections der POST-Endpunkte des ENM-Servers.`, () => {
 	test("Eine SQL Injection auf POST TeilLeistungen um Daten einer anderen Id zu manipulieren. Der Angriff ist nicht erfolgreich.", async () => {
 		const response = await apiServiceAuthInjected.get(`/api/daten`);
 		expect(response.status).toBe(200);
-		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
+		const _data = ENMv1Daten.transpilerFromJSON(await (await response.blob()).text());
 
 		// aktueller Lehrer (auth) M.Gehring@lmail.de ist für diesen Schüler zuständig
 		const schuelerSQLInjectionTargetID = 2884;
@@ -135,7 +135,7 @@ describe(`SQL-Injections der POST-Endpunkte des ENM-Servers.`, () => {
 		// rufe Daten als M.Gehring@lmail.de ab
 		const responseAfterInjection = await apiServiceAuthInjected.get(`/api/daten`);
 		expect(responseAfterInjection.status).toBe(200);
-		const _dataAfterInjection = ENMDaten.transpilerFromJSON(await (await responseAfterInjection.blob()).text());
+		const _dataAfterInjection = ENMv1Daten.transpilerFromJSON(await (await responseAfterInjection.blob()).text());
 
 		const schuelerAfterInjection = findSchueler(_dataAfterInjection, schuelerSQLInjectionTargetID);
 
@@ -150,7 +150,7 @@ describe(`SQL-Injections der POST-Endpunkte des ENM-Servers.`, () => {
 	test.skip("Eine SQL-Injection auf POST Ankreuzkompetenzen um Daten einer anderen Id zu manipulieren. Der Angriff ist nicht erfolgreich.", async () => {
 		const response = await apiServiceAuthInjected.get(`/api/daten`);
 		expect(response.status).toBe(200);
-		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
+		const _data = ENMv1Daten.transpilerFromJSON(await (await response.blob()).text());
 
 		// aktueller Lehrer (auth) M.Gehring@lmail.de ist für diesen Schüler zuständig
 		const schuelerSQLInjectionTargetID = 3029;
@@ -194,7 +194,7 @@ describe(`SQL-Injections der POST-Endpunkte des ENM-Servers.`, () => {
 	test("Eine SQL-Injection auf POST SchuelerBemerkung um Daten einer anderen Id zu manipulieren. Der Angriff ist nicht erfolgreich", async () => {
 		const response = await apiServiceAuthInjected.get(`/api/daten`);
 		expect(response.status).toBe(200);
-		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
+		const _data = ENMv1Daten.transpilerFromJSON(await (await response.blob()).text());
 
 		// aktueller Lehrer (auth) M.Gehring@lmail.de ist für diesen Schüler zuständig
 		const schuelerSQLInjectionTargetID = 2934;
@@ -234,7 +234,7 @@ describe(`SQL-Injections der POST-Endpunkte des ENM-Servers.`, () => {
 		// rufe Daten als M.Gehring@lmail.de ab
 		const responseAfterInjection = await apiServiceAuthInjected.get(`/api/daten`);
 		expect(responseAfterInjection.status).toBe(200);
-		const _dataAfterInjection = ENMDaten.transpilerFromJSON(await (await responseAfterInjection.blob()).text());
+		const _dataAfterInjection = ENMv1Daten.transpilerFromJSON(await (await responseAfterInjection.blob()).text());
 
 		const schuelerAfterInjection = findSchueler(_dataAfterInjection, schuelerSQLInjectionTargetID);
 
@@ -246,7 +246,7 @@ describe(`SQL-Injections der POST-Endpunkte des ENM-Servers.`, () => {
 	test("Eine SQL-Injection auf POST SchuelerLernabschnitt um Daten einer anderen Id zu manipulieren. Der Angriff ist nicht erfolgreich", async () => {
 		const response = await apiServiceAuthInjected.get(`/api/daten`);
 		expect(response.status).toBe(200);
-		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
+		const _data = ENMv1Daten.transpilerFromJSON(await (await response.blob()).text());
 
 		// aktueller Lehrer (auth) M.Gehring@lmail.de ist für diesen Schüler zuständig
 		const schuelerSQLInjectionTargetID = 2939;
@@ -285,7 +285,7 @@ describe(`SQL-Injections der POST-Endpunkte des ENM-Servers.`, () => {
 		// rufe Daten als M.Gehring@lmail.de ab
 		const responseAfterInjection = await apiServiceAuthInjected.get(`/api/daten`);
 		expect(responseAfterInjection.status).toBe(200);
-		const _dataAfterInjection = ENMDaten.transpilerFromJSON(await (await responseAfterInjection.blob()).text());
+		const _dataAfterInjection = ENMv1Daten.transpilerFromJSON(await (await responseAfterInjection.blob()).text());
 
 		const schuelerAfterInjection = findSchueler(_dataAfterInjection, schuelerSQLInjectionTargetID);
 

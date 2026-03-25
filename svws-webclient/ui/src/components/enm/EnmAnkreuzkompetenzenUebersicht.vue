@@ -27,7 +27,7 @@
 						</template>
 					</template>
 					<template #default="{ row, index }">
-						<template v-if="row.kompetenz instanceof ENMLeistung">
+						<template v-if="row.kompetenz instanceof ENMv1Leistung">
 							<td class="text-left bg-ui-50"> {{ row.gruppe.kuerzelAnzeige }} </td>
 							<td v-if="auswahlZelle?.b.klasseID && enmManager().sperrungen.istSpalteneingabeErlaubt(auswahlZelle.b.klasseID, 'FB')"
 								:ref="inputBemerkung(mapLeistungen.get(row.gruppe.id), 1, index)" class="ui-table-grid-button col-span-6 text-left"
@@ -84,30 +84,30 @@
 
 	import type { ComponentPublicInstance } from 'vue';
 	import { computed, ref, shallowRef, watch, watchEffect } from 'vue';
-	import { ENMLeistung } from '../../../../core/src/core/data/enm/ENMLeistung';
+	import { ENMv1Leistung } from '../../../../core/src/core/data/enm/v1/ENMv1Leistung';
 	import { PairNN } from '../../../../core/src/asd/adt/PairNN';
-	import type { ENMSchueler } from '../../../../core/src/core/data/enm/ENMSchueler';
+	import type { ENMv1Schueler } from '../../../../core/src/core/data/enm/v1/ENMv1Schueler';
 	import type { List } from '../../../../core/src/java/util/List';
 	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
 	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
 	import type { EnmAnkreuzkompetenzenUebersichtProps } from './EnmAnkreuzkompetenzenUebersichtProps';
-	import type { ENMFach } from '../../../../core/src/core/data/enm/ENMFach';
-	import type { ENMSchuelerAnkreuzkompetenz } from '../../../../core/src/core/data/enm/ENMSchuelerAnkreuzkompetenz';
+	import type { ENMv1Fach } from '../../../../core/src/core/data/enm/v1/ENMv1Fach';
+	import type { ENMv1SchuelerAnkreuzkompetenz } from '../../../../core/src/core/data/enm/v1/ENMv1SchuelerAnkreuzkompetenz';
 
 	const props = defineProps<EnmAnkreuzkompetenzenUebersichtProps>();
 
-	const gridManagerSchueler = new GridManager<string, PairNN<string, ENMSchueler>, List<PairNN<string, ENMSchueler>>>({
-		daten: computed<List<PairNN<string, ENMSchueler>>>(() => {
-			const result = new ArrayList<PairNN<string, ENMSchueler>>();
+	const gridManagerSchueler = new GridManager<string, PairNN<string, ENMv1Schueler>, List<PairNN<string, ENMv1Schueler>>>({
+		daten: computed<List<PairNN<string, ENMv1Schueler>>>(() => {
+			const result = new ArrayList<PairNN<string, ENMv1Schueler>>();
 			for (const lerngruppenAuswahl of props.auswahl()) {
 				const listSchueler = props.enmManager().mapKlassenSchueler.get(lerngruppenAuswahl.id);
 				const klasse = props.enmManager().mapKlassen.get(lerngruppenAuswahl.id);
 				if ((klasse === null) || (listSchueler === null)) {
 					continue;
 				}
-				const list = new ArrayList<PairNN<string, ENMSchueler>>();
+				const list = new ArrayList<PairNN<string, ENMv1Schueler>>();
 				for (const schueler of listSchueler) {
-					const pair = new PairNN<string, ENMSchueler>(klasse.kuerzel ?? '???', schueler);
+					const pair = new PairNN<string, ENMv1Schueler>(klasse.kuerzel ?? '???', schueler);
 					list.add(pair);
 				}
 				result.addAll(list);
@@ -119,7 +119,7 @@
 	});
 
 	const lastRow = ref<number | null>(null);
-	const auswahlZelle = shallowRef<PairNN<string, ENMSchueler>>();
+	const auswahlZelle = shallowRef<PairNN<string, ENMv1Schueler>>();
 
 	watch(() => gridManagerSchueler.daten, (neu) => {
 		if (neu.contains(auswahlZelle.value)) {
@@ -130,8 +130,8 @@
 	}, { immediate: true });
 
 	const mapLeistungen = computed(() => {
-		const leistungen = auswahlZelle.value?.b.leistungsdaten ?? new ArrayList<ENMLeistung>();
-		const map = new Map<number, ENMLeistung>();
+		const leistungen = auswahlZelle.value?.b.leistungsdaten ?? new ArrayList<ENMv1Leistung>();
+		const map = new Map<number, ENMv1Leistung>();
 		for (const leistung of leistungen) {
 			const fach = props.enmManager().lerngruppeGetFach(leistung.lerngruppenID);
 			if (fach !== null) {
@@ -166,7 +166,7 @@
 		};
 	}
 
-	type RowType = { gruppe: ENMFach, kompetenz: ENMSchuelerAnkreuzkompetenz | ENMLeistung };
+	type RowType = { gruppe: ENMv1Fach, kompetenz: ENMv1SchuelerAnkreuzkompetenz | ENMv1Leistung };
 	const gridManager = new GridManager<string, RowType, List<RowType>>({
 		daten: computed<List<RowType>>(() => {
 			const result = new ArrayList<RowType>();
@@ -211,7 +211,7 @@
 	});
 	defineExpose({ gridManager, gridManagerSchueler });
 
-	function inputStufe(kompetenz: ENMSchuelerAnkreuzkompetenz, col: number, index: number) {
+	function inputStufe(kompetenz: ENMv1SchuelerAnkreuzkompetenz, col: number, index: number) {
 		const key = kompetenz.id + '_Stufe_' + index + "_" + col;
 		const stufen = kompetenz.stufen;
 		const setter = (value: boolean) => {
@@ -226,7 +226,7 @@
 		};
 	}
 
-	function inputBemerkung(leistung: ENMLeistung | undefined, col: number, index: number) {
+	function inputBemerkung(leistung: ENMv1Leistung | undefined, col: number, index: number) {
 		if (leistung === undefined) {
 			return;
 		}

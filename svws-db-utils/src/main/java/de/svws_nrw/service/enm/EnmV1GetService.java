@@ -14,17 +14,17 @@ import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.asd.types.schule.Floskelgruppenart;
 import de.svws_nrw.asd.types.schule.Schulform;
-import de.svws_nrw.core.data.enm.ENMAnkreuzkompetenz;
-import de.svws_nrw.core.data.enm.ENMDaten;
-import de.svws_nrw.core.data.enm.ENMFach;
-import de.svws_nrw.core.data.enm.ENMFloskel;
-import de.svws_nrw.core.data.enm.ENMFloskelgruppe;
-import de.svws_nrw.core.data.enm.ENMJahrgang;
-import de.svws_nrw.core.data.enm.ENMKlasse;
-import de.svws_nrw.core.data.enm.ENMLeistung;
-import de.svws_nrw.core.data.enm.ENMLerngruppe;
-import de.svws_nrw.core.data.enm.ENMSchueler;
-import de.svws_nrw.core.data.enm.ENMTeilleistungsart;
+import de.svws_nrw.core.data.enm.v1.ENMv1Ankreuzkompetenz;
+import de.svws_nrw.core.data.enm.v1.ENMv1Daten;
+import de.svws_nrw.core.data.enm.v1.ENMv1Fach;
+import de.svws_nrw.core.data.enm.v1.ENMv1Floskel;
+import de.svws_nrw.core.data.enm.v1.ENMv1Floskelgruppe;
+import de.svws_nrw.core.data.enm.v1.ENMv1Jahrgang;
+import de.svws_nrw.core.data.enm.v1.ENMv1Klasse;
+import de.svws_nrw.core.data.enm.v1.ENMv1Leistung;
+import de.svws_nrw.core.data.enm.v1.ENMv1Lerngruppe;
+import de.svws_nrw.core.data.enm.v1.ENMv1Schueler;
+import de.svws_nrw.core.data.enm.v1.ENMv1Teilleistungsart;
 import de.svws_nrw.db.dto.current.katalog.DTOFloskelgruppen;
 import de.svws_nrw.db.dto.current.katalog.DTOFloskeln;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
@@ -110,7 +110,7 @@ public final class EnmV1GetService {
 		}
 
 		// Prüfe ob der Jahrgang bereits vorhanden ist.
-		final ENMJahrgang enmJahrgang = kontext.manager.getJahrgang(idJahrgang);
+		final ENMv1Jahrgang enmJahrgang = kontext.manager.getJahrgang(idJahrgang);
 		if (enmJahrgang != null) {
 			return;
 		}
@@ -132,14 +132,14 @@ public final class EnmV1GetService {
 	 *
 	 * @return die Daten der ENM-Klasse
 	 */
-	private ENMKlasse addKlasseIfNotExists(final DTOSchuelerLernabschnittsdaten lernabschnitt) {
+	private ENMv1Klasse addKlasseIfNotExists(final DTOSchuelerLernabschnittsdaten lernabschnitt) {
 		// Lese die Klasse aus dem Kontext aus. Dort muss sie vorliegen...
 		final DTOKlassen dtoKlasse = kontext.getKlasse(lernabschnitt.Klassen_ID);
 		if (dtoKlasse == null)
 			throw new NullPointerException();
 
 		// Prüfe, ob die Klasse bereits zu den ENM-Daten hinzugefügt wurde
-		ENMKlasse enmKlasse = kontext.manager.getKlasse(dtoKlasse.ID);
+		ENMv1Klasse enmKlasse = kontext.manager.getKlasse(dtoKlasse.ID);
 		if (enmKlasse != null) {
 			return enmKlasse;
 		}
@@ -171,8 +171,8 @@ public final class EnmV1GetService {
 	 *
 	 * @return die Daten des ENM-Schülers
 	 */
-	private ENMSchueler addSchuelerIfNotExists(final DTOSchuelerLernabschnittsdaten lernabschnitt, final ENMKlasse enmKlasse) {
-		ENMSchueler enmSchueler = kontext.manager.getSchueler(lernabschnitt.Schueler_ID);
+	private ENMv1Schueler addSchuelerIfNotExists(final DTOSchuelerLernabschnittsdaten lernabschnitt, final ENMv1Klasse enmKlasse) {
+		ENMv1Schueler enmSchueler = kontext.manager.getSchueler(lernabschnitt.Schueler_ID);
 		if (enmSchueler != null) {
 			return enmSchueler;
 		}
@@ -247,8 +247,8 @@ public final class EnmV1GetService {
 	 *
 	 * @return die Daten der ENM-Lerngruppe
 	 */
-	private ENMLerngruppe addLerngruppeIfNotExists(final DTOSchuelerLernabschnittsdaten lernabschnitt, final DTOSchuelerLeistungsdaten leistung,
-			final ZulaessigeKursart kursart, final ENMKlasse enmKlasse) {
+	private ENMv1Lerngruppe addLerngruppeIfNotExists(final DTOSchuelerLernabschnittsdaten lernabschnitt, final DTOSchuelerLeistungsdaten leistung,
+			final ZulaessigeKursart kursart, final ENMv1Klasse enmKlasse) {
 
 		// Erstelle eine temporäre LerngruppenID: Dient zur Kurs- und Klassenübergreifenden Identifikation der Lerngruppe
 		final String strLerngruppenID = (leistung.Kurs_ID == null)
@@ -256,7 +256,7 @@ public final class EnmV1GetService {
 				: ("Kurs:" + leistung.Kurs_ID);
 
 		// Prüfe, ob die Lerngruppe bereits vorhanden ist.
-		ENMLerngruppe lerngruppe = kontext.manager.getLerngruppe(strLerngruppenID);
+		ENMv1Lerngruppe lerngruppe = kontext.manager.getLerngruppe(strLerngruppenID);
 		if (lerngruppe != null) {
 			return lerngruppe;
 		}
@@ -293,7 +293,7 @@ public final class EnmV1GetService {
 	 * @param idArt     die ID der Teilleistungart
 	 */
 	private void addTeilleistungsartIfNotExists(final long idArt) {
-		final ENMTeilleistungsart enmTeilleistungsart = kontext.manager.getTeilleistungsart(idArt);
+		final ENMv1Teilleistungsart enmTeilleistungsart = kontext.manager.getTeilleistungsart(idArt);
 		if (enmTeilleistungsart == null) {
 			final DTOTeilleistungsarten dtoArt = kontext.getTeilleistungsart(idArt);
 			if (dtoArt == null) { // DB-Error -> should not happen
@@ -310,7 +310,7 @@ public final class EnmV1GetService {
 	 *
 	 * @param enmLeistung     die Leistungsdaten aus den ENM-Daten
 	 */
-	private void processSchuelerTeilleistungen(final ENMLeistung enmLeistung) {
+	private void processSchuelerTeilleistungen(final ENMv1Leistung enmLeistung) {
 
 		// Ermittle die Teilleistungen zu den Leistungsdaten
 		final List<DTOSchuelerTeilleistung> teilleistungen = kontext.getTeilleistungen(enmLeistung.id);
@@ -377,8 +377,8 @@ public final class EnmV1GetService {
 	 *
 	 * @return die erstellten Leistungsdaten der ENM-Daten
 	 */
-	private ENMLeistung addSchuelerLeistungsdaten(final DTOSchuelerLeistungsdaten leistung,
-			final ZulaessigeKursart kursart, final ENMKlasse enmKlasse, final ENMSchueler enmSchueler, final ENMLerngruppe enmLerngruppe) {
+	private ENMv1Leistung addSchuelerLeistungsdaten(final DTOSchuelerLeistungsdaten leistung,
+			final ZulaessigeKursart kursart, final ENMv1Klasse enmKlasse, final ENMv1Schueler enmSchueler, final ENMv1Lerngruppe enmLerngruppe) {
 		final boolean istSchriftlich = pruefeKursSchriftlichkeit(leistung.Kurs_ID, kursart, enmKlasse.kuerzel, kontext.getHalbjahr());
 
 		final Integer abiFach = Optional.ofNullable(leistung.AbiFach).map(Integer::valueOf).filter(v -> (v >= 1) && (v <= 5)).orElse(null);
@@ -403,8 +403,8 @@ public final class EnmV1GetService {
 	 * @return gibt die Liste der Fach-IDs zurück, die bei den Schülerleistungsdaten vorkommen, um diese bei den Ankreuzkompetenzen zu kennen,
 	 *         wenn die ENM-Daten Lehrer-Spezifisch erstellt werden.
 	 */
-	private Set<Long> processSchuelerLeistungen(final DTOSchuelerLernabschnittsdaten lernabschnitt, final ENMKlasse enmKlasse,
-			final ENMSchueler enmSchueler) {
+	private Set<Long> processSchuelerLeistungen(final DTOSchuelerLernabschnittsdaten lernabschnitt, final ENMv1Klasse enmKlasse,
+			final ENMv1Schueler enmSchueler) {
 		final Set<Long> leistungenFachIDs = new HashSet<>();
 		final List<DTOSchuelerLeistungsdaten> leistungen = kontext.getLeistungsdaten(lernabschnitt.ID);
 		if (leistungen == null) {
@@ -416,13 +416,13 @@ public final class EnmV1GetService {
 				continue;
 
 			final ZulaessigeKursart kursart = (leistung.Kurs_ID == null) ? null : ZulaessigeKursart.data().getWertByKuerzel(leistung.Kursart);
-			final ENMLerngruppe lerngruppe = addLerngruppeIfNotExists(lernabschnitt, leistung, kursart, enmKlasse);
+			final ENMv1Lerngruppe lerngruppe = addLerngruppeIfNotExists(lernabschnitt, leistung, kursart, enmKlasse);
 
 			if (kontext.istLehrerSpezifisch() && (leistung.Fachlehrer_ID == kontext.getLehrerSpezfisch().ID)) {
 				leistungenFachIDs.add(lerngruppe.fachID);
 			}
 
-			final ENMLeistung enmLeistung = addSchuelerLeistungsdaten(leistung, kursart, enmKlasse, enmSchueler, lerngruppe);
+			final ENMv1Leistung enmLeistung = addSchuelerLeistungsdaten(leistung, kursart, enmKlasse, enmSchueler, lerngruppe);
 
 			processSchuelerTeilleistungen(enmLeistung);
 
@@ -467,8 +467,8 @@ public final class EnmV1GetService {
 	 * @param enmSchueler     die Daten des aktuellen Schülers aus den ENM-Daten
 	 * @param fachIDs         die Fach-IDs aus den Leistungsdaten, um erkennen zu können bei welchen Fächern der Lehrer unterrichtet
 	 */
-	private void processSchuelerAnkreuzkompetenzenOfLernabschnitt(final DTOSchuelerLernabschnittsdaten lernabschnitt, final ENMKlasse enmKlasse,
-			final ENMSchueler enmSchueler, final Set<Long> fachIDs) {
+	private void processSchuelerAnkreuzkompetenzenOfLernabschnitt(final DTOSchuelerLernabschnittsdaten lernabschnitt, final ENMv1Klasse enmKlasse,
+			final ENMv1Schueler enmSchueler, final Set<Long> fachIDs) {
 		final List<DTOSchuelerAnkreuzfloskeln> ankreuzkompetenzen = kontext.getSchuelerAnkreuzkompetenzen(lernabschnitt.ID);
 		if (ankreuzkompetenzen == null) {
 			return;
@@ -487,7 +487,7 @@ public final class EnmV1GetService {
 
 			// Prüfe die Ankreuzfloskel und ergänze sie ggf.
 			final String jahrgang = getJahrgangOfAnkreuzkompetenz(ankreuzkompetenz.ID, lernabschnitt.Fachklasse_ID);
-			final ENMAnkreuzkompetenz enmAnkreuzkompetenz = kontext.manager.getAnkreuzkompetenz(ankreuzkompetenz.Floskel_ID);
+			final ENMv1Ankreuzkompetenz enmAnkreuzkompetenz = kontext.manager.getAnkreuzkompetenz(ankreuzkompetenz.Floskel_ID);
 			if (enmAnkreuzkompetenz == null)
 				kontext.manager.addAnkreuzkompetenz(dtoAnkreuzkompetenz.ID, (dtoAnkreuzkompetenz.IstASV == 0), dtoAnkreuzkompetenz.Fach_ID,
 						jahrgang, dtoAnkreuzkompetenz.FloskelText, dtoAnkreuzkompetenz.Sortierung);
@@ -513,8 +513,8 @@ public final class EnmV1GetService {
 		if ((lernabschnitt.Klassen_ID == null) || (lernabschnitt.Jahrgang_ID == null))
 			return;
 
-		final ENMKlasse enmKlasse = addKlasseIfNotExists(lernabschnitt);
-		final ENMSchueler enmSchueler = addSchuelerIfNotExists(lernabschnitt, enmKlasse);
+		final ENMv1Klasse enmKlasse = addKlasseIfNotExists(lernabschnitt);
+		final ENMv1Schueler enmSchueler = addSchuelerIfNotExists(lernabschnitt, enmKlasse);
 		final Set<Long> idsFaecher = processSchuelerLeistungen(lernabschnitt, enmKlasse, enmSchueler);
 		processSchuelerAnkreuzkompetenzenOfLernabschnitt(lernabschnitt, enmKlasse, enmSchueler, idsFaecher);
 	}
@@ -528,7 +528,7 @@ public final class EnmV1GetService {
 	 *
 	 * @return die ENMDaten
 	 */
-	public ENMDaten get(final Long id) {
+	public ENMv1Daten get(final Long id) {
 		return transactional(() -> {
 			// Allgemeine ENM-Daten (Kontextdaten -  Schule, Kataloge, Lehrer, etc.) laden
 			kontext.fetchData(id);
@@ -569,10 +569,10 @@ public final class EnmV1GetService {
 	}
 
 
-	private HashMap<Long, ENMFloskelgruppe> addFloskelgruppen() {
-		final HashMap<Long, ENMFloskelgruppe> map = new HashMap<>();
+	private HashMap<Long, ENMv1Floskelgruppe> addFloskelgruppen() {
+		final HashMap<Long, ENMv1Floskelgruppe> map = new HashMap<>();
 		for (final DTOFloskelgruppen dto : kontext.getFloskelgruppen()) {
-			final ENMFloskelgruppe enmFG = new ENMFloskelgruppe();
+			final ENMv1Floskelgruppe enmFG = new ENMv1Floskelgruppe();
 			enmFG.kuerzel = dto.Kuerzel;
 			enmFG.bezeichnung = dto.Bezeichnung;
 			final FloskelgruppenartKatalogEintrag eintrag = Floskelgruppenart.data().getEintragByID(dto.Hauptgruppe_ID);
@@ -584,9 +584,9 @@ public final class EnmV1GetService {
 	}
 
 
-	private static void addFloskel(final DTOFloskeln floskel, final ENMFloskelgruppe enmFloskelGruppe, final Long idJahrgang,
-			final ENMFach fach, final Long niveau) {
-		final ENMFloskel enmFl = new ENMFloskel();
+	private static void addFloskel(final DTOFloskeln floskel, final ENMv1Floskelgruppe enmFloskelGruppe, final Long idJahrgang,
+			final ENMv1Fach fach, final Long niveau) {
+		final ENMv1Floskel enmFl = new ENMv1Floskel();
 		enmFl.kuerzel = floskel.Kuerzel;
 		enmFl.text = floskel.Text;
 		enmFl.fachID = (fach == null) ? null : fach.id;
@@ -602,18 +602,18 @@ public final class EnmV1GetService {
 	 */
 	private void processFloskeln() {
 		// Ergänze zuerst die Floskelgruppen bei den ENM-Daten
-		final HashMap<Long, ENMFloskelgruppe> mapFloskelgruppen = addFloskelgruppen();
+		final HashMap<Long, ENMv1Floskelgruppe> mapFloskelgruppen = addFloskelgruppen();
 
 		// Durchwandere die Floskel und füge diese den jeweiligen Floskelgruppen zu
 		for (final DTOFloskeln floskel : kontext.getFloskeln()) {
 			// Prüfe, ob die Floskel eine Gruppe zugeordnet hat - Wenn keine zugeordnet ist, wird die Floskel ignoriert
-			final ENMFloskelgruppe enmFloskelGruppe = mapFloskelgruppen.get(floskel.Gruppe_ID);
+			final ENMv1Floskelgruppe enmFloskelGruppe = mapFloskelgruppen.get(floskel.Gruppe_ID);
 			if (enmFloskelGruppe == null) {
 				continue;
 			}
 
 			// Bestimme Fach und Niveau der Floskel
-			final ENMFach fach = (floskel.Fach_ID == null) ? null : kontext.manager.getFach(floskel.Fach_ID);
+			final ENMv1Fach fach = (floskel.Fach_ID == null) ? null : kontext.manager.getFach(floskel.Fach_ID);
 			final Long niveau = (floskel.Niveau == null) ? null : floskel.Niveau.longValue();
 
 			// Füge die Floskel entweder allgemein (idJahrgang = null) oder für alle Jahrgänge hinzu

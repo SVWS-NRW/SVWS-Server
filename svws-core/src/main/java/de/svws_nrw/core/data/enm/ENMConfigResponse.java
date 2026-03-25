@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
  * ENM-Server-Config-Operation im Server, welche angibt, ob die Operation erfolgreich war. ein
  * Log der Operation zurückgibt sowie die Server-Config selbst.
  */
-@XmlRootElement(name = "ENMServerConfigPesponse")
+@XmlRootElement(name = "ENMServerConfigResponse")
 @Schema(name = "ENM-Server-Config-Operation-Antwort", description = "die Antwort bei einer Operation mit dem Log der Operation sowie der Konfiguration.")
 @TranspilerDTO
 public class ENMConfigResponse {

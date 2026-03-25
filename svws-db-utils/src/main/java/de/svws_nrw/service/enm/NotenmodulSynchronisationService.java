@@ -10,8 +10,8 @@ import java.util.function.Consumer;
 import de.svws_nrw.base.compression.CompressionException;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.enm.ENMConfigResponse;
-import de.svws_nrw.core.data.enm.ENMDaten;
 import de.svws_nrw.core.data.enm.ENMServerConfig;
+import de.svws_nrw.core.data.enm.v1.ENMv1Daten;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.data.JSONMapper;
@@ -102,7 +102,7 @@ public final class NotenmodulSynchronisationService {
 		logger.logLn("Schreibe die neuen Daten aus ENM-Daten anhand der Zeitstempel in die Datenbank des SVWS-Servers...");
 
 		try {
-			this.enmImportService.applyLatest(JSONMapper.toObjectGZip(httpResponse.body(), ENMDaten.class));
+			this.enmImportService.applyLatest(JSONMapper.toObjectGZip(httpResponse.body(), ENMv1Daten.class));
 		} catch (final CompressionException e) {
 			throw new ApiOperationException(Status.BAD_REQUEST, e, "Die ENM-Daten konnten nicht mit GZip entpackt werden.");
 		}
@@ -120,7 +120,7 @@ public final class NotenmodulSynchronisationService {
 	private void uploadENMDaten(final HttpENMServerConnection client, final Logger logger) throws ApiOperationException {
 		try {
 			logger.logLn("Bestimme die ENM-Daten aus der Datenbank des SVWS-Servers...");
-			final ENMDaten enmDaten = enmGetService.get(null); // null für schulenweiten Export
+			final ENMv1Daten enmDaten = enmGetService.get(null); // null für schulenweiten Export
 			final byte[] daten = JSONMapper.gzipByteArrayFromObject(enmDaten);
 
 			logger.logLn("Sende die ENM-Daten an den ENM-Server...");

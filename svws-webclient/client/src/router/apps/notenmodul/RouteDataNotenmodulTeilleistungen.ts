@@ -5,7 +5,7 @@ import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import { routeNotenmodulTeilleistungenData } from "./RouteNotenmodulTeilleistungenData";
 import { routeNotenmodul } from "./RouteNotenmodul";
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { ENMLerngruppe, List, SimpleOperationResponse } from "@core";
+import type { ENMv1Lerngruppe, List, SimpleOperationResponse } from "@core";
 import { UnsupportedOperationException } from "@core";
 
 
@@ -41,11 +41,11 @@ export class RouteDataNotenmodulTeilleistungen extends RouteDataAuswahl<EnmLerng
 		param.id = id;
 	}
 
-	public async ladeDaten(auswahl: ENMLerngruppe, state: Partial<RouteStateNotenmodulTeilleistungen>): Promise<ENMLerngruppe | null> {
+	public async ladeDaten(auswahl: ENMv1Lerngruppe, state: Partial<RouteStateNotenmodulTeilleistungen>): Promise<ENMv1Lerngruppe | null> {
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<ENMLerngruppe>, id: number): Promise<boolean> {
+	protected async doPatch(data: Partial<ENMv1Lerngruppe>, id: number): Promise<boolean> {
 		return true;
 	}
 

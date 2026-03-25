@@ -34,16 +34,16 @@ import { DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
 import { EinschulungsartKatalogEintrag } from '../asd/data/schueler/EinschulungsartKatalogEintrag';
 import { Einwilligungsart } from '../core/data/schule/Einwilligungsart';
 import { ENMConfigResponse } from '../core/data/enm/ENMConfigResponse';
-import { ENMDaten } from '../core/data/enm/ENMDaten';
 import { ENMLehrerInitialKennwort } from '../core/data/enm/ENMLehrerInitialKennwort';
-import { ENMLeistung } from '../core/data/enm/ENMLeistung';
-import { ENMLeistungBemerkungen } from '../core/data/enm/ENMLeistungBemerkungen';
-import { ENMLernabschnitt } from '../core/data/enm/ENMLernabschnitt';
-import { ENMSchuelerAnkreuzkompetenz } from '../core/data/enm/ENMSchuelerAnkreuzkompetenz';
 import { ENMServerConfig } from '../core/data/enm/ENMServerConfig';
 import { ENMServerConfigElement } from '../core/data/enm/ENMServerConfigElement';
 import { ENMServerConnection } from '../core/data/enm/ENMServerConnection';
-import { ENMTeilleistung } from '../core/data/enm/ENMTeilleistung';
+import { ENMv1Daten } from '../core/data/enm/v1/ENMv1Daten';
+import { ENMv1Leistung } from '../core/data/enm/v1/ENMv1Leistung';
+import { ENMv1LeistungBemerkungen } from '../core/data/enm/v1/ENMv1LeistungBemerkungen';
+import { ENMv1Lernabschnitt } from '../core/data/enm/v1/ENMv1Lernabschnitt';
+import { ENMv1SchuelerAnkreuzkompetenz } from '../core/data/enm/v1/ENMv1SchuelerAnkreuzkompetenz';
+import { ENMv1Teilleistung } from '../core/data/enm/v1/ENMv1Teilleistung';
 import { Erzieherart } from '../core/data/erzieher/Erzieherart';
 import { ErzieherListeEintrag } from '../core/data/erzieher/ErzieherListeEintrag';
 import { ErzieherStammdaten } from '../core/data/erzieher/ErzieherStammdaten';
@@ -2004,55 +2004,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/alle
-	 *
-	 * Liest die Daten des Externen Notenmoduls (ENM) aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten des Externen Notenmoduls (ENM)
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: ENMDaten
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
-	 *   Code 404: Es wurden nicht alle benötigten Daten für das Erstellen der ENM-Daten gefunden.
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die Daten des Externen Notenmoduls (ENM)
-	 */
-	public async getENMDaten(schema : string) : Promise<ENMDaten> {
-		const path = "/db/{schema}/enm/alle"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return ENMDaten.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getENMDatenGZip für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/alle/gzip
-	 *
-	 * Liest die Daten des Externen Notenmoduls (ENM) aus der Datenbank und liefert diese GZip-komprimiert zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die GZip-komprimierte ENM-JSON-Datei
-	 *     - Mime-Type: application/octet-stream
-	 *     - Rückgabe-Typ: ApiFile
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
-	 *   Code 404: Es wurden nicht alle benötigten Daten für das Erstellen der ENM-Daten gefunden.
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die GZip-komprimierte ENM-JSON-Datei
-	 */
-	public async getENMDatenGZip(schema : string) : Promise<ApiFile> {
-		const path = "/db/{schema}/enm/alle/gzip"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const data : ApiFile = await super.getOctetStream(path);
-		return data;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getENMLehrerInitialKennwoerter für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/alle/initial_kennwoerter
 	 *
 	 * Liefert eine Liste der Lehrer-IDs mit den zugehörigen Initialkennwörtern für Lehrer zurück, welche bei den Daten für das Externe Datenmodul (ENM) vorkommen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zur Administration der Notenmodul-Daten besitzt.
@@ -2091,13 +2042,13 @@ export class ApiServer extends BaseApi {
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Partial<ENMSchuelerAnkreuzkompetenz>} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<ENMv1SchuelerAnkreuzkompetenz>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchENMSchuelerAnkreuzkompetenz(data : Partial<ENMSchuelerAnkreuzkompetenz>, schema : string) : Promise<void> {
+	public async patchENMSchuelerAnkreuzkompetenz(data : Partial<ENMv1SchuelerAnkreuzkompetenz>, schema : string) : Promise<void> {
 		const path = "/db/{schema}/enm/ankreuzkompetenz"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ENMSchuelerAnkreuzkompetenz.transpilerToJSONPatch(data);
+		const body : string = ENMv1SchuelerAnkreuzkompetenz.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -2115,15 +2066,15 @@ export class ApiServer extends BaseApi {
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Partial<ENMLeistungBemerkungen>} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<ENMv1LeistungBemerkungen>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async patchENMSchuelerBemerkungen(data : Partial<ENMLeistungBemerkungen>, schema : string, id : number) : Promise<void> {
+	public async patchENMSchuelerBemerkungen(data : Partial<ENMv1LeistungBemerkungen>, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/enm/bemerkungen/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = ENMLeistungBemerkungen.transpilerToJSONPatch(data);
+		const body : string = ENMv1LeistungBemerkungen.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -2681,104 +2632,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getENMDatenLeer für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/empty
-	 *
-	 * Liefert leere Daten des Externen Notenmoduls (ENM).
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten des Externen Notenmoduls (ENM)
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: ENMDaten
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um auf die API zuzugreifen.
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die Daten des Externen Notenmoduls (ENM)
-	 */
-	public async getENMDatenLeer(schema : string) : Promise<ENMDaten> {
-		const path = "/db/{schema}/enm/empty"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return ENMDaten.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode importENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/import
-	 *
-	 * Importiert die übergebenen ENM-Daten. Dabei wird die Aktualität der zu importierenden Daten anhand der Zeitstempel in den ENM-Daten geprüft.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Die ENM-Daten wurden erfolgreich importiert.
-	 *   Code 400: Die ENM-Daten sind nicht korrekt.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte zum importieren.
-	 *   Code 404: Es wurden nicht alle benötigten Daten für den Abgleich in der DB gefunden.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {ENMDaten} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 */
-	public async importENMDaten(data : ENMDaten, schema : string) : Promise<void> {
-		const path = "/db/{schema}/enm/import"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ENMDaten.transpilerToJSON(data);
-		await super.postJSON(path, body);
-		return;
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode importENMDatenGZip für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/import/gzip
-	 *
-	 * Importiert die übergebenen ENM-Daten. Dabei wird die Aktualität der zu importierenden Daten anhand der Zeitstempel in den ENM-Daten geprüft.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Die ENM-Daten wurden erfolgreich importiert.
-	 *   Code 400: Die ENM-Daten sind nicht korrekt.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte zum importieren.
-	 *   Code 404: Es wurden nicht alle benötigten Daten für den Abgleich in der DB gefunden.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {FormData} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 */
-	public async importENMDatenGZip(data : FormData, schema : string) : Promise<void> {
-		const path = "/db/{schema}/enm/import/gzip"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		await super.postMultipart(path, data);
-		return;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getLehrerENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/lehrer/{id : \d+}
-	 *
-	 * Liest die Daten des Externen Notenmoduls (ENM) des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) des Lehrers
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: ENMDaten
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
-	 *   Code 404: Kein Lehrer-Eintrag mit der angegebenen ID gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Daten des Externen Notenmoduls (ENM) des Lehrers
-	 */
-	public async getLehrerENMDaten(schema : string, id : number) : Promise<ENMDaten> {
-		const path = "/db/{schema}/enm/lehrer/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return ENMDaten.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der PATCH-Methode patchENMLeistung für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/leistung
 	 *
 	 * Passt die Leistungsdaten eines Schüler anhand der ENM-Daten an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung im Rahmen der Notenmodul-Konfiguration besitzt.
@@ -2791,13 +2644,13 @@ export class ApiServer extends BaseApi {
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Partial<ENMLeistung>} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<ENMv1Leistung>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchENMLeistung(data : Partial<ENMLeistung>, schema : string) : Promise<void> {
+	public async patchENMLeistung(data : Partial<ENMv1Leistung>, schema : string) : Promise<void> {
 		const path = "/db/{schema}/enm/leistung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ENMLeistung.transpilerToJSONPatch(data);
+		const body : string = ENMv1Leistung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -2815,13 +2668,13 @@ export class ApiServer extends BaseApi {
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Partial<ENMLernabschnitt>} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<ENMv1Lernabschnitt>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchENMSchuelerLernabschnitt(data : Partial<ENMLernabschnitt>, schema : string) : Promise<void> {
+	public async patchENMSchuelerLernabschnitt(data : Partial<ENMv1Lernabschnitt>, schema : string) : Promise<void> {
 		const path = "/db/{schema}/enm/lernabschnitt"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ENMLernabschnitt.transpilerToJSONPatch(data);
+		const body : string = ENMv1Lernabschnitt.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 
@@ -2915,14 +2768,161 @@ export class ApiServer extends BaseApi {
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Partial<ENMTeilleistung>} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<ENMv1Teilleistung>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async patchENMTeilleistung(data : Partial<ENMTeilleistung>, schema : string) : Promise<void> {
+	public async patchENMTeilleistung(data : Partial<ENMv1Teilleistung>, schema : string) : Promise<void> {
 		const path = "/db/{schema}/enm/teilleistung"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = ENMTeilleistung.transpilerToJSONPatch(data);
+		const body : string = ENMv1Teilleistung.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/v1/alle
+	 *
+	 * Liest die Daten des Externen Notenmoduls (ENM) aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten des Externen Notenmoduls (ENM)
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ENMv1Daten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
+	 *   Code 404: Es wurden nicht alle benötigten Daten für das Erstellen der ENM-Daten gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Daten des Externen Notenmoduls (ENM)
+	 */
+	public async getENMDaten(schema : string) : Promise<ENMv1Daten> {
+		const path = "/db/{schema}/enm/v1/alle"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return ENMv1Daten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getENMDatenGZip für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/v1/alle/gzip
+	 *
+	 * Liest die Daten des Externen Notenmoduls (ENM) aus der Datenbank und liefert diese GZip-komprimiert zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die GZip-komprimierte ENM-JSON-Datei
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
+	 *   Code 404: Es wurden nicht alle benötigten Daten für das Erstellen der ENM-Daten gefunden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die GZip-komprimierte ENM-JSON-Datei
+	 */
+	public async getENMDatenGZip(schema : string) : Promise<ApiFile> {
+		const path = "/db/{schema}/enm/v1/alle/gzip"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const data : ApiFile = await super.getOctetStream(path);
+		return data;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getENMDatenLeer für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/v1/empty
+	 *
+	 * Liefert leere Daten des Externen Notenmoduls (ENM).
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten des Externen Notenmoduls (ENM)
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ENMv1Daten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um auf die API zuzugreifen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Daten des Externen Notenmoduls (ENM)
+	 */
+	public async getENMDatenLeer(schema : string) : Promise<ENMv1Daten> {
+		const path = "/db/{schema}/enm/v1/empty"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return ENMv1Daten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode importENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/v1/import
+	 *
+	 * Importiert die übergebenen ENM-Daten. Dabei wird die Aktualität der zu importierenden Daten anhand der Zeitstempel in den ENM-Daten geprüft.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die ENM-Daten wurden erfolgreich importiert.
+	 *   Code 400: Die ENM-Daten sind nicht korrekt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte zum importieren.
+	 *   Code 404: Es wurden nicht alle benötigten Daten für den Abgleich in der DB gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {ENMv1Daten} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async importENMDaten(data : ENMv1Daten, schema : string) : Promise<void> {
+		const path = "/db/{schema}/enm/v1/import"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = ENMv1Daten.transpilerToJSON(data);
+		await super.postJSON(path, body);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode importENMDatenGZip für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/v1/import/gzip
+	 *
+	 * Importiert die übergebenen ENM-Daten. Dabei wird die Aktualität der zu importierenden Daten anhand der Zeitstempel in den ENM-Daten geprüft.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die ENM-Daten wurden erfolgreich importiert.
+	 *   Code 400: Die ENM-Daten sind nicht korrekt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte zum importieren.
+	 *   Code 404: Es wurden nicht alle benötigten Daten für den Abgleich in der DB gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {FormData} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async importENMDatenGZip(data : FormData, schema : string) : Promise<void> {
+		const path = "/db/{schema}/enm/v1/import/gzip"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		await super.postMultipart(path, data);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getLehrerENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/v1/lehrer/{id : \d+}
+	 *
+	 * Liest die Daten des Externen Notenmoduls (ENM) des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten des Externen Notenmoduls (ENM) des Lehrers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ENMv1Daten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
+	 *   Code 404: Kein Lehrer-Eintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Daten des Externen Notenmoduls (ENM) des Lehrers
+	 */
+	public async getLehrerENMDaten(schema : string, id : number) : Promise<ENMv1Daten> {
+		const path = "/db/{schema}/enm/v1/lehrer/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return ENMv1Daten.transpilerFromJSON(text);
 	}
 
 

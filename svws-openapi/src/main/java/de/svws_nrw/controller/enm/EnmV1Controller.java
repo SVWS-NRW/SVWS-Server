@@ -1,6 +1,6 @@
 package de.svws_nrw.controller.enm;
 
-import de.svws_nrw.core.data.enm.ENMDaten;
+import de.svws_nrw.core.data.enm.v1.ENMv1Daten;
 import jakarta.ws.rs.core.Response;
 
 /**
@@ -36,7 +36,7 @@ public interface EnmV1Controller {
 	 *
 	 * @return die Response
 	 */
-	Response applyLatest(ENMDaten daten);
+	Response applyLatest(ENMv1Daten daten);
 
 	/**
 	 * Entpackt die ENM-Daten und integriert die Veränderungen bei den importierten ENM-Daten gegenüber

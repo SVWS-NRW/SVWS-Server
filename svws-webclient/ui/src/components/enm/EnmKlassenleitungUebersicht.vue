@@ -165,31 +165,31 @@
 
 	import type { ComponentPublicInstance } from 'vue';
 	import { computed, watchEffect } from 'vue';
-	import type { ENMSchueler } from "../../../../core/src/core/data/enm/ENMSchueler";
+	import type { ENMv1Schueler } from "../../../../core/src/core/data/enm/v1/ENMv1Schueler";
 	import type { EnmKlassenleitungUebersichtProps } from './EnmKlassenleitungUebersichtProps';
 	import { PairNN } from '../../../../core/src/asd/adt/PairNN';
 	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
 	import type { List } from '../../../../core/src/java/util/List';
 	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
-	import type { ENMKlasse } from '../../../../core/src/core/data/enm/ENMKlasse';
+	import type { ENMv1Klasse } from '../../../../core/src/core/data/enm/v1/ENMv1Klasse';
 	import type { GridInput } from '../../ui/controls/tablegrid/GridInput';
-	import type { ENMLernabschnitt } from '../../../../core/src/core/data/enm/ENMLernabschnitt';
+	import type { ENMv1Lernabschnitt } from '../../../../core/src/core/data/enm/v1/ENMv1Lernabschnitt';
 	import type { GridInputIntegerDiv } from '../../ui/controls/tablegrid/GridInputIntegerDiv';
 
 	const props = defineProps<EnmKlassenleitungUebersichtProps>();
 
 	const colsValidationTooltip = new Set(["FS", "FSU"]);
 
-	const gridManager = new GridManager<string, PairNN<ENMKlasse, ENMSchueler>, List<PairNN<ENMKlasse, ENMSchueler>>>({
-		daten: computed<List<PairNN<ENMKlasse, ENMSchueler>>>(() => {
-			const result = new ArrayList<PairNN<ENMKlasse, ENMSchueler>>();
+	const gridManager = new GridManager<string, PairNN<ENMv1Klasse, ENMv1Schueler>, List<PairNN<ENMv1Klasse, ENMv1Schueler>>>({
+		daten: computed<List<PairNN<ENMv1Klasse, ENMv1Schueler>>>(() => {
+			const result = new ArrayList<PairNN<ENMv1Klasse, ENMv1Schueler>>();
 			for (const klasse of props.auswahl()) {
 				const listSchueler = props.enmManager().mapKlassenSchueler.get(klasse.id);
 				if ((listSchueler === null)) {
 					continue;
 				}
 				for (const schueler of listSchueler) {
-					result.add(new PairNN<ENMKlasse, ENMSchueler>(klasse, schueler));
+					result.add(new PairNN<ENMv1Klasse, ENMv1Schueler>(klasse, schueler));
 				}
 			}
 			return result;
@@ -219,10 +219,10 @@
 	};
 	defineExpose({ gridManager });
 
-	function inputFehlstunden(pair: PairNN<ENMKlasse, ENMSchueler>, col: number, index: number) {
+	function inputFehlstunden(pair: PairNN<ENMv1Klasse, ENMv1Schueler>, col: number, index: number) {
 		const key = 'FS_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: number | null) => {
-			const patch = <Partial<ENMLernabschnitt>>{ fehlstundenGesamt: value };
+			const patch = <Partial<ENMv1Lernabschnitt>>{ fehlstundenGesamt: value };
 			const inputFSU = gridManager.getInputByKey('FSU_' + pair.a.id + "_" + pair.b.id);
 			if (inputFSU !== null) {
 				const inputFSUTyped = inputFSU as GridInputIntegerDiv<string>;
@@ -241,7 +241,7 @@
 		};
 	}
 
-	function inputFehlstundenUnendschuldigt(pair: PairNN<ENMKlasse, ENMSchueler>, col: number, index: number) {
+	function inputFehlstundenUnendschuldigt(pair: PairNN<ENMv1Klasse, ENMv1Schueler>, col: number, index: number) {
 		const key = 'FSU_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: number | null) => void props.patchLernabschnitt(pair.b.lernabschnitt, { fehlstundenGesamtUnentschuldigt: value });
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
@@ -252,7 +252,7 @@
 		};
 	}
 
-	function inputASV(pair: PairNN<ENMKlasse, ENMSchueler>, col: number, index: number) {
+	function inputASV(pair: PairNN<ENMv1Klasse, ENMv1Schueler>, col: number, index: number) {
 		const key = 'ASV_' + pair.a.id + "_" + pair.b.id;
 		const setter = (_value: boolean) => void props.focusFloskelEditor('ASV', pair.b, pair.a, index, true);
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
@@ -264,7 +264,7 @@
 		};
 	}
 
-	function inputAUE(pair: PairNN<ENMKlasse, ENMSchueler>, col: number, index: number) {
+	function inputAUE(pair: PairNN<ENMv1Klasse, ENMv1Schueler>, col: number, index: number) {
 		const key = 'AUE_' + pair.a.id + "_" + pair.b.id;
 		const setter = (_value: boolean) => void props.focusFloskelEditor('AUE', pair.b, pair.a, index, true);
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
@@ -276,7 +276,7 @@
 		};
 	}
 
-	function inputZB(pair: PairNN<ENMKlasse, ENMSchueler>, col: number, index: number) {
+	function inputZB(pair: PairNN<ENMv1Klasse, ENMv1Schueler>, col: number, index: number) {
 		const key = 'ZB_' + pair.a.id + "_" + pair.b.id;
 		const setter = (_value: boolean) => void props.focusFloskelEditor('ZB', pair.b, pair.a, index, true);
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {

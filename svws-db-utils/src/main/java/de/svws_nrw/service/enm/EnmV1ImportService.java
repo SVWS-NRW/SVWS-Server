@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.svws_nrw.core.data.enm.ENMDaten;
-import de.svws_nrw.core.data.enm.ENMLehrer;
-import de.svws_nrw.core.data.enm.ENMLeistung;
-import de.svws_nrw.core.data.enm.ENMSchueler;
-import de.svws_nrw.core.data.enm.ENMSchuelerAnkreuzkompetenz;
-import de.svws_nrw.core.data.enm.ENMTeilleistung;
+import de.svws_nrw.core.data.enm.v1.ENMv1Daten;
+import de.svws_nrw.core.data.enm.v1.ENMv1Lehrer;
+import de.svws_nrw.core.data.enm.v1.ENMv1Leistung;
+import de.svws_nrw.core.data.enm.v1.ENMv1Schueler;
+import de.svws_nrw.core.data.enm.v1.ENMv1SchuelerAnkreuzkompetenz;
+import de.svws_nrw.core.data.enm.v1.ENMv1Teilleistung;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
@@ -207,7 +207,7 @@ public class EnmV1ImportService {
 		private final Set<DTOSchuelerAnkreuzfloskeln> setAnkreuzkompetenzen = new HashSet<>();
 		private final Set<DTOTimestampsSchuelerAnkreuzkompetenzen> setAnkreuzkompetenzenTimestamps = new HashSet<>();
 
-		EnmKontextdaten(final ENMDaten daten) {
+		EnmKontextdaten(final ENMv1Daten daten) {
 			// Bestimme die IDs zu den Lehrer-Daten, anhand der zu importierenden Daten (vermeide doppeltes Laden aufgrund von ID-Duplikaten
 			final List<Long> idsLehrer = daten.lehrer.stream().map(s -> s.id).distinct().toList();
 
@@ -217,7 +217,7 @@ public class EnmV1ImportService {
 			final List<Long> idsSchuelerAnkreuzkompetenz = new ArrayList<>();
 			final List<Long> idsLeistungen = new ArrayList<>();
 			final List<Long> idsTeilleistungen = new ArrayList<>();
-			for (final ENMSchueler s : daten.schueler) {
+			for (final ENMv1Schueler s : daten.schueler) {
 				idsSchueler.add(s.id);
 				if (s.lernabschnitt != null) {
 					idsLernabschnitte.add(s.lernabschnitt.id);
@@ -225,9 +225,9 @@ public class EnmV1ImportService {
 				for (final var a : s.ankreuzkompetenzen) {
 					idsSchuelerAnkreuzkompetenz.add(a.id);
 				}
-				for (final ENMLeistung l : s.leistungsdaten) {
+				for (final ENMv1Leistung l : s.leistungsdaten) {
 					idsLeistungen.add(l.id);
-					for (final ENMTeilleistung tl : l.teilleistungen) {
+					for (final ENMv1Teilleistung tl : l.teilleistungen) {
 						idsTeilleistungen.add(tl.id);
 					}
 				}
@@ -252,7 +252,7 @@ public class EnmV1ImportService {
 			verify(daten);
 		}
 
-		private void verify(final ENMDaten daten) {
+		private void verify(final ENMv1Daten daten) {
 			// Prüfe, ob die Daten zu den Lehrern korrekt geladen wurden
 			if (this.mapLehrer.size() != daten.lehrer.size()) {
 				throw new ApiOperationException(Status.NOT_FOUND,
@@ -278,7 +278,7 @@ public class EnmV1ImportService {
 			}
 
 			// Prüfe, ob alle Leistungsdaten aus der Datenbank geladen wurden
-			final List<ENMLeistung> enmLeistungen = daten.schueler.stream().<ENMLeistung>mapMulti((s, consumer) -> s.leistungsdaten.forEach(consumer)).toList();
+			final List<ENMv1Leistung> enmLeistungen = daten.schueler.stream().<ENMv1Leistung>mapMulti((s, consumer) -> s.leistungsdaten.forEach(consumer)).toList();
 			if (this.mapLeistungen.size() != enmLeistungen.size()) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Nicht alle Leistungsdaten aus den ENM-Daten konnten auch in der Datenbank gefunden werden.");
 			}
@@ -301,9 +301,9 @@ public class EnmV1ImportService {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private void applyLehrerCredentials(final ENMDaten daten, final EnmKontextdaten kontext) throws ApiOperationException {
+	private void applyLehrerCredentials(final ENMv1Daten daten, final EnmKontextdaten kontext) throws ApiOperationException {
 		// Gehe die einzelnen Lehrer durch und aktualisiere ggf. die Credentials
-		for (final ENMLehrer enmLehrer : daten.lehrer) {
+		for (final ENMv1Lehrer enmLehrer : daten.lehrer) {
 			final DTOLehrer dtoLehrer = kontext.mapLehrer.get(enmLehrer.id);
 			if (dtoLehrer == null)
 				throw new ApiOperationException(Status.NOT_FOUND,
@@ -340,7 +340,7 @@ public class EnmV1ImportService {
 	}
 
 
-	private static boolean pruefeBemerkungen(final ENMSchueler enmSchueler, final DTOSchuelerLernabschnittsdaten lernabschnitt,
+	private static boolean pruefeBemerkungen(final ENMv1Schueler enmSchueler, final DTOSchuelerLernabschnittsdaten lernabschnitt,
 			final DTOTimestampsSchuelerLernabschnittsdaten lernabschnittTS, final long idNeueFachbemerkung, final EnmKontextdaten kontext) {
 		final boolean neuBemerkungen = !kontext.mapLernabschnittsbemerkungen.containsKey(enmSchueler.lernabschnitt.id);
 		final DTOSchuelerPSFachBemerkungen lernabschnittsbemerkungen = kontext.mapLernabschnittsbemerkungen.getOrDefault(enmSchueler.lernabschnitt.id,
@@ -398,8 +398,8 @@ public class EnmV1ImportService {
 	}
 
 
-	private static void pruefeAnkreuzkompetenzen(final ENMSchueler enmSchueler, final EnmKontextdaten kontext) {
-		for (final ENMSchuelerAnkreuzkompetenz enmAnkreuzkompetenz : enmSchueler.ankreuzkompetenzen) {
+	private static void pruefeAnkreuzkompetenzen(final ENMv1Schueler enmSchueler, final EnmKontextdaten kontext) {
+		for (final ENMv1SchuelerAnkreuzkompetenz enmAnkreuzkompetenz : enmSchueler.ankreuzkompetenzen) {
 			final DTOSchuelerAnkreuzfloskeln ankreuzkompetenz = kontext.mapAnkreuzkompetenzen.get(enmAnkreuzkompetenz.id);
 			final DTOTimestampsSchuelerAnkreuzkompetenzen ankreuzkompetenzTS = kontext.mapAnkreuzkompetenzenTimestamps.get(enmAnkreuzkompetenz.id);
 
@@ -420,8 +420,8 @@ public class EnmV1ImportService {
 	}
 
 
-	private static void pruefeTeilleistungen(final ENMLeistung enmLeistung, final EnmKontextdaten kontext) {
-		for (final ENMTeilleistung enmTeilleistung : enmLeistung.teilleistungen) {
+	private static void pruefeTeilleistungen(final ENMv1Leistung enmLeistung, final EnmKontextdaten kontext) {
+		for (final ENMv1Teilleistung enmTeilleistung : enmLeistung.teilleistungen) {
 			final DTOSchuelerTeilleistung teilleistung = kontext.mapTeilleistungen.get(enmTeilleistung.id);
 			final DTOTimestampsSchuelerTeilleistungen teilleistungTS = kontext.mapTeilleistungenTimestamps.get(enmTeilleistung.id);
 
@@ -449,8 +449,8 @@ public class EnmV1ImportService {
 		}
 	}
 
-	private static void pruefeLeistungsdaten(final ENMSchueler enmSchueler, final EnmKontextdaten kontext) {
-		for (final ENMLeistung enmLeistung : enmSchueler.leistungsdaten) {
+	private static void pruefeLeistungsdaten(final ENMv1Schueler enmSchueler, final EnmKontextdaten kontext) {
+		for (final ENMv1Leistung enmLeistung : enmSchueler.leistungsdaten) {
 			final DTOSchuelerLeistungsdaten leistung = kontext.mapLeistungen.get(enmLeistung.id);
 			final DTOTimestampsSchuelerLeistungsdaten leistungTS = kontext.mapLeistungenTimestamps.get(enmLeistung.id);
 
@@ -535,11 +535,11 @@ public class EnmV1ImportService {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private void applySchuelerdaten(final ENMDaten daten, final EnmKontextdaten kontext) throws ApiOperationException {
+	private void applySchuelerdaten(final ENMv1Daten daten, final EnmKontextdaten kontext) throws ApiOperationException {
 		long idNeueFachbemerkung = schuelerLernabschnittBemerkungenRepository.getNextID();
 
 		// Durchwandere die importierten ENM-Daten und gleiche diese mit den Daten in der Datenbank ab.
-		for (final ENMSchueler enmSchueler : daten.schueler) {
+		for (final ENMv1Schueler enmSchueler : daten.schueler) {
 			final DTOSchuelerLernabschnittsdaten lernabschnitt = kontext.mapLernabschnitte.get(enmSchueler.lernabschnitt.id);
 			final DTOTimestampsSchuelerLernabschnittsdaten lernabschnittTS = kontext.mapLernabschnitteTimestamps.get(enmSchueler.lernabschnitt.id);
 
@@ -564,7 +564,7 @@ public class EnmV1ImportService {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public void applyLatest(final ENMDaten daten) throws ApiOperationException {
+	public void applyLatest(final ENMv1Daten daten) throws ApiOperationException {
 		transactional(() -> {
 			final EnmKontextdaten kontext = new EnmKontextdaten(daten);
 			applyLehrerCredentials(daten, kontext);

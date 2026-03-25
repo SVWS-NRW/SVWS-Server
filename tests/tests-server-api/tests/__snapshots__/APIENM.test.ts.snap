@@ -3,7 +3,7 @@
 exports[`APIENM Tests > gegen { schema: 'GymAbi01' } > getLehrerENMDaten 1`] = `
 {
   "aktuellerAbschnitt": 2,
-  "ankreuzkompetenzen": ENMAnkreuzkompetenzenKatalog {
+  "ankreuzkompetenzen": ENMv1AnkreuzkompetenzenKatalog {
     "kompetenzen": ArrayList {
       "addFirst": [Function],
       "addLast": [Function],

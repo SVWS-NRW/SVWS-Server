@@ -1,6 +1,6 @@
 import { ArrayList } from "@core";
 import { ENMConfigSpalte } from "../../../../../core/src/core/data/enm/ENMConfigSpalte";
-import type { ENMTeilleistungsart } from "../../../../../core/src/core/data/enm/ENMTeilleistungsart";
+import type { ENMv1Teilleistungsart } from "../../../../../core/src/core/data/enm/v1/ENMv1Teilleistungsart";
 import type { Collection } from "../../../../../core/src/java/util/Collection";
 import { HashMap } from "../../../../../core/src/java/util/HashMap";
 import type { JavaMap } from "../../../../../core/src/java/util/JavaMap";
@@ -12,7 +12,7 @@ import type { List } from "../../../../../core/src/java/util/List";
 export class NotenmodulConfigManagerSichtbareSpalten {
 
 	/** Eine Map für den Zugriff auf die Teilleistungsarten */
-	private readonly mapTeilleistungsarten: JavaMap<number, ENMTeilleistungsart>;
+	private readonly mapTeilleistungsarten: JavaMap<number, ENMv1Teilleistungsart>;
 
 	/** Ein Array mit den Namen aller ausblendbaren Spalten in den Ansichten des Notenmoduls */
 	private readonly spaltenAusblendbar = ["Kurs", "Kursart", "Lehrer", "Teilnoten", "Quartal", "Note", "Mahnung", "Fehlstunden", "FB", "ASV", "AUE", "ZB"];
@@ -47,7 +47,7 @@ export class NotenmodulConfigManagerSichtbareSpalten {
 	 * @param mapTeilleistungsarten   die Map mit den Teilleistungsarten
 	 * @param writeConfig             eine Callback-Methode zur Reaktion, wenn die Konfiguration angepasst wurde
 	 */
-	constructor(list: List<ENMConfigSpalte>, mapTeilleistungsarten: JavaMap<number, ENMTeilleistungsart>, writeConfig: () => Promise<void>) {
+	constructor(list: List<ENMConfigSpalte>, mapTeilleistungsarten: JavaMap<number, ENMv1Teilleistungsart>, writeConfig: () => Promise<void>) {
 		this.mapTeilleistungsarten = mapTeilleistungsarten;
 		this.mapConfigSpalte = new HashMap<number | string, ENMConfigSpalte>();
 		this.mapConfigSpalteByName = new HashMap<string, ENMConfigSpalte>();

@@ -1,12 +1,13 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeLeistungen } from "~/router/apps/RouteLeistungen";
 import { api } from "~/router/Api";
-import type { ENMLeistung } from "@core/core/data/enm/ENMLeistung";
-import type { ENMLeistungBemerkungen } from "@core/core/data/enm/ENMLeistungBemerkungen";
-import type { ENMLernabschnitt } from "@core/core/data/enm/ENMLernabschnitt";
-import type { ENMTeilleistung } from "@core/core/data/enm/ENMTeilleistung";
-import type { ENMKlasse } from "@core/core/data/enm/ENMKlasse";
-import type { ENMDaten } from "@core/core/data/enm/ENMDaten";
+import type { ENMv1Leistung } from "@core/core/data/enm/v1/ENMv1Leistung";
+import type { ENMv1LeistungBemerkungen } from "@core/core/data/enm/v1/ENMv1LeistungBemerkungen";
+import type { ENMv1Lernabschnitt } from "@core/core/data/enm/v1/ENMv1Lernabschnitt";
+import type { ENMv1SchuelerAnkreuzkompetenz } from "@core/core/data/enm/v1/ENMv1SchuelerAnkreuzkompetenz";
+import type { ENMv1Teilleistung } from "@core/core/data/enm/v1/ENMv1Teilleistung";
+import type { ENMv1Klasse } from "@core/core/data/enm/v1/ENMv1Klasse";
+import type { ENMv1Daten } from "@core/core/data/enm/v1/ENMv1Daten";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { EnmManager } from "@ui/components/enm/EnmManager";
@@ -15,7 +16,6 @@ import { shallowRef } from "vue";
 import { Config, ConfigElement } from "@ui/utils/Config";
 import { EnmSperrManager } from "@ui/components/enm/EnmSperrManager";
 import { EnmSpaltenManager } from "@ui/components/enm/EnmSpaltenManager";
-import type { ENMSchuelerAnkreuzkompetenz } from "@core/core/data/enm/ENMSchuelerAnkreuzkompetenz";
 
 
 /**
@@ -24,7 +24,7 @@ import type { ENMSchuelerAnkreuzkompetenz } from "@core/core/data/enm/ENMSchuele
 interface RouteStateApp extends RouteStateInterface {
 
 	// Die ENM-Daten, welche für den angemeldeten Lehrer-Benutzer über die API geladen werden
-	daten: ENMDaten | null;
+	daten: ENMv1Daten | null;
 
 	// Der Manager für die ENM-Daten, welche für den angemeldeten Lehrer-Benutzer über die API geladen werden
 	manager: EnmManager | null;
@@ -53,10 +53,10 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	protected _auswahlLerngruppe = shallowRef<EnmLerngruppenAuswahlEintrag | null>(null);
 
 	// Die aktuell ausgewählten Klassen bei der Ansicht für die Klassenleitung (bei Mehrfachauswahl)
-	protected _auswahlKlassen = shallowRef<Array<ENMKlasse>>([]);
+	protected _auswahlKlassen = shallowRef<Array<ENMv1Klasse>>([]);
 
 	// Die aktuell ausgewählte Klasse bei der Ansicht für die Klassenleitung (bei Einzelauswahl)
-	protected _auswahlKlasse = shallowRef<ENMKlasse | null>(null);
+	protected _auswahlKlasse = shallowRef<ENMv1Klasse | null>(null);
 
 	/**
 	 * Erstellt die neue Data Klasse für den Zustand der Applikation.
@@ -171,7 +171,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 *
 	 * @returns die ENM-Daten
 	 */
-	get daten(): ENMDaten {
+	get daten(): ENMv1Daten {
 		if (this._state.value.daten === null) {
 			throw new DeveloperNotificationException("Es wurden noch keine ENM-Daten geladen - Ein Zugriff auf diese Methode darf daher zu diesem Zeitpunkt nicht erfolgen");
 		}
@@ -357,7 +357,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 *
 	 * @returns die Klassen-Auswahl
 	 */
-	get auswahlKlasse(): ENMKlasse | null {
+	get auswahlKlasse(): ENMv1Klasse | null {
 		return this._auswahlKlasse.value;
 	}
 
@@ -367,7 +367,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 *
 	 * @returns die Klassen-Auswahl
 	 */
-	get auswahlKlassen(): Array<ENMKlasse> {
+	get auswahlKlassen(): Array<ENMv1Klasse> {
 		if (this._auswahlKlasse.value === null) {
 			return this._auswahlKlassen.value;
 		}
@@ -379,7 +379,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 *
 	 * @returns die Klassen-Auswahl
 	 */
-	get auswahlKlassenNurMehrfachauswahl(): Array<ENMKlasse> {
+	get auswahlKlassenNurMehrfachauswahl(): Array<ENMv1Klasse> {
 		return this._auswahlKlassen.value;
 	}
 
@@ -388,7 +388,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 *
 	 * @param value   die neue Auswahl
 	 */
-	public setAuswahlKlasse = (value: ENMKlasse | null) => {
+	public setAuswahlKlasse = (value: ENMv1Klasse | null) => {
 		this._auswahlKlasse.value = value;
 	};
 
@@ -397,7 +397,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 *
 	 * @param value   die neue Auswahl
 	 */
-	public setAuswahlKlassen = (value: Array<ENMKlasse>) => {
+	public setAuswahlKlassen = (value: Array<ENMv1Klasse>) => {
 		this._auswahlKlassen.value = value;
 	};
 
@@ -408,7 +408,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @param data    die ursprünglichen Daten
 	 * @param patch   die Daten des Patches
 	 */
-	public patchLeistung = async (data: ENMLeistung, patch: Partial<ENMLeistung>): Promise<void> => {
+	public patchLeistung = async (data: ENMv1Leistung, patch: Partial<ENMv1Leistung>): Promise<void> => {
 		patch.id = data.id;
 		await api.server.patchENMLeistung(patch);
 		Object.assign(data, patch);
@@ -421,7 +421,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @param data    die ursprünglichen Daten
 	 * @param patch   die Daten des Patches
 	 */
-	public patchTeilleistung = async (data: ENMTeilleistung, patch: Partial<ENMTeilleistung>): Promise<void> => {
+	public patchTeilleistung = async (data: ENMv1Teilleistung, patch: Partial<ENMv1Teilleistung>): Promise<void> => {
 		patch.id = data.id;
 		await api.server.patchENMTeilleistung(patch);
 		Object.assign(data, patch);
@@ -435,7 +435,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @param data    die ursprünglichen Daten
 	 * @param patch   die Daten des Patches
 	 */
-	public patchBemerkungen = async (id: number, data: ENMLeistungBemerkungen, patch: Partial<ENMLeistungBemerkungen>): Promise<void> => {
+	public patchBemerkungen = async (id: number, data: ENMv1LeistungBemerkungen, patch: Partial<ENMv1LeistungBemerkungen>): Promise<void> => {
 		await api.server.patchENMSchuelerBemerkungen(id, patch);
 		Object.assign(data, patch);
 		this.commit();
@@ -447,7 +447,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @param data    die ursprünglichen Daten
 	 * @param patch   die Daten des Patches
 	 */
-	public patchLernabschnitt = async (data: ENMLernabschnitt, patch: Partial<ENMLernabschnitt>): Promise<void> => {
+	public patchLernabschnitt = async (data: ENMv1Lernabschnitt, patch: Partial<ENMv1Lernabschnitt>): Promise<void> => {
 		patch.id = data.id;
 		await api.server.patchENMSchuelerLernabschnitt(patch);
 		Object.assign(data, patch);
@@ -460,7 +460,7 @@ export class RouteDataApp extends RouteData<RouteStateApp> {
 	 * @param data    die ursprünglichen Daten
 	 * @param patch   der Patch für die Ankreuzkompetenzen
 	 */
-	public patchAnkreuzkompetenz = async (data: ENMSchuelerAnkreuzkompetenz, patch: Partial<ENMSchuelerAnkreuzkompetenz>): Promise<void> => {
+	public patchAnkreuzkompetenz = async (data: ENMv1SchuelerAnkreuzkompetenz, patch: Partial<ENMv1SchuelerAnkreuzkompetenz>): Promise<void> => {
 		patch.id = data.id;
 		console.log(patch, 'für ID', data.id);
 		await api.server.patchENMSchuelerAnkreuzkompetenzen(patch);

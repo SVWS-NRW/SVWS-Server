@@ -1,7 +1,7 @@
 package de.svws_nrw.controller.enm;
 
 import de.svws_nrw.base.compression.CompressionException;
-import de.svws_nrw.core.data.enm.ENMDaten;
+import de.svws_nrw.core.data.enm.v1.ENMv1Daten;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.Responses;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -35,14 +35,14 @@ public final class EnmV1ControllerImpl implements EnmV1Controller {
 
 	@Override
 	public Response get(final Long id) {
-		final ENMDaten daten = getService.get(id);
+		final ENMv1Daten daten = getService.get(id);
 		return Responses.ok(daten);
 	}
 
 	@Override
 	public Response getGZip(final Long id) {
 		try {
-			final ENMDaten daten = getService.get(id);
+			final ENMv1Daten daten = getService.get(id);
 			final byte[] encoded = JSONMapper.gzipByteArrayFromObject(daten);
 			return Responses.okFile(encoded, "enm.json.gz");
 		} catch (final CompressionException ce) {
@@ -51,7 +51,7 @@ public final class EnmV1ControllerImpl implements EnmV1Controller {
 	}
 
 	@Override
-	public Response applyLatest(final ENMDaten daten) {
+	public Response applyLatest(final ENMv1Daten daten) {
 		this.importService.applyLatest(daten);
 		return Responses.noContent();
 	}
@@ -59,7 +59,7 @@ public final class EnmV1ControllerImpl implements EnmV1Controller {
 	@Override
 	public Response applyLatestGZip(final byte[] daten) {
 		try {
-			this.importService.applyLatest(JSONMapper.toObjectGZip(daten, ENMDaten.class));
+			this.importService.applyLatest(JSONMapper.toObjectGZip(daten, ENMv1Daten.class));
 			return Responses.noContent();
 		} catch (final CompressionException e) {
 			throw new ApiOperationException(Status.BAD_REQUEST, e, "Die ENM-Daten konnten nicht mit GZip entpackt werden.");

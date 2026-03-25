@@ -10,16 +10,16 @@ import de.svws_nrw.controller.enm.NotenmodulControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.benutzer.BenutzerConfigElement;
 import de.svws_nrw.core.data.enm.ENMConfigResponse;
-import de.svws_nrw.core.data.enm.ENMDaten;
 import de.svws_nrw.core.data.enm.ENMLehrerInitialKennwort;
-import de.svws_nrw.core.data.enm.ENMLeistung;
-import de.svws_nrw.core.data.enm.ENMLeistungBemerkungen;
-import de.svws_nrw.core.data.enm.ENMLernabschnitt;
-import de.svws_nrw.core.data.enm.ENMSchuelerAnkreuzkompetenz;
 import de.svws_nrw.core.data.enm.ENMServerConfig;
 import de.svws_nrw.core.data.enm.ENMServerConfigElement;
 import de.svws_nrw.core.data.enm.ENMServerConnection;
-import de.svws_nrw.core.data.enm.ENMTeilleistung;
+import de.svws_nrw.core.data.enm.v1.ENMv1Daten;
+import de.svws_nrw.core.data.enm.v1.ENMv1Leistung;
+import de.svws_nrw.core.data.enm.v1.ENMv1LeistungBemerkungen;
+import de.svws_nrw.core.data.enm.v1.ENMv1Lernabschnitt;
+import de.svws_nrw.core.data.enm.v1.ENMv1SchuelerAnkreuzkompetenz;
+import de.svws_nrw.core.data.enm.v1.ENMv1Teilleistung;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.service.enm.NotenmodulLocalAnkreuzkompetenzPatchRequest;
@@ -81,14 +81,14 @@ public class APIENM {
 	 * @return die leeren ENM-Daten
 	 */
 	@GET
-	@Path("/empty")
+	@Path("/v1/empty")
 	@Operation(summary = "Liefert leere Daten des Externen Notenmoduls (ENM).",
 			description = "Liefert leere Daten des Externen Notenmoduls (ENM).")
 	@ApiResponse(responseCode = "200", description = "Die Daten des Externen Notenmoduls (ENM)",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMDaten.class)))
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMv1Daten.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um auf die API zuzugreifen.")
 	public Response getENMDatenLeer(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new ENMDaten()).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new ENMv1Daten()).build();
 	}
 
 
@@ -104,12 +104,12 @@ public class APIENM {
 	 */
 	@GET
 	@GZIP
-	@Path("/alle")
+	@Path("/v1/alle")
 	@Operation(summary = "Liefert die Daten des Externen Notenmoduls (ENM).",
 			description = "Liest die Daten des Externen Notenmoduls (ENM) aus der Datenbank "
 					+ "und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Daten des Externen Notenmoduls (ENM)",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMDaten.class)))
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMv1Daten.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für das Erstellen der ENM-Daten gefunden.")
 	public Response getENMDaten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -130,7 +130,7 @@ public class APIENM {
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	@Path("/alle/gzip")
+	@Path("/v1/alle/gzip")
 	@Operation(summary = "Liefert die Daten des Externen Notenmoduls (ENM) GZip-komprimiert.",
 			description = "Liest die Daten des Externen Notenmoduls (ENM) aus der Datenbank "
 					+ "und liefert diese GZip-komprimiert zurück. Dabei wird geprüft, ob der SVWS-Benutzer die "
@@ -146,7 +146,6 @@ public class APIENM {
 	}
 
 
-
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Daten für das Externe Datenmodul (ENM) in Bezug auf einen Lehrer.
 	 *
@@ -158,12 +157,12 @@ public class APIENM {
 	 */
 	@GET
 	@GZIP
-	@Path("/lehrer/{id : \\d+}")
+	@Path("/v1/lehrer/{id : \\d+}")
 	@Operation(summary = "Liefert zu der ID des Lehrer die zugehörigen Daten des Externen Notenmoduls (ENM).",
 			description = "Liest die Daten des Externen Notenmoduls (ENM) des Lehrers zu der angegebenen ID aus der Datenbank "
 					+ "und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die Daten des Externen Notenmoduls (ENM) des Lehrers",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMDaten.class)))
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMv1Daten.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
 	public Response getLehrerENMDaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
@@ -171,6 +170,66 @@ public class APIENM {
 		return EnmV1ControllerFactory.withReadAccess(request)
 				.getEnmV1Controller()
 				.get(id);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode zum Importieren von ENM-Daten in die SVWS-Datenbank. Dabei wird die
+	 * Aktualität der zu importierenden Daten anhand der Zeitstempel in den ENM-Daten geprüft.
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param enmDaten   die ENM-Daten
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Reponse
+	 */
+	@POST
+	@Path("/v1/import")
+	@Operation(summary = "Importiert die übergebenen ENM-Daten.",
+			description = "Importiert die übergebenen ENM-Daten. Dabei wird die Aktualität der zu importierenden Daten anhand "
+					+ "der Zeitstempel in den ENM-Daten geprüft.")
+	@ApiResponse(responseCode = "204", description = "Die ENM-Daten wurden erfolgreich importiert.")
+	@ApiResponse(responseCode = "400", description = "Die ENM-Daten sind nicht korrekt.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte zum importieren.")
+	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für den Abgleich in der DB gefunden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response importENMDaten(@PathParam("schema") final String schema, @RequestBody(description = "Die ENM-Daten", required = true,
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMv1Daten.class))) final ENMv1Daten enmDaten,
+			@Context final HttpServletRequest request) {
+		return EnmV1ControllerFactory.withWriteAccess(request)
+				.getEnmV1Controller()
+				.applyLatest(enmDaten);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode zum Importieren von ENM-Daten in die SVWS-Datenbank. Dabei wird die
+	 * Aktualität der zu importierenden Daten anhand der Zeitstempel in den ENM-Daten geprüft.
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param multipart  enthält die ENM-Daten
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Reponse
+	 */
+	@POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Path("/v1/import/gzip")
+	@Operation(summary = "Importiert die übergebenen ENM-Daten.",
+			description = "Importiert die übergebenen ENM-Daten. Dabei wird die Aktualität der zu importierenden Daten anhand der Zeitstempel in den ENM-Daten "
+					+ "geprüft.")
+	@ApiResponse(responseCode = "204", description = "Die ENM-Daten wurden erfolgreich importiert.")
+	@ApiResponse(responseCode = "400", description = "Die ENM-Daten sind nicht korrekt.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte zum importieren.")
+	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für den Abgleich in der DB gefunden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response importENMDatenGZip(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die ENM-Daten", required = true,
+					content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
+			@Context final HttpServletRequest request) {
+		return EnmV1ControllerFactory.withWriteAccess(request)
+				.getEnmV1Controller()
+				.applyLatestGZip(multipart.data);
 	}
 
 
@@ -196,7 +255,7 @@ public class APIENM {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchENMLeistung(@PathParam("schema") final String schema,
 			@Valid @RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = ENMLeistung.class))) final NotenmodulLocalLeistungPatchRequest patch,
+					schema = @Schema(implementation = ENMv1Leistung.class))) final NotenmodulLocalLeistungPatchRequest patch,
 			@Context final HttpServletRequest request) {
 		return NotenmodulControllerFactory.withWriteAccess(request)
 				.getNotenmodulLocalController()
@@ -226,7 +285,7 @@ public class APIENM {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchENMTeilleistung(@PathParam("schema") final String schema,
 			@Valid @RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = ENMTeilleistung.class))) final NotenmodulLocalTeilleistungPatchRequest patch,
+					schema = @Schema(implementation = ENMv1Teilleistung.class))) final NotenmodulLocalTeilleistungPatchRequest patch,
 			@Context final HttpServletRequest request) {
 		return NotenmodulControllerFactory.withWriteAccess(request)
 				.getNotenmodulLocalController()
@@ -257,7 +316,7 @@ public class APIENM {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchENMSchuelerBemerkungen(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Valid @RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = ENMLeistungBemerkungen.class))) final NotenmodulLocalLeistungBemerkungenPatchRequest patch,
+					schema = @Schema(implementation = ENMv1LeistungBemerkungen.class))) final NotenmodulLocalLeistungBemerkungenPatchRequest patch,
 			@Context final HttpServletRequest request) {
 		return NotenmodulControllerFactory.withWriteAccess(request)
 				.getNotenmodulLocalController()
@@ -287,7 +346,7 @@ public class APIENM {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchENMSchuelerLernabschnitt(@PathParam("schema") final String schema,
 			@Valid @RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = ENMLernabschnitt.class))) final NotenmodulLocalLernabschnittPatchRequest patch,
+					schema = @Schema(implementation = ENMv1Lernabschnitt.class))) final NotenmodulLocalLernabschnittPatchRequest patch,
 			@Context final HttpServletRequest request) {
 		return NotenmodulControllerFactory.withWriteAccess(request)
 				.getNotenmodulLocalController()
@@ -317,7 +376,7 @@ public class APIENM {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchENMSchuelerAnkreuzkompetenz(@PathParam("schema") final String schema,
 			@Valid @RequestBody(description = "Der Patch", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-					schema = @Schema(implementation = ENMSchuelerAnkreuzkompetenz.class))) final NotenmodulLocalAnkreuzkompetenzPatchRequest patch,
+					schema = @Schema(implementation = ENMv1SchuelerAnkreuzkompetenz.class))) final NotenmodulLocalAnkreuzkompetenzPatchRequest patch,
 			@Context final HttpServletRequest request) {
 		return NotenmodulControllerFactory.withWriteAccess(request)
 				.getNotenmodulLocalController()
@@ -503,66 +562,6 @@ public class APIENM {
 		return NotenmodulControllerFactory.withAdminAccessOrSelf(request, id)
 				.getNotenmodulCredentialsController()
 				.setPassword(id, password);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode zum Importieren von ENM-Daten in die SVWS-Datenbank. Dabei wird die
-	 * Aktualität der zu importierenden Daten anhand der Zeitstempel in den ENM-Daten geprüft.
-	 *
-	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param enmDaten   die ENM-Daten
-	 * @param request    die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Reponse
-	 */
-	@POST
-	@Path("/import")
-	@Operation(summary = "Importiert die übergebenen ENM-Daten.",
-			description = "Importiert die übergebenen ENM-Daten. Dabei wird die Aktualität der zu importierenden Daten anhand "
-					+ "der Zeitstempel in den ENM-Daten geprüft.")
-	@ApiResponse(responseCode = "204", description = "Die ENM-Daten wurden erfolgreich importiert.")
-	@ApiResponse(responseCode = "400", description = "Die ENM-Daten sind nicht korrekt.")
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte zum importieren.")
-	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für den Abgleich in der DB gefunden.")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response importENMDaten(@PathParam("schema") final String schema, @RequestBody(description = "Die ENM-Daten", required = true,
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMDaten.class))) final ENMDaten enmDaten,
-			@Context final HttpServletRequest request) {
-		return EnmV1ControllerFactory.withWriteAccess(request)
-				.getEnmV1Controller()
-				.applyLatest(enmDaten);
-	}
-
-
-	/**
-	 * Die OpenAPI-Methode zum Importieren von ENM-Daten in die SVWS-Datenbank. Dabei wird die
-	 * Aktualität der zu importierenden Daten anhand der Zeitstempel in den ENM-Daten geprüft.
-	 *
-	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param multipart  enthält die ENM-Daten
-	 * @param request    die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die HTTP-Reponse
-	 */
-	@POST
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	@Path("/import/gzip")
-	@Operation(summary = "Importiert die übergebenen ENM-Daten.",
-			description = "Importiert die übergebenen ENM-Daten. Dabei wird die Aktualität der zu importierenden Daten anhand der Zeitstempel in den ENM-Daten "
-					+ "geprüft.")
-	@ApiResponse(responseCode = "204", description = "Die ENM-Daten wurden erfolgreich importiert.")
-	@ApiResponse(responseCode = "400", description = "Die ENM-Daten sind nicht korrekt.")
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte zum importieren.")
-	@ApiResponse(responseCode = "404", description = "Es wurden nicht alle benötigten Daten für den Abgleich in der DB gefunden.")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response importENMDatenGZip(@PathParam("schema") final String schema,
-			@RequestBody(description = "Die ENM-Daten", required = true,
-					content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
-			@Context final HttpServletRequest request) {
-		return EnmV1ControllerFactory.withWriteAccess(request)
-				.getEnmV1Controller()
-				.applyLatestGZip(multipart.data);
 	}
 
 

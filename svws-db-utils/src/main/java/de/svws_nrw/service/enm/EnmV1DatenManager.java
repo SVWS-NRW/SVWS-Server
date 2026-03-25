@@ -10,60 +10,60 @@ import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.schule.Foerderschwerpunkt;
 import de.svws_nrw.asd.types.schule.Schulform;
-import de.svws_nrw.core.data.enm.ENMAnkreuzkompetenz;
-import de.svws_nrw.core.data.enm.ENMDaten;
-import de.svws_nrw.core.data.enm.ENMFach;
-import de.svws_nrw.core.data.enm.ENMFoerderschwerpunkt;
-import de.svws_nrw.core.data.enm.ENMJahrgang;
-import de.svws_nrw.core.data.enm.ENMKlasse;
-import de.svws_nrw.core.data.enm.ENMLehrer;
-import de.svws_nrw.core.data.enm.ENMLeistung;
-import de.svws_nrw.core.data.enm.ENMLerngruppe;
-import de.svws_nrw.core.data.enm.ENMNote;
-import de.svws_nrw.core.data.enm.ENMSchueler;
-import de.svws_nrw.core.data.enm.ENMSchuelerAnkreuzkompetenz;
-import de.svws_nrw.core.data.enm.ENMTeilleistung;
-import de.svws_nrw.core.data.enm.ENMTeilleistungsart;
+import de.svws_nrw.core.data.enm.v1.ENMv1Ankreuzkompetenz;
+import de.svws_nrw.core.data.enm.v1.ENMv1Daten;
+import de.svws_nrw.core.data.enm.v1.ENMv1Fach;
+import de.svws_nrw.core.data.enm.v1.ENMv1Foerderschwerpunkt;
+import de.svws_nrw.core.data.enm.v1.ENMv1Jahrgang;
+import de.svws_nrw.core.data.enm.v1.ENMv1Klasse;
+import de.svws_nrw.core.data.enm.v1.ENMv1Lehrer;
+import de.svws_nrw.core.data.enm.v1.ENMv1Leistung;
+import de.svws_nrw.core.data.enm.v1.ENMv1Lerngruppe;
+import de.svws_nrw.core.data.enm.v1.ENMv1Note;
+import de.svws_nrw.core.data.enm.v1.ENMv1Schueler;
+import de.svws_nrw.core.data.enm.v1.ENMv1SchuelerAnkreuzkompetenz;
+import de.svws_nrw.core.data.enm.v1.ENMv1Teilleistung;
+import de.svws_nrw.core.data.enm.v1.ENMv1Teilleistungsart;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese Klasse dien dem Verwalten von ENM-Daten (siehe auch {@link ENMDaten}).
+ * Diese Klasse dien dem Verwalten von ENM-Daten (siehe auch {@link ENMv1Daten}).
  */
 public class EnmV1DatenManager {
 
 	/** Die ENM-Daten, die von diesem Daten-Manager verwaltet werden. */
-	public final @NotNull ENMDaten daten;
+	public final @NotNull ENMv1Daten daten;
 
 
 	/** Temporäre Map für das Befüllen der ENMLehrer-Vektors.*/
-	private final @NotNull Map<Long, ENMLehrer> mapLehrer = new HashMap<>();
+	private final @NotNull Map<Long, ENMv1Lehrer> mapLehrer = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMSchueler-Vektors.*/
-	private final @NotNull Map<Long, ENMSchueler> mapSchueler = new HashMap<>();
+	private final @NotNull Map<Long, ENMv1Schueler> mapSchueler = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMFach-Vektors.*/
-	private final @NotNull Map<Long, ENMFach> mapFaecher = new HashMap<>();
+	private final @NotNull Map<Long, ENMv1Fach> mapFaecher = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMFach-Vektors.*/
-	private final @NotNull Map<String, ENMFach> mapFaecherByKuerzel = new HashMap<>();
+	private final @NotNull Map<String, ENMv1Fach> mapFaecherByKuerzel = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMJahrgang-Vektors.*/
-	private final @NotNull Map<Long, ENMJahrgang> mapJahrgaenge = new HashMap<>();
+	private final @NotNull Map<Long, ENMv1Jahrgang> mapJahrgaenge = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMKlasse-Vektors.*/
-	private final @NotNull Map<Long, ENMKlasse> mapKlassen = new HashMap<>();
+	private final @NotNull Map<Long, ENMv1Klasse> mapKlassen = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMTeilleistungsarten-Vektors.*/
-	private final @NotNull Map<Long, ENMTeilleistungsart> mapTeilleistungsarten = new HashMap<>();
+	private final @NotNull Map<Long, ENMv1Teilleistungsart> mapTeilleistungsarten = new HashMap<>();
 
 	/** Temporäre Map für das Befüllen des ENMAnkreuzkompetenz-Vektors.*/
-	private final @NotNull Map<Long, ENMAnkreuzkompetenz> mapAnkreuzkompetenzen = new HashMap<>();
+	private final @NotNull Map<Long, ENMv1Ankreuzkompetenz> mapAnkreuzkompetenzen = new HashMap<>();
 
 	/** Zählt die Id der Lerngruppe hoch. */
 	private long lerngruppenIDZaehler = 1;
 
 	/** Temporäre Map für die Lerngruppen. */
-	private final @NotNull Map<String, ENMLerngruppe> mapLerngruppen = new HashMap<>();
+	private final @NotNull Map<String, ENMv1Lerngruppe> mapLerngruppen = new HashMap<>();
 
 
 	/**
@@ -72,7 +72,7 @@ public class EnmV1DatenManager {
 	 * @param lehrerID   die ID des Lehrers für welchen die ENM-Daten erzeugt werden oder null für alle Lehrer
 	 */
 	public EnmV1DatenManager(final Long lehrerID) {
-		this.daten = new ENMDaten();
+		this.daten = new ENMv1Daten();
 		this.daten.lehrerID = lehrerID;
 	}
 
@@ -146,7 +146,7 @@ public class EnmV1DatenManager {
 			final NoteKatalogEintrag nke = note.daten(schuljahr);
 			if ((nke == null) || (nke.id < 0))
 				continue;
-			final @NotNull ENMNote enmNote = new ENMNote();
+			final @NotNull ENMv1Note enmNote = new ENMv1Note();
 			enmNote.id = (int) nke.id;
 			enmNote.kuerzel = nke.kuerzel;
 			enmNote.notenpunkte = nke.notenpunkte;
@@ -172,7 +172,7 @@ public class EnmV1DatenManager {
 			final FoerderschwerpunktKatalogEintrag fske = foerderschwerpunkt.daten(schuljahr);
 			if (fske == null)
 				continue;
-			final ENMFoerderschwerpunkt enmFoerderschwerpunkt = new ENMFoerderschwerpunkt();
+			final ENMv1Foerderschwerpunkt enmFoerderschwerpunkt = new ENMv1Foerderschwerpunkt();
 			enmFoerderschwerpunkt.id = fske.id;
 			enmFoerderschwerpunkt.kuerzel = fske.kuerzel;
 			enmFoerderschwerpunkt.beschreibung = fske.text;
@@ -199,7 +199,7 @@ public class EnmV1DatenManager {
 			final String eMailDienstlich, final @NotNull String passwordHash, final String tsPasswordHash) {
 		if (mapLehrer.get(id) != null)
 			return false;
-		final @NotNull ENMLehrer enmLehrer = new ENMLehrer();
+		final @NotNull ENMv1Lehrer enmLehrer = new ENMv1Lehrer();
 		enmLehrer.id = id;
 		enmLehrer.kuerzel = kuerzel;
 		enmLehrer.nachname = nachname;
@@ -236,7 +236,7 @@ public class EnmV1DatenManager {
 			final String bilingualeSprache, final boolean istZieldifferent, final boolean istDaZFoerderung) {
 		if (mapSchueler.get(id) != null)
 			return false;
-		final @NotNull ENMSchueler enmSchueler = new ENMSchueler();
+		final @NotNull ENMv1Schueler enmSchueler = new ENMv1Schueler();
 		enmSchueler.id = id;
 		enmSchueler.jahrgangID = jahrgangID;
 		enmSchueler.klasseID = klasseID;
@@ -267,7 +267,7 @@ public class EnmV1DatenManager {
 			final boolean istFremdsprache) {
 		if (mapFaecher.get(id) != null)
 			return false;
-		final @NotNull ENMFach enmFach = new ENMFach();
+		final @NotNull ENMv1Fach enmFach = new ENMv1Fach();
 		enmFach.id = id;
 		enmFach.kuerzel = kuerzel;
 		enmFach.kuerzelAnzeige = kuerzelAnzeige;
@@ -296,7 +296,7 @@ public class EnmV1DatenManager {
 			final int sortierung) {
 		if (mapJahrgaenge.get(id) != null)
 			return false;
-		final @NotNull ENMJahrgang enmJahrgang = new ENMJahrgang();
+		final @NotNull ENMv1Jahrgang enmJahrgang = new ENMv1Jahrgang();
 		enmJahrgang.id = id;
 		enmJahrgang.kuerzel = kuerzel;
 		enmJahrgang.kuerzelAnzeige = kuerzelAnzeige;
@@ -323,7 +323,7 @@ public class EnmV1DatenManager {
 	public boolean addKlasse(final long id, final String kuerzel, final String kuerzelAnzeige, final Long idJahrgang, final int sortierung) {
 		if (mapKlassen.get(id) != null)
 			return false;
-		final @NotNull ENMKlasse enmKlasse = new ENMKlasse();
+		final @NotNull ENMv1Klasse enmKlasse = new ENMv1Klasse();
 		enmKlasse.id = id;
 		enmKlasse.kuerzel = kuerzel;
 		enmKlasse.kuerzelAnzeige = kuerzelAnzeige;
@@ -348,7 +348,7 @@ public class EnmV1DatenManager {
 	public boolean addTeilleistungsart(final long id, final String bezeichnung, final int sortierung, final double gewichtung) {
 		if (mapTeilleistungsarten.get(id) != null)
 			return false;
-		final @NotNull ENMTeilleistungsart enmArt = new ENMTeilleistungsart();
+		final @NotNull ENMv1Teilleistungsart enmArt = new ENMv1Teilleistungsart();
 		enmArt.id = id;
 		enmArt.bezeichnung = bezeichnung;
 		enmArt.sortierung = sortierung;
@@ -375,7 +375,7 @@ public class EnmV1DatenManager {
 			final @NotNull String text, final int sortierung) {
 		if (mapAnkreuzkompetenzen.get(id) != null)
 			return false;
-		final @NotNull ENMAnkreuzkompetenz kompetenz = new ENMAnkreuzkompetenz();
+		final @NotNull ENMv1Ankreuzkompetenz kompetenz = new ENMv1Ankreuzkompetenz();
 		kompetenz.id = id;
 		kompetenz.istFachkompetenz = istFachkompetenz;
 		kompetenz.fachID = fachID;
@@ -397,7 +397,7 @@ public class EnmV1DatenManager {
 	 *
 	 * @return das ENM-Lehrer-Objekt
 	 */
-	public ENMLehrer getLehrer(final long id) {
+	public ENMv1Lehrer getLehrer(final long id) {
 		return mapLehrer.get(id);
 	}
 
@@ -411,7 +411,7 @@ public class EnmV1DatenManager {
 	 *
 	 * @return das ENM-Schüler-Objekt
 	 */
-	public ENMSchueler getSchueler(final long id) {
+	public ENMv1Schueler getSchueler(final long id) {
 		return mapSchueler.get(id);
 	}
 
@@ -425,7 +425,7 @@ public class EnmV1DatenManager {
 	 *
 	 * @return das ENM-Fächer-Objekt
 	 */
-	public ENMFach getFach(final long id) {
+	public ENMv1Fach getFach(final long id) {
 		return mapFaecher.get(id);
 	}
 
@@ -439,7 +439,7 @@ public class EnmV1DatenManager {
 	 *
 	 * @return das ENM-Fächer-Objekt
 	 */
-	public ENMFach getFachByKuerzel(final @NotNull String kuerzel) {
+	public ENMv1Fach getFachByKuerzel(final @NotNull String kuerzel) {
 		return mapFaecherByKuerzel.get(kuerzel);
 	}
 
@@ -453,7 +453,7 @@ public class EnmV1DatenManager {
 	 *
 	 * @return das ENM-Jahrgänge-Objekt
 	 */
-	public ENMJahrgang getJahrgang(final long id) {
+	public ENMv1Jahrgang getJahrgang(final long id) {
 		return mapJahrgaenge.get(id);
 	}
 
@@ -467,7 +467,7 @@ public class EnmV1DatenManager {
 	 *
 	 * @return das ENM-Klassen-Objekt
 	 */
-	public ENMKlasse getKlasse(final long id) {
+	public ENMv1Klasse getKlasse(final long id) {
 		return mapKlassen.get(id);
 	}
 
@@ -480,7 +480,7 @@ public class EnmV1DatenManager {
 	 *
 	 * @return das ENM-Teilleistungsart-Objekt
 	 */
-	public ENMTeilleistungsart getTeilleistungsart(final long id) {
+	public ENMv1Teilleistungsart getTeilleistungsart(final long id) {
 		return mapTeilleistungsarten.get(id);
 	}
 
@@ -493,7 +493,7 @@ public class EnmV1DatenManager {
 	 *
 	 * @return das ENMAnkreuzkompetenz-Objekt
 	 */
-	public ENMAnkreuzkompetenz getAnkreuzkompetenz(final long id) {
+	public ENMv1Ankreuzkompetenz getAnkreuzkompetenz(final long id) {
 		return mapAnkreuzkompetenzen.get(id);
 	}
 
@@ -516,7 +516,7 @@ public class EnmV1DatenManager {
 			final String kursartKuerzel, final String bilingualeSprache, final int wochenstunden) {
 		if (mapLerngruppen.get(strID) != null)
 			return;
-		final @NotNull ENMLerngruppe lerngruppe = new ENMLerngruppe();
+		final @NotNull ENMv1Lerngruppe lerngruppe = new ENMv1Lerngruppe();
 		lerngruppe.id = lerngruppenIDZaehler++;
 		lerngruppe.kID = kID;
 		lerngruppe.fachID = fachID;
@@ -537,7 +537,7 @@ public class EnmV1DatenManager {
 	 *
 	 * @return die Lerngruppe
 	 */
-	public ENMLerngruppe getLerngruppe(final @NotNull String strID) {
+	public ENMv1Lerngruppe getLerngruppe(final @NotNull String strID) {
 		return mapLerngruppen.get(strID);
 	}
 
@@ -550,7 +550,7 @@ public class EnmV1DatenManager {
 	 * @param schueler           der Schüler
 	 * @param klassenlehrerIDs   die IDs der Klassenlehrer
 	 */
-	public void addSchuelerKlassenlehrer(final @NotNull ENMSchueler schueler, final long... klassenlehrerIDs) {
+	public void addSchuelerKlassenlehrer(final @NotNull ENMv1Schueler schueler, final long... klassenlehrerIDs) {
 		// TODO
 	}
 
@@ -569,7 +569,7 @@ public class EnmV1DatenManager {
 	 * @param referenzniveau         die Bezeichnung des Sprachreferenzniveaus, welches bisher erreicht wurde (z.B. B2/C1)
 	 * @param belegungSekI           die Mindest-Dauer der Belegung in der Sekundarstufe I gemäß den Stufen im Core-Type SprachBelegungSekI (z.B. 0, 2, 4, 6)
 	 */
-	public void addSchuelerSprachenfolge(final @NotNull ENMSchueler schueler, final String sprache, final long fachID, final String fachKuerzel,
+	public void addSchuelerSprachenfolge(final @NotNull ENMv1Schueler schueler, final String sprache, final long fachID, final String fachKuerzel,
 			final int reihenfolge,
 			final int belegungVonJahrgang, final int belegungVonAbschnitt, final Integer belegungBisJahrgang, final Integer belegungBisAbschnitt,
 			final String referenzniveau, final Integer belegungSekI) {
@@ -587,9 +587,9 @@ public class EnmV1DatenManager {
 	 *
 	 * @return die neue ENM-Leistung
 	 */
-	public @NotNull ENMSchuelerAnkreuzkompetenz addSchuelerAnkreuzkompetenz(final @NotNull ENMSchueler schueler, final long id,
+	public @NotNull ENMv1SchuelerAnkreuzkompetenz addSchuelerAnkreuzkompetenz(final @NotNull ENMv1Schueler schueler, final long id,
 			final Long kompetenzID, final @NotNull boolean[] stufen, final String tsStufe) {
-		final @NotNull ENMSchuelerAnkreuzkompetenz kompetenz = new ENMSchuelerAnkreuzkompetenz();
+		final @NotNull ENMv1SchuelerAnkreuzkompetenz kompetenz = new ENMv1SchuelerAnkreuzkompetenz();
 		kompetenz.id = id;
 		kompetenz.kompetenzID = kompetenzID;
 		kompetenz.stufen = stufen;
@@ -628,12 +628,12 @@ public class EnmV1DatenManager {
 	 *
 	 * @return die neue ENM-Leistung
 	 */
-	public @NotNull ENMLeistung addSchuelerLeistungsdaten(final @NotNull ENMSchueler schueler, final long leistungID, final long lerngruppenID,
+	public @NotNull ENMv1Leistung addSchuelerLeistungsdaten(final @NotNull ENMv1Schueler schueler, final long leistungID, final long lerngruppenID,
 			final String note, final String tsNote, final String noteQuartal, final String tsNoteQuartal, final boolean istSchriftlich,
 			final Integer abiturfach, final Integer fehlstundenFach, final String tsFehlstundenFach, final Integer fehlstundenUnentschuldigtFach,
 			final String tsFehlstundenUnentschuldigtFach, final String fachbezogeneBemerkungen, final String tsFachbezogeneBemerkungen,
 			final String neueZuweisungKursart, final boolean istGemahnt, final String tsIstGemahnt, final String mahndatum) {
-		final @NotNull ENMLeistung enmLeistung = new ENMLeistung();
+		final @NotNull ENMv1Leistung enmLeistung = new ENMv1Leistung();
 		enmLeistung.id = leistungID;
 		enmLeistung.lerngruppenID = lerngruppenID;
 		enmLeistung.note = note;
@@ -673,9 +673,9 @@ public class EnmV1DatenManager {
 	 * @param note           das Notenkürzel, welches der Teilleistung zuzuordnen ist.
 	 * @param tsNote         der Zeitstempel der letzten Änderung an der Note
 	 */
-	public void addSchuelerTeilleistung(final @NotNull ENMLeistung leistung, final long id, final long artID, final String tsArtID,
+	public void addSchuelerTeilleistung(final @NotNull ENMv1Leistung leistung, final long id, final long artID, final String tsArtID,
 			final String datum, final String tsDatum, final String bemerkung, final String tsBemerkung, final String note, final String tsNote) {
-		final @NotNull ENMTeilleistung enmTeilleistung = new ENMTeilleistung();
+		final @NotNull ENMv1Teilleistung enmTeilleistung = new ENMv1Teilleistung();
 		enmTeilleistung.id = id;
 		enmTeilleistung.artID = artID;
 		enmTeilleistung.tsArtID = tsArtID;

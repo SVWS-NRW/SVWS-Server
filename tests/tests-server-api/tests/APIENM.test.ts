@@ -1,16 +1,16 @@
 import { describe, expect, test } from "vitest";
 import { privilegedApiServer } from "../../utils/APIUtils";
 import { ArrayList } from "../../../svws-webclient/core/src/java/util/ArrayList";
-import type { ENMNote } from "../../../svws-webclient/core/src/core/data/enm/ENMNote";
-import type { ENMFoerderschwerpunkt } from "../../../svws-webclient/core/src/core/data/enm/ENMFoerderschwerpunkt";
-import type { ENMJahrgang } from "../../../svws-webclient/core/src/core/data/enm/ENMJahrgang";
-import type { ENMKlasse } from "../../../svws-webclient/core/src/core/data/enm/ENMKlasse";
-import type { ENMFloskelgruppe } from "../../../svws-webclient/core/src/core/data/enm/ENMFloskelgruppe";
-import type { ENMLehrer } from "../../../svws-webclient/core/src/core/data/enm/ENMLehrer";
-import type { ENMFach } from "../../../svws-webclient/core/src/core/data/enm/ENMFach";
-import type { ENMTeilleistungsart } from "../../../svws-webclient/core/src/core/data/enm/ENMTeilleistungsart";
-import type { ENMLerngruppe } from "../../../svws-webclient/core/src/core/data/enm/ENMLerngruppe";
-import type { ENMSchueler } from "../../../svws-webclient/core/src/core/data/enm/ENMSchueler";
+import type { ENMv1Note } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Note";
+import type { ENMv1Foerderschwerpunkt } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Foerderschwerpunkt";
+import type { ENMv1Jahrgang } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Jahrgang";
+import type { ENMv1Klasse } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Klasse";
+import type { ENMv1Floskelgruppe } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Floskelgruppe";
+import type { ENMv1Lehrer } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Lehrer";
+import type { ENMv1Fach } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Fach";
+import type { ENMv1Teilleistungsart } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Teilleistungsart";
+import type { ENMv1Lerngruppe } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Lerngruppe";
+import type { ENMv1Schueler } from "../../../svws-webclient/core/src/core/data/enm/v1/ENMv1Schueler";
 
 describe("APIENM Tests", () => {
 	describe.each([{ schema: "GymAbi01" }])('gegen %s', ({ schema }) => {
@@ -19,16 +19,16 @@ describe("APIENM Tests", () => {
 		test("getLehrerENMDaten", async () => {
 			const result = await api.getLehrerENMDaten(schema, 76);
 			expect(result).toMatchSnapshot({
-				noten: expect.any(ArrayList<ENMNote>),
-				foerderschwerpunkte: expect.any(ArrayList<ENMFoerderschwerpunkt>),
-				jahrgaenge: expect.any(ArrayList<ENMJahrgang>),
-				klassen: expect.any(ArrayList<ENMKlasse>),
-				floskelgruppen: expect.any(ArrayList<ENMFloskelgruppe>),
-				lehrer: expect.any(ArrayList<ENMLehrer>),
-				faecher: expect.any(ArrayList<ENMFach>),
-				teilleistungsarten: expect.any(ArrayList<ENMTeilleistungsart>),
-				lerngruppen: expect.any(ArrayList<ENMLerngruppe>),
-				schueler: expect.any(ArrayList<ENMSchueler>),
+				noten: expect.any(ArrayList<ENMv1Note>),
+				foerderschwerpunkte: expect.any(ArrayList<ENMv1Foerderschwerpunkt>),
+				jahrgaenge: expect.any(ArrayList<ENMv1Jahrgang>),
+				klassen: expect.any(ArrayList<ENMv1Klasse>),
+				floskelgruppen: expect.any(ArrayList<ENMv1Floskelgruppe>),
+				lehrer: expect.any(ArrayList<ENMv1Lehrer>),
+				faecher: expect.any(ArrayList<ENMv1Fach>),
+				teilleistungsarten: expect.any(ArrayList<ENMv1Teilleistungsart>),
+				lerngruppen: expect.any(ArrayList<ENMv1Lerngruppe>),
+				schueler: expect.any(ArrayList<ENMv1Schueler>),
 			});
 			expect(result.noten.size()).toMatchSnapshot();
 			expect(result.foerderschwerpunkte.size()).toMatchSnapshot();

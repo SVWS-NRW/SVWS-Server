@@ -1,9 +1,9 @@
-import type { ENMKlasse, ENMLeistung, ENMLeistungBemerkungen, ENMSchuelerAnkreuzkompetenz } from "@core";
+import type { ENMv1Klasse, ENMv1Leistung, ENMv1SchuelerAnkreuzkompetenz } from "@core";
 import type { EnmManager } from "@ui";
 
 export interface NotenmodulAnkreuzkompetenzenProps {
 	enmManager: () => EnmManager;
-	auswahl: () => Array<ENMKlasse>;
-	patchLeistung: (data: ENMLeistung, patch: Partial<ENMLeistung>) => Promise<void>;
-	patchAnkreuzkompetenz: (data: ENMSchuelerAnkreuzkompetenz, patch: Partial<ENMSchuelerAnkreuzkompetenz>) => Promise<void>;
+	auswahl: () => Array<ENMv1Klasse>;
+	patchLeistung: (data: ENMv1Leistung, patch: Partial<ENMv1Leistung>) => Promise<void>;
+	patchAnkreuzkompetenz: (data: ENMv1SchuelerAnkreuzkompetenz, patch: Partial<ENMv1SchuelerAnkreuzkompetenz>) => Promise<void>;
 }

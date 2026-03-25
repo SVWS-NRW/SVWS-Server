@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, test } from "vitest";
 import { getApiService } from "../../utils/RequestBuilder.js";
-import type { ENMLeistung } from "@core";
-import { ENMDaten, ENMSchueler, ENMSchuelerAnkreuzkompetenz } from "@core";
+import type { ENMv1Leistung } from "@core";
+import { ENMv1Daten, ENMv1Schueler, ENMv1SchuelerAnkreuzkompetenz } from "@core";
 import { enmURL } from "../../../utils/APIUtils";
 
 const targetUrlENMServer: string = enmURL;
@@ -9,8 +9,8 @@ const targetUrlENMServer: string = enmURL;
 const apiServiceAuth = getApiService('T.Giesen@lmail.de', 'UD73Js0Uro', targetUrlENMServer);
 const apiServiceAuthWrongTeacher = getApiService('D.Berthold@lmail.de', 'uXkpaRLY', targetUrlENMServer);
 
-function findSchueler(data: ENMDaten, id: number): ENMSchueler {
-	let schueler = new ENMSchueler();
+function findSchueler(data: ENMv1Daten, id: number): ENMv1Schueler {
+	let schueler = new ENMv1Schueler();
 	for (const s of data.schueler) {
 		if (s.id === id) {
 			schueler = s;
@@ -32,8 +32,8 @@ describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child A
 		expect(response.status).toBe(200);
 
 		// Extrahier einen Schüler aus den Daten
-		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
-		let schueler = new ENMSchueler();
+		const _data = ENMv1Daten.transpilerFromJSON(await (await response.blob()).text());
+		let schueler = new ENMv1Schueler();
 		for (const s of _data.schueler) {
 			if (s.id === 3029) {
 				schueler = s;
@@ -63,9 +63,9 @@ describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child A
 
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
 		expect(responseAfterEdit.status).toBe(200);
-		const _dataAfterEdit = ENMDaten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
+		const _dataAfterEdit = ENMv1Daten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
 		// Extrahier einen Schüler aus den Daten
-		let schuelerAfterEdit = new ENMSchueler();
+		let schuelerAfterEdit = new ENMv1Schueler();
 		for (const s of _dataAfterEdit.schueler) {
 			if (s.id === 3029) {
 				schuelerAfterEdit = s;
@@ -76,8 +76,8 @@ describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child A
 		const leistungsDaten = [...schuelerAfterEdit.leistungsdaten];
 
 		const prevalences: number [] = [];
-		leistungsDaten.forEach((ld: ENMLeistung) => {
-			const prevalence = leistungsDaten.filter((ldd: ENMLeistung) => {
+		leistungsDaten.forEach((ld: ENMv1Leistung) => {
+			const prevalence = leistungsDaten.filter((ldd: ENMv1Leistung) => {
 				return ldd.id === ld.id;
 			}).length;
 			prevalences.push(prevalence);
@@ -92,7 +92,7 @@ describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child A
 		expect(response.status).toBe(200);
 
 		// Extrahier einen Schüler aus den Daten
-		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
+		const _data = ENMv1Daten.transpilerFromJSON(await (await response.blob()).text());
 		const schueler = findSchueler(_data, 3029);
 
 		// Überprüfe das die entsprechenden Daten vom Schüler passen
@@ -117,7 +117,7 @@ describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child A
 
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
 		expect(responseAfterEdit.status).toBe(200);
-		const _dataAfterEdit = ENMDaten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
+		const _dataAfterEdit = ENMv1Daten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
 		// Extrahier einen Schüler aus den Daten
 		const schuelerAfterEdit = findSchueler(_dataAfterEdit, 3029);
 
@@ -142,7 +142,7 @@ describe("Das Bearbeiten von Leistungen führt zu keinen Redundanzen im Child Ar
 		expect(response.status).toBe(200);
 
 		// Extrahier einen Schüler aus den Daten
-		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
+		const _data = ENMv1Daten.transpilerFromJSON(await (await response.blob()).text());
 		const schueler = findSchueler(_data, 3014);
 
 		// Überprüfe das die entsprechenden Daten vom Schüler passen
@@ -169,7 +169,7 @@ describe("Das Bearbeiten von Leistungen führt zu keinen Redundanzen im Child Ar
 
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
 		expect(responseAfterEdit.status).toBe(200);
-		const _dataAfterEdit = ENMDaten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
+		const _dataAfterEdit = ENMv1Daten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
 
 		// Extrahier einen Schüler aus den Daten
 		const schuelerAfterEdit = findSchueler(_dataAfterEdit, 3014);
@@ -193,7 +193,7 @@ describe("Leistung und Teilleistung können bearbeitet werden", () => {
 	test("Leistungen", async () => {
 		const response = await apiServiceAuth.get(`/api/daten`);
 		expect(response.status).toBe(200);
-		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
+		const _data = ENMv1Daten.transpilerFromJSON(await (await response.blob()).text());
 
 		const schueler = findSchueler(_data, 2889);
 
@@ -223,7 +223,7 @@ describe("Leistung und Teilleistung können bearbeitet werden", () => {
 		expect(responsePost.status).toBe(200);
 		//
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
-		const _dataAfterEdit = ENMDaten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
+		const _dataAfterEdit = ENMv1Daten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
 
 		const testLisaAfterEdit = findSchueler(_dataAfterEdit, 2889);
 
@@ -239,7 +239,7 @@ describe("Leistung und Teilleistung können bearbeitet werden", () => {
 
 		// Request war erfolgreich
 		expect(response.status).toBe(200);
-		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
+		const _data = ENMv1Daten.transpilerFromJSON(await (await response.blob()).text());
 
 		const testSchueler = findSchueler(_data, 3029);
 
@@ -272,7 +272,7 @@ describe("Leistung und Teilleistung können bearbeitet werden", () => {
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
 		expect(responseAfterEdit).toBeDefined();
 		expect(responseAfterEdit.status).toBe(200);
-		const _dataAfterEdit = ENMDaten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
+		const _dataAfterEdit = ENMv1Daten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
 
 		const testSchuelerAfterEdit = findSchueler(_dataAfterEdit, 3029);
 
@@ -316,7 +316,7 @@ describe("Bemerkungen können bearbeitet werden", () => {
 	test("Anpassung von Bemerkungen von Schueler der nicht der gleichen Klasse wie Lehrer zugeordnet ist, ist verboten", async () => {
 		const response = await apiServiceAuthWrongTeacher.get(`/api/daten`);
 		expect(response.status).toBe(200);
-		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
+		const _data = ENMv1Daten.transpilerFromJSON(await (await response.blob()).text());
 
 		const schueler = findSchueler(_data, 3029);
 
@@ -341,7 +341,7 @@ describe("Bemerkungen können bearbeitet werden", () => {
 	test("Bemerkungen", async () => {
 		const response = await apiServiceAuth.get(`/api/daten`);
 		expect(response.status).toBe(200);
-		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
+		const _data = ENMv1Daten.transpilerFromJSON(await (await response.blob()).text());
 
 		const schueler = findSchueler(_data, 3074);
 
@@ -370,7 +370,7 @@ describe("Bemerkungen können bearbeitet werden", () => {
 		expect(responsePost.status).toBe(200);
 
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
-		const _dataAfterEdit = ENMDaten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
+		const _dataAfterEdit = ENMv1Daten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
 
 		const testSchuelerAfterEdit = findSchueler(_dataAfterEdit, 3074);
 
@@ -407,7 +407,7 @@ describe("Ankreuzkompetenzen können bearbeitet werden", () => {
 
 		expect(response.status).toBe(200);
 
-		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
+		const _data = ENMv1Daten.transpilerFromJSON(await (await response.blob()).text());
 
 		const schueler = findSchueler(_data, 3074);
 
@@ -415,7 +415,7 @@ describe("Ankreuzkompetenzen können bearbeitet werden", () => {
 		expect(schueler.nachname).toBe("Fusenig");
 		expect(schueler.vorname).toBe("Kristin");
 
-		let data = new ENMSchuelerAnkreuzkompetenz();
+		let data = new ENMv1SchuelerAnkreuzkompetenz();
 		for (const ak of schueler.ankreuzkompetenzen) {
 			if (ak.id === targetAnkreuzKompetenzId) {
 				data = ak;
@@ -438,11 +438,11 @@ describe("Ankreuzkompetenzen können bearbeitet werden", () => {
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
 		expect(responseAfterEdit.status).toBe(200);
 
-		const _dataAfterEdit = ENMDaten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
+		const _dataAfterEdit = ENMv1Daten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
 
 		const schuelerAfterEdit = findSchueler(_dataAfterEdit, 3074);
 
-		let dataAfterEdit = new ENMSchuelerAnkreuzkompetenz();
+		let dataAfterEdit = new ENMv1SchuelerAnkreuzkompetenz();
 		for (const ak of schuelerAfterEdit.ankreuzkompetenzen) {
 			if (ak.id === targetAnkreuzKompetenzId) {
 				dataAfterEdit = ak;
@@ -506,7 +506,7 @@ describe("Test Lernabschnitte", () => {
 	test("Post Lernabschnitte", async () => {
 		const response = await apiServiceAuth.get(`/api/daten`);
 		expect(response.status).toBe(200);
-		const _data = ENMDaten.transpilerFromJSON(await (await response.blob()).text());
+		const _data = ENMv1Daten.transpilerFromJSON(await (await response.blob()).text());
 
 		const schuelerID = 3029;
 
@@ -529,7 +529,7 @@ describe("Test Lernabschnitte", () => {
 
 		const responseAfterPost = await apiServiceAuth.get(`/api/daten`);
 		expect(responseAfterPost.status).toBe(200);
-		const _dataAfterPost = ENMDaten.transpilerFromJSON(await (await responseAfterPost.blob()).text());
+		const _dataAfterPost = ENMv1Daten.transpilerFromJSON(await (await responseAfterPost.blob()).text());
 
 		const schuelerAfterPost = findSchueler(_dataAfterPost, schuelerID);
 

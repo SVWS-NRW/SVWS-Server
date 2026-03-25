@@ -1,5 +1,5 @@
 import { computed, ref, shallowRef, triggerRef, type ComputedRef } from "vue";
-import type { Collection, Comparator, ENMAbteilung, ENMJahrgang, ENMKlasse, ENMTeilleistungsart, JavaMap, List } from "@core";
+import type { Collection, Comparator, ENMv2Abteilung, ENMv1Jahrgang, ENMv1Klasse, ENMv1Teilleistungsart, JavaMap, List } from "@core";
 import { ArrayList, ENMConfigKlasse, ENMConfigKlasseSpalte, HashMap, HashMap2D, HashSet, JavaString } from "@core";
 import { comparatorENMAbteilung, comparatorENMJahrgang, comparatorENMKlasse } from "./NotenmodulUtils";
 import type { GridColumn } from "../../../../../ui/src/ui/controls/tablegrid/GridManager";
@@ -69,17 +69,17 @@ export class NotenmodulConfigManagerSperrungen {
 	/** Legt fest, ob die einzelnen Teilnoten angezeigt werden sollen oder nur gruppiert */
 	private readonly _zeigeTeilnoten = shallowRef<boolean>(false);
 
-	private readonly _mapKlassen: JavaMap<number, ENMKlasse>;
-	private readonly _mapJahrgaenge: JavaMap<number, ENMJahrgang>;
-	private readonly _mapAbteilungen: JavaMap<number, ENMAbteilung>;
+	private readonly _mapKlassen: JavaMap<number, ENMv1Klasse>;
+	private readonly _mapJahrgaenge: JavaMap<number, ENMv1Jahrgang>;
+	private readonly _mapAbteilungen: JavaMap<number, ENMv2Abteilung>;
 	private readonly _mapConfigKlassen = new HashMap<number, ENMConfigKlasse>();
-	private readonly _mapTeilleistungsarten: JavaMap<number, ENMTeilleistungsart>;
+	private readonly _mapTeilleistungsarten: JavaMap<number, ENMv1Teilleistungsart>;
 	private readonly _mapDefaultConfigKlasseSpalte: JavaMap<number | string, ENMConfigKlasseSpalte>;
 
 	private readonly _listKlassen = new ArrayList<ENMConfigKlasse>();
 	private readonly _mapKlassenSpalte = new HashMap2D<number, string, ENMConfigKlasseSpalte>();
 
-	private readonly _listJahrgaenge = new ArrayList<ENMJahrgang>();
+	private readonly _listJahrgaenge = new ArrayList<ENMv1Jahrgang>();
 	private readonly _mapJahrgangKlassen = new HashMap<number, List<ENMConfigKlasse>>();
 	private readonly _showJahrgangsklassen = shallowRef(new HashSet<number>());
 	private readonly _mapJahrgangGruppe = shallowRef(new HashMap<number, NotenmodulConfigManagerSperrungenGruppe>());
@@ -87,7 +87,7 @@ export class NotenmodulConfigManagerSperrungen {
 	private readonly _mapKlassenToJahrgang = new HashMap<number, NotenmodulConfigManagerSperrungenGruppe>();
 	private readonly _mapSpaltenKlassenToJahrgang = new HashMap2D<number, string, NotenmodulConfigManagerSperrungenGruppeSpalte>();
 
-	private readonly _listAbteilungen = new ArrayList<ENMAbteilung>();
+	private readonly _listAbteilungen = new ArrayList<ENMv2Abteilung>();
 	private readonly _mapAbteilungKlassen = new HashMap<number, List<ENMConfigKlasse>>();
 	private readonly _showAbteilungsklassen = shallowRef(new HashSet<number>());
 	private readonly _mapAbteilungGruppe = shallowRef(new HashMap<number, NotenmodulConfigManagerSperrungenGruppe>());
@@ -114,9 +114,9 @@ export class NotenmodulConfigManagerSperrungen {
 	 * @param gruppierung             die gewählte Gruppierung
 	 * @param setGruppierung          eine Callback-Methode, um das Schreiben der Gruppierung in der Konfiguration zu veranlassen
 	 */
-	constructor(listConfig: List<ENMConfigKlasse>, mapKlassen: JavaMap<number, ENMKlasse>,
-		mapTeilleistungsarten: JavaMap<number, ENMTeilleistungsart>, mapJahrgaenge: JavaMap<number, ENMJahrgang>,
-		mapAbteilungen: JavaMap<number, ENMAbteilung>, writeConfig: () => Promise<void>,
+	constructor(listConfig: List<ENMConfigKlasse>, mapKlassen: JavaMap<number, ENMv1Klasse>,
+		mapTeilleistungsarten: JavaMap<number, ENMv1Teilleistungsart>, mapJahrgaenge: JavaMap<number, ENMv1Jahrgang>,
+		mapAbteilungen: JavaMap<number, ENMv2Abteilung>, writeConfig: () => Promise<void>,
 		gruppierung: NotenmodulConfigManagerSperrungenGruppierung, setGruppierung: (value: NotenmodulConfigManagerSperrungenGruppierung) => Promise<void>) {
 		this._mapKlassen = mapKlassen;
 		this._mapJahrgaenge = mapJahrgaenge;
@@ -226,7 +226,7 @@ export class NotenmodulConfigManagerSperrungen {
 	 *
 	 * @returns die Klasse oder null
 	 */
-	public getKlasse(id: number): ENMKlasse | null {
+	public getKlasse(id: number): ENMv1Klasse | null {
 		return this._mapKlassen.get(id);
 	}
 
@@ -237,7 +237,7 @@ export class NotenmodulConfigManagerSperrungen {
 	 *
 	 * @returns der Jahrgang oder null
 	 */
-	public getJahrgang(id: number): ENMJahrgang | null {
+	public getJahrgang(id: number): ENMv1Jahrgang | null {
 		return this._mapJahrgaenge.get(id);
 	}
 
@@ -248,7 +248,7 @@ export class NotenmodulConfigManagerSperrungen {
 	 *
 	 * @returns die Abteilung oder null
 	 */
-	public getAbteilung(id: number): ENMAbteilung | null {
+	public getAbteilung(id: number): ENMv2Abteilung | null {
 		return this._mapAbteilungen.get(id);
 	}
 

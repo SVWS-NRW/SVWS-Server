@@ -9,8 +9,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.base.crypto.Passwords;
-import de.svws_nrw.core.data.enm.ENMDaten;
 import de.svws_nrw.core.data.enm.ENMLehrerInitialKennwort;
+import de.svws_nrw.core.data.enm.v1.ENMv1Daten;
 import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.ext.jbcrypt.BCrypt;
@@ -52,7 +52,7 @@ public class NotenmodulCredentialsService {
 			// Erstelle zunächst Initialkennwörter, falls eine Lehrer noch keines hat
 			generateMissingCredentials();
 			// Erstelle die ENM-Daten, damit klar ist, für welche Lehrer die Initialkennwörter zurückgegeben werden müssen
-			final ENMDaten enmdaten = enmGetService.get(null);
+			final ENMv1Daten enmdaten = enmGetService.get(null);
 			// Bestimme die Menge der Lehrer-IDs und lese dann dafür die Initialkennwörter aus der Datenbank.
 			final List<ENMLehrerInitialKennwort> daten = new ArrayList<>();
 			final List<Long> idsLehrer = enmdaten.lehrer.stream().map(l -> l.id).toList();

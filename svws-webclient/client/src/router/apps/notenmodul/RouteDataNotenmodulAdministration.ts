@@ -1,6 +1,6 @@
 import type { RouteParamsRawGeneric } from "vue-router";
 import type { List, JavaMap, ENMServerConnection, Abteilung } from "@core";
-import { ENMServerConfigElement, ENMConfigKlasse, ArrayList, UnsupportedOperationException, OpenApiError, DeveloperNotificationException, HashMap, SimpleOperationResponse, UserNotificationException, ENMConfigSpalte, ENMAbteilung } from "@core";
+import { ENMServerConfigElement, ENMConfigKlasse, ArrayList, UnsupportedOperationException, OpenApiError, DeveloperNotificationException, HashMap, SimpleOperationResponse, UserNotificationException, ENMConfigSpalte, ENMv2Abteilung } from "@core";
 import { WenomAuswahlListeManager, ViewType } from "@ui";
 import { api } from "~/router/Api";
 import { RouteDataAuswahl, type RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
@@ -18,7 +18,7 @@ interface RouteStateNotenmodulAdministration extends RouteStateAuswahlInterface<
 	connected: boolean;
 	mapNotenmodulConfigServer: JavaMap<string, string>;
 	mapNotenmodulConfigGlobal: JavaMap<string, string>;
-	mapAbteilungen: JavaMap<number, ENMAbteilung>;
+	mapAbteilungen: JavaMap<number, ENMv2Abteilung>;
 	managerSperrungen: NotenmodulConfigManagerSperrungen;
 	managerSichtbareSpalten: NotenmodulConfigManagerSichtbareSpalten;
 }
@@ -35,7 +35,7 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 			connected: false,
 			mapNotenmodulConfigServer: new HashMap<string, string>(),
 			mapNotenmodulConfigGlobal: new HashMap<string, string>(),
-			mapAbteilungen: new HashMap<number, ENMAbteilung>(),
+			mapAbteilungen: new HashMap<number, ENMv2Abteilung>(),
 			managerSperrungen: new NotenmodulConfigManagerSperrungen(new ArrayList(), new HashMap(), new HashMap(), new HashMap(), new HashMap(), async () => {}, 'Keine', async () => {}),
 			managerSichtbareSpalten: new NotenmodulConfigManagerSichtbareSpalten(new ArrayList(), new HashMap(), async () => {}),
 		}, { gruppenprozesse: routeNotenmodulVerbindungGruppenprozesse, hinzufuegen: routeNotenmodulVerbindungNeu });
@@ -61,9 +61,9 @@ export class RouteDataNotenmodulAdministration extends RouteDataAuswahl<WenomAus
 	}
 
 	private createMapAbteilungen(listAbteilungen: List<Abteilung>) {
-		const mapAbteilungen = new HashMap<number, ENMAbteilung>();
+		const mapAbteilungen = new HashMap<number, ENMv2Abteilung>();
 		for (const abteilung of listAbteilungen) {
-			const enmAbteilung = new ENMAbteilung();
+			const enmAbteilung = new ENMv2Abteilung();
 			enmAbteilung.id = abteilung.id;
 			enmAbteilung.idAbteilungsleiter = abteilung.idAbteilungsleiter;
 			enmAbteilung.bezeichnung = abteilung.bezeichnung;

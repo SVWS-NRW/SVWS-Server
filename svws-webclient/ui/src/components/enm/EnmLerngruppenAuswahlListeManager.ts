@@ -7,13 +7,13 @@ import type { JavaFunction } from '../../../../core/src/java/util/function/JavaF
 import type { List } from '../../../../core/src/java/util/List';
 import { Arrays } from '../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import type { ENMLerngruppe } from '../../../../core/src';
+import type { ENMv1Lerngruppe } from '../../../../core/src/core/data/enm/v1/ENMv1Lerngruppe';
 import type { EnmManager } from './EnmManager';
 
 /**
  * Ein Manager für die Auswahl-Liste der Lerngruppen im Externen Notenmodul (ENM)
  */
-export class EnmLerngruppenAuswahlListeManager extends AuswahlManager<number, ENMLerngruppe, ENMLerngruppe> {
+export class EnmLerngruppenAuswahlListeManager extends AuswahlManager<number, ENMv1Lerngruppe, ENMv1Lerngruppe> {
 
 	/** Der ENM-Manager zum Verwalten der ENM-Daten */
 	public readonly enmManager: EnmManager;
@@ -21,7 +21,7 @@ export class EnmLerngruppenAuswahlListeManager extends AuswahlManager<number, EN
 	/**
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
-	private static readonly _lerngruppeToId: JavaFunction<ENMLerngruppe, number> = { apply: (l: ENMLerngruppe) => l.id };
+	private static readonly _lerngruppeToId: JavaFunction<ENMv1Lerngruppe, number> = { apply: (l: ENMv1Lerngruppe) => l.id };
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -46,7 +46,7 @@ export class EnmLerngruppenAuswahlListeManager extends AuswahlManager<number, EN
 	 *
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
-	protected compareAuswahl(a: ENMLerngruppe, b: ENMLerngruppe): number {
+	protected compareAuswahl(a: ENMv1Lerngruppe, b: ENMv1Lerngruppe): number {
 		for (const criteria of this._order) {
 			const field: string | null = criteria.a;
 			const asc: boolean = (criteria.b === null) || criteria.b;
@@ -64,7 +64,7 @@ export class EnmLerngruppenAuswahlListeManager extends AuswahlManager<number, EN
 		return this.enmManager.comparatorLerngruppen.compare(a, b);
 	}
 
-	protected checkFilter(eintrag: ENMLerngruppe): boolean {
+	protected checkFilter(eintrag: ENMv1Lerngruppe): boolean {
 		return true;
 	}
 

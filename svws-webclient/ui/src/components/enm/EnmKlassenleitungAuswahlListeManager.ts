@@ -7,13 +7,13 @@ import type { JavaFunction } from '../../../../core/src/java/util/function/JavaF
 import type { List } from '../../../../core/src/java/util/List';
 import { Arrays } from '../../../../core/src/java/util/Arrays';
 import type { Schuljahresabschnitt } from '../../../../core/src/asd/data/schule/Schuljahresabschnitt';
-import type { ENMKlasse } from '../../../../core/src';
+import type { ENMv1Klasse } from '../../../../core/src/core/data/enm/v1/ENMv1Klasse';
 import type { EnmManager } from './EnmManager';
 
 /**
  * Ein Manager für die Auswahl-Liste der Klassenleitungen im Externen Notenmodul (ENM)
  */
-export class EnmKlassenleitungAuswahlListeManager extends AuswahlManager<number, ENMKlasse, ENMKlasse> {
+export class EnmKlassenleitungAuswahlListeManager extends AuswahlManager<number, ENMv1Klasse, ENMv1Klasse> {
 
 	/** Der ENM-Manager zum Verwalten der ENM-Daten */
 	public readonly enmManager: EnmManager;
@@ -21,7 +21,7 @@ export class EnmKlassenleitungAuswahlListeManager extends AuswahlManager<number,
 	/**
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
-	private static readonly _klasseToId: JavaFunction<ENMKlasse, number> = { apply: (k: ENMKlasse) => k.id };
+	private static readonly _klasseToId: JavaFunction<ENMv1Klasse, number> = { apply: (k: ENMv1Klasse) => k.id };
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -46,7 +46,7 @@ export class EnmKlassenleitungAuswahlListeManager extends AuswahlManager<number,
 	 *
 	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
 	 */
-	protected compareAuswahl(a: ENMKlasse, b: ENMKlasse): number {
+	protected compareAuswahl(a: ENMv1Klasse, b: ENMv1Klasse): number {
 		for (const criteria of this._order) {
 			const field: string | null = criteria.a;
 			const asc: boolean = (criteria.b === null) || criteria.b;
@@ -64,7 +64,7 @@ export class EnmKlassenleitungAuswahlListeManager extends AuswahlManager<number,
 		return this.enmManager.comparatorKlassen.compare(a, b);
 	}
 
-	protected checkFilter(eintrag: ENMKlasse): boolean {
+	protected checkFilter(eintrag: ENMv1Klasse): boolean {
 		return true;
 	}
 

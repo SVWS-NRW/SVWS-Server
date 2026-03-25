@@ -9,11 +9,11 @@
 
 	import { nextTick, ref, shallowRef, useTemplateRef } from 'vue';
 	import type { EnmLeistungenProps } from './EnmLeistungenProps';
-	import type { ENMSchueler } from '../../../../core/src/core/data/enm/ENMSchueler';
-	import type { ENMLeistung } from '../../../../core/src/core/data/enm/ENMLeistung';
-	import type { ENMKlasse } from '../../../../core/src';
+	import type { ENMv1Schueler } from '../../../../core/src/core/data/enm/v1/ENMv1Schueler';
+	import type { ENMv1Leistung } from '../../../../core/src/core/data/enm/v1/ENMv1Leistung';
+	import type { ENMv1Klasse } from '../../../../core/src/core/data/enm/v1/ENMv1Klasse';
 
-	type AuswahlZelle = { klasse: ENMKlasse | null, schueler: ENMSchueler | null, leistung: ENMLeistung | null };
+	type AuswahlZelle = { klasse: ENMv1Klasse | null, schueler: ENMv1Schueler | null, leistung: ENMv1Leistung | null };
 
 	const props = defineProps<EnmLeistungenProps>();
 
@@ -40,7 +40,7 @@
 		}
 	}
 
-	async function focusFloskelEditor(schueler: ENMSchueler | null, leistung: ENMLeistung | null, row: number | null, doFocus: boolean) {
+	async function focusFloskelEditor(schueler: ENMv1Schueler | null, leistung: ENMv1Leistung | null, row: number | null, doFocus: boolean) {
 		auswahlZelle.value = { klasse: null, schueler, leistung };
 		initialRow.value = row;
 		if (doFocus) {

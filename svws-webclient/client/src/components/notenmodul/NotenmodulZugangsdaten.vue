@@ -75,7 +75,7 @@
 
 	import { computed, ref } from 'vue';
 	import type { NotenmodulZugangsdatenProps } from './NotenmodulZugangsdatenProps';
-	import type { ENMLehrer, List } from "@core";
+	import type { ENMv1Lehrer, List } from "@core";
 	import { ArrayList, DeveloperNotificationException } from "@core";
 
 	const props = defineProps<NotenmodulZugangsdatenProps>();
@@ -86,9 +86,9 @@
 		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value)
 	);
 
-	const lehrerListe = computed<List<ENMLehrer>>(() => {
+	const lehrerListe = computed<List<ENMv1Lehrer>>(() => {
 		const searchValueLowerCase = search.value.toLocaleLowerCase();
-		const result = new ArrayList<ENMLehrer>();
+		const result = new ArrayList<ENMv1Lehrer>();
 		if (searchValueLowerCase === "") {
 			result.addAll(props.manager().daten.lehrer);
 		} else {
@@ -100,7 +100,7 @@
 				}
 			}
 		}
-		result.sort({ compare: (a: ENMLehrer, b: ENMLehrer): number => {
+		result.sort({ compare: (a: ENMv1Lehrer, b: ENMv1Lehrer): number => {
 			if ((a.nachname !== null) && (b.nachname !== null)) {
 				let tmp = a.nachname.localeCompare(b.nachname);
 				if (tmp !== 0) {
@@ -148,10 +148,10 @@
 		return duplikate;
 	});
 
-	const ping = ref<ENMLehrer | null>(null);
+	const ping = ref<ENMv1Lehrer | null>(null);
 	const pingType = ref<'mail' | 'kennwort'>();
 
-	function pingTimer(lehrer: ENMLehrer, type: 'mail' | 'kennwort') {
+	function pingTimer(lehrer: ENMv1Lehrer, type: 'mail' | 'kennwort') {
 		ping.value = lehrer;
 		pingType.value = type;
 		setTimeout(() => {
@@ -159,7 +159,7 @@
 		}, 300);
 	}
 
-	async function copyToClipboard(lehrer: ENMLehrer, type: 'mail' | 'kennwort') {
+	async function copyToClipboard(lehrer: ENMv1Lehrer, type: 'mail' | 'kennwort') {
 		const text = type === 'mail' ? lehrer.eMailDienstlich : props.mapEnmInitialKennwoerter().get(lehrer.id);
 		try {
 			if (text === null) {

@@ -1,13 +1,13 @@
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { BenutzerConfig } from "@core/core/data/benutzer/BenutzerConfig";
-import { ENMLeistung } from "@core/core/data/enm/ENMLeistung";
-import { ENMLeistungBemerkungen } from "@core/core/data/enm/ENMLeistungBemerkungen";
-import { ENMLernabschnitt } from "@core/core/data/enm/ENMLernabschnitt";
-import { ENMSchuelerAnkreuzkompetenz } from "@core/core/data/enm/ENMSchuelerAnkreuzkompetenz";
-import { ENMTeilleistung } from "@core/core/data/enm/ENMTeilleistung";
+import { ENMv1Leistung } from "@core/core/data/enm/v1/ENMv1Leistung";
+import { ENMv1LeistungBemerkungen } from "@core/core/data/enm/v1/ENMv1LeistungBemerkungen";
+import { ENMv1Lernabschnitt } from "@core/core/data/enm/v1/ENMv1Lernabschnitt";
+import { ENMv1SchuelerAnkreuzkompetenz } from "@core/core/data/enm/v1/ENMv1SchuelerAnkreuzkompetenz";
+import { ENMv1Teilleistung } from "@core/core/data/enm/v1/ENMv1Teilleistung";
 import { ServerMode } from "@core/core/types/ServerMode";
 import { BaseApi } from "./BaseApi";
-import { ENMDaten } from "@core/core/data/enm/ENMDaten";
+import { ENMv1Daten } from "@core/core/data/enm/v1/ENMv1Daten";
 
 export class ApiEnmServer extends BaseApi {
 
@@ -81,15 +81,15 @@ export class ApiEnmServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die GZip-komprimierten ENM-Daten
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: ENMDaten
+	 *     - Rückgabe-Typ: ENMv1Daten
 	 *   Code 401: Die Authentifzierung des Benutzers ist fehlgeschlagen
 	 *   Code 404: Es wurden nicht alle benötigten ENM-Daten gefunden.
 	 *   Code 500: Ein interner Fehler im ENM-Server ist aufgetreten.
 	 *
 	 * @returns die GZip-komprimierte ENM-JSON-Datei
 	 */
-	public async getLehrerENMDaten(): Promise<ENMDaten> {
-		return ENMDaten.transpilerFromJSON(await super.getTextBased('/api/daten', 'application/json'));
+	public async getLehrerENMDaten(): Promise<ENMv1Daten> {
+		return ENMv1Daten.transpilerFromJSON(await super.getTextBased('/api/daten', 'application/json'));
 	}
 
 	/**
@@ -114,10 +114,10 @@ export class ApiEnmServer extends BaseApi {
 	 *   Code 403: Ein Patch der Leistungsdaten ist durch den aktuelle angemeldeten Lehrer nicht erlaubt
 	 *   Code 404: Die Leistungsdaten zu der übergebenen ID wurden nicht gefunden.
 	 *
-	 * @param {Partial<ENMLeistung>} patch   die zu patchenden Attribut der Leistungsdaten
+	 * @param {Partial<ENMv1Leistung>} patch   die zu patchenden Attribut der Leistungsdaten
 	 */
-	public async patchENMLeistung(patch: Partial<ENMLeistung>): Promise<void> {
-		await super.postTextBased("/api/leistung", 'application/json', '*/*', ENMLeistung.transpilerToJSONPatch(patch));
+	public async patchENMLeistung(patch: Partial<ENMv1Leistung>): Promise<void> {
+		await super.postTextBased("/api/leistung", 'application/json', '*/*', ENMv1Leistung.transpilerToJSONPatch(patch));
 	}
 
 	/**
@@ -130,10 +130,10 @@ export class ApiEnmServer extends BaseApi {
 	 *   Code 403: Ein Patch der Lernabschnittsdaten ist durch den aktuelle angemeldeten Lehrer nicht erlaubt
 	 *   Code 404: Die Lernabschnittsdaten zu der übergebenen ID wurden nicht gefunden.
 	 *
-	 * @param {Partial<ENMLernabschnitt>} patch   die zu patchenden Attribut der Lernabschnittsdaten
+	 * @param {Partial<ENMv1Lernabschnitt>} patch   die zu patchenden Attribut der Lernabschnittsdaten
 	 */
-	public async patchENMSchuelerLernabschnitt(patch: Partial<ENMLernabschnitt>): Promise<void> {
-		await super.postTextBased("/api/lernabschnitt", 'application/json', '*/*', ENMLernabschnitt.transpilerToJSONPatch(patch));
+	public async patchENMSchuelerLernabschnitt(patch: Partial<ENMv1Lernabschnitt>): Promise<void> {
+		await super.postTextBased("/api/lernabschnitt", 'application/json', '*/*', ENMv1Lernabschnitt.transpilerToJSONPatch(patch));
 	}
 
 	/**
@@ -147,10 +147,10 @@ export class ApiEnmServer extends BaseApi {
 	 *   Code 404: Die Leistungsbemerkungen zu der übergebenen ID wurden nicht gefunden.
 	 *
 	 * @param {number} idSchueler                       die IDs des Schülers, dessen Leistungsbemerkungen angepasst werden sollen
-	 * @param {Partial<ENMLeistungBemerkungen>} patch   die zu patchenden Attribut der Leistungsbemerkungen
+	 * @param {Partial<ENMv1LeistungBemerkungen>} patch   die zu patchenden Attribut der Leistungsbemerkungen
 	 */
-	public async patchENMSchuelerBemerkungen(idSchueler: number, patch: Partial<ENMLeistungBemerkungen>): Promise<void> {
-		const body = `{ "id": ${idSchueler}, "patch": ${ENMLeistungBemerkungen.transpilerToJSONPatch(patch)}}`;
+	public async patchENMSchuelerBemerkungen(idSchueler: number, patch: Partial<ENMv1LeistungBemerkungen>): Promise<void> {
+		const body = `{ "id": ${idSchueler}, "patch": ${ENMv1LeistungBemerkungen.transpilerToJSONPatch(patch)}}`;
 		await super.postTextBased("/api/bemerkungen", 'application/json', '*/*', body);
 	}
 
@@ -164,10 +164,10 @@ export class ApiEnmServer extends BaseApi {
 	 *   Code 403: Ein Patch der Teilleistung ist durch den aktuelle angemeldeten Lehrer nicht erlaubt
 	 *   Code 404: Die Teilleistung zu der übergebenen ID wurden nicht gefunden.
 	 *
-	 * @param {Partial<ENMTeilleistung>} patch   die zu patchenden Attribut der Teilleistung
+	 * @param {Partial<ENMv1Teilleistung>} patch   die zu patchenden Attribut der Teilleistung
 	 */
-	public async patchENMTeilleistung(patch: Partial<ENMTeilleistung>): Promise<void> {
-		await super.postTextBased("/api/teilleistung", 'application/json', '*/*', ENMTeilleistung.transpilerToJSONPatch(patch));
+	public async patchENMTeilleistung(patch: Partial<ENMv1Teilleistung>): Promise<void> {
+		await super.postTextBased("/api/teilleistung", 'application/json', '*/*', ENMv1Teilleistung.transpilerToJSONPatch(patch));
 	}
 
 	/**
@@ -180,10 +180,10 @@ export class ApiEnmServer extends BaseApi {
 	 *   Code 403: Ein Patch der Ankreuzkompetenz ist durch den aktuelle angemeldeten Lehrer nicht erlaubt
 	 *   Code 404: Die Ankreuzkompetenz zu der übergebenen ID wurden nicht gefunden.
 	 *
-	 * @param {Partial<ENMSchuelerAnkreuzkompetenz>} patch   die zu patchenden Attribut der Ankreuzkompetenz
+	 * @param {Partial<ENMv1SchuelerAnkreuzkompetenz>} patch   die zu patchenden Attribut der Ankreuzkompetenz
 	 */
-	public async patchENMSchuelerAnkreuzkompetenzen(patch: Partial<ENMSchuelerAnkreuzkompetenz>): Promise<void> {
-		await super.postTextBased("/api/ankreuzkompetenz", 'application/json', '*/*', ENMSchuelerAnkreuzkompetenz.transpilerToJSONPatch(patch));
+	public async patchENMSchuelerAnkreuzkompetenzen(patch: Partial<ENMv1SchuelerAnkreuzkompetenz>): Promise<void> {
+		await super.postTextBased("/api/ankreuzkompetenz", 'application/json', '*/*', ENMv1SchuelerAnkreuzkompetenz.transpilerToJSONPatch(patch));
 	}
 
 
