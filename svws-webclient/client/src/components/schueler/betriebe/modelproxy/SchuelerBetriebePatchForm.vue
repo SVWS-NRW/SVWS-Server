@@ -4,54 +4,64 @@
 			<svws-ui-input-wrapper :grid="2">
 				<ui-select label="Betreuende Lehrkraft"
 					v-model="model.betreuendeLehrkraft.value"
-					:manager="lehrerManager" />
-				<ui-select label="Ansprechpartner"
+					:deep-search-attributes="['kuerzel']"
+					:manager="lehrerManager" searchable />
+				<ui-select label="Ansprechpartner im Betrieb"
 					v-model="model.ansprechpartner.value"
-					:manager="ansprechpartnerManager" />
+					:manager="ansprechpartnerManager" searchable />
+				<svws-ui-text-input placeholder="Betreuer/Ausbilder"
+					v-model="model.proxy.nameAusbilder"
+					@commit="model.patch"
+					:validation="() => model.getFehler('nameAusbilder')"
+					:max-len="30" />
+				<ui-select label="Beschäftigungsart" v-if="istBK"
+					v-model="model.beschaeftigungsart.value"
+					:manager="beschaeftigungsartenManager"
+					searchable />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-spacing :size="2" />
-		<svws-ui-content-card :title="`Details zu ${betrieb?.name}`">
+		<svws-ui-content-card :title="`Details zu ${model.betrieb.value?.name}`">
 			<template #title>
 				<svws-ui-input-wrapper :grid="2">
-					<h3 :class="'content-card--headline'"> {{ `Details zu ${betrieb?.name}` }} </h3>
-					<svws-ui-button v-if="betrieb !== null" class="rounded-md h-fit"
+					<h3 :class="'content-card--headline'"> {{ `Details zu ${model.betrieb.value?.name}` }} </h3>
+					<svws-ui-button v-if="(model.betrieb.value !== null) && hatKatalogeAnsehenKompetenz" class="rounded-md h-fit"
 						type="secondary"
-						@click="goToBetrieb(betrieb?.id ?? -1)">
+						@click="goToBetrieb(model.betrieb.value?.id ?? -1)">
 						<span class="icon i-ri-link me-1" />zum Profil
 					</svws-ui-button>
 				</svws-ui-input-wrapper>
 			</template>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Name" span="2"
-					:model-value="betrieb?.name ?? ''"
+					:model-value="model.betrieb.value?.name ?? ''"
 					readonly />
 				<svws-ui-text-input placeholder="Namensergänzung"
-					:model-value="betrieb?.nameZusatz"
+					:model-value="model.betrieb.value?.nameZusatz"
 					readonly />
 				<svws-ui-text-input placeholder="Branche"
-					:model-value="betrieb?.branche"
+					:model-value="model.betrieb.value?.branche"
 					readonly />
 				<svws-ui-text-input placeholder="Telefon"
-					:model-value="betrieb?.telefon1"
+					:model-value="model.betrieb.value?.telefon1"
 					readonly />
 				<svws-ui-text-input placeholder="2. Telefon"
-					:model-value="betrieb?.telefon1"
+					:model-value="model.betrieb.value?.telefon1"
 					readonly />
 				<svws-ui-text-input placeholder="Straße und Hausnummer"
 					:model-value="adresse"
 					readonly />
 				<svws-ui-text-input placeholder="Ort"
-					:model-value="ort?.ortsname"
+					:model-value="model.ort.value?.ortsname"
 					readonly />
 				<svws-ui-text-input placeholder="Fax"
-					:model-value="betrieb?.fax"
+					:model-value="model.betrieb.value?.fax"
 					readonly />
 				<svws-ui-text-input placeholder="E-Mail"
-					:model-value="betrieb?.eMail"
+					:model-value="model.betrieb.value?.eMail"
 					readonly />
 				<svws-ui-textarea-input placeholder="Bemerkungen" :span="'full'"
-					:model-value="betrieb?.bemerkungen"
+					:model-value="model.betrieb.value?.bemerkungen"
 					readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -60,8 +70,8 @@
 
 <script setup lang="ts">
 
-	import type { Betrieb, OrtKatalogEintrag, SchuelerBetrieb } from "@core";
-	import { AdressenUtils } from "@core";
+	import type { SchuelerBetrieb } from "@core";
+	import { AdressenUtils, Schulform, BenutzerKompetenz } from "@core";
 	import type { SchuelerBetriebeManager } from "@ui";
 	import { SelectManager } from "@ui";
 	import { computed } from "vue";
@@ -72,29 +82,41 @@
 		manager: () => SchuelerBetriebeManager;
 		patch: (id: number, data: Partial<SchuelerBetrieb>) => Promise<boolean>;
 		goToBetrieb: (idBetrieb: number) => Promise<void>;
+		schulform: Schulform;
+		benutzerKompetenzen: Set<BenutzerKompetenz>;
 	}>();
 
-	const betrieb = computed<Betrieb | null>(() => props.manager().betriebeById.get(model.betrieb.value?.id ?? -1) ?? null);
-	const ort = computed<OrtKatalogEintrag | null>(() => props.manager().orteById.get(betrieb.value?.idOrt ?? -1) ?? null);
+	const istBK = computed(() => {
+		const erlaubteSchulformen = [Schulform.BK, Schulform.SB, Schulform.WB];
+		return erlaubteSchulformen.includes(props.schulform);
+	});
+	const hatKatalogeAnsehenKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN));
 	const lehrer = computed(() => props.manager().lehrerById.values());
+	const beschaeftigungsarten = computed(() => props.manager().beschaeftigungsartenById.values());
 	const ansprechpartner = computed(() => props.manager().ansprechpartnerById.values());
 	const model = new SchuelerBetriebeModelProxy(() => props.selectedBetrieb, props.manager, (data) => props.patch(props.selectedBetrieb.id, data));
 
 	const adresse = computed(() => AdressenUtils.combineStrasse(
-		betrieb.value?.strasse ?? null,
-		betrieb.value?.hausnummer ?? null,
-		betrieb.value?.hausnummerZusatz ?? null));
+		model.betrieb.value?.strasse ?? null,
+		model.betrieb.value?.hausnummer ?? null,
+		model.betrieb.value?.hausnummerZusatz ?? null));
 
 	const lehrerManager = new SelectManager({
 		options: lehrer,
-		optionDisplayText: v => v.kuerzel,
-		selectionDisplayText: v => v.kuerzel,
+		optionDisplayText: v => `${v.nachname}, ${v.vorname}`,
+		selectionDisplayText: v => `${v.nachname}, ${v.vorname}`,
 	});
 
 	const ansprechpartnerManager = new SelectManager({
 		options: ansprechpartner,
-		optionDisplayText: v => v.name ?? '—',
-		selectionDisplayText: v => v.name ?? '—',
+		optionDisplayText: v => `${v.name}, ${v.rufname}`,
+		selectionDisplayText: v => `${v.name}, ${v.rufname}`,
+	});
+
+	const beschaeftigungsartenManager = new SelectManager({
+		options: beschaeftigungsarten,
+		optionDisplayText: v => v.bezeichnung ?? '—',
+		selectionDisplayText: v => v.bezeichnung ?? '—',
 	});
 
 </script>

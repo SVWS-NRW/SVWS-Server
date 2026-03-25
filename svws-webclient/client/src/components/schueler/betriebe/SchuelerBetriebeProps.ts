@@ -1,4 +1,4 @@
-import type { List, SchuelerBetrieb, Schulform } from "@core";
+import type { BenutzerKompetenz, List, SchuelerBetrieb, Schulform } from "@core";
 import type { SchuelerBetriebeManager } from "@ui";
 
 export interface SchuelerBetriebeProps {
@@ -8,4 +8,5 @@ export interface SchuelerBetriebeProps {
 	add: (data: Partial<SchuelerBetrieb>) => Promise<SchuelerBetrieb>;
 	deleteEntries: (idsSchuelerBetriebe: List<number>) => Promise<boolean>;
 	schulform: Schulform;
+	benutzerKompetenzen: Set<BenutzerKompetenz>;
 }

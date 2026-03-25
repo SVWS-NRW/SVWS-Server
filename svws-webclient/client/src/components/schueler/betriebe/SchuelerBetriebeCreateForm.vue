@@ -15,7 +15,24 @@
 							:manager="betriebeManager"
 							:validation="() => model.getFehler('idBetrieb')"
 							searchable required :removable="false" />
-						<svws-ui-text-input placeholder="Ausbilder"
+						<div class="flex">
+							<svws-ui-text-input placeholder="Vertragsbeginn" type="date"
+								v-model="model.proxy.vertragsbeginn" />
+							<svws-ui-text-input placeholder="Vertragsende" type="date"
+								v-model="model.proxy.vertragsende"
+								:min-date="model.proxy.vertragsbeginn ?? undefined" />
+						</div>
+						<svws-ui-spacing :size="2" />
+						<ui-select label="Betreuende Lehrkraft"
+							v-model="model.betreuendeLehrkraft.value"
+							:manager="lehrerManager"
+							:deep-search-attributes="['kuerzel']"
+							searchable />
+						<ui-select label="Ansprechpartner im Betrieb"
+							v-model="model.ansprechpartner.value"
+							:manager="ansprechpartnerManager"
+							searchable />
+						<svws-ui-text-input placeholder="Betreuer/Ausbilder"
 							v-model="model.proxy.nameAusbilder"
 							:validation="() => model.getFehler('nameAusbilder')"
 							:max-len="30" />
@@ -23,7 +40,8 @@
 							v-model="model.beschaeftigungsart.value"
 							:manager="beschaeftigungsartenManager"
 							searchable />
-						<div v-if="istBK" />
+						<div v-if="!istBK" />
+						<svws-ui-spacing :size="2" />
 						<svws-ui-checkbox v-model="model.proxy.erhaeltAnschreiben" class="mt-3">
 							Erhält Anschreiben
 						</svws-ui-checkbox>
@@ -31,20 +49,6 @@
 						<svws-ui-checkbox v-model="model.proxy.istPraktikum">
 							Praktikum
 						</svws-ui-checkbox>
-						<svws-ui-spacing :size="2" />
-						<svws-ui-text-input placeholder="Vertragsbeginn" type="date"
-							v-model="model.proxy.vertragsbeginn" />
-						<svws-ui-text-input placeholder="Vertragsende" type="date"
-							v-model="model.proxy.vertragsende"
-							:min-date="model.proxy.vertragsbeginn ?? undefined" />
-						<ui-select label="Betreuungslehrer"
-							v-model="model.betreuendeLehrkraft.value"
-							:manager="lehrerManager"
-							searchable />
-						<ui-select label="Ansprechpartner"
-							v-model="model.ansprechpartner.value"
-							:manager="ansprechpartnerManager"
-							searchable />
 					</svws-ui-input-wrapper>
 				</template>
 				<template #modalActions>
@@ -121,14 +125,14 @@
 
 	const lehrerManager = new SelectManager({
 		options: lehrer,
-		optionDisplayText: v => v.kuerzel,
-		selectionDisplayText: v => v.kuerzel,
+		optionDisplayText: v => `${v.nachname}, ${v.vorname}`,
+		selectionDisplayText: v => `${v.nachname}, ${v.vorname}`,
 	});
 
 	const ansprechpartnerManager = new SelectManager({
 		options: ansprechpartner,
-		optionDisplayText: v => v.name ?? '—',
-		selectionDisplayText: v => v.name ?? '—',
+		optionDisplayText: v => `${v.name}, ${v.rufname}`,
+		selectionDisplayText: v => `${v.name}, ${v.rufname}`,
 	});
 
 </script>

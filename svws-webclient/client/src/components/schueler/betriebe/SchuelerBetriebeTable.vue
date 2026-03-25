@@ -105,16 +105,16 @@
 	const columns = computed<DataTableColumn[]>(() => {
 		const cols: DataTableColumn[] = [
 			{ key: "idBetrieb", label: "Betrieb" },
-			{ key: "vertragsbeginn", label: "Beginn", span: 0.3, statistic: true },
-			{ key: "vertragsende", label: "Ende", span: 0.3, statistic: true },
+			{ key: "vertragsbeginn", label: "Vertragsbeginn", span: 0.5, statistic: true },
+			{ key: "vertragsende", label: "Vertragsende", span: 0.5, statistic: true },
 		];
 		if (istBK.value) {
 			cols.push({ key: "idBeschaeftigungsart", label: "Beschäftigungsart" });
 		}
 		cols.push(
 			{ key: "idBetreuungslehrer", label: "Betreuende Lehrkraft" },
-			{ key: "idAnsprechpartner", label: "Ansprechpartner" },
-			{ key: "nameAusbilder", label: "Sonstiger Betreuer" },
+			{ key: "idAnsprechpartner", label: "Ansprechpartner im Betrieb" },
+			{ key: "nameAusbilder", label: "Betreuer/Ausbilder" },
 			{ key: "istPraktikum", label: "Praktikum", span: 0.25, tooltip: 'Praktikum', align: 'center' },
 			{ key: "erhaeltAnschreiben", label: "Anschreiben", tooltip: 'Betrieb erhält Anschreiben', span: 0.3, align: 'center' }
 		);
@@ -137,15 +137,15 @@
 
 	function lehrerName(id: number) {
 		const lehrer = props.manager().lehrerById.get(id);
-		return (lehrer === undefined) ? '' : `${lehrer.vorname} ${lehrer.nachname}`;
+		return (lehrer === undefined) ? '' : `${lehrer.nachname}, ${lehrer.vorname}`;
 	}
 
 	function ansprechpartnerName(id: number) {
 		const ansprechpartner = props.manager().ansprechpartnerById.get(id);
-		return (ansprechpartner === undefined) ? '' : `${ansprechpartner.rufname} ${ansprechpartner.name}`;
+		return (ansprechpartner === undefined) ? '' : `${ansprechpartner.name}, ${ansprechpartner.rufname}`;
 	}
 
-	/** Formatiert ein Datum in das Format 01.01.2020 */
+	// --- Formatiert ein Datum in das Format 01.01.2020 ---
 	function formatDate(dateString: string | null): string {
 		if (dateString === null) {
 			return "—";

@@ -15,7 +15,9 @@
 				:manager
 				:selected-betrieb
 				:patch
-				:go-to-betrieb />
+				:go-to-betrieb
+				:schulform
+				:benutzer-kompetenzen />
 		</svws-ui-content-card>
 	</div>
 </template>
@@ -48,6 +50,5 @@
 		createModalIsOpen.value = false;
 		selectedBetrieb.value = null;
 	}
-
 
 </script>

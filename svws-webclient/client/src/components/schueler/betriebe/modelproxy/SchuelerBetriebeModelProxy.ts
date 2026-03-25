@@ -1,6 +1,6 @@
 import type { SchuelerBetriebeManager } from "@ui";
-import { ValidatorStringLength, ValidatorStringMatchesPattern, ValidatorInputRequired, ModelProxy } from "@ui";
-import type { Beschaeftigungsart, Betrieb, BetriebeAnsprechpartner, LehrerListeEintrag, SchuelerBetrieb } from "@core";
+import { ModelProxy, ValidatorInputRequired, ValidatorStringLength, ValidatorStringMatchesPattern } from "@ui";
+import type { Beschaeftigungsart, Betrieb, BetriebeAnsprechpartner, LehrerListeEintrag, OrtKatalogEintrag, SchuelerBetrieb } from "@core";
 import { computed } from "vue";
 import { StringPattern } from "../../../../../../ui/src/validation/common/ValidatorStringMatchesPattern";
 
@@ -48,5 +48,7 @@ export class SchuelerBetriebeModelProxy extends ModelProxy<SchuelerBetrieb> {
 		get: () => this.manager().ansprechpartnerById.get(this.proxy.idAnsprechpartner ?? -1) ?? null,
 		set: (v: BetriebeAnsprechpartner | null) => this.proxy.idAnsprechpartner = v?.id ?? null,
 	});
+
+	ort = computed<OrtKatalogEintrag | null>(() => this.manager().orteById.get(this.betrieb.value?.idOrt ?? -1) ?? null);
 
 }
