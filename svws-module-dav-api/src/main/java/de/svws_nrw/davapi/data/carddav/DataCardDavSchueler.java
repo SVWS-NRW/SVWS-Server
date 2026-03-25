@@ -94,7 +94,7 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 	 * @return true, wenn der Schüler durch den Filter durchgelassen werden soll, und ansonsten false
 	 */
 	static boolean filterBySchuelerStatus(final SchuelerListeEintrag schueler) {
-		final SchuelerStatus status = SchuelerStatus.data().getWertByID(schueler.status);
+		final SchuelerStatus status = SchuelerStatus.data().getWertByID((long) schueler.status);
 		return (status == SchuelerStatus.AKTIV) || (status == SchuelerStatus.EXTERN)
 				|| (status == SchuelerStatus.NEUAUFNAHME) || (status == SchuelerStatus.BEURLAUBT);
 	}
@@ -193,7 +193,9 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 
 		// Kategorie "Neuaufnahmen" setzen
 		final Set<Long> setNeuaufnahmen =
-				listSchueler.stream().filter(schueler -> SchuelerStatus.data().getWertByIDOrNull(schueler.idStatus) == SchuelerStatus.NEUAUFNAHME)
+				listSchueler.stream()
+						.filter(schueler -> SchuelerStatus.data()
+								.getWertByIDOrNull(schueler.idStatus == null ? null : schueler.idStatus.longValue()) == SchuelerStatus.NEUAUFNAHME)
 						.map(s -> s.ID).collect(Collectors.toSet());
 		setNeuaufnahmen.stream().forEach(idSchueler -> result.computeIfAbsent(idSchueler, s -> new HashSet<>()).add("Neuaufnahmen"));
 

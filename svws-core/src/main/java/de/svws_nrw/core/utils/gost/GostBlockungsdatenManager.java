@@ -1907,7 +1907,8 @@ public class GostBlockungsdatenManager {
 		return "";
 	}
 
-	private @NotNull String regelCheckDuplicatesAndReturnWarnung(final @NotNull GostBlockungRegel r, final @NotNull Set<Long> setIDs, final @NotNull Set<LongArrayKey> setMultiKey,
+	private @NotNull String regelCheckDuplicatesAndReturnWarnung(final @NotNull GostBlockungRegel r, final @NotNull Set<Long> setIDs,
+			final @NotNull Set<LongArrayKey> setMultiKey,
 			final @NotNull List<GostBlockungRegel> menge1, final @NotNull List<GostBlockungRegel> menge6, final @NotNull List<GostBlockungRegel> menge9,
 			final @NotNull List<GostBlockungRegel> menge10, final @NotNull List<GostBlockungRegel> menge15) {
 		// Ist die Regel-ID doppelt?
@@ -2428,7 +2429,7 @@ public class GostBlockungsdatenManager {
 		for (final @NotNull Schueler sNeu : schuelermenge) {
 			DeveloperNotificationException.ifInvalidID("schueler.id", sNeu.id);
 			DeveloperNotificationException.ifNull("schueler.geschlecht", Geschlecht.fromValue(sNeu.geschlecht));
-			DeveloperNotificationException.ifNull("schueler.status", SchuelerStatus.data().getWertByID(sNeu.status));
+			DeveloperNotificationException.ifNull("schueler.status", SchuelerStatus.data().getWertByID((long) sNeu.status));
 			DeveloperNotificationException.ifTrue("schueler.id " + sNeu.id + " Dopplung!", !setId.add(sNeu.id));
 		}
 
@@ -2787,34 +2788,34 @@ public class GostBlockungsdatenManager {
 	 * @return eine String-Representation vieler Daten.
 	 */
 	public @NotNull String getDebugString() {
-	    final @NotNull StringBuilder sb = new StringBuilder();
+		final @NotNull StringBuilder sb = new StringBuilder();
 
-	    sb.append("\nErgebnisse = %d\n".formatted(_daten.ergebnisse.size()));
+		sb.append("\nErgebnisse = %d\n".formatted(_daten.ergebnisse.size()));
 
-	    sb.append("\nSchienen = %d\n".formatted(_daten.schienen.size()));
-	    for (final @NotNull GostBlockungSchiene s : _daten.schienen) {
-	        sb.append("    ID=%d, NR=%d, BEZ=%s, W-STD=%d\n".formatted(s.id, s.nummer, s.bezeichnung, s.wochenstunden));
-	        for (final @NotNull GostBlockungsergebnis e : ergebnisGetListeSortiertNachID())
-	            sb.append("    Hat E %d Schiene %d --> %b\n".formatted(e.id, s.id, ergebnisManagerGet(e.id).getOfSchieneExists(s.id)));
-	    }
+		sb.append("\nSchienen = %d\n".formatted(_daten.schienen.size()));
+		for (final @NotNull GostBlockungSchiene s : _daten.schienen) {
+			sb.append("    ID=%d, NR=%d, BEZ=%s, W-STD=%d\n".formatted(s.id, s.nummer, s.bezeichnung, s.wochenstunden));
+			for (final @NotNull GostBlockungsergebnis e : ergebnisGetListeSortiertNachID())
+				sb.append("    Hat E %d Schiene %d --> %b\n".formatted(e.id, s.id, ergebnisManagerGet(e.id).getOfSchieneExists(s.id)));
+		}
 
-	    sb.append("\nSchülermenge = %d\n".formatted(_daten.schueler.size()));
-	    for (final @NotNull Schueler s : _daten.schueler)
-	        sb.append("    %d, %s, %s\n".formatted(s.id, s.nachname, s.vorname));
+		sb.append("\nSchülermenge = %d\n".formatted(_daten.schueler.size()));
+		for (final @NotNull Schueler s : _daten.schueler)
+			sb.append("    %d, %s, %s\n".formatted(s.id, s.nachname, s.vorname));
 
-	    sb.append("\nKurse = %d\n".formatted(_daten.kurse.size()));
-	    for (final @NotNull GostBlockungKurs k : _daten.kurse)
-	        sb.append("    %d, %d, %d, %d\n".formatted(k.id, k.fach_id, k.kursart, k.nummer));
+		sb.append("\nKurse = %d\n".formatted(_daten.kurse.size()));
+		for (final @NotNull GostBlockungKurs k : _daten.kurse)
+			sb.append("    %d, %d, %d, %d\n".formatted(k.id, k.fach_id, k.kursart, k.nummer));
 
-	    sb.append("\nFachwahlen = %d\n".formatted(_daten.fachwahlen.size()));
-	    for (final @NotNull GostFachwahl fw : _daten.fachwahlen)
-	        sb.append("    %d, %d, %d, %d, %b\n".formatted(fw.fachID, fw.kursartID, fw.schuelerID, fw.abiturfach, fw.istSchriftlich));
+		sb.append("\nFachwahlen = %d\n".formatted(_daten.fachwahlen.size()));
+		for (final @NotNull GostFachwahl fw : _daten.fachwahlen)
+			sb.append("    %d, %d, %d, %d, %b\n".formatted(fw.fachID, fw.kursartID, fw.schuelerID, fw.abiturfach, fw.istSchriftlich));
 
-	    sb.append("\nRegeln = %d\n".formatted(_daten.regeln.size()));
-	    for (final @NotNull GostBlockungRegel r : _daten.regeln)
-	        sb.append("    %d, %d, %s\n".formatted(r.id, r.typ, r.parameter));
+		sb.append("\nRegeln = %d\n".formatted(_daten.regeln.size()));
+		for (final @NotNull GostBlockungRegel r : _daten.regeln)
+			sb.append("    %d, %d, %s\n".formatted(r.id, r.typ, r.parameter));
 
-	    return sb.toString();
+		return sb.toString();
 	}
 
 

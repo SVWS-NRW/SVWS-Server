@@ -1,5 +1,20 @@
 package de.svws_nrw.data.gost;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import de.svws_nrw.asd.data.schueler.Sprachbelegung;
+import de.svws_nrw.asd.data.schueler.Sprachendaten;
+import de.svws_nrw.asd.types.fach.Fach;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.Abiturdaten;
@@ -10,16 +25,9 @@ import de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr;
 import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostLeistungenFachbelegung;
 import de.svws_nrw.core.data.gost.GostLeistungenFachwahl;
-import de.svws_nrw.asd.types.schueler.SchuelerStatus;
-import de.svws_nrw.asd.data.schueler.Sprachbelegung;
-import de.svws_nrw.asd.data.schueler.Sprachendaten;
-import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
-import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
-import de.svws_nrw.asd.types.schule.Schulform;
-import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeUtils;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
@@ -40,14 +48,6 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response.Status;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 
 /**
@@ -998,10 +998,11 @@ public final class DBUtilsGostLaufbahn {
 			if (jahrgang == null)
 				continue;
 			// Filtere Schüler, die vor der Oberstufe die Schule verlassen haben
-			final @NotNull SchuelerStatus status = SchuelerStatus.data().getWertByID(schueler.idStatus);
+			final @NotNull SchuelerStatus status = SchuelerStatus.data().getWertByID(schueler.idStatus == null ? null : schueler.idStatus.longValue());
 			if ((schuljahresabschnitt.Jahr < conn.getUser().schuleGetSchuljahresabschnitt().schuljahr)
 					&& !"EF".equals(jahrgang.ASDJahrgang) && !"Q1".equals(jahrgang.ASDJahrgang) && !"Q2".equals(jahrgang.ASDJahrgang)
-					&& ((status == SchuelerStatus.ABGANG) || (status == SchuelerStatus.ABSCHLUSS) || (status == SchuelerStatus.EHEMALIGE) || (status == SchuelerStatus.WARTELISTE)))
+					&& ((status == SchuelerStatus.ABGANG) || (status == SchuelerStatus.ABSCHLUSS) || (status == SchuelerStatus.EHEMALIGE)
+							|| (status == SchuelerStatus.WARTELISTE)))
 				continue;
 			// Bestimme die Restjahre in Bezug auf den Abiturjahrgang und den Schuljahresabschnitt
 			final int restjahreNachAbiturjahr = abijahrgang - schuljahresabschnitt.Jahr;

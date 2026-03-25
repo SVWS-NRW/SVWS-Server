@@ -23,6 +23,15 @@ import java.util.zip.ZipOutputStream;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
+import de.svws_nrw.asd.data.schueler.Sprachbelegung;
+import de.svws_nrw.asd.data.schueler.Sprachpruefung;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.base.compression.CompressionException;
 import de.svws_nrw.base.crypto.AES;
 import de.svws_nrw.base.crypto.AESException;
@@ -41,19 +50,10 @@ import de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenSchueler;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.asd.data.schueler.Sprachbelegung;
-import de.svws_nrw.asd.data.schueler.Sprachpruefung;
-import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
-import de.svws_nrw.asd.types.Note;
-import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
-import de.svws_nrw.asd.types.schueler.SchuelerStatus;
-import de.svws_nrw.asd.types.schule.Schulform;
-import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
-import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
@@ -1027,7 +1027,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 
 		// Führe für alle Schüler nacheinander die Belegprüfung durch
 		for (final DTOSchueler dtoSchueler : listSchuelerDTOs) {
-			final SchuelerStatus status = SchuelerStatus.data().getWertByID(dtoSchueler.idStatus);
+			final SchuelerStatus status = SchuelerStatus.data().getWertByID(dtoSchueler.idStatus == null ? null : dtoSchueler.idStatus.longValue());
 			if ((status != SchuelerStatus.AKTIV) && (status != SchuelerStatus.EXTERN) && (status != SchuelerStatus.NEUAUFNAHME)
 					&& (status != SchuelerStatus.WARTELISTE))
 				continue;

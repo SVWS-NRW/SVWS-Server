@@ -2388,7 +2388,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	private boolean getOfSchuelerHatStatusExtern(final @NotNull Long idSchueler) {
 		final int idStatus = getSchuelerG(idSchueler).status;
-		final SchuelerStatus status = SchuelerStatus.data().getWertByID(idStatus);
+		final SchuelerStatus status = SchuelerStatus.data().getWertByID((long) idStatus);
 		return (status == SchuelerStatus.EXTERN);
 	}
 

@@ -37,7 +37,7 @@ class TestSchulform {
 	 */
 	@Test
 	@DisplayName("Teste CoreType Schulform: Anzahl der vorhandenen Werte.")
-    void testSchulform_AnzahlEintraege() {
+	void testSchulform_AnzahlEintraege() {
 		assertEquals(19, Schulform.data().getWerte().size());
 	}
 
@@ -50,15 +50,15 @@ class TestSchulform {
 	 */
 	@Test
 	@DisplayName("Teste CoreType Schulform: Anzahl der Einträge für die Schuljahre 21, 22, 23.")
-    void testSchulform_AnzahlenBei21_22_23() {
-    	assertEquals(19, Schulform.data().getWerte().size());
-    	assertEquals(19, Schulform.data().getWerteBySchuljahr(2021).size());
-    	assertEquals(19, Schulform.data().getWerteBySchuljahr(2022).size());
-    	assertEquals(18, Schulform.data().getWerteBySchuljahr(2023).size());   // Schulform GM ausgelaufen
-    	assertEquals(5, Schulform.getListMitGymOb(2021).size());
-    	assertEquals(5, Schulform.getListMitGymOb(2022).size());
-    	assertEquals(5, Schulform.getListMitGymOb(2023).size());
-    }
+	void testSchulform_AnzahlenBei21_22_23() {
+		assertEquals(19, Schulform.data().getWerte().size());
+		assertEquals(19, Schulform.data().getWerteBySchuljahr(2021).size());
+		assertEquals(19, Schulform.data().getWerteBySchuljahr(2022).size());
+		assertEquals(18, Schulform.data().getWerteBySchuljahr(2023).size());   // Schulform GM ausgelaufen
+		assertEquals(5, Schulform.getListMitGymOb(2021).size());
+		assertEquals(5, Schulform.getListMitGymOb(2022).size());
+		assertEquals(5, Schulform.getListMitGymOb(2023).size());
+	}
 
 	/**
 	 * Test des CoreTypes Schulform
@@ -69,13 +69,13 @@ class TestSchulform {
 	 */
 	@Test
 	@DisplayName("Teste CoreType Schulform: Korrekte Schulform, Text und Existenz von GM in verschiedenen Jahren.")
-    void testSchulform_GetterAndExistensGM() {
-    	assertEquals(Schulform.GE, Schulform.data().getWertBySchluessel("15"));
-    	assertEquals(Schulform.GE, Schulform.data().getWertByID(4000));
-    	assertEquals(Schulform.GE, Schulform.data().getWertByKuerzel("GE"));
-    	assertEquals("Gesamtschule", Schulform.GE.daten(2000).text);
-    	assertNotNull(Schulform.GM.daten(2022));
-    	assertNull(Schulform.GM.daten(2023));
-    }
+	void testSchulform_GetterAndExistensGM() {
+		assertEquals(Schulform.GE, Schulform.data().getWertBySchluessel("15"));
+		assertEquals(Schulform.GE, Schulform.data().getWertByID(4000L));
+		assertEquals(Schulform.GE, Schulform.data().getWertByKuerzel("GE"));
+		assertEquals("Gesamtschule", Schulform.GE.daten(2000).text);
+		assertNotNull(Schulform.GM.daten(2022));
+		assertNull(Schulform.GM.daten(2023));
+	}
 
 }

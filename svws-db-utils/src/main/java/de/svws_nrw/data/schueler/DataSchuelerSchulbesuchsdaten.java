@@ -1,20 +1,5 @@
 package de.svws_nrw.data.schueler;
 
-import de.svws_nrw.asd.data.CoreTypeException;
-import de.svws_nrw.asd.data.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag;
-import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
-import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
-import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
-import de.svws_nrw.asd.types.schueler.Einschulungsart;
-import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
-import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
-import de.svws_nrw.asd.types.schule.Schulform;
-import de.svws_nrw.asd.types.schueler.Herkunftsarten;
-import de.svws_nrw.db.dto.current.schild.grundschule.DTOKindergarten;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
-import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
-import jakarta.validation.constraints.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,18 +8,32 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.CoreTypeException;
+import de.svws_nrw.asd.data.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
+import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
+import de.svws_nrw.asd.types.schueler.Einschulungsart;
+import de.svws_nrw.asd.types.schueler.Herkunftsarten;
+import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
+import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.grundschule.DTOKindergarten;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAbgaenge;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerMerkmale;
+import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response.Status;
 
 
@@ -187,7 +186,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		if (value == null)
 			return null;
 		final PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag eintrag =
-				PrimarstufeSchuleingangsphaseBesuchsjahre.data().getEintragByID(value);
+				PrimarstufeSchuleingangsphaseBesuchsjahre.data().getEintragByID(value.longValue());
 		if (eintrag == null)
 			return null;
 		return eintrag.id;
@@ -202,11 +201,13 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 				final Long idPatch = JSONMapper.convertToLong(value, true, "idPatch");
 				if (!Objects.equals(idPatch, getLongId(dtoSchueler)))
 					throw new ApiOperationException(Status.BAD_REQUEST,
-							"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(idPatch, getLongId(dtoSchueler)));
+							"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(idPatch,
+									getLongId(dtoSchueler)));
 			}
 			// Informationen zu der Schule, die vor der Aufnahme besucht wurde
 			case "idVorherigeSchule" -> mapSchulnummer(value, "idVorherigeSchule", v -> dtoSchueler.LSSchulNr = v);
-			case "vorigeAllgHerkunft" -> { /* Feld ist historisch überflüssig */ }
+			case "vorigeAllgHerkunft" -> {
+				/* Feld ist historisch überflüssig */ }
 			case "vorigeEntlassdatum" -> dtoSchueler.LSSchulEntlassDatum = JSONMapper.convertToString(value, true, true, null, "vorigeEntlassdatum");
 			case "vorigeEntlassjahrgang" -> updateVorigeEntlassjahrgang(dtoSchueler, value, name);
 			case "vorigeArtLetzteVersetzung" -> mapVorigeArtLetzteVersetzung(dtoSchueler, value);

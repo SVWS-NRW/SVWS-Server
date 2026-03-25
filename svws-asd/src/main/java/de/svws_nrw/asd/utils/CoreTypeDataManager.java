@@ -406,7 +406,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 *
 	 * @throws CoreTypeException   wenn kein Eintrag gefunden wird
 	 */
-	public @NotNull T getEintragByIDOrException(final long id) throws CoreTypeException {
+	public @NotNull T getEintragByIDOrException(final Long id) throws CoreTypeException {
 		final T tmp = _mapIDToEintrag.get(id);
 		if (tmp == null)
 			throw new CoreTypeException(_name + ": Kein Historien-Eintrag für die ID " + id + " gefunden.");
@@ -421,7 +421,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 *
 	 * @return der Historien-Eintrag oder null, wenn die ID ungültig ist
 	 */
-	public T getEintragByID(final long id) {
+	public T getEintragByID(final Long id) {
 		return _mapIDToEintrag.get(id);
 	}
 
@@ -433,7 +433,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 *
 	 * @return der Core-Type-Wert
 	 */
-	public @NotNull U getWertByID(final long id) {
+	public @NotNull U getWertByID(final Long id) {
 		final U tmp = _mapIDToEnum.get(id);
 		if (tmp == null)
 			throw new CoreTypeException(_name + ": Kein Core-Type-Wert für die ID " + id + " gefunden.");
@@ -448,7 +448,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 *
 	 * @return der Core-Type-Wert oder null
 	 */
-	public U getWertByIDOrNull(final long id) {
+	public U getWertByIDOrNull(final Long id) {
 		return _mapIDToEnum.get(id);
 	}
 
