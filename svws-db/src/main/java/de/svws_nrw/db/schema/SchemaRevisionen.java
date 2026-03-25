@@ -44,6 +44,7 @@ import de.svws_nrw.db.schema.revisionen.Revision52Updates;
 import de.svws_nrw.db.schema.revisionen.Revision53Updates;
 import de.svws_nrw.db.schema.revisionen.Revision55Updates;
 import de.svws_nrw.db.schema.revisionen.Revision56Updates;
+import de.svws_nrw.db.schema.revisionen.Revision58Updates;
 import de.svws_nrw.db.schema.revisionen.Revision6Updates;
 import de.svws_nrw.db.schema.revisionen.RevisionNoUpdates;
 
@@ -296,22 +297,24 @@ public enum SchemaRevisionen {
 	REV_56(56, "2026-02-10"),
 
 	/** Neue Spalte Aktiv in der Tabelle Gost_Klausuren_Schuelerklausuren */
-	REV_57(57, "2026-02-23");
+	REV_57(57, "2026-02-23"),
 
+	/** Aktivierung der Fremdschlüsselbeziehung zwischen der Tabelle Klassen und EigeneSchule_Teilstandorte über das AdrMerkmal */
+	REV_58(58, "2026-03-25");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_57;
+	public static final SchemaRevisionen maxRevision = REV_58;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_57;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_58;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
@@ -413,6 +416,7 @@ public enum SchemaRevisionen {
 				case REV_53 -> new Revision53Updates();
 				case REV_55 -> new Revision55Updates();
 				case REV_56 -> new Revision56Updates();
+				case REV_58 -> new Revision58Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}

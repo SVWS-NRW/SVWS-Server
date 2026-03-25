@@ -115,7 +115,6 @@ public class Tabelle_Klassen extends SchemaTabelle {
 			.setConverter(BooleanPlusMinusDefaultMinusConverter.class)
 			.setJavaComment("Gibt an ob in der Klasse Ankreuzeugnisse (GS) oder Kompentenzschreiben (andere) verwendet werden");
 
-
 	/** Die Definition des Fremdschlüssels Klassen_Schuljahresabschnitt_FK */
 	public final SchemaTabelleFremdschluessel fk_Klassen_Schuljahresabschnitt_FK = addForeignKey(
 			"Klassen_Schuljahresabschnitt_FK",
@@ -142,6 +141,14 @@ public class Tabelle_Klassen extends SchemaTabelle {
 	)
 			.setRevision(SchemaRevisionen.REV_2);
 
+	/** Die Definition des Fremdschlüssels fk_Klassen_Teilstandorte_FK */
+	public final SchemaTabelleFremdschluessel fk_Klassen_Teilstandorte_FK = addForeignKey(
+			"Klassen_Teilstandorte_FK",
+			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
+			new Pair<>(col_AdrMerkmal, Schema.tab_EigeneSchule_Teilstandorte.col_AdrMerkmal)
+	)
+			.setRevision(SchemaRevisionen.REV_58);
 
 	/** Die Definition des Unique-Index Klassen_UC1 */
 	public final SchemaTabelleUniqueIndex unique_Klassen_UC1 = addUniqueIndex("Klassen_UC1",
