@@ -887,6 +887,7 @@ export { GostKursblockungRegelParameterTyp } from './core/types/kursblockung/Gos
 export { GostKursblockungRegelTyp } from './core/types/kursblockung/GostKursblockungRegelTyp';
 export { OAuth2ServerTyp } from './core/types/oauth2/OAuth2ServerTyp';
 export { ReportingAusgabeformat } from './core/types/reporting/ReportingAusgabeformat';
+export { ReportingBildDefinition } from './core/types/reporting/ReportingBildDefinition';
 export { ReportingEMailEmpfaengerTyp } from './core/types/reporting/ReportingEMailEmpfaengerTyp';
 export { ReportingFilterOperation } from './core/types/reporting/ReportingFilterOperation';
 export { ReportingFilterVerknuepfung } from './core/types/reporting/ReportingFilterVerknuepfung';
