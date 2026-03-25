@@ -399,7 +399,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 *
 	 * @throws CoreTypeException   wenn kein Eintrag gefunden wird
 	 */
-	public getEintragByIDOrException(id: number): T {
+	public getEintragByIDOrException(id: number | null): T {
 		const tmp: T | null = this._mapIDToEintrag.get(id);
 		if (tmp === null)
 			throw new CoreTypeException(this._name + ": Kein Historien-Eintrag für die ID " + id + " gefunden.")
@@ -413,7 +413,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 *
 	 * @return der Historien-Eintrag oder null, wenn die ID ungültig ist
 	 */
-	public getEintragByID(id: number): T | null {
+	public getEintragByID(id: number | null): T | null {
 		return this._mapIDToEintrag.get(id);
 	}
 
@@ -424,7 +424,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 *
 	 * @return der Core-Type-Wert
 	 */
-	public getWertByID(id: number): U {
+	public getWertByID(id: number | null): U {
 		const tmp: U | null = this._mapIDToEnum.get(id);
 		if (tmp === null)
 			throw new CoreTypeException(this._name + ": Kein Core-Type-Wert für die ID " + id + " gefunden.")
@@ -438,7 +438,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 *
 	 * @return der Core-Type-Wert oder null
 	 */
-	public getWertByIDOrNull(id: number): U | null {
+	public getWertByIDOrNull(id: number | null): U | null {
 		return this._mapIDToEnum.get(id);
 	}
 

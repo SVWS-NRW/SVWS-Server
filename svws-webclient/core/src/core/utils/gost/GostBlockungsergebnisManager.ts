@@ -2173,7 +2173,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	private getOfSchuelerHatStatusExtern(idSchueler: number): boolean {
 		const idStatus: number = this.getSchuelerG(idSchueler).status;
-		const status: SchuelerStatus | null = SchuelerStatus.data().getWertByID(idStatus);
+		const status: SchuelerStatus | null = SchuelerStatus.data().getWertByID(idStatus as number);
 		return (status as unknown === SchuelerStatus.EXTERN as unknown);
 	}
 
