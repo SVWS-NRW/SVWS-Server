@@ -84,6 +84,15 @@ public final class LehrerServiceFactory {
 	}
 
 	/**
+	 * Erstellt einen neuen Service für den Zugriff auf die Unterrichtsfächer von Lehrern.
+	 *
+	 * @return der Service für die Unterrichtsfächer von Lehrern
+	 */
+	public LehrerUnterrichtsfachService getLehrerUnterrichtsfachService() {
+		return new LehrerUnterrichtsfachService(lehrerRepositoryFactory.getLehrerUnterrichtsfachRepository());
+	}
+
+	/**
 	 * Erstellt einen neuen Service für den Zugriff auf Eiträge zu den Anrechnungsstunden bei Lehrern.
 	 *
 	 * @return der Service für die Fachrichtungen von Lehrern.

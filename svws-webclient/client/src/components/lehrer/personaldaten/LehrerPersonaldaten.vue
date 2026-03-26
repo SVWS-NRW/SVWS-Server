@@ -47,6 +47,13 @@
 					:patch-fachrichtung :add-fachrichtung :remove-fachrichtungen />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
+		<svws-ui-content-card title="Unterrichtsfächer" v-if="ServerMode.DEV.checkServerMode(props.serverMode)">
+			<svws-ui-input-wrapper>
+				<lehrer-personaldaten-unterrichtsfaecher :hat-update-kompetenz="!readonly"
+					:lehrer-unterrichtsfaecher :map-faecher :id-lehrer="() => personaldatenModelProxy.proxy.id"
+					:add-lehrer-unterrichtsfach :patch-lehrer-unterrichtsfach :remove-lehrer-unterrichtsfach />
+			</svws-ui-input-wrapper>
+		</svws-ui-content-card>
 		<svws-ui-content-card title="Mehr- und Minderleistung, Anrechnungsstunden">
 			<svws-ui-input-wrapper>
 				<lehrer-personaldaten-anrechnungen :hat-update-kompetenz="!readonly" :personalabschnittsdaten-model-proxy="() => personalabschnittsdatenModelProxy"
@@ -62,7 +69,7 @@
 	import { computed } from "vue";
 	import type { LehrerPersonaldatenProps } from './LehrerPersonaldatenProps';
 	import type { JavaSet, LehrerPersonalabschnittsdaten } from "@core";
-	import { LehrerZugangsgrund, LehrerAbgangsgrund, BenutzerKompetenz, HashSet, LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis } from "@core";
+	import { LehrerZugangsgrund, LehrerAbgangsgrund, BenutzerKompetenz, HashSet, LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis, ServerMode } from "@core";
 	import { CoreTypeSelectManager, SelectManager } from "@ui";
 	import { LehrerPersonalabschnittsdatenModelProxy } from "./LehrerPersonalabschnittsdatenModelProxy";
 	import { LehrerPersonaldatenModelProxy } from "./LehrerPersonaldatenModelProxy";

@@ -4,6 +4,7 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAnrechnungsstunde;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerEntlastungsstunde;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerUnterrichtsfach;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerMehrleistung;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramt;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramtBefaehigung;
@@ -42,6 +43,16 @@ public final class LehrerRepositoryFactory extends RepositoryFactory {
 	 */
 	public LehrerAbschnittsdatenRepository getLehrerAbschnittsdatenRepository() {
 		return getOrCreate(LehrerAbschnittsdatenRepository.class, () -> new LehrerAbschnittsdatenRepositoryImpl(conn));
+	}
+
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOLehrerUnterrichtsfach}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public LehrerUnterrichtsfachRepository getLehrerUnterrichtsfachRepository() {
+		return getOrCreate(LehrerUnterrichtsfachRepository.class, () -> new LehrerUnterrichtsfachRepositoryImpl(conn));
 	}
 
 

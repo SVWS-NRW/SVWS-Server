@@ -68,6 +68,11 @@ export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 			addAnrechnung: routeLehrer.data.addAnrechnung,
 			patchAnrechnung: routeLehrer.data.patchAnrechnung,
 			removeAnrechnung: routeLehrer.data.removeAnrechnung,
+			mapFaecher: () => routeLehrer.data.mapFaecher,
+			lehrerUnterrichtsfaecher: () => routeLehrer.data.lehrerUnterrichtsfaecher,
+			addLehrerUnterrichtsfach: routeLehrer.data.addLehrerUnterrichtsfach,
+			patchLehrerUnterrichtsfach: routeLehrer.data.patchLehrerUnterrichtsfach,
+			removeLehrerUnterrichtsfach: routeLehrer.data.removeLehrerUnterrichtsfach,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 		};
 	}

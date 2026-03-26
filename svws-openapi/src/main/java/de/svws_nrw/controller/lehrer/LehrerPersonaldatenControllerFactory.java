@@ -7,6 +7,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
 import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
 import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenService;
+import de.svws_nrw.service.lehrer.LehrerUnterrichtsfachService;
 import de.svws_nrw.service.lehrer.LehrerServiceFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -62,6 +63,19 @@ public final class LehrerPersonaldatenControllerFactory {
 		return new LehrerPersonaldatenControllerFactory();
 	}
 
+
+
+	/**
+	 * Erstellt einen Controller für die Unterrichtsfächer von Lehrern
+	 *
+	 * @return der Controller
+	 *
+	 * @throws ApiOperationException wenn ein Fehler bei der Überprüfung der Berechtigung auftritt
+	 */
+	public LehrerUnterrichtsfachController getLehrerUnterrichtsfachController() throws ApiOperationException {
+		final LehrerUnterrichtsfachService service = serviceFactory.getLehrerUnterrichtsfachService();
+		return new LehrerUnterrichtsfachControllerImpl(service);
+	}
 
 
 	/**

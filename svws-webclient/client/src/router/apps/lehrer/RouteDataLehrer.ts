@@ -1,4 +1,4 @@
-import type { ApiFile, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten,
+import type { ApiFile, FachDaten, LehrerUnterrichtsfach, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten,
 	LehrerPersonalabschnittsdatenAnrechnungsstunden, LehrerPersonaldaten, LehrerStammdaten, List, ReportingParameter, SchulEintrag, SimpleOperationResponse,
 	StundenplanListeEintrag } from "@core";
 import { ArrayList, BenutzerKompetenz, DeveloperNotificationException, ServerMode, UserNotificationException } from "@core";
@@ -16,6 +16,8 @@ import { routeLehrerAllgemeinesGruppenprozesse } from "./allgemeines/RouteLehrer
 interface RouteStateLehrer extends RouteStateAuswahlInterface<LehrerListeManager> {
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
 	mapSchulen: Map<string, SchulEintrag>;
+	mapFaecher: Map<number, FachDaten>;
+	lehrerUnterrichtsfaecher: List<LehrerUnterrichtsfach>;
 	pendingStateManager: PendingStateManagerLehrerIndividualdaten | undefined;
 }
 
@@ -27,6 +29,8 @@ const defaultState = <RouteStateLehrer>{
 	gruppenprozesseView: routeLehrerIndividualdatenGruppenprozesse,
 	mapStundenplaene: new Map(),
 	mapSchulen: new Map(),
+	mapFaecher: new Map(),
+	lehrerUnterrichtsfaecher: new ArrayList(),
 	pendingStateManager: undefined,
 };
 
@@ -101,7 +105,13 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 	}
 
 	public async ladeDaten(auswahl: LehrerListeEintrag | null): Promise<LehrerStammdaten | null> {
-		return (auswahl === null) ? null : await api.server.getLehrerStammdaten(api.schema, auswahl.id);
+		if (auswahl === null) {
+			return null;
+		}
+		if (this.manager.hasPersonalDaten()) {
+			this._state.value.lehrerUnterrichtsfaecher = await api.server.getLehrerUnterrichtsfaecher(api.schema, auswahl.id);
+		}
+		return await api.server.getLehrerStammdaten(api.schema, auswahl.id);
 	}
 
 	protected async updateManager(manager: LehrerListeManager, managerAlt: LehrerListeManager, daten: LehrerStammdaten) {
@@ -167,11 +177,17 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		}
 		const personaldaten = await api.server.getLehrerPersonaldaten(api.schema, this.manager.auswahl().id);
 		this.manager.setPersonalDaten(personaldaten);
-		this.setPatchedState({ mapSchulen });
+		const faecher = await api.server.getFaecher(api.schema);
+		const mapFaecher = new Map<number, FachDaten>();
+		for (const f of faecher) {
+			mapFaecher.set(f.id, f);
+		}
+		this.setPatchedState({ mapSchulen, mapFaecher });
 	}
 
 	public async unloadPersonaldaten() {
 		this.manager.setPersonalDaten(null);
+		this._state.value.lehrerUnterrichtsfaecher = new ArrayList();
 		this.commit();
 	}
 
@@ -375,6 +391,41 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		}
 		await api.server.patchLehrerFachrichtung(patch, api.schema, eintrag.id);
 		Object.assign(eintrag, patch);
+		this.commit();
+	};
+
+	get mapFaecher(): Map<number, FachDaten> {
+		return this._state.value.mapFaecher;
+	}
+
+	get lehrerUnterrichtsfaecher(): List<LehrerUnterrichtsfach> {
+		return this._state.value.lehrerUnterrichtsfaecher;
+	}
+
+	addLehrerUnterrichtsfach = async (eintrag: Partial<LehrerUnterrichtsfach>) => {
+		if (!this.manager.hasPersonalDaten()) {
+			throw new DeveloperNotificationException("Unterrichtsfächer können nur hinzugefügt werden, wenn gültige Personaldaten geladen sind.");
+		}
+		const result = await api.server.addLehrerUnterrichtsfach(eintrag, api.schema);
+		this._state.value.lehrerUnterrichtsfaecher.add(result);
+		this.commit();
+	};
+
+	patchLehrerUnterrichtsfach = async (eintrag: LehrerUnterrichtsfach, patch: Partial<LehrerUnterrichtsfach>) => {
+		if (!this.manager.hasPersonalDaten()) {
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		}
+		await api.server.patchLehrerUnterrichtsfach(patch, api.schema, eintrag.id);
+		Object.assign(eintrag, patch);
+		this.commit();
+	};
+
+	removeLehrerUnterrichtsfach = async (eintrag: LehrerUnterrichtsfach) => {
+		if (!this.manager.hasPersonalDaten()) {
+			throw new DeveloperNotificationException("Unterrichtsfächer können nur entfernt werden, wenn gültige Personaldaten geladen sind.");
+		}
+		await api.server.deleteLehrerUnterrichtsfach(api.schema, eintrag.id);
+		this._state.value.lehrerUnterrichtsfaecher.remove(eintrag);
 		this.commit();
 	};
 

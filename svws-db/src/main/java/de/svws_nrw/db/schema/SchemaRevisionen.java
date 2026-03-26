@@ -300,21 +300,24 @@ public enum SchemaRevisionen {
 	REV_57(57, "2026-02-23"),
 
 	/** Aktivierung der Fremdschlüsselbeziehung zwischen der Tabelle Klassen und EigeneSchule_Teilstandorte über das AdrMerkmal */
-	REV_58(58, "2026-03-25");
+	REV_58(58, "2026-03-25"),
+
+	/** Neue Tabelle LehrerUnterrichtsfaecher für die Zuordnung von Unterrichtsfächern zu Lehrkräften */
+	REV_59(59, "2026-03-26");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_58;
+	public static final SchemaRevisionen maxRevision = REV_59;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_58;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_59;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
@@ -351,8 +354,9 @@ public enum SchemaRevisionen {
 	 * @return die Map für die Abbildung
 	 */
 	private static Map<Long, SchemaRevisionen> getMapByNumber() {
-		if (_mapByNumber == null)
+		if (_mapByNumber == null) {
 			_mapByNumber = Arrays.stream(SchemaRevisionen.values()).collect(Collectors.toMap(r -> r.revision, r -> r));
+		}
 		return _mapByNumber;
 	}
 

@@ -140,6 +140,7 @@ import { LehrerPersonalabschnittsdatenLehrerfunktion } from '../asd/data/lehrer/
 import { LehrerPersonaldaten } from '../asd/data/lehrer/LehrerPersonaldaten';
 import { LehrerRechtsverhaeltnisKatalogEintrag } from '../asd/data/lehrer/LehrerRechtsverhaeltnisKatalogEintrag';
 import { LehrerStammdaten } from '../asd/data/lehrer/LehrerStammdaten';
+import { LehrerUnterrichtsfach } from '../core/data/lehrer/LehrerUnterrichtsfach';
 import { LehrerZugangsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerZugangsgrundKatalogEintrag';
 import { Leitungsfunktion } from '../core/data/schule/Leitungsfunktion';
 import { Lernplattform } from '../core/data/schule/Lernplattform';
@@ -8862,6 +8863,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getLehrerUnterrichtsfaecher für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/personaldaten/unterrichtsfach
+	 *
+	 * Liest die Unterrichtsfächer des Lehrers mit der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Unterrichtsfächer des Lehrers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<LehrerUnterrichtsfach>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrerpersonaldaten anzusehen.
+	 *   Code 404: Kein Lehrer-Eintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Unterrichtsfächer des Lehrers
+	 */
+	public async getLehrerUnterrichtsfaecher(schema : string, id : number) : Promise<List<LehrerUnterrichtsfach>> {
+		const path = "/db/{schema}/lehrer/{id : \\d+}/personaldaten/unterrichtsfach"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<LehrerUnterrichtsfach>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerUnterrichtsfach.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getLehrerStammdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/{id : \d+}/stammdaten
 	 *
 	 * Liest die Stammdaten des Lehrers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerdaten besitzt.
@@ -10286,6 +10316,92 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return LehrerLehrbefaehigungEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addLehrerUnterrichtsfach für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/unterrichtsfach
+	 *
+	 * Erstellt einen neuen Datensatz für ein Unterrichtsfach eines Lehrers und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Das Unterrichtsfach wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerUnterrichtsfach
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerUnterrichtsfach>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Das Unterrichtsfach wurde erfolgreich hinzugefügt.
+	 */
+	public async addLehrerUnterrichtsfach(data : Partial<LehrerUnterrichtsfach>, schema : string) : Promise<LehrerUnterrichtsfach> {
+		const path = "/db/{schema}/lehrer/personaldaten/unterrichtsfach"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = LehrerUnterrichtsfach.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return LehrerUnterrichtsfach.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLehrerUnterrichtsfach für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/unterrichtsfach/{id : \d+}
+	 *
+	 * Passt den Unterrichtsfach-Eintrag mit der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerUnterrichtsfach
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Unterrichtsfach-Eintrag mit der angegebenen ID gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerUnterrichtsfach>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Patch wurde erfolgreich integriert.
+	 */
+	public async patchLehrerUnterrichtsfach(data : Partial<LehrerUnterrichtsfach>, schema : string, id : number) : Promise<LehrerUnterrichtsfach> {
+		const path = "/db/{schema}/lehrer/personaldaten/unterrichtsfach/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = LehrerUnterrichtsfach.transpilerToJSONPatch(data);
+		const result : string = await super.patchJSONWithResponse(path, body);
+		const text = result;
+		return LehrerUnterrichtsfach.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteLehrerUnterrichtsfach für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personaldaten/unterrichtsfach/{id : \d+}
+	 *
+	 * Entfernt den Unterrichtsfach-Eintrag mit der angegebenen ID aus der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Datensatz wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerUnterrichtsfach
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu entfernen.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Datensatz wurde erfolgreich entfernt.
+	 */
+	public async deleteLehrerUnterrichtsfach(schema : string, id : number) : Promise<LehrerUnterrichtsfach> {
+		const path = "/db/{schema}/lehrer/personaldaten/unterrichtsfach/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return LehrerUnterrichtsfach.transpilerFromJSON(text);
 	}
 
 

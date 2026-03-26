@@ -30,6 +30,7 @@ import de.svws_nrw.asd.data.lehrer.LehrerZugangsgrundKatalogEintrag;
 import de.svws_nrw.controller.lehrer.LehrerPersonaldatenControllerFactory;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.lehrer.LehrerEinwilligung;
+import de.svws_nrw.core.data.lehrer.LehrerUnterrichtsfach;
 import de.svws_nrw.core.data.lehrer.LehrerLernplattform;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.types.ServerMode;
@@ -67,6 +68,8 @@ import de.svws_nrw.data.schule.DataEinwilligungsarten;
 import de.svws_nrw.data.schule.DataLernplattformen;
 import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenCreateRequest;
 import de.svws_nrw.service.lehrer.LehrerAnrechnungsstundenPatchRequest;
+import de.svws_nrw.service.lehrer.LehrerUnterrichtsfachCreateRequest;
+import de.svws_nrw.service.lehrer.LehrerUnterrichtsfachPatchRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -1220,6 +1223,121 @@ public class APILehrer {
 				.getLehrerAnrechnungsstundenController()
 				.patch(id, patch);
 	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Unterrichtsfächer eines Lehrers.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param id        die ID des Lehrers
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Unterrichtsfächer des Lehrers
+	 */
+	@GET
+	@Path("/{id : \\d+}/personaldaten/unterrichtsfach")
+	@Operation(summary = "Liefert die Unterrichtsfächer eines Lehrers.",
+			description = "Liest die Unterrichtsfächer des Lehrers mit der angegebenen ID aus der Datenbank und liefert diese zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Unterrichtsfächer des Lehrers",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerUnterrichtsfach.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerpersonaldaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
+	public Response getLehrerUnterrichtsfaecher(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return LehrerPersonaldatenControllerFactory.withReadAccess(request)
+				.getLehrerUnterrichtsfachController()
+				.getListByLehrerId(id);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen eines Unterrichtsfachs zu einem Lehrer.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param patch     die Daten für den neuen Eintrag
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem neuen Datensatz
+	 */
+	@POST
+	@Path("/personaldaten/unterrichtsfach")
+	@Operation(summary = "Erstellt einen neuen Datensatz für ein Unterrichtsfach eines Lehrers.",
+			description = "Erstellt einen neuen Datensatz für ein Unterrichtsfach eines Lehrers und gibt das zugehörige Objekt zurück. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.")
+	@ApiResponse(responseCode = "201", description = "Das Unterrichtsfach wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerUnterrichtsfach.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addLehrerUnterrichtsfach(@PathParam("schema") final String schema,
+			@Valid @RequestBody(description = "Die Daten des neuen Unterrichtsfachs", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = LehrerUnterrichtsfach.class))) final LehrerUnterrichtsfachCreateRequest patch,
+			@Context final HttpServletRequest request) {
+		return LehrerPersonaldatenControllerFactory.withWriteAccess(request)
+				.getLehrerUnterrichtsfachController()
+				.create(patch);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen eines Unterrichtsfachs eines Lehrers.
+	 *
+	 * @param schema   das Datenbankschema
+	 * @param id       die ID des Unterrichtsfach-Eintrags
+	 * @param patch    der Patch
+	 * @param request  die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/personaldaten/unterrichtsfach/{id : \\d+}")
+	@Operation(summary = "Führt einen Patch auf einem Unterrichtsfach-Eintrag eines Lehrers durch.",
+			description = "Passt den Unterrichtsfach-Eintrag mit der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerUnterrichtsfach.class)))
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Unterrichtsfach-Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchLehrerUnterrichtsfach(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Valid @RequestBody(description = "Der Patch für den Unterrichtsfach-Eintrag", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+							schema = @Schema(implementation = LehrerUnterrichtsfach.class))) final LehrerUnterrichtsfachPatchRequest patch,
+			@Context final HttpServletRequest request) {
+		return LehrerPersonaldatenControllerFactory.withWriteAccess(request)
+				.getLehrerUnterrichtsfachController()
+				.patch(id, patch);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen eines Unterrichtsfachs eines Lehrers.
+	 *
+	 * @param schema   das Datenbankschema
+	 * @param id       die ID des Unterrichtsfach-Eintrags
+	 * @param request  die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Datensatz
+	 */
+	@DELETE
+	@Path("/personaldaten/unterrichtsfach/{id : \\d+}")
+	@Operation(summary = "Entfernt den Unterrichtsfach-Eintrag eines Lehrers.",
+			description = "Entfernt den Unterrichtsfach-Eintrag mit der angegebenen ID aus der Datenbank. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personaldaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Der Datensatz wurde erfolgreich entfernt.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = LehrerUnterrichtsfach.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteLehrerUnterrichtsfach(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return LehrerPersonaldatenControllerFactory.withWriteAccess(request)
+				.getLehrerUnterrichtsfachController()
+				.delete(id);
+	}
+
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Funktionen in den Personalabschnittdaten eines Lehrers.

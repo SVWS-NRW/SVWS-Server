@@ -41,7 +41,8 @@
 		</template>
 	</ui-table-grid>
 	<div v-else>
-		<svws-ui-button @click="openHinzufuegen" type="secondary">Anrechnungs-, Mehr- oder Minderleistungsgründe hinzufügen</svws-ui-button>
+		<svws-ui-button v-if="hatUpdateKompetenz" @click="openHinzufuegen" type="secondary">Anrechnungs-, Mehr- oder Minderleistungsgründe hinzufügen</svws-ui-button>
+		<div v-else>Keine Anrechnungs-, Mehr- oder Minderleistungsgründe zugeordnet.</div>
 	</div>
 	<svws-ui-modal v-model:show="showHinzufuegen" size="medium" class="hidden">
 		<template #modalTitle> Anrechnungs-, Mehr- oder Minderleistungsgründe hinzufügen </template>

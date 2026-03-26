@@ -1,4 +1,4 @@
-import type { BenutzerKompetenz, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerPersonalabschnittsdaten,
+import type { BenutzerKompetenz, FachDaten, LehrerUnterrichtsfach, LehrerFachrichtungEintrag, LehrerLehramtEintrag, LehrerLehrbefaehigungEintrag, LehrerPersonalabschnittsdaten,
 	LehrerPersonalabschnittsdatenAnrechnungsstunden, LehrerPersonaldaten, List, SchulEintrag, Schulform, Schuljahresabschnitt, ServerMode,
 	ValidatorKontext } from "@core";
 import type { LehrerListeManager } from "@ui";
@@ -31,4 +31,9 @@ export interface LehrerPersonaldatenProps {
 	addAnrechnung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) => Promise<void>;
 	patchAnrechnung: (data: Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>, id: number) => Promise<void>;
 	removeAnrechnung: (data: LehrerPersonalabschnittsdatenAnrechnungsstunden) => Promise<void>;
+	mapFaecher: () => Map<number, FachDaten>;
+	lehrerUnterrichtsfaecher: () => List<LehrerUnterrichtsfach>;
+	addLehrerUnterrichtsfach: (eintrag: Partial<LehrerUnterrichtsfach>) => Promise<void>;
+	patchLehrerUnterrichtsfach: (eintrag: LehrerUnterrichtsfach, patch: Partial<LehrerUnterrichtsfach>) => Promise<void>;
+	removeLehrerUnterrichtsfach: (eintrag: LehrerUnterrichtsfach) => Promise<void>;
 }

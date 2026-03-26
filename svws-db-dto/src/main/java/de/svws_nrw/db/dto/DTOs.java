@@ -128,6 +128,7 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerMehrleistung;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramt;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramtBefaehigung;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerPersonaldatenLehramtFachrichtung;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerUnterrichtsfach;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import de.svws_nrw.db.dto.current.schild.personengruppen.DTOPersonengruppen;
 import de.svws_nrw.db.dto.current.schild.personengruppen.DTOPersonengruppenPersonen;
@@ -426,6 +427,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOLehrerPersonaldatenLehramt.class.getSimpleName(), DTOLehrerPersonaldatenLehramt.class);
              mapDTOName2DTOClass.put(DTOLehrerPersonaldatenLehramtBefaehigung.class.getSimpleName(), DTOLehrerPersonaldatenLehramtBefaehigung.class);
              mapDTOName2DTOClass.put(DTOLehrerPersonaldatenLehramtFachrichtung.class.getSimpleName(), DTOLehrerPersonaldatenLehramtFachrichtung.class);
+             mapDTOName2DTOClass.put(DTOLehrerUnterrichtsfach.class.getSimpleName(), DTOLehrerUnterrichtsfach.class);
              mapDTOName2DTOClass.put(DTOSchulleitung.class.getSimpleName(), DTOSchulleitung.class);
              mapDTOName2DTOClass.put(DTOPersonengruppen.class.getSimpleName(), DTOPersonengruppen.class);
              mapDTOName2DTOClass.put(DTOPersonengruppenPersonen.class.getSimpleName(), DTOPersonengruppenPersonen.class);
@@ -719,6 +721,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("LehrerPersonaldatenLehramt", DTOLehrerPersonaldatenLehramt.class);
              mapTablename2DTOClass.put("LehrerPersonaldatenLehramtLehrbefaehigung", DTOLehrerPersonaldatenLehramtBefaehigung.class);
              mapTablename2DTOClass.put("LehrerPersonaldatenLehramtFachrichtung", DTOLehrerPersonaldatenLehramtFachrichtung.class);
+             mapTablename2DTOClass.put("LehrerUnterrichtsfaecher", DTOLehrerUnterrichtsfach.class);
              mapTablename2DTOClass.put("Schulleitung", DTOSchulleitung.class);
              mapTablename2DTOClass.put("Personengruppen", DTOPersonengruppen.class);
              mapTablename2DTOClass.put("Personengruppen_Personen", DTOPersonengruppenPersonen.class);

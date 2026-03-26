@@ -147,6 +147,7 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_Kurse;
 import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerAbschnittsdaten;
 import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerAnrechnung;
 import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerDatenschutz;
+import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerUnterrichtsfaecher;
 import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerEntlastung;
 import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerFotos;
 import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerFunktionen;
@@ -724,6 +725,9 @@ public final class Schema {
 
 	/** Tabelle LehrerAnrechnung */
 	public static final Tabelle_LehrerAnrechnung tab_LehrerAnrechnung = add(new Tabelle_LehrerAnrechnung());
+
+	/** Tabelle LehrerUnterrichtsfaecher */
+	public static final Tabelle_LehrerUnterrichtsfaecher tab_LehrerUnterrichtsfaecher = add(new Tabelle_LehrerUnterrichtsfaecher());
 
 	/** Tabelle LehrerEntlastung */
 	public static final Tabelle_LehrerEntlastung tab_LehrerEntlastung = add(new Tabelle_LehrerEntlastung());
