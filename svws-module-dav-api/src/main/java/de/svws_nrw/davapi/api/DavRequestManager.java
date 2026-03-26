@@ -57,8 +57,9 @@ public class DavRequestManager extends AbstractDavRequestManager {
 		final Multistatus ms = new Multistatus();
 		ms.getResponse().add(this.genPropfindRootResponse(propfind.getProp()));
 		ms.getResponse().add(this.genPropfindAddressbookCollectionResponse(propfind.getProp()));
-		if (propfind.getProp().getCalendarHomeSet() != null)
+		if (propfind.getProp().getCalendarHomeSet() != null) {
 			ms.getResponse().add(this.genPropfindCalendarCollectionResponse(propfind.getProp()));
+		}
 		return buildResponse(ms);
 	}
 
@@ -92,8 +93,9 @@ public class DavRequestManager extends AbstractDavRequestManager {
 			resp.setCurrentUserPrincipal(principal);
 		}
 
-		if (propUtil.getIsFieldRequested(CurrentUserPrivilegeSet.class))
+		if (propUtil.getIsFieldRequested(CurrentUserPrivilegeSet.class)) {
 			resp.setCurrentUserPrivilegeSet(getReadOnlyPrivilegeSet());
+		}
 
 		if (propUtil.getIsFieldRequested(CalendarHomeSet.class)) {
 			// Kalenderanfragen auf unserer Wurzel benötigen den Link zur Kalendersammlung unter dav/schema/kalender
@@ -130,8 +132,9 @@ public class DavRequestManager extends AbstractDavRequestManager {
 			resp.setCurrentUserPrincipal(principal);
 		}
 
-		if (propUtil.getIsFieldRequested(CurrentUserPrivilegeSet.class))
+		if (propUtil.getIsFieldRequested(CurrentUserPrivilegeSet.class)) {
 			resp.setCurrentUserPrivilegeSet(getReadOnlyPrivilegeSet());
+		}
 
 		return createResponse(req, resp, getCardDavUri());
 	}
@@ -163,8 +166,9 @@ public class DavRequestManager extends AbstractDavRequestManager {
 			resp.setCurrentUserPrincipal(principal);
 		}
 
-		if (propUtil.getIsFieldRequested(CurrentUserPrivilegeSet.class))
+		if (propUtil.getIsFieldRequested(CurrentUserPrivilegeSet.class)) {
 			resp.setCurrentUserPrivilegeSet(getReadOnlyPrivilegeSet());
+		}
 
 		if (propUtil.getIsFieldRequested(CalendarHomeSet.class)) {
 			final CalendarHomeSet calendarHomeSet = new CalendarHomeSet();
@@ -239,8 +243,9 @@ public class DavRequestManager extends AbstractDavRequestManager {
 		if (LOG_REQUESTS) {
 			final Logger logger = Logger.global();
 			logger.log(LogLevel.WARNING, methodName);
-			for (final String s : params)
+			for (final String s : params) {
 				logger.log(LogLevel.WARNING, s);
+			}
 			logger.log(methodName + "\n");
 			logger.log(LogLevel.WARNING, new String(requestBody, StandardCharsets.UTF_8));
 		}

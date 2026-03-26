@@ -43,10 +43,12 @@ public final class CardDavAdressbuch {
 	 */
 	public Adressbuch getAdressbuchById(final String idBook, final boolean withContacts, final boolean withPayload) throws ApiOperationException {
 		final Adressbuch book = CardDavAdressbuchTyp.getAdressbuchByID(idBook);
-		if (book == null)
+		if (book == null) {
 			return null;
-		if (!withContacts)
+		}
+		if (!withContacts) {
 			book.adressbuchEintraege.addAll(getKontakteByAdressbuch(idBook, withPayload));
+		}
 		return book;
 	}
 

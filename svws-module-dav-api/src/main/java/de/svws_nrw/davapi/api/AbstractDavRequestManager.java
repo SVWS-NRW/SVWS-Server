@@ -116,8 +116,9 @@ public abstract class AbstractDavRequestManager {
 		} catch (final IOException e) {
 			return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).entity(e.getMessage()).build();
 		} catch (final Exception e) {
-			if (e instanceof final ApiOperationException apiOperationException)
+			if (e instanceof final ApiOperationException apiOperationException) {
 				return apiOperationException.getResponse();
+			}
 			return new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e).getResponse();
 		}
 	}
@@ -133,10 +134,12 @@ public abstract class AbstractDavRequestManager {
 	 * @return die HTTP-Response für das übergebene Objekt
 	 */
 	public static Response buildResponse(final Object o) {
-		if (o instanceof Multistatus)
+		if (o instanceof Multistatus) {
 			return Response.status(DavExtendedHttpStatus.MULTISTATUS).type(MediaType.TEXT_XML).entity(o).build();
-		if (o instanceof Error)
+		}
+		if (o instanceof Error) {
 			return Response.status(Response.Status.NOT_FOUND).type(MediaType.TEXT_XML).entity(o).build();
+		}
 		return Response.status(Response.Status.BAD_REQUEST).type(MediaType.TEXT_PLAIN).build();
 	}
 
@@ -192,10 +195,11 @@ public abstract class AbstractDavRequestManager {
 	 * @param value   der Wert
 	 */
 	private void setParameterString(final @NotNull String key, final String value) {
-		if ((value == null) || (value.isBlank()))
+		if ((value == null) || (value.isBlank())) {
 			params.remove(key);
-		else
+		} else {
 			params.put(key, value);
+		}
 	}
 
 

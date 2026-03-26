@@ -52,10 +52,10 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 	/**
 	 * Mappt die Informationen zu einem Schüler auf einen Kontakt/Adressbucheintrag.
 	 *
-	 * @param schueler     die Informationen zum schüler
-	 * @param nummern      die Liste der Telefonnummern des Schuelers
-	 * @param ort          der Wohnort des Schuelers
-	 * @param categories   die Liste an Kategorien, die dem Schueler zugeordnet werden sollen
+	 * @param schueler     die Informationen zum Schüler
+	 * @param nummern      die Liste der Telefonnummern des Schülers
+	 * @param ort          der Wohnort des Schülers
+	 * @param categories   die Liste an Kategorien, die dem Schüler zugeordnet werden sollen
 	 *
 	 * @return der Kontakt
 	 */
@@ -64,8 +64,9 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 		k.id = getKontaktId(schueler.ID);
 		k.email = schueler.Email;
 
-		if (nummern != null)
+		if (nummern != null) {
 			k.telefonnummern.addAll(nummern);
+		}
 		addStandardTelefonnummer(schueler.Fax, k.telefonnummern, "cell");
 		addStandardTelefonnummer(schueler.Telefon, k.telefonnummern, "voice");
 
@@ -80,8 +81,9 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 		k.vorname = schueler.Vorname;
 		k.rolle = "Schüler";
 		k.organisation = getSchulname();
-		if (categories != null)
+		if (categories != null) {
 			k.kategorien.addAll(categories);
+		}
 		return k;
 	}
 
@@ -109,23 +111,26 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 	@Override
 	public List<AdressbuchEintrag> getKontakte(final String idBook, final boolean withPayload) throws ApiOperationException {
 		final List<AdressbuchEintrag> result = new ArrayList<>();
-		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN))
+		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
 			return result;
+		}
 
 		// Bestimme zunächst die Schülerliste für den Schuljahresabschnitt und filtere anschließend die relevanten Schüler anhand des Schüler-Status
 		final List<SchuelerListeEintrag> listSchueler = DataSchuelerliste.getListeSchueler(conn, schuljahresabschnitt.id, false).stream()
 				.filter(s -> filterBySchuelerStatus(s)).toList();
 
 		// Wenn keine Payload erzeugt wird, so können leere Adressbuch-Einträge zurückgegeben werden ...
-		if (!withPayload)
+		if (!withPayload) {
 			return listSchueler.stream().map(s -> mapEmptyContact(s.id)).toList();
+		}
 
 		// ... ansonsten müssen die entsprechenden Daten zusammengestellt werden.
 
 		// Bestimme nun die vollständigen Schüler-DTOs
 		final List<Long> idsSchueler = listSchueler.stream().map(s -> s.id).toList();
-		if (idsSchueler.isEmpty())
+		if (idsSchueler.isEmpty()) {
 			return result;
+		}
 		final List<DTOSchueler> listDTOSchueler = new DataSchuelerStammdaten(conn).getDTOList(idsSchueler);
 
 		final Set<Long> idsOrte = listDTOSchueler.stream().map(s -> s.Ort_ID).collect(Collectors.toSet());
@@ -146,7 +151,7 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 	 * Erzeugt eine Map mit einer Liste aller Telefonnummern eines Schüler zugeordnet zu dessen ID.
 	 * Die Daten werden über {@link DTOSchuelerTelefon} aus der Datenbank eingelesen.
 	 *
-	 * @param idsSchueler   die IDs der Schueler, für welche die Telefonnummern eingelesen werden sollen
+	 * @param idsSchueler   die IDs der Schüler, für welche die Telefonnummern eingelesen werden sollen
 	 *
 	 * @return die Map
 	 */
@@ -162,8 +167,9 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 				conn.queryList(DTOSchuelerTelefon.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerTelefon.class, idsSchueler);
 		for (final DTOSchuelerTelefon dto : dtoSchuelerTelefonQueryResult) {
 			final DTOTelefonArt art = mapTelefonartById.get(dto.TelefonArt_ID);
-			if (dto.Gesperrt.booleanValue() || (dto.Telefonnummer == null) || (art == null) || !art.Sichtbar.booleanValue())
+			if (dto.Gesperrt.booleanValue() || (dto.Telefonnummer == null) || (art == null) || !art.Sichtbar.booleanValue()) {
 				continue;
+			}
 
 			final List<Telefonnummer> nummern = result.computeIfAbsent(dto.Schueler_ID, s -> new ArrayList<>());
 			final Telefonnummer tel = new Telefonnummer();
@@ -208,22 +214,27 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 						DTOSchuelerLernabschnittsdaten.class, idsSchueler, schuljahresabschnitt.id);
 		for (final DTOSchuelerLernabschnittsdaten lernabschnitt : listLernabschnitte) {
 			final DTOKlassen klasse = mapKlassenById.get(lernabschnitt.Klassen_ID);
-			if (klasse == null)
+			if (klasse == null) {
 				continue;
+			}
 
 			final Set<String> categories = result.computeIfAbsent(lernabschnitt.Schueler_ID, s -> new HashSet<>());
 			final String krzJahrgang = mapJahrgangById.get(klasse.Jahrgang_ID);
 			if (setNeuaufnahmen.contains(lernabschnitt.Schueler_ID)) {
-				if (klasse.Klasse != null)
+				if (klasse.Klasse != null) {
 					categories.add("Neuaufnahmen %s %s".formatted(klasse.Klasse, strSchuljahresabschnitt));
-				if (krzJahrgang != null)
+				}
+				if (krzJahrgang != null) {
 					categories.add("Neuaufnahmen Jahrgang %s %s".formatted(klasse.Jahrgang_ID, strSchuljahresabschnitt));
+				}
 			}
 
-			if (klasse.Klasse != null)
+			if (klasse.Klasse != null) {
 				categories.add("Klasse %s %s".formatted(klasse.Klasse, strSchuljahresabschnitt));
-			if (krzJahrgang != null)
+			}
+			if (krzJahrgang != null) {
 				categories.add("Jahrgang %s %s".formatted(klasse.Jahrgang_ID, strSchuljahresabschnitt));
+			}
 		}
 
 		// Kategorie Kurs
@@ -234,14 +245,15 @@ public final class DataCardDavSchueler extends DataManagerCardDav {
 						mapKursById.keySet());
 		for (final DTOKursSchueler dtoKursSchueler : dtoKursSchuelerQueryResult) {
 			final DTOKurs dtoKurs = mapKursById.get(dtoKursSchueler.Kurs_ID);
-			if (dtoKurs == null)
+			if (dtoKurs == null) {
 				continue;
+			}
 
 			final Set<String> categories = result.computeIfAbsent(dtoKursSchueler.Schueler_ID, s -> new HashSet<>());
 			final String krzJahrgang = mapJahrgangById.get(dtoKurs.Jahrgang_ID);
-			if (krzJahrgang != null)
+			if (krzJahrgang != null) {
 				categories.add("Kurs %s %s %s".formatted(dtoKurs.KurzBez, krzJahrgang, strSchuljahresabschnitt));
-			else {
+			} else {
 				// TODO Jahrgangsübergreifende Kurse: "Kurs %s %s %s", Beispiel "Kurs AG-Netzwerk (05,06,07) 2024/25.2"
 			}
 		}

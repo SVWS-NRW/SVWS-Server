@@ -36,13 +36,15 @@ public final class DataCalDavOeffentlich extends DataManagerCalDav {
 	public Kalender getKalender(final String idCal) {
 		// Bestimme zunächst die Datenbank-ID der Kalender-Collection
 		final Long idCollection = CalDavKalenderTyp.OEFFENTLICH.getDbId(idCal);
-		if (idCollection == null)
+		if (idCollection == null) {
 			return null;
+		}
 
 		// Bestimme die Collection
 		final DavCollection collection = davRepository.getCollectionByID(idCollection);
-		if (collection == null)
+		if (collection == null) {
 			return null;
+		}
 
 		return mapCollectionToKalender(collection);
 	}
@@ -51,8 +53,9 @@ public final class DataCalDavOeffentlich extends DataManagerCalDav {
 	@Override
 	public @NotNull List<KalenderEintrag> getEintraege(final String idCal, final boolean withPayload) {
 		final Long idCollection = CalDavKalenderTyp.OEFFENTLICH.getDbId(idCal);
-		if (idCollection == null)
+		if (idCollection == null) {
 			return Collections.emptyList();
+		}
 
 		final List<KalenderEintrag> result = new ArrayList<>();
 		result.addAll(davRepository.getRessources(List.of(idCollection), withPayload).stream()
@@ -65,8 +68,9 @@ public final class DataCalDavOeffentlich extends DataManagerCalDav {
 	public String persistEintrag(final @NotNull KalenderEintrag eintrag) {
 		final String idCal = eintrag.kalenderId;
 		final CalDavKalenderTyp typ = CalDavKalenderTyp.getByID(idCal);
-		if (typ != CalDavKalenderTyp.OEFFENTLICH)
+		if (typ != CalDavKalenderTyp.OEFFENTLICH) {
 			return null;
+		}
 		final Long idCollection = CalDavKalenderTyp.PERSOENLICH.getDbId(idCal);
 
 		final DavRessource davRessource = new DavRessource();
@@ -76,8 +80,9 @@ public final class DataCalDavOeffentlich extends DataManagerCalDav {
 		davRessource.kalenderEnde = eintrag.kalenderEnde;
 		davRessource.kalenderTyp = eintrag.kalenderTyp;
 		davRessource.uid = eintrag.uid;
-		if ((eintrag.version != null) && !eintrag.version.isBlank())
+		if ((eintrag.version != null) && !eintrag.version.isBlank()) {
 			davRessource.syncToken = Long.parseLong(eintrag.version);
+		}
 		final DavRessource result = davRepository.insertOrUpdateRessource(davRessource);
 		return String.valueOf(result.syncToken);
 	}
@@ -86,8 +91,9 @@ public final class DataCalDavOeffentlich extends DataManagerCalDav {
 	@Override
 	public @NotNull List<String> getDeletedEintragUIDs(final @NotNull String idCal, final long syncToken) throws DavException {
 		final Long idCollection = CalDavKalenderTyp.OEFFENTLICH.getDbId(idCal);
-		if (idCollection == null)
+		if (idCollection == null) {
 			throw new DavException(Status.NOT_FOUND);
+		}
 		return this.davRepository.getDeletedResourceUIDsSince(idCollection, syncToken);
 	}
 
@@ -95,8 +101,9 @@ public final class DataCalDavOeffentlich extends DataManagerCalDav {
 	@Override
 	public boolean deleteEintrag(final @NotNull String idCal, final String uid, final Long syncToken) throws DavException {
 		final Long idCollection = CalDavKalenderTyp.OEFFENTLICH.getDbId(idCal);
-		if (idCollection == null)
+		if (idCollection == null) {
 			throw new DavException(Status.NOT_FOUND);
+		}
 		return this.davRepository.deleteRessource(idCollection, uid, syncToken);
 	}
 

@@ -77,12 +77,15 @@ public enum CalDavKalenderTyp {
 	 * @return der Typ des Kalenders oder null
 	 */
 	public static CalDavKalenderTyp getByID(final @NotNull String idCal) {
-		if (mapKalenderByID.isEmpty())
-			for (final @NotNull CalDavKalenderTyp cal : CalDavKalenderTyp.values())
+		if (mapKalenderByID.isEmpty()) {
+			for (final @NotNull CalDavKalenderTyp cal : CalDavKalenderTyp.values()) {
 				mapKalenderByID.put(cal.id, cal);
+			}
+		}
 		final String[] parts = idCal.split("_", 2);
-		if (parts.length == 0)
+		if (parts.length == 0) {
 			return null;
+		}
 		return mapKalenderByID.get(parts[0]);
 	}
 
@@ -96,11 +99,13 @@ public enum CalDavKalenderTyp {
 	 * @return der Eintrag oder null
 	 */
 	public Long getDbId(final String idCal) {
-		if (getByID(idCal) != this)
+		if (getByID(idCal) != this) {
 			return null;
+		}
 		final String[] parts = idCal.split("_", 2);
-		if (parts.length != 2)
+		if (parts.length != 2) {
 			return null;
+		}
 		try {
 			return Long.parseLong(parts[1]);
 		} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {

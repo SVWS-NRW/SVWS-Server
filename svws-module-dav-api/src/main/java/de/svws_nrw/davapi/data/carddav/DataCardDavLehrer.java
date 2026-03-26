@@ -54,12 +54,15 @@ public final class DataCardDavLehrer extends DataManagerCardDav {
 	private AdressbuchEintrag mapContact(final DTOLehrer l, final DTOOrt ort, final Set<String> categories) {
 		final AdressbuchKontakt k = new AdressbuchKontakt();
 		k.id = getKontaktId(l.ID);
-		if (l.eMailDienstlich != null)
+		if (l.eMailDienstlich != null) {
 			k.email = l.eMailDienstlich;
-		if (l.telefon != null)
+		}
+		if (l.telefon != null) {
 			addStandardTelefonnummer(l.telefon, k.telefonnummern, "voice");
-		if (l.telefonMobil != null)
+		}
+		if (l.telefonMobil != null) {
 			addStandardTelefonnummer(l.telefonMobil, k.telefonnummern, "cell");
+		}
 		k.hausnummer = l.HausNr;
 		k.hausnummerZusatz = l.HausNrZusatz;
 		k.nachname = l.Nachname;
@@ -67,8 +70,9 @@ public final class DataCardDavLehrer extends DataManagerCardDav {
 			k.plz = ort.PLZ;
 			k.ort = ort.Bezeichnung;
 		}
-		if (categories != null)
+		if (categories != null) {
 			k.kategorien.addAll(categories);
+		}
 		k.strassenname = l.Strassenname;
 		k.vorname = l.Vorname;
 		k.rolle = "Lehrer";
@@ -86,25 +90,29 @@ public final class DataCardDavLehrer extends DataManagerCardDav {
 	@Override
 	public List<AdressbuchEintrag> getKontakte(final String idBook, final boolean withPayload) throws ApiOperationException {
 		final List<AdressbuchEintrag> result = new ArrayList<>();
-		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.LEHRERDATEN_ANSEHEN))
+		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.LEHRERDATEN_ANSEHEN)) {
 			return result;
+		}
 
 		// Bestimme alle sichtbaren Lehrer
 		final List<DTOLehrer> listLehrer = conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true);
-		if (listLehrer.isEmpty())
+		if (listLehrer.isEmpty()) {
 			return result;
+		}
 
 		// Wenn keine Payload erzeugt wird, so können leere Adressbuch-Einträge zurückgegeben werden ...
-		if (!withPayload)
+		if (!withPayload) {
 			return listLehrer.stream().map(l -> mapEmptyContact(l.ID)).toList();
+		}
 
 		// ... ansonsten müssen die entsprechenden Daten zusammengestellt werden.
 		final Set<Long> idsOrte = listLehrer.stream().map(l -> l.Ort_ID).collect(Collectors.toSet());
 		final Map<Long, DTOOrt> mapOrtID = queryMapOrte(idsOrte);
 		final Map<Long, Set<String>> categoriesbyLehrerId = getCategoriesById();
 
-		for (final DTOLehrer l : listLehrer)
+		for (final DTOLehrer l : listLehrer) {
 			result.add(mapContact(l, mapOrtID.get(l.Ort_ID), categoriesbyLehrerId.get(l.ID)));
+		}
 
 		return result;
 	}
@@ -131,16 +139,20 @@ public final class DataCardDavLehrer extends DataManagerCardDav {
 		for (final DTOKlassenLeitung kl : listKlassenleitungen) {
 			final Set<String> categories = result.computeIfAbsent(kl.Lehrer_ID, s -> new HashSet<>());
 			final DTOKlassen klasse = mapKlasseById.get(kl.Klassen_ID);
-			if (klasse == null)
+			if (klasse == null) {
 				continue;
+			}
 			final String jahrgang = mapJahrgangById.get(klasse.Jahrgang_ID);
-			if (klasse.Klasse != null)
+			if (klasse.Klasse != null) {
 				categories.add("Klassenlehrer %s %s".formatted(klasse.Klasse, strSchuljahresabschnitt));
+			}
 			categories.add("Klassenlehrer %s".formatted(strSchuljahresabschnitt));
-			if (jahrgang != null)
+			if (jahrgang != null) {
 				categories.add("Klassenlehrer JG %s %s".formatted(jahrgang, strSchuljahresabschnitt));
-			if (jahrgang != null)
+			}
+			if (jahrgang != null) {
 				categories.add("Jahrgangsteam %s %s".formatted(jahrgang, strSchuljahresabschnitt));
+			}
 		}
 
 		// Kategorie der Jahrgangsteams anhand der Kurse (ergänzend zu den Klassenlehrern)
@@ -148,8 +160,9 @@ public final class DataCardDavLehrer extends DataManagerCardDav {
 		for (final DTOKurs k : dtoKursQueryResult) {
 			final Set<String> categories = result.computeIfAbsent(k.Lehrer_ID, s -> new HashSet<>());
 			final String jahrgang = mapJahrgangById.get(k.Jahrgang_ID);
-			if (jahrgang != null)
+			if (jahrgang != null) {
 				categories.add("Jahrgangsteam %s %s".formatted(jahrgang, strSchuljahresabschnitt));
+			}
 		}
 
 		// Kategorie der Fachschaften
@@ -158,12 +171,14 @@ public final class DataCardDavLehrer extends DataManagerCardDav {
 				conn.queryAll(DTOLehrerPersonaldatenLehramtBefaehigung.class).stream().collect(Collectors.groupingBy(b -> b.Lehreramt_ID));
 		for (final DTOLehrerPersonaldatenLehramt lehramt : dtoLehraemter) {
 			final List<DTOLehrerPersonaldatenLehramtBefaehigung> befaehigungen = mapLehraemterLehrbefaehigungen.get(lehramt.ID);
-			if (befaehigungen == null)
+			if (befaehigungen == null) {
 				continue;
+			}
 			for (final DTOLehrerPersonaldatenLehramtBefaehigung befaehigung : befaehigungen) {
 				final LehrerLehrbefaehigungKatalogEintrag bef = LehrerLehrbefaehigung.data().getEintragByID(befaehigung.Lehrbefaehigung_Katalog_ID);
-				if (bef == null)
+				if (bef == null) {
 					continue;
+				}
 				final Set<String> categories = result.computeIfAbsent(lehramt.Lehrer_ID, s -> new HashSet<>());
 				categories.add("Fachschaft %s %s".formatted(bef.kuerzel, strSchuljahresabschnitt));
 			}

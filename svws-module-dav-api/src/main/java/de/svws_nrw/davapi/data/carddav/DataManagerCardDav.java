@@ -40,8 +40,9 @@ public abstract class DataManagerCardDav {
 	protected DataManagerCardDav(final DBEntityManager conn, final long idSchuljahresabschnitt) throws ApiOperationException {
 		this.conn = conn;
 		this.schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
-		if (this.schuljahresabschnitt == null)
+		if (this.schuljahresabschnitt == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Schuljahresabschnittes ist ungültig.");
+		}
 		this.strSchuljahresabschnitt = schuljahresabschnitt.schuljahr + "/" + (schuljahresabschnitt.schuljahr + 1) + "." + schuljahresabschnitt.abschnitt;
 	}
 
@@ -104,11 +105,13 @@ public abstract class DataManagerCardDav {
 	 * @param type             der Typ der Telefonnummer, z.B. cell or voice
 	 */
 	protected void addStandardTelefonnummer(final String telefonnummer, final List<Telefonnummer> telefonnummern, final String type) {
-		if ((telefonnummer == null) || (type == null))
+		if ((telefonnummer == null) || (type == null)) {
 			return;
+		}
 		final boolean isDuplicate = telefonnummern.stream().anyMatch(t -> t.number.replace("\\D+", "").equals(telefonnummer.replace("\\D+", "")));
-		if (isDuplicate)
+		if (isDuplicate) {
 			return;
+		}
 		final Telefonnummer tel = new Telefonnummer();
 		tel.number = telefonnummer;
 		tel.type = type;

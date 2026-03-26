@@ -56,8 +56,9 @@ public final class DavDBRepository {
 	 */
 	private boolean allowModifaction(final DavCollection collection) {
 		final Benutzer user = conn.getUser();
-		if (user.istAdmin())
+		if (user.istAdmin()) {
 			return true;
+		}
 		return user.pruefeKompetenz(BenutzerKompetenz.CALDAV_EIGENER_KALENDER)
 				&& user.getId().equals(collection.besitzer) && (collection.id != null);
 	}
@@ -147,8 +148,9 @@ public final class DavDBRepository {
 	 */
 	private List<DavCollection> getReadableCollections() {
 		final Map<Long, DavPermissions> readableCollectionPermissionsById = getReadableCollectionPermissionsById(null);
-		if (readableCollectionPermissionsById.isEmpty())
+		if (readableCollectionPermissionsById.isEmpty()) {
 			return new ArrayList<>();
+		}
 		return conn.queryByKeyList(DTODavRessourceCollection.class, readableCollectionPermissionsById.keySet())
 				.stream().filter(dto -> dto.geloeschtam == null)
 				.map(dto -> mapDTODavRessourceCollection(dto, readableCollectionPermissionsById.get(dto.ID))).toList();
@@ -262,8 +264,9 @@ public final class DavDBRepository {
 		dtoCollection.Typ = collection.typ;
 
 		// Die Benutzer-ID des Besitzers darf allerdings nur von einem Administrator nachträglich geändert werden
-		if (conn.getUser().istAdmin() && (collection.besitzer != null))
+		if (conn.getUser().istAdmin() && (collection.besitzer != null)) {
 			dtoCollection.Benutzer_ID = collection.besitzer;
+		}
 
 		// Persistiere die Daten
 		if (!conn.transactionPersist(dtoCollection)) {
@@ -290,11 +293,13 @@ public final class DavDBRepository {
 	 */
 	public DavCollection insertOrUpdateCollection(final DavCollection collection) throws DavException {
 		// Prüfe zunächst, ob die Berechtigung für das Aktualisieren bzw. Erzeugen der Collection vorhanden ist (Admin oder Besitzer)
-		if (!allowModifaction(collection))
+		if (!allowModifaction(collection)) {
 			throw new DavException(Status.FORBIDDEN);
+		}
 
-		if (collection.id == null)
+		if (collection.id == null) {
 			return insertCollection(collection);
+		}
 		return updateCollection(collection);
 	}
 
@@ -358,8 +363,9 @@ public final class DavDBRepository {
 	public List<DavRessource> getRessources(final Collection<Long> idsCollection, final boolean withPayload) {
 		// Bestimme eine Map mit allen Berechitungen zu den angegebenen Collection-IDs
 		final Map<Long, DavPermissions> mapPermissions = getReadableCollectionPermissionsById(idsCollection);
-		if (mapPermissions.isEmpty())
+		if (mapPermissions.isEmpty()) {
 			return new ArrayList<>();
+		}
 		// Lese alle Collections ein, wo eine Berechtigung in der Map existiert und gib diese zurück
 		return conn.queryList(DTODavRessource.QUERY_LIST_BY_DAVRESSOURCECOLLECTION_ID, DTODavRessource.class, mapPermissions.keySet()).stream()
 				.filter(dto -> dto.geloeschtam == null)
@@ -408,8 +414,9 @@ public final class DavDBRepository {
 			conn.transactionRollback();
 			return null;
 		}
-		if (!updateCollectionSynctoken(davRessource.idCollection, newSynctoken))
+		if (!updateCollectionSynctoken(davRessource.idCollection, newSynctoken)) {
 			return null;
+		}
 		return mapDTODavRessource(dtoDavRessource, true, permissions);
 	}
 
@@ -442,8 +449,9 @@ public final class DavDBRepository {
 			conn.transactionRollback();
 			return null;
 		}
-		if (!updateCollectionSynctoken(davRessource.idCollection, newSynctoken))
+		if (!updateCollectionSynctoken(davRessource.idCollection, newSynctoken)) {
 			return null;
+		}
 		return mapDTODavRessource(dtoDavRessource, true, permissions);
 	}
 
@@ -460,19 +468,22 @@ public final class DavDBRepository {
 	public DavRessource insertOrUpdateRessource(final DavRessource davRessource) {
 		// Prüfe zunächst, ob die Collection read only ist.
 		final DavPermissions permissions = isWritableCollection(davRessource.idCollection);
-		if (permissions == null)
+		if (permissions == null) {
 			return null;
+		}
 
 		// Starte die Transaktion und prüfe, ob es eine neue Ressource hinzugefügt wurde oder eine bestehende aktualisiert wird
 		conn.transactionBegin();
 		final List<DTODavRessource> dtosWithSameUID = conn.queryList(DTODavRessource.QUERY_BY_DAVRESSOURCECOLLECTION_ID, DTODavRessource.class,
 				davRessource.idCollection).stream().filter(r -> (r.geloeschtam == null) && r.UID.equals(davRessource.uid)).toList();
-		if (dtosWithSameUID.size() == 1)
+		if (dtosWithSameUID.size() == 1) {
 			davRessource.id = dtosWithSameUID.get(0).ID;
+		}
 
 		// Füge eine neue Ressource hinzu oder aktualisiere die Bestehende. Die Transaktion wird dabei abgechlossen
-		if (davRessource.id == null)
+		if (davRessource.id == null) {
 			return insertRessource(davRessource, permissions);
+		}
 		return updateRessource(davRessource, permissions);
 	}
 

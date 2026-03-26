@@ -72,11 +72,13 @@ public class CardDavRequestManager extends AbstractDavRequestManager {
 		final Propfind propfind = mapper.readValue(requestBody, Propfind.class);
 
 		final List<Adressbuch> adressbuecher = repo.getAvailableAdressbuecher();
-		if (adressbuecher.isEmpty())
+		if (adressbuecher.isEmpty()) {
 			return buildResponse(createResourceNotFoundError("Es wurden keine Adressbücher für den angemeldeten Benutzer gefunden!"));
+		}
 		final Multistatus ms = new Multistatus();
-		for (final Adressbuch adressbuch : adressbuecher)
+		for (final Adressbuch adressbuch : adressbuecher) {
 			ms.getResponse().add(this.genPropfindAddressbookResponse(adressbuch, propfind.getProp()));
+		}
 		return buildResponse(ms);
 	}
 
@@ -95,14 +97,16 @@ public class CardDavRequestManager extends AbstractDavRequestManager {
 		logRequest("CardDAV->propfindCalendar", "idBook=" + idBook);
 
 		// Wurde keine gültige Ressource angegeben, so ist dies eigentlich ein Zugriff auf die Adressbuch-Sammlung
-		if ((idBook == null) || idBook.isBlank())
+		if ((idBook == null) || idBook.isBlank()) {
 			return propfindCollection();
+		}
 
 		final Propfind propfind = mapper.readValue(requestBody, Propfind.class);
 
 		final Adressbuch adressbuch = repo.getAdressbuchById(idBook, true, false);
-		if (adressbuch == null)
+		if (adressbuch == null) {
 			return buildResponse(createResourceNotFoundError("Adressbuch mit der angegebenen Id wurde nicht gefunden!"));
+		}
 
 		final Multistatus ms = new Multistatus();
 		ms.getResponse().add(this.genPropfindAddressbookResponse(adressbuch, propfind.getProp()));
@@ -151,8 +155,9 @@ public class CardDavRequestManager extends AbstractDavRequestManager {
 		}
 
 		// Die Privilegien des Benutzers der aktuellen Verbindungen auf das Adressbuch
-		if (propUtil.getIsFieldRequested(CurrentUserPrivilegeSet.class))
+		if (propUtil.getIsFieldRequested(CurrentUserPrivilegeSet.class)) {
 			resp.setCurrentUserPrivilegeSet(getPrivilegeSet(true, false));
+		}
 
 		// Das Collection-Tag, um Änderungen am Adressbuchinhalt zu verfolgen (Verwendung eines Sync-Tokens, welches auch bei Änderungen am Inhalt angepasst werden muss)
 		if (propUtil.getIsFieldRequested(Getctag.class)) {
@@ -218,8 +223,9 @@ public class CardDavRequestManager extends AbstractDavRequestManager {
 		}
 
 		// Die Privilegien des Benutzers der aktuellen Verbindungen auf den Kalender-Eintrag
-		if (propUtil.getIsFieldRequested(CurrentUserPrivilegeSet.class))
+		if (propUtil.getIsFieldRequested(CurrentUserPrivilegeSet.class)) {
 			resp.setCurrentUserPrivilegeSet(getPrivilegeSet(true, false));
+		}
 
 		return createResponse(req, resp, getCardDavResourceUri());
 	}
@@ -242,19 +248,22 @@ public class CardDavRequestManager extends AbstractDavRequestManager {
 
 		// Bestimme die Kalenderdaten aus der Datenbank und gebe einen Fehler zurück, falls kein Kalender mit der ID gefunden wurde
 		final Adressbuch adressbuch = this.repo.getAdressbuchById(idBook, true, true);
-		if (adressbuch == null)
+		if (adressbuch == null) {
 			return buildResponse(this.createResourceNotFoundError("Adressbuch mit der angegebenen ID wurde nicht gefunden!"));
+		}
 		this.setParameterResourceCollectionId(adressbuch.id);
 
 		// Prüfe, ob es sich um eine Anfrage mit dem Typ CalendarMultiget handelt
 		final AddressbookMultiget adressbuchMultiget = deserialiseAddressbookMultiget(requestBody);
-		if (adressbuchMultiget != null)
+		if (adressbuchMultiget != null) {
 			return reportAddressbookMultigetRequest(adressbuch, adressbuchMultiget);
+		}
 
 		// Prüfe, ob es sich um eine Anfrage mit dem Typ SyncCollection handelt
 		final SyncCollection syncCollection = deserialiseSyncCollection(requestBody);
-		if (syncCollection != null)
+		if (syncCollection != null) {
 			return reportSyncCollectionRequest(adressbuch, syncCollection);
+		}
 
 		throw new UnsupportedOperationException(
 				"Es werden nur die Typen AddressbookMultiget und SyncCollection für die Methode REPORT bei einem Adressbuch unterstützt.");
@@ -306,15 +315,17 @@ public class CardDavRequestManager extends AbstractDavRequestManager {
 		for (final AdressbuchEintrag a : adressbuch.adressbuchEintraege) {
 			this.setParameterResourceId(a.id);
 			a.uri = getCardDavResourceUri();
-			if (!hrefs.isEmpty() && !hrefs.contains(a.uri))
+			if (!hrefs.isEmpty() && !hrefs.contains(a.uri)) {
 				continue;
+			}
 			eintraege.add(a);
 		}
 
 		// Generiere die Response mit den Adressbuch-Einträgen
 		final Multistatus ms = new Multistatus();
-		for (final AdressbuchEintrag eintrag : eintraege)
+		for (final AdressbuchEintrag eintrag : eintraege) {
 			ms.getResponse().add(this.genReportContactResponse(eintrag, multiget.getProp()));
+		}
 		return buildResponse(ms);
 	}
 
@@ -346,8 +357,9 @@ public class CardDavRequestManager extends AbstractDavRequestManager {
 
 		// Generiere die Response mit den Adressbuch-Einträgen und den UIDs der entfernten Einträge
 		final Multistatus ms = new Multistatus();
-		for (final AdressbuchEintrag eintrag : eintraege)
+		for (final AdressbuchEintrag eintrag : eintraege) {
 			ms.getResponse().add(this.genReportContactResponse(eintrag, syncCollection.getProp()));
+		}
 		// TODO UIDs der entfernten Einträge - siehe CalDAV-Lösung
 		ms.setSyncToken(Long.toString(adressbuch.synctoken));
 		return buildResponse(ms);
@@ -419,8 +431,9 @@ public class CardDavRequestManager extends AbstractDavRequestManager {
 		if (LOG_REQUESTS) {
 			final Logger logger = Logger.global();
 			logger.log(LogLevel.WARNING, methodName);
-			for (final String s : params)
+			for (final String s : params) {
 				logger.log(LogLevel.WARNING, s);
+			}
 			logger.log(methodName + "\n");
 			logger.log(LogLevel.WARNING, new String(requestBody, StandardCharsets.UTF_8));
 		}

@@ -130,9 +130,9 @@ public class VCard {
 		addSimplePropertyIfNotNull("EMAIL", kontakt.email);
 		addSimplePropertyIfNotNull("URL", kontakt.webAdresse);
 		final VCardProperty categoriesProperty;
-		if (kontakt.kategorien.isEmpty())
+		if (kontakt.kategorien.isEmpty()) {
 			categoriesProperty = new CategoriesProperty(kontakt.adressbuchId);
-		else {
+		} else {
 
 			categoriesProperty = new CategoriesProperty(kontakt.kategorien);
 			addProperty(categoriesProperty);

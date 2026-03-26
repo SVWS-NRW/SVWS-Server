@@ -136,8 +136,9 @@ public abstract class DataManagerCalDav {
 	 */
 	public static Kalender mapCollectionToKalender(final @NotNull DavCollection collection) {
 		final CalDavKalenderTyp type = CalDavKalenderTyp.getByCollectionType(collection.typ);
-		if (type == null)
+		if (type == null) {
 			return null;
+		}
 		final Kalender k = new Kalender();
 		k.displayname = collection.anzeigename;
 		k.beschreibung = collection.beschreibung;

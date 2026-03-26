@@ -35,18 +35,21 @@ public final class DataCalDavEigenerKalender extends DataManagerCalDav {
 
 	@Override
 	public Kalender getKalender(final String idCal) {
-		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_EIGENER_KALENDER))
+		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_EIGENER_KALENDER)) {
 			return null;
+		}
 
 		// Bestimme zunächst die Datenbank-ID der Kalender-Collection
 		final Long idCollection = CalDavKalenderTyp.PERSOENLICH.getDbId(idCal);
-		if (idCollection == null)
+		if (idCollection == null) {
 			return null;
+		}
 
 		// Bestimme die Collection
 		final DavCollection collection = davRepository.getCollectionByID(idCollection);
-		if (collection == null)
+		if (collection == null) {
 			return null;
+		}
 
 		return mapCollectionToKalender(collection);
 	}
@@ -54,12 +57,14 @@ public final class DataCalDavEigenerKalender extends DataManagerCalDav {
 
 	@Override
 	public @NotNull List<KalenderEintrag> getEintraege(final String idCal, final boolean withPayload) {
-		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_EIGENER_KALENDER))
+		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_EIGENER_KALENDER)) {
 			return Collections.emptyList();
+		}
 
 		final Long idCollection = CalDavKalenderTyp.PERSOENLICH.getDbId(idCal);
-		if (idCollection == null)
+		if (idCollection == null) {
 			return Collections.emptyList();
+		}
 
 		final List<KalenderEintrag> result = new ArrayList<>();
 		result.addAll(davRepository.getRessources(List.of(idCollection), withPayload).stream()
@@ -70,13 +75,15 @@ public final class DataCalDavEigenerKalender extends DataManagerCalDav {
 
 	@Override
 	public String persistEintrag(final @NotNull KalenderEintrag eintrag) {
-		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_EIGENER_KALENDER))
+		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_EIGENER_KALENDER)) {
 			return null;
+		}
 
 		final String idCal = eintrag.kalenderId;
 		final CalDavKalenderTyp typ = CalDavKalenderTyp.getByID(idCal);
-		if (typ != CalDavKalenderTyp.PERSOENLICH)
+		if (typ != CalDavKalenderTyp.PERSOENLICH) {
 			return null;
+		}
 		final Long idCollection = CalDavKalenderTyp.PERSOENLICH.getDbId(idCal);
 
 		final DavRessource davRessource = new DavRessource();
@@ -86,8 +93,9 @@ public final class DataCalDavEigenerKalender extends DataManagerCalDav {
 		davRessource.kalenderEnde = eintrag.kalenderEnde;
 		davRessource.kalenderTyp = eintrag.kalenderTyp;
 		davRessource.uid = eintrag.uid;
-		if ((eintrag.version != null) && !eintrag.version.isBlank())
+		if ((eintrag.version != null) && !eintrag.version.isBlank()) {
 			davRessource.syncToken = Long.parseLong(eintrag.version);
+		}
 		final DavRessource result = davRepository.insertOrUpdateRessource(davRessource);
 		return String.valueOf(result.syncToken);
 	}
@@ -95,22 +103,26 @@ public final class DataCalDavEigenerKalender extends DataManagerCalDav {
 
 	@Override
 	public @NotNull List<String> getDeletedEintragUIDs(final @NotNull String idCal, final long syncToken) throws DavException {
-		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_EIGENER_KALENDER))
+		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_EIGENER_KALENDER)) {
 			throw new DavException(Status.NOT_FOUND);
+		}
 		final Long idCollection = CalDavKalenderTyp.PERSOENLICH.getDbId(idCal);
-		if (idCollection == null)
+		if (idCollection == null) {
 			throw new DavException(Status.NOT_FOUND);
+		}
 		return this.davRepository.getDeletedResourceUIDsSince(idCollection, syncToken);
 	}
 
 
 	@Override
 	public boolean deleteEintrag(final @NotNull String idCal, final String uid, final Long syncToken) throws DavException {
-		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_EIGENER_KALENDER))
+		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_EIGENER_KALENDER)) {
 			throw new DavException(Status.NOT_FOUND);
+		}
 		final Long idCollection = CalDavKalenderTyp.PERSOENLICH.getDbId(idCal);
-		if (idCollection == null)
+		if (idCollection == null) {
 			throw new DavException(Status.NOT_FOUND);
+		}
 		return this.davRepository.deleteRessource(idCollection, uid, syncToken);
 	}
 

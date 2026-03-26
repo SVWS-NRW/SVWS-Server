@@ -81,8 +81,9 @@ public final class DataCardDavErzieher extends DataManagerCardDav {
 	public List<AdressbuchEintrag> getKontakte(final String idBook, final boolean withPayload) throws ApiOperationException {
 		final List<AdressbuchEintrag> result = new ArrayList<>();
 
-		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CARDDAV_ERZIEHER_ANSEHEN))
+		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CARDDAV_ERZIEHER_ANSEHEN)) {
 			return result;
+		}
 
 		// Bestimme alle Erzieher
 		// Bestimme zunächst die Schülerliste für den Schuljahresabschnitt und filtere anschließend die relevanten Schüler anhand des Schüler-Status
@@ -96,15 +97,17 @@ public final class DataCardDavErzieher extends DataManagerCardDav {
 		for (DTOSchuelerErzieherAdresse erzieher : listErzieher) {
 			if (erzieherBySchuelerID.containsKey(erzieher.Schueler_ID)) { // TODO nicht nur den Erzieher mit der höchsten Sortierung wählen
 				final DTOSchuelerErzieherAdresse vorhandenerErzieher = erzieherBySchuelerID.get(erzieher.Schueler_ID);
-				if (erzieher.Sortierung < vorhandenerErzieher.Sortierung)
+				if (erzieher.Sortierung < vorhandenerErzieher.Sortierung) {
 					erzieher = vorhandenerErzieher;
+				}
 			}
 			erzieherBySchuelerID.put(erzieher.Schueler_ID, erzieher);
 		}
 
 		// Wenn keine Payload erzeugt wird, so können leere Adressbuch-Einträge zurückgegeben werden ...
-		if (!withPayload)
+		if (!withPayload) {
 			return erzieherBySchuelerID.values().stream().map(l -> mapEmptyContact(l.ID)).toList();
+		}
 
 		// ... ansonsten müssen die entsprechenden Daten zusammengestellt werden.
 		final List<DTOSchueler> listDTOSchueler = new DataSchuelerStammdaten(conn).getDTOList(idsSchueler);
@@ -115,8 +118,9 @@ public final class DataCardDavErzieher extends DataManagerCardDav {
 		// Leite die Kategorien von den Kategorien der Schüler ab
 		final Map<Long, Set<String>> tmpCategoriesBySchuelerID = cardDavSchueler.getCategoriesById(listDTOSchueler);
 		final Map<Long, Set<String>> categoriesBySchuelerID = new HashMap<>();
-		for (final Map.Entry<Long, Set<String>> e : tmpCategoriesBySchuelerID.entrySet())
+		for (final Map.Entry<Long, Set<String>> e : tmpCategoriesBySchuelerID.entrySet()) {
 			categoriesBySchuelerID.put(e.getKey(), e.getValue().stream().map(s -> "Eltern " + s).collect(Collectors.toSet()));
+		}
 
 		// Erzeuge die Kontakte
 		for (final DTOSchuelerErzieherAdresse erzieher : erzieherBySchuelerID.values()) { // TODO Unterstütze beide Einträge im DTO

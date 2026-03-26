@@ -57,8 +57,9 @@ public final class CalDavKalender {
 	public Kalender getKalenderById(final String idCal, final boolean withEintraege, final boolean withPayload) {
 		// Bestimme zunächst den Typ für das Einlesen der Einträge
 		final CalDavKalenderTyp typ = CalDavKalenderTyp.getByID(idCal);
-		if (typ == null)
+		if (typ == null) {
 			return null;
+		}
 
 		// Lese die Kontakte anhand des Typs und des Schuljahresabschnittes aus der DB ein
 		final Kalender cal = switch (typ) {
@@ -66,8 +67,9 @@ public final class CalDavKalender {
 			case OEFFENTLICH -> new DataCalDavOeffentlich(conn).getKalender(idCal);
 			default -> null;
 		};
-		if ((cal != null) && withEintraege)
+		if ((cal != null) && withEintraege) {
 			cal.kalenderEintraege.addAll(getEintraegeByKalender(idCal, withPayload));
+		}
 		return cal;
 	}
 
@@ -78,8 +80,9 @@ public final class CalDavKalender {
 	 * @return die Liste der Kalender
 	 */
 	public List<Kalender> getAvailableKalender() {
-		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_NUTZEN))
+		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_NUTZEN)) {
 			return new ArrayList<>();
+		}
 		// TODO Hier muss später noch gefiltert werden, so dass anhand der Berechtigungen des Connection-Users die Adressbücher zusammengestellt werden
 		return CalDavKalenderTyp.getKalender();
 	}
@@ -95,8 +98,9 @@ public final class CalDavKalender {
 	 */
 	private List<KalenderEintrag> getEintraegeByKalender(final @NotNull String idCal, final boolean withPayload) {
 		// Prüfe die allgemeine Benutzerkompetenz für den Zugriff auf Cal-DAV
-		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_NUTZEN))
+		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_NUTZEN)) {
 			return Collections.emptyList();
+		}
 
 		// Bestimme zunächst den Typ für das Einlesen der Einträge
 		final CalDavKalenderTyp typ = CalDavKalenderTyp.getByID(idCal);
@@ -130,12 +134,14 @@ public final class CalDavKalender {
 		final List<Kalender> result = new ArrayList<>();
 
 		// Prüfe zunächst, ob der Benutzer die CalDAV-API nutzen darf
-		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_NUTZEN))
+		if (!conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_NUTZEN)) {
 			return result;
+		}
 
 		// Prüfe, ob bereits ein eigener Kalender existiert. Wenn nicht, dann lege ihn an
-		if (conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_EIGENER_KALENDER))
+		if (conn.getUser().pruefeKompetenz(BenutzerKompetenz.CALDAV_EIGENER_KALENDER)) {
 			davRepository.tryCreateOwnedCollectionIfNotExists(DavRessourceCollectionTyp.EIGENER_KALENDER);
+		}
 
 		// Bestimme zunächst alle Kalender mit Leseberechtigung und Benutzereinträgen aus der Datenbank und lese ggf. auch die Ressourcen ein
 		final List<DavCollection> collections =
@@ -151,17 +157,20 @@ public final class CalDavKalender {
 		for (final DavCollection collection : collections) {
 			// Bestimme den Kalender und füge ihn zur Liste hinzu
 			final CalDavKalenderTyp typ = CalDavKalenderTyp.getByCollectionType(collection.typ);
-			if (typ == null)
+			if (typ == null) {
 				continue;
+			}
 			final Kalender cal = DataManagerCalDav.mapCollectionToKalender(collection);
 			result.add(cal);
 
 			// Füge ggf. noch die Einträge zum Kalender hinzu (sofern zuvor welche bestimmt wurden)
 			final List<DavRessource> ressources = mapDavRessources.get(collection.id);
-			if ((ressources == null) || ressources.isEmpty())
+			if ((ressources == null) || ressources.isEmpty()) {
 				continue;
-			for (final DavRessource res : ressources)
+			}
+			for (final DavRessource res : ressources) {
 				cal.kalenderEintraege.add(DataManagerCalDav.mapRessourceToEintrag(typ, res));
+			}
 		}
 
 		// Ergänze ggf. noch generierte Kalender, wo der Benutzer Berechtigungen drauf hat
@@ -181,8 +190,9 @@ public final class CalDavKalender {
 	 */
 	public String persistEintrag(final KalenderEintrag eintrag) {
 		final String idCal = eintrag.kalenderId;
-		if (idCal == null)
+		if (idCal == null) {
 			return null;
+		}
 		final CalDavKalenderTyp typ = CalDavKalenderTyp.getByID(idCal);
 		return switch (typ) {
 			case PERSOENLICH -> new DataCalDavEigenerKalender(conn).persistEintrag(eintrag);

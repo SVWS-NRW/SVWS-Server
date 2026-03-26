@@ -10,6 +10,7 @@ package de.svws_nrw.davapi.util.vcard;
  *      Dokumentation für ADR</a>
  */
 public final class AddressProperty implements VCardProperty {
+
 	/**
 	 * Trennzeichen zwischen Straße und Hausnummer
 	 */
@@ -85,8 +86,9 @@ public final class AddressProperty implements VCardProperty {
 
 	@Override
 	public String getType() {
-		if (this.addressType == null)
+		if (this.addressType == null) {
 			return TYPE;
+		}
 		return TYPE + ";TYPE=" + addressType;
 	}
 

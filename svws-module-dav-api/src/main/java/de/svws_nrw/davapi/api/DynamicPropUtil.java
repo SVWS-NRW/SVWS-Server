@@ -40,9 +40,11 @@ class DynamicPropUtil {
 	 * @return true, falls die Property zur gegebenen Typklasse im Prop-Objekt enthalten ist.
 	 */
 	protected final boolean getIsFieldRequested(final @NotNull Class<?> fieldType) {
-		for (final Field field : fieldsRequested)
-			if (field.getType() == fieldType)
+		for (final Field field : fieldsRequested) {
+			if (field.getType() == fieldType) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -60,8 +62,9 @@ class DynamicPropUtil {
 		for (final Field field : fields) {
 			field.setAccessible(true);
 			try {
-				if (field.get(propRequested) != null)
+				if (field.get(propRequested) != null) {
 					requestedFields.add(field);
+				}
 			} catch (final IllegalAccessException e) {
 				e.printStackTrace();
 			}

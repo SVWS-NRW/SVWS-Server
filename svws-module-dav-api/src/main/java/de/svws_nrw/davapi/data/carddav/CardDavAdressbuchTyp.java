@@ -9,7 +9,7 @@ import de.svws_nrw.core.data.adressbuch.Adressbuch;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Eine Aufzählung der verfügbaren Adressbuecher
+ * Eine Aufzählung der verfügbaren Adressbücher.
  */
 public enum CardDavAdressbuchTyp {
 
@@ -35,7 +35,7 @@ public enum CardDavAdressbuchTyp {
 	/** Die ID des Adressbuches */
 	public final @NotNull String id;
 
-	/** Der Typ des Adressuches (Persönlich, Generiert oder Öffentlich) */
+	/** Der Typ des Adressbuches (Persönlich, Generiert oder Öffentlich) */
 	public final @NotNull String typ;
 
 	/** Der Anzeigename des Adressbuches */
@@ -53,7 +53,7 @@ public enum CardDavAdressbuchTyp {
 	 *
 	 * @param displayname    der Anzeigename
 	 * @param beschreibung   die Beschreibung
-	 * @param typ            der Typ des Adressuches (Persönlich, Generiert oder Öffentlich)
+	 * @param typ            der Typ des Adressbuches (Persönlich, Generiert oder Öffentlich)
 	 */
 	CardDavAdressbuchTyp(final @NotNull String displayname, final @NotNull String beschreibung, final @NotNull String typ) {
 		this.id = this.toString().toLowerCase();
@@ -72,9 +72,11 @@ public enum CardDavAdressbuchTyp {
 	 * @return der Eintrag oder null
 	 */
 	public static CardDavAdressbuchTyp getByID(final @NotNull String id) {
-		if (mapAdressbuecherByID.isEmpty())
-			for (final @NotNull CardDavAdressbuchTyp book : CardDavAdressbuchTyp.values())
+		if (mapAdressbuecherByID.isEmpty()) {
+			for (final @NotNull CardDavAdressbuchTyp book : CardDavAdressbuchTyp.values()) {
 				mapAdressbuecherByID.put(book.id, book);
+			}
+		}
 		return mapAdressbuecherByID.get(id);
 	}
 
@@ -88,9 +90,11 @@ public enum CardDavAdressbuchTyp {
 	 * @return der Eintrag oder null
 	 */
 	public static Adressbuch getAdressbuchByID(final @NotNull String id) {
-		if (mapAdressbuecherByID.isEmpty())
-			for (final @NotNull CardDavAdressbuchTyp book : CardDavAdressbuchTyp.values())
+		if (mapAdressbuecherByID.isEmpty()) {
+			for (final @NotNull CardDavAdressbuchTyp book : CardDavAdressbuchTyp.values()) {
 				mapAdressbuecherByID.put(book.id, book);
+			}
+		}
 		final CardDavAdressbuchTyp book = mapAdressbuecherByID.get(id);
 		return (book == null) ? null : book.toAdressbuch();
 	}

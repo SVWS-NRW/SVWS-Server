@@ -85,14 +85,16 @@ public class CalDavRequestManager extends AbstractDavRequestManager {
 		try {
 			final Propfind propfind = mapper.readValue(requestBody, Propfind.class);
 			final List<Kalender> kalenderList = repo.getAvailableKalender(false, false);
-			if (kalenderList.isEmpty())
+			if (kalenderList.isEmpty()) {
 				return buildResponse(createResourceNotFoundError("Es wurden keine Adressbücher für den angemeldeten Benutzer gefunden!"));
+			}
 			final Multistatus ms = new Multistatus();
 			// wichtig ist, dass dem Client die Collection selbst im Response beschrieben wird
 			final var response = genPropfindCollectionResponse(propfind.getProp());
 			ms.getResponse().add(response);
-			for (final Kalender kalender : kalenderList)
+			for (final Kalender kalender : kalenderList) {
 				ms.getResponse().add(this.genPropfindCalendarResponse(kalender, propfind.getProp()));
+			}
 			return buildResponse(ms);
 		} catch (final DavException e) {
 			return buildResponse(e.getDavResponse(getKalenderUri()).getError());
@@ -114,14 +116,16 @@ public class CalDavRequestManager extends AbstractDavRequestManager {
 		this.setParameterResourceCollectionId(idCal);
 
 			// Wurde keine gültige Ressource angegeben, so ist dies eigentlicht ein Zugriff auf die Kalendersammlung
-			if ((idCal == null) || idCal.isBlank())
+			if ((idCal == null) || idCal.isBlank()) {
 				return propfindCollection();
+			}
 
 			final Propfind propfind = mapper.readValue(requestBody, Propfind.class);
 
 			final Kalender kalender = repo.getKalenderById(idCal, true, false);
-			if (kalender == null)
+			if (kalender == null) {
 				return buildResponse(createResourceNotFoundError("Kalender mit der angegebenen Id wurde nicht gefunden!"));
+			}
 
 			final Multistatus ms = new Multistatus();
 			ms.getResponse().add(this.genPropfindCalendarResponse(kalender, propfind.getProp()));
@@ -202,8 +206,9 @@ public class CalDavRequestManager extends AbstractDavRequestManager {
 		}
 
 		// Die Privilegien des Benutzers der aktuellen Verbindungen auf den Kalender
-		if (propUtil.getIsFieldRequested(CurrentUserPrivilegeSet.class))
+		if (propUtil.getIsFieldRequested(CurrentUserPrivilegeSet.class)) {
 			resp.setCurrentUserPrivilegeSet(getPrivilegeSet(kalender.darfLesen, kalender.darfSchreiben));
+		}
 
 		// Das Collection-Tag, um Änderungen am Kalenderinhalt zu verfolgen (Verwendung eines Sync-Tokens, welches auch bei Änderungen am Inhalt angepasst werden muss)
 		if (propUtil.getIsFieldRequested(Getctag.class)) {
@@ -305,8 +310,9 @@ public class CalDavRequestManager extends AbstractDavRequestManager {
 		}
 
 		// Die Privilegien des Benutzers der aktuellen Verbindungen auf den Kalender-Eintrag
-		if (propUtil.getIsFieldRequested(CurrentUserPrivilegeSet.class))
+		if (propUtil.getIsFieldRequested(CurrentUserPrivilegeSet.class)) {
 			resp.setCurrentUserPrivilegeSet(getPrivilegeSet(eintrag.darfLesen, eintrag.darfSchreiben));
+		}
 
 		return createResponse(req, resp, getKalenderResourceUri());
 	}
@@ -331,23 +337,27 @@ public class CalDavRequestManager extends AbstractDavRequestManager {
 		try {
 			// Bestimme die Kalenderdaten aus der Datenbank und gebe einen Fehler zurück, falls kein Kalender mit der ID gefunden wurde
 			final Kalender kalender = this.repo.getKalenderById(idCal, true, true);
-			if (kalender == null)
+			if (kalender == null) {
 				return buildResponse(this.createResourceNotFoundError("Kalender mit der angegebenen ID wurde nicht gefunden!"));
+			}
 
 			// Prüfe, ob es sich um eine Anfrage mit dem Typ CalendarMultiget handelt
 			final CalendarMultiget calendarMultiget = deserialiseCalendarMultiget(requestBody);
-			if (calendarMultiget != null)
+			if (calendarMultiget != null) {
 				return reportCalendarMultigetRequest(kalender, calendarMultiget);
+			}
 
 			// Prüfe, ob es sich um eine Anfrage mit dem Typ SyncCollection handelt
 			final SyncCollection syncCollection = deserialiseSyncCollection(requestBody);
-			if (syncCollection != null)
+			if (syncCollection != null) {
 				return reportSyncCollectionRequest(kalender, syncCollection);
+			}
 
 			// Prüfe, ob es sich um eine Anfrage mit dem Typ CalendarQuery handelt
 			final CalendarQuery calendarQuery = deserialiseCalendarQuery(requestBody);
-			if (calendarQuery != null)
+			if (calendarQuery != null) {
 				return reportCalendarQueryRequest(kalender, calendarQuery);
+			}
 
 			throw new UnsupportedOperationException(
 					"Es werden nur die Typen CalendarMultiget, SyncCollection und CalendarQuery für die Methode REPORT bei einem Kalender unterstützt.");
@@ -421,8 +431,9 @@ public class CalDavRequestManager extends AbstractDavRequestManager {
 
 		// Generiere die Response mit den Kalender-Einträgen
 		final Multistatus ms = new Multistatus();
-		for (final KalenderEintrag eintrag : eintraege)
+		for (final KalenderEintrag eintrag : eintraege) {
 			ms.getResponse().add(this.genReportEntryResponse(eintrag, multiget.getProp()));
+		}
 		return buildResponse(ms);
 	}
 
@@ -453,8 +464,9 @@ public class CalDavRequestManager extends AbstractDavRequestManager {
 
 		// Generiere die Response mit den Kalender-Einträgen und den UIDs der entfernten Einträge
 		final Multistatus ms = new Multistatus();
-		for (final KalenderEintrag eintrag : eintraege)
+		for (final KalenderEintrag eintrag : eintraege) {
 			ms.getResponse().add(this.genReportEntryResponse(eintrag, syncCollection.getProp()));
+		}
 		for (final String uid : deletedUIDs) {
 			this.setParameterResourceId(uid);
 			ms.getResponse().add(this.genReportResourceNotFoundResponse(getKalenderResourceUri(), uid));
@@ -484,8 +496,9 @@ public class CalDavRequestManager extends AbstractDavRequestManager {
 
 		// Generiere die Response mit den Kalender-Einträgen
 		final Multistatus ms = new Multistatus();
-		for (final KalenderEintrag eintrag : eintraege)
+		for (final KalenderEintrag eintrag : eintraege) {
 			ms.getResponse().add(this.genReportEntryResponse(eintrag, calendarQuery.getProp()));
+		}
 		return buildResponse(ms);
 	}
 
@@ -500,8 +513,9 @@ public class CalDavRequestManager extends AbstractDavRequestManager {
 	 */
 	private static Predicate<? super @NotNull KalenderEintrag> getCalendarQueryFilter(final CalendarQuery calendarQuery) {
 		// Prüfe, ob eine gültige Filterdefinition vorliegt. Wenn nicht, dann gib ein Prädikat zurück, welche immer true liefert.
-		if ((calendarQuery == null) || (calendarQuery.getFilter() == null) || (calendarQuery.getFilter().getCompFilter() == null))
+		if ((calendarQuery == null) || (calendarQuery.getFilter() == null) || (calendarQuery.getFilter().getCompFilter() == null)) {
 			return e -> true;
+		}
 		final CompFilter filter = calendarQuery.getFilter().getCompFilter();
 
 		// Erzeuge den Filter für die Art der Ressource, bspw. VCALENDAR (andere Einträge haben wir nicht)
@@ -512,8 +526,9 @@ public class CalDavRequestManager extends AbstractDavRequestManager {
 
 		// Gibt es noch Filterdefinitionen auf Component-Ebene? Wenn nicht, dann ist das Filter-Prädikat bereits vollständig erstellt ...
 		final CompFilter filterComp = filter.getCompFilter();
-		if (filterComp == null)
+		if (filterComp == null) {
 			return ressourceTypePredicate;
+		}
 
 		// Erzeuge den Filter für den Komponenten-Typ, bspw. VEVENT, VTODO, VFREEBUSY oder VTIMEZONE
 		final String componentTypeFilter = filterComp.getName();
@@ -522,8 +537,9 @@ public class CalDavRequestManager extends AbstractDavRequestManager {
 				: e -> (e.data != null) && e.data.contains("BEGIN:" + componentTypeFilter);
 
 		// Gibt es auch einen Filter in Bezug ein Zeitintervall? Wenn nicht, dann ist das Filter-Prädikat bereits vollständig erstellt ...
-		if ((filterComp.getTimeRange() == null) || (filterComp.getTimeRange().getStart() == null) || (filterComp.getTimeRange().getEnd() == null))
+		if ((filterComp.getTimeRange() == null) || (filterComp.getTimeRange().getStart() == null) || (filterComp.getTimeRange().getEnd() == null)) {
 			return ressourceTypePredicate.and(componentTypePredicate);
+		}
 
 		// Erzeuge den Filter für das Zeitintervall ...
 		final TimeRange timeRange = filterComp.getTimeRange();
@@ -617,8 +633,9 @@ public class CalDavRequestManager extends AbstractDavRequestManager {
 
 		final boolean isCreate = (nonMatch != null) && "*".equals(nonMatch);
 		final boolean isUpdate = (match != null) && !match.isBlank();
-		if (!isCreate && !isUpdate)
+		if (!isCreate && !isUpdate) {
 			return buildBadRequest(new BadRequestException("Ungültige Anfrage"));
+		}
 
 		// Lese den Payload: Dies ist kein xml, sondern direkt der Kalendereintrag, also die .ics-Datei ...
 		final String vCalPayload = new String(requestBody, StandardCharsets.UTF_8);
@@ -634,16 +651,19 @@ public class CalDavRequestManager extends AbstractDavRequestManager {
 		eintrag.kalenderTyp = vCalendar.getTyp().name();
 		// Wenn ein Update stattfindet, so trage das zuvor bestimmte eTag aus der Anfrage unter version ein
 		final String eTag = isCreate ? null : adjustETags(match);
-		if (eTag != null)
+		if (eTag != null) {
 			eintrag.version = eTag;
+		}
 
 		// Speichert den Kalender-Eintrag und gibt die neue Version des Eintrags als Entity-Tag zurück
 		final String version = this.repo.persistEintrag(eintrag);
-		if (version == null)
+		if (version == null) {
 			return buildResponse(createResourceNotFoundError("Zugriff auf %s nicht möglich.".formatted(getKalenderResourceUri())));
+		}
 		final EntityTag entityTag = new EntityTag(version);
-		if (isCreate)
+		if (isCreate) {
 			return buildCreatedResponse(entityTag);
+		}
 		return buildNoContentResponse(entityTag);
 	}
 
@@ -667,8 +687,9 @@ public class CalDavRequestManager extends AbstractDavRequestManager {
 
 		String errorMessage;
 		try {
-			if (repo.deleteKalenderEintrag(idCal, uid, Long.valueOf(adjustETags(match))))
+			if (repo.deleteKalenderEintrag(idCal, uid, Long.valueOf(adjustETags(match)))) {
 				return buildNoContentResponse();
+			}
 			errorMessage = "DavRessource<" + uid + "> in Collection<" + idCal + "> nicht gefunden.";
 		} catch (final Exception e) {
 			errorMessage = e.getMessage();
@@ -719,8 +740,9 @@ public class CalDavRequestManager extends AbstractDavRequestManager {
 		if (LOG_REQUESTS) {
 			final Logger logger = Logger.global();
 			logger.log(LogLevel.WARNING, methodName);
-			for (final String s : params)
+			for (final String s : params) {
 				logger.log(LogLevel.WARNING, s);
+			}
 			logger.log(methodName + "\n");
 			logger.log(LogLevel.WARNING, new String(requestBody, StandardCharsets.UTF_8));
 		}
