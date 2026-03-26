@@ -107,8 +107,9 @@ public class GostJahrgangsFachwahlenManager {
 		for (final GostFachwahl fw : jgFachwahlen.abitur.fachwahlen) {
 			final GostKursart kursart = GostKursart.fromID(fw.kursartID);
 			GostAbiturFach abiFach = GostAbiturFach.LK1;
-			if (kursart == GostKursart.GK)
+			if (kursart == GostKursart.GK) {
 				abiFach = fw.istSchriftlich ? GostAbiturFach.AB3 : GostAbiturFach.AB4;
+			}
 			List<Long> schuelerListe = _map2D_fachID_abifachID_schuelerID.getOrNull(fw.fachID, abiFach.id);
 			if (schuelerListe == null) {
 				schuelerListe = new ArrayList<>();
@@ -129,11 +130,13 @@ public class GostJahrgangsFachwahlenManager {
 	 */
 	public @NotNull List<Long> schuelerGetMengeByFachAndAbifachAsListOrException(final long idFach, final @NotNull GostAbiturFach abifach) {
 		int idAbifach = abifach.id;
-		if (idAbifach == 2)
+		if (idAbifach == 2) {
 			idAbifach = 1;
+		}
 		final List<Long> schuelerListe = _map2D_fachID_abifachID_schuelerID.getOrNull(idFach, idAbifach);
-		if (schuelerListe != null)
+		if (schuelerListe != null) {
 			return schuelerListe;
+		}
 		return new ArrayList<>();
 	}
 
@@ -149,8 +152,9 @@ public class GostJahrgangsFachwahlenManager {
 	 */
 	public @NotNull List<Long> schuelerGetMengeLKByFachAndHalbjahrAsListOrException(final long idFach, final @NotNull GostHalbjahr halbjahr) {
 		final List<Long> schuelerListe = _map2D_lk_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
-		if (schuelerListe != null)
+		if (schuelerListe != null) {
 			return schuelerListe;
+		}
 		return new ArrayList<>();
 	}
 
@@ -167,8 +171,9 @@ public class GostJahrgangsFachwahlenManager {
 	 */
 	public @NotNull List<Long> schuelerGetMengeGKByFachAndHalbjahrAsListOrException(final long idFach, final @NotNull GostHalbjahr halbjahr) {
 		final List<Long> schuelerListe = _map2D_gk_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
-		if (schuelerListe != null)
+		if (schuelerListe != null) {
 			return schuelerListe;
+		}
 		return new ArrayList<>();
 	}
 
@@ -184,8 +189,9 @@ public class GostJahrgangsFachwahlenManager {
 	 */
 	public @NotNull List<Long> schuelerGetMengeGKSchriftlichByFachAndHalbjahrAsListOrException(final long idFach, final @NotNull GostHalbjahr halbjahr) {
 		final List<Long> schuelerListe = _map2D_gk_schriftlich_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
-		if (schuelerListe != null)
+		if (schuelerListe != null) {
 			return schuelerListe;
+		}
 		return new ArrayList<>();
 	}
 
@@ -202,8 +208,9 @@ public class GostJahrgangsFachwahlenManager {
 	 */
 	public @NotNull List<Long> schuelerGetMengeGKMuendlichByFachAndHalbjahrAsListOrException(final long idFach, final @NotNull GostHalbjahr halbjahr) {
 		final List<Long> schuelerListe = _map2D_gk_muendlich_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
-		if (schuelerListe != null)
+		if (schuelerListe != null) {
 			return schuelerListe;
+		}
 		return new ArrayList<>();
 	}
 
@@ -219,8 +226,9 @@ public class GostJahrgangsFachwahlenManager {
 	 */
 	public @NotNull List<Long> schuelerGetMengeZKByFachAndHalbjahrAsListOrException(final long idFach, final @NotNull GostHalbjahr halbjahr) {
 		final List<Long> schuelerListe = _map2D_zk_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
-		if (schuelerListe != null)
+		if (schuelerListe != null) {
 			return schuelerListe;
+		}
 		return new ArrayList<>();
 	}
 

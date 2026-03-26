@@ -35,8 +35,9 @@ public final class Map3DUtils {
 	public static <K1, K2, K3, V> @NotNull List<V> getOrCreateArrayList(final @NotNull HashMap3D<K1, K2, K3, List<V>> map3D, final @NotNull K1 key1,
 			final @NotNull K2 key2, final @NotNull K3 key3) {
 		final List<V> list = map3D.getOrNull(key1, key2, key3);
-		if (list != null)
+		if (list != null) {
 			return list;
+		}
 
 		final @NotNull ArrayList<V> listNeu = new ArrayList<>();
 		map3D.put(key1, key2, key3, listNeu);
@@ -61,8 +62,9 @@ public final class Map3DUtils {
 	public static <K1, K2, K3, V> @NotNull Set<V> getOrCreateSet(final @NotNull HashMap3D<K1, K2, K3, Set<V>> map3D, final @NotNull K1 key1,
 			final @NotNull K2 key2, final @NotNull K3 key3) {
 		final Set<V> set = map3D.getOrNull(key1, key2, key3);
-		if (set != null)
+		if (set != null) {
 			return set;
+		}
 		final @NotNull HashSet<V> setNeu = new HashSet<>();
 		map3D.put(key1, key2, key3, setNeu);
 		return setNeu;

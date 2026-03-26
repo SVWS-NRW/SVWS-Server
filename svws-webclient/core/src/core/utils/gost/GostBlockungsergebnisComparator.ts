@@ -22,12 +22,15 @@ export class GostBlockungsergebnisComparator extends JavaObject implements Compa
 
 	public compare(o1: GostBlockungsergebnis, o2: GostBlockungsergebnis): number {
 		const cmp: number = GostBlockungsergebnisBewertungComparator.compareBewertungen(o1.bewertung, o2.bewertung);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
-		if (o1.id < o2.id)
+		}
+		if (o1.id < o2.id) {
 			return -1;
-		if (o1.id > o2.id)
+		}
+		if (o1.id > o2.id) {
 			return +1;
+		}
 		return 0;
 	}
 

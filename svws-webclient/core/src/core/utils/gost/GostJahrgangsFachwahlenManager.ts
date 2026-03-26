@@ -108,8 +108,9 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 		for (const fw of jgFachwahlen.abitur.fachwahlen) {
 			const kursart: GostKursart | null = GostKursart.fromID(fw.kursartID);
 			let abiFach: GostAbiturFach | null = GostAbiturFach.LK1;
-			if (kursart as unknown === GostKursart.GK as unknown)
+			if (kursart as unknown === GostKursart.GK as unknown) {
 				abiFach = fw.istSchriftlich ? GostAbiturFach.AB3 : GostAbiturFach.AB4;
+			}
 			let schuelerListe: List<number> | null = this._map2D_fachID_abifachID_schuelerID.getOrNull(fw.fachID, abiFach.id);
 			if (schuelerListe === null) {
 				schuelerListe = new ArrayList();
@@ -130,11 +131,13 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 	 */
 	public schuelerGetMengeByFachAndAbifachAsListOrException(idFach: number, abifach: GostAbiturFach): List<number> {
 		let idAbifach: number = abifach.id;
-		if (idAbifach === 2)
+		if (idAbifach === 2) {
 			idAbifach = 1;
+		}
 		const schuelerListe: List<number> | null = this._map2D_fachID_abifachID_schuelerID.getOrNull(idFach, idAbifach);
-		if (schuelerListe !== null)
+		if (schuelerListe !== null) {
 			return schuelerListe;
+		}
 		return new ArrayList<number>();
 	}
 
@@ -149,8 +152,9 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 	 */
 	public schuelerGetMengeLKByFachAndHalbjahrAsListOrException(idFach: number, halbjahr: GostHalbjahr): List<number> {
 		const schuelerListe: List<number> | null = this._map2D_lk_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
-		if (schuelerListe !== null)
+		if (schuelerListe !== null) {
 			return schuelerListe;
+		}
 		return new ArrayList<number>();
 	}
 
@@ -166,8 +170,9 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 	 */
 	public schuelerGetMengeGKByFachAndHalbjahrAsListOrException(idFach: number, halbjahr: GostHalbjahr): List<number> {
 		const schuelerListe: List<number> | null = this._map2D_gk_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
-		if (schuelerListe !== null)
+		if (schuelerListe !== null) {
 			return schuelerListe;
+		}
 		return new ArrayList<number>();
 	}
 
@@ -182,8 +187,9 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 	 */
 	public schuelerGetMengeGKSchriftlichByFachAndHalbjahrAsListOrException(idFach: number, halbjahr: GostHalbjahr): List<number> {
 		const schuelerListe: List<number> | null = this._map2D_gk_schriftlich_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
-		if (schuelerListe !== null)
+		if (schuelerListe !== null) {
 			return schuelerListe;
+		}
 		return new ArrayList<number>();
 	}
 
@@ -199,8 +205,9 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 	 */
 	public schuelerGetMengeGKMuendlichByFachAndHalbjahrAsListOrException(idFach: number, halbjahr: GostHalbjahr): List<number> {
 		const schuelerListe: List<number> | null = this._map2D_gk_muendlich_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
-		if (schuelerListe !== null)
+		if (schuelerListe !== null) {
 			return schuelerListe;
+		}
 		return new ArrayList<number>();
 	}
 
@@ -215,8 +222,9 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 	 */
 	public schuelerGetMengeZKByFachAndHalbjahrAsListOrException(idFach: number, halbjahr: GostHalbjahr): List<number> {
 		const schuelerListe: List<number> | null = this._map2D_zk_fachID_halbjahrID_schuelerID.getOrNull(idFach, halbjahr.id);
-		if (schuelerListe !== null)
+		if (schuelerListe !== null) {
 			return schuelerListe;
+		}
 		return new ArrayList<number>();
 	}
 

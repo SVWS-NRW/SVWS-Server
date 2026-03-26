@@ -27,15 +27,19 @@ public class KlausurterminblockungAlgorithmus {
 
 	private static final @NotNull Comparator<GostKursklausurRich> _compGostKursklausurRich =
 			(final @NotNull GostKursklausurRich a, final @NotNull GostKursklausurRich b) -> {
-				if (a.halbjahr < b.halbjahr)
+				if (a.halbjahr < b.halbjahr) {
 					return -1;
-				if (a.halbjahr > b.halbjahr)
+				}
+				if (a.halbjahr > b.halbjahr) {
 					return +1;
+				}
 
-				if (a.quartal < b.quartal)
+				if (a.quartal < b.quartal) {
 					return -1;
-				if (a.quartal > b.quartal)
+				}
+				if (a.quartal > b.quartal) {
 					return +1;
+				}
 
 				return 0;
 			};
@@ -77,8 +81,9 @@ public class KlausurterminblockungAlgorithmus {
 			final @NotNull GostKlausurterminblockungKonfiguration config, final @NotNull GostKlausurterminblockungErgebnis out) {
 
 		// Keine Daten vorhanden.
-		if (input.isEmpty())
+		if (input.isEmpty()) {
 			return;
+		}
 
 		// Keine Filterung angefordert.
 		if (config.modusQuartale == KlausurterminblockungModusQuartale.ZUSAMMEN.id) {
@@ -154,9 +159,11 @@ public class KlausurterminblockungAlgorithmus {
 	private static @NotNull List<GostKursklausurRich> filter(final @NotNull List<GostKursklausurRich> input, final boolean istLK) {
 		final @NotNull List<GostKursklausurRich> temp = new ArrayList<>();
 
-		for (final GostKursklausurRich gostKursklausur : input)
-			if (gostKursklausur.kursart.equals("LK") == istLK)
+		for (final GostKursklausurRich gostKursklausur : input) {
+			if (gostKursklausur.kursart.equals("LK") == istLK) {
 				temp.add(gostKursklausur);
+			}
+		}
 
 		return temp;
 	}

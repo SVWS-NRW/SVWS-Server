@@ -139,17 +139,20 @@ public final class DateUtils {
 	 * - Falls {@code null} übergeben wird, das Format ungültig ist oder nicht-numerische Zeichen enthält, wird {@code false} zurückgegeben.
 	 */
 	public static boolean isValidDate(final String datumISO8601) {
-		if (datumISO8601 == null)
+		if (datumISO8601 == null) {
 			return false;
+		}
 		try {
 			final @NotNull String[] split = datumISO8601.split("-");
-			if (split.length != 3)
+			if (split.length != 3) {
 				return false;
+			}
 			final int jahr = Integer.parseInt(split[0]);
 			final int monat = Integer.parseInt(split[1]);
 			final int tagImMonat = Integer.parseInt(split[2]);
-			if (gibIstJahrUngueltig(jahr) || monat < 1 || monat > 12)
+			if (gibIstJahrUngueltig(jahr) || monat < 1 || monat > 12) {
 				return false;
+			}
 			final int maxTage = daysInMonth(jahr, monat);
 			return tagImMonat >= 1 && tagImMonat <= maxTage;
 		} catch (final NumberFormatException e) {
@@ -301,11 +304,12 @@ public final class DateUtils {
 		final int[] vergangeneTage = (tageDesJahres == 365) ? monat_zu_vergangene_tage[0] : monat_zu_vergangene_tage[1];
 
 		int monat = 12;
-		for (int i = 2; i <= 12; i++)
+		for (int i = 2; i <= 12; i++) {
 			if (vergangeneTage[i] >= t) {
 				monat = i - 1;
 				break;
 			}
+		}
 
 		// Berechne nun den zugehörigen Tag des Monat "tagDesMonats".
 		final int tagDesMonats = t - vergangeneTage[monat];
@@ -366,8 +370,9 @@ public final class DateUtils {
 	public static int gibMinutenOfZeitAsString(final @NotNull String zeit) {
 
 		@NotNull String @NotNull [] sSplit = zeit.split(":");
-		if (sSplit.length != 2)
+		if (sSplit.length != 2) {
 			sSplit = zeit.split(".");
+		}
 		DeveloperNotificationException.ifTrue(
 				"gibMinutenOfZeitAsString(%s): Zeit muss im Format hh:mm oder hh.mm sein!".formatted(zeit),
 				sSplit.length != 2);
@@ -540,8 +545,9 @@ public final class DateUtils {
 		final boolean isLeapYear = (years1 == 0) && ((years100 == 0) || (years4 != 0));
 		// Berechne den Monat und den Tag des Monats anhand des Tag des Jahres relativ zum 1. März und hänge Januar und Februar hinten an. Dieser Trick ermöglicht eine schnelle Berechnung...
 		long day = (daysLeft400 - 60) - (years100 * DAYS_PER_100_YEARS) - (years4 * DAYS_PER_4_YEARS) - (years1 * DAYS_PER_YEAR);
-		if (day < 0)
+		if (day < 0) {
 			day += (isLeapYear ? DAYS_PER_LEAP_YEAR : DAYS_PER_YEAR);
+		}
 		final long m5 = day / 153;   // Die Anzahl der 5-Monatsgruppen (März bis Juli - 153 Tage, August bis Dezember - 153 Tage, Januar und Februar - die restlichen Tage)
 		day -= m5 * 153;  // reduziere die Anzahl der Tage um die 5 Monatsgruppen
 		final long m2 = day / 61;   // Die Anzahl der 2-Monatsgruppen innerhalb der aktuellen 5-Monatsgruppe (der erste Monat hat immer 31 und der zweite 30 - min der Ausnahme am Ende beim Februar)
@@ -549,42 +555,52 @@ public final class DateUtils {
 		final long m1 = day / 31;   // Die Anzahl der ggf. noch abgeschlossenen ersten Monate der aktuellen 2-Monatsgruppe
 		day -= m1 * 31;
 		final long month = ((((m5 * 5) + (m2 * 2) + m1) + 2) % 12) + 1;   // Bestimme den Monat beginnend mit dem März und rotiere dann Januars und Februar nach vorne, um die korrekte Reihenfolge wiederherzustellen
-		if (year < 1000)
+		if (year < 1000) {
 			s.append("0");
-		if (year < 100)
+		}
+		if (year < 100) {
 			s.append("0");
-		if (year < 10)
+		}
+		if (year < 10) {
 			s.append("0");
+		}
 		s.append(year);
 		s.append("-");
-		if (month < 10)
+		if (month < 10) {
 			s.append("0");
+		}
 		s.append(month);
 		s.append("-");
-		if (day < 10)
+		if (day < 10) {
 			s.append("0");
+		}
 		s.append(day);
 		s.append("T");
 		final long hour = time / 3600000L % 24L;
-		if (hour < 10)
+		if (hour < 10) {
 			s.append("0");
+		}
 		s.append(hour);
 		s.append(":");
 		final long min = time / 60000L % 60L;
-		if (min < 10)
+		if (min < 10) {
 			s.append("0");
+		}
 		s.append(min);
 		s.append(":");
 		final long sec = time / 1000L % 60L;
-		if (sec < 10)
+		if (sec < 10) {
 			s.append("0");
+		}
 		s.append(sec);
 		s.append(".");
 		final long ms = time % 1000L;
-		if (ms < 100)
+		if (ms < 100) {
 			s.append("0");
-		if (ms < 10)
+		}
+		if (ms < 10) {
 			s.append("0");
+		}
 		s.append(ms);
 		return s.toString();
 	}
@@ -650,8 +666,9 @@ public final class DateUtils {
 		final String end = (zeitraumAbis.compareTo(zeitraumBbis) <= 0) ? zeitraumAbis : zeitraumBbis;
 
 		// Falls kein gültiger Zeitraum existiert, gib ein leeres Array zurück
-		if (start.compareTo(end) > 0)
+		if (start.compareTo(end) > 0) {
 			return new String[0];
+		}
 
 		// Berechne die Schnittmenge der Tage
 		return gibTageAlsDatumZwischen(start, end);
@@ -664,8 +681,9 @@ public final class DateUtils {
 				return 30;
 			case 2:
 				// Schaltjahrüberprüfung
-				if (istSchaltjahr(year))
+				if (istSchaltjahr(year)) {
 					return 29;
+				}
 				return 28;
 			default:
 				return 31;
@@ -675,8 +693,9 @@ public final class DateUtils {
 	// Hilfsmethode, um zu prüfen, ob ein Jahr ein Schaltjahr ist
 	private static boolean istSchaltjahr(final int year) {
 		if (year % 4 == 0) {
-			if (year % 100 == 0)
+			if (year % 100 == 0) {
 				return year % 400 == 0;
+			}
 			return true;
 		}
 		return false;

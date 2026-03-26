@@ -26,8 +26,9 @@ public final class ArrayUtils {
 	public static @NotNull int[] getIndexPermutation(final int size, final @NotNull Random random) {
 
 		final int[] perm = new int[size];
-		for (int i = 0; i < perm.length; i++)
+		for (int i = 0; i < perm.length; i++) {
 			perm[i] = i;
+		}
 
 		for (int i1 = 0; i1 < perm.length; i1++) {
 			final int i2 = random.nextInt(perm.length);

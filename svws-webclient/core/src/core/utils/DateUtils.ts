@@ -145,17 +145,20 @@ export class DateUtils extends JavaObject {
 	 * - Falls {@code null} übergeben wird, das Format ungültig ist oder nicht-numerische Zeichen enthält, wird {@code false} zurückgegeben.
 	 */
 	public static isValidDate(datumISO8601: string | null): boolean {
-		if (datumISO8601 === null)
+		if (datumISO8601 === null) {
 			return false;
+		}
 		try {
 			const split: Array<string | null> = datumISO8601.split("-");
-			if (split.length !== 3)
+			if (split.length !== 3) {
 				return false;
+			}
 			const jahr: number = JavaInteger.parseInt(split[0]);
 			const monat: number = JavaInteger.parseInt(split[1]);
 			const tagImMonat: number = JavaInteger.parseInt(split[2]);
-			if (DateUtils.gibIstJahrUngueltig(jahr) || monat < 1 || monat > 12)
+			if (DateUtils.gibIstJahrUngueltig(jahr) || monat < 1 || monat > 12) {
 				return false;
+			}
 			const maxTage: number = DateUtils.daysInMonth(jahr, monat);
 			return tagImMonat >= 1 && tagImMonat <= maxTage;
 		} catch(e : any) {
@@ -294,11 +297,12 @@ export class DateUtils extends JavaObject {
 		DeveloperNotificationException.ifTrue("Man kann maximal ins Folgejahr springen!", t > tageDesJahres);
 		const vergangeneTage: Array<number> | null = (tageDesJahres === 365) ? DateUtils.monat_zu_vergangene_tage[0] : DateUtils.monat_zu_vergangene_tage[1];
 		let monat: number = 12;
-		for (let i: number = 2; i <= 12; i++)
+		for (let i: number = 2; i <= 12; i++) {
 			if (vergangeneTage[i] >= t) {
 				monat = i - 1;
 				break;
 			}
+		}
 		const tagDesMonats: number = t - vergangeneTage[monat];
 		return StringUtils.padZahl(j, 4) + "-" + StringUtils.padZahl(monat, 2) + "-" + StringUtils.padZahl(tagDesMonats, 2);
 	}
@@ -355,8 +359,9 @@ export class DateUtils extends JavaObject {
 	 */
 	public static gibMinutenOfZeitAsString(zeit: string): number {
 		let sSplit: Array<string> = zeit.split(":");
-		if (sSplit.length !== 2)
+		if (sSplit.length !== 2) {
 			sSplit = zeit.split(".");
+		}
 		DeveloperNotificationException.ifTrue(JavaString.format("gibMinutenOfZeitAsString(%s): Zeit muss im Format hh:mm oder hh.mm sein!", zeit), sSplit.length !== 2);
 		const sStunden: string = sSplit[0].trim();
 		const sMinuten: string = sSplit[1].trim();
@@ -508,8 +513,9 @@ export class DateUtils extends JavaObject {
 		const year: number = (years400 * 400) + (years100 * 100) + (years4 * 4) + years1;
 		const isLeapYear: boolean = (years1 === 0) && ((years100 === 0) || (years4 !== 0));
 		let day: number = (daysLeft400 - 60) - (years100 * DateUtils.DAYS_PER_100_YEARS) - (years4 * DateUtils.DAYS_PER_4_YEARS) - (years1 * DateUtils.DAYS_PER_YEAR);
-		if (day < 0)
+		if (day < 0) {
 			day += (isLeapYear ? DateUtils.DAYS_PER_LEAP_YEAR : DateUtils.DAYS_PER_YEAR);
+		}
 		const m5: number = Math.trunc(day / 153);
 		day -= m5 * 153;
 		const m2: number = Math.trunc(day / 61);
@@ -517,42 +523,52 @@ export class DateUtils extends JavaObject {
 		const m1: number = Math.trunc(day / 31);
 		day -= m1 * 31;
 		const month: number = ((((m5 * 5) + (m2 * 2) + m1) + 2) % 12) + 1;
-		if (year < 1000)
+		if (year < 1000) {
 			s.append("0");
-		if (year < 100)
+		}
+		if (year < 100) {
 			s.append("0");
-		if (year < 10)
+		}
+		if (year < 10) {
 			s.append("0");
+		}
 		s.append(year);
 		s.append("-");
-		if (month < 10)
+		if (month < 10) {
 			s.append("0");
+		}
 		s.append(month);
 		s.append("-");
-		if (day < 10)
+		if (day < 10) {
 			s.append("0");
+		}
 		s.append(day);
 		s.append("T");
 		const hour: number = Math.trunc(time / 3600000) % 24;
-		if (hour < 10)
+		if (hour < 10) {
 			s.append("0");
+		}
 		s.append(hour);
 		s.append(":");
 		const min: number = Math.trunc(time / 60000) % 60;
-		if (min < 10)
+		if (min < 10) {
 			s.append("0");
+		}
 		s.append(min);
 		s.append(":");
 		const sec: number = Math.trunc(time / 1000) % 60;
-		if (sec < 10)
+		if (sec < 10) {
 			s.append("0");
+		}
 		s.append(sec);
 		s.append(".");
 		const ms: number = time % 1000;
-		if (ms < 100)
+		if (ms < 100) {
 			s.append("0");
-		if (ms < 10)
+		}
+		if (ms < 10) {
 			s.append("0");
+		}
 		s.append(ms);
 		return s.toString();
 	}
@@ -597,8 +613,9 @@ export class DateUtils extends JavaObject {
 	public static berechneGemeinsameTage(zeitraumAab: string, zeitraumAbis: string, zeitraumBab: string, zeitraumBbis: string): Array<string | null> {
 		const start: string | null = (JavaString.compareTo(zeitraumAab, zeitraumBab) >= 0) ? zeitraumAab : zeitraumBab;
 		const end: string | null = (JavaString.compareTo(zeitraumAbis, zeitraumBbis) <= 0) ? zeitraumAbis : zeitraumBbis;
-		if (JavaString.compareTo(start, end) > 0)
+		if (JavaString.compareTo(start, end) > 0) {
 			return Array(0).fill(null);
+		}
 		return DateUtils.gibTageAlsDatumZwischen(start, end);
 	}
 
@@ -611,8 +628,9 @@ export class DateUtils extends JavaObject {
 				return 30;
 			}
 			case 2: {
-				if (DateUtils.istSchaltjahr(year))
+				if (DateUtils.istSchaltjahr(year)) {
 					return 29;
+				}
 				return 28;
 			}
 			default: {
@@ -623,8 +641,9 @@ export class DateUtils extends JavaObject {
 
 	private static istSchaltjahr(year: number): boolean {
 		if (year % 4 === 0) {
-			if (year % 100 === 0)
+			if (year % 100 === 0) {
 				return year % 400 === 0;
+			}
 			return true;
 		}
 		return false;

@@ -40,14 +40,16 @@ public final class KlausurterminblockungAlgorithmusGreedy1 extends Klausurtermin
 		while (System.currentTimeMillis() < pZeitEnde) {
 			_dynDaten.aktion_Clear_KlausurgruppenZufaellig_TermineZufaellig();
 
-			if (_dynDaten.gibIstBesserAlsZustand1())
+			if (_dynDaten.gibIstBesserAlsZustand1()) {
 				_dynDaten.aktionZustand1Speichern();
-			else
+			} else {
 				_dynDaten.aktionZustand1Laden();
+			}
 		}
 
-		if (_dynDaten.gibIstBesserAlsZustand2())
+		if (_dynDaten.gibIstBesserAlsZustand2()) {
 			_dynDaten.aktionZustand2Speichern();
+		}
 	}
 
 }

@@ -53,19 +53,22 @@ public final class KlausurterminblockungAlgorithmusGreedy3 extends Klausurtermin
 		_dynDaten.aktionZustand1Laden();
 
 		// Ist sie auch besser als die beste globale Lösung?
-		if (_dynDaten.gibIstBesserAlsZustand2())
+		if (_dynDaten.gibIstBesserAlsZustand2()) {
 			_dynDaten.aktionZustand2Speichern();
+		}
 	}
 
 	private void berechneRekursiv() {
 
 		// Kann das Ergebnis überhaupt noch besser werden?
-		if (_dynDaten.gibTerminAnzahl() > _minTermine)
+		if (_dynDaten.gibTerminAnzahl() > _minTermine) {
 			return;
+		}
 
 		// Ist die Zeit abgelaufen?
-		if (System.currentTimeMillis() > _zeitEnde)
+		if (System.currentTimeMillis() > _zeitEnde) {
 			return;
+		}
 
 		// Sind alle Klausuren verteilt?
 		if (!_dynDaten.gibExistierenNichtverteilteKlausuren()) {
@@ -89,8 +92,9 @@ public final class KlausurterminblockungAlgorithmusGreedy3 extends Klausurtermin
 
 		// 2. Fall: Die Gruppe muss in einen neu erzeugten Termin.
 		final int terminNr = _dynDaten.gibErzeugeNeuenTermin();
-		if (!_dynDaten.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr))
+		if (!_dynDaten.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr)) {
 			throw new DeveloperNotificationException("Ein Setzen muss hier möglich sein!");
+		}
 		berechneRekursiv();
 		_dynDaten.aktionEntferneKlausurgruppeAusTermin(gruppe, terminNr);
 		_dynDaten.entferneLetztenTermin();

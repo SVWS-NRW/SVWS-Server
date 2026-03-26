@@ -13,8 +13,9 @@ export class KursUtils extends JavaObject {
 	 */
 	public static readonly comparator: Comparator<KursDaten> = { compare: (a: KursDaten, b: KursDaten) => {
 		let cmp: number = a.sortierung - b.sortierung;
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };

@@ -67,8 +67,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	private static readonly _compLehrkraefte: Comparator<GostBlockungKursLehrer> = { compare: (a: GostBlockungKursLehrer, b: GostBlockungKursLehrer) => {
 		const result: number = JavaInteger.compare(a.reihenfolge, b.reihenfolge);
-		if (result !== 0)
+		if (result !== 0) {
 			return result;
+		}
 		return JavaLong.compare(a.id, b.id);
 	} };
 
@@ -244,12 +245,14 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public toStringKurs(idKurs: number): string {
 		const kurs: GostBlockungKurs | null = this._map_idKurs_kurs.get(idKurs);
-		if (kurs === null)
+		if (kurs === null) {
 			return "[Kurs (" + idKurs + ") ohne Mapping]";
+		}
 		const gFach: GostFach | null = this._faecherManager.get(kurs.fach_id);
 		let sFach: string = "Fach-ID = " + kurs.fach_id + " (ohne Mapping)";
-		if (gFach !== null)
+		if (gFach !== null) {
 			sFach = (gFach.kuerzelAnzeige === null) ? ("Fach-ID = " + kurs.fach_id + " (ohne 'kuerzelAnzeige')") : gFach.kuerzelAnzeige;
+		}
 		return "[Kurs " + sFach + "-" + this.toStringKursartSimple(kurs.kursart) + kurs.nummer + (JavaString.isEmpty(kurs.suffix) ? "" : "-") + kurs.suffix + "]";
 	}
 
@@ -262,8 +265,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public toStringKursSimple(idKurs: number): string {
 		const kurs: GostBlockungKurs | null = this._map_idKurs_kurs.get(idKurs);
-		if (kurs === null)
+		if (kurs === null) {
 			return "[Kurs (" + idKurs + ") ohne Mapping]";
+		}
 		return "(" + kurs.id + ") " + this.toStringFachSimple(kurs.fach_id) + "-" + this.toStringKursartSimple(kurs.kursart) + kurs.nummer + (JavaString.isEmpty(kurs.suffix) ? "" : "-") + kurs.suffix;
 	}
 
@@ -276,8 +280,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public toStringKursSimpleOhneID(idKurs: number): string {
 		const kurs: GostBlockungKurs | null = this._map_idKurs_kurs.get(idKurs);
-		if (kurs === null)
+		if (kurs === null) {
 			return "[Kurs (" + idKurs + ") ohne Mapping]";
+		}
 		return this.toStringFachSimple(kurs.fach_id) + "-" + this.toStringKursartSimple(kurs.kursart) + kurs.nummer + (JavaString.isEmpty(kurs.suffix) ? "" : "-") + kurs.suffix;
 	}
 
@@ -290,10 +295,12 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public toStringFachSimple(idFach: number): string {
 		const gFach: GostFach | null = this._faecherManager.get(idFach);
-		if (gFach === null)
+		if (gFach === null) {
 			return "[Fach-ID = " + idFach + " (ohne Mapping)]";
-		if (gFach.kuerzelAnzeige === null)
+		}
+		if (gFach.kuerzelAnzeige === null) {
 			return "[Fach-ID = " + idFach + " (ohne 'kuerzelAnzeige')]";
+		}
 		return gFach.kuerzelAnzeige;
 	}
 
@@ -331,8 +338,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public toStringSchueler(idSchueler: number): string {
 		const schueler: Schueler | null = this._map_idSchueler_schueler.get(idSchueler);
-		if (schueler === null)
+		if (schueler === null) {
 			return "[Schüler (" + idSchueler + ") ohne Mapping]";
+		}
 		return "[Schüler (" + schueler.id + "): " + schueler.nachname + ", " + schueler.vorname + "]";
 	}
 
@@ -345,8 +353,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public toStringSchuelerSimple(idSchueler: number): string {
 		const schueler: Schueler | null = this._map_idSchueler_schueler.get(idSchueler);
-		if (schueler === null)
+		if (schueler === null) {
 			return "[Schüler (" + idSchueler + ") ohne Mapping]";
+		}
 		return schueler.nachname + ", " + schueler.vorname;
 	}
 
@@ -359,8 +368,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public toStringSchiene(idSchiene: number): string {
 		const schiene: GostBlockungSchiene | null = this._map_idSchiene_schiene.get(idSchiene);
-		if (schiene === null)
+		if (schiene === null) {
 			return "[Schiene (" + idSchiene + ") ohne Mapping]";
+		}
 		return "[Schiene: ID " + schiene.id + ", Nr. " + schiene.nummer + ", Bez. " + schiene.bezeichnung + ", Stunden " + schiene.wochenstunden + "]";
 	}
 
@@ -373,8 +383,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public toStringSchieneSimple(idSchiene: number): string {
 		const schiene: GostBlockungSchiene | null = this._map_idSchiene_schiene.get(idSchiene);
-		if (schiene === null)
+		if (schiene === null) {
 			return "[Schiene (" + idSchiene + ") ohne Mapping]";
+		}
 		return "Schiene Nr. " + schiene.nummer;
 	}
 
@@ -388,11 +399,14 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public toStringKursLehrkraft(idKurs: number, idLehrkraft: number): string {
 		const kurs: GostBlockungKurs | null = this._map_idKurs_kurs.get(idKurs);
-		if (kurs === null)
+		if (kurs === null) {
 			return "[Lehrkraft (ID=" + idLehrkraft + ")]";
-		for (const lehrer of kurs.lehrer)
-			if (lehrer.id === idLehrkraft)
+		}
+		for (const lehrer of kurs.lehrer) {
+			if (lehrer.id === idLehrkraft) {
 				return "[Lehrkraft (ID=" + idLehrkraft + ") " + lehrer.kuerzel + "]";
+			}
+		}
 		return "[Lehrkraft (ID=" + idLehrkraft + ")]";
 	}
 
@@ -416,16 +430,18 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public toStringRegel(idRegel: number): string {
 		const regel: GostBlockungRegel | null = this._map_idRegel_regel.get(idRegel);
-		if (regel === null)
+		if (regel === null) {
 			return "[Regel (" + idRegel + ") ohne Mapping]";
+		}
 		return "[Regel (" + regel.id + ", Nr. " + regel.typ + "): " + regel.parameter + "]";
 	}
 
 	private createComparatorRegeln(): Comparator<GostBlockungRegel> {
 		const comp: Comparator<GostBlockungRegel> = { compare: (a: GostBlockungRegel, b: GostBlockungRegel) => {
 			const cmp1: number = JavaInteger.compare(a.typ, b.typ);
-			if (cmp1 !== 0)
+			if (cmp1 !== 0) {
 				return cmp1;
+			}
 			const typ: GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(a.typ);
 			let cmp2: number;
 			const _seexpr_2075240461 = (typ);
@@ -461,8 +477,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 				cmp2 = 0;
 			}
 			;
-			if (cmp2 !== 0)
+			if (cmp2 !== 0) {
 				return cmp2;
+			}
 			return JavaLong.compare(a.id, b.id);
 		} };
 		return comp;
@@ -471,8 +488,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	private createComparatorSchueler(): Comparator<Schueler> {
 		const comp: Comparator<Schueler> = { compare: (a: Schueler, b: Schueler) => {
 			const cmpSchueler: number = this.compareSchueler(a.id, b.id);
-			if (cmpSchueler !== 0)
+			if (cmpSchueler !== 0) {
 				return cmpSchueler;
+			}
 			return JavaLong.compare(a.id, b.id);
 		} };
 		return comp;
@@ -481,11 +499,13 @@ export class GostBlockungsdatenManager extends JavaObject {
 	private createComparatorFachwahlen(): Comparator<GostFachwahl> {
 		const comp: Comparator<GostFachwahl> = { compare: (a: GostFachwahl, b: GostFachwahl) => {
 			const cmpSchueler: number = this.compareSchueler(a.schuelerID, b.schuelerID);
-			if (cmpSchueler !== 0)
+			if (cmpSchueler !== 0) {
 				return cmpSchueler;
+			}
 			const cmpFach: number = this.compareFach(a.fachID, b.fachID);
-			if (cmpFach !== 0)
+			if (cmpFach !== 0) {
 				return cmpFach;
+			}
 			return JavaInteger.compare(a.kursartID, b.kursartID);
 		} };
 		return comp;
@@ -494,11 +514,13 @@ export class GostBlockungsdatenManager extends JavaObject {
 	private createComparatorKursFachKursartNummer(): Comparator<GostBlockungKurs> {
 		const comp: Comparator<GostBlockungKurs> = { compare: (a: GostBlockungKurs, b: GostBlockungKurs) => {
 			const cmpFach: number = this.compareFach(a.fach_id, b.fach_id);
-			if (cmpFach !== 0)
+			if (cmpFach !== 0) {
 				return cmpFach;
+			}
 			const cmpKursart: number = JavaInteger.compare(a.kursart, b.kursart);
-			if (cmpKursart !== 0)
+			if (cmpKursart !== 0) {
 				return cmpKursart;
+			}
 			return JavaInteger.compare(a.nummer, b.nummer);
 		} };
 		return comp;
@@ -509,14 +531,17 @@ export class GostBlockungsdatenManager extends JavaObject {
 			const k1: number = (a.kursart === GostKursart.ZK.id) ? GostKursart.GK.id : a.kursart;
 			const k2: number = (b.kursart === GostKursart.ZK.id) ? GostKursart.GK.id : b.kursart;
 			const cmpKursartGKZK: number = JavaInteger.compare(k1, k2);
-			if (cmpKursartGKZK !== 0)
+			if (cmpKursartGKZK !== 0) {
 				return cmpKursartGKZK;
+			}
 			const cmpFach: number = this.compareFach(a.fach_id, b.fach_id);
-			if (cmpFach !== 0)
+			if (cmpFach !== 0) {
 				return cmpFach;
+			}
 			const cmpKursart: number = JavaInteger.compare(a.kursart, b.kursart);
-			if (cmpKursart !== 0)
+			if (cmpKursart !== 0) {
 				return cmpKursart;
+			}
 			return JavaInteger.compare(a.nummer, b.nummer);
 		} };
 		return comp;
@@ -524,111 +549,134 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	private compareRegel_Kurs(a: GostBlockungRegel, b: GostBlockungRegel): number {
 		const cmpKurs1: number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(0), b.parameter.get(0));
-		if (cmpKurs1 !== 0)
+		if (cmpKurs1 !== 0) {
 			return cmpKurs1;
+		}
 		return JavaLong.compare(a.id, b.id);
 	}
 
 	private compareRegel_Kurs_Nummer(a: GostBlockungRegel, b: GostBlockungRegel): number {
 		const cmpKurs1: number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(0), b.parameter.get(0));
-		if (cmpKurs1 !== 0)
+		if (cmpKurs1 !== 0) {
 			return cmpKurs1;
+		}
 		const cmpSchienenNr: number = JavaLong.compare(a.parameter.get(1), b.parameter.get(1));
-		if (cmpSchienenNr !== 0)
+		if (cmpSchienenNr !== 0) {
 			return cmpSchienenNr;
+		}
 		return JavaLong.compare(a.id, b.id);
 	}
 
 	private compareRegel_Schueler(a: GostBlockungRegel, b: GostBlockungRegel): number {
 		const cmpSchueler1: number = this.compareSchueler(a.parameter.get(0), b.parameter.get(0));
-		if (cmpSchueler1 !== 0)
+		if (cmpSchueler1 !== 0) {
 			return cmpSchueler1;
+		}
 		return JavaLong.compare(a.id, b.id);
 	}
 
 	private compareRegel_Schueler_Kurs(a: GostBlockungRegel, b: GostBlockungRegel): number {
 		const cmpSchueler1: number = this.compareSchueler(a.parameter.get(0), b.parameter.get(0));
-		if (cmpSchueler1 !== 0)
+		if (cmpSchueler1 !== 0) {
 			return cmpSchueler1;
+		}
 		const cmpKurs1: number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(1), b.parameter.get(1));
-		if (cmpKurs1 !== 0)
+		if (cmpKurs1 !== 0) {
 			return cmpKurs1;
+		}
 		return JavaLong.compare(a.id, b.id);
 	}
 
 	private compareRegel_Kurs_Kurs(a: GostBlockungRegel, b: GostBlockungRegel): number {
 		const cmpKurs1: number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(0), b.parameter.get(0));
-		if (cmpKurs1 !== 0)
+		if (cmpKurs1 !== 0) {
 			return cmpKurs1;
+		}
 		const cmpKurs2: number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(1), b.parameter.get(1));
-		if (cmpKurs2 !== 0)
+		if (cmpKurs2 !== 0) {
 			return cmpKurs2;
+		}
 		return JavaLong.compare(a.id, b.id);
 	}
 
 	private compareRegel_Schueler_Schueler_Fach(a: GostBlockungRegel, b: GostBlockungRegel): number {
 		const cmpSchueler1: number = this.compareSchueler(a.parameter.get(0), b.parameter.get(0));
-		if (cmpSchueler1 !== 0)
+		if (cmpSchueler1 !== 0) {
 			return cmpSchueler1;
+		}
 		const cmpSchueler2: number = this.compareSchueler(a.parameter.get(1), b.parameter.get(1));
-		if (cmpSchueler2 !== 0)
+		if (cmpSchueler2 !== 0) {
 			return cmpSchueler2;
+		}
 		const cmpFach: number = this.compareFach(a.parameter.get(2), b.parameter.get(2));
-		if (cmpFach !== 0)
+		if (cmpFach !== 0) {
 			return cmpFach;
+		}
 		return JavaLong.compare(a.id, b.id);
 	}
 
 	private compareRegel_Schueler_Schueler(a: GostBlockungRegel, b: GostBlockungRegel): number {
 		const cmpSchueler1: number = this.compareSchueler(a.parameter.get(0), b.parameter.get(0));
-		if (cmpSchueler1 !== 0)
+		if (cmpSchueler1 !== 0) {
 			return cmpSchueler1;
+		}
 		const cmpSchueler2: number = this.compareSchueler(a.parameter.get(1), b.parameter.get(1));
-		if (cmpSchueler2 !== 0)
+		if (cmpSchueler2 !== 0) {
 			return cmpSchueler2;
+		}
 		return JavaLong.compare(a.id, b.id);
 	}
 
 	private compareSchueler(idSchueler1: number, idSchueler2: number): number {
 		const a: Schueler | null = this._map_idSchueler_schueler.get(idSchueler1);
 		const b: Schueler | null = this._map_idSchueler_schueler.get(idSchueler2);
-		if (a === null)
+		if (a === null) {
 			return (b === null) ? 0 : -1;
-		if (b === null)
+		}
+		if (b === null) {
 			return +1;
+		}
 		const cNachname: number = JavaString.compareTo(a.nachname, b.nachname);
-		if (cNachname !== 0)
+		if (cNachname !== 0) {
 			return cNachname;
+		}
 		const cVorname: number = JavaString.compareTo(a.vorname, b.vorname);
-		if (cVorname !== 0)
+		if (cVorname !== 0) {
 			return cVorname;
+		}
 		return JavaLong.compare(a.id, b.id);
 	}
 
 	private compareFach(idFach1: number, idFach2: number): number {
 		const aFach: GostFach | null = this._faecherManager.get(idFach1);
 		const bFach: GostFach | null = this._faecherManager.get(idFach2);
-		if (aFach === null)
+		if (aFach === null) {
 			return (bFach === null) ? 0 : -1;
+		}
 		return (bFach === null) ? +1 : GostFaecherManager.comp.compare(aFach, bFach);
 	}
 
 	private compareKurs_Kursart_Fach_Nummer(idKurs1: number, idKurs2: number): number {
 		const aKurs: GostBlockungKurs | null = this._map_idKurs_kurs.get(idKurs1);
 		const bKurs: GostBlockungKurs | null = this._map_idKurs_kurs.get(idKurs2);
-		if (aKurs === null)
+		if (aKurs === null) {
 			return (bKurs === null) ? 0 : -1;
-		if (bKurs === null)
+		}
+		if (bKurs === null) {
 			return +1;
+		}
 		const cmpKursart: number = JavaLong.compare(aKurs.kursart, bKurs.kursart);
-		if (cmpKursart !== 0)
+		if (cmpKursart !== 0) {
 			return cmpKursart;
+		}
 		const cmpFach: number = this.compareFach(aKurs.fach_id, bKurs.fach_id);
-		if (cmpFach !== 0)
+		if (cmpFach !== 0) {
 			return cmpFach;
+		}
 		const cmpNummer: number = JavaLong.compare(aKurs.fach_id, bKurs.fach_id);
-		if (cmpNummer !== 0)
+		if (cmpNummer !== 0) {
 			return cmpNummer;
+		}
 		return JavaLong.compare(aKurs.id, bKurs.id);
 	}
 
@@ -762,8 +810,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public ergebnisRemoveListe(ergebnismenge: List<GostBlockungsergebnis>): void {
 		const listIDs: HashSet<number> = new HashSet<number>();
-		for (const e of ergebnismenge)
+		for (const e of ergebnismenge) {
 			listIDs.add(e.id);
+		}
 		this.ergebnisRemoveListeByIDs(listIDs);
 	}
 
@@ -806,8 +855,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * Revalidiert alle Ergebnisse. Dies führt zur Aktualisierung aller Ergebnisse.
 	 */
 	public ergebnisAlleRevalidieren(): void {
-		for (const ergebnisManager of this._map_idErgebnis_ErgebnisManager.values())
+		for (const ergebnisManager of this._map_idErgebnis_ErgebnisManager.values()) {
 			ergebnisManager.stateRevalidateEverything();
+		}
 	}
 
 	/**
@@ -912,8 +962,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public ergebnisGetBewertung3Intervall(idErgebnis: number): number {
 		let wert: number = this.ergebnisGetBewertung3Wert(idErgebnis);
-		if (wert > 0)
+		if (wert > 0) {
 			wert--;
+		}
 		return 1 - (1 / ((0.25 * wert) + 1));
 	}
 
@@ -981,8 +1032,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public kursAddListe(kursmenge: List<GostBlockungKurs>): void {
 		const setId: HashSet<number> = new HashSet<number>();
-		for (const kAlt of this._daten.kurse)
+		for (const kAlt of this._daten.kurse) {
 			setId.add(kAlt.id);
+		}
 		const nSchienen: number = this.schieneGetAnzahl();
 		for (const kNeu of kursmenge) {
 			DeveloperNotificationException.ifInvalidID("pKurs.id", kNeu.id);
@@ -994,8 +1046,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 			DeveloperNotificationException.ifTrue("Kurs.nummer " + kNeu.nummer + " zu klein!", kNeu.nummer < 1);
 			DeveloperNotificationException.ifTrue("Kurs.id " + kNeu.id + " Dopplung!", !setId.add(kNeu.id));
 		}
-		for (const gKurs of kursmenge)
+		for (const gKurs of kursmenge) {
 			this.kursAddKursOhneSortierung(gKurs);
+		}
 		this._list_kurse_sortiert_fach_kursart_kursnummer.sort(this._compKurs_fach_kursart_kursnummer);
 		this._list_kurse_sortiert_kursart_fach_kursnummer.sort(this._compKurs_kursart_fach_kursnummer);
 	}
@@ -1027,9 +1080,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public kursGetAnzahlIntener(): number {
 		let nKurse: number = 0;
-		for (const k of this._map_idKurs_kurs.values())
-			if (!k.istKoopKurs)
+		for (const k of this._map_idKurs_kurs.values()) {
+			if (!k.istKoopKurs) {
 				nKurse++;
+			}
+		}
 		return nKurse;
 	}
 
@@ -1087,9 +1142,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
 	 */
 	public kursGetLehrkraftMitNummer(idKurs: number, reihenfolgeNr: number): GostBlockungKursLehrer | null {
-		for (const lehrkraft of this.kursGetLehrkraefteSortiert(idKurs))
-			if (lehrkraft.reihenfolge === reihenfolgeNr)
+		for (const lehrkraft of this.kursGetLehrkraefteSortiert(idKurs)) {
+			if (lehrkraft.reihenfolge === reihenfolgeNr) {
 				return lehrkraft;
+			}
+		}
 		throw new DeveloperNotificationException("Es gibt im Kurs " + this.toStringKurs(idKurs) + " keine Lehrkraft mit ReihenfolgeNr. " + reihenfolgeNr + "!")
 	}
 
@@ -1103,9 +1160,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls es eine solche Lehrkraft nicht gibt.
 	 */
 	public kursGetLehrkraftMitID(idKurs: number, idLehrkraft: number): GostBlockungKursLehrer | null {
-		for (const lehrkraft of this.kursGetLehrkraefteSortiert(idKurs))
-			if (lehrkraft.id === idLehrkraft)
+		for (const lehrkraft of this.kursGetLehrkraefteSortiert(idKurs)) {
+			if (lehrkraft.id === idLehrkraft) {
 				return lehrkraft;
+			}
+		}
 		throw new DeveloperNotificationException("Es gibt im Kurs " + this.toStringKurs(idKurs) + " keine Lehrkraft mit ID " + idLehrkraft + "!")
 	}
 
@@ -1119,9 +1178,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException  Falls der Kurs nicht in der Blockung existiert.
 	 */
 	public kursGetLehrkraftMitNummerExists(idKurs: number, reihenfolgeNr: number): boolean {
-		for (const lehrkraft of this.kursGetLehrkraefteSortiert(idKurs))
-			if (lehrkraft.reihenfolge === reihenfolgeNr)
+		for (const lehrkraft of this.kursGetLehrkraefteSortiert(idKurs)) {
+			if (lehrkraft.reihenfolge === reihenfolgeNr) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -1134,9 +1195,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return TRUE, falls im Kurs die Lehrkraft mit der ID existiert.
 	 */
 	public kursGetLehrkraftMitIDExists(idKurs: number, idLehrkraft: number): boolean {
-		for (const lehrkraft of this.kursGetLehrkraefteSortiert(idKurs))
-			if (lehrkraft.id === idLehrkraft)
+		for (const lehrkraft of this.kursGetLehrkraefteSortiert(idKurs)) {
+			if (lehrkraft.id === idLehrkraft) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -1183,12 +1246,13 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public kursRemoveLehrkraft(idKurs: number, idAlteLehrkraft: number): void {
 		const kurs: GostBlockungKurs = this.kursGet(idKurs);
 		const listOfLehrer: List<GostBlockungKursLehrer> = kurs.lehrer;
-		for (let i: number = 0; i < listOfLehrer.size(); i++)
+		for (let i: number = 0; i < listOfLehrer.size(); i++) {
 			if (listOfLehrer.get(i).id === idAlteLehrkraft) {
 				listOfLehrer.remove(listOfLehrer.get(i));
 				this.ergebnisAlleRevalidieren();
 				return;
 			}
+		}
 		throw new DeveloperNotificationException(this.toStringKurs(idKurs) + " enthält nicht " + this.toStringKursLehrkraft(idKurs, idAlteLehrkraft))
 	}
 
@@ -1220,8 +1284,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public kursGetListeByFachUndKursart(idFach: number, idKursart: number): List<GostBlockungKurs> {
 		const liste: List<GostBlockungKurs> | null = this._map2d_idFach_idKursart_kurse.getOrNull(idFach, idKursart);
-		if (liste === null)
+		if (liste === null) {
 			return new ArrayList();
+		}
 		liste.sort(GostBlockungsdatenManager._compKursnummer);
 		return liste;
 	}
@@ -1249,21 +1314,27 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException falls der Kurs oder die Schiene in der Blockung nicht existiert.
 	 */
 	public kursGetIstVerbotenInSchiene(idKurs: number, idSchiene: number): boolean {
-		if (this.kursGetHatSperrungInSchiene(idKurs, idSchiene))
+		if (this.kursGetHatSperrungInSchiene(idKurs, idSchiene)) {
 			return true;
+		}
 		const nummer: number = this.schieneGet(idSchiene).nummer;
 		const kursart: number = this.kursGet(idKurs).kursart;
-		for (const regel of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS))
+		for (const regel of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS)) {
 			if ((nummer >= regel.parameter.get(1)) && (nummer <= regel.parameter.get(2))) {
-				if (regel.parameter.get(0) !== kursart)
+				if (regel.parameter.get(0) !== kursart) {
 					return true;
+				}
 			} else {
-				if (regel.parameter.get(0) === kursart)
+				if (regel.parameter.get(0) === kursart) {
 					return true;
+				}
 			}
-		for (const regel of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS))
-			if (((nummer >= regel.parameter.get(1)) && (nummer <= regel.parameter.get(2))) && (regel.parameter.get(0) === kursart))
+		}
+		for (const regel of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS)) {
+			if (((nummer >= regel.parameter.get(1)) && (nummer <= regel.parameter.get(2))) && (regel.parameter.get(0) === kursart)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -1341,8 +1412,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 		for (let nr: number = 1; nr <= this.schieneGetAnzahl(); nr++) {
 			const kFixierungAlt: LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nr]);
 			const rFixierungAlt: GostBlockungRegel | null = this.regelGetByLongArrayKeyOrNull(kFixierungAlt);
-			if (rFixierungAlt !== null)
+			if (rFixierungAlt !== null) {
 				anzahlFixierungen++;
+			}
 		}
 		return anzahlFixierungen < anzahlSchienen;
 	}
@@ -1355,9 +1427,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return die Regel, welche die Anzahl der DummySuS eines Kurses definiert oder NULL.
 	 */
 	public kursGetRegelDummySchuelerOrNull(idKurs: number): GostBlockungRegel | null {
-		for (const regel of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
-			if (regel.parameter.get(0) === idKurs)
+		for (const regel of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)) {
+			if (regel.parameter.get(0) === idKurs) {
 				return regel;
+			}
+		}
 		return null;
 	}
 
@@ -1368,8 +1442,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public kursmengeGetSetDerIDs(): JavaSet<number> {
 		const setKursID: HashSet<number> = new HashSet<number>();
-		for (const kurs of this._list_kurse_sortiert_fach_kursart_kursnummer)
+		for (const kurs of this._list_kurse_sortiert_fach_kursart_kursnummer) {
 			setKursID.add(kurs.id);
+		}
 		return setKursID;
 	}
 
@@ -1386,8 +1461,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public kurseRemoveByID(idKurse: JavaSet<number>): void {
 		DeveloperNotificationException.ifTrue("Ein Löschen von Kursen ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
-		for (const idKurs of idKurse)
+		for (const idKurs of idKurse) {
 			DeveloperNotificationException.ifTrue("Löschen von Kurs.id=" + idKurs + " nicht möglich, da nicht vorhanden!", !this.kursGetExistiert(idKurs));
+		}
 		for (const idKurs of idKurse) {
 			const kurs: GostBlockungKurs = this.kursGet(idKurs);
 			this._list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs);
@@ -1397,12 +1473,14 @@ export class GostBlockungsdatenManager extends JavaObject {
 			this._daten.kurse.remove(kurs);
 		}
 		const regelIDs: HashSet<number> = new HashSet<number>();
-		for (const regel of this._daten.regeln)
-			for (const idKurs of idKurse)
+		for (const regel of this._daten.regeln) {
+			for (const idKurs of idKurse) {
 				if (GostBlockungsdatenManager.regelGetHatKursIDs(regel, idKurs)) {
 					regelIDs.add(regel.id);
 					break;
 				}
+			}
+		}
 		this.regelRemoveListeByIDsOhneRevalidierung(regelIDs);
 	}
 
@@ -1437,8 +1515,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public kurseRemove(kurse: List<GostBlockungKurs>): void {
 		const idKurse: HashSet<number> = new HashSet<number>();
-		for (const kursExtern of kurse)
+		for (const kursExtern of kurse) {
 			idKurse.add(kursExtern.id);
+		}
 		this.kurseRemoveByID(idKurse);
 	}
 
@@ -1517,8 +1596,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 			DeveloperNotificationException.ifTrue("Schienen-ID-Dopplung " + sNeu.id, !setId.add(sNeu.id));
 			DeveloperNotificationException.ifTrue("Schienen-Nr-Dopplung " + sNeu.id, !setNr.add(sNeu.nummer));
 		}
-		for (let nr: number = 1; nr <= this._daten.schienen.size() + schienenmenge.size(); nr++)
+		for (let nr: number = 1; nr <= this._daten.schienen.size() + schienenmenge.size(); nr++) {
 			DeveloperNotificationException.ifTrue("Schienen-Nr. " + nr + " fehlt in der Reihenfolge!", !setNr.contains(nr));
+		}
 		for (const schiene of schienenmenge) {
 			this._map_idSchiene_schiene.put(schiene.id, schiene);
 			this._daten.schienen.add(schiene);
@@ -1607,13 +1687,16 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public schieneRemoveByID(idSchiene: number): void {
 		DeveloperNotificationException.ifTrue("Ein Löschen einer Schiene ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
 		const schieneR: GostBlockungSchiene = this.schieneGet(idSchiene);
-		for (const eManager of this._map_idErgebnis_ErgebnisManager.values())
+		for (const eManager of this._map_idErgebnis_ErgebnisManager.values()) {
 			DeveloperNotificationException.ifTrue("Schiene kann nicht gelöscht werden, da sie Kurse enthält!", !eManager.getOfSchieneIstLeer(idSchiene));
+		}
 		this._map_idSchiene_schiene.remove(idSchiene);
 		this._daten.schienen.remove(schieneR);
-		for (const schiene of this._daten.schienen)
-			if (schiene.nummer > schieneR.nummer)
+		for (const schiene of this._daten.schienen) {
+			if (schiene.nummer > schieneR.nummer) {
 				schiene.nummer--;
+			}
+		}
 		const setLoeschen: JavaSet<number> = new HashSet<number>();
 		const listHinzufuegen: List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const r of this._daten.regeln) {
@@ -1630,9 +1713,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 		this.regelRemoveListeByIDsOhneRevalidierung(setLoeschen);
 		for (const r of listHinzufuegen) {
 			const a: Array<number> | null = GostKursblockungRegelTyp.getNeueParameterBeiSchienenLoeschung(r, schieneR.nummer);
-			if (a !== null)
-				for (let i: number = 0; i < a.length; i++)
+			if (a !== null) {
+				for (let i: number = 0; i < a.length; i++) {
 					r.parameter.set(i, a[i]);
+				}
+			}
 		}
 		this.regelAddListeOhneRevalidierung(listHinzufuegen);
 	}
@@ -1719,11 +1804,13 @@ export class GostBlockungsdatenManager extends JavaObject {
 			}
 			regelmengeOkay.add(r);
 		}
-		for (const regel of regelmengeOkay)
+		for (const regel of regelmengeOkay) {
 			this.regelAddOhneSortierung(regel);
+		}
 		this._daten.regeln.sort(this._compRegel);
-		for (const listOfTyp of this._map_regeltyp_regeln.values())
+		for (const listOfTyp of this._map_regeltyp_regeln.values()) {
 			listOfTyp.sort(this._compRegel);
+		}
 	}
 
 	/**
@@ -1741,31 +1828,39 @@ export class GostBlockungsdatenManager extends JavaObject {
 	private regelCheckParameterReferencesAndReturnWarnung(r: GostBlockungRegel): string {
 		const typ: GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(r.typ);
 		const paramCount: number = typ.getParamCount();
-		if (paramCount !== r.parameter.size())
+		if (paramCount !== r.parameter.size()) {
 			return this.toStringRegel(r.id) + " hat falsche Parameter-Anzahl!";
+		}
 		for (let i: number = 0; i < paramCount; i++) {
 			const value: number = r.parameter.get(i).valueOf();
-			if ((typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.SCHUELER_ID as unknown) && (this.schuelerGetOrNull(value) === null))
+			if ((typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.SCHUELER_ID as unknown) && (this.schuelerGetOrNull(value) === null)) {
 				return this.toStringRegel(r.id) + " hat falsche Schüler-ID-Referenz " + value + "!";
-			if ((typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.KURS_ID as unknown) && (!this.kursGetExistiert(value)))
+			}
+			if ((typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.KURS_ID as unknown) && (!this.kursGetExistiert(value))) {
 				return this.toStringRegel(r.id) + " hat falsche Kurs-ID-Referenz " + value + "!";
-			if ((typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.SCHIENEN_NR as unknown) && ((value < 1) || (value > this.schieneGetAnzahl())))
+			}
+			if ((typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.SCHIENEN_NR as unknown) && ((value < 1) || (value > this.schieneGetAnzahl()))) {
 				return this.toStringRegel(r.id) + " hat falsche Schienen-Nr-Referenz " + value + "!";
-			if ((typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.FACH_ID as unknown) && (this._faecherManager.get(value) === null))
+			}
+			if ((typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.FACH_ID as unknown) && (this._faecherManager.get(value) === null)) {
 				return this.toStringRegel(r.id) + " hat falsche Fach-ID-Referenz " + value + "!";
-			if ((typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.KURSART as unknown) && (GostKursart.fromIDorNull(value as number) === null))
+			}
+			if ((typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.KURSART as unknown) && (GostKursart.fromIDorNull(value as number) === null)) {
 				return this.toStringRegel(r.id) + " hat falsche Kursart-Referenz " + value + "!";
+			}
 		}
 		return "";
 	}
 
 	private regelCheckParameterValuesAndReturnWarnung(r: GostBlockungRegel): string {
-		if (r.id < 0)
+		if (r.id < 0) {
 			return this.toStringRegel(r.id) + " hat eine ungültige ID " + r.id;
+		}
 		const typ: GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(r.typ);
 		const paramCount: number = typ.getParamCount();
-		if (paramCount !== r.parameter.size())
+		if (paramCount !== r.parameter.size()) {
 			return this.toStringRegel(r.id) + " hat falsche Parameter-Anzahl " + r.parameter.size() + "!";
+		}
 		const p: List<number> = r.parameter;
 		switch (typ) {
 			case GostKursblockungRegelTyp.UNDEFINIERT: {
@@ -1788,29 +1883,36 @@ export class GostBlockungsdatenManager extends JavaObject {
 			}
 			case GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS:
 			case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: {
-				if (p.get(2) < p.get(1))
+				if (p.get(2) < p.get(1)) {
 					return this.toStringRegel(r.id) + " Die BIS-Schiene " + p.get(2) + " kann nicht kleiner sein als die VON-Schiene " + p.get(1) + "!";
+				}
 				break;
 			}
 			case GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN: {
-				if (p.get(1) < GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MIN)
+				if (p.get(1) < GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MIN) {
 					return this.toStringRegel(r.id) + " KURS_MIT_DUMMY_SUS_AUFFUELLEN ist mit " + p.get(1) + " zu klein!";
-				if (p.get(1) > GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MAX)
+				}
+				if (p.get(1) > GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN_MAX) {
 					return this.toStringRegel(r.id) + " KURS_MIT_DUMMY_SUS_AUFFUELLEN ist mit " + p.get(1) + " zu groß!";
+				}
 				break;
 			}
 			case GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL: {
-				if (p.get(1) < GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MIN)
+				if (p.get(1) < GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MIN) {
 					return this.toStringRegel(r.id) + " KURS_MAXIMALE_SCHUELERANZAHL ist mit " + p.get(1) + " zu klein!";
-				if (p.get(1) > GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MAX)
+				}
+				if (p.get(1) > GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL_MAX) {
 					return this.toStringRegel(r.id) + " KURS_MAXIMALE_SCHUELERANZAHL ist mit " + p.get(1) + " zu groß!";
+				}
 				break;
 			}
 			case GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE: {
-				if (p.get(2) < GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MIN)
+				if (p.get(2) < GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MIN) {
 					return this.toStringRegel(r.id) + " FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE ist mit " + p.get(2) + " zu klein!";
-				if (p.get(2) > GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MAX)
+				}
+				if (p.get(2) > GostKursblockungRegelTyp.FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE_MAX) {
 					return this.toStringRegel(r.id) + " FACH_KURSART_MAXIMALE_ANZAHL_PRO_SCHIENE ist mit " + p.get(2) + " zu groß!";
+				}
 				break;
 			}
 			default: {
@@ -1821,46 +1923,58 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	private regelCheckDuplicatesAndReturnWarnung(r: GostBlockungRegel, setIDs: JavaSet<number>, setMultiKey: JavaSet<LongArrayKey>, menge1: List<GostBlockungRegel>, menge6: List<GostBlockungRegel>, menge9: List<GostBlockungRegel>, menge10: List<GostBlockungRegel>, menge15: List<GostBlockungRegel>): string {
-		if (this._map_idRegel_regel.containsKey(r.id) || !setIDs.add(r.id))
+		if (this._map_idRegel_regel.containsKey(r.id) || !setIDs.add(r.id)) {
 			return this.toStringRegel(r.id) + "Regel-ID " + r.id + " Dopplung!";
+		}
 		const multikey: LongArrayKey = GostBlockungsdatenManager.regelToMultikey(r);
-		if (!setMultiKey.add(multikey) || this._map_multikey_regeln.containsKey(multikey))
+		if (!setMultiKey.add(multikey) || this._map_multikey_regeln.containsKey(multikey)) {
 			return this.toStringRegel(r.id) + " existiert bereits als gleiche  (nicht als selbe) Regel im MultiMap!";
+		}
 		if (r.typ === GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS.typ) {
-			for (const rAlt of menge1)
-				if (GostBlockungsdatenManager.regelKursartIntervallSchnitt(rAlt, r))
+			for (const rAlt of menge1) {
+				if (GostBlockungsdatenManager.regelKursartIntervallSchnitt(rAlt, r)) {
 					return "Intervallschnitt bei " + this.toStringRegel(r.id) + " und " + this.toStringRegel(rAlt.id) + "!";
+				}
+			}
 			menge1.add(r);
 		}
 		if (r.typ === GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS.typ) {
-			for (const rAlt of menge6)
-				if (GostBlockungsdatenManager.regelKursartIntervallSchnitt(rAlt, r))
+			for (const rAlt of menge6) {
+				if (GostBlockungsdatenManager.regelKursartIntervallSchnitt(rAlt, r)) {
 					return "Intervallschnitt bei " + this.toStringRegel(r.id) + " und " + this.toStringRegel(rAlt.id) + "!";
+				}
+			}
 			menge6.add(r);
 		}
 		if (r.typ === GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ) {
-			for (const rAlt of menge9)
-				if (JavaObject.equalsTranspiler(rAlt.parameter.get(0), (r.parameter.get(0))))
+			for (const rAlt of menge9) {
+				if (JavaObject.equalsTranspiler(rAlt.parameter.get(0), (r.parameter.get(0)))) {
 					return this.toStringRegel(r.id) + " Regel-Dopplung!";
+				}
+			}
 			menge9.add(r);
 		}
 		if (r.typ === GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ) {
-			if (!menge10.isEmpty())
+			if (!menge10.isEmpty()) {
 				return this.toStringRegel(r.id) + " Regel-Dopplung!";
+			}
 			menge10.add(r);
 		}
 		if (r.typ === GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL.typ) {
-			for (const rAlt of menge15)
-				if (JavaObject.equalsTranspiler(rAlt.parameter.get(0), (r.parameter.get(0))))
+			for (const rAlt of menge15) {
+				if (JavaObject.equalsTranspiler(rAlt.parameter.get(0), (r.parameter.get(0)))) {
 					return this.toStringRegel(r.id) + " Regel-Dopplung!";
+				}
+			}
 			menge15.add(r);
 		}
 		return "";
 	}
 
 	private static regelKursartIntervallSchnitt(r1: GostBlockungRegel, r2: GostBlockungRegel): boolean {
-		if (!JavaObject.equalsTranspiler(r1.parameter.get(0), (r2.parameter.get(0))))
+		if (!JavaObject.equalsTranspiler(r1.parameter.get(0), (r2.parameter.get(0)))) {
 			return false;
+		}
 		const von1: number = r1.parameter.get(1).valueOf();
 		const bis1: number = r1.parameter.get(2).valueOf();
 		const von2: number = r2.parameter.get(1).valueOf();
@@ -1933,8 +2047,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public regelGetRegelOrDummyKursGesperrtInSchiene(idKurs: number, nrSchiene: number): GostBlockungRegel {
 		const key: LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nrSchiene]);
 		const regel: GostBlockungRegel | null = this._map_multikey_regeln.get(key);
-		if (regel !== null)
+		if (regel !== null) {
 			return regel;
+		}
 		return DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nrSchiene);
 	}
 
@@ -1949,8 +2064,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public regelGetRegelOrDummyKursFixierungInSchiene(idKurs: number, nrSchiene: number): GostBlockungRegel {
 		const key: LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nrSchiene]);
 		const regel: GostBlockungRegel | null = this._map_multikey_regeln.get(key);
-		if (regel !== null)
+		if (regel !== null) {
 			return regel;
+		}
 		return DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nrSchiene);
 	}
 
@@ -1965,8 +2081,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public regelGetRegelOrDummySchuelerInKursFixierung(idSchueler: number, idKurs: number): GostBlockungRegel {
 		const key: LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs]);
 		const regel: GostBlockungRegel | null = this._map_multikey_regeln.get(key);
-		if (regel !== null)
+		if (regel !== null) {
 			return regel;
+		}
 		return DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs);
 	}
 
@@ -1995,9 +2112,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	private regelGet_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKurs: number): GostBlockungRegel | null {
-		for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
-			if (r.parameter.get(0) === idKurs)
+		for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)) {
+			if (r.parameter.get(0) === idKurs) {
 				return r;
+			}
+		}
 		return null;
 	}
 
@@ -2011,9 +2130,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	private static regelGetHatKursIDs(regel: GostBlockungRegel, idKurs: number): boolean {
 		const regelTyp: GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
-		for (let i: number = 0; i < regelTyp.getParamCount(); i++)
-			if ((regelTyp.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.KURS_ID as unknown) && (regel.parameter.get(i) === idKurs))
+		for (let i: number = 0; i < regelTyp.getParamCount(); i++) {
+			if ((regelTyp.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.KURS_ID as unknown) && (regel.parameter.get(i) === idKurs)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -2055,8 +2176,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public regelRemoveListe(regelmenge: List<GostBlockungRegel>): void {
 		const setRegelIDs: HashSet<number> = new HashSet<number>();
-		for (const regel of regelmenge)
+		for (const regel of regelmenge) {
 			setRegelIDs.add(regel.id);
+		}
 		this.regelRemoveListeByIDs(setRegelIDs);
 	}
 
@@ -2110,8 +2232,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	private static regelToMultikey(regel: GostBlockungRegel): LongArrayKey {
 		const a: Array<number> | null = Array(regel.parameter.size() + 1).fill(0);
 		a[0] = regel.typ;
-		for (let i: number = 1; i < a.length; i++)
+		for (let i: number = 1; i < a.length; i++) {
 			a[i] = regel.parameter.get(i - 1).valueOf();
+		}
 		return new LongArrayKey(a);
 	}
 
@@ -2135,14 +2258,18 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public fachGetMengeKursarten(idFach: number): List<GostKursart> {
 		const idKursarten: HashSet<number> = new HashSet<number>();
-		if (this._map2d_idFach_idKursart_kurse.containsKey1(idFach))
+		if (this._map2d_idFach_idKursart_kurse.containsKey1(idFach)) {
 			idKursarten.addAll(this._map2d_idFach_idKursart_kurse.getKeySetOf(idFach));
-		if (this._map2d_idFach_idKursart_fachwahlen.containsKey1(idFach))
+		}
+		if (this._map2d_idFach_idKursart_fachwahlen.containsKey1(idFach)) {
 			idKursarten.addAll(this._map2d_idFach_idKursart_fachwahlen.getKeySetOf(idFach));
+		}
 		const list: List<GostKursart> = new ArrayList<GostKursart>();
-		for (const kursart of GostKursart.values())
-			if (idKursarten.contains(kursart.id))
+		for (const kursart of GostKursart.values()) {
+			if (idKursarten.contains(kursart.id)) {
 				list.add(kursart);
+			}
+		}
 		return list;
 	}
 
@@ -2230,8 +2357,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public fachwahlGetAnzahlVerwendeterKursarten(): number {
 		const setKursartenIDs: HashSet<number> = new HashSet<number>();
-		for (const fachwahl of this._daten.fachwahlen)
+		for (const fachwahl of this._daten.fachwahlen) {
 			setKursartenIDs.add(fachwahl.kursartID);
+		}
 		return setKursartenIDs.size();
 	}
 
@@ -2245,8 +2373,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	private schuelerAddOhneSortierung(schueler: Schueler): void {
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_idSchueler_schueler, schueler.id, schueler);
-		if (!this._map_idSchueler_fachwahlen.containsKey(schueler.id))
+		if (!this._map_idSchueler_fachwahlen.containsKey(schueler.id)) {
 			this._map_idSchueler_fachwahlen.put(schueler.id, new ArrayList<GostFachwahl>());
+		}
 		this._daten.schueler.add(schueler);
 	}
 
@@ -2270,16 +2399,18 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public schuelerAddListe(schuelermenge: List<Schueler>): void {
 		const setId: HashSet<number> = new HashSet<number>();
-		for (const sAlt of this._daten.schueler)
+		for (const sAlt of this._daten.schueler) {
 			setId.add(sAlt.id);
+		}
 		for (const sNeu of schuelermenge) {
 			DeveloperNotificationException.ifInvalidID("schueler.id", sNeu.id);
 			DeveloperNotificationException.ifNull("schueler.geschlecht", Geschlecht.fromValue(sNeu.geschlecht));
 			DeveloperNotificationException.ifNull("schueler.status", SchuelerStatus.data().getWertByID(sNeu.status as number));
 			DeveloperNotificationException.ifTrue("schueler.id " + sNeu.id + " Dopplung!", !setId.add(sNeu.id));
 		}
-		for (const schueler of schuelermenge)
+		for (const schueler of schuelermenge) {
 			this.schuelerAddOhneSortierung(schueler);
+		}
 		this._daten.schueler.sort(this._compSchueler);
 	}
 
@@ -2290,8 +2421,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public schuelerGetAnzahlMitMindestensEinerFachwahl(): number {
 		const setSchuelerIDs: HashSet<number> | null = new HashSet<number>();
-		for (const fachwahl of this._daten.fachwahlen)
+		for (const fachwahl of this._daten.fachwahlen) {
 			setSchuelerIDs.add(fachwahl.schuelerID);
+		}
 		return setSchuelerIDs.size();
 	}
 
@@ -2416,8 +2548,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return TRUE, falls es den Schüler gibt mit der entsprechenden Fachwahl (Fach + Kursart) gibt.
 	 */
 	public schuelerGetHatFachart(idSchueler: number, idFach: number, idKursart: number): boolean {
-		if (!this._map2d_idSchueler_idFach_fachwahl.contains(idSchueler, idFach))
+		if (!this._map2d_idSchueler_idFach_fachwahl.contains(idSchueler, idFach)) {
 			return false;
+		}
 		return this._map2d_idSchueler_idFach_fachwahl.getOrException(idSchueler, idFach).kursartID === idKursart;
 	}
 
@@ -2444,9 +2577,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public schuelerGetFachListeGemeinsamerFacharten(idSchueler1: number, idSchueler2: number): List<GostFach> {
 		const temp: List<GostFach> = new ArrayList<GostFach>();
-		for (const fachwahl1 of this.schuelerGetListeOfFachwahlen(idSchueler1))
-			if (this.schuelerGetHatFachart(idSchueler2, fachwahl1.fachID, fachwahl1.kursartID))
+		for (const fachwahl1 of this.schuelerGetListeOfFachwahlen(idSchueler1)) {
+			if (this.schuelerGetHatFachart(idSchueler2, fachwahl1.fachID, fachwahl1.kursartID)) {
 				temp.add(this._faecherManager.getOrException(fachwahl1.fachID));
+			}
+		}
 		return temp;
 	}
 
@@ -2629,21 +2764,26 @@ export class GostBlockungsdatenManager extends JavaObject {
 		sb.append(JavaString.format("\nSchienen = %d\n", this._daten.schienen.size()));
 		for (const s of this._daten.schienen) {
 			sb.append(JavaString.format("    ID=%d, NR=%d, BEZ=%s, W-STD=%d\n", s.id, s.nummer, s.bezeichnung, s.wochenstunden));
-			for (const e of this.ergebnisGetListeSortiertNachID())
+			for (const e of this.ergebnisGetListeSortiertNachID()) {
 				sb.append(JavaString.format("    Hat E %d Schiene %d --> %b\n", e.id, s.id, this.ergebnisManagerGet(e.id).getOfSchieneExists(s.id)));
+			}
 		}
 		sb.append(JavaString.format("\nSchülermenge = %d\n", this._daten.schueler.size()));
-		for (const s of this._daten.schueler)
+		for (const s of this._daten.schueler) {
 			sb.append(JavaString.format("    %d, %s, %s\n", s.id, s.nachname, s.vorname));
+		}
 		sb.append(JavaString.format("\nKurse = %d\n", this._daten.kurse.size()));
-		for (const k of this._daten.kurse)
+		for (const k of this._daten.kurse) {
 			sb.append(JavaString.format("    %d, %d, %d, %d\n", k.id, k.fach_id, k.kursart, k.nummer));
+		}
 		sb.append(JavaString.format("\nFachwahlen = %d\n", this._daten.fachwahlen.size()));
-		for (const fw of this._daten.fachwahlen)
+		for (const fw of this._daten.fachwahlen) {
 			sb.append(JavaString.format("    %d, %d, %d, %d, %b\n", fw.fachID, fw.kursartID, fw.schuelerID, fw.abiturfach, fw.istSchriftlich));
+		}
 		sb.append(JavaString.format("\nRegeln = %d\n", this._daten.regeln.size()));
-		for (const r of this._daten.regeln)
+		for (const r of this._daten.regeln) {
 			sb.append(JavaString.format("    %d, %d, %s\n", r.id, r.typ, r.parameter));
+		}
 		return sb.toString();
 	}
 
@@ -2653,12 +2793,14 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return TRUE, falls die Multimap den Test erfolgreich besteht.
 	 */
 	public testMultimap(): boolean {
-		if (this._daten.regeln.size() !== this._map_multikey_regeln.size())
+		if (this._daten.regeln.size() !== this._map_multikey_regeln.size()) {
 			return false;
+		}
 		for (const r of this._daten.regeln) {
 			const key: LongArrayKey = GostBlockungsdatenManager.regelToMultikey(r);
-			if (!this._map_multikey_regeln.containsKey(key))
+			if (!this._map_multikey_regeln.containsKey(key)) {
 				return false;
+			}
 		}
 		return true;
 	}

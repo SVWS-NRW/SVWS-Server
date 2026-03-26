@@ -19,11 +19,13 @@ public final class SchuljahresabschnittsUtils {
 	public static final @NotNull Comparator<Schuljahresabschnitt> comparator =
 			(final @NotNull Schuljahresabschnitt a, final @NotNull Schuljahresabschnitt b) -> {
 				int cmp = a.schuljahr - b.schuljahr;
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = a.abschnitt - b.abschnitt;
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
 			};
 

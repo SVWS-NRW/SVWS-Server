@@ -31,8 +31,9 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 	 * @throws NullPointerException  Falls die Kopplung-ID bereits existiert.
 	 */
 	public addOrException(pKopplungID: number, pKuerzel: string): void {
-		if (this._map.containsKey(pKopplungID))
+		if (this._map.containsKey(pKopplungID)) {
 			throw new NullPointerException("Die Kopplung-ID " + pKopplungID + " existiert bereits!")
+		}
 		const ko: StundenplanblockungManagerKopplung | null = new StundenplanblockungManagerKopplung(pKopplungID, pKuerzel);
 		this._map.put(pKopplungID, ko);
 		this._menge.add(ko);
@@ -48,8 +49,9 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 	 */
 	public getOrException(pKopplungID: number): StundenplanblockungManagerKopplung {
 		const ko: StundenplanblockungManagerKopplung | null = this._map.get(pKopplungID);
-		if (ko === null)
+		if (ko === null) {
 			throw new NullPointerException("Kopplung-ID " + pKopplungID + " unbekannt!")
+		}
 		return ko;
 	}
 
@@ -62,8 +64,9 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 	 */
 	public getRandomOrException(pRandom: Random): StundenplanblockungManagerKopplung {
 		const size: number = this._menge.size();
-		if (size <= 0)
+		if (size <= 0) {
 			throw new NullPointerException("Es gibt keine Kopplungen!")
+		}
 		return this._menge.get(pRandom.nextInt(size));
 	}
 

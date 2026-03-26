@@ -18,15 +18,16 @@ public final class GostAbiturjahrUtils {
 		throw new IllegalStateException("Instantiation not allowed");
 	}
 
-
 	/** Ein Default-Comparator für den Vergleich von Abiturjahrgängen in Abiturjahrgangslisten. */
 	public static final @NotNull Comparator<GostJahrgang> comparator = (final @NotNull GostJahrgang a, final @NotNull GostJahrgang b) -> {
 		final int cmp = a.abiturjahr - b.abiturjahr;
-		if (cmp != 0)
+		if (cmp != 0) {
 			return cmp;
+		}
 		if ((a.jahrgang == null) || (b.jahrgang == null)) {
-			if ((a.jahrgang == null) && (b.jahrgang == null))
+			if ((a.jahrgang == null) && (b.jahrgang == null)) {
 				return 0;
+			}
 			return (a.jahrgang == null) ? -1 : 1;
 		}
 		return a.jahrgang.compareTo(b.jahrgang);
@@ -34,7 +35,7 @@ public final class GostAbiturjahrUtils {
 
 
 	/**
-	 * Bestimmt für das übergegebene Schuljahr eines Schülers das Kalenderjahr, in welchem ein Schüler
+	 * Bestimmt für das übergebene Schuljahr eines Schülers das Kalenderjahr, in welchem ein Schüler
 	 * der gymnasialen Oberstufe Abitur gemacht hat, macht oder machen wird. Hierbei wird für die
 	 * Bestimmung die Schulgliederung und Schulform bei dem Schüler sowie das aktuelle Schuljahr und der
 	 * Statistik-Jahrgang, in welchem sich der Schüler befindet, benötigt.
@@ -49,13 +50,16 @@ public final class GostAbiturjahrUtils {
 	public static Integer getGostAbiturjahr(final @NotNull Schulform schulform, final @NotNull Schulgliederung gliederung,
 			final int aktuellesSchuljahr, final @NotNull String jahrgang) {
 		final SchulformKatalogEintrag sfke = schulform.daten(aktuellesSchuljahr);
-		if ((sfke == null) || (!sfke.hatGymOb))
+		if ((sfke == null) || (!sfke.hatGymOb)) {
 			return null;
+		}
 		Integer restjahre = JahrgaengeUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
-		if (restjahre == null)
+		if (restjahre == null) {
 			return null;
-		if ((schulform != Schulform.GY) && (!JahrgaengeUtils.istGymOb(jahrgang)))
+		}
+		if ((schulform != Schulform.GY) && (!JahrgaengeUtils.istGymOb(jahrgang))) {
 			restjahre += 3;
+		}
 		return aktuellesSchuljahr + restjahre;
 	}
 
@@ -75,22 +79,28 @@ public final class GostAbiturjahrUtils {
 	public static String getGostAbiturjahrJahrgang(final @NotNull Schulform schulform, final @NotNull Schulgliederung gliederung,
 			final int schuljahr, final int abiturjahr) {
 		final SchulformKatalogEintrag sfke = schulform.daten(schuljahr);
-		if ((sfke == null) || (!sfke.hatGymOb))
+		if ((sfke == null) || (!sfke.hatGymOb)) {
 			return null;
+		}
 		final int restlicheJahre = abiturjahr - schuljahr;
-		if (restlicheJahre <= 1)
+		if (restlicheJahre <= 1) {
 			return "Q2";
-		if (restlicheJahre == 2)
+		}
+		if (restlicheJahre == 2) {
 			return "Q1";
-		if (restlicheJahre == 3)
+		}
+		if (restlicheJahre == 3) {
 			return "EF";
+		}
 		final int sekIJahre = (gliederung.istG8() || ((schulform == Schulform.GY) && (gliederung == Schulgliederung.DEFAULT)))
 				? 9 : 10;
-		if (restlicheJahre >= sekIJahre)
+		if (restlicheJahre >= sekIJahre) {
 			return null;
+		}
 		String strJG = "" + (sekIJahre - (restlicheJahre - 4));
-		if (strJG.length() == 1)
+		if (strJG.length() == 1) {
 			strJG = "0" + strJG;
+		}
 		return strJG;
 	}
 

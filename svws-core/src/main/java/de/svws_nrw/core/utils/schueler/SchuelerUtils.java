@@ -15,25 +15,28 @@ public final class SchuelerUtils {
 		throw new IllegalStateException("Instantiation not allowed");
 	}
 
-	/** Ein Default-Comparator für den Vergleich von Schülern in Schuelerlisten. */
+	/** Ein Default-Comparator für den Vergleich von Schülern in Schülerlisten. */
 	public static final @NotNull Comparator<SchuelerListeEintrag> comparator =
 			(final @NotNull SchuelerListeEintrag a, final @NotNull SchuelerListeEintrag b) -> {
 				int cmp = a.nachname.compareTo(b.nachname);
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = a.vorname.compareTo(b.vorname);
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = a.jahrgang.compareTo(b.jahrgang);
 				return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
 			};
 
-	/** Ein Default-Comparator für den Vergleich von Schülern in Schuelerlisten. */
+	/** Ein Default-Comparator für den Vergleich von Schülern in Schülerlisten. */
 	public static final @NotNull Comparator<SchuelerVermerkartZusammenfassung> comparatorSchuelerVermerkartZusammenfassung =
 			(final @NotNull SchuelerVermerkartZusammenfassung a, final @NotNull SchuelerVermerkartZusammenfassung b) -> {
 				int cmp = a.nachname.compareTo(b.nachname);
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = a.vorname.compareTo(b.vorname);
 				return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
 			};

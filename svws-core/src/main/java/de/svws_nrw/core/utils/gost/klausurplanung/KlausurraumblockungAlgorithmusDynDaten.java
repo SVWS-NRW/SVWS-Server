@@ -28,33 +28,41 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 
 	private static final @NotNull Comparator<GostKlausurraumRich> _compRaeume =
 			(final @NotNull GostKlausurraumRich o1, final @NotNull GostKlausurraumRich o2) -> {
-				if (o1.groesse < o2.groesse)
+				if (o1.groesse < o2.groesse) {
 					return -1;
-				if (o1.groesse > o2.groesse)
+				}
+				if (o1.groesse > o2.groesse) {
 					return +1;
+				}
 
-				if (o1.klausurraum.id < o2.klausurraum.id)
+				if (o1.klausurraum.id < o2.klausurraum.id) {
 					return -1;
-				if (o1.klausurraum.id > o2.klausurraum.id)
+				}
+				if (o1.klausurraum.id > o2.klausurraum.id) {
 					return +1;
+				}
 
 				return 0;
 			};
 
 	private static final @NotNull Comparator<List<GostSchuelerklausurTerminRich>> _compKlausurGruppen =
 			(final @NotNull List<GostSchuelerklausurTerminRich> o1, final @NotNull List<GostSchuelerklausurTerminRich> o2) -> {
-				if (o1.size() < o2.size())
+				if (o1.size() < o2.size()) {
 					return -1;
-				if (o1.size() > o2.size())
+				}
+				if (o1.size() > o2.size()) {
 					return +1;
+				}
 
 				// Falls die Gruppen die gleiche Größe haben, wird nach der ID des ersten Repräsentanten sortiert.
 				final @NotNull GostSchuelerklausurTerminRich k1 = ListUtils.getNonNullElementAtOrException(o1, 0);
 				final @NotNull GostSchuelerklausurTerminRich k2 = ListUtils.getNonNullElementAtOrException(o2, 0);
-				if (k1.id < k2.id)
+				if (k1.id < k2.id) {
 					return -1;
-				if (k1.id > k2.id)
+				}
+				if (k1.id > k2.id) {
 					return +1;
+				}
 
 				return 0;
 			};
@@ -141,8 +149,9 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 
 
 		final @NotNull GostKlausurraumRich @NotNull [] copy = new GostKlausurraumRich[list.size()];
-		for (int i = 0; i < copy.length; i++)
+		for (int i = 0; i < copy.length; i++) {
 			copy[i] = list.get(i);
+		}
 
 		return copy;
 	}
@@ -159,13 +168,15 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 		if (_regel_forciere_selbe_kursklausur_im_selben_raum) {
 			// Gruppiere Klausuren nach "idKursklausur".
 			final @NotNull HashMap<Long, List<GostSchuelerklausurTerminRich>> map = new HashMap<>();
-			for (final @NotNull GostSchuelerklausurTerminRich klausur : klausuren)
+			for (final @NotNull GostSchuelerklausurTerminRich klausur : klausuren) {
 				MapUtils.addToList(map, klausur.idKursklausur, klausur);
+			}
 			gruppen.addAll(map.values());
 		} else {
 			// Jede Klausur hat seine eigene Gruppe.
-			for (final @NotNull GostSchuelerklausurTerminRich klausur : klausuren)
+			for (final @NotNull GostSchuelerklausurTerminRich klausur : klausuren) {
 				gruppen.add(ListUtils.create1(klausur));
+			}
 		}
 
 		gruppen.sort(_compKlausurGruppen);
@@ -181,31 +192,37 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 		}
 
 		// Alle Klausuren leeren.
-		for (int k = 0; k < _klausurGruppenAnzahl; k++)
+		for (int k = 0; k < _klausurGruppenAnzahl; k++) {
 			_klausurGruppeZuRaum[k] = null;
+		}
 	}
 
 	private boolean aktionSetzeKlausurgruppeInDenRaum(final int kg, final int r) {
 		final @NotNull List<GostSchuelerklausurTerminRich> gruppe = _klausurGruppen.get(kg);
 
 		// Ist noch Platz für alle Klausuren der Gruppe?
-		if ((_raumZuBelegung[r] + gruppe.size()) > _raumAt[r].groesse)
+		if ((_raumZuBelegung[r] + gruppe.size()) > _raumAt[r].groesse) {
 			return false;
+		}
 
 		// Ist die Klausur-Startzeit in dem Raum überhaupt erlaubt?
-		if ((_regel_forciere_selben_klausurstart_pro_raum) && (_raumZuKlausurstart[r] >= 0) && (_klausurGruppeZuKlausurstart[kg] != _raumZuKlausurstart[r]))
+		if ((_regel_forciere_selben_klausurstart_pro_raum) && (_raumZuKlausurstart[r] >= 0) && (_klausurGruppeZuKlausurstart[kg] != _raumZuKlausurstart[r])) {
 			return false;
+		}
 
 		// Ist die Klausur-Dauer in dem Raum überhaupt erlaubt?
-		if ((_regel_forciere_selbe_klausurdauer_pro_raum) && (_raumZuKlausurdauer[r] >= 0) && (_klausurGruppeZuKlausurdauer[kg] != _raumZuKlausurdauer[r]))
+		if ((_regel_forciere_selbe_klausurdauer_pro_raum) && (_raumZuKlausurdauer[r] >= 0) && (_klausurGruppeZuKlausurdauer[kg] != _raumZuKlausurdauer[r])) {
 			return false;
+		}
 
 		// Raum-Zuordnungen
 		_raumZuBelegung[r] += gruppe.size();
-		if (_regel_forciere_selben_klausurstart_pro_raum)
+		if (_regel_forciere_selben_klausurstart_pro_raum) {
 			_raumZuKlausurstart[r] = _klausurGruppeZuKlausurstart[kg];
-		if (_regel_forciere_selbe_klausurdauer_pro_raum)
+		}
+		if (_regel_forciere_selbe_klausurdauer_pro_raum) {
 			_raumZuKlausurdauer[r] = _klausurGruppeZuKlausurdauer[kg];
+		}
 
 		// Klausur-Zuordnungen
 		_klausurGruppeZuRaum[kg] = _raumAt[r];
@@ -223,17 +240,20 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 
 	private double gibMalus_nicht_verteiler_klausuren(final @NotNull GostKlausurraumRich[] klausurGruppeZuRaum) {
 		double malus = 0.0;
-		for (int i = 0; i < klausurGruppeZuRaum.length; i++)
-			if (klausurGruppeZuRaum[i] == null)
+		for (int i = 0; i < klausurGruppeZuRaum.length; i++) {
+			if (klausurGruppeZuRaum[i] == null) {
 				malus += _klausurGruppen.get(i).size() * MALUS_NICHT_VERTEILT;
+			}
+		}
 		return malus;
 	}
 
 
 	// Attribut "_raumZuBelegung" geht nicht, da man den lokalen Parameter analysieren muss!
 	private double gibMalus_regel_optimiere_blocke_in_moeglichst_wenig_raeume(final @NotNull GostKlausurraumRich[] klausurGruppeZuRaum) {
-		if (!_regel_optimiere_blocke_in_moeglichst_wenig_raeume)
+		if (!_regel_optimiere_blocke_in_moeglichst_wenig_raeume) {
 			return 0.0;
+		}
 
 		double malus = 0.0;
 
@@ -244,16 +264,19 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 			int counterGruppen = 0;
 			for (int k = 0; k < _klausurGruppenAnzahl; k++) {
 				final GostKlausurraumRich raum2 = klausurGruppeZuRaum[k];
-				if (raum2 == null)
+				if (raum2 == null) {
 					continue;
-				if (raum1.klausurraum.id != raum2.klausurraum.id)
+				}
+				if (raum1.klausurraum.id != raum2.klausurraum.id) {
 					continue;
+				}
 				counterGruppen++;
 			}
 
 			// Wird der Raum genutzt?
-			if (counterGruppen > 0)
+			if (counterGruppen > 0) {
 				malus += MALUS_MOEGLICHST_WENIG_RAEUME;
+			}
 		}
 
 		return malus;
@@ -261,8 +284,9 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 
 	// Attribut "_raumZuBelegung" geht nicht, da man den lokalen Parameter analysieren muss!
 	private double gibMalus_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume(final @NotNull GostKlausurraumRich[] klausurGruppeZuRaum) {
-		if (!_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume)
+		if (!_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume) {
 			return 0.0;
+		}
 
 		int maximum = 0; // Der Raum mit den meisten Klausuren.
 
@@ -273,10 +297,12 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 			int counterKlausuren = 0;
 			for (int k = 0; k < _klausurGruppenAnzahl; k++) {
 				final GostKlausurraumRich raum2 = klausurGruppeZuRaum[k];
-				if (raum2 == null)
+				if (raum2 == null) {
 					continue;
-				if (raum1.klausurraum.id != raum2.klausurraum.id)
+				}
+				if (raum1.klausurraum.id != raum2.klausurraum.id) {
 					continue;
+				}
 				counterKlausuren += _klausurGruppen.get(k).size();
 			}
 
@@ -295,8 +321,9 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 		final double malusSave = gibMalus(_klausurGruppeZuRaumSave);
 		final double malus = gibMalus(_klausurGruppeZuRaum);
 
-		if (malus >= malusSave)
+		if (malus >= malusSave) {
 			return;
+		}
 
 		// Der jetzige Zustand ist besser --> Speichere die Klausur-Schienen-Zuordnung.
 		System.arraycopy(_klausurGruppeZuRaum, 0, _klausurGruppeZuRaumSave, 0, _klausurGruppenAnzahl);
@@ -305,10 +332,13 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 	private void aktionKlausurenVerteilenAlgorithmusGeneric(final int[] aRaum, final int[] aKlausurGruppe) {
 		aktionZustandClear();
 
-		for (final int kg : ((aKlausurGruppe == null) ? ArrayUtils.getIndexPermutation(_klausurGruppenAnzahl, _random) : aKlausurGruppe))
-			for (final int r : ((aRaum == null) ? ArrayUtils.getIndexPermutation(_raumAnzahl, _random) : aRaum))
-				if (aktionSetzeKlausurgruppeInDenRaum(kg, r))
+		for (final int kg : ((aKlausurGruppe == null) ? ArrayUtils.getIndexPermutation(_klausurGruppenAnzahl, _random) : aKlausurGruppe)) {
+			for (final int r : ((aRaum == null) ? ArrayUtils.getIndexPermutation(_raumAnzahl, _random) : aRaum)) {
+				if (aktionSetzeKlausurgruppeInDenRaum(kg, r)) {
 					break;
+				}
+			}
+		}
 
 		aktionSpeichernFallsBesser();
 	}
@@ -408,21 +438,26 @@ public class KlausurraumblockungAlgorithmusDynDaten {
 			// Fülle die Klausuren-Liste des Raumes.
 			for (int kg = 0; kg < _klausurGruppenAnzahl; kg++) {
 				final GostKlausurraumRich raum2 = _klausurGruppeZuRaumSave[kg];
-				if (raum2 == null)
+				if (raum2 == null) {
 					continue;
-				if (raum2.klausurraum.id != raum.klausurraum.id)
+				}
+				if (raum2.klausurraum.id != raum.klausurraum.id) {
 					continue;
+				}
 				// Alle Klausuren der Gruppe dem Raum hinzufügen.
-				for (final @NotNull GostSchuelerklausurTerminRich klausur : _klausurGruppen.get(kg))
+				for (final @NotNull GostSchuelerklausurTerminRich klausur : _klausurGruppen.get(kg)) {
 					raum.schuelerklausurterminIDs.add(klausur.id);
+				}
 			}
 		}
 
 		// Überschreibe die Klausur-Liste mit den Klausuren, die nicht verteilt werden konnten.
 		_config.schuelerklausurtermine.clear();
-		for (int kg = 0; kg < _klausurGruppenAnzahl; kg++)
-			if (_klausurGruppeZuRaumSave[kg] == null)
+		for (int kg = 0; kg < _klausurGruppenAnzahl; kg++) {
+			if (_klausurGruppeZuRaumSave[kg] == null) {
 				_config.schuelerklausurtermine.addAll(_klausurGruppen.get(kg));
+			}
+		}
 	}
 
 }

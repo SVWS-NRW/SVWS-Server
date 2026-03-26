@@ -23,10 +23,12 @@ public final class GostStatistikFachwahlManager {
 	 * @param fachwahl   die Fachwahl
 	 */
 	public static void setFachwahlHalbjahr(final @NotNull GostStatistikFachwahl statfw, final @NotNull GostHalbjahr halbjahr, final String fachwahl) {
-		if (statfw.fachwahlen[halbjahr.id] == null)
+		if (statfw.fachwahlen[halbjahr.id] == null) {
 			statfw.fachwahlen[halbjahr.id] = new GostStatistikFachwahlHalbjahr();
-		if ((fachwahl == null) || !("M".equals(fachwahl) || "S".equals(fachwahl) || "ZK".equals(fachwahl) || "LK".equals(fachwahl)))
+		}
+		if ((fachwahl == null) || !("M".equals(fachwahl) || "S".equals(fachwahl) || "ZK".equals(fachwahl) || "LK".equals(fachwahl))) {
 			return;
+		}
 		statfw.fachwahlen[halbjahr.id].wahlenGKMuendlich += "M".equals(fachwahl) ? 1 : 0;
 		statfw.fachwahlen[halbjahr.id].wahlenGKSchriftlich += "S".equals(fachwahl) ? 1 : 0;
 		statfw.fachwahlen[halbjahr.id].wahlenGK += ("M".equals(fachwahl) || "S".equals(fachwahl)) ? 1 : 0;

@@ -54,8 +54,9 @@ export class GostFachwahlManager extends JavaObject {
 			// empty method body
 		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr'))) || (__param0 === null))) {
 			const fachwahlen: GostJahrgangFachwahlenHalbjahr | null = cast_de_svws_nrw_core_data_gost_GostJahrgangFachwahlenHalbjahr(__param0);
-			for (const fw of fachwahlen.fachwahlen)
+			for (const fw of fachwahlen.fachwahlen) {
 				this.add(fw);
+			}
 		} else throw new Error('invalid method overload');
 	}
 
@@ -65,8 +66,9 @@ export class GostFachwahlManager extends JavaObject {
 	 * @param fachwahl   die hinzuzufügende Fachwahl
 	 */
 	public add(fachwahl: GostFachwahl | null): void {
-		if (fachwahl === null)
+		if (fachwahl === null) {
 			return;
+		}
 		this.fachwahlen.add(fachwahl);
 		let fwFach: ArrayList<GostFachwahl> | null = this.mapFach.get(fachwahl.fachID);
 		if (fwFach === null) {
@@ -132,11 +134,13 @@ export class GostFachwahlManager extends JavaObject {
 	 */
 	public hatFachwahl(idSchueler: number, idFach: number, kursart: GostKursart): boolean {
 		const mapKursart: JavaMap<GostKursart, HashSet<number>> | null = this.mapFachKursart.get(idFach);
-		if (mapKursart === null)
+		if (mapKursart === null) {
 			return false;
+		}
 		const schueler: HashSet<number> | null = mapKursart.get(kursart);
-		if (schueler === null)
+		if (schueler === null) {
 			return false;
+		}
 		return schueler.contains(idSchueler);
 	}
 

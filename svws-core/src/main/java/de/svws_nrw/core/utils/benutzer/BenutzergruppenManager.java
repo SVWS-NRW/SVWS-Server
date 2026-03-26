@@ -42,10 +42,12 @@ public class BenutzergruppenManager {
 		this._daten = pDaten;
 		// Aktualisiere die lokalen Datenstrukturen
 		for (final Long kID : pDaten.kompetenzen) {
-			if (kID == null)
+			if (kID == null) {
 				throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.");
-			if (_setKompetenzen.contains(kID))
+			}
+			if (_setKompetenzen.contains(kID)) {
 				throw new IllegalArgumentException("Die Kompetenz mit der ID " + kID + " wurde mehrfach bei der Gruppe eingetragen.");
+			}
 			_setKompetenzen.add(kID);
 		}
 	}
@@ -86,8 +88,9 @@ public class BenutzergruppenManager {
 	 * @param bezeichnung  die neue Bezeichnung der Benutzergruppe
 	 */
 	public void setBezeichnung(final @NotNull String bezeichnung) {
-		if ("".equals(bezeichnung))
+		if ("".equals(bezeichnung)) {
 			throw new IllegalArgumentException("Die Bezeichnung einer Benutzergruppe darf nicht leer sein.");
+		}
 		this._daten.bezeichnung = bezeichnung;
 	}
 
@@ -119,8 +122,9 @@ public class BenutzergruppenManager {
 	 * @return true, falls die Gruppe die Kompetenz besitzt.
 	 */
 	public boolean hatKompetenz(final @NotNull BenutzerKompetenz kompetenz) {
-		if (this._daten.istAdmin)
+		if (this._daten.istAdmin) {
 			return true;
+		}
 		return _setKompetenzen.contains(kompetenz.daten.id);
 	}
 
@@ -132,11 +136,14 @@ public class BenutzergruppenManager {
 	 * @return true, falls die Gruppe die Kompetenzen besitzt.
 	 */
 	public boolean hatKompetenzen(final @NotNull List<BenutzerKompetenz> kompetenzen) {
-		if (this._daten.istAdmin)
+		if (this._daten.istAdmin) {
 			return true;
-		for (final @NotNull BenutzerKompetenz kompetenz : kompetenzen)
-			if (!_setKompetenzen.contains(kompetenz.daten.id))
+		}
+		for (final @NotNull BenutzerKompetenz kompetenz : kompetenzen) {
+			if (!_setKompetenzen.contains(kompetenz.daten.id)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -149,11 +156,14 @@ public class BenutzergruppenManager {
 	 * @return true, falls die Gruppe mindestens eine der Kompetenzen besitzt.
 	 */
 	public boolean hatKompetenzenMindestensEine(final @NotNull List<BenutzerKompetenz> kompetenzen) {
-		if (this._daten.istAdmin)
+		if (this._daten.istAdmin) {
 			return true;
-		for (final @NotNull BenutzerKompetenz kompetenz : kompetenzen)
-			if (_setKompetenzen.contains(kompetenz.daten.id))
+		}
+		for (final @NotNull BenutzerKompetenz kompetenz : kompetenzen) {
+			if (_setKompetenzen.contains(kompetenz.daten.id)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -166,10 +176,12 @@ public class BenutzergruppenManager {
 	 * @throws IllegalArgumentException   wenn die Gruppe die Kompetenz bereits enthält
 	 */
 	public void addKompetenz(final BenutzerKompetenz kompetenz) throws IllegalArgumentException {
-		if (kompetenz == null)
+		if (kompetenz == null) {
 			throw new NullPointerException("Die übergenene Kompetenz darf nicht null sein.");
-		if (_setKompetenzen.contains(kompetenz.daten.id))
+		}
+		if (_setKompetenzen.contains(kompetenz.daten.id)) {
 			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " wurde bereits zuvor zu der Gruppe hinzugefügt.");
+		}
 		this._daten.kompetenzen.add(kompetenz.daten.id);
 		_setKompetenzen.add(kompetenz.daten.id);
 	}
@@ -183,8 +195,9 @@ public class BenutzergruppenManager {
 	 * @throws IllegalArgumentException   wenn die Gruppe die Kompetenz nicht enthält
 	 */
 	public void removeKompetenz(final @NotNull BenutzerKompetenz kompetenz) throws IllegalArgumentException {
-		if (!_setKompetenzen.contains(kompetenz.daten.id))
+		if (!_setKompetenzen.contains(kompetenz.daten.id)) {
 			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " ist in der Gruppe nicht vorhanden.");
+		}
 		this._daten.kompetenzen.remove(kompetenz.daten.id);
 		_setKompetenzen.remove(kompetenz.daten.id);
 	}

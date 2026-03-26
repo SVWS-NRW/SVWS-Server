@@ -60,8 +60,9 @@ public class StundenplanblockungManagerLerngruppe {
 	 * @param pLe Das Objekt, welches hinzugefügt werden soll.
 	 */
 	public void addLehrkraftOrException(final @NotNull StundenplanblockungManagerLehrkraft pLe) {
-		if (_menge_le.contains(pLe))
+		if (_menge_le.contains(pLe)) {
 			throw new NullPointerException("Lerngruppe " + _id + " hat bereits Lehrkraft " + pLe._kuerzel + " (" + pLe._id + ")!");
+		}
 		_menge_le.add(pLe);
 		pLe._menge_gr.add(this);
 	}
@@ -72,8 +73,9 @@ public class StundenplanblockungManagerLerngruppe {
 	 * @param pKl Das Objekt, welches hinzugefügt werden soll.
 	 */
 	public void addKlasseOrException(final @NotNull StundenplanblockungManagerKlasse pKl) {
-		if (_menge_kl.contains(pKl))
+		if (_menge_kl.contains(pKl)) {
 			throw new NullPointerException("Lerngruppe " + _id + " hat bereits Klasse " + pKl._kuerzel + " (" + pKl._id + ")!");
+		}
 		_menge_kl.add(pKl);
 		pKl._menge_gr.add(this);
 	}
@@ -84,8 +86,9 @@ public class StundenplanblockungManagerLerngruppe {
 	 * @param pFa Das Objekt, welches hinzugefügt werden soll.
 	 */
 	public void addFachOrException(final @NotNull StundenplanblockungManagerFach pFa) {
-		if (_menge_fa.contains(pFa))
+		if (_menge_fa.contains(pFa)) {
 			throw new NullPointerException("Lerngruppe " + _id + " hat bereits Fach " + pFa._kuerzel + " (" + pFa._id + ")!");
+		}
 		_menge_fa.add(pFa);
 		pFa._menge_gr.add(this);
 	}
@@ -126,8 +129,9 @@ public class StundenplanblockungManagerLerngruppe {
 	 * @param pLe  Das Objekt, welches entfernt werden soll.
 	 */
 	public void removeLehrkraftOrException(final @NotNull StundenplanblockungManagerLehrkraft pLe) {
-		if (!_menge_le.contains(pLe))
+		if (!_menge_le.contains(pLe)) {
 			throw new NullPointerException("Lerngruppe " + _id + " hat nicht Lehrkraft " + pLe._kuerzel + " (" + pLe._id + ")!");
+		}
 		_menge_le.remove(pLe);
 		pLe._menge_gr.remove(this);
 	}
@@ -138,8 +142,9 @@ public class StundenplanblockungManagerLerngruppe {
 	 * @param pKl  Das Objekt, welches entfernt werden soll.
 	 */
 	public void removeKlasseOrException(final @NotNull StundenplanblockungManagerKlasse pKl) {
-		if (!_menge_kl.contains(pKl))
+		if (!_menge_kl.contains(pKl)) {
 			throw new NullPointerException("Lerngruppe " + _id + " hat nicht Klasse " + pKl._kuerzel + " (" + pKl._id + ")!");
+		}
 		_menge_kl.remove(pKl);
 		pKl._menge_gr.remove(this);
 	}
@@ -150,8 +155,9 @@ public class StundenplanblockungManagerLerngruppe {
 	 * @param pFa  Das Objekt, welches entfernt werden soll.
 	 */
 	public void removeFachOrException(final @NotNull StundenplanblockungManagerFach pFa) {
-		if (!_menge_fa.contains(pFa))
+		if (!_menge_fa.contains(pFa)) {
 			throw new NullPointerException("Lerngruppe " + _id + " hat nicht Fach " + pFa._kuerzel + " (" + pFa._id + ")!");
+		}
 		_menge_fa.remove(pFa);
 		pFa._menge_gr.remove(this);
 	}

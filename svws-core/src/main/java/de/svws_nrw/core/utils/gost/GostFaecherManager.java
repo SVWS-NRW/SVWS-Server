@@ -113,12 +113,14 @@ public class GostFaecherManager {
 	private boolean addFachInternal(final @NotNull GostFach fach) throws DeveloperNotificationException {
 		// Füge das Fach hinzu, wenn es nicht bereits vorhanden ist und gültig ist...
 		DeveloperNotificationException.ifSmaller("fach.id", fach.id, 0);
-		if (_map.containsKey(fach.id))
+		if (_map.containsKey(fach.id)) {
 			return false;
+		}
 		final Fach zf = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		final FachKatalogEintrag fke = zf.daten(schuljahr);
-		if (fke == null)
+		if (fke == null) {
 			return false;
+		}
 		_map.put(fach.id, fach);
 		List<GostFach> listForKuerzel = _mapByKuerzel.get(fach.kuerzel);
 		if (listForKuerzel == null) {
@@ -138,8 +140,9 @@ public class GostFaecherManager {
 		// Prüfe, ob das Fach als Leitfach geeignet ist, d.h. kein Vertiefungs-, Projekt- oder Ersatzfach ist
 		if (!GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
 			final Fachgruppe fg = Fach.getBySchluesselOrDefault(fach.kuerzel).getFachgruppe(schuljahr);
-			if ((fg != Fachgruppe.FG_VX) && (fg != Fachgruppe.FG_PX))
+			if ((fg != Fachgruppe.FG_VX) && (fg != Fachgruppe.FG_PX)) {
 				_leitfaecher.add(fach);
+			}
 		}
 		return added;
 	}
@@ -170,8 +173,9 @@ public class GostFaecherManager {
 		DeveloperNotificationException.ifNotInRange("fachkombi.typ", fachkombi.typ, 0, 1);
 		final GostFach fach1 = get(fachkombi.fachID1);
 		final GostFach fach2 = get(fachkombi.fachID2);
-		if ((fach1 == null) || (fach2 == null))
+		if ((fach1 == null) || (fach2 == null)) {
 			return false;
+		}
 		final @NotNull GostLaufbahnplanungFachkombinationTyp typ = GostLaufbahnplanungFachkombinationTyp.fromValue(fachkombi.typ);
 		if (fachkombi.hinweistext.isBlank()) {
 			final @NotNull String kursart1 = ((fachkombi.kursart1 == null) || fachkombi.kursart1.isBlank()) ? "" : (" als " + fachkombi.kursart1);
@@ -213,9 +217,11 @@ public class GostFaecherManager {
 	 */
 	public boolean addAll(final @NotNull Collection<GostFach> faecher) {
 		boolean result = true;
-		for (final @NotNull GostFach fach : faecher)
-			if (!addFachInternal(fach))
+		for (final @NotNull GostFach fach : faecher) {
+			if (!addFachInternal(fach)) {
 				result = false;
+			}
+		}
 		sort();
 		return result;
 	}
@@ -244,9 +250,11 @@ public class GostFaecherManager {
 	 */
 	public boolean addFachkombinationenAll(final @NotNull List<GostJahrgangFachkombination> fachkombis) {
 		boolean result = true;
-		for (final @NotNull GostJahrgangFachkombination fachkombi : fachkombis)
-			if (!addFachkombinationInternal(fachkombi))
+		for (final @NotNull GostJahrgangFachkombination fachkombi : fachkombis) {
+			if (!addFachkombinationInternal(fachkombi)) {
 				result = false;
+			}
+		}
 		return result;
 	}
 
@@ -332,8 +340,9 @@ public class GostFaecherManager {
 		final @NotNull List<GostFach> faecherSchriftlichMoeglich = new ArrayList<>();
 		for (final @NotNull GostFach f : _faecher) {
 			final Fach zf = Fach.getBySchluesselOrDefault(f.kuerzel);
-			if ((zf == Fach.PX) || (zf == Fach.VX) || (zf == Fach.VO) || (zf == Fach.IN))
+			if ((zf == Fach.PX) || (zf == Fach.VX) || (zf == Fach.VO) || (zf == Fach.IN)) {
 				continue;
+			}
 			faecherSchriftlichMoeglich.add(f);
 		}
 		return faecherSchriftlichMoeglich;
@@ -400,8 +409,9 @@ public class GostFaecherManager {
 	 */
 	public boolean fachIstProjektkurs(final long id) {
 		final GostFach fach = _map.get(id);
-		if (fach == null)
+		if (fach == null) {
 			return false;
+		}
 		return "PX".equals(fach.kuerzel);
 	}
 
@@ -415,8 +425,9 @@ public class GostFaecherManager {
 	 */
 	public boolean fachIstVertiefungskurs(final long id) {
 		final GostFach fach = _map.get(id);
-		if (fach == null)
+		if (fach == null) {
 			return false;
+		}
 		return "VX".equals(fach.kuerzel);
 	}
 
@@ -429,8 +440,9 @@ public class GostFaecherManager {
 	 */
 	public boolean fachIstKunst(final long id) {
 		final GostFach fach = _map.get(id);
-		if (fach == null)
+		if (fach == null) {
 			return false;
+		}
 		return "KU".equals(fach.kuerzel);
 	}
 
@@ -443,8 +455,9 @@ public class GostFaecherManager {
 	 */
 	public boolean fachIstMusik(final long id) {
 		final GostFach fach = _map.get(id);
-		if (fach == null)
+		if (fach == null) {
 			return false;
+		}
 		return "MU".equals(fach.kuerzel);
 	}
 

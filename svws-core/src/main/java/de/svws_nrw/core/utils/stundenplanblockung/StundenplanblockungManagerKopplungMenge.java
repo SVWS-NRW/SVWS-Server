@@ -34,8 +34,9 @@ public class StundenplanblockungManagerKopplungMenge {
 	 * @throws NullPointerException  Falls die Kopplung-ID bereits existiert.
 	 */
 	public void addOrException(final long pKopplungID, final @NotNull String pKuerzel) throws NullPointerException {
-		if (_map.containsKey(pKopplungID))
+		if (_map.containsKey(pKopplungID)) {
 			throw new NullPointerException("Die Kopplung-ID " + pKopplungID + " existiert bereits!");
+		}
 		final StundenplanblockungManagerKopplung ko = new StundenplanblockungManagerKopplung(pKopplungID, pKuerzel);
 		_map.put(pKopplungID, ko);
 		_menge.add(ko);
@@ -51,8 +52,9 @@ public class StundenplanblockungManagerKopplungMenge {
 	 */
 	public @NotNull StundenplanblockungManagerKopplung getOrException(final long pKopplungID) throws NullPointerException {
 		final StundenplanblockungManagerKopplung ko = _map.get(pKopplungID);
-		if (ko == null)
+		if (ko == null) {
 			throw new NullPointerException("Kopplung-ID " + pKopplungID + " unbekannt!");
+		}
 		return ko;
 	}
 
@@ -65,8 +67,9 @@ public class StundenplanblockungManagerKopplungMenge {
 	 */
 	public @NotNull StundenplanblockungManagerKopplung getRandomOrException(final @NotNull Random pRandom) {
 		final int size = _menge.size();
-		if (size <= 0)
+		if (size <= 0) {
 			throw new NullPointerException("Es gibt keine Kopplungen!");
+		}
 		return _menge.get(pRandom.nextInt(size));
 	}
 

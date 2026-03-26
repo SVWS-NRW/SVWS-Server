@@ -62,8 +62,9 @@ public class BerufskollegFachklassenManager {
 				this._mapByKuerzel.put(kuerzel, eintrag);
 				for (final @NotNull BerufskollegFachklassenKatalogDaten daten : eintrag.historie) {
 					final BerufskollegFachklassenKatalogEintrag alt = this._mapByID.put(daten.id, eintrag);
-					if (alt != null)
+					if (alt != null) {
 						throw new DeveloperNotificationException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei der Fachklasse '" + kuerzel + "'");
+					}
 					this._mapDatenByID.put(daten.id, daten);
 				}
 			}
@@ -90,8 +91,9 @@ public class BerufskollegFachklassenManager {
 	 */
 	public long getVersionByIndex(final int index) {
 		final BerufskollegFachklassenKatalogIndex katIndex = _mapByIndex.get(index);
-		if (katIndex == null)
+		if (katIndex == null) {
 			throw new IllegalArgumentException("Ungültiger Fachklassen-Index.");
+		}
 		return katIndex.version;
 	}
 
@@ -107,14 +109,17 @@ public class BerufskollegFachklassenManager {
 	 */
 	public long getVersionBySchuljahrAndGliederung(final int schuljahr, final @NotNull Schulgliederung gliederung) {
 		final SchulgliederungKatalogEintrag sglke = gliederung.daten(schuljahr);
-		if (sglke == null)
+		if (sglke == null) {
 			throw new IllegalArgumentException("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.".formatted(gliederung.name(), schuljahr));
-		if (sglke.bkIndex == null)
+		}
+		if (sglke.bkIndex == null) {
 			throw new IllegalArgumentException("Die Schulgliederung " + sglke.kuerzel + " hat keinen Fachklassen-Index.");
+		}
 		final BerufskollegFachklassenKatalogIndex katIndex = _mapByIndex.get(sglke.bkIndex);
-		if (katIndex == null)
+		if (katIndex == null) {
 			throw new IllegalArgumentException("Keine Fachklassen für den Fachklassen-Index " + sglke.bkIndex + " der Schulgliederung "
 					+ sglke.kuerzel + " bekannt.");
+		}
 		return katIndex.version;
 	}
 
@@ -156,12 +161,15 @@ public class BerufskollegFachklassenManager {
 	 */
 	public BerufskollegFachklassenKatalogDaten getDatenByKuerzelAndSchuljahr(final @NotNull String kuerzel, final int schuljahr) {
 		final BerufskollegFachklassenKatalogEintrag eintrag = this._mapByKuerzel.get(kuerzel);
-		if (eintrag == null)
+		if (eintrag == null) {
 			return null;
-		for (final @NotNull BerufskollegFachklassenKatalogDaten daten : eintrag.historie)
+		}
+		for (final @NotNull BerufskollegFachklassenKatalogDaten daten : eintrag.historie) {
 			if (((daten.gueltigVon == null) || (daten.gueltigVon <= schuljahr))
-					&& ((daten.gueltigBis == null) || (daten.gueltigBis >= schuljahr)))
+					&& ((daten.gueltigBis == null) || (daten.gueltigBis >= schuljahr))) {
 				return daten;
+			}
+		}
 		return null;
 	}
 
@@ -203,8 +211,9 @@ public class BerufskollegFachklassenManager {
 	 */
 	public @NotNull BerufskollegFachklassenKatalogIndex getTeilKatalog(final int index) {
 		final BerufskollegFachklassenKatalogIndex katIndex = _mapByIndex.get(index);
-		if (katIndex == null)
+		if (katIndex == null) {
 			throw new IllegalArgumentException("Ungültiger Fachklassen-Index.");
+		}
 		return katIndex;
 	}
 
@@ -220,14 +229,17 @@ public class BerufskollegFachklassenManager {
 	 */
 	public @NotNull BerufskollegFachklassenKatalogIndex getTeilKatalogBySchuljahrAndGliederung(final int schuljahr, final @NotNull Schulgliederung gliederung) {
 		final SchulgliederungKatalogEintrag sglke = gliederung.daten(schuljahr);
-		if (sglke == null)
+		if (sglke == null) {
 			throw new IllegalArgumentException("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.".formatted(gliederung.name(), schuljahr));
-		if (sglke.bkIndex == null)
+		}
+		if (sglke.bkIndex == null) {
 			throw new IllegalArgumentException("Die Schulgliederung " + sglke.kuerzel + " hat keinen Fachklassen-Index.");
+		}
 		final BerufskollegFachklassenKatalogIndex katIndex = _mapByIndex.get(sglke.bkIndex);
-		if (katIndex == null)
+		if (katIndex == null) {
 			throw new IllegalArgumentException("Keine Fachklassen für den Fachklassen-Index " + sglke.bkIndex + " der Schulgliederung "
 					+ sglke.kuerzel + " bekannt.");
+		}
 		return katIndex;
 	}
 

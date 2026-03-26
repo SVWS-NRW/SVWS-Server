@@ -13,18 +13,23 @@ export class BKGymAbiturUtils extends JavaObject {
 	 *  die Verwendung des Comparators in sort zu einer eindeutigen Sortierreihenfolge führt.
 	 */
 	public static readonly comparatorMarkierung: Comparator<BKGymAbiturMarkierungsalgorithmusMarkierung> = { compare: (a: BKGymAbiturMarkierungsalgorithmusMarkierung, b: BKGymAbiturMarkierungsalgorithmusMarkierung) => {
-		if (b.punkte === null)
+		if (b.punkte === null) {
 			return -1;
-		if (a.punkte === null)
+		}
+		if (a.punkte === null) {
 			return 1;
+		}
 		const tmp: number = b.punkte - a.punkte;
-		if (tmp !== 0)
+		if (tmp !== 0) {
 			return tmp;
+		}
 		const ltmp: number = a.fachID - b.fachID;
-		if (ltmp < 0)
+		if (ltmp < 0) {
 			return -1;
-		if (ltmp > 0)
+		}
+		if (ltmp > 0) {
 			return 1;
+		}
 		return a.halbjahrID - b.halbjahrID;
 	} };
 

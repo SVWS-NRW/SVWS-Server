@@ -26,8 +26,9 @@ export class MapUtils extends JavaObject {
 	 */
 	public static getOrCreateHashSet<K, V>(map: JavaMap<K, JavaSet<V>>, key: K): JavaSet<V> {
 		const set: JavaSet<V> | null = map.get(key);
-		if (set !== null)
+		if (set !== null) {
 			return set;
+		}
 		const setNeu: HashSet<V> = new HashSet<V>();
 		map.put(key, setNeu);
 		return setNeu;
@@ -45,8 +46,9 @@ export class MapUtils extends JavaObject {
 	 */
 	public static getOrCreateArrayList<K, V>(map: JavaMap<K, List<V>>, key: K): List<V> {
 		const list: List<V> | null = map.get(key);
-		if (list !== null)
+		if (list !== null) {
 			return list;
+		}
 		const listNeu: ArrayList<V> = new ArrayList<V>();
 		map.put(key, listNeu);
 		return listNeu;
@@ -65,8 +67,9 @@ export class MapUtils extends JavaObject {
 	public static addToListIfNotExists<K, V>(map: JavaMap<K, List<V>>, key: K, value: V): void {
 		const list: List<V> | null = map.get(key);
 		if (list !== null) {
-			if (!list.contains(value))
+			if (!list.contains(value)) {
 				list.add(value);
+			}
 		} else {
 			const listNeu: List<V> | null = new ArrayList<V>();
 			listNeu.add(value);
@@ -107,8 +110,9 @@ export class MapUtils extends JavaObject {
 	public static removeFromListAndTrimOrException<K, V>(map: JavaMap<K, List<V>>, key: K, value: V): void {
 		const list: List<V> | null = DeveloperNotificationException.ifMapGetIsNull(map, key);
 		DeveloperNotificationException.ifListRemoveFailes("list", list, value);
-		if (list.isEmpty())
+		if (list.isEmpty()) {
 			DeveloperNotificationException.ifMapRemoveFailes(map, key);
+		}
 	}
 
 	/**
@@ -124,8 +128,9 @@ export class MapUtils extends JavaObject {
 	 */
 	public static getOrDefault<K, V>(map: JavaMap<K, V>, key: K, defaultValue: V): V {
 		const value: V | null = map.get(key);
-		if (value === null)
+		if (value === null) {
 			return defaultValue;
+		}
 		return value;
 	}
 
@@ -140,8 +145,9 @@ export class MapUtils extends JavaObject {
 	 * @param value  Der Wert, welcher hinzugefügt werden soll, falls es noch keine Zuordnung gibt.
 	 */
 	public static putNonNullIfNotExists<K, V>(map: JavaMap<K, V>, key: K, value: V): void {
-		if (map.containsKey(key))
+		if (map.containsKey(key)) {
 			return;
+		}
 		map.put(key, value);
 	}
 

@@ -14,7 +14,6 @@ import jakarta.validation.constraints.NotNull;
  */
 public class KlausurraumblockungAlgorithmus {
 
-
 	private final @NotNull Random random;
 
 	/**

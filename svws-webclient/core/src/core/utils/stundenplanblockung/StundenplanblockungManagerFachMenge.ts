@@ -32,8 +32,9 @@ export class StundenplanblockungManagerFachMenge extends JavaObject {
 	 * @throws NullPointerException  Falls die Fach-ID bereits existiert.
 	 */
 	public addOrException(pFachID: number, pKuerzel: string): void {
-		if (this._map.containsKey(pFachID))
+		if (this._map.containsKey(pFachID)) {
 			throw new NullPointerException("Die Fach-ID " + pFachID + " existiert bereits!")
+		}
 		const fa: StundenplanblockungManagerFach = new StundenplanblockungManagerFach(pFachID, pKuerzel);
 		this._map.put(pFachID, fa);
 		this._menge.add(fa);
@@ -49,8 +50,9 @@ export class StundenplanblockungManagerFachMenge extends JavaObject {
 	 */
 	public getOrException(pFachID: number): StundenplanblockungManagerFach {
 		const fa: StundenplanblockungManagerFach | null = this._map.get(pFachID);
-		if (fa === null)
+		if (fa === null) {
 			throw new NullPointerException("Fach-ID " + pFachID + " unbekannt!")
+		}
 		return fa;
 	}
 

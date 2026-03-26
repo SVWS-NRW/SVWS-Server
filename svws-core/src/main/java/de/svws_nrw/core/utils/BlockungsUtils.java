@@ -28,8 +28,9 @@ public final class BlockungsUtils {
 				final @NotNull String praefixA = splitA[0].trim();
 				final @NotNull String praefixB = splitB[0].trim();
 				final int cmpPrefix = praefixA.compareTo(praefixB);
-				if (cmpPrefix != 0)
+				if (cmpPrefix != 0) {
 					return cmpPrefix;
+				}
 
 				// Sortiere nach dem Zahlen-Suffix.
 				final int sizeA = splitA[1].length();
@@ -37,8 +38,9 @@ public final class BlockungsUtils {
 				final @NotNull String suffixA = (sizeA >= sizeB) ? splitA[1] : StringUtils.fillWithLeadingZeros(splitA[1], sizeB);
 				final @NotNull String suffixB = (sizeB >= sizeA) ? splitB[1] : StringUtils.fillWithLeadingZeros(splitB[1], sizeA);
 				final int cmpSuffix = suffixA.compareTo(suffixB);
-				if (cmpSuffix != 0)
+				if (cmpSuffix != 0) {
 					return cmpSuffix;
+				}
 
 				// Sortiere nach der ID.
 				return Long.compare(a.id, b.id);
@@ -68,8 +70,9 @@ public final class BlockungsUtils {
 	 * @return das Minimum beider Zahlenwerte. Ein NULL-Wert wird ignoriert.
 	 */
 	public static int minVI(final int value1, final Integer value2orNull) {
-		if (value2orNull == null)
+		if (value2orNull == null) {
 			return value1;
+		}
 		final int value2 = value2orNull;
 		return (value1 <= value2) ? value1 : value2;
 	}
@@ -83,8 +86,9 @@ public final class BlockungsUtils {
 	 * @return das Maximum beider Zahlenwerte. Ein NULL-Wert wird ignoriert.
 	 */
 	public static int maxVI(final int value1, final Integer value2orNull) {
-		if (value2orNull == null)
+		if (value2orNull == null) {
 			return value1;
+		}
 		final int value2 = value2orNull;
 		return (value1 >= value2) ? value1 : value2;
 	}
@@ -98,10 +102,12 @@ public final class BlockungsUtils {
 	 * @return das Minimum zweier Integer-Zahlenwerte. Ein NULL-Wert wird ignoriert.
 	 */
 	public static Integer minII(final Integer a, final Integer b) {
-		if (a == null)
+		if (a == null) {
 			return b;
-		if (b == null)
+		}
+		if (b == null) {
 			return a;
+		}
 		return (a <= b) ? a : b;
 	}
 
@@ -114,10 +120,12 @@ public final class BlockungsUtils {
 	 * @return das Maximum zweier Integer-Zahlenwerte. Ein NULL-Wert wird ignoriert.
 	 */
 	public static Integer maxII(final Integer a, final Integer b) {
-		if (a == null)
+		if (a == null) {
 			return b;
-		if (b == null)
+		}
+		if (b == null) {
 			return a;
+		}
 		return (a >= b) ? a : b;
 	}
 

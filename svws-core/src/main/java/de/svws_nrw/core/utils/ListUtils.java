@@ -29,9 +29,11 @@ public final class ListUtils {
 	 */
 	public static <E> @NotNull List<E> getCopyFiltered(final @NotNull List<E> list, final @NotNull Predicate<E> filter) {
 		final @NotNull ArrayList<E> listFiltered = new ArrayList<>();
-		for (final @NotNull E t : list)
-			if (filter.test(t))
+		for (final @NotNull E t : list) {
+			if (filter.test(t)) {
 				listFiltered.add(t);
+			}
+		}
 		return listFiltered;
 	}
 
@@ -46,9 +48,11 @@ public final class ListUtils {
 	 */
 	public static <E> int getCountFiltered(final @NotNull List<E> list, final @NotNull Predicate<E> filter) {
 		int summe = 0;
-		for (final @NotNull E t : list)
-			if (filter.test(t))
+		for (final @NotNull E t : list) {
+			if (filter.test(t)) {
 				summe++;
+			}
+		}
 		return summe;
 	}
 
@@ -66,8 +70,9 @@ public final class ListUtils {
 
 		// Erstelle permutierte Indices.
 		final int[] perm = new int[arrayOfT.length];
-		for (int i = 0; i < perm.length; i++)
+		for (int i = 0; i < perm.length; i++) {
 			perm[i] = i;
+		}
 		for (int i1 = 0; i1 < perm.length; i1++) {
 			final int i2 = random.nextInt(perm.length);
 			final int save1 = perm[i1];
@@ -77,8 +82,9 @@ public final class ListUtils {
 		}
 
 		// Füge in zufälliger Reihenfolge hinzu.
-		for (int i = 0; i < arrayOfT.length; i++)
+		for (int i = 0; i < arrayOfT.length; i++) {
 			list.add(arrayOfT[perm[i]]);
+		}
 
 		return list;
 	}
@@ -93,8 +99,9 @@ public final class ListUtils {
 	 */
 	public static <T> @NotNull List<T> getFlatted(final @NotNull List<List<T>> listOfLists) {
 		final @NotNull List<T> resultList = new ArrayList<>();
-		for (final @NotNull List<T> currentList : listOfLists)
+		for (final @NotNull List<T> currentList : listOfLists) {
 			resultList.addAll(currentList);
+		}
 		return resultList;
 	}
 
@@ -112,8 +119,9 @@ public final class ListUtils {
 
 		// Erstelle permutierte Indices.
 		final int[] perm = new int[n];
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < n; i++) {
 			perm[i] = i;
+		}
 		for (int i1 = 0; i1 < n; i1++) {
 			final int i2 = random.nextInt(perm.length);
 			final int save1 = perm[i1];
@@ -124,8 +132,9 @@ public final class ListUtils {
 
 		// Füge in zufälliger Reihenfolge hinzu.
 		final @NotNull List<T> list = new ArrayList<>();
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < n; i++) {
 			list.add(original.get(perm[i]));
+		}
 
 		return list;
 	}
@@ -139,8 +148,9 @@ public final class ListUtils {
 	 *
 	 */
 	public static <E> void addIfNotExists(final @NotNull List<E> list, final @NotNull E e) {
-		if (!list.contains(e))
+		if (!list.contains(e)) {
 			list.add(e);
+		}
 	}
 
 	/**
@@ -151,9 +161,11 @@ public final class ListUtils {
 	 * @param listToAdd  Die Liste aus welcher kopiert wird.
 	 */
 	public static <E> void addAllIfNotExists(final @NotNull List<E> list, final @NotNull List<E> listToAdd) {
-		for (final E e : listToAdd)
-			if (!list.contains(e))
+		for (final E e : listToAdd) {
+			if (!list.contains(e)) {
 				list.add(e);
+			}
+		}
 	}
 
 	/**
@@ -167,8 +179,9 @@ public final class ListUtils {
 	 */
 	public static <E> @NotNull E getNonNullElementAtOrException(final @NotNull List<E> list, final int i) {
 		final E element = list.get(i);
-		if (element == null)
+		if (element == null) {
 			throw new DeveloperNotificationException("Kein Element bei Index " + i + "!");
+		}
 		return element;
 	}
 
@@ -182,8 +195,9 @@ public final class ListUtils {
 	 */
 	public static <E> @NotNull E getNonNullLast(final @NotNull List<E> list) {
 		final E element = list.get(list.size() - 1);
-		if (element == null)
+		if (element == null) {
 			throw new DeveloperNotificationException("Kein letztes Element in der Liste vorhanden!");
+		}
 		return element;
 	}
 

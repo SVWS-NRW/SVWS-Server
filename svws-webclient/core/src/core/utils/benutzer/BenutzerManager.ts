@@ -85,18 +85,22 @@ export class BenutzerManager extends JavaObject {
 			this.init();
 			this._daten = pDaten;
 			for (const kID of pDaten.kompetenzen) {
-				if (kID === null)
+				if (kID === null) {
 					throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.")
+				}
 				const komp: BenutzerKompetenz | null = BenutzerKompetenz.getByID(kID);
-				if (komp === null)
+				if (komp === null) {
 					throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kID + " existiert nicht.")
-				if (this._setKompetenzen.contains(komp))
+				}
+				if (this._setKompetenzen.contains(komp)) {
 					throw new IllegalArgumentException("Die Kompetenz mit der ID " + kID + " wurde mehrfach bei der Gruppe eingetragen.")
+				}
 				this._setKompetenzen.add(komp);
 				this._setKompetenzenAlle.add(komp);
 			}
-			for (const bgd of this._daten.gruppen)
+			for (const bgd of this._daten.gruppen) {
 				this.addGruppe(bgd);
+			}
 		} else throw new Error('invalid method overload');
 	}
 
@@ -106,22 +110,26 @@ export class BenutzerManager extends JavaObject {
 	 * @param bgd die Benutzergruppendaten
 	 */
 	private addGruppe(bgd: BenutzergruppeDaten | null): void {
-		if (bgd === null)
+		if (bgd === null) {
 			return;
+		}
 		this._mapGruppen.put(bgd.id, bgd);
 		this._setGruppenIDs.add(bgd.id);
 		for (const kid of bgd.kompetenzen) {
 			const komp: BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid);
-			if (komp === null)
+			if (komp === null) {
 				throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kid + " existiert nicht.")
+			}
 			this._setKompetenzenAlle.add(komp);
 			const gruppen: ArrayList<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(komp);
-			if (gruppen === null)
+			if (gruppen === null) {
 				throw new NullPointerException("ArrayList existiert nicht, müsste aber zuvor initialisiert worden sein.")
+			}
 			gruppen.add(bgd);
 			const benutzergruppen: JavaSet<number> | null = this._mapKompetenzgruppenVonGruppe.get(BenutzerKompetenzGruppe.getByID(komp.daten.gruppe_id));
-			if (benutzergruppen === null)
+			if (benutzergruppen === null) {
 				throw new NullPointerException("Set existiert nicht, müsste aber zuvor initialisiert worden sein.")
+			}
 			benutzergruppen.add(bgd.id);
 		}
 	}
@@ -132,26 +140,32 @@ export class BenutzerManager extends JavaObject {
 	 * @param bgd die Benutzergruppendaten
 	 */
 	private removeGruppe(bgd: BenutzergruppeDaten | null): void {
-		if (bgd === null)
+		if (bgd === null) {
 			return;
+		}
 		this._mapGruppen.remove(bgd.id);
 		this._setGruppenIDs.remove(bgd.id);
 		for (const kid of bgd.kompetenzen) {
 			const komp: BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid);
 			if (komp !== null) {
 				const gruppen: ArrayList<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(komp);
-				if (gruppen === null)
+				if (gruppen === null) {
 					throw new NullPointerException("ArrayList existiert nicht, müsste aber zuvor initialisiert worden sein.")
-				for (let i: number = gruppen.size() - 1; i >= 0; i--)
-					if (gruppen.get(i).id === bgd.id)
+				}
+				for (let i: number = gruppen.size() - 1; i >= 0; i--) {
+					if (gruppen.get(i).id === bgd.id) {
 						gruppen.remove(gruppen.get(i));
-				if (gruppen.isEmpty() && !this._setKompetenzen.contains(komp))
+					}
+				}
+				if (gruppen.isEmpty() && !this._setKompetenzen.contains(komp)) {
 					this._setKompetenzenAlle.remove(komp);
+				}
 				const komptenenzgruppe: BenutzerKompetenzGruppe | null = BenutzerKompetenzGruppe.getByID(komp.daten.gruppe_id);
 				if (komptenenzgruppe !== null) {
 					const benutzergruppen: JavaSet<number> | null = this._mapKompetenzgruppenVonGruppe.get(komptenenzgruppe);
-					if (benutzergruppen === null)
+					if (benutzergruppen === null) {
 						throw new NullPointerException("Set existiert nicht, müsste aber zuvor initialisiert worden sein.")
+					}
 					benutzergruppen.remove(bgd.id);
 				}
 			}
@@ -164,9 +178,11 @@ export class BenutzerManager extends JavaObject {
 	 * @return true, wenn der Benutzer in einer administrativen Gruppe ist.
 	 */
 	public istInAdminGruppe(): boolean {
-		for (const bg of this._mapGruppen.values())
-			if (bg.istAdmin)
+		for (const bg of this._mapGruppen.values()) {
+			if (bg.istAdmin) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -174,10 +190,12 @@ export class BenutzerManager extends JavaObject {
 	 * Initialisiert die lokalen Datenstrukturen.
 	 */
 	private init(): void {
-		for (const p of BenutzerKompetenz.values())
+		for (const p of BenutzerKompetenz.values()) {
 			this._mapKompetenzenVonGruppe.put(p, new ArrayList<BenutzergruppeDaten>());
-		for (const p of BenutzerKompetenzGruppe.values())
+		}
+		for (const p of BenutzerKompetenzGruppe.values()) {
 			this._mapKompetenzgruppenVonGruppe.put(p, new HashSet<number>());
+		}
 	}
 
 	/**
@@ -191,8 +209,9 @@ export class BenutzerManager extends JavaObject {
 	 */
 	public getGruppen(kompetenz: BenutzerKompetenz): List<BenutzergruppeDaten> {
 		const gruppen: ArrayList<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(kompetenz);
-		if (gruppen === null)
+		if (gruppen === null) {
 			throw new NullPointerException("Die interne Datenstruktur _mapKompetenzenVonGruppe wurde nich korrekt initialisiert.")
+		}
 		return gruppen;
 	}
 
@@ -208,8 +227,9 @@ export class BenutzerManager extends JavaObject {
 		const gruppen: List<BenutzergruppeDaten> = this.getGruppen(kompetenz);
 		const sb: StringBuilder = new StringBuilder();
 		for (const gruppe of gruppen) {
-			if (!sb.isEmpty())
+			if (!sb.isEmpty()) {
 				sb.append(", ");
+			}
 			sb.append(gruppe.bezeichnung);
 		}
 		return sb.toString();
@@ -225,13 +245,15 @@ export class BenutzerManager extends JavaObject {
 	 */
 	public getBenutzergruppenbyKompetenzgruppe(kompetenzgruppe: BenutzerKompetenzGruppe): List<BenutzergruppeDaten> {
 		const benutzergruppen: JavaSet<number> | null = this._mapKompetenzgruppenVonGruppe.get(kompetenzgruppe);
-		if (benutzergruppen === null)
+		if (benutzergruppen === null) {
 			throw new NullPointerException("Die interne Datenstruktur _mapKompetenzgruppenVonGruppe wurde nich korrekt initialisiert.")
+		}
 		const result: List<BenutzergruppeDaten> = new ArrayList<BenutzergruppeDaten>();
 		for (const idGruppe of benutzergruppen) {
 			const daten: BenutzergruppeDaten | null = this._mapGruppen.get(idGruppe);
-			if (daten !== null)
+			if (daten !== null) {
 				result.add(daten);
+			}
 		}
 		return result;
 	}
@@ -248,8 +270,9 @@ export class BenutzerManager extends JavaObject {
 		const gruppen: List<BenutzergruppeDaten> = this.getBenutzergruppenbyKompetenzgruppe(kompetenzgruppe);
 		const sb: StringBuilder = new StringBuilder();
 		for (const gruppe of gruppen) {
-			if (!sb.isEmpty())
+			if (!sb.isEmpty()) {
 				sb.append(", ");
+			}
 			sb.append(gruppe.bezeichnung);
 		}
 		return sb.toString();
@@ -297,8 +320,9 @@ export class BenutzerManager extends JavaObject {
 	 * @param name der neue Anmeldename des Benutzers
 	 */
 	public setAnmeldename(name: string): void {
-		if (JavaObject.equalsTranspiler("", (name)))
+		if (JavaObject.equalsTranspiler("", (name))) {
 			throw new IllegalArgumentException("Der Anmeldename eines Benutzers darf nicht leer sein.")
+		}
 		this._daten.name = name;
 	}
 
@@ -317,8 +341,9 @@ export class BenutzerManager extends JavaObject {
 	 * @param name der neue Anzeigenamen des Benutzers
 	 */
 	public setAnzeigename(name: string): void {
-		if (JavaObject.equalsTranspiler("", (name)))
+		if (JavaObject.equalsTranspiler("", (name))) {
 			throw new IllegalArgumentException("Der Anmeldename eines Benutzers darf nicht leer sein.")
+		}
 		this._daten.anzeigename = name;
 	}
 
@@ -351,8 +376,9 @@ export class BenutzerManager extends JavaObject {
 	 * @return true, falls der Benutzer die Kompetenz besitzt.
 	 */
 	public hatKompetenz(kompetenz: BenutzerKompetenz): boolean {
-		if (this._daten.istAdmin || this.istInAdminGruppe())
+		if (this._daten.istAdmin || this.istInAdminGruppe()) {
 			return true;
+		}
 		return this._setKompetenzenAlle.contains(kompetenz);
 	}
 
@@ -366,11 +392,14 @@ export class BenutzerManager extends JavaObject {
 	 * @return true, falls der Benutzer die Kompetenzen besitzt.
 	 */
 	public hatKompetenzen(kompetenzen: List<BenutzerKompetenz>): boolean {
-		if (this._daten.istAdmin)
+		if (this._daten.istAdmin) {
 			return true;
-		for (const kompetenz of kompetenzen)
-			if (!this._setKompetenzenAlle.contains(kompetenz))
+		}
+		for (const kompetenz of kompetenzen) {
+			if (!this._setKompetenzenAlle.contains(kompetenz)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -384,11 +413,14 @@ export class BenutzerManager extends JavaObject {
 	 * @return true, falls der Benutzer mindestens eine der Kompetenzen besitzt.
 	 */
 	public hatKompetenzenMindestensEine(kompetenzen: List<BenutzerKompetenz>): boolean {
-		if (this._daten.istAdmin)
+		if (this._daten.istAdmin) {
 			return true;
-		for (const kompetenz of kompetenzen)
-			if (this._setKompetenzenAlle.contains(kompetenz))
+		}
+		for (const kompetenz of kompetenzen) {
+			if (this._setKompetenzenAlle.contains(kompetenz)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -400,10 +432,12 @@ export class BenutzerManager extends JavaObject {
 	 * @throws IllegalArgumentException wenn der Benutzer die Kompetenz bereits hat
 	 */
 	public addKompetenz(kompetenz: BenutzerKompetenz | null): void {
-		if (kompetenz === null)
+		if (kompetenz === null) {
 			throw new NullPointerException("Die übergebene Kompetenz darf nicht null sein.")
-		if (this._setKompetenzen.contains(kompetenz))
+		}
+		if (this._setKompetenzen.contains(kompetenz)) {
 			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " wurde bereits zuvor zu dem Benutzer hinzugefügt.")
+		}
 		this._daten.kompetenzen.add(kompetenz.daten.id);
 		this._setKompetenzen.add(kompetenz);
 		this._setKompetenzenAlle.add(kompetenz);
@@ -422,13 +456,15 @@ export class BenutzerManager extends JavaObject {
 	 *                                  oder nur über eine Gruppe hat
 	 */
 	public removeKompetenz(kompetenz: BenutzerKompetenz): void {
-		if (!this._setKompetenzen.contains(kompetenz))
+		if (!this._setKompetenzen.contains(kompetenz)) {
 			throw new IllegalArgumentException("Die Kompetenz mit der ID " + kompetenz.daten.id + " ist nicht direkt beim Benutzer vorhanden.")
+		}
 		this._daten.kompetenzen.remove(kompetenz.daten.id);
 		this._setKompetenzen.remove(kompetenz);
 		const gruppen: List<BenutzergruppeDaten> = this.getGruppen(kompetenz);
-		if (gruppen.isEmpty())
+		if (gruppen.isEmpty()) {
 			this._setKompetenzenAlle.remove(kompetenz);
+		}
 	}
 
 	/**
@@ -462,8 +498,9 @@ export class BenutzerManager extends JavaObject {
 	public addToGruppe(bgd: BenutzergruppeDaten): void {
 		if (bgd !== null) {
 			this.addGruppe(bgd);
-		} else
+		} else {
 			throw new IllegalArgumentException("Der Benutzer ist bereits in der Gruppe ")
+		}
 	}
 
 	/**

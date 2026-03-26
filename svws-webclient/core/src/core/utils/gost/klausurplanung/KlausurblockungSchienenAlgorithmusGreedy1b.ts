@@ -26,13 +26,15 @@ export class KlausurblockungSchienenAlgorithmusGreedy1b extends KlausurblockungS
 		this._dynDaten.aktionZustand1Speichern();
 		while (System.currentTimeMillis() < pZeitEnde) {
 			this._dynDaten.aktion_EntferneAlles_SchienenNacheinander_KlausurenZufaellig();
-			if (this._dynDaten.gibIstBesserAlsZustand1())
+			if (this._dynDaten.gibIstBesserAlsZustand1()) {
 				this._dynDaten.aktionZustand1Speichern();
-			else
+			} else {
 				this._dynDaten.aktionZustand1Laden();
+			}
 		}
-		if (this._dynDaten.gibIstBesserAlsZustand2())
+		if (this._dynDaten.gibIstBesserAlsZustand2()) {
 			this._dynDaten.aktionZustand2Speichern();
+		}
 	}
 
 	transpilerCanonicalName(): string {

@@ -10,26 +10,29 @@ import type { Comparator } from '../../../java/util/Comparator';
 export class SchuelerUtils extends JavaObject {
 
 	/**
-	 * Ein Default-Comparator für den Vergleich von Schülern in Schuelerlisten.
+	 * Ein Default-Comparator für den Vergleich von Schülern in Schülerlisten.
 	 */
 	public static readonly comparator: Comparator<SchuelerListeEintrag> = { compare: (a: SchuelerListeEintrag, b: SchuelerListeEintrag) => {
 		let cmp: number = JavaString.compareTo(a.nachname, b.nachname);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = JavaString.compareTo(a.vorname, b.vorname);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = JavaString.compareTo(a.jahrgang, b.jahrgang);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 
 	/**
-	 * Ein Default-Comparator für den Vergleich von Schülern in Schuelerlisten.
+	 * Ein Default-Comparator für den Vergleich von Schülern in Schülerlisten.
 	 */
 	public static readonly comparatorSchuelerVermerkartZusammenfassung: Comparator<SchuelerVermerkartZusammenfassung> = { compare: (a: SchuelerVermerkartZusammenfassung, b: SchuelerVermerkartZusammenfassung) => {
 		let cmp: number = JavaString.compareTo(a.nachname, b.nachname);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = JavaString.compareTo(a.vorname, b.vorname);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };

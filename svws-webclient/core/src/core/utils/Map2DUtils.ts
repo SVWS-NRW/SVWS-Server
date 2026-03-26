@@ -28,8 +28,9 @@ export class Map2DUtils extends JavaObject {
 	 */
 	public static getOrCreateArrayList<K1, K2, V>(map2D: HashMap2D<K1, K2, List<V>>, key1: K1, key2: K2): List<V> {
 		const list: List<V> | null = map2D.getOrNull(key1, key2);
-		if (list !== null)
+		if (list !== null) {
 			return list;
+		}
 		const listNeu: ArrayList<V> = new ArrayList<V>();
 		map2D.put(key1, key2, listNeu);
 		return listNeu;
@@ -49,8 +50,9 @@ export class Map2DUtils extends JavaObject {
 	 */
 	public static getOrCreateHashSet<K1, K2, V>(map2D: HashMap2D<K1, K2, JavaSet<V>>, key1: K1, key2: K2): JavaSet<V> {
 		const set: JavaSet<V> | null = map2D.getOrNull(key1, key2);
-		if (set !== null)
+		if (set !== null) {
 			return set;
+		}
 		const setNeu: HashSet<V> = new HashSet<V>();
 		map2D.put(key1, key2, setNeu);
 		return setNeu;
@@ -71,8 +73,9 @@ export class Map2DUtils extends JavaObject {
 	 */
 	public static getOrDefault<K1, K2, V>(map2D: HashMap2D<K1, K2, V>, key1: K1, key2: K2, defaultValue: V): V {
 		const value: V | null = map2D.getOrNull(key1, key2);
-		if (value === null)
+		if (value === null) {
 			return defaultValue;
+		}
 		return value;
 	}
 
@@ -114,8 +117,9 @@ export class Map2DUtils extends JavaObject {
 	public static addToListIfNotExists<K1, K2, V>(map2D: HashMap2D<K1, K2, List<V>>, key1: K1, key2: K2, value: V): void {
 		const list: List<V> | null = map2D.getOrNull(key1, key2);
 		if (list !== null) {
-			if (!list.contains(value))
+			if (!list.contains(value)) {
 				list.add(value);
+			}
 		} else {
 			const listNeu: ArrayList<V> = new ArrayList<V>();
 			listNeu.add(value);
@@ -137,8 +141,9 @@ export class Map2DUtils extends JavaObject {
 	public static removeFromListAndTrimOrException<K1, K2, V>(map2D: HashMap2D<K1, K2, List<V>>, key1: K1, key2: K2, value: V): void {
 		const list: List<V> | null = map2D.getOrException(key1, key2);
 		DeveloperNotificationException.ifListRemoveFailes("list", list, value);
-		if (list.isEmpty())
+		if (list.isEmpty()) {
 			map2D.removeOrException(key1, key2);
+		}
 	}
 
 	transpilerCanonicalName(): string {

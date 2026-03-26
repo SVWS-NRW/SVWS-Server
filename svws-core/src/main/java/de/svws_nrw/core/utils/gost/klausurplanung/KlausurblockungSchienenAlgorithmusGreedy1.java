@@ -33,14 +33,16 @@ public final class KlausurblockungSchienenAlgorithmusGreedy1 extends Klausurbloc
 		while (System.currentTimeMillis() < pZeitEnde) {
 			_dynDaten.aktion_EntferneAlles_KlausurenZufaellig_SchienenZufaellig();
 
-			if (_dynDaten.gibIstBesserAlsZustand1())
+			if (_dynDaten.gibIstBesserAlsZustand1()) {
 				_dynDaten.aktionZustand1Speichern();
-			else
+			} else {
 				_dynDaten.aktionZustand1Laden();
+			}
 		}
 
-		if (_dynDaten.gibIstBesserAlsZustand2())
+		if (_dynDaten.gibIstBesserAlsZustand2()) {
 			_dynDaten.aktionZustand2Speichern();
+		}
 	}
 
 }

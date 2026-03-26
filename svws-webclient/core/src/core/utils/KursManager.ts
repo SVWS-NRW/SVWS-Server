@@ -56,11 +56,13 @@ export class KursManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die ID des Kurses nagativ ist.
 	 */
 	private addInternal(kurs: KursDaten): boolean {
-		if (kurs.id < 0)
+		if (kurs.id < 0) {
 			throw new DeveloperNotificationException("Die Kurs-ID darf nicht negativ sein!")
+		}
 		const old: KursDaten | null = this._map.put(kurs.id, kurs);
-		if (old !== null)
+		if (old !== null) {
 			return false;
+		}
 		return this._kurse.add(kurs);
 	}
 
@@ -94,9 +96,11 @@ export class KursManager extends JavaObject {
 	 */
 	public addAll(kurse: Collection<KursDaten>): boolean {
 		let result: boolean = true;
-		for (const kurs of kurse)
-			if (!this.addInternal(kurs))
+		for (const kurs of kurse) {
+			if (!this.addInternal(kurs)) {
 				result = false;
+			}
+		}
 		this.sort();
 		return result;
 	}
@@ -123,8 +127,9 @@ export class KursManager extends JavaObject {
 	 */
 	public getOrException(pKursID: number): KursDaten {
 		const kurs: KursDaten | null = this._map.get(pKursID);
-		if (kurs === null)
+		if (kurs === null) {
 			throw new DeveloperNotificationException("KursDaten mit id=" + pKursID + " gibt es nicht.")
+		}
 		return kurs;
 	}
 
@@ -162,8 +167,9 @@ export class KursManager extends JavaObject {
 	 */
 	public toList(): List<KursDaten> {
 		const result: List<KursDaten> = new ArrayList<KursDaten>();
-		for (const kurs of this._kurse)
+		for (const kurs of this._kurse) {
 			result.add(kurs);
+		}
 		return result;
 	}
 

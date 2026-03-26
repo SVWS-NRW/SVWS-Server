@@ -19,8 +19,9 @@ public final class KursUtils {
 	public static final @NotNull Comparator<KursDaten> comparator =
 			(final @NotNull KursDaten a, final @NotNull KursDaten b) -> {
 				int cmp = a.sortierung - b.sortierung;
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = a.kuerzel.compareTo(b.kuerzel);
 				return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
 			};

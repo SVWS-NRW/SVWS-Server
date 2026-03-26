@@ -71,8 +71,9 @@ public final class StringUtils {
 		final String sNumber = "" + zahl;
 
 		final StringBuilder sb = new StringBuilder();
-		while ((sb.length() + sNumber.length()) < minGroesse)
+		while ((sb.length() + sNumber.length()) < minGroesse) {
 			sb.append('0');
+		}
 		sb.append(sNumber);
 
 		return sb.toString();
@@ -89,8 +90,9 @@ public final class StringUtils {
 	public static @NotNull String fillWithLeadingZeros(final @NotNull String s, final int size) {
 
 		final StringBuilder sb = new StringBuilder();
-		while ((sb.length() + s.length()) < size)
+		while ((sb.length() + s.length()) < size) {
 			sb.append('0');
+		}
 		sb.append(s);
 
 		return sb.toString();

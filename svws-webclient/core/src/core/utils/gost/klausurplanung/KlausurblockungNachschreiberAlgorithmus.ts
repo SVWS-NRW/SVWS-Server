@@ -68,14 +68,16 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 			DeveloperNotificationException.ifTrue("Ungültige Schüler-ID = " + idSchueler, idSchueler < 0);
 			DeveloperNotificationException.ifTrue("Ungültige Kurs-ID = " + idKurs, idKurs < 0);
 			let added: boolean = false;
-			for (const gruppe of nachschreiberGruppen)
+			for (const gruppe of nachschreiberGruppen) {
 				if (KlausurblockungNachschreiberAlgorithmus._istHinzufuegenErlaubt(gruppe, skt, config, klausurManager)) {
 					gruppe.add(skt);
 					added = true;
 					break;
 				}
-			if (!added)
+			}
+			if (!added) {
 				nachschreiberGruppen.add(ListUtils.create1(skt));
+			}
 		}
 		const zeitEnde: number = System.currentTimeMillis() + config.maxTimeMillis;
 		let bestBewertung: KlausurblockungNachschreiberAlgorithmusBewertung = new KlausurblockungNachschreiberAlgorithmusBewertung();
@@ -98,8 +100,9 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 		const kursart: string = klausurManager.vorgabeBySchuelerklausurTermin(skt1).kursart;
 		for (const skt2 of gruppe) {
 			const sk2: GostSchuelerklausur = klausurManager.schuelerklausurBySchuelerklausurtermin(skt2);
-			if (sk1.idSchueler === sk2.idSchueler)
+			if (sk1.idSchueler === sk2.idSchueler) {
 				return false;
+			}
 		}
 		if (config._regel_gleiche_fachart_auf_selbe_termine_verteilen) {
 			const first: GostSchuelerklausurTermin = ListUtils.getNonNullElementAtOrException(gruppe, 0);
@@ -121,8 +124,9 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 		for (const termin of ListUtils.getCopyPermuted(termine, KlausurblockungNachschreiberAlgorithmus._random)) {
 			const gruppenanzahl: number = gruppen.size();
 			KlausurblockungNachschreiberAlgorithmus._verteileMoeglichstVieleGruppenZufaelligAufDenTermin(termin.id, klausurManager, gruppen, ergebnis);
-			if (gruppen.size() < gruppenanzahl)
+			if (gruppen.size() < gruppenanzahl) {
 				bewertung.anzahl_termine++;
+			}
 		}
 		let fakeID: number = -1;
 		while (!gruppen.isEmpty()) {
@@ -137,8 +141,9 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 		const schuelerIDsDesTermin: HashSet<number> | null = new HashSet<number>();
 		if (idTermin >= 0) {
 			const termin: GostKlausurtermin = klausurManager.terminGetByIdOrException(idTermin);
-			for (const sk of klausurManager.schuelerklausurGetMengeByTermin(termin))
+			for (const sk of klausurManager.schuelerklausurGetMengeByTermin(termin)) {
 				schuelerIDsDesTermin.add(sk.idSchueler);
+			}
 		}
 		for (const gruppe of ListUtils.getCopyPermuted(gruppen, KlausurblockungNachschreiberAlgorithmus._random)) {
 			let kollision: boolean = false;
@@ -149,8 +154,9 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 				kollision = kollision || schuelerIDsDesTermin.contains(sk.idSchueler);
 			}
 			if (!kollision) {
-				for (const skt of gruppe)
+				for (const skt of gruppe) {
 					ergebnis.add(new Pair<GostSchuelerklausurTermin, number>(skt, idTermin));
+				}
 				schuelerIDsDesTermin.addAll(schuelerIDsDerGruppe);
 				gruppen.remove(gruppe);
 			}

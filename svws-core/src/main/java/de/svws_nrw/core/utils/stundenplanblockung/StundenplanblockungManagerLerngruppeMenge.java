@@ -36,8 +36,9 @@ public class StundenplanblockungManagerLerngruppeMenge {
 	 * @return Die zuvor erzeugte Lerngruppe.
 	 */
 	public @NotNull StundenplanblockungManagerLerngruppe createOrException(final long pLerngruppeID) throws NullPointerException {
-		if (_map.containsKey(pLerngruppeID))
+		if (_map.containsKey(pLerngruppeID)) {
 			throw new NullPointerException("Die Lerngruppe-ID " + pLerngruppeID + " existiert bereits!");
+		}
 		final StundenplanblockungManagerLerngruppe gr = new StundenplanblockungManagerLerngruppe(pLerngruppeID);
 		_map.put(pLerngruppeID, gr);
 		_menge.add(gr);
@@ -54,8 +55,9 @@ public class StundenplanblockungManagerLerngruppeMenge {
 	 */
 	public @NotNull StundenplanblockungManagerLerngruppe getOrException(final long pLerngruppeID) throws NullPointerException {
 		final StundenplanblockungManagerLerngruppe gr = _map.get(pLerngruppeID);
-		if (gr == null)
+		if (gr == null) {
 			throw new NullPointerException("Lerngruppe-ID " + pLerngruppeID + " unbekannt!");
+		}
 		return gr;
 	}
 
@@ -68,8 +70,9 @@ public class StundenplanblockungManagerLerngruppeMenge {
 	 */
 	public @NotNull StundenplanblockungManagerLerngruppe getRandomOrException(final @NotNull Random pRandom) {
 		final int size = _menge.size();
-		if (size <= 0)
+		if (size <= 0) {
 			throw new NullPointerException("Es gibt keine Lerngruppen!");
+		}
 		return _menge.get(pRandom.nextInt(size));
 	}
 

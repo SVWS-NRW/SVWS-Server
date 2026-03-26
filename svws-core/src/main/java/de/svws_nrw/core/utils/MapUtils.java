@@ -31,8 +31,9 @@ public final class MapUtils {
 	 */
 	public static <K, V> @NotNull Set<V> getOrCreateHashSet(final @NotNull Map<K, Set<V>> map, final @NotNull K key) {
 		final Set<V> set = map.get(key);
-		if (set != null)
+		if (set != null) {
 			return set;
+		}
 
 		final @NotNull HashSet<V> setNeu = new HashSet<>();
 		map.put(key, setNeu);
@@ -51,8 +52,9 @@ public final class MapUtils {
 	 */
 	public static <K, V> @NotNull List<V> getOrCreateArrayList(final @NotNull Map<K, List<V>> map, final @NotNull K key) {
 		final List<V> list = map.get(key);
-		if (list != null)
+		if (list != null) {
 			return list;
+		}
 
 		final @NotNull ArrayList<V> listNeu = new ArrayList<>();
 		map.put(key, listNeu);
@@ -72,8 +74,9 @@ public final class MapUtils {
 	public static <K, V> void addToListIfNotExists(final @NotNull Map<K, List<V>> map, final @NotNull K key, final @NotNull V value) {
 		final List<V> list = map.get(key);
 		if (list != null) {
-			if (!list.contains(value))
+			if (!list.contains(value)) {
 				list.add(value);
+			}
 		} else {
 			final List<V> listNeu = new ArrayList<>();
 			listNeu.add(value);
@@ -116,8 +119,9 @@ public final class MapUtils {
 
 		DeveloperNotificationException.ifListRemoveFailes("list", list, value);
 
-		if (list.isEmpty())
+		if (list.isEmpty()) {
 			DeveloperNotificationException.ifMapRemoveFailes(map, key);
+		}
 	}
 
 	/**
@@ -133,8 +137,9 @@ public final class MapUtils {
 	 */
 	public static <K, V> @NotNull V getOrDefault(final @NotNull Map<K, V> map, final @NotNull K key, final @NotNull V defaultValue) {
 		final V value = map.get(key);
-		if (value == null)
+		if (value == null) {
 			return defaultValue;
+		}
 		return value;
 	}
 
@@ -149,8 +154,9 @@ public final class MapUtils {
 	 * @param value  Der Wert, welcher hinzugefügt werden soll, falls es noch keine Zuordnung gibt.
 	 */
 	public static <K, V> void putNonNullIfNotExists(final @NotNull Map<K, V> map, final @NotNull K key, final @NotNull V value) {
-		if (map.containsKey(key))
+		if (map.containsKey(key)) {
 			return;
+		}
 		map.put(key, value);
 	}
 

@@ -36,8 +36,9 @@ public class StundenplanblockungManagerFachMenge {
 	 * @throws NullPointerException  Falls die Fach-ID bereits existiert.
 	 */
 	public void addOrException(final long pFachID, final @NotNull String pKuerzel) throws NullPointerException {
-		if (_map.containsKey(pFachID))
+		if (_map.containsKey(pFachID)) {
 			throw new NullPointerException("Die Fach-ID " + pFachID + " existiert bereits!");
+		}
 		final @NotNull StundenplanblockungManagerFach fa = new StundenplanblockungManagerFach(pFachID, pKuerzel);
 		_map.put(pFachID, fa);
 		_menge.add(fa);
@@ -53,8 +54,9 @@ public class StundenplanblockungManagerFachMenge {
 	 */
 	public @NotNull StundenplanblockungManagerFach getOrException(final long pFachID) throws NullPointerException {
 		final StundenplanblockungManagerFach fa = _map.get(pFachID);
-		if (fa == null)
+		if (fa == null) {
 			throw new NullPointerException("Fach-ID " + pFachID + " unbekannt!");
+		}
 		return fa;
 	}
 

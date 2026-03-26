@@ -161,8 +161,9 @@ public final class SprachendatenUtils {
 				}
 
 				// Prüfe auf erfolgreiche Feststellungsprüfung auf EESA/MSA-Niveau
-				if (istFeststellungspruefungEESAMSABestanden(pruefung))
+				if (istFeststellungspruefungEESAMSABestanden(pruefung)) {
 					return true;
+				}
 			}
 		}
 
@@ -202,8 +203,9 @@ public final class SprachendatenUtils {
 				}
 
 				// Prüfe auf erfolgreiche Feststellungsprüfung auf EESA/MSA-Niveau
-				if (istFeststellungspruefungEESAMSABestanden(pruefung))
+				if (istFeststellungspruefungEESAMSABestanden(pruefung)) {
 					return false;
+				}
 			}
 		}
 
@@ -229,8 +231,9 @@ public final class SprachendatenUtils {
 			final @NotNull List<Sprachbelegung> belegungen = sprachendaten.belegungen;
 			if ((belegungen != null) && !belegungen.isEmpty()) {
 				for (final Sprachbelegung belegung : belegungen) {
-					if (istFortfuehrbareSpracheInGOSt(sprachendaten, belegung.sprache))
+					if (istFortfuehrbareSpracheInGOSt(sprachendaten, belegung.sprache)) {
 						sprachen.add(belegung.sprache);
+					}
 				}
 			}
 
@@ -238,8 +241,9 @@ public final class SprachendatenUtils {
 			final @NotNull List<Sprachpruefung> pruefungen = sprachendaten.pruefungen;
 			if ((pruefungen != null) && !pruefungen.isEmpty()) {
 				for (final Sprachpruefung pruefung : pruefungen) {
-					if (istFortfuehrbareSpracheInGOSt(sprachendaten, pruefung.sprache))
+					if (istFortfuehrbareSpracheInGOSt(sprachendaten, pruefung.sprache)) {
 						sprachen.add(pruefung.sprache);
+					}
 				}
 			}
 		}
@@ -258,22 +262,25 @@ public final class SprachendatenUtils {
 	 * @return true, falls der Nachweis gemäß der aktuellen Sprachdaten erfüllt ist, andernfalls false.
 	 */
 	public static boolean hatEineSpracheAb5bis7MitMin4JahrenDauerEndeSekI(final Sprachendaten sprachendaten) {
-		if (sprachendaten == null)
+		if (sprachendaten == null) {
 			return false;
+		}
 
 		// Alle Sprachen, die bis einschließlich Klasse 7 gestartet werden, erfüllen die Bedingung von mindestens 4 Jahren Dauer, wenn sie nicht vorher abgewählt werden konnten.
 		// Im Gymnasium G8 gibt es keinen Beginn in der Klasse 7, aber die Bedingung wird durch den Beginn in Stufe 6 ebenfalls erfüllt.
 		final int anzahlSprachen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "07", 4).size();
-		if (anzahlSprachen >= 1)
+		if (anzahlSprachen >= 1) {
 			return true;
+		}
 
 		// Sofern bisher keine fortgeführte Fremdsprache gefunden wurde, durchsuche nun die Sprachprüfungen.
 		final @NotNull List<Sprachpruefung> pruefungen = sprachendaten.pruefungen;
 		if (pruefungen != null) {
 			for (final Sprachpruefung pruefung : pruefungen) {
 				// Prüfe auf erfolgreiche Feststellungsprüfung auf EESA/MSA-Niveau, die eine vierjährige Sprachen ersetzen kann
-				if (kannFeststellungspruefungErsteSpracheErsetzen(pruefung) || kannFeststellungspruefungZweiteSpracheErsetzen(pruefung))
+				if (kannFeststellungspruefungErsteSpracheErsetzen(pruefung) || kannFeststellungspruefungZweiteSpracheErsetzen(pruefung)) {
 					return true;
+				}
 			}
 		}
 		return false;
@@ -290,15 +297,17 @@ public final class SprachendatenUtils {
 	 * @return true, falls der Nachweis gemäß der aktuellen Sprachdaten erfüllt ist, andernfalls false.
 	 */
 	public static boolean hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(final Sprachendaten sprachendaten) {
-		if (sprachendaten == null)
+		if (sprachendaten == null) {
 			return false;
+		}
 
 		// Alle Sprachen, die bis einschließlich Klasse 7 gestartet werden, erfüllen die Bedingung von mindestens 4 Jahren Dauer, wenn sie nicht vorher abgewählt werden konnten.
 		// Im Gymnasium G8 gibt es keinen Beginn in der Klasse 7, aber die Bedingung wird durch den Beginn in Stufe 6 ebenfalls erfüllt.
 		final @NotNull List<Sprachbelegung> belegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "07", 4);
 		final int anzahlSprachen = belegungen.size();
-		if (anzahlSprachen >= 2)
+		if (anzahlSprachen >= 2) {
 			return true;
+		}
 
 		// Sofern bisher keine oder nur eine fortgeführte Fremdsprache gefunden wurde, durchsuche nun die Sprachprüfungen.
 		if (anzahlSprachen == 1) {
@@ -307,8 +316,9 @@ public final class SprachendatenUtils {
 				for (final Sprachpruefung pruefung : pruefungen) {
 					// Prüfe auf erfolgreiche Feststellungsprüfung auf EESA/MSA-Niveau, die eine vierjährige Sprachen ersetzen kann, prüfe zudem auf evtl. doppelte Eintragungen bei Belegung und Prüfung
 					if ((kannFeststellungspruefungErsteSpracheErsetzen(pruefung) || kannFeststellungspruefungZweiteSpracheErsetzen(pruefung))
-							&& (!belegungen.get(0).sprache.equals(pruefung.sprache)))
+							&& (!belegungen.get(0).sprache.equals(pruefung.sprache))) {
 						return true;
+					}
 				}
 			}
 		}
@@ -327,8 +337,9 @@ public final class SprachendatenUtils {
 	 * @return true, falls der Nachweis gemäß der aktuellen Sprachdaten erfüllt ist, andernfalls false.
 	 */
 	public static boolean hatEineSpracheAb8MitMin2JahrenDauerEndeSekI(final Sprachendaten sprachendaten) {
-		if (sprachendaten == null)
+		if (sprachendaten == null) {
 			return false;
+		}
 		final int anzahlSprachen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2).size();
 		return (anzahlSprachen >= 1);
 		// Sofern bisher keine fortgeführte Fremdsprache gefunden wurde, müssen die Sprachprüfungen nicht durchsucht werden,
@@ -345,15 +356,17 @@ public final class SprachendatenUtils {
 	 * @return Sprache, falls eine Belegung vorhanden ist, sonst null
 	 */
 	public static String getEineSpracheAb8MitMin2JahrenDauerEndeSekI(final Sprachendaten sprachendaten) {
-		if (sprachendaten == null)
+		if (sprachendaten == null) {
 			return null;
+		}
 
 		final @NotNull List<Sprachbelegung> belegungen = sprachendaten.belegungen;
 		if (belegungen != null) {
 			// Wähle alle Sprachen mit Beginn in der Sekundarstufe I aus, die in Klassen 8, 9 oder 10 begonnen wurden.
 			final @NotNull List<Sprachbelegung> sprachbelegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2);
-			if (!sprachbelegungen.isEmpty())
+			if (!sprachbelegungen.isEmpty()) {
 				return sprachbelegungen.get(0).sprache;
+			}
 		}
 		// Sofern bisher keine fortgeführte Fremdsprache gefunden wurde, müssen die Sprachprüfungen nicht durchsucht werden,
 		// da Sprachfeststellungsprüfungen nur erste und zweite Sprachen (also Klasse 05 bis 07) ersetzen können.
@@ -370,8 +383,9 @@ public final class SprachendatenUtils {
 	 * @return true, falls entsprechende Sprachprüfungen vorhanden sind, andernfalls false.
 	 */
 	public static boolean hatSprachfeststellungspruefungAufEFNiveau(final Sprachendaten sprachendaten) {
-		if (sprachendaten == null)
+		if (sprachendaten == null) {
 			return false;
+		}
 
 		// Sofern bisher keine fortgeführte Fremdsprache gefunden wurde, durchsuche nun die Sprachprüfungen.
 		final @NotNull List<Sprachpruefung> pruefungen = sprachendaten.pruefungen;
@@ -384,8 +398,9 @@ public final class SprachendatenUtils {
 						if (pruefungEF.istFeststellungspruefung && pruefungEF.sprache.equals(pruefungS1.sprache)
 								&& (pruefungEF.kannErstePflichtfremdspracheErsetzen || pruefungEF.kannZweitePflichtfremdspracheErsetzen
 										|| pruefungEF.kannWahlpflichtfremdspracheErsetzen)
-								&& (pruefungEF.anspruchsniveauId == Sprachpruefungniveau.EF.daten.id) && (pruefungEF.note != null) && (pruefungEF.note <= 4))
+								&& (pruefungEF.anspruchsniveauId == Sprachpruefungniveau.EF.daten.id) && (pruefungEF.note != null) && (pruefungEF.note <= 4)) {
 							return true;
+						}
 					}
 				}
 			}
@@ -449,14 +464,16 @@ public final class SprachendatenUtils {
 	 * @return Die erste belegte Sprache (gemäß Belegung oder Prüfung) oder null, falls keine existiert
 	 */
 	public static String getErsteSpracheInSekI(final Sprachendaten sprachendaten) {
-		if (sprachendaten == null)
+		if (sprachendaten == null) {
 			return null;
+		}
 
 		final @NotNull List<Sprachpruefung> pruefungen = sprachendaten.pruefungen;
 		if (pruefungen != null) {
 			for (final Sprachpruefung pruefung : pruefungen) {
-				if (kannFeststellungspruefungErsteSpracheErsetzen(pruefung))
+				if (kannFeststellungspruefungErsteSpracheErsetzen(pruefung)) {
 					return pruefung.sprache;
+				}
 			}
 		}
 
@@ -464,8 +481,9 @@ public final class SprachendatenUtils {
 		if (belegungen != null) {
 			// Wähle alle Sprachen mit Beginn in der Sekundarstufe I aus
 			final @NotNull List<Sprachbelegung> sprachbelegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 0);
-			if (!sprachbelegungen.isEmpty())
+			if (!sprachbelegungen.isEmpty()) {
 				return sprachbelegungen.get(0).sprache;
+			}
 		}
 		return null;
 	}
@@ -482,8 +500,9 @@ public final class SprachendatenUtils {
 	 * @return Die zweite belegte Sprache (gemäß Belegung oder Prüfung) oder null, falls keine existiert
 	 */
 	public static String getZweiteSpracheInSekI(final Sprachendaten sprachendaten) {
-		if (sprachendaten == null)
+		if (sprachendaten == null) {
 			return null;
+		}
 
 		String pruefungErsteSprache = "";
 		String pruefungZweiteSprache = "";
@@ -498,8 +517,9 @@ public final class SprachendatenUtils {
 				}
 			}
 		}
-		if (!("".equals(pruefungZweiteSprache)))
+		if (!("".equals(pruefungZweiteSprache))) {
 			return pruefungZweiteSprache;
+		}
 
 		final @NotNull List<Sprachbelegung> belegungen = sprachendaten.belegungen;
 		if (belegungen != null) {
@@ -509,13 +529,15 @@ public final class SprachendatenUtils {
 			if (!("".equals(pruefungErsteSprache))) {
 				// Eine Prüfung für die erste Fremdsprache ist vorhanden, daher muss die erste Sprache in der Sprachenfolge ungleich der Prüfungssprache die zweite Fremdsprache sein.
 				for (final Sprachbelegung sprachbelegung : sprachbelegungen) {
-					if (!sprachbelegung.sprache.equals(pruefungErsteSprache))
+					if (!sprachbelegung.sprache.equals(pruefungErsteSprache)) {
 						return sprachbelegung.sprache;
+					}
 				}
 			} else {
 				// Keine Prüfung für die Fremdsprachen vorhanden, daher muss die zweite Sprache in der Sprachenfolge die zweite Fremdsprache sein.
-				if (sprachbelegungen.size() > 1)
+				if (sprachbelegungen.size() > 1) {
 					return sprachbelegungen.get(1).sprache;
+				}
 			}
 		}
 		return null;
@@ -557,8 +579,9 @@ public final class SprachendatenUtils {
 		// Alle anderen Fälle geben hier false zurück.
 		if ((belegung.belegungBisJahrgang != null) && ((getJahrgangNumerisch(belegung.belegungBisJahrgang) <= 8)
 				|| (((getJahrgangNumerisch(belegung.belegungBisJahrgang) == 9) || (getJahrgangNumerisch(belegung.belegungBisJahrgang) == 10))
-						&& (belegung.belegungBisAbschnitt != null) && (belegung.belegungBisAbschnitt == 1))))
+						&& (belegung.belegungBisAbschnitt != null) && (belegung.belegungBisAbschnitt == 1)))) {
 			return false;
+		}
 
 		if (belegung.belegungVonJahrgang != null) {
 			final int letzterJahrgangSekI = 10;
@@ -567,8 +590,9 @@ public final class SprachendatenUtils {
 
 			if ((0 < belegtVonJahrgangNumerisch) && (belegtVonJahrgangNumerisch <= 10)) {
 				// Bei leerem Ende oder Ende in der Sekundarstufe II wähle als Ende den letzten Sek-I Jahrgang
-				if ((belegtBisJahrgangNumerisch == 0) || (belegtBisJahrgangNumerisch > letzterJahrgangSekI))
+				if ((belegtBisJahrgangNumerisch == 0) || (belegtBisJahrgangNumerisch > letzterJahrgangSekI)) {
 					belegtBisJahrgangNumerisch = letzterJahrgangSekI;
+				}
 				return (((belegtBisJahrgangNumerisch - belegtVonJahrgangNumerisch) + 1) >= n);
 			}
 		}
@@ -604,9 +628,9 @@ public final class SprachendatenUtils {
 		if ((sprachendaten == null) || (sprachendaten.belegungen == null)
 				|| (belegungsbeginnStart == null) || "".equals(belegungsbeginnStart)
 				|| (belegungsbeginnEnde == null) || "".equals(belegungsbeginnEnde)
-				|| (mindestBelegdauer == null) || (mindestBelegdauer < 0))
-
+				|| (mindestBelegdauer == null) || (mindestBelegdauer < 0)) {
 			return resultBelegungen;
+		}
 
 		// Ab hier sind die notwendigen Werte gefüllt
 		int belegtVonJahrgangNumerisch;
@@ -662,15 +686,17 @@ public final class SprachendatenUtils {
 	public static @NotNull List<String> unvollstaendigeSprachbelegungen(final Sprachendaten sprachendaten) {
 		final @NotNull List<String> result = new ArrayList<>();
 
-		if (sprachendaten == null)
+		if (sprachendaten == null) {
 			return result;
+		}
 
 		for (final @NotNull Sprachbelegung belegung : sprachendaten.belegungen) {
 			if ((belegung.reihenfolge == null) || (belegung.belegungVonJahrgang == null) || (belegung.belegungBisJahrgang == null)
 					|| (belegung.belegungVonAbschnitt == null) || (belegung.belegungBisAbschnitt == null)
 					|| (belegung.belegungVonAbschnitt < 1) || (belegung.belegungVonAbschnitt > 2)
-					|| (belegung.belegungBisAbschnitt < 1) || (belegung.belegungBisAbschnitt > 2))
+					|| (belegung.belegungBisAbschnitt < 1) || (belegung.belegungBisAbschnitt > 2)) {
 				result.add(belegung.sprache);
+			}
 		}
 
 		return result;
@@ -731,8 +757,9 @@ public final class SprachendatenUtils {
 	 * @return Wert des ASDJahrgangs zwischen 5 und 13, wenn dieser nicht bestimmt werden kann, wird der Wert 0 zurückgegeben.
 	 */
 	public static int getJahrgangNumerisch(final String kuerzelJg) {
-		if ((kuerzelJg == null) || "".equals(kuerzelJg))
+		if ((kuerzelJg == null) || "".equals(kuerzelJg)) {
 			return 0;
+		}
 		switch (kuerzelJg) {
 			case "EF":
 				return 11;

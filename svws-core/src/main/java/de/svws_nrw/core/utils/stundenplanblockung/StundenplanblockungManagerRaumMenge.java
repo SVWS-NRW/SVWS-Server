@@ -35,8 +35,9 @@ public class StundenplanblockungManagerRaumMenge {
 	 * @throws NullPointerException  Falls die Raum-ID bereits existiert.
 	 */
 	public void addOrException(final long pRaumID, final @NotNull String pKuerzel) throws NullPointerException {
-		if (_map.containsKey(pRaumID))
+		if (_map.containsKey(pRaumID)) {
 			throw new NullPointerException("Die Raum-ID " + pRaumID + " existiert bereits!");
+		}
 		final @NotNull StundenplanblockungManagerRaum ra = new StundenplanblockungManagerRaum(pRaumID, pKuerzel);
 		_map.put(pRaumID, ra);
 		_menge.add(ra);
@@ -52,8 +53,9 @@ public class StundenplanblockungManagerRaumMenge {
 	 */
 	public @NotNull StundenplanblockungManagerRaum getOrException(final long pRaumID) throws NullPointerException {
 		final StundenplanblockungManagerRaum ra = _map.get(pRaumID);
-		if (ra == null)
+		if (ra == null) {
 			throw new NullPointerException("Raum-ID " + pRaumID + " unbekannt!");
+		}
 		return ra;
 	}
 
@@ -67,8 +69,9 @@ public class StundenplanblockungManagerRaumMenge {
 	 */
 	public @NotNull StundenplanblockungManagerRaum getRandomOrException(final @NotNull Random pRandom) {
 		final int size = _menge.size();
-		if (size <= 0)
+		if (size <= 0) {
 			throw new NullPointerException("Es gibt keine Räume!");
+		}
 		return _menge.get(pRandom.nextInt(size));
 	}
 

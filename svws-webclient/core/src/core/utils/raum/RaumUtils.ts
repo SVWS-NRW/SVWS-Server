@@ -12,7 +12,7 @@ export class RaumUtils extends JavaObject {
 	 * Ein Default-Comparator für den Vergleich von Räumen in Raumlisten.
 	 */
 	public static readonly comparator: Comparator<Raum> = { compare: (a: Raum, b: Raum) => {
-		let cmp: number = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		const cmp: number = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 

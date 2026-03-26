@@ -18,13 +18,13 @@ public class KlausurblockungSchienenAlgorithmus {
 	private static final @NotNull Random _random = new Random();
 
 	/** Ein Logger für Debug-Zwecke. */
-	private final @NotNull Logger _logger;
+	private final @NotNull Logger log;
 
 	/**
 	 * Der Konstruktor.
 	 */
 	public KlausurblockungSchienenAlgorithmus() {
-		_logger = new Logger();
+		log = new Logger();
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class KlausurblockungSchienenAlgorithmus {
 	 * @param pLogger  Ein Logger für Debug-Zwecke.
 	 */
 	public KlausurblockungSchienenAlgorithmus(final @NotNull Logger pLogger) {
-		_logger = pLogger;
+		log = pLogger;
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class KlausurblockungSchienenAlgorithmus {
 		final @NotNull Random random = new Random(seed);
 
 		// Konvertierung: KlausurblockungSchienenInput --> KlausurblockungSchienenDynDaten
-		final KlausurblockungSchienenDynDaten dynDaten = new KlausurblockungSchienenDynDaten(_logger, random, pInput);
+		final KlausurblockungSchienenDynDaten dynDaten = new KlausurblockungSchienenDynDaten(log, random, pInput);
 
 		// Algorithmen erzeugen
 		final @NotNull KlausurblockungSchienenAlgorithmusAbstract @NotNull [] algorithmen = new KlausurblockungSchienenAlgorithmusAbstract @NotNull [] {

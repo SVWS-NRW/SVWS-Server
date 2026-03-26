@@ -21,8 +21,9 @@ export class ArrayUtils extends JavaObject {
 	 */
 	public static getIndexPermutation(size: number, random: Random): Array<number> {
 		const perm: Array<number> | null = Array(size).fill(0);
-		for (let i: number = 0; i < perm.length; i++)
+		for (let i: number = 0; i < perm.length; i++) {
 			perm[i] = i;
+		}
 		for (let i1: number = 0; i1 < perm.length; i1++) {
 			const i2: number = random.nextInt(perm.length);
 			const save1: number = perm[i1];

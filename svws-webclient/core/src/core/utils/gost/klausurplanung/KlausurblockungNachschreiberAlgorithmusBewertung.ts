@@ -29,14 +29,18 @@ export class KlausurblockungNachschreiberAlgorithmusBewertung extends JavaObject
 	 * @return -1, 0 und +1, wenn dieses Objekt besser, gleich und schlechter als das übergebene Objekt ist.
 	 */
 	public compare(b: KlausurblockungNachschreiberAlgorithmusBewertung): number {
-		if (this.anzahl_zusatztermine < b.anzahl_zusatztermine)
+		if (this.anzahl_zusatztermine < b.anzahl_zusatztermine) {
 			return -1;
-		if (this.anzahl_zusatztermine > b.anzahl_zusatztermine)
+		}
+		if (this.anzahl_zusatztermine > b.anzahl_zusatztermine) {
 			return +1;
-		if (this.anzahl_termine < b.anzahl_termine)
+		}
+		if (this.anzahl_termine < b.anzahl_termine) {
 			return -1;
-		if (this.anzahl_termine > b.anzahl_termine)
+		}
+		if (this.anzahl_termine > b.anzahl_termine) {
 			return +1;
+		}
 		return 0;
 	}
 

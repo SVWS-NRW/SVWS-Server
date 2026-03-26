@@ -26,13 +26,15 @@ export class KlausurterminblockungAlgorithmusGreedy2b extends Klausurterminblock
 		this._dynDaten.aktionZustand1Speichern();
 		while (System.currentTimeMillis() < pZeitEnde) {
 			this._dynDaten.aktion_Clear_TermineNacheinander_GruppeNachGrad();
-			if (this._dynDaten.gibIstBesserAlsZustand1())
+			if (this._dynDaten.gibIstBesserAlsZustand1()) {
 				this._dynDaten.aktionZustand1Speichern();
-			else
+			} else {
 				this._dynDaten.aktionZustand1Laden();
+			}
 		}
-		if (this._dynDaten.gibIstBesserAlsZustand2())
+		if (this._dynDaten.gibIstBesserAlsZustand2()) {
 			this._dynDaten.aktionZustand2Speichern();
+		}
 	}
 
 	transpilerCanonicalName(): string {

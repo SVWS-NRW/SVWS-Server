@@ -57,9 +57,10 @@ public class AbgangsartenManager {
 			this._mapByKuerzel.put(eintrag.kuerzel, eintrag);
 			for (final @NotNull AbgangsartKatalogDaten daten : eintrag.historie) {
 				final AbgangsartKatalogEintrag alt = this._mapByID.put(daten.id, eintrag);
-				if (alt != null)
+				if (alt != null) {
 					throw new DeveloperNotificationException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei den Abgangsarten '" + eintrag.kuerzel
 							+ "' und '" + alt.kuerzel + "'");
+				}
 				this._mapDatenByID.put(daten.id, daten);
 			}
 		}
@@ -111,12 +112,15 @@ public class AbgangsartenManager {
 	 */
 	public AbgangsartKatalogDaten getDaten(final @NotNull String kuerzel, final int schuljahr) {
 		final AbgangsartKatalogEintrag eintrag = this._mapByKuerzel.get(kuerzel);
-		if (eintrag == null)
+		if (eintrag == null) {
 			return null;
-		for (final @NotNull AbgangsartKatalogDaten daten : eintrag.historie)
+		}
+		for (final @NotNull AbgangsartKatalogDaten daten : eintrag.historie) {
 			if (((daten.gueltigVon == null) || (daten.gueltigVon <= schuljahr))
-					&& ((daten.gueltigBis == null) || (daten.gueltigBis >= schuljahr)))
+					&& ((daten.gueltigBis == null) || (daten.gueltigBis >= schuljahr))) {
 				return daten;
+			}
+		}
 		return null;
 	}
 
@@ -172,8 +176,9 @@ public class AbgangsartenManager {
 	 * @return der allgemeinbildende Abschluss oder null in einem unerwarteten Fehlerfall
 	 */
 	public static SchulabschlussAllgemeinbildend getAbschlussAllgemeinbildend(final @NotNull AbgangsartKatalogEintrag abschlussart) {
-		if ((abschlussart.kuerzel.length() < 0) || (abschlussart.kuerzel.length() > 2))
+		if ((abschlussart.kuerzel.length() < 0) || (abschlussart.kuerzel.length() > 2)) {
 			throw new DeveloperNotificationException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.");
+		}
 		final @NotNull String kuerzelAbschluss = (abschlussart.kuerzel.length() == 1) ? abschlussart.kuerzel : abschlussart.kuerzel.substring(1, 2);
 		return SchulabschlussAllgemeinbildend.data().getWertBySchluessel(kuerzelAbschluss);
 	}
@@ -186,10 +191,12 @@ public class AbgangsartenManager {
 	 * @return der berufsbildende Abschluss oder null, wenn nur ein allgemeinbildender Abschluss vorliegt.
 	 */
 	public static SchulabschlussBerufsbildend getAbschlussBerufsbildend(final @NotNull AbgangsartKatalogEintrag abschlussart) {
-		if ((abschlussart.kuerzel.length() < 0) || (abschlussart.kuerzel.length() > 2))
+		if ((abschlussart.kuerzel.length() < 0) || (abschlussart.kuerzel.length() > 2)) {
 			throw new DeveloperNotificationException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.");
-		if (abschlussart.kuerzel.length() == 1)
+		}
+		if (abschlussart.kuerzel.length() == 1) {
 			return null;
+		}
 		return SchulabschlussBerufsbildend.data().getWertBySchluessel(abschlussart.kuerzel.substring(0, 1));
 	}
 

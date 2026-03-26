@@ -17,7 +17,7 @@ public final class RaumUtils {
 
 	/** Ein Default-Comparator für den Vergleich von Räumen in Raumlisten. */
 	public static final @NotNull Comparator<Raum> comparator = (final @NotNull Raum a, final @NotNull Raum b) -> {
-		int cmp = a.kuerzel.compareTo(b.kuerzel);
+		final int cmp = a.kuerzel.compareTo(b.kuerzel);
 		return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
 	};
 

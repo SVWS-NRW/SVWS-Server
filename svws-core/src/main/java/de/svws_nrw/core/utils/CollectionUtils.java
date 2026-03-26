@@ -34,8 +34,9 @@ public final class CollectionUtils {
 	 */
 	public static <K, V> @NotNull Set<V> getOrCreateHashSet(final @NotNull Map<K, Set<V>> map, final @NotNull K key) {
 		final Set<V> set = map.get(key);
-		if (set != null)
+		if (set != null) {
 			return set;
+		}
 
 		final @NotNull HashSet<V> setNeu = new HashSet<>();
 		map.put(key, setNeu);
@@ -54,9 +55,11 @@ public final class CollectionUtils {
 	 */
 	public static <E> @NotNull Set<E> toFilteredHashSet(final @NotNull Collection<E> values, final @NotNull Predicate<E> predicate) {
 		final @NotNull HashSet<E> set = new HashSet<>();
-		for (final @NotNull E e : values)
-			if (predicate.test(e))
+		for (final @NotNull E e : values) {
+			if (predicate.test(e)) {
 				set.add(e);
+			}
+		}
 		return set;
 	}
 
@@ -72,9 +75,11 @@ public final class CollectionUtils {
 	 */
 	public static <E> @NotNull List<E> toFilteredArrayList(final @NotNull Collection<E> values, final @NotNull Predicate<E> predicate) {
 		final @NotNull ArrayList<E> set = new ArrayList<>();
-		for (final @NotNull E e : values)
-			if (predicate.test(e))
+		for (final @NotNull E e : values) {
+			if (predicate.test(e)) {
 				set.add(e);
+			}
+		}
 		return set;
 	}
 

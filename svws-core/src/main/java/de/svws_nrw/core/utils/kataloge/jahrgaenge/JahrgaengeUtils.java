@@ -30,12 +30,15 @@ public final class JahrgaengeUtils {
 	 */
 	public static Integer getRestlicheJahre(final @NotNull Schulform schulform, final Schulgliederung gliederung, final String jahrgang) {
 		// TODO Benutze einen noch zu definierenden Core-Type für Jahrgänge und verschiebe diese Methode in diesen Core-Type
-		if (gliederung == null)
+		if (gliederung == null) {
 			return null;
-		if ((schulform == Schulform.FW) || (schulform == Schulform.WB) || (schulform == Schulform.BK) || (schulform == Schulform.SB))
+		}
+		if ((schulform == Schulform.FW) || (schulform == Schulform.WB) || (schulform == Schulform.BK) || (schulform == Schulform.SB)) {
 			return null;
-		if (jahrgang == null)
+		}
+		if (jahrgang == null) {
 			return null;
+		}
 		if (schulform == Schulform.GY) {
 			// Gymnasium zählt Restjahre immer bis zum Abitur
 			switch (jahrgang) {
@@ -130,8 +133,9 @@ public final class JahrgaengeUtils {
 	 */
 	public static Integer getRestlicheJahreBisAbitur(final @NotNull Schulform schulform, final Schulgliederung gliederung, final int schuljahr, final String jahrgang) {
 		final SchulformKatalogEintrag sf = schulform.daten(schuljahr);
-		if ((sf == null) || (!sf.hatGymOb) || (gliederung == null) || (jahrgang == null))
+		if ((sf == null) || (!sf.hatGymOb) || (gliederung == null) || (jahrgang == null)) {
 			return null;
+		}
 		return switch (jahrgang) {
 			// DEFAULT (***) wird hier als G8 interpretiert, Ausnahme Jahrgang 10
 			case "05" -> ((schulform == Schulform.GY) && (gliederung.istG8() || (gliederung == Schulgliederung.DEFAULT))) ? 8 : 9;

@@ -137,12 +137,14 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	private addFachInternal(fach: GostFach): boolean {
 		DeveloperNotificationException.ifSmaller("fach.id", fach.id, 0);
-		if (this._map.containsKey(fach.id))
+		if (this._map.containsKey(fach.id)) {
 			return false;
+		}
 		const zf: Fach | null = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		const fke: FachKatalogEintrag | null = zf.daten(this.schuljahr);
-		if (fke === null)
+		if (fke === null) {
 			return false;
+		}
 		this._map.put(fach.id, fach);
 		let listForKuerzel: List<GostFach> | null = this._mapByKuerzel.get(fach.kuerzel);
 		if (listForKuerzel === null) {
@@ -161,8 +163,9 @@ export class GostFaecherManager extends JavaObject {
 		const added: boolean = this._faecher.add(fach);
 		if (!GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
 			const fg: Fachgruppe | null = Fach.getBySchluesselOrDefault(fach.kuerzel).getFachgruppe(this.schuljahr);
-			if ((fg as unknown !== Fachgruppe.FG_VX as unknown) && (fg as unknown !== Fachgruppe.FG_PX as unknown))
+			if ((fg as unknown !== Fachgruppe.FG_VX as unknown) && (fg as unknown !== Fachgruppe.FG_PX as unknown)) {
 				this._leitfaecher.add(fach);
+			}
 		}
 		return added;
 	}
@@ -190,8 +193,9 @@ export class GostFaecherManager extends JavaObject {
 		DeveloperNotificationException.ifNotInRange("fachkombi.typ", fachkombi.typ, 0, 1);
 		const fach1: GostFach | null = this.get(fachkombi.fachID1);
 		const fach2: GostFach | null = this.get(fachkombi.fachID2);
-		if ((fach1 === null) || (fach2 === null))
+		if ((fach1 === null) || (fach2 === null)) {
 			return false;
+		}
 		const typ: GostLaufbahnplanungFachkombinationTyp = GostLaufbahnplanungFachkombinationTyp.fromValue(fachkombi.typ);
 		if (JavaString.isBlank(fachkombi.hinweistext)) {
 			const kursart1: string = ((fachkombi.kursart1 === null) || JavaString.isBlank(fachkombi.kursart1)) ? "" : (" als " + fachkombi.kursart1);
@@ -251,9 +255,11 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public addAll(faecher: Collection<GostFach>): boolean {
 		let result: boolean = true;
-		for (const fach of faecher)
-			if (!this.addFachInternal(fach))
+		for (const fach of faecher) {
+			if (!this.addFachInternal(fach)) {
 				result = false;
+			}
+		}
 		this.sort();
 		return result;
 	}
@@ -268,9 +274,11 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public addFachkombinationenAll(fachkombis: List<GostJahrgangFachkombination>): boolean {
 		let result: boolean = true;
-		for (const fachkombi of fachkombis)
-			if (!this.addFachkombinationInternal(fachkombi))
+		for (const fachkombi of fachkombis) {
+			if (!this.addFachkombinationInternal(fachkombi)) {
 				result = false;
+			}
+		}
 		return result;
 	}
 
@@ -350,8 +358,9 @@ export class GostFaecherManager extends JavaObject {
 		const faecherSchriftlichMoeglich: List<GostFach> = new ArrayList<GostFach>();
 		for (const f of this._faecher) {
 			const zf: Fach | null = Fach.getBySchluesselOrDefault(f.kuerzel);
-			if ((zf as unknown === Fach.PX as unknown) || (zf as unknown === Fach.VX as unknown) || (zf as unknown === Fach.VO as unknown) || (zf as unknown === Fach.IN as unknown))
+			if ((zf as unknown === Fach.PX as unknown) || (zf as unknown === Fach.VX as unknown) || (zf as unknown === Fach.VO as unknown) || (zf as unknown === Fach.IN as unknown)) {
 				continue;
+			}
 			faecherSchriftlichMoeglich.add(f);
 		}
 		return faecherSchriftlichMoeglich;
@@ -415,8 +424,9 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public fachIstProjektkurs(id: number): boolean {
 		const fach: GostFach | null = this._map.get(id);
-		if (fach === null)
+		if (fach === null) {
 			return false;
+		}
 		return JavaObject.equalsTranspiler("PX", (fach.kuerzel));
 	}
 
@@ -429,8 +439,9 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public fachIstVertiefungskurs(id: number): boolean {
 		const fach: GostFach | null = this._map.get(id);
-		if (fach === null)
+		if (fach === null) {
 			return false;
+		}
 		return JavaObject.equalsTranspiler("VX", (fach.kuerzel));
 	}
 
@@ -443,8 +454,9 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public fachIstKunst(id: number): boolean {
 		const fach: GostFach | null = this._map.get(id);
-		if (fach === null)
+		if (fach === null) {
 			return false;
+		}
 		return JavaObject.equalsTranspiler("KU", (fach.kuerzel));
 	}
 
@@ -457,8 +469,9 @@ export class GostFaecherManager extends JavaObject {
 	 */
 	public fachIstMusik(id: number): boolean {
 		const fach: GostFach | null = this._map.get(id);
-		if (fach === null)
+		if (fach === null) {
 			return false;
+		}
 		return JavaObject.equalsTranspiler("MU", (fach.kuerzel));
 	}
 

@@ -34,8 +34,9 @@ public final class Map2DUtils {
 	public static <K1, K2, V> @NotNull List<V> getOrCreateArrayList(final @NotNull HashMap2D<K1, K2, List<V>> map2D, final @NotNull K1 key1,
 			final @NotNull K2 key2) {
 		final List<V> list = map2D.getOrNull(key1, key2);
-		if (list != null)
+		if (list != null) {
 			return list;
+		}
 
 		final @NotNull ArrayList<V> listNeu = new ArrayList<>();
 		map2D.put(key1, key2, listNeu);
@@ -57,8 +58,9 @@ public final class Map2DUtils {
 	public static <K1, K2, V> @NotNull Set<V> getOrCreateHashSet(final @NotNull HashMap2D<K1, K2, Set<V>> map2D, final @NotNull K1 key1,
 			final @NotNull K2 key2) {
 		final Set<V> set = map2D.getOrNull(key1, key2);
-		if (set != null)
+		if (set != null) {
 			return set;
+		}
 
 		final @NotNull HashSet<V> setNeu = new HashSet<>();
 		map2D.put(key1, key2, setNeu);
@@ -85,8 +87,9 @@ public final class Map2DUtils {
 			final @NotNull V defaultValue) {
 
 		final V value = map2D.getOrNull(key1, key2);
-		if (value == null)
+		if (value == null) {
 			return defaultValue;
+		}
 		return value;
 	}
 
@@ -130,8 +133,9 @@ public final class Map2DUtils {
 			final @NotNull V value) {
 		final List<V> list = map2D.getOrNull(key1, key2);
 		if (list != null) {
-			if (!list.contains(value))
+			if (!list.contains(value)) {
 				list.add(value);
+			}
 		} else {
 			final @NotNull ArrayList<V> listNeu = new ArrayList<>();
 			listNeu.add(value);
@@ -156,7 +160,8 @@ public final class Map2DUtils {
 
 		DeveloperNotificationException.ifListRemoveFailes("list", list, value);
 
-		if (list.isEmpty())
+		if (list.isEmpty()) {
 			map2D.removeOrException(key1, key2);
+		}
 	}
 }

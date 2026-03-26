@@ -19,15 +19,17 @@ export class BlockungsUtils extends JavaObject {
 		const praefixA: string = splitA[0].trim();
 		const praefixB: string = splitB[0].trim();
 		const cmpPrefix: number = JavaString.compareTo(praefixA, praefixB);
-		if (cmpPrefix !== 0)
+		if (cmpPrefix !== 0) {
 			return cmpPrefix;
+		}
 		const sizeA: number = splitA[1].length;
 		const sizeB: number = splitB[1].length;
 		const suffixA: string = (sizeA >= sizeB) ? splitA[1] : StringUtils.fillWithLeadingZeros(splitA[1], sizeB);
 		const suffixB: string = (sizeB >= sizeA) ? splitB[1] : StringUtils.fillWithLeadingZeros(splitB[1], sizeA);
 		const cmpSuffix: number = JavaString.compareTo(suffixA, suffixB);
-		if (cmpSuffix !== 0)
+		if (cmpSuffix !== 0) {
 			return cmpSuffix;
+		}
 		return JavaLong.compare(a.id, b.id);
 	} };
 
@@ -61,8 +63,9 @@ export class BlockungsUtils extends JavaObject {
 	 * @return das Minimum beider Zahlenwerte. Ein NULL-Wert wird ignoriert.
 	 */
 	public static minVI(value1: number, value2orNull: number | null): number {
-		if (value2orNull === null)
+		if (value2orNull === null) {
 			return value1;
+		}
 		const value2: number = value2orNull.valueOf();
 		return (value1 <= value2) ? value1 : value2;
 	}
@@ -76,8 +79,9 @@ export class BlockungsUtils extends JavaObject {
 	 * @return das Maximum beider Zahlenwerte. Ein NULL-Wert wird ignoriert.
 	 */
 	public static maxVI(value1: number, value2orNull: number | null): number {
-		if (value2orNull === null)
+		if (value2orNull === null) {
 			return value1;
+		}
 		const value2: number = value2orNull.valueOf();
 		return (value1 >= value2) ? value1 : value2;
 	}
@@ -91,10 +95,12 @@ export class BlockungsUtils extends JavaObject {
 	 * @return das Minimum zweier Integer-Zahlenwerte. Ein NULL-Wert wird ignoriert.
 	 */
 	public static minII(a: number | null, b: number | null): number | null {
-		if (a === null)
+		if (a === null) {
 			return b;
-		if (b === null)
+		}
+		if (b === null) {
 			return a;
+		}
 		return (a <= b) ? a : b;
 	}
 
@@ -107,10 +113,12 @@ export class BlockungsUtils extends JavaObject {
 	 * @return das Maximum zweier Integer-Zahlenwerte. Ein NULL-Wert wird ignoriert.
 	 */
 	public static maxII(a: number | null, b: number | null): number | null {
-		if (a === null)
+		if (a === null) {
 			return b;
-		if (b === null)
+		}
+		if (b === null) {
 			return a;
+		}
 		return (a >= b) ? a : b;
 	}
 

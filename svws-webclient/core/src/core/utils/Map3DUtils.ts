@@ -29,8 +29,9 @@ export class Map3DUtils extends JavaObject {
 	 */
 	public static getOrCreateArrayList<K1, K2, K3, V>(map3D: HashMap3D<K1, K2, K3, List<V>>, key1: K1, key2: K2, key3: K3): List<V> {
 		const list: List<V> | null = map3D.getOrNull(key1, key2, key3);
-		if (list !== null)
+		if (list !== null) {
 			return list;
+		}
 		const listNeu: ArrayList<V> = new ArrayList<V>();
 		map3D.put(key1, key2, key3, listNeu);
 		return listNeu;
@@ -52,8 +53,9 @@ export class Map3DUtils extends JavaObject {
 	 */
 	public static getOrCreateSet<K1, K2, K3, V>(map3D: HashMap3D<K1, K2, K3, JavaSet<V>>, key1: K1, key2: K2, key3: K3): JavaSet<V> {
 		const set: JavaSet<V> | null = map3D.getOrNull(key1, key2, key3);
-		if (set !== null)
+		if (set !== null) {
 			return set;
+		}
 		const setNeu: HashSet<V> = new HashSet<V>();
 		map3D.put(key1, key2, key3, setNeu);
 		return setNeu;

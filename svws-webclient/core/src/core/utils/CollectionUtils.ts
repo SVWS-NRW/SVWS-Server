@@ -27,8 +27,9 @@ export class CollectionUtils extends JavaObject {
 	 */
 	public static getOrCreateHashSet<K, V>(map: JavaMap<K, JavaSet<V>>, key: K): JavaSet<V> {
 		const set: JavaSet<V> | null = map.get(key);
-		if (set !== null)
+		if (set !== null) {
 			return set;
+		}
 		const setNeu: HashSet<V> = new HashSet<V>();
 		map.put(key, setNeu);
 		return setNeu;
@@ -45,9 +46,11 @@ export class CollectionUtils extends JavaObject {
 	 */
 	public static toFilteredHashSet<E>(values: Collection<E>, predicate: Predicate<E>): JavaSet<E> {
 		const set: HashSet<E> = new HashSet<E>();
-		for (const e of values)
-			if (predicate.test(e))
+		for (const e of values) {
+			if (predicate.test(e)) {
 				set.add(e);
+			}
+		}
 		return set;
 	}
 
@@ -62,9 +65,11 @@ export class CollectionUtils extends JavaObject {
 	 */
 	public static toFilteredArrayList<E>(values: Collection<E>, predicate: Predicate<E>): List<E> {
 		const set: ArrayList<E> = new ArrayList<E>();
-		for (const e of values)
-			if (predicate.test(e))
+		for (const e of values) {
+			if (predicate.test(e)) {
 				set.add(e);
+			}
+		}
 		return set;
 	}
 

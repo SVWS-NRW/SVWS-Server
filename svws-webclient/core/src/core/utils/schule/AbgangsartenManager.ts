@@ -66,8 +66,9 @@ export class AbgangsartenManager extends JavaObject {
 			this._mapByKuerzel.put(eintrag.kuerzel, eintrag);
 			for (const daten of eintrag.historie) {
 				const alt: AbgangsartKatalogEintrag | null = this._mapByID.put(daten.id, eintrag);
-				if (alt !== null)
+				if (alt !== null) {
 					throw new DeveloperNotificationException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei den Abgangsarten '" + eintrag.kuerzel + "' und '" + alt.kuerzel + "'")
+				}
 				this._mapDatenByID.put(daten.id, daten);
 			}
 		}
@@ -132,11 +133,14 @@ export class AbgangsartenManager extends JavaObject {
 			const kuerzel: string = __param0;
 			const schuljahr: number = __param1 as number;
 			const eintrag: AbgangsartKatalogEintrag | null = this._mapByKuerzel.get(kuerzel);
-			if (eintrag === null)
+			if (eintrag === null) {
 				return null;
-			for (const daten of eintrag.historie)
-				if (((daten.gueltigVon === null) || (daten.gueltigVon <= schuljahr)) && ((daten.gueltigBis === null) || (daten.gueltigBis >= schuljahr)))
+			}
+			for (const daten of eintrag.historie) {
+				if (((daten.gueltigVon === null) || (daten.gueltigVon <= schuljahr)) && ((daten.gueltigBis === null) || (daten.gueltigBis >= schuljahr))) {
 					return daten;
+				}
+			}
 			return null;
 		} else if (((__param0 !== undefined) && typeof __param0 === "number") && (__param1 === undefined)) {
 			const id: number = __param0 as number;
@@ -182,8 +186,9 @@ export class AbgangsartenManager extends JavaObject {
 	 * @return der allgemeinbildende Abschluss oder null in einem unerwarteten Fehlerfall
 	 */
 	public static getAbschlussAllgemeinbildend(abschlussart: AbgangsartKatalogEintrag): SchulabschlussAllgemeinbildend | null {
-		if ((abschlussart.kuerzel.length < 0) || (abschlussart.kuerzel.length > 2))
+		if ((abschlussart.kuerzel.length < 0) || (abschlussart.kuerzel.length > 2)) {
 			throw new DeveloperNotificationException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.")
+		}
 		const kuerzelAbschluss: string = (abschlussart.kuerzel.length === 1) ? abschlussart.kuerzel : abschlussart.kuerzel.substring(1, 2);
 		return SchulabschlussAllgemeinbildend.data().getWertBySchluessel(kuerzelAbschluss);
 	}
@@ -196,10 +201,12 @@ export class AbgangsartenManager extends JavaObject {
 	 * @return der berufsbildende Abschluss oder null, wenn nur ein allgemeinbildender Abschluss vorliegt.
 	 */
 	public static getAbschlussBerufsbildend(abschlussart: AbgangsartKatalogEintrag): SchulabschlussBerufsbildend | null {
-		if ((abschlussart.kuerzel.length < 0) || (abschlussart.kuerzel.length > 2))
+		if ((abschlussart.kuerzel.length < 0) || (abschlussart.kuerzel.length > 2)) {
 			throw new DeveloperNotificationException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.")
-		if (abschlussart.kuerzel.length === 1)
+		}
+		if (abschlussart.kuerzel.length === 1) {
 			return null;
+		}
 		return SchulabschlussBerufsbildend.data().getWertBySchluessel(abschlussart.kuerzel.substring(0, 1));
 	}
 

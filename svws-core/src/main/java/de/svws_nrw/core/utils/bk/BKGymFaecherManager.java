@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klassen bietet Hilfsmethoden für den Zugriff auf Daten des Typs {@link BKGymFach}.
  */
 public class BKGymFaecherManager {
+
 	/** Die Menge aller Fremdsprachen, welche am beruflichen Gymnasium ggf. vorkommen können */
 	public static final @NotNull Set<Fach> alleFremdsprachen = Set.of(
 			Fach.E, Fach.C, Fach.F, Fach.G, Fach.H, Fach.I, Fach.K, Fach.L,
@@ -60,12 +61,14 @@ public class BKGymFaecherManager {
 		final Set<String> setOfBezeichnung = new HashSet<>();
 		boolean result = true;
 		for (final @NotNull BKGymFach fach : faecher) {
-			if (!addFachInternal(fach))
+			if (!addFachInternal(fach)) {
 				result = false;
-			if (setOfBezeichnung.contains(fach.bezeichnung))
+			}
+			if (setOfBezeichnung.contains(fach.bezeichnung)) {
 				doppelteFaecher.add(fach.bezeichnung);
-			else
+			} else {
 				setOfBezeichnung.add(fach.bezeichnung);
+			}
 		}
 		return result;
 	}
@@ -83,14 +86,17 @@ public class BKGymFaecherManager {
 	private boolean addFachInternal(final @NotNull BKGymFach fach) throws DeveloperNotificationException {
 		// Füge das Fach hinzu, wenn es nicht bereits vorhanden ist und gültig ist...
 		DeveloperNotificationException.ifSmaller("fach.id", fach.id, 0);
-		if (map.containsKey(fach.id))
+		if (map.containsKey(fach.id)) {
 			return false;
-		if (fach.bezeichnung == null)
+		}
+		if (fach.bezeichnung == null) {
 			return false;
+		}
 		final Fach zf = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		final FachKatalogEintrag fke = zf.daten(schuljahr);
-		if (fke == null)
+		if (fke == null) {
 			return false;
+		}
 		map.put(fach.id, fach);
 		return true;
 	}
@@ -148,10 +154,12 @@ public class BKGymFaecherManager {
 	 */
 	public @NotNull String getBezeichnungByFachID(final long id) {
 		final BKGymFach fach = map.get(id);
-		if (fach == null)
+		if (fach == null) {
 			return "";
-		if (fach.bezeichnung == null)
+		}
+		if (fach.bezeichnung == null) {
 			return "";
+		}
 		return fach.bezeichnung;
 	}
 
@@ -190,8 +198,9 @@ public class BKGymFaecherManager {
 	 * @return das einstellige Sprach-Kürzel oder null
 	 */
 	public static String getFremdsprache(final @NotNull BKGymFach fach) {
-		if (("".equals(fach.kuerzel)) || !istFremdsprache(fach))
+		if (("".equals(fach.kuerzel)) || !istFremdsprache(fach)) {
 			return null;
+		}
 		return fach.kuerzel.substring(0, 1).toUpperCase();
 	}
 
@@ -206,8 +215,9 @@ public class BKGymFaecherManager {
 	public boolean istFremdsprachenbelegung(final long fachID) {
 		// Prüfe, ob das Fach in der Fächerliste des Abiturjahrgangs überhaupt existiert
 		final BKGymFach fbFach = get(fachID);
-		if ((fbFach == null) || (fbFach.bezeichnung == null))
+		if ((fbFach == null) || (fbFach.bezeichnung == null)) {
 			return false;
+		}
 		return fbFach.istFremdsprache;
 	}
 }

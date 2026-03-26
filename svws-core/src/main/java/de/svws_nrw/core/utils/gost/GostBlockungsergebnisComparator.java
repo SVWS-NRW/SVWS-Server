@@ -27,14 +27,17 @@ public final class GostBlockungsergebnisComparator implements Comparator<GostBlo
 	public int compare(final @NotNull GostBlockungsergebnis o1, final @NotNull GostBlockungsergebnis o2) {
 		// Bewertungskriterium 1-4:
 		final int cmp = GostBlockungsergebnisBewertungComparator.compareBewertungen(o1.bewertung, o2.bewertung);
-		if (cmp != 0)
+		if (cmp != 0) {
 			return cmp;
+		}
 
 		// Bewertungskriterium 5: Bei absolut identischen Ergebnissen gewinnt die kleinere ID des Zwischenergebnisses.
-		if (o1.id < o2.id)
+		if (o1.id < o2.id) {
 			return -1;
-		if (o1.id > o2.id)
+		}
+		if (o1.id > o2.id) {
 			return +1;
+		}
 
 		return 0; // Sollte niemals, da die IDs niemals gleich sind.
 	}

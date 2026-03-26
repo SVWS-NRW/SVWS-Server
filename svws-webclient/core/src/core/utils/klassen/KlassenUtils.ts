@@ -13,10 +13,12 @@ export class KlassenUtils extends JavaObject {
 	 */
 	public static readonly comparator: Comparator<KlassenDaten> = { compare: (a: KlassenDaten, b: KlassenDaten) => {
 		let cmp: number = a.sortierung - b.sortierung;
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
-		if ((a.kuerzel === null) || (b.kuerzel === null))
+		}
+		if ((a.kuerzel === null) || (b.kuerzel === null)) {
 			return JavaLong.compare(a.id, b.id);
+		}
 		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };

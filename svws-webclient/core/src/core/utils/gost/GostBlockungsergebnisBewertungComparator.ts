@@ -35,38 +35,48 @@ export class GostBlockungsergebnisBewertungComparator extends JavaObject impleme
 	public static compareBewertungen(o1: GostBlockungsergebnisBewertung, o2: GostBlockungsergebnisBewertung): number {
 		const o1Wert1: number = o1.regelVerletzungen.size() + o1.anzahlKurseNichtZugeordnet;
 		const o2Wert1: number = o2.regelVerletzungen.size() + o2.anzahlKurseNichtZugeordnet;
-		if (o1Wert1 < o2Wert1)
+		if (o1Wert1 < o2Wert1) {
 			return -1;
-		if (o1Wert1 > o2Wert1)
+		}
+		if (o1Wert1 > o2Wert1) {
 			return +1;
+		}
 		const o1Wert2: number = o1.anzahlSchuelerNichtZugeordnet + o1.anzahlSchuelerKollisionen;
 		const o2Wert2: number = o2.anzahlSchuelerNichtZugeordnet + o2.anzahlSchuelerKollisionen;
-		if (o1Wert2 < o2Wert2)
+		if (o1Wert2 < o2Wert2) {
 			return -1;
-		if (o1Wert2 > o2Wert2)
+		}
+		if (o1Wert2 > o2Wert2) {
 			return +1;
+		}
 		const kdMax1: number = o1.kursdifferenzMax;
 		const kdMax2: number = o2.kursdifferenzMax;
-		if (kdMax1 < kdMax2)
+		if (kdMax1 < kdMax2) {
 			return -1;
-		if (kdMax1 > kdMax2)
+		}
+		if (kdMax1 > kdMax2) {
 			return +1;
+		}
 		if ((o1.kursdifferenzHistogramm.length > 0) && (o2.kursdifferenzHistogramm.length > 0)) {
 			const o1Kursdifferenzen: Array<number> | null = o1.kursdifferenzHistogramm;
 			const o2Kursdifferenzen: Array<number> | null = o2.kursdifferenzHistogramm;
 			for (let i: number = kdMax1; i >= 0; i--) {
-				if (o1Kursdifferenzen[i] < o2Kursdifferenzen[i])
+				if (o1Kursdifferenzen[i] < o2Kursdifferenzen[i]) {
 					return -1;
-				if (o1Kursdifferenzen[i] > o2Kursdifferenzen[i])
+				}
+				if (o1Kursdifferenzen[i] > o2Kursdifferenzen[i]) {
 					return +1;
+				}
 			}
 		}
 		const o1Wert4: number = o1.anzahlKurseMitGleicherFachartProSchiene;
 		const o2Wert4: number = o2.anzahlKurseMitGleicherFachartProSchiene;
-		if (o1Wert4 < o2Wert4)
+		if (o1Wert4 < o2Wert4) {
 			return -1;
-		if (o1Wert4 > o2Wert4)
+		}
+		if (o1Wert4 > o2Wert4) {
 			return +1;
+		}
 		return 0;
 	}
 

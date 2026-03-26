@@ -16,11 +16,13 @@ export class GostAbiturjahrUtils extends JavaObject {
 	 */
 	public static readonly comparator: Comparator<GostJahrgang> = { compare: (a: GostJahrgang, b: GostJahrgang) => {
 		const cmp: number = a.abiturjahr - b.abiturjahr;
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		if ((a.jahrgang === null) || (b.jahrgang === null)) {
-			if ((a.jahrgang === null) && (b.jahrgang === null))
+			if ((a.jahrgang === null) && (b.jahrgang === null)) {
 				return 0;
+			}
 			return (a.jahrgang === null) ? -1 : 1;
 		}
 		return JavaString.compareTo(a.jahrgang, b.jahrgang);
@@ -33,7 +35,7 @@ export class GostAbiturjahrUtils extends JavaObject {
 	}
 
 	/**
-	 * Bestimmt für das übergegebene Schuljahr eines Schülers das Kalenderjahr, in welchem ein Schüler
+	 * Bestimmt für das übergebene Schuljahr eines Schülers das Kalenderjahr, in welchem ein Schüler
 	 * der gymnasialen Oberstufe Abitur gemacht hat, macht oder machen wird. Hierbei wird für die
 	 * Bestimmung die Schulgliederung und Schulform bei dem Schüler sowie das aktuelle Schuljahr und der
 	 * Statistik-Jahrgang, in welchem sich der Schüler befindet, benötigt.
@@ -47,13 +49,16 @@ export class GostAbiturjahrUtils extends JavaObject {
 	 */
 	public static getGostAbiturjahr(schulform: Schulform, gliederung: Schulgliederung, aktuellesSchuljahr: number, jahrgang: string): number | null {
 		const sfke: SchulformKatalogEintrag | null = schulform.daten(aktuellesSchuljahr);
-		if ((sfke === null) || (!sfke.hatGymOb))
+		if ((sfke === null) || (!sfke.hatGymOb)) {
 			return null;
+		}
 		let restjahre: number | null = JahrgaengeUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
-		if (restjahre === null)
+		if (restjahre === null) {
 			return null;
-		if ((schulform as unknown !== Schulform.GY as unknown) && (!JahrgaengeUtils.istGymOb(jahrgang)))
+		}
+		if ((schulform as unknown !== Schulform.GY as unknown) && (!JahrgaengeUtils.istGymOb(jahrgang))) {
 			restjahre += 3;
+		}
 		return aktuellesSchuljahr + restjahre;
 	}
 
@@ -71,21 +76,27 @@ export class GostAbiturjahrUtils extends JavaObject {
 	 */
 	public static getGostAbiturjahrJahrgang(schulform: Schulform, gliederung: Schulgliederung, schuljahr: number, abiturjahr: number): string | null {
 		const sfke: SchulformKatalogEintrag | null = schulform.daten(schuljahr);
-		if ((sfke === null) || (!sfke.hatGymOb))
+		if ((sfke === null) || (!sfke.hatGymOb)) {
 			return null;
+		}
 		const restlicheJahre: number = abiturjahr - schuljahr;
-		if (restlicheJahre <= 1)
+		if (restlicheJahre <= 1) {
 			return "Q2";
-		if (restlicheJahre === 2)
+		}
+		if (restlicheJahre === 2) {
 			return "Q1";
-		if (restlicheJahre === 3)
+		}
+		if (restlicheJahre === 3) {
 			return "EF";
+		}
 		const sekIJahre: number = (gliederung.istG8() || ((schulform as unknown === Schulform.GY as unknown) && (gliederung as unknown === Schulgliederung.DEFAULT as unknown))) ? 9 : 10;
-		if (restlicheJahre >= sekIJahre)
+		if (restlicheJahre >= sekIJahre) {
 			return null;
+		}
 		let strJG: string | null = "" + (sekIJahre - (restlicheJahre - 4));
-		if (strJG.length === 1)
+		if (strJG.length === 1) {
 			strJG = "0" + strJG;
+		}
 		return strJG;
 	}
 

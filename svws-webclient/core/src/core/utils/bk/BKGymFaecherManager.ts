@@ -63,12 +63,14 @@ export class BKGymFaecherManager extends JavaObject {
 		const setOfBezeichnung: JavaSet<string> | null = new HashSet<string>();
 		let result: boolean = true;
 		for (const fach of faecher) {
-			if (!this.addFachInternal(fach))
+			if (!this.addFachInternal(fach)) {
 				result = false;
-			if (setOfBezeichnung.contains(fach.bezeichnung))
+			}
+			if (setOfBezeichnung.contains(fach.bezeichnung)) {
 				this.doppelteFaecher.add(fach.bezeichnung);
-			else
+			} else {
 				setOfBezeichnung.add(fach.bezeichnung);
+			}
 		}
 		return result;
 	}
@@ -84,14 +86,17 @@ export class BKGymFaecherManager extends JavaObject {
 	 */
 	private addFachInternal(fach: BKGymFach): boolean {
 		DeveloperNotificationException.ifSmaller("fach.id", fach.id, 0);
-		if (this.map.containsKey(fach.id))
+		if (this.map.containsKey(fach.id)) {
 			return false;
-		if (fach.bezeichnung === null)
+		}
+		if (fach.bezeichnung === null) {
 			return false;
+		}
 		const zf: Fach | null = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		const fke: FachKatalogEintrag | null = zf.daten(this.schuljahr);
-		if (fke === null)
+		if (fke === null) {
 			return false;
+		}
 		this.map.put(fach.id, fach);
 		return true;
 	}
@@ -144,10 +149,12 @@ export class BKGymFaecherManager extends JavaObject {
 	 */
 	public getBezeichnungByFachID(id: number): string {
 		const fach: BKGymFach | null = this.map.get(id);
-		if (fach === null)
+		if (fach === null) {
 			return "";
-		if (fach.bezeichnung === null)
+		}
+		if (fach.bezeichnung === null) {
 			return "";
+		}
 		return fach.bezeichnung;
 	}
 
@@ -183,8 +190,9 @@ export class BKGymFaecherManager extends JavaObject {
 	 * @return das einstellige Sprach-Kürzel oder null
 	 */
 	public static getFremdsprache(fach: BKGymFach): string | null {
-		if ((JavaObject.equalsTranspiler("", (fach.kuerzel))) || !BKGymFaecherManager.istFremdsprache(fach))
+		if ((JavaObject.equalsTranspiler("", (fach.kuerzel))) || !BKGymFaecherManager.istFremdsprache(fach)) {
 			return null;
+		}
 		return fach.kuerzel.substring(0, 1).toUpperCase();
 	}
 
@@ -197,8 +205,9 @@ export class BKGymFaecherManager extends JavaObject {
 	 */
 	public istFremdsprachenbelegung(fachID: number): boolean {
 		const fbFach: BKGymFach | null = this.get(fachID);
-		if ((fbFach === null) || (fbFach.bezeichnung === null))
+		if ((fbFach === null) || (fbFach.bezeichnung === null)) {
 			return false;
+		}
 		return fbFach.istFremdsprache;
 	}
 

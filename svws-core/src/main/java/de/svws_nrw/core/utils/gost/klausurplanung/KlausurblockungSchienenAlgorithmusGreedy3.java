@@ -46,19 +46,22 @@ public final class KlausurblockungSchienenAlgorithmusGreedy3 extends Klausurbloc
 
 		_dynDaten.aktionZustand1Laden();
 
-		if (_dynDaten.gibIstBesserAlsZustand2())
+		if (_dynDaten.gibIstBesserAlsZustand2()) {
 			_dynDaten.aktionZustand2Speichern();
+		}
 	}
 
 	private void berechneRekursiv() {
 
 		// Kann das Ergebnis überhaupt noch besser werden?
-		if (_dynDaten.gibAnzahlSchienen() > _minSchienen)
+		if (_dynDaten.gibAnzahlSchienen() > _minSchienen) {
 			return;
+		}
 
 		// Zeit abgelaufen (aber mindestens eine Speicherung)?
-		if ((_saved) && (System.currentTimeMillis() > _zeitEnde))
+		if ((_saved) && (System.currentTimeMillis() > _zeitEnde)) {
 			return;
+		}
 
 		// Erster Aufruf?
 		final int klausurNr = (_dynDaten.gibAnzahlSchienen() == 0)

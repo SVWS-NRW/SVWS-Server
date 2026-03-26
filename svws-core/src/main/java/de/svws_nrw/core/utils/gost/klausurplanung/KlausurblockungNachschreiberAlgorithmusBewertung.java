@@ -28,15 +28,19 @@ public class KlausurblockungNachschreiberAlgorithmusBewertung {
 	 * @return -1, 0 und +1, wenn dieses Objekt besser, gleich und schlechter als das übergebene Objekt ist.
 	 */
 	public int compare(final @NotNull KlausurblockungNachschreiberAlgorithmusBewertung b) {
-		if (anzahl_zusatztermine < b.anzahl_zusatztermine)
+		if (anzahl_zusatztermine < b.anzahl_zusatztermine) {
 			return -1;
-		if (anzahl_zusatztermine > b.anzahl_zusatztermine)
+		}
+		if (anzahl_zusatztermine > b.anzahl_zusatztermine) {
 			return +1;
+		}
 
-		if (anzahl_termine < b.anzahl_termine)
+		if (anzahl_termine < b.anzahl_termine) {
 			return -1;
-		if (anzahl_termine > b.anzahl_termine)
+		}
+		if (anzahl_termine > b.anzahl_termine) {
 			return +1;
+		}
 
 		return 0;
 	}

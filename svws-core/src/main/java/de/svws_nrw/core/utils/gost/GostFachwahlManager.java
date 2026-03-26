@@ -44,8 +44,9 @@ public class GostFachwahlManager {
 	 * @param fachwahlen   die Fachwahlen
 	 */
 	public GostFachwahlManager(final GostJahrgangFachwahlenHalbjahr fachwahlen) {
-		for (final @NotNull GostFachwahl fw : fachwahlen.fachwahlen)
+		for (final @NotNull GostFachwahl fw : fachwahlen.fachwahlen) {
 			add(fw);
+		}
 	}
 
 
@@ -55,8 +56,9 @@ public class GostFachwahlManager {
 	 * @param fachwahl   die hinzuzufügende Fachwahl
 	 */
 	public void add(final GostFachwahl fachwahl) {
-		if (fachwahl == null)
+		if (fachwahl == null) {
 			return;
+		}
 
 		fachwahlen.add(fachwahl);
 
@@ -129,11 +131,13 @@ public class GostFachwahlManager {
 	 */
 	public boolean hatFachwahl(final long idSchueler, final long idFach, final @NotNull GostKursart kursart) {
 		final Map<GostKursart, HashSet<Long>> mapKursart = mapFachKursart.get(idFach);
-		if (mapKursart == null)
+		if (mapKursart == null) {
 			return false;
+		}
 		final HashSet<Long> schueler = mapKursart.get(kursart);
-		if (schueler == null)
+		if (schueler == null) {
 			return false;
+		}
 		return schueler.contains(idSchueler);
 	}
 

@@ -3,8 +3,7 @@ package de.svws_nrw.core.utils;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Die Klasse stellt Hilfsmethoden rund um die Handhabung von
- * Addressen zur Verfügung
+ * Die Klasse stellt Hilfsmethoden rund um die Handhabung von Adressen zur Verfügung.
  */
 public final class AdressenUtils {
 
@@ -13,7 +12,7 @@ public final class AdressenUtils {
 	}
 
 	/**
-	 * Teilt eine Strassenangabe bestehend aus dem
+	 * Teilt eine Straßenangabe bestehend aus dem
 	 * Strassennamen, der Hausnummer und dem Hausnummerzusatz
 	 * in die Bestandteile auf.
 	 *
@@ -38,12 +37,15 @@ public final class AdressenUtils {
 		final @NotNull String rest = tmp.substring(result[0].length()).trim();
 		result[1] = rest.replaceFirst("\\D*$", "").trim();
 		result[2] = rest.substring(result[1].length()).trim();
-		if (result[0].length() > 55)
+		if (result[0].length() > 55) {
 			result[0] = result[0].substring(0, 55);
-		if (result[1].length() > 10)
+		}
+		if (result[1].length() > 10) {
 			result[1] = result[1].substring(0, 10);
-		if (result[2].length() > 30)
+		}
+		if (result[2].length() > 30) {
 			result[2] = result[2].substring(0, 30);
+		}
 		return result;
 	}
 
@@ -59,10 +61,12 @@ public final class AdressenUtils {
 	 * @return die kombinierte Strassenangabe
 	 */
 	public static String combineStrasse(final String name, final String hausNummer, final String zusatz) {
-		if ((name == null) || (hausNummer == null) || (zusatz == null))
+		if ((name == null) || (hausNummer == null) || (zusatz == null)) {
 			return null;
-		if ("".equals(hausNummer.trim()) && ("".equals(zusatz.trim())))
+		}
+		if ("".equals(hausNummer.trim()) && ("".equals(zusatz.trim()))) {
 			return name;
+		}
 		return name + " " + hausNummer.trim() + zusatz.trim();
 	}
 

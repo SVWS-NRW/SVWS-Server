@@ -44,8 +44,9 @@ export class GostFachUtils extends JavaObject {
 	 * @return true, falls es so belegbar ist, sonst false
 	 */
 	public static istDurchgehendBelegbarBisQ22(fach: GostFach | null): boolean {
-		if (fach === null)
+		if (fach === null) {
 			return false;
+		}
 		return fach.istMoeglichEF1 && fach.istMoeglichEF2 && fach.istMoeglichQ11 && fach.istMoeglichQ12 && fach.istMoeglichQ21 && fach.istMoeglichQ22;
 	}
 
@@ -69,8 +70,9 @@ export class GostFachUtils extends JavaObject {
 	 * @return true, falls das Fach zu der angegebenen Sprache passt, sonst false
 	 */
 	public static istFremdsprachenfach(fach: GostFach | null, sprache: string | null): boolean {
-		if ((fach === null) || (fach.kuerzel === null) || (JavaObject.equalsTranspiler("", (fach.kuerzel))) || !GostFachbereich.FREMDSPRACHE.hat(fach) || (sprache === null))
+		if ((fach === null) || (fach.kuerzel === null) || (JavaObject.equalsTranspiler("", (fach.kuerzel))) || !GostFachbereich.FREMDSPRACHE.hat(fach) || (sprache === null)) {
 			return false;
+		}
 		return (JavaString.compareToIgnoreCase(sprache, fach.kuerzel.substring(0, 1)) === 0);
 	}
 
@@ -82,8 +84,9 @@ export class GostFachUtils extends JavaObject {
 	 * @return das Kürzel der Sprache oder null
 	 */
 	public static getFremdsprache(fach: GostFach): string | null {
-		if ((fach.kuerzel === null) || (JavaObject.equalsTranspiler("", (fach.kuerzel))) || !GostFachbereich.FREMDSPRACHE.hat(fach))
+		if ((fach.kuerzel === null) || (JavaObject.equalsTranspiler("", (fach.kuerzel))) || !GostFachbereich.FREMDSPRACHE.hat(fach)) {
 			return null;
+		}
 		return fach.kuerzel.substring(0, 1).toUpperCase();
 	}
 
@@ -107,20 +110,27 @@ export class GostFachUtils extends JavaObject {
 	 * @return true, falls das Fach in dem Halbjahr wählbar ist, sonst false
 	 */
 	public static istWaehlbar(fach: GostFach | null, halbjahr: GostHalbjahr): boolean {
-		if (fach === null)
+		if (fach === null) {
 			return false;
-		if (halbjahr as unknown === GostHalbjahr.EF1 as unknown)
+		}
+		if (halbjahr as unknown === GostHalbjahr.EF1 as unknown) {
 			return fach.istMoeglichEF1;
-		if (halbjahr as unknown === GostHalbjahr.EF2 as unknown)
+		}
+		if (halbjahr as unknown === GostHalbjahr.EF2 as unknown) {
 			return fach.istMoeglichEF2;
-		if (halbjahr as unknown === GostHalbjahr.Q11 as unknown)
+		}
+		if (halbjahr as unknown === GostHalbjahr.Q11 as unknown) {
 			return fach.istMoeglichQ11;
-		if (halbjahr as unknown === GostHalbjahr.Q12 as unknown)
+		}
+		if (halbjahr as unknown === GostHalbjahr.Q12 as unknown) {
 			return fach.istMoeglichQ12;
-		if (halbjahr as unknown === GostHalbjahr.Q21 as unknown)
+		}
+		if (halbjahr as unknown === GostHalbjahr.Q21 as unknown) {
 			return fach.istMoeglichQ21;
-		if (halbjahr as unknown === GostHalbjahr.Q22 as unknown)
+		}
+		if (halbjahr as unknown === GostHalbjahr.Q22 as unknown) {
 			return fach.istMoeglichQ22;
+		}
 		return false;
 	}
 

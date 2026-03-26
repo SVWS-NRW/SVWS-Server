@@ -36,14 +36,16 @@ public final class KlausurblockungSchienenAlgorithmusGreedy6 extends Klausurbloc
 		while (System.currentTimeMillis() < pZeitEnde) {
 			berechne();
 
-			if (_dynDaten.gibIstBesserAlsZustand1())
+			if (_dynDaten.gibIstBesserAlsZustand1()) {
 				_dynDaten.aktionZustand1Speichern();
-			else
+			} else {
 				_dynDaten.aktionZustand1Laden();
+			}
 		}
 
-		if (_dynDaten.gibIstBesserAlsZustand2())
+		if (_dynDaten.gibIstBesserAlsZustand2()) {
 			_dynDaten.aktionZustand2Speichern();
+		}
 	}
 
 	private void berechne() {
@@ -64,8 +66,9 @@ public final class KlausurblockungSchienenAlgorithmusGreedy6 extends Klausurbloc
 			int nr2 = _dynDaten.gibKlausurDieFreiIstUndNichtBenachbartZurMengeAberDerenNachbarnMaximalBenachbartSind(setS);
 			while (nr2 >= 0) {
 				setS.addLast(nr2);
-				if (!_dynDaten.aktionSetzeKlausurInSchiene(nr2, s))
+				if (!_dynDaten.aktionSetzeKlausurInSchiene(nr2, s)) {
 					throw new DeveloperNotificationException("Fehler im Algorithmus Greedy6!");
+				}
 				nr2 = _dynDaten.gibKlausurDieFreiIstUndNichtBenachbartZurMengeAberDerenNachbarnMaximalBenachbartSind(setS);
 			}
 		}

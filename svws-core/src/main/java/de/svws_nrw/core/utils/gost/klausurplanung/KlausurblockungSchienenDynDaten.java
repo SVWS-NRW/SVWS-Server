@@ -98,8 +98,9 @@ public class KlausurblockungSchienenDynDaten {
 		final @NotNull HashSet<Long> setSchueler = new HashSet<>();
 		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
 			for (final @NotNull Long schuelerID : gostKursklausur.schuelerIds) {
-				if (schuelerID < 0)
+				if (schuelerID < 0) {
 					throw new DeveloperNotificationException("Schüler-ID " + schuelerID + " ist negativ!");
+				}
 				if (setSchueler.add(schuelerID)) {
 					final int schuelerNummer = _mapSchuelerZuNummer.size(); // Mapping: schuelerID --> laufende Nummer
 					_mapSchuelerZuNummer.put(schuelerID, schuelerNummer);
@@ -110,10 +111,12 @@ public class KlausurblockungSchienenDynDaten {
 
 	private void initialisiereMapKlausuren(final @NotNull List<GostKursklausurRich> pInput) {
 		for (final @NotNull GostKursklausurRich gostKursklausur : pInput) {
-			if (gostKursklausur.id < 0)
+			if (gostKursklausur.id < 0) {
 				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!");
-			if (_mapKlausurZuNummer.containsKey(gostKursklausur.id))
+			}
+			if (_mapKlausurZuNummer.containsKey(gostKursklausur.id)) {
 				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist doppelt!");
+			}
 			// Mapping: datenbankKlausurID --> laufende Nummer
 			final int klausurNummer = _mapKlausurZuNummer.size();
 			_mapKlausurZuNummer.put(gostKursklausur.id, klausurNummer);
@@ -140,7 +143,7 @@ public class KlausurblockungSchienenDynDaten {
 
 		for (final @NotNull Entry<Long, LinkedCollection<Long>> e : mapSchuelerKlausuren.entrySet()) {
 			final @NotNull LinkedCollection<Long> list = e.getValue();
-			for (final @NotNull Long klausurID1 : list)
+			for (final @NotNull Long klausurID1 : list) {
 				for (final @NotNull Long klausurID2 : list) {
 					final @NotNull Integer klausurNr1 = DeveloperNotificationException.ifNull("NULL-Wert beim Mapping von klausurID1(" + klausurID1 + ")",
 							_mapKlausurZuNummer.get(klausurID1));
@@ -148,29 +151,37 @@ public class KlausurblockungSchienenDynDaten {
 							_mapKlausurZuNummer.get(klausurID2));
 					_verboten[klausurNr1][klausurNr2] = true;
 				}
+			}
 		}
 
 	}
 
 	private void initialisiereMatrixBevorzugt(final @NotNull List<GostKursklausurRich> pInput) {
-		for (final @NotNull GostKursklausurRich gostKursklausur1 : pInput)
-			for (final @NotNull GostKursklausurRich gostKursklausur2 : pInput)
+		for (final @NotNull GostKursklausurRich gostKursklausur1 : pInput) {
+			for (final @NotNull GostKursklausurRich gostKursklausur2 : pInput) {
 				if (hatGemeinsameSchiene(gostKursklausur1.kursSchiene, gostKursklausur2.kursSchiene)) {
 					final Integer klausurNr1 = _mapKlausurZuNummer.get(gostKursklausur1.id);
 					final Integer klausurNr2 = _mapKlausurZuNummer.get(gostKursklausur2.id);
-					if (klausurNr1 == null)
+					if (klausurNr1 == null) {
 						throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID1 --> " + gostKursklausur1.id);
-					if (klausurNr2 == null)
+					}
+					if (klausurNr2 == null) {
 						throw new DeveloperNotificationException("NULL-Wert beim Mapping von klausurID2 --> " + gostKursklausur2.id);
+					}
 					_bevorzugt[klausurNr1][klausurNr2]++;
 				}
+			}
+		}
 	}
 
 	private static boolean hatGemeinsameSchiene(final @NotNull int[] kursSchiene1, final @NotNull int[] kursSchiene2) {
-		for (final int schiene1 : kursSchiene1)
-			for (final int schiene2 : kursSchiene2)
-				if (schiene1 == schiene2)
+		for (final int schiene1 : kursSchiene1) {
+			for (final int schiene2 : kursSchiene2) {
+				if (schiene1 == schiene2) {
 					return true;
+				}
+			}
+		}
 		return false;
 	}
 
@@ -179,22 +190,26 @@ public class KlausurblockungSchienenDynDaten {
 		// Initialisierung von '_klausurnummerZuGrad'.
 		for (int klausurNr1 = 0; klausurNr1 < _klausurenAnzahl; klausurNr1++) {
 			int kanten = 0;
-			for (int klausurNr2 = 0; klausurNr2 < _klausurenAnzahl; klausurNr2++)
-				if (_verboten[klausurNr1][klausurNr2])
+			for (int klausurNr2 = 0; klausurNr2 < _klausurenAnzahl; klausurNr2++) {
+				if (_verboten[klausurNr1][klausurNr2]) {
 					kanten++;
+				}
+			}
 			_klausurnummerZuGrad[klausurNr1] = kanten;
 		}
 
 		// InsertionSort von '_klausurenSortiertGrad'.
-		for (int i = 1; i < _klausurenAnzahl; i++)
+		for (int i = 1; i < _klausurenAnzahl; i++) {
 			for (int j = i; j >= 1; j--) {
 				final int nummerR = _klausurenSortiertGrad[j];
 				final int nummerL = _klausurenSortiertGrad[j - 1];
-				if (_klausurnummerZuGrad[nummerL] >= _klausurnummerZuGrad[nummerR])
+				if (_klausurnummerZuGrad[nummerL] >= _klausurnummerZuGrad[nummerR]) {
 					break; // Bereits richtig einsortiert.
+				}
 				_klausurenSortiertGrad[j] = nummerL;
 				_klausurenSortiertGrad[j - 1] = nummerR;
 			}
+		}
 
 	}
 
@@ -206,8 +221,9 @@ public class KlausurblockungSchienenDynDaten {
 	private @NotNull int[] gibErzeugeKlausurenInReihenfolge() {
 		final int[] temp = new int[_klausurenAnzahl];
 
-		for (int i = 0; i < _klausurenAnzahl; i++)
+		for (int i = 0; i < _klausurenAnzahl; i++) {
 			temp[i] = i;
+		}
 
 		return temp;
 	}
@@ -221,8 +237,9 @@ public class KlausurblockungSchienenDynDaten {
 	List<List<Long>> gibErzeugeOutput() {
 
 		final @NotNull List<List<Long>> out = new ArrayList<>();
-		for (int i = 0; i < _schienenAnzahl; i++)
+		for (int i = 0; i < _schienenAnzahl; i++) {
 			out.add(new ArrayList<>());
+		}
 
 		for (final @NotNull Entry<Long, Integer> e : _mapKlausurZuNummer.entrySet()) {
 			final @NotNull Long klausurID = e.getKey();
@@ -246,8 +263,9 @@ public class KlausurblockungSchienenDynDaten {
 	int[] gibErzeugeKlausurenInZufaelligerReihenfolge() {
 		final int[] temp = new int[_klausurenAnzahl];
 
-		for (int i = 0; i < _klausurenAnzahl; i++)
+		for (int i = 0; i < _klausurenAnzahl; i++) {
 			temp[i] = i;
+		}
 
 		for (int i1 = 0; i1 < _klausurenAnzahl; i1++) {
 			final int i2 = _random.nextInt(_klausurenAnzahl);
@@ -300,8 +318,9 @@ public class KlausurblockungSchienenDynDaten {
 		final int[] temp = Arrays.copyOf(_klausurenSortiertGrad, _klausurenAnzahl);
 		for (int i1 = 0; i1 < _klausurenAnzahl; i1++) {
 			final int i2 = _random.nextInt(_klausurenAnzahl);
-			if (((i1 - i2) * (i1 - i2)) > _klausurenAnzahl)
+			if (((i1 - i2) * (i1 - i2)) > _klausurenAnzahl) {
 				continue;
+			}
 			// Tausche nur dann, wenn "nahe" beieinander.
 			final int save1 = temp[i1];
 			final int save2 = temp[i2];
@@ -331,8 +350,9 @@ public class KlausurblockungSchienenDynDaten {
 	int[] gibErzeugeSchienenInZufaelligerReihenfolge() {
 		final int[] temp = new int[_schienenAnzahl];
 
-		for (int i = 0; i < _schienenAnzahl; i++)
+		for (int i = 0; i < _schienenAnzahl; i++) {
 			temp[i] = i;
+		}
 
 		for (int i1 = 0; i1 < _schienenAnzahl; i1++) {
 			final int i2 = _random.nextInt(_schienenAnzahl);
@@ -365,18 +385,22 @@ public class KlausurblockungSchienenDynDaten {
 
 	private boolean gibVergleicheMitAktuellemZustand(final int schienenAnzahlX, final @NotNull int @NotNull [] klausurZuSchieneX) {
 		// Kriterium 1: Die Anzahl an Schienen/Terminen.
-		if (_schienenAnzahl < schienenAnzahlX)
+		if (_schienenAnzahl < schienenAnzahlX) {
 			return true;
-		if (_schienenAnzahl > schienenAnzahlX)
+		}
+		if (_schienenAnzahl > schienenAnzahlX) {
 			return false;
+		}
 
 		// Kriterium 2: Besser, wenn mehr Paare bevorzugt
 		final int bevorzugt = gibSchienenBevorzugt(_klausurZuSchiene);
 		final int bevorzugtX = gibSchienenBevorzugt(klausurZuSchieneX);
-		if (bevorzugt > bevorzugtX)
+		if (bevorzugt > bevorzugtX) {
 			return true;
-		if (bevorzugt < bevorzugtX)
+		}
+		if (bevorzugt < bevorzugtX) {
 			return false;
+		}
 
 		// Kriterium 3: Besser ist, wenn eine Schiene möglichst wenig Termine hat.
 		final int[] histogramm = new int[_schienenAnzahl];
@@ -398,10 +422,13 @@ public class KlausurblockungSchienenDynDaten {
 
 	private int gibSchienenBevorzugt(final @NotNull int @NotNull [] pKlausurZuSchiene) {
 		int summeBevorzugt = 0;
-		for (int nr1 = 0; nr1 < _klausurenAnzahl; nr1++)
-			for (int nr2 = nr1 + 1; nr2 < _klausurenAnzahl; nr2++)
-				if (pKlausurZuSchiene[nr1] == pKlausurZuSchiene[nr2])
+		for (int nr1 = 0; nr1 < _klausurenAnzahl; nr1++) {
+			for (int nr2 = nr1 + 1; nr2 < _klausurenAnzahl; nr2++) {
+				if (pKlausurZuSchiene[nr1] == pKlausurZuSchiene[nr2]) {
 					summeBevorzugt += _bevorzugt[nr1][nr2];
+				}
+			}
+		}
 		return summeBevorzugt;
 	}
 
@@ -412,9 +439,11 @@ public class KlausurblockungSchienenDynDaten {
 	 */
 	int gibAnzahlNichtverteilterKlausuren() {
 		int summe = 0;
-		for (int klausurNr = 0; klausurNr < _klausurenAnzahl; klausurNr++)
-			if (_klausurZuSchiene[klausurNr] < 0)
+		for (int klausurNr = 0; klausurNr < _klausurenAnzahl; klausurNr++) {
+			if (_klausurZuSchiene[klausurNr] < 0) {
 				summe++;
+			}
+		}
 		return summe;
 	}
 
@@ -467,12 +496,14 @@ public class KlausurblockungSchienenDynDaten {
 		int maxNr = -1;
 
 		for (final int klausurNr : gibErzeugeKlausurenInZufaelligerReihenfolge()) {
-			if (_klausurZuSchiene[klausurNr] >= 0)
+			if (_klausurZuSchiene[klausurNr] >= 0) {
 				continue; // Überspringe bereits zugeordnete Knoten.
+			}
 
 			final int farben = gibNachbarsfarbenDerKlausur(klausurNr);
-			if (farben < maxFarben)
+			if (farben < maxFarben) {
 				continue; // Überspringe schlechteren Knoten.
+			}
 
 			maxFarben = farben;
 			maxNr = klausurNr;
@@ -506,12 +537,14 @@ public class KlausurblockungSchienenDynDaten {
 		int maxNr = -1;
 
 		for (final int nr : gibErzeugeKlausurenInZufaelligerReihenfolge()) {
-			if (_klausurZuSchiene[nr] >= 0)
+			if (_klausurZuSchiene[nr] >= 0) {
 				continue; // Überspringe bereits zugeordnete Knoten.
+			}
 
 			final int nachbarn = gibAnzahlFreierNachbarn(nr);
-			if (nachbarn < maxNachbarn)
+			if (nachbarn < maxNachbarn) {
 				continue; // Überspringe schlechteren Knoten.
+			}
 
 			maxNachbarn = nachbarn;
 			maxNr = nr;
@@ -523,9 +556,11 @@ public class KlausurblockungSchienenDynDaten {
 	private int gibAnzahlFreierNachbarn(final int nr) {
 		int summe = 0;
 
-		for (int nr2 = 0; nr2 < _klausurenAnzahl; nr2++)
-			if ((_klausurZuSchiene[nr2] >= 0) && (_verboten[nr][nr2]))
+		for (int nr2 = 0; nr2 < _klausurenAnzahl; nr2++) {
+			if ((_klausurZuSchiene[nr2] >= 0) && (_verboten[nr][nr2])) {
 				summe++;
+			}
+		}
 
 		return summe;
 	}
@@ -544,15 +579,18 @@ public class KlausurblockungSchienenDynDaten {
 		int maxNr = -1;
 
 		for (final int nr2 : gibErzeugeKlausurenInZufaelligerReihenfolge()) {
-			if (_klausurZuSchiene[nr2] >= 0)
+			if (_klausurZuSchiene[nr2] >= 0) {
 				continue; // Überspringe, da "nr2" bereits zugeordnet ist.
+			}
 
-			if (gibIstBenachbart(nr2, setS))
+			if (gibIstBenachbart(nr2, setS)) {
 				continue; // Überspringe, da "nr2" einen Nachbarn in setS hat.
+			}
 
 			final int nachbarn = gibAnzahlFreierNachbarnVonNr2DieMitDerMengeBenachbartSind(setS, nr2);
-			if (nachbarn < maxNachbarn)
+			if (nachbarn < maxNachbarn) {
 				continue; // Überspringe schlechteren Knoten.
+			}
 
 			maxNachbarn = nachbarn;
 			maxNr = nr2;
@@ -564,18 +602,22 @@ public class KlausurblockungSchienenDynDaten {
 	private int gibAnzahlFreierNachbarnVonNr2DieMitDerMengeBenachbartSind(final @NotNull LinkedCollection<Integer> setS, final int nr2) {
 		int summe = 0;
 
-		for (int nr3 = 0; nr3 < _klausurenAnzahl; nr3++)
+		for (int nr3 = 0; nr3 < _klausurenAnzahl; nr3++) {
 			if (((_verboten[nr2][nr3]) && (_klausurZuSchiene[nr3] < 0)) // "nr3" ist freier Nachbar von "nr2".
-					&& (gibIstBenachbart(nr3, setS))) // "nr3" ist Nachbar von einem Knoten in setS
+					&& (gibIstBenachbart(nr3, setS))) { // "nr3" ist Nachbar von einem Knoten in setS
 				summe++;
+			}
+		}
 
 		return summe;
 	}
 
 	private boolean gibIstBenachbart(final int nr3, final @NotNull LinkedCollection<Integer> setS) {
-		for (final Integer nr4 : setS)
-			if (_verboten[nr3][nr4.intValue()])
+		for (final Integer nr4 : setS) {
+			if (_verboten[nr3][nr4.intValue()]) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -618,8 +660,9 @@ public class KlausurblockungSchienenDynDaten {
 	 * Entfernt alle Klausur-Schienen-Zuordnungen und passt die Datenstrukturen entsprechend an.
 	 */
 	void aktionKlausurenAusSchienenEntfernen() {
-		for (int i = 0; i < _klausurenAnzahl; i++)
+		for (int i = 0; i < _klausurenAnzahl; i++) {
 			_klausurZuSchiene[i] = -1;
+		}
 
 		_schienenAnzahl = 0;
 	}
@@ -632,13 +675,17 @@ public class KlausurblockungSchienenDynDaten {
 	 * @return    TRUE, falls die übergebene Klausur in die übergebene Schiene gesetzt werden konnte.
 	 */
 	boolean aktionSetzeKlausurInSchiene(final int nr, final int s) {
-		if (s < 0)
+		if (s < 0) {
 			throw new DeveloperNotificationException("aktionSetzeKlausurInSchiene(" + nr + ", " + s + ") --> Schiene zu klein!");
-		if (s >= _schienenAnzahl)
+		}
+		if (s >= _schienenAnzahl) {
 			throw new DeveloperNotificationException("aktionSetzeKlausurInSchiene(" + nr + ", " + s + ") --> Schiene zu groß!");
-		for (int nr2 = 0; nr2 < _klausurenAnzahl; nr2++)
-			if ((_klausurZuSchiene[nr2] == s) && (_verboten[nr][nr2]))
+		}
+		for (int nr2 = 0; nr2 < _klausurenAnzahl; nr2++) {
+			if ((_klausurZuSchiene[nr2] == s) && (_verboten[nr][nr2])) {
 				return false;
+			}
+		}
 		_klausurZuSchiene[nr] = s;
 		return true;
 	}
@@ -650,8 +697,9 @@ public class KlausurblockungSchienenDynDaten {
 	 * @param klausurNr die Nummer der Klausur, die entfernt werden soll.
 	 */
 	void aktionEntferneKlausurAusSchiene(final int klausurNr) {
-		if (_klausurZuSchiene[klausurNr] < 0)
+		if (_klausurZuSchiene[klausurNr] < 0) {
 			throw new DeveloperNotificationException("aktionEntferneKlausurAusSchiene(" + klausurNr + ") --> Die Klausur hatte gar keine Schiene!");
+		}
 		_klausurZuSchiene[klausurNr] = -1;
 	}
 
@@ -664,8 +712,9 @@ public class KlausurblockungSchienenDynDaten {
 	 */
 	int aktionSetzeKlausurInNeueSchiene(final int klausurNr) {
 		final int schiene = _schienenAnzahl;
-		if (_klausurZuSchiene[klausurNr] >= 0)
+		if (_klausurZuSchiene[klausurNr] >= 0) {
 			throw new DeveloperNotificationException("aktionSetzeKlausurInNeueSchiene(" + klausurNr + ") --> Die Klausur ist bereits in einer Schiene!");
+		}
 		_klausurZuSchiene[klausurNr] = _schienenAnzahl;
 		_schienenAnzahl++;
 		return schiene;
@@ -688,9 +737,11 @@ public class KlausurblockungSchienenDynDaten {
 	 *                  Falls dies nicht möglich ist, wird die Klausur in eine neue Schiene gesetzt.
 	 */
 	void aktionSetzeKlausurInZufaelligeSchieneOderErzeugeNeue(final int klausurNr) {
-		for (final int schienenNr : gibErzeugeSchienenInZufaelligerReihenfolge())
-			if (aktionSetzeKlausurInSchiene(klausurNr, schienenNr))
+		for (final int schienenNr : gibErzeugeSchienenInZufaelligerReihenfolge()) {
+			if (aktionSetzeKlausurInSchiene(klausurNr, schienenNr)) {
 				return; // Die Klausur wurde erfolgreich in eine Schiene gesetzt.
+			}
+		}
 
 		aktionSetzeKlausurInNeueSchiene(klausurNr); // neue Schiene
 	}
@@ -700,9 +751,11 @@ public class KlausurblockungSchienenDynDaten {
 	 * Falls dies nicht klappt, wird eine neue Schiene erzeugt.
 	 */
 	void aktionSetzeNichtverteilteKlausurenZufaellig() {
-		for (final int nr : gibErzeugeKlausurenInZufaelligerReihenfolge())
-			if (_klausurZuSchiene[nr] == -1)
+		for (final int nr : gibErzeugeKlausurenInZufaelligerReihenfolge()) {
+			if (_klausurZuSchiene[nr] == -1) {
 				aktionSetzeKlausurInZufaelligeSchieneOderErzeugeNeue(nr);
+			}
+		}
 	}
 
 	/**
@@ -715,16 +768,19 @@ public class KlausurblockungSchienenDynDaten {
 			// Schienen s zerstören (letzte Farbe wird mit s getauscht).
 			final int s = _random.nextInt(_schienenAnzahl);
 			for (int nr = 0; nr < _klausurenAnzahl; nr++) {
-				if (_klausurZuSchiene[nr] == s) // Dieses IF muss zuerst sein!
+				if (_klausurZuSchiene[nr] == s) { // Dieses IF muss zuerst sein!
 					_klausurZuSchiene[nr] = -1;
-				if (_klausurZuSchiene[nr] == (_schienenAnzahl - 1))
+				}
+				if (_klausurZuSchiene[nr] == (_schienenAnzahl - 1)) {
 					_klausurZuSchiene[nr] = s;
+				}
 			}
 			_schienenAnzahl--;
 
 			// Aufhören?
-			if (_random.nextBoolean())
+			if (_random.nextBoolean()) {
 				break;
+			}
 		}
 
 		aktionSetzeNichtverteilteKlausurenZufaellig();
@@ -741,18 +797,21 @@ public class KlausurblockungSchienenDynDaten {
 
 		for (int s = 0; s < _schienenAnzahl; s++) {
 			_logger.log("    Schiene " + (s + 1) + ": ");
-			for (int nr = 0; nr < _klausurenAnzahl; nr++)
+			for (int nr = 0; nr < _klausurenAnzahl; nr++) {
 				if (_klausurZuSchiene[nr] == s) {
 					final GostKursklausurRich gostKlausur = _mapNummerZuKlausur.get(nr);
-					if (gostKlausur == null)
+					if (gostKlausur == null) {
 						throw new DeveloperNotificationException("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!");
+					}
 					_logger.log(" " + (nr + 1) + "/" + Arrays.toString(gostKlausur.kursSchiene));
 				}
+			}
 			_logger.logLn("");
 		}
 
-		for (int nr = 0; nr < _klausurenAnzahl; nr++)
+		for (int nr = 0; nr < _klausurenAnzahl; nr++) {
 			DeveloperNotificationException.ifTrue("Klausur " + (nr + 1) + " --> ohne Schiene!", _klausurZuSchiene[nr] < 0);
+		}
 	}
 
 	/**
@@ -762,8 +821,9 @@ public class KlausurblockungSchienenDynDaten {
 	void aktion_EntferneAlles_KlausurenZufaellig_SchienenZufaellig() {
 		aktionKlausurenAusSchienenEntfernen();
 
-		for (final int nr : gibErzeugeKlausurenInZufaelligerReihenfolge())
+		for (final int nr : gibErzeugeKlausurenInZufaelligerReihenfolge()) {
 			aktionSetzeKlausurInZufaelligeSchieneOderErzeugeNeue(nr);
+		}
 	}
 
 	/**
@@ -775,9 +835,11 @@ public class KlausurblockungSchienenDynDaten {
 		while (gibAnzahlNichtverteilterKlausuren() > 0) {
 			final int schienenNr = gibErzeugeNeueSchiene();
 
-			for (final int klausurNr : gibErzeugeKlausurenInZufaelligerReihenfolge())
-				if (gibIstKlausurUnverteilt(klausurNr))
+			for (final int klausurNr : gibErzeugeKlausurenInZufaelligerReihenfolge()) {
+				if (gibIstKlausurUnverteilt(klausurNr)) {
 					aktionSetzeKlausurInSchiene(klausurNr, schienenNr);
+				}
+			}
 		}
 	}
 
@@ -788,8 +850,9 @@ public class KlausurblockungSchienenDynDaten {
 	void aktion_EntferneAlles_KlausurenHoherGradZuerst_SchienenZufaellig() {
 		aktionKlausurenAusSchienenEntfernen();
 
-		for (final int klausurNr : gibErzeugeKlausurenMitHoeheremGradZuerstEtwasPermutiert())
+		for (final int klausurNr : gibErzeugeKlausurenMitHoeheremGradZuerstEtwasPermutiert()) {
 			aktionSetzeKlausurInZufaelligeSchieneOderErzeugeNeue(klausurNr);
+		}
 	}
 
 	/**
@@ -802,9 +865,11 @@ public class KlausurblockungSchienenDynDaten {
 		while (gibAnzahlNichtverteilterKlausuren() > 0) {
 			final int schienenNr = gibErzeugeNeueSchiene();
 
-			for (final int klausurNr : gibErzeugeKlausurenMitHoeheremGradZuerstEtwasPermutiert())
-				if (gibIstKlausurUnverteilt(klausurNr))
+			for (final int klausurNr : gibErzeugeKlausurenMitHoeheremGradZuerstEtwasPermutiert()) {
+				if (gibIstKlausurUnverteilt(klausurNr)) {
 					aktionSetzeKlausurInSchiene(klausurNr, schienenNr);
+				}
+			}
 		}
 	}
 
@@ -839,9 +904,11 @@ public class KlausurblockungSchienenDynDaten {
 		while (gibAnzahlNichtverteilterKlausuren() > 0) {
 			final int schienenNr = gibErzeugeNeueSchiene();
 
-			for (final int klausurNr : gibErzeugeKlausurenInZufaelligerReihenfolgeNachBevorzugterLage())
-				if (gibIstKlausurUnverteilt(klausurNr))
+			for (final int klausurNr : gibErzeugeKlausurenInZufaelligerReihenfolgeNachBevorzugterLage()) {
+				if (gibIstKlausurUnverteilt(klausurNr)) {
 					aktionSetzeKlausurInSchiene(klausurNr, schienenNr);
+				}
+			}
 		}
 	}
 

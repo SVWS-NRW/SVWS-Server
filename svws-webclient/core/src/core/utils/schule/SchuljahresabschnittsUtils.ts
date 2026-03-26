@@ -12,11 +12,13 @@ export class SchuljahresabschnittsUtils extends JavaObject {
 	 */
 	public static readonly comparator: Comparator<Schuljahresabschnitt> = { compare: (a: Schuljahresabschnitt, b: Schuljahresabschnitt) => {
 		let cmp: number = a.schuljahr - b.schuljahr;
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = a.abschnitt - b.abschnitt;
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 

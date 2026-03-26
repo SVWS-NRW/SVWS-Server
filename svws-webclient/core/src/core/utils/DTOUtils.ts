@@ -151,9 +151,11 @@ export class DTOUtils extends JavaObject {
 	 * @return TRUE, falls die Parameter der Regeln sich vom übergebenen Array unterscheiden.
 	 */
 	public static testRegelParameterChanged(r: GostBlockungRegel, a: Array<number>): boolean {
-		for (let i: number = 0; i < a.length; i++)
-			if (a[i] !== r.parameter.get(i))
+		for (let i: number = 0; i < a.length; i++) {
+			if (a[i] !== r.parameter.get(i)) {
 				return true;
+			}
+		}
 		return false;
 	}
 

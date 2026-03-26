@@ -116,8 +116,9 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		const kopie: List<List<number>> = new ArrayList<List<number>>(this._klausurGruppen);
 		this._klausurGruppen.clear();
 		for (const gruppe of kopie) {
-			if (gruppe.isEmpty())
+			if (gruppe.isEmpty()) {
 				this._logger.log(LogLevel.ERROR, "Es wurde eine leere Klausurgruppe gefunden!");
+			}
 			while (!gruppe.isEmpty()) {
 				this._klausurGruppen.addLast(new ArrayList<number>());
 				const size: number = gruppe.size();
@@ -139,8 +140,9 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 			const klausur1: GostKursklausurRich = this.gibKlausurOrException(klausurNr1);
 			const klausur2: GostKursklausurRich = this.gibKlausurOrException(klausurNr2);
 			const schnittmenge: List<number> = ListUtils.getIntersection(klausur1.schuelerIds, klausur2.schuelerIds);
-			if (!schnittmenge.isEmpty())
+			if (!schnittmenge.isEmpty()) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -210,41 +212,50 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 
 	private initialisiereKlausurgruppenGrad(): void {
 		this._klausurGruppenGrad.addAll(this._klausurGruppen);
-		for (let i: number = 1; i < this._klausurGruppenGrad.size(); i++)
+		for (let i: number = 1; i < this._klausurGruppenGrad.size(); i++) {
 			for (let j: number = i; j >= 1; j--) {
 				const gruppeR: List<number> = this._klausurGruppenGrad.get(j);
 				const gruppeL: List<number> = this._klausurGruppenGrad.get(j - 1);
 				const gradR: number = this.gibKnotengrad(gruppeR);
 				const gradL: number = this.gibKnotengrad(gruppeL);
-				if (gradL >= gradR)
+				if (gradL >= gradR) {
 					break;
+				}
 				this._klausurGruppenGrad.set(j, gruppeL);
 				this._klausurGruppenGrad.set(j - 1, gruppeR);
 			}
+		}
 	}
 
 	private gibKnotengrad(pGruppe: List<number>): number {
 		let grad: number = 0;
-		for (const gruppe of this._klausurGruppen)
-			if (this.gibIstVerboten(pGruppe, gruppe))
+		for (const gruppe of this._klausurGruppen) {
+			if (this.gibIstVerboten(pGruppe, gruppe)) {
 				grad++;
+			}
+		}
 		return grad;
 	}
 
 	private gibIstVerboten(pGruppe1: List<number>, pGruppe2: List<number>): boolean {
-		for (const klausurNr1 of pGruppe1)
-			for (const klausurNr2 of pGruppe2)
-				if (this._verboten[klausurNr1][klausurNr2])
+		for (const klausurNr1 of pGruppe1) {
+			for (const klausurNr2 of pGruppe2) {
+				if (this._verboten[klausurNr1][klausurNr2]) {
 					return true;
+				}
+			}
+		}
 		return false;
 	}
 
 	private initialisiereMapKlausuren(pInput: List<GostKursklausurRich>): void {
 		for (const gostKursklausur of pInput) {
-			if (gostKursklausur.id < 0)
+			if (gostKursklausur.id < 0) {
 				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist negativ!")
-			if (this._mapKlausurZuNummer.containsKey(gostKursklausur.id))
+			}
+			if (this._mapKlausurZuNummer.containsKey(gostKursklausur.id)) {
 				throw new DeveloperNotificationException("Klausur-ID=" + gostKursklausur.id + " ist doppelt!")
+			}
 			const klausurNummer: number = this._mapKlausurZuNummer.size();
 			this._mapKlausurZuNummer.put(gostKursklausur.id, klausurNummer);
 			this._mapNummerZuKlausur.put(klausurNummer, gostKursklausur);
@@ -253,17 +264,21 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 
 	private initialisiereMatrixVerboten(pInput: List<GostKursklausurRich>): void {
 		const mapSchuelerKlausuren: HashMap<number, List<number>> = new HashMap<number, List<number>>();
-		for (const gostKursklausur of pInput)
+		for (const gostKursklausur of pInput) {
 			for (const schuelerID of gostKursklausur.schuelerIds) {
 				const klausurNr: number = this.gibKlausurNrOrException(gostKursklausur);
 				MapUtils.addToList(mapSchuelerKlausuren, schuelerID, klausurNr);
 			}
+		}
 		for (const e of mapSchuelerKlausuren.entrySet()) {
 			const list: List<number> = e.getValue();
-			for (const klausurNr1 of list)
-				for (const klausurNr2 of list)
-					if (klausurNr1 !== klausurNr2)
+			for (const klausurNr1 of list) {
+				for (const klausurNr2 of list) {
+					if (klausurNr1 !== klausurNr2) {
 						this._verboten[klausurNr1][klausurNr2] = true;
+					}
+				}
+			}
 		}
 	}
 
@@ -292,9 +307,11 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * @return die Anzahl noch nicht verteilter Klausuren.
 	 */
 	gibExistierenNichtverteilteKlausuren(): boolean {
-		for (let klausurNr: number = 0; klausurNr < this._klausurenAnzahl; klausurNr++)
-			if (this._klausurZuTermin[klausurNr] < 0)
+		for (let klausurNr: number = 0; klausurNr < this._klausurenAnzahl; klausurNr++) {
+			if (this._klausurZuTermin[klausurNr] < 0) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -322,8 +339,9 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 */
 	private gibTermineInZufaelligerReihenfolge(): Array<number> {
 		const temp: Array<number> | null = Array(this._terminAnzahl).fill(0);
-		for (let i: number = 0; i < this._terminAnzahl; i++)
+		for (let i: number = 0; i < this._terminAnzahl; i++) {
 			temp[i] = i;
+		}
 		for (let i1: number = 0; i1 < this._terminAnzahl; i1++) {
 			const i2: number = this._random.nextInt(this._terminAnzahl);
 			const save1: number = temp[i1];
@@ -342,8 +360,9 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	private gibKlausurgruppenInZufaelligerReihenfolge(): List<List<number>> {
 		const temp: List<List<number>> = new ArrayList<List<number>>();
 		const perm: Array<number> = ArrayUtils.getIndexPermutation(this._klausurGruppen.size(), this._random);
-		for (const p of perm)
+		for (const p of perm) {
 			temp.add(this._klausurGruppen.get(p));
+		}
 		return temp;
 	}
 
@@ -358,8 +377,9 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		const size: number = temp.size();
 		for (let i1: number = 0; i1 < size; i1++) {
 			const i2: number = this._random.nextInt(size);
-			if (((i1 - i2) * (i1 - i2)) >= size)
+			if (((i1 - i2) * (i1 - i2)) >= size) {
 				continue;
+			}
 			const save1: List<number> = temp.get(i1);
 			const save2: List<number> = temp.get(i2);
 			temp.set(i1, save2);
@@ -376,7 +396,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	gibKlausurgruppeMitMinimalenTerminmoeglichkeiten(): List<number> {
 		let min: number = this._klausurenAnzahl;
 		let gruppeMin: List<number> | null = null;
-		for (const gruppe of this.gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
+		for (const gruppe of this.gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert()) {
 			if (this.gibIstKlausurgruppeUnverteilt(gruppe)) {
 				const terminmoeglichekeiten: number = this.gibTerminmoeglichkeiten(gruppe);
 				if (terminmoeglichekeiten < min) {
@@ -384,26 +404,31 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 					gruppeMin = gruppe;
 				}
 			}
-		if (gruppeMin === null)
+		}
+		if (gruppeMin === null) {
 			throw new DeveloperNotificationException("Das darf nicht passieren!")
+		}
 		return gruppeMin;
 	}
 
 	private gibTerminmoeglichkeiten(gruppe: List<number>): number {
 		let summe: number = 0;
-		for (let terminNr: number = 0; terminNr < this._terminAnzahl; terminNr++)
+		for (let terminNr: number = 0; terminNr < this._terminAnzahl; terminNr++) {
 			if (this.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr)) {
 				summe++;
 				this.aktionEntferneKlausurgruppeAusTermin(gruppe, terminNr);
 			}
+		}
 		return summe;
 	}
 
 	private gibVergleicheMitAktuellemZustand(terminAnzahlX: number, klausurZuTerminX: Array<number>): boolean {
-		if (this._terminAnzahl < terminAnzahlX)
+		if (this._terminAnzahl < terminAnzahlX) {
 			return true;
-		if (this._terminAnzahl > terminAnzahlX)
+		}
+		if (this._terminAnzahl > terminAnzahlX) {
 			return false;
+		}
 		const histogramm: Array<number> | null = Array(this._terminAnzahl).fill(0);
 		const histogrammX: Array<number> | null = Array(this._terminAnzahl).fill(0);
 		for (let i: number = 0; i < this._klausurenAnzahl; i++) {
@@ -426,9 +451,11 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * @return TRUE, falls alle Klausuren der Gruppe noch nicht verteilt wurden.
 	 */
 	private gibIstKlausurgruppeUnverteilt(pGruppe: List<number>): boolean {
-		for (const klausurNr of pGruppe)
-			if (this._klausurZuTermin[klausurNr] >= 0)
+		for (const klausurNr of pGruppe) {
+			if (this._klausurZuTermin[klausurNr] >= 0) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -440,17 +467,24 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * @return TRUE, falls alle Klausuren der Gruppe in den übergebenen Termin gesetzt werden konnten.
 	 */
 	aktionSetzeKlausurgruppeInTermin(pGruppe: List<number>, pTermin: number): boolean {
-		if (pTermin < 0)
+		if (pTermin < 0) {
 			throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu klein!")
-		if (pTermin >= this._terminAnzahl)
+		}
+		if (pTermin >= this._terminAnzahl) {
 			throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu groß!")
-		for (let nr2: number = 0; nr2 < this._klausurenAnzahl; nr2++)
-			if (this._klausurZuTermin[nr2] === pTermin)
-				for (const nr of pGruppe)
-					if (this._verboten[nr][nr2])
+		}
+		for (let nr2: number = 0; nr2 < this._klausurenAnzahl; nr2++) {
+			if (this._klausurZuTermin[nr2] === pTermin) {
+				for (const nr of pGruppe) {
+					if (this._verboten[nr][nr2]) {
 						return false;
-		for (const nr of pGruppe)
+					}
+				}
+			}
+		}
+		for (const nr of pGruppe) {
 			this._klausurZuTermin[nr] = pTermin;
+		}
 		return true;
 	}
 
@@ -460,13 +494,16 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * @param  pTermin der Termin
 	 */
 	aktionEntferneKlausurgruppeAusTermin(pGruppe: List<number>, pTermin: number): void {
-		if (pTermin < 0)
+		if (pTermin < 0) {
 			throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu klein!")
-		if (pTermin >= this._terminAnzahl)
+		}
+		if (pTermin >= this._terminAnzahl) {
 			throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin(" + pGruppe + ", " + pTermin + ") --> Termin zu groß!")
+		}
 		for (const nr of pGruppe) {
-			if (this._klausurZuTermin[nr] !== pTermin)
+			if (this._klausurZuTermin[nr] !== pTermin) {
 				throw new DeveloperNotificationException("aktionEntferneKlausurgruppeAusTermin: Die Gruppe war gar nicht im Termin " + pTermin + "!")
+			}
 			this._klausurZuTermin[nr] = -1;
 		}
 	}
@@ -477,11 +514,14 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * @param pGruppe die Gruppe aller Klausuren
 	 */
 	aktionSetzeKlausurgruppeInNeuenTermin(pGruppe: List<number>): void {
-		for (const klausurNr of pGruppe)
-			if (this._klausurZuTermin[klausurNr] >= 0)
+		for (const klausurNr of pGruppe) {
+			if (this._klausurZuTermin[klausurNr] >= 0) {
 				throw new DeveloperNotificationException("aktionSetzeKlausurGruppeInNeuenTermin(" + klausurNr + ") --> Die Klausur ist bereits einem Termin zugeordnet!")
-		for (const klausurNr of pGruppe)
+			}
+		}
+		for (const klausurNr of pGruppe) {
 			this._klausurZuTermin[klausurNr] = this._terminAnzahl;
+		}
 		this._terminAnzahl++;
 	}
 
@@ -492,9 +532,11 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * @param pGruppe die Gruppe aller Klausuren, die in einen zufälligen Termin gesetzt werden sollen.
 	 */
 	private aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(pGruppe: List<number>): void {
-		for (const terminNr of this.gibTermineInZufaelligerReihenfolge())
-			if (this.aktionSetzeKlausurgruppeInTermin(pGruppe, terminNr))
+		for (const terminNr of this.gibTermineInZufaelligerReihenfolge()) {
+			if (this.aktionSetzeKlausurgruppeInTermin(pGruppe, terminNr)) {
 				return;
+			}
+		}
 		this.aktionSetzeKlausurgruppeInNeuenTermin(pGruppe);
 	}
 
@@ -524,8 +566,9 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 */
 	gibErzeugeOutput(): GostKlausurterminblockungErgebnis {
 		const out: GostKlausurterminblockungErgebnis = new GostKlausurterminblockungErgebnis();
-		for (let i: number = 0; i < this._terminAnzahl; i++)
+		for (let i: number = 0; i < this._terminAnzahl; i++) {
 			out.termine.add(new GostKlausurterminblockungErgebnisTermin());
+		}
 		for (const e of this._mapKlausurZuNummer.entrySet()) {
 			const klausurID: number = e.getKey();
 			const klausurNr: number = e.getValue();
@@ -541,8 +584,9 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 * Entfernt alle Klausur-Termin-Zuordnungen und passt die Datenstrukturen entsprechend an.
 	 */
 	aktionClear(): void {
-		for (let i: number = 0; i < this._klausurenAnzahl; i++)
+		for (let i: number = 0; i < this._klausurenAnzahl; i++) {
 			this._klausurZuTermin[i] = -1;
+		}
 		this._terminAnzahl = 0;
 	}
 
@@ -588,8 +632,9 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 */
 	aktion_Clear_KlausurgruppenZufaellig_TermineZufaellig(): void {
 		this.aktionClear();
-		for (const gruppe of this.gibKlausurgruppenInZufaelligerReihenfolge())
+		for (const gruppe of this.gibKlausurgruppenInZufaelligerReihenfolge()) {
 			this.aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
+		}
 	}
 
 	/**
@@ -600,9 +645,11 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		this.aktionClear();
 		while (this.gibExistierenNichtverteilteKlausuren()) {
 			const terminNr: number = this.gibErzeugeNeuenTermin();
-			for (const gruppe of this.gibKlausurgruppenInZufaelligerReihenfolge())
-				if (this.gibIstKlausurgruppeUnverteilt(gruppe))
+			for (const gruppe of this.gibKlausurgruppenInZufaelligerReihenfolge()) {
+				if (this.gibIstKlausurgruppeUnverteilt(gruppe)) {
 					this.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr);
+				}
+			}
 		}
 	}
 
@@ -613,8 +660,9 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	 */
 	aktion_Clear_GruppeHoeherGradZuerst_TermineZufaellig(): void {
 		this.aktionClear();
-		for (const gruppe of this.gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
+		for (const gruppe of this.gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert()) {
 			this.aktionSetzeKlausurgruppeInZufallsterminOderErzeugeNeuenTermin(gruppe);
+		}
 	}
 
 	/**
@@ -625,9 +673,11 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		this.aktionClear();
 		while (this.gibExistierenNichtverteilteKlausuren()) {
 			const terminNr: number = this.gibErzeugeNeuenTermin();
-			for (const gruppe of this.gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert())
-				if (this.gibIstKlausurgruppeUnverteilt(gruppe))
+			for (const gruppe of this.gibKlausurgruppenMitHoeheremGradZuerstEtwasPermutiert()) {
+				if (this.gibIstKlausurgruppeUnverteilt(gruppe)) {
 					this.aktionSetzeKlausurgruppeInTermin(gruppe, terminNr);
+				}
+			}
 		}
 	}
 
@@ -641,15 +691,17 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 		this._logger.logLn(header);
 		for (let s: number = 0; s < this._terminAnzahl; s++) {
 			this._logger.log("    Schiene " + (s + 1) + ": ");
-			for (let nr: number = 0; nr < this._klausurenAnzahl; nr++)
+			for (let nr: number = 0; nr < this._klausurenAnzahl; nr++) {
 				if (this._klausurZuTermin[nr] === s) {
 					const gostKlausur: GostKursklausurRich = DeveloperNotificationException.ifNull("Mapping _mapNummerZuKlausur.get(" + nr + ") ist NULL!", this._mapNummerZuKlausur.get(nr));
 					this._logger.log(" " + gostKlausur.kursKurzbezeichnung + "/" + Arrays.toString(gostKlausur.kursSchiene));
 				}
+			}
 			this._logger.logLn("");
 		}
-		for (let nr: number = 0; nr < this._klausurenAnzahl; nr++)
+		for (let nr: number = 0; nr < this._klausurenAnzahl; nr++) {
 			DeveloperNotificationException.ifTrue("Klausur " + (nr + 1) + " --> ohne Schiene!", this._klausurZuTermin[nr] < 0);
+		}
 		this._logger.modifyIndent(-4);
 	}
 

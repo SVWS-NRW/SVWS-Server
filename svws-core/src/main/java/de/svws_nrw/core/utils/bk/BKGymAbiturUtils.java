@@ -23,19 +23,24 @@ public final class BKGymAbiturUtils {
 	 */
 	public static final @NotNull Comparator<BKGymAbiturMarkierungsalgorithmusMarkierung> comparatorMarkierung =
 			(final @NotNull BKGymAbiturMarkierungsalgorithmusMarkierung a, final @NotNull BKGymAbiturMarkierungsalgorithmusMarkierung b) -> {
-				if (b.punkte == null)
+				if (b.punkte == null) {
 					return -1;
-				if (a.punkte == null)
+				}
+				if (a.punkte == null) {
 					return 1;
+				}
 				final int tmp = b.punkte - a.punkte;
-				if (tmp != 0)
+				if (tmp != 0) {
 					return tmp;
+				}
 				// Ansonsten gilt die Sortierung des Faches ...
 				final long ltmp = a.fachID - b.fachID;
-				if (ltmp < 0)
+				if (ltmp < 0) {
 					return -1;
-				if (ltmp > 0)
+				}
+				if (ltmp > 0) {
 					return 1;
+				}
 				return a.halbjahrID - b.halbjahrID;
 			};
 

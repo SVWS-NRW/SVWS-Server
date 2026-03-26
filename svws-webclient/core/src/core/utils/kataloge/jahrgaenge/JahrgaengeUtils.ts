@@ -27,12 +27,15 @@ export class JahrgaengeUtils extends JavaObject {
 	 * @return die restlichen Jahre oder null
 	 */
 	public static getRestlicheJahre(schulform: Schulform, gliederung: Schulgliederung | null, jahrgang: string | null): number | null {
-		if (gliederung === null)
+		if (gliederung === null) {
 			return null;
-		if ((schulform as unknown === Schulform.FW as unknown) || (schulform as unknown === Schulform.WB as unknown) || (schulform as unknown === Schulform.BK as unknown) || (schulform as unknown === Schulform.SB as unknown))
+		}
+		if ((schulform as unknown === Schulform.FW as unknown) || (schulform as unknown === Schulform.WB as unknown) || (schulform as unknown === Schulform.BK as unknown) || (schulform as unknown === Schulform.SB as unknown)) {
 			return null;
-		if (jahrgang === null)
+		}
+		if (jahrgang === null) {
 			return null;
+		}
 		if (schulform as unknown === Schulform.GY as unknown) {
 			switch (jahrgang) {
 				case "05": {
@@ -147,8 +150,9 @@ export class JahrgaengeUtils extends JavaObject {
 	 */
 	public static getRestlicheJahreBisAbitur(schulform: Schulform, gliederung: Schulgliederung | null, schuljahr: number, jahrgang: string | null): number | null {
 		const sf: SchulformKatalogEintrag | null = schulform.daten(schuljahr);
-		if ((sf === null) || (!sf.hatGymOb) || (gliederung === null) || (jahrgang === null))
+		if ((sf === null) || (!sf.hatGymOb) || (gliederung === null) || (jahrgang === null)) {
 			return null;
+		}
 		let _sevar_1739790870 : any;
 		const _seexpr_1739790870 = (jahrgang);
 		if (_seexpr_1739790870 === "05") {

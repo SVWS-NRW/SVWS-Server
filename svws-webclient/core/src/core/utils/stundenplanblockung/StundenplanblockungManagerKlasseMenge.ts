@@ -31,8 +31,9 @@ export class StundenplanblockungManagerKlasseMenge extends JavaObject {
 	 * @throws NullPointerException  Falls die Klasse-ID bereits existiert.
 	 */
 	public addOrException(pKlasseID: number, pKuerzel: string): void {
-		if (this._map.containsKey(pKlasseID))
+		if (this._map.containsKey(pKlasseID)) {
 			throw new NullPointerException("Die Klasse-ID " + pKlasseID + " existiert bereits!")
+		}
 		const kl: StundenplanblockungManagerKlasse | null = new StundenplanblockungManagerKlasse(pKlasseID, pKuerzel);
 		this._map.put(pKlasseID, kl);
 		this._menge.add(kl);
@@ -48,8 +49,9 @@ export class StundenplanblockungManagerKlasseMenge extends JavaObject {
 	 */
 	public getOrException(pKlasseID: number): StundenplanblockungManagerKlasse {
 		const klasse: StundenplanblockungManagerKlasse | null = this._map.get(pKlasseID);
-		if (klasse === null)
+		if (klasse === null) {
 			throw new NullPointerException("Klasse-ID " + pKlasseID + " unbekannt!")
+		}
 		return klasse;
 	}
 
@@ -61,8 +63,9 @@ export class StundenplanblockungManagerKlasseMenge extends JavaObject {
 	 */
 	public getRandomOrException(pRandom: Random): StundenplanblockungManagerKlasse {
 		const size: number = this._menge.size();
-		if (size <= 0)
+		if (size <= 0) {
 			throw new NullPointerException("Es gibt keine Klassen!")
+		}
 		return this._menge.get(pRandom.nextInt(size));
 	}
 

@@ -159,9 +159,11 @@ public final class DTOUtils {
 	 * @return TRUE, falls die Parameter der Regeln sich vom übergebenen Array unterscheiden.
 	 */
 	public static boolean testRegelParameterChanged(final @NotNull GostBlockungRegel r, final @NotNull long[] a) {
-		for (int i = 0; i < a.length; i++)
-			if (a[i] != r.parameter.get(i))
+		for (int i = 0; i < a.length; i++) {
+			if (a[i] != r.parameter.get(i)) {
 				return true;
+			}
+		}
 		return false;
 	}
 

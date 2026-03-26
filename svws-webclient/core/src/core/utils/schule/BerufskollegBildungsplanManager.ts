@@ -69,11 +69,13 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 		for (const eintrag of katalog.lehrplaene) {
 			this._values.addAll(eintrag.historie);
 			for (const bildungsplan of eintrag.historie) {
-				if (!JavaObject.equalsTranspiler(bildungsplan.fachklasse.index, (eintrag.index)) || !JavaObject.equalsTranspiler(bildungsplan.fachklasse.schluessel, (eintrag.schluessel)))
+				if (!JavaObject.equalsTranspiler(bildungsplan.fachklasse.index, (eintrag.index)) || !JavaObject.equalsTranspiler(bildungsplan.fachklasse.schluessel, (eintrag.schluessel))) {
 					throw new DeveloperNotificationException("Fehlerhafter Katalog: Fachklasse in Historie mit ID '" + bildungsplan.id + "' ungleich Fachklasse des Bildungsplans")
+				}
 				const alt: BKBildungsplan | null = this._mapByID.put(bildungsplan.id, bildungsplan);
-				if (alt !== null)
+				if (alt !== null) {
 					throw new DeveloperNotificationException("Fehlerhafter Katalog: Doppelte ID '" + bildungsplan.id)
+				}
 				Map3DUtils.getOrCreateArrayList(this._mapBildungsplanByFachklasse, eintrag.index, eintrag.schluessel, bildungsplan.id).add(bildungsplan);
 				for (const fach of bildungsplan.fbFaecher) {
 					this._mapFachByKuerzel.put(fach.kuerzel, fach);
@@ -111,8 +113,9 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	public getLehrplaeneBySchuljahr(schuljahr: number): List<BKBildungsplan> | null {
 		const lehrplaene: ArrayList<BKBildungsplan> = new ArrayList<BKBildungsplan>();
 		for (const bildungsplan of this._values) {
-			if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis >= schuljahr)))
+			if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis >= schuljahr))) {
 				lehrplaene.add(bildungsplan);
+			}
 		}
 		return lehrplaene;
 	}
@@ -130,8 +133,9 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 		const lehrplaeneOfIndex: List<List<BKBildungsplan>> = this._mapBildungsplanByFachklasse.getNonNullValuesOfMap2AsList(index);
 		for (const list of lehrplaeneOfIndex) {
 			for (const bildungsplan of list) {
-				if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis >= schuljahr)))
+				if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis >= schuljahr))) {
 					lehrplaene.add(bildungsplan);
+				}
 			}
 		}
 		return lehrplaene;
@@ -147,10 +151,12 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 */
 	public getLehrplaeneBySchulgliederungSchuljahr(gliederung: Schulgliederung, schuljahr: number): List<BKBildungsplan> | null {
 		const sglke: SchulgliederungKatalogEintrag | null = gliederung.daten(schuljahr);
-		if (sglke === null)
+		if (sglke === null) {
 			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", gliederung.name(), schuljahr))
-		if (sglke.bkIndex === null)
+		}
+		if (sglke.bkIndex === null) {
 			throw new IllegalArgumentException("Die Schulgliederung " + sglke.kuerzel + " hat keinen Schulgliederungs-Index.")
+		}
 		return this.getLehrplaeneByIndexSchuljahr(sglke.bkIndex, schuljahr);
 	}
 
@@ -168,8 +174,9 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 		const lehrplaeneOfIndex: List<List<BKBildungsplan>> = this._mapBildungsplanByFachklasse.getNonNullValuesOfMap2AsList(index);
 		for (const list of lehrplaeneOfIndex) {
 			for (const bildungsplan of list) {
-				if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || ((bildungsplan.gueltigBis + (Math.trunc(bildungsplan.dauer / 2)) + 1) >= schuljahr)))
+				if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || ((bildungsplan.gueltigBis + (Math.trunc(bildungsplan.dauer / 2)) + 1) >= schuljahr))) {
 					lehrplaene.add(bildungsplan);
+				}
 			}
 		}
 		return lehrplaene;
@@ -185,10 +192,12 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 */
 	public getLehrplaeneBySchulgliederungSchuljahrAll(gliederung: Schulgliederung, schuljahr: number): List<BKBildungsplan> | null {
 		const sglke: SchulgliederungKatalogEintrag | null = gliederung.daten(schuljahr);
-		if (sglke === null)
+		if (sglke === null) {
 			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", gliederung.name(), schuljahr))
-		if (sglke.bkIndex === null)
+		}
+		if (sglke.bkIndex === null) {
 			throw new IllegalArgumentException("Die Schulgliederung " + sglke.kuerzel + " hat keinen Schulgliederungs-Index.")
+		}
 		return this.getLehrplaeneByIndexSchuljahrAll(sglke.bkIndex, schuljahr);
 	}
 
@@ -228,12 +237,16 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 */
 	public getBildungsplanByIndexFachklasseSchuljahr(index: number, schluessel: string, schuljahr: number): BKBildungsplan | null {
 		const mapById: JavaMap<number, List<BKBildungsplan>> | null = this._mapBildungsplanByFachklasse.getMap3OrNull(index, schluessel);
-		if (mapById === null)
+		if (mapById === null) {
 			return null;
-		for (const lehrplaene of mapById.values())
-			for (const bildungsplan of lehrplaene)
-				if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis >= schuljahr)))
+		}
+		for (const lehrplaene of mapById.values()) {
+			for (const bildungsplan of lehrplaene) {
+				if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis >= schuljahr))) {
 					return bildungsplan;
+				}
+			}
+		}
 		return null;
 	}
 
@@ -264,10 +277,12 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 */
 	public getBildungsplanByIndexFachklasseSchuljahrJahrgang(index: number, schluessel: string, schuljahr: number, jahrgang: number): BKBildungsplan | null {
 		const bildungsplan: BKBildungsplan | null = this.getBildungsplanByIndexFachklasseSchuljahr(index, schluessel, schuljahr - jahrgang);
-		if (bildungsplan === null)
+		if (bildungsplan === null) {
 			return null;
-		if ((Math.trunc((bildungsplan.dauer + 1) / 2)) < jahrgang)
+		}
+		if ((Math.trunc((bildungsplan.dauer + 1) / 2)) < jahrgang) {
 			throw new UserNotificationException("Fehlerhafter Jahrgang: Der Jahrgang " + jahrgang + " ist zu groß für den Bildungsgang mit einer Dauer von " + bildungsplan.dauer + " Monaten!")
+		}
 		return bildungsplan;
 	}
 
@@ -318,12 +333,16 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 */
 	public getFaecherByIndexFachklasseSchuljahr(index: number, schluessel: string, schuljahr: number): List<BKFBFach> | null {
 		const mapById: JavaMap<number, List<BKBildungsplan>> | null = this._mapBildungsplanByFachklasse.getMap3OrNull(index, schluessel);
-		if (mapById === null)
+		if (mapById === null) {
 			return null;
-		for (const lehrplaene of mapById.values())
-			for (const bildungsplan of lehrplaene)
-				if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis >= schuljahr)))
+		}
+		for (const lehrplaene of mapById.values()) {
+			for (const bildungsplan of lehrplaene) {
+				if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis >= schuljahr))) {
 					return new ArrayList(bildungsplan.fbFaecher);
+				}
+			}
+		}
 		return null;
 	}
 
@@ -354,8 +373,9 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 */
 	public getFaecherByIndexFachklasseSchuljahrJahrgang(index: number, schluessel: string, schuljahr: number, jahrgang: number): List<BKFBFach> | null {
 		const bildungsplan: BKBildungsplan | null = this.getBildungsplanByIndexFachklasseSchuljahrJahrgang(index, schluessel, schuljahr, jahrgang);
-		if (bildungsplan === null)
+		if (bildungsplan === null) {
 			return null;
+		}
 		return new ArrayList<BKFBFach>(bildungsplan.fbFaecher);
 	}
 
@@ -384,12 +404,16 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 */
 	public getLernfelderByIndexFachklasseSchuljahr(index: number, schluessel: string, schuljahr: number): List<BKLernfeld> | null {
 		const mapById: JavaMap<number, List<BKBildungsplan>> | null = this._mapBildungsplanByFachklasse.getMap3OrNull(index, schluessel);
-		if (mapById === null)
+		if (mapById === null) {
 			return null;
-		for (const lehrplaene of mapById.values())
-			for (const bildungsplan of lehrplaene)
-				if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis >= schuljahr)))
+		}
+		for (const lehrplaene of mapById.values()) {
+			for (const bildungsplan of lehrplaene) {
+				if (((bildungsplan.gueltigVon === null) || (bildungsplan.gueltigVon <= schuljahr)) && ((bildungsplan.gueltigBis === null) || (bildungsplan.gueltigBis >= schuljahr))) {
 					return new ArrayList(bildungsplan.lernfelder);
+				}
+			}
+		}
 		return null;
 	}
 
@@ -420,8 +444,9 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 */
 	public getLernfelderByIndexFachklasseSchuljahrJahrgang(index: number, schluessel: string, schuljahr: number, jahrgang: number): List<BKLernfeld> | null {
 		const bildungsplan: BKBildungsplan | null = this.getBildungsplanByIndexFachklasseSchuljahrJahrgang(index, schluessel, schuljahr, jahrgang);
-		if (bildungsplan === null)
+		if (bildungsplan === null) {
 			return null;
+		}
 		return new ArrayList<BKLernfeld>(bildungsplan.lernfelder);
 	}
 

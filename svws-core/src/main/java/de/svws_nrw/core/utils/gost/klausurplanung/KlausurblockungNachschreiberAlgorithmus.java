@@ -68,16 +68,18 @@ public class KlausurblockungNachschreiberAlgorithmus {
 
 			// Überprüfe, ob "skt" in eine bereits vorhandene Gruppe darf.
 			boolean added = false;
-			for (final @NotNull List<GostSchuelerklausurTermin> gruppe : nachschreiberGruppen)
+			for (final @NotNull List<GostSchuelerklausurTermin> gruppe : nachschreiberGruppen) {
 				if (_istHinzufuegenErlaubt(gruppe, skt, config, klausurManager)) {
 					gruppe.add(skt);
 					added = true;
 					break;
 				}
+			}
 
 			// Erzeuge eine neue Gruppe für "skt".
-			if (!added)
+			if (!added) {
 				nachschreiberGruppen.add(ListUtils.create1(skt));
+			}
 		}
 
 		final long zeitEnde = System.currentTimeMillis() + config.maxTimeMillis;
@@ -115,8 +117,9 @@ public class KlausurblockungNachschreiberAlgorithmus {
 		// Verbiete, dass ein Schüler doppelt in einer Gruppe ist.
 		for (final @NotNull GostSchuelerklausurTermin skt2 : gruppe) {
 			final @NotNull GostSchuelerklausur sk2 = klausurManager.schuelerklausurBySchuelerklausurtermin(skt2);
-			if (sk1.idSchueler == sk2.idSchueler)
+			if (sk1.idSchueler == sk2.idSchueler) {
 				return false;
+			}
 		}
 
 		// Sollen Schüler-Nachschreibklausuren der selben Fachart in der selben Gruppe landen?
@@ -153,8 +156,9 @@ public class KlausurblockungNachschreiberAlgorithmus {
 		for (final @NotNull GostKlausurtermin termin : ListUtils.getCopyPermuted(termine, _random)) {
 			final int gruppenanzahl = gruppen.size();
 			_verteileMoeglichstVieleGruppenZufaelligAufDenTermin(termin.id, klausurManager, gruppen, ergebnis);
-			if (gruppen.size() < gruppenanzahl)
+			if (gruppen.size() < gruppenanzahl) {
 				bewertung.anzahl_termine++;
+			}
 		}
 
 		// Verteile pro Fake-Termin möglichst viele Gruppen.
@@ -175,8 +179,9 @@ public class KlausurblockungNachschreiberAlgorithmus {
 		final HashSet<Long> schuelerIDsDesTermin = new HashSet<>();
 		if (idTermin >= 0) {
 			final @NotNull GostKlausurtermin termin = klausurManager.terminGetByIdOrException(idTermin);
-			for (final @NotNull GostSchuelerklausur sk : klausurManager.schuelerklausurGetMengeByTermin(termin))
+			for (final @NotNull GostSchuelerklausur sk : klausurManager.schuelerklausurGetMengeByTermin(termin)) {
 				schuelerIDsDesTermin.add(sk.idSchueler);
+			}
 		}
 
 		// Gehe die Gruppen in zufälliger Reihenfolge durch und versuche die Gruppe auf den den Termin zu verteilen.
@@ -193,8 +198,9 @@ public class KlausurblockungNachschreiberAlgorithmus {
 			// Füge die Gruppe hinzu, falls es keine Kollision gab.
 			if (!kollision) {
 				// Ergebnis erzeugen
-				for (final @NotNull GostSchuelerklausurTermin skt : gruppe)
+				for (final @NotNull GostSchuelerklausurTermin skt : gruppe) {
 					ergebnis.add(new Pair<>(skt, idTermin));
+				}
 
 				// Schüler-IDs des Termins ergänzen
 				schuelerIDsDesTermin.addAll(schuelerIDsDerGruppe);

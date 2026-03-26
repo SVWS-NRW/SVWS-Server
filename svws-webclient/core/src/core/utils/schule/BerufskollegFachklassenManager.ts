@@ -75,8 +75,9 @@ export class BerufskollegFachklassenManager extends JavaObject {
 				this._mapByKuerzel.put(kuerzel, eintrag);
 				for (const daten of eintrag.historie) {
 					const alt: BerufskollegFachklassenKatalogEintrag | null = this._mapByID.put(daten.id, eintrag);
-					if (alt !== null)
+					if (alt !== null) {
 						throw new DeveloperNotificationException("Fehlerhafter Katalog: Doppelte ID '" + daten.id + "' bei der Fachklasse '" + kuerzel + "'")
+					}
 					this._mapDatenByID.put(daten.id, daten);
 				}
 			}
@@ -101,8 +102,9 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 */
 	public getVersionByIndex(index: number): number {
 		const katIndex: BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(index);
-		if (katIndex === null)
+		if (katIndex === null) {
 			throw new IllegalArgumentException("Ungültiger Fachklassen-Index.")
+		}
 		return katIndex.version;
 	}
 
@@ -117,13 +119,16 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 */
 	public getVersionBySchuljahrAndGliederung(schuljahr: number, gliederung: Schulgliederung): number {
 		const sglke: SchulgliederungKatalogEintrag | null = gliederung.daten(schuljahr);
-		if (sglke === null)
+		if (sglke === null) {
 			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", gliederung.name(), schuljahr))
-		if (sglke.bkIndex === null)
+		}
+		if (sglke.bkIndex === null) {
 			throw new IllegalArgumentException("Die Schulgliederung " + sglke.kuerzel + " hat keinen Fachklassen-Index.")
+		}
 		const katIndex: BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(sglke.bkIndex);
-		if (katIndex === null)
+		if (katIndex === null) {
 			throw new IllegalArgumentException("Keine Fachklassen für den Fachklassen-Index " + sglke.bkIndex + " der Schulgliederung " + sglke.kuerzel + " bekannt.")
+		}
 		return katIndex.version;
 	}
 
@@ -162,11 +167,14 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 */
 	public getDatenByKuerzelAndSchuljahr(kuerzel: string, schuljahr: number): BerufskollegFachklassenKatalogDaten | null {
 		const eintrag: BerufskollegFachklassenKatalogEintrag | null = this._mapByKuerzel.get(kuerzel);
-		if (eintrag === null)
+		if (eintrag === null) {
 			return null;
-		for (const daten of eintrag.historie)
-			if (((daten.gueltigVon === null) || (daten.gueltigVon <= schuljahr)) && ((daten.gueltigBis === null) || (daten.gueltigBis >= schuljahr)))
+		}
+		for (const daten of eintrag.historie) {
+			if (((daten.gueltigVon === null) || (daten.gueltigVon <= schuljahr)) && ((daten.gueltigBis === null) || (daten.gueltigBis >= schuljahr))) {
 				return daten;
+			}
+		}
 		return null;
 	}
 
@@ -205,8 +213,9 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 */
 	public getTeilKatalog(index: number): BerufskollegFachklassenKatalogIndex {
 		const katIndex: BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(index);
-		if (katIndex === null)
+		if (katIndex === null) {
 			throw new IllegalArgumentException("Ungültiger Fachklassen-Index.")
+		}
 		return katIndex;
 	}
 
@@ -221,13 +230,16 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 */
 	public getTeilKatalogBySchuljahrAndGliederung(schuljahr: number, gliederung: Schulgliederung): BerufskollegFachklassenKatalogIndex {
 		const sglke: SchulgliederungKatalogEintrag | null = gliederung.daten(schuljahr);
-		if (sglke === null)
+		if (sglke === null) {
 			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", gliederung.name(), schuljahr))
-		if (sglke.bkIndex === null)
+		}
+		if (sglke.bkIndex === null) {
 			throw new IllegalArgumentException("Die Schulgliederung " + sglke.kuerzel + " hat keinen Fachklassen-Index.")
+		}
 		const katIndex: BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(sglke.bkIndex);
-		if (katIndex === null)
+		if (katIndex === null) {
 			throw new IllegalArgumentException("Keine Fachklassen für den Fachklassen-Index " + sglke.bkIndex + " der Schulgliederung " + sglke.kuerzel + " bekannt.")
+		}
 		return katIndex;
 	}
 

@@ -48,11 +48,13 @@ public class KursManager {
 	 * @throws DeveloperNotificationException Falls die ID des Kurses nagativ ist.
 	 */
 	private boolean addInternal(final @NotNull KursDaten kurs) throws DeveloperNotificationException {
-		if (kurs.id < 0)
+		if (kurs.id < 0) {
 			throw new DeveloperNotificationException("Die Kurs-ID darf nicht negativ sein!");
+		}
 		final KursDaten old = _map.put(kurs.id, kurs);
-		if (old != null)
+		if (old != null) {
 			return false;
+		}
 		return _kurse.add(kurs);
 	}
 
@@ -86,9 +88,11 @@ public class KursManager {
 	 */
 	public boolean addAll(final @NotNull Collection<KursDaten> kurse) {
 		boolean result = true;
-		for (final @NotNull KursDaten kurs : kurse)
-			if (!addInternal(kurs))
+		for (final @NotNull KursDaten kurs : kurse) {
+			if (!addInternal(kurs)) {
 				result = false;
+			}
+		}
 		sort();
 		return result;
 	}
@@ -115,8 +119,9 @@ public class KursManager {
 	 */
 	public @NotNull KursDaten getOrException(final long pKursID) throws DeveloperNotificationException {
 		final KursDaten kurs = _map.get(pKursID);
-		if (kurs == null)
+		if (kurs == null) {
 			throw new DeveloperNotificationException("KursDaten mit id=" + pKursID + " gibt es nicht.");
+		}
 		return kurs;
 	}
 
@@ -154,8 +159,9 @@ public class KursManager {
 	 */
 	public @NotNull List<KursDaten> toList() {
 		final @NotNull List<KursDaten> result = new ArrayList<>();
-		for (final @NotNull KursDaten kurs : _kurse)
+		for (final @NotNull KursDaten kurs : _kurse) {
 			result.add(kurs);
+		}
 		return result;
 	}
 

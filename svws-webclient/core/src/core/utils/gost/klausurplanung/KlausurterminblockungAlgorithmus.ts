@@ -26,14 +26,18 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	private static readonly _random: Random = new Random();
 
 	private static readonly _compGostKursklausurRich: Comparator<GostKursklausurRich> = { compare: (a: GostKursklausurRich, b: GostKursklausurRich) => {
-		if (a.halbjahr < b.halbjahr)
+		if (a.halbjahr < b.halbjahr) {
 			return -1;
-		if (a.halbjahr > b.halbjahr)
+		}
+		if (a.halbjahr > b.halbjahr) {
 			return +1;
-		if (a.quartal < b.quartal)
+		}
+		if (a.quartal < b.quartal) {
 			return -1;
-		if (a.quartal > b.quartal)
+		}
+		if (a.quartal > b.quartal) {
 			return +1;
+		}
 		return 0;
 	} };
 
@@ -82,8 +86,9 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	}
 
 	private berechneRekursivQuartalsModus(input: List<GostKursklausurRich>, config: GostKlausurterminblockungKonfiguration, out: GostKlausurterminblockungErgebnis): void {
-		if (input.isEmpty())
+		if (input.isEmpty()) {
 			return;
+		}
 		if (config.modusQuartale === KlausurterminblockungModusQuartale.ZUSAMMEN.id) {
 			this.berechneRekursivLkGkModus(input, config, out);
 			return;
@@ -145,9 +150,11 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	 */
 	private static filter(input: List<GostKursklausurRich>, istLK: boolean): List<GostKursklausurRich> {
 		const temp: List<GostKursklausurRich> = new ArrayList<GostKursklausurRich>();
-		for (const gostKursklausur of input)
-			if (JavaObject.equalsTranspiler(gostKursklausur.kursart, ("LK")) === istLK)
+		for (const gostKursklausur of input) {
+			if (JavaObject.equalsTranspiler(gostKursklausur.kursart, ("LK")) === istLK) {
 				temp.add(gostKursklausur);
+			}
+		}
 		return temp;
 	}
 

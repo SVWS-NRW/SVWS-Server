@@ -13,11 +13,13 @@ export class LehrerUtils extends JavaObject {
 	 */
 	public static readonly comparator: Comparator<LehrerListeEintrag> = { compare: (a: LehrerListeEintrag, b: LehrerListeEintrag) => {
 		let cmp: number = JavaString.compareTo(a.nachname, b.nachname);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = JavaString.compareTo(a.vorname, b.vorname);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };

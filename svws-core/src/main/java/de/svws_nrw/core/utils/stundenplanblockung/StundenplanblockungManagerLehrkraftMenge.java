@@ -35,8 +35,9 @@ public class StundenplanblockungManagerLehrkraftMenge {
 	 * @throws NullPointerException  Falls die Lehrkraft-ID bereits existiert.
 	 */
 	public void addOrException(final long pLehrkraftID, final @NotNull String pKuerzel) throws NullPointerException {
-		if (_map.containsKey(pLehrkraftID))
+		if (_map.containsKey(pLehrkraftID)) {
 			throw new NullPointerException("Die Lehrkraft-ID " + pLehrkraftID + " existiert bereits!");
+		}
 		final StundenplanblockungManagerLehrkraft le = new StundenplanblockungManagerLehrkraft(pLehrkraftID, pKuerzel);
 		_map.put(pLehrkraftID, le);
 		_menge.add(le);
@@ -52,8 +53,9 @@ public class StundenplanblockungManagerLehrkraftMenge {
 	 */
 	public @NotNull StundenplanblockungManagerLehrkraft getOrException(final long pLehrkraftID) throws NullPointerException {
 		final StundenplanblockungManagerLehrkraft lehrkraft = _map.get(pLehrkraftID);
-		if (lehrkraft == null)
+		if (lehrkraft == null) {
 			throw new NullPointerException("Lehrkraft-ID " + pLehrkraftID + " unbekannt!");
+		}
 		return lehrkraft;
 	}
 
@@ -66,8 +68,9 @@ public class StundenplanblockungManagerLehrkraftMenge {
 	 */
 	public @NotNull StundenplanblockungManagerLehrkraft getRandomOrException(final @NotNull Random pRandom) {
 		final int size = _menge.size();
-		if (size <= 0)
+		if (size <= 0) {
 			throw new NullPointerException("Es gibt keine Lehrkräfte!");
+		}
 		return _menge.get(pRandom.nextInt(size));
 	}
 

@@ -24,7 +24,7 @@ export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 	/**
 	 * Ein Logger für Debug-Zwecke.
 	 */
-	private readonly _logger: Logger;
+	private readonly log: Logger;
 
 
 	/**
@@ -45,10 +45,10 @@ export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 	public constructor(__param0?: Logger) {
 		super();
 		if ((__param0 === undefined)) {
-			this._logger = new Logger();
+			this.log = new Logger();
 		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.logger.Logger'))))) {
 			const pLogger: Logger = cast_de_svws_nrw_core_logger_Logger(__param0);
-			this._logger = pLogger;
+			this.log = pLogger;
 		} else throw new Error('invalid method overload');
 	}
 
@@ -63,7 +63,7 @@ export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 		const zeitEndeGesamt: number = System.currentTimeMillis() + pMaxTimeMillis;
 		const seed: number = KlausurblockungSchienenAlgorithmus._random.nextLong();
 		const random: Random = new Random(seed);
-		const dynDaten: KlausurblockungSchienenDynDaten | null = new KlausurblockungSchienenDynDaten(this._logger, random, pInput);
+		const dynDaten: KlausurblockungSchienenDynDaten | null = new KlausurblockungSchienenDynDaten(this.log, random, pInput);
 		const algorithmen: Array<KlausurblockungSchienenAlgorithmusAbstract> = [new KlausurblockungSchienenAlgorithmusGreedy3(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy4(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy1(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy1b(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy2(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy2b(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy5(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy6(random, dynDaten), new KlausurblockungSchienenAlgorithmusGreedy7(random, dynDaten)];
 		dynDaten.aktion_EntferneAlles_SchienenNacheinander_KlausurenZufaellig();
 		dynDaten.aktionZustand2Speichern();
