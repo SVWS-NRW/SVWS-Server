@@ -71,8 +71,9 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 	 * @param t   die anzuhängenden Log-Informationen
 	 */
 	public accept(t: LogData | null): void {
-		if (t === null)
+		if (t === null) {
 			return;
+		}
 		this.logData.add(t);
 	}
 
@@ -116,16 +117,18 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 			let sb: StringBuilder = new StringBuilder(indent);
 			for (let i: number = 0; i < this.logData.size(); i++) {
 				const data: LogData = this.logData.get(i);
-				if (data === null)
+				if (data === null) {
 					continue;
+				}
 				sb.append(data.getText());
 				if (data.isNewLine()) {
 					result.add(sb.toString());
 					sb = new StringBuilder(indent);
 				}
 			}
-			if (!JavaObject.equalsTranspiler(indent, (sb.toString())))
+			if (!JavaObject.equalsTranspiler(indent, (sb.toString()))) {
 				result.add(sb.toString());
+			}
 			return result;
 		} else throw new Error('invalid method overload');
 	}
@@ -184,10 +187,12 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 			const indent: string = __param1;
 			const sb: StringBuilder | null = new StringBuilder();
 			for (const data of this.logData) {
-				if (data === null)
+				if (data === null) {
 					continue;
-				if (data.getLevel().toInteger() > level.toInteger())
+				}
+				if (data.getLevel().toInteger() > level.toInteger()) {
 					continue;
+				}
 				sb.append(indent);
 				sb.append(data.getText());
 				sb.append("\n");

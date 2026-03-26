@@ -57,9 +57,11 @@ export class KlausurterminblockungModusQuartale extends JavaEnum<Klausurterminbl
 	 * @return die Map mit der Zuordnung zu der ID
 	 */
 	private static getMapByID(): HashMap<number, KlausurterminblockungModusQuartale> {
-		if (KlausurterminblockungModusQuartale._mapID.size() === 0)
-			for (const e of KlausurterminblockungModusQuartale.values())
+		if (KlausurterminblockungModusQuartale._mapID.size() === 0) {
+			for (const e of KlausurterminblockungModusQuartale.values()) {
 				KlausurterminblockungModusQuartale._mapID.put(e.id, e);
+			}
+		}
 		return KlausurterminblockungModusQuartale._mapID;
 	}
 

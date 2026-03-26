@@ -17,7 +17,6 @@ import jakarta.validation.constraints.NotNull;
  */
 public enum BenutzerKompetenz {
 
-
 	/** Es werden keinerlei Kompetenzen benötigt. */
 	KEINE(new BenutzerKompetenzKatalogEintrag(-2, BenutzerKompetenzGruppe.KEINE, "keine", null,
 			"Es wird keine spezielle Benutzerkompetent benötigt, eine erfolgreiche Anmeldung am Server genügt."
@@ -607,9 +606,11 @@ public enum BenutzerKompetenz {
 	 * @return die Map von den IDs der Benutzerkompetenzen auf die zugehörigen Benutzerkompetenzen
 	 */
 	private static @NotNull HashMap<Long, BenutzerKompetenz> getMapID() {
-		if (_mapID.size() == 0)
-			for (final @NotNull BenutzerKompetenz p : BenutzerKompetenz.values())
+		if (_mapID.size() == 0) {
+			for (final @NotNull BenutzerKompetenz p : BenutzerKompetenz.values()) {
 				_mapID.put(p.daten.id, p);
+			}
+		}
 		return _mapID;
 	}
 
@@ -621,15 +622,18 @@ public enum BenutzerKompetenz {
 	 */
 	private static @NotNull Map<BenutzerKompetenzGruppe, List<BenutzerKompetenz>> getMapGruppenZuordnung() {
 		if (_mapGruppenZuordnung.size() == 0) {
-			for (final @NotNull BenutzerKompetenzGruppe g : BenutzerKompetenzGruppe.values())
+			for (final @NotNull BenutzerKompetenzGruppe g : BenutzerKompetenzGruppe.values()) {
 				_mapGruppenZuordnung.put(g, new ArrayList<>());
+			}
 			for (final @NotNull BenutzerKompetenz p : BenutzerKompetenz.values()) {
 				BenutzerKompetenzGruppe gruppe = BenutzerKompetenzGruppe.getByID(p.daten.gruppe_id);
-				if (gruppe == null)
+				if (gruppe == null) {
 					gruppe = BenutzerKompetenzGruppe.KEINE;
+				}
 				final List<@NotNull BenutzerKompetenz> liste = _mapGruppenZuordnung.get(gruppe);
-				if (liste != null)
+				if (liste != null) {
 					liste.add(p);
+				}
 			}
 		}
 		return _mapGruppenZuordnung;
@@ -656,10 +660,12 @@ public enum BenutzerKompetenz {
 	 * @return true, wenn die Kompetenz für die Schulform zulässig ist.
 	 */
 	public boolean hatSchulform(final int schuljahr, final Schulform schulform) {
-		if (schulform == null)
+		if (schulform == null) {
 			return false;
-		if (daten.nurSchulformen != null)
+		}
+		if (daten.nurSchulformen != null) {
 			return daten.nurSchulformen.contains(schulform.name());
+		}
 		return true;
 	}
 
@@ -673,8 +679,9 @@ public enum BenutzerKompetenz {
 	 */
 	public static @NotNull List<BenutzerKompetenz> getKompetenzen(final @NotNull BenutzerKompetenzGruppe gruppe) {
 		final List<BenutzerKompetenz> liste = getMapGruppenZuordnung().get(gruppe);
-		if (liste == null)
+		if (liste == null) {
 			return new ArrayList<>();
+		}
 		return liste;
 	}
 
@@ -692,11 +699,13 @@ public enum BenutzerKompetenz {
 			final @NotNull BenutzerKompetenzGruppe gruppe, final @NotNull Schulform schulform) {
 		final List<BenutzerKompetenz> l = new ArrayList<>();
 		final List<BenutzerKompetenz> liste = getMapGruppenZuordnung().get(gruppe);
-		if (liste == null)
+		if (liste == null) {
 			return l;
+		}
 		for (final BenutzerKompetenz bk : liste) {
-			if (bk.hatSchulform(schuljahr, schulform))
+			if (bk.hatSchulform(schuljahr, schulform)) {
 				l.add(bk);
+			}
 		}
 		return l;
 	}

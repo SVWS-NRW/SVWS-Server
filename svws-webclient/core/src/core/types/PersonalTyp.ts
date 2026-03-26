@@ -102,9 +102,11 @@ export class PersonalTyp extends JavaEnum<PersonalTyp> {
 	 * @return die Map von den IDs der Personal-Typen auf die zugehörigen Personal-Typen
 	 */
 	private static getMapID(): HashMap<number, PersonalTyp> {
-		if (PersonalTyp._mapID.size() === 0)
-			for (const p of PersonalTyp.values())
+		if (PersonalTyp._mapID.size() === 0) {
+			for (const p of PersonalTyp.values()) {
 				PersonalTyp._mapID.put(p.id, p);
+			}
+		}
 		return PersonalTyp._mapID;
 	}
 
@@ -115,9 +117,11 @@ export class PersonalTyp extends JavaEnum<PersonalTyp> {
 	 * @return die Map von den Kürzeln der Personal-Typen auf die zugehörigen Personal-Typen
 	 */
 	private static getMapKuerzel(): HashMap<string, PersonalTyp> {
-		if (PersonalTyp._mapKuerzel.size() === 0)
-			for (const p of PersonalTyp.values())
+		if (PersonalTyp._mapKuerzel.size() === 0) {
+			for (const p of PersonalTyp.values()) {
 				PersonalTyp._mapKuerzel.put(p.kuerzel, p);
+			}
+		}
 		return PersonalTyp._mapKuerzel;
 	}
 

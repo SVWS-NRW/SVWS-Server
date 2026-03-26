@@ -60,10 +60,12 @@ export class LogData extends JavaObject implements Comparable<LogData> {
 	 *         Log-Information später geloggt wurde
 	 */
 	public compareTo(other: LogData): number {
-		if (this.time < other.time)
+		if (this.time < other.time) {
 			return -1;
-		if (this.time > other.time)
+		}
+		if (this.time > other.time) {
 			return 1;
+		}
 		return 0;
 	}
 
@@ -128,8 +130,9 @@ export class LogData extends JavaObject implements Comparable<LogData> {
 	 * @return der Text dieser Log-Information
 	 */
 	public getText(): string {
-		if (this.indent <= 0)
+		if (this.indent <= 0) {
 			return this.text;
+		}
 		const indentChars: Array<string> | null = Array(this.indent).fill("");
 		Arrays.fill(indentChars, ' ');
 		return indentChars.join("") + this.text;
@@ -140,10 +143,12 @@ export class LogData extends JavaObject implements Comparable<LogData> {
 	}
 
 	public equals(obj: unknown | null): boolean {
-		if (obj === null)
+		if (obj === null) {
 			return false;
-		if (((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.core.logger.LogData'))))
+		}
+		if (((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.core.logger.LogData')))) {
 			return this.compareTo((obj as unknown as LogData)) === 0;
+		}
 		return super.equals((obj));
 	}
 

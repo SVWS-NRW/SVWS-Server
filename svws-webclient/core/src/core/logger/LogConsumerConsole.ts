@@ -60,10 +60,11 @@ export class LogConsumerConsole extends JavaObject implements Consumer<LogData> 
 	 */
 	public accept(t: LogData): void {
 		const s: string | null = ((this.lastLogDataHadNewLine && this.printTime) ? DateUtils.toISO8601(t.getTime()) + " " : "") + ((this.lastLogDataHadNewLine && this.printLevel) ? t.getLevel() + " " : "") + t.getText();
-		if (t.isNewLine())
+		if (t.isNewLine()) {
 			console.log(JSON.stringify(s));
-		else
+		} else {
 			console.log(JSON.stringify(s));
+		}
 		this.lastLogDataHadNewLine = t.isNewLine();
 	}
 

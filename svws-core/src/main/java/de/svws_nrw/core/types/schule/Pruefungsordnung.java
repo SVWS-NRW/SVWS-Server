@@ -129,8 +129,9 @@ public enum Pruefungsordnung {
 	private static @NotNull HashMap<String, Pruefungsordnung> getMapPruefungsordnungByKuerzel() {
 		if (_verordnungen.size() == 0) {
 			for (final Pruefungsordnung s : Pruefungsordnung.values()) {
-				if (s.daten != null)
+				if (s.daten != null) {
 					_verordnungen.put(s.daten.kuerzel, s);
+				}
 			}
 		}
 		return _verordnungen;

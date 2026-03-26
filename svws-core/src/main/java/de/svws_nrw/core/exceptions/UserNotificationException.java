@@ -29,8 +29,9 @@ public class UserNotificationException extends RuntimeException {
 	 * @param pErfuellt     Falls TRUE, wird eine UserNotificationException geworfen.
 	 */
 	public static void ifTrue(final @NotNull String pBeschreibung, final boolean pErfuellt) {
-		if (pErfuellt)
+		if (pErfuellt) {
 			throw new UserNotificationException(pBeschreibung);
+		}
 	}
 
 }

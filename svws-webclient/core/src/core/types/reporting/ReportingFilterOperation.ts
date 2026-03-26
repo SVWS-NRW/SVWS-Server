@@ -103,9 +103,11 @@ export class ReportingFilterOperation extends JavaEnum<ReportingFilterOperation>
 	 * @return 		Die Filter-Operation
 	 */
 	public static getByID(id: number): ReportingFilterOperation {
-		for (const op of ReportingFilterOperation.values())
-			if (op.id === id)
+		for (const op of ReportingFilterOperation.values()) {
+			if (op.id === id) {
 				return op;
+			}
+		}
 		return ReportingFilterOperation.UNDEFINED;
 	}
 

@@ -64,8 +64,9 @@ public class LogConsumerList implements Consumer<LogData> {
 	 */
 	@Override
 	public void accept(final LogData t) {
-		if (t == null)
+		if (t == null) {
 			return;
+		}
 		logData.add(t);
 	}
 
@@ -106,8 +107,9 @@ public class LogConsumerList implements Consumer<LogData> {
 		@NotNull StringBuilder sb = new StringBuilder(indent);
 		for (int i = 0; i < logData.size(); i++) {
 			final @NotNull LogData data = logData.get(i);
-			if (data == null)
+			if (data == null) {
 				continue;
+			}
 			sb.append(data.getText());
 			if (data.isNewLine()) {
 				result.add(sb.toString());
@@ -115,8 +117,9 @@ public class LogConsumerList implements Consumer<LogData> {
 			}
 		}
 
-		if (!indent.equals(sb.toString()))
+		if (!indent.equals(sb.toString())) {
 			result.add(sb.toString());
+		}
 
 		return result;
 	}
@@ -169,10 +172,12 @@ public class LogConsumerList implements Consumer<LogData> {
 	public @NotNull String getText(final @NotNull LogLevel level, final @NotNull String indent) {
 		final StringBuilder sb = new StringBuilder();
 		for (final @NotNull LogData data : logData) {
-			if (data == null)
+			if (data == null) {
 				continue;
-			if (data.getLevel().toInteger() > level.toInteger())
+			}
+			if (data.getLevel().toInteger() > level.toInteger()) {
 				continue;
+			}
 			sb.append(indent);
 			sb.append(data.getText());
 			sb.append("\n");

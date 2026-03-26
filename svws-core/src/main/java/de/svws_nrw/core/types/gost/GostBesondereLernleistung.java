@@ -50,8 +50,9 @@ public enum GostBesondereLernleistung {
 	 * @return die Art der Besonderen Lernleistung
 	 */
 	public static @NotNull GostBesondereLernleistung fromKuerzel(final String kuerzel) {
-		if (kuerzel == null)
+		if (kuerzel == null) {
 			return KEINE;
+		}
 		switch (kuerzel) {
 			case "K":
 				return KEINE;

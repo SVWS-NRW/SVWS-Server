@@ -55,9 +55,11 @@ public enum ReportingVorlageParameterTyp {
 	 * @return 		Der ReportingDVorlageParameterTyp
 	 */
 	public static @NotNull ReportingVorlageParameterTyp getByID(final int id) {
-		for (final ReportingVorlageParameterTyp dp : ReportingVorlageParameterTyp.values())
-			if (dp.id == id)
+		for (final ReportingVorlageParameterTyp dp : ReportingVorlageParameterTyp.values()) {
+			if (dp.id == id) {
 				return dp;
+			}
+		}
 		return UNDEFINED;
 	}
 

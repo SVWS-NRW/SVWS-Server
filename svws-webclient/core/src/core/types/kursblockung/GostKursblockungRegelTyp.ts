@@ -244,17 +244,22 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	}
 
 	private static getMap(): HashMap<number, GostKursblockungRegelTyp> {
-		if (GostKursblockungRegelTyp._map_id_regel.isEmpty())
-			for (const gostTyp of GostKursblockungRegelTyp.values())
+		if (GostKursblockungRegelTyp._map_id_regel.isEmpty()) {
+			for (const gostTyp of GostKursblockungRegelTyp.values()) {
 				GostKursblockungRegelTyp._map_id_regel.put(gostTyp.typ, gostTyp);
+			}
+		}
 		return GostKursblockungRegelTyp._map_id_regel;
 	}
 
 	private static getMapKursRegeln(): HashMap<number, GostKursblockungRegelTyp> {
-		if (GostKursblockungRegelTyp._map_id_regel_kursid.isEmpty())
-			for (const gostTyp of GostKursblockungRegelTyp.values())
-				if (gostTyp.hasParamType(GostKursblockungRegelParameterTyp.KURS_ID))
+		if (GostKursblockungRegelTyp._map_id_regel_kursid.isEmpty()) {
+			for (const gostTyp of GostKursblockungRegelTyp.values()) {
+				if (gostTyp.hasParamType(GostKursblockungRegelParameterTyp.KURS_ID)) {
 					GostKursblockungRegelTyp._map_id_regel_kursid.put(gostTyp.typ, gostTyp);
+				}
+			}
+		}
 		return GostKursblockungRegelTyp._map_id_regel_kursid;
 	}
 
@@ -275,11 +280,13 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	 * @return der Regel-Typ
 	 */
 	public static fromTyp(id: number | null): GostKursblockungRegelTyp {
-		if (id === null)
+		if (id === null) {
 			return GostKursblockungRegelTyp.UNDEFINIERT;
+		}
 		const gostTyp: GostKursblockungRegelTyp | null = GostKursblockungRegelTyp.getMap().get(id);
-		if (gostTyp === null)
+		if (gostTyp === null) {
 			return GostKursblockungRegelTyp.UNDEFINIERT;
+		}
 		return gostTyp;
 	}
 
@@ -302,8 +309,9 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	 * @throws IllegalArgumentException falls der angegebene Index ungültig ist
 	 */
 	public getParamType(i: number): GostKursblockungRegelParameterTyp {
-		if ((i < 0) || (i >= this.paramTypes.size()))
+		if ((i < 0) || (i >= this.paramTypes.size())) {
 			throw new IllegalArgumentException("Ein Parameter mit dem Index i existiert nicht für den Regel-Typ " + this.name())
+		}
 		return this.paramTypes.get(i);
 	}
 
@@ -316,9 +324,11 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	 * @return true, falls die Regel einen solchen Parametertyp hat und ansonsten false
 	 */
 	public hasParamType(paramType: GostKursblockungRegelParameterTyp | null): boolean {
-		for (const cur of this.paramTypes)
-			if (paramType as unknown === cur as unknown)
+		for (const cur of this.paramTypes) {
+			if (paramType as unknown === cur as unknown) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -337,10 +347,12 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 		switch (typ) {
 			case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE:
 			case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE: {
-				if (nr > param.get(1))
+				if (nr > param.get(1)) {
 					return [param.get(0), param.get(1)];
-				if (nr < param.get(1))
+				}
+				if (nr < param.get(1)) {
 					return [param.get(0), param.get(1) - 1];
+				}
 				return null;
 			}
 			case GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS:
@@ -349,14 +361,16 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 				let bis: number = param.get(2).valueOf()
 				von = (nr < von) ? (von - 1) : von;
 				bis = (nr <= bis) ? (bis - 1) : bis;
-				if (von <= bis)
+				if (von <= bis) {
 					return [param.get(0), von, bis];
+				}
 				return null;
 			}
 			default: {
 				const temp: Array<number> | null = Array(param.size()).fill(0)
-				for (let i: number = 0; i < temp.length; i++)
+				for (let i: number = 0; i < temp.length; i++) {
 					temp[i] = param.get(i).valueOf();
+				}
 				return temp;
 			}
 		}

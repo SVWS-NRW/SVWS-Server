@@ -70,9 +70,11 @@ export class ReportingEMailEmpfaengerTyp extends JavaEnum<ReportingEMailEmpfaeng
 	 * @return 		Der Reporting-E-Mail-Empfaenger-Typ
 	 */
 	public static getByID(id: number): ReportingEMailEmpfaengerTyp | null {
-		for (const em of ReportingEMailEmpfaengerTyp.values())
-			if (em.id === id)
+		for (const em of ReportingEMailEmpfaengerTyp.values()) {
+			if (em.id === id) {
 				return em;
+			}
+		}
 		return ReportingEMailEmpfaengerTyp.UNDEFINED;
 	}
 

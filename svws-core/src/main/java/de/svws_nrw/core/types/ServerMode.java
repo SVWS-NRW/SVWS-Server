@@ -11,7 +11,7 @@ public enum ServerMode {
 	/** STABLE: Es werden nur Funktionen angeboten, die als stabil und getestet angesehen werden */
 	STABLE("stable"),
 
-	/** BETA: Es werden auch Funktionen angeboten, welche als weitgehend stabil angesegen werden, sich aber noch in der abschließenden Entwicklung befinden */
+	/** BETA: Es werden auch Funktionen angeboten, welche als weitgehend stabil angesehen werden, sich aber noch in der abschließenden Entwicklung befinden */
 	BETA("beta"),
 
 	/** ALPHA: Es werden auch Funktionen angeboten, welche noch nicht als stabil gelten, aber zumindest weitgehend implementiert sind */
@@ -66,9 +66,11 @@ public enum ServerMode {
 	 * @return das {@link ServerMode}-Objekt anhand des übergebenen Textes.
 	 */
 	public static @NotNull ServerMode getByText(final String text) {
-		for (final @NotNull ServerMode mode : values())
-			if (mode.text.equalsIgnoreCase(text))
+		for (final @NotNull ServerMode mode : values()) {
+			if (mode.text.equalsIgnoreCase(text)) {
 				return mode;
+			}
+		}
 		return ServerMode.STABLE;
 	}
 

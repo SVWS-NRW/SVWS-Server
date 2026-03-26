@@ -73,9 +73,11 @@ export class ReportingVorlageParameterTyp extends JavaEnum<ReportingVorlageParam
 	 * @return 		Der ReportingDVorlageParameterTyp
 	 */
 	public static getByID(id: number): ReportingVorlageParameterTyp {
-		for (const dp of ReportingVorlageParameterTyp.values())
-			if (dp.id === id)
+		for (const dp of ReportingVorlageParameterTyp.values()) {
+			if (dp.id === id) {
 				return dp;
+			}
+		}
 		return ReportingVorlageParameterTyp.UNDEFINED;
 	}
 

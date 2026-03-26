@@ -59,9 +59,11 @@ export class ReportingAusgabeformat extends JavaEnum<ReportingAusgabeformat> {
 	 * @return 		Das Report-Ausgabeformat
 	 */
 	public static getByID(id: number): ReportingAusgabeformat | null {
-		for (const af of ReportingAusgabeformat.values())
-			if (af.id === id)
+		for (const af of ReportingAusgabeformat.values()) {
+			if (af.id === id) {
 				return af;
+			}
+		}
 		return ReportingAusgabeformat.UNDEFINED;
 	}
 

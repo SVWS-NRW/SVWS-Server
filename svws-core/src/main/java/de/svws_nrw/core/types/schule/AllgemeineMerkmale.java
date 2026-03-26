@@ -292,8 +292,9 @@ public enum AllgemeineMerkmale {
 	private static @NotNull HashMap<String, AllgemeineMerkmale> getMapByKuerzel() {
 		if (_mapByKuerzel.size() == 0) {
 			for (final AllgemeineMerkmale s : AllgemeineMerkmale.values()) {
-				if (s.daten != null)
+				if (s.daten != null) {
 					_mapByKuerzel.put(s.daten.kuerzel, s);
+				}
 			}
 		}
 		return _mapByKuerzel;

@@ -195,8 +195,9 @@ public enum GostFachbereich {
 	 */
 	@JsonIgnore
 	public boolean hatKuerzel(final String kuerzel) {
-		if (kuerzel == null)
+		if (kuerzel == null) {
 			return false;
+		}
 		return this.kuerzel.contains(kuerzel);
 	}
 
@@ -209,12 +210,14 @@ public enum GostFachbereich {
 	 * @return die zugehörigen Fachbereiche
 	 */
 	public static @NotNull List<GostFachbereich> getBereiche(final GostFach fach) {
-		if (fach == null)
+		if (fach == null) {
 			return new ArrayList<>();
+		}
 		final @NotNull Fach zulFach = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		final List<GostFachbereich> bereiche = getMapFachbereichByFach().get(zulFach);
-		if (bereiche != null)
+		if (bereiche != null) {
 			return bereiche;
+		}
 		return new ArrayList<>();
 	}
 
@@ -249,8 +252,9 @@ public enum GostFachbereich {
 	 */
 	public static int getSortierung(final @NotNull Fach fach) {
 		final Integer sortierung = getAlleFaecher().get(fach);
-		if (sortierung == null)
+		if (sortierung == null) {
 			return Integer.MAX_VALUE;
+		}
 		return sortierung;
 	}
 
@@ -265,12 +269,15 @@ public enum GostFachbereich {
 	 */
 	public static int compareFach(final Fach fa, final Fach fb) {
 		// Prüfe zunächst auf null-Werte ...
-		if ((fa == null) && (fb == null))
+		if ((fa == null) && (fb == null)) {
 			return 0;
-		if (fa == null)
+		}
+		if (fa == null) {
 			return Integer.MAX_VALUE;
-		if (fb == null)
+		}
+		if (fb == null) {
 			return Integer.MIN_VALUE;
+		}
 		return Integer.compare(GostFachbereich.getSortierung(fa), GostFachbereich.getSortierung(fb));
 	}
 
@@ -300,16 +307,20 @@ public enum GostFachbereich {
 	 */
 	public static int compareGostFach(final GostFach fa, final GostFach fb) {
 		// Prüfe zunächst auf null-Werte ...
-		if ((fa == null) && (fb == null))
+		if ((fa == null) && (fb == null)) {
 			return 0;
-		if (fa == null)
+		}
+		if (fa == null) {
 			return Integer.MAX_VALUE;
-		if (fb == null)
+		}
+		if (fb == null) {
 			return Integer.MIN_VALUE;
+		}
 		// ... sortiere dann zunächst anhand des Fachbereichs ...
 		final int cmp = GostFachbereich.compareFachByKuerzel(fa.kuerzel, fb.kuerzel);
-		if (cmp != 0)
+		if (cmp != 0) {
 			return cmp;
+		}
 		// ... und nutze als zweites Kriterium die Sortierung des Faches
 		return Integer.compare(fa.sortierung, fb.sortierung);
 	}

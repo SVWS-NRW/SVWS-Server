@@ -83,9 +83,11 @@ public enum PersonalTyp {
 	 * @return die Map von den IDs der Personal-Typen auf die zugehörigen Personal-Typen
 	 */
 	private static @NotNull HashMap<Integer, PersonalTyp> getMapID() {
-		if (_mapID.size() == 0)
-			for (final PersonalTyp p : PersonalTyp.values())
+		if (_mapID.size() == 0) {
+			for (final PersonalTyp p : PersonalTyp.values()) {
 				_mapID.put(p.id, p);
+			}
+		}
 		return _mapID;
 	}
 
@@ -97,9 +99,11 @@ public enum PersonalTyp {
 	 * @return die Map von den Kürzeln der Personal-Typen auf die zugehörigen Personal-Typen
 	 */
 	private static @NotNull HashMap<String, PersonalTyp> getMapKuerzel() {
-		if (_mapKuerzel.size() == 0)
-			for (final PersonalTyp p : PersonalTyp.values())
+		if (_mapKuerzel.size() == 0) {
+			for (final PersonalTyp p : PersonalTyp.values()) {
 				_mapKuerzel.put(p.kuerzel, p);
+			}
+		}
 		return _mapKuerzel;
 	}
 

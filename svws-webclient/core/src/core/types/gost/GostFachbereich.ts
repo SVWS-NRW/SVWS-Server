@@ -228,8 +228,9 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 	 * @return true, falls das Fach zu dem Fachbereich gehört, sonst false
 	 */
 	public hatKuerzel(kuerzel: string | null): boolean {
-		if (kuerzel === null)
+		if (kuerzel === null) {
 			return false;
+		}
 		return this.kuerzel.contains(kuerzel);
 	}
 
@@ -241,12 +242,14 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 	 * @return die zugehörigen Fachbereiche
 	 */
 	public static getBereiche(fach: GostFach | null): List<GostFachbereich> {
-		if (fach === null)
+		if (fach === null) {
 			return new ArrayList();
+		}
 		const zulFach: Fach = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		const bereiche: List<GostFachbereich> | null = GostFachbereich.getMapFachbereichByFach().get(zulFach);
-		if (bereiche !== null)
+		if (bereiche !== null) {
 			return bereiche;
+		}
 		return new ArrayList<GostFachbereich>();
 	}
 
@@ -279,8 +282,9 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 	 */
 	public static getSortierung(fach: Fach): number {
 		const sortierung: number | null = GostFachbereich.getAlleFaecher().get(fach);
-		if (sortierung === null)
+		if (sortierung === null) {
 			return JavaInteger.MAX_VALUE;
+		}
 		return sortierung;
 	}
 
@@ -293,12 +297,15 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 	 * @return der int-wert für den Vergleich (siehe {@link Comparable#compareTo(Object)}
 	 */
 	public static compareFach(fa: Fach | null, fb: Fach | null): number {
-		if ((fa === null) && (fb === null))
+		if ((fa === null) && (fb === null)) {
 			return 0;
-		if (fa === null)
+		}
+		if (fa === null) {
 			return JavaInteger.MAX_VALUE;
-		if (fb === null)
+		}
+		if (fb === null) {
 			return JavaInteger.MIN_VALUE;
+		}
 		return JavaInteger.compare(GostFachbereich.getSortierung(fa), GostFachbereich.getSortierung(fb));
 	}
 
@@ -325,15 +332,19 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 	 * @return der int-wert für den Vergleich (siehe {@link Comparable#compareTo(Object)}
 	 */
 	public static compareGostFach(fa: GostFach | null, fb: GostFach | null): number {
-		if ((fa === null) && (fb === null))
+		if ((fa === null) && (fb === null)) {
 			return 0;
-		if (fa === null)
+		}
+		if (fa === null) {
 			return JavaInteger.MAX_VALUE;
-		if (fb === null)
+		}
+		if (fb === null) {
 			return JavaInteger.MIN_VALUE;
+		}
 		const cmp: number = GostFachbereich.compareFachByKuerzel(fa.kuerzel, fb.kuerzel);
-		if (cmp !== 0)
+		if (cmp !== 0) {
 			return cmp;
+		}
 		return JavaInteger.compare(fa.sortierung, fb.sortierung);
 	}
 

@@ -47,8 +47,9 @@ public enum GostLaufbahnplanungFachkombinationTyp {
 	 * @throws IllegalArgumentException   bei einem ungültigen numerischen Wert
 	 */
 	public static @NotNull GostLaufbahnplanungFachkombinationTyp fromValue(final int value) throws IllegalArgumentException {
-		if ((value < 0) || (value > 1))
+		if ((value < 0) || (value > 1)) {
 			throw new IllegalArgumentException("Der Parameter value " + value + "ist für den Typ einer Fachkombination ungültig.");
+		}
 		return (value == 0) ? GostLaufbahnplanungFachkombinationTyp.VERBOTEN : GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH;
 	}
 

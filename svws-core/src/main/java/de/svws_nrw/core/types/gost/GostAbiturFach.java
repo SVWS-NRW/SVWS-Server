@@ -68,8 +68,9 @@ public enum GostAbiturFach {
 	 * @return die Abiturfachart oder null falls die ID ungültig ist
 	 * */
 	public static GostAbiturFach fromID(final Integer id) {
-		if (id == null)
+		if (id == null) {
 			return null;
+		}
 		switch (id) {
 			case 1:
 				return LK1;
@@ -95,8 +96,9 @@ public enum GostAbiturFach {
 	 * @return die Abiturfachart oder null, falls die ID ungültig ist
 	 * */
 	public static GostAbiturFach fromIDString(final String strID) {
-		if (strID == null)
+		if (strID == null) {
 			return null;
+		}
 		switch (strID) {
 			case "1":
 				return LK1;

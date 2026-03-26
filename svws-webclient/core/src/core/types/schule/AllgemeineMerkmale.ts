@@ -162,8 +162,9 @@ export class AllgemeineMerkmale extends JavaEnum<AllgemeineMerkmale> {
 	private static getMapByKuerzel(): HashMap<string, AllgemeineMerkmale> {
 		if (AllgemeineMerkmale._mapByKuerzel.size() === 0) {
 			for (const s of AllgemeineMerkmale.values()) {
-				if (s.daten !== null)
+				if (s.daten !== null) {
 					AllgemeineMerkmale._mapByKuerzel.put(s.daten.kuerzel, s);
+				}
 			}
 		}
 		return AllgemeineMerkmale._mapByKuerzel;

@@ -47,8 +47,9 @@ public enum AbiturBelegungsart {
 	 * @return die Kurs-Belegungsart oder null, falls das kuerzel fehlerhaft ist
 	 */
 	public static AbiturBelegungsart fromKuerzel(final String kuerzel) {
-		if (kuerzel == null)
+		if (kuerzel == null) {
 			return NICHT_BELEGT;
+		}
 		switch (kuerzel) {
 			case "-":
 				return NICHT_BELEGT;

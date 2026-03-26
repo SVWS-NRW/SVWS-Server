@@ -16,7 +16,7 @@ export class ServerMode extends JavaEnum<ServerMode> {
 	public static readonly STABLE: ServerMode = new ServerMode("STABLE", 0, "stable");
 
 	/**
-	 * BETA: Es werden auch Funktionen angeboten, welche als weitgehend stabil angesegen werden, sich aber noch in der abschließenden Entwicklung befinden
+	 * BETA: Es werden auch Funktionen angeboten, welche als weitgehend stabil angesehen werden, sich aber noch in der abschließenden Entwicklung befinden
 	 */
 	public static readonly BETA: ServerMode = new ServerMode("BETA", 1, "beta");
 
@@ -75,9 +75,11 @@ export class ServerMode extends JavaEnum<ServerMode> {
 	 * @return das {@link ServerMode}-Objekt anhand des übergebenen Textes.
 	 */
 	public static getByText(text: string | null): ServerMode {
-		for (const mode of this.values())
-			if (JavaString.equalsIgnoreCase(mode.text, text))
+		for (const mode of this.values()) {
+			if (JavaString.equalsIgnoreCase(mode.text, text)) {
 				return mode;
+			}
+		}
 		return ServerMode.STABLE;
 	}
 

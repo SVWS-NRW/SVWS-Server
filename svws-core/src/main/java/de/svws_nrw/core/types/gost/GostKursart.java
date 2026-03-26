@@ -141,9 +141,11 @@ public enum GostKursart {
 	 * @return die Map von den Kürzeln auf die Gost-Kursarten
 	 */
 	private static @NotNull HashMap<String, GostKursart> getMapByKuerzel() {
-		if (_mapKuerzel.size() == 0)
-			for (final @NotNull GostKursart k : GostKursart.values())
+		if (_mapKuerzel.size() == 0) {
+			for (final @NotNull GostKursart k : GostKursart.values()) {
 				_mapKuerzel.put(k.kuerzel, k);
+			}
+		}
 		return _mapKuerzel;
 	}
 
@@ -155,10 +157,13 @@ public enum GostKursart {
 	 * @return die Map von den zulässigen Kursarten auf die Gost-Kursarten
 	 */
 	private static @NotNull Map<ZulaessigeKursart, GostKursart> getMapByZulKursart() {
-		if (_mapZulKursart.size() == 0)
-			for (final @NotNull GostKursart k : GostKursart.values())
-				for (final @NotNull ZulaessigeKursart zulKursart : k.kursarten)
+		if (_mapZulKursart.size() == 0) {
+			for (final @NotNull GostKursart k : GostKursart.values()) {
+				for (final @NotNull ZulaessigeKursart zulKursart : k.kursarten) {
 					_mapZulKursart.put(zulKursart, k);
+				}
+			}
+		}
 		return _mapZulKursart;
 	}
 
@@ -254,8 +259,9 @@ public enum GostKursart {
 	 */
 	public static @NotNull GostKursart fromKuerzelOrException(final String kuerzel) {
 		final GostKursart gk = getMapByKuerzel().get(kuerzel);
-		if (gk == null)
+		if (gk == null) {
 			throw new DeveloperNotificationException("Invalid value for kurzel: " + kuerzel);
+		}
 		return gk;
 	}
 

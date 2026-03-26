@@ -22,8 +22,9 @@ export class UserNotificationException extends RuntimeException {
 	 * @param pErfuellt     Falls TRUE, wird eine UserNotificationException geworfen.
 	 */
 	public static ifTrue(pBeschreibung: string, pErfuellt: boolean): void {
-		if (pErfuellt)
+		if (pErfuellt) {
 			throw new UserNotificationException(pBeschreibung)
+		}
 	}
 
 	transpilerCanonicalName(): string {

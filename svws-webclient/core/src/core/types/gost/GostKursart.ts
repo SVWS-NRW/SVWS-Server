@@ -160,9 +160,11 @@ export class GostKursart extends JavaEnum<GostKursart> {
 	 * @return die Map von den Kürzeln auf die Gost-Kursarten
 	 */
 	private static getMapByKuerzel(): HashMap<string, GostKursart> {
-		if (GostKursart._mapKuerzel.size() === 0)
-			for (const k of GostKursart.values())
+		if (GostKursart._mapKuerzel.size() === 0) {
+			for (const k of GostKursart.values()) {
 				GostKursart._mapKuerzel.put(k.kuerzel, k);
+			}
+		}
 		return GostKursart._mapKuerzel;
 	}
 
@@ -173,10 +175,13 @@ export class GostKursart extends JavaEnum<GostKursart> {
 	 * @return die Map von den zulässigen Kursarten auf die Gost-Kursarten
 	 */
 	private static getMapByZulKursart(): JavaMap<ZulaessigeKursart, GostKursart> {
-		if (GostKursart._mapZulKursart.size() === 0)
-			for (const k of GostKursart.values())
-				for (const zulKursart of k.kursarten)
+		if (GostKursart._mapZulKursart.size() === 0) {
+			for (const k of GostKursart.values()) {
+				for (const zulKursart of k.kursarten) {
 					GostKursart._mapZulKursart.put(zulKursart, k);
+				}
+			}
+		}
 		return GostKursart._mapZulKursart;
 	}
 
@@ -282,8 +287,9 @@ export class GostKursart extends JavaEnum<GostKursart> {
 	 */
 	public static fromKuerzelOrException(kuerzel: string | null): GostKursart {
 		const gk: GostKursart | null = GostKursart.getMapByKuerzel().get(kuerzel);
-		if (gk === null)
+		if (gk === null) {
 			throw new DeveloperNotificationException("Invalid value for kurzel: " + kuerzel)
+		}
 		return gk;
 	}
 

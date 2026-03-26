@@ -22,7 +22,7 @@ public enum ReportingReportvorlage {
 	/** Report-Vorlage: GOSt - Klausurplanung - Klausurtermine-Kurse */
 	GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN("GostKlausurplanung-KlausurtermineMitKursen", Arrays.asList(
 			erzeugeVorlageParameter("mitKursklausuren", "mit Kursklausuren", ReportingVorlageParameterTyp.BOOLEAN, "false", "true",
-					ReportingUIKomponentenTyp.CHECKBOX, 1),
+		 			ReportingUIKomponentenTyp.CHECKBOX, 1),
 			erzeugeVorlageParameter("mitNachschreibern", "mit Nachschreibern", ReportingVorlageParameterTyp.BOOLEAN, "false", "true",
 					ReportingUIKomponentenTyp.CHECKBOX, 1),
 			erzeugeVorlageParameter("mitKlausurschreiberNamen", "mit Namen der Klausurschreiber", ReportingVorlageParameterTyp.BOOLEAN, "false", "true",
@@ -381,8 +381,9 @@ public enum ReportingReportvorlage {
 	ReportingReportvorlage(final @NotNull String bezeichnung, final @NotNull List<ReportingVorlageParameter> vorlageParameterList) {
 		this.bezeichnung = bezeichnung;
 		this.vorlageParameterList.addAll(vorlageParameterList);
-		for (final ReportingVorlageParameter vp : vorlageParameterList)
+		for (final ReportingVorlageParameter vp : vorlageParameterList) {
 			this.vorlageParameterMap.put(vp.name, vp);
+		}
 	}
 
 	/**
@@ -393,11 +394,14 @@ public enum ReportingReportvorlage {
 	 * @return Die Report-Vorlage
 	 */
 	public static ReportingReportvorlage getByBezeichnung(final @NotNull String bezeichnung) {
-		if (bezeichnung.isEmpty())
+		if (bezeichnung.isEmpty()) {
 			return null;
-		for (final ReportingReportvorlage rv : ReportingReportvorlage.values())
-			if (rv.bezeichnung.equals(bezeichnung))
+		}
+		for (final ReportingReportvorlage rv : ReportingReportvorlage.values()) {
+			if (rv.bezeichnung.equals(bezeichnung)) {
 				return rv;
+			}
+		}
 		return null;
 	}
 
@@ -409,11 +413,14 @@ public enum ReportingReportvorlage {
 	 * @return Die Report-Vorlage
 	 */
 	public static ReportingReportvorlage getByName(final @NotNull String name) {
-		if (name.isEmpty())
+		if (name.isEmpty()) {
 			return null;
-		for (final ReportingReportvorlage rv : ReportingReportvorlage.values())
-			if (rv.name().equalsIgnoreCase(name))
+		}
+		for (final ReportingReportvorlage rv : ReportingReportvorlage.values()) {
+			if (rv.name().equalsIgnoreCase(name)) {
 				return rv;
+			}
+		}
 		return null;
 	}
 

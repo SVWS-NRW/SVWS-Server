@@ -68,8 +68,9 @@ public enum BKGymAufgabenfeld {
 	 */
 	BKGymAufgabenfeld(final @NotNull String kuerzel, final @NotNull String... fachbezeichnungen) {
 		this.kuerzel = kuerzel;
-		for (final String fach : fachbezeichnungen)
+		for (final String fach : fachbezeichnungen) {
 			this.fachbezeichnungen.add(fach);
+		}
 	}
 
 
@@ -77,10 +78,13 @@ public enum BKGymAufgabenfeld {
 	 * Initialisiert die Map von den Fächern auf das zugehörige Aufgabenfeld, wenn es noch nicht geschehen ist.
 	 */
 	private static void initMapAufgabenfeldByFach() {
-		if (_mapAufgabenfeldByFach.size() == 0)
-			for (final @NotNull BKGymAufgabenfeld feld : BKGymAufgabenfeld.values())
-				for (final String fachbezeichnung : feld.fachbezeichnungen)
+		if (_mapAufgabenfeldByFach.size() == 0) {
+			for (final @NotNull BKGymAufgabenfeld feld : BKGymAufgabenfeld.values()) {
+				for (final String fachbezeichnung : feld.fachbezeichnungen) {
 					_mapAufgabenfeldByFach.put(fachbezeichnung, feld);
+				}
+			}
+		}
 	}
 
 
@@ -88,9 +92,11 @@ public enum BKGymAufgabenfeld {
 	 * Initialisiert die Map von den Kürzeln auf das zugehörige Aufgabenfeld, wenn es noch nicht geschehen ist.
 	 */
 	private static void initMapAufgabenfeldByKuerzel() {
-		if (_mapAufgabenfeldByKuerzel.size() == 0)
-			for (final @NotNull BKGymAufgabenfeld feld : BKGymAufgabenfeld.values())
+		if (_mapAufgabenfeldByKuerzel.size() == 0) {
+			for (final @NotNull BKGymAufgabenfeld feld : BKGymAufgabenfeld.values()) {
 				_mapAufgabenfeldByKuerzel.put(feld.kuerzel, feld);
+			}
+		}
 	}
 
 
@@ -113,8 +119,9 @@ public enum BKGymAufgabenfeld {
 	 */
 	public boolean hatFachbezeichnung(final String fachbezeichnung) {
 		initMapAufgabenfeldByFach();
-		if (fachbezeichnung == null)
+		if (fachbezeichnung == null) {
 			return false;
+		}
 		return _mapAufgabenfeldByFach.get(fachbezeichnung) == this;
 	}
 

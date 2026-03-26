@@ -42,9 +42,11 @@ public enum ReportingAusgabeformat {
 	 * @return 		Das Report-Ausgabeformat
 	 */
 	public static ReportingAusgabeformat getByID(final int id) {
-		for (final ReportingAusgabeformat af : ReportingAusgabeformat.values())
-			if (af.id == id)
+		for (final ReportingAusgabeformat af : ReportingAusgabeformat.values()) {
+			if (af.id == id) {
 				return af;
+			}
+		}
 		return UNDEFINED;
 	}
 }

@@ -47,9 +47,11 @@ public enum OAuth2ServerTyp {
 	 * @return der OAuth2-Servertyp
 	 */
 	public static OAuth2ServerTyp getByID(final long id) {
-		for (final OAuth2ServerTyp s : OAuth2ServerTyp.values())
-			if (s.id == id)
+		for (final OAuth2ServerTyp s : OAuth2ServerTyp.values()) {
+			if (s.id == id) {
 				return s;
+			}
+		}
 		return null;
 	}
 

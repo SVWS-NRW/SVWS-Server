@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse implementiert das Funktionale Interface java.util.function.Consumer
- * für Objekt vom Typ LogData. Die über das Interface empfangeben Log-Daten
+ * für Objekt vom Typ LogData. Die über das Interface empfangenen Log-Daten
  * werden auf der Konsole ausgegeben.
  */
 public class LogConsumerConsole implements Consumer<LogData> {
@@ -56,10 +56,11 @@ public class LogConsumerConsole implements Consumer<LogData> {
 		final String s = ((lastLogDataHadNewLine && printTime) ? DateUtils.toISO8601(t.getTime()) + " " : "")
 				+ ((lastLogDataHadNewLine && printLevel) ? t.getLevel() + " " : "")
 				+ t.getText();
-		if (t.isNewLine())
+		if (t.isNewLine()) {
 			System.out.println(s);
-		else
+		} else {
 			System.out.print(s);
+		}
 		System.out.flush();
 		lastLogDataHadNewLine = t.isNewLine();
 	}

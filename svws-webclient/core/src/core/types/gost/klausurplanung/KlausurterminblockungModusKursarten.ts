@@ -67,9 +67,11 @@ export class KlausurterminblockungModusKursarten extends JavaEnum<Klausurterminb
 	 * @return die Map mit der Zuordnung zu der ID
 	 */
 	private static getMapByID(): HashMap<number, KlausurterminblockungModusKursarten> {
-		if (KlausurterminblockungModusKursarten._mapID.size() === 0)
-			for (const e of KlausurterminblockungModusKursarten.values())
+		if (KlausurterminblockungModusKursarten._mapID.size() === 0) {
+			for (const e of KlausurterminblockungModusKursarten.values()) {
 				KlausurterminblockungModusKursarten._mapID.put(e.id, e);
+			}
+		}
 		return KlausurterminblockungModusKursarten._mapID;
 	}
 

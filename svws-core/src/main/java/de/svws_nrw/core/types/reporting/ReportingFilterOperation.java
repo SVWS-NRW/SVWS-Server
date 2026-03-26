@@ -73,9 +73,11 @@ public enum ReportingFilterOperation {
 	 * @return 		Die Filter-Operation
 	 */
 	public static @NotNull ReportingFilterOperation getByID(final int id) {
-		for (final ReportingFilterOperation op : ReportingFilterOperation.values())
-			if (op.id == id)
+		for (final ReportingFilterOperation op : ReportingFilterOperation.values()) {
+			if (op.id == id) {
 				return op;
+			}
+		}
 		return UNDEFINED;
 	}
 

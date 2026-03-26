@@ -280,18 +280,23 @@ public enum GostKursblockungRegelTyp {
 
 
 	private static @NotNull HashMap<Integer, GostKursblockungRegelTyp> getMap() {
-		if (_map_id_regel.isEmpty())
-			for (final @NotNull GostKursblockungRegelTyp gostTyp : GostKursblockungRegelTyp.values())
+		if (_map_id_regel.isEmpty()) {
+			for (final @NotNull GostKursblockungRegelTyp gostTyp : GostKursblockungRegelTyp.values()) {
 				_map_id_regel.put(gostTyp.typ, gostTyp);
+			}
+		}
 		return _map_id_regel;
 	}
 
 
 	private static @NotNull HashMap<Integer, GostKursblockungRegelTyp> getMapKursRegeln() {
-		if (_map_id_regel_kursid.isEmpty())
-			for (final @NotNull GostKursblockungRegelTyp gostTyp : GostKursblockungRegelTyp.values())
-				if (gostTyp.hasParamType(GostKursblockungRegelParameterTyp.KURS_ID))
+		if (_map_id_regel_kursid.isEmpty()) {
+			for (final @NotNull GostKursblockungRegelTyp gostTyp : GostKursblockungRegelTyp.values()) {
+				if (gostTyp.hasParamType(GostKursblockungRegelParameterTyp.KURS_ID)) {
 					_map_id_regel_kursid.put(gostTyp.typ, gostTyp);
+				}
+			}
+		}
 		return _map_id_regel_kursid;
 	}
 
@@ -327,11 +332,13 @@ public enum GostKursblockungRegelTyp {
 	 * @return der Regel-Typ
 	 */
 	public static @NotNull GostKursblockungRegelTyp fromTyp(final Integer id) {
-		if (id == null)
+		if (id == null) {
 			return GostKursblockungRegelTyp.UNDEFINIERT;
+		}
 		final GostKursblockungRegelTyp gostTyp = getMap().get(id);
-		if (gostTyp == null)
+		if (gostTyp == null) {
 			return GostKursblockungRegelTyp.UNDEFINIERT;
+		}
 		return gostTyp;
 	}
 
@@ -355,8 +362,9 @@ public enum GostKursblockungRegelTyp {
 	 * @throws IllegalArgumentException falls der angegebene Index ungültig ist
 	 */
 	public @NotNull GostKursblockungRegelParameterTyp getParamType(final int i) throws IllegalArgumentException {
-		if ((i < 0) || (i >= paramTypes.size()))
+		if ((i < 0) || (i >= paramTypes.size())) {
 			throw new IllegalArgumentException("Ein Parameter mit dem Index i existiert nicht für den Regel-Typ " + this.name());
+		}
 		return paramTypes.get(i);
 	}
 
@@ -370,9 +378,11 @@ public enum GostKursblockungRegelTyp {
 	 * @return true, falls die Regel einen solchen Parametertyp hat und ansonsten false
 	 */
 	public boolean hasParamType(final GostKursblockungRegelParameterTyp paramType) {
-		for (final GostKursblockungRegelParameterTyp cur : paramTypes)
-			if (paramType == cur)
+		for (final GostKursblockungRegelParameterTyp cur : paramTypes) {
+			if (paramType == cur) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -392,10 +402,12 @@ public enum GostKursblockungRegelTyp {
 		switch (typ) {
 			// Fälle, bei denen es zu einer Veränderung kommt.
 			case KURS_FIXIERE_IN_SCHIENE, KURS_SPERRE_IN_SCHIENE: // 2, 3
-				if (nr > param.get(1))
+				if (nr > param.get(1)) {
 					return new long[] { param.get(0), param.get(1) }; // Keine Veränderung.
-				if (nr < param.get(1))
+				}
+				if (nr < param.get(1)) {
 					return new long[] { param.get(0), param.get(1) - 1 }; // Indexverschiebung der Schienen-Nr.
+				}
 				return null;
 
 			case KURSART_SPERRE_SCHIENEN_VON_BIS, KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: // 1, 6
@@ -403,15 +415,17 @@ public enum GostKursblockungRegelTyp {
 				long bis = param.get(2);
 				von = (nr < von) ? (von - 1) : von;
 				bis = (nr <= bis) ? (bis - 1) : bis;
-				if (von <= bis)
+				if (von <= bis) {
 					return new long[] { param.get(0), von, bis };
+				}
 				return null;
 
 			// Keine Veränderung: Kopiere alle Parameter.
 			default:
 				final long[] temp = new long[param.size()];
-				for (int i = 0; i < temp.length; i++)
+				for (int i = 0; i < temp.length; i++) {
 					temp[i] = param.get(i);
+				}
 				return temp;
 		}
 	}

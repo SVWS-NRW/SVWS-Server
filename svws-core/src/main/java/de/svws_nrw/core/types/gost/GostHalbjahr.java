@@ -98,9 +98,11 @@ public enum GostHalbjahr {
 	 * @return die Map von den IDs auf das Gost-Halbjahr
 	 */
 	private static @NotNull HashMap<Integer, GostHalbjahr> getMapByID() {
-		if (_mapID.size() == 0)
-			for (final @NotNull GostHalbjahr h : GostHalbjahr.values())
+		if (_mapID.size() == 0) {
+			for (final @NotNull GostHalbjahr h : GostHalbjahr.values()) {
 				_mapID.put(h.id, h);
+			}
+		}
 		return _mapID;
 	}
 
@@ -112,9 +114,11 @@ public enum GostHalbjahr {
 	 * @return die Map von den Kürzeln auf das Gost-Halbjahr
 	 */
 	private static @NotNull HashMap<String, GostHalbjahr> getMapByKuerzel() {
-		if (_mapKuerzel.size() == 0)
-			for (final @NotNull GostHalbjahr h : GostHalbjahr.values())
+		if (_mapKuerzel.size() == 0) {
+			for (final @NotNull GostHalbjahr h : GostHalbjahr.values()) {
 				_mapKuerzel.put(h.kuerzel, h);
+			}
+		}
 		return _mapKuerzel;
 	}
 
@@ -126,9 +130,11 @@ public enum GostHalbjahr {
 	 * @return die Map von den alten Kürzeln auf das Gost-Halbjahr
 	 */
 	private static @NotNull HashMap<String, GostHalbjahr> getMapByKuerzelAlt() {
-		if (_mapKuerzelAlt.size() == 0)
-			for (final @NotNull GostHalbjahr h : GostHalbjahr.values())
+		if (_mapKuerzelAlt.size() == 0) {
+			for (final @NotNull GostHalbjahr h : GostHalbjahr.values()) {
 				_mapKuerzelAlt.put(h.kuerzelAlt, h);
+			}
+		}
 		return _mapKuerzelAlt;
 	}
 
@@ -154,8 +160,9 @@ public enum GostHalbjahr {
 	@JsonIgnore
 	public @NotNull GostHalbjahr nextOrException() {
 		final GostHalbjahr hj = getMapByID().get(this.id + 1);
-		if (hj == null)
+		if (hj == null) {
 			throw new NullPointerException();
+		}
 		return hj;
 	}
 
@@ -181,8 +188,9 @@ public enum GostHalbjahr {
 	@JsonIgnore
 	public @NotNull GostHalbjahr previousOrException() {
 		final GostHalbjahr hj = getMapByID().get(this.id - 1);
-		if (hj == null)
+		if (hj == null) {
 			throw new NullPointerException();
+		}
 		return hj;
 	}
 
@@ -287,8 +295,9 @@ public enum GostHalbjahr {
 	 * @return das Halbjahr oder null, falls die ID nicht gültig ist
 	 */
 	public static GostHalbjahr fromID(final Integer id) {
-		if (id == null)
+		if (id == null) {
 			return null;
+		}
 		switch (id) {
 			case 0:
 				return GostHalbjahr.EF1;
@@ -346,8 +355,9 @@ public enum GostHalbjahr {
 	 */
 	public static @NotNull GostHalbjahr fromIDorException(final int pGostHalbjahID) throws NullPointerException {
 		final GostHalbjahr halbjahr = GostHalbjahr.fromID(pGostHalbjahID);
-		if (halbjahr == null)
+		if (halbjahr == null) {
 			throw new NullPointerException("GostHalbjahr nicht gefunden!");
+		}
 		return halbjahr;
 	}
 
@@ -385,8 +395,9 @@ public enum GostHalbjahr {
 	 * @return das Halbjahr oder null, falls es kein gültiges Halbjahr mit den Angaben gibt.
 	 */
 	public static GostHalbjahr fromJahrgangUndHalbjahr(final String jahrgang, final int halbjahr) {
-		if ((halbjahr != 1) && (halbjahr != 2))
+		if ((halbjahr != 1) && (halbjahr != 2)) {
 			return null;
+		}
 		switch (jahrgang) {
 			case "EF":
 				return (halbjahr == 1) ? EF1 : EF2;
@@ -409,8 +420,9 @@ public enum GostHalbjahr {
 	 * @return das Halbjahr oder null, falls es kein gültiges Halbjahr mit den Angaben gibt.
 	 */
 	public static GostHalbjahr fromBkJahrgangUndHalbjahr(final String jahrgang, final int halbjahr) {
-		if ((halbjahr != 1) && (halbjahr != 2))
+		if ((halbjahr != 1) && (halbjahr != 2)) {
 			return null;
+		}
 		switch (jahrgang) {
 			case "01":
 				return (halbjahr == 1) ? EF1 : EF2;
@@ -456,8 +468,9 @@ public enum GostHalbjahr {
 	public static GostHalbjahr getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(final int abiturjahr, final int schuljahr, final int halbjahr) {
 		// Bestimme die ID des Halbjahres und prüfe, ob das Ergebnis im gültigen Bereich liegt
 		int id = (((schuljahr + 3) - abiturjahr) * 2) + halbjahr;
-		if (id < 0)
+		if (id < 0) {
 			id = 0;
+		}
 		return GostHalbjahr.fromID(id);
 	}
 
@@ -519,9 +532,11 @@ public enum GostHalbjahr {
 	 */
 	@JsonIgnore
 	public boolean istIn(final GostHalbjahr... halbjahre) {
-		for (final @NotNull GostHalbjahr h : halbjahre)
-			if (h == this)
+		for (final @NotNull GostHalbjahr h : halbjahre) {
+			if (h == this) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -536,8 +551,9 @@ public enum GostHalbjahr {
 	 *         und ansonsten false
 	 */
 	public static boolean pruefeEinfuehrungsphase(final GostHalbjahr... halbjahre) {
-		if ((halbjahre == null) || (halbjahre.length != 2))
+		if ((halbjahre == null) || (halbjahre.length != 2)) {
 			return false;
+		}
 		return ((halbjahre[0] == GostHalbjahr.EF1) && (halbjahre[0] == GostHalbjahr.EF2))
 				|| ((halbjahre[0] == GostHalbjahr.EF2) && (halbjahre[0] == GostHalbjahr.EF1));
 	}
@@ -553,8 +569,9 @@ public enum GostHalbjahr {
 	 *         handelt und ansonsten false
 	 */
 	public static boolean pruefeQualifikationsphase(final @NotNull GostHalbjahr... halbjahre) {
-		if ((halbjahre == null) || (halbjahre.length != 4))
+		if ((halbjahre == null) || (halbjahre.length != 4)) {
 			return false;
+		}
 		final @NotNull List<GostHalbjahr> list = Arrays.asList(halbjahre);
 		return (list.contains(GostHalbjahr.Q11) && list.contains(GostHalbjahr.Q12) && list.contains(GostHalbjahr.Q21) && list.contains(GostHalbjahr.Q22));
 	}

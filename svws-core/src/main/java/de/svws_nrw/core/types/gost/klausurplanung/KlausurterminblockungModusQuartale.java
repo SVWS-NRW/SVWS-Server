@@ -48,9 +48,11 @@ public enum KlausurterminblockungModusQuartale {
 	 * @return die Map mit der Zuordnung zu der ID
 	 */
 	private static @NotNull HashMap<Integer, KlausurterminblockungModusQuartale> getMapByID() {
-		if (_mapID.size() == 0)
-			for (final @NotNull KlausurterminblockungModusQuartale e : KlausurterminblockungModusQuartale.values())
+		if (_mapID.size() == 0) {
+			for (final @NotNull KlausurterminblockungModusQuartale e : KlausurterminblockungModusQuartale.values()) {
 				_mapID.put(e.id, e);
+			}
+		}
 		return _mapID;
 	}
 

@@ -87,9 +87,11 @@ export class Sprachpruefungniveau extends JavaEnum<Sprachpruefungniveau> {
 	 * @return die Map von den IDs der Sprachprüfungsniveaus auf die zugehörigen Sprachprüfungsniveaus
 	 */
 	private static getMapByID(): HashMap<number, Sprachpruefungniveau> {
-		if (Sprachpruefungniveau._mapID.size() === 0)
-			for (const l of Sprachpruefungniveau.values())
+		if (Sprachpruefungniveau._mapID.size() === 0) {
+			for (const l of Sprachpruefungniveau.values()) {
 				Sprachpruefungniveau._mapID.put(l.daten.id, l);
+			}
+		}
 		return Sprachpruefungniveau._mapID;
 	}
 
@@ -100,9 +102,11 @@ export class Sprachpruefungniveau extends JavaEnum<Sprachpruefungniveau> {
 	 * @return die Map von den Bezeichnungen der Sprachprüfungsniveaus auf die zugehörigen Sprachprüfungsniveaus
 	 */
 	private static getMapByKuerzel(): HashMap<string, Sprachpruefungniveau> {
-		if (Sprachpruefungniveau._mapKuerzel.size() === 0)
-			for (const l of Sprachpruefungniveau.values())
+		if (Sprachpruefungniveau._mapKuerzel.size() === 0) {
+			for (const l of Sprachpruefungniveau.values()) {
 				Sprachpruefungniveau._mapKuerzel.put(l.daten.kuerzel, l);
+			}
+		}
 		return Sprachpruefungniveau._mapKuerzel;
 	}
 

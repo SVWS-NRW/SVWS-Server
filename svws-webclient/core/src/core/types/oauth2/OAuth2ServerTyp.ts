@@ -53,9 +53,11 @@ export class OAuth2ServerTyp extends JavaEnum<OAuth2ServerTyp> {
 	 * @return der OAuth2-Servertyp
 	 */
 	public static getByID(id: number): OAuth2ServerTyp | null {
-		for (const s of OAuth2ServerTyp.values())
-			if (s.id === id)
+		for (const s of OAuth2ServerTyp.values()) {
+			if (s.id === id) {
 				return s;
+			}
+		}
 		return null;
 	}
 

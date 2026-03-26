@@ -89,8 +89,9 @@ export class KursFortschreibungsart extends JavaEnum<KursFortschreibungsart> {
 	 * @return die Kurs-Fortschreibungsart
 	 */
 	public static fromID(id: number | null): KursFortschreibungsart | null {
-		if (id === null)
+		if (id === null) {
 			return KursFortschreibungsart.KEINE;
+		}
 		switch (id) {
 			case 0: {
 				return KursFortschreibungsart.KEINE;
@@ -119,8 +120,9 @@ export class KursFortschreibungsart extends JavaEnum<KursFortschreibungsart> {
 	 * @return die Kurs-Fortschreibungsart
 	 */
 	public static fromKuerzel(kuerzel: string | null): KursFortschreibungsart | null {
-		if (kuerzel === null)
+		if (kuerzel === null) {
 			return KursFortschreibungsart.KEINE;
+		}
 		switch (kuerzel) {
 			case "N": {
 				return KursFortschreibungsart.KEINE;
@@ -149,9 +151,11 @@ export class KursFortschreibungsart extends JavaEnum<KursFortschreibungsart> {
 	 * @return true, falls das kürzel gültig ist.
 	 */
 	public static isValidKuerzel(kuerzel: string | null): boolean {
-		for (const art of KursFortschreibungsart.values())
-			if (JavaObject.equalsTranspiler(art.kuerzel, (kuerzel)))
+		for (const art of KursFortschreibungsart.values()) {
+			if (JavaObject.equalsTranspiler(art.kuerzel, (kuerzel))) {
 				return true;
+			}
+		}
 		return false;
 	}
 

@@ -172,8 +172,9 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 		ReportingReportvorlage.all_values_by_name.set(name, this);
 		this.bezeichnung = bezeichnung;
 		this.vorlageParameterList.addAll(vorlageParameterList);
-		for (const vp of vorlageParameterList)
+		for (const vp of vorlageParameterList) {
 			this.vorlageParameterMap.put(vp.name, vp);
+		}
 	}
 
 	/**
@@ -228,11 +229,14 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	 * @return Die Report-Vorlage
 	 */
 	public static getByBezeichnung(bezeichnung: string): ReportingReportvorlage | null {
-		if (JavaString.isEmpty(bezeichnung))
+		if (JavaString.isEmpty(bezeichnung)) {
 			return null;
-		for (const rv of ReportingReportvorlage.values())
-			if (JavaObject.equalsTranspiler(rv.bezeichnung, (bezeichnung)))
+		}
+		for (const rv of ReportingReportvorlage.values()) {
+			if (JavaObject.equalsTranspiler(rv.bezeichnung, (bezeichnung))) {
 				return rv;
+			}
+		}
 		return null;
 	}
 
@@ -244,11 +248,14 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	 * @return Die Report-Vorlage
 	 */
 	public static getByName(name: string): ReportingReportvorlage | null {
-		if (JavaString.isEmpty(name))
+		if (JavaString.isEmpty(name)) {
 			return null;
-		for (const rv of ReportingReportvorlage.values())
-			if (JavaString.equalsIgnoreCase(rv.name(), name))
+		}
+		for (const rv of ReportingReportvorlage.values()) {
+			if (JavaString.equalsIgnoreCase(rv.name(), name)) {
 				return rv;
+			}
+		}
 		return null;
 	}
 

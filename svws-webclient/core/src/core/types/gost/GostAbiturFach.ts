@@ -73,8 +73,9 @@ export class GostAbiturFach extends JavaEnum<GostAbiturFach> {
 	 * @return die Abiturfachart oder null falls die ID ungültig ist
 	 */
 	public static fromID(id: number | null): GostAbiturFach | null {
-		if (id === null)
+		if (id === null) {
 			return null;
+		}
 		switch (id) {
 			case 1: {
 				return GostAbiturFach.LK1;
@@ -105,8 +106,9 @@ export class GostAbiturFach extends JavaEnum<GostAbiturFach> {
 	 * @return die Abiturfachart oder null, falls die ID ungültig ist
 	 */
 	public static fromIDString(strID: string | null): GostAbiturFach | null {
-		if (strID === null)
+		if (strID === null) {
 			return null;
+		}
 		switch (strID) {
 			case "1": {
 				return GostAbiturFach.LK1;

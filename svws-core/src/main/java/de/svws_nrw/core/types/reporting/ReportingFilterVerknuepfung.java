@@ -46,9 +46,11 @@ public enum ReportingFilterVerknuepfung {
 	 * @return 		Die Filter-Verknüpfung
 	 */
 	public static @NotNull ReportingFilterVerknuepfung getByID(final int id) {
-		for (final ReportingFilterVerknuepfung op : ReportingFilterVerknuepfung.values())
-			if (op.id == id)
+		for (final ReportingFilterVerknuepfung op : ReportingFilterVerknuepfung.values()) {
+			if (op.id == id) {
 				return op;
+			}
+		}
 		return UNDEFINED;
 	}
 }

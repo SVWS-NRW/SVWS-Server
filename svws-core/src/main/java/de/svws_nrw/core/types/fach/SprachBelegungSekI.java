@@ -46,18 +46,22 @@ public enum SprachBelegungSekI {
 	 * @return die Sprachbelegung in der Sek I
 	 */
 	public static @NotNull SprachBelegungSekI getByASDJahrgang(final String kuerzel) {
-		if (kuerzel == null)
+		if (kuerzel == null) {
 			return NICHT_BELEGT;
+		}
 		// Die Sprache ist länger als 4 Jahre belegt - es wird daher von 6 Jahren ausgegangen. Im Rahmen des G8 liegen aber nur 5 Jahre vor
 		// TODO ggf. eine G8-Prüfung einführen ??? Einfluss auf Sprachreferenzniveau gegeben?
-		if (kuerzel.compareTo("05") <= 0)
+		if (kuerzel.compareTo("05") <= 0) {
 			return AB_JAHRGANG_5;
+		}
 		// Im G8-Bildungsgang beginnt eine Sprache im Rahmen des WP I in Klasse 6, ansonsten in Klasse 7, um 4 Jahre in der Sek I zu ermöglichen
-		if (kuerzel.compareTo("07") <= 0)
+		if (kuerzel.compareTo("07") <= 0) {
 			return MIND_4_JAHRE;
+		}
 		// Im G8-Bildungsgang beginnt eine Sprache im Rahmen des WP II in Klasse 8, ansonsten in Klasse 9, um 2 Jahre in der Sek I zu ermöglichen
-		if (kuerzel.compareTo("09") <= 0)
+		if (kuerzel.compareTo("09") <= 0) {
 			return MIND_2_JAHRE;
+		}
 		// Eine Sprache kann nicht im 10. Jahrgang einsetzen
 		return NICHT_BELEGT;
 	}
@@ -73,12 +77,15 @@ public enum SprachBelegungSekI {
 	 * @return die Sprachbelegung in der Sek I
 	 */
 	public static @NotNull SprachBelegungSekI getByDauer(final int dauer) {
-		if (dauer <= 0)
+		if (dauer <= 0) {
 			return NICHT_BELEGT;
-		if (dauer <= 3)
+		}
+		if (dauer <= 3) {
 			return MIND_2_JAHRE;
-		if (dauer <= 4)
+		}
+		if (dauer <= 4) {
 			return MIND_4_JAHRE;
+		}
 		// TODO Spezialfall G8 - Belegung hier auch als 6 Jahre gewertet, obwohl es nur 5 sind...
 		return AB_JAHRGANG_5;
 	}

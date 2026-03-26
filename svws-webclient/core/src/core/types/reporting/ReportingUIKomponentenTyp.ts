@@ -78,9 +78,11 @@ export class ReportingUIKomponentenTyp extends JavaEnum<ReportingUIKomponentenTy
 	 * @return 		Der ReportingUIKomponentenTyp
 	 */
 	public static getByID(id: number): ReportingUIKomponentenTyp {
-		for (const dp of ReportingUIKomponentenTyp.values())
-			if (dp.id === id)
+		for (const dp of ReportingUIKomponentenTyp.values()) {
+			if (dp.id === id) {
 				return dp;
+			}
+		}
 		return ReportingUIKomponentenTyp.UNDEFINED;
 	}
 

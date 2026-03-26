@@ -522,9 +522,11 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	 * @return die Map von den IDs der Benutzerkompetenzen auf die zugehörigen Benutzerkompetenzen
 	 */
 	private static getMapID(): HashMap<number, BenutzerKompetenz> {
-		if (BenutzerKompetenz._mapID.size() === 0)
-			for (const p of BenutzerKompetenz.values())
+		if (BenutzerKompetenz._mapID.size() === 0) {
+			for (const p of BenutzerKompetenz.values()) {
 				BenutzerKompetenz._mapID.put(p.daten.id, p);
+			}
+		}
 		return BenutzerKompetenz._mapID;
 	}
 
@@ -536,15 +538,18 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	 */
 	private static getMapGruppenZuordnung(): JavaMap<BenutzerKompetenzGruppe, List<BenutzerKompetenz>> {
 		if (BenutzerKompetenz._mapGruppenZuordnung.size() === 0) {
-			for (const g of BenutzerKompetenzGruppe.values())
+			for (const g of BenutzerKompetenzGruppe.values()) {
 				BenutzerKompetenz._mapGruppenZuordnung.put(g, new ArrayList<BenutzerKompetenz>());
+			}
 			for (const p of BenutzerKompetenz.values()) {
 				let gruppe: BenutzerKompetenzGruppe | null = BenutzerKompetenzGruppe.getByID(p.daten.gruppe_id);
-				if (gruppe === null)
+				if (gruppe === null) {
 					gruppe = BenutzerKompetenzGruppe.KEINE;
+				}
 				const liste: List<BenutzerKompetenz> | null = BenutzerKompetenz._mapGruppenZuordnung.get(gruppe);
-				if (liste !== null)
+				if (liste !== null) {
 					liste.add(p);
+				}
 			}
 		}
 		return BenutzerKompetenz._mapGruppenZuordnung;
@@ -570,10 +575,12 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	 * @return true, wenn die Kompetenz für die Schulform zulässig ist.
 	 */
 	public hatSchulform(schuljahr: number, schulform: Schulform | null): boolean {
-		if (schulform === null)
+		if (schulform === null) {
 			return false;
-		if (this.daten.nurSchulformen !== null)
+		}
+		if (this.daten.nurSchulformen !== null) {
 			return this.daten.nurSchulformen.contains(schulform.name());
+		}
 		return true;
 	}
 
@@ -587,8 +594,9 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	 */
 	public static getKompetenzen(gruppe: BenutzerKompetenzGruppe): List<BenutzerKompetenz> {
 		const liste: List<BenutzerKompetenz> | null = BenutzerKompetenz.getMapGruppenZuordnung().get(gruppe);
-		if (liste === null)
+		if (liste === null) {
 			return new ArrayList();
+		}
 		return liste;
 	}
 
@@ -605,11 +613,13 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	public static getKompetenzenMitSchulform(schuljahr: number, gruppe: BenutzerKompetenzGruppe, schulform: Schulform): List<BenutzerKompetenz> {
 		const l: List<BenutzerKompetenz> | null = new ArrayList<BenutzerKompetenz>();
 		const liste: List<BenutzerKompetenz> | null = BenutzerKompetenz.getMapGruppenZuordnung().get(gruppe);
-		if (liste === null)
+		if (liste === null) {
 			return l;
+		}
 		for (const bk of liste) {
-			if (bk.hatSchulform(schuljahr, schulform))
+			if (bk.hatSchulform(schuljahr, schulform)) {
 				l.add(bk);
+			}
 		}
 		return l;
 	}

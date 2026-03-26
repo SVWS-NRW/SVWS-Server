@@ -58,9 +58,11 @@ export class ReportingFilterVerknuepfung extends JavaEnum<ReportingFilterVerknue
 	 * @return 		Die Filter-Verknüpfung
 	 */
 	public static getByID(id: number): ReportingFilterVerknuepfung {
-		for (const op of ReportingFilterVerknuepfung.values())
-			if (op.id === id)
+		for (const op of ReportingFilterVerknuepfung.values()) {
+			if (op.id === id) {
 				return op;
+			}
+		}
 		return ReportingFilterVerknuepfung.UNDEFINED;
 	}
 

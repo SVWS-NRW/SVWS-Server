@@ -69,27 +69,33 @@ export class BKGymAufgabenfeld extends JavaEnum<BKGymAufgabenfeld> {
 		BKGymAufgabenfeld.all_values_by_ordinal.push(this);
 		BKGymAufgabenfeld.all_values_by_name.set(name, this);
 		this.kuerzel = kuerzel;
-		for (const fach of fachbezeichnungen)
+		for (const fach of fachbezeichnungen) {
 			this.fachbezeichnungen.add(fach);
+		}
 	}
 
 	/**
 	 * Initialisiert die Map von den Fächern auf das zugehörige Aufgabenfeld, wenn es noch nicht geschehen ist.
 	 */
 	private static initMapAufgabenfeldByFach(): void {
-		if (BKGymAufgabenfeld._mapAufgabenfeldByFach.size() === 0)
-			for (const feld of BKGymAufgabenfeld.values())
-				for (const fachbezeichnung of feld.fachbezeichnungen)
+		if (BKGymAufgabenfeld._mapAufgabenfeldByFach.size() === 0) {
+			for (const feld of BKGymAufgabenfeld.values()) {
+				for (const fachbezeichnung of feld.fachbezeichnungen) {
 					BKGymAufgabenfeld._mapAufgabenfeldByFach.put(fachbezeichnung, feld);
+				}
+			}
+		}
 	}
 
 	/**
 	 * Initialisiert die Map von den Kürzeln auf das zugehörige Aufgabenfeld, wenn es noch nicht geschehen ist.
 	 */
 	private static initMapAufgabenfeldByKuerzel(): void {
-		if (BKGymAufgabenfeld._mapAufgabenfeldByKuerzel.size() === 0)
-			for (const feld of BKGymAufgabenfeld.values())
+		if (BKGymAufgabenfeld._mapAufgabenfeldByKuerzel.size() === 0) {
+			for (const feld of BKGymAufgabenfeld.values()) {
 				BKGymAufgabenfeld._mapAufgabenfeldByKuerzel.put(feld.kuerzel, feld);
+			}
+		}
 	}
 
 	/**
@@ -110,8 +116,9 @@ export class BKGymAufgabenfeld extends JavaEnum<BKGymAufgabenfeld> {
 	 */
 	public hatFachbezeichnung(fachbezeichnung: string | null): boolean {
 		BKGymAufgabenfeld.initMapAufgabenfeldByFach();
-		if (fachbezeichnung === null)
+		if (fachbezeichnung === null) {
 			return false;
+		}
 		return BKGymAufgabenfeld._mapAufgabenfeldByFach.get(fachbezeichnung) as unknown === this as unknown;
 	}
 

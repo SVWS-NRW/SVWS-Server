@@ -83,9 +83,11 @@ public enum Sprachpruefungniveau {
 	 * @return die Map von den IDs der Sprachprüfungsniveaus auf die zugehörigen Sprachprüfungsniveaus
 	 */
 	private static @NotNull HashMap<Integer, Sprachpruefungniveau> getMapByID() {
-		if (_mapID.size() == 0)
-			for (final Sprachpruefungniveau l : Sprachpruefungniveau.values())
+		if (_mapID.size() == 0) {
+			for (final Sprachpruefungniveau l : Sprachpruefungniveau.values()) {
 				_mapID.put(l.daten.id, l);
+			}
+		}
 		return _mapID;
 	}
 
@@ -97,9 +99,11 @@ public enum Sprachpruefungniveau {
 	 * @return die Map von den Bezeichnungen der Sprachprüfungsniveaus auf die zugehörigen Sprachprüfungsniveaus
 	 */
 	private static @NotNull HashMap<String, Sprachpruefungniveau> getMapByKuerzel() {
-		if (_mapKuerzel.size() == 0)
-			for (final Sprachpruefungniveau l : Sprachpruefungniveau.values())
+		if (_mapKuerzel.size() == 0) {
+			for (final Sprachpruefungniveau l : Sprachpruefungniveau.values()) {
 				_mapKuerzel.put(l.daten.kuerzel, l);
+			}
+		}
 		return _mapKuerzel;
 	}
 

@@ -64,9 +64,11 @@ export class KlausurterminblockungAlgorithmen extends JavaEnum<Klausurterminbloc
 	 * @return die Map mit der Zuordnung zu der ID
 	 */
 	private static getMapByID(): HashMap<number, KlausurterminblockungAlgorithmen> {
-		if (KlausurterminblockungAlgorithmen._mapID.size() === 0)
-			for (const e of KlausurterminblockungAlgorithmen.values())
+		if (KlausurterminblockungAlgorithmen._mapID.size() === 0) {
+			for (const e of KlausurterminblockungAlgorithmen.values()) {
 				KlausurterminblockungAlgorithmen._mapID.put(e.id, e);
+			}
+		}
 		return KlausurterminblockungAlgorithmen._mapID;
 	}
 

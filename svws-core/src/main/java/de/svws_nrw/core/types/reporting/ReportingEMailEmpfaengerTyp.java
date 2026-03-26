@@ -50,9 +50,11 @@ public enum ReportingEMailEmpfaengerTyp {
 	 * @return 		Der Reporting-E-Mail-Empfaenger-Typ
 	 */
 	public static ReportingEMailEmpfaengerTyp getByID(final int id) {
-		for (final ReportingEMailEmpfaengerTyp em : ReportingEMailEmpfaengerTyp.values())
-			if (em.id == id)
+		for (final ReportingEMailEmpfaengerTyp em : ReportingEMailEmpfaengerTyp.values()) {
+			if (em.id == id) {
 				return em;
+			}
+		}
 		return UNDEFINED;
 	}
 }

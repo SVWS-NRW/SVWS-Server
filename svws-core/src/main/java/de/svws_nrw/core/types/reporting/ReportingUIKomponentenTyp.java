@@ -57,9 +57,11 @@ public enum ReportingUIKomponentenTyp {
 	 * @return 		Der ReportingUIKomponentenTyp
 	 */
 	public static @NotNull ReportingUIKomponentenTyp getByID(final int id) {
-		for (final ReportingUIKomponentenTyp dp : ReportingUIKomponentenTyp.values())
-			if (dp.id == id)
+		for (final ReportingUIKomponentenTyp dp : ReportingUIKomponentenTyp.values()) {
+			if (dp.id == id) {
 				return dp;
+			}
+		}
 		return UNDEFINED;
 	}
 

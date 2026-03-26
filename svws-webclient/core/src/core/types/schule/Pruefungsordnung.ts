@@ -88,8 +88,9 @@ export class Pruefungsordnung extends JavaEnum<Pruefungsordnung> {
 	private static getMapPruefungsordnungByKuerzel(): HashMap<string, Pruefungsordnung> {
 		if (Pruefungsordnung._verordnungen.size() === 0) {
 			for (const s of Pruefungsordnung.values()) {
-				if (s.daten !== null)
+				if (s.daten !== null) {
 					Pruefungsordnung._verordnungen.put(s.daten.kuerzel, s);
+				}
 			}
 		}
 		return Pruefungsordnung._verordnungen;

@@ -71,8 +71,9 @@ public enum KursFortschreibungsart {
 	 * @return die Kurs-Fortschreibungsart
 	 */
 	public static KursFortschreibungsart fromID(final Integer id) {
-		if (id == null)
+		if (id == null) {
 			return KursFortschreibungsart.KEINE;
+		}
 		switch (id) {
 			case 0:
 				return KursFortschreibungsart.KEINE;
@@ -97,8 +98,9 @@ public enum KursFortschreibungsart {
 	 * @return die Kurs-Fortschreibungsart
 	 */
 	public static KursFortschreibungsart fromKuerzel(final String kuerzel) {
-		if (kuerzel == null)
+		if (kuerzel == null) {
 			return KursFortschreibungsart.KEINE;
+		}
 		switch (kuerzel) {
 			case "N":
 				return KursFortschreibungsart.KEINE;
@@ -123,9 +125,11 @@ public enum KursFortschreibungsart {
 	 * @return true, falls das kürzel gültig ist.
 	 */
 	public static boolean isValidKuerzel(final String kuerzel) {
-		for (final KursFortschreibungsart art : KursFortschreibungsart.values())
-			if (art.kuerzel.equals(kuerzel))
+		for (final KursFortschreibungsart art : KursFortschreibungsart.values()) {
+			if (art.kuerzel.equals(kuerzel)) {
 				return true;
+			}
+		}
 		return false;
 	}
 

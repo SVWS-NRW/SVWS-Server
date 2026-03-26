@@ -57,10 +57,12 @@ public final class LogData implements Comparable<LogData> {
 	@Override
 	public int compareTo(final @NotNull LogData other) {
 		// TODO compare by time (Long.compare(this.time, other.time)), then by level, then by newLine an then by text
-		if (this.time < other.time)
+		if (this.time < other.time) {
 			return -1;
-		if (this.time > other.time)
+		}
+		if (this.time > other.time) {
 			return 1;
+		}
 		return 0;
 	}
 
@@ -133,8 +135,9 @@ public final class LogData implements Comparable<LogData> {
 	 * @return der Text dieser Log-Information
 	 */
 	public @NotNull String getText() {
-		if (indent <= 0)
+		if (indent <= 0) {
 			return text;
+		}
 		final char[] indentChars = new char[indent];
 		Arrays.fill(indentChars, ' ');
 		return new String(indentChars) + text;
@@ -149,10 +152,12 @@ public final class LogData implements Comparable<LogData> {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj == null)
+		if (obj == null) {
 			return false;
-		if (obj instanceof final LogData data)
+		}
+		if (obj instanceof final LogData data) {
 			return compareTo(data) == 0;
+		}
 		return super.equals(obj);
 	}
 
