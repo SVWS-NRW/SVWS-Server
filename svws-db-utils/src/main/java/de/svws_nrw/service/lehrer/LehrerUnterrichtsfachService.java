@@ -5,6 +5,7 @@ import static de.svws_nrw.data.TransactionSupport.transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import de.svws_nrw.core.data.lehrer.LehrerUnterrichtsfach;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerUnterrichtsfach;
@@ -81,8 +82,38 @@ public final class LehrerUnterrichtsfachService {
 	 * @return die Unterrichtsfächer des Lehrers
 	 */
 	public List<LehrerUnterrichtsfach> getListByLehrerId(final long idLehrer) {
-		final List<DTOLehrerUnterrichtsfach> dtos = repository.getListByLehrerId(idLehrer);
+		final var dtos = repository.getListByLehrerId(idLehrer);
 		return dtos.stream().map(LehrerUnterrichtsfachService::toApi).toList();
+	}
+
+
+	/**
+	 * Ermittelt die Unterrichtsfächer für die Lehrer mit den übergebenen IDs.
+	 *
+	 * @param idsLehrer   die IDs der Lehrer
+	 *
+	 * @return die Unterrichtsfächer der Lehrer
+	 */
+	public List<LehrerUnterrichtsfach> getListByLehrerIds(final Collection<Long> idsLehrer) {
+		final var dtos = repository.getListByLehrerIds(idsLehrer);
+		return dtos.stream().map(LehrerUnterrichtsfachService::toApi).toList();
+	}
+
+
+	/**
+	 * Ermittelt die Unterrichtsfächer für die Lehrer mit den übergebenen IDs, gruppiert nach Lehrer-ID.
+	 *
+	 * @param idsLehrer   die IDs der Lehrer
+	 *
+	 * @return die Zuordnung der Lehrer-IDs zu deren Unterrichtsfächern
+	 */
+	public Map<Long, List<LehrerUnterrichtsfach>> getMapByLehrerIds(final Collection<Long> idsLehrer) {
+		final var map = repository.getMapByLehrerIds(idsLehrer);
+		final Map<Long, List<LehrerUnterrichtsfach>> result = new java.util.HashMap<>();
+		for (final var entry : map.entrySet()) {
+			result.put(entry.getKey(), entry.getValue().stream().map(LehrerUnterrichtsfachService::toApi).toList());
+		}
+		return result;
 	}
 
 

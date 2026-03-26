@@ -1,5 +1,7 @@
 package de.svws_nrw.controller.lehrer;
 
+import java.util.Collection;
+
 import de.svws_nrw.service.lehrer.LehrerUnterrichtsfachCreateRequest;
 import de.svws_nrw.service.lehrer.LehrerUnterrichtsfachPatchRequest;
 import jakarta.ws.rs.core.Response;
@@ -17,6 +19,24 @@ public interface LehrerUnterrichtsfachController {
 	 * @return die Response
 	 */
 	Response getListByLehrerId(long idLehrer);
+
+	/**
+	 * Ermittelt die Unterrichtsfächer für mehrere Lehrer anhand ihrer IDs.
+	 *
+	 * @param idsLehrer   die IDs der Lehrer
+	 *
+	 * @return die Response
+	 */
+	Response getListByLehrerIds(Collection<Long> idsLehrer);
+
+	/**
+	 * Ermittelt die Unterrichtsfächer für mehrere Lehrer anhand ihrer IDs, gruppiert nach Lehrer-ID.
+	 *
+	 * @param idsLehrer   die IDs der Lehrer
+	 *
+	 * @return die Response
+	 */
+	Response getMapByLehrerIds(Collection<Long> idsLehrer);
 
 	/**
 	 * Ermittelt ein Unterrichtsfach anhand der ID.

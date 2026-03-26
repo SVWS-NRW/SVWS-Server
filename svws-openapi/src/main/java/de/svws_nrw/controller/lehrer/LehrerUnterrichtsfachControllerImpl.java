@@ -1,5 +1,7 @@
 package de.svws_nrw.controller.lehrer;
 
+import java.util.Collection;
+
 import de.svws_nrw.data.Responses;
 import de.svws_nrw.service.lehrer.LehrerUnterrichtsfachCreateRequest;
 import de.svws_nrw.service.lehrer.LehrerUnterrichtsfachPatchRequest;
@@ -27,6 +29,18 @@ public final class LehrerUnterrichtsfachControllerImpl implements LehrerUnterric
 	@Override
 	public Response getListByLehrerId(final long idLehrer) {
 		final var daten = service.getListByLehrerId(idLehrer);
+		return Responses.ok(daten);
+	}
+
+	@Override
+	public Response getListByLehrerIds(final Collection<Long> idsLehrer) {
+		final var daten = service.getListByLehrerIds(idsLehrer);
+		return Responses.ok(daten);
+	}
+
+	@Override
+	public Response getMapByLehrerIds(final Collection<Long> idsLehrer) {
+		final var daten = service.getMapByLehrerIds(idsLehrer);
 		return Responses.ok(daten);
 	}
 
