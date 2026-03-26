@@ -50,8 +50,9 @@ public class CommandLineParser {
 	 * @throws CommandLineException    tritt auf, falls eine ungültige Option in der Kommandozeile entdeckt wird
 	 */
 	private void parse() throws CommandLineException {
-		if (options.isEmpty())
+		if (options.isEmpty()) {
 			throw new CommandLineException(CommandLineExceptionType.NO_OPTIONS);
+		}
 		// Setze die aktuelle option auf die erste definierte Option, diese wird nicht benötigt, sollte aber nicht null sein
 		CommandLineOption current = options.entrySet().iterator().next().getValue();
 		boolean isArgument = false;
@@ -68,12 +69,14 @@ public class CommandLineParser {
 				} else {
 					throw new CommandLineException(CommandLineExceptionType.UNKNOWN_OPTION);
 				}
-				if (current == null)
+				if (current == null) {
 					throw new CommandLineException(CommandLineExceptionType.UNKNOWN_OPTION);
-				if (current.hasArgument())
+				}
+				if (current.hasArgument()) {
 					isArgument = true;
-				else
+				} else {
 					values.put(current.getShortTag(), "");
+				}
 			}
 		}
 		parsed = true;
@@ -85,13 +88,15 @@ public class CommandLineParser {
 	 *
 	 * @param option   die hinzuzufügende Option
 	 *
-	 * @throws CommandLineException   tritt auf, falls der short oder long tag der Option bereits zuvor verwendte wurde
+	 * @throws CommandLineException   tritt auf, falls der short oder long tag der Option bereits zuvor verwendet wurde
 	 */
 	public void addOption(final CommandLineOption option) throws CommandLineException {
-		if (options.get(option.getShortTag()) != null)
+		if (options.get(option.getShortTag()) != null) {
 			throw new CommandLineException(CommandLineExceptionType.SHORT_TAG_ALREADY_DEFINED);
-		if (optionsLong.get(option.getLongTag()) != null)
+		}
+		if (optionsLong.get(option.getLongTag()) != null) {
 			throw new CommandLineException(CommandLineExceptionType.LONG_TAG_ALREADY_DEFINED);
+		}
 		options.put(option.getShortTag(), option);
 		optionsLong.put(option.getLongTag(), option);
 	}
@@ -108,10 +113,12 @@ public class CommandLineParser {
 	 * @throws CommandLineException tritt auf, wenn die option nicht bekannt ist oder ein Fehler beim Parsen der Kommandozeile auftritt
 	 */
 	public String getValue(final String tag) throws CommandLineException {
-		if (!options.containsKey(tag))
+		if (!options.containsKey(tag)) {
 			throw new CommandLineException(CommandLineExceptionType.UNKNOWN_OPTION);
-		if (!parsed)
+		}
+		if (!parsed) {
 			parse();
+		}
 		return values.get(tag);
 	}
 
@@ -128,8 +135,9 @@ public class CommandLineParser {
 	public String getValue(final String tag, final String def) {
 		try {
 			final String result = getValue(tag);
-			if (result != null)
+			if (result != null) {
 				return result;
+			}
 			return def;
 		} catch (@SuppressWarnings("unused") final CommandLineException e) {
 			return def;
@@ -145,8 +153,9 @@ public class CommandLineParser {
 	 * @return true, falls die Option gesetzt wurde, sonst false
 	 */
 	public boolean isSet(final String tag) {
-		if (!options.containsKey(tag))
+		if (!options.containsKey(tag)) {
 			return false;
+		}
 		if (!parsed) {
 			try {
 				parse();

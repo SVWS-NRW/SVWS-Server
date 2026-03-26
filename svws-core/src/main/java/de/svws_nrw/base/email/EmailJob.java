@@ -55,8 +55,9 @@ public final class EmailJob {
 	 * @param from   die E-Mail-Adresse des Senders
 	 */
 	public EmailJob(final @NotNull String from) {
-		if ((from == null) || from.isBlank())
+		if ((from == null) || from.isBlank()) {
 			throw new IllegalArgumentException("Notwendiger Parameter Absender-E-Mail-Adresse für die Erzeugung eines E-Mail-Jobs ist null oder leer.");
+		}
 		this.from = from;
 	}
 
@@ -70,8 +71,9 @@ public final class EmailJob {
 	 * @throws DeveloperNotificationException falls die ID nicht zuvor von einem Job-Manager gesetzt wurde
 	 */
 	public long getId() throws DeveloperNotificationException {
-		if (id == null)
+		if (id == null) {
 			throw new DeveloperNotificationException("Für den Zugriff auf eine Job-ID muss diese zuvor von dem zugehörigen Job-Manager gesetzt sein.");
+		}
 		return id;
 	}
 
@@ -85,8 +87,9 @@ public final class EmailJob {
 	 * @return true, wenn die ID gesetzt werden konnte und zuvor keine ID gesetzt war, und ansonsten false
 	 */
 	boolean setId(final long id) {
-		if (this.id != null)
+		if (this.id != null) {
 			return false;
+		}
 		this.id = id;
 		return true;
 	}
@@ -140,8 +143,9 @@ public final class EmailJob {
 	 * @return dieser Job
 	 */
 	public @NotNull EmailJob withSubject(final @NotNull String subject) {
-		if (subject != null)
+		if (subject != null) {
 			this.subject = subject;
+		}
 		return this;
 	}
 
@@ -154,8 +158,9 @@ public final class EmailJob {
 	 * @return dieser Job
 	 */
 	public @NotNull EmailJob withBody(final @NotNull String body) {
-		if (body != null)
+		if (body != null) {
 			this.body = body;
+		}
 		return this;
 	}
 
@@ -168,8 +173,9 @@ public final class EmailJob {
 	 * @return dieser Job
 	 */
 	public @NotNull EmailJob addRecipient(final EmailJobRecipient recipient) {
-		if (recipient != null)
+		if (recipient != null) {
 			this.recipients.add(recipient);
+		}
 		return this;
 	}
 
@@ -182,8 +188,9 @@ public final class EmailJob {
 	 * @return dieser Job
 	 */
 	public @NotNull EmailJob addRecipients(final List<EmailJobRecipient> recipients) {
-		if ((recipients != null) && !recipients.isEmpty())
+		if ((recipients != null) && !recipients.isEmpty()) {
 			this.recipients.addAll(recipients);
+		}
 		return this;
 	}
 

@@ -33,8 +33,9 @@ public final class Passwords {
 		types.add(1); // digit
 		types.add(2); // lowercase
 		types.add(6); // uppercase
-		for (int i = 3; i < length; i++)
+		for (int i = 3; i < length; i++) {
 			types.add(random.nextInt(10));
+		}
 		Collections.shuffle(types);
 		// randomly create chars by type and order
 		final char[] chars = new char[length];
@@ -65,8 +66,9 @@ public final class Passwords {
 		types.add(1); // digit
 		types.add(2); // lowercase
 		types.add(6); // uppercase
-		for (int i = 4; i < length; i++)
+		for (int i = 4; i < length; i++) {
 			types.add(random.nextInt(10));
+		}
 		Collections.shuffle(types);
 		// randomly create chars by type and order
 		final char[] chars = new char[length];

@@ -86,8 +86,9 @@ public final class KeyStoreUtils {
 	public static PrivateKey getPrivateKey(final KeyStore keystore, final String alias, final String password) throws KeyStoreException {
 		try {
 			final Key key = keystore.getKey(alias, password.toCharArray());
-			if (key instanceof final PrivateKey privateKey)
+			if (key instanceof final PrivateKey privateKey) {
 				return privateKey;
+			}
 			throw new KeyStoreException("Der private Schlüssel konnte nicht ausgelesen werden.");
 		} catch (KeyStoreException | UnrecoverableKeyException | NoSuchAlgorithmException e) {
 			throw new KeyStoreException("", e);
@@ -182,17 +183,21 @@ public final class KeyStoreUtils {
 	 */
 	public static void addPrivateKeyCertificateBase64(final KeyStore keystore, final String location, final String password,
 			final String alias, final byte[] key, final byte[] cert) throws KeyStoreException {
-		if ((alias == null) || alias.isBlank())
+		if ((alias == null) || alias.isBlank()) {
 			throw new KeyStoreException("Für das Hinzufügen muss ein Alias angegeben werden.");
+		}
 		// Überprüfe den privaten Schlüssel und wandle ihn um
-		if ((key == null) || (key.length == 0))
+		if ((key == null) || (key.length == 0)) {
 			throw new KeyStoreException("Für das Hinzufpgen muss ein privater Schlüssel angegeben werden.");
+		}
 		String[] tmp = new String(key, StandardCharsets.UTF_8).split("-----BEGIN PRIVATE KEY-----\r*\n*");
-		if (tmp.length != 2)
+		if (tmp.length != 2) {
 			throw new KeyStoreException("Der private Schlüssel kann nicht eingelesen werden. Überprüfen sie das Dateiformat.");
+		}
 		tmp = tmp[1].split("\r*\n*-----END PRIVATE KEY-----");
-		if (tmp.length != 2)
+		if (tmp.length != 2) {
 			throw new KeyStoreException("Der private Schlüssel kann nicht eingelesen werden. Überprüfen sie das Dateiformat.");
+		}
 		final String keyBase64 = tmp[0];
 		final byte[] keyRaw = Base64.getMimeDecoder().decode(keyBase64);
 		final PrivateKey keyDecoded;
@@ -203,14 +208,17 @@ public final class KeyStoreUtils {
 			throw new KeyStoreException("Fehler beim Dekodieren des RSA-Schlüssels.", e);
 		}
 		// Überprüfe das Zertifikat und wandle es um
-		if ((cert == null) || (cert.length == 0))
+		if ((cert == null) || (cert.length == 0)) {
 			throw new KeyStoreException("Ein Zertifikat muss angegeben werden.");
+		}
 		tmp = new String(cert, StandardCharsets.UTF_8).split("-----BEGIN CERTIFICATE-----\r*\n*");
-		if (tmp.length != 2)
+		if (tmp.length != 2) {
 			throw new KeyStoreException("Das Zertifikat kann nicht eingelesen werden. Überprüfen sie das Dateiformat.");
+		}
 		tmp = tmp[1].split("\r*\n*-----END CERTIFICATE-----");
-		if (tmp.length != 2)
+		if (tmp.length != 2) {
 			throw new KeyStoreException("Das Zertifikat kann nicht eingelesen werden. Überprüfen sie das Dateiformat.");
+		}
 		final String certBase64 = tmp[0];
 		final byte[] certRaw = Base64.getMimeDecoder().decode(certBase64);
 		final Certificate certDecoded;
@@ -249,7 +257,7 @@ public final class KeyStoreUtils {
 		try {
 			final X509Certificate certDecoded = TLSUtils.decodeCertFileBase64(new String(cert, StandardCharsets.UTF_8));
 			addCertificate(keystore, alias, certDecoded);
-		} catch (CertificateException e) {
+		} catch (final CertificateException e) {
 			throw new KeyStoreException("Fehler beim Dekodieren des TLS-Zertifikates", e);
 		}
 	}
@@ -265,11 +273,13 @@ public final class KeyStoreUtils {
 	 * @throws KeyStoreException   die Exception tritt auf, wenn das Zertifikat nicht zum Keystore hinzugefügt werden kann
 	 */
 	public static void addCertificate(final KeyStore keystore, final String alias, final X509Certificate cert) throws KeyStoreException {
-		if ((alias == null) || alias.isBlank())
+		if ((alias == null) || alias.isBlank()) {
 			throw new KeyStoreException("Für das Hinzufügen muss ein Alias angegeben werden.");
+		}
 		// Überprüfe das Zertifikat und wandle es um
-		if (cert == null)
+		if (cert == null) {
 			throw new KeyStoreException("Ein Zertifikat muss angegeben werden.");
+		}
 		// Schreibe das Zertifikat unter dem angebenen alias in den Keystore
 		try {
 			keystore.setCertificateEntry(alias, cert);

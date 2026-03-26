@@ -21,7 +21,7 @@ import javax.crypto.SecretKey;
  * Beim Verschlüsseln wird ein zufälliger AES-256 generiert. Dieser wird dann mit
  * dem RSA-Verfahren verschlüsselt und den Daten vorangestellt. Die eigentlich
  * zu transportierenden Daten werden dann angehängt und werden mit diesem
- * AES-Schlüssel und dem Vefahren {@link AESAlgo#CBC_PKCS5PADDING} verschlüsselt.
+ * AES-Schlüssel und dem Verfahren {@link AESAlgo#CBC_PKCS5PADDING} verschlüsselt.
  */
 public class RSA {
 
@@ -57,8 +57,9 @@ public class RSA {
 	 * @throws RSAException   eine Exception, falls ein Fehler beim Verschlüsseln auftritt
 	 */
 	public byte[] encrypt(final byte[] input) throws RSAException {
-		if (this.publicKey == null)
+		if (this.publicKey == null) {
 			throw new RSAException("Fehler beim Verschlüsseln der Daten: Es steht kein öffentlicher Schlüssel zur Verfügung.");
+		}
 		try {
 			// Erstelle einen zufälligen AES-Schlüssel ...
 			final SecretKey aeskey = AES.getRandomKey256();
@@ -90,13 +91,15 @@ public class RSA {
 	 * @throws RSAException   eine Exception, falls ein Fehler beim Entschlüsseln auftritt
 	 */
 	public byte[] decrypt(final byte[] input) throws RSAException {
-		if (this.privateKey == null)
+		if (this.privateKey == null) {
 			throw new RSAException("Fehler beim Entschlüsseln der Daten: Es steht kein privater Schlüssel zur Verfügung.");
+		}
 		try {
 			// Stelle den AES-Schlüssel mithilfe des Blockes am Anfang der Daen wieder her
 			final int aeskeyEncodedLength = DEFAULT_KEY_LENGTH / 8;
-			if (input.length < aeskeyEncodedLength)
+			if (input.length < aeskeyEncodedLength) {
 				throw new RSAException("Die Daten enthalten keinen mit RSA verschlüsselten AES-Schlüssel.");
+			}
 			final Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING");
 			cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
 			final byte[] aeskeyDecoded = cipher.doFinal(input, 0, aeskeyEncodedLength);
@@ -201,8 +204,9 @@ public class RSA {
 	 * @throws RSAException falls der Schlüssel nicht vorhanden ist (null)
 	 */
 	public String encodePublicKey() throws RSAException {
-		if (this.publicKey == null)
+		if (this.publicKey == null) {
 			throw new RSAException("Der öffentliche Schlüssel ist nicht vorhanden.");
+		}
 		return encodeKey(this.publicKey);
 	}
 
@@ -215,8 +219,9 @@ public class RSA {
 	 * @throws RSAException falls der Schlüssel nicht vorhanden ist (null)
 	 */
 	public String encodePrivateKey() throws RSAException {
-		if (this.privateKey == null)
+		if (this.privateKey == null) {
 			throw new RSAException("Der private Schlüssel ist nicht vorhanden.");
+		}
 		return encodeKey(this.privateKey);
 	}
 

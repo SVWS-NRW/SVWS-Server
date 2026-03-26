@@ -44,7 +44,7 @@ public class AES {
 
 
 	/**
-	 * Verschlüsselt das übergebene Byte-Array. Der Initialisieruns-
+	 * Verschlüsselt das übergebene Byte-Array. Der Initialisierungs-
 	 * Vektor (IV) wird dabei den Daten vorangestellt.
 	 *
 	 * @param input   das zu verschlüsselnde Byte-Array
@@ -83,9 +83,10 @@ public class AES {
 	 */
 	public byte[] decrypt(final byte[] input) throws AESException {
 		try {
-			if (input.length < 16)
+			if (input.length < 16) {
 				throw new ArrayIndexOutOfBoundsException(
 						"Das übegebene Array ist zu klein und kann noch nicht einmal einen Initialisierungsvbektor enthalten.");
+			}
 			final IvParameterSpec iv = new IvParameterSpec(input, 0, 16);
 			final Cipher cipher = Cipher.getInstance(this.algo.value());
 			cipher.init(Cipher.DECRYPT_MODE, key, iv);
@@ -97,7 +98,7 @@ public class AES {
 
 	/**
 	 * Verschlüsselt die übergebenen Daten und erstellt einen Base64-kodierten
-	 * String aus dem Ergebnis. Der Initialisieruns-
+	 * String aus dem Ergebnis. Der Initialisierungs-
 	 * Vektor (IV) wird dabei den Daten vorangestellt.
 	 *
 	 * @param input   die unverschlüsselten Daten

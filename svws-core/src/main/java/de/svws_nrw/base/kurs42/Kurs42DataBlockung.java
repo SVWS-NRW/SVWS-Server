@@ -46,11 +46,13 @@ public final class Kurs42DataBlockung {
 			data = Files.readAllLines(path, StandardCharsets.ISO_8859_1);
 		}
 		for (final String line : data) {
-			if (line.startsWith("["))
+			if (line.startsWith("[")) {
 				continue;
+			}
 			final String[] parts = line.split("=");
-			if (parts.length != 2)
+			if (parts.length != 2) {
 				continue;
+			}
 			try {
 				switch (parts[0]) {
 					case "Jahrgang" -> this.Jahrgang = parts[1];

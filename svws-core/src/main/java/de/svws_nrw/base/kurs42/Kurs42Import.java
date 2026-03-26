@@ -149,9 +149,10 @@ public class Kurs42Import {
 		this.k42Schienen = CsvReader.fromKurs42(parent.resolve("Schienen.txt"), Kurs42DataSchienen.class);
 		this.k42Blockplan = CsvReader.fromKurs42(parent.resolve("Blockplan.txt"), Kurs42DataBlockplan.class);
 		this.k42Fachwahlen = CsvReader.fromKurs42(parent.resolve("Fachwahlen.txt"), Kurs42DataFachwahlen.class);
-		if (!("" + schulnummer).equals(k42Blockung.Schulnummer))
+		if (!("" + schulnummer).equals(k42Blockung.Schulnummer)) {
 			throw new IOException(
 					"Die Schulnummer der Schule stimmt nicht mit der Schulnummer des Kurs42-Exportes überein. Die Daten können daher nicht importiert werden.");
+		}
 		this.name = ((k42Blockung.Bezeichnung == null) || "".equals(k42Blockung.Bezeichnung)) ? "Blockung importiert aus Kurs42" : k42Blockung.Bezeichnung;
 		final int abschnitt = (k42Blockung.Abschnitt > 2) ? 2 : k42Blockung.Abschnitt;
 		this.halbjahr = GostHalbjahr.fromJahrgangUndHalbjahr(k42Blockung.Jahrgang, abschnitt);
@@ -181,9 +182,10 @@ public class Kurs42Import {
 		for (final Kurs42DataKurse k42Kurs : k42Kurse) {
 			final long id = curKursID++;
 			final Long fachID = mapFachKuerzelToID.get(k42Kurs.Fach);
-			if (fachID == null)
+			if (fachID == null) {
 				throw new IOException("Das bei den Kursen angegeben Fach mit dem Kürzel " + k42Kurs.Fach
 						+ " existiert nicht in der Liste der Fächer. Die zu importierenden Daten sind inkonsistent. Der Import wird abgebrochen.");
+			}
 			final GostKursart kursart = GostKursart.fromKuerzel(k42Kurs.Kursart);
 			final String kursartKey = fachID + ";" + kursart.id;
 
@@ -226,8 +228,9 @@ public class Kurs42Import {
 				try {
 					final String[] tmpSchienen = k42Kurs.Gesperrt.substring(1, k42Kurs.Gesperrt.length() - 1).split(",");
 					for (final String schiene : tmpSchienen) {
-						if ("".equals(schiene.trim()))
+						if ("".equals(schiene.trim())) {
 							continue;
+						}
 						final int schienenNummer = Integer.parseInt(schiene.trim()) + 1;   // Die Schienen-Nummer (1-indiziert)
 						setSchienenBeiKursen.add(schienenNummer);
 						final GostBlockungRegel regel = new GostBlockungRegel();
@@ -292,9 +295,10 @@ public class Kurs42Import {
 				continue;
 			}
 			final Long schienenID = mapSchieneNrToID.get(schienenNr);
-			if (schienenID == null)
+			if (schienenID == null) {
 				throw new IOException("Die im Blockplan angegebene Schienennummer " + bp.Schiene
 						+ " existiert nicht in der Schienen-Liste. Die zu importierenden Daten sind inkonsistent. Der Import wird abgebrochen.");
+			}
 			this.zuordnung_kurs_schiene.put(id, schienenID, new Pair<>(id, schienenID));
 			if (bp.Fixiert != 0) {
 				final GostBlockungRegel regel = new GostBlockungRegel();
@@ -331,9 +335,10 @@ public class Kurs42Import {
 				continue;
 			}
 			final Long schuelerID = mapSchuelerKeyToID.get(schuelerKey);
-			if (schuelerID == null)
+			if (schuelerID == null) {
 				throw new IOException("Der bei den Fachwahlen angegebene Datensatz enthält Schülerdaten (" + schuelerKey
 						+ "), die in der Schülerliste nicht existieren. Die zu importierenden Daten sind inkonsistent. Der Import wird abgebrochen.");
+			}
 			if (!setSchueler.contains(schuelerID)) {
 				logger.logLn("Der Schüler mit der ID %d existiert nicht in der SVWS-DB. Die Kurs-Schüler-Zuordnung wird beim Import ignoriert."
 						.formatted(schuelerID));

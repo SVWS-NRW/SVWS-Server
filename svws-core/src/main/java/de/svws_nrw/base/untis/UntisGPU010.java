@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Diese Klasse dient als DTO für die CSV-Datei {@code GPU010.txt} des
  * Untis-Datenaustausch-Formates und enthält damit eine Beschreibung der
- * Stundenten bzw. Schüler.
+ * Studenten bzw. Schüler.
  */
 public final class UntisGPU010 {
 

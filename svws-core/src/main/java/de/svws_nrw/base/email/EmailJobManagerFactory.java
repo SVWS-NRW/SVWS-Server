@@ -13,7 +13,6 @@ public final class EmailJobManagerFactory {
 	/** Die Instanz der Factory sofern auf diese zugegriffen wurde */
 	private static EmailJobManagerFactory instance = null;
 
-
 	/** Gibt an, ob die Factory aktiv ist und neue {@link EmailJobManager} erstellt werden dürfen. */
 	private boolean active = true;
 
@@ -34,8 +33,9 @@ public final class EmailJobManagerFactory {
 	 * @return die Instanz der Factory
 	 */
 	public static EmailJobManagerFactory getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new EmailJobManagerFactory();
+		}
 		return instance;
 	}
 
@@ -78,16 +78,20 @@ public final class EmailJobManagerFactory {
 	 * @return die Instanz des {@link EmailJobManager}
 	 */
 	public synchronized @NotNull EmailJobManager getManager(final @NotNull EmailJobManagerContext context) {
-		if (context == null)
+		if (context == null) {
 			throw new IllegalArgumentException("Ohne einen Job-Manager-Context kann kein Manager erzeugt werden.");
-		if (!active)
+		}
+		if (!active) {
 			throw new IllegalArgumentException("Die Klasse EmailJobManager ist nicht mehr aktiv. Es kann daher kein neuer Manager mehr erstellt werden.");
+		}
 		final HashMap<Long, EmailJobManager> tmp = mapInstances.computeIfAbsent(context.getDBSchema(), k -> new HashMap<>());
-		if (tmp == null) // kann nicht eintreten
+		if (tmp == null) { // kann nicht eintreten
 			throw new IllegalArgumentException("Fehler beim Erstellen einer HashMap in der Methode EmailJobManager.getManager(...)");
+		}
 		final EmailJobManager jobManager = tmp.computeIfAbsent(context.getUserId(), id -> new EmailJobManager(context));
-		if (jobManager == null) // kann nicht eintreten
+		if (jobManager == null) { // kann nicht eintreten
 			throw new IllegalArgumentException("Fehler beim Erstellen eines neuen Managers in der Methode EmailJobManager.getManager(...)");
+		}
 		return jobManager;
 	}
 
@@ -102,8 +106,9 @@ public final class EmailJobManagerFactory {
 	 */
 	public synchronized EmailJobManager getManagerByUser(final @NotNull String schema, final long idUser) {
 		final HashMap<Long, EmailJobManager> tmp = mapInstances.get(schema);
-		if (tmp == null)
+		if (tmp == null) {
 			return null;
+		}
 		return tmp.get(idUser);
 	}
 
@@ -117,11 +122,13 @@ public final class EmailJobManagerFactory {
 	 */
 	public synchronized void freeManager(final @NotNull String schema, final long idUser) {
 		final HashMap<Long, EmailJobManager> tmp = mapInstances.get(schema);
-		if (tmp == null)
+		if (tmp == null) {
 			return;
+		}
 		final EmailJobManager jobManager = tmp.get(idUser);
-		if (jobManager == null)
+		if (jobManager == null) {
 			return;
+		}
 		jobManager.shutdown();
 		tmp.remove(idUser);
 	}
@@ -133,8 +140,9 @@ public final class EmailJobManagerFactory {
 	 */
 	public synchronized void freeAllManager() {
 		for (final var tmp : mapInstances.values()) {
-			for (final var jobManager : tmp.values())
+			for (final var jobManager : tmp.values()) {
 				jobManager.shutdown();
+			}
 			tmp.clear();
 		}
 		mapInstances.clear();

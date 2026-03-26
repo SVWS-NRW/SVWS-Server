@@ -46,7 +46,7 @@ public final class UntisGPU015 {
 	/** Reserviert */
 	public String reserviert2;
 
-	/** Unterrichtsnummern der Alternativekurse (mit ~ getrennt, 4035~4036~4037) */
+	/** Unterrichtsnummern der Alternativkurse (mit ~ getrennt, 4035~4036~4037) */
 	public String idsUnterrichteAlternativkurse;
 
 	/** Kürzel der Alternativkurse (mit ~ getrennt, z.B. "M-GK1, M-GK2, M-GK3") */

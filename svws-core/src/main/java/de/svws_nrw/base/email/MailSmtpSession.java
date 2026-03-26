@@ -75,11 +75,13 @@ public class MailSmtpSession {
 
 	private static @NotNull InternetAddress[] convertMailAddresses(final String addresses) throws MessagingException {
 		try {
-			if (addresses == null)
+			if (addresses == null) {
 				return new InternetAddress[0];
+			}
 			final String tmp = addresses.trim().replace(" ", "");
-			if (tmp.isBlank())
+			if (tmp.isBlank()) {
 				return new InternetAddress[0];
+			}
 			final String[] arrayAddresses = tmp.split(",");
 			final Pattern p = Pattern.compile("(.*)<([^<>]*)>\\s*");
 			final InternetAddress[] result = new InternetAddress[arrayAddresses.length];
@@ -171,8 +173,9 @@ public class MailSmtpSession {
 		final Multipart multipart = new MimeMultipart();
 		addBody(multipart, text);
 
-		for (int i = 0; i < attachments.size(); i++)
+		for (int i = 0; i < attachments.size(); i++) {
 			addAttachment(multipart, attachments.get(i));
+		}
 
 		message.setContent(multipart);
 		Transport.send(message);

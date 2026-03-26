@@ -50,8 +50,9 @@ public class EmailJobManagerContext {
 	 * @param session   die Session für das Versenden von Email per SMTP
 	 */
 	public EmailJobManagerContext(final @NotNull String schema, final long idUser, final @NotNull MailSmtpSession session) {
-		if ((schema == null) || schema.isBlank() || (session == null))
+		if ((schema == null) || schema.isBlank() || (session == null)) {
 			throw new IllegalArgumentException("Notwendige Parameter für die Erzeugung eines E-Mail-Job-Manager-Contexts sind null oder leer.");
+		}
 		this.schema = schema;
 		this.idUser = idUser;
 		this.session = session;
@@ -70,8 +71,9 @@ public class EmailJobManagerContext {
 	 */
 	@NotNull
 	EmailJobManagerContext withRateLimitTimeframeMs(final long rateLimitTimeframeMs) {
-		if (rateLimitTimeframeMs >= MIN_RATELIMIT_TIMEFRAME_MS)
+		if (rateLimitTimeframeMs >= MIN_RATELIMIT_TIMEFRAME_MS) {
 			this.rateLimitTimeframeMs = rateLimitTimeframeMs;
+		}
 		return this;
 	}
 
@@ -84,14 +86,15 @@ public class EmailJobManagerContext {
 	 * @return dieser Kontext
 	 */
 	public @NotNull EmailJobManagerContext withMaxEmailsPerMinute(final int maxEmailsPerMinute) {
-		if (maxEmailsPerMinute > 0)
+		if (maxEmailsPerMinute > 0) {
 			this.maxEmailsPerMinute = maxEmailsPerMinute;
+		}
 		return this;
 	}
 
 
 	/**
-	 * Setzt die Zeit in Millisekunden, für welche abgeschlossenene Jobs noch im Speicher
+	 * Setzt die Zeit in Millisekunden, für welche abgeschlossene Jobs noch im Speicher
 	 * gehalten werden nachdem sie abgeschlossen wurden. Anschließend wird dieser Kontext (this) zurückgegeben.
 	 *
 	 * @param time   die Zeit in Millisekunden, negative Werte und 0 werden ignoriert
@@ -99,8 +102,9 @@ public class EmailJobManagerContext {
 	 * @return dieser Kontext
 	 */
 	public @NotNull EmailJobManagerContext withTimeToKeepCompletedJobs(final long time) {
-		if (time > 0)
+		if (time > 0) {
 			this.timeToKeepCompletedJobs = time;
+		}
 		return this;
 	}
 
@@ -114,8 +118,9 @@ public class EmailJobManagerContext {
 	 * @return dieser Kontext
 	 */
 	public @NotNull EmailJobManagerContext withMaxAttachmentSize(final long maxAttachmentSize) {
-		if (maxAttachmentSize >= 0)
+		if (maxAttachmentSize >= 0) {
 			this.maxAttachmentSize = maxAttachmentSize;
+		}
 		return this;
 	}
 
@@ -198,7 +203,7 @@ public class EmailJobManagerContext {
 
 
 	/**
-	 * Gibt die Zeit in Millisekunden zurück, für welche abgeschlossenene Jobs noch im Speicher
+	 * Gibt die Zeit in Millisekunden zurück, für welche abgeschlossene Jobs noch im Speicher
 	 * gehalten werden nachdem sie abgeschlossen wurden
 	 *
 	 * @return die Zeit in Millisekunden

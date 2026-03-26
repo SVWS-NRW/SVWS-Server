@@ -40,7 +40,7 @@ public final class ResourceUtils {
 	}
 
 	/**
-	 * Ermittelt alle Dateien, die in dem angebenen Pfad path liegen und zu dem
+	 * Ermittelt alle Dateien, die in dem angegebenen Pfad path liegen und zu dem
 	 * Package mit dem Name packageName oder einem Sub-Package davon gehören
 	 * sowie die angegebene Dateiendung haben.
 	 *
@@ -56,8 +56,9 @@ public final class ResourceUtils {
 	private static List<Path> getFilesInPath(final FileSystem fs, final String path, final String packagePath, final String fileextension) throws IOException {
 		final List<Path> classes = new ArrayList<>();
 		final Path fullPath = fs.getPath(path + (path.endsWith("/") ? "" : "/") + packagePath);
-		if (!Files.isDirectory(fullPath))
+		if (!Files.isDirectory(fullPath)) {
 			return classes;
+		}
 		try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(fullPath)) {
 			for (final Path p : dirStream) {
 				if (Files.isDirectory(p)) {
@@ -86,8 +87,9 @@ public final class ResourceUtils {
 	private static FileSystem getJARFileSystem(final URI uri) throws IOException {
 		final String[] array = uri.toString().split("!");
 		FileSystem fs = jarFS.get(array[0]);
-		if (fs != null)
+		if (fs != null) {
 			return fs;
+		}
 		try {
 			fs = FileSystems.getFileSystem(URI.create(array[0]));
 			jarFS.put(array[0], fs);
@@ -129,7 +131,7 @@ public final class ResourceUtils {
 
 
 	/**
-	 * Liest den UTF8-kodierten Text aus der angebenen Datei ein und gibt
+	 * Liest den UTF8-kodierten Text aus der angegebenen Datei ein und gibt
 	 * diesen als String zurück.
 	 *
 	 * @param filename   der Dateiname
@@ -173,14 +175,16 @@ public final class ResourceUtils {
 			final String[] array = uri.toString().split("!");
 			path = fs.getPath(array[1]);
 			final int j = Paths.get(packagePath).getNameCount();
-			for (int i = 0; i < j; i++)
+			for (int i = 0; i < j; i++) {
 				path = path.getParent();
+			}
 			result.addAll(getFilesInPath(fs, path.toString(), packagePath, fileextension));
 		} else {
 			path = Paths.get(uri);
 			final int j = Paths.get(packagePath).getNameCount();
-			for (int i = 0; i < j; i++)
+			for (int i = 0; i < j; i++) {
 				path = path.getParent();
+			}
 			final FileSystem fs = FileSystems.getDefault();
 			result.addAll(getFilesInPath(fs, path.toString(), packagePath, fileextension));
 		}
@@ -202,8 +206,9 @@ public final class ResourceUtils {
 		try {
 			final String packagePath = packageName.replace(".", "/");
 			res = ResourceUtils.class.getClassLoader().getResources(packagePath);
-			while (res.hasMoreElements())
+			while (res.hasMoreElements()) {
 				getFilesInPackageFromURL(res.nextElement(), packagePath, result, fileextension);
+			}
 		} catch (final IOException e1) {
 			e1.printStackTrace();
 		}
@@ -213,13 +218,13 @@ public final class ResourceUtils {
 
 	/**
 	 * Lädt alle JSON-Dateien aus dem angegebenen Package, welche das angegebene Präfix haben und
-	 * die angegebene Dateiendung. Die JSON-Objekt werden dann in Objekte der angebenenen
+	 * die angegebene Dateiendung. Die JSON-Objekt werden dann in Objekte der angegebenen
 	 * Klasse gemappt.
 	 *
 	 * @param <T>   			die Klasse, von welcher die neuen Objekte erzeugt werden
 	 * @param resourcePackage   das Package
 	 * @param prefix			das benötigte Präfix im Dateinamen
-	 * @param clazz             das Klassenobjekt der Klasse, von welcher neue Objekte ereugt werden
+	 * @param clazz             das Klassenobjekt der Klasse, von welcher neue Objekte erzeugt werden
 	 *
 	 * @return eine Map, welche dem Teil des Dateinamens ohne Präfix und Endung das neu erzeugte Objekt zuordnet
 	 *
@@ -232,14 +237,14 @@ public final class ResourceUtils {
 
 	/**
 	 * Lädt alle JSON-Dateien aus dem angegebenen Package, welche das angegebene Präfix haben und
-	 * die angegebene Dateiendung. Die JSON-Objekt werden dann in Objekte der angebenenen
+	 * die angegebene Dateiendung. Die JSON-Objekt werden dann in Objekte der angegebenen
 	 * Klasse gemappt.
 	 *
 	 * @param <T>   			die Klasse, von welcher die neuen Objekte erzeugt werden
 	 * @param resourcePackage   das Package
 	 * @param prefix			das benötigte Präfix im Dateinamen
 	 * @param suffix            das benötigte Suffix im Dateinamen (vor dem .json)
-	 * @param clazz             das Klassenobjekt der Klasse, von welcher neue Objekte ereugt werden
+	 * @param clazz             das Klassenobjekt der Klasse, von welcher neue Objekte erzeugt werden
 	 *
 	 * @return eine Map, welche dem Teil des Dateinamens ohne Präfix und Endung das neu erzeugte Objekt zuordnet
 	 *
@@ -267,14 +272,14 @@ public final class ResourceUtils {
 
 	/**
 	 * Lädt alle JSON-Dateien aus dem angegebenen Package, welche das angegebene Präfix haben und
-	 * die angegebene Dateiendung. Die JSON-Objekt werden dann in Objekte der angebenenen
+	 * die angegebene Dateiendung. Die JSON-Objekt werden dann in Objekte der angegebenen
 	 * Klasse gemappt.
 	 *
 	 * @param <T>   			die Klasse, von welcher die neuen Objekte erzeugt werden
 	 * @param resourcePackage   das Package
 	 * @param prefix			das benötigte Präfix im Dateinamen
 	 * @param suffix            das benötigte Suffix im Dateinamen (vor dem .json)
-	 * @param clazz             das Klassenobjekt der Klasse, von welcher neue Objekte ereugt werden
+	 * @param clazz             das Klassenobjekt der Klasse, von welcher neue Objekte erzeugt werden
 	 *
 	 * @return eine Map, welche dem Teil des Dateinamens ohne Präfix und Endung das neu erzeugte Objekt zuordnet
 	 *

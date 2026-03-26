@@ -25,8 +25,9 @@ public class EmailJobAttachment {
 	 * @param mimetype   der Mime-Type
 	 */
 	public EmailJobAttachment(final @NotNull String filename, final @NotNull byte[] data, final @NotNull String mimetype) {
-		if ((filename == null) || filename.isBlank() || (data == null) || (data.length == 0) || (mimetype == null) || mimetype.isBlank())
+		if ((filename == null) || filename.isBlank() || (data == null) || (data.length == 0) || (mimetype == null) || mimetype.isBlank()) {
 			throw new IllegalArgumentException("Notwendige Parameter für die Erzeugung eines E-Mail-Attachments sind null oder leer.");
+		}
 		this.filename = filename;
 		this.data = data;
 		this.mimetype = mimetype;

@@ -127,8 +127,9 @@ public final class TLSUtils {
 		}
 
 		// Lese die Zertifikatskette aus
-		if (trustManager.chain == null)
+		if (trustManager.chain == null) {
 			throw new SSLException("Die Server-Zertifikate konnten bei dem Handshake nicht bestimmt werden.");
+		}
 		chain.clear();
 		chain.addAll(Arrays.asList(trustManager.chain));
 		return isTrusted;
@@ -153,8 +154,9 @@ public final class TLSUtils {
 		final List<X509Certificate> chainX509 = new ArrayList<>();
 		final boolean isTrusted = queryServerCertificates(url, chainX509);
 		try {
-			for (final X509Certificate c : chainX509)
+			for (final X509Certificate c : chainX509) {
 				chain.add(encodeCertFileBase64(c));
+			}
 		} catch (final CertificateException e) {
 			throw new SSLException("Fehler bei der Umwandlung der X509-Zertifikate nach Base64", e);
 		}
@@ -231,11 +233,13 @@ public final class TLSUtils {
 	 */
 	public static X509Certificate decodeCertFileBase64(final String base64) throws CertificateException {
 		String[] tmp = base64.split("-----BEGIN CERTIFICATE-----\r*\n*");
-		if (tmp.length != 2)
+		if (tmp.length != 2) {
 			throw new IllegalArgumentException("Das Zertifikat kann nicht eingelesen werden. Überprüfen sie das Dateiformat.");
+		}
 		tmp = tmp[1].split("\r*\n*-----END CERTIFICATE-----");
-		if (tmp.length != 2)
+		if (tmp.length != 2) {
 			throw new IllegalArgumentException("Das Zertifikat kann nicht eingelesen werden. Überprüfen sie das Dateiformat.");
+		}
 		final byte[] certRaw = Base64.getMimeDecoder().decode(tmp[0]);
 		final X509Certificate certDecoded;
 		try {
@@ -262,10 +266,11 @@ public final class TLSUtils {
 		boolean first = true;
 		final StringBuilder result = new StringBuilder("[");
 		for (final X509Certificate cert : certs) {
-			if (first)
+			if (first) {
 				first = false;
-			else
+			} else {
 				result.append(",");
+			}
 			result.append("\"").append(encodeCertBase64(cert)).append("\"");
 		}
 		result.append("]");
@@ -307,7 +312,7 @@ public final class TLSUtils {
 	public static SSLContext getTLSContextFromKeystore(final KeyStore keystore) throws GeneralSecurityException {
 		final TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
 		tmf.init(keystore);
-		SSLContext sslContext = SSLContext.getInstance("TLS");
+		final SSLContext sslContext = SSLContext.getInstance("TLS");
 		sslContext.init(null, tmf.getTrustManagers(), new SecureRandom());
 		return sslContext;
 	}

@@ -70,8 +70,9 @@ public final class EmailJobManager {
 	public long enqueue(final @NotNull EmailJob job) {
 		// Setzt die Job-ID und fügt den Job hinzu.
 		final boolean isNewJob = job.setId(nextJobId.getAndIncrement());
-		if (!isNewJob)
+		if (!isNewJob) {
 			return -1;
+		}
 		mapJobs.put(job.getId(), job);
 		jobs.add(job);
 		return job.getId();
@@ -126,13 +127,15 @@ public final class EmailJobManager {
 	public boolean cancelJob(final long idJob) {
 		// Prüfe, ob die ID gültig ist
 		final EmailJob job = mapJobs.get(idJob);
-		if (job == null)
+		if (job == null) {
 			return false;
+		}
 
 		// Breche den Job ab. Ab diesem Moment wird der Job spätestens in processJob() abgebrochen.
 		job.requestCancellation();
-		if (job.getStatus() != EmailJobStatus.QUEUED)
+		if (job.getStatus() != EmailJobStatus.QUEUED) {
 			return true;
+		}
 
 		// Entferne den Job auch aus der Queue und markiere ihn auch als abgebrochen.
 		if (jobs.remove(job)) {
@@ -182,8 +185,9 @@ public final class EmailJobManager {
 		// Wenn der Job als abgebrochen markiert wurde, kann er auch nicht weiter bearbeitet werden und der Status wird aus CANCELED gesetzt
 		if (job.hasCancellationRequest()) {
 			// Protokolliere den Abbruch. Dies greift nur, falls cancelJob() den Job nicht mehr aus der Queue entfernen konnte.
-			if (job.logError.isEmpty())
+			if (job.logError.isEmpty()) {
 				job.logError.add("- ABBRUCH: Job %d wurde vor dem Start abgebrochen.".formatted(job.getId()));
+			}
 			completedJobs.add(job, EmailJobStatus.CANCELED);
 			return;
 		}
@@ -213,10 +217,11 @@ public final class EmailJobManager {
 				// Der Job ist nur erfolgreich, wenn alle Mails erfolgreich versendet wurden und kein Fehler aufgetreten ist.
 				completedJobs.add(job, EmailJobStatus.COMPLETED_SUCCESSFULLY);
 			} else {
-				if (job.getEmailsSent() > 0)
+				if (job.getEmailsSent() > 0) {
 					completedJobs.add(job, EmailJobStatus.COMPLETED_WITH_ERRORS);
-				else
+				} else {
 					completedJobs.add(job, EmailJobStatus.FAILED);
+				}
 			}
 		} else {
 			// Falls aufgrund des Multi-Threading zwischen dem ersten Check mittels hasCancellationRequest zu Beginn dieser Methode und dem Check dieser
@@ -246,8 +251,9 @@ public final class EmailJobManager {
 				final long now = System.currentTimeMillis();
 
 				// Entferne alle Einträge in der Queue der Zeitstempel, die aus dem Zeitfenster von einer Minute herausfallen
-				while (!sendTimestamps.isEmpty() && ((now - sendTimestamps.peekFirst()) >= zeitfenster))
+				while (!sendTimestamps.isEmpty() && ((now - sendTimestamps.peekFirst()) >= zeitfenster)) {
 					sendTimestamps.pollFirst();
+				}
 
 				// Prüfe, ob die maximale Rate das Senden einer E-Mail erlaubt
 				final Long oldest = sendTimestamps.peekFirst();
@@ -331,8 +337,9 @@ public final class EmailJobManager {
 		boolean allSuccessful = true;
 		for (final List<Integer> paket : pakete) {
 			final List<EmailJobAttachment> paketData = new ArrayList<>(paket.size());
-			for (final Integer index : paket)
+			for (final Integer index : paket) {
 				paketData.add(recipient.attachments.get(index));
+			}
 			if (!sendInternal(job, recipient, paketData)) {
 				allSuccessful = false;
 			}
@@ -354,15 +361,17 @@ public final class EmailJobManager {
 	private boolean sendInternal(final EmailJob job, final EmailJobRecipient recipient, final @NotNull List<EmailJobAttachment> attachments) {
 		// Prüfe das Rate-Limit für den Versand
 		awaitRateLimit();
-		if (job.hasCancellationRequest())
+		if (job.hasCancellationRequest()) {
 			throw new EmailJobCanceledException();
+		}
 
 		// Versuche die nächste E-Mail an den übergebenen Empfänger und den übergebenen Anhängen zu versenden
 		try {
 			final MailSmtpSession session = context.getSmtpSession();
 			// Während die SMTP-Sitzung erstellt wurde, kann der Job abgebrochen worden sein. Prüfe daher hier erneut auf einen Abbruch.
-			if (job.hasCancellationRequest())
+			if (job.hasCancellationRequest()) {
 				throw new EmailJobCanceledException();
+			}
 			// Wenn bis hier kein Abbruch erfolgt ist, kann der Versand einer E-Mail nicht mehr verhindert werden.
 			session.sendTextMessageWithAttachments(job.getFrom(), recipient.email, job.getSubject(), job.getBody(), attachments);
 		} catch (final EmailJobCanceledException e) {
@@ -393,16 +402,18 @@ public final class EmailJobManager {
 			final @NotNull String recipient) {
 		// Erstellt die Ergebnis-Liste für die Gruppen
 		final List<List<Integer>> groups = new ArrayList<>();
-		if (attachments.isEmpty() || (context.getMaxAttachmentSize() <= 0))
+		if (attachments.isEmpty() || (context.getMaxAttachmentSize() <= 0)) {
 			return groups;
+		}
 
 		// Lese die maximale Anhangsgröße aus der Job-Definition aus
 		final long maxSize = context.getMaxAttachmentSize();
 
 		// Bestimme die Größen der Anhänge und speichere diese in einem Array für den schnellen Zugriff auf die Größen
 		final int[] attachmentSizes = new int[attachments.size()];
-		for (int i = 0; i < attachments.size(); i++)
+		for (int i = 0; i < attachments.size(); i++) {
 			attachmentSizes[i] = Optional.of(attachments.get(i)).map(d -> d.data.length).orElse(0);
+		}
 
 		// Erstelle für die spätere Gruppenbildung zunächst eine Liste mit den Indizes, welche anhand der Größe der Anhänge sortiert ist
 		final List<Integer> sortedAttachmentIndizes =

@@ -23,8 +23,9 @@ public final class EmailJobRecipient {
 	 * @param recipient die Empfänger-E-Mail-Adresse
 	 */
 	public EmailJobRecipient(final @NotNull String recipient) {
-		if ((recipient == null) || recipient.isBlank())
+		if ((recipient == null) || recipient.isBlank()) {
 			throw new IllegalArgumentException("Notwendiger Parameter E-Mail-Adresse für die Erzeugung eines E-Mail-Recipients ist null oder leer.");
+		}
 		this.email = recipient;
 	}
 
@@ -35,10 +36,12 @@ public final class EmailJobRecipient {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if ((obj == null) || (getClass() != obj.getClass()))
+		}
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
+		}
 		final EmailJobRecipient other = (EmailJobRecipient) obj;
 		return Objects.equals(this.email, other.email);
 	}

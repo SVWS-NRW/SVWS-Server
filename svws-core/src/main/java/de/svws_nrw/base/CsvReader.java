@@ -81,8 +81,9 @@ public final class CsvReader {
 	private static Path getPath(final String location) throws URISyntaxException {
 		final ClassLoader classLoader = CsvReader.class.getClassLoader();
 		final var url = classLoader.getResource(location);
-		if (url == null)
+		if (url == null) {
 			return null;
+		}
 		final var uri = url.toURI();
 		if (uri.toString().contains("jar:file:")) {
 			try {

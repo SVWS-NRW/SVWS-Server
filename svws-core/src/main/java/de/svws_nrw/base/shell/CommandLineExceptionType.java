@@ -1,7 +1,7 @@
 package de.svws_nrw.base.shell;
 
 /**
- * Dies Ausfzählung spezifiziert den genauen Typ der CommandLineEcxeption
+ * Dies Aufzählung spezifiziert den genauen Typ der CommandLineEcxeption
  */
 public enum CommandLineExceptionType {
 
@@ -39,7 +39,7 @@ public enum CommandLineExceptionType {
 
 
 	/**
-	 * Gibt die anzuzeigende Nachricht zurpck.
+	 * Gibt die anzuzeigende Nachricht zurück.
 	 *
 	 * @return die anzuzeigende Nachricht
 	 */

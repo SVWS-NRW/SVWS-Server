@@ -24,7 +24,7 @@ public final class GZip {
 	 *
 	 * @return die komprimierten Daten
 	 *
-	 * @throws CompressionException   falls ein Fehler beim Komprimieren ensteht
+	 * @throws CompressionException   falls ein Fehler beim Komprimieren entsteht
 	 */
 	public static byte[] encodeData(final GZipWriterFunction writer) throws CompressionException {
 		try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
@@ -82,8 +82,9 @@ public final class GZip {
 		try (ByteArrayInputStream input = new ByteArrayInputStream(data)) {
 			return decodeData(input);
 		} catch (final Exception e) {
-			if (e instanceof final CompressionException ce)
+			if (e instanceof final CompressionException ce) {
 				throw ce;
+			}
 			throw new CompressionException("Fehler beim Dekomprimieren der Daten. ", e);
 		}
 	}
