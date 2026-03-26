@@ -53,8 +53,9 @@ final class ArrayMapCollection<K, V> implements Collection<V> {
 		final @NotNull ArrayList<V> list = new ArrayList<>(_map.size());
 		for (int i = 0; i < _map.getNumberOfKeys(); i++) {
 			final V value = _map.getValueAt(i);
-			if (value != null)
+			if (value != null) {
 				list.add(value);
+			}
 		}
 		return list;
 	}
@@ -81,11 +82,14 @@ final class ArrayMapCollection<K, V> implements Collection<V> {
 
 	@Override
 	public boolean containsAll(final Collection<?> collection) {
-		if ((collection == null) || (this == collection))
+		if ((collection == null) || (this == collection)) {
 			return true;
-		for (final Object obj : collection)
-			if (!_map.containsValue(obj))
+		}
+		for (final Object obj : collection) {
+			if (!_map.containsValue(obj)) {
 				return false;
+			}
+		}
 		return true;
 	}
 

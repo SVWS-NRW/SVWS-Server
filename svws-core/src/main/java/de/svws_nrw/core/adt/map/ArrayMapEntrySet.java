@@ -46,30 +46,36 @@ final class ArrayMapEntrySet<K, V> implements Set<Map.Entry<K, V>> {
 
 	@SuppressWarnings("unchecked")
 	private Entry<K, V> toEntry(final Object obj) {
-		if (obj == null)
+		if (obj == null) {
 			return null;
-		if (!(obj instanceof Entry))
+		}
+		if (!(obj instanceof Entry)) {
 			return null;
+		}
 		final @NotNull Entry<K, V> entry = (@NotNull Entry<K, V>) obj;
 		return entry;
 	}
 
 	private boolean containsEntry(final Entry<K, V> entry) {
-		if (entry == null)
+		if (entry == null) {
 			return false;
-		if (!_map.containsKey(entry.getKey()))
+		}
+		if (!_map.containsKey(entry.getKey())) {
 			return false;
+		}
 		final V value = _map.get(entry.getKey());
-		if (value == null)
+		if (value == null) {
 			return false;
+		}
 		return value.equals(entry.getValue());
 	}
 
 	@Override
 	public boolean contains(final Object obj) {
 		final Entry<K, V> entry = toEntry(obj);
-		if (entry == null)
+		if (entry == null) {
 			return false;
+		}
 		return containsEntry(entry);
 	}
 
@@ -82,8 +88,9 @@ final class ArrayMapEntrySet<K, V> implements Set<Map.Entry<K, V>> {
 		final @NotNull ArrayList<ArrayMapEntry<K, V>> list = new ArrayList<>(_map.size());
 		for (int i = 0; i < _map.getNumberOfKeys(); i++) {
 			final ArrayMapEntry<K, V> value = _map.getEntryByIndex(i);
-			if (value != null)
+			if (value != null) {
 				list.add(value);
+			}
 		}
 		return list;
 	}
@@ -100,8 +107,9 @@ final class ArrayMapEntrySet<K, V> implements Set<Map.Entry<K, V>> {
 
 	@Override
 	public boolean add(final Entry<K, V> e) {
-		if (e == null)
+		if (e == null) {
 			return false;
+		}
 		_map.put(e.getKey(), e.getValue());
 		return true;
 	}
@@ -109,45 +117,56 @@ final class ArrayMapEntrySet<K, V> implements Set<Map.Entry<K, V>> {
 	@Override
 	public boolean remove(final Object obj) {
 		final Entry<K, V> entry = toEntry(obj);
-		if (entry == null)
+		if (entry == null) {
 			return false;
-		if (!containsEntry(entry))
+		}
+		if (!containsEntry(entry)) {
 			return false;
+		}
 		_map.remove(entry.getKey());
 		return true;
 	}
 
 	@Override
 	public boolean containsAll(final Collection<?> collection) {
-		if ((collection == null) || (this == collection))
+		if ((collection == null) || (this == collection)) {
 			return true;
-		for (final Object obj : collection)
-			if (!contains(obj))
+		}
+		for (final Object obj : collection) {
+			if (!contains(obj)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
 	@Override
 	public boolean addAll(final Collection<? extends Entry<K, V>> collection) {
-		if (collection == null)
+		if (collection == null) {
 			throw new NullPointerException();
-		if (this == collection)
+		}
+		if (this == collection) {
 			return true;
-		for (final Entry<K, V> entry : collection)
-			if (!add(entry))
+		}
+		for (final Entry<K, V> entry : collection) {
+			if (!add(entry)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
 	@Override
 	public boolean retainAll(final Collection<?> collection) {
-		if (collection == null)
+		if (collection == null) {
 			throw new NullPointerException();
+		}
 		boolean changed = false;
 		for (int i = 0; i < _map.getNumberOfKeys(); i++) {
 			final ArrayMapEntry<K, V> entry = _map.getEntryByIndex(i);
-			if (entry == null)
+			if (entry == null) {
 				continue;
+			}
 			if (!collection.contains(entry)) {
 				_map.remove(entry.getKey());
 				changed = true;
@@ -158,8 +177,9 @@ final class ArrayMapEntrySet<K, V> implements Set<Map.Entry<K, V>> {
 
 	@Override
 	public boolean removeAll(final Collection<?> collection) {
-		if (collection == null)
+		if (collection == null) {
 			throw new NullPointerException();
+		}
 		boolean changed = false;
 		for (final Object obj : collection) {
 			if (contains(obj)) {

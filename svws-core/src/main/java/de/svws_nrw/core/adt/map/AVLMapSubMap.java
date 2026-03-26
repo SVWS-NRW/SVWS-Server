@@ -64,10 +64,11 @@ public final class AVLMapSubMap<K, V> implements NavigableMap<K, V> {
 		sb.append("Entries = [");
 		boolean first = true;
 		for (final Entry<K, V> e : entrySet()) {
-			if (first)
+			if (first) {
 				first = false;
-			else
+			} else {
 				sb.append(", ");
+			}
 			sb.append(e);
 		}
 		sb.append("], iv = ");
@@ -79,28 +80,35 @@ public final class AVLMapSubMap<K, V> implements NavigableMap<K, V> {
 
 	@Override
 	public boolean equals(final Object o) {
-		if (o == null)
+		if (o == null) {
 			return false;
-		if (o == this)
+		}
+		if (o == this) {
 			return true;
-		if (!(o instanceof Map<?, ?>))
+		}
+		if (!(o instanceof Map<?, ?>)) {
 			return false;
+		}
 		final Map<?, ?> mapO = (Map<?, ?>) o;
-		if (mapO.size() != size())
+		if (mapO.size() != size()) {
 			return false;
+		}
 		// Da SIZE identisch ist, reicht es die KEYS in dieser Map
 		// mit dem Mapping in mapO zu überprüfen.
-		for (final @NotNull Entry<K, V> e : entrySet())
-			if (!e.getValue().equals(mapO.get(e.getKey())))
+		for (final @NotNull Entry<K, V> e : entrySet()) {
+			if (!e.getValue().equals(mapO.get(e.getKey()))) {
 				return false;
+			}
+		}
 		return true;
 	}
 
 	@Override
 	public int hashCode() { // code adapted TreeMap
 		int h = 0;
-		for (final Entry<K, V> entry : entrySet())
+		for (final Entry<K, V> entry : entrySet()) {
 			h += entry.hashCode();
+		}
 		return h;
 	}
 
@@ -503,9 +511,11 @@ public final class AVLMapSubMap<K, V> implements NavigableMap<K, V> {
 		final @NotNull AVLMap<K, V> mapSave = new AVLMap<>();
 
 		final @NotNull Set<Entry<K, V>> setSave = mapSave.entrySet();
-		for (final @NotNull Object o : c)
-			if (_par.bcContainsEntry(o, _iv))
+		for (final @NotNull Object o : c) {
+			if (_par.bcContainsEntry(o, _iv)) {
 				setSave.add((@NotNull Entry<K, V>) o);
+			}
+		}
 
 		// Iteriere und lösche falls nötig...
 		boolean changed = false;
@@ -609,8 +619,9 @@ public final class AVLMapSubMap<K, V> implements NavigableMap<K, V> {
 	ArrayList<K> bcGetArrayListOfKeys() {
 		final ArrayList<K> v = new ArrayList<>();
 		final Iterator<K> iter = navigableKeySet().iterator();
-		while (iter.hasNext())
+		while (iter.hasNext()) {
 			v.add(iter.next());
+		}
 		return v;
 	}
 
@@ -624,8 +635,9 @@ public final class AVLMapSubMap<K, V> implements NavigableMap<K, V> {
 	ArrayList<V> bcGetArrayListOfValues() {
 		final ArrayList<V> v = new ArrayList<>();
 		final Iterator<V> iter = values().iterator();
-		while (iter.hasNext())
+		while (iter.hasNext()) {
 			v.add(iter.next());
+		}
 		return v;
 	}
 
@@ -639,8 +651,9 @@ public final class AVLMapSubMap<K, V> implements NavigableMap<K, V> {
 	ArrayList<Entry<K, V>> bcGetArrayListOfEntries() {
 		final ArrayList<Entry<K, V>> v = new ArrayList<>();
 		final Iterator<Entry<K, V>> iter = entrySet().iterator();
-		while (iter.hasNext())
+		while (iter.hasNext()) {
 			v.add(iter.next());
+		}
 		return v;
 	}
 
@@ -797,10 +810,12 @@ public final class AVLMapSubMap<K, V> implements NavigableMap<K, V> {
 
 	private @NotNull AVLMapSubMap<K, V> _createMap(final @NotNull K from, final boolean fromInc, final @NotNull K to,
 			final boolean toInc, final boolean asc) {
-		if (_par.bcCheckOutOfIntervall(from, fromInc, _iv))
+		if (_par.bcCheckOutOfIntervall(from, fromInc, _iv)) {
 			throw new IllegalArgumentException("FROM-KEY " + from + "/" + fromInc + " nicht in " + _iv);
-		if (_par.bcCheckOutOfIntervall(to, toInc, _iv))
+		}
+		if (_par.bcCheckOutOfIntervall(to, toInc, _iv)) {
 			throw new IllegalArgumentException("TO-KEY " + to + "/" + toInc + " nicht in " + _iv);
+		}
 
 		return new AVLMapSubMap<>(_par, new AVLMapIntervall<>(from, fromInc, to, toInc), asc);
 	}

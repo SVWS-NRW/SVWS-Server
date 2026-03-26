@@ -41,29 +41,35 @@ export class ArrayMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMa
 	}
 
 	private toEntry(obj: unknown | null): JavaMapEntry<K, V> | null {
-		if (obj === null)
+		if (obj === null) {
 			return null;
-		if (!(((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('java.util.Map.Entry')))))
+		}
+		if (!(((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('java.util.Map.Entry'))))) {
 			return null;
+		}
 		const entry: JavaMapEntry<K, V> = cast_java_util_Map_Entry(obj);
 		return entry;
 	}
 
 	private containsEntry(entry: JavaMapEntry<K, V> | null): boolean {
-		if (entry === null)
+		if (entry === null) {
 			return false;
-		if (!this._map.containsKey(entry.getKey()))
+		}
+		if (!this._map.containsKey(entry.getKey())) {
 			return false;
+		}
 		const value: V | null = this._map.get(entry.getKey());
-		if (value === null)
+		if (value === null) {
 			return false;
+		}
 		return JavaObject.equalsTranspiler(value, (entry.getValue()));
 	}
 
 	public contains(obj: unknown | null): boolean {
 		const entry: JavaMapEntry<K, V> | null = this.toEntry(obj);
-		if (entry === null)
+		if (entry === null) {
 			return false;
+		}
 		return this.containsEntry(entry);
 	}
 
@@ -75,8 +81,9 @@ export class ArrayMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMa
 		const list: ArrayList<ArrayMapEntry<K, V>> = new ArrayList<ArrayMapEntry<K, V>>(this._map.size());
 		for (let i: number = 0; i < this._map.getNumberOfKeys(); i++) {
 			const value: ArrayMapEntry<K, V> | null = this._map.getEntryByIndex(i);
-			if (value !== null)
+			if (value !== null) {
 				list.add(value);
+			}
 		}
 		return list;
 	}
@@ -98,50 +105,62 @@ export class ArrayMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMa
 	}
 
 	public add(e: JavaMapEntry<K, V> | null): boolean {
-		if (e === null)
+		if (e === null) {
 			return false;
+		}
 		this._map.put(e.getKey(), e.getValue());
 		return true;
 	}
 
 	public remove(obj: unknown | null): boolean {
 		const entry: JavaMapEntry<K, V> | null = this.toEntry(obj);
-		if (entry === null)
+		if (entry === null) {
 			return false;
-		if (!this.containsEntry(entry))
+		}
+		if (!this.containsEntry(entry)) {
 			return false;
+		}
 		this._map.remove(entry.getKey());
 		return true;
 	}
 
 	public containsAll(collection: Collection<any> | null): boolean {
-		if ((collection === null) || (this as unknown === collection as unknown))
+		if ((collection === null) || (this as unknown === collection as unknown)) {
 			return true;
-		for (const obj of collection)
-			if (!this.contains(obj))
+		}
+		for (const obj of collection) {
+			if (!this.contains(obj)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
 	public addAll(collection: Collection<JavaMapEntry<K, V>> | null): boolean {
-		if (collection === null)
+		if (collection === null) {
 			throw new NullPointerException()
-		if (this as unknown === collection as unknown)
+		}
+		if (this as unknown === collection as unknown) {
 			return true;
-		for (const entry of collection)
-			if (!this.add(entry))
+		}
+		for (const entry of collection) {
+			if (!this.add(entry)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
 	public retainAll(collection: Collection<any> | null): boolean {
-		if (collection === null)
+		if (collection === null) {
 			throw new NullPointerException()
+		}
 		let changed: boolean = false;
 		for (let i: number = 0; i < this._map.getNumberOfKeys(); i++) {
 			const entry: ArrayMapEntry<K, V> | null = this._map.getEntryByIndex(i);
-			if (entry === null)
+			if (entry === null) {
 				continue;
+			}
 			if (!collection.contains(entry)) {
 				this._map.remove(entry.getKey());
 				changed = true;
@@ -151,8 +170,9 @@ export class ArrayMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMa
 	}
 
 	public removeAll(collection: Collection<any> | null): boolean {
-		if (collection === null)
+		if (collection === null) {
 			throw new NullPointerException()
+		}
 		let changed: boolean = false;
 		for (const obj of collection) {
 			if (this.contains(obj)) {

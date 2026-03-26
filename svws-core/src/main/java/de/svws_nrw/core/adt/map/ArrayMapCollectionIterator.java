@@ -40,21 +40,24 @@ class ArrayMapCollectionIterator<K, V> implements Iterator<V> {
 	private Integer getNextIndex(final Integer from) {
 		final int start = (from == null) ? 0 : (from + 1);
 		for (int i = start; i < _map.getNumberOfKeys(); i++) {
-			if (_map.getEntryByIndex(i) != null)
+			if (_map.getEntryByIndex(i) != null) {
 				return i;
+			}
 		}
 		return null;
 	}
 
 	@Override
 	public @NotNull V next() {
-		if (_next == null)
+		if (_next == null) {
 			throw new NoSuchElementException();
+		}
 		_current = _next;
 		_next = getNextIndex(_current);
 		final V result = _map.getValueAt(_current);
-		if (result == null)
+		if (result == null) {
 			throw new NoSuchElementException();
+		}
 		return result;
 	}
 
@@ -65,8 +68,9 @@ class ArrayMapCollectionIterator<K, V> implements Iterator<V> {
 
 	@Override
 	public void remove() {
-		if (_current == null)
+		if (_current == null) {
 			throw new IllegalStateException();
+		}
 		_map.remove(_map.getKeyAt(_current));
 		_current = null;
 	}

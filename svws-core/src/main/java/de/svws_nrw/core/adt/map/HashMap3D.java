@@ -44,11 +44,13 @@ public class HashMap3D<K1, K2, K3, V> {
 	 */
 	public void put(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull V value) {
 		final Map<K2, Map<K3, V>> map2 = _map1.computeIfAbsent(key1, k -> new HashMap<>());
-		if (map2 == null)
+		if (map2 == null) {
 			throw new NullPointerException();
+		}
 		final Map<K3, V> map3 = map2.computeIfAbsent(key2, k -> new HashMap<>());
-		if (map3 == null)
+		if (map3 == null) {
 			throw new NullPointerException();
+		}
 		map3.put(key3, value);
 	}
 
@@ -66,16 +68,19 @@ public class HashMap3D<K1, K2, K3, V> {
 	 */
 	public @NotNull V getOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) throws DeveloperNotificationException {
 		final Map<K2, Map<K3, V>> map2 = _map1.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
+		}
 
 		final Map<K3, V> map3 = map2.get(key2);
-		if (map3 == null)
+		if (map3 == null) {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", " + key2 + ") ungültig!");
+		}
 
 		final V value = map3.get(key3);
-		if (value == null)
+		if (value == null) {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ") ungültig!");
+		}
 		return value;
 	}
 
@@ -90,12 +95,14 @@ public class HashMap3D<K1, K2, K3, V> {
 	 */
 	public V getOrNull(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
 		final Map<K2, Map<K3, V>> map2 = _map1.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			return null;
+		}
 
 		final Map<K3, V> map3 = map2.get(key2);
-		if (map3 == null)
+		if (map3 == null) {
 			return null;
+		}
 
 		return map3.get(key3);
 	}
@@ -121,8 +128,9 @@ public class HashMap3D<K1, K2, K3, V> {
 	 */
 	public Map<K3, V> getMap3OrNull(final @NotNull K1 key1, final @NotNull K2 key2) {
 		final Map<K2, Map<K3, V>> map2 = _map1.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			return null;
+		}
 
 		return map2.get(key2);
 	}
@@ -141,8 +149,9 @@ public class HashMap3D<K1, K2, K3, V> {
 	public @NotNull V getNonNullOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) throws NullPointerException {
 		final V value = getOrException(key1, key2, key3);
 
-		if (value == null)
+		if (value == null) {
 			throw new DeveloperNotificationException("value is NULL!");
+		}
 
 		return value;
 	}
@@ -168,8 +177,9 @@ public class HashMap3D<K1, K2, K3, V> {
 	 */
 	public boolean containsKey1AndKey2(final @NotNull K1 key1, final @NotNull K2 key2) {
 		final Map<K2, Map<K3, V>> map2 = _map1.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			return false;
+		}
 		return map2.containsKey(key2);
 	}
 
@@ -184,12 +194,14 @@ public class HashMap3D<K1, K2, K3, V> {
 	 */
 	public boolean contains(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
 		final Map<K2, Map<K3, V>> map2 = _map1.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			return false;
+		}
 
 		final Map<K3, V> map3 = map2.get(key2);
-		if (map3 == null)
+		if (map3 == null) {
 			return false;
+		}
 
 		return map3.containsKey(key3);
 	}
@@ -212,15 +224,18 @@ public class HashMap3D<K1, K2, K3, V> {
 	 */
 	public void removeOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
 		final Map<K2, Map<K3, V>> map2 = _map1.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
+		}
 
 		final Map<K3, V> map3 = map2.get(key2);
-		if (map3 == null)
+		if (map3 == null) {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", " + key2 + ") ungültig!");
+		}
 
-		if (!map3.containsKey(key3))
+		if (!map3.containsKey(key3)) {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ") ungültig!");
+		}
 
 		// Mapping-Baum abschneiden.
 		map3.remove(key3);
@@ -243,15 +258,18 @@ public class HashMap3D<K1, K2, K3, V> {
 	 */
 	public void remove(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
 		final Map<K2, Map<K3, V>> map2 = _map1.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			return;
+		}
 
 		final Map<K3, V> map3 = map2.get(key2);
-		if (map3 == null)
+		if (map3 == null) {
 			return;
+		}
 
-		if (!map3.containsKey(key3))
+		if (!map3.containsKey(key3)) {
 			return;
+		}
 
 		// Mapping-Baum abschneiden.
 		map3.remove(key3);
@@ -290,10 +308,13 @@ public class HashMap3D<K1, K2, K3, V> {
 	public @NotNull List<V> getNonNullValuesAsList() {
 		final @NotNull ArrayList<V> list = new ArrayList<>();
 
-		for (final @NotNull Map<K2, Map<K3, V>> map2 : _map1.values())
-			for (final @NotNull Map<K3, V> map3 : map2.values())
-				for (final @NotNull V value : map3.values())
+		for (final @NotNull Map<K2, Map<K3, V>> map2 : _map1.values()) {
+			for (final @NotNull Map<K3, V> map3 : map2.values()) {
+				for (final @NotNull V value : map3.values()) {
 					list.add(value);
+				}
+			}
+		}
 
 		return list;
 	}
@@ -310,9 +331,11 @@ public class HashMap3D<K1, K2, K3, V> {
 		final @NotNull ArrayList<V> list = new ArrayList<>();
 		final Map<K2, Map<K3, V>> map2 = _map1.get(key1);
 		if (map2 != null) {
-			for (final @NotNull Map<K3, V> map3 : map2.values())
-				for (final @NotNull V value : map3.values())
+			for (final @NotNull Map<K3, V> map3 : map2.values()) {
+				for (final @NotNull V value : map3.values()) {
 					list.add(value);
+				}
+			}
 		}
 
 		return list;
@@ -332,9 +355,11 @@ public class HashMap3D<K1, K2, K3, V> {
 		final Map<K2, Map<K3, V>> map2 = _map1.get(key1);
 		if (map2 != null) {
 			final Map<K3, V> map3 = map2.get(key2);
-			if (map3 != null)
-				for (final @NotNull V value : map3.values())
+			if (map3 != null) {
+				for (final @NotNull V value : map3.values()) {
 					list.add(value);
+				}
+			}
 		}
 
 		return list;

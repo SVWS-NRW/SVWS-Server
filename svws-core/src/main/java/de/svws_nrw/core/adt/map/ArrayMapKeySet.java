@@ -56,8 +56,9 @@ final class ArrayMapKeySet<K, V> implements Set<K> {
 		final @NotNull ArrayList<K> list = new ArrayList<>(_map.size());
 		for (int i = 0; i < _map.getNumberOfKeys(); i++) {
 			final ArrayMapEntry<K, V> value = _map.getEntryByIndex(i);
-			if (value != null)
+			if (value != null) {
 				list.add(value.getKey());
+			}
 		}
 		return list;
 	}
@@ -84,11 +85,14 @@ final class ArrayMapKeySet<K, V> implements Set<K> {
 
 	@Override
 	public boolean containsAll(final Collection<?> collection) {
-		if ((collection == null) || (this == collection))
+		if ((collection == null) || (this == collection)) {
 			return true;
-		for (final Object obj : collection)
-			if (!_map.containsKey(obj))
+		}
+		for (final Object obj : collection) {
+			if (!_map.containsKey(obj)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -99,13 +103,15 @@ final class ArrayMapKeySet<K, V> implements Set<K> {
 
 	@Override
 	public boolean retainAll(final Collection<?> collection) {
-		if (collection == null)
+		if (collection == null) {
 			throw new NullPointerException();
+		}
 		boolean changed = false;
 		for (int i = 0; i < _map.getNumberOfKeys(); i++) {
 			final ArrayMapEntry<K, V> entry = _map.getEntryByIndex(i);
-			if (entry == null)
+			if (entry == null) {
 				continue;
+			}
 			if (!collection.contains(entry.getKey())) {
 				_map.remove(entry.getKey());
 				changed = true;
@@ -116,8 +122,9 @@ final class ArrayMapKeySet<K, V> implements Set<K> {
 
 	@Override
 	public boolean removeAll(final Collection<?> collection) {
-		if (collection == null)
+		if (collection == null) {
 			throw new NullPointerException();
+		}
 		boolean removed = false;
 		for (final Object obj : collection) {
 			if (_map.containsKey(obj)) {

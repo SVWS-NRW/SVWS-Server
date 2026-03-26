@@ -75,8 +75,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 		if (((__param0 !== undefined) && ((__param0 !== undefined) && (__param0 instanceof Object) && (__param0 !== null) && ('compare' in __param0) && (typeof __param0.compare === 'function')) || (__param0 === null)) && ((__param1 !== undefined) && typeof __param1 === "number")) {
 			const comparator: Comparator<T> = cast_java_util_Comparator(__param0);
 			const initialCapacity: number = __param1 as number;
-			if (initialCapacity <= 0)
+			if (initialCapacity <= 0) {
 				throw new IllegalArgumentException("Die initiale Kapazität muss größer als 0 sein.")
+			}
 			this._comparator = comparator;
 			this._initialCapacity = initialCapacity;
 			this._modCount = 0;
@@ -96,12 +97,15 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	}
 
 	public add(e: T | null): boolean {
-		if (e === null)
+		if (e === null) {
 			return false;
-		if (this._nodes.length === 0)
+		}
+		if (this._nodes.length === 0) {
 			this._nodes = this.newArray(e, this._initialCapacity);
-		if (this._size === this._nodes.length)
+		}
+		if (this._size === this._nodes.length) {
 			this.grow();
+		}
 		this._nodes[this._size] = e;
 		this.heapifyUp(this._size++);
 		this._modCount++;
@@ -109,8 +113,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	}
 
 	public element(): T {
-		if ((this._size === 0) || (this._nodes[0] === null))
+		if ((this._size === 0) || (this._nodes[0] === null)) {
 			throw new NoSuchElementException()
+		}
 		return this._nodes[0];
 	}
 
@@ -123,8 +128,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	}
 
 	public poll(): T | null {
-		if (this._size === 0)
+		if (this._size === 0) {
 			return null;
+		}
 		const elem: T | null = this._nodes[0];
 		this._nodes[0] = this._nodes[--this._size];
 		this._nodes[this._size] = null;
@@ -143,20 +149,24 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	public remove(__param0?: null | unknown): T | boolean {
 		if ((__param0 === undefined)) {
 			const result: T | null = this.poll();
-			if (result === null)
+			if (result === null) {
 				throw new NoSuchElementException()
+			}
 			return result;
 		} else if (((__param0 !== undefined) && ((__param0 instanceof Object) || ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.lang.Object')))) || (__param0 === null))) {
 			const o: unknown | null = (__param0 instanceof JavaObject) ? cast_java_lang_Object(__param0) : __param0;
-			if (o === null)
+			if (o === null) {
 				return false;
+			}
 			const index: number = this.findIndex(o);
-			if (index === -1)
+			if (index === -1) {
 				return false;
+			}
 			this._size--;
 			this._modCount++;
-			if (index === this._size)
+			if (index === this._size) {
 				return true;
+			}
 			this._nodes[index] = this._nodes[this._size];
 			this._nodes[this._size] = null;
 			this.heapifyUp(index);
@@ -174,81 +184,98 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	}
 
 	public contains(o: unknown | null): boolean {
-		if (o === null)
+		if (o === null) {
 			return false;
+		}
 		for (let i: number = 0; i < this._size; i++) {
-			if (JavaObject.equalsTranspiler(this._nodes[i], (o)))
+			if (JavaObject.equalsTranspiler(this._nodes[i], (o))) {
 				return true;
+			}
 		}
 		return false;
 	}
 
 	public containsAll(c: Collection<any> | null): boolean {
-		if (c === null)
+		if (c === null) {
 			return true;
-		if (this as unknown === c as unknown)
+		}
+		if (this as unknown === c as unknown) {
 			return true;
-		for (const o of c)
-			if (!this.contains(o))
+		}
+		for (const o of c) {
+			if (!this.contains(o)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
 	public addAll(c: Collection<T> | null): boolean {
-		if (c === null)
+		if (c === null) {
 			return false;
+		}
 		if (this as unknown === c as unknown) {
-			if (this._size === 0)
+			if (this._size === 0) {
 				return false;
+			}
 			const tmp: Array<T | null> = Arrays.copyOf(this._nodes, this._size);
-			for (const t of tmp)
-				if (t !== null)
+			for (const t of tmp) {
+				if (t !== null) {
 					this.add(t);
+				}
+			}
 			return true;
 		}
 		let result: boolean = false;
 		for (const t of c) {
-			if (this.add(t))
+			if (this.add(t)) {
 				result = true;
+			}
 		}
 		return result;
 	}
 
 	public removeAll(c: Collection<any> | null): boolean {
-		if (c === null)
+		if (c === null) {
 			return false;
+		}
 		if (this as unknown === c as unknown) {
-			if (this.size() === 0)
+			if (this.size() === 0) {
 				return false;
+			}
 			this.clear();
 			return true;
 		}
 		let result: boolean = false;
 		for (const o of c) {
-			while (this.remove(o))
+			while (this.remove(o)) {
 				result = true;
+			}
 		}
 		return result;
 	}
 
 	public retainAll(c: Collection<any> | null): boolean {
-		if (this._size === 0)
+		if (this._size === 0) {
 			return false;
+		}
 		if (c === null) {
 			this.clear();
 			return true;
 		}
-		if (this as unknown === c as unknown)
+		if (this as unknown === c as unknown) {
 			return false;
+		}
 		const tmp: Array<T | null> = this.newArray(this._nodes[0], this._nodes.length);
 		let i: number = 0;
 		let elem: T | null;
 		let changed: boolean = false;
 		while ((elem = this.poll()) !== null) {
-			if (c.contains(elem))
+			if (c.contains(elem)) {
 				tmp[i++] = elem;
-			else
+			} else {
 				changed = true;
+			}
 		}
 		this._nodes = tmp;
 		this._size = i;
@@ -274,8 +301,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 			return this.copyNodes();
 		} else if (((__param0 !== undefined) && Array.isArray(__param0))) {
 			const a: Array<U> = __param0 as unknown as Array<U>;
-			if (a.length < this._size)
+			if (a.length < this._size) {
 				return this.copyNodes() as unknown as Array<U>;
+			}
 			System.arraycopy(this._nodes, 0, a, 0, this._size);
 			Arrays.fill(a, this._size, a.length, null);
 			return a;
@@ -310,14 +338,16 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 * @return ein sortiertes Array mit den Elementen des Minimum Heaps.
 	 */
 	public toSortedArray(): Array<T> {
-		if (this._size === 0)
+		if (this._size === 0) {
 			return Array(0).fill(null) as unknown as Array<T>;
+		}
 		const copy: MinHeap<T> = new MinHeap<T>(this);
 		const tmp: Array<T> = this.newArray(this._nodes[0], this._size);
 		let current: T | null;
 		let i: number = 0;
-		while ((current = copy.poll()) !== null)
+		while ((current = copy.poll()) !== null) {
 			tmp[i++] = current;
+		}
 		return tmp;
 	}
 
@@ -330,8 +360,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 		const sb: StringBuilder = new StringBuilder();
 		for (let i: number = 0; i < this._size; i++) {
 			sb.append(this._nodes[i]);
-			if (i !== (this._size - 1))
+			if (i !== (this._size - 1)) {
 				sb.append(", ");
+			}
 		}
 		return sb.toString();
 	}
@@ -353,10 +384,12 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 * @param obj   das zu vergleichende Objekt
 	 */
 	public equals(obj: unknown | null): boolean {
-		if (this as unknown === obj as unknown)
+		if (this as unknown === obj as unknown) {
 			return true;
-		if (obj === null)
+		}
+		if (obj === null) {
 			return false;
+		}
 		if (((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.core.adt.tree.MinHeap')))) {
 			const other: MinHeap<any> | null = cast_de_svws_nrw_core_adt_tree_MinHeap(obj);
 			return Arrays.deepEquals(this.toSortedArray(), other.toSortedArray());
@@ -417,25 +450,30 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	private heapifyDown(i: number): void {
 		const left: number = MinHeap.getLeftChildIndex(i);
 		const right: number = MinHeap.getRightChildIndex(i);
-		if (left >= this._size)
+		if (left >= this._size) {
 			return;
+		}
 		let child: number = right;
 		if (right === this._size) {
 			child = left;
 		} else {
 			const nodeLeft: T | null = this._nodes[left];
 			const nodeRight: T | null = this._nodes[right];
-			if ((nodeLeft === null) || (nodeRight === null))
+			if ((nodeLeft === null) || (nodeRight === null)) {
 				return;
-			if (this._comparator.compare(nodeLeft, nodeRight) < 0)
+			}
+			if (this._comparator.compare(nodeLeft, nodeRight) < 0) {
 				child = left;
+			}
 		}
 		const nodeCurrent: T | null = this._nodes[i];
 		const nodeChild: T | null = this._nodes[child];
-		if ((nodeCurrent === null) || (nodeChild === null))
+		if ((nodeCurrent === null) || (nodeChild === null)) {
 			throw new NullPointerException()
-		if (this._comparator.compare(nodeCurrent, nodeChild) <= 0)
+		}
+		if (this._comparator.compare(nodeCurrent, nodeChild) <= 0) {
 			return;
+		}
 		this.swap(i, child);
 		this.heapifyDown(child);
 	}
@@ -447,12 +485,14 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 */
 	private heapifyUp(i: number): void {
 		const parentIndex: number = MinHeap.getParentIndex(i);
-		if (parentIndex < 0)
+		if (parentIndex < 0) {
 			return;
+		}
 		const nodeCurrent: T | null = this._nodes[i];
 		const nodeParent: T | null = this._nodes[parentIndex];
-		if ((nodeCurrent === null) || (nodeParent === null) || (this._comparator.compare(nodeCurrent, nodeParent) >= 0))
+		if ((nodeCurrent === null) || (nodeParent === null) || (this._comparator.compare(nodeCurrent, nodeParent) >= 0)) {
 			return;
+		}
 		this.swap(i, parentIndex);
 		this.heapifyUp(parentIndex);
 	}
@@ -466,8 +506,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 * @return das neue Array
 	 */
 	private newArray(elem: T | null, length: number): Array<T> {
-		if (elem === null)
+		if (elem === null) {
 			return Array(length).fill(null) as unknown as Array<T>;
+		}
 		return Array(length).fill(null) as unknown as Array<T>;
 	}
 
@@ -492,11 +533,13 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 * @throws IllegalStateException
 	 */
 	private grow(): void {
-		if (this._nodes.length === JavaInteger.MAX_VALUE)
+		if (this._nodes.length === JavaInteger.MAX_VALUE) {
 			throw new IllegalStateException("Der Minimum-Heap kann nicht mehr als " + JavaInteger.MAX_VALUE + " Elemente beinhalten.")
+		}
 		let newLength: number = (this._nodes.length * 2) + 1;
-		if (newLength < 0)
+		if (newLength < 0) {
 			newLength = JavaInteger.MAX_VALUE;
+		}
 		const tmp: Array<T> = this.newArray(this._nodes[0], newLength);
 		System.arraycopy(this._nodes, 0, tmp, 0, this._size);
 		this._nodes = tmp;
@@ -511,11 +554,13 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 * @return  der Index, falls das Element enthalten ist, ansonsten -1
 	 */
 	private findIndex(obj: unknown | null): number {
-		if (obj === null)
+		if (obj === null) {
 			return -1;
+		}
 		for (let i: number = 0; i < this._size; i++) {
-			if (JavaObject.equalsTranspiler(this._nodes[i], (obj)))
+			if (JavaObject.equalsTranspiler(this._nodes[i], (obj))) {
 				return i;
+			}
 		}
 		return -1;
 	}

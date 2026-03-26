@@ -49,8 +49,9 @@ export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 		const list: ArrayList<K> = new ArrayList<K>(this._map.size());
 		for (let i: number = 0; i < this._map.getNumberOfKeys(); i++) {
 			const value: ArrayMapEntry<K, V> | null = this._map.getEntryByIndex(i);
-			if (value !== null)
+			if (value !== null) {
 				list.add(value.getKey());
+			}
 		}
 		return list;
 	}
@@ -80,11 +81,14 @@ export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 	}
 
 	public containsAll(collection: Collection<any> | null): boolean {
-		if ((collection === null) || (this as unknown === collection as unknown))
+		if ((collection === null) || (this as unknown === collection as unknown)) {
 			return true;
-		for (const obj of collection)
-			if (!this._map.containsKey(obj))
+		}
+		for (const obj of collection) {
+			if (!this._map.containsKey(obj)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -93,13 +97,15 @@ export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 	}
 
 	public retainAll(collection: Collection<any> | null): boolean {
-		if (collection === null)
+		if (collection === null) {
 			throw new NullPointerException()
+		}
 		let changed: boolean = false;
 		for (let i: number = 0; i < this._map.getNumberOfKeys(); i++) {
 			const entry: ArrayMapEntry<K, V> | null = this._map.getEntryByIndex(i);
-			if (entry === null)
+			if (entry === null) {
 				continue;
+			}
 			if (!collection.contains(entry.getKey())) {
 				this._map.remove(entry.getKey());
 				changed = true;
@@ -109,8 +115,9 @@ export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 	}
 
 	public removeAll(collection: Collection<any> | null): boolean {
-		if (collection === null)
+		if (collection === null) {
 			throw new NullPointerException()
+		}
 		let removed: boolean = false;
 		for (const obj of collection) {
 			if (this._map.containsKey(obj)) {

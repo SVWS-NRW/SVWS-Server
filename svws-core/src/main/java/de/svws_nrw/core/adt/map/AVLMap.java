@@ -59,10 +59,12 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 */
 	@SuppressWarnings("unchecked")
 	private final @NotNull Comparator<K> _comparatorNatural = (final @NotNull K key1, final @NotNull K key2) -> {
-		if ((key1 == null) || (key2 == null))
+		if ((key1 == null) || (key2 == null)) {
 			throw new NullPointerException();
-		if (!((key1 instanceof Comparable) && (key2 instanceof Comparable)))
+		}
+		if (!((key1 instanceof Comparable) && (key2 instanceof Comparable))) {
 			throw new ClassCastException();
+		}
 		final @NotNull Comparable<K> k1 = (@NotNull Comparable<K>) key1;
 		return k1.compareTo(key2);
 	};
@@ -343,10 +345,12 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 * @return Den alten Wert (Value), falls ein zugehöriger Schlüssel (Key) existierte, sonst NULL.
 	 */
 	V bcAddEntryReturnOldValueOrNull(final @NotNull K key, final @NotNull V value, final @NotNull AVLMapIntervall<K> iv) {
-		if (key == null) // Sonderfall: NULL-Key
+		if (key == null) { // Sonderfall: NULL-Key
 			throw new NullPointerException("TreeMap erlaubt keine NULL keys.");
-		if (_isOutOfRange(key, iv)) // Sonderfall: Bereich
+		}
+		if (_isOutOfRange(key, iv)) { // Sonderfall: Bereich
 			throw new IllegalArgumentException("Der Schlüsselwert liegt nicht im gültigen Bereich.");
+		}
 		if (_root == null) { // Sonderfall: Baum leer
 			_root = new AVLMapNode<>(key, value);
 			return null;
@@ -369,8 +373,9 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 */
 	boolean bcAddAllEntries(final @NotNull Collection<? extends Entry<K, V>> c, final @NotNull AVLMapIntervall<K> iv) {
 		boolean changed = false;
-		for (final @NotNull Entry<K, V> entry : c)
+		for (final @NotNull Entry<K, V> entry : c) {
 			changed |= bcAddEntryReturnBool(entry, iv);
+		}
 		return changed;
 	}
 
@@ -381,8 +386,9 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 * @param iv  Das Intervall der {@link AVLMapSubMap}.
 	 */
 	void bcAddAllEntriesOfMap(final @NotNull Map<? extends K, ? extends V> map, final @NotNull AVLMapIntervall<K> iv) {
-		for (final @NotNull Entry<? extends K, ? extends V> entry : map.entrySet())
+		for (final @NotNull Entry<? extends K, ? extends V> entry : map.entrySet()) {
 			bcAddEntryReturnOldValueOrNull(entry.getKey(), entry.getValue(), iv);
+		}
 	}
 
 	/**
@@ -398,10 +404,12 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 * @throws UnsupportedOperationException wenn ein alleiniges Hinzufügen eines Schlüssels nicht erlaubt ist.
 	 */
 	boolean bcAddKey(final @NotNull K e, final @NotNull AVLMapIntervall<K> iv) {
-		if (!_allowKeyAlone)
+		if (!_allowKeyAlone) {
 			throw new UnsupportedOperationException(); // KEY kann nicht ohne VALUE hinzugefügt werden.
-		if (bcContainsKey(e, iv))
+		}
+		if (bcContainsKey(e, iv)) {
 			return false;
+		}
 		bcAddEntryReturnOldValueOrNull(e, _dummyValue, iv);
 		return true;
 	}
@@ -418,8 +426,9 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 */
 	boolean bcAddAllKeys(final @NotNull Collection<? extends K> c, final @NotNull AVLMapIntervall<K> iv) {
 		boolean changed = false;
-		for (final K key : c)
+		for (final K key : c) {
 			changed |= bcAddKey(key, iv);
+		}
 		return changed;
 	}
 
@@ -446,9 +455,11 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 * @return TRUE, falls alle Schlüssel (Keys) der Collection in dieser Datenstruktur existieren.
 	 */
 	boolean bcContainsAllKeys(final @NotNull Collection<?> c, final @NotNull AVLMapIntervall<K> iv) {
-		for (final @NotNull Object key : c)
-			if (!bcContainsKey(key, iv))
+		for (final @NotNull Object key : c) {
+			if (!bcContainsKey(key, iv)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -465,16 +476,20 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	boolean bcContainsValue(final @NotNull Object objValue, final @NotNull AVLMapIntervall<K> iv) {
 		final @NotNull V value = (@NotNull V) objValue;
 		AVLMapNode<K, V> n1 = _nodeFirstOrNull(iv);
-		if (n1 == null)
+		if (n1 == null) {
 			return false;
+		}
 		final AVLMapNode<K, V> n2 = _nodeLastOrNull(iv);
-		if (n2 == null)
+		if (n2 == null) {
 			return false; // kann nicht passieren.
+		}
 		while (n1 != n2) {
-			if (n1 == null)
+			if (n1 == null) {
 				throw new NullPointerException(); // kann/sollte nicht passieren.
-			if (_valEquals(n1._val, value))
+			}
+			if (_valEquals(n1._val, value)) {
 				return true;
+			}
 			n1 = n1._next; // iv-Check nicht nötig.
 		}
 		return _valEquals(n2._val, value);
@@ -490,9 +505,11 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 * @return TRUE, falls alle Werte (Values) der Collection in dieser Datenstruktur existieren.
 	 */
 	boolean bcContainsAllValues(final @NotNull Collection<?> c, final @NotNull AVLMapIntervall<K> iv) {
-		for (final @NotNull Object val : c)
-			if (!bcContainsValue(val, iv))
+		for (final @NotNull Object val : c) {
+			if (!bcContainsValue(val, iv)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -506,12 +523,14 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 */
 	@SuppressWarnings("unchecked")
 	boolean bcContainsEntry(final @NotNull Object o, final @NotNull AVLMapIntervall<K> iv) {
-		if (!(o instanceof Entry))
+		if (!(o instanceof Entry)) {
 			return false;
+		}
 		final @NotNull Entry<K, V> e = (@NotNull Entry<K, V>) o;
 		final AVLMapNode<K, V> node = _nodeGetOrNull(e.getKey(), iv);
-		if (node == null)
+		if (node == null) {
 			return false;
+		}
 		return _valEquals(node._val, e.getValue());
 	}
 
@@ -525,9 +544,11 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 * @return TRUE, falls alle Entries in dieser Datenstruktur existieren.
 	 */
 	boolean bcContainsAllEntries(final @NotNull Collection<?> c, final @NotNull AVLMapIntervall<K> iv) {
-		for (final @NotNull Object entry : c)
-			if (!bcContainsEntry(entry, iv))
+		for (final @NotNull Object entry : c) {
+			if (!bcContainsEntry(entry, iv)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -543,15 +564,18 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 */
 	@SuppressWarnings("unchecked")
 	V bcRemoveKeyReturnOldValueOrNull(final @NotNull Object obj, final @NotNull AVLMapIntervall<K> iv) {
-		if (obj == null) // Sonderfall: NULL-Key
+		if (obj == null) { // Sonderfall: NULL-Key
 			throw new NullPointerException("TreeMap unterstützt keine NULL-Schlüssel.");
+		}
 		final @NotNull K key = (@NotNull K) obj;
 		// Alten Wert (Value) sichern.
 		final AVLMapNode<K, V> old = _nodeGetOrNull(key, iv);
-		if (old == null)
+		if (old == null) {
 			return null;
-		if (_root == null)
+		}
+		if (_root == null) {
 			throw new NullPointerException(); // Transpiler-Hilfe
+		}
 		// Schlüssel (Key) löschen.
 		_root = _nodeRemoveKeyRecursive(_root, key);
 		return old._val;
@@ -566,8 +590,9 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 * @return TRUE, falls der Schlüssel existierte und somit entfernt wurde.
 	 */
 	boolean bcRemoveKeyReturnBool(final @NotNull Object o, final @NotNull AVLMapIntervall<K> iv) {
-		if (!bcContainsKey(o, iv))
+		if (!bcContainsKey(o, iv)) {
 			return false; // keine Exception (anders als in der JAVA-TreeMap-Implementation)
+		}
 		bcRemoveKeyReturnOldValueOrNull(o, iv);
 		return true;
 	}
@@ -582,8 +607,9 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 */
 	boolean bcRemoveAllKeys(final @NotNull Collection<?> c, final @NotNull AVLMapIntervall<K> iv) {
 		boolean changed = false;
-		for (final @NotNull Object obj : c)
+		for (final @NotNull Object obj : c) {
 			changed |= bcRemoveKeyReturnBool(obj, iv);
+		}
 		return changed;
 	}
 
@@ -597,12 +623,15 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 */
 	@SuppressWarnings("unchecked")
 	boolean bcRemoveEntry(final @NotNull Object o, final @NotNull AVLMapIntervall<K> iv) {
-		if (!(o instanceof Entry))
+		if (!(o instanceof Entry)) {
 			return false;
-		if (!bcContainsEntry(o, iv))
+		}
+		if (!bcContainsEntry(o, iv)) {
 			return false;
-		if (_root == null)
+		}
+		if (_root == null) {
 			throw new NullPointerException(); // Transpiler-Hilfe
+		}
 		final @NotNull Entry<K, V> e = (@NotNull Entry<K, V>) o;
 		_root = _nodeRemoveKeyRecursive(_root, e.getKey());
 		return true;
@@ -618,8 +647,9 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 */
 	boolean bcRemoveAllEntries(final @NotNull Collection<?> c, final @NotNull AVLMapIntervall<K> iv) {
 		boolean removedAny = false;
-		for (final @NotNull Object entry : c)
+		for (final @NotNull Object entry : c) {
 			removedAny |= bcRemoveEntry(entry, iv);
+		}
 		return removedAny;
 	}
 
@@ -632,10 +662,12 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 */
 	Entry<K, V> bcPollFirstEntryOrNull(final @NotNull AVLMapIntervall<K> iv) {
 		final AVLMapNode<K, V> node = _nodeFirstOrNull(iv);
-		if (node == null)
+		if (node == null) {
 			return null;
-		if (_root == null)
+		}
+		if (_root == null) {
 			throw new NullPointerException(); // Transpiler-Hilfe
+		}
 		_root = _nodeRemoveKeyRecursive(_root, node._key);
 		return node;
 	}
@@ -649,10 +681,12 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 */
 	K bcPollFirstKeyOrNull(final @NotNull AVLMapIntervall<K> iv) {
 		final AVLMapNode<K, V> node = _nodeFirstOrNull(iv);
-		if (node == null)
+		if (node == null) {
 			return null;
-		if (_root == null)
+		}
+		if (_root == null) {
 			throw new NullPointerException(); // kann/sollte nicht passieren.
+		}
 		_root = _nodeRemoveKeyRecursive(_root, node._key);
 		return node._key;
 	}
@@ -666,10 +700,12 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 */
 	Entry<K, V> bcPollLastEntryOrNull(final @NotNull AVLMapIntervall<K> iv) {
 		final AVLMapNode<K, V> node = _nodeLastOrNull(iv);
-		if (node == null)
+		if (node == null) {
 			return null;
-		if (_root == null)
+		}
+		if (_root == null) {
 			throw new NullPointerException(); // kann/sollte nicht passieren.
+		}
 		_root = _nodeRemoveKeyRecursive(_root, node._key);
 		return node;
 	}
@@ -683,10 +719,12 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 */
 	K bcPollLastKeyOrNull(final @NotNull AVLMapIntervall<K> iv) {
 		final AVLMapNode<K, V> node = _nodeLastOrNull(iv);
-		if (node == null)
+		if (node == null) {
 			return null;
-		if (_root == null)
+		}
+		if (_root == null) {
 			throw new NullPointerException(); // kann/sollte nicht passieren.
+		}
 		_root = _nodeRemoveKeyRecursive(_root, node._key);
 		return node._key;
 	}
@@ -700,11 +738,13 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 */
 	int bcGetSize(final @NotNull AVLMapIntervall<K> iv) {
 		final AVLMapNode<K, V> n1 = _nodeFirstOrNull(iv);
-		if (n1 == null)
+		if (n1 == null) {
 			return 0;
+		}
 		final AVLMapNode<K, V> n2 = _nodeLastOrNull(iv);
-		if (n2 == null)
+		if (n2 == null) {
 			return 0; // Transpiler-Hilfe
+		}
 		return (_nodeIndexOf(n2._key) - _nodeIndexOf(n1._key)) + 1;
 	}
 
@@ -944,21 +984,25 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	 * @return TRUE, falls der übergebene Schlüssel außerhalb des übergebenen Intervalls ist.
 	 */
 	boolean bcCheckOutOfIntervall(final @NotNull K key, final boolean inc, final @NotNull AVLMapIntervall<K> iv) {
-		if ((key == _infinityMinus) || (key == _infinityPlus))
+		if ((key == _infinityMinus) || (key == _infinityPlus)) {
 			return false;
+		}
 
 		final int cmpF = _compare(key, iv.from);
 		// Fall: Links von "from" --> außerhalb
-		if (cmpF < 0)
+		if (cmpF < 0) {
 			return true;
+		}
 		// Fall: Gleich "from", aber Intervall nicht inklusive und Schlüssel inklusive --> außerhalb
-		if ((cmpF == 0) && (!iv.fromInc) && (inc))
+		if ((cmpF == 0) && (!iv.fromInc) && (inc)) {
 			return true;
+		}
 
 		final int cmpT = _compare(key, iv.to);
 		// Fall: Rechts von "to" --> außerhalb
-		if (cmpT > 0)
+		if (cmpT > 0) {
 			return true;
+		}
 		// Fall: Gleich "to", aber Intervall nicht inklusive und Schlüssel inklusive --> außerhalb
 		return ((cmpT == 0) && (!iv.toInc) && (inc));
 	}
@@ -976,23 +1020,27 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	}
 
 	private @NotNull K _keyOrExeption(final AVLMapNode<K, V> node) {
-		if (node == null)
+		if (node == null) {
 			throw new NoSuchElementException();
+		}
 		return node._key;
 	}
 
 	private int _compare(final @NotNull K key1, final @NotNull K key2) {
-		if ((key1 == _infinityMinus) || (key2 == _infinityPlus))
+		if ((key1 == _infinityMinus) || (key2 == _infinityPlus)) {
 			return -1;
-		if ((key1 == _infinityPlus) || (key2 == _infinityMinus))
+		}
+		if ((key1 == _infinityPlus) || (key2 == _infinityMinus)) {
 			return +1;
+		}
 		return _comparator.compare(key1, key2);
 	}
 
 	private boolean _isOutOfRange(final @NotNull K key, final @NotNull AVLMapIntervall<K> iv) {
 		final int cmpKeyFrom = _compare(key, iv.from);
-		if ((cmpKeyFrom < 0) || ((cmpKeyFrom == 0) && (!iv.fromInc)))
+		if ((cmpKeyFrom < 0) || ((cmpKeyFrom == 0) && (!iv.fromInc))) {
 			return true;
+		}
 		final int cmpKeyTo = _compare(key, iv.to);
 		return ((cmpKeyTo > 0) || ((cmpKeyTo == 0) && (!iv.toInc)));
 	}
@@ -1007,54 +1055,61 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 
 	private AVLMapNode<K, V> _nodeCeilingOrNull(final @NotNull K key, final @NotNull AVLMapIntervall<K> iv) {
 		final AVLMapNode<K, V> node = _nodeDeepestOrNull(key, iv);
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 		final int cmpNodeKey = _compare(node._key, key);
 		return (cmpNodeKey >= 0) ? node : _nodeNextOrNull(node, iv);
 	}
 
 	private AVLMapNode<K, V> _nodeHigherOrNull(final @NotNull K key, final @NotNull AVLMapIntervall<K> iv) {
 		final AVLMapNode<K, V> node = _nodeDeepestOrNull(key, iv);
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 		final int cmpNodeKey = _compare(node._key, key);
 		return (cmpNodeKey > 0) ? node : _nodeNextOrNull(node, iv);
 	}
 
 	private AVLMapNode<K, V> _nodeFloorOrNull(final @NotNull K key, final @NotNull AVLMapIntervall<K> iv) {
 		final AVLMapNode<K, V> node = _nodeDeepestOrNull(key, iv);
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 		final int cmpNodeKey = _compare(node._key, key);
 		return (cmpNodeKey <= 0) ? node : _nodePrevOrNull(node, iv);
 	}
 
 	private AVLMapNode<K, V> _nodeLowerOrNull(final @NotNull K key, final @NotNull AVLMapIntervall<K> iv) {
 		final AVLMapNode<K, V> node = _nodeDeepestOrNull(key, iv);
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 		final int cmpNodeKey = _compare(node._key, key);
 		return (cmpNodeKey < 0) ? node : _nodePrevOrNull(node, iv);
 	}
 
 	private AVLMapNode<K, V> _nodeNextOrNull(final @NotNull AVLMapNode<K, V> node, final @NotNull AVLMapIntervall<K> iv) {
 		final AVLMapNode<K, V> next = node._next;
-		if (next == null)
+		if (next == null) {
 			return null;
+		}
 		return _isOutOfRange(next._key, iv) ? null : next;
 	}
 
 	private AVLMapNode<K, V> _nodePrevOrNull(final @NotNull AVLMapNode<K, V> node, final @NotNull AVLMapIntervall<K> iv) {
 		final AVLMapNode<K, V> prev = node._prev;
-		if (prev == null)
+		if (prev == null) {
 			return null;
+		}
 		return _isOutOfRange(prev._key, iv) ? null : prev;
 	}
 
 	private AVLMapNode<K, V> _nodeGetOrNull(final @NotNull K key, final @NotNull AVLMapIntervall<K> iv) {
 		final AVLMapNode<K, V> node = _nodeDeepestOrNull(key, iv);
-		if (node == null)
+		if (node == null) {
 			return null;
+		}
 		return (_compare(key, node._key) == 0) ? node : null;
 	}
 
@@ -1064,8 +1119,9 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 
 		int index = 0;
 		while (true) {
-			if (current == null)
+			if (current == null) {
 				throw new NullPointerException(); // kann/sollte nicht passieren.
+			}
 			final int cmp = _compare(key, current._key);
 			if (cmp < 0) {
 				current = current._childL;
@@ -1131,12 +1187,13 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 			return current;
 		}
 
-		if (cmp < 0) // links (einfügen oder weitersuchen)
+		if (cmp < 0) { // links (einfügen oder weitersuchen)
 			current._childL = (current._childL == null) ? _nodeCreateLeaf(current._prev, current, key, value)
-					: _nodePutRecursive(current._childL, key, value);
-		else // rechts (einfügen oder weitersuchen)
+			: _nodePutRecursive(current._childL, key, value);
+		} else { // rechts (einfügen oder weitersuchen)
 			current._childR = (current._childR == null) ? _nodeCreateLeaf(current, current._next, key, value)
-					: _nodePutRecursive(current._childR, key, value);
+			: _nodePutRecursive(current._childR, key, value);
+		}
 
 		return _nodeRevalidate(current); // ggf. rotieren?
 	}
@@ -1160,15 +1217,17 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		final int cmp = _compare(key, current._key);
 		// Fall: Links weitersuchen
 		if (cmp < 0) {
-			if (current._childL == null)
+			if (current._childL == null) {
 				throw new NullPointerException(); // kann/sollte nicht passieren.
+			}
 			current._childL = _nodeRemoveKeyRecursive(current._childL, key);
 			return _nodeRevalidate(current);
 		}
 		// Fall: Rechts weitersuchen
 		if (cmp > 0) {
-			if (current._childR == null)
+			if (current._childR == null) {
 				throw new NullPointerException(); // kann/sollte nicht passieren.
+			}
 			current._childR = _nodeRemoveKeyRecursive(current._childR, key);
 			return _nodeRevalidate(current);
 		}
@@ -1184,8 +1243,9 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		}
 		// Fall (cmp == 0): Lösche 'next', ersetze dann 'current' durch 'next'.
 		final AVLMapNode<K, V> next = current._next;
-		if (next == null)
+		if (next == null) {
 			throw new NullPointerException(); // kann/sollte nicht passieren.
+		}
 		current._childR = _nodeRemoveKeyRecursive(current._childR, next._key);
 		return _nodeRevalidate(_nodeReplaceReferencesFromAwithB(next, current));
 	}
@@ -1197,10 +1257,12 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		final AVLMapNode<K, V> n = b._next;
 		a._prev = p;
 		a._next = n;
-		if (p != null)
+		if (p != null) {
 			p._next = a;
-		if (n != null)
+		}
+		if (n != null) {
 			n._prev = a;
+		}
 		return a;
 	}
 
@@ -1209,10 +1271,12 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 		final AVLMapNode<K, V> nodeP = current._prev;
 		final AVLMapNode<K, V> nodeN = current._next;
 		// Entkopple 'current'
-		if (nodeP != null)
+		if (nodeP != null) {
 			nodeP._next = nodeN;
-		if (nodeN != null)
+		}
+		if (nodeN != null) {
 			nodeN._prev = nodeP;
+		}
 	}
 
 	/**
@@ -1228,19 +1292,23 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 
 		// right sub-tree has more height
 		if (heightBalance > +1) {
-			if (node._childR == null)
+			if (node._childR == null) {
 				throw new NullPointerException(); // kann/sollte nicht passieren.
-			if (_nodeGetHeightBalance(node._childR) < 0)
+			}
+			if (_nodeGetHeightBalance(node._childR) < 0) {
 				node._childR = _nodeRotateRight(node._childR);
+			}
 			return _nodeRotateLeft(node);
 		}
 
 		// left sub-tree has more height
 		if (heightBalance < -1) {
-			if (node._childL == null)
+			if (node._childL == null) {
 				throw new NullPointerException(); // kann/sollte nicht passieren.
-			if (_nodeGetHeightBalance(node._childL) > 0)
+			}
+			if (_nodeGetHeightBalance(node._childL) > 0) {
 				node._childL = _nodeRotateLeft(node._childL);
+			}
 			return _nodeRotateRight(node);
 		}
 
@@ -1249,8 +1317,9 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	}
 
 	private @NotNull AVLMapNode<K, V> _nodeRotateLeft(final @NotNull AVLMapNode<K, V> nodeM) {
-		if (nodeM._childR == null)
+		if (nodeM._childR == null) {
 			throw new NullPointerException(); // kann/sollte nicht passieren.
+		}
 		final @NotNull AVLMapNode<K, V> nodeR = nodeM._childR;
 		nodeM._childR = nodeR._childL;
 		nodeR._childL = nodeM;
@@ -1260,8 +1329,9 @@ public final class AVLMap<K, V> implements NavigableMap<K, V> {
 	}
 
 	private @NotNull AVLMapNode<K, V> _nodeRotateRight(final @NotNull AVLMapNode<K, V> nodeM) {
-		if (nodeM._childL == null)
+		if (nodeM._childL == null) {
 			throw new NullPointerException(); // kann/sollte nicht passieren.
+		}
 		final @NotNull AVLMapNode<K, V> nodeL = nodeM._childL;
 		nodeM._childL = nodeL._childR;
 		nodeL._childR = nodeM;

@@ -54,10 +54,11 @@ public class ListMap4DLongKeys<V> {
 
 		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
 			final long key1 = e.a.getKeyAt(0);
-			if (e.b == null)
+			if (e.b == null) {
 				MapUtils.getOrCreateArrayList(map, key1);
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, key1).add(e.b);
+			}
 		}
 
 		return map;
@@ -68,10 +69,11 @@ public class ListMap4DLongKeys<V> {
 
 		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
 			final long key2 = e.a.getKeyAt(1);
-			if (e.b == null)
+			if (e.b == null) {
 				MapUtils.getOrCreateArrayList(map, key2);
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, key2).add(e.b);
+			}
 		}
 
 		return map;
@@ -82,10 +84,11 @@ public class ListMap4DLongKeys<V> {
 
 		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
 			final long key3 = e.a.getKeyAt(2);
-			if (e.b == null)
+			if (e.b == null) {
 				MapUtils.getOrCreateArrayList(map, key3);
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, key3).add(e.b);
+			}
 		}
 
 		return map;
@@ -96,10 +99,11 @@ public class ListMap4DLongKeys<V> {
 
 		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
 			final long key4 = e.a.getKeyAt(3);
-			if (e.b == null)
+			if (e.b == null) {
 				MapUtils.getOrCreateArrayList(map, key4);
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, key4).add(e.b);
+			}
 		}
 
 		return map;
@@ -111,10 +115,11 @@ public class ListMap4DLongKeys<V> {
 		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
 			final long key1 = e.a.getKeyAt(0);
 			final long key2 = e.a.getKeyAt(1);
-			if (e.b == null)
+			if (e.b == null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2)).add(e.b);
+			}
 		}
 
 		return map;
@@ -126,10 +131,11 @@ public class ListMap4DLongKeys<V> {
 		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
 			final long key1 = e.a.getKeyAt(0);
 			final long key3 = e.a.getKeyAt(2);
-			if (e.b == null)
+			if (e.b == null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3)).add(e.b);
+			}
 		}
 
 		return map;
@@ -141,10 +147,11 @@ public class ListMap4DLongKeys<V> {
 		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
 			final long key1 = e.a.getKeyAt(0);
 			final long key4 = e.a.getKeyAt(3);
-			if (e.b == null)
+			if (e.b == null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key4));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key4)).add(e.b);
+			}
 		}
 
 		return map;
@@ -156,10 +163,11 @@ public class ListMap4DLongKeys<V> {
 		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
 			final long key2 = e.a.getKeyAt(1);
 			final long key3 = e.a.getKeyAt(2);
-			if (e.b == null)
+			if (e.b == null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3)).add(e.b);
+			}
 		}
 
 		return map;
@@ -171,10 +179,11 @@ public class ListMap4DLongKeys<V> {
 		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
 			final long key2 = e.a.getKeyAt(1);
 			final long key4 = e.a.getKeyAt(3);
-			if (e.b == null)
+			if (e.b == null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key4));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key4)).add(e.b);
+			}
 		}
 
 		return map;
@@ -186,10 +195,11 @@ public class ListMap4DLongKeys<V> {
 		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
 			final long key3 = e.a.getKeyAt(2);
 			final long key4 = e.a.getKeyAt(3);
-			if (e.b == null)
+			if (e.b == null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key4));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key4)).add(e.b);
+			}
 		}
 
 		return map;
@@ -202,10 +212,11 @@ public class ListMap4DLongKeys<V> {
 			final long key1 = e.a.getKeyAt(0);
 			final long key2 = e.a.getKeyAt(1);
 			final long key3 = e.a.getKeyAt(2);
-			if (e.b == null)
+			if (e.b == null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3)).add(e.b);
+			}
 		}
 
 		return map;
@@ -218,10 +229,11 @@ public class ListMap4DLongKeys<V> {
 			final long key1 = e.a.getKeyAt(0);
 			final long key2 = e.a.getKeyAt(1);
 			final long key4 = e.a.getKeyAt(3);
-			if (e.b == null)
+			if (e.b == null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key4));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key4)).add(e.b);
+			}
 		}
 
 		return map;
@@ -234,10 +246,11 @@ public class ListMap4DLongKeys<V> {
 			final long key1 = e.a.getKeyAt(0);
 			final long key3 = e.a.getKeyAt(2);
 			final long key4 = e.a.getKeyAt(3);
-			if (e.b == null)
+			if (e.b == null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key4));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key4)).add(e.b);
+			}
 		}
 
 		return map;
@@ -250,10 +263,11 @@ public class ListMap4DLongKeys<V> {
 			final long key2 = e.a.getKeyAt(1);
 			final long key3 = e.a.getKeyAt(2);
 			final long key4 = e.a.getKeyAt(3);
-			if (e.b == null)
+			if (e.b == null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key4));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key4)).add(e.b);
+			}
 		}
 
 		return map;
@@ -261,19 +275,23 @@ public class ListMap4DLongKeys<V> {
 
 	private V getSingleOrNullHelperLong(final @NotNull Map<Long, List<V>> map, final long key) {
 		final List<V> list = map.get(key);
-		if (list == null)
+		if (list == null) {
 			return null;
-		if (list.size() != 1)
+		}
+		if (list.size() != 1) {
 			return null;
+		}
 		return list.getFirst();
 	}
 
 	private V getSingleOrNullHelperLongArray(final @NotNull Map<LongArrayKey, List<V>> map, final @NotNull LongArrayKey key) {
 		final List<V> list = map.get(key);
-		if (list == null)
+		if (list == null) {
 			return null;
-		if (list.size() != 1)
+		}
+		if (list.size() != 1) {
 			return null;
+		}
 		return list.getFirst();
 	}
 
@@ -292,36 +310,50 @@ public class ListMap4DLongKeys<V> {
 		MapUtils.getOrCreateArrayList(_map1234, key).add(value);
 		_list.add(new Pair<>(key, value));
 
-		if (_map1 != null)
+		if (_map1 != null) {
 			MapUtils.getOrCreateArrayList(_map1, key1).add(value);
-		if (_map2 != null)
+		}
+		if (_map2 != null) {
 			MapUtils.getOrCreateArrayList(_map2, key2).add(value);
-		if (_map3 != null)
+		}
+		if (_map3 != null) {
 			MapUtils.getOrCreateArrayList(_map3, key3).add(value);
-		if (_map4 != null)
+		}
+		if (_map4 != null) {
 			MapUtils.getOrCreateArrayList(_map4, key4).add(value);
+		}
 
-		if (_map12 != null)
+		if (_map12 != null) {
 			MapUtils.getOrCreateArrayList(_map12, new LongArrayKey(key1, key2)).add(value);
-		if (_map13 != null)
+		}
+		if (_map13 != null) {
 			MapUtils.getOrCreateArrayList(_map13, new LongArrayKey(key1, key3)).add(value);
-		if (_map14 != null)
+		}
+		if (_map14 != null) {
 			MapUtils.getOrCreateArrayList(_map14, new LongArrayKey(key1, key4)).add(value);
-		if (_map23 != null)
+		}
+		if (_map23 != null) {
 			MapUtils.getOrCreateArrayList(_map23, new LongArrayKey(key2, key3)).add(value);
-		if (_map24 != null)
+		}
+		if (_map24 != null) {
 			MapUtils.getOrCreateArrayList(_map24, new LongArrayKey(key2, key4)).add(value);
-		if (_map34 != null)
+		}
+		if (_map34 != null) {
 			MapUtils.getOrCreateArrayList(_map34, new LongArrayKey(key3, key4)).add(value);
+		}
 
-		if (_map123 != null)
+		if (_map123 != null) {
 			MapUtils.getOrCreateArrayList(_map123, new LongArrayKey(key1, key2, key3)).add(value);
-		if (_map124 != null)
+		}
+		if (_map124 != null) {
 			MapUtils.getOrCreateArrayList(_map124, new LongArrayKey(key1, key2, key4)).add(value);
-		if (_map134 != null)
+		}
+		if (_map134 != null) {
 			MapUtils.getOrCreateArrayList(_map134, new LongArrayKey(key1, key3, key4)).add(value);
-		if (_map234 != null)
+		}
+		if (_map234 != null) {
 			MapUtils.getOrCreateArrayList(_map234, new LongArrayKey(key2, key3, key4)).add(value);
+		}
 	}
 
 	/**
@@ -338,36 +370,50 @@ public class ListMap4DLongKeys<V> {
 		MapUtils.getOrCreateArrayList(_map1234, key);
 		_list.add(new Pair<>(key, null));
 
-		if (_map1 != null)
+		if (_map1 != null) {
 			MapUtils.getOrCreateArrayList(_map1, key1);
-		if (_map2 != null)
+		}
+		if (_map2 != null) {
 			MapUtils.getOrCreateArrayList(_map2, key2);
-		if (_map3 != null)
+		}
+		if (_map3 != null) {
 			MapUtils.getOrCreateArrayList(_map3, key3);
-		if (_map4 != null)
+		}
+		if (_map4 != null) {
 			MapUtils.getOrCreateArrayList(_map4, key4);
+		}
 
-		if (_map12 != null)
+		if (_map12 != null) {
 			MapUtils.getOrCreateArrayList(_map12, new LongArrayKey(key1, key2));
-		if (_map13 != null)
+		}
+		if (_map13 != null) {
 			MapUtils.getOrCreateArrayList(_map13, new LongArrayKey(key1, key3));
-		if (_map14 != null)
+		}
+		if (_map14 != null) {
 			MapUtils.getOrCreateArrayList(_map14, new LongArrayKey(key1, key4));
-		if (_map23 != null)
+		}
+		if (_map23 != null) {
 			MapUtils.getOrCreateArrayList(_map23, new LongArrayKey(key2, key3));
-		if (_map24 != null)
+		}
+		if (_map24 != null) {
 			MapUtils.getOrCreateArrayList(_map24, new LongArrayKey(key2, key4));
-		if (_map34 != null)
+		}
+		if (_map34 != null) {
 			MapUtils.getOrCreateArrayList(_map34, new LongArrayKey(key3, key4));
+		}
 
-		if (_map123 != null)
+		if (_map123 != null) {
 			MapUtils.getOrCreateArrayList(_map123, new LongArrayKey(key1, key2, key3));
-		if (_map124 != null)
+		}
+		if (_map124 != null) {
 			MapUtils.getOrCreateArrayList(_map124, new LongArrayKey(key1, key2, key4));
-		if (_map134 != null)
+		}
+		if (_map134 != null) {
 			MapUtils.getOrCreateArrayList(_map134, new LongArrayKey(key1, key3, key4));
-		if (_map234 != null)
+		}
+		if (_map234 != null) {
 			MapUtils.getOrCreateArrayList(_map234, new LongArrayKey(key2, key3, key4));
+		}
 	}
 
 	/**
@@ -378,8 +424,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return TRUE, falls es den Schlüssel (key1) gibt.
 	 */
 	public boolean containsKey1(final long key1) {
-		if (_map1 == null)
+		if (_map1 == null) {
 			_map1 = _lazyLoad1();
+		}
 		return _map1.containsKey(key1);
 	}
 
@@ -391,8 +438,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return TRUE, falls es den Schlüssel (key2) gibt.
 	 */
 	public boolean containsKey2(final long key2) {
-		if (_map2 == null)
+		if (_map2 == null) {
 			_map2 = _lazyLoad2();
+		}
 		return _map2.containsKey(key2);
 	}
 
@@ -404,8 +452,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return TRUE, falls es den Schlüssel (key3) gibt.
 	 */
 	public boolean containsKey3(final long key3) {
-		if (_map3 == null)
+		if (_map3 == null) {
 			_map3 = _lazyLoad3();
+		}
 		return _map3.containsKey(key3);
 	}
 
@@ -417,8 +466,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return TRUE, falls es den Schlüssel (key4) gibt.
 	 */
 	public boolean containsKey4(final long key4) {
-		if (_map4 == null)
+		if (_map4 == null) {
 			_map4 = _lazyLoad4();
+		}
 		return _map4.containsKey(key4);
 	}
 
@@ -431,8 +481,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return TRUE, falls es den Schlüssel (key1, key2) gibt.
 	 */
 	public boolean containsKey12(final long key1, final long key2) {
-		if (_map12 == null)
+		if (_map12 == null) {
 			_map12 = _lazyLoad12();
+		}
 		return _map12.containsKey(new LongArrayKey(key1, key2));
 	}
 
@@ -445,8 +496,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return TRUE, falls es den Schlüssel (key1, key3) gibt.
 	 */
 	public boolean containsKey13(final long key1, final long key3) {
-		if (_map13 == null)
+		if (_map13 == null) {
 			_map13 = _lazyLoad13();
+		}
 		return _map13.containsKey(new LongArrayKey(key1, key3));
 	}
 
@@ -459,8 +511,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return TRUE, falls es den Schlüssel (key1, key4) gibt.
 	 */
 	public boolean containsKey14(final long key1, final long key4) {
-		if (_map14 == null)
+		if (_map14 == null) {
 			_map14 = _lazyLoad14();
+		}
 		return _map14.containsKey(new LongArrayKey(key1, key4));
 	}
 
@@ -473,8 +526,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return TRUE, falls es den Schlüssel (key2, key3) gibt.
 	 */
 	public boolean containsKey23(final long key2, final long key3) {
-		if (_map23 == null)
+		if (_map23 == null) {
 			_map23 = _lazyLoad23();
+		}
 		return _map23.containsKey(new LongArrayKey(key2, key3));
 	}
 
@@ -487,8 +541,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return TRUE, falls es den Schlüssel (key2, key4) gibt.
 	 */
 	public boolean containsKey24(final long key2, final long key4) {
-		if (_map24 == null)
+		if (_map24 == null) {
 			_map24 = _lazyLoad24();
+		}
 		return _map24.containsKey(new LongArrayKey(key2, key4));
 	}
 
@@ -501,8 +556,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return TRUE, falls es den Schlüssel (key3, key4) gibt.
 	 */
 	public boolean containsKey34(final long key3, final long key4) {
-		if (_map34 == null)
+		if (_map34 == null) {
 			_map34 = _lazyLoad34();
+		}
 		return _map34.containsKey(new LongArrayKey(key3, key4));
 	}
 
@@ -516,8 +572,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return TRUE, falls es den Schlüssel (key1, key2, key3) gibt.
 	 */
 	public boolean containsKey123(final long key1, final long key2, final long key3) {
-		if (_map123 == null)
+		if (_map123 == null) {
 			_map123 = _lazyLoad123();
+		}
 		return _map123.containsKey(new LongArrayKey(key1, key2, key3));
 	}
 
@@ -531,8 +588,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return TRUE, falls es den Schlüssel (key1, key2, key4) gibt.
 	 */
 	public boolean containsKey124(final long key1, final long key2, final long key4) {
-		if (_map124 == null)
+		if (_map124 == null) {
 			_map124 = _lazyLoad124();
+		}
 		return _map124.containsKey(new LongArrayKey(key1, key2, key4));
 	}
 
@@ -546,8 +604,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return TRUE, falls es den Schlüssel (key1, key3, key4) gibt.
 	 */
 	public boolean containsKey134(final long key1, final long key3, final long key4) {
-		if (_map134 == null)
+		if (_map134 == null) {
 			_map134 = _lazyLoad134();
+		}
 		return _map134.containsKey(new LongArrayKey(key1, key3, key4));
 	}
 
@@ -561,8 +620,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return TRUE, falls es den Schlüssel (key2, key3, key4) gibt.
 	 */
 	public boolean containsKey234(final long key2, final long key3, final long key4) {
-		if (_map234 == null)
+		if (_map234 == null) {
 			_map234 = _lazyLoad234();
+		}
 		return _map234.containsKey(new LongArrayKey(key2, key3, key4));
 	}
 
@@ -589,10 +649,12 @@ public class ListMap4DLongKeys<V> {
 	 * @return eine Liste aller Values in dieser Zuordnung.
 	 */
 	public @NotNull List<V> get1(final long key1) {
-		if (_map1 == null)
+		if (_map1 == null) {
 			_map1 = _lazyLoad1();
-		if (!_map1.containsKey(key1))
+		}
+		if (!_map1.containsKey(key1)) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map1, key1));
 	}
 
@@ -605,10 +667,12 @@ public class ListMap4DLongKeys<V> {
 	 * @return eine Liste aller Values in dieser Zuordnung.
 	 */
 	public @NotNull List<V> get2(final long key2) {
-		if (_map2 == null)
+		if (_map2 == null) {
 			_map2 = _lazyLoad2();
-		if (!_map2.containsKey(key2))
+		}
+		if (!_map2.containsKey(key2)) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map2, key2));
 	}
 
@@ -621,10 +685,12 @@ public class ListMap4DLongKeys<V> {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key3).
 	 */
 	public @NotNull List<V> get3(final long key3) {
-		if (_map3 == null)
+		if (_map3 == null) {
 			_map3 = _lazyLoad3();
-		if (!_map3.containsKey(key3))
+		}
+		if (!_map3.containsKey(key3)) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map3, key3));
 	}
 
@@ -637,10 +703,12 @@ public class ListMap4DLongKeys<V> {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key4).
 	 */
 	public @NotNull List<V> get4(final long key4) {
-		if (_map4 == null)
+		if (_map4 == null) {
 			_map4 = _lazyLoad4();
-		if (!_map4.containsKey(key4))
+		}
+		if (!_map4.containsKey(key4)) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map4, key4));
 	}
 
@@ -654,11 +722,13 @@ public class ListMap4DLongKeys<V> {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key1, key2).
 	 */
 	public @NotNull List<V> get12(final long key1, final long key2) {
-		if (_map12 == null)
+		if (_map12 == null) {
 			_map12 = _lazyLoad12();
+		}
 		final @NotNull LongArrayKey key = new LongArrayKey(key1, key2);
-		if (!_map12.containsKey(key))
+		if (!_map12.containsKey(key)) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map12, key));
 	}
 
@@ -672,11 +742,13 @@ public class ListMap4DLongKeys<V> {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key1, key3).
 	 */
 	public @NotNull List<V> get13(final long key1, final long key3) {
-		if (_map13 == null)
+		if (_map13 == null) {
 			_map13 = _lazyLoad13();
+		}
 		final @NotNull LongArrayKey key = new LongArrayKey(key1, key3);
-		if (!_map13.containsKey(key))
+		if (!_map13.containsKey(key)) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map13, key));
 	}
 
@@ -690,11 +762,13 @@ public class ListMap4DLongKeys<V> {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key1, key4).
 	 */
 	public @NotNull List<V> get14(final long key1, final long key4) {
-		if (_map14 == null)
+		if (_map14 == null) {
 			_map14 = _lazyLoad14();
+		}
 		final @NotNull LongArrayKey key = new LongArrayKey(key1, key4);
-		if (!_map14.containsKey(key))
+		if (!_map14.containsKey(key)) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map14, key));
 	}
 
@@ -708,11 +782,13 @@ public class ListMap4DLongKeys<V> {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key2, key3).
 	 */
 	public @NotNull List<V> get23(final long key2, final long key3) {
-		if (_map23 == null)
+		if (_map23 == null) {
 			_map23 = _lazyLoad23();
+		}
 		final @NotNull LongArrayKey key = new LongArrayKey(key2, key3);
-		if (!_map23.containsKey(key))
+		if (!_map23.containsKey(key)) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map23, key));
 	}
 
@@ -726,11 +802,13 @@ public class ListMap4DLongKeys<V> {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key2, key4).
 	 */
 	public @NotNull List<V> get24(final long key2, final long key4) {
-		if (_map24 == null)
+		if (_map24 == null) {
 			_map24 = _lazyLoad24();
+		}
 		final @NotNull LongArrayKey key = new LongArrayKey(key2, key4);
-		if (!_map24.containsKey(key))
+		if (!_map24.containsKey(key)) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map24, key));
 	}
 
@@ -744,11 +822,13 @@ public class ListMap4DLongKeys<V> {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key3, key4).
 	 */
 	public @NotNull List<V> get34(final long key3, final long key4) {
-		if (_map34 == null)
+		if (_map34 == null) {
 			_map34 = _lazyLoad34();
+		}
 		final @NotNull LongArrayKey key = new LongArrayKey(key3, key4);
-		if (!_map34.containsKey(key))
+		if (!_map34.containsKey(key)) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map34, key));
 	}
 
@@ -763,11 +843,13 @@ public class ListMap4DLongKeys<V> {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key1, key2, key3).
 	 */
 	public @NotNull List<V> get123(final long key1, final long key2, final long key3) {
-		if (_map123 == null)
+		if (_map123 == null) {
 			_map123 = _lazyLoad123();
+		}
 		final @NotNull LongArrayKey key = new LongArrayKey(key1, key2, key3);
-		if (!_map123.containsKey(key))
+		if (!_map123.containsKey(key)) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map123, key));
 	}
 
@@ -782,11 +864,13 @@ public class ListMap4DLongKeys<V> {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key1, key2, key4).
 	 */
 	public @NotNull List<V> get124(final long key1, final long key2, final long key4) {
-		if (_map124 == null)
+		if (_map124 == null) {
 			_map124 = _lazyLoad124();
+		}
 		final @NotNull LongArrayKey key = new LongArrayKey(key1, key2, key4);
-		if (!_map124.containsKey(key))
+		if (!_map124.containsKey(key)) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map124, key));
 	}
 
@@ -801,11 +885,13 @@ public class ListMap4DLongKeys<V> {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key1, key3, key4).
 	 */
 	public @NotNull List<V> get134(final long key1, final long key3, final long key4) {
-		if (_map134 == null)
+		if (_map134 == null) {
 			_map134 = _lazyLoad134();
+		}
 		final @NotNull LongArrayKey key = new LongArrayKey(key1, key3, key4);
-		if (!_map134.containsKey(key))
+		if (!_map134.containsKey(key)) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map134, key));
 	}
 
@@ -820,11 +906,13 @@ public class ListMap4DLongKeys<V> {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key2, key3, key4).
 	 */
 	public @NotNull List<V> get234(final long key2, final long key3, final long key4) {
-		if (_map234 == null)
+		if (_map234 == null) {
 			_map234 = _lazyLoad234();
+		}
 		final @NotNull LongArrayKey key = new LongArrayKey(key2, key3, key4);
-		if (!_map234.containsKey(key))
+		if (!_map234.containsKey(key)) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map234, key));
 	}
 
@@ -841,8 +929,9 @@ public class ListMap4DLongKeys<V> {
 	 */
 	public @NotNull List<V> get1234(final long key1, final long key2, final long key3, final long key4) {
 		final @NotNull LongArrayKey key = new LongArrayKey(key1, key2, key3, key4);
-		if (!_map1234.containsKey(key))
+		if (!_map1234.containsKey(key)) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map1234, key));
 	}
 
@@ -854,8 +943,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public V getSingle1OrNull(final long key1) {
-		if (_map1 == null)
+		if (_map1 == null) {
 			_map1 = _lazyLoad1();
+		}
 		return getSingleOrNullHelperLong(_map1, key1);
 	}
 
@@ -867,8 +957,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public V getSingle2OrNull(final long key2) {
-		if (_map2 == null)
+		if (_map2 == null) {
 			_map2 = _lazyLoad2();
+		}
 		return getSingleOrNullHelperLong(_map2, key2);
 	}
 
@@ -880,8 +971,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key3), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public V getSingle3OrNull(final long key3) {
-		if (_map3 == null)
+		if (_map3 == null) {
 			_map3 = _lazyLoad3();
+		}
 		return getSingleOrNullHelperLong(_map3, key3);
 	}
 
@@ -893,8 +985,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key4), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public V getSingle4OrNull(final long key4) {
-		if (_map4 == null)
+		if (_map4 == null) {
 			_map4 = _lazyLoad4();
+		}
 		return getSingleOrNullHelperLong(_map4, key4);
 	}
 
@@ -907,8 +1000,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key1, key2), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public V getSingle12OrNull(final long key1, final long key2) {
-		if (_map12 == null)
+		if (_map12 == null) {
 			_map12 = _lazyLoad12();
+		}
 		return getSingleOrNullHelperLongArray(_map12, new LongArrayKey(key1, key2));
 	}
 
@@ -921,8 +1015,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key1, key3), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public V getSingle13OrNull(final long key1, final long key3) {
-		if (_map13 == null)
+		if (_map13 == null) {
 			_map13 = _lazyLoad13();
+		}
 		return getSingleOrNullHelperLongArray(_map13, new LongArrayKey(key1, key3));
 	}
 
@@ -935,8 +1030,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key1, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public V getSingle14OrNull(final long key1, final long key4) {
-		if (_map14 == null)
+		if (_map14 == null) {
 			_map14 = _lazyLoad14();
+		}
 		return getSingleOrNullHelperLongArray(_map14, new LongArrayKey(key1, key4));
 	}
 
@@ -949,8 +1045,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key2, key3), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public V getSingle23OrNull(final long key2, final long key3) {
-		if (_map23 == null)
+		if (_map23 == null) {
 			_map23 = _lazyLoad23();
+		}
 		return getSingleOrNullHelperLongArray(_map23, new LongArrayKey(key2, key3));
 	}
 
@@ -963,8 +1060,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key2, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public V getSingle24OrNull(final long key2, final long key4) {
-		if (_map24 == null)
+		if (_map24 == null) {
 			_map24 = _lazyLoad24();
+		}
 		return getSingleOrNullHelperLongArray(_map24, new LongArrayKey(key2, key4));
 	}
 
@@ -977,8 +1075,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key3, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public V getSingle34OrNull(final long key3, final long key4) {
-		if (_map34 == null)
+		if (_map34 == null) {
 			_map34 = _lazyLoad34();
+		}
 		return getSingleOrNullHelperLongArray(_map34, new LongArrayKey(key3, key4));
 	}
 
@@ -992,8 +1091,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key1, key2, key3), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public V getSingle123OrNull(final long key1, final long key2, final long key3) {
-		if (_map123 == null)
+		if (_map123 == null) {
 			_map123 = _lazyLoad123();
+		}
 		return getSingleOrNullHelperLongArray(_map123, new LongArrayKey(key1, key2, key3));
 	}
 
@@ -1007,8 +1107,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key1, key2, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public V getSingle124OrNull(final long key1, final long key2, final long key4) {
-		if (_map124 == null)
+		if (_map124 == null) {
 			_map124 = _lazyLoad124();
+		}
 		return getSingleOrNullHelperLongArray(_map124, new LongArrayKey(key1, key2, key4));
 	}
 
@@ -1022,8 +1123,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key1, key3, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public V getSingle134OrNull(final long key1, final long key3, final long key4) {
-		if (_map134 == null)
+		if (_map134 == null) {
 			_map134 = _lazyLoad134();
+		}
 		return getSingleOrNullHelperLongArray(_map134, new LongArrayKey(key1, key3, key4));
 	}
 
@@ -1037,8 +1139,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das zugeordnete Element zum Mapping (key2, key3, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public V getSingle234OrNull(final long key2, final long key3, final long key4) {
-		if (_map234 == null)
+		if (_map234 == null) {
 			_map234 = _lazyLoad234();
+		}
 		return getSingleOrNullHelperLongArray(_map234, new LongArrayKey(key2, key3, key4));
 	}
 
@@ -1260,8 +1363,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das Key-Set der Map1.
 	 */
 	public @NotNull Set<Long> keySet1() {
-		if (_map1 == null)
+		if (_map1 == null) {
 			_map1 = _lazyLoad1();
+		}
 		return _map1.keySet();
 	}
 
@@ -1271,8 +1375,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das Key-Set der Map2.
 	 */
 	public @NotNull Set<Long> keySet2() {
-		if (_map2 == null)
+		if (_map2 == null) {
 			_map2 = _lazyLoad2();
+		}
 		return _map2.keySet();
 	}
 
@@ -1282,8 +1387,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das Key-Set der Map3.
 	 */
 	public @NotNull Set<Long> keySet3() {
-		if (_map3 == null)
+		if (_map3 == null) {
 			_map3 = _lazyLoad3();
+		}
 		return _map3.keySet();
 	}
 
@@ -1293,8 +1399,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das Key-Set der Map4.
 	 */
 	public @NotNull Set<Long> keySet4() {
-		if (_map4 == null)
+		if (_map4 == null) {
 			_map4 = _lazyLoad4();
+		}
 		return _map4.keySet();
 	}
 
@@ -1304,8 +1411,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das Key-Set der Map12.
 	 */
 	public @NotNull Set<LongArrayKey> keySet12() {
-		if (_map12 == null)
+		if (_map12 == null) {
 			_map12 = _lazyLoad12();
+		}
 		return _map12.keySet();
 	}
 
@@ -1315,8 +1423,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das Key-Set der Map13.
 	 */
 	public @NotNull Set<LongArrayKey> keySet13() {
-		if (_map13 == null)
+		if (_map13 == null) {
 			_map13 = _lazyLoad13();
+		}
 		return _map13.keySet();
 	}
 
@@ -1326,8 +1435,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das Key-Set der Map14.
 	 */
 	public @NotNull Set<LongArrayKey> keySet14() {
-		if (_map14 == null)
+		if (_map14 == null) {
 			_map14 = _lazyLoad14();
+		}
 		return _map14.keySet();
 	}
 
@@ -1337,8 +1447,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das Key-Set der Map23.
 	 */
 	public @NotNull Set<LongArrayKey> keySet23() {
-		if (_map23 == null)
+		if (_map23 == null) {
 			_map23 = _lazyLoad23();
+		}
 		return _map23.keySet();
 	}
 
@@ -1348,8 +1459,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das Key-Set der Map24.
 	 */
 	public @NotNull Set<LongArrayKey> keySet24() {
-		if (_map24 == null)
+		if (_map24 == null) {
 			_map24 = _lazyLoad24();
+		}
 		return _map24.keySet();
 	}
 
@@ -1359,8 +1471,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das Key-Set der Map34.
 	 */
 	public @NotNull Set<LongArrayKey> keySet34() {
-		if (_map34 == null)
+		if (_map34 == null) {
 			_map34 = _lazyLoad34();
+		}
 		return _map34.keySet();
 	}
 
@@ -1370,8 +1483,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das Key-Set der Map123.
 	 */
 	public @NotNull Set<LongArrayKey> keySet123() {
-		if (_map123 == null)
+		if (_map123 == null) {
 			_map123 = _lazyLoad123();
+		}
 		return _map123.keySet();
 	}
 
@@ -1381,8 +1495,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das Key-Set der Map124.
 	 */
 	public @NotNull Set<LongArrayKey> keySet124() {
-		if (_map124 == null)
+		if (_map124 == null) {
 			_map124 = _lazyLoad124();
+		}
 		return _map124.keySet();
 	}
 
@@ -1392,8 +1507,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das Key-Set der Map134.
 	 */
 	public @NotNull Set<LongArrayKey> keySet134() {
-		if (_map134 == null)
+		if (_map134 == null) {
 			_map134 = _lazyLoad134();
+		}
 		return _map134.keySet();
 	}
 
@@ -1403,8 +1519,9 @@ public class ListMap4DLongKeys<V> {
 	 * @return das Key-Set der Map234.
 	 */
 	public @NotNull Set<LongArrayKey> keySet234() {
-		if (_map234 == null)
+		if (_map234 == null) {
 			_map234 = _lazyLoad234();
+		}
 		return _map234.keySet();
 	}
 

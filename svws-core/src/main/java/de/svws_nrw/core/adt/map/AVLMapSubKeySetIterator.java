@@ -46,8 +46,9 @@ class AVLMapSubKeySetIterator<K, V> implements Iterator<K> {
 
 	@Override
 	public @NotNull K next() {
-		if (_next == null)
+		if (_next == null) {
 			throw new NoSuchElementException();
+		}
 		_current = _next;
 		_next = _sub.bcGetNextEntryOrNull(_next);
 		return _current._key;
@@ -60,8 +61,9 @@ class AVLMapSubKeySetIterator<K, V> implements Iterator<K> {
 
 	@Override
 	public void remove() {
-		if (_current == null)
+		if (_current == null) {
 			throw new IllegalStateException();
+		}
 		_sub.remove(_current._key);
 		_current = null;
 	}

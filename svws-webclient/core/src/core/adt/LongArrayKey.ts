@@ -120,18 +120,24 @@ export class LongArrayKey extends JavaObject implements Comparable<LongArrayKey>
 	}
 
 	public equals(obj: unknown | null): boolean {
-		if (obj === null)
+		if (obj === null) {
 			return false;
-		if (this as unknown === obj as unknown)
+		}
+		if (this as unknown === obj as unknown) {
 			return true;
-		if (!(((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.core.adt.LongArrayKey')))))
+		}
+		if (!(((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.core.adt.LongArrayKey'))))) {
 			return false;
+		}
 		const keys2: Array<number> = (cast_de_svws_nrw_core_adt_LongArrayKey(obj))._keys;
-		if (this._keys.length !== keys2.length)
+		if (this._keys.length !== keys2.length) {
 			return false;
-		for (let i: number = 0; i < this._keys.length; i++)
-			if (this._keys[i] !== keys2[i])
+		}
+		for (let i: number = 0; i < this._keys.length; i++) {
+			if (this._keys[i] !== keys2[i]) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -141,15 +147,19 @@ export class LongArrayKey extends JavaObject implements Comparable<LongArrayKey>
 
 	public compareTo(o: LongArrayKey): number {
 		const keys2: Array<number> = o._keys;
-		if (this._keys.length < keys2.length)
+		if (this._keys.length < keys2.length) {
 			return -1;
-		if (this._keys.length > keys2.length)
+		}
+		if (this._keys.length > keys2.length) {
 			return +1;
+		}
 		for (let i: number = 0; i < this._keys.length; i++) {
-			if (this._keys[i] < keys2[i])
+			if (this._keys[i] < keys2[i]) {
 				return -1;
-			if (this._keys[i] > keys2[i])
+			}
+			if (this._keys[i] > keys2[i]) {
 				return +1;
+			}
 		}
 		return 0;
 	}

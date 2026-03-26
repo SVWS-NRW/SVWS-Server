@@ -70,17 +70,20 @@ class LinkedCollectionDescendingIterator<E> implements Iterator<E> {
 
 	@Override
 	public boolean hasNext() {
-		if (_collection._modCount != _expModCount)
+		if (_collection._modCount != _expModCount) {
 			throw new ConcurrentModificationException();
+		}
 		return (_current != null);
 	}
 
 	@Override
 	public @NotNull E next() {
-		if (_collection._modCount != _expModCount)
+		if (_collection._modCount != _expModCount) {
 			throw new ConcurrentModificationException();
-		if (_current == null)
+		}
+		if (_current == null) {
 			throw new NoSuchElementException();
+		}
 		final @NotNull E result = _current.getValue();
 		_current = _current.getPrev();
 		return result;

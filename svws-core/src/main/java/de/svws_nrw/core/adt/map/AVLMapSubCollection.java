@@ -37,10 +37,11 @@ public final class AVLMapSubCollection<K, V> implements Collection<V> {
 		sb.append("values = [");
 		boolean first = true;
 		for (final V value : this) {
-			if (first)
+			if (first) {
 				first = false;
-			else
+			} else {
 				sb.append(", ");
+			}
 			sb.append(value);
 		}
 		sb.append("], size = ");

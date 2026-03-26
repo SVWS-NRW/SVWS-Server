@@ -35,14 +35,16 @@ public class ListMap2DLongKeys<V> {
 	}
 
 	private @NotNull Map<Long, List<V>> getMap1() {
-		if (_map1 == null)
+		if (_map1 == null) {
 			_map1 = _lazyLoad1();
+		}
 		return _map1;
 	}
 
 	private @NotNull Map<Long, List<V>> getMap2() {
-		if (_map2 == null)
+		if (_map2 == null) {
 			_map2 = _lazyLoad2();
+		}
 		return _map2;
 	}
 
@@ -51,10 +53,11 @@ public class ListMap2DLongKeys<V> {
 
 		for (final @NotNull Entry<LongArrayKey, List<V>> entry12 : _map12.entrySet()) {
 			final long key1 = entry12.getKey().getKeyAt(0);
-			if (entry12.getValue().isEmpty())
+			if (entry12.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, key1);
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, key1).addAll(entry12.getValue());
+			}
 		}
 		return map;
 	}
@@ -64,10 +67,11 @@ public class ListMap2DLongKeys<V> {
 
 	    for (final @NotNull Entry<LongArrayKey, List<V>> entry12 : _map12.entrySet()) {
 	        final long key2 = entry12.getKey().getKeyAt(1);
-	        if (entry12.getValue().isEmpty())
-	            MapUtils.getOrCreateArrayList(map, key2);
-	        else
-	            MapUtils.getOrCreateArrayList(map, key2).addAll(entry12.getValue());
+	        if (entry12.getValue().isEmpty()) {
+				MapUtils.getOrCreateArrayList(map, key2);
+			} else {
+				MapUtils.getOrCreateArrayList(map, key2).addAll(entry12.getValue());
+			}
 	    }
 	    return map;
 	}
@@ -84,10 +88,12 @@ public class ListMap2DLongKeys<V> {
 		final @NotNull LongArrayKey key = new LongArrayKey(key1, key2);
 		MapUtils.getOrCreateArrayList(_map12, key).add(value);
 
-		if (_map1 != null)
+		if (_map1 != null) {
 			MapUtils.getOrCreateArrayList(_map1, key1).add(value);
-		if (_map2 != null)
+		}
+		if (_map2 != null) {
 			MapUtils.getOrCreateArrayList(_map2, key2).add(value);
+		}
 	}
 
 	/**
@@ -101,10 +107,12 @@ public class ListMap2DLongKeys<V> {
 		final @NotNull LongArrayKey key12 = new LongArrayKey(key1, key2);
 		MapUtils.getOrCreateArrayList(_map12, key12);
 
-		if (_map1 != null)
+		if (_map1 != null) {
 			MapUtils.getOrCreateArrayList(_map1, key1);
-		if (_map2 != null)
+		}
+		if (_map2 != null) {
 			MapUtils.getOrCreateArrayList(_map2, key2);
+		}
 	}
 
 	private void invalidateCaches() {
@@ -139,8 +147,9 @@ public class ListMap2DLongKeys<V> {
 	public List<V> remove(final long key1, final long key2) {
 	    final @NotNull LongArrayKey key = new LongArrayKey(key1, key2);
 	    final List<V> values = _map12.remove(key);
-	    if (values != null)
-	    	invalidateCaches();
+	    if (values != null) {
+			invalidateCaches();
+		}
 	    return values;
 	}
 
@@ -202,14 +211,18 @@ public class ListMap2DLongKeys<V> {
 
 	private void removeAllByKeyX(final long key, final int x) {
 	    final List<LongArrayKey> toRemove = new ArrayList<>();
-	    for (final LongArrayKey keyEntry : _map12.keySet())
-	        if (keyEntry.getKeyAt(x) == key)
-	            toRemove.add(keyEntry);
-	    for (final LongArrayKey keyEntry : toRemove)
-	        _map12.remove(keyEntry);
+	    for (final LongArrayKey keyEntry : _map12.keySet()) {
+			if (keyEntry.getKeyAt(x) == key) {
+				toRemove.add(keyEntry);
+			}
+		}
+	    for (final LongArrayKey keyEntry : toRemove) {
+			_map12.remove(keyEntry);
+		}
 
-	    if (!toRemove.isEmpty())
-	    	invalidateCaches();
+	    if (!toRemove.isEmpty()) {
+			invalidateCaches();
+		}
 	}
 
 	/**
@@ -269,8 +282,9 @@ public class ListMap2DLongKeys<V> {
 	 */
 	public @NotNull List<V> get1(final long key1) {
 		final List<V> list = getMap1().get(key1);
-		if (list == null)
+		if (list == null) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(list);
 	}
 
@@ -283,8 +297,9 @@ public class ListMap2DLongKeys<V> {
 	 */
 	public @NotNull List<V> get2(final long key2) {
 		final List<V> list = getMap2().get(key2);
-		if (list == null)
+		if (list == null) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(list);
 	}
 
@@ -299,8 +314,9 @@ public class ListMap2DLongKeys<V> {
 	public @NotNull List<V> get12(final long key1, final long key2) {
 		final @NotNull LongArrayKey key12 = new LongArrayKey(key1, key2);
 		final List<V> list = _map12.get(key12);
-		if (list == null)
+		if (list == null) {
 			return new ArrayList<>();
+		}
 		return new ArrayList<>(list);
 	}
 
@@ -313,10 +329,12 @@ public class ListMap2DLongKeys<V> {
 	 */
 	public V getSingle1OrNull(final long key1) {
 		final List<V> list = getMap1().get(key1);
-		if (list == null)
+		if (list == null) {
 			return null;
-		if (list.size() != 1)
+		}
+		if (list.size() != 1) {
 			return null;
+		}
 		return list.getFirst();
 	}
 
@@ -329,10 +347,12 @@ public class ListMap2DLongKeys<V> {
 	 */
 	public V getSingle2OrNull(final long key2) {
 		final List<V> list = getMap2().get(key2);
-		if (list == null)
+		if (list == null) {
 			return null;
-		if (list.size() != 1)
+		}
+		if (list.size() != 1) {
 			return null;
+		}
 		return list.getFirst();
 	}
 
@@ -347,10 +367,12 @@ public class ListMap2DLongKeys<V> {
 	public V getSingle12OrNull(final long key1, final long key2) {
 		final @NotNull LongArrayKey key12 = new LongArrayKey(key1, key2);
 		final List<V> list = _map12.get(key12);
-		if (list == null)
+		if (list == null) {
 			return null;
-		if (list.size() != 1)
+		}
+		if (list.size() != 1) {
 			return null;
+		}
 		return list.getFirst();
 	}
 

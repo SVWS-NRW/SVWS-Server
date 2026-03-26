@@ -46,8 +46,9 @@ export class ArrayMapCollection<K, V> extends JavaObject implements Collection<V
 		const list: ArrayList<V> = new ArrayList<V>(this._map.size());
 		for (let i: number = 0; i < this._map.getNumberOfKeys(); i++) {
 			const value: V | null = this._map.getValueAt(i);
-			if (value !== null)
+			if (value !== null) {
 				list.add(value);
+			}
 		}
 		return list;
 	}
@@ -77,11 +78,14 @@ export class ArrayMapCollection<K, V> extends JavaObject implements Collection<V
 	}
 
 	public containsAll(collection: Collection<any> | null): boolean {
-		if ((collection === null) || (this as unknown === collection as unknown))
+		if ((collection === null) || (this as unknown === collection as unknown)) {
 			return true;
-		for (const obj of collection)
-			if (!this._map.containsValue(obj))
+		}
+		for (const obj of collection) {
+			if (!this._map.containsValue(obj)) {
 				return false;
+			}
+		}
 		return true;
 	}
 

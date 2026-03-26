@@ -46,17 +46,20 @@ export class MinHeapIterator<T> extends JavaObject implements JavaIterator<T> {
 	}
 
 	public hasNext(): boolean {
-		if (this._heap.getModCount() !== this._expModCount)
+		if (this._heap.getModCount() !== this._expModCount) {
 			throw new ConcurrentModificationException()
+		}
 		return ((this._current + 1) < this._heap.size());
 	}
 
 	public next(): T {
-		if (!this.hasNext())
+		if (!this.hasNext()) {
 			throw new NoSuchElementException("Keine weiteren Elemente vorhanden. Eine Prüfung mit hasNext() vorab ist empfehlenswert.")
+		}
 		const elem: T | null = this._elements[++this._current];
-		if (elem === null)
+		if (elem === null) {
 			throw new NoSuchElementException("Interner Fehler in der Datenstruktur.")
+		}
 		return elem;
 	}
 

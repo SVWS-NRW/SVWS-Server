@@ -39,20 +39,23 @@ export class ArrayMapKeySetIterator<K, V> extends JavaObject implements JavaIter
 	private getNextIndex(from: number | null): number | null {
 		const start: number = (from === null) ? 0 : (from + 1);
 		for (let i: number = start; i < this._map.getNumberOfKeys(); i++) {
-			if (this._map.getEntryByIndex(i) !== null)
+			if (this._map.getEntryByIndex(i) !== null) {
 				return i;
+			}
 		}
 		return null;
 	}
 
 	public next(): K {
-		if (this._next === null)
+		if (this._next === null) {
 			throw new NoSuchElementException()
+		}
 		this._current = this._next;
 		this._next = this.getNextIndex(this._current);
 		const key: K | null = this._map.getKeyAt(this._current);
-		if (key === null)
+		if (key === null) {
 			throw new NoSuchElementException()
+		}
 		return key;
 	}
 
@@ -61,8 +64,9 @@ export class ArrayMapKeySetIterator<K, V> extends JavaObject implements JavaIter
 	}
 
 	public remove(): void {
-		if (this._current === null)
+		if (this._current === null) {
 			throw new IllegalStateException()
+		}
 		this._map.remove(this._map.getKeyAt(this._current));
 		this._current = null;
 	}

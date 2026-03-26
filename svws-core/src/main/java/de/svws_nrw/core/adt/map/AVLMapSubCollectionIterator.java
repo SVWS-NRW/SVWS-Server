@@ -46,8 +46,9 @@ class AVLMapSubCollectionIterator<K, V> implements Iterator<V> {
 
 	@Override
 	public @NotNull V next() {
-		if (_next == null)
+		if (_next == null) {
 			throw new NoSuchElementException();
+		}
 		_current = _next;
 		_next = _sub.bcGetNextEntryOrNull(_current);
 		return _current._val;
@@ -60,8 +61,9 @@ class AVLMapSubCollectionIterator<K, V> implements Iterator<V> {
 
 	@Override
 	public void remove() {
-		if (_current == null)
+		if (_current == null) {
 			throw new IllegalStateException();
+		}
 		_sub.remove(_current.getKey());
 		_current = null;
 	}

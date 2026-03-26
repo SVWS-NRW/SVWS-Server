@@ -26,14 +26,16 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	}
 
 	private getMap1(): JavaMap<number, List<V>> {
-		if (this._map1 === null)
+		if (this._map1 === null) {
 			this._map1 = this._lazyLoad1();
+		}
 		return this._map1;
 	}
 
 	private getMap2(): JavaMap<number, List<V>> {
-		if (this._map2 === null)
+		if (this._map2 === null) {
 			this._map2 = this._lazyLoad2();
+		}
 		return this._map2;
 	}
 
@@ -41,10 +43,11 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 		const map: JavaMap<number, List<V>> | null = new HashMap<number, List<V>>();
 		for (const entry12 of this._map12.entrySet()) {
 			const key1: number = entry12.getKey().getKeyAt(0);
-			if (entry12.getValue().isEmpty())
+			if (entry12.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, key1);
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, key1).addAll(entry12.getValue());
+			}
 		}
 		return map;
 	}
@@ -53,10 +56,11 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 		const map: JavaMap<number, List<V>> | null = new HashMap<number, List<V>>();
 		for (const entry12 of this._map12.entrySet()) {
 			const key2: number = entry12.getKey().getKeyAt(1);
-			if (entry12.getValue().isEmpty())
+			if (entry12.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, key2);
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, key2).addAll(entry12.getValue());
+			}
 		}
 		return map;
 	}
@@ -72,10 +76,12 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	public add(key1: number, key2: number, value: V): void {
 		const key: LongArrayKey = new LongArrayKey(key1, key2);
 		MapUtils.getOrCreateArrayList(this._map12, key).add(value);
-		if (this._map1 !== null)
+		if (this._map1 !== null) {
 			MapUtils.getOrCreateArrayList(this._map1, key1).add(value);
-		if (this._map2 !== null)
+		}
+		if (this._map2 !== null) {
 			MapUtils.getOrCreateArrayList(this._map2, key2).add(value);
+		}
 	}
 
 	/**
@@ -88,10 +94,12 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	public addEmpty(key1: number, key2: number): void {
 		const key12: LongArrayKey = new LongArrayKey(key1, key2);
 		MapUtils.getOrCreateArrayList(this._map12, key12);
-		if (this._map1 !== null)
+		if (this._map1 !== null) {
 			MapUtils.getOrCreateArrayList(this._map1, key1);
-		if (this._map2 !== null)
+		}
+		if (this._map2 !== null) {
 			MapUtils.getOrCreateArrayList(this._map2, key2);
+		}
 	}
 
 	private invalidateCaches(): void {
@@ -126,8 +134,9 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	public remove(key1: number, key2: number): List<V> | null {
 		const key: LongArrayKey = new LongArrayKey(key1, key2);
 		const values: List<V> | null = this._map12.remove(key);
-		if (values !== null)
+		if (values !== null) {
 			this.invalidateCaches();
+		}
 		return values;
 	}
 
@@ -186,13 +195,17 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 
 	private removeAllByKeyX(key: number, x: number): void {
 		const toRemove: List<LongArrayKey> | null = new ArrayList<LongArrayKey>();
-		for (const keyEntry of this._map12.keySet())
-			if (keyEntry.getKeyAt(x) === key)
+		for (const keyEntry of this._map12.keySet()) {
+			if (keyEntry.getKeyAt(x) === key) {
 				toRemove.add(keyEntry);
-		for (const keyEntry of toRemove)
+			}
+		}
+		for (const keyEntry of toRemove) {
 			this._map12.remove(keyEntry);
-		if (!toRemove.isEmpty())
+		}
+		if (!toRemove.isEmpty()) {
 			this.invalidateCaches();
+		}
 	}
 
 	/**
@@ -252,8 +265,9 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 */
 	public get1(key1: number): List<V> {
 		const list: List<V> | null = this.getMap1().get(key1);
-		if (list === null)
+		if (list === null) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(list);
 	}
 
@@ -266,8 +280,9 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 */
 	public get2(key2: number): List<V> {
 		const list: List<V> | null = this.getMap2().get(key2);
-		if (list === null)
+		if (list === null) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(list);
 	}
 
@@ -282,8 +297,9 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	public get12(key1: number, key2: number): List<V> {
 		const key12: LongArrayKey = new LongArrayKey(key1, key2);
 		const list: List<V> | null = this._map12.get(key12);
-		if (list === null)
+		if (list === null) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(list);
 	}
 
@@ -296,10 +312,12 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 */
 	public getSingle1OrNull(key1: number): V | null {
 		const list: List<V> | null = this.getMap1().get(key1);
-		if (list === null)
+		if (list === null) {
 			return null;
-		if (list.size() !== 1)
+		}
+		if (list.size() !== 1) {
 			return null;
+		}
 		return list.getFirst();
 	}
 
@@ -312,10 +330,12 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	 */
 	public getSingle2OrNull(key2: number): V | null {
 		const list: List<V> | null = this.getMap2().get(key2);
-		if (list === null)
+		if (list === null) {
 			return null;
-		if (list.size() !== 1)
+		}
+		if (list.size() !== 1) {
 			return null;
+		}
 		return list.getFirst();
 	}
 
@@ -330,10 +350,12 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 	public getSingle12OrNull(key1: number, key2: number): V | null {
 		const key12: LongArrayKey = new LongArrayKey(key1, key2);
 		const list: List<V> | null = this._map12.get(key12);
-		if (list === null)
+		if (list === null) {
 			return null;
-		if (list.size() !== 1)
+		}
+		if (list.size() !== 1) {
 			return null;
+		}
 		return list.getFirst();
 	}
 

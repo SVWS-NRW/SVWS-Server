@@ -29,14 +29,15 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 * @param key2  Der 2. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
 	 * @param key3  Der 3. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
 	 * @param key4  Der 4. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
-	 * @param key5  Der 4. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
+	 * @param key5  Der 5. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
 	 *
 	 * @param value Der zugeordnete Wert. Der Wert null ist erlaubt.
 	 */
 	public put(key1: K1, key2: K2, key3: K3, key4: K4, key5: K5, value: V): void {
 		const map2: HashMap4D<K2, K3, K4, K5, V> | null = this._map.computeIfAbsent(key1, { apply: (k: K1 | null) => new HashMap4D() });
-		if (map2 === null)
+		if (map2 === null) {
 			throw new NullPointerException()
+		}
 		map2.put(key2, key3, key4, key5, value);
 	}
 
@@ -56,8 +57,9 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 */
 	public getOrException(key1: K1, key2: K2, key3: K3, key4: K4, key5: K5): V | null {
 		const map2: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
-		if (map2 === null)
+		if (map2 === null) {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!")
+		}
 		return map2.getOrException(key2, key3, key4, key5);
 	}
 
@@ -74,8 +76,9 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 */
 	public getOrNull(key1: K1, key2: K2, key3: K3, key4: K4, key5: K5): V | null {
 		const map2: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
-		if (map2 === null)
+		if (map2 === null) {
 			return null;
+		}
 		return map2.getOrNull(key2, key3, key4, key5);
 	}
 
@@ -100,8 +103,9 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 */
 	public getMap3OrNull(key1: K1, key2: K2): JavaMap<K3, JavaMap<K4, JavaMap<K5, V>>> | null {
 		const map2: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
-		if (map2 === null)
+		if (map2 === null) {
 			return null;
+		}
 		return map2.getMap2OrNull(key2);
 	}
 
@@ -116,8 +120,9 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 */
 	public getMap4OrNull(key1: K1, key2: K2, key3: K3): JavaMap<K4, JavaMap<K5, V>> | null {
 		const map2: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
-		if (map2 === null)
+		if (map2 === null) {
 			return null;
+		}
 		return map2.getMap3OrNull(key2, key3);
 	}
 
@@ -133,8 +138,9 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 */
 	public getMap5OrNull(key1: K1, key2: K2, key3: K3, key4: K4): JavaMap<K5, V> | null {
 		const map2: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
-		if (map2 === null)
+		if (map2 === null) {
 			return null;
+		}
 		return map2.getMap4OrNull(key2, key3, key4);
 	}
 
@@ -155,8 +161,9 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 */
 	public getNonNullOrException(key1: K1, key2: K2, key3: K3, key4: K4, key5: K5): V {
 		const value: V | null = this.getOrException(key1, key2, key3, key4, key5);
-		if (value === null)
+		if (value === null) {
 			throw new DeveloperNotificationException("value is NULL!")
+		}
 		return value;
 	}
 
@@ -173,8 +180,9 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 */
 	public contains(key1: K1, key2: K2, key3: K3, key4: K4, key5: K5): boolean {
 		const map2: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
-		if (map2 === null)
+		if (map2 === null) {
 			return false;
+		}
 		return map2.contains(key2, key3, key4, key5);
 	}
 
@@ -200,8 +208,9 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 */
 	public removeOrException(key1: K1, key2: K2, key3: K3, key4: K4, key5: K5): V {
 		const map2: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
-		if (map2 === null)
+		if (map2 === null) {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!")
+		}
 		return map2.removeOrException(key2, key3, key4, key5);
 	}
 
@@ -217,8 +226,9 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 */
 	public remove(key1: K1, key2: K2, key3: K3, key4: K4, key5: K5): void {
 		const map2: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
-		if (map2 === null)
+		if (map2 === null) {
 			return;
+		}
 		map2.remove(key2, key3, key4, key5);
 	}
 
@@ -228,9 +238,10 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 * @param key1  Der 1. Schlüssel.
 	 */
 	public removeMap1(key1: K1): void {
-		let map1: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
-		if (map1 === null)
+		const map1: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
+		if (map1 === null) {
 			return;
+		}
 		this._map.remove(key1);
 	}
 
@@ -241,9 +252,10 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 * @param key2  Der 2. Schlüssel.
 	 */
 	public removeMap2(key1: K1, key2: K2): void {
-		let map1: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
-		if (map1 === null)
+		const map1: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
+		if (map1 === null) {
 			return;
+		}
 		map1.removeMap1(key2);
 		if (map1.isEmpty()) {
 			this._map.remove(key1);
@@ -258,9 +270,10 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 * @param key3 Der 3. Schlüssel.
 	 */
 	public removeMap3(key1: K1, key2: K2, key3: K3): void {
-		let map1: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
-		if (map1 === null)
+		const map1: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
+		if (map1 === null) {
 			return;
+		}
 		map1.removeMap2(key2, key3);
 		if (map1.isEmpty()) {
 			this._map.remove(key1);
@@ -276,9 +289,10 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 * @param key4 Der 4. Schlüssel.
 	 */
 	public removeMap4(key1: K1, key2: K2, key3: K3, key4: K4): void {
-		let map1: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
-		if (map1 === null)
+		const map1: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
+		if (map1 === null) {
 			return;
+		}
 		map1.removeMap3(key2, key3, key4);
 		if (map1.isEmpty()) {
 			this._map.remove(key1);
@@ -301,8 +315,9 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 */
 	public getNonNullValuesAsList(): List<V> {
 		const list: ArrayList<V> = new ArrayList<V>();
-		for (const map2 of this._map.values())
+		for (const map2 of this._map.values()) {
 			list.addAll(map2.getNonNullValuesAsList());
+		}
 		return list;
 	}
 
@@ -316,8 +331,9 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	public getNonNullValuesOfMap2AsList(key1: K1): List<V> {
 		const list: ArrayList<V> = new ArrayList<V>();
 		const map2: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
-		if (map2 !== null)
+		if (map2 !== null) {
 			list.addAll(map2.getNonNullValuesAsList());
+		}
 		return list;
 	}
 
@@ -332,8 +348,9 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	public getNonNullValuesOfMap3AsList(key1: K1, key2: K2): List<V> {
 		const list: ArrayList<V> = new ArrayList<V>();
 		const map2: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
-		if (map2 !== null)
+		if (map2 !== null) {
 			list.addAll(map2.getNonNullValuesOfMap2AsList(key2));
+		}
 		return list;
 	}
 
@@ -349,8 +366,9 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	public getNonNullValuesOfMap4AsList(key1: K1, key2: K2, key3: K3): List<V> {
 		const list: ArrayList<V> = new ArrayList<V>();
 		const map2: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
-		if (map2 !== null)
+		if (map2 !== null) {
 			list.addAll(map2.getNonNullValuesOfMap3AsList(key2, key3));
+		}
 		return list;
 	}
 
@@ -367,8 +385,9 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	public getNonNullValuesOfMap5AsList(key1: K1, key2: K2, key3: K3, key4: K4): List<V> {
 		const list: ArrayList<V> = new ArrayList<V>();
 		const map2: HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
-		if (map2 !== null)
+		if (map2 !== null) {
 			list.addAll(map2.getNonNullValuesOfMap4AsList(key2, key3, key4));
+		}
 		return list;
 	}
 

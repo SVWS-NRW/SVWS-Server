@@ -55,8 +55,9 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 	 */
 	private readonly keyIndexFunctionEnum: JavaFunction<K, number> = { apply: (key: K) => {
 		const isEnum: boolean = ((key instanceof JavaObject) && (key.isTranspiledInstanceOf('java.lang.Enum')));
-		if (!isEnum)
+		if (!isEnum) {
 			throw new IllegalArgumentException("Der Schlüsselwerte ist keine Enum-Konstanten und somit nicht zulässig.")
+		}
 		return (cast_java_lang_Enum(key)).ordinal();
 	} };
 
@@ -85,11 +86,13 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 		super();
 		if (((__param0 !== undefined) && Array.isArray(__param0)) && (__param1 === undefined)) {
 			const keyArray: Array<K> = __param0 as unknown as Array<K>;
-			if (keyArray.length <= 0)
+			if (keyArray.length <= 0) {
 				throw new IllegalArgumentException("Das Array mit den gültigen Schlüsselwerten darf nicht leer sein.")
+			}
 			const firstKey: K = keyArray[0];
-			if (!(((firstKey instanceof JavaObject) && (firstKey.isTranspiledInstanceOf('java.lang.Enum')))))
+			if (!(((firstKey instanceof JavaObject) && (firstKey.isTranspiledInstanceOf('java.lang.Enum'))))) {
 				throw new IllegalArgumentException("Enthält das Array der Schlüsselwerte keine Enum-Konstanten, so muss ein Funktion für die Zuordnung von Schlüsselwerten angegeben werden.")
+			}
 			this.keyArray = keyArray;
 			this.keyIndexFunction = this.keyIndexFunctionEnum;
 			this.entries = Array(keyArray.length).fill(null) as unknown as Array<ArrayMapEntry<K, V> | null>;
@@ -99,8 +102,9 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 		} else if (((__param0 !== undefined) && Array.isArray(__param0)) && ((__param1 !== undefined) && ((__param1 !== undefined) && (__param1 instanceof Object) && (__param1 !== null) && ('apply' in __param1) && (typeof __param1.apply === 'function')) || (__param1 === null))) {
 			const keyArray: Array<K> = __param0 as unknown as Array<K>;
 			const keyIndexFunction: JavaFunction<K, number> = cast_java_util_function_Function(__param1);
-			if (keyArray.length <= 0)
+			if (keyArray.length <= 0) {
 				throw new IllegalArgumentException("Das Array mit den gültigen Schlüsselwerten darf nicht leer sein.")
+			}
 			this.keyArray = keyArray;
 			this.keyIndexFunction = keyIndexFunction;
 			this.entries = Array(keyArray.length).fill(null) as unknown as Array<ArrayMapEntry<K, V> | null>;
@@ -177,8 +181,9 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 	 */
 	getEntry(key: unknown | null): ArrayMapEntry<K, V> | null {
 		const k: K | null = key as unknown as K;
-		if (k === null)
+		if (k === null) {
 			return null;
+		}
 		const index: number = this.keyIndexFunction.apply(k).valueOf();
 		return this.getEntryByIndex(index);
 	}
@@ -188,11 +193,14 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 	}
 
 	public containsValue(value: unknown | null): boolean {
-		if (value === null)
+		if (value === null) {
 			return false;
-		for (const entry of this.entries)
-			if ((entry !== null) && (JavaObject.equalsTranspiler(value, (entry.getValue()))))
+		}
+		for (const entry of this.entries) {
+			if ((entry !== null) && (JavaObject.equalsTranspiler(value, (entry.getValue())))) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -212,29 +220,34 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 	 * @throws ArrayIndexOutOfBoundsException falls der Index ungültig ist
 	 */
 	public getValueAt(index: number): V | null {
-		if (!this.isValidIndex(index))
+		if (!this.isValidIndex(index)) {
 			throw new ArrayIndexOutOfBoundsException("Fehlerhafter Index für die Schlüsselwerte")
+		}
 		const entry: ArrayMapEntry<K, V> | null = this.getEntryByIndex(index);
 		return (entry === null) ? null : entry.getValue();
 	}
 
 	public put(key: K, value: V): V | null {
 		const index: number = this.keyIndexFunction.apply(key).valueOf();
-		if (!this.isValidIndex(index))
+		if (!this.isValidIndex(index)) {
 			throw new IllegalArgumentException("Der Schlüsselwert ist ungültig und kann keinem Index zugeordnet werden.")
+		}
 		const entry: ArrayMapEntry<K, V> | null = this.getEntryByIndex(index);
-		if (entry === null)
+		if (entry === null) {
 			this.numEntries++;
+		}
 		this.entries[index] = new ArrayMapEntry(key, value);
 		return (entry === null) ? null : entry.getValue();
 	}
 
 	public remove(key: unknown | null): V | null {
-		if (key === null)
+		if (key === null) {
 			throw new NullPointerException("Der Schlüsselwert darf nicht null sein.")
+		}
 		const index: number = this.keyIndexFunction.apply(key as unknown as K).valueOf();
-		if (!this.isValidIndex(index))
+		if (!this.isValidIndex(index)) {
 			return null;
+		}
 		const entry: ArrayMapEntry<K, V> | null = this.getEntryByIndex(index);
 		if (entry !== null) {
 			this.entries[index] = null;
@@ -244,10 +257,12 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 	}
 
 	public putAll(map: JavaMap<K, V> | null): void {
-		if (map === null)
+		if (map === null) {
 			throw new NullPointerException("Der Parameter map darf nicht null sein.")
-		for (const entry of map.entrySet())
+		}
+		for (const entry of map.entrySet()) {
 			this.put(entry.getKey(), entry.getValue());
+		}
 	}
 
 	public clear(): void {

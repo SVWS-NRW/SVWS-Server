@@ -106,23 +106,29 @@ public final class LongArrayKey implements Comparable<LongArrayKey> {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj == null)
+		if (obj == null) {
 			return false;
+		}
 
-		if (this == obj)
+		if (this == obj) {
 			return true;
+		}
 
-		if (!(obj instanceof LongArrayKey))
+		if (!(obj instanceof LongArrayKey)) {
 			return false;
+		}
 
 		final @NotNull long[] keys2 = ((LongArrayKey) obj)._keys;
 
-		if (_keys.length != keys2.length)
+		if (_keys.length != keys2.length) {
 			return false;
+		}
 
-		for (int i = 0; i < _keys.length; i++)
-			if (_keys[i] != keys2[i])
+		for (int i = 0; i < _keys.length; i++) {
+			if (_keys[i] != keys2[i]) {
 				return false;
+			}
+		}
 
 		return true;
 	}
@@ -137,16 +143,20 @@ public final class LongArrayKey implements Comparable<LongArrayKey> {
 
 		final @NotNull long[] keys2 = o._keys;
 
-		if (_keys.length < keys2.length)
+		if (_keys.length < keys2.length) {
 			return -1;
-		if (_keys.length > keys2.length)
+		}
+		if (_keys.length > keys2.length) {
 			return +1;
+		}
 
 		for (int i = 0; i < _keys.length; i++) {
-			if (_keys[i] < keys2[i])
+			if (_keys[i] < keys2[i]) {
 				return -1;
-			if (_keys[i] > keys2[i])
+			}
+			if (_keys[i] > keys2[i]) {
 				return +1;
+			}
 		}
 
 		return 0;

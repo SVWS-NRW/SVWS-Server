@@ -73,18 +73,21 @@ class MinHeapIterator<T> implements Iterator<T> {
 
 	@Override
 	public boolean hasNext() {
-		if (_heap.getModCount() != _expModCount)
+		if (_heap.getModCount() != _expModCount) {
 			throw new ConcurrentModificationException();
+		}
 		return ((_current + 1) < _heap.size());
 	}
 
 	@Override
 	public @NotNull T next() {
-		if (!hasNext())
+		if (!hasNext()) {
 			throw new NoSuchElementException("Keine weiteren Elemente vorhanden. Eine Prüfung mit hasNext() vorab ist empfehlenswert.");
+		}
 		final T elem = _elements[++_current];
-		if (elem == null)
+		if (elem == null) {
 			throw new NoSuchElementException("Interner Fehler in der Datenstruktur.");
+		}
 		return elem;
 	}
 

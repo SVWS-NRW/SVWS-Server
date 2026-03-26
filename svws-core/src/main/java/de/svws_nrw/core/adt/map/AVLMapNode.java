@@ -77,10 +77,12 @@ public final class AVLMapNode<K, V> implements Entry<K, V> {
 
 	@Override
 	public boolean equals(final Object o) {
-		if (o == null)
+		if (o == null) {
 			return false;
-		if (!(o instanceof Entry<?, ?>))
+		}
+		if (!(o instanceof Entry<?, ?>)) {
 			return false;
+		}
 		final Entry<?, ?> e = (Entry<?, ?>) o;
 		return _key.equals(e.getKey()) && (_val.equals(e.getValue()));
 	}

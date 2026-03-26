@@ -38,18 +38,22 @@ public class HashMap2D<K1, K2, V> {
 	public HashMap2D(final @NotNull HashMap2D<K1, K2, V> other) {
 		for (final Map.Entry<K1, Map<K2, V>> entry1 : other._map.entrySet()) {
 			final K1 key1 = entry1.getKey();
-			if (key1 == null)
+			if (key1 == null) {
 				throw new NullPointerException();
+			}
 			final Map<K2, V> map2 = _map.computeIfAbsent(key1, k -> new HashMap<>());
-			if (map2 == null)
+			if (map2 == null) {
 				throw new NullPointerException();
+			}
 			final Map<K2, V> otherMap2 = entry1.getValue();
-			if (otherMap2 == null)
+			if (otherMap2 == null) {
 				throw new NullPointerException();
+			}
 			for (final Map.Entry<K2, V> entry2 : otherMap2.entrySet()) {
 				final K2 key2 = entry2.getKey();
-				if (key2 == null)
+				if (key2 == null) {
 					throw new NullPointerException();
+				}
 				final V value = entry2.getValue();
 				map2.put(key2, value);
 			}
@@ -67,8 +71,9 @@ public class HashMap2D<K1, K2, V> {
 	 */
 	public void put(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull V value) {
 		final Map<K2, V> map2 = _map.computeIfAbsent(key1, k -> new HashMap<>());
-		if (map2 == null)
+		if (map2 == null) {
 			throw new NullPointerException();
+		}
 		map2.put(key2, value);
 	}
 
@@ -82,8 +87,9 @@ public class HashMap2D<K1, K2, V> {
 	 */
 	public V getOrNull(final @NotNull K1 key1, final @NotNull K2 key2) {
 		final Map<K2, V> map2 = _map.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			return null;
+		}
 		return map2.get(key2);
 	}
 
@@ -99,11 +105,13 @@ public class HashMap2D<K1, K2, V> {
 	 */
 	public @NotNull V getOrException(final @NotNull K1 key1, final @NotNull K2 key2) throws DeveloperNotificationException {
 		final @NotNull Map<K2, V> map2 = getSubMapOrException(key1);
-		if (!map2.containsKey(key2))
+		if (!map2.containsKey(key2)) {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!");
+		}
 		final V value = map2.get(key2);
-		if (value == null)
+		if (value == null) {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!");
+		}
 		return value;
 	}
 
@@ -116,8 +124,9 @@ public class HashMap2D<K1, K2, V> {
 	 */
 	public @NotNull Map<K2, V> getSubMapOrException(final @NotNull K1 key1) {
 		final Map<K2, V> map2 = _map.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
+		}
 		return map2;
 	}
 
@@ -142,8 +151,9 @@ public class HashMap2D<K1, K2, V> {
 	 */
 	public boolean contains(final @NotNull K1 key1, final @NotNull K2 key2) {
 		final Map<K2, V> map2 = _map.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			return false;
+		}
 		return map2.containsKey(key2);
 	}
 
@@ -175,13 +185,16 @@ public class HashMap2D<K1, K2, V> {
 	 */
 	public @NotNull V removeOrException(final @NotNull K1 key1, final @NotNull K2 key2) {
 		final @NotNull Map<K2, V> map2 = getSubMapOrException(key1);
-		if (!map2.containsKey(key2))
+		if (!map2.containsKey(key2)) {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!");
+		}
 		final V value = map2.remove(key2);
-		if (map2.isEmpty())   // Wenn map2 durch das Löschen leer wurde, dann entferne den key1 (trim).
+		if (map2.isEmpty()) { // Wenn map2 durch das Löschen leer wurde, dann entferne den key1 (trim).
 			_map.remove(key1);
-		if (value == null)
+		}
+		if (value == null) {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!");
+		}
 		return value;
 	}
 
@@ -205,8 +218,9 @@ public class HashMap2D<K1, K2, V> {
 	 */
 	public @NotNull Map<K2, V> removeSubMapOrException(final @NotNull K1 key1) {
 		final Map<K2, V> map2 = _map.remove(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") existiert nicht!");
+		}
 		return map2;
 	}
 
@@ -241,9 +255,11 @@ public class HashMap2D<K1, K2, V> {
 	public @NotNull List<V> getNonNullValuesAsList() {
 		final @NotNull ArrayList<V> list = new ArrayList<>();
 
-		for (final @NotNull Map<K2, V> map2 : _map.values())
-			for (final @NotNull V value : map2.values())
+		for (final @NotNull Map<K2, V> map2 : _map.values()) {
+			for (final @NotNull V value : map2.values()) {
 				list.add(value);
+			}
+		}
 
 		return list;
 	}
@@ -286,8 +302,9 @@ public class HashMap2D<K1, K2, V> {
 	 */
 	public int getSubMapSizeOrZero(final @NotNull K1 key1) {
 		final Map<K2, V> map2 = _map.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			return 0;
+		}
 		return map2.size();
 	}
 
@@ -299,8 +316,9 @@ public class HashMap2D<K1, K2, V> {
 	public int size() {
 		int size = 0;
 
-		for (final @NotNull Map<K2, V> map2 : _map.values())
+		for (final @NotNull Map<K2, V> map2 : _map.values()) {
 			size += map2.size();
+		}
 
 		return size;
 	}

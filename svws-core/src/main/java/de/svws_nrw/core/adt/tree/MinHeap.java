@@ -75,8 +75,9 @@ public final class MinHeap<T> implements Queue<T> {
 	 * @param initialCapacity die initiale Kapazität des Baums
 	 */
 	public MinHeap(final @NotNull Comparator<T> comparator, final int initialCapacity) {
-		if (initialCapacity <= 0)
+		if (initialCapacity <= 0) {
 			throw new IllegalArgumentException("Die initiale Kapazität muss größer als 0 sein.");
+		}
 		this._comparator = comparator;
 		this._initialCapacity = initialCapacity;
 		this._modCount = 0;
@@ -109,12 +110,15 @@ public final class MinHeap<T> implements Queue<T> {
 
 	@Override
 	public boolean add(final T e) throws IllegalStateException {
-		if (e == null)
+		if (e == null) {
 			return false;
-		if (_nodes.length == 0)
+		}
+		if (_nodes.length == 0) {
 			this._nodes = newArray(e, _initialCapacity);
-		if (_size == _nodes.length)
+		}
+		if (_size == _nodes.length) {
 			grow();
+		}
 		_nodes[_size] = e;
 		heapifyUp(_size++);
 		this._modCount++;
@@ -123,8 +127,9 @@ public final class MinHeap<T> implements Queue<T> {
 
 	@Override
 	public @NotNull T element() {
-		if ((_size == 0) || (_nodes[0] == null))
+		if ((_size == 0) || (_nodes[0] == null)) {
 			throw new NoSuchElementException();
+		}
 		return _nodes[0];
 	}
 
@@ -140,8 +145,9 @@ public final class MinHeap<T> implements Queue<T> {
 
 	@Override
 	public T poll() {
-		if (_size == 0)
+		if (_size == 0) {
 			return null;
+		}
 		final T elem = _nodes[0];
 		_nodes[0] = _nodes[--_size];
 		_nodes[_size] = null;
@@ -153,8 +159,9 @@ public final class MinHeap<T> implements Queue<T> {
 	@Override
 	public @NotNull T remove() {
 		final T result = poll();
-		if (result == null)
+		if (result == null) {
 			throw new NoSuchElementException();
+		}
 		return result;
 	}
 
@@ -170,59 +177,73 @@ public final class MinHeap<T> implements Queue<T> {
 
 	@Override
 	public boolean contains(final Object o) {
-		if (o == null)
+		if (o == null) {
 			return false;
+		}
 		for (int i = 0; i < _size; i++) {
-			if (_nodes[i].equals(o))
+			if (_nodes[i].equals(o)) {
 				return true;
+			}
 		}
 		return false;
 	}
 
 	@Override
 	public boolean containsAll(final Collection<?> c) {
-		if (c == null)
+		if (c == null) {
 			return true;
-		if (this == c)
+		}
+		if (this == c) {
 			return true;
-		for (final Object o : c)
-			if (!this.contains(o))
+		}
+		for (final Object o : c) {
+			if (!this.contains(o)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
 	@Override
 	public boolean addAll(final Collection<? extends T> c) throws IllegalStateException {
-		if (c == null)
+		if (c == null) {
 			return false;
+		}
 		if (this == c) {
-			if (_size == 0)
+			if (_size == 0) {
 				return false;
+			}
 			final @NotNull T[] tmp = Arrays.copyOf(_nodes, _size);
-			for (final T t : tmp)
-				if (t != null)
+			for (final T t : tmp) {
+				if (t != null) {
 					this.add(t);
+				}
+			}
 			return true;
 		}
 		boolean result = false;
 		for (final T t : c) {
-			if (this.add(t))
+			if (this.add(t)) {
 				result = true;
+			}
 		}
 		return result;
 	}
 
 	@Override
 	public boolean remove(final Object o) {
-		if (o == null)
+		if (o == null) {
 			return false;
+		}
 		final int index = findIndex(o);
-		if (index == -1)
+		if (index == -1) {
 			return false;
+		}
 		_size--;
 		this._modCount++;
-		if (index == _size)
+		if (index == _size) {
 			return true;
+		}
 		_nodes[index] = _nodes[_size];
 		_nodes[_size] = null;
 		heapifyUp(index);
@@ -232,42 +253,48 @@ public final class MinHeap<T> implements Queue<T> {
 
 	@Override
 	public boolean removeAll(final Collection<?> c) {
-		if (c == null)
+		if (c == null) {
 			return false;
+		}
 		if (this == c) {
-			if (this.size() == 0)
+			if (this.size() == 0) {
 				return false;
+			}
 			this.clear();
 			return true;
 		}
 		boolean result = false;
 		for (final Object o : c) {
 			// Entferne alle Vorkommen...
-			while (this.remove(o))
+			while (this.remove(o)) {
 				result = true;
+			}
 		}
 		return result;
 	}
 
 	@Override
 	public boolean retainAll(final Collection<?> c) {
-		if (_size == 0)
+		if (_size == 0) {
 			return false;
+		}
 		if (c == null) {
 			this.clear();
 			return true;
 		}
-		if (this == c)
+		if (this == c) {
 			return false;
+		}
 		final @NotNull T[] tmp = newArray(_nodes[0], _nodes.length);
 		int i = 0;
 		T elem;
 		boolean changed = false;
 		while ((elem = this.poll()) != null) {
-			if (c.contains(elem))
+			if (c.contains(elem)) {
 				tmp[i++] = elem;
-			else
+			} else {
 				changed = true;
+			}
 		}
 		this._nodes = tmp;
 		this._size = i;
@@ -291,8 +318,9 @@ public final class MinHeap<T> implements Queue<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <U> @NotNull U @NotNull [] toArray(final @NotNull U @NotNull [] a) {
-		if (a.length < _size)
+		if (a.length < _size) {
 			return (@NotNull U[]) copyNodes();
+		}
 		System.arraycopy(_nodes, 0, a, 0, _size);
 		Arrays.fill(a, _size, a.length, null);
 		return a;
@@ -328,14 +356,16 @@ public final class MinHeap<T> implements Queue<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public @NotNull T @NotNull [] toSortedArray() {
-		if (_size == 0)
+		if (_size == 0) {
 			return (@NotNull T @NotNull []) new Object[0];
+		}
 		final @NotNull MinHeap<T> copy = new MinHeap<>(this);
 		final @NotNull T @NotNull [] tmp = newArray(_nodes[0], _size);
 		T current;
 		int i = 0;
-		while ((current = copy.poll()) != null)
+		while ((current = copy.poll()) != null) {
 			tmp[i++] = current;
+		}
 		return tmp;
 	}
 
@@ -349,8 +379,9 @@ public final class MinHeap<T> implements Queue<T> {
 		final @NotNull StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < _size; i++) {
 			sb.append(_nodes[i]);
-			if (i != (_size - 1))
+			if (i != (_size - 1)) {
 				sb.append(", ");
+			}
 		}
 		return sb.toString();
 	}
@@ -374,10 +405,12 @@ public final class MinHeap<T> implements Queue<T> {
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
+		}
 		if (obj instanceof MinHeap) {
 			final MinHeap<?> other = (MinHeap<?>) obj;
 			return Arrays.deepEquals(this.toSortedArray(), other.toSortedArray());
@@ -439,8 +472,9 @@ public final class MinHeap<T> implements Queue<T> {
 		final int left = getLeftChildIndex(i);
 		final int right = getRightChildIndex(i);
 		// Prüfe, ob i ein Blatt ist, wenn ja: Abbruch der Rekursion
-		if (left >= _size)
+		if (left >= _size) {
 			return;
+		}
 		// gehe davon aus, dass das rechte das 'kleinere' ist und wähle dieses zunächst
 		int child = right;
 		if (right == _size) { // prüfe nun ob kein rechtes Kind existiert, dann wähle das linke Kind
@@ -448,18 +482,22 @@ public final class MinHeap<T> implements Queue<T> {
 		} else { // prüfe nun, ob das linke Kind nicht doch das 'kleinere' ist
 			final T nodeLeft = _nodes[left];
 			final T nodeRight = _nodes[right];
-			if ((nodeLeft == null) || (nodeRight == null))  // tritt nicht auf
+			if ((nodeLeft == null) || (nodeRight == null)) { // tritt nicht auf
 				return;
-			if (_comparator.compare(nodeLeft, nodeRight) < 0)
+			}
+			if (_comparator.compare(nodeLeft, nodeRight) < 0) {
 				child = left;
+			}
 		}
 		// vergleiche und tausche, falls nötig
 		final T nodeCurrent = _nodes[i];
 		final T nodeChild = _nodes[child];
-		if ((nodeCurrent == null) || (nodeChild == null))  // tritt nicht auf
+		if ((nodeCurrent == null) || (nodeChild == null)) { // tritt nicht auf
 			throw new NullPointerException();
-		if (_comparator.compare(nodeCurrent, nodeChild) <= 0)
+		}
+		if (_comparator.compare(nodeCurrent, nodeChild) <= 0) {
 			return;
+		}
 		swap(i, child);
 		heapifyDown(child);
 	}
@@ -471,12 +509,14 @@ public final class MinHeap<T> implements Queue<T> {
 	 */
 	private void heapifyUp(final int i) {
 		final int parentIndex = getParentIndex(i);
-		if (parentIndex < 0)
+		if (parentIndex < 0) {
 			return;
+		}
 		final T nodeCurrent = _nodes[i];
 		final T nodeParent = _nodes[parentIndex];
-		if ((nodeCurrent == null) || (nodeParent == null) || (_comparator.compare(nodeCurrent, nodeParent) >= 0))
+		if ((nodeCurrent == null) || (nodeParent == null) || (_comparator.compare(nodeCurrent, nodeParent) >= 0)) {
 			return;
+		}
 		swap(i, parentIndex);
 		heapifyUp(parentIndex);
 	}
@@ -491,8 +531,9 @@ public final class MinHeap<T> implements Queue<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	private @NotNull T @NotNull [] newArray(final T elem, final int length) {
-		if (elem == null)
+		if (elem == null) {
 			return (@NotNull T @NotNull []) Array.newInstance(Object.class, length);
+		}
 		return (@NotNull T @NotNull []) Array.newInstance(elem.getClass(), length);
 	}
 
@@ -518,11 +559,13 @@ public final class MinHeap<T> implements Queue<T> {
 	 * @throws IllegalStateException
 	 */
 	private void grow() throws IllegalStateException {
-		if (_nodes.length == Integer.MAX_VALUE)
+		if (_nodes.length == Integer.MAX_VALUE) {
 			throw new IllegalStateException("Der Minimum-Heap kann nicht mehr als " + Integer.MAX_VALUE + " Elemente beinhalten.");
+		}
 		int newLength = (_nodes.length * 2) + 1;
-		if (newLength < 0)
+		if (newLength < 0) {
 			newLength = Integer.MAX_VALUE;
+		}
 		final @NotNull T @NotNull [] tmp = newArray(_nodes[0], newLength);
 		System.arraycopy(_nodes, 0, tmp, 0, _size);
 		this._nodes = tmp;
@@ -537,11 +580,13 @@ public final class MinHeap<T> implements Queue<T> {
 	 * @return  der Index, falls das Element enthalten ist, ansonsten -1
 	 */
 	private int findIndex(final Object obj) {
-		if (obj == null)
+		if (obj == null) {
 			return -1;
+		}
 		for (int i = 0; i < _size; i++) {
-			if (_nodes[i].equals(obj))
+			if (_nodes[i].equals(obj)) {
 				return i;
+			}
 		}
 		return -1;
 	}

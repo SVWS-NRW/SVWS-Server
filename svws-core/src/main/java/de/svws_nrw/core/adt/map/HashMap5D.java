@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
  * @param <K2> Der Typ des 2. Schlüsselwertes des Quintupels(key1, key2, key3, key4, key5).
  * @param <K3> Der Typ des 3. Schlüsselwertes des Quintupels(key1, key2, key3, key4, key5).
  * @param <K4> Der Typ des 4. Schlüsselwertes des Quintupels(key1, key2, key3, key4, key5).
- * @param <K5> Der Typ des 4. Schlüsselwertes des Quintupels(key1, key2, key3, key4, key5).
+ * @param <K5> Der Typ des 5. Schlüsselwertes des Quintupels(key1, key2, key3, key4, key5).
  *
  * @param <V>  Der Typ des zugeordneten Wertes.
  */
@@ -39,15 +39,16 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 	 * @param key2  Der 2. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
 	 * @param key3  Der 3. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
 	 * @param key4  Der 4. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
-	 * @param key5  Der 4. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
+	 * @param key5  Der 5. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
 	 *
 	 * @param value Der zugeordnete Wert. Der Wert null ist erlaubt.
 	 */
 	public void put(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull K5 key5,
 			final @NotNull V value) {
 		final HashMap4D<K2, K3, K4, K5, V> map2 = _map.computeIfAbsent(key1, k -> new HashMap4D<>());
-		if (map2 == null)
+		if (map2 == null) {
 			throw new NullPointerException();
+		}
 		map2.put(key2, key3, key4, key5, value);
 	}
 
@@ -68,8 +69,9 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 	public V getOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull K5 key5)
 			throws NullPointerException {
 		final HashMap4D<K2, K3, K4, K5, V> map2 = _map.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
+		}
 
 		return map2.getOrException(key2, key3, key4, key5);
 	}
@@ -87,8 +89,9 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 	 */
 	public V getOrNull(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull K5 key5) {
 		final HashMap4D<K2, K3, K4, K5, V> map2 = _map.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			return null;
+		}
 
 		return map2.getOrNull(key2, key3, key4, key5);
 	}
@@ -114,8 +117,9 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 	 */
 	public Map<K3, Map<K4, Map<K5, V>>> getMap3OrNull(final @NotNull K1 key1, final @NotNull K2 key2) {
 		final HashMap4D<K2, K3, K4, K5, V> map2 = _map.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			return null;
+		}
 		return map2.getMap2OrNull(key2);
 	}
 
@@ -130,8 +134,9 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 	 */
 	public Map<K4, Map<K5, V>> getMap4OrNull(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
 		final HashMap4D<K2, K3, K4, K5, V> map2 = _map.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			return null;
+		}
 		return map2.getMap3OrNull(key2, key3);
 	}
 
@@ -147,8 +152,9 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 	 */
 	public Map<K5, V> getMap5OrNull(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4) {
 		final HashMap4D<K2, K3, K4, K5, V> map2 = _map.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			return null;
+		}
 		return map2.getMap4OrNull(key2, key3, key4);
 	}
 
@@ -171,8 +177,9 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 			final @NotNull K5 key5) throws NullPointerException {
 		final V value = getOrException(key1, key2, key3, key4, key5);
 
-		if (value == null)
+		if (value == null) {
 			throw new DeveloperNotificationException("value is NULL!");
+		}
 
 		return value;
 	}
@@ -190,8 +197,9 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 	 */
 	public boolean contains(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull K5 key5) {
 		final HashMap4D<K2, K3, K4, K5, V> map2 = _map.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			return false;
+		}
 
 		return map2.contains(key2, key3, key4, key5);
 	}
@@ -219,8 +227,9 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 	 */
 	public @NotNull V removeOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull K5 key5) {
 		final HashMap4D<K2, K3, K4, K5, V> map2 = _map.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
+		}
 
 		return map2.removeOrException(key2, key3, key4, key5);
 	}
@@ -238,8 +247,9 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 	 */
 	public void remove(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull K5 key5) {
 		final HashMap4D<K2, K3, K4, K5, V> map2 = _map.get(key1);
-		if (map2 == null)
+		if (map2 == null) {
 			return;
+		}
 
 		map2.remove(key2, key3, key4, key5);
 	}
@@ -250,9 +260,10 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 	 * @param key1  Der 1. Schlüssel.
 	 */
 	public void removeMap1(final @NotNull K1 key1) {
-		HashMap4D<K2, K3, K4, K5, V> map1 = _map.get(key1);
-		if (map1 == null)
+		final HashMap4D<K2, K3, K4, K5, V> map1 = _map.get(key1);
+		if (map1 == null) {
 			return;
+		}
 		_map.remove(key1);
 	}
 
@@ -263,9 +274,10 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 	 * @param key2  Der 2. Schlüssel.
 	 */
 	public void removeMap2(final @NotNull K1 key1, final @NotNull K2 key2) {
-		HashMap4D<K2, K3, K4, K5, V> map1 = _map.get(key1);
-		if (map1 == null)
+		final HashMap4D<K2, K3, K4, K5, V> map1 = _map.get(key1);
+		if (map1 == null) {
 			return;
+		}
 		map1.removeMap1(key2);
 		if (map1.isEmpty()) {
 			_map.remove(key1);
@@ -281,9 +293,10 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 	 *
 	 */
 	public void removeMap3(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
-		HashMap4D<K2, K3, K4, K5, V> map1 = _map.get(key1);
-		if (map1 == null)
+		final HashMap4D<K2, K3, K4, K5, V> map1 = _map.get(key1);
+		if (map1 == null) {
 			return;
+		}
 		map1.removeMap2(key2, key3);
 		if (map1.isEmpty()) {
 			_map.remove(key1);
@@ -300,9 +313,10 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 	 *
 	 */
 	public void removeMap4(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4) {
-		HashMap4D<K2, K3, K4, K5, V> map1 = _map.get(key1);
-		if (map1 == null)
+		final HashMap4D<K2, K3, K4, K5, V> map1 = _map.get(key1);
+		if (map1 == null) {
 			return;
+		}
 		map1.removeMap3(key2, key3, key4);
 		if (map1.isEmpty()) {
 			_map.remove(key1);
@@ -326,8 +340,9 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 	public @NotNull List<V> getNonNullValuesAsList() {
 		final @NotNull ArrayList<V> list = new ArrayList<>();
 
-		for (final HashMap4D<K2, K3, K4, K5, V> map2 : _map.values())
+		for (final HashMap4D<K2, K3, K4, K5, V> map2 : _map.values()) {
 			list.addAll(map2.getNonNullValuesAsList());
+		}
 
 		return list;
 	}
@@ -343,8 +358,9 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 		final @NotNull ArrayList<V> list = new ArrayList<>();
 
 		final HashMap4D<K2, K3, K4, K5, V> map2 = _map.get(key1);
-		if (map2 != null)
+		if (map2 != null) {
 			list.addAll(map2.getNonNullValuesAsList());
+		}
 
 		return list;
 	}
@@ -361,8 +377,9 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 		final @NotNull ArrayList<V> list = new ArrayList<>();
 
 		final HashMap4D<K2, K3, K4, K5, V> map2 = _map.get(key1);
-		if (map2 != null)
+		if (map2 != null) {
 			list.addAll(map2.getNonNullValuesOfMap2AsList(key2));
+		}
 
 		return list;
 	}
@@ -380,8 +397,9 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 		final @NotNull ArrayList<V> list = new ArrayList<>();
 
 		final HashMap4D<K2, K3, K4, K5, V> map2 = _map.get(key1);
-		if (map2 != null)
+		if (map2 != null) {
 			list.addAll(map2.getNonNullValuesOfMap3AsList(key2, key3));
+		}
 
 		return list;
 	}
@@ -400,8 +418,9 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 		final @NotNull ArrayList<V> list = new ArrayList<>();
 
 		final HashMap4D<K2, K3, K4, K5, V> map2 = _map.get(key1);
-		if (map2 != null)
+		if (map2 != null) {
 			list.addAll(map2.getNonNullValuesOfMap4AsList(key2, key3, key4));
+		}
 
 		return list;
 	}

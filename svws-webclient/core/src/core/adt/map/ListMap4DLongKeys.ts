@@ -56,10 +56,11 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 		const map: JavaMap<number, List<V>> | null = new HashMap<number, List<V>>();
 		for (const e of this._list) {
 			const key1: number = e.a.getKeyAt(0);
-			if (e.b === null)
+			if (e.b === null) {
 				MapUtils.getOrCreateArrayList(map, key1);
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, key1).add(e.b);
+			}
 		}
 		return map;
 	}
@@ -68,10 +69,11 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 		const map: JavaMap<number, List<V>> | null = new HashMap<number, List<V>>();
 		for (const e of this._list) {
 			const key2: number = e.a.getKeyAt(1);
-			if (e.b === null)
+			if (e.b === null) {
 				MapUtils.getOrCreateArrayList(map, key2);
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, key2).add(e.b);
+			}
 		}
 		return map;
 	}
@@ -80,10 +82,11 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 		const map: JavaMap<number, List<V>> | null = new HashMap<number, List<V>>();
 		for (const e of this._list) {
 			const key3: number = e.a.getKeyAt(2);
-			if (e.b === null)
+			if (e.b === null) {
 				MapUtils.getOrCreateArrayList(map, key3);
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, key3).add(e.b);
+			}
 		}
 		return map;
 	}
@@ -92,10 +95,11 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 		const map: JavaMap<number, List<V>> | null = new HashMap<number, List<V>>();
 		for (const e of this._list) {
 			const key4: number = e.a.getKeyAt(3);
-			if (e.b === null)
+			if (e.b === null) {
 				MapUtils.getOrCreateArrayList(map, key4);
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, key4).add(e.b);
+			}
 		}
 		return map;
 	}
@@ -105,10 +109,11 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 		for (const e of this._list) {
 			const key1: number = e.a.getKeyAt(0);
 			const key2: number = e.a.getKeyAt(1);
-			if (e.b === null)
+			if (e.b === null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2)).add(e.b);
+			}
 		}
 		return map;
 	}
@@ -118,10 +123,11 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 		for (const e of this._list) {
 			const key1: number = e.a.getKeyAt(0);
 			const key3: number = e.a.getKeyAt(2);
-			if (e.b === null)
+			if (e.b === null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3)).add(e.b);
+			}
 		}
 		return map;
 	}
@@ -131,10 +137,11 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 		for (const e of this._list) {
 			const key1: number = e.a.getKeyAt(0);
 			const key4: number = e.a.getKeyAt(3);
-			if (e.b === null)
+			if (e.b === null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key4));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key4)).add(e.b);
+			}
 		}
 		return map;
 	}
@@ -144,10 +151,11 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 		for (const e of this._list) {
 			const key2: number = e.a.getKeyAt(1);
 			const key3: number = e.a.getKeyAt(2);
-			if (e.b === null)
+			if (e.b === null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3)).add(e.b);
+			}
 		}
 		return map;
 	}
@@ -157,10 +165,11 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 		for (const e of this._list) {
 			const key2: number = e.a.getKeyAt(1);
 			const key4: number = e.a.getKeyAt(3);
-			if (e.b === null)
+			if (e.b === null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key4));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key4)).add(e.b);
+			}
 		}
 		return map;
 	}
@@ -170,10 +179,11 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 		for (const e of this._list) {
 			const key3: number = e.a.getKeyAt(2);
 			const key4: number = e.a.getKeyAt(3);
-			if (e.b === null)
+			if (e.b === null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key4));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key4)).add(e.b);
+			}
 		}
 		return map;
 	}
@@ -184,10 +194,11 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 			const key1: number = e.a.getKeyAt(0);
 			const key2: number = e.a.getKeyAt(1);
 			const key3: number = e.a.getKeyAt(2);
-			if (e.b === null)
+			if (e.b === null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3)).add(e.b);
+			}
 		}
 		return map;
 	}
@@ -198,10 +209,11 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 			const key1: number = e.a.getKeyAt(0);
 			const key2: number = e.a.getKeyAt(1);
 			const key4: number = e.a.getKeyAt(3);
-			if (e.b === null)
+			if (e.b === null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key4));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key4)).add(e.b);
+			}
 		}
 		return map;
 	}
@@ -212,10 +224,11 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 			const key1: number = e.a.getKeyAt(0);
 			const key3: number = e.a.getKeyAt(2);
 			const key4: number = e.a.getKeyAt(3);
-			if (e.b === null)
+			if (e.b === null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key4));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key4)).add(e.b);
+			}
 		}
 		return map;
 	}
@@ -226,29 +239,34 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 			const key2: number = e.a.getKeyAt(1);
 			const key3: number = e.a.getKeyAt(2);
 			const key4: number = e.a.getKeyAt(3);
-			if (e.b === null)
+			if (e.b === null) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key4));
-			else
+			} else {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key4)).add(e.b);
+			}
 		}
 		return map;
 	}
 
 	private getSingleOrNullHelperLong(map: JavaMap<number, List<V>>, key: number): V | null {
 		const list: List<V> | null = map.get(key);
-		if (list === null)
+		if (list === null) {
 			return null;
-		if (list.size() !== 1)
+		}
+		if (list.size() !== 1) {
 			return null;
+		}
 		return list.getFirst();
 	}
 
 	private getSingleOrNullHelperLongArray(map: JavaMap<LongArrayKey, List<V>>, key: LongArrayKey): V | null {
 		const list: List<V> | null = map.get(key);
-		if (list === null)
+		if (list === null) {
 			return null;
-		if (list.size() !== 1)
+		}
+		if (list.size() !== 1) {
 			return null;
+		}
 		return list.getFirst();
 	}
 
@@ -266,34 +284,48 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 		const key: LongArrayKey = new LongArrayKey(key1, key2, key3, key4);
 		MapUtils.getOrCreateArrayList(this._map1234, key).add(value);
 		this._list.add(new Pair<LongArrayKey, V>(key, value));
-		if (this._map1 !== null)
+		if (this._map1 !== null) {
 			MapUtils.getOrCreateArrayList(this._map1, key1).add(value);
-		if (this._map2 !== null)
+		}
+		if (this._map2 !== null) {
 			MapUtils.getOrCreateArrayList(this._map2, key2).add(value);
-		if (this._map3 !== null)
+		}
+		if (this._map3 !== null) {
 			MapUtils.getOrCreateArrayList(this._map3, key3).add(value);
-		if (this._map4 !== null)
+		}
+		if (this._map4 !== null) {
 			MapUtils.getOrCreateArrayList(this._map4, key4).add(value);
-		if (this._map12 !== null)
+		}
+		if (this._map12 !== null) {
 			MapUtils.getOrCreateArrayList(this._map12, new LongArrayKey(key1, key2)).add(value);
-		if (this._map13 !== null)
+		}
+		if (this._map13 !== null) {
 			MapUtils.getOrCreateArrayList(this._map13, new LongArrayKey(key1, key3)).add(value);
-		if (this._map14 !== null)
+		}
+		if (this._map14 !== null) {
 			MapUtils.getOrCreateArrayList(this._map14, new LongArrayKey(key1, key4)).add(value);
-		if (this._map23 !== null)
+		}
+		if (this._map23 !== null) {
 			MapUtils.getOrCreateArrayList(this._map23, new LongArrayKey(key2, key3)).add(value);
-		if (this._map24 !== null)
+		}
+		if (this._map24 !== null) {
 			MapUtils.getOrCreateArrayList(this._map24, new LongArrayKey(key2, key4)).add(value);
-		if (this._map34 !== null)
+		}
+		if (this._map34 !== null) {
 			MapUtils.getOrCreateArrayList(this._map34, new LongArrayKey(key3, key4)).add(value);
-		if (this._map123 !== null)
+		}
+		if (this._map123 !== null) {
 			MapUtils.getOrCreateArrayList(this._map123, new LongArrayKey(key1, key2, key3)).add(value);
-		if (this._map124 !== null)
+		}
+		if (this._map124 !== null) {
 			MapUtils.getOrCreateArrayList(this._map124, new LongArrayKey(key1, key2, key4)).add(value);
-		if (this._map134 !== null)
+		}
+		if (this._map134 !== null) {
 			MapUtils.getOrCreateArrayList(this._map134, new LongArrayKey(key1, key3, key4)).add(value);
-		if (this._map234 !== null)
+		}
+		if (this._map234 !== null) {
 			MapUtils.getOrCreateArrayList(this._map234, new LongArrayKey(key2, key3, key4)).add(value);
+		}
 	}
 
 	/**
@@ -309,34 +341,48 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 		const key: LongArrayKey = new LongArrayKey(key1, key2, key3, key4);
 		MapUtils.getOrCreateArrayList(this._map1234, key);
 		this._list.add(new Pair<LongArrayKey, V>(key, null));
-		if (this._map1 !== null)
+		if (this._map1 !== null) {
 			MapUtils.getOrCreateArrayList(this._map1, key1);
-		if (this._map2 !== null)
+		}
+		if (this._map2 !== null) {
 			MapUtils.getOrCreateArrayList(this._map2, key2);
-		if (this._map3 !== null)
+		}
+		if (this._map3 !== null) {
 			MapUtils.getOrCreateArrayList(this._map3, key3);
-		if (this._map4 !== null)
+		}
+		if (this._map4 !== null) {
 			MapUtils.getOrCreateArrayList(this._map4, key4);
-		if (this._map12 !== null)
+		}
+		if (this._map12 !== null) {
 			MapUtils.getOrCreateArrayList(this._map12, new LongArrayKey(key1, key2));
-		if (this._map13 !== null)
+		}
+		if (this._map13 !== null) {
 			MapUtils.getOrCreateArrayList(this._map13, new LongArrayKey(key1, key3));
-		if (this._map14 !== null)
+		}
+		if (this._map14 !== null) {
 			MapUtils.getOrCreateArrayList(this._map14, new LongArrayKey(key1, key4));
-		if (this._map23 !== null)
+		}
+		if (this._map23 !== null) {
 			MapUtils.getOrCreateArrayList(this._map23, new LongArrayKey(key2, key3));
-		if (this._map24 !== null)
+		}
+		if (this._map24 !== null) {
 			MapUtils.getOrCreateArrayList(this._map24, new LongArrayKey(key2, key4));
-		if (this._map34 !== null)
+		}
+		if (this._map34 !== null) {
 			MapUtils.getOrCreateArrayList(this._map34, new LongArrayKey(key3, key4));
-		if (this._map123 !== null)
+		}
+		if (this._map123 !== null) {
 			MapUtils.getOrCreateArrayList(this._map123, new LongArrayKey(key1, key2, key3));
-		if (this._map124 !== null)
+		}
+		if (this._map124 !== null) {
 			MapUtils.getOrCreateArrayList(this._map124, new LongArrayKey(key1, key2, key4));
-		if (this._map134 !== null)
+		}
+		if (this._map134 !== null) {
 			MapUtils.getOrCreateArrayList(this._map134, new LongArrayKey(key1, key3, key4));
-		if (this._map234 !== null)
+		}
+		if (this._map234 !== null) {
 			MapUtils.getOrCreateArrayList(this._map234, new LongArrayKey(key2, key3, key4));
+		}
 	}
 
 	/**
@@ -347,8 +393,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return TRUE, falls es den Schlüssel (key1) gibt.
 	 */
 	public containsKey1(key1: number): boolean {
-		if (this._map1 === null)
+		if (this._map1 === null) {
 			this._map1 = this._lazyLoad1();
+		}
 		return this._map1.containsKey(key1);
 	}
 
@@ -360,8 +407,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return TRUE, falls es den Schlüssel (key2) gibt.
 	 */
 	public containsKey2(key2: number): boolean {
-		if (this._map2 === null)
+		if (this._map2 === null) {
 			this._map2 = this._lazyLoad2();
+		}
 		return this._map2.containsKey(key2);
 	}
 
@@ -373,8 +421,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return TRUE, falls es den Schlüssel (key3) gibt.
 	 */
 	public containsKey3(key3: number): boolean {
-		if (this._map3 === null)
+		if (this._map3 === null) {
 			this._map3 = this._lazyLoad3();
+		}
 		return this._map3.containsKey(key3);
 	}
 
@@ -386,8 +435,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return TRUE, falls es den Schlüssel (key4) gibt.
 	 */
 	public containsKey4(key4: number): boolean {
-		if (this._map4 === null)
+		if (this._map4 === null) {
 			this._map4 = this._lazyLoad4();
+		}
 		return this._map4.containsKey(key4);
 	}
 
@@ -400,8 +450,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return TRUE, falls es den Schlüssel (key1, key2) gibt.
 	 */
 	public containsKey12(key1: number, key2: number): boolean {
-		if (this._map12 === null)
+		if (this._map12 === null) {
 			this._map12 = this._lazyLoad12();
+		}
 		return this._map12.containsKey(new LongArrayKey(key1, key2));
 	}
 
@@ -414,8 +465,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return TRUE, falls es den Schlüssel (key1, key3) gibt.
 	 */
 	public containsKey13(key1: number, key3: number): boolean {
-		if (this._map13 === null)
+		if (this._map13 === null) {
 			this._map13 = this._lazyLoad13();
+		}
 		return this._map13.containsKey(new LongArrayKey(key1, key3));
 	}
 
@@ -428,8 +480,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return TRUE, falls es den Schlüssel (key1, key4) gibt.
 	 */
 	public containsKey14(key1: number, key4: number): boolean {
-		if (this._map14 === null)
+		if (this._map14 === null) {
 			this._map14 = this._lazyLoad14();
+		}
 		return this._map14.containsKey(new LongArrayKey(key1, key4));
 	}
 
@@ -442,8 +495,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return TRUE, falls es den Schlüssel (key2, key3) gibt.
 	 */
 	public containsKey23(key2: number, key3: number): boolean {
-		if (this._map23 === null)
+		if (this._map23 === null) {
 			this._map23 = this._lazyLoad23();
+		}
 		return this._map23.containsKey(new LongArrayKey(key2, key3));
 	}
 
@@ -456,8 +510,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return TRUE, falls es den Schlüssel (key2, key4) gibt.
 	 */
 	public containsKey24(key2: number, key4: number): boolean {
-		if (this._map24 === null)
+		if (this._map24 === null) {
 			this._map24 = this._lazyLoad24();
+		}
 		return this._map24.containsKey(new LongArrayKey(key2, key4));
 	}
 
@@ -470,8 +525,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return TRUE, falls es den Schlüssel (key3, key4) gibt.
 	 */
 	public containsKey34(key3: number, key4: number): boolean {
-		if (this._map34 === null)
+		if (this._map34 === null) {
 			this._map34 = this._lazyLoad34();
+		}
 		return this._map34.containsKey(new LongArrayKey(key3, key4));
 	}
 
@@ -485,8 +541,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return TRUE, falls es den Schlüssel (key1, key2, key3) gibt.
 	 */
 	public containsKey123(key1: number, key2: number, key3: number): boolean {
-		if (this._map123 === null)
+		if (this._map123 === null) {
 			this._map123 = this._lazyLoad123();
+		}
 		return this._map123.containsKey(new LongArrayKey(key1, key2, key3));
 	}
 
@@ -500,8 +557,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return TRUE, falls es den Schlüssel (key1, key2, key4) gibt.
 	 */
 	public containsKey124(key1: number, key2: number, key4: number): boolean {
-		if (this._map124 === null)
+		if (this._map124 === null) {
 			this._map124 = this._lazyLoad124();
+		}
 		return this._map124.containsKey(new LongArrayKey(key1, key2, key4));
 	}
 
@@ -515,8 +573,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return TRUE, falls es den Schlüssel (key1, key3, key4) gibt.
 	 */
 	public containsKey134(key1: number, key3: number, key4: number): boolean {
-		if (this._map134 === null)
+		if (this._map134 === null) {
 			this._map134 = this._lazyLoad134();
+		}
 		return this._map134.containsKey(new LongArrayKey(key1, key3, key4));
 	}
 
@@ -530,8 +589,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return TRUE, falls es den Schlüssel (key2, key3, key4) gibt.
 	 */
 	public containsKey234(key2: number, key3: number, key4: number): boolean {
-		if (this._map234 === null)
+		if (this._map234 === null) {
 			this._map234 = this._lazyLoad234();
+		}
 		return this._map234.containsKey(new LongArrayKey(key2, key3, key4));
 	}
 
@@ -558,10 +618,12 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return eine Liste aller Values in dieser Zuordnung.
 	 */
 	public get1(key1: number): List<V> {
-		if (this._map1 === null)
+		if (this._map1 === null) {
 			this._map1 = this._lazyLoad1();
-		if (!this._map1.containsKey(key1))
+		}
+		if (!this._map1.containsKey(key1)) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map1, key1));
 	}
 
@@ -574,10 +636,12 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return eine Liste aller Values in dieser Zuordnung.
 	 */
 	public get2(key2: number): List<V> {
-		if (this._map2 === null)
+		if (this._map2 === null) {
 			this._map2 = this._lazyLoad2();
-		if (!this._map2.containsKey(key2))
+		}
+		if (!this._map2.containsKey(key2)) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map2, key2));
 	}
 
@@ -590,10 +654,12 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key3).
 	 */
 	public get3(key3: number): List<V> {
-		if (this._map3 === null)
+		if (this._map3 === null) {
 			this._map3 = this._lazyLoad3();
-		if (!this._map3.containsKey(key3))
+		}
+		if (!this._map3.containsKey(key3)) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map3, key3));
 	}
 
@@ -606,10 +672,12 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key4).
 	 */
 	public get4(key4: number): List<V> {
-		if (this._map4 === null)
+		if (this._map4 === null) {
 			this._map4 = this._lazyLoad4();
-		if (!this._map4.containsKey(key4))
+		}
+		if (!this._map4.containsKey(key4)) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map4, key4));
 	}
 
@@ -623,11 +691,13 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key1, key2).
 	 */
 	public get12(key1: number, key2: number): List<V> {
-		if (this._map12 === null)
+		if (this._map12 === null) {
 			this._map12 = this._lazyLoad12();
+		}
 		const key: LongArrayKey = new LongArrayKey(key1, key2);
-		if (!this._map12.containsKey(key))
+		if (!this._map12.containsKey(key)) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map12, key));
 	}
 
@@ -641,11 +711,13 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key1, key3).
 	 */
 	public get13(key1: number, key3: number): List<V> {
-		if (this._map13 === null)
+		if (this._map13 === null) {
 			this._map13 = this._lazyLoad13();
+		}
 		const key: LongArrayKey = new LongArrayKey(key1, key3);
-		if (!this._map13.containsKey(key))
+		if (!this._map13.containsKey(key)) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map13, key));
 	}
 
@@ -659,11 +731,13 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key1, key4).
 	 */
 	public get14(key1: number, key4: number): List<V> {
-		if (this._map14 === null)
+		if (this._map14 === null) {
 			this._map14 = this._lazyLoad14();
+		}
 		const key: LongArrayKey = new LongArrayKey(key1, key4);
-		if (!this._map14.containsKey(key))
+		if (!this._map14.containsKey(key)) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map14, key));
 	}
 
@@ -677,11 +751,13 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key2, key3).
 	 */
 	public get23(key2: number, key3: number): List<V> {
-		if (this._map23 === null)
+		if (this._map23 === null) {
 			this._map23 = this._lazyLoad23();
+		}
 		const key: LongArrayKey = new LongArrayKey(key2, key3);
-		if (!this._map23.containsKey(key))
+		if (!this._map23.containsKey(key)) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map23, key));
 	}
 
@@ -695,11 +771,13 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key2, key4).
 	 */
 	public get24(key2: number, key4: number): List<V> {
-		if (this._map24 === null)
+		if (this._map24 === null) {
 			this._map24 = this._lazyLoad24();
+		}
 		const key: LongArrayKey = new LongArrayKey(key2, key4);
-		if (!this._map24.containsKey(key))
+		if (!this._map24.containsKey(key)) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map24, key));
 	}
 
@@ -713,11 +791,13 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key3, key4).
 	 */
 	public get34(key3: number, key4: number): List<V> {
-		if (this._map34 === null)
+		if (this._map34 === null) {
 			this._map34 = this._lazyLoad34();
+		}
 		const key: LongArrayKey = new LongArrayKey(key3, key4);
-		if (!this._map34.containsKey(key))
+		if (!this._map34.containsKey(key)) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map34, key));
 	}
 
@@ -732,11 +812,13 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key1, key2, key3).
 	 */
 	public get123(key1: number, key2: number, key3: number): List<V> {
-		if (this._map123 === null)
+		if (this._map123 === null) {
 			this._map123 = this._lazyLoad123();
+		}
 		const key: LongArrayKey = new LongArrayKey(key1, key2, key3);
-		if (!this._map123.containsKey(key))
+		if (!this._map123.containsKey(key)) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map123, key));
 	}
 
@@ -751,11 +833,13 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key1, key2, key4).
 	 */
 	public get124(key1: number, key2: number, key4: number): List<V> {
-		if (this._map124 === null)
+		if (this._map124 === null) {
 			this._map124 = this._lazyLoad124();
+		}
 		const key: LongArrayKey = new LongArrayKey(key1, key2, key4);
-		if (!this._map124.containsKey(key))
+		if (!this._map124.containsKey(key)) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map124, key));
 	}
 
@@ -770,11 +854,13 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key1, key3, key4).
 	 */
 	public get134(key1: number, key3: number, key4: number): List<V> {
-		if (this._map134 === null)
+		if (this._map134 === null) {
 			this._map134 = this._lazyLoad134();
+		}
 		const key: LongArrayKey = new LongArrayKey(key1, key3, key4);
-		if (!this._map134.containsKey(key))
+		if (!this._map134.containsKey(key)) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map134, key));
 	}
 
@@ -789,11 +875,13 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key2, key3, key4).
 	 */
 	public get234(key2: number, key3: number, key4: number): List<V> {
-		if (this._map234 === null)
+		if (this._map234 === null) {
 			this._map234 = this._lazyLoad234();
+		}
 		const key: LongArrayKey = new LongArrayKey(key2, key3, key4);
-		if (!this._map234.containsKey(key))
+		if (!this._map234.containsKey(key)) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map234, key));
 	}
 
@@ -810,8 +898,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 */
 	public get1234(key1: number, key2: number, key3: number, key4: number): List<V> {
 		const key: LongArrayKey = new LongArrayKey(key1, key2, key3, key4);
-		if (!this._map1234.containsKey(key))
+		if (!this._map1234.containsKey(key)) {
 			return new ArrayList();
+		}
 		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map1234, key));
 	}
 
@@ -823,8 +912,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das zugeordnete Element zum Mapping (key1), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public getSingle1OrNull(key1: number): V | null {
-		if (this._map1 === null)
+		if (this._map1 === null) {
 			this._map1 = this._lazyLoad1();
+		}
 		return this.getSingleOrNullHelperLong(this._map1, key1);
 	}
 
@@ -836,8 +926,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das zugeordnete Element zum Mapping (key2), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public getSingle2OrNull(key2: number): V | null {
-		if (this._map2 === null)
+		if (this._map2 === null) {
 			this._map2 = this._lazyLoad2();
+		}
 		return this.getSingleOrNullHelperLong(this._map2, key2);
 	}
 
@@ -849,8 +940,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das zugeordnete Element zum Mapping (key3), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public getSingle3OrNull(key3: number): V | null {
-		if (this._map3 === null)
+		if (this._map3 === null) {
 			this._map3 = this._lazyLoad3();
+		}
 		return this.getSingleOrNullHelperLong(this._map3, key3);
 	}
 
@@ -862,8 +954,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das zugeordnete Element zum Mapping (key4), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public getSingle4OrNull(key4: number): V | null {
-		if (this._map4 === null)
+		if (this._map4 === null) {
 			this._map4 = this._lazyLoad4();
+		}
 		return this.getSingleOrNullHelperLong(this._map4, key4);
 	}
 
@@ -876,8 +969,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das zugeordnete Element zum Mapping (key1, key2), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public getSingle12OrNull(key1: number, key2: number): V | null {
-		if (this._map12 === null)
+		if (this._map12 === null) {
 			this._map12 = this._lazyLoad12();
+		}
 		return this.getSingleOrNullHelperLongArray(this._map12, new LongArrayKey(key1, key2));
 	}
 
@@ -890,8 +984,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das zugeordnete Element zum Mapping (key1, key3), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public getSingle13OrNull(key1: number, key3: number): V | null {
-		if (this._map13 === null)
+		if (this._map13 === null) {
 			this._map13 = this._lazyLoad13();
+		}
 		return this.getSingleOrNullHelperLongArray(this._map13, new LongArrayKey(key1, key3));
 	}
 
@@ -904,8 +999,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das zugeordnete Element zum Mapping (key1, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public getSingle14OrNull(key1: number, key4: number): V | null {
-		if (this._map14 === null)
+		if (this._map14 === null) {
 			this._map14 = this._lazyLoad14();
+		}
 		return this.getSingleOrNullHelperLongArray(this._map14, new LongArrayKey(key1, key4));
 	}
 
@@ -918,8 +1014,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das zugeordnete Element zum Mapping (key2, key3), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public getSingle23OrNull(key2: number, key3: number): V | null {
-		if (this._map23 === null)
+		if (this._map23 === null) {
 			this._map23 = this._lazyLoad23();
+		}
 		return this.getSingleOrNullHelperLongArray(this._map23, new LongArrayKey(key2, key3));
 	}
 
@@ -932,8 +1029,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das zugeordnete Element zum Mapping (key2, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public getSingle24OrNull(key2: number, key4: number): V | null {
-		if (this._map24 === null)
+		if (this._map24 === null) {
 			this._map24 = this._lazyLoad24();
+		}
 		return this.getSingleOrNullHelperLongArray(this._map24, new LongArrayKey(key2, key4));
 	}
 
@@ -946,8 +1044,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das zugeordnete Element zum Mapping (key3, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public getSingle34OrNull(key3: number, key4: number): V | null {
-		if (this._map34 === null)
+		if (this._map34 === null) {
 			this._map34 = this._lazyLoad34();
+		}
 		return this.getSingleOrNullHelperLongArray(this._map34, new LongArrayKey(key3, key4));
 	}
 
@@ -961,8 +1060,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das zugeordnete Element zum Mapping (key1, key2, key3), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public getSingle123OrNull(key1: number, key2: number, key3: number): V | null {
-		if (this._map123 === null)
+		if (this._map123 === null) {
 			this._map123 = this._lazyLoad123();
+		}
 		return this.getSingleOrNullHelperLongArray(this._map123, new LongArrayKey(key1, key2, key3));
 	}
 
@@ -976,8 +1076,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das zugeordnete Element zum Mapping (key1, key2, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public getSingle124OrNull(key1: number, key2: number, key4: number): V | null {
-		if (this._map124 === null)
+		if (this._map124 === null) {
 			this._map124 = this._lazyLoad124();
+		}
 		return this.getSingleOrNullHelperLongArray(this._map124, new LongArrayKey(key1, key2, key4));
 	}
 
@@ -991,8 +1092,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das zugeordnete Element zum Mapping (key1, key3, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public getSingle134OrNull(key1: number, key3: number, key4: number): V | null {
-		if (this._map134 === null)
+		if (this._map134 === null) {
 			this._map134 = this._lazyLoad134();
+		}
 		return this.getSingleOrNullHelperLongArray(this._map134, new LongArrayKey(key1, key3, key4));
 	}
 
@@ -1006,8 +1108,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das zugeordnete Element zum Mapping (key2, key3, key4), falls es genau eines gibt, andernfalls NULL.
 	 */
 	public getSingle234OrNull(key2: number, key3: number, key4: number): V | null {
-		if (this._map234 === null)
+		if (this._map234 === null) {
 			this._map234 = this._lazyLoad234();
+		}
 		return this.getSingleOrNullHelperLongArray(this._map234, new LongArrayKey(key2, key3, key4));
 	}
 
@@ -1228,8 +1331,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das Key-Set der Map1.
 	 */
 	public keySet1(): JavaSet<number> {
-		if (this._map1 === null)
+		if (this._map1 === null) {
 			this._map1 = this._lazyLoad1();
+		}
 		return this._map1.keySet();
 	}
 
@@ -1239,8 +1343,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das Key-Set der Map2.
 	 */
 	public keySet2(): JavaSet<number> {
-		if (this._map2 === null)
+		if (this._map2 === null) {
 			this._map2 = this._lazyLoad2();
+		}
 		return this._map2.keySet();
 	}
 
@@ -1250,8 +1355,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das Key-Set der Map3.
 	 */
 	public keySet3(): JavaSet<number> {
-		if (this._map3 === null)
+		if (this._map3 === null) {
 			this._map3 = this._lazyLoad3();
+		}
 		return this._map3.keySet();
 	}
 
@@ -1261,8 +1367,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das Key-Set der Map4.
 	 */
 	public keySet4(): JavaSet<number> {
-		if (this._map4 === null)
+		if (this._map4 === null) {
 			this._map4 = this._lazyLoad4();
+		}
 		return this._map4.keySet();
 	}
 
@@ -1272,8 +1379,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das Key-Set der Map12.
 	 */
 	public keySet12(): JavaSet<LongArrayKey> {
-		if (this._map12 === null)
+		if (this._map12 === null) {
 			this._map12 = this._lazyLoad12();
+		}
 		return this._map12.keySet();
 	}
 
@@ -1283,8 +1391,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das Key-Set der Map13.
 	 */
 	public keySet13(): JavaSet<LongArrayKey> {
-		if (this._map13 === null)
+		if (this._map13 === null) {
 			this._map13 = this._lazyLoad13();
+		}
 		return this._map13.keySet();
 	}
 
@@ -1294,8 +1403,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das Key-Set der Map14.
 	 */
 	public keySet14(): JavaSet<LongArrayKey> {
-		if (this._map14 === null)
+		if (this._map14 === null) {
 			this._map14 = this._lazyLoad14();
+		}
 		return this._map14.keySet();
 	}
 
@@ -1305,8 +1415,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das Key-Set der Map23.
 	 */
 	public keySet23(): JavaSet<LongArrayKey> {
-		if (this._map23 === null)
+		if (this._map23 === null) {
 			this._map23 = this._lazyLoad23();
+		}
 		return this._map23.keySet();
 	}
 
@@ -1316,8 +1427,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das Key-Set der Map24.
 	 */
 	public keySet24(): JavaSet<LongArrayKey> {
-		if (this._map24 === null)
+		if (this._map24 === null) {
 			this._map24 = this._lazyLoad24();
+		}
 		return this._map24.keySet();
 	}
 
@@ -1327,8 +1439,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das Key-Set der Map34.
 	 */
 	public keySet34(): JavaSet<LongArrayKey> {
-		if (this._map34 === null)
+		if (this._map34 === null) {
 			this._map34 = this._lazyLoad34();
+		}
 		return this._map34.keySet();
 	}
 
@@ -1338,8 +1451,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das Key-Set der Map123.
 	 */
 	public keySet123(): JavaSet<LongArrayKey> {
-		if (this._map123 === null)
+		if (this._map123 === null) {
 			this._map123 = this._lazyLoad123();
+		}
 		return this._map123.keySet();
 	}
 
@@ -1349,8 +1463,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das Key-Set der Map124.
 	 */
 	public keySet124(): JavaSet<LongArrayKey> {
-		if (this._map124 === null)
+		if (this._map124 === null) {
 			this._map124 = this._lazyLoad124();
+		}
 		return this._map124.keySet();
 	}
 
@@ -1360,8 +1475,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das Key-Set der Map134.
 	 */
 	public keySet134(): JavaSet<LongArrayKey> {
-		if (this._map134 === null)
+		if (this._map134 === null) {
 			this._map134 = this._lazyLoad134();
+		}
 		return this._map134.keySet();
 	}
 
@@ -1371,8 +1487,9 @@ export class ListMap4DLongKeys<V> extends JavaObject {
 	 * @return das Key-Set der Map234.
 	 */
 	public keySet234(): JavaSet<LongArrayKey> {
-		if (this._map234 === null)
+		if (this._map234 === null) {
 			this._map234 = this._lazyLoad234();
+		}
 		return this._map234.keySet();
 	}
 
