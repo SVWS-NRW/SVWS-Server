@@ -27,10 +27,13 @@ export class Verkehrssprache extends CoreTypeSimple<VerkehrsspracheKatalogEintra
 	public static init(manager: CoreTypeDataManager<VerkehrsspracheKatalogEintrag, Verkehrssprache>): void {
 		CoreTypeDataManager.putManager(Verkehrssprache.class, manager);
 		Verkehrssprache._mapIso3.clear();
-		for (const sprache of manager.getWerte())
-			for (const eintrag of sprache.historie())
-				if (eintrag.iso3 !== null)
+		for (const sprache of manager.getWerte()) {
+			for (const eintrag of sprache.historie()) {
+				if (eintrag.iso3 !== null) {
 					Verkehrssprache._mapIso3.put(eintrag.iso3, sprache);
+				}
+			}
+		}
 	}
 
 	/**
@@ -68,10 +71,12 @@ export class Verkehrssprache extends CoreTypeSimple<VerkehrsspracheKatalogEintra
 	 * @return die Verkehrssprache oder null, falls das Kürzel unbekannt ist
 	 */
 	public static getByIsoKuerzel(kuerzel: string | null): Verkehrssprache | null {
-		if (kuerzel === null)
+		if (kuerzel === null) {
 			return null;
-		if (kuerzel.length === 2)
+		}
+		if (kuerzel.length === 2) {
 			return Verkehrssprache.data().getWertByKuerzel(kuerzel);
+		}
 		return Verkehrssprache._mapIso3.get(kuerzel);
 	}
 

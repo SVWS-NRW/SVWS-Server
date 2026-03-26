@@ -32,13 +32,15 @@ export class ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnrechnung
 
 	protected pruefe(): boolean {
 		const liste: List<LehrerPersonalabschnittsdatenAnrechnungsstunden> | null = this.anrechnungen.get();
-		if (liste === null)
+		if (liste === null) {
 			return true;
-		for (const eintrag of liste)
+		}
+		for (const eintrag of liste) {
 			if ((eintrag.idGrund === null) || (LehrerAnrechnungsgrund.data().getWertByIDOrNull(eintrag.idGrund) === null)) {
 				this.addFehler(0, "Feld 'Anrechnungsgründe' muss besetzt sein.");
 				return false;
 			}
+		}
 		return true;
 	}
 

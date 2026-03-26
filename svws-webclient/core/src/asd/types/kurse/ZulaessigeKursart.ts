@@ -419,13 +419,15 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 		ZulaessigeKursart._mapSchulformenByID.clear();
 		ZulaessigeKursart._mapBySchuljahrAndSchulform.clear();
 		ZulaessigeKursart._mapBySchuljahrAndAllgemeinerKursart.clear();
-		for (const ct of ZulaessigeKursart.data().getWerte())
+		for (const ct of ZulaessigeKursart.data().getWerte()) {
 			for (const e of ct.historie()) {
 				const tmpSet: JavaSet<Schulform> | null = new HashSet<Schulform>();
-				for (const s of e.zulaessig)
+				for (const s of e.zulaessig) {
 					tmpSet.add(Schulform.data().getWertByBezeichner(s.schulform));
+				}
 				ZulaessigeKursart._mapSchulformenByID.put(e.id, tmpSet);
 			}
+		}
 	}
 
 	/**
@@ -449,8 +451,9 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 		const ke: ZulaessigeKursartKatalogEintrag | null = this.daten(schuljahr);
 		if (ke !== null) {
 			const result: JavaSet<Schulform> | null = ZulaessigeKursart._mapSchulformenByID.get(ke.id);
-			if (result === null)
+			if (result === null) {
 				throw new CoreTypeException(JavaString.format("Fehler beim Prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.", this.getClass().getSimpleName()))
+			}
 			return result.contains(sf);
 		}
 		return false;
@@ -466,15 +469,18 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 	 */
 	public static getListBySchuljahrAndSchulform(schuljahr: number, schulform: Schulform): List<ZulaessigeKursart> {
 		const mapBySchulform: JavaMap<Schulform, List<ZulaessigeKursart>> | null = ZulaessigeKursart._mapBySchuljahrAndSchulform.computeIfAbsent(schuljahr, { apply: (k: number | null) => new HashMap<Schulform, List<ZulaessigeKursart>>() });
-		if (mapBySchulform === null)
+		if (mapBySchulform === null) {
 			throw new NullPointerException("computeIfAbsent darf nicht null liefern")
+		}
 		let result: List<ZulaessigeKursart> | null = mapBySchulform.get(schulform);
 		if (result === null) {
 			result = new ArrayList();
 			const kursarten: List<ZulaessigeKursart> | null = ZulaessigeKursart.data().getWerteBySchuljahr(schuljahr);
-			for (const kursart of kursarten)
-				if (kursart.hatSchulform(schuljahr, schulform))
+			for (const kursart of kursarten) {
+				if (kursart.hatSchulform(schuljahr, schulform)) {
 					result.add(kursart);
+				}
+			}
 			mapBySchulform.put(schulform, result);
 		}
 		return result;
@@ -495,18 +501,21 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 			return result;
 		}
 		const mapByAllgemeinerKursart: JavaMap<string, List<ZulaessigeKursart>> | null = ZulaessigeKursart._mapBySchuljahrAndAllgemeinerKursart.computeIfAbsent(schuljahr, { apply: (k: number | null) => new HashMap<string, List<ZulaessigeKursart>>() });
-		if (mapByAllgemeinerKursart === null)
+		if (mapByAllgemeinerKursart === null) {
 			throw new NullPointerException("computeIfAbsent darf nicht null liefern")
+		}
 		let result: List<ZulaessigeKursart> | null = mapByAllgemeinerKursart.get(allgKursart);
 		if (result === null) {
 			result = new ArrayList();
 			const kursarten: List<ZulaessigeKursart> | null = ZulaessigeKursart.data().getWerteBySchuljahr(schuljahr);
 			for (const kursart of kursarten) {
 				const zkke: ZulaessigeKursartKatalogEintrag | null = kursart.daten(schuljahr);
-				if (zkke === null)
+				if (zkke === null) {
 					continue;
-				if ((JavaObject.equalsTranspiler("", (allgKursart)) && (zkke.kuerzel === null)) || (JavaObject.equalsTranspiler(allgKursart, (zkke.kuerzelAllg))) || ((zkke.kuerzelAllg === null) && (JavaObject.equalsTranspiler(allgKursart, (zkke.kuerzel)))))
+				}
+				if ((JavaObject.equalsTranspiler("", (allgKursart)) && (zkke.kuerzel === null)) || (JavaObject.equalsTranspiler(allgKursart, (zkke.kuerzelAllg))) || ((zkke.kuerzelAllg === null) && (JavaObject.equalsTranspiler(allgKursart, (zkke.kuerzel))))) {
 					result.add(kursart);
+				}
 			}
 			mapByAllgemeinerKursart.put(allgKursart, result);
 		}

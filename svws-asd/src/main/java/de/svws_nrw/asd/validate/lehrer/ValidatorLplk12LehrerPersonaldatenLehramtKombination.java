@@ -49,20 +49,23 @@ public final class ValidatorLplk12LehrerPersonaldatenLehramtKombination extends 
 		final LehrerLehramtKatalogEintrag lehrerLehramtKatalogEintrag61 = LehrerLehramt.ID_61.daten(this.kontext().getSchuljahr());
 
 		if (lehrerLehramtKatalogEintrag56 != null && lehrerLehramtKatalogEintrag57 != null && lehrerLehramtKatalogEintrag58 != null
-				&& lehrerLehramtKatalogEintrag60 != null && lehrerLehramtKatalogEintrag61 != null)
-			for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : this.lehraemter.get())
-				if (lehrerLehramtKatalogEintrag56.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+				&& lehrerLehramtKatalogEintrag60 != null && lehrerLehramtKatalogEintrag61 != null) {
+			for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : this.lehraemter.get()) {
+				if (lehrerLehramtKatalogEintrag56.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id) {
 					lehramtId56Vorhanden = true;
-				else if (lehrerLehramtKatalogEintrag57.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+				} else if (lehrerLehramtKatalogEintrag57.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id) {
 					lehramtId57Vorhanden = true;
-				else if (lehrerLehramtKatalogEintrag58.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+				} else if (lehrerLehramtKatalogEintrag58.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id) {
 					lehramtId58Vorhanden = true;
-				else if (lehrerLehramtKatalogEintrag60.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+				} else if (lehrerLehramtKatalogEintrag60.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id) {
 					lehramtId60Vorhanden = true;
-				else if (lehrerLehramtKatalogEintrag61.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+				} else if (lehrerLehramtKatalogEintrag61.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id) {
 					lehramtId61Vorhanden = true;
-				else
+				} else {
 					anderesLehramtVorhanden = true;
+				}
+			}
+		}
 
 		if ((lehramtId56Vorhanden || lehramtId57Vorhanden || lehramtId58Vorhanden || lehramtId60Vorhanden || lehramtId61Vorhanden) && anderesLehramtVorhanden) {
 			this.addFehler(2,

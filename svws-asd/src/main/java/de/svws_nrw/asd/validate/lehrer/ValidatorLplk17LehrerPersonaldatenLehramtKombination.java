@@ -31,7 +31,6 @@ public final class ValidatorLplk17LehrerPersonaldatenLehramtKombination extends 
 		this.lehraemter = lehraemter;
 	}
 
-
 	@Override
 	protected boolean pruefe() {
 
@@ -40,12 +39,15 @@ public final class ValidatorLplk17LehrerPersonaldatenLehramtKombination extends 
 		boolean anderesLehramtVorhanden = false;
 		final LehrerLehramtKatalogEintrag lehrerLehramtKatalogEintrag = LehrerLehramt.ID_64.daten(this.kontext().getSchuljahr());
 
-		if (lehrerLehramtKatalogEintrag != null)
-			for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : this.lehraemter.get())
-				if (lehrerLehramtKatalogEintrag.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+		if (lehrerLehramtKatalogEintrag != null) {
+			for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : this.lehraemter.get()) {
+				if (lehrerLehramtKatalogEintrag.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id) {
 					lehramtId64Vorhanden = true;
-				else
+				} else {
 					anderesLehramtVorhanden = true;
+				}
+			}
+		}
 
 		if (lehramtId64Vorhanden && anderesLehramtVorhanden) {
 			this.addFehler(7,

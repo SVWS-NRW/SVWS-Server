@@ -197,10 +197,12 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 	 * @return true, falls jgVorher ein gültiger Vorgänger-Jahrgang dieses Jahrgangs ist.
 	 */
 	public boolean isNachfolgerVon(final int schuljahr, final Jahrgaenge vergleichsjahrgang, final Schulform schulform, final Schulgliederung gliederung) {
-		if (schulform == null)
+		if (schulform == null) {
 			return false;
-		if (!this.hatSchulform(schuljahr, schulform) || ((vergleichsjahrgang != null) && (!vergleichsjahrgang.hatSchulform(schuljahr, schulform))))
+		}
+		if (!this.hatSchulform(schuljahr, schulform) || ((vergleichsjahrgang != null) && (!vergleichsjahrgang.hatSchulform(schuljahr, schulform)))) {
 			return false;
+		}
 		final Schulgliederung gl = (gliederung == null) ? Schulgliederung.getDefault(schulform) : gliederung;
 		return switch (this) {
 			case HAUSFRUEHERZIEHUNG -> (vergleichsjahrgang == null);
@@ -254,13 +256,16 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 	 * @return true, falls jgNachher ein gültiger Nachfolger-Jahrgang dieses Jahrgangs ist.
 	 */
 	public boolean isVorgaengerVon(final int schuljahr, final Jahrgaenge vergleichsjahrgang, final Schulform schulform, final Schulgliederung gliederung) {
-		if (schulform == null)
+		if (schulform == null) {
 			return false;
-		if (!this.hatSchulform(schuljahr, schulform) || ((vergleichsjahrgang != null) && (!vergleichsjahrgang.hatSchulform(schuljahr, schulform))))
+		}
+		if (!this.hatSchulform(schuljahr, schulform) || ((vergleichsjahrgang != null) && (!vergleichsjahrgang.hatSchulform(schuljahr, schulform)))) {
 			return false;
+		}
 		final SchulformKatalogEintrag ske = schulform.daten(schuljahr);
-		if (ske == null)
+		if (ske == null) {
 			return false;
+		}
 		final Schulgliederung gl = (gliederung == null) ? Schulgliederung.getDefault(schulform) : gliederung;
 		return switch (this) {
 			case HAUSFRUEHERZIEHUNG -> (vergleichsjahrgang == null);
@@ -444,8 +449,9 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 	 * @return die Bezeichnung der Lernbereichsnote, falls eine vorhanden ist und ansonsten null.
 	 */
 	public String getLernbereichsnote1Bezeichnung(final @NotNull Schulform schulform, final Schulgliederung schulgliederung, final int schuljahr) {
-		if (!hatLernbereichsnote1(schulform, schulgliederung, schuljahr))
+		if (!hatLernbereichsnote1(schulform, schulgliederung, schuljahr)) {
 			return null;
+		}
 		return switch (schulform) {
 			case H, GM, GE, PS, SK -> "Arbeitslehre";
 			default -> "Gesellschaftslehre";
@@ -488,8 +494,9 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 	 * @return die Bezeichnung der Lernbereichsnote, falls eine vorhanden ist und ansonsten null.
 	 */
 	public String getLernbereichsnote2Bezeichnung(final @NotNull Schulform schulform, final Schulgliederung schulgliederung, final int schuljahr) {
-		if (!hatLernbereichsnote2(schulform, schulgliederung, schuljahr))
+		if (!hatLernbereichsnote2(schulform, schulgliederung, schuljahr)) {
 			return null;
+		}
 		return "Naturwissenschaft";
 	}
 

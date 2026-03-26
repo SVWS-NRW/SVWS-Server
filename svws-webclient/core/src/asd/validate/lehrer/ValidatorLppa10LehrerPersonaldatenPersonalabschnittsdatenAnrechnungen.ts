@@ -37,20 +37,24 @@ export class ValidatorLppa10LehrerPersonaldatenPersonalabschnittsdatenAnrechnung
 	protected pruefe(): boolean {
 		const listeLehraemter: List<LehrerLehramtEintrag> | null = this.lehraemter.get();
 		const listeAnrechnungen: List<LehrerPersonalabschnittsdatenAnrechnungsstunden> | null = this.anrechnungen.get();
-		if (listeLehraemter === null || listeAnrechnungen === null)
+		if (listeLehraemter === null || listeAnrechnungen === null) {
 			return true;
+		}
 		const grund935: LehrerAnrechnungsgrund | null = LehrerAnrechnungsgrund.data().getWertByBezeichner("ID_935");
-		for (const lehramtEintrag of listeLehraemter)
-			if (LehrerLehramt.ID_70 as unknown === LehrerLehramt.data().getWertByIDOrNull(lehramtEintrag.idKatalogLehramt) as unknown)
+		for (const lehramtEintrag of listeLehraemter) {
+			if (LehrerLehramt.ID_70 as unknown === LehrerLehramt.data().getWertByIDOrNull(lehramtEintrag.idKatalogLehramt) as unknown) {
 				for (const anrechnung of listeAnrechnungen) {
-					if (anrechnung.idGrund === null)
+					if (anrechnung.idGrund === null) {
 						continue;
+					}
 					const grund: LehrerAnrechnungsgrund | null = LehrerAnrechnungsgrund.data().getWertByIDOrNull(anrechnung.idGrund);
 					if (grund as unknown !== grund935 as unknown) {
 						this.addFehler(0, "Für das Lehramt 'Schulverwaltungsassistent/-in' darf nur der Anrechnungsgrund '935 - Schulverwaltungsassistenz' eingetragen sein.");
 						return false;
 					}
 				}
+			}
+		}
 		return true;
 	}
 

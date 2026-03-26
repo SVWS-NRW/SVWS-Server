@@ -156,8 +156,9 @@ export class Schulform extends JavaEnum<Schulform> implements CoreType<Schulform
 			for (let i: number = result.size() - 1; i >= 0; i--) {
 				const sf: Schulform = result.get(i);
 				const eintrag: SchulformKatalogEintrag | null = Schulform.data().getEintragBySchuljahrUndWert(schuljahr, sf);
-				if ((eintrag === null) || (!eintrag.hatGymOb))
+				if ((eintrag === null) || (!eintrag.hatGymOb)) {
 					result.remove(i);
+				}
 			}
 			Schulform._mapSchuljahrToSchulformenMitGymOb.put(schuljahr, result);
 		}
@@ -177,11 +178,14 @@ export class Schulform extends JavaEnum<Schulform> implements CoreType<Schulform
 			for (let i: number = result.size() - 1; i >= 0; i--) {
 				const sf: Schulform = result.get(i);
 				let hatGymOb: boolean = false;
-				for (const sfke of sf.historie())
-					if (sfke.hatGymOb)
+				for (const sfke of sf.historie()) {
+					if (sfke.hatGymOb) {
 						hatGymOb = true;
-				if (!hatGymOb)
+					}
+				}
+				if (!hatGymOb) {
 					result.remove(i);
+				}
 			}
 			Schulform._listSchulformenMitGymOb = result;
 		}

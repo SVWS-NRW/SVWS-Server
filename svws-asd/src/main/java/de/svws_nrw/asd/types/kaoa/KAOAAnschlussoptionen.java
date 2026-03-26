@@ -262,10 +262,12 @@ public enum KAOAAnschlussoptionen implements CoreType<KAOAAnschlussoptionenKatal
 		for (final KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalHistorienEintrag : KAOAZusatzmerkmal.data().getEintraegeBySchuljahr(schuljahr)) {
 			final List<KAOAAnschlussoptionenKatalogEintrag> result = new ArrayList<>();
 			// Iteriere durch die Anschlussoptionen und füge die zulässigen zur Ergebnisliste hinzu.
-			for (final KAOAAnschlussoptionenKatalogEintrag anschlussoptionHistorienEintrag : KAOAAnschlussoptionen.data().getEintraegeBySchuljahr(schuljahr))
+			for (final KAOAAnschlussoptionenKatalogEintrag anschlussoptionHistorienEintrag : KAOAAnschlussoptionen.data().getEintraegeBySchuljahr(schuljahr)) {
 				if (anschlussoptionHistorienEintrag.anzeigeZusatzmerkmal
-						.contains(KAOAZusatzmerkmal.data().getWertByID(zusatzmerkmalHistorienEintrag.id).name()))
+						.contains(KAOAZusatzmerkmal.data().getWertByID(zusatzmerkmalHistorienEintrag.id).name())) {
 					result.add(anschlussoptionHistorienEintrag);
+				}
+			}
 			cache.put(zusatzmerkmalHistorienEintrag.id, result);
 		}
 		return cache;

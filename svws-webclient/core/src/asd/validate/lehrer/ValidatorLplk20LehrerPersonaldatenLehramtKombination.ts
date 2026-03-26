@@ -30,12 +30,15 @@ export class ValidatorLplk20LehrerPersonaldatenLehramtKombination extends Valida
 		let lehramtId90Vorhanden: boolean = false;
 		let anderesLehramtVorhanden: boolean = false;
 		const lehrerLehramtKatalogEintrag: LehrerLehramtKatalogEintrag | null = LehrerLehramt.ID_90.daten(this.kontext().getSchuljahr());
-		if (lehrerLehramtKatalogEintrag !== null)
-			for (const lehrerLehramtEintrag of this.lehraemter.get())
-				if (lehrerLehramtKatalogEintrag.id === LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+		if (lehrerLehramtKatalogEintrag !== null) {
+			for (const lehrerLehramtEintrag of this.lehraemter.get()) {
+				if (lehrerLehramtKatalogEintrag.id === LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id) {
 					lehramtId90Vorhanden = true;
-				else
+				} else {
 					anderesLehramtVorhanden = true;
+				}
+			}
+		}
 		if (lehramtId90Vorhanden && anderesLehramtVorhanden) {
 			this.addFehler(10, "Neben dem Lehramtseintrag 'Studierende' sollten keine weiteren Lehramtseinträge vorliegen. Bitte korrigieren Sie Ihre Angaben.");
 			return false;

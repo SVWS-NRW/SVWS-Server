@@ -95,11 +95,13 @@ public enum SchulabschlussAllgemeinbildend implements CoreType<SchulabschlussAll
 	 * @return true, falls die Abschlüsse übereinstimmen und ansonsten false
 	 */
 	public boolean is(final String kuerzel) {
-		if (kuerzel == null)
+		if (kuerzel == null) {
 			return false;
+		}
 		final SchulabschlussAllgemeinbildend other = SchulabschlussAllgemeinbildend.data().getWertByKuerzel(kuerzel);
-		if (other == null)
+		if (other == null) {
 			return false;
+		}
 		return (other == this);
 	}
 

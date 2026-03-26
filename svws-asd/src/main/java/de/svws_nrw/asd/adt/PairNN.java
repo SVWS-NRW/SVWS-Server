@@ -35,10 +35,12 @@ public final class PairNN<A, B> {
 
 	@Override
 	public boolean equals(final Object o) {
-		if (o == null)
+		if (o == null) {
 			return false;
-		if (!(o instanceof PairNN<?, ?>))
+		}
+		if (!(o instanceof PairNN<?, ?>)) {
 			return false;
+		}
 		final PairNN<?, ?> e = (PairNN<?, ?>) o;
 		final boolean a_equals = a.equals(e.a);
 		final boolean b_equals = b.equals(e.b);

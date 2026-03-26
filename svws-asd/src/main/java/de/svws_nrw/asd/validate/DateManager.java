@@ -111,10 +111,12 @@ public final class DateManager implements Comparable<DateManager> {
 	 * @throws InvalidDateException   wenn die Werte für Tag, Monat oder Jahr fehlerhaft sind
 	 */
 	private void initPruefeTagMonatUndJahr() throws InvalidDateException {
-		if (jahr < 0)
+		if (jahr < 0) {
 			throw new InvalidDateException("Die Jahresangabe muss positiv sein.");
-		if (jahr > 9999)
+		}
+		if (jahr > 9999) {
 			throw new InvalidDateException("Die Jahresangabe ist größer als 9999.");
+		}
 
 		// Prüfe, ob es sich um ein Schaltjahr handelt
 		final int schalttageBisVorjahr = getSchalttageBisJahr(jahr - 1);
@@ -123,20 +125,23 @@ public final class DateManager implements Comparable<DateManager> {
 		istSchaltjahr = (schalttag == 1);
 
 		// Prüfe, ob der Monat im gültigen Bereich liegt
-		if ((monat < 1) || (monat > 12))
+		if ((monat < 1) || (monat > 12)) {
 			throw new InvalidDateException("Der Monat muss zwischen 1 und 12 liegen.");
+		}
 
 		// Prüfe, ob die Angabe des Tages im Monat korrekt ist
-		if (tag < 1)
+		if (tag < 1) {
 			throw new InvalidDateException("Der Tag im Monat muss größer als 0 sein.");
+		}
 		maxTageImMonat = switch (monat) {
 			case 1, 3, 5, 7, 8, 10, 12 -> 31;
 			case 4, 6, 9, 11 -> 30;
 			case 2 -> 28 + (istSchaltjahr ? 1 : 0);
 			default -> 0;
 		};
-		if (tag > maxTageImMonat)
+		if (tag > maxTageImMonat) {
 			throw new InvalidDateException("Im Monat " + monat + " muss der Tag im Bereicht von 1 bis " + maxTageImMonat + " liegen.");
+		}
 	}
 
 
@@ -201,12 +206,14 @@ public final class DateManager implements Comparable<DateManager> {
 	 * @throws InvalidDateException falls das Datumsformat oder das Datum fehlerhaft ist
 	 */
 	public static @NotNull DateManager from(final String isoDate) throws InvalidDateException {
-		if (isoDate == null)
+		if (isoDate == null) {
 			throw new InvalidDateException("Es muss ein Datum angegeben werden. null ist nicht zulässig.");
+		}
 		final @NotNull String[] d = isoDate.split("-");
 		final @NotNull String strError = "Das Datumsformat '" + isoDate + "' ist nicht konform zu ISO8601";
-		if (d.length != 3)
+		if (d.length != 3) {
 			throw new InvalidDateException(strError + ": Es ist nicht durch zwei Bindestriche unterteilt.");
+		}
 		// Bestimme das Jahr
 		int jahr;
 		try {
@@ -235,14 +242,17 @@ public final class DateManager implements Comparable<DateManager> {
 
 	@Override
 	public int compareTo(final DateManager other) {
-		if (other == null)
+		if (other == null) {
 			return 1;
+		}
 		int tmp = Integer.compare(this.jahr, other.jahr);
-		if (tmp != 0)
+		if (tmp != 0) {
 			return tmp;
+		}
 		tmp = Integer.compare(this.monat, other.monat);
-		if (tmp != 0)
+		if (tmp != 0) {
 			return tmp;
+		}
 		return Integer.compare(this.tag, other.tag);
 	}
 
@@ -255,10 +265,12 @@ public final class DateManager implements Comparable<DateManager> {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if ((obj != null) && (obj instanceof final DateManager dm))
+		}
+		if ((obj != null) && (obj instanceof final DateManager dm)) {
 			return (this.compareTo(dm) == 0);
+		}
 		return false;
 	}
 
@@ -371,12 +383,14 @@ public final class DateManager implements Comparable<DateManager> {
 	 */
 	public int getAlter(final @NotNull DateManager other) throws InvalidDateException {
 		final int cmp = other.compareTo(this);
-		if (cmp < 0)
+		if (cmp < 0) {
 			throw new InvalidDateException("Das angegebene Datum ist vor dem Geburtsdatum."
 					+ " Eine Altersbestimmung ist so nicht möglich.");
+		}
 		final int tmp = other.jahr - this.jahr;
-		if ((other.monat < this.monat) || ((other.monat == this.monat) && (other.tag < this.tag)))
+		if ((other.monat < this.monat) || ((other.monat == this.monat) && (other.tag < this.tag))) {
 			return tmp - 1;
+		}
 		return tmp;
 	}
 

@@ -63,8 +63,9 @@ export class LehrerEinsatzstatus extends JavaEnum<LehrerEinsatzstatus> implement
 	 * @return der zugehörige Einsatzstatus oder null
 	 */
 	public static getBySchluessel(schluessel: string | null): LehrerEinsatzstatus | null {
-		if (schluessel === null)
+		if (schluessel === null) {
 			return LehrerEinsatzstatus.DEFAULT;
+		}
 		return LehrerEinsatzstatus.data().getWertBySchluessel(schluessel);
 	}
 

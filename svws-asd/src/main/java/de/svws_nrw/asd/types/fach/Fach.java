@@ -939,8 +939,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 		if (listFremdsprachen.isEmpty()) {
 			for (final @NotNull Fach f : Fach.values()) {
 				final FachKatalogEintrag fke = f.daten(schuljahr);
-				if (fke != null && fke.istFremdsprache && fke.schluessel.equals(fke.kuerzel))
+				if (fke != null && fke.istFremdsprache && fke.schluessel.equals(fke.kuerzel)) {
 					listFremdsprachen.add(fke.kuerzel);
+				}
 			}
 		}
 
@@ -964,8 +965,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 		if (mapFremdsprachen.isEmpty()) {
 			for (final Fach f : Fach.values()) {
 				final FachKatalogEintrag fke = f.daten(schuljahr);
-				if (fke != null && fke.istFremdsprache && fke.schluessel.equals(fke.kuerzel))
+				if (fke != null && fke.istFremdsprache && fke.schluessel.equals(fke.kuerzel)) {
 					mapFremdsprachen.put(fke.kuerzel, f);
+				}
 			}
 		}
 		return mapFremdsprachen;
@@ -982,8 +984,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 	 */
 	public static @NotNull Fach getBySchluesselOrDefault(final @NotNull String schluessel) {
 		final Fach result = Fach.data().getWertBySchluessel(schluessel);
-		if (result != null)
+		if (result != null) {
 			return result;
+		}
 		return Fach.VF;
 	}
 
@@ -999,8 +1002,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 	 */
 	public FachKatalogEintrag getEintragOrLast(final int schuljahr) {
 		final FachKatalogEintrag result = data().getEintragBySchuljahrUndWert(schuljahr, this);
-		if (result != null)
+		if (result != null) {
 			return result;
+		}
 		return this.historie().getLast();
 	}
 
@@ -1014,8 +1018,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 	 */
 	public Fachgruppe getFachgruppe(final int schuljahr) {
 		final FachKatalogEintrag fke = Fach.data().getEintragBySchuljahrUndWert(schuljahr, this);
-		if ((fke == null) || (fke.fachgruppe == null))
+		if ((fke == null) || (fke.fachgruppe == null)) {
 			return null;
+		}
 		return Fachgruppe.data().getWertByBezeichner(fke.fachgruppe);
 	}
 
@@ -1029,8 +1034,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 	 */
 	public Jahrgaenge getJahrgangAb(final int schuljahr) {
 		final FachKatalogEintrag fke = Fach.data().getEintragBySchuljahrUndWert(schuljahr, this);
-		if ((fke == null) || (fke.abJahrgang == null))
+		if ((fke == null) || (fke.abJahrgang == null)) {
 			return null;
+		}
 		return Jahrgaenge.data().getWertByBezeichner(fke.abJahrgang);
 	}
 
@@ -1044,8 +1050,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 	 */
 	public @NotNull RGBFarbe getFarbe(final int schuljahr) {
 		final Fachgruppe gruppe = getFachgruppe(schuljahr);
-		if (gruppe == null)
+		if (gruppe == null) {
 			return new RGBFarbe();
+		}
 		return gruppe.getFarbe(schuljahr);
 	}
 

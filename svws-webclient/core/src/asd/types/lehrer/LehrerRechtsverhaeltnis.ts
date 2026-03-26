@@ -97,8 +97,9 @@ export class LehrerRechtsverhaeltnis extends JavaEnum<LehrerRechtsverhaeltnis> i
 	 * @return das zugehörige Rechtsverhältnis oder null
 	 */
 	public static getBySchluessel(schluessel: string | null): LehrerRechtsverhaeltnis | null {
-		if (schluessel === null)
+		if (schluessel === null) {
 			return null;
+		}
 		return LehrerRechtsverhaeltnis.data().getWertBySchluessel(schluessel);
 	}
 

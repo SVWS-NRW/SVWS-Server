@@ -127,18 +127,22 @@ export class DateManager extends JavaObject implements Comparable<DateManager> {
 	 * @throws InvalidDateException   wenn die Werte für Tag, Monat oder Jahr fehlerhaft sind
 	 */
 	private initPruefeTagMonatUndJahr(): void {
-		if (this.jahr < 0)
+		if (this.jahr < 0) {
 			throw new InvalidDateException("Die Jahresangabe muss positiv sein.")
-		if (this.jahr > 9999)
+		}
+		if (this.jahr > 9999) {
 			throw new InvalidDateException("Die Jahresangabe ist größer als 9999.")
+		}
 		const schalttageBisVorjahr: number = DateManager.getSchalttageBisJahr(this.jahr - 1);
 		const schalttageBisJahr: number = DateManager.getSchalttageBisJahr(this.jahr);
 		const schalttag: number = (schalttageBisJahr - schalttageBisVorjahr);
 		this.istSchaltjahr = (schalttag === 1);
-		if ((this.monat < 1) || (this.monat > 12))
+		if ((this.monat < 1) || (this.monat > 12)) {
 			throw new InvalidDateException("Der Monat muss zwischen 1 und 12 liegen.")
-		if (this.tag < 1)
+		}
+		if (this.tag < 1) {
 			throw new InvalidDateException("Der Tag im Monat muss größer als 0 sein.")
+		}
 		const _seexpr_1558458123 = (this.monat);
 		if (_seexpr_1558458123 === 1) {
 			this.maxTageImMonat = 31;
@@ -168,8 +172,9 @@ export class DateManager extends JavaObject implements Comparable<DateManager> {
 			this.maxTageImMonat = 0;
 		}
 		;
-		if (this.tag > this.maxTageImMonat)
+		if (this.tag > this.maxTageImMonat) {
 			throw new InvalidDateException("Im Monat " + this.monat + " muss der Tag im Bereicht von 1 bis " + this.maxTageImMonat + " liegen.")
+		}
 	}
 
 	/**
@@ -229,12 +234,14 @@ export class DateManager extends JavaObject implements Comparable<DateManager> {
 	 * @throws InvalidDateException falls das Datumsformat oder das Datum fehlerhaft ist
 	 */
 	public static from(isoDate: string | null): DateManager {
-		if (isoDate === null)
+		if (isoDate === null) {
 			throw new InvalidDateException("Es muss ein Datum angegeben werden. null ist nicht zulässig.")
+		}
 		const d: Array<string | null> = isoDate.split("-");
 		const strError: string = "Das Datumsformat '" + isoDate + "' ist nicht konform zu ISO8601";
-		if (d.length !== 3)
+		if (d.length !== 3) {
 			throw new InvalidDateException(strError + ": Es ist nicht durch zwei Bindestriche unterteilt.")
+		}
 		let jahr: number;
 		try {
 			jahr = JavaInteger.parseInt(d[0]);
@@ -257,14 +264,17 @@ export class DateManager extends JavaObject implements Comparable<DateManager> {
 	}
 
 	public compareTo(other: DateManager | null): number {
-		if (other === null)
+		if (other === null) {
 			return 1;
+		}
 		let tmp: number = JavaInteger.compare(this.jahr, other.jahr);
-		if (tmp !== 0)
+		if (tmp !== 0) {
 			return tmp;
+		}
 		tmp = JavaInteger.compare(this.monat, other.monat);
-		if (tmp !== 0)
+		if (tmp !== 0) {
 			return tmp;
+		}
 		return JavaInteger.compare(this.tag, other.tag);
 	}
 
@@ -273,10 +283,12 @@ export class DateManager extends JavaObject implements Comparable<DateManager> {
 	}
 
 	public equals(obj: unknown | null): boolean {
-		if (this as unknown === obj as unknown)
+		if (this as unknown === obj as unknown) {
 			return true;
-		if ((obj !== null) && (((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.asd.validate.DateManager')))))
+		}
+		if ((obj !== null) && (((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.asd.validate.DateManager'))))) {
 			return (this.compareTo((obj as unknown as DateManager)) === 0);
+		}
 		return false;
 	}
 
@@ -379,11 +391,13 @@ export class DateManager extends JavaObject implements Comparable<DateManager> {
 	 */
 	public getAlter(other: DateManager): number {
 		const cmp: number = other.compareTo(this);
-		if (cmp < 0)
+		if (cmp < 0) {
 			throw new InvalidDateException("Das angegebene Datum ist vor dem Geburtsdatum. Eine Altersbestimmung ist so nicht möglich.")
+		}
 		const tmp: number = other.jahr - this.jahr;
-		if ((other.monat < this.monat) || ((other.monat === this.monat) && (other.tag < this.tag)))
+		if ((other.monat < this.monat) || ((other.monat === this.monat) && (other.tag < this.tag))) {
 			return tmp - 1;
+		}
 		return tmp;
 	}
 

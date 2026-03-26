@@ -30,12 +30,15 @@ export class ValidatorLplk17LehrerPersonaldatenLehramtKombination extends Valida
 		let lehramtId64Vorhanden: boolean = false;
 		let anderesLehramtVorhanden: boolean = false;
 		const lehrerLehramtKatalogEintrag: LehrerLehramtKatalogEintrag | null = LehrerLehramt.ID_64.daten(this.kontext().getSchuljahr());
-		if (lehrerLehramtKatalogEintrag !== null)
-			for (const lehrerLehramtEintrag of this.lehraemter.get())
-				if (lehrerLehramtKatalogEintrag.id === LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+		if (lehrerLehramtKatalogEintrag !== null) {
+			for (const lehrerLehramtEintrag of this.lehraemter.get()) {
+				if (lehrerLehramtKatalogEintrag.id === LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id) {
 					lehramtId64Vorhanden = true;
-				else
+				} else {
 					anderesLehramtVorhanden = true;
+				}
+			}
+		}
 		if (lehramtId64Vorhanden && anderesLehramtVorhanden) {
 			this.addFehler(7, "Neben dem Lehramtseintrag 'Handwerksmeistern/-innen' sollten keine weiteren Lehramtseinträge vorliegen. Bitte korrigieren Sie Ihre Angaben.");
 			return false;

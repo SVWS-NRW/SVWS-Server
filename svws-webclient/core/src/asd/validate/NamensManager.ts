@@ -44,15 +44,19 @@ export class NamensManager extends JavaObject {
 	 * @return der Nachname mit ggf. entferntem Vornamen
 	 */
 	public static getOhneZusatz(nachname: string | null): string {
-		if (nachname === null)
+		if (nachname === null) {
 			return "";
+		}
 		const teile: Array<string> = nachname.split(" ", 3);
-		if (teile.length === 3 && NamensManager.zusaetzeZweiteilig.contains(teile[0] + " " + teile[1]))
+		if (teile.length === 3 && NamensManager.zusaetzeZweiteilig.contains(teile[0] + " " + teile[1])) {
 			return teile[2];
-		if (teile.length === 3 && NamensManager.zusaetze.contains(teile[0]))
+		}
+		if (teile.length === 3 && NamensManager.zusaetze.contains(teile[0])) {
 			return teile[1] + " " + teile[2];
-		if (teile.length === 2 && NamensManager.zusaetze.contains(teile[0]))
+		}
+		if (teile.length === 2 && NamensManager.zusaetze.contains(teile[0])) {
 			return teile[1];
+		}
 		return nachname;
 	}
 

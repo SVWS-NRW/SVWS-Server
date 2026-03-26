@@ -75,8 +75,9 @@ export abstract class CoreTypeSimple<T extends CoreTypeData, U extends CoreTypeS
 	 */
 	public static valuesByClass<S extends CoreTypeSimple<any, any>>(clazz: Class<S>): Array<S> {
 		const list = CoreTypeSimple._values.get(clazz);
-		if (list === null)
+		if (list === null) {
 			return Array(0).fill(null) as unknown as Array<S>;
+		}
 		return list as unknown as Array<S>;
 	}
 
@@ -116,8 +117,9 @@ export abstract class CoreTypeSimple<T extends CoreTypeData, U extends CoreTypeS
 	 *     und größer 0, wenn dieser Wert größer ist
 	 */
 	public compareTo(other: U | null): number {
-		if (other === null)
+		if (other === null) {
 			throw new NullPointerException()
+		}
 		return JavaInteger.compare(this.ordinal(), other.ordinal());
 	}
 

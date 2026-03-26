@@ -274,10 +274,12 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	 * @return true, falls jgVorher ein gültiger Vorgänger-Jahrgang dieses Jahrgangs ist.
 	 */
 	public isNachfolgerVon(schuljahr: number, vergleichsjahrgang: Jahrgaenge | null, schulform: Schulform | null, gliederung: Schulgliederung | null): boolean {
-		if (schulform === null)
+		if (schulform === null) {
 			return false;
-		if (!this.hatSchulform(schuljahr, schulform) || ((vergleichsjahrgang !== null) && (!vergleichsjahrgang.hatSchulform(schuljahr, schulform))))
+		}
+		if (!this.hatSchulform(schuljahr, schulform) || ((vergleichsjahrgang !== null) && (!vergleichsjahrgang.hatSchulform(schuljahr, schulform)))) {
 			return false;
+		}
 		const gl: Schulgliederung | null = (gliederung === null) ? Schulgliederung.getDefault(schulform) : gliederung;
 		let _sevar_515668459 : any;
 		const _seexpr_515668459 = (this);
@@ -367,13 +369,16 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	 * @return true, falls jgNachher ein gültiger Nachfolger-Jahrgang dieses Jahrgangs ist.
 	 */
 	public isVorgaengerVon(schuljahr: number, vergleichsjahrgang: Jahrgaenge | null, schulform: Schulform | null, gliederung: Schulgliederung | null): boolean {
-		if (schulform === null)
+		if (schulform === null) {
 			return false;
-		if (!this.hatSchulform(schuljahr, schulform) || ((vergleichsjahrgang !== null) && (!vergleichsjahrgang.hatSchulform(schuljahr, schulform))))
+		}
+		if (!this.hatSchulform(schuljahr, schulform) || ((vergleichsjahrgang !== null) && (!vergleichsjahrgang.hatSchulform(schuljahr, schulform)))) {
 			return false;
+		}
 		const ske: SchulformKatalogEintrag | null = schulform.daten(schuljahr);
-		if (ske === null)
+		if (ske === null) {
 			return false;
+		}
 		const gl: Schulgliederung | null = (gliederung === null) ? Schulgliederung.getDefault(schulform) : gliederung;
 		let _sevar_285007581 : any;
 		const _seexpr_285007581 = (this);
@@ -693,8 +698,9 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	 * @return die Bezeichnung der Lernbereichsnote, falls eine vorhanden ist und ansonsten null.
 	 */
 	public getLernbereichsnote1Bezeichnung(schulform: Schulform, schulgliederung: Schulgliederung | null, schuljahr: number): string | null {
-		if (!this.hatLernbereichsnote1(schulform, schulgliederung, schuljahr))
+		if (!this.hatLernbereichsnote1(schulform, schulgliederung, schuljahr)) {
 			return null;
+		}
 		let _sevar_825399400 : any;
 		const _seexpr_825399400 = (schulform);
 		if (_seexpr_825399400 === Schulform.H) {
@@ -779,8 +785,9 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	 * @return die Bezeichnung der Lernbereichsnote, falls eine vorhanden ist und ansonsten null.
 	 */
 	public getLernbereichsnote2Bezeichnung(schulform: Schulform, schulgliederung: Schulgliederung | null, schuljahr: number): string | null {
-		if (!this.hatLernbereichsnote2(schulform, schulgliederung, schuljahr))
+		if (!this.hatLernbereichsnote2(schulform, schulgliederung, schuljahr)) {
 			return null;
+		}
 		return "Naturwissenschaft";
 	}
 

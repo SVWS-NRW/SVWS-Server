@@ -671,9 +671,11 @@ export class KAOAZusatzmerkmal extends JavaEnum<KAOAZusatzmerkmal> implements Co
 		const cache: JavaMap<number, List<KAOAZusatzmerkmalKatalogEintrag>> | null = new HashMap<number, List<KAOAZusatzmerkmalKatalogEintrag>>();
 		for (const merkmalHistorienEintrag of KAOAMerkmal.data().getEintraegeBySchuljahr(schuljahr)) {
 			const result: List<KAOAZusatzmerkmalKatalogEintrag> | null = new ArrayList<KAOAZusatzmerkmalKatalogEintrag>();
-			for (const zusatzmerkmalHistorienEintrag of KAOAZusatzmerkmal.data().getEintraegeBySchuljahr(schuljahr))
-				if (JavaObject.equalsTranspiler(zusatzmerkmalHistorienEintrag.merkmal, (KAOAMerkmal.data().getWertByID(merkmalHistorienEintrag.id).name())))
+			for (const zusatzmerkmalHistorienEintrag of KAOAZusatzmerkmal.data().getEintraegeBySchuljahr(schuljahr)) {
+				if (JavaObject.equalsTranspiler(zusatzmerkmalHistorienEintrag.merkmal, (KAOAMerkmal.data().getWertByID(merkmalHistorienEintrag.id).name()))) {
 					result.add(zusatzmerkmalHistorienEintrag);
+				}
+			}
 			cache.put(merkmalHistorienEintrag.id, result);
 		}
 		return cache;

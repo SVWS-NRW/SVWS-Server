@@ -390,9 +390,11 @@ public enum LehrerFachrichtung implements @NotNull CoreType<LehrerFachrichtungKa
 		for (final LehrerFachrichtung fr : LehrerFachrichtung.data().getWerte()) {
 			final LehrerFachrichtungKatalogEintrag eintrag = fr.daten(schuljahr);
 			final List<LehrerLehramt> lehraemter = new ArrayList<>();
-			if (eintrag != null)
-				for (final String laBezeichner : eintrag.lehraemter)
+			if (eintrag != null) {
+				for (final String laBezeichner : eintrag.lehraemter) {
 					lehraemter.add(LehrerLehramt.data().getWertByBezeichner(laBezeichner));
+				}
+			}
 			result.put(fr, lehraemter);
 		}
 		return result;

@@ -186,9 +186,11 @@ public enum KAOAMerkmal implements CoreType<KAOAMerkmalKatalogEintrag, KAOAMerkm
 		for (final KAOAKategorieKatalogEintrag kategorieHistorienEintrag : KAOAKategorie.data().getEintraegeBySchuljahr(schuljahr)) {
 			// Iteriere durch die Merkmale und füge die zulässigen zur Ergebnisliste hinzu.
 			final List<KAOAMerkmalKatalogEintrag> result = new ArrayList<>();
-			for (final KAOAMerkmalKatalogEintrag merkmalHistorienEintrag : KAOAMerkmal.data().getEintraegeBySchuljahr(schuljahr))
-				if (merkmalHistorienEintrag.kategorie.equals(KAOAKategorie.data().getWertByID(kategorieHistorienEintrag.id).name()))
+			for (final KAOAMerkmalKatalogEintrag merkmalHistorienEintrag : KAOAMerkmal.data().getEintraegeBySchuljahr(schuljahr)) {
+				if (merkmalHistorienEintrag.kategorie.equals(KAOAKategorie.data().getWertByID(kategorieHistorienEintrag.id).name())) {
 					result.add(merkmalHistorienEintrag);
+				}
+			}
 			cache.put(kategorieHistorienEintrag.id, result);
 		}
 		return cache;

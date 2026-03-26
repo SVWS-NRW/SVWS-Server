@@ -32,7 +32,7 @@ import jakarta.ws.rs.core.Response.Status;
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die Konfiguration
  * des SVWS-Servers.
  * Die Config-API stellt neben einer Schnittstelle zum Prüfen, ob ein SVWS-Server vorhanden
- * ist (alive), weitere Konfigurationsmöglichkteiten zur Verfügung.
+ * ist (alive), weitere Konfigurationsmöglichkeiten zur Verfügung.
  */
 @Path("")
 @Produces(MediaType.TEXT_PLAIN)
@@ -80,10 +80,12 @@ public class APIConfig {
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Boolean.class)))
 	public Response isAlivePrivileged(@Context final HttpServletRequest request) {
 		final var config = SVWSKonfiguration.get();
-		if (config.isDBRootAccessDisabled())
+		if (config.isDBRootAccessDisabled()) {
 			return Response.ok(false).build();
-		if ((config.hatPortHTTPPrivilegedAccess()) && (config.getPortHTTPPrivilegedAccess() != request.getLocalPort()))
+		}
+		if ((config.hatPortHTTPPrivilegedAccess()) && (config.getPortHTTPPrivilegedAccess() != request.getLocalPort())) {
 			return Response.ok(false).build();
+		}
 		return Response.ok(true).build();
 	}
 
@@ -103,8 +105,9 @@ public class APIConfig {
 	public Response getServerVersion() {
 		try {
 			final String version = SVWSVersion.version();
-			if (version == null)
+			if (version == null) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			return JSONMapper.fromString(version);
 		} catch (final ApiOperationException e) {
 			return e.getResponse();
@@ -149,8 +152,9 @@ public class APIConfig {
 	public Response getSchildMinVersion() {
 		try {
 			final String version = SVWSVersion.getSchildMinVersion();
-			if (version == null)
+			if (version == null) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			return JSONMapper.fromString(version);
 		} catch (final ApiOperationException e) {
 			return e.getResponse();

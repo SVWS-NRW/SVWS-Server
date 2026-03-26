@@ -31,13 +31,16 @@ export class ValidatorLplk15LehrerPersonaldatenLehramtKombination extends Valida
 		let lehramtId62Vorhanden: boolean = false;
 		const lehrerLehramtKatalogEintrag59: LehrerLehramtKatalogEintrag | null = LehrerLehramt.ID_59.daten(this.kontext().getSchuljahr());
 		const lehrerLehramtKatalogEintrag62: LehrerLehramtKatalogEintrag | null = LehrerLehramt.ID_62.daten(this.kontext().getSchuljahr());
-		if (lehrerLehramtKatalogEintrag59 !== null && lehrerLehramtKatalogEintrag62 !== null)
-			for (const lehrerLehramtEintrag of this.lehraemter.get())
-				if (lehrerLehramtKatalogEintrag59.id === LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+		if (lehrerLehramtKatalogEintrag59 !== null && lehrerLehramtKatalogEintrag62 !== null) {
+			for (const lehrerLehramtEintrag of this.lehraemter.get()) {
+				if (lehrerLehramtKatalogEintrag59.id === LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id) {
 					lehramtId59Vorhanden = true;
-				else
-					if (lehrerLehramtKatalogEintrag62.id === LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+				} else
+					if (lehrerLehramtKatalogEintrag62.id === LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id) {
 						lehramtId62Vorhanden = true;
+					}
+			}
+		}
 		if (lehramtId59Vorhanden && lehramtId62Vorhanden) {
 			this.addFehler(5, "Die Lehramtseinträge 'Sonstige pädagogische Unterrichtshilfe ohne sonderpädagogische Zusatzausbildung' und 'Sonstige pädagogische Unterrichtshilfe mit sonderpädagogischer Zusatzausbildung' sollten nicht zusammen vorliegen. Falls der Lehramtseintrag 'Sonstige pädagogische Unterrichtshilfe mit sonderpädagogischer Zusatzausbildung' korrekt ist, entfernen Sie bitte den Lehramtseintrag 'Sonstige pädagogische Unterrichtshilfe ohne sonderpädagogische Zusatzausbildung'.");
 			return false;

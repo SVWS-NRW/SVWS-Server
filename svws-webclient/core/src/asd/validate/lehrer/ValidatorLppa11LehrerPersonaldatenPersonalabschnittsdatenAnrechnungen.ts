@@ -46,8 +46,9 @@ export class ValidatorLppa11LehrerPersonaldatenPersonalabschnittsdatenAnrechnung
 		const listeLehraemter: List<LehrerLehramtEintrag> | null = this.lehraemter.get();
 		const listeAnrechnungen: List<LehrerPersonalabschnittsdatenAnrechnungsstunden> | null = this.anrechnungen.get();
 		const soll: number | null = this.pflichtstundensoll.get();
-		if (listeLehraemter === null || listeAnrechnungen === null || soll === null)
+		if (listeLehraemter === null || listeAnrechnungen === null || soll === null) {
 			return true;
+		}
 		let hatLehramt70: boolean = false;
 		for (const lehramtEintrag of listeLehraemter) {
 			const idKatalog: number = lehramtEintrag.idKatalogLehramt;
@@ -56,12 +57,13 @@ export class ValidatorLppa11LehrerPersonaldatenPersonalabschnittsdatenAnrechnung
 				break;
 			}
 		}
-		if (!hatLehramt70)
+		if (!hatLehramt70) {
 			return true;
+		}
 		const grund935: LehrerAnrechnungsgrund | null = LehrerAnrechnungsgrund.data().getWertByBezeichner("ID_935");
 		let summe935: number = 0;
 		let hatAnrechnung935: boolean = false;
-		for (const anrechnung of listeAnrechnungen)
+		for (const anrechnung of listeAnrechnungen) {
 			if (anrechnung.idGrund !== null) {
 				const grund: LehrerAnrechnungsgrund | null = LehrerAnrechnungsgrund.data().getWertByIDOrNull(anrechnung.idGrund);
 				if (grund as unknown === grund935 as unknown) {
@@ -69,6 +71,7 @@ export class ValidatorLppa11LehrerPersonaldatenPersonalabschnittsdatenAnrechnung
 					summe935 += anrechnung.anzahl;
 				}
 			}
+		}
 		if (hatAnrechnung935 && (Math.abs(summe935 - soll) > 0.001)) {
 			this.addFehler(0, "Für das Lehramt 'Schulverwaltungsassistent/-in' muss die Anzahl der Anrechungsstunden bei dem Anrechnungsgrund '935 - Schulverwaltungsassistenz' dem Pflichtstundensoll entsprechen.");
 			return false;

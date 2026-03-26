@@ -190,8 +190,9 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	 * @return die Note
 	 */
 	public static fromNoteSekI(noteSekI: number | null): Note | null {
-		if (noteSekI === null)
+		if (noteSekI === null) {
 			return null;
+		}
 		let _sevar_928693309 : any;
 		const _seexpr_928693309 = (noteSekI);
 		if (_seexpr_928693309 === 1) {
@@ -220,8 +221,9 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
 	public static fromNotenpunkte(notenpunkte: number | null): Note {
-		if (notenpunkte === null)
+		if (notenpunkte === null) {
 			return Note.KEINE;
+		}
 		let _sevar_1649314226 : any;
 		const _seexpr_1649314226 = (notenpunkte);
 		if (_seexpr_1649314226 === 0) {
@@ -304,8 +306,9 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
 	public static fromKuerzel(kuerzel: string | null): Note {
-		if (kuerzel === null)
+		if (kuerzel === null) {
 			return Note.KEINE;
+		}
 		const kuerzelUppercase: string | null = kuerzel.toUpperCase();
 		let _sevar_1799037231 : any;
 		const _seexpr_1799037231 = (kuerzelUppercase);
@@ -356,8 +359,9 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
 	public static fromNotenpunkteString(notenpunkte: string | null): Note {
-		if (notenpunkte === null)
+		if (notenpunkte === null) {
 			return Note.KEINE;
+		}
 		let _sevar_397605981 : any;
 		const _seexpr_397605981 = (notenpunkte);
 		if (_seexpr_397605981 === "0") {
@@ -449,8 +453,9 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	 */
 	public ohneTendenz(schuljahr: number): Note {
 		const nke: NoteKatalogEintrag | null = this.daten(schuljahr);
-		if (nke === null || nke.notenpunkte === null)
+		if (nke === null || nke.notenpunkte === null) {
 			return Note.KEINE;
+		}
 		const np: number | null = nke.notenpunkte;
 		let _sevar_240724349 : any;
 		const _seexpr_240724349 = (np);
@@ -527,8 +532,9 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 		} else if (((__param0 !== undefined) && typeof __param0 === "number")) {
 			const schuljahr: number = __param0 as number;
 			const nke: NoteKatalogEintrag | null = this.daten(schuljahr);
-			if (nke !== null)
+			if (nke !== null) {
 				return nke.kuerzel;
+			}
 			return "";
 		} else throw new Error('invalid method overload');
 	}
@@ -551,8 +557,9 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	 */
 	public getNoteSekI(schuljahr: number): number | null {
 		const nke: NoteKatalogEintrag | null = this.daten(schuljahr);
-		if (nke === null)
+		if (nke === null) {
 			return null;
+		}
 		const np: number | null = nke.notenpunkte;
 		let _sevar_606963213 : any;
 		const _seexpr_606963213 = (np);
@@ -603,8 +610,9 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	 */
 	public getNoteKuerzel(schuljahr: number): string | null {
 		const nke: NoteKatalogEintrag | null = this.daten(schuljahr);
-		if (nke === null)
+		if (nke === null) {
 			return null;
+		}
 		return nke.kuerzel;
 	}
 
@@ -617,8 +625,9 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	 */
 	public getNoteText(schuljahr: number): string | null {
 		const nke: NoteKatalogEintrag | null = this.daten(schuljahr);
-		if (nke === null)
+		if (nke === null) {
 			return null;
+		}
 		return nke.text;
 	}
 
@@ -631,8 +640,9 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	 */
 	public getNoteTextZeugnis(schuljahr: number): string | null {
 		const nke: NoteKatalogEintrag | null = this.daten(schuljahr);
-		if (nke === null)
+		if (nke === null) {
 			return null;
+		}
 		return nke.textZeugnis;
 	}
 
@@ -645,14 +655,17 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	 */
 	public getNotenpunkteZweistellig(schuljahr: number): string | null {
 		const nke: NoteKatalogEintrag | null = this.daten(schuljahr);
-		if (nke === null)
+		if (nke === null) {
 			return null;
+		}
 		const np: number | null = nke.notenpunkte;
-		if ((np === null) || (np < 0) || (np > 15))
+		if ((np === null) || (np < 0) || (np > 15)) {
 			return null;
+		}
 		let notenpunkte: string | null = np.toString();
-		if (notenpunkte.length === 1)
+		if (notenpunkte.length === 1) {
 			notenpunkte = "0" + notenpunkte;
+		}
 		return notenpunkte;
 	}
 
@@ -677,13 +690,16 @@ export class Note extends JavaEnum<Note> implements CoreType<NoteKatalogEintrag,
 	 */
 	public static getPunkteFromNotenkuerzel(notenkuerzel: string, schuljahr: number): number | null {
 		const note: Note = Note.fromKuerzel(notenkuerzel);
-		if (!note.istNote(schuljahr))
+		if (!note.istNote(schuljahr)) {
 			return null;
+		}
 		const nke: NoteKatalogEintrag | null = note.daten(schuljahr);
-		if (nke === null)
+		if (nke === null) {
 			return null;
-		if (nke.notenpunkte === null)
+		}
+		if (nke.notenpunkte === null) {
 			return null;
+		}
 		return nke.notenpunkte;
 	}
 

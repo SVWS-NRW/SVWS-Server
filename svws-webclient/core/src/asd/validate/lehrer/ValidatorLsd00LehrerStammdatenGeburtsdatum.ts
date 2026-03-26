@@ -8,7 +8,7 @@ import { Validator } from '../../../asd/validate/Validator';
 export class ValidatorLsd00LehrerStammdatenGeburtsdatum extends Validator {
 
 	/**
-	 * Das Geburtsdatumm des Lehrers
+	 * Das Geburtsdatum des Lehrers
 	 */
 	private readonly daten: Supplier<string | null>;
 
@@ -16,7 +16,7 @@ export class ValidatorLsd00LehrerStammdatenGeburtsdatum extends Validator {
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     das Geburtsdatumm des Lehrers
+	 * @param daten     das Geburtsdatum des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
 	public constructor(daten: Supplier<string | null>, kontext: ValidatorKontext) {

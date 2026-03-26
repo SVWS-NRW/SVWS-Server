@@ -153,8 +153,9 @@ public enum KAOAEbene4 implements CoreType<KAOAEbene4KatalogEintrag, KAOAEbene4>
 			final List<KAOAEbene4KatalogEintrag> result = new ArrayList<>();
 			// Iteriere durch die Ebene4-Werte und füge die zulässigen zur Ergebnisliste hinzu.
 			for (final KAOAEbene4KatalogEintrag ebene4HistorienEintrag : KAOAEbene4.data().getEintraegeBySchuljahr(schuljahr)) {
-				if (ebene4HistorienEintrag.zusatzmerkmal.equals(KAOAZusatzmerkmal.data().getWertByID(zusatzmerkmalHistorienEintrag.id).name()))
+				if (ebene4HistorienEintrag.zusatzmerkmal.equals(KAOAZusatzmerkmal.data().getWertByID(zusatzmerkmalHistorienEintrag.id).name())) {
 					result.add(ebene4HistorienEintrag);
+				}
 			}
 			cache.put(zusatzmerkmalHistorienEintrag.id, result);
 		}

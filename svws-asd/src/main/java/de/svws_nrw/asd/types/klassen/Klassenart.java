@@ -82,13 +82,15 @@ public enum Klassenart implements CoreType<KlassenartKatalogEintrag, Klassenart>
 		CoreTypeDataManager.putManager(Klassenart.class, manager);
 		_mapSchulformenByID.clear();
 		_mapBySchuljahrAndSchulform.clear();
-		for (final var ct : data().getWerte())
+		for (final var ct : data().getWerte()) {
 			for (final var e : ct.historie()) {
 				final Set<Schulform> tmpSet = new HashSet<>();
-				for (final var s : e.zulaessig)
+				for (final var s : e.zulaessig) {
 					tmpSet.add(Schulform.data().getWertByBezeichner(s.schulform));
+				}
 				_mapSchulformenByID.put(e.id, tmpSet);
 			}
+		}
 	}
 
 
@@ -114,9 +116,10 @@ public enum Klassenart implements CoreType<KlassenartKatalogEintrag, Klassenart>
 		final KlassenartKatalogEintrag ke = this.daten(schuljahr);
 		if (ke != null) {
 			final Set<Schulform> result = _mapSchulformenByID.get(ke.id);
-			if (result == null)
+			if (result == null) {
 				throw new CoreTypeException(
 						"Fehler beim Prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.".formatted(this.getClass().getSimpleName()));
+			}
 			return result.contains(sf);
 		}
 		return false;
@@ -134,15 +137,18 @@ public enum Klassenart implements CoreType<KlassenartKatalogEintrag, Klassenart>
 	public static @NotNull List<Klassenart> getBySchuljahrAndSchulform(final int schuljahr, final @NotNull Schulform schulform) {
 		final Map<Schulform, List<Klassenart>> mapBySchulform =
 				_mapBySchuljahrAndSchulform.computeIfAbsent(schuljahr, k -> new HashMap<Schulform, List<Klassenart>>());
-		if (mapBySchulform == null)
+		if (mapBySchulform == null) {
 			throw new NullPointerException("computeIfAbsent darf nicht null liefern");
+		}
 		List<Klassenart> result = mapBySchulform.get(schulform);
 		if (result == null) {
 			result = new ArrayList<>();
 			final List<Klassenart> klassenarten = Klassenart.data().getWerteBySchuljahr(schuljahr);
-			for (final @NotNull Klassenart klassenart : klassenarten)
-				if (klassenart.hatSchulform(schuljahr, schulform))
+			for (final @NotNull Klassenart klassenart : klassenarten) {
+				if (klassenart.hatSchulform(schuljahr, schulform)) {
 					result.add(klassenart);
+				}
+			}
 			mapBySchulform.put(schulform, result);
 		}
 		return result;

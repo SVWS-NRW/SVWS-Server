@@ -52,11 +52,14 @@ export class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeft
 	 * @return {@code true}, wenn ein Eintrag mit {@code idGrund} enthalten ist; sonst {@code false}
 	 */
 	private static hatGrund(liste: List<LehrerPersonalabschnittsdatenAnrechnungsstunden> | null, idGrund: number): boolean {
-		if ((liste === null) || liste.isEmpty())
+		if ((liste === null) || liste.isEmpty()) {
 			return false;
-		for (const lpa of liste)
-			if ((lpa !== null) && (lpa.idGrund === idGrund))
+		}
+		for (const lpa of liste) {
+			if ((lpa !== null) && (lpa.idGrund === idGrund)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -75,14 +78,17 @@ export class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeft
 	 */
 	protected pruefe(): boolean {
 		const pss: number | null = this.pflichtstundensoll.get();
-		if (pss === null || pss <= 0.0)
+		if (pss === null || pss <= 0.0) {
 			return true;
+		}
 		const ba: number | null = this.idBeschaeftigungsart.get();
-		if ((ba === null) || (LehrerBeschaeftigungsart.data().getWertByID(ba) as unknown !== LehrerBeschaeftigungsart.TS as unknown))
+		if ((ba === null) || (LehrerBeschaeftigungsart.data().getWertByID(ba) as unknown !== LehrerBeschaeftigungsart.TS as unknown)) {
 			return true;
+		}
 		const es: number | null = this.idEinsatzstatus.get();
-		if ((es !== null) && (LehrerEinsatzstatus.data().getWertByID(es) as unknown !== LehrerEinsatzstatus.A as unknown))
+		if ((es !== null) && (LehrerEinsatzstatus.data().getWertByID(es) as unknown !== LehrerEinsatzstatus.A as unknown)) {
 			return true;
+		}
 		const hatMehr100: boolean = ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell.hatGrund(this.mehrleistungen.get(), 100);
 		const hatMinder240: boolean = ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell.hatGrund(this.minderleistungen.get(), 240);
 		const hatMinder290: boolean = ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell.hatGrund(this.minderleistungen.get(), 290);

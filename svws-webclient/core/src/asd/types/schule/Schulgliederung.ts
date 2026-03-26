@@ -661,10 +661,12 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> implements CoreTy
 	 * @return die Schulgliederung, falls die Schulform gültig ist und ansonsten null
 	 */
 	public static getDefault(sf: Schulform | null): Schulgliederung | null {
-		if (sf === null)
+		if (sf === null) {
 			return null;
-		if ((sf as unknown === Schulform.GY as unknown) || (sf as unknown === Schulform.SK as unknown) || (sf as unknown === Schulform.GM as unknown) || (sf as unknown === Schulform.G as unknown) || (sf as unknown === Schulform.S as unknown) || (sf as unknown === Schulform.PS as unknown) || (sf as unknown === Schulform.V as unknown) || (sf as unknown === Schulform.FW as unknown) || (sf as unknown === Schulform.H as unknown) || (sf as unknown === Schulform.R as unknown) || (sf as unknown === Schulform.GE as unknown) || (sf as unknown === Schulform.SR as unknown) || (sf as unknown === Schulform.SG as unknown))
+		}
+		if ((sf as unknown === Schulform.GY as unknown) || (sf as unknown === Schulform.SK as unknown) || (sf as unknown === Schulform.GM as unknown) || (sf as unknown === Schulform.G as unknown) || (sf as unknown === Schulform.S as unknown) || (sf as unknown === Schulform.PS as unknown) || (sf as unknown === Schulform.V as unknown) || (sf as unknown === Schulform.FW as unknown) || (sf as unknown === Schulform.H as unknown) || (sf as unknown === Schulform.R as unknown) || (sf as unknown === Schulform.GE as unknown) || (sf as unknown === Schulform.SR as unknown) || (sf as unknown === Schulform.SG as unknown)) {
 			return Schulgliederung.DEFAULT;
+		}
 		return null;
 	}
 

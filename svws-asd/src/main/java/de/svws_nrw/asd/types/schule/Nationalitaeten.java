@@ -91,11 +91,15 @@ public class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 	 * @return die Map von den Kürzeln der Nationalitäten auf die zugehörigen Nationalitäten
 	 */
 	private static @NotNull HashMap<String, Nationalitaeten> getMapISO3() {
-		if (_mapISO3.isEmpty())
-			for (final Nationalitaeten s : Nationalitaeten.values())
-				for (final NationalitaetenKatalogEintrag kat : s.historie())
-					if (kat.iso3 != null)
+		if (_mapISO3.isEmpty()) {
+			for (final Nationalitaeten s : Nationalitaeten.values()) {
+				for (final NationalitaetenKatalogEintrag kat : s.historie()) {
+					if (kat.iso3 != null) {
 						_mapISO3.put(kat.iso3, s);
+					}
+				}
+			}
+		}
 		return _mapISO3;
 	}
 
@@ -108,10 +112,13 @@ public class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 	 */
 	private static @NotNull HashMap<String, Nationalitaeten> getMapISO2() {
 		if (_mapISO2.isEmpty()) {
-			for (final Nationalitaeten s : Nationalitaeten.values())
-				for (final NationalitaetenKatalogEintrag kat : s.historie())
-					if (kat.iso2 != null)
+			for (final Nationalitaeten s : Nationalitaeten.values()) {
+				for (final NationalitaetenKatalogEintrag kat : s.historie()) {
+					if (kat.iso2 != null) {
 						_mapISO2.put(kat.iso2, s);
+					}
+				}
+			}
 		}
 		return _mapISO2;
 	}
@@ -125,10 +132,13 @@ public class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 	 */
 	private static @NotNull HashMap<String, Nationalitaeten> getMapDESTATIS() {
 		if (_mapDESTATIS.isEmpty()) {
-			for (final Nationalitaeten s : Nationalitaeten.values())
-				for (final NationalitaetenKatalogEintrag kat : s.historie())
-					if (kat.codeDEStatis != null)
+			for (final Nationalitaeten s : Nationalitaeten.values()) {
+				for (final NationalitaetenKatalogEintrag kat : s.historie()) {
+					if (kat.codeDEStatis != null) {
 						_mapDESTATIS.put(kat.codeDEStatis, s);
+					}
+				}
+			}
 		}
 		return _mapDESTATIS;
 	}
@@ -174,8 +184,9 @@ public class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 	 */
 	public static @NotNull Nationalitaeten getDEU() {
 		final Nationalitaeten deu = getByISO3("DEU");
-		if (deu == null)
+		if (deu == null) {
 			throw new CoreTypeException("Core-Type nicht korrekt initialisiert. DEU kann nicht gefunden werden.");
+		}
 		return deu;
 	}
 

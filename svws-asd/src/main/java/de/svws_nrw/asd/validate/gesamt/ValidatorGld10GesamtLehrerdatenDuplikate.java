@@ -38,8 +38,9 @@ public final class ValidatorGld10GesamtLehrerdatenDuplikate extends Validator {
 		final @NotNull List<LehrerStatistikGesamt> list = listLehrer.get();
 
 		// Bei einer leeren Liste ist hier nichts zu prüfen. Dies ist ein Spezialfall, der nur bei einer neu angelegten Schul-Datenbank vorkommen sollte.
-		if (list.isEmpty())
+		if (list.isEmpty()) {
 			return success;
+		}
 
 		// Gehe die Liste der Lehrer durch und speichere diese in einer HashMap, um Duplikate zu erkennen
 		final @NotNull Set<Long> ids = new HashSet<>();

@@ -42,8 +42,9 @@ export class ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRechtsverh
 
 	protected pruefe(): boolean {
 		const schuljahresabschnitt: Schuljahresabschnitt | null = this.kontext().getSchuljahresabschnittByID(this._idSchuljahresabschnitt.get());
-		if (schuljahresabschnitt === null)
+		if (schuljahresabschnitt === null) {
 			return false;
+		}
 		const schuljahr: number = schuljahresabschnitt.schuljahr;
 		const rv: LehrerRechtsverhaeltnis | null = LehrerRechtsverhaeltnis.data().getWertByID(this._idRechtsverhaeltnis.get());
 		if (JavaObject.equalsTranspiler(rv, (LehrerRechtsverhaeltnis.W))) {

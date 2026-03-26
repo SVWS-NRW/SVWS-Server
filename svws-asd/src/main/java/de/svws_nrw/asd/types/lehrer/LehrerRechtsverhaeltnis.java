@@ -69,8 +69,9 @@ public enum LehrerRechtsverhaeltnis implements @NotNull CoreType<LehrerRechtsver
 	 * @return das zugehörige Rechtsverhältnis oder null
 	 */
 	public static LehrerRechtsverhaeltnis getBySchluessel(final String schluessel) {
-		if (schluessel == null)
+		if (schluessel == null) {
 			return null;
+		}
 		return LehrerRechtsverhaeltnis.data().getWertBySchluessel(schluessel);
 	}
 

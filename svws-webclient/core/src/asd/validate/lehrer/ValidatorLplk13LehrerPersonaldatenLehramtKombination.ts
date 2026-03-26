@@ -30,12 +30,15 @@ export class ValidatorLplk13LehrerPersonaldatenLehramtKombination extends Valida
 		let lehramtId98Vorhanden: boolean = false;
 		let anderesLehramtVorhanden: boolean = false;
 		const lehrerLehramtKatalogEintrag: LehrerLehramtKatalogEintrag | null = LehrerLehramt.ID_98.daten(this.kontext().getSchuljahr());
-		if (lehrerLehramtKatalogEintrag !== null)
-			for (const lehrerLehramtEintrag of this.lehraemter.get())
-				if (lehrerLehramtKatalogEintrag.id === LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+		if (lehrerLehramtKatalogEintrag !== null) {
+			for (const lehrerLehramtEintrag of this.lehraemter.get()) {
+				if (lehrerLehramtKatalogEintrag.id === LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id) {
 					lehramtId98Vorhanden = true;
-				else
+				} else {
 					anderesLehramtVorhanden = true;
+				}
+			}
+		}
 		if (lehramtId98Vorhanden && anderesLehramtVorhanden) {
 			this.addFehler(3, "Neben dem Lehramtseintrag 'Lehramtsanwärter/-in / Studienreferendar/-in' dürfen keine weiteren Lehramtseinträge vorliegen. Bitte überprüfen Sie Ihre Angaben.");
 			return false;

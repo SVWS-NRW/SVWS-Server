@@ -206,8 +206,9 @@ export class Fachgruppe extends JavaEnum<Fachgruppe> implements CoreType<Fachgru
 	 */
 	public getFarbe(schuljahr: number): RGBFarbe {
 		const fgke: FachgruppeKatalogEintrag | null = Fachgruppe.data().getEintragBySchuljahrUndWert(schuljahr, this);
-		if (fgke === null)
+		if (fgke === null) {
 			return new RGBFarbe();
+		}
 		return fgke.farbe;
 	}
 

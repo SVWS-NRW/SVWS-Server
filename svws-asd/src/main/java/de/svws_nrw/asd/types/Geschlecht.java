@@ -57,8 +57,9 @@ public enum Geschlecht {
 	 * @return das Geschlecht oder null, falls die ID fehlerhaft ist
 	 */
 	public static Geschlecht fromValue(final Integer value) {
-		if (value == null)
+		if (value == null) {
 			return null;
+		}
 		switch (value) {
 			case 3: return Geschlecht.M;
 			case 4: return Geschlecht.W;
@@ -80,8 +81,9 @@ public enum Geschlecht {
 	 * @return das Geschlecht als Type
 	 */
 	public static @NotNull Geschlecht fromStringValue(final String text) {
-		if ((text == null) || "".equals(text))
+		if ((text == null) || "".equals(text)) {
 			return Geschlecht.X;
+		}
 		final String upperValue = text.toUpperCase();
 		switch (upperValue) {
 			case "MÄNNLICH", "MAENNLICH", "M":

@@ -106,8 +106,9 @@ public abstract class BasicValidator {
 	 * @param art   die Fehlerart, die für die Überprüfung genutzt wird, oder null
 	 */
 	protected void updateFehlerart(final @NotNull ValidatorFehlerart art) {
-		if (this._fehlerart.ordinal() > art.ordinal())
+		if (this._fehlerart.ordinal() > art.ordinal()) {
 			this._fehlerart = art;
+		}
 	}
 
 

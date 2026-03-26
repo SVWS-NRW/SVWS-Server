@@ -116,8 +116,9 @@ public enum Schulform implements @NotNull CoreType<SchulformKatalogEintrag, Schu
 			for (int i = result.size() - 1; i >= 0; i--) {
 				final @NotNull Schulform sf = result.get(i);
 				final SchulformKatalogEintrag eintrag = data().getEintragBySchuljahrUndWert(schuljahr, sf);
-				if ((eintrag == null) || (!eintrag.hatGymOb))
+				if ((eintrag == null) || (!eintrag.hatGymOb)) {
 					result.remove(i);
+				}
 			}
 			_mapSchuljahrToSchulformenMitGymOb.put(schuljahr, result);
 		}
@@ -137,11 +138,14 @@ public enum Schulform implements @NotNull CoreType<SchulformKatalogEintrag, Schu
 			for (int i = result.size() - 1; i >= 0; i--) {
 				final @NotNull Schulform sf = result.get(i);
 				boolean hatGymOb = false;
-				for (final SchulformKatalogEintrag sfke : sf.historie())
-					if (sfke.hatGymOb)
+				for (final SchulformKatalogEintrag sfke : sf.historie()) {
+					if (sfke.hatGymOb) {
 						hatGymOb = true;
-				if (!hatGymOb)
+					}
+				}
+				if (!hatGymOb) {
 					result.remove(i);
+				}
 			}
 			_listSchulformenMitGymOb = result;
 		}

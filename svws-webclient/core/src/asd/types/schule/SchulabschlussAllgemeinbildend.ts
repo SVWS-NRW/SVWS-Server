@@ -141,11 +141,13 @@ export class SchulabschlussAllgemeinbildend extends JavaEnum<SchulabschlussAllge
 	 * @return true, falls die Abschlüsse übereinstimmen und ansonsten false
 	 */
 	public is(kuerzel: string | null): boolean {
-		if (kuerzel === null)
+		if (kuerzel === null) {
 			return false;
+		}
 		const other: SchulabschlussAllgemeinbildend | null = SchulabschlussAllgemeinbildend.data().getWertByKuerzel(kuerzel);
-		if (other === null)
+		if (other === null) {
 			return false;
+		}
 		return (other as unknown === this as unknown);
 	}
 

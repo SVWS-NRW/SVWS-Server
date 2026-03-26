@@ -40,8 +40,9 @@ public final class ValidatorGld11GesamtLehrerdatenDuplikate extends Validator {
 		final @NotNull List<LehrerStatistikGesamt> list = listLehrer.get();
 
 		// Bei einer leeren Liste ist hier nichts zu prüfen. Dies ist ein Spezialfall, der nur bei einer neu angelegten Schul-Datenbank vorkommen sollte.
-		if (list.isEmpty())
+		if (list.isEmpty()) {
 			return success;
+		}
 
 		// Gehe die Liste der Lehrer durch und speichere diese in einer HashMap, um Duplikate zu erkennen
 		final @NotNull Map<String, LehrerStatistikGesamt> keys = new HashMap<>();
@@ -53,8 +54,9 @@ public final class ValidatorGld11GesamtLehrerdatenDuplikate extends Validator {
 			// Füge die Lehrerstammdaten in die Map ein, damit dieser Datensatz zukünftig bei der Duplikaterkennung berücksichtigt wird
 			// In der Map bereits existierende Stammdaten mit dem gleichen Key werden dabei zurückgegeben.
 			final LehrerStatistikGesamt other = keys.put(key, lehrer);
-			if (other == null)
+			if (other == null) {
 				continue;
+			}
 
 			final String fehlermeldung = "Lehrkäfte: Bei den IDs " + lehrer.id + " und " + other.id
 					+ " kommt die Kombination aus Nachname '" + lehrer.nachname + "', Vorname '" + lehrer.vorname + "', Geburtsdatum '" + lehrer.geburtsdatum

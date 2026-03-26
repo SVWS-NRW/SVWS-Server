@@ -91,11 +91,13 @@ public final class ValidatorManager {
 			for (final Entry<String, List<PairNN<Integer, Integer>>> zeitraeume : mapZeitraeumeBySchulform.entrySet()) {
 				final @NotNull List<CoreTypeData> l = new ArrayList<>();
 				final Schulform sf = Schulform.valueOf(zeitraeume.getKey());
-				if (sf != null)
+				if (sf != null) {
 					l.addAll(sf.historie());
-				if (!pruefeAufZeitraumueberdeckung(validatorName, createSchulformZeitraumListe(l), zeitraeume.getValue()))
+				}
+				if (!pruefeAufZeitraumueberdeckung(validatorName, createSchulformZeitraumListe(l), zeitraeume.getValue())) {
 					throw new CoreTypeException(
 							"Fehler beim Prüfen der Schulform. Der Validator %s hat ungültige Schulform-Zeitraum-Kombinationen.".formatted(validatorName));
+				}
 			}
 		}
 	}
@@ -165,8 +167,9 @@ public final class ValidatorManager {
 	 */
 	public static @NotNull List<ValidatorFehlerartKontext> getValidatorHistorie(final @NotNull String validator) {
 		final List<ValidatorFehlerartKontext> tmp = _data.get(validator);
-		if (tmp == null)
+		if (tmp == null) {
 			throw new CoreTypeException("Der Validator " + validator + " existiert nicht in 'validatoren.json'.");
+		}
 		return tmp;
 	}
 
@@ -182,8 +185,9 @@ public final class ValidatorManager {
 	private @NotNull HashMap<String, ValidatorFehlerart> getValidatornameToFehlerartCache(final int schuljahr) {
 		final @NotNull HashMap<String, ValidatorFehlerart> mapValidatorToFehlerart = computeIfAbsentValidatornameToFehlerart(schuljahr);
 		// Prüfe, ob die Einträge im Cache sind. Wenn nicht, dann erzeuge die Daten im Cache
-		if (mapValidatorToFehlerart.isEmpty())
+		if (mapValidatorToFehlerart.isEmpty()) {
 			createCache(schuljahr);
+		}
 		return mapValidatorToFehlerart;
 	}
 
@@ -216,8 +220,9 @@ public final class ValidatorManager {
 	private @NotNull HashMap<String, String> getValidatornameToFehlercodePraefixCache(final int schuljahr) {
 		final @NotNull HashMap<String, String> mapValidatorToFehlercodePraefix = computeIfAbsentValidatornameToFehlercodePraefix(schuljahr);
 		// Prüfe, ob die Einträge im Cache sind. Wenn nicht, dann erzeuge die Daten im Cache
-		if (mapValidatorToFehlercodePraefix.isEmpty())
+		if (mapValidatorToFehlercodePraefix.isEmpty()) {
 			createCache(schuljahr);
+		}
 		return mapValidatorToFehlercodePraefix;
 	}
 
@@ -298,9 +303,10 @@ public final class ValidatorManager {
 				final boolean hasHart = eintrag.muss.contains(_schulform.name());
 				final boolean hasMuss = eintrag.kann.contains(_schulform.name());
 				final boolean hasHinweis = eintrag.hinweis.contains(_schulform.name());
-				if ((hasHart && hasMuss) || (hasMuss && hasHinweis) || (hasHart && hasHinweis))
+				if ((hasHart && hasMuss) || (hasMuss && hasHinweis) || (hasHart && hasHinweis)) {
 					throw new CoreTypeException(
 							"Ein Validator kann bei einer Schulform nicht bei einem Prüfschritt gleichzeitig bei mehreren Fehlerarten aktiv sein.");
+				}
 
 				// ... überprüfe Umgebung und Schuljahr ...
 				final boolean validatorAktivInUmgebungUndSchuljahr = (_isZebras ? eintrag.zebras : eintrag.svws)
@@ -308,21 +314,23 @@ public final class ValidatorManager {
 						&& ((eintrag.gueltigBis == null) || (schuljahr <= eintrag.gueltigBis));
 				if (validatorAktivInUmgebungUndSchuljahr) {
 					// ... ob das Fehlercode-Präfix eindeutig ist (aber nur für den Historieneinträge des Schuljahres des gleichen Core-Type-Wertes)
-					if (praefixe.contains(eintrag.praefix))
+					if (praefixe.contains(eintrag.praefix)) {
 						throw new CoreTypeException(
 								"Das Fehlercode-Präfix eines Validators muss eindeutig sein. Das Präfix %s wurde mehrfach verwendet."
 										.formatted(eintrag.praefix));
+					}
 					praefixe.add(eintrag.praefix);
 					mapValidatorToFehlercodePraefix.put(validatorName, eintrag.praefix);
 					// ... und befülle den Cache
-					if (hasHart)
+					if (hasHart) {
 						mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.MUSS);
-					else if (hasMuss)
+					} else if (hasMuss) {
 						mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.KANN);
-					else if (hasHinweis)
+					} else if (hasHinweis) {
 						mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.HINWEIS);
-					else
+					} else {
 						mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.UNGENUTZT);
+					}
 				}
 			}
 		}
@@ -384,8 +392,9 @@ public final class ValidatorManager {
 	 */
 	public @NotNull String getFehlercodePraefixBySchuljahrAndValidatorName(final int schuljahr, final @NotNull String validator) {
 		final String code = getValidatornameToFehlercodePraefixCache(schuljahr).get(validator);
-		if (code == null)
+		if (code == null) {
 			throw new ValidatorException("Fehler beim Zugriff auf den Fehlercode-Präfix für den Validator %s im Schuljahr %d.".formatted(validator, schuljahr));
+		}
 		return code;
 	}
 
@@ -429,8 +438,9 @@ public final class ValidatorManager {
 	 */
 	private static @NotNull List<PairNN<Integer, Integer>> createSchulformZeitraumListe(final @NotNull List<CoreTypeData> historie) {
 		final @NotNull List<PairNN<Integer, Integer>> zeitraeume = new ArrayList<>();
-		for (final @NotNull CoreTypeData eintrag : historie)
+		for (final @NotNull CoreTypeData eintrag : historie) {
 			zeitraeume.add(createZeitraum(eintrag.gueltigVon, eintrag.gueltigBis));
+		}
 		return zeitraeume;
 	}
 
@@ -467,27 +477,31 @@ public final class ValidatorManager {
 			final @NotNull List<PairNN<Integer, Integer>> obermenge,
 			final @NotNull List<PairNN<Integer, Integer>> untermenge) {
 		// leere Listen beinhalten nichts -> return false, falls untermenge nicht auch leer ist, sonst true
-		if (obermenge.isEmpty())
+		if (obermenge.isEmpty()) {
 			return untermenge.isEmpty();
+		}
 
 		final List<Integer> listObermenge = getZeitraumListe(validatorName, obermenge);
 		final List<Integer> listUntermenge = getZeitraumListe(validatorName, untermenge);
 		int iObermenge = 0;
 		int iUntermenge = 0;
 		do {
-			if (iUntermenge >= listUntermenge.size())
+			if (iUntermenge >= listUntermenge.size()) {
 				return true;
-			if (iObermenge >= listObermenge.size())
+			}
+			if (iObermenge >= listObermenge.size()) {
 				return false;
+			}
 			// zum nächsten Scanpoint wechseln
 			if (listObermenge.get(iObermenge).intValue() == listUntermenge.get(iUntermenge).intValue()) {
 				iObermenge++;
 				iUntermenge++;
 			} else {
-				if (listObermenge.get(iObermenge) < listUntermenge.get(iUntermenge))
+				if (listObermenge.get(iObermenge) < listUntermenge.get(iUntermenge)) {
 					iObermenge++;
-				else
+				} else {
 					iUntermenge++;
+				}
 			}
 			// Test am Scanpoint, Abbruch sobald feststeht, dass untermenge keine Untermenge ist.
 			// Ergibt die modulo-2 Berechnung des Index an dieser Stelle am Sccanpoint das Ergebnis 0
@@ -520,9 +534,10 @@ public final class ValidatorManager {
 		list.add(vbs.get(0).a); // Eintragen des Beginns
 		while (i + 1 < vbs.size()) {
 			// Prüfe auf überlappende Zeiträume, die nicht erlaubt sind.
-			if (vbs.get(i).b > vbs.get(i + 1).a)
+			if (vbs.get(i).b > vbs.get(i + 1).a) {
 				throw new CoreTypeException("Fehler beim prüfen der Zeiträume bei dem Validator '%s'. Die Zeiträume von %s sind überlappend definiert."
 						.formatted(validatorName, vbs.get(0).getClass().getSimpleName()));
+			}
 			if (vbs.get(i).b < vbs.get(i + 1).a) {
 				// Lücke gefunden
 				list.add(vbs.get(i).b);

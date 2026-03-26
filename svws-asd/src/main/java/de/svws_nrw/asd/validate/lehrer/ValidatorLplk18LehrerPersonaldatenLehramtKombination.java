@@ -39,12 +39,15 @@ public final class ValidatorLplk18LehrerPersonaldatenLehramtKombination extends 
 		boolean anderesLehramtVorhanden = false;
 		final LehrerLehramtKatalogEintrag lehrerLehramtKatalogEintrag = LehrerLehramt.ID_63.daten(this.kontext().getSchuljahr());
 
-		if (lehrerLehramtKatalogEintrag != null)
-			for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : this.lehraemter.get())
-				if (lehrerLehramtKatalogEintrag.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+		if (lehrerLehramtKatalogEintrag != null) {
+			for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : this.lehraemter.get()) {
+				if (lehrerLehramtKatalogEintrag.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id) {
 					lehramtId63Vorhanden = true;
-				else
+				} else {
 					anderesLehramtVorhanden = true;
+				}
+			}
+		}
 
 		if (lehramtId63Vorhanden && anderesLehramtVorhanden) {
 			this.addFehler(8,

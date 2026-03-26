@@ -655,13 +655,15 @@ public enum Schulgliederung implements @NotNull CoreType<SchulgliederungKatalogE
 	 * @return die Schulgliederung, falls die Schulform gültig ist und ansonsten null
 	 */
 	public static Schulgliederung getDefault(final Schulform sf) {
-		if (sf == null)
+		if (sf == null) {
 			return null;
+		}
 		if ((sf == Schulform.GY) || (sf == Schulform.SK) || (sf == Schulform.GM) || (sf == Schulform.G)
 				|| (sf == Schulform.S) || (sf == Schulform.PS) || (sf == Schulform.V) || (sf == Schulform.FW)
 				|| (sf == Schulform.H) || (sf == Schulform.R) || (sf == Schulform.GE) || (sf == Schulform.SR)
-				|| (sf == Schulform.SG))
+				|| (sf == Schulform.SG)) {
 			return Schulgliederung.DEFAULT;
+		}
 		return null;
 	}
 

@@ -142,8 +142,9 @@ public enum Fachgruppe implements CoreType<FachgruppeKatalogEintrag, Fachgruppe>
 	 */
 	public @NotNull RGBFarbe getFarbe(final int schuljahr) {
 		final FachgruppeKatalogEintrag fgke = Fachgruppe.data().getEintragBySchuljahrUndWert(schuljahr, this);
-		if (fgke == null)
+		if (fgke == null) {
 			return new RGBFarbe();
+		}
 		return fgke.farbe;
 	}
 

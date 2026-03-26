@@ -32,7 +32,7 @@ public class ValidatorKontext {
 
 
 	/**
-	 * Erzeugt einen neuen Kontext für Validatoren. Prüfe auch, ob die Stammdaten der Schule eine Valiadierung möglich machen
+	 * Erzeugt einen neuen Kontext für Validatoren. Prüfe auch, ob die Stammdaten der Schule eine Validierung möglich machen
 	 * oder aufgrund gravierender Fehler eine Prüfungen unmöglich machen.
 	 *
 	 * @param schulNr                         die Schulnummer der Schule
@@ -47,8 +47,9 @@ public class ValidatorKontext {
 		_schulNr = schulNr;
 		_schulform = schulform;
 		_idSchuljahresabsbschnittAktuell = idSchuljahresabsbschnittAktuell;
-		for (final Schuljahresabschnitt entry : abschnitte)
+		for (final Schuljahresabschnitt entry : abschnitte) {
 			_mapSchuljahresabschnitte.put(entry.id, entry);
+		}
 
 		_validatorManager = ValidatorManager.getManager(schulform, zebras);
 	}
@@ -70,8 +71,9 @@ public class ValidatorKontext {
 	 */
 	public int getSchuljahr() {
 		final Schuljahresabschnitt abschnitt = getSchuljahresabschnitt();
-		if (abschnitt != null)
+		if (abschnitt != null) {
 			return abschnitt.schuljahr;
+		}
 		//sollte nie erreicht werden!
 		throw new ValidatorException("Es ist kein gültiger Schuljahresabschnitt in den SchuleStammdaten gesetzt");
 	}

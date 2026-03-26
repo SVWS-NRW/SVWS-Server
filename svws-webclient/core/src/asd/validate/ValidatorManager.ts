@@ -97,10 +97,12 @@ export class ValidatorManager extends JavaObject {
 			for (const zeitraeume of mapZeitraeumeBySchulform.entrySet()) {
 				const l: List<CoreTypeData> = new ArrayList<CoreTypeData>();
 				const sf: Schulform | null = Schulform.valueOf(zeitraeume.getKey());
-				if (sf !== null)
+				if (sf !== null) {
 					l.addAll(sf.historie());
-				if (!ValidatorManager.pruefeAufZeitraumueberdeckung(validatorName, ValidatorManager.createSchulformZeitraumListe(l), zeitraeume.getValue()))
+				}
+				if (!ValidatorManager.pruefeAufZeitraumueberdeckung(validatorName, ValidatorManager.createSchulformZeitraumListe(l), zeitraeume.getValue())) {
 					throw new CoreTypeException(JavaString.format("Fehler beim Prüfen der Schulform. Der Validator %s hat ungültige Schulform-Zeitraum-Kombinationen.", validatorName))
+				}
 			}
 		}
 	}
@@ -165,8 +167,9 @@ export class ValidatorManager extends JavaObject {
 	 */
 	public static getValidatorHistorie(validator: string): List<ValidatorFehlerartKontext> {
 		const tmp: List<ValidatorFehlerartKontext> | null = ValidatorManager._data.get(validator);
-		if (tmp === null)
+		if (tmp === null) {
 			throw new CoreTypeException("Der Validator " + validator + " existiert nicht in 'validatoren.json'.")
+		}
 		return tmp;
 	}
 
@@ -180,8 +183,9 @@ export class ValidatorManager extends JavaObject {
 	 */
 	private getValidatornameToFehlerartCache(schuljahr: number): HashMap<string, ValidatorFehlerart> {
 		const mapValidatorToFehlerart: HashMap<string, ValidatorFehlerart> = this.computeIfAbsentValidatornameToFehlerart(schuljahr);
-		if (mapValidatorToFehlerart.isEmpty())
+		if (mapValidatorToFehlerart.isEmpty()) {
 			this.createCache(schuljahr);
+		}
 		return mapValidatorToFehlerart;
 	}
 
@@ -211,8 +215,9 @@ export class ValidatorManager extends JavaObject {
 	 */
 	private getValidatornameToFehlercodePraefixCache(schuljahr: number): HashMap<string, string> {
 		const mapValidatorToFehlercodePraefix: HashMap<string, string> = this.computeIfAbsentValidatornameToFehlercodePraefix(schuljahr);
-		if (mapValidatorToFehlercodePraefix.isEmpty())
+		if (mapValidatorToFehlercodePraefix.isEmpty()) {
 			this.createCache(schuljahr);
+		}
 		return mapValidatorToFehlercodePraefix;
 	}
 
@@ -283,24 +288,27 @@ export class ValidatorManager extends JavaObject {
 				const hasHart: boolean = eintrag.muss.contains(this._schulform.name());
 				const hasMuss: boolean = eintrag.kann.contains(this._schulform.name());
 				const hasHinweis: boolean = eintrag.hinweis.contains(this._schulform.name());
-				if ((hasHart && hasMuss) || (hasMuss && hasHinweis) || (hasHart && hasHinweis))
+				if ((hasHart && hasMuss) || (hasMuss && hasHinweis) || (hasHart && hasHinweis)) {
 					throw new CoreTypeException("Ein Validator kann bei einer Schulform nicht bei einem Prüfschritt gleichzeitig bei mehreren Fehlerarten aktiv sein.")
+				}
 				const validatorAktivInUmgebungUndSchuljahr: boolean = (this._isZebras ? eintrag.zebras : eintrag.svws) && ((eintrag.gueltigVon === null) || (eintrag.gueltigVon <= schuljahr)) && ((eintrag.gueltigBis === null) || (schuljahr <= eintrag.gueltigBis));
 				if (validatorAktivInUmgebungUndSchuljahr) {
-					if (praefixe.contains(eintrag.praefix))
+					if (praefixe.contains(eintrag.praefix)) {
 						throw new CoreTypeException(JavaString.format("Das Fehlercode-Präfix eines Validators muss eindeutig sein. Das Präfix %s wurde mehrfach verwendet.", eintrag.praefix))
+					}
 					praefixe.add(eintrag.praefix);
 					mapValidatorToFehlercodePraefix.put(validatorName, eintrag.praefix);
-					if (hasHart)
+					if (hasHart) {
 						mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.MUSS);
-					else
-						if (hasMuss)
+					} else
+						if (hasMuss) {
 							mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.KANN);
-						else
-							if (hasHinweis)
+						} else
+							if (hasHinweis) {
 								mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.HINWEIS);
-							else
+							} else {
 								mapValidatorToFehlerart.put(validatorName, ValidatorFehlerart.UNGENUTZT);
+							}
 				}
 			}
 		}
@@ -356,8 +364,9 @@ export class ValidatorManager extends JavaObject {
 	 */
 	public getFehlercodePraefixBySchuljahrAndValidatorName(schuljahr: number, validator: string): string {
 		const code: string | null = this.getValidatornameToFehlercodePraefixCache(schuljahr).get(validator);
-		if (code === null)
+		if (code === null) {
 			throw new ValidatorException(JavaString.format("Fehler beim Zugriff auf den Fehlercode-Präfix für den Validator %s im Schuljahr %d.", validator, schuljahr))
+		}
 		return code;
 	}
 
@@ -397,8 +406,9 @@ export class ValidatorManager extends JavaObject {
 	 */
 	private static createSchulformZeitraumListe(historie: List<CoreTypeData>): List<PairNN<number, number>> {
 		const zeitraeume: List<PairNN<number, number>> = new ArrayList<PairNN<number, number>>();
-		for (const eintrag of historie)
+		for (const eintrag of historie) {
 			zeitraeume.add(ValidatorManager.createZeitraum(eintrag.gueltigVon, eintrag.gueltigBis));
+		}
 		return zeitraeume;
 	}
 
@@ -431,25 +441,29 @@ export class ValidatorManager extends JavaObject {
 	 * @return true, falls untermenge wirklich eine Untermenge von Obermenge ist und ansonsten false
 	 */
 	private static pruefeAufZeitraumueberdeckung(validatorName: string, obermenge: List<PairNN<number, number>>, untermenge: List<PairNN<number, number>>): boolean {
-		if (obermenge.isEmpty())
+		if (obermenge.isEmpty()) {
 			return untermenge.isEmpty();
+		}
 		const listObermenge: List<number> | null = ValidatorManager.getZeitraumListe(validatorName, obermenge);
 		const listUntermenge: List<number> | null = ValidatorManager.getZeitraumListe(validatorName, untermenge);
 		let iObermenge: number = 0;
 		let iUntermenge: number = 0;
 		do {
-			if (iUntermenge >= listUntermenge.size())
+			if (iUntermenge >= listUntermenge.size()) {
 				return true;
-			if (iObermenge >= listObermenge.size())
+			}
+			if (iObermenge >= listObermenge.size()) {
 				return false;
+			}
 			if (listObermenge.get(iObermenge) === listUntermenge.get(iUntermenge)) {
 				iObermenge++;
 				iUntermenge++;
 			} else {
-				if (listObermenge.get(iObermenge) < listUntermenge.get(iUntermenge))
+				if (listObermenge.get(iObermenge) < listUntermenge.get(iUntermenge)) {
 					iObermenge++;
-				else
+				} else {
 					iUntermenge++;
+				}
 			}
 		} while ((iObermenge % 2 === 1) || (iUntermenge % 2 === 0));
 		return false;
@@ -473,8 +487,9 @@ export class ValidatorManager extends JavaObject {
 		let i: number = 0;
 		list.add(vbs.get(0).a);
 		while (i + 1 < vbs.size()) {
-			if (vbs.get(i).b > vbs.get(i + 1).a)
+			if (vbs.get(i).b > vbs.get(i + 1).a) {
 				throw new CoreTypeException(JavaString.format("Fehler beim prüfen der Zeiträume bei dem Validator '%s'. Die Zeiträume von %s sind überlappend definiert.", validatorName, vbs.get(0).getClass().getSimpleName()))
+			}
 			if (vbs.get(i).b < vbs.get(i + 1).a) {
 				list.add(vbs.get(i).b);
 				list.add(vbs.get(i + 1).a);

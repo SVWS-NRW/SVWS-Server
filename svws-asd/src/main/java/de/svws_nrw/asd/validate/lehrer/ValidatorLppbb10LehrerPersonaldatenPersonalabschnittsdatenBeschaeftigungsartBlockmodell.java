@@ -68,11 +68,14 @@ public final class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBes
 	 * @return {@code true}, wenn ein Eintrag mit {@code idGrund} enthalten ist; sonst {@code false}
 	 */
 	private static boolean hatGrund(final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> liste, final long idGrund) {
-		if ((liste == null) || liste.isEmpty())
+		if ((liste == null) || liste.isEmpty()) {
 			return false;
-		for (final LehrerPersonalabschnittsdatenAnrechnungsstunden lpa : liste)
-			if ((lpa != null) && (lpa.idGrund == idGrund))
+		}
+		for (final LehrerPersonalabschnittsdatenAnrechnungsstunden lpa : liste) {
+			if ((lpa != null) && (lpa.idGrund == idGrund)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -92,16 +95,19 @@ public final class ValidatorLppbb10LehrerPersonaldatenPersonalabschnittsdatenBes
 	@Override
 	protected boolean pruefe() {
 		final Double pss = pflichtstundensoll.get();
-		if (pss == null || pss <= 0.0)
+		if (pss == null || pss <= 0.0) {
 			return true;
+		}
 
 		final Long ba = idBeschaeftigungsart.get();
-		if ((ba == null) || (LehrerBeschaeftigungsart.data().getWertByID(ba) != LehrerBeschaeftigungsart.TS))
+		if ((ba == null) || (LehrerBeschaeftigungsart.data().getWertByID(ba) != LehrerBeschaeftigungsart.TS)) {
 			return true;
+		}
 
 		final Long es = idEinsatzstatus.get();
-		if ((es != null) && (LehrerEinsatzstatus.data().getWertByID(es) != LehrerEinsatzstatus.A))
+		if ((es != null) && (LehrerEinsatzstatus.data().getWertByID(es) != LehrerEinsatzstatus.A)) {
 			return true;
+		}
 
 		final boolean hatMehr100 = hatGrund(mehrleistungen.get(), 100L);
 		final boolean hatMinder240 = hatGrund(minderleistungen.get(), 240L);

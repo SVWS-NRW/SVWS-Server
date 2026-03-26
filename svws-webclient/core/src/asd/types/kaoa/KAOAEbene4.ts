@@ -202,8 +202,9 @@ export class KAOAEbene4 extends JavaEnum<KAOAEbene4> implements CoreType<KAOAEbe
 		for (const zusatzmerkmalHistorienEintrag of KAOAZusatzmerkmal.data().getEintraegeBySchuljahr(schuljahr)) {
 			const result: List<KAOAEbene4KatalogEintrag> | null = new ArrayList<KAOAEbene4KatalogEintrag>();
 			for (const ebene4HistorienEintrag of KAOAEbene4.data().getEintraegeBySchuljahr(schuljahr)) {
-				if (JavaObject.equalsTranspiler(ebene4HistorienEintrag.zusatzmerkmal, (KAOAZusatzmerkmal.data().getWertByID(zusatzmerkmalHistorienEintrag.id).name())))
+				if (JavaObject.equalsTranspiler(ebene4HistorienEintrag.zusatzmerkmal, (KAOAZusatzmerkmal.data().getWertByID(zusatzmerkmalHistorienEintrag.id).name()))) {
 					result.add(ebene4HistorienEintrag);
+				}
 			}
 			cache.put(zusatzmerkmalHistorienEintrag.id, result);
 		}

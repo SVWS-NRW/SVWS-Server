@@ -1534,8 +1534,9 @@ export class Fach extends JavaEnum<Fach> implements CoreType<FachKatalogEintrag,
 		if (listFremdsprachen.isEmpty()) {
 			for (const f of Fach.values()) {
 				const fke: FachKatalogEintrag | null = f.daten(schuljahr);
-				if (fke !== null && fke.istFremdsprache && JavaObject.equalsTranspiler(fke.schluessel, (fke.kuerzel)))
+				if (fke !== null && fke.istFremdsprache && JavaObject.equalsTranspiler(fke.schluessel, (fke.kuerzel))) {
 					listFremdsprachen.add(fke.kuerzel);
+				}
 			}
 		}
 		return listFremdsprachen;
@@ -1557,8 +1558,9 @@ export class Fach extends JavaEnum<Fach> implements CoreType<FachKatalogEintrag,
 		if (mapFremdsprachen.isEmpty()) {
 			for (const f of Fach.values()) {
 				const fke: FachKatalogEintrag | null = f.daten(schuljahr);
-				if (fke !== null && fke.istFremdsprache && JavaObject.equalsTranspiler(fke.schluessel, (fke.kuerzel)))
+				if (fke !== null && fke.istFremdsprache && JavaObject.equalsTranspiler(fke.schluessel, (fke.kuerzel))) {
 					mapFremdsprachen.put(fke.kuerzel, f);
+				}
 			}
 		}
 		return mapFremdsprachen;
@@ -1574,8 +1576,9 @@ export class Fach extends JavaEnum<Fach> implements CoreType<FachKatalogEintrag,
 	 */
 	public static getBySchluesselOrDefault(schluessel: string): Fach {
 		const result: Fach | null = Fach.data().getWertBySchluessel(schluessel);
-		if (result !== null)
+		if (result !== null) {
 			return result;
+		}
 		return Fach.VF;
 	}
 
@@ -1590,8 +1593,9 @@ export class Fach extends JavaEnum<Fach> implements CoreType<FachKatalogEintrag,
 	 */
 	public getEintragOrLast(schuljahr: number): FachKatalogEintrag | null {
 		const result: FachKatalogEintrag | null = Fach.data().getEintragBySchuljahrUndWert(schuljahr, this);
-		if (result !== null)
+		if (result !== null) {
 			return result;
+		}
 		return this.historie().getLast();
 	}
 
@@ -1604,8 +1608,9 @@ export class Fach extends JavaEnum<Fach> implements CoreType<FachKatalogEintrag,
 	 */
 	public getFachgruppe(schuljahr: number): Fachgruppe | null {
 		const fke: FachKatalogEintrag | null = Fach.data().getEintragBySchuljahrUndWert(schuljahr, this);
-		if ((fke === null) || (fke.fachgruppe === null))
+		if ((fke === null) || (fke.fachgruppe === null)) {
 			return null;
+		}
 		return Fachgruppe.data().getWertByBezeichner(fke.fachgruppe);
 	}
 
@@ -1618,8 +1623,9 @@ export class Fach extends JavaEnum<Fach> implements CoreType<FachKatalogEintrag,
 	 */
 	public getJahrgangAb(schuljahr: number): Jahrgaenge | null {
 		const fke: FachKatalogEintrag | null = Fach.data().getEintragBySchuljahrUndWert(schuljahr, this);
-		if ((fke === null) || (fke.abJahrgang === null))
+		if ((fke === null) || (fke.abJahrgang === null)) {
 			return null;
+		}
 		return Jahrgaenge.data().getWertByBezeichner(fke.abJahrgang);
 	}
 
@@ -1632,8 +1638,9 @@ export class Fach extends JavaEnum<Fach> implements CoreType<FachKatalogEintrag,
 	 */
 	public getFarbe(schuljahr: number): RGBFarbe {
 		const gruppe: Fachgruppe | null = this.getFachgruppe(schuljahr);
-		if (gruppe === null)
+		if (gruppe === null) {
 			return new RGBFarbe();
+		}
 		return gruppe.getFarbe(schuljahr);
 	}
 

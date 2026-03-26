@@ -48,15 +48,19 @@ public final class NamensManager {
 	 * @return der Nachname mit ggf. entferntem Vornamen
 	 */
 	public static @NotNull String getOhneZusatz(final String nachname) {
-		if (nachname == null)
+		if (nachname == null) {
 			return "";
+		}
 		final @NotNull String @NotNull [] teile = nachname.split(" ", 3);
-		if (teile.length == 3 && zusaetzeZweiteilig.contains(teile[0] + " " + teile[1]))
+		if (teile.length == 3 && zusaetzeZweiteilig.contains(teile[0] + " " + teile[1])) {
 			return teile[2];
-		if (teile.length == 3 && zusaetze.contains(teile[0]))
+		}
+		if (teile.length == 3 && zusaetze.contains(teile[0])) {
 			return teile[1] + " " + teile[2];
-		if (teile.length == 2 && zusaetze.contains(teile[0]))
+		}
+		if (teile.length == 2 && zusaetze.contains(teile[0])) {
 			return teile[1];
+		}
 		return nachname;
 	}
 }

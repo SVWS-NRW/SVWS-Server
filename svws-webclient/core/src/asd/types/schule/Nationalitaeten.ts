@@ -74,11 +74,15 @@ export class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 	 * @return die Map von den Kürzeln der Nationalitäten auf die zugehörigen Nationalitäten
 	 */
 	private static getMapISO3(): HashMap<string, Nationalitaeten> {
-		if (Nationalitaeten._mapISO3.isEmpty())
-			for (const s of Nationalitaeten.values())
-				for (const kat of s.historie())
-					if (kat.iso3 !== null)
+		if (Nationalitaeten._mapISO3.isEmpty()) {
+			for (const s of Nationalitaeten.values()) {
+				for (const kat of s.historie()) {
+					if (kat.iso3 !== null) {
 						Nationalitaeten._mapISO3.put(kat.iso3, s);
+					}
+				}
+			}
+		}
 		return Nationalitaeten._mapISO3;
 	}
 
@@ -90,10 +94,13 @@ export class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 	 */
 	private static getMapISO2(): HashMap<string, Nationalitaeten> {
 		if (Nationalitaeten._mapISO2.isEmpty()) {
-			for (const s of Nationalitaeten.values())
-				for (const kat of s.historie())
-					if (kat.iso2 !== null)
+			for (const s of Nationalitaeten.values()) {
+				for (const kat of s.historie()) {
+					if (kat.iso2 !== null) {
 						Nationalitaeten._mapISO2.put(kat.iso2, s);
+					}
+				}
+			}
 		}
 		return Nationalitaeten._mapISO2;
 	}
@@ -106,10 +113,13 @@ export class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 	 */
 	private static getMapDESTATIS(): HashMap<string, Nationalitaeten> {
 		if (Nationalitaeten._mapDESTATIS.isEmpty()) {
-			for (const s of Nationalitaeten.values())
-				for (const kat of s.historie())
-					if (kat.codeDEStatis !== null)
+			for (const s of Nationalitaeten.values()) {
+				for (const kat of s.historie()) {
+					if (kat.codeDEStatis !== null) {
 						Nationalitaeten._mapDESTATIS.put(kat.codeDEStatis, s);
+					}
+				}
+			}
 		}
 		return Nationalitaeten._mapDESTATIS;
 	}
@@ -154,8 +164,9 @@ export class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 	 */
 	public static getDEU(): Nationalitaeten {
 		const deu: Nationalitaeten | null = Nationalitaeten.getByISO3("DEU");
-		if (deu === null)
+		if (deu === null) {
 			throw new CoreTypeException("Core-Type nicht korrekt initialisiert. DEU kann nicht gefunden werden.")
+		}
 		return deu;
 	}
 

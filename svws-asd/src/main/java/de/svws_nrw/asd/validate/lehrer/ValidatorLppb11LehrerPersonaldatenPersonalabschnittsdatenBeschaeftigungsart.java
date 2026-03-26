@@ -51,8 +51,9 @@ public final class ValidatorLppb11LehrerPersonaldatenPersonalabschnittsdatenBesc
 
 		// LPPB3 ex BW15
 		final Double pflichtstundensoll = this._pflichtstundensoll.get();
-		if (pflichtstundensoll == null) //Wenn der Pflichtstundensoll nicht gesetzt ist, kann diese Prüfung nicht durchgeführt werden.
+		if (pflichtstundensoll == null) { //Wenn der Pflichtstundensoll nicht gesetzt ist, kann diese Prüfung nicht durchgeführt werden.
 			return true;
+		}
 		final String fehlertext3 = "Laut Ihren Angaben handelt es sich um eine voll abgeordnete Lehrkraft mit Gestellungsvertrag. Es ist zu erwarten, "
 				+ "dass eine Lehrkraft mit Gestellungsvertrag Unterricht an Ihrer Schule erteilt. Bitte überprüfen Sie Ihre Angaben.";
 

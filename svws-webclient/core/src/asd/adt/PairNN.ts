@@ -31,10 +31,12 @@ export class PairNN<A, B> extends JavaObject {
 	}
 
 	public equals(o: unknown | null): boolean {
-		if (o === null)
+		if (o === null) {
 			return false;
-		if (!(((o instanceof JavaObject) && (o.isTranspiledInstanceOf('de.svws_nrw.asd.adt.PairNN')))))
+		}
+		if (!(((o instanceof JavaObject) && (o.isTranspiledInstanceOf('de.svws_nrw.asd.adt.PairNN'))))) {
 			return false;
+		}
 		const e: PairNN<any, any> | null = cast_de_svws_nrw_asd_adt_PairNN(o);
 		const a_equals: boolean = JavaObject.equalsTranspiler(this.a, (e.a));
 		const b_equals: boolean = JavaObject.equalsTranspiler(this.b, (e.b));

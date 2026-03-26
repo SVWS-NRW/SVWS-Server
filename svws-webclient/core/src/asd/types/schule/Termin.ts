@@ -75,11 +75,13 @@ export class Termin extends JavaEnum<Termin> implements CoreType<TerminKatalogEi
 	 */
 	public static getLetzterUnterrichtstagImErstenHalbjahr(schuljahr: number): DateManager | null {
 		let result: DateManager | null = Termin._mapSchuljahrToLetzterUnterrichtstag.get(schuljahr);
-		if (result !== null)
+		if (result !== null) {
 			return result;
+		}
 		const eintrag: TerminKatalogEintrag | null = Termin.data().getEintragBySchuljahrUndWert(schuljahr, Termin.HALBJAHR_LETZTER_UNTERRICHTSTAG);
-		if (eintrag === null)
+		if (eintrag === null) {
 			return null;
+		}
 		try {
 			result = DateManager.from(eintrag.von);
 		} catch(e : any) {

@@ -67,15 +67,18 @@ public class JsonValidatorFehlerartKontextData {
 			final JsonNode validator = eintrag.findValue("validator");
 			final JsonNode historie = eintrag.findValue("historie");
 			// Ignoriere Dateien, welche nicht dieser Struktur haben.
-			if ((eintrag.size() != 3) || (version == null) || (validator == null) || (historie == null) || (!historie.isArray()))
+			if ((eintrag.size() != 3) || (version == null) || (validator == null) || (historie == null) || (!historie.isArray())) {
 				return;
-			if (version.asLong() < 1)
+			}
+			if (version.asLong() < 1) {
 				throw new ValidatorException("Der Validator-Fehlerart-Kontext muss eine gültige Versionsnummer haben.");
+			}
 			final var list = new ArrayList<ValidatorFehlerartKontext>();
 			this._mapData.put(validator.asText(), list);
 			this._mapVersions.put(validator.asText(), version.asLong());
-			for (final JsonNode obj : historie)
+			for (final JsonNode obj : historie) {
 				list.add(mapper.readValue(obj.toString(), ValidatorFehlerartKontext.class));
+			}
 		} catch (final JsonProcessingException e) {
 			throw new ValidatorException("Fehler beim Parsen der JSON-Daten.", e);
 		}

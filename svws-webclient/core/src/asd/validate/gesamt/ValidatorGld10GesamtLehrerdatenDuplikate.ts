@@ -26,8 +26,9 @@ export class ValidatorGld10GesamtLehrerdatenDuplikate extends Validator {
 	protected pruefe(): boolean {
 		let success: boolean = true;
 		const list: List<LehrerStatistikGesamt> = this.listLehrer.get();
-		if (list.isEmpty())
+		if (list.isEmpty()) {
 			return success;
+		}
 		const ids: JavaSet<number> = new HashSet<number>();
 		for (const lehrer of list) {
 			const istNeu: boolean = ids.add(lehrer.id);

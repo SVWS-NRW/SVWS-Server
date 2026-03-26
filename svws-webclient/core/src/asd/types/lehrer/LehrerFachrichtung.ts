@@ -616,9 +616,11 @@ export class LehrerFachrichtung extends JavaEnum<LehrerFachrichtung> implements 
 		for (const fr of LehrerFachrichtung.data().getWerte()) {
 			const eintrag: LehrerFachrichtungKatalogEintrag | null = fr.daten(schuljahr);
 			const lehraemter: List<LehrerLehramt> | null = new ArrayList<LehrerLehramt>();
-			if (eintrag !== null)
-				for (const laBezeichner of eintrag.lehraemter)
+			if (eintrag !== null) {
+				for (const laBezeichner of eintrag.lehraemter) {
 					lehraemter.add(LehrerLehramt.data().getWertByBezeichner(laBezeichner));
+				}
+			}
 			result.put(fr, lehraemter);
 		}
 		return result;

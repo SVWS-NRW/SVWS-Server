@@ -81,8 +81,9 @@ public enum Sprachreferenzniveau implements @NotNull CoreType<Sprachreferenznive
 	 * @return -1 (kleiner), 0 (gleich) oder 1 (größer)
 	 */
 	public int compare(final Sprachreferenzniveau other) {
-		if (other == null)
+		if (other == null) {
 			return 1;
+		}
 		return this.compareTo(other);
 	}
 
@@ -95,8 +96,9 @@ public enum Sprachreferenzniveau implements @NotNull CoreType<Sprachreferenznive
 	 * @return -1 (kleiner), 0 (gleich) oder 1 (größer)
 	 */
 	public int compareByKuerzel(final String kuerzel) {
-		if (kuerzel == null)
+		if (kuerzel == null) {
 			return 1;
+		}
 		return this.compare(Sprachreferenzniveau.data().getWertByKuerzel(kuerzel));
 	}
 

@@ -39,12 +39,15 @@ public final class ValidatorLplk20LehrerPersonaldatenLehramtKombination extends 
 		boolean anderesLehramtVorhanden = false;
 		final LehrerLehramtKatalogEintrag lehrerLehramtKatalogEintrag = LehrerLehramt.ID_90.daten(kontext().getSchuljahr());
 
-		if (lehrerLehramtKatalogEintrag != null)
-			for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : lehraemter.get())
-				if (lehrerLehramtKatalogEintrag.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+		if (lehrerLehramtKatalogEintrag != null) {
+			for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : lehraemter.get()) {
+				if (lehrerLehramtKatalogEintrag.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id) {
 					lehramtId90Vorhanden = true;
-				else
+				} else {
 					anderesLehramtVorhanden = true;
+				}
+			}
+		}
 
 		if (lehramtId90Vorhanden && anderesLehramtVorhanden) {
 			addFehler(10, "Neben dem Lehramtseintrag 'Studierende' sollten keine weiteren Lehramtseinträge vorliegen. Bitte korrigieren Sie Ihre Angaben.");

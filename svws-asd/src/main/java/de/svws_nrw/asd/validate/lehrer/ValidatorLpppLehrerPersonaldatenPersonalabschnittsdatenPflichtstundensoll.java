@@ -13,13 +13,12 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll extends Validator {
 
-
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param pflichtstundensoll     das Pflichtstundensoll
 	 * @param idEinsatzstatus        der Einsatzstatus
-	 * @param idBeschaeftigungsart   die Beschaeftigungsart
+	 * @param idBeschaeftigungsart   die Beschäftigungsart
 	 * @param kontext                der Kontext des Validators
 	 */
 	public ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(

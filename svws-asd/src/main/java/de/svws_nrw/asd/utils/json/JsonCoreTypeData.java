@@ -65,31 +65,37 @@ public class JsonCoreTypeData<T extends CoreTypeData> {
 		// Prüfe den Aufbau der root-Node
 		final JsonNode version = root.findValue("version");
 		final JsonNode daten = root.findValue("daten");
-		if ((root.size() != 2) || (version == null) || (daten == null))
+		if ((root.size() != 2) || (version == null) || (daten == null)) {
 			throw new IOException("Die JSON-Datei muss auf höchster Ebene ein Objekt mit zwei Attributen \"version\" und \"daten\" sein.");
+		}
 		this._version = version.asLong(-1);
-		if (this._version < 0)
+		if (this._version < 0) {
 			throw new IOException("Die JSON-Datei muss eine gültige Versionsnummer haben.");
-		if (!daten.isArray())
+		}
+		if (!daten.isArray()) {
 			throw new IOException("Die JSON-Datei muss bei dem Attribut \"daten\" ein Array aufweisen.");
+		}
 		final Set<String> idsStatistik = new HashSet<>();
 		for (final JsonNode eintrag : daten) {
 			final JsonNode bezeichner = eintrag.findValue("bezeichner");
 			final JsonNode historie = eintrag.findValue("historie");
 			final JsonNode idStatistik = eintrag.findValue("idStatistik");
-			if ((eintrag.size() != 3) || (bezeichner == null) || (idStatistik == null) || (historie == null) || (!historie.isArray()))
+			if ((eintrag.size() != 3) || (bezeichner == null) || (idStatistik == null) || (historie == null) || (!historie.isArray())) {
 				throw new IOException(
 						"Die JSON-Datei muss bei den Einträgen im Daten-Array jeweils ein Objekt mit drei Attributen \"bezeichner\", \"idStatistik\" und \"historie\" haben, wobei die Historie eine Array von Objekten sein muss.");
+			}
 			final String tmpIdStatistik = idStatistik.asText();
-			if (idsStatistik.contains(tmpIdStatistik))
+			if (idsStatistik.contains(tmpIdStatistik)) {
 				throw new IOException(
 						"Die JSON-Datei muss bei den IDs der Historien eindeutige Werte verwenden. Der Wert " + tmpIdStatistik + " kommt mehrfach vor.");
+			}
 			idsStatistik.add(tmpIdStatistik);
 			this._mapStatistikIDs.put(bezeichner.asText(), tmpIdStatistik);
 			final var list = new ArrayList<T>();
 			this._mapData.put(bezeichner.asText(), list);
-			for (final JsonNode obj : historie)
+			for (final JsonNode obj : historie) {
 				list.add(mapper.readValue(obj.toString(), clazz));
+			}
 		}
 	}
 

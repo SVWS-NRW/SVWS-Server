@@ -75,8 +75,9 @@ public abstract class CoreTypeSimple<T extends CoreTypeData, U extends CoreTypeS
 	@SuppressWarnings("unchecked")
 	public static <S extends CoreTypeSimple<?, ?>> @NotNull S @NotNull [] valuesByClass(final @NotNull Class<S> clazz) {
 		final var list = _values.get(clazz);
-		if (list == null)
+		if (list == null) {
 			return (@NotNull S @NotNull []) Array.newInstance(clazz, 0);
+		}
 		return (@NotNull S @NotNull []) list;
 	}
 
@@ -122,8 +123,9 @@ public abstract class CoreTypeSimple<T extends CoreTypeData, U extends CoreTypeS
 	 */
 	@Override
 	public int compareTo(final U other) {
-		if (other == null)
+		if (other == null) {
 			throw new NullPointerException();
+		}
 		return Integer.compare(this.ordinal(), other.ordinal());
 	}
 

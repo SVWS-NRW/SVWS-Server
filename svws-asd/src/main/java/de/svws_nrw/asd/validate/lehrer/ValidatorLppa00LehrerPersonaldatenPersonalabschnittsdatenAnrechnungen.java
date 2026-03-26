@@ -42,14 +42,16 @@ public final class ValidatorLppa00LehrerPersonaldatenPersonalabschnittsdatenAnre
 		final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> liste = this.anrechnungen.get();
 		boolean istGueltig = true;
 
-		if (liste == null)
+		if (liste == null) {
 			istGueltig = false;
-		else
-			for (final LehrerPersonalabschnittsdatenAnrechnungsstunden eintrag : liste)
+		} else {
+			for (final LehrerPersonalabschnittsdatenAnrechnungsstunden eintrag : liste) {
 				if (eintrag.idGrund == null) {
 					istGueltig = false;
 					break;
 				}
+			}
+		}
 
 		if (!istGueltig) {
 			this.addFehler(0, "Das Feld 'Anrechnungsgründe' muss besetzt sein.");

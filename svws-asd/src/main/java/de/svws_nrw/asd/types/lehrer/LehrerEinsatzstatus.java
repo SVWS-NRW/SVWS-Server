@@ -50,8 +50,9 @@ public enum LehrerEinsatzstatus implements @NotNull CoreType<LehrerEinsatzstatus
 	 * @return der zugehörige Einsatzstatus oder null
 	 */
 	public static LehrerEinsatzstatus getBySchluessel(final String schluessel) {
-		if (schluessel == null)
+		if (schluessel == null) {
 			return LehrerEinsatzstatus.DEFAULT;
+		}
 		return LehrerEinsatzstatus.data().getWertBySchluessel(schluessel);
 	}
 

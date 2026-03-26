@@ -42,15 +42,17 @@ public final class ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnre
 	@Override
 	protected boolean pruefe() {
 		final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> liste = this.anrechnungen.get();
-		if (liste == null)
+		if (liste == null) {
 			return true;
+		}
 
 		final int aktuellesSchuljahr = this.kontext().getSchuljahr();
 
 		for (final LehrerPersonalabschnittsdatenAnrechnungsstunden eintrag : liste) {
 			// Falls keine ID vorhanden ist, wird dies in LPPA00/01 geprüft.
-			if (eintrag.idGrund == null)
+			if (eintrag.idGrund == null) {
 				continue;
+			}
 
 			final LehrerAnrechnungsgrund grund = LehrerAnrechnungsgrund.data().getWertByIDOrNull(eintrag.idGrund);
 

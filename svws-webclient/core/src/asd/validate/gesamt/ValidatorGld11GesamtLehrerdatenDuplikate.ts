@@ -27,15 +27,17 @@ export class ValidatorGld11GesamtLehrerdatenDuplikate extends Validator {
 	protected pruefe(): boolean {
 		let success: boolean = true;
 		const list: List<LehrerStatistikGesamt> = this.listLehrer.get();
-		if (list.isEmpty())
+		if (list.isEmpty()) {
 			return success;
+		}
 		const keys: JavaMap<string, LehrerStatistikGesamt> = new HashMap<string, LehrerStatistikGesamt>();
 		for (const lehrer of list) {
 			const geschlecht: Geschlecht | null = Geschlecht.fromValue(lehrer.geschlecht);
 			const key: string = lehrer.nachname + "__" + lehrer.vorname + "__" + ((lehrer.geburtsdatum === null) ? "" : lehrer.geburtsdatum) + "__" + ((geschlecht === null) ? lehrer.geschlecht : geschlecht.kuerzel);
 			const other: LehrerStatistikGesamt | null = keys.put(key, lehrer);
-			if (other === null)
+			if (other === null) {
 				continue;
+			}
 			const fehlermeldung: string | null = "Lehrkäfte: Bei den IDs " + lehrer.id + " und " + other.id + " kommt die Kombination aus Nachname '" + lehrer.nachname + "', Vorname '" + lehrer.vorname + "', Geburtsdatum '" + lehrer.geburtsdatum + "' und Geschlecht '" + lehrer.geschlecht + "' mehrmals vor. Falls es sich hierbei um eine Person handelt, so fassen Sie die Datensätze bitte unter einer Lehrerabkürzung zusammen.";
 			this.addFehler(2, fehlermeldung);
 			success = false;

@@ -76,8 +76,9 @@ export class Geschlecht extends JavaEnum<Geschlecht> {
 	 * @return das Geschlecht oder null, falls die ID fehlerhaft ist
 	 */
 	public static fromValue(value: number | null): Geschlecht | null {
-		if (value === null)
+		if (value === null) {
 			return null;
+		}
 		switch (value) {
 			case 3: {
 				return Geschlecht.M;
@@ -108,8 +109,9 @@ export class Geschlecht extends JavaEnum<Geschlecht> {
 	 * @return das Geschlecht als Type
 	 */
 	public static fromStringValue(text: string | null): Geschlecht {
-		if ((text === null) || JavaObject.equalsTranspiler("", (text)))
+		if ((text === null) || JavaObject.equalsTranspiler("", (text))) {
 			return Geschlecht.X;
+		}
 		const upperValue: string | null = text.toUpperCase();
 		switch (upperValue) {
 			case "MÄNNLICH":

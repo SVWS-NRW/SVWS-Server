@@ -47,8 +47,9 @@ public final class ValidatorLppr03LehrerPersonaldatenPersonalabschnittsdatenRech
 	protected boolean pruefe() {
 		// Bestimme das Schuljahr über den Schuljahresabschnitt. Treten dabei Fehler auf, so ist dieser durch einen übergeordneten Validator zu prüfen.
 		final Schuljahresabschnitt schuljahresabschnitt = kontext().getSchuljahresabschnittByID(this._idSchuljahresabschnitt.get());
-		if (schuljahresabschnitt == null)
+		if (schuljahresabschnitt == null) {
 			return false;
+		}
 		final int schuljahr = schuljahresabschnitt.schuljahr;
 
 		// Bestimme das Rechtsverhältnis. Ist dieses nicht angegeben, so wird im Folgenden von einem sonstigen Rechtsverhältnis ausgegangen

@@ -35,10 +35,12 @@ public final class Pair<A, B> {
 
 	@Override
 	public boolean equals(final Object o) {
-		if (o == null)
+		if (o == null) {
 			return false;
-		if (!(o instanceof Pair<?, ?>))
+		}
+		if (!(o instanceof Pair<?, ?>)) {
 			return false;
+		}
 		final Pair<?, ?> e = (Pair<?, ?>) o;
 		final boolean a_equals = a.equals(e.a);
 		final boolean b_equals = (b == null) ? (e.b == null) : b.equals(e.b);

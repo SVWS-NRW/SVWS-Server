@@ -30,12 +30,15 @@ export class ValidatorLplk11LehrerPersonaldatenLehramtKombination extends Valida
 		let lehramtId52Vorhanden: boolean = false;
 		let anderesLehramtVorhanden: boolean = false;
 		const lehrerLehramtKatalogEintrag: LehrerLehramtKatalogEintrag | null = LehrerLehramt.ID_52.daten(this.kontext().getSchuljahr());
-		if (lehrerLehramtKatalogEintrag !== null)
-			for (const lehrerLehramtEintrag of this.lehraemter.get())
-				if (lehrerLehramtKatalogEintrag.id === LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+		if (lehrerLehramtKatalogEintrag !== null) {
+			for (const lehrerLehramtEintrag of this.lehraemter.get()) {
+				if (lehrerLehramtKatalogEintrag.id === LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id) {
 					lehramtId52Vorhanden = true;
-				else
+				} else {
 					anderesLehramtVorhanden = true;
+				}
+			}
+		}
 		if (lehramtId52Vorhanden && anderesLehramtVorhanden) {
 			this.addFehler(1, "Neben dem Lehramtseintrag 'Werkstattlehrern/-innen' sollten keine weiteren Lehramtseinträge vorliegen. Bitte korrigieren Sie Ihre Angaben. ");
 			return false;

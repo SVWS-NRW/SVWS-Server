@@ -132,8 +132,9 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 	 * @return die Note
 	 */
 	public static Note fromNoteSekI(final Integer noteSekI) {
-		if (noteSekI == null)
+		if (noteSekI == null) {
 			return null;
+		}
 		return switch (noteSekI) {
 			case 1 -> SEHR_GUT;
 			case 2 -> GUT;
@@ -153,8 +154,9 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
 	public static @NotNull Note fromNotenpunkte(final Integer notenpunkte) {
-		if (notenpunkte == null)
+		if (notenpunkte == null) {
 			return KEINE;
+		}
 		return switch (notenpunkte) {
 			case 0 -> UNGENUEGEND;
 			case 1 -> MANGELHAFT_MINUS;
@@ -206,8 +208,9 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
 	public static @NotNull Note fromKuerzel(final String kuerzel) {
-		if (kuerzel == null)
+		if (kuerzel == null) {
 			return KEINE;
+		}
 		final String kuerzelUppercase = kuerzel.toUpperCase();
 		return switch (kuerzelUppercase) {
 			case "6" -> UNGENUEGEND;
@@ -239,8 +242,9 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 	 * @return die Note aus dieser Aufzählung oder Note.KEINE im Fehlerfall
 	 */
 	public static @NotNull Note fromNotenpunkteString(final String notenpunkte) {
-		if (notenpunkte == null)
+		if (notenpunkte == null) {
 			return KEINE;
+		}
 		return switch (notenpunkte) {
 			case "0", "00" -> UNGENUEGEND;
 			case "1", "01" -> MANGELHAFT_MINUS;
@@ -295,8 +299,9 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 	 */
 	public @NotNull Note ohneTendenz(final int schuljahr) {
 		final NoteKatalogEintrag nke = this.daten(schuljahr);
-		if (nke == null || nke.notenpunkte == null)
+		if (nke == null || nke.notenpunkte == null) {
 			return KEINE;
+		}
 		final Integer np = nke.notenpunkte;
 		return switch (np) {
 			case 0 -> UNGENUEGEND;
@@ -340,8 +345,9 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 	 */
 	public @NotNull String toString(final int schuljahr) {
 		final NoteKatalogEintrag nke = this.daten(schuljahr);
-		if (nke != null)
+		if (nke != null) {
 			return nke.kuerzel;
+		}
 		return "";
 	}
 
@@ -368,8 +374,9 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 
 	public Integer getNoteSekI(final int schuljahr) {
 		final NoteKatalogEintrag nke = this.daten(schuljahr);
-		if (nke == null)
+		if (nke == null) {
 			return null;
+		}
 		final Integer np = nke.notenpunkte;
 		return switch (np) {
 			case 15, 14, 13 -> 1;
@@ -391,8 +398,9 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 	 */
 	public String getNoteKuerzel(final int schuljahr) {
 		final NoteKatalogEintrag nke = this.daten(schuljahr);
-		if (nke == null)
+		if (nke == null) {
 			return null;
+		}
 		return nke.kuerzel;
 	}
 
@@ -405,8 +413,9 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 	 */
 	public String getNoteText(final int schuljahr) {
 		final NoteKatalogEintrag nke = this.daten(schuljahr);
-		if (nke == null)
+		if (nke == null) {
 			return null;
+		}
 		return nke.text;
 	}
 
@@ -419,8 +428,9 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 	 */
 	public String getNoteTextZeugnis(final int schuljahr) {
 		final NoteKatalogEintrag nke = this.daten(schuljahr);
-		if (nke == null)
+		if (nke == null) {
 			return null;
+		}
 		return nke.textZeugnis;
 	}
 
@@ -434,14 +444,17 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 
 	public String getNotenpunkteZweistellig(final int schuljahr) {
 		final NoteKatalogEintrag nke = this.daten(schuljahr);
-		if (nke == null)
+		if (nke == null) {
 			return null;
+		}
 		final Integer np = nke.notenpunkte;
-		if ((np == null) || (np < 0) || (np > 15))
+		if ((np == null) || (np < 0) || (np > 15)) {
 			return null;
+		}
 		String notenpunkte  = np.toString();
-		if (notenpunkte.length() == 1)
+		if (notenpunkte.length() == 1) {
 			notenpunkte = "0" + notenpunkte;
+		}
 		return notenpunkte;
 	}
 
@@ -467,13 +480,16 @@ public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 	 */
 	public static Integer getPunkteFromNotenkuerzel(final @NotNull String notenkuerzel, final int schuljahr) {
 		final @NotNull Note note = Note.fromKuerzel(notenkuerzel);
-		if (!note.istNote(schuljahr))
+		if (!note.istNote(schuljahr)) {
 			return null;
+		}
 		final NoteKatalogEintrag nke = note.daten(schuljahr);
-		if (nke == null)
+		if (nke == null) {
 			return null;
-		if (nke.notenpunkte == null)
+		}
+		if (nke.notenpunkte == null) {
 			return null;
+		}
 		return nke.notenpunkte;
 	}
 }

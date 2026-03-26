@@ -232,8 +232,9 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 	public static <T extends CoreTypeData, U extends CoreType<T, U>> @NotNull JsonCoreTypeData<T> getData(final Class<U> typeClass)
 			throws CoreTypeRessourceException {
 		final var res = get(typeClass);
-		if (res == null)
+		if (res == null) {
 			throw new CoreTypeRessourceException("Der Core Type %s wurde noch nicht initialisiert.".formatted(typeClass.getName()), null);
+		}
 		return res.getData();
 	}
 
@@ -249,8 +250,9 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends CoreTypeData, U extends CoreType<T, U>> CoreTypeRessource<T, U> get(final Class<U> typeClass) {
-		if (listResources.isEmpty())
+		if (listResources.isEmpty()) {
 			initAll();
+		}
 		return (CoreTypeRessource<T, U>) mapResources.get(typeClass);
 	}
 
@@ -278,8 +280,9 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 		// Lade die Daten
 		addAll();
 		// Initialisieren die Core-Types
-		for (final var res : listResources)
+		for (final var res : listResources) {
 			res.init();
+		}
 	}
 
 
@@ -328,15 +331,19 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 	 */
 	@SuppressWarnings("unchecked")
 	public static <V extends CoreTypeData, U extends CoreType<V, U>> void reinitAll(final Map<Class<U>, JsonCoreTypeData<V>> map) {
-		if ((map == null) || map.isEmpty())
+		if ((map == null) || map.isEmpty()) {
 			throw new CoreTypeException("Liste darf nicht leer sein.");
+		}
 		// Prüfen auf unbekannte Kataloge
-		for (final Class<U> key : map.keySet())
-			if (!mapResources.containsKey(key))
+		for (final Class<U> key : map.keySet()) {
+			if (!mapResources.containsKey(key)) {
 				throw new CoreTypeException("Liste enthält Katalog der nicht in den Ressourcen vorhanden ist.");
+			}
+		}
 		// Reinit für alle Kataloge ausführen
-		for (final Map.Entry<Class<U>, JsonCoreTypeData<V>> entry : map.entrySet())
+		for (final Map.Entry<Class<U>, JsonCoreTypeData<V>> entry : map.entrySet()) {
 			((CoreTypeRessource<V, ?>) mapResources.get(entry.getKey())).reinit(entry.getValue());
+		}
 	}
 
 

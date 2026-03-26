@@ -30,12 +30,15 @@ export class ValidatorLplk19LehrerPersonaldatenLehramtKombination extends Valida
 		let lehramtId65Vorhanden: boolean = false;
 		let anderesLehramtVorhanden: boolean = false;
 		const lehrerLehramtKatalogEintrag: LehrerLehramtKatalogEintrag | null = LehrerLehramt.ID_65.daten(this.kontext().getSchuljahr());
-		if (lehrerLehramtKatalogEintrag !== null)
-			for (const lehrerLehramtEintrag of this.lehraemter.get())
-				if (lehrerLehramtKatalogEintrag.id === LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+		if (lehrerLehramtKatalogEintrag !== null) {
+			for (const lehrerLehramtEintrag of this.lehraemter.get()) {
+				if (lehrerLehramtKatalogEintrag.id === LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id) {
 					lehramtId65Vorhanden = true;
-				else
+				} else {
 					anderesLehramtVorhanden = true;
+				}
+			}
+		}
 		if (lehramtId65Vorhanden && anderesLehramtVorhanden) {
 			this.addFehler(9, "Neben dem Lehramtseintrag 'Alltagshelfern/-innen' sollten keine weiteren Lehramtseinträge vorliegen. Bitte korrigieren Sie Ihre Angaben.");
 			return false;

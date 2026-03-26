@@ -34,12 +34,14 @@ export class ValidatorLppa02LehrerPersonaldatenPersonalabschnittsdatenAnrechnung
 
 	protected pruefe(): boolean {
 		const liste: List<LehrerPersonalabschnittsdatenAnrechnungsstunden> | null = this.anrechnungen.get();
-		if (liste === null)
+		if (liste === null) {
 			return true;
+		}
 		const aktuellesSchuljahr: number = this.kontext().getSchuljahr();
 		for (const eintrag of liste) {
-			if (eintrag.idGrund === null)
+			if (eintrag.idGrund === null) {
 				continue;
+			}
 			const grund: LehrerAnrechnungsgrund | null = LehrerAnrechnungsgrund.data().getWertByIDOrNull(eintrag.idGrund);
 			if ((grund === null) || (grund.daten(aktuellesSchuljahr) === null)) {
 				this.addFehler(0, "Der eingetragene Wert für das Feld 'Anrechnungsgründe' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.");

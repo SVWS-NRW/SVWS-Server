@@ -40,12 +40,15 @@ public final class ValidatorLplk15LehrerPersonaldatenLehramtKombination extends 
 		final LehrerLehramtKatalogEintrag lehrerLehramtKatalogEintrag59 = LehrerLehramt.ID_59.daten(this.kontext().getSchuljahr());
 		final LehrerLehramtKatalogEintrag lehrerLehramtKatalogEintrag62 = LehrerLehramt.ID_62.daten(this.kontext().getSchuljahr());
 
-		if (lehrerLehramtKatalogEintrag59 != null && lehrerLehramtKatalogEintrag62 != null)
-			for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : this.lehraemter.get())
-				if (lehrerLehramtKatalogEintrag59.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+		if (lehrerLehramtKatalogEintrag59 != null && lehrerLehramtKatalogEintrag62 != null) {
+			for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : this.lehraemter.get()) {
+				if (lehrerLehramtKatalogEintrag59.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id) {
 					lehramtId59Vorhanden = true;
-				else if (lehrerLehramtKatalogEintrag62.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id)
+				} else if (lehrerLehramtKatalogEintrag62.id == LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).id) {
 					lehramtId62Vorhanden = true;
+				}
+			}
+		}
 
 		if (lehramtId59Vorhanden && lehramtId62Vorhanden) {
 			this.addFehler(5,

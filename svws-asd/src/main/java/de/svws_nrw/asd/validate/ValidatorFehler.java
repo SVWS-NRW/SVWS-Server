@@ -47,8 +47,9 @@ public class ValidatorFehler {
 	 * @return der Kontext
 	 */
 	public @NotNull ValidatorKontext getKontext() {
-		if (_validator instanceof final Validator validator)
+		if (_validator instanceof final Validator validator) {
 			return validator.kontext();
+		}
 		throw new ValidatorException("Der Validator ist nur ein BasicValidator und kein Validator, weshalb er keinen ValidatorKontext hat.");
 	}
 

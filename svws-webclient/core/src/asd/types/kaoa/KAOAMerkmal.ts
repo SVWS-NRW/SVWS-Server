@@ -256,9 +256,11 @@ export class KAOAMerkmal extends JavaEnum<KAOAMerkmal> implements CoreType<KAOAM
 		const cache: JavaMap<number, List<KAOAMerkmalKatalogEintrag>> | null = new HashMap<number, List<KAOAMerkmalKatalogEintrag>>();
 		for (const kategorieHistorienEintrag of KAOAKategorie.data().getEintraegeBySchuljahr(schuljahr)) {
 			const result: List<KAOAMerkmalKatalogEintrag> | null = new ArrayList<KAOAMerkmalKatalogEintrag>();
-			for (const merkmalHistorienEintrag of KAOAMerkmal.data().getEintraegeBySchuljahr(schuljahr))
-				if (JavaObject.equalsTranspiler(merkmalHistorienEintrag.kategorie, (KAOAKategorie.data().getWertByID(kategorieHistorienEintrag.id).name())))
+			for (const merkmalHistorienEintrag of KAOAMerkmal.data().getEintraegeBySchuljahr(schuljahr)) {
+				if (JavaObject.equalsTranspiler(merkmalHistorienEintrag.kategorie, (KAOAKategorie.data().getWertByID(kategorieHistorienEintrag.id).name()))) {
 					result.add(merkmalHistorienEintrag);
+				}
+			}
 			cache.put(kategorieHistorienEintrag.id, result);
 		}
 		return cache;

@@ -67,11 +67,13 @@ public enum Termin implements @NotNull CoreType<TerminKatalogEintrag, Termin> {
 	 */
 	public static DateManager getLetzterUnterrichtstagImErstenHalbjahr(final int schuljahr) {
 		DateManager result = _mapSchuljahrToLetzterUnterrichtstag.get(schuljahr);
-		if (result != null)
+		if (result != null) {
 			return result;
+		}
 		final TerminKatalogEintrag eintrag = data().getEintragBySchuljahrUndWert(schuljahr, HALBJAHR_LETZTER_UNTERRICHTSTAG);
-		if (eintrag == null)
+		if (eintrag == null) {
 			return null;
+		}
 		try {
 			result = DateManager.from(eintrag.von);
 		} catch (final InvalidDateException e) {

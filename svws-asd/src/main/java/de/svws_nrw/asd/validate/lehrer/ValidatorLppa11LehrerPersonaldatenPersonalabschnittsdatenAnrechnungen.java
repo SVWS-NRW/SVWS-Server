@@ -54,8 +54,9 @@ public final class ValidatorLppa11LehrerPersonaldatenPersonalabschnittsdatenAnre
 		final Double soll = this.pflichtstundensoll.get();
 
 		// Wenn wichtige Datenquellen fehlen, kann die Prüfung nicht durchgeführt werden.
-		if (listeLehraemter == null || listeAnrechnungen == null || soll == null)
+		if (listeLehraemter == null || listeAnrechnungen == null || soll == null) {
 			return true;
+		}
 
 		// 1. Prüfe Vorbedingung: Besitzt die Lehrkraft das Lehramt 'ID_70' (Schulverwaltungsassistent/-in)?
 		boolean hatLehramt70 = false;
@@ -68,15 +69,16 @@ public final class ValidatorLppa11LehrerPersonaldatenPersonalabschnittsdatenAnre
 		}
 
 		// Falls die Vorbedingung nicht erfüllt ist, ist dieser Validator nicht relevant.
-		if (!hatLehramt70)
+		if (!hatLehramt70) {
 			return true;
+		}
 
 		// 2. Berechne die Summe der Anrechnungsstunden für den Grund '935 - Schulverwaltungsassistenz'.
 		final LehrerAnrechnungsgrund grund935 = LehrerAnrechnungsgrund.data().getWertByBezeichner("ID_935");
 		double summe935 = 0;
 		boolean hatAnrechnung935 = false;
 
-		for (final LehrerPersonalabschnittsdatenAnrechnungsstunden anrechnung : listeAnrechnungen)
+		for (final LehrerPersonalabschnittsdatenAnrechnungsstunden anrechnung : listeAnrechnungen) {
 			if (anrechnung.idGrund != null) {
 				final LehrerAnrechnungsgrund grund = LehrerAnrechnungsgrund.data().getWertByIDOrNull(anrechnung.idGrund);
 				if (grund == grund935) {
@@ -84,6 +86,7 @@ public final class ValidatorLppa11LehrerPersonaldatenPersonalabschnittsdatenAnre
 					summe935 += anrechnung.anzahl;
 				}
 			}
+		}
 
 		// 3. Prüfung der Bedingung: Die Summe der Stunden muss (nahezu) identisch zum Pflichtstundensoll sein.
 		// Wir nutzen eine Toleranz von 0.001 für den Vergleich der Double-Werte.

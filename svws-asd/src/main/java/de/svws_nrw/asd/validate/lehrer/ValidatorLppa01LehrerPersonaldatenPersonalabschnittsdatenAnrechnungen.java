@@ -43,16 +43,18 @@ public final class ValidatorLppa01LehrerPersonaldatenPersonalabschnittsdatenAnre
 	protected boolean pruefe() {
 		final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> liste = this.anrechnungen.get();
 
-		if (liste == null)
+		if (liste == null) {
 			return true;
+		}
 
-		for (final LehrerPersonalabschnittsdatenAnrechnungsstunden eintrag : liste)
+		for (final LehrerPersonalabschnittsdatenAnrechnungsstunden eintrag : liste) {
 			// Prüfung, ob die ID im Katalog vorhanden ist.
 			// Hinweis: Die reine Pflichtfeldprüfung (idGrund == null) erfolgt bereits in LPPA00.
 			if ((eintrag.idGrund == null) || (LehrerAnrechnungsgrund.data().getWertByIDOrNull(eintrag.idGrund) == null)) {
 				addFehler(0, "Feld 'Anrechnungsgründe' muss besetzt sein.");
 				return false;
 			}
+		}
 
 		return true;
 	}

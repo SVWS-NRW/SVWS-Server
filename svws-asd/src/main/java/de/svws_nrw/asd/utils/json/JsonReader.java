@@ -159,8 +159,9 @@ public final class JsonReader {
 		try {
 			final ClassLoader classLoader = JsonReader.class.getClassLoader();
 			final var url = classLoader.getResource(location);
-			if (url == null)
+			if (url == null) {
 				return null;
+			}
 			final var uri = url.toURI();
 			if (uri.toString().contains("jar:file:")) {
 				final String[] jar_path_elements = uri.toString().split("!");
@@ -192,8 +193,9 @@ public final class JsonReader {
 		final String separator = fs.getSeparator();
 		final String fullPathString = path + (path.endsWith(separator) ? "" : separator) + packagePath;
 		final Path fullPath = fs.getPath(fullPathString);
-		if (!Files.isDirectory(fullPath))
+		if (!Files.isDirectory(fullPath)) {
 			return found;
+		}
 		try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(fullPath)) {
 			for (final Path p : dirStream) {
 				if (Files.isDirectory(p)) {

@@ -44,17 +44,19 @@ public final class ValidatorLppa10LehrerPersonaldatenPersonalabschnittsdatenAnre
 		final List<LehrerLehramtEintrag> listeLehraemter = this.lehraemter.get();
 		final List<LehrerPersonalabschnittsdatenAnrechnungsstunden> listeAnrechnungen = this.anrechnungen.get();
 
-		if (listeLehraemter == null || listeAnrechnungen == null)
+		if (listeLehraemter == null || listeAnrechnungen == null) {
 			return true;
+		}
 
 		final LehrerAnrechnungsgrund grund935 = LehrerAnrechnungsgrund.data().getWertByBezeichner("ID_935");
 
-		for (final LehrerLehramtEintrag lehramtEintrag : listeLehraemter)
+		for (final LehrerLehramtEintrag lehramtEintrag : listeLehraemter) {
 			// Falls das Lehramt 'Schulverwaltungsassistent/-in' (ID 70) vorliegt...
-			if (LehrerLehramt.ID_70 == LehrerLehramt.data().getWertByIDOrNull(lehramtEintrag.idKatalogLehramt))
+			if (LehrerLehramt.ID_70 == LehrerLehramt.data().getWertByIDOrNull(lehramtEintrag.idKatalogLehramt)) {
 				for (final LehrerPersonalabschnittsdatenAnrechnungsstunden anrechnung : listeAnrechnungen) {
-					if (anrechnung.idGrund == null)
+					if (anrechnung.idGrund == null) {
 						continue;
+					}
 
 					final LehrerAnrechnungsgrund grund = LehrerAnrechnungsgrund.data().getWertByIDOrNull(anrechnung.idGrund);
 
@@ -65,6 +67,8 @@ public final class ValidatorLppa10LehrerPersonaldatenPersonalabschnittsdatenAnre
 						return false;
 					}
 				}
+			}
+		}
 		return true;
 	}
 }

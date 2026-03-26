@@ -380,9 +380,11 @@ export class KAOAAnschlussoptionen extends JavaEnum<KAOAAnschlussoptionen> imple
 		const cache: JavaMap<number, List<KAOAAnschlussoptionenKatalogEintrag>> | null = new HashMap<number, List<KAOAAnschlussoptionenKatalogEintrag>>();
 		for (const zusatzmerkmalHistorienEintrag of KAOAZusatzmerkmal.data().getEintraegeBySchuljahr(schuljahr)) {
 			const result: List<KAOAAnschlussoptionenKatalogEintrag> | null = new ArrayList<KAOAAnschlussoptionenKatalogEintrag>();
-			for (const anschlussoptionHistorienEintrag of KAOAAnschlussoptionen.data().getEintraegeBySchuljahr(schuljahr))
-				if (anschlussoptionHistorienEintrag.anzeigeZusatzmerkmal.contains(KAOAZusatzmerkmal.data().getWertByID(zusatzmerkmalHistorienEintrag.id).name()))
+			for (const anschlussoptionHistorienEintrag of KAOAAnschlussoptionen.data().getEintraegeBySchuljahr(schuljahr)) {
+				if (anschlussoptionHistorienEintrag.anzeigeZusatzmerkmal.contains(KAOAZusatzmerkmal.data().getWertByID(zusatzmerkmalHistorienEintrag.id).name())) {
 					result.add(anschlussoptionHistorienEintrag);
+				}
+			}
 			cache.put(zusatzmerkmalHistorienEintrag.id, result);
 		}
 		return cache;

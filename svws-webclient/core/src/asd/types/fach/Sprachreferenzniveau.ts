@@ -116,8 +116,9 @@ export class Sprachreferenzniveau extends JavaEnum<Sprachreferenzniveau> impleme
 	 * @return -1 (kleiner), 0 (gleich) oder 1 (größer)
 	 */
 	public compare(other: Sprachreferenzniveau | null): number {
-		if (other === null)
+		if (other === null) {
 			return 1;
+		}
 		return this.compareTo(other);
 	}
 
@@ -129,8 +130,9 @@ export class Sprachreferenzniveau extends JavaEnum<Sprachreferenzniveau> impleme
 	 * @return -1 (kleiner), 0 (gleich) oder 1 (größer)
 	 */
 	public compareByKuerzel(kuerzel: string | null): number {
-		if (kuerzel === null)
+		if (kuerzel === null) {
 			return 1;
+		}
 		return this.compare(Sprachreferenzniveau.data().getWertByKuerzel(kuerzel));
 	}
 

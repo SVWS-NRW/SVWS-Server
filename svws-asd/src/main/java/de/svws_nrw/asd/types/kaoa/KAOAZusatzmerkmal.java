@@ -434,9 +434,11 @@ public enum KAOAZusatzmerkmal implements CoreType<KAOAZusatzmerkmalKatalogEintra
 		for (final KAOAMerkmalKatalogEintrag merkmalHistorienEintrag : KAOAMerkmal.data().getEintraegeBySchuljahr(schuljahr)) {
 			final List<KAOAZusatzmerkmalKatalogEintrag> result = new ArrayList<>();
 			// Iteriere durch die Anschlussoptionen und füge die zulässigen zur Ergebnisliste hinzu.
-			for (final KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalHistorienEintrag : KAOAZusatzmerkmal.data().getEintraegeBySchuljahr(schuljahr))
-				if (zusatzmerkmalHistorienEintrag.merkmal.equals(KAOAMerkmal.data().getWertByID(merkmalHistorienEintrag.id).name()))
+			for (final KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalHistorienEintrag : KAOAZusatzmerkmal.data().getEintraegeBySchuljahr(schuljahr)) {
+				if (zusatzmerkmalHistorienEintrag.merkmal.equals(KAOAMerkmal.data().getWertByID(merkmalHistorienEintrag.id).name())) {
 					result.add(zusatzmerkmalHistorienEintrag);
+				}
+			}
 			cache.put(merkmalHistorienEintrag.id, result);
 		}
 		return cache;
