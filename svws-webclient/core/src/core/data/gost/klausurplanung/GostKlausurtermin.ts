@@ -20,12 +20,12 @@ export class GostKlausurtermin extends JavaObject {
 	public abijahr: number = -1;
 
 	/**
-	 * Das Gost-Halbjahr, in dem die Klausurg geschrieben wird.
+	 * Das Gost-Halbjahr, in dem die Klausur geschrieben wird.
 	 */
 	public halbjahr: number = -1;
 
 	/**
-	 * Das Quartal, in welchem die Klausur gechrieben wird.
+	 * Das Quartal, in welchem die Klausur geschrieben wird.
 	 */
 	public quartal: number = -1;
 

@@ -16,6 +16,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @Schema(description = "Spezifiziert die Datenstruktur einer Klasse, innerhalb des Exports einer Lernplattform.")
 @TranspilerDTO
 public class LernplattformV1Klasse {
+
 	/** Die ID der Klasse aus der SVWS-DB (z.B. 12) */
 	@Schema(description = "Die ID der Klasse aus der SVWS-DB.", example = "12")
 	public long id;

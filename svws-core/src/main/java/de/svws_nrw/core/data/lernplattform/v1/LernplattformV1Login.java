@@ -11,6 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @Schema(description = "Spezifiziert die Datenstruktur von Logindaten eines Schülers oder Lehrers, innerhalb des Exports einer Lernplattform.")
 @TranspilerDTO
 public class LernplattformV1Login {
+
 	/** Der Benutzername für die Lernplattform. */
 	@Schema(description = "Der Benutzername für die Lernplattform.", example = "max.mustermann")
 	public String benutzername;

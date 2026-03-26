@@ -19,7 +19,7 @@ export class AdressbuchEintrag extends JavaObject {
 	public uri: string = "";
 
 	/**
-	 *  Versionskennzeichen des Kontaks
+	 *  Versionskennzeichen des Kontakts
 	 */
 	public version: string = "";
 

@@ -16,8 +16,8 @@ public class Schild3KatalogEintragPruefungsordnungOption {
 	@Schema(description = "Schulformen für die die Optionen gelten")
 	public String OP_Schulformen;
 
-	/** Kürzel der Prüfungsordung */
-	@Schema(description = "Kürzel der Prüfungsordung")
+	/** Kürzel der Prüfungsordnung */
+	@Schema(description = "Kürzel der Prüfungsordnung")
 	public String OP_POKrz;
 
 	/** Angezeigter Kurztext in Schild-NRW */

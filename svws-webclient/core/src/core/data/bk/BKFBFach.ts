@@ -12,7 +12,7 @@ export class BKFBFach extends JavaObject {
 	public id: number = -1;
 
 	/**
-	 * Das im Alltag verwendete Kuerzel des Fachs.
+	 * Das im Alltag verwendete Kürzel des Fachs.
 	 */
 	public kuerzel: string = "";
 

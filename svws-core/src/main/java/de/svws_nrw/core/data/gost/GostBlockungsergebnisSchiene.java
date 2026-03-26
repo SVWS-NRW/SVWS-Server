@@ -39,12 +39,15 @@ public final class GostBlockungsergebnisSchiene {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof GostBlockungsergebnisSchiene))
+		}
+		if (!(obj instanceof GostBlockungsergebnisSchiene)) {
 			return false;
+		}
 		final @NotNull GostBlockungsergebnisSchiene other = (GostBlockungsergebnisSchiene) obj;
 		return (id == other.id);
 	}

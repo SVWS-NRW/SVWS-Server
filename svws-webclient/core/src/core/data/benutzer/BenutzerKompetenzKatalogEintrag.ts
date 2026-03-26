@@ -69,8 +69,9 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 			this.gruppe_id = gruppe.daten.id;
 			if (schulformen !== null) {
 				this.nurSchulformen = new ArrayList();
-				for (const schulform of schulformen)
+				for (const schulform of schulformen) {
 					this.nurSchulformen.add(schulform.name());
+				}
 			}
 		} else throw new Error('invalid method overload');
 	}

@@ -69,10 +69,12 @@ export class UvSchueler extends JavaObject {
 	 */
 	public static idsFromList(list: List<UvSchueler> | null): List<LongPair> | null {
 		const result: List<LongPair> | null = new ArrayList<LongPair>();
-		if (list === null)
+		if (list === null) {
 			return result;
-		for (const s of list)
+		}
+		for (const s of list) {
 			result.add(new LongPair(s.idPlanungsabschnitt, s.idSchueler));
+		}
 		return result;
 	}
 

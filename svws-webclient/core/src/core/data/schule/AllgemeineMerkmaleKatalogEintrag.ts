@@ -96,9 +96,11 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 			this.beiSchule = beiSchule;
 			this.beiSchueler = beiSchueler;
 			this.kuerzelASD = kuerzelASD;
-			for (const sf of schulformen)
-				if (!this.schulformen.contains(sf.name()))
+			for (const sf of schulformen) {
+				if (!this.schulformen.contains(sf.name())) {
 					this.schulformen.add(sf.name());
+				}
+			}
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;
 		} else throw new Error('invalid method overload');

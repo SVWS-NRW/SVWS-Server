@@ -24,7 +24,7 @@ export class BKBildungsplan extends JavaObject {
 	public dauer: number = -1;
 
 	/**
-	 * Die zugehörigen Bündelfächer
+	 * Die zugehörigen Bündelfächer.
 	 */
 	public fbFaecher: List<BKFBFach> = new ArrayList<BKFBFach>();
 

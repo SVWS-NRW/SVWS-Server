@@ -29,12 +29,15 @@ export class GostBlockungsergebnisKursSchienenZuordnung extends JavaObject {
 	}
 
 	public equals(obj: unknown | null): boolean {
-		if (this as unknown === obj as unknown)
+		if (this as unknown === obj as unknown) {
 			return true;
-		if (obj === null)
+		}
+		if (obj === null) {
 			return false;
-		if (!(((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung')))))
+		}
+		if (!(((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung'))))) {
 			return false;
+		}
 		const other: GostBlockungsergebnisKursSchienenZuordnung = cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisKursSchienenZuordnung(obj);
 		return (this.idKurs === other.idKurs) && (this.idSchiene === other.idSchiene);
 	}

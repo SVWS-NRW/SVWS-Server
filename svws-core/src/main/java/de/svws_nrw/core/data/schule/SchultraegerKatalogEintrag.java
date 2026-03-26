@@ -17,7 +17,6 @@ public class SchultraegerKatalogEintrag {
 	@Schema(description = "Schulträgernummer des Schulträgers")
 	public @NotNull String SchulNr = "";
 
-
 	/** Regionalschlüssel des Schulträgers */
 	@Schema(description = "Regionalschlüssel des Schulträgers")
 	public String RegSchl;

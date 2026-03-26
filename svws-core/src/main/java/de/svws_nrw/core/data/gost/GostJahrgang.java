@@ -21,11 +21,11 @@ public class GostJahrgang {
 	@Schema(description = "das Jahr, in welchem der Jahrgang Abitur machen wird. -1 bei der Vorlage für neue Abiturjahrgänge.", example = "2042")
 	public int abiturjahr = -1;
 
-	/** Die aktuelle Jahrgangstufe, welche dem Abiturjahrgang zugeordnet ist. */
+	/** Die aktuelle Jahrgangsstufe, welche dem Abiturjahrgang zugeordnet ist. */
 	@Schema(description = "die aktuelle Jahrgangstufe, welche dem Abiturjahrgang zugeordnet ist", example = "Q1")
 	public String jahrgang = null;
 
-	/** Das aktuelle Halbjahr, in dem sich der Jahrgang laut Schuljahrsabschnitt der Schule befindet. */
+	/** Das aktuelle Halbjahr, in dem sich der Jahrgang laut Schuljahresabschnitt der Schule befindet. */
 	@Schema(description = "das aktuelle Halbjahr, in dem sich der Jahrgang laut Schuljahrsabschnitt der Schule befindet", example = "Q1")
 	public int halbjahr;
 

@@ -29,12 +29,15 @@ export class GostBlockungsergebnisKursSchuelerZuordnung extends JavaObject {
 	}
 
 	public equals(obj: unknown | null): boolean {
-		if (this as unknown === obj as unknown)
+		if (this as unknown === obj as unknown) {
 			return true;
-		if (obj === null)
+		}
+		if (obj === null) {
 			return false;
-		if (!(((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung')))))
+		}
+		if (!(((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnung'))))) {
 			return false;
+		}
 		const other: GostBlockungsergebnisKursSchuelerZuordnung = cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisKursSchuelerZuordnung(obj);
 		return (this.idKurs === other.idKurs) && (this.idSchueler === other.idSchueler);
 	}

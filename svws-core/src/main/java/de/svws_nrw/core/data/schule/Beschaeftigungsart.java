@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Diese Klasse wird bei der Kommunikation äber die Open-Api-Schnittstelle verwendet.
+ * Diese Klasse wird bei der Kommunikation über die Open-Api-Schnittstelle verwendet.
  * Sie beschreibt, wie die Daten der Beschäftigungsart übergeben werden.
  */
 @XmlRootElement

@@ -14,7 +14,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public final class Teilleistungsart {
 
-
 	/**
 	 * Die ID des Teilleistungsart
 	 */

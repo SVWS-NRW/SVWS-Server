@@ -26,7 +26,7 @@ public class GostJahrgangsdaten {
 	@Schema(description = "die aktuelle Jahrgangstufe, welche dem Abiturjahrgang zugeordnet ist", example = "Q1")
 	public String jahrgang;
 
-	/** Das aktuelle Halbjahr, in dem sich der Jahrgang laut Schuljahrsabschnitt der Schule befindet. */
+	/** Das aktuelle Halbjahr, in dem sich der Jahrgang laut Schuljahresabschnitt der Schule befindet. */
 	@Schema(description = "das aktuelle Halbjahr, in dem sich der Jahrgang laut Schuljahrsabschnitt der Schule befindet", example = "Q1")
 	public int halbjahr;
 

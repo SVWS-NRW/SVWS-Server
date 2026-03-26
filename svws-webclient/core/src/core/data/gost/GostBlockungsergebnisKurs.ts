@@ -48,12 +48,15 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 	}
 
 	public equals(obj: unknown | null): boolean {
-		if (this as unknown === obj as unknown)
+		if (this as unknown === obj as unknown) {
 			return true;
-		if (obj === null)
+		}
+		if (obj === null) {
 			return false;
-		if (!(((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs')))))
+		}
+		if (!(((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs'))))) {
 			return false;
+		}
 		const other: GostBlockungsergebnisKurs = cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisKurs(obj);
 		return (this.id === other.id);
 	}

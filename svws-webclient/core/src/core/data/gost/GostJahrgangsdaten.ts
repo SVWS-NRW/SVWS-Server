@@ -17,7 +17,7 @@ export class GostJahrgangsdaten extends JavaObject {
 	public jahrgang: string | null = null;
 
 	/**
-	 * Das aktuelle Halbjahr, in dem sich der Jahrgang laut Schuljahrsabschnitt der Schule befindet.
+	 * Das aktuelle Halbjahr, in dem sich der Jahrgang laut Schuljahresabschnitt der Schule befindet.
 	 */
 	public halbjahr: number = 0;
 

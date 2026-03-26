@@ -9,12 +9,12 @@ export class GostJahrgang extends JavaObject {
 	public abiturjahr: number = -1;
 
 	/**
-	 * Die aktuelle Jahrgangstufe, welche dem Abiturjahrgang zugeordnet ist.
+	 * Die aktuelle Jahrgangsstufe, welche dem Abiturjahrgang zugeordnet ist.
 	 */
 	public jahrgang: string | null = null;
 
 	/**
-	 * Das aktuelle Halbjahr, in dem sich der Jahrgang laut Schuljahrsabschnitt der Schule befindet.
+	 * Das aktuelle Halbjahr, in dem sich der Jahrgang laut Schuljahresabschnitt der Schule befindet.
 	 */
 	public halbjahr: number = 0;
 

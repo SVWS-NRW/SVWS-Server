@@ -85,10 +85,13 @@ public enum StundenplanblockungRegelTyp {
 	 * @return Liefert die Map. Falls diese leer ist, wird sie vorher gefüllt.
 	 */
 	private static @NotNull HashMap<Integer, StundenplanblockungRegelTyp> getMap() {
-		if (_map_id_regel.isEmpty())
-			for (final @NotNull StundenplanblockungRegelTyp typ : StundenplanblockungRegelTyp.values())
-				if (_map_id_regel.put(typ.id, typ) != null)
+		if (_map_id_regel.isEmpty()) {
+			for (final @NotNull StundenplanblockungRegelTyp typ : StundenplanblockungRegelTyp.values()) {
+				if (_map_id_regel.put(typ.id, typ) != null) {
 					throw new NullPointerException("StundenplanblockungRegelTyp.id=" + typ.id + " doppelt!");
+				}
+			}
+		}
 		return _map_id_regel;
 	}
 
@@ -122,11 +125,13 @@ public enum StundenplanblockungRegelTyp {
 	 * @return der Regel-Typ
 	 */
 	public static @NotNull StundenplanblockungRegelTyp fromTyp(final Integer id) {
-		if (id == null)
+		if (id == null) {
 			return StundenplanblockungRegelTyp.UNDEFINIERT;
+		}
 		final StundenplanblockungRegelTyp gostTyp = getMap().get(id);
-		if (gostTyp == null)
+		if (gostTyp == null) {
 			return StundenplanblockungRegelTyp.UNDEFINIERT;
+		}
 		return gostTyp;
 	}
 
@@ -159,9 +164,10 @@ public enum StundenplanblockungRegelTyp {
 	 * @throws IllegalArgumentException falls der angegebene Index ungültig ist
 	 */
 	public @NotNull StundenplanblockungRegelParameterTyp getParamType(final int i) throws IllegalArgumentException {
-		if ((i < 0) || (i >= paramTypes.size()))
+		if ((i < 0) || (i >= paramTypes.size())) {
 			throw new IllegalArgumentException(
 					"Ein Parameter mit dem Index i existiert nicht für den Regel-Typ " + this.name());
+		}
 		return paramTypes.get(i);
 	}
 
@@ -174,9 +180,11 @@ public enum StundenplanblockungRegelTyp {
 	 * @return true, falls die Regel einen solchen Parametertyp hat und ansonsten false
 	 */
 	public boolean hasParamType(final StundenplanblockungRegelParameterTyp paramType) {
-		for (final StundenplanblockungRegelParameterTyp cur : paramTypes)
-			if (paramType == cur)
+		for (final StundenplanblockungRegelParameterTyp cur : paramTypes) {
+			if (paramType == cur) {
 				return true;
+			}
+		}
 		return false;
 	}
 

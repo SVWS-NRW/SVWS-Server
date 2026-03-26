@@ -36,12 +36,15 @@ public final class GostBlockungsergebnisKursSchuelerZuordnung {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof GostBlockungsergebnisKursSchuelerZuordnung))
+		}
+		if (!(obj instanceof GostBlockungsergebnisKursSchuelerZuordnung)) {
 			return false;
+		}
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnung other = (GostBlockungsergebnisKursSchuelerZuordnung) obj;
 		return (idKurs == other.idKurs) && (idSchueler == other.idSchueler);
 	}

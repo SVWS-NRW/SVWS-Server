@@ -36,7 +36,7 @@ public class BKBildungsplan {
 	@Schema(description = "die Dauer des Bildungsgangs in Halbjahren", example = "7")
 	public int dauer = -1;
 
-	/** Die zugehörigen Bündelfächer */
+	/** Die zugehörigen Bündelfächer. */
 	@Schema(description = "Die zugehörigen Bündelfächer des Bildungsplans", example = "{1000,2000}")
 	public @NotNull List<BKFBFach> fbFaecher = new ArrayList<>();
 

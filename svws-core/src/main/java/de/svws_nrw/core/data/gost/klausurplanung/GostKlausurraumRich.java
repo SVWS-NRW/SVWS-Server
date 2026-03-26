@@ -23,7 +23,7 @@ public class GostKlausurraumRich {
 	@Schema(description = "die ID des Klausurtermins", example = "2242")
 	public @NotNull GostKlausurraum klausurraum = new GostKlausurraum();
 
-	/** Die Grösse des Raumes an Arbeitsplätzen für Schüler. */
+	/** Die Größe des Raumes an Arbeitsplätzen für Schüler. */
 	@Schema(description = "die Grösse des Raumes an Arbeitsplätzen für Schüler", example = "30")
 	public int groesse = -1;
 

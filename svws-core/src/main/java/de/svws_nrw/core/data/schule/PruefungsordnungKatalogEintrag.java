@@ -16,7 +16,6 @@ import jakarta.validation.constraints.NotNull;
 @TranspilerDTO
 public class PruefungsordnungKatalogEintrag {
 
-
 	/** Die ID des Eintrags. */
 	@Schema(description = "die ID des Eintrags", example = "4711")
 	public long id;

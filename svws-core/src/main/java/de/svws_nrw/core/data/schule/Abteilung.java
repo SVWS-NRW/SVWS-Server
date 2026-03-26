@@ -17,6 +17,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @Schema(description = "die Informationen zu einer Abteilung, welche von einem Lehrer geleitet wird.")
 @TranspilerDTO
 public class Abteilung {
+
 	/** Die ID des Eintrags für die Abteilung */
 	@Schema(description = "die ID des Eintrags für die Abteilung", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id = -1;

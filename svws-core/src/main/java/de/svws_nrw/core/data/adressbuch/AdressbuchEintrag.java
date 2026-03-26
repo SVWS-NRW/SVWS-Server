@@ -30,7 +30,7 @@ public class AdressbuchEintrag {
 	public @NotNull String uri = "";
 
 	/**
-	 * Versionskennzeichen des Kontaks
+	 * Versionskennzeichen des Kontakts
 	 */
 	@Schema(description = "Versionskennzeichen des Kontakts", example = "78")
 	public @NotNull String version = "";

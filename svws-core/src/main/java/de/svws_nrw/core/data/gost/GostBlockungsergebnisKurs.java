@@ -51,12 +51,15 @@ public final class GostBlockungsergebnisKurs {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof GostBlockungsergebnisKurs))
+		}
+		if (!(obj instanceof GostBlockungsergebnisKurs)) {
 			return false;
+		}
 		final @NotNull GostBlockungsergebnisKurs other = (GostBlockungsergebnisKurs) obj;
 		return (id == other.id);
 	}

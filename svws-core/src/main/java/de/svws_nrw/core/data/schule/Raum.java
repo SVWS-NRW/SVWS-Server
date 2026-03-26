@@ -26,7 +26,7 @@ public class Raum {
 	@Schema(description = "die Beschreibung des Raumes", example = "Klassenraum der Klasse 07b")
 	public @NotNull String beschreibung = "";
 
-	/** Die Grösse des Raumes an Arbeitsplätzen für Schüler. */
+	/** Die Größe des Raumes an Arbeitsplätzen für Schüler. */
 	@Schema(description = "die Grösse des Raumes an Arbeitsplätzen für Schüler", example = "30")
 	public int groesse = -1;
 

@@ -24,7 +24,7 @@ public class AbschlussErgebnis {
 	@Schema(description = "gibt an, welcher Abschluss geprüft wurde.", example = "MSA-Q")
 	public String abschluss = null;
 
-	/** Eine Liste der Kuerzel für mögliche Nachprüfungsfächer. */
+	/** Eine Liste der Kürzel für mögliche Nachprüfungsfächer. */
 	@ArraySchema(schema = @Schema(description = "eine Liste der Kuerzel für mögliche Nachprüfungsfächer.", example = "M"))
 	public List<String> npFaecher = null;
 

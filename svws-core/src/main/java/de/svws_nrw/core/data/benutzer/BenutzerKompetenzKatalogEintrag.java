@@ -65,8 +65,9 @@ public class BenutzerKompetenzKatalogEintrag {
 		this.gruppe_id = gruppe.daten.id;
 		if (schulformen != null) {
 			this.nurSchulformen = new ArrayList<>();
-			for (final @NotNull Schulform schulform : schulformen)
+			for (final @NotNull Schulform schulform : schulformen) {
 				this.nurSchulformen.add(schulform.name());
+			}
 		}
 	}
 

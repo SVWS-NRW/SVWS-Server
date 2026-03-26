@@ -9,7 +9,7 @@ export class Schild3KatalogEintragPruefungsordnungOption extends JavaObject {
 	public OP_Schulformen: string | null = null;
 
 	/**
-	 * Kürzel der Prüfungsordung
+	 * Kürzel der Prüfungsordnung
 	 */
 	public OP_POKrz: string | null = null;
 

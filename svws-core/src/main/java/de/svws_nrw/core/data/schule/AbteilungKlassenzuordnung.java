@@ -7,12 +7,13 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 /**
  * Dieses Core-DTO beinhaltet die Zuordnung einer Klasse zu einer Abteilung.
  * Die Abteilungsleitung hat im SVWS-Server ggf. erweiterte funktionsbezogene Rechte
- * auf die zugeordnetete Klasse.
+ * auf die zugeordnete Klasse.
  */
 @XmlRootElement
 @Schema(description = "die Zuordnung einer Klasse zu einer Abteilung.")
 @TranspilerDTO
 public class AbteilungKlassenzuordnung {
+
 	/** Die ID der Zuordnung */
 	@Schema(description = "die ID der Zuordnung", example = "4711")
 	public long id = -1;

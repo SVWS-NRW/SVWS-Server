@@ -19,7 +19,7 @@ export class Raum extends JavaObject {
 	public beschreibung: string = "";
 
 	/**
-	 * Die Grösse des Raumes an Arbeitsplätzen für Schüler.
+	 * Die Größe des Raumes an Arbeitsplätzen für Schüler.
 	 */
 	public groesse: number = -1;
 

@@ -16,6 +16,7 @@ public class SchuelerLernabschnittListeEintrag {
 	/** Die ID des Lernabschnitts in der Datenbank. */
 	@Schema(description = "die ID des Lernabschnitts in der Datenbank", example = "126784")
 	public long id;
+
 	/** Die ID des Schülers, zu dem diese Lernabschnittdaten gehören. */
 	@Schema(description = "die ID des Schülers, zu dem diese Lernabschnittdaten gehören", example = "4785")
 	public long schuelerID;

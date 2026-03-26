@@ -76,10 +76,12 @@ public class UvSchueler {
 	 */
 	public static List<LongPair> idsFromList(final List<UvSchueler> list) {
 		final List<LongPair> result = new ArrayList<>();
-		if (list == null)
+		if (list == null) {
 			return result;
-		for (final UvSchueler s : list)
+		}
+		for (final UvSchueler s : list) {
 			result.add(new LongPair(s.idPlanungsabschnitt, s.idSchueler));
+		}
 		return result;
 	}
 }

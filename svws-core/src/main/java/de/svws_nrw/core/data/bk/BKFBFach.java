@@ -21,7 +21,7 @@ public class BKFBFach {
 	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id = -1;
 
-	/** Das im Alltag verwendete Kuerzel des Fachs. */
+	/** Das im Alltag verwendete Kürzel des Fachs. */
 	@Schema(description = "das im Alltag verwendete Kuerzel des Fachs", example = "FP")
 	public @NotNull String kuerzel = "";
 

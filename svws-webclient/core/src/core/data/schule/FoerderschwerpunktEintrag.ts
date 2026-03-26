@@ -14,7 +14,7 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 	public kuerzel: string = "";
 
 	/**
-	 * Das Kürzel des Eintrags im Rahmen der amtlichen Schulstatisik.
+	 * Das Kürzel des Eintrags im Rahmen der amtlichen Schulstatistik.
 	 */
 	public kuerzelStatistik: string = "";
 

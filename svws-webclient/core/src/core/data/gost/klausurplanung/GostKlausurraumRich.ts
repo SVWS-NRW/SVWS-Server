@@ -13,7 +13,7 @@ export class GostKlausurraumRich extends JavaObject {
 	public klausurraum: GostKlausurraum = new GostKlausurraum();
 
 	/**
-	 * Die Grösse des Raumes an Arbeitsplätzen für Schüler.
+	 * Die Größe des Raumes an Arbeitsplätzen für Schüler.
 	 */
 	public groesse: number = -1;
 

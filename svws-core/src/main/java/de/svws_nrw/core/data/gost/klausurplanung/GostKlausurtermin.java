@@ -25,11 +25,11 @@ public class GostKlausurtermin {
 	@Schema(description = "das Jahr, in welchem der Jahrgang Abitur machen wird", example = "2025")
 	public int abijahr = -1;
 
-	/** Das Gost-Halbjahr, in dem die Klausurg geschrieben wird. */
+	/** Das Gost-Halbjahr, in dem die Klausur geschrieben wird. */
 	@Schema(description = "das Gost-Halbjahr, in dem die Klausurg geschrieben wird", example = "3")
 	public int halbjahr = -1;
 
-	/** Das Quartal, in welchem die Klausur gechrieben wird. */
+	/** Das Quartal, in welchem die Klausur geschrieben wird. */
 	@Schema(description = "das Quartal, in welchem die Klausur gechrieben wird", example = "1")
 	public int quartal = -1;
 

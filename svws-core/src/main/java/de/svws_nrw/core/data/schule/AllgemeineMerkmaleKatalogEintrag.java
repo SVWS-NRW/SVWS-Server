@@ -85,9 +85,11 @@ public class AllgemeineMerkmaleKatalogEintrag {
 		this.beiSchule = beiSchule;
 		this.beiSchueler = beiSchueler;
 		this.kuerzelASD = kuerzelASD;
-		for (final @NotNull Schulform sf : schulformen)
-			if (!this.schulformen.contains(sf.name()))
+		for (final @NotNull Schulform sf : schulformen) {
+			if (!this.schulformen.contains(sf.name())) {
 				this.schulformen.add(sf.name());
+			}
+		}
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;
 	}

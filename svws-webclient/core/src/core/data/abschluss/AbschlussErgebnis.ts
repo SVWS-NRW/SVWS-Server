@@ -16,7 +16,7 @@ export class AbschlussErgebnis extends JavaObject {
 	public abschluss: string | null = null;
 
 	/**
-	 * Eine Liste der Kuerzel für mögliche Nachprüfungsfächer.
+	 * Eine Liste der Kürzel für mögliche Nachprüfungsfächer.
 	 */
 	public npFaecher: List<string> | null = null;
 
