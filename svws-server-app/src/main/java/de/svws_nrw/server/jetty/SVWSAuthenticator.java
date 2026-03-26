@@ -52,10 +52,12 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
 					|| RestAppServer.checkIsInPathSpecificationCommon(pathInfo);
 			final boolean needsPriviledgedAccess = RestAppSchemaRoot.checkIsInPathSpecification(pathInfo)
 					|| RestAppAdminClient.checkIsInPathSpecification(pathInfo);
-			if (!isCommonAccess && needsPriviledgedAccess && (Request.getServerPort(req) != config.getPortHTTPPrivilegedAccess()))
+			if (!isCommonAccess && needsPriviledgedAccess && (Request.getServerPort(req) != config.getPortHTTPPrivilegedAccess())) {
 				throw new ServerAuthException("Zugriff auf diese API wurde in der Serverkonfiguration unterbunden.");
-			if (!isCommonAccess && !needsPriviledgedAccess && (Request.getServerPort(req) == config.getPortHTTPPrivilegedAccess()))
+			}
+			if (!isCommonAccess && !needsPriviledgedAccess && (Request.getServerPort(req) == config.getPortHTTPPrivilegedAccess())) {
 				throw new ServerAuthException("Zugriff auf diese API wurde in der Serverkonfiguration unterbunden.");
+			}
 		}
 		// Prüfe die Anmeldenamen...
 		final String auth = req.getHeaders().get(HttpHeader.AUTHORIZATION);
@@ -96,11 +98,13 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
 		} else {
 			try {
 				UserIdentity user = login(username, password, req, res);
-				if (user != null)
+				if (user != null) {
 					return new UserAuthenticationSucceeded(getAuthenticationType(), user);
+				}
 				user = login(usernameISO_8859_1, passwordISO_8859_1, req, res);
-				if (user != null)
+				if (user != null) {
 					return new UserAuthenticationSucceeded(getAuthenticationType(), user);
+				}
 			} catch (final WebApplicationException wae) {
 				try (var r = wae.getResponse()) {
 					res.setStatus(r.getStatus());

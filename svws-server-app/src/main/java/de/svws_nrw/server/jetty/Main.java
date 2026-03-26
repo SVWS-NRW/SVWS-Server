@@ -60,8 +60,9 @@ public class Main {
 		logger.modifyIndent(2);
 		final boolean success = dbManager.updater.update(dbManager.getConnection(), -1, devMode, true);
 		logger.modifyIndent(-2);
-		if (logfile != null)
+		if (logfile != null) {
 			logger.removeConsumer(logfile);
+		}
 		return success;
 	}
 
@@ -91,14 +92,15 @@ public class Main {
 
 		final boolean success = dbManager.updater.coreTypes.updateNewTransaction(dbManager.getConnection(), true, -1);
 		logger.modifyIndent(-2);
-		if (logfile != null)
+		if (logfile != null) {
 			logger.removeConsumer(logfile);
+		}
 		return success;
 	}
 
 
 	/**
-	 * Prüft das Default-Charset und die Default-Collation und gibt ggf. Fehlemeldungen über den Logger
+	 * Prüft das Default-Charset und die Default-Collation und gibt ggf. Fehlermeldungen über den Logger
 	 * aus.
 	 *
 	 * @param dbConn   die Datenbankverbindung
@@ -116,10 +118,12 @@ public class Main {
 				final Object[] tmp = (Object[]) result.get(0);
 				final String charset = (String) tmp[0];
 				final String collation = (String) tmp[1];
-				if (!"utf8mb4".equals(charset))
+				if (!"utf8mb4".equals(charset)) {
 					logger.logLn("Warnung: Das Datenbank-Schema hat nicht 'utf8mb4' als Default-Charset. Dies kann zu Kompatibilitätsproblemen führen.");
-				if (!"utf8mb4_bin".equals(collation))
+				}
+				if (!"utf8mb4_bin".equals(collation)) {
 					logger.logLn("Warnung: Das Datenbank-Schema hat nicht 'utf8mb4_bin' als Default-Collation. Dies kann zu Kompatibilitätsproblemen führen.");
+				}
 			}
 		}
 	}
@@ -156,10 +160,12 @@ public class Main {
 				pruefeCharsetAndCollation(dbConn, logger);
 				if (doUpdate) {
 					final DBSchemaManager dbManager = DBSchemaManager.create(dbConn, true, logger);
-					if (!dbManager.updater.isUptodate(-1, devMode) && !updateSchema(dbManager, logger))
+					if (!dbManager.updater.isUptodate(-1, devMode) && !updateSchema(dbManager, logger)) {
 						schemaOK = false;
-					if (!dbManager.updater.coreTypes.isUptodate() && !updateSchemaCoreTypes(dbManager, logger))
+					}
+					if (!dbManager.updater.coreTypes.isUptodate() && !updateSchemaCoreTypes(dbManager, logger)) {
 						schemaOK = false;
+					}
 				} else {
 					logger.logLn("Die Automatische Schema-Aktualisierung wurde in der Server-Konfiguration deaktiviert.");
 				}
@@ -220,8 +226,9 @@ public class Main {
 
 		// Sperre zunächst alle konfigurierten Datenbank-Verbindungen und aktiviere diese erste nachdem die Prüfung erfolgreich war
 		final List<DBSchemaListeEintrag> schemata = svwsconfig.getSchemaList();
-		for (final DBSchemaListeEintrag schema : schemata)
+		for (final DBSchemaListeEintrag schema : schemata) {
 			svwsconfig.deactivateSchema(schema.name);
+		}
 
 		// Starte den SVWS-HTTP-Server (v1.1 or v2 in Abhängigkeit von der SVWS-Konfiguration) in einem eigenen Task
 		Thread.ofPlatform().start(() -> {
@@ -241,10 +248,12 @@ public class Main {
 				threadLogger.addConsumer(logConsumer);
 				for (int i = 1; i <= 5; i++) {
 					final boolean geprueft = pruefeSchema(schema, threadLogger, !svwsconfig.isAutoUpdatesDisabled(), i);
-					for (final String str : logConsumer.getStrings())
+					for (final String str : logConsumer.getStrings()) {
 						logger.logLn(str);
-					if (geprueft)
+					}
+					if (geprueft) {
 						break;
+					}
 					try {
 						Thread.sleep(Duration.ofSeconds(30));
 					} catch (final InterruptedException e) {

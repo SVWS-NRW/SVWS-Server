@@ -117,14 +117,15 @@ public final class SvwsServer {
 	 * @return die SVWS-Server-Instanz
 	 */
 	public static SvwsServer instance() {
-		if (_instance == null)
+		if (_instance == null) {
 			_instance = new SvwsServer();
+		}
 		return _instance;
 	}
 
 
 	/**
-	 * Started den Server und blockiert den aufrufende Thread bis
+	 * Startet den Server und blockiert den aufrufende Thread bis
 	 * der zum Jetty-Server gehörende {@link ThreadPool} gestoppt wurde.
 	 *
 	 * @throws Exception   eine Exception beim Starten des Servers wird zurückgemeldet
@@ -245,8 +246,9 @@ public final class SvwsServer {
 		sslContextFactory.setKeyManagerPassword(keyStorePassword);
 		sslContextFactory.setTrustStorePath(keyStorePath + "/keystore");
 		sslContextFactory.setTrustStorePassword(keyStorePassword);
-		if ((keyAlias != null) && (!keyAlias.isBlank()))
+		if ((keyAlias != null) && (!keyAlias.isBlank())) {
 			sslContextFactory.setCertAlias(keyAlias);
+		}
 		sslContextFactory.setIncludeProtocols("TLSv1.3", "TLSv1.2");
 		sslContextFactory.setIncludeCipherSuites("TLS_AES_256_GCM_SHA384", "TLS_CHACHA20_POLY1305_SHA256", "TLS_AES_128_GCM_SHA256",
 				"TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256", "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
@@ -285,7 +287,7 @@ public final class SvwsServer {
 				: getHttpsServerConnector(config.getPortHTTPS(), "Server",
 						config.useHTTPDefaultv11(), config.getTLSKeystorePath(), config.getTLSKeystorePassword(), config.getTLSKeyAlias());
 		server.addConnector(connector);
-		// Ergänze ggf. eine weitere Verbindung für den Zugriff über einen priviligierten Port
+		// Ergänze ggf. eine weitere Verbindung für den Zugriff über einen privilegierten Port
 		if (!config.isDBRootAccessDisabled() && config.hatPortHTTPPrivilegedAccess()) {
 			final ServerConnector connectorPrivileged = config.isTLSDisabled()
 					? getHttpServerConnector(config.getPortHTTPPrivilegedAccess(), "Privileged")
@@ -308,8 +310,9 @@ public final class SvwsServer {
 		addApplication(RestAppExternal.class, RestAppExternal.getPathSpecification());
 		if (!config.isDBRootAccessDisabled()) {
 			addApplication(RestAppSchemaRoot.class, RestAppSchemaRoot.getPathSpecification());
-			if ((config.getAdminClientPath() != null) && (!config.getAdminClientPath().isBlank()))
+			if ((config.getAdminClientPath() != null) && (!config.getAdminClientPath().isBlank())) {
 				addApplication(RestAppAdminClient.class, RestAppAdminClient.getPathSpecification());
+			}
 		}
 	}
 

@@ -136,8 +136,9 @@ export class SchuldateiManager extends JavaObject {
 		this._kataloge = kataloge;
 		for (const eintrag of kataloge.kataloge) {
 			const katalog: SchuldateiKatalogManager | null = this._mapKataloge.computeIfAbsent(eintrag.katalog, { apply: (k: string) => new SchuldateiKatalogManager(k) });
-			if (katalog !== null)
+			if (katalog !== null) {
 				katalog.addEintrag(eintrag);
+			}
 		}
 		this.katalogAddressarten = this.getKatalogFromMap("ArtDerAdresse");
 		this.katalogAttribute = this.getKatalogFromMap("Attribut");
@@ -176,8 +177,9 @@ export class SchuldateiManager extends JavaObject {
 		this.katalogSchulformen.validate();
 		this.katalogArtDerTraegerschaft.validate();
 		for (const organisationseinheit of schuldatei.organisationseinheiten) {
-			if (this._mapOrganisationseinheitManagerBySchulnummer.containsKey(organisationseinheit.schulnummer))
+			if (this._mapOrganisationseinheitManagerBySchulnummer.containsKey(organisationseinheit.schulnummer)) {
 				throw new IllegalArgumentException("Die Liste mit den Organisationseinheiten enthält mindestens einen doppelten Eintrag (Schulnummer " + organisationseinheit.schulnummer + ")")
+			}
 			this._mapOrganisationseinheitManagerBySchulnummer.put(organisationseinheit.schulnummer, new SchuldateiOrganisationseinheitManager(this, organisationseinheit));
 		}
 		for (const manager of this._mapOrganisationseinheitManagerBySchulnummer.values()) {
@@ -196,8 +198,9 @@ export class SchuldateiManager extends JavaObject {
 	 */
 	private getKatalogFromMap(nameKatalog: string): SchuldateiKatalogManager {
 		const katalog: SchuldateiKatalogManager | null = this._mapKataloge.get(nameKatalog);
-		if (katalog === null)
+		if (katalog === null) {
 			throw new IllegalArgumentException("Die Kataloge enthält keine Einträge für den Katalog mit dem Namen '" + nameKatalog + "'")
+		}
 		return katalog;
 	}
 

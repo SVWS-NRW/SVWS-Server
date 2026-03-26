@@ -52,30 +52,34 @@ public class SchuldateiOrganisationseinheitAdressManager {
 		this._adresse = adresse;
 
 		// Prüfe, ob die Schulnummer passend zur Organisationseinheit ist
-		if (!this._managerOrganisationseinheit.getSchulnummer().equals(_adresse.schulnummer))
+		if (!this._managerOrganisationseinheit.getSchulnummer().equals(_adresse.schulnummer)) {
 			throw new IllegalArgumentException("Die Schulnummer " + _adresse.schulnummer + " bei der Adresse mit der ID " + _adresse.id
 					+ " passt nicht zu der Schulnummer der Organisationseinheit " + this._managerOrganisationseinheit.getSchulnummer() + ".");
+		}
 
 		// Prüfe das Feld qualitaetverortung - Hier wird noch ein Katalog ergänzt
-		if (!_managerSchuldatei.katalogQualitaetenVerortung.hasEintragInZeitraum(_adresse, _adresse.qualitaetverortung))
+		if (!_managerSchuldatei.katalogQualitaetenVerortung.hasEintragInZeitraum(_adresse, _adresse.qualitaetverortung)) {
 			throw new IllegalArgumentException("Der Wert von QualitätVerortung '" + _adresse.qualitaetverortung + "' bei der Adresse mit der ID " + _adresse.id
 					+ " der Organisationseinheit mit der Schulnummer " + this._managerOrganisationseinheit.getSchulnummer()
 					+ " ist im zugehörigen Katalog nicht vorhanden.");
+		}
 
 		// Prüfe, ob die Art der Adresse (bzw. adresstypid) im Katalog existiert
 		this._artDerAdresse = (_adresse.adresstypeid == null) ? "" : ("" + _adresse.adresstypeid);
-		if (!_managerSchuldatei.katalogAddressarten.hasEintragInZeitraum(_adresse, this._artDerAdresse))
+		if (!_managerSchuldatei.katalogAddressarten.hasEintragInZeitraum(_adresse, this._artDerAdresse)) {
 			throw new IllegalArgumentException("Die Art der Adresse '" + this._artDerAdresse + "' bei der Adresse mit der ID " + _adresse.id
 					+ " der Organisationseinheit mit der Schulnummer " + this._managerOrganisationseinheit.getSchulnummer()
 					+ " ist im zugehörigen Katalog nicht vorhanden.");
+		}
 
 		// Prüfe, ob der Wert von hauptstandortadresse bei dieser Adresse gültig ist
 		// hauptstandortadresse 1->ja (Sitz), 0->nein (kein Sitz) - Hier wird noch ein Katalog ergänzt
-		if (!_managerSchuldatei.katalogHauptstandort.hasEintragInZeitraum(_adresse, _adresse.hauptstandortadresse))
+		if (!_managerSchuldatei.katalogHauptstandort.hasEintragInZeitraum(_adresse, _adresse.hauptstandortadresse)) {
 			throw new IllegalArgumentException(
 					"Der Wert von Hauptstandortadresse '" + _adresse.hauptstandortadresse + "' bei der Adresse mit der ID " + _adresse.id
 							+ " der Organisationseinheit mit der Schulnummer " + this._managerOrganisationseinheit.getSchulnummer()
 							+ " ist im zugehörigen Katalog nicht vorhanden.");
+		}
 		// Ermittle, ob es sich um einen Hauptstandort handelt oder nicht
 		this._istHauptstandort = "1".equals(adresse.hauptstandortadresse);
 
@@ -83,10 +87,11 @@ public class SchuldateiOrganisationseinheitAdressManager {
 		for (final @NotNull SchuldateiOrganisationseinheitErreichbarkeit erreichbarkeit : erreichbarkeiten) {
 			if (((erreichbarkeit.liegenschaft == 0) || (erreichbarkeit.liegenschaft == adresse.liegenschaft)) // Erreichbarkeit gehört zur Adresse
 					&& (erreichbarkeit.codekey != null) && (SchuldateiUtils.pruefeUeberlappung(erreichbarkeit, adresse))) { // Überlappung zeitlich vorhanden (codekey != null wegen Transpiler)
-				List<String> listErreichbarkeit =
+				final List<String> listErreichbarkeit =
 						_mapErreichbarkeitenByKanal.computeIfAbsent(erreichbarkeit.codekey, (final @NotNull String k) -> new ArrayList<String>());
-				if (listErreichbarkeit != null)
+				if (listErreichbarkeit != null) {
 					listErreichbarkeit.add(erreichbarkeit.codewert);
+				}
 			}
 		}
 	}

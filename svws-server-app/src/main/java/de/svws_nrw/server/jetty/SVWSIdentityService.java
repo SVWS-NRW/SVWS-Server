@@ -10,7 +10,7 @@ import de.svws_nrw.data.benutzer.BenutzerApiPrincipal;
 
 
 /**
- * Dies Klasse implmentiert die Schnittstelle {@link IdentityService}
+ * Dies Klasse implementiert die Schnittstelle {@link IdentityService}
  * des Jetty-Server und wird für die Klasse {@link SvwsServer}
  * und dem Umgang mit einer {@link UserIdentity} benötigt.
  */
@@ -35,8 +35,9 @@ public final class SVWSIdentityService implements IdentityService {
 
 	@Override
 	public UserIdentity newUserIdentity(final Subject subject, final Principal userPrincipal, final String[] roles) {
-		if (userPrincipal instanceof BenutzerApiPrincipal)
+		if (userPrincipal instanceof BenutzerApiPrincipal) {
 			return UserIdentity.from(subject, userPrincipal, roles);
+		}
 		return null;
 	}
 

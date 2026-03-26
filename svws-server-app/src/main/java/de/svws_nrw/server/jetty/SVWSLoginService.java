@@ -24,11 +24,11 @@ import de.svws_nrw.db.utils.ApiOperationException;
 /**
  * Diese Klasse implementiert den {@link LoginService} des Jetty-Services und stellt
  * die wesentlichen Teile des Authentifizierungs-Prozesses im SVWS-Server zur Verfügung. <br>
- * Hierbei ist insbesondere die Implementierung der login-Methode von Beudeutung.
+ * Hierbei ist insbesondere die Implementierung der login-Methode von Bedeutung.
  */
 public final class SVWSLoginService extends AbstractLifeCycle implements LoginService {
 
-	/** der Identity-Service, welcher in diesem LoginService genútzt wird. */
+	/** der Identity-Service, welcher in diesem LoginService genutzt wird. */
 	protected IdentityService userIdentityService = new SVWSIdentityService();
 
 	/** Der Name dieses Authentifizierungs-Dienstes */
@@ -61,13 +61,13 @@ public final class SVWSLoginService extends AbstractLifeCycle implements LoginSe
 			return null;
 		}
 
-		// Wandle die Crendentials in einen Passwort-String um
+		// Wandle die Credentials in einen Passwort-String um
 		final String password;
-		if (credentials instanceof char[] chars)
+		if (credentials instanceof final char[] chars) {
 			password = new String(chars);
-		else if ((credentials instanceof String) || (credentials instanceof Password))
+		} else if ((credentials instanceof String) || (credentials instanceof Password)) {
 			password = credentials.toString();
-		else {
+		} else {
 			Logger.global().logLn(LogLevel.WARNING, "Fehler beim Prüfen des Kennwortes! " + credentials.getClass());
 			return null;
 		}
@@ -76,8 +76,9 @@ public final class SVWSLoginService extends AbstractLifeCycle implements LoginSe
 		final BenutzerApiPrincipal principal;
 		try {
 			principal = BenutzerApiPrincipal.login(username, password, Request.getPathInContext(req));
-			if (principal == null)
+			if (principal == null) {
 				return null;
+			}
 		} catch (final ApiOperationException e) {
 			throw new WebApplicationException(e.getMessage(), e, e.getStatus());
 		}
@@ -118,8 +119,9 @@ public final class SVWSLoginService extends AbstractLifeCycle implements LoginSe
 
 	@Override
 	public void setIdentityService(final IdentityService identityService) {
-		if (isRunning())
+		if (isRunning()) {
 			throw new IllegalStateException("Running");
+		}
 		userIdentityService = identityService;
 	}
 

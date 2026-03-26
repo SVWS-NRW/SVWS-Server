@@ -31,7 +31,6 @@ public class SchuldateiOrganisationseinheitManager {
 	/** Die Manager für die Adressen anhand ihrer ID */
 	private final @NotNull Map<Integer, SchuldateiOrganisationseinheitAdressManager> _mapAdressManagerByID = new HashMap<>();
 
-
 	/** Cache: Eine Map der Grunddaten anhand des Schuljahres */
 	private final @NotNull Map<Integer, SchuldateiOrganisationseinheitGrunddaten> _mapGrunddatenBySchuljahr = new HashMap<>();
 
@@ -81,9 +80,10 @@ public class SchuldateiOrganisationseinheitManager {
 	 * @throws IllegalArgumentException falls die Daten der Schuldatei nicht fehlerfrei eingelesen werden können
 	 */
 	private void validate() throws IllegalArgumentException {
-		if ((_organisationseinheit.oeart != null) && (!_managerSchuldatei.katalogOrganisationseinheitarten.hasEintrag(_organisationseinheit.oeart)))
+		if ((_organisationseinheit.oeart != null) && (!_managerSchuldatei.katalogOrganisationseinheitarten.hasEintrag(_organisationseinheit.oeart))) {
 			throw new IllegalArgumentException("Die Art %s der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag."
 					.formatted(_organisationseinheit.oeart, _organisationseinheit.schulnummer));
+		}
 		validateGrunddaten();
 		validateSchulform();
 		validateAdressen();
@@ -110,30 +110,34 @@ public class SchuldateiOrganisationseinheitManager {
 		for (final @NotNull SchuldateiOrganisationseinheitGrunddaten grunddaten : this._organisationseinheit.grunddaten) {
 			// Prüfe, ob die Organisationseinheit für den Schulträger existiert, sofern eines angeben ist
 			if ((!grunddaten.schultraegernummer.equals("0")) && (!grunddaten.schultraegernummer.isEmpty())
-					&& (this._managerSchuldatei.getOrganisationsheinheitManager(grunddaten.schultraegernummer) == null))
+					&& (this._managerSchuldatei.getOrganisationsheinheitManager(grunddaten.schultraegernummer) == null)) {
 				throw new IllegalArgumentException(
 						"Der Schulträger " + grunddaten.schultraegernummer + " bei den Grunddaten der Organisationseinheit mit der Schulnummer "
 								+ this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.");
+			}
 
 			// Prüfe, ob die Organisationseinheit für die obere Schulaufsicht existiert, sofern eines angeben ist
 			if ((!grunddaten.obereschulaufsicht.equals("0")) && (!grunddaten.obereschulaufsicht.isEmpty())
-					&& (this._managerSchuldatei.getOrganisationsheinheitManager(grunddaten.obereschulaufsicht) == null))
+					&& (this._managerSchuldatei.getOrganisationsheinheitManager(grunddaten.obereschulaufsicht) == null)) {
 				throw new IllegalArgumentException(
 						"Die obere Schulaufsicht " + grunddaten.obereschulaufsicht + " bei den Grunddaten der Organisationseinheit mit der Schulnummer "
 								+ this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.");
+			}
 
 			// Prüfe, ob die Organisationseinheit für die untere Schulaufsicht, sofern eines angeben ist
 			if ((!grunddaten.untereschulaufsicht.equals("0")) && (!grunddaten.untereschulaufsicht.isEmpty())
-					&& (this._managerSchuldatei.getOrganisationsheinheitManager(grunddaten.untereschulaufsicht) == null))
+					&& (this._managerSchuldatei.getOrganisationsheinheitManager(grunddaten.untereschulaufsicht) == null)) {
 				throw new IllegalArgumentException(
 						"Die untere Schulaufsicht " + grunddaten.untereschulaufsicht + " bei den Grunddaten der Organisationseinheit mit der Schulnummer "
 								+ this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.");
+			}
 
 			// Prüfe, ob die Organisationseinheit für das ZfsL existiert, sofern eines angeben ist
 			if ((!grunddaten.zfsl.equals("0")) && (!grunddaten.zfsl.isEmpty())
-					&& (this._managerSchuldatei.getOrganisationsheinheitManager(grunddaten.zfsl) == null))
+					&& (this._managerSchuldatei.getOrganisationsheinheitManager(grunddaten.zfsl) == null)) {
 				throw new IllegalArgumentException("Das ZfsL " + grunddaten.zfsl + " bei den Grunddaten der Organisationseinheit mit der Schulnummer "
 						+ this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.");
+			}
 		}
 	}
 
@@ -146,47 +150,53 @@ public class SchuldateiOrganisationseinheitManager {
 	private void validateGrunddaten() throws IllegalArgumentException {
 		for (final @NotNull SchuldateiOrganisationseinheitGrunddaten grunddaten : this._organisationseinheit.grunddaten) {
 			// Prüfe, ob die Schulnummer passend zur Organisationseinheit ist
-			if (!this._organisationseinheit.schulnummer.equals(grunddaten.schulnummer))
+			if (!this._organisationseinheit.schulnummer.equals(grunddaten.schulnummer)) {
 				throw new IllegalArgumentException("Die Schulnummer " + grunddaten.schulnummer
 						+ " bei den Grunddaten passt nicht zu der Schulnummer der Organisationseinheit " + this._organisationseinheit.schulnummer + ".");
+			}
 
 			// Prüfe den Rechtsstatus
-			if (!_managerSchuldatei.katalogRechtsstatus.hasEintragInZeitraum(grunddaten, grunddaten.rechtsstatus))
+			if (!_managerSchuldatei.katalogRechtsstatus.hasEintragInZeitraum(grunddaten, grunddaten.rechtsstatus)) {
 				throw new IllegalArgumentException(
 						"Der Rechtstatus " + grunddaten.rechtsstatus + " bei den Grunddaten der Organisationseinheit mit der Schulnummer "
 								+ this._organisationseinheit.schulnummer + " ist im zugehörigen Katalog nicht vorhanden.");
+			}
 
 			// Prüfe die Art der Trägerschaft
 			if ((!grunddaten.artdertraegerschaft.isEmpty())
-					&& (!_managerSchuldatei.katalogArtDerTraegerschaft.hasEintragInZeitraum(grunddaten, grunddaten.artdertraegerschaft)))
+					&& (!_managerSchuldatei.katalogArtDerTraegerschaft.hasEintragInZeitraum(grunddaten, grunddaten.artdertraegerschaft))) {
 				throw new IllegalArgumentException(
 						"Die Art der Trägerschaft " + grunddaten.artdertraegerschaft + " bei den Grunddaten der Organisationseinheit mit der Schulnummer "
 								+ this._organisationseinheit.schulnummer + " ist im zugehörigen Katalog nicht vorhanden.");
+			}
 
 			// Prüfe den Schulbetriebsschlüssel
-			if (!_managerSchuldatei.katalogSchulbetriebsschluessel.hasEintragInZeitraum(grunddaten, grunddaten.schulbetriebsschluessel))
+			if (!_managerSchuldatei.katalogSchulbetriebsschluessel.hasEintragInZeitraum(grunddaten, grunddaten.schulbetriebsschluessel)) {
 				throw new IllegalArgumentException(
 						"Der Schulbetriebsschlüssel " + grunddaten.schulbetriebsschluessel + " bei den Grunddaten der Organisationseinheit mit der Schulnummer "
 								+ this._organisationseinheit.schulnummer + " ist im zugehörigen Katalog nicht vorhanden.");
+			}
 
 			// Prüfe die Internatsdaten
 			if ((grunddaten.internatsbetrieb != null) && (!grunddaten.internatsbetrieb.equals("0"))) {
 				// Prüfe die Schlüssel für den Internatsbetrieb
-				if (!_managerSchuldatei.katalogHeimInternat.hasEintragInZeitraum(grunddaten, grunddaten.internatsbetrieb))
+				if (!_managerSchuldatei.katalogHeimInternat.hasEintragInZeitraum(grunddaten, grunddaten.internatsbetrieb)) {
 					throw new IllegalArgumentException(
 							"Der Schlüssel für den Internatsbetrieb " + grunddaten.internatsbetrieb
 									+ " bei den Grunddaten der Organisationseinheit mit der Schulnummer "
 									+ this._organisationseinheit.schulnummer + " ist im zugehörigen Katalog nicht vorhanden.");
-				else if (grunddaten.internatsplaetze == 0)
+				} else if (grunddaten.internatsplaetze == 0) {
 					throw new IllegalArgumentException(
 							"Die Internatsplätze haben einen Wert von 0 bei den Grunddaten der Organisationseinheit mit der Schulnummer "
 									+ this._organisationseinheit.schulnummer + " ,obwohl Internatsbetrieb vorliegt.");
+				}
 			} else {
 				// Internatsbetrieb ist null OR "0" -> internatsplätze auf null oder "0" prüfen
-				if (grunddaten.internatsplaetze > 0)
+				if (grunddaten.internatsplaetze > 0) {
 					throw new IllegalArgumentException(
 							"Die Internatsplätze haben einen Wert > 0 bei den Grunddaten der Organisationseinheit mit der Schulnummer "
 									+ this._organisationseinheit.schulnummer + " ,obwohl kein Internatsbetrieb vorliegt.");
+				}
 			}
 		}
 	}
@@ -241,30 +251,34 @@ public class SchuldateiOrganisationseinheitManager {
 				schulformWert = schulform.schulformwert;
 				isSchulform = true;
 			} else if ("SchulformASD".equals(schulform.schulformcode)) {
-				if (!_managerSchuldatei.katalogSchulformen.hasEintragInZeitraum(schulform, schulform.schulformwert))
+				if (!_managerSchuldatei.katalogSchulformen.hasEintragInZeitraum(schulform, schulform.schulformwert)) {
 					throw new IllegalArgumentException(
 							"Die SchulformASD '" + schulform.schulformwert + "' ist bei der Organisationseinheit mit der Schulnummer " + oe.schulnummer
 									+ " nicht im Katalog enthalten.");
+				}
 				schulformAsdWert = schulform.schulformwert;
 				schuljahr = (schulform.gueltigbis == null ? SchuldateiUtils._immerGueltigBis : SchuldateiUtils.schuljahrAusDatum(schulform.gueltigbis));
 				isSchulformASD = true;
 			} else if ("Schulart".equals(schulform.schulformcode)) {
-				if (!_managerSchuldatei.katalogSchularten.hasEintragInZeitraum(schulform, schulform.schulformwert))
+				if (!_managerSchuldatei.katalogSchularten.hasEintragInZeitraum(schulform, schulform.schulformwert)) {
 					throw new IllegalArgumentException(
 							"Die Schulart '" + schulform.schulformwert + "' ist bei der Organisationseinheit mit der Schulnummer " + oe.schulnummer
 									+ " nicht im Katalog enthalten.");
+				}
 			}
 		}
 		//prüfen ob Schulform und SchulformASD gesetzt sind.
-		if (!isSchulform || !isSchulformASD)
+		if (!isSchulform || !isSchulformASD) {
 			throw new IllegalArgumentException(
 					"Die Schulform ist bei der Organisationseinheit mit der Schulnummer " + oe.schulnummer + " nicht gesetzt.");
+		}
 		//prüfen ob Schlüssel des Katalogeintrags von SchulformASD == Schulform
 		final SchuldateiKatalogeintrag eintrag = _managerSchuldatei.katalogSchulformen.getEintragBySchuljahrAndWert(schuljahr, schulformAsdWert);
-		if (eintrag == null || !eintrag.schluessel.equals(schulformWert))
+		if (eintrag == null || !eintrag.schluessel.equals(schulformWert)) {
 			throw new IllegalArgumentException(
 					"Die Schulformen Schulform und SchulformASD passen nicht zusammen bei der Organisationseinheit mit der Schulnummer "
 							+ oe.schulnummer + ".");
+		}
 	}
 
 
@@ -276,9 +290,10 @@ public class SchuldateiOrganisationseinheitManager {
 	private void validateAdressen() throws IllegalArgumentException {
 		for (final @NotNull SchuldateiOrganisationseinheitAdresse adresse : this._organisationseinheit.adressen) {
 			// Prüfe, ob die ID für die Organisationseinheit eindeutig ist und erzeuge den Adress-Manager. Dieser validiert auch die Adresse.
-			if (_mapAdressManagerByID.containsKey(adresse.id))
+			if (_mapAdressManagerByID.containsKey(adresse.id)) {
 				throw new IllegalArgumentException("Die Addressen bei der Organisationseinheit mit der Schulnummer %s hat Duplikate."
 						.formatted(_organisationseinheit.schulnummer));
+			}
 			_mapAdressManagerByID.put(adresse.id,
 					new SchuldateiOrganisationseinheitAdressManager(_managerSchuldatei, this, adresse, this._organisationseinheit.erreichbarkeiten));
 		}
@@ -302,29 +317,33 @@ public class SchuldateiOrganisationseinheitManager {
 	private void validateMerkmale() throws IllegalArgumentException {
 		for (final @NotNull SchuldateiOrganisationseinheitMerkmal merkmal : this._organisationseinheit.merkmal) {
 			// Prüfe, ob die Schulnummer passend zur Organisationseinheit ist
-			if (!this._organisationseinheit.schulnummer.equals(merkmal.schulnummer))
+			if (!this._organisationseinheit.schulnummer.equals(merkmal.schulnummer)) {
 				throw new IllegalArgumentException("Die Schulnummer " + merkmal.schulnummer
 						+ " bei dem Merkmal mit der ID " + merkmal.id + " passt nicht zu der Schulnummer der Organisationseinheit "
 						+ this._organisationseinheit.schulnummer + ".");
+			}
 
 			// Prüfe, ob die Liegenschaftsnummer gültig ist
-			if ((merkmal.liegenschaft != 0) && (!existsLiegenschaftInAdressen(merkmal.liegenschaft)))
+			if ((merkmal.liegenschaft != 0) && (!existsLiegenschaftInAdressen(merkmal.liegenschaft))) {
 				throw new IllegalArgumentException("Für die Liegenschaftsnummer " + merkmal.liegenschaft
 						+ " bei dem Merkmal mit der ID " + merkmal.id
 						+ " existiert keine Adresse mit der gleichen Liegenschaftsnummer bei der Organisationseinheit mit der Schulnummer "
 						+ this._organisationseinheit.schulnummer + ".");
+			}
 
 			// Prüfe, ob die Merkmale im Katalog existieren
-			if (!_managerSchuldatei.katalogMerkmale.hasEintragInZeitraum(merkmal, merkmal.merkmal))
+			if (!_managerSchuldatei.katalogMerkmale.hasEintragInZeitraum(merkmal, merkmal.merkmal)) {
 				throw new IllegalArgumentException(
 						"Das Merkmal " + merkmal.merkmal + " der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag."
 								.formatted(_organisationseinheit.schulnummer));
+			}
 
 			// Prüfe, ob die Attribute im Katalog existieren
-			if (!_managerSchuldatei.katalogAttribute.hasEintragInZeitraum(merkmal, merkmal.attribut))
+			if (!_managerSchuldatei.katalogAttribute.hasEintragInZeitraum(merkmal, merkmal.attribut)) {
 				throw new IllegalArgumentException(
 						"Das Attribut " + merkmal.attribut + " der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag."
 								.formatted(_organisationseinheit.schulnummer));
+			}
 		}
 	}
 
@@ -339,29 +358,33 @@ public class SchuldateiOrganisationseinheitManager {
 	private void validateErreichbarkeiten() throws IllegalArgumentException {
 		for (final @NotNull SchuldateiOrganisationseinheitErreichbarkeit erreichbarkeit : this._organisationseinheit.erreichbarkeiten) {
 			// Prüfe, ob die Schulnummer passend zur Organisationseinheit ist
-			if (!this._organisationseinheit.schulnummer.equals(erreichbarkeit.schulnummer))
+			if (!this._organisationseinheit.schulnummer.equals(erreichbarkeit.schulnummer)) {
 				throw new IllegalArgumentException("Die Schulnummer " + erreichbarkeit.schulnummer
 						+ " bei der Erreichbarkeit passt nicht zu der Schulnummer der Organisationseinheit " + this._organisationseinheit.schulnummer + ".");
+			}
 
 			// prüfe auf adresse mit gleicher liegenschaftsnummer
-			if ((erreichbarkeit.liegenschaft != 0) && !existsLiegenschaftInAdressen(erreichbarkeit.liegenschaft))
+			if ((erreichbarkeit.liegenschaft != 0) && !existsLiegenschaftInAdressen(erreichbarkeit.liegenschaft)) {
 				throw new IllegalArgumentException("Für die Liegenschaftsnummer " + erreichbarkeit.liegenschaft
 						+ " existiert keine Adresse mit der gleichen Liegenschaftsnummer bei der Organisationseinheit mit Schulnummer "
 						+ this._organisationseinheit.schulnummer + ".");
+			}
 
 			// prüfe auf existierenden codekey
 			//TODO workaround solange die Values nicht als String in der WEB-Schuldatei.json
 			//final @NotNull String codekey = "0" + erreichbarkeit.codekey;
-			if (!_managerSchuldatei.katalogErreichbarkeiten.hasEintragInZeitraum(erreichbarkeit, erreichbarkeit.codekey))
+			if (!_managerSchuldatei.katalogErreichbarkeiten.hasEintragInZeitraum(erreichbarkeit, erreichbarkeit.codekey)) {
 				throw new IllegalArgumentException(
 						"Der Typ (codekey) der Erreichbarkeit mit der Id %s in der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag."
 								.formatted(erreichbarkeit.id, erreichbarkeit.schulnummer));
+			}
 
 			// prüfe auf existierende kommgruppe
-			if (!_managerSchuldatei.katalogKommunikationsgruppen.hasEintragInZeitraum(erreichbarkeit, erreichbarkeit.kommgruppe))
+			if (!_managerSchuldatei.katalogKommunikationsgruppen.hasEintragInZeitraum(erreichbarkeit, erreichbarkeit.kommgruppe)) {
 				throw new IllegalArgumentException(
 						"Die Kommunikationsgruppe >%s< der Erreichbarkeit mit der Id %s in der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag."
 								.formatted(erreichbarkeit.kommgruppe, erreichbarkeit.id, erreichbarkeit.schulnummer));
+			}
 		}
 	}
 
@@ -374,15 +397,17 @@ public class SchuldateiOrganisationseinheitManager {
 	private void validateEigenschaften() throws IllegalArgumentException {
 		for (final @NotNull SchuldateiOrganisationseinheitEigenschaft eigenschaft : this._organisationseinheit.oe_eigenschaften) {
 			// Prüfe, ob die Schulnummer passend zur Organisationseinheit ist
-			if (!this._organisationseinheit.schulnummer.equals(eigenschaft.schulnummer))
+			if (!this._organisationseinheit.schulnummer.equals(eigenschaft.schulnummer)) {
 				throw new IllegalArgumentException("Die Schulnummer " + eigenschaft.schulnummer
 						+ " bei der Erreichbarkeit passt nicht zu der Schulnummer der Organisationseinheit " + this._organisationseinheit.schulnummer + ".");
+			}
 
 			// Prüfe, ob die Eigenschaften der Organisationseinheit im Katalog existieren
-			if (!_managerSchuldatei.katalogOergangisationseinheitEigenschaften.hasEintragInZeitraum(eigenschaft, eigenschaft.eigenschaft))
+			if (!_managerSchuldatei.katalogOergangisationseinheitEigenschaften.hasEintragInZeitraum(eigenschaft, eigenschaft.eigenschaft)) {
 				throw new IllegalArgumentException("Die Eigenschaft " + eigenschaft.eigenschaft
 						+ " mit der Id %d in der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag."
 								.formatted(eigenschaft.id, _organisationseinheit.schulnummer));
+			}
 		}
 	}
 
@@ -397,22 +422,25 @@ public class SchuldateiOrganisationseinheitManager {
 	private void validateGliederungen() throws IllegalArgumentException {
 		for (final @NotNull SchuldateiOrganisationseinheitGliederung gliederung : this._organisationseinheit.gliederung) {
 			// Prüfe, ob die Schulnummer passend zur Organisationseinheit ist
-			if (!this._organisationseinheit.schulnummer.equals(gliederung.schulnummer))
+			if (!this._organisationseinheit.schulnummer.equals(gliederung.schulnummer)) {
 				throw new IllegalArgumentException("Die Schulnummer " + gliederung.schulnummer
 						+ " bei der Erreichbarkeit passt nicht zu der Schulnummer der Organisationseinheit " + this._organisationseinheit.schulnummer + ".");
+			}
 
 			// Prüfe, ob die Gliederungen der Organisationseinheit im Katalog existieren
-			if ((!gliederung.gliederung.isEmpty()) && (!_managerSchuldatei.katalogGliederungen.hasEintragInZeitraum(gliederung, gliederung.gliederung)))
+			if ((!gliederung.gliederung.isEmpty()) && (!_managerSchuldatei.katalogGliederungen.hasEintragInZeitraum(gliederung, gliederung.gliederung))) {
 				throw new IllegalArgumentException("Die Gliederung " + gliederung.gliederung
 						+ "mit der Id %d in der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag."
 								.formatted(gliederung.id, _organisationseinheit.schulnummer));
+			}
 
 			// Prüfe, ob die Förderschwerpunkte der Organisationseinheit im Katalog existieren
 			if ((!gliederung.foerderschwerpunkt.isEmpty())
-					&& (!_managerSchuldatei.katalogFoerderschwerpunkte.hasEintragInZeitraum(gliederung, gliederung.foerderschwerpunkt)))
+					&& (!_managerSchuldatei.katalogFoerderschwerpunkte.hasEintragInZeitraum(gliederung, gliederung.foerderschwerpunkt))) {
 				throw new IllegalArgumentException("Der Förderschwerpunkt " + gliederung.foerderschwerpunkt
 						+ "mit der Id %d in der Organisationseinheit mit der Schulnummer %s hat keinen zugehörigen Katalog-Eintrag."
 								.formatted(gliederung.id, _organisationseinheit.schulnummer));
+			}
 		}
 	}
 
@@ -529,21 +557,26 @@ public class SchuldateiOrganisationseinheitManager {
 	private @NotNull SchuldateiOrganisationseinheitGrunddaten getGrunddaten(final int schuljahr) throws IllegalArgumentException {
 		// Prüfe, ob die Anfrage aus dem Cache beantwortet werden kann
 		final SchuldateiOrganisationseinheitGrunddaten daten = _mapGrunddatenBySchuljahr.get(schuljahr);
-		if (daten != null)
+		if (daten != null) {
 			return daten;
+		}
 		// Wenn nicht, dann bestimme alle (!) Einträge, welche in den Zeitraum fallen ...
 		final @NotNull List<SchuldateiOrganisationseinheitGrunddaten> grunddaten = new ArrayList<>();
-		for (final @NotNull SchuldateiOrganisationseinheitGrunddaten eintrag : this._organisationseinheit.grunddaten)
-			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))
+		for (final @NotNull SchuldateiOrganisationseinheitGrunddaten eintrag : this._organisationseinheit.grunddaten) {
+			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag)) {
 				grunddaten.add(eintrag);
-		if (grunddaten.isEmpty())
+			}
+		}
+		if (grunddaten.isEmpty()) {
 			throw new IllegalArgumentException("Es konnten keine Grunddaten für das Schuljahr " + schuljahr + "/" + (schuljahr + 1) + " gefunden werden.");
+		}
 		// ... und übernehme den Eintrag aus dem Ergebnis, dessen Gültigkeit noch am längsten währt.
 		@NotNull SchuldateiOrganisationseinheitGrunddaten eintrag = grunddaten.get(0);
 		for (int i = 1; i < grunddaten.size(); i++) {
 			final @NotNull SchuldateiOrganisationseinheitGrunddaten other = grunddaten.get(0);
-			if (SchuldateiUtils.istFrueher(eintrag.gueltigbis, other.gueltigbis))
+			if (SchuldateiUtils.istFrueher(eintrag.gueltigbis, other.gueltigbis)) {
 				eintrag = other;
+			}
 		}
 		_mapGrunddatenBySchuljahr.put(schuljahr, eintrag);
 		return eintrag;
@@ -609,9 +642,10 @@ public class SchuldateiOrganisationseinheitManager {
 	public @NotNull SchuldateiOrganisationseinheitManager getSchultraeger(final int schuljahr) throws IllegalArgumentException {
 		final @NotNull String nummer = this.getGrunddaten(schuljahr).schultraegernummer;
 		final SchuldateiOrganisationseinheitManager schultraeger = _managerSchuldatei.getOrganisationsheinheitManager(nummer);
-		if (schultraeger == null)
+		if (schultraeger == null) {
 			throw new IllegalArgumentException("Der Schulträger " + nummer + " bei den Grunddaten der Organisationseinheit mit der Schulnummer "
 					+ this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.");
+		}
 		return schultraeger;
 	}
 
@@ -689,9 +723,10 @@ public class SchuldateiOrganisationseinheitManager {
 	public @NotNull SchuldateiOrganisationseinheitManager getObereSchulaufsicht(final int schuljahr) throws IllegalArgumentException {
 		final @NotNull String nummer = this.getGrunddaten(schuljahr).obereschulaufsicht;
 		final SchuldateiOrganisationseinheitManager schulaufsicht = _managerSchuldatei.getOrganisationsheinheitManager(nummer);
-		if (schulaufsicht == null)
+		if (schulaufsicht == null) {
 			throw new IllegalArgumentException("Die obere Schulfaufsicht " + nummer + " bei den Grunddaten der Organisationseinheit mit der Schulnummer "
 					+ this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.");
+		}
 		return schulaufsicht;
 	}
 
@@ -725,9 +760,10 @@ public class SchuldateiOrganisationseinheitManager {
 	public @NotNull SchuldateiOrganisationseinheitManager getUntereSchulaufsicht(final int schuljahr) throws IllegalArgumentException {
 		final @NotNull String nummer = this.getGrunddaten(schuljahr).untereschulaufsicht;
 		final SchuldateiOrganisationseinheitManager schulaufsicht = _managerSchuldatei.getOrganisationsheinheitManager(nummer);
-		if (schulaufsicht == null)
+		if (schulaufsicht == null) {
 			throw new IllegalArgumentException("Die untere Schulfaufsicht " + nummer + " bei den Grunddaten der Organisationseinheit mit der Schulnummer "
 					+ this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.");
+		}
 		return schulaufsicht;
 	}
 
@@ -761,9 +797,10 @@ public class SchuldateiOrganisationseinheitManager {
 	public @NotNull SchuldateiOrganisationseinheitManager getZfsL(final int schuljahr) throws IllegalArgumentException {
 		final @NotNull String nummer = this.getGrunddaten(schuljahr).zfsl;
 		final SchuldateiOrganisationseinheitManager zfsl = _managerSchuldatei.getOrganisationsheinheitManager(nummer);
-		if (zfsl == null)
+		if (zfsl == null) {
 			throw new IllegalArgumentException("Das ZfsL " + nummer + " bei den Grunddaten der Organisationseinheit mit der Schulnummer "
 					+ this._organisationseinheit.schulnummer + " konnte nicht als Organisationseinheit gefunden werden.");
+		}
 		return zfsl;
 	}
 
@@ -848,9 +885,10 @@ public class SchuldateiOrganisationseinheitManager {
 			_mapSchulartBySchuljahr.put(schuljahr, sf[2]);
 		}
 		final String result = _mapSchulformBySchuljahr.get(schuljahr);
-		if (result == null)
+		if (result == null) {
 			throw new IllegalArgumentException("Es konnte keine Schulform für die Organisationseinheit mit der Schulnummer " + _organisationseinheit.schulnummer
 					+ " in diesem Schuljahr gefunden werden.");
+		}
 		return result;
 	}
 
@@ -866,12 +904,14 @@ public class SchuldateiOrganisationseinheitManager {
 	 * @throws IllegalArgumentException wenn für das Schuljahr keine Daten vorhanden sind
 	 */
 	public @NotNull String getSchulformASD(final int schuljahr) throws IllegalArgumentException {
-		if (!_mapSchulformASDBySchuljahr.containsKey(schuljahr))
+		if (!_mapSchulformASDBySchuljahr.containsKey(schuljahr)) {
 			this.getGrunddaten(schuljahr);
+		}
 		final String result = _mapSchulformASDBySchuljahr.get(schuljahr);
-		if (result == null)
+		if (result == null) {
 			throw new IllegalArgumentException("Es konnte keine SchulformASD für die Organisationseinheit mit der Schulnummer "
 					+ _organisationseinheit.schulnummer + " in diesem Schuljahr gefunden werden.");
+		}
 		return result;
 	}
 
@@ -887,8 +927,9 @@ public class SchuldateiOrganisationseinheitManager {
 	 * @throws IllegalArgumentException wenn für das Schuljahr keine Daten vorhanden sind
 	 */
 	public @NotNull String getSchulart(final int schuljahr) throws IllegalArgumentException {
-		if (!_mapSchulartBySchuljahr.containsKey(schuljahr))
+		if (!_mapSchulartBySchuljahr.containsKey(schuljahr)) {
 			this.getGrunddaten(schuljahr);
+		}
 		final String result = _mapSchulartBySchuljahr.get(schuljahr);
 		return (result == null) ? "" : result;
 	}
@@ -907,26 +948,32 @@ public class SchuldateiOrganisationseinheitManager {
 	public @NotNull List<SchuldateiOrganisationseinheitAdressManager> getAdressManager(final int schuljahr) throws IllegalArgumentException {
 		// Prüfe, ob die Anfrage aus dem Cache beantwortet werden kann
 		List<SchuldateiOrganisationseinheitAdressManager> listManager = _mapAdressenBySchuljahr.get(schuljahr);
-		if (listManager != null)
+		if (listManager != null) {
 			return listManager;
+		}
 		// Wenn nicht, dann bestimme alle Adressen, welche in dem Zeitraum gültig sind ...
 		listManager = new ArrayList<>();
-		for (final @NotNull SchuldateiOrganisationseinheitAdresse eintrag : this._organisationseinheit.adressen)
-			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))
+		for (final @NotNull SchuldateiOrganisationseinheitAdresse eintrag : this._organisationseinheit.adressen) {
+			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag)) {
 				listManager.add(_mapAdressManagerByID.get(eintrag.id));
-		if (listManager.isEmpty())
+			}
+		}
+		if (listManager.isEmpty()) {
 			throw new IllegalArgumentException("Es konnten keine Adressen für das Schuljahr " + schuljahr + "/" + (schuljahr + 1) + " gefunden werden.");
+		}
 		// ... und übernehme diese in den Cache
 		_mapAdressenBySchuljahr.put(schuljahr, listManager);
 		// ... und bestimme den Eintrag mit dem Hauptstandort aus der Liste, dessen Gültigkeit noch am längsten währt.
 		SchuldateiOrganisationseinheitAdressManager managerHauptstandort = null;
 		for (final @NotNull SchuldateiOrganisationseinheitAdressManager managerOther : listManager) {
 			if ((managerOther.istHauptstandort())
-					&& ((managerHauptstandort == null) || SchuldateiUtils.istFrueher(managerHauptstandort.getGueltigBis(), managerOther.getGueltigBis())))
+					&& ((managerHauptstandort == null) || SchuldateiUtils.istFrueher(managerHauptstandort.getGueltigBis(), managerOther.getGueltigBis()))) {
 				managerHauptstandort = managerOther;
+			}
 		}
-		if (managerHauptstandort != null)
+		if (managerHauptstandort != null) {
 			_mapHauptstandortBySchuljahr.put(schuljahr, managerHauptstandort);
+		}
 		// Gebe die Liste der Adress-Manager zurück.
 		return listManager;
 	}
@@ -943,12 +990,14 @@ public class SchuldateiOrganisationseinheitManager {
 	 * @throws IllegalArgumentException wenn für das Schuljahr keine Daten vorhanden sind
 	 */
 	public @NotNull SchuldateiOrganisationseinheitAdressManager getHauptstandort(final int schuljahr) throws IllegalArgumentException {
-		if (!_mapHauptstandortBySchuljahr.containsKey(schuljahr))
+		if (!_mapHauptstandortBySchuljahr.containsKey(schuljahr)) {
 			this.getAdressManager(schuljahr);
+		}
 		final SchuldateiOrganisationseinheitAdressManager result = _mapHauptstandortBySchuljahr.get(schuljahr);
-		if (result == null)
+		if (result == null) {
 			throw new IllegalArgumentException("Es konnte kein Hauptstandort für die Organisationseinheit mit der Schulnummer "
 					+ _organisationseinheit.schulnummer + " in diesem Schuljahr gefunden werden.");
+		}
 		return result;
 	}
 
@@ -963,13 +1012,16 @@ public class SchuldateiOrganisationseinheitManager {
 	public @NotNull List<SchuldateiOrganisationseinheitGliederung> getGliederungen(final int schuljahr) {
 		// Prüfe, ob die Anfrage aus dem Cache beantwortet werden kann
 		List<SchuldateiOrganisationseinheitGliederung> listGliederungen = _mapGliederungenBySchuljahr.get(schuljahr);
-		if (listGliederungen != null)
+		if (listGliederungen != null) {
 			return listGliederungen;
+		}
 		// Wenn nicht, dann bestimme alle Gliederungen, die in dem Zeitraum gültig sind ...
 		listGliederungen = new ArrayList<>();
-		for (final @NotNull SchuldateiOrganisationseinheitGliederung eintrag : this._organisationseinheit.gliederung)
-			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))
+		for (final @NotNull SchuldateiOrganisationseinheitGliederung eintrag : this._organisationseinheit.gliederung) {
+			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag)) {
 				listGliederungen.add(eintrag);
+			}
+		}
 		// if (listManager.isEmpty()) : leere Liste ist zulässig
 		// ... und übernehme diese in den Cache
 		_mapGliederungenBySchuljahr.put(schuljahr, listGliederungen);
@@ -987,8 +1039,9 @@ public class SchuldateiOrganisationseinheitManager {
 	 */
 	public boolean existsLiegenschaftInAdressen(final int liegenschaft) {
 		for (final @NotNull SchuldateiOrganisationseinheitAdressManager adresse : this._mapAdressManagerByID.values()) {
-			if (adresse.getLiegenschaftnummer() == liegenschaft)
+			if (adresse.getLiegenschaftnummer() == liegenschaft) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -1004,13 +1057,16 @@ public class SchuldateiOrganisationseinheitManager {
 	public @NotNull List<SchuldateiOrganisationseinheitEigenschaft> getEigenschaften(final int schuljahr) {
 		// Prüfe, ob die Anfrage aus dem Cache beantwortet werden kann
 		List<SchuldateiOrganisationseinheitEigenschaft> listEigenschaften = _mapEigenschaftenBySchuljahr.get(schuljahr);
-		if (listEigenschaften != null)
+		if (listEigenschaften != null) {
 			return listEigenschaften;
+		}
 		// Wenn nicht, dann bestimme alle Eigenschaften, die in dem Zeitraum gültig sind ...
 		listEigenschaften = new ArrayList<>();
-		for (final @NotNull SchuldateiOrganisationseinheitEigenschaft eintrag : this._organisationseinheit.oe_eigenschaften)
-			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))
+		for (final @NotNull SchuldateiOrganisationseinheitEigenschaft eintrag : this._organisationseinheit.oe_eigenschaften) {
+			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag)) {
 				listEigenschaften.add(eintrag);
+			}
+		}
 		// if (listManager.isEmpty()) : leere Liste ist zulässig
 		// ... und übernehme diese in den Cache
 		_mapEigenschaftenBySchuljahr.put(schuljahr, listEigenschaften);
@@ -1034,17 +1090,21 @@ public class SchuldateiOrganisationseinheitManager {
 		if (listMerkmale == null) {
 			// Merkmale einmalig für das Schuljahr zusammenstellen und cashen ...
 			listMerkmale = new ArrayList<>();
-			for (final @NotNull SchuldateiOrganisationseinheitMerkmal eintrag : this._organisationseinheit.merkmal)
-				if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))
+			for (final @NotNull SchuldateiOrganisationseinheitMerkmal eintrag : this._organisationseinheit.merkmal) {
+				if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag)) {
 					listMerkmale.add(eintrag);
+				}
+			}
 			// if (listManager.isEmpty()) : leere Liste ist zulässig
 			// ... und übernehme diese in den Cache
 			_mapMerkmaleBySchuljahr.put(schuljahr, listMerkmale);
 		}
 		// Prüfe, ob das geforderte Merkmal in der Liste ist
-		for (final @NotNull SchuldateiOrganisationseinheitMerkmal eintrag : listMerkmale)
-			if ((eintrag.merkmal == merkmal) && (eintrag.attribut == attribut))
+		for (final @NotNull SchuldateiOrganisationseinheitMerkmal eintrag : listMerkmale) {
+			if ((eintrag.merkmal == merkmal) && (eintrag.attribut == attribut)) {
 				return true;
+			}
+		}
 		return false;
 	}
 

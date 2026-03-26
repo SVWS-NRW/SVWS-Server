@@ -95,8 +95,9 @@ public final class SchuldateiManager {
 	 */
 	private @NotNull SchuldateiKatalogManager getKatalogFromMap(final @NotNull String nameKatalog) throws IllegalArgumentException {
 		final SchuldateiKatalogManager katalog = _mapKataloge.get(nameKatalog);
-		if (katalog == null)
+		if (katalog == null) {
 			throw new IllegalArgumentException("Die Kataloge enthält keine Einträge für den Katalog mit dem Namen '" + nameKatalog + "'");
+		}
 		return katalog;
 	}
 
@@ -116,8 +117,9 @@ public final class SchuldateiManager {
 		for (final @NotNull SchuldateiKatalogeintrag eintrag : kataloge.kataloge) {
 			final SchuldateiKatalogManager katalog =
 					_mapKataloge.computeIfAbsent(eintrag.katalog, (final @NotNull String k) -> new SchuldateiKatalogManager(k));
-			if (katalog != null)
+			if (katalog != null) {
 				katalog.addEintrag(eintrag);
+			}
 		}
 		katalogAddressarten = getKatalogFromMap("ArtDerAdresse");
 		katalogAttribute = getKatalogFromMap("Attribut");
@@ -161,9 +163,10 @@ public final class SchuldateiManager {
 		// Durchwandere die Organisationseinheiten und erzeuge Manager für jede Organisationseinheit
 		for (final @NotNull SchuldateiOrganisationseinheit organisationseinheit : schuldatei.organisationseinheiten) {
 			// Prüfe, ob die Schulnummer schonmal eingelesen wurde. In diesem Fall sind die Daten der Schuldatei inkonsistent
-			if (_mapOrganisationseinheitManagerBySchulnummer.containsKey(organisationseinheit.schulnummer))
+			if (_mapOrganisationseinheitManagerBySchulnummer.containsKey(organisationseinheit.schulnummer)) {
 				throw new IllegalArgumentException("Die Liste mit den Organisationseinheiten enthält mindestens einen doppelten Eintrag (Schulnummer "
 						+ organisationseinheit.schulnummer + ")");
+			}
 			_mapOrganisationseinheitManagerBySchulnummer.put(organisationseinheit.schulnummer,
 					new SchuldateiOrganisationseinheitManager(this, organisationseinheit));
 		}

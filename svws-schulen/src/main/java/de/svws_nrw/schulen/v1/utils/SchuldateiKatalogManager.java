@@ -64,10 +64,11 @@ public class SchuldateiKatalogManager {
 	 */
 	void addEintrag(final @NotNull SchuldateiKatalogeintrag eintrag) {
 		// prüfe ob Eintrag nur temporär innerhalb eines Schuljahres gilt. Wird dann nicht übernommen.
-		int schuljahrBis = eintrag.gueltigbis == null ? SchuldateiUtils._immerGueltigBis : SchuldateiUtils.schuljahrGueltigBis(eintrag.gueltigbis);
-		int schuljahrAb  = eintrag.gueltigab  == null ? SchuldateiUtils._immerGueltigAb  : SchuldateiUtils.schuljahrGueltigAb(eintrag.gueltigab);
-		if (schuljahrAb > schuljahrBis)
+		final int schuljahrBis = eintrag.gueltigbis == null ? SchuldateiUtils._immerGueltigBis : SchuldateiUtils.schuljahrGueltigBis(eintrag.gueltigbis);
+		final int schuljahrAb  = eintrag.gueltigab  == null ? SchuldateiUtils._immerGueltigAb  : SchuldateiUtils.schuljahrGueltigAb(eintrag.gueltigab);
+		if (schuljahrAb > schuljahrBis) {
 			return;
+		}
 
 		// Eintrag ablegen
 		_katalogeintraege.add(eintrag);
@@ -75,15 +76,17 @@ public class SchuldateiKatalogManager {
 		// ... in der Map der Einträge anhand des Wertes
 		final List<SchuldateiKatalogeintrag> eintraegeByWert =
 				_mapKatalogeintraegeByWert.computeIfAbsent(eintrag.wert, (final @NotNull String k) -> new ArrayList<SchuldateiKatalogeintrag>());
-		if (eintraegeByWert != null)
+		if (eintraegeByWert != null) {
 			eintraegeByWert.add(eintrag);
+		}
 
 		// ... in der Map der Einträge anhand des Schlüssels
 		if (!eintrag.schluessel.isBlank()) {
 			final List<SchuldateiKatalogeintrag> eintraegeBySchluessel =
 					_mapKatalogeintraegeBySchluessel.computeIfAbsent(eintrag.schluessel, (final @NotNull String k) -> new ArrayList<SchuldateiKatalogeintrag>());
-			if (eintraegeBySchluessel != null)
+			if (eintraegeBySchluessel != null) {
 				eintraegeBySchluessel.add(eintrag);
+			}
 		}
 	}
 
@@ -117,13 +120,16 @@ public class SchuldateiKatalogManager {
 	 */
 	public @NotNull List<SchuldateiKatalogeintrag> getEintraegeBySchuljahr(final int schuljahr) {
 		final List<SchuldateiKatalogeintrag> list = this._mapKatalogeintraegeBySchuljahr.get(schuljahr);
-		if (list != null)
+		if (list != null) {
 			return list;
+		}
 		// Wenn nicht, dann bestimme alle (!) Einträge, welche in das Schuljahr fallen ...
 		final @NotNull List<SchuldateiKatalogeintrag> listEintraege = new ArrayList<>();
-		for (final @NotNull SchuldateiKatalogeintrag eintrag : this._katalogeintraege)
-			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))
+		for (final @NotNull SchuldateiKatalogeintrag eintrag : this._katalogeintraege) {
+			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag)) {
 				listEintraege.add(eintrag);
+			}
+		}
 		this._mapKatalogeintraegeBySchuljahr.put(schuljahr, listEintraege);
 		return listEintraege;
 	}
@@ -201,20 +207,24 @@ public class SchuldateiKatalogManager {
 	 * @return die Liste der Katalog-Eintrag für den Schlüssel existiert der Schlüssel nicht, so wird null zurückgegeben
 	 */
 	public List<SchuldateiKatalogeintrag> getEintraegeBySchuljahrAndSchluessel(final int schuljahr, final String schluessel) {
-		if ((schluessel == null) || (!_mapKatalogeintraegeBySchluessel.containsKey(schluessel)))
+		if ((schluessel == null) || (!_mapKatalogeintraegeBySchluessel.containsKey(schluessel))) {
 			return null;
+		}
 		final Map<String, List<SchuldateiKatalogeintrag>> map = this._mapKatalogEintraegeBySchuljahrAndSchluessel.get(schuljahr);
-		if (map != null)
+		if (map != null) {
 			return map.get(schluessel);
+		}
 		// Cache wird für ein Schuljahr aufgebaut
 		final @NotNull Map<String, List<SchuldateiKatalogeintrag>> neueMap = new HashMap<>();
-		for (final @NotNull SchuldateiKatalogeintrag eintrag : this._katalogeintraege)
+		for (final @NotNull SchuldateiKatalogeintrag eintrag : this._katalogeintraege) {
 			if ((!eintrag.schluessel.isBlank()) && (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))) {
 				final List<SchuldateiKatalogeintrag> eintraegeBySchluessel =
 						neueMap.computeIfAbsent(eintrag.schluessel, (final @NotNull String k) -> new ArrayList<SchuldateiKatalogeintrag>());
-				if (eintraegeBySchluessel != null)
+				if (eintraegeBySchluessel != null) {
 					eintraegeBySchluessel.add(eintrag);
+				}
 			}
+		}
 		// Map eintragen in den Cache
 		this._mapKatalogEintraegeBySchuljahrAndSchluessel.put(schuljahr, neueMap);
 		return neueMap.get(schluessel);
@@ -229,8 +239,9 @@ public class SchuldateiKatalogManager {
 	 * @return true, falls ein Katalog-Eintrag existiert und ansonsten false.
 	 */
 	public boolean hasEintrag(final String wert) {
-		if (wert == null)
+		if (wert == null) {
 			return false;
+		}
 		return this._mapKatalogeintraegeByWert.containsKey(wert);
 	}
 
@@ -282,8 +293,9 @@ public class SchuldateiKatalogManager {
 	 * @return true, falls ein Katalog-Eintrag existiert und ansonsten false.
 	 */
 	public boolean hasEintragInZeitraum(final SchuldateiEintrag abBis, final String wert) {
-		if (wert == null)
+		if (wert == null) {
 			return false;
+		}
 		final int ab = abBis.gueltigab == null ? SchuldateiUtils._immerGueltigAb : SchuldateiUtils.schuljahrAusDatum(abBis.gueltigab);
 		final int bis = abBis.gueltigbis == null ? SchuldateiUtils._immerGueltigBis : SchuldateiUtils.schuljahrAusDatum(abBis.gueltigbis);
 		return hasEintragInZeitraum(ab, bis, wert, false);
@@ -317,18 +329,21 @@ public class SchuldateiKatalogManager {
 	 */
 	public boolean hasEintragInZeitraum(final int schuljahrAb, final int schuljahrBis, final String wert, final boolean mitTeilgueltigkeit) {
 		final List<SchuldateiKatalogeintrag> list = getEintraegeByWert(wert);
-		if (list == null)
+		if (list == null) {
 			return false;
+		}
 		list.sort(SchuldateiUtils._comparatorSchuldateieintragZeitraumDescending);
 		final int ab = schuljahrAb < SchuldateiUtils._immerGueltigAb ? SchuldateiUtils._immerGueltigAb : schuljahrAb;
 		int bis = schuljahrBis > SchuldateiUtils._immerGueltigBis ? SchuldateiUtils._immerGueltigBis : schuljahrBis;
 		for (final SchuldateiKatalogeintrag eintrag : list) {
-			if ((eintrag.gueltigbis == null) || SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis) < bis)
+			if ((eintrag.gueltigbis == null) || SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis) < bis) {
 				return false;
+			}
 			final int vonSchuljahr = (eintrag.gueltigab == null ? SchuldateiUtils._immerGueltigAb : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigab));
 			if (vonSchuljahr <= bis) {
-				if (mitTeilgueltigkeit || (vonSchuljahr <= ab))
+				if (mitTeilgueltigkeit || (vonSchuljahr <= ab)) {
 					return true;
+				}
 				bis = vonSchuljahr - 1;
 			}
 		}
@@ -347,8 +362,9 @@ public class SchuldateiKatalogManager {
 	 */
 	public String getBezeichnung(final int schuljahr, final String wert) {
 		final SchuldateiKatalogeintrag eintrag = getEintragBySchuljahrAndWert(schuljahr, wert);
-		if (eintrag == null)
+		if (eintrag == null) {
 			return null;
+		}
 		return eintrag.bezeichnung;
 	}
 
@@ -362,13 +378,16 @@ public class SchuldateiKatalogManager {
 	 */
 	private @NotNull Map<String, SchuldateiKatalogeintrag> getCacheBySchuljahrAndWert(final int schuljahr) {
 		final Map<String, SchuldateiKatalogeintrag> map = this._mapKatalogEintraegeBySchuljahrAndWert.get(schuljahr);
-		if (map != null)
+		if (map != null) {
 			return map;
+		}
 		// Cache wird für ein Schuljahr aufgebaut
 		final @NotNull Map<String, SchuldateiKatalogeintrag> neueMap = new HashMap<>();
-		for (final @NotNull SchuldateiKatalogeintrag eintrag : this._katalogeintraege)
-			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))
+		for (final @NotNull SchuldateiKatalogeintrag eintrag : this._katalogeintraege) {
+			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag)) {
 				neueMap.put(eintrag.wert, eintrag);
+			}
+		}
 		// Map eintragen in den Cache
 		this._mapKatalogEintraegeBySchuljahrAndWert.put(schuljahr, neueMap);
 		return neueMap;
@@ -392,24 +411,28 @@ public class SchuldateiKatalogManager {
 				int schuljahrAb  = eintrag.gueltigab  == null ? SchuldateiUtils._immerGueltigAb  : SchuldateiUtils.schuljahrGueltigAb(eintrag.gueltigab);
 				for (int i = 1; i < list.size(); i++) {
 					// Wirf Exception, wenn der Zeitraum eines Katalog-Eintrags nicht valide ist
-					if (schuljahrBis < schuljahrAb)
+					if (schuljahrBis < schuljahrAb) {
 						throw new IllegalArgumentException("Dieser Katalogeintrag Katalog='" + eintrag.katalog + "', Wert='" + eintrag.wert	+ "' hat einen ungültigen Gültigkeitszeitraum.");
+					}
 					// hole nächsten Katalog-Eintrag und bestimme schuljahrBis (Iterationsschritt Teil1)
 					eintrag = list.get(i);
 					schuljahrBis = eintrag.gueltigbis == null ? SchuldateiUtils._immerGueltigBis : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis);
 					// Wirf Exception, wenn der nächste Katalog-Eintrag nicht früher liegt also falls schuljahrBis(n+1) >= schuljahrAb(n)
-					if (schuljahrBis >= schuljahrAb)
+					if (schuljahrBis >= schuljahrAb) {
 						throw new IllegalArgumentException("Dieser Katalogeintrag Katalog='" + eintrag.katalog + "', Wert='" + eintrag.wert	+ "' hat überlappende Gültigkeitszeiträume.");
+					}
 					// Iterationsschritt Teil2
 					schuljahrAb = eintrag.gueltigab == null ? SchuldateiUtils._immerGueltigAb : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigab);
 				}
 				// Wirf Exception, wenn der Zeitraum eines Katalog-Eintrags nicht valide ist (letzten Eintrag prüfen)
-				if (schuljahrBis < schuljahrAb)
+				if (schuljahrBis < schuljahrAb) {
 					throw new IllegalArgumentException("Dieser Katalogeintrag Katalog='" + eintrag.katalog + "', Wert='" + eintrag.wert	+ "' hat einen ungültigen Gültigkeitszeitraum.");
+				}
 			} else {
 				eintrag = list.getFirst();
-				if (SchuldateiUtils.istFrueher(eintrag.gueltigbis, eintrag.gueltigab))
+				if (SchuldateiUtils.istFrueher(eintrag.gueltigbis, eintrag.gueltigab)) {
 					throw new IllegalArgumentException("Dieser Katalogeintrag Katalog='" + eintrag.katalog + "', Wert='" + eintrag.wert	+ "' hat einen ungültigen Gültigkeitszeitraum.");
+				}
  			}
 		}
 	}

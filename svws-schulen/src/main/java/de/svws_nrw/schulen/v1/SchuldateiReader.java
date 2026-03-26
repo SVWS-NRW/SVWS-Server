@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse stellt Methoden für den Zugriff auf die Schuldatei
- * entweder lokal über die Resourcen oder über den Webservice zur
+ * entweder lokal über die Ressourcen oder über den Webservice zur
  * Verfügung.
  */
 public final class SchuldateiReader {
@@ -26,7 +26,7 @@ public final class SchuldateiReader {
 
 	/**
 	 * Erstellt einen neuen {@link SchuldateiManager} mithilfe der Daten aus
-	 * den Resourcen.
+	 * den Ressourcen.
 	 *
 	 * @return der Manager oder im Fehlerfall null
 	 */
