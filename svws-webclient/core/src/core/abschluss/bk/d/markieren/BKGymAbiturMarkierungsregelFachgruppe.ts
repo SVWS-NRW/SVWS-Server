@@ -50,8 +50,9 @@ export class BKGymAbiturMarkierungsregelFachgruppe extends BKGymAbiturMarkierung
 	 */
 	public markiere(variante: BKGymAbiturMarkierungsVariante): void {
 		const gruppe: BKGymAufgabenfeld | null = BKGymAufgabenfeld.getAufgabenfeldFromKuerzel(this.fachgruppe);
-		if (gruppe === null)
+		if (gruppe === null) {
 			throw new DeveloperNotificationException("Die Prüfbedingung spezifiziert eine nicht vorhandene Fachgruppe.")
+		}
 		const faecher: ArrayList<number> = BKGymAbiturMarkierungsregelFachgruppe.moeglicheFaecherAusFachgruppe(gruppe, this.belegtSeit, variante);
 		if (this.pruefeBereitsMarkiert(faecher, variante)) {
 			variante.addLogEintrag(1, "Die erforderliche Anzahl an Kursen ist bereits markiert.");
@@ -100,8 +101,9 @@ export class BKGymAbiturMarkierungsregelFachgruppe extends BKGymAbiturMarkierung
 	private pruefeBereitsMarkiert(faecher: ArrayList<number>, variante: BKGymAbiturMarkierungsVariante): boolean {
 		for (const fachID of faecher) {
 			const bedingung: Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> = { test: (markierung: BKGymAbiturMarkierungsalgorithmusMarkierung | null) => (markierung !== null) && (fachID === markierung.fachID) };
-			if (variante.zaehleMarkierte(bedingung) >= this.anzahl)
+			if (variante.zaehleMarkierte(bedingung) >= this.anzahl) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -111,7 +113,7 @@ export class BKGymAbiturMarkierungsregelFachgruppe extends BKGymAbiturMarkierung
 	 * Einführungsphase belegt sind oder alle Fächer des Aufgabenfeldes/der Fachgruppe, wenn seitHalbjahr leer ist.
 	 *
 	 * @param gruppe         das Aufgabenfeld/die Fachgruppe
-	 * @param seitHalbjahr   ggfs. das Halbjahr, ab dem belegt sein muss in EF
+	 * @param seitHalbjahr   ggf. das Halbjahr, ab dem belegt sein muss in EF
 	 * @param variante       eine Markierungsvariante, auf der gearbeitet wird
 	 *
 	 * @return die Liste der Fachbezeichnungen
@@ -126,18 +128,24 @@ export class BKGymAbiturMarkierungsregelFachgruppe extends BKGymAbiturMarkierung
 			return result;
 		}
 		const hj: GostHalbjahr | null = GostHalbjahr.fromKuerzel(seitHalbjahr);
-		if (hj === null)
+		if (hj === null) {
 			throw new DeveloperNotificationException("Die Prüfbedingung enthält ein ungültiges GostHalbjahr '" + seitHalbjahr + "'.")
+		}
 		const hje: Array<GostHalbjahr> = GostHalbjahr.getHalbjahreAbHalbjahr(hj);
 		const leereHje: ArrayList<GostHalbjahr> = new ArrayList<GostHalbjahr>();
-		for (const h of hje)
-			if (!variante.varianten.abiturdatenManager.istBewertet(h))
+		for (const h of hje) {
+			if (!variante.varianten.abiturdatenManager.istBewertet(h)) {
 				leereHje.add(h);
-		if (!leereHje.isEmpty())
+			}
+		}
+		if (!leereHje.isEmpty()) {
 			variante.addLogEintrag(1, "HINWEIS: Nicht alle Halbjahre bewertet. Bitte die erforderliche Belegung der Fachgruppe '" + gruppe.name() + "' prüfen!");
-		for (const fach of gruppe.getFaecher())
-			if (fachbelegungManager.pruefeBelegung(fachbelegungManager.getFachbelegungByBezeichnung(fach), leereHje, ...hje))
+		}
+		for (const fach of gruppe.getFaecher()) {
+			if (fachbelegungManager.pruefeBelegung(fachbelegungManager.getFachbelegungByBezeichnung(fach), leereHje, ...hje)) {
 				result.add(fachbelegungManager.getFachIDByBezeichnung(fach));
+			}
+		}
 		return result;
 	}
 

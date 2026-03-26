@@ -24,7 +24,7 @@ export class BKGymStundentafelManager extends JavaObject {
 	public static readonly ZWEITE_FREMDSPRACHE: string = "Zweite Fremdsprache";
 
 	/**
-	 * Die Bezeichnung für die neueinsetzende Fremdsprache
+	 * Die Bezeichnung für die neu einsetzende Fremdsprache
 	 */
 	public static readonly NEUE_FREMDSPRACHE: string = "Neue Fremdsprache";
 
@@ -77,11 +77,14 @@ export class BKGymStundentafelManager extends JavaObject {
 		for (const t of tafeln) {
 			this.stundentafeln.addAll(this.createStundentafelnOhneWahlmoeglichkeit(t));
 		}
-		for (const t of this.stundentafeln)
+		for (const t of this.stundentafeln) {
 			BKGymStundentafelManager.pruefeStundentafelAufDoppelte(t);
-		for (const tafel of this.stundentafeln)
-			for (const fach of tafel.faecher)
+		}
+		for (const tafel of this.stundentafeln) {
+			for (const fach of tafel.faecher) {
 				this.mapStundentafelFachByTafelAndFachbezeichnung.put(tafel, fach.fachbezeichnung, fach);
+			}
+		}
 	}
 
 	/**
@@ -148,14 +151,15 @@ export class BKGymStundentafelManager extends JavaObject {
 		const eindeutigeFaecher: List<BeruflichesGymnasiumStundentafelFach> = new ArrayList<BeruflichesGymnasiumStundentafelFach>();
 		for (const entry of mapFachBySortierung.entrySet()) {
 			const bereinigt: List<BeruflichesGymnasiumStundentafelFach> | null = this.bereinigteFaecherliste(entry.getValue());
-			if (bereinigt.isEmpty())
+			if (bereinigt.isEmpty()) {
 				eindeutigeFaecher.add(entry.getValue().getFirst());
-			else
-				if (bereinigt.size() === 1)
+			} else
+				if (bereinigt.size() === 1) {
 					eindeutigeFaecher.add(bereinigt.getFirst());
-				else
-					if (bereinigt.size() > 1)
+				} else
+					if (bereinigt.size() > 1) {
 						mapMultiFachBySortierung.put(entry.getKey(), bereinigt);
+					}
 		}
 		return BKGymStundentafelManager.createStundentafelPermutation(eindeutigeFaecher, mapMultiFachBySortierung);
 	}
@@ -199,8 +203,9 @@ export class BKGymStundentafelManager extends JavaObject {
 			return;
 		}
 		const currentFaecher: List<BeruflichesGymnasiumStundentafelFach> | null = map.get(keys.get(index));
-		if (currentFaecher === null)
+		if (currentFaecher === null) {
 			return;
+		}
 		for (const fach of currentFaecher) {
 			current.add(fach);
 			BKGymStundentafelManager.permutiereFaecher(result, eindeutigeFaecher, map, keys, index + 1, current);
@@ -219,8 +224,9 @@ export class BKGymStundentafelManager extends JavaObject {
 	private bereinigteFaecherliste(faecher: List<BeruflichesGymnasiumStundentafelFach>): List<BeruflichesGymnasiumStundentafelFach> {
 		const bereinigt: List<BeruflichesGymnasiumStundentafelFach> = new ArrayList<BeruflichesGymnasiumStundentafelFach>();
 		for (const fach of faecher) {
-			if (this.istGueltigesSpezialfach(fach.fachbezeichnung) || this.fachbelegungManager.getFachbelegungByBezeichnung(fach.fachbezeichnung) !== null)
+			if (this.istGueltigesSpezialfach(fach.fachbezeichnung) || this.fachbelegungManager.getFachbelegungByBezeichnung(fach.fachbezeichnung) !== null) {
 				bereinigt.add(fach);
+			}
 		}
 		return bereinigt;
 	}
@@ -238,12 +244,15 @@ export class BKGymStundentafelManager extends JavaObject {
 	 * @return siehe oben
 	 */
 	private istGueltigesSpezialfach(fachbezeichnung: string): boolean {
-		if (BKGymStundentafelManager.istWahlfach(fachbezeichnung))
+		if (BKGymStundentafelManager.istWahlfach(fachbezeichnung)) {
 			return true;
-		if (BKGymStundentafelManager.istZweiteFremdsprache(fachbezeichnung))
+		}
+		if (BKGymStundentafelManager.istZweiteFremdsprache(fachbezeichnung)) {
 			return !this.fachbelegungManager.istZweiteFremdspracheNeuEinsetzend();
-		if (BKGymStundentafelManager.istNeueFremdsprache(fachbezeichnung))
+		}
+		if (BKGymStundentafelManager.istNeueFremdsprache(fachbezeichnung)) {
 			return this.fachbelegungManager.istZweiteFremdspracheNeuEinsetzend();
+		}
 		return false;
 	}
 
@@ -302,8 +311,9 @@ export class BKGymStundentafelManager extends JavaObject {
 	 */
 	public pruefeAbiGrundkurswahl(tafel: BeruflichesGymnasiumStundentafel, ab3Bezeichnung: string, ab4Bezeichnung: string): boolean {
 		for (const wm of tafel.wahlmoeglichkeiten) {
-			if (this.istGueltigeWahlmoeglichkeit(wm, ab3Bezeichnung, ab4Bezeichnung))
+			if (this.istGueltigeWahlmoeglichkeit(wm, ab3Bezeichnung, ab4Bezeichnung)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -321,14 +331,19 @@ export class BKGymStundentafelManager extends JavaObject {
 	 */
 	private istGueltigeWahlmoeglichkeit(wm: BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit, ab3Bezeichnung: string, ab4Bezeichnung: string): boolean {
 		let wm3: string | null = null;
-		for (const fachBez3 of wm.abifach3)
-			if (JavaObject.equalsTranspiler(fachBez3, (ab3Bezeichnung)) || BKGymStundentafelManager.istWahlfach(fachBez3) || (BKGymStundentafelManager.istZweiteFremdsprache(fachBez3) && this.fachbelegungManager.istZweiteFremdsprache(ab3Bezeichnung)))
+		for (const fachBez3 of wm.abifach3) {
+			if (JavaObject.equalsTranspiler(fachBez3, (ab3Bezeichnung)) || BKGymStundentafelManager.istWahlfach(fachBez3) || (BKGymStundentafelManager.istZweiteFremdsprache(fachBez3) && this.fachbelegungManager.istZweiteFremdsprache(ab3Bezeichnung))) {
 				wm3 = fachBez3;
-		if (wm3 === null)
+			}
+		}
+		if (wm3 === null) {
 			return false;
-		for (const fachBez4 of wm.abifach4)
-			if (JavaObject.equalsTranspiler(fachBez4, (ab4Bezeichnung)) || BKGymStundentafelManager.istWahlfach(fachBez4) || (BKGymStundentafelManager.istZweiteFremdsprache(fachBez4) && this.fachbelegungManager.istZweiteFremdsprache(ab4Bezeichnung)))
+		}
+		for (const fachBez4 of wm.abifach4) {
+			if (JavaObject.equalsTranspiler(fachBez4, (ab4Bezeichnung)) || BKGymStundentafelManager.istWahlfach(fachBez4) || (BKGymStundentafelManager.istZweiteFremdsprache(fachBez4) && this.fachbelegungManager.istZweiteFremdsprache(ab4Bezeichnung))) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -340,8 +355,9 @@ export class BKGymStundentafelManager extends JavaObject {
 	private static pruefeStundentafelAufDoppelte(t: BeruflichesGymnasiumStundentafel): void {
 		const single: JavaSet<number> = new HashSet<number>();
 		for (const fach of t.faecher) {
-			if (single.contains(fach.sortierung))
+			if (single.contains(fach.sortierung)) {
 				throw new DeveloperNotificationException("In der Belegprüfung ist ein interner Fehler aufgetreten: In der Stundentafel sind noch Wahlmöglichkeiten enthalten.")
+			}
 			single.add(fach.sortierung);
 		}
 	}
@@ -355,9 +371,11 @@ export class BKGymStundentafelManager extends JavaObject {
 	 */
 	public static getMaximalSortierung(tafel: BeruflichesGymnasiumStundentafel): number {
 		let max: number = JavaInteger.MIN_VALUE;
-		for (const fach of tafel.faecher)
-			if (fach.sortierung > max)
+		for (const fach of tafel.faecher) {
+			if (fach.sortierung > max) {
 				max = fach.sortierung;
+			}
+		}
 		return max;
 	}
 
@@ -370,8 +388,9 @@ export class BKGymStundentafelManager extends JavaObject {
 	 */
 	public static brauchtBelegungInQPhase(fach: BeruflichesGymnasiumStundentafelFach): boolean {
 		let summeStunden: number = 0;
-		for (const hj of GostHalbjahr.getQualifikationsphase())
+		for (const hj of GostHalbjahr.getQualifikationsphase()) {
 			summeStunden += fach.stundenumfang[hj.id];
+		}
 		return summeStunden > 0;
 	}
 
@@ -385,8 +404,9 @@ export class BKGymStundentafelManager extends JavaObject {
 	public istBerufsbezogenesFach(fachbezeichnung: string): boolean {
 		for (const t of this.stundentafeln) {
 			const fach: BeruflichesGymnasiumStundentafelFach | null = this.getFachByTafelAndBezeichnung(t, fachbezeichnung);
-			if (fach !== null)
+			if (fach !== null) {
 				return JavaObject.equalsTranspiler(fach.zeugnisbereich, (BKGymStundentafelManager.BERUFSBEZOGENER_LERNBEREICH));
+			}
 		}
 		return false;
 	}

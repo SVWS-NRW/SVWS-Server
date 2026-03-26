@@ -66,12 +66,14 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 		// Bestimme die belegten Projektfächer
 		final @NotNull List<AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
 		for (final @NotNull AbiturFachbelegung fachbelegung : alleFachbelegungen) {
-			if (manager.zaehleBelegung(fachbelegung) <= 0)
+			if (manager.zaehleBelegung(fachbelegung) <= 0) {
 				continue;
+			}
 
 			final GostFach fach = manager.getFach(fachbelegung);
-			if ((fach != null) && GostFachUtils.istProjektkurs(fach))
+			if ((fach != null) && GostFachUtils.istProjektkurs(fach)) {
 				projektkursBelegung.add(fachbelegung);
+			}
 		}
 	}
 
@@ -88,12 +90,14 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 		// Prüfe die Belegung des Projektkurses und der Leitfächer
 		pruefeBelegungEF();
 		pruefeBelegung();
-		if (projektkurs != null)
+		if (projektkurs != null) {
 			pruefeBelegungLeitfaecher();
+		}
 
 		// ist der Kurs eine besondere Lernleistung?
-		if (manager.istProjektKursBesondereLernleistung())
+		if (manager.istProjektKursBesondereLernleistung()) {
 			addFehler((projektkurs != null) ? GostBelegungsfehler.PF_16_INFO : GostBelegungsfehler.PF_15);
+		}
 	}
 
 
@@ -105,11 +109,13 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 	private void pruefeBelegungEF() {
 		for (final AbiturFachbelegung fachbelegung : projektkursBelegung) {
 			for (final AbiturFachbelegungHalbjahr belegungHalbjahr : fachbelegung.belegungen) {
-				if (belegungHalbjahr == null)
+				if (belegungHalbjahr == null) {
 					continue;
+				}
 				final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
-				if ((halbjahr == GostHalbjahr.EF1) || (halbjahr == GostHalbjahr.EF2))
+				if ((halbjahr == GostHalbjahr.EF1) || (halbjahr == GostHalbjahr.EF2)) {
 					addFehler(GostBelegungsfehler.PF_10);
+				}
 			}
 		}
 	}
@@ -130,8 +136,9 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 		}
 
 		final AbiturFachbelegung fachbelegung = projektkursBelegung.get(0);
-		if (fachbelegung == null)
+		if (fachbelegung == null) {
 			return;
+		}
 
 		// Prüfe auf fehlerhafte Belegungen in den Halbjahren der Q1
 		if ((fachbelegung.belegungen[GostHalbjahr.Q11.id] != null) || (fachbelegung.belegungen[GostHalbjahr.Q12.id] != null)) {
@@ -155,11 +162,13 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 	 * Prüft die Belegung der Leitfächer
 	 */
 	private void pruefeBelegungLeitfaecher() {
-		if (projektkurs == null)
+		if (projektkurs == null) {
 			return;
+		}
 		final GostFach fach = manager.getFach(projektkurs);
-		if (fach == null)
+		if (fach == null) {
 			return;
+		}
 		// Prüfe nun, ob genau ein Leitfach/Referenzfach belegt wurde
 		final AbiturFachbelegung leitfach1 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
 		final AbiturFachbelegung leitfach2 = manager.getFachbelegungByKuerzel(fach.projektKursLeitfach2Kuerzel);
@@ -179,8 +188,9 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 				return;
 			}
 			final Fach zf = Fach.getBySchluesselOrDefault(lf.kuerzel);
-			if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf == Fach.PX) || (zf == Fach.VX)))
+			if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf == Fach.PX) || (zf == Fach.VX))) {
 				addFehler(GostBelegungsfehler.PF_19);
+			}
 
 			// Prüfe die Belegung des Referenzfaches in EF und Q1 und die Schriftlichkeit in der Q1
 			hatReferenzfach1Belegung = manager.pruefeBelegung(leitfach1, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
@@ -198,8 +208,9 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 				return;
 			}
 			final Fach zf = Fach.getBySchluesselOrDefault(lf.kuerzel);
-			if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf == Fach.PX) || (zf == Fach.VX)))
+			if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf == Fach.PX) || (zf == Fach.VX))) {
 				addFehler(GostBelegungsfehler.PF_19);
+			}
 
 			// Prüfe die Belegung des Referenzfaches in EF und Q1 und die Schriftlichkeit in der Q1
 			hatReferenzfach2Belegung = manager.pruefeBelegung(leitfach2, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12);
@@ -213,8 +224,9 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 		}
 
 		if ((!hatReferenzfach1Belegung || !hatReferenzfach1BelegungSchriftlich)
-				&& (!hatReferenzfach2Belegung || !hatReferenzfach2BelegungSchriftlich))
+				&& (!hatReferenzfach2Belegung || !hatReferenzfach2BelegungSchriftlich)) {
 			addFehler(GostBelegungsfehler.PF_24_2);
+		}
 	}
 
 
@@ -238,13 +250,16 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 	 * @return true, wenn die Fachbelegung anrechenbar ist.
 	 */
 	public boolean istAnrechenbar(final AbiturFachbelegungHalbjahr fachbelegungHalbjahr) {
-		if (fachbelegungHalbjahr == null)
+		if (fachbelegungHalbjahr == null) {
 			return false;
-		if (GostKursart.fromKuerzel(fachbelegungHalbjahr.kursartKuerzel) != GostKursart.PJK)
+		}
+		if (GostKursart.fromKuerzel(fachbelegungHalbjahr.kursartKuerzel) != GostKursart.PJK) {
 			return false;
+		}
 		final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(fachbelegungHalbjahr.halbjahrKuerzel);
-		if ((projektkurs == null) || (projektkursHalbjahre.size() != 2) || (manager.istProjektKursBesondereLernleistung()))
+		if ((projektkurs == null) || (projektkursHalbjahre.size() != 2) || (manager.istProjektKursBesondereLernleistung())) {
 			return false;
+		}
 		return (halbjahr == projektkursHalbjahre.get(0)) || (halbjahr == projektkursHalbjahre.get(1));
 	}
 
@@ -255,8 +270,9 @@ public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 	 * @return die Anzahl der anrechenbaren Kurse
 	 */
 	public int getAnrechenbareKurse() {
-		if ((projektkurs == null) || (manager.istProjektKursBesondereLernleistung()))
+		if ((projektkurs == null) || (manager.istProjektKursBesondereLernleistung())) {
 			return 0;
+		}
 		return 2;
 	}
 

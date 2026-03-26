@@ -28,8 +28,9 @@ export class Abi30BelegpruefungFachWaehlbar extends GostBelegpruefung {
 
 	private pruefeFachbelegungHalbjahr(fach: GostFach, fachbelegung: AbiturFachbelegung, halbjahr: GostHalbjahr): void {
 		const fbHalbjahr: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
-		if (fbHalbjahr === null)
+		if (fbHalbjahr === null) {
 			return;
+		}
 		let istwaehlbar: boolean;
 		const _seexpr_358622684 = (halbjahr);
 		if (_seexpr_358622684 === GostHalbjahr.EF1) {
@@ -48,26 +49,31 @@ export class Abi30BelegpruefungFachWaehlbar extends GostBelegpruefung {
 			istwaehlbar = false;
 		}
 		;
-		if (!istwaehlbar)
+		if (!istwaehlbar) {
 			this.addFehler(GostBelegungsfehler.WAEHLBARKEIT_1);
+		}
 	}
 
 	private static hatLKFachbelegung(fachbelegung: AbiturFachbelegung): boolean {
 		for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 			const fbHalbjahr: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
-			if ((fbHalbjahr !== null) && JavaObject.equalsTranspiler("LK", (fbHalbjahr.kursartKuerzel)))
+			if ((fbHalbjahr !== null) && JavaObject.equalsTranspiler("LK", (fbHalbjahr.kursartKuerzel))) {
 				return true;
+			}
 		}
 		return false;
 	}
 
 	private pruefeFachbelegungAbitur(fach: GostFach, fachbelegung: AbiturFachbelegung): void {
-		if (fachbelegung.abiturFach === null)
+		if (fachbelegung.abiturFach === null) {
 			return;
-		if ((!fach.istMoeglichAbiLK) && ((fachbelegung.abiturFach === 1) || (fachbelegung.abiturFach === 2) || (Abi30BelegpruefungFachWaehlbar.hatLKFachbelegung(fachbelegung))))
+		}
+		if ((!fach.istMoeglichAbiLK) && ((fachbelegung.abiturFach === 1) || (fachbelegung.abiturFach === 2) || (Abi30BelegpruefungFachWaehlbar.hatLKFachbelegung(fachbelegung)))) {
 			this.addFehler(GostBelegungsfehler.WAEHLBARKEIT_3);
-		if ((!fach.istMoeglichAbiGK) && ((fachbelegung.abiturFach === 3) || (fachbelegung.abiturFach === 4) || (fachbelegung.abiturFach === 5)))
+		}
+		if ((!fach.istMoeglichAbiGK) && ((fachbelegung.abiturFach === 3) || (fachbelegung.abiturFach === 4) || (fachbelegung.abiturFach === 5))) {
 			this.addFehler(GostBelegungsfehler.WAEHLBARKEIT_2);
+		}
 	}
 
 	protected pruefeEF1(): void {
@@ -88,8 +94,9 @@ export class Abi30BelegpruefungFachWaehlbar extends GostBelegpruefung {
 				this.addFehler(GostBelegungsfehler.WAEHLBARKEIT_0);
 				continue;
 			}
-			for (const halbjahr of GostHalbjahr.values())
+			for (const halbjahr of GostHalbjahr.values()) {
 				this.pruefeFachbelegungHalbjahr(fach, fachbelegung, halbjahr);
+			}
 			this.pruefeFachbelegungAbitur(fach, fachbelegung);
 		}
 	}

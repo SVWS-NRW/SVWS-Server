@@ -17,7 +17,7 @@ export class GostAbiturMarkierungsalgorithmusBelegung extends JavaObject {
 	public readonly belegungHalbjahr: AbiturFachbelegungHalbjahr;
 
 	/**
-	 * Das Halbjahr der Halbjahrebelegung
+	 * Das Halbjahr der Halbjahresbelegung
 	 */
 	public readonly halbjahr: GostHalbjahr;
 

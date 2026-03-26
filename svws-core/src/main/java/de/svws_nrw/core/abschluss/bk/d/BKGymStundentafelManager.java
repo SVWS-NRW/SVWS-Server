@@ -28,7 +28,7 @@ public class BKGymStundentafelManager {
 	/** Die Bezeichnung für die zweite fortgeführte Fremdsprache */
 	public static final @NotNull String ZWEITE_FREMDSPRACHE = "Zweite Fremdsprache";
 
-	/** Die Bezeichnung für die neueinsetzende Fremdsprache */
+	/** Die Bezeichnung für die neu einsetzende Fremdsprache */
 	public static final @NotNull String NEUE_FREMDSPRACHE = "Neue Fremdsprache";
 
 	/** Die Bezeichnung für das Fach Religion */
@@ -71,13 +71,16 @@ public class BKGymStundentafelManager {
 		for (final BeruflichesGymnasiumStundentafel t : tafeln) {
 			this.stundentafeln.addAll(createStundentafelnOhneWahlmoeglichkeit(t));
 		}
-		for (final BeruflichesGymnasiumStundentafel t : this.stundentafeln)
+		for (final BeruflichesGymnasiumStundentafel t : this.stundentafeln) {
 			pruefeStundentafelAufDoppelte(t);
+		}
 
 		//initialisiere Datenstruktur
-		for (final @NotNull BeruflichesGymnasiumStundentafel tafel : this.stundentafeln)
-			for (final @NotNull BeruflichesGymnasiumStundentafelFach fach : tafel.faecher)
+		for (final @NotNull BeruflichesGymnasiumStundentafel tafel : this.stundentafeln) {
+			for (final @NotNull BeruflichesGymnasiumStundentafelFach fach : tafel.faecher) {
 				mapStundentafelFachByTafelAndFachbezeichnung.put(tafel, fach.fachbezeichnung, fach);
+			}
+		}
 	}
 
 
@@ -151,12 +154,13 @@ public class BKGymStundentafelManager {
 		final @NotNull List<BeruflichesGymnasiumStundentafelFach> eindeutigeFaecher = new ArrayList<>();
 		for (final Entry<Integer, List<BeruflichesGymnasiumStundentafelFach>> entry : mapFachBySortierung.entrySet()) {
 			final List<BeruflichesGymnasiumStundentafelFach> bereinigt = bereinigteFaecherliste(entry.getValue());
-			if (bereinigt.isEmpty())
+			if (bereinigt.isEmpty()) {
 				eindeutigeFaecher.add(entry.getValue().getFirst());
-			else if (bereinigt.size() == 1)
+			} else if (bereinigt.size() == 1) {
 				eindeutigeFaecher.add(bereinigt.getFirst());
-			else if (bereinigt.size() > 1)
+			} else if (bereinigt.size() > 1) {
 				mapMultiFachBySortierung.put(entry.getKey(), bereinigt);
+			}
 		}
 		return createStundentafelPermutation(eindeutigeFaecher, mapMultiFachBySortierung);
 	}
@@ -214,8 +218,9 @@ public class BKGymStundentafelManager {
 
 		// Rekursiver Fall: Iteriere über alle Fächer der aktuellen Fachtafelposition
 		final List<BeruflichesGymnasiumStundentafelFach> currentFaecher = map.get(keys.get(index));
-		if (currentFaecher == null)
+		if (currentFaecher == null) {
 			return;
+		}
 		for (final BeruflichesGymnasiumStundentafelFach fach : currentFaecher) {
 			current.add(fach);
 			permutiereFaecher(result, eindeutigeFaecher, map, keys, index + 1, current);
@@ -235,8 +240,9 @@ public class BKGymStundentafelManager {
 	private @NotNull List<BeruflichesGymnasiumStundentafelFach> bereinigteFaecherliste(final @NotNull List<BeruflichesGymnasiumStundentafelFach> faecher) {
 		final @NotNull List<BeruflichesGymnasiumStundentafelFach> bereinigt = new ArrayList<>();
 		for (final @NotNull BeruflichesGymnasiumStundentafelFach fach : faecher) {
-			if (istGueltigesSpezialfach(fach.fachbezeichnung) || fachbelegungManager.getFachbelegungByBezeichnung(fach.fachbezeichnung) != null)
+			if (istGueltigesSpezialfach(fach.fachbezeichnung) || fachbelegungManager.getFachbelegungByBezeichnung(fach.fachbezeichnung) != null) {
 				bereinigt.add(fach);
+			}
 		}
 		return bereinigt;
 	}
@@ -255,12 +261,15 @@ public class BKGymStundentafelManager {
 	 * @return siehe oben
 	 */
 	private boolean istGueltigesSpezialfach(final @NotNull String fachbezeichnung) {
-		if (istWahlfach(fachbezeichnung))
+		if (istWahlfach(fachbezeichnung)) {
 			return true;
-		if (istZweiteFremdsprache(fachbezeichnung))
+		}
+		if (istZweiteFremdsprache(fachbezeichnung)) {
 			return !fachbelegungManager.istZweiteFremdspracheNeuEinsetzend();
-		if (istNeueFremdsprache(fachbezeichnung))
+		}
+		if (istNeueFremdsprache(fachbezeichnung)) {
 			return fachbelegungManager.istZweiteFremdspracheNeuEinsetzend();
+		}
 		return false;
 	}
 
@@ -326,8 +335,9 @@ public class BKGymStundentafelManager {
 			final @NotNull String ab3Bezeichnung, final @NotNull String ab4Bezeichnung) {
 		// Bestimme ob das dritte und vierte Abiturfach gültig gewählt wurden
 		for (final @NotNull BeruflichesGymnasiumStundentafelAbiturfaecherWahlmoeglichkeit wm : tafel.wahlmoeglichkeiten) {
-			if (istGueltigeWahlmoeglichkeit(wm, ab3Bezeichnung, ab4Bezeichnung))
+			if (istGueltigeWahlmoeglichkeit(wm, ab3Bezeichnung, ab4Bezeichnung)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -349,18 +359,23 @@ public class BKGymStundentafelManager {
 
 		// Prüfe zunächst, ob das dritte Fach der Wahlmöglichkeit entspricht
 		String wm3 = null;
-		for (final @NotNull String fachBez3 : wm.abifach3)
+		for (final @NotNull String fachBez3 : wm.abifach3) {
 			if (fachBez3.equals(ab3Bezeichnung) || BKGymStundentafelManager.istWahlfach(fachBez3)
-					|| (istZweiteFremdsprache(fachBez3) && fachbelegungManager.istZweiteFremdsprache(ab3Bezeichnung)))
+					|| (istZweiteFremdsprache(fachBez3) && fachbelegungManager.istZweiteFremdsprache(ab3Bezeichnung))) {
 				wm3 = fachBez3;
-		if (wm3 == null)
+			}
+		}
+		if (wm3 == null) {
 			return false;
+		}
 
 		// Prüfe danach, ob auch das vierte Fach der Wahlmöglichkeit entspricht
-		for (final @NotNull String fachBez4 : wm.abifach4)
+		for (final @NotNull String fachBez4 : wm.abifach4) {
 			if (fachBez4.equals(ab4Bezeichnung) || BKGymStundentafelManager.istWahlfach(fachBez4)
-					|| (BKGymStundentafelManager.istZweiteFremdsprache(fachBez4) && fachbelegungManager.istZweiteFremdsprache(ab4Bezeichnung)))
+					|| (BKGymStundentafelManager.istZweiteFremdsprache(fachBez4) && fachbelegungManager.istZweiteFremdsprache(ab4Bezeichnung))) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -373,8 +388,9 @@ public class BKGymStundentafelManager {
 	private static void pruefeStundentafelAufDoppelte(final @NotNull BeruflichesGymnasiumStundentafel t) {
 		final @NotNull Set<Integer> single = new HashSet<>();
 		for (final @NotNull BeruflichesGymnasiumStundentafelFach fach : t.faecher) {
-			if (single.contains(fach.sortierung))
+			if (single.contains(fach.sortierung)) {
 				throw new DeveloperNotificationException("In der Belegprüfung ist ein interner Fehler aufgetreten: In der Stundentafel sind noch Wahlmöglichkeiten enthalten.");
+			}
 			single.add(fach.sortierung);
 		}
 	}
@@ -390,9 +406,11 @@ public class BKGymStundentafelManager {
 	public static int getMaximalSortierung(final @NotNull BeruflichesGymnasiumStundentafel tafel) {
 		int max = Integer.MIN_VALUE;
 
-		for (final @NotNull BeruflichesGymnasiumStundentafelFach fach : tafel.faecher)
-			if (fach.sortierung > max)
+		for (final @NotNull BeruflichesGymnasiumStundentafelFach fach : tafel.faecher) {
+			if (fach.sortierung > max) {
 				max = fach.sortierung;
+			}
+		}
 		return max;
 	}
 
@@ -406,8 +424,9 @@ public class BKGymStundentafelManager {
 	 */
 	public static boolean brauchtBelegungInQPhase(@NotNull final BeruflichesGymnasiumStundentafelFach fach) {
 		int summeStunden = 0;
-		for (final GostHalbjahr hj : GostHalbjahr.getQualifikationsphase())
+		for (final GostHalbjahr hj : GostHalbjahr.getQualifikationsphase()) {
 			summeStunden += fach.stundenumfang[hj.id];
+		}
 		return summeStunden > 0;
 	}
 
@@ -422,8 +441,9 @@ public class BKGymStundentafelManager {
 	public boolean istBerufsbezogenesFach(final @NotNull String fachbezeichnung) {
 		for (final BeruflichesGymnasiumStundentafel t : stundentafeln) {
 			final BeruflichesGymnasiumStundentafelFach fach = getFachByTafelAndBezeichnung(t, fachbezeichnung);
-			if (fach != null)
+			if (fach != null) {
 				return fach.zeugnisbereich.equals(BERUFSBEZOGENER_LERNBEREICH);
+			}
 		}
 		return false;
 	}

@@ -28,33 +28,39 @@ export class Allgemeines extends GostBelegpruefung {
 	}
 
 	protected pruefeEF1(): void {
-		if (this.manager.zaehleBelegungInHalbjahren(this.manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION), GostHalbjahr.EF1) > 1)
+		if (this.manager.zaehleBelegungInHalbjahren(this.manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION), GostHalbjahr.EF1) > 1) {
 			this.addFehler(GostBelegungsfehler.IGF_10);
-		if (this.manager.hatDoppelteFachbelegungInHalbjahr(GostHalbjahr.EF1))
+		}
+		if (this.manager.hatDoppelteFachbelegungInHalbjahr(GostHalbjahr.EF1)) {
 			this.addFehler(GostBelegungsfehler.IGF_10);
+		}
 	}
 
 	protected pruefeGesamt(): void {
 		const alleFachbelegungen: List<AbiturFachbelegung> = this.manager.getRelevanteFachbelegungen();
 		for (const fachbelegung of alleFachbelegungen) {
-			if (!this.manager.istBelegtSeitEF(fachbelegung))
+			if (!this.manager.istBelegtSeitEF(fachbelegung)) {
 				this.addFehler(GostBelegungsfehler.E1BEL_10);
+			}
 		}
 		for (const fachbelegung of alleFachbelegungen) {
 			const abiturFach: GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
-			if (abiturFach !== null)
+			if (abiturFach !== null) {
 				continue;
+			}
 			if (this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22)) {
 				this.addFehler(GostBelegungsfehler.ABI_16);
 				break;
 			}
 		}
 		for (const halbjahr of GostHalbjahr.values()) {
-			if (this.manager.zaehleBelegungInHalbjahren(this.manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION), halbjahr) > 1)
+			if (this.manager.zaehleBelegungInHalbjahren(this.manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION), halbjahr) > 1) {
 				this.addFehler(GostBelegungsfehler.IGF_10);
+			}
 		}
-		if (this.manager.hatDoppelteFachbelegung(GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+		if (this.manager.hatDoppelteFachbelegung(GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 			this.addFehler(GostBelegungsfehler.IGF_10);
+		}
 	}
 
 	transpilerCanonicalName(): string {

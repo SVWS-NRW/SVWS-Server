@@ -58,10 +58,11 @@ public final class AbschlussManager {
 		final @NotNull AbschlussErgebnis ergebnis = new AbschlussErgebnis();
 		ergebnis.abschluss = (abschluss == null) ? null : abschluss.toString();
 		ergebnis.erworben = false;
-		if ((npFaecher == null) || (npFaecher.isEmpty()))
+		if ((npFaecher == null) || (npFaecher.isEmpty())) {
 			ergebnis.npFaecher = null;
-		else
+		} else {
 			ergebnis.npFaecher = npFaecher;
+		}
 		ergebnis.log = null;
 		return ergebnis;
 	}
@@ -89,12 +90,14 @@ public final class AbschlussManager {
 	 * @return die Nachprüfungsfächer als Komma-separierten String
 	 */
 	public static @NotNull String getNPFaecherString(final @NotNull AbschlussErgebnis ergebnis) {
-		if (ergebnis.npFaecher == null)
+		if (ergebnis.npFaecher == null) {
 			return "";
+		}
 		final StringBuilder sb = new StringBuilder();
 		for (final String fach : ergebnis.npFaecher) {
-			if (!sb.isEmpty())
+			if (!sb.isEmpty()) {
 				sb.append(", ");
+			}
 			sb.append(fach);
 		}
 		return sb.toString();
@@ -113,8 +116,9 @@ public final class AbschlussManager {
 	 */
 	public static boolean equalsAbschluesse(final String a, final String b) {
 		final SchulabschlussAllgemeinbildend oa = SchulabschlussAllgemeinbildend.OA;
-		if ((a == null) || (oa.is(a)))
+		if ((a == null) || (oa.is(a))) {
 			return (b == null) || (oa.is(b));
+		}
 		return a.equals(b);
 	}
 
@@ -169,8 +173,9 @@ public final class AbschlussManager {
 	public static @NotNull List<String> getKuerzel(final @NotNull List<GEAbschlussFach> faecher) {
 		final @NotNull ArrayList<String> result = new ArrayList<>();
 		for (final @NotNull GEAbschlussFach fach : faecher) {
-			if ((fach.kuerzel == null) || result.contains(fach.kuerzel))
+			if ((fach.kuerzel == null) || result.contains(fach.kuerzel)) {
 				continue;
+			}
 			result.add(fach.kuerzel);
 		}
 		return result;
@@ -186,16 +191,19 @@ public final class AbschlussManager {
 	 * @return true, falls vier leistungsdifferenzierte Fächer belegt wurden, sonst false
 	 */
 	public static boolean pruefeHat4LeistungsdifferenzierteFaecher(final @NotNull GEAbschlussFaecher abschlussFaecher) {
-		if (abschlussFaecher.faecher == null)
+		if (abschlussFaecher.faecher == null) {
 			return false;
+		}
 		int count = 0;
 		final @NotNull List<GEAbschlussFach> faecher = abschlussFaecher.faecher;
 		for (final GEAbschlussFach fach : faecher) {
-			if (fach == null)
+			if (fach == null) {
 				continue;
+			}
 			final @NotNull GELeistungsdifferenzierteKursart kursart = GELeistungsdifferenzierteKursart.from(fach.kursart);
-			if ((kursart == GELeistungsdifferenzierteKursart.E) || (kursart == GELeistungsdifferenzierteKursart.G))
+			if ((kursart == GELeistungsdifferenzierteKursart.E) || (kursart == GELeistungsdifferenzierteKursart.G)) {
 				count++;
+			}
 		}
 		return (count == 4);
 	}
@@ -211,15 +219,18 @@ public final class AbschlussManager {
 	 * @return true, falls keine Duplikate vorkommen, sonst false
 	 */
 	public static boolean pruefeKuerzelDuplikate(final @NotNull GEAbschlussFaecher abschlussFaecher) {
-		if (abschlussFaecher.faecher == null)
+		if (abschlussFaecher.faecher == null) {
 			return true;
+		}
 		final @NotNull HashSet<String> kuerzel = new HashSet<>();
 		final @NotNull List<GEAbschlussFach> faecher = abschlussFaecher.faecher;
 		for (final GEAbschlussFach fach : faecher) {
-			if ((fach == null) || (fach.kuerzel == null))
+			if ((fach == null) || (fach.kuerzel == null)) {
 				continue;
-			if (!kuerzel.add(fach.kuerzel))
+			}
+			if (!kuerzel.add(fach.kuerzel)) {
 				return false;
+			}
 		}
 		return true;
 	}

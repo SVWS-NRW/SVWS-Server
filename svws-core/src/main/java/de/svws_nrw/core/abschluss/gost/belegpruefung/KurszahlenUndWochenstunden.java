@@ -106,8 +106,9 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 			final @NotNull ArrayMap<GostKursart, Integer> kurszahlenHalbjahr = new ArrayMap<>(GostKursart.values());
 			kurszahlen.put(halbjahr, kurszahlenHalbjahr);
-			for (final GostKursart kursart : kursarten)
+			for (final GostKursart kursart : kursarten) {
 				kurszahlenHalbjahr.put(kursart, 0);
+			}
 			kurszahlenGrundkurse.put(halbjahr, 0);
 			kurszahlenLeistungskurse.put(halbjahr, 0);
 			kurszahlenAnrechenbar.put(halbjahr, 0);
@@ -122,27 +123,32 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		final @NotNull List<AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
 		for (final @NotNull AbiturFachbelegung fachbelegung : alleFachbelegungen) {
 			final GostFach fach = manager.getFach(fachbelegung);
-			if ((fach == null) || (!fach.istPruefungsordnungsRelevant))
+			if ((fach == null) || (!fach.istPruefungsordnungsRelevant)) {
 				continue;
+			}
 			final Fach zulFach = Fach.getBySchluesselOrDefault(fach.kuerzel);
 			boolean istLKFach = false;
 			for (final AbiturFachbelegungHalbjahr fachbelegungHalbjahr : fachbelegung.belegungen) {
-				if (fachbelegungHalbjahr == null)
+				if (fachbelegungHalbjahr == null) {
 					continue;
+				}
 
 				// Überspringe Sport-Kurse, die in diesem Halbjahr die Note "AT" beinhalten, bei der Zählung der Kursstunden
 				// und der Wochenstunden. Der Schüler ist in diesem Halbjahr aufgrund eines Attestes von Sport befreit.
 				final Note note = Note.fromKuerzel(fachbelegungHalbjahr.notenkuerzel);
-				if (GostFachbereich.SPORT.hat(fach) && Note.ATTEST.equals(note))
+				if (GostFachbereich.SPORT.hat(fach) && Note.ATTEST.equals(note)) {
 					continue;
+				}
 
 				// Bestimme Halbjahr und Kursart
 				final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(fachbelegungHalbjahr.halbjahrKuerzel);
-				if (halbjahr == null)
+				if (halbjahr == null) {
 					continue;
+				}
 				final GostKursart kursart = GostKursart.fromKuerzel(fachbelegungHalbjahr.kursartKuerzel);
-				if (kursart == null)  // Dies kann z.B. bei einem Sportattest ("AT") der Fall sein.
+				if (kursart == null) { // Dies kann z.B. bei einem Sportattest ("AT") der Fall sein.
 					continue;
+				}
 
 				boolean istAnrechenbar = true;
 				boolean istAnrechenbarHalbjahr = true;   // Für den Speziallfall, dass Musikkurse nicht anrechenbar sind (s.u.), kann vorab nicht festgelegt werden in welchem Halbjahr der Kurs nicht anrechenbar ist
@@ -158,23 +164,27 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 						if (blockIHatMusikLK) {
 							istAnrechenbar = !istMusikErsatzfach;
 							istAnrechenbarHalbjahr = !istMusikErsatzfach;
-							if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT))
+							if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT)) {
 								addFehler(GostBelegungsfehler.ANZ_21_INFO);
+							}
 						} else if (blockIHatMusikGKAbitur) {
 							istAnrechenbar = (blockIAnzahlMusik <= 6);
-							if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT))
+							if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT)) {
 								addFehler(GostBelegungsfehler.ANZ_22_INFO);
+							}
 						} else {
 							istAnrechenbar = (blockIAnzahlMusik <= 5);
-							if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT))
+							if (!istAnrechenbar && (pruefungs_art == GostBelegpruefungsArt.GESAMT)) {
 								addFehler(GostBelegungsfehler.ANZ_23_INFO);
+							}
 						}
 					}
 					if (istErsatzfach) {
 						blockIAnzahlErsatzfach++;
 						final boolean istAnrechenbarErsatzfach = (blockIAnzahlErsatzfach <= 2);
-						if (!istAnrechenbarErsatzfach && (pruefungs_art == GostBelegpruefungsArt.GESAMT))
+						if (!istAnrechenbarErsatzfach && (pruefungs_art == GostBelegpruefungsArt.GESAMT)) {
 							addFehler(GostBelegungsfehler.ANZ_20_INFO);
+						}
 						istAnrechenbar = istAnrechenbar && istAnrechenbarErsatzfach;
 					}
 
@@ -185,8 +195,9 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				// Für das Halbjahr
 				if (istAnrechenbarHalbjahr && !istNullPunkteBelegungInQPhase) {
 					ArrayMap<GostKursart, Integer> kurszahlenHalbjahr = kurszahlen.get(halbjahr);
-					if (kurszahlenHalbjahr == null)
+					if (kurszahlenHalbjahr == null) {
 						kurszahlenHalbjahr = new ArrayMap<>(GostKursart.values());
+					}
 					final Integer kurszahlAlt = kurszahlenHalbjahr.get(kursart);
 					kurszahlenHalbjahr.put(kursart, (kurszahlAlt == null) ? 1 : (kurszahlAlt + 1));
 				}
@@ -256,8 +267,9 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 					wochenstundenQualifikationsphase += stunden;
 				}
 			}
-			if (istLKFach)
+			if (istLKFach) {
 				anzahlLKFaecher++;
+			}
 		}
 	}
 
@@ -276,11 +288,13 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * dh. weniger als 10 Kurse
 	 */
 	private void pruefeGrundkurseEF1() {
-		if (kurszahlenGrundkurse == null)
+		if (kurszahlenGrundkurse == null) {
 			throw new NullPointerException();
+		}
 		final Integer kurszahlGK = kurszahlenGrundkurse.get(GostHalbjahr.EF1);
-		if ((kurszahlGK == null) || (kurszahlGK < 10))
+		if ((kurszahlGK == null) || (kurszahlGK < 10)) {
 			addFehler(GostBelegungsfehler.ANZ_10);
+		}
 	}
 
 	/**
@@ -288,11 +302,13 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * Prüfe, ob die Summe der Kursstunden in der EF.1 größer oder gleich 32 und kleiner oder gleich 36 ist.
 	 */
 	private void pruefeWochenstundenEF1() {
-		if (wochenstunden == null)
+		if (wochenstunden == null) {
 			throw new NullPointerException();
+		}
 		final Integer stunden = wochenstunden.get(GostHalbjahr.EF1);
-		if ((stunden == null) || (stunden < 32) || (stunden > 36))
+		if ((stunden == null) || (stunden < 32) || (stunden > 36)) {
 			addFehler(GostBelegungsfehler.ANZ_11_INFO);
+		}
 	}
 
 
@@ -318,12 +334,14 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * dh. weniger als 10 Kurse
 	 */
 	private void pruefeGrundkurseEF() {
-		if (kurszahlenGrundkurse == null)
+		if (kurszahlenGrundkurse == null) {
 			throw new NullPointerException();
+		}
 		final Integer kurszahlGK_EF1 = kurszahlenGrundkurse.get(GostHalbjahr.EF1);
 		final Integer kurszahlGK_EF2 = kurszahlenGrundkurse.get(GostHalbjahr.EF2);
-		if ((kurszahlGK_EF1 == null) || (kurszahlGK_EF1 < 10) || (kurszahlGK_EF2 == null) || (kurszahlGK_EF2 < 10))
+		if ((kurszahlGK_EF1 == null) || (kurszahlGK_EF1 < 10) || (kurszahlGK_EF2 == null) || (kurszahlGK_EF2 < 10)) {
 			addFehler(GostBelegungsfehler.ANZ_10);
+		}
 	}
 
 
@@ -332,12 +350,14 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * Prüfe, ob in jedem Halbjahr die Summe der Kursstunden größer oder gleich 32 und kleiner oder gleich 36 ist.
 	 */
 	private void pruefeWochenstunden() {
-		if (wochenstunden == null)
+		if (wochenstunden == null) {
 			throw new NullPointerException();
+		}
 		for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 			final Integer stunden = wochenstunden.get(halbjahr);
-			if ((stunden == null) || (stunden < 32) || (stunden > 36))
+			if ((stunden == null) || (stunden < 32) || (stunden > 36)) {
 				addFehler(GostBelegungsfehler.ANZ_11_INFO);
+			}
 		}
 	}
 
@@ -349,12 +369,14 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * und zu keiner besonderen Lernleistung zählen.
 	 */
 	private void pruefeGrundkurseQ() {
-		if (kurszahlenGrundkurse == null)
+		if (kurszahlenGrundkurse == null) {
 			throw new NullPointerException();
+		}
 		for (final GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
 			final Integer kurszahlGK = kurszahlenGrundkurse.get(halbjahr);
-			if ((kurszahlGK == null) || (kurszahlGK < 7))
+			if ((kurszahlGK == null) || (kurszahlGK < 7)) {
 				addFehler(GostBelegungsfehler.GKS_10);
+			}
 		}
 	}
 
@@ -364,17 +386,20 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * Wurden in der Qualifikationsphase in jedem Halbjahr zwei LKs belegt in insgesamt genau 2 Fächern.
 	 */
 	private void pruefeLeistungskurse() {
-		if (anzahlLKFaecher != 2)
+		if (anzahlLKFaecher != 2) {
 			addFehler(GostBelegungsfehler.LK_10);
-		if (kurszahlenLeistungskurse == null)
+		}
+		if (kurszahlenLeistungskurse == null) {
 			throw new NullPointerException();
+		}
 		for (final GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
 			final Integer kurszahlLK = kurszahlenLeistungskurse.get(halbjahr);
 			if (kurszahlLK != null) {
-				if (kurszahlLK < 2)
+				if (kurszahlLK < 2) {
 					addFehler(GostBelegungsfehler.LK_10);
-				else if (kurszahlLK > 2)
+				} else if (kurszahlLK > 2) {
 					addFehler(GostBelegungsfehler.LK_11);
+				}
 			}
 		}
 	}
@@ -386,11 +411,13 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * Ist die Summe aller belegten Vertiefungskurse in der EF kleiner gleich 4?
 	 */
 	private void pruefeVertiefungskurseEF() {
-		if (kurszahlenEinfuehrungsphase == null)
+		if (kurszahlenEinfuehrungsphase == null) {
 			throw new NullPointerException();
+		}
 		final Integer kurszahlEF_VTF = kurszahlenEinfuehrungsphase.get(GostKursart.VTF);
-		if ((kurszahlEF_VTF != null) && (kurszahlEF_VTF > 4))
+		if ((kurszahlEF_VTF != null) && (kurszahlEF_VTF > 4)) {
 			addFehler(GostBelegungsfehler.VF_10);
+		}
 	}
 
 
@@ -399,11 +426,13 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * Ist die Summe aller belegten Vertiefungskurse in der Qualifikationsphase kleiner gleich 2?
 	 */
 	private void pruefeVertiefungskurseQ() {
-		if (kurszahlenQualifikationsphase == null)
+		if (kurszahlenQualifikationsphase == null) {
 			throw new NullPointerException();
+		}
 		final Integer kurszahlQ_VTF = kurszahlenQualifikationsphase.get(GostKursart.VTF);
-		if ((kurszahlQ_VTF != null) && (kurszahlQ_VTF > 2))
+		if ((kurszahlQ_VTF != null) && (kurszahlQ_VTF > 2)) {
 			addFehler(GostBelegungsfehler.VF_11);
+		}
 	}
 
 
@@ -412,8 +441,9 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * Ist die Anzahl anrechenbarer Kurse für Block I des Abiturs (Qualifikationsphase) größer gleich 38?
 	 */
 	private void pruefeAnrechenbareKurse() {
-		if (blockIAnzahlAnrechenbar < 38)
+		if (blockIAnzahlAnrechenbar < 38) {
 			addFehler(GostBelegungsfehler.ANZ_12);
+		}
 	}
 
 
@@ -424,10 +454,12 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * größer oder gleich 34 ist.
 	 */
 	private void pruefeKursstundenSummen() {
-		if ((wochenstundenEinfuehrungsphase / 2.0) < 34.0)
+		if ((wochenstundenEinfuehrungsphase / 2.0) < 34.0) {
 			addFehler(GostBelegungsfehler.WST_20);
-		if ((wochenstundenQualifikationsphase / 4.0) < 34.0)
+		}
+		if ((wochenstundenQualifikationsphase / 4.0) < 34.0) {
 			addFehler(GostBelegungsfehler.WST_21);
+		}
 		final double summeKursstundenDurchschnitte = (wochenstundenEinfuehrungsphase / 2.0) + ((wochenstundenQualifikationsphase / 4.0) * 2.0);
 		if (summeKursstundenDurchschnitte < 102) {
 			if (summeKursstundenDurchschnitte < 100) {
@@ -450,14 +482,17 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * @return die Kurszahlen
 	 */
 	public int getKurszahlen(final @NotNull GostHalbjahr halbjahr, final @NotNull GostKursart kursart) {
-		if (kurszahlen == null)
+		if (kurszahlen == null) {
 			return 0;
+		}
 		final ArrayMap<GostKursart, Integer> kurszahlenHalbjahr = kurszahlen.get(halbjahr);
-		if (kurszahlenHalbjahr == null)
+		if (kurszahlenHalbjahr == null) {
 			return 0;
+		}
 		final Integer kurszahl = kurszahlenHalbjahr.get(kursart);
-		if (kurszahl == null)
+		if (kurszahl == null) {
 			return 0;
+		}
 		return kurszahl;
 	}
 
@@ -470,11 +505,13 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * @return die Kurszahlen
 	 */
 	public int getKurszahlenGrundkurse(final @NotNull GostHalbjahr halbjahr) {
-		if (kurszahlenGrundkurse == null)
+		if (kurszahlenGrundkurse == null) {
 			return 0;
+		}
 		final Integer kurszahl = kurszahlenGrundkurse.get(halbjahr);
-		if (kurszahl == null)
+		if (kurszahl == null) {
 			return 0;
+		}
 		return kurszahl;
 	}
 
@@ -487,11 +524,13 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * @return die Kurszahlen
 	 */
 	public int getKurszahlenLeistungskurse(final @NotNull GostHalbjahr halbjahr) {
-		if (kurszahlenLeistungskurse == null)
+		if (kurszahlenLeistungskurse == null) {
 			return 0;
+		}
 		final Integer kurszahl = kurszahlenLeistungskurse.get(halbjahr);
-		if (kurszahl == null)
+		if (kurszahl == null) {
 			return 0;
+		}
 		return kurszahl;
 	}
 
@@ -504,11 +543,13 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * @return die Kurszahlen
 	 */
 	public int getKurszahlenAnrechenbar(final @NotNull GostHalbjahr halbjahr) {
-		if (kurszahlenAnrechenbar == null)
+		if (kurszahlenAnrechenbar == null) {
 			return 0;
+		}
 		final Integer kurszahl = kurszahlenAnrechenbar.get(halbjahr);
-		if (kurszahl == null)
+		if (kurszahl == null) {
 			return 0;
+		}
 		return kurszahl;
 	}
 
@@ -521,11 +562,13 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * @return die Kurszahlen
 	 */
 	public int getKurszahlenEinfuehrungsphase(final @NotNull GostKursart kursart) {
-		if (kurszahlenEinfuehrungsphase == null)
+		if (kurszahlenEinfuehrungsphase == null) {
 			return 0;
+		}
 		final Integer kurszahl = kurszahlenEinfuehrungsphase.get(kursart);
-		if (kurszahl == null)
+		if (kurszahl == null) {
 			return 0;
+		}
 		return kurszahl;
 	}
 
@@ -538,11 +581,13 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * @return die Kurszahlen
 	 */
 	public int getKurszahlenQualifikationsphase(final @NotNull GostKursart kursart) {
-		if (kurszahlenQualifikationsphase == null)
+		if (kurszahlenQualifikationsphase == null) {
 			return 0;
+		}
 		final Integer kurszahl = kurszahlenQualifikationsphase.get(kursart);
-		if (kurszahl == null)
+		if (kurszahl == null) {
 			return 0;
+		}
 		return kurszahl;
 	}
 
@@ -585,11 +630,13 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	 * @return die Anzahl der Wochenstunden
 	 */
 	public int getWochenstunden(final @NotNull GostHalbjahr halbjahr) {
-		if (wochenstunden == null)
+		if (wochenstunden == null) {
 			return 0;
+		}
 		Integer stunden = wochenstunden.get(halbjahr);
-		if (stunden == null)
+		if (stunden == null) {
 			stunden = 0;
+		}
 		return stunden;
 	}
 

@@ -298,8 +298,9 @@ public class BKGymAbiturdatenManager {
 	 */
 	public @NotNull BKGymAbiturMarkierungsalgorithmusErgebnis getErgebnisMarkierungsalgorithmus() {
 		zulassungsPruefung();
-		if (this.ergebnisMarkierungsalgorithmus == null)
+		if (this.ergebnisMarkierungsalgorithmus == null) {
 			return new BKGymAbiturMarkierungsalgorithmusErgebnis();
+		}
 		return this.ergebnisMarkierungsalgorithmus;
 	}
 
@@ -326,8 +327,9 @@ public class BKGymAbiturdatenManager {
 		final @NotNull List<BeruflichesGymnasiumStundentafel> result = new ArrayList<>();
 		final int schuljahr = getSchuljahrAbitur();
 		final BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag poke = anlage.daten(schuljahr);
-		if (poke == null)
+		if (poke == null) {
 			return result;
+		}
 		return poke.stundentafeln;
 	}
 
@@ -350,9 +352,11 @@ public class BKGymAbiturdatenManager {
 	 * @return true, falls alle Halbjahre bewertet sind, und ansonsten false
 	 */
 	public boolean istBewertetQualifikationsPhase() {
-		for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase())
-			if (!istBewertet(hj))
+		for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase()) {
+			if (!istBewertet(hj)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -366,14 +370,16 @@ public class BKGymAbiturdatenManager {
 	private boolean istZweiteFremdspracheInSekIErfuellt() {
 		for (final @NotNull Sprachbelegung belegung : abidaten.sprachendaten.belegungen) {
 			if ((belegung.reihenfolge == null) || (belegung.belegungVonJahrgang == null) || (belegung.belegungBisJahrgang == null)
-					|| (belegung.belegungVonAbschnitt == null) || (belegung.belegungBisAbschnitt == null))
+					|| (belegung.belegungVonAbschnitt == null) || (belegung.belegungBisAbschnitt == null)) {
 				continue;
+			}
 			if (!belegung.sprache.equals("E")) {
 				int anzHalbjahre = (SprachendatenUtils.getJahrgangNumerisch(belegung.belegungBisJahrgang)
 						- SprachendatenUtils.getJahrgangNumerisch(belegung.belegungVonJahrgang) + 1) * 2;
 				anzHalbjahre += belegung.belegungBisAbschnitt - belegung.belegungVonAbschnitt - 1;
-				if (anzHalbjahre >= 8)
+				if (anzHalbjahre >= 8) {
 					return true;
+				}
 			}
 		}
 		return false;

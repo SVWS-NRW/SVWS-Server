@@ -124,8 +124,9 @@ export class AbschlussFaecherGruppen extends JavaObject {
 			const sb: StringBuilder = new StringBuilder();
 			const faecher: List<string> = this.getKuerzel(filter);
 			for (const fach of faecher) {
-				if (!sb.isEmpty())
+				if (!sb.isEmpty()) {
 					sb.append(", ");
+				}
 				sb.append(fach);
 			}
 			return sb.toString();
@@ -136,13 +137,15 @@ export class AbschlussFaecherGruppen extends JavaObject {
 			const faecherFG1: List<string> = this.fg1.getKuerzel(filterFG1);
 			const faecherFG2: List<string> = this.fg2.getKuerzel(filterFG2);
 			for (const fach of faecherFG1) {
-				if (!sb.isEmpty())
+				if (!sb.isEmpty()) {
 					sb.append(", ");
+				}
 				sb.append(fach);
 			}
 			for (const fach of faecherFG2) {
-				if (!sb.isEmpty())
+				if (!sb.isEmpty()) {
 					sb.append(", ");
+				}
 				sb.append(fach);
 			}
 			return sb.toString();

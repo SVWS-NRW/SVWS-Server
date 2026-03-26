@@ -110,8 +110,9 @@ public class AbschlussFaecherGruppen {
 		final @NotNull StringBuilder sb = new StringBuilder();
 		final @NotNull List<String> faecher = getKuerzel(filter);
 		for (final String fach : faecher) {
-			if (!sb.isEmpty())
+			if (!sb.isEmpty()) {
 				sb.append(", ");
+			}
 			sb.append(fach);
 		}
 		return sb.toString();
@@ -133,13 +134,15 @@ public class AbschlussFaecherGruppen {
 		final @NotNull List<String> faecherFG1 = fg1.getKuerzel(filterFG1);
 		final @NotNull List<String> faecherFG2 = fg2.getKuerzel(filterFG2);
 		for (final String fach : faecherFG1) {
-			if (!sb.isEmpty())
+			if (!sb.isEmpty()) {
 				sb.append(", ");
+			}
 			sb.append(fach);
 		}
 		for (final String fach : faecherFG2) {
-			if (!sb.isEmpty())
+			if (!sb.isEmpty()) {
 				sb.append(", ");
+			}
 			sb.append(fach);
 		}
 		return sb.toString();

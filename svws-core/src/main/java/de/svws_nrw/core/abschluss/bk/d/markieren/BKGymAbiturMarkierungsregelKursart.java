@@ -43,8 +43,9 @@ public class BKGymAbiturMarkierungsregelKursart extends BKGymAbiturMarkierungsre
 	@Override
 	public void markiere(final @NotNull BKGymAbiturMarkierungsVariante variante) {
 		final GostAbiturFach abifach = GostAbiturFach.fromKuerzel(kursart);
-		if (abifach == null)
+		if (abifach == null) {
 			throw new DeveloperNotificationException("Die Prüfbedingung " + kuerzel + " enthält die unzulässige Kursart '" + kursart + "'.");
+		}
 		final Long abiFachID = variante.varianten.abiturdatenManager.getFachbelegungManager().getAbiFachID(abifach);
 		if (abiFachID == null) {
 			variante.addLogEintrag(1, "Fehler: Eine entsprechende Belegung konnte nicht gefunden werden.");

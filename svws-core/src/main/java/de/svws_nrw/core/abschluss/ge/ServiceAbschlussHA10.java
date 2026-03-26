@@ -105,8 +105,9 @@ public class ServiceAbschlussHA10 extends Service {
 		final @NotNull List<GEAbschlussFach> weitereFS = faecher.fg2.entferneFaecher(filterWeitereFremdsprachen);
 		if (!weitereFS.isEmpty()) {
 			for (final GEAbschlussFach fs : weitereFS) {
-				if (fs.bezeichnung == null)
+				if (fs.bezeichnung == null) {
 					continue;
+				}
 				logger.logLn(LogLevel.DEBUG, " -> Ignoriere weitere Fremdsprache: " + fs.bezeichnung + "(" + fs.note + ")");
 			}
 		}
@@ -115,8 +116,9 @@ public class ServiceAbschlussHA10 extends Service {
 		logger.logLn(LogLevel.DEBUG, " - ggf. Verbessern der E-Kurs-Noten für die Defizitberechnung:");
 		final @NotNull List<GEAbschlussFach> tmpFaecher = faecher.getFaecher(filterEKurse);
 		for (final @NotNull GEAbschlussFach f : tmpFaecher) {
-			if (f.kuerzel == null)
+			if (f.kuerzel == null) {
 				continue;
+			}
 			final int note = f.note;
 			final int note_neu = (note == 1) ? 1 : (note - 1);
 			logger.logLn(LogLevel.DEBUG, "   " + f.kuerzel + "(E):" + note + "->" + note_neu);
@@ -159,11 +161,13 @@ public class ServiceAbschlussHA10 extends Service {
 		final long fg1_ungenuegend = faecher.fg1.getFaecherAnzahl(filterUngenuegend);
 		final long fg2_ungenuegend = faecher.fg2.getFaecherAnzahl(filterUngenuegend);
 
-		if (fg1_defizite > 0)
+		if (fg1_defizite > 0) {
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> FG1: Defizit" + (fg1_defizite > 1 ? "e" : "") + ": " + faecher.fg1.getKuerzelListe(filterDefizit));
+		}
 
-		if (fg2_defizite > 0)
+		if (fg2_defizite > 0) {
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> FG2: Defizit" + (fg2_defizite > 1 ? "e" : "") + ": " + faecher.fg2.getKuerzelListe(filterDefizit));
+		}
 
 		// Kein Abschluss und keine Nachprüfungsmöglichkeit bei mind. einer 6 in FG1 oder zwei 6en in FG2
 		if ((fg1_ungenuegend > 0) || (fg2_ungenuegend > 1)) {

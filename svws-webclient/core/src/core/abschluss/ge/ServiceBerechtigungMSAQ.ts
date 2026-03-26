@@ -124,10 +124,12 @@ export class ServiceBerechtigungMSAQ extends Service {
 	private pruefeDefizite(faecher: AbschlussFaecherGruppen, logIndent: string): AbschlussErgebnis {
 		const fg1_defizite: List<GEAbschlussFach> = faecher.fg1.getFaecher(ServiceBerechtigungMSAQ.filterDefizite);
 		const fg2_defizite: List<GEAbschlussFach> = faecher.fg2.getFaecher(ServiceBerechtigungMSAQ.filterDefizite);
-		if (!fg1_defizite.isEmpty())
+		if (!fg1_defizite.isEmpty()) {
 			this.logger.logLn(LogLevel.DEBUG, logIndent + " -> FG1: Defizit" + (fg1_defizite.size() > 1 ? "e" : "") + ": " + faecher.fg1.getKuerzelListe(ServiceBerechtigungMSAQ.filterDefizite));
-		if (!fg2_defizite.isEmpty())
+		}
+		if (!fg2_defizite.isEmpty()) {
 			this.logger.logLn(LogLevel.DEBUG, logIndent + " -> FG2: Defizit" + (fg2_defizite.size() > 1 ? "e" : "") + ": " + faecher.fg2.getKuerzelListe(ServiceBerechtigungMSAQ.filterDefizite));
+		}
 		let nachpruefung_genutzt: boolean = false;
 		const npFaecher: List<GEAbschlussFach> = new ArrayList<GEAbschlussFach>();
 		const fg1_nicht_ausgleichbar: List<GEAbschlussFach> = faecher.fg1.getFaecher(ServiceBerechtigungMSAQ.filterFG1NichtAusgleichbar);
@@ -155,8 +157,9 @@ export class ServiceBerechtigungMSAQ extends Service {
 			} else
 				if ((fg1_defizite.size() === 2) && (wp_defizit !== null) && (!fg1_ausgleichsfaecher.isEmpty()) && (!nachpruefung_genutzt)) {
 					const defizitFach: GEAbschlussFach | null = faecher.fg1.getFach(ServiceBerechtigungMSAQ.filterDefizitNichtWP);
-					if (defizitFach === null)
+					if (defizitFach === null) {
 						throw new NullPointerException()
+					}
 					const ausgleichsFach: GEAbschlussFach = fg1_ausgleichsfaecher.get(0);
 					defizitFach.ausgeglichen = true;
 					ausgleichsFach.ausgleich = true;
@@ -175,8 +178,9 @@ export class ServiceBerechtigungMSAQ extends Service {
 		}
 		if ((fg1_defizite.size() === 1) && (wp_defizit === null)) {
 			const defizitFach: GEAbschlussFach | null = faecher.fg1.getFach(ServiceBerechtigungMSAQ.filterDefizitNichtWP);
-			if (defizitFach === null)
+			if (defizitFach === null) {
 				throw new NullPointerException()
+			}
 			const ausgleichsFach: GEAbschlussFach = fg1_ausgleichsfaecher.get(0);
 			defizitFach.ausgeglichen = true;
 			ausgleichsFach.ausgleich = true;
@@ -190,8 +194,9 @@ export class ServiceBerechtigungMSAQ extends Service {
 				ausgleichsFach.ausgleich = true;
 				this.logger.logLn(LogLevel.DEBUG, logIndent + " -> Prüfe FG2 mit der Option Ausgleich von " + defizitFach.kuerzel + " durch " + ausgleichsFach.kuerzel);
 				const abschlussergebnis: AbschlussErgebnis = this.pruefeFG2(faecher, logIndent + "  ", npFaecher, nachpruefung_genutzt);
-				if (abschlussergebnis.erworben)
+				if (abschlussergebnis.erworben) {
 					return abschlussergebnis;
+				}
 				defizitFach.ausgeglichen = false;
 				ausgleichsFach.ausgleich = false;
 			}
@@ -204,8 +209,9 @@ export class ServiceBerechtigungMSAQ extends Service {
 			const abschlussergebnis: AbschlussErgebnis = this.pruefeFG2(faecher, logIndent, npFaecher, true);
 			wp_defizit.note++;
 			wp_defizit.ausgleich = false;
-			if (abschlussergebnis.erworben)
+			if (abschlussergebnis.erworben) {
 				npFaecher.add(wp_defizit);
+			}
 			return AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.MSA_Q, AbschlussManager.getKuerzel(npFaecher));
 		}
 		let log_fg2_indent: string = logIndent;
@@ -255,8 +261,9 @@ export class ServiceBerechtigungMSAQ extends Service {
 				this.logger.logLn(LogLevel.DEBUG, logIndent + " -> Prüfe erneut mit Nachprüfung in " + defizitFach.kuerzel);
 				const abschlussergebnis: AbschlussErgebnis = this.pruefeFG2(faecher, logIndent + "  ", npFaecher, true);
 				this.logger.logLn(LogLevel.DEBUG, logIndent + "   -> Nachprüfung in " + defizitFach.kuerzel + (abschlussergebnis.erworben ? " möglich" : " nicht möglich"));
-				if (abschlussergebnis.erworben)
+				if (abschlussergebnis.erworben) {
 					npFaecher.add(defizitFach);
+				}
 				defizitFach.ausgeglichen = true;
 				defizitFach.ausgleich = true;
 				defizitFach.note++;
@@ -274,8 +281,9 @@ export class ServiceBerechtigungMSAQ extends Service {
 			this.logger.logLn(LogLevel.DEBUG, logIndent + " -> Prüfe erneut mit Nachprüfung in " + defizitFach.kuerzel);
 			const abschlussergebnis: AbschlussErgebnis = this.pruefeFG2(faecher, logIndent + "  ", npFaecher, true);
 			this.logger.logLn(LogLevel.DEBUG, logIndent + "   -> Nachprüfung in " + defizitFach.kuerzel + (abschlussergebnis.erworben ? " möglich" : " nicht möglich"));
-			if (abschlussergebnis.erworben)
+			if (abschlussergebnis.erworben) {
 				npFaecher.add(defizitFach);
+			}
 			defizitFach.ausgeglichen = true;
 			defizitFach.ausgleich = true;
 			defizitFach.note++;

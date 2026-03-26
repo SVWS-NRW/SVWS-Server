@@ -51,8 +51,9 @@ public final class AbschlussManagerBerufsbildend {
 	 * @return der Notendurchschnitt oder NaN im Fehlerfall
 	 */
 	public static double getDurchschnitt(final @NotNull BKAnlageAFaecher abschlussFaecher) {
-		if ((abschlussFaecher.faecher == null) || (abschlussFaecher.faecher.isEmpty()))
+		if ((abschlussFaecher.faecher == null) || (abschlussFaecher.faecher.isEmpty())) {
 			return Double.NaN;
+		}
 		int sum = 0;
 		for (final BKAnlageAFach fach : abschlussFaecher.faecher) {
 			sum += fach.note;
@@ -69,12 +70,14 @@ public final class AbschlussManagerBerufsbildend {
 	 * @return die Anzahl der Defizite oder -1 im Fehlerfall
 	 */
 	public static int getAnzahlDefizite(final @NotNull BKAnlageAFaecher abschlussFaecher) {
-		if ((abschlussFaecher.faecher == null) || (abschlussFaecher.faecher.isEmpty()))
+		if ((abschlussFaecher.faecher == null) || (abschlussFaecher.faecher.isEmpty())) {
 			return -1;
+		}
 		int sum = 0;
 		for (final BKAnlageAFach fach : abschlussFaecher.faecher) {
-			if (fach.note >= 5)
+			if (fach.note >= 5) {
 				sum++;
+			}
 		}
 		return sum;
 	}
@@ -88,12 +91,14 @@ public final class AbschlussManagerBerufsbildend {
 	 * @return die Anzahl der Note Ungenügend oder -1 im Fehlerfall
 	 */
 	public static int getAnzahlUngenuegend(final @NotNull BKAnlageAFaecher abschlussFaecher) {
-		if ((abschlussFaecher.faecher == null) || (abschlussFaecher.faecher.isEmpty()))
+		if ((abschlussFaecher.faecher == null) || (abschlussFaecher.faecher.isEmpty())) {
 			return -1;
+		}
 		int sum = 0;
 		for (final BKAnlageAFach fach : abschlussFaecher.faecher) {
-			if (fach.note >= 6)
+			if (fach.note >= 6) {
 				sum++;
+			}
 		}
 		return sum;
 	}

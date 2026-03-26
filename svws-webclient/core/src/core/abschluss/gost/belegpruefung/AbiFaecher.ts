@@ -78,25 +78,33 @@ export class AbiFaecher extends GostBelegpruefung {
 		const alleFachbelegungen: List<AbiturFachbelegung> = this.manager.getRelevanteFachbelegungen();
 		for (const fachbelegung of alleFachbelegungen) {
 			const abiturFach: GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
-			if (abiturFach === null)
+			if (abiturFach === null) {
 				continue;
+			}
 			this.mapAbiturFachbelegungen.put(abiturFach, fachbelegung);
 			this.anzahlAbiFaecher++;
 			const fach: GostFach | null = this.manager.getFach(fachbelegung);
-			if (fach === null)
+			if (fach === null) {
 				continue;
-			if (GostFachbereich.FREMDSPRACHE.hat(fach) || GostFachbereich.DEUTSCH.hat(fach))
+			}
+			if (GostFachbereich.FREMDSPRACHE.hat(fach) || GostFachbereich.DEUTSCH.hat(fach)) {
 				this.hatAufgabenfeldI = true;
-			if (GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION.hat(fach))
+			}
+			if (GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION.hat(fach)) {
 				this.hatAufgabenfeldII = true;
-			if (GostFachbereich.MATHEMATISCH_NATURWISSENSCHAFTLICH.hat(fach))
+			}
+			if (GostFachbereich.MATHEMATISCH_NATURWISSENSCHAFTLICH.hat(fach)) {
 				this.hatAufgabenfeldIII = true;
-			if (GostFachbereich.FREMDSPRACHE.hat(fach) || GostFachbereich.DEUTSCH.hat(fach) || GostFachbereich.MATHEMATIK.hat(fach))
+			}
+			if (GostFachbereich.FREMDSPRACHE.hat(fach) || GostFachbereich.DEUTSCH.hat(fach) || GostFachbereich.MATHEMATIK.hat(fach)) {
 				this.anzahlDeutschMatheFremdsprache++;
-			if (GostFachbereich.FREMDSPRACHE.hat(fach))
+			}
+			if (GostFachbereich.FREMDSPRACHE.hat(fach)) {
 				this.anzahlFremdsprachen++;
-			if (GostFachbereich.SPORT.hat(fach) || GostFachbereich.RELIGION.hat(fach))
+			}
+			if (GostFachbereich.SPORT.hat(fach) || GostFachbereich.RELIGION.hat(fach)) {
 				this.anzahlSportReligion++;
+			}
 		}
 	}
 
@@ -118,8 +126,9 @@ export class AbiFaecher extends GostBelegpruefung {
 	private pruefeLK1(): void {
 		const lk1: AbiturFachbelegung | null = (this.mapAbiturFachbelegungen === null) ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.LK1);
 		const lk1fach: GostFach | null = this.manager.getFach(lk1);
-		if ((lk1 === null) || (lk1fach === null) || !((GostFachbereich.DEUTSCH.hat(lk1fach)) || (GostFachbereich.FREMDSPRACHE.hat(lk1fach) && !lk1.istFSNeu) || (GostFachbereich.MATHEMATIK.hat(lk1fach)) || (GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH.hat(lk1fach))))
+		if ((lk1 === null) || (lk1fach === null) || !((GostFachbereich.DEUTSCH.hat(lk1fach)) || (GostFachbereich.FREMDSPRACHE.hat(lk1fach) && !lk1.istFSNeu) || (GostFachbereich.MATHEMATIK.hat(lk1fach)) || (GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH.hat(lk1fach)))) {
 			this.addFehler(GostBelegungsfehler.LK1_11);
+		}
 	}
 
 	/**
@@ -130,20 +139,25 @@ export class AbiFaecher extends GostBelegpruefung {
 	 *    und ob Sport nicht als erstes oder drittes Abiturfach gewählt wurde
 	 */
 	private pruefeAnzahlUndAufgabenfelderAbiFaecher(): void {
-		if ((this.anzahlAbiFaecher !== 4) || (!this.hatAufgabenfeldI) || (!this.hatAufgabenfeldII) || (!this.hatAufgabenfeldIII))
+		if ((this.anzahlAbiFaecher !== 4) || (!this.hatAufgabenfeldI) || (!this.hatAufgabenfeldII) || (!this.hatAufgabenfeldIII)) {
 			this.addFehler(GostBelegungsfehler.LK1_13);
-		if (this.anzahlDeutschMatheFremdsprache < 2)
+		}
+		if (this.anzahlDeutschMatheFremdsprache < 2) {
 			this.addFehler(GostBelegungsfehler.ABI_10);
-		if ((this.anzahlDeutschMatheFremdsprache < 3) && (this.anzahlFremdsprachen > 1))
+		}
+		if ((this.anzahlDeutschMatheFremdsprache < 3) && (this.anzahlFremdsprachen > 1)) {
 			this.addFehler(GostBelegungsfehler.ABI_19);
-		if (this.anzahlSportReligion > 1)
+		}
+		if (this.anzahlSportReligion > 1) {
 			this.addFehler(GostBelegungsfehler.ABI_11);
+		}
 		const lk1: AbiturFachbelegung | null = (this.mapAbiturFachbelegungen === null) ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.LK1);
 		const lk1fach: GostFach | null = this.manager.getFach(lk1);
 		const ab3: AbiturFachbelegung | null = (this.mapAbiturFachbelegungen === null) ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
 		const ab3fach: GostFach | null = this.manager.getFach(ab3);
-		if (((lk1fach !== null) && (GostFachbereich.SPORT.hatKuerzel(lk1fach.kuerzel))) || ((ab3fach !== null) && (GostFachbereich.SPORT.hatKuerzel(ab3fach.kuerzel))))
+		if (((lk1fach !== null) && (GostFachbereich.SPORT.hatKuerzel(lk1fach.kuerzel))) || ((ab3fach !== null) && (GostFachbereich.SPORT.hatKuerzel(ab3fach.kuerzel)))) {
 			this.addFehler(GostBelegungsfehler.ABI_15);
+		}
 	}
 
 	/**
@@ -155,8 +169,9 @@ export class AbiFaecher extends GostBelegpruefung {
 		const alleFachbelegungen: List<AbiturFachbelegung> = this.manager.getRelevanteFachbelegungen();
 		for (const fachbelegung of alleFachbelegungen) {
 			const abiturFach: GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
-			if (abiturFach === null)
+			if (abiturFach === null) {
 				continue;
+			}
 			if (!abiFaecher.contains(abiturFach)) {
 				abiFaecher.add(abiturFach);
 				continue;
@@ -186,18 +201,21 @@ export class AbiFaecher extends GostBelegpruefung {
 	}
 
 	private pruefeSchriftlichkeitVorQ22(belegung: AbiturFachbelegung | null): boolean {
-		if (this.manager.pruefeBelegungMitSchriftlichkeit(belegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+		if (this.manager.pruefeBelegungMitSchriftlichkeit(belegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
 			return true;
+		}
 		const fach: GostFach | null = this.manager.getFach(belegung);
 		if (fach !== null) {
 			let belegungen: List<AbiturFachbelegung>;
 			belegungen = this.manager.getFachbelegungByFachkuerzel(fach.kuerzel);
-			if ((this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)))
+			if ((this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21))) {
 				return true;
+			}
 			if (GostFachbereich.RELIGION.hat(fach)) {
 				belegungen = this.manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION);
-				if ((this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)))
+				if ((this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12)) && (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21))) {
 					return true;
+				}
 			}
 		}
 		return false;
@@ -211,17 +229,21 @@ export class AbiFaecher extends GostBelegpruefung {
 	private pruefeSchriftlichkeitAB3undAB4(): void {
 		const ab3: AbiturFachbelegung | null = (this.mapAbiturFachbelegungen === null) ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
 		if (ab3 !== null) {
-			if (!this.pruefeSchriftlichkeitVorQ22(ab3))
+			if (!this.pruefeSchriftlichkeitVorQ22(ab3)) {
 				this.addFehler(GostBelegungsfehler.ABI_17);
-			if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab3, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22))
+			}
+			if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab3, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22)) {
 				this.addFehler(GostBelegungsfehler.ABI_12);
+			}
 		}
 		const ab4: AbiturFachbelegung | null = (this.mapAbiturFachbelegungen === null) ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB4);
 		if (ab4 !== null) {
-			if (!this.pruefeSchriftlichkeitVorQ22(ab4))
+			if (!this.pruefeSchriftlichkeitVorQ22(ab4)) {
 				this.addFehler(GostBelegungsfehler.ABI_18);
-			if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab4, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.Q22))
+			}
+			if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab4, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.Q22)) {
 				this.addFehler(GostBelegungsfehler.ABI_13);
+			}
 		}
 	}
 

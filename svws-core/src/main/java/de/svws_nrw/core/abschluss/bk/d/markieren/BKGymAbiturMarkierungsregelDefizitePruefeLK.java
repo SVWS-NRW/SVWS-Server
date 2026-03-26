@@ -41,9 +41,9 @@ public class BKGymAbiturMarkierungsregelDefizitePruefeLK extends BKGymAbiturMark
 	@Override
 	public void markiere(final @NotNull BKGymAbiturMarkierungsVariante variante) {
 		final int anzahlLKDefizite = anzahlDefizite("LK1", variante) + anzahlDefizite("LK2", variante);
-		if (anzahlLKDefizite <= erlaubteDefizite)
+		if (anzahlLKDefizite <= erlaubteDefizite) {
 			variante.addLogEintrag(1, "Defizite im LK-Bereich: Erlaubt=" + erlaubteDefizite + " Ist=" + anzahlLKDefizite + ".");
-		else {
+		} else {
 			variante.addLogEintrag(1, "Fehler: Es sind mehr als die " + erlaubteDefizite + " erlaubten Defizite im LK-Bereich vorhanden.");
 			variante.setHatZulassung(false);
 		}
@@ -60,11 +60,13 @@ public class BKGymAbiturMarkierungsregelDefizitePruefeLK extends BKGymAbiturMark
 	 */
 	private int anzahlDefizite(final @NotNull String kursart, final @NotNull BKGymAbiturMarkierungsVariante variante) {
 		final GostAbiturFach abifach = GostAbiturFach.fromKuerzel(kursart);
-		if (abifach == null)
+		if (abifach == null) {
 			throw new DeveloperNotificationException("Die Prüfbedingung " + kuerzel + " enthält die unzulässige Kursart '" + kursart + "'.");
+		}
 		final Long abiFachID = variante.varianten.abiturdatenManager.getFachbelegungManager().getAbiFachID(abifach);
-		if (abiFachID == null)
+		if (abiFachID == null) {
 			return 0;
+		}
 
 		final @NotNull Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> bedingung =
 				markierung -> ((markierung != null) && (markierung.fachID == abiFachID)

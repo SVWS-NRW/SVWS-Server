@@ -76,12 +76,14 @@ public class BKGymFachbelegungZuStundentafelfachManager {
 	 */
 	public boolean getSchriftlichBelegt(final @NotNull GostHalbjahr hj, final @NotNull BeruflichesGymnasiumStundentafelFach fach) {
 		//Die schriftliche Belegung in der EF kennt nur der BKGymFachbelegungManager, da hierher nur die Q-Phase übermittelt wird.
-		if (hj.istEinfuehrungsphase())
+		if (hj.istEinfuehrungsphase()) {
 			return abidatenManager.getFachbelegungManager().getSchriftlichBelegt(hj, fach);
+		}
 
 		BKGymAbiturFachbelegungHalbjahr belegungHj = mapBelegungByHalbjahrAndFachbezeichung.getOrNull(fach.fachbezeichnung, hj.id);
-		if (belegungHj == null)
+		if (belegungHj == null) {
 			belegungHj = mapUsedBelegungByHalbjahrAndFachbezeichung.getOrNull(fach.fachbezeichnung, hj.id);
+		}
 		return (belegungHj == null) || belegungHj.schriftlich;
 	}
 
@@ -137,8 +139,9 @@ public class BKGymFachbelegungZuStundentafelfachManager {
 		for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase()) {
 			final BKGymAbiturFachbelegungHalbjahr belegungHj = mapBelegungByHalbjahrAndFachbezeichung.getOrNull(fach.fachbezeichnung, hj.id);
 			if ((getBelegteStundenByHalbjahrAndFach(hj, fach) <= 0)
-					&& ((belegungHj == null) || (belegungHj.wochenstunden < fach.stundenumfang[hj.id]) || !giltNoteFuerBelegung(Note.fromKuerzel(belegungHj.notenkuerzel))))
+					&& ((belegungHj == null) || (belegungHj.wochenstunden < fach.stundenumfang[hj.id]) || !giltNoteFuerBelegung(Note.fromKuerzel(belegungHj.notenkuerzel)))) {
 				return false;
+			}
 		}
 		// Belegung der fehlenden Halbjahre
 		for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase()) {
@@ -168,16 +171,19 @@ public class BKGymFachbelegungZuStundentafelfachManager {
 		// prüfe, ob vollständig Belegung möglich
 		for (final @NotNull GostHalbjahr hj : hjeReversed) {
 			final BKGymAbiturFachbelegungHalbjahr belegungHj = mapBelegungByHalbjahrAndFachbezeichung.getOrNull(fach.fachbezeichnung, hj.id);
-			if (getBelegteStundenByHalbjahrAndFach(hj, fach) > 0)
+			if (getBelegteStundenByHalbjahrAndFach(hj, fach) > 0) {
 				break;
-			if ((belegungHj == null) || (belegungHj.wochenstunden < fach.stundenumfang[hj.id]) || !giltNoteFuerBelegung(Note.fromKuerzel(belegungHj.notenkuerzel)))
+			}
+			if ((belegungHj == null) || (belegungHj.wochenstunden < fach.stundenumfang[hj.id]) || !giltNoteFuerBelegung(Note.fromKuerzel(belegungHj.notenkuerzel))) {
 				return false;
+			}
 		}
 		// Belegung der fehlenden Halbjahre
 		for (final @NotNull GostHalbjahr hj : hjeReversed) {
 			final BKGymAbiturFachbelegungHalbjahr belegungHj = mapBelegungByHalbjahrAndFachbezeichung.getOrNull(fach.fachbezeichnung, hj.id);
-			if (getBelegteStundenByHalbjahrAndFach(hj, fach) > 0)
+			if (getBelegteStundenByHalbjahrAndFach(hj, fach) > 0) {
 				break;
+			}
 			if (belegungHj != null) {
 				belegteStundenByHalbjahrUndFachposition[fach.sortierung][hj.id] = belegungHj.wochenstunden;
 				mapBelegungByHalbjahrAndFachbezeichung.removeOrException(fach.fachbezeichnung, hj.id);
@@ -190,7 +196,7 @@ public class BKGymFachbelegungZuStundentafelfachManager {
 
 	/**
 	 * Belegt ein beliebiges Fach für ein Halbjahr.
-	 * Die Bezeichnung des Fachs ist dabei egal. Es wird der Position zugeordet.
+	 * Die Bezeichnung des Fachs ist dabei egal. Es wird der Position zugeordnet.
 	 * Die Methode wird für die Belegung des Wahlfachs verwendet
 	 *
 	 * @param hj     das Halbjahr
@@ -220,9 +226,11 @@ public class BKGymFachbelegungZuStundentafelfachManager {
 	 * @return true, wenn die Belegung vollständig auch im Stundenumfang ist.
 	 */
 	public boolean istVollbelegt(final @NotNull BeruflichesGymnasiumStundentafelFach fach) {
-		for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase())
-			if (getBelegteStundenByHalbjahrAndFach(hj, fach) < fach.stundenumfang[hj.id])
+		for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase()) {
+			if (getBelegteStundenByHalbjahrAndFach(hj, fach) < fach.stundenumfang[hj.id]) {
 				return false;
+			}
+		}
 		return true;
 	}
 

@@ -37,9 +37,9 @@ export class BKGymAbiturMarkierungsregelDefizitePruefeLK extends BKGymAbiturMark
 	 */
 	public markiere(variante: BKGymAbiturMarkierungsVariante): void {
 		const anzahlLKDefizite: number = this.anzahlDefizite("LK1", variante) + this.anzahlDefizite("LK2", variante);
-		if (anzahlLKDefizite <= this.erlaubteDefizite)
+		if (anzahlLKDefizite <= this.erlaubteDefizite) {
 			variante.addLogEintrag(1, "Defizite im LK-Bereich: Erlaubt=" + this.erlaubteDefizite + " Ist=" + anzahlLKDefizite + ".");
-		else {
+		} else {
 			variante.addLogEintrag(1, "Fehler: Es sind mehr als die " + this.erlaubteDefizite + " erlaubten Defizite im LK-Bereich vorhanden.");
 			variante.setHatZulassung(false);
 		}
@@ -55,11 +55,13 @@ export class BKGymAbiturMarkierungsregelDefizitePruefeLK extends BKGymAbiturMark
 	 */
 	private anzahlDefizite(kursart: string, variante: BKGymAbiturMarkierungsVariante): number {
 		const abifach: GostAbiturFach | null = GostAbiturFach.fromKuerzel(kursart);
-		if (abifach === null)
+		if (abifach === null) {
 			throw new DeveloperNotificationException("Die Prüfbedingung " + this.kuerzel + " enthält die unzulässige Kursart '" + kursart + "'.")
+		}
 		const abiFachID: number | null = variante.varianten.abiturdatenManager.getFachbelegungManager().getAbiFachID(abifach);
-		if (abiFachID === null)
+		if (abiFachID === null) {
 			return 0;
+		}
 		const bedingung: Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> = { test: (markierung: BKGymAbiturMarkierungsalgorithmusMarkierung | null) => ((markierung !== null) && (markierung.fachID === abiFachID) && (markierung.punkte !== null) && (markierung.punkte < 5)) };
 		return variante.zaehleMarkierte(bedingung);
 	}

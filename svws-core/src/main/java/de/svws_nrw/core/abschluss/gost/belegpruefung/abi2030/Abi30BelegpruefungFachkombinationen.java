@@ -48,8 +48,9 @@ public final class Abi30BelegpruefungFachkombinationen extends GostBelegpruefung
 
 	private static boolean pruefeHatBelegungFach2InHalbjahr(final @NotNull GostJahrgangFachkombination kombi, final AbiturFachbelegung belegung2,
 			final @NotNull GostHalbjahr halbjahr) {
-		if (belegung2 == null)
+		if (belegung2 == null) {
 			return false;
+		}
 		final AbiturFachbelegungHalbjahr belegung2Halbjahr = belegung2.belegungen[halbjahr.id];
 		return ((belegung2Halbjahr != null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegung2Halbjahr))
 				&& ((kombi.kursart2 == null) || (GostKursart.fromKuerzel(belegung2Halbjahr.kursartKuerzel) == GostKursart.fromKuerzel(kombi.kursart2))));
@@ -59,18 +60,21 @@ public final class Abi30BelegpruefungFachkombinationen extends GostBelegpruefung
 	private void pruefeHatFachkombination(final @NotNull GostJahrgangFachkombination kombi, final @NotNull GostHalbjahr... halbjahre) {
 		// Prüfe, ob das erste fach überhaupt belegt ist und die Fachkombination "aktivieren" kann
 		final AbiturFachbelegung belegung1 = manager.getFachbelegungByID(kombi.fachID1);
-		if (belegung1 == null)
+		if (belegung1 == null) {
 			return;
+		}
 		// Prüfe nun über alle Halbjahre, ob eine Halbjahresbelegung mit der Kursart die Fachkombination aktiviert und diese ggf. zu einem Fehler führt
 		final AbiturFachbelegung belegung2 = manager.getFachbelegungByID(kombi.fachID2);
 		for (final @NotNull GostHalbjahr halbjahr : halbjahre) {
 			// Prüfe, ob die Regel in dem Halbjahr überhaupt gültig ist
-			if (!kombi.gueltigInHalbjahr[halbjahr.id])
+			if (!kombi.gueltigInHalbjahr[halbjahr.id]) {
 				continue;
+			}
 			// Prüfe die Belegungen
 			final AbiturFachbelegungHalbjahr belegung1Halbjahr = belegung1.belegungen[halbjahr.id];
-			if ((belegung1Halbjahr == null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegung1Halbjahr)))
+			if ((belegung1Halbjahr == null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegung1Halbjahr))) {
 				continue;
+			}
 			if ((kombi.kursart1 == null) || (GostKursart.fromKuerzel(belegung1Halbjahr.kursartKuerzel) == GostKursart.fromKuerzel(kombi.kursart1))) {
 				// Die Fachkombinations-Regel wurde durch dir Fachbelegung des ersten Faches aktiviert - Prüfe nun auf eine Regelverletzung
 				if ((kombi.typ == GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue()) && pruefeHatBelegungFach2InHalbjahr(kombi, belegung2, halbjahr)) {
@@ -88,14 +92,16 @@ public final class Abi30BelegpruefungFachkombinationen extends GostBelegpruefung
 
 	@Override
 	protected void pruefeEF1() {
-		for (final @NotNull GostJahrgangFachkombination kombi : manager.getFachkombinationenEF1())
+		for (final @NotNull GostJahrgangFachkombination kombi : manager.getFachkombinationenEF1()) {
 			pruefeHatFachkombination(kombi, GostHalbjahr.EF1);
+		}
 	}
 
 	@Override
 	protected void pruefeGesamt() {
-		for (final @NotNull GostJahrgangFachkombination kombi : manager.getFachkombinationenGesamt())
+		for (final @NotNull GostJahrgangFachkombination kombi : manager.getFachkombinationenGesamt()) {
 			pruefeHatFachkombination(kombi, GostHalbjahr.values());
+		}
 	}
 
 }

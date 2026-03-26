@@ -33,12 +33,14 @@ export class ServicePrognose extends Service {
 	private static hatLernbereichsnoten(faecher: GEAbschlussFaecher): boolean {
 		let hatLBNW: boolean = false;
 		let hatLBAL: boolean = false;
-		if (faecher.faecher === null)
+		if (faecher.faecher === null) {
 			return false;
+		}
 		const tmp: List<GEAbschlussFach> = faecher.faecher;
 		for (const fach of tmp) {
-			if (fach === null)
+			if (fach === null) {
 				continue;
+			}
 			hatLBNW = hatLBNW || JavaObject.equalsTranspiler("LBNW", (fach.kuerzel));
 			hatLBAL = hatLBAL || JavaObject.equalsTranspiler("LBAL", (fach.kuerzel));
 		}
@@ -72,8 +74,9 @@ export class ServicePrognose extends Service {
 			const ha9: ServiceAbschlussHA9 = new ServiceAbschlussHA9();
 			const ha9output: AbschlussErgebnis = ha9.berechne(input);
 			np_faecher = ha9output.npFaecher;
-			if (ha9output.erworben)
+			if (ha9output.erworben) {
 				abschluss = SchulabschlussAllgemeinbildend.HA9;
+			}
 			this.log.append(ha9.getLog());
 			this.logger.logLn(LogLevel.INFO, "");
 		} else
@@ -82,11 +85,12 @@ export class ServicePrognose extends Service {
 			}
 		const ha10: ServiceAbschlussHA10 = new ServiceAbschlussHA10();
 		const ha10output: AbschlussErgebnis = ha10.berechne(input);
-		if (ha10output.erworben)
+		if (ha10output.erworben) {
 			abschluss = SchulabschlussAllgemeinbildend.HA10;
-		else
-			if (JavaObject.equalsTranspiler("10", (input.jahrgang)) || (JavaObject.equalsTranspiler(SchulabschlussAllgemeinbildend.HA9, (abschluss))))
+		} else
+			if (JavaObject.equalsTranspiler("10", (input.jahrgang)) || (JavaObject.equalsTranspiler(SchulabschlussAllgemeinbildend.HA9, (abschluss)))) {
 				np_faecher = ha10output.npFaecher;
+			}
 		this.log.append(ha10.getLog());
 		if ((!JavaObject.equalsTranspiler(SchulabschlussAllgemeinbildend.OA, (abschluss))) || (!ServicePrognose.hatLernbereichsnoten(input))) {
 			const msa: ServiceAbschlussMSA = new ServiceAbschlussMSA();

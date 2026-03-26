@@ -47,23 +47,29 @@ export class BKGymBelegpruefung extends JavaObject {
 	 *  dann die Anzahl der Fehler und schließlich die Fehlertypen alphabetisch vergleicht.
 	 */
 	private static readonly fehlerliste_comparator: Comparator<List<BKGymBelegungsfehler>> = { compare: (l1: List<BKGymBelegungsfehler> | null, l2: List<BKGymBelegungsfehler> | null) => {
-		if (l1 === null || l2 === null)
+		if (l1 === null || l2 === null) {
 			throw new DeveloperNotificationException("Die Belegungsfehlerliste darf nicht null sein.")
+		}
 		let sum1: number = 0;
-		for (const f of l1)
+		for (const f of l1) {
 			sum1 += f.wert;
+		}
 		let sum2: number = 0;
-		for (const f of l2)
+		for (const f of l2) {
 			sum2 += f.wert;
-		if (sum1 !== sum2)
+		}
+		if (sum1 !== sum2) {
 			return JavaInteger.compare(sum1, sum2);
-		if (l1.size() !== l2.size())
+		}
+		if (l1.size() !== l2.size()) {
 			return JavaInteger.compare(l1.size(), l2.size());
+		}
 		const n: number = Math.min(l1.size(), l2.size());
 		for (let i: number = 0; i < n; i++) {
 			const cmp: number = JavaString.compareTo(l1.get(i).text, l2.get(i).text);
-			if (cmp !== 0)
+			if (cmp !== 0) {
 				return cmp;
+			}
 		}
 		return 0;
 	} };
@@ -126,9 +132,11 @@ export class BKGymBelegpruefung extends JavaObject {
 	 * @return true, wenn kein "echter" Belegungsfehler vorliegt, und ansonsten false.
 	 */
 	public istErfolgreich(): boolean {
-		for (const fehler of this.getBelegungsfehler())
-			if (!fehler.istInfo() && fehler.wert > 0)
+		for (const fehler of this.getBelegungsfehler()) {
+			if (!fehler.istInfo() && fehler.wert > 0) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -157,23 +165,26 @@ export class BKGymBelegpruefung extends JavaObject {
 		const fb2TafelManager: BKGymFachbelegungZuStundentafelfachManager = fbManager.newFachbelegungZuStundentafelfachManager(BKGymStundentafelManager.getMaximalSortierung(tafel));
 		this.pruefeAbiGrundkurse(tafel);
 		for (const fach of tafel.faecher) {
-			if (BKGymStundentafelManager.istZweiteFremdsprache(fach.fachbezeichnung))
+			if (BKGymStundentafelManager.istZweiteFremdsprache(fach.fachbezeichnung)) {
 				zweiteFremdspracheBelegt = this.pruefeBelegungZweiteFremdsprache(fb2TafelManager, tafel, fach);
-			else
-				if (BKGymStundentafelManager.istNeueFremdsprache(fach.fachbezeichnung))
+			} else
+				if (BKGymStundentafelManager.istNeueFremdsprache(fach.fachbezeichnung)) {
 					this.pruefeBelegungNeueFremdsprache(fb2TafelManager, tafel, fach);
-				else
-					if (BKGymStundentafelManager.istReligion(fach.fachbezeichnung))
+				} else
+					if (BKGymStundentafelManager.istReligion(fach.fachbezeichnung)) {
 						religionVollbelegt = BKGymBelegpruefung.pruefeBelegungReligion(fb2TafelManager, fach);
-					else
+					} else
 						if (BKGymStundentafelManager.istWahlfach(fach.fachbezeichnung)) {
-							if (!zweiteFremdspracheBelegt)
+							if (!zweiteFremdspracheBelegt) {
 								this.pruefeBelegungFremdsprachenErsatzfach(fb2TafelManager, tafel);
-							if (!religionVollbelegt)
+							}
+							if (!religionVollbelegt) {
 								this.pruefeBelegungReligionErsatzfach(fb2TafelManager, tafel);
+							}
 							this.pruefeBelegungWahlfach(fb2TafelManager, tafel, fach);
-						} else
+						} else {
 							this.pruefeBelegungFach(fb2TafelManager, tafel, fach);
+						}
 		}
 	}
 
@@ -185,15 +196,18 @@ export class BKGymBelegpruefung extends JavaObject {
 	private pruefeAbiGrundkurse(tafel: BeruflichesGymnasiumStundentafel): void {
 		const fbManager: BKGymFachbelegungManager = this.abidatenManager.getFachbelegungManager();
 		const ab3: BKGymAbiturFachbelegung | null = fbManager.getAbiFachbelegung(GostAbiturFach.AB3);
-		if (ab3 === null)
+		if (ab3 === null) {
 			this.addFehler(tafel, BKGymBelegungsfehlerTyp.AB_3);
+		}
 		const ab4: BKGymAbiturFachbelegung | null = fbManager.getAbiFachbelegung(GostAbiturFach.AB4);
-		if (ab4 === null)
+		if (ab4 === null) {
 			this.addFehler(tafel, BKGymBelegungsfehlerTyp.AB_4);
+		}
 		const ab3Bezeichnung: string | null = ab3 === null ? null : this.abidatenManager.getFaecherManager().getBezeichnungByFachID(ab3.fachID);
 		const ab4Bezeichnung: string | null = ab4 === null ? null : this.abidatenManager.getFaecherManager().getBezeichnungByFachID(ab4.fachID);
-		if ((ab3Bezeichnung !== null) && (ab4Bezeichnung !== null) && !this.abidatenManager.getStundentafelManager().pruefeAbiGrundkurswahl(tafel, ab3Bezeichnung, ab4Bezeichnung))
+		if ((ab3Bezeichnung !== null) && (ab4Bezeichnung !== null) && !this.abidatenManager.getStundentafelManager().pruefeAbiGrundkurswahl(tafel, ab3Bezeichnung, ab4Bezeichnung)) {
 			this.addFehler(tafel, BKGymBelegungsfehlerTyp.AB_5, ab3Bezeichnung, ab4Bezeichnung, this.abidatenManager.getGliederung().name(), this.abidatenManager.getFachklassenschluessel());
+		}
 	}
 
 	/**
@@ -202,9 +216,11 @@ export class BKGymBelegpruefung extends JavaObject {
 	 * @param tafel   die zu prüfende Stundentafel
 	 */
 	private nichtBelegteHalbjahreHinweis(tafel: BeruflichesGymnasiumStundentafel): void {
-		for (const hj of GostHalbjahr.values())
-			if (!this.abidatenManager.istBewertet(hj))
+		for (const hj of GostHalbjahr.values()) {
+			if (!this.abidatenManager.istBewertet(hj)) {
 				this.addFehler(tafel, BKGymBelegungsfehlerTyp.HJ_1_INFO, hj.kuerzel);
+			}
+		}
 	}
 
 	/**
@@ -221,8 +237,9 @@ export class BKGymBelegpruefung extends JavaObject {
 	 */
 	private pruefeBelegungZweiteFremdsprache(fb2TafelManager: BKGymFachbelegungZuStundentafelfachManager, tafel: BeruflichesGymnasiumStundentafel, fach: BeruflichesGymnasiumStundentafelFach): boolean {
 		const bezeichnerFremdsprache: string | null = this.abidatenManager.getFachbelegungManager().getZweiteFremdspracheBezeichnung();
-		if (bezeichnerFremdsprache === null)
+		if (bezeichnerFremdsprache === null) {
 			return false;
+		}
 		const fachFremdsprache: BeruflichesGymnasiumStundentafelFach = BKGymBelegpruefung.copyStundentafelFach(fach, bezeichnerFremdsprache);
 		return this.pruefeBelegungFach(fb2TafelManager, tafel, fachFremdsprache);
 	}
@@ -254,12 +271,14 @@ export class BKGymBelegpruefung extends JavaObject {
 	private pruefeBelegungFremdsprachenErsatzfach(fb2TafelManager: BKGymFachbelegungZuStundentafelfachManager, tafel: BeruflichesGymnasiumStundentafel): void {
 		const stManager: BKGymStundentafelManager = this.abidatenManager.getStundentafelManager();
 		const fachZweiteFremdsprache: BeruflichesGymnasiumStundentafelFach | null = stManager.getFachByTafelAndBezeichnung(tafel, BKGymStundentafelManager.ZWEITE_FREMDSPRACHE);
-		if (fachZweiteFremdsprache === null)
+		if (fachZweiteFremdsprache === null) {
 			throw new DeveloperNotificationException("Das Fach \"Zweite Fremdsprache\" fehlt in der Stundentafel.")
+		}
 		for (const ersatzfachBezeichnung of fb2TafelManager.getFachbezeichnungenFreierBelegungen()) {
 			const ersatzfach: BeruflichesGymnasiumStundentafelFach = BKGymBelegpruefung.copyStundentafelFach(fachZweiteFremdsprache, ersatzfachBezeichnung);
-			if (fb2TafelManager.belegeErsatzfachVomEndeHer(ersatzfach))
+			if (fb2TafelManager.belegeErsatzfachVomEndeHer(ersatzfach)) {
 				break;
+			}
 		}
 		this.pruefeStundenumfang(fb2TafelManager, tafel, fachZweiteFremdsprache);
 	}
@@ -287,12 +306,14 @@ export class BKGymBelegpruefung extends JavaObject {
 	private pruefeBelegungReligionErsatzfach(fb2TafelManager: BKGymFachbelegungZuStundentafelfachManager, tafel: BeruflichesGymnasiumStundentafel): void {
 		const stManager: BKGymStundentafelManager = this.abidatenManager.getStundentafelManager();
 		const fachReligion: BeruflichesGymnasiumStundentafelFach | null = stManager.getFachByTafelAndBezeichnung(tafel, BKGymStundentafelManager.RELIGION);
-		if (fachReligion === null)
+		if (fachReligion === null) {
 			throw new DeveloperNotificationException("Das Fach " + BKGymStundentafelManager.RELIGION + " fehlt in der Stundentafel.")
+		}
 		for (const ersatzfachBezeichnung of BKGymStundentafelManager.ERSATZ_FUER_RELIGION) {
 			const ersatzfach: BeruflichesGymnasiumStundentafelFach = BKGymBelegpruefung.copyStundentafelFach(fachReligion, ersatzfachBezeichnung);
-			if (fb2TafelManager.belegeErsatzfach(ersatzfach))
+			if (fb2TafelManager.belegeErsatzfach(ersatzfach)) {
 				break;
+			}
 		}
 		this.pruefeStundenumfang(fb2TafelManager, tafel, fachReligion);
 	}
@@ -305,8 +326,9 @@ export class BKGymBelegpruefung extends JavaObject {
 	 * @param fach              das zu prüfende Fach der Stundentafel
 	 */
 	private pruefeBelegungWahlfach(fb2TafelManager: BKGymFachbelegungZuStundentafelfachManager, tafel: BeruflichesGymnasiumStundentafel, fach: BeruflichesGymnasiumStundentafelFach): void {
-		for (const hj of GostHalbjahr.getQualifikationsphase())
+		for (const hj of GostHalbjahr.getQualifikationsphase()) {
 			fb2TafelManager.belegeBeliebigesFachFuerHalbjahr(hj, fach);
+		}
 		this.pruefeStundenumfang(fb2TafelManager, tafel, fach);
 	}
 
@@ -354,14 +376,17 @@ export class BKGymBelegpruefung extends JavaObject {
 			} else
 				if (belegteStunden < fach.stundenumfang[hj.id]) {
 					unterbelegung = true;
-					if (belegteStunden === 0)
+					if (belegteStunden === 0) {
 						success = !this.addFehler(tafel, BKGymBelegungsfehlerTyp.ST_6, fach.fachbezeichnung, hj.kuerzel) && success;
+					}
 				}
 		}
-		if (summeTafel > summeBelegung)
+		if (summeTafel > summeBelegung) {
 			return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.ST_3, fach.fachbezeichnung) && success;
-		if (unterbelegung)
+		}
+		if (unterbelegung) {
 			success = !this.addFehler(tafel, BKGymBelegungsfehlerTyp.ST_5_INFO, fach.fachbezeichnung) && success;
+		}
 		return success;
 	}
 
@@ -375,24 +400,29 @@ export class BKGymBelegpruefung extends JavaObject {
 	 */
 	private pruefeKursart(tafel: BeruflichesGymnasiumStundentafel, fach: BeruflichesGymnasiumStundentafelFach): boolean {
 		const fachBelegung: BKGymAbiturFachbelegung | null = this.abidatenManager.getFachbelegungManager().getFachbelegungByBezeichnung(fach.fachbezeichnung);
-		if (fachBelegung === null)
+		if (fachBelegung === null) {
 			return !BKGymStundentafelManager.brauchtBelegungInQPhase(fach);
+		}
 		const kursartBelegung: string = fachBelegung.letzteKursart === null ? "" : fachBelegung.letzteKursart;
 		let lkNummerTafel: number = 0;
 		let lkNummerBelegung: number = 0;
-		if (fach.abifach !== null)
+		if (fach.abifach !== null) {
 			lkNummerTafel = fach.abifach.valueOf();
-		if (fachBelegung.abiturFach !== null)
+		}
+		if (fachBelegung.abiturFach !== null) {
 			lkNummerBelegung = fachBelegung.abiturFach.valueOf();
+		}
 		switch (fach.kursart) {
 			case "GK": {
-				if (JavaObject.equalsTranspiler("LK", (kursartBelegung)))
+				if (JavaObject.equalsTranspiler("LK", (kursartBelegung))) {
 					return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.LK_3, fach.fachbezeichnung);
+				}
 				break;
 			}
 			case "LK": {
-				if (!JavaObject.equalsTranspiler("LK", (kursartBelegung)) || (lkNummerTafel !== lkNummerBelegung))
+				if (!JavaObject.equalsTranspiler("LK", (kursartBelegung)) || (lkNummerTafel !== lkNummerBelegung)) {
 					return !this.addFehler(tafel, lkNummerTafel === 1 ? BKGymBelegungsfehlerTyp.LK_1 : BKGymBelegungsfehlerTyp.LK_2, fach.fachbezeichnung);
+				}
 				break;
 			}
 			default: {
@@ -415,8 +445,9 @@ export class BKGymBelegpruefung extends JavaObject {
 	private pruefeSchriftlich(fb2TafelManager: BKGymFachbelegungZuStundentafelfachManager, tafel: BeruflichesGymnasiumStundentafel, fach: BeruflichesGymnasiumStundentafelFach): boolean {
 		let success: boolean;
 		const fachBelegung: BKGymAbiturFachbelegung | null = this.abidatenManager.getFachbelegungManager().getFachbelegungByBezeichnung(fach.fachbezeichnung);
-		if (fachBelegung === null)
+		if (fachBelegung === null) {
 			return true;
+		}
 		success = this.pruefeSchriftlichEF(fb2TafelManager, tafel, fach, fachBelegung, GostHalbjahr.EF1);
 		success = this.pruefeSchriftlichEF(fb2TafelManager, tafel, fach, fachBelegung, GostHalbjahr.EF2) && success;
 		success = this.pruefeSchriftlichQ1(fb2TafelManager, tafel, fach, fachBelegung, GostHalbjahr.Q11) && success;
@@ -440,14 +471,18 @@ export class BKGymBelegpruefung extends JavaObject {
 	 * @return true, wenn die Prüfung keinen Fehler entdeckt, sonst false
 	 */
 	private pruefeSchriftlichEF(fb2TafelManager: BKGymFachbelegungZuStundentafelfachManager, tafel: BeruflichesGymnasiumStundentafel, fach: BeruflichesGymnasiumStundentafelFach, fachBelegung: BKGymAbiturFachbelegung, hj: GostHalbjahr): boolean {
-		if (!this.abidatenManager.istBewertet(hj) || fb2TafelManager.getSchriftlichBelegt(hj, fach))
+		if (!this.abidatenManager.istBewertet(hj) || fb2TafelManager.getSchriftlichBelegt(hj, fach)) {
 			return true;
-		if (JavaObject.equalsTranspiler("Deutsch", (fach.fachbezeichnung)) || JavaObject.equalsTranspiler("Mathematik", (fach.fachbezeichnung)))
+		}
+		if (JavaObject.equalsTranspiler("Deutsch", (fach.fachbezeichnung)) || JavaObject.equalsTranspiler("Mathematik", (fach.fachbezeichnung))) {
 			return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.KL_1_INFO, fach.fachbezeichnung, hj.kuerzel);
-		if ((fachBelegung.abiturFach !== null) && (fachBelegung.abiturFach <= 2))
+		}
+		if ((fachBelegung.abiturFach !== null) && (fachBelegung.abiturFach <= 2)) {
 			return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.KL_2, fach.fachbezeichnung, hj.kuerzel);
-		if (this.abidatenManager.getFaecherManager().istFremdsprachenbelegung(fachBelegung.fachID))
+		}
+		if (this.abidatenManager.getFaecherManager().istFremdsprachenbelegung(fachBelegung.fachID)) {
 			return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.KL_3_INFO, fach.fachbezeichnung, hj.kuerzel);
+		}
 		return true;
 	}
 
@@ -464,14 +499,18 @@ export class BKGymBelegpruefung extends JavaObject {
 	 * @return true, wenn die Prüfung keinen Fehler entdeckt, sonst false
 	 */
 	private pruefeSchriftlichQ1(fb2TafelManager: BKGymFachbelegungZuStundentafelfachManager, tafel: BeruflichesGymnasiumStundentafel, fach: BeruflichesGymnasiumStundentafelFach, fachBelegung: BKGymAbiturFachbelegung, hj: GostHalbjahr): boolean {
-		if (fb2TafelManager.getSchriftlichBelegt(hj, fach))
+		if (fb2TafelManager.getSchriftlichBelegt(hj, fach)) {
 			return true;
-		if (JavaObject.equalsTranspiler("Deutsch", (fach.fachbezeichnung)) || JavaObject.equalsTranspiler("Mathematik", (fach.fachbezeichnung)))
+		}
+		if (JavaObject.equalsTranspiler("Deutsch", (fach.fachbezeichnung)) || JavaObject.equalsTranspiler("Mathematik", (fach.fachbezeichnung))) {
 			return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.KL_1, fach.fachbezeichnung, hj.kuerzel);
-		if ((fachBelegung.abiturFach !== null) && (fachBelegung.abiturFach <= 4))
+		}
+		if ((fachBelegung.abiturFach !== null) && (fachBelegung.abiturFach <= 4)) {
 			return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.KL_4, fach.fachbezeichnung, hj.kuerzel);
-		if (this.abidatenManager.getFaecherManager().istFremdsprachenbelegung(fachBelegung.fachID))
+		}
+		if (this.abidatenManager.getFaecherManager().istFremdsprachenbelegung(fachBelegung.fachID)) {
 			return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.KL_3, fach.fachbezeichnung, hj.kuerzel);
+		}
 		return true;
 	}
 
@@ -488,12 +527,15 @@ export class BKGymBelegpruefung extends JavaObject {
 	 * @return true, wenn die Prüfung keinen Fehler entdeckt, sonst false
 	 */
 	private pruefeSchriftlichQ2(fb2TafelManager: BKGymFachbelegungZuStundentafelfachManager, tafel: BeruflichesGymnasiumStundentafel, fach: BeruflichesGymnasiumStundentafelFach, fachBelegung: BKGymAbiturFachbelegung, hj: GostHalbjahr): boolean {
-		if (fb2TafelManager.getSchriftlichBelegt(hj, fach))
+		if (fb2TafelManager.getSchriftlichBelegt(hj, fach)) {
 			return true;
-		if ((fachBelegung.abiturFach !== null) && (fachBelegung.abiturFach <= 3))
+		}
+		if ((fachBelegung.abiturFach !== null) && (fachBelegung.abiturFach <= 3)) {
 			return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.KL_4, fach.fachbezeichnung, hj.kuerzel);
-		if ((GostHalbjahr.Q21 as unknown === hj as unknown) && this.abidatenManager.getFaecherManager().istFremdsprachenbelegung(fachBelegung.fachID))
+		}
+		if ((GostHalbjahr.Q21 as unknown === hj as unknown) && this.abidatenManager.getFaecherManager().istFremdsprachenbelegung(fachBelegung.fachID)) {
 			return !this.addFehler(tafel, BKGymBelegungsfehlerTyp.KL_3, fach.fachbezeichnung, hj.kuerzel);
+		}
 		return true;
 	}
 

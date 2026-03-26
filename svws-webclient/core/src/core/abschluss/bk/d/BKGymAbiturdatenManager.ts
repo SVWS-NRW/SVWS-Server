@@ -341,8 +341,9 @@ export class BKGymAbiturdatenManager extends JavaObject {
 	 */
 	public getErgebnisMarkierungsalgorithmus(): BKGymAbiturMarkierungsalgorithmusErgebnis {
 		this.zulassungsPruefung();
-		if (this.ergebnisMarkierungsalgorithmus === null)
+		if (this.ergebnisMarkierungsalgorithmus === null) {
 			return new BKGymAbiturMarkierungsalgorithmusErgebnis();
+		}
 		return this.ergebnisMarkierungsalgorithmus;
 	}
 
@@ -366,8 +367,9 @@ export class BKGymAbiturdatenManager extends JavaObject {
 		const result: List<BeruflichesGymnasiumStundentafel> = new ArrayList<BeruflichesGymnasiumStundentafel>();
 		const schuljahr: number = this.getSchuljahrAbitur();
 		const poke: BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag | null = this.anlage.daten(schuljahr);
-		if (poke === null)
+		if (poke === null) {
 			return result;
+		}
 		return poke.stundentafeln;
 	}
 
@@ -388,9 +390,11 @@ export class BKGymAbiturdatenManager extends JavaObject {
 	 * @return true, falls alle Halbjahre bewertet sind, und ansonsten false
 	 */
 	public istBewertetQualifikationsPhase(): boolean {
-		for (const hj of GostHalbjahr.getQualifikationsphase())
-			if (!this.istBewertet(hj))
+		for (const hj of GostHalbjahr.getQualifikationsphase()) {
+			if (!this.istBewertet(hj)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -402,13 +406,15 @@ export class BKGymAbiturdatenManager extends JavaObject {
 	 */
 	private istZweiteFremdspracheInSekIErfuellt(): boolean {
 		for (const belegung of this.abidaten.sprachendaten.belegungen) {
-			if ((belegung.reihenfolge === null) || (belegung.belegungVonJahrgang === null) || (belegung.belegungBisJahrgang === null) || (belegung.belegungVonAbschnitt === null) || (belegung.belegungBisAbschnitt === null))
+			if ((belegung.reihenfolge === null) || (belegung.belegungVonJahrgang === null) || (belegung.belegungBisJahrgang === null) || (belegung.belegungVonAbschnitt === null) || (belegung.belegungBisAbschnitt === null)) {
 				continue;
+			}
 			if (!JavaObject.equalsTranspiler(belegung.sprache, ("E"))) {
 				let anzHalbjahre: number = (SprachendatenUtils.getJahrgangNumerisch(belegung.belegungBisJahrgang) - SprachendatenUtils.getJahrgangNumerisch(belegung.belegungVonJahrgang) + 1) * 2;
 				anzHalbjahre += belegung.belegungBisAbschnitt - belegung.belegungVonAbschnitt - 1;
-				if (anzHalbjahre >= 8)
+				if (anzHalbjahre >= 8) {
 					return true;
+				}
 			}
 		}
 		return false;

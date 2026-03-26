@@ -53,8 +53,9 @@ export class BKGymAbiturMarkierungsVarianten extends JavaObject {
 	 * @param root   die Markierungsvariante
 	 */
 	private reportDoppelteFaecher(root: BKGymAbiturMarkierungsVariante): void {
-		for (const fach of this.abiturdatenManager.getFaecherManager().getDoppelteFaecher())
+		for (const fach of this.abiturdatenManager.getFaecherManager().getDoppelteFaecher()) {
 			root.addLogEintrag(0, "Hinweis: Das Fach " + fach + " ist im Fächerkatalog nicht eindeutig bestimmbar. Bitte die Bezeichnungen der Fächer eindeutig festlegen.");
+		}
 	}
 
 	/**
@@ -63,8 +64,9 @@ export class BKGymAbiturMarkierungsVarianten extends JavaObject {
 	 * @param root   die Markierungsvariante
 	 */
 	private reportFehlerFacharbeit(root: BKGymAbiturMarkierungsVariante): void {
-		if (!this.abiturdatenManager.getFachbelegungManager().getIstFacharbeitBerufsbezogenerLK())
+		if (!this.abiturdatenManager.getFachbelegungManager().getIstFacharbeitBerufsbezogenerLK()) {
 			root.addLogEintrag(0, "Hinweis: Die Facharbeit ist nicht einem berufsbezogenen Leistungkursfach zugeordnet.");
+		}
 	}
 
 	/**
@@ -91,8 +93,9 @@ export class BKGymAbiturMarkierungsVarianten extends JavaObject {
 	 * @return das Ergebnis
 	 */
 	public getBestesErgebnis(): BKGymAbiturMarkierungsalgorithmusErgebnis | null {
-		if (this.ergebnisse.isEmpty())
+		if (this.ergebnisse.isEmpty()) {
 			return null;
+		}
 		this.ergebnisse.sort(BKGymAbiturMarkierungsVariante.comparator);
 		return this.ergebnisse.getFirst().getErgebnis();
 	}

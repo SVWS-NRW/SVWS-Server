@@ -54,8 +54,9 @@ public final class Abi30BelegpruefungSchwerpunkt extends GostBelegpruefung {
 		// Prüfe, ob insgesamt so viele Fremdsprachen und Naturwissenschaften gewählt wurden, dass zunächst kein Schwerpunkt vorliegt.
 		// Dann liegt kein Belegungsfehler vor.
 		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2)
-				&& (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1))
+				&& (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
 			return;
+		}
 
 		// Prüfe, ob ein sprachlicher Schwerpunkt vorliegt
 		if (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
@@ -84,8 +85,9 @@ public final class Abi30BelegpruefungSchwerpunkt extends GostBelegpruefung {
 		// Prüfe, ob insgesamt so viele Fremdsprachen und Naturwissenschaften gewählt wurden, dass zunächst kein Schwerpunkt vorliegt.
 		// Dann liegt kein Belegungsfehler vor.
 		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2)
-				&& (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1))
+				&& (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
 			return;
+		}
 
 		// Prüfe, ob ein sprachlicher Schwerpunkt vorliegt
 		if (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {

@@ -101,10 +101,12 @@ public class BKGymAbiturMarkierungsVariante {
 			this.facharbeitEinbeziehen = true;
 			final Integer punkte = varianten.abiturdatenManager.getAbidaten().facharbeitNotenpunkte;
 			anzahlKurse += 2;
-			if (punkte != null)
+			if (punkte != null) {
 				summeNotenpunkte += 2 * punkte;
-			if (!varianten.abiturdatenManager.getFachbelegungManager().getIstFacharbeitBerufsbezogenerLK())
+			}
+			if (!varianten.abiturdatenManager.getFachbelegungManager().getIstFacharbeitBerufsbezogenerLK()) {
 				setHatZulassung(false);
+			}
 		} else {
 			this.facharbeitEinbeziehen = other.facharbeitEinbeziehen;
 		}
@@ -133,15 +135,17 @@ public class BKGymAbiturMarkierungsVariante {
 		for (final BKGymAbiturFachbelegung fachbelegung : fachbelegungen) {
 			for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase()) {
 				final BKGymAbiturFachbelegungHalbjahr belegung = fachbelegung.belegungen[hj.id];
-				if (belegung == null)
+				if (belegung == null) {
 					continue;
+				}
 				if ((belegung.notenkuerzel != null) && (!belegung.notenkuerzel.isEmpty())) {
 					final BKGymAbiturMarkierungsalgorithmusMarkierung	markierung = new BKGymAbiturMarkierungsalgorithmusMarkierung();
 					markierung.fachID = fachbelegung.fachID;
 					markierung.halbjahrID = hj.id;
 					markierung.punkte = Note.getPunkteFromNotenkuerzel(belegung.notenkuerzel, schuljahr);
-					if (markierung.punkte != null)
+					if (markierung.punkte != null) {
 						unmarkiert.add(markierung);
+					}
 				}
 			}
 		}
@@ -239,8 +243,9 @@ public class BKGymAbiturMarkierungsVariante {
 	 * @param markierung   der zu markierende Eintrag
 	 */
 	public void markiereEintrag(final BKGymAbiturMarkierungsalgorithmusMarkierung markierung) {
-		if (markierung == null)
+		if (markierung == null) {
 			return;
+		}
 		final int defizit = (markierung.punkte == null) || (markierung.punkte < 5) ? 1 : 0;
 		markiert.add(markierung);
 		anzahlKurse++;
@@ -268,10 +273,12 @@ public class BKGymAbiturMarkierungsVariante {
 	 * @return die Anzahl verbleibender Kurse, die nicht markiert werden konnte
 	 */
 	public int markiereKursanzahl(final int kursanzahl, final Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> bedingung) {
-		if (kursanzahl <= 0)
+		if (kursanzahl <= 0) {
 			return 0;
-		if (bedingung == null)
+		}
+		if (bedingung == null) {
 			return kursanzahl;
+		}
 		int verbleibend = kursanzahl;
 		final List<BKGymAbiturMarkierungsalgorithmusMarkierung> weiterUnmarkiert = new ArrayList<>(unmarkiert.size());
 		for (final @NotNull BKGymAbiturMarkierungsalgorithmusMarkierung unmarked : unmarkiert) {
@@ -297,15 +304,20 @@ public class BKGymAbiturMarkierungsVariante {
 	 * @return die Anzahl verbleibender Kurse, die nicht der Bedingung genügen
 	 */
 	public int pruefeKursanzahl(final int kursanzahl, final Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> bedingung) {
-		if (bedingung == null)
+		if (bedingung == null) {
 			return kursanzahl;
+		}
 		int verbleibend = kursanzahl;
-		for (final @NotNull BKGymAbiturMarkierungsalgorithmusMarkierung marked : markiert)
-			if ((verbleibend > 0) && bedingung.test(marked))
+		for (final @NotNull BKGymAbiturMarkierungsalgorithmusMarkierung marked : markiert) {
+			if ((verbleibend > 0) && bedingung.test(marked)) {
 				verbleibend--;
-		for (final @NotNull BKGymAbiturMarkierungsalgorithmusMarkierung unmarked : unmarkiert)
-			if ((verbleibend > 0) && bedingung.test(unmarked))
+			}
+		}
+		for (final @NotNull BKGymAbiturMarkierungsalgorithmusMarkierung unmarked : unmarkiert) {
+			if ((verbleibend > 0) && bedingung.test(unmarked)) {
 				verbleibend--;
+			}
+		}
 		return verbleibend;
 	}
 
@@ -318,12 +330,15 @@ public class BKGymAbiturMarkierungsVariante {
 	 * @return die Anzahl der markierten Kurse, die die Bedingung erfüllen
 	 */
 	public int zaehleMarkierte(final Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> bedingung) {
-		if (bedingung == null)
+		if (bedingung == null) {
 			return 0;
+		}
 		int anzahl = 0;
-		for (final @NotNull BKGymAbiturMarkierungsalgorithmusMarkierung marked : markiert)
-			if (bedingung.test(marked))
+		for (final @NotNull BKGymAbiturMarkierungsalgorithmusMarkierung marked : markiert) {
+			if (bedingung.test(marked)) {
 				anzahl++;
+			}
+		}
 		return anzahl;
 	}
 
@@ -341,15 +356,17 @@ public class BKGymAbiturMarkierungsVariante {
 		int summe = 0;
 		int verbleibend = anzahl;
 		for (final @NotNull BKGymAbiturMarkierungsalgorithmusMarkierung unmarked : unmarkiert) {
-			if (verbleibend <= 0)
+			if (verbleibend <= 0) {
 				break;
+			}
 			if (fachID == unmarked.fachID) {
 				summe += (unmarked.punkte == null ? 0 : unmarked.punkte);
 				verbleibend--;
 			}
 		}
-		if (verbleibend <= 0)
+		if (verbleibend <= 0) {
 			return summe;
+		}
 		return 0;
 	}
 
@@ -394,8 +411,9 @@ public class BKGymAbiturMarkierungsVariante {
 	 * @return der Punktedurchschnitt
 	 */
 	public float getDurchschnitt() {
-		if (anzahlKurse == 0)
+		if (anzahlKurse == 0) {
 			return 0;
+		}
 		return summeNotenpunkte / (float) anzahlKurse;
 	}
 
@@ -417,8 +435,9 @@ public class BKGymAbiturMarkierungsVariante {
 	 */
 	public static final @NotNull Comparator<BKGymAbiturMarkierungsVariante> comparator =
 			(final @NotNull BKGymAbiturMarkierungsVariante a, final @NotNull BKGymAbiturMarkierungsVariante b) -> {
-				if (a.istErfolgreich() != b.istErfolgreich())
+				if (a.istErfolgreich() != b.istErfolgreich()) {
 					return a.istErfolgreich() ? -1 : 1;
+				}
 				return b.getPunktzahlBlockI() - a.getPunktzahlBlockI();
 			};
 
@@ -453,14 +472,15 @@ public class BKGymAbiturMarkierungsVariante {
 	private void erzeugeFehlerlog(final @NotNull List<String> fehlerLog) {
 		@NotNull String vorherigeZeile = "";
 		for (final @NotNull String zeile : log) {
-			if (zeile.startsWith("Hinweis:"))
+			if (zeile.startsWith("Hinweis:")) {
 				fehlerLog.add(zeile);
-			else if (zeile.contains("Fehler:")) {
+			} else if (zeile.contains("Fehler:")) {
 				fehlerLog.add(vorherigeZeile);
 				fehlerLog.add(zeile);
 			}
-			if (zeile.startsWith("Regel"))
+			if (zeile.startsWith("Regel")) {
 				vorherigeZeile = zeile;
+			}
 		}
 	}
 

@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse definiert den Markierungsalgorithmus über den Regelsatz.
- * Der Regelsatz wird mit der Methode berechne auf die ergebnisse angewendet.
+ * Der Regelsatz wird mit der Methode berechne auf die Ergebnisse angewendet.
  */
 public final class BKGymAbiturMarkierungsalgorithmus {
 
@@ -123,8 +123,9 @@ public final class BKGymAbiturMarkierungsalgorithmus {
 	public BKGymAbiturMarkierungsalgorithmusErgebnis berechne() {
 		for (final @NotNull BKGymAbiturMarkierungsregel regel : regelsatz) {
 			final List<BKGymAbiturMarkierungsVariante> jetzt = new ArrayList<>(ergebnisse.getErgebnisse());
-			for (final @NotNull BKGymAbiturMarkierungsVariante variante : jetzt)
+			for (final @NotNull BKGymAbiturMarkierungsVariante variante : jetzt) {
 				regel.exec(variante);
+			}
 		}
 		return ergebnisse.getBestesErgebnis();
 	}

@@ -37,8 +37,9 @@ public class BKGymAbiturMarkierungsregelMaxAnzahlkurse extends BKGymAbiturMarkie
 	@Override
 	public void markiere(final @NotNull BKGymAbiturMarkierungsVariante variante) {
 		final int vorherMarkiert = variante.anzahlEingebrachteKurse();
-		if (vorherMarkiert > anzahl)
+		if (vorherMarkiert > anzahl) {
 			throw new DeveloperNotificationException("Es wurden mehr Kurse markiert als maximal erlaubt ist.");
+		}
 		if (vorherMarkiert == anzahl) {
 			variante.addLogEintrag(1, "Es sind bereits " + vorherMarkiert + " Kurse durch die vorherigen Bedingungen markiert.");
 			return;
@@ -49,9 +50,10 @@ public class BKGymAbiturMarkierungsregelMaxAnzahlkurse extends BKGymAbiturMarkie
 				&& (markierung.punkte != null) && (variante.getDurchschnitt() < markierung.punkte);
 		variante.markiereKursanzahl(anzahl - vorherMarkiert, bedingung);
 		final int jetztMarkiert = variante.anzahlEingebrachteKurse();
-		if (vorherMarkiert < jetztMarkiert)
+		if (vorherMarkiert < jetztMarkiert) {
 			variante.addLogEintrag(1, "Es konnten " + (jetztMarkiert - vorherMarkiert) + " weitere Kurse zur Verbesserung markiert werden.");
-		else
+		} else {
 			variante.addLogEintrag(1, "Weitere Kurse wurden nicht markiert, da dadurch keine Verbesserung erreicht wird.");
+		}
 	}
 }

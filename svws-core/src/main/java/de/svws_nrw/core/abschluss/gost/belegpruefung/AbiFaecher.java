@@ -73,34 +73,42 @@ public final class AbiFaecher extends GostBelegpruefung {
 		final @NotNull List<AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
 		for (final AbiturFachbelegung fachbelegung : alleFachbelegungen) {
 			final GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach);
-			if (abiturFach == null)
+			if (abiturFach == null) {
 				continue;
+			}
 			mapAbiturFachbelegungen.put(abiturFach, fachbelegung);
 			anzahlAbiFaecher++;
 			// Bestimme Aufgabenfelder
 			final GostFach fach = manager.getFach(fachbelegung);
-			if (fach == null)
+			if (fach == null) {
 				continue;
-			if (GostFachbereich.FREMDSPRACHE.hat(fach) || GostFachbereich.DEUTSCH.hat(fach))
+			}
+			if (GostFachbereich.FREMDSPRACHE.hat(fach) || GostFachbereich.DEUTSCH.hat(fach)) {
 				hatAufgabenfeldI = true;
-			if (GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION.hat(fach))
+			}
+			if (GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION.hat(fach)) {
 				hatAufgabenfeldII = true;
-			if (GostFachbereich.MATHEMATISCH_NATURWISSENSCHAFTLICH.hat(fach))
+			}
+			if (GostFachbereich.MATHEMATISCH_NATURWISSENSCHAFTLICH.hat(fach)) {
 				hatAufgabenfeldIII = true;
+			}
 
 			// Zähle Fächer im Bereich Deutsch, Mathematik und Fremdsprache
 			if (GostFachbereich.FREMDSPRACHE.hat(fach)
 					|| GostFachbereich.DEUTSCH.hat(fach)
-					|| GostFachbereich.MATHEMATIK.hat(fach))
+					|| GostFachbereich.MATHEMATIK.hat(fach)) {
 				anzahlDeutschMatheFremdsprache++;
+			}
 
 			// Zähle die Anzahl der Fremdsprachen
-			if (GostFachbereich.FREMDSPRACHE.hat(fach))
+			if (GostFachbereich.FREMDSPRACHE.hat(fach)) {
 				anzahlFremdsprachen++;
+			}
 
 			// Zähle Fächer im Bereich Sport und Religion
-			if (GostFachbereich.SPORT.hat(fach) || GostFachbereich.RELIGION.hat(fach))
+			if (GostFachbereich.SPORT.hat(fach) || GostFachbereich.RELIGION.hat(fach)) {
 				anzahlSportReligion++;
+			}
 		}
 	}
 
@@ -132,8 +140,9 @@ public final class AbiFaecher extends GostBelegpruefung {
 		if ((lk1 == null) || (lk1fach == null) || !((GostFachbereich.DEUTSCH.hat(lk1fach))
 				|| (GostFachbereich.FREMDSPRACHE.hat(lk1fach) && !lk1.istFSNeu)
 				|| (GostFachbereich.MATHEMATIK.hat(lk1fach))
-				|| (GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH.hat(lk1fach))))
+				|| (GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH.hat(lk1fach)))) {
 			addFehler(GostBelegungsfehler.LK1_11);
+		}
 	}
 
 
@@ -145,20 +154,25 @@ public final class AbiFaecher extends GostBelegpruefung {
 	 *    und ob Sport nicht als erstes oder drittes Abiturfach gewählt wurde
 	 */
 	private void pruefeAnzahlUndAufgabenfelderAbiFaecher() {
-		if ((anzahlAbiFaecher != 4) || (!hatAufgabenfeldI) || (!hatAufgabenfeldII) || (!hatAufgabenfeldIII))
+		if ((anzahlAbiFaecher != 4) || (!hatAufgabenfeldI) || (!hatAufgabenfeldII) || (!hatAufgabenfeldIII)) {
 			addFehler(GostBelegungsfehler.LK1_13);
-		if (anzahlDeutschMatheFremdsprache < 2)
+		}
+		if (anzahlDeutschMatheFremdsprache < 2) {
 			addFehler(GostBelegungsfehler.ABI_10);
-		if ((anzahlDeutschMatheFremdsprache < 3) && (anzahlFremdsprachen > 1))
+		}
+		if ((anzahlDeutschMatheFremdsprache < 3) && (anzahlFremdsprachen > 1)) {
 			addFehler(GostBelegungsfehler.ABI_19);
-		if (anzahlSportReligion > 1)
+		}
+		if (anzahlSportReligion > 1) {
 			addFehler(GostBelegungsfehler.ABI_11);
+		}
 		final AbiturFachbelegung lk1 = (mapAbiturFachbelegungen == null) ? null : mapAbiturFachbelegungen.get(GostAbiturFach.LK1);
 		final GostFach lk1fach = manager.getFach(lk1);
 		final AbiturFachbelegung ab3 = (mapAbiturFachbelegungen == null) ? null : mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
 		final GostFach ab3fach = manager.getFach(ab3);
-		if (((lk1fach != null) && (GostFachbereich.SPORT.hatKuerzel(lk1fach.kuerzel))) || ((ab3fach != null) && (GostFachbereich.SPORT.hatKuerzel(ab3fach.kuerzel))))
+		if (((lk1fach != null) && (GostFachbereich.SPORT.hatKuerzel(lk1fach.kuerzel))) || ((ab3fach != null) && (GostFachbereich.SPORT.hatKuerzel(ab3fach.kuerzel)))) {
 			addFehler(GostBelegungsfehler.ABI_15);
+		}
 	}
 
 
@@ -171,8 +185,9 @@ public final class AbiFaecher extends GostBelegpruefung {
 		final @NotNull List<AbiturFachbelegung> alleFachbelegungen = manager.getRelevanteFachbelegungen();
 		for (final AbiturFachbelegung fachbelegung : alleFachbelegungen) {
 			final GostAbiturFach abiturFach = GostAbiturFach.fromID(fachbelegung.abiturFach);
-			if (abiturFach == null)
+			if (abiturFach == null) {
 				continue;
+			}
 			if (!abiFaecher.contains(abiturFach)) {
 				abiFaecher.add(abiturFach);
 				continue;
@@ -199,8 +214,9 @@ public final class AbiFaecher extends GostBelegpruefung {
 
 	private boolean pruefeSchriftlichkeitVorQ22(final AbiturFachbelegung belegung) {
 		// Prüfe zunächst, ob das Fach selbst schriftlich belegt wurde
-		if (manager.pruefeBelegungMitSchriftlichkeit(belegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+		if (manager.pruefeBelegungMitSchriftlichkeit(belegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
 			return true;
+		}
 		// Prüfe weitere Fach-spezifische Fälle...
 		final GostFach fach = manager.getFach(belegung);
 		if (fach != null) {
@@ -209,15 +225,17 @@ public final class AbiFaecher extends GostBelegpruefung {
 			belegungen = manager.getFachbelegungByFachkuerzel(fach.kuerzel);
 			if ((manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11))
 					&& (manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12))
-					&& (manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)))
+					&& (manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21))) {
 				return true;
+			}
 			// Fall Kurs-Wechsel bei einem Religionskurs: Prüfe, ob in einer anderen Konfession ein Kurs belegt wurde
 			if (GostFachbereich.RELIGION.hat(fach)) {
 				belegungen = manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION);
 				if ((manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11))
 						&& (manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12))
-						&& (manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)))
+						&& (manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(belegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21))) {
 					return true;
+				}
 			}
 		}
 		return false;
@@ -232,17 +250,21 @@ public final class AbiFaecher extends GostBelegpruefung {
 	private void pruefeSchriftlichkeitAB3undAB4() {
 		final AbiturFachbelegung ab3 = (mapAbiturFachbelegungen == null) ? null : mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
 		if (ab3 != null) {
-			if (!pruefeSchriftlichkeitVorQ22(ab3))
+			if (!pruefeSchriftlichkeitVorQ22(ab3)) {
 				addFehler(GostBelegungsfehler.ABI_17);
-			if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab3, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22))
+			}
+			if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab3, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q22)) {
 				addFehler(GostBelegungsfehler.ABI_12);
+			}
 		}
 		final AbiturFachbelegung ab4 = (mapAbiturFachbelegungen == null) ? null : mapAbiturFachbelegungen.get(GostAbiturFach.AB4);
 		if (ab4 != null) {
-			if (!pruefeSchriftlichkeitVorQ22(ab4))
+			if (!pruefeSchriftlichkeitVorQ22(ab4)) {
 				addFehler(GostBelegungsfehler.ABI_18);
-			if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab4, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.Q22))
+			}
+			if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(ab4, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.Q22)) {
 				addFehler(GostBelegungsfehler.ABI_13);
+			}
 		}
 	}
 

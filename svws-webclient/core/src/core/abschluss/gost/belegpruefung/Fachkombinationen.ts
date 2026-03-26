@@ -28,23 +28,27 @@ export class Fachkombinationen extends GostBelegpruefung {
 	}
 
 	private static pruefeHatBelegungFach2InHalbjahr(kombi: GostJahrgangFachkombination, belegung2: AbiturFachbelegung | null, halbjahr: GostHalbjahr): boolean {
-		if (belegung2 === null)
+		if (belegung2 === null) {
 			return false;
+		}
 		const belegung2Halbjahr: AbiturFachbelegungHalbjahr | null = belegung2.belegungen[halbjahr.id];
 		return ((belegung2Halbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegung2Halbjahr)) && ((kombi.kursart2 === null) || (GostKursart.fromKuerzel(belegung2Halbjahr.kursartKuerzel) as unknown === GostKursart.fromKuerzel(kombi.kursart2) as unknown)));
 	}
 
 	private pruefeHatFachkombination(kombi: GostJahrgangFachkombination, ...halbjahre: Array<GostHalbjahr>): void {
 		const belegung1: AbiturFachbelegung | null = this.manager.getFachbelegungByID(kombi.fachID1);
-		if (belegung1 === null)
+		if (belegung1 === null) {
 			return;
+		}
 		const belegung2: AbiturFachbelegung | null = this.manager.getFachbelegungByID(kombi.fachID2);
 		for (const halbjahr of halbjahre) {
-			if (!kombi.gueltigInHalbjahr[halbjahr.id])
+			if (!kombi.gueltigInHalbjahr[halbjahr.id]) {
 				continue;
+			}
 			const belegung1Halbjahr: AbiturFachbelegungHalbjahr | null = belegung1.belegungen[halbjahr.id];
-			if ((belegung1Halbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegung1Halbjahr)))
+			if ((belegung1Halbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegung1Halbjahr))) {
 				continue;
+			}
 			if ((kombi.kursart1 === null) || (GostKursart.fromKuerzel(belegung1Halbjahr.kursartKuerzel) as unknown === GostKursart.fromKuerzel(kombi.kursart1) as unknown)) {
 				if ((kombi.typ === GostLaufbahnplanungFachkombinationTyp.VERBOTEN.getValue()) && Fachkombinationen.pruefeHatBelegungFach2InHalbjahr(kombi, belegung2, halbjahr)) {
 					this.addFehler(GostBelegungsfehler.KOMBI_1);
@@ -59,13 +63,15 @@ export class Fachkombinationen extends GostBelegpruefung {
 	}
 
 	protected pruefeEF1(): void {
-		for (const kombi of this.manager.getFachkombinationenEF1())
+		for (const kombi of this.manager.getFachkombinationenEF1()) {
 			this.pruefeHatFachkombination(kombi, GostHalbjahr.EF1);
+		}
 	}
 
 	protected pruefeGesamt(): void {
-		for (const kombi of this.manager.getFachkombinationenGesamt())
+		for (const kombi of this.manager.getFachkombinationenGesamt()) {
 			this.pruefeHatFachkombination(kombi, ...GostHalbjahr.values());
+		}
 	}
 
 	transpilerCanonicalName(): string {

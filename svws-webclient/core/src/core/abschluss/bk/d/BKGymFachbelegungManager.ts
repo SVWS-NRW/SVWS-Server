@@ -79,15 +79,18 @@ export class BKGymFachbelegungManager extends JavaObject {
 		for (const fb of abidaten.fachbelegungen) {
 			const fachbezeichnung: string = this.faecherManager.getBezeichnungByFachID(fb.fachID);
 			const fach: BKGymFach | null = this.faecherManager.get(fb.fachID);
-			if ((fach === null) || (fach.bezeichnung === null))
+			if ((fach === null) || (fach.bezeichnung === null)) {
 				continue;
+			}
 			this.mapFachbelegungenByFachbezeichnung.put(fach.bezeichnung, fb);
-			if (fb.abiturFach !== null)
+			if (fb.abiturFach !== null) {
 				this.mapAbiturfachbelegungen.put(fb.abiturFach, fb);
+			}
 			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 				const belegungHalbjahr: BKGymAbiturFachbelegungHalbjahr | null = fb.belegungen[halbjahr.id];
-				if ((belegungHalbjahr !== null) && (belegungHalbjahr.kursartKuerzel !== null))
+				if ((belegungHalbjahr !== null) && (belegungHalbjahr.kursartKuerzel !== null)) {
 					this.mapBelegungByHalbjahrAndFachbezeichung.put(fachbezeichnung, halbjahr.id, belegungHalbjahr);
+				}
 			}
 		}
 	}
@@ -112,8 +115,9 @@ export class BKGymFachbelegungManager extends JavaObject {
 	 */
 	public getAbiFachID(abiFach: GostAbiturFach): number | null {
 		const abifach: BKGymAbiturFachbelegung | null = this.getAbiFachbelegung(abiFach);
-		if (abifach === null)
+		if (abifach === null) {
 			return null;
+		}
 		return abifach.fachID;
 	}
 
@@ -125,8 +129,9 @@ export class BKGymFachbelegungManager extends JavaObject {
 	public ermittleZweiteFremdspracheID(): number | null {
 		for (const entry of this.mapFachbelegungenByFachbezeichnung.entrySet()) {
 			const fach: BKGymFach | null = this.faecherManager.get(entry.getValue().fachID);
-			if ((fach !== null) && fach.istFremdsprache && !JavaObject.equalsTranspiler(fach.bezeichnung, ("Englisch")))
+			if ((fach !== null) && fach.istFremdsprache && !JavaObject.equalsTranspiler(fach.bezeichnung, ("Englisch"))) {
 				return entry.getValue().fachID;
+			}
 		}
 		return null;
 	}
@@ -169,8 +174,9 @@ export class BKGymFachbelegungManager extends JavaObject {
 	 */
 	public getFachIDByBezeichnung(bezeichnung: string): number | null {
 		const fach: BKGymAbiturFachbelegung | null = this.mapFachbelegungenByFachbezeichnung.get(bezeichnung);
-		if (fach === null)
+		if (fach === null) {
 			return null;
+		}
 		return fach.fachID;
 	}
 
@@ -184,18 +190,26 @@ export class BKGymFachbelegungManager extends JavaObject {
 	 */
 	public getFachByBelegung(tafel: BeruflichesGymnasiumStundentafel, fb: BKGymAbiturFachbelegung): BeruflichesGymnasiumStundentafelFach | null {
 		const fbFach: BKGymFach | null = this.faecherManager.get(fb.fachID);
-		if ((fbFach === null) || (fbFach.bezeichnung === null))
+		if ((fbFach === null) || (fbFach.bezeichnung === null)) {
 			return null;
-		for (const tafelFach of tafel.faecher)
-			if (JavaObject.equalsTranspiler(tafelFach.fachbezeichnung, (fbFach.bezeichnung)))
+		}
+		for (const tafelFach of tafel.faecher) {
+			if (JavaObject.equalsTranspiler(tafelFach.fachbezeichnung, (fbFach.bezeichnung))) {
 				return tafelFach;
-		if (fbFach.istFremdsprache)
-			for (const tafelFach of tafel.faecher)
-				if (BKGymStundentafelManager.istZweiteFremdsprache(tafelFach.fachbezeichnung))
+			}
+		}
+		if (fbFach.istFremdsprache) {
+			for (const tafelFach of tafel.faecher) {
+				if (BKGymStundentafelManager.istZweiteFremdsprache(tafelFach.fachbezeichnung)) {
 					return tafelFach;
-		for (const tafelFach of tafel.faecher)
-			if (BKGymStundentafelManager.istWahlfach(tafelFach.fachbezeichnung))
+				}
+			}
+		}
+		for (const tafelFach of tafel.faecher) {
+			if (BKGymStundentafelManager.istWahlfach(tafelFach.fachbezeichnung)) {
 				return tafelFach;
+			}
+		}
 		return null;
 	}
 
@@ -217,8 +231,9 @@ export class BKGymFachbelegungManager extends JavaObject {
 	 */
 	public istZweiteFremdsprache(fachBezeichnung: string): boolean {
 		const zweiteFremdspracheBezeichnung: string | null = this.getZweiteFremdspracheBezeichnung();
-		if (zweiteFremdspracheBezeichnung === null)
+		if (zweiteFremdspracheBezeichnung === null) {
 			return false;
+		}
 		return JavaObject.equalsTranspiler(zweiteFremdspracheBezeichnung, (fachBezeichnung));
 	}
 
@@ -230,22 +245,28 @@ export class BKGymFachbelegungManager extends JavaObject {
 	 * @return false wenn Facharbeit vorhanden und nicht einem LK zugeordnet sonst true
 	 */
 	private pruefeIstFacharbeitBerufsbezogenerLK(): boolean {
-		if (this.abidatenManager.getAbidaten().facharbeitFachbezeichnung === null)
+		if (this.abidatenManager.getAbidaten().facharbeitFachbezeichnung === null) {
 			return true;
+		}
 		const fachbezeichnung: string | null = this.abidatenManager.getAbidaten().facharbeitFachbezeichnung;
-		if (fachbezeichnung === null)
+		if (fachbezeichnung === null) {
 			return false;
+		}
 		const facharbeitFachID: number | null = this.getFachIDByBezeichnung(fachbezeichnung);
-		if (facharbeitFachID === null)
+		if (facharbeitFachID === null) {
 			return false;
-		if (!this.abidatenManager.getStundentafelManager().istBerufsbezogenesFach(fachbezeichnung))
+		}
+		if (!this.abidatenManager.getStundentafelManager().istBerufsbezogenesFach(fachbezeichnung)) {
 			return false;
+		}
 		const fachIDLK1: number | null = this.getAbiFachID(GostAbiturFach.LK1);
-		if (fachIDLK1 !== null && JavaObject.equalsTranspiler(facharbeitFachID, (fachIDLK1)))
+		if (fachIDLK1 !== null && JavaObject.equalsTranspiler(facharbeitFachID, (fachIDLK1))) {
 			return true;
+		}
 		const fachIDLK2: number | null = this.getAbiFachID(GostAbiturFach.LK2);
-		if (fachIDLK2 === null)
+		if (fachIDLK2 === null) {
 			return false;
+		}
 		return JavaObject.equalsTranspiler(facharbeitFachID, (fachIDLK2));
 	}
 
@@ -255,8 +276,9 @@ export class BKGymFachbelegungManager extends JavaObject {
 	 * @return ob ggfs. die Facharbeit einem berufsbezogenen LK-Fach zugeordnet ist
 	 */
 	public getIstFacharbeitBerufsbezogenerLK(): boolean {
-		if (this.istFacharbeitBerufsbezogenerLK === null)
+		if (this.istFacharbeitBerufsbezogenerLK === null) {
 			this.istFacharbeitBerufsbezogenerLK = this.pruefeIstFacharbeitBerufsbezogenerLK();
+		}
 		return this.istFacharbeitBerufsbezogenerLK;
 	}
 
@@ -272,18 +294,23 @@ export class BKGymFachbelegungManager extends JavaObject {
 	 * @return true, falls das Fach in den Halbjahren belegt wurde, sonst false
 	 */
 	public pruefeBelegung(fachbelegung: BKGymAbiturFachbelegung | null, leereHje: List<GostHalbjahr>, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if (fachbelegung === null)
+		if (fachbelegung === null) {
 			return false;
-		if (halbjahre.length === 0)
+		}
+		if (halbjahre.length === 0) {
 			return true;
+		}
 		for (const halbjahr of halbjahre) {
-			if (leereHje.contains(halbjahr))
+			if (leereHje.contains(halbjahr)) {
 				continue;
+			}
 			const belegungHalbjahr: BKGymAbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
-			if ((belegungHalbjahr === null) || (belegungHalbjahr.kursartKuerzel === null))
+			if ((belegungHalbjahr === null) || (belegungHalbjahr.kursartKuerzel === null)) {
 				return false;
-			if (BKGymFachbelegungManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))
+			}
+			if (BKGymFachbelegungManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -298,8 +325,9 @@ export class BKGymFachbelegungManager extends JavaObject {
 	 */
 	public static istNullPunkteBelegungInQPhase(halbjahresbelegung: BKGymAbiturFachbelegungHalbjahr): boolean {
 		const hj: GostHalbjahr | null = GostHalbjahr.fromKuerzel(halbjahresbelegung.halbjahrKuerzel);
-		if ((hj === null) || (hj.istEinfuehrungsphase()))
+		if ((hj === null) || (hj.istEinfuehrungsphase())) {
 			return false;
+		}
 		return Note.fromKuerzel(halbjahresbelegung.notenkuerzel) as unknown === Note.UNGENUEGEND as unknown;
 	}
 
@@ -324,8 +352,9 @@ export class BKGymFachbelegungManager extends JavaObject {
 	 */
 	public getSchriftlichBelegt(hj: GostHalbjahr, fach: BeruflichesGymnasiumStundentafelFach): boolean {
 		const belegung: BKGymAbiturFachbelegung | null = this.getFachbelegungByBezeichnung(fach.fachbezeichnung);
-		if (belegung === null)
+		if (belegung === null) {
 			return false;
+		}
 		const belegungHalbjahr: BKGymAbiturFachbelegungHalbjahr | null = belegung.belegungen[hj.id];
 		return (belegungHalbjahr !== null) && (belegungHalbjahr.schriftlich);
 	}

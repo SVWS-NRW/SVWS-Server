@@ -153,12 +153,14 @@ public class ServiceBerechtigungMSAQ extends Service {
 		final @NotNull List<GEAbschlussFach> fg1_defizite = faecher.fg1.getFaecher(filterDefizite);
 		final @NotNull List<GEAbschlussFach> fg2_defizite = faecher.fg2.getFaecher(filterDefizite);
 
-		if (!fg1_defizite.isEmpty())
+		if (!fg1_defizite.isEmpty()) {
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> FG1: Defizit" + (fg1_defizite.size() > 1 ? "e" : "") + ": "
 					+ faecher.fg1.getKuerzelListe(filterDefizite));
-		if (!fg2_defizite.isEmpty())
+		}
+		if (!fg2_defizite.isEmpty()) {
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> FG2: Defizit" + (fg2_defizite.size() > 1 ? "e" : "") + ": "
 					+ faecher.fg2.getKuerzelListe(filterDefizite));
+		}
 
 		// Prüfe, ob in FG1 oder FG2 Fächer vorhanden sind, die nicht ausgeglichen werden können und in denen keine Nachprüfung möglich ist
 		boolean nachpruefung_genutzt = false;
@@ -195,8 +197,9 @@ public class ServiceBerechtigungMSAQ extends Service {
 		} else if ((fg1_defizite.size() == 2) && (wp_defizit != null) && (!fg1_ausgleichsfaecher.isEmpty()) && (!nachpruefung_genutzt)) {
 			// Ausgleich in dem nicht WP-Fach
 			final GEAbschlussFach defizitFach = faecher.fg1.getFach(filterDefizitNichtWP);
-			if (defizitFach == null)
+			if (defizitFach == null) {
 				throw new NullPointerException();
+			}
 			final @NotNull GEAbschlussFach ausgleichsFach = fg1_ausgleichsfaecher.get(0);
 			defizitFach.ausgeglichen = true;
 			ausgleichsFach.ausgleich = true;
@@ -225,8 +228,9 @@ public class ServiceBerechtigungMSAQ extends Service {
 		// Nutze Ausgleichregelung bei einem Nicht-WP-Fach-Defizit
 		if ((fg1_defizite.size() == 1) && (wp_defizit == null)) {
 			final GEAbschlussFach defizitFach = faecher.fg1.getFach(filterDefizitNichtWP);
-			if (defizitFach == null)
+			if (defizitFach == null) {
 				throw new NullPointerException();
+			}
 			final @NotNull GEAbschlussFach ausgleichsFach = fg1_ausgleichsfaecher.get(0);
 			defizitFach.ausgeglichen = true;
 			ausgleichsFach.ausgleich = true;
@@ -247,8 +251,9 @@ public class ServiceBerechtigungMSAQ extends Service {
 
 				// Prüfe FG2 - falls ein Abschluss mit der Ausgleichs-Option möglich ist - kann die Prüfung insgesamt beendet werden
 				final @NotNull AbschlussErgebnis abschlussergebnis = pruefeFG2(faecher, logIndent + "  ", npFaecher, nachpruefung_genutzt);
-				if (abschlussergebnis.erworben)
+				if (abschlussergebnis.erworben) {
 					return abschlussergebnis;
+				}
 
 				// Für die weitere Prüfung wird der Ausgleich zurückgenommen
 				defizitFach.ausgeglichen = false;
@@ -266,8 +271,9 @@ public class ServiceBerechtigungMSAQ extends Service {
 			final @NotNull AbschlussErgebnis abschlussergebnis = pruefeFG2(faecher, logIndent, npFaecher, true);
 			wp_defizit.note++; // verschlechtere wieder
 			wp_defizit.ausgleich = false;
-			if (abschlussergebnis.erworben)
+			if (abschlussergebnis.erworben) {
 				npFaecher.add(wp_defizit);
+			}
 			return AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.MSA_Q, AbschlussManager.getKuerzel(npFaecher));
 		}
 
@@ -333,8 +339,9 @@ public class ServiceBerechtigungMSAQ extends Service {
 				final @NotNull AbschlussErgebnis abschlussergebnis = pruefeFG2(faecher, logIndent + "  ", npFaecher, true);
 				logger.logLn(LogLevel.DEBUG, logIndent + "   -> Nachprüfung in " + defizitFach.kuerzel + (abschlussergebnis.erworben
 						? " möglich" : " nicht möglich"));
-				if (abschlussergebnis.erworben)
+				if (abschlussergebnis.erworben) {
 					npFaecher.add(defizitFach);
+				}
 				defizitFach.ausgeglichen = true;
 				defizitFach.ausgleich = true;
 				defizitFach.note++; // verschlechtere wieder
@@ -357,8 +364,9 @@ public class ServiceBerechtigungMSAQ extends Service {
 			final @NotNull AbschlussErgebnis abschlussergebnis = pruefeFG2(faecher, logIndent + "  ", npFaecher, true);
 			logger.logLn(LogLevel.DEBUG, logIndent + "   -> Nachprüfung in " + defizitFach.kuerzel + (abschlussergebnis.erworben
 					? " möglich" : " nicht möglich"));
-			if (abschlussergebnis.erworben)
+			if (abschlussergebnis.erworben) {
 				npFaecher.add(defizitFach);
+			}
 			defizitFach.ausgeglichen = true;
 			defizitFach.ausgleich = true;
 			defizitFach.note++; // verschlechtere wieder

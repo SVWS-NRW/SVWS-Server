@@ -81,12 +81,15 @@ public final class Fremdsprachen extends GostBelegpruefung {
 	 * Fremdsprache fehlerhafterweise als neu einsetzende Fremdsprache belegt wurde.
 	 */
 	private void pruefeEF1Sprachenfolge() {
-		if (manager.hatFortgefuehrteFremdspracheInSprachendaten(_fremdsprachenNeu))
+		if (manager.hatFortgefuehrteFremdspracheInSprachendaten(_fremdsprachenNeu)) {
 			addFehler(GostBelegungsfehler.FS_20);
-		if (manager.hatNeuEinsetzendeFremdspracheInSprachendaten(_fremdsprachenFortgefuehrt))
+		}
+		if (manager.hatNeuEinsetzendeFremdspracheInSprachendaten(_fremdsprachenFortgefuehrt)) {
 			addFehler(GostBelegungsfehler.FS_21);
-		if (!SprachendatenUtils.hatSprachbelegung(manager.getSprachendaten(), "E"))
+		}
+		if (!SprachendatenUtils.hatSprachbelegung(manager.getSprachendaten(), "E")) {
 			addFehler(GostBelegungsfehler.FS_22_INFO);
+		}
 	}
 
 
@@ -150,18 +153,21 @@ public final class Fremdsprachen extends GostBelegpruefung {
 		}
 
 		// Es wurde eine mündlich belegte Fremdsprache in der EF gefunden, gebe den entsprechenden Fehler daher aus.
-		if ((anzahlFortgefuehrteFremdsprachenDurchgehendBelegbarFehlerMuendlich + anzahlFortgefuehrteFremdsprachenEFBelegbarFehlerMuendlich) > 0)
+		if ((anzahlFortgefuehrteFremdsprachenDurchgehendBelegbarFehlerMuendlich + anzahlFortgefuehrteFremdsprachenEFBelegbarFehlerMuendlich) > 0) {
 			addFehler(GostBelegungsfehler.FS_12);
+		}
 
 		// Wenn alle fortgeführten Fremdsprachen mündlich belegt sind, gib eine weitere Fehlermeldung aus.
 		if ((anzahlFortgefuehrteFremdsprachen > 0) && (anzahlFortgefuehrteFremdsprachen == (anzahlFortgefuehrteFremdsprachenDurchgehendBelegbarFehlerMuendlich
-				+ anzahlFortgefuehrteFremdsprachenEFBelegbarFehlerMuendlich)))
+				+ anzahlFortgefuehrteFremdsprachenEFBelegbarFehlerMuendlich))) {
 			addFehler(GostBelegungsfehler.FS_16);
+		}
 
 		// Es wurde eine passende Fremdsprache zur Erfüllung der Bedingung der ersten Fremdsprache gefunden.
 		// Sollte diese nur mündlich belegt sein, wurde vorher ein Fehler ergänzt
-		if (anzahlFortgefuehrteFremdsprachenDurchgehendBelegbar > 0)
+		if (anzahlFortgefuehrteFremdsprachenDurchgehendBelegbar > 0) {
 			return;
+		}
 
 		// Bisher wurde keine passende fortgeführte Fremdsprache gefunden. Betrachte nun Fälle mit neu einsetzender Sprache
 		int anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbar = 0;
@@ -172,8 +178,9 @@ public final class Fremdsprachen extends GostBelegpruefung {
 
 			// Wenn die Sprache nicht in EF.1 belegt wurde, kann es keine Sprache sein, die als neu einsetzende
 			// Fremdsprache gewertet werden kann.
-			if (!manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1))
+			if (!manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1)) {
 				continue;
+			}
 			gefundenFremdsprachenbelegung = true;
 
 			final GostFach gostFach = manager.getFach(abiFachbelegung);
@@ -200,20 +207,23 @@ public final class Fremdsprachen extends GostBelegpruefung {
 		}
 
 		// Eine neu einsetzende Fremdsprache wurde mündlich belegt, gib einen Fehler aus.
-		if (anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbarFehlerMuendlich > 0)
+		if (anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbarFehlerMuendlich > 0) {
 			addFehler(GostBelegungsfehler.FS_12);
+		}
 
 		// Wenn zwar eine reguläre Belegung einer Sprache gefunden wurde, die aber nicht durchgängig belegt werden kann, gib eine entsprechende Fehlermeldung aus.
 		if ((gefundenFremdsprachenbelegung
 				&& !(gefundenFortgefuehrteFremdsprachenbelegungOhneSprachenfolge || gefundenFortgefuehrteFremdspracheAlsNeueinsetzende))
-				&& ((anzahlFortgefuehrteFremdsprachenDurchgehendBelegbar + anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbar) == 0))
+				&& ((anzahlFortgefuehrteFremdsprachenDurchgehendBelegbar + anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbar) == 0)) {
 			addFehler(GostBelegungsfehler.FS_11);
+		}
 
 		// Wenn nur in der EF belegbare, fortgeführte Sprachen gefunden wurden, muss zusätzlich eine neu einsetzende Fremdsprache belegt werden.
 		// Fehlt die neu einsetzende Fremdsprache, so wird ein Fehler ausgegeben.
 		if (anzahlFortgefuehrteFremdsprachenEFBelegbar > 0) {
-			if (anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbar == 0)
+			if (anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbar == 0) {
 				addFehler(GostBelegungsfehler.FS_10);
+			}
 			return;
 		}
 
@@ -242,8 +252,9 @@ public final class Fremdsprachen extends GostBelegpruefung {
 					addFehler(GostBelegungsfehler.FS_25);
 				} else { // Andernfalls gib eine Fehlermeldung aus, dass eine vorhandene Sprache belegt werden muss
 					addFehler(GostBelegungsfehler.FS_18);
-					if (!SprachendatenUtils.hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(manager.getSprachendaten()))
+					if (!SprachendatenUtils.hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(manager.getSprachendaten())) {
 						addFehler(GostBelegungsfehler.FS_24);
+					}
 				}
 			}
 		}
@@ -257,15 +268,17 @@ public final class Fremdsprachen extends GostBelegpruefung {
 	private void pruefeEF1FremdsprachenfolgeZweiteFremdsprache() {
 
 		// Sind zwei mind. vierjährige Sprachen in der Sek-I vorhanden oder entsprechende Sprachprüfungen?
-		if (SprachendatenUtils.hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(manager.getSprachendaten()))
+		if (SprachendatenUtils.hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(manager.getSprachendaten())) {
 			return;
+		}
 
 		// Wenn die geforderten zwei Sprachen noch nicht belegt wurden, ist dann wenigstens eine vierjährige Sprache in der Sek-I vorhanden oder eine entsprechende Sprachprüfung?
 		if (SprachendatenUtils.hatEineSpracheAb5bis7MitMin4JahrenDauerEndeSekI(manager.getSprachendaten())) {
 
 			// Prüfe, ob ergänzend eine neu einsetzende Fremdsprache in EF.1 schriftlich belegt wurde
-			if (manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(_fremdsprachenNeu, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
+			if (manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(_fremdsprachenNeu, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
 				return;
+			}
 
 			// Wenn keine neue Fremdsprache vorhanden ist, findet sich dann eine 2. Fremdsprache ab Klasse 8 (bzw. 9)?
 			if (SprachendatenUtils.hatEineSpracheAb8MitMin2JahrenDauerEndeSekI(manager.getSprachendaten())) {
@@ -273,8 +286,9 @@ public final class Fremdsprachen extends GostBelegpruefung {
 				final AbiturFachbelegung zweiteFremdsprache =
 						manager.getSprachbelegung(SprachendatenUtils.getEineSpracheAb8MitMin2JahrenDauerEndeSekI(manager.getSprachendaten()));
 				// Die Sprache muss, um als zweite Fremdsprache gewertet werden zu können, bis Ende EF.2 belegt werden.
-				if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(zweiteFremdsprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
+				if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(zweiteFremdsprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
 					addFehler(GostBelegungsfehler.FS_13);
+				}
 				return;
 			}
 		}
@@ -291,14 +305,16 @@ public final class Fremdsprachen extends GostBelegpruefung {
 	 * Prüft, ob alle Fremdsprachen in der EF.1 schriftlich belegt wurden.
 	 */
 	private void pruefeEF1Schriftlichkeit() {
-		if (_fremdsprachen == null)
+		if (_fremdsprachen == null) {
 			return;
-		for (final AbiturFachbelegung fachbelegung : _fremdsprachen)
+		}
+		for (final AbiturFachbelegung fachbelegung : _fremdsprachen) {
 			if (manager.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, GostSchriftlichkeit.BELIEBIG, GostHalbjahr.EF1)
 					&& !manager.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
 				addFehler(GostBelegungsfehler.FS_12);
 				break;
 			}
+		}
 	}
 
 
@@ -314,14 +330,17 @@ public final class Fremdsprachen extends GostBelegpruefung {
 		_anzahlDurchgehendSchriftlich = fremdsprachenDurchgehend.size();
 
 		// Eine Prüfung der bilingualen Sachfächer ist nur nötig, sofern nur eine durchgängig belegbare schriftlich belegte Fremdsprache vorliegt
-		if (_anzahlDurchgehendSchriftlich != 1)
+		if (_anzahlDurchgehendSchriftlich != 1) {
 			return;
+		}
 		final GostFach fsDurchgehend = manager.getFach(fremdsprachenDurchgehend.get(0));
-		if (fsDurchgehend == null) // Dieser Fehlerfall sollte nicht auftreten...
+		if (fsDurchgehend == null) { // Dieser Fehlerfall sollte nicht auftreten...
 			return;
+		}
 		final String fremdspracheDurchgehend = GostFachUtils.getFremdsprache(fsDurchgehend);
-		if (fremdspracheDurchgehend == null) // Dieser Fehlerfall sollte nicht auftreten...
+		if (fremdspracheDurchgehend == null) { // Dieser Fehlerfall sollte nicht auftreten...
 			return;
+		}
 
 		// Bestimme die bilingualen Sachfächer, die durchgehend belegbar sind und in der EF.1 schriftlich gewählt wurden
 		final List<AbiturFachbelegung> biliSachfaecherDurchgehendSchriftlich = manager.filterBelegungenMitSchriftlichkeit(
@@ -330,8 +349,9 @@ public final class Fremdsprachen extends GostBelegpruefung {
 		for (final AbiturFachbelegung biliSachfach : biliSachfaecherDurchgehendSchriftlich) {
 			// Stelle sicher, dass die belegte Fremdsprache nicht als Unterrichtssprache erneut gezählt wird
 			final GostFach fach = manager.getFach(biliSachfach);
-			if ((fach == null) || (fremdspracheDurchgehend.equals(fach.biliSprache)))
+			if ((fach == null) || (fremdspracheDurchgehend.equals(fach.biliSprache))) {
 				continue;
+			}
 			// Werte das bilinguale Sachfach für einen möglichen Sprachenschwerpunkt und beende die Prüfung dann
 			_anzahlDurchgehendSchriftlich++;
 			return;
@@ -345,15 +365,17 @@ public final class Fremdsprachen extends GostBelegpruefung {
 	 * in der EF.1 belegt wurde.
 	 */
 	private void pruefeEF1BilingualeSachfaecher() {
-		if (_biliSachfaecher == null)
+		if (_biliSachfaecher == null) {
 			return;
+		}
 
 		// Prüfe alle belegten bilingualen Sachfächer...
 		for (final AbiturFachbelegung biliSachfach : _biliSachfaecher) {
 			// Prüfe, ob die Unterrichtssprache des bilingualen Sachfaches in der Sekundarstufe 1 mindestens zwei Jahre lang belegt wurde
 			final GostFach fach = manager.getFach(biliSachfach);
-			if (fach == null)
+			if (fach == null) {
 				continue;
+			}
 			final String biliSprache = fach.biliSprache;
 			if (!SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(manager.getSprachendaten(), biliSprache)) {
 				addFehler(GostBelegungsfehler.BIL_14);
@@ -364,8 +386,9 @@ public final class Fremdsprachen extends GostBelegpruefung {
 			// der Fall, so kann das bilinguale Sachfach bei einer geeigneten Weiterbelegung zu einem möglichen Sprachenschwerpunkt beitragen.
 			final AbiturFachbelegung fremdsprache = manager.getSprachbelegung(biliSprache);
 			if (manager.pruefeBelegungMitSchriftlichkeitEinzeln(fremdsprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)
-					|| manager.pruefeBelegungMitSchriftlichkeitEinzeln(biliSachfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
+					|| manager.pruefeBelegungMitSchriftlichkeitEinzeln(biliSachfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
 				continue;
+			}
 
 			// Das bilinguale Sachfach kann somit nicht zum Sprachenschwerpunkt beitragen. Gebe einen entsprechenden Hinweis...
 			addFehler(GostBelegungsfehler.BIL_4_INFO);
@@ -379,13 +402,15 @@ public final class Fremdsprachen extends GostBelegpruefung {
 	private void pruefeEF1BilingualenBildungsgang() {
 		// Prüfe, ob der Schüler im bilingualen Bildungsgang ist
 		final String biligualeSprache = manager.getBiligualenBildungsgang();
-		if (biligualeSprache == null)
+		if (biligualeSprache == null) {
 			return;
+		}
 
 		// Prüfe, ob die Fremdsprache des bilingualen Bildungsganges schriftlich gewählt wurde und durchgehend belegbar ist
 		final AbiturFachbelegung biliSprache = manager.getSprachbelegung(biligualeSprache);
-		if (!manager.pruefeBelegungDurchgehendBelegbar(biliSprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
+		if (!manager.pruefeBelegungDurchgehendBelegbar(biliSprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
 			addFehler(GostBelegungsfehler.BIL_10);
+		}
 
 		// Prüfe, ob kein bilinguales Sachfach gewählt wurde.
 		if ((_biliSachfaecher == null) || (_biliSachfaecher.isEmpty())) {
@@ -394,8 +419,9 @@ public final class Fremdsprachen extends GostBelegpruefung {
 		}
 
 		// Prüfe, ob nur ein bilinguales Sachfach gewählt wurde.
-		if (_biliSachfaecher.size() < 2)
+		if (_biliSachfaecher.size() < 2) {
 			addFehler(GostBelegungsfehler.BIL_11_INFO);
+		}
 	}
 
 
@@ -419,12 +445,15 @@ public final class Fremdsprachen extends GostBelegpruefung {
 	 * Fremdsprache fehlerhafterweise als neu einsetzende Fremdsprache belegt wurde.
 	 */
 	private void pruefeGesamtSprachenfolge() {
-		if (manager.hatFortgefuehrteFremdspracheInSprachendaten(_fremdsprachenNeu))
+		if (manager.hatFortgefuehrteFremdspracheInSprachendaten(_fremdsprachenNeu)) {
 			addFehler(GostBelegungsfehler.FS_20);
-		if (manager.hatNeuEinsetzendeFremdspracheInSprachendaten(_fremdsprachenFortgefuehrt))
+		}
+		if (manager.hatNeuEinsetzendeFremdspracheInSprachendaten(_fremdsprachenFortgefuehrt)) {
 			addFehler(GostBelegungsfehler.FS_21);
-		if (!SprachendatenUtils.hatSprachbelegung(manager.getSprachendaten(), "E"))
+		}
+		if (!SprachendatenUtils.hatSprachbelegung(manager.getSprachendaten(), "E")) {
 			addFehler(GostBelegungsfehler.FS_22_INFO);
+		}
 	}
 
 
@@ -460,13 +489,15 @@ public final class Fremdsprachen extends GostBelegpruefung {
 				if (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(manager.getSprachendaten(), gostFach.kuerzel.substring(0, 1))) {
 
 					// Prüfe, ob diese Sprache durchgängig von EF.1 bis EF.2 belegt wurde.
-					if (manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2))
+					if (manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2)) {
 						anzahlFortgefuehrteFremdsprachenEFBelegt += 1;
+					}
 
 					// Prüfe, ob die belegte Fremdsprache in der EF.1 und EF.2 schriftlich belegt war. Andernfalls liegt ein Fehler vor.
 					if (manager.pruefeBelegungMitSchriftlichkeit(abiFachbelegung, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.EF1)
-							|| manager.pruefeBelegungMitSchriftlichkeit(abiFachbelegung, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.EF2))
+							|| manager.pruefeBelegungMitSchriftlichkeit(abiFachbelegung, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.EF2)) {
 						anzahlFortgefuehrteFremdsprachenBelegtFehlerMuendlichEF += 1;
+					}
 
 					// Prüfe, ob diese Sprache durchgängig von EF.1 bis Q2.2 belegt wurde. Dabei ist die Schriftlichkeit ab Q1.1 nicht zwingend erforderlich.
 					if (manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21,
@@ -474,8 +505,9 @@ public final class Fremdsprachen extends GostBelegpruefung {
 						anzahlFortgefuehrteFremdsprachenDurchgehendBelegt += 1;
 						// Prüfe, ob die belegte Fremdsprache in der EF.1 und EF.2 schriftlich belegt war. Andernfalls liegt ein Fehler vor.
 						if (manager.pruefeBelegungMitSchriftlichkeit(abiFachbelegung, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.EF1)
-								|| manager.pruefeBelegungMitSchriftlichkeit(abiFachbelegung, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.EF2))
+								|| manager.pruefeBelegungMitSchriftlichkeit(abiFachbelegung, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.EF2)) {
 							anzahlFortgefuehrteFremdsprachenDurchgehendBelegtFehlerMuendlichEF += 1;
+						}
 					}
 				} else {
 					// Es wurde ein Fach einer fortgeführten Fremdsprache belegt, ohne das die Sprachenfolge oder die Sprachprüfung dazu passt. Gib eine Fehlermeldung aus.
@@ -485,18 +517,21 @@ public final class Fremdsprachen extends GostBelegpruefung {
 		}
 
 		// Es wurde eine mündlich belegte Fremdsprache in der EF gefunden, gebe den entsprechenden Fehler daher aus.
-		if (anzahlFortgefuehrteFremdsprachenBelegtFehlerMuendlichEF > 0)
+		if (anzahlFortgefuehrteFremdsprachenBelegtFehlerMuendlichEF > 0) {
 			addFehler(GostBelegungsfehler.FS_12);
+		}
 
 		// Wenn alle durchgängig belegten, fortgeführten Fremdsprachen in mindestens einem EF Halbjahr mündlich belegt sind, gib eine weitere Fehlermeldung aus.
 		if ((anzahlFortgefuehrteFremdsprachenDurchgehendBelegt > 0)
-				&& (anzahlFortgefuehrteFremdsprachenDurchgehendBelegt == anzahlFortgefuehrteFremdsprachenDurchgehendBelegtFehlerMuendlichEF))
+				&& (anzahlFortgefuehrteFremdsprachenDurchgehendBelegt == anzahlFortgefuehrteFremdsprachenDurchgehendBelegtFehlerMuendlichEF)) {
 			addFehler(GostBelegungsfehler.FS_16);
+		}
 
 		// Es wurde eine passende Fremdsprache zur Erfüllung der Bedingung der ersten Fremdsprache gefunden.
 		// Sollte diese nur mündlich belegt sein, wurde vorher ein Fehler ergänzt
-		if (anzahlFortgefuehrteFremdsprachenDurchgehendBelegt > 0)
+		if (anzahlFortgefuehrteFremdsprachenDurchgehendBelegt > 0) {
 			return;
+		}
 
 
 		// ### Abschnitt 2 ###
@@ -510,8 +545,9 @@ public final class Fremdsprachen extends GostBelegpruefung {
 
 			// Wenn die Sprache nicht in EF.1 belegt wurde, kann es keine Sprache sein, die als neu einsetzende
 			// Fremdsprache gewertet werden kann.
-			if (!manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1))
+			if (!manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1)) {
 				continue;
+			}
 
 			final GostFach gostFach = manager.getFach(abiFachbelegung);
 			if ((gostFach != null) && !gostFach.kuerzel.equals("")) {
@@ -558,8 +594,9 @@ public final class Fremdsprachen extends GostBelegpruefung {
 				if (anzahlFortfuehrbareFremdsprachen == 0) {
 					addFehler(GostBelegungsfehler.FS_25);
 				} else { // Andernfalls gib eine Fehlermeldung aus, dass eine vorhandene Sprache belegt werden muss
-					if (!SprachendatenUtils.hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(manager.getSprachendaten()))
+					if (!SprachendatenUtils.hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(manager.getSprachendaten())) {
 						addFehler(GostBelegungsfehler.FS_24);
+					}
 				}
 			}
 		} else {
@@ -584,16 +621,18 @@ public final class Fremdsprachen extends GostBelegpruefung {
 	private void pruefeGesamtFremdsprachenfolgeZweiteFremdsprache() {
 
 		// Sind zwei mind. vierjährige Sprachen in der Sek-I vorhanden oder entsprechende Sprachprüfungen?
-		if (SprachendatenUtils.hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(manager.getSprachendaten()))
+		if (SprachendatenUtils.hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(manager.getSprachendaten())) {
 			return;
+		}
 
 		// Wenn die geforderten zwei Sprachen noch nicht belegt wurden, ist dann wenigstens eine vierjährige Sprache in der Sek-I vorhanden oder eine entsprechende Sprachprüfung?
 		if (SprachendatenUtils.hatEineSpracheAb5bis7MitMin4JahrenDauerEndeSekI(manager.getSprachendaten())) {
 
 			// Prüfe, ob ergänzend eine neu einsetzende Fremdsprache in EF.1 schriftlich belegt wurde
 			if (manager.pruefeBelegungExistiert(_fremdsprachenNeu, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21,
-					GostHalbjahr.Q22))
+					GostHalbjahr.Q22)) {
 				return;
+			}
 
 			// Wenn keine neue Fremdsprache vorhanden ist, findet sich dann eine 2. Fremdsprache ab Klasse 8 (bzw. 9)?
 			if (SprachendatenUtils.hatEineSpracheAb8MitMin2JahrenDauerEndeSekI(manager.getSprachendaten())) {
@@ -601,8 +640,9 @@ public final class Fremdsprachen extends GostBelegpruefung {
 				final AbiturFachbelegung zweiteFremdsprache =
 						manager.getSprachbelegung(SprachendatenUtils.getEineSpracheAb8MitMin2JahrenDauerEndeSekI(manager.getSprachendaten()));
 				// Die Sprache muss, um als zweite Fremdsprache gewertet werden zu können, bis Ende EF.2 belegt werden.
-				if (!manager.pruefeBelegungMitSchriftlichkeit(zweiteFremdsprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2))
+				if (!manager.pruefeBelegungMitSchriftlichkeit(zweiteFremdsprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2)) {
 					addFehler(GostBelegungsfehler.FS_13);
+				}
 				return;
 			}
 		}
@@ -622,23 +662,27 @@ public final class Fremdsprachen extends GostBelegpruefung {
 	private void pruefeGesamtSchriftlichkeit() {
 		// Prüfe, ob eine neu einsetzende Fremdsprache in den Halbjahren EF.1 bis Q2.1 mündlich belegt wurde
 		if (manager.pruefeBelegungExistiertHatMindestensEinmalSchriftlichkeit(_fremdsprachenNeu, GostSchriftlichkeit.MUENDLICH,
-				GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+				GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
 			addFehler(GostBelegungsfehler.FS_15);
+		}
 
 		// Prüft, ob eine neu einsetzende Fremdsprache in einem der Halbjahre der Qualifikationsphase als Leistungskurs belegt wurde. Dies ist nicht zulässig.
 		if (manager.pruefeBelegungExistiertHatMindestensEinmalKursart(_fremdsprachenNeu, GostKursart.LK, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21,
-				GostHalbjahr.Q22))
+				GostHalbjahr.Q22)) {
 			addFehler(GostBelegungsfehler.FS_17);
+		}
 
 		// Prüfe, ob eine fortgeführte Fremdsprache in der Einführungsphase mündlich belegt wurde
 		if (manager.pruefeBelegungExistiertErfuelltNichtFallsBelegt(_fremdsprachenFortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1,
-				GostHalbjahr.EF2))
+				GostHalbjahr.EF2)) {
 			addFehler(GostBelegungsfehler.FS_12);
+		}
 
 		// Prüfe, ob eine fortgeführte Fremdsprache durchgehend (außer Q2.2) schriftlich belegt wurde
 		if (manager.pruefeBelegungDurchgehendBelegtExistiert(_fremdsprachenFortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH,
-				GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+				GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
 			return;
+		}
 
 		// Es wurde keine fortgeführte Fremdsprache durchgehend (außer Q2.2) schriftlich belegt, existiert denn eine neu einsetzende mit dieser Belegung?
 		if (!manager.pruefeBelegungDurchgehendBelegtExistiert(_fremdsprachenNeu, GostSchriftlichkeit.SCHRIFTLICH,
@@ -650,19 +694,22 @@ public final class Fremdsprachen extends GostBelegpruefung {
 		// Prüfe, ob eine Muttersprachenprüfung stattgefunden hat und eine fortgeführte Fremdsprache in der EF schriftlich belegt wurde
 		if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(manager.getSprachendaten())
 				&& manager.pruefeBelegungExistiertMitSchriftlichkeit(_fremdsprachenFortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH,
-						GostHalbjahr.EF1, GostHalbjahr.EF2))
+						GostHalbjahr.EF1, GostHalbjahr.EF2)) {
 			return;
+		}
 
 		// Prüfe, ob eine Muttersprachenprüfung stattgefunden hat und eine neu einsetzende Fremdsprache durchgängig belegt wurde
 		if (SprachendatenUtils.hatSprachfeststellungspruefungAufEFNiveau(manager.getSprachendaten())
 				&& manager.pruefeBelegungDurchgehendBelegtExistiert(_fremdsprachenNeu, GostSchriftlichkeit.SCHRIFTLICH,
-						GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+						GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
 			return;
+		}
 
 		// Es liegt somit ein Belegungsfehler vor, wenn keine fortgeführte Fremdsprache in EF.1 schriftliche belegt wurde...
 		if (!manager.pruefeBelegungExistiertMitSchriftlichkeit(_fremdsprachenFortgefuehrt, GostSchriftlichkeit.SCHRIFTLICH,
-				GostHalbjahr.EF1, GostHalbjahr.EF2))
+				GostHalbjahr.EF1, GostHalbjahr.EF2)) {
 			addFehler(GostBelegungsfehler.FS_16);
+		}
 	}
 
 
@@ -682,14 +729,17 @@ public final class Fremdsprachen extends GostBelegpruefung {
 		_anzahlDurchgehendSchriftlich = fremdsprachenDurchgehendSchriftlich.size();
 
 		// Eine Prüfung der bilingualen Sachfächer ist nur nötig, sofern nur eine durchgängig belegbare schriftlich belegte Fremdsprache vorliegt
-		if (_anzahlDurchgehendSchriftlich != 1)
+		if (_anzahlDurchgehendSchriftlich != 1) {
 			return;
+		}
 		final GostFach fsDurchgehend = manager.getFach(fremdsprachenDurchgehendSchriftlich.get(0));
-		if (fsDurchgehend == null) // Dieser Fehlerfall sollte nicht auftreten...
+		if (fsDurchgehend == null) { // Dieser Fehlerfall sollte nicht auftreten...
 			return;
+		}
 		final String fremdspracheDurchgehend = GostFachUtils.getFremdsprache(fsDurchgehend);
-		if (fremdspracheDurchgehend == null) // Dieser Fehlerfall sollte nicht auftreten...
+		if (fremdspracheDurchgehend == null) { // Dieser Fehlerfall sollte nicht auftreten...
 			return;
+		}
 
 		// Bestimme die bilingualen Sachfächer, die durchgehend schriftlich belegt wurden
 		final @NotNull List<AbiturFachbelegung> biliSachfaecherDurchgehend = manager.filterBelegungen(_biliSachfaecher, GostHalbjahr.EF1,
@@ -701,8 +751,9 @@ public final class Fremdsprachen extends GostBelegpruefung {
 		for (final AbiturFachbelegung biliSachfach : biliSachfaecherDurchgehendSchriftlich) {
 			// Stelle sicher, dass die belegte Fremdsprache nicht als Unterrichtssprache erneut gezählt wird
 			final GostFach fach = manager.getFach(biliSachfach);
-			if ((fach == null) || (fremdspracheDurchgehend.equals(fach.biliSprache)))
+			if ((fach == null) || (fremdspracheDurchgehend.equals(fach.biliSprache))) {
 				continue;
+			}
 			// Werte das bilinguale Sachfach für einen möglichen Sprachenschwerpunkt und beende die Prüfung dann
 			_anzahlDurchgehendSchriftlich++;
 			return;
@@ -716,15 +767,17 @@ public final class Fremdsprachen extends GostBelegpruefung {
 	 * belegt wurde.
 	 */
 	private void pruefeGesamtBilingualeSachfaecher() {
-		if (_biliSachfaecher == null)
+		if (_biliSachfaecher == null) {
 			return;
+		}
 
 		// Prüfe alle belegten bilingualen Sachfächer...
 		for (final AbiturFachbelegung biliSachfach : _biliSachfaecher) {
 			// Prüfe, ob die Unterrichtssprache des bilingualen Sachfaches in der Sekundarstufe I mindestens zwei Jahre lang belegt wurde
 			final GostFach biliFach = manager.getFach(biliSachfach);
-			if ((biliFach == null) || (!SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(manager.getSprachendaten(), biliFach.biliSprache)))
+			if ((biliFach == null) || (!SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(manager.getSprachendaten(), biliFach.biliSprache))) {
 				addFehler(GostBelegungsfehler.BIL_14);
+			}
 		}
 	}
 
@@ -737,14 +790,16 @@ public final class Fremdsprachen extends GostBelegpruefung {
 	private void pruefeGesamtBilingualenBildungsgang() {
 		// Prüfe, ob der Schüler im bilingualen Bildungsgang ist
 		final String biligualeSprache = manager.getBiligualenBildungsgang();
-		if (biligualeSprache == null)
+		if (biligualeSprache == null) {
 			return;
+		}
 
 		// Prüfe, ob die Fremdsprache des bilingualen Bildungsganges in der EF schriftlich gewählt wurde und danach als LK gewählt wurde
 		final AbiturFachbelegung biliSprache = manager.getSprachbelegung(biligualeSprache);
 		if ((!manager.pruefeBelegungMitSchriftlichkeit(biliSprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2)
-				|| (!manager.pruefeBelegungMitKursart(biliSprache, GostKursart.LK, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))))
+				|| (!manager.pruefeBelegungMitKursart(biliSprache, GostKursart.LK, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)))) {
 			addFehler(GostBelegungsfehler.BIL_10);
+		}
 
 		// Prüfe, ob kein bilinguales Sachfach in der EF gewählt wurde.
 		final List<AbiturFachbelegung> biliSachfaecherEF = manager.filterBelegungen(_biliSachfaecher, GostHalbjahr.EF1, GostHalbjahr.EF2);
@@ -754,8 +809,9 @@ public final class Fremdsprachen extends GostBelegpruefung {
 		}
 
 		// Prüfe, ob nur ein bilinguales Sachfach in der EF gewählt wurde.
-		if (biliSachfaecherEF.size() < 2)
+		if (biliSachfaecherEF.size() < 2) {
 			addFehler(GostBelegungsfehler.BIL_11_INFO);
+		}
 
 		// Prüfe, ob mindestens eines der Sachfächer von EF.1 bis Q2.2 belegt und von Q1.1 bis Q2.1 schriftlich belegt wurde
 		boolean hatBiliSachfaecherDurchgehendSchriftlich = false;
@@ -767,12 +823,14 @@ public final class Fremdsprachen extends GostBelegpruefung {
 				}
 			}
 		}
-		if (!hatBiliSachfaecherDurchgehendSchriftlich)
+		if (!hatBiliSachfaecherDurchgehendSchriftlich) {
 			addFehler(GostBelegungsfehler.BIL_12);
+		}
 
 		// Prüfe, ob ein zum bilingualen Bildungsgang zugehöriges Sachfach 3. oder 4. Abiturfach ist
-		if (!manager.pruefeExistiertAbiFach(_biliSachfaecher, GostAbiturFach.AB3, GostAbiturFach.AB4))
+		if (!manager.pruefeExistiertAbiFach(_biliSachfaecher, GostAbiturFach.AB3, GostAbiturFach.AB4)) {
 			addFehler(GostBelegungsfehler.BIL_13);
+		}
 	}
 
 

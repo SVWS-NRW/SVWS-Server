@@ -51,8 +51,9 @@ export class GostBelegpruefungsArt extends JavaEnum<GostBelegpruefungsArt> {
 	 * @return die Art der Belegprüfung
 	 */
 	public static fromKuerzel(kuerzel: string | null): GostBelegpruefungsArt | null {
-		if (kuerzel === null)
+		if (kuerzel === null) {
 			return null;
+		}
 		switch (kuerzel) {
 			case "EF.1": {
 				return GostBelegpruefungsArt.EF1;

@@ -46,10 +46,11 @@ public abstract class GostBelegpruefung {
 	 */
 	public void pruefe() {
 		init();
-		if (pruefungs_art == GostBelegpruefungsArt.EF1)
+		if (pruefungs_art == GostBelegpruefungsArt.EF1) {
 			pruefeEF1();
-		else if (pruefungs_art == GostBelegpruefungsArt.GESAMT)
+		} else if (pruefungs_art == GostBelegpruefungsArt.GESAMT) {
 			pruefeGesamt();
+		}
 	}
 
 
@@ -60,8 +61,9 @@ public abstract class GostBelegpruefung {
 	 * @param fehler   der hinzuzufügende Belegungsfehler
 	 */
 	protected void addFehler(final @NotNull GostBelegungsfehler fehler) {
-		if (!belegungsfehler.contains(fehler))
+		if (!belegungsfehler.contains(fehler)) {
 			belegungsfehler.add(fehler);
+		}
 	}
 
 
@@ -82,8 +84,9 @@ public abstract class GostBelegpruefung {
 	 */
 	public boolean hatBelegungsfehler() {
 		for (final @NotNull GostBelegungsfehler fehler : belegungsfehler) {
-			if (!fehler.istInfo())
+			if (!fehler.istInfo()) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -117,8 +120,9 @@ public abstract class GostBelegpruefung {
 	 */
 	public static boolean istErfolgreich(final @NotNull List<GostBelegungsfehler> alleFehler) {
 		for (final @NotNull GostBelegungsfehler fehler : alleFehler) {
-			if (!fehler.istInfo())
+			if (!fehler.istInfo()) {
 				return false;
+			}
 		}
 		return true;
 	}

@@ -263,8 +263,9 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return eine Liste mit den durchgefuehrten Belegpruefungen
 	 */
 	public getPruefungen(pruefungsArt: GostBelegpruefungsArt): List<GostBelegpruefung> {
-		if (AbiturdatenManager.nutzeExperimentellenCode(this.servermode, this.abidaten.abiturjahr))
+		if (AbiturdatenManager.nutzeExperimentellenCode(this.servermode, this.abidaten.abiturjahr)) {
 			return this.getPruefungenAbi2030(pruefungsArt);
+		}
 		return this.getPruefungenDefault(pruefungsArt);
 	}
 
@@ -273,12 +274,14 @@ export class AbiturdatenManager extends JavaObject {
 	 * eingerichtet werden.
 	 */
 	public init(): void {
-		if (this.abidaten === null)
+		if (this.abidaten === null) {
 			return;
+		}
 		this.initMaps();
 		this.belegpruefungen = this.getPruefungen(this.pruefungsArt);
-		for (const belegpruefung of this.belegpruefungen)
+		for (const belegpruefung of this.belegpruefungen) {
 			belegpruefung.pruefe();
+		}
 		this.belegpruefungsfehler = GostBelegpruefung.getBelegungsfehlerAlle(this.belegpruefungen);
 		this.belegpruefungErfolgreich = GostBelegpruefung.istErfolgreich(this.belegpruefungsfehler);
 		if (this.istBewertetQualifikationsPhase()) {
@@ -319,40 +322,48 @@ export class AbiturdatenManager extends JavaObject {
 			this.mapFachbereicheRelevant.put(fachbereich, new ArrayList<AbiturFachbelegung>());
 		}
 		this.mapFachbelegungenByGostHalbjahr.clear();
-		for (const halbjahr of GostHalbjahr.values())
+		for (const halbjahr of GostHalbjahr.values()) {
 			this.mapFachbelegungenByGostHalbjahr.put(halbjahr, new ArrayList<AbiturFachbelegung>());
+		}
 		const fachbelegungen: List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fachbelegung of fachbelegungen) {
 			const fach: GostFach | null = this.getFach(fachbelegung);
-			if (fach === null)
+			if (fach === null) {
 				continue;
+			}
 			this.mapFachbelegungByFachID.put(fachbelegung.fachID, fachbelegung);
 			const tmpListFachbelegungenByFachKuerzel: List<AbiturFachbelegung> | null = this.mapFachbelegungenByFachKuerzel.computeIfAbsent(fach.kuerzel, { apply: (k: string | null) => new ArrayList() });
-			if (tmpListFachbelegungenByFachKuerzel !== null)
+			if (tmpListFachbelegungenByFachKuerzel !== null) {
 				tmpListFachbelegungenByFachKuerzel.add(fachbelegung);
+			}
 			if (this.zaehleBelegung(fachbelegung) > 0) {
 				const fachbereiche: List<GostFachbereich> = GostFachbereich.getBereiche(fach);
 				for (const fachbereich of fachbereiche) {
 					let listFachbelegungen: List<AbiturFachbelegung> | null = this.mapFachbereiche.get(fachbereich);
-					if (listFachbelegungen !== null)
+					if (listFachbelegungen !== null) {
 						listFachbelegungen.add(fachbelegung);
+					}
 					if (fach.istPruefungsordnungsRelevant) {
 						listFachbelegungen = this.mapFachbereicheRelevant.get(fachbereich);
-						if (listFachbelegungen !== null)
+						if (listFachbelegungen !== null) {
 							listFachbelegungen.add(fachbelegung);
+						}
 					}
 				}
 			}
 			for (const halbjahr of GostHalbjahr.values()) {
 				const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
-				if ((belegungHalbjahr === null) || (belegungHalbjahr.kursartKuerzel === null))
+				if ((belegungHalbjahr === null) || (belegungHalbjahr.kursartKuerzel === null)) {
 					continue;
+				}
 				this.mapFachbelegungHalbjahrByFachIDAndHalbjahrID.put(fachbelegung.fachID, halbjahr.id, belegungHalbjahr);
-				if (halbjahr.istQualifikationsphase() && (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) as unknown === Note.UNGENUEGEND as unknown))
+				if (halbjahr.istQualifikationsphase() && (Note.fromKuerzel(belegungHalbjahr.notenkuerzel) as unknown === Note.UNGENUEGEND as unknown)) {
 					continue;
+				}
 				const tmp: List<AbiturFachbelegung> | null = this.mapFachbelegungenByGostHalbjahr.get(halbjahr);
-				if (tmp === null)
+				if (tmp === null) {
 					continue;
+				}
 				tmp.add(fachbelegung);
 			}
 		}
@@ -366,8 +377,9 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public kombiniereFachbelegungenEinesFaches(): boolean {
 		for (const belegungen of this.mapFachbelegungenByFachKuerzel.values()) {
-			if (belegungen.size() < 2)
+			if (belegungen.size() < 2) {
 				continue;
+			}
 			let ziel: AbiturFachbelegung | null = null;
 			let letztes: GostHalbjahr = GostHalbjahr.EF2;
 			for (const belegung of belegungen) {
@@ -381,15 +393,18 @@ export class AbiturdatenManager extends JavaObject {
 					halbjahr = halbjahr.next();
 				}
 			}
-			if (ziel === null)
+			if (ziel === null) {
 				continue;
+			}
 			for (const belegung of belegungen) {
-				if (belegung as unknown === ziel as unknown)
+				if (belegung as unknown === ziel as unknown) {
 					continue;
+				}
 				for (const halbjahr of GostHalbjahr.values()) {
 					const zielHalbjahr: AbiturFachbelegungHalbjahr | null = ziel.belegungen[halbjahr.id];
-					if ((zielHalbjahr !== null) && (zielHalbjahr.kursartKuerzel !== null) && (zielHalbjahr.notenkuerzel !== null) && (!JavaObject.equalsTranspiler("", (zielHalbjahr.notenkuerzel))))
+					if ((zielHalbjahr !== null) && (zielHalbjahr.kursartKuerzel !== null) && (zielHalbjahr.notenkuerzel !== null) && (!JavaObject.equalsTranspiler("", (zielHalbjahr.notenkuerzel)))) {
 						continue;
+					}
 					const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
 					if ((belegungHalbjahr !== null) && (belegungHalbjahr.kursartKuerzel !== null) && (belegungHalbjahr.notenkuerzel !== null)) {
 						ziel.belegungen[halbjahr.id] = belegungHalbjahr;
@@ -428,8 +443,9 @@ export class AbiturdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException falls keine Jahrgangsdaten vorliegen
 	 */
 	public jahrgangsdaten(): GostJahrgangsdaten {
-		if (this._jahrgangsdaten === null)
+		if (this._jahrgangsdaten === null) {
 			throw new DeveloperNotificationException("Es liegen keine Jahrgangsdaten vor.")
+		}
 		return this._jahrgangsdaten;
 	}
 
@@ -459,9 +475,11 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls alle Halbjahre bewertet sind, und ansonsten false
 	 */
 	public istBewertetQualifikationsPhase(): boolean {
-		for (const hj of GostHalbjahr.getQualifikationsphase())
-			if (!this.istBewertet(hj))
+		for (const hj of GostHalbjahr.getQualifikationsphase()) {
+			if (!this.istBewertet(hj)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -502,8 +520,9 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public static istNullPunkteBelegungInQPhase(halbjahresbelegung: AbiturFachbelegungHalbjahr): boolean {
 		const hj: GostHalbjahr | null = GostHalbjahr.fromKuerzel(halbjahresbelegung.halbjahrKuerzel);
-		if ((hj === null) || (hj.istEinfuehrungsphase()))
+		if ((hj === null) || (hj.istEinfuehrungsphase())) {
 			return false;
+		}
 		return Note.fromKuerzel(halbjahresbelegung.notenkuerzel) as unknown === Note.UNGENUEGEND as unknown;
 	}
 
@@ -515,12 +534,15 @@ export class AbiturdatenManager extends JavaObject {
 			belegung.belegungen[halbjahr.id] = halbjahresbelegung;
 		}
 		const kursart: GostKursart | null = GostKursart.fromKuerzel(halbjahresbelegung.kursartKuerzel);
-		if (kursart === null)
+		if (kursart === null) {
 			return (JavaObject.equalsTranspiler("", (halbjahresbelegung.kursartKuerzel)) ? null : halbjahresbelegung.kursartKuerzel);
-		if (AbiturdatenManager.istNullPunkteBelegungInQPhase(halbjahresbelegung))
+		}
+		if (AbiturdatenManager.istNullPunkteBelegungInQPhase(halbjahresbelegung)) {
 			return null;
-		if ((kursart as unknown === GostKursart.ZK as unknown) || (kursart as unknown === GostKursart.LK as unknown))
+		}
+		if ((kursart as unknown === GostKursart.ZK as unknown) || (kursart as unknown === GostKursart.LK as unknown)) {
 			return kursart.kuerzel;
+		}
 		return halbjahresbelegung.schriftlich ? "S" : "M";
 	}
 
@@ -533,8 +555,9 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public getSchuelerFachwahl(fachID: number): GostSchuelerFachwahl {
 		const belegung: AbiturFachbelegung | null = this.getFachbelegungByID(fachID);
-		if (belegung === null)
+		if (belegung === null) {
 			return new GostSchuelerFachwahl();
+		}
 		const wahl: GostSchuelerFachwahl = new GostSchuelerFachwahl();
 		wahl.halbjahre[0] = AbiturdatenManager.getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.EF1);
 		wahl.halbjahre[1] = AbiturdatenManager.getSchuelerFachwahlFromBelegung(belegung, GostHalbjahr.EF2);
@@ -554,8 +577,9 @@ export class AbiturdatenManager extends JavaObject {
 	public getSchuelerFachwahlen(): JavaMap<number, GostSchuelerFachwahl> {
 		const fachwahlen: HashMap<number, GostSchuelerFachwahl> = new HashMap<number, GostSchuelerFachwahl>();
 		const fachbelegungen: List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
-		for (const fb of fachbelegungen)
+		for (const fb of fachbelegungen) {
 			fachwahlen.put(fb.fachID, this.getSchuelerFachwahl(fb.fachID));
+		}
 		return fachwahlen;
 	}
 
@@ -567,8 +591,9 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return das Fach der gymnasialen Oberstufe (siehe {@link GostFach})
 	 */
 	public getFach(belegung: AbiturFachbelegung | null): GostFach | null {
-		if (belegung === null)
+		if (belegung === null) {
 			return null;
+		}
 		return this.faecherManager.get(belegung.fachID);
 	}
 
@@ -581,14 +606,18 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, wenn die Fachbelegung in einem der Bereiche liegt und ansonsten false
 	 */
 	public hatFachbereich(belegung: AbiturFachbelegung | null, ...bereiche: Array<GostFachbereich>): boolean {
-		if ((belegung === null) || (bereiche.length === 0))
+		if ((belegung === null) || (bereiche.length === 0)) {
 			return false;
+		}
 		const fach: GostFach | null = this.getFach(belegung);
-		if (fach === null)
+		if (fach === null) {
 			return false;
-		for (const bereich of bereiche)
-			if (bereich.hat(fach))
+		}
+		for (const bereich of bereiche) {
+			if (bereich.hat(fach)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -602,8 +631,9 @@ export class AbiturdatenManager extends JavaObject {
 	public hatFachbereichInAbiturfaechern(...bereiche: Array<GostFachbereich>): boolean {
 		for (const belegung of this.abidaten.fachbelegungen) {
 			const abiturFach: GostAbiturFach | null = GostAbiturFach.fromID(belegung.abiturFach);
-			if ((abiturFach !== null) && this.hatFachbereich(belegung, ...bereiche))
+			if ((abiturFach !== null) && this.hatFachbereich(belegung, ...bereiche)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -618,12 +648,15 @@ export class AbiturdatenManager extends JavaObject {
 	public hatFachbereichInLKAbiturfaechern(...bereiche: Array<GostFachbereich>): boolean {
 		for (const belegung of this.abidaten.fachbelegungen) {
 			const abiturFach: GostAbiturFach | null = GostAbiturFach.fromID(belegung.abiturFach);
-			if (abiturFach !== null)
+			if (abiturFach !== null) {
 				continue;
-			if ((abiturFach as unknown !== GostAbiturFach.LK1 as unknown) && (abiturFach as unknown !== GostAbiturFach.LK2 as unknown))
+			}
+			if ((abiturFach as unknown !== GostAbiturFach.LK1 as unknown) && (abiturFach as unknown !== GostAbiturFach.LK2 as unknown)) {
 				continue;
-			if (this.hatFachbereich(belegung, ...bereiche))
+			}
+			if (this.hatFachbereich(belegung, ...bereiche)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -638,12 +671,15 @@ export class AbiturdatenManager extends JavaObject {
 	public hatFachbereichInGKAbiturfaechern(...bereiche: Array<GostFachbereich>): boolean {
 		for (const belegung of this.abidaten.fachbelegungen) {
 			const abiturFach: GostAbiturFach | null = GostAbiturFach.fromID(belegung.abiturFach);
-			if (abiturFach !== null)
+			if (abiturFach !== null) {
 				continue;
-			if ((abiturFach as unknown === GostAbiturFach.LK1 as unknown) || (abiturFach as unknown === GostAbiturFach.LK2 as unknown))
+			}
+			if ((abiturFach as unknown === GostAbiturFach.LK1 as unknown) || (abiturFach as unknown === GostAbiturFach.LK2 as unknown)) {
 				continue;
-			if (this.hatFachbereich(belegung, ...bereiche))
+			}
+			if (this.hatFachbereich(belegung, ...bereiche)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -658,11 +694,14 @@ export class AbiturdatenManager extends JavaObject {
 		const fachbelegungen: List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fb of fachbelegungen) {
 			const fach: GostFach | null = this.getFach(fb);
-			if (fach === null)
+			if (fach === null) {
 				continue;
-			for (let i: number = 0; i < GostHalbjahr.maxHalbjahre; i++)
-				if (fb.belegungen[i] !== null)
+			}
+			for (let i: number = 0; i < GostHalbjahr.maxHalbjahre; i++) {
+				if (fb.belegungen[i] !== null) {
 					return true;
+				}
+			}
 		}
 		return false;
 	}
@@ -678,16 +717,20 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls das Fach in den Halbjahren belegt wurde, sonst false
 	 */
 	public pruefeBelegung(fachbelegung: AbiturFachbelegung | null, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if (fachbelegung === null)
+		if (fachbelegung === null) {
 			return false;
-		if (halbjahre.length === 0)
+		}
+		if (halbjahre.length === 0) {
 			return true;
+		}
 		for (const halbjahr of halbjahre) {
 			const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
-			if ((belegungHalbjahr === null) || (belegungHalbjahr.kursartKuerzel === null))
+			if ((belegungHalbjahr === null) || (belegungHalbjahr.kursartKuerzel === null)) {
 				return false;
-			if (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))
+			}
+			if (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -701,13 +744,15 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Anzahl der Belegungen des Faches
 	 */
 	public zaehleBelegung(fachbelegung: AbiturFachbelegung | null): number {
-		if (fachbelegung === null)
+		if (fachbelegung === null) {
 			return 0;
+		}
 		let anzahl: number = 0;
 		for (let i: number = 0; i < GostHalbjahr.maxHalbjahre; i++) {
 			const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[i];
-			if ((belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)))
+			if ((belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 				anzahl++;
+			}
 		}
 		return anzahl;
 	}
@@ -723,15 +768,18 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Anzahl der Belegungen in den Halbjahren
 	 */
 	public zaehleHalbjahresbelegungen(fachbelegung: AbiturFachbelegung | null, ...halbjahre: Array<GostHalbjahr>): number {
-		if (fachbelegung === null)
+		if (fachbelegung === null) {
 			return 0;
-		if (halbjahre.length === 0)
+		}
+		if (halbjahre.length === 0) {
 			return 0;
+		}
 		let anzahl: number = 0;
 		for (const halbjahr of halbjahre) {
 			const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
-			if ((belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)))
+			if ((belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 				anzahl++;
+			}
 		}
 		return anzahl;
 	}
@@ -747,16 +795,19 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Anzahl der Belegungen in den Halbjahren und den Fächern
 	 */
 	public zaehleBelegungInHalbjahren(fachbelegungen: List<AbiturFachbelegung> | null, ...halbjahre: Array<GostHalbjahr>): number {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return 0;
-		if (halbjahre.length === 0)
+		}
+		if (halbjahre.length === 0) {
 			return 0;
+		}
 		let anzahl: number = 0;
 		for (const fachbelegung of fachbelegungen) {
 			for (const halbjahr of halbjahre) {
 				const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
-				if ((belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)))
+				if ((belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 					anzahl++;
+				}
 			}
 		}
 		return anzahl;
@@ -772,8 +823,9 @@ export class AbiturdatenManager extends JavaObject {
 		for (const fachbelegung of this.abidaten.fachbelegungen) {
 			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 				const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
-				if ((belegungHalbjahr !== null) && (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)))
+				if ((belegungHalbjahr !== null) && (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 					anzahl++;
+				}
 			}
 		}
 		return anzahl;
@@ -791,14 +843,17 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungMitKursart(fachbelegung: AbiturFachbelegung | null, kursart: GostKursart, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if (fachbelegung === null)
+		if (fachbelegung === null) {
 			return false;
-		if (halbjahre.length === 0)
+		}
+		if (halbjahre.length === 0) {
 			return true;
+		}
 		for (const halbjahr of halbjahre) {
 			const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
-			if ((belegungHalbjahr === null) || (kursart as unknown !== GostKursart.fromKuerzel(belegungHalbjahr.kursartKuerzel) as unknown) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)))
+			if ((belegungHalbjahr === null) || (kursart as unknown !== GostKursart.fromKuerzel(belegungHalbjahr.kursartKuerzel) as unknown) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -816,13 +871,16 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungExistiertMitKursart(fachbelegungen: List<AbiturFachbelegung> | null, kursart: GostKursart, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if ((fachbelegungen === null) || (fachbelegungen.isEmpty()))
+		if ((fachbelegungen === null) || (fachbelegungen.isEmpty())) {
 			return false;
-		if (halbjahre.length === 0)
+		}
+		if (halbjahre.length === 0) {
 			return true;
+		}
 		for (const fachbelegung of fachbelegungen) {
-			if (this.pruefeBelegungMitKursart(fachbelegung, kursart, ...halbjahre))
+			if (this.pruefeBelegungMitKursart(fachbelegung, kursart, ...halbjahre)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -840,16 +898,20 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls die Kursart mindestens einmal in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungHatMindestensEinmalKursart(fachbelegung: AbiturFachbelegung | null, kursart: GostKursart, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if (fachbelegung === null)
+		if (fachbelegung === null) {
 			return false;
-		if (halbjahre.length === 0)
+		}
+		if (halbjahre.length === 0) {
 			return false;
+		}
 		for (const halbjahr of halbjahre) {
 			const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
-			if (belegungHalbjahr === null)
+			if (belegungHalbjahr === null) {
 				continue;
-			if ((kursart as unknown === GostKursart.fromKuerzel(belegungHalbjahr.kursartKuerzel) as unknown) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)))
+			}
+			if ((kursart as unknown === GostKursart.fromKuerzel(belegungHalbjahr.kursartKuerzel) as unknown) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -865,11 +927,13 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls die Schriftlichkeit in dem Halbjahr gegeben ist, sonst false
 	 */
 	public pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung: AbiturFachbelegung | null, schriftlichkeit: GostSchriftlichkeit, halbjahr: GostHalbjahr): boolean {
-		if (fachbelegung === null)
+		if (fachbelegung === null) {
 			return false;
+		}
 		const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
-		if ((belegungHalbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)))
+		if ((belegungHalbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 			return false;
+		}
 		switch (schriftlichkeit) {
 			case GostSchriftlichkeit.BELIEBIG: {
 				return true;
@@ -898,13 +962,17 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungMitSchriftlichkeit(fachbelegung: AbiturFachbelegung | null, schriftlichkeit: GostSchriftlichkeit, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if (fachbelegung === null)
+		if (fachbelegung === null) {
 			return false;
-		if (halbjahre.length === 0)
+		}
+		if (halbjahre.length === 0) {
 			return true;
-		for (const halbjahr of halbjahre)
-			if (!this.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, schriftlichkeit, halbjahr))
+		}
+		for (const halbjahr of halbjahre) {
+			if (!this.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, schriftlichkeit, halbjahr)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -920,14 +988,17 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls die Schriftlichkeit in den Halbjahren nicht gegeben ist, sonst false
 	 */
 	public pruefeBelegungErfuelltNicht(fachbelegung: AbiturFachbelegung | null, schriftlichkeit: GostSchriftlichkeit, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if (fachbelegung === null)
+		if (fachbelegung === null) {
 			return false;
-		if (halbjahre.length === 0)
+		}
+		if (halbjahre.length === 0) {
 			return true;
+		}
 		for (const halbjahr of halbjahre) {
 			const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
-			if ((belegungHalbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)) || ((schriftlichkeit as unknown !== GostSchriftlichkeit.BELIEBIG as unknown) && (((schriftlichkeit as unknown === GostSchriftlichkeit.SCHRIFTLICH as unknown) && (!belegungHalbjahr.schriftlich)) || ((schriftlichkeit as unknown === GostSchriftlichkeit.MUENDLICH as unknown) && (belegungHalbjahr.schriftlich)))))
+			if ((belegungHalbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)) || ((schriftlichkeit as unknown !== GostSchriftlichkeit.BELIEBIG as unknown) && (((schriftlichkeit as unknown === GostSchriftlichkeit.SCHRIFTLICH as unknown) && (!belegungHalbjahr.schriftlich)) || ((schriftlichkeit as unknown === GostSchriftlichkeit.MUENDLICH as unknown) && (belegungHalbjahr.schriftlich))))) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -945,16 +1016,20 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls die Schriftlichkeit in den Halbjahren nicht gegeben ist, sonst false
 	 */
 	public pruefeBelegungErfuelltNichtFallsBelegt(fachbelegung: AbiturFachbelegung | null, schriftlichkeit: GostSchriftlichkeit, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if (fachbelegung === null)
+		if (fachbelegung === null) {
 			return false;
-		if (halbjahre.length === 0)
+		}
+		if (halbjahre.length === 0) {
 			return true;
+		}
 		for (const halbjahr of halbjahre) {
 			const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
-			if ((belegungHalbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)))
+			if ((belegungHalbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 				continue;
-			if (((schriftlichkeit as unknown !== GostSchriftlichkeit.BELIEBIG as unknown) && (((schriftlichkeit as unknown === GostSchriftlichkeit.SCHRIFTLICH as unknown) && (!belegungHalbjahr.schriftlich)) || ((schriftlichkeit as unknown === GostSchriftlichkeit.MUENDLICH as unknown) && (belegungHalbjahr.schriftlich)))))
+			}
+			if (((schriftlichkeit as unknown !== GostSchriftlichkeit.BELIEBIG as unknown) && (((schriftlichkeit as unknown === GostSchriftlichkeit.SCHRIFTLICH as unknown) && (!belegungHalbjahr.schriftlich)) || ((schriftlichkeit as unknown === GostSchriftlichkeit.MUENDLICH as unknown) && (belegungHalbjahr.schriftlich))))) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -972,16 +1047,20 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls die angegebene Schriftlichkeit mindestens einmal in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungHatMindestensEinmalSchriftlichkeit(fachbelegung: AbiturFachbelegung | null, schriftlichkeit: GostSchriftlichkeit, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if (fachbelegung === null)
+		if (fachbelegung === null) {
 			return false;
-		if (halbjahre.length === 0)
+		}
+		if (halbjahre.length === 0) {
 			return false;
+		}
 		for (const halbjahr of halbjahre) {
 			const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
-			if ((belegungHalbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)))
+			if ((belegungHalbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 				continue;
-			if ((schriftlichkeit.istSchriftlich === null) || (JavaObject.equalsTranspiler(schriftlichkeit.istSchriftlich, (belegungHalbjahr.schriftlich))))
+			}
+			if ((schriftlichkeit.istSchriftlich === null) || (JavaObject.equalsTranspiler(schriftlichkeit.istSchriftlich, (belegungHalbjahr.schriftlich)))) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -1000,13 +1079,17 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls die angegebene Schriftlichkeit bei einer Fachbelegung mindestens einmal in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungExistiertHatMindestensEinmalSchriftlichkeit(fachbelegungen: List<AbiturFachbelegung> | null, schriftlichkeit: GostSchriftlichkeit, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if ((fachbelegungen === null) || (fachbelegungen.isEmpty()))
+		if ((fachbelegungen === null) || (fachbelegungen.isEmpty())) {
 			return false;
-		if (halbjahre.length === 0)
+		}
+		if (halbjahre.length === 0) {
 			return false;
-		for (const fachbelegung of fachbelegungen)
-			if (this.pruefeBelegungHatMindestensEinmalSchriftlichkeit(fachbelegung, schriftlichkeit, ...halbjahre))
+		}
+		for (const fachbelegung of fachbelegungen) {
+			if (this.pruefeBelegungHatMindestensEinmalSchriftlichkeit(fachbelegung, schriftlichkeit, ...halbjahre)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -1024,17 +1107,21 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls eine Fachbelegung mit den Halbjahren existiert, sonst false
 	 */
 	public pruefeBelegungExistiert(fachbelegungen: List<AbiturFachbelegung> | null, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return false;
-		if ((halbjahre === null) || (halbjahre.length === 0))
+		}
+		if ((halbjahre === null) || (halbjahre.length === 0)) {
 			return true;
+		}
 		for (const fachbelegung of fachbelegungen) {
 			const fach: GostFach | null = this.faecherManager.get(fachbelegung.fachID);
-			if (fach === null)
+			if (fach === null) {
 				continue;
+			}
 			const alleBelegungen: List<AbiturFachbelegung> | null = this.getFachbelegungByFachkuerzel(fach.kuerzel);
-			if ((alleBelegungen === null) || (alleBelegungen.isEmpty()))
+			if ((alleBelegungen === null) || (alleBelegungen.isEmpty())) {
 				continue;
+			}
 			let hatBelegung: boolean = true;
 			for (const halbjahr of halbjahre) {
 				let hatHalbjahresBelegung: boolean = false;
@@ -1050,8 +1137,9 @@ export class AbiturdatenManager extends JavaObject {
 					break;
 				}
 			}
-			if (hatBelegung)
+			if (hatBelegung) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -1069,19 +1157,23 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls eine Fachbelegung mit dem Halbjahr existiert, sonst false
 	 */
 	public pruefeBelegungExistiertEinzeln(fachbelegungen: List<AbiturFachbelegung> | null, halbjahr: GostHalbjahr): boolean {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return false;
+		}
 		for (const fachbelegung of fachbelegungen) {
 			const fach: GostFach | null = this.faecherManager.get(fachbelegung.fachID);
-			if (fach === null)
+			if (fach === null) {
 				continue;
+			}
 			const alleBelegungen: List<AbiturFachbelegung> | null = this.getFachbelegungByFachkuerzel(fach.kuerzel);
-			if (alleBelegungen.isEmpty())
+			if (alleBelegungen.isEmpty()) {
 				continue;
+			}
 			for (const aktFachbelegung of alleBelegungen) {
 				const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = aktFachbelegung.belegungen[halbjahr.id];
-				if ((belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)))
+				if ((belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 					return true;
+				}
 			}
 		}
 		return false;
@@ -1100,15 +1192,18 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls eine durchgehend schriftliche Fachbelegung existiert, sonst false
 	 */
 	public pruefeBelegungExistiertDurchgehendSchriftlich(fachbelegungen: List<AbiturFachbelegung> | null): boolean {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return false;
+		}
 		for (const fachbelegung of fachbelegungen) {
 			const fach: GostFach | null = this.faecherManager.get(fachbelegung.fachID);
-			if (fach === null)
+			if (fach === null) {
 				continue;
+			}
 			const alleBelegungen: List<AbiturFachbelegung> | null = this.getFachbelegungByFachkuerzel(fach.kuerzel);
-			if ((alleBelegungen === null) || (alleBelegungen.isEmpty()))
+			if ((alleBelegungen === null) || (alleBelegungen.isEmpty())) {
 				continue;
+			}
 			let hatBelegung: boolean = true;
 			for (const halbjahr of GostHalbjahr.values()) {
 				let hatHalbjahresBelegung: boolean = false;
@@ -1123,8 +1218,9 @@ export class AbiturdatenManager extends JavaObject {
 					break;
 				}
 			}
-			if (hatBelegung)
+			if (hatBelegung) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -1140,11 +1236,13 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls bei einer Fachbelegung die Schriftlichkeit in dem Halbjahr gegeben ist, sonst false
 	 */
 	public pruefeBelegungExistiertMitSchriftlichkeitEinzeln(fachbelegungen: List<AbiturFachbelegung> | null, schriftlichkeit: GostSchriftlichkeit, halbjahr: GostHalbjahr): boolean {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return false;
+		}
 		for (const fachbelegung of fachbelegungen) {
-			if (this.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, schriftlichkeit, halbjahr))
+			if (this.pruefeBelegungMitSchriftlichkeitEinzeln(fachbelegung, schriftlichkeit, halbjahr)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -1161,11 +1259,13 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls bei einer Fachbelegung die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen: List<AbiturFachbelegung> | null, schriftlichkeit: GostSchriftlichkeit, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return false;
+		}
 		for (const fachbelegung of fachbelegungen) {
-			if (this.pruefeBelegungMitSchriftlichkeit(fachbelegung, schriftlichkeit, ...halbjahre))
+			if (this.pruefeBelegungMitSchriftlichkeit(fachbelegung, schriftlichkeit, ...halbjahre)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -1182,11 +1282,13 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls die Kursart bei einer Fachbelegung mindestens einmal in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungExistiertHatMindestensEinmalKursart(fachbelegungen: List<AbiturFachbelegung> | null, kursart: GostKursart, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return false;
+		}
 		for (const fachbelegung of fachbelegungen) {
-			if (this.pruefeBelegungHatMindestensEinmalKursart(fachbelegung, kursart, ...halbjahre))
+			if (this.pruefeBelegungHatMindestensEinmalKursart(fachbelegung, kursart, ...halbjahre)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -1204,11 +1306,13 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true oder false (siehe oben)
 	 */
 	public pruefeBelegungExistiertErfuelltNicht(fachbelegungen: List<AbiturFachbelegung> | null, schriftlichkeit: GostSchriftlichkeit, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return false;
+		}
 		for (const fachbelegung of fachbelegungen) {
-			if (this.pruefeBelegungErfuelltNicht(fachbelegung, schriftlichkeit, ...halbjahre))
+			if (this.pruefeBelegungErfuelltNicht(fachbelegung, schriftlichkeit, ...halbjahre)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -1227,11 +1331,13 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true oder false (siehe oben)
 	 */
 	public pruefeBelegungExistiertErfuelltNichtFallsBelegt(fachbelegungen: List<AbiturFachbelegung> | null, schriftlichkeit: GostSchriftlichkeit, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return false;
+		}
 		for (const fachbelegung of fachbelegungen) {
-			if (this.pruefeBelegungErfuelltNichtFallsBelegt(fachbelegung, schriftlichkeit, ...halbjahre))
+			if (this.pruefeBelegungErfuelltNichtFallsBelegt(fachbelegung, schriftlichkeit, ...halbjahre)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -1249,10 +1355,12 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungDurchgehendBelegbar(fachbelegung: AbiturFachbelegung | null, schriftlichkeit: GostSchriftlichkeit, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if (fachbelegung === null)
+		if (fachbelegung === null) {
 			return false;
-		if (!GostFachUtils.istDurchgehendBelegbarBisQ22(this.getFach(fachbelegung)))
+		}
+		if (!GostFachUtils.istDurchgehendBelegbarBisQ22(this.getFach(fachbelegung))) {
 			return false;
+		}
 		return this.pruefeBelegungMitSchriftlichkeit(fachbelegung, schriftlichkeit, ...halbjahre);
 	}
 
@@ -1269,11 +1377,13 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls bei einer Fachbelegung die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungDurchgehendBelegbarExistiert(fachbelegungen: List<AbiturFachbelegung> | null, schriftlichkeit: GostSchriftlichkeit, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return false;
+		}
 		for (const fachbelegung of fachbelegungen) {
-			if (this.pruefeBelegungDurchgehendBelegbar(fachbelegung, schriftlichkeit, ...halbjahre))
+			if (this.pruefeBelegungDurchgehendBelegbar(fachbelegung, schriftlichkeit, ...halbjahre)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -1292,11 +1402,13 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls bei eine Fachbelegung durchgängig belegt wurde und die Schriftlichkeit in den Halbjahren gegeben ist, sonst false
 	 */
 	public pruefeBelegungDurchgehendBelegtExistiert(fachbelegungen: List<AbiturFachbelegung> | null, schriftlichkeit: GostSchriftlichkeit, ...halbjahre: Array<GostHalbjahr>): boolean {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return false;
+		}
 		for (const fachbelegung of fachbelegungen) {
-			if (this.pruefeBelegung(fachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22) && this.pruefeBelegungMitSchriftlichkeit(fachbelegung, schriftlichkeit, ...halbjahre))
+			if (this.pruefeBelegung(fachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22) && this.pruefeBelegungMitSchriftlichkeit(fachbelegung, schriftlichkeit, ...halbjahre)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -1311,11 +1423,13 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls mindestens einmal die Kursart belegt wurde, sonst false
 	 */
 	public pruefeAufKursart(fachbelegung: AbiturFachbelegung | null, kursart: GostKursart): boolean {
-		if (fachbelegung === null)
+		if (fachbelegung === null) {
 			return false;
+		}
 		for (const belegunghalbjahr of fachbelegung.belegungen) {
-			if ((belegunghalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegunghalbjahr)) && (GostKursart.fromKuerzel(belegunghalbjahr.kursartKuerzel) as unknown === kursart as unknown))
+			if ((belegunghalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegunghalbjahr)) && (GostKursart.fromKuerzel(belegunghalbjahr.kursartKuerzel) as unknown === kursart as unknown)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -1333,11 +1447,13 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public filterBelegungKursartExistiert(fachbelegungen: List<AbiturFachbelegung> | null, kursart: GostKursart): List<AbiturFachbelegung> {
 		const result: ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
-		if ((fachbelegungen === null) || (fachbelegungen.isEmpty()))
+		if ((fachbelegungen === null) || (fachbelegungen.isEmpty())) {
 			return result;
+		}
 		for (const fachbelegung of fachbelegungen) {
-			if (this.pruefeAufKursart(fachbelegung, kursart))
+			if (this.pruefeAufKursart(fachbelegung, kursart)) {
 				result.add(fachbelegung);
+			}
 		}
 		return result;
 	}
@@ -1351,8 +1467,9 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, wenn die Belegung durchgängig ist.
 	 */
 	public pruefeDurchgaengigkeit(fachbelegung: AbiturFachbelegung | null): boolean {
-		if ((fachbelegung === null) || (this.pruefeAufKursart(fachbelegung, GostKursart.ZK)))
+		if ((fachbelegung === null) || (this.pruefeAufKursart(fachbelegung, GostKursart.ZK))) {
 			return false;
+		}
 		return this.pruefeBelegung(fachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22);
 	}
 
@@ -1368,18 +1485,22 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Anzahl der durchgängigen Belegungen
 	 */
 	public zaehleDurchgaengigeBelegungen(fachbelegungen: List<AbiturFachbelegung> | null): number {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return 0;
+		}
 		let anzahl: number = 0;
 		for (const fachbelegung of fachbelegungen) {
 			const fach: GostFach | null = this.faecherManager.get(fachbelegung.fachID);
-			if (fach === null)
+			if (fach === null) {
 				continue;
-			if (fachbelegung.belegungen[GostHalbjahr.EF1.id] === null)
+			}
+			if (fachbelegung.belegungen[GostHalbjahr.EF1.id] === null) {
 				continue;
+			}
 			const alleBelegungen: List<AbiturFachbelegung> | null = this.getFachbelegungByFachkuerzel(fach.kuerzel);
-			if ((alleBelegungen === null) || (alleBelegungen.isEmpty()))
+			if ((alleBelegungen === null) || (alleBelegungen.isEmpty())) {
 				continue;
+			}
 			let hatBelegung: boolean = true;
 			const halbjahre: Array<GostHalbjahr> = [GostHalbjahr.EF1, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22];
 			for (const halbjahr of halbjahre) {
@@ -1396,8 +1517,9 @@ export class AbiturdatenManager extends JavaObject {
 					break;
 				}
 			}
-			if (hatBelegung)
+			if (hatBelegung) {
 				anzahl++;
+			}
 		}
 		return anzahl;
 	}
@@ -1413,8 +1535,9 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, wenn die Belegung durchgängig ist und die Schriftlichkeit den Anforderungen genügt.
 	 */
 	public pruefeDurchgaengigkeitSchriftlich(fachbelegung: AbiturFachbelegung | null): boolean {
-		if (!this.pruefeDurchgaengigkeit(fachbelegung))
+		if (!this.pruefeDurchgaengigkeit(fachbelegung)) {
 			return false;
+		}
 		return this.pruefeBelegungMitSchriftlichkeit(fachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21);
 	}
 
@@ -1429,16 +1552,20 @@ export class AbiturdatenManager extends JavaObject {
 	 *         angegebenen Arten gewählt wurde und false sonst
 	 */
 	public pruefeExistiertAbiFach(fachbelegungen: List<AbiturFachbelegung> | null, ...arten: Array<GostAbiturFach>): boolean {
-		if ((arten === null) || (arten.length === 0))
+		if ((arten === null) || (arten.length === 0)) {
 			return true;
-		if (fachbelegungen === null)
+		}
+		if (fachbelegungen === null) {
 			return false;
-		for (const fachbelegung of fachbelegungen)
+		}
+		for (const fachbelegung of fachbelegungen) {
 			for (const art of arten) {
 				const abiturFach: GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
-				if (abiturFach as unknown === art as unknown)
+				if (abiturFach as unknown === art as unknown) {
 					return true;
+				}
 			}
+		}
 		return false;
 	}
 
@@ -1452,8 +1579,9 @@ export class AbiturdatenManager extends JavaObject {
 	public hatAbiFach(art: GostAbiturFach): boolean {
 		for (const fachbelegung of this.abidaten.fachbelegungen) {
 			const abiturFach: GostAbiturFach | null = GostAbiturFach.fromID(fachbelegung.abiturFach);
-			if (abiturFach as unknown === art as unknown)
+			if (abiturFach as unknown === art as unknown) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -1473,16 +1601,20 @@ export class AbiturdatenManager extends JavaObject {
 		const fachbelegungen: List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fb of fachbelegungen) {
 			const fach: GostFach | null = this.getFach(fb);
-			if ((fach === null) || (!fach.istPruefungsordnungsRelevant))
+			if ((fach === null) || (!fach.istPruefungsordnungsRelevant)) {
 				continue;
+			}
 			const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = this.getBelegungHalbjahr(fb, halbjahr, GostSchriftlichkeit.BELIEBIG);
-			if ((belegungHalbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)))
+			if ((belegungHalbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 				continue;
+			}
 			let kuerzel: string | null = GostFachUtils.getFremdsprache(fach);
-			if (kuerzel === null)
+			if (kuerzel === null) {
 				kuerzel = (fach.kuerzel === null) ? "" : fach.kuerzel;
-			if (!set.add(kuerzel) && (!JavaObject.equalsTranspiler("VX", (kuerzel))))
+			}
+			if (!set.add(kuerzel) && (!JavaObject.equalsTranspiler("VX", (kuerzel)))) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -1497,11 +1629,14 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls eine doppelte Belegung vorliegt, sonst false
 	 */
 	public hatDoppelteFachbelegung(...halbjahre: Array<GostHalbjahr>): boolean {
-		if (halbjahre.length === 0)
+		if (halbjahre.length === 0) {
 			return false;
-		for (const halbjahr of halbjahre)
-			if (this.hatDoppelteFachbelegungInHalbjahr(halbjahr))
+		}
+		for (const halbjahr of halbjahre) {
+			if (this.hatDoppelteFachbelegungInHalbjahr(halbjahr)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -1533,13 +1668,15 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Fachbelegung oder null, falls keine vorhanden ist
 	 */
 	public getFachbelegungByKuerzel(kuerzel: string | null): AbiturFachbelegung | null {
-		if ((kuerzel === null) || (JavaObject.equalsTranspiler("", (kuerzel))))
+		if ((kuerzel === null) || (JavaObject.equalsTranspiler("", (kuerzel)))) {
 			return null;
+		}
 		const fachbelegungen: List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fb of fachbelegungen) {
 			const fach: GostFach | null = this.getFach(fb);
-			if ((fach !== null) && (JavaObject.equalsTranspiler(kuerzel, (fach.kuerzel))))
+			if ((fach !== null) && (JavaObject.equalsTranspiler(kuerzel, (fach.kuerzel)))) {
 				return fb;
+			}
 		}
 		return null;
 	}
@@ -1553,13 +1690,15 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return eine Liste der Fachbelegungen aus den Fachbereichen
 	 */
 	public getFachbelegungen(...fachbereiche: Array<GostFachbereich>): List<AbiturFachbelegung> {
-		if ((fachbereiche === null) || (fachbereiche.length === 0))
+		if ((fachbereiche === null) || (fachbereiche.length === 0)) {
 			return this.abidaten.fachbelegungen;
+		}
 		const result: ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		for (const fachbereich of fachbereiche) {
 			const fachbelegungen: List<AbiturFachbelegung> | null = this.mapFachbereiche.get(fachbereich);
-			if (fachbelegungen === null)
+			if (fachbelegungen === null) {
 				continue;
+			}
 			result.addAll(fachbelegungen);
 		}
 		return result;
@@ -1575,13 +1714,15 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return eine Liste der Fachbelegungen aus den Fachbereichen
 	 */
 	public getRelevanteFachbelegungen(...fachbereiche: Array<GostFachbereich>): List<AbiturFachbelegung> {
-		if ((fachbereiche === null) || (fachbereiche.length === 0))
+		if ((fachbereiche === null) || (fachbereiche.length === 0)) {
 			return this.abidaten.fachbelegungen;
+		}
 		const result: ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		for (const fachbereich of fachbereiche) {
 			const fachbelegungen: List<AbiturFachbelegung> | null = this.mapFachbereicheRelevant.get(fachbereich);
-			if (fachbelegungen === null)
+			if (fachbelegungen === null) {
 				continue;
+			}
 			result.addAll(fachbelegungen);
 		}
 		return result;
@@ -1596,11 +1737,13 @@ export class AbiturdatenManager extends JavaObject {
 		const result: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		const fachbelegungen: List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fb of fachbelegungen) {
-			if (this.zaehleBelegung(fb) <= 0)
+			if (this.zaehleBelegung(fb) <= 0) {
 				continue;
+			}
 			const fach: GostFach | null = this.getFach(fb);
-			if ((fach !== null) && (!GostFachbereich.FREMDSPRACHE.hat(fach)) && (!GostFachbereich.DEUTSCH.hat(fach)) && (fach.biliSprache !== null) && (!JavaObject.equalsTranspiler("D", (fach.biliSprache))))
+			if ((fach !== null) && (!GostFachbereich.FREMDSPRACHE.hat(fach)) && (!GostFachbereich.DEUTSCH.hat(fach)) && (fach.biliSprache !== null) && (!JavaObject.equalsTranspiler("D", (fach.biliSprache)))) {
 				result.add(fb);
+			}
 		}
 		return result;
 	}
@@ -1613,13 +1756,15 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die gefilterten Fachbelegungen
 	 */
 	public filterFremdspracheNeuEinsetzend(fachbelegungen: List<AbiturFachbelegung> | null): List<AbiturFachbelegung> {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return Collections.emptyList();
+		}
 		const result: ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		for (const fb of fachbelegungen) {
 			const fach: GostFach | null = this.getFach(fb);
-			if ((fach !== null) && fach.istFremdsprache && fach.istFremdSpracheNeuEinsetzend)
+			if ((fach !== null) && fach.istFremdsprache && fach.istFremdSpracheNeuEinsetzend) {
 				result.add(fb);
+			}
 		}
 		return result;
 	}
@@ -1632,13 +1777,15 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die gefilterten Fachbelegungen
 	 */
 	public filterFremdspracheFortgefuehrt(fachbelegungen: List<AbiturFachbelegung> | null): List<AbiturFachbelegung> {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return Collections.emptyList();
+		}
 		const result: ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		for (const fb of fachbelegungen) {
 			const fach: GostFach | null = this.getFach(fb);
-			if ((fach !== null) && fach.istFremdsprache && !fach.istFremdSpracheNeuEinsetzend)
+			if ((fach !== null) && fach.istFremdsprache && !fach.istFremdSpracheNeuEinsetzend) {
 				result.add(fb);
+			}
 		}
 		return result;
 	}
@@ -1652,12 +1799,14 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public filterDurchgehendBelegbar(fachbelegungen: List<AbiturFachbelegung> | null): List<AbiturFachbelegung> {
 		const result: ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return result;
+		}
 		for (const fb of fachbelegungen) {
 			const fach: GostFach | null = this.getFach(fb);
-			if (GostFachUtils.istDurchgehendBelegbarBisQ22(fach))
+			if (GostFachUtils.istDurchgehendBelegbarBisQ22(fach)) {
 				result.add(fb);
+			}
 		}
 		return result;
 	}
@@ -1672,12 +1821,14 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die gefilterten Fachbelegungen
 	 */
 	public filterBelegungen(fachbelegungen: List<AbiturFachbelegung> | null, ...halbjahre: Array<GostHalbjahr>): List<AbiturFachbelegung> {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return Collections.emptyList();
+		}
 		const result: ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		for (const fb of fachbelegungen) {
-			if (this.pruefeBelegung(fb, ...halbjahre))
+			if (this.pruefeBelegung(fb, ...halbjahre)) {
 				result.add(fb);
+			}
 		}
 		return result;
 	}
@@ -1693,8 +1844,9 @@ export class AbiturdatenManager extends JavaObject {
 		const faecher: HashSet<Fach> = new HashSet<Fach>();
 		for (const fb of fachbelegungen) {
 			const fach: GostFach | null = this.faecherManager.get(fb.fachID);
-			if (fach === null)
+			if (fach === null) {
 				continue;
+			}
 			faecher.add(Fach.getBySchluesselOrDefault(fach.kuerzel));
 		}
 		return faecher;
@@ -1711,8 +1863,9 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Anzahl der Fachbelegungen
 	 */
 	public zaehleBelegungenDurchgaengig(fachbelegungen: List<AbiturFachbelegung> | null): number {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return 0;
+		}
 		const faecher: JavaSet<Fach> = this.getMengeStatistikFaecher(fachbelegungen);
 		let count: number = 0;
 		for (const zulFach of faecher) {
@@ -1721,8 +1874,9 @@ export class AbiturdatenManager extends JavaObject {
 				let belegung_vorhanden: boolean = false;
 				for (const fb of fachbelegungen) {
 					const fbFach: GostFach | null = this.faecherManager.get(fb.fachID);
-					if (fbFach === null)
+					if (fbFach === null) {
 						continue;
+					}
 					const fbZulFach: Fach = Fach.getBySchluesselOrDefault(fbFach.kuerzel);
 					const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = fb.belegungen[halbjahr.id];
 					if ((zulFach as unknown === fbZulFach as unknown) && (belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
@@ -1735,25 +1889,29 @@ export class AbiturdatenManager extends JavaObject {
 					break;
 				}
 			}
-			if (vorhanden)
+			if (vorhanden) {
 				count++;
+			}
 		}
 		return count;
 	}
 
 	private istBelegungDurchgaengigSchriftlichInQPhase(zulFach: Fach, halbjahr: GostHalbjahr, fb: AbiturFachbelegung): boolean {
 		const fbFach: GostFach | null = this.faecherManager.get(fb.fachID);
-		if (fbFach === null)
+		if (fbFach === null) {
 			return false;
+		}
 		const fbZulFach: Fach = Fach.getBySchluesselOrDefault(fbFach.kuerzel);
 		if (zulFach as unknown === fbZulFach as unknown) {
 			const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = fb.belegungen[halbjahr.id];
 			if ((belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 				let istSchriftlichkeitOK: boolean = true;
-				if (((halbjahr as unknown === GostHalbjahr.Q11 as unknown) || (halbjahr as unknown === GostHalbjahr.Q12 as unknown) || (halbjahr as unknown === GostHalbjahr.Q21 as unknown)) && (!belegungHalbjahr.schriftlich))
+				if (((halbjahr as unknown === GostHalbjahr.Q11 as unknown) || (halbjahr as unknown === GostHalbjahr.Q12 as unknown) || (halbjahr as unknown === GostHalbjahr.Q21 as unknown)) && (!belegungHalbjahr.schriftlich)) {
 					istSchriftlichkeitOK = false;
-				if (istSchriftlichkeitOK)
+				}
+				if (istSchriftlichkeitOK) {
 					return true;
+				}
 			}
 		}
 		return false;
@@ -1770,8 +1928,9 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Anzahl der Fachbelegungen
 	 */
 	public zaehleBelegungenDurchgaengigSchriftlichInQPhase(fachbelegungen: List<AbiturFachbelegung> | null): number {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return 0;
+		}
 		const faecher: JavaSet<Fach> = this.getMengeStatistikFaecher(fachbelegungen);
 		let count: number = 0;
 		for (const zulFach of faecher) {
@@ -1789,8 +1948,9 @@ export class AbiturdatenManager extends JavaObject {
 					break;
 				}
 			}
-			if (vorhanden)
+			if (vorhanden) {
 				count++;
+			}
 		}
 		return count;
 	}
@@ -1806,12 +1966,14 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die gefilterten Fachbelegungen
 	 */
 	public filterBelegungenMitSchriftlichkeit(fachbelegungen: List<AbiturFachbelegung> | null, schriftlichkeit: GostSchriftlichkeit, ...halbjahre: Array<GostHalbjahr>): List<AbiturFachbelegung> {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return Collections.emptyList();
+		}
 		const result: ArrayList<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 		for (const fb of fachbelegungen) {
-			if (this.pruefeBelegungMitSchriftlichkeit(fb, schriftlichkeit, ...halbjahre))
+			if (this.pruefeBelegungMitSchriftlichkeit(fb, schriftlichkeit, ...halbjahre)) {
 				result.add(fb);
+			}
 		}
 		return result;
 	}
@@ -1825,8 +1987,9 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public getFachbelegung(fachbereich: GostFachbereich): AbiturFachbelegung | null {
 		const faecher: ArrayList<AbiturFachbelegung> | null = this.mapFachbereiche.get(fachbereich);
-		if ((faecher === null) || (faecher.isEmpty()))
+		if ((faecher === null) || (faecher.isEmpty())) {
 			return null;
+		}
 		return faecher.get(0);
 	}
 
@@ -1839,8 +2002,9 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public getRelevanteFachbelegung(fachbereich: GostFachbereich): AbiturFachbelegung | null {
 		const faecher: ArrayList<AbiturFachbelegung> | null = this.mapFachbereicheRelevant.get(fachbereich);
-		if ((faecher === null) || (faecher.isEmpty()))
+		if ((faecher === null) || (faecher.isEmpty())) {
 			return null;
+		}
 		return faecher.get(0);
 	}
 
@@ -1853,13 +2017,15 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public getFachbelegungByFachkuerzel(kuerzel: string | null): List<AbiturFachbelegung> {
 		const fachbelegungen: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
-		if (kuerzel === null)
+		if (kuerzel === null) {
 			return fachbelegungen;
+		}
 		const tmpFachbelegungen: List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fachbelegung of tmpFachbelegungen) {
 			const fach: GostFach | null = this.faecherManager.get(fachbelegung.fachID);
-			if ((fach === null) || (!JavaObject.equalsTranspiler(kuerzel, (fach.kuerzel))))
+			if ((fach === null) || (!JavaObject.equalsTranspiler(kuerzel, (fach.kuerzel)))) {
 				continue;
+			}
 			fachbelegungen.add(fachbelegung);
 		}
 		return fachbelegungen;
@@ -1888,15 +2054,18 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Fachbelegung für die Sprache
 	 */
 	public getSprachbelegung(sprache: string | null): AbiturFachbelegung | null {
-		if (sprache === null)
+		if (sprache === null) {
 			return null;
+		}
 		const fachbelegungen: List<AbiturFachbelegung> = this.abidaten.fachbelegungen;
 		for (const fb of fachbelegungen) {
 			const fach: GostFach | null = this.getFach(fb);
-			if ((fach === null) || (!GostFachUtils.istFremdsprachenfach(fach, sprache)))
+			if ((fach === null) || (!GostFachUtils.istFremdsprachenfach(fach, sprache))) {
 				continue;
-			if (JavaObject.equalsTranspiler(sprache, (GostFachUtils.getFremdsprache(fach))))
+			}
+			if (JavaObject.equalsTranspiler(sprache, (GostFachUtils.getFremdsprache(fach)))) {
 				return fb;
+			}
 		}
 		return null;
 	}
@@ -1911,21 +2080,27 @@ export class AbiturdatenManager extends JavaObject {
 	 *         ausgewählt werden kann.
 	 */
 	public getMoeglicheKursartAlsAbiturfach(id: number): GostKursart | null {
-		if (AbiturdatenManager.nutzeExperimentellenCode(this.servermode, this.abidaten.abiturjahr))
+		if (AbiturdatenManager.nutzeExperimentellenCode(this.servermode, this.abidaten.abiturjahr)) {
 			return this._getAbi30MoeglicheKursartAlsAbiturfach(id);
+		}
 		const fach: GostFach | null = this.faecherManager.get(id);
-		if ((fach === null) || (!fach.istPruefungsordnungsRelevant))
+		if ((fach === null) || (!fach.istPruefungsordnungsRelevant)) {
 			return null;
+		}
 		const belegung: AbiturFachbelegung | null = this.getFachbelegungByID(id);
-		if ((belegung === null) || (belegung.letzteKursart === null))
+		if ((belegung === null) || (belegung.letzteKursart === null)) {
 			return null;
+		}
 		const kursart: GostKursart | null = GostKursart.fromKuerzel(belegung.letzteKursart);
-		if ((kursart === null) || ((kursart as unknown === GostKursart.LK as unknown) && (!fach.istMoeglichAbiLK)) || ((kursart as unknown === GostKursart.GK as unknown) && (!fach.istMoeglichAbiGK)) || ((kursart as unknown !== GostKursart.GK as unknown) && (kursart as unknown !== GostKursart.LK as unknown)))
+		if ((kursart === null) || ((kursart as unknown === GostKursart.LK as unknown) && (!fach.istMoeglichAbiLK)) || ((kursart as unknown === GostKursart.GK as unknown) && (!fach.istMoeglichAbiGK)) || ((kursart as unknown !== GostKursart.GK as unknown) && (kursart as unknown !== GostKursart.LK as unknown))) {
 			return null;
-		if (kursart as unknown === GostKursart.LK as unknown)
+		}
+		if (kursart as unknown === GostKursart.LK as unknown) {
 			return this.pruefeBelegungMitKursart(belegung, kursart, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22) ? kursart : null;
-		if (belegung.belegungen[GostHalbjahr.Q22.id] === null)
+		}
+		if (belegung.belegungen[GostHalbjahr.Q22.id] === null) {
 			return null;
+		}
 		const fachbelegungen: List<AbiturFachbelegung> = GostFachbereich.RELIGION.hat(fach) ? this.getFachbelegungen(GostFachbereich.RELIGION) : this.getFachbelegungByFachkuerzel(fach.kuerzel);
 		return (this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11) && this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12) && this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)) ? kursart : null;
 	}
@@ -1943,35 +2118,45 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	private _getAbi30MoeglicheKursartAlsAbiturfach(id: number): GostKursart | null {
 		const fach: GostFach | null = this.faecherManager.get(id);
-		if ((fach === null) || (!fach.istPruefungsordnungsRelevant))
+		if ((fach === null) || (!fach.istPruefungsordnungsRelevant)) {
 			return null;
+		}
 		const belegung: AbiturFachbelegung | null = this.getFachbelegungByID(id);
-		if ((belegung === null) || (belegung.letzteKursart === null))
+		if ((belegung === null) || (belegung.letzteKursart === null)) {
 			return null;
+		}
 		const kursart: GostKursart | null = GostKursart.fromKuerzel(belegung.letzteKursart);
-		if ((kursart === null) || (kursart as unknown !== GostKursart.GK as unknown) && (kursart as unknown !== GostKursart.LK as unknown) && (kursart as unknown !== GostKursart.PJK as unknown))
+		if ((kursart === null) || (kursart as unknown !== GostKursart.GK as unknown) && (kursart as unknown !== GostKursart.LK as unknown) && (kursart as unknown !== GostKursart.PJK as unknown)) {
 			return null;
+		}
 		if (kursart as unknown === GostKursart.LK as unknown) {
-			if (!fach.istMoeglichAbiLK)
+			if (!fach.istMoeglichAbiLK) {
 				return null;
+			}
 			return this.pruefeBelegungMitKursart(belegung, kursart, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22) ? kursart : null;
 		}
 		if (kursart as unknown === GostKursart.PJK as unknown) {
-			if (!fach.istMoeglichAbiGK)
+			if (!fach.istMoeglichAbiGK) {
 				return null;
-			if (!this.pruefeBelegungMitKursart(belegung, kursart, GostHalbjahr.Q21, GostHalbjahr.Q22))
+			}
+			if (!this.pruefeBelegungMitKursart(belegung, kursart, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 				return null;
+			}
 			const referenzfach: AbiturFachbelegung | null = this.getFachbelegungByKuerzel(fach.projektKursLeitfach1Kuerzel);
-			if (!this.pruefeBelegungMitKursart(referenzfach, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12))
+			if (!this.pruefeBelegungMitKursart(referenzfach, GostKursart.GK, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
 				return null;
-			if (!this.pruefeBelegungMitSchriftlichkeit(referenzfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12))
+			}
+			if (!this.pruefeBelegungMitSchriftlichkeit(referenzfach, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
 				return null;
+			}
 			return kursart;
 		}
-		if (!fach.istMoeglichAbiGK)
+		if (!fach.istMoeglichAbiGK) {
 			return null;
-		if (belegung.belegungen[GostHalbjahr.Q22.id] === null)
+		}
+		if (belegung.belegungen[GostHalbjahr.Q22.id] === null) {
 			return null;
+		}
 		const fachbelegungen: List<AbiturFachbelegung> = GostFachbereich.RELIGION.hat(fach) ? this.getFachbelegungen(GostFachbereich.RELIGION) : this.getFachbelegungByFachkuerzel(fach.kuerzel);
 		return (this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11) && this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q12) && this.pruefeBelegungExistiertMitSchriftlichkeit(fachbelegungen, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q21)) ? kursart : null;
 	}
@@ -1990,11 +2175,13 @@ export class AbiturdatenManager extends JavaObject {
 		const halbjahre: ArrayList<GostHalbjahr> = new ArrayList<GostHalbjahr>();
 		if (fachbelegung !== null) {
 			for (const belegungHalbjahr of fachbelegung.belegungen) {
-				if ((belegungHalbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)))
+				if ((belegungHalbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 					continue;
+				}
 				const halbjahr: GostHalbjahr | null = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
-				if (halbjahr === null)
+				if (halbjahr === null) {
 					continue;
+				}
 				if ((kursarten === null) || (kursarten.length === 0)) {
 					halbjahre.add(halbjahr);
 					continue;
@@ -2030,14 +2217,17 @@ export class AbiturdatenManager extends JavaObject {
 	 *         Fachbelegungen existiert, ansonsten false
 	 */
 	public hatFortgefuehrteFremdspracheInSprachendaten(fremdsprachen: List<AbiturFachbelegung> | null): boolean {
-		if (fremdsprachen === null)
+		if (fremdsprachen === null) {
 			return false;
-		if (this.abidaten.sprachendaten === null)
+		}
+		if (this.abidaten.sprachendaten === null) {
 			return false;
+		}
 		for (const fs of fremdsprachen) {
 			const fach: GostFach | null = this.getFach(fs);
-			if ((fach === null) || (!fach.istFremdsprache))
+			if ((fach === null) || (!fach.istFremdsprache)) {
 				continue;
+			}
 			if (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(this.abidaten.sprachendaten, GostFachUtils.getFremdsprache(fach))) {
 				return true;
 			}
@@ -2056,14 +2246,17 @@ export class AbiturdatenManager extends JavaObject {
 	 *         Fachbelegungen existiert, ansonsten false
 	 */
 	public hatNeuEinsetzendeFremdspracheInSprachendaten(fremdsprachen: List<AbiturFachbelegung> | null): boolean {
-		if (fremdsprachen === null)
+		if (fremdsprachen === null) {
 			return false;
-		if (this.abidaten.sprachendaten === null)
+		}
+		if (this.abidaten.sprachendaten === null) {
 			return false;
+		}
 		for (const fs of fremdsprachen) {
 			const fach: GostFach | null = this.getFach(fs);
-			if ((fach === null) || (!fach.istFremdsprache))
+			if ((fach === null) || (!fach.istFremdsprache)) {
 				continue;
+			}
 			if (SprachendatenUtils.istNeueinsetzbareSpracheInGOSt(this.abidaten.sprachendaten, GostFachUtils.getFremdsprache(fach))) {
 				return true;
 			}
@@ -2083,33 +2276,43 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public istBelegtSeitEF(fachbelegung: AbiturFachbelegung): boolean {
 		const fach: GostFach | null = this.getFach(fachbelegung);
-		if (fach === null)
+		if (fach === null) {
 			return false;
-		if (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach))
+		}
+		if (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
 			return true;
-		if (GostFachbereich.RELIGION.hat(fach))
+		}
+		if (GostFachbereich.RELIGION.hat(fach)) {
 			return true;
-		if (JavaObject.equalsTranspiler("PL", (fach.kuerzel)))
+		}
+		if (JavaObject.equalsTranspiler("PL", (fach.kuerzel))) {
 			return true;
+		}
 		for (const belegungHalbjahr of fachbelegung.belegungen) {
-			if ((belegungHalbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr)))
+			if ((belegungHalbjahr === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 				continue;
+			}
 			const halbjahr: GostHalbjahr | null = GostHalbjahr.fromKuerzel(belegungHalbjahr.halbjahrKuerzel);
 			const kursart: GostKursart | null = GostKursart.fromKuerzel(belegungHalbjahr.kursartKuerzel);
-			if ((halbjahr === null) || (kursart === null))
+			if ((halbjahr === null) || (kursart === null)) {
 				continue;
-			if ((kursart as unknown === GostKursart.ZK as unknown) || (kursart as unknown === GostKursart.PJK as unknown) || (kursart as unknown === GostKursart.VTF as unknown))
+			}
+			if ((kursart as unknown === GostKursart.ZK as unknown) || (kursart as unknown === GostKursart.PJK as unknown) || (kursart as unknown === GostKursart.VTF as unknown)) {
 				continue;
+			}
 			const prevHalbjahr: GostHalbjahr | null = halbjahr.previous();
-			if (prevHalbjahr === null)
+			if (prevHalbjahr === null) {
 				continue;
+			}
 			const belegungHalbjahrVorher: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[prevHalbjahr.id];
 			if ((belegungHalbjahrVorher === null) || (AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahrVorher))) {
 				const alleBelegungen: List<AbiturFachbelegung> | null = this.getFachbelegungByFachkuerzel(fach.kuerzel);
-				if ((alleBelegungen === null) || (alleBelegungen.size() <= 1))
+				if ((alleBelegungen === null) || (alleBelegungen.size() <= 1)) {
 					return false;
-				if (!this.pruefeBelegungExistiert(alleBelegungen, prevHalbjahr))
+				}
+				if (!this.pruefeBelegungExistiert(alleBelegungen, prevHalbjahr)) {
 					return false;
+				}
 			}
 		}
 		return true;
@@ -2122,8 +2325,9 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, wenn einer angeboten wird und ansonsten false
 	 */
 	public istErlaubtZusatzkursGE(): boolean {
-		if (this._jahrgangsdaten === null)
+		if (this._jahrgangsdaten === null) {
 			return true;
+		}
 		return this._jahrgangsdaten.hatZusatzkursGE;
 	}
 
@@ -2134,11 +2338,13 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return das erste Halbjahr für Zusatzkurse in Geschichte
 	 */
 	public getBeginnZusatzkursGE(): GostHalbjahr {
-		if (this._jahrgangsdaten === null)
+		if (this._jahrgangsdaten === null) {
 			return GostHalbjahr.Q21;
+		}
 		const hj: GostHalbjahr | null = GostHalbjahr.fromKuerzel(this._jahrgangsdaten.beginnZusatzkursGE);
-		if (hj === null)
+		if (hj === null) {
 			return GostHalbjahr.Q21;
+		}
 		return hj;
 	}
 
@@ -2149,8 +2355,9 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, wenn einer angeboten wird und ansonsten false
 	 */
 	public istErlaubtZusatzkursSW(): boolean {
-		if (this._jahrgangsdaten === null)
+		if (this._jahrgangsdaten === null) {
 			return true;
+		}
 		return this._jahrgangsdaten.hatZusatzkursSW;
 	}
 
@@ -2161,11 +2368,13 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return das erste Halbjahr für Zusatzkurse in Sozialwissenschaften
 	 */
 	public getBeginnZusatzkursSW(): GostHalbjahr {
-		if (this._jahrgangsdaten === null)
+		if (this._jahrgangsdaten === null) {
 			return GostHalbjahr.Q21;
+		}
 		const hj: GostHalbjahr | null = GostHalbjahr.fromKuerzel(this._jahrgangsdaten.beginnZusatzkursSW);
-		if (hj === null)
+		if (hj === null) {
 			return GostHalbjahr.Q21;
+		}
 		return hj;
 	}
 
@@ -2176,9 +2385,11 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public getFachkombinationenEF1(): List<GostJahrgangFachkombination> {
 		const kombis: List<GostJahrgangFachkombination> = new ArrayList<GostJahrgangFachkombination>();
-		for (const kombi of this.faecherManager.getFachkombinationen())
-			if (kombi.gueltigInHalbjahr[GostHalbjahr.EF1.id])
+		for (const kombi of this.faecherManager.getFachkombinationen()) {
+			if (kombi.gueltigInHalbjahr[GostHalbjahr.EF1.id]) {
 				kombis.add(kombi);
+			}
+		}
 		return kombis;
 	}
 
@@ -2214,8 +2425,9 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return das Belegprüfungs-Objekt für die KurszahlenUndWochenstunden
 	 */
 	private getKurszahlenUndWochenstunden(): KurszahlenUndWochenstunden {
-		if (this.belegpruefungKurszahlenUndWochenstunden === null)
+		if (this.belegpruefungKurszahlenUndWochenstunden === null) {
 			throw new NullPointerException("Die Belegprüfung zu Kurszahlen und Wochenstunden wurde noch nicht erstellt und durchgeführt.")
+		}
 		return this.belegpruefungKurszahlenUndWochenstunden;
 	}
 
@@ -2227,8 +2439,9 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return das Belegprüfungs-Objekt für die KurszahlenUndWochenstunden
 	 */
 	private getAbi30KurszahlenUndWochenstunden(): Abi30BelegpruefungKurszahlenUndWochenstunden {
-		if (this.abi30BelegpruefungKurszahlenUndWochenstunden === null)
+		if (this.abi30BelegpruefungKurszahlenUndWochenstunden === null) {
 			throw new NullPointerException("Die Belegprüfung zu Kurszahlen und Wochenstunden wurde noch nicht erstellt und durchgeführt.")
+		}
 		return this.abi30BelegpruefungKurszahlenUndWochenstunden;
 	}
 
@@ -2242,14 +2455,16 @@ export class AbiturdatenManager extends JavaObject {
 		if (AbiturdatenManager.nutzeExperimentellenCode(this.servermode, this.abidaten.abiturjahr)) {
 			const kuw: Abi30BelegpruefungKurszahlenUndWochenstunden = this.getAbi30KurszahlenUndWochenstunden();
 			const stunden: Array<number> = [0, 0, 0, 0, 0, 0];
-			for (const hj of GostHalbjahr.values())
+			for (const hj of GostHalbjahr.values()) {
 				stunden[hj.id] = kuw.getWochenstunden(hj);
+			}
 			return stunden;
 		}
 		const kuw: KurszahlenUndWochenstunden = this.getKurszahlenUndWochenstunden();
 		const stunden: Array<number> = [0, 0, 0, 0, 0, 0];
-		for (const hj of GostHalbjahr.values())
+		for (const hj of GostHalbjahr.values()) {
 			stunden[hj.id] = kuw.getWochenstunden(hj);
+		}
 		return stunden;
 	}
 
@@ -2291,14 +2506,16 @@ export class AbiturdatenManager extends JavaObject {
 		if (AbiturdatenManager.nutzeExperimentellenCode(this.servermode, this.abidaten.abiturjahr)) {
 			const kuw: Abi30BelegpruefungKurszahlenUndWochenstunden = this.getAbi30KurszahlenUndWochenstunden();
 			const anzahl: Array<number> = [0, 0, 0, 0, 0, 0];
-			for (const hj of GostHalbjahr.values())
+			for (const hj of GostHalbjahr.values()) {
 				anzahl[hj.id] = kuw.getKurszahlenAnrechenbar(hj);
+			}
 			return anzahl;
 		}
 		const kuw: KurszahlenUndWochenstunden = this.getKurszahlenUndWochenstunden();
 		const anzahl: Array<number> = [0, 0, 0, 0, 0, 0];
-		for (const hj of GostHalbjahr.values())
+		for (const hj of GostHalbjahr.values()) {
 			anzahl[hj.id] = kuw.getKurszahlenAnrechenbar(hj);
+		}
 		return anzahl;
 	}
 
@@ -2325,8 +2542,9 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Notenpunkte oder null, falls das Fach in dem Halbjahr nicht gewählt wurde
 	 */
 	public getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr: AbiturFachbelegungHalbjahr | null): number | null {
-		if (belegungHalbjahr === null)
+		if (belegungHalbjahr === null) {
 			return null;
+		}
 		const nke: NoteKatalogEintrag | null = Note.fromKuerzel(belegungHalbjahr.notenkuerzel).daten(this.getSchuljahr());
 		return (nke === null) ? null : nke.notenpunkte;
 	}
@@ -2353,12 +2571,14 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls alle Kurse der Fachbelegung in der Qualifikationsphase als angerechnet markiert sind, und ansonsten false
 	 */
 	public hatMarkierungQualifikationsphase(belegung: AbiturFachbelegung | null): boolean {
-		if (belegung === null)
+		if (belegung === null) {
 			return false;
+		}
 		for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 			const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
-			if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
+			if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet)) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -2378,15 +2598,18 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return eine Fachbelegung mit den Markierung in den Halbjahren der Qualifikationsphase und ansonsten null
 	 */
 	public pruefeMarkierungExistiertDurchgaengig(fachbelegungen: List<AbiturFachbelegung> | null): AbiturFachbelegung | null {
-		if (fachbelegungen === null)
+		if (fachbelegungen === null) {
 			return null;
+		}
 		for (const fachbelegung of fachbelegungen) {
 			const fach: GostFach | null = this.faecherManager.get(fachbelegung.fachID);
-			if (fach === null)
+			if (fach === null) {
 				continue;
+			}
 			const alleBelegungen: List<AbiturFachbelegung> | null = this.getFachbelegungByFachkuerzel(fach.kuerzel);
-			if ((alleBelegungen === null) || (alleBelegungen.isEmpty()))
+			if ((alleBelegungen === null) || (alleBelegungen.isEmpty())) {
 				continue;
+			}
 			let hatBelegung: boolean = true;
 			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 				let hatHalbjahresBelegung: boolean = false;
@@ -2402,8 +2625,9 @@ export class AbiturdatenManager extends JavaObject {
 					break;
 				}
 			}
-			if (hatBelegung)
+			if (hatBelegung) {
 				return fachbelegung;
+			}
 		}
 		return null;
 	}
@@ -2417,13 +2641,15 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Anzahl der Markierungen bei der Fachbelegung
 	 */
 	public zaehleMarkierungenQualifikationsphase(belegung: AbiturFachbelegung | null): number {
-		if (belegung === null)
+		if (belegung === null) {
 			return 0;
+		}
 		let count: number = 0;
 		for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 			const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
-			if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
+			if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet)) {
 				continue;
+			}
 			count++;
 		}
 		return count;
@@ -2437,14 +2663,16 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Anzahl der Markierungen bei den Fachbelegungen
 	 */
 	public zaehleAlleMarkierungenQualifikationsphase(belegungen: List<AbiturFachbelegung>): number {
-		if (belegungen.isEmpty())
+		if (belegungen.isEmpty()) {
 			return 0;
+		}
 		let count: number = 0;
 		for (const belegung of belegungen) {
 			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 				const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
-				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
+				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet)) {
 					continue;
+				}
 				count++;
 			}
 		}
@@ -2459,17 +2687,20 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Anzahl der markierten Fachbelegungen ohne Wertung oder mit 0 Punkten bei den Fachbelegungen
 	 */
 	public zaehleMarkierungenOhneWertungOderMitNullPunkten(belegungen: List<AbiturFachbelegung>): number {
-		if (belegungen.isEmpty())
+		if (belegungen.isEmpty()) {
 			return 0;
+		}
 		let count: number = 0;
 		for (const belegung of belegungen) {
 			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 				const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
-				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
+				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet)) {
 					continue;
+				}
 				const np: number | null = this.getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr);
-				if ((np === null) || (np === 0))
+				if ((np === null) || (np === 0)) {
 					count++;
+				}
 			}
 		}
 		return count;
@@ -2483,17 +2714,20 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Anzahl der Markierungen mit Defiziten bei den Fachbelegungen
 	 */
 	public zaehleMarkierungenMitDefiziten(belegungen: List<AbiturFachbelegung>): number {
-		if (belegungen.isEmpty())
+		if (belegungen.isEmpty()) {
 			return 0;
+		}
 		let count: number = 0;
 		for (const belegung of belegungen) {
 			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 				const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
-				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
+				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet)) {
 					continue;
+				}
 				const np: number | null = this.getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr);
-				if ((np !== null) && (np < 5))
+				if ((np !== null) && (np < 5)) {
 					count++;
+				}
 			}
 		}
 		return count;
@@ -2507,17 +2741,20 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Anzahl der nicht markierten Kurse ohne Defiziten bei den Fachbelegungen
 	 */
 	public zaehleOhneMarkierungenUndOhneDefizite(belegungen: List<AbiturFachbelegung>): number {
-		if (belegungen.isEmpty())
+		if (belegungen.isEmpty()) {
 			return 0;
+		}
 		let count: number = 0;
 		for (const belegung of belegungen) {
 			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 				const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
-				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
+				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet)) {
 					continue;
+				}
 				const np: number | null = this.getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr);
-				if ((np !== null) && (np >= 5))
+				if ((np !== null) && (np >= 5)) {
 					count++;
+				}
 			}
 		}
 		return count;
@@ -2534,15 +2771,18 @@ export class AbiturdatenManager extends JavaObject {
 		let count: number = 0;
 		for (const belegung of this.abidaten.fachbelegungen) {
 			const kursart: GostKursart | null = GostKursart.fromKuerzel(belegung.letzteKursart);
-			if (kursart === null)
+			if (kursart === null) {
 				continue;
+			}
 			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 				const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
-				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
+				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet)) {
 					continue;
+				}
 				const np: number | null = this.getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr);
-				if ((np === null) || (np === 0))
+				if ((np === null) || (np === 0)) {
 					continue;
+				}
 				if (kursart as unknown === GostKursart.LK as unknown) {
 					summe += 2.0 * np;
 					count += 2;
@@ -2565,11 +2805,13 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return true, falls alle Kurse der Fachbelegung in der Qualifikationsphase als angerechnet markiert sind, und ansonsten false
 	 */
 	public hatMarkierungHalbjahr(belegung: AbiturFachbelegung | null, halbjahr: GostHalbjahr): boolean {
-		if (belegung === null)
+		if (belegung === null) {
 			return false;
+		}
 		const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
-		if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
+		if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet)) {
 			return false;
+		}
 		return true;
 	}
 
@@ -2596,12 +2838,14 @@ export class AbiturdatenManager extends JavaObject {
 		result[3] = 0;
 		result[4] = 0;
 		result[5] = 0;
-		if (belegungen === null)
+		if (belegungen === null) {
 			return result;
+		}
 		for (const belegung of belegungen) {
 			const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = belegung.belegungen[halbjahr.id];
-			if ((belegungHalbjahr === null) || (!belegungHalbjahr.block1gewertet))
+			if ((belegungHalbjahr === null) || (!belegungHalbjahr.block1gewertet)) {
 				continue;
+			}
 			const istLKBelegung: boolean = JavaObject.equalsTranspiler(GostKursart.LK.kuerzel, (belegungHalbjahr.kursartKuerzel));
 			const np: number | null = this.getNotenpunkteOfFachbelegungHalbjahr(belegungHalbjahr);
 			if ((np !== null) && (np !== 0)) {
@@ -2609,14 +2853,16 @@ export class AbiturdatenManager extends JavaObject {
 					result[0] += np * 2;
 					result[1]++;
 					result[2] += 2;
-					if (np < 5)
+					if (np < 5) {
 						result[3]++;
+					}
 				} else {
 					result[0] += np;
 					result[1]++;
 					result[2]++;
-					if (np < 5)
+					if (np < 5) {
 						result[4]++;
+					}
 				}
 			}
 		}
@@ -2676,13 +2922,15 @@ export class AbiturdatenManager extends JavaObject {
 			fachbelegung.block1PunktSumme = 0;
 			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 				const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[halbjahr.id];
-				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet))
+				if ((belegungHalbjahr === null) || (belegungHalbjahr.block1gewertet === null) || (!belegungHalbjahr.block1gewertet)) {
 					continue;
+				}
 				const istLK: boolean = JavaObject.equalsTranspiler(GostKursart.LK.kuerzel, (belegungHalbjahr.kursartKuerzel));
 				const note: Note | null = Note.fromKuerzel(belegungHalbjahr.notenkuerzel);
 				const nke: NoteKatalogEintrag | null = note.getKatalogEintrag(this.getSchuljahr());
-				if ((nke === null) || (nke.notenpunkte === null))
+				if ((nke === null) || (nke.notenpunkte === null)) {
 					continue;
+				}
 				punktSummeEinfach += nke.notenpunkte;
 				const notenpunkte: number = nke.notenpunkte * (istLK ? 2 : 1);
 				fachbelegung.block1PunktSumme += notenpunkte;
@@ -2690,13 +2938,15 @@ export class AbiturdatenManager extends JavaObject {
 				this.abidaten.block1AnzahlKurse++;
 				if (istLK) {
 					this.abidaten.block1PunktSummeLK += notenpunkte;
-					if (nke.notenpunkte < 5)
+					if (nke.notenpunkte < 5) {
 						this.abidaten.block1DefiziteLK++;
+					}
 				} else {
 					this.abidaten.block1PunktSummeGK += notenpunkte;
 				}
-				if (nke.notenpunkte < 5)
+				if (nke.notenpunkte < 5) {
 					this.abidaten.block1DefiziteGesamt++;
+				}
 			}
 			fachbelegung.block1NotenpunkteDurchschnitt = (summeKurseFach === 0.0) ? null : (punktSummeEinfach / summeKurseFach);
 		}
@@ -2707,8 +2957,9 @@ export class AbiturdatenManager extends JavaObject {
 		this.abidaten.block1NotenpunkteDurchschnitt = Math.round((summeNotenpunkte / anzahlKurse) * 100.0) / 100.0;
 		this.abidaten.block1Zulassung = (this.abidaten.block1PunktSummeNormiert >= 200) && (((this.abidaten.block1AnzahlKurse >= 35) && (this.abidaten.block1AnzahlKurse <= 37) && (this.abidaten.block1DefiziteGesamt <= 7)) || ((this.abidaten.block1AnzahlKurse >= 38) && (this.abidaten.block1DefiziteGesamt <= 8)));
 		this.pruefeMarkierungen();
-		if (!this.markierpruefungsergebnis.erfolgreich)
+		if (!this.markierpruefungsergebnis.erfolgreich) {
 			this.abidaten.block1Zulassung = false;
+		}
 	}
 
 	/**
@@ -2723,14 +2974,17 @@ export class AbiturdatenManager extends JavaObject {
 		}
 		for (const markierung of this.markierungsErgebnis.markierungen) {
 			const belegung: AbiturFachbelegung | null = this.getFachbelegungByID(markierung.idFach);
-			if (belegung === null)
+			if (belegung === null) {
 				return false;
+			}
 			const halbjahr: GostHalbjahr | null = GostHalbjahr.fromID(markierung.idHalbjahr);
-			if (halbjahr === null)
+			if (halbjahr === null) {
 				return false;
+			}
 			const belegungHalbjahr: AbiturFachbelegungHalbjahr | null = belegung.belegungen[markierung.idHalbjahr];
-			if (belegungHalbjahr === null)
+			if (belegungHalbjahr === null) {
 				return false;
+			}
 			belegungHalbjahr.block1gewertet = markierung.markiert;
 		}
 		this.pruefeZulassung();
@@ -2745,8 +2999,9 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Belegungsart
 	 */
 	public static getBelegungsartFromHalbjahresbelegung(belegungHalbjahr: AbiturFachbelegungHalbjahr | null): AbiturBelegungsart {
-		if (belegungHalbjahr === null)
+		if (belegungHalbjahr === null) {
 			return AbiturBelegungsart.NICHT_BELEGT;
+		}
 		return belegungHalbjahr.schriftlich ? AbiturBelegungsart.SCHRIFTLICH : AbiturBelegungsart.MUENDLICH;
 	}
 
@@ -2758,8 +3013,9 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Markierungsinformation
 	 */
 	public static getKursmarkierungFromHalbjahresbelegung(belegungHalbjahr: AbiturFachbelegungHalbjahr | null): AbiturKursMarkierung | null {
-		if (belegungHalbjahr === null)
+		if (belegungHalbjahr === null) {
 			return null;
+		}
 		const istGewertet: boolean = (belegungHalbjahr.block1gewertet !== null) && (belegungHalbjahr.block1gewertet);
 		const istKursAufZeugnis: boolean = istGewertet || ((belegungHalbjahr.block1kursAufZeugnis !== null) && (belegungHalbjahr.block1kursAufZeugnis));
 		return new AbiturKursMarkierung(istGewertet, istKursAufZeugnis);
@@ -2773,16 +3029,20 @@ export class AbiturdatenManager extends JavaObject {
 	 * @return die Notenpunkte als zweistelliger String, "AT" oder null
 	 */
 	public getNotenpunkteStringHalbjahresbelegung(belegungHalbjahr: AbiturFachbelegungHalbjahr | null): string | null {
-		if (belegungHalbjahr === null)
+		if (belegungHalbjahr === null) {
 			return null;
+		}
 		const tmpNote: Note | null = Note.fromKuerzel(belegungHalbjahr.notenkuerzel);
-		if (tmpNote as unknown === Note.ATTEST as unknown)
+		if (tmpNote as unknown === Note.ATTEST as unknown) {
 			return belegungHalbjahr.notenkuerzel;
-		if (!tmpNote.istNote(this.getSchuljahr()))
+		}
+		if (!tmpNote.istNote(this.getSchuljahr())) {
 			return null;
+		}
 		const nke: NoteKatalogEintrag | null = tmpNote.daten(this.getSchuljahr());
-		if ((nke === null) || (nke.notenpunkte === null))
+		if ((nke === null) || (nke.notenpunkte === null)) {
 			return null;
+		}
 		return (nke.notenpunkte < 10) ? ("0" + nke.notenpunkte) : ("" + nke.notenpunkte);
 	}
 
@@ -2807,8 +3067,9 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	private static getNotenpunkteFromKuerzelInternal(kuerzel: string | null, schuljahr: number): number | null {
 		const tmpNote: Note | null = Note.fromKuerzel(kuerzel);
-		if (!tmpNote.istNote(schuljahr))
+		if (!tmpNote.istNote(schuljahr)) {
 			return null;
+		}
 		const nke: NoteKatalogEintrag | null = tmpNote.daten(schuljahr);
 		return (nke === null) ? null : nke.notenpunkte;
 	}
@@ -2826,9 +3087,11 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public static berechnePruefungsergebnis(servermode: ServerMode, abidaten: Abiturdaten, berechnePflichtpruefungenNeu: boolean): boolean {
 		const abiBelegungen: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
-		for (const fachbelegung of abidaten.fachbelegungen)
-			if (fachbelegung.abiturFach !== null)
+		for (const fachbelegung of abidaten.fachbelegungen) {
+			if (fachbelegung.abiturFach !== null) {
 				abiBelegungen.add(fachbelegung);
+			}
+		}
 		const istAbi30ff: boolean = AbiturdatenManager.nutzeExperimentellenCode(servermode, abidaten.abiturjahr);
 		const hatBLL: boolean = !JavaObject.equalsTranspiler("K", (abidaten.besondereLernleistung));
 		const faktor: number = (istAbi30ff || hatBLL) ? 4 : 5;
@@ -2841,19 +3104,22 @@ export class AbiturdatenManager extends JavaObject {
 			if (npPruefung === null) {
 				abibelegung.block2PunkteZwischenstand = null;
 				abibelegung.block2Punkte = null;
-				if (berechnePflichtpruefungenNeu)
+				if (berechnePflichtpruefungenNeu) {
 					abibelegung.block2MuendlichePruefungAbweichung = null;
+				}
 				fehlendeNoten++;
 			} else {
 				abibelegung.block2PunkteZwischenstand = faktor * npPruefung;
 				abibelegung.block2Punkte = abibelegung.block2PunkteZwischenstand;
-				if (berechnePflichtpruefungenNeu)
+				if (berechnePflichtpruefungenNeu) {
 					abibelegung.block2MuendlichePruefungAbweichung = (abidaten.abiturjahr <= 2019) && (abibelegung.block1NotenpunkteDurchschnitt !== null) && (Math.abs(abibelegung.block1NotenpunkteDurchschnitt - npPruefung) >= 4.0);
+				}
 				summe += abibelegung.block2PunkteZwischenstand;
 				if (npPruefung < 5) {
 					defizite++;
-					if ((abibelegung.abiturFach === 1) || (abibelegung.abiturFach === 2))
+					if ((abibelegung.abiturFach === 1) || (abibelegung.abiturFach === 2)) {
 						defiziteLK++;
+					}
 				}
 			}
 		}
@@ -2862,8 +3128,9 @@ export class AbiturdatenManager extends JavaObject {
 			if (npPruefung === null) {
 				fehlendeNoten++;
 			} else {
-				if (npPruefung < 5)
+				if (npPruefung < 5) {
 					defizite++;
+				}
 				summe += faktor * npPruefung;
 			}
 		}
@@ -2883,8 +3150,9 @@ export class AbiturdatenManager extends JavaObject {
 				abibelegung.block2Punkte = null;
 				continue;
 			}
-			if (berechnePflichtpruefungenNeu)
+			if (berechnePflichtpruefungenNeu) {
 				abibelegung.block2MuendlichePruefungBestehen = (hatPflichtPruefungen && (abibelegung.abiturFach !== null) && (abibelegung.abiturFach <= 3));
+			}
 			const hatMdlAbweichung: boolean = (abibelegung.block2MuendlichePruefungAbweichung !== null) && abibelegung.block2MuendlichePruefungAbweichung;
 			const hatMdlBestehen: boolean = (abibelegung.block2MuendlichePruefungBestehen !== null) && abibelegung.block2MuendlichePruefungBestehen;
 			const hatMdlFreiwillig: boolean = (abibelegung.block2MuendlichePruefungFreiwillig !== null) && abibelegung.block2MuendlichePruefungFreiwillig;
@@ -2894,11 +3162,13 @@ export class AbiturdatenManager extends JavaObject {
 					fehlendeNoten++;
 					if (hatMdlBestehen || hatMdlAbweichung) {
 						fehlendeNotenMdlPflicht++;
-						if ((abibelegung.abiturFach === 1) || (abibelegung.abiturFach === 2))
+						if ((abibelegung.abiturFach === 1) || (abibelegung.abiturFach === 2)) {
 							fehlendeNotenMdlPflichtLK++;
+						}
 					}
-					if (hatMdlFreiwillig)
+					if (hatMdlFreiwillig) {
 						fehlendeNotenMdlFreiwillig++;
+					}
 				} else {
 					if (berechnePflichtpruefungenNeu) {
 						abibelegung.block2MuendlichePruefungNotenKuerzel = null;
@@ -2921,13 +3191,15 @@ export class AbiturdatenManager extends JavaObject {
 					summe += (punkteNachher - punkteVorher);
 					if ((punkteVorher < 5 * faktor) && (punkteNachher >= 5 * faktor)) {
 						defizite--;
-						if ((abibelegung.abiturFach === 1) || (abibelegung.abiturFach === 2))
+						if ((abibelegung.abiturFach === 1) || (abibelegung.abiturFach === 2)) {
 							defiziteLK--;
+						}
 					}
 					if ((punkteVorher >= 5 * faktor) && (punkteNachher < 5 * faktor)) {
 						defizite++;
-						if ((abibelegung.abiturFach === 1) || (abibelegung.abiturFach === 2))
+						if ((abibelegung.abiturFach === 1) || (abibelegung.abiturFach === 2)) {
 							defiziteLK++;
+						}
 					}
 				}
 			}
@@ -2942,8 +3214,9 @@ export class AbiturdatenManager extends JavaObject {
 			abidaten.gesamtPunkteVerschlechterung = null;
 		} else {
 			let note: number = Math.floor((5.0 + (2.0 / 3.0) - abidaten.gesamtPunkte / 180.0) * 10.0) / 10.0;
-			if (note < 1.0)
+			if (note < 1.0) {
 				note = 1.0;
+			}
 			if (note <= 4.0) {
 				const strNote: string = "" + note;
 				abidaten.note = (strNote.length <= 3) ? strNote : strNote.substring(0, 3);
@@ -2967,13 +3240,14 @@ export class AbiturdatenManager extends JavaObject {
 		}
 		if (hatNotenPruefung && (fehlendeNotenMdlFreiwillig === 0)) {
 			const hatBestanden: boolean = (defizite <= (2 + (hatBLL ? 1 : 0))) && (defiziteLK <= 1) && (summe >= 100);
-			if (hatBestanden)
+			if (hatBestanden) {
 				abidaten.pruefungBestanden = true;
-			else
-				if ((fehlendeNotenMdlPflicht > 0) && ((fehlendeNotenMdlPflichtLK !== 0) || (defiziteLK < 2)))
+			} else
+				if ((fehlendeNotenMdlPflicht > 0) && ((fehlendeNotenMdlPflichtLK !== 0) || (defiziteLK < 2))) {
 					abidaten.pruefungBestanden = null;
-				else
+				} else {
 					abidaten.pruefungBestanden = false;
+				}
 		} else {
 			abidaten.pruefungBestanden = null;
 		}

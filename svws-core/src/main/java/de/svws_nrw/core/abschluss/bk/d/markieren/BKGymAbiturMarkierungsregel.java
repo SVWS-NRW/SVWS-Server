@@ -60,10 +60,12 @@ public abstract class BKGymAbiturMarkierungsregel {
 	 * @param variante   die zu bearbeitende Variante
 	 */
 	public void exec(final @NotNull BKGymAbiturMarkierungsVariante variante) {
-		if (variante.istGestoppt())
+		if (variante.istGestoppt()) {
 			return;
-		if ((kennungVariante != null) && !kennungVariante.equals(variante.getKennung()))
+		}
+		if ((kennungVariante != null) && !kennungVariante.equals(variante.getKennung())) {
 			return;
+		}
 		variante.addLogEintrag(0, "Regel " + kuerzel + ": " + hinweis + " entsprechend " + bezugAPOBK);
 		markiere(variante);
 	}

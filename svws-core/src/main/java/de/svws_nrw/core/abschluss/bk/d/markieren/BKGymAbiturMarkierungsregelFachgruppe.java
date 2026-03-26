@@ -49,8 +49,9 @@ public class BKGymAbiturMarkierungsregelFachgruppe extends BKGymAbiturMarkierung
 	@Override
 	public void markiere(final @NotNull BKGymAbiturMarkierungsVariante variante) {
 		final BKGymAufgabenfeld gruppe = BKGymAufgabenfeld.getAufgabenfeldFromKuerzel(fachgruppe);
-		if (gruppe == null)
+		if (gruppe == null) {
 			throw new DeveloperNotificationException("Die Prüfbedingung spezifiziert eine nicht vorhandene Fachgruppe.");
+		}
 
 		final @NotNull ArrayList<@NotNull Long> faecher = moeglicheFaecherAusFachgruppe(gruppe, belegtSeit, variante);
 		if (pruefeBereitsMarkiert(faecher, variante)) {
@@ -108,8 +109,9 @@ public class BKGymAbiturMarkierungsregelFachgruppe extends BKGymAbiturMarkierung
 		for (final long fachID : faecher) {
 			final @NotNull Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> bedingung =
 					markierung -> (markierung != null) && (fachID == markierung.fachID);
-			if (variante.zaehleMarkierte(bedingung) >= anzahl)
+			if (variante.zaehleMarkierte(bedingung) >= anzahl) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -120,7 +122,7 @@ public class BKGymAbiturMarkierungsregelFachgruppe extends BKGymAbiturMarkierung
 	 * Einführungsphase belegt sind oder alle Fächer des Aufgabenfeldes/der Fachgruppe, wenn seitHalbjahr leer ist.
 	 *
 	 * @param gruppe         das Aufgabenfeld/die Fachgruppe
-	 * @param seitHalbjahr   ggfs. das Halbjahr, ab dem belegt sein muss in EF
+	 * @param seitHalbjahr   ggf. das Halbjahr, ab dem belegt sein muss in EF
 	 * @param variante       eine Markierungsvariante, auf der gearbeitet wird
 	 *
 	 * @return die Liste der Fachbezeichnungen
@@ -137,19 +139,25 @@ public class BKGymAbiturMarkierungsregelFachgruppe extends BKGymAbiturMarkierung
 			return result;
 		}
 		final GostHalbjahr hj = GostHalbjahr.fromKuerzel(seitHalbjahr);
-		if (hj == null)
+		if (hj == null) {
 			throw new DeveloperNotificationException("Die Prüfbedingung enthält ein ungültiges GostHalbjahr '" + seitHalbjahr + "'.");
+		}
 
 		final @NotNull GostHalbjahr @NotNull [] hje = GostHalbjahr.getHalbjahreAbHalbjahr(hj);
 		final @NotNull ArrayList<GostHalbjahr> leereHje = new ArrayList<>();
-		for (final @NotNull GostHalbjahr h : hje)
-			if (!variante.varianten.abiturdatenManager.istBewertet(h))
+		for (final @NotNull GostHalbjahr h : hje) {
+			if (!variante.varianten.abiturdatenManager.istBewertet(h)) {
 				leereHje.add(h);
-		if (!leereHje.isEmpty())
+			}
+		}
+		if (!leereHje.isEmpty()) {
 			variante.addLogEintrag(1, "HINWEIS: Nicht alle Halbjahre bewertet. Bitte die erforderliche Belegung der Fachgruppe '" + gruppe.name() + "' prüfen!");
-		for (final @NotNull String fach : gruppe.getFaecher())
-			if (fachbelegungManager.pruefeBelegung(fachbelegungManager.getFachbelegungByBezeichnung(fach), leereHje, hje))
+		}
+		for (final @NotNull String fach : gruppe.getFaecher()) {
+			if (fachbelegungManager.pruefeBelegung(fachbelegungManager.getFachbelegungByBezeichnung(fach), leereHje, hje)) {
 				result.add(fachbelegungManager.getFachIDByBezeichnung(fach));
+			}
+		}
 
 		return result;
 	}

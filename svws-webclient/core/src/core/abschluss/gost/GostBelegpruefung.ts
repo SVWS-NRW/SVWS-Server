@@ -48,11 +48,12 @@ export abstract class GostBelegpruefung extends JavaObject {
 	 */
 	public pruefe(): void {
 		this.init();
-		if (this.pruefungs_art as unknown === GostBelegpruefungsArt.EF1 as unknown)
+		if (this.pruefungs_art as unknown === GostBelegpruefungsArt.EF1 as unknown) {
 			this.pruefeEF1();
-		else
-			if (this.pruefungs_art as unknown === GostBelegpruefungsArt.GESAMT as unknown)
+		} else
+			if (this.pruefungs_art as unknown === GostBelegpruefungsArt.GESAMT as unknown) {
 				this.pruefeGesamt();
+			}
 	}
 
 	/**
@@ -62,8 +63,9 @@ export abstract class GostBelegpruefung extends JavaObject {
 	 * @param fehler   der hinzuzufügende Belegungsfehler
 	 */
 	protected addFehler(fehler: GostBelegungsfehler): void {
-		if (!this.belegungsfehler.contains(fehler))
+		if (!this.belegungsfehler.contains(fehler)) {
 			this.belegungsfehler.add(fehler);
+		}
 	}
 
 	/**
@@ -82,8 +84,9 @@ export abstract class GostBelegpruefung extends JavaObject {
 	 */
 	public hatBelegungsfehler(): boolean {
 		for (const fehler of this.belegungsfehler) {
-			if (!fehler.istInfo())
+			if (!fehler.istInfo()) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -113,8 +116,9 @@ export abstract class GostBelegpruefung extends JavaObject {
 	 */
 	public static istErfolgreich(alleFehler: List<GostBelegungsfehler>): boolean {
 		for (const fehler of alleFehler) {
-			if (!fehler.istInfo())
+			if (!fehler.istInfo()) {
 				return false;
+			}
 		}
 		return true;
 	}

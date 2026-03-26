@@ -88,8 +88,9 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 	 *  Kriterien: ZulassungJa, größte PunktzahlBlockI
 	 */
 	public static readonly comparator: Comparator<BKGymAbiturMarkierungsVariante> = { compare: (a: BKGymAbiturMarkierungsVariante, b: BKGymAbiturMarkierungsVariante) => {
-		if (a.istErfolgreich() !== b.istErfolgreich())
+		if (a.istErfolgreich() !== b.istErfolgreich()) {
 			return a.istErfolgreich() ? -1 : 1;
+		}
 		return b.getPunktzahlBlockI() - a.getPunktzahlBlockI();
 	} };
 
@@ -141,10 +142,12 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 				this.facharbeitEinbeziehen = true;
 				const punkte: number | null = this.varianten.abiturdatenManager.getAbidaten().facharbeitNotenpunkte;
 				this.anzahlKurse += 2;
-				if (punkte !== null)
+				if (punkte !== null) {
 					this.summeNotenpunkte += 2 * punkte;
-				if (!this.varianten.abiturdatenManager.getFachbelegungManager().getIstFacharbeitBerufsbezogenerLK())
+				}
+				if (!this.varianten.abiturdatenManager.getFachbelegungManager().getIstFacharbeitBerufsbezogenerLK()) {
 					this.setHatZulassung(false);
+				}
 			} else {
 				this.facharbeitEinbeziehen = other.facharbeitEinbeziehen;
 			}
@@ -172,15 +175,17 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 		for (const fachbelegung of fachbelegungen) {
 			for (const hj of GostHalbjahr.getQualifikationsphase()) {
 				const belegung: BKGymAbiturFachbelegungHalbjahr | null = fachbelegung.belegungen[hj.id];
-				if (belegung === null)
+				if (belegung === null) {
 					continue;
+				}
 				if ((belegung.notenkuerzel !== null) && (!JavaString.isEmpty(belegung.notenkuerzel))) {
 					const markierung: BKGymAbiturMarkierungsalgorithmusMarkierung | null = new BKGymAbiturMarkierungsalgorithmusMarkierung();
 					markierung.fachID = fachbelegung.fachID;
 					markierung.halbjahrID = hj.id;
 					markierung.punkte = Note.getPunkteFromNotenkuerzel(belegung.notenkuerzel, schuljahr);
-					if (markierung.punkte !== null)
+					if (markierung.punkte !== null) {
 						this.unmarkiert.add(markierung);
+					}
 				}
 			}
 		}
@@ -274,8 +279,9 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 	 * @param markierung   der zu markierende Eintrag
 	 */
 	public markiereEintrag(markierung: BKGymAbiturMarkierungsalgorithmusMarkierung | null): void {
-		if (markierung === null)
+		if (markierung === null) {
 			return;
+		}
 		const defizit: number = (markierung.punkte === null) || (markierung.punkte < 5) ? 1 : 0;
 		this.markiert.add(markierung);
 		this.anzahlKurse++;
@@ -300,10 +306,12 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 	 * @return die Anzahl verbleibender Kurse, die nicht markiert werden konnte
 	 */
 	public markiereKursanzahl(kursanzahl: number, bedingung: Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> | null): number {
-		if (kursanzahl <= 0)
+		if (kursanzahl <= 0) {
 			return 0;
-		if (bedingung === null)
+		}
+		if (bedingung === null) {
 			return kursanzahl;
+		}
 		let verbleibend: number = kursanzahl;
 		const weiterUnmarkiert: List<BKGymAbiturMarkierungsalgorithmusMarkierung> | null = new ArrayList<BKGymAbiturMarkierungsalgorithmusMarkierung>(this.unmarkiert.size());
 		for (const unmarked of this.unmarkiert) {
@@ -328,15 +336,20 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 	 * @return die Anzahl verbleibender Kurse, die nicht der Bedingung genügen
 	 */
 	public pruefeKursanzahl(kursanzahl: number, bedingung: Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> | null): number {
-		if (bedingung === null)
+		if (bedingung === null) {
 			return kursanzahl;
+		}
 		let verbleibend: number = kursanzahl;
-		for (const marked of this.markiert)
-			if ((verbleibend > 0) && bedingung.test(marked))
+		for (const marked of this.markiert) {
+			if ((verbleibend > 0) && bedingung.test(marked)) {
 				verbleibend--;
-		for (const unmarked of this.unmarkiert)
-			if ((verbleibend > 0) && bedingung.test(unmarked))
+			}
+		}
+		for (const unmarked of this.unmarkiert) {
+			if ((verbleibend > 0) && bedingung.test(unmarked)) {
 				verbleibend--;
+			}
+		}
 		return verbleibend;
 	}
 
@@ -348,12 +361,15 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 	 * @return die Anzahl der markierten Kurse, die die Bedingung erfüllen
 	 */
 	public zaehleMarkierte(bedingung: Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> | null): number {
-		if (bedingung === null)
+		if (bedingung === null) {
 			return 0;
+		}
 		let anzahl: number = 0;
-		for (const marked of this.markiert)
-			if (bedingung.test(marked))
+		for (const marked of this.markiert) {
+			if (bedingung.test(marked)) {
 				anzahl++;
+			}
+		}
 		return anzahl;
 	}
 
@@ -370,15 +386,17 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 		let summe: number = 0;
 		let verbleibend: number = anzahl;
 		for (const unmarked of this.unmarkiert) {
-			if (verbleibend <= 0)
+			if (verbleibend <= 0) {
 				break;
+			}
 			if (fachID === unmarked.fachID) {
 				summe += (unmarked.punkte === null ? 0 : unmarked.punkte);
 				verbleibend--;
 			}
 		}
-		if (verbleibend <= 0)
+		if (verbleibend <= 0) {
 			return summe;
+		}
 		return 0;
 	}
 
@@ -432,8 +450,9 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 	 * @return der Punktedurchschnitt
 	 */
 	public getDurchschnitt(): number {
-		if (this.anzahlKurse === 0)
+		if (this.anzahlKurse === 0) {
 			return 0;
+		}
 		return this.summeNotenpunkte / this.anzahlKurse as number;
 	}
 
@@ -476,15 +495,16 @@ export class BKGymAbiturMarkierungsVariante extends JavaObject {
 	private erzeugeFehlerlog(fehlerLog: List<string>): void {
 		let vorherigeZeile: string = "";
 		for (const zeile of this.log) {
-			if (zeile.startsWith("Hinweis:"))
+			if (zeile.startsWith("Hinweis:")) {
 				fehlerLog.add(zeile);
-			else
+			} else
 				if (JavaString.contains(zeile, "Fehler:")) {
 					fehlerLog.add(vorherigeZeile);
 					fehlerLog.add(zeile);
 				}
-			if (zeile.startsWith("Regel"))
+			if (zeile.startsWith("Regel")) {
 				vorherigeZeile = zeile;
+			}
 		}
 	}
 

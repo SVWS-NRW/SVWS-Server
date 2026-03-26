@@ -93,16 +93,18 @@ export class ServiceAbschlussHA9 extends Service {
 		const weitereFS: List<GEAbschlussFach> = faecher.fg2.entferneFaecher(ServiceAbschlussHA9.filterWeitereFremdsprachen);
 		if (!weitereFS.isEmpty()) {
 			for (const fs of weitereFS) {
-				if (fs.bezeichnung === null)
+				if (fs.bezeichnung === null) {
 					continue;
+				}
 				this.logger.logLn(LogLevel.DEBUG, " -> Ignoriere weitere Fremdsprache: " + fs.bezeichnung + "(" + fs.note + ")");
 			}
 		}
 		this.logger.logLn(LogLevel.DEBUG, " - ggf. Verbessern der E-Kurs-Noten für die Defizitberechnung:");
 		const tmpFaecher: List<GEAbschlussFach> = faecher.getFaecher(ServiceAbschlussHA9.filterEKurse);
 		for (const f of tmpFaecher) {
-			if (f.kuerzel === null)
+			if (f.kuerzel === null) {
 				continue;
+			}
 			const note: number = f.note;
 			const note_neu: number = (note === 1) ? 1 : (note - 1);
 			this.logger.logLn(LogLevel.DEBUG, "   " + f.kuerzel + "(E):" + note + "->" + note_neu);
@@ -138,10 +140,12 @@ export class ServiceAbschlussHA9 extends Service {
 		const fg1_mangelhaft: number = faecher.fg1.getFaecherAnzahl(ServiceAbschlussHA9.filterMangelhaft);
 		const fg1_ungenuegend: number = faecher.fg1.getFaecherAnzahl(ServiceAbschlussHA9.filterUngenuegend);
 		const fg2_ungenuegend: number = faecher.fg2.getFaecherAnzahl(ServiceAbschlussHA9.filterUngenuegend);
-		if (fg1_defizite > 0)
+		if (fg1_defizite > 0) {
 			this.logger.logLn(LogLevel.DEBUG, logIndent + " -> FG1: Defizit" + (fg1_defizite > 1 ? "e" : "") + ": " + faecher.fg1.getKuerzelListe(ServiceAbschlussHA9.filterDefizit));
-		if (fg2_defizite > 0)
+		}
+		if (fg2_defizite > 0) {
 			this.logger.logLn(LogLevel.DEBUG, logIndent + " -> FG2: Defizit" + (fg2_defizite > 1 ? "e" : "") + ": " + faecher.fg2.getKuerzelListe(ServiceAbschlussHA9.filterDefizit));
+		}
 		if ((fg1_ungenuegend > 0) || (fg2_ungenuegend > 1)) {
 			this.logger.logLn(LogLevel.DEBUG, logIndent + " -> zu oft ungenügend (6) - 0x6 in FG1 und max. 1x6 in FG2 erlaubt.");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.HA9, false);

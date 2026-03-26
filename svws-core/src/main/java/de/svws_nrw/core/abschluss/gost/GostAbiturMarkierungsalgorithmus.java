@@ -100,45 +100,55 @@ public final class GostAbiturMarkierungsalgorithmus {
 	private final @NotNull Comparator<GostAbiturMarkierungsalgorithmusBelegung> comparatorBelegungen =
 			(final @NotNull GostAbiturMarkierungsalgorithmusBelegung a, final @NotNull GostAbiturMarkierungsalgorithmusBelegung b) -> {
 				int tmp = b.notenpunkte - a.notenpunkte;
-				if (tmp != 0)
+				if (tmp != 0) {
 					return tmp;
+				}
 				// Ansonsten gilt die Sortierung des Faches ...
 				final GostFach aFach = getFach(a.belegung);
 				final GostFach bFach = getFach(b.belegung);
-				if ((aFach == null) || (bFach == null)) // Kann hier nicht auftreten - nur für den Compiler...
+				if ((aFach == null) || (bFach == null)) { // Kann hier nicht auftreten - nur für den Compiler...
 					return -1;
+				}
 				tmp = GostFachbereich.compareGostFach(aFach, bFach);
-				if (tmp != 0)
+				if (tmp != 0) {
 					return tmp;
+				}
 				// Ansonsten die des Halbjahres
 				final GostHalbjahr hjA = GostHalbjahr.fromKuerzel(a.belegungHalbjahr.halbjahrKuerzel);
 				final GostHalbjahr hjB = GostHalbjahr.fromKuerzel(b.belegungHalbjahr.halbjahrKuerzel);
-				if ((hjA == null) || (hjB == null)) // Kann hier nicht auftreten - nur für den Compiler...
+				if ((hjA == null) || (hjB == null)) { // Kann hier nicht auftreten - nur für den Compiler...
 					return -1;
+				}
 				return hjB.id - hjA.id;
 			};
 
 	/** Vergleicht zwei Ergebnisse miteinander und sortiert diese */
 	private static final @NotNull Comparator<GostAbiturMarkierungsalgorithmus> comparatorStates =
 			(final @NotNull GostAbiturMarkierungsalgorithmus a, final @NotNull GostAbiturMarkierungsalgorithmus b) -> {
-				if (a.ergebnis.erfolgreich == !b.ergebnis.erfolgreich)
+				if (a.ergebnis.erfolgreich == !b.ergebnis.erfolgreich) {
 					return a.ergebnis.erfolgreich ? -1 : 1;
-				if (a.hatZulassung == !b.hatZulassung)
+				}
+				if (a.hatZulassung == !b.hatZulassung) {
 					return a.hatZulassung ? -1 : 2;
+				}
 				int tmp = b.summeNormiert - a.summeNormiert;
-				if (tmp != 0)
+				if (tmp != 0) {
 					return tmp;
+				}
 				final int aDefizite = a.defiziteLK + a.defiziteGK;
 				final int bDefizite = b.defiziteLK + b.defiziteGK;
 				tmp = aDefizite - bDefizite;
-				if (tmp != 0)
+				if (tmp != 0) {
 					return tmp;
+				}
 				tmp = a.defiziteLK - b.defiziteLK;
-				if (tmp != 0)
+				if (tmp != 0) {
 					return tmp;
+				}
 				tmp = a.summeKurse - b.summeKurse;
-				if (tmp != 0)
+				if (tmp != 0) {
 					return tmp;
+				}
 				final Integer aPjk = a.anzahlBelegungen.get(GostFachbereich.PROJEKTKURSE);
 				final Integer bPjk = b.anzahlBelegungen.get(GostFachbereich.PROJEKTKURSE);
 				return ((aPjk == null) ? 0 : aPjk) - ((bPjk == null) ? 0 : bPjk);
@@ -157,16 +167,20 @@ public final class GostAbiturMarkierungsalgorithmus {
 		Projektkurse tmpBelegpruefungProjektkurse = null;
 		AbiFaecher tmpBelegpruefungAbiturfaecher = null;
 		for (final @NotNull GostBelegpruefung pruefung : belegpruefungen) {
-			if (pruefung instanceof final Projektkurse projektkurse)
+			if (pruefung instanceof final Projektkurse projektkurse) {
 				tmpBelegpruefungProjektkurse = projektkurse;
-			if (pruefung instanceof final AbiFaecher abiturfaecher)
+			}
+			if (pruefung instanceof final AbiFaecher abiturfaecher) {
 				tmpBelegpruefungAbiturfaecher = abiturfaecher;
+			}
 		}
-		if (tmpBelegpruefungProjektkurse == null)
+		if (tmpBelegpruefungProjektkurse == null) {
 			throw new DeveloperNotificationException("Die Projektkursprüfung muss als Belegprüfung vorhanden sein.");
+		}
 		this.belegpruefungProjektkurse = tmpBelegpruefungProjektkurse;
-		if (tmpBelegpruefungAbiturfaecher == null)
+		if (tmpBelegpruefungAbiturfaecher == null) {
 			throw new DeveloperNotificationException("Die Abiturfächerprüfung muss als Belegprüfung vorhanden sein.");
+		}
 		this.belegpruefungAbiturfaecher = tmpBelegpruefungAbiturfaecher;
 	}
 
@@ -187,8 +201,9 @@ public final class GostAbiturMarkierungsalgorithmus {
 		this.manager = original.manager;
 		this.belegpruefungProjektkurse = original.belegpruefungProjektkurse;
 		this.belegpruefungAbiturfaecher = original.belegpruefungAbiturfaecher;
-		for (int i = 0; i < this.abi.length; i++)
+		for (int i = 0; i < this.abi.length; i++) {
 			this.abi[i] = original.abi[i];
+		}
 		// Übernehme den aktuellen Zustand des Originals, da an diesem Baum-Knoten eine Aufspaltung von diesem Zustand aus erfolgt
 		this.summeNormiert = original.summeNormiert;
 		this.hatZulassung = original.hatZulassung;
@@ -203,11 +218,14 @@ public final class GostAbiturMarkierungsalgorithmus {
 		this.restErlaubtMusik = original.restErlaubtMusik;
 		this.restErlaubtVPIP = original.restErlaubtVPIP;
 		this.restErlaubtKUMUErsatz = original.restErlaubtKUMUErsatz;
-		for (final Map.@NotNull Entry<GostFachbereich, Integer> e : original.anzahlBelegungen.entrySet())
+		for (final Map.@NotNull Entry<GostFachbereich, Integer> e : original.anzahlBelegungen.entrySet()) {
 			this.anzahlBelegungen.put(e.getKey(), e.getValue());
-		for (final Map.@NotNull Entry<Long, Map<Integer, GostAbiturMarkierungsalgorithmusMarkierung>> e1 : original.markiert.getEntrySet())
-			for (final Map.@NotNull Entry<Integer, GostAbiturMarkierungsalgorithmusMarkierung> e2 : e1.getValue().entrySet())
+		}
+		for (final Map.@NotNull Entry<Long, Map<Integer, GostAbiturMarkierungsalgorithmusMarkierung>> e1 : original.markiert.getEntrySet()) {
+			for (final Map.@NotNull Entry<Integer, GostAbiturMarkierungsalgorithmusMarkierung> e2 : e1.getValue().entrySet()) {
 				this.markiert.put(e1.getKey(), e2.getKey(), e2.getValue());
+			}
+		}
 	}
 
 
@@ -225,14 +243,16 @@ public final class GostAbiturMarkierungsalgorithmus {
 			final @NotNull List<GostBelegpruefung> belegpruefungen) {
 		// Initialisiere den Algorithmus
 		final @NotNull GostAbiturMarkierungsalgorithmus initialState = new GostAbiturMarkierungsalgorithmus(manager, belegpruefungen);
-		if (!initialState.init())
+		if (!initialState.init()) {
 			return initialState.ergebnis;
+		}
 
 		// Prüfe ausgehend vom initialen Zustand als Wurzel eines Baums mit den möglichen States die unterschiedlichen Varianten
 		// von Markierungen und bestimme deren Gesamtpunktzahl für den Vergleich. Beginne dabei mit der Markierung der ersten Fremdsprache
 		final @NotNull List<GostAbiturMarkierungsalgorithmus> states = initialState.markiereErsteFremsprache();
-		if (states.isEmpty())
+		if (states.isEmpty()) {
 			return initialState.ergebnis;
+		}
 
 		// Sortiere die Zustände, um das Ergebnis des Markierungsalgorithmus zu ermitteln, welches am besten geeignet ist
 		states.sort(comparatorStates);
@@ -264,14 +284,17 @@ public final class GostAbiturMarkierungsalgorithmus {
 		ergebnis.log.add(logIndent + "Schwerpunkt: " + (hatSchwerpunktFremdsprachen ? "Fremdsprachen" : "") + " "
 				+ (hatSchwerpunktNaturwissenschaften ? "Naturwissenschaften" : ""));
 		// Markierung der Abiturfächer
-		if (!markiereAbiturfaecher())
+		if (!markiereAbiturfaecher()) {
 			return false;
+		}
 		// Markierung des Faches Deutsch, sofern es kein Abiturfach ist
-		if (!markiereDeutsch())
+		if (!markiereDeutsch()) {
 			return false;
+		}
 		// Markierung des Faches Mathematik, sofern es kein Abiturfach ist
-		if (!markiereMathematik())
+		if (!markiereMathematik()) {
 			return false;
+		}
 		return true;
 	}
 
@@ -285,16 +308,19 @@ public final class GostAbiturMarkierungsalgorithmus {
 		for (final @NotNull AbiturFachbelegung belegung : manager.daten().fachbelegungen) {
 			// Bestimme das Fach der Belegung
 			final GostFach fach = getFach(belegung);
-			if (fach == null)
+			if (fach == null) {
 				return;
+			}
 			// Prüfe, ob die Belegung überhaupt Abiturrelevant ist
-			if (GostFachbereich.getBereiche(fach).isEmpty())
+			if (GostFachbereich.getBereiche(fach).isEmpty()) {
 				continue;
+			}
 			// Durchwandere die einzelnen Halbjahresbelegungen der Qualifikationsphase, und füge die Markierungsinformationen zum Ergebnis hinzu
 			for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase()) {
 				final AbiturFachbelegungHalbjahr hjBelegung = belegung.belegungen[hj.id];
-				if (hjBelegung == null)
+				if (hjBelegung == null) {
 					continue;
+				}
 				GostAbiturMarkierungsalgorithmusMarkierung markierung = markiert.getOrNull(fach.id, hj.id);
 				if (markierung == null) {
 					markierung = new GostAbiturMarkierungsalgorithmusMarkierung();
@@ -321,11 +347,13 @@ public final class GostAbiturMarkierungsalgorithmus {
 			if ((manager.pruefeBelegungMitSchriftlichkeit(belegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
 					&& (manager.pruefeBelegung(belegung, GostHalbjahr.Q22))) {
 				final GostFach fach = manager.getFach(belegung);
-				if (fach == null) // Dieser Fehlerfall sollte nicht auftreten...
+				if (fach == null) { // Dieser Fehlerfall sollte nicht auftreten...
 					continue;
+				}
 				final String fs = GostFachUtils.getFremdsprache(fach);
-				if (fs == null) // Dieser Fehlerfall sollte nicht auftreten...
+				if (fs == null) { // Dieser Fehlerfall sollte nicht auftreten...
 					continue;
+				}
 				belegteFremdsprachen.add(fs);
 				belegungen.add(belegung);
 			}
@@ -335,10 +363,12 @@ public final class GostAbiturMarkierungsalgorithmus {
 			if ((manager.pruefeBelegungMitSchriftlichkeit(belegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
 					&& (manager.pruefeBelegung(belegung, GostHalbjahr.Q22))) {
 				final GostFach fach = manager.getFach(belegung);
-				if (fach == null) // Dieser Fehlerfall sollte nicht auftreten...
+				if (fach == null) { // Dieser Fehlerfall sollte nicht auftreten...
 					continue;
-				if (belegteFremdsprachen.contains(fach.biliSprache))
+				}
+				if (belegteFremdsprachen.contains(fach.biliSprache)) {
 					continue;
+				}
 				belegungen.add(belegung);
 			}
 		}
@@ -378,8 +408,9 @@ public final class GostAbiturMarkierungsalgorithmus {
 		int np2 = -1;
 		for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase()) {
 			final int np = getNotenpunkte(belegung, hj); // 0 Punkte ist nicht belegt und -1 wird hier bei Nicht-Belegung zurückgegeben
-			if (np <= 0)
+			if (np <= 0) {
 				continue;
+			}
 			if ((result[0] == null) || (np > np1)) {
 				result[1] = result[0];
 				np2 = np1;
@@ -404,8 +435,9 @@ public final class GostAbiturMarkierungsalgorithmus {
 	private void increaseBelegungInFachbereich(final @NotNull GostFachbereich fb, final @NotNull GostFach fach) {
 		if (fb.hat(fach)) {
 			Integer anzahl = anzahlBelegungen.computeIfAbsent(fb, k -> 0);
-			if (anzahl == null)
+			if (anzahl == null) {
 				anzahl = 0;
+			}
 			anzahlBelegungen.put(fb, anzahl + 1);
 		}
 	}
@@ -425,19 +457,24 @@ public final class GostAbiturMarkierungsalgorithmus {
 		for (final GostHalbjahr hj : halbjahre) {
 			final AbiturFachbelegungHalbjahr hjBelegung = belegung.belegungen[hj.id];
 			// Prüfe ob die Halbjahresbelegung existiert
-			if (hjBelegung == null)
+			if (hjBelegung == null) {
 				return -1;
+			}
 			// Prüfe, ob eine Note gesetzt wurde
-			if ((hjBelegung.notenkuerzel == null) || (hjBelegung.notenkuerzel.isBlank()))
+			if ((hjBelegung.notenkuerzel == null) || (hjBelegung.notenkuerzel.isBlank())) {
 				return -1;
+			}
 			final @NotNull Note note = Note.fromKuerzel(hjBelegung.notenkuerzel);
-			if (!note.istNote(manager.getSchuljahr()))
+			if (!note.istNote(manager.getSchuljahr())) {
 				return -1;
+			}
 			final NoteKatalogEintrag nke = note.daten(manager.getSchuljahr());
-			if (nke == null)
+			if (nke == null) {
 				return -1;
-			if (nke.notenpunkte == null)
+			}
+			if (nke.notenpunkte == null) {
 				return -1;
+			}
 			summe += nke.notenpunkte;
 		}
 		return summe;
@@ -447,13 +484,15 @@ public final class GostAbiturMarkierungsalgorithmus {
 	private boolean markiereHalbjahresbelegung(final @NotNull AbiturFachbelegung belegung, final @NotNull GostHalbjahr hj) {
 		final boolean istAbiturbereich = (belegung.abiturFach != null);
 		final GostFach fach = getFach(belegung);
-		if (fach == null)
+		if (fach == null) {
 			return false;
+		}
 		final AbiturFachbelegungHalbjahr hjBelegung = belegung.belegungen[hj.id];
 		// Prüfe ob die Halbjahresbelegung existiert
 		if (hjBelegung == null) {
-			if (istAbiturbereich)
+			if (istAbiturbereich) {
 				ergebnis.log.add(logIndent + "  Im Halbjahr %s fehlt eine Belegung des Abiturfaches.".formatted(hj.kuerzel));
+			}
 			return false;
 		}
 		// Prüfe, ob eine Note gesetzt wurde
@@ -472,9 +511,10 @@ public final class GostAbiturMarkierungsalgorithmus {
 		}
 		// Prüfe, ob es sich bei der Note um ein Ungenügend handelt oder nicht
 		if (note == Note.UNGENUEGEND) {
-			if (istAbiturbereich)
+			if (istAbiturbereich) {
 				ergebnis.log.add(logIndent + "  Im Halbjahr %s wurde die Note ungenügend für das Abiturfach erteilt."
 						+ " Somit ist keine Zulassung mehr möglich, da der Kurs somit als nicht belegt gilt.".formatted(hj.kuerzel));
+			}
 			return false;
 		}
 		// Prüfe LK-Bereich bzw. GK-Bereich
@@ -534,8 +574,9 @@ public final class GostAbiturMarkierungsalgorithmus {
 			return false;
 		}
 		final GostFach fach = getFach(belegung);
-		if (fach == null)
+		if (fach == null) {
 			return false;
+		}
 		// Prüfe, auch ob die Fachbelegung auch zwischenzeitlich bilinguale und nicht bilinguale Kurse hat
 		final @NotNull List<AbiturFachbelegung> fachbelegungen = manager.getFachbelegungByFachkuerzel(fach.kuerzel);
 
@@ -588,8 +629,9 @@ public final class GostAbiturMarkierungsalgorithmus {
 			}
 
 			// Prüfe, ob die Belegung bereits markiert wurde - wenn nicht, dann versuche eine Belegung
-			if ((this.markiert.getOrNull(fach.id, hj.id) == null) && (!markiereHalbjahresbelegung(current, hj)))
+			if ((this.markiert.getOrNull(fach.id, hj.id) == null) && (!markiereHalbjahresbelegung(current, hj))) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -615,13 +657,15 @@ public final class GostAbiturMarkierungsalgorithmus {
 		final @NotNull int[] resNotenpunkte = new int[2];
 		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
 			final GostFach fach = getFach(belegung);
-			if (fach == null)
+			if (fach == null) {
 				continue;
+			}
 			// Bestimme die beiden besten Halbjahresbewertungen
 			final @NotNull GostHalbjahr[] halbjahre = getZweiBesteBelegungen(belegung);
 			for (final @NotNull GostHalbjahr hj : halbjahre) {
-				if (hj == null)
+				if (hj == null) {
 					continue;
+				}
 				final int np = getNotenpunkte(belegung, hj);
 				if ((resBelegung[0] == null) || (np > resNotenpunkte[0])) {
 					resBelegung[1] = resBelegung[0];
@@ -674,22 +718,27 @@ public final class GostAbiturMarkierungsalgorithmus {
 				return false;
 			}
 			final GostFach fach = getFach(belegung);
-			if (fach == null)
+			if (fach == null) {
 				return false;
+			}
 			ergebnis.log.add(logIndent + "Markiere die vier Kurse des " + i + ". Abiturfaches (" + fach.kuerzelAnzeige + ")...");
 			// Prüfe, ob es sich bei der Belegung um eine neu einsetzen Fremdsprache handelt
-			if (fach.istFremdsprache)
+			if (fach.istFremdsprache) {
 				anzahlAbiFremdsprachen++;
-			if (fach.istFremdsprache && fach.istFremdSpracheNeuEinsetzend)
+			}
+			if (fach.istFremdsprache && fach.istFremdSpracheNeuEinsetzend) {
 				this.hatAbiFremspracheNeueinsetzend = true;
+			}
 			// Prüfe auf die Belegung einer Gesellschaftswissenschaft außer Religion
-			if (GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH.hat(fach))
+			if (GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH.hat(fach)) {
 				anzahlAbiGesellschaftswissenschaft++;
+			}
 			// Prüfe die Belegung auf Kunst oder Musik
 			final boolean istKunst = manager.faecher().fachIstKunst(fach.id);
 			final boolean istMusik = manager.faecher().fachIstMusik(fach.id);
-			if (istKunst || istMusik)
+			if (istKunst || istMusik) {
 				this.hatAbiKunstOderMusik = true;
+			}
 			if (istMusik && ((i == 1) || (i == 2))) { // LK1 oder LK2
 				this.restErlaubtMusik = 0;
 				this.restErlaubtVPIP = 0;
@@ -698,8 +747,9 @@ public final class GostAbiturMarkierungsalgorithmus {
 			}
 
 			// Markiere alle vier Halbjahresbelegungen
-			if (!markiereBelegungDurchgaengig(belegung))
+			if (!markiereBelegungDurchgaengig(belegung)) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -714,8 +764,9 @@ public final class GostAbiturMarkierungsalgorithmus {
 		if (anzahlBelegungen.computeIfAbsent(GostFachbereich.DEUTSCH, k -> 0) == 0) {
 			ergebnis.log.add(logIndent + "Markiere die vier Kurse für das Fach Deutsch...");
 			final AbiturFachbelegung deutsch = manager.getRelevanteFachbelegung(GostFachbereich.DEUTSCH);
-			if (!markiereBelegungDurchgaengig(deutsch))
+			if (!markiereBelegungDurchgaengig(deutsch)) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -730,8 +781,9 @@ public final class GostAbiturMarkierungsalgorithmus {
 		if (anzahlBelegungen.computeIfAbsent(GostFachbereich.MATHEMATIK, k -> 0) == 0) {
 			ergebnis.log.add(logIndent + "Markiere die vier Kurse für das Fach Mathematik...");
 			final AbiturFachbelegung mathematik = manager.getRelevanteFachbelegung(GostFachbereich.MATHEMATIK);
-			if (!markiereBelegungDurchgaengig(mathematik))
+			if (!markiereBelegungDurchgaengig(mathematik)) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -758,9 +810,11 @@ public final class GostAbiturMarkierungsalgorithmus {
 
 		// Bestimme die möglichen Fremdsprachen ...
 		final @NotNull List<AbiturFachbelegung> fremdsprachen = new ArrayList<>();
-		for (final @NotNull AbiturFachbelegung tmpFremdsprache : manager.getRelevanteFachbelegungen(GostFachbereich.FREMDSPRACHE))
-			if (manager.pruefeBelegung(tmpFremdsprache, GostHalbjahr.getQualifikationsphase()))
+		for (final @NotNull AbiturFachbelegung tmpFremdsprache : manager.getRelevanteFachbelegungen(GostFachbereich.FREMDSPRACHE)) {
+			if (manager.pruefeBelegung(tmpFremdsprache, GostHalbjahr.getQualifikationsphase())) {
 				fremdsprachen.add(tmpFremdsprache);
+			}
+		}
 		// ... prüfe die einzelnen Markierungsmöglichkeiten und erzeuge dafür weitere Instanzen des Algorithmus mit getrennten States
 		if (fremdsprachen.isEmpty()) {
 			ergebnis.log.add(logIndent + "  Konnte keine durchgängig belegte Fremdsprache zur Markierung ermitteln.");
@@ -768,14 +822,16 @@ public final class GostAbiturMarkierungsalgorithmus {
 		}
 		for (final @NotNull AbiturFachbelegung fremdsprache : fremdsprachen) {
 			final GostFach fach = getFach(fremdsprache);
-			if (fach == null)
+			if (fach == null) {
 				continue;
+			}
 			// Erzeuge einen neuen State, bei welchem die Belegung durchgängig markiert wird
 			final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
 
 			ergebnis.log.add(logIndent + "  Fallunterscheidung: Markiere die vier Kurse für die Fremdsprache " + fach.kuerzelAnzeige + "...");
-			if (!newState.markiereBelegungDurchgaengig(fremdsprache))
+			if (!newState.markiereBelegungDurchgaengig(fremdsprache)) {
 				continue;
+			}
 
 			newStates.addAll(newState.markiereErsteKlassischeNaturwissenschaft());
 		}
@@ -808,14 +864,17 @@ public final class GostAbiturMarkierungsalgorithmus {
 		final @NotNull Set<String> bereitsGeprueft = new HashSet<>(); // Wird ggf. bei bilingualen Sachfächern benötigt, um doppelte Erkennung zu vermeiden
 		for (final @NotNull AbiturFachbelegung belegung : manager.getRelevanteFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH_KLASSISCH)) {
 			final GostFach fach = getFach(belegung);
-			if (fach == null)
+			if (fach == null) {
 				continue;
-			if (bereitsGeprueft.contains(fach.kuerzel))
+			}
+			if (bereitsGeprueft.contains(fach.kuerzel)) {
 				continue;
+			}
 			final @NotNull List<AbiturFachbelegung> tmpBelegung = new ArrayList<>(); // Wird ggf. benötigt, um die Abwahl eines bilingualen Faches zu erkennen
 			tmpBelegung.add(belegung);
-			if (manager.pruefeBelegungExistiert(tmpBelegung, GostHalbjahr.getQualifikationsphase()))
+			if (manager.pruefeBelegungExistiert(tmpBelegung, GostHalbjahr.getQualifikationsphase())) {
 				belegungen.add(belegung);
+			}
 			bereitsGeprueft.add(fach.kuerzel);
 		}
 		// ... prüfe die einzelnen Markierungsmöglichkeiten und erzeuge dafür weitere Instanzen des Algorithmus mit getrennten States
@@ -825,14 +884,16 @@ public final class GostAbiturMarkierungsalgorithmus {
 		}
 		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
 			final GostFach fach = getFach(belegung);
-			if (fach == null)
+			if (fach == null) {
 				continue;
+			}
 			// Erzeuge einen neuen State, bei welchem die Belegung durchgängig markiert wird
 			final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
 
 			ergebnis.log.add(logIndent + "  Fallunterscheidung: Markiere die vier Kurse für die klassische Naturwissenschaft " + fach.kuerzelAnzeige + "...");
-			if (!newState.markiereBelegungDurchgaengig(belegung))
+			if (!newState.markiereBelegungDurchgaengig(belegung)) {
 				continue;
+			}
 
 			newStates.addAll(newState.markiereZweitesSchwerpunktfachQ2());
 		}
@@ -874,20 +935,27 @@ public final class GostAbiturMarkierungsalgorithmus {
 		// Bestimme alle Fachbelegungen, die noch möglich sind: Fremdsprachen, Naturwissenschaften und bilinguale Sachfächer
 		final @NotNull Set<AbiturFachbelegung> belegungen = new HashSet<>();
 		if (hatSchwerpunktFremdsprachen) {
-			for (final @NotNull AbiturFachbelegung belegung : manager.getRelevanteFachbelegungen(GostFachbereich.FREMDSPRACHE))
+			for (final @NotNull AbiturFachbelegung belegung : manager.getRelevanteFachbelegungen(GostFachbereich.FREMDSPRACHE)) {
 				if (setBelegungenSprachenschwerpunkt.contains(belegung)
-						&& (!markiert.contains(belegung.fachID, GostHalbjahr.Q21.id) && !markiert.contains(belegung.fachID, GostHalbjahr.Q22.id)))
+						&& (!markiert.contains(belegung.fachID, GostHalbjahr.Q21.id) && !markiert.contains(belegung.fachID, GostHalbjahr.Q22.id))) {
 					belegungen.add(belegung);
-			for (final @NotNull AbiturFachbelegung belegung : manager.getFachbelegungenBilingual())
-				if (setBelegungenSprachenschwerpunkt.contains(belegung))
+				}
+			}
+			for (final @NotNull AbiturFachbelegung belegung : manager.getFachbelegungenBilingual()) {
+				if (setBelegungenSprachenschwerpunkt.contains(belegung)) {
 					belegungen.add(belegung);
+				}
+			}
 		}
-		if (hatSchwerpunktNaturwissenschaften)
-			for (final @NotNull AbiturFachbelegung belegung : manager.getRelevanteFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH))
+		if (hatSchwerpunktNaturwissenschaften) {
+			for (final @NotNull AbiturFachbelegung belegung : manager.getRelevanteFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH)) {
 				if (manager.pruefeBelegung(belegung, GostHalbjahr.getQualifikationsphase())
 						&& (!markiert.contains(belegung.fachID, GostHalbjahr.Q21.id) && !markiert.contains(belegung.fachID, GostHalbjahr.Q22.id))
-						&& !setBelegungenSprachenschwerpunkt.contains(belegung)) // Spezialfall Bili-Sachfach berücksichtigen
+						&& !setBelegungenSprachenschwerpunkt.contains(belegung)) { // Spezialfall Bili-Sachfach berücksichtigen
 					belegungen.add(belegung);
+				}
+			}
+		}
 
 		// ... prüfe die einzelnen Markierungsmöglichkeiten und erzeuge dafür weitere Instanzen des Algorithmus mit getrennten States
 		if (belegungen.isEmpty()) {
@@ -896,16 +964,19 @@ public final class GostAbiturMarkierungsalgorithmus {
 		}
 		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
 			final GostFach fach = getFach(belegung);
-			if (fach == null)
+			if (fach == null) {
 				continue;
+			}
 			// Erzeuge einen neuen State, bei welchem die Belegung durchgängig markiert wird
 			final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
 
 			ergebnis.log.add(logIndent + "  Fallunterscheidung: Markiere die beiden Kurse in der Q2 für das Schwerpunktfach " + fach.kuerzelAnzeige + "...");
-			if (!markiert.contains(belegung.fachID, GostHalbjahr.Q21.id) && !newState.markiereHalbjahresbelegung(belegung, GostHalbjahr.Q21))
+			if (!markiert.contains(belegung.fachID, GostHalbjahr.Q21.id) && !newState.markiereHalbjahresbelegung(belegung, GostHalbjahr.Q21)) {
 				continue;
-			if (!markiert.contains(belegung.fachID, GostHalbjahr.Q22.id) && !newState.markiereHalbjahresbelegung(belegung, GostHalbjahr.Q22))
+			}
+			if (!markiert.contains(belegung.fachID, GostHalbjahr.Q22.id) && !newState.markiereHalbjahresbelegung(belegung, GostHalbjahr.Q22)) {
 				continue;
+			}
 
 			newStates.addAll(newState.markiereKunstMusikOderErsatz());
 		}
@@ -929,19 +1000,23 @@ public final class GostAbiturMarkierungsalgorithmus {
 		if (hatAbiKunstOderMusik) {
 			ergebnis.log.add(logIndent + "  Kunst oder Musik wurde bereits im Abiturbereich markiert.");
 			final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
-			if (!newState.markiereGeschichteBzwSozialwissenschaften(GostFachbereich.GESCHICHTE))
+			if (!newState.markiereGeschichteBzwSozialwissenschaften(GostFachbereich.GESCHICHTE)) {
 				return newStates;
-			if (!newState.markiereGeschichteBzwSozialwissenschaften(GostFachbereich.SOZIALWISSENSCHAFTEN))
+			}
+			if (!newState.markiereGeschichteBzwSozialwissenschaften(GostFachbereich.SOZIALWISSENSCHAFTEN)) {
 				return newStates;
+			}
 			newStates.addAll(newState.markiereEinsprachlerNeuEinsetzendeFremdsprache());
 			return newStates;
 		}
 
 		// Bestimme die möglichen Fachbelegungen (mindestens zwei Belegungen in der QPhase - keine Null-Punkte-Belegung zählen!)
 		final @NotNull List<AbiturFachbelegung> belegungen = new ArrayList<>();
-		for (final @NotNull AbiturFachbelegung belegung : manager.getRelevanteFachbelegungen(GostFachbereich.LITERARISCH_KUENSTLERISCH))
-			if (manager.zaehleHalbjahresbelegungen(belegung, GostHalbjahr.getQualifikationsphase()) >= 2)
+		for (final @NotNull AbiturFachbelegung belegung : manager.getRelevanteFachbelegungen(GostFachbereich.LITERARISCH_KUENSTLERISCH)) {
+			if (manager.zaehleHalbjahresbelegungen(belegung, GostHalbjahr.getQualifikationsphase()) >= 2) {
 				belegungen.add(belegung);
+			}
+		}
 		// ... prüfe die einzelnen Markierungsmöglichkeiten und erzeuge dafür weitere Instanzen des Algorithmus mit getrennten States
 		if (belegungen.isEmpty()) {
 			ergebnis.log.add(logIndent + "  Keine Fachbelegung von Kunst, Musik oder einem Ersatzfach in zwei Halbjahren vorhanden.");
@@ -950,8 +1025,9 @@ public final class GostAbiturMarkierungsalgorithmus {
 
 		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
 			final GostFach fach = getFach(belegung);
-			if (fach == null)
+			if (fach == null) {
 				continue;
+			}
 			// Bestimme die beiden besten Halbjahresbewertungen
 			final @NotNull GostHalbjahr[] hj = getZweiBesteBelegungen(belegung);
 			if ((hj[0] == null) || (hj[1] == null)) {
@@ -964,24 +1040,29 @@ public final class GostAbiturMarkierungsalgorithmus {
 			final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
 			ergebnis.log.add(logIndent + "  Fallunterscheidung: Markiere die beiden Kurse in "
 					+ hj[0].kuerzel + " (" + np1 + " Punkte) und " + hj[1].kuerzel + " (" + np2 + " Punkte) für das " + fach.kuerzelAnzeige + "...");
-			if (!newState.markiereHalbjahresbelegung(belegung, hj[0]))
+			if (!newState.markiereHalbjahresbelegung(belegung, hj[0])) {
 				continue;
-			if (!newState.markiereHalbjahresbelegung(belegung, hj[1]))
+			}
+			if (!newState.markiereHalbjahresbelegung(belegung, hj[1])) {
 				continue;
+			}
 
 			if (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
 				newState.restErlaubtVPIP = 0;
 				newState.restErlaubtKUMUErsatz = 0;
 			}
 			final @NotNull Fach f = Fach.getBySchluesselOrDefault(fach.kuerzel);
-			if ((f == Fach.MU) || (f == Fach.IN) || (f == Fach.VO))
+			if ((f == Fach.MU) || (f == Fach.IN) || (f == Fach.VO)) {
 				newState.restErlaubtMusik = 3;
+			}
 
-			if (!newState.markiereGeschichteBzwSozialwissenschaften(GostFachbereich.GESCHICHTE))
+			if (!newState.markiereGeschichteBzwSozialwissenschaften(GostFachbereich.GESCHICHTE)) {
 				continue;
+			}
 
-			if (!newState.markiereGeschichteBzwSozialwissenschaften(GostFachbereich.SOZIALWISSENSCHAFTEN))
+			if (!newState.markiereGeschichteBzwSozialwissenschaften(GostFachbereich.SOZIALWISSENSCHAFTEN)) {
 				continue;
+			}
 
 			newStates.addAll(newState.markiereEinsprachlerNeuEinsetzendeFremdsprache());
 		}
@@ -1030,8 +1111,9 @@ public final class GostAbiturMarkierungsalgorithmus {
 
 		// Prüfe, ob es sich um einen Einsprachler handelt oder nicht
 		final boolean istEinsprachler = (SprachendatenUtils.getZweiteSpracheInSekI(manager.getSprachendaten()) == null);
-		if (!istEinsprachler)
+		if (!istEinsprachler) {
 			ergebnis.log.add(logIndent + "  Es wurde in der Sek I mehr als eine Fremdsprache belegt.");
+		}
 
 		// Prüfe, on ein Einsprachler bereits die Q2-Halbjahre einer durchgehend belegten neu einsetzenen Fremdsprache belegt hat
 		// Bestimme dabei auch mögliche Belegungen einer neu einsetzenden Fremdsprache
@@ -1042,14 +1124,16 @@ public final class GostAbiturMarkierungsalgorithmus {
 				if (belegung.istFSNeu && manager.pruefeBelegung(belegung, GostHalbjahr.getQualifikationsphase())) {
 					belegungen.add(belegung);
 					if ((markiert.getOrNull(belegung.fachID, GostHalbjahr.Q21.id) != null)
-							&& (markiert.getOrNull(belegung.fachID, GostHalbjahr.Q22.id) != null))
+							&& (markiert.getOrNull(belegung.fachID, GostHalbjahr.Q22.id) != null)) {
 						hatEinsprachlerBereitsNeueinsetzendeFremdsprache = true;
+					}
 				}
 			}
 		}
 
-		if (!istEinsprachler && hatEinsprachlerBereitsNeueinsetzendeFremdsprache)
+		if (!istEinsprachler && hatEinsprachlerBereitsNeueinsetzendeFremdsprache) {
 			ergebnis.log.add(logIndent + "  Es ist bereits eine neu einsetzende Fremdsprache in der Q2 markiert.");
+		}
 
 		if (!istEinsprachler || hatEinsprachlerBereitsNeueinsetzendeFremdsprache) {
 			final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
@@ -1065,15 +1149,18 @@ public final class GostAbiturMarkierungsalgorithmus {
 		}
 		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
 			final GostFach fach = getFach(belegung);
-			if (fach == null)
+			if (fach == null) {
 				continue;
+			}
 			// Erzeuge einen neuen State, bei welchem die beiden besten Halbjahresmarkierungen markiert sind
 			final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
 			ergebnis.log.add(logIndent + "  Fallunterscheidung: Markiere die beiden Kurse in der Q2 für das " + fach.kuerzelAnzeige + "...");
-			if (!newState.markiereHalbjahresbelegung(belegung, GostHalbjahr.Q21))
+			if (!newState.markiereHalbjahresbelegung(belegung, GostHalbjahr.Q21)) {
 				continue;
-			if (!newState.markiereHalbjahresbelegung(belegung, GostHalbjahr.Q22))
+			}
+			if (!newState.markiereHalbjahresbelegung(belegung, GostHalbjahr.Q22)) {
 				continue;
+			}
 
 			newStates.addAll(newState.markiereReligionOderPhilosophieUndEineGesellschaftswissenschaft());
 		}
@@ -1106,13 +1193,15 @@ public final class GostAbiturMarkierungsalgorithmus {
 			newStates.addAll(this.markiereGesellschaftswissenschaftUndGgfErsatzfachFuerReligion(hatAbiPL, true));
 			return newStates;
 		}
-		if (hatAbiPL)
+		if (hatAbiPL) {
 			ergebnis.log.add(logIndent + "  Philosophie wurde im Abiturbereich gewählt und kann daher nicht als Ersatz für ein Religionsfach genutzt werden.");
+		}
 
 		// Wenn weder ein Religionsfach noch Philosophie im Abitur belegt wurde, dann können die beiden besten Halbjahrebelegungen gewählt werden
 		if (!hatAbiPL) { // && !hatAbiRE
-			if (!this.markiereZweiBeste(manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION, GostFachbereich.PHILOSOPHIE)))
+			if (!this.markiereZweiBeste(manager.getRelevanteFachbelegungen(GostFachbereich.RELIGION, GostFachbereich.PHILOSOPHIE))) {
 				return newStates;
+			}
 			newStates.addAll(this.markiereGesellschaftswissenschaftUndGgfErsatzfachFuerReligion(hatAbiPL, true));
 			return newStates;
 		}
@@ -1123,8 +1212,9 @@ public final class GostAbiturMarkierungsalgorithmus {
 		if (hatReligionsbelegungen) {
 			// Wenn Religion existiert, so kann es entweder selbst markiert werden ...
 			final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
-			if (!newState.markiereZweiBeste(belegungen))
+			if (!newState.markiereZweiBeste(belegungen)) {
 				return newStates;
+			}
 			newStates.addAll(this.markiereGesellschaftswissenschaftUndGgfErsatzfachFuerReligion(hatAbiPL, true));
 		}
 		// ... oder ggf. auch ein Ersatzfach
@@ -1141,8 +1231,9 @@ public final class GostAbiturMarkierungsalgorithmus {
 		if (anzahlAbiGesellschaftswissenschaft > 0) {
 			final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
 			// Wenn bereits PL Abiturfach ist, dann kann die zweite Gesellschaftswissenschaft als Religionsersatz dienen
-			if ((!hatReBelegungErfuellt) && (!hatAbiPL || (anzahlAbiGesellschaftswissenschaft == 1)))
+			if ((!hatReBelegungErfuellt) && (!hatAbiPL || (anzahlAbiGesellschaftswissenschaft == 1))) {
 				newState.markiereReligionOderErsatzAusGesellschaftswissenschaften();
+			}
 			newStates.addAll(newState.markiereProjektkurs());
 			return newStates;
 		}
@@ -1152,14 +1243,17 @@ public final class GostAbiturMarkierungsalgorithmus {
 		final @NotNull Set<String> bereitsGeprueft = new HashSet<>(); // Wird ggf. bei bilingualen Sachfächern benötigt, um doppelte Erkennung zu vermeiden
 		for (final @NotNull AbiturFachbelegung belegung : manager.getRelevanteFachbelegungen(GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH)) {
 			final GostFach fach = getFach(belegung);
-			if (fach == null)
+			if (fach == null) {
 				continue;
-			if (bereitsGeprueft.contains(fach.kuerzel))
+			}
+			if (bereitsGeprueft.contains(fach.kuerzel)) {
 				continue;
+			}
 			final @NotNull List<AbiturFachbelegung> tmpBelegung = new ArrayList<>(); // Wird ggf. benötigt, um die Abwahl eines bilingualen Faches zu erkennen
 			tmpBelegung.add(belegung);
-			if (manager.pruefeBelegungExistiert(tmpBelegung, GostHalbjahr.getQualifikationsphase()))
+			if (manager.pruefeBelegungExistiert(tmpBelegung, GostHalbjahr.getQualifikationsphase())) {
 				belegungen.add(belegung);
+			}
 			bereitsGeprueft.add(fach.kuerzel);
 		}
 		// ... prüfe die einzelnen Markierungsmöglichkeiten und erzeuge dafür weitere Instanzen des Algorithmus mit getrennten States
@@ -1169,17 +1263,20 @@ public final class GostAbiturMarkierungsalgorithmus {
 		}
 		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
 			final GostFach fach = getFach(belegung);
-			if (fach == null)
+			if (fach == null) {
 				continue;
+			}
 			// Erzeuge einen neuen State, bei welchem die Belegung durchgängig markiert wird
 			final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
 
 			ergebnis.log.add(logIndent + "  Fallunterscheidung: Markiere die vier Kurse für die Gesellschaftswissenschaft " + fach.kuerzelAnzeige + "...");
-			if (!newState.markiereBelegungDurchgaengig(belegung))
+			if (!newState.markiereBelegungDurchgaengig(belegung)) {
 				continue;
+			}
 
-			if (!hatReBelegungErfuellt)
+			if (!hatReBelegungErfuellt) {
 				newState.markiereReligionOderErsatzAusGesellschaftswissenschaften();
+			}
 			newStates.addAll(newState.markiereProjektkurs());
 		}
 		return newStates;
@@ -1203,13 +1300,16 @@ public final class GostAbiturMarkierungsalgorithmus {
 
 		for (final @NotNull AbiturFachbelegung belegung : belegungen) {
 			final GostFach fach = getFach(belegung);
-			if (fach == null)
+			if (fach == null) {
 				continue;
+			}
 			for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase()) {
-				if (markiert.getOrNull(belegung.fachID, hj.id) != null)
+				if (markiert.getOrNull(belegung.fachID, hj.id) != null) {
 					continue;
-				if (!manager.pruefeBelegung(belegung, hj))
+				}
+				if (!manager.pruefeBelegung(belegung, hj)) {
 					continue;
+				}
 				final int np = getNotenpunkte(belegung, hj);
 				if ((resBelegung[0] == null) || (np > resNotenpunkte[0])) {
 					resBelegung[1] = resBelegung[0];
@@ -1257,15 +1357,18 @@ public final class GostAbiturMarkierungsalgorithmus {
 		// Projektkurs ermitteln (Projektkurs, ProjBll)
 		final AbiturFachbelegung projektkurs = belegpruefungProjektkurse.getProjektkurs();
 		final GostFach fach = (projektkurs == null) ? null : getFach(projektkurs);
-		if (fach != null)
+		if (fach != null) {
 			ergebnis.log.add(logIndent + "  Es wurde ein Projektkurs belegt: " + fach.kuerzelAnzeige);
+		}
 		final @NotNull List<GostHalbjahr> pjkHalbjahre = belegpruefungProjektkurse.getAnrechenbareHalbjahre();
 		final boolean pjkAnrechenbar = (projektkurs != null) && (!manager.istProjektKursBesondereLernleistung()) && (pjkHalbjahre.size() == 2);
-		if (pjkAnrechenbar)
+		if (pjkAnrechenbar) {
 			ergebnis.log.add(logIndent + "  und dieser ist anrechenbar.");
+		}
 		final boolean pjkIstBll = (projektkurs != null) && (manager.istProjektKursBesondereLernleistung());
-		if (pjkIstBll)
+		if (pjkIstBll) {
 			ergebnis.log.add(logIndent + "  und dieser wird für eine besondere Lernleistung verwendet.");
+		}
 
 		// Fall 1: Belege den Projektkurs
 		if (pjkAnrechenbar && (projektkurs != null)) {
@@ -1294,18 +1397,21 @@ public final class GostAbiturMarkierungsalgorithmus {
 			bel1.notenkuerzel = bel2.notenkuerzel;
 
 			// Markiere die beiden Halbjahre
-			if (!newState.markiereHalbjahresbelegung(projektkurs, hj1) || !newState.markiereHalbjahresbelegung(projektkurs, hj2))
+			if (!newState.markiereHalbjahresbelegung(projektkurs, hj1) || !newState.markiereHalbjahresbelegung(projektkurs, hj2)) {
 				return newStates;
+			}
 
-			if (newState.markiereWeitereKurse())
+			if (newState.markiereWeitereKurse()) {
 				newStates.add(newState);
+			}
 		}
 
 		// Fall 2: Belege keinen Projektkurs
 		ergebnis.log.add(logIndent + "  " + (pjkAnrechenbar ? "Fallunterscheidung:" : "") + "Markiere keine Projektkursbelegung");
 		final @NotNull GostAbiturMarkierungsalgorithmus newState = new GostAbiturMarkierungsalgorithmus(this);
-		if (newState.markiereWeitereKurse())
+		if (newState.markiereWeitereKurse()) {
 			newStates.add(newState);
+		}
 		return newStates;
 	}
 
@@ -1329,22 +1435,28 @@ public final class GostAbiturMarkierungsalgorithmus {
 		for (final @NotNull AbiturFachbelegung belegung : manager.daten().fachbelegungen) {
 			// Prüfe das Fach - Projektkurse brauchen hier nicht beachtet zu werden - das passiert bereits früher
 			final GostFach fach = getFach(belegung);
-			if ((fach == null) || ("PX".equals(fach.kuerzel)))
+			if ((fach == null) || ("PX".equals(fach.kuerzel))) {
 				continue;
+			}
 			for (final @NotNull GostHalbjahr hj : GostHalbjahr.getQualifikationsphase()) {
-				if (markiert.contains(belegung.fachID, hj.id))
+				if (markiert.contains(belegung.fachID, hj.id)) {
 					continue;
-				if (!manager.pruefeBelegung(belegung, hj))
+				}
+				if (!manager.pruefeBelegung(belegung, hj)) {
 					continue;
+				}
 				final AbiturFachbelegungHalbjahr belHj = belegung.belegungen[hj.id];
-				if (belHj == null)
+				if (belHj == null) {
 					continue;
+				}
 				final Note note = (belHj.notenkuerzel == null) ? null : Note.fromKuerzel(belHj.notenkuerzel);
-				if ((note == null) || !note.istNote(manager.getSchuljahr()))
+				if ((note == null) || !note.istNote(manager.getSchuljahr())) {
 					continue;
+				}
 				final NoteKatalogEintrag nke = note.daten(manager.getSchuljahr());
-				if ((nke == null) || (nke.notenpunkte == null))
+				if ((nke == null) || (nke.notenpunkte == null)) {
 					continue;
+				}
 				auswahlliste.add(new GostAbiturMarkierungsalgorithmusBelegung(belegung, belHj, nke.notenpunkte));
 			}
 		}
@@ -1357,23 +1469,26 @@ public final class GostAbiturMarkierungsalgorithmus {
 			// Nehme den ersten Eintrag aus der Liste und ermittle das zugehörige Fach und Halbjahr
 			final @NotNull GostAbiturMarkierungsalgorithmusBelegung eintrag = auswahlliste.removeFirst();
 			final GostFach fach = getFach(eintrag.belegung);
-			if (fach == null)
+			if (fach == null) {
 				continue;
+			}
 			final @NotNull Fach f = Fach.getBySchluesselOrDefault(fach.kuerzel);
 
 			// Je nach Fach kann keine Markierung vorgenommen werden...
 			if ((((f == Fach.IN) || (f == Fach.VO)) && ((restErlaubtVPIP == 0) || (restErlaubtMusik == 0) || (restErlaubtKUMUErsatz == 0)))
 					|| ((f == Fach.LI) && (restErlaubtKUMUErsatz == 0))
-					|| ((f == Fach.MU) && (restErlaubtMusik == 0)))
+					|| ((f == Fach.MU) && (restErlaubtMusik == 0))) {
 				continue;
+			}
 
 			// ... wenn 35 oder mehr Kurse vorhanden sind, dann werden Kurse nur noch verwendet
 			// , wenn dadurch der Durchschnitt verbessert wird oder die Anzahl der Defizite sonst zu hoch wäre ...
 			final double durchschnittNotepunkte = summeNotenpunkte / (summeKurse + 8.0); // LK-Belegungen doppelt zählen, also + 2*4
 			final int defizite = defiziteLK + defiziteGK;
 			if ((((summeKurse >= 35) && (summeKurse <= 37) && (defizite <= 7)) || ((summeKurse >= 38) && (defizite <= 8)))
-					&& (eintrag.notenpunkte <= durchschnittNotepunkte))
+					&& (eintrag.notenpunkte <= durchschnittNotepunkte)) {
 				break;
+			}
 
 			// ... eine Markierung sollte vorgenommen werden ...
 			if (!markiereHalbjahresbelegung(eintrag.belegung, eintrag.halbjahr)) {

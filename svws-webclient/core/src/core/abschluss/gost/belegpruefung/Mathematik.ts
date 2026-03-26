@@ -35,8 +35,9 @@ export class Mathematik extends GostBelegpruefung {
 			this.addFehler(GostBelegungsfehler.M_10);
 			return;
 		}
-		if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(this._mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
+		if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(this._mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
 			this.addFehler(GostBelegungsfehler.M_11);
+		}
 	}
 
 	protected pruefeGesamt(): void {
@@ -44,10 +45,12 @@ export class Mathematik extends GostBelegpruefung {
 			this.addFehler(GostBelegungsfehler.M_10);
 			return;
 		}
-		if (!this.manager.pruefeBelegung(this._mathematik, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+		if (!this.manager.pruefeBelegung(this._mathematik, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 			this.addFehler(GostBelegungsfehler.M_10);
-		if (!this.manager.pruefeBelegungMitSchriftlichkeit(this._mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21))
+		}
+		if (!this.manager.pruefeBelegungMitSchriftlichkeit(this._mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21)) {
 			this.addFehler(GostBelegungsfehler.M_11);
+		}
 	}
 
 	transpilerCanonicalName(): string {

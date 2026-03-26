@@ -42,8 +42,9 @@ public class BKGymAbiturMarkierungsregelAufgabenfeld extends BKGymAbiturMarkieru
 	@Override
 	public void markiere(final @NotNull BKGymAbiturMarkierungsVariante variante) {
 		final BKGymAufgabenfeld feld = BKGymAufgabenfeld.getAufgabenfeldFromKuerzel(aufgabenfeld);
-		if (feld == null)
+		if (feld == null) {
 			throw new DeveloperNotificationException("Die Prüfbedingung " + kuerzel + "spezifiziert ein nicht vorhandenes Aufgabenfeld.");
+		}
 
 		final @NotNull Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> bedingung =
 				markierung -> (markierung != null)

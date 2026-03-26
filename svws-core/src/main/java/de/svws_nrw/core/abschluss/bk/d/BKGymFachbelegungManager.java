@@ -73,15 +73,18 @@ public class BKGymFachbelegungManager {
 			final @NotNull String fachbezeichnung = faecherManager.getBezeichnungByFachID(fb.fachID);
 			// Ordne die Fachbelegungen ihren Bezeichnungen zu.
 			final BKGymFach fach = faecherManager.get(fb.fachID);
-			if ((fach == null) || (fach.bezeichnung == null))
+			if ((fach == null) || (fach.bezeichnung == null)) {
 				continue;
+			}
 			mapFachbelegungenByFachbezeichnung.put(fach.bezeichnung, fb);
-			if (fb.abiturFach != null)
+			if (fb.abiturFach != null) {
 				mapAbiturfachbelegungen.put(fb.abiturFach, fb);
+			}
 			for (final GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
 				final BKGymAbiturFachbelegungHalbjahr belegungHalbjahr = fb.belegungen[halbjahr.id];
-				if ((belegungHalbjahr != null) && (belegungHalbjahr.kursartKuerzel != null))
+				if ((belegungHalbjahr != null) && (belegungHalbjahr.kursartKuerzel != null)) {
 					mapBelegungByHalbjahrAndFachbezeichung.put(fachbezeichnung, halbjahr.id, belegungHalbjahr);
+				}
 			}
 		}
 	}
@@ -108,8 +111,9 @@ public class BKGymFachbelegungManager {
 	 */
 	public Long getAbiFachID(@NotNull final GostAbiturFach abiFach) {
 		final BKGymAbiturFachbelegung abifach = getAbiFachbelegung(abiFach);
-		if (abifach == null)
+		if (abifach == null) {
 			return null;
+		}
 		return abifach.fachID;
 	}
 
@@ -123,8 +127,9 @@ public class BKGymFachbelegungManager {
 		// Durchwandere alle belegten Fächer und schaue nach Fremdsprache
 		for (final Entry<String, BKGymAbiturFachbelegung> entry : mapFachbelegungenByFachbezeichnung.entrySet()) {
 			final BKGymFach fach = faecherManager.get(entry.getValue().fachID);
-			if ((fach != null) && fach.istFremdsprache && !fach.bezeichnung.equals("Englisch"))
+			if ((fach != null) && fach.istFremdsprache && !fach.bezeichnung.equals("Englisch")) {
 				return entry.getValue().fachID;
+			}
 		}
 		return null;
 	}
@@ -171,8 +176,9 @@ public class BKGymFachbelegungManager {
 	 */
 	public Long getFachIDByBezeichnung(@NotNull final String bezeichnung) {
 		final BKGymAbiturFachbelegung fach = mapFachbelegungenByFachbezeichnung.get(bezeichnung);
-		if (fach == null)
+		if (fach == null) {
 			return null;
+		}
 		return fach.fachID;
 	}
 
@@ -189,24 +195,32 @@ public class BKGymFachbelegungManager {
 			final @NotNull BKGymAbiturFachbelegung fb) {
 		// Prüfe, ob das Fach in der Fächerliste des Abiturjahrgangs überhaupt existiert
 		final BKGymFach fbFach = faecherManager.get(fb.fachID);
-		if ((fbFach == null) || (fbFach.bezeichnung == null))
+		if ((fbFach == null) || (fbFach.bezeichnung == null)) {
 			return null;
+		}
 
 		// Wenn die Bezeichnungen gleich sind, dann wurde ein Fach gefunden
-		for (final BeruflichesGymnasiumStundentafelFach tafelFach : tafel.faecher)
-			if (tafelFach.fachbezeichnung.equals(fbFach.bezeichnung))
+		for (final BeruflichesGymnasiumStundentafelFach tafelFach : tafel.faecher) {
+			if (tafelFach.fachbezeichnung.equals(fbFach.bezeichnung)) {
 				return tafelFach;
+			}
+		}
 
 		// Wenn es sich um eine Fremdsprache handelt, dann kann diese ggf. als zweite Fremdsprache genommen werden
-		if (fbFach.istFremdsprache)
-			for (final BeruflichesGymnasiumStundentafelFach tafelFach : tafel.faecher)
-				if (BKGymStundentafelManager.istZweiteFremdsprache(tafelFach.fachbezeichnung))
+		if (fbFach.istFremdsprache) {
+			for (final BeruflichesGymnasiumStundentafelFach tafelFach : tafel.faecher) {
+				if (BKGymStundentafelManager.istZweiteFremdsprache(tafelFach.fachbezeichnung)) {
 					return tafelFach;
+				}
+			}
+		}
 
 		// Ggf. kann die Fachbelegung auch als Wahlfach gewertet werden.
-		for (final BeruflichesGymnasiumStundentafelFach tafelFach : tafel.faecher)
-			if (BKGymStundentafelManager.istWahlfach(tafelFach.fachbezeichnung))
+		for (final BeruflichesGymnasiumStundentafelFach tafelFach : tafel.faecher) {
+			if (BKGymStundentafelManager.istWahlfach(tafelFach.fachbezeichnung)) {
 				return tafelFach;
+			}
+		}
 
 		return null;
 	}
@@ -231,8 +245,9 @@ public class BKGymFachbelegungManager {
 	 */
 	public boolean istZweiteFremdsprache(@NotNull final String fachBezeichnung) {
 		final String zweiteFremdspracheBezeichnung = getZweiteFremdspracheBezeichnung();
-		if (zweiteFremdspracheBezeichnung == null)
+		if (zweiteFremdspracheBezeichnung == null) {
 			return false;
+		}
 		return zweiteFremdspracheBezeichnung.equals(fachBezeichnung);
 	}
 
@@ -245,22 +260,28 @@ public class BKGymFachbelegungManager {
 	 * @return false wenn Facharbeit vorhanden und nicht einem LK zugeordnet sonst true
 	 */
 	private boolean pruefeIstFacharbeitBerufsbezogenerLK() {
-		if (abidatenManager.getAbidaten().facharbeitFachbezeichnung == null)
+		if (abidatenManager.getAbidaten().facharbeitFachbezeichnung == null) {
 			return true;
+		}
 		final String fachbezeichnung = abidatenManager.getAbidaten().facharbeitFachbezeichnung;
-		if (fachbezeichnung == null)
+		if (fachbezeichnung == null) {
 			return false;
+		}
 		final Long facharbeitFachID = getFachIDByBezeichnung(fachbezeichnung);
-		if (facharbeitFachID == null)
+		if (facharbeitFachID == null) {
 			return false;
-		if (!abidatenManager.getStundentafelManager().istBerufsbezogenesFach(fachbezeichnung))
+		}
+		if (!abidatenManager.getStundentafelManager().istBerufsbezogenesFach(fachbezeichnung)) {
 			return false;
+		}
 		final Long fachIDLK1 = getAbiFachID(GostAbiturFach.LK1);
-		if (fachIDLK1 != null && facharbeitFachID.equals(fachIDLK1))
+		if (fachIDLK1 != null && facharbeitFachID.equals(fachIDLK1)) {
 			return true;
+		}
 		final Long fachIDLK2 = getAbiFachID(GostAbiturFach.LK2);
-		if (fachIDLK2 == null)
+		if (fachIDLK2 == null) {
 			return false;
+		}
 		return facharbeitFachID.equals(fachIDLK2);
 	}
 
@@ -271,8 +292,9 @@ public class BKGymFachbelegungManager {
 	 * @return ob ggfs. die Facharbeit einem berufsbezogenen LK-Fach zugeordnet ist
 	 */
 	public boolean getIstFacharbeitBerufsbezogenerLK() {
-		if (istFacharbeitBerufsbezogenerLK == null)
+		if (istFacharbeitBerufsbezogenerLK == null) {
 			istFacharbeitBerufsbezogenerLK = pruefeIstFacharbeitBerufsbezogenerLK();
+		}
 		return istFacharbeitBerufsbezogenerLK;
 	}
 
@@ -289,18 +311,23 @@ public class BKGymFachbelegungManager {
 	 * @return true, falls das Fach in den Halbjahren belegt wurde, sonst false
 	 */
 	public boolean pruefeBelegung(final BKGymAbiturFachbelegung fachbelegung, final @NotNull List<GostHalbjahr> leereHje, final @NotNull GostHalbjahr... halbjahre) {
-		if (fachbelegung == null)
+		if (fachbelegung == null) {
 			return false;
-		if (halbjahre.length == 0)
+		}
+		if (halbjahre.length == 0) {
 			return true;
+		}
 		for (final GostHalbjahr halbjahr : halbjahre) {
-			if (leereHje.contains(halbjahr))
+			if (leereHje.contains(halbjahr)) {
 				continue;
+			}
 			final BKGymAbiturFachbelegungHalbjahr belegungHalbjahr = fachbelegung.belegungen[halbjahr.id];
-			if ((belegungHalbjahr == null) || (belegungHalbjahr.kursartKuerzel == null))
+			if ((belegungHalbjahr == null) || (belegungHalbjahr.kursartKuerzel == null)) {
 				return false;
-			if (istNullPunkteBelegungInQPhase(belegungHalbjahr))
+			}
+			if (istNullPunkteBelegungInQPhase(belegungHalbjahr)) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -316,8 +343,9 @@ public class BKGymFachbelegungManager {
 	 */
 	public static boolean istNullPunkteBelegungInQPhase(final @NotNull BKGymAbiturFachbelegungHalbjahr halbjahresbelegung) {
 		final GostHalbjahr hj = GostHalbjahr.fromKuerzel(halbjahresbelegung.halbjahrKuerzel);
-		if ((hj == null) || (hj.istEinfuehrungsphase()))
+		if ((hj == null) || (hj.istEinfuehrungsphase())) {
 			return false;
+		}
 		return Note.fromKuerzel(halbjahresbelegung.notenkuerzel) == Note.UNGENUEGEND;
 	}
 
@@ -344,8 +372,9 @@ public class BKGymFachbelegungManager {
 	 */
 	public boolean getSchriftlichBelegt(@NotNull final GostHalbjahr hj, @NotNull final BeruflichesGymnasiumStundentafelFach fach) {
 		final BKGymAbiturFachbelegung belegung = getFachbelegungByBezeichnung(fach.fachbezeichnung);
-		if (belegung == null)
+		if (belegung == null) {
 			return false;
+		}
 		final BKGymAbiturFachbelegungHalbjahr belegungHalbjahr = belegung.belegungen[hj.id];
 		return (belegungHalbjahr != null) && (belegungHalbjahr.schriftlich);
 	}

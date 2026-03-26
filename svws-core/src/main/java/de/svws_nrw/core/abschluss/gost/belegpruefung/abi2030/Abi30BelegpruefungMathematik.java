@@ -56,8 +56,9 @@ public final class Abi30BelegpruefungMathematik extends GostBelegpruefung {
 		}
 
 		// EF1-Prüfung Punkt 12: Prüfe, ob Mathematik in der EF1 schriftlich belegt wurde
-		if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(_mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
+		if (!manager.pruefeBelegungMitSchriftlichkeitEinzeln(_mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
 			addFehler(GostBelegungsfehler.M_11);
+		}
 	}
 
 
@@ -70,13 +71,15 @@ public final class Abi30BelegpruefungMathematik extends GostBelegpruefung {
 		}
 
 		// Gesamtprüfung Punkt 45: Prüfe, ob Mathematik von EF.1 bis Q2.2 belegt wurde
-		if (!manager.pruefeBelegung(_mathematik, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+		if (!manager.pruefeBelegung(_mathematik, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 			addFehler(GostBelegungsfehler.M_10);
+		}
 
 		// Gesamtprüfung Punkt 46: Prüfe, ob Mathematik von EF.1 bis Q2.1 schriftlich belegt wurde
 		if (!manager.pruefeBelegungMitSchriftlichkeit(_mathematik, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11,
-				GostHalbjahr.Q12, GostHalbjahr.Q21))
+				GostHalbjahr.Q12, GostHalbjahr.Q21)) {
 			addFehler(GostBelegungsfehler.M_11);
+		}
 	}
 
 }

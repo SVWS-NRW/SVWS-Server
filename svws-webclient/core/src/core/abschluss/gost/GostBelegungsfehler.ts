@@ -755,8 +755,9 @@ export class GostBelegungsfehler extends JavaEnum<GostBelegungsfehler> {
 	 * @return der zugehörige Text des Belegungsfehlers
 	 */
 	public getText(pruefArt: GostBelegpruefungsArt): string {
-		if (JavaObject.equalsTranspiler(pruefArt, (GostBelegpruefungsArt.EF1)))
+		if (JavaObject.equalsTranspiler(pruefArt, (GostBelegpruefungsArt.EF1))) {
 			return this.textEF1;
+		}
 		return this.textGESAMT;
 	}
 

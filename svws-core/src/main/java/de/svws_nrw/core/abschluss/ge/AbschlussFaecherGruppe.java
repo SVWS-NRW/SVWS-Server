@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse enthält die Informationen für die Abschlussberechnung, welche Fächer einer Fächergruppe zugeordnet sind.
- * Hierzu wird intern eine Lister zur Verfügung gestellt und es werden mehrere Hilfemethoden zur Verfügung gestellt,
+ * Hierzu wird intern eine Lister zur Verfügung gestellt und es werden mehrere Hilfsmethoden zur Verfügung gestellt,
  * um Operationen auf dieser Fachgruppe auszuführen.
  */
 @XmlRootElement(name = "AbschlussFaecherGruppe")
@@ -37,12 +37,15 @@ public class AbschlussFaecherGruppe {
 		// Gehe alle Leistungsdaten des Lernabschnittes durch und füge alle Fächer hinzu, die den Kriterien entsprechen
 		for (int i = 0; i < faecherAlle.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecherAlle.get(i);
-			if (fach.kuerzel == null)
+			if (fach.kuerzel == null) {
 				continue;
-			if ((faecherFiltern != null) && faecherFiltern.contains(fach.kuerzel))
+			}
+			if ((faecherFiltern != null) && faecherFiltern.contains(fach.kuerzel)) {
 				continue;
-			if ((faecherNutzen != null) && !faecherNutzen.contains(fach.kuerzel))
+			}
+			if ((faecherNutzen != null) && !faecherNutzen.contains(fach.kuerzel)) {
 				continue;
+			}
 			faecher.add(AbschlussManager.erstelleAbschlussFach(fach.kuerzel, fach.bezeichnung, fach.note, GELeistungsdifferenzierteKursart.from(fach.kursart),
 					fach.istFremdsprache));
 		}
@@ -57,17 +60,22 @@ public class AbschlussFaecherGruppe {
 	 * @return true, falls die angegebenen Fächer und nur diese in der Fächergruppe sind, ansonsten false.
 	 */
 	public boolean istVollstaendig(final List<String> faecherAbgleich) {
-		if (faecherAbgleich == null)
+		if (faecherAbgleich == null) {
 			return true;
-		if (isEmpty())
-			return false;
-		for (final String kuerzel : faecherAbgleich) {
-			if (!this.contains(kuerzel))
-				return false;
 		}
-		for (final @NotNull GEAbschlussFach fach : faecher)
-			if (!faecherAbgleich.contains(fach.kuerzel))
+		if (isEmpty()) {
+			return false;
+		}
+		for (final String kuerzel : faecherAbgleich) {
+			if (!this.contains(kuerzel)) {
 				return false;
+			}
+		}
+		for (final @NotNull GEAbschlussFach fach : faecher) {
+			if (!faecherAbgleich.contains(fach.kuerzel)) {
+				return false;
+			}
+		}
 		return true;
 	}
 
@@ -91,11 +99,13 @@ public class AbschlussFaecherGruppe {
 	 * @return true, falls das Fach vorhanden ist, und ansonsten false
 	 */
 	public boolean contains(final String kuerzel) {
-		if (kuerzel == null)
+		if (kuerzel == null) {
 			return false;
+		}
 		for (final @NotNull GEAbschlussFach fach : faecher) {
-			if (fach.kuerzel.equals(kuerzel))
+			if (fach.kuerzel.equals(kuerzel)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -112,8 +122,9 @@ public class AbschlussFaecherGruppe {
 		final @NotNull ArrayList<GEAbschlussFach> selected = new ArrayList<>();
 		for (int i = 0; i < faecher.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecher.get(i);
-			if (filter.test(fach))
+			if (filter.test(fach)) {
 				selected.add(fach);
+			}
 		}
 		faecher.removeAll(selected);
 		return selected;
@@ -131,8 +142,9 @@ public class AbschlussFaecherGruppe {
 	 */
 	public GEAbschlussFach getFach(final @NotNull Predicate<GEAbschlussFach> filter) {
 		for (final @NotNull GEAbschlussFach fach : faecher) {
-			if (filter.test(fach))
+			if (filter.test(fach)) {
 				return fach;
+			}
 		}
 		return null;
 	}
@@ -149,8 +161,9 @@ public class AbschlussFaecherGruppe {
 		final @NotNull ArrayList<GEAbschlussFach> result = new ArrayList<>();
 		for (int i = 0; i < faecher.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecher.get(i);
-			if (filter.test(fach))
+			if (filter.test(fach)) {
 				result.add(fach);
+			}
 		}
 		return result;
 	}
@@ -166,8 +179,9 @@ public class AbschlussFaecherGruppe {
 	public long getFaecherAnzahl(final @NotNull Predicate<GEAbschlussFach> filter) {
 		long count = 0;
 		for (final @NotNull GEAbschlussFach fach : faecher) {
-			if (filter.test(fach))
+			if (filter.test(fach)) {
 				count++;
+			}
 		}
 		return count;
 	}
@@ -184,8 +198,9 @@ public class AbschlussFaecherGruppe {
 		final @NotNull ArrayList<String> result = new ArrayList<>();
 		for (int i = 0; i < faecher.size(); i++) {
 			final @NotNull GEAbschlussFach fach = faecher.get(i);
-			if (filter.test(fach) && (fach.kuerzel != null))
+			if (filter.test(fach) && (fach.kuerzel != null)) {
 				result.add(fach.kuerzel);
+			}
 		}
 		return result;
 	}
@@ -203,8 +218,9 @@ public class AbschlussFaecherGruppe {
 		final @NotNull StringBuilder sb = new StringBuilder();
 		for (final @NotNull GEAbschlussFach fach : faecher) {
 			if (filter.test(fach)) {
-				if (!sb.isEmpty())
+				if (!sb.isEmpty()) {
 					sb.append(", ");
+				}
 				sb.append(fach.kuerzel);
 			}
 		}
@@ -221,13 +237,16 @@ public class AbschlussFaecherGruppe {
 	public @NotNull String toString() {
 		final @NotNull StringBuilder sb = new StringBuilder();
 		for (final @NotNull GEAbschlussFach fach : faecher) {
-			if (!sb.isEmpty())
+			if (!sb.isEmpty()) {
 				sb.append(", ");
+			}
 			@NotNull String diffkursinfo = "";
-			if ((fach.kursart == null) || (fach.kuerzel == null))
+			if ((fach.kursart == null) || (fach.kuerzel == null)) {
 				continue;
-			if (!GELeistungsdifferenzierteKursart.Sonstige.hat(fach.kursart))
+			}
+			if (!GELeistungsdifferenzierteKursart.Sonstige.hat(fach.kursart)) {
 				diffkursinfo += fach.kursart + ",";
+			}
 			sb.append("%s(%s%s)".formatted(fach.kuerzel, diffkursinfo, fach.note));
 		}
 		return sb.toString();

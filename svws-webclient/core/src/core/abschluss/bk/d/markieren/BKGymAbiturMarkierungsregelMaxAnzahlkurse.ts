@@ -32,8 +32,9 @@ export class BKGymAbiturMarkierungsregelMaxAnzahlkurse extends BKGymAbiturMarkie
 	 */
 	public markiere(variante: BKGymAbiturMarkierungsVariante): void {
 		const vorherMarkiert: number = variante.anzahlEingebrachteKurse();
-		if (vorherMarkiert > this.anzahl)
+		if (vorherMarkiert > this.anzahl) {
 			throw new DeveloperNotificationException("Es wurden mehr Kurse markiert als maximal erlaubt ist.")
+		}
 		if (vorherMarkiert === this.anzahl) {
 			variante.addLogEintrag(1, "Es sind bereits " + vorherMarkiert + " Kurse durch die vorherigen Bedingungen markiert.");
 			return;
@@ -41,10 +42,11 @@ export class BKGymAbiturMarkierungsregelMaxAnzahlkurse extends BKGymAbiturMarkie
 		const bedingung: Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> = { test: (markierung: BKGymAbiturMarkierungsalgorithmusMarkierung | null) => (markierung !== null) && (markierung.punkte !== null) && (variante.getDurchschnitt() < markierung.punkte) };
 		variante.markiereKursanzahl(this.anzahl - vorherMarkiert, bedingung);
 		const jetztMarkiert: number = variante.anzahlEingebrachteKurse();
-		if (vorherMarkiert < jetztMarkiert)
+		if (vorherMarkiert < jetztMarkiert) {
 			variante.addLogEintrag(1, "Es konnten " + (jetztMarkiert - vorherMarkiert) + " weitere Kurse zur Verbesserung markiert werden.");
-		else
+		} else {
 			variante.addLogEintrag(1, "Weitere Kurse wurden nicht markiert, da dadurch keine Verbesserung erreicht wird.");
+		}
 	}
 
 	transpilerCanonicalName(): string {

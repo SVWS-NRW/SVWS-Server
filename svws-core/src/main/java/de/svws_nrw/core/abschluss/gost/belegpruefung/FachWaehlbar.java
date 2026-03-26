@@ -37,8 +37,9 @@ public final class FachWaehlbar extends GostBelegpruefung {
 	private void pruefeFachbelegungHalbjahr(final @NotNull GostFach fach, final @NotNull AbiturFachbelegung fachbelegung,
 			final @NotNull GostHalbjahr halbjahr) {
 		final AbiturFachbelegungHalbjahr fbHalbjahr = fachbelegung.belegungen[halbjahr.id];
-		if (fbHalbjahr == null)
+		if (fbHalbjahr == null) {
 			return;
+		}
 		final boolean istwaehlbar = switch (halbjahr) {
 			case EF1 -> fach.istMoeglichEF1;
 			case EF2 -> fach.istMoeglichEF2;
@@ -48,30 +49,35 @@ public final class FachWaehlbar extends GostBelegpruefung {
 			case Q22 -> fach.istMoeglichQ22;
 			default -> false;
 		};
-		if (!istwaehlbar)
+		if (!istwaehlbar) {
 			addFehler(GostBelegungsfehler.WAEHLBARKEIT_1);
+		}
 	}
 
 
 	private static boolean hatLKFachbelegung(final @NotNull AbiturFachbelegung fachbelegung) {
 		for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.getQualifikationsphase()) {
 			final AbiturFachbelegungHalbjahr fbHalbjahr = fachbelegung.belegungen[halbjahr.id];
-			if ((fbHalbjahr != null) && "LK".equals(fbHalbjahr.kursartKuerzel))
+			if ((fbHalbjahr != null) && "LK".equals(fbHalbjahr.kursartKuerzel)) {
 				return true;
+			}
 		}
 		return false;
 	}
 
 
 	private void pruefeFachbelegungAbitur(final @NotNull GostFach fach, final @NotNull AbiturFachbelegung fachbelegung) {
-		if (fachbelegung.abiturFach == null)
+		if (fachbelegung.abiturFach == null) {
 			return;
+		}
 		// Prüfe auf LK
-		if ((!fach.istMoeglichAbiLK) && ((fachbelegung.abiturFach == 1) || (fachbelegung.abiturFach == 2) || (hatLKFachbelegung(fachbelegung))))
+		if ((!fach.istMoeglichAbiLK) && ((fachbelegung.abiturFach == 1) || (fachbelegung.abiturFach == 2) || (hatLKFachbelegung(fachbelegung)))) {
 			addFehler(GostBelegungsfehler.WAEHLBARKEIT_3);
+		}
 		// Prüfe auf GK
-		if ((!fach.istMoeglichAbiGK) && ((fachbelegung.abiturFach == 3) || (fachbelegung.abiturFach == 4)))
+		if ((!fach.istMoeglichAbiGK) && ((fachbelegung.abiturFach == 3) || (fachbelegung.abiturFach == 4))) {
 			addFehler(GostBelegungsfehler.WAEHLBARKEIT_2);
+		}
 	}
 
 
@@ -95,8 +101,9 @@ public final class FachWaehlbar extends GostBelegpruefung {
 				addFehler(GostBelegungsfehler.WAEHLBARKEIT_0);
 				continue;
 			}
-			for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.values())
+			for (final @NotNull GostHalbjahr halbjahr : GostHalbjahr.values()) {
 				pruefeFachbelegungHalbjahr(fach, fachbelegung, halbjahr);
+			}
 			pruefeFachbelegungAbitur(fach, fachbelegung);
 		}
 	}

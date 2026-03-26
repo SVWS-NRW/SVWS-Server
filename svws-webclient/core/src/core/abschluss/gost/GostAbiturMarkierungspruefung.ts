@@ -88,16 +88,20 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 		let tmpBelegpruefungProjektkurse: Projektkurse | null = null;
 		let tmpBelegpruefungAbiturfaecher: AbiFaecher | null = null;
 		for (const pruefung of belegpruefungen) {
-			if (((pruefung instanceof JavaObject) && (pruefung.isTranspiledInstanceOf('de.svws_nrw.core.abschluss.gost.belegpruefung.Projektkurse'))))
+			if (((pruefung instanceof JavaObject) && (pruefung.isTranspiledInstanceOf('de.svws_nrw.core.abschluss.gost.belegpruefung.Projektkurse')))) {
 				tmpBelegpruefungProjektkurse = (pruefung as unknown as Projektkurse);
-			if (((pruefung instanceof JavaObject) && (pruefung.isTranspiledInstanceOf('de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher'))))
+			}
+			if (((pruefung instanceof JavaObject) && (pruefung.isTranspiledInstanceOf('de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher')))) {
 				tmpBelegpruefungAbiturfaecher = (pruefung as unknown as AbiFaecher);
+			}
 		}
-		if (tmpBelegpruefungProjektkurse === null)
+		if (tmpBelegpruefungProjektkurse === null) {
 			throw new DeveloperNotificationException("Die Projektkursprüfung muss als Belegprüfung vorhanden sein.")
+		}
 		this.belegpruefungProjektkurse = tmpBelegpruefungProjektkurse;
-		if (tmpBelegpruefungAbiturfaecher === null)
+		if (tmpBelegpruefungAbiturfaecher === null) {
 			throw new DeveloperNotificationException("Die Abiturfächerprüfung muss als Belegprüfung vorhanden sein.")
+		}
 		this.belegpruefungAbiturfaecher = tmpBelegpruefungAbiturfaecher;
 		this.abi[0] = this.belegpruefungAbiturfaecher.getAbiturfach(GostAbiturFach.LK1);
 		this.abi[1] = this.belegpruefungAbiturfaecher.getAbiturfach(GostAbiturFach.LK2);
@@ -133,8 +137,9 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 		success = success && this.pruefeAbiturfachMarkierung();
 		success = success && this.pruefeDeutschMarkierung();
 		success = success && this.pruefeFremdsprachenMarkierung();
-		if (!success)
+		if (!success) {
 			return success;
+		}
 		this.pruefeAufWeitereFremdsprache();
 		success = this.pruefeNeuEinsetzendeFremdsprache();
 		success = success && this.pruefeKunstMusikOderErsatzMarkierung();
@@ -146,15 +151,17 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 		success = success && this.pruefeReligionsOderErsatzMarkierungen();
 		success = success && this.pruefeAnzahlMarkierungen(GostFachbereich.MATHEMATIK, 4, "Mathematik muss durchgehend markiert sein.");
 		success = success && this.pruefeNaturwissenschaftMarkierung();
-		if (!success)
+		if (!success) {
 			return success;
+		}
 		this.pruefeAufWeitereNaturwissenschaft();
 		success = this.pruefeSchwerpunkt();
 		success = success && this.pruefeProjektkurs();
 		success = success && this.pruefeAnzahlUndDefizite();
 		success = success && this.pruefeProjektkursBesondereLernleistung();
-		if (!success)
+		if (!success) {
 			return success;
+		}
 		return this.pruefeOptimierung();
 	}
 
@@ -175,10 +182,12 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 				this.ergebnis.log.add(JavaString.format("Beide Leistungskurse müssen im Halbjahr %s bewertet sein, damit eine Abiturzulassung möglich ist.", halbjahr.kuerzel));
 				return false;
 			}
-			if (np1 < 5)
+			if (np1 < 5) {
 				defiziteLK++;
-			if (np2 < 5)
+			}
+			if (np2 < 5) {
 				defiziteLK++;
+			}
 		}
 		if (defiziteLK > 3) {
 			this.ergebnis.log.add("Es liegen mehr als drei Leistungskursdefizite vor. Keine Zulassung zum Abitur.");
@@ -291,8 +300,9 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 		this.hatWeitereFremdsprache = false;
 		let belegungen: List<AbiturFachbelegung> = this.manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE);
 		for (const belegung of belegungen) {
-			if (belegung as unknown === this.fremdsprache as unknown)
+			if (belegung as unknown === this.fremdsprache as unknown) {
 				continue;
+			}
 			let found: boolean = true;
 			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 				if (belegung.belegungen[halbjahr.id] === null) {
@@ -323,8 +333,9 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 			const fs: string | null = (tmpFach === null) ? "" : GostFachUtils.getFremdsprache(tmpFach);
 			for (const belegung of belegungen) {
 				const sachfach: GostFach | null = this.manager.getFach(belegung);
-				if ((sachfach === null) || (sachfach.biliSprache === null) || (JavaString.isBlank(sachfach.biliSprache)) || (JavaObject.equalsTranspiler(sachfach.biliSprache, (fs))))
+				if ((sachfach === null) || (sachfach.biliSprache === null) || (JavaString.isBlank(sachfach.biliSprache)) || (JavaObject.equalsTranspiler(sachfach.biliSprache, (fs)))) {
 					continue;
+				}
 				let found: boolean = true;
 				for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 					if (belegung.belegungen[halbjahr.id] === null) {
@@ -354,8 +365,9 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 
 	private pruefeNeuEinsetzendeFremdsprache(): boolean {
 		const fs2: string | null = SprachendatenUtils.getZweiteSpracheInSekI(this.manager.getSprachendaten());
-		if (fs2 !== null)
+		if (fs2 !== null) {
 			return true;
+		}
 		const belegungen: List<AbiturFachbelegung> = this.manager.filterFremdspracheNeuEinsetzend(this.manager.getFachbelegungen(GostFachbereich.FREMDSPRACHE));
 		for (const belegung of belegungen) {
 			let found: boolean = true;
@@ -374,8 +386,9 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 					break;
 				}
 			}
-			if (found)
+			if (found) {
 				return true;
+			}
 		}
 		this.ergebnis.log.add("Es muss eine neu einsetzende Fremdsprache in der Q2.1 und Q2.2 markiert sein, damit eine Abiturzulassung möglich ist.");
 		return false;
@@ -390,16 +403,20 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 		for (const belegung of belegungen) {
 			let kurseMarkiert: number = 0;
 			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
-				if (belegung.belegungen[halbjahr.id] === null)
+				if (belegung.belegungen[halbjahr.id] === null) {
 					continue;
+				}
 				const np: number | null = this.manager.getNotenpunkteOfFachbelegungHalbjahr(belegung.belegungen[halbjahr.id]);
-				if ((np === null) || (np === 0))
+				if ((np === null) || (np === 0)) {
 					continue;
-				if (this.manager.hatMarkierungHalbjahr(belegung, halbjahr))
+				}
+				if (this.manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
 					kurseMarkiert++;
+				}
 			}
-			if (kurseMarkiert >= 2)
+			if (kurseMarkiert >= 2) {
 				return true;
+			}
 		}
 		this.ergebnis.log.add("Es müssen mindestens 2 Kurse in Kunst, Musik oder einem Ersatzfach markiert sein, damit eine Abiturzulassung möglich ist.");
 		return false;
@@ -411,16 +428,20 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 		for (const belegung of belegungen) {
 			let kurseMarkiert: number = 0;
 			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
-				if (belegung.belegungen[halbjahr.id] === null)
+				if (belegung.belegungen[halbjahr.id] === null) {
 					continue;
+				}
 				const np: number | null = this.manager.getNotenpunkteOfFachbelegungHalbjahr(belegung.belegungen[halbjahr.id]);
-				if ((np === null) || (np === 0))
+				if ((np === null) || (np === 0)) {
 					continue;
-				if (this.manager.hatMarkierungHalbjahr(belegung, halbjahr))
+				}
+				if (this.manager.hatMarkierungHalbjahr(belegung, halbjahr)) {
 					kurseMarkiert++;
+				}
 			}
-			if (kurseMarkiert > 0)
+			if (kurseMarkiert > 0) {
 				faecherMarkiert++;
+			}
 			if (kurseMarkiert > 2) {
 				this.ergebnis.log.add("Es dürfen maximal 2 Kurse in einem Ersatzfach markiert sein.");
 				return false;
@@ -464,8 +485,9 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 	private pruefeAnzahlMarkierungen(fb: GostFachbereich, min: number, fehler: string): boolean {
 		const belegungen: List<AbiturFachbelegung> = this.manager.getFachbelegungen(fb);
 		let anzahl: number = 0;
-		for (const belegung of belegungen)
+		for (const belegung of belegungen) {
 			anzahl += this.manager.zaehleMarkierungenQualifikationsphase(belegung);
+		}
 		if (anzahl < min) {
 			this.ergebnis.log.add(fehler);
 			return false;
@@ -479,8 +501,9 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 			this.ergebnis.log.add("Es muss mindestens eine Gesellschaftswissenschaft belegt sein, damit eine Abiturzulassung möglich ist.");
 			return false;
 		}
-		if (this.manager.pruefeMarkierungExistiertDurchgaengig(belegungen) !== null)
+		if (this.manager.pruefeMarkierungExistiertDurchgaengig(belegungen) !== null) {
 			return true;
+		}
 		this.ergebnis.log.add("Es muss mindestens eine Gesellschaftswissenschaft durchgängig markiert sein, damit eine Abiturzulassung möglich ist.");
 		return false;
 	}
@@ -497,22 +520,26 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 		}
 		const countGW: number = this.manager.zaehleAlleMarkierungenQualifikationsphase(this.manager.getFachbelegungen(GostFachbereich.GESCHICHTE, GostFachbereich.SOZIALWISSENSCHAFTEN, GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE));
 		const hatAbiGW: boolean = this.manager.hatFachbereichInAbiturfaechern(GostFachbereich.GESCHICHTE, GostFachbereich.SOZIALWISSENSCHAFTEN, GostFachbereich.GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE);
-		if (!(!hatAbiRE && hatAbiPL && !hatAbiGW))
+		if (!(!hatAbiRE && hatAbiPL && !hatAbiGW)) {
 			return true;
-		if (countRE >= 2)
+		}
+		if (countRE >= 2) {
 			return true;
+		}
 		if (this.manager.pruefeBelegungExistiert(belRE, GostHalbjahr.Q11, GostHalbjahr.Q12)) {
 			this.ergebnis.log.add("Es müssen mindestens zwei Kurse aus der Fächergruppe Religionslehre markiert werden.");
 			return false;
 		}
-		if ((countRE === 1) && (countGW + countPL >= 9))
+		if ((countRE === 1) && (countGW + countPL >= 9)) {
 			return true;
+		}
 		if (this.manager.pruefeBelegungExistiert(belRE, GostHalbjahr.Q11) || this.manager.pruefeBelegungExistiert(belRE, GostHalbjahr.Q11)) {
 			this.ergebnis.log.add("Es müssen zwei Kurse Religionslehre oder ein Kurs Religionslehre und ein Kurs des Ersatzfaches markiert werden.");
 			return false;
 		}
-		if (countGW + countPL >= 10)
+		if (countGW + countPL >= 10) {
 			return true;
+		}
 		this.ergebnis.log.add("Es müssen zwei Kurse Religionslehre oder ein Kurs Religionslehre und ein Kurs des Ersatzfaches oder zwei Kurse des Ersatzfaches markiert werden.");
 		return false;
 	}
@@ -524,20 +551,23 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 			return false;
 		}
 		this.naturwissenschaft = this.manager.pruefeMarkierungExistiertDurchgaengig(belegungen);
-		if (this.naturwissenschaft !== null)
+		if (this.naturwissenschaft !== null) {
 			return true;
+		}
 		this.ergebnis.log.add("Es muss mindestens eine klassische Naturwissenschaft durchgängig markiert sein, damit eine Abiturzulassung möglich ist.");
 		return false;
 	}
 
 	private pruefeAufWeitereNaturwissenschaft(): void {
-		if (this.naturwissenschaft === null)
+		if (this.naturwissenschaft === null) {
 			return;
+		}
 		this.hatWeitereNaturwissenschaft = false;
 		const belegungen: List<AbiturFachbelegung> = this.manager.getFachbelegungen(GostFachbereich.NATURWISSENSCHAFTLICH);
 		for (const belegung of belegungen) {
-			if (belegung.fachID === this.naturwissenschaft.fachID)
+			if (belegung.fachID === this.naturwissenschaft.fachID) {
 				continue;
+			}
 			let found: boolean = true;
 			for (const halbjahr of GostHalbjahr.getQualifikationsphase()) {
 				if (belegung.belegungen[halbjahr.id] === null) {
@@ -565,16 +595,18 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 	}
 
 	private pruefeSchwerpunkt(): boolean {
-		if (this.hatWeitereFremdsprache || this.hatWeitereNaturwissenschaft)
+		if (this.hatWeitereFremdsprache || this.hatWeitereNaturwissenschaft) {
 			return true;
+		}
 		this.ergebnis.log.add("Es müssen zwei Kurse einer Naturwissenschaft oder einer schriftlich belegten weiteren Fremdsprache in Q2.1 und Q2.2 markiert werden.");
 		return false;
 	}
 
 	private pruefeProjektkurs(): boolean {
 		const count: number = this.manager.zaehleMarkierungenQualifikationsphase(this.belegpruefungProjektkurse.getProjektkurs());
-		if (count !== 1)
+		if (count !== 1) {
 			return true;
+		}
 		this.ergebnis.log.add("Es müssen immer beide Halbjahre des Projektkurses markiert werden.");
 		return false;
 	}
@@ -586,10 +618,11 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 		}
 		const count: number = this.manager.zaehleAlleMarkierungenQualifikationsphase(this.manager.daten().fachbelegungen);
 		if ((count < 35) || (count > 40)) {
-			if (count < 35)
+			if (count < 35) {
 				this.ergebnis.log.add("Es müssen mindestens 35 markiert werden.");
-			else
+			} else {
 				this.ergebnis.log.add("Es dürfen höchstens 40 Kurse markiert werden.");
+			}
 			return false;
 		}
 		const countDefizite: number = this.manager.zaehleMarkierungenMitDefiziten(this.manager.daten().fachbelegungen);
@@ -599,48 +632,56 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 		}
 		if ((count < 38) && (countDefizite === 8)) {
 			const countVerfuegbar: number = this.manager.zaehleOhneMarkierungenUndOhneDefizite(this.manager.daten().fachbelegungen);
-			if (countVerfuegbar > 0)
+			if (countVerfuegbar > 0) {
 				this.ergebnis.log.add("Bei acht markierten Defiziten muss ein weiterer Kurs ohne Defizit markiert werden.");
-			else
+			} else {
 				this.ergebnis.log.add("Keine Zulassung zum Abitur. Es wurden zu viele Kurse mit Defizit markiert.");
+			}
 			return false;
 		}
 		return true;
 	}
 
 	private pruefeProjektkursBesondereLernleistung(): boolean {
-		if (!JavaObject.equalsTranspiler(GostBesondereLernleistung.PROJEKTKURS.kuerzel, (this.manager.daten().besondereLernleistung)))
+		if (!JavaObject.equalsTranspiler(GostBesondereLernleistung.PROJEKTKURS.kuerzel, (this.manager.daten().besondereLernleistung))) {
 			return true;
+		}
 		const count: number = this.manager.zaehleMarkierungenQualifikationsphase(this.belegpruefungProjektkurse.getProjektkurs());
-		if (count <= 0)
+		if (count <= 0) {
 			return true;
+		}
 		this.ergebnis.log.add("Wenn der Projektkurs als besondere Lernleistung in das Abitur eingebracht werden soll, so darf er nicht für Block I markiert werden.");
 		return false;
 	}
 
 	private pruefeOptimierung(): boolean {
 		const count: number = this.manager.zaehleAlleMarkierungenQualifikationsphase(this.manager.daten().fachbelegungen);
-		if (count >= 40)
+		if (count >= 40) {
 			return true;
+		}
 		const durchschnitt: number = this.manager.berechneMarkierungenDurchschnittspunkte();
 		const hatPjkBLL: boolean = JavaObject.equalsTranspiler(GostBesondereLernleistung.PROJEKTKURS.kuerzel, (this.manager.daten().besondereLernleistung));
 		const auswahlliste: List<GostAbiturMarkierungsalgorithmusBelegung> = new ArrayList<GostAbiturMarkierungsalgorithmusBelegung>();
 		for (const belegung of this.manager.daten().fachbelegungen) {
 			const fach: GostFach | null = this.manager.getFach(belegung);
-			if ((fach === null) || (hatPjkBLL && JavaObject.equalsTranspiler("PX", (fach.kuerzel))))
+			if ((fach === null) || (hatPjkBLL && JavaObject.equalsTranspiler("PX", (fach.kuerzel)))) {
 				continue;
+			}
 			for (const hj of GostHalbjahr.getQualifikationsphase()) {
 				const belHj: AbiturFachbelegungHalbjahr | null = belegung.belegungen[hj.id];
-				if ((belHj === null) || ((belHj.block1gewertet !== null) && belHj.block1gewertet))
+				if ((belHj === null) || ((belHj.block1gewertet !== null) && belHj.block1gewertet)) {
 					continue;
+				}
 				const np: number | null = this.manager.getNotenpunkteOfFachbelegungHalbjahr(belHj);
-				if ((np === null) || (np === 0))
+				if ((np === null) || (np === 0)) {
 					continue;
+				}
 				auswahlliste.add(new GostAbiturMarkierungsalgorithmusBelegung(belegung, belHj, np));
 			}
 		}
-		if (auswahlliste.isEmpty())
+		if (auswahlliste.isEmpty()) {
 			return true;
+		}
 		const belMU: AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel("MU");
 		const belVP: AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel("VP");
 		const belIN: AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel("IN");
@@ -653,21 +694,24 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 		const countLI: number = this.manager.zaehleMarkierungenQualifikationsphase(belLI);
 		const countMoeglichErsatz: number = 2 - (countLI + countVP + countIN);
 		let maxMU: number = 5;
-		if (istMusikAbiLK)
+		if (istMusikAbiLK) {
 			maxMU--;
-		else
-			if (istMusikAbiGK)
+		} else
+			if (istMusikAbiGK) {
 				maxMU++;
+			}
 		const countMoeglichMusik: number = maxMU - (countMU + countVP + countIN);
 		this.sort(auswahlliste);
 		while (!auswahlliste.isEmpty()) {
 			const bel: GostAbiturMarkierungsalgorithmusBelegung = auswahlliste.getFirst();
 			auswahlliste.removeFirst();
-			if (bel.notenpunkte <= durchschnitt)
+			if (bel.notenpunkte <= durchschnitt) {
 				break;
+			}
 			const fach: GostFach | null = this.manager.getFach(bel.belegung);
-			if ((fach === null) || (JavaObject.equalsTranspiler("LI", (fach.kuerzel)) && (countMoeglichErsatz <= 0)) || (JavaObject.equalsTranspiler("MU", (fach.kuerzel)) && (countMoeglichMusik <= 0)) || ((JavaObject.equalsTranspiler("VP", (fach.kuerzel)) || JavaObject.equalsTranspiler("IN", (fach.kuerzel))) && ((countMoeglichErsatz <= 0) || (countMoeglichMusik <= 0))))
+			if ((fach === null) || (JavaObject.equalsTranspiler("LI", (fach.kuerzel)) && (countMoeglichErsatz <= 0)) || (JavaObject.equalsTranspiler("MU", (fach.kuerzel)) && (countMoeglichMusik <= 0)) || ((JavaObject.equalsTranspiler("VP", (fach.kuerzel)) || JavaObject.equalsTranspiler("IN", (fach.kuerzel))) && ((countMoeglichErsatz <= 0) || (countMoeglichMusik <= 0)))) {
 				continue;
+			}
 			this.ergebnis.log.add("Es existieren nicht markierte Kurse, die durch Markierung den Abiturdurchschnitt verbessern können.");
 			return false;
 		}
@@ -677,19 +721,23 @@ export class GostAbiturMarkierungspruefung extends JavaObject {
 	private sort(auswahlliste: List<GostAbiturMarkierungsalgorithmusBelegung>): void {
 		const comparatorBelegungen: Comparator<GostAbiturMarkierungsalgorithmusBelegung> = { compare: (a: GostAbiturMarkierungsalgorithmusBelegung, b: GostAbiturMarkierungsalgorithmusBelegung) => {
 			let tmp: number = b.notenpunkte - a.notenpunkte;
-			if (tmp !== 0)
+			if (tmp !== 0) {
 				return tmp;
+			}
 			const aFach: GostFach | null = this.manager.getFach(a.belegung);
 			const bFach: GostFach | null = this.manager.getFach(b.belegung);
-			if ((aFach === null) || (bFach === null))
+			if ((aFach === null) || (bFach === null)) {
 				return -1;
+			}
 			tmp = GostFachbereich.compareGostFach(aFach, bFach);
-			if (tmp !== 0)
+			if (tmp !== 0) {
 				return tmp;
+			}
 			const hjA: GostHalbjahr | null = GostHalbjahr.fromKuerzel(a.belegungHalbjahr.halbjahrKuerzel);
 			const hjB: GostHalbjahr | null = GostHalbjahr.fromKuerzel(b.belegungHalbjahr.halbjahrKuerzel);
-			if ((hjA === null) || (hjB === null))
+			if ((hjA === null) || (hjB === null)) {
 				return -1;
+			}
 			return hjB.id - hjA.id;
 		} };
 		auswahlliste.sort(comparatorBelegungen);

@@ -18,7 +18,7 @@ class GostAbiturMarkierungsalgorithmusBelegung {
 	/** Die Halbjahresbelegung */
 	public final @NotNull AbiturFachbelegungHalbjahr belegungHalbjahr;
 
-	/** Das Halbjahr der Halbjahrebelegung */
+	/** Das Halbjahr der Halbjahresbelegung */
 	public final @NotNull GostHalbjahr halbjahr;
 
 	/** Die Notenpunkte der Halbjahresbelegung */

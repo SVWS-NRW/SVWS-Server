@@ -42,8 +42,9 @@ public enum GostBelegungsfehlerArt {
 	 * @return die Belegungsfehler-Art
 	 */
 	public static GostBelegungsfehlerArt fromKuerzel(final String kuerzel) {
-		if (kuerzel == null)
+		if (kuerzel == null) {
 			return null;
+		}
 		switch (kuerzel) {
 			case "BELEGUNG":
 				return BELEGUNG;

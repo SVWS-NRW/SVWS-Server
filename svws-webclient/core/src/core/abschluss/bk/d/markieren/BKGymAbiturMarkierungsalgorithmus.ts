@@ -61,8 +61,9 @@ export class BKGymAbiturMarkierungsalgorithmus extends JavaObject {
 	public berechne(): BKGymAbiturMarkierungsalgorithmusErgebnis | null {
 		for (const regel of BKGymAbiturMarkierungsalgorithmus.regelsatz) {
 			const jetzt: List<BKGymAbiturMarkierungsVariante> | null = new ArrayList<BKGymAbiturMarkierungsVariante>(this.ergebnisse.getErgebnisse());
-			for (const variante of jetzt)
+			for (const variante of jetzt) {
 				regel.exec(variante);
+			}
 		}
 		return this.ergebnisse.getBestesErgebnis();
 	}

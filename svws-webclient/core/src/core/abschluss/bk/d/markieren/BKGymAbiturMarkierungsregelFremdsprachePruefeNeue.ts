@@ -45,9 +45,9 @@ export class BKGymAbiturMarkierungsregelFremdsprachePruefeNeue extends BKGymAbit
 		}
 		const bedingung: Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> = { test: (markierung: BKGymAbiturMarkierungsalgorithmusMarkierung | null) => (markierung !== null) && (markierung.fachID === zweiteFremdspracheID) && (markierung.punkte !== null) && (markierung.punkte > 0) };
 		const verbleibend: number = variante.pruefeKursanzahl(this.anzahl, bedingung);
-		if (verbleibend === 0)
+		if (verbleibend === 0) {
 			variante.addLogEintrag(1, "Alle Kurshalbjahre in der Qualifikationsphase mit mindestens einem Punkt abgeschlossen.");
-		else {
+		} else {
 			variante.addLogEintrag(1, "Fehler: Nur " + (this.anzahl - verbleibend) + " von " + this.anzahl + " Kursen haben mehr als 0 Punkte.");
 			variante.setHatZulassung(false);
 		}

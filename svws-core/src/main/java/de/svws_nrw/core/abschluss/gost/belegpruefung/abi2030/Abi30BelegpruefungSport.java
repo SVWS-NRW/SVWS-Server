@@ -54,8 +54,9 @@ public final class Abi30BelegpruefungSport extends GostBelegpruefung {
 	@Override
 	protected void pruefeEF1() {
 		// Prüfe, ob Sport in EF.1 belegt wurde
-		if ((_sport == null) || (!manager.pruefeBelegungExistiertEinzeln(_sport, GostHalbjahr.EF1)))
+		if ((_sport == null) || (!manager.pruefeBelegungExistiertEinzeln(_sport, GostHalbjahr.EF1))) {
 			addFehler(GostBelegungsfehler.SP_10);
+		}
 	}
 
 
@@ -64,8 +65,9 @@ public final class Abi30BelegpruefungSport extends GostBelegpruefung {
 		// Prüfe, ob Sport durchgängig von EF.1 bis Q2.2 belegt wurde. Ein Sportattest muss mit
 		// Note "AT" eingetragen werden und gilt damit zunächst als belegt.
 		if ((_sport == null) || (!manager.pruefeBelegungExistiert(_sport, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12,
-				GostHalbjahr.Q21, GostHalbjahr.Q22)))
+				GostHalbjahr.Q21, GostHalbjahr.Q22))) {
 			addFehler(GostBelegungsfehler.SP_10);
+		}
 	}
 
 }

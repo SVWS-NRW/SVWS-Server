@@ -44,8 +44,9 @@ public enum GostBelegpruefungsArt {
 	 * @return die Art der Belegprüfung
 	 */
 	public static GostBelegpruefungsArt fromKuerzel(final String kuerzel) {
-		if (kuerzel == null)
+		if (kuerzel == null) {
 			return null;
+		}
 		switch (kuerzel) {
 			case "EF.1":
 				return EF1;

@@ -28,8 +28,9 @@ export class Abi30BelegpruefungSchwerpunkt extends GostBelegpruefung {
 	protected pruefeEF1(): void {
 		const pruefung_sprachen: Abi30BelegpruefungFremdsprachen = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_abi2030_Abi30BelegpruefungFremdsprachen(this.pruefungen_vorher[0]));
 		const pruefung_nawi: Abi30BelegpruefungNaturwissenschaften = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_abi2030_Abi30BelegpruefungNaturwissenschaften(this.pruefungen_vorher[1]));
-		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1))
+		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
 			return;
+		}
 		if (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
 			this.addFehler(GostBelegungsfehler.NW_FS_12_INFO);
 			return;
@@ -44,8 +45,9 @@ export class Abi30BelegpruefungSchwerpunkt extends GostBelegpruefung {
 	protected pruefeGesamt(): void {
 		const pruefung_sprachen: Abi30BelegpruefungFremdsprachen = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_abi2030_Abi30BelegpruefungFremdsprachen(this.pruefungen_vorher[0]));
 		const pruefung_nawi: Abi30BelegpruefungNaturwissenschaften = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_abi2030_Abi30BelegpruefungNaturwissenschaften(this.pruefungen_vorher[1]));
-		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1))
+		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
 			return;
+		}
 		if (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
 			this.addFehler(GostBelegungsfehler.NW_FS_12_INFO);
 			return;

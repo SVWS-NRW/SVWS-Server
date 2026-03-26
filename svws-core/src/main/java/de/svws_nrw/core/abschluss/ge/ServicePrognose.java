@@ -36,12 +36,14 @@ public class ServicePrognose extends Service {
 	private static boolean hatLernbereichsnoten(final @NotNull GEAbschlussFaecher faecher) {
 		boolean hatLBNW = false;
 		boolean hatLBAL = false;
-		if (faecher.faecher == null)
+		if (faecher.faecher == null) {
 			return false;
+		}
 		final @NotNull List<GEAbschlussFach> tmp = faecher.faecher;
 		for (final GEAbschlussFach fach : tmp) {
-			if (fach == null)
+			if (fach == null) {
 				continue;
+			}
 			hatLBNW = hatLBNW || "LBNW".equals(fach.kuerzel);
 			hatLBAL = hatLBAL || "LBAL".equals(fach.kuerzel);
 		}
@@ -81,8 +83,9 @@ public class ServicePrognose extends Service {
 			final @NotNull ServiceAbschlussHA9 ha9 = new ServiceAbschlussHA9();
 			final @NotNull AbschlussErgebnis ha9output = ha9.berechne(input);
 			np_faecher = ha9output.npFaecher;
-			if (ha9output.erworben)
+			if (ha9output.erworben) {
 				abschluss = SchulabschlussAllgemeinbildend.HA9;
+			}
 			log.append(ha9.getLog());
 			logger.logLn(LogLevel.INFO, "");
 		} else if ("10".equals(input.jahrgang)) {
@@ -92,10 +95,11 @@ public class ServicePrognose extends Service {
 
 		final @NotNull ServiceAbschlussHA10 ha10 = new ServiceAbschlussHA10();
 		final @NotNull AbschlussErgebnis ha10output = ha10.berechne(input);
-		if (ha10output.erworben)
+		if (ha10output.erworben) {
 			abschluss = SchulabschlussAllgemeinbildend.HA10;
-		else if ("10".equals(input.jahrgang) || (SchulabschlussAllgemeinbildend.HA9.equals(abschluss)))
+		} else if ("10".equals(input.jahrgang) || (SchulabschlussAllgemeinbildend.HA9.equals(abschluss))) {
 			np_faecher = ha10output.npFaecher;
+		}
 		log.append(ha10.getLog());
 
 		if ((!SchulabschlussAllgemeinbildend.OA.equals(abschluss)) || (!hatLernbereichsnoten(input))) {

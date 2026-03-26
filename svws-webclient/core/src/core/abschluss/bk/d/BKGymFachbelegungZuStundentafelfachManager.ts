@@ -73,11 +73,13 @@ export class BKGymFachbelegungZuStundentafelfachManager extends JavaObject {
 	 * @return true, wenn schriftlich belegt oder keine Belegung vorliegt, sonst false
 	 */
 	public getSchriftlichBelegt(hj: GostHalbjahr, fach: BeruflichesGymnasiumStundentafelFach): boolean {
-		if (hj.istEinfuehrungsphase())
+		if (hj.istEinfuehrungsphase()) {
 			return this.abidatenManager.getFachbelegungManager().getSchriftlichBelegt(hj, fach);
+		}
 		let belegungHj: BKGymAbiturFachbelegungHalbjahr | null = this.mapBelegungByHalbjahrAndFachbezeichung.getOrNull(fach.fachbezeichnung, hj.id);
-		if (belegungHj === null)
+		if (belegungHj === null) {
 			belegungHj = this.mapUsedBelegungByHalbjahrAndFachbezeichung.getOrNull(fach.fachbezeichnung, hj.id);
+		}
 		return (belegungHj === null) || belegungHj.schriftlich;
 	}
 
@@ -135,8 +137,9 @@ export class BKGymFachbelegungZuStundentafelfachManager extends JavaObject {
 	public belegeErsatzfach(fach: BeruflichesGymnasiumStundentafelFach): boolean {
 		for (const hj of GostHalbjahr.getQualifikationsphase()) {
 			const belegungHj: BKGymAbiturFachbelegungHalbjahr | null = this.mapBelegungByHalbjahrAndFachbezeichung.getOrNull(fach.fachbezeichnung, hj.id);
-			if ((this.getBelegteStundenByHalbjahrAndFach(hj, fach) <= 0) && ((belegungHj === null) || (belegungHj.wochenstunden < fach.stundenumfang[hj.id]) || !BKGymFachbelegungZuStundentafelfachManager.giltNoteFuerBelegung(Note.fromKuerzel(belegungHj.notenkuerzel))))
+			if ((this.getBelegteStundenByHalbjahrAndFach(hj, fach) <= 0) && ((belegungHj === null) || (belegungHj.wochenstunden < fach.stundenumfang[hj.id]) || !BKGymFachbelegungZuStundentafelfachManager.giltNoteFuerBelegung(Note.fromKuerzel(belegungHj.notenkuerzel)))) {
 				return false;
+			}
 		}
 		for (const hj of GostHalbjahr.getQualifikationsphase()) {
 			const belegungHj: BKGymAbiturFachbelegungHalbjahr | null = this.mapBelegungByHalbjahrAndFachbezeichung.getOrNull(fach.fachbezeichnung, hj.id);
@@ -163,15 +166,18 @@ export class BKGymFachbelegungZuStundentafelfachManager extends JavaObject {
 		Collections.reverse(hjeReversed);
 		for (const hj of hjeReversed) {
 			const belegungHj: BKGymAbiturFachbelegungHalbjahr | null = this.mapBelegungByHalbjahrAndFachbezeichung.getOrNull(fach.fachbezeichnung, hj.id);
-			if (this.getBelegteStundenByHalbjahrAndFach(hj, fach) > 0)
+			if (this.getBelegteStundenByHalbjahrAndFach(hj, fach) > 0) {
 				break;
-			if ((belegungHj === null) || (belegungHj.wochenstunden < fach.stundenumfang[hj.id]) || !BKGymFachbelegungZuStundentafelfachManager.giltNoteFuerBelegung(Note.fromKuerzel(belegungHj.notenkuerzel)))
+			}
+			if ((belegungHj === null) || (belegungHj.wochenstunden < fach.stundenumfang[hj.id]) || !BKGymFachbelegungZuStundentafelfachManager.giltNoteFuerBelegung(Note.fromKuerzel(belegungHj.notenkuerzel))) {
 				return false;
+			}
 		}
 		for (const hj of hjeReversed) {
 			const belegungHj: BKGymAbiturFachbelegungHalbjahr | null = this.mapBelegungByHalbjahrAndFachbezeichung.getOrNull(fach.fachbezeichnung, hj.id);
-			if (this.getBelegteStundenByHalbjahrAndFach(hj, fach) > 0)
+			if (this.getBelegteStundenByHalbjahrAndFach(hj, fach) > 0) {
 				break;
+			}
 			if (belegungHj !== null) {
 				this.belegteStundenByHalbjahrUndFachposition[fach.sortierung][hj.id] = belegungHj.wochenstunden;
 				this.mapBelegungByHalbjahrAndFachbezeichung.removeOrException(fach.fachbezeichnung, hj.id);
@@ -183,7 +189,7 @@ export class BKGymFachbelegungZuStundentafelfachManager extends JavaObject {
 
 	/**
 	 * Belegt ein beliebiges Fach für ein Halbjahr.
-	 * Die Bezeichnung des Fachs ist dabei egal. Es wird der Position zugeordet.
+	 * Die Bezeichnung des Fachs ist dabei egal. Es wird der Position zugeordnet.
 	 * Die Methode wird für die Belegung des Wahlfachs verwendet
 	 *
 	 * @param hj     das Halbjahr
@@ -212,9 +218,11 @@ export class BKGymFachbelegungZuStundentafelfachManager extends JavaObject {
 	 * @return true, wenn die Belegung vollständig auch im Stundenumfang ist.
 	 */
 	public istVollbelegt(fach: BeruflichesGymnasiumStundentafelFach): boolean {
-		for (const hj of GostHalbjahr.getQualifikationsphase())
-			if (this.getBelegteStundenByHalbjahrAndFach(hj, fach) < fach.stundenumfang[hj.id])
+		for (const hj of GostHalbjahr.getQualifikationsphase()) {
+			if (this.getBelegteStundenByHalbjahrAndFach(hj, fach) < fach.stundenumfang[hj.id]) {
 				return false;
+			}
+		}
 		return true;
 	}
 

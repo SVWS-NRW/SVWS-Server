@@ -52,8 +52,9 @@ public final class Schwerpunkt extends GostBelegpruefung {
 
 		// Prüfe, ob insgesamt so viele Fremdsprachen und Naturwissenschaften gewählt wurden, dass zunächst kein Schwerpunkt vorliegt.
 		// Dann liegt kein Belegungsfehler vor.
-		if (_hatSchwerpunktFremdsprachen && (_hatSchwerpunktNaturwissenschaften))
+		if (_hatSchwerpunktFremdsprachen && (_hatSchwerpunktNaturwissenschaften)) {
 			return;
+		}
 
 		// Prüfe, ob ein sprachlicher Schwerpunkt vorliegt
 		if (_hatSchwerpunktFremdsprachen) {
@@ -85,8 +86,9 @@ public final class Schwerpunkt extends GostBelegpruefung {
 
 		// Prüfe, ob insgesamt so viele Fremdsprachen und Naturwissenschaften gewählt wurden, dass zunächst kein Schwerpunkt vorliegt.
 		// Dann liegt kein Belegungsfehler vor.
-		if (_hatSchwerpunktFremdsprachen && _hatSchwerpunktNaturwissenschaften)
+		if (_hatSchwerpunktFremdsprachen && _hatSchwerpunktNaturwissenschaften) {
 			return;
+		}
 
 		// Prüfe, ob ein sprachlicher Schwerpunkt vorliegt
 		if (_hatSchwerpunktFremdsprachen) {

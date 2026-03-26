@@ -60,10 +60,12 @@ export abstract class BKGymAbiturMarkierungsregel extends JavaObject {
 	 * @param variante   die zu bearbeitende Variante
 	 */
 	public exec(variante: BKGymAbiturMarkierungsVariante): void {
-		if (variante.istGestoppt())
+		if (variante.istGestoppt()) {
 			return;
-		if ((this.kennungVariante !== null) && !JavaObject.equalsTranspiler(this.kennungVariante, (variante.getKennung())))
+		}
+		if ((this.kennungVariante !== null) && !JavaObject.equalsTranspiler(this.kennungVariante, (variante.getKennung()))) {
 			return;
+		}
 		variante.addLogEintrag(0, "Regel " + this.kuerzel + ": " + this.hinweis + " entsprechend " + this.bezugAPOBK);
 		this.markiere(variante);
 	}

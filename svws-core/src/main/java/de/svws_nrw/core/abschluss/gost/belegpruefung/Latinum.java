@@ -40,8 +40,9 @@ public final class Latinum extends GostBelegpruefung {
 		// Prüfe, ob Latein am Ende der SI belegt mit mind. 2 Jahren belegt wurde, aber nicht in EF.1.
 		// Gebe dann einen entsprechenden Hinweis zum Erwerbs des Latinums aus.
 		if (SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(manager.getSprachendaten(), "L")
-				&& (!manager.pruefeBelegung(latein, GostHalbjahr.EF1)))
+				&& (!manager.pruefeBelegung(latein, GostHalbjahr.EF1))) {
 			addFehler(GostBelegungsfehler.L_10_INFO);
+		}
 	}
 
 
@@ -52,11 +53,13 @@ public final class Latinum extends GostBelegpruefung {
 		// Gebe andernfalls einen passenden Hinweis zum Erwerbs des Latinums aus.
 		if (SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(manager.getSprachendaten(), "L")) {
 			if (SprachendatenUtils.hatSprachbelegungMitMin4JahrenDauerEndeSekI(manager.getSprachendaten(), "L")) {
-				if (!manager.pruefeBelegung(latein, GostHalbjahr.EF1, GostHalbjahr.EF2))
+				if (!manager.pruefeBelegung(latein, GostHalbjahr.EF1, GostHalbjahr.EF2)) {
 					addFehler(GostBelegungsfehler.L_10_INFO);
+				}
 			} else {
-				if (!manager.pruefeBelegung(latein, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+				if (!manager.pruefeBelegung(latein, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 					addFehler(GostBelegungsfehler.L_11_INFO);
+				}
 			}
 		}
 	}

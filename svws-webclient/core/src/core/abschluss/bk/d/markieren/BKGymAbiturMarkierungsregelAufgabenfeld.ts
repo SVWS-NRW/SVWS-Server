@@ -39,8 +39,9 @@ export class BKGymAbiturMarkierungsregelAufgabenfeld extends BKGymAbiturMarkieru
 	 */
 	public markiere(variante: BKGymAbiturMarkierungsVariante): void {
 		const feld: BKGymAufgabenfeld | null = BKGymAufgabenfeld.getAufgabenfeldFromKuerzel(this.aufgabenfeld);
-		if (feld === null)
+		if (feld === null) {
 			throw new DeveloperNotificationException("Die Prüfbedingung " + this.kuerzel + "spezifiziert ein nicht vorhandenes Aufgabenfeld.")
+		}
 		const bedingung: Predicate<BKGymAbiturMarkierungsalgorithmusMarkierung> = { test: (markierung: BKGymAbiturMarkierungsalgorithmusMarkierung | null) => (markierung !== null) && feld.hatFachbezeichnung(variante.varianten.abiturdatenManager.getFaecherManager().getBezeichnungByFachID(markierung.fachID)) };
 		const anzBereitsMarkiert: number = variante.zaehleMarkierte(bedingung);
 		let verbleibend: number = this.anzahl;
