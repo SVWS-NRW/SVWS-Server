@@ -81,7 +81,7 @@ public class APIPrivilegedSchema {
 	}
 
 	/**
-	 * Erzeugt eine einfache Anwort mit der Angabe, ob die Operation erfolgreich war und
+	 * Erzeugt eine einfache Antwort mit der Angabe, ob die Operation erfolgreich war und
 	 * mit dem Log derOperation.
 	 *
 	 * @param status    der Status der zu erzeugenden HTTP-Response
@@ -346,25 +346,30 @@ public class APIPrivilegedSchema {
 			final LogConsumerList log = new LogConsumerList();
 			logger.addConsumer(log);
 			try {
-				if (SVWSKonfiguration.get().isLoggingEnabled())
+				if (SVWSKonfiguration.get().isLoggingEnabled()) {
 					logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
+				}
 			} catch (final IOException e) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
 			}
 
 			final long max_revision = SchemaRevisionen.maxRevision.revision;
 			long rev = revision;
-			if (rev < 0)
+			if (rev < 0) {
 				rev = max_revision;
-			if (rev > max_revision)
+			}
+			if (rev > max_revision) {
 				return simpleResponse(Status.BAD_REQUEST, false, log);
+			}
 
 			final DBRootManager root_manager = DBRootManager.create(conn);
-			if (root_manager == null)
+			if (root_manager == null) {
 				return simpleResponse(Status.FORBIDDEN, false, log);
+			}
 
-			if ((DBRootManager.isReservedSchemaName(schemaname)) || DBRootManager.isReservedUserName(kennwort.user))
+			if ((DBRootManager.isReservedSchemaName(schemaname)) || DBRootManager.isReservedUserName(kennwort.user)) {
 				return simpleResponse(Status.BAD_REQUEST, false, log);
+			}
 
 			logger.logLn("Prüfe, ob das Schema bereits existiert...");
 			logger.modifyIndent(2);
@@ -435,12 +440,14 @@ public class APIPrivilegedSchema {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
 			// Erzeuge einen Root-Manager zum Löschen des Schemas
 			final DBRootManager root_manager = DBRootManager.create(conn);
-			if (root_manager == null)
+			if (root_manager == null) {
 				return new ApiOperationException(Status.FORBIDDEN).getResponse();
+			}
 
 			// Prüfe ob das Schema existiert und lösche das Schema mit dem Root-Manager
-			if (!root_manager.dropDBSchemaIfExists(schemaname))
+			if (!root_manager.dropDBSchemaIfExists(schemaname)) {
 				return new ApiOperationException(Status.NOT_FOUND).getResponse();
+			}
 
 			return Response.status(Status.NO_CONTENT).build();
 		},
@@ -472,20 +479,23 @@ public class APIPrivilegedSchema {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
 			// Prüfe, ob der Datenbank-Benutzer priviligiert ist
-			if (!conn.isPrivilegedDatabaseUser())
+			if (!conn.isPrivilegedDatabaseUser()) {
 				throw new ApiOperationException(Status.FORBIDDEN);
+			}
 
 			// Prüfe, ob der Schema-Name gültig ist
-			if ((schemaname == null) || schemaname.isBlank())
+			if ((schemaname == null) || schemaname.isBlank()) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Der Schema-Name darf nicht null oder leer sein.");
+			}
 
 			// Prüfe, ob das Schema in der Konfiguration vorhanden ist oder nicht
 			final SVWSKonfiguration config = SVWSKonfiguration.get();
 			final boolean success = (state == 1)
 					? config.activateSchema(schemaname)
 					: config.deactivateSchema(schemaname);
-			if (!success)
+			if (!success) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Der Status konnte nicht angepasst werden.");
+			}
 			return Response.status(Status.NO_CONTENT).build();
 		},
 				request, ServerMode.STABLE,
@@ -523,8 +533,9 @@ public class APIPrivilegedSchema {
 			final LogConsumerList log = new LogConsumerList();
 			logger.addConsumer(log);
 			try {
-				if (SVWSKonfiguration.get().isLoggingEnabled())
+				if (SVWSKonfiguration.get().isLoggingEnabled()) {
 					logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
+				}
 			} catch (final IOException e) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
 			}
@@ -583,8 +594,9 @@ public class APIPrivilegedSchema {
 			final LogConsumerList log = new LogConsumerList();
 			logger.addConsumer(log);
 			try {
-				if (SVWSKonfiguration.get().isLoggingEnabled())
+				if (SVWSKonfiguration.get().isLoggingEnabled()) {
 					logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
+				}
 			} catch (final IOException e) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
 			}
@@ -614,8 +626,9 @@ public class APIPrivilegedSchema {
 						final DBSchemaManager srcManager = DBSchemaManager.create(srcConn, true, logger);
 						logger.modifyIndent(2);
 						if (!srcManager.backup.importDB(tgtConfig, conn.getUser().getUsername(), conn.getUser().getPassword(), maxUpdateRevision, false,
-								logger))
+								logger)) {
 							return simpleResponse(Status.INTERNAL_SERVER_ERROR, false, log);
+						}
 						logger.modifyIndent(-2);
 					}
 				} catch (@SuppressWarnings("unused") final DBException e) {
@@ -830,8 +843,9 @@ public class APIPrivilegedSchema {
 			final LogConsumerList log = new LogConsumerList();
 			logger.addConsumer(log);
 			try {
-				if (SVWSKonfiguration.get().isLoggingEnabled())
+				if (SVWSKonfiguration.get().isLoggingEnabled()) {
 					logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
+				}
 			} catch (final IOException e) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
 			}
@@ -1233,18 +1247,21 @@ public class APIPrivilegedSchema {
 			final LogConsumerList log = new LogConsumerList();
 			logger.addConsumer(log);
 			try {
-				if (SVWSKonfiguration.get().isLoggingEnabled())
+				if (SVWSKonfiguration.get().isLoggingEnabled()) {
 					logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
+				}
 			} catch (final IOException e) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
 			}
 
 			final long max_revision = SchemaRevisionen.maxRevision.revision;
 			long rev = revision;
-			if (rev < 0)
+			if (rev < 0) {
 				rev = max_revision;
-			if (rev > max_revision)
+			}
+			if (rev > max_revision) {
 				return simpleResponse(Status.BAD_REQUEST, false, log);
+			}
 
 			final DBConfig dbconfig = new DBConfig(PersistenceUnits.SVWS_ROOT, conn.getDBDriver(), conn.getDBLocation(), conn.getDBSchema(), conn.useDBLogin(),
 					conn.getUser().getUsername(), conn.getUser().getPassword(), true, true);
@@ -1415,14 +1432,16 @@ public class APIPrivilegedSchema {
 			try {
 				// Prüfe zunächst den Status des Schemas
 				final DBSchemaStatus status = DBSchemaStatus.read(conn, schema);
-				if (status == null)
+				if (status == null) {
 					throw new ApiOperationException(Status.NOT_FOUND,
 							"Ein Schema mit dem Namen %s konnte in den Datenbank nicht gefunden werden.".formatted(schema));
+				}
 				// Prüfe, ob das Schema bereits in der Konfiguration vorhanden ist
 				final SVWSKonfiguration config = SVWSKonfiguration.get();
-				if (config.hasSchema(schema))
+				if (config.hasSchema(schema)) {
 					throw new ApiOperationException(Status.BAD_REQUEST,
 							"Ein Schema mit dem Namen %s existiert bereits in der Konfiguration!".formatted(schema));
+				}
 				// Prüfe, ob der Datenbank-Benutzer bereits existiert
 				final List<String> usernames = DTOInformationUser.queryNames(conn);
 				if (!usernames.contains(kennwort.user)) {

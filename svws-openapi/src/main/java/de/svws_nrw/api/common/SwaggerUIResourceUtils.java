@@ -23,13 +23,15 @@ public final class SwaggerUIResourceUtils {
 	public static String getSwaggerUIDistResourcePath() {
 		// Ermittle den Pfad zur JAR-Datei
 		final URL jarURL = ClassLoader.getSystemResource(RESOURCE_PATH_SWAGGER_UI_DIST);
-		if (jarURL == null)
+		if (jarURL == null) {
 			return null;
+		}
 
 		// Versions-Tag ausschneiden und mit dem Base Pfad zusammenfügen
 		String version = StringUtils.substringBefore(StringUtils.substringAfter(jarURL.getPath(), "swagger-ui-dist/"), "/");
-		if ((version == null) || (version.isBlank()))
+		if ((version == null) || (version.isBlank())) {
 			version = StringUtils.substringBefore(StringUtils.substringAfter(jarURL.getPath(), "swagger-ui-dist-"), ".jar!");
+		}
 		return RESOURCE_PATH_SWAGGER_UI_DIST + '/' + version;
 	}
 
@@ -59,12 +61,14 @@ public final class SwaggerUIResourceUtils {
 	 * @return Name der OpenAPI Definition oder <code>null</code>, wenn <code>null</code> übergeben wurde
 	 */
 	static String extractAPIDefinitionName(final String openApiFilePath) {
-		if (openApiFilePath == null)
+		if (openApiFilePath == null) {
 			return null;
+		}
 
 		String apiNameWithSuffix = openApiFilePath;
-		if (openApiFilePath.contains("/"))
+		if (openApiFilePath.contains("/")) {
 			apiNameWithSuffix = StringUtils.substringAfterLast(openApiFilePath, "/");
+		}
 
 		return StringUtils.substringBefore(apiNameWithSuffix, ".");
 	}

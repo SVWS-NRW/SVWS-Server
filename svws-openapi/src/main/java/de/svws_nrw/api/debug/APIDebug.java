@@ -87,19 +87,22 @@ public class APIDebug {
 	private static Response getResource(final String filename, final HttpServletRequest request, final boolean isYAML, final String api) {
 		// Prüfe, ob der Dateiname und die Api gültig sind.
 		final String mediaType = mapMediaType.get(filename);
-		if ((mediaType == null) || (!mapApiIsPrivileged.containsKey(api)))
+		if ((mediaType == null) || (!mapApiIsPrivileged.containsKey(api))) {
 			return Response.status(Status.NOT_FOUND).build();
+		}
 		// Prüfe, ob für die API ein privilegierter Zugriff benötigt wird und ob dieser so zulässig ist.
 		final SVWSKonfiguration config = SVWSKonfiguration.get();
 		final boolean apiIsPrivileged = mapApiIsPrivileged.get(api);
-		if (config.isDBRootAccessDisabled() && apiIsPrivileged)
+		if (config.isDBRootAccessDisabled() && apiIsPrivileged) {
 			return Response.status(Status.FORBIDDEN).entity("Der Zugriff auf die API für privilegierte Anfragen wurde beim Server gesperrt.")
 					.type(MediaType.TEXT_PLAIN).build();
+		}
 		if (config.hatPortHTTPPrivilegedAccess()) {
 			final boolean portIsPrivileged = (request.getServerPort() == config.getPortHTTPPrivilegedAccess());
-			if (apiIsPrivileged && (!portIsPrivileged))
+			if (apiIsPrivileged && (!portIsPrivileged)) {
 				return Response.status(Status.FORBIDDEN).entity("Der Zugriff auf die API für privilegierte Anfragen wurde beim Server gesperrt.")
 						.type(MediaType.TEXT_PLAIN).build();
+			}
 			if (!apiIsPrivileged && (portIsPrivileged)) { // Redirect
 				final URI uri = UriBuilder.fromPath(request.getServletPath() + request.getPathInfo())
 						.scheme(request.getScheme())
@@ -129,8 +132,9 @@ public class APIDebug {
 			e.printStackTrace();
 		}
 
-		if (data == null)
+		if (data == null) {
 			return Response.status(Status.NOT_FOUND).build();
+		}
 		return Response.ok(data).type(mediaType).build();
 	}
 
@@ -167,8 +171,9 @@ public class APIDebug {
 	@Path("/debug{yaml : (/yaml)?}/{filename}")
 	public Response debugFile(@PathParam("yaml") final String yaml, @QueryParam("urls.primaryName") final String apiDefinition,
 			@PathParam("filename") final String filename, @Context final HttpServletRequest request) {
-		if ("index.html".equals(filename) && StringUtils.isBlank(apiDefinition))
+		if ("index.html".equals(filename) && StringUtils.isBlank(apiDefinition)) {
 			return redirectToDefault(yaml);
+		}
 		return getResource(filename, request, "/yaml".equals(yaml), StringUtils.isBlank(apiDefinition) ? DEFAULT_API_DEFINITION : apiDefinition);
 	}
 
@@ -180,8 +185,9 @@ public class APIDebug {
 	 * @return Redirect HTTP-Response
 	 */
 	private Response redirectToDefault(final String yaml) {
-		if ("/yaml".equals(yaml))
+		if ("/yaml".equals(yaml)) {
 			return Response.temporaryRedirect(UriBuilder.fromPath("/debug/yaml/index.html").queryParam("urls.primaryName", DEFAULT_API_DEFINITION).build()).build();
+		}
 		return Response.temporaryRedirect(UriBuilder.fromPath("/debug/index.html").queryParam("urls.primaryName", DEFAULT_API_DEFINITION).build()).build();
 	}
 

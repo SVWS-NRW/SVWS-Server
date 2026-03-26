@@ -48,7 +48,7 @@ public class APIAlgoGesamtschuleAbschluss {
 	 * @param faecher       zu übergebende Fächerdaten für die Prüfung auf HA9
 	 * @param request       die Informationen zur HTTP-Anfrage
 	 *
-	 * @return              das Ergebis der Prüfung auf HA9
+	 * @return              das Ergebnis der Prüfung auf HA9
 	 */
 	@POST
 	@Path("/ha9")
@@ -65,8 +65,9 @@ public class APIAlgoGesamtschuleAbschluss {
 			@Context final HttpServletRequest request) {
 		final ServiceAbschlussHA9 ha9 = new ServiceAbschlussHA9();
 		final AbschlussErgebnis daten = ha9.berechne(faecher);
-		if (daten == null)
+		if (daten == null) {
 			return new ApiOperationException(Status.BAD_REQUEST).getResponse();
+		}
 		daten.log = ha9.getLog().getStrings();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -95,8 +96,9 @@ public class APIAlgoGesamtschuleAbschluss {
 			@Context final HttpServletRequest request) {
 		final ServiceAbschlussHA10 ha10 = new ServiceAbschlussHA10();
 		final AbschlussErgebnis daten = ha10.berechne(faecher);
-		if (daten == null)
+		if (daten == null) {
 			return new ApiOperationException(Status.BAD_REQUEST).getResponse();
+		}
 		daten.log = ha10.getLog().getStrings();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -125,8 +127,9 @@ public class APIAlgoGesamtschuleAbschluss {
 			@Context final HttpServletRequest request) {
 		final ServiceAbschlussMSA msa = new ServiceAbschlussMSA();
 		final AbschlussErgebnis daten = msa.berechne(faecher);
-		if (daten == null)
+		if (daten == null) {
 			return new ApiOperationException(Status.BAD_REQUEST).getResponse();
+		}
 		daten.log = msa.getLog().getStrings();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -155,8 +158,9 @@ public class APIAlgoGesamtschuleAbschluss {
 			@Context final HttpServletRequest request) {
 		final ServiceBerechtigungMSAQ msaq = new ServiceBerechtigungMSAQ();
 		final AbschlussErgebnis daten = msaq.berechne(faecher);
-		if (daten == null)
+		if (daten == null) {
 			return new ApiOperationException(Status.BAD_REQUEST).getResponse();
+		}
 		daten.log = msaq.getLog().getStrings();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -184,8 +188,9 @@ public class APIAlgoGesamtschuleAbschluss {
 			@Context final HttpServletRequest request) {
 		final ServicePrognose prognose = new ServicePrognose();
 		final AbschlussErgebnis daten = prognose.berechne(faecher);
-		if (daten == null)
+		if (daten == null) {
 			return new ApiOperationException(Status.BAD_REQUEST).getResponse();
+		}
 		daten.log = prognose.getLog().getStrings();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

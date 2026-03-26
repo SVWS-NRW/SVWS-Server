@@ -49,7 +49,7 @@ import jakarta.ws.rs.core.Response.Status;
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die
  * angelegten Benutzer und die den Benutzern
- * zugeordneten Kompetenezen.
+ * zugeordneten Kompetenzen.
  * Ein Zugriff erfolgt über den Pfad https://{Hostname}/db/{schema}/benutzer/...
  */
 @Path("/db/{schema}/benutzer")
@@ -111,8 +111,9 @@ public class APIBenutzer {
 	public Response getBenutzerDatenEigene(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
 			final Benutzer user = conn.getUser();
-			if (user == null)
+			if (user == null) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Kein Benutzer angemeldet.");
+			}
 			return (new DataBenutzerDaten(conn).get(user.getId()));
 		}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
@@ -843,8 +844,9 @@ public class APIBenutzer {
 	public Response getBenutzerEmailDaten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
 			final Benutzer user = conn.getUser();
-			if (user == null)
+			if (user == null) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Kein Benutzer angemeldet.");
+			}
 			return (new DataBenutzerEMailDaten(conn).get(user.getId()));
 		}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
@@ -878,8 +880,9 @@ public class APIBenutzer {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
 			final Benutzer user = conn.getUser();
-			if (user == null)
+			if (user == null) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Kein Benutzer angemeldet.");
+			}
 			return new DataBenutzerEMailDaten(conn).patch(user.getId(), is);
 		}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}

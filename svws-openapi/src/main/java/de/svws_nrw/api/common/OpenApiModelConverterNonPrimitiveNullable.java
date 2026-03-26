@@ -24,14 +24,16 @@ public class OpenApiModelConverterNonPrimitiveNullable implements ModelConverter
 
 	@Override
 	public final Schema<?> resolve(final AnnotatedType annotatedType, final ModelConverterContext modelConverterContext, final Iterator<ModelConverter> iterator) {
-		if (!iterator.hasNext())
+		if (!iterator.hasNext()) {
 			return null;
+		}
 
 		final ModelConverter converter = iterator.next();
 		final Schema<?> model = converter.resolve(annotatedType, modelConverterContext, iterator);
 
-		if (model == null)
+		if (model == null) {
 			return null;
+		}
 
 		// Prüfe, ob mit @NotNull annotiert wurde
 		final boolean isPropertyDefinedAsNotNull =
@@ -47,8 +49,9 @@ public class OpenApiModelConverterNonPrimitiveNullable implements ModelConverter
 		 * - das `nullable` Flag nicht bereits im zum Attribut gehörenden @Schema (egal mit welchem Wert) gesetzt wurde UND
 		 * - das Attribut nicht mit @NotNull annotiert wurde
 		 */
-		if (!isPrimitive && (model.getNullable() == null) && !isPropertyDefinedAsNotNull)
+		if (!isPrimitive && (model.getNullable() == null) && !isPropertyDefinedAsNotNull) {
 			model.setNullable(true);
+		}
 
 		return model;
 	}

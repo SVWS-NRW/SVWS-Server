@@ -358,8 +358,9 @@ public class APIGost {
 	public Response getGostAbiturjahrgangSchueler(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
-			if (abiturjahr < 0)
+			if (abiturjahr < 0) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Schüler können dem Vorlagen-Abiturjahrgang nicht zugewiesen sein.");
+			}
 			return (new DataGostJahrgangSchuelerliste(conn, abiturjahr)).getList();
 		},
 				request, ServerMode.STABLE,
@@ -485,8 +486,9 @@ public class APIGost {
 	public Response getGostAbiturjahrgangFachwahlstatistik(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
-			if (abiturjahr < 0)
+			if (abiturjahr < 0) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
+			}
 			return (new DataGostAbiturjahrgangFachwahlen(conn, abiturjahr)).getList();
 		},
 				request, ServerMode.STABLE,
@@ -522,8 +524,9 @@ public class APIGost {
 	public Response getGostAbiturjahrgangFachwahlen(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
-			if (abiturjahr < 0)
+			if (abiturjahr < 0) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
+			}
 			return (new DataGostAbiturjahrgangFachwahlen(conn, abiturjahr)).getSchuelerFachwahlenResponse();
 		},
 				request, ServerMode.STABLE,
@@ -560,8 +563,9 @@ public class APIGost {
 	public Response getGostAbiturjahrgangHalbjahrFachwahlen(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
 			@PathParam("halbjahr") final int halbjahr, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
-			if (abiturjahr < 0)
+			if (abiturjahr < 0) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Fachwahlen sind für den Vorlagen-Abiturjahrgang nicht verfügbar.");
+			}
 			return (new DataGostAbiturjahrgangFachwahlen(conn, abiturjahr)).getSchuelerFachwahlenResponseHalbjahr(halbjahr);
 		},
 				request, ServerMode.STABLE,
@@ -600,8 +604,9 @@ public class APIGost {
 	public Response getGostAbiturjahrgangBelegpruefungsergebnisseGesamt(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
-			if (abiturjahr < 0)
+			if (abiturjahr < 0) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Eine Belegprüfung ist für den Vorlagen-Abiturjahrgang nicht möglich.");
+			}
 			return (new DataGostSchuelerLaufbahnplanung(conn, abiturjahr)).pruefeBelegungAbiturjahrgang(GostBelegpruefungsArt.GESAMT);
 		},
 				request, ServerMode.STABLE,
@@ -638,8 +643,9 @@ public class APIGost {
 	public Response getGostAbiturjahrgangBelegpruefungsergebnisseEF1(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
-			if (abiturjahr < 0)
+			if (abiturjahr < 0) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Eine Belegprüfung ist für den Vorlagen-Abiturjahrgang nicht möglich.");
+			}
 			return (new DataGostSchuelerLaufbahnplanung(conn, abiturjahr)).pruefeBelegungAbiturjahrgang(GostBelegpruefungsArt.EF1);
 		},
 				request, ServerMode.STABLE,
@@ -1298,13 +1304,15 @@ public class APIGost {
 					schema = @Schema(implementation = Abiturdaten.class))) final Abiturdaten abidaten,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
-			if (!conn.getUser().schuleHatGymOb())
+			if (!conn.getUser().schuleHatGymOb()) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abidaten.abiturjahr);
 			// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
 			GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, abidaten.abiturjahr);
-			if (faecherManager.isEmpty())
+			if (faecherManager.isEmpty()) {
 				faecherManager = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, null);
+			}
 			faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr));
 			final AbiturdatenManager manager =
 					new AbiturdatenManager(SVWSKonfiguration.get().getServerMode(), abidaten, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
@@ -1339,13 +1347,15 @@ public class APIGost {
 					schema = @Schema(implementation = Abiturdaten.class))) final Abiturdaten abidaten,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
-			if (!conn.getUser().schuleHatGymOb())
+			if (!conn.getUser().schuleHatGymOb()) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abidaten.abiturjahr);
 			// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
 			GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, abidaten.abiturjahr);
-			if (faecherManager.isEmpty())
+			if (faecherManager.isEmpty()) {
 				faecherManager = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, null);
+			}
 			faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr));
 			final AbiturdatenManager manager =
 					new AbiturdatenManager(SVWSKonfiguration.get().getServerMode(), abidaten, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);

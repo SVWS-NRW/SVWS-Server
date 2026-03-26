@@ -56,7 +56,7 @@ public class APIClientConfig {
 	 * @param app     die Applikation in der Konfiguration
 	 * @param request   der HTTP-request
 	 *
-	 * @return die Key-Value-Paare der Konfigurationserinträge
+	 * @return die Key-Value-Paare der Konfigurationseinträge
 	 *
 	 */
 	@GET
@@ -121,8 +121,9 @@ public class APIClientConfig {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
 			// Prüfe, ob ein benutzerspezifischer Konfigurationseintrag vorliegt und gebe diesen ggf. zurück
 			final DTOClientKonfigurationBenutzer config = conn.queryByKey(DTOClientKonfigurationBenutzer.class, conn.getUser().getId(), app, key);
-			if (config != null)
+			if (config != null) {
 				return JSONMapper.fromString(config.Wert);
+			}
 			// Ansonsten: Lese aus der globalen Konfiguration
 			final DTOClientKonfigurationGlobal configGlobal = conn.queryByKey(DTOClientKonfigurationGlobal.class, app, key);
 			return JSONMapper.fromString((configGlobal == null) ? null : configGlobal.Wert);
@@ -163,8 +164,9 @@ public class APIClientConfig {
 			} else {
 				config.Wert = strData;
 			}
-			if (!conn.transactionPersist(config))
+			if (!conn.transactionPersist(config)) {
 				throw new ApiOperationException(Status.BAD_REQUEST);
+			}
 			return Response.status(Status.NO_CONTENT).build();
 		}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
@@ -203,8 +205,9 @@ public class APIClientConfig {
 			} else {
 				config.Wert = strData;
 			}
-			if (!conn.transactionPersist(config))
+			if (!conn.transactionPersist(config)) {
 				throw new ApiOperationException(Status.BAD_REQUEST);
+			}
 			return Response.status(Status.NO_CONTENT).build();
 		}, request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
 	}

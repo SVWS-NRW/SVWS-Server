@@ -47,8 +47,9 @@ public class APIClient {
 	private static Response getFile(final String filename, final HttpServletRequest request) {
 		try {
 			final byte[] data = ResourceFileManager.client().getData(filename);
-			if ((data == null) || (data.length == 0))
+			if ((data == null) || (data.length == 0)) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			return Response.ok(data).build();
 		} catch (final ApiOperationException e) {
 			return e.getResponse();

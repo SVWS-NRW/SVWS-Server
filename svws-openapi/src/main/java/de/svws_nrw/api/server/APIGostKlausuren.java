@@ -1012,13 +1012,15 @@ public class APIGostKlausuren {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
 			final List<DTOGostKlausurenSchuelerklausurenTermine> list =
 					DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurterminDTOsById(conn, update.listSchuelerklausurTermineRemoveIdTermin);
-			for (final DTOGostKlausurenSchuelerklausurenTermine skt : list)
+			for (final DTOGostKlausurenSchuelerklausurenTermine skt : list) {
 				skt.Termin_ID = null;
+			}
 			conn.transactionPersistAll(list);
 			final List<DTOGostKlausurenTermine> listTermine =
 					DataGostKlausurenTermin.getKlausurterminDTOsZuIds(conn, update.listKlausurtermineNachschreiberZugelassenFalse);
-			for (final DTOGostKlausurenTermine ts : listTermine)
+			for (final DTOGostKlausurenTermine ts : listTermine) {
 				ts.NachschreiberZugelassen = false;
+			}
 			conn.transactionPersistAll(listTermine);
 			return Response.status(Status.NO_CONTENT).build();
 		},

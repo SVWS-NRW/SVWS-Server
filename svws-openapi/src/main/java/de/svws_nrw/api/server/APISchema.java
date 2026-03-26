@@ -112,8 +112,9 @@ public class APISchema {
 	public Response revision(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
 			final DTOSchemaStatus version = conn.querySingle(DTOSchemaStatus.class);
-			if (version == null)
+			if (version == null) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(version.Revision).build();
 		}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
@@ -142,8 +143,9 @@ public class APISchema {
 	public Response isTainted(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
 			final DTOSchemaStatus version = conn.querySingle(DTOSchemaStatus.class);
-			if (version == null)
+			if (version == null) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(version.IsTainted).build();
 		}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}

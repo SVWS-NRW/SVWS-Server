@@ -76,8 +76,9 @@ public interface OpenApiDefinition {
 	default Response getOpenApiFile(@PathParam("type") final String type) throws OpenApiConfigurationException, JsonProcessingException {
 		final OpenApiContext ctx = getOpenApiContext();
 		final OpenAPI oas = ctx.read();
-		if (oas == null)
+		if (oas == null) {
 			return Response.status(404).build();
+		}
 
 		if (StringUtils.isNotBlank(type) && type.trim().equalsIgnoreCase("yaml")) {
 			return Response.status(Response.Status.OK)

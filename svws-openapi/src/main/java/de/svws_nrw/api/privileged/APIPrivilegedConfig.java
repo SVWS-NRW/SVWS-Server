@@ -27,7 +27,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Die Klasse spezifiziert die OpenAPI-Schnittstelle für priviligierte Datenbankbenutzer
+ * Die Klasse spezifiziert die OpenAPI-Schnittstelle für privilegierte Datenbankbenutzer
  * in Bezug auf den Zugriff auf die SVWS-Konfiguration des Servers
  * Ein Zugriff erfolgt über den Pfad https://{Hostname}/api/privileged/...
  */
@@ -45,7 +45,7 @@ public class APIPrivilegedConfig {
 	}
 
 	/**
-	 * Die OpenAPI-Methode für die Abfrage ob der angemeldete Datenbankuser ein priviligierter Datenbank-Benutzer
+	 * Die OpenAPI-Methode für die Abfrage ob der angemeldete Datenbankuser ein privilegierter Datenbank-Benutzer
 	 * mit Rechten zur Anpassung der SVWS-Konfiguration ist.
 	 *
 	 * @param request     die Informationen zur HTTP-Anfrage
@@ -70,7 +70,7 @@ public class APIPrivilegedConfig {
 
 	/**
 	 * Die OpenAPI-Methode für das Setzen des Default-Schemas in der SVWS-Konfiguration.
-	 * Der angemeldete Datenbankbenutzer muss dafür priviligierte Rechte für die Bearbeitung
+	 * Der angemeldete Datenbankbenutzer muss dafür privilegierte Rechte für die Bearbeitung
 	 * der SVWS-Konfiguration haben.
 	 *
 	 * @param schemaname    der Name des Schemas, das als Default-Schema gesetzt werden soll
@@ -89,20 +89,23 @@ public class APIPrivilegedConfig {
 	@ApiResponse(responseCode = "404", description = "Das angegebene Schema wurde nicht gefunden.")
 	public Response setDefaultSchemaInConfig(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
-			// Prüfe, ob der Datenbank-Benutzer priviligiert ist
-			if (!conn.isPrivilegedDatabaseUser())
+			// Prüfe, ob der Datenbank-Benutzer privilegiert ist
+			if (!conn.isPrivilegedDatabaseUser()) {
 				throw new ApiOperationException(Status.FORBIDDEN);
+			}
 
 			// Prüfe, ob der Schema-Name gültig ist
-			if ((schemaname == null) || schemaname.isBlank())
+			if ((schemaname == null) || schemaname.isBlank()) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Der Schema-Name darf nicht null oder leer sein.");
+			}
 
 			// Prüfe, ob das Schema in der Konfiguration vorhanden ist oder nicht
 			final SVWSKonfiguration config = SVWSKonfiguration.get();
 			final String schemanameConfig = config.getSchemanameCaseConfig(schemaname);
-			if ((schemanameConfig == null) || (!config.setDefaultschema(schemanameConfig)))
+			if ((schemanameConfig == null) || (!config.setDefaultschema(schemanameConfig))) {
 				throw new ApiOperationException(Status.NOT_FOUND,
 						"Das Schema mit dem Namen %s konnte in der Konfiguration nicht gefunden werden.".formatted(schemaname));
+			}
 			SVWSKonfiguration.write();
 			return Response.status(Status.NO_CONTENT).build();
 		},
@@ -113,7 +116,7 @@ public class APIPrivilegedConfig {
 
 	/**
 	 * Die OpenAPI-Methode für das Zurücksetzen des Default-Schemas in der SVWS-Konfiguration.
-	 * Der angemeldete Datenbankbenutzer muss dafür priviligierte Rechte für die Bearbeitung
+	 * Der angemeldete Datenbankbenutzer muss dafür privilegierte Rechte für die Bearbeitung
 	 * der SVWS-Konfiguration haben.
 	 *
 	 * @param request       die Informationen zur HTTP-Anfrage
@@ -129,14 +132,16 @@ public class APIPrivilegedConfig {
 	@ApiResponse(responseCode = "404", description = "Die Konfiguration wurde nicht gefunden.")
 	public Response unsetDefaultSchemaInConfig(@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
-			// Prüfe, ob der Datenbank-Benutzer priviligiert ist
-			if (!conn.isPrivilegedDatabaseUser())
+			// Prüfe, ob der Datenbank-Benutzer privilegiert ist
+			if (!conn.isPrivilegedDatabaseUser()) {
 				throw new ApiOperationException(Status.FORBIDDEN);
+			}
 
 			// Prüfe, ob das Schema in der Konfiguration vorhanden ist oder nicht
 			final SVWSKonfiguration config = SVWSKonfiguration.get();
-			if (!config.setDefaultschema(null))
+			if (!config.setDefaultschema(null)) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Die Konfiguration wurde nicht gefunden.");
+			}
 			SVWSKonfiguration.write();
 			return Response.status(Status.NO_CONTENT).build();
 		},
@@ -165,20 +170,23 @@ public class APIPrivilegedConfig {
 	@ApiResponse(responseCode = "404", description = "Das angegebene Schema wurde nicht gefunden.")
 	public Response removeSchemaFromConfig(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
-			// Prüfe, ob der Datenbank-Benutzer priviligiert ist
-			if (!conn.isPrivilegedDatabaseUser())
+			// Prüfe, ob der Datenbank-Benutzer privilegiert ist
+			if (!conn.isPrivilegedDatabaseUser()) {
 				throw new ApiOperationException(Status.FORBIDDEN);
+			}
 
 			// Prüfe, ob der Schema-Name gültig ist
-			if ((schemaname == null) || schemaname.isBlank())
+			if ((schemaname == null) || schemaname.isBlank()) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Der Schema-Name darf nicht null oder leer sein.");
+			}
 
 			// Prüfe, ob das Schema in der Konfiguration vorhanden ist oder nicht
 			final SVWSKonfiguration config = SVWSKonfiguration.get();
 			final String schemanameConfig = config.getSchemanameCaseConfig(schemaname);
-			if (schemanameConfig == null)
+			if (schemanameConfig == null) {
 				throw new ApiOperationException(Status.NOT_FOUND,
 						"Das Schema mit dem Namen %s konnte in der Konfiguration nicht gefunden werden.".formatted(schemaname));
+			}
 			config.removeSchema(schemanameConfig);
 			SVWSKonfiguration.write();
 			return Response.status(Status.NO_CONTENT).build();

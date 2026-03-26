@@ -14,12 +14,15 @@ public final class PathUtils {
 	 * @return <code>true</code>, falls der Pfad enthalten ist, ansonsten <code>false</code>
 	 */
 	public static boolean checkIsInPathSpecification(final String[] pathSpecs, final String path) {
-		if (path == null)
+		if (path == null) {
 			return false;
-		for (final String pathSpec : pathSpecs)
+		}
+		for (final String pathSpec : pathSpecs) {
 			if (path.equals(pathSpec) || (pathSpec.endsWith("/*") && (path.equals(pathSpec.substring(0, pathSpec.length() - 2))))
-					|| (pathSpec.endsWith("*") && (path.startsWith(pathSpec.substring(0, pathSpec.length() - 1)))))
+					|| (pathSpec.endsWith("*") && (path.startsWith(pathSpec.substring(0, pathSpec.length() - 1))))) {
 				return true;
+			}
+		}
 		return false;
 	}
 }

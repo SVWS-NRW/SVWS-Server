@@ -39,8 +39,9 @@ public class APIAdminClient {
 	private static Response getFile(final String filename) {
 		try {
 			final byte[] data = ResourceFileManager.admin().getData(filename);
-			if ((data == null) || (data.length == 0))
+			if ((data == null) || (data.length == 0)) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			return Response.ok(data).build();
 		} catch (final ApiOperationException e) {
 			return e.getResponse();

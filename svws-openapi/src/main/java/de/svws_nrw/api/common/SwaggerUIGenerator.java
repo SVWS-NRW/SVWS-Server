@@ -59,8 +59,9 @@ public class SwaggerUIGenerator {
 	 * @param args Parameter für den Start des Generators
 	 */
 	public static void main(final String[] args) throws IOException, OpenApiConfigurationException {
-		if (args.length != 2)
+		if (args.length != 2) {
 			throw new IllegalArgumentException("Es fehlen benötigte Startparameter.");
+		}
 
 		final String outputPathArg = args[0];
 		final String serverUrlsArg = args[1];
@@ -70,8 +71,9 @@ public class SwaggerUIGenerator {
 
 		// Prüfe den Pfad zur JAR-Datei
 		final URL jarURL = ClassLoader.getSystemResource(generator.getSwaggerUiDistResourcePath());
-		if (jarURL == null)
+		if (jarURL == null) {
 			throw new FileNotFoundException("SwaggerUI Ressource-Verzeichnis nicht gefunden.");
+		}
 
 		// URI korrekt auflösen
 		final String pathToJarDir = URLDecoder.decode(jarURL.getPath().substring("file:".length(), jarURL.getPath().indexOf("!")), StandardCharsets.UTF_8);
@@ -116,8 +118,9 @@ public class SwaggerUIGenerator {
 			// Dateien in der Jar-Datei durchlaufen
 			for (final JarEntry jarEntry : jar.stream().toList()) {
 				// Nur Dateien im gewünschten Verzeichnis übernehmen
-				if (!jarEntry.getName().startsWith(Objects.requireNonNull(swaggerUiDistResourcePath)) || jarEntry.isDirectory())
+				if (!jarEntry.getName().startsWith(Objects.requireNonNull(swaggerUiDistResourcePath)) || jarEntry.isDirectory()) {
 					continue;
+				}
 
 				writeJarResourcesToOutput(jar, jarEntry, outputDir, swaggerAPIExports);
 			}

@@ -29,7 +29,7 @@ public final class ResourceFileManager {
 
 
 	/**
-	 * Erstellt einen neuen Manager für alle Datei-Ressourcen in dem angebenen Pfad.
+	 * Erstellt einen neuen Manager für alle Datei-Ressourcen in dem angegebenen Pfad.
 	 * Bei der Registierung werden nur die relativen Pfade darunter verwendet.
 	 *
 	 * @param path   der Pfad, aus welchem die Datei-Ressourcen hinzuzufügen sind.
@@ -65,8 +65,9 @@ public final class ResourceFileManager {
 			Logger.global().logLn("Füge die Datei-Ressourcen für den SVWS-Admin-Client hinzu:");
 			final SVWSKonfiguration config = SVWSKonfiguration.get();
 			final String path = config.getAdminClientPath();
-			if ((path == null) || (path.isBlank()))
+			if ((path == null) || (path.isBlank())) {
 				return null;
+			}
 			_admin = new ResourceFileManager(path);
 		}
 		return _admin;
@@ -75,18 +76,20 @@ public final class ResourceFileManager {
 
 	/**
 	 * Fügt alle Ressourcen in dem angegebenen Verzeichnis zu den Ressourcen hinzu. Dabei wird das
-	 * angegbene Präfix bei dem Pfadnamen der Dateien nicht für die Registierung als Resource
+	 * angegbene Präfix bei dem Pfadnamen der Dateien nicht für die Registrierung als Ressource
 	 * verwendet und aus dem Pfad für die Registrierung entfernt.
 	 *
 	 * @param prefix   das bei der Registrierung zu ignorierende Präfix des Dateipfades
 	 * @param dir      das Verzeichnis, in dem die hinzuzufügenden Datei-Ressourcen gesucht werden
 	 */
 	private void addDirectory(final String prefix, final File dir) {
-		if (!dir.isDirectory())
+		if (!dir.isDirectory()) {
 			return;
+		}
 		final File[] dir_content = dir.listFiles();
-		if (dir_content == null)
+		if (dir_content == null) {
 			return;
+		}
 		for (final File f : dir_content) {
 			if (f.isFile()) {
 				final ResourceFile file = new ResourceFile(prefix, f);
@@ -123,8 +126,9 @@ public final class ResourceFileManager {
 	 */
 	public boolean handleResponse(final String path, final HttpServletResponse response) throws ApiOperationException {
 		final ResourceFile res = files.get(path);
-		if (res == null)
+		if (res == null) {
 			return false;
+		}
 		try {
 			res.write(response);
 		} catch (final IOException e) {
@@ -148,8 +152,9 @@ public final class ResourceFileManager {
 	 */
 	public byte[] getData(final String path) throws ApiOperationException {
 		final ResourceFile res = files.get(path);
-		if (res == null)
+		if (res == null) {
 			return new byte[0];
+		}
 		return res.getData();
 	}
 

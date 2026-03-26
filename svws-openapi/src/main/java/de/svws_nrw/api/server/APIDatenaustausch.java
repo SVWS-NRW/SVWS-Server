@@ -83,9 +83,10 @@ public class APIDatenaustausch {
 					content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.run(() -> {
-			if (!("all".equals(mode) || "schueler".equals(mode) || "none".equals(mode)))
+			if (!("all".equals(mode) || "schueler".equals(mode) || "none".equals(mode))) {
 				return new ApiOperationException(Status.BAD_REQUEST, "Der Modus zum Ersetzen von Daten muss auf 'none', 'schueler' oder 'all' gesetzt sein")
 						.getResponse();
+			}
 			final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LUPO_IMPORT);
 			final boolean replaceJahrgang = "all".equals(mode);
 			final boolean replaceSchueler = "all".equals(mode) || "schueler".equals(mode);
