@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
+<html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}, duplex = ${Parameter.duplexdruck}">
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='Lehrer-Stundenplan',
 		htmlTemplatePfad=${Parameter.htmlTemplateDefinition().getPfadHtmlTemplate()},
-		namePageCSS='reporting-A4-hoch.css')}">
+		namePageCSS='reporting-A4-hoch' + (${duplex} ? '-duplex' : '') + '.css')}">
 		<title></title>
 	</head>
 
@@ -54,12 +54,12 @@
 					<tbody>
 						<!-- Pro Element im Pausenraster wird eine Pausenzeile und eine Unterrichtszeile ausgegeben. Ausgenommen die letzte Zeile, da wird nur eine Pausenzeile erzeugt. -->
 						<th:block th:each="zeilePausenraster,iterationVarZeilePausenraster : ${plan.stundenplan().rasterPausenNachStundeUndTagen()}"
-								  th:with="habenPausenaufsichtInZeile = ${zeilePausenraster.habenLehrkraeftePausenaufsichtInZeile(Parameter.idsDetaildaten, wochentyp, true)}">
+								  th:with="habenPausenaufsichtInZeile = ${zeilePausenraster.habenLehrkraeftePausenaufsichtInZeile(Parameter.idsHauptdaten, wochentyp, true)}">
 							<tr th:if="${((mitPausenaufsichten && habenPausenaufsichtInZeile) || mitPausenzeiten) && zeilePausenraster.dauerZeileInMinutenUnterrichtOderPausen() > 0}">
 								<!-- Zeilenkopf für Pausen ist leer -->
 								<td class="mp-0 ta-cm" style="min-height: 1mm;"></td>
 								<th:block th:each="rasterelementZumTag : ${zeilePausenraster.rasterElemente()}"
-										  th:with="pausenaufsichten = ${rasterelementZumTag.pausenaufsichtenByLehrkraeftenUndWochentyp(Parameter.idsDetaildaten, wochentyp, true)},
+										  th:with="pausenaufsichten = ${rasterelementZumTag.pausenaufsichtenByLehrkraeftenUndWochentyp(Parameter.idsHauptdaten, wochentyp, true)},
 												   habenPausenaufsichtInElement = ${!pausenaufsichten.isEmpty()}">
 									<td class="mp-0 ta-cm">
 										<!-- Pro Zeile wird eine kleine Tabelle mit den Pausenaufsichten eingefügt -->
@@ -87,8 +87,8 @@
 								<td class="head-small-grey head-black-lines-small-all ta-cm mp-0" style="min-height: 7mm; font-weight: bolder;" th:text="${plan.stundenplan().unterrichtsrasterStundennummern().get(iterationVarZeilePausenraster.index)}">1</td>
 								<td class="bo-black mp-0"
 									th:each="rasterelementZumTag : ${zeileUnterrichtsraster.rasterElemente()}"
-									th:with="unterrichte = ${rasterelementZumTag.unterrichtsrasterstunde().unterrichteLehrkraefte(Parameter.idsDetaildaten, wochentyp, true)},
-											pausenaufsichten = ${rasterelementZumTag.pausenaufsichtenByLehrkraeftenUndWochentyp(Parameter.idsDetaildaten, wochentyp, true)}">
+									th:with="unterrichte = ${rasterelementZumTag.unterrichtsrasterstunde().unterrichteLehrkraefte(Parameter.idsHauptdaten, wochentyp, true)},
+											pausenaufsichten = ${rasterelementZumTag.pausenaufsichtenByLehrkraeftenUndWochentyp(Parameter.idsHauptdaten, wochentyp, true)}">
 									<!-- Pro Stunde wird eine kleine Tabelle mit den Unterrichten und Pausen eingefügt -->
 									<table class="fixed-100 mp-0">
 										<colgroup>

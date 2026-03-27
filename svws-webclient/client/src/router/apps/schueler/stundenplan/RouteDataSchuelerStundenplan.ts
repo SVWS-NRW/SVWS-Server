@@ -111,9 +111,9 @@ export class RouteDataSchuelerStundenplan extends RouteData<RouteStateSchuelerDa
 	private getKalenderWoche(manager: StundenplanManager, wochentyp: number, kwjahr: number | undefined, kw: number | undefined): { wochentyp?: number, kalenderwoche?: StundenplanKalenderwochenzuordnung } {
 		const result: { wochentyp?: number, kalenderwoche?: StundenplanKalenderwochenzuordnung } = {};
 		try {
-			result.kalenderwoche = manager.kalenderwochenzuordnungGetByJahrAndKWOrException(kwjahr === undefined ? -1 : kwjahr, kw === undefined ? -1 : kw);
+			result.kalenderwoche = manager.kalenderwochenzuordnungGetByJahrAndKWOrException(kwjahr ?? -1, kw ?? -1);
 			result.wochentyp = result.kalenderwoche.wochentyp;
-		} catch (e) {
+		} catch {
 			result.kalenderwoche = undefined;
 			result.wochentyp = wochentyp;
 		}
@@ -169,13 +169,12 @@ export class RouteDataSchuelerStundenplan extends RouteData<RouteStateSchuelerDa
 		await RouteManager.doRoute(routeSchuelerStundenplan.getRoute({ wochentyp, kw }));
 	};
 
-	getPDF = api.call(async (reportingParameter: ReportingParameter, idStundenplan: number): Promise<ApiFile> => {
+	getPDF = api.call(async (reportingParameter: ReportingParameter): Promise<ApiFile> => {
 		if (!this.hatAuswahl) {
 			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens ein Lehrer ausgewählt ist.");
 		}
 		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-		reportingParameter.idsHauptdaten.add(idStundenplan);
-		reportingParameter.idsDetaildaten.add(this.idSchueler);
+		reportingParameter.idsHauptdaten.add(this.idSchueler);
 		return await api.server.pdfReport(reportingParameter, api.schema);
 	});
 

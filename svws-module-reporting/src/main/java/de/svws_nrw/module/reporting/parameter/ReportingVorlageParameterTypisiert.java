@@ -3,8 +3,8 @@ package de.svws_nrw.module.reporting.parameter;
 
 import java.util.Objects;
 
-import de.svws_nrw.core.data.reporting.ReportingVorlageParameter;
-import de.svws_nrw.core.types.reporting.ReportingVorlageParameterTyp;
+import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
+import de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
 
@@ -39,12 +39,12 @@ public class ReportingVorlageParameterTypisiert<T> {
 	 * Erstellt eine Instanz und wandelt den Wert des übergebenen ReportingVorlageParameter in den Zieltyp T um,
 	 * sofern T mit dem Typ des Vorlage-Parameters kompatibel ist. Andernfalls wird eine IllegalArgumentException geworfen.
 	 *
-	 * @param reportingVorlageParameter der Vorlage-Parameter
+	 * @param reportingReportVorlageParameter der Vorlage-Parameter
 	 * @throws ApiOperationException falls der Zieltyp nicht mit dem Parameter-Typ kompatibel ist oder die Konvertierung fehlschlägt
 	 */
-	public ReportingVorlageParameterTypisiert(final ReportingVorlageParameter reportingVorlageParameter) throws ApiOperationException {
-		this.name = reportingVorlageParameter.name;
-		this.wert = getTypisiertenWert(reportingVorlageParameter);
+	public ReportingVorlageParameterTypisiert(final ReportingReportvorlageParameter reportingReportVorlageParameter) throws ApiOperationException {
+		this.name = reportingReportVorlageParameter.name;
+		this.wert = getTypisiertenWert(reportingReportVorlageParameter);
 	}
 
 	/**
@@ -55,10 +55,12 @@ public class ReportingVorlageParameterTypisiert<T> {
 	 * @return true, wenn das angegebene Objekt gleich der aktuellen Instanz ist, andernfalls false
 	 */
 	public boolean equals(final Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if ((o == null) || (getClass() != o.getClass()))
+		}
+		if ((o == null) || (getClass() != o.getClass())) {
 			return false;
+		}
 		final ReportingVorlageParameterTypisiert<?> that = (ReportingVorlageParameterTypisiert<?>) o;
 		return Objects.equals(this.name, that.name);
 	}
@@ -76,17 +78,17 @@ public class ReportingVorlageParameterTypisiert<T> {
 	 * Konvertiert den Wert eines übergebenen ReportingVorlageParameter in den entsprechenden Zieltyp T basierend auf dem Typ des Parameters.
 	 *
 	 * @param <T> Der Zieltyp, in den der Wert konvertiert werden soll
-	 * @param reportingVorlageParameter Das Objekt, das den zu konvertierenden Wert sowie dessen Typ angibt
+	 * @param reportingReportVorlageParameter Das Objekt, das den zu konvertierenden Wert sowie dessen Typ angibt
 	 *
 	 * @return Der in den Zieltyp T konvertierte Wert
 	 *
 	 * @throws ApiOperationException Wenn die Konvertierung fehlschlägt oder ein ungültiger Typ angegeben wurde
 	 */
 	@SuppressWarnings("unchecked")
-	private static <T> T getTypisiertenWert(final ReportingVorlageParameter reportingVorlageParameter) throws ApiOperationException {
-		final String s = (reportingVorlageParameter.wert == null) ? "" : reportingVorlageParameter.wert.trim();
+	private static <T> T getTypisiertenWert(final ReportingReportvorlageParameter reportingReportVorlageParameter) throws ApiOperationException {
+		final String s = (reportingReportVorlageParameter.wert == null) ? "" : reportingReportVorlageParameter.wert.trim();
 		try {
-			return switch (ReportingVorlageParameterTyp.getByID(reportingVorlageParameter.typ)) {
+			return switch (ReportingReportvorlageParameterTyp.getByID(reportingReportVorlageParameter.typ)) {
 				case BOOLEAN -> (T) Boolean.valueOf(Boolean.parseBoolean(s));
 				case INTEGER -> (T) Integer.valueOf(s.isEmpty() ? -1 : Integer.parseInt(s));
 				case LONG -> (T) Long.valueOf(s.isEmpty() ? -1L : Long.parseLong(s));
@@ -95,7 +97,7 @@ public class ReportingVorlageParameterTypisiert<T> {
 			};
 		} catch (final Exception e) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e,
-					"Konvertierung des Werts " + s + " für die Vorlagenparameter " + reportingVorlageParameter.name + " fehlgeschlagen.");
+					"Konvertierung des Werts " + s + " für die Vorlagenparameter " + reportingReportVorlageParameter.name + " fehlgeschlagen.");
 		}
 	}
 

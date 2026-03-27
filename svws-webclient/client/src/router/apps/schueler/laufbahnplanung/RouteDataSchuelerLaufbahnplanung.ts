@@ -128,27 +128,29 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 	});
 
 	getPdfWahlbogen = async (title: string) => {
-		const list = new ArrayList<number>();
-		list.add(this.auswahl.id);
-		const reportingParameter = new ReportingParameter();
+		const reportingParameter = ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getReportingParameter();
 		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
-		reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getBezeichnung();
-		reportingParameter.idsHauptdaten = list;
-		reportingParameter.einzelausgabeHauptdaten = false;
+		reportingParameter.idsHauptdaten.add(this.auswahl.id);
 		switch (title) {
 			case 'Laufbahnwahlbogen':
-				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getVorlageParameterList());
-				for (const vp of reportingParameter.vorlageParameter) {
-					if (vp.name === "nurBelegteFaecher") {
-						vp.wert = false.toString();
+				for (const gruppe of reportingParameter.reportvorlageParameterGruppen) {
+					if (gruppe.name === "Inhaltsoptionen") {
+						for (const vp of gruppe.reportvorlageParameter) {
+							if (vp.name === "nurBelegteFaecher") {
+								vp.wert = false.toString();
+							}
+						}
 					}
 				}
 				return await api.server.pdfReport(reportingParameter, api.schema);
 			case 'Laufbahnwahlbogen (nur Belegung)':
-				reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getVorlageParameterList());
-				for (const vp of reportingParameter.vorlageParameter) {
-					if (vp.name === "nurBelegteFaecher") {
-						vp.wert = true.toString();
+				for (const gruppe of reportingParameter.reportvorlageParameterGruppen) {
+					if (gruppe.name === "Inhaltsoptionen") {
+						for (const vp of gruppe.reportvorlageParameter) {
+							if (vp.name === "nurBelegteFaecher") {
+								vp.wert = true.toString();
+							}
+						}
 					}
 				}
 				return await api.server.pdfReport(reportingParameter, api.schema);
@@ -248,7 +250,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 				listeLehrer.addAll(listeLehrerRest);
 				this.setPatchedState({ auswahl, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten, faecherManager, listeLehrer, zwischenspeicher: undefined });
 				await this.setGostBelegpruefungErgebnis();
-			} catch (error) {
+			} catch {
 				throw new DeveloperNotificationException("Die Laufbahndaten konnten nicht eingeholt werden, sind für diesen Schüler Laufbahndaten möglich?");
 			}
 		}
@@ -280,9 +282,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 				break;
 			}
 		}
-		if (blockungseintrag === undefined) {
-			blockungseintrag = blockungsliste.get(0);
-		}
+		blockungseintrag ??= blockungsliste.get(0);
 		// Bestimme die Daten der Blockung mit der Ergebnisliste
 		const blockungsdaten = await api.server.getGostBlockung(api.schema, blockungseintrag.id);
 		if (blockungsdaten.ergebnisse.isEmpty()) {
@@ -296,9 +296,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 				break;
 			}
 		}
-		if (ergebnis === undefined) {
-			ergebnis = blockungsdaten.ergebnisse.get(0);
-		}
+		ergebnis ??= blockungsdaten.ergebnisse.get(0);
 		const route = RouteNode.getNodeByName("gost.kursplanung.schueler")!.getRoute({ abiturjahr: this.gostJahrgangsdaten.abiturjahr, halbjahr: halbjahr.id, idblockung: blockungsdaten.id, idergebnis: ergebnis.id, idschueler: this.auswahl.id });
 		await RouteManager.doRoute(route);
 	});

@@ -29,7 +29,7 @@ public final class HtmlContextStundenplanungSchuelerStundenplan extends HtmlCont
 	 */
 	public HtmlContextStundenplanungSchuelerStundenplan(final ReportingRepository reportingRepository, final ReportingStundenplanungStundenplan stundenplan,
 			final List<Long> idsAusgabe) {
-		super(reportingRepository, false);
+		super(reportingRepository);
 		this.reportingRepository = reportingRepository;
 		erzeugeContext(stundenplan, idsAusgabe);
 	}

@@ -34,7 +34,7 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> {
 	 * @param reportingKlassen		Liste der Klassen, die berücksichtigt werden sollen.
 	 */
 	public HtmlContextKlassen(final ReportingRepository reportingRepository, final List<ReportingKlasse> reportingKlassen) {
-		super(reportingRepository, true);
+		super(reportingRepository);
 		this.reportingRepository = reportingRepository;
 		erzeugeContextFromKlassen(reportingKlassen);
 	}
@@ -45,7 +45,7 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> {
 	 * @param reportingRepository   Repository mit Parametern, Logger und Daten zum Reporting.
 	 */
 	public HtmlContextKlassen(final ReportingRepository reportingRepository) {
-		super(reportingRepository, true);
+		super(reportingRepository);
 		this.reportingRepository = reportingRepository;
 		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten());
 	}

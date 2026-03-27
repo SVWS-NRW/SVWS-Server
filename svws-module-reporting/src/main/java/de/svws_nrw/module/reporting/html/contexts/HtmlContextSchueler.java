@@ -28,7 +28,7 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> {
 	 * @param reportingSchueler		Liste der Schüler, die berücksichtigt werden sollen.
 	 */
 	public HtmlContextSchueler(final ReportingRepository reportingRepository, final List<ReportingSchueler> reportingSchueler) {
-		super(reportingRepository, true);
+		super(reportingRepository);
 		this.reportingRepository = reportingRepository;
 		erzeugeContextFromSchueler(reportingSchueler);
 	}
@@ -39,7 +39,7 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> {
 	 * @param reportingRepository   Repository mit Parametern, Logger und Daten zum Reporting.
 	 */
 	public HtmlContextSchueler(final ReportingRepository reportingRepository) {
-		super(reportingRepository, true);
+		super(reportingRepository);
 		this.reportingRepository = reportingRepository;
 		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten());
 	}

@@ -17,13 +17,17 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class ReportingSortierungDefinition {
 
+	/** Die Bezeichnung der Sortierdefinition, die auch zur Anzeige in der UI verwendet werden kann. */
+	@Schema(description = "Die Bezeichnung der Sortierdefinition, die auch zur Anzeige in der UI verwendet werden kann.", example = "Klasse, Name, Rufname")
+	public @NotNull String bezeichnung = "";
+
 	/** Der Typname des zu sortierenden Reporting-Datentyps, z. B. 'ReportingSchueler' oder 'ReportingKlasse'. */
 	@Schema(description = "Der Typname des zu sortierenden Reporting-Datentyps, z. B. 'ReportingSchueler'.", example = "ReportingSchueler")
 	public @NotNull String typ = "";
 
 	/** Die Angabe legt fest, ob die definierte Standardsortierung für diesen Typ verwendet werden soll. */
 	@Schema(description = "Die Angabe legt fest, ob die definierte Standardsortierung für diesen Typ verwendet werden soll.", example = "true")
-	public Boolean verwendeStandardsortierung = true;
+	public boolean verwendeStandardsortierung = true;
 
 	/** Liste von Attributnamen für eine benutzerdefinierte Sortierung dieses Typs. */
 	@Schema(description = "Liste von Sortierattributen für diesen Typ, z. B. ['Nachname', 'Vorname' oder '-Geburtsdatum'].",

@@ -6,6 +6,11 @@ import { Class } from '../../../java/lang/Class';
 export class ReportingSortierungDefinition extends JavaObject {
 
 	/**
+	 * Die Bezeichnung der Sortierdefinition, die auch zur Anzeige in der UI verwendet werden kann.
+	 */
+	public bezeichnung: string = "";
+
+	/**
 	 * Der Typname des zu sortierenden Reporting-Datentyps, z. B. 'ReportingSchueler' oder 'ReportingKlasse'.
 	 */
 	public typ: string = "";
@@ -13,7 +18,7 @@ export class ReportingSortierungDefinition extends JavaObject {
 	/**
 	 * Die Angabe legt fest, ob die definierte Standardsortierung für diesen Typ verwendet werden soll.
 	 */
-	public verwendeStandardsortierung: boolean | null = true;
+	public verwendeStandardsortierung: boolean = true;
 
 	/**
 	 * Liste von Attributnamen für eine benutzerdefinierte Sortierung dieses Typs.
@@ -43,10 +48,15 @@ export class ReportingSortierungDefinition extends JavaObject {
 	public static transpilerFromJSON(json: string): ReportingSortierungDefinition {
 		const obj = JSON.parse(json) as Partial<ReportingSortierungDefinition>;
 		const result = new ReportingSortierungDefinition();
+		if (obj.bezeichnung === undefined)
+			throw new Error('invalid json format, missing attribute bezeichnung');
+		result.bezeichnung = obj.bezeichnung;
 		if (obj.typ === undefined)
 			throw new Error('invalid json format, missing attribute typ');
 		result.typ = obj.typ;
-		result.verwendeStandardsortierung = (obj.verwendeStandardsortierung === undefined) ? null : obj.verwendeStandardsortierung === null ? null : obj.verwendeStandardsortierung;
+		if (obj.verwendeStandardsortierung === undefined)
+			throw new Error('invalid json format, missing attribute verwendeStandardsortierung');
+		result.verwendeStandardsortierung = obj.verwendeStandardsortierung;
 		if (obj.attribute !== undefined) {
 			for (const elem of obj.attribute) {
 				result.attribute.add(elem);
@@ -57,8 +67,9 @@ export class ReportingSortierungDefinition extends JavaObject {
 
 	public static transpilerToJSON(obj: ReportingSortierungDefinition): string {
 		let result = '{';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"typ" : ' + JSON.stringify(obj.typ) + ',';
-		result += '"verwendeStandardsortierung" : ' + ((obj.verwendeStandardsortierung === null) ? 'null' : obj.verwendeStandardsortierung.toString()) + ',';
+		result += '"verwendeStandardsortierung" : ' + obj.verwendeStandardsortierung.toString() + ',';
 		result += '"attribute" : [ ';
 		for (let i = 0; i < obj.attribute.size(); i++) {
 			const elem = obj.attribute.get(i);
@@ -74,11 +85,14 @@ export class ReportingSortierungDefinition extends JavaObject {
 
 	public static transpilerToJSONPatch(obj: Partial<ReportingSortierungDefinition>): string {
 		let result = '{';
+		if (obj.bezeichnung !== undefined) {
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		}
 		if (obj.typ !== undefined) {
 			result += '"typ" : ' + JSON.stringify(obj.typ) + ',';
 		}
 		if (obj.verwendeStandardsortierung !== undefined) {
-			result += '"verwendeStandardsortierung" : ' + ((obj.verwendeStandardsortierung === null) ? 'null' : obj.verwendeStandardsortierung.toString()) + ',';
+			result += '"verwendeStandardsortierung" : ' + obj.verwendeStandardsortierung.toString() + ',';
 		}
 		if (obj.attribute !== undefined) {
 			result += '"attribute" : [ ';

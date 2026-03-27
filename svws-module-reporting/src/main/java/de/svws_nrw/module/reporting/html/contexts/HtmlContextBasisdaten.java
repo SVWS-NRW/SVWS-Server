@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.core.data.reporting.ReportingVorlageParameter;
-import de.svws_nrw.core.types.reporting.ReportingVorlageParameterTyp;
+import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
+import de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.parameter.ReportingVorlageParameterTypisiert;
 import de.svws_nrw.module.reporting.types.schule.ProxyReportingBenutzer;
@@ -26,7 +26,7 @@ public final class HtmlContextBasisdaten extends HtmlContext<Object> {
 
 	/** In der Map werden zum Vorlage-Parameter die jeweiligen Werte gespeichert. */
 	@JsonIgnore
-	private final Map<String, Object> vorlageParameterWerte = new HashMap<>();
+	private final Map<String, Object> reportvorlageParameterWerte = new HashMap<>();
 
 
 	/**
@@ -37,7 +37,7 @@ public final class HtmlContextBasisdaten extends HtmlContext<Object> {
 	 * @throws ApiOperationException Im Falle eines Fehlers beim Erzeugen des Contexts.
 	 */
 	public HtmlContextBasisdaten(final ReportingRepository reportingRepository) throws ApiOperationException {
-		super(reportingRepository, true);
+		super(reportingRepository);
 		this.reportingRepository = reportingRepository;
 		erzeugeContext();
 	}
@@ -55,40 +55,40 @@ public final class HtmlContextBasisdaten extends HtmlContext<Object> {
 		context.setVariable("Parameter", this.reportingRepository.reportingParameter());
 
 		// Baue die HashMap mit den übergebenen Vorlage-Parameter-Namen und ihren Werten auf, damit diese in den Templates direkt genutzt werden können.
-		if ((this.reportingRepository.reportingParameter() != null) && (this.reportingRepository.reportingParameter().vorlageParameter() != null)) {
-			for (final ReportingVorlageParameter reportingVorlageParameter : this.reportingRepository.reportingParameter().vorlageParameter()) {
-				final ReportingVorlageParameterTypisiert<?> typisiert = erstelleTypisiertenParameter(reportingVorlageParameter);
-				this.vorlageParameterWerte.put(typisiert.getName(), typisiert.getWert());
+		if ((this.reportingRepository.reportingParameter() != null) && (this.reportingRepository.reportingParameter().reportvorlageParameter() != null)) {
+			for (final ReportingReportvorlageParameter reportingReportVorlageParameter : this.reportingRepository.reportingParameter().reportvorlageParameter()) {
+				final ReportingVorlageParameterTypisiert<?> typisiert = erstelleTypisiertenParameter(reportingReportVorlageParameter);
+				this.reportvorlageParameterWerte.put(typisiert.getName(), typisiert.getWert());
 			}
 		}
-		context.setVariable("VorlageParameter", this.vorlageParameterWerte);
+		context.setVariable("VorlageParameter", this.reportvorlageParameterWerte);
 
 		super.setContext(context);
 	}
 
 	/**
 	 * Erstellt einen typisierten Parameter basierend auf dem übergebenen ReportingVorlageParameter.
-	 * Der Typ wird auf Grundlage des {@link ReportingVorlageParameterTyp} festgelegt.
+	 * Der Typ wird auf Grundlage des {@link ReportingReportvorlageParameterTyp} festgelegt.
 	 * Bei einem Fehler während der Typisierung wird als Fallback ein String-Typ verwendet.
 	 *
-	 * @param reportingVorlageParameter der Vorlage-Parameter, aus dem der typisierte Parameter erstellt wird
+	 * @param reportingReportVorlageParameter der Vorlage-Parameter, aus dem der typisierte Parameter erstellt wird
 	 *
 	 * @return Ein Objekt der Klasse ReportingVorlageParameterTypisiert mit dem entsprechenden Typ
 	 *         basierend auf dem Typ des übergebenen Parameters
 	 *
 	 * @throws ApiOperationException Im Falle eines Konvertierungsfehlers.
 	 */
-	private ReportingVorlageParameterTypisiert<?> erstelleTypisiertenParameter(final ReportingVorlageParameter reportingVorlageParameter)
+	private ReportingVorlageParameterTypisiert<?> erstelleTypisiertenParameter(final ReportingReportvorlageParameter reportingReportVorlageParameter)
 			throws ApiOperationException {
 		try {
-			return switch (ReportingVorlageParameterTyp.getByID(reportingVorlageParameter.typ)) {
-				case BOOLEAN -> new ReportingVorlageParameterTypisiert<Boolean>(reportingVorlageParameter);
-				case INTEGER -> new ReportingVorlageParameterTypisiert<Integer>(reportingVorlageParameter);
-				case LONG -> new ReportingVorlageParameterTypisiert<Long>(reportingVorlageParameter);
-				case DECIMAL -> new ReportingVorlageParameterTypisiert<Double>(reportingVorlageParameter);
-				case STRING -> new ReportingVorlageParameterTypisiert<String>(reportingVorlageParameter);
+			return switch (ReportingReportvorlageParameterTyp.getByID(reportingReportVorlageParameter.typ)) {
+				case BOOLEAN -> new ReportingVorlageParameterTypisiert<Boolean>(reportingReportVorlageParameter);
+				case INTEGER -> new ReportingVorlageParameterTypisiert<Integer>(reportingReportVorlageParameter);
+				case LONG -> new ReportingVorlageParameterTypisiert<Long>(reportingReportVorlageParameter);
+				case DECIMAL -> new ReportingVorlageParameterTypisiert<Double>(reportingReportVorlageParameter);
+				case STRING -> new ReportingVorlageParameterTypisiert<String>(reportingReportVorlageParameter);
 				default -> throw new ApiOperationException(Response.Status.BAD_REQUEST,
-						"Ungültiger Typ für den Reporting-Vorlage-Parameter " + reportingVorlageParameter.name + " übergeben.");
+						"Ungültiger Typ für den Reporting-Vorlage-Parameter " + reportingReportVorlageParameter.name + " übergeben.");
 			};
 		} catch (final Exception e) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e, "Fehler bei der Typisierung der Vorlage-Parameter aufgetreten.");

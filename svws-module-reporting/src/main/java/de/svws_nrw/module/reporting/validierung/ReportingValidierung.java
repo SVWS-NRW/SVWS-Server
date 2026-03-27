@@ -37,6 +37,8 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class ReportingValidierung {
 
+	private static final String KEINE_GOST_SCHULE = "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.";
+
 	private ReportingValidierung() {
 		throw new IllegalStateException("Statische Klasse mit Hilfsmethoden zur Validierung von Daten für das Reporting. Initialisierung nicht möglich.");
 	}
@@ -77,79 +79,111 @@ public final class ReportingValidierung {
 		// Prüfe die Schüler-IDs. Erzeuge Maps, damit auch später leicht auf die Schülerdaten zugegriffen werden kann.
 		final Map<Long, SchuelerStammdaten> mapSchueler = (new DataSchuelerStammdaten(conn)).getListByIds(idsNonNull).stream()
 				.collect(Collectors.toMap(s -> s.id, s -> s));
-		for (final Long sID : idsNonNull)
+		for (final Long sID : idsNonNull) {
 			if (mapSchueler.get(sID) == null) {
 				reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden ungültige Schüler-IDs übergeben.");
 				throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Schüler-IDs übergeben.");
 			}
+		}
 
 		reportingRepository.mapSchuelerStammdaten().putAll(mapSchueler);
 
 		// Prüfe Daten aus dem Bereich des Abiturs. Das gilt auch für die Laufbahnplanung, da dort Daten wie das Abiturjahr benötigt werden.
 		if (mitAbiturDaten) {
-			// Schule hat eine gym. Oberstufe? pruefeSchuleMitGOSt wirft eine NOT_FOUND-Exception, wenn die Schule keine GOSt hat.
-			try {
-				DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			} catch (final ApiOperationException aoe) {
-				reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
-				throw new ApiOperationException(Status.NOT_FOUND, aoe, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
-			}
-
-			final Map<Long, Abiturdaten> mapGostSchuelerAbiturdaten;
-
-			try {
-				mapGostSchuelerAbiturdaten = new HashMap<>(new DataGostAbiturdaten(conn, null).getMapAbiturdatenFromIDs(idsNonNull));
-			} catch (final ApiOperationException aoe) {
-				reportingRepository.logger().logLn(LogLevel.ERROR, 4,
-						"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
-				throw new ApiOperationException(Status.NOT_FOUND, aoe,
-						"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
-			}
-
-			reportingRepository.mapGostSchuelerAbiturdaten().putAll(mapGostSchuelerAbiturdaten);
+			validiereUndLadeAbiturdaten(reportingRepository, conn, idsNonNull);
 		}
 
 		// Prüfe Daten aus dem Bereich der GOSt-Laufbahnplanung.
 		if (mitGostLaufbahnplanung) {
-			try {
-				DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			} catch (final ApiOperationException aoe) {
-				reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
-				throw new ApiOperationException(Status.NOT_FOUND, aoe, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
-			}
-
-			// Lade die Beratungsdaten der Schüler zwecks Prüfung.
-			final Map<Long, GostLaufbahnplanungBeratungsdaten> mapGostBeratungsdaten =
-					new HashMap<>(new DataGostSchuelerLaufbahnplanungBeratungsdaten(conn).getMapFromIDs(idsNonNull));
-			for (final Long sID : idsNonNull)
-				if (mapGostBeratungsdaten.get(sID) == null) {
-					reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
-					throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
-				}
-			reportingRepository.mapGostBeratungsdaten().putAll(mapGostBeratungsdaten);
-
-			// Lade Abiturdaten für die Gost-Laufbahnplanung zwecks Prüfung.
-			final Map<Long, Abiturdaten> mapGostBeratungsdatenAbiturdaten;
-			try {
-				mapGostBeratungsdatenAbiturdaten = new HashMap<>(DBUtilsGostLaufbahn.getMapFromIDs(conn, idsNonNull));
-			} catch (final ApiOperationException aoe) {
-				reportingRepository.logger().logLn(LogLevel.ERROR, 4,
-						"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
-				throw new ApiOperationException(Status.NOT_FOUND, aoe,
-						"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
-			}
-			for (final Abiturdaten abiturdaten : mapGostBeratungsdatenAbiturdaten.values()) {
-				if ((abiturdaten == null) || (abiturdaten.abiturjahr <= 0)) {
-					reportingRepository.logger().logLn(LogLevel.ERROR, 4,
-							"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
-					throw new ApiOperationException(Status.NOT_FOUND,
-							"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
-				}
-			}
-			reportingRepository.mapGostBeratungsdatenAbiturdaten().putAll(mapGostBeratungsdatenAbiturdaten);
+			validiereUndLadeGostLaufbahnplanung(reportingRepository, conn, idsNonNull);
 		}
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Validierung der Schülerdaten.");
+	}
+
+	/**
+	 * Validiert die Schülerdaten und lädt die Abiturdaten für die Schüler.
+	 *npm
+	 * @param reportingRepository der ReportingRepository
+	 * @param conn                die Datenbankverbindung
+	 * @param idsNonNull          die Liste der Schüler-IDs
+	 *
+	 * @throws ApiOperationException wenn die Schülerdaten ungültig sind
+	 */
+	private static void validiereUndLadeAbiturdaten(final ReportingRepository reportingRepository, final DBEntityManager conn,
+			final List<Long> idsNonNull) throws ApiOperationException {
+
+		// Schule hat eine gym. Oberstufe? pruefeSchuleMitGOSt wirft eine NOT_FOUND-Exception, wenn die Schule keine GOSt hat.
+		try {
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		} catch (final ApiOperationException aoe) {
+			reportingRepository.logger().logLn(LogLevel.ERROR, 4, KEINE_GOST_SCHULE);
+			throw new ApiOperationException(Status.NOT_FOUND, aoe, KEINE_GOST_SCHULE);
+		}
+
+		final Map<Long, Abiturdaten> mapGostSchuelerAbiturdaten;
+
+		try {
+			mapGostSchuelerAbiturdaten = new HashMap<>(new DataGostAbiturdaten(conn, null).getMapAbiturdatenFromIDs(idsNonNull));
+		} catch (final ApiOperationException aoe) {
+			reportingRepository.logger().logLn(LogLevel.ERROR, 4,
+					"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
+			throw new ApiOperationException(Status.NOT_FOUND, aoe,
+					"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt existieren.");
+		}
+
+		reportingRepository.mapGostSchuelerAbiturdaten().putAll(mapGostSchuelerAbiturdaten);
+	}
+
+	/**
+	 * Validiert die Schülerdaten und lädt die Beratungsdaten für die Schüler.
+	 *
+	 * @param reportingRepository der ReportingRepository
+	 * @param conn                die Datenbankverbindung
+	 * @param idsNonNull          die Liste der Schüler-IDs
+	 *
+	 * @throws ApiOperationException wenn die Schülerdaten ungültig sind
+	 */
+	private static void validiereUndLadeGostLaufbahnplanung(final ReportingRepository reportingRepository,
+			final DBEntityManager conn, final List<Long> idsNonNull) throws ApiOperationException {
+
+		try {
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		} catch (final ApiOperationException aoe) {
+			reportingRepository.logger().logLn(LogLevel.ERROR, 4, KEINE_GOST_SCHULE);
+			throw new ApiOperationException(Status.NOT_FOUND, aoe, KEINE_GOST_SCHULE);
+		}
+
+		// Lade die Beratungsdaten der Schüler zwecks Prüfung.
+		final Map<Long, GostLaufbahnplanungBeratungsdaten> mapGostBeratungsdaten =
+				new HashMap<>(new DataGostSchuelerLaufbahnplanungBeratungsdaten(conn).getMapFromIDs(idsNonNull));
+		for (final Long sID : idsNonNull) {
+			if (mapGostBeratungsdaten.get(sID) == null) {
+				reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
+				throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
+			}
+		}
+		reportingRepository.mapGostBeratungsdaten().putAll(mapGostBeratungsdaten);
+
+		// Lade Abiturdaten für die Gost-Laufbahnplanung zwecks Prüfung.
+		final Map<Long, Abiturdaten> mapGostBeratungsdatenAbiturdaten;
+		try {
+			mapGostBeratungsdatenAbiturdaten = new HashMap<>(DBUtilsGostLaufbahn.getMapFromIDs(conn, idsNonNull));
+		} catch (final ApiOperationException aoe) {
+			reportingRepository.logger().logLn(LogLevel.ERROR, 4,
+					"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
+			throw new ApiOperationException(Status.NOT_FOUND, aoe,
+					"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
+		}
+		for (final Abiturdaten abiturdaten : mapGostBeratungsdatenAbiturdaten.values()) {
+			if ((abiturdaten == null) || (abiturdaten.abiturjahr <= 0)) {
+				reportingRepository.logger().logLn(LogLevel.ERROR, 4,
+						"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
+				throw new ApiOperationException(Status.NOT_FOUND,
+						"FEHLER: Es wurden Schüler-IDs übergeben, für die keine Abiturdaten in der GOSt-Laufbahnplanung existieren.");
+			}
+		}
+		reportingRepository.mapGostBeratungsdatenAbiturdaten().putAll(mapGostBeratungsdatenAbiturdaten);
 	}
 
 
@@ -185,8 +219,9 @@ public final class ReportingValidierung {
 		try {
 
 			final List<DTOKlassen> dtoKlassen = new DataKlassendaten(reportingRepository.conn()).getDTOsByIds(idsNonNull);
-			if (dtoKlassen.size() != idsNonNull.size())
+			if (dtoKlassen.size() != idsNonNull.size()) {
 				throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Klassen-IDs übergeben.");
+			}
 		} catch (final ApiOperationException aoe) {
 			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden ungültige Klassen-IDs übergeben.");
 			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Klassen-IDs übergeben.");
@@ -227,11 +262,12 @@ public final class ReportingValidierung {
 		final Map<Long, KursDaten> mapKursdaten =
 				new DataKurse(reportingRepository.conn()).getListByIDs(idsNonNull, true).stream()
 						.collect(Collectors.toMap(k -> k.id, k -> k));
-		for (final Long kID : idsNonNull)
+		for (final Long kID : idsNonNull) {
 			if (mapKursdaten.get(kID) == null) {
 				reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden ungültige Kurs-IDs übergeben.");
 				throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden ungültige Kurs-IDs übergeben.");
 			}
+		}
 
 		// Daten sind valide, speichere diese nun gemäß Parameter im Repository.
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Speicherung der Daten aus der Validierung der Kursdaten im Repository.");
@@ -291,7 +327,7 @@ public final class ReportingValidierung {
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Validierung der Blockungsergebnisdaten.");
 
-		if ((reportingRepository.reportingParameter().idsHauptdaten() == null) || reportingRepository.reportingParameter().idsHauptdaten().isEmpty()) {
+		if ((reportingRepository.reportingParameter().idHauptdatenObjekt() < 0)) {
 			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
 			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurde keine ID für ein Blockungsergebnis übergeben.");
 		}
@@ -300,11 +336,11 @@ public final class ReportingValidierung {
 		try {
 			DBUtilsGost.pruefeSchuleMitGOSt(reportingRepository.conn());
 		} catch (final ApiOperationException e) {
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
-			throw new ApiOperationException(Status.NOT_FOUND, e, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, KEINE_GOST_SCHULE);
+			throw new ApiOperationException(Status.NOT_FOUND, e, KEINE_GOST_SCHULE);
 		}
 
-		final Long idBlockungsergebnis = reportingRepository.reportingParameter().idsHauptdaten().getFirst();
+		final long idBlockungsergebnis = reportingRepository.reportingParameter().idHauptdatenObjekt();
 
 		// Prüfe nun, ob es zur angegebenen Blockungsergebnis-ID ein Ergebnis gibt.
 		try {
@@ -333,7 +369,7 @@ public final class ReportingValidierung {
 		try {
 			DBUtilsGost.pruefeSchuleMitGOSt(reportingRepository.conn());
 		} catch (final ApiOperationException e) {
-			throw new ApiOperationException(Status.NOT_FOUND, e, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, e, KEINE_GOST_SCHULE);
 		}
 
 		// Erwartete Datenstruktur in idsHauptdaten der Reporting-Parameter: Abiturjahr - GostHalbjahrID (0-5) - Abiturjahr - GostHalbjahrID (0-5) - usw.
@@ -350,26 +386,41 @@ public final class ReportingValidierung {
 			}
 			final List<Pair<Integer, Integer>> selection = new ArrayList<>();
 
-			try {
-				// Lese die Parameter im Wechsel aus.
-				for (int i = 0; i < parameterDaten.size(); i = i + 2) {
-					selection.add(new Pair<>(Math.toIntExact(parameterDaten.get(i)), Math.toIntExact(parameterDaten.get(i + 1))));
-				}
+			validiereParameterDatenPaare(reportingRepository, parameterDaten, selection);
+		}
+	}
 
-				// Lese die Abiturjahrgänge aus der DB zum Abgleich.
-				final List<DTOGostJahrgangsdaten> abiturjahrgaenge = reportingRepository.conn().queryAll(DTOGostJahrgangsdaten.class);
+	/**
+	 * Validiert die Parameter für die Klausurplanung für die GOSt.
+	 *
+	 * @param reportingRepository der ReportingRepository
+	 * @param parameterDaten      die Parameterdaten
+	 * @param selection           die Auswahl
+	 */
+	private static void validiereParameterDatenPaare(final ReportingRepository reportingRepository, final List<Long> parameterDaten,
+			final List<Pair<Integer, Integer>> selection) {
 
-				// Prüfe die Parameter in den Listen auf plausible bzw. zugelassene Werte.
-				for (final Pair<Integer, Integer> wert : selection) {
-					if ((wert.a < 1900) || abiturjahrgaenge.stream().noneMatch(aj -> aj.Abi_Jahrgang == wert.a))
-						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.");
-					if (GostHalbjahr.fromID(wert.b) == null)
-						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Ein GOSt-Halbjahr liegt außerhalb des Wertebereichs.");
-				}
-			} catch (final Exception e) {
-				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
-						"FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr konnten nicht gelesen werden oder sind außerhalb des Wertebereichs.");
+		try {
+			// Lese die Parameter im Wechsel aus.
+			for (int i = 0; i < parameterDaten.size(); i = i + 2) {
+				selection.add(new Pair<>(Math.toIntExact(parameterDaten.get(i)), Math.toIntExact(parameterDaten.get(i + 1))));
 			}
+
+			// Lese die Abiturjahrgänge aus der DB zum Abgleich.
+			final List<DTOGostJahrgangsdaten> abiturjahrgaenge = reportingRepository.conn().queryAll(DTOGostJahrgangsdaten.class);
+
+			// Prüfe die Parameter in den Listen auf plausible bzw. zugelassene Werte.
+			for (final Pair<Integer, Integer> wert : selection) {
+				if ((wert.a < 1900) || abiturjahrgaenge.stream().noneMatch(aj -> aj.Abi_Jahrgang == wert.a)) {
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.");
+				}
+				if (GostHalbjahr.fromID(wert.b) == null) {
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Ein GOSt-Halbjahr liegt außerhalb des Wertebereichs.");
+				}
+			}
+		} catch (final Exception e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
+					"FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr konnten nicht gelesen werden oder sind außerhalb des Wertebereichs.");
 		}
 	}
 
@@ -388,7 +439,7 @@ public final class ReportingValidierung {
 		try {
 			DBUtilsGost.pruefeSchuleMitGOSt(reportingRepository.conn());
 		} catch (final ApiOperationException e) {
-			throw new ApiOperationException(Status.NOT_FOUND, e, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, e, KEINE_GOST_SCHULE);
 		}
 
 		// Erwartete Datenstruktur in idsHauptdaten der Reporting-Parameter: Abiturjahr - GostHalbjahrID (0-5) - GostHalbjahrID (0-5) - usw.
@@ -402,13 +453,15 @@ public final class ReportingValidierung {
 				final int abiturjahrgang = Math.toIntExact(parameterDaten.getFirst());
 
 				// Lese die Abiturjahrgänge aus der DB zum Abgleich.
-				if ((abiturjahrgang < 1900) || (reportingRepository.conn().queryByKey(DTOGostJahrgangsdaten.class, abiturjahrgang) == null))
+				if ((abiturjahrgang < 1900) || (reportingRepository.conn().queryByKey(DTOGostJahrgangsdaten.class, abiturjahrgang) == null)) {
 					throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Das Abiturjahr ist ungültig.");
+				}
 
 				// Lese die Parameter im Wechsel aus.
 				for (int i = 1; i < parameterDaten.size(); i++) {
-					if (GostHalbjahr.fromID(Math.toIntExact(parameterDaten.get(i))) == null)
+					if (GostHalbjahr.fromID(Math.toIntExact(parameterDaten.get(i))) == null) {
 						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Ein GOSt-Halbjahr liegt außerhalb des Wertebereichs.");
+					}
 				}
 			} catch (final Exception e) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
@@ -432,12 +485,12 @@ public final class ReportingValidierung {
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Beginn der Validierung der Stundenplanungsdaten.");
 
-		if ((reportingRepository.reportingParameter().idsHauptdaten() == null) || reportingRepository.reportingParameter().idsHauptdaten().isEmpty()) {
+		if ((reportingRepository.reportingParameter().idHauptdatenObjekt() < 0)) {
 			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "FEHLER: Es wurde keine ID für die Stundenplanung übergeben.");
 			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurde keine ID für die Stundenplanung übergeben.");
 		}
 
-		final Long idStundenplan = reportingRepository.reportingParameter().idsHauptdaten().getFirst();
+		final Long idStundenplan = reportingRepository.reportingParameter().idHauptdatenObjekt();
 
 		// Prüfe nun, ob es zur angegebenen Stundenplan-ID einen Stundenplan gibt.
 		if ((idStundenplan == null) || (reportingRepository.stundenplan(idStundenplan) == null)) {

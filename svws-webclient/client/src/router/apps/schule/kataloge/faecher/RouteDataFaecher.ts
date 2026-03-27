@@ -95,14 +95,13 @@ export class RouteDataFaecher extends RouteDataAuswahl<FaecherListeManager, Rout
 		await this.gotoDefaultView(fach.id);
 	};
 
-	getPDF = api.call(async (reportingParameter: ReportingParameter, idStundenplan: number): Promise<ApiFile> => {
+	getPDF = api.call(async (reportingParameter: ReportingParameter): Promise<ApiFile> => {
 		if (!this.manager.liste.auswahlExists()) {
 			throw new DeveloperNotificationException("Dieser Stundenplan kann nur gedruckt werden, wenn mindestens ein Fach ausgewählt ist.");
 		}
 		reportingParameter.idSchuljahresabschnitt = this.idSchuljahresabschnitt;
-		reportingParameter.idsHauptdaten.add(idStundenplan);
 		for (const l of this.manager.liste.auswahl()) {
-			reportingParameter.idsDetaildaten.add(l.id);
+			reportingParameter.idsHauptdaten.add(l.id);
 		}
 		return await api.server.pdfReport(reportingParameter, api.schema);
 	});

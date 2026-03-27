@@ -23,8 +23,13 @@ public class ReportingParameter {
 	@Schema(description = "Der Schuljahresabschnitt, für den der Report erstellt werden soll.", example = "0")
 	public long idSchuljahresabschnitt = -1;
 
+	/** Die Optionen für das Dateiformat, in dem der Report ausgegeben werden soll, angegeben als Wert gemäß CoreType {@link ReportingAusgabeformat} */
+	@Schema(description = "Die Optionen für das Dateiformat, in dem der Report ausgegeben werden soll. Werte gemäß CoreType ReportingAusgabeformat, z. B. "
+			+ "(HTML = 1, PDF = 2, EMAIL = 3).", example = "2")
+	public @NotNull List<@NotNull Integer> ausgabeformatOptionen = new ArrayList<>();
+
 	/** Das Dateiformat, in dem der Report ausgegeben werden soll, angegeben als Wert gemäß CoreType {@link ReportingAusgabeformat} */
-	@Schema(description = "Das Dateiformat, in dem der Report ausgegeben werden soll. Werte gemäß CoreType ReportingAusgabeformat, z. B. (HTML = 1, PDF = 2).",
+	@Schema(description = "Das Dateiformat, in dem der Report ausgegeben werden soll. Werte gemäß CoreType ReportingAusgabeformat, z. B. (HTML = 1, PDF = 2, EMAIL = 3).",
 			example = "2")
 	public int ausgabeformat = ReportingAusgabeformat.PDF.getId();
 
@@ -33,54 +38,38 @@ public class ReportingParameter {
 			example = "GostKlausurplanung-SchuelerMitKlausuren")
 	public @NotNull String reportvorlage = "";
 
+	/** Eine ID zum Objekt, das die Hauptdaten-IDs enthält, wie z. B. die ID eines Blockungsergebnisses oder eines Stundenplans. Gibt es kein solches Objekt,
+	 *  so ist der Wert kleiner 0. */
+	@Schema(description = "Eine ID zum Objekt, das die Hauptdaten-IDs enthält, wie z. B. die ID eines Blockungsergebnisses oder eines Stundenplans. Gibt es "
+			+ "kein solches Objekt, so ist der Wert kleiner 0.", example = "17")
+	public long idHauptdatenObjekt = -1;
+
 	/** Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDFs. */
 	@Schema(description = "Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF.", example = "[2019,5,2020,3,2021,1]")
 	public @NotNull List<Long> idsHauptdaten = new ArrayList<>();
-
-	/** Legt fest, ob pro Datensatz der Hauptdaten eine einzelne PDF-Datei erzeugt werden soll. */
-	@Schema(description = "Legt fest, ob pro Datensatz der Hauptdaten eine einzelne PDF-Datei erzeugt werden soll.", example = "false")
-	public boolean einzelausgabeHauptdaten = false;
 
 	/** Eine Liste von IDs für die Ausgabe von Detaildaten zu den Hauptdaten. */
 	@Schema(description = "Eine Liste von IDs für die Ausgabe von Detaildaten zu den Hauptdaten.", example = "[]")
 	public @NotNull List<Long> idsDetaildaten = new ArrayList<>();
 
-	/** Legt fest, ob pro Datensatz der Detaildaten eine einzelne PDF-Datei erzeugt werden soll. */
-	@Schema(description = "Legt fest, ob pro Datensatz der Detaildaten eine einzelne PDF-Datei erzeugt werden soll.", example = "false")
-	public boolean einzelausgabeDetaildaten = false;
-
-	/** Eine ReportingSortierungDefinition für die Hauptdaten. Der Typ wird dabei ignoriert und nur die übrigen Einstellungen werden benutzt.*/
-	@Schema(description = "Eine ReportingSortierungDefinition für die Hauptdaten. Der Typ wird dabei ignoriert und nur die übrigen Einstellungen werden benutzt.",
-			example = "[ {\"typ\":\"\",\"verwendeStandardsortierung\":true,\"attribute\":[] } ]")
-	public ReportingSortierungDefinition sortierungHauptdaten = new ReportingSortierungDefinition();
-
-	/** Eine ReportingSortierungDefinition für die Detaildaten. Der Typ wird dabei ignoriert und nur die übrigen Einstellungen werden benutzt.*/
-	@Schema(description = "Eine ReportingSortierungDefinition für die Detaildaten. Der Typ wird dabei ignoriert und nur die übrigen Einstellungen werden benutzt.",
-			example = "[ {\"typ\":\"\",\"verwendeStandardsortierung\":true,\"attribute\":[] } ]")
-	public ReportingSortierungDefinition sortierungDetaildaten = new ReportingSortierungDefinition();
+	/** Eine Liste mit Gruppen von freien, typisierten Report-Parameter-Werten, die in Templates direkt über ihren Namen nutzbar sind. */
+	@Schema(description = "Eine Liste mit Gruppen von freien, typisierten Report-Parameter-Werten, die in Templates direkt über ihren Namen nutzbar sind.")
+	public @NotNull List<ReportingReportvorlageParameterGruppe> reportvorlageParameterGruppen = new ArrayList<>();
 
 	/** Typenspezifische Sortierdefinitionen, die für die Sortierung von ProxyTyp-Objekten verwendet werden sollen. */
-	@Schema(description = "Typenspezifische Sortierdefinitionen, die für die Sortierung von ProxyTyp-Objekten verwendet werden sollen.",
-			example = "[ {\"typ\":\"ReportingSchueler\",\"verwendeStandardsortierung\":false,\"attribute\":[auswahlLernabschnitt.klasse, nachname, vorname] }"
-					+ " ]")
-	public @NotNull List<ReportingSortierungDefinition> sortierungDefinitionen = new ArrayList<>();
+	@Schema(description = "Gruppen von typenspezifischen Sortierdefinitionen, die für die Sortierung von ProxyTyp-Objekten verwendet werden sollen.",
+			example = "[]")
+	public @NotNull List<ReportingSortierungDefinitionGruppe> sortierungDefinitionenGruppen = new ArrayList<>();
 
 	/** Typenspezifische Filterdefinitionen, die für die Filterung von ProxyTyp-Objekten verwendet werden sollen. */
-	@Schema(description = "Typenspezifische Filterdefinitionen, die für die Filterung von ProxyTyp-Objekten verwendet werden sollen.", example = "[]")
-	public @NotNull List<ReportingFilterDefinition> filterDefinitionen = new ArrayList<>();
+	@Schema(description = "Gruppen von typenspezifischen Filterdefinitionen, die für die Filterung von ProxyTyp-Objekten verwendet werden sollen.",
+			example = "[]")
+	public @NotNull List<ReportingFilterDefinitionGruppe> filterDefinitionenGruppen = new ArrayList<>();
 
 	/** Parameter, der die Daten für den E-Mail-Versand enthält. */
 	@Schema(description = "Parameter, der die Daten für den E-Mail-Versand enthält.",
 			example = "{\"betreff\":\"Persönlicher Stundenplan\",\"text\":\"Sehr geehrte Damen und Herren,\n\nanbei erhalten Sie den persönlichen Stundenplan.\n\nMit freundlichen Grüßen\\nIhre Schule\"}")
 	public ReportingEMailDaten eMailDaten = new ReportingEMailDaten();
-
-	/** Legt fest, ob die Seiteneinstellungen für einen Duplexdruck verwendet werden sollen. */
-	@Schema(description = "Legt fest, ob die Seiteneinstellungen für einen Duplexdruck verwendet werden sollen.", example = "false")
-	public boolean duplexdruck = false;
-
-	/** Eine Liste mit freien, typisierten Report-Parameter-Werten, die in Templates direkt über ihren Namen nutzbar sind. */
-	@Schema(description = "Eine Liste mit freien, typisierten Report-Parameter-Werten, die in Templates direkt über ihren Namen nutzbar sind.")
-	public @NotNull List<ReportingVorlageParameter> vorlageParameter = new ArrayList<>();
 
 
 	/**

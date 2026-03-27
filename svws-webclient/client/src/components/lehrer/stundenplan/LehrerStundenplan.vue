@@ -1,8 +1,8 @@
 <template>
 	<Teleport defer to=".svws-ui-header--actions">
-		<lehrer-stundenplan-drucken-modal v-slot="{ openModal }" :map-stundenplaene :get-p-d-f :api-status>
+		<stundenplan-drucken-modal :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN" v-slot="{ openModal }" :map-stundenplaene :get-p-d-f :api-status>
 			<svws-ui-button @click="openModal" type="secondary"><span class="icon i-ri-printer-line" /> Stundenplan drucken</svws-ui-button>
-		</lehrer-stundenplan-drucken-modal>
+		</stundenplan-drucken-modal>
 		<svws-ui-modal-hilfe> <hilfe-lehrer-stundenplan /> </svws-ui-modal-hilfe>
 	</Teleport>
 	<div class="page page-flex-col overflow-x-auto">
@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 
+	import { ReportingReportvorlage } from '@core';
 	import type { LehrerStundenplanProps } from './LehrerStundenplanProps';
 
 	const props = defineProps<LehrerStundenplanProps>();

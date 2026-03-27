@@ -31,12 +31,14 @@ import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
 import de.svws_nrw.core.data.reporting.ReportingFilterDefinition;
+import de.svws_nrw.core.data.reporting.ReportingFilterDefinitionGruppe;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.reporting.ReportingSortierungDefinition;
+import de.svws_nrw.core.data.reporting.ReportingSortierungDefinitionGruppe;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.data.schule.Telefonart;
@@ -48,6 +50,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.reporting.ReportingFilterVerknuepfung;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import de.svws_nrw.data.erzieher.DataErzieherarten;
@@ -1245,21 +1248,23 @@ public class ReportingRepository {
 	 * @return Eine Liste der bereinigten Attributnamen.
 	 */
 	public List<String> getSortierungsAttribute(final String typ, final boolean nutzeStandardsortierungAlsFallback) {
-		ReportingSortierungDefinition reportingSortierungDefinition =
-				((this.reportingParameterTypisiert == null) || (this.reportingParameterTypisiert.sortierungDefinitionen() == null))
+		// Finde die Sortierungsgruppe für den angefragten Typ
+		final ReportingSortierungDefinitionGruppe gruppe =
+				((this.reportingParameterTypisiert == null) || (this.reportingParameterTypisiert.sortierungDefinitionenGruppen() == null))
 						? null
-						: this.reportingParameterTypisiert.sortierungDefinitionen().stream()
-								.filter(d -> (d != null) && Objects.equals(typ, d.typ))
+						: this.reportingParameterTypisiert.sortierungDefinitionenGruppen().stream()
+								.filter(g -> (g != null) && Objects.equals(typ, g.typ))
 								.findFirst()
 								.orElse(null);
 
-		// Falls keine typspezifische Definition in den Sortierdefinitionen gefunden wurde, prüfe die Haupt- oder Detailsortierung als Fallback.
-		if ((reportingSortierungDefinition == null) && (this.reportingParameterTypisiert != null)) {
-			if (Objects.equals(typ, this.reportingParameterTypisiert.sortierungHauptdaten().typ))
-				reportingSortierungDefinition = this.reportingParameterTypisiert.sortierungHauptdaten();
-			else if (Objects.equals(typ, this.reportingParameterTypisiert.sortierungDetaildaten().typ))
-				reportingSortierungDefinition = this.reportingParameterTypisiert.sortierungDetaildaten();
-		}
+		// Verwende die erste ausgewählte Sortierungsdefinition aus der Gruppe
+		final ReportingSortierungDefinition reportingSortierungDefinition =
+				((gruppe == null) || (gruppe.sortierungDefinitionen == null) || gruppe.sortierungDefinitionen.isEmpty())
+						? null
+						: gruppe.sortierungDefinitionen.stream()
+								.filter(Objects::nonNull)
+								.findFirst()
+								.orElse(null);
 
 		// 1. Fall: Es gibt eine explizite benutzerdefinierte Sortierung mit vorhandenen Attributen
 		if ((reportingSortierungDefinition != null) && Boolean.FALSE.equals(reportingSortierungDefinition.verwendeStandardsortierung)
@@ -1314,22 +1319,37 @@ public class ReportingRepository {
 	 * @return Ein {@link Predicate}, das die Filterkriterien anwendet. Falls keine Definition vorhanden ist, wird ein Filter zurückgegeben, der alles akzeptiert.
 	 */
 	public <T> Predicate<T> getFilter(final String typ, final List<String> validierungsfehler) {
-		final ReportingFilterDefinition reportingFilterDefinition =
-				((this.reportingParameterTypisiert == null) || (this.reportingParameterTypisiert.filterDefinitionen() == null) || this.reportingParameterTypisiert.filterDefinitionen().isEmpty())
-						? null
-						: this.reportingParameterTypisiert.filterDefinitionen().stream()
-								.filter(d -> (d != null) && Objects.equals(typ, d.typ))
-								.findFirst()
-								.orElse(null);
+		// Finde die Filtergruppe für den angefragten Typ
+		final ReportingFilterDefinitionGruppe gruppe =
+				((this.reportingParameterTypisiert == null) || (this.reportingParameterTypisiert.filterDefinitionenGruppen() == null)
+						|| this.reportingParameterTypisiert.filterDefinitionenGruppen().isEmpty())
+								? null
+								: this.reportingParameterTypisiert.filterDefinitionenGruppen().stream()
+										.filter(g -> (g != null) && Objects.equals(typ, g.typ))
+										.findFirst()
+										.orElse(null);
 
-		if (reportingFilterDefinition == null)
+		if ((gruppe == null) || (gruppe.filterDefinitionen == null) || gruppe.filterDefinitionen.isEmpty())
 			return t -> true;
 
 		final FilterRegistry<T> registry = getFilterRegistryByTyp(typ);
 		if (registry == null)
 			return t -> true;
 
-		return registry.erstelleFilter(reportingFilterDefinition, validierungsfehler);
+		// Wenn nur eine Filterdefinition zurückgegeben wird, wird diese wie definiert verwendet.
+		if (gruppe.filterDefinitionen.size() == 1)
+			return registry.erstelleFilter(gruppe.filterDefinitionen.getFirst(), validierungsfehler);
+
+		// Wenn mehrere Filterdefinitionen zurückgegeben werden, werden diese gemäß Verknüpfung kombiniert.
+		final boolean istOr = ReportingFilterVerknuepfung.getByID(gruppe.multiselectVerknuepfung) == ReportingFilterVerknuepfung.OR;
+		Predicate<T> result = istOr ? (t -> false) : (t -> true);
+
+		for (final ReportingFilterDefinition def : gruppe.filterDefinitionen) {
+			final Predicate<T> p = registry.erstelleFilter(def, validierungsfehler);
+			result = istOr ? result.or(p) : result.and(p);
+		}
+
+		return result;
 	}
 
 	/**

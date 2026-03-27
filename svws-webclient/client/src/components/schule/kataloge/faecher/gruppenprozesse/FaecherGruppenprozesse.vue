@@ -6,31 +6,12 @@
 		<div class="flex flex-col gap-4" v-if="ServerMode.DEV.checkServerMode(serverMode)">
 			<ui-card v-if="hatKompetenzDrucken && (stundenplaeneById.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken" subtitle="Drucke die Stundenpläne der ausgewählten Klassen."
 				:is-open="currentAction === 'print'" @update:is-open="isOpen => setCurrentAction('print', isOpen)">
-				<svws-ui-input-wrapper :grid="2" class="p-2">
+				<div class="flex flex-col">
 					<div>
-						<svws-ui-select title="Stundenplan" v-model="stundenplanAuswahl" :items="stundenplaeneById.values()"
-							:item-text="s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')'" />
+						<ui-select v-model="stundenplanModel" :manager="stundenplanSelectManager" label="Stundenplan" />
 					</div>
-					<div />
-					<div class="text-left">
-						<svws-ui-checkbox v-model="option2" name="Pausenzeiten">Pausenzeiten anzeigen</svws-ui-checkbox><br>
-					</div>
-					<div>
-						<svws-ui-radio-group>
-							<svws-ui-radio-option :value="false" v-model="gruppe2" name="Ausgabe" label="Gesamtausdruck" />
-							<svws-ui-radio-option :value="true" v-model="gruppe2" name="Ausgabe" label="Einzelausdruck" />
-						</svws-ui-radio-group>
-					</div>
-				</svws-ui-input-wrapper>
-				<template #buttonFooterLeft>
-					<svws-ui-button class="mt-4"
-						:disabled="(stundenplanAuswahl === undefined) || !hatKompetenzDrucken || manager().liste.auswahl().isEmpty()"
-						@click="downloadPDF" :is-loading="loading">
-						<svws-ui-spinner v-if="loading" spinning />
-						<span v-else class="icon i-ri-play-line" />
-						Drucken
-					</svws-ui-button>
-				</template>
+					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN" :id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
+				</div>
 			</ui-card>
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Fächer werden gelöscht" icon="i-ri-delete-bin-line"
 				:is-open="currentAction === 'delete'"
@@ -89,7 +70,8 @@
 	import { computed, ref } from "vue";
 	import type { FaecherGruppenprozesseProps } from "./FaecherGruppenprozesseProps";
 	import type { List, StundenplanListeEintrag } from "@core";
-	import { ServerMode, BenutzerKompetenz, ReportingParameter, DateUtils, ReportingReportvorlage, ArrayList } from "@core";
+	import { ServerMode, BenutzerKompetenz, DateUtils, ReportingReportvorlage, ArrayList } from "@core";
+	import { SelectManager } from "@ui";
 
 	const props = defineProps<FaecherGruppenprozesseProps>();
 
@@ -129,32 +111,25 @@
 	// --- Stundenplan ---
 
 	const stundenplanAuswahl = ref<StundenplanListeEintrag>();
-	const option2 = ref(false);
-	const gruppe2 = ref(false);
-
-	async function downloadPDF() {
-		if (stundenplanAuswahl.value === undefined) {
-			return;
-		}
-		loading.value = true;
-		const reportingParameter = new ReportingParameter();
-		reportingParameter.reportvorlage = ReportingReportvorlage.STUNDENPLANUNG_V_FACH_STUNDENPLAN.getBezeichnung();
-		reportingParameter.einzelausgabeDetaildaten = gruppe2.value;
-		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.STUNDENPLANUNG_V_FACH_STUNDENPLAN.getVorlageParameterList());
-		for (const vp of reportingParameter.vorlageParameter) {
-			if (vp.name === "mitPausenzeiten") {
-				vp.wert = option2.value.toString();
+	const stundenplanModel = computed({
+		get: () => {
+			if (stundenplanAuswahl.value === undefined) {
+				if (stundenplaeneById.value.size > 0) {
+					const [first] = stundenplaeneById.value.values();
+					return first;
+				}
 			}
-		}
-		const { data, name } = await props.getPDF(reportingParameter, stundenplanAuswahl.value.id);
-		const link = document.createElement("a");
-		link.href = URL.createObjectURL(data);
-		link.download = name;
-		link.target = "_blank";
-		link.click();
-		URL.revokeObjectURL(link.href);
-		loading.value = false;
-	}
+			return stundenplanAuswahl.value;
+		},
+		set: value => stundenplanAuswahl.value = value,
+	});
+
+	const stundenplanOptions = computed(() => stundenplaeneById.value.values());
+	const stundenplanSelectManager = new SelectManager({
+		options: stundenplanOptions.value,
+		optionDisplayText: s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')',
+		selectionDisplayText: s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')',
+	});
 
 	const wochentag = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.', 'So.'];
 

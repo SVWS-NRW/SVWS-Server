@@ -59,7 +59,7 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 	 */
 	public HtmlContextGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository, final List<Long> idsFilter,
 			final ReportingFilterDataType idsFilterDataType) throws ApiOperationException {
-		super(reportingRepository, true);
+		super(reportingRepository);
 		this.reportingRepository = reportingRepository;
 		this.idsFilter = idsFilter;
 		this.idsFilterDataType = idsFilterDataType;
@@ -81,7 +81,7 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 	public HtmlContextGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository, final GostBlockungsergebnis blockungsergebnis,
 			final GostBlockungsdatenManager datenManager, final List<Long> idsFilter, final ReportingFilterDataType idsFilterDataType)
 			throws ApiOperationException {
-		super(reportingRepository, true);
+		super(reportingRepository);
 		this.reportingRepository = reportingRepository;
 		this.blockungsergebnis = blockungsergebnis;
 		this.datenManager = datenManager;
@@ -103,8 +103,8 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 
 		if ((blockungsergebnis == null) || (this.datenManager == null)) {
 			try {
-				final Long idBlockungsergebnis = this.reportingRepository.reportingParameter().idsHauptdaten().getFirst();
-				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Die ID der Blockungsergebnisses wurde ermittelt: " + idBlockungsergebnis.toString());
+				final long idBlockungsergebnis = this.reportingRepository.reportingParameter().idHauptdatenObjekt();
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Die ID der Blockungsergebnisses wurde ermittelt: " + idBlockungsergebnis);
 				this.blockungsergebnis = DataGostBlockungsergebnisse.getErgebnisFromID(this.reportingRepository.conn(), idBlockungsergebnis);
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Das Blockungsergebnis wurde ermittelt.");
 				this.datenManager = DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(this.reportingRepository.conn(), blockungsergebnis.blockungID);
@@ -137,8 +137,9 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 	public List<HtmlContextGostKursplanungBlockungsergebnis> getEinzelContexts() {
 		final List<HtmlContextGostKursplanungBlockungsergebnis> result = new ArrayList<>();
 
-		if ((this.blockungsergebnis == null) || (this.datenManager == null))
+		if ((this.blockungsergebnis == null) || (this.datenManager == null)) {
 			return result;
+		}
 
 		try {
 			for (final Long idFilter : this.reportingGostKursplanungBlockungsergebnis.idsGefiltert()) {

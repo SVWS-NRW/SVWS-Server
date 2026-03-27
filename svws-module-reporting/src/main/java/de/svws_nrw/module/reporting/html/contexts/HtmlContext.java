@@ -1,5 +1,7 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
+import de.svws_nrw.core.data.reporting.ReportingSortierungDefinition;
+import de.svws_nrw.core.data.reporting.ReportingSortierungDefinitionGruppe;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.sortierung.SortierungRegistryReportingKlasse;
@@ -45,9 +47,6 @@ public abstract class HtmlContext<T> {
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	private final ReportingRepository reportingRepository;
 
-	/** Legt fest, ob der Context als Haupt-Daten-Context verwendet werden soll (true) oder als Detail-Daten-Context (false). */
-	private boolean istHauptdatenContext = true;
-
 	/** Legt fest, ob die Standardsortierung verwendet des entsprechenden Types werden soll. */
 	private boolean verwendeStandardsortierung = true;
 
@@ -59,18 +58,9 @@ public abstract class HtmlContext<T> {
 	 * Konstruktor für die Klasse HtmlContext, die das Repository und das Flag zur Hauptdatenquelle initialisiert.
 	 *
 	 * @param reportingRepository Das Reporting-Repository, welches verwendet wird, um die Daten zu verwalten.
-	 * @param istHauptdatenContext Ein Boolean-Wert, der angibt, ob der aktuelle Kontext ein Hauptdatenkontext ist.
 	 */
-	protected HtmlContext(final ReportingRepository reportingRepository, final Boolean istHauptdatenContext) {
+	protected HtmlContext(final ReportingRepository reportingRepository) {
 		this.reportingRepository = reportingRepository;
-		this.istHauptdatenContext = istHauptdatenContext;
-		if (this.istHauptdatenContext) {
-			this.verwendeStandardsortierung = reportingRepository.reportingParameter().sortierungHauptdaten().verwendeStandardsortierung;
-			setSortierungAttribute(this.reportingRepository.reportingParameter().sortierungHauptdaten().attribute);
-		} else {
-			this.verwendeStandardsortierung = reportingRepository.reportingParameter().sortierungDetaildaten().verwendeStandardsortierung;
-			setSortierungAttribute(this.reportingRepository.reportingParameter().sortierungDetaildaten().attribute);
-		}
 	}
 
 
@@ -158,10 +148,11 @@ public abstract class HtmlContext<T> {
 						.filter(sa -> !sa.isBlank())
 						.toList());
 
-		if (!filterSortierungsattribute.isEmpty())
+		if (!filterSortierungsattribute.isEmpty()) {
 			this.sortierungAttribute = filterSortierungsattribute;
-		else
+		} else {
 			this.sortierungAttribute = new ArrayList<>();
+		}
 	}
 
 
@@ -174,8 +165,9 @@ public abstract class HtmlContext<T> {
 	 * Falls die Attribute nicht gefunden werden, werden sie für die Sortierung ignoriert.
 	 */
 	protected void sortiereContextMitRegistry() {
-		if ((this.contextData == null) || this.contextData.isEmpty())
+		if ((this.contextData == null) || this.contextData.isEmpty()) {
 			return;
+		}
 		final List<T> sorted = sortiereListeMitRegistry(this.contextData);
 		this.contextData = (sorted == null) ? new ArrayList<>() : sorted;
 	}
@@ -194,67 +186,78 @@ public abstract class HtmlContext<T> {
 	 *         wird die unveränderte Eingabeliste zurückgegeben.
 	 */
 	protected List<T> sortiereListeMitRegistry(final List<T> list) {
-		if ((list == null) || (this.sortierungAttribute.isEmpty() && !this.verwendeStandardsortierung))
+		if ((list == null) || (this.sortierungAttribute.isEmpty() && !this.verwendeStandardsortierung)) {
 			return list;
+		}
 
 		final List<T> listNonNull = new ArrayList<>(list.stream().filter(Objects::nonNull).toList());
 
-		if (listNonNull.isEmpty())
+		if (listNonNull.isEmpty()) {
 			return list;
+		}
 
 		// Erstelle eine Liste für evtl. fehlerhaft übergebene Sortierkriterien.
 		final List<String> validierungsfehler = new ArrayList<>();
 
 		switch (listNonNull.getFirst()) {
 			case final ReportingSchueler ignore -> {
+				ladeSortierEinstellungenFuerTyp("ReportingSchueler");
 				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
 						() -> SortierungRegistryReportingSchueler.buildComparatorStandard(validierungsfehler),
 						() -> SortierungRegistryReportingSchueler.buildComparator(this.sortierungAttribute, validierungsfehler), "ReportingSchueler",
 						validierungsfehler);
 			}
 			case final ReportingLehrer ignore -> {
+				ladeSortierEinstellungenFuerTyp("ReportingLehrer");
 				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
 						() -> SortierungRegistryReportingLehrer.buildComparatorStandard(validierungsfehler),
 						() -> SortierungRegistryReportingLehrer.buildComparator(this.sortierungAttribute, validierungsfehler), "ReportingLehrer",
 						validierungsfehler);
 			}
 			case final ReportingKlasse ignore -> {
+				ladeSortierEinstellungenFuerTyp("ReportingKlasse");
 				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
 						() -> SortierungRegistryReportingKlasse.buildComparatorStandard(validierungsfehler),
 						() -> SortierungRegistryReportingKlasse.buildComparator(this.sortierungAttribute, validierungsfehler), "ReportingKlasse",
 						validierungsfehler);
 			}
 			case final ReportingKurs ignore -> {
+				ladeSortierEinstellungenFuerTyp("ReportingKurs");
 				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
 						() -> SortierungRegistryReportingKurs.buildComparatorStandard(validierungsfehler),
 						() -> SortierungRegistryReportingKurs.buildComparator(this.sortierungAttribute, validierungsfehler), "ReportingKurs",
 						validierungsfehler);
 			}
 			case final ReportingStundenplanungFachStundenplan ignore -> {
+				ladeSortierEinstellungenFuerTyp("ReportingStundenplanungFachStundenplan");
 				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
 						() -> SortierungRegistryReportingStundenplanungFachStundenplan.buildComparatorStandard(validierungsfehler),
 						() -> SortierungRegistryReportingStundenplanungFachStundenplan.buildComparator(this.sortierungAttribute, validierungsfehler),
 						"ReportingStundenplanungFachStundenplan", validierungsfehler);
 			}
 			case final ReportingStundenplanungKlasseStundenplan ignore -> {
+				ladeSortierEinstellungenFuerTyp("ReportingStundenplanungKlasseStundenplan");
 				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
 						() -> SortierungRegistryReportingStundenplanungKlasseStundenplan.buildComparatorStandard(validierungsfehler),
 						() -> SortierungRegistryReportingStundenplanungKlasseStundenplan.buildComparator(this.sortierungAttribute, validierungsfehler),
 						"ReportingStundenplanungKlasseStundenplan", validierungsfehler);
 			}
 			case final ReportingStundenplanungLehrerStundenplan ignore -> {
+				ladeSortierEinstellungenFuerTyp("ReportingStundenplanungLehrerStundenplan");
 				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
 						() -> SortierungRegistryReportingStundenplanungLehrerStundenplan.buildComparatorStandard(validierungsfehler),
 						() -> SortierungRegistryReportingStundenplanungLehrerStundenplan.buildComparator(this.sortierungAttribute, validierungsfehler),
 						"ReportingStundenplanungLehrerStundenplan", validierungsfehler);
 			}
 			case final ReportingStundenplanungRaumStundenplan ignore -> {
+				ladeSortierEinstellungenFuerTyp("ReportingStundenplanungRaumStundenplan");
 				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
 						() -> SortierungRegistryReportingStundenplanungRaumStundenplan.buildComparatorStandard(validierungsfehler),
 						() -> SortierungRegistryReportingStundenplanungRaumStundenplan.buildComparator(this.sortierungAttribute, validierungsfehler),
 						"ReportingStundenplanungRaumStundenplan", validierungsfehler);
 			}
 			case final ReportingStundenplanungSchuelerStundenplan ignore -> {
+				ladeSortierEinstellungenFuerTyp("ReportingStundenplanungSchuelerStundenplan");
 				return sortiereMitComparatorAusRegistry(list, listNonNull, this.verwendeStandardsortierung,
 						() -> SortierungRegistryReportingStundenplanungSchuelerStundenplan.buildComparatorStandard(validierungsfehler),
 						() -> SortierungRegistryReportingStundenplanungSchuelerStundenplan.buildComparator(this.sortierungAttribute, validierungsfehler),
@@ -263,6 +266,47 @@ public abstract class HtmlContext<T> {
 			case null, default -> {
 				return list;
 			}
+		}
+	}
+
+	/**
+	 * Lädt Sortier-Einstellungen (Standard vs. benutzerdefiniert + Attribute) für einen Reporting-Typ aus den Reporting-Parametern.
+	 * Fallback: Wenn keine brauchbare benutzerdefinierte Sortierung vorliegt, wird Standardsortierung verwendet.
+	 *
+	 * @param typ Der Typ des Reporting-Objekts, z. B. "ReportingSchueler"
+	 */
+	private void ladeSortierEinstellungenFuerTyp(final String typ) {
+		// Definiere zunächst den Standardfall.
+		this.verwendeStandardsortierung = true;
+		this.sortierungAttribute = new ArrayList<>();
+
+		if ((typ == null) || typ.isBlank() || (this.reportingRepository == null) || (this.reportingRepository.reportingParameter() == null)) {
+			return;
+		}
+
+		// Finde die Sortierungsgruppe für den angefragten Typ
+		final List<ReportingSortierungDefinitionGruppe> gruppen = this.reportingRepository.reportingParameter().sortierungDefinitionenGruppen();
+		final ReportingSortierungDefinitionGruppe gruppe = (gruppen == null) ? null : gruppen.stream()
+				.filter(Objects::nonNull)
+				.filter(g -> Objects.equals(typ, g.typ))
+				.findFirst()
+				.orElse(null);
+
+		if ((gruppe == null) || (gruppe.sortierungDefinitionen == null) || gruppe.sortierungDefinitionen.isEmpty()) {
+			return;
+		}
+
+		// Verwende die erste ausgewählte Sortierungsdefinition aus der Gruppe
+		final ReportingSortierungDefinition sortierungDefinition = gruppe.sortierungDefinitionen.stream()
+				.filter(Objects::nonNull)
+				.findFirst()
+				.orElse(null);
+
+		// Wenn eine benutzerdefinierte Sortierung gewünscht wird und Attribute vorhanden sind, wird die benutzerdefinierte Sortierung verwendet.
+		if ((sortierungDefinition != null) && Boolean.FALSE.equals(sortierungDefinition.verwendeStandardsortierung)
+				&& (sortierungDefinition.attribute != null) && !sortierungDefinition.attribute.isEmpty()) {
+			this.verwendeStandardsortierung = false;
+			setSortierungAttribute(sortierungDefinition.attribute);
 		}
 	}
 
@@ -288,8 +332,9 @@ public abstract class HtmlContext<T> {
 
 		final Comparator<X> comparator = verwendeStandardsortierung ? supplierComparatorStandard.get() : supplierComparatorBenutzerdefiniert.get();
 		if (comparator == null) {
-			if (validierungsfehler.isEmpty())
+			if (validierungsfehler.isEmpty()) {
 				validierungsfehler.add("- keine -");
+			}
 			ReportingExceptionUtils.logInfo(
 					("INFO: Es konnte kein Comparator für %s erstellt werden. Zudem wurden folgende Attribute zur Sortierung "
 							+ "übergeben, die nicht in der Registry definiert wurden: %s.")
@@ -323,7 +368,6 @@ public abstract class HtmlContext<T> {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static <X> void typisierteSortierung(final List<?> liste, final Comparator<X> comparator) {
-		final List typisierteListe = (List) liste;
-		typisierteListe.sort((Comparator) comparator);
+		((List) liste).sort(comparator);
 	}
 }

@@ -780,14 +780,7 @@ export class RouteDataStundenplan extends RouteDataAuswahl<StundenplanListeManag
 
 	gotoEintrag = async (eintrag?: StundenplanListeEintrag) => await RouteManager.doRoute(routeStundenplan.getRoute({ id: eintrag?.id }));
 
-	getPDF = api.call(async (reportingParameter: ReportingParameter, idRaum: number): Promise<ApiFile> => {
-		const id = this._state.value.manager?.auswahlID() ?? null;
-		if (id === null) {
-			throw new DeveloperNotificationException("Es ist kein gültiger Stundenplan ausgewählt.");
-		}
-		reportingParameter.idSchuljahresabschnitt = this._state.value.idSchuljahresabschnitt;
-		reportingParameter.idsHauptdaten.add(id);
-		reportingParameter.idsDetaildaten.add(idRaum);
+	getPDF = api.call(async (reportingParameter: ReportingParameter): Promise<ApiFile> => {
 		return await api.server.pdfReport(reportingParameter, api.schema);
 	});
 }

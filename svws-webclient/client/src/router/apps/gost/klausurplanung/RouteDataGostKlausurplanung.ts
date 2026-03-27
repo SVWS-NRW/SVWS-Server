@@ -1,6 +1,6 @@
 
 import type { GostJahrgangsdaten, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration, GostKlausurenUpdate, List, GostKlausurraumRich, ApiFile, GostSchuelerklausur } from "@core";
-import { GostKlausurtermin, ArrayList, StundenplanManager, GostFaecherManager, GostHalbjahr, GostKlausurplanManager, DeveloperNotificationException, GostSchuelerklausurTermin, GostKlausurenCollectionAllData, GostKlausurenCollectionHjData, ReportingParameter, ReportingReportvorlage, GostKursklausur } from "@core";
+import { GostKlausurtermin, ArrayList, StundenplanManager, GostFaecherManager, GostHalbjahr, GostKlausurplanManager, DeveloperNotificationException, GostSchuelerklausurTermin, GostKlausurenCollectionAllData, GostKlausurenCollectionHjData, ReportingReportvorlage, GostKursklausur } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import { computed } from "vue";
 
@@ -579,36 +579,31 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	};
 
 	getPDF = api.call(async (title: DownloadPDFTypen): Promise<ApiFile> => {
-		const reportingParameter = new ReportingParameter();
-		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
-		if (title.startsWith("Klausurplan", 0)) {
-			reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN.getBezeichnung()!;
-			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN.getVorlageParameterList());
-			for (const vp of reportingParameter.vorlageParameter) {
-				switch (vp.name) {
-					case "mitKursklausuren":
-						vp.wert = ((title.indexOf("Kurse") > 0) || (title.indexOf("detailliert") > 0)).toString();
-						break;
-					case "mitNachschreibern":
-						vp.wert = ((title.indexOf("Nachschreiber") > 0) || (title.indexOf("detailliert") > 0)).toString();
-						break;
-					case "mitKlausurschreiberNamen":
-						vp.wert = (title.indexOf("detailliert") > 0).toString();
-						break;
-				}
-			}
-		} else {
-			reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN.getBezeichnung()!;
-			reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN.getVorlageParameterList());
-			// Keine Vorlagen spezifischen Parameter vorhanden.
+		const istKlausurplan = title.startsWith("Klausurplan", 0);
+
+		const reportvorlage = istKlausurplan
+			? ReportingReportvorlage.GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN
+			: ReportingReportvorlage.GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN;
+
+		const reportingParameter = reportvorlage.getReportingParameter();
+
+		if (istKlausurplan) {
+			const istDetailliert = title.indexOf("detailliert") > 0;
+			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "mitKursklausuren", ((title.indexOf("Kurse") > 0) || istDetailliert).toString());
+			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "mitNachschreibern", ((title.indexOf("Nachschreiber") > 0) || istDetailliert).toString());
+			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "mitKlausurschreiberNamen", istDetailliert.toString());
 		}
+
+		reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "einzelausgabeDetaildaten", (title.indexOf("einzeln") > 0).toString());
+
+		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
+		reportingParameter.idsHauptdaten = new ArrayList<number>();
+
 		if (title.indexOf(" alle ") <= 0) {
 			reportingParameter.idsHauptdaten.add(this.abiturjahr);
 			reportingParameter.idsHauptdaten.add(this.halbjahr.id);
 		}
-		if (title.indexOf("einzeln") > 0) {
-			reportingParameter.einzelausgabeDetaildaten = true;
-		}
+
 		return await api.server.pdfReport(reportingParameter, api.schema);
 	});
 

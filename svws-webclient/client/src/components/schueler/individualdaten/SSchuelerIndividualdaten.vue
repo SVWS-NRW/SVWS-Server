@@ -218,7 +218,7 @@
 	import type { SchuelerIndividualdatenProps } from "./SSchuelerIndividualdatenProps";
 	import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, SchulEintrag, Telefonart, Haltestelle, Fahrschuelerart } from "@core";
 	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils, SchuelerTelefon, ServerMode,
-		ArrayList, ReportingParameter, ReportingSortierungDefinition, ReportingReportvorlage, JavaString } from "@core";
+		ArrayList, ReportingReportvorlage, JavaString } from "@core";
 	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort,
 		staatsangehoerigkeitKatalogEintragSort, staatsangehoerigkeitKatalogEintragFilter, orte_sort, ortsteilSort } from "~/utils/helfer";
 	import type { DataTableColumn } from "@ui";
@@ -480,39 +480,10 @@
 	const loading = ref<boolean>(false);
 
 	async function downloadPDF() {
-		const reportingParameter = new ReportingParameter();
-		const listeIdsSchueler = new ArrayList<number>();
-		listeIdsSchueler.add(props.schuelerListeManager().auswahlID());
-		reportingParameter.reportvorlage = ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG.getBezeichnung();
-		reportingParameter.idsHauptdaten = listeIdsSchueler;
-		reportingParameter.einzelausgabeHauptdaten = true;
-		reportingParameter.einzelausgabeDetaildaten = false;
-		reportingParameter.sortierungHauptdaten = new ReportingSortierungDefinition();
-		reportingParameter.sortierungHauptdaten.verwendeStandardsortierung = true;
-		reportingParameter.vorlageParameter = new ArrayList(ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG.getVorlageParameterList());
-		for (const vp of reportingParameter.vorlageParameter) {
-			switch (vp.name) {
-				case "fuerErzieher":
-					vp.wert = false.toString();
-					break;
-				case "mitBildBriefkopf":
-					vp.wert = false.toString();
-					break;
-				case "mitSchullogo":
-					vp.wert = true.toString();
-					break;
-				case "keineAnschrift":
-					vp.wert = false.toString();
-					break;
-				case "keinInfoblock":
-					vp.wert = false.toString();
-					break;
-				case "keineUnterschrift":
-					vp.wert = false.toString();
-					break;
-			}
-		}
-
+		const reportingParameter = ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG.getReportingParameter();
+		ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG.setReportingParameterVorlageparameter(reportingParameter, "mitSchullogo", "true");
+		reportingParameter.idsHauptdaten.add(props.schuelerListeManager().auswahlID());
+		reportingParameter.idSchuljahresabschnitt = props.schuelerListeManager().getSchuljahresabschnittSchule().id;
 		loading.value = true;
 		const { data, name } = await props.getPDF(reportingParameter);
 		const link = document.createElement("a");

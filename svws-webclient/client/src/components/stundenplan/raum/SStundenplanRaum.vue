@@ -20,22 +20,26 @@
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" defer>
-			<s-stundenplan-raum-drucken-modal v-if="raum" v-slot="{ openModal }" :get-p-d-f :api-status :manager="stundenplanManager()" :raum>
-				<svws-ui-button @click="openModal" type="secondary"><span class="icon i-ri-printer-line" /> Stundenplan drucken</svws-ui-button>
-			</s-stundenplan-raum-drucken-modal>
+			<svws-ui-button @click="show = true" type="secondary"><span class="icon i-ri-printer-line" /> Stundenplan drucken</svws-ui-button>
 			<svws-ui-modal-hilfe> <hilfe-raum-stundenplan /> </svws-ui-modal-hilfe>
 		</Teleport>
-		<div v-if="raum === undefined">Dieser Stundenplan hat noch keine Räume</div>
+		<div v-if="raum === null">Dieser Stundenplan hat noch keine Räume</div>
 		<stundenplan-raum v-else class="min-w-fit h-full w-2/3 overflow-scroll pr-4" :id="raum.id" :manager="stundenplanManager"
 			:wochentyp="() => wochentypAnzeige" :kalenderwoche="() => undefined" mode-pausenaufsichten="aus" :ignore-empty />
+		<svws-ui-modal v-model:show="show" size="medium">
+			<template #modalTitle>Stundenplan drucken</template>
+			<template #modalContent>
+				<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_RAUM_STUNDENPLAN" :id-hauptdaten-objekt="stundenplanManager().getStundenplan().id" :ids-hauptdaten="[raum?.id ?? -1]" :ids-detaildaten="[]" :create-report="getPDF" :id-abschnitt="stundenplanManager().getAbschnitt()" />
+			</template>
+		</svws-ui-modal>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { computed, shallowRef } from "vue";
+	import { computed, shallowRef, ref } from "vue";
 	import type { List, StundenplanRaum } from "@core";
-	import { ArrayList } from "@core";
+	import { ArrayList, ReportingReportvorlage } from "@core";
 	import { useRegionSwitch } from "@ui";
 	import type { StundenplanRaumProps } from "./SStundenplanRaumProps";
 
@@ -43,22 +47,23 @@
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
 
-	const _raum = shallowRef<StundenplanRaum | undefined>();
+	const _raum = shallowRef<StundenplanRaum | null>(null);
 	const wochentypAnzeige = shallowRef<number>(0);
+	const show = ref(false);
 
-	const raum = computed<StundenplanRaum | undefined>({
+	const raum = computed<StundenplanRaum | null>({
 		get: () => {
-			if (_raum.value !== undefined) {
+			if (_raum.value !== null) {
 				try {
 					return props.stundenplanManager().raumGetByIdOrException(_raum.value.id);
-				} catch (e) {
-					return undefined;
+				} catch {
+					return null;
 				}
 			}
 			if (props.stundenplanManager().raumGetMengeVerwendetAsList().size() > 0) {
 				return props.stundenplanManager().raumGetMengeVerwendetAsList().get(0);
 			} else {
-				return undefined;
+				return null;
 			}
 		},
 		set: (value) => _raum.value = value,

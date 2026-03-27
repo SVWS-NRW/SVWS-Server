@@ -1,12 +1,12 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { ReportingFilterDefinition } from '../../../core/data/reporting/ReportingFilterDefinition';
-import { ReportingVorlageParameter } from '../../../core/data/reporting/ReportingVorlageParameter';
+import { ReportingFilterDefinitionGruppe } from '../../../core/data/reporting/ReportingFilterDefinitionGruppe';
+import { ReportingSortierungDefinitionGruppe } from '../../../core/data/reporting/ReportingSortierungDefinitionGruppe';
 import { ReportingEMailDaten } from '../../../core/data/reporting/ReportingEMailDaten';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { ReportingReportvorlageParameterGruppe } from '../../../core/data/reporting/ReportingReportvorlageParameterGruppe';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { ReportingAusgabeformat } from '../../../core/types/reporting/ReportingAusgabeformat';
-import { ReportingSortierungDefinition } from '../../../core/data/reporting/ReportingSortierungDefinition';
 
 export class ReportingParameter extends JavaObject {
 
@@ -14,6 +14,11 @@ export class ReportingParameter extends JavaObject {
 	 * Die ID des Schuljahres, auf den sich die Ausgabe des Reports beziehen soll.
 	 */
 	public idSchuljahresabschnitt: number = -1;
+
+	/**
+	 * Die Optionen für das Dateiformat, in dem der Report ausgegeben werden soll, angegeben als Wert gemäß CoreType {@link ReportingAusgabeformat}
+	 */
+	public ausgabeformatOptionen: List<number> = new ArrayList<number>();
 
 	/**
 	 * Das Dateiformat, in dem der Report ausgegeben werden soll, angegeben als Wert gemäß CoreType {@link ReportingAusgabeformat}
@@ -26,14 +31,15 @@ export class ReportingParameter extends JavaObject {
 	public reportvorlage: string = "";
 
 	/**
+	 * Eine ID zum Objekt, das die Hauptdaten-IDs enthält, wie z. B. die ID eines Blockungsergebnisses oder eines Stundenplans. Gibt es kein solches Objekt,
+	 *   so ist der Wert kleiner 0.
+	 */
+	public idHauptdatenObjekt: number = -1;
+
+	/**
 	 * Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDFs.
 	 */
 	public idsHauptdaten: List<number> = new ArrayList<number>();
-
-	/**
-	 * Legt fest, ob pro Datensatz der Hauptdaten eine einzelne PDF-Datei erzeugt werden soll.
-	 */
-	public einzelausgabeHauptdaten: boolean = false;
 
 	/**
 	 * Eine Liste von IDs für die Ausgabe von Detaildaten zu den Hauptdaten.
@@ -41,44 +47,24 @@ export class ReportingParameter extends JavaObject {
 	public idsDetaildaten: List<number> = new ArrayList<number>();
 
 	/**
-	 * Legt fest, ob pro Datensatz der Detaildaten eine einzelne PDF-Datei erzeugt werden soll.
+	 * Eine Liste mit Gruppen von freien, typisierten Report-Parameter-Werten, die in Templates direkt über ihren Namen nutzbar sind.
 	 */
-	public einzelausgabeDetaildaten: boolean = false;
-
-	/**
-	 * Eine ReportingSortierungDefinition für die Hauptdaten. Der Typ wird dabei ignoriert und nur die übrigen Einstellungen werden benutzt.
-	 */
-	public sortierungHauptdaten: ReportingSortierungDefinition | null = new ReportingSortierungDefinition();
-
-	/**
-	 * Eine ReportingSortierungDefinition für die Detaildaten. Der Typ wird dabei ignoriert und nur die übrigen Einstellungen werden benutzt.
-	 */
-	public sortierungDetaildaten: ReportingSortierungDefinition | null = new ReportingSortierungDefinition();
+	public reportvorlageParameterGruppen: List<ReportingReportvorlageParameterGruppe> = new ArrayList<ReportingReportvorlageParameterGruppe>();
 
 	/**
 	 * Typenspezifische Sortierdefinitionen, die für die Sortierung von ProxyTyp-Objekten verwendet werden sollen.
 	 */
-	public sortierungDefinitionen: List<ReportingSortierungDefinition> = new ArrayList<ReportingSortierungDefinition>();
+	public sortierungDefinitionenGruppen: List<ReportingSortierungDefinitionGruppe> = new ArrayList<ReportingSortierungDefinitionGruppe>();
 
 	/**
 	 * Typenspezifische Filterdefinitionen, die für die Filterung von ProxyTyp-Objekten verwendet werden sollen.
 	 */
-	public filterDefinitionen: List<ReportingFilterDefinition> = new ArrayList<ReportingFilterDefinition>();
+	public filterDefinitionenGruppen: List<ReportingFilterDefinitionGruppe> = new ArrayList<ReportingFilterDefinitionGruppe>();
 
 	/**
 	 * Parameter, der die Daten für den E-Mail-Versand enthält.
 	 */
 	public eMailDaten: ReportingEMailDaten | null = new ReportingEMailDaten();
-
-	/**
-	 * Legt fest, ob die Seiteneinstellungen für einen Duplexdruck verwendet werden sollen.
-	 */
-	public duplexdruck: boolean = false;
-
-	/**
-	 * Eine Liste mit freien, typisierten Report-Parameter-Werten, die in Templates direkt über ihren Namen nutzbar sind.
-	 */
-	public vorlageParameter: List<ReportingVorlageParameter> = new ArrayList<ReportingVorlageParameter>();
 
 
 	/**
@@ -105,57 +91,63 @@ export class ReportingParameter extends JavaObject {
 		if (obj.idSchuljahresabschnitt === undefined)
 			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
+		if (obj.ausgabeformatOptionen !== undefined) {
+			for (const elem of obj.ausgabeformatOptionen) {
+				result.ausgabeformatOptionen.add(elem);
+			}
+		}
 		if (obj.ausgabeformat === undefined)
 			throw new Error('invalid json format, missing attribute ausgabeformat');
 		result.ausgabeformat = obj.ausgabeformat;
 		if (obj.reportvorlage === undefined)
 			throw new Error('invalid json format, missing attribute reportvorlage');
 		result.reportvorlage = obj.reportvorlage;
+		if (obj.idHauptdatenObjekt === undefined)
+			throw new Error('invalid json format, missing attribute idHauptdatenObjekt');
+		result.idHauptdatenObjekt = obj.idHauptdatenObjekt;
 		if (obj.idsHauptdaten !== undefined) {
 			for (const elem of obj.idsHauptdaten) {
 				result.idsHauptdaten.add(elem);
 			}
 		}
-		if (obj.einzelausgabeHauptdaten === undefined)
-			throw new Error('invalid json format, missing attribute einzelausgabeHauptdaten');
-		result.einzelausgabeHauptdaten = obj.einzelausgabeHauptdaten;
 		if (obj.idsDetaildaten !== undefined) {
 			for (const elem of obj.idsDetaildaten) {
 				result.idsDetaildaten.add(elem);
 			}
 		}
-		if (obj.einzelausgabeDetaildaten === undefined)
-			throw new Error('invalid json format, missing attribute einzelausgabeDetaildaten');
-		result.einzelausgabeDetaildaten = obj.einzelausgabeDetaildaten;
-		result.sortierungHauptdaten = ((obj.sortierungHauptdaten === undefined) || (obj.sortierungHauptdaten === null)) ? null : ReportingSortierungDefinition.transpilerFromJSON(JSON.stringify(obj.sortierungHauptdaten));
-		result.sortierungDetaildaten = ((obj.sortierungDetaildaten === undefined) || (obj.sortierungDetaildaten === null)) ? null : ReportingSortierungDefinition.transpilerFromJSON(JSON.stringify(obj.sortierungDetaildaten));
-		if (obj.sortierungDefinitionen !== undefined) {
-			for (const elem of obj.sortierungDefinitionen) {
-				result.sortierungDefinitionen.add(ReportingSortierungDefinition.transpilerFromJSON(JSON.stringify(elem)));
+		if (obj.reportvorlageParameterGruppen !== undefined) {
+			for (const elem of obj.reportvorlageParameterGruppen) {
+				result.reportvorlageParameterGruppen.add(ReportingReportvorlageParameterGruppe.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (obj.filterDefinitionen !== undefined) {
-			for (const elem of obj.filterDefinitionen) {
-				result.filterDefinitionen.add(ReportingFilterDefinition.transpilerFromJSON(JSON.stringify(elem)));
+		if (obj.sortierungDefinitionenGruppen !== undefined) {
+			for (const elem of obj.sortierungDefinitionenGruppen) {
+				result.sortierungDefinitionenGruppen.add(ReportingSortierungDefinitionGruppe.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if (obj.filterDefinitionenGruppen !== undefined) {
+			for (const elem of obj.filterDefinitionenGruppen) {
+				result.filterDefinitionenGruppen.add(ReportingFilterDefinitionGruppe.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		result.eMailDaten = ((obj.eMailDaten === undefined) || (obj.eMailDaten === null)) ? null : ReportingEMailDaten.transpilerFromJSON(JSON.stringify(obj.eMailDaten));
-		if (obj.duplexdruck === undefined)
-			throw new Error('invalid json format, missing attribute duplexdruck');
-		result.duplexdruck = obj.duplexdruck;
-		if (obj.vorlageParameter !== undefined) {
-			for (const elem of obj.vorlageParameter) {
-				result.vorlageParameter.add(ReportingVorlageParameter.transpilerFromJSON(JSON.stringify(elem)));
-			}
-		}
 		return result;
 	}
 
 	public static transpilerToJSON(obj: ReportingParameter): string {
 		let result = '{';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
+		result += '"ausgabeformatOptionen" : [ ';
+		for (let i = 0; i < obj.ausgabeformatOptionen.size(); i++) {
+			const elem = obj.ausgabeformatOptionen.get(i);
+			result += elem.toString();
+			if (i < obj.ausgabeformatOptionen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
 		result += '"ausgabeformat" : ' + obj.ausgabeformat.toString() + ',';
 		result += '"reportvorlage" : ' + JSON.stringify(obj.reportvorlage) + ',';
+		result += '"idHauptdatenObjekt" : ' + obj.idHauptdatenObjekt.toString() + ',';
 		result += '"idsHauptdaten" : [ ';
 		for (let i = 0; i < obj.idsHauptdaten.size(); i++) {
 			const elem = obj.idsHauptdaten.get(i);
@@ -164,7 +156,6 @@ export class ReportingParameter extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"einzelausgabeHauptdaten" : ' + obj.einzelausgabeHauptdaten.toString() + ',';
 		result += '"idsDetaildaten" : [ ';
 		for (let i = 0; i < obj.idsDetaildaten.size(); i++) {
 			const elem = obj.idsDetaildaten.get(i);
@@ -173,35 +164,31 @@ export class ReportingParameter extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"einzelausgabeDetaildaten" : ' + obj.einzelausgabeDetaildaten.toString() + ',';
-		result += '"sortierungHauptdaten" : ' + ((obj.sortierungHauptdaten === null) ? 'null' : ReportingSortierungDefinition.transpilerToJSON(obj.sortierungHauptdaten)) + ',';
-		result += '"sortierungDetaildaten" : ' + ((obj.sortierungDetaildaten === null) ? 'null' : ReportingSortierungDefinition.transpilerToJSON(obj.sortierungDetaildaten)) + ',';
-		result += '"sortierungDefinitionen" : [ ';
-		for (let i = 0; i < obj.sortierungDefinitionen.size(); i++) {
-			const elem = obj.sortierungDefinitionen.get(i);
-			result += ReportingSortierungDefinition.transpilerToJSON(elem);
-			if (i < obj.sortierungDefinitionen.size() - 1)
+		result += '"reportvorlageParameterGruppen" : [ ';
+		for (let i = 0; i < obj.reportvorlageParameterGruppen.size(); i++) {
+			const elem = obj.reportvorlageParameterGruppen.get(i);
+			result += ReportingReportvorlageParameterGruppe.transpilerToJSON(elem);
+			if (i < obj.reportvorlageParameterGruppen.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"filterDefinitionen" : [ ';
-		for (let i = 0; i < obj.filterDefinitionen.size(); i++) {
-			const elem = obj.filterDefinitionen.get(i);
-			result += ReportingFilterDefinition.transpilerToJSON(elem);
-			if (i < obj.filterDefinitionen.size() - 1)
+		result += '"sortierungDefinitionenGruppen" : [ ';
+		for (let i = 0; i < obj.sortierungDefinitionenGruppen.size(); i++) {
+			const elem = obj.sortierungDefinitionenGruppen.get(i);
+			result += ReportingSortierungDefinitionGruppe.transpilerToJSON(elem);
+			if (i < obj.sortierungDefinitionenGruppen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"filterDefinitionenGruppen" : [ ';
+		for (let i = 0; i < obj.filterDefinitionenGruppen.size(); i++) {
+			const elem = obj.filterDefinitionenGruppen.get(i);
+			result += ReportingFilterDefinitionGruppe.transpilerToJSON(elem);
+			if (i < obj.filterDefinitionenGruppen.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
 		result += '"eMailDaten" : ' + ((obj.eMailDaten === null) ? 'null' : ReportingEMailDaten.transpilerToJSON(obj.eMailDaten)) + ',';
-		result += '"duplexdruck" : ' + obj.duplexdruck.toString() + ',';
-		result += '"vorlageParameter" : [ ';
-		for (let i = 0; i < obj.vorlageParameter.size(); i++) {
-			const elem = obj.vorlageParameter.get(i);
-			result += ReportingVorlageParameter.transpilerToJSON(elem);
-			if (i < obj.vorlageParameter.size() - 1)
-				result += ',';
-		}
-		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -212,11 +199,24 @@ export class ReportingParameter extends JavaObject {
 		if (obj.idSchuljahresabschnitt !== undefined) {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		}
+		if (obj.ausgabeformatOptionen !== undefined) {
+			result += '"ausgabeformatOptionen" : [ ';
+			for (let i = 0; i < obj.ausgabeformatOptionen.size(); i++) {
+				const elem = obj.ausgabeformatOptionen.get(i);
+				result += elem.toString();
+				if (i < obj.ausgabeformatOptionen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		if (obj.ausgabeformat !== undefined) {
 			result += '"ausgabeformat" : ' + obj.ausgabeformat.toString() + ',';
 		}
 		if (obj.reportvorlage !== undefined) {
 			result += '"reportvorlage" : ' + JSON.stringify(obj.reportvorlage) + ',';
+		}
+		if (obj.idHauptdatenObjekt !== undefined) {
+			result += '"idHauptdatenObjekt" : ' + obj.idHauptdatenObjekt.toString() + ',';
 		}
 		if (obj.idsHauptdaten !== undefined) {
 			result += '"idsHauptdaten" : [ ';
@@ -228,9 +228,6 @@ export class ReportingParameter extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (obj.einzelausgabeHauptdaten !== undefined) {
-			result += '"einzelausgabeHauptdaten" : ' + obj.einzelausgabeHauptdaten.toString() + ',';
-		}
 		if (obj.idsDetaildaten !== undefined) {
 			result += '"idsDetaildaten" : [ ';
 			for (let i = 0; i < obj.idsDetaildaten.size(); i++) {
@@ -241,50 +238,38 @@ export class ReportingParameter extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (obj.einzelausgabeDetaildaten !== undefined) {
-			result += '"einzelausgabeDetaildaten" : ' + obj.einzelausgabeDetaildaten.toString() + ',';
-		}
-		if (obj.sortierungHauptdaten !== undefined) {
-			result += '"sortierungHauptdaten" : ' + ((obj.sortierungHauptdaten === null) ? 'null' : ReportingSortierungDefinition.transpilerToJSON(obj.sortierungHauptdaten)) + ',';
-		}
-		if (obj.sortierungDetaildaten !== undefined) {
-			result += '"sortierungDetaildaten" : ' + ((obj.sortierungDetaildaten === null) ? 'null' : ReportingSortierungDefinition.transpilerToJSON(obj.sortierungDetaildaten)) + ',';
-		}
-		if (obj.sortierungDefinitionen !== undefined) {
-			result += '"sortierungDefinitionen" : [ ';
-			for (let i = 0; i < obj.sortierungDefinitionen.size(); i++) {
-				const elem = obj.sortierungDefinitionen.get(i);
-				result += ReportingSortierungDefinition.transpilerToJSON(elem);
-				if (i < obj.sortierungDefinitionen.size() - 1)
+		if (obj.reportvorlageParameterGruppen !== undefined) {
+			result += '"reportvorlageParameterGruppen" : [ ';
+			for (let i = 0; i < obj.reportvorlageParameterGruppen.size(); i++) {
+				const elem = obj.reportvorlageParameterGruppen.get(i);
+				result += ReportingReportvorlageParameterGruppe.transpilerToJSON(elem);
+				if (i < obj.reportvorlageParameterGruppen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
 		}
-		if (obj.filterDefinitionen !== undefined) {
-			result += '"filterDefinitionen" : [ ';
-			for (let i = 0; i < obj.filterDefinitionen.size(); i++) {
-				const elem = obj.filterDefinitionen.get(i);
-				result += ReportingFilterDefinition.transpilerToJSON(elem);
-				if (i < obj.filterDefinitionen.size() - 1)
+		if (obj.sortierungDefinitionenGruppen !== undefined) {
+			result += '"sortierungDefinitionenGruppen" : [ ';
+			for (let i = 0; i < obj.sortierungDefinitionenGruppen.size(); i++) {
+				const elem = obj.sortierungDefinitionenGruppen.get(i);
+				result += ReportingSortierungDefinitionGruppe.transpilerToJSON(elem);
+				if (i < obj.sortierungDefinitionenGruppen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (obj.filterDefinitionenGruppen !== undefined) {
+			result += '"filterDefinitionenGruppen" : [ ';
+			for (let i = 0; i < obj.filterDefinitionenGruppen.size(); i++) {
+				const elem = obj.filterDefinitionenGruppen.get(i);
+				result += ReportingFilterDefinitionGruppe.transpilerToJSON(elem);
+				if (i < obj.filterDefinitionenGruppen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
 		}
 		if (obj.eMailDaten !== undefined) {
 			result += '"eMailDaten" : ' + ((obj.eMailDaten === null) ? 'null' : ReportingEMailDaten.transpilerToJSON(obj.eMailDaten)) + ',';
-		}
-		if (obj.duplexdruck !== undefined) {
-			result += '"duplexdruck" : ' + obj.duplexdruck.toString() + ',';
-		}
-		if (obj.vorlageParameter !== undefined) {
-			result += '"vorlageParameter" : [ ';
-			for (let i = 0; i < obj.vorlageParameter.size(); i++) {
-				const elem = obj.vorlageParameter.get(i);
-				result += ReportingVorlageParameter.transpilerToJSON(elem);
-				if (i < obj.vorlageParameter.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

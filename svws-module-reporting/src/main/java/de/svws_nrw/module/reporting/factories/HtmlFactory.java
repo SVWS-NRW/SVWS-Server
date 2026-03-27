@@ -253,8 +253,8 @@ public class HtmlFactory {
 		ReportingValidierung.validiereDatenFuerGostKursplanungBlockungsergebnis(reportingRepository);
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
 				"Erzeuge Datenkontext Gost-Kursplanung-Blockungsergebnis für die HTML-Generierung mit ID %s für Template %s."
-						.formatted(reportingParameter.idsHauptdaten().getFirst(), htmlTemplateDefinition.name()));
-		final List<Long> idsFilter = this.reportingRepository.reportingParameter().idsDetaildaten();
+						.formatted(reportingParameter.idHauptdatenObjekt(), htmlTemplateDefinition.name()));
+		final List<Long> idsFilter = this.reportingRepository.reportingParameter().idsHauptdaten();
 		final ReportingFilterDataType idsFilterDataType = switch (htmlTemplateDefinition) {
 			case GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN -> ReportingFilterDataType.KURSE;
 			case GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN, GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN -> ReportingFilterDataType.SCHUELER;
@@ -299,42 +299,42 @@ public class HtmlFactory {
 			case STUNDENPLANUNG_V_FACH_STUNDENPLAN -> {
 				final HtmlContextStundenplanungFachStundenplan htmlContextFachStundenplan =
 						new HtmlContextStundenplanungFachStundenplan(reportingRepository,
-								reportingRepository.stundenplan(reportingParameter.idsHauptdaten().getFirst()),
-								reportingParameter.idsDetaildaten());
+								reportingRepository.stundenplan(reportingParameter.idHauptdatenObjekt()),
+								reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put("FaecherStundenplaene", htmlContextFachStundenplan);
 			}
 			case STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN -> {
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Klassen für einen Stundenplan für die HTML-Generierung.");
-				ReportingValidierung.validiereDatenFuerKlassen(reportingRepository, reportingParameter.idsDetaildaten());
+				ReportingValidierung.validiereDatenFuerKlassen(reportingRepository, reportingParameter.idsHauptdaten());
 				final HtmlContextStundenplanungKlassenStundenplan htmlContextKlassenStundenplan =
 						new HtmlContextStundenplanungKlassenStundenplan(reportingRepository,
-								reportingRepository.stundenplan(reportingParameter.idsHauptdaten().getFirst()),
-								reportingParameter.idsDetaildaten());
+								reportingRepository.stundenplan(reportingParameter.idHauptdatenObjekt()),
+								reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put("KlassenStundenplaene", htmlContextKlassenStundenplan);
 			}
 			case STUNDENPLANUNG_V_LEHRER_STUNDENPLAN, STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT -> {
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Lehrkräfte für einen Stundenplan für die HTML-Generierung.");
-				ReportingValidierung.validiereDatenFuerLehrer(reportingRepository, reportingParameter.idsDetaildaten());
+				ReportingValidierung.validiereDatenFuerLehrer(reportingRepository, reportingParameter.idsHauptdaten());
 				final HtmlContextStundenplanungLehrerStundenplan htmlContextLehrerStundenplan =
 						new HtmlContextStundenplanungLehrerStundenplan(reportingRepository,
-								reportingRepository.stundenplan(reportingParameter.idsHauptdaten().getFirst()),
-								reportingParameter.idsDetaildaten());
+								reportingRepository.stundenplan(reportingParameter.idHauptdatenObjekt()),
+								reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put("LehrerStundenplaene", htmlContextLehrerStundenplan);
 			}
 			case STUNDENPLANUNG_V_RAUM_STUNDENPLAN -> {
 				final HtmlContextStundenplanungRaumStundenplan htmlContextRaeumeStundenplan =
 						new HtmlContextStundenplanungRaumStundenplan(reportingRepository,
-								reportingRepository.stundenplan(reportingParameter.idsHauptdaten().getFirst()),
-								reportingParameter.idsDetaildaten());
+								reportingRepository.stundenplan(reportingParameter.idHauptdatenObjekt()),
+								reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put("RaeumeStundenplaene", htmlContextRaeumeStundenplan);
 			}
 			case STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN -> {
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten der Schüler für einen Stundenplan für die HTML-Generierung.");
-				ReportingValidierung.validiereDatenFuerSchueler(reportingRepository, reportingParameter.idsDetaildaten(), false, false);
+				ReportingValidierung.validiereDatenFuerSchueler(reportingRepository, reportingParameter.idsHauptdaten(), false, false);
 				final HtmlContextStundenplanungSchuelerStundenplan htmlContextSchuelerStundenplan =
 						new HtmlContextStundenplanungSchuelerStundenplan(reportingRepository,
-								reportingRepository.stundenplan(reportingParameter.idsHauptdaten().getFirst()),
-								reportingParameter.idsDetaildaten());
+								reportingRepository.stundenplan(reportingParameter.idHauptdatenObjekt()),
+								reportingParameter.idsHauptdaten());
 				mapHtmlContexts.put("SchuelerStundenplaene", htmlContextSchuelerStundenplan);
 			}
 			default -> {

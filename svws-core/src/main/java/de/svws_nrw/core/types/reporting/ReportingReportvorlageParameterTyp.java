@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Diese Enum-Klasse repräsentiert die Typen von Parametern, die für eine Reporting-Vorlage verwendet werden können.
  */
-public enum ReportingVorlageParameterTyp {
+public enum ReportingReportvorlageParameterTyp {
 	/** Vorlage-Parameter wurde vom Typ her noch nicht festgelegt. */
 	UNDEFINED(0),
 
@@ -34,7 +34,7 @@ public enum ReportingVorlageParameterTyp {
 	 *
 	 * @param id Die ID des ReportingVorlageParameterTyp
 	 */
-	ReportingVorlageParameterTyp(final int id) {
+	ReportingReportvorlageParameterTyp(final int id) {
 		this.id = id;
 	}
 
@@ -54,12 +54,10 @@ public enum ReportingVorlageParameterTyp {
 	 *
 	 * @return 		Der ReportingDVorlageParameterTyp
 	 */
-	public static @NotNull ReportingVorlageParameterTyp getByID(final int id) {
-		for (final ReportingVorlageParameterTyp dp : ReportingVorlageParameterTyp.values()) {
-			if (dp.id == id) {
+	public static @NotNull ReportingReportvorlageParameterTyp getByID(final int id) {
+		for (final ReportingReportvorlageParameterTyp dp : ReportingReportvorlageParameterTyp.values())
+			if (dp.id == id)
 				return dp;
-			}
-		}
 		return UNDEFINED;
 	}
 

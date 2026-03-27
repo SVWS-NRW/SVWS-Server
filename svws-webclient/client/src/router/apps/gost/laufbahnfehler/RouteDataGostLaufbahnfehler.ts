@@ -1,5 +1,5 @@
 import type { ApiFile, GostBelegpruefungsErgebnisse, List, ReportingParameter } from "@core";
-import { ArrayList, DeveloperNotificationException, GostBelegpruefungsArt, OpenApiError, ReportingReportvorlage, SimpleOperationResponse } from "@core";
+import { ArrayList, DeveloperNotificationException, GostBelegpruefungsArt } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -7,7 +7,6 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
 import { routeSchuelerSprachen } from "../../schueler/sprachen/RouteSchuelerSprachen";
-import { routeApp } from "~/router/apps/RouteApp";
 
 
 interface RouteStateDataGostLaufbahnfehler extends RouteStateInterface {

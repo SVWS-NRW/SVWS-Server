@@ -1,9 +1,9 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { ReportingVorlageParameterTyp } from '../../../core/types/reporting/ReportingVorlageParameterTyp';
+import { ReportingReportvorlageParameterTyp } from '../../../core/types/reporting/ReportingReportvorlageParameterTyp';
 import { ReportingUIKomponentenTyp } from '../../../core/types/reporting/ReportingUIKomponentenTyp';
 import { Class } from '../../../java/lang/Class';
 
-export class ReportingVorlageParameter extends JavaObject {
+export class ReportingReportvorlageParameter extends JavaObject {
 
 	/**
 	 * Der Name des Vorlage-Parameters, wie er später im HTML-Template verwendet wird.
@@ -18,7 +18,7 @@ export class ReportingVorlageParameter extends JavaObject {
 	/**
 	 * Der Typ des Wertes des Vorlage-Parameters.
 	 */
-	public typ: number = ReportingVorlageParameterTyp.UNDEFINED.getId();
+	public typ: number = ReportingReportvorlageParameterTyp.UNDEFINED.getId();
 
 	/**
 	 * Der Wert des Vorlage-Parameters.
@@ -28,17 +28,17 @@ export class ReportingVorlageParameter extends JavaObject {
 	/**
 	 * Gibt an, ob der Parameter in der UI sichtbar sein soll.
 	 */
-	public istSichtbar: string = "true";
+	public uiIstSichtbar: boolean = true;
 
 	/**
 	 * Der Typ der UI-Komponente (z.B. 'checkbox', 'input', 'select', 'textarea', 'numberpicker', 'datepicker').
 	 */
-	public komponentenTyp: number = ReportingUIKomponentenTyp.UNDEFINED.getId();
+	public uiKomponentenTyp: number = ReportingUIKomponentenTyp.UNDEFINED.getId();
 
 	/**
 	 * Die Anzahl der Grid-Spalten, die der Parameter in der UI einnehmen soll.
 	 */
-	public spaltenAnzahl: number = 1;
+	public uiAnzahlSpalten: number = 1;
 
 
 	/**
@@ -49,18 +49,18 @@ export class ReportingVorlageParameter extends JavaObject {
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.core.data.reporting.ReportingVorlageParameter';
+		return 'de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter';
 	}
 
 	isTranspiledInstanceOf(name: string): boolean {
-		return ['de.svws_nrw.core.data.reporting.ReportingVorlageParameter'].includes(name);
+		return ['de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter'].includes(name);
 	}
 
-	public static readonly class = new Class<ReportingVorlageParameter>('de.svws_nrw.core.data.reporting.ReportingVorlageParameter');
+	public static readonly class = new Class<ReportingReportvorlageParameter>('de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter');
 
-	public static transpilerFromJSON(json: string): ReportingVorlageParameter {
-		const obj = JSON.parse(json) as Partial<ReportingVorlageParameter>;
-		const result = new ReportingVorlageParameter();
+	public static transpilerFromJSON(json: string): ReportingReportvorlageParameter {
+		const obj = JSON.parse(json) as Partial<ReportingReportvorlageParameter>;
+		const result = new ReportingReportvorlageParameter();
 		if (obj.name === undefined)
 			throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
@@ -73,33 +73,33 @@ export class ReportingVorlageParameter extends JavaObject {
 		if (obj.wert === undefined)
 			throw new Error('invalid json format, missing attribute wert');
 		result.wert = obj.wert;
-		if (obj.istSichtbar === undefined)
-			throw new Error('invalid json format, missing attribute istSichtbar');
-		result.istSichtbar = obj.istSichtbar;
-		if (obj.komponentenTyp === undefined)
-			throw new Error('invalid json format, missing attribute komponentenTyp');
-		result.komponentenTyp = obj.komponentenTyp;
-		if (obj.spaltenAnzahl === undefined)
-			throw new Error('invalid json format, missing attribute spaltenAnzahl');
-		result.spaltenAnzahl = obj.spaltenAnzahl;
+		if (obj.uiIstSichtbar === undefined)
+			throw new Error('invalid json format, missing attribute uiIstSichtbar');
+		result.uiIstSichtbar = obj.uiIstSichtbar;
+		if (obj.uiKomponentenTyp === undefined)
+			throw new Error('invalid json format, missing attribute uiKomponentenTyp');
+		result.uiKomponentenTyp = obj.uiKomponentenTyp;
+		if (obj.uiAnzahlSpalten === undefined)
+			throw new Error('invalid json format, missing attribute uiAnzahlSpalten');
+		result.uiAnzahlSpalten = obj.uiAnzahlSpalten;
 		return result;
 	}
 
-	public static transpilerToJSON(obj: ReportingVorlageParameter): string {
+	public static transpilerToJSON(obj: ReportingReportvorlageParameter): string {
 		let result = '{';
 		result += '"name" : ' + JSON.stringify(obj.name) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"typ" : ' + obj.typ.toString() + ',';
 		result += '"wert" : ' + JSON.stringify(obj.wert) + ',';
-		result += '"istSichtbar" : ' + JSON.stringify(obj.istSichtbar) + ',';
-		result += '"komponentenTyp" : ' + obj.komponentenTyp.toString() + ',';
-		result += '"spaltenAnzahl" : ' + obj.spaltenAnzahl.toString() + ',';
+		result += '"uiIstSichtbar" : ' + obj.uiIstSichtbar.toString() + ',';
+		result += '"uiKomponentenTyp" : ' + obj.uiKomponentenTyp.toString() + ',';
+		result += '"uiAnzahlSpalten" : ' + obj.uiAnzahlSpalten.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj: Partial<ReportingVorlageParameter>): string {
+	public static transpilerToJSONPatch(obj: Partial<ReportingReportvorlageParameter>): string {
 		let result = '{';
 		if (obj.name !== undefined) {
 			result += '"name" : ' + JSON.stringify(obj.name) + ',';
@@ -113,14 +113,14 @@ export class ReportingVorlageParameter extends JavaObject {
 		if (obj.wert !== undefined) {
 			result += '"wert" : ' + JSON.stringify(obj.wert) + ',';
 		}
-		if (obj.istSichtbar !== undefined) {
-			result += '"istSichtbar" : ' + JSON.stringify(obj.istSichtbar) + ',';
+		if (obj.uiIstSichtbar !== undefined) {
+			result += '"uiIstSichtbar" : ' + obj.uiIstSichtbar.toString() + ',';
 		}
-		if (obj.komponentenTyp !== undefined) {
-			result += '"komponentenTyp" : ' + obj.komponentenTyp.toString() + ',';
+		if (obj.uiKomponentenTyp !== undefined) {
+			result += '"uiKomponentenTyp" : ' + obj.uiKomponentenTyp.toString() + ',';
 		}
-		if (obj.spaltenAnzahl !== undefined) {
-			result += '"spaltenAnzahl" : ' + obj.spaltenAnzahl.toString() + ',';
+		if (obj.uiAnzahlSpalten !== undefined) {
+			result += '"uiAnzahlSpalten" : ' + obj.uiAnzahlSpalten.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
@@ -129,6 +129,6 @@ export class ReportingVorlageParameter extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_reporting_ReportingVorlageParameter(obj: unknown): ReportingVorlageParameter {
-	return obj as ReportingVorlageParameter;
+export function cast_de_svws_nrw_core_data_reporting_ReportingReportvorlageParameter(obj: unknown): ReportingReportvorlageParameter {
+	return obj as ReportingReportvorlageParameter;
 }

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
+<html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}, duplex = ${Parameter.duplexdruck}">
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='Raum-Stundenplan',
 		htmlTemplatePfad=${Parameter.htmlTemplateDefinition().getPfadHtmlTemplate()},
-		namePageCSS='reporting-A4-hoch.css')}">
+		namePageCSS='reporting-A4-hoch' + (${duplex} ? '-duplex' : '') + '.css')}">
 		<title></title>
 	</head>
 

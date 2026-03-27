@@ -1,7 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 import type { KlassenStundenplanProps } from "~/components/klassen/stundenplan/SKlassenStundenplanProps";
-import { DeveloperNotificationException } from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode, DeveloperNotificationException } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
@@ -14,7 +13,7 @@ const SKlassenStundenplan = () => import("~/components/klassen/stundenplan/SKlas
 export class RouteKlassenStundenplan extends RouteNode<RouteDataKlassenStundenplan, RouteKlassen> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN], "klassen.stundenplan", "stundenplan/:idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", SKlassenStundenplan, new RouteDataKlassenStundenplan());
+		super(Schulform.values(), [BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN], "klassen.stundenplan", String.raw`stundenplan/:idStundenplan(\d+)?/:wochentyp(\d+)?/:kw(\d+\.\d+)?`, SKlassenStundenplan, new RouteDataKlassenStundenplan());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
@@ -38,8 +37,8 @@ export class RouteKlassenStundenplan extends RouteNode<RouteDataKlassenStundenpl
 				if (tmpKW.length !== 2) {
 					throw new DeveloperNotificationException("Die Angabe der Kalenderwoche muss die Form 'Jahr.KW' haben.");
 				}
-				kwjahr = parseInt(tmpKW[0]);
-				kw = parseInt(tmpKW[1]);
+				kwjahr = Number.parseInt(tmpKW[0]);
+				kw = Number.parseInt(tmpKW[1]);
 			}
 			// Prüfe, ob ein Schüler ausgewählt ist. Wenn nicht dann wechsele in die Schüler-Route zurück.
 			if (idKlasse === undefined) {

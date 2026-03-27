@@ -5,7 +5,7 @@ export interface StundenplanRaumProps {
 	// schulform: Schulform;
 	// serverMode: ServerMode;
 	// benutzerKompetenzen: Set<BenutzerKompetenz>,
-	getPDF: (parameter: ReportingParameter, idStundenplan: number) => Promise<ApiFile>;
+	getPDF: (parameter: ReportingParameter) => Promise<ApiFile>;
 	apiStatus: ApiStatus;
 	stundenplanManager: () => StundenplanManager;
 	ganzerStundenplanRaeume: () => boolean;

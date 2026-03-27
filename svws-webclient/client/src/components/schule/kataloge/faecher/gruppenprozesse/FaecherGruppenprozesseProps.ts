@@ -2,7 +2,7 @@ import type { List, ServerMode, BenutzerKompetenz, ApiFile, ReportingParameter }
 import type { FaecherListeManager } from "@ui";
 
 export interface FaecherGruppenprozesseProps {
-	getPDF: (parameter: ReportingParameter, idStundenplan: number) => Promise<ApiFile>;
+	getPDF: (parameter: ReportingParameter) => Promise<ApiFile>;
 	serverMode: ServerMode;
 	benutzerKompetenzen: Set<BenutzerKompetenz>;
 	manager: () => FaecherListeManager;

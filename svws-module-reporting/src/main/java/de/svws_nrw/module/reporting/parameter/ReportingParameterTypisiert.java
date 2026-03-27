@@ -1,12 +1,15 @@
 package de.svws_nrw.module.reporting.parameter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.svws_nrw.core.data.reporting.ReportingEMailDaten;
-import de.svws_nrw.core.data.reporting.ReportingFilterDefinition;
+import de.svws_nrw.core.data.reporting.ReportingFilterDefinitionGruppe;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
-import de.svws_nrw.core.data.reporting.ReportingSortierungDefinition;
-import de.svws_nrw.core.data.reporting.ReportingVorlageParameter;
+import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
+import de.svws_nrw.core.data.reporting.ReportingSortierungDefinitionGruppe;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
 import de.svws_nrw.module.reporting.html.HtmlTemplateDefinition;
@@ -25,6 +28,12 @@ public class ReportingParameterTypisiert {
 	/** Das gekapselte ReportingParameter-Objekt */
 	private final ReportingParameter reportingParameter;
 
+	/** Map mit allen ReportingVorlageParametern */
+	private final Map<String, ReportingReportvorlageParameter> mapReportVorlageParameter = new HashMap<>();
+
+	/** Liste mit allen ReportingVorlageParametern */
+	private final List<ReportingReportvorlageParameter> listReportVorlageParameter = new ArrayList<>();
+
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse ReportingParameterTypisiert.
@@ -35,6 +44,11 @@ public class ReportingParameterTypisiert {
 	public ReportingParameterTypisiert(final ReportingRepository reportingRepository, final ReportingParameter reportingParameter) {
 		this.reportingRepository = reportingRepository;
 		this.reportingParameter = reportingParameter;
+		this.reportingParameter.reportvorlageParameterGruppen
+				.forEach(g -> g.reportvorlageParameter
+						.forEach(p -> mapReportVorlageParameter.put(p.name, p)));
+		this.reportingParameter.reportvorlageParameterGruppen
+				.forEach(g -> listReportVorlageParameter.addAll(g.reportvorlageParameter));
 	}
 
 
@@ -52,8 +66,27 @@ public class ReportingParameterTypisiert {
 	 *
 	 * @return das ReportingAusgabeformat
 	 */
+	public List<ReportingAusgabeformat> ausgabeformatOptionen() {
+		return reportingParameter.ausgabeformatOptionen.stream().map(ReportingAusgabeformat::getByID).toList();
+	}
+
+	/**
+	 * Gibt das Report-Ausgabeformat als Enum zurück.
+	 *
+	 * @return das ReportingAusgabeformat
+	 */
 	public ReportingAusgabeformat ausgabeformat() {
 		return ReportingAusgabeformat.getByID(reportingParameter.ausgabeformat);
+	}
+
+	/**
+	 * Gibt zurück, ob eine Ausgabe für einen Ausdruck (auf Papier) erfolgen soll (PDF oder E-Mail).
+	 *
+	 * @return true, wenn die Ausgabe für einen Ausdruck erfolgen soll.
+	 */
+	public boolean istDruckausgabe() {
+		final ReportingAusgabeformat ausgabeformat = this.ausgabeformat();
+		return (ausgabeformat == ReportingAusgabeformat.PDF) || (ausgabeformat == ReportingAusgabeformat.EMAIL);
 	}
 
 	/**
@@ -76,17 +109,13 @@ public class ReportingParameterTypisiert {
 	}
 
 	/**
-	 * Gibt zurück, ob eine Ausgabe für einen Ausdruck (auf Papier) erfolgen soll (PDF oder E-Mail).
+	 * Eine ID zum Objekt, das die Hauptdaten-IDs enthält, wie z. B. die ID eines Blockungsergebnisses oder eines Stundenplans.
 	 *
-	 * @return true, wenn die Ausgabe für einen Ausdruck erfolgen soll.
+	 * @return die ID des Hauptdatenobjektes.
 	 */
-	public boolean istDruckausgabe() {
-		final ReportingAusgabeformat ausgabeformat = this.ausgabeformat();
-		return (ausgabeformat == ReportingAusgabeformat.PDF) || (ausgabeformat == ReportingAusgabeformat.EMAIL);
+	public long idHauptdatenObjekt() {
+		return reportingParameter.idHauptdatenObjekt;
 	}
-
-
-	// ##### Getter für die Attribute aus ReportingParameter. #####
 
 	/**
 	 * Gibt die Liste von IDs für die Hauptdatenquelle zurück.
@@ -95,15 +124,6 @@ public class ReportingParameterTypisiert {
 	 */
 	public List<Long> idsHauptdaten() {
 		return reportingParameter.idsHauptdaten;
-	}
-
-	/**
-	 * Gibt zurück, ob eine Einzelausgabe für Hauptdaten gewünscht ist.
-	 *
-	 * @return true, wenn Einzelausgabe für Hauptdaten gewünscht
-	 */
-	public boolean einzelausgabeHauptdaten() {
-		return reportingParameter.einzelausgabeHauptdaten;
 	}
 
 	/**
@@ -116,30 +136,12 @@ public class ReportingParameterTypisiert {
 	}
 
 	/**
-	 * Gibt zurück, ob eine Einzelausgabe für Detaildaten gewünscht ist.
+	 * Gibt die Liste der Vorlage-Parameter zurück.
 	 *
-	 * @return true, wenn Einzelausgabe für Detaildaten gewünscht
+	 * @return die Liste der Vorlage-Parameter
 	 */
-	public boolean einzelausgabeDetaildaten() {
-		return reportingParameter.einzelausgabeDetaildaten;
-	}
-
-	/**
-	 * Gibt die Sortierung für die Hauptdaten zurück.
-	 *
-	 * @return die Sortierung für die Hauptdaten
-	 */
-	public ReportingSortierungDefinition sortierungHauptdaten() {
-		return reportingParameter.sortierungHauptdaten;
-	}
-
-	/**
-	 * Gibt die Sortierung für die Detaildaten zurück.
-	 *
-	 * @return die Sortierung für die Detaildaten
-	 */
-	public ReportingSortierungDefinition sortierungDetaildaten() {
-		return reportingParameter.sortierungDetaildaten;
+	public List<ReportingReportvorlageParameter> reportvorlageParameter() {
+		return listReportVorlageParameter;
 	}
 
 	/**
@@ -147,8 +149,8 @@ public class ReportingParameterTypisiert {
 	 *
 	 * @return die Liste der Sortierdefinitionen
 	 */
-	public List<ReportingSortierungDefinition> sortierungDefinitionen() {
-		return reportingParameter.sortierungDefinitionen;
+	public List<ReportingSortierungDefinitionGruppe> sortierungDefinitionenGruppen() {
+		return reportingParameter.sortierungDefinitionenGruppen;
 	}
 
 	/**
@@ -156,8 +158,8 @@ public class ReportingParameterTypisiert {
 	 *
 	 * @return die Liste der Filterdefinitionen
 	 */
-	public List<ReportingFilterDefinition> filterDefinitionen() {
-		return reportingParameter.filterDefinitionen;
+	public List<ReportingFilterDefinitionGruppe> filterDefinitionenGruppen() {
+		return reportingParameter.filterDefinitionenGruppen;
 	}
 
 	/**
@@ -169,21 +171,38 @@ public class ReportingParameterTypisiert {
 		return reportingParameter.eMailDaten;
 	}
 
+
+
+	// ##### Getter für spezielle bzw. allgemeine ReportvorlageParameter. #####
+
+	/**
+	 * Gibt zurück, ob eine Einzelausgabe für Hauptdaten gewünscht ist.
+	 *
+	 * @return true, wenn Einzelausgabe für Hauptdaten gewünscht
+	 */
+	public boolean einzelausgabeHauptdaten() {
+		final ReportingReportvorlageParameter einzelausgabeHauptdaten = mapReportVorlageParameter.get("einzelausgabeHauptdaten");
+		return (einzelausgabeHauptdaten != null) && einzelausgabeHauptdaten.wert.equalsIgnoreCase("true");
+	}
+
+	/**
+	 * Gibt zurück, ob eine Einzelausgabe für Detaildaten gewünscht ist.
+	 *
+	 * @return true, wenn Einzelausgabe für Detaildaten gewünscht
+	 */
+	public boolean einzelausgabeDetaildaten() {
+		final ReportingReportvorlageParameter einzelausgabeDetaildaten = mapReportVorlageParameter.get("einzelausgabeDetaildaten");
+		return (einzelausgabeDetaildaten != null) && einzelausgabeDetaildaten.wert.equalsIgnoreCase("true");
+	}
+
 	/**
 	 * Gibt zurück, ob der Duplexdruck aktiviert ist.
 	 *
 	 * @return true bei Duplexdruck
 	 */
 	public boolean duplexdruck() {
-		return reportingParameter.duplexdruck;
+		final ReportingReportvorlageParameter duplexdruck = mapReportVorlageParameter.get("duplexdruck");
+		return (duplexdruck != null) && duplexdruck.wert.equalsIgnoreCase("true");
 	}
 
-	/**
-	 * Gibt die Liste der Vorlage-Parameter zurück.
-	 *
-	 * @return die Liste der Vorlage-Parameter
-	 */
-	public List<ReportingVorlageParameter> vorlageParameter() {
-		return reportingParameter.vorlageParameter;
-	}
 }

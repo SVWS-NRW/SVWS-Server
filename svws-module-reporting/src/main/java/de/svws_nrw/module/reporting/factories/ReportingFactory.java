@@ -7,7 +7,8 @@ import java.util.Objects;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
-import de.svws_nrw.core.data.reporting.ReportingVorlageParameter;
+import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
+import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameterGruppe;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
@@ -149,46 +150,93 @@ public final class ReportingFactory {
 	}
 
 	/**
-	 * Validiert die übergebenen Vorlage-Parameter gegen die definierten Vorlage-Parameter einer Reportvorlage und kombiniert diese bei Übereinstimmung.
-	 * Fehlende oder ungültige Parameter werden ignoriert. Die kombinierten Parameter werden anschließend zurückgeschrieben.
+	 * Validiert die übergebenen Vorlage-Parameter und deren Gruppen gegen die definierte Vorlage und kombiniert diese bei Übereinstimmung.
+	 * Fehlende oder ungültige Parameter werden ignoriert. Die kombinierten Parameter und Gruppen werden anschließend zurückgeschrieben.
 	 *
 	 * @param reportingParameter Das ReportingParameter-Objekt, welches die zu validierenden und kombinierten Vorlage-Parameter beinhaltet.
 	 */
 	private void validiereVorlageParameter(final ReportingParameter reportingParameter) {
-		final List<ReportingVorlageParameter> uebergebeneVorlageParameter = (reportingParameter.vorlageParameter == null) ? new ArrayList<>()
-				: new ArrayList<>(reportingParameter.vorlageParameter.stream().filter(Objects::nonNull)
-						.filter(reportingVorlageParameter -> ((reportingVorlageParameter.name != null) && !reportingVorlageParameter.name.isBlank()))
-						.distinct().toList());
-
-		// Map der übergebenen Parameter nach Namen zur schnellen Suche anlegen.
-		final java.util.Map<String, ReportingVorlageParameter> uebergebeneVorlageParameterMap = new HashMap<>();
-		uebergebeneVorlageParameter.forEach(p -> uebergebeneVorlageParameterMap.put(p.name, p));
-
-		final List<ReportingVorlageParameter> definierteVorlageParameter =
-				ReportingReportvorlage.getByBezeichnung(this.reportingParameter.reportvorlage).getVorlageParameterList();
-
-		final List<ReportingVorlageParameter> vorlageParameter = new ArrayList<>();
-
-		for (final ReportingVorlageParameter definierteVorlageParameterEintrag : definierteVorlageParameter) {
-			// Neuen Parameter auf Basis des definierten erstellen, aber den Wert aus dem übergebenen setzen
-			final ReportingVorlageParameter kombinierterEintrag = new ReportingVorlageParameter();
-			// Name aus der Definition
-			kombinierterEintrag.name = definierteVorlageParameterEintrag.name;
-			// Typ aus der Definition
-			kombinierterEintrag.typ = definierteVorlageParameterEintrag.typ;
-			// Zunächst den Standardwert der Definition setzen.
-			kombinierterEintrag.wert = definierteVorlageParameterEintrag.wert;
-
-			// Suche den gleichnamigen Parameter in den übergebenen Einträgen und setze dessen Wert auf den kombinierten Wert.
-			final ReportingVorlageParameter uebergebenerEintrag = uebergebeneVorlageParameterMap.get(definierteVorlageParameterEintrag.name);
-			if ((uebergebenerEintrag != null) && (uebergebenerEintrag.wert != null))
-				kombinierterEintrag.wert = uebergebenerEintrag.wert;
-
-			vorlageParameter.add(kombinierterEintrag);
+		final ReportingReportvorlage reportvorlage = ReportingReportvorlage.getByBezeichnung(this.reportingParameter.reportvorlage);
+		if (reportvorlage == null) {
+			// Sollte durch die vorherige Validierung im Konstruktor eigentlich nicht passieren.
+			this.reportingParameter.reportvorlageParameterGruppen = new ArrayList<>();
+			return;
 		}
 
-		// Ergebnis in die Reporting-Parameter zurückschreiben
-		this.reportingParameter.vorlageParameter = vorlageParameter;
+		// Übergebene Parameter-Werte (IST-Werte) aus den übergebenen Gruppen als Map ablegen: Key = gruppenname#parametername
+		final List<ReportingReportvorlageParameterGruppe> uebergebeneParameterGruppen =
+				(reportingParameter.reportvorlageParameterGruppen == null)
+						? new ArrayList<>()
+						: reportingParameter.reportvorlageParameterGruppen.stream().filter(Objects::nonNull).toList();
+
+		final HashMap<String, ReportingReportvorlageParameter> mapUebergebeneReportvorlageParameter = new HashMap<>();
+		for (final ReportingReportvorlageParameterGruppe g : uebergebeneParameterGruppen) {
+			if ((g.name == null) || g.name.isBlank() || (g.reportvorlageParameter == null))
+				continue;
+			for (final ReportingReportvorlageParameter p : g.reportvorlageParameter) {
+				if ((p == null) || (p.name == null) || p.name.isBlank())
+					continue;
+				mapUebergebeneReportvorlageParameter.put(g.name + "#" + p.name, p);
+			}
+		}
+
+		// Definierte Struktur aus der Reportvorlage laden (SOLL-Werte) und Ergebnisliste nach Vorlage mit den evtl. übergebenen Werten kombinieren.
+		// Das Ergebnis wird in das Reporting-Parameter-Gruppen-Objekt zurückgeschrieben.
+		this.reportingParameter.reportvorlageParameterGruppen = getKombinierteReportvorlageParameter(reportvorlage, mapUebergebeneReportvorlageParameter);
+	}
+
+	/**
+	 * Kombiniert die Reportvorlage-Parametergruppen aus der Reportvorlage mit den evtl. übergebenen Werten der Parameter.
+	 * Dazu wird die definierte Struktur aus der Reportvorlage geladen (SOLL-Werte) und die Ergebnisliste nach Vorlage aufgebaut.
+	 *
+	 * @param reportvorlage die Reportvorlage, aus der die Reportvorlage-Parametergruppen geladen werden sollen
+	 * @param mapUebergebeneReportvorlageParameter die übergebenen Parameter-Werte mit Keys in der Form gruppenname#parametername
+	 *
+	 * @return die Reportvorlage-Parametergruppen aus der Reportvorlage kombiniert mit den evtl. übergebenen Werten der Parameter.
+	 */
+	private List<ReportingReportvorlageParameterGruppe> getKombinierteReportvorlageParameter(final ReportingReportvorlage reportvorlage,
+			final HashMap<String, ReportingReportvorlageParameter> mapUebergebeneReportvorlageParameter) {
+		final List<ReportingReportvorlageParameterGruppe> definierteGruppen =
+				reportvorlage.getReportingParameter().reportvorlageParameterGruppen.stream().filter(Objects::nonNull).toList();
+		final List<ReportingReportvorlageParameterGruppe> kombinierteGruppen = new ArrayList<>();
+
+		for (final ReportingReportvorlageParameterGruppe definierteGruppe : definierteGruppen) {
+			final ReportingReportvorlageParameterGruppe kombinierteGruppe = new ReportingReportvorlageParameterGruppe();
+			kombinierteGruppe.name = definierteGruppe.name;
+			kombinierteGruppe.beschreibung = definierteGruppe.beschreibung;
+			kombinierteGruppe.uiIstSichtbar = definierteGruppe.uiIstSichtbar;
+			kombinierteGruppe.uiAnzahlSpalten = definierteGruppe.uiAnzahlSpalten;
+
+			final List<ReportingReportvorlageParameter> kombinierteReportvorlageParameter = new ArrayList<>();
+			if (definierteGruppe.reportvorlageParameter != null) {
+				for (final ReportingReportvorlageParameter definierterReportvorlageParameter : definierteGruppe.reportvorlageParameter) {
+					if (definierterReportvorlageParameter == null)
+						continue;
+
+					final ReportingReportvorlageParameter kombinierterReportvorlageParameter = new ReportingReportvorlageParameter();
+					// Daten zunächst aus der Vorlage übernehmen ...
+					kombinierterReportvorlageParameter.name = definierterReportvorlageParameter.name;
+					kombinierterReportvorlageParameter.bezeichnung = definierterReportvorlageParameter.bezeichnung;
+					kombinierterReportvorlageParameter.typ = definierterReportvorlageParameter.typ;
+					kombinierterReportvorlageParameter.wert = definierterReportvorlageParameter.wert;
+					kombinierterReportvorlageParameter.uiIstSichtbar = definierterReportvorlageParameter.uiIstSichtbar;
+					kombinierterReportvorlageParameter.uiKomponentenTyp = definierterReportvorlageParameter.uiKomponentenTyp;
+					kombinierterReportvorlageParameter.uiAnzahlSpalten = definierterReportvorlageParameter.uiAnzahlSpalten;
+
+					// ... und wenn ein gültiger Wert ungleich null übergeben wurde, so wird dieser gesetzt.
+					final ReportingReportvorlageParameter uebergebenerReportvorlageParameter =
+							mapUebergebeneReportvorlageParameter.get(definierteGruppe.name + "#" + definierterReportvorlageParameter.name);
+					if ((uebergebenerReportvorlageParameter != null) && (uebergebenerReportvorlageParameter.wert != null))
+						kombinierterReportvorlageParameter.wert = uebergebenerReportvorlageParameter.wert;
+
+					kombinierteReportvorlageParameter.add(kombinierterReportvorlageParameter);
+				}
+			}
+
+			kombinierteGruppe.reportvorlageParameter = kombinierteReportvorlageParameter;
+			kombinierteGruppen.add(kombinierteGruppe);
+		}
+		return kombinierteGruppen;
 	}
 
 

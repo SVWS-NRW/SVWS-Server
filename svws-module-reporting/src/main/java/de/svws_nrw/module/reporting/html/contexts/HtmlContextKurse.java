@@ -34,7 +34,7 @@ public final class HtmlContextKurse extends HtmlContext<ReportingKurs> {
 	 * @param reportingKurse		Liste der Kurse, die berücksichtigt werden sollen.
 	 */
 	public HtmlContextKurse(final ReportingRepository reportingRepository, final List<ReportingKurs> reportingKurse) {
-		super(reportingRepository, true);
+		super(reportingRepository);
 		this.reportingRepository = reportingRepository;
 		erzeugeContextFromKurse(reportingKurse);
 	}
@@ -45,7 +45,7 @@ public final class HtmlContextKurse extends HtmlContext<ReportingKurs> {
 	 * @param reportingRepository   Repository mit Parametern, Logger und Daten zum Reporting.
 	 */
 	public HtmlContextKurse(final ReportingRepository reportingRepository) {
-		super(reportingRepository, true);
+		super(reportingRepository);
 		this.reportingRepository = reportingRepository;
 		erzeugeContextFromIds(this.reportingRepository.reportingParameter().idsHauptdaten());
 	}

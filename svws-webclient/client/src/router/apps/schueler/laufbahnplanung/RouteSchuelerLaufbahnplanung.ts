@@ -33,7 +33,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 
 	protected checkHidden(params?: RouteParams) {
 		try {
-			const { id } = (params !== undefined) ? RouteNode.getIntParams(params, ["id"]) : { id: undefined };
+			const { id } = (params === undefined) ? { id: undefined } : RouteNode.getIntParams(params, ["id"]);
 			if (!routeSchueler.data.manager.hasDaten()) {
 				return false;
 			}
@@ -69,7 +69,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			} else {
 				try {
 					await this.data.ladeDaten(routeSchueler.data.manager.liste.get(id));
-				} catch (error) {
+				} catch {
 					return routeSchueler.getRoute({ id });
 				}
 			}

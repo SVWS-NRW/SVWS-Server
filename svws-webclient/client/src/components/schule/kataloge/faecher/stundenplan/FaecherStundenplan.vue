@@ -1,9 +1,7 @@
 <template>
 	<template v-if="stundenplan() !== undefined">
 		<Teleport to=".svws-ui-header--actions" defer>
-			<faecher-stundenplan-drucken-modal v-slot="{ openModal }" :get-p-d-f :api-status :id :manager="manager()">
-				<svws-ui-button @click="openModal" type="secondary"><span class="icon i-ri-printer-line" /> Stundenplan drucken</svws-ui-button>
-			</faecher-stundenplan-drucken-modal>
+			<svws-ui-button @click="show = true" type="secondary"><span class="icon i-ri-printer-line" /> Stundenplan drucken</svws-ui-button>
 			<svws-ui-modal-hilfe> <hilfe-lehrer-stundenplan /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<div class="page page-flex-col overflow-x-auto">
@@ -16,6 +14,12 @@
 			<template v-else>
 				<stundenplan-auswahl :stundenplan="stundenplan()" :map-stundenplaene :goto-stundenplan :goto-wochentyp :goto-kalenderwoche :manager :wochentyp :kalenderwoche :ganzer-stundenplan :set-ganzer-stundenplan />
 				<stundenplan-fach :id :ignore-empty :manager :wochentyp :kalenderwoche />
+				<svws-ui-modal v-model:show="show" size="medium">
+					<template #modalTitle>Stundenplan drucken</template>
+					<template #modalContent>
+						<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_FACH_STUNDENPLAN" :id-hauptdaten-objekt="stundenplan()?.id" :ids-hauptdaten="[id]" :ids-detaildaten="[]" :create-report="getPDF" :id-abschnitt="manager().getAbschnitt()" />
+					</template>
+				</svws-ui-modal>
 			</template>
 		</div>
 	</template>
@@ -31,8 +35,11 @@
 
 <script setup lang="ts">
 
+	import { ref } from "vue";
+	import { ReportingReportvorlage } from "@core";
 	import type { FaecherStundenplanProps } from "./FaecherStundenplanProps";
 
 	defineProps<FaecherStundenplanProps>();
+	const show = ref(false);
 
 </script>

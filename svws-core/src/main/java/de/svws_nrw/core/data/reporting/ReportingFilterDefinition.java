@@ -16,6 +16,10 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class ReportingFilterDefinition {
 
+	/** Die Bezeichnung der Filterdefinition, die auch zur Anzeige in der UI verwendet werden kann. */
+	@Schema(description = "Die Bezeichnung der Filterdefinition, die auch zur Anzeige in der UI verwendet werden kann.", example = "Nur zeugnisrelevante Fächer")
+	public @NotNull String bezeichnung = "";
+
 	/** Der Typname des zu filternden Reporting-Datentyps, z. B. 'ReportingFach'. */
 	@Schema(description = "Der Typname des zu filternden Reporting-Datentyps, z. B. 'ReportingFach'.", example = "ReportingFach")
 	public @NotNull String typ = "";

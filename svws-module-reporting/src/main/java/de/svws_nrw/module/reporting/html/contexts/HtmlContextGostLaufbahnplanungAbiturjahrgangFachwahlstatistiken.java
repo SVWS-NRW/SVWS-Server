@@ -30,7 +30,7 @@ public final class HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistik
 	 * @param reportingRepository    Repository mit Parametern, Logger und Daten zum Reporting.
 	 */
  	public HtmlContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken(final ReportingRepository reportingRepository) {
-		super(reportingRepository, true);
+		super(reportingRepository);
 		this.reportingRepository = reportingRepository;
 		erzeugeContext();
 	}

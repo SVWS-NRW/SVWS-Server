@@ -7,6 +7,11 @@ import { ReportingFilterKriterium } from '../../../core/data/reporting/Reporting
 export class ReportingFilterDefinition extends JavaObject {
 
 	/**
+	 * Die Bezeichnung der Filterdefinition, die auch zur Anzeige in der UI verwendet werden kann.
+	 */
+	public bezeichnung: string = "";
+
+	/**
 	 * Der Typname des zu filternden Reporting-Datentyps, z. B. 'ReportingFach'.
 	 */
 	public typ: string = "";
@@ -34,6 +39,9 @@ export class ReportingFilterDefinition extends JavaObject {
 	public static transpilerFromJSON(json: string): ReportingFilterDefinition {
 		const obj = JSON.parse(json) as Partial<ReportingFilterDefinition>;
 		const result = new ReportingFilterDefinition();
+		if (obj.bezeichnung === undefined)
+			throw new Error('invalid json format, missing attribute bezeichnung');
+		result.bezeichnung = obj.bezeichnung;
 		if (obj.typ === undefined)
 			throw new Error('invalid json format, missing attribute typ');
 		result.typ = obj.typ;
@@ -47,6 +55,7 @@ export class ReportingFilterDefinition extends JavaObject {
 
 	public static transpilerToJSON(obj: ReportingFilterDefinition): string {
 		let result = '{';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"typ" : ' + JSON.stringify(obj.typ) + ',';
 		result += '"kriterien" : [ ';
 		for (let i = 0; i < obj.kriterien.size(); i++) {
@@ -63,6 +72,9 @@ export class ReportingFilterDefinition extends JavaObject {
 
 	public static transpilerToJSONPatch(obj: Partial<ReportingFilterDefinition>): string {
 		let result = '{';
+		if (obj.bezeichnung !== undefined) {
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		}
 		if (obj.typ !== undefined) {
 			result += '"typ" : ' + JSON.stringify(obj.typ) + ',';
 		}

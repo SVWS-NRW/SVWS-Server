@@ -4,7 +4,7 @@ import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface LehrerStundenplanProps {
 	apiStatus: ApiStatus;
-	getPDF: (parameter: ReportingParameter, idStundenplan: number) => Promise<ApiFile>;
+	getPDF: (parameter: ReportingParameter) => Promise<ApiFile>;
 	ignoreEmpty?: boolean;
 	id: number,
 	stundenplan: () => StundenplanListeEintrag | undefined;

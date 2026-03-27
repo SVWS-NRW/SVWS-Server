@@ -52,7 +52,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext<
 	 */
 	public HtmlContextGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final List<Long> idsFilter,
 			final ReportingFilterDataType idsFilterDataType) throws ApiOperationException {
-		super(reportingRepository, true);
+		super(reportingRepository);
 		this.reportingRepository = reportingRepository;
 		this.idsFilter = idsFilter;
 		this.idsFilterDataType = idsFilterDataType;
@@ -70,7 +70,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext<
 	 */
 	public HtmlContextGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final ReportingGostKlausurplanungKlausurplan gostKlausurplan,
 			final List<Long> idsFilter, final ReportingFilterDataType idsFilterDataType) {
-		super(reportingRepository, true);
+		super(reportingRepository);
 		this.reportingRepository = reportingRepository;
 		this.idsFilter = idsFilter;
 		this.idsFilterDataType = idsFilterDataType;

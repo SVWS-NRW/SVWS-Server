@@ -14,7 +14,7 @@ const SSchuelerStundenplan = () => import("~/components/schueler/stundenplan/SSc
 export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStundenplan, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN], "schueler.stundenplan", "stundenplan/:idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", SSchuelerStundenplan, new RouteDataSchuelerStundenplan());
+		super(Schulform.values(), [BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN], "schueler.stundenplan", String.raw`stundenplan/:idStundenplan(\d+)?/:wochentyp(\d+)?/:kw(\d+\.\d+)?`, SSchuelerStundenplan, new RouteDataSchuelerStundenplan());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
@@ -38,8 +38,8 @@ export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStunden
 				if (tmpKW.length !== 2) {
 					throw new DeveloperNotificationException("Die Angabe der Kalenderwoche muss die Form 'Jahr.KW' haben.");
 				}
-				kwjahr = parseInt(tmpKW[0]);
-				kw = parseInt(tmpKW[1]);
+				kwjahr = Number.parseInt(tmpKW[0]);
+				kw = Number.parseInt(tmpKW[1]);
 			}
 			// Prüfe, ob ein Schüler ausgewählt ist. Wenn nicht dann wechsele in die Schüler-Route zurück.
 			if (idSchueler === undefined) {
