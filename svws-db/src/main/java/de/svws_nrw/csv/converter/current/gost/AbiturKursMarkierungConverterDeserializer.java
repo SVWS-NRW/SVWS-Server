@@ -18,7 +18,7 @@ public final class AbiturKursMarkierungConverterDeserializer extends StdDeserial
 	private static final long serialVersionUID = -4503947939673854979L;
 
 	/**
-	 * Erzeugt einen neuen Deerialisierer
+	 * Erzeugt einen neuen Deserialisierer
 	 */
 	public AbiturKursMarkierungConverterDeserializer() {
 		super(AbiturKursMarkierung.class);

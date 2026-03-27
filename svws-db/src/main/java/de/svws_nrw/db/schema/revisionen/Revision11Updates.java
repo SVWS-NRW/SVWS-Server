@@ -34,12 +34,14 @@ public final class Revision11Updates extends SchemaRevisionUpdateSQL {
 		logger.logLn("- Ermittle eine ggf. bestehende Email-Konfiguration aus den SchildNRW 2 - Einstellungen ...");
 		final List<String> tmpEinstellungen =
 				conn.queryNative("SELECT Wert FROM Client_Konfiguration_Global WHERE AppName='Schild2' AND Schluessel='Einstellungen'");
-		if (tmpEinstellungen.isEmpty())
+		if (tmpEinstellungen.isEmpty()) {
 			return true;
+		}
 		final String einstellungen = tmpEinstellungen.get(0);
 		final List<String> einstellungenSMTP = einstellungen.lines().filter(s -> s.contains("SMTP")).toList();
-		if (einstellungenSMTP.isEmpty())
+		if (einstellungenSMTP.isEmpty()) {
 			return true;
+		}
 		boolean hasSMTP = false;
 		String host = "";
 		int port = 25;
@@ -47,16 +49,18 @@ public final class Revision11Updates extends SchemaRevisionUpdateSQL {
 		boolean useStartTLS = true;
 		for (final String einstellung : einstellungenSMTP) {
 			final String[] keyvalue = einstellung.split("=");
-			if (keyvalue.length != 2)
+			if (keyvalue.length != 2) {
 				continue;
+			}
 			switch (keyvalue[0]) {
 				case "SMTPMail" -> hasSMTP = (!"0".equals(keyvalue[1]));
 				case "SMTPServer" -> host = keyvalue[1];
 				case "SMTPPort" -> {
 					try {
 						port = Integer.parseInt(keyvalue[1]);
-						if ((port < 1) || (port > 65535))
+						if ((port < 1) || (port > 65535)) {
 							port = 25;
+						}
 					} catch (@SuppressWarnings("unused") final Exception e) {
 						port = 25;
 					}
@@ -68,8 +72,9 @@ public final class Revision11Updates extends SchemaRevisionUpdateSQL {
 				}
 			}
 		}
-		if ((host != null) && (host.startsWith("\"")))
+		if ((host != null) && (host.startsWith("\""))) {
 			host = host.replace("\"", "");
+		}
 		if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(
 				"INSERT INTO EigeneSchule_Email(ID, SMTPServer, SMTPPort, SMTPStartTLS, SMTPUseTLS, SMTPTrustTLSHost) VALUES (%d, '%s', %d, %d, %d, %s)"
 						.formatted(

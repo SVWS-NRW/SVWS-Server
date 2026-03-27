@@ -16,17 +16,20 @@ public final class AbiturKursMarkierungConverter extends DBAttributeConverter<Ab
 
 	@Override
 	public String convertToDatabaseColumn(final AbiturKursMarkierung value) {
-		if (value == null)
+		if (value == null) {
 			return "-";
-		if (value.aufAbiturZeugnis)
+		}
+		if (value.aufAbiturZeugnis) {
 			return value.fuerBerechnung ? "+" : "-";
+		}
 		return "/";
 	}
 
 	@Override
 	public AbiturKursMarkierung convertToEntityAttribute(final String dbData) {
-		if ((dbData == null) || (!"+".equals(dbData) && !"-".equals(dbData) && !"/".equals(dbData)))
+		if ((dbData == null) || (!"+".equals(dbData) && !"-".equals(dbData) && !"/".equals(dbData))) {
 			return new AbiturKursMarkierung();
+		}
 		return new AbiturKursMarkierung("+".equals(dbData), !"/".equals(dbData));
 	}
 

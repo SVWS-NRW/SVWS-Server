@@ -31,26 +31,30 @@ public final class Revision43Updates extends SchemaRevisionUpdateSQL {
 			logger.logLn("- LehrerLehramtFachr: Anlegen der Spalte LehramtKrz, falls diese noch nicht vorhanden ist.");
 			String sql = "ALTER TABLE %s ADD COLUMN IF NOT EXISTS LehramtKrz varchar(10) NOT NULL COMMENT 'Lehramtskürzel'"
 					.formatted(Schema.tab_LehrerLehramtFachr.name());
-			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 				throw new DBException("Fehler beim Anlegen der Spalte LehramtKrz");
+			}
 			conn.transactionFlush();
 			logger.logLn("- LehrerLehramtFachr: Neusetzen des Primärschlüssels mit der Spalte LehramtKrz.");
 			sql = "ALTER TABLE %s DROP PRIMARY KEY, ADD PRIMARY KEY (Lehrer_ID, LehramtKrz, FachrKrz)"
 					.formatted(Schema.tab_LehrerLehramtFachr.name());
-			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 				throw new DBException("Fehler beim Neusetzen des Primärschlüssels.");
+			}
 			conn.transactionFlush();
 			logger.logLn("- LehrerLehramtLehrbef: Anlegen der Spalte LehramtKrz, falls diese noch nicht vorhanden ist.");
 			sql = "ALTER TABLE %s ADD COLUMN IF NOT EXISTS LehramtKrz varchar(10) NOT NULL COMMENT 'Lehramtskürzel'"
 					.formatted(Schema.tab_LehrerLehramtLehrbef.name());
-			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 				throw new DBException("Fehler beim Anlegen der Spalte LehramtKrz");
+			}
 			conn.transactionFlush();
 			logger.logLn("- LehrerLehramtLehrbef: Neusetzen des Primärschlüssels mit der Spalte LehramtKrz.");
 			sql = "ALTER TABLE %s DROP PRIMARY KEY, ADD PRIMARY KEY (Lehrer_ID, LehramtKrz, LehrbefKrz)"
 					.formatted(Schema.tab_LehrerLehramtLehrbef.name());
-			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 				throw new DBException("Fehler beim Neusetzen des Primärschlüssels.");
+			}
 			conn.transactionFlush();
 			return true;
 		} catch (final DBException e) {

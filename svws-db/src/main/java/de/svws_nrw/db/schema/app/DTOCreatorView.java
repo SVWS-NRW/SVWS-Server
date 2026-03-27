@@ -41,8 +41,9 @@ public class DTOCreatorView {
 	 * @return der Package-Name
 	 */
 	public String getPackageName(final long rev) {
-		if (rev == 0)
+		if (rev == 0) {
 			throw new IllegalArgumentException("Java-DTOs für Views brauchen nicht für die Migration erstellt werden.");
+		}
 		return Schema.JAVA_PACKAGE + "."
 				+ Schema.JAVA_DTO_PACKAGE
 				+ ((rev < 0) ? ".current." : ".dev.")
@@ -59,8 +60,9 @@ public class DTOCreatorView {
 	 */
 	@JsonIgnore
 	public String getJavaKlasse(final long rev) {
-		if (rev == 0)
+		if (rev == 0) {
 			throw new IllegalArgumentException("Java-DTOs für Views brauchen nicht für die Migration erstellt werden.");
+		}
 		return (rev > 0) ? ("Dev" + view.dtoName) : view.dtoName;
 	}
 
@@ -136,8 +138,9 @@ public class DTOCreatorView {
 	 * @return der Java-Code für den Import der Attribut-Konverter
 	 */
 	private static String getCodeImportConverter(final List<? extends DBAttributeConverter<?, ?>> acs) {
-		if (acs.isEmpty())
+		if (acs.isEmpty()) {
 			return "";
+		}
 		String result = "import "
 				+ acs.stream().map(ac -> ac.getClass().getName()).filter(Objects::nonNull).sorted().distinct()
 						.collect(Collectors.joining(";" + System.lineSeparator() + "import "))
@@ -146,11 +149,12 @@ public class DTOCreatorView {
 		final String resultTypeImports = acs.stream().map(ac -> ac.getResultType().getName())
 				.filter(Objects::nonNull).filter(cntt -> !cntt.startsWith("java.lang")).sorted().distinct()
 				.collect(Collectors.joining(";" + System.lineSeparator() + "import "));
-		if (!"".equals(resultTypeImports))
+		if (!"".equals(resultTypeImports)) {
 			result += "import "
 					+ resultTypeImports
 					+ ";" + System.lineSeparator()
 					+ System.lineSeparator();
+		}
 		return result;
 	}
 
@@ -197,8 +201,9 @@ public class DTOCreatorView {
 		}
 		// alle Views: Generiere Annotationen für Queries für einzelne Attribute der View
 		for (final ViewSpalte spalte : view.spalten) {
-			if (spalte.name.startsWith("-"))
+			if (spalte.name.startsWith("-")) {
 				continue; // ignoriere Datenbank-Spalten, welche nicht als Java-Attribute umgesetzt werden sollen
+			}
 			query = "SELECT e FROM " + className + " e WHERE e." + spalte.name + " = ?1";
 			sb.append(getQueryAttribute("BY_" + spalte.name.toUpperCase(), query, "Die Datenbankabfrage für DTOs anhand des Attributes " + spalte.name));
 			query = "SELECT e FROM " + className + " e WHERE e." + spalte.name + " IN ?1";
@@ -220,11 +225,13 @@ public class DTOCreatorView {
 	 */
 	private String getCode4Attributes(final ViewSpalte spalte, final boolean withAnnotations) {
 		final StringBuilder sb = new StringBuilder();
-		if (spalte.beschreibung != null)
+		if (spalte.beschreibung != null) {
 			sb.append("\t/** " + spalte.beschreibung + " */" + System.lineSeparator());
+		}
 		if (withAnnotations) {
-			if ((view.pkSpalten.isEmpty()) || view.pkSpalten.contains(spalte))
+			if ((view.pkSpalten.isEmpty()) || view.pkSpalten.contains(spalte)) {
 				sb.append("\t@Id" + System.lineSeparator());
+			}
 			sb.append("\t@Column(name = \"" + spalte.name + "\")" + System.lineSeparator());
 			sb.append("\t@JsonProperty" + System.lineSeparator());
 		}
@@ -255,18 +262,21 @@ public class DTOCreatorView {
 		sb.append("package " + getPackageName(rev) + ";" + System.lineSeparator());
 		sb.append(System.lineSeparator());
 		sb.append("import de.svws_nrw.db.DBEntityManager;" + System.lineSeparator());
-		if (!acs.isEmpty())
+		if (!acs.isEmpty()) {
 			sb.append(getCodeImportConverter(acs));
+		}
 		sb.append(System.lineSeparator());
 
 		sb.append("import jakarta.persistence.Cacheable;" + System.lineSeparator());
 		sb.append("import jakarta.persistence.Column;" + System.lineSeparator());
-		if (!acs.isEmpty())
+		if (!acs.isEmpty()) {
 			sb.append("import jakarta.persistence.Convert;" + System.lineSeparator());
+		}
 		sb.append("import jakarta.persistence.Entity;" + System.lineSeparator());
 		sb.append("import jakarta.persistence.Id;" + System.lineSeparator());
-		if (view.pkSpalten.size() != 1)
+		if (view.pkSpalten.size() != 1) {
 			sb.append("import jakarta.persistence.IdClass;" + System.lineSeparator());
+		}
 		sb.append("import jakarta.persistence.Table;" + System.lineSeparator());
 		sb.append(System.lineSeparator());
 
@@ -347,10 +357,12 @@ public class DTOCreatorView {
 		final String className = getJavaKlasse(rev);
 		// Bestimme die Spalten für den Primärschlüssel und erzeuge nur Code, wenn es sich nicht um einen einfachen Primärschlüssel handelt
 		List<ViewSpalte> pkSpalten = view.pkSpalten;
-		if (pkSpalten == null)
+		if (pkSpalten == null) {
 			pkSpalten = view.spalten;
-		if (pkSpalten.size() <= 1)
+		}
+		if (pkSpalten.size() <= 1) {
 			return null;
+		}
 
 		final StringBuilder sb = new StringBuilder();
 		sb.append("package " + getPackageName(rev) + ";" + System.lineSeparator());

@@ -141,8 +141,9 @@ public abstract class DBAttributeConverter<X, Y> implements AttributeConverter<X
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends DBAttributeConverter<?, ?>> T getByClass(final Class<T> clazz) {
-		if (converter.size() == 0)
+		if (converter.size() == 0) {
 			init();
+		}
 		return (T) converter.get(clazz);
 	}
 
@@ -158,8 +159,9 @@ public abstract class DBAttributeConverter<X, Y> implements AttributeConverter<X
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends DBAttributeConverter<?, ?>> T getByClassName(final String classname) {
-		if (converter.size() == 0)
+		if (converter.size() == 0) {
 			init();
+		}
 		return (T) converterByName.get(classname);
 	}
 
@@ -192,8 +194,9 @@ public abstract class DBAttributeConverter<X, Y> implements AttributeConverter<X
 	 */
 	@SuppressWarnings("unchecked")
 	public X convertToEntityAttributeFromObject(final Object dbData) {
-		if ((dbData == null) || (!getDBType().isInstance(dbData.getClass())))
+		if ((dbData == null) || (!getDBType().isInstance(dbData.getClass()))) {
 			return null;
+		}
 		return convertToEntityAttribute((Y) dbData);
 	}
 

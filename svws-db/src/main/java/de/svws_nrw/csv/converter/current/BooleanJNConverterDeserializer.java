@@ -17,7 +17,7 @@ public final class BooleanJNConverterDeserializer extends StdDeserializer<Boolea
 	private static final long serialVersionUID = -1327227762966985248L;
 
 	/**
-	 * Erzeugt einen neuen Deerialisierer
+	 * Erzeugt einen neuen Deserialisierer
 	 */
 	public BooleanJNConverterDeserializer() {
 		super(Boolean.class);

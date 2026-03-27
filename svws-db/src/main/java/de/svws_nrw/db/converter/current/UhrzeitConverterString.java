@@ -37,8 +37,9 @@ public final class UhrzeitConverterString extends DBAttributeConverter<String, T
 
 	@Override
 	public String convertToEntityAttribute(final Timestamp dbData) {
-		if (dbData == null)
+		if (dbData == null) {
 			return null;
+		}
 		return dbData.toLocalDateTime().toLocalTime().toString();
 	}
 

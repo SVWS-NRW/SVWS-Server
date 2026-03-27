@@ -77,8 +77,9 @@ public class SchemaTabelle {
 	 * @param revision   die Revision, ab wann die Tabelle gültig ist.
 	 */
 	public SchemaTabelle(final String name, final SchemaRevisionen revision) {
-		if (revision == SchemaRevisionen.UNDEFINED)
+		if (revision == SchemaRevisionen.UNDEFINED) {
 			throw new RuntimeException("Die Revision, ab wann eine Tabelle gültig ist muss definiert sein.");
+		}
 		this._name = name;
 		this._revision = revision;
 		this._javaSubPackage = "svws";
@@ -95,11 +96,14 @@ public class SchemaTabelle {
 	 */
 	public boolean brauchtDeveloperDTO() {
 		if ((this._revision.revision > SchemaRevisionen.maxRevision.revision)
-				|| ((this._veraltet != SchemaRevisionen.UNDEFINED) && (this._veraltet.revision > SchemaRevisionen.maxRevision.revision)))
+				|| ((this._veraltet != SchemaRevisionen.UNDEFINED) && (this._veraltet.revision > SchemaRevisionen.maxRevision.revision))) {
 			return true;
-		for (final SchemaTabelleSpalte spalte : this._spalten)
-			if (spalte.brauchtDeveloperDTO())
+		}
+		for (final SchemaTabelleSpalte spalte : this._spalten) {
+			if (spalte.brauchtDeveloperDTO()) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -109,9 +113,10 @@ public class SchemaTabelle {
 	 * @param veraltet    die Revision, ab wann die Tabelle veraltet ist
 	 */
 	public void setVeraltet(final SchemaRevisionen veraltet) {
-		if (veraltet == SchemaRevisionen.UNDEFINED)
+		if (veraltet == SchemaRevisionen.UNDEFINED) {
 			throw new RuntimeException("Die Revision, ab wann eine Tabelle veraltet ist kann nicht auf undefiniert gesetzt werden. Dies ist bereits der"
 					+ " Default-Wert.");
+		}
 		this._veraltet = veraltet;
 	}
 
@@ -169,8 +174,9 @@ public class SchemaTabelle {
 	 */
 	public void setPKAutoIncrement() {
 		this._pkAutoIncrement = true;
-		if ((_pkSpalten.size() > 1) || ((_pkSpalten.size() == 1) && (!_pkSpalten.iterator().next().datentyp().isIntType())))
+		if ((_pkSpalten.size() > 1) || ((_pkSpalten.size() == 1) && (!_pkSpalten.iterator().next().datentyp().isIntType()))) {
 			throw new RuntimeException("Ein Primärschlüssel mit Auto-Inkrement muss aus einer Spalte mit ganzzahligen Werten bestehen.");
+		}
 	}
 
 	/**
@@ -328,8 +334,9 @@ public class SchemaTabelle {
 		_mapSpalten.put(name, col);
 		if (pk) {
 			_pkSpalten.add(col);
-			if ((this._pkAutoIncrement) && ((_pkSpalten.size() != 1) || (!typ.isIntType())))
+			if ((this._pkAutoIncrement) && ((_pkSpalten.size() != 1) || (!typ.isIntType()))) {
 				throw new RuntimeException("Ein Primärschlüssel mit Auto-Inkrement muss aus einer Spalte mit ganzzahligen Werten bestehen.");
+			}
 		}
 		return col;
 	}
@@ -357,21 +364,26 @@ public class SchemaTabelle {
 	@SafeVarargs
 	public final SchemaTabelleFremdschluessel addForeignKey(final String name, final SchemaFremdschluesselAktionen onUpdate,
 			final SchemaFremdschluesselAktionen onDelete, final Pair<SchemaTabelleSpalte, SchemaTabelleSpalte>... referenziert) {
-		if (referenziert.length <= 0)
+		if (referenziert.length <= 0) {
 			throw new RuntimeException("Ein Fremdschlüssel muss mindestens eine fremde Spalte referenzieren.");
+		}
 		SchemaTabelle tabReferenziert = null;
 		final ArrayList<SchemaTabelleSpalte> spalten = new ArrayList<>();
 		final ArrayList<SchemaTabelleSpalte> spaltenReferenziert = new ArrayList<>();
 		for (final Pair<SchemaTabelleSpalte, SchemaTabelleSpalte> ref : referenziert) {
-			if (ref.a.tabelle() != this)
+			if (ref.a.tabelle() != this) {
 				throw new RuntimeException("Die Tabelle der ersten Spalte muss diese Tabelle referenzieren.");
-			if (tabReferenziert == null)
+			}
+			if (tabReferenziert == null) {
 				tabReferenziert = ref.b.tabelle();
-			if (ref.b.tabelle() == this)
+			}
+			if (ref.b.tabelle() == this) {
 				throw new RuntimeException(
 						"Die Tabelle der zweiten Spalte darf nicht dieser Tabelle entsprechen. Die Tabelle kann nicht auf sich selbst verweisen");
-			if (ref.b.tabelle() != tabReferenziert)
+			}
+			if (ref.b.tabelle() != tabReferenziert) {
 				throw new RuntimeException("Die zweiten Spalten müssen immer zu der gleichen Tabelle gehören.");
+			}
 			spalten.add(ref.a);
 			spaltenReferenziert.add(ref.b);
 		}
@@ -432,8 +444,9 @@ public class SchemaTabelle {
 	 * @param coreType    die Klasse mit den Informationen zur des Core-Types
 	 */
 	public void setCoreType(final SchemaTabelleCoreType coreType) {
-		if (_coreType != null)
+		if (_coreType != null) {
 			throw new RuntimeException("Der Tabelle wurde bereits zuvor ein Core-Type zugeordnet. Zwei Zuordnungen sind nicht zulässig.");
+		}
 		_coreType = coreType;
 	}
 
@@ -506,10 +519,12 @@ public class SchemaTabelle {
 	 * @return der Name der Java-Klasse
 	 */
 	public String getJavaKlasse(final long rev) {
-		if (rev > 0)
+		if (rev > 0) {
 			return "Dev" + _javaClassName;
-		if (rev == 0)
+		}
+		if (rev == 0) {
 			return "Migration" + _javaClassName;
+		}
 		return _javaClassName;
 	}
 
@@ -588,8 +603,9 @@ public class SchemaTabelle {
 						|| ((rev != -1) && (rev >= fk.revision().revision) && ((fk.veraltet().revision == -1) || (rev < fk.veraltet().revision))))
 				.map(fk -> fk.getSQL())
 				.collect(Collectors.joining("," + System.lineSeparator() + "  "));
-		if ((result == null) || ("".equals(result)))
+		if ((result == null) || ("".equals(result))) {
 			return "";
+		}
 		return "," + System.lineSeparator() + "  " + result;
 	}
 
@@ -624,8 +640,9 @@ public class SchemaTabelle {
 						|| ((rev != -1) && (rev >= uc.revision().revision) && ((uc.veraltet().revision == -1) || (rev < uc.veraltet().revision))))
 				.map(uc -> uc.getSQL())
 				.collect(Collectors.joining("," + System.lineSeparator() + "  "));
-		if ((result == null) || ("".equals(result)))
+		if ((result == null) || ("".equals(result))) {
 			return "";
+		}
 		return "," + System.lineSeparator() + "  " + result;
 	}
 
@@ -659,16 +676,19 @@ public class SchemaTabelle {
 		// Lese die einzelnen Trigger aus
 		final ArrayList<String> sqlTrigger = new ArrayList<>();
 		for (final SchemaTabelleTrigger t : this._trigger) {
-			if (!dbms.equals(t.dbms()))
+			if (!dbms.equals(t.dbms())) {
 				continue;
+			}
 			// Prüfe, ab wann die Trigger gültig bzw. ungültig sind
 			if (create) {
 				if (((rev == -1) && (t.veraltet().revision == -1))
-						|| ((rev != -1) && (rev >= t.revision().revision) && ((t.veraltet().revision == -1) || (rev < t.veraltet().revision))))
+						|| ((rev != -1) && (rev >= t.revision().revision) && ((t.veraltet().revision == -1) || (rev < t.veraltet().revision)))) {
 					sqlTrigger.add(t.getSQL(dbms, true));
+				}
 			} else {
-				if ((t.veraltet().revision >= 0) && (rev >= t.veraltet().revision))
+				if ((t.veraltet().revision >= 0) && (rev >= t.veraltet().revision)) {
 					sqlTrigger.add(t.getSQL(dbms, false));
+				}
 			}
 		}
 		sqlTrigger.addAll(this.getPrimaerschluesselTriggerSQLList(dbms, rev, create));
@@ -714,8 +734,9 @@ public class SchemaTabelle {
 		final var iter = pkSpalten().iterator();
 		for (int i = 0; i < pkSpalten().size(); i++) {
 			final SchemaTabelleSpalte col = iter.next();
-			if (i > 0)
+			if (i > 0) {
 				sb.append(" AND ");
+			}
 			sb.append("e.").append(col.javaAttributName()).append(" = ?").append(i + 1);
 		}
 		return sb.toString();
@@ -728,8 +749,9 @@ public class SchemaTabelle {
 	 * @return der SQL-String für das Erstellen des Primärschlüssels
 	 */
 	public String getPrimaerschluesselSQL() {
-		if (_pkSpalten.isEmpty())
+		if (_pkSpalten.isEmpty()) {
 			return "";
+		}
 		return _pkSpalten.stream().map(spalte -> spalte.name()).collect(Collectors.joining(", ", "CONSTRAINT PK_" + this._name + " PRIMARY KEY (", ")"));
 	}
 
@@ -746,16 +768,18 @@ public class SchemaTabelle {
 	 */
 	public List<String> getPrimaerschluesselTriggerSQLList(final DBDriver dbms, final long rev, final boolean create) {
 		final ArrayList<String> result = new ArrayList<>();
-		if ((!this._pkAutoIncrement) || (this._pkSpalten.size() != 1))
+		if ((!this._pkAutoIncrement) || (this._pkSpalten.size() != 1)) {
 			return result;
+		}
 		// DBDriver.MDB wird hier nicht unterstützt !!!
 		final String tab = this._name;
 		final String spalte = this._pkSpalten.iterator().next().name();
 		final String newline = System.lineSeparator();
 		if (create) {
 			if (!(((rev == -1) && (this.veraltet().revision == -1))
-					|| ((rev != -1) && (rev >= this.revision().revision) && ((this.veraltet().revision == -1) || (rev < this.veraltet().revision)))))
+					|| ((rev != -1) && (rev >= this.revision().revision) && ((this.veraltet().revision == -1) || (rev < this.veraltet().revision))))) {
 				return result;
+			}
 			if (DBDriver.MARIA_DB.equals(dbms) || DBDriver.MYSQL.equals(dbms)) {
 				result.add("CREATE OR REPLACE TRIGGER t_AutoIncrement_INSERT_" + tab + newline
 						+ "BEFORE INSERT" + newline
@@ -959,8 +983,9 @@ public class SchemaTabelle {
 								+ "END;\r\n");
 			}
 		} else {
-			if ((this.veraltet().revision < 0) || (rev < this.veraltet().revision))
+			if ((this.veraltet().revision < 0) || (rev < this.veraltet().revision)) {
 				return result;
+			}
 			if (DBDriver.MARIA_DB.equals(dbms) || DBDriver.MYSQL.equals(dbms)) {
 				result.add("DROP TRIGGER IF EXISTS t_AutoIncrement_INSERT_" + tab + ";");
 				result.add("DROP TRIGGER IF EXISTS t_AutoIncrement_UPDATE_" + tab + ";");

@@ -66,8 +66,9 @@ public class ConnectionFactory {
 	 * @return der neue JPA {@link EntityManager}
 	 */
 	EntityManager getNewJPAEntityManager() {
-		if (emf == null)
+		if (emf == null) {
 			return null;
+		}
 		return emf.createEntityManager();
 	}
 
@@ -119,16 +120,19 @@ public class ConnectionFactory {
 		ConnectionManager.instance.lock();
 		try {
 			// Prüfe zunächst, ob noch eine offene Verbindung existiert. Ist dies der Fall, so darf die Factory noch nicht geschlossen werden
-			if (!connections.isEmpty())
+			if (!connections.isEmpty()) {
 				return;
+			}
 			// Wenn in der Zwischenzeit nicht mindestens CONNECTION_CLEANUP_INTERVAL an Zeit vergangen ist, dann gab
 			// es zwischendurch eine weitere Verbindung und dieser Thread ist nicht mehr zuständig
 			final long now = System.currentTimeMillis();
-			if (now - tsLastConnection < CONNECTION_CLEANUP_INTERVAL)
+			if (now - tsLastConnection < CONNECTION_CLEANUP_INTERVAL) {
 				return;
+			}
 			// Ansonsten muss die Factory geschlossen werden, sofern dies nicht zwischenzeitlich passiert ist...
-			if (ConnectionManager.instance.hasFactory(config))
+			if (ConnectionManager.instance.hasFactory(config)) {
 				ConnectionManager.instance.closeSingle(config);
+			}
 		} finally {
 			ConnectionManager.instance.unlock();
 		}
@@ -143,8 +147,9 @@ public class ConnectionFactory {
 	void close(final DBEntityManager conn) {
 		ConnectionManager.instance.lock();
 		try {
-			if (emf == null)
+			if (emf == null) {
 				return;
+			}
 			tsLastConnection = System.currentTimeMillis();
 			connections.remove(conn);
 			// Wenn keine Verbindungen mehr da sind und es sich nicht um ein Schema aus der SVWS-Konfiguration handelt, dann kann die Factory geschlossen werden...
@@ -203,8 +208,9 @@ public class ConnectionFactory {
 			} catch (@SuppressWarnings("unused") final IOException e) {
 				password = "";
 			}
-			if (config.createDBFile())
+			if (config.createDBFile()) {
 				url += ";newdatabaseversion=V2000";
+			}
 			propertyMap.put("eclipselink.jpa.uppercase-column-names", "true");
 		}
 		final String sessionName = "SVWSDB_url=" + url + "_user=" + config.getUsername() + "_random=" + random.ints(48, 123)  // from 0 to z

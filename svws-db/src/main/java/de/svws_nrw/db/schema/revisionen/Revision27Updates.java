@@ -1,4 +1,4 @@
-package de.svws_nrw.db.schema.revisionen;
+ package de.svws_nrw.db.schema.revisionen;
 
 import java.util.List;
 import java.util.Map;
@@ -30,8 +30,9 @@ public final class Revision27Updates extends SchemaRevisionUpdateSQL {
 			final String jgAlt, final String bedingung) throws DBException {
 		logger.logLn("- %s: Setzte den ASD-Jahrgang auf '%s', wenn zuvor '%s' gesetzt war.".formatted(tabname, jgNeu, jgAlt));
 		final String sql = "UPDATE %1$s SET %2$s = '%3$s' WHERE %2$s = '%4$s'%5$s".formatted(tabname, colname, jgNeu, jgAlt, bedingung);
-		if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+		if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 			throw new DBException("Fehler beim Korrigieren des ASD-Jahrgangs");
+		}
 	}
 
 
@@ -56,8 +57,9 @@ public final class Revision27Updates extends SchemaRevisionUpdateSQL {
 			return true;
 		}
 		// Die folgenden Korrektur sind nur für die Schulform WB vorgesehen...
-		if (!schulformKrz.equals("WB"))
+		if (!schulformKrz.equals("WB")) {
 			return true;
+		}
 
 		// Aktualisiere die ASD-Jahrgangs-Einträge
 		final Map<String, String> mapJg = Map.of("S1", "01", "S2", "02", "S3", "03", "S4", "04", "S5", "05", "S6", "06");
@@ -82,8 +84,9 @@ public final class Revision27Updates extends SchemaRevisionUpdateSQL {
 						jg.getKey(), jg.getValue()));
 				final String sql = "UPDATE %1$s SET %2$s = CONCAT('%3$s', SUBSTRING(%2$s, 3)) WHERE %2$s LIKE '%4$s%%'".formatted(Schema.tab_Klassen.name(),
 						Schema.tab_Klassen.col_ASDKlasse.name(), jg.getKey(), jg.getValue());
-				if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+				if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 					throw new DBException("Fehler beim Korrigieren der ASDKlasse");
+				}
 
 			}
 		} catch (final DBException e) {

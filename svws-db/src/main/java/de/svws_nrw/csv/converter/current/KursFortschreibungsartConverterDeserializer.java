@@ -18,7 +18,7 @@ public final class KursFortschreibungsartConverterDeserializer extends StdDeseri
 	private static final long serialVersionUID = 1871702485070815240L;
 
 	/**
-	 * Erzeugt einen neuen Deerialisierer
+	 * Erzeugt einen neuen Deserialisierer
 	 */
 	public KursFortschreibungsartConverterDeserializer() {
 		super(KursFortschreibungsart.class);

@@ -25,20 +25,24 @@ public final class Revision37Updates extends SchemaRevisionUpdateSQL {
 
 	private static void dropTrigger(final DBEntityManager conn, final Logger logger, final SchemaTabelleTrigger trig) throws DBException {
 		final var sql = trig.getSQL(conn.getDBDriver(), false);
-		if ((sql == null) || ("".equals(sql)))
+		if ((sql == null) || ("".equals(sql))) {
 			throw new DBException("Kein SQL-Befehl für das Entfernen des Triggers " + trig.name() + " vorhanden");
-		if (conn.transactionNativeUpdateAndFlush(sql) == Integer.MIN_VALUE)
+		}
+		if (conn.transactionNativeUpdateAndFlush(sql) == Integer.MIN_VALUE) {
 			throw new DBException("Fehler beim Entfernen des Trigger " + trig.name());
+		}
 		logger.logLn("  ... entfernt");
 	}
 
 	private static void createTrigger(final DBEntityManager conn, final Logger logger, final SchemaTabelleTrigger trig) throws DBException {
 		final String sql = trig.getSQL(conn.getDBDriver(), true);
-		if ((sql == null) || ("".equals(sql)))
+		if ((sql == null) || ("".equals(sql))) {
 			throw new DBException("Kein SQL-Befehl für das Erstellen des Triggers " + trig.name() + " vorhanden");
+		}
 		logger.logLn(trig.name());
-		if (conn.transactionExecuteWithJDBCConnection(sql) == Integer.MIN_VALUE)
+		if (conn.transactionExecuteWithJDBCConnection(sql) == Integer.MIN_VALUE) {
 			throw new DBException("Fehler beim Erstellen des Trigger " + trig.name());
+		}
 		logger.logLn("  ...neu erstellt");
 	}
 

@@ -23,8 +23,9 @@ public final class AbiturBelegungsartConverter extends DBAttributeConverter<Abit
 
 	@Override
 	public String convertToDatabaseColumn(final AbiturBelegungsart value) {
-		if (value == null)
+		if (value == null) {
 			return AbiturBelegungsart.NICHT_BELEGT.toString();
+		}
 		return value.toString();
 	}
 

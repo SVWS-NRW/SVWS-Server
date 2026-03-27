@@ -53,11 +53,13 @@ public class SchemaTabelleUniqueIndex {
 	 * @return dieses Objekt
 	 */
 	public SchemaTabelleUniqueIndex setRevision(final SchemaRevisionen revision) {
-		if (revision == SchemaRevisionen.UNDEFINED)
+		if (revision == SchemaRevisionen.UNDEFINED) {
 			throw new RuntimeException("Die Revision eines Index kann nicht auf undefiniert gesetzt werden.");
-		if (revision.revision <= this._revision.revision)
+		}
+		if (revision.revision <= this._revision.revision) {
 			throw new RuntimeException("Die Revision eines Index kann nur Überschrieben werden, wenn die Revision größer ist als die,"
 					+ " welche bei der Tabelle gesetzt ist.");
+		}
 		this._revision = revision;
 		return this;
 	}
@@ -71,12 +73,14 @@ public class SchemaTabelleUniqueIndex {
 	 * @return dieses Objekt
 	 */
 	public SchemaTabelleUniqueIndex setVeraltet(final SchemaRevisionen veraltet) {
-		if (veraltet == SchemaRevisionen.UNDEFINED)
+		if (veraltet == SchemaRevisionen.UNDEFINED) {
 			throw new RuntimeException("Die Revision, wann ein Index veraltet, kann nicht auf undefiniert gesetzt werden, da in diesem Fall"
 					+ " das Erben des Veraltet-Attributes der Tabelle vorrangig ist.");
-		if ((this._veraltet != SchemaRevisionen.UNDEFINED) && (veraltet.revision >= this._veraltet.revision))
+		}
+		if ((this._veraltet != SchemaRevisionen.UNDEFINED) && (veraltet.revision >= this._veraltet.revision)) {
 			throw new RuntimeException("Die Revision, wann ein Index veraltet, kann nicht auf eine Revision größer oder gleich der Revision gesetzt werden,"
 					+ " wo die zugehörige Tabelle veraltet.");
+		}
 		this._veraltet = veraltet;
 		return this;
 	}

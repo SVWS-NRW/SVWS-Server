@@ -27,7 +27,7 @@ public final class GeschlechtConverterDeserializer extends StdDeserializer<Gesch
 
 
 	/**
-	 * Erzeugt einen neuen Deerialisierer unter Angabe der {@link Class}
+	 * Erzeugt einen neuen Deserialisierer unter Angabe der {@link Class}
 	 *
 	 * @param vc   das Klassen-Objekt
 	 */

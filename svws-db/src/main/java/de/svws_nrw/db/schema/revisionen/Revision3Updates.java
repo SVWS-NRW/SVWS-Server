@@ -58,10 +58,11 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 	private static boolean entferneQuartalsmodus(final DBEntityManager conn, final Logger logger) {
 		final List<Integer> rowsAnzahlAbschnitte = conn.queryNative("SELECT AnzahlAbschnitte FROM EigeneSchule");
 		int anzahlAbschnitte = -1;
-		if ((rowsAnzahlAbschnitte.size() != 1) || (rowsAnzahlAbschnitte.get(0) == null))
+		if ((rowsAnzahlAbschnitte.size() != 1) || (rowsAnzahlAbschnitte.get(0) == null)) {
 			logger.logLn("Konnte die Anzahl der Abschnitte nicht bestimmen.");
-		else
+		} else {
 			anzahlAbschnitte = rowsAnzahlAbschnitte.get(0);
+		}
 		if (anzahlAbschnitte == 4) {
 			logger.logLn(
 					"Im Anschluss - Die Schule wurde in Schild 2 im \"Quartalsmodus\" betrieben und wird im folgenden auf den Betrieb mit Halbjahren umgestellt:");
@@ -721,43 +722,56 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 						finalAbsBis = (Integer) eintragSprachenfolge[iAbsBis];
 						finalReihenfolge = (Integer) eintragSprachenfolge[iReihenfolge];
 						if ((finalNiveau == null)
-								|| (((eintragSprachenfolge[iNiveau]) != null) && ((finalNiveau.compareTo((String) eintragSprachenfolge[iNiveau])) < 0)))
+								|| (((eintragSprachenfolge[iNiveau]) != null) && ((finalNiveau.compareTo((String) eintragSprachenfolge[iNiveau])) < 0))) {
 							finalNiveau = (String) eintragSprachenfolge[iNiveau];
-						if (finalKlLat < ((Integer) eintragSprachenfolge[iKlLat]))
+						}
+						if (finalKlLat < ((Integer) eintragSprachenfolge[iKlLat])) {
 							finalKlLat = (Integer) eintragSprachenfolge[iKlLat];
-						if (finalLat < ((Integer) eintragSprachenfolge[iLat]))
+						}
+						if (finalLat < ((Integer) eintragSprachenfolge[iLat])) {
 							finalLat = (Integer) eintragSprachenfolge[iLat];
-						if (finalGrae < ((Integer) eintragSprachenfolge[iGrae]))
+						}
+						if (finalGrae < ((Integer) eintragSprachenfolge[iGrae])) {
 							finalGrae = (Integer) eintragSprachenfolge[iGrae];
-						if (finalHeb < ((Integer) eintragSprachenfolge[iHeb]))
+						}
+						if (finalHeb < ((Integer) eintragSprachenfolge[iHeb])) {
 							finalHeb = (Integer) eintragSprachenfolge[iHeb];
+						}
 					} else {
 						// Der aktuell betrachtete Eintrag beginnt vor bzw. mit dem bisher als final gesetzen Sprachbelegungsende. Verschmelze daher beide Einträge.
 						if ((jgAktuellBeginn.compareTo(jgFinalBeginn) == 0)
 								&& (((finalAbsVon == null) && (eintragSprachenfolge[iAbsVon] != null)) || ((finalAbsVon != null)
-										&& (eintragSprachenfolge[iAbsVon] != null) && (((Integer) eintragSprachenfolge[iAbsVon]) < finalAbsVon))))
+										&& (eintragSprachenfolge[iAbsVon] != null) && (((Integer) eintragSprachenfolge[iAbsVon]) < finalAbsVon)))) {
 							finalAbsVon = (Integer) eintragSprachenfolge[iAbsVon];
+						}
 						if ((jgFinalEnde != null) && ((jgAktuellEnde == null) || (jgAktuellEnde.compareTo(jgFinalEnde) > 0))) {
 							finalASDBis = (String) eintragSprachenfolge[iASDBis];
-							if (finalASDBis == null)
+							if (finalASDBis == null) {
 								finalAbsBis = null;
-							else
+							} else {
 								finalAbsBis = (Integer) eintragSprachenfolge[iAbsBis];
+							}
 						}
 						if (((finalReihenfolge == null) && ((eintragSprachenfolge[iReihenfolge]) != null)) || ((finalReihenfolge != null)
-								&& ((eintragSprachenfolge[iReihenfolge]) != null) && (((Integer) eintragSprachenfolge[iReihenfolge]) < finalReihenfolge)))
+								&& ((eintragSprachenfolge[iReihenfolge]) != null) && (((Integer) eintragSprachenfolge[iReihenfolge]) < finalReihenfolge))) {
 							finalReihenfolge = (Integer) eintragSprachenfolge[iReihenfolge];
+						}
 						if ((finalNiveau == null)
-								|| (((eintragSprachenfolge[iNiveau]) != null) && ((finalNiveau.compareTo((String) eintragSprachenfolge[iNiveau])) < 0)))
+								|| (((eintragSprachenfolge[iNiveau]) != null) && ((finalNiveau.compareTo((String) eintragSprachenfolge[iNiveau])) < 0))) {
 							finalNiveau = (String) eintragSprachenfolge[iNiveau];
-						if (finalKlLat < ((Integer) eintragSprachenfolge[iKlLat]))
+						}
+						if (finalKlLat < ((Integer) eintragSprachenfolge[iKlLat])) {
 							finalKlLat = (Integer) eintragSprachenfolge[iKlLat];
-						if (finalLat < ((Integer) eintragSprachenfolge[iLat]))
+						}
+						if (finalLat < ((Integer) eintragSprachenfolge[iLat])) {
 							finalLat = (Integer) eintragSprachenfolge[iLat];
-						if (finalGrae < ((Integer) eintragSprachenfolge[iGrae]))
+						}
+						if (finalGrae < ((Integer) eintragSprachenfolge[iGrae])) {
 							finalGrae = (Integer) eintragSprachenfolge[iGrae];
-						if (finalHeb < ((Integer) eintragSprachenfolge[iHeb]))
+						}
+						if (finalHeb < ((Integer) eintragSprachenfolge[iHeb])) {
 							finalHeb = (Integer) eintragSprachenfolge[iHeb];
+						}
 					}
 				}
 			}
@@ -785,31 +799,39 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 
 					if ((jgFinalEnde != null) && ((jgAktuellEnde == null) || (jgAktuellEnde.compareTo(jgFinalEnde) > 0))) {
 						finalASDBis = (String) eintragSprachenfolge[iASDBis];
-						if (finalASDBis == null)
+						if (finalASDBis == null) {
 							finalAbsBis = null;
-						else
+						} else {
 							finalAbsBis = (Integer) eintragSprachenfolge[iAbsBis];
+						}
 					}
 					if (((finalReihenfolge == null) && ((eintragSprachenfolge[iReihenfolge]) != null)) || ((finalReihenfolge != null)
-							&& ((eintragSprachenfolge[iReihenfolge]) != null) && (((Integer) eintragSprachenfolge[iReihenfolge]) < finalReihenfolge)))
+							&& ((eintragSprachenfolge[iReihenfolge]) != null) && (((Integer) eintragSprachenfolge[iReihenfolge]) < finalReihenfolge))) {
 						finalReihenfolge = (Integer) eintragSprachenfolge[iReihenfolge];
+					}
 					if ((finalNiveau == null)
-							|| (((eintragSprachenfolge[iNiveau]) != null) && ((finalNiveau.compareTo((String) eintragSprachenfolge[iNiveau])) < 0)))
+							|| (((eintragSprachenfolge[iNiveau]) != null) && ((finalNiveau.compareTo((String) eintragSprachenfolge[iNiveau])) < 0))) {
 						finalNiveau = (String) eintragSprachenfolge[iNiveau];
-					if (finalKlLat < ((Integer) eintragSprachenfolge[iKlLat]))
+					}
+					if (finalKlLat < ((Integer) eintragSprachenfolge[iKlLat])) {
 						finalKlLat = (Integer) eintragSprachenfolge[iKlLat];
-					if (finalLat < ((Integer) eintragSprachenfolge[iLat]))
+					}
+					if (finalLat < ((Integer) eintragSprachenfolge[iLat])) {
 						finalLat = (Integer) eintragSprachenfolge[iLat];
-					if (finalGrae < ((Integer) eintragSprachenfolge[iGrae]))
+					}
+					if (finalGrae < ((Integer) eintragSprachenfolge[iGrae])) {
 						finalGrae = (Integer) eintragSprachenfolge[iGrae];
-					if (finalHeb < ((Integer) eintragSprachenfolge[iHeb]))
+					}
+					if (finalHeb < ((Integer) eintragSprachenfolge[iHeb])) {
 						finalHeb = (Integer) eintragSprachenfolge[iHeb];
+					}
 				}
 			}
 
 			// Falls kein Eintrag übernommen wurde, ist ein unerwarteter Fehler aufgetreten.
-			if (finalID == null)
+			if (finalID == null) {
 				resultVorbereitung = false;
+			}
 
 			// Nur wenn bisher kein Fehler aufgetreten ist, aktualisiere die Datenbank.
 			if (resultVorbereitung) {
@@ -818,9 +840,9 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 					final Long idToDelete = (Long) objects[iID];
 					if (!idToDelete.equals(finalID)) {
 						final int removed = conn.transactionNativeDeleteAndFlush("DELETE FROM SchuelerSprachenfolge WHERE ID = %d".formatted(idToDelete));
-						if (removed == 1)
+						if (removed == 1) {
 							logger.logLn("Datensatz mit der ID %d in SchuelerSprachenfolge wurde entfernt.".formatted(idToDelete));
-						else {
+						} else {
 							logger.logLn("[Fehler] Datensatz mit der ID %d in SchuelerSprachenfolge konnte nicht entfernt werden.".formatted(idToDelete));
 							resultVorbereitung = false;
 						}
@@ -830,9 +852,9 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 					final Long idToDelete = (Long) objects[iID];
 					if (!idToDelete.equals(finalID)) {
 						final int removed = conn.transactionNativeDeleteAndFlush("DELETE FROM SchuelerSprachenfolge WHERE ID = %d".formatted(idToDelete));
-						if (removed == 1)
+						if (removed == 1) {
 							logger.logLn("Datensatz mit der ID %d in SchuelerSprachenfolge wurde entfernt.".formatted(idToDelete));
-						else {
+						} else {
 							logger.logLn("[Fehler] Datensatz mit der ID %d in SchuelerSprachenfolge konnte nicht entfernt werden.".formatted(idToDelete));
 							resultVorbereitung = false;
 						}
@@ -850,9 +872,9 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 								convertToSQL(finalKlLat), convertToSQL(finalLat), convertToSQL(finalGrae), convertToSQL(finalHeb), finalID);
 
 				final int updated = conn.transactionNativeUpdateAndFlush(updateCommand);
-				if (updated == 1)
+				if (updated == 1) {
 					logger.logLn("Datensatz mit der ID %d in SchuelerSprachenfolge wurde aktualisiert.".formatted(finalID));
-				else {
+				} else {
 					logger.logLn("[Fehler] Datensatz mit der ID  %d in SchuelerSprachenfolge konnte nicht aktualisiert werden.".formatted(finalID));
 					resultVorbereitung = false;
 				}
@@ -881,47 +903,60 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 
 		// Werte normalisieren
 		for (final Object[] eintragSprachenfolge : listDuplikateSprachenfolge) {
-			if (setBeginnNull)
+			if (setBeginnNull) {
 				eintragSprachenfolge[iASDVon] = null;
+			}
 
-			if ((eintragSprachenfolge[iASDVon] != null) && eintragSprachenfolge[iASDVon].toString().isEmpty())
+			if ((eintragSprachenfolge[iASDVon] != null) && eintragSprachenfolge[iASDVon].toString().isEmpty()) {
 				eintragSprachenfolge[iASDVon] = null;
-			if (eintragSprachenfolge[iASDVon] == null)
+			}
+			if (eintragSprachenfolge[iASDVon] == null) {
 				eintragSprachenfolge[iAbsVon] = null;
+			}
 			if (eintragSprachenfolge[iASDVon] != null) {
-				if ((eintragSprachenfolge[iAbsVon] != null) && (((Short) eintragSprachenfolge[iAbsVon]) <= 1))
+				if ((eintragSprachenfolge[iAbsVon] != null) && (((Short) eintragSprachenfolge[iAbsVon]) <= 1)) {
 					eintragSprachenfolge[iAbsVon] = 1;
-				else if ((eintragSprachenfolge[iAbsVon] != null) && (((Short) eintragSprachenfolge[iAbsVon]) >= 2))
+				} else if ((eintragSprachenfolge[iAbsVon] != null) && (((Short) eintragSprachenfolge[iAbsVon]) >= 2)) {
 					eintragSprachenfolge[iAbsVon] = 2;
-				else
+				} else {
 					eintragSprachenfolge[iAbsVon] = null;
+				}
 			}
 
-			if ((eintragSprachenfolge[iASDBis] != null) && eintragSprachenfolge[iASDBis].toString().isEmpty())
+			if ((eintragSprachenfolge[iASDBis] != null) && eintragSprachenfolge[iASDBis].toString().isEmpty()) {
 				eintragSprachenfolge[iASDBis] = null;
-			if (eintragSprachenfolge[iASDBis] == null)
+			}
+			if (eintragSprachenfolge[iASDBis] == null) {
 				eintragSprachenfolge[iAbsBis] = null;
+			}
 			if (eintragSprachenfolge[iASDBis] != null) {
-				if ((eintragSprachenfolge[iAbsBis] != null) && (((Short) eintragSprachenfolge[iAbsBis]) <= 1))
+				if ((eintragSprachenfolge[iAbsBis] != null) && (((Short) eintragSprachenfolge[iAbsBis]) <= 1)) {
 					eintragSprachenfolge[iAbsBis] = 1;
-				else if ((eintragSprachenfolge[iAbsBis] != null) && (((Short) eintragSprachenfolge[iAbsBis]) >= 2))
+				} else if ((eintragSprachenfolge[iAbsBis] != null) && (((Short) eintragSprachenfolge[iAbsBis]) >= 2)) {
 					eintragSprachenfolge[iAbsBis] = 2;
-				else
+				} else {
 					eintragSprachenfolge[iAbsBis] = null;
+				}
 			}
 
-			if ((eintragSprachenfolge[iReihenfolge] != null) && (((Integer) eintragSprachenfolge[iReihenfolge]) <= 0))
+			if ((eintragSprachenfolge[iReihenfolge] != null) && (((Integer) eintragSprachenfolge[iReihenfolge]) <= 0)) {
 				eintragSprachenfolge[iReihenfolge] = null;
-			if ((eintragSprachenfolge[iNiveau] != null) && eintragSprachenfolge[iNiveau].toString().isEmpty())
+			}
+			if ((eintragSprachenfolge[iNiveau] != null) && eintragSprachenfolge[iNiveau].toString().isEmpty()) {
 				eintragSprachenfolge[iNiveau] = null;
-			if ((eintragSprachenfolge[iKlLat] == null) || ((((Integer) eintragSprachenfolge[iKlLat]) != 0) && (((Integer) eintragSprachenfolge[iKlLat]) != 1)))
+			}
+			if ((eintragSprachenfolge[iKlLat] == null) || ((((Integer) eintragSprachenfolge[iKlLat]) != 0) && (((Integer) eintragSprachenfolge[iKlLat]) != 1))) {
 				eintragSprachenfolge[iKlLat] = 0;
-			if ((eintragSprachenfolge[iLat] == null) || ((((Integer) eintragSprachenfolge[iLat]) != 0) && (((Integer) eintragSprachenfolge[iLat]) != 1)))
+			}
+			if ((eintragSprachenfolge[iLat] == null) || ((((Integer) eintragSprachenfolge[iLat]) != 0) && (((Integer) eintragSprachenfolge[iLat]) != 1))) {
 				eintragSprachenfolge[iLat] = 0;
-			if ((eintragSprachenfolge[iGrae] == null) || ((((Integer) eintragSprachenfolge[iGrae]) != 0) && (((Integer) eintragSprachenfolge[iGrae]) != 1)))
+			}
+			if ((eintragSprachenfolge[iGrae] == null) || ((((Integer) eintragSprachenfolge[iGrae]) != 0) && (((Integer) eintragSprachenfolge[iGrae]) != 1))) {
 				eintragSprachenfolge[iGrae] = 0;
-			if ((eintragSprachenfolge[iHeb] == null) || ((((Integer) eintragSprachenfolge[iHeb]) != 0) && (((Integer) eintragSprachenfolge[iHeb]) != 1)))
+			}
+			if ((eintragSprachenfolge[iHeb] == null) || ((((Integer) eintragSprachenfolge[iHeb]) != 0) && (((Integer) eintragSprachenfolge[iHeb]) != 1))) {
 				eintragSprachenfolge[iHeb] = 0;
+			}
 		}
 	}
 
@@ -941,8 +976,9 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 			return false;
 		}
 
-		if (!entferneQuartalsmodus(conn, logger))
+		if (!entferneQuartalsmodus(conn, logger)) {
 			return false;
+		}
 
 		return bereiteSprachenfolgeFuerUniqueConstraintVor(conn, logger);
 	}

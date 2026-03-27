@@ -30,16 +30,18 @@ public final class UhrzeitConverter extends DBAttributeConverter<Integer, Timest
 
 	@Override
 	public Timestamp convertToDatabaseColumn(final Integer attribute) {
-		if ((attribute == null) || (attribute < 0) || (attribute >= 1440)) // 24*60 = 1440
+		if ((attribute == null) || (attribute < 0) || (attribute >= 1440)) { // 24*60 = 1440
 			return null;
+		}
 		final String timeStr = "%02d:%02d".formatted(attribute / 60, attribute % 60);
 		return Timestamp.valueOf(LocalTime.parse(timeStr).atDate(LocalDate.of(1970, 1, 1)));
 	}
 
 	@Override
 	public Integer convertToEntityAttribute(final Timestamp dbData) {
-		if (dbData == null)
+		if (dbData == null) {
 			return null;
+		}
 		final LocalTime time = dbData.toLocalDateTime().toLocalTime();
 		return (time.getHour() * 60) + time.getMinute();
 	}

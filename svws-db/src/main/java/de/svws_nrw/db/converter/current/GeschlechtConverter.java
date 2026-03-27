@@ -33,8 +33,9 @@ public final class GeschlechtConverter extends DBAttributeConverter<Geschlecht, 
 
 	@Override
 	public Geschlecht convertToEntityAttribute(final Integer dbData) {
-		if (dbData == null)
+		if (dbData == null) {
 			return Geschlecht.X;
+		}
 		return Geschlecht.fromValue(dbData);
 	}
 

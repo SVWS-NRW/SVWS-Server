@@ -1254,8 +1254,9 @@ public final class Schema {
 	 * @return eine Liste mit den Tabellen
 	 */
 	public static @NotNull List<SchemaTabelle> tabellen() {
-		if (_alleTabellen == null)
+		if (_alleTabellen == null) {
 			_alleTabellen = new ArrayList<>(_tabellen);
+		}
 		return _alleTabellen;
 	}
 

@@ -13,10 +13,10 @@ public class SchemaTabelleFremdschluessel {
 	/** Der Name des Fremdschlüssels */
 	private final String _name;
 
-	/** Die Tabelle, der dieser Fremdschluessel zugeordnet ist */
+	/** Die Tabelle, der dieser Fremdschlüssel zugeordnet ist */
 	private final SchemaTabelle _tabelle;
 
-	/** Die Tabelle, die dieser Fremdschluessel referenziert */
+	/** Die Tabelle, die dieser Fremdschlüssel referenziert */
 	private final SchemaTabelle _tabelleReferenziert;
 
 	/** Die Spalten dieser Tabelle */
@@ -31,10 +31,10 @@ public class SchemaTabelleFremdschluessel {
 	/** Die Aktion bei dem Entfernen des referenzierten Schlüsselwertes */
 	private final SchemaFremdschluesselAktionen _onDelete;
 
-	/** Die Revision, ab wann der Fremdschluessel gültig ist. */
+	/** Die Revision, ab wann der Fremdschlüssel gültig ist. */
 	private SchemaRevisionen _revision;
 
-	/** Die Revision, ab wann der Fremdschluessel veraltet ist, sofern er veraltet ist, ansonsten {@link SchemaRevisionen#UNDEFINED} */
+	/** Die Revision, ab wann der Fremdschlüssel veraltet ist, sofern er veraltet ist, ansonsten {@link SchemaRevisionen#UNDEFINED} */
 	private SchemaRevisionen _veraltet;
 
 
@@ -47,7 +47,7 @@ public class SchemaTabelleFremdschluessel {
 	 * @param onUpdate     die Aktion bei einer Aktualisierung des referenzierten Schlüsselwertes
 	 * @param onDelete     die Aktion bei dem Entfernen des referenzierten Schlüsselwertes
 	 * @param spalten      die Spalten des Fremdschlüssel dieser Tabelle
-	 * @param spaltenRef   die referenzierten Spalten der referentierten Tabelle des Fremdschlüssels
+	 * @param spaltenRef   die referenzierten Spalten der referenzierten Tabelle des Fremdschlüssels
 	 */
 	SchemaTabelleFremdschluessel(final String name, final SchemaTabelle tab, final SchemaTabelle tabRef, final SchemaFremdschluesselAktionen onUpdate,
 			final SchemaFremdschluesselAktionen onDelete, final List<SchemaTabelleSpalte> spalten, final List<SchemaTabelleSpalte> spaltenRef) {
@@ -72,11 +72,13 @@ public class SchemaTabelleFremdschluessel {
 	 * @return dieses Objekt
 	 */
 	public SchemaTabelleFremdschluessel setRevision(final SchemaRevisionen revision) {
-		if (revision == SchemaRevisionen.UNDEFINED)
+		if (revision == SchemaRevisionen.UNDEFINED) {
 			throw new RuntimeException("Die Revision eines Fremdschlüssels kann nicht auf undefiniert gesetzt werden.");
-		if (revision.revision <= this._revision.revision)
+		}
+		if (revision.revision <= this._revision.revision) {
 			throw new RuntimeException("Die Revision eines Fremdschlüssels kann nur Überschrieben werden, wenn die Revision größer ist als die,"
 					+ " welche bei der Tabelle gesetzt ist.");
+		}
 		this._revision = revision;
 		return this;
 	}
@@ -90,12 +92,14 @@ public class SchemaTabelleFremdschluessel {
 	 * @return dieses Objekt
 	 */
 	public SchemaTabelleFremdschluessel setVeraltet(final SchemaRevisionen veraltet) {
-		if (veraltet == SchemaRevisionen.UNDEFINED)
+		if (veraltet == SchemaRevisionen.UNDEFINED) {
 			throw new RuntimeException("Die Revision, wann ein Fremdschlüssel veraltet, kann nicht auf undefiniert gesetzt werden, da in diesem Fall"
 					+ " das Erben des Veraltet-Attributes der Tabelle vorrangig ist.");
-		if ((this._veraltet != SchemaRevisionen.UNDEFINED) && (veraltet.revision >= this._veraltet.revision))
+		}
+		if ((this._veraltet != SchemaRevisionen.UNDEFINED) && (veraltet.revision >= this._veraltet.revision)) {
 			throw new RuntimeException("Die Revision, wann ein Fremdschlüssel veraltet, kann nicht auf eine Revision größer oder gleich der Revision"
 					+ " gesetzt werden, wo die zugehörige Tabelle veraltet.");
+		}
 		this._veraltet = veraltet;
 		return this;
 	}

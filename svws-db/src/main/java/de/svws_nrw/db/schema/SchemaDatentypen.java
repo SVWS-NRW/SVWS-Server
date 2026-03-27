@@ -209,8 +209,9 @@ public enum SchemaDatentypen {
 	 * @return true, wenn der Datentype primitiv ist und ansonsten false
 	 */
 	public boolean isJavaPrimitiveType(final boolean isNotNull) {
-		if (!isNotNull)
+		if (!isNotNull) {
 			return false;
+		}
 		return switch (this) {
 			case BIGINT -> true;
 			case CHAR -> false;
@@ -261,8 +262,9 @@ public enum SchemaDatentypen {
 	 * @return der Datentyp
 	 */
 	public static SchemaDatentypen getByName(final String name) {
-		if (_typen == null)
+		if (_typen == null) {
 			_typen = Arrays.stream(SchemaDatentypen.values()).collect(Collectors.toMap(t -> t.getName(), t -> t));
+		}
 		return _typen.get(name);
 	}
 

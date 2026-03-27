@@ -18,7 +18,7 @@ public final class GOStAbiturFachConverterDeserializer extends StdDeserializer<G
 	private static final long serialVersionUID = 3985680930817774032L;
 
 	/**
-	 * Erzeugt einen neuen Deerialisierer
+	 * Erzeugt einen neuen Deserialisierer
 	 */
 	public GOStAbiturFachConverterDeserializer() {
 		super(GostAbiturFach.class);

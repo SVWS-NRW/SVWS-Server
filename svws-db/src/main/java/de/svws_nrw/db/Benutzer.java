@@ -181,8 +181,9 @@ public final class Benutzer {
 	 * @return der Hash des Kennwortes
 	 */
 	public static String erstellePasswortHash(final String password) {
-		if ((password == null) || ("".equals(password)))
+		if ((password == null) || ("".equals(password))) {
 			return null;
+		}
 		return BCrypt.hashpw(password, BCrypt.gensalt());
 	}
 
@@ -198,14 +199,18 @@ public final class Benutzer {
 	 *         wird false zurückgegeben.
 	 */
 	private boolean hatKompetenz(final Set<BenutzerKompetenz> kompetenzen) {
-		if (kompetenzen == null)
+		if (kompetenzen == null) {
 			return false;
-		if (kompetenzen.contains(BenutzerKompetenz.KEINE))
+		}
+		if (kompetenzen.contains(BenutzerKompetenz.KEINE)) {
 			return true;
+		}
 		_kompetenzenVerwendet.clear();
-		for (final BenutzerKompetenz kompetenz : kompetenzen)
-			if (this._kompetenzen.contains(kompetenz))
+		for (final BenutzerKompetenz kompetenz : kompetenzen) {
+			if (this._kompetenzen.contains(kompetenz)) {
 				_kompetenzenVerwendet.add(kompetenz);
+			}
+		}
 		return !_kompetenzenVerwendet.isEmpty();
 	}
 
@@ -409,8 +414,9 @@ public final class Benutzer {
 	 * @return die Stammdaten der Schule
 	 */
 	public @NotNull SchuleStammdaten schuleGetStammdaten() {
-		if (_stammdaten == null)
+		if (_stammdaten == null) {
 			throw new DeveloperNotificationException("Es wurde auf die Stammdaten der Schule zugegriffen, obwohl diese nicht geladen sind.");
+		}
 		return _stammdaten;
 	}
 
@@ -469,8 +475,9 @@ public final class Benutzer {
 		final List<Schuljahresabschnitt> result = new ArrayList<>();
 		for (final int schuljahr : schuljahre) {
 			final Map<Integer, Schuljahresabschnitt> mapHalbjahre = _mapSchuljahresabschnitteByJahrUndHalbjahr.getSubMapOrNull(schuljahr);
-			if (mapHalbjahre != null)
+			if (mapHalbjahre != null) {
 				result.addAll(mapHalbjahre.values());
+			}
 		}
 		return result;
 	}
@@ -483,8 +490,9 @@ public final class Benutzer {
 	 */
 	public @NotNull Schuljahresabschnitt schuleGetSchuljahresabschnitt() {
 		final Schuljahresabschnitt result = _mapSchuljahresabschnitte.get(schuleGetStammdaten().idSchuljahresabschnitt);
-		if (result == null)
+		if (result == null) {
 			throw new DeveloperNotificationException("Der aktuelle Schuljahresabschnitt der Schule konnte nicht bestimmt werden.");
+		}
 		return result;
 	}
 
@@ -498,8 +506,9 @@ public final class Benutzer {
 	 */
 	public @NotNull Schuljahresabschnitt schuleGetSchuljahresabschnittByIdOrDefault(final long id) {
 		final Schuljahresabschnitt result = _mapSchuljahresabschnitte.get(id);
-		if (result != null)
+		if (result != null) {
 			return result;
+		}
 		return schuleGetSchuljahresabschnitt();
 	}
 
@@ -531,8 +540,9 @@ public final class Benutzer {
 	 */
 	public @NotNull Schulform schuleGetSchulform() {
 		final Schulform result = Schulform.data().getWertByKuerzel(schuleGetStammdaten().schulform);
-		if (result == null)
+		if (result == null) {
 			throw new DeveloperNotificationException("Die Schulform der Schule konnte nicht bestimmt werden.");
+		}
 		return result;
 	}
 
@@ -544,10 +554,11 @@ public final class Benutzer {
 	 */
 	public @NotNull SchulformKatalogEintrag schuleGetSchulformKatalogEintrag() {
 		final SchulformKatalogEintrag result = schuleGetSchulform().daten(schuleGetSchuljahresabschnitt().schuljahr);
-		if (result == null)
+		if (result == null) {
 			throw new DeveloperNotificationException(
 					"Der Schulform-Katalog-Eintrag für die Schulform der Schule konnte für das aktuelle Schuljahr %d nicht bestimmt werden."
 							.formatted(schuleGetSchuljahresabschnitt().schuljahr));
+		}
 		return result;
 	}
 

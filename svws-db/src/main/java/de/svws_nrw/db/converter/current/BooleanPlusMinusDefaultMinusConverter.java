@@ -6,7 +6,7 @@ import jakarta.persistence.Converter;
 /**
  * Diese Klasse dient dem Konvertieren von Wahrheitswerten in Java (Boolean)
  * zu einer Stringdarstellung in der Datenbank, bei der die - false repräsentiert
- * und die + true. Dieser Converter setzt den Defaultwertwert -.
+ * und die + true. Dieser Converter setzt den Defaultwert -.
  * Sie ist abgeleitet von der Basisklasse {@link DBAttributeConverter}, welche
  * die grundlegende Funktionalität von Konvertern zur Verfügung stellt. Dort muss
  * der Konverter auch in der Methode {@link DBAttributeConverter#getByClass}

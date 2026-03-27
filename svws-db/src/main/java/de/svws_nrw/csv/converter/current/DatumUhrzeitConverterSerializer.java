@@ -15,7 +15,6 @@ import java.sql.Timestamp;
  */
 public final class DatumUhrzeitConverterSerializer extends StdSerializer<String> {
 
-
 	private static final long serialVersionUID = 2066486893789871316L;
 
 	/**

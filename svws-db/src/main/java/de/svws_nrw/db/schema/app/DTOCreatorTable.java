@@ -113,8 +113,9 @@ public final class DTOCreatorTable {
 	 * @return der Java-Attributname
 	 */
 	private static String getJavaAttributeName(final SchemaTabelleSpalte spalte) {
-		if (spalte.javaAttributName() != null)
+		if (spalte.javaAttributName() != null) {
 			return spalte.javaAttributName().startsWith("-") ? null : spalte.javaAttributName();
+		}
 		return spalte.name();
 	}
 
@@ -130,8 +131,9 @@ public final class DTOCreatorTable {
 	private static String getDataType(final SchemaTabelleSpalte spalte, final long rev) {
 		String dataType = spalte.datentyp().java((rev != 0) && spalte.notNull());
 		final DBAttributeConverter<?, ?> attrConverter = spalte.javaConverter(rev);
-		if (attrConverter != null)
+		if (attrConverter != null) {
 			dataType = attrConverter.getResultType().getSimpleName();
+		}
 		return dataType;
 	}
 
@@ -182,8 +184,9 @@ public final class DTOCreatorTable {
 			}
 			i++;
 		}
-		if (!combinedReturn)
+		if (!combinedReturn) {
 			sb.append("\t\treturn true;" + System.lineSeparator());
+		}
 		sb.append("\t}" + System.lineSeparator());
 		sb.append(System.lineSeparator());
 		sb.append("\t@Override" + System.lineSeparator());
@@ -192,10 +195,12 @@ public final class DTOCreatorTable {
 		sb.append("\t\tint result = 1;" + System.lineSeparator());
 		sb.append(pkspalten.stream().map(col -> {
 			final String colname = getJavaAttributeName(col);
-			if (colname == null)
+			if (colname == null) {
 				return null;
-			if (col.datentyp().isJavaPrimitiveType((rev != 0) && col.notNull()))
+			}
+			if (col.datentyp().isJavaPrimitiveType((rev != 0) && col.notNull())) {
 				return "\t\tresult = prime * result + " + col.datentyp().java(false) + ".hashCode(" + colname + ");" + System.lineSeparator();
+			}
 			return "\t\tresult = prime * result + ((" + colname + " == null) ? 0 : " + colname + ".hashCode());" + System.lineSeparator();
 		})
 				.filter(Objects::nonNull)
@@ -230,8 +235,9 @@ public final class DTOCreatorTable {
 	 * @return der Java-Code für den Import der Attribut-Konverter
 	 */
 	private static String getCodeImportConverter(final List<DBAttributeConverter<?, ?>> acs) {
-		if (acs.isEmpty())
+		if (acs.isEmpty()) {
 			return "";
+		}
 		String result = "import "
 				+ acs.stream().map(ac -> ac.getClass().getName()).filter(Objects::nonNull).sorted().distinct()
 						.collect(Collectors.joining(";" + System.lineSeparator() + "import "))
@@ -240,11 +246,12 @@ public final class DTOCreatorTable {
 		final String resultTypeImports = acs.stream().map(ac -> ac.getResultType().getName())
 				.filter(Objects::nonNull).filter(cntt -> !cntt.startsWith("java.lang")).sorted().distinct()
 				.collect(Collectors.joining(";" + System.lineSeparator() + "import "));
-		if (!"".equals(resultTypeImports))
+		if (!"".equals(resultTypeImports)) {
 			result += "import "
 					+ resultTypeImports
 					+ ";" + System.lineSeparator()
 					+ System.lineSeparator();
+		}
 		return result;
 	}
 
@@ -296,8 +303,9 @@ public final class DTOCreatorTable {
 		}
 		// alle Tabellen: Generiere Annotationen für Queries für einzelne Attribute der Tabelle
 		for (final SchemaTabelleSpalte spalte : tabelle.getSpalten(rev)) {
-			if (spalte.javaAttributName().startsWith("-"))
+			if (spalte.javaAttributName().startsWith("-")) {
 				continue; // ignoriere Datenbank-Spalten, welche nicht als Java-Attribute umgesetzt werden sollen
+			}
 			query = "SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE e." + spalte.javaAttributName() + " = ?1";
 			sb.append(getQueryAttribute("BY_" + spalte.javaAttributName().toUpperCase(), query,
 					"Die Datenbankabfrage für DTOs anhand des Attributes " + spalte.javaAttributName()));
@@ -325,14 +333,17 @@ public final class DTOCreatorTable {
 	 */
 	private String getCode4Attributes(final SchemaTabelleSpalte spalte, final long rev, final boolean withAnnotations) {
 		final String javaAttributName = getJavaAttributeName(spalte);
-		if (javaAttributName == null)
+		if (javaAttributName == null) {
 			return null;
+		}
 		final StringBuilder sb = new StringBuilder();
-		if (spalte.javaComment() != null)
+		if (spalte.javaComment() != null) {
 			sb.append("\t/** " + spalte.javaComment() + " */" + System.lineSeparator());
+		}
 		if (withAnnotations) {
-			if ((tabelle.pkSpalten().isEmpty()) || tabelle.pkSpalten().contains(spalte))
+			if ((tabelle.pkSpalten().isEmpty()) || tabelle.pkSpalten().contains(spalte)) {
 				sb.append("\t@Id" + System.lineSeparator());
+			}
 			sb.append("\t@Column(name = \"" + spalte.name() + "\")" + System.lineSeparator());
 			sb.append("\t@JsonProperty" + System.lineSeparator());
 		}
@@ -362,8 +373,9 @@ public final class DTOCreatorTable {
 	 */
 	public String getCode(final long rev) {
 		// Prüfe, ob überhaupt eine Java-Klasse erzeugt werden soll
-		if ((tabelle.getJavaKlasse(rev) == null) || (!tabelle.isDefined(rev)))
+		if ((tabelle.getJavaKlasse(rev) == null) || (!tabelle.isDefined(rev))) {
 			return null;
+		}
 
 		final var acs = getAttributeConverter(rev);
 
@@ -371,18 +383,21 @@ public final class DTOCreatorTable {
 		sb.append("package " + getPackageName(rev) + ";" + System.lineSeparator());
 		sb.append(System.lineSeparator());
 		sb.append("import de.svws_nrw.db.DBEntityManager;" + System.lineSeparator());
-		if (!acs.isEmpty())
+		if (!acs.isEmpty()) {
 			sb.append(getCodeImportConverter(acs));
+		}
 		sb.append(System.lineSeparator());
 
 		sb.append("import jakarta.persistence.Cacheable;" + System.lineSeparator());
 		sb.append("import jakarta.persistence.Column;" + System.lineSeparator());
-		if (!acs.isEmpty())
+		if (!acs.isEmpty()) {
 			sb.append("import jakarta.persistence.Convert;" + System.lineSeparator());
+		}
 		sb.append("import jakarta.persistence.Entity;" + System.lineSeparator());
 		sb.append("import jakarta.persistence.Id;" + System.lineSeparator());
-		if (tabelle.pkSpalten().size() != 1)
+		if (tabelle.pkSpalten().size() != 1) {
 			sb.append("import jakarta.persistence.IdClass;" + System.lineSeparator());
+		}
 		sb.append("import jakarta.persistence.Table;" + System.lineSeparator());
 		sb.append(System.lineSeparator());
 
@@ -436,8 +451,9 @@ public final class DTOCreatorTable {
 					+ System.lineSeparator());
 			tabelle.getSpalten(rev).stream().filter(spalte -> spalte.notNull()).forEach(spalte -> {
 				final String colname = getJavaAttributeName(spalte);
-				if (colname != null)
+				if (colname != null) {
 					sb.append("\t * @param " + colname + "   der Wert für das Attribut " + colname + "" + System.lineSeparator());
+				}
 			});
 			sb.append("\t */" + System.lineSeparator());
 			sb.append("\tpublic " + tabelle.getJavaKlasse(rev) + "(");
@@ -453,8 +469,9 @@ public final class DTOCreatorTable {
 					.map(spalte -> {
 						final String zuweisung =
 								"\t\tthis." + getJavaAttributeName(spalte) + " = " + getJavaAttributeName(spalte) + ";" + System.lineSeparator();
-						if (spalte.datentyp().isJavaPrimitiveType((rev != 0) && spalte.notNull()))
+						if (spalte.datentyp().isJavaPrimitiveType((rev != 0) && spalte.notNull())) {
 							return zuweisung;
+						}
 						return "\t\tif (" + getJavaAttributeName(spalte) + " == null) {" + System.lineSeparator()
 								+ "\t\t\tthrow new NullPointerException(\"" + getJavaAttributeName(spalte) + " must not be null\");" + System.lineSeparator()
 								+ "\t\t}" + System.lineSeparator()
@@ -498,15 +515,18 @@ public final class DTOCreatorTable {
 	 */
 	public String getCode4PrimaryKeyClass(final long rev) {
 		// Prüfe, ob überhaupt eine Java-Klasse erzeugt werden soll
-		if ((tabelle.getJavaKlasse(rev) == null) || (!tabelle.isDefined(rev)))
+		if ((tabelle.getJavaKlasse(rev) == null) || (!tabelle.isDefined(rev))) {
 			return null;
+		}
 
 		// Bestimme die Spalten für den Primärschlüssel und erzeuge nur Code, wenn es sich nicht um einen einfachen Primärschlüssel handelt
 		Collection<SchemaTabelleSpalte> pkSpalten = tabelle.pkSpalten();
-		if (pkSpalten == null)
+		if (pkSpalten == null) {
 			pkSpalten = tabelle.getSpalten(rev);
-		if (pkSpalten.size() <= 1)
+		}
+		if (pkSpalten.size() <= 1) {
 			return null;
+		}
 
 		final StringBuilder sb = new StringBuilder();
 		sb.append("package " + getPackageName(rev) + ";" + System.lineSeparator());
@@ -540,8 +560,9 @@ public final class DTOCreatorTable {
 		sb.append("\t * Erstellt ein neues Objekt der Klasse " + tabelle.getJavaKlasse(rev) + "PK." + System.lineSeparator());
 		tabelle.pkSpalten().stream().forEach(spalte -> {
 			final String colname = getJavaAttributeName(spalte);
-			if (colname != null)
+			if (colname != null) {
 				sb.append("\t * @param " + colname + "   der Wert für das Attribut " + colname + "" + System.lineSeparator());
+			}
 		});
 		sb.append("\t */" + System.lineSeparator());
 		sb.append("\tpublic " + tabelle.getJavaKlasse(rev) + "PK(");
@@ -554,8 +575,9 @@ public final class DTOCreatorTable {
 				.filter(spalte -> getJavaAttributeName(spalte) != null)
 				.map(spalte -> {
 					final String zuweisung = "\t\tthis." + getJavaAttributeName(spalte) + " = " + getJavaAttributeName(spalte) + ";" + System.lineSeparator();
-					if (spalte.datentyp().isJavaPrimitiveType((rev != 0) && spalte.notNull()))
+					if (spalte.datentyp().isJavaPrimitiveType((rev != 0) && spalte.notNull())) {
 						return zuweisung;
+					}
 					return "\t\tif (" + getJavaAttributeName(spalte) + " == null) {" + System.lineSeparator()
 							+ "\t\t\tthrow new NullPointerException(\"" + getJavaAttributeName(spalte) + " must not be null\");" + System.lineSeparator()
 							+ "\t\t}" + System.lineSeparator()

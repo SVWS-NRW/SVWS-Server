@@ -36,9 +36,11 @@ public final class Revision33Updates extends SchemaRevisionUpdateSQL {
 			final List<String> pkTrigger = Schema.tab_SchuelerMerkmale.getPrimaerschluesselTriggerSQLList(DBDriver.MARIA_DB, SchemaRevisionen.REV_33.revision, true);
 			if (!pkTrigger.isEmpty()) {
 				logger.logLn("- %s: Erstelle Trigger für Auto-Inkremente, falls dies nicht bereits bei der Migration erfolgt ist.".formatted(Schema.tab_SchuelerMerkmale.name()));
-				for (final String scriptTrigger : pkTrigger)
-					if (conn.transactionNativeUpdateAndFlush(scriptTrigger) == Integer.MIN_VALUE)
+				for (final String scriptTrigger : pkTrigger) {
+					if (conn.transactionNativeUpdateAndFlush(scriptTrigger) == Integer.MIN_VALUE) {
 						throw new DBException("Fehler beim Anlegen der Trigger");
+					}
+				}
 			}
 		} catch (final DBException e) {
 			logger.logLn(e.getMessage());

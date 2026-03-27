@@ -32,8 +32,9 @@ public final class PersonalTypConverter extends DBAttributeConverter<PersonalTyp
 
 	@Override
 	public PersonalTyp convertToEntityAttribute(final String dbData) {
-		if (dbData == null)
+		if (dbData == null) {
 			return PersonalTyp.LEHRKRAFT;
+		}
 		return PersonalTyp.fromKuerzel(dbData);
 	}
 

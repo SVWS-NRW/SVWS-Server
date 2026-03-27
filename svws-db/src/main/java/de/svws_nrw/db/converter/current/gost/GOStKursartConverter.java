@@ -23,8 +23,9 @@ public final class GOStKursartConverter extends DBAttributeConverter<GostKursart
 
 	@Override
 	public String convertToDatabaseColumn(final GostKursart value) {
-		if (value == null)
+		if (value == null) {
 			return null;
+		}
 		return value.toString();
 	}
 

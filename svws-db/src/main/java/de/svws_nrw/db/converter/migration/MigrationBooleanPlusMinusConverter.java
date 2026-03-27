@@ -27,15 +27,17 @@ public final class MigrationBooleanPlusMinusConverter extends DBAttributeConvert
 
 	@Override
 	public String convertToDatabaseColumn(final Boolean value) {
-		if (value == null)
+		if (value == null) {
 			return null;
+		}
 		return value ? "+" : "-";
 	}
 
 	@Override
 	public Boolean convertToEntityAttribute(final String dbData) {
-		if (dbData == null)
+		if (dbData == null) {
 			return null;
+		}
 		return "+".equals(dbData);
 	}
 

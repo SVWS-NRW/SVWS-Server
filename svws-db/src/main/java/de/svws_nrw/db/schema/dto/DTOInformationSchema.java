@@ -109,9 +109,11 @@ public final class DTOInformationSchema {
 	 */
 	public static boolean hasSchemaIgnoreCase(final DBEntityManager conn, final String schema) {
 		final List<String> schemata = queryNames(conn);
-		for (final String s : schemata)
-			if (s.equalsIgnoreCase(schema))
+		for (final String s : schemata) {
+			if (s.equalsIgnoreCase(schema)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -127,9 +129,11 @@ public final class DTOInformationSchema {
 	 */
 	public static String getSchemanameCaseDB(final DBEntityManager conn, final String schema) {
 		final List<String> schemata = queryNames(conn);
-		for (final String s : schemata)
-			if (s.equalsIgnoreCase(schema))
+		for (final String s : schemata) {
+			if (s.equalsIgnoreCase(schema)) {
 				return s;
+			}
+		}
 		return null;
 	}
 
@@ -145,18 +149,23 @@ public final class DTOInformationSchema {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final DTOInformationSchema other = (DTOInformationSchema) obj;
 		if (Name == null) {
-			if (other.Name != null)
+			if (other.Name != null) {
 				return false;
-		} else if (!Name.equals(other.Name))
+			}
+		} else if (!Name.equals(other.Name)) {
 			return false;
+		}
 		return true;
 	}
 

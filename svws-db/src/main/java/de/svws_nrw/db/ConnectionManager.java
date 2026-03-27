@@ -201,8 +201,9 @@ public final class ConnectionManager {
 		this.lock();
 		try {
 			final List<DBConfig> configs = mapFactories.keySet().stream().toList();
-			for (final DBConfig config : configs)
+			for (final DBConfig config : configs) {
 				closeSingle(config);
+			}
 		} finally {
 			this.unlock();
 		}
@@ -225,8 +226,9 @@ public final class ConnectionManager {
 	 * {@link ReentrantLock#unlock()})
 	 */
 	public void unlock() {
-		if (mutex.isLocked() && mutex.isHeldByCurrentThread())
+		if (mutex.isLocked() && mutex.isHeldByCurrentThread()) {
 			mutex.unlock();
+		}
 	}
 
 }

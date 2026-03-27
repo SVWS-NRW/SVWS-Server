@@ -6,7 +6,7 @@ import jakarta.persistence.Converter;
 
 /**
  * Diese Klasse dient dem Konvertieren von Verkehrsprachen in Java (Value)
- * zu der String -Darstellung in der Datenbank nach der Defintion des
+ * zu der String -Darstellung in der Datenbank nach der Definition des
  * ISO 639-2-Standards.
  * Sie ist abgeleitet von der Basisklasse {@link DBAttributeConverter}, welche
  * die grundlegende Funktionalität von Konvertern zur Verfügung stellt. Dort muss

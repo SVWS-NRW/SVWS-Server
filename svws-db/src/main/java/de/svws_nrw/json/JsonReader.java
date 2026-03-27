@@ -82,8 +82,9 @@ public final class JsonReader {
 		try {
 			final ClassLoader classLoader = JsonReader.class.getClassLoader();
 			final var url = classLoader.getResource(location);
-			if (url == null)
+			if (url == null) {
 				return null;
+			}
 			final var uri = url.toURI();
 			if (uri.toString().contains("jar:file:")) {
 				final String[] jar_path_elements = uri.toString().split("!");

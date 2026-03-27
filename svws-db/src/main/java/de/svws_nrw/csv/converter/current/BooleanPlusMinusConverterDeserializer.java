@@ -17,7 +17,7 @@ public final class BooleanPlusMinusConverterDeserializer extends StdDeserializer
 	private static final long serialVersionUID = -1327227762966985248L;
 
 	/**
-	 * Erzeugt einen neuen Deerialisierer
+	 * Erzeugt einen neuen Deserialisierer
 	 */
 	public BooleanPlusMinusConverterDeserializer() {
 		super(Boolean.class);

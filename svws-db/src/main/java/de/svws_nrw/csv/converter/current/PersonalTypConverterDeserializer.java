@@ -18,7 +18,7 @@ public final class PersonalTypConverterDeserializer extends StdDeserializer<Pers
 	private static final long serialVersionUID = 8347463080558723603L;
 
 	/**
-	 * Erzeugt einen neuen Deerialisierer
+	 * Erzeugt einen neuen Deserialisierer
 	 */
 	public PersonalTypConverterDeserializer() {
 		super(PersonalTyp.class);

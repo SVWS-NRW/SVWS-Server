@@ -67,13 +67,15 @@ public final class Revision34Updates extends SchemaRevisionUpdateSQL {
 			}
 			logger.logLn("- Kurs_Schueler: Anlegen der Spalte Leistung_ID, falls diese noch nicht vorhanden ist.");
 			String sql = "ALTER TABLE %s ADD COLUMN IF NOT EXISTS Leistung_ID bigint(20) NOT NULL COMMENT 'Die eindeutige ID der Leistungsdaten, in denen die Zuordnung stattgefunden hat'".formatted(Schema.tab_Kurs_Schueler.name());
-			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 				throw new DBException("Fehler beim Anlegen der Spalte Leistung_ID");
+			}
 			conn.transactionFlush();
 			logger.logLn("- Kurs_Schueler: Neusetzen des Primärschlüssels mit der Spalte Leistung_ID.");
 			sql = "ALTER TABLE %s DROP PRIMARY KEY, ADD PRIMARY KEY (Kurs_ID, Schueler_ID, LernabschnittWechselNr, Leistung_ID)".formatted(Schema.tab_Kurs_Schueler.name());
-			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 				throw new DBException("Fehler beim Korrigieren des ASD-Jahrgangs");
+			}
 			conn.transactionFlush();
 			return true;
 		} catch (final DBException e) {

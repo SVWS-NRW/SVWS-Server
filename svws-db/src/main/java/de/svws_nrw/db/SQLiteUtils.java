@@ -27,8 +27,9 @@ public final class SQLiteUtils {
 		String tmpSql = sql;
 		while (true) {
 			Matcher matcher = patternConcat.matcher(tmpSql);
-			if (!matcher.find())
+			if (!matcher.find()) {
 				break;
+			}
 			final StringBuilder result = new StringBuilder();
 			result.append(tmpSql, 0, matcher.start());
 			int countBraces = 0;
@@ -36,32 +37,38 @@ public final class SQLiteUtils {
 			String tmp = tmpSql.substring(matcher.end());
 			// Prüfe auf beginnende Klammer
 			matcher = patternBraceCommaOrQuote.matcher(tmp);
-			if (!matcher.find())
+			if (!matcher.find()) {
 				throw new RuntimeException("Error: Cannot replace concat in SQL-Query: " + sql);
+			}
 			char found = tmp.charAt(matcher.start());
-			if (found != '(')
+			if (found != '(') {
 				throw new RuntimeException("Error: Missing ( after concat in SQL-Query: " + sql);
+			}
 			countBraces++;
 			tmp = tmp.substring(matcher.end());
 			// Prüfe auf Anführungszeichen, Klammer oder Komma
 			while (true) {
 				matcher = patternBraceCommaOrQuote.matcher(tmp);
-				if (!matcher.find())
+				if (!matcher.find()) {
 					throw new RuntimeException("Error: Cannot replace concat in SQL-Query: " + sql);
+				}
 				found = tmp.charAt(matcher.start());
 				switch (found) {
 					case '(' -> {
-						if (countQuotes == 0)
+						if (countQuotes == 0) {
 							countBraces++;
+						}
 						result.append(tmp, 0, matcher.end());
 					}
 					case ')' -> {
-						if (countQuotes == 0)
+						if (countQuotes == 0) {
 							countBraces--;
-						if (countBraces > 0)
+						}
+						if (countBraces > 0) {
 							result.append(tmp, 0, matcher.end());
-						else
+						} else {
 							result.append(tmp, 0, matcher.start());
+						}
 					}
 					case '\'' -> {
 						countQuotes = (countQuotes == 0) ? 1 : 0;
@@ -70,8 +77,9 @@ public final class SQLiteUtils {
 					case ',' -> {
 						if ((countQuotes == 0) && (countBraces == 1)) {
 							result.append(tmp, 0, matcher.start()).append(" || ");
-						} else
+						} else {
 							result.append(tmp, 0, matcher.end());
+						}
 					}
 					default -> {
 						// do nothing

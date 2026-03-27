@@ -119,10 +119,11 @@ public class SchemaRevisionUpdateSQL {
 		_kommentare.add(kommentar);
 		_tabellen.addAll(Arrays.asList(tabellen));
 		for (final DBDriver dbms : DBDriver.values()) {
-			if (dbms == dbms2)
+			if (dbms == dbms2) {
 				add(dbms, sql2);
-			else
+			} else {
 				add(dbms, (dbms == dbms3) ? sql3 : sql);
+			}
 		}
 	}
 
@@ -144,8 +145,9 @@ public class SchemaRevisionUpdateSQL {
 	 * @return der Kommentar
 	 */
 	public String getKommentar(final int i) {
-		if ((i < 0) || (i >= _kommentare.size()))
+		if ((i < 0) || (i >= _kommentare.size())) {
 			throw new ArrayIndexOutOfBoundsException();
+		}
 		return _kommentare.get(i);
 	}
 
@@ -168,11 +170,13 @@ public class SchemaRevisionUpdateSQL {
 	 * @return der Kommentar
 	 */
 	public String getSQL(final DBDriver dbms, final int i) {
-		if ((i < 0) || (i >= _kommentare.size()))
+		if ((i < 0) || (i >= _kommentare.size())) {
 			throw new ArrayIndexOutOfBoundsException();
+		}
 		final var liste = getSQL(dbms);
-		if (liste == null)
+		if (liste == null) {
 			throw new ArrayIndexOutOfBoundsException();
+		}
 		return _sql.get(dbms).get(i);
 	}
 

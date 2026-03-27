@@ -193,8 +193,9 @@ public final class DBEntityManager implements AutoCloseable {
 	 * {@link ReentrantLock#unlock()})
 	 */
 	public void unlock() {
-		if (mutex.isLocked() && mutex.isHeldByCurrentThread())
+		if (mutex.isLocked() && mutex.isHeldByCurrentThread()) {
 			mutex.unlock();
+		}
 	}
 
 	/**
@@ -270,8 +271,9 @@ public final class DBEntityManager implements AutoCloseable {
 	 */
 	public boolean transactionRollback() {
 		try {
-			if (em.getTransaction().isActive())
+			if (em.getTransaction().isActive()) {
 				em.getTransaction().rollback();
+			}
 			return true;
 		} catch (@SuppressWarnings("unused") final PersistenceException e) {
 			return false;
@@ -288,8 +290,9 @@ public final class DBEntityManager implements AutoCloseable {
 	 */
 	public void transactionRollbackOrThrow() {
 		try {
-			if (em.getTransaction().isActive())
+			if (em.getTransaction().isActive()) {
 				em.getTransaction().rollback();
+			}
 		} finally {
 			this.unlock();
 		}
@@ -417,11 +420,13 @@ public final class DBEntityManager implements AutoCloseable {
 	 * @return true, falls die Entities erfolgreich persistiert wurden und ansonsten false
 	 */
 	public boolean transactionPersistAll(final Collection<? extends Object> entities) {
-		if (entities == null)
+		if (entities == null) {
 			return false;
+		}
 		try {
-			for (final Object obj : entities)
+			for (final Object obj : entities) {
 				em.persist(obj);
+			}
 			return true;
 		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | IllegalStateException e) {
 			return false;
@@ -455,11 +460,13 @@ public final class DBEntityManager implements AutoCloseable {
 	 * @return true, falls die Entities erfolgreich entfernt wurden und ansonsten false
 	 */
 	public boolean transactionRemoveAll(final Collection<? extends Object> entities) {
-		if (entities == null)
+		if (entities == null) {
 			return false;
+		}
 		try {
-			for (final Object obj : entities)
+			for (final Object obj : entities) {
 				em.remove(obj);
+			}
 			return true;
 		} catch (@SuppressWarnings("unused") TransactionRequiredException | IllegalStateException e) {
 			return false;
@@ -517,15 +524,18 @@ public final class DBEntityManager implements AutoCloseable {
 	 * @return true, falls die Entities erfolgreich persistiert wurde und ansonsten false
 	 */
 	public boolean persistAll(final Collection<? extends Object> entities) {
-		if (entities == null)
+		if (entities == null) {
 			return false;
+		}
 		try {
 			this.lock();
 			this.transactionBegin();
-			for (final Object obj : entities)
+			for (final Object obj : entities) {
 				em.persist(obj);
-			if (this.transactionCommit())
+			}
+			if (this.transactionCommit()) {
 				return true;
+			}
 			this.transactionRollback();
 			return false;
 		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
@@ -548,17 +558,20 @@ public final class DBEntityManager implements AutoCloseable {
 	 * @return true, falls die Entities erfolgreich persistiert wurde und ansonsten false
 	 */
 	public boolean persistRange(final List<? extends Object> entities, final int indexFirst, final int indexLast) {
-		if (entities == null)
+		if (entities == null) {
 			return false;
+		}
 		final int first = (indexFirst < 0) ? 0 : indexFirst;
 		final int last = (indexLast >= entities.size()) ? (entities.size() - 1) : indexLast;
 		try {
 			this.lock();
 			this.transactionBegin();
-			for (int i = first; i <= last; i++)
+			for (int i = first; i <= last; i++) {
 				em.persist(entities.get(i));
-			if (this.transactionCommit())
+			}
+			if (this.transactionCommit()) {
 				return true;
+			}
 			this.transactionRollback();
 			return false;
 		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
@@ -583,8 +596,9 @@ public final class DBEntityManager implements AutoCloseable {
 			this.lock();
 			this.transactionBegin();
 			em.persist(entity);
-			if (this.transactionCommit())
+			if (this.transactionCommit()) {
 				return true;
+			}
 			this.transactionRollback();
 			return false;
 		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
@@ -608,8 +622,9 @@ public final class DBEntityManager implements AutoCloseable {
 			this.lock();
 			this.transactionBegin();
 			em.remove(entity);
-			if (this.transactionCommit())
+			if (this.transactionCommit()) {
 				return true;
+			}
 			this.transactionRollback();
 			return false;
 		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
@@ -636,8 +651,9 @@ public final class DBEntityManager implements AutoCloseable {
 			this.transactionBegin();
 			em.remove(oldEntity);
 			em.persist(newEntity);
-			if (this.transactionCommit())
+			if (this.transactionCommit()) {
 				return true;
+			}
 			this.transactionRollback();
 			return false;
 		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
@@ -675,8 +691,9 @@ public final class DBEntityManager implements AutoCloseable {
 			this.lock();
 			this.transactionBegin();
 			final int count = em.createQuery(query).executeUpdate();
-			if (this.transactionCommit())
+			if (this.transactionCommit()) {
 				return count;
+			}
 			this.transactionRollback();
 			return Integer.MIN_VALUE;
 		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
@@ -714,8 +731,9 @@ public final class DBEntityManager implements AutoCloseable {
 			this.lock();
 			this.transactionBegin();
 			final int count = em.createNativeQuery(query).executeUpdate();
-			if (this.transactionCommit())
+			if (this.transactionCommit()) {
 				return count;
+			}
 			this.transactionRollback();
 			return Integer.MIN_VALUE;
 		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | RollbackException | IllegalStateException e) {
@@ -743,8 +761,9 @@ public final class DBEntityManager implements AutoCloseable {
 			final Connection conn = em.unwrap(Connection.class);
 			try (Statement stmt = conn.createStatement()) {
 				final int count = stmt.executeUpdate(query);
-				if (this.transactionCommit())
+				if (this.transactionCommit()) {
 					return count;
+				}
 				this.transactionRollback();
 				return Integer.MIN_VALUE;
 			}
@@ -774,11 +793,13 @@ public final class DBEntityManager implements AutoCloseable {
 			this.transactionBegin();
 			final Connection conn = em.unwrap(Connection.class);
 			try (Statement stmt = conn.createStatement()) {
-				for (final String query : queries)
+				for (final String query : queries) {
 					stmt.addBatch(query);
+				}
 				final int[] count = stmt.executeBatch();
-				if (this.transactionCommit())
+				if (this.transactionCommit()) {
 					return Arrays.stream(count).sum();
+				}
 				this.transactionRollback();
 			}
 			throw new DBException("Fehler beim Ausführen der SQL-Befehle");
@@ -824,8 +845,9 @@ public final class DBEntityManager implements AutoCloseable {
 	 */
 	public boolean transactionInsertRangeNative(final String tablename, final List<String> colnames, final List<Object[]> entities, final int indexFirst,
 			final int indexLast) {
-		if ((entities == null) || (colnames == null) || (tablename == null) || (colnames.isEmpty()) || (entities.isEmpty()))
+		if ((entities == null) || (colnames == null) || (tablename == null) || (colnames.isEmpty()) || (entities.isEmpty())) {
 			return false;
+		}
 		final int first = (indexFirst < 0) ? 0 : indexFirst;
 		final int last = (indexLast >= entities.size()) ? (entities.size() - 1) : indexLast;
 		try {
@@ -881,14 +903,16 @@ public final class DBEntityManager implements AutoCloseable {
 	 */
 	public boolean insertRangeNative(final String tablename, final List<String> colnames, final List<Object[]> entities, final int indexFirst,
 			final int indexLast) {
-		if ((entities == null) || (colnames == null) || (tablename == null) || (colnames.isEmpty()) || (entities.isEmpty()))
+		if ((entities == null) || (colnames == null) || (tablename == null) || (colnames.isEmpty()) || (entities.isEmpty())) {
 			return false;
+		}
 		try {
 			this.lock();
 			this.transactionBegin();
 			final boolean success = transactionInsertRangeNative(tablename, colnames, entities, indexFirst, indexLast);
-			if (success && this.transactionCommit())
+			if (success && this.transactionCommit()) {
 				return true;
+			}
 			this.transactionRollback();
 			return false;
 		} catch (@SuppressWarnings("unused") PersistenceException | IllegalStateException e) {
@@ -902,10 +926,12 @@ public final class DBEntityManager implements AutoCloseable {
 
 
 	private String toSQLStringWitEscapeSequences(final String str) {
-		if (str == null)
+		if (str == null) {
 			return null;
-		if (factory.getConfig().getDBDriver() == DBDriver.SQLITE)
+		}
+		if (factory.getConfig().getDBDriver() == DBDriver.SQLITE) {
 			return "'" + str.replace("'", "''").replace("\0", "'||char(0)||'") + "'";
+		}
 		// else MariaDB / MYSQL ...
 		return "'" + str.replace("\\", "\\\\").replace("'", "\\'") + "'";
 	}
@@ -926,8 +952,9 @@ public final class DBEntityManager implements AutoCloseable {
 			final Connection conn = em.unwrap(Connection.class);
 			try (Statement statement = conn.createStatement()) {
 				final int count = statement.executeUpdate(query);
-				if (this.transactionCommit())
+				if (this.transactionCommit()) {
 					return count;
+				}
 				this.transactionRollback();
 				return Integer.MIN_VALUE;
 			}
@@ -959,8 +986,9 @@ public final class DBEntityManager implements AutoCloseable {
 	 */
 	public boolean insertRangeNativeUnprepared(final String tablename, final List<String> colnames, final List<Object[]> entities,
 			final int indexFirst, final int indexLast, final int maxSQLStrLen) {
-		if ((entities == null) || (colnames == null) || (tablename == null) || (colnames.isEmpty()) || (entities.isEmpty()))
+		if ((entities == null) || (colnames == null) || (tablename == null) || (colnames.isEmpty()) || (entities.isEmpty())) {
 			return false;
+		}
 		final int first = (indexFirst < 0) ? 0 : indexFirst;
 		final int last = (indexLast >= entities.size()) ? (entities.size() - 1) : indexLast;
 		final StringBuilder sb = new StringBuilder();
@@ -971,29 +999,33 @@ public final class DBEntityManager implements AutoCloseable {
 			sb.append("(");
 			final Object[] data = entities.get(i);
 			for (int j = 0; j < colnames.size(); j++) {
-				if (data[j] == null)
+				if (data[j] == null) {
 					sb.append("null");
-				else if (data[j] instanceof final Timestamp timestamp)
+				} else if (data[j] instanceof final Timestamp timestamp) {
 					sb.append(toSQLStringWitEscapeSequences(datetimeFormatter.format(timestamp.toLocalDateTime())));
-				else if (data[j] instanceof final Date date)
+				} else if (data[j] instanceof final Date date) {
 					sb.append(toSQLStringWitEscapeSequences(dateFormatter.format(date.toLocalDate())));
-				else if (data[j] instanceof final Time time)
+				} else if (data[j] instanceof final Time time) {
 					sb.append(toSQLStringWitEscapeSequences(timeFormatter.format(time.toLocalTime())));
-				else if (data[j] instanceof final String str)
+				} else if (data[j] instanceof final String str) {
 					sb.append(toSQLStringWitEscapeSequences(str));
-				else if (data[j] instanceof final Number number)
+				} else if (data[j] instanceof final Number number) {
 					sb.append(number);
-				else
+				} else {
 					return false;
-				if (j < (colnames.size() - 1))
+				}
+				if (j < (colnames.size() - 1)) {
 					sb.append(",");
+				}
 			}
 			sb.append(")");
-			if (i != last)
+			if (i != last) {
 				sb.append(",");
+			}
 		}
-		if ((maxSQLStrLen > 0) && (sb.length() > maxSQLStrLen))
+		if ((maxSQLStrLen > 0) && (sb.length() > maxSQLStrLen)) {
 			return false;
+		}
 		return internalExecuteNativeUpdateConnectionUnprepared(sb.toString()) != Integer.MIN_VALUE;
 	}
 
@@ -1139,8 +1171,9 @@ public final class DBEntityManager implements AutoCloseable {
 		try {
 			final Field f = cl.getField(queryAttribute);
 			final Object obj = f.get(null);
-			if (obj instanceof final String s)
+			if (obj instanceof final String s) {
 				return s;
+			}
 			throw new NoSuchFieldException("Das angeforderte Attribut für die Query ist nicht vom Typ String.");
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -1209,8 +1242,9 @@ public final class DBEntityManager implements AutoCloseable {
 	 */
 	public <T> T queryByKey(final Class<T> cl, final Object... id) {
 		final List<T> entries = queryList(getQueryString(cl, "QUERY_PK"), cl, id);
-		if (entries.isEmpty())
+		if (entries.isEmpty()) {
 			return null;
+		}
 		return entries.get(0);
 	}
 
@@ -1228,8 +1262,9 @@ public final class DBEntityManager implements AutoCloseable {
 	 * @return doe Liste mit den Datensätzen
 	 */
 	public <T> List<T> queryByKeyList(final Class<T> cl, final Collection<?> ids) {
-		if ((ids == null) || ids.isEmpty())
+		if ((ids == null) || ids.isEmpty()) {
 			return new ArrayList<>();
+		}
 		return queryList(getQueryString(cl, "QUERY_LIST_PK"), cl, ids);
 	}
 
@@ -1244,8 +1279,9 @@ public final class DBEntityManager implements AutoCloseable {
 	 */
 	public <T> long transactionGetNextID(final Class<T> t) {
 		final String tableName = t.getAnnotation(Table.class).name();
-		if (tableName == null)
+		if (tableName == null) {
 			throw new NullPointerException("Die angegebene Klasse hat keine Tabellen-Annotation");
+		}
 		final Tabelle_Schema_AutoInkremente tabelleSvwsDbAutoInkremente = new Tabelle_Schema_AutoInkremente();
 		final String col_MaxID = tabelleSvwsDbAutoInkremente.col_MaxID.name();
 		final String tableAutoInkrementeName = tabelleSvwsDbAutoInkremente.name();
@@ -1268,8 +1304,9 @@ public final class DBEntityManager implements AutoCloseable {
 	 * @return die nächste verfügbare ID
 	 */
 	public long transactionGetNextIDByTablename(final String tableName) {
-		if (tableName == null)
+		if (tableName == null) {
 			throw new NullPointerException("Der angebene Tabellenname ist null.");
+		}
 		final Tabelle_Schema_AutoInkremente tabelleSvwsDbAutoInkremente = new Tabelle_Schema_AutoInkremente();
 		final String col_MaxID = tabelleSvwsDbAutoInkremente.col_MaxID.name();
 		final String tableAutoInkrementeName = tabelleSvwsDbAutoInkremente.name();

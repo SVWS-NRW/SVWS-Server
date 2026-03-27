@@ -22,8 +22,9 @@ public final class GOStAbiturFachConverter extends DBAttributeConverter<GostAbit
 
 	@Override
 	public String convertToDatabaseColumn(final GostAbiturFach value) {
-		if (value == null)
+		if (value == null) {
 			return null;
+		}
 		return "" + value.id;
 	}
 

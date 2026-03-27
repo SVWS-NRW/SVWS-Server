@@ -23,8 +23,9 @@ public final class StringToIntegerConverter extends DBAttributeConverter<Integer
 
 	@Override
 	public String convertToDatabaseColumn(final Integer value) {
-		if (value == null)
+		if (value == null) {
 			return null;
+		}
 		return value.toString();
 	}
 

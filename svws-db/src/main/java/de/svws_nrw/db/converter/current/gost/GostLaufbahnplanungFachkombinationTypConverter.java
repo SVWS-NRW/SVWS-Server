@@ -23,8 +23,9 @@ public final class GostLaufbahnplanungFachkombinationTypConverter extends DBAttr
 
 	@Override
 	public Integer convertToDatabaseColumn(final GostLaufbahnplanungFachkombinationTyp value) {
-		if (value == null)
+		if (value == null) {
 			return null;
+		}
 		return value.getValue();
 	}
 

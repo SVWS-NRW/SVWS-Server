@@ -18,7 +18,7 @@ public final class GOStBesondereLernleistungConverterDeserializer extends StdDes
 	private static final long serialVersionUID = 1295380111565891607L;
 
 	/**
-	 * Erzeugt einen neuen Deerialisierer
+	 * Erzeugt einen neuen Deserialisierer
 	 */
 	public GOStBesondereLernleistungConverterDeserializer() {
 		super(GostBesondereLernleistung.class);

@@ -206,48 +206,65 @@ public final class DTOInformationSchemaTableColumn {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final DTOInformationSchemaTableColumn other = (DTOInformationSchemaTableColumn) obj;
 		if (DataLength == null) {
-			if (other.DataLength != null)
+			if (other.DataLength != null) {
 				return false;
-		} else if (!DataLength.equals(other.DataLength))
+			}
+		} else if (!DataLength.equals(other.DataLength)) {
 			return false;
+		}
 		if (DataType == null) {
-			if (other.DataType != null)
+			if (other.DataType != null) {
 				return false;
-		} else if (!DataType.equals(other.DataType))
+			}
+		} else if (!DataType.equals(other.DataType)) {
 			return false;
+		}
 		if (DefaultValue == null) {
-			if (other.DefaultValue != null)
+			if (other.DefaultValue != null) {
 				return false;
-		} else if (!DefaultValue.equals(other.DefaultValue))
+			}
+		} else if (!DefaultValue.equals(other.DefaultValue)) {
 			return false;
+		}
 		if (Name == null) {
-			if (other.Name != null)
+			if (other.Name != null) {
 				return false;
-		} else if (!Name.equals(other.Name))
+			}
+		} else if (!Name.equals(other.Name)) {
 			return false;
+		}
 		if (NameTabelle == null) {
-			if (other.NameTabelle != null)
+			if (other.NameTabelle != null) {
 				return false;
-		} else if (!NameTabelle.equals(other.NameTabelle))
+			}
+		} else if (!NameTabelle.equals(other.NameTabelle)) {
 			return false;
+		}
 		if (Nullable == null) {
-			if (other.Nullable != null)
+			if (other.Nullable != null) {
 				return false;
-		} else if (!Nullable.equals(other.Nullable))
+			}
+		} else if (!Nullable.equals(other.Nullable)) {
 			return false;
+		}
 		if (Reihenfolge == null) {
-			if (other.Reihenfolge != null)
+			if (other.Reihenfolge != null) {
 				return false;
-		} else if (!Reihenfolge.equals(other.Reihenfolge))
+			}
+		} else if (!Reihenfolge.equals(other.Reihenfolge)) {
 			return false;
+		}
 		return true;
 	}
 

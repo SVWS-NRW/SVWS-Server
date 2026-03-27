@@ -5,8 +5,8 @@ import de.svws_nrw.db.converter.DBAttributeConverter;
 import jakarta.persistence.Converter;
 
 /**
- * Diese Klasse dient dem Konvertieren von Nationalitaeten in Java (Value)
- * zu der String -Darstellung in der Datenbank nach der Defintion des
+ * Diese Klasse dient dem Konvertieren von Nationalitäten in Java (Value)
+ * zu der String -Darstellung in der Datenbank nach der Definition des
  * statistischen Bundesamtes (DESTATIS).
  * Sie ist abgeleitet von der Basisklasse {@link DBAttributeConverter}, welche
  * die grundlegende Funktionalität von Konvertern zur Verfügung stellt. Dort muss

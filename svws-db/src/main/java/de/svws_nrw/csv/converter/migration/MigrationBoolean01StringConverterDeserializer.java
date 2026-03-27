@@ -17,7 +17,7 @@ public final class MigrationBoolean01StringConverterDeserializer extends StdDese
 	private static final long serialVersionUID = 5630376392284015049L;
 
 	/**
-	 * Erzeugt einen neuen Deerialisierer
+	 * Erzeugt einen neuen Deserialisierer
 	 */
 	public MigrationBoolean01StringConverterDeserializer() {
 		super(Boolean.class);

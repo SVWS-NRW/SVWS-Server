@@ -11,7 +11,7 @@ public class DBException extends Exception {
 	/**
 	 * Erzeugt eine {@link DBException} mit der angegebenen textuellen Beschreibung.
 	 *
-	 * @param message   die textuelle Beschreiung zu der Exception
+	 * @param message   die textuelle Beschreibung zu der Exception
 	 */
 	public DBException(final String message) {
 		super(message);
@@ -30,7 +30,7 @@ public class DBException extends Exception {
 	 * Erzeugt eine {@link DBException} mit der angegebenen textuellen Beschreibung
 	 * und mit dem angegebenen Grund.
 	 *
-	 * @param message   die textuelle Beschreiung zu der Exception
+	 * @param message   die textuelle Beschreibung zu der Exception
 	 * @param cause   der Grund für diese Exception
 	 */
 	public DBException(final String message, final Throwable cause) {

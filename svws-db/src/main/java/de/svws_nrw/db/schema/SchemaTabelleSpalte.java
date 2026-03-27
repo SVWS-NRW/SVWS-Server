@@ -124,11 +124,13 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	 * @return dieses Objekt
 	 */
 	public SchemaTabelleSpalte setRevision(final SchemaRevisionen revision) {
-		if (revision == SchemaRevisionen.UNDEFINED)
+		if (revision == SchemaRevisionen.UNDEFINED) {
 			throw new RuntimeException("Die Revision einer Spalte kann nicht auf undefiniert gesetzt werden.");
-		if (revision.revision <= this._revision.revision)
+		}
+		if (revision.revision <= this._revision.revision) {
 			throw new RuntimeException("Die Revision einer Spalte kann nur Überschrieben werden, wenn die Revision größer ist als die,"
 					+ " welche bei der Tabelle gesetzt ist.");
+		}
 		this._revision = revision;
 		return this;
 	}
@@ -142,12 +144,14 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	 * @return dieses Objekt
 	 */
 	public SchemaTabelleSpalte setVeraltet(final SchemaRevisionen veraltet) {
-		if (veraltet == SchemaRevisionen.UNDEFINED)
+		if (veraltet == SchemaRevisionen.UNDEFINED) {
 			throw new RuntimeException("Die Revision, wann eine Spalte veraltet, kann nicht auf undefiniert gesetzt werden, da in diesem Fall"
 					+ " das Erben des Veraltet-Attributes der Tabelle vorrangig ist.");
-		if ((this._veraltet != SchemaRevisionen.UNDEFINED) && (veraltet.revision >= this._veraltet.revision))
+		}
+		if ((this._veraltet != SchemaRevisionen.UNDEFINED) && (veraltet.revision >= this._veraltet.revision)) {
 			throw new RuntimeException("Die Revision, wann eine Spalte veraltet, kann nicht auf eine Revision größer oder gleich der Revision gesetzt werden,"
 					+ " wo die zugehörige Tabelle veraltet.");
+		}
 		this._veraltet = veraltet;
 		return this;
 	}
@@ -301,8 +305,9 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	 * @return der Name des Java-Attributs
 	 */
 	public String javaAttributName() {
-		if (this._javaAttributName == null)
+		if (this._javaAttributName == null) {
 			return this._name;
+		}
 		return _javaAttributName;
 	}
 
@@ -317,16 +322,21 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	 */
 	public DBAttributeConverter<?, ?> javaConverter(final long rev) {
 		final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
-		if (_javaConverter == null)
+		if (_javaConverter == null) {
 			return null;
-		if ((_javaConverterRevision != null) && (revision < _javaConverterRevision.revision))
+		}
+		if ((_javaConverterRevision != null) && (revision < _javaConverterRevision.revision)) {
 			return null;
-		if ((_javaConverterVeraltet != null) && (_javaConverterVeraltet.revision >= 0) && (revision >= _javaConverterVeraltet.revision))
+		}
+		if ((_javaConverterVeraltet != null) && (_javaConverterVeraltet.revision >= 0) && (revision >= _javaConverterVeraltet.revision)) {
 			return null;
-		if (rev == 0)
+		}
+		if (rev == 0) {
 			return DBAttributeConverter.getByClassName("Migration" + _javaConverter.getSimpleName());
-		if (rev <= SchemaRevisionen.maxRevision.revision)
+		}
+		if (rev <= SchemaRevisionen.maxRevision.revision) {
 			return DBAttributeConverter.getByClass(_javaConverter);
+		}
 		return DBAttributeConverter.getByClassName("Dev" + _javaConverter.getSimpleName());
 	}
 
@@ -336,8 +346,9 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	 * @return die Revision
 	 */
 	public SchemaRevisionen javaConverterRevision() {
-		if (this._javaConverterRevision == null)
+		if (this._javaConverterRevision == null) {
 			return this._revision;
+		}
 		return this._javaConverterRevision;
 	}
 
@@ -348,8 +359,9 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	 * @return die Revision
 	 */
 	public SchemaRevisionen javaConverterVeraltet() {
-		if (this._javaConverterVeraltet == null)
+		if (this._javaConverterVeraltet == null) {
 			return this._veraltet;
+		}
 		return this._javaConverterVeraltet;
 	}
 
@@ -373,16 +385,21 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	 */
 	public String getJavaAttributConverter(final long rev) {
 		final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
-		if (_javaConverter == null)
+		if (_javaConverter == null) {
 			return null;
-		if ((_javaConverterRevision != null) && (revision < _javaConverterRevision.revision))
+		}
+		if ((_javaConverterRevision != null) && (revision < _javaConverterRevision.revision)) {
 			return null;
-		if ((_javaConverterVeraltet != null) && (_javaConverterVeraltet.revision >= 0) && (revision >= _javaConverterVeraltet.revision))
+		}
+		if ((_javaConverterVeraltet != null) && (_javaConverterVeraltet.revision >= 0) && (revision >= _javaConverterVeraltet.revision)) {
 			return null;
-		if (rev < 0)
+		}
+		if (rev < 0) {
 			return _javaConverter.getSimpleName();
-		if (rev == 0)
+		}
+		if (rev == 0) {
 			return "Migration" + _javaConverter.getSimpleName();
+		}
 		return "Dev" + _javaConverter.getSimpleName();
 	}
 
@@ -394,13 +411,15 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	 * @return der Default-Wert der Spalte
 	 */
 	public Object getDefaultWertConverted() {
-		if (_default == null)
+		if (_default == null) {
 			return null;
+		}
 		Object result = null;
 		switch (_datentyp) {
 			case BIGINT:
-				if ("".equals(_default.trim()))
+				if ("".equals(_default.trim())) {
 					return null;
+				}
 				result = 0;
 				try {
 					result = Long.parseLong(_default);
@@ -409,8 +428,9 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 				}
 				break;
 			case FLOAT:
-				if ("".equals(_default.trim()))
+				if ("".equals(_default.trim())) {
 					return null;
+				}
 				result = 0.0;
 				try {
 					result = Double.parseDouble(_default);
@@ -421,8 +441,9 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 			case LONGBLOB:
 				return null;
 			case SMALLINT, INT:
-				if ("".equals(_default.trim()))
+				if ("".equals(_default.trim())) {
 					return null;
+				}
 				result = 0;
 				try {
 					result = Integer.parseInt(_default);
@@ -431,8 +452,9 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 				}
 				break;
 			case BOOLEAN:
-				if ("".equals(_default.trim()))
+				if ("".equals(_default.trim())) {
 					return null;
+				}
 				result = _default.equalsIgnoreCase("true");
 				break;
 			case CHAR, DATE, DATETIME, TEXT, VARCHAR:
@@ -441,8 +463,9 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 			default: // unbekannter Typ
 				return null;
 		}
-		if (_javaConverter == null)
+		if (_javaConverter == null) {
 			return result;
+		}
 		return DBAttributeConverter.getByClass(_javaConverter).convertToEntityAttributeFromObject(result);
 	}
 
@@ -505,8 +528,9 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	private String getSQLAutoinkrement(final DBDriver dbms) {
 		if ((!this._tabelle.istPrimaerschlusselAttribut(this))
 				|| (!this._tabelle.pkAutoIncrement())
-				|| (!this._datentyp.isIntType()))
+				|| (!this._datentyp.isIntType())) {
 			return "";
+		}
 		return switch (dbms) {
 			case MARIA_DB, MSSQL, MYSQL, SQLITE -> " DEFAULT -1";
 			case MDB -> " AUTOINCREMENT";
@@ -525,10 +549,12 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	 * @return der SQL-Code für eine Default-Wert bei dieser Spalte
 	 */
 	private String getSQLDefault(final DBDriver dbms, final SchemaDatentypen type) {
-		if (this._default != null)
+		if (this._default != null) {
 			return " DEFAULT " + (type.isQuoted() ? "'" : "") + this._default + (type.isQuoted() ? "'" : "");
-		if (!this._notNull)
+		}
+		if (!this._notNull) {
 			return "";
+		}
 		return switch (this._datentyp) {
 			case DATE -> switch (dbms) {
 				case MYSQL -> " DEFAULT (CURRENT_DATE)";
@@ -561,8 +587,9 @@ public final class SchemaTabelleSpalte implements Comparable<SchemaTabelleSpalte
 	@Override
 	public int compareTo(final SchemaTabelleSpalte other) {
 		final int result = this._tabelle.name().compareTo(other._tabelle.name());
-		if (result != 0)
+		if (result != 0) {
 			return result;
+		}
 		return (this.sortierung() < other.sortierung()) ? -1 : 1;
 	}
 

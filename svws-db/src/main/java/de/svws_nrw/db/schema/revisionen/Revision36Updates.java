@@ -27,8 +27,9 @@ public final class Revision36Updates extends SchemaRevisionUpdateSQL {
 
 	private static void doUpdate(final DBEntityManager conn, final Logger logger, final String logInfo, final String sql) throws DBException {
 		logger.logLn(logInfo);
-		if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+		if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 			throw new DBException("Fehler beim Korrigieren des ASD-Jahrgangs");
+		}
 	}
 
 	@Override
@@ -51,8 +52,9 @@ public final class Revision36Updates extends SchemaRevisionUpdateSQL {
 		}
 
 		// Die folgenden Korrekturen sind nur für die Schulformen mit Schuleingangsphase vorgesehen...
-		if (!Set.of("FW", "HI", "WF", "G", "PS", "S", "KS", "V").contains(schulformKrz))
+		if (!Set.of("FW", "HI", "WF", "G", "PS", "S", "KS", "V").contains(schulformKrz)) {
 			return true;
+		}
 
 		try {
 			// Prüfe, ob die Jahrgänge E1 und E2 in der Tabelle EigeneSchule_Jahrgänge angelegt sind. Ist dies der Fall, so setze diese auf 01 und 02, ansonsten lege sie an

@@ -109,18 +109,21 @@ public final class Revision45Updates extends SchemaRevisionUpdateSQL {
 			final String krzLehramtAnerkennung = (String) tmpLehramt[2];
 			// Prüfe, ob das Lehramt überhaupt gültig ist oder war - nur solche Einträge werden übernommen
 			final LehrerLehramt lehramt = LehrerLehramt.data().getWertBySchluessel(krzLehramt);
-			if (lehramt == null)
+			if (lehramt == null) {
 				continue;
+			}
 			// Bestimme den aktuellen Eintrag in dem Katalog der Lehrämter anhand des aktuellen Schuljahresabschnitt der Schule
 			LehrerLehramtKatalogEintrag eintragLehramt = LehrerLehramt.data().getEintragBySchuljahrUndSchluessel(schuljahr, krzLehramt);
-			if (eintragLehramt == null) // Existiert kein Eintrag in der Historie, so übernehme den letzten gültigen Historieneintrag
+			if (eintragLehramt == null) { // Existiert kein Eintrag in der Historie, so übernehme den letzten gültigen Historieneintrag
 				eintragLehramt = lehramt.historie().getLast();
+			}
 			// Prüfe den Anerkennungsgrund für das Lehramt
 			final LehrerLehramtAnerkennung lehramtAnerkennung = LehrerLehramtAnerkennung.data().getWertBySchluessel(krzLehramtAnerkennung);
 			LehrerLehramtAnerkennungKatalogEintrag eintragLehramtAnerkennung =
 					LehrerLehramtAnerkennung.data().getEintragBySchuljahrUndSchluessel(schuljahr, krzLehramtAnerkennung);
-			if (eintragLehramtAnerkennung == null)
+			if (eintragLehramtAnerkennung == null) {
 				eintragLehramtAnerkennung = (lehramtAnerkennung == null) ? null : lehramtAnerkennung.historie().getLast();
+			}
 			// Schreibe den Eintrag für das Lehramt
 			final long id = idNext++;
 			final Object[] entry = new Object[4];
@@ -147,24 +150,28 @@ public final class Revision45Updates extends SchemaRevisionUpdateSQL {
 			final String krzLehrbefaehigungAnerkennung = (String) tmpLehrbefaehigung[3];
 			// Bestimme die ID des zugehörigen Lehrarmtseintrages, ignoriere Einträge ohne gültigen Bezug zu einem Eintrag in der Lahramtstabelle
 			final Long idLehramt = mapLehraemter.getOrNull(idLehrer, krzLehramt);
-			if (idLehramt == null)
+			if (idLehramt == null) {
 				continue;
+			}
 			// Prüfe, ob die Lehrbefägigung überhaupt gültig ist oder war - nur solche Einträge werden übernommen
 			final LehrerLehrbefaehigung lehrbefaehigung = LehrerLehrbefaehigung.data().getWertBySchluessel(krzLehrbefaehigung);
-			if (lehrbefaehigung == null)
+			if (lehrbefaehigung == null) {
 				continue;
+			}
 			// Bestimme den aktuellen Eintrag in dem Katalog der Lehrbefägigungen anhand des aktuellen Schuljahresabschnitt der Schule
 			LehrerLehrbefaehigungKatalogEintrag eintragLehrbefaehigung =
 					LehrerLehrbefaehigung.data().getEintragBySchuljahrUndSchluessel(schuljahr, krzLehrbefaehigung);
-			if (eintragLehrbefaehigung == null) // Existiert kein Eintrag in der Historie, so übernehme den letzten gültigen Historieneintrag
+			if (eintragLehrbefaehigung == null) { // Existiert kein Eintrag in der Historie, so übernehme den letzten gültigen Historieneintrag
 				eintragLehrbefaehigung = lehrbefaehigung.historie().getLast();
+			}
 			// Prüfe den Anerkennungsgrund für die Lehrbefähigung
 			final LehrerLehrbefaehigungAnerkennung lehrbefaehigungAnerkennung =
 					LehrerLehrbefaehigungAnerkennung.data().getWertBySchluessel(krzLehrbefaehigungAnerkennung);
 			LehrerLehrbefaehigungAnerkennungKatalogEintrag eintragLehrbefaehigungAnerkennung =
 					LehrerLehrbefaehigungAnerkennung.data().getEintragBySchuljahrUndSchluessel(schuljahr, krzLehrbefaehigungAnerkennung);
-			if (eintragLehrbefaehigungAnerkennung == null)
+			if (eintragLehrbefaehigungAnerkennung == null) {
 				eintragLehrbefaehigungAnerkennung = (lehrbefaehigungAnerkennung == null) ? null : lehrbefaehigungAnerkennung.historie().getLast();
+			}
 			// Schreibe den Eintrag für die Lehrbefähigung
 			final long id = idNext++;
 			final Object[] entry = new Object[4];
@@ -190,24 +197,28 @@ public final class Revision45Updates extends SchemaRevisionUpdateSQL {
 			final String krzFachrichtungAnerkennung = (String) tmpFachrichtung[3];
 			// Bestimme die ID des zugehörigen Lehrarmtseintrages, ignoriere Einträge ohne gültigen Bezug zu einem Eintrag in der Lahramtstabelle
 			final Long idLehramt = mapLehraemter.getOrNull(idLehrer, krzLehramt);
-			if (idLehramt == null)
+			if (idLehramt == null) {
 				continue;
+			}
 			// Prüfe, ob die Fachrichtung überhaupt gültig ist oder war - nur solche Einträge werden übernommen
 			final LehrerFachrichtung fachrichtung = LehrerFachrichtung.data().getWertBySchluessel(krzFachrichtung);
-			if (fachrichtung == null)
+			if (fachrichtung == null) {
 				continue;
+			}
 			// Bestimme den aktuellen Eintrag in dem Katalog der Fachrichtungen anhand des aktuellen Schuljahresabschnitt der Schule
 			LehrerFachrichtungKatalogEintrag eintragFachrichtung =
 					LehrerFachrichtung.data().getEintragBySchuljahrUndSchluessel(schuljahr, krzFachrichtung);
-			if (eintragFachrichtung == null) // Existiert kein Eintrag in der Historie, so übernehme den letzten gültigen Historieneintrag
+			if (eintragFachrichtung == null) { // Existiert kein Eintrag in der Historie, so übernehme den letzten gültigen Historieneintrag
 				eintragFachrichtung = fachrichtung.historie().getLast();
+			}
 			// Prüfe den Anerkennungsgrund für die Fachrichtung
 			final LehrerFachrichtungAnerkennung fachrichtungAnerkennung =
 					LehrerFachrichtungAnerkennung.data().getWertBySchluessel(krzFachrichtungAnerkennung);
 			LehrerFachrichtungAnerkennungKatalogEintrag eintragFachrichtungAnerkennung =
 					LehrerFachrichtungAnerkennung.data().getEintragBySchuljahrUndSchluessel(schuljahr, krzFachrichtungAnerkennung);
-			if (eintragFachrichtungAnerkennung == null)
+			if (eintragFachrichtungAnerkennung == null) {
 				eintragFachrichtungAnerkennung = (fachrichtungAnerkennung == null) ? null : fachrichtungAnerkennung.historie().getLast();
+			}
 			// Schreibe den Eintrag für die Fachrichtung
 			final long id = idNext++;
 			final Object[] entry = new Object[4];

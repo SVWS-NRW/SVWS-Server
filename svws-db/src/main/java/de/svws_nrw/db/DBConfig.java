@@ -19,7 +19,6 @@ public final class DBConfig {
 	/** Der Standard Ort für die Datenbank, falls kein gültiger angegeben wird */
 	private static final String DEFAULT_DB_LOCATION = "localhost";
 
-
 	/** Die zu verwendende Persistence-Unit */
 	private final @NotNull PersistenceUnits persistenceUnit;
 
@@ -219,12 +218,15 @@ public final class DBConfig {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final DBConfig other = (DBConfig) obj;
 		return (create_db_file == other.create_db_file) && (persistenceUnit == other.persistenceUnit) && (db_driver == other.db_driver)
 				&& Objects.equals(db_location, other.db_location) && Objects.equals(db_schema, other.db_schema)

@@ -19,7 +19,7 @@ public final class GeschlechtConverterFromStringDeserializer extends StdDeserial
 	private static final long serialVersionUID = 670435792297312455L;
 
 	/**
-	 * Erzeugt einen neuen Deerialisierer
+	 * Erzeugt einen neuen Deserialisierer
 	 */
 	public GeschlechtConverterFromStringDeserializer() {
 		super(Geschlecht.class);

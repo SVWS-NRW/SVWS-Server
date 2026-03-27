@@ -35,8 +35,9 @@ public final class GeschlechtConverterFromString extends DBAttributeConverter<Ge
 
 	@Override
 	public Geschlecht convertToEntityAttribute(final String dbData) {
-		if (dbData == null)
+		if (dbData == null) {
 			return Geschlecht.X;
+		}
 		try {
 			return Geschlecht.fromValue(Integer.parseInt(dbData));
 		} catch (@SuppressWarnings("unused") final NumberFormatException e) {

@@ -19,7 +19,7 @@ public class SchemaTabelleCoreType {
 	/** Die Version, in welcher der Core-Type vorliegt */
 	final long _ctVersion;
 
-	/** Ein Supplier für die Bestimmmung der Daten des Core-Types und der Erzeugung der VALUE-Einträge im SQL-Insert-Befehl. */
+	/** Ein Supplier für die Bestimmung der Daten des Core-Types und der Erzeugung der VALUE-Einträge im SQL-Insert-Befehl. */
 	final Function<Long, List<String>> valueSupplier;
 
 
@@ -67,8 +67,9 @@ public class SchemaTabelleCoreType {
 	 * @return der SQL-Code zum Einfügen oder null, falls die Tabelle in der Revision nicht definiert ist.
 	 */
 	public String getSQLInsert(final long revision, final boolean isBackup) {
-		if (!_tabelle.isDefined(revision))
+		if (!_tabelle.isDefined(revision)) {
 			return "";
+		}
 		final StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
 		sql.append(_tabelle.name());

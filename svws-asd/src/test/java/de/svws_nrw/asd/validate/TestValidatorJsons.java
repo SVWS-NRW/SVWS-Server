@@ -30,7 +30,6 @@ class TestValidatorJsons {
 	// Das Package, in welchem die Validatoren gesucht werden
 	private static final String BASE_PACKAGE = "de.svws_nrw.asd.validate";
 
-
 	@Test
 	@DisplayName("Prüfe, ob für jeden Validator die JSON-Datei am korrekten Ort liegt und valide ist")
 	void testValidatorJsonFiles() throws Exception {
@@ -211,8 +210,9 @@ class TestValidatorJsons {
 		for (final Class<? extends Validator> clazz : validatorClasses) {
 			final String resourceLocation = clazz.getName().replace('.', '/') + ".json";
 			final String jsonContent = JsonReader.fromResourceOrEmptyString(resourceLocation);
-			if (jsonContent.isEmpty())
+			if (jsonContent.isEmpty()) {
 				continue;
+			}
 
 			final JsonNode root = JsonReader.mapper.readTree(jsonContent);
 			final String validatorName = root.get("validator").asText();
@@ -220,8 +220,9 @@ class TestValidatorJsons {
 
 			for (final JsonNode eintrag : historie) {
 				final String prefix = eintrag.get("praefix").asText();
-				if ((prefix == null) || (prefix.isEmpty()))
+				if ((prefix == null) || (prefix.isEmpty())) {
 					continue;
+				}
 
 				final int von = eintrag.get("gueltigVon").isNull() ? Integer.MIN_VALUE : eintrag.get("gueltigVon").asInt();
 				final int bis = eintrag.get("gueltigBis").isNull() ? Integer.MAX_VALUE : eintrag.get("gueltigBis").asInt();

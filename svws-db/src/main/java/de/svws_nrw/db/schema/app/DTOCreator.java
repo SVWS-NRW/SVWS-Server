@@ -58,8 +58,9 @@ public class DTOCreator {
 			final String pack = Schema.JAVA_PACKAGE + "." + Schema.JAVA_DTO_PACKAGE;
 			logger.logLn("Erzeuge Package " + pack);
 			String packPath = pack.replace(".", "/");
-			if ((baseDir != null) && !baseDir.isEmpty())
+			if ((baseDir != null) && !baseDir.isEmpty()) {
 				packPath = baseDir + (baseDir.endsWith("/") ? "" : "/") + packPath;
+			}
 			final Path dir = Paths.get(packPath);
 			Files.createDirectories(dir);
 			return dir.toFile();
@@ -214,31 +215,37 @@ public class DTOCreator {
 	 */
 	private static File createJavaCode(final String baseDir, final long rev) {
 		final File packageDir = createPackageDirectory(baseDir);
-		if (packageDir == null)
+		if (packageDir == null) {
 			cmdLine.printOptionsAndExit(2, "Fehler beim Erstellen des Verzeichnisses für das DTO-Package. Korrigieren Sie den Ausgabe-Pfad.");
+		}
 
 		// Generiere den Code für die Java DTO-Klasse
 		String dtosClassname = "DTOs";
-		if (rev > 0)
+		if (rev > 0) {
 			dtosClassname = "DevDTOs";
-		else if (rev == 0)
+		} else if (rev == 0) {
 			dtosClassname = "MigrationDTOs";
+		}
 		final File dtosFile = new File(packageDir, dtosClassname + ".java");
 		final StringBuilder codeDTOImports = new StringBuilder();
 		final StringBuilder codeMapDTOName2DTOClass = new StringBuilder();
 		final StringBuilder codeMapTablename2DTOClass = new StringBuilder();
 
 		// Erzeuge die DTOs für die einzelnen Tabellen
-		for (final DTOCreatorTable dto : DTOCreatorTable.all)
-			if (!createJavaCodeForTable(baseDir, rev, dto, codeDTOImports, codeMapDTOName2DTOClass, codeMapTablename2DTOClass))
+		for (final DTOCreatorTable dto : DTOCreatorTable.all) {
+			if (!createJavaCodeForTable(baseDir, rev, dto, codeDTOImports, codeMapDTOName2DTOClass, codeMapTablename2DTOClass)) {
 				return packageDir;
+			}
+		}
 
 		// Erzeuge die DTOs für die einzelnen Views
 		if (rev != 0) {
 			final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
-			for (final View view : DBSchemaViews.getInstance().getViewsActive(revision))
-				if (!createJavaCodeForView(baseDir, rev, view, codeDTOImports, codeMapDTOName2DTOClass, codeMapTablename2DTOClass))
+			for (final View view : DBSchemaViews.getInstance().getViewsActive(revision)) {
+				if (!createJavaCodeForView(baseDir, rev, view, codeDTOImports, codeMapDTOName2DTOClass, codeMapTablename2DTOClass)) {
 					return packageDir;
+				}
+			}
 		}
 
 		final String dtosCode = "package " + Schema.JAVA_PACKAGE + "." + Schema.JAVA_DTO_PACKAGE + ";" + System.lineSeparator()
@@ -456,8 +463,9 @@ public class DTOCreator {
                           <class>de.svws_nrw.db.schema.dto.DTOInformationSchemaTables</class>
                           <class>de.svws_nrw.db.schema.dto.DTOInformationUser</class>
                   """);
-		for (final String cl : allClasses)
+		for (final String cl : allClasses) {
 			sb.append("        <class>" + cl + "</class>" + System.lineSeparator());
+		}
 		sb.append("""
                           <exclude-unlisted-classes>true</exclude-unlisted-classes>
                       </persistence-unit>

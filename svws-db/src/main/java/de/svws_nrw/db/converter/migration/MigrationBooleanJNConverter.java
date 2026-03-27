@@ -27,8 +27,9 @@ public final class MigrationBooleanJNConverter extends DBAttributeConverter<Bool
 
 	@Override
 	public String convertToDatabaseColumn(final Boolean value) {
-		if (value == null)
+		if (value == null) {
 			return null;
+		}
 		return value ? "J" : "N";
 	}
 

@@ -18,7 +18,7 @@ public final class GOStKursartConverterDeserializer extends StdDeserializer<Gost
 	private static final long serialVersionUID = -5121032441860213925L;
 
 	/**
-	 * Erzeugt einen neuen Deerialisierer
+	 * Erzeugt einen neuen Deserialisierer
 	 */
 	public GOStKursartConverterDeserializer() {
 		super(GostKursart.class);

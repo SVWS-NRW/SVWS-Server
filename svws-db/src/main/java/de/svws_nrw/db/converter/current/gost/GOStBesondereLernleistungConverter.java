@@ -22,8 +22,9 @@ public final class GOStBesondereLernleistungConverter extends DBAttributeConvert
 
 	@Override
 	public String convertToDatabaseColumn(final GostBesondereLernleistung value) {
-		if (value == null)
+		if (value == null) {
 			return null;
+		}
 		return value.toString();
 	}
 

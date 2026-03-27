@@ -32,8 +32,9 @@ public final class Revision35Updates extends SchemaRevisionUpdateSQL {
 			final String jgAlt, final String bedingung) throws DBException {
 		logger.logLn("- %s: Setze den ASD-Jahrgang auf '%s', wenn zuvor '%s' gesetzt war.".formatted(tabname, jgNeu, jgAlt));
 		final String sql = "UPDATE %1$s SET %2$s = '%3$s' WHERE %2$s = '%4$s'%5$s".formatted(tabname, colname, jgNeu, jgAlt, bedingung);
-		if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+		if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 			throw new DBException("Fehler beim Korrigieren des ASD-Jahrgangs");
+		}
 	}
 
 
@@ -42,39 +43,47 @@ public final class Revision35Updates extends SchemaRevisionUpdateSQL {
 		try {
 			// Aktualisiere die ASD-Jahrgangs-Einträge für die Tabelle "K_Ankreuzfloskeln"
 			final Map<String, String> mapJg = Map.of("S1", "01", "S2", "02", "S3", "03", "S4", "04", "S5", "05", "S6", "06");
-			for (final Map.Entry<String, String> jg : mapJg.entrySet())
+			for (final Map.Entry<String, String> jg : mapJg.entrySet()) {
 				updateASDJahrgang(conn, logger, tab.name(), tab.col_Jahrgang.name(), jg.getKey(), jg.getValue(), "");
+			}
 
 			// Korrigiere zunächst die Einträge, bei welchen die Schulgliederung angegeben wurde und angepasst werden muss
 			logger.logLn("- K_Ankreuzfloskeln: Gliederung G02/K02: Setze den ASD-Jahrgang auf 'V1', wenn zuvor '91' gesetzt ist.");
 			String sql = "UPDATE %s SET Jahrgang = 'V1' WHERE Jahrgang = '91' AND (Gliederung IN ('G02','K02') OR Gliederung IS NULL)".formatted(tab.name());
-			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 				throw new DBException("Fehler beim Korrigieren des ASD-Jahrgangs");
+			}
 			logger.logLn("- K_Ankreuzfloskeln: Gliederung G02/K02: Setze den ASD-Jahrgang auf 'V2', wenn zuvor '92' gesetzt ist.");
 			sql = "UPDATE %s SET Jahrgang = 'V2' WHERE Jahrgang = '92' AND (Gliederung IN ('G02','K02') OR Gliederung IS NULL)".formatted(tab.name());
-			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 				throw new DBException("Fehler beim Korrigieren des ASD-Jahrgangs");
+			}
 			logger.logLn("- K_Ankreuzfloskeln: Gliederung R02: Setze den ASD-Jahrgang auf 'R1', wenn zuvor 'S1' gesetzt ist.");
 			sql = "UPDATE %s SET Jahrgang = 'R1' WHERE Jahrgang = 'S1' AND Gliederung = 'R02'".formatted(tab.name());
-			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 				throw new DBException("Fehler beim Korrigieren des ASD-Jahrgangs");
+			}
 			logger.logLn("- K_Ankreuzfloskeln: Gliederung R02: Setze den ASD-Jahrgang auf 'R2', wenn zuvor 'S2' gesetzt ist.");
 			sql = "UPDATE %s SET Jahrgang = 'R2' WHERE Jahrgang = 'S2' AND Gliederung = 'R02'".formatted(tab.name());
-			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 				throw new DBException("Fehler beim Korrigieren des ASD-Jahrgangs");
+			}
 			logger.logLn("- K_Ankreuzfloskeln: Gliederung R02: Setze den ASD-Jahrgang auf 'R3', wenn zuvor 'S3' gesetzt ist.");
 			sql = "UPDATE %s SET Jahrgang = 'R3' WHERE Jahrgang = 'S3' AND Gliederung = 'R02'".formatted(tab.name());
-			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 				throw new DBException("Fehler beim Korrigieren des ASD-Jahrgangs");
+			}
 			logger.logLn("- K_Ankreuzfloskeln: Gliederung R02: Setze den ASD-Jahrgang auf 'R4', wenn zuvor 'S4' gesetzt ist.");
 			sql = "UPDATE %s SET Jahrgang = 'R4' WHERE Jahrgang = 'S4' AND Gliederung = 'R02'".formatted(tab.name());
-			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 				throw new DBException("Fehler beim Korrigieren des ASD-Jahrgangs");
+			}
 			// Entferne alle Eintragungen, wo die Gliederung der Abendrealschule für Semester gesetzt ist, die es dort gar nicht gibt
 			logger.logLn("- K_Ankreuzfloskeln: Gliederung R02: Entferne Einträge, wo Jahrgang 'S5' oder 'S6' gesetzt ist.");
 			sql = "DELETE FROM %s WHERE Gliederung = 'R02' AND Jahrgang IN ('S5','S6')".formatted(tab.name());
-			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+			if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 				throw new DBException("Fehler beim Korrigieren des ASD-Jahrgangs");
+			}
 			// Dupliziere für die Abendrealschule zunächst alle Einträge, welche als Gliederung NULL eingetragen haben, ignoriere dabei die Einträge mit S5 und S6
 			logger.logLn("- K_Ankreuzfloskeln: Gliederung R02: Erzeuge Einträge für die Schulgliederung R02, wenn die Gliederung NULL ist.");
 			conn.transactionFlush();
@@ -98,10 +107,12 @@ public final class Revision35Updates extends SchemaRevisionUpdateSQL {
 					map.put(id, nextID);
 					sql = "INSERT INTO %1$s SELECT %3$d AS ID, Fach_ID, IstASV, '%4$s' AS Jahrgang, '%5$s' AS Gliederung, FloskelText, Sortierung, FachSortierung, Abschnitt, Sichtbar, Aktiv FROM %1$s WHERE ID = %2$d"
 							.formatted(tab.name(), id, nextID++, jg, "R02");
-					if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+					if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 						throw new DBException("Fehler beim Duplizieren des Eintrags mit der ID %d zu Jahrgang %s".formatted(id, jg));
-				} else
+					}
+				} else {
 					throw new DBException("Fehler beim Bestimmen der ID oder des Jahrgangs der Datensätze");
+				}
 			}
 			conn.transactionFlush();
 			// ggf. Korrektur der Einträge in SchuelerAnkreuzfloskeln
@@ -110,9 +121,10 @@ public final class Revision35Updates extends SchemaRevisionUpdateSQL {
 				final long idNeu = e.getValue();
 				sql = "UPDATE %s sa JOIN %s sla ON sa.Abschnitt_ID = sla.ID AND sla.ASDSchulgliederung = 'R02' AND sa.Floskel_ID = %d SET sa.Floskel_ID = %d"
 						.formatted(Schema.tab_SchuelerAnkreuzfloskeln.name(), Schema.tab_SchuelerLernabschnittsdaten.name(), idAlt, idNeu);
-				if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+				if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 					throw new DBException("Fehler beim Setzen der Einträge in SchuelerAnkreuzfloskeln für die duplizierten Einträge von ID %d aus ID %d"
 							.formatted(idAlt, idNeu));
+				}
 			}
 			return true;
 		} catch (final DBException e) {
@@ -123,8 +135,9 @@ public final class Revision35Updates extends SchemaRevisionUpdateSQL {
 
 	private static void doUpdate(final DBEntityManager conn, final Logger logger, final String logInfo, final String sql) throws DBException {
 		logger.logLn(logInfo);
-		if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql))
+		if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 			throw new DBException("Fehler beim Korrigieren des ASD-Jahrgangs");
+		}
 	}
 
 	@Override
@@ -146,8 +159,9 @@ public final class Revision35Updates extends SchemaRevisionUpdateSQL {
 			return true;
 		}
 		// Die folgenden Korrektur sind nur für die Schulform WB vorgesehen...
-		if (!schulformKrz.equals("WB"))
+		if (!schulformKrz.equals("WB")) {
 			return true;
+		}
 
 		try {
 			// EigeneSchule_Jahrgaenge - Abendgymnasium / Kolleg
@@ -221,8 +235,9 @@ public final class Revision35Updates extends SchemaRevisionUpdateSQL {
 			conn.transactionFlush();
 
 			// Aktualisiere den Katalog der Ankreuzfloskeln
-			if (!updateKatalogAnkreuzfloskeln(conn, logger))
+			if (!updateKatalogAnkreuzfloskeln(conn, logger)) {
 				return false;
+			}
 
 			// Aktualisiere die ASD-Jahrgänge in der Kurstabelle über die Jahrgangs-ID
 			doUpdate(conn, logger, "- Kurse: Aktualisiere die Einträge zum Attribut ASDJahrgang anhand der Tabelle EigeneSchule_Jahrgaenge.",

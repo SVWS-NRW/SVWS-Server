@@ -17,7 +17,7 @@ public final class Boolean01StringConverterDeserializer extends StdDeserializer<
 	private static final long serialVersionUID = 5630376392284015049L;
 
 	/**
-	 * Erzeugt einen neuen Deerialisierer
+	 * Erzeugt einen neuen Deserialisierer
 	 */
 	public Boolean01StringConverterDeserializer() {
 		super(Boolean.class);

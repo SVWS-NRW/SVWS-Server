@@ -24,8 +24,9 @@ public final class GOStHalbjahrConverter extends DBAttributeConverter<GostHalbja
 
 	@Override
 	public Integer convertToDatabaseColumn(final GostHalbjahr value) {
-		if (value == null)
+		if (value == null) {
 			return null;
+		}
 		return value.id;
 	}
 

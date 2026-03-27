@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import de.svws_nrw.db.converter.current.StringToIntegerConverter;
 
 /**
- * Diese Klasse ist ein Deserialisierer für Strinwerte. Sie deserialisiert die
+ * Diese Klasse ist ein Deserialisierer für Stringwerte. Sie deserialisiert die
  * Datenbankdarstellung als Integer.
  */
 public final class StringToIntegerConverterDeserializer extends StdDeserializer<Integer> {
@@ -17,7 +17,7 @@ public final class StringToIntegerConverterDeserializer extends StdDeserializer<
 	private static final long serialVersionUID = 899602939694388520L;
 
 	/**
-	 * Erzeugt einen neuen Deerialisierer
+	 * Erzeugt einen neuen Deserialisierer
 	 */
 	public StringToIntegerConverterDeserializer() {
 		super(Integer.class);

@@ -74,10 +74,12 @@ public final class SVWSKonfiguration {
 	 * @return die SVWS-Konfiguration
 	 */
 	public static SVWSKonfiguration getFrom(final String path) {
-		if (instanceConfig.dto == null)
+		if (instanceConfig.dto == null) {
 			readJSON(path, DEFAULT_CONFIG_FILENAME);
-		if (instanceConfig.dto == null)
+		}
+		if (instanceConfig.dto == null) {
 			readXML(path, DEFAULT_CONFIG_FILENAME_XML);
+		}
 		if (instanceConfig.dto == null) {
 			Logger.global().logLn(LogLevel.INFO, "Erstelle leere Konfiguration mit Default-Werten...");
 			instanceConfig.dto = new SVWSKonfigurationDTO();
@@ -96,8 +98,9 @@ public final class SVWSKonfiguration {
 	 * @return die SVWS-Konfiguration
 	 */
 	public static SVWSKonfiguration get() {
-		if (instanceConfig.dto != null)
+		if (instanceConfig.dto != null) {
 			return instanceConfig;
+		}
 		return getFrom(null);
 	}
 
@@ -116,26 +119,30 @@ public final class SVWSKonfiguration {
 		// Prüfe, ob die Datei an dem speziellen Ort zu finden ist
 		if (path != null) {
 			final Path p = Paths.get(path + "/" + filename);
-			if (Files.exists(p))
+			if (Files.exists(p)) {
 				return p;
+			}
 		}
 
 		// Prüfe, ob die Datei im Ausführungsverzeichnis vorhanden ist
 		Path p = Paths.get(System.getProperty("user.dir") + "/" + filename);
-		if (Files.exists(p))
+		if (Files.exists(p)) {
 			return p;
+		}
 
 		// Prüfe, ob die Datei im User-Home-Verzeichnis vorhanden ist
 		p = Paths.get(System.getProperty("user.home") + "/" + filename);
-		if (Files.exists(p))
+		if (Files.exists(p)) {
 			return p;
+		}
 
 		// Prüfe, ob die Datei als Java-Resource im Classpath vorhanden ist.
 		try {
 			final ClassLoader classLoader = SVWSKonfiguration.class.getClassLoader();
 			final URL url = classLoader.getResource(filename);
-			if (url != null)
+			if (url != null) {
 				return Paths.get(url.toURI());
+			}
 			throw new IOException("File not found");
 		} catch (final URISyntaxException e) {
 			throw new IOException("File not found", e);
@@ -160,8 +167,9 @@ public final class SVWSKonfiguration {
 			instanceConfig.dto.filepath = p;
 			for (int i = 0; i < instanceConfig.getDBAnzahl(); i++) {
 				final SVWSKonfigurationSchemaDTO schema = instanceConfig.dto.dbKonfiguration.schemata.get(i);
-				if (schema.svwslogin == null)
+				if (schema.svwslogin == null) {
 					schema.svwslogin = false;
+				}
 				instanceConfig.dto.dbconfigs.put(schema.name, instanceConfig.getDBConfig(i));
 			}
 		} catch (final JsonMappingException e) {
@@ -189,8 +197,9 @@ public final class SVWSKonfiguration {
 			instanceConfig.dto.filepath = p;
 			for (int i = 0; i < instanceConfig.getDBAnzahl(); i++) {
 				final SVWSKonfigurationSchemaDTO schema = instanceConfig.dto.dbKonfiguration.schemata.get(i);
-				if (schema.svwslogin == null)
+				if (schema.svwslogin == null) {
 					schema.svwslogin = false;
+				}
 				instanceConfig.dto.dbconfigs.put(schema.name, instanceConfig.getDBConfig(i));
 			}
 		} catch (final JsonMappingException e) {
@@ -248,8 +257,9 @@ public final class SVWSKonfiguration {
 	 */
 	public static void write() throws SVWSKonfigurationException {
 		try {
-			if (instanceConfig.dto == null)
+			if (instanceConfig.dto == null) {
 				throw new SVWSKonfigurationException("Es existiert noch keine Konfiguration.");
+			}
 			if (instanceConfig.dto.isXMLConfig) {
 				writeXML(instanceConfig.dto.filepath);
 			} else {
@@ -319,8 +329,9 @@ public final class SVWSKonfiguration {
 	 * @return der Dateiname
 	 */
 	public String getFilename() {
-		if ((dto == null) || (dto.filepath == null) || ("".equals(dto.filepath.toString())))
+		if ((dto == null) || (dto.filepath == null) || ("".equals(dto.filepath.toString()))) {
 			return (((dto == null) || !dto.isXMLConfig) ? DEFAULT_CONFIG_FILENAME : DEFAULT_CONFIG_FILENAME_XML);
+		}
 		return dto.filepath.toString();
 	}
 
@@ -468,8 +479,9 @@ public final class SVWSKonfiguration {
 	 * @return der HTTP-Port des Servers für den priviligierten Zugriff
 	 */
 	public int getPortHTTPPrivilegedAccess() {
-		if ((dto == null) || (this.dto.portHTTPPrivilegedAccess == null))
+		if ((dto == null) || (this.dto.portHTTPPrivilegedAccess == null)) {
 			throw new NullPointerException("Es ist kein zweiter Port für den priviligierten Zugriff auf die SVWS-Datenbank definiert.");
+		}
 		return this.dto.portHTTPPrivilegedAccess;
 	}
 
@@ -522,8 +534,9 @@ public final class SVWSKonfiguration {
 	 * @return die Anzahl der Datenbank-Konfigurationen
 	 */
 	public int getDBAnzahl() {
-		if (dto == null)
+		if (dto == null) {
 			return 0;
+		}
 		return dto.dbKonfiguration.schemata.size();
 	}
 
@@ -535,8 +548,9 @@ public final class SVWSKonfiguration {
 	 * @return die Datenbank-Konfiguration
 	 */
 	private DBConfig getDBConfig(final int i) {
-		if ((dto == null) || (i < 0) || (i >= getDBAnzahl()))
+		if ((dto == null) || (i < 0) || (i >= getDBAnzahl())) {
 			return null;
+		}
 		final DBDriver driver = DBDriver.valueOf(dto.dbKonfiguration.dbms);
 		final SVWSKonfigurationSchemaDTO schema = dto.dbKonfiguration.schemata.get(i);
 		return new DBConfig(PersistenceUnits.SVWS_DB, driver, dto.dbKonfiguration.location, schema.name, schema.svwslogin, schema.username, schema.password,
@@ -551,8 +565,9 @@ public final class SVWSKonfiguration {
 	 * @return die Datenbank-Konfiguration
 	 */
 	public DBConfig getDBConfig(final String schema) {
-		if (dto == null)
+		if (dto == null) {
 			return null;
+		}
 		return dto.dbconfigs.get(schema);
 	}
 
@@ -565,8 +580,9 @@ public final class SVWSKonfiguration {
 	 * @return die Datenbank-Konfiguration für den Zugriff
 	 */
 	public DBConfig getRootDBConfig(final String username, final String password) {
-		if (dto == null)
+		if (dto == null) {
 			return null;
+		}
 		final DBDriver driver = DBDriver.valueOf(dto.dbKonfiguration.dbms);
 		return new DBConfig(PersistenceUnits.SVWS_ROOT, driver, dto.dbKonfiguration.location, driver.getRootSchema(), true, username, password, true, false);
 	}
@@ -579,13 +595,16 @@ public final class SVWSKonfiguration {
 	 * @return der Name des konfigurierten Default-Schemas oder null
 	 */
 	public String getDefaultSchema() {
-		if ((dto == null) || (dto.dbKonfiguration.schemata.isEmpty()))
+		if ((dto == null) || (dto.dbKonfiguration.schemata.isEmpty())) {
 			return null;
-		if ((dto.dbKonfiguration.defaultschema == null) || ("".equals(dto.dbKonfiguration.defaultschema)))
+		}
+		if ((dto.dbKonfiguration.defaultschema == null) || ("".equals(dto.dbKonfiguration.defaultschema))) {
 			return null;
+		}
 		final DBConfig schema = dto.dbconfigs.get(dto.dbKonfiguration.defaultschema);
-		if (schema != null)
+		if (schema != null) {
 			return schema.getDBSchema();
+		}
 		return null;
 	}
 
@@ -598,15 +617,17 @@ public final class SVWSKonfiguration {
 	 * @return true, wenn das Default-Schema erfolgreich gesetzt wurde
 	 */
 	public boolean setDefaultschema(final String schemaname) {
-		if (dto == null)
+		if (dto == null) {
 			return false;
+		}
 		if (schemaname == null) {
 			dto.dbKonfiguration.defaultschema = null;
 			return true;
 		}
 		final DBConfig schema = dto.dbconfigs.get(schemaname);
-		if (schema == null)
+		if (schema == null) {
 			return false;
+		}
 		dto.dbKonfiguration.defaultschema = schemaname;
 		return true;
 	}
@@ -620,13 +641,17 @@ public final class SVWSKonfiguration {
 	 * @return true, falls eine Konfiguratio für das Schema vorliegt, ansonsten false
 	 */
 	public boolean hasSchema(final String schemaName) {
-		if ((dto == null) || (schemaName == null) || "".equals(schemaName))
+		if ((dto == null) || (schemaName == null) || "".equals(schemaName)) {
 			return false;
-		if (dto.dbconfigs.get(schemaName) != null)
+		}
+		if (dto.dbconfigs.get(schemaName) != null) {
 			return true;
-		for (final String sn : dto.dbconfigs.keySet())
-			if (sn.equalsIgnoreCase(schemaName))
+		}
+		for (final String sn : dto.dbconfigs.keySet()) {
+			if (sn.equalsIgnoreCase(schemaName)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -641,13 +666,17 @@ public final class SVWSKonfiguration {
 	 * @return der Name des Schemas in der SVWS-Konfiguration oder null, wenn es nicht existiert
 	 */
 	public String getSchemanameCaseConfig(final String schemaName) {
-		if ((dto == null) || (schemaName == null) || "".equals(schemaName))
+		if ((dto == null) || (schemaName == null) || "".equals(schemaName)) {
 			return null;
-		if (dto.dbconfigs.get(schemaName) != null)
+		}
+		if (dto.dbconfigs.get(schemaName) != null) {
 			return schemaName;
-		for (final String sn : dto.dbconfigs.keySet())
-			if (sn.equalsIgnoreCase(schemaName))
+		}
+		for (final String sn : dto.dbconfigs.keySet()) {
+			if (sn.equalsIgnoreCase(schemaName)) {
 				return sn;
+			}
+		}
 		return null;
 	}
 
@@ -660,8 +689,9 @@ public final class SVWSKonfiguration {
 	 * @return true, fall das Schema gesperrt werden konnte
 	 */
 	public synchronized boolean lockSchema(final String schemaName) {
-		if (schemataLocked.contains(schemaName))
+		if (schemataLocked.contains(schemaName)) {
 			return false;
+		}
 		schemataLocked.add(schemaName);
 		return true;
 	}
@@ -704,8 +734,9 @@ public final class SVWSKonfiguration {
 	 * @return true, fall das Schema entgesperrt werden konnte
 	 */
 	public synchronized boolean activateSchema(final String schemaName) {
-		if (!schemataDeactivated.contains(schemaName))
+		if (!schemataDeactivated.contains(schemaName)) {
 			return false;
+		}
 		schemataDeactivated.remove(schemaName);
 		return true;
 	}
@@ -720,8 +751,9 @@ public final class SVWSKonfiguration {
 	 * @return true, fall das Schema gesperrt werden konnte
 	 */
 	public synchronized boolean deactivateSchema(final String schemaName) {
-		if (schemataDeactivated.contains(schemaName))
+		if (schemataDeactivated.contains(schemaName)) {
 			return false;
+		}
 		schemataDeactivated.add(schemaName);
 		return true;
 	}
@@ -745,8 +777,9 @@ public final class SVWSKonfiguration {
 	 * @return eine Liste mit allen konfigurierten Schemanamen
 	 */
 	public List<DBSchemaListeEintrag> getSchemaList() {
-		if (dto == null)
+		if (dto == null) {
 			return Collections.emptyList();
+		}
 		final String defaultSchema = this.getDefaultSchema();
 		return dto.dbconfigs.values().stream()
 				.map(c -> c.getDBSchema())
@@ -769,11 +802,13 @@ public final class SVWSKonfiguration {
 	 * @return die Schema-Konfiguration, falls eines vorhanden ist, ansonsten null
 	 */
 	private SVWSKonfigurationSchemaDTO getSchemaKonfiguration(final String schemaName) {
-		if ((dto == null) || (dto.dbKonfiguration.schemata == null) || (schemaName == null) || ("".equals(schemaName)))
+		if ((dto == null) || (dto.dbKonfiguration.schemata == null) || (schemaName == null) || ("".equals(schemaName))) {
 			return null;
+		}
 		for (final SVWSKonfigurationSchemaDTO config : dto.dbKonfiguration.schemata) {
-			if (schemaName.equals(config.name))
+			if (schemaName.equals(config.name)) {
 				return config;
+			}
 		}
 		return null;
 	}
@@ -792,18 +827,22 @@ public final class SVWSKonfiguration {
 	 */
 	public void createOrUpdateSchema(final String schemaName, final String userName, final String userPassword, final boolean userSVWSLogin)
 			throws SVWSKonfigurationException {
-		if (dto == null)
+		if (dto == null) {
 			throw new SVWSKonfigurationException(
 					"Es ist keine Konfiguration geladen. Das Erstellen oder Aktualisieren der Schema-Konfiguration ist daher nicht möglich.");
-		if ((schemaName == null) || ("".equals(schemaName)))
+		}
+		if ((schemaName == null) || ("".equals(schemaName))) {
 			throw new SVWSKonfigurationException(
 					"Es ist kein Schemaname angegeben. Das Erstellen oder Aktualisieren der Schema-Konfiguration ist daher nicht möglich.");
-		if ((userName == null) || ("".equals(userName)))
+		}
+		if ((userName == null) || ("".equals(userName))) {
 			throw new SVWSKonfigurationException(
 					"Es ist kein Benutzername angegeben. Das Erstellen oder Aktualisieren der Schema-Konfiguration ist daher nicht möglich.");
+		}
 		String password = userPassword;
-		if (password == null)
+		if (password == null) {
 			password = "";
+		}
 		SVWSKonfigurationSchemaDTO config = getSchemaKonfiguration(schemaName);
 		if (config == null) {
 			// Neue Config erstellen
@@ -815,8 +854,9 @@ public final class SVWSKonfiguration {
 			dto.dbKonfiguration.schemata.add(config);
 			dto.dbconfigs.put(schemaName, this.getDBConfig(dto.dbKonfiguration.schemata.size() - 1));
 			// Prüfe, ob dies das erste Schema ist -> setzen als Default-Schema
-			if (dto.dbKonfiguration.schemata.size() == 1)
+			if (dto.dbKonfiguration.schemata.size() == 1) {
 				dto.dbKonfiguration.defaultschema = schemaName;
+			}
 		} else {
 			// Vorhandene Config aktualisieren
 			config.name = schemaName;
@@ -838,12 +878,15 @@ public final class SVWSKonfiguration {
 	 * @throws SVWSKonfigurationException   falls ein Fehler beim Entfernen der Schema-Konfiguration auftritt.
 	 */
 	public void removeSchema(final String schemaName) throws SVWSKonfigurationException {
-		if (dto == null)
+		if (dto == null) {
 			throw new SVWSKonfigurationException("Es ist keine Konfiguration geladen. Das Entfernen der Schema-Konfiguration ist daher nicht möglich.");
-		if ((schemaName == null) || ("".equals(schemaName)))
+		}
+		if ((schemaName == null) || ("".equals(schemaName))) {
 			throw new SVWSKonfigurationException("Es ist kein Schemaname angegeben. Das Entfernen der Schema-Konfiguration ist daher nicht möglich.");
-		if (!dto.dbconfigs.containsKey(schemaName))
+		}
+		if (!dto.dbconfigs.containsKey(schemaName)) {
 			return;
+		}
 		// Entferne das schema aus der Konfiguration
 		dto.dbconfigs.remove(schemaName);
 		for (final SVWSKonfigurationSchemaDTO config : dto.dbKonfiguration.schemata) {

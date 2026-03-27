@@ -24,8 +24,9 @@ public final class GostKursblockungRegelTypConverter extends DBAttributeConverte
 
 	@Override
 	public Integer convertToDatabaseColumn(final GostKursblockungRegelTyp value) {
-		if (value == null)
+		if (value == null) {
 			return null;
+		}
 		return value.typ;
 	}
 

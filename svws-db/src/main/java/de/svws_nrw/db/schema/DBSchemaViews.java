@@ -43,15 +43,18 @@ public final class DBSchemaViews {
 	 * @param view   die hinzuzufügende View
 	 */
 	private void addView(final View view) {
-		if (view == null)
+		if (view == null) {
 			throw new NullPointerException("Kann null nicht zu der Liste der Views hinzufügen.");
+		}
 		allViews.add(view);
 		final int rev = view.revision;
-		if (rev < 0)
+		if (rev < 0) {
 			throw new IllegalArgumentException("Negative Revisionen dürfen bei Views nicht angegeben werden");
+		}
 		getViewsCreated(rev).add(view);
-		if ((view.veraltet != null) && (view.veraltet >= 0))
+		if ((view.veraltet != null) && (view.veraltet >= 0)) {
 			getViewsDeprecated(view.veraltet).add(view);
+		}
 	}
 
 
@@ -88,9 +91,11 @@ public final class DBSchemaViews {
 	 */
 	public List<View> getViewsActive(final long revision) {
 		final ArrayList<View> result = new ArrayList<>();
-		for (final View v : allViews)
-			if ((revision >= v.revision) && ((v.veraltet == null) || (revision < v.veraltet)))
+		for (final View v : allViews) {
+			if ((revision >= v.revision) && ((v.veraltet == null) || (revision < v.veraltet))) {
 				result.add(v);
+			}
+		}
 		return result;
 	}
 

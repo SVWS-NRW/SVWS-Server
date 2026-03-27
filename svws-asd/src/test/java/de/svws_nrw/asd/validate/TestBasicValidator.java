@@ -37,10 +37,11 @@ class TestBasicValidator {
 		@Override
 		protected boolean pruefe() {
 			// Für das Testen, falls in einem Validator eine Exception auftritt
-			if (pruefungException != null)
+			if (pruefungException != null) {
 				throw pruefungException;
+			}
 
-			// Fügt einen Fehlertext hinzu, falls die Rüfung des Validators nicht erfolgreich ist
+			// Fügt einen Fehlertext hinzu, falls die Prüfung des Validators nicht erfolgreich ist
 			if (!pruefungErfolgreich) {
 				addFehler(1, "Test Fehler");
 			}
