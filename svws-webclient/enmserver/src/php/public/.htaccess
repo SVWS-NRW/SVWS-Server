@@ -1,4 +1,7 @@
-CGIPassAuth on
+<IfModule !mod_rewrite.c>
+	ErrorDocument 500 "Server-Konfigurationsfehler: mod_rewrite ist nicht aktiviert. Bitte kontaktieren Sie den Hoster oder aktivieren Sie das Modul."
+	RewriteEngine Off
+</IfModule>
 
 <IfModule mod_headers.c>
 	Header set Access-Control-Allow-Origin "*"
@@ -7,34 +10,30 @@ CGIPassAuth on
 	Header set X-Robots-Tag "noindex, nofollow"
 </IfModule>
 
-# Fallback für Server ohne mod_rewrite: Verwende index.php als Router
-<IfModule !mod_rewrite.c>
-    # Wenn mod_rewrite nicht verfügbar ist, leite alles an index.php
-    ErrorDocument 404 /index.php
-</IfModule>
-
 <IfModule mod_rewrite.c>
+
 	RewriteEngine on
 	RewriteBase /
-
-	# Authorization Header explizit durchreichen (Fallback für FastCGI)
-	RewriteCond %{HTTP:Authorization} ^(.*)
-	RewriteRule ^ - [E=HTTP_AUTHORIZATION:%1]
-
-	# Falls eine Webserver-Konfiguration den Authorization-Header durch ein Redirect verändert hat, dann benenne ihn wieder um
-	RewriteCond %{ENV:HTTP_AUTHORIZATION} ^$
-	RewriteCond %{ENV:REDIRECT_HTTP_AUTHORIZATION} ^(.*)
-	RewriteRule ^ - [E=HTTP_AUTHORIZATION:%1]
-
-	# respond with 404 on incoming URLs with .php
-	RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
-	RewriteRule ^ /%0 [R=404,NE,L]
 	
-	# Wenn die Datei nicht existiert und kein Verzeichnis ist, dann prüfe, ob eine .php existiert mit dem Namen existiert und leite dann weiter
-	RewriteCond %{DOCUMENT_ROOT}/$1 !-f
-	RewriteCond %{DOCUMENT_ROOT}/$1 !-d
-	RewriteCond %{DOCUMENT_ROOT}/$1.php -f
-	RewriteRule ^(.+?)/?$ $1.php [L]
+	# Sicherstellen, dass der Authorization-Header (Bearer/Basic) auch in CGI/FastCGI-Umgebungen an PHP durchgereicht wird
+	CGIPassAuth on
+	
+	# Standard-Einstieg für den Vue-Client
+	DirectoryIndex index.html
+	RewriteRule ^$ index.html [L]
+
+	RewriteCond %{REQUEST_URI} ^/(assets|index/.html) [NC,OR]
+	RewriteCond %{REQUEST_FILENAME}/$1 -f [OR]
+	RewriteCond %{REQUEST_FILENAME}/$1 -d
+	RewriteRule ^ - [L]
+	
+	RewriteCond %{HTTP:Authorization} ^(.+)$
+	RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]
+
+	RewriteCond %{REQUEST_URI} ^/(api|oauth) [NC]
+	RewriteRule ^ api.php [L,QSA]
+	
+	RewriteCond %{REQUEST_URI} !^/api.php
+	RewriteRule ^ index.html [L]
 
 </IfModule>
-

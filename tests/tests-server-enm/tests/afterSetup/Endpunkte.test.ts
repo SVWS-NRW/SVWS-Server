@@ -59,7 +59,7 @@ describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child A
 			},
 		};
 		const postResponse = await apiServiceAuth.post(`/api/bemerkungen`, { body: JSON.stringify(bodyDataPost) });
-		expect(postResponse.status).toBe(200);
+		expect(postResponse.status).toBe(204);
 
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
 		expect(responseAfterEdit.status).toBe(200);
@@ -113,7 +113,7 @@ describe("Das Bearbeiten von Bemerkungen führt zu keinen Redundanzen im Child A
 			},
 		};
 		const postResponse = await apiServiceAuth.post(`/api/bemerkungen`, { body: JSON.stringify(bodyDataPost) });
-		expect(postResponse.status).toBe(200);
+		expect(postResponse.status).toBe(204);
 
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
 		expect(responseAfterEdit.status).toBe(200);
@@ -165,7 +165,7 @@ describe("Das Bearbeiten von Leistungen führt zu keinen Redundanzen im Child Ar
 			body: JSON.stringify(bodyData),
 		});
 
-		expect(responsePost.status).toBe(200);
+		expect(responsePost.status).toBe(204);
 
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
 		expect(responseAfterEdit.status).toBe(200);
@@ -220,7 +220,7 @@ describe("Leistung und Teilleistung können bearbeitet werden", () => {
 		const responsePost = await apiServiceAuth.post(`/api/leistung`, {
 			body: JSON.stringify(bodyData),
 		});
-		expect(responsePost.status).toBe(200);
+		expect(responsePost.status).toBe(204);
 		//
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
 		const _dataAfterEdit = ENMv1Daten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
@@ -266,7 +266,7 @@ describe("Leistung und Teilleistung können bearbeitet werden", () => {
 			const postResponse = await apiServiceAuth.post(`/api/teilleistung`, { body: JSON.stringify(bodyData) });
 
 			// Post war erfolgreich
-			expect(postResponse.status).toBe(200);
+			expect(postResponse.status).toBe(204);
 		}
 
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
@@ -303,7 +303,7 @@ describe("Clientconfig können bearbeitet werden", () => {
 			headers: { "Content-Type": "application/json" },
 		});
 
-		expect(responsePUT.status).toBe(200);
+		expect(responsePUT.status).toBe(204);
 
 		const responseAfterPUT = await apiServiceAuth.get(`/api/clientconfig`);
 		expect(responseAfterPUT.status).toBe(200);
@@ -367,7 +367,7 @@ describe("Bemerkungen können bearbeitet werden", () => {
 			},
 		};
 		const responsePost = await apiServiceAuth.post(`/api/bemerkungen`, { body: JSON.stringify(bodyData) });
-		expect(responsePost.status).toBe(200);
+		expect(responsePost.status).toBe(204);
 
 		const responseAfterEdit = await apiServiceAuth.get(`/api/daten`);
 		const _dataAfterEdit = ENMv1Daten.transpilerFromJSON(await (await responseAfterEdit.blob()).text());
@@ -525,7 +525,7 @@ describe("Test Lernabschnitte", () => {
 			body: JSON.stringify(bodyData),
 		});
 		console.log(await responseOfPost.text());
-		expect(responseOfPost.status).toBe(200);
+		expect(responseOfPost.status).toBe(204);
 
 		const responseAfterPost = await apiServiceAuth.get(`/api/daten`);
 		expect(responseAfterPost.status).toBe(200);

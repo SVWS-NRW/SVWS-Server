@@ -12,10 +12,9 @@ beforeAll(async () => {
 });
 
 describe("POST Requests ohne Auth gegen den ENM Server", () => {
-	test("alive > 204", async () => {
+	test("alive > 405", async () => {
 		const response = await apiServiceNoAuth.post(`/api/alive`);
-		expect(response.status).toBe(204);
-		expect(await response.text()).toBe("");
+		expect(response.status).toBe(405);
 	});
 
 	test("ankreuzkompetenz > 401", async () => {
@@ -28,14 +27,14 @@ describe("POST Requests ohne Auth gegen den ENM Server", () => {
 		expect(response.status).toBe(401);
 	});
 
-	test("clientconfig > 403", async () => {
+	test("clientconfig > 405", async () => {
 		const response = await apiServiceNoAuth.post(`/api/clientconfig`);
-		expect(response.status).toBe(403);
+		expect(response.status).toBe(405);
 	});
 
-	test("daten > 403", async () => {
+	test("daten > 405", async () => {
 		const response = await apiServiceNoAuth.post(`/api/daten`);
-		expect(response.status).toBe(403);
+		expect(response.status).toBe(405);
 	});
 
 	test("leistung > 401", async () => {
@@ -48,9 +47,9 @@ describe("POST Requests ohne Auth gegen den ENM Server", () => {
 		expect(response.status).toBe(401);
 	});
 
-	test("mode > 403", async () => {
+	test("mode > 405", async () => {
 		const response = await apiServiceNoAuth.post(`/api/mode`);
-		expect(response.status).toBe(403);
+		expect(response.status).toBe(405);
 	});
 
 	test("teilleistung > 401", async () => {
@@ -66,14 +65,14 @@ describe("GET Requests ohne Auth gegen den ENM Server", () => {
 		expect(await response.text()).toBe("");
 	});
 
-	test("ankreuzkompetenz > 403", async () => {
+	test("ankreuzkompetenz > 405", async () => {
 		const response = await apiServiceNoAuth.get(`/api/ankreuzkompetenz`);
-		expect(response.status).toBe(403);
+		expect(response.status).toBe(405);
 	});
 
-	test("bemerkungen > 403", async () => {
+	test("bemerkungen > 405", async () => {
 		const response = await apiServiceNoAuth.get(`/api/bemerkungen`);
-		expect(response.status).toBe(403);
+		expect(response.status).toBe(405);
 	});
 
 	test("clientconfig > 401", async () => {
@@ -86,14 +85,14 @@ describe("GET Requests ohne Auth gegen den ENM Server", () => {
 		expect(response.status).toBe(401);
 	});
 
-	test("leistung > 403", async () => {
+	test("leistung > 405", async () => {
 		const response = await apiServiceNoAuth.get(`/api/leistung`);
-		expect(response.status).toBe(403);
+		expect(response.status).toBe(405);
 	});
 
-	test("lernabschnitt > 403", async () => {
+	test("lernabschnitt > 405", async () => {
 		const response = await apiServiceNoAuth.get(`/api/lernabschnitt`);
-		expect(response.status).toBe(403);
+		expect(response.status).toBe(405);
 	});
 
 	test("mode > 200", async () => {
@@ -102,9 +101,9 @@ describe("GET Requests ohne Auth gegen den ENM Server", () => {
 		expect(await response.text()).toBe("stable");
 	});
 
-	test("teilleistung > 403", async () => {
+	test("teilleistung > 405", async () => {
 		const response = await apiServiceNoAuth.get(`/api/teilleistung`);
-		expect(response.status).toBe(403);
+		expect(response.status).toBe(405);
 	});
 
 	test("check_smtp > 200", async () => {
@@ -114,20 +113,19 @@ describe("GET Requests ohne Auth gegen den ENM Server", () => {
 });
 
 describe("PUT Requests ohne Auth gegen den ENM Server", () => {
-	test("alive > 204", async () => {
+	test("alive > 405", async () => {
 		const response = await apiServiceNoAuth.put(`/api/alive`);
-		expect(response.status).toBe(204);
-		expect(await response.text()).toBe("");
+		expect(response.status).toBe(405);
 	});
 
-	test("ankreuzkompetenz > 403", async () => {
+	test("ankreuzkompetenz > 405", async () => {
 		const response = await apiServiceNoAuth.put(`/api/ankreuzkompetenz`);
-		expect(response.status).toBe(403);
+		expect(response.status).toBe(405);
 	});
 
-	test("bemerkungen > 403", async () => {
+	test("bemerkungen > 405", async () => {
 		const response = await apiServiceNoAuth.put(`/api/bemerkungen`);
-		expect(response.status).toBe(403);
+		expect(response.status).toBe(405);
 	});
 
 	test("clientconfig > 401", async () => {
@@ -135,29 +133,29 @@ describe("PUT Requests ohne Auth gegen den ENM Server", () => {
 		expect(response.status).toBe(401);
 	});
 
-	test("daten > 403", async () => {
+	test("daten > 405", async () => {
 		const response = await apiServiceNoAuth.put(`/api/daten`);
-		expect(response.status).toBe(403);
+		expect(response.status).toBe(405);
 	});
 
-	test("leistung > 403", async () => {
+	test("leistung > 405", async () => {
 		const response = await apiServiceNoAuth.put(`/api/leistung`);
-		expect(response.status).toBe(403);
+		expect(response.status).toBe(405);
 	});
 
-	test("lernabschnitt > 403", async () => {
+	test("lernabschnitt > 405", async () => {
 		const response = await apiServiceNoAuth.put(`/api/lernabschnitt`);
-		expect(response.status).toBe(403);
+		expect(response.status).toBe(405);
 	});
 
-	test("mode > 403", async () => {
+	test("mode > 405", async () => {
 		const response = await apiServiceNoAuth.put(`/api/mode`);
-		expect(response.status).toBe(403);
+		expect(response.status).toBe(405);
 	});
 
-	test("teilleistung > 403", async () => {
+	test("teilleistung > 405", async () => {
 		const response = await apiServiceNoAuth.put(`/api/teilleistung`);
-		expect(response.status).toBe(403);
+		expect(response.status).toBe(405);
 	});
 });
 

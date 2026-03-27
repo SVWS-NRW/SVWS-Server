@@ -276,6 +276,58 @@ class Http {
     }
 
     /**
+     * Gibt einen NO_CONTENT (204) zurück und beendet das PHP-Skript.
+     */
+    public static function exit204NoContent(?string $header = null): never {
+        header("Content-Length: 0");
+        http_response_code(204);
+        if ($header != null) {
+            header($header);
+        }
+        exit;
+    }
+
+    /**
+     * Gibt einen OK (200) für JSON-Daten ggf. mit Daten für ein echo zurück und beendet das PHP-Skript.
+     *
+     * @param ?string data   die Daten, welche ggf. noch ausgegeben werden
+     */
+    public static function exit200OKJson(?string $data = null): never {
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code(200);
+        if ($data != null) {
+            echo $data;
+        }
+        exit;
+    }
+
+    /**
+     * Gibt einen OK (200) für GZip-Daten aus und beendet das PHP-Skript.
+     *
+     * @param string data   die Daten, welche als GZip in der Nachricht zurückzugeben werden
+     */
+    public static function exit200OKGZipJson(string $data): never {
+        header('Content-Encoding: gzip');
+        header('Content-Type: application/json; charset=utf-8');
+        echo gzencode($data, 5);
+        http_response_code(200);
+        exit;
+    }
+
+
+    /**
+     * Gibt einen OK (200) für GZip-Daten aus und beendet das PHP-Skript.
+     *
+     * @param string data   die Daten, welche als GZip in der Nachricht zurückzugeben werden
+     */
+    public static function exit200OKGZip(string $data): never {
+        header('Content-Type: application/gzip;');
+        echo gzencode($data, 5);
+        http_response_code(200);
+        exit;
+    }
+
+    /**
      * Gibt einen BAD_REQUEST (400) zurück und beendet das PHP-Skript.
      *
      * @param ?string msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
@@ -312,6 +364,14 @@ class Http {
      */
     public static function exit403Forbidden(): never {
         http_response_code(403);
+        exit;
+    }
+
+    /**
+     * Gibt einen METHOD_NOT_ALLOWED (405) zurück und beendet das PHP-Skript.
+     */
+    public static function exit405MethodNotAllowed(): never {
+        http_response_code(405);
         exit;
     }
 

@@ -8,14 +8,14 @@ describe("Init Setup Methode", () => {
 
 	const apiService = getApiService('', '', targetUrlENMServer);
 
-	test("POST setup > 403", async () => {
+	test("POST setup > 405", async () => {
 		const response = await apiService.post(`/api/setup`);
-		expect(response.status).toBe(403);
+		expect(response.status).toBe(405);
 	});
 
-	test("PUT setup > 403", async () => {
+	test("PUT setup > 405", async () => {
 		const response = await apiService.put(`/api/setup`);
-		expect(response.status).toBe(403);
+		expect(response.status).toBe(405);
 	});
 
 	test("First (and only) setup successfully, a further request fails > 204", async () => {

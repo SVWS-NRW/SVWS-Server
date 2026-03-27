@@ -35,7 +35,7 @@ class PatchManager {
      *
      * @return string   das aktuelle Datum als String
      */
-    private static function now(): string {
+    public static function now(): string {
         return date('Y-m-d H:i:s.v', time());
     }
 
