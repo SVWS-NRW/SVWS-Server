@@ -97,8 +97,9 @@ public final class NotenmodulSynchronisationService {
 	private void downloadENMDaten(final HttpENMServerConnection client, final Logger logger) throws ApiOperationException {
 		logger.logLn("Sende die Anfrage zum Herunderladen der ENM-Daten von dem ENM-Server...");
 		final HttpResponse<byte[]> httpResponse = client.get("/api/secure/export", BodyHandlers.ofByteArray());
-		if (httpResponse.statusCode() != Status.OK.getStatusCode())
+		if (httpResponse.statusCode() != Status.OK.getStatusCode()) {
 			throw new ApiOperationException(Status.BAD_GATEWAY, httpResponse.body());
+		}
 		logger.logLn("Schreibe die neuen Daten aus ENM-Daten anhand der Zeitstempel in die Datenbank des SVWS-Servers...");
 
 		try {
@@ -127,8 +128,9 @@ public final class NotenmodulSynchronisationService {
 			logger.modifyIndent(2);
 			final HttpResponse<String> response = client.postMultipart("/api/secure/import", "json.gz", daten, BodyHandlers.ofString());
 			logger.modifyIndent(-2);
-			if (response.statusCode() != Status.OK.getStatusCode())
+			if (response.statusCode() != Status.OK.getStatusCode()) {
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
+			}
 
 			logger.logLn("ENM-Daten erfolgreich an den ENM-Server übertragen.");
 		} catch (final CompressionException ce) {
@@ -201,8 +203,9 @@ public final class NotenmodulSynchronisationService {
 				client = new HttpENMServerConnection(repository, logger, idVerbindung, true, true);
 				response = client.postEmpty("/api/secure/truncate", BodyHandlers.ofString());
 			}
-			if (response.statusCode() != Status.OK.getStatusCode())
+			if (response.statusCode() != Status.OK.getStatusCode()) {
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
+			}
 		}));
 	}
 
@@ -222,8 +225,9 @@ public final class NotenmodulSynchronisationService {
 				client = new HttpENMServerConnection(repository, logger, idVerbindung, true, true);
 				response = client.postEmpty("/api/secure/reset", BodyHandlers.ofString());
 			}
-			if (response.statusCode() != Status.OK.getStatusCode())
+			if (response.statusCode() != Status.OK.getStatusCode()) {
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
+			}
 		}));
 	}
 
@@ -243,8 +247,9 @@ public final class NotenmodulSynchronisationService {
 				client = new HttpENMServerConnection(repository, logger, idVerbindung, true, true);
 				response = client.get("/api/secure/check", BodyHandlers.ofString());
 			}
-			if (response.statusCode() != Status.OK.getStatusCode())
+			if (response.statusCode() != Status.OK.getStatusCode()) {
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
+			}
 		}));
 	}
 
@@ -269,11 +274,13 @@ public final class NotenmodulSynchronisationService {
 				logger.modifyIndent(2);
 				final HttpENMServerConnection client = new HttpENMServerConnection(repository, logger, idVerbindung, true, false);
 				final HttpResponse<String> response = client.get("/api/secure/serverconfig", BodyHandlers.ofString());
-				if (response.statusCode() != Status.OK.getStatusCode())
+				if (response.statusCode() != Status.OK.getStatusCode()) {
 					throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
+				}
 				logger.logLn("Die Serverkonfiguration wurde erfolgreich abgefragt.");
-				if (response.body() == null)
+				if (response.body() == null) {
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Keine Daten vom Server erhalten.");
+				}
 				res.config = JSONMapper.toObject(response.body().getBytes(), ENMServerConfig.class);
 				res.success = true;
 				logger.setIndent(0);
@@ -308,8 +315,9 @@ public final class NotenmodulSynchronisationService {
 			final String element = JSONMapper.toJsonString(is);
 			final HttpENMServerConnection client = new HttpENMServerConnection(repository, logger, idVerbindung, true, false);
 			final HttpResponse<String> response = client.put("/api/secure/serverconfig", BodyHandlers.ofString(), element);
-			if (response.statusCode() != Status.OK.getStatusCode())
+			if (response.statusCode() != Status.OK.getStatusCode()) {
 				throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
+			}
 		}));
 	}
 
@@ -328,7 +336,7 @@ public final class NotenmodulSynchronisationService {
 				final HttpENMServerConnection client = new HttpENMServerConnection(repository, logger, idVerbindung, false, false);
 				final boolean isTrusted = client.checkCertificate();
 				if (!isTrusted) {
-					throw new ApiOperationException(Status.CONFLICT, "Dem Zertifikat wird aktuell nicht vertraut.");
+					return false;
 				}
 				final HttpResponse<String> response = client.getUnauthorized("/api/setup", BodyHandlers.ofString());
 				if ((response.statusCode() != Status.NO_CONTENT.getStatusCode()) && (response.statusCode() != Status.CONFLICT.getStatusCode())) {
@@ -336,8 +344,9 @@ public final class NotenmodulSynchronisationService {
 				}
 				return response.statusCode() == Status.NO_CONTENT.getStatusCode();
 			} catch (final Exception e) {
-				if (e instanceof final ApiOperationException aoe)
+				if (e instanceof final ApiOperationException aoe) {
 					throw aoe;
+				}
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Unerwarteter Fehler aufgetreten: " + e.getMessage());
 			}
 		});
