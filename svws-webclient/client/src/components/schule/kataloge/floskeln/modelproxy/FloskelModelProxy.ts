@@ -1,0 +1,81 @@
+import { ValidatorInputRequired, ModelProxy, ValidatorNumberRange } from "@ui";
+import type { FachDaten, Floskel, Floskelgruppe, JahrgangsDaten } from "@core";
+import { ArrayList, Floskelgruppenart } from "@core";
+import { ValidatorFloskelKuerzel } from "~/components/schule/kataloge/floskeln/modelproxy/validation/ValidatorFloskelKuerzel";
+import { computed } from "vue";
+import type { FloskelnListeManager } from "@ui";
+
+export class FloskelModelProxy extends ModelProxy<Floskel> {
+
+	private readonly manager: () => FloskelnListeManager;
+
+	constructor(
+		data: () => Floskel,
+		alleFloskeln: () => Iterable<Floskel>,
+		manager: () => FloskelnListeManager,
+		patch?: (data: Partial<Floskel>) => Promise<boolean>
+	) {
+		const listOfAutopatchProps: Iterable<keyof Floskel> = ['idFloskelgruppe', 'idFach', 'niveau', 'idsJahrgaenge', 'sortierung'];
+		super({ data, patch, listOfAutopatchProps, checkValidBeforePatch: true });
+		this.manager = manager;
+		this.addValidatoren(alleFloskeln);
+		this.validate();
+
+	}
+
+	private addValidatoren(liste: () => Iterable<Floskel>) {
+		this.addValidator(new ValidatorFloskelKuerzel(() => this.proxy, liste), 'kuerzel');
+		this.addValidator(new ValidatorInputRequired(() => this.proxy.text), 'text');
+		this.addValidator(new ValidatorInputRequired(() => this.proxy.idFloskelgruppe), 'idFloskelgruppe');
+		this.addValidator(new ValidatorNumberRange(() => this.proxy.sortierung, 0, 32000), "sortierung");
+	}
+
+	hatFloskelgruppeArtFach = computed<boolean>(() => {
+		const fg = this.selectedFloskelgruppe.value;
+		if (fg === null) {
+			return false;
+		}
+		return this.istFloskelgruppeArtFach(fg.idFloskelgruppenart);
+	});
+
+	selectedFloskelgruppe = computed<Floskelgruppe | null>({
+		get: (): Floskelgruppe | null => this.manager().floskelgruppenById.get(this.proxy.idFloskelgruppe ?? -1) ?? null,
+		set: (value: Floskelgruppe | null) => {
+			this.proxy.idFloskelgruppe = value?.id ?? null;
+			if (!this.istFloskelgruppeArtFach(value?.idFloskelgruppenart ?? null)) {
+				this.proxy.idFach = null;
+			}
+		},
+	});
+
+	selectedFach = computed<FachDaten | null>({
+		get: (): FachDaten | null => this.manager().faecherById.get(this.proxy.idFach ?? -1) ?? null,
+		set: (value: FachDaten | null) => this.proxy.idFach = value?.id ?? null,
+	});
+
+	selectedJahrgang = computed<JahrgangsDaten | null>({
+		get: (): JahrgangsDaten | null => {
+			const ids = this.proxy.idsJahrgaenge;
+			if (ids === null || ids.isEmpty()) {
+				return null;
+			}
+			return this.manager().jahrgaengeById.get(ids.get(0)) ?? null;
+		},
+		set: (value: JahrgangsDaten | null | undefined) => {
+			const list = new ArrayList<number>();
+			if (value !== null && value !== undefined) {
+				list.add(value.id);
+			}
+			this.proxy.idsJahrgaenge = list;
+		},
+	});
+
+	selectedNiveau = computed<number | null>({
+		get: (): number | null => this.proxy.niveau,
+		set: (value: number | null) => this.proxy.niveau = value ?? null,
+	});
+
+	private istFloskelgruppeArtFach(idFloskelgruppenart: number | null): boolean {
+		return Floskelgruppenart.data().getWertByIDOrNull(idFloskelgruppenart ?? -1)?.name() === 'FACH';
+	}
+}

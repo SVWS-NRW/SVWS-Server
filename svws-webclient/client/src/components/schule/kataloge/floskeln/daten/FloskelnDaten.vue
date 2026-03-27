@@ -4,33 +4,33 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper>
 					<svws-ui-text-input placeholder="Kürzel" class="contentFocusField"
-						:model-value="manager().daten().kuerzel"
-						@change="patchKuerzel"
-						:valid="kuerzelIsValid"
-						:min-len="1" :max-len="10" :readonly required />
+						v-model="model.proxy.kuerzel"
+						:validation="() => model.getFehler('kuerzel')"
+						@commit="model.patch"
+						:max-len="10" :readonly="!hatKompetenzUpdate" required />
 					<svws-ui-textarea-input placeholder="Text" span="full"
-						:model-value="manager().daten().text"
-						@change="patchText" @keydown.enter.prevent
-						:valid="textIsValid"
-						:disabled="readonly" required autoresize resizeable="none" />
+						v-model="model.proxy.text"
+						:validation="() => model.getFehler('text')"
+						@commit="model.patch" @keydown.enter.prevent
+						:readonly="!hatKompetenzUpdate" required autoresize resizeable="none" />
 					<svws-ui-input-wrapper :grid="2">
 						<ui-select label="Floskelgruppe"
-							v-model="selectedFloskelgruppe"
+							v-model="model.selectedFloskelgruppe.value"
 							:manager="floskelgruppenManager"
-							:removable="false" searchable required :readonly />
-						<ui-select v-if="hatFloskelgruppeArtFach" label="Fach"
-							v-model="selectedFach"
+							:removable="false" searchable required :readonly="!hatKompetenzUpdate" />
+						<ui-select v-if="model.hatFloskelgruppeArtFach.value" label="Fach"
+							v-model="model.selectedFach.value"
 							:manager="faecherManager"
-							searchable :readonly />
+							searchable :readonly="!hatKompetenzUpdate" />
 						<div v-else />
 						<ui-select label="Jahrgang"
-							v-model="selectedJahrgang"
+							v-model="model.selectedJahrgang.value"
 							:manager="jahrgaengeManager"
-							searchable removable />
+							:readonly="!hatKompetenzUpdate" searchable removable />
 						<ui-select label="Niveau"
-							v-model="selectedNiveau"
+							v-model="model.selectedNiveau.value"
 							:manager="niveauManager"
-							:readonly />
+							:readonly="!hatKompetenzUpdate" />
 					</svws-ui-input-wrapper>
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
@@ -39,9 +39,10 @@
 			<svws-ui-content-card title="Sortierung">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
-						:model-value="manager().daten().sortierung"
-						@change="patchSortierung"
-						:readonly :min="0" :max="32000" />
+						v-model="model.proxy.sortierung"
+						:validation="() => model.getFehler('sortierung')"
+						@commit="model.patch"
+						:min="0" :max="32000" required />
 					<svws-ui-spacing />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
@@ -53,120 +54,43 @@
 
 	import { computed } from "vue";
 	import type { FachDaten, Floskelgruppe, JahrgangsDaten } from "@core";
-	import { ArrayList, BenutzerKompetenz, Floskelgruppenart } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import type { FloskelnDatenProps } from "./FloskelnDatenProps";
-	import { isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid } from "~/util/validation/Validation";
 	import { SelectManager } from "@ui";
+	import { FloskelModelProxy } from "~/components/schule/kataloge/floskeln/modelproxy/FloskelModelProxy";
 
 	const props = defineProps<FloskelnDatenProps>();
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
-	const readonly = computed<boolean>(() => !hatKompetenzUpdate.value);
-	const manager = () => props.manager();
-
-	const floskelgruppen = computed(() => manager().floskelgruppenById.values());
-	const selectedFloskelgruppe = computed<Floskelgruppe | null>({
-		get: () => manager().floskelgruppenById.get(manager().auswahl().idFloskelgruppe ?? -1) ?? null,
-		set: (value: Floskelgruppe | null) => void props.patch({ idFloskelgruppe: value?.id ?? null }),
-	});
-
-	const faecher = computed<FachDaten[]>(() => [...manager().faecherById.values()]);
-	const selectedFach = computed<FachDaten | null>({
-		get: () => manager().faecherById.get(manager().auswahl().idFach ?? -1) ?? null,
-		set: (value: FachDaten | null) => void props.patch({ idFach: value?.id ?? null }),
-	});
-	const hatFloskelgruppeArtFach = computed<boolean>(() => {
-		const fg = selectedFloskelgruppe.value;
-		if (fg === null) {
-			return false;
-		}
-		const eintragByID = Floskelgruppenart.data().getEintragByID(fg.idFloskelgruppenart ?? -1);
-		return eintragByID?.schluessel === 'FACH';
-	});
-
-
-	const jahrgaenge = computed<JahrgangsDaten[]>(() => [...manager().jahrgaengeById.values()]);
-	const selectedJahrgang = computed<JahrgangsDaten | null | undefined>({
-		get: () => {
-			const ids = manager().auswahl().idsJahrgaenge;
-			if (ids === null || ids.isEmpty()) {
-				return null;
-			}
-			return props.manager().jahrgaengeById.get(ids.get(0)) ?? null;
-		},
-		set: (value: JahrgangsDaten | null | undefined) => {
-			const list = new ArrayList<number>();
-			if (value !== null && value !== undefined) {
-				list.add(value.id);
-			}
-			if (list.size() <= 1) {
-				void props.patch({ idsJahrgaenge: list });
-			}
-		},
-	});
-
-	const selectedNiveau = computed<number | null>({
-		get: () => manager().auswahl().niveau,
-		set: (value: number | null) => void props.patch({ niveau: value }),
-	});
+	const model = new FloskelModelProxy(
+		() => props.manager().daten(),
+		() => props.manager().liste.list(),
+		props.manager,
+		props.patch
+	);
 
 	// --- manager ---
 
 	const floskelgruppenManager = new SelectManager<Floskelgruppe>({
-		options: floskelgruppen,
+		options: computed(() => props.manager().floskelgruppenById.values()),
 		optionDisplayText: (v: Floskelgruppe) => v.bezeichnung,
 		selectionDisplayText: (v: Floskelgruppe) => v.bezeichnung,
 	});
 
 	const faecherManager = new SelectManager<FachDaten>({
-		options: faecher,
+		options: computed<FachDaten[]>(() => [...props.manager().faecherById.values()]),
 		optionDisplayText: (f: FachDaten) => f.bezeichnung,
 		selectionDisplayText: (f: FachDaten) => f.bezeichnung,
 	});
 
 	const jahrgaengeManager = new SelectManager<JahrgangsDaten>({
-		options: jahrgaenge,
+		options: computed<JahrgangsDaten[]>(() => [...props.manager().jahrgaengeById.values()]),
 		optionDisplayText: (jg: JahrgangsDaten) => jg.kuerzel ?? '',
 		selectionDisplayText: (jg: JahrgangsDaten) => jg.kuerzel ?? '',
 	});
 
 	const niveauManager = new SelectManager<number>({
-		options: manager().niveaus,
+		options: computed(() => props.manager().niveaus),
 		optionDisplayText: String,
 		selectionDisplayText: String,
 	});
-
-	// --- patch --
-
-	async function patchKuerzel(value: string | null) {
-		if (kuerzelIsValid(value)) {
-			await props.patch({ kuerzel: value?.trim() });
-		}
-	}
-
-	async function patchText(value: string | null) {
-		if (textIsValid(value)) {
-			await props.patch({ text: value?.trim() });
-		}
-	}
-	async function patchSortierung(sortierung: number | null) {
-		if (sortierungIsValid(sortierung)) {
-			await props.patch({ sortierung });
-		}
-	}
-
-	// --- validate ---
-
-	function kuerzelIsValid(value: string | null): boolean {
-		return (mandatoryInputIsValid(value, 10) &&
-			isUniqueInList(value, manager().liste.list(), "kuerzel", "id", manager().auswahlID()));
-	}
-
-	function textIsValid(value: string | null): boolean {
-		return (value !== null) && (value !== "");
-	}
-
-	function sortierungIsValid(value: number | null): value is number {
-		return !numberHasDecimals(value) && numberIsValid(value, true, 0, 32000);
-	}
-
 </script>

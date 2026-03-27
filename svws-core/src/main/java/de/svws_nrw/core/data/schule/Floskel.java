@@ -7,6 +7,7 @@ import java.util.List;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -20,15 +21,15 @@ public class Floskel {
 
 	/** Die ID der Floskel */
 	@Schema(description = "Die ID der Floskel", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
-	public long id;
+	public long id = -1;
 
 	/** Das Kürzel der Floskel */
 	@Schema(description = "Das Kürzel der Floskel", example = "#103")
-	public String kuerzel;
+	public @NotNull String kuerzel = "";
 
 	/** Der Text */
 	@Schema(description = "Der Text", example = "#$Vorname$ bringt sich bei Teamarbeit sehr produktiv in die Gruppe ein.")
-	public String text;
+	public @NotNull String text = "";
 
 	/** Die ID der Floskelgruppe */
 	@Schema(description = "Die ID der Floskelgruppe", example = "1")

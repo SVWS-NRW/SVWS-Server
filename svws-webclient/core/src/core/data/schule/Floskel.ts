@@ -8,17 +8,17 @@ export class Floskel extends JavaObject {
 	/**
 	 * Die ID der Floskel
 	 */
-	public id: number = 0;
+	public id: number = -1;
 
 	/**
 	 * Das Kürzel der Floskel
 	 */
-	public kuerzel: string | null = null;
+	public kuerzel: string = "";
 
 	/**
 	 * Der Text
 	 */
-	public text: string | null = null;
+	public text: string = "";
 
 	/**
 	 * Die ID der Floskelgruppe
@@ -66,8 +66,12 @@ export class Floskel extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
-		result.text = (obj.text === undefined) ? null : obj.text === null ? null : obj.text;
+		if (obj.kuerzel === undefined)
+			throw new Error('invalid json format, missing attribute kuerzel');
+		result.kuerzel = obj.kuerzel;
+		if (obj.text === undefined)
+			throw new Error('invalid json format, missing attribute text');
+		result.text = obj.text;
 		result.idFloskelgruppe = (obj.idFloskelgruppe === undefined) ? null : obj.idFloskelgruppe === null ? null : obj.idFloskelgruppe;
 		result.idFach = (obj.idFach === undefined) ? null : obj.idFach === null ? null : obj.idFach;
 		result.niveau = (obj.niveau === undefined) ? null : obj.niveau === null ? null : obj.niveau;
@@ -88,8 +92,8 @@ export class Floskel extends JavaObject {
 	public static transpilerToJSON(obj: Floskel): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
-		result += '"text" : ' + ((obj.text === null) ? 'null' : JSON.stringify(obj.text)) + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		result += '"idFloskelgruppe" : ' + ((obj.idFloskelgruppe === null) ? 'null' : obj.idFloskelgruppe.toString()) + ',';
 		result += '"idFach" : ' + ((obj.idFach === null) ? 'null' : obj.idFach.toString()) + ',';
 		result += '"niveau" : ' + ((obj.niveau === null) ? 'null' : obj.niveau.toString()) + ',';
@@ -117,10 +121,10 @@ export class Floskel extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.text !== undefined) {
-			result += '"text" : ' + ((obj.text === null) ? 'null' : JSON.stringify(obj.text)) + ',';
+			result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		}
 		if (obj.idFloskelgruppe !== undefined) {
 			result += '"idFloskelgruppe" : ' + ((obj.idFloskelgruppe === null) ? 'null' : obj.idFloskelgruppe.toString()) + ',';

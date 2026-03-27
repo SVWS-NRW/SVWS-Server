@@ -32,11 +32,9 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 			if (cmp !== 0) {
 				return cmp;
 			}
-			if ((a.kuerzel !== null) && (b.kuerzel !== null)) {
-				cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
-				if (cmp !== 0) {
-					return cmp;
-				}
+			cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+			if (cmp !== 0) {
+				return cmp;
 			}
 			return JavaLong.compare(a.id, b.id);
 		},
@@ -145,10 +143,10 @@ export class FloskelnListeManager extends AuswahlManager<number, Floskel, Floske
 
 	private entryMatchesSearchTerm(eintrag: Floskel) {
 		const searchTermLower = this._searchTerm.toLocaleLowerCase();
-		if ((eintrag.kuerzel !== null) && (eintrag.kuerzel.toLocaleLowerCase().includes(searchTermLower))) {
+		if (eintrag.kuerzel.toLocaleLowerCase().includes(searchTermLower)) {
 			return true;
 		}
-		return ((eintrag.text !== null) && (eintrag.text.toLocaleLowerCase().includes(searchTermLower)));
+		return (eintrag.text.toLocaleLowerCase().includes(searchTermLower));
 	}
 
 	get searchTerm(): string {
