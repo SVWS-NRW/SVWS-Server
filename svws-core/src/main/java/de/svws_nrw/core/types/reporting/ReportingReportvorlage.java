@@ -23,20 +23,33 @@ import de.svws_nrw.core.utils.reporting.ReportingSortierungDefinitionFactory;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Eine ENUM der integrierten Report-Vorlagen des SVWS-Servers. Im Rahmen des Reportings werden auf Basis dieses CoreTyps Template-Definitionen vorgenommen.
- * Wichtig:
- * - Die Bezeichnung der Vorlagen muss eindeutig sein und darf keine Leerzeichen enthalten. Die Bezeichnung darf nur aus Buchstaben, Ziffern, Bindestrichen und
- * Unterstrichen
- * bestehen.
- * - Die Parametergruppen, aber auch die Parameter müssen eindeutig sein pro ENUM-Eintrag und dürfen keine Leerzeichen enthalten. Die Parametergruppen und die
- * Parameter dürfen nur aus Buchstaben, Ziffern, Bindestrichen und Unterstrichen bestehen.
+ * Eine ENUM der integrierten Report-Vorlagen des SVWS-Servers.
+ * Im Rahmen des Reportings werden auf Basis dieses Core-Typs Template-Definitionen vorgenommen.
  *
- * Hinweis: Es ist nicht ausreichend, eine neue Vorlage nur hier einzubinden. Es muss in jedem Fall auch eine neue HTML-Template-Definition im
- * Reporting-Modul erstellt werden.
+ * <p><strong>Wichtig:</strong></p>
+ * <ul>
+ *   <li>Die Bezeichnung der Vorlagen muss eindeutig sein und darf keine Leerzeichen enthalten.</li>
+ *   <li>Zulässig sind nur Buchstaben, Ziffern, Bindestriche und Unterstriche.</li>
+ *   <li>Die Parametergruppen sowie die Parameter müssen je ENUM-Eintrag eindeutig sein und dürfen
+ *       ebenfalls keine Leerzeichen enthalten.</li>
+ *   <li>Auch hier sind nur Buchstaben, Ziffern, Bindestriche und Unterstriche zulässig.</li>
+ * </ul>
  *
- * Anmerkung: Die Benennung der Vorlagen erfolgt nach dem Schema Hauptdaten_v_Detaildaten. Bei der Report-Generierung erfolgt in Teilen ein entsprechendes
- * Füllen der Datenkontexte anhand der Benennung.
+ * <p><strong>Hinweis:</strong></p>
+ * <p>
+ * Es ist nicht ausreichend, eine neue Vorlage nur hier einzubinden.
+ * Es muss in jedem Fall auch eine neue HTML-Template-Definition im Reporting-Modul erstellt werden.
+ * </p>
+ *
+ * <p><strong>Anmerkung:</strong></p>
+ * <p>
+ * Die Benennung der Vorlagen erfolgt nach dem Schema
+ * <code>Hauptdaten_v_Detaildaten</code>.
+ * Bei der Report-Generierung erfolgt in Teilen ein entsprechendes Füllen der Datenkontexte
+ * anhand der Benennung.
+ * </p>
  */
+
 // SONARQUBE WARNUNG: Es sollen Konstanten für wiederkehrende Strings definiert werden. Das ist in einer ENUM nicht ohne Komplexitätserhöhung möglich.
 @SuppressWarnings("java:S1192")
 public enum ReportingReportvorlage {
@@ -44,14 +57,17 @@ public enum ReportingReportvorlage {
 	/** Report-Vorlage: GOSt - Klausurplanung - Klausurtermine-Kurse */
 	GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN("GostKlausurplanung-KlausurtermineMitKursen",
 			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
-					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "", true, 1, Arrays.asList(
-							erzeugeVorlageParameter("mitKursklausuren", "mit Kursklausuren", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitNachschreibern", "mit Nachschreibern", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitKlausurschreiberNamen", "mit Namen der Klausurschreiber", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
-					))
+					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+							"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1,
+							Arrays.asList(
+									erzeugeVorlageParameter("mitKursklausuren", "mit Kursklausuren", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitNachschreibern", "mit Nachschreibern", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitKlausurschreiberNamen", "mit Namen der Klausurschreiber",
+											ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+							))
 			), new ArrayList<>(), new ArrayList<>(), false, false, true)
 	),
 
@@ -91,74 +107,95 @@ public enum ReportingReportvorlage {
 					new ArrayList<>(), new ArrayList<>(), false, false, true)
 	),
 
+	/** Report-Vorlage: Klasse - Liste - Schüler - Fotos - Namen */
+	KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN("Klasse-Liste-Schueler-Fotos-Namen",
+			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), List.of(
+					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+							"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1,
+							List.of(
+									erzeugeVorlageParameter("anzahlBilderProZeile", "Anzahl Bilder pro Spalte", ReportingReportvorlageParameterTyp.INTEGER,
+											"" + 4, true, ReportingUIKomponentenTyp.NUMBERPICKER, 1)
+							))
+			), new ArrayList<>(), new ArrayList<>(), true, false, true)
+	),
+
 	/** Report-Vorlage: Klasse - Liste - Schüler - Kontaktdaten - Erzieher */
 	KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER("Klasse-Liste-Schueler-Kontaktdaten-Erzieher",
 			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), List.of(
-					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "", true, 3, Arrays.asList(
-							erzeugeVorlageParameter("nurSchuelerRufname", "nur Rufname", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-									true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerGeschlecht", "mit Geschlecht", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerGebDat", "mit Geburtsdatum", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerStaat", "mit Staatsangehörigkeit", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerAnschrift", "mit Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerTelefonPrivat", "mit Telefon (privat)", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerEmailSchule", "mit E-Mail (Schule)", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerEmailPrivat", "mit E-Mail (privat)", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSpalteSchuelerTelefonKontakte", "mit Telefonkontakten",
-									ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitErzieher", "mit Erziehern", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-									true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitErzieherAnschrift", "mit Erzieher-Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitErzieherEmailPrivat", "mit Erzieher-E-Mail", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
-					))
+					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+							"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 3,
+							Arrays.asList(
+									erzeugeVorlageParameter("nurSchuelerRufname", "nur Rufname", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
+											true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerGeschlecht", "mit Geschlecht", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerGebDat", "mit Geburtsdatum", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerStaat", "mit Staatsangehörigkeit", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerAnschrift", "mit Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerTelefonPrivat", "mit Telefon (privat)", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerEmailSchule", "mit E-Mail (Schule)", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerEmailPrivat", "mit E-Mail (privat)", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSpalteSchuelerTelefonKontakte", "mit Telefonkontakten",
+											ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitErzieher", "mit Erziehern", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
+											true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitErzieherAnschrift", "mit Erzieher-Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitErzieherEmailPrivat", "mit Erzieher-E-Mail", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+							))
 			), new ArrayList<>(), new ArrayList<>(), true, false, true)
 	),
 
 	/** Report-Vorlage: Klasse - Liste - Schüler - Leistungsdaten */
 	KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN("Klasse-Liste-Schueler-Leistungsdaten",
 			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()),
-					List.of(erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "", true, 2, Arrays.asList(
-							erzeugeVorlageParameter("mitPunktenStattNoten", "Punkte statt Noten ausgeben", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitQuartalsnote", "Quartalsnoten statt Noten ausgeben", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitIndividuellerKursart", "mit individueller Kursart", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitZuweisung", "mit Zuweisungen", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-									true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitGesamtfehlstunden", "mit Gesamtfehlstunden", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitFachbezogenenFehlstunden", "mit fachbezogenen Fehlstunden", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitFachbezogenenBemerkungen", "mit fachbezogenen Bemerkungen", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitLernentwicklung", "mit Angabe zur Lernentwicklung", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitFoerderschwerpunkt", "mit Angaben zum Förderschwerpunkt", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitASVBemerkung", "mit ASV-Bemerkungen", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitAUEBemerkung", "mit AUE-Bemerkungen", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitZeugnisbemerkung", "mit Zeugnisbemerkungen", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchulformempfehlung", "mit Empfehlung der Schulform", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitVersetzungAbschluss", "mit Versetzung und Abschluss", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitVersetzungsentscheidung", "mit Text zur Versetzungsentscheidung",
-									ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1))
+					List.of(erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+							"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2,
+							Arrays.asList(
+									erzeugeVorlageParameter("mitPunktenStattNoten", "Punkte statt Noten ausgeben", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitQuartalsnote", "Quartalsnoten statt Noten ausgeben", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitIndividuellerKursart", "mit individueller Kursart", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitZuweisung", "mit Zuweisungen", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
+											true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitGesamtfehlstunden", "mit Gesamtfehlstunden", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitFachbezogenenFehlstunden", "mit fachbezogenen Fehlstunden",
+											ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitFachbezogenenBemerkungen", "mit fachbezogenen Bemerkungen",
+											ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitLernentwicklung", "mit Angabe zur Lernentwicklung", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitFoerderschwerpunkt", "mit Angaben zum Förderschwerpunkt",
+											ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitASVBemerkung", "mit ASV-Bemerkungen", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitAUEBemerkung", "mit AUE-Bemerkungen", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitZeugnisbemerkung", "mit Zeugnisbemerkungen", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchulformempfehlung", "mit Empfehlung der Schulform",
+											ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitVersetzungAbschluss", "mit Versetzung und Abschluss",
+											ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitVersetzungsentscheidung", "mit Text zur Versetzungsentscheidung",
+											ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1))
 					)),
 					List.of(erzeugeSortierungDefinitionGruppe("Fachsortierung", "ReportingFach", true,
 							ReportingSortierungDefinitionFactory.definitionen(
@@ -191,63 +228,81 @@ public enum ReportingReportvorlage {
 	/** Report-Vorlage: Kurs - Liste - Schüler - Kontaktdaten - Erzieher */
 	KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER("Kurs-Liste-Schueler-Kontaktdaten-Erzieher",
 			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), List.of(
-					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "", true, 3, Arrays.asList(
-							erzeugeVorlageParameter("mitSchuelerKlasse", "mit Klasse", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-									true, ReportingUIKomponentenTyp.CHECKBOX, 3),
-							erzeugeVorlageParameter("nurSchuelerRufname", "nur Rufname", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-									true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerGeschlecht", "mit Geschlecht", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerGebDat", "mit Geburtsdatum", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerStaat", "mit Staatsangehörigkeit", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerAnschrift", "mit Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerTelefonPrivat", "mit Telefon (privat)", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerEmailSchule", "mit E-Mail (Schule)", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerEmailPrivat", "mit E-Mail (privat)", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSpalteSchuelerTelefonKontakte", "mit Telefonkontakten",
-									ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitErzieher", "mit Erziehern", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-									true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitErzieherAnschrift", "mit Erzieher-Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitErzieherEmailPrivat", "mit Erzieher-E-Mail", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
-					))
+					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+							"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 3,
+							Arrays.asList(
+									erzeugeVorlageParameter("mitSchuelerKlasse", "mit Klasse", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
+											true, ReportingUIKomponentenTyp.CHECKBOX, 3),
+									erzeugeVorlageParameter("nurSchuelerRufname", "nur Rufname", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
+											true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerGeschlecht", "mit Geschlecht", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerGebDat", "mit Geburtsdatum", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerStaat", "mit Staatsangehörigkeit", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerAnschrift", "mit Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerTelefonPrivat", "mit Telefon (privat)", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerEmailSchule", "mit E-Mail (Schule)", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerEmailPrivat", "mit E-Mail (privat)", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSpalteSchuelerTelefonKontakte", "mit Telefonkontakten",
+											ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitErzieher", "mit Erziehern", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
+											true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitErzieherAnschrift", "mit Erzieher-Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitErzieherEmailPrivat", "mit Erzieher-E-Mail", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+							))
+			), new ArrayList<>(), new ArrayList<>(), true, false, true)
+	),
+
+	/** Report-Vorlage: Kurs - Liste - Schüler - Fotos - Namen */
+	KURSE_V_LISTE_SCHUELER_FOTOS_NAMEN("Kurs-Liste-Schueler-Fotos-Namen",
+			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), List.of(
+					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+							"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1,
+							List.of(
+									erzeugeVorlageParameter("anzahlBilderProZeile", "Anzahl Bilder pro Spalte", ReportingReportvorlageParameterTyp.INTEGER,
+											"" + 4, true, ReportingUIKomponentenTyp.NUMBERPICKER, 1)
+							))
 			), new ArrayList<>(), new ArrayList<>(), true, false, true)
 	),
 
 	/** Report-Vorlage: Kurs - Liste - Schüler - Leistungsdaten */
 	KURSE_V_LISTE_SCHUELER_LEISTUNGSDATEN("Kurs-Liste-Schueler-Leistungsdaten",
 			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
-					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "", true, 1, Arrays.asList(
-							erzeugeVorlageParameter("mitPunktenStattNoten", "Punkte statt Noten ausgeben", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitBemerkungen", "mit fachbezogenen Bemerkungen", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
-					))
+					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+							"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1,
+							Arrays.asList(
+									erzeugeVorlageParameter("mitPunktenStattNoten", "Punkte statt Noten ausgeben", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitBemerkungen", "mit fachbezogenen Bemerkungen", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+							))
 			), new ArrayList<>(), new ArrayList<>(), true, false, true)
 	),
 
 	/** Report-Vorlage: Lehrer - Liste - Schüler - Leistungsdaten */
 	LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN("Lehrer-Liste-Schueler-Leistungsdaten",
 			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
-					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "", true, 2, Arrays.asList(
-							erzeugeVorlageParameter("mitKlassenunterricht", "mit Klassenunterricht", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitKursunterricht", "mit Kursunterricht", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitPunktenStattNoten", "Punkte statt Noten ausgeben", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitBemerkungen", "mit fachbezogenen Bemerkungen", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
-					))
+					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+							"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2,
+							Arrays.asList(
+									erzeugeVorlageParameter("mitKlassenunterricht", "mit Klassenunterricht", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitKursunterricht", "mit Kursunterricht", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitPunktenStattNoten", "Punkte statt Noten ausgeben", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitBemerkungen", "mit fachbezogenen Bemerkungen", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+							))
 			), new ArrayList<>(), new ArrayList<>(), true, false, true)
 	),
 
@@ -320,75 +375,84 @@ public enum ReportingReportvorlage {
 	/** Report-Vorlage: GOSt - Laufbahnplanung - Ergebnisübersicht */
 	SCHUELER_V_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT("Schueler-GostLaufbahnplanungErgebnisuebersicht",
 			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
-					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "", true, 1, Arrays.asList(
-							erzeugeVorlageParameter("mitFehlernKommentaren", "mit Fehlern/Kommentaren", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitHinweisen", "mit Hinweisen", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-									true, ReportingUIKomponentenTyp.CHECKBOX, 1)
-					))
+					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+							"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1,
+							Arrays.asList(
+									erzeugeVorlageParameter("mitFehlernKommentaren", "mit Fehlern/Kommentaren", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitHinweisen", "mit Hinweisen", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
+											true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+							))
 			), new ArrayList<>(), new ArrayList<>(), true, false, true)
 	),
 
 	/** Report-Vorlage: GOSt - Laufbahnplanung - Wahlbogen */
 	SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN("Schueler-GostLaufbahnplanungWahlbogen",
 			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
-					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "", true, 1, Arrays.asList(
-							erzeugeVorlageParameter("nurBelegteFaecher", "nur belegte Fächer", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
-					))
+					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+							"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1,
+							List.of(
+									erzeugeVorlageParameter("nurBelegteFaecher", "nur belegte Fächer", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+							))
 			), new ArrayList<>(), new ArrayList<>(), true, false, true)
 	),
 
 	/** Report-Vorlage: Schüler - Schulbescheinigung */
 	SCHUELER_V_SCHULBESCHEINIGUNG("Schueler-Schulbescheinigung",
 			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
-					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "", true, 3, Arrays.asList(
-							erzeugeVorlageParameter("fuerErzieher", "für Erzieher", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-									true, ReportingUIKomponentenTyp.CHECKBOX, 3),
-							erzeugeVorlageParameter("mitSchullogo", "mit Schullogo", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-									true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitBildBriefkopf", "mit Bild im Briefkopf", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 2),
-							erzeugeVorlageParameter("keineAnschrift", "ohne Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-									true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("keinInfoblock", "ohne Infoblock", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-									true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("keineUnterschrift", "ohne Unterschrift", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
-					))
+					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+							"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 3,
+							Arrays.asList(
+									erzeugeVorlageParameter("fuerErzieher", "für Erzieher", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
+											true, ReportingUIKomponentenTyp.CHECKBOX, 3),
+									erzeugeVorlageParameter("mitSchullogo", "mit Schullogo", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
+											true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitBildBriefkopf", "mit Bild im Briefkopf", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 2),
+									erzeugeVorlageParameter("keineAnschrift", "ohne Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
+											true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("keinInfoblock", "ohne Infoblock", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
+											true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("keineUnterschrift", "ohne Unterschrift", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+							))
 			), new ArrayList<>(), new ArrayList<>(), true, false, true)
 	),
 
 	/** Report-Vorlage: Schüler - Liste - Kontaktdaten - Erzieher */
 	SCHUELER_V_LISTE_KONTAKTDATENERZIEHER("Schueler-Liste-Kontaktdaten-Erzieher",
 			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
-					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "", true, 3, Arrays.asList(
-							erzeugeVorlageParameter("mitSchuelerKlasse", "mit Klasse", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-									true, ReportingUIKomponentenTyp.CHECKBOX, 3),
-							erzeugeVorlageParameter("nurSchuelerRufname", "nur Rufname", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-									true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerGeschlecht", "mit Geschlecht", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerGebDat", "mit Geburtsdatum", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerStaat", "mit Staatsangehörigkeit", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerAnschrift", "mit Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerTelefonPrivat", "mit Telefon (privat)", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerEmailSchule", "mit E-Mail (Schule)", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSchuelerEmailPrivat", "mit E-Mail (privat)", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitSpalteSchuelerTelefonKontakte", "mit Telefonkontakten", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitErzieher", "mit Erziehern", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-									true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitErzieherAnschrift", "mit Erzieher-Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitErzieherEmailPrivat", "mit Erzieher-E-Mail", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1))
+					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+							"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 3,
+							Arrays.asList(
+									erzeugeVorlageParameter("mitSchuelerKlasse", "mit Klasse", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
+											true, ReportingUIKomponentenTyp.CHECKBOX, 3),
+									erzeugeVorlageParameter("nurSchuelerRufname", "nur Rufname", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
+											true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerGeschlecht", "mit Geschlecht", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerGebDat", "mit Geburtsdatum", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerStaat", "mit Staatsangehörigkeit", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerAnschrift", "mit Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerTelefonPrivat", "mit Telefon (privat)", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerEmailSchule", "mit E-Mail (Schule)", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSchuelerEmailPrivat", "mit E-Mail (privat)", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitSpalteSchuelerTelefonKontakte", "mit Telefonkontakten",
+											ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitErzieher", "mit Erziehern", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
+											true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitErzieherAnschrift", "mit Erzieher-Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+									erzeugeVorlageParameter("mitErzieherEmailPrivat", "mit Erzieher-E-Mail", ReportingReportvorlageParameterTyp.BOOLEAN,
+											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1))
 					)),
 					List.of(erzeugeSortierungDefinitionGruppe("Schülersortierung", "ReportingSchueler", true,
 							ReportingSortierungDefinitionFactory.definitionen(
@@ -404,10 +468,12 @@ public enum ReportingReportvorlage {
 	/** Report-Vorlage: Stundenplanung - Fach - Stundenplan */
 	STUNDENPLANUNG_V_FACH_STUNDENPLAN("Stundenplanung-FachStundenplan",
 			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
-					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "", true, 2, Arrays.asList(
-							erzeugeVorlageParameter("mitPausenzeiten", "mit Pausenzeiten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-									true, ReportingUIKomponentenTyp.CHECKBOX, 1)
-					))
+					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+							"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2,
+							List.of(
+									erzeugeVorlageParameter("mitPausenzeiten", "mit Pausenzeiten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
+											true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+							))
 			), new ArrayList<>(), new ArrayList<>(), false, true, true)
 	),
 
@@ -415,16 +481,19 @@ public enum ReportingReportvorlage {
 	STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN("Stundenplanung-KlassenStundenplan",
 			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()),
 					List.of(
-							erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "", true, 2, Arrays.asList(
-									erzeugeVorlageParameter("mitPausenzeiten", "mit Pausenzeiten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-											true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-									erzeugeVorlageParameter("mitFachStattKursbezeichnung", "Fach statt Kursbezeichnung",
-											ReportingReportvorlageParameterTyp.BOOLEAN,
-											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-									erzeugeVorlageParameter("mitFachkuerzelStattFachbezeichnung", "Fachkürzel statt Fachbezeichnung",
-											ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true,
-											ReportingUIKomponentenTyp.CHECKBOX, 1)
-							))
+							erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+									"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true,
+									2, Arrays.asList(
+											erzeugeVorlageParameter("mitPausenzeiten", "mit Pausenzeiten", ReportingReportvorlageParameterTyp.BOOLEAN,
+													"" + false,
+													true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+											erzeugeVorlageParameter("mitFachStattKursbezeichnung", "Fach statt Kursbezeichnung",
+													ReportingReportvorlageParameterTyp.BOOLEAN,
+													"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+											erzeugeVorlageParameter("mitFachkuerzelStattFachbezeichnung", "Fachkürzel statt Fachbezeichnung",
+													ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true,
+													ReportingUIKomponentenTyp.CHECKBOX, 1)
+									))
 					), new ArrayList<>(), new ArrayList<>(), false, true, true)
 	),
 
@@ -432,7 +501,27 @@ public enum ReportingReportvorlage {
 	STUNDENPLANUNG_V_LEHRER_STUNDENPLAN("Stundenplanung-LehrerStundenplan",
 			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()),
 					List.of(
-							erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "", true, 2, Arrays.asList(
+							erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+									"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true,
+									2, Arrays.asList(
+											erzeugeVorlageParameter("mitPausenzeiten", "mit Pausenzeiten", ReportingReportvorlageParameterTyp.BOOLEAN,
+													"" + false,
+													true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+											erzeugeVorlageParameter("mitPausenaufsichten", "mit Pausenaufsichten", ReportingReportvorlageParameterTyp.BOOLEAN,
+													"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+											erzeugeVorlageParameter("mitFachkuerzelStattFachbezeichnung", "Fachkürzel statt Fachbezeichnung",
+													ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true,
+													ReportingUIKomponentenTyp.CHECKBOX, 1)
+									))
+					), new ArrayList<>(), new ArrayList<>(), false, true, true)
+	),
+
+	/** Report-Vorlage: Stundenplanung - Lehrer - Stundenplan - Kombiniert */
+	STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT("Stundenplanung-LehrerStundenplanKombiniert",
+			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
+					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+							"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2,
+							Arrays.asList(
 									erzeugeVorlageParameter("mitPausenzeiten", "mit Pausenzeiten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
 											true, ReportingUIKomponentenTyp.CHECKBOX, 1),
 									erzeugeVorlageParameter("mitPausenaufsichten", "mit Pausenaufsichten", ReportingReportvorlageParameterTyp.BOOLEAN,
@@ -441,31 +530,18 @@ public enum ReportingReportvorlage {
 											ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true,
 											ReportingUIKomponentenTyp.CHECKBOX, 1)
 							))
-					), new ArrayList<>(), new ArrayList<>(), false, true, true)
-	),
-
-	/** Report-Vorlage: Stundenplanung - Lehrer - Stundenplan - Kombiniert */
-	STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT("Stundenplanung-LehrerStundenplanKombiniert",
-			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
-					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "", true, 2, Arrays.asList(
-							erzeugeVorlageParameter("mitPausenzeiten", "mit Pausenzeiten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-									true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitPausenaufsichten", "mit Pausenaufsichten", ReportingReportvorlageParameterTyp.BOOLEAN,
-									"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-							erzeugeVorlageParameter("mitFachkuerzelStattFachbezeichnung", "Fachkürzel statt Fachbezeichnung",
-									ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true,
-									ReportingUIKomponentenTyp.CHECKBOX, 1)
-					))
 			), new ArrayList<>(), new ArrayList<>(), false, false, true)
 	),
 
 	/** Report-Vorlage: Stundenplanung - Fach - Stundenplan */
 	STUNDENPLANUNG_V_RAUM_STUNDENPLAN("Stundenplanung-RaumStundenplan",
 			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
-					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "", true, 2, Arrays.asList(
-							erzeugeVorlageParameter("mitPausenzeiten", "mit Pausenzeiten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-									true, ReportingUIKomponentenTyp.CHECKBOX, 1)
-					))
+					erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+							"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2,
+							List.of(
+									erzeugeVorlageParameter("mitPausenzeiten", "mit Pausenzeiten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
+											true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+							))
 			), new ArrayList<>(), new ArrayList<>(), false, true, true)
 	),
 
@@ -473,18 +549,22 @@ public enum ReportingReportvorlage {
 	STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN("Stundenplanung-SchuelerStundenplan",
 			erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()),
 					List.of(
-							erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "", true, 2, Arrays.asList(
-									erzeugeVorlageParameter("mitPausenzeiten", "mit Pausenzeiten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-											true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-									erzeugeVorlageParameter("mitFachStattKursbezeichnung", "Fach statt Kursbezeichnung",
-											ReportingReportvorlageParameterTyp.BOOLEAN,
-											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
-									erzeugeVorlageParameter("mitFachkuerzelStattFachbezeichnung", "Fachkürzel statt Fachbezeichnung",
-											ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true,
-											ReportingUIKomponentenTyp.CHECKBOX, 1),
-									erzeugeVorlageParameter("mitIndividuelleKursart", "mit individueller Kursart", ReportingReportvorlageParameterTyp.BOOLEAN,
-											"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
-							))
+							erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
+									"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true,
+									2, Arrays.asList(
+											erzeugeVorlageParameter("mitPausenzeiten", "mit Pausenzeiten", ReportingReportvorlageParameterTyp.BOOLEAN,
+													"" + false,
+													true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+											erzeugeVorlageParameter("mitFachStattKursbezeichnung", "Fach statt Kursbezeichnung",
+													ReportingReportvorlageParameterTyp.BOOLEAN,
+													"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
+											erzeugeVorlageParameter("mitFachkuerzelStattFachbezeichnung", "Fachkürzel statt Fachbezeichnung",
+													ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true,
+													ReportingUIKomponentenTyp.CHECKBOX, 1),
+											erzeugeVorlageParameter("mitIndividuelleKursart", "mit individueller Kursart",
+													ReportingReportvorlageParameterTyp.BOOLEAN,
+													"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
+									))
 					), new ArrayList<>(), new ArrayList<>(), false, true, true)
 	);
 
@@ -815,14 +895,22 @@ public enum ReportingReportvorlage {
 
 		// Erzeuge die Gruppe der Standardausgabeoptionen (Einzelausgabe und Duplexdruck).
 		// In der Regel ist immer nur eine der beiden Optionen für den Einzeldruck sichtbar.
+		String ausgabeoptionenBeschreibung = ((uiIstSichtbarEinzelausgabeHauptdaten) || (uiIstSichtbarEinzelausgabeDetaildaten))
+				? "Die Option Einzelausgabe ermöglicht es, pro Datensatz eine Ausgabe in eine einzelne Datei zu erzeugen. "
+				: "";
+		ausgabeoptionenBeschreibung += (uiIstSichtbarDuplexdruck)
+				? ("Wird Duplexdruck aktiviert, so kann die erzeuget Datei später auf einem Drucker mit der Option 'beidseitiger Druck (Duplexdruck)' gedruckt "
+						+ "werden.")
+				: "";
 		final ReportingReportvorlageParameterGruppe standardausgabeoptionenGruppe =
-				erzeugeReportingvorlageParameterGruppe("Ausgabeoptionen", "", true, 3, Arrays.asList(
-						erzeugeVorlageParameter("einzelausgabeHauptdaten", "Einzelausgabe der Daten", ReportingReportvorlageParameterTyp.BOOLEAN,
-								"" + false, uiIstSichtbarEinzelausgabeHauptdaten, ReportingUIKomponentenTyp.CHECKBOX, 1),
-						erzeugeVorlageParameter("einzelausgabeDetaildaten", "Einzelausgabe der Daten", ReportingReportvorlageParameterTyp.BOOLEAN,
-								"" + false, uiIstSichtbarEinzelausgabeDetaildaten, ReportingUIKomponentenTyp.CHECKBOX, 1),
-						erzeugeVorlageParameter("duplexdruck", "Duplexdruck", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
-								uiIstSichtbarDuplexdruck, ReportingUIKomponentenTyp.CHECKBOX, 1)));
+				erzeugeReportingvorlageParameterGruppe("Ausgabeoptionen", ausgabeoptionenBeschreibung, true, 3,
+						Arrays.asList(
+								erzeugeVorlageParameter("einzelausgabeHauptdaten", "Einzelausgabe der Daten", ReportingReportvorlageParameterTyp.BOOLEAN,
+										"" + false, uiIstSichtbarEinzelausgabeHauptdaten, ReportingUIKomponentenTyp.CHECKBOX, 1),
+								erzeugeVorlageParameter("einzelausgabeDetaildaten", "Einzelausgabe der Daten", ReportingReportvorlageParameterTyp.BOOLEAN,
+										"" + false, uiIstSichtbarEinzelausgabeDetaildaten, ReportingUIKomponentenTyp.CHECKBOX, 1),
+								erzeugeVorlageParameter("duplexdruck", "Duplexdruck", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
+										uiIstSichtbarDuplexdruck, ReportingUIKomponentenTyp.CHECKBOX, 1)));
 
 		// Füge dann die übergebenen ReportvorlageParameter-Gruppen und die Ausgabeoptionen mit ihren ReportvorlageParametern hinzu.
 		reportingParameter.reportvorlageParameterGruppen = new ArrayList<>(

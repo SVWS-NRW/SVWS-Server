@@ -20,6 +20,7 @@ import de.svws_nrw.module.reporting.types.schueler.schulbesuch.ReportingSchueler
 import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
 import de.svws_nrw.module.reporting.types.schueler.telefon.ReportingSchuelerTelefonkontakt;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
+import de.svws_nrw.module.reporting.utils.ReportingImageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +73,9 @@ public class ReportingSchueler extends ReportingPerson {
 
 	/** Das Foto (in Base64 kodiert) des Schülers. */
 	protected String foto;
+
+	/** Eine HTML-kompatible Bildquelle (Data-URI) für das Foto des Schülers. Der MIME-Type wird, falls nicht explizit bekannt, aus den Base64-Daten ermittelt. */
+	protected String fotoHtmlSource;
 
 	/** Das Geburtsland der Mutter des Schülers. */
 	protected String geburtslandMutter;
@@ -241,6 +245,7 @@ public class ReportingSchueler extends ReportingPerson {
 		this.externeSchulNr = externeSchulNr;
 		this.fahrschuelerArtID = fahrschuelerArtID;
 		this.foto = foto;
+		this.fotoHtmlSource = ReportingImageUtils.base64ImageToHtmlImageSource(this.foto, null, null);
 		this.geburtslandMutter = geburtslandMutter;
 		this.geburtslandVater = geburtslandVater;
 		this.gostAbitur = gostAbitur;
@@ -455,6 +460,16 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public String foto() {
 		return foto;
+	}
+
+	/**
+	 * Liefert eine HTML-kompatible Bildquelle (Data-URI) für das Foto des Schülers.
+	 * Der MIME-Type wird, falls nicht explizit bekannt, aus den Base64-Daten ermittelt.
+	 *
+	 * @return Data-URI für das Foto oder ein leerer String, wenn kein Foto vorhanden ist.
+	 */
+	public String fotoHtmlSource() {
+		return this.fotoHtmlSource;
 	}
 
 	/**

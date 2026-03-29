@@ -1,0 +1,43 @@
+/* Foto-Zelle: kein Innenabstand, Inhalt oben ausgerichtet */
+td.foto-zelle {
+	padding: 0;
+	vertical-align: top;
+}
+
+/* Foto-Container: feste Höhe für PDF-Renderer, beschneidet überstehende Bildbereiche */
+.foto-container {
+	width: 100%;
+	height: 50mm;
+	overflow: hidden;
+}
+
+/* Foto-Bild: füllt die Breite des Containers, Höhe skaliert proportional (keine Verzerrung).
+   Überstehende Bereiche werden durch overflow:hidden am Container abgeschnitten. */
+.foto-bild {
+	width: 100%;
+	display: block;
+}
+
+/* Platzhalter für fehlende Fotos: hellgraues Rechteck, gleiche Höhe wie Foto-Container */
+.foto-placeholder {
+	background-color: #d3d3d3;
+	width: 100%;
+	height: 50mm;
+}
+
+/* Foto-Tabelle: gleichmäßiger Abstand zwischen den Spalten über border-spacing.
+   Da border-spacing auf beiden Seiten jeder Zelle wirkt, wird die Tabelle per
+   negativem Margin und calc() um den äußeren Abstand links und rechts korrigiert,
+   sodass erstes und letztes Foto bündig mit dem Seitenrand abschließen. */
+table.foto-tabelle {
+	border-collapse: separate;
+	border-spacing: 9mm 0;
+	margin-left: -9mm;
+	margin-right: -9mm;
+	width: calc(100% + 18mm);
+}
+
+/* Text unter dem Foto: Schriftgröße 9pt */
+.foto-text {
+	font-size: 9pt;
+}

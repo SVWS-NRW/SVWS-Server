@@ -33,6 +33,9 @@ public final class ReportRendererPdf {
 		this.logger = logger;
 	}
 
+	private static final String SVWSSERVER = "SVWS-Server";
+	private static final String LIBERATION = "liberation";
+
 	/**
 	 * Rendert ein PDF-Dokument basierend auf dem gegebenen HTML-Inhalt sowie spezifischen Konfigurationen
 	 * und schreibt das generierte Dokument in den bereitgestellten OutputStream.
@@ -54,18 +57,19 @@ public final class ReportRendererPdf {
 		try (PDDocument doc = new PDDocument()) {
 			// Dokument-Metadaten setzen
 			final PDDocumentInformation info = doc.getDocumentInformation();
-			info.setAuthor("SVWSServer");
+			info.setAuthor(SVWSSERVER);
 			info.setCreationDate(now);
-			info.setCreator("SVWSServer");
+			info.setCreator(SVWSSERVER);
 			info.setModificationDate(now);
-			info.setProducer("SVWSServer");
+			info.setProducer(SVWSSERVER);
 
 			// Renderer konfigurieren
 			final PdfRendererBuilder builder = new PdfRendererBuilder();
 			final URL baseRes = PDDocument.class.getClassLoader().getResource(rootPfad);
 			if (baseRes == null) {
-				if (logger != null)
+				if (logger != null) {
 					logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Der Root-Pfad zu den Ressourcen wurde nicht gefunden. Angegebener Pfad: " + rootPfad);
+				}
 				throw new ApiOperationException(Response.Status.NOT_FOUND,
 						"### FEHLER: Der Root-Pfad zu den Ressourcen wurde nicht gefunden. Angegebener Pfad: " + rootPfad);
 			}
@@ -75,7 +79,6 @@ public final class ReportRendererPdf {
 			registerFonts(builder, rootPfad);
 
 			// Builder konfigurieren
-			builder.useFastMode();
 			builder.usePDDocument(doc);
 			builder.withHtmlContent(html, baseURI);
 			builder.useSVGDrawer(new BatikSVGDrawer());
@@ -84,8 +87,9 @@ public final class ReportRendererPdf {
 			// PDF generieren
 			builder.run();
 		} catch (final Exception e) {
-			if (logger != null)
+			if (logger != null) {
 				logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Das PDF konnte aufgrund des folgenden Fehlers nicht gerendert werden: " + e.getMessage());
+			}
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, e,
 					"### FEHLER: Das PDF konnte aufgrund der folgenden Fehlers nicht gerendert werden: " + e.getMessage());
 		}
@@ -102,10 +106,10 @@ public final class ReportRendererPdf {
 	 */
 	private void registerFonts(final PdfRendererBuilder builder, final String rootPfad) throws ApiOperationException {
 		final String fontsPfad = rootPfad + "fonts/liberation/";
-		registerFont(builder, fontsPfad + "LiberationSans-Regular.ttf", "liberation", 400, BaseRendererBuilder.FontStyle.NORMAL, false);
-		registerFont(builder, fontsPfad + "LiberationSans-Bold.ttf", "liberation", 700, BaseRendererBuilder.FontStyle.NORMAL, true);
-		registerFont(builder, fontsPfad + "LiberationSans-Italic.ttf", "liberation", 400, BaseRendererBuilder.FontStyle.ITALIC, true);
-		registerFont(builder, fontsPfad + "LiberationSans-BoldItalic.ttf", "liberation", 700, BaseRendererBuilder.FontStyle.ITALIC, true);
+		registerFont(builder, fontsPfad + "LiberationSans-Regular.ttf", LIBERATION, 400, BaseRendererBuilder.FontStyle.NORMAL, false);
+		registerFont(builder, fontsPfad + "LiberationSans-Bold.ttf", LIBERATION, 700, BaseRendererBuilder.FontStyle.NORMAL, true);
+		registerFont(builder, fontsPfad + "LiberationSans-Italic.ttf", LIBERATION, 400, BaseRendererBuilder.FontStyle.ITALIC, true);
+		registerFont(builder, fontsPfad + "LiberationSans-BoldItalic.ttf", LIBERATION, 700, BaseRendererBuilder.FontStyle.ITALIC, true);
 	}
 
 	/**
@@ -126,13 +130,15 @@ public final class ReportRendererPdf {
 
 		try (InputStream is = PDDocument.class.getClassLoader().getResourceAsStream(path)) {
 			if (is == null) {
-				if (logger != null)
+				if (logger != null) {
 					logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Schriftart nicht gefunden: " + path);
+				}
 				throw new ApiOperationException(Response.Status.NOT_FOUND, "### FEHLER: Schriftart nicht gefunden: " + path);
 			}
 		} catch (final Exception e) {
-			if (logger != null)
+			if (logger != null) {
 				logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Schriftart nicht gefunden: " + path);
+			}
 			throw new ApiOperationException(Response.Status.NOT_FOUND, e, "### FEHLER: Schriftart nicht gefunden: " + path);
 		}
 		builder.useFont(() -> PDDocument.class.getClassLoader().getResourceAsStream(path), family, weight, style, embed);

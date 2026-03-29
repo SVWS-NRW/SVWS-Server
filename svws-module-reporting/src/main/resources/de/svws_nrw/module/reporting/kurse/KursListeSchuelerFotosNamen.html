@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}, duplex = ${Parameter.duplexdruck}">
+	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
+			title='Kursliste mit Fotos und Namen der Schülerinnen und Schüler',
+			htmlTemplatePfad=${Parameter.htmlTemplateDefinition().getPfadHtmlTemplate()},
+			namePageCSS='reporting-A4-hoch' + (${duplex} ? '-duplex' : '') + '.css')}">
+		<title></title>
+	</head>
+
+	<body>
+		<div class="reset-page-counter start-new-page" th:each="kurs,iterationVarKlasse : ${Kurse}"
+		     th:with="anzahlBilderProZeile = ${((VorlageParameter.get('anzahlBilderProZeile') != null) && (VorlageParameter.get('anzahlBilderProZeile') >= 2) && (VorlageParameter.get('anzahlBilderProZeile') <= 6)) ? VorlageParameter.get('anzahlBilderProZeile') : 4},
+				  spaltenBreite = ${100 / anzahlBilderProZeile},
+		          bildBreite = ${(180 - ((anzahlBilderProZeile - 1) * 9)) / anzahlBilderProZeile},
+				  bildHoehe = ${bildBreite * 4.0 / 3.0}">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<!--headerRight: Der Abschnitt und die Schulnummer werden über das Fragment hinzugefügt-->
+			<th:block th:replace="~{fragments/reportPageHeaderFooter :: pageHeaderFooter(
+					headerRight='Kurs: ' + ${kurs.kuerzel()} +
+						'<br/>Klassenleitung: ' + (${(kurs.kursleitung() != '') ? kurs.kursleitung() : '---'}))}">
+			</th:block>
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			<table class="fixed-100 mp-0 foto-tabelle">
+				<colgroup>
+					<col th:each="i : ${#numbers.sequence(1, anzahlBilderProZeile)}" th:style="${'width: ' + spaltenBreite + '%'}" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th th:colspan="${anzahlBilderProZeile}">
+							<table class="fixed-100 mp-0">
+								<tr>
+									<th class="ta-lb bo-b-grey" style="width: 35%; font-size: 13pt; font-weight: bold;" th:text="${'Kursliste ' + kurs.kuerzel()}">
+										Kursliste GE-GK-2
+									</th>
+									<th class="ta-rb bo-b-grey" style="width: 65%; font-size: 9pt;" th:text="${((!kurs.auflistungJahrgaenge().isEmpty()) ? ((kurs.jahrgaenge().size() == 1) ? ('Jahrgangsstufe: ' + kurs.auflistungJahrgaenge() + ' - ') : ('Jahrgangsstufen: ' + kurs.auflistungJahrgaenge() + ' - ')) : '')  + ((kurs.kurslehrer().size == 1) ? 'Lehrkraft: ' : 'Lehrkräfte: ') + kurs.auflistungKurslehrerkuerzel()}">
+										Jahrgangsstufe: EF - Lehrkräfte: ABC,DEF"
+									</th>
+								</tr>
+								<tr>
+									<td class="ta-lt" style="width: 35%; font-size: 9pt;" th:text="${kurs.schueler().size() + ' Personen ' + kurs.statistikGeschlechter()}">22 Personen (12/10/0)</td>
+									<td class="ta-rt" style="width: 65%; font-size: 9pt;" th:text="${'Klassen: ' + kurs.auflistungKlassen() + ' - Belegung: ' + kurs.statistikIndividuelleKursarten()}">
+										Klassen: EFA,EFB - Belegung: GKM: 12, GKS: 10"
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2" class="ta-lb" style="height: 2mm"></td>
+								</tr>
+							</table>
+						</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr th:each="schueler, stat : ${kurs.schueler()}"
+					    th:if="${stat.index % anzahlBilderProZeile == 0}">
+
+						<td class="foto-zelle"
+						    th:each="i : ${#numbers.sequence(stat.index, stat.index + anzahlBilderProZeile - 1)}">
+
+							<div class="foto-wrapper" th:if="${i < kurs.schueler().size()}">
+								<div class="foto-container" th:style="${'width: ' + bildBreite + 'mm; height: ' + bildHoehe + 'mm'}">
+									<img class="foto-bild"
+										 th:if="${kurs.schueler()[i].fotoHtmlSource() != null and !kurs.schueler()[i].fotoHtmlSource().isEmpty()}"
+										 th:src="${kurs.schueler()[i].fotoHtmlSource()}"
+										 th:alt="${'Foto von ' + kurs.schueler()[i].vorname() + ' ' + kurs.schueler()[i].nachname()}" />
+									<div class="foto-placeholder"
+										 th:unless="${kurs.schueler()[i].fotoHtmlSource() != null and !kurs.schueler()[i].fotoHtmlSource().isEmpty()}"
+										 th:style="${'width: ' + bildBreite + 'mm; height: ' + bildHoehe + 'mm'}">
+									</div>
+								</div>
+								<div class="m-t-1 ta-c foto-text" th:text="${kurs.schueler()[i].vorname()}"></div>
+								<div class="m-b-3 ta-c foto-text" th:text="${kurs.schueler()[i].nachname()}"></div>
+							</div>
+
+						</td>
+					</tr>
+				</tbody>
+
+			</table>
+
+		</div>
+	</body>
+</html>

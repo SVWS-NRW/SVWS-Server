@@ -598,5 +598,4 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			}
 		}
 	}
-
 }

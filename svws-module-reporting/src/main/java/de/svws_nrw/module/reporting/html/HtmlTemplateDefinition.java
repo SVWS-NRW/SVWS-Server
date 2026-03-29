@@ -81,18 +81,19 @@ public enum HtmlTemplateDefinition {
 			List.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
 
+
+	/** Report-Vorlage: Klasse - Liste - Schüler - Fotos - Namen */
+	KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN(
+			HauptdatenContextDefinition.KLASSEN,
+			"klassen/KlasseListeSchuelerFotosNamen.html",
+			"Klasse-Liste-Schueler-Fotos-Namen",
+			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)),
+
 	/** Report-Vorlage: Klasse - Liste - Schüler - Kontaktdaten - Erzieher */
 	KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER(
 			HauptdatenContextDefinition.KLASSEN,
 			"klassen/KlasseListeSchuelerKontaktdatenErzieher.html",
 			"Klasse-Liste-Schueler-Kontaktdaten-Erzieher",
-			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)),
-
-	/** Report-Vorlage: Kurs - Liste - Schüler - Kontaktdaten - Erzieher */
-	KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER(
-			HauptdatenContextDefinition.KURSE,
-			"kurse/KursListeSchuelerKontaktdatenErzieher.html",
-			"Kurs-Liste-Schueler-Kontaktdaten-Erzieher",
 			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)),
 
 	/** Report-Vorlage: Klasse - Liste - Schüler - Leistungsdaten */
@@ -108,6 +109,20 @@ public enum HtmlTemplateDefinition {
 			"kurse/leistungsdaten/KursListeSchuelerLeistungsdaten.html",
 			"Kurs-Liste-Schueler-Leistungsdaten",
 			List.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN)),
+
+	/** Report-Vorlage: Kurs - Liste - Schüler - Fotos - Namen */
+	KURSE_V_LISTE_SCHUELER_FOTOS_NAMEN(
+			HauptdatenContextDefinition.KURSE,
+			"kurse/KursListeSchuelerFotosNamen.html",
+			"Kurs-Liste-Schueler-Fotos-Namen",
+			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)),
+
+	/** Report-Vorlage: Kurs - Liste - Schüler - Kontaktdaten - Erzieher */
+	KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER(
+			HauptdatenContextDefinition.KURSE,
+			"kurse/KursListeSchuelerKontaktdatenErzieher.html",
+			"Kurs-Liste-Schueler-Kontaktdaten-Erzieher",
+			List.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)),
 
 	/** Report-Vorlage: Lehrer - Liste - Schüler - Leistungsdaten */
 	LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN(
@@ -271,8 +286,9 @@ public enum HtmlTemplateDefinition {
 		final String vollPfad = ROOT_PATH + tplPfad;
 		try {
 			final String content = ResourceUtils.text(vollPfad);
-			if (content == null)
+			if (content == null) {
 				return "";
+			}
 			return content;
 		} catch (final Exception e) {
 			return "";
