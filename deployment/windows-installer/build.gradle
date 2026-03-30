@@ -40,7 +40,7 @@ def jdk_win_url = (base_url == null)
 	: "${base_url}/OpenJDK${jdk}U-jdk_x64_windows_hotspot_${jdk_version}_${jdk_fix}.zip"
 //def jdk_win_url = "https://download.java.net/java/GA/jdk${jdk_version}/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-${jdk_version}_windows-x64_bin.zip"
 
-def mariadb_version = "11.4.4"
+def mariadb_version = "11.4.10"
 def mariadb_win_url = (base_url == null)
 	? "https://mirror.netcologne.de/mariadb/mariadb-${mariadb_version}/winx64-packages/mariadb-${mariadb_version}-winx64.zip"
 	: "${base_url}/mariadb-${mariadb_version}-winx64.zip"
@@ -255,14 +255,7 @@ task extract(type:Copy) {
 	dependsOn "copyJARs"
 	dependsOn "download"
 	from(zipTree("${downloadDir}/mariadb-${mariadb_version}-winx64.zip")) {
-		include "mariadb-${mariadb_version}-winx64/bin/mysqld.exe"
-		include "mariadb-${mariadb_version}-winx64/bin/server.dll"
-		include "mariadb-${mariadb_version}-winx64/bin/mariadb-install-db.exe"
-		include "mariadb-${mariadb_version}-winx64/COPYING"
-		include "mariadb-${mariadb_version}-winx64/CREDITS"
-		include "mariadb-${mariadb_version}-winx64/EXCEPTIONS-CLIENT"
-		include "mariadb-${mariadb_version}-winx64/README.md"
-		include "mariadb-${mariadb_version}-winx64/THIRDPARTY"
+		include "mariadb-${mariadb_version}-winx64/**"
 		includeEmptyDirs = false
 	}
 	from(zipTree(file("${downloadDir}/jdk-${jdk_version}-win.zip"))) {

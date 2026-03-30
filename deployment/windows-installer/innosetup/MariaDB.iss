@@ -265,6 +265,43 @@ procedure StartMariaDBInstall;
       end;
   end;
 
+{ Aktualisiert die Datenbank für eine neue Maria-DB-Version }
+procedure UpgradeMariaDB;
+var
+  ResultCode: Integer;
+  BinPath, DataPath, Params, ExeName: String;
+begin
+  // Aktualisiere nur, wenn MariaDB zuvor installiert war
+  if (CompareStr(SVWSExistingMariaDBVersion, '') <> 0) then
+    begin
+      Log('Starte passwortloses Upgrade (Wartungsmodus)...');
+      BinPath := ExpandConstant('{app}\db\mariadb\bin');
+      DataPath := SVWSDataDir + '\data';
+      if FileExists(BinPath + '\mariadbd.exe') then
+        ExeName := 'mariadbd.exe'
+      else
+        ExeName := 'mysqld.exe';
+      Params := '--standalone --skip-grant-tables --port=' + IntToStr(MariaDBPort) + ' --datadir="' + DataPath + '"';
+    
+      // MariaDB temporär ohne Rechteprüfung im Hintergrund starten
+      if Exec(BinPath + '\' + ExeName, Params, BinPath, SW_HIDE, ewNoWait, ResultCode) then
+        begin
+          // Kurz warten, bis der Prozess bereit ist (hier 3 Sekunden)
+          Sleep(3000);
+
+          // Upgrade-Tool kann jetzt ohne Passwort ausgeführt werden
+          Log('Führe mariadb-upgrade aus...');
+          Exec(BinPath + '\mariadb-upgrade.exe', '--user=root --port=' + IntToStr(MariaDBPort) + ' --force', BinPath, SW_HIDE, ewWaitUntilTerminated, ResultCode);
+
+          // Beende den temporären Prozess wieder
+          Exec('taskkill.exe', '/f /im ' + ExeName, BinPath, SW_HIDE, ewWaitUntilTerminated, ResultCode);
+          Sleep(2000);
+      
+          Log('Upgrade-Vorgang abgeschlossen.');
+        end;
+    end;
+end;
+
 
 { Wird zum Beenden der Installation des SVWS-MariaDB-Servers aufgerufen. }
 procedure FinishMariaDBInstall;
@@ -283,6 +320,9 @@ procedure FinishMariaDBInstall;
 
         // Erstelle ggf. den MariaDB-Service
         CreateServiceMariaDB;
+        
+        // Upgrade durchführen, bevor der reguläre Dienst gestartet wird
+        UpgradeMariaDB;
 
         // Füge die Firewall-Regeln hinzu
         AddMariaDBFirewallRules;
