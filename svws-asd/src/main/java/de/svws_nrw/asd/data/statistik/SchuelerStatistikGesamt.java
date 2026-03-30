@@ -56,7 +56,7 @@ public class SchuelerStatistikGesamt {
 
 	/** Die Anrechungszeit in Monaten für den Beginn des Bildungsganges des Berufskolleg (z.B. 0,6,12,18). */
 	@Schema(description = "die Anrechungszeit in Monaten für den Beginn des Berufskolleg (z.B. 0,6,12,18)", example = "12")
-	public Integer bkAvzo;
+	public Integer bkAzvo;
 
 	// **** Daten zum Migrationshintergrund
 
