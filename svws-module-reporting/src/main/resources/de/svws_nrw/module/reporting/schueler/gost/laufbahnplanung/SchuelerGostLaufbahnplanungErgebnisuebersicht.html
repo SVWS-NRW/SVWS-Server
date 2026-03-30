@@ -2,7 +2,7 @@
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 			title='Ergebnisübersicht-GOSt-Laufbahnplanung',
-			htmlTemplatePfad=${Parameter.htmlTemplateDefinition().getPfadHtmlTemplate()},
+			htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
 			namePageCSS='reporting-A4-hoch.css')}">
 		<title></title>
 	</head>

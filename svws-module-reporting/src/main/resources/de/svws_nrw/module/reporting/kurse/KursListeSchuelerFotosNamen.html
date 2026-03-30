@@ -2,7 +2,7 @@
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}, duplex = ${Parameter.duplexdruck}">
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 			title='Kursliste mit Fotos und Namen der Schülerinnen und Schüler',
-			htmlTemplatePfad=${Parameter.htmlTemplateDefinition().getPfadHtmlTemplate()},
+			htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
 			namePageCSS='reporting-A4-hoch' + (${duplex} ? '-duplex' : '') + '.css')}">
 		<title></title>
 	</head>

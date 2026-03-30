@@ -559,10 +559,6 @@ thead {
 	page-break-inside: avoid;
 }
 
-tbody {
-	page-break-inside: avoid;
-}
-
 tfoot {
 	display: table-footer-group;
 	page-break-inside: avoid;

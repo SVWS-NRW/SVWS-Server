@@ -4,7 +4,7 @@
 	           querformat = ${!Klassen.isEmpty() && Klassen[0].schuelerLeistungsdatenMatrix().spaltenFaecher().size() > 16}">
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 			title='Klassenliste mit Leistungsdaten',
-			htmlTemplatePfad=${Parameter.htmlTemplateDefinition().getPfadHtmlTemplate()},
+			htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
 			namePageCSS='reporting-A4-' + (${querformat} ? 'quer' : 'hoch') + (${duplex} ? '-duplex' : '') + '.css')}">
 		<title></title>
 	</head>

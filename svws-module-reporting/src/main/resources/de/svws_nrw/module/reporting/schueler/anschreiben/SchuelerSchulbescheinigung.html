@@ -2,7 +2,7 @@
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='Schulbescheinigung',
-		htmlTemplatePfad=${Parameter.htmlTemplateDefinition().getPfadHtmlTemplate()},
+		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
 		namePageCSS='reporting-A4-DIN5008.css')}">
 		<title></title>
 	</head>

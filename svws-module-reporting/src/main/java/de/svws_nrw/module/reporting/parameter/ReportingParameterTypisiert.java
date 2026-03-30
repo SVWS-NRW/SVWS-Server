@@ -12,7 +12,6 @@ import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
 import de.svws_nrw.core.data.reporting.ReportingSortierungDefinitionGruppe;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
-import de.svws_nrw.module.reporting.html.HtmlTemplateDefinition;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
@@ -96,16 +95,6 @@ public class ReportingParameterTypisiert {
 	 */
 	public ReportingReportvorlage reportVorlage() {
 		return ReportingReportvorlage.getByBezeichnung(reportingParameter.reportvorlage);
-	}
-
-	/**
-	 * Ermittelt die HtmlTemplateDefinition passend zur Vorlage.
-	 *
-	 * @return die HtmlTemplateDefinition oder null.
-	 */
-	public HtmlTemplateDefinition htmlTemplateDefinition() {
-		final ReportingReportvorlage vorlage = this.reportVorlage();
-		return (vorlage != null) ? HtmlTemplateDefinition.getByReportvorlage(vorlage) : null;
 	}
 
 	/**

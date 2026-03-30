@@ -2,7 +2,7 @@
 <html lang="de" xmlns:th="http://www.thymeleaf.org" th:with="istDruckausgabe = ${Parameter.istDruckausgabe()}">
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='NRW - Anlage 12 - Zeugnis der allgemeinen Hochschulreife',
-		htmlTemplatePfad=${Parameter.htmlTemplateDefinition().getPfadHtmlTemplate()},
+		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
 		namePageCSS='reporting-A4-hoch-minimal-rand.css')}">
 		<title></title>
 	</head>

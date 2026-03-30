@@ -4,7 +4,7 @@
 	<!-- querformat verwenden, wenn Erzieher plus eine weitere Datenart (Telefon, EMail, Kontakte) dargestellt werden sollen. -->
 	<head th:replace="~{fragments/reportHtmlHead :: htmlHead(
 		title='Schülerliste mit Kontaktdaten und Erziehern der Schülerinnen und Schüler',
-		htmlTemplatePfad=${Parameter.htmlTemplateDefinition().getPfadHtmlTemplate()},
+		htmlTemplatePfad=${Parameter.reportVorlage().getPfadHtmlTemplate()},
 		namePageCSS='reporting-A4' + (${querformat} ? '-quer' : '-hoch') + (${duplex} ? '-duplex' : '') + '.css')}">
 		<title></title>
 	</head>

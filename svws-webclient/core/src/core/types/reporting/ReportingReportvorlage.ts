@@ -1,30 +1,25 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { ReportingReportvorlageKonfigurationStundenplanung } from '../../../core/types/reporting/reportvorlagekonfiguration/ReportingReportvorlageKonfigurationStundenplanung';
 import { ReportingReportvorlageParameter } from '../../../core/data/reporting/ReportingReportvorlageParameter';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
-import { ReportingSortierungDefinitionGruppe } from '../../../core/data/reporting/ReportingSortierungDefinitionGruppe';
-import { ReportingEMailDaten } from '../../../core/data/reporting/ReportingEMailDaten';
+import { ReportingReportvorlageDatenContext } from '../../../core/types/reporting/ReportingReportvorlageDatenContext';
+import { ReportingReportvorlageKonfigurationKurse } from '../../../core/types/reporting/reportvorlagekonfiguration/ReportingReportvorlageKonfigurationKurse';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { ReportingReportvorlageUtils } from '../../../core/utils/reporting/ReportingReportvorlageUtils';
+import { ReportingReportvorlageKonfigurationLehrer } from '../../../core/types/reporting/reportvorlagekonfiguration/ReportingReportvorlageKonfigurationLehrer';
 import { JavaString } from '../../../java/lang/JavaString';
-import { ReportingFilterKriterium } from '../../../core/data/reporting/ReportingFilterKriterium';
+import { ReportingReportvorlageKonfigurationGost } from '../../../core/types/reporting/reportvorlagekonfiguration/ReportingReportvorlageKonfigurationGost';
 import { ReportingParameter } from '../../../core/data/reporting/ReportingParameter';
-import { ReportingSortierungDefinition } from '../../../core/data/reporting/ReportingSortierungDefinition';
-import { ReportingFilterDefinitionGruppe } from '../../../core/data/reporting/ReportingFilterDefinitionGruppe';
-import type { List } from '../../../java/util/List';
-import { ReportingAusgabeformat } from '../../../core/types/reporting/ReportingAusgabeformat';
-import { HashSet } from '../../../java/util/HashSet';
-import { ReportingFilterDefinitionFactory } from '../../../core/utils/reporting/ReportingFilterDefinitionFactory';
-import { ReportingFilterVerknuepfung } from '../../../core/types/reporting/ReportingFilterVerknuepfung';
-import { ReportingFilterDefinition } from '../../../core/data/reporting/ReportingFilterDefinition';
-import { ReportingReportvorlageParameterTyp } from '../../../core/types/reporting/ReportingReportvorlageParameterTyp';
-import { ReportingUIKomponentenTyp } from '../../../core/types/reporting/ReportingUIKomponentenTyp';
-import { ReportingSortierungDefinitionFactory } from '../../../core/utils/reporting/ReportingSortierungDefinitionFactory';
-import { ReportingFilterEintrag } from '../../../core/data/reporting/ReportingFilterEintrag';
+import { ReportingReportvorlageKonfigurationSchueler } from '../../../core/types/reporting/reportvorlagekonfiguration/ReportingReportvorlageKonfigurationSchueler';
+import { BenutzerKompetenz } from '../../../core/types/benutzer/BenutzerKompetenz';
 import { ReportingReportvorlageParameterGruppe } from '../../../core/data/reporting/ReportingReportvorlageParameterGruppe';
+import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
-import { Arrays } from '../../../java/util/Arrays';
 import type { JavaMap } from '../../../java/util/JavaMap';
+import { ReportingReportvorlageKonfigurationKlassen } from '../../../core/types/reporting/reportvorlagekonfiguration/ReportingReportvorlageKonfigurationKlassen';
+import { HashSet } from '../../../java/util/HashSet';
 
 export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 
@@ -37,142 +32,172 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	/**
 	 * Report-Vorlage: GOSt - Klausurplanung - Klausurtermine-Kurse
 	 */
-	public static readonly GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN", 0, "GostKlausurplanung-KlausurtermineMitKursen", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1, Arrays.asList(ReportingReportvorlage.erzeugeVorlageParameter("mitKursklausuren", "mit Kursklausuren", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitNachschreibern", "mit Nachschreibern", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitKlausurschreiberNamen", "mit Namen der Klausurschreiber", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ArrayList(), new ArrayList(), false, false, true));
+	public static readonly GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KLAUSURPLANUNG_V_KLAUSURTERMINE_MIT_KURSEN", 0, "GostKlausurplanung-KlausurtermineMitKursen", "Klausurplan der Kurse", "Einen Plan mit den Klausurterminen der Kurse erzeugen.", ReportingReportvorlageDatenContext.GOST_KLAUSURPLANUNG, "gost/klausurplanung/GostKlausurplanungKlausurtermineMitKursen.html", "GOSt-Klausurplanung-Klausurtermine-Kurse", ArrayList.of(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION), ReportingReportvorlageKonfigurationGost.getGostKlausurplanungVKlausurtermineMitKursen());
 
 	/**
 	 * Report-Vorlage: GOSt - Klausurplanung - Schueler-Klausuren
 	 */
-	public static readonly GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN", 1, "GostKlausurplanung-SchuelerMitKlausuren", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ArrayList(), new ArrayList(), false, true, true));
+	public static readonly GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN", 1, "GostKlausurplanung-SchuelerMitKlausuren", "Klausurplan der Schülerinnen und Schüler", "Einen Plan mit den Klausurterminen der Schülerinnen und Schüler erzeugen.", ReportingReportvorlageDatenContext.GOST_KLAUSURPLANUNG, "gost/klausurplanung/GostKlausurplanungSchuelerMitKlausuren.html", "GOSt-Klausurplanung-Schueler-Klausuren", ArrayList.of(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION), ReportingReportvorlageKonfigurationGost.getGostKlausurplanungVSchuelerMitKlausuren());
 
 	/**
 	 * Report-Vorlage: GOSt - Kursplanung - Kurs-Kurschüler
 	 */
-	public static readonly GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN", 2, "GostKursplanung-KursMitKursschuelern", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ArrayList(), new ArrayList(), false, false, true));
+	public static readonly GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN", 2, "GostKursplanung-KursMitKursschuelern", "Kursliste", "Eine Liste mit den Schülerinnen und Schülern der Kurse aus der GOSt-Kursplaung erzeugen.", ReportingReportvorlageDatenContext.GOST_KURSPLANUNG, "gost/kursplanung/GostKursplanungKursMitKursschuelern.html", "GOSt-Blockungsergebnis-Kurs-Schueler", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationGost.getGostKursplanungVKursMitKursschuelern());
 
 	/**
 	 * Report-Vorlage: GOSt - Kursplanung - Kurse-Statistikwerte
 	 */
-	public static readonly GOST_KURSPLANUNG_V_KURSE_MIT_STATISTIKWERTEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_V_KURSE_MIT_STATISTIKWERTEN", 3, "GostKursplanung-KurseMitStatistikwerten", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ArrayList(), new ArrayList(), false, false, true));
+	public static readonly GOST_KURSPLANUNG_V_KURSE_MIT_STATISTIKWERTEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_V_KURSE_MIT_STATISTIKWERTEN", 3, "GostKursplanung-KurseMitStatistikwerten", "Kursstatistik", "Eine Liste mit den Kursen aus der GOSt-Kursplanung und ihren Statistikwerten erzeugen.", ReportingReportvorlageDatenContext.GOST_KURSPLANUNG, "gost/kursplanung/GostKursplanungKurseMitStatistikwerten.html", "GOSt-Blockungsergebnis-Kurse-Statistikwerte", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationGost.getGostKursplanungVKurseMitStatistikwerten());
 
 	/**
 	 * Report-Vorlage: GOSt - Kursplanung - Schüler-Kurse
 	 */
-	public static readonly GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN", 4, "GostKursplanung-SchuelerMitKursen", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ArrayList(), new ArrayList(), false, false, true));
+	public static readonly GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_V_SCHUELER_MIT_KURSEN", 4, "GostKursplanung-SchuelerMitKursen", "Kurszuordnungen der Schülerinnen und Schüler", "Eien Übersicht mit den einzelnen Kurszuorndungen der Schülerinnen und Schüler aus der GOSt-Kursplanung erzeugen.", ReportingReportvorlageDatenContext.GOST_KURSPLANUNG, "gost/kursplanung/GostKursplanungSchuelerMitKursen.html", "GOSt-Blockungsergebnis-Schueler-Kurse", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationGost.getGostKursplanungVSchuelerMitKursen());
 
 	/**
 	 * Report-Vorlage: GOSt - Kursplanung - Schüler-Schienen-Kurse
 	 */
-	public static readonly GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN", 5, "GostKursplanung-SchuelerMitSchienenKursen", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ArrayList(), new ArrayList(), false, false, true));
+	public static readonly GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_V_SCHUELER_MIT_SCHIENEN_KURSEN", 5, "GostKursplanung-SchuelerMitSchienenKursen", "Kurs-Schienen-Zuordnungen der Schülerinnen und Schüler", "Eine Übersicht mit den einzelnen Kurszuordnungen und deeren Schienen für die Schülerinnen und Schüler aus der GOSt-Kursplanung erzeugen.", ReportingReportvorlageDatenContext.GOST_KURSPLANUNG, "gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.html", "GOSt-Blockungsergebnis-Schueler-Schienen-Kurse", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationGost.getGostKursplanungVSchuelerMitSchienenKursen());
 
 	/**
 	 * Report-Vorlage: GOSt - Laufbahnplanung - Abiturjahrgang - Fachwahlstatistiken
 	 */
-	public static readonly GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG_V_FACHWAHLSTATISTIKEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG_V_FACHWAHLSTATISTIKEN", 6, "GostLaufbahnplanung-Abiturjahrgang-Fachwahlstatistiken", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ArrayList(), new ArrayList(), false, false, true));
+	public static readonly GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG_V_FACHWAHLSTATISTIKEN: ReportingReportvorlage = new ReportingReportvorlage("GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG_V_FACHWAHLSTATISTIKEN", 6, "GostLaufbahnplanung-Abiturjahrgang-Fachwahlstatistiken", "Fachwahlstatistiken", "Eine statische Übersicht der Fachwahlen eines Abiturjahrgangs aus der GOSt-Laufbahnplanung erzeugen.", ReportingReportvorlageDatenContext.GOST_LAUFBAHNPLANUNG_ABITURJAHRGANG, "gost/laufbahnplanung/GostLaufbahnplanungAbiturjahrgangFachwahlstatistiken.html", "GOSt-Laufbahnplanung-Abiturjahrgang-Fachwahlstatistiken", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationGost.getGostLaufbahnplanungAbiturjahrgangVFachwahlstatistiken());
 
 	/**
 	 * Report-Vorlage: Klasse - Liste - Schüler - Fotos - Namen
 	 */
-	public static readonly KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN: ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN", 7, "Klasse-Liste-Schueler-Fotos-Namen", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1, ArrayList.of(ReportingReportvorlage.erzeugeVorlageParameter("anzahlBilderProZeile", "Anzahl Bilder pro Spalte", ReportingReportvorlageParameterTyp.INTEGER, "" + 4, true, ReportingUIKomponentenTyp.NUMBERPICKER, 1)))), new ArrayList(), new ArrayList(), true, false, true));
+	public static readonly KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN: ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN", 7, "Klasse-Liste-Schueler-Fotos-Namen", "Fotoübersicht klassenweise", "Eine Übersicht mit den Fotos der Schülerinnen und Schüler der Klassen erzeugen oder versenden.", ReportingReportvorlageDatenContext.KLASSEN, "klassen/KlasseListeSchuelerFotosNamen.html", "Klasse-Liste-Schueler-Fotos-Namen", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerFotosNamen());
 
 	/**
 	 * Report-Vorlage: Klasse - Liste - Schüler - Kontaktdaten - Erzieher
 	 */
-	public static readonly KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER: ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER", 8, "Klasse-Liste-Schueler-Kontaktdaten-Erzieher", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 3, Arrays.asList(ReportingReportvorlage.erzeugeVorlageParameter("nurSchuelerRufname", "nur Rufname", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerGeschlecht", "mit Geschlecht", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerGebDat", "mit Geburtsdatum", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerStaat", "mit Staatsangehörigkeit", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerAnschrift", "mit Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerTelefonPrivat", "mit Telefon (privat)", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerEmailSchule", "mit E-Mail (Schule)", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerEmailPrivat", "mit E-Mail (privat)", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSpalteSchuelerTelefonKontakte", "mit Telefonkontakten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitErzieher", "mit Erziehern", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitErzieherAnschrift", "mit Erzieher-Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitErzieherEmailPrivat", "mit Erzieher-E-Mail", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ArrayList(), new ArrayList(), true, false, true));
+	public static readonly KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER: ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER", 8, "Klasse-Liste-Schueler-Kontaktdaten-Erzieher", "Klassenliste mit Kontaktdaten", "Eine Liste mit den Kontaktdaten der Schülerinnen und Schüler der Klassen erzeugen oder versenden.", ReportingReportvorlageDatenContext.KLASSEN, "klassen/KlasseListeSchuelerKontaktdatenErzieher.html", "Klasse-Liste-Schueler-Kontaktdaten-Erzieher", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerKontaktdatenerzieher());
 
 	/**
 	 * Report-Vorlage: Klasse - Liste - Schüler - Leistungsdaten
 	 */
-	public static readonly KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN: ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN", 9, "Klasse-Liste-Schueler-Leistungsdaten", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2, Arrays.asList(ReportingReportvorlage.erzeugeVorlageParameter("mitPunktenStattNoten", "Punkte statt Noten ausgeben", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitQuartalsnote", "Quartalsnoten statt Noten ausgeben", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitIndividuellerKursart", "mit individueller Kursart", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitZuweisung", "mit Zuweisungen", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitGesamtfehlstunden", "mit Gesamtfehlstunden", ReportingReportvorlageParameterTyp.BOOLEAN, "" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitFachbezogenenFehlstunden", "mit fachbezogenen Fehlstunden", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitFachbezogenenBemerkungen", "mit fachbezogenen Bemerkungen", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitLernentwicklung", "mit Angabe zur Lernentwicklung", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitFoerderschwerpunkt", "mit Angaben zum Förderschwerpunkt", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitASVBemerkung", "mit ASV-Bemerkungen", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitAUEBemerkung", "mit AUE-Bemerkungen", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitZeugnisbemerkung", "mit Zeugnisbemerkungen", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchulformempfehlung", "mit Empfehlung der Schulform", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitVersetzungAbschluss", "mit Versetzung und Abschluss", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitVersetzungsentscheidung", "mit Text zur Versetzungsentscheidung", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), ArrayList.of(ReportingReportvorlage.erzeugeSortierungDefinitionGruppe("Fachsortierung", "ReportingFach", true, ReportingSortierungDefinitionFactory.definitionen(ReportingSortierungDefinitionFactory.standard("Standardsortierung der Fächer", "ReportingFach"), ReportingSortierungDefinitionFactory.definition("GOSt-Sortierung der Fächer", "ReportingFach", false, ArrayList.of("gostSortierung")), ReportingSortierungDefinitionFactory.definition("Sortierung nach Fachkürzeln", "ReportingFach", false, ArrayList.of("kuerzel"))))), ArrayList.of(ReportingReportvorlage.erzeugeFilterDefinitionGruppe("Fachfilter", "ReportingFach", true, true, ReportingFilterVerknuepfung.AND, ReportingFilterDefinitionFactory.definitionen(ReportingFilterDefinitionFactory.definition("Nur Fächer für Zeugnisrelevanz", "ReportingFach", ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("aufZeugnis", "true"))), ReportingFilterDefinitionFactory.definition("Nur Fächer mit Prüfungsordnungsrelevanz", "ReportingFach", ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("istPruefungsordnungsRelevant", "true")))))), true, false, true));
+	public static readonly KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN: ReportingReportvorlage = new ReportingReportvorlage("KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN", 9, "Klasse-Liste-Schueler-Leistungsdaten", "Leistungsübersicht klassenweise", "Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der Klassen erzeugen.", ReportingReportvorlageDatenContext.KLASSEN, "klassen/leistungsdaten/KlasseListeSchuelerLeistungsdaten.html", "Klassen-Liste-Schueler-Leistungsdaten", ArrayList.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN), ReportingReportvorlageKonfigurationKlassen.getKlassenVListeSchuelerLeistungsdaten());
 
 	/**
 	 * Report-Vorlage: Kurs - Liste - Schüler - Kontaktdaten - Erzieher
 	 */
-	public static readonly KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER: ReportingReportvorlage = new ReportingReportvorlage("KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER", 10, "Kurs-Liste-Schueler-Kontaktdaten-Erzieher", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 3, Arrays.asList(ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerKlasse", "mit Klasse", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 3), ReportingReportvorlage.erzeugeVorlageParameter("nurSchuelerRufname", "nur Rufname", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerGeschlecht", "mit Geschlecht", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerGebDat", "mit Geburtsdatum", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerStaat", "mit Staatsangehörigkeit", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerAnschrift", "mit Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerTelefonPrivat", "mit Telefon (privat)", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerEmailSchule", "mit E-Mail (Schule)", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerEmailPrivat", "mit E-Mail (privat)", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSpalteSchuelerTelefonKontakte", "mit Telefonkontakten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitErzieher", "mit Erziehern", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitErzieherAnschrift", "mit Erzieher-Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitErzieherEmailPrivat", "mit Erzieher-E-Mail", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ArrayList(), new ArrayList(), true, false, true));
+	public static readonly KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER: ReportingReportvorlage = new ReportingReportvorlage("KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER", 10, "Kurs-Liste-Schueler-Kontaktdaten-Erzieher", "Kursliste mit Kontaktdaten", "Eine Liste mit den Kontaktdaten der Schülerinnen und Schüler der Kurse erzeugen oder versenden.", ReportingReportvorlageDatenContext.KURSE, "kurse/KursListeSchuelerKontaktdatenErzieher.html", "Kurs-Liste-Schueler-Kontaktdaten-Erzieher", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ReportingReportvorlageKonfigurationKurse.getKurseVListeSchuelerKontaktdatenerzieher());
 
 	/**
 	 * Report-Vorlage: Kurs - Liste - Schüler - Fotos - Namen
 	 */
-	public static readonly KURSE_V_LISTE_SCHUELER_FOTOS_NAMEN: ReportingReportvorlage = new ReportingReportvorlage("KURSE_V_LISTE_SCHUELER_FOTOS_NAMEN", 11, "Kurs-Liste-Schueler-Fotos-Namen", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1, ArrayList.of(ReportingReportvorlage.erzeugeVorlageParameter("anzahlBilderProZeile", "Anzahl Bilder pro Spalte", ReportingReportvorlageParameterTyp.INTEGER, "" + 4, true, ReportingUIKomponentenTyp.NUMBERPICKER, 1)))), new ArrayList(), new ArrayList(), true, false, true));
+	public static readonly KURSE_V_LISTE_SCHUELER_FOTOS_NAMEN: ReportingReportvorlage = new ReportingReportvorlage("KURSE_V_LISTE_SCHUELER_FOTOS_NAMEN", 11, "Kurs-Liste-Schueler-Fotos-Namen", "Fotoübersicht kursweise", "Eine Übersicht mit den Fotos der Schülerinnen und Schüler der Kurse erzeugen oder versenden.", ReportingReportvorlageDatenContext.KURSE, "kurse/KursListeSchuelerFotosNamen.html", "Kurs-Liste-Schueler-Fotos-Namen", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ReportingReportvorlageKonfigurationKurse.getKurseVListeSchuelerFotosNamen());
 
 	/**
 	 * Report-Vorlage: Kurs - Liste - Schüler - Leistungsdaten
 	 */
-	public static readonly KURSE_V_LISTE_SCHUELER_LEISTUNGSDATEN: ReportingReportvorlage = new ReportingReportvorlage("KURSE_V_LISTE_SCHUELER_LEISTUNGSDATEN", 12, "Kurs-Liste-Schueler-Leistungsdaten", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1, Arrays.asList(ReportingReportvorlage.erzeugeVorlageParameter("mitPunktenStattNoten", "Punkte statt Noten ausgeben", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitBemerkungen", "mit fachbezogenen Bemerkungen", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ArrayList(), new ArrayList(), true, false, true));
+	public static readonly KURSE_V_LISTE_SCHUELER_LEISTUNGSDATEN: ReportingReportvorlage = new ReportingReportvorlage("KURSE_V_LISTE_SCHUELER_LEISTUNGSDATEN", 12, "Kurs-Liste-Schueler-Leistungsdaten", "Leistungsübersicht kursweise", "Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der Kurse erzeugen.", ReportingReportvorlageDatenContext.KURSE, "kurse/leistungsdaten/KursListeSchuelerLeistungsdaten.html", "Kurs-Liste-Schueler-Leistungsdaten", ArrayList.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN), ReportingReportvorlageKonfigurationKurse.getKurseVListeSchuelerLeistungsdaten());
 
 	/**
 	 * Report-Vorlage: Lehrer - Liste - Schüler - Leistungsdaten
 	 */
-	public static readonly LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN: ReportingReportvorlage = new ReportingReportvorlage("LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN", 13, "Lehrer-Liste-Schueler-Leistungsdaten", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2, Arrays.asList(ReportingReportvorlage.erzeugeVorlageParameter("mitKlassenunterricht", "mit Klassenunterricht", ReportingReportvorlageParameterTyp.BOOLEAN, "" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitKursunterricht", "mit Kursunterricht", ReportingReportvorlageParameterTyp.BOOLEAN, "" + true, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitPunktenStattNoten", "Punkte statt Noten ausgeben", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitBemerkungen", "mit fachbezogenen Bemerkungen", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ArrayList(), new ArrayList(), true, false, true));
+	public static readonly LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN: ReportingReportvorlage = new ReportingReportvorlage("LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN", 13, "Lehrer-Liste-Schueler-Leistungsdaten", "Leistungsdaten der Lerngruppen", "Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der ausgewählten Lehrkräfte nach Lerngruppen erzeugen", ReportingReportvorlageDatenContext.LEHRER, "lehrer/leistungsdaten/LehrerListeSchuelerLeistungsdaten.html", "Lehrer-Liste-Schueler-Leistungsdaten", ArrayList.of(BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN), ReportingReportvorlageKonfigurationLehrer.getLehrerVListeSchuelerLeistungsdaten());
 
 	/**
 	 * Report-Vorlage: Lehrer - Stammdaten - Liste
 	 */
-	public static readonly LEHRER_V_STAMMDATENLISTE: ReportingReportvorlage = new ReportingReportvorlage("LEHRER_V_STAMMDATENLISTE", 14, "Lehrer-Stammdatenliste", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ArrayList(), new ArrayList(), true, false, true));
+	public static readonly LEHRER_V_STAMMDATENLISTE: ReportingReportvorlage = new ReportingReportvorlage("LEHRER_V_STAMMDATENLISTE", 14, "Lehrer-Stammdatenliste", "Stammdatenliste der Lehrkräfte", "Stammdatenliste der Lehrkräfte erzeugen.", ReportingReportvorlageDatenContext.LEHRER, "lehrer/stammdaten/LehrerStammdatenliste.html", "Lehrer-Stammdatenliste", ArrayList.of(BenutzerKompetenz.LEHRERDATEN_ANSEHEN), ReportingReportvorlageKonfigurationLehrer.getLehrerVStammdatenliste());
 
 	/**
 	 * Report-Vorlage: GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis) - DIN-A4
 	 */
-	public static readonly SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A4: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A4", 15, "Schueler-GostAbiturApoAnlage12-A4", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Unterschriftenoptionen", "", true, 1, Arrays.asList(ReportingReportvorlage.erzeugeVorlageParameter("mitPersoenlichenUnterschriften", "mit persönlichen Unterschriften", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitZweiterBeratungslehrerUnterschrift", "mit Unterschrift 2. Beratungslehrer", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("textZAAVorsitzUnterschrift", "Unterschrift ZAA-Vorsitz", ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("textZAAVorsitzUnterschriftBezeichnung", "Bezeichnung ZAA-Vorsitz", ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1), ReportingReportvorlage.erzeugeVorlageParameter("textSchulleitungUnterschrift", "Unterschrift Schulleitung", ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("textSchulleitungUnterschriftBezeichnung", "Bezeichnung Schulleitung", ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1), ReportingReportvorlage.erzeugeVorlageParameter("textSchultraegerUnterschrift", "Unterschrift Schulträger", ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("textSchultraegerUnterschriftBezeichnung", "Bezeichnung Schulträger", ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1), ReportingReportvorlage.erzeugeVorlageParameter("textBeratungslehrerUnterschrift", "Unterschrift Beratungslehrer", ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1), ReportingReportvorlage.erzeugeVorlageParameter("textBeratungslehrerUnterschriftBezeichnung", "Bezeichnung Beratungslehrer", ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1)))), new ArrayList(), new ArrayList(), true, false, true));
+	public static readonly SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A4: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A4", 15, "Schueler-GostAbiturApoAnlage12-A4", "APO-GOSt - Anlage 12 - Abiturzeugnis (DIN-A4)", "Erzeugt das Abiturzeugnis des Schülerinnen und Schüler gemäß APO-GOSt Anlage 12", ReportingReportvorlageDatenContext.SCHUELER, "schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12-A4.html", "APO-GOSt-Anlage12", ArrayList.of(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostAbiturApoAnlage12A4());
 
 	/**
 	 * Report-Vorlage: GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis) - DIN-A3
 	 */
-	public static readonly SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A3: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A3", 16, "Schueler-GostAbiturApoAnlage12-A3", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Unterschriftenoptionen", "", true, 1, Arrays.asList(ReportingReportvorlage.erzeugeVorlageParameter("mitPersoenlichenUnterschriften", "mit persönlichen Unterschriften", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitZweiterBeratungslehrerUnterschrift", "mit Unterschrift 2. Beratungslehrer", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("textZAAVorsitzUnterschrift", "Unterschrift ZAA-Vorsitz", ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("textZAAVorsitzUnterschriftBezeichnung", "Bezeichnung ZAA-Vorsitz", ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1), ReportingReportvorlage.erzeugeVorlageParameter("textSchulleitungUnterschrift", "Unterschrift Schulleitung", ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("textSchulleitungUnterschriftBezeichnung", "Bezeichnung Schulleitung", ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1), ReportingReportvorlage.erzeugeVorlageParameter("textSchultraegerUnterschrift", "Unterschrift Schulträger", ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("textSchultraegerUnterschriftBezeichnung", "Bezeichnung Schulträger", ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1), ReportingReportvorlage.erzeugeVorlageParameter("textBeratungslehrerUnterschrift", "Unterschrift Beratungslehrer", ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1), ReportingReportvorlage.erzeugeVorlageParameter("textBeratungslehrerUnterschriftBezeichnung", "Bezeichnung Beratungslehrer", ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1)))), new ArrayList(), new ArrayList(), true, false, true));
+	public static readonly SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A3: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_GOST_ABITUR_APO_ANLAGE_12_A3", 16, "Schueler-GostAbiturApoAnlage12-A3", "APO-GOSt - Anlage 12 - Abiturzeugnis (DIN-A3)", "Erzeugt das Abiturzeugnis des Schülerinnen und Schüler gemäß APO-GOSt Anlage 12", ReportingReportvorlageDatenContext.SCHUELER, "schueler/gost/abitur/apo/SchuelerGostAbiturApoAnlage12-A3.html", "APO-GOSt-Anlage12", ArrayList.of(BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostAbiturApoAnlage12A3());
 
 	/**
 	 * Report-Vorlage: GOSt - Laufbahnplanung - Ergebnisübersicht
 	 */
-	public static readonly SCHUELER_V_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT", 17, "Schueler-GostLaufbahnplanungErgebnisuebersicht", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1, Arrays.asList(ReportingReportvorlage.erzeugeVorlageParameter("mitFehlernKommentaren", "mit Fehlern/Kommentaren", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitHinweisen", "mit Hinweisen", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ArrayList(), new ArrayList(), true, false, true));
+	public static readonly SCHUELER_V_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT", 17, "Schueler-GostLaufbahnplanungErgebnisuebersicht", "Ergebnisübersicht der GOSt-Laufbahnplanung", "Ergebnisübersicht der GOSt-Laufbahnplanung nach Schülerinnen und Schüler für Beratungslehrkräfte erzeugen.", ReportingReportvorlageDatenContext.SCHUELER, "schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungErgebnisuebersicht.html", "GOSt-Laufbahnplanung-Pruefungsergebnisse", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostLaufbahnplanungErgebnisuebersicht());
 
 	/**
 	 * Report-Vorlage: GOSt - Laufbahnplanung - Wahlbogen
 	 */
-	public static readonly SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN", 18, "Schueler-GostLaufbahnplanungWahlbogen", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1, ArrayList.of(ReportingReportvorlage.erzeugeVorlageParameter("nurBelegteFaecher", "nur belegte Fächer", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ArrayList(), new ArrayList(), true, false, true));
+	public static readonly SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN", 18, "Schueler-GostLaufbahnplanungWahlbogen", "GOST-Laufbahnwahlbogen", "Die GOST-Laufbahnwahlbögen für Schülerinnen und Schüler erzeugen oder versenden.", ReportingReportvorlageDatenContext.SCHUELER, "schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungWahlbogen.html", "GOSt-Laufbahnplanung-Wahlboegen", ArrayList.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN), ReportingReportvorlageKonfigurationSchueler.getSchuelerVGostLaufbahnplanungWahlbogen());
 
 	/**
 	 * Report-Vorlage: Schüler - Schulbescheinigung
 	 */
-	public static readonly SCHUELER_V_SCHULBESCHEINIGUNG: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_SCHULBESCHEINIGUNG", 19, "Schueler-Schulbescheinigung", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 3, Arrays.asList(ReportingReportvorlage.erzeugeVorlageParameter("fuerErzieher", "für Erzieher", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 3), ReportingReportvorlage.erzeugeVorlageParameter("mitSchullogo", "mit Schullogo", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitBildBriefkopf", "mit Bild im Briefkopf", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 2), ReportingReportvorlage.erzeugeVorlageParameter("keineAnschrift", "ohne Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("keinInfoblock", "ohne Infoblock", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("keineUnterschrift", "ohne Unterschrift", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ArrayList(), new ArrayList(), true, false, true));
+	public static readonly SCHUELER_V_SCHULBESCHEINIGUNG: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_SCHULBESCHEINIGUNG", 19, "Schueler-Schulbescheinigung", "Schulbescheinigung", "Eine Schulbescheinigung für Schülerinnen und Schüler oder deren Erziehungsberechtigte erzeugen.", ReportingReportvorlageDatenContext.SCHUELER, "schueler/anschreiben/SchuelerSchulbescheinigung.html", "Schueler-Schulbescheinigung", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ReportingReportvorlageKonfigurationSchueler.getSchuelerVSchulbescheinigung());
 
 	/**
 	 * Report-Vorlage: Schüler - Liste - Kontaktdaten - Erzieher
 	 */
-	public static readonly SCHUELER_V_LISTE_KONTAKTDATENERZIEHER: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_LISTE_KONTAKTDATENERZIEHER", 20, "Schueler-Liste-Kontaktdaten-Erzieher", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 3, Arrays.asList(ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerKlasse", "mit Klasse", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 3), ReportingReportvorlage.erzeugeVorlageParameter("nurSchuelerRufname", "nur Rufname", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerGeschlecht", "mit Geschlecht", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerGebDat", "mit Geburtsdatum", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerStaat", "mit Staatsangehörigkeit", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerAnschrift", "mit Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerTelefonPrivat", "mit Telefon (privat)", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerEmailSchule", "mit E-Mail (Schule)", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSchuelerEmailPrivat", "mit E-Mail (privat)", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitSpalteSchuelerTelefonKontakte", "mit Telefonkontakten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitErzieher", "mit Erziehern", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitErzieherAnschrift", "mit Erzieher-Anschrift", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitErzieherEmailPrivat", "mit Erzieher-E-Mail", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), ArrayList.of(ReportingReportvorlage.erzeugeSortierungDefinitionGruppe("Schülersortierung", "ReportingSchueler", true, ReportingSortierungDefinitionFactory.definitionen(ReportingSortierungDefinitionFactory.standard("Standardsortierung der Schüler", "ReportingSchueler"), ReportingSortierungDefinitionFactory.definition("Sortierung nach Klasse, Name, Vorname", "ReportingSchueler", false, ArrayList.of("Klasse, Nachname, Vorname, Vornamen"))))), new ArrayList(), false, false, true));
+	public static readonly SCHUELER_V_LISTE_KONTAKTDATENERZIEHER: ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_V_LISTE_KONTAKTDATENERZIEHER", 20, "Schueler-Liste-Kontaktdaten-Erzieher", "Schülerliste mit Kontaktdaten", "Eine Liste mit den Kontaktdaten der Schülerinnen und Schüler erzeugen oder versenden.", ReportingReportvorlageDatenContext.SCHUELER, "schueler/listen/SchuelerListeKontaktdatenErzieher.html", "Schueler-Liste-Kontaktdaten-Erzieher", ArrayList.of(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN), ReportingReportvorlageKonfigurationSchueler.getSchuelerVListeKontaktdatenerzieher());
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Fach - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_V_FACH_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_FACH_STUNDENPLAN", 21, "Stundenplanung-FachStundenplan", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2, ArrayList.of(ReportingReportvorlage.erzeugeVorlageParameter("mitPausenzeiten", "mit Pausenzeiten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ArrayList(), new ArrayList(), false, true, true));
+	public static readonly STUNDENPLANUNG_V_FACH_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_FACH_STUNDENPLAN", 21, "Stundenplanung-FachStundenplan", "Fach-Stundenplan", "Den ausgewählten Stundenplan für die ausgewählten Fächer erzeugen oder versenden.", ReportingReportvorlageDatenContext.STUNDENPLANUNG, "stundenplanung/StundenplanungFachStundenplan.html", "Fach-Stundenplan", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVFachStundenplan());
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Klasse - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN", 22, "Stundenplanung-KlassenStundenplan", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2, Arrays.asList(ReportingReportvorlage.erzeugeVorlageParameter("mitPausenzeiten", "mit Pausenzeiten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitFachStattKursbezeichnung", "Fach statt Kursbezeichnung", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitFachkuerzelStattFachbezeichnung", "Fachkürzel statt Fachbezeichnung", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ArrayList(), new ArrayList(), false, true, true));
+	public static readonly STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN", 22, "Stundenplanung-KlassenStundenplan", "", "", ReportingReportvorlageDatenContext.STUNDENPLANUNG, "stundenplanung/StundenplanungKlassenStundenplan.html", "Klassen-Stundenplan", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVKlassenStundenplan());
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Lehrer - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_V_LEHRER_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_LEHRER_STUNDENPLAN", 23, "Stundenplanung-LehrerStundenplan", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2, Arrays.asList(ReportingReportvorlage.erzeugeVorlageParameter("mitPausenzeiten", "mit Pausenzeiten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitPausenaufsichten", "mit Pausenaufsichten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitFachkuerzelStattFachbezeichnung", "Fachkürzel statt Fachbezeichnung", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ArrayList(), new ArrayList(), false, true, true));
+	public static readonly STUNDENPLANUNG_V_LEHRER_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_LEHRER_STUNDENPLAN", 23, "Stundenplanung-LehrerStundenplan", "Lehrer-Stundenplan", "Den ausgewählten Stundenplan für die ausgewählten Lehrkräfte erzeugen oder versenden.", ReportingReportvorlageDatenContext.STUNDENPLANUNG, "stundenplanung/StundenplanungLehrerStundenplan.html", "Lehrer-Stundenplan", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVLehrerStundenplan());
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Lehrer - Stundenplan - Kombiniert
 	 */
-	public static readonly STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT", 24, "Stundenplanung-LehrerStundenplanKombiniert", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2, Arrays.asList(ReportingReportvorlage.erzeugeVorlageParameter("mitPausenzeiten", "mit Pausenzeiten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitPausenaufsichten", "mit Pausenaufsichten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitFachkuerzelStattFachbezeichnung", "Fachkürzel statt Fachbezeichnung", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ArrayList(), new ArrayList(), false, false, true));
+	public static readonly STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT", 24, "Stundenplanung-LehrerStundenplanKombiniert", "Lehrer-Stundenplan kombiniert", "Den ausgewählten Stundenplan für die ausgewählten Lehrkräfte in einer kombinierten Ansicht erzeugen", ReportingReportvorlageDatenContext.STUNDENPLANUNG, "stundenplanung/StundenplanungLehrerStundenplanKombiniert.html", "Lehrer-Stundenplan-Kombiniert", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVLehrerStundenplanKombiniert());
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Fach - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_V_RAUM_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_RAUM_STUNDENPLAN", 25, "Stundenplanung-RaumStundenplan", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2, ArrayList.of(ReportingReportvorlage.erzeugeVorlageParameter("mitPausenzeiten", "mit Pausenzeiten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ArrayList(), new ArrayList(), false, true, true));
+	public static readonly STUNDENPLANUNG_V_RAUM_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_RAUM_STUNDENPLAN", 25, "Stundenplanung-RaumStundenplan", "Raum-Stundenplan", "Den ausgewählten Stundenplan für die ausgewählten Räume erzeugen.", ReportingReportvorlageDatenContext.STUNDENPLANUNG, "stundenplanung/StundenplanungRaumStundenplan.html", "Raum-Stundenplan", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVRaumStundenplan());
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Schüler - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN", 26, "Stundenplanung-SchuelerStundenplan", ReportingReportvorlage.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), ArrayList.of(ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2, Arrays.asList(ReportingReportvorlage.erzeugeVorlageParameter("mitPausenzeiten", "mit Pausenzeiten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitFachStattKursbezeichnung", "Fach statt Kursbezeichnung", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitFachkuerzelStattFachbezeichnung", "Fachkürzel statt Fachbezeichnung", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("mitIndividuelleKursart", "mit individueller Kursart", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ArrayList(), new ArrayList(), false, true, true));
+	public static readonly STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN", 26, "Stundenplanung-SchuelerStundenplan", "Schüler-Stundenplan", "Den ausgewählten Stundenplan für die ausgewählten Schülerinnen und Schüler erzeugen oder versenden.", ReportingReportvorlageDatenContext.STUNDENPLANUNG, "stundenplanung/StundenplanungSchuelerStundenplan.html", "Schueler-Stundenplan", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVSchuelerStundenplan());
 
 	/**
 	 * Die Bezeichnung der Report-Vorlage
 	 */
 	private readonly bezeichnung: string;
+
+	/**
+	 * Der Titel, der in der UI zu diesem Report-Vorlagen-Objekt angezeigt wird, z. B. als Card- oder Gruppen-Titel.
+	 */
+	private readonly uiTitel: string;
+
+	/**
+	 * Die Beschreibung, die in der UI zu diesem Report-Vorlagen-Objekt angezeigt wird, z. B. als Card- oder Gruppen-Beschreibung.
+	 */
+	private readonly uiBeschreibung: string;
+
+	/**
+	 * Der Daten-Context, der für die HTML-Template-Datei verwendet wird.
+	 */
+	private readonly datenContext: ReportingReportvorlageDatenContext;
+
+	/**
+	 * Pfad zur HTML-Template-Datei. Angabe erfolgt relativ zum Root-Pfad.
+	 */
+	private readonly pfadHtmlTemplate: string;
+
+	/**
+	 * Der statische Dateiname ohne Dateiendung, der bei der Ausgabe als ZIP-Datei verwendet wird.
+	 */
+	private readonly dateiname: string;
+
+	/**
+	 * Die Liste mit Benutzerkompetenzen (als OR-Verknüpfung) gemäß {@link BenutzerKompetenz}, die zur Nutzung des Templates erforderlich sind.
+	 */
+	private readonly benutzerKompetenzen: List<BenutzerKompetenz>;
 
 	/**
 	 * Reporting-Parameter inkl. der gültigen Vorlage-Parametergruppen für diese Report-Vorlage.
@@ -202,15 +227,27 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	/**
 	 * Konstruktor für eine Reporting-Reportvorlage.
 	 *
-	 * @param bezeichnung Die Bezeichnung der Reportvorlage. Darf nicht null sein.
-	 * @param reportingParameter Eine Liste mit den Vorlage-Parametern, basierend auf der jeweiligen Definition. Darf nicht null sein.
+	 * @param bezeichnung         Die Bezeichnung der Reportvorlage.
+	 * @param uiTitel             Der Titel, der in der UI zu diesem Report-Vorlagen-Objekt angezeigt wird, z. B. als Card- oder Gruppen-Titel.
+	 * @param uiBeschreibung      Die Beschreibung, die in der UI zu diesem Report-Vorlagen-Objekt angezeigt wird, z. B. als Card- oder Gruppen-Beschreibung.
+	 * @param datenContext        Der Hauptdaten-Context, der für die HTML-Template-Datei verwendet wird.
+	 * @param pfadHtmlTemplate    Pfad zur HTML-Template-Datei. Angabe erfolgt relativ zum Root-Pfad.
+	 * @param dateiname           Der statische Dateiname ohne Dateiendung.
+	 * @param benutzerKompetenzen Die Liste mit Benutzerkompetenzen.
+	 * @param reportingParameter  Eine Liste mit den Vorlage-Parametern, basierend auf der jeweiligen Definition.
 	 */
-	private constructor(name: string, ordinal: number, bezeichnung: string, reportingParameter: ReportingParameter) {
+	private constructor(name: string, ordinal: number, bezeichnung: string, uiTitel: string, uiBeschreibung: string, datenContext: ReportingReportvorlageDatenContext, pfadHtmlTemplate: string, dateiname: string, benutzerKompetenzen: List<BenutzerKompetenz>, reportingParameter: ReportingParameter) {
 		super(name, ordinal);
 		ReportingReportvorlage.all_values_by_ordinal.push(this);
 		ReportingReportvorlage.all_values_by_name.set(name, this);
 		this.bezeichnung = bezeichnung;
+		this.uiTitel = uiTitel;
+		this.uiBeschreibung = uiBeschreibung;
 		reportingParameter.reportvorlage = bezeichnung;
+		this.datenContext = datenContext;
+		this.pfadHtmlTemplate = pfadHtmlTemplate;
+		this.dateiname = dateiname;
+		this.benutzerKompetenzen = benutzerKompetenzen;
 		this.reportingParameter = reportingParameter;
 	}
 
@@ -224,13 +261,94 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	}
 
 	/**
+	 * Gibt den Titel für die Benutzeroberfläche zurück.
+	 *
+	 * @return Der Titel für die Benutzeroberfläche. Falls kein Titel gesetzt wurde, wird ein leerer String zurückgegeben.
+	 */
+	public getUiTitel(): string {
+		return (this.uiTitel !== null) ? this.uiTitel : "";
+	}
+
+	/**
+	 * Gibt die Beschreibung für die Benutzeroberfläche zurück.
+	 *
+	 * @return Die Beschreibung für die  Benutzeroberfläche. Falls keine Beschreibung gesetzt wurde, wird ein leerer String zurückgegeben.
+	 */
+	public getUiBeschreibung(): string {
+		return (this.uiBeschreibung !== null) ? this.uiBeschreibung : "";
+	}
+
+	/**
+	 * Liefert den Daten-Context der aktuellen HTML-Template-Definition.
+	 *
+	 * @return Der Daten-Context
+	 */
+	public getReportingReportvorlageDatenContext(): ReportingReportvorlageDatenContext {
+		return this.datenContext;
+	}
+
+	/**
+	 * Gibt den statischen Root-Pfad zurück.
+	 *
+	 * @return der Root-Pfad für alle Reporting-Templates
+	 */
+	public static getRootPfad(): string {
+		return "de/svws_nrw/module/reporting/";
+	}
+
+	/**
+	 * Pfad zur HTML-Template-Datei. Angabe erfolgt relativ zum Root-Pfad.
+	 *
+	 * @return Der Dateipfad zur HTML-Template-Datei
+	 */
+	public getPfadHtmlTemplate(): string {
+		return this.pfadHtmlTemplate;
+	}
+
+	/**
+	 * Pfad zur HTML-Template-Datei, inklusive des Root-Pfads.
+	 *
+	 * @return Der Root-Dateipfad zur HTML-Template-Datei
+	 */
+	public getRootPfadHtmlTemplate(): string {
+		return ReportingReportvorlage.getRootPfad() + this.pfadHtmlTemplate;
+	}
+
+	/**
+	 * Gibt den statischen Dateinamen ohne Dateiendung zurück.
+	 *
+	 * @return Der statische Dateiname
+	 */
+	public getDateiname(): string {
+		return this.dateiname;
+	}
+
+	/**
+	 * Gibt den relativen Pfad zur Dateinamensvorlage zurück, indem im Pfad der HTML-Vorlage die Endung ".html" durch ".name.tpl" ersetzt wird.
+	 *
+	 * @return Der Pfad zur Dateinamensvorlage.
+	 */
+	public getPfadDateinamensvorlage(): string {
+		return JavaString.replace(this.pfadHtmlTemplate, ".html", ".name.tpl");
+	}
+
+	/**
+	 * Gibt die Benutzer-Kompetenzen für diese Template-Definition zurück
+	 *
+	 * @return Die Liste der Benutzerkompetenzen
+	 */
+	public getBenutzerKompetenzen(): List<BenutzerKompetenz> {
+		return this.benutzerKompetenzen;
+	}
+
+	/**
 	 * Gibt eine Kopie der ReportingParamater für diese Report-Vorlage zurück. So wird verhindert, dass die Werte der ReportingParameter in der ENUM
 	 * verändert werden können, was im Client Server weit greifen würde.
 	 *
 	 * @return Die Kopie der ReportingParameter für diese Report-Vorlage.
 	 */
 	public getReportingParameter(): ReportingParameter {
-		return ReportingReportvorlage.cloneReportingParameter(this.reportingParameter);
+		return ReportingReportvorlageUtils.cloneReportingParameter(this.reportingParameter);
 	}
 
 	/**
@@ -315,7 +433,7 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	 */
 	public getDefaultVorlageparameterByVorlage(): List<ReportingReportvorlageParameter> {
 		ReportingReportvorlage.mapsInitialisieren();
-		const key1: string | null = ReportingReportvorlage.normalizeKeyInput(this.bezeichnung);
+		const key1: string | null = ReportingReportvorlageUtils.normalizeKeyInput(this.bezeichnung);
 		const mapParam: JavaMap<string, ReportingReportvorlageParameter> | null = ReportingReportvorlage.MAP_PARAMETER.get(key1);
 		return (mapParam === null) ? new ArrayList() : new ArrayList(mapParam.values());
 	}
@@ -330,8 +448,8 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	 */
 	public getDefaultVorlageparameterByGruppe(parametergruppeName: string): List<ReportingReportvorlageParameter> {
 		ReportingReportvorlage.mapsInitialisieren();
-		const key1: string | null = ReportingReportvorlage.normalizeKeyInput(this.bezeichnung);
-		const key2: string | null = ReportingReportvorlage.normalizeKeyInput(parametergruppeName);
+		const key1: string | null = ReportingReportvorlageUtils.normalizeKeyInput(this.bezeichnung);
+		const key2: string | null = ReportingReportvorlageUtils.normalizeKeyInput(parametergruppeName);
 		const mapGruppen: JavaMap<string, ReportingReportvorlageParameterGruppe> | null = ReportingReportvorlage.MAP_PARAMETERGRUPPEN.get(key1);
 		if (mapGruppen !== null) {
 			const gruppe: ReportingReportvorlageParameterGruppe | null = mapGruppen.get(key2);
@@ -352,8 +470,8 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	 */
 	public getDefaultVorlageparameter(parameterName: string): ReportingReportvorlageParameter | null {
 		ReportingReportvorlage.mapsInitialisieren();
-		const key1: string | null = ReportingReportvorlage.normalizeKeyInput(this.bezeichnung);
-		const key3: string | null = ReportingReportvorlage.normalizeKeyInput(parameterName);
+		const key1: string | null = ReportingReportvorlageUtils.normalizeKeyInput(this.bezeichnung);
+		const key3: string | null = ReportingReportvorlageUtils.normalizeKeyInput(parameterName);
 		const mapParam: JavaMap<string, ReportingReportvorlageParameter> | null = ReportingReportvorlage.MAP_PARAMETER.get(key1);
 		return (mapParam !== null) ? mapParam.get(key3) : null;
 	}
@@ -389,8 +507,8 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	 */
 	public getDefaultVorlageparametergruppeByName(gruppenName: string): ReportingReportvorlageParameterGruppe | null {
 		ReportingReportvorlage.mapsInitialisieren();
-		const key1: string | null = ReportingReportvorlage.normalizeKeyInput(this.bezeichnung);
-		const key2: string | null = ReportingReportvorlage.normalizeKeyInput(gruppenName);
+		const key1: string | null = ReportingReportvorlageUtils.normalizeKeyInput(this.bezeichnung);
+		const key2: string | null = ReportingReportvorlageUtils.normalizeKeyInput(gruppenName);
 		const mapGruppen: JavaMap<string, ReportingReportvorlageParameterGruppe> | null = ReportingReportvorlage.MAP_PARAMETERGRUPPEN.get(key1);
 		return (mapGruppen !== null) ? mapGruppen.get(key2) : null;
 	}
@@ -415,7 +533,7 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	 * @param reportvorlage die Reportvorlage
 	 */
 	private static initialisiereParameterMaps(reportvorlage: ReportingReportvorlage): void {
-		const key1: string | null = ReportingReportvorlage.normalizeKeyInput(reportvorlage.bezeichnung);
+		const key1: string | null = ReportingReportvorlageUtils.normalizeKeyInput(reportvorlage.bezeichnung);
 		let mapParam: JavaMap<string, ReportingReportvorlageParameter> | null = ReportingReportvorlage.MAP_PARAMETER.get(key1);
 		if (mapParam === null) {
 			mapParam = new HashMap();
@@ -430,13 +548,13 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 			if ((gruppe === null) || (gruppe.name === null) || (gruppe.reportvorlageParameter === null)) {
 				continue;
 			}
-			const key2: string | null = ReportingReportvorlage.normalizeKeyInput(gruppe.name);
+			const key2: string | null = ReportingReportvorlageUtils.normalizeKeyInput(gruppe.name);
 			mapGruppen.put(key2, gruppe);
 			for (const parameter of gruppe.reportvorlageParameter) {
 				if ((parameter === null) || (parameter.name === null)) {
 					continue;
 				}
-				const key3: string | null = ReportingReportvorlage.normalizeKeyInput(parameter.name);
+				const key3: string | null = ReportingReportvorlageUtils.normalizeKeyInput(parameter.name);
 				mapParam.put(key3, parameter);
 			}
 		}
@@ -460,318 +578,6 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 			}
 			vorlagen.add(reportvorlage);
 		}
-	}
-
-	/**
-	 * Erzeugt ein {@link ReportingParameter}-Objekt mit Standardwerten und setzt die aktuell definierten Vorlage-Parametergruppen.
-	 *
-	 * @param ausgabeformatOptionen                 Liste der erlaubten Ausgabeformate (IDs aus {@link ReportingAusgabeformat}).
-	 * @param reportvorlageParameterGruppen         die definierten Vorlage-Parametergruppen der Reportvorlage
-	 * @param sortierungDefinitionenGruppen         Liste mit den in der UI angebotenen Optionen für die Sortierung
-	 * @param filterDefinitionenGruppen             Liste mit den in der UI angebotenen Optionen für die Filterung
-	 * @param uiIstSichtbarEinzelausgabeHauptdaten  Legt fest, ob in der UI eine Option erscheinen soll, die die Einzelausgabe der Hauptdaten regelt.
-	 * @param uiIstSichtbarEinzelausgabeDetaildaten Legt fest, ob in der UI eine Option erscheinen soll, die die Einzelausgabe der Detaildaten regelt.
-	 * @param uiIstSichtbarDuplexdruck              Legt fest, ob in der UI eine Option erscheinen soll, die den Duplexdruck regelt.
-	 *
-	 * @return ein {@link ReportingParameter}-Objekt mit Standardwerten und gesetzten Gruppen
-	 */
-	private static erzeugeReportingParameter(ausgabeformatOptionen: List<number> | null, reportvorlageParameterGruppen: List<ReportingReportvorlageParameterGruppe> | null, sortierungDefinitionenGruppen: List<ReportingSortierungDefinitionGruppe> | null, filterDefinitionenGruppen: List<ReportingFilterDefinitionGruppe> | null, uiIstSichtbarEinzelausgabeHauptdaten: boolean, uiIstSichtbarEinzelausgabeDetaildaten: boolean, uiIstSichtbarDuplexdruck: boolean): ReportingParameter {
-		const reportingParameter: ReportingParameter | null = new ReportingParameter();
-		reportingParameter.ausgabeformatOptionen = new ArrayList(((ausgabeformatOptionen === null) || ausgabeformatOptionen.isEmpty()) ? ArrayList.of(ReportingAusgabeformat.PDF.getId()) : ausgabeformatOptionen);
-		let ausgabeoptionenBeschreibung: string | null = ((uiIstSichtbarEinzelausgabeHauptdaten) || (uiIstSichtbarEinzelausgabeDetaildaten)) ? "Die Option Einzelausgabe ermöglicht es, pro Datensatz eine Ausgabe in eine einzelne Datei zu erzeugen. " : "";
-		ausgabeoptionenBeschreibung += (uiIstSichtbarDuplexdruck) ? ("Wird Duplexdruck aktiviert, so kann die erzeuget Datei später auf einem Drucker mit der Option 'beidseitiger Druck (Duplexdruck)' gedruckt werden.") : "";
-		const standardausgabeoptionenGruppe: ReportingReportvorlageParameterGruppe | null = ReportingReportvorlage.erzeugeReportingvorlageParameterGruppe("Ausgabeoptionen", ausgabeoptionenBeschreibung, true, 3, Arrays.asList(ReportingReportvorlage.erzeugeVorlageParameter("einzelausgabeHauptdaten", "Einzelausgabe der Daten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, uiIstSichtbarEinzelausgabeHauptdaten, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("einzelausgabeDetaildaten", "Einzelausgabe der Daten", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, uiIstSichtbarEinzelausgabeDetaildaten, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlage.erzeugeVorlageParameter("duplexdruck", "Duplexdruck", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, uiIstSichtbarDuplexdruck, ReportingUIKomponentenTyp.CHECKBOX, 1)));
-		reportingParameter.reportvorlageParameterGruppen = new ArrayList((reportvorlageParameterGruppen === null) ? new ArrayList() : reportvorlageParameterGruppen);
-		reportingParameter.reportvorlageParameterGruppen.add(standardausgabeoptionenGruppe);
-		reportingParameter.sortierungDefinitionenGruppen = new ArrayList((sortierungDefinitionenGruppen === null) ? new ArrayList() : sortierungDefinitionenGruppen);
-		reportingParameter.filterDefinitionenGruppen = new ArrayList((filterDefinitionenGruppen === null) ? new ArrayList() : filterDefinitionenGruppen);
-		return reportingParameter;
-	}
-
-	/**
-	 * Erstellt eine neue Reporting-Vorlage-Parametergruppe mit den angegebenen Parametern, mit UI-Parametern.
-	 *
-	 * @param name                            Der Titel der Gruppe. Darf nicht null sein.
-	 * @param beschreibung                    Die Beschreibung der Gruppe. Darf nicht null sein.
-	 * @param uiIstSichtbar                   Gibt an, ob die Gruppe in der UI sichtbar sein soll. Darf nicht null sein.
-	 * @param uiAnzahlSpalten                 Die Anzahl der Grid-Spalten, die die Gruppe in der UI einnehmen soll.
-	 * @param reportingReportvorlageParameter Eine Liste von ReportingvorlageParametern, die in der Gruppe enthalten sein sollen.
-	 *
-	 * @return Eine neue Instanz von ReportingUIGruppenDefinition.
-	 */
-	private static erzeugeReportingvorlageParameterGruppe(name: string, beschreibung: string, uiIstSichtbar: boolean, uiAnzahlSpalten: number, reportingReportvorlageParameter: List<ReportingReportvorlageParameter>): ReportingReportvorlageParameterGruppe {
-		const reportingReportvorlageParameterGruppe: ReportingReportvorlageParameterGruppe | null = new ReportingReportvorlageParameterGruppe();
-		reportingReportvorlageParameterGruppe.name = name;
-		reportingReportvorlageParameterGruppe.beschreibung = beschreibung;
-		reportingReportvorlageParameterGruppe.uiIstSichtbar = uiIstSichtbar;
-		reportingReportvorlageParameterGruppe.uiAnzahlSpalten = uiAnzahlSpalten;
-		reportingReportvorlageParameterGruppe.reportvorlageParameter = reportingReportvorlageParameter;
-		return reportingReportvorlageParameterGruppe;
-	}
-
-	/**
-	 * Erstellt einen neuen Vorlage-Parameter mit dem angegebenen Namen, Typ und Wert, mit UI-Parametern.
-	 *
-	 * @param name             Der Name des Vorlage-Parameters. Darf nicht null sein.
-	 * @param bezeichnung      Die Bezeichnung des Vorlage-Parameters. Darf nicht null sein.
-	 * @param typ              Der Typ des Vorlage-Parameters. Darf nicht null sein.
-	 * @param wert             Der Wert des Vorlage-Parameters. Darf nicht null sein.
-	 * @param uiIstSichtbar    Gibt an, ob der Parameter in der UI sichtbar sein soll. Darf nicht null sein.
-	 * @param uiKomponentenTyp Der Typ der UI-Komponente (z.B. 'checkbox', 'input', 'select', 'textarea', 'numberPicker', 'datePicker').
-	 * @param uiAnzahlSpalten  Die Anzahl der Grid-Spalten, die der Parameter in der UI einnehmen soll.
-	 *
-	 * @return Ein neues Objekt der Klasse {@link ReportingReportvorlageParameter}, das den angegebenen Namen, Typ und Wert enthält.
-	 */
-	private static erzeugeVorlageParameter(name: string, bezeichnung: string, typ: ReportingReportvorlageParameterTyp, wert: string, uiIstSichtbar: boolean, uiKomponentenTyp: ReportingUIKomponentenTyp, uiAnzahlSpalten: number): ReportingReportvorlageParameter {
-		const reportingReportVorlageParameter: ReportingReportvorlageParameter | null = new ReportingReportvorlageParameter();
-		reportingReportVorlageParameter.name = name;
-		reportingReportVorlageParameter.bezeichnung = bezeichnung;
-		reportingReportVorlageParameter.typ = typ.getId();
-		reportingReportVorlageParameter.wert = wert;
-		reportingReportVorlageParameter.uiIstSichtbar = uiIstSichtbar;
-		reportingReportVorlageParameter.uiKomponentenTyp = uiKomponentenTyp.getId();
-		reportingReportVorlageParameter.uiAnzahlSpalten = uiAnzahlSpalten;
-		return reportingReportVorlageParameter;
-	}
-
-	/**
-	 * Erstellt eine neue Sortierungs-Definitionsgruppe.
-	 *
-	 * @param bezeichnung                    Die Bezeichnung der Gruppe (UI-Text).
-	 * @param typ                            Der Typname des zu sortierenden Reporting-Datentyps.
-	 * @param uiIstSichtbar                  Gibt an, ob die Gruppe in der UI sichtbar sein soll.
-	 * @param sortierungDefinitionenOptionen Die Liste der Sortierungsdefinitionen, die in dieser Gruppe als Optionen zur Verfügung stehen.
-	 *
-	 * @return Eine neue Instanz von {@link ReportingSortierungDefinitionGruppe}.
-	 */
-	private static erzeugeSortierungDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, sortierungDefinitionenOptionen: List<ReportingSortierungDefinition>): ReportingSortierungDefinitionGruppe {
-		const gruppe: ReportingSortierungDefinitionGruppe | null = new ReportingSortierungDefinitionGruppe();
-		gruppe.bezeichnung = bezeichnung;
-		gruppe.typ = typ;
-		gruppe.uiIstSichtbar = uiIstSichtbar;
-		gruppe.sortierungDefinitionenOptionen = new ArrayList(sortierungDefinitionenOptionen);
-		return gruppe;
-	}
-
-	/**
-	 * Erstellt eine neue Filter-Definitionsgruppe.
-	 *
-	 * @param bezeichnung                Die Bezeichnung der Gruppe (UI-Text).
-	 * @param typ                        Der Typname des zu filternden Reporting-Datentyps.
-	 * @param uiIstSichtbar              Gibt an, ob die Gruppe in der UI sichtbar sein soll.
-	 * @param uiIstMultiselect           Gibt an, ob mehrere Filterdefinitionen ausgewählt werden können.
-	 * @param multiselectVerknuepfung    Die Verknüpfungsart bei Mehrfachauswahl (AND/OR).
-	 * @param filterDefinitionenOptionen Die Liste der Filterdefinitionen, die in dieser Gruppe als Optionen zur Verfügung stehen.
-	 *
-	 * @return Eine neue Instanz von {@link ReportingFilterDefinitionGruppe}.
-	 */
-	private static erzeugeFilterDefinitionGruppe(bezeichnung: string, typ: string, uiIstSichtbar: boolean, uiIstMultiselect: boolean, multiselectVerknuepfung: ReportingFilterVerknuepfung, filterDefinitionenOptionen: List<ReportingFilterDefinition>): ReportingFilterDefinitionGruppe {
-		const gruppe: ReportingFilterDefinitionGruppe | null = new ReportingFilterDefinitionGruppe();
-		gruppe.bezeichnung = bezeichnung;
-		gruppe.typ = typ;
-		gruppe.uiIstSichtbar = uiIstSichtbar;
-		gruppe.uiIstMultiselect = uiIstMultiselect;
-		gruppe.multiselectVerknuepfung = multiselectVerknuepfung.getId();
-		gruppe.filterDefinitionenOptionen = new ArrayList(filterDefinitionenOptionen);
-		return gruppe;
-	}
-
-	/**
-	 * Normalisiert den angegebenen String, indem alle Leerzeichen entfernt und die Zeichen in Kleinbuchstaben umgewandelt werden.
-	 *
-	 * @param input Der String, der normalisiert werden soll.
-	 *
-	 * @return Der normalisierte String.
-	 */
-	private static normalizeKeyInput(input: string | null): string {
-		return (input === null) ? "" : input.trim().toLowerCase();
-	}
-
-	/**
-	 * Erzeugt eine tiefe Kopie des ReportingParameter-Objekts inkl. aller Unterlisten und DTOs.
-	 * Da die ReportingParameter als DTO konzipiert wurden und transpiliert werden, können dort keine Methoden implementiert werden und es wird hier auf
-	 * Reflection verzichtet.
-	 *
-	 * @param source Ein ReportingParamater-Objekt als Quelle, die kopiert werden soll.
-	 *
-	 * @return Eine tiefe Kopie des ReportingParameter-Objekts, das unabhängig von der ENUM genutzt werden kann.
-	 */
-	private static cloneReportingParameter(source: ReportingParameter): ReportingParameter {
-		const copy: ReportingParameter | null = new ReportingParameter();
-		copy.idSchuljahresabschnitt = source.idSchuljahresabschnitt;
-		copy.ausgabeformat = source.ausgabeformat;
-		copy.reportvorlage = source.reportvorlage;
-		copy.idHauptdatenObjekt = source.idHauptdatenObjekt;
-		copy.ausgabeformatOptionen.addAll(source.ausgabeformatOptionen);
-		copy.idsHauptdaten.addAll(source.idsHauptdaten);
-		copy.idsDetaildaten.addAll(source.idsDetaildaten);
-		if (source.eMailDaten !== null) {
-			copy.eMailDaten = new ReportingEMailDaten();
-			copy.eMailDaten.empfaengerTyp = source.eMailDaten.empfaengerTyp;
-			copy.eMailDaten.istPrivateEmailAlternative = source.eMailDaten.istPrivateEmailAlternative;
-			copy.eMailDaten.betreff = source.eMailDaten.betreff;
-			copy.eMailDaten.text = source.eMailDaten.text;
-		} else {
-			copy.eMailDaten = null;
-		}
-		copy.reportvorlageParameterGruppen.addAll(ReportingReportvorlage.cloneVorlageParameterGruppen(source.reportvorlageParameterGruppen));
-		copy.sortierungDefinitionenGruppen.addAll(ReportingReportvorlage.cloneSortierungDefinitionGruppen(source.sortierungDefinitionenGruppen));
-		copy.filterDefinitionenGruppen.addAll(ReportingReportvorlage.cloneFilterDefinitionGruppen(source.filterDefinitionenGruppen));
-		return copy;
-	}
-
-	private static cloneVorlageParameterGruppen(source: List<ReportingReportvorlageParameterGruppe> | null): List<ReportingReportvorlageParameterGruppe> {
-		const result: List<ReportingReportvorlageParameterGruppe> | null = new ArrayList<ReportingReportvorlageParameterGruppe>();
-		if ((source === null) || source.isEmpty()) {
-			return result;
-		}
-		for (const vpg of source) {
-			if (vpg === null) {
-				continue;
-			}
-			const vpgCopy: ReportingReportvorlageParameterGruppe | null = new ReportingReportvorlageParameterGruppe();
-			vpgCopy.name = vpg.name;
-			vpgCopy.beschreibung = vpg.beschreibung;
-			vpgCopy.uiIstSichtbar = vpg.uiIstSichtbar;
-			vpgCopy.uiAnzahlSpalten = vpg.uiAnzahlSpalten;
-			if (vpg.reportvorlageParameter !== null) {
-				vpgCopy.reportvorlageParameter.addAll(ReportingReportvorlage.cloneVorlageParameter(vpg.reportvorlageParameter));
-			}
-			result.add(vpgCopy);
-		}
-		return result;
-	}
-
-	private static cloneVorlageParameter(source: List<ReportingReportvorlageParameter> | null): List<ReportingReportvorlageParameter> {
-		const result: List<ReportingReportvorlageParameter> | null = new ArrayList<ReportingReportvorlageParameter>();
-		if ((source === null) || source.isEmpty()) {
-			return result;
-		}
-		for (const vp of source) {
-			if (vp === null) {
-				continue;
-			}
-			const vpCopy: ReportingReportvorlageParameter | null = new ReportingReportvorlageParameter();
-			vpCopy.name = vp.name;
-			vpCopy.bezeichnung = vp.bezeichnung;
-			vpCopy.typ = vp.typ;
-			vpCopy.wert = vp.wert;
-			vpCopy.uiIstSichtbar = vp.uiIstSichtbar;
-			vpCopy.uiKomponentenTyp = vp.uiKomponentenTyp;
-			vpCopy.uiAnzahlSpalten = vp.uiAnzahlSpalten;
-			result.add(vpCopy);
-		}
-		return result;
-	}
-
-	private static cloneSortierungDefinitionGruppen(source: List<ReportingSortierungDefinitionGruppe> | null): List<ReportingSortierungDefinitionGruppe> {
-		const result: List<ReportingSortierungDefinitionGruppe> | null = new ArrayList<ReportingSortierungDefinitionGruppe>();
-		if (source === null) {
-			return result;
-		}
-		for (const sdg of source) {
-			if (sdg.sortierungDefinitionenOptionen === null) {
-				continue;
-			}
-			const sdgCopy: ReportingSortierungDefinitionGruppe | null = new ReportingSortierungDefinitionGruppe();
-			sdgCopy.bezeichnung = sdg.bezeichnung;
-			sdgCopy.typ = sdg.typ;
-			sdgCopy.uiIstSichtbar = sdg.uiIstSichtbar;
-			if (sdg.sortierungDefinitionenOptionen !== null) {
-				sdgCopy.sortierungDefinitionenOptionen.addAll(ReportingReportvorlage.cloneSortierungDefinitionen(sdg.sortierungDefinitionenOptionen));
-			}
-			result.add(sdgCopy);
-		}
-		return result;
-	}
-
-	private static cloneSortierungDefinitionen(source: List<ReportingSortierungDefinition> | null): List<ReportingSortierungDefinition> {
-		const result: List<ReportingSortierungDefinition> | null = new ArrayList<ReportingSortierungDefinition>();
-		if ((source === null) || source.isEmpty()) {
-			return result;
-		}
-		for (const sd of source) {
-			if (sd === null) {
-				continue;
-			}
-			const sdCopy: ReportingSortierungDefinition | null = new ReportingSortierungDefinition();
-			sdCopy.bezeichnung = sd.bezeichnung;
-			sdCopy.typ = sd.typ;
-			sdCopy.verwendeStandardsortierung = sd.verwendeStandardsortierung;
-			sdCopy.attribute.addAll(sd.attribute);
-			result.add(sdCopy);
-		}
-		return result;
-	}
-
-	private static cloneFilterDefinitionGruppen(source: List<ReportingFilterDefinitionGruppe> | null): List<ReportingFilterDefinitionGruppe> {
-		const result: List<ReportingFilterDefinitionGruppe> | null = new ArrayList<ReportingFilterDefinitionGruppe>();
-		if ((source === null) || source.isEmpty()) {
-			return result;
-		}
-		for (const fdg of source) {
-			if (fdg === null) {
-				continue;
-			}
-			const fdgCopy: ReportingFilterDefinitionGruppe | null = new ReportingFilterDefinitionGruppe();
-			fdgCopy.bezeichnung = fdg.bezeichnung;
-			fdgCopy.typ = fdg.typ;
-			fdgCopy.uiIstSichtbar = fdg.uiIstSichtbar;
-			fdgCopy.uiIstMultiselect = fdg.uiIstMultiselect;
-			fdgCopy.multiselectVerknuepfung = fdg.multiselectVerknuepfung;
-			if (fdg.filterDefinitionenOptionen !== null) {
-				fdgCopy.filterDefinitionenOptionen.addAll(ReportingReportvorlage.cloneFilterDefinitionen(fdg.filterDefinitionenOptionen));
-			}
-			result.add(fdgCopy);
-		}
-		return result;
-	}
-
-	private static cloneFilterDefinitionen(source: List<ReportingFilterDefinition> | null): List<ReportingFilterDefinition> {
-		const result: List<ReportingFilterDefinition> | null = new ArrayList<ReportingFilterDefinition>();
-		if ((source === null) || source.isEmpty()) {
-			return result;
-		}
-		for (const fd of source) {
-			if (fd === null) {
-				continue;
-			}
-			const fdCopy: ReportingFilterDefinition | null = new ReportingFilterDefinition();
-			fdCopy.bezeichnung = fd.bezeichnung;
-			fdCopy.typ = fd.typ;
-			fdCopy.kriterien.addAll(ReportingReportvorlage.cloneFilterKriterien(fd.kriterien));
-			result.add(fdCopy);
-		}
-		return result;
-	}
-
-	private static cloneFilterKriterien(source: List<ReportingFilterKriterium> | null): List<ReportingFilterKriterium> {
-		const result: List<ReportingFilterKriterium> | null = new ArrayList<ReportingFilterKriterium>();
-		if ((source === null) || source.isEmpty()) {
-			return result;
-		}
-		for (const k of source) {
-			if (k === null) {
-				continue;
-			}
-			const kCopy: ReportingFilterKriterium | null = new ReportingFilterKriterium();
-			kCopy.verknuepfung = k.verknuepfung;
-			kCopy.nicht = k.nicht;
-			if (k.eintraege !== null) {
-				for (const e of k.eintraege) {
-					const eCopy: ReportingFilterEintrag | null = new ReportingFilterEintrag();
-					eCopy.attribut = e.attribut;
-					eCopy.operation = e.operation;
-					eCopy.werte.addAll(e.werte);
-					kCopy.eintraege.add(eCopy);
-				}
-			}
-			if (k.unterkriterien !== null) {
-				kCopy.unterkriterien.addAll(ReportingReportvorlage.cloneFilterKriterien(k.unterkriterien));
-			}
-			result.add(kCopy);
-		}
-		return result;
 	}
 
 	/**
