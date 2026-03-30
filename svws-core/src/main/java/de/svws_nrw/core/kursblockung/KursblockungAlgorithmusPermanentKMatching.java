@@ -40,8 +40,9 @@ public final class KursblockungAlgorithmusPermanentKMatching extends Kursblockun
 		super(random, logger, input);
 
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
-		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
+		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) {
 			return;
+		}
 
 		// Erzeuge einen zufälligen Startzustand für Kurse und SuS.
 		dynDaten.aktionSchuelerAusAllenKursenEntfernen();

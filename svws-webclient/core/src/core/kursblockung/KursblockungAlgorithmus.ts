@@ -57,8 +57,9 @@ export class KursblockungAlgorithmus extends Service {
 				do {
 					KursblockungAlgorithmus.verwendeAlgorithmusK(algorithmus, zeitEndeK, dynDaten, algorithmenS, kursblockungOutputs, pInput);
 				} while (System.currentTimeMillis() < zeitEndeK);
-				if ((System.currentTimeMillis() + zeitProK) > zeitEndeGesamt)
+				if ((System.currentTimeMillis() + zeitProK) > zeitEndeGesamt) {
 					break;
+				}
 			}
 			zeitProK *= 2;
 		} while (System.currentTimeMillis() < zeitEndeGesamt);
@@ -71,8 +72,9 @@ export class KursblockungAlgorithmus extends Service {
 		dynDaten.aktionZustandSpeichernK();
 		for (const algorithmus of algorithmenS) {
 			algorithmus.berechne();
-			if (dynDaten.gibCompareZustandK_NW_KD_FW() > 0)
+			if (dynDaten.gibCompareZustandK_NW_KD_FW() > 0) {
 				dynDaten.aktionZustandSpeichernK();
+			}
 		}
 		dynDaten.aktionZustandLadenK();
 		if (dynDaten.gibCompareZustandG_NW_KD_FW() > 0) {

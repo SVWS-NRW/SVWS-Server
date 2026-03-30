@@ -3,12 +3,12 @@ package de.svws_nrw.abschluesse.gost.test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -69,24 +69,27 @@ class TestGostBelegpruefung {
 		final Map<String, GostJahrgangsdaten> tempTestGostJahrgaenge =
 				ResourceUtils.json2Classes("de.svws_nrw.abschluesse.gost.test", "Jahrgang_", "_GostJahrgangsdaten", GostJahrgangsdaten.class);
 		assert (tempTestGostJahrgaenge != null) && (tempTestGostJahrgaenge.size() != 0) : "Fehler beim Laden der Gost-Testjahrgänge!";
-		for (final Map.Entry<String, GostJahrgangsdaten> entry : tempTestGostJahrgaenge.entrySet())
+		for (final Map.Entry<String, GostJahrgangsdaten> entry : tempTestGostJahrgaenge.entrySet()) {
 			testGostJahrgaenge.put(entry.getKey(), entry.getValue());
+		}
 		System.out.println("  FERTIG!");
 
 		System.out.println("- Lade die Fächer der Gost-Jahrgänge aus den JSON-Resourcen...");
 		final Map<String, GostFach[]> tempTestGostJahrgaengeFaecher =
 				ResourceUtils.json2Classes("de.svws_nrw.abschluesse.gost.test", "Jahrgang_", "_GostFaecher", GostFach[].class);
 		assert (tempTestGostJahrgaengeFaecher != null) && (tempTestGostJahrgaengeFaecher.size() != 0) : "Fehler beim Laden der Gost-Fächer der Testjahrgänge!";
-		for (final Map.Entry<String, GostFach[]> entry : tempTestGostJahrgaengeFaecher.entrySet())
+		for (final Map.Entry<String, GostFach[]> entry : tempTestGostJahrgaengeFaecher.entrySet()) {
 			testGostJahrgaengeFaecher.put(entry.getKey(), Arrays.asList(entry.getValue()));
+		}
 		System.out.println("  FERTIG!");
 
 		System.out.println("- Lade die Informationen zu nicht erlaubten und geforderten Fachkombinationen zu den Gost-Jahrgängen aus den JSON-Resourcen...");
 		final Map<String, GostJahrgangFachkombination[]> tempTestGostJahrgaengeFachkombinationen = ResourceUtils
 				.json2Classes("de.svws_nrw.abschluesse.gost.test", "Jahrgang_", "_GostJahrgangFachkombination", GostJahrgangFachkombination[].class);
 		assert (tempTestGostJahrgaengeFachkombinationen != null) : "Fehler beim Laden der Gost-Fachkombinationen der Testjahrgänge!";
-		for (final Map.Entry<String, GostJahrgangFachkombination[]> entry : tempTestGostJahrgaengeFachkombinationen.entrySet())
+		for (final Map.Entry<String, GostJahrgangFachkombination[]> entry : tempTestGostJahrgaengeFachkombinationen.entrySet()) {
 			testGostJahrgaengeFachkombinationen.put(entry.getKey(), Arrays.asList(entry.getValue()));
+		}
 		System.out.println("  FERTIG!");
 
 		System.out.println("- Lade die Abiturdaten aus den JSON-Resourcen und ordne sie den Jahrgängen zu...");
@@ -95,8 +98,9 @@ class TestGostBelegpruefung {
 		assert (tempTestAbiturdaten != null) && (tempTestAbiturdaten.size() != 0) : "Fehler beim Laden der Abiturdaten!";
 		for (final Map.Entry<String, Abiturdaten> entry : tempTestAbiturdaten.entrySet()) {
 			final String[] ids = entry.getKey().split("_");
-			if (ids.length != 2)
+			if (ids.length != 2) {
 				fail("Fehler beim Laden der Abiturdaten - ungültiger Dateiname: Jahrgang_" + entry.getKey() + "_Abiturdaten");
+			}
 			HashMap<String, Abiturdaten> mapSchuelerJahrgang = testAbiturdaten.get(ids[0]);
 			if (mapSchuelerJahrgang == null) {
 				mapSchuelerJahrgang = new HashMap<>();
@@ -113,9 +117,10 @@ class TestGostBelegpruefung {
 				: "Fehler beim Laden der Gesamt-Belegprüfungsergebnisse!";
 		for (final Map.Entry<String, GostBelegpruefungErgebnis> entry : tempTestBelegpruefungsergebnisseGesamt.entrySet()) {
 			final String[] ids = entry.getKey().split("_");
-			if (ids.length != 2)
+			if (ids.length != 2) {
 				fail("Fehler beim Laden der Gesamt-Belegprüfungsergebnisse - ungültiger Dateiname: Jahrgang_" + entry.getKey()
 						+ "_Belegpruefungsergebnis_Gesamt");
+			}
 			HashMap<String, GostBelegpruefungErgebnis> mapSchuelerJahrgang = testBelegpruefungsergebnisseGesamt.get(ids[0]);
 			if (mapSchuelerJahrgang == null) {
 				mapSchuelerJahrgang = new HashMap<>();
@@ -132,8 +137,9 @@ class TestGostBelegpruefung {
 				: "Fehler beim Laden der EF1-Belegprüfungsergebnisse!";
 		for (final Map.Entry<String, GostBelegpruefungErgebnis> entry : tempTestBelegpruefungsergebnisseEF1.entrySet()) {
 			final String[] ids = entry.getKey().split("_");
-			if (ids.length != 2)
+			if (ids.length != 2) {
 				fail("Fehler beim Laden der EF1-Belegprüfungsergebnisse - ungültiger Dateiname: Jahrgang_" + entry.getKey() + "_Belegpruefungsergebnis_EF1");
+			}
 			HashMap<String, GostBelegpruefungErgebnis> mapSchuelerJahrgang = testBelegpruefungsergebnisseEF1.get(ids[0]);
 			if (mapSchuelerJahrgang == null) {
 				mapSchuelerJahrgang = new HashMap<>();
@@ -259,10 +265,11 @@ class TestGostBelegpruefung {
 							final List<String> ergebnisFehler = ergebnis.fehlercodes.stream().map(error -> error.code).toList();
 							final String zuwenig = testfallFehler.stream().filter(error -> !ergebnisFehler.contains(error)).collect(Collectors.joining(", "));
 							final String zuviele = ergebnisFehler.stream().filter(error -> !testfallFehler.contains(error)).collect(Collectors.joining(", "));
-							if ((!"".equals(zuwenig)) || (!"".equals(zuviele)))
+							if ((!"".equals(zuwenig)) || (!"".equals(zuviele))) {
 								fail("Fehler: Die Fehlercodes der Gesamt-Belegprüfung stimmen nicht mit dem Testfall überein: " + System.lineSeparator()
 										+ "  - zuviel gefundene Fehler: " + (("".equals(zuviele)) ? "---" : zuviele) + System.lineSeparator()
 										+ "  - zu wenig gefunden Fehler:" + (("".equals(zuwenig)) ? "---" : zuwenig));
+							}
 							System.out.println("  Test erfolgreich beendet.");
 						}));
 			});

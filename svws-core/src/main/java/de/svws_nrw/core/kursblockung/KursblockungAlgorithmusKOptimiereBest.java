@@ -37,8 +37,9 @@ public final class KursblockungAlgorithmusKOptimiereBest extends KursblockungAlg
 	@Override
 	public void berechne(final long pEndzeit) {
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
-		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
+		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) {
 			return;
+		}
 
 		// Lade beste globale Blockung.
 		dynDaten.aktionZustandLadenG();

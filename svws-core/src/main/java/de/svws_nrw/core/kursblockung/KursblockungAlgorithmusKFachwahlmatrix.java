@@ -42,8 +42,9 @@ public final class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAl
 	@Override
 	public void berechne(final long pEndzeit) {
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
-		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
+		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) {
 			return;
+		}
 
 		// Entferne SuS aus den Kursen (vorsichtshalber wegen alter Berechnungen).
 		dynDaten.aktionSchuelerAusAllenKursenEntfernen();

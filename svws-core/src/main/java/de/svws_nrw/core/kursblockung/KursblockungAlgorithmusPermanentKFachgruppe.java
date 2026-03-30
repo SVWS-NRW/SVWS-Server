@@ -27,8 +27,9 @@ public final class KursblockungAlgorithmusPermanentKFachgruppe extends Kursblock
 		super(random, logger, input);
 
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
-		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
+		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) {
 			return;
+		}
 
 		// Erzeuge einen zufälligen Startzustand-K für Kurse und SuS.
 		dynDaten.aktionSchuelerAusAllenKursenEntfernen();

@@ -1,7 +1,7 @@
 package de.svws_nrw.core.kursblockung;
 
-import java.util.Random;
 import java.util.ArrayList;
+import java.util.Random;
 
 import de.svws_nrw.core.Service;
 import de.svws_nrw.core.logger.LogLevel;
@@ -87,8 +87,9 @@ public final class KursblockungAlgorithmus extends Service {
 				} while (System.currentTimeMillis() < zeitEndeK);
 
 				// Zeit abgelaufen?
-				if ((System.currentTimeMillis() + zeitProK) > zeitEndeGesamt)
+				if ((System.currentTimeMillis() + zeitProK) > zeitEndeGesamt) {
 					break;
+				}
 
 			}
 			// Nächster Durchgang hat mehr Zeit.
@@ -118,8 +119,9 @@ public final class KursblockungAlgorithmus extends Service {
 			algorithmus.berechne();
 
 			// Bessere SuS-Verteilung gefunden?
-			if (dynDaten.gibCompareZustandK_NW_KD_FW() > 0)
+			if (dynDaten.gibCompareZustandK_NW_KD_FW() > 0) {
 				dynDaten.aktionZustandSpeichernK();
+			}
 		}
 
 		// Bestes Ergebnis laden (Zustand K).

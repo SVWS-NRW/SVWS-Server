@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 @DisplayName("Diese Klasse enthält die Testroutinen für die Klasse {@link DateUtils}.")
 class TestDateUtils {
 
-
 	/**
 	 * Initialisiert den Test
 	 */
@@ -47,8 +46,9 @@ class TestDateUtils {
 		while (true) {
 			final int jahr = cal.get(Calendar.YEAR);
 
-			if (DateUtils.gibIstJahrUngueltig(jahr))
+			if (DateUtils.gibIstJahrUngueltig(jahr)) {
 				break;
+			}
 
 			final int monat = cal.get(Calendar.MONTH) + 1;
 			final int tagImMonat = cal.get(Calendar.DAY_OF_MONTH);

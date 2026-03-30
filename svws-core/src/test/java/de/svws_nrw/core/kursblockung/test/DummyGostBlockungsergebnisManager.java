@@ -51,17 +51,20 @@ public class DummyGostBlockungsergebnisManager {
 	public void stateClear() {
 		// Lösche alle E-Schienen, die es im Elternteil nicht mehr gibt.
 		final List<GostBlockungsergebnisSchiene> listZuLoeschen = new ArrayList<>();
-		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen)
-			if (!_parent.schieneGetExistiert(eSchiene.id))
+		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen) {
+			if (!_parent.schieneGetExistiert(eSchiene.id)) {
 				listZuLoeschen.add(eSchiene);
+			}
+		}
 		_ergebnis.schienen.removeAll(listZuLoeschen);
 
 		// Erzeuge fehlende E-Schienen, die nur das Elternteil derzeit hat.
-		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen)
+		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
 			if (!getOfSchieneExists(gSchiene.id)) {
 				final @NotNull GostBlockungsergebnisSchiene eSchiene = DTOUtils.newGostBlockungsergebnisSchiene(gSchiene.id);
 				_ergebnis.schienen.add(eSchiene);
 			}
+		}
 	}
 
 	/**
@@ -119,9 +122,11 @@ public class DummyGostBlockungsergebnisManager {
 	 * @return TRUE, falls die E-Schiene existiert.
 	 */
 	public boolean getOfSchieneExists(final long idSchiene) {
-		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen)
-			if (eSchiene.id == idSchiene)
+		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen) {
+			if (eSchiene.id == idSchiene) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -134,9 +139,11 @@ public class DummyGostBlockungsergebnisManager {
 	 * @throws DeveloperNotificationException falls die Schiene nicht existiert.
 	 */
 	private @NotNull GostBlockungsergebnisSchiene getSchieneE(final long idSchiene) throws DeveloperNotificationException {
-		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen)
-			if (eSchiene.id == idSchiene)
+		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen) {
+			if (eSchiene.id == idSchiene) {
 				return eSchiene;
+			}
+		}
 		throw new DeveloperNotificationException("Es gibt keine E-Schiene mit ID " + idSchiene + "!");
 	}
 

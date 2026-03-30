@@ -25,8 +25,9 @@ export class KursblockungAlgorithmusKSchnellW extends KursblockungAlgorithmusK {
 	}
 
 	public berechne(pEndzeit: number): void {
-		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0)
+		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0) {
 			return;
+		}
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 		this.dynDaten.aktionKurseFreieZufaelligVerteilen();
 		this.dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();

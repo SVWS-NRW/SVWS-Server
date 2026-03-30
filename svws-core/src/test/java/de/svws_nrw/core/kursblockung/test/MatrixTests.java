@@ -65,8 +65,9 @@ class MatrixTests {
 		d[4][5] = 13;
 
 		final int[] r2c = m.gibMinimalesBipartitesMatchingGewichtet(false);
-		if ((r2c[0] != 4) || (r2c[1] != 5) || (r2c[2] != 3) || (r2c[3] != 0) || (r2c[4] != 2))
+		if ((r2c[0] != 4) || (r2c[1] != 5) || (r2c[2] != 3) || (r2c[3] != 0) || (r2c[4] != 2)) {
 			fail("Matching schlug fehl.");
+		}
 	}
 
 	/** Matrix-Test 001 */

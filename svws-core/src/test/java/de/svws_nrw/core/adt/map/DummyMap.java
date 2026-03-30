@@ -274,10 +274,12 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @throws UnsupportedOperationException wenn ein alleiniges Hinzufügen eines Schlüssels nicht erlaubt ist.
 	 */
 	boolean bcAddKey(final @NotNull DummyMapIntervall iv, final @NotNull Integer e) {
-		if (!_allowKeyAlone)
+		if (!_allowKeyAlone) {
 			throw new UnsupportedOperationException(); // KEY kann nicht ohne VALUE hinzugefügt werden.
-		if (bcContainsKey(iv, e))
+		}
+		if (bcContainsKey(iv, e)) {
 			return false;
+		}
 		bcAddEntryReturnOldValueOrNull(iv, e, e);
 		return true;
 	}
@@ -295,8 +297,9 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	boolean bcAddAllKeys(final @NotNull DummyMapIntervall iv, final Collection<? extends @NotNull Integer> c) {
 		boolean changed = false;
-		for (final Integer key : c)
+		for (final Integer key : c) {
 			changed |= bcAddKey(iv, key);
+		}
 		return changed;
 	}
 
@@ -313,8 +316,9 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 		// KEY, VALUE schon vorhanden?
 		final Integer key = e.getKey();
 		final Integer val = e.getValue();
-		if (bcContainsKey(iv, key) && val.equals(bcGetValueOfKeyOrNull(iv, key)))
+		if (bcContainsKey(iv, key) && val.equals(bcGetValueOfKeyOrNull(iv, key))) {
 			return false;
+		}
 		// Hinzufügen, da neu KEY oder VALUE neu.
 		bcAddEntryReturnOldValueOrNull(iv, key, val);
 		return true;
@@ -332,8 +336,9 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	boolean bcAddAllEntries(final @NotNull DummyMapIntervall iv,
 			final @NotNull Collection<? extends @NotNull Entry<@NotNull Integer, @NotNull Integer>> c) {
 		boolean changed = false;
-		for (final @NotNull Entry<@NotNull Integer, @NotNull Integer> ent : c)
+		for (final @NotNull Entry<@NotNull Integer, @NotNull Integer> ent : c) {
 			changed |= bcAddEntry(iv, ent);
+		}
 		return changed;
 	}
 
@@ -361,9 +366,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return TRUE, falls alle Schlüssel (Keys) der Collection in dieser Datenstruktur existieren.
 	 */
 	boolean bcContainsAllKeys(final @NotNull DummyMapIntervall iv, final @NotNull Collection<?> c) {
-		for (final @NotNull Object key : c)
-			if (!bcContainsKey(iv, key))
+		for (final @NotNull Object key : c) {
+			if (!bcContainsKey(iv, key)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -377,9 +384,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return TRUE, falls der Wert (Value) in dieser Datenstruktur existiert.
 	 */
 	boolean bcContainsValue(final @NotNull DummyMapIntervall iv, final @NotNull Object value) {
-		for (int i = iv.min(); i <= iv.max(); i++)
-			if (valEqual(_isMapped[i], value))
+		for (int i = iv.min(); i <= iv.max(); i++) {
+			if (valEqual(_isMapped[i], value)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -393,9 +402,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return TRUE, falls alle Werte (Values) der Collection in dieser Datenstruktur existieren.
 	 */
 	boolean bcContainsAllValues(final @NotNull DummyMapIntervall iv, final @NotNull Collection<?> c) {
-		for (final Object obj : c)
-			if (!bcContainsValue(iv, obj))
+		for (final Object obj : c) {
+			if (!bcContainsValue(iv, obj)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -410,14 +421,17 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	@SuppressWarnings("unchecked")
 	boolean bcContainsEntry(final @NotNull DummyMapIntervall iv, final Object o) {
-		if (!(o instanceof Entry<?, ?>))
+		if (!(o instanceof Entry<?, ?>)) {
 			return false;
+		}
 		final @NotNull Entry<@NotNull Integer, @NotNull Integer> e = (@NotNull Entry<@NotNull Integer, @NotNull Integer>) o;
-		final int key = (Integer) e.getKey();
-		if (!iv.contains(key))
+		final int key = e.getKey();
+		if (!iv.contains(key)) {
 			return false;
-		if (_isMapped[key] == null)
+		}
+		if (_isMapped[key] == null) {
 			return false;
+		}
 		return _isMapped[key].equals(e.getValue());
 	}
 
@@ -431,9 +445,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return TRUE, falls alle Entries in dieser Datenstruktur existieren.
 	 */
 	boolean bcContainsAllEntries(final @NotNull DummyMapIntervall iv, final @NotNull Collection<?> c) {
-		for (final Object obj : c)
-			if (!bcContainsEntry(iv, obj))
+		for (final Object obj : c) {
+			if (!bcContainsEntry(iv, obj)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -449,8 +465,9 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	Integer bcRemoveKeyReturnOldValue(final @NotNull DummyMapIntervall iv, final @NotNull Object objKey) {
 		final int key = (Integer) objKey;
-		if (!iv.contains(key))
+		if (!iv.contains(key)) {
 			return null; // keine Exception (analog zur JAVA-TreeMap-Implementation)
+		}
 		final Integer oldValue = _isMapped[key];
 		_isMapped[key] = null;
 		return oldValue;
@@ -467,8 +484,9 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	boolean bcRemoveAllKeyReturnBool(final @NotNull DummyMapIntervall iv, final @NotNull Collection<?> c) {
 		boolean changed = false;
-		for (final @NotNull Object obj : c)
+		for (final @NotNull Object obj : c) {
 			changed |= removeKeyReturnBool(iv, obj);
+		}
 		return changed;
 	}
 
@@ -482,8 +500,9 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	@SuppressWarnings({ "unchecked" })
 	boolean bcRemoveEntryReturnBool(final @NotNull DummyMapIntervall iv, final @NotNull Object o) {
-		if (!bcContainsEntry(iv, o))
+		if (!bcContainsEntry(iv, o)) {
 			return false;
+		}
 		final @NotNull Entry<@NotNull Integer, @NotNull Integer> e = (@NotNull Entry<@NotNull Integer, @NotNull Integer>) o;
 		return removeKeyReturnBool(iv, e.getKey());
 	}
@@ -499,8 +518,9 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	boolean bcRemoveAllEntriesReturnBool(final @NotNull DummyMapIntervall iv, final @NotNull Collection<?> c) {
 		boolean changed = false;
-		for (final @NotNull Object obj : c)
+		for (final @NotNull Object obj : c) {
 			changed |= bcRemoveEntryReturnBool(iv, obj);
+		}
 		return changed;
 	}
 
@@ -513,12 +533,13 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return Entfernt und liefert das erste Entry dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
 	Entry<@NotNull Integer, @NotNull Integer> bcPollFirstEntryOrNull(final @NotNull DummyMapIntervall iv) {
-		for (int i = iv.min(); i <= iv.max(); i++)
+		for (int i = iv.min(); i <= iv.max(); i++) {
 			if (_isMapped[i] != null) {
 				final Entry<Integer, Integer> e = new DummyMapEntry(i, _isMapped[i]);
 				_isMapped[i] = null;
 				return e;
 			}
+		}
 		return null;
 	}
 
@@ -531,11 +552,12 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return Entfernt und liefert den ersten Schlüssel (Key) dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
 	Integer bcPollFirstKeyOrNull(final @NotNull DummyMapIntervall iv) {
-		for (int i = iv.min(); i <= iv.max(); i++)
+		for (int i = iv.min(); i <= iv.max(); i++) {
 			if (_isMapped[i] != null) {
 				_isMapped[i] = null;
 				return i;
 			}
+		}
 		return null;
 	}
 
@@ -548,12 +570,13 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return Entfernt und liefert das letzte Entry dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
 	Entry<@NotNull Integer, @NotNull Integer> bcPollLastEntryOrNull(final @NotNull DummyMapIntervall iv) {
-		for (int i = iv.max(); i >= iv.min(); i--)
+		for (int i = iv.max(); i >= iv.min(); i--) {
 			if (_isMapped[i] != null) {
 				final Entry<Integer, Integer> e = new DummyMapEntry(i, _isMapped[i]);
 				_isMapped[i] = null;
 				return e;
 			}
+		}
 		return null;
 	}
 
@@ -566,11 +589,12 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return Entfernt und liefert den letzten Schlüssel (Key) dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
 	Integer bcPollLastKeyOrNull(final @NotNull DummyMapIntervall iv) {
-		for (int i = iv.max(); i >= iv.min(); i--)
+		for (int i = iv.max(); i >= iv.min(); i--) {
 			if (_isMapped[i] != null) {
 				_isMapped[i] = null;
 				return i;
 			}
+		}
 		return null;
 	}
 
@@ -586,8 +610,9 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	Integer bcAddEntryReturnOldValueOrNull(final @NotNull DummyMapIntervall iv, final @NotNull Integer key,
 			final @NotNull Integer value) {
-		if (!(iv.contains(key)))
+		if (!(iv.contains(key))) {
 			throw new IllegalArgumentException("Der Schlüsselwert liegt nicht im gültigen Bereich.");
+		}
 		final Integer oldValue = _isMapped[key];
 		_isMapped[key] = value;
 		return oldValue;
@@ -602,8 +627,9 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	void bcAddAllEntriesOfMap(final @NotNull DummyMapIntervall iv,
 			final @NotNull Map<? extends @NotNull Integer, ? extends @NotNull Integer> map) {
-		for (final Entry<? extends @NotNull Integer, ? extends @NotNull Integer> e : map.entrySet())
+		for (final Entry<? extends @NotNull Integer, ? extends @NotNull Integer> e : map.entrySet()) {
 			bcAddEntryReturnOldValueOrNull(iv, e.getKey(), e.getValue());
+		}
 	}
 
 	/**
@@ -615,9 +641,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return TRUE, falls die Datenstruktur innerhalb der Intervallgrenzen leer ist.
 	 */
 	boolean bcIsEmpty(final @NotNull DummyMapIntervall iv) {
-		for (int i = iv.min(); i <= iv.max(); i++)
-			if (_isMapped[i] != null)
+		for (int i = iv.min(); i <= iv.max(); i++) {
+			if (_isMapped[i] != null) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -627,8 +655,9 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @param iv Das {@link DummyMapIntervall} dieser {@link DummyMap}.
 	 */
 	void bcClear(final @NotNull DummyMapIntervall iv) {
-		for (int i = iv.min(); i <= iv.max(); i++)
+		for (int i = iv.min(); i <= iv.max(); i++) {
 			_isMapped[i] = null;
+		}
 	}
 
 	/**
@@ -642,8 +671,9 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	Integer bcGetValueOfKeyOrNull(final @NotNull DummyMapIntervall iv, final @NotNull Object objKey) {
 		final int e = (Integer) objKey;
-		if (!iv.contains(e))
+		if (!iv.contains(e)) {
 			return null;
+		}
 		// throw new IllegalArgumentException("Der Schlüsselwert liegt nicht im gültigen Bereich.");
 		return _isMapped[e];
 	}
@@ -658,9 +688,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	int bcGetSize(final @NotNull DummyMapIntervall iv) {
 		int size = 0;
-		for (int i = iv.min(); i <= iv.max(); i++)
-			if (_isMapped[i] != null)
+		for (int i = iv.min(); i <= iv.max(); i++) {
+			if (_isMapped[i] != null) {
 				size++;
+			}
+		}
 		return size;
 	}
 
@@ -676,9 +708,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	Entry<@NotNull Integer, @NotNull Integer> bcGetLowerEntryOrNull(final @NotNull DummyMapIntervall iv,
 			final @NotNull Integer key) {
-		for (int i = Math.min(key - 1, iv.max()); i >= iv.min(); i--)
-			if (_isMapped[i] != null)
+		for (int i = Math.min(key - 1, iv.max()); i >= iv.min(); i--) {
+			if (_isMapped[i] != null) {
 				return new DummyMapEntry(i, _isMapped[i]);
+			}
+		}
 		return null;
 	}
 
@@ -693,9 +727,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return Den Vorgänger-Schlüssel des übergebenen Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
 	Integer bcGetLowerKeyOrNull(final @NotNull DummyMapIntervall iv, final @NotNull Integer key) {
-		for (int i = Math.min(key - 1, iv.max()); i >= iv.min(); i--)
-			if (_isMapped[i] != null)
+		for (int i = Math.min(key - 1, iv.max()); i >= iv.min(); i--) {
+			if (_isMapped[i] != null) {
 				return i;
+			}
+		}
 		return null;
 	}
 
@@ -713,9 +749,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	Entry<@NotNull Integer, @NotNull Integer> bcGetFloorEntryOrNull(final @NotNull DummyMapIntervall iv,
 			final @NotNull Integer key) {
-		for (int i = Math.min(key, iv.max()); i >= iv.min(); i--)
-			if (_isMapped[i] != null)
+		for (int i = Math.min(key, iv.max()); i >= iv.min(); i--) {
+			if (_isMapped[i] != null) {
 				return new DummyMapEntry(i, _isMapped[i]);
+			}
+		}
 		return null;
 	}
 
@@ -732,9 +770,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 *         andernfalls NULL.
 	 */
 	Integer bcGetFloorKeyOrNull(final @NotNull DummyMapIntervall iv, final @NotNull Integer key) {
-		for (int i = Math.min(key, iv.max()); i >= iv.min(); i--)
-			if (_isMapped[i] != null)
+		for (int i = Math.min(key, iv.max()); i >= iv.min(); i--) {
+			if (_isMapped[i] != null) {
 				return i;
+			}
+		}
 		return null;
 	}
 
@@ -752,9 +792,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	Entry<@NotNull Integer, @NotNull Integer> bcGetCeilingEntryOrNull(final @NotNull DummyMapIntervall iv,
 			final @NotNull Integer key) {
-		for (int i = Math.max(key, iv.min()); i <= iv.max(); i++)
-			if (_isMapped[i] != null)
+		for (int i = Math.max(key, iv.min()); i <= iv.max(); i++) {
+			if (_isMapped[i] != null) {
 				return new DummyMapEntry(i, _isMapped[i]);
+			}
+		}
 		return null;
 	}
 
@@ -771,9 +813,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 *         andernfalls NULL.
 	 */
 	Integer bcGetCeilingKeyOrNull(final @NotNull DummyMapIntervall iv, final @NotNull Integer key) {
-		for (int i = Math.max(key, iv.min()); i <= iv.max(); i++)
-			if (_isMapped[i] != null)
+		for (int i = Math.max(key, iv.min()); i <= iv.max(); i++) {
+			if (_isMapped[i] != null) {
 				return i;
+			}
+		}
 		return null;
 	}
 
@@ -789,9 +833,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	Entry<@NotNull Integer, @NotNull Integer> bcGetHigherEntryOrNull(final @NotNull DummyMapIntervall iv,
 			final @NotNull Integer key) {
-		for (int i = Math.max(key + 1, iv.min()); i <= iv.max(); i++)
-			if (_isMapped[i] != null)
+		for (int i = Math.max(key + 1, iv.min()); i <= iv.max(); i++) {
+			if (_isMapped[i] != null) {
 				return new DummyMapEntry(i, _isMapped[i]);
+			}
+		}
 		return null;
 	}
 
@@ -806,9 +852,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return Den Nachfolger-Schlüssel des übergebenen Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
 	Integer bcGetHigherKeyOrNull(final @NotNull DummyMapIntervall iv, final @NotNull Integer key) {
-		for (int i = Math.max(key + 1, iv.min()); i <= iv.max(); i++)
-			if (_isMapped[i] != null)
+		for (int i = Math.max(key + 1, iv.min()); i <= iv.max(); i++) {
+			if (_isMapped[i] != null) {
 				return i;
+			}
+		}
 		return null;
 	}
 
@@ -821,9 +869,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return Das erste Entry dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
 	Entry<@NotNull Integer, @NotNull Integer> bcGetFirstEntryOrNull(final @NotNull DummyMapIntervall iv) {
-		for (int i = iv.min(); i <= iv.max(); i++)
-			if (_isMapped[i] != null)
+		for (int i = iv.min(); i <= iv.max(); i++) {
+			if (_isMapped[i] != null) {
 				return new DummyMapEntry(i, _isMapped[i]);
+			}
+		}
 		return null;
 	}
 
@@ -838,9 +888,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	@NotNull
 	Integer bcGetFirstKeyOrException(final @NotNull DummyMapIntervall iv) {
-		for (int i = iv.min(); i <= iv.max(); i++)
-			if (_isMapped[i] != null)
+		for (int i = iv.min(); i <= iv.max(); i++) {
+			if (_isMapped[i] != null) {
 				return i;
+			}
+		}
 		throw new NoSuchElementException();
 	}
 
@@ -853,9 +905,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 * @return Liefert das letzte Entry dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
 	Entry<@NotNull Integer, @NotNull Integer> bcGetLastEntryOrNull(final @NotNull DummyMapIntervall iv) {
-		for (int i = iv.max(); i >= iv.min(); i--)
-			if (_isMapped[i] != null)
+		for (int i = iv.max(); i >= iv.min(); i--) {
+			if (_isMapped[i] != null) {
 				return new DummyMapEntry(i, _isMapped[i]);
+			}
+		}
 		return null;
 	}
 
@@ -870,9 +924,11 @@ public final class DummyMap implements NavigableMap<Integer, Integer> {
 	 */
 	@NotNull
 	Integer bcGetLastKeyOrException(final @NotNull DummyMapIntervall iv) {
-		for (int i = iv.max(); i >= iv.min(); i--)
-			if (_isMapped[i] != null)
+		for (int i = iv.max(); i >= iv.min(); i--) {
+			if (_isMapped[i] != null) {
 				return i;
+			}
+		}
 		throw new NoSuchElementException();
 	}
 

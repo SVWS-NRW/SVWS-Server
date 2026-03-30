@@ -90,17 +90,21 @@ public final class DummyMapIntervall {
 	 */
 	boolean isOutOfRange(final int x, final boolean inc) {
 
-		if (x < from)
+		if (x < from) {
 			return true;
+		}
 
-		if ((x == from) && (!fromInc) && (inc))
+		if ((x == from) && (!fromInc) && (inc)) {
 			return true;
+		}
 
-		if (x > to)
+		if (x > to) {
 			return true;
+		}
 
-		if ((x == to) && (!toInc) && (inc))
+		if ((x == to) && (!toInc) && (inc)) {
 			return true;
+		}
 
 		return false;
 	}

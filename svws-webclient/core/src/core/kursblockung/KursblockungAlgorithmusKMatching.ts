@@ -37,8 +37,9 @@ export class KursblockungAlgorithmusKMatching extends KursblockungAlgorithmusK {
 	public berechne(pEndzeit: number): void {
 		const current: number = System.currentTimeMillis();
 		const halbzeit: number = current + (Math.trunc((pEndzeit - current) / 2));
-		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0)
+		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0) {
 			return;
+		}
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 		this.dynDaten.aktionKurseFreieZufaelligVerteilen();
 		this.dynDaten.aktionZustandSpeichernK();

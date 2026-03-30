@@ -46,8 +46,9 @@ public final class DummySetIterator implements Iterator<Integer> {
 
 	@Override
 	public Integer next() {
-		if (_next == null)
+		if (_next == null) {
 			throw new NoSuchElementException();
+		}
 		_current = _next;
 		_next = _parent.higher(_next);
 		return _current;

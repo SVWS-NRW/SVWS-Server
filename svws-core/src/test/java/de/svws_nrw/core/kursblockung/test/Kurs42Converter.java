@@ -63,8 +63,9 @@ public class Kurs42Converter {
 
 			// Doppelter Kursname?
 			final String sKursname = k42kurs.Name;
-			if (mapKurse.containsKey(sKursname))
+			if (mapKurse.containsKey(sKursname)) {
 				throw new DeveloperNotificationException("Kurs42-Kurse-Inkonsistenz: Kurs '" + sKursname + "' existiert doppelt.");
+			}
 
 			// Neues Fach? --> Map
 			final String sFachKuerzel = k42kurs.Fach;
@@ -80,15 +81,17 @@ public class Kurs42Converter {
 			final String sKursartKuerzel = convertKursart(k42kurs.Kursart);
 			if (!mapKursarten.containsKey(sKursartKuerzel)) {
 				final GostKursart gKursart = GostKursart.fromKuerzel(sKursartKuerzel);
-				if (gKursart == null)
+				if (gKursart == null) {
 					throw new DeveloperNotificationException("GostKursart.fromKuerzel(" + sKursartKuerzel + ") == null");
+				}
 				mapKursarten.put(sKursartKuerzel, gKursart);
 			}
 
 			// Neue Fachart? --> Map
 			final String sFachart = sFachKuerzel + ";" + sKursartKuerzel;
-			if (!mapFachart.containsKey(sFachart))
+			if (!mapFachart.containsKey(sFachart)) {
 				mapFachart.put(sFachart, new LinkedList<>());
+			}
 
 			// Neuen Kurs erzeugen. Dem Map und ArrayList hinzufügen.
 			final GostBlockungKurs gKurs = new GostBlockungKurs();
@@ -106,8 +109,9 @@ public class Kurs42Converter {
 		for (final Kurs42DataFachwahlen k42fachwahl : CsvReader.fromResource(pPfad + "Fachwahlen.txt", Kurs42DataFachwahlen.class)) {
 			// Schüler unbekannt?
 			final String sSchueler = getKeySchueler(k42fachwahl);
-			if (!mapSchueler.containsKey(sSchueler))
+			if (!mapSchueler.containsKey(sSchueler)) {
 				throw new DeveloperNotificationException("Kurs42-Fachwahlen-Inkonsistenz: Schüler (" + sSchueler + ") unbekannt!");
+			}
 
 			// Neues Fach? --> Map
 			final String sFachKuerzel = k42fachwahl.Fachkrz;
@@ -122,16 +126,18 @@ public class Kurs42Converter {
 			final String sKursartKuerzel = convertKursart(k42fachwahl.Kursart);
 			if (!mapKursarten.containsKey(sKursartKuerzel)) {
 				final GostKursart gKursart = GostKursart.fromKuerzel(sKursartKuerzel);
-				if (gKursart == null)
+				if (gKursart == null) {
 					throw new NullPointerException("GostKursart.fromKuerzel(" + sKursartKuerzel + ") == null");
+				}
 				mapKursarten.put(sKursartKuerzel, gKursart);
 			}
 
 			// Schüler hat doppelte Fachwahl?
 			final String sFachwahl = sSchueler + ";" + sFachKuerzel + ";" + sKursartKuerzel;
-			if (mapFachwahlen.containsKey(sFachwahl))
+			if (mapFachwahlen.containsKey(sFachwahl)) {
 				throw new DeveloperNotificationException(
 						"Kurs42-Fachwahlen: Schüler (" + sSchueler + ") hat die Fachwahl (" + sFachKuerzel + ";" + sKursartKuerzel + ") doppelt!");
+			}
 
 			// Fachwahl erzeugen
 			final GostFachwahl gFachwahl = new GostFachwahl();
@@ -147,8 +153,9 @@ public class Kurs42Converter {
 
 			// Kurs unbekannt?
 			final String sKursname = k42blockplan.Kursbezeichnung;
-			if (!mapKurse.containsKey(sKursname))
+			if (!mapKurse.containsKey(sKursname)) {
 				throw new DeveloperNotificationException("Kurs42-Blockplan-Inkonsistenz: Kurs (" + sKursname + ") existiert nicht in 'Kurse.txt'.");
+			}
 
 			// Schienenanzahl erhöhen?
 			final int gSchiene = k42blockplan.Schiene + 1;

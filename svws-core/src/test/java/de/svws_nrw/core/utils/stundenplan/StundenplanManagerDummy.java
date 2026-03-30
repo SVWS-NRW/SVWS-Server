@@ -30,68 +30,80 @@ public final class StundenplanManagerDummy {
 
 	private static final @NotNull Comparator<@NotNull StundenplanFach> _compFach =
 			(final @NotNull StundenplanFach a, final @NotNull StundenplanFach b) -> {
-				if (a.sortierung < b.sortierung)
+				if (a.sortierung < b.sortierung) {
 					return -1;
-				if (a.sortierung > b.sortierung)
+				}
+				if (a.sortierung > b.sortierung) {
 					return +1;
+				}
 				final int result = a.kuerzel.compareTo(b.kuerzel);
-				if (result != 0)
+				if (result != 0) {
 					return result;
+				}
 				return Long.compare(a.id, b.id);
 			};
 
 	private static final @NotNull Comparator<@NotNull StundenplanRaum> _compRaum =
 			(final @NotNull StundenplanRaum a, final @NotNull StundenplanRaum b) -> {
 				final int result = a.kuerzel.compareTo(b.kuerzel);
-				if (result != 0)
+				if (result != 0) {
 					return result;
+				}
 				return Long.compare(a.id, b.id);
 			};
 
 	private static final @NotNull Comparator<@NotNull StundenplanLehrer> _compLehrer =
 			(final @NotNull StundenplanLehrer a, final @NotNull StundenplanLehrer b) -> {
 				final int result = a.kuerzel.compareTo(b.kuerzel);
-				if (result != 0)
+				if (result != 0) {
 					return result;
+				}
 				return Long.compare(a.id, b.id);
 			};
 
 	private static final @NotNull Comparator<@NotNull StundenplanKlasse> _compKlasse =
 			(final @NotNull StundenplanKlasse a, final @NotNull StundenplanKlasse b) -> {
 				final int result = a.kuerzel.compareTo(b.kuerzel);
-				if (result != 0)
+				if (result != 0) {
 					return result;
+				}
 				return Long.compare(a.id, b.id);
 			};
 
 	private static final @NotNull Comparator<@NotNull StundenplanSchueler> _compSchueler =
 			(final @NotNull StundenplanSchueler a, final @NotNull StundenplanSchueler b) -> {
-				if (a.idKlasse < b.idKlasse)
+				if (a.idKlasse < b.idKlasse) {
 					return -1;
-				if (a.idKlasse > b.idKlasse)
+				}
+				if (a.idKlasse > b.idKlasse) {
 					return +1;
+				}
 				final int cmpNachname = a.nachname.compareTo(b.nachname);
-				if (cmpNachname != 0)
+				if (cmpNachname != 0) {
 					return cmpNachname;
+				}
 				final int cmpVorname = a.vorname.compareTo(b.vorname);
-				if (cmpVorname != 0)
+				if (cmpVorname != 0) {
 					return cmpVorname;
+				}
 				return Long.compare(a.id, b.id);
 			};
 
 	private static final @NotNull Comparator<@NotNull StundenplanJahrgang> _compJahrgang =
 			(final @NotNull StundenplanJahrgang a, final @NotNull StundenplanJahrgang b) -> {
 				final int result = a.kuerzel.compareTo(b.kuerzel);
-				if (result != 0)
+				if (result != 0) {
 					return result;
+				}
 				return Long.compare(a.id, b.id);
 			};
 
 	private static final @NotNull Comparator<@NotNull StundenplanAufsichtsbereich> _compAufsichtsbereich =
 			(final @NotNull StundenplanAufsichtsbereich a, final @NotNull StundenplanAufsichtsbereich b) -> {
 				final int result = a.kuerzel.compareTo(b.kuerzel);
-				if (result != 0)
+				if (result != 0) {
 					return result;
+				}
 				return Long.compare(a.id, b.id);
 			};
 
@@ -164,8 +176,9 @@ public final class StundenplanManagerDummy {
 		final @NotNull List<@NotNull StundenplanFach> fachList = new ArrayList<>();
 
 		final int size = rnd.nextInt(5);
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < size; i++) {
 			fachList.add(fachCreateRandom(rnd));
+		}
 
 		return fachList;
 	}
@@ -190,15 +203,18 @@ public final class StundenplanManagerDummy {
 		// check
 		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanFach fach : list) {
-			if (_fachmap.containsKey(fach.id))
+			if (_fachmap.containsKey(fach.id)) {
 				throw new DeveloperNotificationException("fachAddAll: Fach-ID existiert bereits!");
-			if (!setOfIDs.add(fach.id))
+			}
+			if (!setOfIDs.add(fach.id)) {
 				throw new DeveloperNotificationException("fachAddAll: Doppelte Fach-ID in der Liste!");
+			}
 		}
 
 		// add
-		for (final @NotNull StundenplanFach fach : list)
+		for (final @NotNull StundenplanFach fach : list) {
 			fachAdd(fach);
+		}
 	}
 
 	/**
@@ -265,8 +281,9 @@ public final class StundenplanManagerDummy {
 		final @NotNull List<@NotNull @NotNull StundenplanRaum> raumList = new ArrayList<>();
 
 		final int size = rnd.nextInt(5);
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < size; i++) {
 			raumList.add(raumCreateRandom(rnd));
+		}
 
 		return raumList;
 	}
@@ -280,15 +297,18 @@ public final class StundenplanManagerDummy {
 		// check
 		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanRaum raum : list) {
-			if (_raummap.containsKey(raum.id))
+			if (_raummap.containsKey(raum.id)) {
 				throw new DeveloperNotificationException("raumAddAll: Raum-ID existiert bereits!");
-			if (!setOfIDs.add(raum.id))
+			}
+			if (!setOfIDs.add(raum.id)) {
 				throw new DeveloperNotificationException("raumAddAll: Doppelte Raum-ID in 'list'!");
+			}
 		}
 
 		// add
-		for (final @NotNull StundenplanRaum raum : list)
+		for (final @NotNull StundenplanRaum raum : list) {
 			raumAdd(raum);
+		}
 	}
 
 	/**
@@ -343,15 +363,18 @@ public final class StundenplanManagerDummy {
 		// check
 		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanRaum raum : list) {
-			if (!_raummap.containsKey(raum.id))
+			if (!_raummap.containsKey(raum.id)) {
 				throw new DeveloperNotificationException("raumRemoveAll: Raum-ID existiert nicht!");
-			if (!setOfIDs.add(raum.id))
+			}
+			if (!setOfIDs.add(raum.id)) {
 				throw new DeveloperNotificationException("raumRemoveAll: Doppelte Raum-ID in der Liste!");
+			}
 		}
 
 		// add
-		for (final @NotNull StundenplanRaum raum : list)
+		for (final @NotNull StundenplanRaum raum : list) {
 			raumRemoveById(raum.id);
+		}
 	}
 
 	/**
@@ -382,8 +405,9 @@ public final class StundenplanManagerDummy {
 		final @NotNull List<@NotNull @NotNull StundenplanSchueler> schuelerList = new ArrayList<>();
 
 		final int size = rnd.nextInt(5);
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < size; i++) {
 			schuelerList.add(schuelerCreateRandom(rnd));
+		}
 
 		return schuelerList;
 	}
@@ -411,16 +435,19 @@ public final class StundenplanManagerDummy {
 		// check
 		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanSchueler lehrer : list) {
-			if (_schuelermap.containsKey(lehrer.id))
+			if (_schuelermap.containsKey(lehrer.id)) {
 				throw new DeveloperNotificationException("schuelerAddAll: Schüler-ID existiert bereits!");
-			if (!setOfIDs.add(lehrer.id))
+			}
+			if (!setOfIDs.add(lehrer.id)) {
 				throw new DeveloperNotificationException("schuelerAddAll: Doppelte Schüler-ID in 'list'!");
 			// Hinweis: Kein check der Klassenreferenz, der Check wird umgekehrt gemacht.
+			}
 		}
 
 		// add
-		for (final @NotNull StundenplanSchueler schueler : list)
+		for (final @NotNull StundenplanSchueler schueler : list) {
 			schuelerAdd(schueler);
+		}
 	}
 
 	/**
@@ -444,8 +471,9 @@ public final class StundenplanManagerDummy {
 	public @NotNull List<@NotNull StundenplanSchueler> schuelerGetMengeByKlasseIdAsListOrException(final long idKlasse) {
 		final @NotNull List<@NotNull StundenplanSchueler> listSchueler = new ArrayList<>();
 
-		for (final @NotNull Long idSchueler : DeveloperNotificationException.ifMapGetIsNull(_klassemap, idKlasse).schueler)
+		for (final @NotNull Long idSchueler : DeveloperNotificationException.ifMapGetIsNull(_klassemap, idKlasse).schueler) {
 			listSchueler.add(DeveloperNotificationException.ifMapGetIsNull(_schuelermap, idSchueler));
+		}
 
 		listSchueler.sort(_compSchueler);
 		return listSchueler;
@@ -485,12 +513,15 @@ public final class StundenplanManagerDummy {
 		final @NotNull StundenplanJahrgang jahrgang = new StundenplanJahrgang();
 		jahrgang.id = rnd.nextLong(JAHRGANG_MAX_ID);
 		jahrgang.kuerzel = "" + (jahrgang.id + 1);
-		if (jahrgang.id == (JAHRGANG_MAX_ID - 1))
+		if (jahrgang.id == (JAHRGANG_MAX_ID - 1)) {
 			jahrgang.kuerzel = "Q2";
-		if (jahrgang.id == (JAHRGANG_MAX_ID - 2))
+		}
+		if (jahrgang.id == (JAHRGANG_MAX_ID - 2)) {
 			jahrgang.kuerzel = "Q1";
-		if (jahrgang.id == (JAHRGANG_MAX_ID - 3))
+		}
+		if (jahrgang.id == (JAHRGANG_MAX_ID - 3)) {
 			jahrgang.kuerzel = "EF";
+		}
 		jahrgang.bezeichnung = "Bezeichung von " + jahrgang.kuerzel;
 		return jahrgang;
 	}
@@ -506,8 +537,9 @@ public final class StundenplanManagerDummy {
 		final @NotNull List<@NotNull @NotNull StundenplanJahrgang> jahrgangList = new ArrayList<>();
 
 		final int size = rnd.nextInt(5);
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < size; i++) {
 			jahrgangList.add(jahrgangCreateRandom(rnd));
+		}
 
 		return jahrgangList;
 	}
@@ -535,15 +567,18 @@ public final class StundenplanManagerDummy {
 		// check
 		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanJahrgang jahrgang : list) {
-			if (_jahrgangmap.containsKey(jahrgang.id))
+			if (_jahrgangmap.containsKey(jahrgang.id)) {
 				throw new DeveloperNotificationException("jahrgangAddAll: Jahrgang-ID existiert bereits!");
-			if (!setOfIDs.add(jahrgang.id))
+			}
+			if (!setOfIDs.add(jahrgang.id)) {
 				throw new DeveloperNotificationException("jahrgangAddAll: Doppelte Jahrgang-ID in 'list'!");
+			}
 		}
 
 		// add
-		for (final @NotNull StundenplanJahrgang jahrgang : list)
+		for (final @NotNull StundenplanJahrgang jahrgang : list) {
 			jahrgangAdd(jahrgang);
+		}
 	}
 
 	/**
@@ -566,8 +601,9 @@ public final class StundenplanManagerDummy {
 	 */
 	public void jahrgangPatchAttributes(final @NotNull StundenplanJahrgang jahrgang) {
 		// check
-		if (!_jahrgangmap.containsKey(jahrgang.id))
+		if (!_jahrgangmap.containsKey(jahrgang.id)) {
 			throw new DeveloperNotificationException("jahrgangPatchAttributes: Jahrgang-ID existiert nicht!");
+		}
 
 		// Altes Objekt durch neues Objekt ersetzen
 		DeveloperNotificationException.ifMapRemoveFailes(_jahrgangmap, jahrgang.id);
@@ -608,15 +644,18 @@ public final class StundenplanManagerDummy {
 		// check
 		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : list) {
-			if (_aufsichtsbereichmap.containsKey(aufsichtsbereich.id))
+			if (_aufsichtsbereichmap.containsKey(aufsichtsbereich.id)) {
 				throw new DeveloperNotificationException("aufsichtsbereichAddAll: Aufsichtsbereich-ID existiert bereits!");
-			if (!setOfIDs.add(aufsichtsbereich.id))
+			}
+			if (!setOfIDs.add(aufsichtsbereich.id)) {
 				throw new DeveloperNotificationException("aufsichtsbereichAddAll: Doppelte Aufsichtsbereich-ID in 'list'!");
+			}
 		}
 
 		// add
-		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : list)
+		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : list) {
 			aufsichtsbereichAdd(aufsichtsbereich);
+		}
 	}
 
 	/**
@@ -645,8 +684,9 @@ public final class StundenplanManagerDummy {
 		final @NotNull List<@NotNull @NotNull StundenplanAufsichtsbereich> aufsichtsbereichList = new ArrayList<>();
 
 		final int size = rnd.nextInt(5);
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < size; i++) {
 			aufsichtsbereichList.add(aufsichtsbereichCreateRandom(rnd));
+		}
 
 		return aufsichtsbereichList;
 	}
@@ -671,8 +711,9 @@ public final class StundenplanManagerDummy {
 	 */
 	public void aufsichtsbereichPatchAttributes(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
 		// check
-		if (!_aufsichtsbereichmap.containsKey(aufsichtsbereich.id))
+		if (!_aufsichtsbereichmap.containsKey(aufsichtsbereich.id)) {
 			throw new DeveloperNotificationException("aufsichtsbereichPatchAttributes: Aufsichtsbereich-ID existiert nicht!");
+		}
 
 		// Altes Objekt durch neues Objekt ersetzen
 		DeveloperNotificationException.ifMapRemoveFailes(_aufsichtsbereichmap, aufsichtsbereich.id);
@@ -697,15 +738,18 @@ public final class StundenplanManagerDummy {
 		// check
 		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : list) {
-			if (!_aufsichtsbereichmap.containsKey(aufsichtsbereich.id))
+			if (!_aufsichtsbereichmap.containsKey(aufsichtsbereich.id)) {
 				throw new DeveloperNotificationException("aufsichtsbereichRemoveAll: Aufsichtsbereich-ID existiert nicht!");
-			if (!setOfIDs.add(aufsichtsbereich.id))
+			}
+			if (!setOfIDs.add(aufsichtsbereich.id)) {
 				throw new DeveloperNotificationException("aufsichtsbereichRemoveAll: Doppelte Aufsichtsbereich-ID in der Liste!");
+			}
 		}
 
 		// add
-		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : list)
+		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : list) {
 			aufsichtsbereichRemoveById(aufsichtsbereich.id);
+		}
 	}
 
 	/**
@@ -769,8 +813,9 @@ public final class StundenplanManagerDummy {
 		final @NotNull List<@NotNull @NotNull StundenplanZeitraster> zeitrasterList = new ArrayList<>();
 
 		final int size = rnd.nextInt(5);
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < size; i++) {
 			zeitrasterList.add(zeitrasterCreateRandom(rnd));
+		}
 
 		return zeitrasterList;
 	}
@@ -794,8 +839,9 @@ public final class StundenplanManagerDummy {
 	 */
 	public void zeitrasterAddAll(final @NotNull List<@NotNull StundenplanZeitraster> list) {
 		final @NotNull HashSet<@NotNull String> setOfWochentagStundeAlt = new HashSet<>();
-		for (final @NotNull StundenplanZeitraster z : _zeitrastermap.values())
+		for (final @NotNull StundenplanZeitraster z : _zeitrastermap.values()) {
 			setOfWochentagStundeAlt.add(z.wochentag + ";" + z.unterrichtstunde);
+		}
 
 		// check
 		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
@@ -817,8 +863,9 @@ public final class StundenplanManagerDummy {
 		}
 
 		// add
-		for (final @NotNull StundenplanZeitraster z : list)
+		for (final @NotNull StundenplanZeitraster z : list) {
 			_zeitrastermap.put(z.id, z);
+		}
 	}
 
 	/**
@@ -829,9 +876,11 @@ public final class StundenplanManagerDummy {
 	 * @return TRUE, falls ein {@link StundenplanZeitraster}-Objekt mit dem Wochentag existiert.
 	 */
 	public boolean zeitrasterExistsByWochentag(final int wochentag) {
-		for (final @NotNull StundenplanZeitraster zeitraster : _zeitrastermap.values())
-			if (zeitraster.wochentag == wochentag)
+		for (final @NotNull StundenplanZeitraster zeitraster : _zeitrastermap.values()) {
+			if (zeitraster.wochentag == wochentag) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -844,9 +893,11 @@ public final class StundenplanManagerDummy {
 	 * @return TRUE, falls ein {@link StundenplanZeitraster}-Objekt mit dem Wochentag existiert.
 	 */
 	public boolean zeitrasterExistsByWochentagAndStunde(final int wochentag, final int stunde) {
-		for (final @NotNull StundenplanZeitraster zeitraster : _zeitrastermap.values())
-			if ((zeitraster.wochentag == wochentag) && (zeitraster.unterrichtstunde == stunde))
+		for (final @NotNull StundenplanZeitraster zeitraster : _zeitrastermap.values()) {
+			if ((zeitraster.wochentag == wochentag) && (zeitraster.unterrichtstunde == stunde)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -865,8 +916,9 @@ public final class StundenplanManagerDummy {
 		lehrer.vorname = "Vorname " + lehrer.id;
 
 		final int nFaecher = rnd.nextInt(3);
-		for (int i = 0; i < nFaecher; i++)
+		for (int i = 0; i < nFaecher; i++) {
 			lehrer.faecher.add(rnd.nextLong(FACH_MAX_ID));
+		}
 
 		return lehrer;
 	}
@@ -882,8 +934,9 @@ public final class StundenplanManagerDummy {
 		final @NotNull List<@NotNull @NotNull StundenplanLehrer> lehrerList = new ArrayList<>();
 
 		final int size = rnd.nextInt(5);
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < size; i++) {
 			lehrerList.add(lehrerCreateRandom(rnd));
+		}
 
 		return lehrerList;
 	}
@@ -897,8 +950,9 @@ public final class StundenplanManagerDummy {
 	 */
 	public void lehrerAdd(final @NotNull StundenplanLehrer lehrer) throws DeveloperNotificationException {
 		// check
-		for (final @NotNull Long idFach : lehrer.faecher)
+		for (final @NotNull Long idFach : lehrer.faecher) {
 			DeveloperNotificationException.ifMapNotContains("_fachmap", _fachmap, idFach);
+		}
 
 		// add
 		DeveloperNotificationException.ifMapPutOverwrites(_lehrermap, lehrer.id, lehrer);
@@ -913,18 +967,23 @@ public final class StundenplanManagerDummy {
 		// check
 		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanLehrer lehrer : list) {
-			if (_lehrermap.containsKey(lehrer.id))
+			if (_lehrermap.containsKey(lehrer.id)) {
 				throw new DeveloperNotificationException("lehrerAddAll: Lehrer-ID existiert bereits!");
-			if (!setOfIDs.add(lehrer.id))
+			}
+			if (!setOfIDs.add(lehrer.id)) {
 				throw new DeveloperNotificationException("lehrerAddAll: Doppelte Lehrer-ID in 'list'!");
-			for (final @NotNull Long idFach : lehrer.faecher)
-				if (!_fachmap.containsKey(idFach))
+			}
+			for (final @NotNull Long idFach : lehrer.faecher) {
+				if (!_fachmap.containsKey(idFach)) {
 					throw new DeveloperNotificationException("lehrerAddAll: Fach-ID der Lehrkraft existiert nicht!");
+				}
+			}
 		}
 
 		// add
-		for (final @NotNull StundenplanLehrer lehrer : list)
+		for (final @NotNull StundenplanLehrer lehrer : list) {
 			lehrerAdd(lehrer);
+		}
 	}
 
 	/**
@@ -947,11 +1006,14 @@ public final class StundenplanManagerDummy {
 	 */
 	public void lehrerPatchAttributes(final @NotNull StundenplanLehrer lehrer) {
 		// check
-		if (!_lehrermap.containsKey(lehrer.id))
+		if (!_lehrermap.containsKey(lehrer.id)) {
 			throw new DeveloperNotificationException("lehrerPatchAttributes: Lehrer-ID existiert nicht!");
-		for (final @NotNull Long idFach : lehrer.faecher)
-			if (!_fachmap.containsKey(idFach))
+		}
+		for (final @NotNull Long idFach : lehrer.faecher) {
+			if (!_fachmap.containsKey(idFach)) {
 				throw new DeveloperNotificationException("lehrerPatchAttributes: Fach-ID der Lehrkraft existiert nicht!");
+			}
+		}
 
 		lehrerRemoveById(lehrer.id);
 		lehrerAdd(lehrer);
@@ -975,15 +1037,18 @@ public final class StundenplanManagerDummy {
 		// check
 		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
 		for (final @NotNull StundenplanLehrer lehrer : list) {
-			if (!_lehrermap.containsKey(lehrer.id))
+			if (!_lehrermap.containsKey(lehrer.id)) {
 				throw new DeveloperNotificationException("lehrerRemoveAll: Lehrer-ID existiert nicht!");
-			if (!setOfIDs.add(lehrer.id))
+			}
+			if (!setOfIDs.add(lehrer.id)) {
 				throw new DeveloperNotificationException("lehrerRemoveAll: Doppelte Lehrer-ID in der Liste!");
+			}
 		}
 
 		// add
-		for (final @NotNull StundenplanLehrer lehrer : list)
+		for (final @NotNull StundenplanLehrer lehrer : list) {
 			lehrerRemoveById(lehrer.id);
+		}
 	}
 
 	/**

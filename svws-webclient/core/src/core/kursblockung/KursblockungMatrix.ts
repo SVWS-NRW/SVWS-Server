@@ -259,8 +259,9 @@ export class KursblockungMatrix extends JavaObject {
 				let fromC: number = 0;
 				for (let ic: number = 0; ic < this.cols; ic++) {
 					const c: number = this.permC[ic];
-					if ((!this.abgearbeitetC[c]) && ((this.abgearbeitetC[fromC]) || (this.distanzC[c] < this.distanzC[fromC])))
+					if ((!this.abgearbeitetC[c]) && ((this.abgearbeitetC[fromC]) || (this.distanzC[c] < this.distanzC[fromC]))) {
 						fromC = c;
+					}
 				}
 				this.abgearbeitetC[fromC] = true;
 				const overR: number = this.c2r[fromC];
@@ -371,8 +372,9 @@ export class KursblockungMatrix extends JavaObject {
 				const wert: number = mitKnotenPotential ? ((this.matrix[r][c] + this.potentialR[r]) - this.potentialC[c]) : this.matrix[r][c];
 				const sWert1: StringBuilder = new StringBuilder();
 				const sWert2: StringBuilder = new StringBuilder("" + wert);
-				while ((sWert1.length() + sWert2.length()) < zellenbreite)
+				while ((sWert1.length() + sWert2.length()) < zellenbreite) {
 					sWert1.append(" ");
+				}
 				const sZusatz: string = (this.r2c[r] === c) ? "*" : " ";
 				sb.append(sWert1);
 				sb.append(sWert2);
@@ -392,9 +394,11 @@ export class KursblockungMatrix extends JavaObject {
 	 * @param bis Der größtmögliche zufällige Wert (inklusive).
 	 */
 	public fuelleMitZufallszahlenVonBis(von: number, bis: number): void {
-		for (let r: number = 0; r < this.rows; r++)
-			for (let c: number = 0; c < this.cols; c++)
+		for (let r: number = 0; r < this.rows; r++) {
+			for (let c: number = 0; c < this.cols; c++) {
 				this.matrix[r][c] = this._random.nextLong((bis - von) + 1) + von;
+			}
+		}
 	}
 
 	/**
@@ -403,9 +407,11 @@ export class KursblockungMatrix extends JavaObject {
 	 * @param wert  Der Wert, der alle Zellen überschreibt.
 	 */
 	public fuelleMitWert(wert: number): void {
-		for (let r: number = 0; r < this.rows; r++)
-			for (let c: number = 0; c < this.cols; c++)
+		for (let r: number = 0; r < this.rows; r++) {
+			for (let c: number = 0; c < this.cols; c++) {
 				this.matrix[r][c] = wert;
+			}
+		}
 	}
 
 	/**

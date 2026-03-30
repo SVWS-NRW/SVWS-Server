@@ -29,8 +29,9 @@ public final class KursblockungAlgorithmusPermanentKSchuelervorschlag extends Ku
 		super(random, logger, input);
 
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
-		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
+		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) {
 			return;
+		}
 
 		// Erzeuge einen zufälligen Startzustand für Kurse und SuS.
 		dynDaten.aktionSchuelerAusAllenKursenEntfernen();
@@ -64,9 +65,10 @@ public final class KursblockungAlgorithmusPermanentKSchuelervorschlag extends Ku
 		dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 
 		// Verteile SuS nach Schülerwunsch.
-		boolean kurslagenveraenderung = dynDaten.aktionKurseVerteilenNachSchuelerwunsch();
-		if (!kurslagenveraenderung)
+		final boolean kurslagenveraenderung = dynDaten.aktionKurseVerteilenNachSchuelerwunsch();
+		if (!kurslagenveraenderung) {
 			dynDaten.aktionKursVerteilenEinenZufaelligenFreien();
+		}
 
 		// Schülerverteilungsstrategie 1
 		dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();

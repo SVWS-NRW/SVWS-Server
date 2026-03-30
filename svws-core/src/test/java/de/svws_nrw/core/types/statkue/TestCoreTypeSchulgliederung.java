@@ -34,8 +34,9 @@ class TestCoreTypeSchulgliederung {
 	@DisplayName("Teste ob die Schulformen mindestens eine Schulgliederungen haben")
 	void testSchulformMindestensEineSchulgliederung() {
 		for (final Schulform sf : Schulform.values()) {
-			if (Schulgliederung.getBySchuljahrAndSchulform(2022, sf).size() <= 0)
+			if (Schulgliederung.getBySchuljahrAndSchulform(2022, sf).size() <= 0) {
 				fail("Keine Schulgliederungen für die Schulform " + sf.name() + " gefunden.");
+			}
 		}
 	}
 
@@ -47,8 +48,9 @@ class TestCoreTypeSchulgliederung {
 	void testSchulgliederungMindestensEineSchulform() {
 		for (final Schulgliederung gl : Schulgliederung.values()) {
 			final SchulgliederungKatalogEintrag k = gl.daten(2024);
-			if ((k != null) && (k.schulformen.size() <= 0))
+			if ((k != null) && (k.schulformen.size() <= 0)) {
 				fail("Keine Schulform für die Schulgliederung " + gl.name() + "angegeben.");
+			}
 		}
 	}
 

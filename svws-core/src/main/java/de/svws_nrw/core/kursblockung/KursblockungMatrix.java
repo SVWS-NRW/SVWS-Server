@@ -290,8 +290,9 @@ public class KursblockungMatrix {
 				int fromC = 0;
 				for (int ic = 0; ic < cols; ic++) {
 					final int c = permC[ic]; // zufällige C-Reihenfolge
-					if ((!abgearbeitetC[c]) && ((abgearbeitetC[fromC]) || (distanzC[c] < distanzC[fromC])))
+					if ((!abgearbeitetC[c]) && ((abgearbeitetC[fromC]) || (distanzC[c] < distanzC[fromC]))) {
 						fromC = c;
+					}
 				}
 				abgearbeitetC[fromC] = true;
 
@@ -411,8 +412,9 @@ public class KursblockungMatrix {
 				final long wert = mitKnotenPotential ? ((matrix[r][c] + potentialR[r]) - potentialC[c]) : matrix[r][c];
 				final @NotNull StringBuilder sWert1 = new StringBuilder();          // leading spaces
 				final @NotNull StringBuilder sWert2 = new StringBuilder("" + wert); // value
-				while ((sWert1.length() + sWert2.length()) < zellenbreite)
+				while ((sWert1.length() + sWert2.length()) < zellenbreite) {
 					sWert1.append(" ");
+				}
 				final @NotNull String sZusatz = (r2c[r] == c) ? "*" : " ";
 				sb.append(sWert1);
 				sb.append(sWert2);
@@ -432,9 +434,11 @@ public class KursblockungMatrix {
 	 * @param bis Der größtmögliche zufällige Wert (inklusive).
 	 */
 	public void fuelleMitZufallszahlenVonBis(final int von, final int bis) {
-		for (int r = 0; r < rows; r++)
-			for (int c = 0; c < cols; c++)
+		for (int r = 0; r < rows; r++) {
+			for (int c = 0; c < cols; c++) {
 				matrix[r][c] = _random.nextLong((bis - von) + 1L) + von;
+			}
+		}
 	}
 
 	/**
@@ -443,9 +447,11 @@ public class KursblockungMatrix {
 	 * @param wert  Der Wert, der alle Zellen überschreibt.
 	 */
 	public void fuelleMitWert(final long wert) {
-		for (int r = 0; r < rows; r++)
-			for (int c = 0; c < cols; c++)
+		for (int r = 0; r < rows; r++) {
+			for (int c = 0; c < cols; c++) {
 				matrix[r][c] = wert;
+			}
+		}
 	}
 
 

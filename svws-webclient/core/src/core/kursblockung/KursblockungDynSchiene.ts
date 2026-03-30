@@ -70,8 +70,9 @@ export class KursblockungDynSchiene extends JavaObject {
 			throw new DeveloperNotificationException(fehler)
 		}
 		kurs1.gibFachart().aktionSchieneWurdeHinzugefuegt(this);
-		for (const kurs2 of this.kursMap.values())
+		for (const kurs2 of this.kursMap.values()) {
 			this.statistik.aktionKurspaarInSchieneHinzufuegen(kurs1, kurs2);
+		}
 		this.kursMap.put(kursID, kurs1);
 	}
 
@@ -89,8 +90,9 @@ export class KursblockungDynSchiene extends JavaObject {
 		}
 		this.kursMap.remove(kursID);
 		kurs1.gibFachart().aktionSchieneWurdeEntfernt(this);
-		for (const kurs2 of this.kursMap.values())
+		for (const kurs2 of this.kursMap.values()) {
 			this.statistik.aktionKurspaarInSchieneEntfernen(kurs1, kurs2);
+		}
 	}
 
 	/**
@@ -121,9 +123,11 @@ export class KursblockungDynSchiene extends JavaObject {
 	gibAnzahlGleicherFacharten(): number {
 		const setFachart: HashSet<number> | null = new HashSet<number>();
 		let summe: number = 0;
-		for (const kurs of this.kursMap.values())
-			if (!setFachart.add(kurs.gibFachart().gibNr()))
+		for (const kurs of this.kursMap.values()) {
+			if (!setFachart.add(kurs.gibFachart().gibNr())) {
 				summe++;
+			}
+		}
 		return summe;
 	}
 
@@ -135,8 +139,9 @@ export class KursblockungDynSchiene extends JavaObject {
 	public debug(nurMultikurse: boolean): void {
 		this.logger.modifyIndent(+4);
 		for (const k of this.kursMap.values()) {
-			if ((nurMultikurse) && (k.gibSchienenAnzahl() < 2))
+			if ((nurMultikurse) && (k.gibSchienenAnzahl() < 2)) {
 				continue;
+			}
 			this.logger.logLn("    " + k.toString());
 		}
 		this.logger.modifyIndent(-4);
@@ -147,8 +152,9 @@ export class KursblockungDynSchiene extends JavaObject {
 	 */
 	public printlnKurse(): void {
 		console.log(JSON.stringify("Schiene " + (this.nr + 1)));
-		for (const k of this.kursMap.values())
+		for (const k of this.kursMap.values()) {
 			console.log(JSON.stringify("    ID " + k.gibDatenbankID() + ", " + k.gibFachart()));
+		}
 	}
 
 	/**
@@ -160,9 +166,11 @@ export class KursblockungDynSchiene extends JavaObject {
 		console.log(JSON.stringify("Schiene " + (this.nr + 1)));
 		for (const k of this.kursMap.values()) {
 			console.log(JSON.stringify("    ID " + k.gibDatenbankID() + ", " + k.gibFachart() + ", Fach-ID=" + k.gibFachID()));
-			for (const s of _schuelerArr)
-				if (s.gibIstInKurs(k))
+			for (const s of _schuelerArr) {
+				if (s.gibIstInKurs(k)) {
 					console.log(JSON.stringify("        ID " + s.gibDatenbankID() + ", " + s.gibRepresentation()));
+				}
+			}
 		}
 	}
 
@@ -172,9 +180,11 @@ export class KursblockungDynSchiene extends JavaObject {
 	 * @return true, falls in der Schiene nur Kurse der Kursart LK sind (oder keine Kurse).
 	 */
 	public gibHatNurLK(): boolean {
-		for (const k of this.kursMap.values())
-			if (k.gibFachart().gibKursart() as unknown !== GostKursart.LK as unknown)
+		for (const k of this.kursMap.values()) {
+			if (k.gibFachart().gibKursart() as unknown !== GostKursart.LK as unknown) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -184,9 +194,11 @@ export class KursblockungDynSchiene extends JavaObject {
 	 * @return true, falls in der Schiene keine Kurse der Kursart LK sind.
 	 */
 	public gibHatKeineLK(): boolean {
-		for (const k of this.kursMap.values())
-			if (k.gibFachart().gibKursart() as unknown === GostKursart.LK as unknown)
+		for (const k of this.kursMap.values()) {
+			if (k.gibFachart().gibKursart() as unknown === GostKursart.LK as unknown) {
 				return false;
+			}
+		}
 		return true;
 	}
 

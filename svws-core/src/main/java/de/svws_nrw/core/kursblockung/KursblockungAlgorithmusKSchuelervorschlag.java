@@ -48,8 +48,9 @@ public final class KursblockungAlgorithmusKSchuelervorschlag extends Kursblockun
 		final long halbzeit = current + ((pEndzeit - current) / 2);
 
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
-		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
+		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) {
 			return;
+		}
 
 		// Entferne SuS aus den Kursen (vorsichtshalber wegen alter Berechnungen).
 		dynDaten.aktionSchuelerAusAllenKursenEntfernen();

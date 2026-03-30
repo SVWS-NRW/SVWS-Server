@@ -188,10 +188,12 @@ public final class DummySetSub implements NavigableSet<Integer> {
 
 	private @NotNull NavigableSet<@NotNull Integer> createSet(final Integer from, final boolean fromInc, final @NotNull Integer to,
 			final boolean toInc) {
-		if (_iv.contains(from, fromInc))
+		if (_iv.contains(from, fromInc)) {
 			throw new IllegalArgumentException();
-		if (_iv.contains(to, toInc))
+		}
+		if (_iv.contains(to, toInc)) {
 			throw new IllegalArgumentException();
+		}
 		final DummySetIntervall info = new DummySetIntervall(from, fromInc, to, toInc);
 		return new DummySetSub(_par, info, _asc);
 	}
@@ -208,8 +210,9 @@ public final class DummySetSub implements NavigableSet<Integer> {
 
 	private ArrayList<Integer> getArrayListOfKeys() {
 		final ArrayList<Integer> list = new ArrayList<>();
-		for (final Integer key : this)
+		for (final Integer key : this) {
 			list.add(key);
+		}
 		return list;
 	}
 

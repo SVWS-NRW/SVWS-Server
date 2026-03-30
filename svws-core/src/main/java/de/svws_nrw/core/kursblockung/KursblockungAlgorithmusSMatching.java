@@ -91,8 +91,9 @@ public final class KursblockungAlgorithmusSMatching extends KursblockungAlgorith
 
 		// Schlechter? --> Kurszuordnung zurück.
 		final int cmp = dynDaten.gibStatistik().gibBewertungZustandS_NW_KD();
-		if (cmp < 0)
+		if (cmp < 0) {
 			schueler.aktionZustandLadenS();
+		}
 
 		// Besser?
 		return cmp > 0;

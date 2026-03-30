@@ -38,8 +38,9 @@ class SchuelerblockungTests {
 	@DisplayName("Testet den Schülerblockungs-Algorithmus mit randomisierten Daten.")
 	void testeSchuelerblockungAlgorithmusZufaellig() {
 		final Random lRandom = new Random(_SEED);
-		for (int i = 0; i < _ANZAHL_AN_ZUFALLSTESTS; i++)
+		for (int i = 0; i < _ANZAHL_AN_ZUFALLSTESTS; i++) {
 			testeSchuelerblockAlgorithmusZufaelligEinMal(lRandom);
+		}
 	}
 
 	private static void testeSchuelerblockAlgorithmusZufaelligEinMal(final Random pRandom) {
@@ -54,8 +55,9 @@ class SchuelerblockungTests {
 		log.addConsumer(new Consumer<LogData>() {
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+				if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 					fail(t.getText());
+				}
 			}
 		});
 
@@ -65,8 +67,9 @@ class SchuelerblockungTests {
 
 		final int nFachwahlen = 1 + pRandom.nextInt(15); // 1 bis 15 Fachwahlen
 		int nFachwahlenDavonMulti = pRandom.nextInt(4); // 0 bis 4 Multikurse
-		if (nFachwahlenDavonMulti > nFachwahlen)
+		if (nFachwahlenDavonMulti > nFachwahlen) {
 			nFachwahlenDavonMulti = pRandom.nextInt(nFachwahlen);
+		}
 		int nKurse = 0; // Zähler für die Kurse.
 		final int nSchienen = nFachwahlen + nFachwahlenDavonMulti;
 		in.schienen = nSchienen;
@@ -111,8 +114,9 @@ class SchuelerblockungTests {
 					final int s1 = pRandom.nextInt(nSchienen) + 1; // Schienen sind 1-indiziert.
 					if (i < nFachwahlenDavonMulti) {
 						int s2 = pRandom.nextInt(nSchienen) + 1; // Schienen sind 1-indiziert.
-						while (s1 == s2)
+						while (s1 == s2) {
 							s2 = pRandom.nextInt(nSchienen) + 1; // Schienen sind 1-indiziert.
+						}
 						kurs.schienen = new int[] { s1, s2 };
 					} else {
 						kurs.schienen = new int[] { s1 };
@@ -131,9 +135,11 @@ class SchuelerblockungTests {
 		// ##################################################
 
 		// Überprüfung potentieller Fehler.
-		for (final LogData t : alg.getLog().getLogData())
-			if (t.getLevel().compareTo(LogLevel.APP) != 0)
+		for (final LogData t : alg.getLog().getLogData()) {
+			if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 				fail(t.getText());
+			}
+		}
 
 		// Kein Blockungsergebnis vorhanden?
 		if (out == null) {

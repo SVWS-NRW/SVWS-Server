@@ -2,13 +2,12 @@ package de.svws_nrw.abschluesse.ge.test;
 
 import java.util.List;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.svws_nrw.core.data.abschluss.AbschlussErgebnis;
 import de.svws_nrw.core.data.abschluss.GEAbschlussFaecher;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /** Diese Klasse stelt die Testfälle für die Prognoseberechnung an der Gesamtschule zur Verfügung. */
 @XmlRootElement(name = "GEAbschlussTestfall")
@@ -52,8 +51,9 @@ public class GEAbschlussTestfall {
 	public static boolean vergleicheNachpruefungsfaecher(final List<String> faecherListe1, final List<String> faecherListe2) {
 		if ((faecherListe1 == null) || faecherListe1.isEmpty()) {
 			return (faecherListe2 == null) || faecherListe2.isEmpty();
-		} else if ((faecherListe2 == null) || faecherListe2.isEmpty())
+		} else if ((faecherListe2 == null) || faecherListe2.isEmpty()) {
 			return faecherListe1.isEmpty();
+		}
 		return faecherListe1.containsAll(faecherListe2) && faecherListe2.containsAll(faecherListe1);
 	}
 

@@ -40,8 +40,9 @@ public final class DummyMapSubKeySetIterator implements Iterator<@NotNull Intege
 
 	@Override
 	public @NotNull Integer next() {
-		if (_next == null)
+		if (_next == null) {
 			throw new NoSuchElementException();
+		}
 		_current = _next;
 		_next = _sub.higherEntry(_next.getKey());
 		return _current.getKey();
@@ -54,8 +55,9 @@ public final class DummyMapSubKeySetIterator implements Iterator<@NotNull Intege
 
 	@Override
 	public void remove() {
-		if (_current == null)
+		if (_current == null) {
 			throw new IllegalStateException();
+		}
 		_sub.remove(_current.getKey());
 		_current = null;
 	}

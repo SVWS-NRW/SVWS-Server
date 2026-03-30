@@ -68,8 +68,9 @@ public class KursblockungDynSchiene {
 
 		// Fachart-Schiene und Kurs-Kurs Beziehungen aktualisieren.
 		kurs1.gibFachart().aktionSchieneWurdeHinzugefuegt(this);
-		for (final @NotNull KursblockungDynKurs kurs2 : kursMap.values())
+		for (final @NotNull KursblockungDynKurs kurs2 : kursMap.values()) {
 			statistik.aktionKurspaarInSchieneHinzufuegen(kurs1, kurs2);
+		}
 
 		// Dann der Datenstruktur hinzufügen.
 		kursMap.put(kursID, kurs1);
@@ -94,8 +95,9 @@ public class KursblockungDynSchiene {
 
 		// Fachart-Schiene und Kurs-Kurs Beziehungen aktualisieren.
 		kurs1.gibFachart().aktionSchieneWurdeEntfernt(this);
-		for (final @NotNull KursblockungDynKurs kurs2 : kursMap.values())
+		for (final @NotNull KursblockungDynKurs kurs2 : kursMap.values()) {
 			statistik.aktionKurspaarInSchieneEntfernen(kurs1, kurs2);
+		}
 	}
 
 	/**
@@ -127,9 +129,11 @@ public class KursblockungDynSchiene {
 		final HashSet<Integer> setFachart = new HashSet<>(); // Gibt es bereits diese Fachart?
 
 		int summe = 0;
-		for (final @NotNull KursblockungDynKurs kurs : kursMap.values())
-			if (!setFachart.add(kurs.gibFachart().gibNr())) // Wenn es die Fachart bereits gibt, ...
+		for (final @NotNull KursblockungDynKurs kurs : kursMap.values()) {
+			if (!setFachart.add(kurs.gibFachart().gibNr())) { // Wenn es die Fachart bereits gibt, ...
 				summe++; // ... dann Malus erhöhen.
+			}
+		}
 
 		return summe;
 	}
@@ -142,8 +146,9 @@ public class KursblockungDynSchiene {
 	public void debug(final boolean nurMultikurse) {
 		logger.modifyIndent(+4);
 		for (final @NotNull KursblockungDynKurs k : kursMap.values()) {
-			if ((nurMultikurse) && (k.gibSchienenAnzahl() < 2))
+			if ((nurMultikurse) && (k.gibSchienenAnzahl() < 2)) {
 				continue;
+			}
 			logger.logLn("    " + k.toString());
 		}
 		logger.modifyIndent(-4);
@@ -154,8 +159,9 @@ public class KursblockungDynSchiene {
 	 */
 	public void printlnKurse() {
 		System.out.println("Schiene " + (nr + 1));
-		for (final @NotNull KursblockungDynKurs k : kursMap.values())
+		for (final @NotNull KursblockungDynKurs k : kursMap.values()) {
 			System.out.println("    ID " + k.gibDatenbankID() + ", " + k.gibFachart());
+		}
 	}
 
 	/**
@@ -167,9 +173,11 @@ public class KursblockungDynSchiene {
 		System.out.println("Schiene " + (nr + 1));
 		for (final @NotNull KursblockungDynKurs k : kursMap.values()) {
 			System.out.println("    ID " + k.gibDatenbankID() + ", " + k.gibFachart() + ", Fach-ID=" + k.gibFachID());
-			for (final @NotNull KursblockungDynSchueler s : _schuelerArr)
-				if (s.gibIstInKurs(k))
+			for (final @NotNull KursblockungDynSchueler s : _schuelerArr) {
+				if (s.gibIstInKurs(k)) {
 					System.out.println("        ID " + s.gibDatenbankID() + ", " + s.gibRepresentation());
+				}
+			}
 		}
 	}
 
@@ -179,9 +187,11 @@ public class KursblockungDynSchiene {
 	 * @return true, falls in der Schiene nur Kurse der Kursart LK sind (oder keine Kurse).
 	 */
 	public boolean gibHatNurLK() {
-		for (final @NotNull KursblockungDynKurs k : kursMap.values())
-			if (k.gibFachart().gibKursart() != GostKursart.LK)
+		for (final @NotNull KursblockungDynKurs k : kursMap.values()) {
+			if (k.gibFachart().gibKursart() != GostKursart.LK) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -191,9 +201,11 @@ public class KursblockungDynSchiene {
 	 * @return true, falls in der Schiene keine Kurse der Kursart LK sind.
 	 */
 	public boolean gibHatKeineLK() {
-		for (final @NotNull KursblockungDynKurs k : kursMap.values())
-			if (k.gibFachart().gibKursart() == GostKursart.LK)
+		for (final @NotNull KursblockungDynKurs k : kursMap.values()) {
+			if (k.gibFachart().gibKursart() == GostKursart.LK) {
 				return false;
+			}
+		}
 		return true;
 	}
 }

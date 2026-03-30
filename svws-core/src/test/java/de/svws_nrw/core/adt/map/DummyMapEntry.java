@@ -37,8 +37,9 @@ public final class DummyMapEntry implements Entry<@NotNull Integer, @NotNull Int
 
 	@Override
 	public boolean equals(final Object o) {
-		if (!(o instanceof Entry<?, ?>))
+		if (!(o instanceof Entry<?, ?>)) {
 			return false;
+		}
 		final Entry<?, ?> e = (Entry<?, ?>) o;
 		return _key.equals(e.getKey()) && (_val.equals(e.getValue()));
 	}

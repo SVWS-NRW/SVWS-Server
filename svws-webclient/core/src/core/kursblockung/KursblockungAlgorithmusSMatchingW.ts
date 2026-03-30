@@ -75,8 +75,9 @@ export class KursblockungAlgorithmusSMatchingW extends KursblockungAlgorithmusS 
 		schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 		schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtetem();
 		const cmp: number = this.dynDaten.gibStatistik().gibBewertungZustandS_NW_KD();
-		if (cmp < 0)
+		if (cmp < 0) {
 			schueler.aktionZustandLadenS();
+		}
 		return cmp > 0;
 	}
 

@@ -776,14 +776,15 @@ class TestListMap3DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_SINGLE_OR_EXCEPTION_1, nullValues = "{null}")
 	void test_getSingleOrException1(final String result, final int key1) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.getSingle1OrException(key1);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.getSingle1OrException(key1));
 			});
+		}
 	}
 
 	/**
@@ -796,14 +797,15 @@ class TestListMap3DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_SINGLE_OR_EXCEPTION_2, nullValues = "{null}")
 	void test_getSingleOrException2(final String result, final int key2) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.getSingle2OrException(key2);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.getSingle2OrException(key2));
 			});
+		}
 	}
 
 	/**
@@ -816,14 +818,15 @@ class TestListMap3DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_SINGLE_OR_EXCEPTION_3, nullValues = "{null}")
 	void test_getSingleOrException3(final String result, final int key3) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.getSingle3OrException(key3);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.getSingle3OrException(key3));
 			});
+		}
 	}
 
 	/**
@@ -837,14 +840,15 @@ class TestListMap3DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_SINGLE_OR_EXCEPTION_12, nullValues = "{null}")
 	void test_getSingleOrException12(final String result, final int key1, final int key2) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.getSingle12OrException(key1, key2);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.getSingle12OrException(key1, key2));
 			});
+		}
 	}
 
 	/**
@@ -858,14 +862,15 @@ class TestListMap3DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_SINGLE_OR_EXCEPTION_13, nullValues = "{null}")
 	void test_getSingleOrException13(final String result, final int key1, final int key3) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.getSingle13OrException(key1, key3);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.getSingle13OrException(key1, key3));
 			});
+		}
 	}
 
 	/**
@@ -879,14 +884,15 @@ class TestListMap3DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_SINGLE_OR_EXCEPTION_23, nullValues = "{null}")
 	void test_getSingleOrException23(final String result, final int key2, final int key3) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.getSingle23OrException(key2, key3);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.getSingle23OrException(key2, key3));
 			});
+		}
 	}
 
 	/**
@@ -901,14 +907,15 @@ class TestListMap3DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_SINGLE_OR_EXCEPTION_123, nullValues = "{null}")
 	void test_getSingleOrException123(final String result, final int key1, final int key2, final int key3) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.getSingle123OrException(key1, key2, key3);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.getSingle123OrException(key1, key2, key3));
 			});
+		}
 	}
 
 	/**
@@ -1047,14 +1054,15 @@ class TestListMap3DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_OR_EXCEPTION_1, nullValues = "{null}")
 	void test_get1OrException(final Integer result, final int key1) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.get1OrException(key1);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.get1OrException(key1).size());
 			});
+		}
 	}
 
 	/**
@@ -1067,14 +1075,15 @@ class TestListMap3DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_OR_EXCEPTION_2, nullValues = "{null}")
 	void test_get2OrException(final Integer result, final int key2) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.get2OrException(key2);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.get2OrException(key2).size());
 			});
+		}
 	}
 
 	/**
@@ -1087,14 +1096,15 @@ class TestListMap3DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_OR_EXCEPTION_3, nullValues = "{null}")
 	void test_get3OrException(final Integer result, final int key3) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.get3OrException(key3);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.get3OrException(key3).size());
 			});
+		}
 	}
 
 	/**
@@ -1108,14 +1118,15 @@ class TestListMap3DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_OR_EXCEPTION_12, nullValues = "{null}")
 	void test_get12OrException(final Integer result, final int key1, final int key2) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.get12OrException(key1, key2);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.get12OrException(key1, key2).size());
 			});
+		}
 	}
 
 	/**
@@ -1129,14 +1140,15 @@ class TestListMap3DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_OR_EXCEPTION_13, nullValues = "{null}")
 	void test_get13OrException(final Integer result, final int key1, final int key3) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.get13OrException(key1, key3);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.get13OrException(key1, key3).size());
 			});
+		}
 	}
 
 	/**
@@ -1150,14 +1162,15 @@ class TestListMap3DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_OR_EXCEPTION_23, nullValues = "{null}")
 	void test_get23OrException(final Integer result, final int key2, final int key3) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.get23OrException(key2, key3);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.get23OrException(key2, key3).size());
 			});
+		}
 	}
 
 	/**
@@ -1172,14 +1185,15 @@ class TestListMap3DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_OR_EXCEPTION_123, nullValues = "{null}")
 	void test_get123OrException(final Integer result, final int key1, final int key2, final int key3) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.get123OrException(key1, key2, key3);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.get123OrException(key1, key2, key3).size());
 			});
+		}
 	}
 
 }

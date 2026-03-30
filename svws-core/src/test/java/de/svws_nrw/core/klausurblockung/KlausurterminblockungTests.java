@@ -42,34 +42,41 @@ class KlausurterminblockungTests {
 
 		// Einlesen der Kurs-Datensätze
 		final HashMap<Integer, EsserFormatKurs> mapKurs = new HashMap<>();
-		for (final EsserFormatKurs kurs : CsvReader.fromResource(PFAD_DATEN_001 + "kurs.txt", EsserFormatKurs.class))
+		for (final EsserFormatKurs kurs : CsvReader.fromResource(PFAD_DATEN_001 + "kurs.txt", EsserFormatKurs.class)) {
 			mapKurs.put(kurs.id, kurs);
+		}
 
 		// Einlesen der SuS-Datensätze
 		final HashMap<Integer, EsserFormatSchueler> mapSuS = new HashMap<>();
-		for (final EsserFormatSchueler schueler : CsvReader.fromResource(PFAD_DATEN_001 + "schueler.txt", EsserFormatSchueler.class))
+		for (final EsserFormatSchueler schueler : CsvReader.fromResource(PFAD_DATEN_001 + "schueler.txt", EsserFormatSchueler.class)) {
 			mapSuS.put(schueler.id, schueler);
+		}
 
 		// Einlesen der SuS-Fachwahl-Datensätze (nur diejenigen, die es schriftlich haben).
 		final HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuS1 = new HashMap<>();
 		final HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuS2 = new HashMap<>();
 		for (final EsserFormatFachwahl fachwahl : CsvReader.fromResource(PFAD_DATEN_001 + "fachwahl.txt", EsserFormatFachwahl.class)) {
-			if (mapKursSuS1.get(fachwahl.kurs) == null)
+			if (mapKursSuS1.get(fachwahl.kurs) == null) {
 				mapKursSuS1.put(fachwahl.kurs, new LinkedList<>());
-			if (mapKursSuS2.get(fachwahl.kurs) == null)
+			}
+			if (mapKursSuS2.get(fachwahl.kurs) == null) {
 				mapKursSuS2.put(fachwahl.kurs, new LinkedList<>());
+			}
 
 			final EsserFormatSchueler schueler = mapSuS.get(fachwahl.schueler);
-			if (fachwahl.schriftlich > 1)
+			if (fachwahl.schriftlich > 1) {
 				mapKursSuS1.get(fachwahl.kurs).addLast(schueler);
-			if ((fachwahl.schriftlich == 3) || (fachwahl.schriftlich == 5))
+			}
+			if ((fachwahl.schriftlich == 3) || (fachwahl.schriftlich == 5)) {
 				mapKursSuS2.get(fachwahl.kurs).addLast(schueler);
+			}
 		}
 
 		// Einlesen der KData-Datensätze
 		final HashMap<Integer, EsserFormatKData> mapKData = new HashMap<>();
-		for (final EsserFormatKData kdata : CsvReader.fromResource(PFAD_DATEN_001 + "kdata.txt", EsserFormatKData.class))
+		for (final EsserFormatKData kdata : CsvReader.fromResource(PFAD_DATEN_001 + "kdata.txt", EsserFormatKData.class)) {
 			mapKData.put(kdata.id, kdata);
+		}
 
 		// Einlesen der Klausur-Datensätze
 		final HashMap<Integer, EsserFormatKlausur> mapKlausur = new HashMap<>();
@@ -83,24 +90,28 @@ class KlausurterminblockungTests {
 
 			final EsserFormatKData kdata = mapKData.get(klausur.kdata);
 
-			if (mapQuartalZuKlausuren.get(kdata.halbjahr) == null)
+			if (mapQuartalZuKlausuren.get(kdata.halbjahr) == null) {
 				mapQuartalZuKlausuren.put(kdata.halbjahr, new HashMap<>());
-			if (mapQuartalZuKlausuren.get(kdata.halbjahr).get(kdata.klausnr) == null)
+			}
+			if (mapQuartalZuKlausuren.get(kdata.halbjahr).get(kdata.klausnr) == null) {
 				mapQuartalZuKlausuren.get(kdata.halbjahr).put(kdata.klausnr, new HashMap<>());
-			if (mapQuartalZuKlausuren.get(kdata.halbjahr).get(kdata.klausnr).get(kdata.stufe) == null)
+			}
+			if (mapQuartalZuKlausuren.get(kdata.halbjahr).get(kdata.klausnr).get(kdata.stufe) == null) {
 				mapQuartalZuKlausuren.get(kdata.halbjahr).get(kdata.klausnr).put(kdata.stufe, new LinkedList<>());
+			}
 
 			mapQuartalZuKlausuren.get(kdata.halbjahr).get(kdata.klausnr).get(kdata.stufe).addLast(klausur);
 		}
 
 		// Quartale durchgehen und blocken.
-		for (final int halbjahr : mapQuartalZuKlausuren.keySet())
-			for (final int klausnr : mapQuartalZuKlausuren.get(halbjahr).keySet())
+		for (final int halbjahr : mapQuartalZuKlausuren.keySet()) {
+			for (final int klausnr : mapQuartalZuKlausuren.get(halbjahr).keySet()) {
 				for (final String stufe : mapQuartalZuKlausuren.get(halbjahr).get(klausnr).keySet()) {
 					// Was war die Mindestanzahl an Terminen bis jetzt?
 					final TreeSet<Integer> termine = new TreeSet<>();
-					for (final EsserFormatKlausur klausur : mapQuartalZuKlausuren.get(halbjahr).get(klausnr).get(stufe))
+					for (final EsserFormatKlausur klausur : mapQuartalZuKlausuren.get(halbjahr).get(klausnr).get(stufe)) {
 						termine.add(klausur.termin);
+					}
 
 					// Welche Klausuren müssen geschrieben werden?
 					final LinkedList<EsserFormatKlausur> klausuren = mapQuartalZuKlausuren.get(halbjahr).get(klausnr).get(stufe);
@@ -108,6 +119,8 @@ class KlausurterminblockungTests {
 					// Blockungsalgorithmus...
 					klausurblockung(halbjahr, stufe, klausuren, mapKursSuS1, mapKursSuS2);
 				}
+			}
+		}
 
 	}
 
@@ -123,10 +136,12 @@ class KlausurterminblockungTests {
 		final TreeMap<String, HashMap<Long, LinkedList<Long>>> map = new TreeMap<>();
 		for (final PluemperFormatStufeSchuelerKurs daten : CsvReader.fromResource(PFAD_DATEN_002 + "StufeSchuelerKurs.txt",
 				PluemperFormatStufeSchuelerKurs.class)) {
-			if (map.get(daten.stufe) == null)
+			if (map.get(daten.stufe) == null) {
 				map.put(daten.stufe, new HashMap<>());
-			if (map.get(daten.stufe).get(daten.schuelerid) == null)
+			}
+			if (map.get(daten.stufe).get(daten.schuelerid) == null) {
 				map.get(daten.stufe).put(daten.schuelerid, new LinkedList<>());
+			}
 			map.get(daten.stufe).get(daten.schuelerid).push(daten.kursid);
 		}
 
@@ -164,11 +179,13 @@ class KlausurterminblockungTests {
 		final TreeMap<String, HashMap<Long, LinkedList<Long>>> map = new TreeMap<>();
 		for (final PluemperFormatStufeSchuelerKurs daten : CsvReader.fromResource(PFAD_DATEN_003 + "Westphal_EF.txt", PluemperFormatStufeSchuelerKurs.class)) {
 
-			if (map.get(daten.stufe) == null)
+			if (map.get(daten.stufe) == null) {
 				map.put(daten.stufe, new HashMap<>());
+			}
 
-			if (map.get(daten.stufe).get(daten.schuelerid) == null)
+			if (map.get(daten.stufe).get(daten.schuelerid) == null) {
 				map.get(daten.stufe).put(daten.schuelerid, new LinkedList<>());
+			}
 
 			map.get(daten.stufe).get(daten.schuelerid).push(daten.kursid);
 		}
@@ -202,8 +219,9 @@ class KlausurterminblockungTests {
 			final HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuSschriftlich1,
 			final HashMap<Integer, LinkedList<EsserFormatSchueler>> mapKursSuSschriftlich2) {
 
-		if (stufe.equals("EF"))
+		if (stufe.equals("EF")) {
 			return;
+		}
 
 		// System.out.println();
 		// System.out.println(halbjahr + "," + klausnr + "," + stufe + " --> " + klausuren.size() + " Klausuren, auf " +
@@ -211,8 +229,9 @@ class KlausurterminblockungTests {
 
 		// Wähle die richtige Map.
 		HashMap<Integer, LinkedList<EsserFormatSchueler>> mapSchriftlich = mapKursSuSschriftlich1;
-		if (stufe.equals("Q2") && (halbjahr == 2))
+		if (stufe.equals("Q2") && (halbjahr == 2)) {
 			mapSchriftlich = mapKursSuSschriftlich2;
+		}
 
 		// Input-Erzeugen
 		final @NotNull List<@NotNull GostKursklausurRich> input = new ArrayList<>();

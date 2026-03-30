@@ -47,8 +47,9 @@ public final class KursblockungAlgorithmusKMatching extends KursblockungAlgorith
 		final long halbzeit = current + ((pEndzeit - current) / 2);
 
 		// Keine Kursverteilung, wenn es keine freien Kurse gibt.
-		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0)
+		if (dynDaten.gibKurseDieFreiSindAnzahl() == 0) {
 			return;
+		}
 
 		// Entferne SuS aus den Kursen (vorsichtshalber wegen alter Berechnungen).
 		dynDaten.aktionSchuelerAusAllenKursenEntfernen();

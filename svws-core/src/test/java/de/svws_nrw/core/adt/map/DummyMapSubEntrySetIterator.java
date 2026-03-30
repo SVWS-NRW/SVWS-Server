@@ -43,8 +43,9 @@ class DummyMapSubEntrySetIterator implements Iterator<@NotNull Entry<@NotNull In
 
 	@Override
 	public @NotNull Entry<@NotNull Integer, @NotNull Integer> next() {
-		if (_next == null)
+		if (_next == null) {
 			throw new NoSuchElementException();
+		}
 		_current = _next;
 		_next = _sub.higherEntry(_next.getKey());
 		return _current;
@@ -57,8 +58,9 @@ class DummyMapSubEntrySetIterator implements Iterator<@NotNull Entry<@NotNull In
 
 	@Override
 	public void remove() {
-		if (_current == null)
+		if (_current == null) {
 			throw new IllegalStateException();
+		}
 		_sub.remove(_current.getKey());
 		_current = null;
 	}

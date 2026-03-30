@@ -47,7 +47,7 @@ class TestGostMarkierungsalgorithmus {
 	/** Eine Map mit den Abiturdaten von Schülern der Gymnasialen Oberstufe aus den zugehörigen JSON-Dateien mit den Testfällen */
 	static HashMap<String, HashMap<String, Abiturdaten>> testAbiturdaten = new HashMap<>();
 
-	/** Eine Map mit den Ergenissen des Abitur-Markierungsalgorithmus für die Abiturdaten von Schülern der Gymnasialen Oberstufe aus den zugehörigen JSON-Dateien mit den Testfällen */
+	/** Eine Map mit den Ergebnissen des Abitur-Markierungsalgorithmus für die Abiturdaten von Schülern der Gymnasialen Oberstufe aus den zugehörigen JSON-Dateien mit den Testfällen */
 	static HashMap<String, HashMap<String, GostAbiturMarkierungsalgorithmusErgebnis>> testErgebnisseMarkierungsalgorihmus = new HashMap<>();
 
 
@@ -64,24 +64,27 @@ class TestGostMarkierungsalgorithmus {
 		final Map<String, GostJahrgangsdaten> tempTestGostJahrgaenge =
 				ResourceUtils.json2Classes("de.svws_nrw.abschluesse.gost.test", "Jahrgang_", "_GostJahrgangsdaten", GostJahrgangsdaten.class);
 		assert (tempTestGostJahrgaenge != null) && (tempTestGostJahrgaenge.size() != 0) : "Fehler beim Laden der Gost-Testjahrgänge!";
-		for (final Map.Entry<String, GostJahrgangsdaten> entry : tempTestGostJahrgaenge.entrySet())
+		for (final Map.Entry<String, GostJahrgangsdaten> entry : tempTestGostJahrgaenge.entrySet()) {
 			testGostJahrgaenge.put(entry.getKey(), entry.getValue());
+		}
 		System.out.println("  FERTIG!");
 
 		System.out.println("- Lade die Fächer der Gost-Jahrgänge aus den JSON-Resourcen...");
 		final Map<String, GostFach[]> tempTestGostJahrgaengeFaecher =
 				ResourceUtils.json2Classes("de.svws_nrw.abschluesse.gost.test", "Jahrgang_", "_GostFaecher", GostFach[].class);
 		assert (tempTestGostJahrgaengeFaecher != null) && (tempTestGostJahrgaengeFaecher.size() != 0) : "Fehler beim Laden der Gost-Fächer der Testjahrgänge!";
-		for (final Map.Entry<String, GostFach[]> entry : tempTestGostJahrgaengeFaecher.entrySet())
+		for (final Map.Entry<String, GostFach[]> entry : tempTestGostJahrgaengeFaecher.entrySet()) {
 			testGostJahrgaengeFaecher.put(entry.getKey(), Arrays.asList(entry.getValue()));
+		}
 		System.out.println("  FERTIG!");
 
 		System.out.println("- Lade die Informationen zu nicht erlaubten und geforderten Fachkombinationen zu den Gost-Jahrgängen aus den JSON-Resourcen...");
 		final Map<String, GostJahrgangFachkombination[]> tempTestGostJahrgaengeFachkombinationen = ResourceUtils
 				.json2Classes("de.svws_nrw.abschluesse.gost.test", "Jahrgang_", "_GostJahrgangFachkombination", GostJahrgangFachkombination[].class);
 		assert (tempTestGostJahrgaengeFachkombinationen != null) : "Fehler beim Laden der Gost-Fachkombinationen der Testjahrgänge!";
-		for (final Map.Entry<String, GostJahrgangFachkombination[]> entry : tempTestGostJahrgaengeFachkombinationen.entrySet())
+		for (final Map.Entry<String, GostJahrgangFachkombination[]> entry : tempTestGostJahrgaengeFachkombinationen.entrySet()) {
 			testGostJahrgaengeFachkombinationen.put(entry.getKey(), Arrays.asList(entry.getValue()));
+		}
 		System.out.println("  FERTIG!");
 
 		System.out.println("- Lade die Abiturdaten aus den JSON-Resourcen und ordne sie den Jahrgängen zu...");
@@ -90,8 +93,9 @@ class TestGostMarkierungsalgorithmus {
 		assert (tempTestAbiturdaten != null) && (tempTestAbiturdaten.size() != 0) : "Fehler beim Laden der Abiturdaten!";
 		for (final Map.Entry<String, Abiturdaten> entry : tempTestAbiturdaten.entrySet()) {
 			final String[] ids = entry.getKey().split("_");
-			if (ids.length != 2)
+			if (ids.length != 2) {
 				fail("Fehler beim Laden der Abiturdaten - ungültiger Dateiname: Jahrgang_" + entry.getKey() + "_Abiturdaten");
+			}
 			HashMap<String, Abiturdaten> mapSchuelerJahrgang = testAbiturdaten.get(ids[0]);
 			if (mapSchuelerJahrgang == null) {
 				mapSchuelerJahrgang = new HashMap<>();
@@ -109,9 +113,10 @@ class TestGostMarkierungsalgorithmus {
 				: "Fehler beim Laden der Ergebnisse für den Abitur-Markierungsalgorithmus!";
 		for (final Map.Entry<String, GostAbiturMarkierungsalgorithmusErgebnis> entry : tempTestErgebnisseMarkierungsalgorihmus.entrySet()) {
 			final String[] ids = entry.getKey().split("_");
-			if (ids.length != 2)
+			if (ids.length != 2) {
 				fail("Fehler beim Laden der Ergebnisse des Abitur-Markierungsalgorithmus - ungültiger Dateiname: Jahrgang_" + entry.getKey()
 						+ "_Markierungsalgorihmus");
+			}
 			HashMap<String, GostAbiturMarkierungsalgorithmusErgebnis> mapSchuelerJahrgang = testErgebnisseMarkierungsalgorihmus.get(ids[0]);
 			if (mapSchuelerJahrgang == null) {
 				mapSchuelerJahrgang = new HashMap<>();
@@ -147,11 +152,13 @@ class TestGostMarkierungsalgorithmus {
 						+ schueler_id + "' wurden keine Test-Fachkombinationen der gymnasialen Oberstufe gefunden.";
 				// Lese Ergebnis des Abitur-Markierungsergebnis ein, sofern eines vorhanden ist.
 				final var testJahrgangErgebnisseMarkierungsalgorihmus = testErgebnisseMarkierungsalgorihmus.get(jahrgang);
-				if (testJahrgangErgebnisseMarkierungsalgorihmus == null)
+				if (testJahrgangErgebnisseMarkierungsalgorihmus == null) {
 					return;
+				}
 				final var vergleichErgebnisMarkierungsalgorihmus = testJahrgangErgebnisseMarkierungsalgorihmus.get(schueler_id);
-				if (vergleichErgebnisMarkierungsalgorihmus == null)
+				if (vergleichErgebnisMarkierungsalgorihmus == null) {
 					return;
+				}
 				// Füge Test für den Abitur-Markierungsalgorithmus hinzu
 				tests.add(DynamicTest.dynamicTest(
 						"Testjahrgang " + jahrgang + " - Abiturdaten " + schueler_id + " - Markierungsalgorithmus",
@@ -165,8 +172,9 @@ class TestGostMarkierungsalgorithmus {
 							final GostAbiturMarkierungsalgorithmusErgebnis ergebnis = manager.getErgebnisMarkierungsalgorithmus();
 							if (!ergebnis.log.isEmpty()) {
 								System.out.println("  Log:");
-								for (final String text : ergebnis.log)
+								for (final String text : ergebnis.log) {
 									System.out.println("    " + text);
+								}
 							}
 
 							// Prüfe den Erfolg der Belegprüfung
@@ -176,11 +184,13 @@ class TestGostMarkierungsalgorithmus {
 
 							// Prüfe, ob alle Fehlercodes des Testfalls gefunden wurden und ob zuviele Fehlercodes im Vergleich zum Testfall gefunden wurden.
 							final HashMap3D<Long, Integer, Boolean, GostAbiturMarkierungsalgorithmusMarkierung> testfallMarkierungen = new HashMap3D<>();
-							for (final GostAbiturMarkierungsalgorithmusMarkierung markierung : vergleichErgebnisMarkierungsalgorihmus.markierungen)
+							for (final GostAbiturMarkierungsalgorithmusMarkierung markierung : vergleichErgebnisMarkierungsalgorihmus.markierungen) {
 								testfallMarkierungen.put(markierung.idFach, markierung.idHalbjahr, markierung.markiert, markierung);
+							}
 							final HashMap3D<Long, Integer, Boolean, GostAbiturMarkierungsalgorithmusMarkierung> ergebnisMarkierungen = new HashMap3D<>();
-							for (final GostAbiturMarkierungsalgorithmusMarkierung markierung : ergebnis.markierungen)
+							for (final GostAbiturMarkierungsalgorithmusMarkierung markierung : ergebnis.markierungen) {
 								ergebnisMarkierungen.put(markierung.idFach, markierung.idHalbjahr, markierung.markiert, markierung);
+							}
 							// Vergleiche das Ergebnis mit dem erwarteten Ergebnis...
 							final List<String> zuwenig = new ArrayList<>();
 							for (final GostAbiturMarkierungsalgorithmusMarkierung markierung : vergleichErgebnisMarkierungsalgorihmus.markierungen) {
@@ -190,10 +200,12 @@ class TestGostMarkierungsalgorithmus {
 									final GostHalbjahr halbjahr = GostHalbjahr.fromID(markierung.idHalbjahr);
 									assert (halbjahr != null) && (halbjahr != GostHalbjahr.EF1) && (halbjahr != GostHalbjahr.EF2)
 											: "Die ID des Halbjahres " + markierung.idHalbjahr + " ist ungültig oder nicht aus der Qualifikationsphase.";
-									if (markierung.markiert)
+									if (markierung.markiert) {
 										zuwenig.add("(%s-%s)".formatted(fach.kuerzelAnzeige, halbjahr.kuerzel));
-									if ((!markierung.markiert) && (!ergebnisMarkierungen.contains(markierung.idFach, markierung.idHalbjahr, !markierung.markiert)))
+									}
+									if ((!markierung.markiert) && (!ergebnisMarkierungen.contains(markierung.idFach, markierung.idHalbjahr, !markierung.markiert))) {
 										zuwenig.add("(%s-%s,nicht markiert)".formatted(fach.kuerzelAnzeige, halbjahr.kuerzel));
+									}
 								}
 							}
 							final List<String> zuviele = new ArrayList<>();
@@ -204,10 +216,12 @@ class TestGostMarkierungsalgorithmus {
 									final GostHalbjahr halbjahr = GostHalbjahr.fromID(markierung.idHalbjahr);
 									assert (halbjahr != null) && (halbjahr != GostHalbjahr.EF1) && (halbjahr != GostHalbjahr.EF2)
 											: "Die ID des Halbjahres " + markierung.idHalbjahr + " ist ungültig oder nicht aus der Qualifikationsphase.";
-									if (markierung.markiert)
+									if (markierung.markiert) {
 										zuviele.add("(%s-%s)".formatted(fach.kuerzelAnzeige, halbjahr.kuerzel));
-									if ((!markierung.markiert) && (!testfallMarkierungen.contains(markierung.idFach, markierung.idHalbjahr, !markierung.markiert)))
+									}
+									if ((!markierung.markiert) && (!testfallMarkierungen.contains(markierung.idFach, markierung.idHalbjahr, !markierung.markiert))) {
 										zuviele.add("(%s-%s,nicht markiert)".formatted(fach.kuerzelAnzeige, halbjahr.kuerzel));
+									}
 								}
 							}
 

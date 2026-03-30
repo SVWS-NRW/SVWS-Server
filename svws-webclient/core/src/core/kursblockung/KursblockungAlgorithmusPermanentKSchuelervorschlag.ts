@@ -17,8 +17,9 @@ export class KursblockungAlgorithmusPermanentKSchuelervorschlag extends Kursbloc
 	 */
 	public constructor(random: Random, logger: Logger, input: GostBlockungsdatenManager) {
 		super(random, logger, input);
-		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0)
+		if (this.dynDaten.gibKurseDieFreiSindAnzahl() === 0) {
 			return;
+		}
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
 		this.dynDaten.aktionKurseFreieZufaelligVerteilen();
 		this.dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
@@ -42,9 +43,10 @@ export class KursblockungAlgorithmusPermanentKSchuelervorschlag extends Kursbloc
 
 	private verteileKurseMitSchuelerwunsch(): void {
 		this.dynDaten.aktionSchuelerAusAllenKursenEntfernen();
-		let kurslagenveraenderung: boolean = this.dynDaten.aktionKurseVerteilenNachSchuelerwunsch();
-		if (!kurslagenveraenderung)
+		const kurslagenveraenderung: boolean = this.dynDaten.aktionKurseVerteilenNachSchuelerwunsch();
+		if (!kurslagenveraenderung) {
 			this.dynDaten.aktionKursVerteilenEinenZufaelligenFreien();
+		}
 		this.dynDaten.aktionSchuelerVerteilenMitGewichtetenBipartitemMatching();
 		if (this.dynDaten.gibCompareZustandK_NW_KD_FW() > 0) {
 			this.dynDaten.aktionZustandSpeichernK();

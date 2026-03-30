@@ -374,14 +374,15 @@ class TestListMap2DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_SINGLE_OR_EXCEPTION_1, nullValues = "{null}")
 	void test_getSingleOrException1(final String result, final int key1) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.getSingle1OrException(key1);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.getSingle1OrException(key1));
 			});
+		}
 	}
 
 	/**
@@ -394,14 +395,15 @@ class TestListMap2DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_SINGLE_OR_EXCEPTION_2, nullValues = "{null}")
 	void test_getSingleOrException2(final String result, final int key2) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.getSingle2OrException(key2);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.getSingle2OrException(key2));
 			});
+		}
 	}
 
 	/**
@@ -415,14 +417,15 @@ class TestListMap2DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_SINGLE_OR_EXCEPTION_12, nullValues = "{null}")
 	void test_getSingleOrException12(final String result, final int key1, final int key2) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.getSingle12OrException(key1, key2);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.getSingle12OrException(key1, key2));
 			});
+		}
 	}
 
 	/**
@@ -489,14 +492,15 @@ class TestListMap2DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_OR_EXCEPTION_1, nullValues = "{null}")
 	void test_get1OrException(final Integer result, final int key1) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.get1OrException(key1);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.get1OrException(key1).size());
 			});
+		}
 	}
 
 	/**
@@ -509,14 +513,15 @@ class TestListMap2DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_OR_EXCEPTION_2, nullValues = "{null}")
 	void test_get2OrException(final Integer result, final int key2) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.get2OrException(key2);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.get2OrException(key2).size());
 			});
+		}
 	}
 
 	/**
@@ -530,14 +535,15 @@ class TestListMap2DLongKeys {
 	@ParameterizedTest
 	@CsvSource(textBlock = TEST_GET_OR_EXCEPTION_12, nullValues = "{null}")
 	void test_get12OrException(final Integer result, final int key1, final int key2) {
-		if (result == null)
+		if (result == null) {
 			assertThrows(DeveloperNotificationException.class, () -> {
 				map.get12OrException(key1, key2);
 			});
-		else
+		} else {
 			assertDoesNotThrow(() -> {
 				assertEquals(result, map.get12OrException(key1, key2).size());
 			});
+		}
 	}
 
 	/**
@@ -555,10 +561,11 @@ class TestListMap2DLongKeys {
 	void test_removeValueOrException(final int sizeVorher, final int key1, final int key2, final String value, final String resultErwartet) {
 	    assertEquals(sizeVorher, map.get12(key1, key2).size());
 	    map.removeValueOrException(key1, key2, value);
-	    if (resultErwartet == null)
-	        assertEquals(0, map.get12(key1, key2).size());
-	    else
-	        assertEquals(resultErwartet, map.get12(key1, key2).getFirst());
+	    if (resultErwartet == null) {
+			assertEquals(0, map.get12(key1, key2).size());
+		} else {
+			assertEquals(resultErwartet, map.get12(key1, key2).getFirst());
+		}
 	}
 
 	/**
@@ -589,8 +596,9 @@ class TestListMap2DLongKeys {
 	void test_removeAllByKey1(final int key1) {
 	    map.removeAllByKey1(key1);
 	    // Prüfe, dass zu diesem key1 keine Zuordnung mehr existiert
-	    for (int k2 = 1; k2 <= 4; k2++)
-	        assertEquals(0, map.get12(key1, k2).size());
+	    for (int k2 = 1; k2 <= 4; k2++) {
+			assertEquals(0, map.get12(key1, k2).size());
+		}
 	}
 
 	/**
@@ -620,20 +628,20 @@ class TestListMap2DLongKeys {
 	        map.add(key1, key2, addValue.replace("\"", ""));
 	    }
 	    // 2. Vorher: existiert der Pfad?
-	    boolean existed = map.containsKey12(key1, key2);
+	    final boolean existed = map.containsKey12(key1, key2);
 	    assertEquals(existedBefore, existed);
 
 	    // 3. remove auf Pfad (auch wenn schon leer oder nie da)
 	    map.remove(key1, key2);
 
 	    // 4. Danach: get12 ist niemals null, sondern eine (neue) leere Liste
-	    List<String> afterList = map.get12(key1, key2);
+	    final List<String> afterList = map.get12(key1, key2);
 	    assertNotNull(afterList);
 	    assertEquals(expectedAfter, afterList.size());
 
 	    // 5. Nach erneutem add sind Werte sofort wieder sichtbar
 	    map.add(key1, key2, "Z");
-	    List<String> newList = map.get12(key1, key2);
+	    final List<String> newList = map.get12(key1, key2);
 	    assertEquals(1, newList.size());
 	    assertEquals("Z", newList.getFirst());
 	}

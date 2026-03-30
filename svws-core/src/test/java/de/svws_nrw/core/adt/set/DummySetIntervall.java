@@ -89,8 +89,9 @@ public final class DummySetIntervall {
 	 * @return TRUE, wenn der übergebene Wert im Intervall liegt.
 	 */
 	boolean contains(final int e, final boolean inclusive) {
-		if (inclusive)
+		if (inclusive) {
 			return contains(e);
+		}
 		return (e >= (min() + 1)) && (e <= (max() - 1));
 	}
 

@@ -197,9 +197,11 @@ public final class DummySet implements NavigableSet<Integer> {
 	 */
 	@NotNull
 	Integer bcGetFirstKeyOrException(final @NotNull DummySetIntervall iv) {
-		for (int i = iv.min(); i <= iv.max(); i++)
-			if (_isSet[i])
+		for (int i = iv.min(); i <= iv.max(); i++) {
+			if (_isSet[i]) {
 				return i;
+			}
+		}
 		throw new NoSuchElementException();
 	}
 
@@ -214,9 +216,11 @@ public final class DummySet implements NavigableSet<Integer> {
 	 */
 	@NotNull
 	Integer bcGetLastKeyOrException(final @NotNull DummySetIntervall iv) {
-		for (int i = iv.max(); i >= iv.min(); i--)
-			if (_isSet[i])
+		for (int i = iv.max(); i >= iv.min(); i--) {
+			if (_isSet[i]) {
 				return i;
+			}
+		}
 		throw new NoSuchElementException();
 	}
 
@@ -230,9 +234,11 @@ public final class DummySet implements NavigableSet<Integer> {
 	 */
 	int bcGetSize(final @NotNull DummySetIntervall iv) {
 		int size = 0;
-		for (int i = iv.min(); i <= iv.max(); i++)
-			if (_isSet[i])
+		for (int i = iv.min(); i <= iv.max(); i++) {
+			if (_isSet[i]) {
 				size++;
+			}
+		}
 		return size;
 	}
 
@@ -245,9 +251,11 @@ public final class DummySet implements NavigableSet<Integer> {
 	 * @return TRUE, falls die Datenstruktur innerhalb des Intervalls leer ist.
 	 */
 	boolean bcIsEmpty(final @NotNull DummySetIntervall iv) {
-		for (int i = iv.min(); i <= iv.max(); i++)
-			if (_isSet[i])
+		for (int i = iv.min(); i <= iv.max(); i++) {
+			if (_isSet[i]) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -275,9 +283,11 @@ public final class DummySet implements NavigableSet<Integer> {
 	 * @return TRUE, falls alle Schlüssel (Keys) der Collection in dieser Datenstruktur existieren.
 	 */
 	boolean bcContainsAllKeys(final @NotNull DummySetIntervall iv, final @NotNull Collection<?> c) {
-		for (final Object obj : c)
-			if (!bcContainsKey(iv, obj))
+		for (final Object obj : c) {
+			if (!bcContainsKey(iv, obj)) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -308,8 +318,9 @@ public final class DummySet implements NavigableSet<Integer> {
 	 */
 	boolean bcAddAllKeys(final @NotNull DummySetIntervall iv, final @NotNull Collection<? extends @NotNull Integer> c) {
 		boolean changed = false;
-		for (final Object obj : c)
+		for (final Object obj : c) {
 			changed |= bcAddKey(iv, (Integer) obj);
+		}
 		return changed;
 	}
 
@@ -341,11 +352,12 @@ public final class DummySet implements NavigableSet<Integer> {
 	 */
 	boolean bcRetainAllKeys(final @NotNull DummySetIntervall iv, final @NotNull Collection<?> c) {
 		boolean changed = false;
-		for (int i = iv.min(); i <= iv.max(); i++)
+		for (int i = iv.min(); i <= iv.max(); i++) {
 			if ((_isSet[i]) && (!c.contains(i))) {
 				_isSet[i] = false;
 				changed = true;
 			}
+		}
 		return changed;
 	}
 
@@ -360,8 +372,9 @@ public final class DummySet implements NavigableSet<Integer> {
 	 */
 	boolean bcRemoveAllKeys(final @NotNull DummySetIntervall iv, final @NotNull Collection<?> c) {
 		boolean changed = false;
-		for (final Object obj : c)
+		for (final Object obj : c) {
 			changed |= bcRemoveKeyReturnBool(iv, obj);
+		}
 		return changed;
 	}
 
@@ -372,8 +385,9 @@ public final class DummySet implements NavigableSet<Integer> {
 	 * @param iv Das {@link DummySetIntervall} des {@link DummySetSub}.
 	 */
 	void bcClear(final @NotNull DummySetIntervall iv) {
-		for (int i = iv.min(); i <= iv.max(); i++)
+		for (int i = iv.min(); i <= iv.max(); i++) {
 			_isSet[i] = false;
+		}
 	}
 
 	/**
@@ -387,9 +401,10 @@ public final class DummySet implements NavigableSet<Integer> {
 	 * @return Den Vorgänger-Schlüssel des übergebenen Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
 	Integer bcGetLowerKeyOrNull(final @NotNull DummySetIntervall iv, final @NotNull Integer key) {
-		for (int i = key - 1; i >= iv.min(); i--) // search < key
+		for (int i = key - 1; i >= iv.min(); i--) { // search < key
 			if (_isSet[i])
-				return i;
+			return i;
+		}
 		return null; // NULL allowed
 	}
 
@@ -406,9 +421,10 @@ public final class DummySet implements NavigableSet<Integer> {
 	 *         andernfalls NULL.
 	 */
 	Integer bcGetFloorKeyOrNull(final @NotNull DummySetIntervall iv, final @NotNull Integer key) {
-		for (int i = key; i >= iv.min(); i--) // search <= key
+		for (int i = key; i >= iv.min(); i--) { // search <= key
 			if (_isSet[i])
-				return i;
+			return i;
+		}
 		return null; // NULL allowed
 	}
 
@@ -425,9 +441,10 @@ public final class DummySet implements NavigableSet<Integer> {
 	 *         andernfalls NULL.
 	 */
 	Integer bcGetCeilingKeyOrNull(final @NotNull DummySetIntervall iv, final @NotNull Integer key) {
-		for (int i = key; i <= iv.max(); i++) // search >= key
+		for (int i = key; i <= iv.max(); i++) { // search >= key
 			if (_isSet[i])
-				return i;
+			return i;
+		}
 		return null; // NULL allowed
 	}
 
@@ -442,9 +459,10 @@ public final class DummySet implements NavigableSet<Integer> {
 	 * @return Den Nachfolger-Schlüssel des übergebenen Schlüssels (Key) falls vorhanden, sonst NULL.
 	 */
 	Integer bcGetHigherKeyOrNull(final @NotNull DummySetIntervall iv, final @NotNull Integer key) {
-		for (int i = key + 1; i <= iv.max(); i++) // search > key
+		for (int i = key + 1; i <= iv.max(); i++) { // search > key
 			if (_isSet[i])
-				return i;
+			return i;
+		}
 		return null; // NULL allowed
 	}
 
@@ -457,11 +475,12 @@ public final class DummySet implements NavigableSet<Integer> {
 	 * @return Entfernt und liefert den ersten Schlüssel (Key) dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
 	Integer bcPollFirstKeyOrNull(final @NotNull DummySetIntervall iv) {
-		for (int i = iv.min(); i <= iv.max(); i++)
+		for (int i = iv.min(); i <= iv.max(); i++) {
 			if (_isSet[i]) {
 				_isSet[i] = false;
 				return i;
 			}
+		}
 		return null;
 	}
 
@@ -474,11 +493,12 @@ public final class DummySet implements NavigableSet<Integer> {
 	 * @return Entfernt und liefert den letzten Schlüssel (Key) dieser Datenstruktur falls vorhanden, andernfalls NULL.
 	 */
 	Integer bcPollLastKeyOrNull(final @NotNull DummySetIntervall iv) {
-		for (int i = iv.max(); i >= iv.min(); i--)
+		for (int i = iv.max(); i >= iv.min(); i--) {
 			if (_isSet[i]) {
 				_isSet[i] = false;
 				return i;
 			}
+		}
 		return null;
 	}
 

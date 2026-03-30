@@ -174,17 +174,20 @@ public final class SchuelerStatistikService {
 		final Map<Long, List<String>> mapSchuelerAbiturFach =
 				dtosSchuelerAbiturFach.stream().collect(Collectors.groupingBy(f -> f.Schueler_ID, Collectors.collectingAndThen(
 						Collectors.toList(), list -> {
-							if (list.size() < 4)
+							if (list.size() < 4) {
 								return Collections.emptyList();
+							}
 							list.sort(Comparator.comparing(dto -> dto.AbiturFach));
 							final List<String> kuerzel = new ArrayList<>();
 							for (int i = 0; i < list.size(); i++) {
 								final var abiFach = list.get(i);
-								if (i + 1 != abiFach.AbiturFach.id)
+								if (i + 1 != abiFach.AbiturFach.id) {
 									return Collections.emptyList();
+								}
 								final var fachkuerzel = mapFaecher.get(abiFach.Fach_ID);
-								if (fachkuerzel == null)
+								if (fachkuerzel == null) {
 									return Collections.emptyList();
+								}
 								kuerzel.add(fachkuerzel);
 							}
 							return kuerzel;

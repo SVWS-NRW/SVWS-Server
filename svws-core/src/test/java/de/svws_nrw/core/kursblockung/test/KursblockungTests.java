@@ -133,8 +133,9 @@ class KursblockungTests {
 			long wert1 = 0;
 			for (int r = 0; r < r2c.length; r++) {
 				final int c = r2c[r];
-				if (c >= 0)
+				if (c >= 0) {
 					wert1 += m.getMatrix()[r][c];
+				}
 			}
 
 			// Summe berechnen (alle Kombinationen durchgehen)
@@ -163,8 +164,9 @@ class KursblockungTests {
 		log.addConsumer(new Consumer<LogData>() {
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+				if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 					fail(t.getText());
+				}
 			}
 		});
 
@@ -174,23 +176,29 @@ class KursblockungTests {
 		final GostBlockungsdatenManager manager = k42Converter.gibKursblockungInput();
 
 		// Überprüfen der Ergebnisse
-		if (manager.schieneGetAnzahl() != 14)
+		if (manager.schieneGetAnzahl() != 14) {
 			fail("Blockung001 hat nicht 14 Schienen, sondern " + manager.schieneGetAnzahl() + ".");
+		}
 
-		if (manager.schuelerGetAnzahlMitMindestensEinerFachwahl() != 137)
+		if (manager.schuelerGetAnzahlMitMindestensEinerFachwahl() != 137) {
 			fail("Blockung001 hat nicht 137 SuS mit Fachwahlen, sondern " + manager.schuelerGetAnzahlMitMindestensEinerFachwahl() + ".");
+		}
 
-		if (manager.getFaecherAnzahl() != 33)
+		if (manager.getFaecherAnzahl() != 33) {
 			fail("Blockung001 hat nicht 33 Fächer, sondern " + manager.getFaecherAnzahl() + ".");
+		}
 
-		if (manager.fachwahlGetAnzahlVerwendeterKursarten() != 3)
+		if (manager.fachwahlGetAnzahlVerwendeterKursarten() != 3) {
 			fail("Blockung001 hat nicht 3 Kursarten, sondern " + manager.fachwahlGetAnzahlVerwendeterKursarten() + ".");
+		}
 
-		if (manager.kursGetAnzahl() != 69)
+		if (manager.kursGetAnzahl() != 69) {
 			fail("Blockung001 hat nicht 69 Kurse, sondern " + manager.kursGetAnzahl() + ".");
+		}
 
-		if (manager.fachwahlGetAnzahl() != 1146)
+		if (manager.fachwahlGetAnzahl() != 1146) {
 			fail("Blockung001 hat nicht 1146 Fachwahlen, " + manager.fachwahlGetAnzahl() + ".");
+		}
 	}
 
 	/**
@@ -211,8 +219,9 @@ class KursblockungTests {
 		log.addConsumer(new Consumer<LogData>() {
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+				if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 					fail(t.getText());
+				}
 			}
 		});
 
@@ -230,8 +239,9 @@ class KursblockungTests {
 		assert kbOutputs != null : "kbOutputs == null";
 
 		// Jedes einzelne Blockungsergebnis prüfen.
-		for (final GostBlockungsergebnisManager kbOutput : kbOutputs)
+		for (final GostBlockungsergebnisManager kbOutput : kbOutputs) {
 			check(kbInput, kbOutput);
+		}
 	}
 
 	/**
@@ -252,8 +262,9 @@ class KursblockungTests {
 		log.addConsumer(new Consumer<LogData>() {
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+				if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 					fail(t.getText());
+				}
 			}
 		});
 
@@ -279,8 +290,9 @@ class KursblockungTests {
 		assert kbOutputs != null : "kbOutputs == null";
 
 		// Jedes einzelne Blockungsergebnis prüfen.
-		for (final GostBlockungsergebnisManager kbOutput : kbOutputs)
+		for (final GostBlockungsergebnisManager kbOutput : kbOutputs) {
 			check(kbInput, kbOutput);
+		}
 	}
 
 	/**
@@ -302,8 +314,9 @@ class KursblockungTests {
 		log.addConsumer(new Consumer<LogData>() {
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+				if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 					fail(t.getText());
+				}
 			}
 		});
 
@@ -323,8 +336,9 @@ class KursblockungTests {
 		regelFixiereKurseInSchieneSonstNichts(kbInput, new long[] { 18, 33 }, 14);
 
 		// Regel 5 --> Sperre einen Schüler in allen Kursen.
-		for (final @NotNull GostBlockungKurs gKurs : kbInput.daten().kurse)
+		for (final @NotNull GostBlockungKurs gKurs : kbInput.daten().kurse) {
 			regelVerbieteSchuelerInKurs(kbInput, 18, gKurs.id);
+		}
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
 		final ArrayList<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
@@ -336,18 +350,24 @@ class KursblockungTests {
 		for (final GostBlockungsergebnisManager kbOutput : kbOutputs) {
 			check(kbInput, kbOutput);
 
-			if (!kbOutput.getOfKursOfSchieneIstZugeordnet(35, 12))
+			if (!kbOutput.getOfKursOfSchieneIstZugeordnet(35, 12)) {
 				fail("kbOutput.getIstKursInSchiene(35, 12)");
-			if (!kbOutput.getOfKursOfSchieneIstZugeordnet(36, 12))
+			}
+			if (!kbOutput.getOfKursOfSchieneIstZugeordnet(36, 12)) {
 				fail("kbOutput.getIstKursInSchiene(36, 12)");
-			if (!kbOutput.getOfKursOfSchieneIstZugeordnet(37, 12))
+			}
+			if (!kbOutput.getOfKursOfSchieneIstZugeordnet(37, 12)) {
 				fail("kbOutput.getIstKursInSchiene(37, 12)");
-			if (!kbOutput.getOfKursOfSchieneIstZugeordnet(68, 13))
+			}
+			if (!kbOutput.getOfKursOfSchieneIstZugeordnet(68, 13)) {
 				fail("kbOutput.getIstKursInSchiene(68, 13)");
-			if (!kbOutput.getOfKursOfSchieneIstZugeordnet(18, 14))
+			}
+			if (!kbOutput.getOfKursOfSchieneIstZugeordnet(18, 14)) {
 				fail("kbOutput.getIstKursInSchiene(18, 14)");
-			if (!kbOutput.getOfKursOfSchieneIstZugeordnet(33, 14))
+			}
+			if (!kbOutput.getOfKursOfSchieneIstZugeordnet(33, 14)) {
 				fail("kbOutput.getIstKursInSchiene(33, 14)");
+			}
 
 			// TODO BAR Sperrungen überprüfen.
 		}
@@ -395,8 +415,9 @@ class KursblockungTests {
 		log.addConsumer(new Consumer<LogData>() {
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+				if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 					fail(t.getText());
+				}
 			}
 		});
 
@@ -406,9 +427,11 @@ class KursblockungTests {
 		// Blockungsergebnisse vorhanden?
 		assert kbOutputs != null : "kbOutputs == null";
 
-		for (final GostBlockungsergebnisManager ergebnis : kbOutputs)
-			if (ergebnis.getOfSchuelerIstZusammenMitSchuelerInFach(54, 114, 0))
+		for (final GostBlockungsergebnisManager ergebnis : kbOutputs) {
+			if (ergebnis.getOfSchuelerIstZusammenMitSchuelerInFach(54, 114, 0)) {
 				fail("Schüler 54 und 114 sind zusammen in Fach 0 trotz Regel 12!");
+			}
+		}
 	}
 
 	/**
@@ -454,8 +477,9 @@ class KursblockungTests {
 		log.addConsumer(new Consumer<LogData>() {
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+				if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 					fail(t.getText());
+				}
 			}
 		});
 
@@ -467,13 +491,16 @@ class KursblockungTests {
 
 		for (final GostBlockungsergebnisManager ergebnis : kbOutputs) {
 			// Ignoriere es wenn Schüler 54 oder Schüler 114 keinen zugeordneten Kurs hat.
-			if (ergebnis.getOfSchuelerOfFachZugeordneterKurs(54, 0) == null)
+			if (ergebnis.getOfSchuelerOfFachZugeordneterKurs(54, 0) == null) {
 				continue;
-			if (ergebnis.getOfSchuelerOfFachZugeordneterKurs(114, 0) == null)
+			}
+			if (ergebnis.getOfSchuelerOfFachZugeordneterKurs(114, 0) == null) {
 				continue;
+			}
 			// Wurde die Regel verletzt?
-			if (!ergebnis.getOfSchuelerIstZusammenMitSchuelerInFach(54, 114, 0))
+			if (!ergebnis.getOfSchuelerIstZusammenMitSchuelerInFach(54, 114, 0)) {
 				fail("Schüler 54 und 114 sind nicht zusammen in Fach 0 trotz Regel 11!");
+			}
 		}
 
 	}
@@ -490,8 +517,9 @@ class KursblockungTests {
 		log.addConsumer(new Consumer<LogData>() {
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+				if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 					fail(t.getText());
+				}
 			}
 		});
 
@@ -501,23 +529,29 @@ class KursblockungTests {
 		final @NotNull GostBlockungsdatenManager manager = k42Converter.gibKursblockungInput();
 
 		// Überprüfen der Ergebnisse
-		if (manager.schieneGetAnzahl() != 12)
+		if (manager.schieneGetAnzahl() != 12) {
 			fail("Blockung002 hat nicht 12 Schienen, sondern " + manager.schieneGetAnzahl() + ".");
+		}
 
-		if (manager.schuelerGetAnzahlMitMindestensEinerFachwahl() != 150)
+		if (manager.schuelerGetAnzahlMitMindestensEinerFachwahl() != 150) {
 			fail("Blockung002 hat nicht 150 SuS mit Fachwahlen, sondern " + manager.schuelerGetAnzahlMitMindestensEinerFachwahl() + ".");
+		}
 
-		if (manager.getFaecherAnzahl() != 23)
+		if (manager.getFaecherAnzahl() != 23) {
 			fail("Blockung002 hat nicht 23 Fächer, sondern " + manager.getFaecherAnzahl() + ".");
+		}
 
-		if (manager.fachwahlGetAnzahlVerwendeterKursarten() != 2)
+		if (manager.fachwahlGetAnzahlVerwendeterKursarten() != 2) {
 			fail("Blockung002 hat nicht 2 Kursarten, sondern " + manager.fachwahlGetAnzahlVerwendeterKursarten() + ".");
+		}
 
-		if (manager.kursGetAnzahl() != 86)
+		if (manager.kursGetAnzahl() != 86) {
 			fail("Blockung002 hat nicht 86 Kurse, sondern " + manager.kursGetAnzahl());
+		}
 
-		if (manager.fachwahlGetAnzahl() != 1798)
+		if (manager.fachwahlGetAnzahl() != 1798) {
 			fail("Blockung002 hat nicht 1798 Fachwahlen, sondern " + manager.fachwahlGetAnzahl() + ".");
+		}
 
 	}
 
@@ -540,8 +574,9 @@ class KursblockungTests {
 
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+				if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 					fail(t.getText());
+				}
 			}
 		});
 
@@ -561,8 +596,9 @@ class KursblockungTests {
 		assert kbOutputs != null : "kbOutputs == null";
 
 		// Jedes einzelne Blockungsergebnis prüfen.
-		for (final GostBlockungsergebnisManager kbOutput : kbOutputs)
+		for (final GostBlockungsergebnisManager kbOutput : kbOutputs) {
 			check(kbInput, kbOutput);
+		}
 	}
 
 	/**
@@ -584,8 +620,9 @@ class KursblockungTests {
 
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+				if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 					fail(t.getText());
+				}
 			}
 		});
 
@@ -609,8 +646,9 @@ class KursblockungTests {
 		assert kbOutputs != null : "kbOutputs == null";
 
 		// Jedes einzelne Blockungsergebnis prüfen.
-		for (final GostBlockungsergebnisManager kbOutput : kbOutputs)
+		for (final GostBlockungsergebnisManager kbOutput : kbOutputs) {
 			check(kbInput, kbOutput);
+		}
 	}
 
 	/**
@@ -632,8 +670,9 @@ class KursblockungTests {
 
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+				if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 					fail(t.getText());
+				}
 			}
 		});
 
@@ -652,8 +691,9 @@ class KursblockungTests {
 		regelFixiereKursInSchiene(kbInput, 17, 1);
 
 		final long[] schuelerFixierungen = new long[] { 4, 10, 18, 21, 22, 27, 31, 55, 56, 58, 59, 61, 66, 78, 101, 118, 122, 125, 128 };
-		for (final long schuelerID : schuelerFixierungen)
+		for (final long schuelerID : schuelerFixierungen) {
 			regelFixiereSchuelerInKurs(kbInput, schuelerID, 0);
+		}
 
 		// Berechnung der Blockung und Rückgabe aller Blockungsergebnisse.
 		final ArrayList<@NotNull GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
@@ -662,8 +702,9 @@ class KursblockungTests {
 		assert kbOutputs != null : "kbOutputs == null";
 
 		// Jedes einzelne Blockungsergebnis prüfen.
-		for (final GostBlockungsergebnisManager kbOutput : kbOutputs)
+		for (final GostBlockungsergebnisManager kbOutput : kbOutputs) {
 			check(kbInput, kbOutput);
+		}
 
 	}
 
@@ -685,8 +726,9 @@ class KursblockungTests {
 		log.addConsumer(new Consumer<LogData>() {
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+				if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 					fail(t.getText());
+				}
 			}
 		});
 
@@ -713,8 +755,9 @@ class KursblockungTests {
 		assert kbOutputs != null : "kbOutputs == null";
 
 		// Jedes einzelne Blockungsergebnis prüfen.
-		for (final GostBlockungsergebnisManager kbOutput : kbOutputs)
+		for (final GostBlockungsergebnisManager kbOutput : kbOutputs) {
 			check(man, kbOutput);
+		}
 	}
 
 	private static void check(final @NotNull GostBlockungsdatenManager kbInput, final GostBlockungsergebnisManager kbOutput) {
@@ -727,8 +770,9 @@ class KursblockungTests {
 	}
 
 	private long recursive_min_sum_r(final long[][] matrix, final int r, final boolean[] usedC) {
-		if (r == matrix.length)
+		if (r == matrix.length) {
 			return 0;
+		}
 
 		long min = Long.MAX_VALUE;
 		for (int c = 0; c < matrix[r].length; c++) {
@@ -744,8 +788,9 @@ class KursblockungTests {
 	}
 
 	private long recursive_min_sum_c(final long[][] matrix, final int c, final boolean[] usedR) {
-		if (c == matrix[0].length)
+		if (c == matrix[0].length) {
 			return 0;
+		}
 
 		long min = Long.MAX_VALUE;
 		for (int r = 0; r < matrix.length; r++) {
@@ -763,8 +808,9 @@ class KursblockungTests {
 	private static void regelSperreSchieneFuerKursart(final @NotNull GostBlockungsdatenManager pInput, final @NotNull String pKursart, final int pVon,
 			final int pBis) {
 		final GostKursart gKursart = GostKursart.fromKuerzel(pKursart);
-		if (gKursart == null)
+		if (gKursart == null) {
 			throw new AssertionError("GostKursart '" + pKursart + "' nicht gefunden.");
+		}
 
 		final GostBlockungRegel gRegel = new GostBlockungRegel();
 		gRegel.id = pInput.regelGetAnzahl() + 1;
@@ -780,11 +826,12 @@ class KursblockungTests {
 		for (final @NotNull GostBlockungKurs gKurs : pInput.daten().kurse) {
 
 			boolean gefunden = false;
-			for (final long idKurs : pKursID)
+			for (final long idKurs : pKursID) {
 				if (gKurs.id == idKurs) {
 					gefunden = true;
 					break;
 				}
+			}
 
 			final GostBlockungRegel gRegel = new GostBlockungRegel();
 			gRegel.id = pInput.regelGetAnzahl() + 1;
@@ -852,8 +899,9 @@ class KursblockungTests {
 	@DisplayName("Daten - Random")
 	void testeKursblockungAlgorithmusZufaellig() {
 		final Random lRandom = new Random(1);
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 10; i++) {
 			testeKursblockungAlgorithmusZufaelligEinMal(lRandom);
+		}
 	}
 
 	private static void testeKursblockungAlgorithmusZufaelligEinMal(final Random pRandom) {
@@ -868,8 +916,9 @@ class KursblockungTests {
 		log.addConsumer(new Consumer<LogData>() {
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.APP) != 0)
+				if (t.getLevel().compareTo(LogLevel.APP) != 0) {
 					fail(t.getText());
+				}
 			}
 		});
 
@@ -880,12 +929,14 @@ class KursblockungTests {
 		final ArrayList<GostBlockungsergebnisManager> kbOutputs = kbAlgorithmus.handle(kbInput);
 
 		// Blockungsergebnisse vorhanden?
-		if (kbOutputs == null)
+		if (kbOutputs == null) {
 			throw new AssertionError("kbOutputs == null");
+		}
 
 		// Jedes einzelne Blockungsergebnis prüfen.
-		for (final GostBlockungsergebnisManager kbOutput : kbOutputs)
+		for (final GostBlockungsergebnisManager kbOutput : kbOutputs) {
 			check(kbInput, kbOutput);
+		}
 	}
 
 	private static GostBlockungsdatenManager erzeugeZufallsdaten(final Random pRandom) {
@@ -960,13 +1011,15 @@ class KursblockungTests {
 				final GostBlockungKurs gKurs = mapKurse.get(kursID);
 
 				// Fach bereits gewählt?
-				if (setUsedFach.contains(gKurs.fach_id))
+				if (setUsedFach.contains(gKurs.fach_id)) {
 					continue;
+				}
 
 				// Schiene bereits gewählt?
 				final GostBlockungSchiene gSchiene = mapKursIDSchiene.get(gKurs.id);
-				if (setUsedSchiene.contains(gSchiene.id))
+				if (setUsedSchiene.contains(gSchiene.id)) {
 					continue;
+				}
 
 				// Fachwahl hinzufügen.
 				setUsedFach.add(gKurs.fach_id);
@@ -1025,8 +1078,9 @@ class KursblockungTests {
 		log.addConsumer(new Consumer<LogData>() {
 			@Override
 			public void accept(final LogData t) {
-				if (t.getLevel().compareTo(LogLevel.ERROR) == 0)
+				if (t.getLevel().compareTo(LogLevel.ERROR) == 0) {
 					fail(t.getText());
+				}
 			}
 		});
 
@@ -1091,8 +1145,9 @@ class KursblockungTests {
 		assert kbOutputs != null : "kbOutputs == null";
 
 		// Jedes einzelne Blockungsergebnis prüfen.
-		for (final GostBlockungsergebnisManager kbOutput : kbOutputs)
+		for (final GostBlockungsergebnisManager kbOutput : kbOutputs) {
 			check(kbInput, kbOutput);
+		}
 	}
 
 }

@@ -1,5 +1,13 @@
 package de.svws_nrw.abschluesse.ge.test;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
@@ -16,14 +24,6 @@ import de.svws_nrw.core.abschluss.ge.ServicePrognose;
 import de.svws_nrw.core.data.abschluss.AbschlussErgebnis;
 import de.svws_nrw.core.logger.LogLevel;
 
-import java.util.Map;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 /**
  * Diese Klasse enthält die Testroutinen für die Abschlussberechnung an der
  * Gesamtschule.
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 @DisplayName("Teste Abschlussberechnung für die Gesamtschule")
 class TestGEAbschluesse {
 
-	/** Eine MAP mit den Testfällen aus den zugeörigen JSON-Dateien */
+	/** Eine MAP mit den Testfällen aus den zugehörigen JSON-Dateien */
 	static Map<String, GEAbschlussTestfall> notenBilder;
 
 	/**
@@ -45,8 +45,9 @@ class TestGEAbschluesse {
 		ASDCoreTypeUtils.initAll();
 		System.out.println(" - Lade Notenbilder aus den JSON-Resourcen...");
 		notenBilder = ResourceUtils.json2Classes("de.svws_nrw.abschluesse.ge.test", "geabschlusstest_", GEAbschlussTestfall.class);
-		if ((notenBilder == null) || (notenBilder.size() == 0))
+		if ((notenBilder == null) || (notenBilder.size() == 0)) {
 			fail("Fehler beim laden der Notenbilder!");
+		}
 		System.out.println("    FERTIG!");
 		System.out.println();
 	}
@@ -97,7 +98,7 @@ class TestGEAbschluesse {
 		System.out.println("  - Prüfe HA9:");
 		final ArrayList<DynamicTest> tests = new ArrayList<>();
 		notenBilder.forEach((name, data) -> {
-			if ("09".equals(data.input.jahrgang) || "9".equals(data.input.jahrgang))
+			if ("09".equals(data.input.jahrgang) || "9".equals(data.input.jahrgang)) {
 				tests.add(DynamicTest.dynamicTest(
 						"ID " + name + "",
 						() -> {
@@ -118,6 +119,7 @@ class TestGEAbschluesse {
 									+ AbschlussManager.getNPFaecherString(data.ha9) + "): " + (testNPFaecher ? "OK" : "FEHLER"));
 							assertTrue(testNPFaecher, "Fehler: Nachprüfungsfächer unterscheiden sich zu den Testdaten!");
 						}));
+			}
 		});
 		return tests.stream();
 	}
@@ -134,7 +136,7 @@ class TestGEAbschluesse {
 		System.out.println("  - Prüfe HA10:");
 		final ArrayList<DynamicTest> tests = new ArrayList<>();
 		notenBilder.forEach((name, data) -> {
-			if ("10".equals(data.input.jahrgang))
+			if ("10".equals(data.input.jahrgang)) {
 				tests.add(DynamicTest.dynamicTest(
 						"ID " + name + "",
 						() -> {
@@ -154,6 +156,7 @@ class TestGEAbschluesse {
 									+ AbschlussManager.getNPFaecherString(data.ha10) + "): " + (testNPFaecher ? "OK" : "FEHLER"));
 							assertTrue(testNPFaecher, "Fehler: Nachprüfungsfächer unterscheiden sich zu den Testdaten!");
 						}));
+			}
 		});
 		return tests.stream();
 	}
@@ -170,7 +173,7 @@ class TestGEAbschluesse {
 		System.out.println("  - Prüfe MSA:");
 		final ArrayList<DynamicTest> tests = new ArrayList<>();
 		notenBilder.forEach((name, data) -> {
-			if ("10".equals(data.input.jahrgang))
+			if ("10".equals(data.input.jahrgang)) {
 				tests.add(DynamicTest.dynamicTest(
 						"ID " + name + "",
 						() -> {
@@ -190,6 +193,7 @@ class TestGEAbschluesse {
 									+ AbschlussManager.getNPFaecherString(data.msa) + "): " + (testNPFaecher ? "OK" : "FEHLER"));
 							assertTrue(testNPFaecher, "Fehler: Nachprüfungsfächer unterscheiden sich zu den Testdaten!");
 						}));
+			}
 		});
 		return tests.stream();
 	}
@@ -206,7 +210,7 @@ class TestGEAbschluesse {
 		System.out.println("  - Prüfe MSA-Q:");
 		final ArrayList<DynamicTest> tests = new ArrayList<>();
 		notenBilder.forEach((name, data) -> {
-			if ("10".equals(data.input.jahrgang))
+			if ("10".equals(data.input.jahrgang)) {
 				tests.add(DynamicTest.dynamicTest(
 						"ID " + name + "",
 						() -> {
@@ -226,6 +230,7 @@ class TestGEAbschluesse {
 									+ AbschlussManager.getNPFaecherString(data.msa_q) + "): " + (testNPFaecher ? "OK" : "FEHLER"));
 							assertTrue(testNPFaecher, "Fehler: Nachprüfungsfächer unterscheiden sich zu den Testdaten!");
 						}));
+			}
 		});
 		return tests.stream();
 	}
