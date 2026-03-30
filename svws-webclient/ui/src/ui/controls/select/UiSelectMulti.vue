@@ -58,13 +58,13 @@
 								{{ manager.getSelectionText(item) }}
 							</template>
 							<div class="flex items-center justify-between w-full">
-								<span :class="[textColorClass, 'ui-select-multi--selection--text truncate px-2']">
+								<span :class="[selectionBubbleTextClasses, 'ui-select-multi--selection--text truncate px-2']">
 									{{ manager.getSelectionText(item) }}
 								</span>
 								<button v-if="!readonly && (removable || (modelArray.length > 1))" @click.stop="deselectOption(item)" @keydown.enter.stop="deselectOption(item)"
 									class="ui-select-multi--selection--removebutton hover:bg-ui rounded-sm flex m-1 -ml-1 shrink-0 focus:ring-2 ring-ui-brand outline-none"
 									:aria-label="`Auswahl ${props.manager.getSelectionText(item)} löschen`">
-									<span :class="[ iconColorClass, 'icon-sm i-ri-close-line']" />
+									<span :class="[ selectionBubbleIconClasses, 'icon-sm i-ri-close-line']" />
 								</button>
 							</div>
 						</svws-ui-tooltip>
@@ -232,9 +232,23 @@
 	 * Berechnet die Farbe der Selektion-Bubbles abhängig davon, ob sie disabled sind
 	 */
 	const selectionBubbleClasses = computed((): string => {
-		const colors = props.disabled ? 'bg-ui-disabled text-ui-ondisabled border-ui-disabled' : 'bg-ui-selected text-ui-onselected border-ui-selected';
+		const colors = props.disabled ? 'bg-ui-disabled border-ui-ondisabled' : 'bg-ui-selected border-ui-selected';
 		const height = props.headless ? '' : 'mt-[0.35rem]';
 		return `${colors} ${height}`;
+	});
+
+	/**
+	 * Berechnet die Farbe der Selektion-Bubble-Texte abhängig davon, ob sie disabled sind
+	 */
+	const selectionBubbleTextClasses = computed((): string => {
+		return props.disabled ? 'text-ui-ondisabled' : 'text-ui-onselected';
+	});
+
+	/**
+	 * Berechnet die Farbe der Selektion-Bubble-Icons abhängig davon, ob sie disabled sind
+	 */
+	const selectionBubbleIconClasses = computed((): string => {
+		return props.disabled ? 'icon-ui-ondisabled' : 'icon-ui-onselected';
 	});
 
 	/**

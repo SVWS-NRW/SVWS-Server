@@ -52,7 +52,6 @@ beforeEach(() => {
 describe("UiSelectMulti Utils", () => {
 	const { manager, singleSelection, multiSelection } = createTestData();
 	let scrollHeightSpy: ReturnType<typeof vi.spyOn>;
-	let scrollTopSpy: ReturnType<typeof vi.spyOn>;
 
 	describe.concurrent("Selektion", () => {
 		test("Nach der Selektion wird das Dropdown nicht geschlossen", async () => {
@@ -162,9 +161,6 @@ describe("UiSelectMulti Utils", () => {
 			if (scrollHeightSpy !== undefined) {
 				scrollHeightSpy.mockRestore();
 			}
-			if (scrollTopSpy !== undefined) {
-				scrollTopSpy.mockRestore();
-			}
 		});
 
 		test("Das Dropdown wird unter dem Select angezeigt, wenn Platz da ist", async () => {
@@ -269,7 +265,7 @@ describe("UiSelectMulti Utils", () => {
 			expect(positionStyles.maxHeight).toBe("155px");
 		});
 
-		test("Bei einer Navigation nach unten, wird das Dropdown zur unteren Optionsgrenze gescrollt, falls die Option außerhalb des Sichtbereiches ist", async () => {
+		test("Bei einer Navigation nach unten wird das Dropdown zur unteren Optionsgrenze gescrollt, falls die Option außerhalb des Sichtbereiches ist", async () => {
 			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager }, attachTo: document.body });
 			const { combobox, dropdown } = getElements(wrapper);
 
@@ -361,7 +357,7 @@ describe("UiSelectMulti Utils", () => {
 			expect(dropdown.attributes("data-popover-open")).toBeUndefined();
 		});
 
-		test("Beim Öffnen des Dropdowns wird dessen Position und Größe neu berechnet", async () => {
+		test("Das Dropdown passt sich an die Dimensionen der Combobox an", async () => {
 			mockBounding.x.value = 150;
 			mockBounding.y.value = 50;
 			mockBounding.width.value = 200;
@@ -372,17 +368,21 @@ describe("UiSelectMulti Utils", () => {
 			mockBounding.bottom.value = 90;
 
 			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
-			const { combobox } = getElements(wrapper);
+			const { vm } = getElements(wrapper);
 
-			const oldPositionStyles = wrapper.findComponent({ name: "UiSelectMulti" }).vm.dropdownPositionStyles;
+			const oldPositionStyles = vm.dropdownPositionStyles;
+			expect(oldPositionStyles).toEqual({ top: '93px', left: '150px', width: '200px', maxHeight: '235px' });
 
-			// Dropdown öffnen
-			await combobox.trigger('click');
+			mockBounding.x.value = 250;
+			mockBounding.y.value = 150;
+			mockBounding.width.value = 400;
+			mockBounding.height.value = 50;
+			mockBounding.top.value = 150;
+			mockBounding.left.value = 250;
+			mockBounding.bottom.value = 550;
 
-			expect(oldPositionStyles).toEqual({ top: '3px', left: '0px', width: '0px', maxHeight: '235px' });
-
-			const newPositionStyles = wrapper.findComponent({ name: "UiSelectMulti" }).vm.dropdownPositionStyles;
-			expect(newPositionStyles).toEqual({ top: '93px', left: '150px', width: '200px', maxHeight: '235px' });
+			const newPositionStyles = vm.dropdownPositionStyles;
+			expect(newPositionStyles).toEqual({ top: '203px', left: '250px', width: '400px', maxHeight: '235px' });
 		});
 
 		test("Beim Öffnen des Dropdowns wird die Scrollposition auf 0 gesetzt, wenn kein Element hervorgehoben ist", async () => {
@@ -395,72 +395,6 @@ describe("UiSelectMulti Utils", () => {
 			// Dropdown öffnen
 			await combobox.trigger('click');
 			expect(dropdown.element.scrollTop).toBe(0);
-		});
-
-		test("Beim Öffnen des Dropdowns wird ein EventListener auf window resize gesetzt", async () => {
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
-			const { combobox } = getElements(wrapper);
-
-			const eventSpy = vi.spyOn(globalThis, "addEventListener");
-
-			// Dropdown öffnen
-			await combobox.trigger('click');
-			expect(eventSpy).toHaveBeenCalledWith("resize", expect.any(Function));
-			eventSpy.mockRestore();
-		});
-
-		test("Beim Schließen des Dropdowns wird ein EventListener auf window resize entfernt", async () => {
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
-			const { combobox } = getElements(wrapper);
-
-			const eventSpy = vi.spyOn(globalThis, "removeEventListener");
-
-			// Dropdown öffnen und schließen
-			await combobox.trigger('click');
-			await combobox.trigger('click');
-
-			expect(eventSpy).toHaveBeenCalledWith("resize", expect.any(Function));
-			eventSpy.mockRestore();
-		});
-
-		test("Das Dropdown schließt sich bei einem window resize", async () => {
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
-			const { combobox, dropdown } = getElements(wrapper);
-
-			// Dropdown öffnen
-			await combobox.trigger('click');
-
-			globalThis.dispatchEvent(new Event("resize"));
-
-			expect(dropdown.attributes("data-popover-open")).toBeUndefined();
-		});
-
-		test("Das Dropdown schließt sich nicht, wenn sich die Position verändert, aber das Dropdown gerade geöffnet wurde", async () => {
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
-			const { combobox, dropdown, vm } = getElements(wrapper);
-
-			// Dropdown öffnen
-			await combobox.trigger('click');
-
-			mockBounding.x.value = 50;
-			mockBounding.left.value = 50;
-			await vm.$nextTick();
-
-			expect(dropdown.attributes("data-popover-open")).toBe("true");
-		});
-
-		test("Das Dropdown schließt sich, wenn sich die Position verändert, aber das Dropdown schon offen war", async () => {
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager: manager } });
-			const { combobox, dropdown, vm } = getElements(wrapper);
-			vi.useFakeTimers();
-			// Dropdown öffnen
-			await combobox.trigger('click');
-			vi.runAllTimers();
-
-			mockBounding.x.value = 50;
-			await vm.$nextTick();
-
-			expect(dropdown.attributes("data-popover-open")).toBeUndefined();
 		});
 	});
 
@@ -636,11 +570,6 @@ describe("UiSelectMulti Utils", () => {
 				expect(wrapper.find(".ui-select-multi--icons-right button span").classes()).toContain("icon-ui-success");
 				// Statistik-Icon bleibt unberührt
 				expect(label.find(".ui-select-multi--label--statistics span").classes()).not.toContain("icon-ui-success");
-
-				const selectionRemoveButtons = wrapper.findAll(".ui-select-multi--selection--removebutton span");
-				expect(selectionRemoveButtons.length).toBe(2);
-
-				selectionRemoveButtons.forEach(removeButton => expect(removeButton.classes()).toContain("icon-ui-success"));
 
 				await wrapper.setProps({ required: true });
 				expect(label.find(".ui-select-multi--label--required span").classes()).toContain("icon-ui-success");

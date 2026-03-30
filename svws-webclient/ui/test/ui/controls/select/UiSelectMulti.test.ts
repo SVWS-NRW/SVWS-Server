@@ -890,42 +890,77 @@ describe.concurrent("Teste Watcher und Computeds", () => {
 	});
 
 	describe.concurrent("computed->selectionBubbleClasses", () => {
+		test.each([
+			{ disabled: true, headless: false, expectedClasses: "bg-ui-disabled border-ui-ondisabled mt-[0.35rem]" },
+			{ disabled: true, headless: true, expectedClasses: "bg-ui-disabled border-ui-ondisabled" },
+			{ disabled: false, headless: false, expectedClasses: "bg-ui-selected border-ui-selected mt-[0.35rem]" },
+			{ disabled: false, headless: true, expectedClasses: "bg-ui-selected border-ui-selected" },
+
+		])(
+			"disabled=$disabled, headless=$headless → Klassen enthalten '$expectedClasses'",
+			({ disabled, headless, expectedClasses }) => {
+				const { manager } = createTestData();
+				const wrapper = mount(UiSelectMulti<cars>, {
+					props: { manager, disabled, headless },
+				});
+				const vm = wrapper.findComponent({ name: "UiSelectMulti" }).vm;
+
+				expect(vm.selectionBubbleClasses).toContain(expectedClasses);
+			}
+		);
+	});
+
+	describe.concurrent("computed->selectionBubbleIconClasses", () => {
+		test.each([
+			{ disabled: true, expectedClasses: "icon-ui-ondisabled" },
+			{ disabled: false, expectedClasses: "icon-ui-onselected" },
+
+		])(
+			"disabled=$disabled → Klassen enthalten '$expectedClasses'",
+			({ disabled, expectedClasses }) => {
+				const { manager } = createTestData();
+				const wrapper = mount(UiSelectMulti<cars>, {
+					props: { manager, disabled },
+				});
+				const vm = wrapper.findComponent({ name: "UiSelectMulti" }).vm;
+
+				expect(vm.selectionBubbleIconClasses).toContain(expectedClasses);
+			}
+		);
+	});
+
+	describe.concurrent("computed->selectionBubbleTextClasses", () => {
+		test.each([
+			{ disabled: true, expectedClasses: "text-ui-ondisabled" },
+			{ disabled: false, expectedClasses: "text-ui-onselected" },
+
+		])(
+			"disabled=$disabled → Klassen enthalten '$expectedClasses'",
+			({ disabled, expectedClasses }) => {
+				const { manager } = createTestData();
+				const wrapper = mount(UiSelectMulti<cars>, {
+					props: { manager, disabled },
+				});
+				const vm = wrapper.findComponent({ name: "UiSelectMulti" }).vm;
+
+				expect(vm.selectionBubbleTextClasses).toContain(expectedClasses);
+			}
+		);
+	});
+
+	describe.concurrent("computed->selectionBubbleIconClasses", () => {
 		const { manager } = createTestData();
 
-		test("disabled = true, headless = false → Styles enthalten bg-ui-disabled, text-ui-ondisabled, border-ui-disabled und mt-[0.35rem]", () => {
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, disabled: true, headless: false } });
+		test("disabled = true → Styles enthält Klasse icon-ui-ondisabled", () => {
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, disabled: true } });
 			const vm = wrapper.findComponent({ name: "UiSelectMulti" }).vm;
-			expect(vm.selectionBubbleClasses).toContain("bg-ui-disabled");
-			expect(vm.selectionBubbleClasses).toContain("text-ui-ondisabled");
-			expect(vm.selectionBubbleClasses).toContain("border-ui-disabled");
-			expect(vm.selectionBubbleClasses).toContain("mt-[0.35rem]");
+			expect(vm.selectionBubbleIconClasses).toContain("icon-ui-ondisabled");
 		});
 
-		test("disabled = true, headless = true → Styles enthalten bg-ui-disabled, text-ui-ondisabled, border-ui-disabled ohne mt-[0.35rem]", () => {
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, disabled: true, headless: true } });
+		test("disabled = false → Styles enthält Klasse icon-ui-onselected", () => {
+			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, disabled: false } });
 			const vm = wrapper.findComponent({ name: "UiSelectMulti" }).vm;
-			expect(vm.selectionBubbleClasses).toContain("bg-ui-disabled");
-			expect(vm.selectionBubbleClasses).toContain("text-ui-ondisabled");
-			expect(vm.selectionBubbleClasses).toContain("border-ui-disabled");
-			expect(vm.selectionBubbleClasses).not.toContain("mt-[0.35rem]");
-		});
-
-		test("disabled = false, headless = false → Styles enthalten bg-ui-selected, text-ui-onselected, border-ui-selected und mt-[0.35rem]", () => {
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, disabled: false, headless: false } });
-			const vm = wrapper.findComponent({ name: "UiSelectMulti" }).vm;
-			expect(vm.selectionBubbleClasses).toContain("bg-ui-selected");
-			expect(vm.selectionBubbleClasses).toContain("text-ui-onselected");
-			expect(vm.selectionBubbleClasses).toContain("border-ui-selected");
-			expect(vm.selectionBubbleClasses).toContain("mt-[0.35rem]");
-		});
-
-		test("disabled = false, headless = true → Styles enthalten bg-ui-selected, text-ui-onselected, border-ui-selected ohne mt-[0.35rem]", () => {
-			const wrapper = mount(UiSelectMulti<cars>, { props: { manager, disabled: false, headless: true } });
-			const vm = wrapper.findComponent({ name: "UiSelectMulti" }).vm;
-			expect(vm.selectionBubbleClasses).toContain("bg-ui-selected");
-			expect(vm.selectionBubbleClasses).toContain("text-ui-onselected");
-			expect(vm.selectionBubbleClasses).toContain("border-ui-selected");
-			expect(vm.selectionBubbleClasses).not.toContain("mt-[0.35rem]");
+			expect(vm.selectionBubbleIconClasses).toContain("icon-ui-onselected");
 		});
 	});
 });

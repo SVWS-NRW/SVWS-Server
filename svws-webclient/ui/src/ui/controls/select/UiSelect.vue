@@ -50,10 +50,10 @@
 						<div v-if="(model !== undefined) && (model !== null)" class="ui-select--selection flex items-center overflow-hidden row-start-1 col-start-1">
 							<svws-ui-tooltip position="top" :indicator="false" class="truncate">
 								<template #content>
-									{{ manager.getSelectionText(model) }}
+									{{ manager.getSelectionText(model) ?? "-" }}
 								</template>
 								<div v-if="showSelection" :class="[selectionTextColor, 'truncate z-0 cursor-pointer font-medium inline-block align-middle leading-none h-5 mt-1']">
-									{{ manager.getSelectionText(model) }}
+									{{ manager.getSelectionText(model) ?? "-" }}
 								</div>
 							</svws-ui-tooltip>
 						</div>

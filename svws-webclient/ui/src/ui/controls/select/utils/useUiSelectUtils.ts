@@ -51,25 +51,10 @@ export function useUiSelectUtils<T>(
 
 } {
 	const dropdownIsOpen = ref(false);
-	// Größen und Positionen zur Berechnung des Dropdowns
-	const distanceWindowTopToComboboxTop = ref(0);
-	const distanceWindowTopToComboboxBottom = ref(0);
-	const distanceWindowLeftToComboboxLeft = ref(0);
-	const widthComboBox = ref(0);
-	const heightComboBox = ref(0);
-	const { height: windowHeight } = useWindowSize();
-	const bounding = useElementBounding(elements.uiSelectCombobox);
-	const justOpened = ref(false);
 
-	// Beobachtet Größe und Position der Combobox, um bei Änderungen das Dropdown zu schließen
-	watch(
-		[bounding.x, bounding.y, bounding.height, bounding.width],
-		() => {
-			if (!justOpened.value) {
-				closeDropdown();
-			}
-		}
-	);
+	// Größen und Positionen zur Berechnung des Dropdowns
+	const { height: windowHeight } = useWindowSize();
+	const comboboxDimensions = useElementBounding(elements.uiSelectCombobox);
 
 	// Index des visuell hervorgehobenen Dropdownlistenelements bei Tastennavigation
 	const highlightedIndex = ref(-1);
@@ -121,12 +106,14 @@ export function useUiSelectUtils<T>(
 		});
 	});
 
-	const dropdownPositionStyles = computed(() => ({
-		top: dropdownTopPosition.value + 'px',
-		left: distanceWindowLeftToComboboxLeft.value + 'px',
-		width: widthComboBox.value + 'px',
-		maxHeight: dropdownMaxHeight.value + 'px',
-	}));
+	const dropdownDimensionStyles = computed(() => (
+		{
+			top: `${dropdownTopPosition.value}px`,
+			left: `${comboboxDimensions.left.value}px`,
+			width: `${comboboxDimensions.width.value}px`,
+			maxHeight: `${dropdownMaxHeight.value}px`,
+		}
+	));
 
 	const dropdownTopPosition = computed(() => {
 		if (elements.uiSelectDropdown.value === null) {
@@ -134,9 +121,9 @@ export function useUiSelectUtils<T>(
 		}
 		if (dropdownShouldBeDisplayedAboveComboBox.value) {
 			const dropdownHeight = Math.min(dropdownMaxHeight.value, elements.uiSelectDropdown.value.scrollHeight);
-			return `${distanceWindowTopToComboboxTop.value - dropdownHeight - 2}`;
+			return `${comboboxDimensions.top.value - dropdownHeight - 2}`;
 		} else {
-			return `${distanceWindowTopToComboboxTop.value + heightComboBox.value + 3}`;
+			return `${comboboxDimensions.top.value + comboboxDimensions.height.value + 3}`;
 		}
 	});
 
@@ -145,8 +132,9 @@ export function useUiSelectUtils<T>(
 			return false;
 		}
 
-		const freeSpaceBelowCombobox = windowHeight.value - distanceWindowTopToComboboxBottom.value;
-		const freeSpaceAboveCombobox = distanceWindowTopToComboboxTop.value;
+		const comboboxBottomLeft = comboboxDimensions.top.value + comboboxDimensions.height.value;
+		const freeSpaceBelowCombobox = windowHeight.value - comboboxBottomLeft;
+		const freeSpaceAboveCombobox = comboboxDimensions.top.value;
 		const minimumSpace = 100;
 		if (freeSpaceBelowCombobox > minimumSpace) {
 			return false;
@@ -162,20 +150,13 @@ export function useUiSelectUtils<T>(
 	const dropdownMaxHeight = computed(() => {
 		let maxHeight;
 		if (dropdownShouldBeDisplayedAboveComboBox.value) {
-			maxHeight = distanceWindowTopToComboboxTop.value - 5;
+			maxHeight = comboboxDimensions.top.value - 5;
 		} else {
-			maxHeight = windowHeight.value - distanceWindowTopToComboboxBottom.value - 5;
+			const comboboxBottomLeft = comboboxDimensions.top.value + comboboxDimensions.height.value;
+			maxHeight = windowHeight.value - comboboxBottomLeft - 5;
 		}
 		return Math.min(235, maxHeight);
 	});
-
-	function updateDropdownSizeAndPosition(): void {
-		distanceWindowTopToComboboxTop.value = bounding.top.value;
-		distanceWindowTopToComboboxBottom.value = bounding.bottom.value;
-		distanceWindowLeftToComboboxLeft.value = bounding.left.value;
-		widthComboBox.value = bounding.width.value;
-		heightComboBox.value = bounding.height.value;
-	}
 
 	function toggleDropdown(): void {
 		if (dropdownIsOpen.value) {
@@ -189,21 +170,12 @@ export function useUiSelectUtils<T>(
 		if ((elements.uiSelectDropdown.value === null) || dropdownIsOpen.value) {
 			return;
 		}
-		justOpened.value = true;
-		updateDropdownSizeAndPosition();
 		focusSelect();
 		elements.uiSelectDropdown.value.showPopover();
 		dropdownIsOpen.value = true;
 		if (!hasHighlightedOption()) {
 			scrollDropdownToTop();
 		}
-
-		window.addEventListener('resize', () => closeDropdown());
-		// Manchmal verschiebt sich das Select, wenn reingeklickt wird. Dieses Flag soll verhindern, dass es in dem Fall
-		// sofort wieder geschlossen wird
-		requestAnimationFrame(() => {
-			justOpened.value = false;
-		});
 	}
 
 	function closeDropdown(): void {
@@ -213,7 +185,6 @@ export function useUiSelectUtils<T>(
 		dropdownIsOpen.value = false;
 		elements.uiSelectDropdown.value?.hidePopover();
 		removeOptionHighlighting();
-		window.removeEventListener('resize', () => closeDropdown());
 	}
 
 	function scrollDropdownToTop(): void {
@@ -323,7 +294,7 @@ export function useUiSelectUtils<T>(
 
 	return {
 		// Dropdown
-		dropdownPositionStyles,
+		dropdownPositionStyles: dropdownDimensionStyles,
 		toggleSelection,
 		closeDropdown,
 		// Styles und Attribute
