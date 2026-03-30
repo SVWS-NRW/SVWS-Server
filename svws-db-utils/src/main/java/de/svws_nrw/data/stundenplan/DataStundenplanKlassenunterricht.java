@@ -9,10 +9,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.adt.map.HashMap2D;
-import de.svws_nrw.core.data.stundenplan.StundenplanKlassenunterricht;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.core.adt.map.HashMap2D;
+import de.svws_nrw.core.data.stundenplan.StundenplanKlassenunterricht;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
@@ -44,7 +44,6 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 		super(conn);
 		this.stundenplanID = stundenplanID;
 	}
-
 
 	@Override
 	public Response getAll() throws ApiOperationException {
@@ -80,8 +79,9 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
 				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID IN ?2 AND e.WechselNr = 0",
 				DTOSchuelerLernabschnittsdaten.class, idSchuljahresabschnitt, mapKlassen.keySet());
-		if (lernabschnitte.isEmpty())
+		if (lernabschnitte.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final Map<Long, List<Long>> mapKlassenLernabschnittIDs = lernabschnitte.stream()
 				.collect(Collectors.groupingBy(la -> la.Klassen_ID, Collectors.mapping(la -> la.ID, Collectors.toList())));
 		final Map<Long, Long> mapLernabschnittSchuelerID = lernabschnitte.stream().collect(Collectors.toMap(la -> la.ID, la -> la.Schueler_ID));
@@ -92,15 +92,17 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 		for (final Map.Entry<Long, List<Long>> entry : mapKlassenLernabschnittIDs.entrySet()) {
 			final long klassenID = entry.getKey();
 			final List<Long> lernabschnittIDs = entry.getValue();
-			if (lernabschnittIDs.isEmpty())
+			if (lernabschnittIDs.isEmpty()) {
 				continue;
+			}
 			// Bestimme die Leistungsdaten zu den Lernabschnitten, welche keine Kurse sind, d.h. wo der Kurseintrag null, leer oder die Kursart PUK ist
 			final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList(
 					"SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID IN ?1 AND e.Kurs_ID IS NULL AND (e.Kursart IS NULL OR e.Kursart = '' OR e.Kursart = '%s')"
 							.formatted(ZulaessigeKursart.PUK.daten(schuljahresabschnitt.schuljahr).kuerzel),
 					DTOSchuelerLeistungsdaten.class, lernabschnittIDs);
-			if (leistungsdaten.isEmpty())
+			if (leistungsdaten.isEmpty()) {
 				continue;
+			}
 			for (final DTOSchuelerLeistungsdaten ls : leistungsdaten) {
 				StundenplanKlassenunterricht ku = klassenunterrichte.getOrNull(klassenID, ls.Fach_ID);
 				if (ku == null) {
@@ -112,16 +114,20 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 					daten.add(ku);
 					faecherIDs.add(ku.idFach);
 				} else {
-					if ((ls.Wochenstunden != null) && (ku.wochenstunden < ls.Wochenstunden))
+					if ((ls.Wochenstunden != null) && (ku.wochenstunden < ls.Wochenstunden)) {
 						ku.wochenstunden = ls.Wochenstunden;
+					}
 				}
 				final Long schuelerID = mapLernabschnittSchuelerID.get(ls.Abschnitt_ID);
-				if (schuelerID != null)
+				if (schuelerID != null) {
 					ku.schueler.add(schuelerID);
-				if ((ls.Fachlehrer_ID != null) && (!ku.lehrer.contains(ls.Fachlehrer_ID)))
+				}
+				if ((ls.Fachlehrer_ID != null) && (!ku.lehrer.contains(ls.Fachlehrer_ID))) {
 					ku.lehrer.add(ls.Fachlehrer_ID);
-				if ((ls.Zusatzkraft_ID != null) && (!ku.lehrer.contains(ls.Zusatzkraft_ID)))
+				}
+				if ((ls.Zusatzkraft_ID != null) && (!ku.lehrer.contains(ls.Zusatzkraft_ID))) {
 					ku.lehrer.add(ls.Zusatzkraft_ID);
+				}
 			}
 		}
 		// Ergänze die Fachinformationen
@@ -149,13 +155,15 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 	public static List<StundenplanKlassenunterricht> getKlassenunterrichte(final @NotNull DBEntityManager conn, final long idStundenplan)
 			throws ApiOperationException {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
-		if (stundenplan == null)
+		if (stundenplan == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
+		}
 		// Klassen bestimmen
 		final List<DTOKlassen> klassen = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, stundenplan.Schuljahresabschnitts_ID);
-		if (klassen.isEmpty())
+		if (klassen.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Es wurden keine Klassen für den Schuljahresabschnitt des Stundenplans mit der ID %d gefunden.".formatted(idStundenplan));
+		}
 		final Map<Long, DTOKlassen> mapKlassen = klassen.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
 		return getKlassenunterrichteFuerKlassen(conn, stundenplan.Schuljahresabschnitts_ID, mapKlassen);
 	}
@@ -176,27 +184,31 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 			throws ApiOperationException {
 		// TODO Man könnte die Daten des Klassenunterrichtes auch aus der Vorlage beziehen, wenn noch keine Lernabschnitte oder Leistungsdaten vorliegen
 		final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, idKlasse);
-		if (klasse == null)
+		if (klasse == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klasse mit der ID %d gefunden.".formatted(idKlasse));
+		}
 		final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
-		if (fach == null)
+		if (fach == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Fach mit der ID %d gefunden.".formatted(idFach));
+		}
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(klasse.Schuljahresabschnitts_ID);
 		// Bestimme die Daten anhand der Leistungsdaten, die einem Lernabschnitt der Klasse zugeordnet sind.
 		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
 				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID = ?2 AND e.WechselNr = 0",
 				DTOSchuelerLernabschnittsdaten.class, klasse.Schuljahresabschnitts_ID, klasse.ID);
 		final List<Long> lernabschnittIDs = lernabschnitte.stream().map(l -> l.ID).toList();
-		if (lernabschnittIDs.isEmpty())
+		if (lernabschnittIDs.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Lernabschnitt für die Klasse mit der ID %d gefunden.".formatted(idKlasse));
+		}
 		final Map<Long, Long> mapLernabschnittSchuelerID = lernabschnitte.stream().collect(Collectors.toMap(la -> la.ID, la -> la.Schueler_ID));
 		final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList(
 				"SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID IN ?1 AND e.Fach_ID = ?2 AND e.Kurs_ID IS NULL AND (e.Kursart IS NULL OR e.Kursart = '' OR e.Kursart = '%s')"
 						.formatted(ZulaessigeKursart.PUK.daten(schuljahresabschnitt.schuljahr).kuerzel),
 				DTOSchuelerLeistungsdaten.class, lernabschnittIDs, fach.ID);
-		if (leistungsdaten.isEmpty())
+		if (leistungsdaten.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Keine Leistungsdaten für die Klasse mit der ID %d und das Fach mit der ID %d gefunden.".formatted(klasse.ID, fach.ID));
+		}
 		// Aggregiere die Klassenunterrichte aus den Leistungsdaten
 		StundenplanKlassenunterricht daten = null;
 		for (final DTOSchuelerLeistungsdaten ls : leistungsdaten) {
@@ -206,16 +218,20 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 				daten.idFach = ls.Fach_ID;
 				daten.wochenstunden = (ls.Wochenstunden == null) ? 1 : ls.Wochenstunden;
 			} else {
-				if ((ls.Wochenstunden != null) && (daten.wochenstunden < ls.Wochenstunden))
+				if ((ls.Wochenstunden != null) && (daten.wochenstunden < ls.Wochenstunden)) {
 					daten.wochenstunden = ls.Wochenstunden;
+				}
 			}
 			final Long schuelerID = mapLernabschnittSchuelerID.get(ls.Abschnitt_ID);
-			if (schuelerID != null)
+			if (schuelerID != null) {
 				daten.schueler.add(schuelerID);
-			if ((ls.Fachlehrer_ID != null) && (!daten.lehrer.contains(ls.Fachlehrer_ID)))
+			}
+			if ((ls.Fachlehrer_ID != null) && (!daten.lehrer.contains(ls.Fachlehrer_ID))) {
 				daten.lehrer.add(ls.Fachlehrer_ID);
-			if ((ls.Zusatzkraft_ID != null) && (!daten.lehrer.contains(ls.Zusatzkraft_ID)))
+			}
+			if ((ls.Zusatzkraft_ID != null) && (!daten.lehrer.contains(ls.Zusatzkraft_ID))) {
 				daten.lehrer.add(ls.Zusatzkraft_ID);
+			}
 		}
 		return daten;
 	}
@@ -235,8 +251,9 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 			throws ApiOperationException {
 		// Klasse bestimmen
 		final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, idKlasse);
-		if (klasse == null)
+		if (klasse == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klasse mit der ID %d gefunden.".formatted(idKlasse));
+		}
 		final Map<Long, DTOKlassen> mapKlassen = new HashMap<>();
 		mapKlassen.put(klasse.ID, klasse);
 		return getKlassenunterrichteFuerKlassen(conn, klasse.Schuljahresabschnitts_ID, mapKlassen);

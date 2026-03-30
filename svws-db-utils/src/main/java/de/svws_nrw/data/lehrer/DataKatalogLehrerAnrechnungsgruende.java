@@ -26,8 +26,9 @@ public final class DataKatalogLehrerAnrechnungsgruende extends DataManager<Long>
 	@Override
 	public Response getAll() {
 		final ArrayList<LehrerAnrechnungsgrundKatalogEintrag> daten = new ArrayList<>();
-		for (final LehrerAnrechnungsgrund grund : LehrerAnrechnungsgrund.values())
+		for (final LehrerAnrechnungsgrund grund : LehrerAnrechnungsgrund.values()) {
 			daten.addAll(grund.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

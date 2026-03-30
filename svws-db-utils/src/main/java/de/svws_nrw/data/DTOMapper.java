@@ -41,8 +41,9 @@ public interface DTOMapper<T, R> {
 	 */
 	static <D, C> List<C> mapList(final Collection<D> dtoCollection, final DTOMapper<D, C> mapper) throws ApiOperationException {
 		final List<C> daten = new ArrayList<>();
-		for (final D dto : dtoCollection)
+		for (final D dto : dtoCollection) {
 			daten.add(mapper.apply(dto));
+		}
 		return daten;
 	}
 

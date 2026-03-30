@@ -48,7 +48,6 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
 	}
 
-
 	/**
 	 * Prüft, ob der übergebene Lehrer in dem Schuljahresabschnitt, auf welchen sich die Abfrage bezieht aktiv ist oder nicht.
 	 * In dem Fall, dass die Abfrage keinen Bezug zu einem Schuljahresabschnitt hat, wird immer true zurückgegeben.
@@ -60,27 +59,32 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 	 * @throws ApiOperationException   wenn der Schuljahresabschnitt bei vorhandener ID nicht existiert
 	 */
 	private boolean pruefeAktiv(final DTOLehrer l) throws ApiOperationException {
-		if (idSchuljahresabschnitt == null)
+		if (idSchuljahresabschnitt == null) {
 			return true;
+		}
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
-		if (schuljahresabschnitt == null)
+		if (schuljahresabschnitt == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Der Schuljahresabschnitt mit der ID %d existiert nicht.".formatted(idSchuljahresabschnitt));
+		}
 		// Prüfe ggf. das Zugangsdatum
 		if (l.DatumZugang != null) {
 			final LocalDate dateZugang = LocalDate.parse(l.DatumZugang);
 			final int year = dateZugang.getYear();
-			if (year > schuljahresabschnitt.schuljahr + 1)
+			if (year > schuljahresabschnitt.schuljahr + 1) {
 				return false;
+			}
 			if (year == schuljahresabschnitt.schuljahr + 1) {
 				final int month = dateZugang.getMonthValue();
-				if (month >= 8)
+				if (month >= 8) {
 					return false;
+				}
 				if (schuljahresabschnitt.abschnitt == 1) {
 					final DateManager date = Termin.getLetzterUnterrichtstagImErstenHalbjahr(schuljahresabschnitt.schuljahr);
 					if (date != null) {
 						final int day = dateZugang.getDayOfMonth();
-						if ((month > date.getMonat()) || ((month == date.getMonat()) && (day > date.getTag())))
+						if ((month > date.getMonat()) || ((month == date.getMonat()) && (day > date.getTag()))) {
 							return false;
+						}
 					}
 				}
 			}
@@ -89,18 +93,21 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 		if (l.DatumAbgang != null) {
 			final LocalDate dateAbgang = LocalDate.parse(l.DatumAbgang);
 			final int year = dateAbgang.getYear();
-			if ((year < schuljahresabschnitt.schuljahr) || ((schuljahresabschnitt.abschnitt == 2) && (year == schuljahresabschnitt.schuljahr)))
+			if ((year < schuljahresabschnitt.schuljahr) || ((schuljahresabschnitt.abschnitt == 2) && (year == schuljahresabschnitt.schuljahr))) {
 				return false;
+			}
 			if (year <= schuljahresabschnitt.schuljahr + 1) {
 				final int month = dateAbgang.getMonthValue();
-				if ((schuljahresabschnitt.abschnitt == 1) && (year == schuljahresabschnitt.schuljahr) && (month <= 7))
+				if ((schuljahresabschnitt.abschnitt == 1) && (year == schuljahresabschnitt.schuljahr) && (month <= 7)) {
 					return false;
+				}
 				if ((schuljahresabschnitt.abschnitt == 2) && (year == schuljahresabschnitt.schuljahr + 1)) {
 					final DateManager date = Termin.getLetzterUnterrichtstagImErstenHalbjahr(schuljahresabschnitt.schuljahr);
 					if (date != null) {
 						final int day = dateAbgang.getDayOfMonth();
-						if ((month < date.getMonat()) || ((month == date.getMonat()) && (day <= date.getTag())))
+						if ((month < date.getMonat()) || ((month == date.getMonat()) && (day <= date.getTag()))) {
 							return false;
+						}
 					}
 				}
 			}
@@ -129,29 +136,32 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 	 */
 	private static final Comparator<LehrerListeEintrag> dataComparator = (a, b) -> {
 		final Collator collator = Collator.getInstance(Locale.GERMAN);
-		if ((a.kuerzel == null) && (b.kuerzel != null))
+		if ((a.kuerzel == null) && (b.kuerzel != null)) {
 			return -1;
-		else if ((a.kuerzel != null) && (b.kuerzel == null))
+		} else if ((a.kuerzel != null) && (b.kuerzel == null)) {
 			return 1;
-		else if (a.kuerzel == null)
+		} else if (a.kuerzel == null) {
 			return 0;
+		}
 		int result = collator.compare(a.kuerzel, b.kuerzel);
 		if (result == 0) {
-			if ((a.nachname == null) && (b.nachname != null))
+			if ((a.nachname == null) && (b.nachname != null)) {
 				return -1;
-			else if ((a.nachname != null) && (b.nachname == null))
+			} else if ((a.nachname != null) && (b.nachname == null)) {
 				return 1;
-			else if (a.nachname == null)
+			} else if (a.nachname == null) {
 				return 0;
+			}
 			result = collator.compare(a.nachname, b.nachname);
 		}
 		if (result == 0) {
-			if ((a.vorname == null) && (b.vorname != null))
+			if ((a.vorname == null) && (b.vorname != null)) {
 				return -1;
-			else if ((a.vorname != null) && (b.vorname == null))
+			} else if ((a.vorname != null) && (b.vorname == null)) {
 				return 1;
-			else if (a.vorname == null)
+			} else if (a.vorname == null) {
 				return 0;
+			}
 			result = collator.compare(a.vorname, b.vorname);
 		}
 		return result;
@@ -171,8 +181,9 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 	public List<LehrerListeEintrag> getLehrerListe(final boolean includeReferenzInfo) throws ApiOperationException {
 		// Bestimme zunächst die Lehrer aus der Datenbank, ggf. nur sichtbare Lehrer
 		final List<DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class);
-		if (lehrer.isEmpty())
+		if (lehrer.isEmpty()) {
 			return Collections.emptyList();
+		}
 
 		// Ergänze ggf. die Information, ob Lehrer irgendwo in der Datenbank referenziert wurden... Dies ist die DB-Anfrage dafür
 		final Set<Long> idsOfReferencedLehrer = includeReferenzInfo
@@ -183,8 +194,9 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 		final List<LehrerListeEintrag> result = new ArrayList<>();
 		for (final DTOLehrer l : lehrer) {
 			final LehrerListeEintrag lehrerListeEintrag = map(l);
-			if (includeReferenzInfo)
+			if (includeReferenzInfo) {
 				lehrerListeEintrag.referenziertInAnderenTabellen = idsOfReferencedLehrer.contains(lehrerListeEintrag.id);
+			}
 			result.add(lehrerListeEintrag);
 		}
 		result.sort(dataComparator);
@@ -211,8 +223,9 @@ public final class DataLehrerliste extends DataManagerRevised<Long, DTOLehrer, L
 	 * @return die Zuordnung der Abschnittsdaten zu den Lehrer-IDs
 	 */
 	public Map<Long, DTOLehrerAbschnittsdaten> getDTOAbschnittsdatenByID(final @NotNull List<Long> idsLehrer, final long idSchuljahresabschnitt) {
-		if (idsLehrer.isEmpty())
+		if (idsLehrer.isEmpty()) {
 			return new HashMap<>();
+		}
 		final List<DTOLehrerAbschnittsdaten> listAbschnitte =
 				conn.queryList(DTOLehrerAbschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID + " AND e.Lehrer_ID IN ?2", DTOLehrerAbschnittsdaten.class,
 						idSchuljahresabschnitt, idsLehrer);

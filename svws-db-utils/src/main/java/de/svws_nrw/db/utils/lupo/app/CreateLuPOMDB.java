@@ -42,8 +42,9 @@ public class CreateLuPOMDB {
 		logger.logLn(text);
 		while (true) {
 			final String input = scan.nextLine();
-			if (input == null)
+			if (input == null) {
 				continue;
+			}
 			switch (input.toUpperCase()) {
 				case "JA", "J", "YES", "Y":
 					return true;

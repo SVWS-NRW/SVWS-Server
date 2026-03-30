@@ -35,8 +35,9 @@ public final class DataStundenplanKalenderwochenzuordnung
 		setAttributesRequiredOnCreation("jahr", "kw", "wochentyp");
 		this.stundenplanID = stundenplanID;
 		// Prüfe ggf. ob der Stundenplan existiert
-		if (stundenplanID != null)
+		if (stundenplanID != null) {
 			DataStundenplan.getDTOStundenplan(conn, stundenplanID);
+		}
 	}
 
 	@Override
@@ -70,13 +71,15 @@ public final class DataStundenplanKalenderwochenzuordnung
 		switch (name) {
 			case "id" -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST);
+				}
 			}
 			case "jahr" -> {
 				dto.Jahr = JSONMapper.convertToInteger(value, false);
-				if (DateUtils.gibIstJahrUngueltig(dto.Jahr))
+				if (DateUtils.gibIstJahrUngueltig(dto.Jahr)) {
 					throw new ApiOperationException(Status.BAD_REQUEST);
+				}
 			}
 			case "kw" -> dto.KW = JSONMapper.convertToInteger(value, false);
 			case "wochentyp" -> dto.Wochentyp = JSONMapper.convertToInteger(value, false);
@@ -97,19 +100,22 @@ public final class DataStundenplanKalenderwochenzuordnung
 		final List<DTOStundenplanKalenderwochenZuordnung> zuordnungen = conn.queryList(DTOStundenplanKalenderwochenZuordnung.QUERY_BY_STUNDENPLAN_ID,
 				DTOStundenplanKalenderwochenZuordnung.class, stundenplanID);
 		final ArrayList<StundenplanKalenderwochenzuordnung> daten = new ArrayList<>();
-		for (final DTOStundenplanKalenderwochenZuordnung z : zuordnungen)
+		for (final DTOStundenplanKalenderwochenZuordnung z : zuordnungen) {
 			daten.add(map(z));
+		}
 		return daten;
 	}
 
 
 	@Override
 	public StundenplanKalenderwochenzuordnung getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einer Kalenderwochen-Zuordnung mit der ID null ist unzulässig.");
+		}
 		final DTOStundenplanKalenderwochenZuordnung zuordung = conn.queryByKey(DTOStundenplanKalenderwochenZuordnung.class, id);
-		if (zuordung == null)
+		if (zuordung == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Kalenderwochen-Zuordnung mit der ID %d gefunden.".formatted(id));
+		}
 		return map(zuordung);
 	}
 
@@ -123,9 +129,11 @@ public final class DataStundenplanKalenderwochenzuordnung
 	 */
 	@Override
 	public void checkBeforeDeletion(final List<DTOStundenplanKalenderwochenZuordnung> dtos) throws ApiOperationException {
-		for (final DTOStundenplanKalenderwochenZuordnung dto : dtos)
-			if (dto.Stundenplan_ID != this.stundenplanID)
+		for (final DTOStundenplanKalenderwochenZuordnung dto : dtos) {
+			if (dto.Stundenplan_ID != this.stundenplanID) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Mindestens eine Kalenderwochenzuordnung gehört nicht zu dem angegebenen Stundenplan.");
+			}
+		}
 	}
 
 	/**

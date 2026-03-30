@@ -50,12 +50,14 @@ public final class DataKatalogEntlassgruende extends DataManagerRevised<Long, DT
 
 	@Override
 	public KatalogEntlassgrund getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den Entlassgrund darf nicht null sein.");
+		}
 
 		final DTOEntlassarten dto = conn.queryByKey(DTOEntlassarten.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Entlassgrund mit der ID %d gefunden.".formatted(id));
+		}
 
 		return map(dto);
 	}
@@ -113,11 +115,13 @@ public final class DataKatalogEntlassgruende extends DataManagerRevised<Long, DT
 
 	private void updateBezeichnung(final DTOEntlassarten dto, final Object value, final String name) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_EntlassGrund.col_Bezeichnung.datenlaenge(), name);
-		if (bezeichnung.isBlank())
+		if (bezeichnung.isBlank()) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine leere Bezeichnung ist nicht gestattet");
+		}
 
-		if (bezeichnungIsAlreadyUsed(bezeichnung))
+		if (bezeichnungIsAlreadyUsed(bezeichnung)) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(value));
+		}
 
 		dto.Bezeichnung = bezeichnung;
 	}
@@ -131,12 +135,14 @@ public final class DataKatalogEntlassgruende extends DataManagerRevised<Long, DT
 	}
 
 	private Set<Long> getIdsOfReferencedEntlassgruende(final List<DTOEntlassarten> entlassgruende) {
-		if ((entlassgruende == null) || entlassgruende.isEmpty())
+		if ((entlassgruende == null) || entlassgruende.isEmpty()) {
 			return Collections.emptySet();
+		}
 
 		final Set<String> bezeichnungen = this.mapToBezeichnung(entlassgruende);
-		if (bezeichnungen.isEmpty())
+		if (bezeichnungen.isEmpty()) {
 			return Collections.emptySet();
+		}
 
 		final String query1 = "SELECT DISTINCT a.Entlassgrund FROM DTOSchueler a WHERE a.Entlassgrund IN :bezeichnungen";
 		final String query2 = "SELECT DISTINCT a.LSEntlassgrund FROM DTOSchueler a WHERE a.LSEntlassgrund IN :bezeichnungen";

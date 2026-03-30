@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
-import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.DataManager;
@@ -53,8 +53,9 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 
 	@Override
 	public Response get(final Integer abijahr) throws ApiOperationException {
-		if (abijahr == null)
+		if (abijahr == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final Abiturdaten daten = DBUtilsGostLaufbahn.getVorlage(conn, abijahr);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
@@ -79,11 +80,13 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	public Response getFachwahl(final Integer abijahr, final Long fach_id) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
-		if (jahrgang == null)
+		if (jahrgang == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
-		if ((fach == null) || (fach.IstOberstufenFach == null) || Boolean.FALSE.equals(fach.IstOberstufenFach))
+		if ((fach == null) || (fach.IstOberstufenFach == null) || Boolean.FALSE.equals(fach.IstOberstufenFach)) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final DTOGostJahrgangFachbelegungen fachbelegung = conn.queryByKey(DTOGostJahrgangFachbelegungen.class, abijahr, fach.ID);
 		final GostSchuelerFachwahl fachwahl = new GostSchuelerFachwahl();
 		fachwahl.halbjahre[0] = (fachbelegung == null) ? null : fachbelegung.EF1_Kursart;
@@ -112,16 +115,19 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 */
 	private static String patchFachwahlHalbjahr(final String fwDB, final GostHalbjahr halbjahr, final DTOFach fach, final String fw)
 			throws ApiOperationException {
-		if ("".equals(fw))
+		if ("".equals(fw)) {
 			return null;
-		if (((fw == null) && (fwDB == null)) || ((fw != null) && (fw.equals(fwDB))))
+		}
+		if (((fw == null) && (fwDB == null)) || ((fw != null) && (fw.equals(fwDB)))) {
 			return fwDB;
+		}
 		final boolean valid = (fw == null)
 				|| (fw.equals("M")) || (fw.equals("S"))
 				|| (((fw.equals("LK")) || (fw.equals("ZK"))) && (!halbjahr.istEinfuehrungsphase()))
 				|| ((fw.equals("AT")) && ("SP".equals(fach.StatistikKuerzel)));
-		if (!valid)
+		if (!valid) {
 			throw new ApiOperationException(Status.CONFLICT);
+		}
 		return fw;
 	}
 
@@ -143,23 +149,27 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 		if (map.size() > 0) {
 			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
-			if (jahrgang == null)
+			if (jahrgang == null) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			// Bestimme das Fach und die Fachbelegungen in der DB. Liegen keine vor, so erstelle eine neue Fachnbelegung in der DB,um den Patch zu speichern
 			final DTOFach fach = conn.queryByKey(DTOFach.class, fach_id);
-			if ((fach == null) || (fach.IstOberstufenFach == null) || Boolean.FALSE.equals(fach.IstOberstufenFach))
+			if ((fach == null) || (fach.IstOberstufenFach == null) || Boolean.FALSE.equals(fach.IstOberstufenFach)) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			DTOGostJahrgangFachbelegungen fachbelegung = conn.queryByKey(DTOGostJahrgangFachbelegungen.class, abijahr, fach.ID);
-			if (fachbelegung == null)
+			if (fachbelegung == null) {
 				fachbelegung = new DTOGostJahrgangFachbelegungen(abijahr, fach.ID);
+			}
 			for (final Entry<String, Object> entry : map.entrySet()) {
 				final String key = entry.getKey();
 				final Object value = entry.getValue();
 				switch (key) {
 					case "halbjahre" -> {
 						final String[] wahlen = JSONMapper.convertToStringArray(value, true, 6);
-						if ((wahlen == null) || ((wahlen.length != 0) && (wahlen.length != 6)))
+						if ((wahlen == null) || ((wahlen.length != 0) && (wahlen.length != 6))) {
 							throw new ApiOperationException(Status.CONFLICT);
+						}
 						if (wahlen.length == 0) {
 							fachbelegung.EF1_Kursart = null;
 							fachbelegung.EF2_Kursart = null;
@@ -178,8 +188,9 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 					}
 					case "abiturFach" -> {
 						final Integer af = JSONMapper.convertToInteger(value, true);
-						if ((af != null) && ((af < 1) || (af > 4)))
+						if ((af != null) && ((af < 1) || (af > 4))) {
 							throw new ApiOperationException(Status.CONFLICT);
+						}
 						fachbelegung.AbiturFach = af;
 					}
 					default -> throw new ApiOperationException(Status.BAD_REQUEST);
@@ -326,8 +337,9 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 			transactionResetJahrgang(conn, jahrgang);
 			conn.transactionCommit();
 		} catch (final Exception e) {
-			if (e instanceof final ApiOperationException aoe)
+			if (e instanceof final ApiOperationException aoe) {
 				throw aoe;
+			}
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e);
 		} finally {
 			// Perform a rollback if necessary
@@ -350,12 +362,14 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	public Response reset(final Integer abijahr) throws ApiOperationException {
 		final int schuljahr = DBUtilsGost.pruefeSchuleMitGOStAndGetSchuljahr(conn, abijahr);
 		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
-		if (jahrgang == null)
+		if (jahrgang == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
-		if (abijahr == -1)
+		}
+		if (abijahr == -1) {
 			transactionResetJahrgangVorlage(schuljahr, conn);
-		else
+		} else {
 			transactionResetJahrgang(conn, jahrgang);
+		}
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
@@ -373,11 +387,13 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	public Response resetSchuelerAlle(final Integer abijahr) throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
-		if (jahrgang == null)
+		if (jahrgang == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final List<DTOSchueler> listSchueler = (new DataGostJahrgangSchuelerliste(conn, abijahr)).getSchuelerDTOs();
-		for (final DTOSchueler schueler : listSchueler)
+		for (final DTOSchueler schueler : listSchueler) {
 			transactionResetSchueler(conn, jahrgang, schueler.ID);
+		}
 		return Response.status(Status.NO_CONTENT).build();
 	}
 

@@ -41,9 +41,8 @@ public final class DBRootManager {
 		this.conn = conn;
 	}
 
-
 	/**
-	 * Erstellt für die angebene Datenbank-Verbindung einen DB-Root-Manager.
+	 * Erstellt für die angegebene Datenbank-Verbindung einen DB-Root-Manager.
 	 *
 	 * @param conn   die Datenbank-Verbindung
 	 *
@@ -75,8 +74,9 @@ public final class DBRootManager {
 	 * @return true, falls der Name reserviert oder ungültig ist.
 	 */
 	public static boolean isReservedSchemaName(final String name) {
-		if (name == null)
+		if (name == null) {
 			return true;
+		}
 		return _reserverSchemaNames.contains(name);
 	}
 
@@ -92,8 +92,9 @@ public final class DBRootManager {
 	 * @return true, falls der Name reserviert oder ungültig ist.
 	 */
 	public static boolean isReservedUserName(final String name) {
-		if (name == null)
+		if (name == null) {
 			return true;
+		}
 		return _reserverUserNames.contains(name);
 	}
 
@@ -107,19 +108,22 @@ public final class DBRootManager {
 	 * @return true, wenn das Schema erstellt wurde, sonst false
 	 */
 	private boolean createDBSchema(final String nameSchema) {
-		if ((conn == null) || (nameSchema == null) || "".equals(nameSchema))
+		if ((conn == null) || (nameSchema == null) || "".equals(nameSchema)) {
 			return false;
+		}
 		final String collation = conn.getDBDriver().getCollation();
 		return switch (conn.getDBDriver()) {
 			case MARIA_DB, MYSQL -> {
-				if ((collation == null) || "".equals(collation))
+				if ((collation == null) || "".equals(collation)) {
 					yield false;
+				}
 				yield conn.executeNativeUpdate("CREATE SCHEMA IF NOT EXISTS `" + nameSchema + "` DEFAULT CHARACTER SET 'utf8mb4' DEFAULT COLLATE '" + collation
 						+ "'") > Integer.MIN_VALUE;
 			}
 			case MSSQL -> {
-				if ((collation == null) || "".equals(collation))
+				if ((collation == null) || "".equals(collation)) {
 					yield false;
+				}
 				yield conn.executeNativeUpdate("CREATE DATABASE [" + nameSchema + "] COLLATE " + collation) > Integer.MIN_VALUE;
 			}
 			default -> false;
@@ -129,7 +133,7 @@ public final class DBRootManager {
 
 
 	/**
-	 * Erstellt einen neuen Datenbank-Benutzer mit administrativen Rechten auf dem angebenen Schema.
+	 * Erstellt einen neuen Datenbank-Benutzer mit administrativen Rechten auf dem angegebenen Schema.
 	 *
 	 * @param conn         die Datenbank-Verbindung
 	 * @param nameUser     der Name des zu erstellenden Benutzers
@@ -142,8 +146,9 @@ public final class DBRootManager {
 	 */
 	public static boolean createDBAdminUser(final DBEntityManager conn, final String nameUser, final String pwUser, final String nameSchema)
 			throws DBException {
-		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport())
+		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport()) {
 			return false;
+		}
 		// Prüfe, ob der aktuelle Datenbank-Benutzer überhaupt Rechte auf das Schema hat und sich verbinden kann
 		final Benutzer user;
 		try {
@@ -152,12 +157,14 @@ public final class DBRootManager {
 			return false;
 		}
 		try (DBEntityManager tmpConn = user.getEntityManager()) {
-			if (tmpConn == null)
+			if (tmpConn == null) {
 				return false;
+			}
 			// Prüfe, ob der Benutzer bereits existiert und erstelle nur einen, wenn keiner existiert
 			final List<String> benutzer = DTOInformationUser.queryNames(tmpConn);
-			if (!benutzer.contains(nameUser) && !createDBUser(tmpConn, nameUser, pwUser))
+			if (!benutzer.contains(nameUser) && !createDBUser(tmpConn, nameUser, pwUser)) {
 				return false;
+			}
 
 			// Gibt dem Benutzer administrative Rechte auf das Schema
 			return grantAdminRights(tmpConn, nameUser, nameSchema);
@@ -169,7 +176,7 @@ public final class DBRootManager {
 	/**
 	 * Erstellt einen neuen Datenbank-Benutzer auf der Verbindung, welche durch den
 	 * EntityManager gegeben ist. Diese Verbindung muss durch einen DB-Benutzer mit
-	 * entsprechenden administrativen Rechten auf dem angebenen Schema aufgebaut sein.
+	 * entsprechenden administrativen Rechten auf dem angegebenen Schema aufgebaut sein.
 	 *
 	 * @param conn         die Datenbank-Verbindung
 	 * @param nameUser     der Name des zu erstellenden Benutzers
@@ -178,8 +185,9 @@ public final class DBRootManager {
 	 * @return true im Erfolgsfall
 	 */
 	private static boolean createDBUser(final DBEntityManager conn, final String nameUser, final String pwUser) {
-		if ((conn == null) || (nameUser == null) || "".equals(nameUser) || (pwUser == null))
+		if ((conn == null) || (nameUser == null) || "".equals(nameUser) || (pwUser == null)) {
 			return false;
+		}
 		// TODO Nutze jeweils eine verschlüsselte Form des Kennwortes -> dieses sollte beim Logging nicht erscheinen -> also nicht "IDENTIFIED BY 'USERPASSWORD'"
 		return switch (conn.getDBDriver()) {
 			case MARIA_DB, MYSQL -> conn.executeNativeUpdate("CREATE USER IF NOT EXISTS `" + nameUser + "` IDENTIFIED BY '" + pwUser + "'") > Integer.MIN_VALUE;
@@ -207,8 +215,9 @@ public final class DBRootManager {
 	 * @return true wenn die administrativen Rechte gewährt wurden und ansonsten false
 	 */
 	public static boolean grantAdminRights(final DBEntityManager conn, final String nameUser, final String nameSchema) {
-		if ((conn == null) || (nameUser == null) || "".equals(nameUser) || (nameSchema == null) || "".equals(nameSchema))
+		if ((conn == null) || (nameUser == null) || "".equals(nameUser) || (nameSchema == null) || "".equals(nameSchema)) {
 			return false;
+		}
 		if ((conn.getDBDriver() == DBDriver.MARIA_DB) || (conn.getDBDriver() == DBDriver.MYSQL)) {
 			conn.transactionBegin();
 			final int c1 = conn.transactionNativeUpdate("GRANT ALL PRIVILEGES ON `" + nameSchema + "`.* TO `" + nameUser + "`");
@@ -231,7 +240,7 @@ public final class DBRootManager {
 	 * Entfernt administrative Rechte für das angegebene Schema nameSchema an den angegebenen
 	 * Datenbank-Benutzer nameUser auf der Verbindung, welche durch den angegebenen DBEntityManager conn
 	 * aufgebaut ist. Diese Verbindung muss durch einen DB-Benutzer mit entsprechenden administrativen
-	 * Rechten auf dem angebenen Schema aufgebaut sein.
+	 * Rechten auf dem angegebenen Schema aufgebaut sein.
 	 *
 	 * @param conn         die Datenbank-Verbindung
 	 * @param nameUser     der Name des Benutzers dem die adminstrativen Rechte entzogen werden sollen
@@ -240,16 +249,18 @@ public final class DBRootManager {
 	 * @return true wenn die administrativen Rechte entfernt wurden und ansonsten false
 	 */
 	private static boolean revokeAdminRights(final DBEntityManager conn, final String nameUser, final String nameSchema) {
-		if ((conn == null) || (nameUser == null) || "".equals(nameUser) || (nameSchema == null) || "".equals(nameSchema))
+		if ((conn == null) || (nameUser == null) || "".equals(nameUser) || (nameSchema == null) || "".equals(nameSchema)) {
 			return false;
+		}
 		if ((conn.getDBDriver() == DBDriver.MARIA_DB) || (conn.getDBDriver() == DBDriver.MYSQL)) {
 			conn.transactionBegin();
 			final int c1 = conn.transactionNativeUpdate("REVOKE GRANT OPTION ON `" + nameSchema + "`.* FROM `" + nameUser + "`");
 			final int c2 = conn.transactionNativeUpdate("REVOKE ALL PRIVILEGES ON `" + nameSchema + "`.* FROM `" + nameUser + "`");
 			return conn.transactionCommit() && (c1 > Integer.MIN_VALUE) && (c2 > Integer.MIN_VALUE);
 		}
-		if (conn.getDBDriver() == DBDriver.MSSQL)
+		if (conn.getDBDriver() == DBDriver.MSSQL) {
 			throw new UnsupportedOperationException("MSSQL-Datenbanken werden zur Zeit nicht vollständig unterstützt.");
+		}
 		return false;
 	}
 
@@ -270,8 +281,9 @@ public final class DBRootManager {
 	public boolean createDBSchemaWithAdminUser(final String nameUser, final String pwUser, final String nameSchema)
 			throws SVWSKonfigurationException, DBException {
 		// Erstelle zunächst das DB-Schema
-		if (!createDBSchema(nameSchema))
+		if (!createDBSchema(nameSchema)) {
 			return false;
+		}
 		// Erstelle dann den DB-Benutzer und gebe diesem Adminstrationsrechte auf das Schema
 		if (!createDBAdminUser(conn, nameUser, pwUser, nameSchema)) {
 			dropDBSchemaIfExists(nameSchema);
@@ -292,8 +304,9 @@ public final class DBRootManager {
 	 * @return true, falls das Schema existiert, sonst false
 	 */
 	public boolean dbSchemaExists(final String nameSchema) {
-		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport() || (nameSchema == null) || "".equals(nameSchema))
+		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport() || (nameSchema == null) || "".equals(nameSchema)) {
 			return false;
+		}
 		return DTOInformationSchema.hasSchemaIgnoreCase(conn, nameSchema);
 	}
 
@@ -309,11 +322,13 @@ public final class DBRootManager {
 	 * @throws SVWSKonfigurationException   falls ein Fehler beim Entfernen der SVWS-Konfiguration auftritt
 	 */
 	public boolean dropDBSchemaIfExists(final String nameSchema) throws SVWSKonfigurationException {
-		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport() || (nameSchema == null) || "".equals(nameSchema))
+		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport() || (nameSchema == null) || "".equals(nameSchema)) {
 			return false;
+		}
 		final String name = DTOInformationSchema.getSchemanameCaseDB(conn, nameSchema);
-		if (name == null)
+		if (name == null) {
 			return true;
+		}
 		// Entferne das Schema aus der Datenbank
 		final boolean success = switch (conn.getDBDriver()) {
 			case MARIA_DB, MYSQL -> conn.executeNativeDelete("DROP SCHEMA IF EXISTS `" + name + "`") > Integer.MIN_VALUE;
@@ -324,14 +339,17 @@ public final class DBRootManager {
 		final String nameSchemaConfig = SVWSKonfiguration.get().getSchemanameCaseConfig(nameSchema);
 		if (nameSchemaConfig != null) {
 			final DBConfig dbConfig = SVWSKonfiguration.get().getDBConfig(nameSchemaConfig);
-			if (dbConfig != null)
+			if (dbConfig != null) {
 				revokeAdminRights(conn, dbConfig.getUsername(), dbConfig.getDBSchema());
+			}
 		}
 		// Aktualisieren der DB-Konfiguration
-		if (success)
+		if (success) {
 			SVWSKonfiguration.get().removeSchema(nameSchema);
-		if (!success)
+		}
+		if (!success) {
 			SVWSKonfiguration.get().removeSchema(name);
+		}
 		return success;
 	}
 
@@ -345,8 +363,9 @@ public final class DBRootManager {
 	 * @return true, falls der Datenbank-Benutzer existiert, sonst false
 	 */
 	public boolean dbUserExists(final String nameUser) {
-		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport() || (nameUser == null) || "".equals(nameUser))
+		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport() || (nameUser == null) || "".equals(nameUser)) {
 			return false;
+		}
 		final List<String> benutzer = DTOInformationUser.queryNames(conn);
 		return (benutzer != null) && benutzer.contains(nameUser);
 	}
@@ -362,11 +381,13 @@ public final class DBRootManager {
 	 *         der Benutzer nicht vorhanden war, sonst false
 	 */
 	public boolean dropDBUserIfExists(final String nameUser) {
-		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport() || (nameUser == null) || "".equals(nameUser))
+		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport() || (nameUser == null) || "".equals(nameUser)) {
 			return false;
+		}
 		final List<String> benutzer = DTOInformationUser.queryNames(conn);
-		if (!benutzer.contains(nameUser))
+		if (!benutzer.contains(nameUser)) {
 			return true;
+		}
 		return switch (conn.getDBDriver()) {
 			case MARIA_DB, MYSQL -> conn.executeNativeDelete("DROP USER IF EXISTS `" + nameUser + "`") > Integer.MIN_VALUE;
 			case MSSQL -> {
@@ -391,11 +412,13 @@ public final class DBRootManager {
 	 * @return true, falls die Datenbank-Datei gelöscht wurde, zuvor nicht existierte oder das DBMS nicht eine einzelne DB-Datei verwendet, sonst false
 	 */
 	private static boolean removeDBFile(final DBDriver driver, final String db_location) {
-		if ((driver != DBDriver.MDB) && (driver != DBDriver.SQLITE))
+		if ((driver != DBDriver.MDB) && (driver != DBDriver.SQLITE)) {
 			return true;
+		}
 		final Path path = Paths.get(db_location);
-		if (!Files.exists(path))
+		if (!Files.exists(path)) {
 			return true;
+		}
 		try {
 			Files.delete(path);
 			return true;
@@ -443,8 +466,9 @@ public final class DBRootManager {
 	private boolean checkUserNotExistsOrCredentialsValid(final DBConfig config) {
 		try {
 			final List<String> benutzer = DTOInformationUser.queryNames(conn);
-			if (!benutzer.contains(config.getUsername()))
+			if (!benutzer.contains(config.getUsername())) {
 				return true;
+			}
 			final Benutzer userInformationSchema = Benutzer.create(config.switchSchema(PersistenceUnits.SVWS_ROOT, "information_schema"));
 			try (DBEntityManager tmpConn = userInformationSchema.getEntityManager()) {
 				/* Kein Zugriff über tmpConn nötig... Nur ein Verbindungstest */
@@ -496,30 +520,35 @@ public final class DBRootManager {
 				final DBRootManager root_manager = new DBRootManager(rootConn);
 
 				logger.log("- Prüfe, ob der Benutzer noch angelegt werden kann oder ob das angebene Kennwort zu einem existierenden Benutzer passt...");
-				if (!root_manager.checkUserNotExistsOrCredentialsValid(config))
+				if (!root_manager.checkUserNotExistsOrCredentialsValid(config)) {
 					throw new DBException("Der Datenbank-Benutzer exisiert bereits und das angegeben Kennwort passt nicht dazu.");
+				}
 				logger.logLn(0, " [OK]");
 
 				logger.log("- Entferne aus der Ziel-DB das alte Schema, falls vorhanden...");
-				if (!root_manager.dropDBSchemaIfExists(config.getDBSchema()))
+				if (!root_manager.dropDBSchemaIfExists(config.getDBSchema())) {
 					throw new DBException("Das bereits existierende Schema konnte nicht entfernt werden.");
+				}
 				logger.logLn(0, " [OK]");
 
 				logger.log("- Erstelle in der Ziel-DB das Schema und den Admin-Benutzer:");
-				if (!root_manager.createDBSchemaWithAdminUser(config.getUsername(), config.getPassword(), config.getDBSchema()))
+				if (!root_manager.createDBSchemaWithAdminUser(config.getUsername(), config.getPassword(), config.getDBSchema())) {
 					throw new DBException("Das Schema konnte nicht erstellt werden oder der Admin-Benutzer konnte nicht angelegt werden.");
+				}
 				logger.logLn(0, " [OK]");
 
 				return true;
 			} catch (final Exception e) {
 				logger.logLn(0, " [Fehler]");
-				if (e instanceof final DBException dbe)
+				if (e instanceof final DBException dbe) {
 					throw dbe;
-				if (e instanceof final SVWSKonfigurationException ske)
+				}
+				if (e instanceof final SVWSKonfigurationException ske) {
 					throw new DBException(
 							"Ein unerwarteter Fehler ist beim Zugriff auf die SVWS-Konfiguration nach dem Erstellen des Datenbank-Schemas aufgetreten: "
 									+ ske.getMessage(),
 							ske.getCause());
+				}
 				throw new DBException("Ein unerwarteter Fehler ist beim Erstellen des Datenbank-Schemas aufgetreten.", e);
 			} finally {
 				logger.modifyIndent(-2);

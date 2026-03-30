@@ -33,7 +33,6 @@ public final class DataLehrerLernplattformen extends DataManagerRevised<Long[], 
 		setAttributesRequiredOnCreation("idLernplattform");
 	}
 
-
 	@Override
 	public LehrerLernplattform map(final DTOLehrerLernplattform dtoLernplattform) {
 		final LehrerLernplattform daten = new LehrerLernplattform();
@@ -107,10 +106,11 @@ public final class DataLehrerLernplattformen extends DataManagerRevised<Long[], 
 		final Long idLehrer = JSONMapper.convertToLong(initAttributes.get("idLehrer"), false, "idLehrer");
 		final Long idLernplattform = JSONMapper.convertToLong(initAttributes.get("idLernplattform"), false, "idLernplattform");
 		final DTOLehrerLernplattform existingEntry = conn.queryByKey(DTOLehrerLernplattform.class, idLehrer, idLernplattform);
-		if (existingEntry != null)
+		if (existingEntry != null) {
 			throw new ApiOperationException(
 					Status.BAD_REQUEST,
 					"Es existiert bereits eine Einwilligung für die Kombination aus Lehrer-ID %d und Lernplattform-ID %d.".formatted(idLehrer, idLernplattform));
+		}
 	}
 
 	@Override
@@ -119,13 +119,15 @@ public final class DataLehrerLernplattformen extends DataManagerRevised<Long[], 
 		switch (name) {
 			case "idLehrer" -> {
 				final Long idLehrer = JSONMapper.convertToLong(value, false, "idLehrer");
-				if (!Objects.equals(dto.LehrerID, idLehrer))
+				if (!Objects.equals(dto.LehrerID, idLehrer)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(idLehrer, dto.LehrerID));
+				}
 			}
 			case "idLernplattform" -> {
 				final Long idLernplattform = JSONMapper.convertToLong(value, false, "idLernplattform");
-				if (!Objects.equals(dto.LernplattformID, idLernplattform))
+				if (!Objects.equals(dto.LernplattformID, idLernplattform)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(idLernplattform, dto.LernplattformID));
+				}
 			}
 			case "einwilligungAbgefragt" -> dto.EinwilligungAbgefragt = JSONMapper.convertToBoolean(value, false, "einwilligungAbgefragt");
 			case "einwilligungNutzung" -> dto.EinwilligungNutzung = JSONMapper.convertToBoolean(value, false, "einwilligungNutzung");
@@ -137,12 +139,14 @@ public final class DataLehrerLernplattformen extends DataManagerRevised<Long[], 
 
 	@Override
 	public LehrerLernplattform getById(final Long[] id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einer Lernplattform mit der ID null ist unzulässig.");
+		}
 		final DTOLehrerLernplattform lernplattform = conn.queryByKey(DTOLehrerLernplattform.class, id[0], id[1]);
-		if (lernplattform == null)
+		if (lernplattform == null) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Eine Lernplattform mit LehrerID %d und der LernplattformID %d wurde nicht gefunden.".formatted(id[0], id[1]));
+		}
 		return map(lernplattform);
 	}
 

@@ -1,10 +1,12 @@
 package de.svws_nrw.db.utils.lupo.mdb;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ArrayList;
 
+import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import io.github.spannm.jackcess.ColumnBuilder;
 import io.github.spannm.jackcess.DataType;
 import io.github.spannm.jackcess.Database;
@@ -12,9 +14,6 @@ import io.github.spannm.jackcess.PropertyMap;
 import io.github.spannm.jackcess.Row;
 import io.github.spannm.jackcess.Table;
 import io.github.spannm.jackcess.TableBuilder;
-
-import de.svws_nrw.core.types.gost.GostHalbjahr;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 
 /**
  * Diese Klasse wird für den Import der Tabelle ABP_Schuldaten aus einer LuPO-Datenbank
@@ -337,8 +336,9 @@ public final class ABPSchuldaten {
 	 */
 	public static List<ABPSchuldaten> get(final DTOEigeneSchule schule, final String jahrgang, final int halbjahr) {
 		final List<ABPSchuldaten> lupoSchuldaten = new ArrayList<>();
-		if (schule == null)
+		if (schule == null) {
 			return lupoSchuldaten;
+		}
 		final ABPSchuldaten schuldaten = new ABPSchuldaten();
 		schuldaten.Schulnr = "" + schule.SchulNr;
 		schuldaten.SchulformKrz = schule.SchulformKuerzel;

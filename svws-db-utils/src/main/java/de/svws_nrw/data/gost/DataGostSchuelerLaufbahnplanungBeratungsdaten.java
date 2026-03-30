@@ -1,5 +1,13 @@
 package de.svws_nrw.data.gost;
 
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.data.DataManager;
@@ -12,14 +20,6 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -76,12 +76,14 @@ public final class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataMan
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public GostLaufbahnplanungBeratungsdaten getFromID(final Long schueler_id) throws ApiOperationException {
-		if (schueler_id == null)
+		if (schueler_id == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Schüler-ID übergeben.");
+		}
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schueler_id);
-		if (gostSchueler == null)
+		if (gostSchueler == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit Daten zur GOSt mit der ID " + schueler_id + " gefunden.");
+		}
 		return dtoMapper.apply(gostSchueler);
 	}
 
@@ -95,16 +97,18 @@ public final class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataMan
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Map<Long, GostLaufbahnplanungBeratungsdaten> getMapFromIDs(final List<Long> schueler_ids) throws ApiOperationException {
-		if (schueler_ids == null)
+		if (schueler_ids == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Schüler-IDs übergeben.");
+		}
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final Map<Long, DTOGostSchueler> mapGostSchueler = conn.queryList(DTOGostSchueler.QUERY_LIST_BY_SCHUELER_ID, DTOGostSchueler.class, schueler_ids)
 				.stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
 		final Map<Long, GostLaufbahnplanungBeratungsdaten> result = new HashMap<>();
 		for (final Long sID : schueler_ids) {
 			final var schueler = mapGostSchueler.get(sID);
-			if (schueler == null)
+			if (schueler == null) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
+			}
 			result.put(sID, dtoMapper.apply(schueler));
 		}
 		return result;
@@ -117,8 +121,9 @@ public final class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataMan
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (!map.isEmpty()) {
 			final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schueler_id);
-			if (gostSchueler == null)
+			if (gostSchueler == null) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			for (final Entry<String, Object> entry : map.entrySet()) {
 				final String key = entry.getKey();
 				final Object value = entry.getValue();
@@ -127,8 +132,9 @@ public final class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataMan
 						final Long beratungslehrerID = JSONMapper.convertToLong(value, true);
 						if (beratungslehrerID != null) {
 							final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, beratungslehrerID);
-							if (lehrer == null)
+							if (lehrer == null) {
 								throw new ApiOperationException(Status.CONFLICT);
+							}
 						}
 						gostSchueler.Beratungslehrer_ID = beratungslehrerID;
 					}

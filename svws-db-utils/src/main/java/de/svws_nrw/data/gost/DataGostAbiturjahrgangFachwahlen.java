@@ -42,8 +42,9 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	 */
 	public DataGostAbiturjahrgangFachwahlen(final DBEntityManager conn, final Integer abijahr) {
 		super(conn);
-		if (abijahr == null)
+		if (abijahr == null) {
 			throw new NullPointerException();
+		}
 		this.abijahr = abijahr;
 	}
 
@@ -55,21 +56,25 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<GostStatistikFachwahl> daten = this.getFachwahlen();
-		if (daten == null)
+		if (daten == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final List<GostStatistikFachwahl> alle = this.getFachwahlen();
-		if (alle == null)
+		if (alle == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		for (final GostStatistikFachwahl wahl : alle) {
-			if (wahl.id == id)
+			if (wahl.id == id) {
 				return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(wahl).build();
+			}
 		}
 		throw new ApiOperationException(Status.NOT_FOUND);
 	}
@@ -90,18 +95,21 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	public List<GostStatistikFachwahl> getFachwahlen() throws ApiOperationException {
 		// Lese die Fachliste aus der DB
 		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
-		if ((faecher == null) || (faecher.size() == 0))
+		if ((faecher == null) || (faecher.size() == 0)) {
 			return new ArrayList<>();
+		}
 		// Bestimme die Fachwahlen des Abiturjahrganges
 		final GostJahrgangFachwahlen wahlen = this.getSchuelerFachwahlen();
 		final HashMap<Long, GostStatistikFachwahl> matrixFachwahlen = new HashMap<>();
 		for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
-			if (wahlen.halbjahr[halbjahr.id] == null)
+			if (wahlen.halbjahr[halbjahr.id] == null) {
 				continue;
+			}
 			for (final GostFachwahl wahl : wahlen.halbjahr[halbjahr.id].fachwahlen) {
 				final DTOFach fach = faecher.get(wahl.fachID);
-				if (fach == null)
+				if (fach == null) {
 					continue;
+				}
 				GostStatistikFachwahl statfw = matrixFachwahlen.get(fach.ID);
 				if (statfw == null) {
 					statfw = new GostStatistikFachwahl();
@@ -110,8 +118,9 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 					statfw.kuerzel = fach.Kuerzel;
 					statfw.bezeichnung = fach.Bezeichnung;
 					statfw.kuerzelStatistik = fach.StatistikKuerzel;
-					for (final GostHalbjahr hj : GostHalbjahr.values())
+					for (final GostHalbjahr hj : GostHalbjahr.values()) {
 						statfw.fachwahlen[hj.id] = new GostStatistikFachwahlHalbjahr();
+					}
 					matrixFachwahlen.put(statfw.id, statfw);
 				}
 				final GostKursart kursart = GostKursart.fromIDorNull(wahl.kursartID);
@@ -119,10 +128,11 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 					switch (kursart) {
 						case GK -> {
 							statfw.fachwahlen[halbjahr.id].wahlenGK++;
-							if (wahl.istSchriftlich)
+							if (wahl.istSchriftlich) {
 								statfw.fachwahlen[halbjahr.id].wahlenGKSchriftlich++;
-							else
+							} else {
 								statfw.fachwahlen[halbjahr.id].wahlenGKMuendlich++;
+							}
 						}
 						case LK -> statfw.fachwahlen[halbjahr.id].wahlenLK++;
 						case PJK, VTF -> {
@@ -136,20 +146,24 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 		}
 		for (final GostFachwahl wahl : wahlen.abitur.fachwahlen) {
 			final GostStatistikFachwahl statfw = matrixFachwahlen.get(wahl.fachID);
-			if (statfw == null)
+			if (statfw == null) {
 				continue;
+			}
 			if (wahl.abiturfach != null) {
-				if (wahl.abiturfach == 3)
+				if (wahl.abiturfach == 3) {
 					statfw.wahlenAB3++;
-				if (wahl.abiturfach == 4)
+				}
+				if (wahl.abiturfach == 4) {
 					statfw.wahlenAB4++;
+				}
 			}
 		}
 		return matrixFachwahlen.values().stream()
 				.sorted((a, b) -> {
 					final int cmp = GostFachbereich.compareFachByKuerzel(a.kuerzelStatistik, b.kuerzelStatistik);
-					if (cmp != 0)
+					if (cmp != 0) {
 						return cmp;
+					}
 					return Integer.compare(faecher.get(a.id).SortierungAllg, faecher.get(b.id).SortierungAllg);
 				})
 				.toList();
@@ -165,9 +179,11 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	 */
 	public Response getSchuelerFachwahlenResponse() throws ApiOperationException {
 		final GostJahrgangFachwahlen daten = this.getSchuelerFachwahlen();
-		for (final GostHalbjahr halbjahr : GostHalbjahr.values())
-			if (daten.halbjahr[halbjahr.id] == null)
+		for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
+			if (daten.halbjahr[halbjahr.id] == null) {
 				daten.halbjahr[halbjahr.id] = new GostJahrgangFachwahlenHalbjahr();
+			}
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -184,8 +200,9 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	 */
 	public Response getSchuelerFachwahlenResponseHalbjahr(final int halbjahr_id) throws ApiOperationException {
 		final GostJahrgangFachwahlenHalbjahr daten = this.getSchuelerFachwahlenHalbjahr(GostHalbjahr.fromID(halbjahr_id));
-		if (daten.fachwahlen.isEmpty())
+		if (daten.fachwahlen.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -217,8 +234,9 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public GostJahrgangFachwahlenHalbjahr getSchuelerFachwahlenHalbjahr(final GostHalbjahr halbjahr) throws ApiOperationException {
-		if (halbjahr == null)
+		if (halbjahr == null) {
 			return new GostJahrgangFachwahlenHalbjahr();
+		}
 		final GostJahrgangFachwahlenHalbjahr result = this.getSchuelerFachwahlen().halbjahr[halbjahr.id];
 		return (result == null) ? new GostJahrgangFachwahlenHalbjahr() : result;
 	}
@@ -243,13 +261,15 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 			final GostJahrgangFachwahlen fachwahlen = entry.getValue();
 			for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 				if (DBUtilsGost.pruefeIstAnSchule(schueler, halbjahr, abijahr, mapSchuljahresabschnitte) && (fachwahlen.halbjahr[halbjahr.id] != null)) {
-					if (result.halbjahr[halbjahr.id] == null)
+					if (result.halbjahr[halbjahr.id] == null) {
 						result.halbjahr[halbjahr.id] = new GostJahrgangFachwahlenHalbjahr();
+					}
 					result.halbjahr[halbjahr.id].fachwahlen.addAll(fachwahlen.halbjahr[halbjahr.id].fachwahlen);
 				}
 			}
-			if (DBUtilsGost.pruefeIstAnSchule(schueler, GostHalbjahr.Q22, abijahr, mapSchuljahresabschnitte))
+			if (DBUtilsGost.pruefeIstAnSchule(schueler, GostHalbjahr.Q22, abijahr, mapSchuljahresabschnitte)) {
 				result.abitur.fachwahlen.addAll(fachwahlen.abitur.fachwahlen);
+			}
 		}
 		return result;
 	}

@@ -26,8 +26,9 @@ public final class DataKatalogLehrerMehrleistungsarten extends DataManager<Long>
 	@Override
 	public Response getAll() {
 		final ArrayList<LehrerMehrleistungsartKatalogEintrag> daten = new ArrayList<>();
-		for (final LehrerMehrleistungsarten status : LehrerMehrleistungsarten.values())
+		for (final LehrerMehrleistungsarten status : LehrerMehrleistungsarten.values()) {
 			daten.addAll(status.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

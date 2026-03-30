@@ -65,8 +65,9 @@ public class ImportLupoMDB {
 
 			// Lese die Optionen für die Ziel-Datenbank ein
 			final DBDriver tgtDrv = DBDriver.fromString(cmdLine.getValue("td", "MARIA_DB"));
-			if (tgtDrv == null)
+			if (tgtDrv == null) {
 				cmdLine.printOptionsAndExit(3, "Fehlerhafte Angabe bei dem Treiber der Ziel-DB");
+			}
 			final String tgtLoc = cmdLine.getValue("tl", "localhost");
 			final String tgtDB = cmdLine.getValue("ts", "svwsdb");
 			final String tgtUser = cmdLine.getValue("tu", "svwsadmin");

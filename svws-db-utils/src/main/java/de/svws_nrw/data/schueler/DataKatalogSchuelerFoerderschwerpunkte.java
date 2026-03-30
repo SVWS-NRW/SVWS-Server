@@ -1,5 +1,14 @@
 package de.svws_nrw.data.schueler;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import de.svws_nrw.asd.types.schule.Foerderschwerpunkt;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
@@ -11,15 +20,6 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOFoerderschwerpunkt;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link FoerderschwerpunktEintrag}.
@@ -51,12 +51,14 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 
 	@Override
 	public FoerderschwerpunktEintrag getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Förderschwerpunktes darf nicht null sein.");
+		}
 
 		final DTOFoerderschwerpunkt dto = this.conn.queryByKey(DTOFoerderschwerpunkt.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Förderschwerpunkt mit der ID %d gefunden.".formatted(id));
+		}
 
 		return map(dto);
 	}
@@ -121,30 +123,35 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManagerRev
 
 	private void updateBezeichnung(final DTOFoerderschwerpunkt dto, final Object value, final String name) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Foerderschwerpunkt.col_Bezeichnung.datenlaenge(), name);
-		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung))
+		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung)) {
 			return;
+		}
 
-		if (bezeichnungIsAlreadyUsed(dto.ID, bezeichnung))
+		if (bezeichnungIsAlreadyUsed(dto.ID, bezeichnung)) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Das Kürzel %s darf nicht doppelt vergeben werden".formatted(bezeichnung));
+		}
 
 		dto.Bezeichnung = bezeichnung;
 	}
 
 	private static void updateKuerzelStatistik(final DTOFoerderschwerpunkt dto, final Object value, final String name) throws ApiOperationException {
 		final String kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_K_Foerderschwerpunkt.col_StatistikKrz.datenlaenge(), name);
-		if (ValidationUtils.isBlankOrUnchanged(dto.StatistikKrz, kuerzel))
+		if (ValidationUtils.isBlankOrUnchanged(dto.StatistikKrz, kuerzel)) {
 			return;
+		}
 
-		if (noMatchingCoreTypeFound(kuerzel))
+		if (noMatchingCoreTypeFound(kuerzel)) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Zum angegebenen Kürzel %s wurde kein passender Förderschwerpunkt gefunden.".formatted(kuerzel));
+		}
 
 		dto.StatistikKrz = kuerzel;
 	}
 
 	private Set<Long> getIdsOfReferencedFoerderschwerpunkte(final Set<Long> ids) {
-		if ((ids == null) || ids.isEmpty())
+		if ((ids == null) || ids.isEmpty()) {
 			return Collections.emptySet();
+		}
 
 		final String query1 = "SELECT DISTINCT f.Foerderschwerpunkt_ID FROM DTOSchuelerLernabschnittsdaten f WHERE f.Foerderschwerpunkt_ID IN :ids";
 		final String query2 = "SELECT DISTINCT g.Foerderschwerpunkt2_ID FROM DTOSchuelerLernabschnittsdaten g WHERE g.Foerderschwerpunkt2_ID IN :ids";

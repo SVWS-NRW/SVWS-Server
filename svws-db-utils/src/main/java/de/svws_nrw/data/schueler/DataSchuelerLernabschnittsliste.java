@@ -68,16 +68,19 @@ public final class DataSchuelerLernabschnittsliste extends DataManager<Long> {
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
 		// Prüfe, ob der Schüler mit der ID existiert
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
-		if (schueler == null)
+		if (schueler == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		// Bestimme die Lernabschnitte
 		final List<DTOSchuelerLernabschnittsdaten> abschnitte = conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHUELER_ID,
 				DTOSchuelerLernabschnittsdaten.class, id);
-		if (abschnitte == null)
+		if (abschnitte == null) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+		}
 		// Bestimme die Klassen aus den Abschnitte und liese diese aus der Klassentabelle aus
 		final List<Long> klassenIDs = abschnitte.stream().filter(a -> a.Klassen_ID != null).map(a -> a.Klassen_ID).toList();
 		final List<DTOKlassen> klassen = conn.queryByKeyList(DTOKlassen.class, klassenIDs);
@@ -96,23 +99,28 @@ public final class DataSchuelerLernabschnittsliste extends DataManager<Long> {
 				e.klasseStatistik = klasse.ASDKlasse;
 			}
 			final DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(e.schuljahresabschnitt);
-			if (schuljahresabschnitt == null)
+			if (schuljahresabschnitt == null) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+			}
 			e.schuljahr = schuljahresabschnitt.Jahr;
 			e.abschnitt = schuljahresabschnitt.Abschnitt;
 			daten.add(e);
 		}
 		daten.sort((final SchuelerLernabschnittListeEintrag a, final SchuelerLernabschnittListeEintrag b) -> {
 			int tmp = Integer.compare(a.schuljahr, b.schuljahr);
-			if (tmp != 0)
+			if (tmp != 0) {
 				return tmp;
+			}
 			tmp = Integer.compare(a.abschnitt, b.abschnitt);
-			if (tmp != 0)
+			if (tmp != 0) {
 				return tmp;
-			if (a.wechselNr == 0)
+			}
+			if (a.wechselNr == 0) {
 				return 1;
-			if (b.wechselNr == 0)
+			}
+			if (b.wechselNr == 0) {
 				return -1;
+			}
 			return Integer.compare(a.wechselNr, b.wechselNr);
 		});
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

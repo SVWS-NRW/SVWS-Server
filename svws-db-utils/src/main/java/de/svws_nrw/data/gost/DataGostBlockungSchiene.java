@@ -3,9 +3,9 @@ package de.svws_nrw.data.gost;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -73,8 +73,9 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Schiene der Blockung
 		final DTOGostBlockungSchiene schiene = conn.queryByKey(DTOGostBlockungSchiene.class, id);
-		if (schiene == null)
+		if (schiene == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final GostBlockungSchiene daten = dtoMapper.apply(schiene);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -82,13 +83,15 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		final Map<String, Object> map = JSONMapper.toMap(is);
-		if (map.size() <= 0)
+		if (map.size() <= 0) {
 			return Response.status(Status.OK).build();
+		}
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Schiene der Blockung
 		final DTOGostBlockungSchiene schiene = conn.queryByKey(DTOGostBlockungSchiene.class, id);
-		if (schiene == null)
+		if (schiene == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		// Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, schiene.Blockung_ID);
 		DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
@@ -98,20 +101,23 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 			switch (key) {
 				case "id" -> {
 					final Long patch_id = JSONMapper.convertToLong(value, true);
-					if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
+					if ((patch_id == null) || (patch_id.longValue() != id.longValue())) {
 						throw new ApiOperationException(Status.BAD_REQUEST);
+					}
 				}
 				case "bezeichnung" ->
 					schiene.Bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_Gost_Blockung_Schienen.col_Bezeichnung.datenlaenge());
 				case "wochenstunden" -> {
 					schiene.Wochenstunden = JSONMapper.convertToInteger(value, false);
-					if ((schiene.Wochenstunden < 1) || (schiene.Wochenstunden > 40))
+					if ((schiene.Wochenstunden < 1) || (schiene.Wochenstunden > 40)) {
 						throw new ApiOperationException(Status.BAD_REQUEST);
+					}
 				}
 				case "nummer" -> {
 					final Integer patch_nummer = JSONMapper.convertToInteger(value, true);
-					if ((patch_nummer == null) || (!patch_nummer.equals(schiene.Nummer)))
+					if ((patch_nummer == null) || (!patch_nummer.equals(schiene.Nummer))) {
 						throw new ApiOperationException(Status.BAD_REQUEST);
+					}
 				}
 				default -> throw new ApiOperationException(Status.BAD_REQUEST);
 			}
@@ -131,24 +137,27 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	private GostBlockungSchiene _delete(final DTOGostBlockungSchiene schiene) throws ApiOperationException {
-		if (schiene == null)
+		if (schiene == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 
 		// Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, schiene.Blockung_ID);
 		final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
-		if (vorlage == null)
+		if (vorlage == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Die Schiene kann nicht entfernt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+		}
 
 		// Prüfe, ob die Schiene im aktuelle Vorlage-Ergebnis Kurse hat: Dann ist das entfernen nicht erlaubt...
 		final List<DTOGostBlockungZwischenergebnisKursSchiene> kurse = conn.queryList(
 				"SELECT e FROM DTOGostBlockungZwischenergebnisKursSchiene e WHERE e.Zwischenergebnis_ID = ?1 AND e.Schienen_ID = ?2",
 				DTOGostBlockungZwischenergebnisKursSchiene.class,
 				vorlage.ID, schiene.ID);
-		if (!kurse.isEmpty())
+		if (!kurse.isEmpty()) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Die Schiene kann nicht entfernt werden, da der Schiene bereits Kurse zugeordnet sind. Diese müssen zuerst entfernt werden.");
+		}
 		final GostBlockungSchiene daten = dtoMapper.apply(schiene);
 
 		// Passt die Schienen-Nummern bei den Regeln an.
@@ -177,11 +186,13 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 			final List<GostBlockungRegel> regeln = DataGostBlockungRegel.getBlockungsregeln(dtoRegeln, dtoRegelParameter);
 			// Übertrage die Anpassungen in die Datenbank
 			for (final GostBlockungRegel regel : regeln) {
-				if (regel.parameter.isEmpty())
+				if (regel.parameter.isEmpty()) {
 					continue;
+				}
 				final List<DTOGostBlockungRegelParameter> dtoParams = mapParameter.get(regel.id);
-				if ((dtoParams == null) || (dtoParams.isEmpty()))
+				if ((dtoParams == null) || (dtoParams.isEmpty())) {
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+				}
 				final Map<Integer, DTOGostBlockungRegelParameter> mapParam = dtoParams.stream().collect(Collectors.toMap(p -> p.Nummer, p -> p));
 				final long[] newParams = GostKursblockungRegelTyp.getNeueParameterBeiSchienenLoeschung(regel, daten.nummer);
 				if (newParams == null) { // Lösche die Regel in der DB und gehe zur nächsten über
@@ -212,8 +223,9 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response delete(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.CONFLICT);
+		}
 		// Bestimme die Schiene der Blockung
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final GostBlockungSchiene daten = _delete(conn.queryByKey(DTOGostBlockungSchiene.class, id));
@@ -235,13 +247,15 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Prüfe, ob die Blockung mit der ID existiert
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, idBlockung);
-		if (blockung == null)
+		if (blockung == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		// Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
 		final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
-		if (vorlage == null)
+		if (vorlage == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Die Schiene kann nicht hinzugefügt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+		}
 		// Bestimme die ID, für welche der Datensatz eingefügt wird
 		final DTOSchemaAutoInkremente dbSchienenID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Schienen");
 		final long idSchiene = (dbSchienenID == null) ? 1 : (dbSchienenID.MaxID + 1);
@@ -250,8 +264,9 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 		int schienennummer = 1;
 		if ((schienen != null) && (!schienen.isEmpty())) { // Bestimme die erste freie Schienennummer
 			final Set<Integer> schienenIDs = schienen.stream().map(e -> e.Nummer).collect(Collectors.toSet());
-			while (schienenIDs.contains(schienennummer))
+			while (schienenIDs.contains(schienennummer)) {
 				schienennummer++;
+			}
 		}
 		final DTOGostBlockungSchiene schiene = new DTOGostBlockungSchiene(idSchiene, idBlockung, schienennummer, "Schiene " + schienennummer, 3);
 		conn.transactionPersist(schiene);
@@ -273,11 +288,13 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Bestimme die Schienen der Blockung und löschen die Schiene mit der höchsten Nummer
 		final List<DTOGostBlockungSchiene> schienen = conn.queryList(DTOGostBlockungSchiene.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungSchiene.class, idBlockung);
-		if ((schienen == null) || (schienen.isEmpty()))
+		if ((schienen == null) || (schienen.isEmpty())) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final Optional<DTOGostBlockungSchiene> optSchiene = schienen.stream().max((a, b) -> Integer.compare(a.Nummer, b.Nummer));
-		if (optSchiene.isEmpty())
+		if (optSchiene.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final DTOGostBlockungSchiene schiene = optSchiene.get();
 		final GostBlockungSchiene daten = _delete(schiene);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

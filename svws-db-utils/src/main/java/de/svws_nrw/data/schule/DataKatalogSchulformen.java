@@ -4,13 +4,13 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -41,8 +41,9 @@ public final class DataKatalogSchulformen extends DataManager<Long> {
 	 */
 	public List<SchulformKatalogEintrag> getListAll() {
 		final ArrayList<SchulformKatalogEintrag> daten = new ArrayList<>();
-		for (final Schulform schulform : Schulform.values())
+		for (final Schulform schulform : Schulform.values()) {
 			daten.addAll(schulform.historie());
+		}
 		return daten;
 	}
 

@@ -1,5 +1,10 @@
 package de.svws_nrw.data.kurse;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import de.svws_nrw.asd.data.kurse.KursLehrer;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
@@ -7,10 +12,6 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 /** Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link KursLehrer} */
 public final class DataKursLehrer extends DataManagerRevised<Long[], DTOKursLehrer, KursLehrer> {
@@ -41,11 +42,12 @@ public final class DataKursLehrer extends DataManagerRevised<Long[], DTOKursLehr
 		final Long kursId = JSONMapper.convertToLong(initAttributes.get("idKurs"), false, "idKurs");
 		final Long idLehrer = JSONMapper.convertToLong(initAttributes.get("idLehrer"), false, "idLehrer");
 		final DTOKursLehrer dto = this.conn.queryByKey(DTOKursLehrer.class, kursId, idLehrer);
-		if (dto != null)
+		if (dto != null) {
 			throw new ApiOperationException(
 					Response.Status.BAD_REQUEST,
 					"Es existiert bereits eine Eintrag für die Kombination aus Kurs-ID %d und Lehrer-ID %d.".formatted(kursId, idLehrer)
 			);
+		}
 	}
 
 	@Override
@@ -57,14 +59,16 @@ public final class DataKursLehrer extends DataManagerRevised<Long[], DTOKursLehr
 
 	@Override
 	public KursLehrer getById(final Long[] id) throws ApiOperationException {
-		if ((id == null) || (id[0] == null) || (id[1] == null))
+		if ((id == null) || (id[0] == null) || (id[1] == null)) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "IDs can not be null.");
+		}
 		final DTOKursLehrer dto = this.conn.queryByKey(DTOKursLehrer.class, id[0], id[1]);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(
 					Response.Status.NOT_FOUND,
 					("Es existiert kein Eintrag für die Kombination aus Kurs-ID %d und Lehrer-ID %d.").formatted(id[0], id[1])
 			);
+		}
 		return map(dto);
 	}
 
@@ -94,15 +98,17 @@ public final class DataKursLehrer extends DataManagerRevised<Long[], DTOKursLehr
 		switch (name) {
 			case "idKurs" -> {
 				final Long id = JSONMapper.convertToLong(value, false, name);
-				if (!Objects.equals(dto.Kurs_ID, id))
+				if (!Objects.equals(dto.Kurs_ID, id)) {
 					throw new ApiOperationException(Response.Status.BAD_REQUEST,
 							"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.Kurs_ID));
+				}
 			}
 			case "idLehrer" -> {
 				final Long id = JSONMapper.convertToLong(value, false, name);
-				if (!Objects.equals(dto.Lehrer_ID, id))
+				if (!Objects.equals(dto.Lehrer_ID, id)) {
 					throw new ApiOperationException(Response.Status.BAD_REQUEST,
 							"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(id, dto.Lehrer_ID));
+				}
 			}
 			case "wochenstundenLehrer" -> mapWochenstundenLehrer(dto, name, value);
 			default -> throw new ApiOperationException(Response.Status.BAD_REQUEST,  "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
@@ -111,8 +117,9 @@ public final class DataKursLehrer extends DataManagerRevised<Long[], DTOKursLehr
 
 	private static void mapWochenstundenLehrer(final DTOKursLehrer dto, final String name, final Object value) throws ApiOperationException {
 		final double wochenstunden = JSONMapper.convertToDouble(value, true, name);
-		if (wochenstunden < 0)
+		if (wochenstunden < 0) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Eine negative Anzahl an Wochenstunden ist nicht gestattet");
+		}
 
 		dto.Anteil = wochenstunden;
 	}
@@ -122,8 +129,9 @@ public final class DataKursLehrer extends DataManagerRevised<Long[], DTOKursLehr
 		final List<DTOKursLehrer> result = new ArrayList<>();
 		for (final Long[] id : ids) {
 			final DTOKursLehrer dto = this.conn.queryByKey(DTOKursLehrer.class, id[0], id[1]);
-			if (dto != null)
+			if (dto != null) {
 				result.add(dto);
+			}
 		}
 		return result;
 	}

@@ -1,5 +1,14 @@
 package de.svws_nrw.data.jahrgaenge;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag;
 import de.svws_nrw.asd.data.schule.BildungsstufeKatalogEintrag;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
@@ -17,14 +26,6 @@ import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response.Status;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das Core-DTO {@link JahrgangsDaten}.
@@ -63,12 +64,14 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 
 	private Long mapSekundarstufe(final String sekundarstufe) {
 		final Bildungsstufe wertByKuerzel = Bildungsstufe.data().getWertByKuerzel(sekundarstufe);
-		if (wertByKuerzel == null)
+		if (wertByKuerzel == null) {
 			return null;
+		}
 
 		final BildungsstufeKatalogEintrag daten = wertByKuerzel.daten(this.conn.getUser().schuleGetSchuljahr());
-		if (daten == null)
-				return null;
+		if (daten == null) {
+			return null;
+		}
 
 		return daten.id;
 	}
@@ -92,12 +95,14 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 
 	@Override
 	public JahrgangsDaten getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Keine ID für den Jahrgang übergeben.");
+		}
 
 		final DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, id);
-		if (jahrgang == null)
+		if (jahrgang == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Jahrgang zur ID %d gefunden.".formatted(id));
+		}
 
 		return map(jahrgang);
 	}
@@ -136,8 +141,9 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 			return;
 		}
 		final BildungsstufeKatalogEintrag eintrag = Bildungsstufe.data().getEintragByID(idBildungsstufe);
-		if (eintrag == null)
+		if (eintrag == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Keine Bildungsstufe zur ID %d gefunden.".formatted(idBildungsstufe));
+		}
 
 		dto.Sekundarstufe = eintrag.schluessel;
 	}
@@ -145,26 +151,30 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 	private void updateBezeichnung(final DTOJahrgang dto, final String name, final Object value) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(
 				value, false, false, Schema.tab_EigeneSchule_Jahrgaenge.col_ASDBezeichnung.datenlaenge(), name);
-		if (Objects.equals(dto.ASDBezeichnung, bezeichnung) || bezeichnung.isBlank())
+		if (Objects.equals(dto.ASDBezeichnung, bezeichnung) || bezeichnung.isBlank()) {
 			return;
+		}
 
 		final boolean bezeichnungAlreadyUsed = this.conn.queryAll(DTOJahrgang.class).stream()
 				.anyMatch(j -> (j.ID != dto.ID) && bezeichnung.equalsIgnoreCase(j.ASDBezeichnung));
-		if (bezeichnungAlreadyUsed)
+		if (bezeichnungAlreadyUsed) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
+		}
 
 		dto.ASDBezeichnung = bezeichnung;
 	}
 
 	private void updateKuerzel(final DTOJahrgang dto, final String name, final Object value) throws ApiOperationException {
 		final String kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_EigeneSchule_Jahrgaenge.col_InternKrz.datenlaenge(), name);
-		if (Objects.equals(dto.InternKrz, kuerzel) || kuerzel.isBlank())
+		if (Objects.equals(dto.InternKrz, kuerzel) || kuerzel.isBlank()) {
 			return;
+		}
 
 		final boolean kuerzelAlreadyUsed = this.conn.queryAll(DTOJahrgang.class).stream()
 				.anyMatch(j -> (j.ID != dto.ID) && kuerzel.equalsIgnoreCase(j.InternKrz));
-		if (kuerzelAlreadyUsed)
+		if (kuerzelAlreadyUsed) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Das Kürzel %s ist bereits vorhanden.".formatted(kuerzel));
+		}
 
 		dto.InternKrz = kuerzel;
 	}
@@ -176,8 +186,9 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 			return;
 		}
 		final DTOJahrgang folgeJahrgang = conn.queryByKey(DTOJahrgang.class, idFolgejahrgang);
-		if (folgeJahrgang == null)
+		if (folgeJahrgang == null) {
 			throw new ApiOperationException(Status.CONFLICT, "Ein Folgejahrgang mit der ID %d wurde nicht gefunden.".formatted(idFolgejahrgang));
+		}
 		dtoJahrgang.Folgejahrgang_ID = idFolgejahrgang;
 	}
 
@@ -189,11 +200,13 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 		}
 
 		final Schulgliederung schulgliederung = Schulgliederung.data().getWertBySchluessel(kuerzelSchuldgliederung);
-		if (schulgliederung == null)
+		if (schulgliederung == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schulgliederung mit dem Schlüssel %s gefunden.".formatted(kuerzelSchuldgliederung));
+		}
 
-		if (!schulgliederung.hatSchulform(conn.getUser().schuleGetSchuljahr(), conn.getUser().schuleGetSchulform()))
+		if (!schulgliederung.hatSchulform(conn.getUser().schuleGetSchuljahr(), conn.getUser().schuleGetSchulform())) {
 			throw new ApiOperationException(Status.CONFLICT, "Die Schulgliederung ist für diese Schulform nicht gültig.");
+		}
 
 		dtoJahrgang.GliederungKuerzel = kuerzelSchuldgliederung;
 	}
@@ -201,12 +214,14 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 	private void updateKuerzelStatistik(final DTOJahrgang dtoJahrgang, final Object value, final String attrName) throws ApiOperationException {
 		final String kuerzelASDJahrgang = JSONMapper.convertToString(
 				value, true, false, Schema.tab_EigeneSchule_Jahrgaenge.col_ASDJahrgang.datenlaenge(), attrName);
-		if (kuerzelASDJahrgang == null)
+		if (kuerzelASDJahrgang == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Kein ASD-Jahrgang ausgewählt.");
+		}
 
 		final Jahrgaenge jahrgang = Jahrgaenge.data().getWertBySchluessel(kuerzelASDJahrgang);
-		if (jahrgang == null)
+		if (jahrgang == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Jahrgang mit dem Schlüssel %s gefunden.".formatted(kuerzelASDJahrgang));
+		}
 
 		final int schuljahr = conn.getUser().schuleGetSchuljahr();
 		final JahrgaengeKatalogEintrag eintrag = jahrgang.daten(schuljahr);
@@ -223,12 +238,14 @@ public final class DataJahrgangsdaten extends DataManagerRevised<Long, DTOJahrga
 	 * @return die Zuordnung der Jahrgänge zu den Klassen-IDs
 	 */
 	public static Map<Long, DTOJahrgang> getDTOMapByKlassen(final @NotNull DBEntityManager conn, final @NotNull List<DTOKlassen> klassen) {
-		if (klassen.isEmpty())
+		if (klassen.isEmpty()) {
 			return Collections.emptyMap();
+		}
 
 		final Set<Long> idsJahrgaenge = klassen.stream().map(kl -> kl.Jahrgang_ID).filter(Objects::nonNull).collect(Collectors.toSet());
-		if (idsJahrgaenge.isEmpty())
+		if (idsJahrgaenge.isEmpty()) {
 			return Collections.emptyMap();
+		}
 
 		final Map<Long, DTOJahrgang> jahrgaengeById = conn.queryByKeyList(DTOJahrgang.class, idsJahrgaenge).stream()
 				.collect(Collectors.toMap(j -> j.ID, j -> j));

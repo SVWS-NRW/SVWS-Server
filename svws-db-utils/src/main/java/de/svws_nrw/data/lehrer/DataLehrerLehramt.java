@@ -46,8 +46,9 @@ public final class DataLehrerLehramt extends DataManagerRevised<Long, DTOLehrerP
 
 	@Override
 	protected Long getID(final Map<String, Object> attributes) throws ApiOperationException {
-		if (!attributes.containsKey("id"))
+		if (!attributes.containsKey("id")) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Datensatzes ist nicht angegeben.");
+		}
 		return JSONMapper.convertToLong(attributes.get("id"), false, "id");
 	}
 
@@ -80,8 +81,9 @@ public final class DataLehrerLehramt extends DataManagerRevised<Long, DTOLehrerP
 	public void checkBeforeCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		final long tmpIdLehrer = JSONMapper.convertToLong(initAttributes.get("idLehrer"), false, "idLehrer");
 		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, tmpIdLehrer);
-		if (lehrer == null)
+		if (lehrer == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Lehrer für die übergebene Lehrer-ID in der Datenbank gefunden werden.");
+		}
 	}
 
 
@@ -91,20 +93,23 @@ public final class DataLehrerLehramt extends DataManagerRevised<Long, DTOLehrerP
 		switch (name) {
 			case "id" -> {
 				final Long id = JSONMapper.convertToLong(value, true, "id");
-				if ((id == null) || (id != dto.ID))
+				if ((id == null) || (id != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "ID von Patch und Datenbank-Objekt stimmen nicht überein.");
+				}
 			}
 			case "idLehrer" -> {
 				final long tmpIdLehrer = JSONMapper.convertToLong(map.get("idLehrer"), false, "idLehrer");
-				if (tmpIdLehrer != dto.Lehrer_ID)
+				if (tmpIdLehrer != dto.Lehrer_ID) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die Lehrer-ID von Patch und Datenbank-Objekt stimmen nicht überein.");
+				}
 			}
 			case "idKatalogLehramt" -> {
 				final long tmpIdLehramt = JSONMapper.convertToLong(map.get("idKatalogLehramt"), false, "idKatalogLehramt");
 				final LehrerLehramtKatalogEintrag tmpLehramt = LehrerLehramt.data().getEintragByID(tmpIdLehramt);
-				if (tmpLehramt == null)
+				if (tmpLehramt == null) {
 					throw new ApiOperationException(Status.BAD_REQUEST,
 							"Es existiert kein Lehramt im Katalog der Lehrämter mit der ID %d.".formatted(tmpIdLehramt));
+				}
 				dto.Lehramt_Katalog_ID = tmpIdLehramt;
 			}
 			case "idAnerkennungsgrund" -> {
@@ -113,10 +118,11 @@ public final class DataLehrerLehramt extends DataManagerRevised<Long, DTOLehrerP
 					dto.LehramtAnerkennung_Katalog_ID = null;
 				} else {
 					final LehrerLehramtAnerkennungKatalogEintrag eintrag = LehrerLehramtAnerkennung.data().getEintragByID(tmpIdAnerkennungsgrund);
-					if (eintrag == null)
+					if (eintrag == null) {
 						throw new ApiOperationException(Status.BAD_REQUEST,
 								"Es existiert kein Anerkennungsgrund für das Lehramt im Katalog der Anerkennungsgründe mit der ID %d."
 										.formatted(tmpIdAnerkennungsgrund));
+					}
 					dto.LehramtAnerkennung_Katalog_ID = tmpIdAnerkennungsgrund;
 				}
 			}
@@ -161,15 +167,17 @@ public final class DataLehrerLehramt extends DataManagerRevised<Long, DTOLehrerP
 		// Bestimme die Lehrämter des Lehrers
 		final List<DTOLehrerPersonaldatenLehramt> daten =
 				conn.queryList(DTOLehrerPersonaldatenLehramt.QUERY_BY_LEHRER_ID, DTOLehrerPersonaldatenLehramt.class, idLehrer);
-		if (daten == null)
+		if (daten == null) {
 			return result;
+		}
 		// Bestimme die Lehrbefähigungen und die Fachrichtungen zu den Lehrämtern
 		final List<Long> idsLehraemter = daten.stream().map(l -> l.ID).toList();
 		final Map<Long, List<LehrerLehrbefaehigungEintrag>> mapLehrbefaehigungen = DataLehrerLehrbefaehigung.getMapByLehramtIds(conn, idsLehraemter);
 		final Map<Long, List<LehrerFachrichtungEintrag>> mapFachrichtungen = DataLehrerFachrichtungen.getMapByLehramtIds(conn, idsLehraemter);
 		// Konvertiere sie und füge sie zur Liste hinzu
-		for (final DTOLehrerPersonaldatenLehramt l : daten)
+		for (final DTOLehrerPersonaldatenLehramt l : daten) {
 			result.add(mapInternal(l, mapLehrbefaehigungen.get(l.ID), mapFachrichtungen.get(l.ID)));
+		}
 		return result;
 	}
 

@@ -67,8 +67,9 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 	public static List<StundenplanPausenzeit> getPausenzeiten(final @NotNull DBEntityManager conn) throws ApiOperationException {
 		final List<DTOKatalogPausenzeit> pausenzeiten = conn.queryAll(DTOKatalogPausenzeit.class);
 		final ArrayList<StundenplanPausenzeit> daten = new ArrayList<>();
-		for (final DTOKatalogPausenzeit p : pausenzeiten)
+		for (final DTOKatalogPausenzeit p : pausenzeiten) {
 			daten.add(dtoMapper.apply(p));
+		}
 		return daten;
 	}
 
@@ -80,11 +81,13 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einer Pausenzeit mit der ID null ist unzulässig.");
+		}
 		final DTOKatalogPausenzeit pausenzeit = conn.queryByKey(DTOKatalogPausenzeit.class, id);
-		if (pausenzeit == null)
+		if (pausenzeit == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Pausenzeit mit der ID %d gefunden.".formatted(id));
+		}
 		final StundenplanPausenzeit daten = dtoMapper.apply(pausenzeit);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -93,8 +96,9 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 	private static final Map<String, DataBasicMapper<DTOKatalogPausenzeit>> patchMappings = Map.ofEntries(
 			Map.entry("id", (conn, dto, value, map) -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST);
+				}
 			}),
 			Map.entry("wochentag", (conn, dto, value, map) -> dto.Tag = JSONMapper.convertToIntegerInRange(value, false, 1, 8)),
 			Map.entry("beginn", (conn, dto, value, map) -> dto.Beginn = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),

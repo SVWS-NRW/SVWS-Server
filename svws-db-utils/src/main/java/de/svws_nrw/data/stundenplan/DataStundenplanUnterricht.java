@@ -67,13 +67,15 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 		// Bestimme die Zeitraster-IDs des Stundenplans
 		final List<Long> zeitrasterIDs = conn.queryList(DTOStundenplanZeitraster.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanZeitraster.class, idStundenplan)
 				.stream().map(p -> p.ID).toList();
-		if (zeitrasterIDs.isEmpty())
+		if (zeitrasterIDs.isEmpty()) {
 			return daten;
+		}
 		// Bestimme die Unterrichte der Zeitraster-Einträge
 		final List<DTOStundenplanUnterricht> dtoUnterrichte = conn.queryList(DTOStundenplanUnterricht.QUERY_LIST_BY_ZEITRASTER_ID,
 				DTOStundenplanUnterricht.class, zeitrasterIDs);
-		if (dtoUnterrichte.isEmpty())
+		if (dtoUnterrichte.isEmpty()) {
 			return daten;
+		}
 		final List<Long> unterrichtIDs = dtoUnterrichte.stream().map(a -> a.ID).toList();
 		// Bestimme die Zuordnung der Räume zu den Unterrichts-Einträgen
 		final Map<Long, List<DTOStundenplanUnterrichtRaum>> mapRaeume = conn.queryList(DTOStundenplanUnterrichtRaum.QUERY_LIST_BY_UNTERRICHT_ID,
@@ -94,14 +96,18 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 			unterricht.wochentyp = dtoUnterricht.Wochentyp;
 			unterricht.idKurs = dtoUnterricht.Kurs_ID;
 			unterricht.idFach = dtoUnterricht.Fach_ID;
-			if (mapRaeume.containsKey(unterricht.id))
+			if (mapRaeume.containsKey(unterricht.id)) {
 				unterricht.raeume.addAll(mapRaeume.get(unterricht.id).stream().map(b -> b.Raum_ID).toList());
-			if (mapKlassen.containsKey(unterricht.id))
+			}
+			if (mapKlassen.containsKey(unterricht.id)) {
 				unterricht.klassen.addAll(mapKlassen.get(unterricht.id).stream().map(b -> b.Klasse_ID).toList());
-			if (mapLehrer.containsKey(unterricht.id))
+			}
+			if (mapLehrer.containsKey(unterricht.id)) {
 				unterricht.lehrer.addAll(mapLehrer.get(unterricht.id).stream().map(b -> b.Lehrer_ID).toList());
-			if (mapSchienen.containsKey(unterricht.id))
+			}
+			if (mapSchienen.containsKey(unterricht.id)) {
 				unterricht.schienen.addAll(mapSchienen.get(unterricht.id).stream().map(b -> b.Schiene_ID).toList());
+			}
 			daten.add(unterricht);
 		}
 		return daten;
@@ -109,22 +115,26 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 
 	@Override
 	public Response getList() throws ApiOperationException {
-		if (idStundenplan == null)
+		if (idStundenplan == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Stundenplan mit der ID null ist unzulässig.");
+		}
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
-		if (stundenplan == null)
+		if (stundenplan == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
+		}
 		final List<StundenplanUnterricht> daten = getUnterrichte(conn, idStundenplan);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
 	private StundenplanUnterricht getUnterricht(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Unterricht mit der ID null ist unzulässig.");
+		}
 		final DTOStundenplanUnterricht dtoUnterricht = conn.queryByKey(DTOStundenplanUnterricht.class, id);
-		if (dtoUnterricht == null)
+		if (dtoUnterricht == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Unterricht mit der ID %d gefunden.".formatted(id));
+		}
 		final List<Long> raeume = conn.queryList(DTOStundenplanUnterrichtRaum.QUERY_BY_UNTERRICHT_ID, DTOStundenplanUnterrichtRaum.class, dtoUnterricht.ID)
 				.stream().map(b -> b.Raum_ID).toList();
 		final List<Long> schienen = conn.queryList(
@@ -157,13 +167,15 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	private static final Map<String, DataBasicMapper<DTOStundenplanUnterricht>> patchMappings = Map.ofEntries(
 			Map.entry("id", (conn, dto, value, map) -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST);
+				}
 			}),
 			Map.entry("idZeitraster", (conn, dto, value, map) -> {
 				final DTOStundenplanZeitraster zeitraster = conn.queryByKey(DTOStundenplanZeitraster.class, value);
-				if (zeitraster == null)
+				if (zeitraster == null) {
 					throw new ApiOperationException(Status.NOT_FOUND, "Zeitraster mit der ID %d nicht gefunden.".formatted((Long) value));
+				}
 				dto.Zeitraster_ID = zeitraster.ID;
 			}),
 			Map.entry("wochentyp", (conn, dto, value, map) -> dto.Wochentyp = JSONMapper.convertToIntegerInRange(value, false, 0, 100)),
@@ -172,15 +184,17 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 					dto.Kurs_ID = null;
 				} else {
 					final DTOKurs kurs = conn.queryByKey(DTOKurs.class, value);
-					if (kurs == null)
+					if (kurs == null) {
 						throw new ApiOperationException(Status.NOT_FOUND, "Kurs mit der ID %d nicht gefunden.".formatted((Long) value));
+					}
 					dto.Kurs_ID = kurs.ID;
 				}
 			}),
 			Map.entry("idFach", (conn, dto, value, map) -> {
 				final DTOFach fach = conn.queryByKey(DTOFach.class, value);
-				if (fach == null)
+				if (fach == null) {
 					throw new ApiOperationException(Status.NOT_FOUND, "Fach mit der ID %d nicht gefunden.".formatted((Long) value));
+				}
 				dto.Fach_ID = fach.ID;
 			}),
 			Map.entry("lehrer", (conn, dto, value, map) -> {
@@ -194,61 +208,69 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 
 
 	private void patchLehrer(final long idUnterricht, final Map<String, Object> map) throws ApiOperationException {
-		if (!map.containsKey("lehrer"))
+		if (!map.containsKey("lehrer")) {
 			return;
+		}
 		final List<Long> lehrer = JSONMapper.convertToListOfLong(map.get("lehrer"), false);
 		// Entferne ggf. die alten Lehrer
 		conn.transactionExecuteDelete("DELETE FROM DTOStundenplanUnterrichtLehrer e WHERE e.Unterricht_ID = " + idUnterricht);
 		conn.transactionFlush();
 		// Schreibe die neuen Lehrer
 		long nextID = conn.transactionGetNextID(DTOStundenplanUnterrichtLehrer.class);
-		for (final Long idLehrer : lehrer)
+		for (final Long idLehrer : lehrer) {
 			conn.transactionPersist(new DTOStundenplanUnterrichtLehrer(nextID++, idUnterricht, idLehrer));
+		}
 		conn.transactionFlush();
 	}
 
 
 	private void patchKlassen(final long idUnterricht, final Map<String, Object> map) throws ApiOperationException {
-		if (!map.containsKey("klassen"))
+		if (!map.containsKey("klassen")) {
 			return;
+		}
 		final List<Long> klassen = JSONMapper.convertToListOfLong(map.get("klassen"), false);
 		// Entferne ggf. die alten Klassen
 		conn.transactionExecuteDelete("DELETE FROM DTOStundenplanUnterrichtKlasse e WHERE e.Unterricht_ID = " + idUnterricht);
 		conn.transactionFlush();
 		// Schreibe die neuen Klassen
 		long nextID = conn.transactionGetNextID(DTOStundenplanUnterrichtKlasse.class);
-		for (final Long idKlasse : klassen)
+		for (final Long idKlasse : klassen) {
 			conn.transactionPersist(new DTOStundenplanUnterrichtKlasse(nextID++, idUnterricht, idKlasse));
+		}
 		conn.transactionFlush();
 	}
 
 
 	private void patchRaeume(final long idUnterricht, final Map<String, Object> map) throws ApiOperationException {
-		if (!map.containsKey("raeume"))
+		if (!map.containsKey("raeume")) {
 			return;
+		}
 		final List<Long> raeume = JSONMapper.convertToListOfLong(map.get("raeume"), false);
 		// Entferne ggf. die alten Räume
 		conn.transactionExecuteDelete("DELETE FROM DTOStundenplanUnterrichtRaum e WHERE e.Unterricht_ID = " + idUnterricht);
 		conn.transactionFlush();
 		// Schreibe die neuen Räume
 		long nextID = conn.transactionGetNextID(DTOStundenplanUnterrichtRaum.class);
-		for (final Long idRaum : raeume)
+		for (final Long idRaum : raeume) {
 			conn.transactionPersist(new DTOStundenplanUnterrichtRaum(nextID++, idUnterricht, idRaum));
+		}
 		conn.transactionFlush();
 	}
 
 
 	private void patchSchienen(final long idUnterricht, final Map<String, Object> map) throws ApiOperationException {
-		if (!map.containsKey("schienen"))
+		if (!map.containsKey("schienen")) {
 			return;
+		}
 		final List<Long> schienen = JSONMapper.convertToListOfLong(map.get("schienen"), false);
 		// Entferne ggf. die alten Schienen
 		conn.transactionExecuteDelete("DELETE FROM DTOStundenplanUnterrichtSchiene e WHERE e.Unterricht_ID = " + idUnterricht);
 		conn.transactionFlush();
 		// Schreibe die neuen Schienen
 		long nextID = conn.transactionGetNextID(DTOStundenplanUnterrichtSchiene.class);
-		for (final Long idSchiene : schienen)
+		for (final Long idSchiene : schienen) {
 			conn.transactionPersist(new DTOStundenplanUnterrichtSchiene(nextID++, idUnterricht, idSchiene));
+		}
 		conn.transactionFlush();
 	}
 
@@ -256,8 +278,9 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	private void patchInternal(final DTOStundenplanUnterricht dto, final Map<String, Object> map) throws ApiOperationException {
 		applyPatchMappings(conn, dto, map, patchMappings, Collections.emptySet(), null);
 		// Persistiere das DTO in der Datenbank
-		if (!conn.transactionPersist(dto))
+		if (!conn.transactionPersist(dto)) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+		}
 		conn.transactionFlush();
 		// Passe ggf. die Listen an
 		patchLehrer(dto.ID, map);
@@ -270,14 +293,17 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 
 	@Override
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Ein Patch mit der ID null ist nicht möglich.");
+		}
 		final Map<String, Object> map = JSONMapper.toMap(is);
-		if (map.isEmpty())
+		if (map.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND, "In dem Patch sind keine Daten enthalten.");
+		}
 		final DTOStundenplanUnterricht dto = conn.queryByKey(DTOStundenplanUnterricht.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		patchInternal(dto, map);
 		return Response.status(Status.NO_CONTENT).build();
 	}
@@ -296,13 +322,16 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
 		for (final Map<String, Object> map : multipleMaps) {
 			final Long id = JSONMapper.convertToLong(map.get("id"), true);
-			if (id == null)
+			if (id == null) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Ein Patch mit der ID null ist nicht möglich.");
-			if (map.size() == 1)
+			}
+			if (map.size() == 1) {
 				throw new ApiOperationException(Status.NOT_FOUND, "In dem Patch sind keine zu patchenden Daten enthalten.");
+			}
 			final DTOStundenplanUnterricht dto = conn.queryByKey(DTOStundenplanUnterricht.class, id);
-			if (dto == null)
+			if (dto == null) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			patchInternal(dto, map);
 		}
 		return Response.status(Status.NO_CONTENT).build();
@@ -334,9 +363,11 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	 */
 	public Response add(final InputStream is) throws ApiOperationException {
 		final Map<String, Object> map = JSONMapper.toMap(is);
-		for (final String attr : requiredCreateAttributes)
-			if (!map.containsKey(attr))
+		for (final String attr : requiredCreateAttributes) {
+			if (!map.containsKey(attr)) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s fehlt in der Anfrage".formatted(attr));
+			}
+		}
 		final StundenplanUnterricht daten = addInternal(conn.transactionGetNextID(DTOStundenplanUnterricht.class), map);
 		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -354,14 +385,18 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	 */
 	public Response addMultiple(final InputStream is) throws ApiOperationException {
 		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
-		for (final Map<String, Object> map : multipleMaps)
-			for (final String attr : requiredCreateAttributes)
-				if (!map.containsKey(attr))
+		for (final Map<String, Object> map : multipleMaps) {
+			for (final String attr : requiredCreateAttributes) {
+				if (!map.containsKey(attr)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s fehlt in der Anfrage bei mindestens einem Unterricht".formatted(attr));
+				}
+			}
+		}
 		final List<StundenplanUnterricht> daten = new ArrayList<>();
 		long newID = conn.transactionGetNextID(DTOStundenplanUnterricht.class);
-		for (final Map<String, Object> map : multipleMaps)
+		for (final Map<String, Object> map : multipleMaps) {
 			daten.add(addInternal(newID++, map));
+		}
 		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -392,9 +427,11 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
 		final List<Long> idsZeitraster = conn.queryByKeyList(DTOStundenplanUnterricht.class, ids).stream().map(u -> u.Zeitraster_ID).toList();
 		final List<DTOStundenplanZeitraster> dtos = conn.queryByKeyList(DTOStundenplanZeitraster.class, idsZeitraster);
-		for (final DTOStundenplanZeitraster dto : dtos)
-			if (dto.Stundenplan_ID != this.idStundenplan)
+		for (final DTOStundenplanZeitraster dto : dtos) {
+			if (dto.Stundenplan_ID != this.idStundenplan) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Der Zeitraster-Eintrag eines Unterrichtes gehört nicht zu dem angegebenen Stundenplan.");
+			}
+		}
 		return super.deleteBasicMultiple(ids, DTOStundenplanUnterricht.class, dtoMapper);
 	}
 

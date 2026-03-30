@@ -37,7 +37,7 @@ public final class DataLupo {
 	 * Importiert die in dem Multipart übergebene Datei.
 	 *
 	 * @param user               der Datenbank-Benutzer
-	 * @param multipart          der Multipart-Body mmit der Datei
+	 * @param multipart          der Multipart-Body mit der Datei
 	 * @param replaceJahrgang    gibt an, ob alte Daten für den Jahrgang der LuPO-Datei ersetzt werden
 	 *                           sollen, sofern sie bereits vorhanden sind.
 	 * @param replaceSchueler    gibt an, ob alte Daten für die Schüler der LuPO-Datei ersetzt werden
@@ -158,8 +158,9 @@ public final class DataLupo {
 				e.printStackTrace();
 			}
 		}).header("Content-Disposition", "attachment; filename=\"" + user.getConfig().getDBSchema() + jahrgang + ".lup\"").build();
-		if (!response.hasEntity())
+		if (!response.hasEntity()) {
 			logger.logLn(2, "[FEHLER]");
+		}
 		logger.logLn("LuPO-Datei für die Antwort eingelesen.");
 		return response;
 	}

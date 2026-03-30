@@ -67,8 +67,9 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 	public static List<StundenplanZeitraster> getZeitraster(final @NotNull DBEntityManager conn) throws ApiOperationException {
 		final List<DTOKatalogZeitraster> zeitraster = conn.queryAll(DTOKatalogZeitraster.class);
 		final ArrayList<StundenplanZeitraster> daten = new ArrayList<>();
-		for (final DTOKatalogZeitraster z : zeitraster)
+		for (final DTOKatalogZeitraster z : zeitraster) {
 			daten.add(dtoMapper.apply(z));
+		}
 		return daten;
 	}
 
@@ -80,11 +81,13 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Zeitrastereintrag mit der ID null ist unzulässig.");
+		}
 		final DTOKatalogZeitraster eintrag = conn.queryByKey(DTOKatalogZeitraster.class, id);
-		if (eintrag == null)
+		if (eintrag == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Zeitrastereintrag mit der ID %d gefunden.".formatted(id));
+		}
 		final StundenplanZeitraster daten = dtoMapper.apply(eintrag);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -93,8 +96,9 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 	private static final Map<String, DataBasicMapper<DTOKatalogZeitraster>> patchMappings = Map.ofEntries(
 			Map.entry("id", (conn, dto, value, map) -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST);
+				}
 			}),
 			Map.entry("wochentag", (conn, dto, value, map) -> dto.Tag = JSONMapper.convertToIntegerInRange(value, false, 1, 8)),
 			Map.entry("unterrichtstunde", (conn, dto, value, map) -> dto.Stunde = JSONMapper.convertToIntegerInRange(value, false, 0, 30)),

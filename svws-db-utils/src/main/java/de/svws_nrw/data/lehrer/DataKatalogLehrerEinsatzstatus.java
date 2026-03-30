@@ -26,8 +26,9 @@ public final class DataKatalogLehrerEinsatzstatus extends DataManager<Long> {
 	@Override
 	public Response getAll() {
 		final ArrayList<LehrerEinsatzstatusKatalogEintrag> daten = new ArrayList<>();
-		for (final LehrerEinsatzstatus status : LehrerEinsatzstatus.values())
+		for (final LehrerEinsatzstatus status : LehrerEinsatzstatus.values()) {
 			daten.addAll(status.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

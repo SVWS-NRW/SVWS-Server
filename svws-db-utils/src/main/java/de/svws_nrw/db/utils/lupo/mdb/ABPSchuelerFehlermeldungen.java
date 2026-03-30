@@ -1,9 +1,9 @@
 package de.svws_nrw.db.utils.lupo.mdb;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ArrayList;
 
 import io.github.spannm.jackcess.ColumnBuilder;
 import io.github.spannm.jackcess.DataType;
@@ -89,8 +89,9 @@ public final class ABPSchuelerFehlermeldungen {
 					.addColumn(new ColumnBuilder("Fehlergruppe", DataType.TEXT).withLengthInUnits(2))
 					.addColumn(new ColumnBuilder("Sortierung", DataType.LONG))
 					.toTable(db);
-			if (list == null)
+			if (list == null) {
 				return;
+			}
 			for (final ABPSchuelerFehlermeldungen schueler : list) {
 				table.addRow(
 						schueler.Schueler_ID,

@@ -42,8 +42,9 @@ public final class DataStundenplanPausenzeiten extends DataManagerRevised<Long, 
 		setAttributesDelayedOnCreation("klassen");
 		this.stundenplanID = stundenplanID;
 		// Prüfe ggf. ob der Stundenplan existiert
-		if (stundenplanID != null)
+		if (stundenplanID != null) {
 			DataStundenplan.getDTOStundenplan(conn, stundenplanID);
+		}
 	}
 
 	@Override
@@ -56,7 +57,6 @@ public final class DataStundenplanPausenzeiten extends DataManagerRevised<Long, 
 		dto.ID = newId;
 		dto.Stundenplan_ID = this.stundenplanID;
 	}
-
 
 	@Override
 	public StundenplanPausenzeit map(final DTOStundenplanPausenzeit dto) {
@@ -76,8 +76,9 @@ public final class DataStundenplanPausenzeiten extends DataManagerRevised<Long, 
 		switch (name) {
 			case "id" -> {
 				final Long id = JSONMapper.convertToLong(value, false, name);
-				if ((id == null) || (id != dto.ID))
+				if ((id == null) || (id != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Patches stimmt nicht mit der ID des Objekts überein.");
+				}
 			}
 			case "wochentag" -> dto.Tag = JSONMapper.convertToIntegerInRange(value, false, 1, 8);
 			case "beginn" -> dto.Beginn = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
@@ -88,13 +89,15 @@ public final class DataStundenplanPausenzeiten extends DataManagerRevised<Long, 
 				final DTOStundenplan dtoStundenplan = conn.queryByKey(DTOStundenplan.class, dto.Stundenplan_ID);
 				final List<Long> idsKlassen = JSONMapper.convertToListOfLong(value, false);
 				final List<DTOKlassen> klassen = idsKlassen.isEmpty() ? new ArrayList<>() : conn.queryByKeyList(DTOKlassen.class, idsKlassen);
-				if (idsKlassen.size() != klassen.size())
+				if (idsKlassen.size() != klassen.size()) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Nicht alle angegebenen Klassen-IDs lassen sich Klassen zuordnen");
+				}
 				final List<DTOKlassen> klassenVonStundenplan =
 						klassen.stream().filter(k -> k.Schuljahresabschnitts_ID == dtoStundenplan.Schuljahresabschnitts_ID).toList();
-				if (klassen.size() != klassenVonStundenplan.size())
+				if (klassen.size() != klassenVonStundenplan.size()) {
 					throw new ApiOperationException(Status.BAD_REQUEST,
 							"Nicht alle angegebenen Klassen-IDs gehören zu Klassen des Schuljahresabschnittes des Stundenplans");
+				}
 				// Bestimme die bereits existierenden Klasseneinträge und vergleiche diese mit den geforderten
 				final List<DTOStundenplanPausenzeitKlassenzuordnung> existing = conn.queryList(DTOStundenplanPausenzeitKlassenzuordnung.QUERY_BY_PAUSENZEIT_ID,
 						DTOStundenplanPausenzeitKlassenzuordnung.class, dto.ID);
@@ -103,19 +106,22 @@ public final class DataStundenplanPausenzeiten extends DataManagerRevised<Long, 
 				final Set<Long> idsKlassenNeu = new HashSet<>();
 				final Set<Long> idsKlassenVorhanden = new HashSet<>();
 				for (final long idKlasse : idsKlassen) {
-					if (mapExisting.keySet().contains(idKlasse))
+					if (mapExisting.keySet().contains(idKlasse)) {
 						idsKlassenVorhanden.add(idKlasse);
-					else
+					} else {
 						idsKlassenNeu.add(idKlasse);
+					}
 				}
 				// Entferne die alten Klassenzuordnungen
 				mapExisting.keySet().removeAll(idsKlassenVorhanden);
-				for (final DTOStundenplanPausenzeitKlassenzuordnung pkl : mapExisting.values())
+				for (final DTOStundenplanPausenzeitKlassenzuordnung pkl : mapExisting.values()) {
 					conn.transactionRemove(pkl);
+				}
 				// Erzeuge die neuen Klassenzuordnungen
 				long idNext = conn.transactionGetNextID(DTOStundenplanPausenzeitKlassenzuordnung.class);
-				for (final long idKlasse : idsKlassenNeu)
+				for (final long idKlasse : idsKlassenNeu) {
 					conn.transactionPersist(new DTOStundenplanPausenzeitKlassenzuordnung(idNext++, dto.ID, idKlasse));
+				}
 				conn.transactionFlush();
 			}
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten ein unbekanntes Attribut.");
@@ -143,8 +149,9 @@ public final class DataStundenplanPausenzeiten extends DataManagerRevised<Long, 
 		for (final DTOStundenplanPausenzeit p : pausenzeiten) {
 			final StundenplanPausenzeit mapped = map(p);
 			final List<Long> idsKlassen = mapKlassen.get(p.ID);
-			if (idsKlassen != null)
+			if (idsKlassen != null) {
 				mapped.klassen.addAll(idsKlassen);
+			}
 			daten.add(mapped);
 		}
 		return daten;
@@ -152,11 +159,13 @@ public final class DataStundenplanPausenzeiten extends DataManagerRevised<Long, 
 
 	@Override
 	public StundenplanPausenzeit getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einer Pausenzeit eines Stundenplans mit der ID null ist unzulässig.");
+		}
 		final DTOStundenplanPausenzeit pausenzeit = conn.queryByKey(DTOStundenplanPausenzeit.class, id);
-		if (pausenzeit == null)
+		if (pausenzeit == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Pausenzeit eines Stundenplans mit der ID %d gefunden.".formatted(id));
+		}
 		final List<Long> klassen = conn.queryList(DTOStundenplanPausenzeitKlassenzuordnung.QUERY_BY_PAUSENZEIT_ID,
 				DTOStundenplanPausenzeitKlassenzuordnung.class, id).stream().map(pkz -> pkz.Klassen_ID).toList();
 		final StundenplanPausenzeit daten = map(pausenzeit);
@@ -174,9 +183,11 @@ public final class DataStundenplanPausenzeiten extends DataManagerRevised<Long, 
 	 */
 	@Override
 	public void checkBeforeDeletion(final List<DTOStundenplanPausenzeit> dtos) throws ApiOperationException {
-		for (final DTOStundenplanPausenzeit dto : dtos)
-			if (dto.Stundenplan_ID != this.stundenplanID)
+		for (final DTOStundenplanPausenzeit dto : dtos) {
+			if (dto.Stundenplan_ID != this.stundenplanID) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Der Pausenzeit-Eintrag gehört nicht zu dem angegebenen Stundenplan.");
+			}
+		}
 	}
 
 	/**

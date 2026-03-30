@@ -35,7 +35,6 @@ public final class DataStundenplanJahrgaenge extends DataManager<Long> {
 		this.stundenplanID = stundenplanID;
 	}
 
-
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOJahrgang} in einen Core-DTO {@link StundenplanJahrgang}.
 	 */
@@ -65,8 +64,9 @@ public final class DataStundenplanJahrgaenge extends DataManager<Long> {
 	 */
 	public static List<StundenplanJahrgang> getJahrgaenge(final @NotNull DBEntityManager conn, final long idStundenplan) throws ApiOperationException {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
-		if (stundenplan == null)
+		if (stundenplan == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
+		}
 		final List<DTOJahrgang> jahrgaenge = conn.queryAll(DTOJahrgang.class);
 		final ArrayList<StundenplanJahrgang> daten = new ArrayList<>();
 		for (final DTOJahrgang j : jahrgaenge) {
@@ -97,11 +97,13 @@ public final class DataStundenplanJahrgaenge extends DataManager<Long> {
 	 */
 	public static StundenplanJahrgang getById(final DBEntityManager conn, final long idStundenplan, final long idJahrgang) throws ApiOperationException {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
-		if (stundenplan == null)
+		if (stundenplan == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
+		}
 		final DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, idJahrgang);
-		if (jahrgang == null)
+		if (jahrgang == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Jahrgang mit der ID %d gefunden.".formatted(idJahrgang));
+		}
 		// TODO Prüfe die Gültigkeit des Jahrgangs (Schuljahresabschnitt: GueltigVon - GueltigBis) in Bezug auf den Stundenplan (Datum: Beginn - Ende)
 		return dtoMapper.apply(jahrgang);
 	}
@@ -109,8 +111,9 @@ public final class DataStundenplanJahrgaenge extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Jahrgang mit der ID null ist unzulässig.");
+		}
 		final StundenplanJahrgang daten = getById(conn, stundenplanID, id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

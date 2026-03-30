@@ -26,8 +26,9 @@ public final class DataKatalogHerkunftsarten extends DataManager<Long> {
 	@Override
 	public Response getAll() {
 		final ArrayList<HerkunftsartenKatalogEintrag> daten = new ArrayList<>();
-		for (final Herkunftsarten eintrag : Herkunftsarten.values())
+		for (final Herkunftsarten eintrag : Herkunftsarten.values()) {
 			daten.addAll(eintrag.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

@@ -26,8 +26,9 @@ public final class DataKatalogLehrerLehrbefaehigungAnerkennungen extends DataMan
 	@Override
 	public Response getAll() {
 		final ArrayList<LehrerLehrbefaehigungAnerkennungKatalogEintrag> daten = new ArrayList<>();
-		for (final LehrerLehrbefaehigungAnerkennung status : LehrerLehrbefaehigungAnerkennung.values())
+		for (final LehrerLehrbefaehigungAnerkennung status : LehrerLehrbefaehigungAnerkennung.values()) {
 			daten.addAll(status.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

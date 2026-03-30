@@ -26,8 +26,9 @@ public final class DataKatalogKindergartenbesuch extends DataManager<Long> {
 	@Override
 	public Response getAll() {
 		final ArrayList<KindergartenbesuchKatalogEintrag> daten = new ArrayList<>();
-		for (final Kindergartenbesuch eintrag : Kindergartenbesuch.values())
+		for (final Kindergartenbesuch eintrag : Kindergartenbesuch.values()) {
 			daten.addAll(eintrag.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

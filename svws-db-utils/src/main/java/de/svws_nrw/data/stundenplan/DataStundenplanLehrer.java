@@ -36,7 +36,6 @@ public final class DataStundenplanLehrer extends DataManager<Long> {
 		this.stundenplanID = stundenplanID;
 	}
 
-
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOLehrer} in einen Core-DTO {@link StundenplanLehrer}.
 	 */
@@ -70,8 +69,9 @@ public final class DataStundenplanLehrer extends DataManager<Long> {
 	public static List<StundenplanLehrer> getLehrer(final @NotNull DBEntityManager conn, final long idStundenplan, final boolean nurAktive)
 			throws ApiOperationException {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
-		if (stundenplan == null)
+		if (stundenplan == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
+		}
 		final List<DTOLehrer> lehrerliste = nurAktive
 				? conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true)
 				: conn.queryAll(DTOLehrer.class);
@@ -108,11 +108,13 @@ public final class DataStundenplanLehrer extends DataManager<Long> {
 	 */
 	public static StundenplanLehrer getById(final DBEntityManager conn, final long idStundenplan, final long idLehrer) throws ApiOperationException {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
-		if (stundenplan == null)
+		if (stundenplan == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
+		}
 		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, idLehrer);
-		if (lehrer == null)
+		if (lehrer == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Lehrkraft mit der ID %d gefunden.".formatted(idLehrer));
+		}
 		if ((lehrer.DatumAbgang != null)) {
 			// TODO DatumAbgang bei Filterung berücksichtigen, wenn gesetzt
 		}
@@ -124,8 +126,9 @@ public final class DataStundenplanLehrer extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Lehrer mit der ID null ist unzulässig.");
+		}
 		final StundenplanLehrer daten = getById(conn, stundenplanID, id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

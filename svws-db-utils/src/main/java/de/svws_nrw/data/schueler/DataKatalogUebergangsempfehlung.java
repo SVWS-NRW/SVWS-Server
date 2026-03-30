@@ -26,8 +26,9 @@ public final class DataKatalogUebergangsempfehlung extends DataManager<Long> {
 	@Override
 	public Response getAll() {
 		final ArrayList<UebergangsempfehlungKatalogEintrag> daten = new ArrayList<>();
-		for (final Uebergangsempfehlung eintrag : Uebergangsempfehlung.values())
+		for (final Uebergangsempfehlung eintrag : Uebergangsempfehlung.values()) {
 			daten.addAll(eintrag.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

@@ -26,8 +26,9 @@ public final class DataKatalogLehrerRechtsverhaeltnis extends DataManager<Long> 
 	@Override
 	public Response getAll() {
 		final ArrayList<LehrerRechtsverhaeltnisKatalogEintrag> daten = new ArrayList<>();
-		for (final LehrerRechtsverhaeltnis verhaeltnis : LehrerRechtsverhaeltnis.values())
+		for (final LehrerRechtsverhaeltnis verhaeltnis : LehrerRechtsverhaeltnis.values()) {
 			daten.addAll(verhaeltnis.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

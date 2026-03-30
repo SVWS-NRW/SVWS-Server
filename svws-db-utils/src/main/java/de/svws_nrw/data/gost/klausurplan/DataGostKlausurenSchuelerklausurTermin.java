@@ -90,12 +90,14 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOGostKlausurenSchuelerklausurenTermine getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den GostSchuelerklausurTermin darf nicht null sein.");
+		}
 
 		final DTOGostKlausurenSchuelerklausurenTermine klasseDto = conn.queryByKey(DTOGostKlausurenSchuelerklausurenTermine.class, id);
-		if (klasseDto == null)
+		if (klasseDto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein GostSchuelerklausurTermin zur ID " + id + " gefunden.");
+		}
 
 		return klasseDto;
 	}
@@ -188,8 +190,9 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	 */
 	public List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuSchuelerklausurids(final List<Long> listSkIds)
 			throws ApiOperationException {
-		if (listSkIds.isEmpty())
+		if (listSkIds.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final List<DTOGostKlausurenSchuelerklausurenTermine> terminDTOs = conn.queryList(
 				DTOGostKlausurenSchuelerklausurenTermine.QUERY_LIST_BY_SCHUELERKLAUSUR_ID, DTOGostKlausurenSchuelerklausurenTermine.class, listSkIds);
 		return mapList(terminDTOs);
@@ -206,8 +209,9 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	 */
 	public List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuSchuelerklausurterminids(final List<Long> listSkIds)
 			throws ApiOperationException {
-		if (listSkIds.isEmpty())
+		if (listSkIds.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final List<DTOGostKlausurenSchuelerklausurenTermine> terminDTOs = conn.queryByKeyList(DTOGostKlausurenSchuelerklausurenTermine.class, listSkIds);
 		return mapList(terminDTOs);
 	}
@@ -224,8 +228,9 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	 */
 	public List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuSchuelerklausurterminraumstunden(
 			final Collection<GostSchuelerklausurterminraumstunde> listSktrs) throws ApiOperationException {
-		if (listSktrs.isEmpty())
+		if (listSktrs.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final List<DTOGostKlausurenSchuelerklausurenTermine> terminDTOs = conn.queryByKeyList(DTOGostKlausurenSchuelerklausurenTermine.class,
 				listSktrs.stream().map(skrs -> skrs.idSchuelerklausurtermin).distinct().toList());
 		return mapList(terminDTOs);
@@ -242,8 +247,9 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	 */
 	public static List<DTOGostKlausurenSchuelerklausurenTermine> getSchuelerklausurterminDTOsZuSchuelerklausurterminen(final DBEntityManager conn,
 			final List<GostSchuelerklausurTermin> listSkts) {
-		if (listSkts.isEmpty())
+		if (listSkts.isEmpty()) {
 			return new ArrayList<>();
+		}
 		return conn.queryByKeyList(DTOGostKlausurenSchuelerklausurenTermine.class, listSkts.stream().map(skt -> skt.id).toList());
 	}
 
@@ -257,8 +263,9 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	 * @return die Liste der zugehörigen Datenbank-DTOs
 	 */
 	public static List<DTOGostKlausurenSchuelerklausurenTermine> getSchuelerklausurterminDTOsById(final DBEntityManager conn, final List<Long> listIds) {
-		if (listIds.isEmpty())
+		if (listIds.isEmpty()) {
 			return new ArrayList<>();
+		}
 		return conn.queryByKeyList(DTOGostKlausurenSchuelerklausurenTermine.class, listIds);
 	}
 
@@ -275,24 +282,27 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	 */
 	public List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuTerminIds(final List<Long> terminIds,
 			final boolean includeAbwesend) throws ApiOperationException {
-		if (terminIds.isEmpty())
+		if (terminIds.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final List<GostKursklausur> kursklausuren = new DataGostKlausurenKursklausur(conn).getKursklausurenZuTerminids(terminIds);
 		final List<GostSchuelerklausur> schuelerklausuren = new DataGostKlausurenSchuelerklausur(conn).getSchuelerKlausurenZuKursklausuren(kursklausuren);
 		final List<Long> kkSkIds = schuelerklausuren.stream().map(sk -> sk.id).toList();
 		String skFilter = "";
 		if (!kkSkIds.isEmpty()) {
 			skFilter += " OR (skt.Schuelerklausur_ID IN :skIds AND skt.Folge_Nr = 0";
-			if (!includeAbwesend)
+			if (!includeAbwesend) {
 				skFilter +=
 						" AND NOT EXISTS (SELECT sktInner FROM DTOGostKlausurenSchuelerklausurenTermine sktInner WHERE sktInner.Schuelerklausur_ID = skt.Schuelerklausur_ID AND sktInner.Folge_Nr > 0)";
+			}
 			skFilter += ")";
 		}
 		final TypedQuery<DTOGostKlausurenSchuelerklausurenTermine> query =
 				conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Termin_ID IN :tids" + skFilter,
 						DTOGostKlausurenSchuelerklausurenTermine.class);
-		if (!kkSkIds.isEmpty())
+		if (!kkSkIds.isEmpty()) {
 			query.setParameter("skIds", kkSkIds);
+		}
 		final List<DTOGostKlausurenSchuelerklausurenTermine> skts = query.setParameter("tids", terminIds).getResultList();
 		return new DataGostKlausurenSchuelerklausurTermin(conn).mapList(skts);
 	}
@@ -373,8 +383,9 @@ public final class DataGostKlausurenSchuelerklausurTermin
 									.setParameter("jahr", ghj.getSchuljahrFromAbiturjahr(v.abiJahrgang))
 									.setParameter("abschnitt", (v.halbjahr % 2) + 1)
 									.getResultList();
-					if ((sjaList == null) || (sjaList.size() != 1))
+					if ((sjaList == null) || (sjaList.size() != 1)) {
 						throw new ApiOperationException(Status.NOT_FOUND, "Noch kein Schuljahresabschnitt für dieses Halbjahr definiert.");
+					}
 
 					neuerTermin = new DTOGostKlausurenTermine(idNextTermin++, sjaList.getFirst().ID, v.abiJahrgang,
 							ghj, v.quartal, false, true);
@@ -382,8 +393,9 @@ public final class DataGostKlausurenSchuelerklausurTermin
 					conn.transactionFlush();
 					mapNeueTermine.put(zuordnung.b, neuerTermin);
 				}
-				if (neuerTermin.Quartal != v.quartal) // mehrer Klausurquartale im neuen Termin gemischt
+				if (neuerTermin.Quartal != v.quartal) { // mehrer Klausurquartale im neuen Termin gemischt
 					neuerTermin.Quartal = 0;
+				}
 				dtoSkt.Termin_ID = neuerTermin.ID;
 			}
 

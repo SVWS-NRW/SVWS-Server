@@ -28,8 +28,9 @@ public final class DataSchildPruefungsordnungOptionen extends DataManager<Long> 
 	public Response getAll() throws ApiOperationException {
 		final List<Schild3KatalogEintragPruefungsordnungOption> katalog =
 				CsvReader.fromResource("daten/csv/schild3/PruefOrd_Optionen.csv", Schild3KatalogEintragPruefungsordnungOption.class);
-		if (katalog == null)
+		if (katalog == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
 	}
 

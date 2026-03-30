@@ -117,8 +117,9 @@ public final class EnmV1GetService {
 
 		// Wenn nicht, dann füge ihn hinzu ...
 		final DTOJahrgang dtoJahrgang = kontext.getJahrgang(idJahrgang);
-		if (dtoJahrgang == null)
+		if (dtoJahrgang == null) {
 			throw new NullPointerException("Kein Jahrgang zu der Jahrgangs-ID gefunden.");
+		}
 		kontext.manager.addJahrgang(dtoJahrgang.ID, dtoJahrgang.ASDJahrgang, dtoJahrgang.InternKrz,
 				dtoJahrgang.ASDBezeichnung, dtoJahrgang.Sekundarstufe, dtoJahrgang.Sortierung);
 	}
@@ -135,8 +136,9 @@ public final class EnmV1GetService {
 	private ENMv1Klasse addKlasseIfNotExists(final DTOSchuelerLernabschnittsdaten lernabschnitt) {
 		// Lese die Klasse aus dem Kontext aus. Dort muss sie vorliegen...
 		final DTOKlassen dtoKlasse = kontext.getKlasse(lernabschnitt.Klassen_ID);
-		if (dtoKlasse == null)
+		if (dtoKlasse == null) {
 			throw new NullPointerException();
+		}
 
 		// Prüfe, ob die Klasse bereits zu den ENM-Daten hinzugefügt wurde
 		ENMv1Klasse enmKlasse = kontext.manager.getKlasse(dtoKlasse.ID);
@@ -319,8 +321,9 @@ public final class EnmV1GetService {
 		}
 
 		for (final DTOSchuelerTeilleistung teilleistung : teilleistungen) {
-			if (teilleistung.Art_ID == null)
+			if (teilleistung.Art_ID == null) {
 				continue;
+			}
 
 			addTeilleistungsartIfNotExists(teilleistung.Art_ID);
 
@@ -349,8 +352,9 @@ public final class EnmV1GetService {
 	 */
 	private static boolean pruefeKursSchriftlichkeit(final Long idKurs, final ZulaessigeKursart kursart, final String klasse, final int halbjahr) {
 		// Wenn es sich bei den Leistungsdaten nicht um eine Kurs handelt, so wird die Schriftlichkeit hier nicht geprüft
-		if ((idKurs == null) || (kursart == null))
+		if ((idKurs == null) || (kursart == null)) {
 			return false;
+		}
 
 		// Ein LK und das 1.-3. Abiturfach sind in der Qualifikationsphase immer schriftlich
 		if (Set.of(ZulaessigeKursart.LK1, ZulaessigeKursart.LK2, ZulaessigeKursart.GKS, ZulaessigeKursart.AB3).contains(kursart)) {
@@ -412,8 +416,9 @@ public final class EnmV1GetService {
 		}
 
 		for (final DTOSchuelerLeistungsdaten leistung : leistungen) {
-			if (leistung.Fachlehrer_ID == null)
+			if (leistung.Fachlehrer_ID == null) {
 				continue;
+			}
 
 			final ZulaessigeKursart kursart = (leistung.Kurs_ID == null) ? null : ZulaessigeKursart.data().getWertByKuerzel(leistung.Kursart);
 			final ENMv1Lerngruppe lerngruppe = addLerngruppeIfNotExists(lernabschnitt, leistung, kursart, enmKlasse);
@@ -475,8 +480,9 @@ public final class EnmV1GetService {
 		}
 		for (final DTOSchuelerAnkreuzfloskeln ankreuzkompetenz : ankreuzkompetenzen) {
 			final DTOAnkreuzfloskeln dtoAnkreuzkompetenz = kontext.getKatalogeintragAnkreuzkompetenz(ankreuzkompetenz.Floskel_ID);
-			if (dtoAnkreuzkompetenz == null) // DB-Error -> should not happen
+			if (dtoAnkreuzkompetenz == null) { // DB-Error -> should not happen
 				throw new NullPointerException();
+			}
 
 			// Überspringe bei Lehrer-Spezifischen Daten die Ankreuzkompetezen, falls keine Fachlehrer-Zuordnung vorliegt bzw. der Lehrer kein Klassenlehrer ist
 			if ((kontext.istLehrerSpezifisch())
@@ -488,14 +494,16 @@ public final class EnmV1GetService {
 			// Prüfe die Ankreuzfloskel und ergänze sie ggf.
 			final String jahrgang = getJahrgangOfAnkreuzkompetenz(ankreuzkompetenz.ID, lernabschnitt.Fachklasse_ID);
 			final ENMv1Ankreuzkompetenz enmAnkreuzkompetenz = kontext.manager.getAnkreuzkompetenz(ankreuzkompetenz.Floskel_ID);
-			if (enmAnkreuzkompetenz == null)
+			if (enmAnkreuzkompetenz == null) {
 				kontext.manager.addAnkreuzkompetenz(dtoAnkreuzkompetenz.ID, (dtoAnkreuzkompetenz.IstASV == 0), dtoAnkreuzkompetenz.Fach_ID,
 						jahrgang, dtoAnkreuzkompetenz.FloskelText, dtoAnkreuzkompetenz.Sortierung);
+			}
 			// Füge die Schueler-Ankreuzkompetenz hinzu
 			final var ankreuzkompetenzTimestamps = kontext.getSchuelerAnkreuzkompetenzenTimestamps(ankreuzkompetenz.ID);
-			if (ankreuzkompetenzTimestamps == null)
+			if (ankreuzkompetenzTimestamps == null) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 						"Es konnten keine Zeitstempel für die Ankreuzkompetenzen ausgelesen werden. Dies deutet auf einen Fehler in der Datenbank hin.");
+			}
 			final boolean[] stufen = { ankreuzkompetenz.Stufe1, ankreuzkompetenz.Stufe2, ankreuzkompetenz.Stufe3, ankreuzkompetenz.Stufe4,
 					ankreuzkompetenz.Stufe5 };
 			kontext.manager.addSchuelerAnkreuzkompetenz(enmSchueler, ankreuzkompetenz.ID, ankreuzkompetenz.Floskel_ID, stufen,
@@ -510,8 +518,9 @@ public final class EnmV1GetService {
 	 * @param lernabschnitt   der zu integrierende Lernabschnitt
 	 */
 	private void processSchuelerLernabschnitt(final DTOSchuelerLernabschnittsdaten lernabschnitt) {
-		if ((lernabschnitt.Klassen_ID == null) || (lernabschnitt.Jahrgang_ID == null))
+		if ((lernabschnitt.Klassen_ID == null) || (lernabschnitt.Jahrgang_ID == null)) {
 			return;
+		}
 
 		final ENMv1Klasse enmKlasse = addKlasseIfNotExists(lernabschnitt);
 		final ENMv1Schueler enmSchueler = addSchuelerIfNotExists(lernabschnitt, enmKlasse);

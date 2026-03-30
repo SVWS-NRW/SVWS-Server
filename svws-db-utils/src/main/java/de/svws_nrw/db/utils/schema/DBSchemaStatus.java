@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.data.schule.SchuleInfo;
 import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.core.data.schule.SchuleInfo;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
@@ -148,8 +148,9 @@ public final class DBSchemaStatus {
 	 * @return die Datenbank-Version
 	 */
 	private DBSchemaVersion leseDBSchemaVersion(final DBEntityManager conn) {
-		if (tabellen.stream().filter(tabname -> tabname.equalsIgnoreCase(Schema.tab_Schema_Status.name())).findFirst().orElse(null) == null)
+		if (tabellen.stream().filter(tabname -> tabname.equalsIgnoreCase(Schema.tab_Schema_Status.name())).findFirst().orElse(null) == null) {
 			return null;
+		}
 		final DTOSchemaStatus dto;
 		final DBDriver dbms = conn.getDBDriver();
 		if ((!dbms.hasMultiSchemaSupport()) || (schemaName == null) || schemaName.equals(conn.getDBSchema())) {
@@ -167,8 +168,9 @@ public final class DBSchemaStatus {
 			dto = conn.queryNative(sql, DTOSchemaStatus.class).stream().findFirst().orElse(null);
 		}
 		Long revision = null;
-		if ((dto != null) && (dto.Revision >= 0))
+		if ((dto != null) && (dto.Revision >= 0)) {
 			revision = dto.Revision;
+		}
 		final boolean isTainted = (dto == null) || dto.IsTainted;
 		return new DBSchemaVersion(revision, isTainted);
 	}
@@ -186,36 +188,45 @@ public final class DBSchemaStatus {
 	 * @return die Informationen zu der Schule
 	 */
 	private SchuleInfo leseSchuleInfo(final DBEntityManager conn) {
-		if ((conn.getDBDriver() != DBDriver.MARIA_DB) && (conn.getDBDriver() != DBDriver.MYSQL))
+		if ((conn.getDBDriver() != DBDriver.MARIA_DB) && (conn.getDBDriver() != DBDriver.MYSQL)) {
 			return null;
+		}
 		final List<String> existingCols = filterColumns("EigeneSchule", colsEigeneSchule);
-		if (existingCols.size() != colsEigeneSchule.size())
+		if (existingCols.size() != colsEigeneSchule.size()) {
 			return null;
+		}
 		try {
 			final List<Object[]> results = conn.query(
 					"SELECT ID, SchulNr, SchulformKrz, Bezeichnung1, Bezeichnung2, Bezeichnung3, Strassenname, HausNr, HausNrZusatz, PLZ, Ort FROM `%s`.`EigeneSchule`"
 							.formatted(schemaName));
-			if (results.isEmpty())
+			if (results.isEmpty()) {
 				return null;
-			if (results.size() > 1)
+			}
+			if (results.size() > 1) {
 				return null;
+			}
 			final Object[] result = results.get(0);
-			if ((result[1] == null) || (result[2] == null))
+			if ((result[1] == null) || (result[2] == null)) {
 				return null;
+			}
 			final SchuleInfo info = new SchuleInfo();
 			info.schulNr = (result[1] instanceof final String str) ? Integer.parseInt(str) : -1;
-			if (info.schulNr < 0)
+			if (info.schulNr < 0) {
 				return null;
+			}
 			final String sfKuerzel = (result[2] instanceof final String str) ? str : null;
 			final Schulform sf = (sfKuerzel == null) ? null : Schulform.data().getWertByKuerzel(sfKuerzel);
-			if (sf == null)
+			if (sf == null) {
 				return null;
+			}
 			info.schulform = sfKuerzel;
 			info.bezeichnung = (result[3] instanceof final String str) ? str : "???";
-			if (result[4] instanceof final String str)
+			if (result[4] instanceof final String str) {
 				info.bezeichnung += "\n" + str;
-			if (result[5] instanceof final String str)
+			}
+			if (result[5] instanceof final String str) {
 				info.bezeichnung += "\n" + str;
+			}
 			info.strassenname = (result[6] instanceof final String str) ? str : "";
 			info.hausnummer = (result[7] instanceof final String str) ? str : "";
 			info.hausnummerZusatz = (result[8] instanceof final String str) ? str : "";
@@ -237,9 +248,11 @@ public final class DBSchemaStatus {
 	 * @return true, falls die Tabelle vorhanden ist und ansonsten false
 	 */
 	public boolean hasTable(final String tabname) {
-		for (final String nameTabelle : tabellen)
-			if (nameTabelle.equalsIgnoreCase(tabname))
+		for (final String nameTabelle : tabellen) {
+			if (nameTabelle.equalsIgnoreCase(tabname)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -282,11 +295,13 @@ public final class DBSchemaStatus {
 	 * @return true, falls die Spalte bei der Tabelle vorhanden ist und ansonsten false
 	 */
 	public boolean hasColumn(final String tabname, final String colname) {
-		if (!hasTable(tabname))
+		if (!hasTable(tabname)) {
 			return false;
+		}
 		final Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, schemaName, tabname);
-		if (spalten == null)
+		if (spalten == null) {
 			return false;
+		}
 		return spalten.containsKey(colname.toLowerCase());
 	}
 
@@ -301,11 +316,13 @@ public final class DBSchemaStatus {
 	 * @return die gefilterte Liste von Spaltennamen
 	 */
 	public List<String> filterColumns(final String tabname, final List<String> cols) {
-		if (!hasTable(tabname))
+		if (!hasTable(tabname)) {
 			return new ArrayList<>();
+		}
 		final Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, schemaName, tabname);
-		if (spalten == null)
+		if (spalten == null) {
 			return new ArrayList<>();
+		}
 		return cols.stream().filter(col -> (spalten.containsKey(col.toLowerCase()))).toList();
 	}
 

@@ -26,8 +26,9 @@ public final class DataKatalogLehrerMinderleistungsarten extends DataManager<Lon
 	@Override
 	public Response getAll() {
 		final ArrayList<LehrerMinderleistungsartKatalogEintrag> daten = new ArrayList<>();
-		for (final LehrerMinderleistungsarten status : LehrerMinderleistungsarten.values())
+		for (final LehrerMinderleistungsarten status : LehrerMinderleistungsarten.values()) {
 			daten.addAll(status.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

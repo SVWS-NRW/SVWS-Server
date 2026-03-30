@@ -90,14 +90,16 @@ public final class DataStundenplanRaeume extends DataManagerRevised<Long, DTOStu
 		switch (name) {
 			case "id" -> {
 				final Long id = JSONMapper.convertToLong(value, false, name);
-				if ((id == null) || (id != dto.ID))
+				if ((id == null) || (id != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Patches stimmt nicht mit der ID des Objekts überein.");
+				}
 			}
 			case "kuerzel" -> {
 				dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20).trim();
-				if ("".equals(dto.Kuerzel))
+				if ("".equals(dto.Kuerzel)) {
 					throw new ApiOperationException(Status.BAD_REQUEST,
 							"Das Kürzel darf nicht nur aus Leerzeichen bestehen (diese werden am Anfang und am Ende des Kürzels automatisch entfernt.");
+				}
 			}
 			case "beschreibung" -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000);
 			case "groesse" -> dto.Groesse = JSONMapper.convertToInteger(value, false);
@@ -115,11 +117,13 @@ public final class DataStundenplanRaeume extends DataManagerRevised<Long, DTOStu
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOStundenplanRaum getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den StundenplanRaum darf nicht null sein.");
+		}
 		final DTOStundenplanRaum dto = conn.queryByKey(DTOStundenplanRaum.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein StundenplanRaum zur ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 
@@ -157,8 +161,9 @@ public final class DataStundenplanRaeume extends DataManagerRevised<Long, DTOStu
 				: conn.queryList(DTOStundenplanUnterrichtRaum.QUERY_LIST_BY_UNTERRICHT_ID, DTOStundenplanUnterrichtRaum.class, unterrichtIds);
 		for (final DTOStundenplanUnterrichtRaum r : listRaeume) {
 			final List<StundenplanRaum> raeume = raeumeByUnterrichtId.computeIfAbsent(r.Unterricht_ID, id -> new ArrayList<>());
-			if (raumById.containsKey(r.Raum_ID))
+			if (raumById.containsKey(r.Raum_ID)) {
 				raeume.add(raumById.get(r.Raum_ID));
+			}
 		}
 		return raeumeByUnterrichtId;
 	}
@@ -188,8 +193,9 @@ public final class DataStundenplanRaeume extends DataManagerRevised<Long, DTOStu
 			conn.transactionFlush();
 			return data.map(raum);
 		}
-		if (raeume.size() == 1)
+		if (raeume.size() == 1) {
 			return data.map(raeume.get(0));
+		}
 		throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 				"Mehrfach-Einträge für das Kürzel %s im Stundenplan mit der ID %d.".formatted(kuerzel, idStundenplan));
 	}
@@ -216,17 +222,20 @@ public final class DataStundenplanRaeume extends DataManagerRevised<Long, DTOStu
 	 */
 	public static void addRaeume(final DBEntityManager conn, final DTOStundenplan dtoStundenplan, final List<Raum> raeume) {
 		long id = conn.transactionGetNextID(DTOStundenplanRaum.class);
-		for (final Raum raum : raeume)
+		for (final Raum raum : raeume) {
 			conn.transactionPersist(new DTOStundenplanRaum(id++, dtoStundenplan.ID, raum.kuerzel, raum.beschreibung, raum.groesse));
+		}
 		conn.transactionFlush();
 	}
 
 	@Override
 	public Response deleteMultipleAsResponse(final List<Long> ids) throws ApiOperationException {
 		final List<DTOStundenplanRaum> dtos = conn.queryByKeyList(DTOStundenplanRaum.class, ids);
-		for (final DTOStundenplanRaum dto : dtos)
-			if (dto.Stundenplan_ID != this.stundenplanID)
+		for (final DTOStundenplanRaum dto : dtos) {
+			if (dto.Stundenplan_ID != this.stundenplanID) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Der Raum-Eintrag gehört nicht zu dem angegebenen Stundenplan.");
+			}
+		}
 		return super.deleteMultipleAsResponse(ids);
 	}
 

@@ -87,8 +87,9 @@ public class APITempDBFile implements AutoCloseable {
 		try {
 			Files.createDirectories(Paths.get(_tmpDir));
 			// Schreibe Daten nur, wenn die DB für den Import genutzt wird. Bei einem Export ist die Datei zunächst leer
-			if (data != null)
+			if (data != null) {
 				Files.write(Paths.get(_tmpDir + "/" + _tmpFilename), data, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+			}
 		} catch (@SuppressWarnings("unused") final IOException e) {
 			_logger.logLn(2, "Fehler beim Erstellen der temporären Datenbank unter dem Namen \"" + _tmpDir + "/" + _tmpFilename + "\"");
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, simpleResponse(false, log));
@@ -124,8 +125,9 @@ public class APITempDBFile implements AutoCloseable {
 	public void close() {
 		_logger.logLn("Löschen der temporären Datenbank unter dem Namen \"" + _tmpDir + "/" + _tmpFilename + "\".");
 		try {
-			if (_doDelete)
+			if (_doDelete) {
 				Files.delete(Paths.get(_tmpDir + "/" + _tmpFilename));
+			}
 		} catch (@SuppressWarnings("unused") final IOException e) {
 			_logger.logLn(2, "[FEHLER]");
 		}

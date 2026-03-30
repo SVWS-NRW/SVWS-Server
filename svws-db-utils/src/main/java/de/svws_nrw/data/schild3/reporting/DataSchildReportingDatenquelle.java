@@ -1,11 +1,17 @@
 package de.svws_nrw.data.schild3.reporting;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.data.schild3.reporting.SchildReportingDate;
 import de.svws_nrw.core.data.schild3.reporting.SchildReportingDatenquelle;
 import de.svws_nrw.core.data.schild3.reporting.SchildReportingDatenquelleAttribut;
 import de.svws_nrw.core.data.schild3.reporting.SchildReportingMemo;
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
-import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -14,12 +20,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
 
 
 /**
@@ -62,8 +62,9 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 		this.datenquelle.name = this.getClass().getSimpleName().replace("DataSchildReportingDatenquelle", "");
 		this.datenquelle.datenart = dtoClass.getSimpleName().replace("SchildReporting", "");
 		final Schema schema = dtoClass.getAnnotation(Schema.class);
-		if ((schema == null) || (schema.description() == null))
+		if ((schema == null) || (schema.description() == null)) {
 			throw new NullPointerException("Im Core-DTO musse eine Schema-Definition mit einer 'description' vorhanden sein");
+		}
 		this.datenquelle.beschreibung = schema.description();
 		this.addAttribute(dtoClass);
 		DataSchildReportingDatenquelle.datenquellen.put(this.datenquelle.name, this);
@@ -119,16 +120,19 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 				case "float", "double", "Float", "Double" -> SchildReportingAttributTyp.NUMBER;
 				case "boolean", "Boolean" -> SchildReportingAttributTyp.BOOLEAN;
 				default -> {
-					if (field.getAnnotation(SchildReportingDate.class) != null)
+					if (field.getAnnotation(SchildReportingDate.class) != null) {
 						yield SchildReportingAttributTyp.DATE;
-					if (field.getAnnotation(SchildReportingMemo.class) != null)
+					}
+					if (field.getAnnotation(SchildReportingMemo.class) != null) {
 						yield SchildReportingAttributTyp.MEMO;
+					}
 					yield SchildReportingAttributTyp.STRING;
 				}
 			};
 			final Schema schema = field.getAnnotation(Schema.class);
-			if ((schema == null) || (schema.description() == null))
+			if ((schema == null) || (schema.description() == null)) {
 				throw new NullPointerException("Im Core-DTO musse eine Schema-Definition mit einer 'description' vorhanden sein");
+			}
 			addAttribut(field.getName(), typ, schema.description());
 		}
 	}
@@ -142,8 +146,9 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 	 * @param schulformen   die Schulformen, für welche die Datenquelle zulässig ist
 	 */
 	public void restrictTo(final Schulform... schulformen) {
-		for (final Schulform sf : schulformen)
+		for (final Schulform sf : schulformen) {
 			this.schulformen.add(sf);
+		}
 	}
 
 
@@ -181,14 +186,18 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 
 	private List<DTO> getDatenBoolean(final DBEntityManager conn, final List<? extends Object> params) throws ApiOperationException {
 		// Daten vorhanden?
-		if (params.isEmpty())
+		if (params.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND, meldungKeinParameter);
-		if (this.masterclass != Boolean.class)
+		}
+		if (this.masterclass != Boolean.class) {
 			throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+		}
 		// Prüfe, ob alle Parameter vom Typ Boolean sind
-		for (final Object p : params)
-			if (!(p instanceof Boolean))
+		for (final Object p : params) {
+			if (!(p instanceof Boolean)) {
 				throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+			}
+		}
 		@SuppressWarnings("unchecked") final List<JMT> paramListe = (List<JMT>) params;
 		return getDaten(conn, paramListe);
 	}
@@ -196,10 +205,12 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 
 	private List<DTO> getDatenInteger(final DBEntityManager conn, final List<? extends Object> params) throws ApiOperationException {
 		// Daten vorhanden?
-		if (params.isEmpty())
+		if (params.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND, meldungKeinParameter);
-		if (this.masterclass != Long.class)
+		}
+		if (this.masterclass != Long.class) {
 			throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+		}
 		// Prüfe, ob alle Parameter vom Typ Long sind
 		final ArrayList<Long> paramListe = new ArrayList<>();
 		for (final Object p : params) {
@@ -218,10 +229,12 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 
 	private List<DTO> getDatenNumber(final DBEntityManager conn, final List<? extends Object> params) throws ApiOperationException {
 		// Daten vorhanden?
-		if (params.isEmpty())
+		if (params.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND, meldungKeinParameter);
-		if (this.masterclass != Double.class)
+		}
+		if (this.masterclass != Double.class) {
 			throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+		}
 		// Prüfe, ob alle Parameter vom Typ Double sind
 		final ArrayList<Double> paramListe = new ArrayList<>();
 		for (final Object p : params) {
@@ -238,14 +251,18 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 
 	private List<DTO> getDatenString(final DBEntityManager conn, final List<? extends Object> params) throws ApiOperationException {
 		// Daten vorhanden?
-		if (params.isEmpty())
+		if (params.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND, meldungKeinParameter);
-		if (this.masterclass != String.class)
+		}
+		if (this.masterclass != String.class) {
 			throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+		}
 		// Prüfe, ob alle Parameter vom Typ String sind
-		for (final Object p : params)
-			if (!(p instanceof String))
+		for (final Object p : params) {
+			if (!(p instanceof String)) {
 				throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+			}
+		}
 		@SuppressWarnings("unchecked") final List<JMT> paramListeJMT = (List<JMT>) params;
 		return getDaten(conn, paramListeJMT);
 	}
@@ -267,8 +284,9 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 	 */
 	public static Response getDaten(final DBEntityManager conn, final String name, final List<? extends Object> params) throws ApiOperationException {
 		final DataSchildReportingDatenquelle<?, ?> datenquelle = getMapDatenquellen().get(name);
-		if (datenquelle == null)
+		if (datenquelle == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Datenquelle \"" + name + "\" vorhanden.");
+		}
 		List<? extends Object> result = null;
 		result = switch (datenquelle.mastertyp) {
 			case BOOLEAN -> datenquelle.getDatenBoolean(conn, params);
@@ -276,13 +294,15 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 			case NUMBER -> datenquelle.getDatenNumber(conn, params);
 			case STRING, MEMO -> datenquelle.getDatenString(conn, params);
 			default -> {
-				if (!params.isEmpty())
+				if (!params.isEmpty()) {
 					throw new ApiOperationException(Status.CONFLICT, "Eine Datenquelle ohne Master-Datenquelle kann keine Parameter entgegennehmen");
+				}
 				yield datenquelle.getDaten(conn);
 			}
 		};
-		if (result == null)
+		if (result == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Fehler beim Lesen der Daten aus der Datenquelle \"" + name + "\".");
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
 	}
 
@@ -301,8 +321,9 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 		final Schulform schulform = conn.getUser().schuleGetSchulform();
 		final ArrayList<SchildReportingDatenquelle> result = new ArrayList<>();
 		for (final var datenquelle : datenquellen.values()) {
-			if ((datenquelle.schulformen.isEmpty()) || (datenquelle.schulformen.contains(schulform)))
+			if ((datenquelle.schulformen.isEmpty()) || (datenquelle.schulformen.contains(schulform))) {
 				result.add(datenquelle.datenquelle);
+			}
 		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
 	}

@@ -12,14 +12,14 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.data.schueler.SchuelerListe;
-import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.core.data.schueler.SchuelerListe;
+import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.gost.DataGostJahrgangsliste;
@@ -57,14 +57,14 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		this.abschnitt = abschnitt;
 	}
 
-
 	@Override
 	public Response getAll() throws ApiOperationException {
 		Long tmpAbschnitt = this.abschnitt;
 		if (tmpAbschnitt == null) {
 			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-			if (schule == null)
+			if (schule == null) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			tmpAbschnitt = schule.Schuljahresabschnitts_ID;
 		}
 		final List<SchuelerListeEintrag> daten = getListeSchueler(conn, tmpAbschnitt, false);
@@ -76,8 +76,9 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		Long tmpAbschnitt = this.abschnitt;
 		if (tmpAbschnitt == null) {
 			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-			if (schule == null)
+			if (schule == null) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			tmpAbschnitt = schule.Schuljahresabschnitts_ID;
 		}
 		final List<SchuelerListeEintrag> daten = getListeSchueler(conn, tmpAbschnitt, true);
@@ -175,30 +176,33 @@ public final class DataSchuelerliste extends DataManager<Long> {
 	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs {@link SchuelerListeEintrag}.
 	 */
 	public static final Comparator<SchuelerListeEintrag> dataComparator = (a, b) -> {
-		if ((a.idKlasse == null) && (b.idKlasse != null))
+		if ((a.idKlasse == null) && (b.idKlasse != null)) {
 			return -1;
-		else if ((a.idKlasse != null) && (b.idKlasse == null))
+		} else if ((a.idKlasse != null) && (b.idKlasse == null)) {
 			return 1;
-		else if ((a.idKlasse == null) && (b.idKlasse == null))
+		} else if ((a.idKlasse == null) && (b.idKlasse == null)) {
 			return 0;
+		}
 		int result = Long.compare(a.idKlasse, b.idKlasse);
 		final Collator collator = Collator.getInstance(Locale.GERMAN);
 		if (result == 0) {
-			if ((a.nachname == null) && (b.nachname != null))
+			if ((a.nachname == null) && (b.nachname != null)) {
 				return -1;
-			else if ((a.nachname != null) && (b.nachname == null))
+			} else if ((a.nachname != null) && (b.nachname == null)) {
 				return 1;
-			else if ((a.nachname == null) && (b.nachname == null))
+			} else if ((a.nachname == null) && (b.nachname == null)) {
 				return 0;
+			}
 			result = collator.compare(a.nachname, b.nachname);
 		}
 		if (result == 0) {
-			if ((a.vorname == null) && (b.vorname != null))
+			if ((a.vorname == null) && (b.vorname != null)) {
 				return -1;
-			else if ((a.vorname != null) && (b.vorname == null))
+			} else if ((a.vorname != null) && (b.vorname == null)) {
 				return 1;
-			else if ((a.vorname == null) && (b.vorname == null))
+			} else if ((a.vorname == null) && (b.vorname == null)) {
 				return 0;
+			}
 			result = collator.compare(a.vorname, b.vorname);
 		}
 		return result;
@@ -237,9 +241,11 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			}
 			for (final SchuelerListeEintrag eintrag : schuelerListe) {
 				final List<DTOKursSchueler> kurs_schueler = kursSchueler.get(eintrag.id);
-				if ((kurs_schueler != null) && (!kurs_schueler.isEmpty()))
-					for (final DTOKursSchueler ks : kurs_schueler)
+				if ((kurs_schueler != null) && (!kurs_schueler.isEmpty())) {
+					for (final DTOKursSchueler ks : kurs_schueler) {
 						eintrag.kurse.add(ks.Kurs_ID);
+					}
+				}
 			}
 		}
 	}
@@ -270,12 +276,14 @@ public final class DataSchuelerliste extends DataManager<Long> {
 					+ "(s.Geloescht = null OR s.Geloescht = false)", DTOSchueler.class);
 			schueler = querySchueler.getResultList();
 		}
-		if (schueler == null)
+		if (schueler == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		// Bestimme die aktuellen Lernabschnitte für die Schüler, ignoriere dabei Lernabschnitte, welche vor einem Wechsel liegen, aber in dem gleichen Lernabschnitt (ein seltener Spezialfall)
 		final List<Long> schuelerIDs = schueler.stream().map(s -> s.ID).toList();
-		if (schuelerIDs.isEmpty())
+		if (schuelerIDs.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final List<DTOSchuelerLernabschnittsdaten> listAktAbschnitte = conn.queryList(
 				"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON s.ID IN ?1 AND s.ID = l.Schueler_ID"
 						+ " AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID AND l.WechselNr = 0",
@@ -303,11 +311,13 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		final List<SchuelerListeEintrag> schuelerListe = new ArrayList<>();
 		for (final DTOSchueler s : schueler) {
 			final DTOSchuelerLernabschnittsdaten sla = mapAbschnitte.get(s.ID);
-			if (sla == null)
+			if (sla == null) {
 				continue;
+			}
 			final Schuljahresabschnitt sja = conn.getUser().schuleGetAbschnittById(sla.Schuljahresabschnitts_ID);
-			if (sja == null)
+			if (sja == null) {
 				continue;
+			}
 			final SchuelerListeEintrag sle = erstelleSchuelerlistenEintrag(s, sja.schuljahr, mapAbschnitte.get(s.ID), mapJahrgaenge, schulform);
 			schuelerListe.add(sle);
 		}
@@ -318,8 +328,9 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		if (schulform.daten(conn.getUser().schuleGetAbschnittById(abschnitt).schuljahr).hatGymOb) {
 			for (final SchuelerListeEintrag s : schuelerListe) {
 				final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(s.idSchuljahresabschnitt);
-				if (schuljahresabschnitt == null)
+				if (schuljahresabschnitt == null) {
 					continue;
+				}
 				s.abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schulform, Schulgliederung.data().getWertByKuerzel(s.schulgliederung),
 						schuljahresabschnitt.schuljahr, s.jahrgang);
 			}
@@ -343,9 +354,10 @@ public final class DataSchuelerliste extends DataManager<Long> {
 	public static SchuelerListe getSchuelerListe(final DBEntityManager conn, final long idSchuljahresabschnitt) throws ApiOperationException {
 		// Bestimme zunächst alle Schuljahresabschnitte und prüfe, ob die übergeben ID gültig ist
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
-		if (schuljahresabschnitt == null)
+		if (schuljahresabschnitt == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Schuljahresabschnitt mit der ID %d gefunden werden"
 					.formatted(idSchuljahresabschnitt));
+		}
 
 		final DataKlassendaten dataKlassendaten = new DataKlassendaten(conn);
 
@@ -357,8 +369,9 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		result.kurse.addAll(DataKurse.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, true));
 		result.jahrgaenge.addAll(DataJahrgangsliste.getJahrgangsliste(conn));
 
-		if (conn.getUser().schuleHatGymOb())
+		if (conn.getUser().schuleHatGymOb()) {
 			result.jahrgaengeGost.addAll(DataGostJahrgangsliste.getGostJahrgangsliste(conn, schuljahresabschnitt));
+		}
 
 		// ermittle ggf. weitere Klassen
 		final Set<Long> idsKlassen = result.klassen.stream().map(k -> k.id).collect(Collectors.toSet());
@@ -366,8 +379,9 @@ public final class DataSchuelerliste extends DataManager<Long> {
 				.filter(id -> (id != null) && (id >= 0) && (!idsKlassen.contains(id)))
 				.distinct().toList();
 
-		if (!idsFehlendeKlassen.isEmpty())
+		if (!idsFehlendeKlassen.isEmpty()) {
 			result.klassen.addAll(dataKlassendaten.getListByIdsOhneSchueler(idsFehlendeKlassen, idSchuljahresabschnitt));
+		}
 
 		return result;
 	}

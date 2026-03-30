@@ -50,8 +50,9 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 		super.setAttributesNotPatchable("id", "abiJahrgang", "halbjahr", "quartal", "idFach", "kursart");
 		super.setAttributesRequiredOnCreation("abiJahrgang", "halbjahr", "quartal", "idFach", "kursart");
 		_abiturjahr = abiturjahr;
-		if ((abiturjahr != -1) && (conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr) == null))
+		if ((abiturjahr != -1) && (conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr) == null)) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Jahrgang nicht gefunden, ID: " + abiturjahr);
+		}
 	}
 
 	/**
@@ -92,12 +93,14 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOGostKlausurenVorgaben getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die GostKlausurvorgabe darf nicht null sein.");
+		}
 
 		final DTOGostKlausurenVorgaben klasseDto = conn.queryByKey(DTOGostKlausurenVorgaben.class, id);
-		if (klasseDto == null)
+		if (klasseDto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine GostKlausurvorgabe zur ID " + id + " gefunden.");
+		}
 
 		return klasseDto;
 	}
@@ -131,20 +134,23 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 		switch (name) {
 			case "idVorgabe" -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true, name);
-				if ((patch_id == null) || (patch_id != dto.ID))
+				if ((patch_id == null) || (patch_id != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST);
+				}
 			}
 			case "abiJahrgang" -> {
 				dto.Abi_Jahrgang = JSONMapper.convertToInteger(value, false, name);
-				if (conn.queryByKey(DTOGostJahrgangsdaten.class, dto.Abi_Jahrgang) == null)
+				if (conn.queryByKey(DTOGostJahrgangsdaten.class, dto.Abi_Jahrgang) == null) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Jahrgang nicht gefunden, ID: " + dto.Abi_Jahrgang);
+				}
 			}
 			case "halbjahr" -> dto.Halbjahr = checkHalbjahr(JSONMapper.convertToInteger(value, false, name));
 			case "quartal" -> dto.Quartal = checkQuartal(JSONMapper.convertToInteger(value, false, name));
 			case "idFach" -> {
 				dto.Fach_ID = JSONMapper.convertToLong(value, false, name);
-				if (conn.queryByKey(DTOFach.class, dto.Fach_ID) == null)
+				if (conn.queryByKey(DTOFach.class, dto.Fach_ID) == null) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Fach nicht gefunden, ID: " + dto.Fach_ID);
+				}
 			}
 			case "kursart" -> dto.Kursart = checkKursart(JSONMapper.convertToString(value, false, false, null));
 			case "dauer" -> dto.Dauer = JSONMapper.convertToInteger(value, false, name);
@@ -169,8 +175,9 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 	 */
 	public static GostHalbjahr checkHalbjahr(final int halbjahr) throws ApiOperationException {
 		final GostHalbjahr hj = GostHalbjahr.fromID(halbjahr);
-		if (hj == null)
+		if (hj == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Kein gültiges GostHalbjahr angegeben: " + halbjahr);
+		}
 		return hj;
 	}
 
@@ -184,15 +191,17 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static int checkQuartal(final int quartal) throws ApiOperationException {
-		if (quartal < 0)
+		if (quartal < 0) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Quartal ungültig: " + quartal);
+		}
 		return quartal;
 	}
 
 	private static GostKursart checkKursart(final String kursart) throws ApiOperationException {
 		final GostKursart ka = GostKursart.fromKuerzel(kursart);
-		if (ka == null)
+		if (ka == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Keine gültige Kursart angegeben: " + kursart);
+		}
 		return ka;
 	}
 
@@ -248,11 +257,13 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static List<DTOGostKlausurenVorgaben> getKlausurvorgabDTOsZuIds(final DBEntityManager conn, final List<Long> vids) throws ApiOperationException {
-		if (vids.isEmpty())
+		if (vids.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final List<DTOGostKlausurenVorgaben> vorgaben = conn.queryByKeyList(DTOGostKlausurenVorgaben.class, vids);
-		if (vorgaben.isEmpty())
+		if (vorgaben.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Klausurvorgabe-DTOs zu angegebenen IDs nicht gefunden.");
+		}
 		return vorgaben;
 	}
 
@@ -334,15 +345,17 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 		final List<DTOGostKlausurenVorgaben> vorgabenJg =
 				conn.queryList(DTOGostKlausurenVorgaben.QUERY_BY_ABI_JAHRGANG, DTOGostKlausurenVorgaben.class, abiturjahr);
 		// Prüfe, ob die Vorlage eingelesen werden kann
-		if (vorgabenVorlage == null)
+		if (vorgabenVorlage == null) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+		}
 
 		// Bestimme die ID, für welche der Datensatz eingefügt wird
 		long idNMK = conn.transactionGetNextID(DTOGostKlausurenVorgaben.class);
 		final List<DTOGostKlausurenVorgaben> vorgabenNeu = new ArrayList<>();
 		for (final DTOGostKlausurenVorgaben vorgabe : vorgabenVorlage) {
-			if (((halbjahr != null) && (vorgabe.Halbjahr != halbjahr)) || ((quartal > 0) && (quartal != vorgabe.Quartal)))
+			if (((halbjahr != null) && (vorgabe.Halbjahr != halbjahr)) || ((quartal > 0) && (quartal != vorgabe.Quartal))) {
 				continue;
+			}
 			boolean exists = false;
 			for (final DTOGostKlausurenVorgaben v : vorgabenJg) {
 				if ((vorgabe.Halbjahr.id == v.Halbjahr.id) && (vorgabe.Quartal == v.Quartal) && (vorgabe.Fach_ID == v.Fach_ID)
@@ -359,8 +372,9 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 				vorgabenNeu.add(k);
 			}
 		}
-		if (!conn.transactionPersistAll(vorgabenNeu))
+		if (!conn.transactionPersistAll(vorgabenNeu)) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Gost-Klausurvorgaben.");
+		}
 		return mapList(vorgabenNeu);
 	}
 
@@ -379,11 +393,13 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 		final List<DTOGostKlausurenVorgaben> vorgabenVorlage =
 				conn.queryList(DTOGostKlausurenVorgaben.QUERY_BY_ABI_JAHRGANG, DTOGostKlausurenVorgaben.class, -1);
 		// Prüfe, ob die Vorlage eingelesen werden kann
-		if (vorgabenVorlage == null)
+		if (vorgabenVorlage == null) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+		}
 		final EnumMap<GostHalbjahr, GostKlausurplanManager> manager = new EnumMap<>(GostHalbjahr.class);
-		for (final GostHalbjahr hj : GostHalbjahr.values())
+		for (final GostHalbjahr hj : GostHalbjahr.values()) {
 			manager.put(hj, new GostKlausurplanManager(mapList(vorgabenVorlage.stream().filter(v -> v.Halbjahr == hj).toList())));
+		}
 		final List<GostFach> faecher = DataGostFaecher.getFaecherManager(conn, -1).getFaecherSchriftlichMoeglich();
 		final List<DTOGostKlausurenVorgaben> neueVorgaben = new ArrayList<>();
 		// Bestimme die ID, für welche der Datensatz eingefügt wird
@@ -392,68 +408,82 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 		if (quartal == 0) {
 			quartale.add(1);
 			quartale.add(2);
-		} else
+		} else {
 			quartale.add(quartal);
+		}
 		final GostKursart[] arten =
 				halbjahr.istEinfuehrungsphase() ? new GostKursart[] { GostKursart.GK } : new GostKursart[] { GostKursart.GK, GostKursart.LK };
 		for (final GostFach fach : faecher) {
 			for (final GostKursart ka : arten) {
-				if (((ka == GostKursart.LK) && !fach.istMoeglichAbiLK) || ((halbjahr == GostHalbjahr.Q22) && !(fach.istMoeglichAbiGK || fach.istMoeglichAbiLK)))
+				if (((ka == GostKursart.LK) && !fach.istMoeglichAbiLK) || ((halbjahr == GostHalbjahr.Q22) && !(fach.istMoeglichAbiGK || fach.istMoeglichAbiLK))) {
 					continue;
+				}
 				for (final int q : quartale) {
 					final DTOGostKlausurenVorgaben vorgabeNeu = new DTOGostKlausurenVorgaben(idNMK++, -1, halbjahr, q, fach.id, ka,
 							berechneApoKlausurdauer(halbjahr, ka, fach), 0, false, false, false);
 					if (manager.get(vorgabeNeu.Halbjahr).vorgabeGetByHalbjahrAndQuartalAndKursartallgAndFachid(-1, halbjahr, vorgabeNeu.Quartal,
-							vorgabeNeu.Kursart, vorgabeNeu.Fach_ID) == null)
+							vorgabeNeu.Kursart, vorgabeNeu.Fach_ID) == null) {
 						neueVorgaben.add(vorgabeNeu);
+					}
 				}
 			}
 		}
-		if (!conn.transactionPersistAll(neueVorgaben))
+		if (!conn.transactionPersistAll(neueVorgaben)) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Gost-Klausurvorgaben.");
+		}
 		return mapList(neueVorgaben);
 	}
 
 	private static int berechneApoKlausurdauer(final GostHalbjahr halbjahr, final GostKursart kursart, final GostFach fach) {
-	    if (halbjahr.istEinfuehrungsphase())
-	        return 90;
-	    if (halbjahr.id <= 3)
-	        return (kursart == GostKursart.LK) ? 180 : 135;
-	    if (halbjahr.id == 4)
-	        return (kursart == GostKursart.LK) ? 225 : 180;
-	    if (halbjahr.id == 5) // Abiturhalbjahr
-	        return berechneAbiturKlausurdauer(kursart, fach);
+	    if (halbjahr.istEinfuehrungsphase()) {
+			return 90;
+		}
+	    if (halbjahr.id <= 3) {
+			return (kursart == GostKursart.LK) ? 180 : 135;
+		}
+	    if (halbjahr.id == 4) {
+			return (kursart == GostKursart.LK) ? 225 : 180;
+		}
+	    if (halbjahr.id == 5) { // Abiturhalbjahr
+			return berechneAbiturKlausurdauer(kursart, fach);
+		}
 	    throw new DeveloperNotificationException("Berechnung Klausurdauer fehlgeschlagen.");
 	}
 
 	private static int berechneAbiturKlausurdauer(final GostKursart kursart, final GostFach fach) {
 		// Alte Sprachen
 		if (fach.kuerzel.matches("^[GLH]\\d?$")) {
-			if (!fach.istFremdSpracheNeuEinsetzend)
+			if (!fach.istFremdSpracheNeuEinsetzend) {
 				return kursart == GostKursart.LK ? 300 : 240; // fortgeführt
+			}
 		    return 210; // GK neu einsetzend
 		}
 
 		// Moderne Fremdsprachen
 		if (fach.istFremdsprache) {
-			if (!fach.istFremdSpracheNeuEinsetzend)
+			if (!fach.istFremdSpracheNeuEinsetzend) {
 				return kursart == GostKursart.LK ? 315 : 285; // fortgeführt
+			}
 			return 255; // GK neu einsetzend
 		}
 
 		// Naturwissenschaften
-		if (List.of(Fach.BI.toString(), Fach.CH.toString(), Fach.PH.toString()).contains(fach.kuerzel))
+		if (List.of(Fach.BI.toString(), Fach.CH.toString(), Fach.PH.toString()).contains(fach.kuerzel)) {
 			return kursart == GostKursart.LK ? 300 : 255;
+		}
 
-		if (Fach.D.toString().equals(fach.kuerzel))
+		if (Fach.D.toString().equals(fach.kuerzel)) {
 			return kursart == GostKursart.LK ? 315 : 255;
+		}
 
-		if (Fach.M.toString().equals(fach.kuerzel))
+		if (Fach.M.toString().equals(fach.kuerzel)) {
 			return kursart == GostKursart.LK ? 300 : 255;
+		}
 
 		// Informatik, Ernährungslehre, Technik
-		if (List.of(Fach.IF.toString(), Fach.EL.toString(), Fach.TC.toString()).contains(fach.kuerzel))
+		if (List.of(Fach.IF.toString(), Fach.EL.toString(), Fach.TC.toString()).contains(fach.kuerzel)) {
 			return kursart == GostKursart.LK ? 270 : 225;
+		}
 
 		// alle anderen Fächer
 		return kursart == GostKursart.LK ? 300 : 240;

@@ -1,7 +1,7 @@
 package de.svws_nrw.data.erzieher;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -84,10 +84,12 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 	@Override
 	protected ErzieherStammdaten map(final DTOSchuelerErzieherAdresse dto) throws ApiOperationException {
 		// Entscheidet anhand belegter Namensfelder, ob es sich um Erzieher 1 oder 2 handelt
-		if ((dto.Name1 != null) && !dto.Name1.isBlank())
+		if ((dto.Name1 != null) && !dto.Name1.isBlank()) {
 			return dtoMapperErzieher1.apply(dto);
-		if ((dto.Name2 != null) && !dto.Name2.isBlank())
+		}
+		if ((dto.Name2 != null) && !dto.Name2.isBlank()) {
 			return dtoMapperErzieher2.apply(dto);
+		}
 		throw new ApiOperationException(Status.NOT_FOUND, "Erzieher konnte nicht gemappt werden: weder Name1 noch Name2 sind befüllt.");
 	}
 
@@ -173,8 +175,9 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 	public List<ErzieherStammdaten> getListBySchuelerId(final long schuelerID) throws ApiOperationException {
 		final List<DTOSchuelerErzieherAdresse> erzieher = conn.queryList(DTOSchuelerErzieherAdresse.QUERY_BY_SCHUELER_ID, DTOSchuelerErzieherAdresse.class,
 				schuelerID);
-		if (erzieher == null)
+		if (erzieher == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Erzieher für den Schüler mit der ID " + schuelerID + " nicht gefunden.");
+		}
 		final List<ErzieherStammdaten> daten = new ArrayList<>();
 		daten.addAll(erzieher.stream().filter(e -> ((e.Name1 != null) && !e.Name1.trim().isEmpty())).map(dtoMapperErzieher1).toList());
 		daten.addAll(erzieher.stream().filter(e -> ((e.Name2 != null) && !e.Name2.trim().isEmpty())).map(dtoMapperErzieher2).toList());
@@ -193,8 +196,9 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 	public List<ErzieherStammdaten> getListBySchuelerIds(final List<Long> schuelerIDs) throws ApiOperationException {
 		final List<DTOSchuelerErzieherAdresse> erzieher = conn.queryList(DTOSchuelerErzieherAdresse.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerErzieherAdresse.class,
 				schuelerIDs);
-		if (erzieher == null)
+		if (erzieher == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Erzieher konnten nicht gefunden werden.");
+		}
 		final List<ErzieherStammdaten> daten = new ArrayList<>();
 		daten.addAll(erzieher.stream().filter(e -> ((e.Name1 != null) && !e.Name1.trim().isEmpty())).map(dtoMapperErzieher1).toList());
 		daten.addAll(erzieher.stream().filter(e -> ((e.Name2 != null) && !e.Name2.trim().isEmpty())).map(dtoMapperErzieher2).toList());
@@ -212,20 +216,21 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 		// Extrahieren vom Positions-Suffix
 		final long suffix = apiId % 10;
 		// Position 1: Suffix abziehen und durch 10 teilen, um auf die Datenbank‑ID zu kommen
-		if (suffix == 1)
+		if (suffix == 1) {
 			return (apiId - 1) / 10;
-		// Position 2: Analoges Vorgehen
-		else if (suffix == 2)
+		} else if (suffix == 2) {
 			return (apiId - 2) / 10;
 		// falls kein gültiges Suffix
-		else
+		} else {
 			return 0;
+		}
 	}
 
 	@Override
 	public ErzieherStammdaten getById(final Long tmpid) throws ApiOperationException {
-		if (tmpid == null)
+		if (tmpid == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Erzieher‑ID fehlt");
+		}
 
 		final long id;
 		final int nr;
@@ -244,8 +249,9 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 		}
 
 		final DTOSchuelerErzieherAdresse dto = conn.queryByKey(DTOSchuelerErzieherAdresse.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Erzieher mit ID " + id + " nicht gefunden");
+		}
 		// Falls das Suffix 1 ist, wird der Datensatz an Position 1 gemappt, ansonsten an Position 2
 		return (nr == 1) ? dtoMapperErzieher1.apply(dto) : dtoMapperErzieher2.apply(dto);
 	}
@@ -269,8 +275,9 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 		switch (name) {
 			case "idSchueler" -> {
 				final Long idSchueler = JSONMapper.convertToLong(value, false, name);
-				if (!Objects.equals(dto.Schueler_ID, idSchueler))
+				if (!Objects.equals(dto.Schueler_ID, idSchueler)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(idSchueler, dto.Schueler_ID));
+				}
 			}
 			case "idErzieherArt" -> {
 				final Long artID = JSONMapper.convertToLong(value, true, name);
@@ -278,45 +285,51 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 					dto.ErzieherArt_ID = null;
 				} else {
 					final DTOErzieherart art = conn.queryByKey(DTOErzieherart.class, artID);
-					if (art == null)
+					if (art == null) {
 						throw new ApiOperationException(Status.NOT_FOUND, "Erzieherart mit ID " + artID + " nicht gefunden");
+					}
 					dto.ErzieherArt_ID = artID;
 				}
 			}
 			case "titel" -> {
 				final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Titel1.datenlaenge(), name);
-				if (targetNr == 1)
+				if (targetNr == 1) {
 					dto.Titel1 = tmp;
-				else
+				} else {
 					dto.Titel2 = tmp;
+				}
 			}
 			case "anrede" -> {
 				final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Anrede1.datenlaenge(), name);
-				if (targetNr == 1)
+				if (targetNr == 1) {
 					dto.Anrede1 = tmp;
-				else
+				} else {
 					dto.Anrede2 = tmp;
+				}
 			}
 			case "nachname" -> {
 				final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Name1.datenlaenge(), name);
-				if (targetNr == 1)
+				if (targetNr == 1) {
 					dto.Name1 = tmp;
-				else
+				} else {
 					dto.Name2 = tmp;
+				}
 			}
 			case "vorname" -> {
 				final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Vorname1.datenlaenge(), name);
-				if (targetNr == 1)
+				if (targetNr == 1) {
 					dto.Vorname1 = tmp;
-				else
+				} else {
 					dto.Vorname2 = tmp;
+				}
 			}
 			case "eMail" -> {
 				final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_ErzEmail.datenlaenge(), name);
-				if (targetNr == 1)
+				if (targetNr == 1) {
 					dto.ErzEmail = tmp;
-				else
+				} else {
 					dto.ErzEmail2 = tmp;
+				}
 			}
 			case "strassenname" -> dto.ErzStrassenname = JSONMapper.convertToString(value, true, true,
 					Schema.tab_SchuelerErzAdr.col_ErzStrassenname.datenlaenge(), name);
@@ -332,18 +345,21 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 			case "staatsangehoerigkeitID" -> {
 				final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true, null, name);
 				if ((staatsangehoerigkeitID == null) || (staatsangehoerigkeitID.isEmpty())) {
-					if (targetNr == 1)
+					if (targetNr == 1) {
 						dto.Erz1StaatKrz = null;
-					else
+					} else {
 						dto.Erz2StaatKrz = null;
+					}
 				} else {
 					final Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeitID);
-					if (nat == null)
+					if (nat == null) {
 						throw new ApiOperationException(Status.NOT_FOUND, "Staatsangehörigkeit mit der ID " + staatsangehoerigkeitID + " nicht gefunden");
-					if (targetNr == 1)
+					}
+					if (targetNr == 1) {
 						dto.Erz1StaatKrz = nat;
-					else
+					} else {
 						dto.Erz2StaatKrz = nat;
+					}
 				}
 			}
 			case "erhaeltAnschreiben" -> dto.ErzAnschreiben = JSONMapper.convertToBoolean(value, true, name);
@@ -355,8 +371,9 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 
 	@Override
 	public Response deleteMultipleAsResponse(final List<Long> apiIds) throws ApiOperationException {
-		if (apiIds == null)
+		if (apiIds == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Für das Löschen müssen IDs angegeben werden. Null ist nicht zulässig.");
+		}
 
 		// Extrahiere die echten Datenbank-IDs und zugehörigen Suffixe
 		final Map<Long, List<Integer>> idMap = apiIds.stream()
@@ -368,16 +385,18 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 		// Alle DTOs laden
 		final List<Long> dbIds = new ArrayList<>(idMap.keySet());
 		final List<DTOSchuelerErzieherAdresse> dtos = conn.queryByKeyList(DTOSchuelerErzieherAdresse.class, dbIds);
-		if (dtos.isEmpty())
+		if (dtos.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Entitäten zu den IDs gefunden.");
+		}
 
 		// Teile der DTOs werden auf null gesetzt oder komplett gelöscht
 		final List<ErzieherStammdaten> deleted = new ArrayList<>();
 		for (final DTOSchuelerErzieherAdresse dto : dtos) {
 			final long dtoId = dto.ID;
 			final List<Integer> suffixes = idMap.get(dtoId);
-			if (suffixes == null)
+			if (suffixes == null) {
 				continue;
+			}
 			// Für jede angefragte Position
 			for (final int suffix : suffixes) {
 				// Core-DTO zur gelöschten Position erzeugen
@@ -404,8 +423,9 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 			final boolean pos1Empty = ((dto.Name1 == null) || dto.Name1.isBlank());
 			final boolean pos2Empty = ((dto.Name2 == null) || dto.Name2.isBlank());
 			if (pos1Empty && pos2Empty) {
-				if (!conn.transactionRemove(dto))
+				if (!conn.transactionRemove(dto)) {
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Entfernen der Entität.");
+				}
 			} else {
 				// Andernfalls nur flushen, damit die Änderungen persistiert werden
 				conn.transactionFlush();
@@ -425,10 +445,12 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 	 * @throws ApiOperationException eine Exception mit dem HTTP-Fehlercode 409, falls die ID negative und damit ungültig ist
 	 */
 	void setWohnort(final DTOSchuelerErzieherAdresse dto, final Long wohnortID, final Long ortsteilID) throws ApiOperationException {
-		if ((wohnortID != null) && (wohnortID < 0))
+		if ((wohnortID != null) && (wohnortID < 0)) {
 			throw new ApiOperationException(Status.CONFLICT);
-		if ((ortsteilID != null) && (ortsteilID < 0))
+		}
+		if ((ortsteilID != null) && (ortsteilID < 0)) {
 			throw new ApiOperationException(Status.CONFLICT);
+		}
 
 		// Prüfe, ob die Ortsteil ID in Bezug auf die WohnortID gültig ist, wähle hierbei null-Verweise auf die K_Ort-Tabelle als überall gültig
 		dto.ErzOrtsteil_ID = isOrtsteilGueltig(ortsteilID, wohnortID) ? ortsteilID : null;
@@ -444,8 +466,9 @@ public final class DataErzieherStammdaten extends DataManagerRevised<Long, DTOSc
 	 * @return true, falls der Ortsteil für den Wohnort gültig ist, und ansonsten false
 	 */
 	boolean isOrtsteilGueltig(final Long ortsteilID, final Long wohnortID) {
-		if (ortsteilID == null)
+		if (ortsteilID == null) {
 			return false;
+		}
 		final DTOOrtsteil ortsteil = conn.queryByKey(DTOOrtsteil.class, ortsteilID);
 		return (ortsteil != null) && Objects.equals(ortsteil.Ort_ID, wohnortID);
 	}

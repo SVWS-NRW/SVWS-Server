@@ -1,11 +1,22 @@
 package de.svws_nrw.db.utils.lupo.mdb;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
+import de.svws_nrw.asd.data.schueler.Sprachbelegung;
+import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.core.data.gost.GostLeistungen;
+import de.svws_nrw.core.data.gost.GostLeistungenFachbelegung;
+import de.svws_nrw.core.data.gost.GostLeistungenFachwahl;
+import de.svws_nrw.core.types.gost.GostAbiturFach;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
+import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import io.github.spannm.jackcess.ColumnBuilder;
 import io.github.spannm.jackcess.DataType;
 import io.github.spannm.jackcess.Database;
@@ -14,18 +25,6 @@ import io.github.spannm.jackcess.PropertyMap;
 import io.github.spannm.jackcess.Row;
 import io.github.spannm.jackcess.Table;
 import io.github.spannm.jackcess.TableBuilder;
-
-import de.svws_nrw.core.data.gost.GostLeistungen;
-import de.svws_nrw.core.data.gost.GostLeistungenFachbelegung;
-import de.svws_nrw.core.data.gost.GostLeistungenFachwahl;
-import de.svws_nrw.asd.data.schueler.Sprachbelegung;
-import de.svws_nrw.asd.types.Note;
-import de.svws_nrw.core.types.gost.GostAbiturFach;
-import de.svws_nrw.core.types.gost.GostHalbjahr;
-import de.svws_nrw.core.types.gost.GostKursart;
-import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
-import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 
 /**
  * Diese Klasse wird für den Import der Tabelle ABP_SchuelerFaecher aus einer LuPO-Datenbank
@@ -39,7 +38,7 @@ public final class ABPSchuelerFaecher {
 	/** Die LuPO-Schüler-ID */
 	public int Schueler_ID = -1;
 
-	/** Die ID ds zugeordneten Faches */
+	/** Die ID des zugeordneten Faches */
 	public int Fach_ID = -1;
 
 	/** Das Kürzel des zugeordneten Faches */
@@ -236,17 +235,21 @@ public final class ABPSchuelerFaecher {
 				zuordnung.Kursart_E1 = r.getString(fieldKursart_E1);
 				zuordnung.Punkte_E1 = r.getString(fieldPunkte_E1);
 				zuordnung.Konflikt_E1 = "J".equals(r.getString(fieldKonflikt_E1));
-				if ((zuordnung.Kursart_E1 != null) && zuordnung.Kursart_E1.isEmpty())
+				if ((zuordnung.Kursart_E1 != null) && zuordnung.Kursart_E1.isEmpty()) {
 					zuordnung.Kursart_E1 = null;
-				if ((zuordnung.Punkte_E1 != null) && zuordnung.Punkte_E1.isEmpty())
+				}
+				if ((zuordnung.Punkte_E1 != null) && zuordnung.Punkte_E1.isEmpty()) {
 					zuordnung.Punkte_E1 = null;
+				}
 				zuordnung.Kursart_E2 = r.getString(fieldKursart_E2);
 				zuordnung.Punkte_E2 = r.getString(fieldPunkte_E2);
 				zuordnung.Konflikt_E2 = "J".equals(r.getString(fieldKonflikt_E2));
-				if ((zuordnung.Kursart_E2 != null) && zuordnung.Kursart_E2.isEmpty())
+				if ((zuordnung.Kursart_E2 != null) && zuordnung.Kursart_E2.isEmpty()) {
 					zuordnung.Kursart_E2 = null;
-				if ((zuordnung.Punkte_E2 != null) && zuordnung.Punkte_E2.isEmpty())
+				}
+				if ((zuordnung.Punkte_E2 != null) && zuordnung.Punkte_E2.isEmpty()) {
 					zuordnung.Punkte_E2 = null;
+				}
 				zuordnung.Kursart_Q1 = r.getString(fieldKursart_Q1);
 				zuordnung.Punkte_Q1 = r.getString(fieldPunkte_Q1);
 				zuordnung.Konflikt_Q1 = "J".equals(r.getString(fieldKonflikt_Q1));
@@ -259,22 +262,30 @@ public final class ABPSchuelerFaecher {
 				zuordnung.Kursart_Q4 = r.getString(fieldKursart_Q4);
 				zuordnung.Punkte_Q4 = r.getString(fieldPunkte_Q4);
 				zuordnung.Konflikt_Q4 = "J".equals(r.getString(fieldKonflikt_Q4));
-				if ((zuordnung.Kursart_Q1 != null) && zuordnung.Kursart_Q1.isEmpty())
+				if ((zuordnung.Kursart_Q1 != null) && zuordnung.Kursart_Q1.isEmpty()) {
 					zuordnung.Kursart_Q1 = null;
-				if ((zuordnung.Punkte_Q1 != null) && zuordnung.Punkte_Q1.isEmpty())
+				}
+				if ((zuordnung.Punkte_Q1 != null) && zuordnung.Punkte_Q1.isEmpty()) {
 					zuordnung.Punkte_Q1 = null;
-				if ((zuordnung.Kursart_Q2 != null) && zuordnung.Kursart_Q2.isEmpty())
+				}
+				if ((zuordnung.Kursart_Q2 != null) && zuordnung.Kursart_Q2.isEmpty()) {
 					zuordnung.Kursart_Q2 = null;
-				if ((zuordnung.Punkte_Q2 != null) && zuordnung.Punkte_Q2.isEmpty())
+				}
+				if ((zuordnung.Punkte_Q2 != null) && zuordnung.Punkte_Q2.isEmpty()) {
 					zuordnung.Punkte_Q2 = null;
-				if ((zuordnung.Kursart_Q3 != null) && zuordnung.Kursart_Q3.isEmpty())
+				}
+				if ((zuordnung.Kursart_Q3 != null) && zuordnung.Kursart_Q3.isEmpty()) {
 					zuordnung.Kursart_Q3 = null;
-				if ((zuordnung.Punkte_Q3 != null) && zuordnung.Punkte_Q3.isEmpty())
+				}
+				if ((zuordnung.Punkte_Q3 != null) && zuordnung.Punkte_Q3.isEmpty()) {
 					zuordnung.Punkte_Q3 = null;
-				if ((zuordnung.Kursart_Q4 != null) && zuordnung.Kursart_Q4.isEmpty())
+				}
+				if ((zuordnung.Kursart_Q4 != null) && zuordnung.Kursart_Q4.isEmpty()) {
 					zuordnung.Kursart_Q4 = null;
-				if ((zuordnung.Punkte_Q4 != null) && zuordnung.Punkte_Q4.isEmpty())
+				}
+				if ((zuordnung.Punkte_Q4 != null) && zuordnung.Punkte_Q4.isEmpty()) {
 					zuordnung.Punkte_Q4 = null;
+				}
 				zuordnung.AbiturFach = r.getInt(fieldAbiturFach);
 				zuordnung.Konflikt_AF = "J".equals(r.getString(fieldKonflikt_AF));
 				zuordnung.Bemerkungen = r.getString(fieldBemerkungen);
@@ -357,8 +368,9 @@ public final class ABPSchuelerFaecher {
 					.addColumn(new ColumnBuilder(fieldMdlPruefErgebnis, DataType.LONG))
 					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).withColumns(fieldID).withPrimaryKey())
 					.toTable(db);
-			if (list == null)
+			if (list == null) {
 				return;
+			}
 			for (final ABPSchuelerFaecher zuordnung : list) {
 				table.addRow(
 						zuordnung.ID,
@@ -456,8 +468,9 @@ public final class ABPSchuelerFaecher {
 	public static List<ABPSchuelerFaecher> get(final Map<String, ABPFaecher> faecher, final Map<String, ABPFachgruppen> fachgruppen,
 			final List<DTOSchueler> schuelerListe, final Map<Long, DTOGostSchueler> schuelerLupoInfo, final Map<Long, GostLeistungen> gostInfo) {
 		final List<ABPSchuelerFaecher> liste = new ArrayList<>();
-		if (schuelerListe == null)
+		if (schuelerListe == null) {
 			return liste;
+		}
 		int j = 1;   // TODO mit Maximum+1 aus DTOGostSchuelerFachbelegungen anfangen...
 		for (int sid = 0; sid < schuelerListe.size(); sid++) {
 			final DTOSchueler schueler = schuelerListe.get(sid);
@@ -480,16 +493,18 @@ public final class ABPSchuelerFaecher {
 				}
 				eintrag.Sortierung = fach.Sortierung;
 				final ABPFachgruppen fachgruppe = fachgruppen.get(fach.StatistikKrz);
-				if (fachgruppe == null)   // Eine Fachgruppe muss definiert sein, damit das Fach übernommen wird
+				if (fachgruppe == null) { // Eine Fachgruppe muss definiert sein, damit das Fach übernommen wird
 					continue;
+				}
 				eintrag.Fachgruppe = fachgruppe.FachgruppeKrz;
 				eintrag.Aufgabenfeld = fachgruppe.Aufgabenfeld;
 				eintrag.AbiturFach = (GostAbiturFach.fromID(fachwahl.abiturfach) == null) ? null : fachwahl.abiturfach;
 				for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 					GostLeistungenFachbelegung belegung = null;
 					for (final GostLeistungenFachbelegung tmpBelegung : fachwahl.belegungen) {
-						if (!tmpBelegung.abschnittGewertet)
+						if (!tmpBelegung.abschnittGewertet) {
 							continue;
+						}
 						if (halbjahr == GostHalbjahr.fromKuerzel(tmpBelegung.halbjahrKuerzel)) {
 							belegung = tmpBelegung;
 							break;

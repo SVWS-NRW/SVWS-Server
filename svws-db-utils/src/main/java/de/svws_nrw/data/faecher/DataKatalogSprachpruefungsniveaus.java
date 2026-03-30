@@ -1,8 +1,8 @@
 package de.svws_nrw.data.faecher;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import de.svws_nrw.core.data.fach.SprachpruefungsniveauKatalogEintrag;
 import de.svws_nrw.core.types.fach.Sprachpruefungniveau;
@@ -27,8 +27,9 @@ public final class DataKatalogSprachpruefungsniveaus extends DataManager<Long> {
 	@Override
 	public Response getAll() {
 		final ArrayList<SprachpruefungsniveauKatalogEintrag> daten = new ArrayList<>();
-		for (final Sprachpruefungniveau ref : Sprachpruefungniveau.values())
+		for (final Sprachpruefungniveau ref : Sprachpruefungniveau.values()) {
 			daten.addAll(Arrays.asList(ref.historie));
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

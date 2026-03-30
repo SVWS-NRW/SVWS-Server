@@ -9,8 +9,8 @@ import java.util.Set;
 import de.svws_nrw.asd.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
-import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -93,8 +93,9 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 		if (idKurs != null) {
 			/// Prüfe, ob der Kurs existiert und passe ggf. Fachlehrer und Kursart an.
 			final DTOKurs kurs = conn.queryByKey(DTOKurs.class, idKurs);
-			if (kurs == null)
+			if (kurs == null) {
 				throw new ApiOperationException(Status.CONFLICT);
+			}
 			// Setze Fachlehrer
 			dto.Fachlehrer_ID = kurs.Lehrer_ID;
 			// Passe ggf. die Kursart an, wenn sie sich geändert hat
@@ -113,19 +114,23 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 					dto.Kursart = ZulaessigeKursart.G.daten(abschnitt.schuljahr).kuerzel;
 				} else if (kurs.KursartAllg.equals(ZulaessigeKursart.GKM.daten(abschnitt.schuljahr).kuerzelAllg)) { // Spezialfall Gymnasiale Oberstufe GK -> Berücksichtige Abiturfach, Default GKM
 					ZulaessigeKursart kursart = ZulaessigeKursart.GKM;
-					if ("1".equals(dto.AbiFach) || "2".equals(dto.AbiFach))
+					if ("1".equals(dto.AbiFach) || "2".equals(dto.AbiFach)) {
 						dto.AbiFach = null;
-					if ("3".equals(dto.AbiFach))
+					}
+					if ("3".equals(dto.AbiFach)) {
 						kursart = ZulaessigeKursart.AB3;
-					else if ("4".equals(dto.AbiFach))
+					} else if ("4".equals(dto.AbiFach)) {
 						kursart = ZulaessigeKursart.AB4;
+					}
 					dto.Kursart = kursart.daten(abschnitt.schuljahr).kuerzel;
 				} else if (kurs.KursartAllg.equals(ZulaessigeKursart.LK1.daten(abschnitt.schuljahr).kuerzelAllg)) { // Spezialfall Gymnasiale Oberstufe LK -> Berücksichtige Abiturfach, Default LK1
 					dto.Kursart = ZulaessigeKursart.LK1.daten(abschnitt.schuljahr).kuerzel;
-					if ("2".equals(dto.AbiFach))
+					if ("2".equals(dto.AbiFach)) {
 						dto.Kursart = ZulaessigeKursart.LK2.daten(abschnitt.schuljahr).kuerzel;
-					if (dto.AbiFach == null)
+					}
+					if (dto.AbiFach == null) {
 						dto.AbiFach = "1";
+					}
 				} else {
 					dto.Kursart = kursarten.isEmpty() ? null : kursarten.get(0).daten(abschnitt.schuljahr).kuerzel;
 				}
@@ -141,20 +146,23 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 		switch (name) {
 			case "id" -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST);
+				}
 			}
 			case "lernabschnittID" -> {
 				final long idAbschnitt = JSONMapper.convertToLong(value, false);
-				if (conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, idAbschnitt) == null)
+				if (conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, idAbschnitt) == null) {
 					throw new ApiOperationException(Status.CONFLICT);
+				}
 				dto.Abschnitt_ID = idAbschnitt;
 			}
 			case "fachID" -> {
 				final long idFach = JSONMapper.convertToLong(value, false);
 				final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
-				if (fach == null)
+				if (fach == null) {
 					throw new ApiOperationException(Status.CONFLICT);
+				}
 				dto.Fach_ID = idFach;
 				dto.Sortierung = fach.SortierungAllg;
 				dto.Kurs_ID = null;
@@ -163,8 +171,9 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 			case "kursart" -> {
 				final String strKursart = JSONMapper.convertToString(value, true, false, null);
 				final ZulaessigeKursart kursart = (strKursart == null) ? ZulaessigeKursart.PUK : ZulaessigeKursart.data().getWertByKuerzel(strKursart);
-				if (kursart == null)
+				if (kursart == null) {
 					throw new ApiOperationException(Status.CONFLICT);
+				}
 				final DTOSchuelerLernabschnittsdaten dtoAbschnitt = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, dto.Abschnitt_ID);
 				final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoAbschnitt.Schuljahresabschnitts_ID);
 				final String kuerzel = kursart.daten(abschnitt.schuljahr).kuerzel;
@@ -174,37 +183,42 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 			}
 			case "abifach" -> {
 				final Integer abiFach = JSONMapper.convertToInteger(value, true);
-				if ((abiFach != null) && (abiFach != 1) && (abiFach != 2) && (abiFach != 3) && (abiFach != 4))
+				if ((abiFach != null) && (abiFach != 1) && (abiFach != 2) && (abiFach != 3) && (abiFach != 4)) {
 					throw new ApiOperationException(Status.CONFLICT);
+				}
 				dto.AbiFach = (abiFach == null) ? null : ("" + abiFach);
 			}
 			case "istZP10oderZK10" -> dto.Prf10Fach = JSONMapper.convertToBoolean(value, false);
 			case "koopSchule" -> dto.SchulNr = JSONMapper.convertToIntegerInRange(value, true, 100000, 1000000);
 			case "lehrerID" -> {
 				final Long idLehrer = JSONMapper.convertToLong(value, true);
-				if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
+				if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null)) {
 					throw new ApiOperationException(Status.CONFLICT);
+				}
 				dto.Fachlehrer_ID = idLehrer;
 			}
 			case "wochenstunden" -> dto.Wochenstunden = JSONMapper.convertToIntegerInRange(value, true, 0, 1000);
 			case "zusatzkraftID" -> {
 				final Long idLehrer = JSONMapper.convertToLong(value, true);
-				if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
+				if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null)) {
 					throw new ApiOperationException(Status.CONFLICT);
+				}
 				dto.Zusatzkraft_ID = idLehrer;
 			}
 			case "zusatzkraftWochenstunden" -> dto.WochenstdZusatzkraft = JSONMapper.convertToIntegerInRange(value, true, 0, 1000);
 			case "aufZeugnis" -> dto.AufZeugnis = JSONMapper.convertToBoolean(value, false);
 			case "note" -> {
 				final String str = JSONMapper.convertToString(value, true, true, null);
-				if (Note.fromKuerzel(str) == null)
+				if (Note.fromKuerzel(str) == null) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Das Notenkürzel ist ungültig");
+				}
 				dto.NotenKrz = str;
 			}
 			case "noteQuartal" -> {
 				final String str = JSONMapper.convertToString(value, true, true, null);
-				if (Note.fromKuerzel(str) == null)
+				if (Note.fromKuerzel(str) == null) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Das Notenkürzel ist ungültig");
+				}
 				dto.NotenKrzQuartal = str;
 			}
 			case "istGemahnt" -> dto.Warnung = JSONMapper.convertToBoolean(value, false);
@@ -224,8 +238,9 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 			case "textFachbezogeneLernentwicklung" -> dto.Lernentw = JSONMapper.convertToString(value, true, true, null);
 			case "umfangLernstandsbericht" -> {
 				final String strUmfang = JSONMapper.convertToString(value, true, true, 1);
-				if ((strUmfang != null) && (!strUmfang.isBlank()) && (!strUmfang.equals("V")) && (!strUmfang.equals("R")))
+				if ((strUmfang != null) && (!strUmfang.isBlank()) && (!strUmfang.equals("V")) && (!strUmfang.equals("R"))) {
 					throw new ApiOperationException(Status.CONFLICT);
+				}
 				dto.Umfang = ((strUmfang == null) || strUmfang.isBlank()) ? null : strUmfang;
 			}
 			case "fehlstundenGesamt" -> dto.FehlStd = JSONMapper.convertToIntegerInRange(value, true, 0, 100000);
@@ -248,8 +263,9 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 		if (hatBenutzerNurFunktionsbezogeneKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN,
 				Set.of(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))) {
 			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryByKeyList(DTOSchuelerLernabschnittsdaten.class, idsLernabschnitte);
-			for (final DTOSchuelerLernabschnittsdaten lernabschnitt : lernabschnitte)
+			for (final DTOSchuelerLernabschnittsdaten lernabschnitt : lernabschnitte) {
 				checkBenutzerFunktionsbezogeneKompetenzKlasse(lernabschnitt.Klassen_ID);
+			}
 		}
 	}
 
@@ -280,8 +296,9 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 				final Set<String> erlaubt = Set.of("id", "note", "noteQuartal", "fehlstundenGesamt", "fehlstundenUnentschuldigt");
 				final Set<String> vorhanden = new HashSet<>(patchAttributes.keySet());
 				vorhanden.removeAll(erlaubt);
-				if (vorhanden.isEmpty())
+				if (vorhanden.isEmpty()) {
 					return;
+				}
 			}
 		}
 		// Die funktionsbezogene Kompetenz des Fachlehrers ist nicht ausreichend, prüfe auf Klassenlehrer- oder Abteilungsleiter-Kompetenzen
@@ -299,11 +316,13 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 	@Override
 	public SchuelerLeistungsdaten getById(final Long id) throws ApiOperationException {
 		// Prüfe, ob die Leistungsdaten mit der ID existieren
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final DTOSchuelerLeistungsdaten dto = conn.queryByKey(DTOSchuelerLeistungsdaten.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Leistungsdaten mit der ID %d wurden in der Datenbank nicht gefunden".formatted(id));
+		}
 		return map(dto);
 	}
 
@@ -320,11 +339,13 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 		// Bestimme die Leistungsdaten des Lernabschnitts
 		final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_BY_ABSCHNITT_ID,
 				DTOSchuelerLeistungsdaten.class, abschnittID);
-		if (leistungsdaten == null)
+		if (leistungsdaten == null) {
 			return false;
+		}
 		// Konvertiere sie und füge sie zur Liste hinzu
-		for (final DTOSchuelerLeistungsdaten l : leistungsdaten)
+		for (final DTOSchuelerLeistungsdaten l : leistungsdaten) {
 			list.add(map(l));
+		}
 		return true;
 	}
 
@@ -341,11 +362,13 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 		// Bestimme die Leistungsdaten des Lernabschnitts
 		final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_ABSCHNITT_ID,
 				DTOSchuelerLeistungsdaten.class, idsAbschnitte);
-		if (leistungsdaten == null)
+		if (leistungsdaten == null) {
 			return result;
+		}
 		// Konvertiere sie und füge sie zur Liste hinzu
-		for (final DTOSchuelerLeistungsdaten l : leistungsdaten)
+		for (final DTOSchuelerLeistungsdaten l : leistungsdaten) {
 			result.add(map(l));
+		}
 		return result;
 	}
 

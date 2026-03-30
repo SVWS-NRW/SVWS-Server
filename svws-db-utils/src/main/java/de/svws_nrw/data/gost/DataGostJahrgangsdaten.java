@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
-import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.kataloge.jahrgaenge.JahrgaengeUtils;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -90,20 +90,23 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 
 		// Bestimme den aktuellen Schuljahresabschnitt der Schule
 		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
-		if (aktuellerAbschnitt == null)
+		if (aktuellerAbschnitt == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 
 		// Bestimme die Jahrgaenge der Schule
 		final List<DTOJahrgang> dtosJahrgaenge = conn.queryAll(DTOJahrgang.class);
-		if ((dtosJahrgaenge == null) || (dtosJahrgaenge.isEmpty()))
+		if ((dtosJahrgaenge == null) || (dtosJahrgaenge.isEmpty())) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 
 		// Lese den Abiturjahrgang aus der Datenbank ein
 		final DTOGostJahrgangsdaten jahrgangsdaten = (abijahrgang == -1)
 				? getVorlage(conn)
 				: conn.queryByKey(DTOGostJahrgangsdaten.class, abijahrgang);
-		if (jahrgangsdaten == null)
+		if (jahrgangsdaten == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 
 		final GostJahrgangsdaten daten = new GostJahrgangsdaten();
 		daten.abiturjahr = jahrgangsdaten.Abi_Jahrgang;
@@ -113,8 +116,9 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 			for (final DTOJahrgang jahrgang : dtosJahrgaenge) {
 				Integer jahrgangRestjahre =
 						JahrgaengeUtils.getRestlicheJahre(schulform, Schulgliederung.data().getWertByKuerzel(jahrgang.GliederungKuerzel), jahrgang.ASDJahrgang);
-				if ((jahrgangRestjahre != null) && (schulform != Schulform.GY) && JahrgaengeUtils.istSekI(jahrgang.ASDJahrgang))
+				if ((jahrgangRestjahre != null) && (schulform != Schulform.GY) && JahrgaengeUtils.istSekI(jahrgang.ASDJahrgang)) {
 					jahrgangRestjahre += 3;
+				}
 				if ((jahrgangRestjahre != null) && (restjahre == jahrgangRestjahre)) {
 					daten.jahrgang = jahrgang.ASDJahrgang;
 					break;
@@ -160,20 +164,23 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 	@Override
 	public Response patch(final Integer abiturjahr, final InputStream is) throws ApiOperationException {
 		final Map<String, Object> map = JSONMapper.toMap(is);
-		if (map.size() <= 0)
+		if (map.size() <= 0) {
 			return Response.status(Status.OK).build();
+		}
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr);
-		if (jahrgangsdaten == null)
+		if (jahrgangsdaten == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		for (final Entry<String, Object> entry : map.entrySet()) {
 			final String key = entry.getKey();
 			final Object value = entry.getValue();
 			switch (key) {
 				case "abiturjahr" -> {
 					final Integer patch_abiturjahr = JSONMapper.convertToInteger(value, true);
-					if ((patch_abiturjahr == null) || (patch_abiturjahr.intValue() != abiturjahr.intValue()))
+					if ((patch_abiturjahr == null) || (patch_abiturjahr.intValue() != abiturjahr.intValue())) {
 						throw new ApiOperationException(Status.BAD_REQUEST);
+					}
 				}
 				case "jahrgang" -> throw new ApiOperationException(Status.BAD_REQUEST);
 				case "bezeichnung" -> throw new ApiOperationException(Status.BAD_REQUEST);
@@ -186,16 +193,18 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 				case "beginnZusatzkursGE" -> {
 					final String tmp = JSONMapper.convertToString(value, false, false, null);
 					final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(tmp);
-					if ((halbjahr == null) || (halbjahr.istEinfuehrungsphase()))
+					if ((halbjahr == null) || (halbjahr.istEinfuehrungsphase())) {
 						throw new ApiOperationException(Status.BAD_REQUEST);
+					}
 					jahrgangsdaten.ZusatzkursGEErstesHalbjahr = halbjahr.kuerzel;
 				}
 				case "hatZusatzkursSW" -> jahrgangsdaten.ZusatzkursSWVorhanden = JSONMapper.convertToBoolean(value, false);
 				case "beginnZusatzkursSW" -> {
 					final String tmp = JSONMapper.convertToString(value, false, false, null);
 					final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(tmp);
-					if ((halbjahr == null) || (halbjahr.istEinfuehrungsphase()))
+					if ((halbjahr == null) || (halbjahr.istEinfuehrungsphase())) {
 						throw new ApiOperationException(Status.BAD_REQUEST);
+					}
 					jahrgangsdaten.ZusatzkursSWErstesHalbjahr = halbjahr.kuerzel;
 				}
 				// TODO case "beratungslehrer" -> TODO set Beratungslehrer - zusätzliche API

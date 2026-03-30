@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
 import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenLehrerfunktion;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
@@ -33,32 +32,36 @@ public final class DataLehrerPersonalabschnittsdatenLehrerfunktionen extends Dat
 	@Override
 	public void checkBeforeCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		// Prüfe vor dem Erstellen, ob bereits ein entsprechende Funktion für den Abschnitt in der Datenbank eingetragen ist.
-		long idAbschnittsdaten = JSONMapper.convertToLong(initAttributes.get("idAbschnittsdaten"), false);
-		long idFunktion = JSONMapper.convertToLong(initAttributes.get("idFunktion"), false);
-		List<DTOLehrerFunktion> funktionen = conn.queryList(
+		final long idAbschnittsdaten = JSONMapper.convertToLong(initAttributes.get("idAbschnittsdaten"), false);
+		final long idFunktion = JSONMapper.convertToLong(initAttributes.get("idFunktion"), false);
+		final List<DTOLehrerFunktion> funktionen = conn.queryList(
 					"SELECT p FROM DTOLehrerFunktion p WHERE p.Abschnitt_ID = ?1 AND p.Funktion_ID = ?2", DTOLehrerFunktion.class,
 					idAbschnittsdaten, idFunktion);
 		// Wenn ja, dann ist das Anlegen eines neuen Eintrages unzulässig
-		if (!funktionen.isEmpty())
+		if (!funktionen.isEmpty()) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Lehrerfunktion mit der ID %s im Abschnitt mit der ID %s existiert bereits.".formatted(idFunktion, idAbschnittsdaten));
+		}
 	}
 
 	@Override
 	public void checkBeforePersist(final DTOLehrerFunktion dto, final Map<String, Object> patchedAttributes) throws ApiOperationException {
 		// Wenn idAbschnittsdaten oder idGrund nicht bereits in das DTO eingetragen sind, dann liegt hier ein Fehler vor. Ein Patch muss hier bereits angewendet sein.
-		if (dto.Abschnitt_ID < 0)
-				throw new ApiOperationException(Status.BAD_REQUEST,
-								"Eine negative ID %d für den Abschnitt des Lehrers ist nicht zulässig.".formatted(dto.Abschnitt_ID));
-		if (Long.valueOf(dto.Funktion_ID) == null)
-				throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist für die Funktion nicht zulässig.");
+		if (dto.Abschnitt_ID < 0) {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+							"Eine negative ID %d für den Abschnitt des Lehrers ist nicht zulässig.".formatted(dto.Abschnitt_ID));
+		}
+		if (Long.valueOf(dto.Funktion_ID) == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist für die Funktion nicht zulässig.");
+		}
 
 		// Überprüfe, ob ein anderes DTO-Objekt mit dem Abschnitt und der Funktion in der DB bereits existiert.
-		List<DTOLehrerFunktion> funktionen = conn.queryList(
+		final List<DTOLehrerFunktion> funktionen = conn.queryList(
 				"SELECT p FROM DTOLehrerFunktion p WHERE p.Abschnitt_ID = ?1 AND p.Funktion_ID = ?2 AND p.ID != ?3", DTOLehrerFunktion.class,
 				dto.Abschnitt_ID, dto.Funktion_ID, dto.ID);
 		// Wenn ja, dann ist das Anlegen eines neuen Eintrages unzulässig.
-		if (!funktionen.isEmpty())
+		if (!funktionen.isEmpty()) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Lehrerfunktion mit der ID %s im Abschnitt mit der ID %s existiert bereits.".formatted(dto.Funktion_ID, dto.Abschnitt_ID));
+		}
 	}
 
 	@Override
@@ -90,11 +93,13 @@ public final class DataLehrerPersonalabschnittsdatenLehrerfunktionen extends Dat
 
 	@Override
 	public LehrerPersonalabschnittsdatenLehrerfunktion getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Mehrleistungsstunden mit der ID %d gefunden.".formatted(id));
+		}
 		final DTOLehrerFunktion dto = conn.queryByKey(DTOLehrerFunktion.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		return map(dto);
 	}
 
@@ -114,26 +119,31 @@ public final class DataLehrerPersonalabschnittsdatenLehrerfunktionen extends Dat
 		// Bestimme die Anrechungen für die Lehrerabschnittsdaten
 		final List<DTOLehrerFunktion> dtos = conn.queryList(DTOLehrerFunktion.QUERY_BY_ABSCHNITT_ID,
 				DTOLehrerFunktion.class, idLehrerabschnittsdaten);
-		if (dtos == null)
+		if (dtos == null) {
 			return result;
+		}
 		// Konvertiere sie und füge sie zur Liste hinzu
-		for (final DTOLehrerFunktion dto : dtos)
+		for (final DTOLehrerFunktion dto : dtos) {
 			result.add(mapInternal(dto, conn));
+		}
 		return result;
 	}
 
 	private void updateAbschnittID(final DTOLehrerFunktion dto, final Long abschnittID) throws ApiOperationException {
-		if ((abschnittID != null) && ((abschnittID < 0 || (conn.queryByKey(DTOLehrerAbschnittsdaten.class, abschnittID)) == null)))
-				throw new ApiOperationException(Status.CONFLICT, "AbschnittID %d ungültig.".formatted(abschnittID));
-		if (abschnittID == null)
+		if ((abschnittID != null) && ((abschnittID < 0 || (conn.queryByKey(DTOLehrerAbschnittsdaten.class, abschnittID)) == null))) {
+			throw new ApiOperationException(Status.CONFLICT, "AbschnittID %d ungültig.".formatted(abschnittID));
+		}
+		if (abschnittID == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "AbschnittID darf nicht null sein.");
+		}
 		dto.Abschnitt_ID = abschnittID;
 	}
 
 	private long updateIdFunktion(final Long idFunktion) throws ApiOperationException {
 		final DTOLeitungsfunktion f = conn.queryByKey(DTOLeitungsfunktion.class, idFunktion);
-		if (f == null)
+		if (f == null) {
 			throw new ApiOperationException(Status.NOT_FOUND,  "Keine Funktion mit der ID  %d gefunden.".formatted(idFunktion));
+		}
 		return f.ID;
 	}
 

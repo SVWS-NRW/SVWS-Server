@@ -26,8 +26,9 @@ public final class DataKatalogLehrerLeitungsfunktionen extends DataManager<Long>
 	@Override
 	public Response getAll() {
 		final ArrayList<LehrerLeitungsfunktionKatalogEintrag> daten = new ArrayList<>();
-		for (final LehrerLeitungsfunktion slf : LehrerLeitungsfunktion.values())
+		for (final LehrerLeitungsfunktion slf : LehrerLeitungsfunktion.values()) {
 			daten.addAll(slf.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

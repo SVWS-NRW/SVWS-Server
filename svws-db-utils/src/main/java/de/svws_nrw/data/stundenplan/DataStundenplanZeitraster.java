@@ -86,8 +86,9 @@ public final class DataStundenplanZeitraster extends DataManagerRevised<Long, DT
 		switch (name) {
 			case "id" -> {
 				final Long id = JSONMapper.convertToLong(value, false, name);
-				if ((id == null) || (id != dto.ID))
+				if ((id == null) || (id != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Patches stimmt nicht mit der ID des Objekts überein.");
+				}
 			}
 			case "wochentag" -> dto.Tag = JSONMapper.convertToIntegerInRange(value, false, 1, 8);
 			case "unterrichtstunde" -> dto.Stunde = JSONMapper.convertToIntegerInRange(value, false, 0, 30);
@@ -107,11 +108,13 @@ public final class DataStundenplanZeitraster extends DataManagerRevised<Long, DT
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOStundenplanZeitraster getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für das StundenplanZeitraster darf nicht null sein.");
+		}
 		final DTOStundenplanZeitraster dto = conn.queryByKey(DTOStundenplanZeitraster.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein StundenplanZeitraster zur ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 
@@ -159,10 +162,11 @@ public final class DataStundenplanZeitraster extends DataManagerRevised<Long, DT
 			conn.transactionFlush();
 		} else if (eintraege.size() == 1) {
 			eintrag = eintraege.get(0);
-		} else
+		} else {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 					"Mehrfach-Einträge für die Kombination Wochentag %d und Stunde %d im Stundenplan mit der ID %d."
 							.formatted(wochentag, unterrichtsstunde, idStundenplan));
+		}
 		return (new DataStundenplanZeitraster(conn, idStundenplan)).map(eintrag);
 	}
 
@@ -194,9 +198,10 @@ public final class DataStundenplanZeitraster extends DataManagerRevised<Long, DT
 	 */
 	public static void addZeitraster(final @NotNull DBEntityManager conn, final DTOStundenplan dtoStundenplan, final List<StundenplanZeitraster> eintraege) {
 		long id = conn.transactionGetNextID(DTOStundenplanZeitraster.class);
-		for (final StundenplanZeitraster eintrag : eintraege)
+		for (final StundenplanZeitraster eintrag : eintraege) {
 			conn.transactionPersist(new DTOStundenplanZeitraster(id++, dtoStundenplan.ID, eintrag.wochentag, eintrag.unterrichtstunde, eintrag.stundenbeginn,
 					eintrag.stundenende));
+		}
 		conn.transactionFlush();
 	}
 
@@ -204,9 +209,11 @@ public final class DataStundenplanZeitraster extends DataManagerRevised<Long, DT
 	@Override
 	public Response deleteMultipleAsResponse(final List<Long> ids) throws ApiOperationException {
 		final List<DTOStundenplanZeitraster> dtos = conn.queryByKeyList(DTOStundenplanZeitraster.class, ids);
-		for (final DTOStundenplanZeitraster dto : dtos)
-			if (dto.Stundenplan_ID != this.stundenplanID)
+		for (final DTOStundenplanZeitraster dto : dtos) {
+			if (dto.Stundenplan_ID != this.stundenplanID) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Der Zeitraster-Eintrag gehört nicht zu dem angegebenen Stundenplan.");
+			}
+		}
 		return super.deleteMultipleAsResponse(ids);
 	}
 

@@ -3,12 +3,12 @@ package de.svws_nrw.data.klassen;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.asd.data.klassen.KlassenartKatalogEintrag;
 import de.svws_nrw.asd.types.klassen.Klassenart;
 import de.svws_nrw.data.DataManager;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -26,8 +26,9 @@ public final class DataKatalogKlassenarten extends DataManager<Long> {
 	@Override
 	public Response getAll() {
 		final ArrayList<KlassenartKatalogEintrag> daten = new ArrayList<>();
-		for (final Klassenart ka : Klassenart.values())
+		for (final Klassenart ka : Klassenart.values()) {
 			daten.addAll(ka.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

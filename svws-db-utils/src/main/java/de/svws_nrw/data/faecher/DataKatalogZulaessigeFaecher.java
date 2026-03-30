@@ -26,8 +26,9 @@ public final class DataKatalogZulaessigeFaecher extends DataManager<Long> {
 	@Override
 	public Response getAll() {
 		final ArrayList<FachKatalogEintrag> daten = new ArrayList<>();
-		for (final Fach f : Fach.values())
+		for (final Fach f : Fach.values()) {
 			daten.addAll(f.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

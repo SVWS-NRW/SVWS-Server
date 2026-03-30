@@ -56,8 +56,9 @@ public class SQLGenerator {
 		for (final SchemaTabelle t : Schema.tabellen()) {
 			sb.append(t.getSQL(dbms, rev));
 			final var sql_indizes = t.getSQLIndizes(rev);
-			if ((sql_indizes != null) && (!"".equals(sql_indizes)))
+			if ((sql_indizes != null) && (!"".equals(sql_indizes))) {
 				sb.append(newline + newline + sql_indizes);
+			}
 			sb.append(newline + newline + newline);
 		}
 		sb.append(newline
@@ -105,8 +106,9 @@ public class SQLGenerator {
 		final long rev = (revision == -1) ? SchemaRevisionen.maxRevision.revision : revision;
 		final StringBuilder result = new StringBuilder();
 		for (final SchemaTabelle tab : Schema.tabellen()) {
-			if (!tab.isDefined(rev))
+			if (!tab.isDefined(rev)) {
 				continue;
+			}
 			if (tab.hasCoreType()) {
 				result.append(tab.getCoreType().getSQLInsert(rev, true)).append(";");
 				result.append(System.lineSeparator());

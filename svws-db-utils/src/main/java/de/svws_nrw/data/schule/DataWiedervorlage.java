@@ -77,38 +77,45 @@ public final class DataWiedervorlage extends DataManagerRevised<Long, DTOWiederv
 		final Long id = JSONMapper.convertToLong(valueId, true);
 		switch (dto.personTyp) {
 			case null -> {
-				if (id != null)
+				if (id != null) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Ist der Typ der Person null, so darf auch keine ID angegeben werden.");
+				}
 				dto.Lehrer_ID = null;
 				dto.Schueler_ID = null;
 				dto.Erzieher_ID = null;
 			}
 			case LEHRER -> {
-				if (id == null)
+				if (id == null) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Für den Person-Typ Lehrer wurde keine ID angegeben.");
+				}
 				final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
-				if (lehrer == null)
+				if (lehrer == null) {
 					throw new ApiOperationException(Status.NOT_FOUND, "Für die ID %d konnte kein Lehrer gefunden werden.".formatted(id));
+				}
 				dto.Lehrer_ID = lehrer.ID;
 				dto.Schueler_ID = null;
 				dto.Erzieher_ID = null;
 			}
 			case SCHUELER -> {
-				if (id == null)
+				if (id == null) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Für den Person-Typ Schueler wurde keine ID angegeben.");
+				}
 				final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
-				if (schueler == null)
+				if (schueler == null) {
 					throw new ApiOperationException(Status.NOT_FOUND, "Für die ID %d konnte kein Schüler gefunden werden.".formatted(id));
+				}
 				dto.Lehrer_ID = null;
 				dto.Schueler_ID = schueler.ID;
 				dto.Erzieher_ID = null;
 			}
 			case ERZIEHER -> {
-				if (id == null)
+				if (id == null) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Für den Person-Typ Erzieher wurde keine ID angegeben.");
+				}
 				final DTOSchuelerErzieherAdresse erzieher = conn.queryByKey(DTOSchuelerErzieherAdresse.class, id);
-				if (erzieher == null)
+				if (erzieher == null) {
 					throw new ApiOperationException(Status.NOT_FOUND, "Für die ID %d konnte kein Erzieher gefunden werden.".formatted(id));
+				}
 				dto.Lehrer_ID = null;
 				dto.Schueler_ID = null;
 				dto.Erzieher_ID = erzieher.ID;
@@ -123,13 +130,15 @@ public final class DataWiedervorlage extends DataManagerRevised<Long, DTOWiederv
 		switch (name) {
 			case "id" -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "die ID im Patch muss mit der ID im DTO übereinstimmen.");
+				}
 			}
 			case "idBenutzergruppe" -> {
 				final Long idBenutzergruppe = JSONMapper.convertToLong(value, true);
-				if ((idBenutzergruppe != null) && conn.queryByKey(DTOBenutzergruppe.class, idBenutzergruppe) == null)
+				if ((idBenutzergruppe != null) && conn.queryByKey(DTOBenutzergruppe.class, idBenutzergruppe) == null) {
 					throw new ApiOperationException(Status.CONFLICT, "Die Benutzergruppe mit der ID %d ist ungültig. ".formatted(idBenutzergruppe));
+				}
 				dto.Benutzergruppe_ID = idBenutzergruppe;
 			}
 			case "typPerson" -> mapPersonTypAndId(dto, value, map.get("idPerson"));
@@ -152,8 +161,9 @@ public final class DataWiedervorlage extends DataManagerRevised<Long, DTOWiederv
 				.stream().map(g -> g.Gruppe_ID).collect(Collectors.toSet());
 		final List<DTOWiedervorlage> dtos = new ArrayList<>();
 		dtos.addAll(conn.queryList(DTOWiedervorlage.QUERY_BY_BENUTZER_ID, DTOWiedervorlage.class, idBenutzer));
-		if (!idsGruppen.isEmpty())
+		if (!idsGruppen.isEmpty()) {
 			dtos.addAll(conn.queryList(DTOWiedervorlage.QUERY_LIST_BY_BENUTZERGRUPPE_ID, DTOWiedervorlage.class, idsGruppen));
+		}
 		final List<WiedervorlageEintrag> result = new ArrayList<>();
 		final Set<Long> ids = new HashSet<>();
 		for (final DTOWiedervorlage dto : dtos) {
@@ -168,13 +178,15 @@ public final class DataWiedervorlage extends DataManagerRevised<Long, DTOWiederv
 
 	private void checkBenutzer(final DTOWiedervorlage dto) throws ApiOperationException {
 		final long idBenutzer = conn.getUser().getId();
-		if (dto.Benutzer_ID == idBenutzer)
+		if (dto.Benutzer_ID == idBenutzer) {
 			return;
+		}
 		if (dto.Benutzergruppe_ID != null) {
 			final Set<Long> idsGruppen = conn.queryList(DTOBenutzergruppenMitglied.QUERY_BY_BENUTZER_ID, DTOBenutzergruppenMitglied.class, idBenutzer)
 					.stream().map(g -> g.Gruppe_ID).collect(Collectors.toSet());
-			if (idsGruppen.contains(dto.Benutzergruppe_ID))
+			if (idsGruppen.contains(dto.Benutzergruppe_ID)) {
 				return;
+			}
 		}
 		throw new ApiOperationException(Status.FORBIDDEN,
 				"Der angemeldete Benutzer darf den Wiedervorlage-Eintrag nicht bearbeiten, da er ihm nicht gehört bzw. ihm nicht zugeordnet ist.");
@@ -183,8 +195,9 @@ public final class DataWiedervorlage extends DataManagerRevised<Long, DTOWiederv
 
 	private DTOWiedervorlage getDTO(final Long id) throws ApiOperationException {
 		final DTOWiedervorlage dto = conn.queryByKey(DTOWiedervorlage.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Eintrag für die Wiedervorlage mit der ID %d gefunden.".formatted(id));
+		}
 		checkBenutzer(dto);
 		return dto;
 	}
@@ -192,16 +205,18 @@ public final class DataWiedervorlage extends DataManagerRevised<Long, DTOWiederv
 
 	@Override
 	public WiedervorlageEintrag getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Für den Person-Typ Erzieher wurde keine ID angegeben.");
+		}
 		return map(getDTO(id));
 	}
 
 
 	@Override
 	public void checkBeforeDeletion(final List<DTOWiedervorlage> dtos) throws ApiOperationException {
-		for (final DTOWiedervorlage dto : dtos)
+		for (final DTOWiedervorlage dto : dtos) {
 			checkBenutzer(dto);
+		}
 	}
 
 
@@ -215,8 +230,9 @@ public final class DataWiedervorlage extends DataManagerRevised<Long, DTOWiederv
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response postErledigt(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den Wiedervorlage-Eintrag darf nicht null sein.");
+		}
 		final DTOWiedervorlage dto = getDTO(id);
 		dto.tsErledigt = JSONMapper.tsFormatter.format(ZonedDateTime.now(ZoneId.of("Europe/Berlin")));
 		dto.Benutzer_ID_Erledigt = conn.getUser().getId();

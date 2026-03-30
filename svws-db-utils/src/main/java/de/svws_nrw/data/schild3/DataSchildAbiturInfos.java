@@ -28,8 +28,9 @@ public final class DataSchildAbiturInfos extends DataManager<Long> {
 	public Response getAll() throws ApiOperationException {
 		final List<Schild3KatalogEintragAbiturInfos> katalog =
 				CsvReader.fromResource("daten/csv/schild3/AbiturInfos.csv", Schild3KatalogEintragAbiturInfos.class);
-		if (katalog == null)
+		if (katalog == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
 	}
 

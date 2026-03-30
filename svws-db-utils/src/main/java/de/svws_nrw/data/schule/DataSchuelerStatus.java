@@ -27,8 +27,9 @@ public final class DataSchuelerStatus extends DataManager<Long> {
 	@Override
 	public Response getAll() throws ApiOperationException {
 		final ArrayList<SchuelerStatusKatalogEintrag> daten = new ArrayList<>();
-		for (final SchuelerStatus status : SchuelerStatus.values())
+		for (final SchuelerStatus status : SchuelerStatus.values()) {
 			daten.addAll(status.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

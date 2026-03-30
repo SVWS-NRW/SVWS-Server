@@ -15,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
@@ -30,7 +31,6 @@ import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
-import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.db.utils.lupo.mdb.LupoMDB;
 import jakarta.validation.constraints.NotNull;
@@ -103,8 +103,9 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 			// Prüfe die Schulform
 			final Schulform schulform = lupoMDB.retrieveSchulform();
 			final int schuljahr = 2024; // Nehme das Schuljahr 2024 für den Zugriff auf die Statistikdaten
-			if ((schulform == null) || (schulform.daten(schuljahr) == null) || (!schulform.daten(schuljahr).hatGymOb))
+			if ((schulform == null) || (schulform.daten(schuljahr) == null) || (!schulform.daten(schuljahr).hatGymOb)) {
 				throw new DeveloperNotificationException("Datenbank-Schema enthält keine Daten für die Gymnasiale Oberstufe (Unzulässige Schulform)");
+			}
 
 			final String outPath = "../svws-core/src/test/resources/de/svws_nrw/abschluesse/gost/test";
 			// Files.createDirectories(Paths.get(outPath));
@@ -115,8 +116,9 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 			// Lese die Fächerdaten aus der Lupo-Datei und generiere die Testdateien - Fasse dabei alle Daten der Datei zu einem Jahrgang zusammen
 			final @NotNull GostJahrgangsdaten gostJahrgangsdaten = new GostJahrgangsdaten();
 			final List<GostFach> gostFaecher = lupoMDB.retrieveGostFaecher();
-			if ((gostFaecher == null) || (gostFaecher.isEmpty()))
+			if ((gostFaecher == null) || (gostFaecher.isEmpty())) {
 				throw new DeveloperNotificationException("Die Lupo-Datei enthält keine Fächerdefinitionen.");
+			}
 			final @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherkombinationen = new ArrayList<>();
 			final String strJahrgangID = String.format("%02d", jahrgangID);
 

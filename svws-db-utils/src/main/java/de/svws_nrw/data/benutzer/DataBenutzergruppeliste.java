@@ -2,15 +2,12 @@ package de.svws_nrw.data.benutzer;
 
 import java.io.InputStream;
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import java.util.ArrayList;
 import java.util.function.Function;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.data.benutzer.BenutzerListeEintrag;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeListeEintrag;
 import de.svws_nrw.data.DataManager;
@@ -18,6 +15,9 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppe;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -42,8 +42,9 @@ public final class DataBenutzergruppeliste extends DataManager<Long> {
 	@Override
 	public Response getList() throws ApiOperationException {
 		final List<DTOBenutzergruppe> benutzergruppe = conn.queryAll(DTOBenutzergruppe.class);
-		if (benutzergruppe == null)
+		if (benutzergruppe == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		// Erstelle die Benutzerliste und sortiere sie
 		final List<BenutzergruppeListeEintrag> daten = benutzergruppe.stream().map(dtoMapper).sorted(dataComparator).toList();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
@@ -94,12 +95,13 @@ public final class DataBenutzergruppeliste extends DataManager<Long> {
 	 */
 	private final Comparator<BenutzergruppeListeEintrag> dataComparator = (a, b) -> {
 		final Collator collator = Collator.getInstance(Locale.GERMAN);
-		if ((a.bezeichnung == null) && (b.bezeichnung != null))
+		if ((a.bezeichnung == null) && (b.bezeichnung != null)) {
 			return -1;
-		else if ((a.bezeichnung != null) && (b.bezeichnung == null))
+		} else if ((a.bezeichnung != null) && (b.bezeichnung == null)) {
 			return 1;
-		else if ((a.bezeichnung == null) && (b.bezeichnung == null))
+		} else if ((a.bezeichnung == null) && (b.bezeichnung == null)) {
 			return 0;
+		}
 		return collator.compare(a.bezeichnung, b.bezeichnung);
 	};
 

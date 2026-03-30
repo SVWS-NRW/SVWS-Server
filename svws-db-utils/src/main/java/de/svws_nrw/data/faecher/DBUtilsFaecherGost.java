@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
-import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
+import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.db.DBEntityManager;
@@ -53,14 +53,17 @@ public final class DBUtilsFaecherGost {
 	private static int getDefaultWochenstundenQPhase(final int schuljahr, final @NotNull Fach fach) {
 		final int defaultWochenstundenQ_GK = (Jahrgaenge.EF == fach.getJahrgangAb(schuljahr)) ? 4 : 3;
 		// Vertiefungskurs
-		if (fach.getFachgruppe(schuljahr) == Fachgruppe.FG_VX)
+		if (fach.getFachgruppe(schuljahr) == Fachgruppe.FG_VX) {
 			return 2;
+		}
 		// Alle Fächer aus Projektkurse
-		if (fach.getFachgruppe(schuljahr) != Fachgruppe.FG_PX)
+		if (fach.getFachgruppe(schuljahr) != Fachgruppe.FG_PX) {
 			return defaultWochenstundenQ_GK;
+		}
 		// Projekt kurse
-		if (AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), schuljahr + 1))  // Experimenteller Code
+		if (AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), schuljahr + 1)) { // Experimenteller Code
 			return 3;
+		}
 		return 2;
 	}
 
@@ -75,13 +78,15 @@ public final class DBUtilsFaecherGost {
 	 */
 	private static int getWochenstundenQPhaseByDTOFach(final int schuljahr, final @NotNull DTOFach fach) {
 		final Fach tmpFach = Fach.getBySchluesselOrDefault(fach.StatistikKuerzel);
-		if (fach.WochenstundenQualifikationsphase == null)
+		if (fach.WochenstundenQualifikationsphase == null) {
 			return getDefaultWochenstundenQPhase(schuljahr, tmpFach);
+		}
 
 		// Experimenteller Code
 		if (AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), schuljahr + 1)
-				&& (tmpFach.getFachgruppe(schuljahr) == Fachgruppe.FG_PX))
+				&& (tmpFach.getFachgruppe(schuljahr) == Fachgruppe.FG_PX)) {
 			return 3;
+		}
 
 		return fach.WochenstundenQualifikationsphase;
 	}
@@ -97,14 +102,16 @@ public final class DBUtilsFaecherGost {
 	 * @return die Wochenstundenanzahl
 	 */
 	private static int getWochenstundenQPhaseByDTOFach(final int schuljahr, final DTOGostJahrgangFaecher jf, final @NotNull DTOFach fach) {
-		if ((jf == null) || (jf.WochenstundenQPhase == null))
+		if ((jf == null) || (jf.WochenstundenQPhase == null)) {
 			return getWochenstundenQPhaseByDTOFach(schuljahr, fach);
+		}
 
 		// Experimenteller Code
 		final Fach tmpFach = Fach.getBySchluesselOrDefault(fach.StatistikKuerzel);
 		if (AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), schuljahr + 1)
-				&& (tmpFach.getFachgruppe(schuljahr) == Fachgruppe.FG_PX))
+				&& (tmpFach.getFachgruppe(schuljahr) == Fachgruppe.FG_PX)) {
 			return 3;
+		}
 
 		return jf.WochenstundenQPhase;
 	}
@@ -182,11 +189,13 @@ public final class DBUtilsFaecherGost {
 	 */
 	public static GostFach mapFromDTOGostJahrgangFaecher(final int schuljahr, final long idFach, final DTOGostJahrgangFaecher jf,
 			final Map<Long, DTOFach> faecher) {
-		if ((jf != null) && (idFach != jf.Fach_ID))
+		if ((jf != null) && (idFach != jf.Fach_ID)) {
 			return null;
+		}
 		final DTOFach fach = faecher.get(idFach);
-		if (fach == null)
+		if (fach == null) {
 			return null;
+		}
 		final Fach f = Fach.getBySchluesselOrDefault(fach.StatistikKuerzel);
 		final GostFach eintrag = new GostFach();
 		eintrag.id = fach.ID;
@@ -195,8 +204,9 @@ public final class DBUtilsFaecherGost {
 		eintrag.bezeichnung = fach.Bezeichnung;
 		eintrag.sortierung = fach.SortierungAllg;
 		eintrag.istPruefungsordnungsRelevant = fach.IstPruefungsordnungsRelevant;
-		if (AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), schuljahr + 1)) // Experimenteller Code
+		if (AbiturdatenManager.nutzeExperimentellenCode(SVWSKonfiguration.get().getServerMode(), schuljahr + 1)) { // Experimenteller Code
 			eintrag.istPruefungsordnungsRelevant = eintrag.istPruefungsordnungsRelevant && ((f != Fach.IN) && (f != Fach.VO));
+		}
 		eintrag.istFremdsprache = fach.IstFremdsprache;
 		eintrag.istFremdSpracheNeuEinsetzend = fach.IstMoeglichAlsNeueFremdspracheInSekII;
 		eintrag.biliSprache = ((fach.Unterrichtssprache != null) && (!"".equals(fach.Unterrichtssprache)) && (!"D".equals(fach.Unterrichtssprache)))
@@ -278,8 +288,9 @@ public final class DBUtilsFaecherGost {
 			throws ApiOperationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
-		if (faecher == null)
+		if (faecher == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		if ((abiJahrgang == null) || (abiJahrgang == -1)) {
 			final @NotNull List<GostFach> tmpFaecher = faecher.values().stream().filter(fach -> fach.IstOberstufenFach)
 					.map(fach -> mapFromDTOFach(schuljahr, fach, faecher)).filter(Objects::nonNull).toList();
@@ -291,10 +302,11 @@ public final class DBUtilsFaecherGost {
 						.stream().collect(Collectors.toMap(f -> f.Fach_ID, f -> f));
 		List<GostFach> tmpFaecher = faecher.values().stream().filter(fach -> fach.IstOberstufenFach)
 				.map(fach -> mapFromDTOGostJahrgangFaecher(schuljahr, fach.ID, jahrgangfaecher.get(fach.ID), faecher)).filter(Objects::nonNull).toList();
-		if (nurWaehlbareFaecher)
+		if (nurWaehlbareFaecher) {
 			tmpFaecher = tmpFaecher.stream()
 					.filter(f -> (f.istMoeglichEF1 || f.istMoeglichEF2 || f.istMoeglichQ11 || f.istMoeglichQ12 || f.istMoeglichQ21 || f.istMoeglichQ22))
 					.toList();
+		}
 		return new GostFaecherManager(schuljahr, tmpFaecher);
 	}
 

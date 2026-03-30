@@ -81,10 +81,12 @@ public final class DataGostKlausuren {
 
 			final List<SchuelerListeEintrag> schuelerJahrgang = new DataGostJahrgangSchuelerliste(conn, jg.abiturjahrgang).getAllSchueler();
 			schuelerNichtSenden.addAll(schuelerJahrgang);
-			if (jg.schueler != null)
+			if (jg.schueler != null) {
 				jg.schueler = schuelerJahrgang;
-			if (jg.faecher != null)
+			}
+			if (jg.faecher != null) {
 				jg.faecher = DataGostFaecher.getFaecherManager(conn, jg.abiturjahrgang).faecher();
+			}
 
 			final GostHalbjahr gj = GostHalbjahr.fromID(jg.gostHalbjahr);
 			final Schuljahresabschnitt sja =
@@ -110,8 +112,9 @@ public final class DataGostKlausuren {
 	}
 
 	private static List<SchuelerListeEintrag> ladeSchuelerByIds(final int schuljahr, final DBEntityManager conn, final List<Long> schuelerIds) {
-		if (schuelerIds.isEmpty())
+		if (schuelerIds.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final List<DTOSchueler> schuelerListe = conn.queryList(DTOSchueler.QUERY_LIST_BY_ID, DTOSchueler.class, schuelerIds);
 		return schuelerListe.stream().map(s -> DataSchuelerliste.erstelleSchuelerlistenEintrag(s, schuljahr, null, null, null)).toList();
 	}
@@ -131,8 +134,9 @@ public final class DataGostKlausuren {
 		final GostHalbjahr halbjahr = GostHalbjahr.fromID(hj);
 
 		final List<GostKlausurvorgabe> vorgaben = new DataGostKlausurenVorgabe(conn).getKlausurvorgaben(_abiturjahr, hj, false);
-		if (vorgaben.isEmpty())
+		if (vorgaben.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klausurvorgaben für dieses Halbjahr definiert.");
+		}
 
 		final GostKlausurplanManager manager = new GostKlausurplanManager(vorgaben);
 
@@ -145,8 +149,9 @@ public final class DataGostKlausuren {
 						.setParameter("jahr", halbjahr.getSchuljahrFromAbiturjahr(_abiturjahr))
 						.setParameter("abschnitt", (halbjahr.id % 2) + 1)
 						.getResultList();
-		if ((sjaList == null) || (sjaList.size() != 1))
+		if ((sjaList == null) || (sjaList.size() != 1)) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Noch kein Schuljahresabschnitt für dieses Halbjahr definiert.");
+		}
 
 		final DTOSchuljahresabschnitte sja = sjaList.getFirst();
 
@@ -167,8 +172,9 @@ public final class DataGostKlausuren {
 			final List<DTOSchuelerLernabschnittsdaten> laDaten = getLernabschnittsdatenZuKurs(conn, sja.Jahr, kurs);
 			final List<GostKlausurvorgabe> listKursVorgaben = manager.vorgabeGetMengeByHalbjahrAndQuartalAndKursartallgAndFachid(_abiturjahr, halbjahr, quartal,
 					GostKursart.fromKuerzelOrException(kurs.KursartAllg), kurs.Fach_ID);
-			if (listKursVorgaben.isEmpty() && !laDaten.isEmpty())
+			if (listKursVorgaben.isEmpty() && !laDaten.isEmpty()) {
 				missingVorgaben.add(kurs);
+			}
 			for (final GostKlausurvorgabe vorgabe : listKursVorgaben) {
 				if (!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID) && mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.id))) {
 					final DTOGostKlausurenKursklausuren kursklausur = new DTOGostKlausurenKursklausuren(idNextKursklausur, vorgabe.id, kurs.ID);
@@ -184,17 +190,20 @@ public final class DataGostKlausuren {
 
 		// ID in Schülerklausuren einfügen
 		long idNextSchuelerklausur = conn.transactionGetNextID(DTOGostKlausurenSchuelerklausuren.class);
-		for (final DTOGostKlausurenSchuelerklausuren sk : schuelerklausuren)
+		for (final DTOGostKlausurenSchuelerklausuren sk : schuelerklausuren) {
 			sk.ID = idNextSchuelerklausur++;
+		}
 
 		// SchülerklausurTermine erstellen und ID in SchülerklausurTermine einfügen
 		final List<DTOGostKlausurenSchuelerklausurenTermine> sktermine = createSchuelerklausurenTermineZuSchuelerklausuren(schuelerklausuren);
 		long idNextSchuelerklausurTermin = conn.transactionGetNextID(DTOGostKlausurenSchuelerklausurenTermine.class);
-		for (final DTOGostKlausurenSchuelerklausurenTermine skt : sktermine)
+		for (final DTOGostKlausurenSchuelerklausurenTermine skt : sktermine) {
 			skt.ID = idNextSchuelerklausurTermin++;
+		}
 
-		if (!conn.transactionPersistAll(kursklausuren) || !conn.transactionPersistAll(schuelerklausuren) || !conn.transactionPersistAll(sktermine))
+		if (!conn.transactionPersistAll(kursklausuren) || !conn.transactionPersistAll(schuelerklausuren) || !conn.transactionPersistAll(sktermine)) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+		}
 		final GostKlausurenCollectionData retKlausuren = new GostKlausurenCollectionData();
 		retKlausuren.kursklausuren = new DataGostKlausurenKursklausur(conn).mapList(kursklausuren);
 		retKlausuren.schuelerklausuren = new DataGostKlausurenSchuelerklausur(conn).mapList(schuelerklausuren);
@@ -316,9 +325,13 @@ public final class DataGostKlausuren {
 
 		private static void bearbeiteKursOhneSchueler(final GostKlausurenCollectionHjData fehlend, final GostKlausurplanManager manager,
 		    final GostKlausurvorgabe vorgabe, final DTOKurs kurs) {
-		  if (vorgabe == null) return;
+		  if (vorgabe == null) {
+			return;
+		  }
 		  final GostKursklausur kursklausur = manager.kursklausurByVorgabeAndKursid(vorgabe, kurs.ID);
-		  if (kursklausur == null) return;
+		  if (kursklausur == null) {
+			return;
+		  }
 		  fehlend.data.kursklausuren.add(kursklausur);
 		  manager.kursklausurfehlendAdd(kursklausur);
 		  fehlend.data.schuelerklausuren.addAll(manager.schuelerklausurGetMengeByKursklausur(kursklausur));
@@ -327,7 +340,9 @@ public final class DataGostKlausuren {
 		private static void erzeugeFehlendeVorgabe(final GostKlausurenCollectionHjData fehlend, final GostKlausurplanManager manager,
 		    final int abijahr, final GostHalbjahr halbjahr, final int quartal, final DTOKurs kurs) {
 		  if (manager.vorgabefehlendGetByHalbjahrAndQuartalAndKursartallgAndFachid(
-		      abijahr, halbjahr, quartal, GostKursart.fromKuerzelOrException(kurs.KursartAllg), kurs.Fach_ID) != null) return;
+		      abijahr, halbjahr, quartal, GostKursart.fromKuerzelOrException(kurs.KursartAllg), kurs.Fach_ID) != null) {
+			return;
+		  }
 
 		  final GostKlausurvorgabe neueVorgabe = new GostKlausurvorgabe();
 		  neueVorgabe.abiJahrgang = abijahr;

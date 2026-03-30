@@ -89,16 +89,18 @@ public final class DataSchuelerTelefon extends DataManagerRevised<Long, DTOSchue
 	 */
 	public List<SchuelerTelefon> getListFromSchuelerIDs(final List<Long> idsSchueler) throws ApiOperationException {
 		// Prüfe, ob die Liste der Schüler-IDs existiert
-		if (idsSchueler == null)
+		if (idsSchueler == null) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Es sind keine Schueler-IDs angegeben worden.");
+		}
 		final List<Long> idsSchuelerNonNull = idsSchueler.stream().filter(Objects::nonNull).toList();
-		if (idsSchuelerNonNull.isEmpty())
+		if (idsSchuelerNonNull.isEmpty()) {
 			return new ArrayList<>();
+		}
 
 		final List<DTOSchuelerTelefon> dtosSchuelerTelefon =
 				conn.queryList(DTOSchuelerTelefon.QUERY_LIST_BY_SCHUELER_ID, DTOSchuelerTelefon.class, idsSchuelerNonNull)
 						.stream().filter(t -> ((t.Telefonnummer != null) && !t.Telefonnummer.isEmpty()))
-						.sorted(Comparator.comparing((DTOSchuelerTelefon t) -> t.Schueler_ID).thenComparing(t -> t.Sortierung))
+						.sorted(Comparator.comparing((final DTOSchuelerTelefon t) -> t.Schueler_ID).thenComparing(t -> t.Sortierung))
 						.toList();
 
 		return dtosSchuelerTelefon.stream().map(this::map).toList();
@@ -106,11 +108,13 @@ public final class DataSchuelerTelefon extends DataManagerRevised<Long, DTOSchue
 
 	@Override
 	public SchuelerTelefon getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Eine Anfrage zu einer Telefonart mit der ID null ist unzulässig.");
+		}
 		final DTOSchuelerTelefon schuelerTelefon = conn.queryByKey(DTOSchuelerTelefon.class, id);
-		if (schuelerTelefon == null)
+		if (schuelerTelefon == null) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Ein Schülertelefon mit der ID %d wurde nicht gefunden".formatted(id));
+		}
 		return map(schuelerTelefon);
 	}
 
@@ -120,13 +124,15 @@ public final class DataSchuelerTelefon extends DataManagerRevised<Long, DTOSchue
 		switch (name) {
 			case "id" -> {
 				final Long id = JSONMapper.convertToLong(value, false, "id");
-				if (!Objects.equals(dto.ID, id))
+				if (!Objects.equals(dto.ID, id)) {
 					throw new ApiOperationException(Response.Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(id, dto.ID));
+				}
 			}
 			case "idSchueler" -> {
 				final Long id = JSONMapper.convertToLong(value, false, "idSchueler");
-				if (!Objects.equals(dto.Schueler_ID, id))
+				if (!Objects.equals(dto.Schueler_ID, id)) {
 					throw new ApiOperationException(Response.Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(idSchueler, dto.Schueler_ID));
+				}
 			}
 			case "idTelefonArt" -> {
 				final Long idTelefonArt = JSONMapper.convertToLong(value, false, "idTelefonArt");

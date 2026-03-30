@@ -65,8 +65,9 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 	public static List<Aufsichtsbereich> getAufsichtsbereiche(final @NotNull DBEntityManager conn) throws ApiOperationException {
 		final List<DTOKatalogAufsichtsbereich> aufsichtsbereiche = conn.queryAll(DTOKatalogAufsichtsbereich.class);
 		final ArrayList<Aufsichtsbereich> daten = new ArrayList<>();
-		for (final DTOKatalogAufsichtsbereich a : aufsichtsbereiche)
+		for (final DTOKatalogAufsichtsbereich a : aufsichtsbereiche) {
 			daten.add(dtoMapper.apply(a));
+		}
 		return daten;
 	}
 
@@ -78,11 +79,13 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Aufsichtsbereich der Schule mit der ID null ist unzulässig.");
+		}
 		final DTOKatalogAufsichtsbereich aufsichtsbereich = conn.queryByKey(DTOKatalogAufsichtsbereich.class, id);
-		if (aufsichtsbereich == null)
+		if (aufsichtsbereich == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Aufsichtsbereich der Schule mit der ID %d gefunden.".formatted(id));
+		}
 		final Aufsichtsbereich daten = dtoMapper.apply(aufsichtsbereich);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -91,8 +94,9 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 	private static final Map<String, DataBasicMapper<DTOKatalogAufsichtsbereich>> patchMappings = Map.ofEntries(
 			Map.entry("id", (conn, dto, value, map) -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST);
+				}
 			}),
 			Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
 			Map.entry("beschreibung", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000)));

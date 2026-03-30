@@ -153,8 +153,9 @@ public class EnmV1ImportService {
 	 * @return der Timestamp oder null, falls der ISO-String ungültig ist
 	 */
 	private static Timestamp getTimeStampFromIso(final String iso) {
-		if ((iso == null) || iso.isBlank())
+		if ((iso == null) || iso.isBlank()) {
 			return null;
+		}
 		return Timestamp.valueOf(LocalDateTime.parse(iso, timestampPattern));
 	}
 
@@ -170,11 +171,13 @@ public class EnmV1ImportService {
 	 */
 	private static boolean isTimestampAfter(final String tsCheckStr, final String tsOtherStr) {
 		final Timestamp tsCheck = getTimeStampFromIso(tsCheckStr);
-		if (tsCheck == null)
+		if (tsCheck == null) {
 			return false;
+		}
 		final Timestamp tsOther = getTimeStampFromIso(tsOtherStr);
-		if (tsOther == null)
+		if (tsOther == null) {
 			return true;
+		}
 		return tsCheck.after(tsOther);
 	}
 
@@ -305,16 +308,18 @@ public class EnmV1ImportService {
 		// Gehe die einzelnen Lehrer durch und aktualisiere ggf. die Credentials
 		for (final ENMv1Lehrer enmLehrer : daten.lehrer) {
 			final DTOLehrer dtoLehrer = kontext.mapLehrer.get(enmLehrer.id);
-			if (dtoLehrer == null)
+			if (dtoLehrer == null) {
 				throw new ApiOperationException(Status.NOT_FOUND,
 						"Der Lehrer in den ENM-Daten mit der ID %d konnte in der Datenbank nicht gefunden werden.".formatted(enmLehrer.id));
+			}
 			DTONotenmodulCredentials cred = kontext.mapLehrerCreds.get(enmLehrer.id);
 			final DTOTimestampsNotenmodulCredentials credTS = kontext.mapLehrerCredsTimestamps.get(enmLehrer.id);
 			if (isTimestampAfter(enmLehrer.tsPasswordHash, credTS == null ? null : credTS.tsPasswordHash)) {
-				if (cred == null)
+				if (cred == null) {
 					cred = new DTONotenmodulCredentials(enmLehrer.id, "", enmLehrer.passwordHash);
-				else
+				} else {
 					cred.passwordHash = enmLehrer.passwordHash;
+				}
 				notenmodulCredentialsRepository.update(cred);
 			}
 		}
@@ -385,14 +390,18 @@ public class EnmV1ImportService {
 			lernabschnittTS.tsSumFehlStdU = enmSchueler.lernabschnitt.tsFehlstundenGesamtUnentschuldigt;
 		});
 
-		if (updatedBemerkungen && !neuBemerkungen)
+		if (updatedBemerkungen && !neuBemerkungen) {
 			kontext.setLernabschnittsbemerkungen.add(lernabschnittsbemerkungen);
-		if (neuBemerkungen)
+		}
+		if (neuBemerkungen) {
 			kontext.setLernabschnittsbemerkungenNeu.add(lernabschnittsbemerkungen);
-		if (updatedLernabschnitt)
+		}
+		if (updatedLernabschnitt) {
 			kontext.setLernabschnitte.add(lernabschnitt);
-		if (updatedBemerkungen || updatedLernabschnitt)
+		}
+		if (updatedBemerkungen || updatedLernabschnitt) {
 			kontext.setLernabschnitteTimestamps.add(lernabschnittTS);
+		}
 
 		return neuBemerkungen;
 	}

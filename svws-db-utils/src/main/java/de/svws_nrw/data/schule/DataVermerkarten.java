@@ -66,12 +66,14 @@ public final class DataVermerkarten extends DataManagerRevised<Long, DTOVermerkA
 
 	@Override
 	public VermerkartEintrag getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID der Vermerkart darf nicht null sein.");
+		}
 
 		final DTOVermerkArt vermerkArt = conn.queryByKey(DTOVermerkArt.class, id);
-		if (vermerkArt == null)
+		if (vermerkArt == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Vermerkart mit der ID %d wurde nicht gefunden.".formatted(id));
+		}
 
 		return map(vermerkArt);
 	}
@@ -96,8 +98,9 @@ public final class DataVermerkarten extends DataManagerRevised<Long, DTOVermerkA
 
 	private void updateBezeichnung(final DTOVermerkArt dto, final Object value, final String name) throws ApiOperationException {
 		final String bezeichnung = JSONMapper.convertToString(value, false, false, Schema.tab_K_Vermerkart.col_Bezeichnung.datenlaenge(), name);
-		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung))
+		if (ValidationUtils.isBlankOrUnchanged(dto.Bezeichnung, bezeichnung)) {
 			return;
+		}
 
 		validateBezeichnung(dto.ID, bezeichnung);
 
@@ -116,8 +119,9 @@ public final class DataVermerkarten extends DataManagerRevised<Long, DTOVermerkA
 	}
 
 	private Set<Long> getIdsOfReferencedVermerkarten(final Set<Long> ids) {
-		if ((ids == null) || ids.isEmpty())
+		if ((ids == null) || ids.isEmpty()) {
 			return Collections.emptySet();
+		}
 
 		final String query = "SELECT DISTINCT a.VermerkArt_ID FROM DTOSchuelerVermerke a WHERE a.VermerkArt_ID IN :ids";
 		final List<Long> results = this.conn.query(query, Long.class).setParameter("ids", ids).getResultList();
@@ -128,8 +132,9 @@ public final class DataVermerkarten extends DataManagerRevised<Long, DTOVermerkA
 		final boolean isAlreadyUsed = this.conn
 				.queryAll(DTOVermerkArt.class).stream()
 				.anyMatch(e -> (e.ID != id) && bezeichnung.equalsIgnoreCase(e.Bezeichnung));
-		if (isAlreadyUsed)
+		if (isAlreadyUsed) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Bezeichnung %s ist bereits vorhanden.".formatted(bezeichnung));
+		}
 	}
 
 }

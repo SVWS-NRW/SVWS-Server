@@ -70,73 +70,90 @@ public class DBUpdater {
 		boolean success = true;
 		try {
 			// 1. Update-Schritt: DROP_TRIGGER
-			if (!dropTrigger(conn, neue_revision))
+			if (!dropTrigger(conn, neue_revision)) {
 				throw new DBException("Fehler beim Verwerfen der Trigger");
+			}
 
 			// 2. Update-Schritt: DROP_INDICES
-			if (!dropIndices(conn, neue_revision))
+			if (!dropIndices(conn, neue_revision)) {
 				throw new DBException("Fehler beim Verwerfen der Indizes");
+			}
 
 			// 3. Update-Schritt: DROP_FOREIGN_KEYS
-			if (!dropForeignKeys(conn, neue_revision))
+			if (!dropForeignKeys(conn, neue_revision)) {
 				throw new DBException("Fehler beim Verwerfen der Fremdschlüssel");
+			}
 
 			// 4. Update-Schritt: DROP_UNIQUE_CONSTRAINTS
-			if (!dropUniqueConstraints(conn, neue_revision))
+			if (!dropUniqueConstraints(conn, neue_revision)) {
 				throw new DBException("Fehler beim Verwerfen der Unique-Constraints");
+			}
 
 			// 5. Update-Schritt: CREATE_TABLES
-			if (!createNewTables(conn, neue_revision))
+			if (!createNewTables(conn, neue_revision)) {
 				throw new DBException("Fehler beim Erstellen der neuen Tabellen");
+			}
 
 			// 6. Update-Schritt: ADD_COLUMNS
-			if (!addNewColumns(conn, neue_revision))
+			if (!addNewColumns(conn, neue_revision)) {
 				throw new DBException("Fehler beim Hinzufügen der neuen Tabellenspalten");
+			}
 
 			// 7. Update-Schritt: Core-Type-Updates
-			if (!coreTypes.update(conn, false, neue_revision))
+			if (!coreTypes.update(conn, false, neue_revision)) {
 				throw new DBException("Fehler beim Aktualisieren der Core-Types");
+			}
 
 			// 8. Update-Schritt: ManualSQL
-			if (!executeManualSQLCommands(conn, neue_revision))
+			if (!executeManualSQLCommands(conn, neue_revision)) {
 				throw new DBException("Fehler beim Ausführen der manuellen SQL-Befehle");
+			}
 
 			// 9. Update-Schritt: ADD_UNIQUE_CONSTRAINTS
-			if (!addNewUniqueConstraints(conn, neue_revision))
+			if (!addNewUniqueConstraints(conn, neue_revision)) {
 				throw new DBException("Fehler beim Hinzufügen der neuen Unique-Constraints");
+			}
 
 			// 10. Update-Schritt: ADD_INDICES
-			if (!addNewIndices(conn, neue_revision))
+			if (!addNewIndices(conn, neue_revision)) {
 				throw new DBException("Fehler beim Hinzufügen der neuen Indizes");
+			}
 
 			// 11. Update-Schritt: ADD_FOREIGN_KEYS
-			if (!addNewForeignKeys(conn, neue_revision))
+			if (!addNewForeignKeys(conn, neue_revision)) {
 				throw new DBException("Fehler beim Hinzufügen der neuen Fremdschlüssel");
+			}
 
 			// 12. Update-Schritt: ADD_TRIGGER
-			if (!createNewTrigger(conn, neue_revision))
+			if (!createNewTrigger(conn, neue_revision)) {
 				throw new DBException("Fehler beim Erstellen der neuen Trigger");
+			}
 
 			// 13. Update-Schritt: ADD VIEWS
-			if (!createNewViews(conn, neue_revision))
+			if (!createNewViews(conn, neue_revision)) {
 				throw new DBException("Fehler beim Erstellen der neuen Views");
+			}
 
 			// 14. Update-Schritt: DROP VIEWS
-			if (!dropViews(conn, neue_revision))
+			if (!dropViews(conn, neue_revision)) {
 				throw new DBException("Fehler beim Verwerfen der Views");
+			}
 
 			// 15. Update-Schritt: DROP_COLUMNS
-			if (!dropColumns(conn, neue_revision))
+			if (!dropColumns(conn, neue_revision)) {
 				throw new DBException("Fehler beim Verwerfen veralteter Tabellenspalten");
+			}
 
 			// 16. Update-Schritt: DROP_TABLES
-			if (!dropTables(conn, neue_revision))
+			if (!dropTables(conn, neue_revision)) {
 				throw new DBException("Fehler beim Verwerfen veralteter Tabellen");
+			}
 
 			// 17. Update-Schritt: Tabelle Schema_Status aktualisieren
 			logger.logLn("- Setze die DB-Revision auf " + neue_revision);
-			if (!DBSchemaManager.setDBRevision(conn, neue_revision))
+			if (!DBSchemaManager.setDBRevision(conn, neue_revision)) {
 				throw new DBException("Fehler beim Setzen der SVWS-DB-Revision");
+			}
 		} catch (@SuppressWarnings("unused") final DBException e) {
 			success = false;
 		} finally {
@@ -169,8 +186,9 @@ public class DBUpdater {
 			logger.logLn("Interner Fehler: Es ist keine gültige Datenbank-Revision definiert");
 			return true;
 		}
-		if ((maxUpdateRevision >= 0) && (maxUpdateRevision < max_revision))
+		if ((maxUpdateRevision >= 0) && (maxUpdateRevision < max_revision)) {
 			max_revision = maxUpdateRevision;
+		}
 		try {
 			// Prüfe, ob das Schema aktuell ist oder sogar neuer als in der schema-Beschreibung bekannt.
 			final long revision = currentVersion.getRevision();
@@ -206,15 +224,18 @@ public class DBUpdater {
 		status.update();
 		final DBSchemaVersion currentVersion = status.getVersion();
 		long max_revision = devMode ? SchemaRevisionen.maxDeveloperRevision.revision : SchemaRevisionen.maxRevision.revision;
-		if ((currentVersion == null) || (max_revision < 0))
+		if ((currentVersion == null) || (max_revision < 0)) {
 			return false;
-		if ((maxUpdateRevision >= 0) && (maxUpdateRevision < max_revision))
+		}
+		if ((maxUpdateRevision >= 0) && (maxUpdateRevision < max_revision)) {
 			max_revision = maxUpdateRevision;
+		}
 		try {
 			// Ist eine Aktualisierung überhaupt nötig, oder ist das Schema schon aktuell oder sogar aktueller?
 			final long revision = currentVersion.getRevision();
-			if (revision >= max_revision)
+			if (revision >= max_revision) {
 				return false;
+			}
 		} catch (@SuppressWarnings("unused") final Exception e) {
 			// Das Schema hat keine gültige Revision und kann daher nicht aktualisiert werden - Migration nötig?
 			return false;
@@ -248,14 +269,17 @@ public class DBUpdater {
 			status.update(conn);
 			final DBSchemaVersion currentVersion = status.getVersion();
 			long max_revision = devMode ? SchemaRevisionen.maxDeveloperRevision.revision : SchemaRevisionen.maxRevision.revision;
-			if ((currentVersion == null) || (max_revision < 0))
+			if ((currentVersion == null) || (max_revision < 0)) {
 				return false;
-			if ((maxUpdateRevision >= 0) && (maxUpdateRevision < max_revision))
+			}
+			if ((maxUpdateRevision >= 0) && (maxUpdateRevision < max_revision)) {
 				max_revision = maxUpdateRevision;
+			}
 
 			// Ist kein Update nötig, so war die Aktualisierung erfolgreich
-			if (max_revision <= currentVersion.getRevisionOrDefault(0))
+			if (max_revision <= currentVersion.getRevisionOrDefault(0)) {
 				return true;
+			}
 
 			// Ermittle die nächste Revision, auf die aktualisiert werden soll
 			for (long neue_revision = currentVersion.getRevisionOrDefault(0) + 1; neue_revision <= max_revision; neue_revision++) {
@@ -263,12 +287,14 @@ public class DBUpdater {
 				logger.modifyIndent(2);
 				success = performUpdate(conn, neue_revision);
 				logger.modifyIndent(-2);
-				if (!success)
+				if (!success) {
 					break;
+				}
 			}
 
-			if (success && (!conn.transactionCommit()))
+			if (success && (!conn.transactionCommit())) {
 				success = false;
+			}
 		} catch (final Exception e) {
 			e.printStackTrace();
 			success = false;
@@ -312,13 +338,15 @@ public class DBUpdater {
 		logger.modifyIndent(2);
 		for (final SchemaTabelleTrigger trig : trigger) {
 			final var sql = trig.getSQL(dbms, false);
-			if ((sql == null) || ("".equals(sql)))
+			if ((sql == null) || ("".equals(sql))) {
 				continue;
+			}
 			logger.logLn(trig.name());
 			if (conn.transactionNativeUpdateAndFlush(sql) == Integer.MIN_VALUE) {
 				result = false;
-				if (returnOnError)
+				if (returnOnError) {
 					break;
+				}
 			}
 		}
 		logger.modifyIndent(-2);
@@ -358,8 +386,9 @@ public class DBUpdater {
 			logger.logLn(idx.name());
 			if (conn.transactionNativeUpdateAndFlush(sql) == Integer.MIN_VALUE) {
 				result = false;
-				if (returnOnError)
+				if (returnOnError) {
 					break;
+				}
 			}
 		}
 		logger.modifyIndent(-2);
@@ -399,8 +428,9 @@ public class DBUpdater {
 			logger.logLn(uc.name());
 			if (conn.transactionNativeUpdateAndFlush(sql) == Integer.MIN_VALUE) {
 				result = false;
-				if (returnOnError)
+				if (returnOnError) {
 					break;
+				}
 			}
 		}
 		logger.modifyIndent(-2);
@@ -440,8 +470,9 @@ public class DBUpdater {
 			logger.logLn(fk.name());
 			if (conn.transactionNativeUpdateAndFlush(sql) == Integer.MIN_VALUE) {
 				result = false;
-				if (returnOnError)
+				if (returnOnError) {
 					break;
+				}
 			}
 		}
 		logger.modifyIndent(-2);
@@ -482,8 +513,9 @@ public class DBUpdater {
 			logger.logLn(col.tabelle().name() + "." + col.name());
 			if (conn.transactionNativeUpdateAndFlush(sql) == Integer.MIN_VALUE) {
 				result = false;
-				if (returnOnError)
+				if (returnOnError) {
 					break;
+				}
 			}
 		}
 		logger.modifyIndent(-2);
@@ -519,8 +551,9 @@ public class DBUpdater {
 			logger.logLn(tab.name());
 			if (conn.transactionNativeUpdateAndFlush(sql) == Integer.MIN_VALUE) {
 				result = false;
-				if (returnOnError)
+				if (returnOnError) {
 					break;
+				}
 			}
 		}
 		final String names = tabs.stream().map(t -> String.format("\"%s\"", t.name())).collect(Collectors.joining(","));
@@ -555,8 +588,9 @@ public class DBUpdater {
 			logger.logLn(view.name);
 			if (conn.transactionNativeUpdateAndFlush(sql) == Integer.MIN_VALUE) {
 				result = false;
-				if (returnOnError)
+				if (returnOnError) {
 					break;
+				}
 			}
 		}
 		logger.modifyIndent(-2);
@@ -591,13 +625,15 @@ public class DBUpdater {
 		final var dbms = conn.getDBDriver();
 		for (final SchemaTabelle tab : tabs) {
 			final String sql = tab.getSQL(dbms, revision);
-			if ((sql == null) || "".equals(sql))
+			if ((sql == null) || "".equals(sql)) {
 				continue;
+			}
 			logger.logLn(tab.name());
 			if (conn.transactionNativeUpdateAndFlush(sql) == Integer.MIN_VALUE) {
 				result = false;
-				if (returnOnError)
+				if (returnOnError) {
 					break;
+				}
 				continue;
 			}
 			final List<String> pkTrigger = tab.getPrimaerschluesselTriggerSQLList(dbms, revision, true);
@@ -606,8 +642,9 @@ public class DBUpdater {
 				for (final String scriptTrigger : pkTrigger) {
 					if (conn.transactionNativeUpdateAndFlush(scriptTrigger) == Integer.MIN_VALUE) {
 						result = false;
-						if (returnOnError)
+						if (returnOnError) {
 							break;
+						}
 					}
 				}
 			}
@@ -642,13 +679,15 @@ public class DBUpdater {
 		logger.modifyIndent(2);
 		for (final View view : views) {
 			final String sql = view.getSQLCreate(conn.getDBDriver());
-			if ((sql == null) || "".equals(sql))
+			if ((sql == null) || "".equals(sql)) {
 				continue;
+			}
 			logger.logLn(view.name);
 			if (conn.transactionNativeUpdateAndFlush(sql) == Integer.MIN_VALUE) {
 				result = false;
-				if (returnOnError)
+				if (returnOnError) {
 					break;
+				}
 			}
 		}
 		logger.modifyIndent(-2);
@@ -689,8 +728,9 @@ public class DBUpdater {
 			logger.logLn(col.tabelle().name() + "." + col.name());
 			if (conn.transactionNativeUpdateAndFlush(sql) == Integer.MIN_VALUE) {
 				result = false;
-				if (returnOnError)
+				if (returnOnError) {
 					break;
+				}
 			}
 		}
 		logger.modifyIndent(-2);
@@ -731,8 +771,9 @@ public class DBUpdater {
 			logger.logLn(fk.name());
 			if (conn.transactionNativeUpdateAndFlush(sql) == Integer.MIN_VALUE) {
 				result = false;
-				if (returnOnError)
+				if (returnOnError) {
 					break;
+				}
 			}
 		}
 		logger.modifyIndent(-2);
@@ -773,8 +814,9 @@ public class DBUpdater {
 			logger.logLn(uc.name());
 			if (conn.transactionNativeUpdateAndFlush(sql) == Integer.MIN_VALUE) {
 				result = false;
-				if (returnOnError)
+				if (returnOnError) {
 					break;
+				}
 			}
 		}
 		logger.modifyIndent(-2);
@@ -814,8 +856,9 @@ public class DBUpdater {
 			logger.logLn(idx.name());
 			if (conn.transactionNativeUpdateAndFlush(sql) == Integer.MIN_VALUE) {
 				result = false;
-				if (returnOnError)
+				if (returnOnError) {
 					break;
+				}
 			}
 		}
 		logger.modifyIndent(-2);
@@ -911,8 +954,9 @@ public class DBUpdater {
 			logger.logLn(trig.name());
 			if (conn.transactionExecuteWithJDBCConnection(sql) == Integer.MIN_VALUE) {
 				result = false;
-				if (returnOnError)
+				if (returnOnError) {
 					break;
+				}
 			}
 			conn.transactionFlush();
 		}

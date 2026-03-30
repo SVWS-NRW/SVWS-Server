@@ -27,8 +27,9 @@ public final class DBUtilsJahrgaenge {
 	 */
 	public static DTOJahrgang get(final DBEntityManager conn, final long idJahrgang) throws ApiOperationException {
 		final DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, idJahrgang);
-		if (jahrgang == null)
+		if (jahrgang == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Konnte den Jahrgang mit der ID " + idJahrgang + " nicht finden.");
+		}
 		return jahrgang;
 	}
 

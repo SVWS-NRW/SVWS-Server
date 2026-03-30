@@ -124,8 +124,9 @@ public class NotenmodulCredentialsService {
 			} else {
 				final DTONotenmodulCredentials cred = foundCred.get();
 				final boolean hasInitial = (cred.initialkennwort != null) && (!cred.initialkennwort.isBlank());
-				if (!hasInitial)
+				if (!hasInitial) {
 					cred.initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
+				}
 				cred.passwordHash = BCrypt.hashpw(cred.initialkennwort, BCrypt.gensalt());
 				notenmodulCredentialsRepository.update(cred);
 			}
@@ -143,8 +144,9 @@ public class NotenmodulCredentialsService {
 	public void setPassword(final long idLehrer, final String password) {
 		transactional(() -> {
 			// TODO geeignetere Kriterien festlegen und in Passwords.java als Methode zum Prüfen implementieren
-			if ((password == null) || (password.isBlank()) || (password.length() < 6))
+			if ((password == null) || (password.isBlank()) || (password.length() < 6)) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Ein neues Kennwort darf nicht leer sein und muss mindestens 6 Zeichen enthalten.");
+			}
 
 			// Prüfe, ob ein Lehrer mit der ID in der Datenbank existiert
 			lehrerRepository.findById(idLehrer)
@@ -165,8 +167,9 @@ public class NotenmodulCredentialsService {
 			// Aktualisiere vorhandene Credentials
 			final DTONotenmodulCredentials cred = foundCred.get();
 			final boolean hasInitial = (cred.initialkennwort != null) && (!cred.initialkennwort.isBlank());
-			if (!hasInitial)
+			if (!hasInitial) {
 				cred.initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
+			}
 			cred.passwordHash = hash;
 			notenmodulCredentialsRepository.update(cred);
 		});

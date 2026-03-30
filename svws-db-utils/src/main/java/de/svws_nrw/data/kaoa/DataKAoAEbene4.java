@@ -26,8 +26,9 @@ public final class DataKAoAEbene4 extends DataManager<Long> {
 	@Override
 	public Response getAll() {
 		final ArrayList<KAOAEbene4KatalogEintrag> daten = new ArrayList<>();
-		for (final KAOAEbene4 e : KAOAEbene4.values())
+		for (final KAOAEbene4 e : KAOAEbene4.values()) {
 			daten.addAll(e.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

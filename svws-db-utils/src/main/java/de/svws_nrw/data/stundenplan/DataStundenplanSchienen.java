@@ -45,7 +45,6 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 		this.stundenplanID = stundenplanID;
 	}
 
-
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOStundenplanSchienen} in einen Core-DTO {@link StundenplanRaum}.
 	 */
@@ -76,8 +75,9 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 		final List<DTOStundenplanSchienen> schienen = conn.queryList(
 				DTOStundenplanSchienen.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanSchienen.class, idStundenplan);
 		final ArrayList<StundenplanSchiene> daten = new ArrayList<>();
-		for (final DTOStundenplanSchienen s : schienen)
+		for (final DTOStundenplanSchienen s : schienen) {
 			daten.add(dtoMapper.apply(s));
+		}
 		return daten;
 	}
 
@@ -115,11 +115,13 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einer Schiene eines Stundenplans mit der ID null ist unzulässig.");
+		}
 		final DTOStundenplanSchienen schiene = conn.queryByKey(DTOStundenplanSchienen.class, id);
-		if (schiene == null)
+		if (schiene == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Schiene eines Stundenplans mit der ID %d gefunden.".formatted(id));
+		}
 		final StundenplanSchiene daten = dtoMapper.apply(schiene);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -138,8 +140,9 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 		final List<DTOStundenplanSchienen> listSchienen =
 				conn.queryList(DTOStundenplanSchienen.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanSchienen.class, idStundenplan);
 		final HashMap2D<Integer, Long, DTOStundenplanSchienen> result = new HashMap2D<>();
-		for (final DTOStundenplanSchienen schiene : listSchienen)
+		for (final DTOStundenplanSchienen schiene : listSchienen) {
 			result.put(schiene.Nummer, schiene.Jahrgang_ID, schiene);
+		}
 		return result;
 	}
 
@@ -157,11 +160,15 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 	public static void updateSchienenFromKurslisteInternal(final DBEntityManager conn, final Long idStundenplan, final List<KursDaten> kurse,
 			final HashMap2D<Integer, Long, DTOStundenplanSchienen> mapDTOs) {
 		final Set<Pair<Long, Integer>> setJahrgangsSchienen = new HashSet<>();
-		for (final KursDaten kurs : kurse)
-			for (final long idJahrgang : kurs.idJahrgaenge)
-				for (final int schiene : kurs.schienen)
-					if (!mapDTOs.contains(schiene, idJahrgang))
+		for (final KursDaten kurs : kurse) {
+			for (final long idJahrgang : kurs.idJahrgaenge) {
+				for (final int schiene : kurs.schienen) {
+					if (!mapDTOs.contains(schiene, idJahrgang)) {
 						setJahrgangsSchienen.add(new Pair<>(idJahrgang, schiene));
+					}
+				}
+			}
+		}
 		long id = conn.transactionGetNextID(DTOStundenplanSchienen.class);
 		for (final Pair<Long, Integer> s : setJahrgangsSchienen) {
 			final DTOStundenplanSchienen dto = new DTOStundenplanSchienen(id++, idStundenplan, s.b, "Schiene " + s.b);
@@ -201,8 +208,9 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 	private static final Map<String, DataBasicMapper<DTOStundenplanSchienen>> patchMappings = Map.ofEntries(
 			Map.entry("id", (conn, dto, value, map) -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST);
+				}
 			}),
 			Map.entry("idJahrgang", (conn, dto, value, map) -> dto.Jahrgang_ID = JSONMapper.convertToLong(value, false)),
 			Map.entry("nummer", (conn, dto, value, map) -> dto.Nummer = JSONMapper.convertToInteger(value, false)),

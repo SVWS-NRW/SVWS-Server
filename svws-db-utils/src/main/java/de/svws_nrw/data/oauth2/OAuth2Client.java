@@ -74,18 +74,23 @@ public final class OAuth2Client {
 		// Lese die Verbindungsdaten aus der Datenbank ein.
 		logger.logLn("Lese die OAuth2-Client-Secrets für den Server-Typ %s aus der Datenbank...".formatted(serverTyp.name()));
 		this.dto = new DataOauthClientSecrets(conn).getDto(serverTyp);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Es wurden keine OAuth2-Client-Secrets den Server-Typ %s in der Datenbank gefunden.".formatted(serverTyp.name()));
-		if ((dto.AuthServer == null) || dto.AuthServer.isBlank())
+		}
+		if ((dto.AuthServer == null) || dto.AuthServer.isBlank()) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Bei den OAuth2-Daten aus der Datenbank fehlt die Server-URL.");
-		if ((dto.ClientID == null) || dto.ClientID.isBlank())
+		}
+		if ((dto.ClientID == null) || dto.ClientID.isBlank()) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Bei den OAuth2-Daten aus der Datenbank ist keine Client-ID angegeben.");
-		if (!dto.ClientID.equals("" + serverTyp.getId()))
+		}
+		if (!dto.ClientID.equals("" + serverTyp.getId())) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Bei den OAuth2-Daten aus der Datenbank ist keine passende Client-ID angegeben.");
+		}
 		if (updateToken) {
-			if ((dto.ClientSecret == null) || dto.ClientSecret.isBlank())
+			if ((dto.ClientSecret == null) || dto.ClientSecret.isBlank()) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Die OAuth2-Daten aus der Datenbank enthalten kein Client-Secret.");
+			}
 			logger.logLn("Generiere den HTTP-Header für Basic-Auth bestehen aus der Client-ID als User und dem Client-Secret als Kennwort...");
 			final String basicAuth = Base64.getEncoder().encodeToString((dto.ClientID + ":" + dto.ClientSecret).getBytes());
 			logger.logLn("Prüfe, ob ein bestehendes Token wiederverwendet werden kann...");
@@ -105,8 +110,9 @@ public final class OAuth2Client {
 	 * @return true, wenn ein nicht abgelaufenes Token vorhanden ist, und ansonsten false
 	 */
 	private boolean isTokenValid() {
-		if (dto.Token == null)
+		if (dto.Token == null) {
 			return false;
+		}
 		// Berechne die Zeit in Millisekunden, wann das Token abläuft
 		final long tsExpiration = ((dto.TokenExpiresIn * 1000) + dto.TokenTimestamp);
 		// Bestimme die aktuelle Zeit zum Vergleich, addiere aber einen Wert darauf, um das Token ggf. früher zu erneuern
@@ -138,14 +144,17 @@ public final class OAuth2Client {
 		final HttpResponse<String> response = send(request, BodyHandlers.ofString());
 		// ... prüfe, den Response-Code ...
 		final int statusCode = response.statusCode();
-		if (statusCode == 401)
+		if (statusCode == 401) {
 			throw new ApiOperationException(Status.BAD_GATEWAY, "Verbindung zu dem OAuth2-Server ergab 401 (Unauthorized)."
 					+ " Die Client Credentials sollten überprüft werden.");
-		if (statusCode == 500)
+		}
+		if (statusCode == 500) {
 			throw new ApiOperationException(Status.UNAUTHORIZED, "Verbindung zu dem OAuth2-Server ergab 500 (Internal Server Error)."
 					+ " Die Client Credentials sollten überprüft werden. Hier liegt ein interner Fehler im OAuth2-Server vor.");
-		if ((statusCode != 200) && (statusCode != 201))
+		}
+		if ((statusCode != 200) && (statusCode != 201)) {
 			throw new ApiOperationException(Status.BAD_GATEWAY, "Verbindung zu dem OAuth2-Server mit dem Status-Code %d fehlgeschlagen.".formatted(statusCode));
+		}
 		// ... und validiere im Erfolgsfall die HTTP-Response
 		final String stringResponse = response.body();
 		try {
@@ -184,13 +193,16 @@ public final class OAuth2Client {
 		HttpClient.Builder builder = HttpClient.newBuilder().version(Version.HTTP_1_1).connectTimeout(Duration.ofSeconds(20));
 		if ((dto.TLSCertIsKnown == null) || (!dto.TLSCertIsKnown)) {
 			try {
-				if (dto.TLSCert == null)
+				if (dto.TLSCert == null) {
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "In der Datenbank ist keine TLS-Zertifikatskette des TLS-Servers zur Nutzung hinterlegt.");
+				}
 				final List<X509Certificate> certList = TLSUtils.decodeCertListJson(dto.TLSCert);
-				if (certList.isEmpty())
+				if (certList.isEmpty()) {
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "In der Datenbank ist kein TLS-Zertifikat zur Nutzung hinterlegt.");
-				if (!dto.TLSCertIsTrusted)
+				}
+				if (!dto.TLSCertIsTrusted) {
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der in der Datenbank zur Nutzung hinterlegten TLS-Zertifikatskette des TLS-Servers wird nicht vertraut.");
+				}
 				final KeyStore keystore = KeyStoreUtils.newKeystore();
 				KeyStoreUtils.addCertificate(keystore, dto.AuthServer, certList.getFirst());
 				final SSLContext sslContext = TLSUtils.getTLSContextFromKeystore(keystore);
@@ -263,11 +275,13 @@ public final class OAuth2Client {
 	public <T> HttpResponse<T> postFormUrlEncoded(final String path, final BodyHandler<T> handler, final String... keyValuePairs) throws ApiOperationException {
 		logger.logLn("Bereite die HTTP-Anfrage vor...");
 		final URI uri = URI.create(dto.AuthServer + path);
-		if ((keyValuePairs.length % 2) != 0)
+		if ((keyValuePairs.length % 2) != 0) {
 			throw new IllegalArgumentException("Invalid nameValuePairs");
+		}
 		String input = "";
-		for (int i = 0; i < keyValuePairs.length; i += 2)
+		for (int i = 0; i < keyValuePairs.length; i += 2) {
 			input = keyValuePairs[i] + "=" + keyValuePairs[i + 1] + "\n";
+		}
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2))
 				.POST(BodyPublishers.ofString(input)).header("Content-Type", "application/x-www-form-urlencoded")
 				.header("Accept", "application/json")
@@ -382,12 +396,14 @@ public final class OAuth2Client {
 			boolean isTrusted;
 			isTrusted = TLSUtils.queryServerCertificates(dto.AuthServer, chain);
 			// Fehlerbehandlung: Hat der Server ein Zertifikat zurückgegeben?
-			if (chain.isEmpty())
+			if (chain.isEmpty()) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Kein gültiges Server-Zertifikat erhalten.");
+			}
 			final List<X509Certificate> dtoChain = (dto.TLSCert == null) ? null : TLSUtils.decodeCertListJson(dto.TLSCert);
 			// Prüfe, ob das Zertifikat in der DB gespeichert ist, dann ist relevant, ob diesem vertraut wird
-			if ((dtoChain != null) && (!dtoChain.isEmpty()) && (chain.getFirst().equals(dtoChain.getFirst())))
+			if ((dtoChain != null) && (!dtoChain.isEmpty()) && (chain.getFirst().equals(dtoChain.getFirst()))) {
 				return dto.TLSCertIsTrusted;
+			}
 			// Im anderen Fall - kein Zertifikat in der Datenbank hinterlegt ist oder es hat sich geändert,
 			// dann muss dieses einfach nur in der DB eingetragen werden.
 			dto.TLSCert = TLSUtils.encodeCertListJson(chain);

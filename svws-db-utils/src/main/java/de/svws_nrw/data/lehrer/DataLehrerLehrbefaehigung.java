@@ -46,8 +46,9 @@ public final class DataLehrerLehrbefaehigung extends DataManagerRevised<Long, DT
 
 	@Override
 	protected Long getID(final Map<String, Object> attributes) throws ApiOperationException {
-		if (!attributes.containsKey("id"))
+		if (!attributes.containsKey("id")) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Datensatzes ist nicht angegeben.");
+		}
 		return JSONMapper.convertToLong(attributes.get("id"), false, "id");
 	}
 
@@ -81,8 +82,9 @@ public final class DataLehrerLehrbefaehigung extends DataManagerRevised<Long, DT
 	public void checkBeforeCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		final long tmpIdLehramt = JSONMapper.convertToLong(initAttributes.get("idLehramt"), false, "idLehramt");
 		final DTOLehrerPersonaldatenLehramt lehramt = conn.queryByKey(DTOLehrerPersonaldatenLehramt.class, tmpIdLehramt);
-		if (lehramt == null)
+		if (lehramt == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Lehramt für die übergebene Lehramts-ID in der Datenbank gefunden werden.");
+		}
 	}
 
 
@@ -92,20 +94,23 @@ public final class DataLehrerLehrbefaehigung extends DataManagerRevised<Long, DT
 		switch (name) {
 			case "id" -> {
 				final Long id = JSONMapper.convertToLong(value, true, "id");
-				if ((id == null) || (id != dto.ID))
+				if ((id == null) || (id != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "ID von Patch und Datenbank-Objekt stimmen nicht überein.");
+				}
 			}
 			case "idLehramt" -> {
 				final long tmpIdLehramt = JSONMapper.convertToLong(map.get("idLehramt"), false, "idLehramt");
-				if (tmpIdLehramt != dto.Lehreramt_ID)
+				if (tmpIdLehramt != dto.Lehreramt_ID) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die Lehramts-ID von Patch und Datenbank-Objekt stimmen nicht überein.");
+				}
 			}
 			case "idLehrbefaehigung" -> {
 				final long tmpIdLehrbefaehigung = JSONMapper.convertToLong(map.get("idLehrbefaehigung"), false, "idLehrbefaehigung");
 				final LehrerLehrbefaehigungKatalogEintrag tmpLehrbefaehigung = LehrerLehrbefaehigung.data().getEintragByID(tmpIdLehrbefaehigung);
-				if (tmpLehrbefaehigung == null)
+				if (tmpLehrbefaehigung == null) {
 					throw new ApiOperationException(Status.BAD_REQUEST,
 							"Es existiert keine Lehrbefähigung im Katalog der Lehrbefähigungen mit der ID %d.".formatted(tmpIdLehrbefaehigung));
+				}
 				dto.Lehrbefaehigung_Katalog_ID = tmpIdLehrbefaehigung;
 			}
 			case "idAnerkennungsgrund" -> {
@@ -115,10 +120,11 @@ public final class DataLehrerLehrbefaehigung extends DataManagerRevised<Long, DT
 				} else {
 					final LehrerLehrbefaehigungAnerkennungKatalogEintrag eintrag =
 							LehrerLehrbefaehigungAnerkennung.data().getEintragByID(tmpIdAnerkennungsgrund);
-					if (eintrag == null)
+					if (eintrag == null) {
 						throw new ApiOperationException(Status.BAD_REQUEST,
 								"Es existiert kein Anerkennungsgrund für die Lehrbefähigung im Katalog der Anerkennungsgründe mit der ID %d."
 										.formatted(tmpIdAnerkennungsgrund));
+					}
 					dto.LehrbefaehigungAnerkennung_Katalog_ID = tmpIdAnerkennungsgrund;
 				}
 			}
@@ -150,11 +156,13 @@ public final class DataLehrerLehrbefaehigung extends DataManagerRevised<Long, DT
 		// Bestimme die Lehrbefähigungen des Lehramtes
 		final List<DTOLehrerPersonaldatenLehramtBefaehigung> daten =
 				conn.queryList(DTOLehrerPersonaldatenLehramtBefaehigung.QUERY_BY_LEHRERAMT_ID, DTOLehrerPersonaldatenLehramtBefaehigung.class, idLehramt);
-		if (daten == null)
+		if (daten == null) {
 			return result;
+		}
 		// Konvertiere sie und füge sie zur Liste hinzu
-		for (final DTOLehrerPersonaldatenLehramtBefaehigung l : daten)
+		for (final DTOLehrerPersonaldatenLehramtBefaehigung l : daten) {
 			result.add(mapInternal(l));
+		}
 		return result;
 	}
 
@@ -169,19 +177,23 @@ public final class DataLehrerLehrbefaehigung extends DataManagerRevised<Long, DT
 	 */
 	public static Map<Long, List<LehrerLehrbefaehigungEintrag>> getMapByLehramtIds(final DBEntityManager conn, final List<Long> idsLehraemter) {
 		final Map<Long, List<LehrerLehrbefaehigungEintrag>> result = new HashMap<>();
-		if (idsLehraemter.isEmpty())
+		if (idsLehraemter.isEmpty()) {
 			return result;
-		for (final Long idLehramt : idsLehraemter)
+		}
+		for (final Long idLehramt : idsLehraemter) {
 			result.put(idLehramt, new ArrayList<>());
+		}
 		// Bestimme die Lehrbefähigungen zu den Lehrämtern
 		final List<DTOLehrerPersonaldatenLehramtBefaehigung> daten =
 				conn.queryList(DTOLehrerPersonaldatenLehramtBefaehigung.QUERY_LIST_BY_LEHRERAMT_ID, DTOLehrerPersonaldatenLehramtBefaehigung.class,
 						idsLehraemter);
-		if (daten == null)
+		if (daten == null) {
 			return result;
+		}
 		// Konvertiere sie und füge sie zur Map hinzu
-		for (final DTOLehrerPersonaldatenLehramtBefaehigung l : daten)
+		for (final DTOLehrerPersonaldatenLehramtBefaehigung l : daten) {
 			result.get(l.Lehreramt_ID).add(mapInternal(l));
+		}
 		return result;
 	}
 

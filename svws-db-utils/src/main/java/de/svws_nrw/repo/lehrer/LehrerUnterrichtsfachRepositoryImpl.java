@@ -31,15 +31,17 @@ public final class LehrerUnterrichtsfachRepositoryImpl extends RepositoryImpl<DT
 
 	@Override
 	public List<DTOLehrerUnterrichtsfach> getListByLehrerIds(final Collection<Long> idsLehrer) {
-		if ((idsLehrer == null) || idsLehrer.isEmpty())
+		if ((idsLehrer == null) || idsLehrer.isEmpty()) {
 			return Collections.emptyList();
+		}
 		return conn.queryList(DTOLehrerUnterrichtsfach.QUERY_LIST_BY_LEHRER_ID, DTOLehrerUnterrichtsfach.class, idsLehrer);
 	}
 
 	@Override
 	public Map<Long, List<DTOLehrerUnterrichtsfach>> getMapByLehrerIds(final Collection<Long> idsLehrer) {
-		if ((idsLehrer == null) || idsLehrer.isEmpty())
+		if ((idsLehrer == null) || idsLehrer.isEmpty()) {
 			return Collections.emptyMap();
+		}
 		final var list = conn.queryList(DTOLehrerUnterrichtsfach.QUERY_LIST_BY_LEHRER_ID, DTOLehrerUnterrichtsfach.class, idsLehrer);
 		final Map<Long, List<DTOLehrerUnterrichtsfach>> grouped = list.stream().collect(Collectors.groupingBy(f -> f.Lehrer_ID));
 		return idsLehrer.stream().collect(Collectors.toMap(id -> id,	id -> grouped.getOrDefault(id, Collections.emptyList())));

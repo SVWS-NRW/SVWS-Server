@@ -74,11 +74,13 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 
 	@Override
 	public SchuelerSchulbesuchsdaten getById(final Long idSchueler) throws ApiOperationException {
-		if (idSchueler == null)
+		if (idSchueler == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den Schüler darf nicht null sein.");
+		}
 		final DTOSchueler dto = conn.queryByKey(DTOSchueler.class, idSchueler);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der Id %d gefunden".formatted(idSchueler));
+		}
 		return map(dto);
 	}
 
@@ -91,14 +93,17 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 	 * @throws ApiOperationException wenn die Eingabe ungültig ist oder keine Daten für die angegebenen IDs gefunden werden konnten.
 	 */
 	public List<SchuelerSchulbesuchsdaten> getListByIds(final List<Long> idsSchueler) throws ApiOperationException {
-		if (idsSchueler == null)
+		if (idsSchueler == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Liste der IDs der Schüler darf nicht null sein.");
+		}
 		final List<Long> ids = idsSchueler.stream().distinct().filter(Objects::nonNull).toList();
-		if (ids.isEmpty())
+		if (ids.isEmpty()) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Liste der IDs der Schüler darf nicht leer sein.");
+		}
 		final List<DTOSchueler> dtos = conn.queryByKeyList(DTOSchueler.class, idsSchueler);
-		if ((dtos == null) || dtos.isEmpty() || (dtos.size() != ids.size()))
+		if ((dtos == null) || dtos.isEmpty() || (dtos.size() != ids.size())) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es konnten nicht zu allen übergebenen IDs Schüler ermittelt werden.");
+		}
 		final List<SchuelerSchulbesuchsdaten> schulbesuchsdaten = new ArrayList<>(dtos.size());
 		for (final DTOSchueler dto : dtos) {
 			schulbesuchsdaten.add(map(dto));
@@ -166,13 +171,15 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 	}
 
 	private static Long mapSchluesselDauerKindergartenbesuch(final DTOSchueler dtoSchueler) throws ApiOperationException {
-		if (dtoSchueler.DauerKindergartenbesuch == null)
+		if (dtoSchueler.DauerKindergartenbesuch == null) {
 			return null;
+		}
 
 		final Kindergartenbesuch kindergartenbesuch = Kindergartenbesuch.data().getWertBySchluessel(dtoSchueler.DauerKindergartenbesuch);
-		if (kindergartenbesuch == null)
+		if (kindergartenbesuch == null) {
 			throw new ApiOperationException(
 					Status.NOT_FOUND, "Kein Kindergartenbesuch mit dem Schlüssel %s gefunden.".formatted(dtoSchueler.DauerKindergartenbesuch));
+		}
 
 		try {
 			return kindergartenbesuch.historie().getLast().id;
@@ -183,12 +190,14 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 	}
 
 	private static Long mapGrundschuleJahreEingangsphase(final Integer value) {
-		if (value == null)
+		if (value == null) {
 			return null;
+		}
 		final PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag eintrag =
 				PrimarstufeSchuleingangsphaseBesuchsjahre.data().getEintragByID(value.longValue());
-		if (eintrag == null)
+		if (eintrag == null) {
 			return null;
+		}
 		return eintrag.id;
 	}
 
@@ -199,10 +208,11 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		switch (name) {
 			case "id" -> {
 				final Long idPatch = JSONMapper.convertToLong(value, true, "idPatch");
-				if (!Objects.equals(idPatch, getLongId(dtoSchueler)))
+				if (!Objects.equals(idPatch, getLongId(dtoSchueler))) {
 					throw new ApiOperationException(Status.BAD_REQUEST,
 							"Die ID %d des Patches ist null oder stimmt nicht mit der ID %d in der Datenbank überein.".formatted(idPatch,
 									getLongId(dtoSchueler)));
+				}
 			}
 			// Informationen zu der Schule, die vor der Aufnahme besucht wurde
 			case "idVorherigeSchule" -> mapSchulnummer(value, "idVorherigeSchule", v -> dtoSchueler.LSSchulNr = v);
@@ -258,8 +268,9 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			return;
 		}
 		final KindergartenbesuchKatalogEintrag eintrag = Kindergartenbesuch.data().getEintragByID(id);
-		if (eintrag == null)
+		if (eintrag == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Kindergartenbesuch mit der ID %d gefunden.".formatted(id));
+		}
 
 		dtoSchueler.DauerKindergartenbesuch = eintrag.schluessel;
 	}
@@ -271,8 +282,9 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			return;
 		}
 		final DTOKindergarten kindergartenDTO = conn.queryByKey(DTOKindergarten.class, id);
-		if (kindergartenDTO == null)
+		if (kindergartenDTO == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Kindergarten mit der ID %d gefunden.".formatted(id));
+		}
 
 		dto.Kindergarten_ID = id;
 	}
@@ -284,8 +296,9 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			return;
 		}
 		final EinschulungsartKatalogEintrag eintrag = Einschulungsart.data().getEintragByID(id);
-		if (eintrag == null)
+		if (eintrag == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Einschulungsart mit der ID %d gefunden.".formatted(id));
+		}
 
 		dtoSchueler.EinschulungsartASD = eintrag.schluessel;
 	}
@@ -296,8 +309,9 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			dtoSchueler.ErsteSchulform_SI = null;
 			return;
 		}
-		if (Schulform.data().getWertByKuerzel(kuerzel) == null)
+		if (Schulform.data().getWertByKuerzel(kuerzel) == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Für das Kürzel %s wurde keine Schulform gefunden".formatted(kuerzel));
+		}
 
 		dtoSchueler.ErsteSchulform_SI = kuerzel;
 	}
@@ -309,8 +323,9 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			dtoSchueler.Uebergangsempfehlung_JG5 = null;
 			return;
 		}
-		if (Uebergangsempfehlung.data().getWertByKuerzel(kuerzel) == null)
+		if (Uebergangsempfehlung.data().getWertByKuerzel(kuerzel) == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Übergangsempfehlung für das Kürzel %s gefunden.".formatted(kuerzel));
+		}
 
 		dtoSchueler.Uebergangsempfehlung_JG5 = kuerzel;
 	}
@@ -322,8 +337,9 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			return;
 		}
 		final PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag eintrag = PrimarstufeSchuleingangsphaseBesuchsjahre.data().getEintragByID(id);
-		if (eintrag == null)
+		if (eintrag == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Eingangsphase mit der ID %d vorhanden.".formatted(id));
+		}
 
 		dtoSchueler.EPJahre = (int) eintrag.id;
 	}
@@ -334,8 +350,9 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			setter.accept(null);
 			return;
 		}
-		if ((jahr < 1900) || (jahr > 2100))
+		if ((jahr < 1900) || (jahr > 2100)) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Das Jahr %d ist nicht gültig. Es muss zwischen 1900 und 2100 liegen.".formatted(jahr));
+		}
 
 		setter.accept(jahr);
 	}
@@ -359,8 +376,9 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			dto.LSJahrgang = null;
 			return;
 		}
-		if (Jahrgaenge.data().getWertByKuerzel(kuerzel) == null)
+		if (Jahrgaenge.data().getWertByKuerzel(kuerzel) == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Jahrgang für das Kürzel %s gefunden.".formatted(kuerzel));
+		}
 
 		dto.LSJahrgang = kuerzel;
 	}
@@ -373,8 +391,9 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			return;
 		}
 		final DTOJahrgang dtoJahrgang = this.conn.queryByKey(DTOJahrgang.class, idEntlassjahrgang);
-		if (dtoJahrgang == null)
+		if (dtoJahrgang == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Jahrgang für die ID %d gefunden.".formatted(idEntlassjahrgang));
+		}
 
 		dto.Entlassjahrgang_ID = idEntlassjahrgang;
 		dto.Entlassjahrgang = dtoJahrgang.ASDJahrgang;
@@ -389,8 +408,9 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		}
 
 		final Long idAsLong = JSONMapper.convertToLong(id, true, "id");
-		if (Herkunftsarten.data().getWertByIDOrNull(idAsLong) == null)
+		if (Herkunftsarten.data().getWertByIDOrNull(idAsLong) == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Herkunftsart für die ID: %s gefunden.".formatted(id));
+		}
 
 		dtoSchueler.LSVersetzung = id;
 	}

@@ -31,7 +31,7 @@ public final class DataMigration {
 	}
 
 	/**
-	 * Erzeugt eine einfache Anwort mit der Angabe, ob die Operation erfolgreich war und
+	 * Erzeugt eine einfache Antwort mit der Angabe, ob die Operation erfolgreich war und
 	 * mit dem Log derOperation.
 	 *
 	 * @param success   gibt an, ob die Operation erfolgreich war oder nicht
@@ -64,8 +64,9 @@ public final class DataMigration {
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
 		try {
-			if (SVWSKonfiguration.get().isLoggingEnabled())
+			if (SVWSKonfiguration.get().isLoggingEnabled()) {
 				logger.addConsumer(new LogConsumerLogfile("svws_schema_" + conn.getDBSchema() + ".log", true, true));
+			}
 		} catch (final IOException e) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
 		}
@@ -83,9 +84,10 @@ public final class DataMigration {
 			DBConfig tgtConfig = SVWSKonfiguration.get().getDBConfig(conn.getDBSchema());
 			final boolean hatSchemaConfig = (tgtConfig != null);
 			// Falls das Schema in der SVWS-Konfiguration nicht als SVWS-Schema angelegt wurde, dann verwende die Informationen aus der aktuellen Datenbank-Verbindung.
-			if (tgtConfig == null)
+			if (tgtConfig == null) {
 				tgtConfig = SVWSKonfiguration.get().getRootDBConfig(conn.getUser().getUsername(), conn.getUser().getPassword())
 						.switchSchema(PersistenceUnits.SVWS_DB, conn.getDBSchema());
+			}
 
 			// Führe die Migration durch
 			if (!DBMigrationManager.migrateInto(srcConfig, tgtConfig, -1, false, null, logger)) {
@@ -96,8 +98,9 @@ public final class DataMigration {
 
 			// Schreibe die Verbindungsinformation für das neu angelegte SVWS-Schema in die SVWS-Konfiguration
 			try {
-				if (!hatSchemaConfig)
+				if (!hatSchemaConfig) {
 					SVWSKonfiguration.get().createOrUpdateSchema(conn.getDBSchema(), conn.getUser().getUsername(), conn.getUser().getPassword(), false);
+				}
 			} catch (final SVWSKonfigurationException e) {
 				logger.logLn(LogLevel.ERROR, 2, "Fehler bei dem Erstellen bzw. Anpassen der SVWS-Konfiguration (" + e.getMessage() + ")");
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, simpleResponse(false, log));
@@ -130,8 +133,9 @@ public final class DataMigration {
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
 		try {
-			if (SVWSKonfiguration.get().isLoggingEnabled())
+			if (SVWSKonfiguration.get().isLoggingEnabled()) {
 				logger.addConsumer(new LogConsumerLogfile("svws_schema_" + conn.getDBSchema() + ".log", true, true));
+			}
 		} catch (final IOException e) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
 		}
@@ -181,9 +185,10 @@ public final class DataMigration {
 		DBConfig tgtConfig = SVWSKonfiguration.get().getDBConfig(conn.getDBSchema());
 		final boolean hatSchemaConfig = (tgtConfig != null);
 		// Falls das Schema in der SVWS-Konfiguration nicht als SVWS-Schema angelegt wurde, dann verwende die Informationsn aus der aktuellen Datenbank-Verbindung.
-		if (tgtConfig == null)
+		if (tgtConfig == null) {
 			tgtConfig = SVWSKonfiguration.get().getRootDBConfig(conn.getUser().getUsername(), conn.getUser().getPassword())
 					.switchSchema(PersistenceUnits.SVWS_DB, conn.getDBSchema());
+		}
 
 		// Führe die Migration durch
 		if (!DBMigrationManager.migrateInto(srcConfig, tgtConfig, -1, false, schulnummer, logger)) {
@@ -195,8 +200,9 @@ public final class DataMigration {
 
 		// Schreibe die Verbindungsinformation für das neu angelegte SVWS-Schema in die SVWS-Konfiguration
 		try {
-			if (!hatSchemaConfig)
+			if (!hatSchemaConfig) {
 				SVWSKonfiguration.get().createOrUpdateSchema(conn.getDBSchema(), conn.getUser().getUsername(), conn.getUser().getPassword(), false);
+			}
 		} catch (final SVWSKonfigurationException e) {
 			logger.logLn(LogLevel.ERROR, 2, "Fehler bei dem Erstellen bzw. Anpassen der SVWS-Konfiguration (" + e.getMessage() + ")");
 			final SimpleOperationResponse daten = simpleResponse(false, log);

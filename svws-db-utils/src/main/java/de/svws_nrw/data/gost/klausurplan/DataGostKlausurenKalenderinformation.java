@@ -71,8 +71,9 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 	private List<GostKlausurenKalenderinformation> getKalenderinformationen() throws ApiOperationException {
 		final List<DTOGostKlausurenKalenderinformationen> kalInfos = conn.queryAll(DTOGostKlausurenKalenderinformationen.class);
 		final List<GostKlausurenKalenderinformation> daten = new ArrayList<>();
-		for (final DTOGostKlausurenKalenderinformationen ki : kalInfos)
+		for (final DTOGostKlausurenKalenderinformationen ki : kalInfos) {
 			daten.add(dtoMapper.apply(ki));
+		}
 		return daten;
 	}
 

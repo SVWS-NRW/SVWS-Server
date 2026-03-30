@@ -1,5 +1,7 @@
 package de.svws_nrw.data.schule;
 
+import static de.svws_nrw.db.schema.Schema.tab_AllgAdrAnsprechpartner;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -14,12 +16,10 @@ import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.util.ValidationUtils;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebeAnsprechpartner;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOBetrieb;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOBetriebeAnsprechpartner;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
-
-import static de.svws_nrw.db.schema.Schema.tab_AllgAdrAnsprechpartner;
 
 /** Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für das CoreDTO {@link BetriebeAnsprechpartner} */
 public final class DataBetriebAnsprechpartner extends DataManagerRevised<Long, DTOBetriebeAnsprechpartner, BetriebeAnsprechpartner> {
@@ -47,12 +47,14 @@ public final class DataBetriebAnsprechpartner extends DataManagerRevised<Long, D
 
 	@Override
 	public BetriebeAnsprechpartner getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die ID des Ansprechpartners darf nicht null sein.");
+		}
 
 		final DTOBetriebeAnsprechpartner dto = this.conn.queryByKey(DTOBetriebeAnsprechpartner.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde kein Ansprechpartner mit der ID %d gefunden.".formatted(id));
+		}
 
 		return map(dto);
 	}
@@ -109,12 +111,14 @@ public final class DataBetriebAnsprechpartner extends DataManagerRevised<Long, D
 
 	private void updateIdBetrieb(final DTOBetriebeAnsprechpartner dto, final String name, final Object value) throws ApiOperationException {
 		final Long idBetrieb = JSONMapper.convertToLong(value, false, name);
-		if (idBetrieb.equals(dto.Adresse_ID))
+		if (idBetrieb.equals(dto.Adresse_ID)) {
 			return;
+		}
 
 		final DTOBetrieb betrieb = this.conn.queryByKey(DTOBetrieb.class, idBetrieb);
-		if (betrieb == null)
+		if (betrieb == null) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Kein Betrieb zur ID %d gefunden.".formatted(idBetrieb));
+		}
 
 		dto.Adresse_ID =  idBetrieb;
 	}
@@ -126,8 +130,9 @@ public final class DataBetriebAnsprechpartner extends DataManagerRevised<Long, D
 	}
 
 	private Set<Long> getIdsOfReferencedAnsprechpartner(final Set<Long> ids) {
-		if ((ids == null) || ids.isEmpty())
+		if ((ids == null) || ids.isEmpty()) {
 			return Collections.emptySet();
+		}
 
 		final String query = "SELECT DISTINCT a.idAnsprechpartner FROM DTOSchuelerBetrieb a WHERE a.idAnsprechpartner IN :ids";
 		final List<Long> results = this.conn.query(query, Long.class).setParameter("ids", ids).getResultList();

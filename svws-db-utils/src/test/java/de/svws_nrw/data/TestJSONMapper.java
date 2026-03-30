@@ -1,24 +1,24 @@
 package de.svws_nrw.data;
 
-import java.util.List;
-import java.util.Map;
-
 import static de.svws_nrw.data.util.TestUtils.fromObject;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import de.svws_nrw.db.utils.ApiOperationException;
-import jakarta.ws.rs.core.Response;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import de.svws_nrw.base.compression.CompressionException;
-import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
+import de.svws_nrw.base.compression.CompressionException;
+import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
+import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.Response;
 
 
 /**
@@ -66,8 +66,9 @@ class TestJSONMapper {
 			assertEquals(original.abiturjahrgang, decoded.abiturjahrgang);
 			assertEquals(original.schulgliederung, decoded.schulgliederung);
 			assertEquals(original.kurse.size(), decoded.kurse.size());
-			for (int i = 0; i < original.kurse.size(); i++)
+			for (int i = 0; i < original.kurse.size(); i++) {
 				assertEquals(original.kurse.get(i), decoded.kurse.get(i));
+			}
 		} catch (final CompressionException e) {
 			fail(e);
 		}

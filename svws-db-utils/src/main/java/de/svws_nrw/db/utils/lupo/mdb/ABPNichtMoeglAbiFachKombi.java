@@ -1,11 +1,13 @@
 package de.svws_nrw.db.utils.lupo.mdb;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
+import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
+import de.svws_nrw.db.dto.current.schild.gost.DTOFaecherNichtMoeglicheKombination;
 import io.github.spannm.jackcess.ColumnBuilder;
 import io.github.spannm.jackcess.DataType;
 import io.github.spannm.jackcess.Database;
@@ -14,9 +16,6 @@ import io.github.spannm.jackcess.PropertyMap;
 import io.github.spannm.jackcess.Row;
 import io.github.spannm.jackcess.Table;
 import io.github.spannm.jackcess.TableBuilder;
-
-import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
-import de.svws_nrw.db.dto.current.schild.gost.DTOFaecherNichtMoeglicheKombination;
 
 /**
  * Diese Klasse wird für den Import der Tabelle ABP_NichtMoeglAbiFachKombi
@@ -147,8 +146,9 @@ public final class ABPNichtMoeglAbiFachKombi {
 	public static List<ABPNichtMoeglAbiFachKombi> get(final List<DTOFaecherNichtMoeglicheKombination> nichtMoeglicheKombinationen, final List<DTOFach> faecher,
 			final Map<Long, DTOFach> faecherMap) {
 		final List<ABPNichtMoeglAbiFachKombi> liste = new ArrayList<>();
-		if (nichtMoeglicheKombinationen == null)
+		if (nichtMoeglicheKombinationen == null) {
 			return liste;
+		}
 		for (int i = 0; i < nichtMoeglicheKombinationen.size(); i++) {
 			final DTOFaecherNichtMoeglicheKombination nichtMoeglicheKombination = nichtMoeglicheKombinationen.get(i);
 			final ABPNichtMoeglAbiFachKombi eintrag = new ABPNichtMoeglAbiFachKombi();

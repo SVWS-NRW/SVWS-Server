@@ -45,7 +45,6 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 		this.stundenplanID = stundenplanID;
 	}
 
-
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchueler} in einen Core-DTO {@link StundenplanSchueler}.
 	 */
@@ -76,11 +75,13 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 	 */
 	public static List<StundenplanSchueler> getSchueler(final @NotNull DBEntityManager conn, final long idStundenplan) throws ApiOperationException {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
+		if (schule == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
-		if (stundenplan == null)
+		if (stundenplan == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
+		}
 		// Bestimme alle Klassen-IDs der Schuljahresabschnitts
 		final List<Long> klassenIDs = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKlassen.class, stundenplan.Schuljahresabschnitts_ID)
 				.stream().map(k -> k.ID).toList();
@@ -109,8 +110,9 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 		for (final DTOSchueler s : schuelerListe) {
 			// TODO Filtere alle Schüler, die ein Abgangsdatum haben, welches vor dem Beginn des Stundenplans liegt
 			final Long idKlasse = mapSchuelerKlasse.get(s.ID);
-			if (idKlasse == null) // Fehlervermeidung: Schüler ist noch in der Tabelle Kurs_Schueler enthalten, obwohl er keinen Lernabschnitt mehr hat - sollte so eigentlich nicht auftauchen
+			if (idKlasse == null) { // Fehlervermeidung: Schüler ist noch in der Tabelle Kurs_Schueler enthalten, obwohl er keinen Lernabschnitt mehr hat - sollte so eigentlich nicht auftauchen
 				continue;
+			}
 			final StundenplanSchueler schueler = dtoMapper.apply(s);
 			schueler.idKlasse = idKlasse;
 			daten.add(schueler);
@@ -129,18 +131,22 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, stundenplanID);
-		if (stundenplan == null)
+		if (stundenplan == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(stundenplanID));
-		if (id == null)
+		}
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Schüler mit der ID null ist unzulässig.");
+		}
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
-		if (schueler == null)
+		if (schueler == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der ID %d gefunden.".formatted(id));
+		}
 		final List<DTOSchuelerLernabschnittsdaten> abschnitte = conn.queryList(
 				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr = 0",
 				DTOSchuelerLernabschnittsdaten.class, id, stundenplan.Schuljahresabschnitts_ID);
-		if (abschnitte.size() != 1)
+		if (abschnitte.size() != 1) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Der Schüler mit der ID %d hat keinen oder mehr als einen Lernabschnitt.".formatted(id));
+		}
 		final DTOSchuelerLernabschnittsdaten abschnitt = abschnitte.get(0);
 		final StundenplanSchueler daten = dtoMapper.apply(schueler);
 		daten.idKlasse = abschnitt.Klassen_ID;

@@ -26,8 +26,9 @@ public final class DataKatalogLehrerFachrichtungen extends DataManager<Long> {
 	@Override
 	public Response getAll() {
 		final ArrayList<LehrerFachrichtungKatalogEintrag> daten = new ArrayList<>();
-		for (final LehrerFachrichtung status : LehrerFachrichtung.values())
+		for (final LehrerFachrichtung status : LehrerFachrichtung.values()) {
 			daten.addAll(status.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

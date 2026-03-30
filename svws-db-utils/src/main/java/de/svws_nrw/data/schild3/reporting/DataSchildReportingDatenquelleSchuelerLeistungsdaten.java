@@ -1,10 +1,10 @@
 package de.svws_nrw.data.schild3.reporting;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.NoteKatalogEintrag;
@@ -41,10 +41,12 @@ public final class DataSchildReportingDatenquelleSchuelerLeistungsdaten extends 
 		// Prüfe, ob die Lernabschnittsdaten in der DB vorhanden sind
 		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAbschnitte = conn.queryByKeyList(DTOSchuelerLernabschnittsdaten.class, params)
 				.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
-		for (final Long abschnittID : params)
-			if (mapAbschnitte.get(abschnittID) == null)
+		for (final Long abschnittID : params) {
+			if (mapAbschnitte.get(abschnittID) == null) {
 				throw new ApiOperationException(Status.NOT_FOUND,
 						"Parameter der Abfrage ungültig: Ein Schülerlernabschnitt mit der ID " + abschnittID + " existiert nicht.");
+			}
+		}
 
 		// Erzeuge die Core-DTOs für das Ergebnis der Datenquelle
 		final ArrayList<SchildReportingSchuelerLeistungsdaten> result = new ArrayList<>();
@@ -52,8 +54,9 @@ public final class DataSchildReportingDatenquelleSchuelerLeistungsdaten extends 
 		// Aggregiere die benötigten Daten aus der Datenbank
 		final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_LIST_BY_ABSCHNITT_ID,
 				DTOSchuelerLeistungsdaten.class, params);
-		if ((leistungsdaten == null) || leistungsdaten.isEmpty())
+		if ((leistungsdaten == null) || leistungsdaten.isEmpty()) {
 			return result;
+		}
 		final List<Long> idFaecher = leistungsdaten.stream().map(l -> l.Fach_ID).distinct().toList();
 		final Map<Long, DTOFach> mapFaecher = (idFaecher.isEmpty()) ? Collections.emptyMap()
 				: conn.queryByKeyList(DTOFach.class, idFaecher).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
@@ -69,14 +72,16 @@ public final class DataSchildReportingDatenquelleSchuelerLeistungsdaten extends 
 
 		for (final DTOSchuelerLeistungsdaten dto : leistungsdaten) {
 			final DTOFach dtoFach = mapFaecher.get(dto.Fach_ID);
-			if (dtoFach == null)
+			if (dtoFach == null) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, String.format(meldungsvorlageDatenInkonsistent, "Fach", dto.Fach_ID, dto.ID));
+			}
 			String lehrerKuerzel = null;
 			if (dto.Fachlehrer_ID != null) {
 				final DTOLehrer dtoLehrer = mapLehrer.get(dto.Fachlehrer_ID);
-				if (dtoLehrer == null)
+				if (dtoLehrer == null) {
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 							String.format(meldungsvorlageDatenInkonsistent, "Fachlehrer", dto.Fachlehrer_ID, dto.ID));
+				}
 				lehrerKuerzel = dtoLehrer.Kuerzel;
 			}
 			final DTOSchuelerLernabschnittsdaten dtoLernabschnitt = mapAbschnitte.get(dto.Abschnitt_ID);

@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import de.svws_nrw.core.data.schule.Einwilligungsart;
 import de.svws_nrw.core.data.lehrer.LehrerEinwilligung;
+import de.svws_nrw.core.data.schule.Einwilligungsart;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -79,12 +79,13 @@ public final class DataLehrerEinwilligungen extends DataManagerRevised<Long[], D
 		final Long idLehrer = JSONMapper.convertToLong(initAttributes.get("idLehrer"), false, "idLehrer");
 		final Long idEinwilligungsart = JSONMapper.convertToLong(initAttributes.get("idEinwilligungsart"), false, "idEinwilligungsart");
 		final DTOLehrerDatenschutz existingEntry = conn.queryByKey(DTOLehrerDatenschutz.class, idLehrer, idEinwilligungsart);
-		if (existingEntry != null)
+		if (existingEntry != null) {
 			throw new ApiOperationException(
 					Status.NOT_FOUND,
 					"Es existiert bereits eine Einwilligung für die Kombination aus Lehrer-ID %d und Einwilligungsart-ID %d.".formatted(idLehrer,
 							idEinwilligungsart)
 			);
+		}
 	}
 
 	@Override
@@ -93,13 +94,15 @@ public final class DataLehrerEinwilligungen extends DataManagerRevised<Long[], D
 		switch (name) {
 			case "idLehrer" -> {
 				final Long idLehrer = JSONMapper.convertToLong(value, false, "idLehrer");
-				if (!Objects.equals(dto.LehrerID, idLehrer))
+				if (!Objects.equals(dto.LehrerID, idLehrer)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(idLehrer, dto.LehrerID));
+				}
 			}
 			case "idEinwilligungsart" -> {
 				final Long idEinwilligungsart = JSONMapper.convertToLong(value, false, "idEinwilligungsart");
-				if (!Objects.equals(dto.DatenschutzID, idEinwilligungsart))
+				if (!Objects.equals(dto.DatenschutzID, idEinwilligungsart)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(idEinwilligungsart, dto.DatenschutzID));
+				}
 			}
 			case "istZugestimmt" -> dto.Status = JSONMapper.convertToBoolean(value, false, "istZugestimmt");
 			case "istAbgefragt" -> dto.Abgefragt = JSONMapper.convertToBoolean(value, false, "istAbgefragt");
@@ -109,12 +112,14 @@ public final class DataLehrerEinwilligungen extends DataManagerRevised<Long[], D
 
 	@Override
 	public LehrerEinwilligung getById(final Long[] id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einer Einwilligungsart mit der ID null ist unzulässig.");
+		}
 		final DTOLehrerDatenschutz einwilligung = conn.queryByKey(DTOLehrerDatenschutz.class, id[0], id[1]);
-		if (einwilligung == null)
+		if (einwilligung == null) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Eine Einwilligung mit LehrerID %d und der EinwilligungsartID %d wurde nicht gefunden.".formatted(id[0], id[1]));
+		}
 		return map(einwilligung);
 	}
 

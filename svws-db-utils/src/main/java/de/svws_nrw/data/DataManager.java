@@ -139,13 +139,16 @@ public abstract class DataManager<ID> {
 		for (final Entry<String, Object> entry : map.entrySet()) {
 			final String key = entry.getKey();
 			final Object value = entry.getValue();
-			if (attributesSkip.contains(key))
+			if (attributesSkip.contains(key)) {
 				continue;
-			if ((attributesForbidden != null) && attributesForbidden.contains(key))
+			}
+			if ((attributesForbidden != null) && attributesForbidden.contains(key)) {
 				throw new ApiOperationException(Status.FORBIDDEN, "Attribut %s darf nicht im Patch enthalten sein.".formatted(key));
+			}
 			final DataBasicMapper<DTO> mapper = attributeMapper.get(key);
-			if (mapper == null)
+			if (mapper == null) {
 				throw new ApiOperationException(Status.BAD_REQUEST);
+			}
 			mapper.map(conn, dto, value, map);
 		}
 	}
@@ -168,13 +171,16 @@ public abstract class DataManager<ID> {
 	 */
 	private <DTO> void patchBasicInternal(final ID id, final Map<String, Object> map, final Class<DTO> dtoClass,
 			final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Ein Patch mit der ID null ist nicht möglich.");
-		if (map.isEmpty())
+		}
+		if (map.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND, "In dem Patch sind keine Daten enthalten.");
+		}
 		final DTO dto = conn.queryByKey(dtoClass, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		applyPatchMappings(conn, dto, map, attributeMapper, Collections.emptySet(), attributesForbidden);
 		conn.transactionPersist(dto);
 		conn.transactionFlush();
@@ -245,8 +251,9 @@ public abstract class DataManager<ID> {
 	protected <DTO> Response patchBasicMultiple(final String idAttr, final InputStream is, final Class<DTO> dtoClass,
 			final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
 		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
-		for (final Map<String, Object> map : multipleMaps)
+		for (final Map<String, Object> map : multipleMaps) {
 			patchBasicInternal((ID) map.get(idAttr), map, dtoClass, attributeMapper, null);
+		}
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
@@ -288,8 +295,9 @@ public abstract class DataManager<ID> {
 			initDTO.accept(dto, newID);
 			return dto;
 		} catch (final Exception e) {
-			if (e instanceof final ApiOperationException apiOperationException)
+			if (e instanceof final ApiOperationException apiOperationException) {
 				throw apiOperationException;
+			}
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e);
 		}
 	}
@@ -322,21 +330,25 @@ public abstract class DataManager<ID> {
 			final DTOMapper<DTO, CoreData> dtoMapper, final Set<String> attributesRequired, final Set<String> attributesDelayed,
 			final Map<String, DataBasicMapper<DTO>> attributeMapper) throws ApiOperationException {
 		// Prüfe, ob alle relevanten Attribute im JSON-Inputstream vorhanden sind
-		for (final String attr : attributesRequired)
-			if (!map.containsKey(attr))
+		for (final String attr : attributesRequired) {
+			if (!map.containsKey(attr)) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s fehlt in der Anfrage".formatted(attr));
+			}
+		}
 		// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
 		final DTO dto = newDTO(dtoClass, newID, initDTO);
 		applyPatchMappings(conn, dto, map, attributeMapper, attributesDelayed, null);
 		// Persistiere das DTO in der Datenbank
-		if (!conn.transactionPersist(dto))
+		if (!conn.transactionPersist(dto)) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+		}
 		conn.transactionFlush();
 		if (!attributesDelayed.isEmpty()) {
 			final var attrSkip = attributeMapper.keySet().stream().filter(a -> !attributesDelayed.contains(a)).collect(Collectors.toSet());
 			applyPatchMappings(conn, dto, map, attributeMapper, attrSkip, null);
-			if (!conn.transactionPersist(dto))
+			if (!conn.transactionPersist(dto)) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+			}
 			conn.transactionFlush();
 		}
 		return dtoMapper.apply(dto);
@@ -431,8 +443,9 @@ public abstract class DataManager<ID> {
 		// Und jetzt durchwandere die einzelnen hinzuzufügenden Objekte
 		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
 		final List<CoreData> daten = new ArrayList<>();
-		for (final Map<String, Object> map : multipleMaps)
+		for (final Map<String, Object> map : multipleMaps) {
 			daten.add(this.addBasic(newID++, map, dtoClass, initDTO, dtoMapper, attributesRequired, Collections.emptySet(), attributeMapper));
+		}
 		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -467,8 +480,9 @@ public abstract class DataManager<ID> {
 		// Und jetzt durchwandere die einzelnen hinzuzufügenden Objekte
 		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
 		final List<CoreData> daten = new ArrayList<>();
-		for (final Map<String, Object> map : multipleMaps)
+		for (final Map<String, Object> map : multipleMaps) {
 			daten.add(this.addBasic(newID++, map, dtoClass, initDTO, dtoMapper, attributesRequired, attributesDelayed, attributeMapper));
+		}
 		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -491,11 +505,13 @@ public abstract class DataManager<ID> {
 	protected <DTO, CoreData> Response deleteBasic(final Object id, final Class<DTO> dtoClass, final DTOMapper<DTO, CoreData> dtoMapper)
 			throws ApiOperationException {
 		// Bestimme das DTO
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es muss eine ID angegeben werden. Null ist nicht zulässig.");
+		}
 		final DTO dto = conn.queryByKey(dtoClass, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein DTO mit der ID %s gefunden.".formatted(id));
+		}
 		final CoreData daten = dtoMapper.apply(dto);
 		// Entferne das DTO
 		conn.transactionRemove(dto);
@@ -522,14 +538,17 @@ public abstract class DataManager<ID> {
 	protected <DTO, CoreData> Response deleteBasicMultiple(final List<? extends Object> ids, final Class<DTO> dtoClass,
 			final DTOMapper<DTO, CoreData> dtoMapper) throws ApiOperationException {
 		// Bestimme die DTOs
-		if (ids == null)
+		if (ids == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es müssen IDs angegeben werden. Null ist nicht zulässig.");
+		}
 		final List<CoreData> daten = new ArrayList<>();
-		if (ids.isEmpty())
+		if (ids.isEmpty()) {
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		}
 		final List<DTO> dtos = conn.queryByKeyList(dtoClass, ids);
-		if (dtos == null)
+		if (dtos == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine DTOs mit den angegebenen IDs gefunden.");
+		}
 		for (final DTO dto : dtos) {
 			daten.add(dtoMapper.apply(dto));
 			conn.transactionRemove(dto);

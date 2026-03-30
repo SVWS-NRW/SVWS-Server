@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import io.github.spannm.jackcess.ColumnBuilder;
 import io.github.spannm.jackcess.DataType;
 import io.github.spannm.jackcess.Database;
@@ -14,8 +15,6 @@ import io.github.spannm.jackcess.PropertyMap;
 import io.github.spannm.jackcess.Row;
 import io.github.spannm.jackcess.Table;
 import io.github.spannm.jackcess.TableBuilder;
-
-import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 
 /**
  * Diese Klasse wird für den Import der Tabelle ABP_Faecher aus einer LuPO-Datenbank
@@ -278,8 +277,9 @@ public final class ABPFaecher {
 	 */
 	public static Map<String, ABPFaecher> get(final Map<String, ABPFachgruppen> fachgruppen, final List<DTOFach> faecher, final Map<Long, DTOFach> faecherMap) {
 		final HashMap<String, ABPFaecher> lupoFaecher = new HashMap<>();
-		if (faecher == null)
+		if (faecher == null) {
 			return lupoFaecher;
+		}
 
 		// Filtere alle Fächer, für die keine Fachgruppe definiert ist
 		final List<DTOFach> faecherGefiltert = faecher.stream()

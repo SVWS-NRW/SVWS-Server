@@ -161,8 +161,9 @@ public final class DBSchemaManager {
 			conn.transactionFlush();
 			if (!success) {
 				result = false;
-				if (returnOnError)
+				if (returnOnError) {
 					break;
+				}
 			} else {
 				final List<String> pkTrigger = tab.getPrimaerschluesselTriggerSQLList(dbms, revision, true);
 				if (!pkTrigger.isEmpty()) {
@@ -170,8 +171,9 @@ public final class DBSchemaManager {
 					for (final String scriptTrigger : pkTrigger) {
 						if (conn.transactionNativeUpdate(scriptTrigger) == Integer.MIN_VALUE) {
 							result = false;
-							if (returnOnError)
+							if (returnOnError) {
 								break;
+							}
 						}
 						conn.transactionFlush();
 					}
@@ -200,8 +202,9 @@ public final class DBSchemaManager {
 				final String script = idx.getSQL();
 				if (conn.transactionNativeUpdate(script) == Integer.MIN_VALUE) {
 					result = false;
-					if (returnOnError)
+					if (returnOnError) {
 						break;
+					}
 				}
 				conn.transactionFlush();
 			}
@@ -225,8 +228,9 @@ public final class DBSchemaManager {
 			logger.logLn(view.name);
 			if (conn.transactionNativeUpdate(view.getSQLCreate(conn.getDBDriver())) == Integer.MIN_VALUE) {
 				result = false;
-				if (returnOnError)
+				if (returnOnError) {
 					break;
+				}
 			}
 			conn.transactionFlush();
 		}
@@ -251,8 +255,9 @@ public final class DBSchemaManager {
 			logger.logLn(sql);
 			if (conn.transactionNativeUpdate(sql) == Integer.MIN_VALUE) {
 				result = false;
-				if (returnOnError)
+				if (returnOnError) {
 					break;
+				}
 			}
 			conn.transactionFlush();
 		}
@@ -271,16 +276,19 @@ public final class DBSchemaManager {
 	 */
 	public static boolean setDBRevision(final DBEntityManager conn, final long revision) {
 		final long rev = (revision == -1) ? SchemaRevisionen.maxRevision.revision : revision;
-		if (rev == -1)
+		if (rev == -1) {
 			return false;
+		}
 		final DTOSchemaStatus oldObj = conn.querySingle(DTOSchemaStatus.class);
 		final DTOSchemaStatus newObj = new DTOSchemaStatus(rev, (rev > SchemaRevisionen.maxRevision.revision) || ((oldObj != null) && (oldObj.IsTainted)));
 		if (oldObj == null) {
-			if (!conn.transactionPersist(newObj))
+			if (!conn.transactionPersist(newObj)) {
 				return false;
+			}
 		} else {
-			if (!conn.transactionReplace(oldObj, newObj))
+			if (!conn.transactionReplace(oldObj, newObj)) {
 				return false;
+			}
 		}
 		conn.transactionFlush();
 		return true;
@@ -307,18 +315,22 @@ public final class DBSchemaManager {
 		final var dbms = conn.getDBDriver();
 		for (final SchemaTabelle tab : Schema.getTabellen(revision)) {
 			for (final SchemaTabelleTrigger trig : tab.trigger()) {
-				if (!dbms.equals(trig.dbms()))
+				if (!dbms.equals(trig.dbms())) {
 					continue;
-				if (revision < trig.revision().revision)
+				}
+				if (revision < trig.revision().revision) {
 					continue;
-				if ((trig.veraltet().revision >= 0) && (revision >= trig.veraltet().revision))
+				}
+				if ((trig.veraltet().revision >= 0) && (revision >= trig.veraltet().revision)) {
 					continue;
+				}
 				logger.logLn(trig.name());
 				final String script = trig.getSQL(conn.getDBDriver(), true);
 				if (conn.transactionNativeUpdate(script) == Integer.MIN_VALUE) {
 					result = false;
-					if (returnOnError)
+					if (returnOnError) {
 						break;
+					}
 				}
 			}
 		}
@@ -326,8 +338,9 @@ public final class DBSchemaManager {
 		logger.modifyIndent(-2);
 		if (!result) {
 			logger.logLn(strError);
-			if (returnOnError)
+			if (returnOnError) {
 				return false;
+			}
 		}
 		logger.logLn(strOK);
 		return result;
@@ -352,8 +365,9 @@ public final class DBSchemaManager {
 		logger.modifyIndent(-2);
 		if (!success) {
 			logger.logLn(strError);
-			if (returnOnError)
+			if (returnOnError) {
 				return false;
+			}
 		}
 		logger.logLn(strOK);
 
@@ -363,8 +377,9 @@ public final class DBSchemaManager {
 		logger.modifyIndent(-2);
 		if (!success) {
 			logger.logLn(strError);
-			if (returnOnError)
+			if (returnOnError) {
 				return false;
+			}
 		}
 		logger.logLn(strOK);
 
@@ -375,8 +390,9 @@ public final class DBSchemaManager {
 			logger.modifyIndent(-2);
 			if (!success) {
 				logger.logLn(strError);
-				if (returnOnError)
+				if (returnOnError) {
 					return false;
+				}
 			}
 			logger.logLn(strOK);
 		}
@@ -388,8 +404,9 @@ public final class DBSchemaManager {
 		logger.modifyIndent(-2);
 		if (!success) {
 			logger.logLn(strError);
-			if (returnOnError)
+			if (returnOnError) {
 				return false;
+			}
 		}
 		logger.logLn(strOK);
 
@@ -399,8 +416,9 @@ public final class DBSchemaManager {
 		logger.modifyIndent(-2);
 		if (!success) {
 			logger.logLn(strError);
-			if (returnOnError)
+			if (returnOnError) {
 				return false;
+			}
 		}
 		logger.logLn(strOK);
 
@@ -411,8 +429,9 @@ public final class DBSchemaManager {
 			logger.modifyIndent(-2);
 			if (!success) {
 				logger.logLn(strError);
-				if (returnOnError)
+				if (returnOnError) {
 					return false;
+				}
 			}
 			logger.logLn(strOK);
 		}
@@ -423,8 +442,9 @@ public final class DBSchemaManager {
 		logger.modifyIndent(-2);
 		if (!success) {
 			logger.logLn(strError);
-			if (returnOnError)
+			if (returnOnError) {
 				return false;
+			}
 		}
 		logger.logLn(strOK);
 		return true;
@@ -449,14 +469,17 @@ public final class DBSchemaManager {
 		try {
 			conn.transactionBegin();
 			result = createSVWSSchemaInternal(conn, revision, createUser, createTrigger);
-			if (!result)
+			if (!result) {
 				throw new DBException("Fehler beim Erstellen des Schemas");
-			if (!conn.transactionCommit())
+			}
+			if (!conn.transactionCommit()) {
 				throw new DBException("Fehler beim Erstellen des Schemas - Datenbank-Transaktion konnte nicht abgeschlossen werden.");
+			}
 		} catch (final Exception e) {
 			logger.logLn(" " + strError);
-			if (e instanceof DBException)
+			if (e instanceof DBException) {
 				throw e;
+			}
 			throw new DBException("Unerwarteter Fehler beim Erstellen des Schemas: " + e.getMessage());
 		} finally {
 			logger.modifyIndent(-2);
@@ -487,10 +510,12 @@ public final class DBSchemaManager {
 		Collections.reverse(tabellen);
 		for (final SchemaTabelle tab : tabellen) {
 			// Prüfe bei einer Lecagy-Schild-DB, ob eine Tabelle für die Migration vorliegt - nur diese sollen verworfen werden
-			if (!version.isValid() && !tab.migrate())
+			if (!version.isValid() && !tab.migrate()) {
 				continue;
-			if (!status.hasTable(tab.name()))
+			}
+			if (!status.hasTable(tab.name())) {
 				continue;
+			}
 			logger.log(tab.name() + "... ");
 			final String sql = "DROP TABLE " + ((driver == DBDriver.SQLITE) ? "IF EXISTS " : "") + tab.name() + ";";
 			final int result = conn.executeWithJDBCConnection(sql);
@@ -609,10 +634,12 @@ public final class DBSchemaManager {
 		logger.modifyIndent(2);
 		try {
 			manager.conn.transactionBegin();
-			if (!manager.createSVWSSchemaInternal(manager.conn, 0, true, true))
+			if (!manager.createSVWSSchemaInternal(manager.conn, 0, true, true)) {
 				throw new DBException("Fehler beim Erstellen des Schemas");
-			if (!manager.conn.transactionCommit())
+			}
+			if (!manager.conn.transactionCommit()) {
 				throw new DBException("Fehler beim Erstellen des Schemas - Transaktion konnte nicht abgeschlossen werden");
+			}
 		} catch (final DBException e) {
 			logger.logLn(e.getMessage());
 			return false;
@@ -626,8 +653,9 @@ public final class DBSchemaManager {
 
 		logger.logLn("Aktualisiere das Schema schrittweise auf Revision " + rev + ".");
 		logger.modifyIndent(2);
-		if (!manager.updater.update(manager.conn, rev, false, true))
+		if (!manager.updater.update(manager.conn, rev, false, true)) {
 			return false;
+		}
 		logger.modifyIndent(-2);
 		return true;
 	}
@@ -648,13 +676,16 @@ public final class DBSchemaManager {
 			final Logger logger) {
 		final long max_revision = SchemaRevisionen.maxRevision.revision;
 		long rev = maxUpdateRevision;
-		if (rev < 0)
+		if (rev < 0) {
 			rev = max_revision;
-		if (rev > max_revision)
+		}
+		if (rev > max_revision) {
 			return false;
+		}
 
-		if (!DBMigrationManager.createNewTargetSchema(tgtConfig, tgtRootUser, tgtRootPW, logger))
+		if (!DBMigrationManager.createNewTargetSchema(tgtConfig, tgtRootUser, tgtRootPW, logger)) {
 			return false;
+		}
 
 		return createAndUpdateSchemaInto(tgtConfig, rev, logger, false);
 	}
@@ -675,17 +706,20 @@ public final class DBSchemaManager {
 	public static boolean recycleSchema(final DBConfig tgtConfig, final long maxUpdateRevision, final Logger logger) throws SVWSKonfigurationException {
 		final long max_revision = SchemaRevisionen.maxRevision.revision;
 		long rev = maxUpdateRevision;
-		if (rev < 0)
+		if (rev < 0) {
 			rev = max_revision;
-		if (rev > max_revision)
+		}
+		if (rev > max_revision) {
 			return false;
+		}
 
 		final boolean success = createAndUpdateSchemaInto(tgtConfig, rev, logger, true);
 
 		// Prüfe, ob das Datenbank-Schema bereits in der Konfiguration vorhanden ist oder nicht. Wenn nicht, dann füge es hinzu
 		final DBConfig tmp = SVWSKonfiguration.get().getDBConfig(tgtConfig.getDBSchema());
-		if (tmp == null)
+		if (tmp == null) {
 			SVWSKonfiguration.get().createOrUpdateSchema(tgtConfig.getDBSchema(), tgtConfig.getUsername(), tgtConfig.getPassword(), false);
+		}
 
 		return success;
 	}

@@ -58,12 +58,14 @@ public final class DataGostKlausurenRaumstunde extends DataManagerRevised<Long, 
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOGostKlausurenRaumstunden getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die GostKlausurraumstunde darf nicht null sein.");
+		}
 
 		final DTOGostKlausurenRaumstunden klasseDto = conn.queryByKey(DTOGostKlausurenRaumstunden.class, id);
-		if (klasseDto == null)
+		if (klasseDto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine GostKlausurraumstunde zur ID " + id + " gefunden.");
+		}
 
 		return klasseDto;
 	}
@@ -93,8 +95,9 @@ public final class DataGostKlausurenRaumstunde extends DataManagerRevised<Long, 
 	 */
 	public List<GostKlausurraumstunde> getKlausurraumstundenZuTermin(final Long idTermin) throws ApiOperationException {
 		final List<GostKlausurraum> listRaeume = new DataGostKlausurenRaum(conn).getKlausurraeumeZuTerminIDs(ListUtils.create1(idTermin));
-		if (listRaeume.isEmpty())
+		if (listRaeume.isEmpty()) {
 			return new ArrayList<>();
+		}
 		return getKlausurraumstundenZuRaeumen(listRaeume);
 	}
 
@@ -107,8 +110,9 @@ public final class DataGostKlausurenRaumstunde extends DataManagerRevised<Long, 
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public List<GostKlausurraumstunde> getKlausurraumstundenZuRaeumen(final Collection<GostKlausurraum> listRaeume) throws ApiOperationException {
-		if (listRaeume.isEmpty())
+		if (listRaeume.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final List<DTOGostKlausurenRaumstunden> stunden = conn.queryList(DTOGostKlausurenRaumstunden.QUERY_LIST_BY_KLAUSURRAUM_ID,
 				DTOGostKlausurenRaumstunden.class, listRaeume.stream().map(s -> s.id).toList());
 		return mapList(stunden);
@@ -137,8 +141,9 @@ public final class DataGostKlausurenRaumstunde extends DataManagerRevised<Long, 
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public List<GostKlausurraumstunde> getKlausurraumstundenZuSchuelerklausurterminraumstunden(final Collection<GostSchuelerklausurterminraumstunde> listSktrs) throws ApiOperationException {
-		if (listSktrs.isEmpty())
+		if (listSktrs.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final List<DTOGostKlausurenRaumstunden> sks = conn.queryByKeyList(DTOGostKlausurenRaumstunden.class,
 				listSktrs.stream().map(sktrs -> sktrs.idRaumstunde).toList());
 		return mapList(sks);

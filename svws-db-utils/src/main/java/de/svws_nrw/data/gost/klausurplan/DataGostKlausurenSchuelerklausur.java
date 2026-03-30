@@ -67,12 +67,14 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOGostKlausurenSchuelerklausuren getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die GostSchuelerklausur darf nicht null sein.");
+		}
 
 		final DTOGostKlausurenSchuelerklausuren klasseDto = conn.queryByKey(DTOGostKlausurenSchuelerklausuren.class, id);
-		if (klasseDto == null)
+		if (klasseDto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine GostSchuelerklausur zur ID " + id + " gefunden.");
+		}
 
 		return klasseDto;
 	}
@@ -142,8 +144,9 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 	 */
 	public List<GostSchuelerklausur> getSchuelerKlausurenZuKursklausuren(final List<GostKursklausur> kursKlausuren)
 			throws ApiOperationException {
-		if (kursKlausuren.isEmpty())
+		if (kursKlausuren.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final List<DTOGostKlausurenSchuelerklausuren> schuelerKlausurDTOs = conn.queryList(DTOGostKlausurenSchuelerklausuren.QUERY_LIST_BY_KURSKLAUSUR_ID,
 				DTOGostKlausurenSchuelerklausuren.class, kursKlausuren.stream().map(kk -> kk.id).toList());
 		return mapList(schuelerKlausurDTOs);
@@ -160,12 +163,14 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public List<GostSchuelerklausur> getSchuelerklausurenZuSchuelerklausurterminen(final Collection<GostSchuelerklausurTermin> termine) throws ApiOperationException {
-		if (termine.isEmpty())
+		if (termine.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final List<GostSchuelerklausur> sks = mapList(conn.queryByKeyList(DTOGostKlausurenSchuelerklausuren.class,
 				termine.stream().map(sk -> sk.idSchuelerklausur).toList()));
-		if (sks.isEmpty())
+		if (sks.isEmpty()) {
 			throw new ApiOperationException(Status.CONFLICT, "Schülerklausuren zu Schülerklausurterminen nicht gefunden.");
+		}
 		return sks;
 	}
 
@@ -218,24 +223,27 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 	 */
 	public List<GostSchuelerklausurTermin> getSchuelerKlausurenZuTerminIds(final List<Long> terminIds,
 			final boolean includeAbwesend) throws ApiOperationException {
-		if (terminIds.isEmpty())
+		if (terminIds.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final List<GostKursklausur> kursklausuren = new DataGostKlausurenKursklausur(conn).getKursklausurenZuTerminids(terminIds);
 		final List<GostSchuelerklausur> schuelerklausuren = getSchuelerKlausurenZuKursklausuren(kursklausuren);
 		final List<Long> kkSkIds = schuelerklausuren.stream().map(sk -> sk.id).toList();
 		String skFilter = "";
 		if (!kkSkIds.isEmpty()) {
 			skFilter += " OR (skt.Schuelerklausur_ID IN :skIds AND skt.Folge_Nr = 0";
-			if (!includeAbwesend)
+			if (!includeAbwesend) {
 				skFilter +=
 						" AND NOT EXISTS (SELECT sktInner FROM DTOGostKlausurenSchuelerklausurenTermine sktInner WHERE sktInner.Schuelerklausur_ID = skt.Schuelerklausur_ID AND sktInner.Folge_Nr > 0)";
+			}
 			skFilter += ")";
 		}
 		final TypedQuery<DTOGostKlausurenSchuelerklausurenTermine> query =
 				conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Termin_ID IN :tids" + skFilter,
 						DTOGostKlausurenSchuelerklausurenTermine.class);
-		if (!kkSkIds.isEmpty())
+		if (!kkSkIds.isEmpty()) {
 			query.setParameter("skIds", kkSkIds);
+		}
 		final List<DTOGostKlausurenSchuelerklausurenTermine> skts = query.setParameter("tids", terminIds).getResultList();
 		return new DataGostKlausurenSchuelerklausurTermin(conn).mapList(skts);
 	}

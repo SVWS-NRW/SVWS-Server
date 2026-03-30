@@ -74,11 +74,13 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<
 
 	@Override
 	public LehrerPersonalabschnittsdaten getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die ID für die Personalabschnittsdaten der Lehrkraft darf nicht null sein.");
+		}
 		final DTOLehrerAbschnittsdaten dto = conn.queryByKey(DTOLehrerAbschnittsdaten.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Personalabschnittsdaten einer Lehrkraft mit der ID %d gefunden.".formatted(id));
+		}
 		final LehrerPersonalabschnittsdaten daten = map(dto);
 		daten.anrechnungen.addAll(anrechnungsService.getListByLehrerabschnittsdatenId(id));
 		daten.mehrleistung.addAll(DataLehrerPersonalabschnittsdatenMehrleistungen.getByLehrerabschnittsdatenId(conn, id));
@@ -137,8 +139,9 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<
 		}
 
 		final BigDecimal bd = BigDecimal.valueOf(pflichtstundensoll);
-		if (bd.scale() > 2)
+		if (bd.scale() > 2) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert Pflichtstundensoll darf höchstens zwei Nachkommastellen haben.");
+		}
 
 		dto.PflichtstdSoll = pflichtstundensoll;
 	}
@@ -159,8 +162,9 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<
 		// Bestimme die Abschnittsdaten des Lehrers
 		final List<DTOLehrerAbschnittsdaten> abschnittsdaten =
 				conn.queryList(DTOLehrerAbschnittsdaten.QUERY_BY_LEHRER_ID, DTOLehrerAbschnittsdaten.class, idLehrer);
-		if (abschnittsdaten == null)
+		if (abschnittsdaten == null) {
 			return result;
+		}
 		// Konvertiere sie und füge sie zur Liste hinzu
 		for (final DTOLehrerAbschnittsdaten l : abschnittsdaten) {
 			final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(l.Schuljahresabschnitts_ID);
@@ -178,48 +182,57 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManagerRevised<
 
 	private String validateRechtverhaeltnis(final Object value, final DTOLehrerAbschnittsdaten dto) throws ApiOperationException {
 		final Long id = JSONMapper.convertToLong(value, true, "idRechtsverhaeltnis");
-		if (id == null)
+		if (id == null) {
 			return null;
+		}
 		final LehrerRechtsverhaeltnis rv = LehrerRechtsverhaeltnis.data().getWertByIDOrNull(id);
-		if (rv == null)
+		if (rv == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Das Rechtsverhältnis mit der ID %d ist nicht vorhanden".formatted(id));
+		}
 		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID);
 		final LehrerRechtsverhaeltnisKatalogEintrag eintrag = rv.daten(abschnitt.schuljahr);
-		if (eintrag == null)
+		if (eintrag == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Das Rechtsverhältnis mit dem Kürzel %s ist im Schuljahr %d nicht gültig."
 					.formatted(id, abschnitt.schuljahr));
+		}
 		return eintrag.kuerzel;
 	}
 
 
 	private String validateBeschaeftigunsart(final Object value, final DTOLehrerAbschnittsdaten dto) throws ApiOperationException {
 		final Long id = JSONMapper.convertToLong(value, true, "idBeschaeftigungsart");
-		if (id == null)
+		if (id == null) {
 			return null;
+		}
 		final LehrerBeschaeftigungsart ba = LehrerBeschaeftigungsart.data().getWertByIDOrNull(id);
-		if (ba == null)
+		if (ba == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Beschäftigungsart mit dem Kürzel %s ist nicht vorhanden".formatted(id));
+		}
 		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID);
 		final LehrerBeschaeftigungsartKatalogEintrag eintrag = ba.daten(abschnitt.schuljahr);
-		if (eintrag == null)
+		if (eintrag == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die Beschäftigungsart mit dem Kürzel %s ist im Schuljahr %d nicht gültig."
 					.formatted(id, abschnitt.schuljahr));
+		}
 		return eintrag.kuerzel;
 	}
 
 
 	private String validateEinsatzstatus(final Object value, final DTOLehrerAbschnittsdaten dto) throws ApiOperationException {
 		final Long id = JSONMapper.convertToLong(value, true, "idEinsatzstatus");
-		if (id == null)
+		if (id == null) {
 			return null;
+		}
 		final LehrerEinsatzstatus es = LehrerEinsatzstatus.data().getWertByIDOrNull(id);
-		if (es == null)
+		if (es == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Der Einsatzstatus mit dem Kürzel %s ist nicht vorhanden".formatted(id));
+		}
 		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID);
 		final LehrerEinsatzstatusKatalogEintrag eintrag = es.daten(abschnitt.schuljahr);
-		if (eintrag == null)
+		if (eintrag == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Der Einsatzstatus mit dem Kürzel %s ist im Schuljahr %d nicht gültig."
 					.formatted(id, abschnitt.schuljahr));
+		}
 		return eintrag.kuerzel;
 	}
 

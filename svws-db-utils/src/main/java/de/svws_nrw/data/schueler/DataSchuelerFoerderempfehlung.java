@@ -146,11 +146,13 @@ public final class DataSchuelerFoerderempfehlung extends DataManagerRevised<Stri
 
 	@Override
 	public SchuelerFoerderempfehlung getById(final String id) throws ApiOperationException {
-		if ((id == null) || id.isEmpty())
+		if ((id == null) || id.isEmpty()) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die GUID darf nicht null oder leer sein.");
+		}
 		final DTOSchuelerFoerderempfehlung dto = conn.queryByKey(DTOSchuelerFoerderempfehlung.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Förderempfehlung mit der GUID %s gefunden.".formatted(id));
+		}
 		return map(dto);
 	}
 
@@ -170,8 +172,9 @@ public final class DataSchuelerFoerderempfehlung extends DataManagerRevised<Stri
 		final List<DTOSchuelerFoerderempfehlung> dtos =
 				conn.queryList(DTOSchuelerFoerderempfehlung.QUERY_BY_ABSCHNITT_ID, DTOSchuelerFoerderempfehlung.class, idLernabschnittsdaten);
 		// Konventiere sie und füge sie zur Liste hinzu
-		for (final DTOSchuelerFoerderempfehlung dto : dtos)
+		for (final DTOSchuelerFoerderempfehlung dto : dtos) {
 			empfehlungen.add(map(dto));
+		}
 		return Response.ok(empfehlungen).build();
 	}
 
@@ -213,8 +216,9 @@ public final class DataSchuelerFoerderempfehlung extends DataManagerRevised<Stri
 	 */
 	private void pruefeExistenzAbschnitt(final Long abschnittID) throws ApiOperationException {
 		final DTOSchuelerLernabschnittsdaten abschnitte = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, abschnittID);
-		if (abschnitte == null)
+		if (abschnitte == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Kein Schüler-Lernabschnitt mit der ID %d gefunden.".formatted(abschnittID));
+		}
 	}
 
 
@@ -227,8 +231,9 @@ public final class DataSchuelerFoerderempfehlung extends DataManagerRevised<Stri
 	 */
 	private void pruefeExistenzKlasse(final Long klassenID) throws ApiOperationException {
 		final DTOKlassen klassen = conn.queryByKey(DTOKlassen.class, klassenID);
-		if (klassen == null)
+		if (klassen == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Keine Klasse mit der ID %d gefunden.".formatted(klassenID));
+		}
 	}
 
 
@@ -241,8 +246,9 @@ public final class DataSchuelerFoerderempfehlung extends DataManagerRevised<Stri
 	 */
 	private void pruefeExistenzLehrer(final Long lehrerID) throws ApiOperationException {
 		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, lehrerID);
-		if (lehrer == null)
+		if (lehrer == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Kein Lehrer mit der ID %d gefunden.".formatted(lehrerID));
+		}
 	}
 
 }

@@ -20,6 +20,7 @@ import java.util.zip.ZipInputStream;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
 import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.base.LogUtils;
 import de.svws_nrw.base.kurs42.Kurs42Import;
@@ -34,7 +35,6 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
-import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
@@ -77,26 +77,33 @@ public final class DataKurs42 {
 	private static boolean removeTempFiles(final Path path) {
 		try {
 			final Path pBlockung = path.resolve("Blockung.txt");
-			if (Files.exists(pBlockung))
+			if (Files.exists(pBlockung)) {
 				Files.delete(pBlockung);
+			}
 			final Path pSchueler = path.resolve("Schueler.txt");
-			if (Files.exists(pSchueler))
+			if (Files.exists(pSchueler)) {
 				Files.delete(pSchueler);
+			}
 			final Path pFaecher = path.resolve("Faecher.txt");
-			if (Files.exists(pFaecher))
+			if (Files.exists(pFaecher)) {
 				Files.delete(pFaecher);
+			}
 			final Path pKurse = path.resolve("Kurse.txt");
-			if (Files.exists(pKurse))
+			if (Files.exists(pKurse)) {
 				Files.delete(pKurse);
+			}
 			final Path pSchienen = path.resolve("Schienen.txt");
-			if (Files.exists(pSchienen))
+			if (Files.exists(pSchienen)) {
 				Files.delete(pSchienen);
+			}
 			final Path pBlockplan = path.resolve("Blockplan.txt");
-			if (Files.exists(pBlockplan))
+			if (Files.exists(pBlockplan)) {
 				Files.delete(pBlockplan);
+			}
 			final Path pFachwahlen = path.resolve("Fachwahlen.txt");
-			if (Files.exists(pFachwahlen))
+			if (Files.exists(pFachwahlen)) {
 				Files.delete(pFachwahlen);
+			}
 			Files.delete(path);
 		} catch (@SuppressWarnings("unused") final IOException e) {
 			return false;
@@ -223,8 +230,9 @@ public final class DataKurs42 {
 			throw new ApiOperationException(Status.NOT_FOUND, "Konnte die Informationen zur Schule nicht aus der Datenbank lesen.");
 		}
 		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
-		if (schuljahresabschnitt == null)
+		if (schuljahresabschnitt == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine gültiger Schuljahresabschnitt vorhanden.");
+		}
 		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
 		if ((schulform == null) || (!schulform.daten(schuljahresabschnitt.Jahr).hatGymOb)) {
 			logger.logLn("[Fehler] - Die Schulform hat keine gymnasiale Oberstufe oder konnte nicht bestimmt werden");
@@ -318,9 +326,10 @@ public final class DataKurs42 {
 				}
 				conn.transactionPersist(new DTOGostBlockungKurs(kursID + kurs.id, blockungID, kurs.fach_id,
 						GostKursart.fromID(kurs.kursart), kurs.nummer, kurs.istKoopKurs, kurs.anzahlSchienen, kurs.wochenstunden));
-				for (final GostBlockungKursLehrer lehrer : kurs.lehrer)
+				for (final GostBlockungKursLehrer lehrer : kurs.lehrer) {
 					conn.transactionPersist(new DTOGostBlockungKurslehrer(kursID + kurs.id,
 							lehrer.id, lehrer.reihenfolge, lehrer.wochenstunden));
+				}
 			}
 			// Lege die Regeln an
 			for (final GostBlockungRegel regel : k42.regeln) {
@@ -340,13 +349,15 @@ public final class DataKurs42 {
 				}
 			}
 			// Schreibe die Kurs-Schienen-Zuordnungen
-			for (final Pair<Long, Long> zuordnung : k42.zuordnung_kurs_schiene.getNonNullValuesAsList())
+			for (final Pair<Long, Long> zuordnung : k42.zuordnung_kurs_schiene.getNonNullValuesAsList()) {
 				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID,
 						kursID + zuordnung.a, schienenID + zuordnung.b));
+			}
 			// Schreibe die Kurs-Schüler-Zuordnungen
-			for (final Pair<Long, Long> zuordnung : k42.zuordnung_kurs_schueler.getNonNullValuesAsList())
+			for (final Pair<Long, Long> zuordnung : k42.zuordnung_kurs_schueler.getNonNullValuesAsList()) {
 				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchueler(ergebnisID,
 						kursID + zuordnung.a, zuordnung.b));
+			}
 			if (!conn.transactionCommit()) {
 				logger.logLn("[Fehler] Unerwarteter Fehler beim Schreiben in die Datenbank.");
 				logger.modifyIndent(-2);

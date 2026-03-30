@@ -1,9 +1,9 @@
 package de.svws_nrw.db.utils.lupo.mdb;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ArrayList;
 
 import io.github.spannm.jackcess.ColumnBuilder;
 import io.github.spannm.jackcess.DataType;
@@ -111,8 +111,9 @@ public final class ABPSchuelerSprachenfolge {
 					.addColumn(new ColumnBuilder(fieldStatistikKrz, DataType.TEXT).withLengthInUnits(2))
 					.addIndex(new IndexBuilder(IndexBuilder.PRIMARY_KEY_NAME).withColumns(fieldSchueler_ID, fieldFachKrz).withPrimaryKey())
 					.toTable(db);
-			if (list == null)
+			if (list == null) {
 				return;
+			}
 			for (final ABPSchuelerSprachenfolge zuordnung : list) {
 				table.addRow(
 						zuordnung.Schueler_ID,

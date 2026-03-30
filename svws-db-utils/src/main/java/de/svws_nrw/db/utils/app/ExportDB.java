@@ -51,8 +51,9 @@ public class ExportDB {
 		boolean habeAntwort = false;
 		while (!habeAntwort) {
 			final String input = scan.nextLine();
-			if (input == null)
+			if (input == null) {
 				continue;
+			}
 			habeAntwort = true;
 			switch (input.toUpperCase()) {
 				case "JA", "J", "YES", "Y":
@@ -112,8 +113,9 @@ public class ExportDB {
 
 			// Lese die Optionen für die Quell-Datenbank ein
 			final DBDriver srcDrv = DBDriver.fromString(cmdLine.getValue("sd", "MARIA_DB"));
-			if (srcDrv == null)
+			if (srcDrv == null) {
 				cmdLine.printOptionsAndExit(3, "Fehlerhafte Angabe bei dem Treiber der Quell-DB");
+			}
 			final String srcLoc = cmdLine.getValue("sl", "localhost");
 			final String srcDB = cmdLine.getValue("ss", "svwsdb");
 			final String srcUsername = cmdLine.getValue("su", "svwsadmin");

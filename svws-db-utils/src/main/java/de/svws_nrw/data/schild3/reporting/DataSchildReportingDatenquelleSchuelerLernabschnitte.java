@@ -1,9 +1,9 @@
 package de.svws_nrw.data.schild3.reporting;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerLernabschnitt;
@@ -35,9 +35,11 @@ public final class DataSchildReportingDatenquelleSchuelerLernabschnitte extends 
 	List<SchildReportingSchuelerLernabschnitt> getDaten(final DBEntityManager conn, final List<Long> params) throws ApiOperationException {
 		// Prüfe, ob die Schüler in der DB vorhanden sind
 		final Map<Long, DTOSchueler> schueler = conn.queryByKeyList(DTOSchueler.class, params).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
-		for (final Long schuelerID : params)
-			if (schueler.get(schuelerID) == null)
+		for (final Long schuelerID : params) {
+			if (schueler.get(schuelerID) == null) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Parameter der Abfrage ungültig: Ein Schüler mit der ID " + schuelerID + " existiert nicht.");
+			}
+		}
 
 		// Erzeuge die Core-DTOs für das Ergebnis der Datenquelle
 		final ArrayList<SchildReportingSchuelerLernabschnitt> result = new ArrayList<>();
@@ -45,8 +47,9 @@ public final class DataSchildReportingDatenquelleSchuelerLernabschnitte extends 
 		// Aggregiere die benötigten Daten aus der Datenbank
 		final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_LIST_BY_SCHUELER_ID,
 				DTOSchuelerLernabschnittsdaten.class, params);
-		if ((lernabschnittsdaten == null) || lernabschnittsdaten.isEmpty())
+		if ((lernabschnittsdaten == null) || lernabschnittsdaten.isEmpty()) {
 			return result;
+		}
 		final List<Long> idSchuljahresabschnitte = lernabschnittsdaten.stream().map(l -> l.Schuljahresabschnitts_ID).toList();
 		final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = conn.queryByKeyList(DTOSchuljahresabschnitte.class, idSchuljahresabschnitte)
 				.stream().collect(Collectors.toMap(j -> j.ID, j -> j));
@@ -63,17 +66,20 @@ public final class DataSchildReportingDatenquelleSchuelerLernabschnitte extends 
 		for (final DTOSchuelerLernabschnittsdaten dto : lernabschnittsdaten) {
 			final DTOSchuljahresabschnitte dtoSJA = mapSchuljahresabschnitte.get(dto.Schuljahresabschnitts_ID);
 
-			if (dtoSJA == null)
+			if (dtoSJA == null) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 						String.format(meldungsvorlageDatenInkonsistent, "Schuljahresabschnitt", dto.Schuljahresabschnitts_ID, dto.ID));
+			}
 			final DTOKlassen dtoKlasse = mapKlassen.get(dto.Klassen_ID);
-			if (dtoKlasse == null)
+			if (dtoKlasse == null) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 						String.format(meldungsvorlageDatenInkonsistent, "Klasse", dto.Klassen_ID, dto.ID));
+			}
 			final DTOJahrgang dtoJahrgang = mapJahrgaenge.get(dto.Jahrgang_ID);
-			if (dtoJahrgang == null)
+			if (dtoJahrgang == null) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 						String.format(meldungsvorlageDatenInkonsistent, "Jahrgang", dto.Jahrgang_ID, dto.ID));
+			}
 			final SchildReportingSchuelerLernabschnitt data = new SchildReportingSchuelerLernabschnitt();
 			data.id = dto.ID;
 			data.schuelerID = dto.Schueler_ID;
@@ -99,8 +105,9 @@ public final class DataSchildReportingDatenquelleSchuelerLernabschnitte extends 
 	}
 
 	private final Comparator<SchildReportingSchuelerLernabschnitt> comparatorLernabschnitte = (la1, la2) -> {
-		if (la1.schuljahr != la2.schuljahr)
+		if (la1.schuljahr != la2.schuljahr) {
 			return Integer.compare(la1.schuljahr, la2.schuljahr);
+		}
 		if (la1.abschnitt != la2.abschnitt) {
 			return Integer.compare(la1.abschnitt, la2.abschnitt);
 		}
@@ -111,15 +118,19 @@ public final class DataSchildReportingDatenquelleSchuelerLernabschnitte extends 
 			// Dieser Fall darf bei korrekten Daten nicht auftreten, weil es dann zwei identische Lernabschnitte geben würde.
 			// Prüfe aber dennoch zusätzlich die Wertung und Wiederholung.
 			int checkA1 = 1;
-			if (!la1.istGewertet)
+			if (!la1.istGewertet) {
 				checkA1 -= 1;
-			if (la1.istWiederholung)
+			}
+			if (la1.istWiederholung) {
 				checkA1 += 2;
+			}
 			int checkA2 = 1;
-			if (!la2.istGewertet)
+			if (!la2.istGewertet) {
 				checkA2 -= 1;
-			if (la2.istWiederholung)
+			}
+			if (la2.istWiederholung) {
 				checkA2 += 2;
+			}
 			return Integer.compare(checkA1, checkA2);
 		} else if (la1.wechselNr == 0) {
 			return -1;

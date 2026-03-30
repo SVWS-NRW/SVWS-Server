@@ -102,8 +102,9 @@ public class DTOGostJahrgangsinformationen {
 	public static HashMap2D<Long, String, DTOGostJahrgangsinformationen> getMapJahrgangsinformationen(final @NotNull DBEntityManager conn) {
 		final @NotNull List<DTOGostJahrgangsinformationen> list = queryAll(conn);
 		final @NotNull HashMap2D<Long, String, DTOGostJahrgangsinformationen> map = new HashMap2D<>();
-		for (final @NotNull DTOGostJahrgangsinformationen info : list)
+		for (final @NotNull DTOGostJahrgangsinformationen info : list) {
 			map.put(info.idSchuljahresabschnitts, info.kuerzelASDJahrgang, info);
+		}
 		return map;
 	}
 

@@ -54,7 +54,6 @@ final class HttpENMServerConnection {
 	private final DTONotenmodulVerbindungen dto;
 
 
-
 	/**
 	 * Erzeugt eine neuen Verbindung zu einem Notenmodul-Server und erneuert ggf. das aktuelle Token.
 	 *
@@ -81,8 +80,9 @@ final class HttpENMServerConnection {
 			throw new ApiOperationException(Status.NOT_FOUND, "Bei der Verbindung wurde keine Client-ID für die Authentifizierung angegeben.");
 		}
 		if (updateToken) {
-			if ((dto.clientSecret == null) || dto.clientSecret.isBlank())
+			if ((dto.clientSecret == null) || dto.clientSecret.isBlank()) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Bei der Verbindung wurde kein Client-Secret für die Authentifizierung angegeben.");
+			}
 			logger.logLn("Generiere den HTTP-Header für Basic-Auth bestehen aus der Client-ID als User und dem Client-Secret als Kennwort...");
 			final String basicAuth = Base64.getEncoder().encodeToString((dto.clientID + ":" + dto.clientSecret).getBytes());
 			if (forceNewToken) {
@@ -107,8 +107,9 @@ final class HttpENMServerConnection {
 	 * @return true, wenn ein nicht abgelaufenes Token vorhanden ist, und ansonsten false
 	 */
 	boolean isTokenValid() {
-		if (dto.token == null)
+		if (dto.token == null) {
 			return false;
+		}
 		// Berechne die Zeit in Millisekunden, wann das Token abläuft
 		final long tsExpiration = ((dto.tokenExpiresIn * 1000) + dto.tokenTimestamp);
 		// Bestimme die aktuelle Zeit zum Vergleich, addiere aber einen Wert darauf, um das Token ggf. früher zu erneuern
@@ -140,14 +141,17 @@ final class HttpENMServerConnection {
 		final HttpResponse<String> response = send(request, BodyHandlers.ofString());
 		// ... prüfe, den Response-Code ...
 		final int statusCode = response.statusCode();
-		if (statusCode == 401)
+		if (statusCode == 401) {
 			throw new ApiOperationException(Status.BAD_GATEWAY, "Verbindung zu dem Server ergab 401 (Unauthorized)."
 					+ " Die Client-ID und das Client-Secret sollten überprüft werden.");
-		if (statusCode == 500)
+		}
+		if (statusCode == 500) {
 			throw new ApiOperationException(Status.UNAUTHORIZED, "Verbindung zu dem Server ergab 500 (Internal Server Error)."
 					+ " Die Client-ID und das Client-Secret sollten überprüft werden.");
-		if ((statusCode != 200) && (statusCode != 201))
+		}
+		if ((statusCode != 200) && (statusCode != 201)) {
 			throw new ApiOperationException(Status.BAD_GATEWAY, "Verbindung zu dem Server mit dem OAuth2-Status-Code %d fehlgeschlagen.".formatted(statusCode));
+		}
 		// ... und validiere im Erfolgsfall die HTTP-Response
 		final String stringResponse = response.body();
 		try {
@@ -183,13 +187,16 @@ final class HttpENMServerConnection {
 		HttpClient.Builder builder = HttpClient.newBuilder().version(Version.HTTP_1_1).connectTimeout(Duration.ofSeconds(20));
 		if ((dto.serverTLSCertIsKnown == null) || (!dto.serverTLSCertIsKnown)) {
 			try {
-				if (dto.serverTLSCert == null)
+				if (dto.serverTLSCert == null) {
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "In der Datenbank ist keine TLS-Zertifikatskette des TLS-Servers zur Nutzung hinterlegt.");
+				}
 				final List<X509Certificate> certList = TLSUtils.decodeCertListJson(dto.serverTLSCert);
-				if (certList.isEmpty())
+				if (certList.isEmpty()) {
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "In der Datenbank ist kein TLS-Zertifikat zur Nutzung hinterlegt.");
-				if (!Boolean.TRUE.equals(dto.serverTLSCertIsTrusted))
+				}
+				if (!Boolean.TRUE.equals(dto.serverTLSCertIsTrusted)) {
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der in der Datenbank zur Nutzung hinterlegten TLS-Zertifikatskette des TLS-Servers wird nicht vertraut.");
+				}
 				final KeyStore keystore = KeyStoreUtils.newKeystore();
 				KeyStoreUtils.addCertificate(keystore, dto.url, certList.getFirst());
 				final SSLContext sslContext = TLSUtils.getTLSContextFromKeystore(keystore);
@@ -331,12 +338,14 @@ final class HttpENMServerConnection {
 			boolean isTrusted;
 			isTrusted = TLSUtils.queryServerCertificates(dto.url, chain);
 			// Fehlerbehandlung: Hat der Server ein Zertifikat zurückgegeben?
-			if (chain.isEmpty())
+			if (chain.isEmpty()) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Kein gültiges Server-Zertifikat erhalten.");
+			}
 			final List<X509Certificate> dtoChain = (dto.serverTLSCert == null) ? null : TLSUtils.decodeCertListJson(dto.serverTLSCert);
 			// Prüfe, ob das Zertifikat in der DB gespeichert ist, dann ist relevant, ob diesem vertraut wird
-			if ((dtoChain != null) && (!dtoChain.isEmpty()) && (chain.getFirst().equals(dtoChain.getFirst())))
+			if ((dtoChain != null) && (!dtoChain.isEmpty()) && (chain.getFirst().equals(dtoChain.getFirst()))) {
 				return dto.serverTLSCertIsTrusted;
+			}
 			// Im anderen Fall - kein Zertifikat in der Datenbank hinterlegt ist oder es hat sich geändert,
 			// dann muss dieses einfach nur in der DB eingetragen werden.
 			dto.serverTLSCert = TLSUtils.encodeCertListJson(chain);

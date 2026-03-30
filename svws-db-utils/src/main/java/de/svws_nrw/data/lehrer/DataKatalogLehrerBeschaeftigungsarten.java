@@ -23,12 +23,12 @@ public final class DataKatalogLehrerBeschaeftigungsarten extends DataManager<Lon
 		super(null);
 	}
 
-
 	@Override
 	public Response getAll() {
 		final ArrayList<LehrerBeschaeftigungsartKatalogEintrag> daten = new ArrayList<>();
-		for (final LehrerBeschaeftigungsart art : LehrerBeschaeftigungsart.values())
+		for (final LehrerBeschaeftigungsart art : LehrerBeschaeftigungsart.values()) {
 			daten.addAll(art.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

@@ -1,5 +1,10 @@
 package de.svws_nrw.data.schild3.reporting;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerSprachpruefungen;
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
 import de.svws_nrw.db.DBEntityManager;
@@ -7,11 +12,6 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerSprachpruefungen;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Die Definition einer Schild-Reporting-Datenquelle für die Fehler der Laufbahnplanung in der gymnasialen Oberstufe
@@ -33,9 +33,10 @@ public final class DataSchildReportingDatenquelleSchuelerSprachpruefungen
 		// Prüfe, ob die Schüler in der DB vorhanden sind
 		final Map<Long, DTOSchueler> schueler = conn.queryByKeyList(DTOSchueler.class, params).stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		for (final Long schuelerID : params) {
-			if (schueler.get(schuelerID) == null)
+			if (schueler.get(schuelerID) == null) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Parameter der Abfrage ungültig: Ein Schüler mit der ID " + schuelerID.toString()
 						+ " existiert nicht.");
+			}
 		}
 
 		// Aggregiere die benötigten Daten aus der Datenbank, wenn alle Schüler-IDs existieren

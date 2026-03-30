@@ -26,8 +26,9 @@ public final class DataKatalogNoten extends DataManager<Long> {
 	@Override
 	public Response getAll() {
 		final ArrayList<NoteKatalogEintrag> daten = new ArrayList<>();
-		for (final Note note : Note.values())
+		for (final Note note : Note.values()) {
 			daten.addAll(note.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

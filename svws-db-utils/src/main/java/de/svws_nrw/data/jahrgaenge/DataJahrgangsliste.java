@@ -64,8 +64,9 @@ public final class DataJahrgangsliste extends DataManager<Long> {
 	 */
 	public static List<JahrgangsDaten> getJahrgangsliste(final DBEntityManager conn) throws ApiOperationException {
 		final List<DTOJahrgang> jahrgaenge = conn.queryAll(DTOJahrgang.class);
-		if (jahrgaenge == null)
+		if (jahrgaenge == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Jahrgänge gefunden");
+		}
 		return jahrgaenge.stream().map(dto -> map(conn, dto)).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
 	}
 

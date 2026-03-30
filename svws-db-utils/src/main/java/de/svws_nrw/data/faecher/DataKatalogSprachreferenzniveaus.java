@@ -26,8 +26,9 @@ public final class DataKatalogSprachreferenzniveaus extends DataManager<Long> {
 	@Override
 	public Response getAll() {
 		final ArrayList<SprachreferenzniveauKatalogEintrag> daten = new ArrayList<>();
-		for (final Sprachreferenzniveau ref : Sprachreferenzniveau.values())
+		for (final Sprachreferenzniveau ref : Sprachreferenzniveau.values()) {
 			daten.addAll(ref.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

@@ -415,9 +415,11 @@ public final class EnmV1GetServiceKontext {
 				return true;
 			}
 
-			for (final Long idKlassenleitung : idsKlassenleitungen)
-				if (idKlassenleitung.equals(dtoLehrer.ID))
+			for (final Long idKlassenleitung : idsKlassenleitungen) {
+				if (idKlassenleitung.equals(dtoLehrer.ID)) {
 					return false; // NICHT löschen
+				}
+			}
 
 			// Er ist kein Fach- und kein Klassenlehrer - also Löschen
 			return true;
@@ -450,8 +452,9 @@ public final class EnmV1GetServiceKontext {
 		// ... ermittle den speziellen Lehrer, für welchen die ENM-Daten bestimmt werden, falls eine idLehrer übergeben wurde
 		// ... wenn idLehrer = null ist, dann sollen die ENM-Daten schulweit bestimmt werden
 		this.dtoLehrer = (idLehrer == null) ? null : mapLehrer.get(idLehrer);
-		if ((idLehrer != null) && (dtoLehrer == null))
+		if ((idLehrer != null) && (dtoLehrer == null)) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 
 		this.mapSchueler = schuelerRepository.getMapByStatusAndSchuljahresabschnitt(idSchuljahresabschnitt,
 				List.of(SchuelerStatus.AKTIV.daten(schuljahresabschnitt.Jahr).id, SchuelerStatus.EXTERN.daten(schuljahresabschnitt.Jahr).id));

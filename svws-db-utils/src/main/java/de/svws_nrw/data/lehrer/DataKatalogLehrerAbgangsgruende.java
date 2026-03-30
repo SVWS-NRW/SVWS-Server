@@ -26,8 +26,9 @@ public final class DataKatalogLehrerAbgangsgruende extends DataManager<Long> {
 	@Override
 	public Response getAll() {
 		final ArrayList<LehrerAbgangsgrundKatalogEintrag> daten = new ArrayList<>();
-		for (final LehrerAbgangsgrund grund : LehrerAbgangsgrund.values())
+		for (final LehrerAbgangsgrund grund : LehrerAbgangsgrund.values()) {
 			daten.addAll(grund.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

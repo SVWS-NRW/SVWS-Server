@@ -32,7 +32,6 @@ public final class DataStundenplanListe extends DataManager<Long> {
 		super(conn);
 	}
 
-
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOStundenplan} in einen Core-DTO {@link StundenplanListeEintrag}.
 	 */
@@ -68,8 +67,9 @@ public final class DataStundenplanListe extends DataManager<Long> {
 		final List<DTOStundenplan> plaene = (idSchuljahresabschnitt == null)
 				? conn.queryAll(DTOStundenplan.class)
 				: conn.queryList(DTOStundenplan.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOStundenplan.class, idSchuljahresabschnitt);
-		if (plaene.isEmpty())
+		if (plaene.isEmpty()) {
 			return daten;
+		}
 		final List<Long> idsSchuljahresabschnitte = plaene.stream().map(p -> p.Schuljahresabschnitts_ID).distinct().toList();
 		final Map<Long, DTOSchuljahresabschnitte> mapAbschnitte = conn.queryByKeyList(DTOSchuljahresabschnitte.class, idsSchuljahresabschnitte)
 				.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
@@ -79,20 +79,24 @@ public final class DataStundenplanListe extends DataManager<Long> {
 			final StundenplanListeEintrag e = dtoMapper.apply(s);
 			e.schuljahr = a.Jahr;
 			e.abschnitt = a.Abschnitt;
-			if (e.gueltigBis == null)
+			if (e.gueltigBis == null) {
 				e.gueltigBis = "%04d-%02d-%02d".formatted(a.Jahr + 1, 7, 31);
+			}
 			daten.add(e);
 		}
 		return daten.stream().sorted((a, b) -> {
 			int cmp = Integer.compare(a.schuljahr, b.schuljahr);
-			if (cmp != 0)
+			if (cmp != 0) {
 				return cmp;
+			}
 			cmp = Integer.compare(a.abschnitt, b.abschnitt);
-			if (cmp != 0)
+			if (cmp != 0) {
 				return cmp;
+			}
 			cmp = a.gueltigAb.compareTo(b.gueltigAb);
-			if (cmp != 0)
+			if (cmp != 0) {
 				return cmp;
+			}
 			return a.gueltigBis.compareTo(b.gueltigBis);
 		}).toList();
 	}
@@ -154,8 +158,9 @@ public final class DataStundenplanListe extends DataManager<Long> {
 	public Response delete(final long idStundenplan) throws ApiOperationException {
 		// Bestimme den Stundenplan zu der ID und lösche ihn, falls er vorhanden ist
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
-		if (stundenplan == null)
+		if (stundenplan == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Ein Stundenplan mit der ID %d konnte nicht gefunden werden.".formatted(idStundenplan));
+		}
 		conn.transactionRemove(stundenplan);
 		return Response.status(Status.NO_CONTENT).type(MediaType.APPLICATION_JSON).build();
 	}

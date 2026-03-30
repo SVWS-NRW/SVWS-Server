@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
@@ -70,8 +70,9 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 	public DTOSchuelerAbitur getDatabaseDTOByID(final Long id) {
 		// Lese die Abiturdaten anhand der ID aus der Datenbank
 		final List<DTOSchuelerAbitur> dtosSchuelerAbitur = conn.queryList(DTOSchuelerAbitur.QUERY_BY_SCHUELER_ID, DTOSchuelerAbitur.class, id);
-		if ((dtosSchuelerAbitur == null) || (dtosSchuelerAbitur.isEmpty()))
+		if ((dtosSchuelerAbitur == null) || (dtosSchuelerAbitur.isEmpty())) {
 			return null;
+		}
 		// Abiturjahr wurde nicht angegeben - ggf. auswählen
 		if (schuljahresabschnitt == null) {
 			DTOSchuelerAbitur current = null;
@@ -87,9 +88,11 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 			}
 			return current;
 		}
-		for (final DTOSchuelerAbitur dtoSchuelerAbitur : dtosSchuelerAbitur)
-			if (dtoSchuelerAbitur.Schuljahresabschnitts_ID == schuljahresabschnitt.id)
+		for (final DTOSchuelerAbitur dtoSchuelerAbitur : dtosSchuelerAbitur) {
+			if (dtoSchuelerAbitur.Schuljahresabschnitts_ID == schuljahresabschnitt.id) {
 				return dtoSchuelerAbitur;
+			}
+		}
 		return null;
 	}
 
@@ -98,24 +101,28 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 	public Abiturdaten getById(final Long id) throws ApiOperationException {
 		// Prüfe zunächst den Schüler auf Existenz.
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
-		if (dtoSchueler == null)
+		if (dtoSchueler == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es existiert kein Schüler mit der ID %d in der Datenbank.".formatted(id));
+		}
 
 		// Ermittle für einen Vergleich die Abiturdaten für Block I aus den Leistungsdaten, nutze dafür den entsprechenden Service
 		final Abiturdaten abidatenVergleich = DBUtilsGostLaufbahn.get(conn, id);
-		if (abidatenVergleich == null)
+		if (abidatenVergleich == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es konnten keine Abiturdaten aus den Leistungsdaten ausgelesen werden.");
+		}
 
 		// Lese die Abiturdaten anhand der ID aus der Datenbank
 		final DTOSchuelerAbitur dtoSchuelerAbitur = getDatabaseDTOByID(id);
-		if (dtoSchuelerAbitur == null)
+		if (dtoSchuelerAbitur == null) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Es wurden keine Abiturdaten für den Schüler mit der ID %d in der Datenbank gefunden.".formatted(id));
+		}
 
 		final List<DTOSchuelerAbiturFach> faecher = conn.queryList(DTOSchuelerAbiturFach.QUERY_BY_SCHUELER_ID, DTOSchuelerAbiturFach.class, id);
-		if (faecher == null)
+		if (faecher == null) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Es konnten keine Fachinformationen für die Abiturdaten des Schülers aus der DB ausgelesen werden.");
+		}
 
 		// Lese beide Tabellen mit den Informationen zu den belegten oder geprüften Sprachen aus.
 		final List<DTOSchuelerSprachenfolge> sprachenfolge = conn.queryList(DTOSchuelerSprachenfolge.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, id);
@@ -125,20 +132,23 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 
 		// gib die Abiturdaten zurück.
 		final Abiturdaten abidaten = erzeugeAbiturdaten(dtoSchuelerAbitur, abidatenVergleich, sprachenfolge, faecher, mapGostFaecherManager);
-		if (abidaten == null)
+		if (abidaten == null) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Es konnten keine Abiturdaten für den Schüler mit der ID %d aus der Datenbank zusammengestellt werden, da der zugehörige Schuljahresabschnitt in der Datenbank (noch) nicht angelegt ist.".formatted(id));
+		}
 		return abidaten;
 	}
 
 
 	@Override
 	public List<Abiturdaten> getList() throws ApiOperationException {
-		if (schuljahresabschnitt == null)
+		if (schuljahresabschnitt == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Abiturjahrgang angegeben oder dieser wurde nicht in der Datenbank gefunden.");
+		}
 		final List<DTOSchueler> schuelerListe = DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, schuljahresabschnitt.schuljahr + 1);
-		if (schuelerListe.isEmpty())
+		if (schuelerListe.isEmpty()) {
 			return new ArrayList<>();
+		}
 		return getAbiturdatenFromIDs(schuelerListe.stream().map(s -> s.ID).toList());
 	}
 
@@ -156,39 +166,48 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 		if (map.containsKey("block1gewertet") || map.containsKey("block1kursAufZeugnis")) {
 			final String hjKuerzel = JSONMapper.convertToString(map.get("halbjahrKuerzel"), false, false, 4);
 			final GostHalbjahr halbjahr = GostHalbjahr.fromKuerzel(hjKuerzel);
-			if (halbjahr == null)
+			if (halbjahr == null) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Bei den Fachbelegungen des Halbjahres muss ein gültiges Kürzel angegeben werden.");
+			}
 			if (halbjahr == GostHalbjahr.Q11) {
 				boolean block1gewertet = dto.Q1_HJ1_MarkiertFuerAbiturBerechnung.fuerBerechnung;
 				boolean block1kursAufZeugnis = dto.Q1_HJ1_MarkiertFuerAbiturBerechnung.aufAbiturZeugnis;
-				if (map.containsKey("block1gewertet"))
+				if (map.containsKey("block1gewertet")) {
 					block1gewertet = JSONMapper.convertToBoolean(map.get("block1gewertet"), false);
-				if (map.containsKey("block1kursAufZeugnis"))
+				}
+				if (map.containsKey("block1kursAufZeugnis")) {
 					block1kursAufZeugnis = JSONMapper.convertToBoolean(map.get("block1kursAufZeugnis"), false);
+				}
 				dto.Q1_HJ1_MarkiertFuerAbiturBerechnung = new AbiturKursMarkierung(block1gewertet, block1kursAufZeugnis);
 			} else if (halbjahr == GostHalbjahr.Q12) {
 				boolean block1gewertet = dto.Q1_HJ2_MarkiertFuerAbiturBerechnung.fuerBerechnung;
 				boolean block1kursAufZeugnis = dto.Q1_HJ2_MarkiertFuerAbiturBerechnung.aufAbiturZeugnis;
-				if (map.containsKey("block1gewertet"))
+				if (map.containsKey("block1gewertet")) {
 					block1gewertet = JSONMapper.convertToBoolean(map.get("block1gewertet"), false);
-				if (map.containsKey("block1kursAufZeugnis"))
+				}
+				if (map.containsKey("block1kursAufZeugnis")) {
 					block1kursAufZeugnis = JSONMapper.convertToBoolean(map.get("block1kursAufZeugnis"), false);
+				}
 				dto.Q1_HJ2_MarkiertFuerAbiturBerechnung = new AbiturKursMarkierung(block1gewertet, block1kursAufZeugnis);
 			} else if (halbjahr == GostHalbjahr.Q21) {
 				boolean block1gewertet = dto.Q2_HJ1_MarkiertFuerAbiturBerechnung.fuerBerechnung;
 				boolean block1kursAufZeugnis = dto.Q2_HJ1_MarkiertFuerAbiturBerechnung.aufAbiturZeugnis;
-				if (map.containsKey("block1gewertet"))
+				if (map.containsKey("block1gewertet")) {
 					block1gewertet = JSONMapper.convertToBoolean(map.get("block1gewertet"), false);
-				if (map.containsKey("block1kursAufZeugnis"))
+				}
+				if (map.containsKey("block1kursAufZeugnis")) {
 					block1kursAufZeugnis = JSONMapper.convertToBoolean(map.get("block1kursAufZeugnis"), false);
+				}
 				dto.Q2_HJ1_MarkiertFuerAbiturBerechnung = new AbiturKursMarkierung(block1gewertet, block1kursAufZeugnis);
 			} else if (halbjahr == GostHalbjahr.Q22) {
 				boolean block1gewertet = dto.Q2_HJ2_MarkiertFuerAbiturBerechnung.fuerBerechnung;
 				boolean block1kursAufZeugnis = dto.Q2_HJ2_MarkiertFuerAbiturBerechnung.aufAbiturZeugnis;
-				if (map.containsKey("block1gewertet"))
+				if (map.containsKey("block1gewertet")) {
 					block1gewertet = JSONMapper.convertToBoolean(map.get("block1gewertet"), false);
-				if (map.containsKey("block1kursAufZeugnis"))
+				}
+				if (map.containsKey("block1kursAufZeugnis")) {
 					block1kursAufZeugnis = JSONMapper.convertToBoolean(map.get("block1kursAufZeugnis"), false);
+				}
 				dto.Q2_HJ2_MarkiertFuerAbiturBerechnung = new AbiturKursMarkierung(block1gewertet, block1kursAufZeugnis);
 			}
 		}
@@ -200,8 +219,9 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 		switch (name) {
 			case "fachID" -> {
 				final Long idFach = JSONMapper.convertToLong(value, false);
-				if (dto.Fach_ID != idFach)
+				if (dto.Fach_ID != idFach) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die Fach-ID aus dem Patch passt nicht zu der Fach-ID aus der Anfrage.");
+				}
 			}
 			case "block1PunktSumme" -> dto.ZulassungPunktsumme = JSONMapper.convertToIntegerInRange(value, true, 0, 121);
 			case "block1NotenpunkteDurchschnitt" -> dto.ZulassungNotenpunktdurchschnitt = JSONMapper.convertToDouble(value, true);
@@ -223,16 +243,19 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 				final Long idFachlehrer = JSONMapper.convertToLongInRange(value, true, 0L, null, "block2Pruefer");
 				if (idFachlehrer != null) {
 					final DTOLehrer dtoLehrer = conn.queryByKey(DTOLehrer.class, idFachlehrer);
-					if (dtoLehrer == null)
+					if (dtoLehrer == null) {
 						throw new ApiOperationException(Status.NOT_FOUND, "Ein Fachlehrer mit der ID %d existiert nicht.".formatted(idFachlehrer));
+					}
 				}
 				dto.Fachlehrer_ID = idFachlehrer;
 			}
 			case "belegungen" -> {
 				final List<Map<String, Object>> listMapsBelegungen = JSONMapper.toListOfMaps(value);
-				for (final Map<String, Object> mapBelegung : listMapsBelegungen)
-					if (mapBelegung != null)
+				for (final Map<String, Object> mapBelegung : listMapsBelegungen) {
+					if (mapBelegung != null) {
 						mapAttributesFachbelegungenHalbjahr(dto, mapBelegung, schuljahr);
+					}
+				}
 			}
 			default -> {
 				// ignoriere Attribute, die nicht für die Patch-Operation relevant sind
@@ -247,8 +270,9 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 		switch (name) {
 			case "schuelerID" -> {
 				final Long idSchueler = JSONMapper.convertToLong(value, false);
-				if (dto.Schueler_ID != idSchueler)
+				if (dto.Schueler_ID != idSchueler) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die Schüler-ID aus dem Patch passt nicht zu der Schüler-ID aus der Anfrage.");
+				}
 			}
 			case "block1FehlstundenGesamt" -> dto.FehlstundenSumme = JSONMapper.convertToIntegerInRange(value, true, 0, 10000);
 			case "block1FehlstundenUnentschuldigt" -> dto.FehlstundenSummeUnentschuldigt = JSONMapper.convertToIntegerInRange(value, true, 0, 10000);
@@ -272,10 +296,12 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 			case "block1Zulassung", "freiwilligerRuecktritt" -> {
 				boolean block1Zulassung = !"-".equals(dto.BlockI_HatZulassung);
 				boolean freiwilligerRuecktritt = "R".equals(dto.BlockI_HatZulassung);
-				if (map.containsKey("block1Zulassung"))
+				if (map.containsKey("block1Zulassung")) {
 					block1Zulassung = JSONMapper.convertToBoolean(map.get("block1Zulassung"), false);
-				if (map.containsKey("freiwilligerRuecktritt"))
+				}
+				if (map.containsKey("freiwilligerRuecktritt")) {
 					freiwilligerRuecktritt = JSONMapper.convertToBoolean(map.get("freiwilligerRuecktritt"), false);
+				}
 				dto.BlockI_HatZulassung = freiwilligerRuecktritt ? "R" : (block1Zulassung ? "+" : "-");
 			}
 
@@ -289,19 +315,23 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 			case "note" -> {
 				final String strNote = JSONMapper.convertToString(value, true, false, 3);
 				if (strNote != null) {
-					if (strNote.length() == 2)
+					if (strNote.length() == 2) {
 						throw new ApiOperationException(Status.BAD_REQUEST,
 								"Die Abiturnote muss entweder eine Note ohne Nachkommstelle oder eine Note mit genau einer Nachkommastelle sein. '1,' ist nicht zulässig.");
+					}
 					final char note0 = strNote.charAt(0);
-					if ((note0 != '1') && (note0 != '2') && (note0 != '3') && (note0 != '4'))
+					if ((note0 != '1') && (note0 != '2') && (note0 != '3') && (note0 != '4')) {
 						throw new ApiOperationException(Status.BAD_REQUEST, "Es sind nur Abiturnoten zwischen 1 und 4 zulässig.");
+					}
 					if (strNote.length() == 3) {
 						final char note2 = strNote.charAt(2);
 						if ((note2 != '0') && (note2 != '1') && (note2 != '2') && (note2 != '3') && (note2 != '4') && (note2 != '5') && (note2 != '6')
-								&& (note2 != '7') && (note2 != '8') && (note2 != '9'))
+								&& (note2 != '7') && (note2 != '8') && (note2 != '9')) {
 							throw new ApiOperationException(Status.BAD_REQUEST, "Für die Nachkommastellen sind nur Ziffern von 0-9 zulässig.");
-						if ((note0 == '4') && (note2 != '0'))
+						}
+						if ((note0 == '4') && (note2 != '0')) {
 							throw new ApiOperationException(Status.BAD_REQUEST, "Bei einer Note 4 ist eine Nachkommstellen ungleich 0 nicht zulässig.");
+						}
 					}
 				}
 				dto.AbiturNote = strNote;
@@ -325,18 +355,22 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 	 * @throws ApiOperationException
 	 */
 	public Response patchAbiturdatenAsResponse(final Long id, final InputStream is) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Für das Patchen muss eine ID angegeben werden. Null ist nicht zulässig.");
+		}
 		final Map<String, Object> attributesToPatch = JSONMapper.toMap(is);
-		if (attributesToPatch.isEmpty())
+		if (attributesToPatch.isEmpty()) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "In dem Patch sind keine Daten enthalten.");
+		}
 		final DTOSchuelerAbitur dto = getDatabaseDTOByID(id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Konnte die Abiturdaten für die angegebene ID in der Datenbank nicht finden.");
+		}
 
 		// Patche zunächst die Abiturdaten, die keinen speziellen Fach-bezug haben
-		for (final Entry<String, Object> patchMapping : attributesToPatch.entrySet())
+		for (final Entry<String, Object> patchMapping : attributesToPatch.entrySet()) {
 			mapAttribute(dto, patchMapping.getKey(), patchMapping.getValue(), attributesToPatch);
+		}
 
 		// Patche zunächst die Abiturdaten für die einzelnen Fachbelegungen
 		final Object tmpFachbelegungen = attributesToPatch.get("fachbelegungen");
@@ -345,21 +379,25 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 			final List<Map<String, Object>> listMapsFachbelegungen = JSONMapper.toListOfMaps(tmpFachbelegungen);
 			// Bestimme zunächst alle Fächer-IDs im Patch
 			final @NotNull List<Long> idsFaecher = new ArrayList<>();
-			for (final Map<String, Object> mapFachbelegung : listMapsFachbelegungen)
+			for (final Map<String, Object> mapFachbelegung : listMapsFachbelegungen) {
 				idsFaecher.add(JSONMapper.convertToLong(mapFachbelegung.get("fachID"), false));
-			if (!idsFaecher.isEmpty())
+			}
+			if (!idsFaecher.isEmpty()) {
 				dtosFachbelegungen.addAll(conn.queryList("SELECT e FROM DTOSchuelerAbiturFach e WHERE e.Schueler_ID = ?1 AND e.Fach_ID IN ?2",
 						DTOSchuelerAbiturFach.class, id, idsFaecher));
-			if (idsFaecher.size() != dtosFachbelegungen.size())
+			}
+			if (idsFaecher.size() != dtosFachbelegungen.size()) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Es konnten nicht alle Fachbelegungen aus dem Patch in der Datenbank gefunden werden.");
+			}
 			final Map<Long, DTOSchuelerAbiturFach> mapDTOsFachbelegungen = dtosFachbelegungen.stream().collect(Collectors.toMap(fb -> fb.Fach_ID, fb -> fb));
 			final Schuljahresabschnitt sja = conn.getUser().schuleGetAbschnittById(dto.Schuljahresabschnitts_ID);
 			// Führe einen Patch auf die einzelnen Fachbelegungen durch.
 			for (final Map<String, Object> mapFachbelegung : listMapsFachbelegungen) {
 				final long idFach = JSONMapper.convertToLong(mapFachbelegung.get("fachID"), false);
 				final DTOSchuelerAbiturFach dtoFachbelegung = mapDTOsFachbelegungen.get(idFach);
-				for (final Entry<String, Object> patchMapping : mapFachbelegung.entrySet())
+				for (final Entry<String, Object> patchMapping : mapFachbelegung.entrySet()) {
 					mapAttributeFachbelegungen(dtoFachbelegung, patchMapping.getKey(), patchMapping.getValue(), mapFachbelegung, sja.schuljahr);
+				}
 			}
 		}
 
@@ -381,16 +419,19 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 	 */
 	public List<Abiturdaten> getAbiturdatenFromIDs(final List<Long> idsSchueler) throws ApiOperationException {
 		// Prüfe zunächst die Schüler auf Existenz.
-		if (idsSchueler == null)
+		if (idsSchueler == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 
 		final List<Long> idsSchuelerNonNull = new ArrayList<>(idsSchueler.stream().filter(Objects::nonNull).toList());
-		if (idsSchuelerNonNull.isEmpty())
+		if (idsSchuelerNonNull.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 
 		final List<DTOSchueler> dtoSchueler = conn.queryByKeyList(DTOSchueler.class, idsSchuelerNonNull);
-		if ((dtoSchueler == null) || dtoSchueler.isEmpty() || (dtoSchueler.size() != idsSchuelerNonNull.size()))
+		if ((dtoSchueler == null) || dtoSchueler.isEmpty() || (dtoSchueler.size() != idsSchuelerNonNull.size())) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 
 		// Lese die Abiturdaten anhand der IDs aus der Datenbank
 		final Map<Long, List<DTOSchuelerAbitur>> mapDTOsSchuelerAbitur =
@@ -414,30 +455,35 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 
 		for (final Long idSchueler : idsSchuelerNonNull) {
 			// Hole die Abiturdaten zur Schüler-ID aus der Map. Wenn diese nicht existieren, gibt es keine Abiturdaten zum Schüler.
-			if ((mapDTOsSchuelerAbitur.get(idSchueler) == null) || mapDTOsSchuelerAbitur.get(idSchueler).isEmpty())
+			if ((mapDTOsSchuelerAbitur.get(idSchueler) == null) || mapDTOsSchuelerAbitur.get(idSchueler).isEmpty()) {
 				continue;
+			}
 			// TODO: Hier wird der erste Eintrag verwendet. Hier müsste bei mehreren Einträgen der neuste Eintrag bestimmt werden.
 			final DTOSchuelerAbitur dtoSchuelerAbitur = mapDTOsSchuelerAbitur.get(idSchueler).getFirst();
 
 			// Hole die Abiturfächer zur Schüler-ID aus der Map. Wenn diese nicht existieren, gibt es keine Abiturdaten zum Schüler.
-			if ((mapSchuelerAbiturFaecher.get(idSchueler) == null) || mapSchuelerAbiturFaecher.get(idSchueler).isEmpty())
+			if ((mapSchuelerAbiturFaecher.get(idSchueler) == null) || mapSchuelerAbiturFaecher.get(idSchueler).isEmpty()) {
 				continue;
+			}
 			final List<DTOSchuelerAbiturFach> faecher = mapSchuelerAbiturFaecher.get(idSchueler);
 
 			// Hole die Sprachenfolge zur Schüler-ID aus der Map.
 			final List<DTOSchuelerSprachenfolge> sprachenfolge = new ArrayList<>();
-			if ((mapSchuelerSprachenfolge.get(idSchueler) != null) && !mapSchuelerSprachenfolge.get(idSchueler).isEmpty())
+			if ((mapSchuelerSprachenfolge.get(idSchueler) != null) && !mapSchuelerSprachenfolge.get(idSchueler).isEmpty()) {
 				sprachenfolge.addAll(mapSchuelerSprachenfolge.get(idSchueler));
+			}
 
 			// Ermittle für einen Vergleich die Abiturdaten für Block I aus den Leistungsdaten, nutze dafür den entsprechenden Service.
 			// TODO: Hier müsste auch die folgende Methode mehrere IDs umgestellt und aus der for-Schleife gezogen werden.
 			final Abiturdaten abidatenVergleich = DBUtilsGostLaufbahn.get(conn, idSchueler);
-			if (abidatenVergleich == null)
+			if (abidatenVergleich == null) {
 				continue;
+			}
 
 			final Abiturdaten abidaten = erzeugeAbiturdaten(dtoSchuelerAbitur, abidatenVergleich, sprachenfolge, faecher, mapGostFaecherManager);
-			if (abidaten != null)
+			if (abidaten != null) {
 				listAbiturdaten.add(abidaten);
+			}
 		}
 
 		// Gibt die Liste der Abiturdaten zurück.
@@ -465,22 +511,26 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 		final Schuljahresabschnitt schuljahresabschnittPruefung = (dtoSchuelerAbitur.Schuljahresabschnitts_ID != null)
 				? conn.getUser().schuleGetAbschnittById(dtoSchuelerAbitur.Schuljahresabschnitts_ID)
 				: conn.getUser().schuleGetAbschnittBySchuljahrUndHalbjahr(abidatenVergleich.schuljahrAbitur, 2);
-		if (schuljahresabschnittPruefung == null)
+		if (schuljahresabschnittPruefung == null) {
 			return null;
+		}
 
 		// Bestimme zunächst das Abiturjahr
 		Integer abiturjahr = null;
 		if (dtoSchuelerAbitur.Schuljahresabschnitts_ID != null) {
 			final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, dtoSchuelerAbitur.Schuljahresabschnitts_ID);
-			if (abschnitt != null)
+			if (abschnitt != null) {
 				abiturjahr = abschnitt.Jahr + 1;
+			}
 		}
-		if (abiturjahr == null)
+		if (abiturjahr == null) {
 			abiturjahr = abidatenVergleich.abiturjahr;
+		}
 
 		// Lese die Oberstufenfächer aus der DB ein, um schnell Daten zu einzelnen Fächern nachschlagen zu können
-		if (!mapGostFaecherManager.containsKey(abiturjahr))
+		if (!mapGostFaecherManager.containsKey(abiturjahr)) {
 			mapGostFaecherManager.put(abiturjahr, DBUtilsFaecherGost.getFaecherManager(abidatenVergleich.schuljahrAbitur, conn, abiturjahr));
+		}
 		final GostFaecherManager gostFaecher = mapGostFaecherManager.get(abiturjahr);
 
 		// Kopiere die DTOs in die Abiturdaten-Klasse
@@ -493,33 +543,37 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 		abidaten.block1FehlstundenUnentschuldigt = (dtoSchuelerAbitur.FehlstundenSummeUnentschuldigt == null) ? 0
 				: dtoSchuelerAbitur.FehlstundenSummeUnentschuldigt;
 		abidaten.latinum = false;
-		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
+		for (final DTOSchuelerSprachenfolge folge : sprachenfolge) {
 			if ((Fach.L == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.LatinumErreicht != null)
 					&& Boolean.TRUE.equals((folge.LatinumErreicht))) {
 				abidaten.latinum = true;
 				break;
 			}
+		}
 		abidaten.kleinesLatinum = false;
-		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
+		for (final DTOSchuelerSprachenfolge folge : sprachenfolge) {
 			if ((Fach.L == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.KleinesLatinumErreicht != null)
 					&& Boolean.TRUE.equals((folge.KleinesLatinumErreicht))) {
 				abidaten.kleinesLatinum = true;
 				break;
 			}
+		}
 		abidaten.graecum = false;
-		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
+		for (final DTOSchuelerSprachenfolge folge : sprachenfolge) {
 			if ((Fach.G == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.GraecumErreicht != null)
 					&& Boolean.TRUE.equals((folge.GraecumErreicht))) {
 				abidaten.graecum = true;
 				break;
 			}
+		}
 		abidaten.hebraicum = false;
-		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
+		for (final DTOSchuelerSprachenfolge folge : sprachenfolge) {
 			if ((Fach.H == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.HebraicumErreicht != null)
 					&& Boolean.TRUE.equals((folge.HebraicumErreicht))) {
 				abidaten.hebraicum = true;
 				break;
 			}
+		}
 		abidaten.besondereLernleistung = dtoSchuelerAbitur.BesondereLernleistungArt.kuerzel;
 		abidaten.besondereLernleistungNotenKuerzel =
 				Note.fromNotenpunkte(dtoSchuelerAbitur.BesondereLernleistungNotenpunkte).daten(abidaten.abiturjahr - 1).kuerzel;
@@ -653,8 +707,9 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 		}
 
 		// Markiere alles Gost-Halbjahre als gewertet
-		for (final GostHalbjahr hj : GostHalbjahr.values())
+		for (final GostHalbjahr hj : GostHalbjahr.values()) {
 			abidaten.bewertetesHalbjahr[hj.id] = true;
+		}
 
 		// Kopiere Abiturdaten, welche nicht in den Abitur-DB-Tabellen direkt vorhanden sind
 		abidaten.sprachendaten = abidatenVergleich.sprachendaten;
@@ -667,15 +722,18 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 					break;
 				}
 			}
-			if (fachVergleich == null)
+			if (fachVergleich == null) {
 				continue;
+			}
 			fach.istFSNeu = fachVergleich.istFSNeu;
 			for (final AbiturFachbelegungHalbjahr belegung : fach.belegungen) {
-				if (belegung == null)
+				if (belegung == null) {
 					continue;
+				}
 				final AbiturFachbelegungHalbjahr belegungVergleich = fachVergleich.belegungen[GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel).id];
-				if (belegungVergleich == null)
+				if (belegungVergleich == null) {
 					continue;
+				}
 				if (GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel).istEinfuehrungsphase()) {
 					belegung.wochenstunden = belegungVergleich.wochenstunden;
 				}
@@ -704,8 +762,9 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 		final @NotNull Abiturdaten abidaten = manager.daten();
 		// Bestimme den Schuljahresabschnitt für das Abitur
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittBySchuljahrUndHalbjahr(manager.getSchuljahr(), 2);
-		if (schuljahresabschnitt == null)
+		if (schuljahresabschnitt == null) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Es existiert kein Schuljahresabschnitt für das Schuljahr der Q2.2 der Abiturdaten.");
+		}
 		// Bestimme den Eintrag des Schülers in der Abiturdaten-Tabelle, sofern einer vorhanden ist
 		final long idSchueler = manager.daten().schuelerID;
 		final @NotNull List<DTOSchuelerAbitur> dtosSchueler = conn.queryList(DTOSchuelerAbitur.QUERY_BY_SCHUELER_ID, DTOSchuelerAbitur.class, idSchueler);
@@ -714,11 +773,13 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 			// Prüfe, ob ein Eintrag mit dem korrekten Schuljahresabschnitt bereits existiert
 			dtoSchueler = dtosSchueler.stream().filter(s -> (s.Schuljahresabschnitts_ID != null) && (s.Schuljahresabschnitts_ID == schuljahresabschnitt.id))
 					.findFirst().orElse(null);
-			if (dtoSchueler == null)
+			if (dtoSchueler == null) {
 				dtoSchueler = dtosSchueler.stream().filter(s -> s.Schuljahresabschnitts_ID == null).findFirst().orElse(null);
+			}
 		}
-		if (dtoSchueler == null)
+		if (dtoSchueler == null) {
 			dtoSchueler = new DTOSchuelerAbitur(conn.transactionGetNextID(DTOSchuelerAbitur.class), idSchueler);
+		}
 		dtoSchueler.Schuljahresabschnitts_ID = schuljahresabschnitt.id;
 		dtoSchueler.ProjektkursThema = abidaten.projektKursThema;
 		dtoSchueler.FremdspracheSekIManuellGeprueft = false;
@@ -756,8 +817,9 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 		long idNext = conn.transactionGetNextID(DTOSchuelerAbiturFach.class);
 		for (final @NotNull AbiturFachbelegung belegung : abidaten.fachbelegungen) {
 			final @NotNull GostFach fach = manager.faecher().get(belegung.fachID);
-			if (fach == null)
+			if (fach == null) {
 				continue;
+			}
 			// Informationen zum Fach bestimmen...
 			final @NotNull DTOSchuelerAbiturFach dto = new DTOSchuelerAbiturFach(idNext++, idSchueler, fach.id);
 			dto.FachKuerzel = fach.kuerzelAnzeige;
@@ -838,8 +900,9 @@ public final class DataGostAbiturdaten extends DataManagerRevised<Long, DTOSchue
 	public Response copyAbiturdatenAusLeistungsdaten(final long id) throws ApiOperationException {
 		final Abiturdaten abidaten = (new DataGostSchuelerLaufbahnplanung(conn, null)).getById(id);
 		if ((!abidaten.bewertetesHalbjahr[GostHalbjahr.Q11.id]) || (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q12.id])
-				|| (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q21.id]) || (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q22.id]))
+				|| (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q21.id]) || (!abidaten.bewertetesHalbjahr[GostHalbjahr.Q22.id])) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Es liegen noch nicht alle Leistungen für die Qualifikationsphase vor.");
+		}
 		final @NotNull GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, abidaten.abiturjahr);
 		final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abidaten.abiturjahr);
 		final @NotNull AbiturdatenManager manager =

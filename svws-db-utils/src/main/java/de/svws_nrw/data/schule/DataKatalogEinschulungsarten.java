@@ -3,13 +3,13 @@ package de.svws_nrw.data.schule;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -29,8 +29,9 @@ public final class DataKatalogEinschulungsarten extends DataManager<Long> {
 	@Override
 	public Response getAll() {
 		final ArrayList<EinschulungsartKatalogEintrag> daten = new ArrayList<>();
-		for (final Einschulungsart art : Einschulungsart.values())
+		for (final Einschulungsart art : Einschulungsart.values()) {
 			daten.addAll(art.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

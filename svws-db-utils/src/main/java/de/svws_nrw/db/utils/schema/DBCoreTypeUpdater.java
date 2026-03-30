@@ -1,13 +1,12 @@
 package de.svws_nrw.db.utils.schema;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.asd.data.NoteKatalogEintrag;
 import de.svws_nrw.asd.data.fach.FachKatalogEintrag;
 import de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag;
@@ -18,12 +17,9 @@ import de.svws_nrw.asd.data.schueler.HerkunftSonstigeKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftsartenKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulformSchulgliederung;
-import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.core.types.KursFortschreibungsart;
 import de.svws_nrw.asd.types.Note;
-import de.svws_nrw.core.types.PersonalTyp;
-import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.asd.types.fach.Fach;
+import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.klassen.Klassenart;
 import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
@@ -34,13 +30,17 @@ import de.svws_nrw.asd.types.schueler.HerkunftSchulform;
 import de.svws_nrw.asd.types.schueler.HerkunftSonstige;
 import de.svws_nrw.asd.types.schueler.Herkunftsarten;
 import de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen;
-import de.svws_nrw.core.types.schule.AllgemeineMerkmale;
 import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.asd.types.schule.Religion;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.asd.types.schule.WeiterbildungskollegOrganisationsformen;
+import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.KursFortschreibungsart;
+import de.svws_nrw.core.types.PersonalTyp;
+import de.svws_nrw.core.types.schule.AllgemeineMerkmale;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
@@ -148,18 +148,23 @@ public class DBCoreTypeUpdater {
 			status_revision = 0;
 		}
 		for (final SchemaTabelle tab : Schema.getTabellen(status_revision)) {
-			if (!tab.hasCoreType())
+			if (!tab.hasCoreType()) {
 				continue;
+			}
 			final DTOSchemaCoreTypeVersion v = _status.getCoreTypeVersion(conn, tab.name());
-			if (v == null)
+			if (v == null) {
 				return false; // Bisher keine Version gespeichert - Update also nötig
-			if (Long.compare(tab.getCoreType().getCoreTypeVersion(), v.Version) > 0)
+			}
+			if (Long.compare(tab.getCoreType().getCoreTypeVersion(), v.Version) > 0) {
 				return false;  // Die Version des Core-Types ist größer als die Version in der DB -> Update also nötig
+			}
 		}
 		// TODO unten deprecated, oben aktuell
-		for (final CoreTypeTable entry : tables)
-			if ((entry.name == null) || (!pruefeVersion(conn, entry.name, entry.version)))
+		for (final CoreTypeTable entry : tables) {
+			if ((entry.name == null) || (!pruefeVersion(conn, entry.name, entry.version))) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -185,21 +190,26 @@ public class DBCoreTypeUpdater {
 			status_revision = 0;
 		}
 		for (final SchemaTabelle tab : Schema.getTabellen(status_revision)) {
-			if (!tab.hasCoreType())
+			if (!tab.hasCoreType()) {
 				continue;
+			}
 			final DTOSchemaCoreTypeVersion v = _status.getCoreTypeVersion(conn, tab.name());
-			if (v == null)
+			if (v == null) {
 				continue; // Bisher keine Version gespeichert - Update also möglich
-			if (Long.compare(tab.getCoreType().getCoreTypeVersion(), v.Version) < 0)
+			}
+			if (Long.compare(tab.getCoreType().getCoreTypeVersion(), v.Version) < 0) {
 				return false;  // Die Version des Core-Types ist kleiner als die Version in der DB
+			}
 		}
 		// TODO unten deprecated, oben aktuell
 		for (final CoreTypeTable entry : tables) {
 			final DTOSchemaCoreTypeVersion v = _status.getCoreTypeVersion(conn, entry.name);
-			if (v == null)
+			if (v == null) {
 				continue; // Bisher keine Version gespeichert - Update also möglich
-			if (Long.compare(entry.version, v.Version) < 0)
+			}
+			if (Long.compare(entry.version, v.Version) < 0) {
 				return false;  // Die Version des Core-Types ist kleiner als die Version in der DB
+			}
 		}
 		return true;
 	}
@@ -219,8 +229,9 @@ public class DBCoreTypeUpdater {
 		try {
 			conn.transactionBegin();
 			boolean result = update(conn, lockSchema, rev);
-			if (result && (!conn.transactionCommit()))
+			if (result && (!conn.transactionCommit())) {
 				result = false;
+			}
 			return result;
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -251,38 +262,46 @@ public class DBCoreTypeUpdater {
 		try {
 			long revision = rev;
 			// Prüfe zunächst, ob ein Update möglich ist
-			if (!isUpdatable(conn))
+			if (!isUpdatable(conn)) {
 				throw new DBException("Core-Types können nicht aktualisiert werden, da die Core-Type-Version in der Datenbank neuer sind als die des Servers.");
+			}
 			// Bestimme ggf. die aktuelle Datenbank-Revision
-			if (revision < 0)
+			if (revision < 0) {
 				revision = _status.getVersion().getRevisionOrDefault(-1);
-			if (revision < 0)
+			}
+			if (revision < 0) {
 				throw new DBException("Core-Types können nicht aktualisiert werden, da die Revision der Datenbank nicht bestimmt werden kann.");
+			}
 			// Aktualisiere ggf. die Daten der einzelnen Core-Types
 			final long status_revision = (_status.version == null) ? 0 : _status.version.getRevisionOrDefault(0);
 			for (final SchemaTabelle tab : Schema.getTabellen(status_revision)) {
-				if (!tab.hasCoreType())
+				if (!tab.hasCoreType()) {
 					continue;
+				}
 				final SchemaTabelleCoreType ct = tab.getCoreType();
-				if (pruefeVersion(conn, tab.name(), ct.getCoreTypeVersion()))
+				if (pruefeVersion(conn, tab.name(), ct.getCoreTypeVersion())) {
 					continue;
+				}
 				_logger.logLn(strAktualisiereTabelle + tab.name());
 				updateCoreTypeTabelle(conn, tab.name(), ct.getCoreTypeName(), ct.getCoreTypeVersion(),
 						ct.getSQLInsert(status_revision, conn.getDBDriver() == DBDriver.SQLITE));
 			}
 			// TODO unten deprecated: Aktualisiere ggf. die Daten der einzelnen Core-Types
-			for (final CoreTypeTable entry : tables)
-				if (!pruefeVersion(conn, entry.name, entry.version))
+			for (final CoreTypeTable entry : tables) {
+				if (!pruefeVersion(conn, entry.name, entry.version)) {
 					entry.updater.accept(conn, _logger);
+				}
+			}
 			return true;
 		} catch (final Exception e) {
 			e.printStackTrace();
 			return false;
 		} finally {
 			// Entsperre ggf. das Datenbankschema
-			if ((lockSchema) && (!SVWSKonfiguration.get().unlockSchema(_schemaManager.getSchemaStatus().schemaName)))
+			if ((lockSchema) && (!SVWSKonfiguration.get().unlockSchema(_schemaManager.getSchemaStatus().schemaName))) {
 				_logger.logLn("-> Update evtl. fehlgeschlagen! (Fehler beim Freigeben des Datenbank-Schemas. Schema ist nicht gesperrt"
 						+ " - dies wird an dieser Stelle nicht erwartet!)");
+			}
 		}
 	}
 
@@ -338,8 +357,9 @@ public class DBCoreTypeUpdater {
 				if (isFirst) {
 					sql.append(strValues);
 					isFirst = false;
-				} else
+				} else {
 					sql.append(", (");
+				}
 				sql.append(fgke.id).append(",");
 				sql.append(fgke.nummer).append(",");
 				sql.append(fgke.schluessel).append(",");
@@ -355,9 +375,10 @@ public class DBCoreTypeUpdater {
 				sql.append(fgke.gueltigBis).append(")");
 			}
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(
 					" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Fachbereich=VALUES(Fachbereich), SchildFgID=VALUES(SchildFgID), FG_Bezeichnung=VALUES(FG_Bezeichnung), FG_Kuerzel=VALUES(FG_Kuerzel), Schulformen=VALUES(Schulformen), FarbeR=VALUES(FarbeR), FarbeG=VALUES(FarbeG), FarbeB=VALUES(FarbeB), Sortierung=VALUES(Sortierung), FuerZeugnis=VALUES(FuerZeugnis), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
+		}
 		updateCoreTypeTabelle(conn, tabname, Fachgruppe.class.getCanonicalName(), Fachgruppe.data().getVersion(), sql.toString());
 	};
 
@@ -381,8 +402,9 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(kuerzel).append("'").append(")");
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
+		}
 		updateCoreTypeTabelle(conn, tabname, Jahrgaenge.class.getCanonicalName(), Jahrgaenge.data().getVersion(), sql.toString());
 	};
 
@@ -407,9 +429,10 @@ public class DBCoreTypeUpdater {
 			sql.append(p.gueltigVon).append(",");
 			sql.append(p.gueltigBis).append(")");
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(
 					" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), Bezeichnung=VALUES(Bezeichnung), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
+		}
 		updateCoreTypeTabelle(conn, tabname, KursFortschreibungsart.class.getCanonicalName(), KursFortschreibungsart.VERSION, sql.toString());
 	};
 
@@ -431,8 +454,9 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(code).append("')");
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(" ON DUPLICATE KEY UPDATE DEStatisCode=VALUES(DEStatisCode)");
+		}
 		updateCoreTypeTabelle(conn, tabname, Nationalitaeten.class.getCanonicalName(), Nationalitaeten.data().getVersion(), sql.toString());
 	};
 
@@ -449,8 +473,9 @@ public class DBCoreTypeUpdater {
 		sql.append("(ID, Kuerzel, IstTendenznote, Text, AufZeugnis, Notenpunkte, TextLaufbahnSII, AufLaufbahnSII, Sortierung, gueltigVon, gueltigBis) ");
 		boolean isFirst = true;
 		for (final Note n : Note.values()) {
-			if (n == Note.KEINE)
+			if (n == Note.KEINE) {
 				continue;
+			}
 			for (final NoteKatalogEintrag nke : n.historie()) {
 				sql.append(isFirst ? strValues : ", (");
 				isFirst = false;
@@ -460,12 +485,13 @@ public class DBCoreTypeUpdater {
 				sql.append("'").append(nke.text).append("'").append(",");
 				sql.append("--------------------".equals(nke.textZeugnis)).append(",");
 				sql.append(nke.notenpunkte).append(",");
-				if (nke.notenpunkte != null)
+				if (nke.notenpunkte != null) {
 					sql.append("'").append(String.format("%02d", nke.notenpunkte)).append("'").append(",");
-				else if ((n == Note.E3_TEILGENOMMEN) || (n == Note.E2_MIT_ERFOLG_TEILGENOMMEN) || (n == (Note.E3_TEILGENOMMEN)) || (n == Note.ATTEST))
+				} else if ((n == Note.E3_TEILGENOMMEN) || (n == Note.E2_MIT_ERFOLG_TEILGENOMMEN) || (n == (Note.E3_TEILGENOMMEN)) || (n == Note.ATTEST)) {
 					sql.append("'").append(nke.kuerzel).append("'").append(",");
-				else
+				} else {
 					sql.append(strNullValue);
+				}
 				sql.append((nke.notenpunkte != null) || (n == Note.E3_TEILGENOMMEN) || (n == Note.E2_MIT_ERFOLG_TEILGENOMMEN)
 						|| (n == (Note.E3_TEILGENOMMEN)) || (n == Note.ATTEST)).append(",");
 				sql.append(nke.sortierung).append(",");
@@ -473,9 +499,10 @@ public class DBCoreTypeUpdater {
 				sql.append(nke.gueltigBis).append(")");
 			}
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(
 					" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), IstTendenznote=VALUES(IstTendenznote), Text=VALUES(Text), AufZeugnis=VALUES(AufZeugnis), Notenpunkte=VALUES(Notenpunkte), TextLaufbahnSII=VALUES(TextLaufbahnSII), AufLaufbahnSII=VALUES(AufLaufbahnSII), Sortierung=VALUES(Sortierung), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
+		}
 		updateCoreTypeTabelle(conn, tabname, Note.class.getCanonicalName(), Note.data().getVersion(), sql.toString());
 	};
 
@@ -500,9 +527,10 @@ public class DBCoreTypeUpdater {
 			sql.append(p.gueltigVon).append(",");
 			sql.append(p.gueltigBis).append(")");
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(
 					" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), Bezeichnung=VALUES(Bezeichnung), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
+		}
 		updateCoreTypeTabelle(conn, tabname, PersonalTyp.class.getCanonicalName(), PersonalTyp.VERSION, sql.toString());
 	};
 
@@ -525,19 +553,21 @@ public class DBCoreTypeUpdater {
 				isFirst = false;
 				sql.append(sf.id).append(",");
 				sql.append("'").append(sf.kuerzel).append("'").append(",");
-				if (sf.schluessel == null)
+				if (sf.schluessel == null) {
 					sql.append(strNullValue);
-				else
+				} else {
 					sql.append("'").append(sf.schluessel).append("'").append(",");
+				}
 				sql.append("'").append(sf.text).append("'").append(",");
 				sql.append(sf.hatGymOb).append(",");
 				sql.append(sf.gueltigVon).append(",");
 				sql.append(sf.gueltigBis).append(")");
 			}
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(
 					" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), Nummer=VALUES(Nummer), Bezeichnung=VALUES(Bezeichnung), HatGymOb=VALUES(HatGymOb), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
+		}
 		updateCoreTypeTabelle(conn, tabname, Schulform.class.getCanonicalName(), Schulform.data().getVersion(), sql.toString());
 	};
 
@@ -597,9 +627,10 @@ public class DBCoreTypeUpdater {
 				sql.append(h.gueltigBis).append(")");
 			}
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(
 					" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), Beschreibung=VALUES(Beschreibung), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
+		}
 		final long version = HerkunftSonstige.data().getVersion() + HerkunftBildungsgang.data().getVersion() + HerkunftBildungsgangTyp.data().getVersion()
 				+ HerkunftSchulform.data().getVersion();
 		updateCoreTypeTabelle(conn, tabname, "de.svws_nrw.core.types.schueler.Herkunft", version, sql.toString());
@@ -631,8 +662,9 @@ public class DBCoreTypeUpdater {
 		}
 		final long version = HerkunftSonstige.data().getVersion() + HerkunftBildungsgang.data().getVersion() + HerkunftBildungsgangTyp.data().getVersion()
 				+ HerkunftSchulform.data().getVersion();
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
+		}
 		updateCoreTypeTabelle(conn, tabname, "de.svws_nrw.core.types.schueler.Herkunft", version, sql.toString());
 	};
 
@@ -688,8 +720,9 @@ public class DBCoreTypeUpdater {
 				}
 			}
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(" ON DUPLICATE KEY UPDATE Herkunft_ID=VALUES(Herkunft_ID), Schulform_Kuerzel=VALUES(Schulform_Kuerzel)");
+		}
 		final long version = HerkunftSonstige.data().getVersion() + HerkunftBildungsgang.data().getVersion() + HerkunftBildungsgangTyp.data().getVersion()
 				+ HerkunftSchulform.data().getVersion();
 		updateCoreTypeTabelle(conn, tabname, "de.svws_nrw.core.types.schueler.Herkunft", version, sql.toString());
@@ -718,8 +751,9 @@ public class DBCoreTypeUpdater {
 				sql.append(h.gueltigBis).append(")");
 			}
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
+		}
 		updateCoreTypeTabelle(conn, tabname, Herkunftsarten.class.getCanonicalName(), Herkunftsarten.data().getVersion(), sql.toString());
 	};
 
@@ -741,8 +775,9 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
+		}
 		updateCoreTypeTabelle(conn, tabname, Herkunftsarten.class.getCanonicalName(), Herkunftsarten.data().getVersion(), sql.toString());
 	};
 
@@ -771,9 +806,10 @@ public class DBCoreTypeUpdater {
 				}
 			}
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(
 					" ON DUPLICATE KEY UPDATE Herkunftsart_ID=VALUES(Herkunftsart_ID), Schulform_Kuerzel=VALUES(Schulform_Kuerzel), KurzBezeichnung=VALUES(KurzBezeichnung), Bezeichnung=VALUES(Bezeichnung)");
+		}
 		updateCoreTypeTabelle(conn, tabname, Herkunftsarten.class.getCanonicalName(), Herkunftsarten.data().getVersion(), sql.toString());
 	};
 
@@ -795,8 +831,9 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
+		}
 		updateCoreTypeTabelle(conn, tabname, Klassenart.class.getCanonicalName(), Klassenart.data().getVersion(), sql.toString());
 	};
 
@@ -818,8 +855,9 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
+		}
 		updateCoreTypeTabelle(conn, tabname, ZulaessigeKursart.class.getCanonicalName(), ZulaessigeKursart.data().getVersion(), sql.toString());
 	};
 
@@ -844,14 +882,16 @@ public class DBCoreTypeUpdater {
 				sql.append("'").append(f.schluessel).append("'").append(",");
 				sql.append("'").append(f.text.replace("'", "''")).append("'").append(",");
 				sql.append("'").append(f.kuerzel).append("'").append(",");
-				if (f.aufgabenfeld == null)
+				if (f.aufgabenfeld == null) {
 					sql.append(strNullValue);
-				else
+				} else {
 					sql.append(f.aufgabenfeld).append(",");
-				if (f.fachgruppe == null)
+				}
+				if (f.fachgruppe == null) {
 					sql.append(strNullValue);
-				else
+				} else {
 					sql.append("'").append(f.fachgruppe).append("'").append(",");
+				}
 				if (f.abJahrgang == null) {
 					sql.append(strNullValue);
 				} else {
@@ -869,9 +909,10 @@ public class DBCoreTypeUpdater {
 				sql.append(f.gueltigBis).append(")");
 			}
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(
 					" ON DUPLICATE KEY UPDATE ID=VALUES(ID), KuerzelASD=VALUES(KuerzelASD), Bezeichnung=VALUES(Bezeichnung), Kuerzel=VALUES(Kuerzel), Aufgabenfeld=VALUES(Aufgabenfeld), Fachgruppe=VALUES(Fachgruppe), JahrgangAb=VALUES(JahrgangAb), IstFremdsprache=VALUES(IstFremdsprache), IstHKFS=VALUES(IstHKFS), IstAusRegUFach=VALUES(IstAusRegUFach), IstErsatzPflichtFS=VALUES(IstErsatzPflichtFS), IstKonfKoop=VALUES(IstKonfKoop), NurSII=VALUES(NurSII), ExportASD=VALUES(ExportASD), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
+		}
 		updateCoreTypeTabelle(conn, tabname, Fach.class.getCanonicalName(), Fach.data().getVersion(), sql.toString());
 	};
 
@@ -893,8 +934,9 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
+		}
 		updateCoreTypeTabelle(conn, tabname, Fach.class.getCanonicalName(), Fach.data().getVersion(), sql.toString());
 	};
 
@@ -917,20 +959,23 @@ public class DBCoreTypeUpdater {
 					sql.append(isFirst ? strValues : ", (");
 					isFirst = false;
 					sql.append(f.id).append(",");
-					if (sfsg.schulform == null)
+					if (sfsg.schulform == null) {
 						sql.append(strNullValue);
-					else
+					} else {
 						sql.append("'").append(sfsg.schulform).append("'").append(",");
-					if (sfsg.gliederung == null)
+					}
+					if (sfsg.gliederung == null) {
 						sql.append("'')");
-					else
+					} else {
 						sql.append("'").append(Schulgliederung.data().getWertByKuerzel(sfsg.gliederung)).append("'").append(")");
+					}
 				}
 			}
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(
 					" ON DUPLICATE KEY UPDATE Fach_ID=VALUES(Fach_ID), Schulform_Kuerzel=VALUES(Schulform_Kuerzel), Schulgliederung_Kuerzel=VALUES(Schulgliederung_Kuerzel)");
+		}
 		updateCoreTypeTabelle(conn, tabname, Fach.class.getCanonicalName(), Fach.data().getVersion(), sql.toString());
 	};
 
@@ -952,8 +997,9 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
+		}
 		updateCoreTypeTabelle(conn, tabname, Religion.class.getCanonicalName(), Religion.data().getVersion(), sql.toString());
 	};
 
@@ -975,8 +1021,9 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
+		}
 		updateCoreTypeTabelle(conn, tabname, AllgemeineMerkmale.class.getCanonicalName(), AllgemeineMerkmale.VERSION, sql.toString());
 	};
 
@@ -1003,8 +1050,9 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		if (conn.getDBDriver() != DBDriver.SQLITE)
+		if (conn.getDBDriver() != DBDriver.SQLITE) {
 			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
+		}
 		updateCoreTypeTabelle(conn, tabname,
 				BerufskollegOrganisationsformen.class.getCanonicalName() + ", " + WeiterbildungskollegOrganisationsformen.class.getCanonicalName() + ", "
 						+ AllgemeinbildendOrganisationsformen.class.getCanonicalName(),
@@ -1040,8 +1088,9 @@ public class DBCoreTypeUpdater {
 	 */
 	private boolean pruefeVersion(final DBEntityManager conn, final String tabname, final long version) {
 		final DTOSchemaCoreTypeVersion v = _status.getCoreTypeVersion(conn, tabname);
-		if (v == null)
+		if (v == null) {
 			return false;
+		}
 		return v.Version == version;
 	}
 

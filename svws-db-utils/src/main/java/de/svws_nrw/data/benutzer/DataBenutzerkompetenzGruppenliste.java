@@ -1,15 +1,15 @@
 package de.svws_nrw.data.benutzer;
 
 import java.io.InputStream;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.data.benutzer.BenutzerKompetenzGruppenKatalogEintrag;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe;
 import de.svws_nrw.data.DataManager;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -24,7 +24,6 @@ public final class DataBenutzerkompetenzGruppenliste extends DataManager<Long> {
 		super(null);
 	}
 
-
 	@Override
 	public Response getAll() {
 		return this.getList();
@@ -33,8 +32,9 @@ public final class DataBenutzerkompetenzGruppenliste extends DataManager<Long> {
 	@Override
 	public Response getList() {
 		final List<BenutzerKompetenzGruppenKatalogEintrag> daten = new ArrayList<>();
-		for (final BenutzerKompetenzGruppe k : BenutzerKompetenzGruppe.values())
+		for (final BenutzerKompetenzGruppe k : BenutzerKompetenzGruppe.values()) {
 			daten.add(k.daten);
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

@@ -114,8 +114,9 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 	 * @return der Schüler-Lernabschnitt oder null
 	 */
 	public static DTOSchuelerLernabschnittsdaten get(final DBEntityManager conn, final Long idSchueler, final Long idSchuljahresabschnitt) {
-		if ((idSchueler == null) || (idSchuljahresabschnitt == null))
+		if ((idSchueler == null) || (idSchuljahresabschnitt == null)) {
 			return null;
+		}
 		return conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr = 0",
 				DTOSchuelerLernabschnittsdaten.class, idSchueler, idSchuljahresabschnitt).stream().findFirst().orElse(null);
 	}
@@ -134,14 +135,16 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 	 */
 	public static boolean pruefeWiederholung(final DBEntityManager conn, final Schuljahresabschnitt schuljahresabschnitt, final Long idSchueler,
 			final Long idJahrgang) {
-		if ((schuljahresabschnitt == null) || (idSchueler == null) || (idJahrgang == null))
+		if ((schuljahresabschnitt == null) || (idSchueler == null) || (idJahrgang == null)) {
 			return false;
+		}
 		final List<Long> schuljahresabschnitte = conn.queryList(
 				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.WechselNr = 0 AND e.Jahrgang_ID = ?2 AND e.Schuljahresabschnitts_ID <> ?3",
 				DTOSchuelerLernabschnittsdaten.class, idSchueler, idJahrgang, schuljahresabschnitt.id)
 				.stream().map(sla -> sla.Schuljahresabschnitts_ID).toList();
-		if (schuljahresabschnitte.isEmpty())
+		if (schuljahresabschnitte.isEmpty()) {
 			return false;
+		}
 		return conn.queryByKeyList(DTOSchuljahresabschnitte.class, schuljahresabschnitte).stream()
 				.anyMatch(sja -> Objects.equals(sja.Abschnitt, schuljahresabschnitt.abschnitt) && !Objects.equals(sja.Jahr, schuljahresabschnitt.abschnitt));
 	}
@@ -177,9 +180,10 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 			DTOKlassen klassePrev;  // Bestimme die entsprechende Klasse im vorigen Lernabschnitt
 			if (slaPrev.Folgeklasse_ID == null) { // Wenn die Folge-Klasse gesetzt ist, dann muss bei einem neuen Schuljahr dieses Feld genutzt werden...
 				klassePrev = dataKlassendaten.getDTO(slaPrev.Klassen_ID);
-				if (schuljahrNeu)
+				if (schuljahrNeu) {
 					klassePrev = dataKlassendaten.getDTOByKuerzelOrASDKuerzelAndHalbjahresabschnittId(klassePrev.FKlasse, null,
 							klassePrev.Schuljahresabschnitts_ID);
+				}
 			} else {
 				klassePrev = dataKlassendaten.getDTO(schuljahrNeu ? slaPrev.Folgeklasse_ID : slaPrev.Klassen_ID);
 			}
@@ -198,10 +202,11 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 			sla.ZieldifferentesLernen = slaPrev.ZieldifferentesLernen;
 			sla.Folgeklasse_ID = null;
 			sla.Wiederholung = pruefeWiederholung(conn, schuljahresabschnitt, idSchueler, sla.Jahrgang_ID);
-			if (!conn.transactionPersist(sla))
+			if (!conn.transactionPersist(sla)) {
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 						"Fehler beim Schreiben des Schüler-Lernabschnitts %d.%d des Schülers %d in die Datenbank".formatted(schuljahresabschnitt.schuljahr,
 								schuljahresabschnitt.abschnitt, idSchueler));
+			}
 			conn.transactionFlush();
 			return sla;
 		}

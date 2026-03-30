@@ -1,5 +1,10 @@
 package de.svws_nrw.data.email;
 
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.Map;
+import java.util.function.Function;
+
 import de.svws_nrw.core.data.email.SMTPServerKonfiguration;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
@@ -10,11 +15,6 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.Map;
-import java.util.function.Function;
 
 
 /**
@@ -110,8 +110,9 @@ public final class DataEmailSMTPServerKonfiguration extends DataManager<Long> {
 	private static final Map<String, DataBasicMapper<DTOSchuleEmail>> patchMappings = Map.ofEntries(
 			Map.entry("id", (conn, dto, value, map) -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST);
+				}
 			}),
 			Map.entry("host", (conn, dto, value, map) -> dto.SMTPServer = JSONMapper.convertToString(value, false, true, 256)),
 			Map.entry("port", (conn, dto, value, map) -> dto.SMTPPort = JSONMapper.convertToIntegerInRange(value, false, 1, 65536)),

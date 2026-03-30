@@ -3,7 +3,6 @@ package de.svws_nrw.data.benutzer;
 import java.io.Serializable;
 import java.security.Principal;
 
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
@@ -13,6 +12,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.Response.Status;
 
 
 /**
@@ -81,8 +81,9 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 
 	private static BenutzerApiPrincipal loginUsingDBAuthentication(final String username, final String password, final String path, final String schemaname) {
 		// Prüfe, ob der root-Zugriff per Konfiguration deaktiviert wurde. Dann darf aus Sicherheitgründen auch keine Kennwort-Prüfung stattfinden!
-		if (SVWSKonfiguration.get().isDBRootAccessDisabled())
+		if (SVWSKonfiguration.get().isDBRootAccessDisabled()) {
 			return null;
+		}
 		// Prüfe, ob eine Anmeldung über das root-Schema erfolgt oder über ein spezielle Schema
 		final boolean useRootSchema = path.matches("/api/schema/root/.*");
 		String schema = schemaname;
@@ -91,26 +92,30 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 		} else if (!useRootSchema) {
 			final var pathelements = path.split("/");
 			if ((pathelements.length > 4) && ("".equals(pathelements[0])) && ("api".equals(pathelements[1])) && ("schema".equals(pathelements[2]))) {
-				if ("liste".equals(pathelements[3]))
+				if ("liste".equals(pathelements[3])) {
 					schema = "information_schema";
-				else
+				} else {
 					schema = pathelements[4].replace("%20", " ");
+				}
 			}
 		}
 		// Erstelle eine DB-Konfiguration für den Datenbank-Root-Zugriff mit den angegebenen Benutzerdaten
 		// An dieser Stelle kann nicht vorausgesetzt werden, dass ein anderes SVWS-Schema bereits generiert wurde.
 		DBConfig rootConfig = SVWSKonfiguration.get().getRootDBConfig(username, password);
-		if ((username == null) || (username.isBlank()))
+		if ((username == null) || (username.isBlank())) {
 			return null;
-		if (!schema.isBlank())
+		}
+		if (!schema.isBlank()) {
 			rootConfig = rootConfig.switchSchema(PersistenceUnits.SVWS_ROOT, schema);
+		}
 		try {
 			final Benutzer benutzer = Benutzer.create(rootConfig);
 			benutzer.setUsername(username);
 			benutzer.setPassword(password);
 			try (DBEntityManager conn = benutzer.getEntityManager()) {
-				if (conn == null)  // Prüfe, ob eine Verbindung zu der DB aufgebaut werden konnte
+				if (conn == null) { // Prüfe, ob eine Verbindung zu der DB aufgebaut werden konnte
 					return null; // wenn nicht, dann liegt ein Verbindungs- oder Authentifizierungsfehler vor und die Authentifizierung ist fehlgeschlagen
+				}
 			}
 			return new BenutzerApiPrincipal(benutzer);
 		} catch (@SuppressWarnings("unused") final DBException de) {
@@ -131,12 +136,14 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static BenutzerApiPrincipal login(final String username, final String password, final String path) throws ApiOperationException {
-		if (path == null)
+		if (path == null) {
 			return null;
+		}
 
 		// Prüfe auf illegale Zugriffe die mit "/index.php" beginnen und lehne den Zugriff ab
-		if (path.startsWith("/index.php"))
+		if (path.startsWith("/index.php")) {
 			return null;
+		}
 
 		// Prüfe, ob die Pfade "admin", "/debug/" oder "/openapi/" angefragt werden. Hier erfolgt immer ein anonymer Zugriff und keine Überprüfung über die DB
 		boolean isAnonymous = path.matches("/admin(/.*)?") || path.matches("/debug(/.*)?") || path.matches("/openapi/.*");
@@ -165,19 +172,22 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 		String schema = "";
 		if ((!isAnonymous) && (!isDBAuthentication)) {
 			final var pathelements = path.split("/");
-			if ((pathelements.length > 2) && ("".equals(pathelements[0])) && (("db".equals(pathelements[1])) || ("dav".equals(pathelements[1]))))
+			if ((pathelements.length > 2) && ("".equals(pathelements[0])) && (("db".equals(pathelements[1])) || ("dav".equals(pathelements[1])))) {
 				schema = pathelements[2].replace("%20", " ");
-			else if ((pathelements.length > 2) && ("".equals(pathelements[0])) && ("api".equals(pathelements[1])) && ("external".equals(pathelements[2])))
+			} else if ((pathelements.length > 2) && ("".equals(pathelements[0])) && ("api".equals(pathelements[1])) && ("external".equals(pathelements[2]))) {
 				schema = pathelements[3].replace("%20", " ");
+			}
 		}
 
 		// Erzeuge ggf. einen anonymen Principal
-		if (isAnonymous && (!isDBAuthentication))
+		if (isAnonymous && (!isDBAuthentication)) {
 			return new BenutzerApiPrincipal();
+		}
 
 		// Prüfe, ob ein Zugriff als Root auf das DBMS nötig ist
-		if (isDBAuthentication)
+		if (isDBAuthentication) {
 			return loginUsingDBAuthentication(username, password, path, schema);
+		}
 
 		// Konfiguration zum Datenbankschema laden
 		DBConfig config = SVWSKonfiguration.get().getDBConfig(schema);
@@ -185,21 +195,25 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 		// Auf die "/status/", "/config/", "/api/common/" und "/types/" URLs muss auch ohne Schema zugegriffen werden können
 		final boolean isPathWithoutSchema = path.matches("/status/.*") || path.matches("/config/.*") || path.matches("/api/common/.*")
 			|| path.matches("/types/.*");
-		if ((config == null) && isPathWithoutSchema)
+		if ((config == null) && isPathWithoutSchema) {
 			return new BenutzerApiPrincipal();
+		}
 
 		// Datenbankschema existiert nicht
-		if (config == null)
+		if (config == null) {
 			throw new ApiOperationException(Status.FORBIDDEN, "Das Datenbank-Schema existiert nicht.");
+		}
 
 		// Prüfe, ob das Datenbankschema ggf. gesperrt ist.
 		if (config.getDBSchema() != null) {
-			if (SVWSKonfiguration.get().isDeactivatedSchema(config.getDBSchema()))
+			if (SVWSKonfiguration.get().isDeactivatedSchema(config.getDBSchema())) {
 				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE,
 						"Datenbank-Schema ist zur Zeit deaktiviert, da es fehlerhaft ist. Bitte wenden Sie sich an Ihren System-Administrator.");
-			if (SVWSKonfiguration.get().isLockedSchema(config.getDBSchema()))
+			}
+			if (SVWSKonfiguration.get().isLockedSchema(config.getDBSchema())) {
 				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE,
 						"Datenbank-Schema ist zur Zeit aufgrund von internen Operationen gesperrt. Der Zugriff kann später nochmals versucht werden.");
+			}
 		}
 
 		if (config.useDBLogin()) {
@@ -213,8 +227,9 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 
 			// Prüfe den Passwort-Hash des Benutzer aus der DB
 			final String updatedUsername = DBBenutzerUtils.pruefePasswort(user, password);
-			if (updatedUsername == null)
+			if (updatedUsername == null) {
 				return null;
+			}
 			user.setUsername(updatedUsername);
 
 			// Erzeuge nach erfolgreicher Prüfung den Benutzer-spezifischen AES-Schlüssel

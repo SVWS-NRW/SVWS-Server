@@ -62,12 +62,14 @@ public final class DataGostKlausurenRaum extends DataManagerRevised<Long, DTOGos
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOGostKlausurenRaeume getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den GostKlausurraum darf nicht null sein.");
+		}
 
 		final DTOGostKlausurenRaeume klasseDto = conn.queryByKey(DTOGostKlausurenRaeume.class, id);
-		if (klasseDto == null)
+		if (klasseDto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein GostKlausurraum zur ID " + id + " gefunden.");
+		}
 
 		return klasseDto;
 	}
@@ -93,13 +95,15 @@ public final class DataGostKlausurenRaum extends DataManagerRevised<Long, DTOGos
 		switch (name) {
 			case "idTermin" -> {
 				dto.Termin_ID = JSONMapper.convertToLong(value, false, name);
-				if (conn.queryByKey(DTOGostKlausurenTermine.class, dto.Termin_ID) == null)
+				if (conn.queryByKey(DTOGostKlausurenTermine.class, dto.Termin_ID) == null) {
 					throw new ApiOperationException(Status.NOT_FOUND, "Klausurtermin mit ID %d existiert nicht.".formatted(dto.Termin_ID));
+				}
 			}
 			case "idStundenplanRaum" -> {
 				dto.Stundenplan_Raum_ID = JSONMapper.convertToLong(value, true, name);
-				if ((dto.Stundenplan_Raum_ID != null) && (conn.queryByKey(DTOStundenplanRaum.class, dto.Stundenplan_Raum_ID) == null))
+				if ((dto.Stundenplan_Raum_ID != null) && (conn.queryByKey(DTOStundenplanRaum.class, dto.Stundenplan_Raum_ID) == null)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Stundenplanraum nicht gefunden, ID: " + dto.Stundenplan_Raum_ID);
+				}
 				dto.Stundenplan_Raum_Kuerzel = null;
 			}
 			case "bemerkung" -> dto.Bemerkungen =
@@ -118,12 +122,14 @@ public final class DataGostKlausurenRaum extends DataManagerRevised<Long, DTOGos
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public List<GostKlausurraum> getKlausurraeumeZuTerminIDs(final List<Long> terminIds) throws ApiOperationException {
-		if (terminIds.isEmpty())
+		if (terminIds.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final List<DTOGostKlausurenRaeume> raeume = conn.queryList(DTOGostKlausurenRaeume.QUERY_LIST_BY_TERMIN_ID, DTOGostKlausurenRaeume.class, terminIds);
 		final List<GostKlausurraum> daten = new ArrayList<>();
-		for (final DTOGostKlausurenRaeume r : raeume)
+		for (final DTOGostKlausurenRaeume r : raeume) {
 			daten.add(map(r));
+		}
 		return daten;
 	}
 
@@ -150,13 +156,15 @@ public final class DataGostKlausurenRaum extends DataManagerRevised<Long, DTOGos
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public List<GostKlausurraum> getKlausurraeumeZuRaumstunden(final Collection<GostKlausurraumstunde> stunden) throws ApiOperationException {
-		if (stunden.isEmpty())
+		if (stunden.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final List<DTOGostKlausurenRaeume> raeume = conn.queryByKeyList(DTOGostKlausurenRaeume.class, stunden.stream().map(s -> s.idRaum).toList());
 //		final List<DTOGostKlausurenRaeume> raeume = conn.queryList(DTOGostKlausurenRaeume.QUERY_LIST_BY_ID, DTOGostKlausurenRaeume.class, stunden.stream().map(s -> s.idRaum).toList());
 		final List<GostKlausurraum> daten = new ArrayList<>();
-		for (final DTOGostKlausurenRaeume r : raeume)
+		for (final DTOGostKlausurenRaeume r : raeume) {
 			daten.add(map(r));
+		}
 		return daten;
 	}
 

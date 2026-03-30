@@ -42,32 +42,38 @@ public final class DBUtilsCrypto {
 	private static String determineUsername(final String nachname, final String vorname, final int maxlen, final Set<String> existingUsernames) {
 		final String vn = nameToAscii(vorname);
 		String nn = nameToAscii(nachname);
-		if (nn.length() > (maxlen - 2))
+		if (nn.length() > (maxlen - 2)) {
 			nn = nn.substring(0, maxlen - 2);
+		}
 		// Erster Versuch mit vorname.nachname
 		String username = vn + "." + nn;
-		if ((username.length() <= maxlen) && (!existingUsernames.contains(username)))
+		if ((username.length() <= maxlen) && (!existingUsernames.contains(username))) {
 			return username;
+		}
 		// Zweiter Versuch mit v.nachname
 		final String vn1 = vn.substring(0, 1);
 		username = vn1 + "." + nn;
-		if ((username.length() <= maxlen) && (!existingUsernames.contains(username)))
+		if ((username.length() <= maxlen) && (!existingUsernames.contains(username))) {
 			return username;
+		}
 		// Dritter Versuch mit vo.nachname
 		if (vn.length() > 1) {
 			username = vn.substring(0, 2) + "." + nn;
-			if ((username.length() <= maxlen) && (!existingUsernames.contains(username)))
+			if ((username.length() <= maxlen) && (!existingUsernames.contains(username))) {
 				return username;
+			}
 		}
 		// Und dann Versuch mit vX.nachname, wobei X hochgezählt wird und nachname ggf. gekürzt wird.
 		long value = 1;
 		while (value > 0) {
 			final String nummer = "" + value;
-			if (nn.length() > (maxlen - (2 + nummer.length())))
+			if (nn.length() > (maxlen - (2 + nummer.length()))) {
 				nn = nn.substring(0, (maxlen - (2 + nummer.length())));
+			}
 			username = vn1 + nummer + "." + nn;
-			if ((username.length() <= maxlen) && (!existingUsernames.contains(username)))
+			if ((username.length() <= maxlen) && (!existingUsernames.contains(username))) {
 				return username;
+			}
 			value++;
 		}
 		throw new RuntimeException("Kann keinen Benutzernamen ermitteln.");
@@ -76,8 +82,9 @@ public final class DBUtilsCrypto {
 
 	private static String determinePseudonym(final String praefix, final long id, final Set<String> existingPseudonyms) {
 		final String pseudonym = praefix + id;
-		if (existingPseudonyms.contains(pseudonym))
+		if (existingPseudonyms.contains(pseudonym)) {
 			throw new RuntimeException("Kann kein Pseudonym für den Benutzer erstellen.");
+		}
 		return pseudonym;
 	}
 
@@ -101,8 +108,9 @@ public final class DBUtilsCrypto {
 	public static DTOCredentials getOrCreateSchuelerCredentials(final DBEntityManager conn, final long id) throws ApiOperationException {
 		conn.transactionFlush();
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
-		if (schueler == null)
+		if (schueler == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Der Schüler mit der ID %d konnte in der Datenbank nicht gefunden werden.".formatted(id));
+		}
 		final DTOCredentials cred;
 		if (schueler.CredentialID == null) {
 			final long credId = conn.transactionGetNextID(DTOCredentials.class);
@@ -139,9 +147,10 @@ public final class DBUtilsCrypto {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static void addRSAKeyPair(final DBEntityManager conn, final DTOCredentials cred) throws ApiOperationException {
-		if ((cred.RSAPrivateKey != null) || (cred.RSAPublicKey != null))
+		if ((cred.RSAPrivateKey != null) || (cred.RSAPublicKey != null)) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Das Erstellen eines neuen RSA-Schlüsselpaares ist fehlgeschlagen, da bereits ein Schlüsselpaar vorhanden ist.");
+		}
 		conn.transactionFlush();
 		try {
 			final var keypair = RSA.createKey();
@@ -167,9 +176,10 @@ public final class DBUtilsCrypto {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static void addAESKey(final DBEntityManager conn, final DTOCredentials cred) throws ApiOperationException {
-		if (cred.AES != null)
+		if (cred.AES != null) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Das Erstellen eines neuen AES-Schlüssel ist fehlgeschlagen, da bereits ein Schlüssel vorhanden ist.");
+		}
 		conn.transactionFlush();
 		try {
 			cred.AES = Base64.getEncoder().encodeToString(AES.getRandomKey256().getEncoded());

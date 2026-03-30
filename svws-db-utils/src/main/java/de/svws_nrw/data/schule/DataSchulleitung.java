@@ -43,7 +43,6 @@ public final class DataSchulleitung extends DataManager<Long> {
 		this.idLehrer = idLehrer;
 	}
 
-
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchulleitung} in einen Core-DTO {@link Schulleitung}.
 	 */
@@ -80,11 +79,13 @@ public final class DataSchulleitung extends DataManager<Long> {
 		// Ermittle die Schulleitungsfunktionen ...
 		final List<DTOSchulleitung> funktionen = (idLehrer == null) ? conn.queryAll(DTOSchulleitung.class)
 				: conn.queryList(DTOSchulleitung.QUERY_BY_LEHRERID, DTOSchulleitung.class, idLehrer);
-		if (funktionen.isEmpty())
+		if (funktionen.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final List<Schulleitung> result = new ArrayList<>();
-		for (final DTOSchulleitung funktion : funktionen)
+		for (final DTOSchulleitung funktion : funktionen) {
 			result.add(dtoMapper.apply(funktion));
+		}
 		return result;
 	}
 
@@ -101,8 +102,9 @@ public final class DataSchulleitung extends DataManager<Long> {
 	 */
 	public static Schulleitung getSchulleitungsfunktion(final @NotNull DBEntityManager conn, final long id) throws ApiOperationException {
 		final DTOSchulleitung funktion = conn.queryByKey(DTOSchulleitung.class, id);
-		if (funktion == null)
+		if (funktion == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Eine Schulleitungsfunktion mit der ID %d konnte nicht gefunden werden.".formatted(id));
+		}
 		return dtoMapper.apply(funktion);
 	}
 
@@ -122,20 +124,23 @@ public final class DataSchulleitung extends DataManager<Long> {
 	private final Map<String, DataBasicMapper<DTOSchulleitung>> patchMappings = Map.ofEntries(
 			Map.entry("id", (conn, dto, value, map) -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID im Patch (%d) stimmt nicht mit der ID des API-Aufrufs (%d) überein."
 							.formatted(patch_id, dto.ID));
+				}
 			}),
 			Map.entry("idLeitungsfunktion", (conn, dto, value, map) -> {
 				final long id = JSONMapper.convertToLong(value, false);
 				if (id != dto.LeitungsfunktionID) {
 					final LehrerLeitungsfunktion funktion = LehrerLeitungsfunktion.data().getWertByID(id);
-					if (funktion == null)
+					if (funktion == null) {
 						throw new ApiOperationException(Status.BAD_REQUEST, "Es gibt keine Leitungsfunktion mit der ID %d.".formatted(id));
+					}
 					final int schuljahr = conn.getUser().schuleGetSchuljahr();
 					dto.LeitungsfunktionID = id;
-					if ((dto.Funktionstext == null) || (dto.Funktionstext.isBlank()))
+					if ((dto.Funktionstext == null) || (dto.Funktionstext.isBlank())) {
 						dto.Funktionstext = funktion.daten(schuljahr).text;
+					}
 				}
 			}),
 			Map.entry("bezeichnung",
@@ -145,8 +150,9 @@ public final class DataSchulleitung extends DataManager<Long> {
 				final long id = JSONMapper.convertToLong(value, false);
 				if (id != dto.LehrerID) {
 					final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
-					if (lehrer == null)
+					if (lehrer == null) {
 						throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Lehrer mit der ID %d gefunden werden.".formatted(id));
+					}
 					dto.LehrerID = id;
 				}
 			}),

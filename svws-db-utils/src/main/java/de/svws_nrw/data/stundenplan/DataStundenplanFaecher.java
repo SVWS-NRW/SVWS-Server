@@ -42,17 +42,17 @@ public final class DataStundenplanFaecher extends DataManager<Long> {
 		this.stundenplanID = stundenplanID;
 	}
 
-
 	private static StundenplanFach map(final DBEntityManager conn, final DTOFach f) {
 		final StundenplanFach daten = new StundenplanFach();
 		daten.id = f.ID;
 		daten.kuerzel = f.Kuerzel;
 		daten.kuerzelStatistik = f.StatistikKuerzel;
 		daten.bezeichnung = f.Bezeichnung;
-		if (f.SortierungAllg != null)
+		if (f.SortierungAllg != null) {
 			daten.sortierung = f.SortierungAllg;
-		else
+		} else {
 			daten.sortierung = ((f.SortierungSekII == null) ? 32000 : f.SortierungSekII);
+		}
 		final Fach fach = (f.StatistikKuerzel == null) ? null : Fach.data().getWertBySchluessel(f.StatistikKuerzel);
 		final FachKatalogEintrag fke = (fach == null) ? null : fach.daten(conn.getUser().schuleGetSchuljahr());
 		final Fachgruppe fg = ((fke == null) || (fke.fachgruppe == null)) ? null : Fachgruppe.data().getWertByBezeichner(fke.fachgruppe);
@@ -80,26 +80,30 @@ public final class DataStundenplanFaecher extends DataManager<Long> {
 	 */
 	public static List<StundenplanFach> getFaecher(final @NotNull DBEntityManager conn, final long idStundenplan) throws ApiOperationException {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
+		if (schule == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
-		if (stundenplan == null)
+		if (stundenplan == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
+		}
 		// Bestimme zunächst alle Zeitraster-IDs des Stundenplans
 		final List<Long> zeitrasterIDs = conn.queryList(DTOStundenplanZeitraster.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanZeitraster.class, idStundenplan)
 				.stream().map(z -> z.ID).toList();
 		// Bestimme alle zunächst alle Fächer-IDs der Unterrichte ...
 		List<Long> faecherIDs = new ArrayList<>();
-		if (!zeitrasterIDs.isEmpty())
+		if (!zeitrasterIDs.isEmpty()) {
 			faecherIDs.addAll(conn.queryList(DTOStundenplanUnterricht.QUERY_LIST_BY_ZEITRASTER_ID, DTOStundenplanUnterricht.class, zeitrasterIDs)
 					.stream().map(u -> u.Fach_ID).filter(f -> f != null).toList());
+		}
 		// ... und dann der ggf. noch nicht zugeordneten Kurs- und Klassenunterrichte
 		faecherIDs = Stream.concat(faecherIDs.stream(),
 				DataStundenplanKlassenunterricht.getKlassenunterrichte(conn, idStundenplan).stream().map(ku -> ku.idFach).distinct()).distinct().toList();
 		faecherIDs = Stream.concat(faecherIDs.stream(), DataStundenplanKurse.getKurse(conn, idStundenplan).stream().map(ku -> ku.idFach).distinct()).distinct()
 				.toList();
-		if (faecherIDs.isEmpty())
+		if (faecherIDs.isEmpty()) {
 			return new ArrayList<>();
+		}
 		// Bestimme nun die Fächer-Daten...
 		final List<DTOFach> faecherListe = conn.queryByKeyList(DTOFach.class, faecherIDs);
 		final ArrayList<StundenplanFach> daten = new ArrayList<>();
@@ -121,16 +125,20 @@ public final class DataStundenplanFaecher extends DataManager<Long> {
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
+		if (schule == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, stundenplanID);
-		if (stundenplan == null)
+		if (stundenplan == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(stundenplanID));
-		if (id == null)
+		}
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Fach mit der ID null ist unzulässig.");
+		}
 		final DTOFach fach = conn.queryByKey(DTOFach.class, id);
-		if (fach == null)
+		if (fach == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Fach mit der ID %d gefunden.".formatted(id));
+		}
 		final StundenplanFach daten = map(conn, fach);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

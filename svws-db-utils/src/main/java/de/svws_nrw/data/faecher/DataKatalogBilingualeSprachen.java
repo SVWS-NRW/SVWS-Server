@@ -32,33 +32,41 @@ public final class DataKatalogBilingualeSprachen extends DataManager<Long> {
 	@Override
 	public Response getAll() {
 		final ArrayList<BilingualeSpracheKatalogEintrag> daten = new ArrayList<>();
-		for (final BilingualeSprache gruppe : BilingualeSprache.values())
+		for (final BilingualeSprache gruppe : BilingualeSprache.values()) {
 			daten.addAll(gruppe.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response getList() throws ApiOperationException {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
+		if (schule == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final ArrayList<BilingualeSpracheKatalogEintrag> daten = new ArrayList<>();
-		for (final BilingualeSprache sprache : BilingualeSprache.values())
-			for (final BilingualeSpracheKatalogEintrag eintrag : sprache.historie())
-				if (eintrag.schulformen.contains(schule.SchulformKuerzel))
+		for (final BilingualeSprache sprache : BilingualeSprache.values()) {
+			for (final BilingualeSpracheKatalogEintrag eintrag : sprache.historie()) {
+				if (eintrag.schulformen.contains(schule.SchulformKuerzel)) {
 					daten.add(eintrag);
-		if (daten.isEmpty())
+				}
+			}
+		}
+		if (daten.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final BilingualeSpracheKatalogEintrag daten = BilingualeSprache.data().getEintragByID(id);
-		if (daten == null)
+		if (daten == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

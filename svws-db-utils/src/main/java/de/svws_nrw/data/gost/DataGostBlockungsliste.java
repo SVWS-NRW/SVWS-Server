@@ -33,8 +33,9 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 	 */
 	public DataGostBlockungsliste(final DBEntityManager conn, final Integer abijahrgang) {
 		super(conn);
-		if (abijahrgang == null)
+		if (abijahrgang == null) {
 			throw new NullPointerException();
+		}
 		this.abijahrgang = abijahrgang;
 	}
 
@@ -65,8 +66,9 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final List<DTOGostBlockung> blockungen =
 				conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1", DTOGostBlockung.class, abijahrgang);
-		if (blockungen == null)
+		if (blockungen == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final List<Long> blockungsIDs = blockungen.stream().map(b -> b.ID).toList();
 		final Map<Long, List<DTOGostBlockungZwischenergebnis>> mapErgebnisse = conn.queryList(DTOGostBlockungZwischenergebnis.QUERY_LIST_BY_BLOCKUNG_ID,
 				DTOGostBlockungZwischenergebnis.class, blockungsIDs).stream().collect(Collectors.groupingBy(e -> e.Blockung_ID));
@@ -81,18 +83,22 @@ public final class DataGostBlockungsliste extends DataManager<Integer> {
 
 	@Override
 	public Response get(final Integer id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final GostHalbjahr halbjahr = GostHalbjahr.fromID(id);
-		if (halbjahr == null)
+		if (halbjahr == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final List<DTOGostBlockung> blockungen =
 				conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1 and e.Halbjahr = ?2", DTOGostBlockung.class, abijahrgang, halbjahr);
-		if (blockungen == null)
+		if (blockungen == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
-		if (blockungen.isEmpty())
+		}
+		if (blockungen.isEmpty()) {
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new ArrayList<>()).build();
+		}
 		final List<Long> blockungsIDs = blockungen.stream().map(b -> b.ID).toList();
 		final Map<Long, List<DTOGostBlockungZwischenergebnis>> mapErgebnisse = conn.queryList(DTOGostBlockungZwischenergebnis.QUERY_LIST_BY_BLOCKUNG_ID,
 				DTOGostBlockungZwischenergebnis.class, blockungsIDs).stream().collect(Collectors.groupingBy(e -> e.Blockung_ID));

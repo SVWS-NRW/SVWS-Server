@@ -7,9 +7,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.DataManager;
@@ -20,6 +17,9 @@ import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -72,17 +72,20 @@ public final class DataGostFaecher extends DataManager<Long> {
 	public Response get(final Long id) throws ApiOperationException {
 		final int schuljahr = DBUtilsGost.pruefeSchuleMitGOStAndGetSchuljahr(conn, abijahr);
 		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
-		if (faecher == null)
+		if (faecher == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final DTOFach fach = faecher.get(id);
-		if (fach == null)
+		if (fach == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		GostFach daten = null;
 		if (abijahr == -1) {
 			daten = DBUtilsFaecherGost.mapFromDTOFach(schuljahr, fach, faecher);
 		} else {
-			if (conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr) == null)
+			if (conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr) == null) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			final DTOGostJahrgangFaecher jf = conn.queryByKey(DTOGostJahrgangFaecher.class, abijahr, id);
 			daten = DBUtilsFaecherGost.mapFromDTOGostJahrgangFaecher(schuljahr, id, jf, faecher);
 		}
@@ -95,11 +98,13 @@ public final class DataGostFaecher extends DataManager<Long> {
 		if (map.size() > 0) {
 			DBUtilsGost.pruefeSchuleMitGOSt(conn);
 			final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
-			if (faecher == null)
+			if (faecher == null) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			final DTOFach fach = faecher.get(id);
-			if (fach == null)
+			if (fach == null) {
 				throw new ApiOperationException(Status.NOT_FOUND);
+			}
 			if (abijahr == -1) {
 				for (final Entry<String, Object> entry : map.entrySet()) {
 					final String key = entry.getKey();
@@ -107,8 +112,9 @@ public final class DataGostFaecher extends DataManager<Long> {
 					switch (key) {
 						case "id" -> {
 							final Long patch_id = JSONMapper.convertToLong(value, true);
-							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
+							if ((patch_id == null) || (patch_id.longValue() != id.longValue())) {
 								throw new ApiOperationException(Status.BAD_REQUEST);
+							}
 						}
 						// Änderungen von allgemeinen Fachinformationen sind hier nicht erlaubt, nur GOSt-spezifische
 						case "kuerzel" -> throw new ApiOperationException(Status.BAD_REQUEST);
@@ -135,17 +141,21 @@ public final class DataGostFaecher extends DataManager<Long> {
 						}
 						case "projektKursLeitfach1ID" -> {
 							fach.ProjektKursLeitfach1_ID = JSONMapper.convertToLong(value, true);
-							if ((fach.ProjektKursLeitfach1_ID != null) && (fach.ProjektKursLeitfach1_ID < 0))
+							if ((fach.ProjektKursLeitfach1_ID != null) && (fach.ProjektKursLeitfach1_ID < 0)) {
 								throw new ApiOperationException(Status.CONFLICT);
-							if ((fach.ProjektKursLeitfach1_ID != null) && (faecher.get(fach.ProjektKursLeitfach1_ID) == null))
+							}
+							if ((fach.ProjektKursLeitfach1_ID != null) && (faecher.get(fach.ProjektKursLeitfach1_ID) == null)) {
 								throw new ApiOperationException(Status.NOT_FOUND);
+							}
 						}
 						case "projektKursLeitfach2ID" -> {
 							fach.ProjektKursLeitfach2_ID = JSONMapper.convertToLong(value, true);
-							if ((fach.ProjektKursLeitfach2_ID != null) && (fach.ProjektKursLeitfach2_ID < 0))
+							if ((fach.ProjektKursLeitfach2_ID != null) && (fach.ProjektKursLeitfach2_ID < 0)) {
 								throw new ApiOperationException(Status.CONFLICT);
-							if ((fach.ProjektKursLeitfach2_ID != null) && (faecher.get(fach.ProjektKursLeitfach2_ID) == null))
+							}
+							if ((fach.ProjektKursLeitfach2_ID != null) && (faecher.get(fach.ProjektKursLeitfach2_ID) == null)) {
 								throw new ApiOperationException(Status.NOT_FOUND);
+							}
 						}
 						case "projektKursLeitfach1Kuerzel" -> throw new ApiOperationException(Status.BAD_REQUEST);
 						case "projektKursLeitfach2Kuerzel" -> throw new ApiOperationException(Status.BAD_REQUEST);
@@ -154,8 +164,9 @@ public final class DataGostFaecher extends DataManager<Long> {
 				}
 				conn.transactionPersist(fach);
 			} else {
-				if (conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr) == null)
+				if (conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr) == null) {
 					throw new ApiOperationException(Status.BAD_REQUEST);
+				}
 				DTOGostJahrgangFaecher jf = conn.queryByKey(DTOGostJahrgangFaecher.class, abijahr, id);
 				if (jf == null) {
 					jf = new DTOGostJahrgangFaecher(abijahr, fach.ID, false, false, false, false, false, false, false, false);
@@ -167,8 +178,9 @@ public final class DataGostFaecher extends DataManager<Long> {
 					switch (key) {
 						case "id" -> {
 							final Long patch_id = JSONMapper.convertToLong(value, true);
-							if ((patch_id == null) || (!Objects.equals(patch_id, id)))
+							if ((patch_id == null) || (!Objects.equals(patch_id, id))) {
 								throw new ApiOperationException(Status.BAD_REQUEST);
+							}
 						}
 						// Änderungen von allgemeinen Fachinformationen sind hier nicht erlaubt, nur GOSt-spezifische
 						case "kuerzel" -> throw new ApiOperationException(Status.BAD_REQUEST);

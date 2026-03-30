@@ -66,8 +66,9 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 	public static List<Raum> getRaeume(final @NotNull DBEntityManager conn) throws ApiOperationException {
 		final List<DTOKatalogRaum> raeume = conn.queryAll(DTOKatalogRaum.class);
 		final ArrayList<Raum> daten = new ArrayList<>();
-		for (final DTOKatalogRaum r : raeume)
+		for (final DTOKatalogRaum r : raeume) {
 			daten.add(dtoMapper.apply(r));
+		}
 		return daten;
 	}
 
@@ -81,11 +82,13 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Raum mit der ID null ist unzulässig.");
+		}
 		final DTOKatalogRaum raum = conn.queryByKey(DTOKatalogRaum.class, id);
-		if (raum == null)
+		if (raum == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Raum mit der ID %d gefunden.".formatted(id));
+		}
 		final Raum daten = dtoMapper.apply(raum);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -94,14 +97,16 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 	private static final Map<String, DataBasicMapper<DTOKatalogRaum>> patchMappings = Map.ofEntries(
 			Map.entry("id", (conn, dto, value, map) -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST);
+				}
 			}),
 			Map.entry("kuerzel", (conn, dto, value, map) -> {
 				dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20).trim();
-				if ("".equals(dto.Kuerzel))
+				if ("".equals(dto.Kuerzel)) {
 					throw new ApiOperationException(Status.BAD_REQUEST,
 							"Das Kürzel darf nicht nur aus Leerzeichen bestehen (diese werden am Anfang und am Ende des Kürzels automatisch entfernt.");
+				}
 			}),
 			Map.entry("beschreibung", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000)),
 			Map.entry("groesse", (conn, dto, value, map) -> dto.Groesse = JSONMapper.convertToInteger(value, false)));

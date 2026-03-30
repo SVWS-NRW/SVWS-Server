@@ -1,9 +1,9 @@
 package de.svws_nrw.db.utils.lupo.mdb;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ArrayList;
 
 import io.github.spannm.jackcess.ColumnBuilder;
 import io.github.spannm.jackcess.DataType;
@@ -24,7 +24,7 @@ public final class ABPSchuelerFaecherBasisSicherung {
 	/** Die LuPO-Schüler-ID */
 	public int Schueler_ID = -1;
 
-	/** Die ID ds zugeordneten Faches */
+	/** Die ID des zugeordneten Faches */
 	public int Fach_ID = -1;
 
 	/** Das Kürzel des zugeordneten Faches */
@@ -192,8 +192,9 @@ public final class ABPSchuelerFaecherBasisSicherung {
 					.addColumn(new ColumnBuilder(fieldFachgruppe, DataType.TEXT).withLengthInUnits(5))
 					.addColumn(new ColumnBuilder(fieldAufgabenfeld, DataType.LONG))
 					.toTable(db);
-			if (list == null)
+			if (list == null) {
 				return;
+			}
 			for (final ABPSchuelerFaecherBasisSicherung zuordnung : list) {
 				table.addRow(
 						zuordnung.ID,

@@ -15,7 +15,7 @@ public final class DBSchemaVersion implements Comparable<Long> {
 
 
 	/**
-	 * Erzeugt eine neues Objekt für eien Schema-Version
+	 * Erzeugt eine neues Objekt für eine Schema-Version
 	 *
 	 * @param revision    die zu setzen Revisionsnummer
 	 * @param isTainted   gibt an, ob es sich um eine "verdorbene" Datenbank-Revision
@@ -46,8 +46,9 @@ public final class DBSchemaVersion implements Comparable<Long> {
 	 * @throws DeveloperNotificationException   tritt auf, wenn das Schema keine gültige Revision hat
 	 */
 	public long getRevision() throws DeveloperNotificationException {
-		if (_revision == null)
+		if (_revision == null) {
 			throw new DeveloperNotificationException("Das Schema besitzt keine gültige Revision");
+		}
 		return _revision;
 	}
 
@@ -73,43 +74,52 @@ public final class DBSchemaVersion implements Comparable<Long> {
 	 * @return die Revision des Schemas oder der Default-Wert
 	 */
 	public long getRevisionOrDefault(final long default_revision) {
-		if (_revision == null)
+		if (_revision == null) {
 			return default_revision;
+		}
 		return _revision;
 	}
 
 
 	@Override
 	public int compareTo(final Long otherRevision) {
-		if ((this._revision == null) || this._tainted)
+		if ((this._revision == null) || this._tainted) {
 			return (otherRevision == null) ? 0 : -1;
-		if (otherRevision == null)
+		}
+		if (otherRevision == null) {
 			return 1;
+		}
 		return Long.compare(_revision, otherRevision);
 	}
 
 
 	@Override
 	public int hashCode() {
-		if (_revision == null)
+		if (_revision == null) {
 			return Integer.MIN_VALUE;
+		}
 		return (int) (_tainted ? -_revision : _revision);
 	}
 
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final DBSchemaVersion other = (DBSchemaVersion) obj;
-		if ((_revision == null) || (other._revision == null))
+		if ((_revision == null) || (other._revision == null)) {
 			return false;
-		if (_tainted || other._tainted)
+		}
+		if (_tainted || other._tainted) {
 			return false;
+		}
 		return _revision.equals(other._revision);
 	}
 

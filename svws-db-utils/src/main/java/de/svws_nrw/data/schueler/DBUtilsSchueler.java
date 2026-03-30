@@ -27,7 +27,6 @@ public final class DBUtilsSchueler {
 		throw new IllegalStateException("Instantiation of " + DBUtilsSchueler.class.getName() + " not allowed");
 	}
 
-
 	/**
 	 * Liest den AES-Schlüssel des Schülers aus der Datenbank ein und gibt das zugehörige AES-Crypto-Objekt zurück.
 	 * Sollte noch kein AES-Schlüssel in der Datenbank vorhanden sein, so wird ein neuer Schlüssel angelegt.
@@ -44,8 +43,9 @@ public final class DBUtilsSchueler {
 	 */
 	public static AES getOrCreateSchuelerAES(final DBEntityManager conn, final long id) throws ApiOperationException {
 		final DTOCredentials cred = DBUtilsCrypto.getOrCreateSchuelerCredentials(conn, id);
-		if (cred.AES == null)
+		if (cred.AES == null) {
 			DBUtilsCrypto.addAESKey(conn, cred);
+		}
 		return new AES(AESAlgo.CBC_PKCS5PADDING, AES.getKeyFromByteArray(Base64.getDecoder().decode(cred.AES)));
 	}
 
@@ -55,14 +55,16 @@ public final class DBUtilsSchueler {
 		final Sprachendaten sprachendaten = new Sprachendaten();
 		sprachendaten.schuelerID = idSchueler;
 		for (final DTOSchuelerSprachenfolge dtoSprachbelegung : dtoSprachbelegungen) {
-			if (dtoSprachbelegung.ASDJahrgangVon == null)
+			if (dtoSprachbelegung.ASDJahrgangVon == null) {
 				continue;
+			}
 			sprachendaten.belegungen.add(new DataSchuelerSprachbelegung(conn, idSchueler).map(dtoSprachbelegung));
 		}
 		for (final DTOSchuelerSprachpruefungen dtoSprachpruefung : dtoSprachpruefungen) {
 			if ((dtoSprachpruefung.Sprache == null) || (dtoSprachpruefung.Anspruchsniveau == null)
-					|| (!dtoSprachpruefung.IstHSUPruefung && !dtoSprachpruefung.IstFeststellungspruefung))
+					|| (!dtoSprachpruefung.IstHSUPruefung && !dtoSprachpruefung.IstFeststellungspruefung)) {
 				continue;
+			}
 			sprachendaten.pruefungen.add((new DataSchuelerSprachpruefung(conn, idSchueler)).map(dtoSprachpruefung));
 		}
 		return sprachendaten;
@@ -112,9 +114,10 @@ public final class DBUtilsSchueler {
 						.stream().collect(Collectors.groupingBy(f -> f.Schueler_ID, Collectors.toList()));
 		// ... und gibt sie als Sprachendaten-Objekte zurück.
 		final List<Sprachendaten> result = new ArrayList<>();
-		for (final Long id : ids)
+		for (final Long id : ids) {
 			result.add(dtoMapperSprachendaten(conn, id, mapSprachenfolgen.computeIfAbsent(id, k -> new ArrayList<>()),
 					mapSprachpruefungen.computeIfAbsent(id, k -> new ArrayList<>())));
+		}
 		return result;
 	}
 

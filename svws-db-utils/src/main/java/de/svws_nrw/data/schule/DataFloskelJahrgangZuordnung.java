@@ -43,12 +43,14 @@ public final class DataFloskelJahrgangZuordnung extends DataManagerRevised<Long,
 
 	@Override
 	public FloskelJahrgangZuordnung getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die ID für die Floskel-Jahrgangs-Zuordnung darf nicht null sein.");
+		}
 
 		final DTOFloskelnJahrgaenge dto = this.conn.queryByKey(DTOFloskelnJahrgaenge.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde keine Floskel-Jahrgangs-Zuordnung mit der ID %d gefunden.".formatted(id));
+		}
 
 		return map(dto);
 	}
@@ -98,8 +100,9 @@ public final class DataFloskelJahrgangZuordnung extends DataManagerRevised<Long,
 
 	private void updateIdJahrgang(final DTOFloskelnJahrgaenge dto, final String name, final Object value) throws ApiOperationException {
 		final Long idJahrgang = JSONMapper.convertToLong(value, false, name);
-		if (jahrgangWithIdNotFound(idJahrgang))
+		if (jahrgangWithIdNotFound(idJahrgang)) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Es wurde kein Jahrgang mit der id %d gefunden.".formatted(idJahrgang));
+		}
 
 		dto.Jahrgang_ID = idJahrgang;
 	}
@@ -111,9 +114,10 @@ public final class DataFloskelJahrgangZuordnung extends DataManagerRevised<Long,
 	private void ensureFloskelAndJahrgangCombinationIsUnique(final Map<String, Object> initAttributes) throws ApiOperationException {
 		final Long idFloskel = JSONMapper.convertToLong(initAttributes.get(ID_FLOSKEL), false, ID_FLOSKEL);
 		final Long idJahrgang = JSONMapper.convertToLong(initAttributes.get(ID_JAHRGANG), false, ID_JAHRGANG);
-		if (combinationAlreadyExists(idFloskel, idJahrgang))
+		if (combinationAlreadyExists(idFloskel, idJahrgang)) {
 			throw new ApiOperationException(
 					Response.Status.BAD_REQUEST, "Die Kombination aus idFloskel %d und idJahrgang %d ist bereits vorhanden.".formatted(idFloskel, idJahrgang));
+		}
 	}
 
 	private boolean combinationAlreadyExists(final Long idFloskel, final Long idJahrgang) {

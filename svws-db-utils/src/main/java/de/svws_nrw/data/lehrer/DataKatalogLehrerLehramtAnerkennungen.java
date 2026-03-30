@@ -26,8 +26,9 @@ public final class DataKatalogLehrerLehramtAnerkennungen extends DataManager<Lon
 	@Override
 	public Response getAll() {
 		final ArrayList<LehrerLehramtAnerkennungKatalogEintrag> daten = new ArrayList<>();
-		for (final LehrerLehramtAnerkennung status : LehrerLehramtAnerkennung.values())
+		for (final LehrerLehramtAnerkennung status : LehrerLehramtAnerkennung.values()) {
 			daten.addAll(status.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

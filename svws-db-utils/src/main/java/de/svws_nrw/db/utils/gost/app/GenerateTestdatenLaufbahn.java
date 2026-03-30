@@ -119,8 +119,9 @@ public class GenerateTestdatenLaufbahn {
 
 			// Lese das Schema ein und erstelle den Datenbankbenutzer für den Zugriff auf das Schema
 			final String dbSchema = cmdLine.getValue("s", svwsconfig.getDefaultSchema());
-			if (dbSchema == null)
+			if (dbSchema == null) {
 				throw new IOException("Es wurde kein gültiges Datenbank-Schema zum Einlesen der Laufbahndaten angegeben.");
+			}
 			final DBConfig dbConfig = svwsconfig.getDBConfig(dbSchema);
 			final Benutzer user = Benutzer.create(dbConfig);
 			try (DBEntityManager conn = user.getEntityManager()) {
@@ -135,14 +136,17 @@ public class GenerateTestdatenLaufbahn {
 
 				// Prüfe die Schulform
 				final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-				if (schule == null)
+				if (schule == null) {
 					throw new DeveloperNotificationException("Keine Schule angelegt.");
+				}
 				final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
-				if (schuljahresabschnitt == null)
+				if (schuljahresabschnitt == null) {
 					throw new DeveloperNotificationException("Keine gültiger Schuljahresabschnitt vorhanden.");
+				}
 				final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
-				if ((schulform.daten(schuljahresabschnitt.Jahr) == null) || (!schulform.daten(schuljahresabschnitt.Jahr).hatGymOb))
+				if ((schulform.daten(schuljahresabschnitt.Jahr) == null) || (!schulform.daten(schuljahresabschnitt.Jahr).hatGymOb)) {
 					throw new DeveloperNotificationException("Datenbank-Schema enthält keine Daten für die Gymnasiale Oberstufe (Unzulässige Schulform)");
+				}
 
 				final String outPath = "../svws-core/src/test/resources/de/svws_nrw/abschluesse/gost/test";
 				// Files.createDirectories(Paths.get(outPath));
@@ -156,8 +160,9 @@ public class GenerateTestdatenLaufbahn {
 					try {
 						final @NotNull GostJahrgangsdaten gostJahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, jahrgang.Abi_Jahrgang);
 						final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(schuljahresabschnitt.Jahr, conn, jahrgang.Abi_Jahrgang);
-						if (gostFaecher.isEmpty())
+						if (gostFaecher.isEmpty()) {
 							continue; // Lasse Jahrgänge ohne Fächerdaten aus
+						}
 						final @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherkombinationen =
 								DataGostJahrgangFachkombinationen.getFachkombinationen(conn, jahrgang.Abi_Jahrgang);
 						final String strJahrgangID = String.format("%02d", jahrgangID++);
@@ -184,8 +189,9 @@ public class GenerateTestdatenLaufbahn {
 					} catch (@SuppressWarnings("unused") final Exception e) {
 						abiturdaten = null;
 					}
-					if (abiturdaten == null)
+					if (abiturdaten == null) {
 						continue;
+					}
 					final String strJahrgangID = mapAbiJahrgangToJahrgangID.get(abiturdaten.abiturjahr);
 					final GostJahrgangsdaten gostJahrgangsdaten = mapJahrgangIDToGostJahrgangsdaten.get(strJahrgangID);
 					final GostFaecherManager faecherManager = mapJahrgangIDToGostFaecher.get(strJahrgangID);

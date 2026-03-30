@@ -1,9 +1,9 @@
 package de.svws_nrw.data.gost;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.types.schule.Schulform;
@@ -52,8 +52,9 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 	 * @throws ApiOperationException   für den Fall, dass keine Schüler für den Abiturjahrgang bestimmt werden konnten
 	 */
 	List<DTOSchueler> getSchuelerDTOs() throws ApiOperationException {
-		if (abijahrgang == null)
+		if (abijahrgang == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		return DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, abijahrgang);
 	}
 
@@ -73,8 +74,9 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 
 		// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
 		final List<DTOSchueler> schuelerListe = getSchuelerDTOs();
-		if (schuelerListe.isEmpty())
+		if (schuelerListe.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final List<Long> schuelerIDs = schuelerListe.stream().map(s -> s.ID).toList();
 
 		// Bestimme die aktuellen Lernabschnitte für die Schüler

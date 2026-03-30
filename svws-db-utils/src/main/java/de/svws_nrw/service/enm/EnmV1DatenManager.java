@@ -139,13 +139,15 @@ public class EnmV1DatenManager {
 	 * @param schuljahr   das Schuljahr, für welches die ENM-Datei erzeugt wird
 	 */
 	public void addNoten(final int schuljahr) {
-		if (!daten.noten.isEmpty())
+		if (!daten.noten.isEmpty()) {
 			return;
+		}
 		final @NotNull List<Note> noten = Note.data().getWerteBySchuljahr(schuljahr);
 		for (final @NotNull Note note : noten) {
 			final NoteKatalogEintrag nke = note.daten(schuljahr);
-			if ((nke == null) || (nke.id < 0))
+			if ((nke == null) || (nke.id < 0)) {
 				continue;
+			}
 			final @NotNull ENMv1Note enmNote = new ENMv1Note();
 			enmNote.id = (int) nke.id;
 			enmNote.kuerzel = nke.kuerzel;
@@ -165,13 +167,15 @@ public class EnmV1DatenManager {
 	 *                    zurückgegeben werden
 	 */
 	public void addFoerderschwerpunkte(final int schuljahr, final @NotNull Schulform schulform) {
-		if (!daten.foerderschwerpunkte.isEmpty())
+		if (!daten.foerderschwerpunkte.isEmpty()) {
 			return;
+		}
 		final @NotNull List<Foerderschwerpunkt> foerderschwerpunkte = Foerderschwerpunkt.getBySchuljahrAndSchulform(schuljahr, schulform);
 		for (final Foerderschwerpunkt foerderschwerpunkt : foerderschwerpunkte) {
 			final FoerderschwerpunktKatalogEintrag fske = foerderschwerpunkt.daten(schuljahr);
-			if (fske == null)
+			if (fske == null) {
 				continue;
+			}
 			final ENMv1Foerderschwerpunkt enmFoerderschwerpunkt = new ENMv1Foerderschwerpunkt();
 			enmFoerderschwerpunkt.id = fske.id;
 			enmFoerderschwerpunkt.kuerzel = fske.kuerzel;
@@ -197,8 +201,9 @@ public class EnmV1DatenManager {
 	 */
 	public boolean addLehrer(final long id, final String kuerzel, final String nachname, final String vorname, final @NotNull Geschlecht geschlecht,
 			final String eMailDienstlich, final @NotNull String passwordHash, final String tsPasswordHash) {
-		if (mapLehrer.get(id) != null)
+		if (mapLehrer.get(id) != null) {
 			return false;
+		}
 		final @NotNull ENMv1Lehrer enmLehrer = new ENMv1Lehrer();
 		enmLehrer.id = id;
 		enmLehrer.kuerzel = kuerzel;
@@ -234,8 +239,9 @@ public class EnmV1DatenManager {
 	public boolean addSchueler(final long id, final long jahrgangID, final long klasseID, final String nachname, final String vorname,
 			final @NotNull Geschlecht geschlecht,
 			final String bilingualeSprache, final boolean istZieldifferent, final boolean istDaZFoerderung) {
-		if (mapSchueler.get(id) != null)
+		if (mapSchueler.get(id) != null) {
 			return false;
+		}
 		final @NotNull ENMv1Schueler enmSchueler = new ENMv1Schueler();
 		enmSchueler.id = id;
 		enmSchueler.jahrgangID = jahrgangID;
@@ -265,8 +271,9 @@ public class EnmV1DatenManager {
 	 */
 	public boolean addFach(final long id, final @NotNull String kuerzel, final @NotNull String kuerzelAnzeige, final int sortierung,
 			final boolean istFremdsprache) {
-		if (mapFaecher.get(id) != null)
+		if (mapFaecher.get(id) != null) {
 			return false;
+		}
 		final @NotNull ENMv1Fach enmFach = new ENMv1Fach();
 		enmFach.id = id;
 		enmFach.kuerzel = kuerzel;
@@ -294,8 +301,9 @@ public class EnmV1DatenManager {
 	 */
 	public boolean addJahrgang(final long id, final String kuerzel, final String kuerzelAnzeige, final String beschreibung, final String stufe,
 			final int sortierung) {
-		if (mapJahrgaenge.get(id) != null)
+		if (mapJahrgaenge.get(id) != null) {
 			return false;
+		}
 		final @NotNull ENMv1Jahrgang enmJahrgang = new ENMv1Jahrgang();
 		enmJahrgang.id = id;
 		enmJahrgang.kuerzel = kuerzel;
@@ -321,8 +329,9 @@ public class EnmV1DatenManager {
 	 * @return true, falls die Klasse hinzugefügt wurde, ansonsten false
 	 */
 	public boolean addKlasse(final long id, final String kuerzel, final String kuerzelAnzeige, final Long idJahrgang, final int sortierung) {
-		if (mapKlassen.get(id) != null)
+		if (mapKlassen.get(id) != null) {
 			return false;
+		}
 		final @NotNull ENMv1Klasse enmKlasse = new ENMv1Klasse();
 		enmKlasse.id = id;
 		enmKlasse.kuerzel = kuerzel;
@@ -346,8 +355,9 @@ public class EnmV1DatenManager {
 	 * @return true, falls der Jahrgang hinzugefügt wurde, ansonsten false
 	 */
 	public boolean addTeilleistungsart(final long id, final String bezeichnung, final int sortierung, final double gewichtung) {
-		if (mapTeilleistungsarten.get(id) != null)
+		if (mapTeilleistungsarten.get(id) != null) {
 			return false;
+		}
 		final @NotNull ENMv1Teilleistungsart enmArt = new ENMv1Teilleistungsart();
 		enmArt.id = id;
 		enmArt.bezeichnung = bezeichnung;
@@ -373,8 +383,9 @@ public class EnmV1DatenManager {
 	 */
 	public boolean addAnkreuzkompetenz(final long id, final boolean istFachkompetenz, final Long fachID, final @NotNull String jahrgang,
 			final @NotNull String text, final int sortierung) {
-		if (mapAnkreuzkompetenzen.get(id) != null)
+		if (mapAnkreuzkompetenzen.get(id) != null) {
 			return false;
+		}
 		final @NotNull ENMv1Ankreuzkompetenz kompetenz = new ENMv1Ankreuzkompetenz();
 		kompetenz.id = id;
 		kompetenz.istFachkompetenz = istFachkompetenz;
@@ -514,8 +525,9 @@ public class EnmV1DatenManager {
 	 */
 	public void addLerngruppe(final @NotNull String strID, final long kID, final long fachID, final Integer kursartID, final String bezeichnung,
 			final String kursartKuerzel, final String bilingualeSprache, final int wochenstunden) {
-		if (mapLerngruppen.get(strID) != null)
+		if (mapLerngruppen.get(strID) != null) {
 			return;
+		}
 		final @NotNull ENMv1Lerngruppe lerngruppe = new ENMv1Lerngruppe();
 		lerngruppe.id = lerngruppenIDZaehler++;
 		lerngruppe.kID = kID;

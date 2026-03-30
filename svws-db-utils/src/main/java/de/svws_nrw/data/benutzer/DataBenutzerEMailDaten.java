@@ -65,11 +65,13 @@ public final class DataBenutzerEMailDaten extends DataManager<Long> {
 	}
 
 	private static @NotNull DTOBenutzerMail getOrCreateDTO(final DBEntityManager conn, final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Es wurde keine ID angegeben.");
+		}
 		// Prüfe, ob die ID mit der ID des Benutzers der Verbindung
-		if (!Objects.equals(id, conn.getUser().getId()))
+		if (!Objects.equals(id, conn.getUser().getId())) {
 			throw new ApiOperationException(Status.FORBIDDEN, "Nur der angemeldete Benutzer darf seine SMTP-Verbindungsdaten auslesen.");
+		}
 		DTOBenutzerMail dto = conn.queryByKey(DTOBenutzerMail.class, id);
 		if (dto == null) {
 			dto = new DTOBenutzerMail(id, "", "");
@@ -120,8 +122,9 @@ public final class DataBenutzerEMailDaten extends DataManager<Long> {
 	private static final Map<String, DataBasicMapper<DTOBenutzerMail>> patchMappings = Map.ofEntries(
 			Map.entry("id", (conn, dto, value, map) -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.Benutzer_ID))
+				if ((patch_id == null) || (patch_id.longValue() != dto.Benutzer_ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST);
+				}
 			}),
 			Map.entry("name", (conn, dto, value, map) -> dto.EmailName = JSONMapper.convertToString(value, true, false, 255)),
 			Map.entry("address", (conn, dto, value, map) -> dto.Email = JSONMapper.convertToString(value, true, false, 255)),
@@ -129,8 +132,9 @@ public final class DataBenutzerEMailDaten extends DataManager<Long> {
 			Map.entry("passwordSMTP", (conn, dto, value, map) -> {
 				final String password = JSONMapper.convertToString(value, true, false, 127);
 				final AES aes = conn.getUser().getAES();
-				if (aes == null)
+				if (aes == null) {
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Konnte kein AES-Verschlüsselungsobjekt für den Benutzer finden.");
+				}
 				try {
 					dto.SMTPPassword = aes.encryptBase64(password.getBytes());
 				} catch (@SuppressWarnings("unused") final AESException e) {
@@ -144,11 +148,13 @@ public final class DataBenutzerEMailDaten extends DataManager<Long> {
 	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
 		final DTOBenutzerMail dto = getOrCreateDTO(conn, id);
 		final Map<String, Object> map = JSONMapper.toMap(is);
-		if (map.isEmpty())
+		if (map.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND, "In dem Patch sind keine Daten enthalten.");
+		}
 		applyPatchMappings(conn, dto, map, patchMappings, Collections.emptySet(), null);
-		if (!conn.transactionPersist(dto))
+		if (!conn.transactionPersist(dto)) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+		}
 		conn.transactionFlush();
 		return Response.status(Status.NO_CONTENT).build();
 	}

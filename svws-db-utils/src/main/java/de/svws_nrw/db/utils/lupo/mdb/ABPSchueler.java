@@ -3,11 +3,19 @@ package de.svws_nrw.db.utils.lupo.mdb;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
+import de.svws_nrw.asd.types.Geschlecht;
+import de.svws_nrw.core.data.gost.GostLeistungen;
+import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
+import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
+import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import io.github.spannm.jackcess.ColumnBuilder;
 import io.github.spannm.jackcess.DataType;
 import io.github.spannm.jackcess.Database;
@@ -16,15 +24,6 @@ import io.github.spannm.jackcess.PropertyMap;
 import io.github.spannm.jackcess.Row;
 import io.github.spannm.jackcess.Table;
 import io.github.spannm.jackcess.TableBuilder;
-
-import de.svws_nrw.core.data.gost.GostLeistungen;
-import de.svws_nrw.asd.types.Geschlecht;
-import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
-import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
-import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
-import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 
 /**
  * Diese Klasse wird für den Import der Tabelle ABP_Schueler aus einer LuPO-Datenbank
@@ -224,10 +223,11 @@ public final class ABPSchueler {
 				schueler.Name = r.getString(fieldName);
 				schueler.Vorname = r.getString(fieldVorname);
 				schueler.Geburtsdatum = r.getLocalDateTime(fieldGeburtsdatum);
-				if (r.getByte(fieldGeschlecht) == null)
+				if (r.getByte(fieldGeschlecht) == null) {
 					schueler.geschlecht = Geschlecht.X.id;
-				else
+				} else {
 					schueler.geschlecht = Geschlecht.fromValue((int) r.getByte(fieldGeschlecht)).id;
+				}
 				schueler.DatumBeratung = r.getLocalDateTime(fieldDatumBeratung);
 				schueler.DatumRuecklauf = r.getLocalDateTime(fieldDatumRuecklauf);
 				schueler.Klasse = r.getString(fieldKlasse);
@@ -406,8 +406,9 @@ public final class ABPSchueler {
 			final Map<Long, DTOKlassen> mapKlassen, final Map<Long, DTOLehrer> mapLehrer, final Map<Long, DTOGostSchueler> schuelerLupoInfo,
 			final Map<Long, GostLeistungen> gostInfo) {
 		final List<ABPSchueler> liste = new ArrayList<>();
-		if (schuelerListe == null)
+		if (schuelerListe == null) {
 			return liste;
+		}
 		for (int i = 0; i < schuelerListe.size(); i++) {
 			final DTOSchueler schueler = schuelerListe.get(i);
 			final DTOSchuelerLernabschnittsdaten aktAbschnitt = mapAktAbschnitte.get(schueler.ID);

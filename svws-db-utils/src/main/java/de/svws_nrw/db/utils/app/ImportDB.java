@@ -53,8 +53,9 @@ public class ImportDB {
 		boolean habeAntwort = false;
 		while (!habeAntwort) {
 			final String input = scan.nextLine();
-			if (input == null)
+			if (input == null) {
 				continue;
+			}
 			habeAntwort = true;
 			switch (input.toUpperCase()) {
 				case "JA", "J", "YES", "Y":
@@ -125,8 +126,9 @@ public class ImportDB {
 
 			// Lese die Optionen für die Quell-Datenbank ein
 			final DBDriver tgtDrv = DBDriver.fromString(cmdLine.getValue("td", "MARIA_DB"));
-			if (tgtDrv == null)
+			if (tgtDrv == null) {
 				cmdLine.printOptionsAndExit(3, "Fehlerhafte Angabe bei dem Treiber der Ziel-DB");
+			}
 			final String tgtLoc = cmdLine.getValue("tl", "localhost");
 			final String tgtDB = cmdLine.getValue("ts", "svwsdb");
 			final String tgtUser = cmdLine.getValue("tu", "svwsadmin");

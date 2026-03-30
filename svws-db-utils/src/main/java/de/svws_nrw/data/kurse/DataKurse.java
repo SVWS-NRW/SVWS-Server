@@ -1,11 +1,9 @@
 package de.svws_nrw.data.kurse;
 
-import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
-import de.svws_nrw.db.schema.Schema;
-import java.util.List;
-import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -18,11 +16,13 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
@@ -109,8 +109,9 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		daten.schulnummer = dto.SchulNr;
 		daten.istEpochalunterricht = (dto.EpochU != null) && dto.EpochU;
 		daten.bezeichnungZeugnis = dto.ZeugnisBez;
-		if ((daten.bezeichnungZeugnis != null) && daten.bezeichnungZeugnis.isBlank())
+		if ((daten.bezeichnungZeugnis != null) && daten.bezeichnungZeugnis.isBlank()) {
 			daten.bezeichnungZeugnis = null;
+		}
 		daten.weitereLehrer = new DataKursLehrer(conn, dto.ID).getList();
 		return daten;
 	}
@@ -151,17 +152,19 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 				break;
 			}
 		}
-		if (!changed)
+		if (!changed) {
 			return;
+		}
 		if (neu.isEmpty()) {
 			dto.ASDJahrgang = null;
 			dto.Jahrgang_ID = null;
 			dto.Jahrgaenge = null;
 		} else {
 			final List<DTOJahrgang> dtoJahrgaenge = conn.queryByKeyList(DTOJahrgang.class, neu);
-			if (dtoJahrgaenge.size() != neu.size())
+			if (dtoJahrgaenge.size() != neu.size()) {
 				throw new ApiOperationException(Status.BAD_REQUEST,
 						"Mindestens einer der angegebenen Jahrgang-IDs existiert nicht in der SVWS-Datenbank");
+			}
 			if (neu.size() > 1) {
 				dto.ASDJahrgang = null;
 				dto.Jahrgang_ID = null;
@@ -179,10 +182,12 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		final List<Integer> vorher = convertSchienenStrToList(dto.Schienen);
 		boolean changed = (neu.size() != vorher.size());
 		for (final int n : neu) {
-			if (n < 0)
+			if (n < 0) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Eine Schienen-Nummer kleiner als 0 ist nicht zulässig.");
-			if (!vorher.contains(n))
+			}
+			if (!vorher.contains(n)) {
 				changed = true;
+			}
 		}
 		if (changed) {
 			dto.Schienen = neu.stream().map(Object::toString).collect(Collectors.joining(","));
@@ -196,8 +201,9 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 			return;
 		}
 		final List<DTOSchuleNRW> schulen = this.conn.queryList(DTOSchuleNRW.QUERY_BY_SCHULNR, DTOSchuleNRW.class, schulnummer);
-		if (schulen.isEmpty())
+		if (schulen.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Für die Schulnummer %d konnte keine passende Schule gefunden werden.".formatted(schulnummer));
+		}
 
 		dto.SchulNr = schulnummer;
 	}
@@ -209,20 +215,23 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 			return;
 		}
 		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
-		if (lehrer == null)
+		if (lehrer == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Lehrer mit der angegebenen ID %d gefunden werden.".formatted(id));
+		}
 
 		dto.Lehrer_ID = id;
 	}
 
 	private void mapIdFach(final DTOKurs dto, final String name, final Object value) throws ApiOperationException {
 		final Long idFach = JSONMapper.convertToLong(value, true, name);
-		if (idFach == null)
+		if (idFach == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Faches darf nicht null sein.");
+		}
 
 		final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
-		if (fach == null)
+		if (fach == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Fach mit der angegebenen ID gefunden werden.");
+		}
 
 		dto.Fach_ID = idFach;
 	}
@@ -239,8 +248,9 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 	 */
 	private static @NotNull Map<Long, List<Schueler>> getMapKursSchuelerByKursID(final DBEntityManager conn, final @NotNull List<Long> idsKurse) {
 		final @NotNull Map<Long, List<Schueler>> result = idsKurse.stream().collect(Collectors.toMap(id -> id, id -> new ArrayList<>()));
-		if (idsKurse.isEmpty())
+		if (idsKurse.isEmpty()) {
 			return result;
+		}
 		final List<DTOKursSchueler> listKursSchueler =
 				conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, idsKurse);
 		final List<Long> schuelerIDs = listKursSchueler.stream().map(ks -> ks.Schueler_ID).toList();
@@ -253,8 +263,9 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		for (final @NotNull DTOKursSchueler kursSchueler : listKursSchueler) {
 			final List<Schueler> tmpList = result.get(kursSchueler.Kurs_ID);
 			final Schueler schueler = mapSchueler.get(kursSchueler.Schueler_ID);
-			if (schueler != null)
+			if (schueler != null) {
 				tmpList.add(schueler);
+			}
 		}
 		return result;
 	}
@@ -270,11 +281,13 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public static KursDaten getKursdaten(final DBEntityManager conn, final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Kurses darf nicht null sein.");
+		}
 		final DTOKurs kurs = conn.queryByKey(DTOKurs.class, id);
-		if (kurs == null)
+		if (kurs == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final KursDaten daten = mapInternal(kurs, conn);
 		// Bestimme die Schüler des Kurses
 		daten.schueler.addAll(getMapKursSchuelerByKursID(conn, List.of(daten.id)).get(daten.id));
@@ -294,8 +307,9 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		final List<Integer> result = new ArrayList<>();
 		if ((strSchienen != null) && (!strSchienen.isBlank())) {
 			for (final String strSchiene : strSchienen.split(",")) {
-				if (strSchiene.trim().isEmpty())
+				if (strSchiene.trim().isEmpty()) {
 					continue;
+				}
 				try {
 					result.add(Integer.parseInt(strSchiene.trim()));
 				} catch (final NumberFormatException ignored) {
@@ -308,12 +322,16 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 
 	private static List<Long> convertJahrgaenge(final DTOKurs kurs) {
 		final List<Long> result = new ArrayList<>();
-		if (kurs.Jahrgang_ID != null)
+		if (kurs.Jahrgang_ID != null) {
 			result.add(kurs.Jahrgang_ID);
-		if (kurs.Jahrgaenge != null)
-			for (final String jahrgang : kurs.Jahrgaenge.split(","))
-				if (jahrgang.matches("^\\d+$"))
+		}
+		if (kurs.Jahrgaenge != null) {
+			for (final String jahrgang : kurs.Jahrgaenge.split(",")) {
+				if (jahrgang.matches("^\\d+$")) {
 					result.add(Long.parseLong(jahrgang));
+				}
+			}
+		}
 		return result;
 	}
 
@@ -329,8 +347,9 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public List<KursDaten> getListBySchuljahresabschnittID(final Long idSchuljahresabschnitt, final boolean attachSchueler) throws ApiOperationException {
-		if (idSchuljahresabschnitt == null)
+		if (idSchuljahresabschnitt == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final List<DTOKurs> kurse = conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, idSchuljahresabschnitt);
 		return getKurseDaten(kurse, attachSchueler);
 	}
@@ -346,8 +365,9 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public List<KursDaten> getListByIDs(final List<Long> ids, final boolean attachSchueler) throws ApiOperationException {
-		if (ids == null)
+		if (ids == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final List<DTOKurs> kurse = conn.queryByKeyList(DTOKurs.class, ids);
 		return getKurseDaten(kurse, attachSchueler);
 	}
@@ -363,8 +383,9 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	private List<KursDaten> getKurseDaten(final List<DTOKurs> dtoKurse, final boolean attachSchueler) throws ApiOperationException {
-		if ((dtoKurse == null) || dtoKurse.isEmpty())
+		if ((dtoKurse == null) || dtoKurse.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 
 		// Bestimme die IDs der Kurse
 		final List<Long> idsKurse = dtoKurse.stream().map(k -> k.ID).toList();
@@ -373,8 +394,9 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		for (final DTOKurs kurs : dtoKurse) {
 			final KursDaten kursdaten = map(kurs);
 			// Bestimme die Schüler der Kurse, wenn gewünscht.
-			if (attachSchueler)
+			if (attachSchueler) {
 				kursdaten.schueler.addAll(mapKursSchueler.get(kurs.ID));
+			}
 			kurseDaten.add(kursdaten);
 		}
 		return kurseDaten;
@@ -396,15 +418,18 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		final @NotNull List<DTOKurs> kurse = (idSchuljahresabschnitt == null)
 				? conn.queryAll(DTOKurs.class)
 				: conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, idSchuljahresabschnitt);
-		if (kurse.isEmpty())
+		if (kurse.isEmpty()) {
 			return new ArrayList<>();
+		}
 		// Erstelle die Liste der Kurse
 		final @NotNull List<KursDaten> daten = new ArrayList<>();
-		for (final @NotNull DTOKurs dtoKurs : kurse)
+		for (final @NotNull DTOKurs dtoKurs : kurse) {
 			daten.add(mapInternal(dtoKurs, conn));
+		}
 		daten.sort((a, b) -> Long.compare(a.sortierung, b.sortierung));
-		if (!mitSchuelerListe)
+		if (!mitSchuelerListe) {
 			return daten;
+		}
 		// Ergänze die Liste der Schüler in den Kursen
 		final List<Long> kursIDs = daten.stream().map(k -> k.id).toList();
 		final List<DTOKursSchueler> listKursSchueler = conn.queryList(
@@ -414,8 +439,9 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		final HashMap<Long, List<Schueler>> mapKursSchueler = new HashMap<>();
 		for (final DTOKursSchueler ks : listKursSchueler) {
 			final DTOSchueler dtoSchueler = mapSchueler.get(ks.Schueler_ID);
-			if ((dtoSchueler == null) || (Boolean.TRUE.equals(dtoSchueler.Geloescht)))
+			if ((dtoSchueler == null) || (Boolean.TRUE.equals(dtoSchueler.Geloescht))) {
 				continue;
+			}
 			List<Schueler> listSchueler = mapKursSchueler.get(ks.Kurs_ID);
 			if (listSchueler == null) {
 				listSchueler = new ArrayList<>();
@@ -425,8 +451,9 @@ public final class DataKurse extends DataManagerRevised<Long, DTOKurs, KursDaten
 		}
 		for (final KursDaten eintrag : daten) {
 			final List<Schueler> listSchueler = mapKursSchueler.get(eintrag.id);
-			if (listSchueler != null)
+			if (listSchueler != null) {
 				eintrag.schueler.addAll(listSchueler);
+			}
 		}
 		return daten;
 	}

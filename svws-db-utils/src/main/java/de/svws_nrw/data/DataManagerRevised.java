@@ -161,8 +161,9 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 			initDTO(dto, newID, initAttributes);
 			return dto;
 		} catch (final Exception e) {
-			if (e instanceof final ApiOperationException apiOperationException)
+			if (e instanceof final ApiOperationException apiOperationException) {
 				throw apiOperationException;
+			}
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e);
 		}
 	}
@@ -206,8 +207,9 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 */
 	public List<CoreDTO> mapList(final Collection<DatabaseDTO> dtos) throws ApiOperationException {
 		final List<CoreDTO> daten = new ArrayList<>();
-		for (final DatabaseDTO dto : dtos)
+		for (final DatabaseDTO dto : dtos) {
 			daten.add(map(dto));
+		}
 		return daten;
 	}
 
@@ -357,9 +359,10 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 					.filter(attributesNotPatchable::contains)
 					.collect(Collectors.joining(","));
 
-			if (!notPatchableAttrsStr.isBlank())
+			if (!notPatchableAttrsStr.isBlank()) {
 				throw new ApiOperationException(Status.BAD_REQUEST,
 						"Folgende Attribute werden für ein Patch nicht zugelassen: %s.".formatted(String.join(",", notPatchableAttrsStr)));
+			}
 		}
 
 		for (final Entry<String, Object> patchMapping : patchMappings.entrySet()) {
@@ -367,8 +370,9 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 			final Object value = patchMapping.getValue();
 
 			// Es wird geprüft, ob das Attribut ausgelassen werden soll oder nicht bei den zu patchenden Attributen dabei ist
-			if (attributesToSkip.contains(key) || ((attributesToPatch != null) && !attributesToPatch.contains(key)))
+			if (attributesToSkip.contains(key) || ((attributesToPatch != null) && !attributesToPatch.contains(key))) {
 				continue;
+			}
 
 			// Patching für Attribut auf DTO anwenden
 			mapAttribute(dto, key, value, patchMappings);
@@ -441,8 +445,9 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response patchMultipleAsResponse(final InputStream is) throws ApiOperationException {
-		for (final Map<String, Object> map : JSONMapper.toMultipleMaps(is))
+		for (final Map<String, Object> map : JSONMapper.toMultipleMaps(is)) {
 			patch(getID(map), map);
+		}
 		// TODO ggf. Anpassung, so dass Status.OK mit den veränderten Daten zurückgegeben wird
 		return Response.status(Status.NO_CONTENT).build();
 	}
@@ -511,13 +516,15 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public CoreDTO delete(final ID id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Für das Löschen muss eine ID angegeben werden. Null ist nicht zulässig.");
+		}
 
 		// DTO mit Hilfe der ID ermitteln
 		final DatabaseDTO dbDTO = getDatabaseDTOByID(id);
-		if (dbDTO == null)
+		if (dbDTO == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Entität mit der ID %s gefunden.".formatted(id));
+		}
 
 		// Prüfen, ob das Datenbank-DTO gelöscht werden darf
 		checkBeforeDeletion(List.of(dbDTO));
@@ -556,15 +563,17 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response deleteMultipleAsResponse(final List<ID> ids) throws ApiOperationException {
-		if (ids == null)
+		if (ids == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Für das Löschen müssen IDs angegeben werden. Null ist nicht zulässig.");
+		}
 
 		final List<CoreDTO> deletedCoreDTOs = new ArrayList<>();
 		if (!ids.isEmpty()) {
 			// DTOs mit Hilfe der IDs ermitteln
 			final List<DatabaseDTO> dbDTOs = getDatabaseDTOsByIds(ids);
-			if (dbDTOs.isEmpty())
+			if (dbDTOs.isEmpty()) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Entitäten zu den IDs gefunden.");
+			}
 
 			// Prüfen, ob alle DTOs gelöscht werden dürfen
 			checkBeforeDeletion(dbDTOs);
@@ -625,15 +634,17 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response deleteMultipleAsSimpleResponseList(final List<ID> ids) throws ApiOperationException {
-		if (ids == null)
+		if (ids == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Für das Löschen müssen IDs angegeben werden. Null ist nicht zulässig.");
+		}
 
 		final Map<Long, SimpleOperationResponse> mapResponses = new HashMap<>();
 		if (!ids.isEmpty()) {
 			// DTOs mit Hilfe der IDs ermitteln
 			final List<DatabaseDTO> dbDTOs = getDatabaseDTOsByIds(ids);
-			if (dbDTOs.isEmpty())
+			if (dbDTOs.isEmpty()) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Entitäten zu den IDs gefunden.");
+			}
 			// Erstelle die SimpleOperationResponse-Objekte und füge sie in die Map ein.
 			for (final DatabaseDTO dbDTO : dbDTOs) {
 				final Long id = getLongId(dbDTO);
@@ -687,13 +698,15 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 */
 	public boolean hatBenutzerNurFunktionsbezogeneKompetenz(final @NotNull BenutzerKompetenz kompetenzFunktionsbezogen,
 			final @NotNull Set<BenutzerKompetenz> kompetenzenUebergreifend) {
-		if ((kompetenzFunktionsbezogen == null) || (kompetenzenUebergreifend == null) || kompetenzenUebergreifend.isEmpty())
+		if ((kompetenzFunktionsbezogen == null) || (kompetenzenUebergreifend == null) || kompetenzenUebergreifend.isEmpty()) {
 			throw new IllegalArgumentException("Die Parameter kompetenzFunktionsbezogen und kompetenzenUebergreifend dürfen nicht null oder leer sein.");
+		}
 
 		final Benutzer user = conn.getUser();
 		final boolean hatUebergreifendeKompetenz = kompetenzenUebergreifend.stream().anyMatch(user::hatVerwendeteKompetenz);
-		if (hatUebergreifendeKompetenz)
+		if (hatUebergreifendeKompetenz) {
 			return false;
+		}
 
 		return user.hatVerwendeteKompetenz(kompetenzFunktionsbezogen);
 	}
@@ -707,9 +720,10 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @throws ApiOperationException wenn der Benutzer nicht die Kompetenz für den funktionsbezogenen Zugriff auf die Daten der Klasse hat (403 - FORBIDDEN).
 	 */
 	public void checkBenutzerFunktionsbezogeneKompetenzKlasse(final Long idKlasse) throws ApiOperationException {
-		if (idKlasse == null)
+		if (idKlasse == null) {
 			throw new ApiOperationException(Status.FORBIDDEN,
 					"Der Benutzer kann keine funktionsbezogene Kompetenz nutzen, um auf Daten zuzugreifen, die keiner Klasse zugeordnet sind.");
+		}
 
 		final boolean hatKompetenzFuerKlasse = conn.getUser().getKlassenIDs().contains(idKlasse);
 		if (!hatKompetenzFuerKlasse) {
@@ -739,13 +753,15 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @throws ApiOperationException wenn der Benutzer nicht die Kompetenz für den funktionsbezogenen Zugriff auf den Abiturjahrgang hat (503 - FORBIDDEN).
 	 */
 	public void checkBenutzerFunktionsbezogeneKompetenzAbiturjahrgang(final Integer abijahrgang) throws ApiOperationException {
-		if (abijahrgang == null)
+		if (abijahrgang == null) {
 			throw new ApiOperationException(Status.FORBIDDEN,
 					"Der Benutzer kann keine funktionsbezogene Kompetenz nutzen, um auf Daten zuzugreifen, die keinem Abiturjahrgang zugeordnet sind.");
+		}
 		final boolean hatKompetenzFuerAbijahrgang = conn.getUser().getAbiturjahrgaenge().contains(abijahrgang);
-		if (!hatKompetenzFuerAbijahrgang)
+		if (!hatKompetenzFuerAbijahrgang) {
 			throw new ApiOperationException(Status.FORBIDDEN,
 					"Der Benutzer hat keine funktionsbezogene Kompetenz für den Zugriff als Beratungslehrer auf den Abiturjahrgang " + abijahrgang);
+		}
 	}
 
 
@@ -820,15 +836,18 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 */
 	public CoreDTO patch(final ID id, final Map<String, Object> attributesToPatch) throws ApiOperationException {
 		// Prüfe, ob benötigte Parameter übergeben wurden
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Für das Patchen muss eine ID angegeben werden. Null ist nicht zulässig.");
-		if (attributesToPatch.isEmpty())
+		}
+		if (attributesToPatch.isEmpty()) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "In dem Patch sind keine Daten enthalten.");
+		}
 
 		// zu patchendes DTO mit ID aus der Datenbank laden
 		final DatabaseDTO dto = getDatabaseDTOByID(id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Entität für die angegebene ID wurden in der Datenbank nicht gefunden.");
+		}
 
 		checkBeforePatch(dto, attributesToPatch);
 
@@ -892,9 +911,10 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	protected CoreDTO addBasic(final ID newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		// Prüfe, ob alle relevanten Attribute für das Erstellen des DTOs übergeben wurden
 		final String missingAttrsStr = attributesRequiredOnCreation.stream().filter(attr -> !initAttributes.containsKey(attr)).collect(Collectors.joining(","));
-		if (!missingAttrsStr.isEmpty())
+		if (!missingAttrsStr.isEmpty()) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Es werden weitere Attribute (%s) benötigt, damit die Entität erstellt werden kann.".formatted(missingAttrsStr));
+		}
 
 		// Prüfe, ob alle Vorbedingung für das Erstellen des DTOs erfüllt sind
 		checkBeforeCreation(newID, initAttributes);
@@ -941,8 +961,9 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	protected void saveDatabaseDTO(final DatabaseDTO dto) throws ApiOperationException {
-		if (!conn.transactionPersist(dto))
+		if (!conn.transactionPersist(dto)) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Entität.");
+		}
 		conn.transactionFlush();
 	}
 
@@ -955,8 +976,9 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	protected void deleteDatabaseDTO(final DatabaseDTO dto) throws ApiOperationException {
-		if (!conn.transactionRemove(dto))
+		if (!conn.transactionRemove(dto)) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Entfernen der Entität.");
+		}
 		conn.transactionFlush();
 	}
 
@@ -973,8 +995,9 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 */
 	@SuppressWarnings("unchecked")
 	protected ID getNextID(final ID lastID, final Map<String, Object> initAttributes) throws ApiOperationException {
-		if (getClassID().isAssignableFrom(Long.class))
+		if (getClassID().isAssignableFrom(Long.class)) {
 			return (ID) createNextLongID((Long) lastID);
+		}
 		return getID(initAttributes);
 	}
 

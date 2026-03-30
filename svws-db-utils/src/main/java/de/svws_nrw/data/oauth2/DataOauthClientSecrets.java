@@ -52,7 +52,7 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 		// Umwandeln des TLS-Zertifikates, so dass der Client dieses in lesbarer Form erhält
 		try {
 			if (secrets.TLSCert != null) {
-				List<X509Certificate> chain = TLSUtils.decodeCertListJson(secrets.TLSCert);
+				final List<X509Certificate> chain = TLSUtils.decodeCertListJson(secrets.TLSCert);
 				for (final X509Certificate cert : chain) {
 					final TLSCertificate c = new TLSCertificate();
 					c.version = cert.getVersion();
@@ -77,7 +77,7 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 					daten.tlsCertChain.add(c);
 				}
 			}
-		} catch (CertificateException e) {
+		} catch (final CertificateException e) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Einlesen der TLS-Zertifikatskette");
 		}
 		daten.tlsCert = secrets.TLSCert;
@@ -107,10 +107,12 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	public Response getList() throws ApiOperationException {
 		final List<DTOSchuleOAuthSecrets> daten = conn.queryAll(DTOSchuleOAuthSecrets.class);
 		final List<OAuth2ClientConnection> result = new ArrayList<>();
-		if (daten == null)
+		if (daten == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
-		for (final DTOSchuleOAuthSecrets secret : daten)
+		}
+		for (final DTOSchuleOAuthSecrets secret : daten) {
 			result.add(dtoMapper.apply(secret));
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
 	}
 
@@ -120,8 +122,9 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 		// Bestimme den Typ des OAuth2-Servers, dessen Secrets aus der Darenbank ermittelt werden sollen
 		final OAuth2ServerTyp typ = OAuth2ServerTyp.getByID(id);
 		final DTOSchuleOAuthSecrets daten = getDto(typ);
-		if (daten == null)
+		if (daten == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(dtoMapper.apply(daten)).build();
 	}
 
@@ -141,8 +144,9 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	private static final Map<String, DataBasicMapper<DTOSchuleOAuthSecrets>> patchMappings = Map.ofEntries(
 			Map.entry("id", (conn, dto, value, map) -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID) || (OAuth2ServerTyp.getByID(patch_id.longValue()) == null))
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID) || (OAuth2ServerTyp.getByID(patch_id.longValue()) == null)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die ID bzw. der Servertyp darf für das OAuth2-Secret nicht angepasst werden.");
+				}
 			}),
 			Map.entry("authServer", (conn, dto, value, map) -> {
 				try {
@@ -174,11 +178,13 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response delete(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es muss eine ID angegeben werden. Null ist nicht zulässig.");
+		}
 		final DTOSchuleOAuthSecrets dto = conn.queryByKey(DTOSchuleOAuthSecrets.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein DTO mit der ID %s gefunden.".formatted(id));
+		}
 		return super.deleteBasic(id, DTOSchuleOAuthSecrets.class, dtoMapper);
 	}
 
@@ -198,11 +204,13 @@ public final class DataOauthClientSecrets extends DataManager<Long> {
 		try {
 			final OAuth2ClientConnection data = JSONMapper.mapper.readValue(is, OAuth2ClientConnection.class);
 			final OAuth2ServerTyp serverTyp = OAuth2ServerTyp.getByID(data.id);
-			if (serverTyp == null)
+			if (serverTyp == null) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Es existiert kein OAuth2-Servertyp mit der ID %d.".formatted(data.id));
-			if (getDto(serverTyp) != null)
+			}
+			if (getDto(serverTyp) != null) {
 				throw new ApiOperationException(Status.CONFLICT, "Es existiert bereits ein Datensatz für den OAuth2-Servertyp %s."
 						.formatted(serverTyp.toString()));
+			}
 			final DTOSchuleOAuthSecrets toPersist = new DTOSchuleOAuthSecrets(data.id, data.authServer, data.clientID, data.clientSecret);
 			toPersist.TLSCert = data.tlsCert;
 			toPersist.TLSCertIsKnown = data.tlsCertIsKnown;

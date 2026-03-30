@@ -32,33 +32,41 @@ public final class DataKatalogFachgruppen extends DataManager<Long> {
 	@Override
 	public Response getAll() {
 		final ArrayList<FachgruppeKatalogEintrag> daten = new ArrayList<>();
-		for (final Fachgruppe gruppe : Fachgruppe.values())
+		for (final Fachgruppe gruppe : Fachgruppe.values()) {
 			daten.addAll(gruppe.historie());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response getList() throws ApiOperationException {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
+		if (schule == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final ArrayList<FachgruppeKatalogEintrag> daten = new ArrayList<>();
-		for (final Fachgruppe gruppe : Fachgruppe.values())
-			for (final FachgruppeKatalogEintrag eintrag : gruppe.historie())
-				if (eintrag.schulformen.contains(schule.SchulformKuerzel))
+		for (final Fachgruppe gruppe : Fachgruppe.values()) {
+			for (final FachgruppeKatalogEintrag eintrag : gruppe.historie()) {
+				if (eintrag.schulformen.contains(schule.SchulformKuerzel)) {
 					daten.add(eintrag);
-		if (daten.isEmpty())
+				}
+			}
+		}
+		if (daten.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final FachgruppeKatalogEintrag daten = Fachgruppe.data().getEintragByID(id);
-		if (daten == null)
+		if (daten == null) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

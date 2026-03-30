@@ -56,8 +56,9 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 	@Override
 	protected void initDTO(final DTOSchuelerMerkmale dto, final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		dto.ID = newID;
-		if (this.idSchueler == null)
+		if (this.idSchueler == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Schuelers darf nicht null sein.");
+		}
 		dto.Schueler_ID = this.idSchueler;
 	}
 
@@ -68,12 +69,14 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 
 	@Override
 	public SchuelerSchulbesuchMerkmal getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für das Merkmal des Schülers darf nicht null sein.");
+		}
 
 		final DTOSchuelerMerkmale dto = conn.queryByKey(DTOSchuelerMerkmale.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Merkmal eines Schülers mit der Id %d gefunden".formatted(id));
+		}
 
 		return map(dto);
 	}
@@ -110,8 +113,9 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 		switch (name) {
 			case "id" -> {
 				final Long id = JSONMapper.convertToLong(value, false, "ID");
-				if (!Objects.equals(dto.ID, id))
+				if (!Objects.equals(dto.ID, id)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(id, dto.ID));
+				}
 			}
 			case "idMerkmal" -> {
 				final Long id = JSONMapper.convertToLong(value, false, "idMerkmal");
@@ -131,8 +135,9 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 			final LocalDate datumVon = LocalDate.parse(dto.DatumVon, formatter);
 			final LocalDate datumBis = LocalDate.parse(datum, formatter);
-			if (datumBis.isBefore(datumVon))
+			if (datumBis.isBefore(datumVon)) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Das Enddatum %s darf nicht vor dem Startdatum %s liegen".formatted(datumBis, datumVon));
+			}
 		}
 		dto.DatumBis = datum;
 	}

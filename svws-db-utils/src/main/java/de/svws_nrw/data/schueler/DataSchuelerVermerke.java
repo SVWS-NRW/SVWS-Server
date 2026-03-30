@@ -123,11 +123,13 @@ public final class DataSchuelerVermerke extends DataManagerRevised<Long, DTOSchu
 
 	@Override
 	public SchuelerVermerke getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Die erwartete ID zur Anfrage ist nicht vorhanden.");
+		}
 		final DTOSchuelerVermerke schuelerVermerk = conn.queryByKey(DTOSchuelerVermerke.class, id);
-		if (schuelerVermerk == null)
+		if (schuelerVermerk == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es existiert mit der ID kein Vermerk.");
+		}
 		return map(schuelerVermerk);
 	}
 
@@ -137,9 +139,10 @@ public final class DataSchuelerVermerke extends DataManagerRevised<Long, DTOSchu
 		switch (name) {
 			case "id" -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id != dto.ID))
+				if ((patch_id == null) || (patch_id != dto.ID)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die angegebene ID %d ist null oder stimmt nicht mit der ID %d im DTO überein."
 							.formatted(patch_id, dto.ID));
+				}
 			}
 			case "idSchueler" -> dto.Schueler_ID = JSONMapper.convertToLong(value, false);
 			case "bemerkung" -> {
@@ -149,8 +152,9 @@ public final class DataSchuelerVermerke extends DataManagerRevised<Long, DTOSchu
 			}
 			case "idVermerkart" -> {
 				final long idVermerkart = JSONMapper.convertToLong(value, false);
-				if (conn.queryByKey(DTOVermerkArt.class, idVermerkart) == null)
+				if (conn.queryByKey(DTOVermerkArt.class, idVermerkart) == null) {
 					throw new ApiOperationException(Status.CONFLICT);
+				}
 				dto.VermerkArt_ID = idVermerkart;
 				dto.GeaendertVon = conn.getUser().getUsername();
 				dto.Datum = String.valueOf(Date.valueOf(LocalDate.now()));

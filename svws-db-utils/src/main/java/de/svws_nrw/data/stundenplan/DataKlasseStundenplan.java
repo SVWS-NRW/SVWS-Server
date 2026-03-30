@@ -10,12 +10,12 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.data.stundenplan.StundenplanKomplett;
-import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
+import de.svws_nrw.core.data.stundenplan.StundenplanKomplett;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
+import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
@@ -66,14 +66,17 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 	public Response get(final Long id) throws ApiOperationException {
 		final StundenplanKomplett stundenplan = new StundenplanKomplett();
 		final DTOStundenplan dtoStundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
-		if (dtoStundenplan == null)
+		if (dtoStundenplan == null) {
 			throw new NotFoundException("Kein Stundenplan mit angegebener ID gefunden");
+		}
 		final DTOSchuljahresabschnitte dtoSchuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, dtoStundenplan.Schuljahresabschnitts_ID);
-		if (dtoSchuljahresabschnitt == null)
+		if (dtoSchuljahresabschnitt == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Konnte den Schuljahresabschnitt für den Stundenplan nicht in der Datenban finden.");
+		}
 		final DTOKlassen dtoKlasse = conn.queryByKey(DTOKlassen.class, id);
-		if (dtoKlasse == null)
+		if (dtoKlasse == null) {
 			throw new NotFoundException("Kein Klasse mit angegebener ID gefunden");
+		}
 		stundenplan.daten.id = dtoStundenplan.ID;
 		stundenplan.unterrichtsverteilung.id = dtoStundenplan.ID;
 		stundenplan.daten.idSchuljahresabschnitt = dtoStundenplan.Schuljahresabschnitts_ID;
@@ -87,17 +90,20 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 		stundenplan.daten.jahrgaenge.addAll(DataStundenplanJahrgaenge.getJahrgaenge(conn, idStundenplan));
 		stundenplan.daten.kalenderwochenZuordnung.addAll(new DataStundenplanKalenderwochenzuordnung(conn, idStundenplan).getList());
 		stundenplan.daten.zeitraster.addAll(DataStundenplanZeitraster.getZeitraster(conn, idStundenplan));
-		if (!stundenplan.daten.zeitraster.isEmpty())
+		if (!stundenplan.daten.zeitraster.isEmpty()) {
 			getUnterricht(stundenplan, klasse, stundenplan.daten.zeitraster);
-		if (stundenplan.unterrichtsverteilung.klassen.isEmpty())
+		}
+		if (stundenplan.unterrichtsverteilung.klassen.isEmpty()) {
 			stundenplan.unterrichtsverteilung.klassen.add(klasse);
+		}
 		// Füge ggf. noch die Schüler der Klassen zu der Schülerliste hinzu
 		final Set<Long> schuelerIDs = new HashSet<>();
 		schuelerIDs.addAll(stundenplan.unterrichtsverteilung.klassen.stream().flatMap(k -> k.schueler.stream()).toList());
 		schuelerIDs.removeAll(stundenplan.unterrichtsverteilung.schueler.stream().map(s -> s.id).toList());
-		if (!schuelerIDs.isEmpty())
+		if (!schuelerIDs.isEmpty()) {
 			stundenplan.unterrichtsverteilung.schueler.addAll(DataStundenplanSchueler.getSchueler(conn, idStundenplan).stream()
 					.filter(s -> schuelerIDs.contains(s.id)).toList());
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(stundenplan).build();
 	}
 
@@ -114,8 +120,9 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 				DTOStundenplanUnterricht.class)
 				.setParameter("klasseId", klasse.id).setParameter("klasseId2", klasse.id)
 				.setParameter("zrids", zeitrasterIds).getResultList();
-		if (unterrichte.isEmpty())
+		if (unterrichte.isEmpty()) {
 			return;
+		}
 		final List<Long> unterrichtIds = unterrichte.stream().map(u -> u.ID).toList();
 
 		final Map<Long, List<StundenplanKlasse>> klassenByUnterrichtIds = DataStundenplanKlassen.getKlassenByUnterrichtIds(conn, idStundenplan, unterrichtIds);
@@ -126,8 +133,9 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 		final Map<Long, List<StundenplanLehrer>> lehrerByUnterrichtId = new HashMap<>();
 		unterrichtLehrerList.stream().forEach(ul -> {
 			final List<StundenplanLehrer> listLehrer = lehrerByUnterrichtId.computeIfAbsent(ul.Unterricht_ID, id -> new ArrayList<>());
-			if (lehrerById.containsKey(ul.Lehrer_ID))
+			if (lehrerById.containsKey(ul.Lehrer_ID)) {
 				listLehrer.add(lehrerById.get(ul.Lehrer_ID));
+			}
 		});
 
 		final Map<Long, List<StundenplanSchiene>> schienenByUnterrichtId =
@@ -146,8 +154,9 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 			u.idZeitraster = unterricht.Zeitraster_ID;
 			u.wochentyp = unterricht.Wochentyp;
 			u.idKurs = unterricht.Kurs_ID;
-			if (u.idKurs != null)
+			if (u.idKurs != null) {
 				kursIDs.add(u.idKurs);
+			}
 			u.idFach = unterricht.Fach_ID;
 			fachIDs.add(u.idFach);
 
@@ -166,12 +175,15 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 			result.add(u);
 		}
 		stundenplan.unterrichte.addAll(result);
-		for (final StundenplanRaum r : setRaeume)
+		for (final StundenplanRaum r : setRaeume) {
 			stundenplan.daten.raeume.add(r);
-		for (final StundenplanKlasse k : setKlassen)
+		}
+		for (final StundenplanKlasse k : setKlassen) {
 			stundenplan.unterrichtsverteilung.klassen.add(k);
-		for (final StundenplanLehrer l : setLehrer)
+		}
+		for (final StundenplanLehrer l : setLehrer) {
 			stundenplan.unterrichtsverteilung.lehrer.add(l);
+		}
 		stundenplan.unterrichtsverteilung.kurse.addAll(DataStundenplanKurse.getKurse(conn, idStundenplan).stream()
 				.filter(k -> kursIDs.contains(k.id)).toList());
 		stundenplan.unterrichtsverteilung.klassenunterricht.addAll(DataStundenplanKlassenunterricht.getKlassenunterricht(conn, klasse.id));
@@ -190,9 +202,10 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 		weitereLehrerIDs.addAll(stundenplan.unterrichtsverteilung.klassenunterricht.stream().flatMap(k -> k.lehrer.stream()).toList());
 		weitereLehrerIDs.addAll(stundenplan.unterrichtsverteilung.kurse.stream().flatMap(k -> k.lehrer.stream()).toList());
 		weitereLehrerIDs.removeAll(stundenplan.unterrichtsverteilung.lehrer.stream().map(l -> l.id).toList());
-		if (!weitereLehrerIDs.isEmpty())
+		if (!weitereLehrerIDs.isEmpty()) {
 			stundenplan.unterrichtsverteilung.lehrer.addAll(DataStundenplanLehrer.getLehrer(conn, idStundenplan, false).stream()
 					.filter(l -> weitereLehrerIDs.contains(l.id)).toList());
+		}
 		// Füge die Fächer hinzu
 		fachIDs.addAll(stundenplan.unterrichtsverteilung.klassenunterricht.stream().map(ku -> ku.idFach).distinct().toList());
 		fachIDs.addAll(stundenplan.unterrichtsverteilung.lehrer.stream().flatMap(l -> l.faecher.stream()).toList());

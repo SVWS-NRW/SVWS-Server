@@ -1,6 +1,5 @@
 package de.svws_nrw.data.schueler;
 
-import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -14,6 +13,7 @@ import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOSchuleNRW;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOEntlassarten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAbgaenge;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -61,8 +61,9 @@ public final class DataSchuelerSchulbesuchSchule extends DataManagerRevised<Long
 	@Override
 	protected void initDTO(final DTOSchuelerAbgaenge dto, final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		dto.ID = newID;
-		if (this.idSchueler == null)
+		if (this.idSchueler == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Schuelers darf nicht null sein.");
+		}
 		dto.Schueler_ID = this.idSchueler;
 	}
 
@@ -73,12 +74,14 @@ public final class DataSchuelerSchulbesuchSchule extends DataManagerRevised<Long
 
 	@Override
 	public SchuelerSchulbesuchSchule getById(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den Schulbesuch eines Schülers darf nicht null sein.");
+		}
 
 		final DTOSchuelerAbgaenge dto = conn.queryByKey(DTOSchuelerAbgaenge.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schulbesuch eines Schülers mit der Id %d gefunden".formatted(id));
+		}
 
 		return map(dto);
 	}
@@ -125,8 +128,9 @@ public final class DataSchuelerSchulbesuchSchule extends DataManagerRevised<Long
 		switch (name) {
 			case "id" -> {
 				final Long id = JSONMapper.convertToLong(value, false, "id");
-				if (!Objects.equals(dto.ID, id))
+				if (!Objects.equals(dto.ID, id)) {
 					throw new ApiOperationException(Status.BAD_REQUEST, "PatchId %d ist ungleich dtoID %d.".formatted(id, dto.ID));
+				}
 			}
 			case "idSchule" -> mapSchulnummer(dto, value);
 			case "schulgliederung" -> dto.LSSGL = JSONMapper.convertToString(value, true, true, 5, "schulgliederung");
@@ -148,8 +152,9 @@ public final class DataSchuelerSchulbesuchSchule extends DataManagerRevised<Long
 			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 			final LocalDate datumVon = LocalDate.parse(dto.LSBeginnDatum, formatter);
 			final LocalDate datumBis = LocalDate.parse(datum, formatter);
-			if (datumBis.isBefore(datumVon))
+			if (datumBis.isBefore(datumVon)) {
 				throw new ApiOperationException(Status.BAD_REQUEST, "Das Enddatum %s darf nicht vor dem Startdatum %s liegen".formatted(datumBis, datumVon));
+			}
 		}
 		dto.LSSchulEntlassDatum = datum;
 	}

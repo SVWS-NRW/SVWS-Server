@@ -30,7 +30,6 @@ public class DBBackupManager {
 	/** Ein Logger, um die Abläufe bei dem Update-Prozess zu loggen */
 	private final Logger logger;
 
-
 	/**
 	 * Erzeugt einen neuen {@link DBBackupManager}.
 	 *
@@ -75,14 +74,17 @@ public class DBBackupManager {
 		}
 
 		try {
-			if (((tgtConfig.getDBDriver() == DBDriver.MARIA_DB) || (tgtConfig.getDBDriver() == DBDriver.MYSQL)) && ("root".equals(tgtConfig.getUsername())))
+			if (((tgtConfig.getDBDriver() == DBDriver.MARIA_DB) || (tgtConfig.getDBDriver() == DBDriver.MYSQL)) && ("root".equals(tgtConfig.getUsername()))) {
 				throw new DBException("Der Benutzer \"root\" ist kein zulässiger SVWS-Admin-Benutzer für MYSQL / MARIA_DB");
+			}
 
-			if ((tgtConfig.getDBDriver() == DBDriver.MSSQL) && ("sa".equals(tgtConfig.getUsername())))
+			if ((tgtConfig.getDBDriver() == DBDriver.MSSQL) && ("sa".equals(tgtConfig.getUsername()))) {
 				throw new DBException("Der Benutzer \"sa\" ist kein zulässiger SVWS-Admin-Benutzer für MS SQL Server");
+			}
 
-			if (!DBRootManager.recreateDB(tgtConfig, tgtRootUser, tgtRootPW, logger))
+			if (!DBRootManager.recreateDB(tgtConfig, tgtRootUser, tgtRootPW, logger)) {
 				throw new DBException("Fehler beim Anlegen des Schemas und des Admin-Benutzers");
+			}
 
 			importDBInternal(conn, tgtConfig, maxUpdateRevision, devMode, logger);
 
@@ -137,8 +139,9 @@ public class DBBackupManager {
 
 		try (DBEntityManager tgtConn = Benutzer.create(tgtConfig).getEntityManager()) {
 			final DBSchemaManager tgtManager = DBSchemaManager.create(tgtConn, true, logger);
-			if (!tgtManager.dropSVWSSchema())
+			if (!tgtManager.dropSVWSSchema()) {
 				throw new DBException("Fehler beim Leeren des Schemas der Ziel-Datenbank.");
+			}
 
 			importDBInternal(conn, tgtConfig, maxUpdateRevision, devMode, logger);
 
@@ -216,8 +219,9 @@ public class DBBackupManager {
 			try {
 				tgtConn.transactionBegin();
 				result = DBSchemaManager.createAllTrigger(tgtConn, logger, version.Revision, true);
-				if (result)
+				if (result) {
 					tgtConn.transactionCommit();
+				}
 			} catch (final Exception e) {
 				error = "Fehler bei der Transaktion: " + e.getMessage();
 				result = false;
@@ -273,8 +277,9 @@ public class DBBackupManager {
 		logger.modifyIndent(2);
 		DBSchemaManager tgtManager = null;
 		try {
-			if (!DBRootManager.recreateDB(tgtConfig, null, null, logger))
+			if (!DBRootManager.recreateDB(tgtConfig, null, null, logger)) {
 				throw new DBException("Fehler beim Anlegen des Schemas in der SQlite-Export-Datei");
+			}
 
 			logger.log("-> Verbinde zur SQLite-Export-Datenbank...");
 			try (DBEntityManager tgtConn = Benutzer.create(tgtConfig).getEntityManager()) {
@@ -314,8 +319,9 @@ public class DBBackupManager {
 				try {
 					tgtConn.transactionBegin();
 					result = DBSchemaManager.createAllTrigger(tgtConn, logger, version.Revision, true);
-					if (result)
+					if (result) {
 						tgtConn.transactionCommit();
+					}
 				} catch (final Exception e) {
 					error = "Fehler bei der Transaktion: " + e.getMessage();
 					result = false;
@@ -367,24 +373,26 @@ public class DBBackupManager {
 		for (int i = 0; i <= ((entities.size() - 1) / maxRangeSize); i++) {
 			final int first = i * maxRangeSize;
 			int last = ((i + 1) * maxRangeSize) - 1;
-			if (last >= entities.size())
+			if (last >= entities.size()) {
 				last = entities.size() - 1;
+			}
 			ranges.add(Map.entry(first, last));
 		}
 		while (!ranges.isEmpty()) {
 			final Map.Entry<Integer, Integer> range = ranges.removeFirst();
 			final List<String> colnames = tab.getSpalten(rev).stream().map(col -> col.name()).toList();
 			if (tgtConn.insertRangeNativeUnprepared(tab.name(), colnames, entities, range.getKey(), range.getValue(), 1000000)) {
-				if (range.getKey().equals(range.getValue()))
+				if (range.getKey().equals(range.getValue())) {
 					logger.logLn("Datensatz " + range.getKey() + " erfolgreich geschrieben. (Freier Speicher: "
 							+ (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
 							+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
 							+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
-				else
+				} else {
 					logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " erfolgreich geschrieben. (Freier Speicher: "
 							+ (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
 							+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
 							+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
+				}
 			} else {
 				if (range.getKey().equals(range.getValue())) {
 					logger.logLn(LogLevel.ERROR, "Datensatz " + range.getKey() + " konnte nicht geschrieben werden - Datensatz wird übersprungen.");
@@ -395,8 +403,9 @@ public class DBBackupManager {
 							+ " konnten nicht geschrieben werden geschrieben - Teile den Block auf und versuche die Teilblöcke zu schreiben.");
 					// Teile den Block auf
 					int step = ((range.getValue() - range.getKey()) + 1) / 10;
-					if (step < 1)
+					if (step < 1) {
 						step = 1;
+					}
 					for (int last = range.getValue(); last >= range.getKey(); last -= step) {
 						final int first = (last - step) + 1;
 						ranges.addFirst(Map.entry((first >= range.getKey()) ? first : range.getKey(), last));
@@ -423,11 +432,13 @@ public class DBBackupManager {
 		// Durchwandere alle Tabellen in der geeigneten Reihenfolge, so dass Foreign-Key-Constraints erfüllt werden
 		for (final SchemaTabelle tab : Schema.getTabellen(rev)) {
 			// Prüfe, ob die Tabelle bei dem Import/Export beachtet werden soll, wenn nicht dann übespringe sie
-			if (!tab.importExport())
+			if (!tab.importExport()) {
 				continue;
+			}
 			// Spezialfall vor Revision 34 - In Tabelle Kurs_Schueler gibt es in den Backups noch keine Spalte Leistung-ID... Der Inhalt wird aber in Revision rekonstruiert
-			if (("Kurs_Schueler".equals(tab.name())) && (rev < 34))
+			if (("Kurs_Schueler".equals(tab.name())) && (rev < 34)) {
 				continue;
+			}
 
 			final DBEntityManager srcConn = schemaManager.getConnection();
 			logger.logLn("Tabelle " + tab.name() + ":");
@@ -442,8 +453,9 @@ public class DBBackupManager {
 					&& !this.schemaManager.getSchemaStatus().hasColumn(tab.name(), "LehramtKrz")) {
 				sql = tab.getSpalten(rev).stream()
 						.map(t -> {
-							if ("LehramtKrz".equals(t.name()))
+							if ("LehramtKrz".equals(t.name())) {
 								return "'' AS " + t.name();
+							}
 							return t.name();
 						})
 						.collect(Collectors.joining(", ", "SELECT ", " FROM " + tab.name()));

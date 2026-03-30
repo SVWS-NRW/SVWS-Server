@@ -6,18 +6,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
-
-import io.github.spannm.jackcess.Column;
-import io.github.spannm.jackcess.DataType;
-import io.github.spannm.jackcess.Database;
-import io.github.spannm.jackcess.DatabaseBuilder;
-import io.github.spannm.jackcess.Row;
-import io.github.spannm.jackcess.Table;
 
 import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.shell.CommandLineException;
@@ -26,6 +19,12 @@ import de.svws_nrw.base.shell.CommandLineParser;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
+import io.github.spannm.jackcess.Column;
+import io.github.spannm.jackcess.DataType;
+import io.github.spannm.jackcess.Database;
+import io.github.spannm.jackcess.DatabaseBuilder;
+import io.github.spannm.jackcess.Row;
+import io.github.spannm.jackcess.Table;
 
 
 /**
@@ -60,60 +59,76 @@ public class MDBtoCSV {
 	}
 
 	private static int cmpDate(final LocalDateTime a, final LocalDateTime b) {
-		if ((a == null) && (b == null))
+		if ((a == null) && (b == null)) {
 			return 0;
-		if (a == null)
+		}
+		if (a == null) {
 			return -1;
-		if (b == null)
+		}
+		if (b == null) {
 			return 1;
+		}
 		return a.compareTo(b);
 	}
 
 	private static int cmpString(final String a, final String b) {
-		if ((a == null) && (b == null))
+		if ((a == null) && (b == null)) {
 			return 0;
-		if (a == null)
+		}
+		if (a == null) {
 			return -1;
-		if (b == null)
+		}
+		if (b == null) {
 			return 1;
+		}
 		return a.compareTo(b);
 	}
 
 	private static int cmpInt(final Integer a, final Integer b) {
-		if ((a == null) && (b == null))
+		if ((a == null) && (b == null)) {
 			return 0;
-		if (a == null)
+		}
+		if (a == null) {
 			return -1;
-		if (b == null)
+		}
+		if (b == null) {
 			return 1;
+		}
 		return Integer.compare(a, b);
 	}
 
 	private static int cmpShort(final Short a, final Short b) {
-		if ((a == null) && (b == null))
+		if ((a == null) && (b == null)) {
 			return 0;
-		if (a == null)
+		}
+		if (a == null) {
 			return -1;
-		if (b == null)
+		}
+		if (b == null) {
 			return 1;
+		}
 		return Short.compare(a, b);
 	}
 
 
 	private static int cmpByte(final Byte a, final Byte b) {
-		if ((a == null) && (b == null))
+		if ((a == null) && (b == null)) {
 			return 0;
-		if (a == null)
+		}
+		if (a == null) {
 			return -1;
-		if (b == null)
+		}
+		if (b == null) {
 			return 1;
+		}
 		return Byte.compare(a, b);
 	}
 
 	private static final Comparator<Row> compSortKurztext = (a, b) -> {
 		final int cmp = cmpInt(a.getInt("Sort"), b.getInt("Sort"));
-		if (cmp != 0)
+		if (cmp != 0) {
 			return cmp;
+		}
 		return cmpString(a.getString("Kurztext"), b.getString("Kurztext"));
 	};
 
@@ -125,8 +140,9 @@ public class MDBtoCSV {
 	 * @return der Typ der MDB-Datei
 	 */
 	private static MDBType getMDBTypeFromString(final String type) {
-		if (type == null)
+		if (type == null) {
 			return MDBType.UNKNOWN;
+		}
 		return switch (type) {
 			case "statkue" -> MDBType.STATKUE;
 			case "s2statkue" -> MDBType.SCHILD2_STATKUE;
@@ -147,140 +163,169 @@ public class MDBtoCSV {
 		return switch (table.getName()) {
 			case "ASA01_Tabelle" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("ASA01_Schulnr"), b.getString("ASA01_Schulnr"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("ASA01_Sf"), b.getString("ASA01_Sf"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("ASA01_Text"), b.getString("ASA01_Text"));
 			}).toList();
 			case "AS_Schulformen" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("AS_Schulf"), b.getString("AS_Schulf"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("AS_Sf2"), b.getString("AS_Sf2"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("AS_Text"), b.getString("AS_Text"));
 			}).toList();
 			case "Abgangsart" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("AbgangsJG"), b.getString("AbgangsJG"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Art"), b.getString("Art"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpShort(a.getShort("KZ_Bereich"), b.getShort("KZ_Bereich"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("SF"), b.getString("SF"));
 			}).toList();
 			case "AllgMerkmale" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpInt(a.getInt("ID"), b.getInt("ID"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Kurztext"), b.getString("Kurztext"));
 			}).toList();
 			case "AndereGrundschulen" -> table.stream().sorted((a, b) -> cmpString(a.getString("SNR"), b.getString("SNR"))).toList();
 			case "Bereiche" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpInt(a.getInt("ID_Bereich"), b.getInt("ID_Bereich"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("SGL"), b.getString("SGL"));
 			}).toList();
 			case "Bereiche_Jahrgang" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpInt(a.getInt("ID_Bereich"), b.getInt("ID_Bereich"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("JG"), b.getString("JG"));
 			}).toList();
 			case "Betreuung" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("SF"), b.getString("SF"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Betreuung"), b.getString("Betreuung"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Beschreibung"), b.getString("Beschreibung"));
 			}).toList();
 			case "Bilingual" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("Fach"), b.getString("Fach"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("SF"), b.getString("SF"));
 			}).toList();
 			case "Einschulungsart" -> table.stream().sorted((a, b) -> cmpString(a.getString("Art"), b.getString("Art"))).toList();
 			case "Fachklasse" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("AP"), b.getString("AP"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpShort(a.getShort("BKIndex"), b.getShort("BKIndex"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("FKS"), b.getString("FKS"));
 			}).toList();
 			case "Foerderschwerpunkt" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("FSP"), b.getString("FSP"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("SF"), b.getString("SF"));
 			}).toList();
 			case "Gliederung" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("BKAnlage"), b.getString("BKAnlage"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("BKTyp"), b.getString("BKTyp"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("SF"), b.getString("SF"));
 			}).toList();
 			case "Gemeinden" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpShort(a.getShort("Sortierung"), b.getShort("Sortierung"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("GemKZ"), b.getString("GemKZ"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Bezeichnung"), b.getString("Bezeichnung"));
 			}).toList();
 			case "Geschlecht" -> table.stream().sorted((a, b) -> cmpString(a.getString("Art"), b.getString("Art"))).toList();
 			case "Herkunftsart" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("Art"), b.getString("Art"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("SF"), b.getString("SF"));
 			}).toList();
 			case "Herkunftslaender" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpInt(a.getInt("Sortierung"), b.getInt("Sortierung"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Schluessel"), b.getString("Schluessel"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Staat_Gebiet"), b.getString("Staat_Gebiet"));
 			}).toList();
 			case "Herkunftsschulform" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("HSF"), b.getString("HSF"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("SF"), b.getString("SF"));
 			}).toList();
 			case "JG_Bereiche" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("SF"), b.getString("SF"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpByte(a.getByte("JG_Bereich"), b.getByte("JG_Bereich"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Jahrgang"), b.getString("Jahrgang"));
 			}).toList();
 			case "LehrerAbgang" -> table.stream().sorted((a, b) -> cmpString(a.getString("ASDSchluessel"), b.getString("ASDSchluessel"))).toList();
@@ -300,86 +345,104 @@ public class MDBtoCSV {
 			case "LetzteAenderung" -> table.stream().sorted((a, b) -> cmpDate(a.getLocalDateTime("Datum"), b.getLocalDateTime("Datum"))).toList();
 			case "LetzteAenderung_Schild" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("Datum"), b.getString("Datum"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Tabelle"), b.getString("Tabelle"));
 			}).toList();
 			case "Nationalitaeten" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("Schluessel"), b.getString("Schluessel"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Klartext"), b.getString("Klartext"));
 			}).toList();
 			case "nrw_plz_ort" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpShort(a.getShort("Art"), b.getShort("Art"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("PLZ"), b.getString("PLZ"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("RegSchl"), b.getString("RegSchl"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Ort"), b.getString("Ort"));
 			}).toList();
 			case "nrw_ortsteile" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("PLZ"), b.getString("PLZ"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("REGSCHL"), b.getString("REGSCHL"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("ORT"), b.getString("ORT"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("ORTSTEIL"), b.getString("ORTSTEIL"));
 			}).toList();
 			case "nrw_strassen" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("RegSchl"), b.getString("RegSchl"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Ort"), b.getString("Ort"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Strasse"), b.getString("Strasse"));
 			}).toList();
 			case "Organisationsform" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("SF"), b.getString("SF"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("OrgForm"), b.getString("OrgForm"));
 			}).toList();
 			case "PrfFortsetzung" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpInt(a.getInt("Sortierung"), b.getInt("Sortierung"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Nr"), b.getString("Nr"));
 			}).toList();
 			case "PrfSemAbschl" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpInt(a.getInt("Sortierung"), b.getInt("Sortierung"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Nr"), b.getString("Nr"));
 			}).toList();
 			case "Reformpaedagogik" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("SF"), b.getString("SF"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("RPG"), b.getString("RPG"));
 			}).toList();
 			case "Religionen" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("Schluessel"), b.getString("Schluessel"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Klartext"), b.getString("Klartext"));
 			}).toList();
 			case "SchuelerErsteSchulformSekI" -> table.stream().sorted((a, b) -> cmpInt(a.getInt("Sort"), b.getInt("Sort"))).toList();
@@ -387,95 +450,116 @@ public class MDBtoCSV {
 			case "SchuelerUebergangsempfehlung5Jg" -> table.stream().sorted((a, b) -> cmpInt(a.getInt("Sort"), b.getInt("Sort"))).toList();
 			case "SchuelerVerkehrssprache" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("Kurztext"), b.getString("Kurztext"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Langtext"), b.getString("Langtext"));
 			}).toList();
 			case "Schulformen" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("Schulform"), b.getString("Schulform"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("SF"), b.getString("SF"));
 			}).toList();
 			case "Schultraegerart" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("Schultraegerart"), b.getString("Schultraegerart"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Bezeichnung"), b.getString("Bezeichnung"));
 			}).toList();
 			case "SVWS_Zulaessige_Faecher" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("Schulform"), b.getString("Schulform"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Fach"), b.getString("Fach"));
 			}).toList();
 			case "SVWS_Zulaessige_Jahrgaenge", "SVWS_ZulaessigeJahrgaenge" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("Schulform"), b.getString("Schulform"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Jahrgang"), b.getString("Jahrgang"));
 			}).toList();
 			case "ZulFaecher" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("Schulform"), b.getString("Schulform"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Fach"), b.getString("Fach"));
 			}).toList();
 			case "ZulJahrgaenge" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("Schulform"), b.getString("Schulform"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Jahrgang"), b.getString("Jahrgang"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("SNR"), b.getString("SNR"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("FSP"), b.getString("FSP"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Beschreibung"), b.getString("Beschreibung"));
 			}).toList();
 			case "ZulKlArt" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("Schulform"), b.getString("Schulform"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("KlArt"), b.getString("KlArt"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("FSP"), b.getString("FSP"));
 			}).toList();
 			case "ZulKuArt" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("SF"), b.getString("SF"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Kursart"), b.getString("Kursart"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpByte(a.getByte("SGLBereich"), b.getByte("SGLBereich"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Kursart2"), b.getString("Kursart2"));
 			}).toList();
 			case "ZulQualifikation" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("Schulform"), b.getString("Schulform"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Qualifikation"), b.getString("Qualifikation"));
 			}).toList();
 			default -> throw new UnsupportedOperationException("Unbekannter Tabellenname in der Statkue-MDB : " + table.getName());
@@ -495,134 +579,162 @@ public class MDBtoCSV {
 		return switch (table.getName()) {
 			case "ASA01_Tabelle" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("ASA01_Schulnr"), b.getString("ASA01_Schulnr"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("ASA01_Sf"), b.getString("ASA01_Sf"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("ASA01_Text"), b.getString("ASA01_Text"));
 			}).toList();
 			case "AS_Schulformen" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("AS_Schulf"), b.getString("AS_Schulf"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("AS_Sf2"), b.getString("AS_Sf2"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("AS_Text"), b.getString("AS_Text"));
 			}).toList();
 			case "Abgangsart" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("AbgangsJG"), b.getString("AbgangsJG"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Art"), b.getString("Art"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpInt(a.getInt("KZ_Bereich"), b.getInt("KZ_Bereich"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("SF"), b.getString("SF"));
 			}).toList();
 			case "AllgMerkmale" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpInt(a.getInt("ID"), b.getInt("ID"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Kurztext"), b.getString("Kurztext"));
 			}).toList();
 			case "AndereGrundschulen" -> table.stream().sorted((a, b) -> cmpString(a.getString("SNR"), b.getString("SNR"))).toList();
 			case "Bereiche" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpInt(a.getInt("ID_Bereich"), b.getInt("ID_Bereich"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("SGL"), b.getString("SGL"));
 			}).toList();
 			case "Betreuung" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("SF"), b.getString("SF"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Betreuung"), b.getString("Betreuung"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Beschreibung"), b.getString("Beschreibung"));
 			}).toList();
 			case "Bilingual" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("Fach"), b.getString("Fach"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("SF"), b.getString("SF"));
 			}).toList();
 			case "Einschulungsart" -> table.stream().sorted((a, b) -> cmpString(a.getString("Art"), b.getString("Art"))).toList();
 			case "Fachklasse" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("AP"), b.getString("AP"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpInt(a.getInt("BKIndex"), b.getInt("BKIndex"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("FKS"), b.getString("FKS"));
 			}).toList();
 			case "Förderschwerpunkt" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("FSP"), b.getString("FSP"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("SF"), b.getString("SF"));
 			}).toList();
 			case "Gliederung" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("BKAnlage"), b.getString("BKAnlage"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("BKTyp"), b.getString("BKTyp"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("SF"), b.getString("SF"));
 			}).toList();
 			case "Gemeinden" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpShort(a.getShort("Sortierung"), b.getShort("Sortierung"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("GemKZ"), b.getString("GemKZ"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Bezeichnung"), b.getString("Bezeichnung"));
 			}).toList();
 			case "Geschlecht" -> table.stream().sorted((a, b) -> cmpString(a.getString("Art"), b.getString("Art"))).toList();
 			case "Herkunftsart" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("Art"), b.getString("Art"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("SF"), b.getString("SF"));
 			}).toList();
 			case "Herkunftslaender" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpInt(a.getInt("Sortierung"), b.getInt("Sortierung"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Schluessel"), b.getString("Schluessel"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Staat_Gebiet"), b.getString("Staat_Gebiet"));
 			}).toList();
 			case "Herkunftsschulform" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("HSF"), b.getString("HSF"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("SF"), b.getString("SF"));
 			}).toList();
 			case "JG_Bereiche" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("SF"), b.getString("SF"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpByte(a.getByte("JG_Bereich"), b.getByte("JG_Bereich"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Jahrgang"), b.getString("Jahrgang"));
 			}).toList();
 			case "LehrerAbgangKat" -> table.stream().sorted((a, b) -> cmpString(a.getString("ASDSchluessel"), b.getString("ASDSchluessel"))).toList();
@@ -643,71 +755,85 @@ public class MDBtoCSV {
 			case "LetzteAenderung" -> table.stream().sorted((a, b) -> cmpDate(a.getLocalDateTime("Datum"), b.getLocalDateTime("Datum"))).toList();
 			case "LetzteAenderung_Schild" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("Datum"), b.getString("Datum"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Tabelle"), b.getString("Tabelle"));
 			}).toList();
 			case "Nationalitäten" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("Schluessel"), b.getString("Schluessel"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Klartext"), b.getString("Klartext"));
 			}).toList();
 			case "PLZOrt" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("PLZ"), b.getString("PLZ"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("RegSchl"), b.getString("RegSchl"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Ort"), b.getString("Ort"));
 			}).toList();
 			case "Strassen" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("RegSchl"), b.getString("RegSchl"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Ort"), b.getString("Ort"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Strasse"), b.getString("Strasse"));
 			}).toList();
 			case "Organisationsform" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("SF"), b.getString("SF"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("OrgForm"), b.getString("OrgForm"));
 			}).toList();
 			case "PrfFortsetzung" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpInt(a.getInt("Sortierung"), b.getInt("Sortierung"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Nr"), b.getString("Nr"));
 			}).toList();
 			case "PrfSemAbschl" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpInt(a.getInt("Sortierung"), b.getInt("Sortierung"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Nr"), b.getString("Nr"));
 			}).toList();
 			case "Reformpädagogik" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("SF"), b.getString("SF"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("RPG"), b.getString("RPG"));
 			}).toList();
 			case "Religionen" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("Schluessel"), b.getString("Schluessel"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Klartext"), b.getString("Klartext"));
 			}).toList();
 			case "SchuelerErsteSchulformSekI" -> table.stream().sorted((a, b) -> cmpInt(a.getInt("Sort"), b.getInt("Sort"))).toList();
@@ -715,26 +841,31 @@ public class MDBtoCSV {
 			case "SchuelerUebergangsempfehlung5Jg" -> table.stream().sorted((a, b) -> cmpInt(a.getInt("Sort"), b.getInt("Sort"))).toList();
 			case "SchuelerVerkehrssprache" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("Kurztext"), b.getString("Kurztext"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Langtext"), b.getString("Langtext"));
 			}).toList();
 			case "Schulformen" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("Schulform"), b.getString("Schulform"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("SF"), b.getString("SF"));
 			}).toList();
 			case "Schultraegerart" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("Schultraegerart"), b.getString("Schultraegerart"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Bezeichnung"), b.getString("Bezeichnung"));
 			}).toList();
 			case "SVWS_BKAnlagen" -> table.stream().sorted((a, b) -> cmpString(a.getString("BKAnlage"), b.getString("BKAnlage"))).toList();
@@ -743,57 +874,69 @@ public class MDBtoCSV {
 			case "SVWS_ZulaessigeFaecher" -> table.stream().sorted((a, b) -> cmpString(a.getString("Fach"), b.getString("Fach"))).toList();
 			case "SVWS_ZulaessigeJahrgaenge" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("Schulform"), b.getString("Schulform"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Jahrgang"), b.getString("Jahrgang"));
 			}).toList();
 			case "SVWS_ZulaessigeKursarten" -> table.stream().sorted((a, b) -> cmpString(a.getString("ID"), b.getString("ID"))).toList();
 			case "ZulFächer" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("Schulform"), b.getString("Schulform"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Fach"), b.getString("Fach"));
 			}).toList();
 			case "ZulJahrgänge" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("Schulform"), b.getString("Schulform"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Jahrgang"), b.getString("Jahrgang"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("SNR"), b.getString("SNR"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("FSP"), b.getString("FSP"));
 			}).toList();
 			case "ZulKlArt" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("Schulform"), b.getString("Schulform"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("KlArt"), b.getString("KlArt"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("FSP"), b.getString("FSP"));
 			}).toList();
 			case "ZulKuArt" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("SF"), b.getString("SF"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Kursart"), b.getString("Kursart"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("Flag"), b.getString("Flag"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpInt(a.getInt("SGLBereich"), b.getInt("SGLBereich"));
 			}).toList();
 			case "ZulQualifikation" -> table.stream().sorted((a, b) -> {
 				final int cmp = cmpString(a.getString("Schulform"), b.getString("Schulform"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("Qualifikation"), b.getString("Qualifikation"));
 			}).toList();
 			default -> throw new UnsupportedOperationException("Unbekannter Tabellenname in der Schild2-Statkue-MDB : " + table.getName());
@@ -812,8 +955,9 @@ public class MDBtoCSV {
 	private static List<Row> getRowsSchulver(final Table table) {
 		return switch (table.getName()) {
 			case "DBS" -> table.stream().sorted((a, b) -> {
-				if (a.getString("Schulnr") != null)
+				if (a.getString("Schulnr") != null) {
 					return cmpString(a.getString("Schulnr"), b.getString("Schulnr"));
+				}
 				return cmpString(a.getString("SchulNr"), b.getString("SchulNr"));
 			}).toList();
 			case "Schulformen" ->
@@ -821,11 +965,13 @@ public class MDBtoCSV {
 			case "Schultraeger" -> table.stream().sorted((a, b) -> cmpString(a.getString("SchulNr"), b.getString("SchulNr"))).toList();
 			case "WeitereSF" -> table.stream().sorted((a, b) -> {
 				int cmp = cmpString(a.getString("SNR"), b.getString("SNR"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				cmp = cmpString(a.getString("SGL"), b.getString("SGL"));
-				if (cmp != 0)
+				if (cmp != 0) {
 					return cmp;
+				}
 				return cmpString(a.getString("FSP"), b.getString("FSP"));
 			}).toList();
 			default -> throw new UnsupportedOperationException("Unbekannter Tabellenname " + table.getName() + " in der Schulver-MDB");
@@ -866,14 +1012,16 @@ public class MDBtoCSV {
 			case "DBS" -> {
 				final Map<String, ? extends Column> mapCols = cols.stream().collect(Collectors.toMap(Column::getName, c -> c));
 				final List<Column> result = new ArrayList<>();
-				if (mapCols.get("SchulNr") == null)
+				if (mapCols.get("SchulNr") == null) {
 					result.add(mapCols.get("Schulnr"));
-				else
+				} else {
 					result.add(mapCols.get("SchulNr"));
-				if (mapCols.get("RegSchl") == null)
+				}
+				if (mapCols.get("RegSchl") == null) {
 					result.add(mapCols.get("Regschl"));
-				else
+				} else {
 					result.add(mapCols.get("RegSchl"));
+				}
 				result.add(mapCols.get("KoRe"));
 				result.add(mapCols.get("KoHo"));
 				result.add(mapCols.get("ABez1"));
@@ -893,14 +1041,16 @@ public class MDBtoCSV {
 				result.add(mapCols.get("KurzBez"));
 				result.add(mapCols.get("SchBetrSchl"));
 				result.add(mapCols.get("SchBetrSchlDatum"));
-				if (mapCols.get("ArtderTraegerschaft") == null)
+				if (mapCols.get("ArtderTraegerschaft") == null) {
 					result.add(mapCols.get("ArtderTrägerschaft"));
-				else
+				} else {
 					result.add(mapCols.get("ArtderTraegerschaft"));
-				if (mapCols.get("SchultraegerNr") == null)
+				}
+				if (mapCols.get("SchultraegerNr") == null) {
 					result.add(mapCols.get("SchulträgerNr"));
-				else
+				} else {
 					result.add(mapCols.get("SchultraegerNr"));
+				}
 				result.add(mapCols.get("Schulgliederung"));
 				result.add(mapCols.get("Schulart"));
 				result.add(mapCols.get("Ganztagsbetrieb"));
@@ -908,10 +1058,11 @@ public class MDBtoCSV {
 				result.add(mapCols.get("Verbund"));
 				result.add(mapCols.get("Bus"));
 				result.add(mapCols.get("Fachberater"));
-				if (mapCols.get("FachberHauptamtl") == null)
+				if (mapCols.get("FachberHauptamtl") == null) {
 					result.add(mapCols.get("Fachber hauptamtl"));
-				else
+				} else {
 					result.add(mapCols.get("FachberHauptamtl"));
+				}
 				result.add(mapCols.get("TelNrDBSalt"));
 				result.add(mapCols.get("RP"));
 				result.add(mapCols.get("Email"));
@@ -922,10 +1073,11 @@ public class MDBtoCSV {
 				result.add(mapCols.get("SELB"));
 				result.add(mapCols.get("Internat"));
 				result.add(mapCols.get("InternatPlaetze"));
-				if (mapCols.get("SMail") == null)
+				if (mapCols.get("SMail") == null) {
 					result.add(mapCols.get("S-Mail"));
-				else
+				} else {
 					result.add(mapCols.get("SMail"));
+				}
 				result.add(mapCols.get("SportImAbi"));
 				result.add(mapCols.get("Tal"));
 				result.add(mapCols.get("KonKop"));
@@ -995,8 +1147,9 @@ public class MDBtoCSV {
 			case "DBS" -> {
 				yield switch (colName) {
 					case "KoRe", "KoHo" -> {
-						if (colType == DataType.DOUBLE)
+						if (colType == DataType.DOUBLE) {
 							yield "" + r.getDouble(colName).longValue();
+						}
 						yield null;
 					}
 					default -> null;
@@ -1016,16 +1169,18 @@ public class MDBtoCSV {
 			case UNKNOWN -> null;
 			default -> null;
 		};
-		if (fixedOutput != null)
+		if (fixedOutput != null) {
 			return fixedOutput;
+		}
 		return switch (colType) {
 			case BYTE -> (r.getByte(colName) == null) ? "null" : r.getByte(colName).toString();
 			case INT -> (r.getShort(colName) == null) ? "null" : r.getShort(colName).toString();
 			case LONG -> (r.getInt(colName) == null) ? "null" : r.getInt(colName).toString();
 			case BIG_INT -> {
 				final Object o = r.get(colName);
-				if (o instanceof final Long l)
+				if (o instanceof final Long l) {
 					yield l.toString();
+				}
 				throw new UnsupportedOperationException(colType.toString());
 			}
 			case BOOLEAN -> {
@@ -1036,8 +1191,9 @@ public class MDBtoCSV {
 			case DOUBLE -> (r.getDouble(colName) == null) ? "null" : r.getDouble(colName).toString();
 			case TEXT, MEMO, GUID -> {
 				final String str = r.getString(colName);
-				if (str == null)
+				if (str == null) {
 					yield "null";
+				}
 				yield "\"" + str.replace("\"", "'") + "\"";
 			}
 			case SHORT_DATE_TIME -> (r.getLocalDateTime(colName) == null) ? "null" : r.getLocalDateTime(colName).toString();
@@ -1071,8 +1227,9 @@ public class MDBtoCSV {
 		for (int i = 0; i < cols.size(); i++) {
 			final Column col = cols.get(i);
 			sb.append(renameColumn(table, col.getName()));
-			if (i < (cols.size() - 1))
+			if (i < (cols.size() - 1)) {
 				sb.append(";");
+			}
 		}
 		sb.append(System.lineSeparator());
 		for (final Row r : getRows(table)) {
@@ -1080,15 +1237,17 @@ public class MDBtoCSV {
 				final Column col = cols.get(i);
 				final String colName = col.getName();
 				boolean doWrite = true;
-				if ((type == MDBType.STATKUE) && ("geaendert".equals(col.getName()) || "Stand".equals(col.getName()) || "STAND".equals(col.getName())))
+				if ((type == MDBType.STATKUE) && ("geaendert".equals(col.getName()) || "Stand".equals(col.getName()) || "STAND".equals(col.getName()))) {
 					doWrite = false;
+				}
 				if (doWrite) {
 					final DataType colType = col.getType();
 					final String output = getCSVOutput(table, r, colType, colName);
 					sb.append(output);
 				}
-				if (i < (cols.size() - 1))
+				if (i < (cols.size() - 1)) {
 					sb.append(";");
+				}
 			}
 			sb.append(System.lineSeparator());
 		}
@@ -1141,8 +1300,9 @@ public class MDBtoCSV {
 							|| ("ortswahl".equals(tablename)) || ("RPTabelle".equals(tablename)) || ("Schulbetrieb".equals(tablename))
 							|| ("Schulformen_alt".equals(tablename)) || ("Schulträger".equals(tablename))
 							|| ("Tabelle1".equals(tablename)) || ("testschulenumsetzer".equals(tablename))
-							|| ("Version_2018".equals(tablename)) || ("WeitereSFdub".equals(tablename)) || ("WeitereSFx".equals(tablename))))
+							|| ("Version_2018".equals(tablename)) || ("WeitereSFdub".equals(tablename)) || ("WeitereSFx".equals(tablename)))) {
 						continue;
+					}
 					final Path outFile = Paths.get(outDir.toString() + "/" + tablename + ".csv");
 					final Table table = db.getTable(tablename);
 					final String sql = createCSV(table);
