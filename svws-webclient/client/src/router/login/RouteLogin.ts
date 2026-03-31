@@ -39,6 +39,7 @@ export class RouteLogin extends RouteNode<any, any> {
 	public login = async (schema: string, username: string, password: string): Promise<void> => {
 		await api.login(schema, username, password);
 		if (api.authenticated) {
+			this.checkEE(username);
 			if (await api.init()) {
 				// Überprüfe das Schema, falls ein redirect nach dem Login geplant ist
 				if (this.routepath !== "/") {
@@ -52,6 +53,18 @@ export class RouteLogin extends RouteNode<any, any> {
 			if (api.benutzerIstAdmin) {
 				await RouteManager.doRoute(routeInit.name);
 			}
+		}
+	};
+
+	private readonly checkEE = (username: string) => {
+		if (api.mode !== ServerMode.DEV) {
+			return;
+		}
+		if (username === 'Admin') {
+			localStorage.setItem("ee", JSON.stringify(true));
+			document.documentElement.classList.add('ee');
+		} else {
+			localStorage.setItem("ee", JSON.stringify(false));
 		}
 	};
 

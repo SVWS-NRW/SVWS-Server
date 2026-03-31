@@ -138,7 +138,8 @@
 	import { useRegionSwitch, type TabData } from "@ui";
 	import type { AppProps } from './SAppProps';
 	import type { SimpleOperationResponse } from '@core';
-	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from '@core';
+	import { ServerMode } from '@core';
+	import { Random, DeveloperNotificationException, OpenApiError, UserNotificationException } from '@core';
 	import { githash } from '../../githash';
 	import { version } from '../../version';
 	import { api } from '~/router/Api';
@@ -147,7 +148,18 @@
 
 	const { focusHelpVisible, focusSwitchingEnabled, enable, disable } = useRegionSwitch();
 	const appLayout = ref();
+	const eeListener = () => {
+		if (new Random().nextBoolean()) {
+			void new Audio('https://cdn.freesound.org/previews/751/751699_9129912-lq.mp3').play();
+		}
+	};
+
 	onMounted(() => {
+		if ((api.mode === ServerMode.DEV) && (JSON.parse(localStorage.getItem("ee") ?? "") === true)) {
+			document.removeEventListener('click', eeListener);
+			document.addEventListener('click', eeListener);
+		}
+
 		if (props.menu.current.name === 'statistik') {
 			appLayout.value?.setSecondSidebarExpanded(false);
 		} else {
@@ -216,6 +228,10 @@
 		document.title = "Abmelden…";
 		await props.logout();
 		document.title = "SVWS NRW";
+		if (api.mode === ServerMode.DEV) {
+			document.removeEventListener('click', eeListener);
+			document.documentElement.classList.remove('ee');
+		}
 	}
 
 	//* Fehlerbehandlung */

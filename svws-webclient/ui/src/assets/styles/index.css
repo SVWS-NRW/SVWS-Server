@@ -106,3 +106,15 @@
 	}
 
 }
+
+.ee .i-ri-bar-chart-2-line {
+	mask-image: none !important;
+	-webkit-mask-image: none !important;
+	background-color: transparent !important;
+	background-image: url(../img/Basket_intensive.svg);
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+}
+
+
