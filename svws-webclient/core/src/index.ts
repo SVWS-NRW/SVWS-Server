@@ -756,6 +756,7 @@ export { SchuleInfo } from './core/data/schule/SchuleInfo';
 export { SchulenKatalogEintrag } from './core/data/schule/SchulenKatalogEintrag';
 export { SchulformGliederungJahrgaenge } from './core/data/schule/SchulformGliederungJahrgaenge';
 export { SchultraegerKatalogEintrag } from './core/data/schule/SchultraegerKatalogEintrag';
+export { Teilstandort } from './core/data/schule/Teilstandort';
 export { Telefonart } from './core/data/schule/Telefonart';
 export { VermerkartEintrag } from './core/data/schule/VermerkartEintrag';
 export { WiedervorlageEintrag } from './core/data/schule/WiedervorlageEintrag';

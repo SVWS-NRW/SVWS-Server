@@ -221,6 +221,7 @@ import { StundenplanUnterricht } from '../core/data/stundenplan/StundenplanUnter
 import { StundenplanUnterrichtsverteilung } from '../core/data/stundenplan/StundenplanUnterrichtsverteilung';
 import { StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
 import { Teilleistungsart } from '../core/data/kataloge/Teilleistungsart';
+import { Teilstandort } from '../core/data/schule/Teilstandort';
 import { Telefonart } from '../core/data/schule/Telefonart';
 import { UebergangsempfehlungKatalogEintrag } from '../asd/data/schueler/UebergangsempfehlungKatalogEintrag';
 import { UvFach } from '../core/data/uv/UvFach';
@@ -17024,6 +17025,116 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = SchuleStammdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchTeilstandort für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/teilstandort/{id}
+	 *
+	 * Patched den Teilstandort mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z. B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Teilstandort>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {string} id - der Pfad-Parameter id
+	 */
+	public async patchTeilstandort(data : Partial<Teilstandort>, schema : string, id : string) : Promise<void> {
+		const path = "/db/{schema}/schule/teilstandort/{id}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id);
+		const body : string = Teilstandort.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addTeilstandort für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/teilstandort/create
+	 *
+	 * Erstellt einen neuen Teilstandort, insofern die notwendigen Berechtigungen vorliegen
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Teilstandort wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Teilstandort
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Teilstandorte anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Teilstandort>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Teilstandort wurde erfolgreich hinzugefügt.
+	 */
+	public async addTeilstandort(data : Partial<Teilstandort>, schema : string) : Promise<Teilstandort> {
+		const path = "/db/{schema}/schule/teilstandort/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = Teilstandort.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Teilstandort.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getTeilstandorte für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/teilstandorte
+	 *
+	 * Gibt die Teilstandorte zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste der Teilstandorte.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Teilstandort>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Teilstandorte-Einträge anzusehen.
+	 *   Code 404: Keine Teilstandorte-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste der Teilstandorte.
+	 */
+	public async getTeilstandorte(schema : string) : Promise<List<Teilstandort>> {
+		const path = "/db/{schema}/schule/teilstandorte"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Teilstandort>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Teilstandort.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteTeilstandorte für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/teilstandorte/delete/multiple
+	 *
+	 * Entfernt mehrere Teilstandorte, insofern die notwendigen Berechtigungen vorhanden sind.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Teilstandorte zu entfernen.
+	 *   Code 404: Teilstandorte nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<string>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteTeilstandorte(data : List<string>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schule/teilstandorte/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<string>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

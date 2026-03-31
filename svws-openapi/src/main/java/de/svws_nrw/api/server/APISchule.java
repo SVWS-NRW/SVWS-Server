@@ -8,6 +8,7 @@ import de.svws_nrw.core.data.schule.Floskel;
 import de.svws_nrw.core.data.schule.Floskelgruppe;
 import de.svws_nrw.core.data.schule.Leitungsfunktion;
 import de.svws_nrw.core.data.schule.Lernplattform;
+import de.svws_nrw.core.data.schule.Teilstandort;
 import de.svws_nrw.core.data.schule.Telefonart;
 import de.svws_nrw.data.erzieher.DataErzieherarten;
 import de.svws_nrw.data.schule.DataBetriebe;
@@ -18,6 +19,7 @@ import de.svws_nrw.data.schule.DataFloskelgruppen;
 import de.svws_nrw.data.schule.DataFloskeln;
 import de.svws_nrw.data.schule.DataLeitungsfunktionen;
 import de.svws_nrw.data.schule.DataLernplattformen;
+import de.svws_nrw.data.schule.DataTeilstandorte;
 import de.svws_nrw.data.schule.DataTelefonarten;
 import java.io.InputStream;
 
@@ -3432,6 +3434,111 @@ public class APISchule {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
 				conn -> new DataLeitungsfunktionen(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste der Teilstandorte.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Teilstandorte
+	 */
+	@GET
+	@Path("/teilstandorte")
+	@Operation(summary = "Gibt eine Liste der Teilstandorte zurück.",
+			description = "Gibt die Teilstandorte zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste der Teilstandorte.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Teilstandort.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Teilstandorte-Einträge anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Teilstandorte-Einträge gefunden")
+	public Response getTeilstandorte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataTeilstandorte(conn).getAllAsResponse(),
+				request, ServerMode.DEV, BenutzerKompetenz.KEINE);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Hinzufügen eines Teilstandorts.
+	 *
+	 * @param schema       das Datenbankschema
+	 * @param is           der Input-Stream mit den Daten des Teilstandorts
+	 * @param request      die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem erstellten Teilstandort
+	 */
+	@POST
+	@Path("/teilstandort/create")
+	@Operation(summary = "Erstellt einen neuen Teilstandort und gibt das erstellte Objekt zurück.",
+			description = "Erstellt einen neuen Teilstandort, insofern die notwendigen Berechtigungen vorliegen")
+	@ApiResponse(responseCode = "201", description = "Der Teilstandort wurde erfolgreich hinzugefügt.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Teilstandort.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Teilstandorte anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response addTeilstandort(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die Daten des zu erstellenden Teilstandorts", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Teilstandort.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataTeilstandorte(conn).addAsResponse(is), request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Patchen eines Teilstandortes.
+	 *
+	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+	 * @param id        die ID zur Identifikation des Teilstandortes
+	 * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das Ergebnis der Patch-Operation
+	 */
+	@PATCH
+	@Path("/teilstandort/{id}")
+	@Operation(summary = "Patched den Teilstandort mit der angegebenen ID.",
+			description = "Patched den Teilstandort mit der angegebenen ID, insofern die notwendigen Berechtigungen vorliegen.")
+	@ApiResponse(responseCode = "204", description = "Der Patch wurde erfolgreich integriert.")
+	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
+			+ " (z.B. eine negative ID)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z. B. beim Datenbankzugriff)")
+	public Response patchTeilstandort(@PathParam("schema") final String schema, @PathParam("id") final String id,
+			@RequestBody(description = "Der Patch eines Teilstandortes", required = true,
+					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Teilstandort.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataTeilstandorte(conn).patchAsResponse(id, is), request, ServerMode.DEV,
+				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Teilstandorte.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste der zu löschenden ids
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/teilstandorte/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Teilstandorte.", description = "Entfernt mehrere Teilstandorte, insofern die notwendigen Berechtigungen vorhanden sind.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Teilstandorte zu entfernen.")
+	@ApiResponse(responseCode = "404", description = "Teilstandorte nicht vorhanden")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteTeilstandorte(@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der zu löschenden Teilstandorte",
+					required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = String.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> new DataTeilstandorte(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfString(is)),
+				request, ServerMode.DEV,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
