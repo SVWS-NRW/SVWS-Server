@@ -6,6 +6,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerPSFachBemerkungen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerTeilleistung;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerZP10;
 import de.svws_nrw.db.dto.current.schild.schueler.abitur.DTOSchuelerAbitur;
 import de.svws_nrw.db.dto.current.schild.schueler.abitur.DTOSchuelerAbiturFach;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerAnkreuzkompetenzen;
@@ -146,6 +147,16 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 */
 	public SchuelerAbiturFachRepository getSchuelerAbiturFachRepository() {
 		return getOrCreate(SchuelerAbiturFachRepository.class, () -> new SchuelerAbiturFachRepositoryImpl(conn));
+	}
+
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOSchuelerZP10}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public SchuelerZP10Repository getSchuelerZP10Repository() {
+		return getOrCreate(SchuelerZP10Repository.class, () -> new SchuelerZP10RepositoryImpl(conn));
 	}
 
 }

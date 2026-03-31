@@ -1,0 +1,127 @@
+package de.svws_nrw.controller.enm;
+
+import de.svws_nrw.core.types.ServerMode;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.benutzer.DBBenutzerUtils;
+import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.repo.enm.NotenmodulRepositoryFactory;
+import de.svws_nrw.repo.kataloge.KatalogeRepositoryFactory;
+import de.svws_nrw.repo.klassen.KlassenRepositoryFactory;
+import de.svws_nrw.repo.kurse.KurseRepositoryFactory;
+import de.svws_nrw.repo.lehrer.LehrerRepositoryFactory;
+import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
+import de.svws_nrw.repo.schule.SchuleRepositoryFactory;
+import de.svws_nrw.service.enm.EnmV2GetService;
+import de.svws_nrw.service.enm.EnmV2ImportService;
+import de.svws_nrw.service.enm.EnmV2ServiceFactory;
+import jakarta.servlet.http.HttpServletRequest;
+
+/**
+ * Die Controller-Factory für die ENM-Daten in Version 2
+ */
+public final class EnmV2ControllerFactory {
+
+	/** Die Service-Factory für die ENM-Daten in Version 2 */
+	private final EnmV2ServiceFactory serviceFactory;
+
+
+	/**
+	 * Erzeugt eine neue Factory für die übergebene Datenbank-Verbindung.
+	 * Der Konstruktor ist package private und sollte nur von einer Default-Methode
+	 * im Interface aufgerufen werden.
+	 */
+	private EnmV2ControllerFactory() {
+		this.serviceFactory = EnmV2ServiceFactory.getNewInstance(
+				KatalogeRepositoryFactory.getNewInstance(),
+				KlassenRepositoryFactory.getNewInstance(),
+				KurseRepositoryFactory.getNewInstance(),
+				LehrerRepositoryFactory.getNewInstance(),
+				NotenmodulRepositoryFactory.getNewInstance(),
+				SchuelerRepositoryFactory.getNewInstance(),
+				SchuleRepositoryFactory.getNewInstance());
+	}
+
+
+	/**
+	 * Diese statische Methode dient dem Zugriff auf die in der API-Schicht.
+	 *
+	 * @param request  der HTTP-Request mit welchem der spezielle Controller erzeugt wird
+	 *
+	 * @return der spezielle Servlet-Controller
+	 *
+	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
+	 */
+	public static EnmV2ControllerFactory withReadAccess(final HttpServletRequest request) throws ApiOperationException {
+		// Die Datenbank-Verbindung muss aufgebaut werden, bevor auf Respositories zugegriffen wird
+		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
+				BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_ALLGEMEIN);
+		return new EnmV2ControllerFactory();
+	}
+
+
+	/**
+	 * Diese statische Methode dient dem Zugriff auf die in der API-Schicht.
+	 *
+	 * @param request  der HTTP-Request mit welchem der spezielle Controller erzeugt wird
+	 *
+	 * @return der spezielle Servlet-Controller
+	 *
+	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
+	 */
+	public static EnmV2ControllerFactory withReadAccessFunktionsbezogen(final HttpServletRequest request) throws ApiOperationException {
+		// Die Datenbank-Verbindung muss aufgebaut werden, bevor auf Respositories zugegriffen wird
+		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
+				BenutzerKompetenz.NOTENMODUL_NOTEN_ANSEHEN_FUNKTION);
+		return new EnmV2ControllerFactory();
+	}
+
+
+	/**
+	 * Diese statische Methode dient dem Zugriff auf die in der API-Schicht.
+	 *
+	 * @param request  der HTTP-Request mit welchem der spezielle Controller erzeugt wird
+	 *
+	 * @return der spezielle Servlet-Controller
+	 *
+	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
+	 */
+	public static EnmV2ControllerFactory withWriteAccess(final HttpServletRequest request) throws ApiOperationException {
+		// Die Datenbank-Verbindung muss aufgebaut werden, bevor auf Respositories zugegriffen wird
+		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
+				BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN,
+				BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION);
+		return new EnmV2ControllerFactory();
+	}
+
+
+	/**
+	 * Diese statische Methode dient dem Zugriff auf die in der API-Schicht.
+	 *
+	 * @param request  der HTTP-Request mit welchem der spezielle Controller erzeugt wird
+	 *
+	 * @return der spezielle Servlet-Controller
+	 *
+	 * @throws ApiOperationException   falls die Berechtigung nicht gegeben ist
+	 */
+	public static EnmV2ControllerFactory withAdminAccess(final HttpServletRequest request) throws ApiOperationException {
+		// Die Datenbank-Verbindung muss aufgebaut werden, bevor auf Respositories zugegriffen wird
+		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
+				BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+		return new EnmV2ControllerFactory();
+	}
+
+
+	/**
+	 * Erstellt einen Controller für die ENM-Daten in Version 2
+	 *
+	 * @return der Controller
+	 *
+	 * @throws ApiOperationException wenn ein Fehler bei der Überprüfung der Berechtigung auftritt
+	 */
+	public EnmV2Controller getEnmV2Controller() throws ApiOperationException {
+		final EnmV2GetService getService = serviceFactory.getEnmV2GetService();
+		final EnmV2ImportService importService = serviceFactory.getEnmV2ImportService();
+		return new EnmV2ControllerImpl(getService, importService);
+	}
+
+}
