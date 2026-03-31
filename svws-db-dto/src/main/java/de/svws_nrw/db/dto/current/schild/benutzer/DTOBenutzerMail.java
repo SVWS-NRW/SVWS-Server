@@ -150,12 +150,15 @@ public final class DTOBenutzerMail {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOBenutzerMail other = (DTOBenutzerMail) obj;
 		return Benutzer_ID == other.Benutzer_ID;
 	}

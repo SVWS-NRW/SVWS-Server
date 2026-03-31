@@ -82,18 +82,23 @@ public final class MigrationDTOSchemaAutoInkremente {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOSchemaAutoInkremente other = (MigrationDTOSchemaAutoInkremente) obj;
 		if (NameTabelle == null) {
-			if (other.NameTabelle != null)
+			if (other.NameTabelle != null) {
 				return false;
-		} else if (!NameTabelle.equals(other.NameTabelle))
+			}
+		} else if (!NameTabelle.equals(other.NameTabelle)) {
 			return false;
+		}
 		return true;
 	}
 

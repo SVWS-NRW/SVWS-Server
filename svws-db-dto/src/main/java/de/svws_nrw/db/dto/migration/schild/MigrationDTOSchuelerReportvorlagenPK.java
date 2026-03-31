@@ -44,23 +44,30 @@ public final class MigrationDTOSchuelerReportvorlagenPK implements Serializable 
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOSchuelerReportvorlagenPK other = (MigrationDTOSchuelerReportvorlagenPK) obj;
 		if (User_ID == null) {
-			if (other.User_ID != null)
+			if (other.User_ID != null) {
 				return false;
-		} else if (!User_ID.equals(other.User_ID))
+			}
+		} else if (!User_ID.equals(other.User_ID)) {
 			return false;
+		}
 		if (Reportvorlage == null) {
-			if (other.Reportvorlage != null)
+			if (other.Reportvorlage != null) {
 				return false;
-		} else if (!Reportvorlage.equals(other.Reportvorlage))
+			}
+		} else if (!Reportvorlage.equals(other.Reportvorlage)) {
 			return false;
+		}
 		return true;
 	}
 

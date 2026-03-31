@@ -169,18 +169,23 @@ public final class MigrationDTOFaecherNichtMoeglicheKombination {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOFaecherNichtMoeglicheKombination other = (MigrationDTOFaecherNichtMoeglicheKombination) obj;
 		if (PK == null) {
-			if (other.PK != null)
+			if (other.PK != null) {
 				return false;
-		} else if (!PK.equals(other.PK))
+			}
+		} else if (!PK.equals(other.PK)) {
 			return false;
+		}
 		return true;
 	}
 

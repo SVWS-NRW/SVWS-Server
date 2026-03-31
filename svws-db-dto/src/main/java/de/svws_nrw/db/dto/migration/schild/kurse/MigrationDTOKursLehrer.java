@@ -104,23 +104,30 @@ public final class MigrationDTOKursLehrer {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOKursLehrer other = (MigrationDTOKursLehrer) obj;
 		if (Kurs_ID == null) {
-			if (other.Kurs_ID != null)
+			if (other.Kurs_ID != null) {
 				return false;
-		} else if (!Kurs_ID.equals(other.Kurs_ID))
+			}
+		} else if (!Kurs_ID.equals(other.Kurs_ID)) {
 			return false;
+		}
 		if (Lehrer_ID == null) {
-			if (other.Lehrer_ID != null)
+			if (other.Lehrer_ID != null) {
 				return false;
-		} else if (!Lehrer_ID.equals(other.Lehrer_ID))
+			}
+		} else if (!Lehrer_ID.equals(other.Lehrer_ID)) {
 			return false;
+		}
 		return true;
 	}
 

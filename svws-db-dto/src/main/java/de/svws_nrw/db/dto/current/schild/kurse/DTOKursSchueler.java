@@ -102,22 +102,29 @@ public final class DTOKursSchueler {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOKursSchueler other = (DTOKursSchueler) obj;
-		if (Kurs_ID != other.Kurs_ID)
+		if (Kurs_ID != other.Kurs_ID) {
 			return false;
-		if (Schueler_ID != other.Schueler_ID)
+		}
+		if (Schueler_ID != other.Schueler_ID) {
 			return false;
+		}
 		if (LernabschnittWechselNr == null) {
-			if (other.LernabschnittWechselNr != null)
+			if (other.LernabschnittWechselNr != null) {
 				return false;
-		} else if (!LernabschnittWechselNr.equals(other.LernabschnittWechselNr))
+			}
+		} else if (!LernabschnittWechselNr.equals(other.LernabschnittWechselNr)) {
 			return false;
+		}
 		return Leistung_ID == other.Leistung_ID;
 	}
 

@@ -49,25 +49,33 @@ public final class DTOClientKonfigurationBenutzerPK implements Serializable {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOClientKonfigurationBenutzerPK other = (DTOClientKonfigurationBenutzerPK) obj;
-		if (Benutzer_ID != other.Benutzer_ID)
+		if (Benutzer_ID != other.Benutzer_ID) {
 			return false;
+		}
 		if (AppName == null) {
-			if (other.AppName != null)
+			if (other.AppName != null) {
 				return false;
-		} else if (!AppName.equals(other.AppName))
+			}
+		} else if (!AppName.equals(other.AppName)) {
 			return false;
+		}
 		if (Schluessel == null) {
-			if (other.Schluessel != null)
+			if (other.Schluessel != null) {
 				return false;
-		} else if (!Schluessel.equals(other.Schluessel))
+			}
+		} else if (!Schluessel.equals(other.Schluessel)) {
 			return false;
+		}
 		return true;
 	}
 

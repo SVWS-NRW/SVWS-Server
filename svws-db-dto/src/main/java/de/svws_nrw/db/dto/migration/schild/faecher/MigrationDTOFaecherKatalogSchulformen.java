@@ -99,28 +99,37 @@ public final class MigrationDTOFaecherKatalogSchulformen {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOFaecherKatalogSchulformen other = (MigrationDTOFaecherKatalogSchulformen) obj;
 		if (Fach_ID == null) {
-			if (other.Fach_ID != null)
+			if (other.Fach_ID != null) {
 				return false;
-		} else if (!Fach_ID.equals(other.Fach_ID))
+			}
+		} else if (!Fach_ID.equals(other.Fach_ID)) {
 			return false;
+		}
 		if (Schulform_Kuerzel == null) {
-			if (other.Schulform_Kuerzel != null)
+			if (other.Schulform_Kuerzel != null) {
 				return false;
-		} else if (!Schulform_Kuerzel.equals(other.Schulform_Kuerzel))
+			}
+		} else if (!Schulform_Kuerzel.equals(other.Schulform_Kuerzel)) {
 			return false;
+		}
 		if (Schulgliederung_Kuerzel == null) {
-			if (other.Schulgliederung_Kuerzel != null)
+			if (other.Schulgliederung_Kuerzel != null) {
 				return false;
-		} else if (!Schulgliederung_Kuerzel.equals(other.Schulgliederung_Kuerzel))
+			}
+		} else if (!Schulgliederung_Kuerzel.equals(other.Schulgliederung_Kuerzel)) {
 			return false;
+		}
 		return true;
 	}
 

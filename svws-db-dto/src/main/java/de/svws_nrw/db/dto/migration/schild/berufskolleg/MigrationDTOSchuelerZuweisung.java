@@ -104,23 +104,30 @@ public final class MigrationDTOSchuelerZuweisung {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOSchuelerZuweisung other = (MigrationDTOSchuelerZuweisung) obj;
 		if (Abschnitt_ID == null) {
-			if (other.Abschnitt_ID != null)
+			if (other.Abschnitt_ID != null) {
 				return false;
-		} else if (!Abschnitt_ID.equals(other.Abschnitt_ID))
+			}
+		} else if (!Abschnitt_ID.equals(other.Abschnitt_ID)) {
 			return false;
+		}
 		if (Fach_ID == null) {
-			if (other.Fach_ID != null)
+			if (other.Fach_ID != null) {
 				return false;
-		} else if (!Fach_ID.equals(other.Fach_ID))
+			}
+		} else if (!Fach_ID.equals(other.Fach_ID)) {
 			return false;
+		}
 		return true;
 	}
 

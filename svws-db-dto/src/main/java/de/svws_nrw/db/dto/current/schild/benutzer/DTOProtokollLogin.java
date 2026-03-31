@@ -85,20 +85,26 @@ public final class DTOProtokollLogin {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOProtokollLogin other = (DTOProtokollLogin) obj;
-		if (LI_UserID != other.LI_UserID)
+		if (LI_UserID != other.LI_UserID) {
 			return false;
+		}
 		if (LI_LoginTime == null) {
-			if (other.LI_LoginTime != null)
+			if (other.LI_LoginTime != null) {
 				return false;
-		} else if (!LI_LoginTime.equals(other.LI_LoginTime))
+			}
+		} else if (!LI_LoginTime.equals(other.LI_LoginTime)) {
 			return false;
+		}
 		return true;
 	}
 

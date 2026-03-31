@@ -1,9 +1,9 @@
 package de.svws_nrw.db.schema.app;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -150,45 +150,62 @@ public final class DTOCreatorTable {
 	 */
 	private static String getCode4EqualsAndHashcode(final String classname, final Collection<SchemaTabelleSpalte> pkspalten, final long rev) {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("\t@Override" + System.lineSeparator());
-		sb.append("\tpublic boolean equals(final Object obj) {" + System.lineSeparator());
-		sb.append("\t\tif (this == obj)" + System.lineSeparator());
-		sb.append("\t\t\treturn true;" + System.lineSeparator());
-		sb.append("\t\tif (obj == null)" + System.lineSeparator());
-		sb.append("\t\t\treturn false;" + System.lineSeparator());
-		sb.append("\t\tif (getClass() != obj.getClass())" + System.lineSeparator());
-		sb.append("\t\t\treturn false;" + System.lineSeparator());
-		sb.append("\t\t" + classname + " other = (" + classname + ") obj;" + System.lineSeparator());
-		int i = 0;
-		boolean combinedReturn = false;
-		for (final SchemaTabelleSpalte col : pkspalten) {
-			final String colname = getJavaAttributeName(col);
-			if (colname == null) {
-				i++;
-				continue;
-			}
-			if (col.datentyp().isJavaPrimitiveType((rev != 0) && col.notNull())) {
-				if (i == (pkspalten.size() - 1)) {
-					sb.append("\t\treturn " + colname + " == other." + colname + ";" + System.lineSeparator());
-					combinedReturn = true;
-				} else {
-					sb.append("\t\tif (" + colname + " != other." + colname + ")" + System.lineSeparator());
-					sb.append("\t\t\treturn false;" + System.lineSeparator());
-				}
-			} else {
-				sb.append("\t\tif (" + colname + " == null) {" + System.lineSeparator());
-				sb.append("\t\t\tif (other." + colname + " != null)" + System.lineSeparator());
-				sb.append("\t\t\t\treturn false;" + System.lineSeparator());
-				sb.append("\t\t} else if (!" + colname + ".equals(other." + colname + "))" + System.lineSeparator());
-				sb.append("\t\t\treturn false;" + System.lineSeparator());
-			}
-			i++;
-		}
-		if (!combinedReturn) {
-			sb.append("\t\treturn true;" + System.lineSeparator());
-		}
-		sb.append("\t}" + System.lineSeparator());
+		createCode4Equals(sb, classname, pkspalten, rev);
 		sb.append(System.lineSeparator());
+		createCode4HashCode(sb, classname, pkspalten, rev);
+		return sb.toString();
+	}
+
+
+	private static void createCode4Equals(final StringBuilder sb, final String classname, final Collection<SchemaTabelleSpalte> pkspalten, final long rev) {
+	    sb.append("\t@Override" + System.lineSeparator());
+	    sb.append("\tpublic boolean equals(final Object obj) {" + System.lineSeparator());
+	    sb.append("\t\tif (this == obj) {" + System.lineSeparator());
+	    sb.append("\t\t\treturn true;" + System.lineSeparator());
+	    sb.append("\t\t}" + System.lineSeparator());
+	    sb.append("\t\tif (obj == null) {" + System.lineSeparator());
+	    sb.append("\t\t\treturn false;" + System.lineSeparator());
+	    sb.append("\t\t}" + System.lineSeparator());
+	    sb.append("\t\tif (getClass() != obj.getClass()) {" + System.lineSeparator());
+	    sb.append("\t\t\treturn false;" + System.lineSeparator());
+	    sb.append("\t\t}" + System.lineSeparator());
+	    sb.append("\t\t" + classname + " other = (" + classname + ") obj;" + System.lineSeparator());
+	    int i = 0;
+	    boolean combinedReturn = false;
+	    for (final SchemaTabelleSpalte col : pkspalten) {
+	        final String colname = getJavaAttributeName(col);
+	        if (colname == null) {
+	            i++;
+	            continue;
+	        }
+	        if (col.datentyp().isJavaPrimitiveType((rev != 0) && col.notNull())) {
+	            if (i == (pkspalten.size() - 1)) {
+	                sb.append("\t\treturn " + colname + " == other." + colname + ";" + System.lineSeparator());
+	                combinedReturn = true;
+	            } else {
+	                sb.append("\t\tif (" + colname + " != other." + colname + ") {" + System.lineSeparator());
+	                sb.append("\t\t\treturn false;" + System.lineSeparator());
+	                sb.append("\t\t}" + System.lineSeparator());
+	            }
+	        } else {
+	            sb.append("\t\tif (" + colname + " == null) {" + System.lineSeparator());
+	            sb.append("\t\t\tif (other." + colname + " != null) {" + System.lineSeparator());
+	            sb.append("\t\t\t\treturn false;" + System.lineSeparator());
+	            sb.append("\t\t\t}" + System.lineSeparator());
+	            sb.append("\t\t} else if (!" + colname + ".equals(other." + colname + ")) {" + System.lineSeparator());
+	            sb.append("\t\t\treturn false;" + System.lineSeparator());
+	            sb.append("\t\t}" + System.lineSeparator());
+	        }
+	        i++;
+	    }
+	    if (!combinedReturn) {
+	        sb.append("\t\treturn true;" + System.lineSeparator());
+	    }
+	    sb.append("\t}" + System.lineSeparator());
+	}
+
+
+	private static void createCode4HashCode(final StringBuilder sb, final String classname, final Collection<SchemaTabelleSpalte> pkspalten, final long rev) {
 		sb.append("\t@Override" + System.lineSeparator());
 		sb.append("\tpublic int hashCode() {" + System.lineSeparator());
 		sb.append("\t\tfinal int prime = 31;" + System.lineSeparator());
@@ -207,9 +224,7 @@ public final class DTOCreatorTable {
 				.collect(Collectors.joining(System.lineSeparator())));
 		sb.append("\t\treturn result;" + System.lineSeparator());
 		sb.append("\t}" + System.lineSeparator());
-		return sb.toString();
 	}
-
 
 
 	/**

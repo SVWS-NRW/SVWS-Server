@@ -74,12 +74,15 @@ public final class DTOSchuelerFoto {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOSchuelerFoto other = (DTOSchuelerFoto) obj;
 		return Schueler_ID == other.Schueler_ID;
 	}

@@ -98,23 +98,30 @@ public final class MigrationDTOKlassenLeitung {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOKlassenLeitung other = (MigrationDTOKlassenLeitung) obj;
 		if (Klassen_ID == null) {
-			if (other.Klassen_ID != null)
+			if (other.Klassen_ID != null) {
 				return false;
-		} else if (!Klassen_ID.equals(other.Klassen_ID))
+			}
+		} else if (!Klassen_ID.equals(other.Klassen_ID)) {
 			return false;
+		}
 		if (Lehrer_ID == null) {
-			if (other.Lehrer_ID != null)
+			if (other.Lehrer_ID != null) {
 				return false;
-		} else if (!Lehrer_ID.equals(other.Lehrer_ID))
+			}
+		} else if (!Lehrer_ID.equals(other.Lehrer_ID)) {
 			return false;
+		}
 		return true;
 	}
 

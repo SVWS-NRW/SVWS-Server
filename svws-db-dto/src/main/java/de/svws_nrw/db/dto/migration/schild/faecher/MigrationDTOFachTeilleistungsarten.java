@@ -110,28 +110,37 @@ public final class MigrationDTOFachTeilleistungsarten {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOFachTeilleistungsarten other = (MigrationDTOFachTeilleistungsarten) obj;
 		if (Teilleistungsart_ID == null) {
-			if (other.Teilleistungsart_ID != null)
+			if (other.Teilleistungsart_ID != null) {
 				return false;
-		} else if (!Teilleistungsart_ID.equals(other.Teilleistungsart_ID))
+			}
+		} else if (!Teilleistungsart_ID.equals(other.Teilleistungsart_ID)) {
 			return false;
+		}
 		if (Fach_ID == null) {
-			if (other.Fach_ID != null)
+			if (other.Fach_ID != null) {
 				return false;
-		} else if (!Fach_ID.equals(other.Fach_ID))
+			}
+		} else if (!Fach_ID.equals(other.Fach_ID)) {
 			return false;
+		}
 		if (Kursart == null) {
-			if (other.Kursart != null)
+			if (other.Kursart != null) {
 				return false;
-		} else if (!Kursart.equals(other.Kursart))
+			}
+		} else if (!Kursart.equals(other.Kursart)) {
 			return false;
+		}
 		return true;
 	}
 

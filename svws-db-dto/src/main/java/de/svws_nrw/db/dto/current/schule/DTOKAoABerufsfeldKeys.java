@@ -63,12 +63,15 @@ public final class DTOKAoABerufsfeldKeys {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOKAoABerufsfeldKeys other = (DTOKAoABerufsfeldKeys) obj;
 		return ID == other.ID;
 	}

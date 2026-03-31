@@ -188,23 +188,30 @@ public final class MigrationDTOSchuelerLernplattform {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOSchuelerLernplattform other = (MigrationDTOSchuelerLernplattform) obj;
 		if (SchuelerID == null) {
-			if (other.SchuelerID != null)
+			if (other.SchuelerID != null) {
 				return false;
-		} else if (!SchuelerID.equals(other.SchuelerID))
+			}
+		} else if (!SchuelerID.equals(other.SchuelerID)) {
 			return false;
+		}
 		if (LernplattformID == null) {
-			if (other.LernplattformID != null)
+			if (other.LernplattformID != null) {
 				return false;
-		} else if (!LernplattformID.equals(other.LernplattformID))
+			}
+		} else if (!LernplattformID.equals(other.LernplattformID)) {
 			return false;
+		}
 		return true;
 	}
 

@@ -120,23 +120,30 @@ public final class MigrationDTOErzieherDatenschutz {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOErzieherDatenschutz other = (MigrationDTOErzieherDatenschutz) obj;
 		if (ErzieherID == null) {
-			if (other.ErzieherID != null)
+			if (other.ErzieherID != null) {
 				return false;
-		} else if (!ErzieherID.equals(other.ErzieherID))
+			}
+		} else if (!ErzieherID.equals(other.ErzieherID)) {
 			return false;
+		}
 		if (DatenschutzID == null) {
-			if (other.DatenschutzID != null)
+			if (other.DatenschutzID != null) {
 				return false;
-		} else if (!DatenschutzID.equals(other.DatenschutzID))
+			}
+		} else if (!DatenschutzID.equals(other.DatenschutzID)) {
 			return false;
+		}
 		return true;
 	}
 

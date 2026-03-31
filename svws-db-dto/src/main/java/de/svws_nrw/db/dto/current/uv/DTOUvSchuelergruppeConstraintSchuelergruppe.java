@@ -89,15 +89,19 @@ public final class DTOUvSchuelergruppeConstraintSchuelergruppe {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOUvSchuelergruppeConstraintSchuelergruppe other = (DTOUvSchuelergruppeConstraintSchuelergruppe) obj;
-		if (Schuelergruppe_ID != other.Schuelergruppe_ID)
+		if (Schuelergruppe_ID != other.Schuelergruppe_ID) {
 			return false;
+		}
 		return Schuelergruppe_Vaild_ID == other.Schuelergruppe_Vaild_ID;
 	}
 

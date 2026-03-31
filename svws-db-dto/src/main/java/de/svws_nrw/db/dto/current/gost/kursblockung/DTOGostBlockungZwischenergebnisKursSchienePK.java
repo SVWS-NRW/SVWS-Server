@@ -43,17 +43,22 @@ public final class DTOGostBlockungZwischenergebnisKursSchienePK implements Seria
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOGostBlockungZwischenergebnisKursSchienePK other = (DTOGostBlockungZwischenergebnisKursSchienePK) obj;
-		if (Zwischenergebnis_ID != other.Zwischenergebnis_ID)
+		if (Zwischenergebnis_ID != other.Zwischenergebnis_ID) {
 			return false;
-		if (Blockung_Kurs_ID != other.Blockung_Kurs_ID)
+		}
+		if (Blockung_Kurs_ID != other.Blockung_Kurs_ID) {
 			return false;
+		}
 		return Schienen_ID == other.Schienen_ID;
 	}
 

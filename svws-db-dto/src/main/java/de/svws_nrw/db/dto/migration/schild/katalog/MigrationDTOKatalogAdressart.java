@@ -1,22 +1,20 @@
 package de.svws_nrw.db.dto.migration.schild.katalog;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusConverterDeserializer;
+import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusConverterSerializer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.converter.migration.MigrationBooleanPlusMinusDefaultPlusConverter;
-
-
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusConverterSerializer;
-import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle K_Adressart.
@@ -140,18 +138,23 @@ public final class MigrationDTOKatalogAdressart {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
-		MigrationDTOKatalogAdressart other = (MigrationDTOKatalogAdressart) obj;
+		}
+		final MigrationDTOKatalogAdressart other = (MigrationDTOKatalogAdressart) obj;
 		if (ID == null) {
-			if (other.ID != null)
+			if (other.ID != null) {
 				return false;
-		} else if (!ID.equals(other.ID))
+			}
+		} else if (!ID.equals(other.ID)) {
 			return false;
+		}
 		return true;
 	}
 

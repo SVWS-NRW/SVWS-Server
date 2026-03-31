@@ -63,12 +63,15 @@ public final class DTOKAoASBOEB4Keys {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOKAoASBOEB4Keys other = (DTOKAoASBOEB4Keys) obj;
 		return ID == other.ID;
 	}

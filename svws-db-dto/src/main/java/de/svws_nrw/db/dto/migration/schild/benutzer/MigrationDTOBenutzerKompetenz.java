@@ -82,23 +82,30 @@ public final class MigrationDTOBenutzerKompetenz {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOBenutzerKompetenz other = (MigrationDTOBenutzerKompetenz) obj;
 		if (Benutzer_ID == null) {
-			if (other.Benutzer_ID != null)
+			if (other.Benutzer_ID != null) {
 				return false;
-		} else if (!Benutzer_ID.equals(other.Benutzer_ID))
+			}
+		} else if (!Benutzer_ID.equals(other.Benutzer_ID)) {
 			return false;
+		}
 		if (Kompetenz_ID == null) {
-			if (other.Kompetenz_ID != null)
+			if (other.Kompetenz_ID != null) {
 				return false;
-		} else if (!Kompetenz_ID.equals(other.Kompetenz_ID))
+			}
+		} else if (!Kompetenz_ID.equals(other.Kompetenz_ID)) {
 			return false;
+		}
 		return true;
 	}
 

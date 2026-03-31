@@ -52,28 +52,37 @@ public final class MigrationDTOBerufskollegFachklassenKeysPK implements Serializ
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOBerufskollegFachklassenKeysPK other = (MigrationDTOBerufskollegFachklassenKeysPK) obj;
 		if (FachklassenIndex == null) {
-			if (other.FachklassenIndex != null)
+			if (other.FachklassenIndex != null) {
 				return false;
-		} else if (!FachklassenIndex.equals(other.FachklassenIndex))
+			}
+		} else if (!FachklassenIndex.equals(other.FachklassenIndex)) {
 			return false;
+		}
 		if (Schluessel == null) {
-			if (other.Schluessel != null)
+			if (other.Schluessel != null) {
 				return false;
-		} else if (!Schluessel.equals(other.Schluessel))
+			}
+		} else if (!Schluessel.equals(other.Schluessel)) {
 			return false;
+		}
 		if (Schluessel2 == null) {
-			if (other.Schluessel2 != null)
+			if (other.Schluessel2 != null) {
 				return false;
-		} else if (!Schluessel2.equals(other.Schluessel2))
+			}
+		} else if (!Schluessel2.equals(other.Schluessel2)) {
 			return false;
+		}
 		return true;
 	}
 

@@ -82,23 +82,30 @@ public final class MigrationDTOBenutzergruppenMitglied {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOBenutzergruppenMitglied other = (MigrationDTOBenutzergruppenMitglied) obj;
 		if (Gruppe_ID == null) {
-			if (other.Gruppe_ID != null)
+			if (other.Gruppe_ID != null) {
 				return false;
-		} else if (!Gruppe_ID.equals(other.Gruppe_ID))
+			}
+		} else if (!Gruppe_ID.equals(other.Gruppe_ID)) {
 			return false;
+		}
 		if (Benutzer_ID == null) {
-			if (other.Benutzer_ID != null)
+			if (other.Benutzer_ID != null) {
 				return false;
-		} else if (!Benutzer_ID.equals(other.Benutzer_ID))
+			}
+		} else if (!Benutzer_ID.equals(other.Benutzer_ID)) {
 			return false;
+		}
 		return true;
 	}
 

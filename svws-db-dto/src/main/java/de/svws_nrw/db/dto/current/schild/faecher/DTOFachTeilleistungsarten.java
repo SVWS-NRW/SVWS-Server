@@ -88,22 +88,29 @@ public final class DTOFachTeilleistungsarten {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOFachTeilleistungsarten other = (DTOFachTeilleistungsarten) obj;
-		if (Teilleistungsart_ID != other.Teilleistungsart_ID)
+		if (Teilleistungsart_ID != other.Teilleistungsart_ID) {
 			return false;
-		if (Fach_ID != other.Fach_ID)
+		}
+		if (Fach_ID != other.Fach_ID) {
 			return false;
+		}
 		if (Kursart == null) {
-			if (other.Kursart != null)
+			if (other.Kursart != null) {
 				return false;
-		} else if (!Kursart.equals(other.Kursart))
+			}
+		} else if (!Kursart.equals(other.Kursart)) {
 			return false;
+		}
 		return true;
 	}
 

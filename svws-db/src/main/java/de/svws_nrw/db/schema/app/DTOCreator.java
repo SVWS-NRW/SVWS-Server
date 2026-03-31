@@ -22,11 +22,11 @@ import de.svws_nrw.db.schema.View;
 
 
 /**
- * Diese Klasse generiert den Java-Code für die JavaDTO-Klassen entsprechend eines spezifierten Datenbankschemas.
+ * Diese Klasse generiert den Java-Code für die JavaDTO-Klassen entsprechend eines spezifizierten Datenbankschemas.
  */
 public class DTOCreator {
 
-	/** Der Parser für die Kommandozeile */
+	/** Der Parser für die Kommandozeile. */
 	private static CommandLineParser cmdLine;
 
 	/** Der intern genutzte Logger */
@@ -129,7 +129,7 @@ public class DTOCreator {
 					.append(".class.getSimpleName(), ").append(dto.tabelle.getJavaKlasse(rev)).append(".class);").append(System.lineSeparator());
 			codeMapTablename2DTOClass.append("             mapTablename2DTOClass.put(\"").append(dto.tabelle.name()).append("\", ")
 					.append(dto.tabelle.getJavaKlasse(rev)).append(".class);").append(System.lineSeparator());
-			// Generierere ggf. zusätzliche Code für eine Primary Key - Klasse
+			// Generiere ggf. zusätzliche Code für eine Primary Key - Klasse
 			if ((dto.tabelle.pkSpalten() == null) || (dto.tabelle.pkSpalten().size() != 1)) {
 				logger.log(" (" + dto.tabelle.getJavaKlasse(rev) + "PK)");
 				file = new File(dir, dto.tabelle.getJavaKlasse(rev) + "PK.java");

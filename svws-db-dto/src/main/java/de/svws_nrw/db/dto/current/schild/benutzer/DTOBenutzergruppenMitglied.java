@@ -76,15 +76,19 @@ public final class DTOBenutzergruppenMitglied {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOBenutzergruppenMitglied other = (DTOBenutzergruppenMitglied) obj;
-		if (Gruppe_ID != other.Gruppe_ID)
+		if (Gruppe_ID != other.Gruppe_ID) {
 			return false;
+		}
 		return Benutzer_ID == other.Benutzer_ID;
 	}
 

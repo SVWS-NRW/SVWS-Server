@@ -82,23 +82,30 @@ public final class MigrationDTOHerkunftSchulformen {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOHerkunftSchulformen other = (MigrationDTOHerkunftSchulformen) obj;
 		if (Herkunft_ID == null) {
-			if (other.Herkunft_ID != null)
+			if (other.Herkunft_ID != null) {
 				return false;
-		} else if (!Herkunft_ID.equals(other.Herkunft_ID))
+			}
+		} else if (!Herkunft_ID.equals(other.Herkunft_ID)) {
 			return false;
+		}
 		if (Schulform_Kuerzel == null) {
-			if (other.Schulform_Kuerzel != null)
+			if (other.Schulform_Kuerzel != null) {
 				return false;
-		} else if (!Schulform_Kuerzel.equals(other.Schulform_Kuerzel))
+			}
+		} else if (!Schulform_Kuerzel.equals(other.Schulform_Kuerzel)) {
 			return false;
+		}
 		return true;
 	}
 

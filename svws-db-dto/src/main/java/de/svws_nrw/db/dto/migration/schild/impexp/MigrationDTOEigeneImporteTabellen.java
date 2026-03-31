@@ -231,23 +231,30 @@ public final class MigrationDTOEigeneImporteTabellen {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOEigeneImporteTabellen other = (MigrationDTOEigeneImporteTabellen) obj;
 		if (Import_ID == null) {
-			if (other.Import_ID != null)
+			if (other.Import_ID != null) {
 				return false;
-		} else if (!Import_ID.equals(other.Import_ID))
+			}
+		} else if (!Import_ID.equals(other.Import_ID)) {
 			return false;
+		}
 		if (TableName == null) {
-			if (other.TableName != null)
+			if (other.TableName != null) {
 				return false;
-		} else if (!TableName.equals(other.TableName))
+			}
+		} else if (!TableName.equals(other.TableName)) {
 			return false;
+		}
 		return true;
 	}
 

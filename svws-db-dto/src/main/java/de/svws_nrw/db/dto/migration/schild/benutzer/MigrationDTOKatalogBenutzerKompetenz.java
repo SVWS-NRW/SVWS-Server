@@ -98,18 +98,23 @@ public final class MigrationDTOKatalogBenutzerKompetenz {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOKatalogBenutzerKompetenz other = (MigrationDTOKatalogBenutzerKompetenz) obj;
 		if (KO_ID == null) {
-			if (other.KO_ID != null)
+			if (other.KO_ID != null) {
 				return false;
-		} else if (!KO_ID.equals(other.KO_ID))
+			}
+		} else if (!KO_ID.equals(other.KO_ID)) {
 			return false;
+		}
 		return true;
 	}
 

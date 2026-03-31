@@ -89,15 +89,19 @@ public final class DTOGostBlockungRegelParameter {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOGostBlockungRegelParameter other = (DTOGostBlockungRegelParameter) obj;
-		if (Regel_ID != other.Regel_ID)
+		if (Regel_ID != other.Regel_ID) {
 			return false;
+		}
 		return Nummer == other.Nummer;
 	}
 

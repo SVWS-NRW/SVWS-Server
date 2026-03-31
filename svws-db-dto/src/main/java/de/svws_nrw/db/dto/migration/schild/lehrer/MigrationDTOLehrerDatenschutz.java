@@ -139,23 +139,30 @@ public final class MigrationDTOLehrerDatenschutz {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOLehrerDatenschutz other = (MigrationDTOLehrerDatenschutz) obj;
 		if (LehrerID == null) {
-			if (other.LehrerID != null)
+			if (other.LehrerID != null) {
 				return false;
-		} else if (!LehrerID.equals(other.LehrerID))
+			}
+		} else if (!LehrerID.equals(other.LehrerID)) {
 			return false;
+		}
 		if (DatenschutzID == null) {
-			if (other.DatenschutzID != null)
+			if (other.DatenschutzID != null) {
 				return false;
-		} else if (!DatenschutzID.equals(other.DatenschutzID))
+			}
+		} else if (!DatenschutzID.equals(other.DatenschutzID)) {
 			return false;
+		}
 		return true;
 	}
 

@@ -46,20 +46,26 @@ public final class DTOFachgliederungenPK implements Serializable {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOFachgliederungenPK other = (DTOFachgliederungenPK) obj;
-		if (Fach_ID != other.Fach_ID)
+		if (Fach_ID != other.Fach_ID) {
 			return false;
+		}
 		if (Gliederung == null) {
-			if (other.Gliederung != null)
+			if (other.Gliederung != null) {
 				return false;
-		} else if (!Gliederung.equals(other.Gliederung))
+			}
+		} else if (!Gliederung.equals(other.Gliederung)) {
 			return false;
+		}
 		return Fachklasse_ID == other.Fachklasse_ID;
 	}
 

@@ -44,23 +44,30 @@ public final class MigrationDTOLehrerLernplattformPK implements Serializable {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOLehrerLernplattformPK other = (MigrationDTOLehrerLernplattformPK) obj;
 		if (LehrerID == null) {
-			if (other.LehrerID != null)
+			if (other.LehrerID != null) {
 				return false;
-		} else if (!LehrerID.equals(other.LehrerID))
+			}
+		} else if (!LehrerID.equals(other.LehrerID)) {
 			return false;
+		}
 		if (LernplattformID == null) {
-			if (other.LernplattformID != null)
+			if (other.LernplattformID != null) {
 				return false;
-		} else if (!LernplattformID.equals(other.LernplattformID))
+			}
+		} else if (!LernplattformID.equals(other.LernplattformID)) {
 			return false;
+		}
 		return true;
 	}
 

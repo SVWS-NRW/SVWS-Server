@@ -111,28 +111,37 @@ public final class MigrationDTOLehrerLehramtFachrichtung {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOLehrerLehramtFachrichtung other = (MigrationDTOLehrerLehramtFachrichtung) obj;
 		if (Lehrer_ID == null) {
-			if (other.Lehrer_ID != null)
+			if (other.Lehrer_ID != null) {
 				return false;
-		} else if (!Lehrer_ID.equals(other.Lehrer_ID))
+			}
+		} else if (!Lehrer_ID.equals(other.Lehrer_ID)) {
 			return false;
+		}
 		if (LehramtKrz == null) {
-			if (other.LehramtKrz != null)
+			if (other.LehramtKrz != null) {
 				return false;
-		} else if (!LehramtKrz.equals(other.LehramtKrz))
+			}
+		} else if (!LehramtKrz.equals(other.LehramtKrz)) {
 			return false;
+		}
 		if (FachrKrz == null) {
-			if (other.FachrKrz != null)
+			if (other.FachrKrz != null) {
 				return false;
-		} else if (!FachrKrz.equals(other.FachrKrz))
+			}
+		} else if (!FachrKrz.equals(other.FachrKrz)) {
 			return false;
+		}
 		return true;
 	}
 

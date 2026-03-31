@@ -43,17 +43,22 @@ public final class DTOUvStundenplanErgebnisUnterrichtRaumPK implements Serializa
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOUvStundenplanErgebnisUnterrichtRaumPK other = (DTOUvStundenplanErgebnisUnterrichtRaumPK) obj;
-		if (Ergebnis_ID != other.Ergebnis_ID)
+		if (Ergebnis_ID != other.Ergebnis_ID) {
 			return false;
-		if (Unterricht_ID != other.Unterricht_ID)
+		}
+		if (Unterricht_ID != other.Unterricht_ID) {
 			return false;
+		}
 		return Raum_ID == other.Raum_ID;
 	}
 

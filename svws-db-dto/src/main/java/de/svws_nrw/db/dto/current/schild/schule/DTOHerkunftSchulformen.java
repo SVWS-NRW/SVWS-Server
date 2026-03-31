@@ -79,20 +79,26 @@ public final class DTOHerkunftSchulformen {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOHerkunftSchulformen other = (DTOHerkunftSchulformen) obj;
-		if (Herkunft_ID != other.Herkunft_ID)
+		if (Herkunft_ID != other.Herkunft_ID) {
 			return false;
+		}
 		if (Schulform_Kuerzel == null) {
-			if (other.Schulform_Kuerzel != null)
+			if (other.Schulform_Kuerzel != null) {
 				return false;
-		} else if (!Schulform_Kuerzel.equals(other.Schulform_Kuerzel))
+			}
+		} else if (!Schulform_Kuerzel.equals(other.Schulform_Kuerzel)) {
 			return false;
+		}
 		return true;
 	}
 

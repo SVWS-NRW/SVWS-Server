@@ -142,18 +142,23 @@ public final class MigrationDTOFloskeln {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOFloskeln other = (MigrationDTOFloskeln) obj;
 		if (Kuerzel == null) {
-			if (other.Kuerzel != null)
+			if (other.Kuerzel != null) {
 				return false;
-		} else if (!Kuerzel.equals(other.Kuerzel))
+			}
+		} else if (!Kuerzel.equals(other.Kuerzel)) {
 			return false;
+		}
 		return true;
 	}
 

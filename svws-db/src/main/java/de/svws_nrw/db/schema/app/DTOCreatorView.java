@@ -77,28 +77,43 @@ public class DTOCreatorView {
 	 */
 	private static String getCode4EqualsAndHashcode(final String classname, final Collection<ViewSpalte> pkspalten) {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("\t@Override" + System.lineSeparator());
-		sb.append("\tpublic boolean equals(final Object obj) {" + System.lineSeparator());
-		sb.append("\t\tif (this == obj)" + System.lineSeparator());
-		sb.append("\t\t\treturn true;" + System.lineSeparator());
-		sb.append("\t\tif (obj == null)" + System.lineSeparator());
-		sb.append("\t\t\treturn false;" + System.lineSeparator());
-		sb.append("\t\tif (getClass() != obj.getClass())" + System.lineSeparator());
-		sb.append("\t\t\treturn false;" + System.lineSeparator());
-		sb.append("\t\t" + classname + " other = (" + classname + ") obj;" + System.lineSeparator());
-		sb.append(pkspalten.stream()
-				.map(col -> col.name)
-				.filter(Objects::nonNull)
-				.map(colname -> "\t\tif (" + colname + " == null) {" + System.lineSeparator()
-						+ "\t\t\tif (other." + colname + " != null)" + System.lineSeparator()
-						+ "\t\t\t\treturn false;" + System.lineSeparator()
-						+ "\t\t} else if (!" + colname + ".equals(other." + colname + "))" + System.lineSeparator()
-						+ "\t\t\treturn false;" + System.lineSeparator())
-				.filter(Objects::nonNull)
-				.collect(Collectors.joining(System.lineSeparator())));
-		sb.append("\t\treturn true;" + System.lineSeparator());
-		sb.append("\t}" + System.lineSeparator());
+		createCode4Equals(sb, classname, pkspalten);
 		sb.append(System.lineSeparator());
+		createCode4HashCode(sb, pkspalten);
+		return sb.toString();
+	}
+
+
+	private static void createCode4Equals(final StringBuilder sb, final String classname, final Collection<ViewSpalte> pkspalten) {
+	    sb.append("\t@Override" + System.lineSeparator());
+	    sb.append("\tpublic boolean equals(final Object obj) {" + System.lineSeparator());
+	    sb.append("\t\tif (this == obj) {" + System.lineSeparator());
+	    sb.append("\t\t\treturn true;" + System.lineSeparator());
+	    sb.append("\t\t}" + System.lineSeparator());
+	    sb.append("\t\tif (obj == null) {" + System.lineSeparator());
+	    sb.append("\t\t\treturn false;" + System.lineSeparator());
+	    sb.append("\t\t}" + System.lineSeparator());
+	    sb.append("\t\tif (getClass() != obj.getClass()) {" + System.lineSeparator());
+	    sb.append("\t\t\treturn false;" + System.lineSeparator());
+	    sb.append("\t\t}" + System.lineSeparator());
+	    sb.append("\t\t" + classname + " other = (" + classname + ") obj;" + System.lineSeparator());
+	    sb.append(pkspalten.stream()
+	        .map(col -> col.name)
+	        .filter(Objects::nonNull)
+	        .map(colname -> "\t\tif (" + colname + " == null) {" + System.lineSeparator()
+	            + "\t\t\tif (other." + colname + " != null) {" + System.lineSeparator()
+	            + "\t\t\t\treturn false;" + System.lineSeparator()
+	            + "\t\t\t}" + System.lineSeparator()
+	            + "\t\t} else if (!" + colname + ".equals(other." + colname + ")) {" + System.lineSeparator()
+	            + "\t\t\treturn false;" + System.lineSeparator()
+	            + "\t\t}" + System.lineSeparator())
+	        .collect(Collectors.joining()));
+	    sb.append("\t\treturn true;" + System.lineSeparator());
+	    sb.append("\t}" + System.lineSeparator());
+	}
+
+
+	private static void createCode4HashCode(final StringBuilder sb, final Collection<ViewSpalte> pkspalten) {
 		sb.append("\t@Override" + System.lineSeparator());
 		sb.append("\tpublic int hashCode() {" + System.lineSeparator());
 		sb.append("\t\tfinal int prime = 31;" + System.lineSeparator());
@@ -111,9 +126,7 @@ public class DTOCreatorView {
 				.collect(Collectors.joining(System.lineSeparator())));
 		sb.append("\t\treturn result;" + System.lineSeparator());
 		sb.append("\t}" + System.lineSeparator());
-		return sb.toString();
 	}
-
 
 
 	/**

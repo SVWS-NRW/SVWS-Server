@@ -44,23 +44,30 @@ public final class MigrationDTOSchuelerIndividuelleGruppeSchuelerPK implements S
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOSchuelerIndividuelleGruppeSchuelerPK other = (MigrationDTOSchuelerIndividuelleGruppeSchuelerPK) obj;
 		if (Liste_ID == null) {
-			if (other.Liste_ID != null)
+			if (other.Liste_ID != null) {
 				return false;
-		} else if (!Liste_ID.equals(other.Liste_ID))
+			}
+		} else if (!Liste_ID.equals(other.Liste_ID)) {
 			return false;
+		}
 		if (Schueler_ID == null) {
-			if (other.Schueler_ID != null)
+			if (other.Schueler_ID != null) {
 				return false;
-		} else if (!Schueler_ID.equals(other.Schueler_ID))
+			}
+		} else if (!Schueler_ID.equals(other.Schueler_ID)) {
 			return false;
+		}
 		return true;
 	}
 

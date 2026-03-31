@@ -137,18 +137,23 @@ public final class MigrationDTOTeilleistungsarten {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOTeilleistungsarten other = (MigrationDTOTeilleistungsarten) obj;
 		if (ID == null) {
-			if (other.ID != null)
+			if (other.ID != null) {
 				return false;
-		} else if (!ID.equals(other.ID))
+			}
+		} else if (!ID.equals(other.ID)) {
 			return false;
+		}
 		return true;
 	}
 

@@ -52,28 +52,37 @@ public final class MigrationDTOClientKonfigurationBenutzerPK implements Serializ
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOClientKonfigurationBenutzerPK other = (MigrationDTOClientKonfigurationBenutzerPK) obj;
 		if (Benutzer_ID == null) {
-			if (other.Benutzer_ID != null)
+			if (other.Benutzer_ID != null) {
 				return false;
-		} else if (!Benutzer_ID.equals(other.Benutzer_ID))
+			}
+		} else if (!Benutzer_ID.equals(other.Benutzer_ID)) {
 			return false;
+		}
 		if (AppName == null) {
-			if (other.AppName != null)
+			if (other.AppName != null) {
 				return false;
-		} else if (!AppName.equals(other.AppName))
+			}
+		} else if (!AppName.equals(other.AppName)) {
 			return false;
+		}
 		if (Schluessel == null) {
-			if (other.Schluessel != null)
+			if (other.Schluessel != null) {
 				return false;
-		} else if (!Schluessel.equals(other.Schluessel))
+			}
+		} else if (!Schluessel.equals(other.Schluessel)) {
 			return false;
+		}
 		return true;
 	}
 

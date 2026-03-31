@@ -82,18 +82,23 @@ public final class DTONotenmodulKonfigurationClient {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTONotenmodulKonfigurationClient other = (DTONotenmodulKonfigurationClient) obj;
 		if (schluessel == null) {
-			if (other.schluessel != null)
+			if (other.schluessel != null) {
 				return false;
-		} else if (!schluessel.equals(other.schluessel))
+			}
+		} else if (!schluessel.equals(other.schluessel)) {
 			return false;
+		}
 		return true;
 	}
 

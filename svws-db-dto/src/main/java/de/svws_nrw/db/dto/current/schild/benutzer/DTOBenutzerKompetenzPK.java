@@ -38,15 +38,19 @@ public final class DTOBenutzerKompetenzPK implements Serializable {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOBenutzerKompetenzPK other = (DTOBenutzerKompetenzPK) obj;
-		if (Benutzer_ID != other.Benutzer_ID)
+		if (Benutzer_ID != other.Benutzer_ID) {
 			return false;
+		}
 		return Kompetenz_ID == other.Kompetenz_ID;
 	}
 

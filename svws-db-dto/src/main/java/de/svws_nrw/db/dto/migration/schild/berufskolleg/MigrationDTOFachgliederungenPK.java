@@ -52,28 +52,37 @@ public final class MigrationDTOFachgliederungenPK implements Serializable {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOFachgliederungenPK other = (MigrationDTOFachgliederungenPK) obj;
 		if (Fach_ID == null) {
-			if (other.Fach_ID != null)
+			if (other.Fach_ID != null) {
 				return false;
-		} else if (!Fach_ID.equals(other.Fach_ID))
+			}
+		} else if (!Fach_ID.equals(other.Fach_ID)) {
 			return false;
+		}
 		if (Gliederung == null) {
-			if (other.Gliederung != null)
+			if (other.Gliederung != null) {
 				return false;
-		} else if (!Gliederung.equals(other.Gliederung))
+			}
+		} else if (!Gliederung.equals(other.Gliederung)) {
 			return false;
+		}
 		if (Fachklasse_ID == null) {
-			if (other.Fachklasse_ID != null)
+			if (other.Fachklasse_ID != null) {
 				return false;
-		} else if (!Fachklasse_ID.equals(other.Fachklasse_ID))
+			}
+		} else if (!Fachklasse_ID.equals(other.Fachklasse_ID)) {
 			return false;
+		}
 		return true;
 	}
 

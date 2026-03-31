@@ -93,18 +93,23 @@ public final class MigrationDTOSchemaStatus {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOSchemaStatus other = (MigrationDTOSchemaStatus) obj;
 		if (Revision == null) {
-			if (other.Revision != null)
+			if (other.Revision != null) {
 				return false;
-		} else if (!Revision.equals(other.Revision))
+			}
+		} else if (!Revision.equals(other.Revision)) {
 			return false;
+		}
 		return true;
 	}
 

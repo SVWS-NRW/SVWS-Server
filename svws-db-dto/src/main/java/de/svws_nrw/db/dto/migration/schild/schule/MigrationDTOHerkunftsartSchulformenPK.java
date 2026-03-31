@@ -44,23 +44,30 @@ public final class MigrationDTOHerkunftsartSchulformenPK implements Serializable
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOHerkunftsartSchulformenPK other = (MigrationDTOHerkunftsartSchulformenPK) obj;
 		if (Herkunftsart_ID == null) {
-			if (other.Herkunftsart_ID != null)
+			if (other.Herkunftsart_ID != null) {
 				return false;
-		} else if (!Herkunftsart_ID.equals(other.Herkunftsart_ID))
+			}
+		} else if (!Herkunftsart_ID.equals(other.Herkunftsart_ID)) {
 			return false;
+		}
 		if (Schulform_Kuerzel == null) {
-			if (other.Schulform_Kuerzel != null)
+			if (other.Schulform_Kuerzel != null) {
 				return false;
-		} else if (!Schulform_Kuerzel.equals(other.Schulform_Kuerzel))
+			}
+		} else if (!Schulform_Kuerzel.equals(other.Schulform_Kuerzel)) {
 			return false;
+		}
 		return true;
 	}
 

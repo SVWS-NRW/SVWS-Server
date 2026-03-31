@@ -291,18 +291,23 @@ public final class MigrationDTOSchuelerGrundschuldaten {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOSchuelerGrundschuldaten other = (MigrationDTOSchuelerGrundschuldaten) obj;
 		if (Schueler_ID == null) {
-			if (other.Schueler_ID != null)
+			if (other.Schueler_ID != null) {
 				return false;
-		} else if (!Schueler_ID.equals(other.Schueler_ID))
+			}
+		} else if (!Schueler_ID.equals(other.Schueler_ID)) {
 			return false;
+		}
 		return true;
 	}
 

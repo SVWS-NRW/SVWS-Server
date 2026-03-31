@@ -1,15 +1,14 @@
 package de.svws_nrw.db.dto.migration.schild.katalog;
 
-import de.svws_nrw.db.DBEntityManager;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import de.svws_nrw.db.DBEntityManager;
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle AllgAdrAnsprechpartner.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
@@ -181,18 +180,23 @@ public final class MigrationDTOAnsprechpartnerAllgemeineAdresse {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
-		MigrationDTOAnsprechpartnerAllgemeineAdresse other = (MigrationDTOAnsprechpartnerAllgemeineAdresse) obj;
+		}
+		final MigrationDTOAnsprechpartnerAllgemeineAdresse other = (MigrationDTOAnsprechpartnerAllgemeineAdresse) obj;
 		if (ID == null) {
-			if (other.ID != null)
+			if (other.ID != null) {
 				return false;
-		} else if (!ID.equals(other.ID))
+			}
+		} else if (!ID.equals(other.ID)) {
 			return false;
+		}
 		return true;
 	}
 

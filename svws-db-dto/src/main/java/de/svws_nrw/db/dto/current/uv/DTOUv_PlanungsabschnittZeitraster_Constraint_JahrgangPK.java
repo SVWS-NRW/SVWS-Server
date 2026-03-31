@@ -43,17 +43,22 @@ public final class DTOUv_PlanungsabschnittZeitraster_Constraint_JahrgangPK imple
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOUv_PlanungsabschnittZeitraster_Constraint_JahrgangPK other = (DTOUv_PlanungsabschnittZeitraster_Constraint_JahrgangPK) obj;
-		if (Planungsabschnitt_ID != other.Planungsabschnitt_ID)
+		if (Planungsabschnitt_ID != other.Planungsabschnitt_ID) {
 			return false;
-		if (Zeitraster_ID != other.Zeitraster_ID)
+		}
+		if (Zeitraster_ID != other.Zeitraster_ID) {
 			return false;
+		}
 		return Jahrgang_ID == other.Jahrgang_ID;
 	}
 

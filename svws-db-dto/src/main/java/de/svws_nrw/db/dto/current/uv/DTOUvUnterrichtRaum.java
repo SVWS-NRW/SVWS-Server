@@ -89,15 +89,19 @@ public final class DTOUvUnterrichtRaum {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOUvUnterrichtRaum other = (DTOUvUnterrichtRaum) obj;
-		if (Unterricht_ID != other.Unterricht_ID)
+		if (Unterricht_ID != other.Unterricht_ID) {
 			return false;
+		}
 		return Raum_ID == other.Raum_ID;
 	}
 

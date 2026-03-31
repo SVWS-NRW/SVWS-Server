@@ -44,23 +44,30 @@ public final class MigrationDTOEigeneImporteFelderPK implements Serializable {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOEigeneImporteFelderPK other = (MigrationDTOEigeneImporteFelderPK) obj;
 		if (Import_ID == null) {
-			if (other.Import_ID != null)
+			if (other.Import_ID != null) {
 				return false;
-		} else if (!Import_ID.equals(other.Import_ID))
+			}
+		} else if (!Import_ID.equals(other.Import_ID)) {
 			return false;
+		}
 		if (Field_ID == null) {
-			if (other.Field_ID != null)
+			if (other.Field_ID != null) {
 				return false;
-		} else if (!Field_ID.equals(other.Field_ID))
+			}
+		} else if (!Field_ID.equals(other.Field_ID)) {
 			return false;
+		}
 		return true;
 	}
 

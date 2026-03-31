@@ -99,18 +99,23 @@ public final class MigrationDTOSchuleCredentials {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOSchuleCredentials other = (MigrationDTOSchuleCredentials) obj;
 		if (Schulnummer == null) {
-			if (other.Schulnummer != null)
+			if (other.Schulnummer != null) {
 				return false;
-		} else if (!Schulnummer.equals(other.Schulnummer))
+			}
+		} else if (!Schulnummer.equals(other.Schulnummer)) {
 			return false;
+		}
 		return true;
 	}
 

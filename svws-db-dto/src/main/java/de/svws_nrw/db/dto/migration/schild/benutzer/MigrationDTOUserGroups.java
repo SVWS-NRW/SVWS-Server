@@ -110,18 +110,23 @@ public final class MigrationDTOUserGroups {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOUserGroups other = (MigrationDTOUserGroups) obj;
 		if (UG_ID == null) {
-			if (other.UG_ID != null)
+			if (other.UG_ID != null) {
 				return false;
-		} else if (!UG_ID.equals(other.UG_ID))
+			}
+		} else if (!UG_ID.equals(other.UG_ID)) {
 			return false;
+		}
 		return true;
 	}
 

@@ -66,18 +66,23 @@ public final class DTONationalitaetenKeys {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTONationalitaetenKeys other = (DTONationalitaetenKeys) obj;
 		if (DEStatisCode == null) {
-			if (other.DEStatisCode != null)
+			if (other.DEStatisCode != null) {
 				return false;
-		} else if (!DEStatisCode.equals(other.DEStatisCode))
+			}
+		} else if (!DEStatisCode.equals(other.DEStatisCode)) {
 			return false;
+		}
 		return true;
 	}
 

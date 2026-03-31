@@ -228,20 +228,26 @@ public final class DTOEigeneImporteTabellen {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOEigeneImporteTabellen other = (DTOEigeneImporteTabellen) obj;
-		if (Import_ID != other.Import_ID)
+		if (Import_ID != other.Import_ID) {
 			return false;
+		}
 		if (TableName == null) {
-			if (other.TableName != null)
+			if (other.TableName != null) {
 				return false;
-		} else if (!TableName.equals(other.TableName))
+			}
+		} else if (!TableName.equals(other.TableName)) {
 			return false;
+		}
 		return true;
 	}
 

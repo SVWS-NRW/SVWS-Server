@@ -38,15 +38,19 @@ public final class DTOGostKlausurenSchuelerklausurenTermineRaumstundenPK impleme
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOGostKlausurenSchuelerklausurenTermineRaumstundenPK other = (DTOGostKlausurenSchuelerklausurenTermineRaumstundenPK) obj;
-		if (Schuelerklausurtermin_ID != other.Schuelerklausurtermin_ID)
+		if (Schuelerklausurtermin_ID != other.Schuelerklausurtermin_ID) {
 			return false;
+		}
 		return Raumstunde_ID == other.Raumstunde_ID;
 	}
 

@@ -114,18 +114,23 @@ public final class MigrationDTOKatalogBenutzerKompetenzGruppe {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOKatalogBenutzerKompetenzGruppe other = (MigrationDTOKatalogBenutzerKompetenzGruppe) obj;
 		if (KG_ID == null) {
-			if (other.KG_ID != null)
+			if (other.KG_ID != null) {
 				return false;
-		} else if (!KG_ID.equals(other.KG_ID))
+			}
+		} else if (!KG_ID.equals(other.KG_ID)) {
 			return false;
+		}
 		return true;
 	}
 

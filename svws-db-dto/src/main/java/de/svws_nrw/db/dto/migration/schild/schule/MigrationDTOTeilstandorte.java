@@ -170,18 +170,23 @@ public final class MigrationDTOTeilstandorte {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		MigrationDTOTeilstandorte other = (MigrationDTOTeilstandorte) obj;
 		if (AdrMerkmal == null) {
-			if (other.AdrMerkmal != null)
+			if (other.AdrMerkmal != null) {
 				return false;
-		} else if (!AdrMerkmal.equals(other.AdrMerkmal))
+			}
+		} else if (!AdrMerkmal.equals(other.AdrMerkmal)) {
 			return false;
+		}
 		return true;
 	}
 

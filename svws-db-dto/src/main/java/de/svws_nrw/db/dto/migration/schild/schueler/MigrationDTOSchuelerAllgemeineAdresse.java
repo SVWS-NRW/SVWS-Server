@@ -1,25 +1,23 @@
 package de.svws_nrw.db.dto.migration.schild.schueler;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinusConverterDeserializer;
+import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinusConverterSerializer;
+import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
+import de.svws_nrw.csv.converter.migration.MigrationDatumConverterSerializer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.converter.migration.MigrationBooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.converter.migration.MigrationDatumConverter;
-
-
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinusConverterSerializer;
-import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinusConverterDeserializer;
-import de.svws_nrw.csv.converter.migration.MigrationDatumConverterSerializer;
-import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Schueler_AllgAdr.
@@ -231,18 +229,23 @@ public final class MigrationDTOSchuelerAllgemeineAdresse {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
-		MigrationDTOSchuelerAllgemeineAdresse other = (MigrationDTOSchuelerAllgemeineAdresse) obj;
+		}
+		final MigrationDTOSchuelerAllgemeineAdresse other = (MigrationDTOSchuelerAllgemeineAdresse) obj;
 		if (ID == null) {
-			if (other.ID != null)
+			if (other.ID != null) {
 				return false;
-		} else if (!ID.equals(other.ID))
+			}
+		} else if (!ID.equals(other.ID)) {
 			return false;
+		}
 		return true;
 	}
 

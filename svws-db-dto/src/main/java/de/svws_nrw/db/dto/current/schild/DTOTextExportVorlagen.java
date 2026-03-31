@@ -77,18 +77,23 @@ public final class DTOTextExportVorlagen {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOTextExportVorlagen other = (DTOTextExportVorlagen) obj;
 		if (VorlageName == null) {
-			if (other.VorlageName != null)
+			if (other.VorlageName != null) {
 				return false;
-		} else if (!VorlageName.equals(other.VorlageName))
+			}
+		} else if (!VorlageName.equals(other.VorlageName)) {
 			return false;
+		}
 		return true;
 	}
 

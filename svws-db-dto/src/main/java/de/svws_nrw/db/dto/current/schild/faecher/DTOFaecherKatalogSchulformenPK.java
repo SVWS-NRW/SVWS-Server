@@ -49,25 +49,33 @@ public final class DTOFaecherKatalogSchulformenPK implements Serializable {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		DTOFaecherKatalogSchulformenPK other = (DTOFaecherKatalogSchulformenPK) obj;
-		if (Fach_ID != other.Fach_ID)
+		if (Fach_ID != other.Fach_ID) {
 			return false;
+		}
 		if (Schulform_Kuerzel == null) {
-			if (other.Schulform_Kuerzel != null)
+			if (other.Schulform_Kuerzel != null) {
 				return false;
-		} else if (!Schulform_Kuerzel.equals(other.Schulform_Kuerzel))
+			}
+		} else if (!Schulform_Kuerzel.equals(other.Schulform_Kuerzel)) {
 			return false;
+		}
 		if (Schulgliederung_Kuerzel == null) {
-			if (other.Schulgliederung_Kuerzel != null)
+			if (other.Schulgliederung_Kuerzel != null) {
 				return false;
-		} else if (!Schulgliederung_Kuerzel.equals(other.Schulgliederung_Kuerzel))
+			}
+		} else if (!Schulgliederung_Kuerzel.equals(other.Schulgliederung_Kuerzel)) {
 			return false;
+		}
 		return true;
 	}
 
