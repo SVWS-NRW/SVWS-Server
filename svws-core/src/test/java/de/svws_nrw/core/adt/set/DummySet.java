@@ -402,8 +402,9 @@ public final class DummySet implements NavigableSet<Integer> {
 	 */
 	Integer bcGetLowerKeyOrNull(final @NotNull DummySetIntervall iv, final @NotNull Integer key) {
 		for (int i = key - 1; i >= iv.min(); i--) { // search < key
-			if (_isSet[i])
-			return i;
+			if (_isSet[i]) {
+				return i;
+			}
 		}
 		return null; // NULL allowed
 	}
@@ -422,8 +423,9 @@ public final class DummySet implements NavigableSet<Integer> {
 	 */
 	Integer bcGetFloorKeyOrNull(final @NotNull DummySetIntervall iv, final @NotNull Integer key) {
 		for (int i = key; i >= iv.min(); i--) { // search <= key
-			if (_isSet[i])
-			return i;
+			if (_isSet[i]) {
+				return i;
+			}
 		}
 		return null; // NULL allowed
 	}
@@ -442,8 +444,9 @@ public final class DummySet implements NavigableSet<Integer> {
 	 */
 	Integer bcGetCeilingKeyOrNull(final @NotNull DummySetIntervall iv, final @NotNull Integer key) {
 		for (int i = key; i <= iv.max(); i++) { // search >= key
-			if (_isSet[i])
-			return i;
+			if (_isSet[i]) {
+				return i;
+			}
 		}
 		return null; // NULL allowed
 	}
@@ -460,8 +463,9 @@ public final class DummySet implements NavigableSet<Integer> {
 	 */
 	Integer bcGetHigherKeyOrNull(final @NotNull DummySetIntervall iv, final @NotNull Integer key) {
 		for (int i = key + 1; i <= iv.max(); i++) { // search > key
-			if (_isSet[i])
-			return i;
+			if (_isSet[i]) {
+				return i;
+			}
 		}
 		return null; // NULL allowed
 	}

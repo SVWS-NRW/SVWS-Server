@@ -48,8 +48,9 @@ public final class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorith
 		dynDaten.gibStatistik().aktionBewertungSpeichernS();
 
 		// Optimiere die Verteilung der SuS 10 mal.
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 10; i++) {
 			verteileSchuelerAlle();
+		}
 	}
 
 	/**
@@ -83,8 +84,9 @@ public final class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorith
 
 		// Schlechter? --> Kurszuordnung zurück.
 		final int cmp = dynDaten.gibStatistik().gibBewertungZustandS_NW_KD();
-		if (cmp < 0)
+		if (cmp < 0) {
 			schueler.aktionZustandLadenS();
+		}
 
 		// Besser?
 		return cmp > 0;

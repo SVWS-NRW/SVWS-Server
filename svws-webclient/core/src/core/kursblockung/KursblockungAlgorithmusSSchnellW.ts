@@ -39,8 +39,9 @@ export class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorithmusS {
 	 */
 	public berechne(): void {
 		this.dynDaten.gibStatistik().aktionBewertungSpeichernS();
-		for (let i: number = 0; i < 10; i++)
+		for (let i: number = 0; i < 10; i++) {
 			this.verteileSchuelerAlle();
+		}
 	}
 
 	/**
@@ -67,8 +68,9 @@ export class KursblockungAlgorithmusSSchnellW extends KursblockungAlgorithmusS {
 		schueler.aktionKurseVerteilenNurMultikurseZufaellig();
 		schueler.aktionKurseVerteilenMitBipartiteMatchingGewichtetem();
 		const cmp: number = this.dynDaten.gibStatistik().gibBewertungZustandS_NW_KD();
-		if (cmp < 0)
+		if (cmp < 0) {
 			schueler.aktionZustandLadenS();
+		}
 		return cmp > 0;
 	}
 
