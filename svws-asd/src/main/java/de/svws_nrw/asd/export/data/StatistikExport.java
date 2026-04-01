@@ -64,6 +64,7 @@ public class StatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public StatistikExport() {
+		// leer
 	}
 
 }

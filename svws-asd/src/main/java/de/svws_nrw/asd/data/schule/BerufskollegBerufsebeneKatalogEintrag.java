@@ -1,9 +1,9 @@
 package de.svws_nrw.asd.data.schule;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.asd.data.CoreTypeData;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -23,6 +23,7 @@ public class BerufskollegBerufsebeneKatalogEintrag extends CoreTypeData {
 	 * Erstellt einen Berufsebene-Eintrag mit Standardwerten
 	 */
 	public BerufskollegBerufsebeneKatalogEintrag() {
+		// leer
 	}
 
 }

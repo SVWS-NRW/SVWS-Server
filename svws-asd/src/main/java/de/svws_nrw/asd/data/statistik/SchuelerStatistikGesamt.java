@@ -153,6 +153,7 @@ public class SchuelerStatistikGesamt {
 	 * Leerer Standardkonstruktor.
 	 */
 	public SchuelerStatistikGesamt() {
+		// leer
 	}
 
 }

@@ -25,6 +25,7 @@ public class LehrerMehrleistungenStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public LehrerMehrleistungenStatistikExport() {
+		// leer
 	}
 
 }

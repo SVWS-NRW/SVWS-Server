@@ -107,6 +107,7 @@ public class AbgaengerStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public AbgaengerStatistikExport() {
+		// leer
 	}
 
 }

@@ -89,6 +89,7 @@ public class SchuleAdressenStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public SchuleAdressenStatistikExport() {
+		// leer
 	}
 
 }

@@ -137,6 +137,7 @@ public class SchuelerZahlenStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public SchuelerZahlenStatistikExport() {
+		// leer
 	}
 
 }

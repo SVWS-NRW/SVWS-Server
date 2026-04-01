@@ -152,6 +152,7 @@ public class KlassenStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public KlassenStatistikExport() {
+		// leer
 	}
 
 }

@@ -109,6 +109,7 @@ public class AbiturpruefungsergebnisseStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public AbiturpruefungsergebnisseStatistikExport() {
+		// leer
 	}
 
 }

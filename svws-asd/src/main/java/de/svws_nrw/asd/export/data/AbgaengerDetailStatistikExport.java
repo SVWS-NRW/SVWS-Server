@@ -36,6 +36,7 @@ public class AbgaengerDetailStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public AbgaengerDetailStatistikExport() {
+		// leer
 	}
 
 }

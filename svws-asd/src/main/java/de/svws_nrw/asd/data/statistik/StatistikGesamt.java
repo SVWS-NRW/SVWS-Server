@@ -61,6 +61,7 @@ public class StatistikGesamt {
 	 * Leerer Standardkonstruktor.
 	 */
 	public StatistikGesamt() {
+		// leer
 	}
 
 }

@@ -45,7 +45,7 @@ public class KlassenHerkunftStatistikExport {
 	@Schema(description = "die ausländischen Schüler des Herkunftsatzes weiblich.", example = "27")
 	public int schuelerAuslaendischWeiblich = 0;
 
-	/** Die Anrechnungen des Herkunftssatzes (B-Schulen K86). */
+	/** Die Anrechnungen des Herkunftsatzes (B-Schulen K86). */
 	@Schema(description = "Die Anrechnungen des Herkunftssatzes (B-Schulen K86)")
 	public @NotNull KlassenHerkunftAnrechungenStatistikExport klassenHerkunftAnrechungenStatistikExport = new KlassenHerkunftAnrechungenStatistikExport();
 
@@ -53,6 +53,7 @@ public class KlassenHerkunftStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public KlassenHerkunftStatistikExport() {
+		// leer
 	}
 
 }

@@ -25,6 +25,7 @@ public class LehrerErteilteStundenStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public LehrerErteilteStundenStatistikExport() {
+		// leer
 	}
 
 }

@@ -52,7 +52,7 @@ public class SchuelerLernabschnittStatistikGesamt {
 	@Schema(description = "gibt an, ob eine Schwerbehinderung nachgwiesen ist oder nicht", example = "false")
 	public boolean hatSchwerbehinderungsNachweis = false;
 
-	/** Die ID des Haupförderschwerpunktes des Schülers */
+	/** Die ID des Hauptförderschwerpunktes des Schülers */
 	@Schema(description = "die ID des Haupförderschwerpunktes des Schülers", example = "null")
 	public Long idFoerderschwerpunkt1 = null;
 
@@ -68,6 +68,7 @@ public class SchuelerLernabschnittStatistikGesamt {
 	 * Leerer Standardkonstruktor.
 	 */
 	public SchuelerLernabschnittStatistikGesamt() {
+		// leer
 	}
 
 }

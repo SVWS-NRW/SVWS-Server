@@ -32,6 +32,7 @@ public class KlassenZuwanderungsgeschichteStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public KlassenZuwanderungsgeschichteStatistikExport() {
+		// leer
 	}
 
 }

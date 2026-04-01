@@ -109,11 +109,11 @@ public class ReligionszugehoerigkeitenStatistikExport {
 	@Schema(description = "die Summe aller Schüler ohne Religionszugehörigkeit Weiblich", example = "12")
 	public int ohneWeiblich = 0;
 
-	/** Die Summe aller Schüler dieses Satzes ingesamt. */
+	/** Die Summe aller Schüler dieses Satzes insgesamt. */
 	@Schema(description = "die Summe aller Schüler dieses Satzes ingesamt", example = "500")
 	public int insgesamtZusammen = 0;
 
-	/** Die Summe aller Schüler dieses Satzes ingesamt Weiblich. */
+	/** Die Summe aller Schüler dieses Satzes insgesamt Weiblich. */
 	@Schema(description = "die Summe aller Schüler dieses Satzes ingesamt Weiblich", example = "490")
 	public int insgesamtWeiblich = 0;
 
@@ -133,11 +133,11 @@ public class ReligionszugehoerigkeitenStatistikExport {
 	@Schema(description = "die Summe aller katholischen Schüler, die sich vom Religionsunterricht abgemeldet haben Weiblich", example = "15")
 	public int abmeldungenKathWeiblich = 0;
 
-	/** Die Summe aller evanglischer Schüler, die aus organisatorischen Gründen keinen Religionsunterricht erhalten. */
+	/** Die Summe aller evangelischer Schüler, die aus organisatorischen Gründen keinen Religionsunterricht erhalten. */
 	@Schema(description = "die Summe aller evanglischer Schüler, die aus organisatorischen Gründen keinen Religionsunterricht erhalten", example = "20")
 	public int ohneUnterrichtEvangelischZusammen = 0;
 
-	/** Die Summe aller evanglischer Schüler, die aus organisatorischen Gründen keinen Religionsunterricht erhalten Weiblich. */
+	/** Die Summe aller evangelischer Schüler, die aus organisatorischen Gründen keinen Religionsunterricht erhalten Weiblich. */
 	@Schema(description = "die Summe aller evanglischer Schüler, die aus organisatorischen Gründen keinen Religionsunterricht erhalten Weiblich",
 			example = "15")
 	public int ohneUnterrichtEvangelischWeiblich = 0;
@@ -155,6 +155,7 @@ public class ReligionszugehoerigkeitenStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public ReligionszugehoerigkeitenStatistikExport() {
+		// leer
 	}
 
 }

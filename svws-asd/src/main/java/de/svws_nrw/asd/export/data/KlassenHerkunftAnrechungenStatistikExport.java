@@ -32,6 +32,7 @@ public class KlassenHerkunftAnrechungenStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public KlassenHerkunftAnrechungenStatistikExport() {
+		// leer
 	}
 
 }

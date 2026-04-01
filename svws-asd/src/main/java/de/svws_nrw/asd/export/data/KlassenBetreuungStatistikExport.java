@@ -24,6 +24,7 @@ public class KlassenBetreuungStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public KlassenBetreuungStatistikExport() {
+		// leer
 	}
 
 }

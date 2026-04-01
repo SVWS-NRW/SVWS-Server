@@ -44,6 +44,7 @@ public class InternatsplaetzeStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public InternatsplaetzeStatistikExport() {
+		// leer
 	}
 
 }

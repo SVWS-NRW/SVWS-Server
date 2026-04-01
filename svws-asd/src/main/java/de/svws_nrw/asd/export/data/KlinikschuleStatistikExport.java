@@ -40,6 +40,7 @@ public class KlinikschuleStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public KlinikschuleStatistikExport() {
+		// leer
 	}
 
 }

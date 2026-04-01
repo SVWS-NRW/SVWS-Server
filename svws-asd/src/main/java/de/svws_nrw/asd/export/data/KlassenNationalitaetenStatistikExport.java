@@ -13,7 +13,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class KlassenNationalitaetenStatistikExport {
 
-	/** Satzschlüssel: Die Nationalitaet. */
+	/** Satzschlüssel: Die Nationalität. */
 	@Schema(description = "satzschlüssel: die Nationalitaet", example = "141")
 	public @NotNull String nationalitaet = "";
 
@@ -29,6 +29,7 @@ public class KlassenNationalitaetenStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public KlassenNationalitaetenStatistikExport() {
+		// leer
 	}
 
 }

@@ -33,6 +33,7 @@ public class VomSchulbesuchZurueckgestelltStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public VomSchulbesuchZurueckgestelltStatistikExport() {
+		// leer
 	}
 
 }

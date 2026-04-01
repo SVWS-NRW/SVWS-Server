@@ -33,6 +33,7 @@ public class KlassenAltersstrukturStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public KlassenAltersstrukturStatistikExport() {
+		// leer
 	}
 
 }

@@ -20,6 +20,7 @@ public class SchuleAdressenSchuelerStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public SchuleAdressenSchuelerStatistikExport() {
+		// leer
 	}
 
 }

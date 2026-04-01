@@ -108,7 +108,7 @@ public class SchuleStatistikExport {
 	@Schema(description = "Talentschule Form", example = "0")
 	public int talentschule = 0;
 
-	/** Reformpedagogik Schulebene */
+	/** Reformpädagogik Schulebene */
 	@Schema(description = "Reformpedagogik Schulebene", example = "M")
 	public String reformpaedagogik = "";
 
@@ -121,6 +121,7 @@ public class SchuleStatistikExport {
 	 * Leerer Standardkonstruktor.
 	 */
 	public SchuleStatistikExport() {
+		// leer
 	}
 
 }
