@@ -24,7 +24,7 @@ public final class RestAppSchemaRoot extends Application {
 			"/api/schema/import/*", "/api/schema/migrate/*", "/api/schema/update/*", "/api/privileged/*", "/openapi/privileged.json",
 			"/openapi/privileged.yaml" };
 
-	/// Enthält die API-Klassen für diese Applikation
+	/** Enthält die API-Klassen für diese Applikation */
 	private final Set<Class<?>> classes = Set.of(
 			OpenAPICorsFilter.class,
 			ValidationExceptionMapper.class,

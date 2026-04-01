@@ -28,7 +28,7 @@ import de.svws_nrw.db.utils.schema.DBSchemaManager;
  */
 public class ImportDB {
 
-	/// Der Logger
+	/** Der Logger */
 	private static final Logger logger = new Logger();
 
 	/**

@@ -33,10 +33,10 @@ import io.github.spannm.jackcess.Table;
  */
 public class MDBtoCSV {
 
-	/// Der Logger
+	/** Der Logger */
 	private static final Logger logger = new Logger();
 
-	/// Die unterstützen Typen von MDBs
+	/** Die unterstützen Typen von MDBs */
 	private enum MDBType {
 		/** MDB-Typ unbekannt */
 		UNKNOWN,
@@ -48,7 +48,7 @@ public class MDBtoCSV {
 		SCHULVER
 	}
 
-	/// Der Typ der MDB-Datei
+	/** Der Typ der MDB-Datei */
 	private static MDBType type = MDBType.UNKNOWN;
 
 	/**

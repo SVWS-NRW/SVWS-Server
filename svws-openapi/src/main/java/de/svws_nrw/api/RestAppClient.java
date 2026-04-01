@@ -18,7 +18,7 @@ public final class RestAppClient extends Application {
 	/** Die Pfad-Spezifikation für diese Applikation */
 	private static final String[] pathSpec = { "/*" };
 
-	/// Enthält alle Klassen, die für die OpenAPI eingebunden werden
+	/** Enthält alle Klassen, die für die OpenAPI eingebunden werden */
 	private final Set<Class<?>> classes = Set.of(
 			APIClient.class,
 			ApiOperationExceptionMapper.class,

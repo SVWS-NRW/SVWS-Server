@@ -21,7 +21,7 @@ public final class RestAppExternal extends Application {
 	/** Die Pfad-Spezifikation für diese Applikation */
 	private static final String[] pathSpec = { "/api/external/*", "/openapi/external.json", "/openapi/external.yaml" };
 
-	/// Enthält alle Klassen, die für die OpenAPI eingebunden werden
+	/** Enthält alle Klassen, die für die OpenAPI eingebunden werden */
 	private final Set<Class<?>> classes = Set.of(
 			APILernplattformenV1.class,
 			APISchuljahresabschnitteV1.class,

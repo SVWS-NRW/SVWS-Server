@@ -24,7 +24,7 @@ import de.svws_nrw.db.utils.schema.DBMigrationManager;
  */
 public class MigrateDB {
 
-	/// Der Logger
+	/** Der Logger */
 	private static final Logger logger = new Logger();
 
 	/**

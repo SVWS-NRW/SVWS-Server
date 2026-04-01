@@ -25,7 +25,7 @@ import de.svws_nrw.db.utils.lupo.mdb.LupoMDB;
  */
 public class ExportLuPOMDB {
 
-	/// Der Logger
+	/** Der Logger */
 	private static final Logger logger = new Logger();
 
 	/**

@@ -17,6 +17,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.asd.types.fach.Fach;
+import de.svws_nrw.asd.types.schueler.Herkunftsarten;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.config.SVWSKonfigurationException;
@@ -26,11 +31,6 @@ import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.KursFortschreibungsart;
 import de.svws_nrw.core.types.PersonalTyp;
-import de.svws_nrw.asd.types.schueler.SchuelerStatus;
-import de.svws_nrw.asd.types.fach.Fach;
-import de.svws_nrw.asd.types.schueler.Herkunftsarten;
-import de.svws_nrw.asd.types.schule.Schulform;
-import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.AdressenUtils;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
@@ -108,7 +108,7 @@ public final class DBMigrationManager {
 	private final Integer filterSchulNummer;
 	private final Logger logger;
 
-	/// Enthält ggf. einen Fehler-String für einen zuletzt aufgetretenen Fehler
+	/** Enthält ggf. einen Fehler-String für einen zuletzt aufgetretenen Fehler */
 	private String lastError;
 
 	// Der Source-DB-Schema-Manager, sofern gerade eine Datenbank-Verbindung besteht
@@ -237,20 +237,25 @@ public final class DBMigrationManager {
 		logger.logLn("Erstelle Ziel-Schema für " + tgtConfig.getDBDriver() + " (" + tgtConfig.getDBLocation() + "/" + tgtSchema + ")");
 		logger.modifyIndent(2);
 		try {
-			if ((tgtSchema == null) || "".equals(tgtSchema.trim()))
+			if ((tgtSchema == null) || "".equals(tgtSchema.trim())) {
 				throw new DBException("Ziel-Schemaname darf nicht null oder leer sein");
+			}
 
-			if (!SVWSKonfiguration.get().lockSchema(tgtSchema))
+			if (!SVWSKonfiguration.get().lockSchema(tgtSchema)) {
 				throw new DBException("Ziel-Schema ist aktuell gesperrt und kann daher nicht überschrieben werden");
+			}
 
-			if (((tgtConfig.getDBDriver() == DBDriver.MARIA_DB) || (tgtConfig.getDBDriver() == DBDriver.MYSQL)) && ("root".equals(tgtConfig.getUsername())))
+			if (((tgtConfig.getDBDriver() == DBDriver.MARIA_DB) || (tgtConfig.getDBDriver() == DBDriver.MYSQL)) && ("root".equals(tgtConfig.getUsername()))) {
 				throw new DBException("Der Benutzer \"root\" ist kein zulässiger SVWS-Admin-Benutzer für MYSQL / MARIA_DB");
+			}
 
-			if ((tgtConfig.getDBDriver() == DBDriver.MSSQL) && ("sa".equals(tgtConfig.getUsername())))
+			if ((tgtConfig.getDBDriver() == DBDriver.MSSQL) && ("sa".equals(tgtConfig.getUsername()))) {
 				throw new DBException("Der Benutzer \"sa\" ist kein zulässiger SVWS-Admin-Benutzer für MS SQL Server");
+			}
 
-			if (!DBRootManager.recreateDB(tgtConfig, tgtRootUser, tgtRootPW, logger))
+			if (!DBRootManager.recreateDB(tgtConfig, tgtRootUser, tgtRootPW, logger)) {
 				throw new DBException("Fehler beim Anlegen des Schemas und des Admin-Benutzers");
+			}
 
 		} catch (final DBException e) {
 			logger.logLn("-> Erstellen fehlgeschlagen! (%s)".formatted(e.getMessage()));
@@ -321,8 +326,9 @@ public final class DBMigrationManager {
 		try (DBEntityManager tgtConn = tgtUser.getEntityManager()) {
 			logger.logLn("[OK]");
 			final DBSchemaManager tgtManager = DBSchemaManager.create(tgtConn, true, logger);
-			if (!tgtManager.dropSVWSSchema())
+			if (!tgtManager.dropSVWSSchema()) {
 				return false;
+			}
 			final DBMigrationManager migrationManager = new DBMigrationManager(srcManager, tgtConfig, maxUpdateRevision, devMode, schulNr, logger);
 			final boolean success = migrationManager.doMigrate();
 			logger.modifyIndent(-2);
@@ -363,8 +369,9 @@ public final class DBMigrationManager {
 			return false;
 		}
 		// Erstelle das Ziel-Schema
-		if (!createNewTargetSchema(tgtConfig, tgtRootUser, tgtRootPW, logger))
+		if (!createNewTargetSchema(tgtConfig, tgtRootUser, tgtRootPW, logger)) {
 			return false;
+		}
 		final DBMigrationManager migrationManager = new DBMigrationManager(srcManager, tgtConfig, maxUpdateRevision, devMode, schulNr, logger);
 		final boolean success = migrationManager.doMigrate();
 		logger.modifyIndent(-2);
@@ -538,8 +545,9 @@ public final class DBMigrationManager {
 	private boolean fixSchulform() throws ApiOperationException {
 		final DBEntityManager conn = tgtManager.getConnection();
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
+		if (schule == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Eintrag für die eigene Schule in der Datenbank vorhanden.");
+		}
 		final Schulform tmpSchulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
 		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 		logger.logLn("- Schulnummer: " + schule.SchulNr);
@@ -608,8 +616,9 @@ public final class DBMigrationManager {
 		// Falls ja, dann kopiere direkt, sofern keine Schulnummer angegeben ist.
 		if ((filterSchulNummer == null) && (spaltenSoll.size() == spaltenIst.size())) {
 			// Lese alle Daten aus der Tabelle
-			if (!tab.pkSpalten().isEmpty())
+			if (!tab.pkSpalten().isEmpty()) {
 				srcManager.getConnection().migrationQueryAll(dtoClass);
+			}
 			return srcManager.getConnection().queryAll(dtoClass);
 		}
 
@@ -618,16 +627,18 @@ public final class DBMigrationManager {
 			final List<Field> fields = Arrays.asList(dtoClass.getDeclaredFields())
 					.stream().filter(f -> {
 						final var col_annotation = f.getAnnotation(Column.class);
-						if (col_annotation == null)
+						if (col_annotation == null) {
 							return false;
+						}
 						return spaltenIst.contains(col_annotation.name()) || spaltenIst.contains(col_annotation.name().toUpperCase());
 					})
 					.toList();
 			final List<Field> missing_fields = Arrays.asList(dtoClass.getDeclaredFields())
 					.stream().filter(f -> {
 						final var col_annotation = f.getAnnotation(Column.class);
-						if (col_annotation == null)
+						if (col_annotation == null) {
 							return false;
+						}
 						return !spaltenIst.contains(col_annotation.name()) && !spaltenIst.contains(col_annotation.name().toUpperCase());
 					})
 					.toList();
@@ -644,8 +655,9 @@ public final class DBMigrationManager {
 				}
 				if ((filterSchulNummer != null) && spaltenIst.contains("SchulnrEigner")) {
 					jpql += ((!pkSpalten.isEmpty()) ? " AND " : " WHERE ") + "(e.SchulnrEigner = " + filterSchulNummer + "";
-					if (zentralKatalogeGemeinsam.contains(tab.name().toLowerCase()))
+					if (zentralKatalogeGemeinsam.contains(tab.name().toLowerCase())) {
 						jpql += " OR e.SchulnrEigner = 0";
+					}
 					jpql += ")";
 				}
 			}
@@ -656,8 +668,9 @@ public final class DBMigrationManager {
 			for (final Object[] obj : entities) {
 				final Object entity = constructor.newInstance();
 				int i = 0;
-				for (final Field f : fields)
+				for (final Field f : fields) {
 					f.set(entity, obj[i++]);
+				}
 				for (final Field f : missing_fields) {
 					final SchemaTabelleSpalte column =
 							tab.getSpalten(0).stream().filter(col -> col.javaAttributName().equals(f.getName())).findFirst().orElse(null);
@@ -693,23 +706,25 @@ public final class DBMigrationManager {
 		for (int i = 0; i <= ((entities.size() - 1) / 10000); i++) {
 			final int first = i * 10000;
 			int last = ((i + 1) * 10000) - 1;
-			if (last >= entities.size())
+			if (last >= entities.size()) {
 				last = entities.size() - 1;
+			}
 			ranges.add(Map.entry(first, last));
 		}
 		while (!ranges.isEmpty()) {
 			final Map.Entry<Integer, Integer> range = ranges.removeFirst();
 			if (tgtManager.getConnection().persistRange(entities, range.getKey(), range.getValue())) {
-				if (range.getKey().equals(range.getValue()))
+				if (range.getKey().equals(range.getValue())) {
 					logger.logLn("Datensatz " + range.getKey() + " erfolgreich geschrieben. (Freier Speicher: "
 							+ (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
 							+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
 							+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
-				else
+				} else {
 					logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " erfolgreich geschrieben. (Freier Speicher: "
 							+ (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
 							+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
 							+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
+				}
 			} else {
 				if (range.getKey().equals(range.getValue())) {
 					logger.logLn(LogLevel.ERROR, "Datensatz " + range.getKey() + " konnte nicht geschrieben werden - Datensatz wird übersprungen.");
@@ -720,8 +735,9 @@ public final class DBMigrationManager {
 							+ " konnten nicht geschrieben werden geschrieben - Teile den Block auf und versuche die Teilblöcke zu schreiben.");
 					// Teile den Block auf
 					int step = ((range.getValue() - range.getKey()) + 1) / 10;
-					if (step < 1)
+					if (step < 1) {
 						step = 1;
+					}
 					for (int last = range.getValue(); last >= range.getKey(); last -= step) {
 						final int first = (last - step) + 1;
 						ranges.addFirst(Map.entry((first >= range.getKey()) ? first : range.getKey(), last));
@@ -784,8 +800,9 @@ public final class DBMigrationManager {
 				final List<MigrationDTOSchuljahresabschnitte> folgeAbschnitte = tgtConn.queryList(
 						"SELECT e FROM MigrationDTOSchuljahresabschnitte e WHERE e.Jahr = ?1 AND e.Abschnitt = ?2",
 						MigrationDTOSchuljahresabschnitte.class, pairFolgeAbschnitt.a, pairFolgeAbschnitt.b);
-				if (!folgeAbschnitte.isEmpty())
+				if (!folgeAbschnitte.isEmpty()) {
 					continue;
+				}
 				logger.logLn("Ergänze Schuljahresabschnitt %d.%d ...".formatted(pairFolgeAbschnitt.a, pairFolgeAbschnitt.b));
 				tgtConn.persistNewWithAutoInkrement(MigrationDTOSchuljahresabschnitte.class,
 						(final long id) -> new MigrationDTOSchuljahresabschnitte(id, pairFolgeAbschnitt.a, pairFolgeAbschnitt.b));
@@ -809,16 +826,18 @@ public final class DBMigrationManager {
 			int pos = 0;
 			for (pos = 0; pos < entities.size(); pos++) {
 				schulNummer = entities.get(pos).SchulNr;
-				if (schulNummer != null)
+				if (schulNummer != null) {
 					break;
+				}
 			}
 			if (schulNummer == null) {
 				logger.logLn(LogLevel.ERROR, "Die Quelldatenbank ist fehlerhaft und enthält nur Datensätze mit leerer Schulnummer.");
 				return false;
 			}
 			for (int i = entities.size() - 1; i >= 0; i--) {
-				if (i == pos)  // Der erste gültige Datensatz sollte nicht entfernt werden...
+				if (i == pos) { // Der erste gültige Datensatz sollte nicht entfernt werden...
 					continue;
+				}
 				final MigrationDTOEigeneSchule daten = entities.get(i);
 				if (daten.SchulNr == null) {
 					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz mit leerer Schulnummer. Die Quell-Datenbank war fehlerhaft."
@@ -934,12 +953,15 @@ public final class DBMigrationManager {
 		final Set<String> set = new HashSet<>();
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOKursarten daten = entities.get(i);
-			if (daten.Kursart != null)
+			if (daten.Kursart != null) {
 				daten.Kursart = mapKursart(daten.Kursart);
-			if (daten.KursartAllg != null)
+			}
+			if (daten.KursartAllg != null) {
 				daten.KursartAllg = mapKursart(daten.KursartAllg);
-			if (daten.Kursart != null)
+			}
+			if (daten.Kursart != null) {
 				daten.InternBez = mapKursart(daten.InternBez);
+			}
 			final String tmpID = daten.Kursart + "-" + daten.KursartAllg;
 			if (set.contains(tmpID)) {
 				logger.logLn(LogLevel.ERROR, "Entferne doppelten Datensatz (ID %d) für die Kursart '%s'.".formatted(daten.ID, daten.Kursart));
@@ -1043,8 +1065,9 @@ public final class DBMigrationManager {
 			if ((daten.Benutzername == null) || ("".equals(daten.Benutzername.trim()))) {
 				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz mit der (ID %d): Benutzername darf nicht leer sein.".formatted(daten.ID));
 				entities.remove(i);
-			} else
+			} else {
 				credentialsIDs.add(daten.ID);
+			}
 		}
 		return true;
 	}
@@ -1282,10 +1305,12 @@ public final class DBMigrationManager {
 				continue;
 			}
 			schuelerLeistungsdatenIDs.add(daten.ID);
-			if (daten.Kursart != null)
+			if (daten.Kursart != null) {
 				daten.Kursart = mapKursart(daten.Kursart);
-			if (daten.KursartAllg != null)
+			}
+			if (daten.KursartAllg != null) {
 				daten.KursartAllg = mapKursart(daten.KursartAllg);
+			}
 		}
 		return true;
 	}
@@ -1418,8 +1443,9 @@ public final class DBMigrationManager {
 	 * @return die angepasste Kursart
 	 */
 	private String mapKursart(final String kursart) {
-		if (kursart == null)
+		if (kursart == null) {
 			return null;
+		}
 		final String result = switch (kursart) {
 			case "FS" -> "DFG";
 			case "FSD" -> "DFK";
@@ -1433,8 +1459,9 @@ public final class DBMigrationManager {
 			case "G" -> ((schulform == Schulform.H) || (schulform == Schulform.R) || (schulform == Schulform.S) || (schulform == Schulform.V)) ? "G_H" : "G";
 			default -> kursart;
 		};
-		if (!kursart.equals(result))
+		if (!kursart.equals(result)) {
 			logger.logLn(LogLevel.ERROR, "Korrigiere Datensatz: Die Kursart " + kursart + " wurde auf " + result + " angepasst.");
+		}
 		return result;
 	}
 
@@ -1453,8 +1480,9 @@ public final class DBMigrationManager {
 				logger.logLn(LogLevel.ERROR, "Korrigiere Datensatz (ID %d): Die Fortschreibungsart muss gesetzt sein.".formatted(daten.ID));
 				daten.Fortschreibungsart = KursFortschreibungsart.KEINE.kuerzel;
 			}
-			if (daten.KursartAllg != null)
+			if (daten.KursartAllg != null) {
 				daten.KursartAllg = mapKursart(daten.KursartAllg);
+			}
 			kursIDs.add(daten.ID);
 		}
 		return true;
@@ -1471,8 +1499,9 @@ public final class DBMigrationManager {
 	private boolean checkLehrer(final List<MigrationDTOLehrer> entities) {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOLehrer daten = entities.get(i);
-			if ((daten.PersonTyp == null) || ("".equals(daten.PersonTyp.trim())))
+			if ((daten.PersonTyp == null) || ("".equals(daten.PersonTyp.trim()))) {
 				daten.PersonTyp = PersonalTyp.LEHRKRAFT.kuerzel;
+			}
 			// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
 			if (daten.Strasse != null) {
 				final String[] aufgeteilt = AdressenUtils.splitStrasse(daten.Strasse);
@@ -1917,8 +1946,9 @@ public final class DBMigrationManager {
 //				continue;
 //			}
 			// Füge GU_IDs zu der Tabelle Schueler hinzu falls diese NULL sind.
-			if ((daten.GU_ID == null) || ("".equals(daten.GU_ID)))
+			if ((daten.GU_ID == null) || ("".equals(daten.GU_ID))) {
 				daten.GU_ID = "{" + UUID.randomUUID().toString() + "}";
+			}
 			if (schuelerGUIDs.contains(daten.GU_ID)) {
 				final String guid = "{" + UUID.randomUUID().toString() + "}";
 				logger.logLn(LogLevel.ERROR,
@@ -1946,8 +1976,9 @@ public final class DBMigrationManager {
 				daten.HausNrZusatz = aufgeteilt[2];
 			}
 			// Prüfe das Feld LSSchulform
-			if ((daten.LSSchulform != null) && (daten.LSSchulform.length() > 2))
+			if ((daten.LSSchulform != null) && (daten.LSSchulform.length() > 2)) {
 				daten.LSSchulform = daten.LSSchulform.substring(0, 2);
+			}
 			// Passe das Feld LSVersetzung an und verwende die ID statt des Statistik-Kürzels in der DB
 			if ((daten.LSVersetzung != null)) {
 				final Herkunftsarten art = switch (daten.LSVersetzung) {
@@ -2253,98 +2284,144 @@ public final class DBMigrationManager {
 	@SuppressWarnings("unchecked")
 	private boolean checkData(final List<?> entities) {
 		final Object firstObject = entities.get(0);
-		if (firstObject instanceof MigrationDTOEigeneSchule)
+		if (firstObject instanceof MigrationDTOEigeneSchule) {
 			return checkEigeneSchule((List<MigrationDTOEigeneSchule>) entities);
-		if (firstObject instanceof MigrationDTOTeilstandorte)
+		}
+		if (firstObject instanceof MigrationDTOTeilstandorte) {
 			return checkEigeneSchuleTeilstandorte((List<MigrationDTOTeilstandorte>) entities);
-		if (firstObject instanceof MigrationDTOKursarten)
+		}
+		if (firstObject instanceof MigrationDTOKursarten) {
 			return checkEigeneSchuleKursarten((List<MigrationDTOKursarten>) entities);
-		if (firstObject instanceof MigrationDTOSchuleNRW)
+		}
+		if (firstObject instanceof MigrationDTOSchuleNRW) {
 			return checkKatalogSchule((List<MigrationDTOSchuleNRW>) entities);
-		if (firstObject instanceof MigrationDTOSchuelerIndividuelleGruppe)
+		}
+		if (firstObject instanceof MigrationDTOSchuelerIndividuelleGruppe) {
 			return checkSchuelerListe((List<MigrationDTOSchuelerIndividuelleGruppe>) entities);
-		if (firstObject instanceof MigrationDTOSchuelerIndividuelleGruppeSchueler)
+		}
+		if (firstObject instanceof MigrationDTOSchuelerIndividuelleGruppeSchueler) {
 			return checkSchuelerListeInhalt((List<MigrationDTOSchuelerIndividuelleGruppeSchueler>) entities);
-		if (firstObject instanceof MigrationDTOCredentials)
+		}
+		if (firstObject instanceof MigrationDTOCredentials) {
 			return checkCredentials((List<MigrationDTOCredentials>) entities);
-		if (firstObject instanceof MigrationDTOCredentialsLernplattformen)
+		}
+		if (firstObject instanceof MigrationDTOCredentialsLernplattformen) {
 			return checkCredentialsLernplattformen((List<MigrationDTOCredentialsLernplattformen>) entities);
-		if (firstObject instanceof MigrationDTOFachklassen)
+		}
+		if (firstObject instanceof MigrationDTOFachklassen) {
 			return checkEigeneSchuleFachklassen((List<MigrationDTOFachklassen>) entities);
-		if (firstObject instanceof MigrationDTOUsers)
+		}
+		if (firstObject instanceof MigrationDTOUsers) {
 			return checkUsers((List<MigrationDTOUsers>) entities);
-		if (firstObject instanceof MigrationDTOProtokollLogin)
+		}
+		if (firstObject instanceof MigrationDTOProtokollLogin) {
 			return checkLogins((List<MigrationDTOProtokollLogin>) entities);
-		if (firstObject instanceof MigrationDTOPersonengruppen)
+		}
+		if (firstObject instanceof MigrationDTOPersonengruppen) {
 			return checkPersonengruppen((List<MigrationDTOPersonengruppen>) entities);
-		if (firstObject instanceof MigrationDTOPersonengruppenPersonen)
+		}
+		if (firstObject instanceof MigrationDTOPersonengruppenPersonen) {
 			return checkPersonengruppenPersonen((List<MigrationDTOPersonengruppenPersonen>) entities);
-		if (firstObject instanceof MigrationDTOSchuelerLernabschnittsdaten)
+		}
+		if (firstObject instanceof MigrationDTOSchuelerLernabschnittsdaten) {
 			return checkSchuelerLernabschnittsdaten((List<MigrationDTOSchuelerLernabschnittsdaten>) entities);
-		if (firstObject instanceof MigrationDTOSchuelerLeistungsdaten)
+		}
+		if (firstObject instanceof MigrationDTOSchuelerLeistungsdaten) {
 			return checkSchuelerLeistungsdaten((List<MigrationDTOSchuelerLeistungsdaten>) entities);
-		if (firstObject instanceof MigrationDTOSchuelerPSFachBemerkungen)
+		}
+		if (firstObject instanceof MigrationDTOSchuelerPSFachBemerkungen) {
 			return checkSchuelerLD_PSFachBem((List<MigrationDTOSchuelerPSFachBemerkungen>) entities);
-		if (firstObject instanceof MigrationDTOSchuelerFoerderempfehlung)
+		}
+		if (firstObject instanceof MigrationDTOSchuelerFoerderempfehlung) {
 			return checkSchuelerFoerderempfehlungen((List<MigrationDTOSchuelerFoerderempfehlung>) entities);
-		if (firstObject instanceof MigrationDTOSchuelerAbiturFach)
+		}
+		if (firstObject instanceof MigrationDTOSchuelerAbiturFach) {
 			return checkSchuelerAbiFaecher((List<MigrationDTOSchuelerAbiturFach>) entities);
-		if (firstObject instanceof MigrationDTOKurs)
+		}
+		if (firstObject instanceof MigrationDTOKurs) {
 			return checkKurse((List<MigrationDTOKurs>) entities);
-		if (firstObject instanceof MigrationDTOLehrer)
+		}
+		if (firstObject instanceof MigrationDTOLehrer) {
 			return checkLehrer((List<MigrationDTOLehrer>) entities);
-		if (firstObject instanceof MigrationDTOLehrerAbschnittsdaten)
+		}
+		if (firstObject instanceof MigrationDTOLehrerAbschnittsdaten) {
 			return checkLehrerAbschnittsdaten((List<MigrationDTOLehrerAbschnittsdaten>) entities);
-		if (firstObject instanceof MigrationDTOLehrerAnrechnungsstunde)
+		}
+		if (firstObject instanceof MigrationDTOLehrerAnrechnungsstunde) {
 			return checkLehrerAnrechnung((List<MigrationDTOLehrerAnrechnungsstunde>) entities);
-		if (firstObject instanceof MigrationDTOLehrerEntlastungsstunde)
+		}
+		if (firstObject instanceof MigrationDTOLehrerEntlastungsstunde) {
 			return checkLehrerEntlastung((List<MigrationDTOLehrerEntlastungsstunde>) entities);
-		if (firstObject instanceof MigrationDTOLehrerMehrleistung)
+		}
+		if (firstObject instanceof MigrationDTOLehrerMehrleistung) {
 			return checkLehrerMehrleistung((List<MigrationDTOLehrerMehrleistung>) entities);
-		if (firstObject instanceof MigrationDTOLehrerLehramt)
+		}
+		if (firstObject instanceof MigrationDTOLehrerLehramt) {
 			return checkLehrerLehramt((List<MigrationDTOLehrerLehramt>) entities);
-		if (firstObject instanceof MigrationDTOLehrerLehramtBefaehigung)
+		}
+		if (firstObject instanceof MigrationDTOLehrerLehramtBefaehigung) {
 			return checkLehrerLehramtBefaehigung((List<MigrationDTOLehrerLehramtBefaehigung>) entities);
-		if (firstObject instanceof MigrationDTOLehrerLehramtFachrichtung)
+		}
+		if (firstObject instanceof MigrationDTOLehrerLehramtFachrichtung) {
 			return checkLehrerLehramtFachrichtung((List<MigrationDTOLehrerLehramtFachrichtung>) entities);
-		if (firstObject instanceof MigrationDTOLehrerDatenschutz)
+		}
+		if (firstObject instanceof MigrationDTOLehrerDatenschutz) {
 			return checkLehrerDatenschutz((List<MigrationDTOLehrerDatenschutz>) entities);
-		if (firstObject instanceof MigrationDTOLehrerLernplattform)
+		}
+		if (firstObject instanceof MigrationDTOLehrerLernplattform) {
 			return checkLehrerLernplattform((List<MigrationDTOLehrerLernplattform>) entities);
-		if (firstObject instanceof MigrationDTOSchuelerLernplattform)
+		}
+		if (firstObject instanceof MigrationDTOSchuelerLernplattform) {
 			return checkSchuelerLernplattform((List<MigrationDTOSchuelerLernplattform>) entities);
-		if (firstObject instanceof MigrationDTOErzieherLernplattform)
+		}
+		if (firstObject instanceof MigrationDTOErzieherLernplattform) {
 			return checkErzieherLernplattform((List<MigrationDTOErzieherLernplattform>) entities);
-		if (firstObject instanceof MigrationDTOLehrerFoto)
+		}
+		if (firstObject instanceof MigrationDTOLehrerFoto) {
 			return checkLehrerFoto((List<MigrationDTOLehrerFoto>) entities);
-		if (firstObject instanceof MigrationDTOLehrerFunktion)
+		}
+		if (firstObject instanceof MigrationDTOLehrerFunktion) {
 			return checkLehrerFunktionen((List<MigrationDTOLehrerFunktion>) entities);
-		if (firstObject instanceof MigrationDTOSchueler)
+		}
+		if (firstObject instanceof MigrationDTOSchueler) {
 			return checkSchueler((List<MigrationDTOSchueler>) entities);
-		if (firstObject instanceof MigrationDTOSchuelerErzieherAdresse)
+		}
+		if (firstObject instanceof MigrationDTOSchuelerErzieherAdresse) {
 			return checkSchuelerErzieherAdresse((List<MigrationDTOSchuelerErzieherAdresse>) entities);
-		if (firstObject instanceof MigrationDTOSchuelerDatenschutz)
+		}
+		if (firstObject instanceof MigrationDTOSchuelerDatenschutz) {
 			return checkSchuelerDatenschutz((List<MigrationDTOSchuelerDatenschutz>) entities);
-		if (firstObject instanceof MigrationDTOSchuelerGrundschuldaten)
+		}
+		if (firstObject instanceof MigrationDTOSchuelerGrundschuldaten) {
 			return checkSchuelerGSDaten((List<MigrationDTOSchuelerGrundschuldaten>) entities);
-		if (firstObject instanceof MigrationDTOSchuelerKAoADaten)
+		}
+		if (firstObject instanceof MigrationDTOSchuelerKAoADaten) {
 			return checkSchuelerKAoADaten((List<MigrationDTOSchuelerKAoADaten>) entities);
-		if (firstObject instanceof MigrationDTOSchuelerBKFach)
+		}
+		if (firstObject instanceof MigrationDTOSchuelerBKFach) {
 			return checkSchuelerBKFaecher((List<MigrationDTOSchuelerBKFach>) entities);
-		if (firstObject instanceof MigrationDTOBetrieb)
+		}
+		if (firstObject instanceof MigrationDTOBetrieb) {
 			return checkKatalogAllgAdresse((List<MigrationDTOBetrieb>) entities);
-		if (firstObject instanceof MigrationDTOSchuelerAllgemeineAdresse)
+		}
+		if (firstObject instanceof MigrationDTOSchuelerAllgemeineAdresse) {
 			return checkSchuelerAllgAdr((List<MigrationDTOSchuelerAllgemeineAdresse>) entities);
-		if (firstObject instanceof MigrationDTOOrt)
+		}
+		if (firstObject instanceof MigrationDTOOrt) {
 			return checkKatalogOrt((List<MigrationDTOOrt>) entities);
-		if (firstObject instanceof MigrationDTOAnkreuzdaten)
+		}
+		if (firstObject instanceof MigrationDTOAnkreuzdaten) {
 			return checkKatalogAnkreuzdaten((List<MigrationDTOAnkreuzdaten>) entities);
-		if (firstObject instanceof MigrationDTOFach)
+		}
+		if (firstObject instanceof MigrationDTOFach) {
 			return checkFaecher((List<MigrationDTOFach>) entities);
-		if (firstObject instanceof MigrationDTOKatalogAdressart)
+		}
+		if (firstObject instanceof MigrationDTOKatalogAdressart) {
 			return checkKatalogAdressart((List<MigrationDTOKatalogAdressart>) entities);
-		if (firstObject instanceof MigrationDTOKindergarten)
+		}
+		if (firstObject instanceof MigrationDTOKindergarten) {
 			return checkKatalogKindergarten((List<MigrationDTOKindergarten>) entities);
+		}
 		return true;
 	}
 
@@ -2359,14 +2436,16 @@ public final class DBMigrationManager {
 	 */
 	private boolean copy() throws DBException {
 		// Lese die Schulnummer aus
-		if (!readSchulnummer())
+		if (!readSchulnummer()) {
 			return false;
+		}
 
 		// Durchwandere alle Tabellen in der geeigneten Reihenfolge, so dass Foreign-Key-Constraints erfüllt werden
 		for (final SchemaTabelle tab : Schema.getTabellen(0)) {
 			// Prüfe, ob die Tabelle bei der Migration beachtet werden soll, wenn nicht dann überspringe sie
-			if (!tab.migrate())
+			if (!tab.migrate()) {
 				continue;
+			}
 
 			logger.logLn("Tabelle " + tab.name() + ":");
 			logger.modifyIndent(2);
@@ -2386,15 +2465,17 @@ public final class DBMigrationManager {
 
 			// Wenn keine Daten vorhanden sind, dann brauchen auch keine geschrieben zu werden...
 			if (entities.isEmpty()) {
-				if ((lastError != null) && (!"".equals(lastError)))
+				if ((lastError != null) && (!"".equals(lastError))) {
 					logger.logLn("  Fehler: " + lastError);
+				}
 				logger.modifyIndent(-2);
 				continue;
 			}
 
 			// Prüfe die Entitäten auf fehlerhafte Daten, welche dann gefiltert werden, und ergänze ggf. zusätzliche Informationen während der Migration
-			if (!checkData(entities))
+			if (!checkData(entities)) {
 				return false;
+			}
 			if (entities.isEmpty()) {
 				logger.modifyIndent(-2);
 				continue;
@@ -2418,8 +2499,9 @@ public final class DBMigrationManager {
 		final List<MigrationDTOEigeneSchule> es_in = tgtManager.getConnection().queryAll(MigrationDTOEigeneSchule.class);
 		final List<MigrationDTOEigeneSchule> es_out = es_in.stream()
 				.filter(es -> {
-					if (es.SchulLogo == null)
+					if (es.SchulLogo == null) {
 						return false;
+					}
 					es.SchulLogoBase64 = Base64.getEncoder().encodeToString(es.SchulLogo);
 					return true;
 				}).toList();
@@ -2430,8 +2512,9 @@ public final class DBMigrationManager {
 		final List<MigrationDTOLehrerFoto> lf_in = tgtManager.getConnection().queryAll(MigrationDTOLehrerFoto.class);
 		final List<MigrationDTOLehrerFoto> lf_out = lf_in.stream()
 				.filter(lf -> {
-					if (lf.Foto == null)
+					if (lf.Foto == null) {
 						return false;
+					}
 					lf.FotoBase64 = Base64.getEncoder().encodeToString(lf.Foto);
 					return true;
 				}).toList();
@@ -2442,8 +2525,9 @@ public final class DBMigrationManager {
 		final List<MigrationDTOSchuelerFoto> sf_in = tgtManager.getConnection().queryAll(MigrationDTOSchuelerFoto.class);
 		final List<MigrationDTOSchuelerFoto> sf_out = sf_in.stream()
 				.filter(sf -> {
-					if (sf.Foto == null)
+					if (sf.Foto == null) {
 						return false;
+					}
 					sf.FotoBase64 = Base64.getEncoder().encodeToString(sf.Foto);
 					return true;
 				}).toList();

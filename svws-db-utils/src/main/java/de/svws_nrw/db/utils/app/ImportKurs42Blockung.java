@@ -24,7 +24,7 @@ import de.svws_nrw.db.DBException;
  */
 public class ImportKurs42Blockung {
 
-	/// Der Logger
+	/** Der Logger */
 	private static final Logger logger = new Logger();
 
 	/**

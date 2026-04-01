@@ -65,7 +65,7 @@ public class GenerateTestdatenLaufbahn {
 
 	private static final HashMap<String, String> mapJahrgangIDToJsonGostFaecher = new HashMap<>();
 
-	/// Der Logger
+	/** Der Logger */
 	private static final Logger logger = new Logger();
 
 	/**

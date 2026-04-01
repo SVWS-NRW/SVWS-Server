@@ -19,7 +19,7 @@ public final class RestAppDebug extends Application {
 	/** Die Pfad-Spezifikation für diese Applikation */
 	private static final String[] pathSpec = { "/debug/*" };
 
-	/// Enthält die API-Klasse für den Zugriff auf die Swagger-UI-Dateien
+	/** Enthält die API-Klasse für den Zugriff auf die Swagger-UI-Dateien */
 	private final Set<Class<?>> classes = Set.of(
 			ApiOperationExceptionMapper.class,
 			GenericExceptionMapper.class,

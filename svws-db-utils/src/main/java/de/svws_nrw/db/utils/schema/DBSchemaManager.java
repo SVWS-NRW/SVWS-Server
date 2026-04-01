@@ -28,19 +28,19 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class DBSchemaManager {
 
-	/// Die Datenbank-Verbindung
+	/** Die Datenbank-Verbindung */
 	private final DBEntityManager conn;
 
-	/// Der Status des Datenbank-Schema
+	/** Der Status des Datenbank-Schema */
 	private final DBSchemaStatus status;
 
-	/// Ein Logger, um die Abläufe in dem Schema-Manager zu loggen
+	/** Ein Logger, um die Abläufe in dem Schema-Manager zu loggen */
 	private final Logger logger;
 
-	/// Gibt an, ob die Ausführung von Operationen bei einzelnen Fehlern abgebrochen werden sollen.
+	/** Gibt an, ob die Ausführung von Operationen bei einzelnen Fehlern abgebrochen werden sollen. */
 	private final boolean returnOnError;
 
-	/// Enthält ggf. einen Fehler-String für einen zuletzt aufgetretenen Fehler
+	/** Enthält ggf. einen Fehler-String für einen zuletzt aufgetretenen Fehler */
 	private String lastError;
 
 	/** Der Updater, um Datenbank-Updates durchzuführen */

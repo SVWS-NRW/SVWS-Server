@@ -91,7 +91,7 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 
 	private void mapKursID(final DTOSchuelerLeistungsdaten dto, final Long idKurs) throws ApiOperationException {
 		if (idKurs != null) {
-			/// Prüfe, ob der Kurs existiert und passe ggf. Fachlehrer und Kursart an.
+			// Prüfe, ob der Kurs existiert und passe ggf. Fachlehrer und Kursart an.
 			final DTOKurs kurs = conn.queryByKey(DTOKurs.class, idKurs);
 			if (kurs == null) {
 				throw new ApiOperationException(Status.CONFLICT);

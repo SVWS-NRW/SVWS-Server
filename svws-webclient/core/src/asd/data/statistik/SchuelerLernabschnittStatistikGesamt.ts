@@ -54,7 +54,7 @@ export class SchuelerLernabschnittStatistikGesamt extends JavaObject {
 	public hatSchwerbehinderungsNachweis: boolean = false;
 
 	/**
-	 * Die ID des Haupförderschwerpunktes des Schülers
+	 * Die ID des Hauptförderschwerpunktes des Schülers
 	 */
 	public idFoerderschwerpunkt1: number | null = null;
 

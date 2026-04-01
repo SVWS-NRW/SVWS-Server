@@ -14,23 +14,23 @@ import jakarta.validation.constraints.NotNull;
  */
 public class CmdLineParser {
 
-	/// Gibt an, ob die Kommandozeile bereits in Bezug auf die angegebenen Optionen untersucht wurde
+	/** Gibt an, ob die Kommandozeile bereits in Bezug auf die angegebenen Optionen untersucht wurde */
 	private boolean parsed = false;
 
-	/// Die Kommandozeilen-Parameter als String-Array
+	/** Die Kommandozeilen-Parameter als String-Array */
 	private final String[] args;
 
-	/// Der Logger für die Ausgabe von Rückmeldungen des Parsers
+	/** Der Logger für die Ausgabe von Rückmeldungen des Parsers */
 	private final @NotNull Logger logger;
 
 
-	/// Eine Hashmap mit allen Kommandozeilenoptionen, welche ihren Short-Tags zugeordnet sind
+	/** Eine Hashmap mit allen Kommandozeilenoptionen, welche ihren Short-Tags zugeordnet sind */
 	private final HashMap<String, CmdLineOption> options = new HashMap<>();
 
-	/// Eine Hashmap mit allen Kommandozeilenoptionen, welche ihren Long-Tags zugeordnet sind
+	/** Eine Hashmap mit allen Kommandozeilenoptionen, welche ihren Long-Tags zugeordnet sind */
 	private final HashMap<String, CmdLineOption> optionsLong = new HashMap<>();
 
-	/// Eine Hashmap, welche dem short tag einer Option den Wert zuordnet, der über den Parser eingelesen wurde
+	/** Eine Hashmap, welche dem short tag einer Option den Wert zuordnet, der über den Parser eingelesen wurde */
 	private final HashMap<String, String> values = new HashMap<>();
 
 
@@ -58,8 +58,9 @@ public class CmdLineParser {
 	 * @throws CmdLineException    tritt auf, falls eine ungültige Option in der Kommandozeile entdeckt wird
 	 */
 	private void parse() throws CmdLineException {
-		if (options.isEmpty())
+		if (options.isEmpty()) {
 			throw new CmdLineException(CmdLineExceptionType.NO_OPTIONS);
+		}
 		// Setze die aktuelle option auf die erste definierte Option, diese wird nicht benötigt, sollte aber nicht null sein
 		CmdLineOption current = options.entrySet().iterator().next().getValue();
 		boolean isArgument = false;
@@ -76,12 +77,14 @@ public class CmdLineParser {
 				} else {
 					throw new CmdLineException(CmdLineExceptionType.UNKNOWN_OPTION);
 				}
-				if (current == null)
+				if (current == null) {
 					throw new CmdLineException(CmdLineExceptionType.UNKNOWN_OPTION);
-				if (current.hasArgument())
+				}
+				if (current.hasArgument()) {
 					isArgument = true;
-				else
+				} else {
 					values.put(current.getShortTag(), "");
+				}
 			}
 		}
 		parsed = true;
@@ -96,10 +99,12 @@ public class CmdLineParser {
 	 * @throws CmdLineException   tritt auf, falls der short oder long tag der Option bereits zuvor verwendte wurde
 	 */
 	public void addOption(final CmdLineOption option) throws CmdLineException {
-		if (options.get(option.getShortTag()) != null)
+		if (options.get(option.getShortTag()) != null) {
 			throw new CmdLineException(CmdLineExceptionType.SHORT_TAG_ALREADY_DEFINED);
-		if (optionsLong.get(option.getLongTag()) != null)
+		}
+		if (optionsLong.get(option.getLongTag()) != null) {
 			throw new CmdLineException(CmdLineExceptionType.LONG_TAG_ALREADY_DEFINED);
+		}
 		options.put(option.getShortTag(), option);
 		optionsLong.put(option.getLongTag(), option);
 	}
@@ -116,10 +121,12 @@ public class CmdLineParser {
 	 * @throws CmdLineException tritt auf, wenn die option nicht bekannt ist oder ein Fehler beim Parsen der Kommandozeile auftritt
 	 */
 	public String getValue(final String tag) throws CmdLineException {
-		if (!options.containsKey(tag))
+		if (!options.containsKey(tag)) {
 			throw new CmdLineException(CmdLineExceptionType.UNKNOWN_OPTION);
-		if (!parsed)
+		}
+		if (!parsed) {
 			parse();
+		}
 		return values.get(tag);
 	}
 
@@ -136,8 +143,9 @@ public class CmdLineParser {
 	public String getValue(final String tag, final String def) {
 		try {
 			final String result = getValue(tag);
-			if (result != null)
+			if (result != null) {
 				return result;
+			}
 			return def;
 		} catch (@SuppressWarnings("unused") final CmdLineException e) {
 			return def;
@@ -153,8 +161,9 @@ public class CmdLineParser {
 	 * @return true, falls die Option gesetzt wurde, sonst false
 	 */
 	public boolean isSet(final String tag) {
-		if (!options.containsKey(tag))
+		if (!options.containsKey(tag)) {
 			return false;
+		}
 		if (!parsed) {
 			try {
 				parse();

@@ -26,7 +26,7 @@ import de.svws_nrw.db.utils.schema.DBSchemaManager;
  */
 public class ExportDB {
 
-	/// Der Logger
+	/** Der Logger */
 	private static final Logger logger = new Logger();
 
 	/**

@@ -57,7 +57,7 @@ public final class RestAppServer extends Application {
 	/** Die Pfad-Spezifikationen für diese Applikation, welche auch bei dem Zugriff über andere Ports zur Verfügung stehen sollen */
 	private static final String[] pathSpecCommon = { "/config/*", "/status/*" };
 
-	/// Enthält alle Klassen, die für die OpenAPI eingebunden werden
+	/** Enthält alle Klassen, die für die OpenAPI eingebunden werden */
 	private final Set<Class<?>> classes = Set.of(
 			APIConfig.class,
 			APIAlgoGesamtschuleAbschluss.class,
