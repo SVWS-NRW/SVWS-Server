@@ -51,12 +51,15 @@ public class ReportingLehrerLeitungsfunktion extends ReportingBaseType {
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof final ReportingLehrerLeitungsfunktion other))
+		}
+		if (!(obj instanceof final ReportingLehrerLeitungsfunktion other)) {
 			return false;
+		}
 		return (idLeitungsfunktion == other.idLeitungsfunktion);
 	}
 

@@ -101,8 +101,9 @@ public final class SortierungRegistryReportingFach {
 
 		// Spezielle Sortierung für die gymnasiale Oberstufe.
 		reg.registiereComparable("gostSortierung", fach -> {
-			if (fach.statistikfach() == null)
+			if (fach.statistikfach() == null) {
 				return Integer.MAX_VALUE;
+			}
 			return GostFachbereich.getSortierung(Fach.getBySchluesselOrDefault(fach.statistikfach().kuerzelASD()));
 		});
 

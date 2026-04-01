@@ -113,11 +113,15 @@ public final class SortierungRegistryReportingKurs {
 				FunktionBuilder.start(ReportingKurs::kursleitung)
 						.then(ReportingLehrer::kuerzel)
 						.toFunction());
-		reg.registiereString(reg.methodeToString(ReportingKurs::schuljahresabschnitt) + "." + reg.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittKurz),
+		reg.registiereString(
+				reg.methodeToString(ReportingKurs::schuljahresabschnitt) + "."
+						+ reg.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittKurz),
 				FunktionBuilder.start(ReportingKurs::schuljahresabschnitt)
 						.then(ReportingSchuljahresabschnitt::textSchuljahresabschnittKurz)
 						.toFunction());
-		reg.registiereString(reg.methodeToString(ReportingKurs::schuljahresabschnitt) + "." + reg.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittLang),
+		reg.registiereString(
+				reg.methodeToString(ReportingKurs::schuljahresabschnitt) + "."
+						+ reg.methodeToString(ReportingSchuljahresabschnitt::textSchuljahresabschnittLang),
 				FunktionBuilder.start(ReportingKurs::schuljahresabschnitt)
 						.then(ReportingSchuljahresabschnitt::textSchuljahresabschnittLang)
 						.toFunction());

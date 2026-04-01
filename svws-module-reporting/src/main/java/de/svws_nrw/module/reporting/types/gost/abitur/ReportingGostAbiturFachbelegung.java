@@ -97,8 +97,9 @@ public class ReportingGostAbiturFachbelegung extends ReportingBaseType {
 		this.halbjahresbelegungen = halbjahresbelegungen;
 		this.letzteKursart = letzteKursart;
 
-		if (halbjahresbelegungen == null)
+		if (halbjahresbelegungen == null) {
 			this.halbjahresbelegungen = new ReportingGostAbiturFachbelegungHalbjahr[6];
+		}
 	}
 
 
@@ -128,10 +129,11 @@ public class ReportingGostAbiturFachbelegung extends ReportingBaseType {
 	 * @return Die Fachbezeichnung des Faches, ggf. erweitert um den Zusatz "(LK/eA)".
 	 */
 	public String zeugnisFachbezeichnung(final boolean mitLKBezeichnung) {
-		if (mitLKBezeichnung && (abiturFach != null) && (abiturFach <= 2))
+		if (mitLKBezeichnung && (abiturFach != null) && (abiturFach <= 2)) {
 			return (fach.bezeichnungZeugnis() + " (LK/eA)");
-		else
+		} else {
 			return this.fach.bezeichnungZeugnis();
+		}
 	}
 
 	/**
@@ -148,20 +150,25 @@ public class ReportingGostAbiturFachbelegung extends ReportingBaseType {
 	private String zeugnisNotenpunkte(final int gostHalbjahr, final int schuljahr, final boolean ausgabeAbiturzeugnis) {
 		if ((gostHalbjahr < 2) || (gostHalbjahr > 5)
 				|| (this.halbjahresbelegungen()[gostHalbjahr] == null)
-				|| (this.halbjahresbelegungen()[gostHalbjahr].note() == null))
+				|| (this.halbjahresbelegungen()[gostHalbjahr].note() == null)) {
 			return "--";
+		}
 
-		if (ausgabeAbiturzeugnis && !Boolean.TRUE.equals(this.halbjahresbelegungen()[gostHalbjahr].block1kursAufZeugnis()))
+		if (ausgabeAbiturzeugnis && !Boolean.TRUE.equals(this.halbjahresbelegungen()[gostHalbjahr].block1kursAufZeugnis())) {
 			return "--";
+		}
 
-		if (this.halbjahresbelegungen()[gostHalbjahr].note() == Note.E3_TEILGENOMMEN)
+		if (this.halbjahresbelegungen()[gostHalbjahr].note() == Note.E3_TEILGENOMMEN) {
 			return "teilg.";
+		}
 
-		if (this.halbjahresbelegungen()[gostHalbjahr].note().getNotenpunkteZweistellig(schuljahr) == null)
+		if (this.halbjahresbelegungen()[gostHalbjahr].note().getNotenpunkteZweistellig(schuljahr) == null) {
 			return "--";
+		}
 
-		if (ausgabeAbiturzeugnis && !Boolean.TRUE.equals(this.halbjahresbelegungen()[gostHalbjahr].block1gewertet()))
+		if (ausgabeAbiturzeugnis && !Boolean.TRUE.equals(this.halbjahresbelegungen()[gostHalbjahr].block1gewertet())) {
 			return '(' + this.halbjahresbelegungen()[gostHalbjahr].note().getNotenpunkteZweistellig(schuljahr) + ')';
+		}
 
 		return this.halbjahresbelegungen()[gostHalbjahr].note().getNotenpunkteZweistellig(schuljahr);
 	}

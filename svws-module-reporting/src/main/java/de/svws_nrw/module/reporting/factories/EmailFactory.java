@@ -161,8 +161,9 @@ public final class EmailFactory {
 		// E-Mail-Daten des aktuellen Benutzers ermitteln. Tritt dabei ein Fehler auf, so wird eine leere Adresse zurückgegeben.
 		try {
 			benutzerEMailDaten = new DataBenutzerEMailDaten(reportingRepository.conn()).getById(reportingRepository.conn().getUser().getId());
-			if ((benutzerEMailDaten != null) && (benutzerEMailDaten.address != null) && !benutzerEMailDaten.address.isBlank())
+			if ((benutzerEMailDaten != null) && (benutzerEMailDaten.address != null) && !benutzerEMailDaten.address.isBlank()) {
 				emailAdresse = benutzerEMailDaten.address.trim();
+			}
 		} catch (@SuppressWarnings("unused") final Exception ignore) {
 			emailAdresse = "";
 		}
@@ -223,8 +224,9 @@ public final class EmailFactory {
 			final Long id = entry.getKey();
 			final List<ReportBuilderPdf> pdfBuilders = entry.getValue();
 
-			if (id == null)
+			if (id == null) {
 				continue;
+			}
 
 			if (id < 0) {
 				listUebersprungen.add("- HINWEIS: Es gab PDF-Dateien, die keinem Empfänger zugeordnet werden konnten. Diese werden nicht versendet.");
@@ -328,22 +330,25 @@ public final class EmailFactory {
 			}
 			case KLASSENLEHRER -> {
 				final ReportingKlasse klasse = reportingRepository.klasse(id);
-				if (klasse == null)
+				if (klasse == null) {
 					yield new ArrayList<>();
+				}
 				final List<ReportingLehrer> lehrer = (klasse.klassenlehrer() == null) ? new ArrayList<>() : klasse.klassenlehrer();
 				yield new ArrayList<>(lehrer);
 			}
 			case KURSLEHRER -> {
 				final ReportingKurs kurs = reportingRepository.mapKurse().get(id);
-				if (kurs == null)
+				if (kurs == null) {
 					yield new ArrayList<>();
+				}
 				final List<ReportingLehrer> lehrer = (kurs.kurslehrer() == null) ? new ArrayList<>() : kurs.kurslehrer();
 				yield new ArrayList<>(lehrer);
 			}
 			case GOSTKURSPLANUNG_KURSLEHRER -> {
 				final ReportingGostKursplanungKurs kurs = reportingRepository.mapGostKursplanungKurse().get(id);
-				if (kurs == null)
+				if (kurs == null) {
 					yield new ArrayList<>();
+				}
 				final List<ReportingLehrer> lehrer = (kurs.lehrkraefte() == null) ? new ArrayList<>() : kurs.lehrkraefte();
 				yield new ArrayList<>(lehrer);
 			}
@@ -388,10 +393,11 @@ public final class EmailFactory {
 			return Response.status(Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity(simple).build();
 		}
 		if ((job.getStatus() == EmailJobStatus.COMPLETED_SUCCESSFULLY) || (job.getStatus() == EmailJobStatus.COMPLETED_WITH_ERRORS)
-				|| (job.getStatus() == EmailJobStatus.FAILED) || (job.getStatus() == EmailJobStatus.CANCELED))
+				|| (job.getStatus() == EmailJobStatus.FAILED) || (job.getStatus() == EmailJobStatus.CANCELED)) {
 			simple.log.add("Job war bereits beendet (Status=" + job.getStatus() + ").");
-		else
+		} else {
 			simple.log.add("Abbruch wurde veranlasst.");
+		}
 		return Response.ok(simple).type(MediaType.APPLICATION_JSON).build();
 	}
 
@@ -409,13 +415,15 @@ public final class EmailFactory {
 	 * @return Die gültige E-Mail-Adresse der Person oder ein leerer String, wenn keine gültige E-Mail-Adresse gefunden wurde.
 	 */
 	private static String ermittleEMailAdresseZurPerson(final ReportingPerson reportingPerson, final boolean istPrivateEmailAlternative) {
-		if (reportingPerson == null)
+		if (reportingPerson == null) {
 			return "";
+		}
 
 		String eMailAddress = validatedEmailOrEmpty(reportingPerson.emailSchule());
 
-		if (eMailAddress.isBlank() && istPrivateEmailAlternative)
+		if (eMailAddress.isBlank() && istPrivateEmailAlternative) {
 			eMailAddress = validatedEmailOrEmpty(reportingPerson.emailPrivat());
+		}
 
 		return eMailAddress;
 	}
@@ -428,13 +436,15 @@ public final class EmailFactory {
 	 * @return Die bereinigte und validierte E-Mail-Adresse in Kleinbuchstaben, oder ein leerer String, wenn die Eingabe ungültig ist.
 	 */
 	private static String validatedEmailOrEmpty(final String emailAddress) {
-		if ((emailAddress == null) || emailAddress.isBlank())
+		if ((emailAddress == null) || emailAddress.isBlank()) {
 			return "";
+		}
 		// E-Mail-Adresse bearbeiten ...
 		final String resultEmailAddress = emailAddress.trim().toLowerCase(Locale.ROOT);
 		// ... und dann validieren.
-		if (isValidEmail(resultEmailAddress))
+		if (isValidEmail(resultEmailAddress)) {
 			return resultEmailAddress;
+		}
 		return "";
 	}
 
@@ -446,8 +456,9 @@ public final class EmailFactory {
 	 * @return true, wenn die E-Mail-Adresse gültig ist, andernfalls false.
 	 */
 	private static boolean isValidEmail(final String emailAddress) {
-		if ((emailAddress == null) || emailAddress.isBlank())
+		if ((emailAddress == null) || emailAddress.isBlank()) {
 			return false;
+		}
 		try {
 			final InternetAddress address = new InternetAddress(emailAddress);
 			address.validate();
@@ -469,7 +480,8 @@ public final class EmailFactory {
 	 * @throws ApiOperationException Falls kein gültiger Betreff definiert ist.
 	 */
 	private String buildEMailBetreff(final ReportingParameterTypisiert parameter) throws ApiOperationException {
-		if ((parameter != null) && (parameter.eMailDaten() != null) && (parameter.eMailDaten().betreff != null) && (!parameter.eMailDaten().betreff.isBlank())) {
+		if ((parameter != null) && (parameter.eMailDaten() != null) && (parameter.eMailDaten().betreff != null)
+				&& (!parameter.eMailDaten().betreff.isBlank())) {
 			return parameter.eMailDaten().betreff;
 		}
 		reportingRepository.logger().logLn(LogLevel.ERROR, 4,
@@ -580,8 +592,9 @@ public final class EmailFactory {
 	 * @return Der HTML-escaped String, der für die Verwendung in HTML-Inhalten geeignet ist.
 	 */
 	private static String htmlEscape(final String text) {
-		if ((text == null) || text.isEmpty())
+		if ((text == null) || text.isEmpty()) {
 			return "";
+		}
 		final StringBuilder stringBuilder = new StringBuilder(text.length());
 		for (int i = 0; i < text.length(); i++) {
 			final char c = text.charAt(i);

@@ -46,14 +46,18 @@ public class ReportingStundenplanungKlasseStundenplan extends ReportingBaseType 
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if ((obj == null) || (this.klasse == null) || (this.stundenplan == null))
+		}
+		if ((obj == null) || (this.klasse == null) || (this.stundenplan == null)) {
 			return false;
-		if (!(obj instanceof final ReportingStundenplanungKlasseStundenplan other))
+		}
+		if (!(obj instanceof final ReportingStundenplanungKlasseStundenplan other)) {
 			return false;
-		if (((other.klasse == null) || (other.stundenplan == null)))
+		}
+		if (((other.klasse == null) || (other.stundenplan == null))) {
 			return false;
+		}
 		return (Objects.equals(klasse.id(), other.klasse.id()) && (Objects.equals(stundenplan.id(), other.stundenplan.id())));
 	}
 

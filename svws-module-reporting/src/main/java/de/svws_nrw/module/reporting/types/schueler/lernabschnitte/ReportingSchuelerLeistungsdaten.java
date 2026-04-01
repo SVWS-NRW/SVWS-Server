@@ -171,12 +171,15 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof final ReportingSchuelerLeistungsdaten other))
+		}
+		if (!(obj instanceof final ReportingSchuelerLeistungsdaten other)) {
 			return false;
+		}
 		return (id == other.id);
 	}
 
@@ -189,10 +192,12 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 */
 	public List<ReportingLehrer> lehrer() {
 		final List<ReportingLehrer> listeLehrkraefte = new ArrayList<>();
-		if (fachlehrer != null)
+		if (fachlehrer != null) {
 			listeLehrkraefte.add(fachlehrer);
-		if ((zusatzLehrer != null) && !zusatzLehrer.isEmpty())
+		}
+		if ((zusatzLehrer != null) && !zusatzLehrer.isEmpty()) {
 			listeLehrkraefte.addAll(zusatzLehrer);
+		}
 		return listeLehrkraefte;
 	}
 
@@ -202,8 +207,9 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 * @return		Kommaseparierte Liste der Lehrkräfte, beginnend mit der Fachlehrkraft.
 	 */
 	public String auflistungLehrerkuerzel() {
-		if (lehrer().isEmpty())
+		if (lehrer().isEmpty()) {
 			return "";
+		}
 		return this.lehrer().stream().map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
 	}
 
@@ -215,8 +221,9 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 * @return		Die Wochenstunden der Lehrkraft in diesem Kurs.
 	 */
 	public double wochenstundenLehrerZurID(final Long id) {
-		if ((id == null) || !wochenstundenLehrer.containsKey(id))
+		if ((id == null) || !wochenstundenLehrer.containsKey(id)) {
 			return 0;
+		}
 		return wochenstundenLehrer.get(id);
 	}
 
@@ -580,8 +587,9 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 * @return Die Kursart der Zuweisung oder einen leeren String.
 	 */
 	public String zuweisungKursart() {
-		if ((this.fach() == null) || (this.lernabschnitt() == null))
+		if ((this.fach() == null) || (this.lernabschnitt() == null)) {
 			return "";
+		}
 
 		return this.lernabschnitt().zuweisungen().stream()
 				.filter(z -> ((z.fach() != null) && (z.fach().id() == this.fach().id())))

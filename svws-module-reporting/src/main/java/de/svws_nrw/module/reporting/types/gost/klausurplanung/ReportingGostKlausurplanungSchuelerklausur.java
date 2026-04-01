@@ -76,8 +76,9 @@ public class ReportingGostKlausurplanungSchuelerklausur extends ReportingBaseTyp
 	 */
 	public String startuhrzeit() {
 		if (this.startzeit == null) {
-			if ((klausurtermin != null) && (klausurtermin.startzeit != null))
+			if ((klausurtermin != null) && (klausurtermin.startzeit != null)) {
 				return DateUtils.gibZeitStringOfMinuten(klausurtermin.startzeit);
+			}
 			return "";
 		}
 		return DateUtils.gibZeitStringOfMinuten(this.startzeit);

@@ -30,8 +30,9 @@ public final class ComparatorBuilder {
 		for (final SortierungAttribut attribut : sortierungAttribute) {
 			registry.attributComparator(attribut.attribut(), attribut.sortiereAufsteigend)
 					.ifPresentOrElse(comparators::add, () -> {
-						if (validierungsfehler != null)
+						if (validierungsfehler != null) {
 							validierungsfehler.add("Unbekanntes Sortierattribut: " + attribut.attribut());
+						}
 					});
 		}
 		return Comparators.verketten(comparators);
@@ -64,18 +65,21 @@ public final class ComparatorBuilder {
 	 *         Gibt eine leere Liste zurück, wenn die Eingabe null ist oder keinen gültigen String-Eintrag enthält.
 	 */
 	private static List<SortierungAttribut> sortierungAttribute(final List<String> attribute) {
-		if (attribute == null)
+		if (attribute == null) {
 			return List.of();
+		}
 
 		final List<SortierungAttribut> result = new ArrayList<>();
 
 		for (final String listeneintrag : attribute) {
-			if (listeneintrag == null)
+			if (listeneintrag == null) {
 				continue;
+			}
 
 			String trimmedListeneintrag = listeneintrag.trim();
-			if (trimmedListeneintrag.isEmpty())
+			if (trimmedListeneintrag.isEmpty()) {
 				continue;
+			}
 
 			boolean sortiereAufsteigend = true;
 
@@ -97,8 +101,9 @@ public final class ComparatorBuilder {
 			}
 
 			// Erzeuge ein neues SortierAttribut und setze es in die Liste.
-			if (!attribut.isBlank())
+			if (!attribut.isBlank()) {
 				result.add(new SortierungAttribut(attribut, sortiereAufsteigend));
+			}
 		}
 		return result;
 	}

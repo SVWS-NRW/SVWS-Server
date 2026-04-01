@@ -78,14 +78,16 @@ public final class ReportBuilderUtils {
 	 */
 	public static Context mergeHtmlContexts(final List<HtmlContext<?>> contexts) {
 		final Context finalContext = new Context();
-		if ((contexts == null) || contexts.isEmpty())
+		if ((contexts == null) || contexts.isEmpty()) {
 			return finalContext;
+		}
 
 		for (final HtmlContext<?> htmlCtx : contexts) {
 			if (htmlCtx != null) {
 				final Context ctx = htmlCtx.getContext();
-				if (ctx == null)
+				if (ctx == null) {
 					continue;
+				}
 				for (final String variable : ctx.getVariableNames()) {
 					finalContext.setVariable(variable, ctx.getVariable(variable));
 				}
@@ -107,8 +109,9 @@ public final class ReportBuilderUtils {
 	 */
 	public static String generiereDateinameAusVorlage(final String dateinamensvorlage, final List<HtmlContext<?>> contexts) {
 
-		if ((dateinamensvorlage == null) || dateinamensvorlage.isBlank())
+		if ((dateinamensvorlage == null) || dateinamensvorlage.isBlank()) {
 			return "";
+		}
 
 		final Context context = mergeHtmlContexts(contexts);
 
@@ -123,11 +126,13 @@ public final class ReportBuilderUtils {
 			// Entferne daher Tabs, Zeilenumbrüche und weitere Whitespaces (außer Space) wie Formfeed, Vertical Tab, ggf. Unicode-Whitespaces.
 			final String dateiname = textOutput.replace("\t", "").replaceAll("\\R\\s*", "").replaceAll("[^\\S ]+", "").trim();
 
-			if (dateiname.isBlank())
+			if (dateiname.isBlank()) {
 				return "";
+			}
 
-			if (istValiderDateiname(dateiname))
+			if (istValiderDateiname(dateiname)) {
 				return dateiname;
+			}
 
 			return "";
 		} catch (final Exception e) {
@@ -144,8 +149,9 @@ public final class ReportBuilderUtils {
 	 * @return true, wenn der Dateiname gültig ist; false, wenn er null, leer oder ungültig ist.
 	 */
 	private static boolean istValiderDateiname(final String dateiname) {
-		if ((dateiname == null) || dateiname.isBlank())
+		if ((dateiname == null) || dateiname.isBlank()) {
 			return false;
+		}
 		try {
 			//noinspection ResultOfMethodCallIgnored
 			new File(dateiname).getCanonicalFile();

@@ -187,8 +187,9 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public ReportingJahrgang jahrgang() {
-		if ((super.jahrgang == null) && (super.idJahrgang != null) && (super.idJahrgang >= 0))
+		if ((super.jahrgang == null) && (super.idJahrgang != null) && (super.idJahrgang >= 0)) {
 			super.jahrgang = super.schuljahresabschnitt.jahrgang(super.idJahrgang);
+		}
 		return super.jahrgang();
 	}
 
@@ -199,8 +200,9 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	 */
 	@Override
 	public ReportingKlasse klasse() {
-		if ((super.klasse() == null) && (super.idKlasse() != null) && (super.idKlasse() >= 0))
+		if ((super.klasse() == null) && (super.idKlasse() != null) && (super.idKlasse() >= 0)) {
 			super.klasse = super.schuljahresabschnitt.klasse(super.idKlasse);
+		}
 		return super.klasse();
 	}
 
@@ -243,7 +245,8 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 							reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idSonderpaedagoge(), l -> {
 								try {
 									final DBEntityManager conn = reportingRepository.conn();
-									return new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getById(super.idSonderpaedagoge());
+									return new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn))
+											.getById(super.idSonderpaedagoge());
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.logException(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
@@ -269,7 +272,8 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 							reportingRepository.mapLehrerStammdaten().computeIfAbsent(super.idTutor(), l -> {
 								try {
 									final DBEntityManager conn = reportingRepository.conn();
-									return new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getById(super.idTutor());
+									return new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn))
+											.getById(super.idTutor());
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.logException(
 											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
@@ -302,7 +306,8 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 				} catch (final Exception e) {
 					ReportingExceptionUtils.logException(
 							"INFO: Fehler bei der Ermittlung der Zuweisungen für Lernabschnitt %d aus der Datenbank. Gebe leere Liste zurück."
-									.formatted(this.id), e, this.reportingRepository.logger(), LogLevel.INFO, 0);
+									.formatted(this.id),
+							e, this.reportingRepository.logger(), LogLevel.INFO, 0);
 				}
 				this.reportingRepository.mapSchuelerZuweisungen().put(this.id(), reportingZuweisungen);
 			}

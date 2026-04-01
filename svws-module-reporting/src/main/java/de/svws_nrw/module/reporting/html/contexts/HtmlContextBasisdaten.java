@@ -56,7 +56,8 @@ public final class HtmlContextBasisdaten extends HtmlContext<Object> {
 
 		// Baue die HashMap mit den übergebenen Vorlage-Parameter-Namen und ihren Werten auf, damit diese in den Templates direkt genutzt werden können.
 		if ((this.reportingRepository.reportingParameter() != null) && (this.reportingRepository.reportingParameter().reportvorlageParameter() != null)) {
-			for (final ReportingReportvorlageParameter reportingReportVorlageParameter : this.reportingRepository.reportingParameter().reportvorlageParameter()) {
+			for (final ReportingReportvorlageParameter reportingReportVorlageParameter : this.reportingRepository.reportingParameter()
+					.reportvorlageParameter()) {
 				final ReportingVorlageParameterTypisiert<?> typisiert = erstelleTypisiertenParameter(reportingReportVorlageParameter);
 				this.reportvorlageParameterWerte.put(typisiert.getName(), typisiert.getWert());
 			}

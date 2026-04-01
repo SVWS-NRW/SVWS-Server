@@ -116,14 +116,15 @@ public final class ReportingFactory {
 				// Evtl. vorhandene null-Elemente in der Liste entfernen.
 				this.reportingParameter.idsHauptdaten = new ArrayList<>(reportingParameter.idsHauptdaten.stream().filter(Objects::nonNull).distinct().toList());
 			}
-			if (this.reportingParameter.idsHauptdaten.isEmpty())
+			if (this.reportingParameter.idsHauptdaten.isEmpty()) {
 				this.logger.logLn(LogLevel.INFO, 4, "HINWEIS: Die Liste der Hauptdaten ist leer an die Reporting-Factory übergeben worden.");
+			}
 
 			// Stelle sicher, dass bei nicht vorhandenen Detaildaten eine leere Liste statt null vorhanden ist.
 			this.logger.logLn(LogLevel.DEBUG, 4, "Validiere Detaildaten.");
-			if (this.reportingParameter.idsDetaildaten == null)
+			if (this.reportingParameter.idsDetaildaten == null) {
 				this.reportingParameter.idsDetaildaten = new ArrayList<>();
-			else {
+			} else {
 				// Evtl. vorhandene null-Elemente in der Liste entfernen.
 				this.reportingParameter.idsDetaildaten =
 						new ArrayList<>(reportingParameter.idsDetaildaten.stream().filter(Objects::nonNull).distinct().toList());
@@ -171,11 +172,13 @@ public final class ReportingFactory {
 
 		final HashMap<String, ReportingReportvorlageParameter> mapUebergebeneReportvorlageParameter = new HashMap<>();
 		for (final ReportingReportvorlageParameterGruppe g : uebergebeneParameterGruppen) {
-			if ((g.name == null) || g.name.isBlank() || (g.reportvorlageParameter == null))
+			if ((g.name == null) || g.name.isBlank() || (g.reportvorlageParameter == null)) {
 				continue;
+			}
 			for (final ReportingReportvorlageParameter p : g.reportvorlageParameter) {
-				if ((p == null) || (p.name == null) || p.name.isBlank())
+				if ((p == null) || (p.name == null) || p.name.isBlank()) {
 					continue;
+				}
 				mapUebergebeneReportvorlageParameter.put(g.name + "#" + p.name, p);
 			}
 		}
@@ -210,8 +213,9 @@ public final class ReportingFactory {
 			final List<ReportingReportvorlageParameter> kombinierteReportvorlageParameter = new ArrayList<>();
 			if (definierteGruppe.reportvorlageParameter != null) {
 				for (final ReportingReportvorlageParameter definierterReportvorlageParameter : definierteGruppe.reportvorlageParameter) {
-					if (definierterReportvorlageParameter == null)
+					if (definierterReportvorlageParameter == null) {
 						continue;
+					}
 
 					final ReportingReportvorlageParameter kombinierterReportvorlageParameter = new ReportingReportvorlageParameter();
 					// Daten zunächst aus der Vorlage übernehmen ...
@@ -226,8 +230,9 @@ public final class ReportingFactory {
 					// ... und wenn ein gültiger Wert ungleich null übergeben wurde, so wird dieser gesetzt.
 					final ReportingReportvorlageParameter uebergebenerReportvorlageParameter =
 							mapUebergebeneReportvorlageParameter.get(definierteGruppe.name + "#" + definierterReportvorlageParameter.name);
-					if ((uebergebenerReportvorlageParameter != null) && (uebergebenerReportvorlageParameter.wert != null))
+					if ((uebergebenerReportvorlageParameter != null) && (uebergebenerReportvorlageParameter.wert != null)) {
 						kombinierterReportvorlageParameter.wert = uebergebenerReportvorlageParameter.wert;
+					}
 
 					kombinierteReportvorlageParameter.add(kombinierterReportvorlageParameter);
 				}

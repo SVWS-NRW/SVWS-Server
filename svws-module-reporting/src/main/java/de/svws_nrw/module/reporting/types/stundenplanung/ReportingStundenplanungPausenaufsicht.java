@@ -65,12 +65,15 @@ public class ReportingStundenplanungPausenaufsicht extends ReportingBaseType {
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof final ReportingStundenplanungStundenplan other))
+		}
+		if (!(obj instanceof final ReportingStundenplanungStundenplan other)) {
 			return false;
+		}
 		return (id == other.id);
 	}
 
@@ -129,7 +132,7 @@ public class ReportingStundenplanungPausenaufsicht extends ReportingBaseType {
 	 *
 	 * @return Der Wochen-Typ diesem Unterricht oder 0.
 	 */
-	 public int wochentyp() {
+	public int wochentyp() {
 		return wochentyp;
 	}
 }

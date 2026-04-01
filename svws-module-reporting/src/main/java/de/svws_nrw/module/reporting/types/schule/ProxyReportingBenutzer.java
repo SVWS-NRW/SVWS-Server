@@ -67,8 +67,9 @@ public class ProxyReportingBenutzer extends ReportingBenutzer {
 		} else {
 			try {
 				final DTOViewBenutzerdetails dtoBenutzer = this.reportingRepository.conn().queryByKey(DTOViewBenutzerdetails.class, super.id);
-				if (dtoBenutzer != null)
+				if (dtoBenutzer != null) {
 					super.anzeigename = dtoBenutzer.AnzeigeName;
+				}
 			} catch (final Exception ignore) {
 				// Bei einem Fehler im Datenbankzugriff fehlt nur der Anzeigename. Daher kann der Fehler ignoriert werden.
 			}

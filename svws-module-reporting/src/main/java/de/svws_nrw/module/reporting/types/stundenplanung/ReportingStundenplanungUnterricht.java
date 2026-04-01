@@ -66,8 +66,9 @@ public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 		this.id = id;
 		this.fach = fach;
 		this.klassen = klassen;
-		if (klassen == null)
+		if (klassen == null) {
 			this.klassen = new ArrayList<>();
+		}
 		this.kurs = kurs;
 		if (this.kurs != null) {
 			this.klassen = this.kurs.klassen();
@@ -96,12 +97,15 @@ public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof final ReportingStundenplanungStundenplan other))
+		}
+		if (!(obj instanceof final ReportingStundenplanungStundenplan other)) {
 			return false;
+		}
 		return (id == other.id);
 	}
 
@@ -137,10 +141,11 @@ public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 	public String klassenAuflistungJahrgangParallelitaetKurz() {
 		final List<ReportingKlasse> listKlassen = new ArrayList<>();
 
-		if (!this.klassen().isEmpty())
+		if (!this.klassen().isEmpty()) {
 			listKlassen.addAll(this.klassen());
-		else
+		} else {
 			listKlassen.addAll(this.kurs().klassen());
+		}
 
 		return listKlassen.stream()
 				.collect(Collectors.groupingBy(k -> k.jahrgang().kuerzel(), Collectors.mapping(ReportingKlasse::parallelitaet,
@@ -243,10 +248,11 @@ public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 	 * @return Die Schüler zu diesem Unterricht.
 	 */
 	public List<ReportingSchueler> schueler() {
-		if (this.kurs != null)
+		if (this.kurs != null) {
 			return kurs.schueler();
-		else
+		} else {
 			return klassen.stream().flatMap(k -> k.schueler().stream()).toList();
+		}
 	}
 
 	/**

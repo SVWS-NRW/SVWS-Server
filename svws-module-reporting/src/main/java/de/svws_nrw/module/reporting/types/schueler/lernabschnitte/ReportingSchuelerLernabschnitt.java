@@ -368,12 +368,15 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof final ReportingSchuelerLernabschnitt other))
+		}
+		if (!(obj instanceof final ReportingSchuelerLernabschnitt other)) {
 			return false;
+		}
 		return (id == other.id);
 	}
 
@@ -387,8 +390,9 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Voraussichtliches Entlassungsdatum
 	 */
 	public String jahrVoraussichtlicheEntlassung() {
-		if ((this.jahrgang() == null) || (this.schuljahresabschnitt() == null) || (this.jahrgang.anzahlRestabschnitte() == null))
+		if ((this.jahrgang() == null) || (this.schuljahresabschnitt() == null) || (this.jahrgang.anzahlRestabschnitte() == null)) {
 			return "";
+		}
 
 		return String.valueOf(this.schuljahresabschnitt.schuljahr() + (this.jahrgang.anzahlRestabschnitte() / 2) + (this.schuljahresabschnitt.abschnitt() % 2));
 	}
@@ -744,8 +748,9 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Liste der Leistungsdaten des Klassenunterrichts
 	 */
 	public List<ReportingSchuelerLeistungsdaten> klassenunterricht() {
-		if (leistungsdaten() == null)
+		if (leistungsdaten() == null) {
 			return new ArrayList<>();
+		}
 		// Unterrichte ohne Kurs haben die ID -1 in der ListMap im dritten Index (Kurs-ID)
 		return listMapLeistungsdaten.get3(-1);
 	}
@@ -774,8 +779,9 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Liste von Schüler-Leistungsdaten, die Klassenunterricht darstellen.
 	 */
 	public List<ReportingSchuelerLeistungsdaten> leistungsdatenKlassenunterrichte() {
-		if (this.leistungsdaten() == null)
+		if (this.leistungsdaten() == null) {
 			return new ArrayList<>();
+		}
 
 		// Klassenunterrichte haben keine Kurs-ID, also hat Key3den Wert -1.
 		return listMapLeistungsdaten.get3(-1);
@@ -787,8 +793,9 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @return Liste von Schüler-Leistungsdaten, die Kursunterricht darstellen.
 	 */
 	public List<ReportingSchuelerLeistungsdaten> leistungsdatenKursunterrichte() {
-		if (this.leistungsdaten() == null)
+		if (this.leistungsdaten() == null) {
 			return new ArrayList<>();
+		}
 
 		// Kursunterrichte haben eine Kurs-ID, also hat Key3 einen Wert größer -1.
 		final List<ReportingSchuelerLeistungsdaten> leistungsdatenKursunterrichte = new ArrayList<>();
@@ -808,20 +815,23 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * Kursart PUK oder leer gewählt. Wird kein Eintrag gefunden, so wird null zurückgegeben.
 	 */
 	public ReportingSchuelerLeistungsdaten leistungsdatenKlassenunterrichtZurIdFachIdLehrer(final long idFach, final long idLehrer) {
-		if ((idFach < 0) || (idLehrer < 0) || (this.leistungsdaten() == null))
+		if ((idFach < 0) || (idLehrer < 0) || (this.leistungsdaten() == null)) {
 			return null;
+		}
 
 		// Klassenunterrichte haben keine Kurs-ID, also hat Key3den Wert -1.
 		final List<ReportingSchuelerLeistungsdaten> leistungsdatenZumFachUndLehrer =
 				listMapLeistungsdaten.get23(idFach, -1).stream().filter(l -> (l.fachlehrer().id() == idLehrer)).toList();
 
 		// Wenn es keinen Eintrag gibt, gebe null zurück.
-		if (leistungsdatenZumFachUndLehrer.isEmpty())
+		if (leistungsdatenZumFachUndLehrer.isEmpty()) {
 			return null;
+		}
 
 		// Wenn nur ein Eintrag existiert, wird dieser zurückgegeben
-		if (leistungsdatenZumFachUndLehrer.size() == 1)
+		if (leistungsdatenZumFachUndLehrer.size() == 1) {
 			return leistungsdatenZumFachUndLehrer.getFirst();
+		}
 
 		// Wenn es mehrere Leistungsdatensätze ohne Kurs-ID, aber mit gleichem Fach und Lehrer gibt, muss noch die Kursart verschieden sein.
 		// Wähle dann die Kursart PUK zuerst und wenn das nicht hilft, die leere Kursart. Andernfalls null.
@@ -840,8 +850,9 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 *         entsprechenden Leistungsdaten gefunden werden.
 	 */
 	public ReportingSchuelerLeistungsdaten leistungsdatenZurId(final long id) {
-		if ((id >= 0) && (this.leistungsdaten() != null))
+		if ((id >= 0) && (this.leistungsdaten() != null)) {
 			return listMapLeistungsdaten.getSingle1OrNull(id);
+		}
 		return null;
 	}
 
@@ -854,8 +865,9 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * oder eine leere Liste, falls keine Daten gefunden wurden.
 	 */
 	public List<ReportingSchuelerLeistungsdaten> leistungsdatenZurIdFach(final long idFach) {
-		if ((idFach >= 0) && (this.leistungsdaten() != null))
+		if ((idFach >= 0) && (this.leistungsdaten() != null)) {
 			return listMapLeistungsdaten.get2(idFach);
+		}
 		return new ArrayList<>();
 	}
 
@@ -868,8 +880,9 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 *         oder null, wenn keine entsprechenden Daten gefunden werden.
 	 */
 	public ReportingSchuelerLeistungsdaten leistungsdatenZurIdKurs(final long idKurs) {
-		if ((idKurs >= 0) && (this.leistungsdaten() != null))
+		if ((idKurs >= 0) && (this.leistungsdaten() != null)) {
 			return listMapLeistungsdaten.getSingle3OrNull(idKurs);
+		}
 		return null;
 	}
 

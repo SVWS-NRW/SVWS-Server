@@ -66,8 +66,9 @@ public class ProxyReportingKurs extends ReportingKurs {
 		// Jahrgänge setzen
 		if ((kursDaten.idJahrgaenge != null) && !kursDaten.idJahrgaenge.isEmpty()) {
 			for (final Long idJahrgang : kursDaten.idJahrgaenge) {
-				if (this.reportingRepository.mapJahrgaenge().containsKey(idJahrgang))
+				if (this.reportingRepository.mapJahrgaenge().containsKey(idJahrgang)) {
 					super.jahrgaenge.add(super.schuljahresabschnitt.jahrgang(idJahrgang));
+				}
 			}
 		}
 
@@ -84,8 +85,9 @@ public class ProxyReportingKurs extends ReportingKurs {
 		// Bestimme zunächst, ob es mehr als einen Lehrer für den Kurs gibt, und speichere sie dann ggf. in einer Map mit ihren Wochenstunden.
 		final List<DTOKursLehrer> dtoKursLehrer = this.reportingRepository.conn().queryList(DTOKursLehrer.QUERY_BY_KURS_ID, DTOKursLehrer.class, super.id);
 		Map<Long, Double> mapZusatzKurslehrer = new LinkedHashMap<>();
-		if (!dtoKursLehrer.isEmpty())
+		if (!dtoKursLehrer.isEmpty()) {
 			mapZusatzKurslehrer = dtoKursLehrer.stream().filter(Objects::nonNull).collect(Collectors.toMap(k -> k.Lehrer_ID, k -> k.Anteil));
+		}
 
 		// Wenn es einen Kursleiter gibt, prüfe, ob auch er bei den Zusatzkräften ist, und addiere hier seine beiden Wochenstunden.
 		final Map<Long, Double> mapKurslehrer = new LinkedHashMap<>();
@@ -97,8 +99,9 @@ public class ProxyReportingKurs extends ReportingKurs {
 				mapKurslehrer.put(kursDaten.lehrer, kursDaten.wochenstundenLehrer);
 			}
 		}
-		if (!mapZusatzKurslehrer.isEmpty())
+		if (!mapZusatzKurslehrer.isEmpty()) {
 			mapKurslehrer.putAll(mapZusatzKurslehrer);
+		}
 
 		// Erstelle jetzt alle Kurslehrer als Reporting-Lehrer.
 		super.lehrer = new ArrayList<>(this.reportingRepository.lehrer(mapKurslehrer.keySet().stream().toList(), false));
@@ -160,8 +163,9 @@ public class ProxyReportingKurs extends ReportingKurs {
 			if (super.idsSchueler().isEmpty()) {
 				try {
 					kursDaten = DataKurse.getKursdaten(reportingRepository.conn(), super.id());
-					if ((kursDaten.schueler != null) && !kursDaten.schueler.isEmpty())
+					if ((kursDaten.schueler != null) && !kursDaten.schueler.isEmpty()) {
 						idsSchueler.addAll(kursDaten.schueler.stream().map(s -> s.id).toList());
+					}
 				} catch (final ApiOperationException e) {
 					ReportingExceptionUtils.logException(
 							"FEHLER: Fehler bei der Ermittlung der Daten des Kurses %s in %s."
@@ -170,8 +174,9 @@ public class ProxyReportingKurs extends ReportingKurs {
 					return super.schueler();
 				}
 			}
-			if (!idsSchueler.isEmpty())
+			if (!idsSchueler.isEmpty()) {
 				super.schueler = this.reportingRepository.schueler(idsSchueler);
+			}
 		}
 		return super.schueler();
 	}

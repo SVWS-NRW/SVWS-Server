@@ -46,8 +46,9 @@ public class ReportingKlassenunterricht extends ReportingLerngruppe {
 		this.bewertenderLehrer = bewertenderLehrer;
 		this.jahrgang = klasse.jahrgang();
 
-		if (mapSchuelerLeistungsdaten != null)
+		if (mapSchuelerLeistungsdaten != null) {
 			this.mapSchuelerLeistungsdaten.putAll(mapSchuelerLeistungsdaten);
+		}
 
 		this.schueler().forEach(s -> this.mapSchuelerLeistungsdaten.computeIfAbsent(s.id(),
 				id -> s.aktiverLernabschnittInSchuljahresabschnitt(this.schuljahresabschnitt())
@@ -86,8 +87,9 @@ public class ReportingKlassenunterricht extends ReportingLerngruppe {
 	 */
 	@Override
 	public ReportingSchuelerLeistungsdaten leistungsdatenBySchueler(final Long idSchueler) {
-		if ((idSchueler == null) || mapSchuelerLeistungsdaten.isEmpty())
+		if ((idSchueler == null) || mapSchuelerLeistungsdaten.isEmpty()) {
 			return null;
+		}
 		return this.mapSchuelerLeistungsdaten.get(idSchueler);
 	}
 

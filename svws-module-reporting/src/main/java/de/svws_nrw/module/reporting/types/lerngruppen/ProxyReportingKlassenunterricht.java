@@ -37,9 +37,10 @@ public class ProxyReportingKlassenunterricht extends ReportingKlassenunterricht 
 	 * @param wochenstundenSchueler Wochenstunden für die Schüler
 	 * @param mapSchuelerLeistungsdaten Eine Map, die die Leistungsdaten zu diesem Unterricht zur ID des Schülers speichert
 	 */
-	public ProxyReportingKlassenunterricht(final ReportingRepository reportingRepository, final @NotNull ReportingKlasse klasse, final @NotNull ReportingFach fach,
-			final ReportingLehrer bewertenderLehrer, final List<ReportingLehrer> fachlehrer, final Map<Long, Double> wochenstundenFachlehrer,
-			final List<ReportingSchueler> schueler, final int wochenstundenSchueler, final Map<Long, ReportingSchuelerLeistungsdaten> mapSchuelerLeistungsdaten) {
+	public ProxyReportingKlassenunterricht(final ReportingRepository reportingRepository, final @NotNull ReportingKlasse klasse,
+			final @NotNull ReportingFach fach, final ReportingLehrer bewertenderLehrer, final List<ReportingLehrer> fachlehrer,
+			final Map<Long, Double> wochenstundenFachlehrer, final List<ReportingSchueler> schueler, final int wochenstundenSchueler,
+			final Map<Long, ReportingSchuelerLeistungsdaten> mapSchuelerLeistungsdaten) {
 		super(klasse, fach, bewertenderLehrer, fachlehrer, wochenstundenFachlehrer, schueler, wochenstundenSchueler, mapSchuelerLeistungsdaten);
 		this.reportingRepository = reportingRepository;
 	}
@@ -64,8 +65,9 @@ public class ProxyReportingKlassenunterricht extends ReportingKlassenunterricht 
 		final List<ReportingSchueler> schueler = super.schueler();
 		final Comparator<ReportingSchueler> comparator = ComparatorFactory.buildOptionalComparator(reportingRepository, ReportingSchueler.class.getSimpleName(),
 				SortierungRegistryReportingSchueler.sortierungRegistry()).orElse(null);
-		if (comparator != null)
+		if (comparator != null) {
 			return schueler.stream().sorted(comparator).toList();
+		}
 		return schueler;
 	}
 

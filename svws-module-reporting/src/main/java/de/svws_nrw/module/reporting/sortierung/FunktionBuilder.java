@@ -38,8 +38,9 @@ public final class FunktionBuilder {
 	 */
 	public static <T, A> Teilfunktion<T, A> start(final Function<? super T, ? extends A> f1) {
 		return new Teilfunktion<>(t -> {
-			if (t == null)
+			if (t == null) {
 				return null;
+			}
 			return f1.apply(t);
 		});
 	}
@@ -72,8 +73,9 @@ public final class FunktionBuilder {
 		public <S> Teilfunktion<T, S> then(final Function<? super R, ? extends S> next) {
 			return new Teilfunktion<>(t -> {
 				final R r = f.apply(t);
-				if (r == null)
+				if (r == null) {
 					return null;
+				}
 				return next.apply(r);
 			});
 		}
@@ -116,8 +118,9 @@ public final class FunktionBuilder {
 		return t -> {
 			for (final Function<T, R> f : alternativfunktionen) {
 				final R r = f.apply(t);
-				if (r != null)
+				if (r != null) {
 					return r;
+				}
 			}
 			return null;
 		};

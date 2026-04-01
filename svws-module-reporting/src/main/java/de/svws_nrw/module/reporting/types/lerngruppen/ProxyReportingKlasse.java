@@ -70,8 +70,9 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 		this.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt);
 		// Schüler setzen. Fülle nur die Liste der IDs. Die ReportingSchueler-Liste wird per lazy-Loading gefüllt, da nicht immer die Klassenschüler benötigt
 		// werden.
-		if ((klassenDaten.schueler != null) && !klassenDaten.schueler.isEmpty())
+		if ((klassenDaten.schueler != null) && !klassenDaten.schueler.isEmpty()) {
 			idsSchueler.addAll(klassenDaten.schueler.stream().map(s -> s.id).toList());
+		}
 	}
 
 
@@ -152,8 +153,9 @@ public class ProxyReportingKlasse extends ReportingKlasse {
 								try {
 									final DataJahrgangsdaten dataJahrgangsdaten = new DataJahrgangsdaten(this.reportingRepository.conn());
 									final Long idJahrgang = super.idJahrgang();
-									if (idJahrgang == null)
+									if (idJahrgang == null) {
 										throw new ApiOperationException(Response.Status.BAD_REQUEST, "Keine ID für den Jahrgang übergeben.");
+									}
 									return dataJahrgangsdaten.getById(idJahrgang);
 								} catch (final ApiOperationException e) {
 									ReportingExceptionUtils.logException(

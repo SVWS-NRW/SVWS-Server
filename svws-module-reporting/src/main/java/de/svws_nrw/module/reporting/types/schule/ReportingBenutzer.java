@@ -61,7 +61,8 @@ public class ReportingBenutzer extends ReportingPerson {
 	 * @param wohnort Der Wohnort des Benutzers.
 	 * @param wohnortsteil Ggf. der Ortsteil des Wohnortes des Benutzers.
 	 */
-	public ReportingBenutzer(final String anrede, final String anzeigename, final String benutzername, final String emailPrivat, final String emailSchule, final String faxSchule,
+	public ReportingBenutzer(final String anrede, final String anzeigename, final String benutzername, final String emailPrivat, final String emailSchule,
+			final String faxSchule,
 			final String geburtsdatum, final String geburtsland, final String geburtsname, final String geburtsort,
 			final Geschlecht geschlecht, final String hausnummer, final String hausnummerZusatz, final long id, final boolean istAdmin, final String kuerzel,
 			final ReportingLehrer lehrer, final String nachname, final Nationalitaeten staatsangehoerigkeit,
@@ -94,12 +95,15 @@ public class ReportingBenutzer extends ReportingPerson {
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof final ReportingBenutzer other))
+		}
+		if (!(obj instanceof final ReportingBenutzer other)) {
 			return false;
+		}
 		return (id == other.id);
 	}
 

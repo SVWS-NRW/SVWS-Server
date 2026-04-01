@@ -64,19 +64,22 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 
 	private static ProxyReportingSchulkatalogEintragNRW createReportingSchulkatalogEintragNRW(final ReportingRepository reportingRepository,
 			final Long idSchule) {
-		if (idSchule == null)
+		if (idSchule == null) {
 			return null;
+		}
 
 		final SchulEintrag schulEintrag = reportingRepository.katalogSchulen().get(idSchule);
-		if (schulEintrag == null)
+		if (schulEintrag == null) {
 			return null;
+		}
 
 		return new ProxyReportingSchulkatalogEintragNRW(reportingRepository, schulEintrag);
 	}
 
 	private static KatalogEntlassgrund createEndlassgrund(final ReportingRepository reportingRepository, final Long idEntlassgrund) {
-		if (idEntlassgrund == null)
+		if (idEntlassgrund == null) {
 			return null;
+		}
 
 		return reportingRepository.katalogEntlassgruende().get(idEntlassgrund);
 	}

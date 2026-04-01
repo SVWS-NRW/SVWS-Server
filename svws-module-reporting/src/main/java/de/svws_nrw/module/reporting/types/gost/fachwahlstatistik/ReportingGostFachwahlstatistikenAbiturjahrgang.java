@@ -98,8 +98,9 @@ public class ReportingGostFachwahlstatistikenAbiturjahrgang extends ReportingBas
 	 * @return Eine Liste mit den Fachwahlstatistiken für die angegebenen Fächer oder eine leere Liste, falls keine Statistiken existieren.
 	 */
 	public List<ReportingGostFachwahlstatistik> fachwahlstatistikenByIds(final List<Long> idsFach) {
-		if ((idsFach == null) || idsFach.isEmpty())
+		if ((idsFach == null) || idsFach.isEmpty()) {
 			return new ArrayList<>();
+		}
 
 		return idsFach.stream()
 				.filter(Objects::nonNull)
@@ -118,8 +119,9 @@ public class ReportingGostFachwahlstatistikenAbiturjahrgang extends ReportingBas
 	 * @return Eine Liste mit den Fachwahlstatistiken für die angegebenen Fächer oder eine leere Liste, falls keine Statistiken existieren.
 	 */
 	public List<ReportingGostFachwahlstatistik> fachwahlstatistikenByFaecher(final List<ReportingFach> faecher) {
-		if ((faecher == null) || faecher.isEmpty())
+		if ((faecher == null) || faecher.isEmpty()) {
 			return new ArrayList<>();
+		}
 
 		final List<Long> idsFaecher = faecher.stream()
 				.filter(Objects::nonNull)
@@ -141,14 +143,16 @@ public class ReportingGostFachwahlstatistikenAbiturjahrgang extends ReportingBas
 	 * @return Eine sortierte Liste der Fachwahlstatistiken für die angegebenen Fach-IDs und Halbjahres-IDs.
 	 */
 	public List<ReportingGostFachwahlstatistikHalbjahr> fachwahlstatistikenHalbjahreByIds(final List<Long> idsFaecher, final List<Integer> idsGostHalbjahre) {
-		if ((idsFaecher == null) || (idsGostHalbjahre == null) || idsFaecher.isEmpty() || idsGostHalbjahre.isEmpty())
+		if ((idsFaecher == null) || (idsGostHalbjahre == null) || idsFaecher.isEmpty() || idsGostHalbjahre.isEmpty()) {
 			return new ArrayList<>();
+		}
 
 		final List<Long> idsCheckedFeacher = idsFaecher.stream().filter(Objects::nonNull).distinct().toList();
 		final List<Integer> idsCheckedHalbjahre = idsGostHalbjahre.stream().filter(Objects::nonNull).distinct().toList();
 
-		if (idsCheckedFeacher.isEmpty() || idsCheckedHalbjahre.isEmpty())
+		if (idsCheckedFeacher.isEmpty() || idsCheckedHalbjahre.isEmpty()) {
 			return new ArrayList<>();
+		}
 
 		return listmapGostFachwahlstatistikenHalbjahre.keySet1().stream()
 				.filter(idsCheckedFeacher::contains)
@@ -168,14 +172,16 @@ public class ReportingGostFachwahlstatistikenAbiturjahrgang extends ReportingBas
 	 */
 	public List<ReportingGostFachwahlstatistikHalbjahr> fachwahlstatistikenHalbjahreByFaecherHalbjahre(final List<ReportingFach> faecher,
 			final List<GostHalbjahr> gostHalbjahre) {
-		if ((faecher == null) || (gostHalbjahre == null))
+		if ((faecher == null) || (gostHalbjahre == null)) {
 			return new ArrayList<>();
+		}
 
 		final List<Long> idsFaecher = faecher.stream().filter(Objects::nonNull).distinct().map(ReportingFach::id).toList();
 		final List<Integer> idsHalbjahre = gostHalbjahre.stream().filter(Objects::nonNull).distinct().map(halbjahr -> halbjahr.id).toList();
 
-		if (idsFaecher.isEmpty() || idsHalbjahre.isEmpty())
+		if (idsFaecher.isEmpty() || idsHalbjahre.isEmpty()) {
 			return new ArrayList<>();
+		}
 
 		return fachwahlstatistikenHalbjahreByIds(idsFaecher, idsHalbjahre);
 	}
@@ -190,8 +196,9 @@ public class ReportingGostFachwahlstatistikenAbiturjahrgang extends ReportingBas
 	 * @param gostFachwahlstatistiken Eine Liste mit den Halbjahresstatistiken im angegebenen Abiturjahr.
 	 */
 	public void setFachwahlstatistiken(final List<ReportingGostFachwahlstatistik> gostFachwahlstatistiken) {
-		if (gostFachwahlstatistiken == null)
+		if (gostFachwahlstatistiken == null) {
 			return;
+		}
 
 		listGostFachwahlstatistiken.clear();
 		mapGostFachwahlstatistiken.clear();

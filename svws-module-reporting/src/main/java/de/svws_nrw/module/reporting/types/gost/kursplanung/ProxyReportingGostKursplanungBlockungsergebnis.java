@@ -105,7 +105,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 		for (final GostBlockungKurs kurs : datenManager.kursGetListeSortiertNachKursartFachNummer()) {
 			// Liste der Kurslehrer erzeugen.
 			List<ReportingLehrer> kursLehrer = new ArrayList<>();
-			if (!datenManager.kursGetLehrkraefteSortiert(kurs.id).isEmpty())
+			if (!datenManager.kursGetLehrkraefteSortiert(kurs.id).isEmpty()) {
 				kursLehrer = datenManager.kursGetLehrkraefteSortiert(kurs.id)
 						.stream()
 						.map(l -> (ReportingLehrer) new ProxyReportingLehrer(
@@ -123,6 +123,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 									}
 								})))
 						.toList();
+			}
 
 			// Den Kurs der Gost-Kurplanung erzeugen.
 			// Darin fehlen die Kurschüler. Diese werden später durch das ProxyKursobjekt nachgeladen (lazy-loading), in dem dort

@@ -148,12 +148,15 @@ public class ReportingFach extends ReportingBaseType {
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof final ReportingFach other))
+		}
+		if (!(obj instanceof final ReportingFach other)) {
 			return false;
+		}
 		return (id == other.id);
 	}
 

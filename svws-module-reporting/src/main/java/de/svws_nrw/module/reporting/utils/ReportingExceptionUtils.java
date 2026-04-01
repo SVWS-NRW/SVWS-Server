@@ -83,18 +83,21 @@ public final class ReportingExceptionUtils {
 	 */
 	public static void logInfo(final String beschreibung, final Logger logger, final LogLevel loglevel, final int relativeIndent) {
 		logger.modifyIndent(relativeIndent);
-		if ((beschreibung != null) && !beschreibung.isEmpty())
+		if ((beschreibung != null) && !beschreibung.isEmpty()) {
 			logger.logLn(loglevel, beschreibung);
+		}
 	}
 
-	private static void logExceptionTypeAndMessage(final Exception exception, final Logger logger, final String templateOriginalString, final String templateReplaceString) {
+	private static void logExceptionTypeAndMessage(final Exception exception, final Logger logger, final String templateOriginalString,
+			final String templateReplaceString) {
 		if (exception instanceof final ApiOperationException aoe) {
 			logger.logLn(LogLevel.ERROR, 0, "### FEHLER: Fehler vom Typ ApiOperationException - Code: %d".formatted(aoe.getStatus().getStatusCode()));
 			logger.modifyIndent(4);
 			String message = aoe.getMessage();
 			if (message != null) {
-				if (!templateOriginalString.isEmpty())
+				if (!templateOriginalString.isEmpty()) {
 					message = message.replace(templateOriginalString, templateReplaceString);
+				}
 				logger.logLn(LogLevel.ERROR, message);
 			}
 		} else {
@@ -103,33 +106,38 @@ public final class ReportingExceptionUtils {
 		}
 	}
 
-	private static void logErrorCauses(final Exception exception, final Logger logger, final String templateOriginalString, final String templateReplaceString) {
+	private static void logErrorCauses(final Exception exception, final Logger logger, final String templateOriginalString,
+			final String templateReplaceString) {
 		logger.logLn(LogLevel.ERROR, 0, "### FEHLERGRÜNDE:");
 		logger.modifyIndent(4);
 		for (Throwable cause = exception; cause != null; cause = cause.getCause()) {
 			String message = cause.getMessage();
 			if ((message != null) && !message.isEmpty()) {
-				if (!templateOriginalString.isEmpty())
+				if (!templateOriginalString.isEmpty()) {
 					message = message.replace(templateOriginalString, templateReplaceString);
+				}
 				logger.logLn(LogLevel.ERROR, message);
 			}
 		}
 		logger.modifyIndent(-4);
 	}
 
-	private static void logStackTrace(final Exception exception, final Logger logger, final LogLevel loglevel, final String templateOriginalString, final String templateReplaceString) {
+	private static void logStackTrace(final Exception exception, final Logger logger, final LogLevel loglevel, final String templateOriginalString,
+			final String templateReplaceString) {
 		logger.logLn(LogLevel.ERROR, 0, "### STACKTRACE:");
 		logger.modifyIndent(4);
 
 		final Writer stringWriter = new StringWriter();
-		if (exception.getCause() == null)
+		if (exception.getCause() == null) {
 			exception.printStackTrace(new PrintWriter(stringWriter));
-		else
+		} else {
 			exception.getCause().printStackTrace(new PrintWriter(stringWriter));
+		}
 
 		String fullStacktrace = stringWriter.toString();
-		if (!templateOriginalString.isEmpty())
+		if (!templateOriginalString.isEmpty()) {
 			fullStacktrace = fullStacktrace.replace(templateOriginalString, templateReplaceString);
+		}
 
 		final BufferedReader reader = new BufferedReader(new StringReader(fullStacktrace));
 		reader.lines().forEach(l -> logger.logLn(loglevel, l));

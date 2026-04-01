@@ -121,11 +121,13 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	 */
 	public List<ReportingFach> faecher(final List<Long> ids) {
 		final List<ReportingFach> result = new ArrayList<>();
-		if (ids == null)
+		if (ids == null) {
 			return result;
-		final List<Long> idsNonNull =  ids.stream().filter(Objects::nonNull).distinct().toList();
-		if (idsNonNull.isEmpty())
+		}
+		final List<Long> idsNonNull = ids.stream().filter(Objects::nonNull).distinct().toList();
+		if (idsNonNull.isEmpty()) {
 			return result;
+		}
 		idsNonNull.forEach(idFach -> result.add(fach(idFach)));
 		return result;
 	}

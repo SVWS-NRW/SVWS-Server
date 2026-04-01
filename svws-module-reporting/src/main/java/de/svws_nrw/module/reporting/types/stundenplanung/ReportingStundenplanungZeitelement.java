@@ -52,12 +52,15 @@ public class ReportingStundenplanungZeitelement extends ReportingBaseType implem
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof final ReportingStundenplanungZeitelement other))
+		}
+		if (!(obj instanceof final ReportingStundenplanungZeitelement other)) {
 			return false;
+		}
 		return (Objects.equals(beginn, other.beginn)) && (Objects.equals(ende, other.ende))
 				&& (Objects.equals(wochentag.id, other.wochentag.id));
 	}
@@ -79,19 +82,23 @@ public class ReportingStundenplanungZeitelement extends ReportingBaseType implem
 		final int zeitelementWochentag = (zeitelement.wochentag == null) ? -1 : zeitelement.wochentag.id;
 
 		// Vergleiche die Wochentage.
-		if (thisWochentag < zeitelementWochentag)
+		if (thisWochentag < zeitelementWochentag) {
 			return -1;
-		if (thisWochentag > zeitelementWochentag)
+		}
+		if (thisWochentag > zeitelementWochentag) {
 			return 1;
+		}
 
 		// Falls vorhanden, dann werden null-Werte als "vor Beginn" oder "nach Ende" des 1440 Minuten Zeitraumes gewertet.
 		final int thisStart = (this.beginn == null) ? -1 : this.beginn;
 		final int zeitelementStart = (zeitelement.beginn == null) ? -1 : zeitelement.beginn;
 
-		if (thisStart < zeitelementStart)
+		if (thisStart < zeitelementStart) {
 			return -1;
-		if (thisStart > zeitelementStart)
+		}
+		if (thisStart > zeitelementStart) {
 			return 1;
+		}
 
 		// Falls vorhanden, dann werden null-Werte als "vor Beginn" oder "nach Ende" des 1440 Minuten Zeitraumes gewertet.
 		final int thisEnde = (this.ende == null) ? 1441 : this.ende;
@@ -128,10 +135,12 @@ public class ReportingStundenplanungZeitelement extends ReportingBaseType implem
 		final int zeitelementWochentag = (zeitelement.wochentag == null) ? -1 : zeitelement.wochentag.id;
 
 		// Vergleiche die Wochentage.
-		if (thisWochentag < zeitelementWochentag)
+		if (thisWochentag < zeitelementWochentag) {
 			return -8;
-		if (thisWochentag > zeitelementWochentag)
+		}
+		if (thisWochentag > zeitelementWochentag) {
 			return 8;
+		}
 
 		// Falls vorhanden, dann werden null-Werte als "vor Beginn" oder "nach Ende" des 1440 Minuten Zeitraumes gewertet.
 		final int thisStart = (this.beginn == null) ? -1 : this.beginn;
@@ -142,37 +151,42 @@ public class ReportingStundenplanungZeitelement extends ReportingBaseType implem
 		// Im Folgenden stimmen die Objekte im Wochentag schon überein.
 
 		// Vergleiche die Lage der Elemente zueinander anhand von Start und Ende.
-		if ((thisStart == zeitelementStart) && (thisEnde == zeitelementEnde))
+		if ((thisStart == zeitelementStart) && (thisEnde == zeitelementEnde)) {
 			return 0;
+		}
 
 		if (thisStart < zeitelementStart) {
 			// Beginn vor dem Vergleichselement.
-			if (thisEnde <= zeitelementStart)
+			if (thisEnde <= zeitelementStart) {
 				// Endet vor Beginn des Vergleichselements.
 				return -4;
-			if (thisEnde <= zeitelementEnde)
-				// Endet im Vergleichselements.
+			}
+			if (thisEnde <= zeitelementEnde) {
+				// Endet im Vergleichselement.
 				return -3;
-			else
+			} else {
 				// Endet nach dem Ende des Vergleichselements.
 				return -2;
+			}
 		} else if (thisStart >= zeitelementEnde) {
 			// Beginn nach dem Vergleichselement.
 			return 4;
 		} else if (thisStart > zeitelementStart) {
 			// Beginn im Vergleichselement.
-			if (thisEnde <= zeitelementEnde)
+			if (thisEnde <= zeitelementEnde) {
 				return 2;
-			else
+			} else {
 				return 3;
+			}
 		} else {
 			// Beginn gleichzeitig mit Vergleichselement.
-			if (thisEnde < zeitelementEnde)
+			if (thisEnde < zeitelementEnde) {
 				// Endet vor dem Vergleichselement
 				return -1;
-			else
+			} else {
 				// Endet nach dem Vergleichselement
 				return 1;
+			}
 		}
 	}
 
@@ -221,12 +235,15 @@ public class ReportingStundenplanungZeitelement extends ReportingBaseType implem
 	 *         Andernfalls die Differenz zwischen Endzeit und Startzeit.
 	 */
 	public int dauerInMinuten() {
-		if ((beginn == null) && (ende == null))
+		if ((beginn == null) && (ende == null)) {
 			return 0;
-		if (beginn == null)
+		}
+		if (beginn == null) {
 			return ende;
-		if (ende == null)
+		}
+		if (ende == null) {
 			return 1440 - beginn;
+		}
 		return ende - beginn;
 	}
 

@@ -55,8 +55,9 @@ public class ProxyReportingErzieher extends ReportingErzieher {
 				(erzieherStammdaten.ortsteilID != null) ? reportingRepository.katalogOrtsteile().get(erzieherStammdaten.ortsteilID) : null);
 
 		this.reportingRepository = reportingRepository;
-		if (erzieherStammdaten.idErzieherArt != null)
+		if (erzieherStammdaten.idErzieherArt != null) {
 			super.art = this.reportingRepository.mapReportingErzieherarten().get(erzieherStammdaten.idErzieherArt);
+		}
 	}
 
 

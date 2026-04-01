@@ -38,8 +38,9 @@ public class ProxyReportingSchuelerSprachbelegung extends ReportingSchuelerSprac
 				null
 		);
 		this.reportingRepository = reportingRepository;
-		if (sprachbelegung.referenzniveau != null)
+		if (sprachbelegung.referenzniveau != null) {
 			super.referenzniveau = Sprachreferenzniveau.data().getWertBySchluessel(sprachbelegung.referenzniveau);
+		}
 		super.statistikfach =
 				new ProxyReportingStatistikFach(sprachbelegung.sprache, this.reportingRepository.aktuellerSchuljahresabschnitt().schuljahr(), false);
 	}

@@ -27,8 +27,9 @@ public final class ReportingTypesUtils {
 		Die folgende Übertragung der Felder ist nur dann sicher möglich, wenn das quellobjekt auf eine
 		übergeordnete Klasse des Zielobjektes ist. Prüfe dies zunächst. Andernfalls wird die Methode abgebrochen.
 		*/
-		if ((quellobjekt == null) || (zielobjekt == null))
+		if ((quellobjekt == null) || (zielobjekt == null)) {
 			return;
+		}
 
 		final Class<?> klasseQuelle = quellobjekt.getClass();
 		final Class<?> klasseZiel = zielobjekt.getClass();
@@ -47,8 +48,9 @@ public final class ReportingTypesUtils {
 			}
 
 			// Wenn die Prüfung keinen geeigneten Zusammenhang zwischen den Klassen ergeben hat, breche hier ab.
-			if (!istQuelleSuperklasseVonZiel)
+			if (!istQuelleSuperklasseVonZiel) {
 				return;
+			}
 		}
 
 		/*
@@ -69,8 +71,9 @@ public final class ReportingTypesUtils {
 		final List<Field> editierbareFelder = new ArrayList<>();
 		for (final Field feld : felderQuellobjekt) {
 			modifiers = feld.getModifiers();
-			if (!Modifier.isStatic(modifiers) && Modifier.isPublic(modifiers))
+			if (!Modifier.isStatic(modifiers) && Modifier.isPublic(modifiers)) {
 				editierbareFelder.add(feld);
+			}
 		}
 
 		/*

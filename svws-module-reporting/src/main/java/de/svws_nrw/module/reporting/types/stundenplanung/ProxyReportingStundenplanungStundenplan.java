@@ -34,8 +34,9 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 		this.reportingRepository = reportingRepository;
 		this.stundenplanManager = stundenplanManager;
 
-		if (this.stundenplanManager == null)
+		if (this.stundenplanManager == null) {
 			return;
+		}
 
 		super.id = this.stundenplanManager.stundenplanGetID();
 		super.beschreibung = ersetzeNullBlankTrim(stundenplanManager.getBezeichnungStundenplan());

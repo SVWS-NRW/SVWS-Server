@@ -72,8 +72,9 @@ public class ReportingStundenplanungUnterrichtsrasterstunde extends ReportingStu
 		this.stundenplan = stundenplan;
 		this.stundeImUnterrichtsraster = stundeImUnterrichtsraster;
 
-		if ((unterrichte != null) && !unterrichte.isEmpty())
+		if ((unterrichte != null) && !unterrichte.isEmpty()) {
 			setUnterrichte(unterrichte);
+		}
 	}
 
 
@@ -95,12 +96,15 @@ public class ReportingStundenplanungUnterrichtsrasterstunde extends ReportingStu
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof final ReportingStundenplanungUnterrichtsrasterstunde other))
+		}
+		if (!(obj instanceof final ReportingStundenplanungUnterrichtsrasterstunde other)) {
 			return false;
+		}
 		return (id == other.id);
 	}
 
@@ -118,10 +122,11 @@ public class ReportingStundenplanungUnterrichtsrasterstunde extends ReportingStu
 	@Override
 	public int compareTo(final @NotNull ReportingStundenplanungZeitelement zeitelement) {
 		if (zeitelement instanceof final ReportingStundenplanungUnterrichtsrasterstunde other) {
-			if (super.wochentag() == other.wochentag())
+			if (super.wochentag() == other.wochentag()) {
 				return Integer.compare(this.stundeImUnterrichtsraster, other.stundeImUnterrichtsraster);
-			else
+			} else {
 				return super.wochentag().compareTo(other.wochentag());
+			}
 		}
 		return super.compareTo(zeitelement);
 	}
@@ -136,8 +141,9 @@ public class ReportingStundenplanungUnterrichtsrasterstunde extends ReportingStu
 	 *                           die dieser Stunde aus dem Unterrichtsraster zugeordnet werden soll.
 	 */
 	public void addUnterrichte(final List<ReportingStundenplanungUnterricht> unterrichte) {
-		if ((unterrichte == null) || unterrichte.isEmpty())
+		if ((unterrichte == null) || unterrichte.isEmpty()) {
 			return;
+		}
 
 		this.unterrichte.addAll(unterrichte);
 		for (final ReportingStundenplanungUnterricht unterricht : unterrichte) {
@@ -151,8 +157,9 @@ public class ReportingStundenplanungUnterrichtsrasterstunde extends ReportingStu
 			for (final ReportingStundenplanungRaum raum : unterricht.raeume()) {
 				this.listMapRaeumeUnterrichte.add(raum.id(), unterricht.wochentyp(), unterricht.id(), unterricht);
 			}
-			if (unterricht.fach() != null)
+			if (unterricht.fach() != null) {
 				this.listMapFaecherUnterrichte.add(unterricht.fach().id(), unterricht.wochentyp(), unterricht.id(), unterricht);
+			}
 			for (final ReportingSchueler schueler : unterricht.schueler()) {
 				this.listMapSchuelerUnterrichte.add(schueler.id(), unterricht.wochentyp(), unterricht.id(), unterricht);
 			}
@@ -310,13 +317,15 @@ public class ReportingStundenplanungUnterrichtsrasterstunde extends ReportingStu
 			final boolean inklusiveWochentyp0, final ListMap3DLongKeys<ReportingStundenplanungUnterricht> listMapUnterrichte) {
 		final List<ReportingStundenplanungUnterricht> result = new ArrayList<>();
 
-		if (this.unterrichte.isEmpty() || (idsObjekte == null))
+		if (this.unterrichte.isEmpty() || (idsObjekte == null)) {
 			return result;
+		}
 
 		final List<Long> idsObjekteNonNull = new ArrayList<>(idsObjekte.stream().filter(Objects::nonNull).toList());
 
-		if (idsObjekteNonNull.isEmpty())
+		if (idsObjekteNonNull.isEmpty()) {
 			return result;
+		}
 
 		for (final long idObjekt : idsObjekteNonNull) {
 			if (inklusiveWochentyp0) {

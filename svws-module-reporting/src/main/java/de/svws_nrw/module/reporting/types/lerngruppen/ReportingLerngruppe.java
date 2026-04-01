@@ -92,13 +92,15 @@ public abstract class ReportingLerngruppe extends ReportingSchuelergruppe {
 		wochenstundenFachlehrer.keySet().removeIf(Objects::isNull);
 		// Sammle alle IDs der übergebenen Fachlehrer, beginnend mit dem bewertenden Lehrer.
 		final List<Long> idsLehrer = new ArrayList<>();
-		if (!lehrer.isEmpty())
+		if (!lehrer.isEmpty()) {
 			idsLehrer.addAll(lehrer.stream().filter(Objects::nonNull).map(ReportingLehrer::id).distinct().toList());
+		}
 		// Prüfe, ob zu allen Fachlehrern Wochenstunden angegeben sind, ansonsten ergänze sie mit 0 in der Map.
 		// Fachlehrer, die nur in der Map gefunden werden, werden entfernt.
 		idsLehrer.forEach(idLehrer -> {
-			if (!wochenstundenFachlehrer.containsKey(idLehrer))
+			if (!wochenstundenFachlehrer.containsKey(idLehrer)) {
 				wochenstundenFachlehrer.put(idLehrer, 0.0);
+			}
 		});
 		wochenstundenFachlehrer.keySet().removeIf(idLehrer -> !idsLehrer.contains(idLehrer));
 	}
@@ -152,8 +154,9 @@ public abstract class ReportingLerngruppe extends ReportingSchuelergruppe {
 	 * @return Die Anzahl der Wochenstunden der Lehrkraft. Ist keine Zuordnung vorhanden, wird 0 zurückgegeben.
 	 */
 	public double wochenstundenFachlehrer(final long idLehrer) {
-		if (wochenstundenFachlehrer == null)
+		if (wochenstundenFachlehrer == null) {
 			return 0.0;
+		}
 		return wochenstundenFachlehrer.getOrDefault(idLehrer, 0.0);
 	}
 
@@ -187,7 +190,7 @@ public abstract class ReportingLerngruppe extends ReportingSchuelergruppe {
 						final ReportingSchuelerLeistungsdaten leistungsdaten = this.leistungsdatenBySchueler(s.id());
 						return (leistungsdaten != null) && !leistungsdaten.textFachbezogeneLernentwicklung().isEmpty();
 					})
-					? 1 : 0);
+							? 1 : 0);
 		}
 		return minAnzahlSchuelerMitFachbezogenerBemerkung == 1;
 	}
@@ -218,17 +221,21 @@ public abstract class ReportingLerngruppe extends ReportingSchuelergruppe {
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof final ReportingLerngruppe other))
+		}
+		if (!(obj instanceof final ReportingLerngruppe other)) {
 			return false;
+		}
 
 		// Vergleich von Fach
 		if (fach == null) {
-			if (other.fach != null)
+			if (other.fach != null) {
 				return false;
+			}
 		} else if (other.fach == null) {
 			return false;
 		} else if (fach.id() != other.fach.id()) {

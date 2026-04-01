@@ -46,8 +46,9 @@ public class FilterRegistry<T> {
 	 * @return Ein Predicate, das true liefert, wenn das Objekt den Kriterien entspricht. Unbekannte Attribute werden ignoriert.
 	 */
 	public Predicate<T> erstelleFilter(final ReportingFilterDefinition reportingFilterDefinition, final List<String> validierungsfehler) {
-		if ((reportingFilterDefinition == null) || (reportingFilterDefinition.kriterien == null) || reportingFilterDefinition.kriterien.isEmpty())
+		if ((reportingFilterDefinition == null) || (reportingFilterDefinition.kriterien == null) || reportingFilterDefinition.kriterien.isEmpty()) {
 			return t -> true;
+		}
 
 		// Die Hauptliste der Kriterien in der Definition wird standardmäßig mit UND verknüpft.
 		Predicate<T> result = t -> true;
@@ -91,15 +92,17 @@ public class FilterRegistry<T> {
 	private Predicate<T> baueEintragPredicate(final ReportingFilterEintrag eintrag, final List<String> validierungsfehler) {
 		final Function<T, ?> extractor = attributExtractors.get(eintrag.attribut.trim().toLowerCase(Locale.ROOT));
 		if (extractor == null) {
-			if (validierungsfehler != null)
+			if (validierungsfehler != null) {
 				validierungsfehler.add(eintrag.attribut);
+			}
 			return t -> true;
 		}
 
 		return obj -> {
 			final Object value = extractor.apply(obj);
-			if (value == null)
+			if (value == null) {
 				return false;
+			}
 			return pruefeWertGegenEintrag(value, eintrag);
 		};
 	}
@@ -107,10 +110,12 @@ public class FilterRegistry<T> {
 	private boolean pruefeWertGegenEintrag(final Object value, final ReportingFilterEintrag eintrag) {
 		final ReportingFilterOperation operation = ReportingFilterOperation.getByID(eintrag.operation);
 
-		if (operation == ReportingFilterOperation.IN)
+		if (operation == ReportingFilterOperation.IN) {
 			return pruefeIn(value, eintrag.werte);
-		if (operation == ReportingFilterOperation.BETWEEN)
+		}
+		if (operation == ReportingFilterOperation.BETWEEN) {
 			return pruefeBetween(value, eintrag.werte);
+		}
 
 		final String filterWert = eintrag.werte.isEmpty() ? "" : eintrag.werte.getFirst();
 		return vergleicheWert(value, filterWert, operation);
@@ -127,8 +132,9 @@ public class FilterRegistry<T> {
 	}
 
 	private boolean pruefeBetween(final Object value, final List<String> werte) {
-		if (werte.size() != 2)
+		if (werte.size() != 2) {
 			return false;
+		}
 		final String start = werte.get(0);
 		final String ende = werte.get(1);
 		return vergleicheWert(value, start, ReportingFilterOperation.GREATER_OR_EQUAL)
@@ -164,8 +170,9 @@ public class FilterRegistry<T> {
 	}
 
 	private boolean vergleicheString(final String wert, final String filterWert, final ReportingFilterOperation reportingFilterOperation) {
-		if (reportingFilterOperation == null)
+		if (reportingFilterOperation == null) {
 			return false;
+		}
 
 		final String wertLower = wert.toLowerCase(Locale.ROOT);
 		final String filterLower = filterWert.toLowerCase(Locale.ROOT);
@@ -185,8 +192,9 @@ public class FilterRegistry<T> {
 	}
 
 	private boolean vergleicheNumber(final double wert, final double filterWert, final ReportingFilterOperation reportingFilterOperation) {
-		if (reportingFilterOperation == null)
+		if (reportingFilterOperation == null) {
 			return false;
+		}
 		return switch (reportingFilterOperation) {
 			case EQUAL -> Double.compare(wert, filterWert) == 0;
 			case NOT_EQUAL -> Double.compare(wert, filterWert) != 0;
@@ -199,17 +207,20 @@ public class FilterRegistry<T> {
 	}
 
 	private boolean vergleicheBoolean(final boolean wert, final boolean filterWert, final ReportingFilterOperation reportingFilterOperation) {
-		if (reportingFilterOperation == ReportingFilterOperation.EQUAL)
+		if (reportingFilterOperation == ReportingFilterOperation.EQUAL) {
 			return wert == filterWert;
-		if (reportingFilterOperation == ReportingFilterOperation.NOT_EQUAL)
+		}
+		if (reportingFilterOperation == ReportingFilterOperation.NOT_EQUAL) {
 			return wert != filterWert;
+		}
 		return false;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private boolean vergleicheComparable(final Comparable wert, final String filterWert, final ReportingFilterOperation reportingFilterOperation) {
-		if (wert == null)
+		if (wert == null) {
 			return false;
+		}
 
 		// 1. Wenn der Wert ohnehin ein String ist, nutze die String-Logik.
 		if (wert instanceof final String s) {

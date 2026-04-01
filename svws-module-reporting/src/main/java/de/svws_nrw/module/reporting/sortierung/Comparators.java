@@ -78,7 +78,8 @@ public final class Comparators {
 	 * @return Ein {@link Comparator}, der Objekte des Typs {@code T} anhand des extrahierten
 	 *         vergleichbaren Wertes sortiert, abhängig von der angegebenen Sortierrichtung
 	 */
-	public static <T, U extends Comparable<? super U>> Comparator<T> comparableComparator(final Function<T, U> wertermittlungsfunktion, final boolean sortiereAufsteigend) {
+	public static <T, U extends Comparable<? super U>> Comparator<T> comparableComparator(final Function<T, U> wertermittlungsfunktion,
+			final boolean sortiereAufsteigend) {
 		final Comparator<T> cmp = Comparator.comparing(wertermittlungsfunktion, Comparator.nullsLast(Comparator.naturalOrder()));
 		return sortiereAufsteigend ? cmp : cmp.reversed();
 	}
@@ -94,8 +95,9 @@ public final class Comparators {
 	 */
 	public static <T> Comparator<T> verketten(final List<Comparator<T>> comparators) {
 		Comparator<T> result = (a, b) -> 0;
-		for (final Comparator<T> c : comparators)
+		for (final Comparator<T> c : comparators) {
 			result = result.thenComparing(c);
+		}
 		return result;
 	}
 }

@@ -130,7 +130,7 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 				if (this.idsFilter.isEmpty()) {
 					// Wenn die Liste der zu filterenden IDs leer ist, wird keine Filterung vorgenommen, also alle Schüler verwendet.
 					this.gefilterteSchueler = new ArrayList<>(this.schueler);
-				} else  if (!this.schueler.isEmpty()) {
+				} else if (!this.schueler.isEmpty()) {
 					// Filtere die Schüler heraus, die gewünscht werden.
 					gefilterteSchueler = this.schueler.stream().filter(s -> idsFilter.contains(s.id())).toList();
 					// Bereinige anschließend unter Umständen die Liste der Filter-IDs.

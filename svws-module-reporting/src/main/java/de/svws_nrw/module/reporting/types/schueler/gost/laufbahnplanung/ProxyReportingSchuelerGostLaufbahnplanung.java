@@ -91,8 +91,9 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 				// Es wurde ein Schüler gefunden, für den keine Abiturdaten in der Laufbahnplanung vorhanden sind. Prüfe alle Schüler und lade nach.
 				final List<Long> idsFehlendeSchueler = new ArrayList<>();
 				for (final Long idSchueler : this.reportingRepository.mapSchueler().keySet()) {
-					if (!this.reportingRepository.mapGostBeratungsdatenAbiturdaten().containsKey(idSchueler))
+					if (!this.reportingRepository.mapGostBeratungsdatenAbiturdaten().containsKey(idSchueler)) {
 						idsFehlendeSchueler.add(idSchueler);
+					}
 				}
 				this.reportingRepository.mapGostBeratungsdatenAbiturdaten().putAll(
 						new HashMap<>(DBUtilsGostLaufbahn.getMapFromIDs(this.reportingRepository.conn(), idsFehlendeSchueler)));
@@ -141,13 +142,15 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 				// Es wurde ein Schüler gefunden, für den keine Beratungsdaten in der Laufbahnplanung vorhanden sind. Prüfe alle Schüler und lade nach.
 				final List<Long> idsFehlendeSchueler = new ArrayList<>();
 				for (final Long idSchueler : this.reportingRepository.mapSchueler().keySet()) {
-					if (!this.reportingRepository.mapGostBeratungsdaten().containsKey(idSchueler))
+					if (!this.reportingRepository.mapGostBeratungsdaten().containsKey(idSchueler)) {
 						idsFehlendeSchueler.add(idSchueler);
+					}
 				}
 				this.reportingRepository.mapGostBeratungsdaten().putAll(
 						new HashMap<>(new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingRepository.conn()).getMapFromIDs(idsFehlendeSchueler)));
-				if (!this.reportingRepository.mapGostBeratungsdaten().containsKey(reportingSchueler.id()))
+				if (!this.reportingRepository.mapGostBeratungsdaten().containsKey(reportingSchueler.id())) {
 					throw new ApiOperationException(Response.Status.NOT_FOUND);
+				}
 			}
 		} catch (final ApiOperationException e) {
 			ReportingExceptionUtils.logException(
@@ -169,8 +172,9 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		// Aktuelle Prüfungsordnung und Klasse ergänzen, wenn Lernabschnitt vorhanden.
 		if (reportingSchueler.aktuellerLernabschnitt() != null) {
 			super.pruefungsordnung = reportingSchueler.aktuellerLernabschnitt().pruefungsOrdnung();
-			if (!super.pruefungsordnung().toLowerCase().contains("gost"))
+			if (!super.pruefungsordnung().toLowerCase().contains("gost")) {
 				super.pruefungsordnung = "APO-GOSt";
+			}
 			super.aktuelleKlasse = reportingSchueler.aktuellerLernabschnitt().klasse().kuerzel();
 		} else {
 			super.pruefungsordnung = "APO-GOSt";
@@ -251,32 +255,36 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 		if (aktuellesGostHalbjahrAbiturjahrgang != null) {
 			super.aktuellesGOStHalbjahr = aktuellesGostHalbjahrAbiturjahrgang.kuerzel;
-			if (aktuellesGostHalbjahrAbiturjahrgang.next() != null)
+			if (aktuellesGostHalbjahrAbiturjahrgang.next() != null) {
 				super.folgeAktuellesGOStHalbjahr = aktuellesGostHalbjahrAbiturjahrgang.next().kuerzel;
-			else
+			} else {
 				super.folgeAktuellesGOStHalbjahr = GostHalbjahr.Q22.kuerzel;
+			}
 		} else {
 			// Hier muss entweder ein Jahr vor EF.1 oder nach Q2.2 vorliegen. Prüfe mittels Abiturjahr.
 			super.aktuellesGOStHalbjahr = "";
-			if (this.reportingRepository.aktuellerSchuljahresabschnitt().schuljahr() >= super.abiturjahr)
+			if (this.reportingRepository.aktuellerSchuljahresabschnitt().schuljahr() >= super.abiturjahr) {
 				super.folgeAktuellesGOStHalbjahr = GostHalbjahr.Q22.kuerzel;
-			else
+			} else {
 				super.folgeAktuellesGOStHalbjahr = GostHalbjahr.EF1.kuerzel;
+			}
 		}
 
 		if (auswahlGostHalbjahrAbiturjahrgang != null) {
 			super.auswahlGOStHalbjahr = auswahlGostHalbjahrAbiturjahrgang.kuerzel;
-			if (auswahlGostHalbjahrAbiturjahrgang.next() != null)
+			if (auswahlGostHalbjahrAbiturjahrgang.next() != null) {
 				super.folgeAuswahlGOStHalbjahr = auswahlGostHalbjahrAbiturjahrgang.next().kuerzel;
-			else
+			} else {
 				super.folgeAuswahlGOStHalbjahr = GostHalbjahr.Q22.kuerzel;
+			}
 		} else {
 			// Hier muss entweder ein Jahr vor EF.1 oder nach Q2.2 vorliegen. Prüfe mittels Abiturjahr.
 			super.auswahlGOStHalbjahr = "";
-			if (this.reportingRepository.auswahlSchuljahresabschnitt().schuljahr() >= super.abiturjahr)
+			if (this.reportingRepository.auswahlSchuljahresabschnitt().schuljahr() >= super.abiturjahr) {
 				super.folgeAuswahlGOStHalbjahr = GostHalbjahr.Q22.kuerzel;
-			else
+			} else {
 				super.folgeAuswahlGOStHalbjahr = GostHalbjahr.EF1.kuerzel;
+			}
 		}
 	}
 
@@ -295,7 +303,8 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 					this.reportingRepository.mapLehrerStammdaten().computeIfAbsent(gostBeratungsdaten.beratungslehrerID, l -> {
 						try {
 							final DBEntityManager conn = this.reportingRepository.conn();
-							return new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn)).getById(gostBeratungsdaten.beratungslehrerID);
+							return new DataLehrerStammdaten(conn, new DataLernplattformen(conn), new DataEinwilligungsarten(conn))
+									.getById(gostBeratungsdaten.beratungslehrerID);
 						} catch (final ApiOperationException e) {
 							ReportingExceptionUtils.logException(
 									"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
@@ -349,8 +358,9 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 		// Erzeuge für jedes Fach des Abiturjahrgangs eine Zeile, wobei ggf. die Belegungen aus der Map verwendet werden
 		for (final GostFach fach : gostFaecherManager.faecher()) {
-			if (!checkBelegungInGostMoeglich(fach))
+			if (!checkBelegungInGostMoeglich(fach)) {
 				continue;
+			}
 
 			final ProxyReportingGostLaufbahnplanungFachwahl fachwahl;
 
@@ -404,10 +414,11 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 				} else if (sprachpruefung.istHSUPruefung) {
 					jahrgangFremdsprachenbeginn = "HSU";
 				}
-				if (sprachpruefung.kannErstePflichtfremdspracheErsetzen)
+				if (sprachpruefung.kannErstePflichtfremdspracheErsetzen) {
 					positionFremdsprachenfolge = "1";
-				else if (sprachpruefung.kannZweitePflichtfremdspracheErsetzen || sprachpruefung.kannWahlpflichtfremdspracheErsetzen)
+				} else if (sprachpruefung.kannZweitePflichtfremdspracheErsetzen || sprachpruefung.kannWahlpflichtfremdspracheErsetzen) {
 					positionFremdsprachenfolge = "2";
+				}
 			}
 
 			fachwahl = new ProxyReportingGostLaufbahnplanungFachwahl(
@@ -462,10 +473,12 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 */
 	private boolean checkSprachbelegungsbeginn(final GostFach fach, final Sprachbelegung sprachbelegung, final Fach zfach) {
 		String abJahrgang = zfach.daten(auswahlSchuljahr).abJahrgang;
-		if (abJahrgang == null)
+		if (abJahrgang == null) {
 			return true;
-		if (Jahrgaenge.data().getWertByBezeichner(abJahrgang).daten(auswahlSchuljahr) == null)
+		}
+		if (Jahrgaenge.data().getWertByBezeichner(abJahrgang).daten(auswahlSchuljahr) == null) {
 			return false;
+		}
 		abJahrgang = Jahrgaenge.data().getWertByBezeichner(abJahrgang).daten(auswahlSchuljahr).schluessel;
 		return ((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty()) && ((abJahrgang == null) || abJahrgang.isEmpty()
 				|| ((abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend
@@ -483,20 +496,26 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 * @return 				String mit dem Belegungskürzel des Faches gemäß dessen Halbjahresbelegung
 	 */
 	private static String eintragFachbelegung(final AbiturFachbelegungHalbjahr belegungHj) {
-		if (belegungHj == null)
+		if (belegungHj == null) {
 			return "";
+		}
 
 		final GostKursart kursart = GostKursart.fromKuerzel(belegungHj.kursartKuerzel);
-		if (kursart == GostKursart.GK)
+		if (kursart == GostKursart.GK) {
 			return belegungHj.schriftlich ? "S" : "M";
-		if (kursart == GostKursart.LK)
+		}
+		if (kursart == GostKursart.LK) {
 			return "LK";
-		if ((kursart == GostKursart.PJK) || (kursart == GostKursart.VTF))
+		}
+		if ((kursart == GostKursart.PJK) || (kursart == GostKursart.VTF)) {
 			return "M";
-		if (kursart == GostKursart.ZK)
+		}
+		if (kursart == GostKursart.ZK) {
 			return "ZK";
-		if ("AT".equals(belegungHj.kursartKuerzel))
+		}
+		if ("AT".equals(belegungHj.kursartKuerzel)) {
 			return "AT";
+		}
 		return "";
 	}
 

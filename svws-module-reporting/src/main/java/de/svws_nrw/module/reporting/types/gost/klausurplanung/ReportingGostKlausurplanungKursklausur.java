@@ -88,11 +88,13 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 	 * @return Anzahl der Schüler
 	 */
 	public String anzahlSchuelerKlausur() {
-		if ((this.schuelerklausuren == null) || this.schuelerklausuren.isEmpty())
+		if ((this.schuelerklausuren == null) || this.schuelerklausuren.isEmpty()) {
 			return "00";
+		}
 		final int anzahl = schuelerklausuren.stream().map(s -> s.id).distinct().toList().size();
-		if (anzahl < 10)
+		if (anzahl < 10) {
 			return "0" + anzahl;
+		}
 		return "" + anzahl;
 	}
 
@@ -102,11 +104,13 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 	 * @return Anzahl der Schüler
 	 */
 	public String anzahlSchuelerKurs() {
-		if (this.kurs == null)
+		if (this.kurs == null) {
 			return "00";
+		}
 		final int anzahl = this.kurs.schueler().stream().map(ReportingSchueler::id).distinct().toList().size();
-		if (anzahl < 10)
+		if (anzahl < 10) {
 			return "0" + anzahl;
+		}
 		return "" + anzahl;
 	}
 
@@ -116,8 +120,9 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 	 * @return	Liste der Klausurschreiber.
 	 */
 	public List<String> klausurschreiberNamen() {
-		if (this.kurs == null)
+		if (this.kurs == null) {
 			return new ArrayList<>();
+		}
 		return schuelerklausuren.stream().map(s -> s.schueler.vorname() + " " + s.schueler.nachname()).toList();
 	}
 
@@ -127,8 +132,9 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 	 * @return Die Liste der Räume der Kursklausur.
 	 */
 	public List<String> raeume() {
-		if ((schuelerklausuren == null) || schuelerklausuren.isEmpty())
+		if ((schuelerklausuren == null) || schuelerklausuren.isEmpty()) {
 			return new ArrayList<>();
+		}
 		// Der erste Termin einer Schülerklausur ist der Termin der Kursklausur (FolgeNr ist 0).
 		return schuelerklausuren.stream()
 				.filter(s -> (s.klausurtermin != null) && (s.nummerTerminfolge == 0)
@@ -143,8 +149,9 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 	 */
 	public String startuhrzeit() {
 		if (this.startzeit == null) {
-			if ((klausurtermin != null) && (klausurtermin.startzeit != null))
+			if ((klausurtermin != null) && (klausurtermin.startzeit != null)) {
 				return DateUtils.gibZeitStringOfMinuten(klausurtermin.startzeit);
+			}
 			return "";
 		}
 		return DateUtils.gibZeitStringOfMinuten(this.startzeit);
@@ -167,9 +174,10 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 						&& (!s.klausurraum.aufsichten.isEmpty()))
 				.toList();
 
-		if (!klausurenMitRaumUndStunden.isEmpty())
+		if (!klausurenMitRaumUndStunden.isEmpty()) {
 			return klausurenMitRaumUndStunden.getFirst().klausurraum.aufsichten.stream()
 					.map(a -> a.unterrichtsstunde.stundeImUnterrichtsraster()).toList();
+		}
 		return new ArrayList<>();
 	}
 
@@ -179,8 +187,9 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 	 * @return	Liste der Klausurschreiber als Text.
 	 */
 	public String textKlausurschreiberNamen() {
-		if (this.kurs == null)
+		if (this.kurs == null) {
 			return "";
+		}
 		return String.join(", ", klausurschreiberNamen());
 	}
 
@@ -190,8 +199,9 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 	 * @return Die Liste der Räume der Kursklausur als Text.
 	 */
 	public String textRaeume() {
-		if ((schuelerklausuren == null) || schuelerklausuren.isEmpty())
+		if ((schuelerklausuren == null) || schuelerklausuren.isEmpty()) {
 			return "";
+		}
 		return String.join(", ", raeume());
 	}
 
@@ -201,8 +211,9 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 	 * @return Die Unterrichtsstunden der Klausur als Text.
 	 */
 	public String textStunden() {
-		if (!stunden().isEmpty())
+		if (!stunden().isEmpty()) {
 			return stunden().getFirst() + "-" + stunden().getLast();
+		}
 		return "";
 	}
 

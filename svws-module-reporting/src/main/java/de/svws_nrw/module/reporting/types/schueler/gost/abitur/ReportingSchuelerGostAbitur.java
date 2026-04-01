@@ -376,13 +376,15 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 		final List<String> zahlworte = Arrays.asList("Null", "Eins", "Zwei", "Drei", "Vier", "Fünf", "Sechs", "Sieben", "Acht", "Neun");
 
 		final String durchschnittsnote = note();
-		if (durchschnittsnote.isEmpty() || "---".equals(durchschnittsnote))
+		if (durchschnittsnote.isEmpty() || "---".equals(durchschnittsnote)) {
 			return "---";
+		}
 
 		final List<String> durchschnittsnoteZiffern = new ArrayList<>(Arrays.stream(durchschnittsnote.split(",")).toList());
 
-		if (durchschnittsnoteZiffern.size() != 2)
+		if (durchschnittsnoteZiffern.size() != 2) {
 			return "---";
+		}
 
 		return zahlworte.get(Integer.parseInt(durchschnittsnoteZiffern.get(0))) + " Komma "
 				+ zahlworte.get(Integer.parseInt(durchschnittsnoteZiffern.get(1)));
@@ -416,13 +418,15 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	@JsonIgnore
 	public boolean vertiefungskursVorhanden() {
 		final List<ReportingGostAbiturFachbelegung> listVertiefungskurse = fachbelegungenVertiefungskurseZeugnisrelevant();
-		if (listVertiefungskurse.isEmpty())
+		if (listVertiefungskurse.isEmpty()) {
 			return false;
+		}
 
 		for (final ReportingGostAbiturFachbelegung vertiefung : listVertiefungskurse) {
 			for (int i = 0; i < 6; i++) {
-				if ((vertiefung.halbjahresbelegungen()[i] != null) && ('Q' == vertiefung.halbjahresbelegungen()[i].halbjahrKuerzel().charAt(0)))
+				if ((vertiefung.halbjahresbelegungen()[i] != null) && ('Q' == vertiefung.halbjahresbelegungen()[i].halbjahrKuerzel().charAt(0))) {
 					return true;
+				}
 			}
 		}
 
@@ -673,24 +677,29 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	 * @return Inhalt des Feldes note
 	 */
 	public String note() {
-		if ((note == null) || note.trim().isEmpty())
+		if ((note == null) || note.trim().isEmpty()) {
 			return "---";
+		}
 
 		String checkNote = note.trim();
-		if (!checkNote.contains(","))
+		if (!checkNote.contains(",")) {
 			checkNote += ",0";
+		}
 
-		if (checkNote.length() != 3)
+		if (checkNote.length() != 3) {
 			return "---";
+		}
 
 		final List<String> erlaubteZiffern = Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
 		final List<String> checkNoteZiffern = new ArrayList<>(Arrays.stream(checkNote.split(",")).toList());
 
-		if (checkNoteZiffern.size() != 2)
+		if (checkNoteZiffern.size() != 2) {
 			return "---";
+		}
 
-		if (!erlaubteZiffern.contains(checkNoteZiffern.get(0)) || !erlaubteZiffern.contains(checkNoteZiffern.get(1)))
+		if (!erlaubteZiffern.contains(checkNoteZiffern.get(0)) || !erlaubteZiffern.contains(checkNoteZiffern.get(1))) {
 			return "---";
+		}
 
 		return checkNote;
 	}

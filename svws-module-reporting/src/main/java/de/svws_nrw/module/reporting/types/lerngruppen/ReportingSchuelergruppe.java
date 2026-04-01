@@ -153,10 +153,11 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 	 * @return Alle Lehrkräfte außer der leitenden Lehrkraft
 	 */
 	protected List<ReportingLehrer> zusatzLehrer() {
-		if (lehrer.size() > 1)
+		if (lehrer.size() > 1) {
 			return lehrer.subList(1, lehrer.size());
-		else
+		} else {
 			return new ArrayList<>();
+		}
 	}
 
 	/**
@@ -167,8 +168,9 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 	 */
 	protected String auflistungLehrerkuerzel() {
 		final List<ReportingLehrer> listeLehrkraefte = lehrer();
-		if (listeLehrkraefte.isEmpty())
+		if (listeLehrkraefte.isEmpty()) {
 			return "";
+		}
 		return listeLehrkraefte.stream().map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
 	}
 
@@ -179,8 +181,9 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 	 *         String zurückgegeben.
 	 */
 	public String auflistungSchuelerVornameName() {
-		if (schueler.isEmpty())
+		if (schueler.isEmpty()) {
 			return "";
+		}
 		return schueler.stream().map(ReportingSchueler::vornameNachname).collect(Collectors.joining(", "));
 	}
 
@@ -191,8 +194,9 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 	 *         String zurückgegeben.
 	 */
 	public String auflistungSchuelerVornamenName() {
-		if (schueler.isEmpty())
+		if (schueler.isEmpty()) {
 			return "";
+		}
 		return schueler.stream().map(ReportingSchueler::vornamenNachname).collect(Collectors.joining(", "));
 	}
 
@@ -203,8 +207,9 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 	 *         String zurückgegeben.
 	 */
 	public String auflistungSchuelerNameVorname() {
-		if (schueler.isEmpty())
+		if (schueler.isEmpty()) {
 			return "";
+		}
 		return schueler.stream().map(ReportingSchueler::nachnameVorname).collect(Collectors.joining("; "));
 	}
 
@@ -215,8 +220,9 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 	 *         String zurückgegeben.
 	 */
 	public String auflistungSchuelerNameVornamen() {
-		if (schueler.isEmpty())
+		if (schueler.isEmpty()) {
 			return "";
+		}
 		return schueler.stream().map(ReportingSchueler::nachnameVornamen).collect(Collectors.joining("; "));
 	}
 
@@ -232,8 +238,9 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 			final List<ReportingKlasse> result = new ArrayList<>();
 			for (final ReportingSchueler s : reportingSchueler) {
 				final ReportingSchuelerLernabschnitt lernabschnitt = s.aktiverLernabschnittInSchuljahresabschnitt(this.schuljahresabschnitt);
-				if ((lernabschnitt != null) && (lernabschnitt.klasse() != null))
+				if ((lernabschnitt != null) && (lernabschnitt.klasse() != null)) {
 					result.add(lernabschnitt.klasse());
+				}
 			}
 			if (!result.isEmpty()) {
 				this.klassen.addAll(result.stream().distinct().sorted(Comparator.comparing(ReportingKlasse::kuerzel)).toList());
@@ -249,8 +256,9 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 	 */
 	public String auflistungKlassen() {
 		final List<ReportingKlasse> listeKlassen = this.klassen();
-		if (listeKlassen.isEmpty())
+		if (listeKlassen.isEmpty()) {
 			return "";
+		}
 		return listeKlassen.stream().filter(Objects::nonNull).map(ReportingKlasse::kuerzel).collect(Collectors.joining(","));
 	}
 
@@ -261,8 +269,9 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 	 */
 	public String auflistungJahrgaenge() {
 		final List<ReportingJahrgang> listeJahrgaenge = this.jahrgaenge();
-		if (listeJahrgaenge.isEmpty())
+		if (listeJahrgaenge.isEmpty()) {
 			return "";
+		}
 		return listeJahrgaenge.stream().filter(Objects::nonNull).map(ReportingJahrgang::kuerzel).collect(Collectors.joining(","));
 	}
 
@@ -274,8 +283,9 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 	 * @return Die Leistungsdaten-Matrix für diese Schülergruppe.
 	 */
 	public ReportingSchuelerLeistungsdatenMatrix schuelerLeistungsdatenMatrix() {
-		if (this.schuelerLeistungsdatenMatrix == null)
+		if (this.schuelerLeistungsdatenMatrix == null) {
 			this.schuelerLeistungsdatenMatrix = new ReportingSchuelerLeistungsdatenMatrix(this.schueler(), this.schuljahresabschnitt(), null, null, null);
+		}
 		return schuelerLeistungsdatenMatrix;
 	}
 
@@ -286,8 +296,9 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 	 * @return Statistik in der Form (m/w/d).
 	 */
 	public String statistikGeschlechter() {
-		if ((schueler == null) || schueler.isEmpty())
+		if ((schueler == null) || schueler.isEmpty()) {
 			return "(0/0/0)";
+		}
 		final long anzahlM = schueler.stream().filter(s -> "m".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
 		final long anzahlW = schueler.stream().filter(s -> "w".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
 		final long anzahlD = schueler.stream().filter(s -> "d".equalsIgnoreCase(s.geschlecht().kuerzel)).count();
@@ -319,12 +330,15 @@ public abstract class ReportingSchuelergruppe extends ReportingBaseType {
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof final ReportingSchuelergruppe other))
+		}
+		if (!(obj instanceof final ReportingSchuelergruppe other)) {
 			return false;
+		}
 
 		// Vergleich von ID und Klassentyp
 		return (id == other.id) && (this.getClass() == other.getClass());

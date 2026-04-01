@@ -126,12 +126,15 @@ public class ReportingStatistikFach extends ReportingBaseType {
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof final ReportingFach other))
+		}
+		if (!(obj instanceof final ReportingFach other)) {
 			return false;
+		}
 		return (idFachkatalog == other.id);
 	}
 
@@ -308,9 +311,10 @@ public class ReportingStatistikFach extends ReportingBaseType {
 	 * @param fach Das Fach, dessen Statistikfach dieses Statistikfach ist und das mit ihm im Kürzel übereinstimmt.
 	 */
 	public void setFach(final ReportingFach fach) {
-		if ((fach == null) || (fach.kuerzel() == null) || fach.kuerzel().isEmpty() || !fach.kuerzel().equals(this.kuerzel()))
+		if ((fach == null) || (fach.kuerzel() == null) || fach.kuerzel().isEmpty() || !fach.kuerzel().equals(this.kuerzel())) {
 			this.fach = null;
-		else
+		} else {
 			this.fach = fach;
+		}
 	}
 }

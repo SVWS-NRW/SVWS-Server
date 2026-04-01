@@ -132,16 +132,19 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 
 	private static Nationalitaeten getNationalitaet(final String nationalitaetId) {
-		if ((nationalitaetId == null) || nationalitaetId.isBlank())
+		if ((nationalitaetId == null) || nationalitaetId.isBlank()) {
 			return null;
+		}
 
 		Nationalitaeten result = Nationalitaeten.getByISO3(nationalitaetId);
-		if (result != null)
+		if (result != null) {
 			return result;
+		}
 
 		result = Nationalitaeten.getByISO2(nationalitaetId);
-		if (result != null)
+		if (result != null) {
 			return result;
+		}
 
 		result = Nationalitaeten.getByDESTATIS(nationalitaetId);
 
@@ -189,8 +192,9 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 */
 	@Override
 	public ReportingSchuelerLernabschnitt aktuellerLernabschnitt() {
-		if (super.aktuellerLernabschnitt == null)
+		if (super.aktuellerLernabschnitt == null) {
 			lernabschnitte();
+		}
 		return super.aktuellerLernabschnitt;
 	}
 
@@ -201,8 +205,9 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 */
 	@Override
 	public ReportingSchuelerLernabschnitt auswahlLernabschnitt() {
-		if (super.auswahlLernabschnitt == null)
+		if (super.auswahlLernabschnitt == null) {
 			lernabschnitte();
+		}
 		return super.auswahlLernabschnitt;
 	}
 
@@ -278,8 +283,9 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 						.thenComparing(ReportingErzieher::nachname)
 						.thenComparing(ReportingErzieher::vorname))
 				.toList();
-		if (!erzieherInGruppe.isEmpty())
+		if (!erzieherInGruppe.isEmpty()) {
 			super.erzieherArtGruppen.add(new ReportingErzieherArtGruppe("---", erzieherInGruppe, -1, this, -1));
+		}
 
 		super.erzieherArtGruppen.sort(Comparator.comparing(ReportingErzieherArtGruppe::sortierung).thenComparing(ReportingErzieherArtGruppe::bezeichnung));
 	}
@@ -306,8 +312,9 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 			// Übertrage Daten aus dem Repository
 			final Abiturdaten repoDaten = this.reportingRepository.mapGostSchuelerAbiturdaten().get(this.id());
-			if (repoDaten == null)
+			if (repoDaten == null) {
 				return null;
+			}
 
 			super.gostAbitur = new ProxyReportingSchuelerGostAbitur(this.reportingRepository, repoDaten);
 		}
@@ -364,17 +371,19 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 			final List<SchuelerLernabschnittsdaten> aktuelleAbschnitte =
 					this.reportingRepository.mapAlleLernabschnittsdaten().get123(super.id, this.reportingRepository.aktuellerSchuljahresabschnitt().id(), 0);
-			if (!aktuelleAbschnitte.isEmpty())
+			if (!aktuelleAbschnitte.isEmpty()) {
 				super.aktuellerLernabschnitt = new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, aktuelleAbschnitte.getFirst());
-			else
+			} else {
 				super.aktuellerLernabschnitt = null;
+			}
 
 			final List<SchuelerLernabschnittsdaten> auswahlAbschnitte =
 					this.reportingRepository.mapAlleLernabschnittsdaten().get123(super.id, this.reportingRepository.auswahlSchuljahresabschnitt().id(), 0);
-			if (!auswahlAbschnitte.isEmpty())
+			if (!auswahlAbschnitte.isEmpty()) {
 				super.auswahlLernabschnitt = new ProxyReportingSchuelerLernabschnitt(this.reportingRepository, auswahlAbschnitte.getFirst());
-			else
+			} else {
 				super.auswahlLernabschnitt = null;
+			}
 		}
 		return super.lernabschnitte();
 	}
@@ -382,9 +391,11 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	private void getLernabschnitte() {
 		final List<Long> idsSchuelerOhneLernabschnitte = new ArrayList<>(this.reportingRepository.mapSchueler().size());
 
-		for (final long key : this.reportingRepository.mapSchueler().keySet())
-			if (!this.reportingRepository.mapAlleLernabschnittsdaten().containsKey1(key))
+		for (final long key : this.reportingRepository.mapSchueler().keySet()) {
+			if (!this.reportingRepository.mapAlleLernabschnittsdaten().containsKey1(key)) {
 				idsSchuelerOhneLernabschnitte.add(key);
+			}
+		}
 
 		if (!idsSchuelerOhneLernabschnitte.isEmpty()) {
 			final List<SchuelerLernabschnittsdaten> schuelerGesamteLernabschnittsdaten = new ArrayList<>();
@@ -429,9 +440,10 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 					},
 					"Schulbesuchsdaten");
 
-			if (this.reportingRepository.mapSchuelerSchulbesuchsdaten().containsKey(this.id()))
+			if (this.reportingRepository.mapSchuelerSchulbesuchsdaten().containsKey(this.id())) {
 				super.schulbesuch = new ProxyReportingSchuelerSchulbesuch(reportingRepository,
 						this.reportingRepository.mapSchuelerSchulbesuchsdaten().get(this.id()));
+			}
 		}
 		return super.schulbesuch;
 	}
@@ -520,8 +532,9 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 */
 	private <T> void ladeListeInRepositoryMap(final Map<Long, List<T>> repositoryMap, final Function<List<Long>, Map<Long, List<T>>> funktionGesammeltesLaden,
 			final String datenbezeichnung) {
-		if (repositoryMap.containsKey(this.id()))
+		if (repositoryMap.containsKey(this.id())) {
 			return;
+		}
 
 		final List<Long> fehlendeIds = this.reportingRepository.mapSchueler().keySet().stream()
 				.filter(id -> !repositoryMap.containsKey(id))
@@ -536,8 +549,9 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			final Map<Long, List<T>> geladeneDaten = funktionGesammeltesLaden.apply(fehlendeIds);
 			repositoryMap.putAll(geladeneDaten);
 			// Leere Listen für alle angefragten IDs ohne Treffer
-			for (final Long id : fehlendeIds)
+			for (final Long id : fehlendeIds) {
 				repositoryMap.putIfAbsent(id, new ArrayList<>());
+			}
 		} catch (final Exception e) {
 			// Gesammeltes Laden fehlgeschlagen – Fallback: einzelnes Laden für aktuellen Schüler
 			ReportingExceptionUtils.logException(
@@ -570,15 +584,17 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	 */
 	private <T> void ladeObjektInRepositoryMap(final Map<Long, T> repositoryMap, final Function<List<Long>, Map<Long, T>> funktionGesammeltesLaden,
 			final String datenbezeichnung) {
-		if (repositoryMap.containsKey(this.id()))
+		if (repositoryMap.containsKey(this.id())) {
 			return;
+		}
 
 		final List<Long> fehlendeIds = this.reportingRepository.mapSchueler().keySet().stream()
 				.filter(id -> !repositoryMap.containsKey(id))
 				.toList();
 
-		if (fehlendeIds.isEmpty())
+		if (fehlendeIds.isEmpty()) {
 			return;
+		}
 
 		try {
 			final Map<Long, T> geladeneDaten = funktionGesammeltesLaden.apply(fehlendeIds);

@@ -79,9 +79,9 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> {
 		// Erzeuge Maps, damit auch später leicht auf die Klassendaten zugegriffen werden kann.
 		final Map<Long, ReportingKlasse> mapKlassen = new HashMap<>();
 		for (final Long idKlasse : idsKlassen) {
-			if (reportingRepository.mapKlassen().containsKey(idKlasse))
+			if (reportingRepository.mapKlassen().containsKey(idKlasse)) {
 				mapKlassen.put(idKlasse, reportingRepository.mapKlassen().get(idKlasse));
-			else {
+			} else {
 				// Die ID der Klasse ist bekannt, aber sie wurde noch nicht aus der DB geladen. Lade dessen Daten und lade dabei alle Klassen des Lernabschnitts.
 				final KlassenDaten klassenDaten;
 				try {

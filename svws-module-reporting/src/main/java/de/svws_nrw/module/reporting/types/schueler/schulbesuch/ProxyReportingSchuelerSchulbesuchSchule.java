@@ -46,12 +46,14 @@ public class ProxyReportingSchuelerSchulbesuchSchule extends ReportingSchuelerSc
 	 * @return Ein ProxyReportingSchulkatalogEintragNRW-Objekt oder null, wenn die Schule nicht gefunden wurde
 	 */
 	private static ProxyReportingSchulkatalogEintragNRW createSchulkatalogEintrag(final ReportingRepository reportingRepository, final Long idSchule) {
-		if (idSchule == null)
+		if (idSchule == null) {
 			return null;
+		}
 
 		final var schulEintrag = reportingRepository.katalogSchulen().get(idSchule);
-		if (schulEintrag == null)
+		if (schulEintrag == null) {
 			return null;
+		}
 
 		return new ProxyReportingSchulkatalogEintragNRW(reportingRepository, schulEintrag);
 	}

@@ -55,11 +55,13 @@ public class ReportingSchuelerLeistungsdatenMatrix {
 
 		// Prüfe die Listen mit den übergebenen Sortierungsattributen. Sind diese null oder empty, wähle die Standardsortierung aus der entsprechenden Registry.
 		List<String> sortFaecher = sortierungsAttributeFaecher;
-		if ((sortFaecher == null) || sortFaecher.isEmpty())
+		if ((sortFaecher == null) || sortFaecher.isEmpty()) {
 			sortFaecher = SortierungRegistryReportingFach.standardsortierung();
+		}
 		List<String> sortSchueler = sortierungsAttributeSchueler;
-		if ((sortSchueler == null) || sortSchueler.isEmpty())
+		if ((sortSchueler == null) || sortSchueler.isEmpty()) {
 			sortSchueler = SortierungRegistryReportingSchueler.standardsortierung();
+		}
 
 		// Filter vorbereiten
 		final Predicate<ReportingFach> effektiverFilter = (filterFaecher == null) ? f -> true : filterFaecher;
@@ -84,13 +86,15 @@ public class ReportingSchuelerLeistungsdatenMatrix {
 	 */
 	private void initialisiereMatrix(final List<ReportingSchueler> schuelerListe,
 			final ReportingSchuljahresabschnitt schuljahresabschnitt, final Predicate<ReportingFach> filterFaecher) {
-		if ((schuelerListe == null) || (schuljahresabschnitt == null))
+		if ((schuelerListe == null) || (schuljahresabschnitt == null)) {
 			return;
+		}
 
 		for (final ReportingSchueler s : schuelerListe) {
 			final ReportingSchuelerLernabschnitt la = s.aktiverLernabschnittInSchuljahresabschnitt(schuljahresabschnitt);
-			if (la == null)
+			if (la == null) {
 				continue;
+			}
 
 			this.schueler.add(s);
 			this.mapSchuelerLernabschnitte.put(s.id(), la);
@@ -107,13 +111,15 @@ public class ReportingSchuelerLeistungsdatenMatrix {
 	 */
 	private void verarbeiteLeistungsdaten(final long schuelerId, final List<ReportingSchuelerLeistungsdaten> leistungsdaten,
 			final Predicate<ReportingFach> filterFaecher) {
-		if (leistungsdaten == null)
+		if (leistungsdaten == null) {
 			return;
+		}
 
 		for (final ReportingSchuelerLeistungsdaten daten : leistungsdaten) {
 			final ReportingFach fach = daten.fach();
-			if ((fach == null) || !filterFaecher.test(fach))
+			if ((fach == null) || !filterFaecher.test(fach)) {
 				continue;
+			}
 
 			this.matrix.add(schuelerId, fach.id(), daten);
 			this.mapAlleFaecher.putIfAbsent(fach.id(), fach);
@@ -186,8 +192,9 @@ public class ReportingSchuelerLeistungsdatenMatrix {
 	public boolean hatFachbezogeneLernentwicklung(final ReportingSchueler schueler) {
 		for (final ReportingFach fach : this.spaltenFaecher) {
 			final ReportingSchuelerLeistungsdaten daten = this.matrix.getSingle12OrNull(schueler.id(), fach.id());
-			if ((daten != null) && (daten.textFachbezogeneLernentwicklung() != null) && !daten.textFachbezogeneLernentwicklung().isEmpty())
+			if ((daten != null) && (daten.textFachbezogeneLernentwicklung() != null) && !daten.textFachbezogeneLernentwicklung().isEmpty()) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -199,8 +206,9 @@ public class ReportingSchuelerLeistungsdatenMatrix {
 	 */
 	public boolean hatSchuelerMitFachbezogenerLernentwicklung() {
 		for (final ReportingSchueler s : this.schueler) {
-			if (hatFachbezogeneLernentwicklung(s))
+			if (hatFachbezogeneLernentwicklung(s)) {
 				return true;
+			}
 		}
 		return false;
 	}

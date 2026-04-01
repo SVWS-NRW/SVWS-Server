@@ -121,12 +121,15 @@ public class ReportingJahrgang extends ReportingBaseType {
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof final ReportingJahrgang other))
+		}
+		if (!(obj instanceof final ReportingJahrgang other)) {
 			return false;
+		}
 		return (id == other.id);
 	}
 
@@ -139,8 +142,9 @@ public class ReportingJahrgang extends ReportingBaseType {
 	 * @return true, wenn der Jahrgang im Bereich der Primarstufe liegt, andernfalls false.
 	 */
 	public boolean istJahrgangImBereichPrimarstufe() {
-		if (this.jahrgang == null)
+		if (this.jahrgang == null) {
 			return false;
+		}
 		final Set<Jahrgaenge> erlaubteJahrgaenge =
 				Set.of(Jahrgaenge.HAUSFRUEHERZIEHUNG, Jahrgaenge.JAHRGANG_00, Jahrgaenge.JAHRGANG_01, Jahrgaenge.JAHRGANG_02, Jahrgaenge.JAHRGANG_03,
 						Jahrgaenge.JAHRGANG_04);
@@ -153,8 +157,9 @@ public class ReportingJahrgang extends ReportingBaseType {
 	 * @return true, wenn der Jahrgang im Bereich der Sekundarstufe I liegt, andernfalls false.
 	 */
 	public boolean istJahrgangImBereichSek1() {
-		if (this.jahrgang == null)
+		if (this.jahrgang == null) {
 			return false;
+		}
 		final Set<Jahrgaenge> erlaubteJahrgaenge =
 				Set.of(Jahrgaenge.JAHRGANG_05, Jahrgaenge.JAHRGANG_06, Jahrgaenge.JAHRGANG_07, Jahrgaenge.JAHRGANG_08, Jahrgaenge.JAHRGANG_09,
 						Jahrgaenge.JAHRGANG_10);
@@ -167,8 +172,9 @@ public class ReportingJahrgang extends ReportingBaseType {
 	 * @return true, wenn der Jahrgang im Bereich der Sekundarstufe II oder der Weiterbildung liegt, andernfalls false.
 	 */
 	public boolean istJahrgangImBereichSek2OderWeiterbildung() {
-		if (this.jahrgang == null)
+		if (this.jahrgang == null) {
 			return false;
+		}
 		return !(istJahrgangImBereichPrimarstufe() || istJahrgangImBereichSek1());
 	}
 

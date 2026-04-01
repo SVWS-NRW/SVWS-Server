@@ -69,8 +69,9 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 				null,
 				false);
 
-		if ((statistikfachKuerzel != null) && !statistikfachKuerzel.isEmpty())
+		if ((statistikfachKuerzel != null) && !statistikfachKuerzel.isEmpty()) {
 			initReportingStatistikFach(Fach.getBySchluesselOrDefault(statistikfachKuerzel), schuljahr, exaktePruefungSchuljahr);
+		}
 	}
 
 
@@ -85,10 +86,11 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 	private void initReportingStatistikFach(final Fach statistikfach, final int schuljahr, final boolean exaktePruefungSchuljahr) {
 
 		final FachKatalogEintrag statistikfachDaten;
-		if (exaktePruefungSchuljahr)
+		if (exaktePruefungSchuljahr) {
 			statistikfachDaten = statistikfach.daten(schuljahr);
-		else
+		} else {
 			statistikfachDaten = statistikfach.getEintragOrLast(schuljahr);
+		}
 
 		// Wenn die statistikfachDaten null sind, dann war das Statistikfach wahrscheinlich im angegebenen Schuljahr nicht gültig.
 		if (statistikfachDaten != null) {

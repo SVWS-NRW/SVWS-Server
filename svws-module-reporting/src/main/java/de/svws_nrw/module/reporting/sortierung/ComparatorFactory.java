@@ -32,14 +32,16 @@ public final class ComparatorFactory {
 			final String typName,
 			final SortierungRegistry<T> sortierungRegistry) {
 
-		if ((reportingRepository == null) || (reportingRepository.reportingParameter() == null))
+		if ((reportingRepository == null) || (reportingRepository.reportingParameter() == null)) {
 			return Optional.empty();
+		}
 
 		// Prüfe, ob eine Definition für die Sortierung des angegebenen Typs vorhanden ist.
 		final List<String> attribute = reportingRepository.getSortierungsAttribute(typName, true);
 
-		if (attribute.isEmpty())
+		if (attribute.isEmpty()) {
 			return Optional.empty();
+		}
 
 		final List<String> validierungsfehler = new ArrayList<>();
 		final Comparator<T> comparator = ComparatorBuilder.build(sortierungRegistry, attribute, validierungsfehler);

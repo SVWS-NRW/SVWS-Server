@@ -152,8 +152,9 @@ public class PdfFactory {
 			}
 
 			for (final Long id : ids) {
-				if (id == null)
+				if (id == null) {
 					continue;
+				}
 				result.computeIfAbsent(id, k -> new ArrayList<>()).add(pdf);
 			}
 		}

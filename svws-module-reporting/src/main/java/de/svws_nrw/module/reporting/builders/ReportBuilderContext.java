@@ -33,8 +33,9 @@ public abstract class ReportBuilderContext<S extends ReportBuilderContext<S>> {
 	 */
 	@SuppressWarnings("unchecked")
 	public S withStatischerDateiname(final String statischerDateiname) throws ApiOperationException {
-		if ((statischerDateiname == null) || statischerDateiname.isBlank())
+		if ((statischerDateiname == null) || statischerDateiname.isBlank()) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der statische Dateiname des Report-Builders darf nicht leer sein");
+		}
 		this.statischerDateiname = statischerDateiname;
 		return (S) this;
 	}
@@ -51,8 +52,9 @@ public abstract class ReportBuilderContext<S extends ReportBuilderContext<S>> {
 	 */
 	@SuppressWarnings("unchecked")
 	public S withRootPfad(final String rootPfad) throws ApiOperationException {
-		if ((rootPfad == null) || rootPfad.isBlank())
+		if ((rootPfad == null) || rootPfad.isBlank()) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der Root-Pfad des Report-Builders darf nicht leer sein");
+		}
 		this.rootPfad = rootPfad;
 		return (S) this;
 	}
@@ -68,8 +70,9 @@ public abstract class ReportBuilderContext<S extends ReportBuilderContext<S>> {
 	 */
 	@SuppressWarnings("unchecked")
 	public S withLogger(final Logger logger) throws ApiOperationException {
-		if (logger == null)
+		if (logger == null) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der Logger des Report-Builders darf nicht leer sein");
+		}
 		this.logger = logger;
 		return (S) this;
 	}
@@ -85,12 +88,15 @@ public abstract class ReportBuilderContext<S extends ReportBuilderContext<S>> {
 	 */
 	@SuppressWarnings("unchecked")
 	public S validiert() throws ApiOperationException {
-		if ((this.getStatischerDateiname() == null) || this.getStatischerDateiname().isBlank())
+		if ((this.getStatischerDateiname() == null) || this.getStatischerDateiname().isBlank()) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der statische Dateiname des Report-Builders nicht leer sein");
-		if ((this.getRootPfad() == null) || this.getRootPfad().isBlank())
+		}
+		if ((this.getRootPfad() == null) || this.getRootPfad().isBlank()) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der Root-Pfad des Report-Builders nicht leer sein");
-		if ((this.getLogger() == null))
+		}
+		if ((this.getLogger() == null)) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der Logger des Report-Builders nicht leer sein");
+		}
 		return (S) this;
 	}
 

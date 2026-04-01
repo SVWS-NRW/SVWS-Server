@@ -113,8 +113,9 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 						"FEHLER: Fehler bei der Erstellung der Klassenliste für den Schuljahresabschnitt %s.".formatted(this.textSchuljahresabschnittKurz()), e,
 						reportingRepository.logger(), LogLevel.ERROR, 0);
 			}
-			if (klassendaten.isEmpty())
+			if (klassendaten.isEmpty()) {
 				return super.mapKlassen;
+			}
 
 			for (final KlassenDaten klasse : klassendaten) {
 				final ReportingKlasse reportingKlasse = new ProxyReportingKlasse(this.reportingRepository, klasse);
@@ -144,8 +145,9 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 						"FEHLER: Fehler bei der Erstellung der Liste der Kurse für den Schuljahresabschnitt %s.".formatted(this.textSchuljahresabschnittKurz()),
 						e, reportingRepository.logger(), LogLevel.ERROR, 0);
 			}
-			if (kurseDaten.isEmpty())
+			if (kurseDaten.isEmpty()) {
 				return super.mapKurse;
+			}
 
 			for (final KursDaten kurs : kurseDaten) {
 				final ReportingKurs reportingKurs = new ProxyReportingKurs(this.reportingRepository, kurs);

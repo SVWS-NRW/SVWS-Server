@@ -29,8 +29,9 @@ public final class ReportBuilderContextPdf extends ReportBuilderContext<ReportBu
 	 * @throws ApiOperationException Wird geworfen, wenn der Dateiname leer ist
 	 */
 	public ReportBuilderContextPdf withDateiname(final String dateiname) throws ApiOperationException {
-		if ((dateiname == null) || dateiname.isBlank())
+		if ((dateiname == null) || dateiname.isBlank()) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der Dateiname des Report-Builders darf nicht leer sein");
+		}
 		this.dateiname = dateiname;
 		return this;
 	}
@@ -45,8 +46,9 @@ public final class ReportBuilderContextPdf extends ReportBuilderContext<ReportBu
 	 * @throws ApiOperationException Wird geworfen, wenn der HTML-Inhalt leer ist
 	 */
 	public ReportBuilderContextPdf withHtmlInput(final String htmlInput) throws ApiOperationException {
-		if ((htmlInput == null) || htmlInput.isBlank())
+		if ((htmlInput == null) || htmlInput.isBlank()) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der HTML-Input des Report-Builders darf nicht leer sein");
+		}
 		this.htmlInput = htmlInput;
 		return this;
 	}
@@ -77,10 +79,12 @@ public final class ReportBuilderContextPdf extends ReportBuilderContext<ReportBu
 	@Override
 	public ReportBuilderContextPdf validiert() throws ApiOperationException {
 		super.validiert();
-		if ((dateiname == null) || dateiname.isBlank())
+		if ((dateiname == null) || dateiname.isBlank()) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der Dateiname des Report-Builders darf nicht leer sein");
-		if ((htmlInput == null) || htmlInput.isBlank())
+		}
+		if ((htmlInput == null) || htmlInput.isBlank()) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der HTML-Input des Report-Builders darf nicht leer sein");
+		}
 		return this;
 	}
 
@@ -110,8 +114,9 @@ public final class ReportBuilderContextPdf extends ReportBuilderContext<ReportBu
 	 * @return Der Renderer vom Typ {@link ReportRendererPdf}, der für die Reportgenerierung verwendet wird.
 	 */
 	ReportRendererPdf getRenderer() {
-		if (this.renderer == null)
+		if (this.renderer == null) {
 			this.renderer = new ReportRendererPdf(this.logger);
+		}
 		return renderer;
 	}
 

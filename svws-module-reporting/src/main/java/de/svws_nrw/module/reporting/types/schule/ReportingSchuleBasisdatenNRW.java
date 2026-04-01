@@ -141,11 +141,13 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	public String bezeichnungSchuleMehrzeilig() {
 		final StringBuilder result = new StringBuilder(
 				((!bezeichnung.isEmpty()) && (bezeichnung.getFirst() != null) && !bezeichnung.getFirst().isEmpty()) ? bezeichnung.getFirst().trim() : "");
-		if (result.isEmpty())
+		if (result.isEmpty()) {
 			return "";
+		}
 		for (int i = 1; i < bezeichnung.size(); i++) {
-			if ((bezeichnung.get(i) != null) && (!bezeichnung.get(i).trim().isEmpty()))
+			if ((bezeichnung.get(i) != null) && (!bezeichnung.get(i).trim().isEmpty())) {
 				result.append("%n").append(bezeichnung.get(i).trim());
+			}
 		}
 		return result.toString();
 	}
@@ -158,11 +160,13 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	public String bezeichnungSchuleMehrzeiligHtml() {
 		final StringBuilder result = new StringBuilder(
 				((!bezeichnung.isEmpty()) && (bezeichnung.getFirst() != null) && !bezeichnung.getFirst().isEmpty()) ? bezeichnung.getFirst().trim() : "");
-		if (result.isEmpty())
+		if (result.isEmpty()) {
 			return "";
+		}
 		for (int i = 1; i < bezeichnung.size(); i++) {
-			if ((bezeichnung.get(i) != null) && (!bezeichnung.get(i).trim().isEmpty()))
+			if ((bezeichnung.get(i) != null) && (!bezeichnung.get(i).trim().isEmpty())) {
 				result.append("<br/>").append(bezeichnung.get(i).trim());
+			}
 		}
 		return result.toString();
 	}
@@ -173,8 +177,9 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	 * @return Postleitzahl und Wohnort
 	 */
 	public String plzOrt() {
-		if ((this.plz == null))
+		if ((this.plz == null)) {
 			return "";
+		}
 
 		String result = this.plz;
 		result += " " + this.ort;
@@ -203,8 +208,9 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	 * @return Straße und Hausnummer
 	 */
 	public String strassennameHausnummer() {
-		if (this.strassenname.isEmpty())
+		if (this.strassenname.isEmpty()) {
 			return "";
+		}
 
 		String result = this.strassenname;
 		result += !this.hausnummer.isEmpty() ? (" " + this.hausnummer) : "";

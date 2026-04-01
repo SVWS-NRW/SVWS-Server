@@ -26,9 +26,10 @@ public final class ReportingImageUtils {
 	 *
 	 * @return Das Bild als HTML-image source, inklusive des mimeTypes.
 	 */
-	public static String base64ImageToHtmlImageSource(final String base64Image, final String mimeType,  final Logger logger) {
-		if ((base64Image == null) || base64Image.isBlank())
+	public static String base64ImageToHtmlImageSource(final String base64Image, final String mimeType, final Logger logger) {
+		if ((base64Image == null) || base64Image.isBlank()) {
 			return "";
+		}
 
 		String type = mimeType;
 		if ((type == null) || type.isBlank()) {
@@ -37,8 +38,9 @@ public final class ReportingImageUtils {
 				final byte[] header = Base64.getDecoder().decode(base64Image.substring(0, Math.min(base64Image.length(), 24)));
 				type = ermittleMimeTypeAusBase64Daten(header);
 			} catch (final IllegalArgumentException e) {
-				if (logger != null)
+				if (logger != null) {
 					logger.log(LogLevel.ERROR, 0, "### Fehler beim Dekodieren des Base64-Strings für die MimeType-Erkennung: " + e.getMessage());
+				}
 				type = "unknown";
 			}
 		}
@@ -53,29 +55,43 @@ public final class ReportingImageUtils {
 	 * @return Der erkannte MIME-Type oder "unknown".
 	 */
 	private static String ermittleMimeTypeAusBase64Daten(final byte[] data) {
-		if ((data == null) || (data.length < 4))
+		if ((data == null) || (data.length < 4)) {
 			return "unknown";
+		}
 
 		// Konvertiere in int-Array für vorzeichenlosen Vergleich
 		final int[] bytes = new int[data.length];
-		for (int i = 0; i < data.length; i++)
+		for (int i = 0; i < data.length; i++) {
 			bytes[i] = data[i] & 0xFF;
+		}
 
 		// PNG: 89 50 4E 47 0D 0A 1A 0A
-		if (startsWith(bytes, 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A)) return "image/png";
+		if (startsWith(bytes, 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A)) {
+			return "image/png";
+		}
 
 		// JPEG: FF D8 FF
-		if (startsWith(bytes, 0xFF, 0xD8, 0xFF)) return "image/jpeg";
+		if (startsWith(bytes, 0xFF, 0xD8, 0xFF)) {
+			return "image/jpeg";
+		}
 
 		// GIF: 47 49 46 38
-		if (startsWith(bytes, 0x47, 0x49, 0x46, 0x38)) return "image/gif";
+		if (startsWith(bytes, 0x47, 0x49, 0x46, 0x38)) {
+			return "image/gif";
+		}
 
 		// BMP: 42 4D
-		if (startsWith(bytes, 0x42, 0x4D)) return "image/bmp";
+		if (startsWith(bytes, 0x42, 0x4D)) {
+			return "image/bmp";
+		}
 
 		// SVG: <svg oder <?xml
-		if (startsWith(bytes, 0x3C, 0x73, 0x76, 0x67)) return "image/svg+xml";
-		if (startsWith(bytes, 0x3C, 0x3F, 0x78, 0x6D, 0x6C)) return "image/svg+xml";
+		if (startsWith(bytes, 0x3C, 0x73, 0x76, 0x67)) {
+			return "image/svg+xml";
+		}
+		if (startsWith(bytes, 0x3C, 0x3F, 0x78, 0x6D, 0x6C)) {
+			return "image/svg+xml";
+		}
 
 		return "unknown";
 	}
@@ -88,9 +104,13 @@ public final class ReportingImageUtils {
 	 * @return true, wenn das Array mit dem Muster beginnt.
 	 */
 	private static boolean startsWith(final int[] data, final int... pattern) {
-		if (data.length < pattern.length) return false;
+		if (data.length < pattern.length) {
+			return false;
+		}
 		for (int i = 0; i < pattern.length; i++) {
-			if (data[i] != pattern[i]) return false;
+			if (data[i] != pattern[i]) {
+				return false;
+			}
 		}
 		return true;
 	}

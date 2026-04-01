@@ -94,8 +94,9 @@ public class ReportingGostKlausurplanungKlausurtermin extends ReportingBaseType 
 	 * @return Die Schülerklausuren zum Kurstermin.
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausurenKurstermin() {
-		if (this.schuelerklausuren.isEmpty())
+		if (this.schuelerklausuren.isEmpty()) {
 			return new ArrayList<>();
+		}
 		return this.schuelerklausuren.stream().filter(k -> k.nummerTerminfolge == 0).toList();
 	}
 
@@ -105,8 +106,9 @@ public class ReportingGostKlausurplanungKlausurtermin extends ReportingBaseType 
 	 * @return Die Schülerklausuren als Nachschreibklausuren.
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausurenNachschreibtermin() {
-		if (this.schuelerklausuren.isEmpty())
+		if (this.schuelerklausuren.isEmpty()) {
 			return new ArrayList<>();
+		}
 		return this.schuelerklausuren.stream().filter(k -> k.nummerTerminfolge > 0).toList();
 	}
 
@@ -116,8 +118,9 @@ public class ReportingGostKlausurplanungKlausurtermin extends ReportingBaseType 
 	 * @return Die Uhrzeitangabe der Startzeit.
 	 */
 	public String startuhrzeit() {
-		if (this.startzeit == null)
+		if (this.startzeit == null) {
 			return "";
+		}
 		return DateUtils.gibZeitStringOfMinuten(this.startzeit);
 	}
 
@@ -139,11 +142,13 @@ public class ReportingGostKlausurplanungKlausurtermin extends ReportingBaseType 
 				temp = temp + " (Std. " + raum.aufsichten.getFirst().unterrichtsstunde.stundeImUnterrichtsraster() + "-"
 						+ raum.aufsichten.getLast().unterrichtsstunde.stundeImUnterrichtsraster() + ")";
 			}
-			if (!temp.isEmpty())
+			if (!temp.isEmpty()) {
 				tempList.add(temp);
+			}
 		}
-		if (tempList.isEmpty())
+		if (tempList.isEmpty()) {
 			return "";
+		}
 		return String.join(",", tempList);
 	}
 

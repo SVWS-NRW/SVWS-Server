@@ -71,8 +71,9 @@ public class ProxyReportingSchulkatalogEintragNRW extends ReportingSchulkatalogE
 	 * @return Die Schulnummer als long-Wert
 	 */
 	private static long parseSchulnummer(final String schulnummerStatistik) {
-		if ((schulnummerStatistik == null) || schulnummerStatistik.isEmpty())
+		if ((schulnummerStatistik == null) || schulnummerStatistik.isEmpty()) {
 			return 0L;
+		}
 
 		try {
 			return Long.parseLong(schulnummerStatistik);
@@ -90,8 +91,9 @@ public class ProxyReportingSchulkatalogEintragNRW extends ReportingSchulkatalogE
 	 * @return Die ermittelte Schulform oder null
 	 */
 	private static SchulformKatalogEintrag getSchulform(final ReportingRepository reportingRepository, final Long idSchulform) {
-		if (idSchulform == null)
+		if (idSchulform == null) {
 			return null;
+		}
 		return reportingRepository.katalogSchulformen().get(idSchulform);
 	}
 

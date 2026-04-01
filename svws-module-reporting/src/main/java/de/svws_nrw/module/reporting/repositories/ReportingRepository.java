@@ -257,16 +257,18 @@ public class ReportingRepository {
 			throws ApiOperationException {
 
 		// Initialisiere den Logger und das Log, sofern noch nicht erfolgt.
-		if (logger == null)
+		if (logger == null) {
 			this.logger = new Logger();
-		else
+		} else {
 			this.logger = logger;
+		}
 
 		if ((logger == null) || (log == null)) {
 			this.log = new LogConsumerList();
 			this.logger.addConsumer(this.log);
-		} else
+		} else {
 			this.log = log;
+		}
 
 		this.logger.logLn(LogLevel.DEBUG, 4, ">>> Beginn der Erzeugung des Reporting-Repository");
 
@@ -358,8 +360,9 @@ public class ReportingRepository {
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Schulen geladen.");
 
 			final ArrayList<SchulformKatalogEintrag> schulformen = new ArrayList<>();
-			for (final Schulform schulform : Schulform.values())
+			for (final Schulform schulform : Schulform.values()) {
 				schulformen.addAll(schulform.historie());
+			}
 			this.katalogSchulformen = schulformen.stream().collect(Collectors.toMap(sfke -> sfke.id, sfke -> sfke));
 			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Schulformen geladen.");
 
@@ -436,8 +439,9 @@ public class ReportingRepository {
 			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle alle Stundenplan-Definitionen der Schule.");
 			// Ermittle alle Stundenpläne zum aktuellen Schuljahresabschnitt.
 			this.stundenplandefinitionen = new ArrayList<>(DataStundenplanListe.getStundenplaeneAktiv(this.conn, null));
-			if (!this.stundenplandefinitionen.isEmpty())
+			if (!this.stundenplandefinitionen.isEmpty()) {
 				this.stundenplandefinitionen.sort(Comparator.comparing((StundenplanListeEintrag sle) -> sle.gueltigAb).reversed());
+			}
 		} catch (final Exception e) {
 			this.logger.logLn(LogLevel.ERROR, 8, "Die Daten der Stundenpläne konnten nicht ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e,
@@ -527,8 +531,9 @@ public class ReportingRepository {
 	public ReportingSchuljahresabschnitt schuljahresabschnitt(final int schuljahr, final int abschnitt) {
 		final List<ReportingSchuljahresabschnitt> reportingSchuljahresabschnitte =
 				mapSchuljahresabschnitte.values().stream().filter(a -> (a.schuljahr() == schuljahr) && (a.abschnitt() == abschnitt)).toList();
-		if (reportingSchuljahresabschnitte.isEmpty())
+		if (reportingSchuljahresabschnitte.isEmpty()) {
 			return null;
+		}
 		return reportingSchuljahresabschnitte.getFirst();
 	}
 
@@ -847,8 +852,9 @@ public class ReportingRepository {
 	 * @return Ein ReportingKlassen-Objekt für die gegebene Klassen-ID oder null, falls die ID negativ ist
 	 */
 	public ReportingKlasse klasse(final long idKlasse) {
-		if (idKlasse < 0)
+		if (idKlasse < 0) {
 			return null;
+		}
 
 		// Prüfe, ob die ID der Klasse in der Map der Klassen ist.
 		ergaenzeKlasseInMapKlassen(idKlasse);
@@ -869,8 +875,9 @@ public class ReportingRepository {
 
 		// Sofern noch keine Reporting-Objekte der Klassen existieren, erzeuge sie und speichere sie.
 		for (final Long idKlasse : idsKlassen) {
-			if ((idKlasse == null) || (idKlasse < 0))
+			if ((idKlasse == null) || (idKlasse < 0)) {
 				continue;
+			}
 			ergaenzeKlasseInMapKlassen(idKlasse);
 			resultKlassen.add(mapKlassen.get(idKlasse));
 		}
@@ -914,8 +921,9 @@ public class ReportingRepository {
 	 *         oder ein Fehler beim Laden der Stammdaten aufgetreten ist.
 	 */
 	public ReportingLehrer lehrer(final long idLehrer) {
-		if (idLehrer < 0)
+		if (idLehrer < 0) {
 			return null;
+		}
 
 		// Lade ggf. fehlende Lehrerstammdaten analog zum Vorgehen bei Schülern nach.
 		if (!mapLehrerStammdaten.containsKey(idLehrer)) {
@@ -931,10 +939,11 @@ public class ReportingRepository {
 			}
 		}
 
-		if (mapLehrerStammdaten.containsKey(idLehrer))
+		if (mapLehrerStammdaten.containsKey(idLehrer)) {
 			return mapLehrer.computeIfAbsent(idLehrer, key -> new ProxyReportingLehrer(this, mapLehrerStammdaten.get(key)));
-		else
+		} else {
 			return null;
+		}
 	}
 
 	/**
@@ -996,8 +1005,9 @@ public class ReportingRepository {
 	 *         falls die Daten erfolgreich abgerufen werden konnten; sonst null.
 	 */
 	public ReportingSchueler schueler(final long idSchueler) {
-		if (idSchueler < 0)
+		if (idSchueler < 0) {
 			return null;
+		}
 
 		if (!mapSchuelerStammdaten.containsKey(idSchueler)) {
 			try {
@@ -1011,10 +1021,11 @@ public class ReportingRepository {
 			}
 		}
 
-		if (mapSchuelerStammdaten.containsKey(idSchueler))
+		if (mapSchuelerStammdaten.containsKey(idSchueler)) {
 			return mapSchueler.computeIfAbsent(idSchueler, key -> new ProxyReportingSchueler(this, mapSchuelerStammdaten.get(key)));
-		else
+		} else {
 			return null;
+		}
 	}
 
 	/**
@@ -1078,17 +1089,19 @@ public class ReportingRepository {
 	 * @return Der Stundenplan zum Datum, wenn er gefunden wird, sonst null.
 	 */
 	public ReportingStundenplanungStundenplan stundenplan(final String datum) {
-		if ((datum == null) || (datum.length() != 10) || (stundenplandefinitionen == null) || (stundenplandefinitionen.isEmpty()))
+		if ((datum == null) || (datum.length() != 10) || (stundenplandefinitionen == null) || (stundenplandefinitionen.isEmpty())) {
 			return null;
+		}
 
 		final StundenplanListeEintrag stundenplandefinitionZuDatum = stundenplandefinitionen.stream()
 				.filter(d -> ((d.gueltigAb != null) && (d.gueltigBis != null) && (datum.compareTo(d.gueltigAb) >= 0) && (datum.compareTo(d.gueltigBis) <= 0)))
 				.findFirst().orElse(null);
 
-		if (stundenplandefinitionZuDatum != null)
+		if (stundenplandefinitionZuDatum != null) {
 			return stundenplan(stundenplandefinitionZuDatum.id);
-		else
+		} else {
 			return null;
+		}
 	}
 
 	/**
@@ -1100,12 +1113,14 @@ public class ReportingRepository {
 	 */
 	public ReportingStundenplanungStundenplan stundenplan(final long idStundenplan) {
 		// Prüfe zunächst, ob die Stundenplan-ID auch als Definition in der Datenbank der Schule vorhanden ist.
-		if (stundenplandefinitionen.stream().noneMatch(d -> d.id == idStundenplan))
+		if (stundenplandefinitionen.stream().noneMatch(d -> d.id == idStundenplan)) {
 			return null;
+		}
 
 		// Nutze vorhandene Objekte, falls möglich.
-		if (mapStundenplaene.containsKey(idStundenplan))
+		if (mapStundenplaene.containsKey(idStundenplan)) {
 			return mapStundenplaene.get(idStundenplan);
+		}
 
 		if (mapStundenplanManager.containsKey(idStundenplan)) {
 			mapStundenplaene.computeIfAbsent(idStundenplan, key -> new ProxyReportingStundenplanungStundenplan(this, mapStundenplanManager.get(key)));
@@ -1136,8 +1151,9 @@ public class ReportingRepository {
 		mapStundenplanManager.computeIfAbsent(idStundenplan, key -> {
 			try {
 				final Stundenplan stundenplan = new DataStundenplan(conn).getById(key);
-				if (stundenplan == null)
+				if (stundenplan == null) {
 					return null;
+				}
 				final List<StundenplanUnterricht> unterrichte = DataStundenplanUnterricht.getUnterrichte(this.conn, key);
 				final List<StundenplanPausenaufsicht> aufsichten = DataStundenplanPausenaufsichten.getAufsichten(this.conn, key);
 				final StundenplanUnterrichtsverteilung unterrichtsverteilung = DataStundenplanUnterrichtsverteilung.getUnterrichtsverteilung(this.conn, key);
@@ -1181,13 +1197,15 @@ public class ReportingRepository {
 			default -> datentyp = "";
 		}
 
-		if (ids == null)
+		if (ids == null) {
 			return result;
+		}
 
 		final List<Long> idsNonNull = ids.stream().filter(Objects::nonNull).filter(id -> id >= 0).distinct().toList();
 
-		if (idsNonNull.isEmpty())
+		if (idsNonNull.isEmpty()) {
 			return result;
+		}
 
 		// Fehlende Stammdaten ermitteln
 		final List<Long> fehlendeIds = idsNonNull.stream().filter(id -> !mapStammdaten.containsKey(id)).toList();
@@ -1198,8 +1216,9 @@ public class ReportingRepository {
 				for (final S stammdaten : fehlendeStammdaten) {
 					if (stammdaten != null) {
 						final Long id = getIdFromStammdaten(stammdaten);
-						if (id != null)
+						if (id != null) {
 							mapStammdaten.put(id, stammdaten);
+						}
 					}
 				}
 			} catch (final Exception e) {
@@ -1227,10 +1246,12 @@ public class ReportingRepository {
 	 * @return Die ID des Stammdaten-Objekts
 	 */
 	private Long getIdFromStammdaten(final Object stammdaten) {
-		if (stammdaten instanceof final LehrerStammdaten l)
+		if (stammdaten instanceof final LehrerStammdaten l) {
 			return l.id;
-		if (stammdaten instanceof final SchuelerStammdaten s)
+		}
+		if (stammdaten instanceof final SchuelerStammdaten s) {
 			return s.id;
+		}
 		return null;
 	}
 
@@ -1278,8 +1299,9 @@ public class ReportingRepository {
 
 		// 2. Fall: Es besteht der explizite Wunsch nach Standardsortierung in den Parametern ODER Fallback bei fehlender Definition
 		if (((reportingSortierungDefinition != null) && Boolean.TRUE.equals(reportingSortierungDefinition.verwendeStandardsortierung))
-				|| ((reportingSortierungDefinition == null) && nutzeStandardsortierungAlsFallback))
+				|| ((reportingSortierungDefinition == null) && nutzeStandardsortierungAlsFallback)) {
 			return getStandardsortierungByTyp(typ);
+		}
 
 		// 3. Fall: Keine Sortierung gewünscht oder zulässig
 		return new ArrayList<>();
@@ -1295,8 +1317,9 @@ public class ReportingRepository {
 	 */
 	@SuppressWarnings("unchecked")
 	private List<String> getStandardsortierungByTyp(final String typ) {
-		if ((typ == null) || typ.isBlank())
+		if ((typ == null) || typ.isBlank()) {
 			return new ArrayList<>();
+		}
 		try {
 			final String className = "de.svws_nrw.module.reporting.sortierung.SortierungRegistry" + typ;
 			final Class<?> clazz = Class.forName(className);
@@ -1329,16 +1352,19 @@ public class ReportingRepository {
 										.findFirst()
 										.orElse(null);
 
-		if ((gruppe == null) || (gruppe.filterDefinitionen == null) || gruppe.filterDefinitionen.isEmpty())
+		if ((gruppe == null) || (gruppe.filterDefinitionen == null) || gruppe.filterDefinitionen.isEmpty()) {
 			return t -> true;
+		}
 
 		final FilterRegistry<T> registry = getFilterRegistryByTyp(typ);
-		if (registry == null)
+		if (registry == null) {
 			return t -> true;
+		}
 
 		// Wenn nur eine Filterdefinition zurückgegeben wird, wird diese wie definiert verwendet.
-		if (gruppe.filterDefinitionen.size() == 1)
+		if (gruppe.filterDefinitionen.size() == 1) {
 			return registry.erstelleFilter(gruppe.filterDefinitionen.getFirst(), validierungsfehler);
+		}
 
 		// Wenn mehrere Filterdefinitionen zurückgegeben werden, werden diese gemäß Verknüpfung kombiniert.
 		final boolean istOr = ReportingFilterVerknuepfung.getByID(gruppe.multiselectVerknuepfung) == ReportingFilterVerknuepfung.OR;
@@ -1363,8 +1389,9 @@ public class ReportingRepository {
 	 */
 	@SuppressWarnings("unchecked")
 	private <T> FilterRegistry<T> getFilterRegistryByTyp(final String typ) {
-		if ((typ == null) || typ.isBlank())
+		if ((typ == null) || typ.isBlank()) {
 			return null;
+		}
 		try {
 			final String className = "de.svws_nrw.module.reporting.filterung.FilterRegistry" + typ;
 			final Class<?> clazz = Class.forName(className);

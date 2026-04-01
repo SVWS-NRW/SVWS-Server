@@ -54,7 +54,8 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository,
 			final List<ReportingGostKlausurplanungKlausurtermin> klausurtermine, final List<ReportingKurs> kurse,
 			final List<ReportingGostKlausurplanungKursklausur> kursklausuren, final List<ReportingSchueler> schueler,
-			final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren, final List<Long> idsFilter, final ReportingFilterDataType idsFilterDataType) {
+			final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren, final List<Long> idsFilter,
+			final ReportingFilterDataType idsFilterDataType) {
 		super(klausurtermine,
 				kurse,
 				kursklausuren,
@@ -83,8 +84,9 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 		this.reportingRepository = reportingRepository;
 		this.gostKlausurplanManager = gostKlausurplanManager;
 
-		if (this.gostKlausurplanManager == null)
+		if (this.gostKlausurplanManager == null) {
 			return;
+		}
 
 		// 1. Schülerstammdaten der Schüler aus den Schülerklausuren ermitteln und in Listen und Maps einfügen.
 		initSchueler();
@@ -136,8 +138,9 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	 * Initialisiert die Schüler für die später zu erstellenden Schülerklausuren.
 	 */
 	private void initSchueler() {
-		if (this.gostKlausurplanManager == null)
+		if (this.gostKlausurplanManager == null) {
 			return;
+		}
 		super.schueler().addAll(this.reportingRepository
 				.schueler(this.gostKlausurplanManager.schuelerklausurGetMengeAsList().stream().map(s -> s.idSchueler).distinct().toList()));
 	}
@@ -146,8 +149,9 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	 * Initialisiert die Raumdaten und Unterrichtsstunden der Klausurräume. Das Ergebnis wird in den übergebenen Listen gespeichert.
 	 */
 	private void initKlausurraeume() {
-		if (this.gostKlausurplanManager == null)
+		if (this.gostKlausurplanManager == null) {
 			return;
+		}
 
 		// Durchlaufe alle Klausurtermine und weise ihnen die ReportingKlausurräume zu, die aus den Daten erzeugt werden.
 		for (final ReportingGostKlausurplanungKlausurtermin termin : super.klausurtermine) {
@@ -168,8 +172,9 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	 * Initialisiert die Schülerklausuren mit allen Informationen (auch individuelle Raumdaten, Zeit oder Klausurdaten).
 	 */
 	private void initSchuelerklausuren() {
-		if (this.gostKlausurplanManager == null)
+		if (this.gostKlausurplanManager == null) {
 			return;
+		}
 
 		// Listen und Maps mit Daten aus den vorherigen Schritten, um nicht erneut auf die DB zugreifen zu müssen.
 		final Map<Long, ReportingGostKlausurplanungKlausurtermin> mapKlausurtermine =

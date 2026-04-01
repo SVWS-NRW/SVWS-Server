@@ -46,8 +46,9 @@ public class ProxyReportingStundenplanungPausenzeit extends ReportingStundenplan
 		this.reportingRepository = reportingRepository;
 		this.stundenplanManager = this.reportingRepository.stundenplanManager(stundenplan.id());
 
-		if (stundenplanManager == null)
+		if (stundenplanManager == null) {
 			return;
+		}
 
 		try {
 			// Prüfe, ob die ID des Zeitrasters zum Stundenplan-Manager passt.

@@ -175,8 +175,9 @@ public class ProxyReportingLehrerFactoryUnterricht {
 
 			final ListMap3DLongKeys<DTOSchuelerLeistungsdaten> listmapLeistungsdaten = new ListMap3DLongKeys<>();
 
-			if (results.isEmpty())
+			if (results.isEmpty()) {
 				return listmapLeistungsdaten;
+			}
 
 			// Iterieren über die Ergebnisse und Befüllen der Map
 			for (final Object[] row : results) {
@@ -218,18 +219,21 @@ public class ProxyReportingLehrerFactoryUnterricht {
 
 		for (final LongArrayKey key : dtoSchuelerLeistungsdaten.keySet123()) {
 			final ReportingSchueler schueler = mapSchueler.get(key.getKeyAt(0));
-			if (schueler == null)
+			if (schueler == null) {
 				continue;
+			}
 			final ReportingSchuelerLernabschnitt lernabschnitt = schueler.lernabschnittById(key.getKeyAt(1));
-			if (lernabschnitt == null)
+			if (lernabschnitt == null) {
 				continue;
+			}
 			final ReportingKlasse klasse = lernabschnitt.klasse();
 			final ReportingSchuelerLeistungsdaten reportingSchuelerLeistungsdaten = lernabschnitt.leistungsdatenZurId(key.getKeyAt(2));
 			final ReportingFach fach = reportingSchuelerLeistungsdaten.fach();
 			final ReportingLehrer fachlehrer = reportingSchuelerLeistungsdaten.fachlehrer();
 
-			if ((klasse == null) || (fach == null) || (fachlehrer == null))
+			if ((klasse == null) || (fach == null) || (fachlehrer == null)) {
 				continue;
+			}
 
 			mapIdLeistungsdatenIdSchueler.putIfAbsent(reportingSchuelerLeistungsdaten.id(), schueler.id());
 			mapKlasseFachLehrerLeistungsdaten.add(klasse.id(), fach.id(), fachlehrer.id(), reportingSchuelerLeistungsdaten);
@@ -279,8 +283,9 @@ public class ProxyReportingLehrerFactoryUnterricht {
 			final Map<Long, ReportingLehrer> mapLehrer) {
 		final List<ReportingLehrer> lehrer = new ArrayList<>();
 		final ReportingLehrer fachlehrer = mapLehrer.get(idFachlehrer);
-		if (fachlehrer != null)
+		if (fachlehrer != null) {
 			lehrer.add(fachlehrer);
+		}
 		lehrer.addAll(idsZusatzLehrer.stream().map(mapLehrer::get).filter(Objects::nonNull).toList());
 		return lehrer;
 	}
@@ -377,7 +382,8 @@ public class ProxyReportingLehrerFactoryUnterricht {
 			final Map<Long, ReportingSchuelerLeistungsdaten> mapSchuelerLeistungsdaten = new HashMap<>();
 			mapSchuelerLeistungsdaten.putAll(leistungsdaten.stream().collect(Collectors.toMap(ld -> mapIdLeistungsdatenIdSchueler.get(ld.id()), ld -> ld)));
 
-			result.add(new ProxyReportingKlassenunterricht(this.reportingRepository, klasse, fach, bewertenderLehrer, lehrer, wochenstundenProLehrer, schueler, wochenstundenSchueler,
+			result.add(new ProxyReportingKlassenunterricht(this.reportingRepository, klasse, fach, bewertenderLehrer, lehrer, wochenstundenProLehrer, schueler,
+					wochenstundenSchueler,
 					mapSchuelerLeistungsdaten));
 		}
 
@@ -403,20 +409,24 @@ public class ProxyReportingLehrerFactoryUnterricht {
 
 		for (final LongArrayKey key : dtoSchuelerLeistungsdaten.keySet123()) {
 			final ReportingSchueler schueler = mapSchueler.get(key.getKeyAt(0));
-			if (schueler == null)
+			if (schueler == null) {
 				continue;
+			}
 			final ReportingSchuelerLernabschnitt lernabschnitt = schueler.lernabschnittById(key.getKeyAt(1));
-			if (lernabschnitt == null)
+			if (lernabschnitt == null) {
 				continue;
+			}
 			final ReportingSchuelerLeistungsdaten reportingSchuelerLeistungsdaten = lernabschnitt.leistungsdatenZurId(key.getKeyAt(2));
 			final ReportingKurs kurs = reportingSchuelerLeistungsdaten.kurs();
-			if (kurs == null)
+			if (kurs == null) {
 				continue;
+			}
 			final ReportingFach fach = reportingSchuelerLeistungsdaten.fach();
 			final ReportingLehrer fachlehrer = reportingSchuelerLeistungsdaten.fachlehrer();
 
-			if ((fach == null) || (fachlehrer == null))
+			if ((fach == null) || (fachlehrer == null)) {
 				continue;
+			}
 
 			mapIdLeistungsdatenIdSchueler.putIfAbsent(reportingSchuelerLeistungsdaten.id(), schueler.id());
 			mapKursFachLehrerLeistungsdaten.add(kurs.id(), fach.id(), fachlehrer.id(), reportingSchuelerLeistungsdaten);

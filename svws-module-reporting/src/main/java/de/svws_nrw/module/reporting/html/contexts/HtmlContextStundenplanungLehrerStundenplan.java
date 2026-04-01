@@ -52,9 +52,10 @@ public final class HtmlContextStundenplanungLehrerStundenplan extends HtmlContex
 		final List<ReportingLehrer> listeLehrkraefte = new ArrayList<>();
 		stundenplaene.forEach(stundenplanungLehrerStundenplan -> listeLehrkraefte.add(stundenplanungLehrerStundenplan.lehrer()));
 		String auflistungKuerzel = "";
-		if (!listeLehrkraefte.isEmpty())
+		if (!listeLehrkraefte.isEmpty()) {
 			auflistungKuerzel = listeLehrkraefte.stream().sorted(Comparator.comparing(ReportingLehrer::kuerzel))
 					.map(ReportingLehrer::kuerzel).collect(Collectors.joining(","));
+		}
 
 		setContextData(stundenplaene);
 		sortiereContextMitRegistry();

@@ -148,8 +148,9 @@ public class ReportingGostFachwahlstatistik extends ReportingBaseType {
 	 * @return Eine sortierte Liste der Fachwahlstatistiken für die angegebenen Halbjahres-IDs.
 	 */
 	public List<ReportingGostFachwahlstatistikHalbjahr> fachwahlstatistikByHalbjahrenIds(final List<Integer> idsGostHalbjahre) {
-		if ((idsGostHalbjahre == null) || idsGostHalbjahre.isEmpty())
+		if ((idsGostHalbjahre == null) || idsGostHalbjahre.isEmpty()) {
 			return new ArrayList<>();
+		}
 
 		final List<Integer> idsCheckedHalbjahre = idsGostHalbjahre.stream().filter(Objects::nonNull).distinct().toList();
 
@@ -164,8 +165,9 @@ public class ReportingGostFachwahlstatistik extends ReportingBaseType {
 	 * @return Eine sortierte Liste der Fachwahlstatistiken für die angegebenen Halbjahre.
 	 */
 	public List<ReportingGostFachwahlstatistikHalbjahr> fachwahlstatistikByHalbjahren(final List<GostHalbjahr> gostHalbjahre) {
-		if ((gostHalbjahre == null) || gostHalbjahre.isEmpty())
+		if ((gostHalbjahre == null) || gostHalbjahre.isEmpty()) {
 			return new ArrayList<>();
+		}
 
 		final List<Integer> idsHalbjahre = gostHalbjahre.stream().filter(Objects::nonNull).distinct().map(halbjahr -> halbjahr.id).toList();
 		return fachwahlstatistikByHalbjahrenIds(idsHalbjahre);
@@ -181,8 +183,9 @@ public class ReportingGostFachwahlstatistik extends ReportingBaseType {
 	 * @param fachwahlstatistikHalbjahre Eine Liste mit den Halbjahresstatistiken.
 	 */
 	public void setFachwahlstatistikHalbjahre(final List<ReportingGostFachwahlstatistikHalbjahr> fachwahlstatistikHalbjahre) {
-		if ((fachwahlstatistikHalbjahre == null) || fachwahlstatistikHalbjahre.isEmpty())
+		if ((fachwahlstatistikHalbjahre == null) || fachwahlstatistikHalbjahre.isEmpty()) {
 			return;
+		}
 		listGostFachwahlstatistikHalbjahre.clear();
 		mapGostFachwahlstatistikHalbjahre.clear();
 

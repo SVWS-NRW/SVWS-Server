@@ -133,20 +133,21 @@ public final class SortierungRegistry<T> {
 	public <P> void importiereRegistryEintraege(final String prefix, final SortierungRegistry<P> quellregistry,
 			final Function<T, P> quellwertermittlungsfunktion) {
 
-		if (quellregistry == null)
+		if (quellregistry == null) {
 			return;
+		}
 
 		for (final String quellattribut : quellregistry.unterstuetzteAttribute()) {
 			final Optional<Attributeintrag<P>> optionalAttributeintrag = quellregistry.attributeintragAsOptional(quellattribut);
-			if (optionalAttributeintrag.isEmpty())
+			if (optionalAttributeintrag.isEmpty()) {
 				continue;
+			}
 
 			final Attributeintrag<P> attributeintrag = optionalAttributeintrag.get();
 			final String vollstaendigerAttributname = ergaenzePrefix(prefix, quellattribut);
 
 			if (Objects.requireNonNull(attributeintrag.werttype()) == ValueType.STRING) {
-				@SuppressWarnings("unchecked")
-				final Function<P, String> wertermittlungsfunktion =
+				@SuppressWarnings("unchecked") final Function<P, String> wertermittlungsfunktion =
 						(Function<P, String>) attributeintrag.wertermittlungsfunktion();
 				this.registiereString(vollstaendigerAttributname, t -> {
 					final P quellwert = quellwertermittlungsfunktion.apply(t);
@@ -177,11 +178,13 @@ public final class SortierungRegistry<T> {
 	 *         nicht existiert oder ungültig ist.
 	 */
 	public Optional<Comparator<T>> attributComparator(final String attribut, final boolean sortiereAufsteigend) {
-		if ((attribut == null) || attribut.isBlank())
+		if ((attribut == null) || attribut.isBlank()) {
 			return Optional.empty();
+		}
 		final Optional<Attributeintrag<T>> entry = attributeintragAsOptional(attribut);
-		if (entry.isEmpty())
+		if (entry.isEmpty()) {
 			return Optional.empty();
+		}
 
 		final Attributeintrag<T> e = entry.get();
 		return switch (e.werttype()) {
@@ -206,8 +209,9 @@ public final class SortierungRegistry<T> {
 	}
 
 	private static String ergaenzePrefix(final String prefix, final String name) {
-		if ((prefix == null) || prefix.isBlank())
+		if ((prefix == null) || prefix.isBlank()) {
 			return name;
+		}
 		return prefix + name;
 	}
 
@@ -242,8 +246,9 @@ public final class SortierungRegistry<T> {
 			final Method writeReplace = methodenreferenz.getClass().getDeclaredMethod("writeReplace");
 			writeReplace.setAccessible(true);
 			final Object serializedForm = writeReplace.invoke(methodenreferenz);
-			if (serializedForm instanceof final SerializedLambda lambda)
+			if (serializedForm instanceof final SerializedLambda lambda) {
 				return lambda.getImplMethodName();
+			}
 			return "";
 		} catch (final ReflectiveOperationException e) {
 			return "";

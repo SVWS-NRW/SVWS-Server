@@ -93,14 +93,16 @@ public class ProxyReportingSchuelerLeistungsdaten extends ReportingSchuelerLeist
 			super.zusatzLehrer.add(new ProxyReportingLehrer(this.reportingRepository,
 					this.reportingRepository.mapLehrerStammdaten().get(schuelerLeistungsdaten.zusatzkraftID)));
 			super.wochenstundenLehrer.put(schuelerLeistungsdaten.zusatzkraftID, (double) schuelerLeistungsdaten.zusatzkraftWochenstunden);
-		} else
+		} else {
 			super.zusatzLehrer = new ArrayList<>();
+		}
 
 		if (schuelerLeistungsdaten.kursID != null) {
 			// Es liegt Kursunterricht vor. Ergänze alle Angaben entsprechend.
 			super.kurs = schuljahresabschnitt.kurs(schuelerLeistungsdaten.kursID);
-			if (super.fachlehrer == null)
+			if (super.fachlehrer == null) {
 				super.fachlehrer = kurs.kursleitung();
+			}
 			super.zusatzLehrer.addAll(kurs.zusatzKurslehrer());
 			super.wochenstundenLehrer.putAll(kurs.wochenstundenLehrkraefte());
 		}

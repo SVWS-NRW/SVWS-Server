@@ -126,12 +126,15 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof final ReportingStundenplanungStundenplan other))
+		}
+		if (!(obj instanceof final ReportingStundenplanungStundenplan other)) {
 			return false;
+		}
 		return (id == other.id);
 	}
 
@@ -146,14 +149,16 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 	 * @return true, wenn das Datum im Zeitbereich des Stundenplans liegt, sonst false. Ist nur eine Gültigkeitsangabe im Plan gesetzt, wird nur gegen diese geprüft.
 	 */
 	public boolean istDatumImStundenplan(final String datum) {
-		if ((datum == null) || (datum.length() != 10))
+		if ((datum == null) || (datum.length() != 10)) {
 			return false;
-		if ((gueltigAb != null) && (gueltigBis != null))
+		}
+		if ((gueltigAb != null) && (gueltigBis != null)) {
 			return (datum.compareTo(gueltigAb) >= 0) && (datum.compareTo(gueltigBis) <= 0);
-		else if (gueltigAb != null)
+		} else if (gueltigAb != null) {
 			return (datum.compareTo(gueltigAb) >= 0);
-		else if (gueltigBis != null)
+		} else if (gueltigBis != null) {
 			return (datum.compareTo(gueltigBis) <= 0);
+		}
 
 		return false;
 	}
@@ -166,8 +171,9 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 	 * @return Raum zur ID oder null, wenn es zur ID keinen Raum im Stundenplan gibt.
 	 */
 	public ReportingStundenplanungRaum raum(final Long id) {
-		if (id == null)
+		if (id == null) {
 			return null;
+		}
 		return this.mapRaeume.get(id);
 	}
 
@@ -180,11 +186,13 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 	 */
 	public List<ReportingStundenplanungRaum> raeume(final List<Long> ids) {
 		final List<ReportingStundenplanungRaum> result = new ArrayList<>();
-		if (ids == null)
+		if (ids == null) {
 			return result;
-		final List<Long> idsNonNull =  ids.stream().filter(Objects::nonNull).distinct().toList();
-		if (idsNonNull.isEmpty())
+		}
+		final List<Long> idsNonNull = ids.stream().filter(Objects::nonNull).distinct().toList();
+		if (idsNonNull.isEmpty()) {
 			return result;
+		}
 		idsNonNull.forEach(idRaum -> result.add(raum(idRaum)));
 		return result;
 	}
@@ -197,8 +205,9 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 	 * @return Stunde aus dem Unterrichtsraster zur ID oder null, wenn es zu ID keine Stunde gibt.
 	 */
 	public ReportingStundenplanungUnterrichtsrasterstunde unterrichtsrasterstunde(final Long id) {
-		if (id == null)
+		if (id == null) {
 			return null;
+		}
 		return this.mapUnterrichtsrasterstunden.get(id);
 	}
 
@@ -229,8 +238,9 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 	 * @return Stunde aus dem Unterrichtsraster oder null, wenn es zur ID keine Stunde gibt.
 	 */
 	public ReportingStundenplanungUnterrichtsrasterstunde unterrichtsrasterstunde(final Wochentag wochentag, final int stunde) {
-		if ((wochentag == null) || (stunde < 0))
+		if ((wochentag == null) || (stunde < 0)) {
 			return null;
+		}
 		return this.listMapUnterrichtsrasterstundenZuTagUndStunde.getSingle12OrNull(wochentag.id, stunde);
 	}
 
@@ -399,8 +409,9 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 		this.mapPausenzeiten.putAll(this.pausenzeiten.stream().collect(Collectors.toMap(p -> p.id, p -> p)));
 
 		// Erzeuge die Raster für die spätere Ausgabe des Stundenplans.
-		if (!this.unterrichtsrasterstunden.isEmpty() || !this.pausenzeiten.isEmpty())
+		if (!this.unterrichtsrasterstunden.isEmpty() || !this.pausenzeiten.isEmpty()) {
 			erzeugeRasterUnterrichteUndPausen();
+		}
 	}
 
 	/**

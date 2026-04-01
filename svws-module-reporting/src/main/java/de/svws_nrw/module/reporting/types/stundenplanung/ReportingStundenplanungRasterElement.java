@@ -76,12 +76,15 @@ public class ReportingStundenplanungRasterElement extends ReportingStundenplanun
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof final ReportingStundenplanungRasterElement other))
+		}
+		if (!(obj instanceof final ReportingStundenplanungRasterElement other)) {
 			return false;
+		}
 		return (Objects.equals(zeilennummer, other.zeilennummer)) && (Objects.equals(wochentag.id, other.wochentag.id));
 	}
 
@@ -102,14 +105,17 @@ public class ReportingStundenplanungRasterElement extends ReportingStundenplanun
 		final int zeitelementWochentag = (zeitelement.wochentag == null) ? 0 : zeitelement.wochentag.id;
 
 		// Vergleiche die Wochentage.
-		if (thisWochentag < zeitelementWochentag)
+		if (thisWochentag < zeitelementWochentag) {
 			return -1;
-		if (thisWochentag > zeitelementWochentag)
+		}
+		if (thisWochentag > zeitelementWochentag) {
 			return 1;
+		}
 
 		// Bei gleichem Wochentag vergleiche die Position, wenn es ein Rasterelement ist.
-		if (zeitelement instanceof final ReportingStundenplanungRasterElement rasterelement)
+		if (zeitelement instanceof final ReportingStundenplanungRasterElement rasterelement) {
 			return Integer.compare(this.zeilennummer, rasterelement.zeilennummer);
+		}
 
 		return super.compareTo(zeitelement);
 	}
@@ -125,8 +131,9 @@ public class ReportingStundenplanungRasterElement extends ReportingStundenplanun
 	 * @return der früheste Beginn aller Einträge, oder null, wenn keiner definiert wurde.
 	 */
 	public Integer beginnUnterrichtOderPausen() {
-		if (this.unterrichtsrasterstunde != null)
+		if (this.unterrichtsrasterstunde != null) {
 			return this.unterrichtsrasterstunde.beginn();
+		}
 
 		return pausenzeiten.stream()
 				.map(ReportingStundenplanungPausenzeit::beginn)
@@ -143,8 +150,9 @@ public class ReportingStundenplanungRasterElement extends ReportingStundenplanun
 	 * @return das späteste Ende aller Einträge, oder null, wenn keines definiert wurde.
 	 */
 	public Integer endeUnterrichtOderPausen() {
-		if (this.unterrichtsrasterstunde != null)
+		if (this.unterrichtsrasterstunde != null) {
 			return this.unterrichtsrasterstunde.ende();
+		}
 
 		return pausenzeiten.stream()
 				.map(ReportingStundenplanungPausenzeit::ende)
@@ -193,8 +201,9 @@ public class ReportingStundenplanungRasterElement extends ReportingStundenplanun
 	public List<ReportingStundenplanungPausenaufsicht> pausenaufsichtenByIdUndWochentyp(final long id, final int wochentyp, final boolean inklusiveWochentyp0) {
 		final List<ReportingStundenplanungPausenaufsicht> result = new ArrayList<>();
 
-		if (this.pausenaufsichten.isEmpty())
+		if (this.pausenaufsichten.isEmpty()) {
 			return result;
+		}
 
 		if (inklusiveWochentyp0) {
 			result.addAll(listMapPausenaufsichten.get14(id, 0));
@@ -231,11 +240,13 @@ public class ReportingStundenplanungRasterElement extends ReportingStundenplanun
 			final boolean inklusiveWochentyp0) {
 		final List<ReportingStundenplanungPausenaufsicht> result = new ArrayList<>();
 
-		if ((idsLehrkraefte == null) || idsLehrkraefte.isEmpty())
+		if ((idsLehrkraefte == null) || idsLehrkraefte.isEmpty()) {
 			return result;
+		}
 
-		if (this.pausenaufsichten.isEmpty())
+		if (this.pausenaufsichten.isEmpty()) {
 			return result;
+		}
 
 		for (final long idLehrkraft : idsLehrkraefte) {
 			if (inklusiveWochentyp0) {
@@ -260,8 +271,9 @@ public class ReportingStundenplanungRasterElement extends ReportingStundenplanun
 			final boolean inklusiveWochentyp0) {
 		final List<ReportingStundenplanungPausenaufsicht> result = new ArrayList<>();
 
-		if (this.pausenaufsichten.isEmpty())
+		if (this.pausenaufsichten.isEmpty()) {
 			return result;
+		}
 
 		if (inklusiveWochentyp0) {
 			result.addAll(listMapPausenaufsichten.get34(idAufsichtsbereich, 0));
@@ -290,8 +302,9 @@ public class ReportingStundenplanungRasterElement extends ReportingStundenplanun
 	 *                   Wenn null, wird keine Aktion ausgeführt.
 	 */
 	public void addPausenzeit(final ReportingStundenplanungPausenzeit pausenzeit) {
-		if ((pausenzeit == null) || this.pausenzeiten.contains(pausenzeit))
+		if ((pausenzeit == null) || this.pausenzeiten.contains(pausenzeit)) {
 			return;
+		}
 
 		this.pausenzeiten.add(pausenzeit);
 

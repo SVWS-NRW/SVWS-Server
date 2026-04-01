@@ -34,8 +34,9 @@ public abstract class ReportBuilder<T> {
 	protected ReportBuilder(final ReportBuilderContext<?> reportBuilderContext, final String contentType, final String dateiname)
 			throws ApiOperationException {
 		this.reportBuilderContext = reportBuilderContext.validiert();
-		if ((contentType == null) || contentType.isBlank())
+		if ((contentType == null) || contentType.isBlank()) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Der Content-Type (MIME-Type) des Report-Builders darf nicht leer sein");
+		}
 		this.contentType = contentType;
 		this.dateiname = (dateiname != null) ? dateiname : "";
 	}
@@ -99,7 +100,7 @@ public abstract class ReportBuilder<T> {
 	 * @return Ein Byte-Array, das den generierten Report repräsentiert
 	 */
 	public byte[] getByteArray() throws ApiOperationException {
-			return generateInternalByteArray();
+		return generateInternalByteArray();
 	}
 
 	/**

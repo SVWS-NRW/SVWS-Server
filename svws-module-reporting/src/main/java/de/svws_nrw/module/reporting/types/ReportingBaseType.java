@@ -17,8 +17,9 @@ public abstract class ReportingBaseType {
 	}
 
 	protected static String ersetzeNullBlankTrim(final String value) {
-		if ((value == null) || value.isBlank())
+		if ((value == null) || value.isBlank()) {
 			return "";
+		}
 		return value.trim();
 	}
 
@@ -30,8 +31,9 @@ public abstract class ReportingBaseType {
 	 * @param ersetzeFelderAusObjektClass	Legt fest, ob die Werte in den Feldern der aufrufenden Klasse ebenfalls ersetzt werden sollen.
 	 */
 	protected static void ersetzeStringNullDurchEmpty(final Object quellobjekt, final boolean ersetzeFelderAusObjektClass) {
-		if (quellobjekt == null)
+		if (quellobjekt == null) {
 			return;
+		}
 
 		// Ermittle alle Felder der Klasse des Quellobjektes und ersetze deren Werte im Quellobjekt.
 		if (ersetzeFelderAusObjektClass) {

@@ -38,7 +38,8 @@ public class ReportingGostKursplanungFachwahlstatistik extends ReportingBaseType
 	 * @param reportingGostFachwahlstatistik Die allgemeine Fachwahlstatistik der gymnasialen Oberstufe.
 	 */
 	public ReportingGostKursplanungFachwahlstatistik(final int differenzKursgroessenLK, final int differenzKursgroessenGK, final int differenzKursgroessenZK,
-			final int differenzKursgroessenPJK, final int differenzKursgroessenVTF, final ReportingGostFachwahlstatistikHalbjahr reportingGostFachwahlstatistik) {
+			final int differenzKursgroessenPJK, final int differenzKursgroessenVTF,
+			final ReportingGostFachwahlstatistikHalbjahr reportingGostFachwahlstatistik) {
 		this.differenzKursgroessenLK = differenzKursgroessenLK;
 		this.differenzKursgroessenGK = differenzKursgroessenGK;
 		this.differenzKursgroessenZK = differenzKursgroessenZK;

@@ -44,8 +44,9 @@ public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends Reporti
 		this.reportingRepository = reportingRepository;
 		this.stundenplanManager = this.reportingRepository.stundenplanManager(stundenplan.id());
 
-		if (stundenplanManager == null)
+		if (stundenplanManager == null) {
 			return;
+		}
 
 		try {
 			// Prüfe, ob die ID des Zeitrasters zum Stundenplan-Manager passt.
@@ -193,10 +194,10 @@ public class ProxyReportingStundenplanungUnterrichtsrasterstunde extends Reporti
 						stundenplanManager.unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrer, this.wochentag.id,
 								this.stundeImUnterrichtsraster, wochentyp, inklusiveWochentyp0);
 				result.addAll(new ArrayList<>(managerUnterricht.stream()
-								.filter(u -> super.unterricht(u.id) == null)
-								.map(u -> (ReportingStundenplanungUnterricht) new ProxyReportingStundenplanungUnterricht(this.reportingRepository,
-										this.stundenplan, u))
-								.toList()));
+						.filter(u -> super.unterricht(u.id) == null)
+						.map(u -> (ReportingStundenplanungUnterricht) new ProxyReportingStundenplanungUnterricht(this.reportingRepository,
+								this.stundenplan, u))
+						.toList()));
 			}
 			super.addUnterrichte(result);
 		}

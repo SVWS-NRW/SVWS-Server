@@ -383,8 +383,9 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Postleitzahl
 	 */
 	public String plz() {
-		if ((this.wohnort() == null))
+		if ((this.wohnort() == null)) {
 			return "";
+		}
 
 		return this.wohnort().plz;
 	}
@@ -395,8 +396,9 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Postleitzahl und Wohnort
 	 */
 	public String plzOrt() {
-		if ((this.wohnort() == null))
+		if ((this.wohnort() == null)) {
 			return "";
+		}
 
 		String result = this.wohnort().plz;
 		result += " " + this.wohnort().ortsname;
@@ -439,8 +441,9 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Straße und Hausnummer
 	 */
 	public String strassennameHausnummer() {
-		if (this.strassenname().isEmpty())
+		if (this.strassenname().isEmpty()) {
 			return "";
+		}
 
 		String result = this.strassenname();
 		result += !this.hausnummer().isEmpty() ? (" " + this.hausnummer()) : "";
@@ -492,8 +495,9 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Wohnortname
 	 */
 	public String wohnortname() {
-		if ((this.wohnort() == null))
+		if ((this.wohnort() == null)) {
 			return "";
+		}
 
 		return this.wohnort().ortsname;
 	}
@@ -504,8 +508,9 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Wohnortsteilname
 	 */
 	public String wohnortsteilname() {
-		if ((this.wohnortsteil() == null))
+		if ((this.wohnortsteil() == null)) {
 			return "";
+		}
 
 		return this.wohnortsteil().ortsteil;
 	}
@@ -768,10 +773,11 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Inhalt des Feldes vornamen
 	 */
 	public String vornamen() {
-		if (!vornamen.isEmpty())
+		if (!vornamen.isEmpty()) {
 			return vornamen;
-		else
+		} else {
 			return vorname;
+		}
 	}
 
 	/**

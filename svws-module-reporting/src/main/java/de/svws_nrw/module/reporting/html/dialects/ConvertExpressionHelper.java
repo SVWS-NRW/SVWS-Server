@@ -40,8 +40,9 @@ public class ConvertExpressionHelper {
 	 * @return					Das übergebene Datum im deutschen Format.
 	 */
 	public String toDateDE(final String dateISO8601) {
-		if ((dateISO8601 == null) || dateISO8601.isEmpty())
+		if ((dateISO8601 == null) || dateISO8601.isEmpty()) {
 			return "";
+		}
 		try {
 			return DateUtils.gibDatumGermanFormat(dateISO8601);
 		} catch (@SuppressWarnings("unused") final Exception ignore) {
@@ -57,8 +58,9 @@ public class ConvertExpressionHelper {
 	 * @return					Das übergebene Datum im deutschen Format mit ausgeschriebenem Monat.
 	 */
 	public String toDateDELong(final String dateISO8601) {
-		if ((dateISO8601 == null) || dateISO8601.isEmpty())
+		if ((dateISO8601 == null) || dateISO8601.isEmpty()) {
 			return "";
+		}
 		try {
 			return DateUtils.gibDatumGermanFormatAusgeschrieben(dateISO8601);
 		} catch (@SuppressWarnings("unused") final Exception ignore) {
@@ -74,8 +76,9 @@ public class ConvertExpressionHelper {
 	 * @return					Der deutsche Wochentag des Datums.
 	 */
 	public String toWochentagDE(final String dateISO8601) {
-		if ((dateISO8601 == null) || dateISO8601.isEmpty())
+		if ((dateISO8601 == null) || dateISO8601.isEmpty()) {
 			return "";
+		}
 		try {
 			final String[] wochentage = new String[] { "", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" };
 			return wochentage[DateUtils.gibWochentagDesDatumsISO8601(dateISO8601)];
@@ -92,8 +95,9 @@ public class ConvertExpressionHelper {
 	 * @return					Der abgekürzte deutsche Wochentag des Datums.
 	 */
 	public String toWochentagKurzDE(final String dateISO8601) {
-		if ((dateISO8601 == null) || dateISO8601.isEmpty())
+		if ((dateISO8601 == null) || dateISO8601.isEmpty()) {
 			return "";
+		}
 		try {
 			final String[] wochentage = new String[] { "", "Mo.", "Di.", "Mi.", "Do.", "Fr.", "Sa.", "So." };
 			return wochentage[DateUtils.gibWochentagDesDatumsISO8601(dateISO8601)];
@@ -110,8 +114,9 @@ public class ConvertExpressionHelper {
 	 * @return					Die Kalenderwoche des Datums in Deutschland.
 	 */
 	public String toKalenderwocheDE(final String dateISO8601) {
-		if ((dateISO8601 == null) || dateISO8601.isEmpty())
+		if ((dateISO8601 == null) || dateISO8601.isEmpty()) {
 			return "";
+		}
 		try {
 			return String.valueOf(DateUtils.extractFromDateISO8601(dateISO8601)[5]);
 		} catch (@SuppressWarnings("unused") final Exception ignore) {

@@ -271,8 +271,9 @@ public class ReportingSchueler extends ReportingPerson {
 		this.verkehrspracheFamilie = verkehrspracheFamilie;
 		this.zuzugsjahr = zuzugsjahr;
 
-		if (lernabschnitte != null)
+		if (lernabschnitte != null) {
 			this.setLernabschnitte(lernabschnitte);
+		}
 	}
 
 	/**
@@ -311,12 +312,15 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return	true, falls es das gleiche Objekt ist, andernfalls false.
 	 */
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof final ReportingSchueler other))
+		}
+		if (!(obj instanceof final ReportingSchueler other)) {
 			return false;
+		}
 		return (id == other.id);
 	}
 
@@ -331,8 +335,9 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Der Lernabschnitt zum SchuljahresAbschnitt oder null, wenn kein solcher Abschnitt existiert.
 	 */
 	public ReportingSchuelerLernabschnitt aktiverLernabschnittInSchuljahresabschnitt(final ReportingSchuljahresabschnitt schuljahresabschnitt) {
-		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty())
+		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty()) {
 			return null;
+		}
 		return this.mapLernabschnitte.getSingle12OrNull(schuljahresabschnitt.id(), 0);
 	}
 
@@ -663,8 +668,9 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Der Lernabschnitt zur ID.
 	 */
 	public ReportingSchuelerLernabschnitt lernabschnittById(final long id) {
-		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty())
+		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty()) {
 			return null;
+		}
 		return mapLernabschnitte.getSingle3OrNull(id);
 	}
 
@@ -685,8 +691,9 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @return Die Lernabschnitte zur ID.
 	 */
 	public List<ReportingSchuelerLernabschnitt> lernabschnittBySchuljahresabschnittsId(final long id) {
-		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty())
+		if ((this.lernabschnitte() == null) || this.lernabschnitte().isEmpty()) {
 			return new ArrayList<>();
+		}
 		return mapLernabschnitte.get1(id);
 	}
 
@@ -743,8 +750,9 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public boolean hatKleinesLatinum() {
 		for (final ReportingSchuelerSprachbelegung sprachbelegung : sprachbelegungen) {
-			if (sprachbelegung.hatKleinesLatinum())
+			if (sprachbelegung.hatKleinesLatinum()) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -756,8 +764,9 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public boolean hatLatinum() {
 		for (final ReportingSchuelerSprachbelegung sprachbelegung : sprachbelegungen) {
-			if (sprachbelegung.hatLatinum())
+			if (sprachbelegung.hatLatinum()) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -769,8 +778,9 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public boolean hatGraecum() {
 		for (final ReportingSchuelerSprachbelegung sprachbelegung : sprachbelegungen) {
-			if (sprachbelegung.hatGraecum())
+			if (sprachbelegung.hatGraecum()) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -782,8 +792,9 @@ public class ReportingSchueler extends ReportingPerson {
 	 */
 	public boolean hatHebraicum() {
 		for (final ReportingSchuelerSprachbelegung sprachbelegung : sprachbelegungen) {
-			if (sprachbelegung.hatHebraicum())
+			if (sprachbelegung.hatHebraicum()) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -869,8 +880,9 @@ public class ReportingSchueler extends ReportingPerson {
 	 *                        Nullwerte innerhalb der Liste werden ignoriert.
 	 */
 	public void addLernabschnitte(final List<ReportingSchuelerLernabschnitt> lernabschnitte) {
-		if (lernabschnitte == null)
+		if (lernabschnitte == null) {
 			return;
+		}
 
 		final List<ReportingSchuelerLernabschnitt> lernabschnitteNonNull = new ArrayList<>(lernabschnitte.stream().filter(Objects::nonNull).toList());
 		this.lernabschnitte.addAll(lernabschnitteNonNull);

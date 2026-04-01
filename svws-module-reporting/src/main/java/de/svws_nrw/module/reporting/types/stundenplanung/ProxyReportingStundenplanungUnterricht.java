@@ -41,8 +41,9 @@ public class ProxyReportingStundenplanungUnterricht extends ReportingStundenplan
 			super.fach = this.stundenplan.schuljahresabschnitt().mapFaecher().get(unterricht.idFach);
 			if (unterricht.idKurs != null) {
 				super.kurs = this.stundenplan.schuljahresabschnitt().mapKurse().get(unterricht.idKurs);
-				if (super.kurs() != null)
+				if (super.kurs() != null) {
 					super.klassen = super.kurs().klassen();
+				}
 			} else {
 				super.kurs = null;
 				super.klassen =
@@ -55,8 +56,9 @@ public class ProxyReportingStundenplanungUnterricht extends ReportingStundenplan
 				.map(l -> (ReportingLehrer) new ProxyReportingLehrer(this.reportingRepository, this.reportingRepository.mapLehrerStammdaten().get(l)))
 				.toList();
 
-		if ((this.stundenplan.raeume() != null) && !this.stundenplan.raeume().isEmpty())
+		if ((this.stundenplan.raeume() != null) && !this.stundenplan.raeume().isEmpty()) {
 			super.raeume = unterricht.raeume.stream().map(this.stundenplan::raum).toList();
+		}
 
 		// TODO: Schienen noch als Reporting-Objekt definieren und verwenden.
 		super.schienen = unterricht.schienen;

@@ -45,15 +45,17 @@ public class ProxyReportingGostKlausurplanungKlausurraum extends ReportingGostKl
 
 		if (stundenplan != null) {
 			// Wenn bereits ein Raum der Schule (aus dem Stundenplan) der Klausur zugeordnet wurde, dann die Daten ermitteln und ergänzen.
-			if (gostKlausurraum.idStundenplanRaum != null)
+			if (gostKlausurraum.idStundenplanRaum != null) {
 				super.raumdaten = stundenplan.raum(gostKlausurraum.idStundenplanRaum);
+			}
 
 			// Stunden der Klausur für die Aufsichten aus dem Zeitraster des Stundenplans ergänzen.
 			if ((gostKlausurraumstunden != null) && !gostKlausurraumstunden.isEmpty()) {
 				final List<ReportingStundenplanungUnterrichtsrasterstunde> stunden = new ArrayList<>();
 				for (final GostKlausurraumstunde stunde : gostKlausurraumstunden) {
-					if (stunde != null)
+					if (stunde != null) {
 						stunden.add(stundenplan.unterrichtsrasterstunde(stunde.idZeitraster));
+					}
 				}
 				if (!stunden.isEmpty()) {
 					stunden.sort(Comparator.comparing(ReportingStundenplanungUnterrichtsrasterstunde::stundeImUnterrichtsraster));

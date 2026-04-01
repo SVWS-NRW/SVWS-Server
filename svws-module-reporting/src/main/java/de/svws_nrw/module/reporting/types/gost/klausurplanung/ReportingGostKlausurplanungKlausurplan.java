@@ -103,7 +103,7 @@ public class ReportingGostKlausurplanungKlausurplan extends ReportingBaseType {
 				if (this.idsFilter.isEmpty()) {
 					// Wenn die Liste der zu filterenden IDs leer ist, wird keine Filterung vorgenommen, also alle Kurse verwendet.
 					this.gefilterteKurse = new ArrayList<>(this.kurse);
-				} else  if (!this.kurse.isEmpty()) {
+				} else if (!this.kurse.isEmpty()) {
 					// Filtere die Kurse heraus, die gewünscht werden.
 					gefilterteKurse = this.kurse.stream().filter(k -> idsFilter.contains(k.id())).toList();
 					// Bereinige anschließend unter Umständen die Liste der Filter-IDs.
@@ -224,8 +224,9 @@ public class ReportingGostKlausurplanungKlausurplan extends ReportingBaseType {
 	 * @return 			Liste der Klausurtermine mit dem gewünschten Datum
 	 */
 	public List<ReportingGostKlausurplanungKlausurtermin> klausurtermineZumDatum(final String datum) {
-		if ((datum == null) || datum.isEmpty())
+		if ((datum == null) || datum.isEmpty()) {
 			return new ArrayList<>();
+		}
 		return this.klausurtermine.stream().filter(t -> datum.equals(t.datum()))
 				.sorted(Comparator
 						.comparing(ReportingGostKlausurplanungKlausurtermin::gostHalbjahr)
@@ -241,8 +242,9 @@ public class ReportingGostKlausurplanungKlausurplan extends ReportingBaseType {
 	 * @return 		Der Klausurtermin zur ID oder null, wenn nicht vorhanden.
 	 */
 	public ReportingGostKlausurplanungKlausurtermin klausurtermin(final long id) {
-		if (id < 0)
+		if (id < 0) {
 			return null;
+		}
 		return this.klausurtermine.stream().filter(t -> id == t.id).findFirst().orElse(null);
 	}
 
@@ -254,8 +256,9 @@ public class ReportingGostKlausurplanungKlausurplan extends ReportingBaseType {
 	 * @return 		Der Kurs zur ID oder null, wenn nicht vorhanden.
 	 */
 	public ReportingKurs kurs(final long id) {
-		if (id < 0)
+		if (id < 0) {
 			return null;
+		}
 		return this.kurse.stream().filter(k -> id == k.id()).findFirst().orElse(null);
 	}
 
@@ -267,8 +270,9 @@ public class ReportingGostKlausurplanungKlausurplan extends ReportingBaseType {
 	 * @return 		Die Kursklausur zur ID oder null, wenn nicht vorhanden.
 	 */
 	public ReportingGostKlausurplanungKursklausur kursklausur(final long id) {
-		if (id < 0)
+		if (id < 0) {
 			return null;
+		}
 		return this.kursklausuren.stream().filter(k -> id == k.id()).findFirst().orElse(null);
 	}
 
@@ -280,8 +284,9 @@ public class ReportingGostKlausurplanungKlausurplan extends ReportingBaseType {
 	 * @return 		Der Schüler zur ID oder null, wenn nicht vorhanden.
 	 */
 	public ReportingSchueler schueler(final long id) {
-		if (id < 0)
+		if (id < 0) {
 			return null;
+		}
 		return this.schueler.stream().filter(s -> id == s.id()).findFirst().orElse(null);
 	}
 
@@ -293,8 +298,9 @@ public class ReportingGostKlausurplanungKlausurplan extends ReportingBaseType {
 	 * @return 		Die Schülerklausur zur ID oder null, wenn nicht vorhanden.
 	 */
 	public ReportingGostKlausurplanungSchuelerklausur schuelerklausur(final long id) {
-		if (id < 0)
+		if (id < 0) {
 			return null;
+		}
 		return this.schuelerklausuren.stream().filter(s -> id == s.id()).findFirst().orElse(null);
 	}
 

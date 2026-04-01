@@ -77,12 +77,15 @@ public class ReportingStundenplanungPausenzeit extends ReportingStundenplanungZe
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof final ReportingStundenplanungPausenzeit other))
+		}
+		if (!(obj instanceof final ReportingStundenplanungPausenzeit other)) {
 			return false;
+		}
 		return (id == other.id);
 	}
 
@@ -119,8 +122,9 @@ public class ReportingStundenplanungPausenzeit extends ReportingStundenplanungZe
 	public String klassenAuflistungJahrgangParallelitaetKurz() {
 		final List<ReportingKlasse> listKlassen = new ArrayList<>();
 
-		if (!this.klassen().isEmpty())
+		if (!this.klassen().isEmpty()) {
 			listKlassen.addAll(this.klassen());
+		}
 
 		return listKlassen.stream()
 				.collect(Collectors.groupingBy(k -> k.jahrgang().kuerzel(), Collectors.mapping(ReportingKlasse::parallelitaet,
@@ -184,8 +188,9 @@ public class ReportingStundenplanungPausenzeit extends ReportingStundenplanungZe
 	public List<ReportingStundenplanungPausenaufsicht> pausenaufsichtenByIdUndWochentyp(final long id, final int wochentyp, final boolean inklusiveWochentyp0) {
 		final List<ReportingStundenplanungPausenaufsicht> result = new ArrayList<>();
 
-		if (this.pausenaufsichten.isEmpty())
+		if (this.pausenaufsichten.isEmpty()) {
 			return result;
+		}
 
 		if (inklusiveWochentyp0) {
 			result.addAll(listMapPausenaufsichten.get14(id, 0));
@@ -222,11 +227,13 @@ public class ReportingStundenplanungPausenzeit extends ReportingStundenplanungZe
 			final boolean inklusiveWochentyp0) {
 		final List<ReportingStundenplanungPausenaufsicht> result = new ArrayList<>();
 
-		if ((idsLehrkraefte == null) || idsLehrkraefte.isEmpty())
+		if ((idsLehrkraefte == null) || idsLehrkraefte.isEmpty()) {
 			return result;
+		}
 
-		if (this.pausenaufsichten.isEmpty())
+		if (this.pausenaufsichten.isEmpty()) {
 			return result;
+		}
 
 		for (final long idLehrkraft : idsLehrkraefte) {
 			if (inklusiveWochentyp0) {
@@ -251,8 +258,9 @@ public class ReportingStundenplanungPausenzeit extends ReportingStundenplanungZe
 			final boolean inklusiveWochentyp0) {
 		final List<ReportingStundenplanungPausenaufsicht> result = new ArrayList<>();
 
-		if (this.pausenaufsichten.isEmpty())
+		if (this.pausenaufsichten.isEmpty()) {
 			return result;
+		}
 
 		if (inklusiveWochentyp0) {
 			result.addAll(listMapPausenaufsichten.get34(idAufsichtsbereich, 0));

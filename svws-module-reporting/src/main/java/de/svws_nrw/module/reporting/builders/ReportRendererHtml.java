@@ -41,18 +41,21 @@ public final class ReportRendererHtml {
 	public String renderHtml(final String htmlTemplate, final List<HtmlContext<?>> contexts) throws ApiOperationException {
 		try {
 			if ((templateEngine == null) || (htmlTemplate == null) || htmlTemplate.isBlank()) {
-				if (logger != null)
+				if (logger != null) {
 					logger.logLn(LogLevel.ERROR, 4, "### FEHLER: Die HTML-Template-Engine oder das HTML-Template wurden nicht übergeben.");
+				}
 				throw new ApiOperationException(Response.Status.BAD_REQUEST, "### FEHLER: Die HTML-Template-Engine oder das HTML-Template wurden nicht "
 						+ "übergeben.");
 			}
 			final Context finalContext = ReportBuilderUtils.mergeHtmlContexts(contexts);
-			if (finalContext.getVariableNames().isEmpty())
+			if (finalContext.getVariableNames().isEmpty()) {
 				return "";
+			}
 			return templateEngine.process(htmlTemplate, finalContext);
 		} catch (final Exception e) {
-			if (logger != null)
-				ReportingExceptionUtils.logException("### FEHLER: Das HTML konnte nicht gerendert werden.",	e, logger, LogLevel.ERROR, 0);
+			if (logger != null) {
+				ReportingExceptionUtils.logException("### FEHLER: Das HTML konnte nicht gerendert werden.", e, logger, LogLevel.ERROR, 0);
+			}
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "### FEHLER: Das HTML konnte nicht gerendert werden.");
 		}
 	}

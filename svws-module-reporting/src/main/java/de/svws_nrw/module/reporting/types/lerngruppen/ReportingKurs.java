@@ -120,8 +120,9 @@ public class ReportingKurs extends ReportingLerngruppe {
 							.leistungsdatenZurIdKurs(this.id())));
 		}
 
-		if ((idSchueler == null) || mapSchuelerLeistungsdaten.isEmpty())
+		if ((idSchueler == null) || mapSchuelerLeistungsdaten.isEmpty()) {
 			return null;
+		}
 		return this.mapSchuelerLeistungsdaten.get(idSchueler);
 	}
 
@@ -136,8 +137,9 @@ public class ReportingKurs extends ReportingLerngruppe {
 	 *         falls keine spezifische Kursart hinterlegt ist oder der idSchueler null ist
 	 */
 	public String schuelerIndividuelleKursart(final Long idSchueler) {
-		if (idSchueler == null)
+		if (idSchueler == null) {
 			return "";
+		}
 		this.erstelleMapIndividuelleKursartenProSchueler();
 		return this.mapSchuelerIndividuelleKursarten.getOrDefault(idSchueler, "");
 	}
@@ -149,13 +151,15 @@ public class ReportingKurs extends ReportingLerngruppe {
 	 */
 	private void erstelleMapIndividuelleKursartenProSchueler() {
 		// Wenn die HashMap bereits gefüllt wurde, muss sie nicht noch einmal erstellt werden.
-		if (!this.mapSchuelerIndividuelleKursarten.isEmpty())
+		if (!this.mapSchuelerIndividuelleKursarten.isEmpty()) {
 			return;
+		}
 
 		// Wenn keine Schüler im Kurs sind, breche die Berechnung ebenfalls ab.
 		final List<ReportingSchueler> kursSchueler = this.schueler();
-		if ((kursSchueler == null) || kursSchueler.isEmpty())
+		if ((kursSchueler == null) || kursSchueler.isEmpty()) {
 			return;
+		}
 
 		for (final ReportingSchueler reportingSchueler : kursSchueler) {
 			final Long idSchueler = reportingSchueler.id();
@@ -168,8 +172,9 @@ public class ReportingKurs extends ReportingLerngruppe {
 				continue;
 			}
 			final ReportingSchuelerLeistungsdaten leistungsdaten = lernabschnitt.leistungsdatenZurIdKurs(this.id);
-			if (leistungsdaten != null)
+			if (leistungsdaten != null) {
 				individuelleKursart = (leistungsdaten.kursart() == null) ? "" : leistungsdaten.kursart().trim();
+			}
 
 			this.mapSchuelerIndividuelleKursarten.put(idSchueler, individuelleKursart);
 		}
@@ -188,8 +193,9 @@ public class ReportingKurs extends ReportingLerngruppe {
 		this.mapStatistikIndividuelleKursarten.entrySet().stream()
 				.sorted(Map.Entry.comparingByKey(String.CASE_INSENSITIVE_ORDER))
 				.forEach(kursart -> {
-					if (!stringBuilder.isEmpty())
+					if (!stringBuilder.isEmpty()) {
 						stringBuilder.append(", ");
+					}
 					stringBuilder.append(kursart.getKey()).append(": ").append(kursart.getValue());
 				});
 		return stringBuilder.toString();
@@ -201,24 +207,28 @@ public class ReportingKurs extends ReportingLerngruppe {
 	 */
 	private void erstelleMapStatistikKursarten() {
 		// Wenn die HashMap bereits gefüllt wurde, muss nicht noch einmal die Statistik erstellt werden.
-		if (!this.mapStatistikIndividuelleKursarten.isEmpty())
+		if (!this.mapStatistikIndividuelleKursarten.isEmpty()) {
 			return;
+		}
 
 		// Stelle sicher, dass die individuellen Kursarten pro Schüler ermittelt wurden
 		this.erstelleMapIndividuelleKursartenProSchueler();
 
 		// Wenn keine Schüler im Kurs sind, breche die Berechnung ebenfalls ab.
 		final List<ReportingSchueler> kursSchueler = this.schueler();
-		if ((kursSchueler == null) || kursSchueler.isEmpty())
+		if ((kursSchueler == null) || kursSchueler.isEmpty()) {
 			return;
+		}
 
 		// Zähle die nicht-leeren Kursarten aus der vorbereiteten Map
 		for (final ReportingSchueler reportingSchueler : kursSchueler) {
-			if (reportingSchueler == null)
+			if (reportingSchueler == null) {
 				continue;
+			}
 			final String individuelleKursart = this.mapSchuelerIndividuelleKursarten.getOrDefault(reportingSchueler.id(), "");
-			if ((individuelleKursart != null) && !individuelleKursart.isEmpty())
+			if ((individuelleKursart != null) && !individuelleKursart.isEmpty()) {
 				this.mapStatistikIndividuelleKursarten.merge(individuelleKursart, 1, Integer::sum);
+			}
 		}
 	}
 
@@ -353,8 +363,9 @@ public class ReportingKurs extends ReportingLerngruppe {
 	 * @return Die Wochenstunden der Lehrkraft in diesem Kurs.
 	 */
 	public double wochenstundenLehrerZurID(final Long id) {
-		if (id == null)
+		if (id == null) {
 			return 0.0;
+		}
 		return wochenstundenFachlehrer(id);
 	}
 

@@ -113,7 +113,8 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext<
 			final GostKlausurplanManager gostKlausurManager =
 					new GostKlausurplanManager(allData);
 
-			this.gostKlausurplan = new ProxyReportingGostKlausurplanungKlausurplan(this.reportingRepository, gostKlausurManager, this.idsFilter, this.idsFilterDataType);
+			this.gostKlausurplan =
+					new ProxyReportingGostKlausurplanungKlausurplan(this.reportingRepository, gostKlausurManager, this.idsFilter, this.idsFilterDataType);
 
 			// Daten-Context für Thymeleaf erzeugen.
 			final Context context = new Context();

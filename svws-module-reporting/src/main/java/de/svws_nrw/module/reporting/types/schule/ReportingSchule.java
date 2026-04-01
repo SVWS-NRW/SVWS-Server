@@ -84,7 +84,8 @@ public class ReportingSchule extends ReportingSchuleBasisdatenNRW {
 			final long anzahlJahrgangsstufenProJahr, final long anzahlSchuljahresabschnitteProJahr,
 			final ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt,
 			final String bezeichnungSchuljahresabschnitt, final List<String> bezeichnungenSchuljahresabschnitte, final long dauerUnterrichtseinheit,
-			final List<ReportingSchuljahresabschnitt> schuljahresabschnitte, final SchulformKatalogEintrag schulform, final ReportingLehrer schulleitung, final String schullogo,
+			final List<ReportingSchuljahresabschnitt> schuljahresabschnitte, final SchulformKatalogEintrag schulform, final ReportingLehrer schulleitung,
+			final String schullogo,
 			final ReportingLehrer stvSchulleitung, final String webAdresse) {
 		super(bezeichnung, email, fax, hausnummer, ort, plz, schulnummer, strassenname, telefon, hausnummerZusatz);
 		this.aktuellerSchuljahresabschnitt = aktuellerSchuljahresabschnitt;

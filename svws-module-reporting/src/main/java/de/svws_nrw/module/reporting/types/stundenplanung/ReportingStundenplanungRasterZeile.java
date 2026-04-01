@@ -56,10 +56,12 @@ public class ReportingStundenplanungRasterZeile extends ReportingStundenplanungZ
 	 */
 	@Override
 	public boolean equals(final Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if ((obj == null) || (getClass() != obj.getClass()))
+		}
+		if ((obj == null) || (getClass() != obj.getClass())) {
 			return false;
+		}
 		final ReportingStundenplanungRasterZeile other = (ReportingStundenplanungRasterZeile) obj;
 		return (zeilennummer == other.zeilennummer) && Objects.equals(beginn, other.beginn) && Objects.equals(ende, other.ende);
 	}
@@ -145,8 +147,9 @@ public class ReportingStundenplanungRasterZeile extends ReportingStundenplanungZ
 	 * @return die max. Gesamtdauer dieser Zeile
 	 */
 	public int dauerZeileInMinutenUnterrichtOderPausen() {
-		if ((beginnUnterrichtOderPausen() == null) || (endeUnterrichtOderPausen() == null))
+		if ((beginnUnterrichtOderPausen() == null) || (endeUnterrichtOderPausen() == null)) {
 			return 0;
+		}
 		return endeUnterrichtOderPausen() - beginnUnterrichtOderPausen();
 	}
 
