@@ -151,6 +151,15 @@ class JavaLibPlugin implements Plugin<Project> {
 		project.dependencies.add('xjc', 'org.glassfish.jaxb:jaxb-xjc:' + version);
 	}
 
+	void addMapstruct() {
+		def version = "1.6.3"
+		project.configurations.create('mapstructApi')
+		project.configurations.create('mapstructProcessor')
+
+		project.dependencies.add('mapstructApi', 'org.mapstruct:mapstruct:' + version)
+		project.dependencies.add('mapstructProcessor', 'org.mapstruct:mapstruct-processor:' + version)
+	}
+
 
 	@Override
 	void apply(Project project) {
@@ -188,6 +197,7 @@ class JavaLibPlugin implements Plugin<Project> {
 		this.addEmail();
 		this.addJaxbRuntime()
 		this.addXjc()
+		this.addMapstruct()
 	}
 
 }

@@ -1,7 +1,8 @@
 import org.gradle.internal.os.OperatingSystem
 
 configurations {
-	implementation.extendsFrom(crypto, database, jackson, jetty, resteasy, swagger, email)
+	implementation.extendsFrom(crypto, database, jackson, jetty, resteasy, swagger, email, mapstructApi)
+	annotationProcessor.extendsFrom(mapstructProcessor)
 }
 
 dependencies {
