@@ -1,0 +1,33 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://xbildung.de/def/xbildung/1.1/xsd" version="1.1" elementFormDefault="qualified"
+		   attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:appinfo>
+			<standard>
+				<nameLang>XBildung</nameLang>
+				<nameKurz>XBildung</nameKurz>
+				<nameTechnisch>xbildung</nameTechnisch>
+				<kennung>urn:xoev-de:xbildung-de:def:standard:xbildung</kennung>
+				<beschreibung>XBildung</beschreibung>
+			</standard>
+			<versionStandard>
+				<version>1.1</version>
+				<versionXOEVProfil>3.0.1</versionXOEVProfil>
+				<versionXOEVHandbuch>3.0.0</versionXOEVHandbuch>
+				<versionXGenerator>3.1.1</versionXGenerator>
+				<versionModellierungswerkzeug>19.0 SP 3</versionModellierungswerkzeug>
+				<nameModellierungswerkzeug>MagicDraw</nameModellierungswerkzeug>
+			</versionStandard>
+		</xs:appinfo>
+	</xs:annotation>
+	<xs:import schemaLocation="xml.xsd" namespace="http://www.w3.org/XML/1998/namespace"/>
+	<xs:complexType name="String.Localized">
+		<xs:annotation>
+			<xs:documentation>Erweiterung eines String-Datentyps um das Attribut xml:lang (optional)</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute ref="xml:lang" use="optional"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+</xs:schema>

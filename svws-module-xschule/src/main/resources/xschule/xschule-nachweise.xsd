@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:xsc="http://xschule.digital/def/xschule/1.1/xsd"
-           xmlns:din91379="urn:xoev-de:kosit:xoev:datentyp:din-91379_2022-08"
-           xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
-           xmlns:xbd="http://xbildung.de/def/xbildung/1.1/xsd"
-           targetNamespace="http://xschule.digital/def/xschule/1.1/xsd"
-           version="1.1"
-           elementFormDefault="qualified"
-           attributeFormDefault="unqualified">
+		   xmlns:xsc="http://xschule.digital/def/xschule/1.1/xsd"
+		   xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+		   xmlns:xbd="http://xbildung.de/def/xbildung/1.1/xsd"
+		   targetNamespace="http://xschule.digital/def/xschule/1.1/xsd"
+		   version="1.1"
+		   elementFormDefault="qualified"
+		   attributeFormDefault="unqualified">
    <xs:annotation>
       <xs:appinfo>
          <standard>
@@ -31,9 +30,9 @@
 	<!-- Schema von "http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd" -->
    <xs:import schemaLocation="xmldsig-core-schema.xsd"
               namespace="http://www.w3.org/2000/09/xmldsig#"/>
-   <xs:import schemaLocation="http://xbildung.de/def/xbildung/1.1/xsd/xbildung-baukasten.xsd"
+	<xs:import schemaLocation="xbildung-baukasten.xsd"
               namespace="http://xbildung.de/def/xbildung/1.1/xsd"/>
-   <xs:import schemaLocation="https://xoev.de/schemata/din/91379/2022-08/din-norm-91379-datatypes.xsd"
+	<xs:import schemaLocation="din-norm-91379-datatypes.xsd"
               namespace="urn:xoev-de:kosit:xoev:datentyp:din-91379_2022-08"/>
    <xs:element name="schueler.wechsel.0001">
       <xs:annotation>

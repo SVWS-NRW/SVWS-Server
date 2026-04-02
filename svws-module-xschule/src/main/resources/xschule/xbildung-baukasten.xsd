@@ -1,0 +1,2064 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xbd="http://xbildung.de/def/xbildung/1.1/xsd"
+           xmlns:din91379="urn:xoev-de:kosit:xoev:datentyp:din-91379_2022-08"
+           xmlns:xoev-code="http://xoev.de/schemata/code/1_0"
+           targetNamespace="http://xbildung.de/def/xbildung/1.1/xsd"
+           version="1.1"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+   <xs:annotation>
+      <xs:appinfo>
+         <standard>
+            <nameLang>XBildung</nameLang>
+            <nameKurz>XBildung</nameKurz>
+            <nameTechnisch>xbildung</nameTechnisch>
+            <kennung>urn:xoev-de:xbildung-de:def:standard:xbildung</kennung>
+            <beschreibung>XBildung</beschreibung>
+         </standard>
+         <versionStandard>
+            <version>1.1</version>
+            <versionXOEVProfil>3.0.1</versionXOEVProfil>
+            <versionXOEVHandbuch>3.0.0</versionXOEVHandbuch>
+            <versionXGenerator>3.1.1</versionXGenerator>
+            <versionModellierungswerkzeug>19.0 SP 3</versionModellierungswerkzeug>
+            <nameModellierungswerkzeug>MagicDraw</nameModellierungswerkzeug>
+         </versionStandard>
+      </xs:appinfo>
+   </xs:annotation>
+   <xs:include schemaLocation="xbildung-basisdatentypen.xsd"/>
+   <xs:import schemaLocation="xoev-code.xsd"
+              namespace="http://xoev.de/schemata/code/1_0"/>
+   <xs:import schemaLocation="din-norm-91379-datatypes.xsd"
+              namespace="urn:xoev-de:kosit:xoev:datentyp:din-91379_2022-08"/>
+   <xs:complexType name="Benotung">
+      <xs:annotation>
+         <xs:documentation>Die Klasse Note dient zur Angabe von Bewertungen aller Art, z.B. Schulnoten auf dem Schulzeugnis, Punktzahlen für ein Modul an der Hochschule, Durchschnittsnoten, Abschlussnoten, Zensuren für Abschlussarbeiten, Prüfungsleistungen und Prüfungsteile in der beruflichen Bildung, etc.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="note" minOccurs="0" type="xs:string" form="qualified">
+            <xs:annotation>
+               <xs:documentation>Dieses Feld enhält die Bewertung für eine bestimmte Leistung.</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="wortbezeichnung"
+                     minOccurs="0"
+                     type="xbd:String.Localized"
+                     form="qualified">
+            <xs:annotation>
+               <xs:documentation>Dieses Feld enhält die textuelle Bezeichnung für eine bestimmte Note, z.B. "sehr gut" für den Wert 1</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="punkte" minOccurs="0" type="xs:decimal" form="qualified">
+            <xs:annotation>
+               <xs:documentation>Dieses Feld enhält die Punkte für eine bestimmte Leistung.</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="bewertungsschemaNote" minOccurs="0" form="qualified">
+            <xs:annotation>
+               <xs:documentation>Dieses Feld enhält Angaben zum Schema, nach dem eine Note gegeben wird oder wurde</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="schemaURI" minOccurs="0" type="xs:anyURI">
+                     <xs:annotation>
+                        <xs:documentation>Dieses Feld enhält einen URI-Verweis auf das zugrundeliegende Bewertungsschema (Grading Scheme). XBildung stellt in der Codeliste Bewertungsschema (Seite ) eine Reihe von schemaURIs zur Verfügung.</xs:documentation>
+                     </xs:annotation>
+                  </xs:element>
+                  <xs:element name="beschreibung" minOccurs="0" type="xbd:String.Localized">
+                     <xs:annotation>
+                        <xs:documentation>Dieses Feld dient der textuellen Beschreibung des zugrundeliegenden Bewertungsschemas und sollte insbesondere dann genutzt werden, wenn das Bewertungsschema nicht durch eine URI hinterlegt werden kann.</xs:documentation>
+                     </xs:annotation>
+                  </xs:element>
+                  <xs:element name="weitereInformationen"
+                              minOccurs="0"
+                              maxOccurs="unbounded"
+                              type="xs:anyURI">
+                     <xs:annotation>
+                        <xs:documentation>Hier sollen Links zu Webseiten angegeben werden, die das Bewertungsschema genauer beschreiben.</xs:documentation>
+                     </xs:annotation>
+                  </xs:element>
+                  <xs:element name="besteBewertung" minOccurs="0" type="xs:string">
+                     <xs:annotation>
+                        <xs:documentation>Hier wird angegeben, welche Bewertung (Note, Punktzahl, ...) in diesem Bewertungsschema (Grading Scheme) die theoretisch bestmögliche Bewertung ist.</xs:documentation>
+                     </xs:annotation>
+                  </xs:element>
+                  <xs:element name="bestandenAbBewertung" minOccurs="0" type="xs:string">
+                     <xs:annotation>
+                        <xs:documentation>Hier wird angegeben, ab welcher Bewertung (Note, Punktzahl, ....) in diesem Bewertungsschema (Grading Scheme) eine Leistung als bestanden gilt.</xs:documentation>
+                     </xs:annotation>
+                  </xs:element>
+                  <xs:element name="schlechtesteBewertung" minOccurs="0" type="xs:string">
+                     <xs:annotation>
+                        <xs:documentation>Hier wird angegeben, welche Bewertung (Note, Punktzahl, ....) in diesem Bewertungsschema (Grading Scheme) die theoretisch schlechteste Bewertung ist.</xs:documentation>
+                     </xs:annotation>
+                  </xs:element>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="bewertungsschemaPunkte" minOccurs="0" form="qualified">
+            <xs:annotation>
+               <xs:documentation>Dieses Feld enhält Angaben zum Schema, nach dem Punkte vergegeben werden oder wurden</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="schemaURI" minOccurs="0" type="xs:anyURI">
+                     <xs:annotation>
+                        <xs:documentation>Dieses Feld enhält einen URI-Verweis auf das zugrundeliegende Bewertungsschema (Grading Scheme). XBildung stellt in der Codeliste Bewertungsschema (Seite ) eine Reihe von schemaURIs zur Verfügung.</xs:documentation>
+                     </xs:annotation>
+                  </xs:element>
+                  <xs:element name="beschreibung" minOccurs="0" type="xbd:String.Localized">
+                     <xs:annotation>
+                        <xs:documentation>Dieses Feld dient der textuellen Beschreibung des zugrundeliegenden Bewertungsschemas und sollte insbesondere dann genutzt werden, wenn das Bewertungsschema nicht durch eine URI hinterlegt werden kann.</xs:documentation>
+                     </xs:annotation>
+                  </xs:element>
+                  <xs:element name="weitereInformationen"
+                              minOccurs="0"
+                              maxOccurs="unbounded"
+                              type="xs:anyURI">
+                     <xs:annotation>
+                        <xs:documentation>Hier sollen Links zu Webseiten angegeben werden, die das Bewertungsschema genauer beschreiben.</xs:documentation>
+                     </xs:annotation>
+                  </xs:element>
+                  <xs:element name="besteBewertung" minOccurs="0" type="xs:string">
+                     <xs:annotation>
+                        <xs:documentation>Hier wird angegeben, welche Bewertung (Note, Punktzahl, ...) in diesem Bewertungsschema (Grading Scheme) die theoretisch bestmögliche Bewertung ist.</xs:documentation>
+                     </xs:annotation>
+                  </xs:element>
+                  <xs:element name="bestandenAbBewertung" minOccurs="0" type="xs:string">
+                     <xs:annotation>
+                        <xs:documentation>Hier wird angegeben, ab welcher Bewertung (Note, Punktzahl, ....) in diesem Bewertungsschema (Grading Scheme) eine Leistung als bestanden gilt.</xs:documentation>
+                     </xs:annotation>
+                  </xs:element>
+                  <xs:element name="schlechtesteBewertung" minOccurs="0" type="xs:string">
+                     <xs:annotation>
+                        <xs:documentation>Hier wird angegeben, welche Bewertung (Note, Punktzahl, ....) in diesem Bewertungsschema (Grading Scheme) die theoretisch schlechteste Bewertung ist.</xs:documentation>
+                     </xs:annotation>
+                  </xs:element>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="Code.AmtlicherGemeindeschluessel">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Gemeinden, dargestellt durch den Amtlichen Gemeindeschlüssel (AGS) des Statistischen Bundesamtes</nameLang>
+               <nameKurz>AGS</nameKurz>
+               <nameTechnisch>ags</nameTechnisch>
+               <kennung>urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:ags</kennung>
+               <beschreibung>Diese Codeliste stellt alle Gemeinden Deutschlands durch den Amtlichen Gemeindeschlüssel (AGS) dar, wie im Gemeindeverzeichnis des Statistischen Bundesamtes enthalten. Darüber hinaus enthält die Codeliste für die Stadtstaaten Hamburg, Bremen und Berlin Einträge für Stadt-/Ortsteile bzw. Stadtbezirke. Diese Einträge sind mit einem entsprechenden Hinweis versehen. Link zur Webseite: https://www.xrepository.de/details/urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:ags Code: Der zu verwendende Schlüssel ist der Eintrag in der empfohlenen Codespalte "SCHLUESSEL". Beispiele: (Element : Code) Flensburg, Stadt : 01001000 Kiel, Landeshauptstadt : 01002000 Lübeck, Hansestadt : 01003000</beschreibung>
+               <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
+               <herausgebernameKurz>Destatis</herausgebernameKurz>
+            </codeliste>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" type="xs:token" form="unqualified"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:ags"/>
+            <xs:attribute name="listVersionID" type="xs:normalizedString" use="required"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.ArtDerBemerkung">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Art der Bemerkung</nameLang>
+               <nameKurz>Art der Bemerkung</nameKurz>
+               <nameTechnisch>ArtDerBemerkung-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:xbildung:codeliste:artderbemerkung</kennung>
+               <beschreibung>Die Liste "Art der Bemerkung" bildet häufige Bemerkungen ab, damit sie trotz ihres unstrukturierten Charakters besser strukturiert erfasst werden können.</beschreibung>
+               <herausgebernameLang>XBildung</herausgebernameLang>
+               <herausgebernameKurz>XBildung.de</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>2025-02-04</version>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten>
+               <code>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>true</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>true</empfohleneCodeSpalte>
+               </code>
+               <description-de-DE>
+                  <spaltennameLang>Beschreibung</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </description-de-DE>
+            </codelistenspalten>
+            <genutzteCodeSpalte>code</genutzteCodeSpalte>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" form="unqualified" type="xbd:ArtDerBemerkung-Codes"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:xbildung-de:xbildung:codeliste:artderbemerkung"/>
+            <xs:attribute name="listVersionID"
+                          type="xs:normalizedString"
+                          use="optional"
+                          fixed="2025-02-04"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.ArtDerPruefung">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Art der Prüfung</nameLang>
+               <nameKurz>Art der Prüfung</nameKurz>
+               <nameTechnisch>ArtderPruefung-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:xbildung:codeliste:artderpruefung</kennung>
+               <beschreibung>Diese Codeliste enthält mögliche Ausprägungen der Art einer Prüfung. Sie wurde mit den Stakeholdern von XBildung und seinen Teilmodulen gemäß den Bedarfen für die jeweiligen Anwendungsfälle erstellt und deckt sich in Teilen mit Einträgen der Assessment Types des European Learning Model (ELM). ELM List Of Assessment Types: https://op.europa.eu/de/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/assessment</beschreibung>
+               <herausgebernameLang>XBildung</herausgebernameLang>
+               <herausgebernameKurz>XBildung.de</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>1.0</version>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten>
+               <code>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>true</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>true</empfohleneCodeSpalte>
+               </code>
+               <description-de-DE>
+                  <spaltennameLang>Prüfung</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </description-de-DE>
+               <description-en-GB>
+                  <spaltennameLang>Type of Exam</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </description-en-GB>
+               <mapping-ELMAssessmentType>
+                  <spaltennameLang>ELM List Of Assessment Types</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </mapping-ELMAssessmentType>
+            </codelistenspalten>
+            <genutzteCodeSpalte>code</genutzteCodeSpalte>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" form="unqualified" type="xbd:ArtderPruefung-Codes"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:xbildung-de:xbildung:codeliste:artderpruefung"/>
+            <xs:attribute name="listVersionID"
+                          type="xs:normalizedString"
+                          use="optional"
+                          fixed="1.0"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.ArtDerSchule">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Art der Schule</nameLang>
+               <nameKurz>Art der Schule</nameKurz>
+               <nameTechnisch>ArtDerSchule-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:kmk:codeliste:artderschule</kennung>
+               <beschreibung>Die Codeliste basiert auf dem Kerndatensatz (KDS) der Länder für schulstatistische Individualdaten in der Version 4.0. Sie enthält die mögliche Ausprägungen des Merkmals "Schulart/-typ im Sinne der schulartspezifischen Einrichtung", wie sie in der laufende Nummer 1.4 (Schulart) spezifiziert wurden, ergänzt um "Wert nicht bekannt" und "Wert nicht in Liste".</beschreibung>
+               <herausgebernameLang>Kultusministerkonferenz</herausgebernameLang>
+               <herausgebernameKurz>KMK</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>1.0</version>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten>
+               <code>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>true</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>true</empfohleneCodeSpalte>
+               </code>
+               <description-de-DE>
+                  <spaltennameLang>Schule</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </description-de-DE>
+            </codelistenspalten>
+            <genutzteCodeSpalte>code</genutzteCodeSpalte>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" form="unqualified" type="xbd:ArtDerSchule-Codes"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:xbildung-de:kmk:codeliste:artderschule"/>
+            <xs:attribute name="listVersionID"
+                          type="xs:normalizedString"
+                          use="optional"
+                          fixed="1.0"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.ArtDerTraegerschaft">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Art der Trägerschaft</nameLang>
+               <nameKurz>Art der Trägerschaft</nameKurz>
+               <nameTechnisch>ArtderTraegerschaft-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:xbildung:codeliste:artdertraegerschaft</kennung>
+               <beschreibung>Diese Codeliste enthält mögliche Ausprägungen der Art einer Trägerschaft einer Bildungseinrichtung. Sie basiert auf dem Dokument "Schlüsselverzeichnisse, Datensatzbeschreibungen und Definitionenkatalog für die Statistik zum Deutschlandstipendium", ergänzt um den Wert "Kreis".</beschreibung>
+               <herausgebernameLang>XBildung</herausgebernameLang>
+               <herausgebernameKurz>XBildung.de</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>1.0</version>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten>
+               <code>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>true</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>true</empfohleneCodeSpalte>
+               </code>
+               <description-de-DE>
+                  <spaltennameLang>Trägerschaft</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </description-de-DE>
+            </codelistenspalten>
+            <genutzteCodeSpalte>code</genutzteCodeSpalte>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" form="unqualified" type="xbd:ArtderTraegerschaft-Codes"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:xbildung-de:xbildung:codeliste:artdertraegerschaft"/>
+            <xs:attribute name="listVersionID"
+                          type="xs:normalizedString"
+                          use="optional"
+                          fixed="1.0"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.ArtDesSchulabschlusses">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Art des Schulabschlusses</nameLang>
+               <nameKurz>Art des Schulabschlusses</nameKurz>
+               <nameTechnisch>ArtDesSchulabschlusses-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:destatis:codeliste:artdesschulabschlusses</kennung>
+               <beschreibung>Diese Liste beinhaltet die Arten der Bildungsabschlüsse aus dem Schulwesen in Deutschland. Sie basiert auf der Fachserie 11, Reihe 1, 2009/10.</beschreibung>
+               <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
+               <herausgebernameKurz>DESTATIS</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>1.0</version>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten>
+               <code>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>true</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>true</empfohleneCodeSpalte>
+               </code>
+               <description-de-DE>
+                  <spaltennameLang>Abschluss</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </description-de-DE>
+               <mapping-ISCED2011L>
+                  <spaltennameLang>UNESCO ISCED 2011-L</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </mapping-ISCED2011L>
+            </codelistenspalten>
+            <genutzteCodeSpalte>code</genutzteCodeSpalte>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code"
+                           form="unqualified"
+                           type="xbd:ArtDesSchulabschlusses-Codes"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:xbildung-de:destatis:codeliste:artdesschulabschlusses"/>
+            <xs:attribute name="listVersionID"
+                          type="xs:normalizedString"
+                          use="optional"
+                          fixed="1.0"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.Bewertungsschema">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Bewertungsschema</nameLang>
+               <nameKurz>Bewertungsschema</nameKurz>
+               <nameTechnisch>Bewertungsschema-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:xbildung:codeliste:bewertungsschema</kennung>
+               <beschreibung>Codeliste für die bekannten und im XBildungs-Kontext verwendeten Bewertungsschemata. Die Aufbauvorschrift lautet: http://xbildung.de/def/xbildung/{Version}/code/bewertungsschema/{ISO3166-Alpha2}_{Hrsg}_{Kontext}_{schlechtesteBewertung}_{bestandenAbBewertung}_{besteBewertung}</beschreibung>
+               <herausgebernameLang>XBildung</herausgebernameLang>
+               <herausgebernameKurz>XBildung.de</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>2025-02-04</version>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten>
+               <code>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>true</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>true</empfohleneCodeSpalte>
+               </code>
+               <description-de-DE>
+                  <spaltennameLang>Beschreibung</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </description-de-DE>
+               <seeAlso>
+                  <spaltennameLang>Weitere Informationen (Webseite)</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </seeAlso>
+            </codelistenspalten>
+            <genutzteCodeSpalte>code</genutzteCodeSpalte>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" form="unqualified" type="xbd:Bewertungsschema-Codes"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:xbildung-de:xbildung:codeliste:bewertungsschema"/>
+            <xs:attribute name="listVersionID"
+                          type="xs:normalizedString"
+                          use="optional"
+                          fixed="2025-02-04"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.Bezirk">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Bezirke bzw. Regierungsbezirke der deutschen Bundesländer nach dem Gemeindeverzeichnis des Statistischen Bundesamtes</nameLang>
+               <nameKurz>Bezirk</nameKurz>
+               <nameTechnisch>bezirk</nameTechnisch>
+               <kennung>urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:bezirk</kennung>
+               <beschreibung>Die Bundesrepublik Deutschland ist ein Zusammenschluss von Bundesländern. Die meisten Bundesländer umfassen mehrere Kreise und Bezirke bzw. Regierungsbezirke. Diese Codeliste stellt alle Bezirke nach dem Gemeindeverzeichnis des Statistischen Bundesamtes dar. Dieser Code ist auch Bestandteil des Amtlichen Gemeindeschlüssels (AGS). Link zur Webseite: https://www.xrepository.de/details/urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:bezirk Code: Der zu verwendende Schlüssel ist der Eintrag in der empfohlenen Codespalte "SCHLUESSEL". Beispiele: (Element : Code) Bezirk Hamburg-Mitte : 021 Statistische Region Hannover : 032 Mittelfranken : 095</beschreibung>
+               <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
+               <herausgebernameKurz>Destatis</herausgebernameKurz>
+            </codeliste>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" type="xs:token" form="unqualified"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:bezirk"/>
+            <xs:attribute name="listVersionID" type="xs:normalizedString" use="required"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.Bundesland">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Die deutschen Bundesländer nach dem Gemeindeverzeichnis des Statistischen Bundesamtes</nameLang>
+               <nameKurz>Bundesland</nameKurz>
+               <nameTechnisch>bundesland</nameTechnisch>
+               <kennung>urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:bundesland</kennung>
+               <beschreibung>Die Bundesrepublik Deutschland ist ein Zusammenschluss von Bundesländern. Die meisten Bundesländer umfassen mehrere Kreise und Bezirke. Diese Codeliste stellt die deutschen Bundesländer nach dem Gemeindeverzeichnis des Statistischen Bundesamtes dar. Dieser Code ist auch Bestandteil des Amtlichen Gemeindeschlüssels (AGS). Link zur Webseite: https://www.xrepository.de/details/urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:bundesland Code: Der zu verwendende Schlüssel ist der Eintrag in der empfohlenen Codespalte "SCHLUESSEL". Beispiele: (Element : Code) Schleswig-Holstein : 01 Hamburg : 02 Niedersachsen : 03</beschreibung>
+               <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
+               <herausgebernameKurz>Destatis</herausgebernameKurz>
+            </codeliste>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" type="xs:token" form="unqualified"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:bundesland"/>
+            <xs:attribute name="listVersionID" type="xs:normalizedString" use="required"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.CEFR">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Common European Framework Reference of Languages</nameLang>
+               <nameKurz>CEFR / GER</nameKurz>
+               <nameTechnisch>CEFR-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:coe-int:codeliste:languagereference</kennung>
+               <beschreibung>Das Common European Framework Reference of Languages (CEFR), das auch Gemeinsamer europäischer Referenzrahmen für Sprachen (GER) genannt wird, wurde vom Europarat erstellt. Offizielle weitere Informationen können hier abgerufen werden: https://www.coe.int/en/web/common-european-framework-reference-languages/level-descriptions XBildung verwendet die Codeliste, die vom EU Publication Office technisch zur Verfügung gestellt wird. Link zur Webseite: https://op.europa.eu/de/web​/eu-vocabularies​/dataset/-/​resource?uri=​http://publications.europa.eu/​resource/dataset/​foreign-language-skill Code: Der zu verwendende Schlüssel ist die URI des gewünschten Eintrags, der über den Button "Browse content" gefunden werden kann. Beispiele: (Element : Code) A1 Elementare Sprachverwendung : http://data.europa.eu/snb/cefr/c_1e3dc79a A2 Elementare Sprachverwendung : http://data.europa.eu/snb/cefr/c_3458f114 B1 Selbstständige Sprachverwendung : http://data.europa.eu/snb/cefr/c_0427b00c B2 Selbstständige Sprachverwendung : http://data.europa.eu/snb/cefr/c_097c5ed1 C1 Kompetente Sprachverwendung : http://data.europa.eu/snb/cefr/c_2f49f1ce C2 Kompetente Sprachverwendung : http://data.europa.eu/snb/cefr/c_c24a21da</beschreibung>
+               <herausgebernameLang>Technisch: Publications Office of the European Union; Inhaltlich: Council of Europe</herausgebernameLang>
+               <herausgebernameKurz>PO.EU for CoE</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>20230628-0</version>
+               <bezugsort>https://op.europa.eu/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/foreign-language-skill</bezugsort>
+               <datumGueltigkeitAb>2023-06-28</datumGueltigkeitAb>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten/>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" form="unqualified" type="xs:token"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:xbildung-de:coe-int:codeliste:languagereference"/>
+            <xs:attribute name="listVersionID"
+                          type="xs:normalizedString"
+                          use="optional"
+                          fixed="20230628-0"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.EQF">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>European Qualifications Framework</nameLang>
+               <nameKurz>EQF</nameKurz>
+               <nameTechnisch>EuropeanQualificationsFramework-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:publicationsoffice-eu:codeliste:eqf</kennung>
+               <beschreibung>Folgende Beschreibung wurde vom Publications Office der EU übernommen: The European Qualifications Framework (EQF) is an 8-level, learning outcomes-based framework for all types of qualifications that serves as a translation tool between different national qualifications frameworks. This framework helps improve transparency, comparability and portability of people's qualifications and makes it possible to compare qualifications from different countries and institutions. The European Qualifications Framework is maintained by DG EMPL and published by the Publications Office of the European Union on the EU Vocabularies website. Link zur Webseite: https://op.europa.eu/​de/web/eu-vocabularies/​dataset/-/resource?uri=​http://publications.europa.eu/​resource/​dataset/​european-qualification-framework Code: Der zu verwendende Schlüssel ist die URI des gewünschten Eintrags, der über den Button "Browse content" gefunden werden kann. Beispiele: (Element : Code) Niveau 2 : http://data.europa.eu/snb/eqf/2 Niveau 3 : http://data.europa.eu/snb/eqf/3 Niveau 4 : http://data.europa.eu/snb/eqf/4 Niveau 5 : http://data.europa.eu/snb/eqf/5</beschreibung>
+               <herausgebernameLang>Publications Office of the European Union</herausgebernameLang>
+               <herausgebernameKurz>PO.EU</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>20230118-0</version>
+               <bezugsort>https://op.europa.eu/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/european-qualification-framework</bezugsort>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten/>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" form="unqualified" type="xs:token"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:xbildung-de:publicationsoffice-eu:codeliste:eqf"/>
+            <xs:attribute name="listVersionID"
+                          type="xs:normalizedString"
+                          use="optional"
+                          fixed="20230118-0"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.Erreichbarkeit">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Erreichbarkeit</nameLang>
+               <nameKurz>Erreichbarkeit</nameKurz>
+               <nameTechnisch>Erreichbarkeit-Codes</nameTechnisch>
+               <kennung>urn:de:xoev:codeliste:erreichbarkeit</kennung>
+               <beschreibung>Eine Liste der Kommunikationsmedien und -kanäle, über die man eine Person oder Institution erreichen kann. Link zur Webseite: https://www.xrepository.de/details/urn:de:xoev:codeliste:erreichbarkeit Code: Der zu verwendende Schlüssel ist der Eintrag in der empfohlenen Codespalte "code". Beispiele: (Element : Code) E-Mail : 01 Telefon Festnetz : 02 Telefon mobil : 03</beschreibung>
+               <herausgebernameLang>Koordinierungsstelle für IT-Standards</herausgebernameLang>
+               <herausgebernameKurz>KoSIT</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>3</version>
+               <bezugsort>https://www.xrepository.de/details/urn:de:xoev:codeliste:erreichbarkeit_3#version</bezugsort>
+               <datumGueltigkeitAb>2018-05-03</datumGueltigkeitAb>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten/>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" form="unqualified" type="xs:token"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:de:xoev:codeliste:erreichbarkeit"/>
+            <xs:attribute name="listVersionID"
+                          type="xs:normalizedString"
+                          use="optional"
+                          fixed="3"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.Geschlecht">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Geschlechtsangaben in XInneres</nameLang>
+               <nameKurz>XInneres Geschlecht</nameKurz>
+               <nameTechnisch>geschlecht</nameTechnisch>
+               <kennung>urn:xoev-de:xinneres:codeliste:geschlecht</kennung>
+               <beschreibung>Mit dieser Schlüsseltabelle wird das Geschlecht einer Person abgebildet. Verwendet werden die Codes für Geschlechtsangaben gemäß §§ 22 und 45 b PStG. Link zur Webseite: https://www.xrepository.de/details/urn:xoev-de:xinneres:codeliste:geschlecht Code: Der zu verwendende Schlüssel ist der Eintrag in der empfohlenen Codespalte "code". Beispiele: (Element : Code) männlich : m weiblich : w keine Angabe : x divers : d</beschreibung>
+               <herausgebernameLang>Koordinierungsstelle für IT-Standards</herausgebernameLang>
+               <herausgebernameKurz>KoSIT</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>1</version>
+               <bezugsort>https://www.xrepository.de/details/urn:xoev-de:xinneres:codeliste:geschlecht</bezugsort>
+               <datumGueltigkeitAb>2022-11-01</datumGueltigkeitAb>
+               <versionXOEVHandbuch>2.1</versionXOEVHandbuch>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten/>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" form="unqualified" type="xs:token"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:xoev-de:xinneres:codeliste:geschlecht"/>
+            <xs:attribute name="listVersionID"
+                          type="xs:normalizedString"
+                          use="optional"
+                          fixed="1"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.GesetzlicherVertreter">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>DSMeld Gesetzlicher Vertreter (DSMeld-Blatt 0001)</nameLang>
+               <nameKurz>Gesetzlicher Vertreter</nameKurz>
+               <nameTechnisch>DSMeld-GesetzlicherVertreter</nameTechnisch>
+               <kennung>urn:de:dsmeld:schluesseltabelle:gesetzlicher.vertreter</kennung>
+               <beschreibung>Mit dieser Schlüsseltabelle wird die Art der gesetzlichen Vertretung abgebildet. Siehe Blatt 0001 des DSMeld. Codeliste DSMeld Gesetzlicher Vertreter im XRepository: https://www.xrepository.de/details/​urn​:de​:dsmeld​:schluesseltabelle​:gesetzlicher​.vertreter Code: Der zu verwendende Schlüssel ist der Eintrag in der empfohlenen Codespalte "key". Beispiele: (Element : Code) Vater, Elternteil : 1 Mutter, Elternteil : 2 anderer gesetzlicher Vertreter (natürliche Person) : 3 anderer gesetzlicher Vertreter (juristische Person) : 4</beschreibung>
+               <herausgebernameLang>Koordindierungsstelle für IT-Standards</herausgebernameLang>
+               <herausgebernameKurz>KoSIT</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>3</version>
+               <bezugsort>https://www.xrepository.de/details/urn:de:dsmeld:schluesseltabelle:gesetzlicher.vertreter</bezugsort>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten/>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" form="unqualified" type="xs:token"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:de:dsmeld:schluesseltabelle:gesetzlicher.vertreter"/>
+            <xs:attribute name="listVersionID"
+                          type="xs:normalizedString"
+                          use="optional"
+                          fixed="3"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.ISCED2011">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>ISCED 2011 Level</nameLang>
+               <nameKurz>ISCED Level</nameKurz>
+               <nameTechnisch>ISCEDlevel-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:unesco:codeliste:isced2011</kennung>
+               <beschreibung>Die International Standard Classification of Education (ISCED) der UNESCO klassifiziert Elemente des Bildungswesens, wodurch internationalie Vergleiche möglich werden. Offizielle Dokumente können hier abgerufen werden: http://uis.unesco.org/en/isced-mappings ISCED 2011 definiert neun Ebenen (Level 0 bis 8) für die Angabe des Bildungsniveaus. Link zur Webseite: https://www.datenportal.bmbf.de/​portal/de/G293.html Code: Der zu verwendende Schlüssel ist die einstellige Ziffer des Levels. Beispiele: (Element : Code) Gymnasium : 3 Bachelor : 6 Master : 7</beschreibung>
+               <herausgebernameLang>United Nations Educational, Scientific and Cultural Organization</herausgebernameLang>
+               <herausgebernameKurz>UNESCO</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>ISCED-2011</version>
+            </versionCodeliste>
+            <codelistenspalten/>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" form="unqualified" type="xs:token"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:xbildung-de:unesco:codeliste:isced2011"/>
+            <xs:attribute name="listVersionID"
+                          type="xs:normalizedString"
+                          use="optional"
+                          fixed="ISCED-2011"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.ISCEDF2013">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>International Standard Classification of Education: Fields of Education and Training 2013</nameLang>
+               <nameKurz>ISCED-F 2013</nameKurz>
+               <nameTechnisch>ISCED-F-2013-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:publicationsoffice-eu:taxonomie:isced-f-2013</kennung>
+               <beschreibung>Die International Standard Classification of Education (ISCED) der UNESCO klassifiziert Elemente des Bildungswesens, wodurch internationalie Vergleiche möglich werden. Offizielle Dokumente können hier abgerufen werden: http://uis.unesco.org/en/isced-mappings International Standard Classification of Education 2013 Field of Studies (ISCED-F 2013) ist eine Taxonomie von Bildungsbereichen. Sie wurde von der UNESCO erstellt. Von XBildung wird jedoch die Version verwendet, die vom EU Publication Office technisch zur Verfügung gestellt wird. Link zur Webseite: https://op.europa.eu/de/​web/eu-vocabularies/dataset/​-/resource?uri=​http://publications.europa.eu/​resource/dataset/​international-education-classification Code: Der zu verwendende Schlüssel ist die URI des gewünschten Eintrags, der über den Button "Browse content" gefunden werden kann. Beispiele: (Element : Code) Mathematik : http://data.europa.eu/snb/isced-f/0541 Fremdsprachenerwerb : http://data.europa.eu/snb/isced-f/0231 Sport : http://data.europa.eu/snb/isced-f/1014</beschreibung>
+               <herausgebernameLang>Technisch: Publications Office of the European Union; Inhaltlich: United Nations Educational, Scientific and Cultural Organization</herausgebernameLang>
+               <herausgebernameKurz>PO.EU for UNESCO</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>20240110-0</version>
+               <bezugsort>https://op.europa.eu/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/international-education-classification</bezugsort>
+               <datumGueltigkeitAb>2024-01-10</datumGueltigkeitAb>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten/>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" form="unqualified" type="xs:token"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:xbildung-de:publicationsoffice-eu:taxonomie:isced-f-2013"/>
+            <xs:attribute name="listVersionID"
+                          type="xs:normalizedString"
+                          use="optional"
+                          fixed="20240110-0"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.Kreis">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Die Kreise der deutschen Bundesländer nach dem Gemeindeverzeichnis des Statistischen Bundesamtes</nameLang>
+               <nameKurz>Kreis</nameKurz>
+               <nameTechnisch>kreis</nameTechnisch>
+               <kennung>urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:kreis</kennung>
+               <beschreibung>Die Bundesrepublik Deutschland ist ein Zusammenschluss von Bundesländern. Die meisten Bundesländer umfassen mehrere Kreise und Bezirke. Diese Codeliste stellt die Kreise der deutschen Bundesländer nach dem Gemeindeverzeichnis des Statistischen Bundesamtes dar. Dieser Code ist auch Bestandteil des Amtlichen Gemeindeschlüssels (AGS). Link zur Webseite: https://www.xrepository.de/details/urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:kreis Code: Der zu verwendende Schlüssel ist der Eintrag in der empfohlenen Codespalte "SCHLUESSEL". Beispiele: (Element : Code) Flensburg, Stadt : 01001 Kiel, Landeshauptstadt : 01002 Lübeck, Hansestadt : 01003</beschreibung>
+               <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
+               <herausgebernameKurz>Destatis</herausgebernameKurz>
+            </codeliste>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" type="xs:token" form="unqualified"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:kreis"/>
+            <xs:attribute name="listVersionID" type="xs:normalizedString" use="required"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.Language">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Language</nameLang>
+               <nameKurz>Language</nameKurz>
+               <nameTechnisch>Language-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:publicationsoffice-eu:codeliste:language</kennung>
+               <beschreibung>Folgende Beschreibung wurde vom Publications Office der EU übernommen: Language is a controlled vocabulary that lists world languages and language varieties, including sign languages. Its main purpose is to support activities associated with the publication process. The full set of languages contains more than 8000 language varieties, each identified by a code equivalent to the ISO 639-3 code. Concepts are aligned with the ISO 639 international standard, which is issued in several parts: ISO 639-1 contains strictly two alphabetic letters (alpha-2), ISO 639-2/B (B = bibliographic) is used for bibliographic purpose (alpha-3), ISO 639-2/T (T = terminology) is used for technical purpose (alpha-3), ISO 639-3 covers all the languages and macro-languages of the world (alpha-3); the values are compliant with ISO 639-2/T. If an authority code is needed for a language without assigned ISO code, an alphanumeric code is created in order to not confuse with ISO codes that are strictly alphabetic. Link zur Webseite: https://op.europa.eu/​de/web/eu-vocabularies/​dataset/-/resource?uri​=http://publications.europa.eu/​resource/​dataset/language Code: Der zu verwendende Schlüssel ist die URI des gewünschten Eintrags, der über den Button "Browse content" gefunden werden kann. Beispiele: (Element : Code) Deutsch : http://publications.europa.eu/resource/authority/language/DEU Englisch : http://publications.europa.eu/resource/authority/language/ENG Französisch : http://publications.europa.eu/resource/authority/language/FRA Latein : http://publications.europa.eu/resource/authority/language/LAT</beschreibung>
+               <herausgebernameLang>Publications Office of the European Union</herausgebernameLang>
+               <herausgebernameKurz>PO.EU</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>20240925-0</version>
+               <bezugsort>https://op.europa.eu/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/language</bezugsort>
+               <datumGueltigkeitAb>2024-09-25</datumGueltigkeitAb>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten/>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" form="unqualified" type="xs:token"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:xbildung-de:publicationsoffice-eu:codeliste:language"/>
+            <xs:attribute name="listVersionID"
+                          type="xs:normalizedString"
+                          use="optional"
+                          fixed="20240925-0"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.Lernzeitmodell">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Lernzeitmodell</nameLang>
+               <nameKurz>Lernzeitmodell</nameKurz>
+               <nameTechnisch>Lernzeitmodell-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:xbildung:codeliste:lernzeitmodell</kennung>
+               <beschreibung>Diese Codeliste enthält mögliche Ausprägungen von Lernzeitmodellen. Sie wurde mit den Stakeholdern von XBildung und seinen Teilmodulen gemäß den Bedarfen für die jeweiligen Anwendungsfälle erstellt und deckt sich in Teilen mit Einträgen der Liste der Lernzeitmodelle des European Learning Model (ELM). ELM Liste der Lernzeitmodelle: https://op.europa.eu/de/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/learning-schedule</beschreibung>
+               <herausgebernameLang>XBildung</herausgebernameLang>
+               <herausgebernameKurz>XBildung.de</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>2025-02-04</version>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten>
+               <code>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>true</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>true</empfohleneCodeSpalte>
+               </code>
+               <description-de-DE>
+                  <spaltennameLang>Lernzeitmodell</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </description-de-DE>
+               <mapping-ELMLearningScheduleType>
+                  <spaltennameLang>ELM Lernzeitmodell</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </mapping-ELMLearningScheduleType>
+            </codelistenspalten>
+            <genutzteCodeSpalte>code</genutzteCodeSpalte>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" form="unqualified" type="xbd:Lernzeitmodell-Codes"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:xbildung-de:xbildung:codeliste:lernzeitmodell"/>
+            <xs:attribute name="listVersionID"
+                          type="xs:normalizedString"
+                          use="optional"
+                          fixed="2025-02-04"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.Regionalschluessel">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Gemeinden, dargestellt durch den Amtlichen Regionalschlüssel (ARS) des Statistischen Bundesamtes</nameLang>
+               <nameKurz>Regionalschüssel</nameKurz>
+               <nameTechnisch>rs</nameTechnisch>
+               <kennung>urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:rs</kennung>
+               <beschreibung>Diese Codeliste stellt alle Gemeinden Deutschlands durch den Amtlichen Regionalschlüssel (ARS) dar, wie im Gemeindeverzeichnis des Statistischen Bundesamtes enthalten. Darüber hinaus enthält die Codeliste für die Stadtstaaten Hamburg, Bremen und Berlin Einträge für Stadt-/Ortsteile bzw. Stadtbezirke. Diese Einträge sind mit einem entsprechenden Hinweis versehen. Link zur Webseite: https://www.xrepository.de/details/urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:rs Code: Der zu verwendende Schlüssel ist der Eintrag in der empfohlenen Codespalte "SCHLUESSEL". Beispiele: (Element : Code) Flensburg, Stadt : 010010000000 Kiel, Landeshauptstadt : 010020000000 Lübeck, Hansestadt : 010030000000</beschreibung>
+               <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
+               <herausgebernameKurz>Destatis</herausgebernameKurz>
+            </codeliste>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" type="xs:token" form="unqualified"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:rs"/>
+            <xs:attribute name="listVersionID" type="xs:normalizedString" use="required"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.Staat">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Codeliste Staatsangehörigkeit aus der Staats- und Gebietssystematik des Statistischen Bundesamtes</nameLang>
+               <nameKurz>Staatsangehörigkeit</nameKurz>
+               <nameTechnisch>staatsangehoerigkeit</nameTechnisch>
+               <kennung>urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:staatsangehoerigkeit</kennung>
+               <beschreibung>Tabelle von Staaten und Staatsangehörigkeiten. Enthält alle Einträge der Codeliste Staat (eigenständige, von Deutschland diplomatisch anerkannte derzeitige Staaten) und zusätzlich Einträge für ehemalige Staaten sowie Ersatzwerte. Link zur Webseite: https://www.xrepository.de/details/urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:staatsangehoerigkeit</beschreibung>
+               <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
+               <herausgebernameKurz>DESTATIS</herausgebernameKurz>
+            </codeliste>
+            <genutzteCodeSpalte>DESTATIS-Schluessel-Staatsangehoerigkeit</genutzteCodeSpalte>
+         </xs:appinfo>
+         <xs:documentation>Verwendet die Codeliste Staatsangehörigkeit aus der Staats- und Gebietssystematik des Statistischen Bundesamtes zur Angabe von Staaten zur Angabe des Staats. Es muss sowohl der Codewert als auch der Name übermittelt werden. Code: Der zu verwendende Schlüssel ist der Eintrag in der empfohlenen Codespalte "DESTATIS-Schluessel-Staatsangehoerigkeit". Name: Die zu verwendende Beschreibungsspalte ist "Staatsname-kurz". Beispiele: (Code : Name) 000 : Deutschland 120 : Jugoslawien 121 : Albanien</xs:documentation>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" type="xs:token" form="unqualified"/>
+               <xs:element name="name" type="xs:normalizedString" form="unqualified"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:staatsangehoerigkeit"/>
+            <xs:attribute name="listVersionID" type="xs:normalizedString" use="required"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Code.Staatsangehoerigkeit">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Codeliste Staatsangehörigkeit aus der Staats- und Gebietssystematik des Statistischen Bundesamtes</nameLang>
+               <nameKurz>Staatsangehörigkeit</nameKurz>
+               <nameTechnisch>staatsangehoerigkeit</nameTechnisch>
+               <kennung>urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:staatsangehoerigkeit</kennung>
+               <beschreibung>Tabelle von Staaten und Staatsangehörigkeiten. Enthält alle Einträge der Codeliste Staat (eigenständige, von Deutschland diplomatisch anerkannte derzeitige Staaten) und zusätzlich Einträge für ehemalige Staaten sowie Ersatzwerte. Link zur Webseite: https://www.xrepository.de/details/urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:staatsangehoerigkeit</beschreibung>
+               <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
+               <herausgebernameKurz>DESTATIS</herausgebernameKurz>
+            </codeliste>
+            <genutzteCodeSpalte>DESTATIS-Schluessel-Staatsangehoerigkeit</genutzteCodeSpalte>
+         </xs:appinfo>
+         <xs:documentation>Verwendet die Codeliste Staatsangehörigkeit aus der Staats- und Gebietssystematik des Statistischen Bundesamtes zur Angabe von Staaten zur Angabe der Staatsangehörigkeit. Es muss sowohl der Codewert als auch der Name übermittelt werden. Code: Der zu verwendende Schlüssel ist der Eintrag in der empfohlenen Codespalte "DESTATIS-Schluessel-Staatsangehoerigkeit". Name: Die zu verwendende Beschreibungsspalte ist "Staatsangehoerigkeit". Beispiele: (Code : Staatsangehoerigkeit) 000 : deutsch 120 : jugoslawisch 121 : albanisch</xs:documentation>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:restriction base="xoev-code:Code">
+            <xs:sequence>
+               <xs:element name="code" type="xs:token" form="unqualified"/>
+               <xs:element name="name" type="xs:normalizedString" form="unqualified"/>
+            </xs:sequence>
+            <xs:attribute name="listURI"
+                          type="xs:anyURI"
+                          use="optional"
+                          fixed="urn:de:bund:destatis:bevoelkerungsstatistik:schluessel:staatsangehoerigkeit"/>
+            <xs:attribute name="listVersionID" type="xs:normalizedString" use="required"/>
+         </xs:restriction>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="Dokument">
+      <xs:annotation>
+         <xs:documentation>Allgemeine Eigenschaften von Dokumenten, die zum Zwecke generischerer Verarbeitung übergreifend modelliert wurden. Die Klasse Dokument bildet damit die Grundlage für z.B. Bildungsnachweise oder Bescheinigungen die in den Teilmodulen als XML-Dateien für den Datenaustausch erstellt werden.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="titel"
+                     minOccurs="0"
+                     type="xbd:String.Localized"
+                     form="qualified">
+            <xs:annotation>
+               <xs:documentation>Vollständiger Titel des Dokuments.</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="ausstellung"
+                     minOccurs="0"
+                     maxOccurs="unbounded"
+                     form="qualified">
+            <xs:annotation>
+               <xs:documentation>Angaben zur Ausstellung des Dokuments. In manchen Dokumenten gibt es parallel zum Datum der Ausstellung auch ein Datum des Erwerbs.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="datum" minOccurs="0" type="xs:date">
+                     <xs:annotation>
+                        <xs:documentation>Datum der Ausstellung des Dokuments</xs:documentation>
+                     </xs:annotation>
+                  </xs:element>
+                  <xs:element name="ort" minOccurs="0" type="xbd:Ortsangabe">
+                     <xs:annotation>
+                        <xs:documentation>Ort der Ausstellung des Dokuments</xs:documentation>
+                     </xs:annotation>
+                  </xs:element>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="gueltigkeitsdatum"
+                     minOccurs="0"
+                     type="xs:date"
+                     form="qualified">
+            <xs:annotation>
+               <xs:documentation>Datum, ab dem das Dokument gültig ist.</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="sprache" type="xbd:Code.Language" form="qualified">
+            <xs:annotation>
+               <xs:documentation>Sprachkennzeichnung des Dokuments. Die Sprache eines Elements vom Typ xbd:String.Localized muss nur angegeben werden, wenn sie von der hier gewählten Sprache des Dokuments abweicht.</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="nonce" minOccurs="0" type="xs:string" form="qualified">
+            <xs:annotation>
+               <xs:documentation>Erlaubt die Angabe einer Nonce, die in einer technischen Implementierung aus verschiedenen Gründen relevant sein kann. Zum Beispiel um die Entropie der Daten zu erhöhen.</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="Ortsangabe">
+      <xs:annotation>
+         <xs:documentation>Hier werden Angaben zum Ort und dem Staat gemacht.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="ort" type="din91379:datatypeC" form="qualified">
+            <xs:annotation>
+               <xs:documentation>Hier werden Angaben zum Ort gemacht.</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="staat"
+                     minOccurs="0"
+                     type="xbd:Code.Staat"
+                     form="qualified">
+            <xs:annotation>
+               <xs:documentation>Hier werden Angaben zum Staat gemacht.</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="Praktikum">
+      <xs:annotation>
+         <xs:documentation>Diese Klasse dient zur Angabe von Daten zu einem absolvierten Praktikum.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="zeitraum"
+                     minOccurs="0"
+                     type="xbd:Zeitraum"
+                     form="qualified">
+            <xs:annotation>
+               <xs:documentation>Angaben zum Zeitraum eines absolvierten Praktikums.</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="namePraktikumsstelle"
+                     minOccurs="0"
+                     type="din91379:datatypeE"
+                     form="qualified">
+            <xs:annotation>
+               <xs:documentation>Angaben zum offiziellen Namen einer Organisation, in der das Praktikum absolviert wurde.</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="ort" minOccurs="0" type="xbd:Ortsangabe" form="qualified">
+            <xs:annotation>
+               <xs:documentation>Ort (im Sinne der Anschrift), an dem das Praktikum absolviert wurde.</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="TeilbekanntesDatum">
+      <xs:annotation>
+         <xs:documentation>Mit diesem Datentyp kann entweder ein vollständig bekanntes oder ein teilweise bekanntes Datum übermittelt werden. Hinweis: Diese Klasse ist angelehnt an die Umsetzung in XInneres.</xs:documentation>
+      </xs:annotation>
+      <xs:choice>
+         <xs:element name="jahrMonatTag" type="xs:date" form="qualified">
+            <xs:annotation>
+               <xs:documentation>Angabe eines vollständigen Datums. Die Angabe folgt der Schreibweise der ISO-8601 für solche Zeiträume, also "YYYY-MM-DD".</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="jahrMonat" type="xs:gYearMonth" form="qualified">
+            <xs:annotation>
+               <xs:documentation>Angabe eines Datums mit Jahr und Monat. Die Angabe folgt der Schreibweise der ISO-8601 für solche Zeiträume, also "YYYY-MM".</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="jahr" type="xs:gYear" form="qualified">
+            <xs:annotation>
+               <xs:documentation>Angabe eines Datums durch eine Jahresangabe. Die Angabe folgt der Schreibweise der ISO-8601 für solche Zeiträume, also "YYYY".</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+      </xs:choice>
+   </xs:complexType>
+   <xs:complexType name="Zeitraum">
+      <xs:annotation>
+         <xs:documentation>Der Zeitraum kennzeichnet einen Abschnitt auf einem Zeitstrahl durch Angabe von Beginn und/oder Ende.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="beginn" minOccurs="0" type="xs:date">
+            <xs:annotation>
+               <xs:documentation>Der Beginn eines Zeitraums beschreibt den Zeitpunkt, ab dem ein Sachverhalt eintritt bzw. rechtskräftig wirksam ist. Der Beginn ist immer Teil der Dauer des Zeitraumes. Anmerkung: Bei der Ableitung von Fachkomponenten sollten zusätzliche Festlegungen getroffen werden wie der Beginn des Zeitraums zu interpretieren ist. z.B.: "Wird ein Monat als Beginn angegeben, dann gilt der erste Tag des Monats als Beginn des Zeitraums" Beispiel: identisch mit *Fristbeginn (BKA) *Wirksamkeitsdatum der Änderung des Familiennamens (Personenstand) *Eheschließungsdatum (Personenstand)</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="ende" minOccurs="0" type="xs:date">
+            <xs:annotation>
+               <xs:documentation>Das Ende eines Zeitraumes beschreibt den Zeitpunkt, ab dem ein Sachverhalt endet bzw. nicht mehr rechtskräftig ist. Das Ende ist Teil der Dauer des Zeitraumes. Anmerkung: Bei der Ableitung von Fachkomponenten sollten zusätzliche Festlegungen getroffen werden wie das Ende des Zeitraums zu interpretieren ist. z.B.: "Wird ein Monat als Ende angegeben, dann gilt der letzte Tag des Monats als Ende des Zeitraums" Beispiel: identisch mit *Fristdatum (Bau) *Ablaufdatum (Finanz) *Faelligkeitsdatum (Finanz) *Wirksamkeitsdatum der Aufhebung/Scheidung der Ehe (Personenstand)</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+         <xs:element name="zusatz" minOccurs="0" type="din91379:datatypeC">
+            <xs:annotation>
+               <xs:documentation>Der Zusatz enthält weitere textuelle Beschreibungen des festgelegten Zeitraums.</xs:documentation>
+            </xs:annotation>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:simpleType name="ArtDerBemerkung-Codes">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Art der Bemerkung</nameLang>
+               <nameKurz>Art der Bemerkung</nameKurz>
+               <nameTechnisch>ArtDerBemerkung-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:xbildung:codeliste:artderbemerkung</kennung>
+               <beschreibung>Die Liste "Art der Bemerkung" bildet häufige Bemerkungen ab, damit sie trotz ihres unstrukturierten Charakters besser strukturiert erfasst werden können.</beschreibung>
+               <herausgebernameLang>XBildung</herausgebernameLang>
+               <herausgebernameKurz>XBildung.de</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>2025-02-04</version>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten>
+               <code>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>true</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>true</empfohleneCodeSpalte>
+               </code>
+               <description-de-DE>
+                  <spaltennameLang>Beschreibung</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </description-de-DE>
+            </codelistenspalten>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/artderbemerkung/aequivalenzbemerkung">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Äquivalenzbemerkung</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/artderbemerkung/arbeitsgemeinschaft">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Arbeitsgemeinschaft</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/artderbemerkung/befreiung">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Befreiung</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/artderbemerkung/beurteilung_allgemein">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>allgemeine Beurteilung</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/artderbemerkung/beurteilung_arbeitsverhalten">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Beurteilung Arbeitsverhalten</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/artderbemerkung/beurteilung_sozialverhalten">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Beurteilung Sozialverhalten</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/artderbemerkung/engagement_ausserschulisch">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>außerschulisches Engagement</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/artderbemerkung/engagement_schulisch">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>schulisches Engagement</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/artderbemerkung/freie_formulierung">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>freie Formulierung</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/artderbemerkung/laengerfristige_befreiung">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>längerfristige Befreiung</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/artderbemerkung/rechtsgrundlage">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Rechtsgrundlage</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/artderbemerkung/sonstige_standardisierte_bemerkung">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>sonstige standardisierte Bemerkung</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="ArtDerSchule-Codes">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Art der Schule</nameLang>
+               <nameKurz>Art der Schule</nameKurz>
+               <nameTechnisch>ArtDerSchule-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:kmk:codeliste:artderschule</kennung>
+               <beschreibung>Die Codeliste basiert auf dem Kerndatensatz (KDS) der Länder für schulstatistische Individualdaten in der Version 4.0. Sie enthält die mögliche Ausprägungen des Merkmals "Schulart/-typ im Sinne der schulartspezifischen Einrichtung", wie sie in der laufende Nummer 1.4 (Schulart) spezifiziert wurden, ergänzt um "Wert nicht bekannt" und "Wert nicht in Liste".</beschreibung>
+               <herausgebernameLang>Kultusministerkonferenz</herausgebernameLang>
+               <herausgebernameKurz>KMK</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>1.0</version>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten>
+               <code>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>true</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>true</empfohleneCodeSpalte>
+               </code>
+               <description-de-DE>
+                  <spaltennameLang>Schule</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </description-de-DE>
+            </codelistenspalten>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/abendgymnasium">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Abendgymnasium</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/abendhauptschule">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Abendhauptschule</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/abendrealschule">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Abendrealschule</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/berufsaufbauschule">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Berufsaufbauschule</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/berufsfachschule">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Berufsfachschule</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/berufsgrundbildungsjahr_in_vollzeitform">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Berufsgrundbildungsjahr in Vollzeitform</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/berufsoberschule_technische_oberschule">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Berufsoberschule/Technische Oberschule</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/berufsvorbereitungsjahr">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Berufsvorbereitungsjahr</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/fachakademie_berufsakademie">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Fachakademie/Berufsakademie</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/fachgymnasium">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Fachgymnasium</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/fachoberschule">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Fachoberschule</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/fachschule">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Fachschule</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/foerderschule_sonderschule">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Förderschule (Sonderschule)</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/freie_waldorfschule">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Freie Waldorfschule</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/grundschule_1_4">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Grundschule (1 - 4)</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/gymnasium">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Gymnasium</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/hauptschule">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Hauptschule</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/integrierte_gesamtschule">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Integrierte Gesamtschule</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/kolleg">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Kolleg</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/realschule">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Realschule</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/schulartunabhaengige_orientierungsstufe">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Schulartunabhängige Orientierungsstufe</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/schule_des_gesundheitswesens">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Schule des Gesundheitswesens</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/schule_mit_mehreren_bildungsgaengen">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Schule mit mehreren Bildungsgängen</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/schulkindergarten">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Schulkindergarten</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/schulkindergarten_an_der_foerderschule">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Schulkindergarten an Förderschule</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/teilzeit_berufsschule">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Teilzeit-Berufsschule</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/vorklasse">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Vorklasse</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/vorklasse_an_der_foerderschule">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Vorklasse an Förderschule</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/~wert_nicht_bekannt">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Wert nicht bekannt</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/kmk/1.0/code/artderschule/~wert_nicht_in_liste">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Wert nicht in Liste</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="ArtDesSchulabschlusses-Codes">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Art des Schulabschlusses</nameLang>
+               <nameKurz>Art des Schulabschlusses</nameKurz>
+               <nameTechnisch>ArtDesSchulabschlusses-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:destatis:codeliste:artdesschulabschlusses</kennung>
+               <beschreibung>Diese Liste beinhaltet die Arten der Bildungsabschlüsse aus dem Schulwesen in Deutschland. Sie basiert auf der Fachserie 11, Reihe 1, 2009/10.</beschreibung>
+               <herausgebernameLang>Statistisches Bundesamt, Wiesbaden</herausgebernameLang>
+               <herausgebernameKurz>DESTATIS</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>1.0</version>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten>
+               <code>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>true</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>true</empfohleneCodeSpalte>
+               </code>
+               <description-de-DE>
+                  <spaltennameLang>Abschluss</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </description-de-DE>
+               <mapping-ISCED2011L>
+                  <spaltennameLang>UNESCO ISCED 2011-L</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </mapping-ISCED2011L>
+            </codelistenspalten>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="http://xbildung.de/def/destatis/1.0/code/artdesschulabschlusses/allgemeine_hochschulreife">
+            <xs:annotation>
+               <xs:appinfo>
+                  <mapping-ISCED2011L>3</mapping-ISCED2011L>
+                  <description-de-DE>allgemeine Hochschulreife</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/destatis/1.0/code/artdesschulabschlusses/fachhochschulreife">
+            <xs:annotation>
+               <xs:appinfo>
+                  <mapping-ISCED2011L>3</mapping-ISCED2011L>
+                  <description-de-DE>Fachhochschulreife</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/destatis/1.0/code/artdesschulabschlusses/hauptschulabschluss">
+            <xs:annotation>
+               <xs:appinfo>
+                  <mapping-ISCED2011L>2</mapping-ISCED2011L>
+                  <description-de-DE>Hauptschulabschluss bzw. entsprechendem Abschluss</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/destatis/1.0/code/artdesschulabschlusses/ohne_hauptschulabschluss">
+            <xs:annotation>
+               <xs:appinfo>
+                  <mapping-ISCED2011L>2</mapping-ISCED2011L>
+                  <description-de-DE>ohne Hauptschulabschluss; einschl. Abschluss der Förderschule mit Förderschwerpunkt Lernen und Abschluss der Förderschule mit Förderschwerpunkt geistige Entwicklunng</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/destatis/1.0/code/artdesschulabschlusses/realschulabschluss">
+            <xs:annotation>
+               <xs:appinfo>
+                  <mapping-ISCED2011L>2</mapping-ISCED2011L>
+                  <description-de-DE>Realschulabschluss (Mittlerer Abschluss)</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/destatis/1.0/code/artdesschulabschlusses/~wert_nicht_bekannt">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Wert nicht bekannt</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/destatis/1.0/code/artdesschulabschlusses/~wert_nicht_in_liste">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Wert nicht in Liste</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="ArtderPruefung-Codes">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Art der Prüfung</nameLang>
+               <nameKurz>Art der Prüfung</nameKurz>
+               <nameTechnisch>ArtderPruefung-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:xbildung:codeliste:artderpruefung</kennung>
+               <beschreibung>Diese Codeliste enthält mögliche Ausprägungen der Art einer Prüfung. Sie wurde mit den Stakeholdern von XBildung und seinen Teilmodulen gemäß den Bedarfen für die jeweiligen Anwendungsfälle erstellt und deckt sich in Teilen mit Einträgen der Assessment Types des European Learning Model (ELM). ELM List Of Assessment Types: https://op.europa.eu/de/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/assessment</beschreibung>
+               <herausgebernameLang>XBildung</herausgebernameLang>
+               <herausgebernameKurz>XBildung.de</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>1.0</version>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten>
+               <code>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>true</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>true</empfohleneCodeSpalte>
+               </code>
+               <description-de-DE>
+                  <spaltennameLang>Prüfung</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </description-de-DE>
+               <description-en-GB>
+                  <spaltennameLang>Type of Exam</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </description-en-GB>
+               <mapping-ELMAssessmentType>
+                  <spaltennameLang>ELM List Of Assessment Types</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </mapping-ELMAssessmentType>
+            </codelistenspalten>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artderpruefung/besondere_lernleistung">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>besondere Lernleistung</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artderpruefung/fortlaufende_bewertung">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>fortlaufende Bewertung</description-de-DE>
+                  <description-en-GB>continuous evaluation</description-en-GB>
+                  <mapping-ELMAssessmentType>http://data.europa.eu/snb/assessment/3484bd7e51</mapping-ELMAssessmentType>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artderpruefung/kuenstlerische_eignungspruefung">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>künstlerische Eignungsprüfung</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artderpruefung/muendliche_pruefung">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>mündliche Prüfung</description-de-DE>
+                  <description-en-GB>oral examination</description-en-GB>
+                  <mapping-ELMAssessmentType>http://data.europa.eu/snb/assessment/d30284d7df</mapping-ELMAssessmentType>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artderpruefung/praesentationspruefung">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Präsentationsprüfung</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artderpruefung/praktische_pruefung">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>praktische Prüfung</description-de-DE>
+                  <description-en-GB>practical assessment</description-en-GB>
+                  <mapping-ELMAssessmentType>http://data.europa.eu/snb/assessment/6a4db9f11d</mapping-ELMAssessmentType>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artderpruefung/schriftliche_hausarbeit">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>schriftliche Hausarbeit</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artderpruefung/schriftliche_pruefung">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>schriftliche Prüfung</description-de-DE>
+                  <description-en-GB>written examination</description-en-GB>
+                  <mapping-ELMAssessmentType>http://data.europa.eu/snb/assessment/6e6cb2cc78</mapping-ELMAssessmentType>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artderpruefung/~wert_nicht_bekannt">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Wert nicht bekannt</description-de-DE>
+                  <description-en-GB>value not known</description-en-GB>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artderpruefung/~wert_nicht_in_liste">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Wert nicht in Liste</description-de-DE>
+                  <description-en-GB>value not in list</description-en-GB>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="ArtderTraegerschaft-Codes">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Art der Trägerschaft</nameLang>
+               <nameKurz>Art der Trägerschaft</nameKurz>
+               <nameTechnisch>ArtderTraegerschaft-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:xbildung:codeliste:artdertraegerschaft</kennung>
+               <beschreibung>Diese Codeliste enthält mögliche Ausprägungen der Art einer Trägerschaft einer Bildungseinrichtung. Sie basiert auf dem Dokument "Schlüsselverzeichnisse, Datensatzbeschreibungen und Definitionenkatalog für die Statistik zum Deutschlandstipendium", ergänzt um den Wert "Kreis".</beschreibung>
+               <herausgebernameLang>XBildung</herausgebernameLang>
+               <herausgebernameKurz>XBildung.de</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>1.0</version>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten>
+               <code>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>true</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>true</empfohleneCodeSpalte>
+               </code>
+               <description-de-DE>
+                  <spaltennameLang>Trägerschaft</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </description-de-DE>
+            </codelistenspalten>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artdertraegerschaft/bund">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Bund</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artdertraegerschaft/kirchlich">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Kirchlich</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artdertraegerschaft/kommune">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Kommune</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artdertraegerschaft/kreis">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Kreis</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artdertraegerschaft/land">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Land</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artdertraegerschaft/privat">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Privat</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artdertraegerschaft/sonstige">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Sonstige</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/1.0/code/artdertraegerschaft/~wert_nicht_bekannt">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Wert nicht bekannt</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="Bewertungsschema-Codes">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Bewertungsschema</nameLang>
+               <nameKurz>Bewertungsschema</nameKurz>
+               <nameTechnisch>Bewertungsschema-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:xbildung:codeliste:bewertungsschema</kennung>
+               <beschreibung>Codeliste für die bekannten und im XBildungs-Kontext verwendeten Bewertungsschemata. Die Aufbauvorschrift lautet: http://xbildung.de/def/xbildung/{Version}/code/bewertungsschema/{ISO3166-Alpha2}_{Hrsg}_{Kontext}_{schlechtesteBewertung}_{bestandenAbBewertung}_{besteBewertung}</beschreibung>
+               <herausgebernameLang>XBildung</herausgebernameLang>
+               <herausgebernameKurz>XBildung.de</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>2025-02-04</version>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten>
+               <code>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>true</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>true</empfohleneCodeSpalte>
+               </code>
+               <description-de-DE>
+                  <spaltennameLang>Beschreibung</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </description-de-DE>
+               <seeAlso>
+                  <spaltennameLang>Weitere Informationen (Webseite)</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </seeAlso>
+            </codelistenspalten>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/bewertungsschema/de_bmj_juristischepruefung_00_04_18">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Verordnung über eine Noten- und Punkteskala für die erste und zweite juristische Prüfung vom 3. Dezember 1981 (BGBl. I S. 1243), die durch Artikel 209 Absatz 4 des Gesetzes vom 19. April 2006 (BGBl. I S. 866) geändert worden ist. Es werden mindestens 4 Punkte zum Bestehen benötigt. Maximal möglich sind 18 Punkte.</description-de-DE>
+                  <seeAlso>https://www.gesetze-im-internet.de/jurprnotskv/BJNR012430981.html</seeAlso>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/bewertungsschema/de_kmk_abitur_000_100_300">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Notensystem der KMK aus dem Jahre 1972, verwendet im Block II des Abiturzeugnisses. Es werden mindestens 100 Punkte zum Bestehen benötigt. Maximal möglich sind 300 Punkte.</description-de-DE>
+                  <seeAlso>http://www.kmk.org/fileadmin/veroeffentlichungen_beschluesse/1972/1972_07_07-VB-gymnasiale-Oberstufe-Abiturpruefung.pdf</seeAlso>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/bewertungsschema/de_kmk_abitur_000_200_600">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Notensystem der KMK aus dem Jahre 1972, verwendet im Block I des Abiturzeugnisses. Es werden mindestens 200 Punkte zum Bestehen benötigt. Maximal möglich sind 600 Punkte.</description-de-DE>
+                  <seeAlso>http://www.kmk.org/fileadmin/veroeffentlichungen_beschluesse/1972/1972_07_07-VB-gymnasiale-Oberstufe-Abiturpruefung.pdf</seeAlso>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/bewertungsschema/de_kmk_abitur_000_280_840">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Notensystem der KMK aus dem Jahre 1972, verwendet für die Gesamtqualifikation des Abiturzeugnisses. Es werden mindestens 280 Punkte zum Bestehen benötigt. Maximal möglich sind 840 Punkte.</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/bewertungsschema/de_kmk_abitur_000_300_900">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Notensystem der KMK aus dem Jahre 1972, verwendet für die Gesamtqualifikation des Abiturzeugnisses. Es werden mindestens 300 Punkte zum Bestehen benötigt. Maximal möglich sind 900 Punkte.</description-de-DE>
+                  <seeAlso>http://www.kmk.org/fileadmin/veroeffentlichungen_beschluesse/1972/1972_07_07-VB-gymnasiale-Oberstufe-Abiturpruefung.pdf</seeAlso>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/bewertungsschema/de_kmk_abitur_00_05_15">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Notensystem der KMK aus dem Jahre 1972, verwendet für Leistungen aus der Qualifkationsphase. Es werden in einem Kurs mindestens 5 Punkte zum Bestehen benötigt. Maximal möglich sind 15 Punkte.</description-de-DE>
+                  <seeAlso>http://www.kmk.org/fileadmin/veroeffentlichungen_beschluesse/1972/1972_07_07-VB-gymnasiale-Oberstufe-Abiturpruefung.pdf</seeAlso>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/bewertungsschema/de_kmk_alternativehochschulnote_F_D_A">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Alternative Ausprägung der Hochschulnote, welche zusätzlich bzw. anstatt der in Deutschland gängigen Note angegeben werden kann. Es wird davon ausgegangen, dass die Noten hierbei als A, B, C, D, E und F ausgewiesen werden und ggf. bei einem Datenaustausch zwischen Hochschulen nach der modifizierten bayerischen Formel umgerechnet werden müsste.</description-de-DE>
+                  <seeAlso>https://www.kmk.org/fileadmin/pdf/ZAB/Hochschulzugang_Beschluesse_der_KMK/GesNot05.pdf</seeAlso>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/bewertungsschema/de_kmk_hochschulnote_5_4_1">
+            <xs:annotation>
+               <xs:appinfo>
+                  <seeAlso>https://www.kmk.org/fileadmin/veroeffentlichungen_beschluesse/2003/2003_10_10-Laendergemeinsame-Strukturvorgaben.pdf</seeAlso>
+                  <description-de-DE>Notensystem der KMK aus dem Jahre 2003, verwendet für die Bewertung von Leistungen erbracht im Verlauf des Hochschulstudiums. Es wird mindestens eine 4 zum Bestehen benötigt. Maximal möglich ist eine 1.</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/bewertungsschema/de_kmk_schulnote_6_4_1">
+            <xs:annotation>
+               <xs:appinfo>
+                  <seeAlso>https://www.kmk.org/fileadmin/Dateien/veroeffentlichungen_beschluesse/2020/2020_10_15-Laendervereinbarung-gemeinsame-Grundstruktur.pdf</seeAlso>
+                  <description-de-DE>Notensystem der KMK für die Bewertung von Leistungen erbracht im Verlauf der Primar- und Sekundarstufe. Es wird mindestens eine 4 zum Bestehen benötigt. Maximal möglich ist eine 1.</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="Lernzeitmodell-Codes">
+      <xs:annotation>
+         <xs:appinfo>
+            <codeliste>
+               <nameLang>Lernzeitmodell</nameLang>
+               <nameKurz>Lernzeitmodell</nameKurz>
+               <nameTechnisch>Lernzeitmodell-Codes</nameTechnisch>
+               <kennung>urn:xbildung-de:xbildung:codeliste:lernzeitmodell</kennung>
+               <beschreibung>Diese Codeliste enthält mögliche Ausprägungen von Lernzeitmodellen. Sie wurde mit den Stakeholdern von XBildung und seinen Teilmodulen gemäß den Bedarfen für die jeweiligen Anwendungsfälle erstellt und deckt sich in Teilen mit Einträgen der Liste der Lernzeitmodelle des European Learning Model (ELM). ELM Liste der Lernzeitmodelle: https://op.europa.eu/de/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/learning-schedule</beschreibung>
+               <herausgebernameLang>XBildung</herausgebernameLang>
+               <herausgebernameKurz>XBildung.de</herausgebernameKurz>
+            </codeliste>
+            <versionCodeliste>
+               <version>2025-02-04</version>
+               <versionCodelistenHandbuch>1.2</versionCodelistenHandbuch>
+            </versionCodeliste>
+            <codelistenspalten>
+               <code>
+                  <datentyp>string</datentyp>
+                  <codeSpalte>true</codeSpalte>
+                  <verwendung>required</verwendung>
+                  <empfohleneCodeSpalte>true</empfohleneCodeSpalte>
+               </code>
+               <description-de-DE>
+                  <spaltennameLang>Lernzeitmodell</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </description-de-DE>
+               <mapping-ELMLearningScheduleType>
+                  <spaltennameLang>ELM Lernzeitmodell</spaltennameLang>
+                  <datentyp>string</datentyp>
+                  <sprache>de-DE</sprache>
+                  <codeSpalte>false</codeSpalte>
+                  <verwendung>optional</verwendung>
+                  <empfohleneCodeSpalte>false</empfohleneCodeSpalte>
+               </mapping-ELMLearningScheduleType>
+            </codelistenspalten>
+         </xs:appinfo>
+      </xs:annotation>
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/lernzeitmodell/dual-ausbildungsintegriert">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Dual (ausbildungsintegriert)</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/lernzeitmodell/dual-praxisintegriert">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Dual (praxisintegriert)</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/lernzeitmodell/teilzeit">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Teilzeit</description-de-DE>
+                  <mapping-ELMLearningScheduleType>https://publications.europa.eu/resource/authority/snb/learning-schedule/f230bae523</mapping-ELMLearningScheduleType>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/lernzeitmodell/vollzeit">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Vollzeit</description-de-DE>
+                  <mapping-ELMLearningScheduleType>https://publications.europa.eu/resource/authority/snb/learning-schedule/72a0ab92fa</mapping-ELMLearningScheduleType>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/lernzeitmodell/~wert_nicht_bekannt">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Wert nicht bekannt</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="http://xbildung.de/def/xbildung/2025-02-04/code/lernzeitmodell/~wert_nicht_in_liste">
+            <xs:annotation>
+               <xs:appinfo>
+                  <description-de-DE>Wert nicht in Liste</description-de-DE>
+               </xs:appinfo>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+</xs:schema>

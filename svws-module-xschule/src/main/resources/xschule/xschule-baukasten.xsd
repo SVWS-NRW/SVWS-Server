@@ -27,11 +27,11 @@
          </versionStandard>
       </xs:appinfo>
    </xs:annotation>
-   <xs:import schemaLocation="http://xbildung.de/def/xbildung/1.1/xsd/xbildung-baukasten.xsd"
+	<xs:import schemaLocation="xbildung-baukasten.xsd"
               namespace="http://xbildung.de/def/xbildung/1.1/xsd"/>
-   <xs:import schemaLocation="http://xoev.de/schemata/code/1_0/xoev-code.xsd"
+	<xs:import schemaLocation="xoev-code.xsd"
               namespace="http://xoev.de/schemata/code/1_0"/>
-   <xs:import schemaLocation="https://xoev.de/schemata/din/91379/2022-08/din-norm-91379-datatypes.xsd"
+	<xs:import schemaLocation="din-norm-91379-datatypes.xsd"
               namespace="urn:xoev-de:kosit:xoev:datentyp:din-91379_2022-08"/>
    <xs:complexType name="AllgemeinerName">
       <xs:annotation>
