@@ -17,9 +17,15 @@
 		}">
 		<span v-if="url" class="pointer-events-none absolute left-0 pl-3 opacity-60 top-[0.32rem]">https://</span>
 		<span class="icon i-ri-search-line text-input--search-icon" v-if="type === 'search'" />
-		<div v-if="readonly && !isSelectInput" :class="{ 'text-input--control': !headless, 'text-input--headless': headless, 'text-input--rounded': rounded, 'text-input--prefix': url, }">
+		<span v-if="readonly && !isSelectInput"
+			:class="{
+				'text-input--control': !headless,
+				'text-input--headless': headless,
+				'text-input--rounded': rounded,
+				'text-input--prefix': url
+			}">
 			{{ data }}
-		</div>
+		</span>
 		<input v-else ref="input"
 			v-focus
 			:class="{ 'text-input--control': !headless, 'text-input--headless': headless, 'text-input--rounded': rounded, 'text-input--prefix': url, }"
@@ -144,10 +150,15 @@
 	});
 
 	const emit = defineEmits<{
+		/* Emit value when the value changes. */
 		"update:modelValue": [value: string | null];
+		/* Emit value on blur and keyDown event when the value changes */
 		"change": [value: string | null];
+		/* Emit value on blur event */
 		"blur": [value: string | null];
+		/* Emit value on blur and keyDown event */
 		"commit": [value: string | null];
+		/* Emit methods in onMounted and onBeforeUnmounted hooks */
 		"methods": [ methods: { focus: () => void } | undefined ];
 	}>();
 

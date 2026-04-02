@@ -45,7 +45,7 @@
 		<Variant title="Validation" id="Validation">
 			<div class="p-4">
 				<svws-ui-input-wrapper :grid="4">
-					<svws-ui-textarea-input :model-value="validationState.modelValue.value" v-bind="validationState.props" @input="onInput" />
+					<svws-ui-textarea-input v-model="validationState.modelValue.value" v-bind="validationState.props" @input="onInput" />
 				</svws-ui-input-wrapper>
 			</div>
 		</Variant>
@@ -359,7 +359,6 @@ ${lines} />`;
 
 	function onInput(value: string | null) {
 		logEvent('input', value);
-		activeState.value.modelValue.value = value;
 	}
 
 </script>

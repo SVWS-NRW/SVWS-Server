@@ -24,8 +24,8 @@
 						@commit="model.patch"
 						:max-len="50" :readonly />
 					<svws-ui-textarea-input placeholder="Bemerkungen"
-						:model-value="model.proxy.bemerkungen"
-						@change="patchBemerkung"
+						v-model="model.proxy.bemerkungen"
+						@change="model.patch"
 						:validation="() => model.getFehler('bemerkungen')"
 						resizeable="none" :max-len="255" />
 					<div>

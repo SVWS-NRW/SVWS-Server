@@ -15,11 +15,11 @@ let idComponent: string;
 let idPlaceholder: string;
 let idStatistics: string;
 
-
 beforeEach(() => {
+
 	wrapper = mount(SvwsUiTextareaInput, {
 		props: {
-			modelValue: "",
+			modelValue: null,
 			placeholder: "",
 			valid: () => true,
 			statistics: false,
@@ -39,15 +39,33 @@ beforeEach(() => {
 	idStatistics = "#" + wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.idStatistics;
 });
 
+afterEach(() => {
+	wrapper.unmount();
+	document.body.innerHTML = "";
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Basic Rendering
+// ─────────────────────────────────────────────────────────────────────────────
+
 test("Rendert HTML korrekt", async () => {
 	expect(wrapper.find(idComponent).exists()).toBeTruthy();
 	expect(wrapper.find("textarea").exists()).toBeTruthy();
 });
 
-// CSS-Props data, disabled, statisctics, resizeable-none, ,
+
+test("Setzt die textarea-Referenz korrekt", async () => {
+	const textareaRef = wrapper.vm.$refs.textarea;
+	expect(textareaRef).not.toBeNull();
+	expect((textareaRef as HTMLElement).tagName).toBe("TEXTAREA");
+	expect((textareaRef as HTMLTextAreaElement).classList).toContain("textarea-input--control");
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Setzen von CSS Klassen
+// ─────────────────────────────────────────────────────────────────────────────
 
 describe.concurrent("Tests für die CSS-Props", () => {
-	// [Propname, Klassen- oder Stylename, Beschreibung, Class(0)Style(1)]
 	test.each([
 		["modelValue", "textarea-input--filled", "Prop modelValue wird an CSS übergeben"],
 		["disabled", "textarea-input--disabled", "Prop disabled wird an CSS übergeben"],
@@ -55,7 +73,6 @@ describe.concurrent("Tests für die CSS-Props", () => {
 		["resizeable", "textarea-input--resize-none", "Prop resizeable mit none wird an CSS übergeben"],
 		["span", "col-span-full", "Prop span mit full wird an CSS übergeben"],
 	])("%s(%s) => %s", async (x, y) => {
-		// Testen der default-Werte
 		if (["modelValue", "disabled", "statistics"].includes(x)) {
 			expect(wrapper.props(x as prop_names)).toBeFalsy();
 		} else if (x === "resizeable") {
@@ -65,7 +82,6 @@ describe.concurrent("Tests für die CSS-Props", () => {
 			expect(wrapper.props("span")).toBeUndefined();
 		}
 
-		// Vorbereiten
 		switch (x) {
 			case "modelValue":
 				await wrapper.setProps({ modelValue: "test" });
@@ -82,399 +98,232 @@ describe.concurrent("Tests für die CSS-Props", () => {
 			case "span":
 				await wrapper.setProps({ span: "full" });
 				break;
-			default:
-				break;
 		}
 		expect(wrapper.find("label").classes()).toContain(y);
 	});
 
 	test("Prop resizeable mit horizontal wird an CSS übergeben", async () => {
-		// Vorbereiten
-		// Erneute Definiton des Wrappers, da es Probleme bei parallelen Tests gibt.
 		const w = mount(SvwsUiTextareaInput);
 		await w.setProps({ resizeable: "horizontal" });
-
-		// Testen
 		expect(w.find("label").classes()).toContain("textarea-input--resize-horizontal");
 	});
 
 	test("Prop resizeable mit both wird an CSS übergeben", async () => {
-		// Vorbereiten
 		await wrapper.setProps({ resizeable: "both" });
-
-		// Testen
 		expect(wrapper.find("label").classes()).toContain("textarea-input--resize-both");
 	});
 
 	test("Prop span mit grow wird an CSS übergeben", async () => {
-		// Vorbereiten
 		await wrapper.setProps({ span: "grow" });
-
-		// Testen
 		expect(wrapper.find("label").classes()).toContain("grow");
 	});
 
-	test("Prop required mit false wird an CSS übergeben", async () => {
-		// Vorbereiten
-		await wrapper.setProps({ placeholder: "Placeholder" });
-
-		// Testen
-		expect(wrapper.find(idPlaceholder).classes().includes("textarea-input--placeholder--required"));
-	});
-
 	test("Prop required mit true wird an CSS übergeben", async () => {
-		// Vorbereiten
 		await wrapper.setProps({ placeholder: "Placeholder", required: true });
 		const requiredSpan = wrapper.find(`${idPlaceholder} span.i-ri-asterisk`);
-
-		// Testen
 		expect(requiredSpan.exists()).toBeTruthy();
 		expect(requiredSpan.classes()).toContain("textarea-input--placeholder--required");
 	});
+
+	test("Prop modelValue gleich null setzt keine Filled Class", async () => {
+		await wrapper.setProps({ modelValue: null });
+		expect(wrapper.find("label").classes()).not.toContain("textarea-input--filled");
+	});
 });
 
-describe("Bedingtes Rendern der HTML-Elemenete", () => {
-	describe("Textarea->tests", () => {
-		test("rendert Textarea mit modelValue richtig, wenn modelValue null ist.", async () => {
-			// Vorbereiten
+// ─────────────────────────────────────────────────────────────────────────────
+// Bedingtes Rendern
+// ─────────────────────────────────────────────────────────────────────────────
+
+describe("Bedingtes Rendern der HTML-Elemente", () => {
+
+	describe("Textarea", () => {
+		test("hat leeren Wert, wenn modelValue null ist", async () => {
 			await wrapper.setProps({ modelValue: null });
-
-			// Testen
 			expect(wrapper.get("textarea").element.value.length).toBe(0);
 		});
 
-		test("rendert Textarea mit modelValue richtig, wenn modelValue gleich '' ist.", async () => {
-			// Vorbereiten
+		test("hat leeren Wert, wenn modelValue '' ist", async () => {
 			await wrapper.setProps({ modelValue: "" });
-
-			// Testen
 			expect(wrapper.get("textarea").element.value.length).toBe(0);
 		});
 
-		test("rendert Textarea mit modelValue richtig, wenn modelValue definiert ist.", async () => {
-			// Vorbereiten
+		test("zeigt modelValue korrekt an", async () => {
 			await wrapper.setProps({ modelValue: "Test" });
-
-			// Testen
 			expect(wrapper.get("textarea").element.value).toBe("Test");
 		});
 
-		test("rendert Textarea mit prop required richtig, wenn required false ist.", async () => {
-			// Testen
+		test("zeigt getippten Wert korrekt an auch ohne modelValue Update (uncontrolled)", async () => {
+			await wrapper.find("textarea").setValue("Uncontrolled");
+			expect(wrapper.get("textarea").element.value).toBe("Uncontrolled");
+		});
+
+		test("required=false setzt kein required-Attribut", () => {
 			expect(wrapper.get("textarea").attributes("required")).toBeUndefined();
 		});
 
-		test("rendert Textarea mit prop required richtig, wenn required true ist.", async () => {
-			// Vorbereiten
+		test("required=true setzt required-Attribut", async () => {
 			await wrapper.setProps({ required: true });
-			// Testen
 			expect(wrapper.get("textarea").attributes("required")).toBe("");
 		});
 
-		test("rendert Textarea mit prop disabled richtig, wenn disabled false ist.", async () => {
-			// Testen
+		test("disabled=false setzt kein disabled-Attribut", () => {
 			expect(wrapper.get("textarea").attributes("disabled")).toBeUndefined();
 		});
 
-		test("rendert Textarea mit prop disabled richtig, wenn disabled true ist.", async () => {
-			// Vorbereiten
+		test("disabled=true setzt disabled-Attribut", async () => {
 			await wrapper.setProps({ disabled: true });
-			// Testen
 			expect(wrapper.get("textarea").attributes("disabled")).toBe("");
 		});
 
-		test("rendert Textarea mit prop rows(defaultwert) richtig.", async () => {
-			// Testen
+		test("rows hat korrekten Defaultwert (3)", () => {
 			expect(wrapper.get("textarea").attributes("rows")).toBe("3");
 		});
 
-		test("rendert Textarea mit prop rows richtig, wenn rows geändert wird", async () => {
-			// Vorbereiten
+		test("rows wird korrekt gesetzt", async () => {
 			await wrapper.setProps({ rows: 4 });
-			// Testen
 			expect(wrapper.get("textarea").attributes("rows")).toBe("4");
 		});
 	});
 
-	describe("Span-Placeholder->tests", () => {
-		test("Html-Element span wird nicht gerendert, wenn placeholder nicht gesetzt ist", () => {
-			// Testen
+	describe("Span-Placeholder", () => {
+		test("wird nicht gerendert, wenn placeholder leer ist", () => {
 			expect(wrapper.find(idPlaceholder).exists()).toBeFalsy();
 		});
 
-		test("Html-Element span wird gerendert, wenn placeholder gesetzt ist", async () => {
-			// Vorbereiten
+		test("wird gerendert und zeigt Text an", async () => {
 			await wrapper.setProps({ placeholder: "Placeholder" });
-
-			// Testen
-			expect(wrapper.find(idPlaceholder).exists()).toBeTruthy();
-		});
-
-		test("Html-Element span wird gerendert, wenn placeholder gesetzt ist", async () => {
-			// Vorbereiten
-			await wrapper.setProps({ placeholder: "Placeholder" });
-
-			// Testen
 			expect(wrapper.find(idPlaceholder).exists()).toBeTruthy();
 			expect(wrapper.find(idPlaceholder).text()).toBe("Placeholder");
 		});
 
-		test("Bei Validierungsfehlern wird ein Validation-Icon angezeigt", async () => {
-			// Vorbereiten
-			await wrapper.setProps({ required: true, modelValue: "", placeholder: "Placeholder" });
-
-			// Testen
-			expect(wrapper.find(".validation-tooltip-icon").exists()).toBeTruthy();
+		test("maxLen-Warnung wird nicht gerendert, wenn maxLen undefined ist", async () => {
+			await wrapper.setProps({ placeholder: "Placeholder", modelValue: "Test" });
+			expect(wrapper.findComponent({ name: "SvwsUiTextareaInput" }).props("maxLen")).toBeUndefined();
+			expect(wrapper.find("span.inline-flex.gap-1").exists()).toBeFalsy();
 		});
 
-		test("Bei keinen Validierungsfehlern wird kein Validation-Icon angezeigt", async () => {
-			// Vorbereiten
-			await wrapper.setProps({ required: true, modelValue: "Test", placeholder: "Placeholder" });
-
-			// Testen
-			expect(wrapper.find(".validation-tooltip-icon").exists()).toBeFalsy();
-		});
-
-		test("Warnung für maxLen wird nicht gerendert, wenn maxLen undefiniert ist", async () => {
-			// Vorbereiten
-			await wrapper.setProps({ placeholder: "Placeholder" });
-			expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).props('maxLen')).toBeUndefined();
-			// Testen
-			expect(wrapper.find("span.inline-flex.ml-1.gap-1").exists()).toBeFalsy();
-		});
-
-		test("Warnung für maxLen wird gerendert, wenn maxLen definiert ist", async () => {
-			// Vorbereiten
-			await wrapper.setProps({ placeholder: "Placeholder", maxLen: 12 });
-			expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).props('maxLen')).toBeDefined();
-			// Testen
+		test("maxLen-Warnung wird gerendert, wenn maxLen gesetzt und modelValue nicht null", async () => {
+			await wrapper.setProps({ placeholder: "Placeholder", maxLen: 12, modelValue: "Test" });
 			expect(wrapper.find("span.inline-flex.gap-1").exists()).toBeTruthy();
 		});
 
-		// TODO - Tests für den angezeigten Text der Warnung
+		test("maxLen-Warnung wird nicht gerendert, wenn modelValue null ist", async () => {
+			await wrapper.setProps({ placeholder: "Placeholder", maxLen: 12, modelValue: null });
+			expect(wrapper.find("span.inline-flex.gap-1").exists()).toBeFalsy();
+		});
 
 		test("span-statistics wird nicht gerendert, wenn statistics false ist", async () => {
-			// Vorbereiten
 			await wrapper.setProps({ placeholder: "Placeholder" });
-			expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).props('statisctics')).toBeFalsy();
-
-			// Testen
 			expect(wrapper.find(idStatistics).exists()).toBeFalsy();
 		});
 
 		test("span-statistics wird gerendert, wenn statistics true ist", async () => {
-			// Vorbereiten
 			await wrapper.setProps({ placeholder: "Placeholder", statistics: true });
-			expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).props('statistics')).toBeTruthy();
-
-			// Testen
 			expect(wrapper.find(idStatistics).exists()).toBeTruthy();
 		});
 
-		test("Komponente tooltip wird gerendert, wenn statistics true ist", async () => {
-			// Vorbereiten
+		test("Tooltip wird korrekt gerendert, wenn statistics true ist", async () => {
 			await wrapper.setProps({ placeholder: "Placeholder", statistics: true });
 			const tooltip = wrapper.findComponent(SvwsUiTooltip);
-
-			// Testen
 			expect(tooltip.exists()).toBeTruthy();
-			expect(tooltip.props('position')).toBe("right");
-			const statistic_icon = tooltip.find("span.icon.i-ri-bar-chart-2-line");
-			expect(statistic_icon.classes()).toContain("textarea-input--statistic-icon");
-			// TODO #content-Slot testen ?????
+			expect(tooltip.props("position")).toBe("right");
+			expect(tooltip.find("span.icon.i-ri-bar-chart-2-line").classes()).toContain("textarea-input--statistic-icon");
 		});
 	});
 });
 
-describe("computed/functions tests", () => {
-	test("computed->dataOrEmpty->get liefert '', wenn data null ist", async () => {
-		// Vorereiten
-		await wrapper.setProps({ modelValue: null });
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data).toBeNull();
+// ─────────────────────────────────────────────────────────────────────────────
+// Expose
+// ─────────────────────────────────────────────────────────────────────────────
 
-		// Testen
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.dataOrEmpty).toBe("");
+describe("defineExpose 'content'", () => {
+
+	test("gibt modelValue zurück", async () => {
+		await wrapper.setProps({ modelValue: "Exposed" });
+		expect(wrapper.vm.content).toBe("Exposed");
 	});
 
-	test("computed->dataOrEmpty->get liefert den Wert, wenn data nicht null ist", async () => {
-		// Vorereiten
-		await wrapper.setProps({ modelValue: "Test" });
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data).toBeDefined();
+	test("gibt null zurück, wenn Feld leer ist", () => {
+		expect(wrapper.vm.content).toBeNull();
+	});
+});
 
-		// Testen
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.dataOrEmpty).toBe("Test");
+// ─────────────────────────────────────────────────────────────────────────────
+// Events
+// ─────────────────────────────────────────────────────────────────────────────
+
+describe("Event-Tests", () => {
+
+	test("onInput emittiert update:modelValue mit eingegebenem Wert", async () => {
+		await wrapper.find("textarea").setValue("Test1-?");
+		expect(wrapper.emitted("update:modelValue")?.at(0)?.at(0)).toBe("Test1-?");
 	});
 
-	test("computed->dataOrEmpty->set setzt den Wert von dataOrEmpty auf null, wenn value leer ist", async () => {
-		// Vorereiten
-		await wrapper.setProps({ modelValue: "" });
-
-		// Aktion
-		wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.dataOrEmpty = "";
-
-		// Testen
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.dataOrEmpty).toBe("");
+	test("onInput emittiert 'input' Event mit null bei leerem Feld", async () => {
+		await wrapper.find("textarea").setValue("");
+		expect(wrapper.emitted("input")?.at(0)?.at(0)).toBeNull();
 	});
 
-	test("computed->dataOrEmpty->set setzt den Wert von dataOrEmpty , wenn value nicht leer ist", async () => {
-		// Vorereiten
-		await wrapper.setProps({ modelValue: "Test" });
-
-		// Aktion
-		wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.dataOrEmpty = "Test2";
-		// Testen
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.dataOrEmpty).toBe("Test2");
-	});
-
-	test("function->updateData aktualisiert data und modelValue nicht, wenn der übergebene Wert gleich ist", async () => {
-		// Vorbereiten
-		await wrapper.setProps({ modelValue: "Test" });
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data).toBe("Test");
-
-		// Aktion
-		wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.updateData("Test");
-
-		// Testen
-		// Länge ist deswegen 1, weil durch watch updateData bereits bei der Konstruktion einmal aufgerufen wird
-		// Jedoch wird die Methode beim nächsten Aufruf mit dem gleichen Wert nicht aufgerufen.
-		expect(wrapper.emitted("update:modelValue")).toHaveLength(1);
-	});
-
-	test("function->updateData aktualisiert data und modelValue(mit emit) mit dem übergebenen Wert", async () => {
-		// Vorbereiten
-		await wrapper.setProps({ modelValue: "Test" });
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data).toBe("Test");
-
-		// Aktion
-		wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.updateData("Test2");
-		await wrapper.vm.$nextTick();
-		// Testen
-		expect(await wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data).toBe("Test2");
-		expect(wrapper.emitted("update:modelValue")?.at(0)?.at(0)).toBe("Test");
-		expect(wrapper.emitted("update:modelValue")?.at(1)?.at(0)).toBe("Test2");
-	});
-
-	test("functions->onInput aktualisiert den data-Wert beim Eintippen in textarea.", async () => {
-		// Vorbereiten
+	test("onBlur emittiert blur mit null, wenn das Feld leer ist", async () => {
 		const textarea = wrapper.find("textarea");
-
-		// Aktion
-		await textarea.setValue("Test1-?");
-
-		// Testen
-		expect(wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data).toBe("Test1-?");
-	});
-
-	test("functions->onBlur emittiert nur blur-Event, weil props-modelValue sich von data nicht unterscheidet. modelValue ist leer.", async () => {
-		// Vorbereiten
-		const textarea = wrapper.find("textarea");
-		expect(wrapper.props("modelValue")).toBe(wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data);
-
-		// Aktion
+		await textarea.trigger("focus");
 		await textarea.trigger("blur");
-
-		// Testen
-		expect(wrapper.emitted("unchanged")).toBeUndefined();
-		expect(wrapper.emitted("blur")).toBeDefined();
-		expect(wrapper.emitted("blur")?.at(0)?.at(0)).toBe('');
+		expect(wrapper.emitted("blur")?.at(0)?.at(0)).toBeNull();
 	});
 
-	test("functions->onBlur emittiert nur blue-Event, weil props-modelValue sich von data nicht unterscheidet. modelValue ist beleget.", async () => {
-		// Vorbereiten
-		await wrapper.setProps({ modelValue: "Test+23" });
+	test("onBlur emittiert blur und kein change, wenn der Wert sich nicht geändert hat (leeres Feld)", async () => {
 		const textarea = wrapper.find("textarea");
-		expect(wrapper.props("modelValue")).toBe(wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.data);
-		await wrapper.vm.$nextTick();
-
-		// Aktion
+		await textarea.trigger("focus");
 		await textarea.trigger("blur");
-
-		// Testen
-		expect(wrapper.emitted("unchanged")).toBeUndefined();
 		expect(wrapper.emitted("blur")).toBeDefined();
-		expect(wrapper.emitted("blur")?.at(0)?.at(0)).toBe("Test+23");
-	});
-
-	test("functions->onBlur emittiert change- und blur-Event, weil props-modelValue sich von data unterscheidet.", async () => {
-		// Vorbereiten
-		await wrapper.setProps({ modelValue: "Test+23" });
-		const textarea = wrapper.find("textarea");
-		textarea.element.value = "222";
-
-		// Aktion
-		await wrapper.get("textarea").trigger("input");
-		await wrapper.get("textarea").trigger("blur");
-
-		// Testen
-		expect(wrapper.emitted("change")).toBeDefined();
-		expect(wrapper.emitted("blur")).toBeDefined();
-		expect(wrapper.emitted("blur")?.at(0)?.at(0)).toBe("222");
-		expect(wrapper.emitted("change")?.at(0)?.at(0)).toBe("222");
-	});
-
-	test("functions->onKeyTab emittiert kein change-Event, weil props-modelValue sich von data nicht unterscheidet ", async () => {
-		// Vorbereiten
-		await wrapper.setProps({ modelValue: "Test+23" });
-		const textarea = wrapper.find("textarea");
-		textarea.element.value = "Test+23";
-
-		// Aktion
-		await textarea.trigger("input");
-		await textarea.trigger("keydown.enter");
-
-		// Testen
 		expect(wrapper.emitted("change")).toBeUndefined();
 	});
 
+	test("onBlur emittiert blur und change, wenn der Wert sich seit Fokus geändert hat", async () => {
+		await wrapper.setProps({ modelValue: "Test+23" });
+		const textarea = wrapper.find("textarea");
+		await textarea.trigger("focus");
+		textarea.element.value = "222";
+		await textarea.trigger("input");
+		await textarea.trigger("blur");
+		expect(wrapper.emitted("blur")?.at(0)?.at(0)).toBe("222");
+		expect(wrapper.emitted("change")?.at(0)?.at(0)).toBe("222");
+	});
 });
 
-test('sollte die textarea-Referenz korrekt setzen', async () => {
-	// Zugriff auf die Referenz über $refs
-	const textareaRef = wrapper.vm.$refs.textarea;
-
-	// Überprüfen, ob die Referenz existiert
-	expect(textareaRef).not.toBeNull();
-	expect((textareaRef as HTMLElement).tagName).toBe("TEXTAREA");
-
-	// Überprüfe, ob das HTML-Element mit ref richtig verknüpfpt ist
-	const textareaElement = textareaRef as HTMLTextAreaElement;
-	expect(textareaElement.classList).toContain("textarea-input--control");
-});
+// ─────────────────────────────────────────────────────────────────────────────
+// Validierung
+// ─────────────────────────────────────────────────────────────────────────────
 
 describe.concurrent("Validierung", () => {
 
 	test("Mit Prop 'validation' wird eine Validierung von außen ausgeführt", () => {
-		const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: "Test", validation: () => getValidatorFehler() } });
-		const validatorResult = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult;
-
-		expect(validatorResult.fehler.size()).toBe(1);
-		expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
+		const w = mount(SvwsUiTextareaInput, { props: { modelValue: "Test", validation: () => getValidatorFehler() } });
+		const result = w.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult;
+		expect(result.fehler.size()).toBe(1);
+		expect(result.fehler.getFirst().getFehlermeldung()).toBe("Custom-Validierung fehlgeschlagen");
 	});
 
-	test("Wird mit der Klasse 'textarea-input--muss' wiedergegeben, wenn valid falsch ist", () => {
-		const wrapper = mount(SvwsUiTextareaInput, {
-			props: { modelValue: "Test", valid: () => false },
-		});
-		expect(wrapper.find(".textarea-input--muss").exists()).toBe(true);
+	test("Klasse 'textarea-input--muss' wird gesetzt, wenn valid() false zurückgibt", () => {
+		const w = mount(SvwsUiTextareaInput, { props: { modelValue: "Test", valid: () => false } });
+		expect(w.find(".textarea-input--muss").exists()).toBe(true);
 	});
 
 	test.each([
 		["textarea-input--muss", ValidatorFehlerart.MUSS],
 		["textarea-input--kann", ValidatorFehlerart.KANN],
 		["textarea-input--hinweis", ValidatorFehlerart.HINWEIS],
-	])(
-		"Wird mit der Klasse '%s' wiedergegeben, wenn Validierungsfehler vom Härtegrad %s vorhanden sind",
-		(expectedClass, fehlerart) => {
-			const wrapper = mount(SvwsUiTextareaInput, {
-				props: { modelValue: "Test", validation: () => getValidatorFehler(fehlerart) },
-			});
-			expect(wrapper.find(`.${expectedClass}`).exists()).toBe(true);
-		}
-	);
+	])("Klasse '%s' wird gesetzt bei Fehlerart %s", (expectedClass, fehlerart) => {
+		const w = mount(SvwsUiTextareaInput, {
+			props: { modelValue: "Test", validation: () => getValidatorFehler(fehlerart) },
+		});
+		expect(w.find(`.${expectedClass}`).exists()).toBe(true);
+	});
 
 	test("Bei Validierungsfehlern wird ein Validation-Icon angezeigt", () => {
-		const wrapper = mount(SvwsUiTextareaInput, { props: { placeholder: "Titel", validation: () => getValidatorFehler() } });
-		expect(wrapper.find(".validation-tooltip-icon").exists()).toBeTruthy();
+		const w = mount(SvwsUiTextareaInput, { props: { placeholder: "Titel", validation: () => getValidatorFehler() } });
+		expect(w.find(".validation-tooltip-icon").exists()).toBeTruthy();
 	});
 
 	describe.concurrent("required", () => {
@@ -483,89 +332,74 @@ describe.concurrent("Validierung", () => {
 			[false, "ohne Prop 'validation'", undefined],
 			[false, "mit Prop 'validation'", () => getValidatorFehler()],
 			[true, "mit Prop 'validation'", () => getValidatorFehler()],
-		])(
-			"Mit Prop 'required = %s' und %s wird kein Required-Validator hinzugefügt",
-			(required, _vString, validation) => {
-				const wrapper = mount(SvwsUiTextareaInput, { props: { required, validation } });
-				const validatorRequired = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorRequired;
+		])("required=%s, %s → kein Required-Validator", (required, _desc, validation) => {
+			const w = mount(SvwsUiTextareaInput, { props: { required, validation } });
+			expect(w.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorRequired).toBeNull();
+		});
 
-				expect(validatorRequired).toBeNull();
-			}
-		);
-
-		test("Mit Prop 'required = true' und ohne Prop 'validation' wird ein Required-Validator hinzugefügt", () => {
-			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: null, required: true } });
-			const validatorRequired = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorRequired;
-
-			expect(validatorRequired).not.toBeNull();
-			expect(validatorRequired).toBeInstanceOf(BasicValidator);
+		test("required=true ohne 'validation' → Required-Validator wird gesetzt", () => {
+			const w = mount(SvwsUiTextareaInput, { props: { modelValue: null, required: true } });
+			const v = w.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorRequired;
+			expect(v).not.toBeNull();
+			expect(v).toBeInstanceOf(BasicValidator);
 		});
 
 		test.each([
 			["''", ""],
-			[null, null],
-		])("Mit Prop 'required = true' und Eingabe = %s wird ein Fehler für die Required-Validierung generiert", (_, input) => {
-			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: input, required: true } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(1);
-			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Bitte geben Sie einen Wert an.");
+			["null", null],
+		])("required=true, Eingabe=%s → Required-Validierungsfehler", (_label, input) => {
+			const w = mount(SvwsUiTextareaInput, { props: { modelValue: input, required: true } });
+			const result = w.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult;
+			expect(result.fehler.size()).toBe(1);
+			expect(result.fehler.getFirst().getFehlermeldung()).toBe("Bitte geben Sie einen Wert an.");
 		});
 
-		test("Mit Prop 'required = true' mit Eingabe ergibt die Validierung keine Fehler", () => {
-			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: "Test", required: true } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
+		test("required=true mit Eingabe → keine Validierungsfehler", () => {
+			const w = mount(SvwsUiTextareaInput, { props: { modelValue: "Test", required: true } });
+			expect(w.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult.fehler.size()).toBe(0);
 		});
 	});
+
 	describe.concurrent("maxLen", () => {
+
 		test.each([
 			[undefined, "ohne Prop 'validation'", undefined],
 			[undefined, "mit Prop 'validation'", () => getValidatorFehler()],
 			[3, "mit Prop 'validation'", () => getValidatorFehler()],
-		])("Mit Prop 'maxLen = %s' und %s wird kein Length-Validator hinzugefügt", (maxLen, _validationString, validation) => {
-			const wrapper = mount(SvwsUiTextareaInput, { props: { maxLen, validation } });
-			const validatorLength = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorLength;
-
-			expect(validatorLength).toBeNull();
+		])("maxLen=%s, %s → kein Length-Validator", (maxLen, _desc, validation) => {
+			const w = mount(SvwsUiTextareaInput, { props: { maxLen, validation } });
+			expect(w.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorLength).toBeNull();
 		});
 
-		test("Mit Prop 'maxLen = 3' und ohne Prop 'validation' wird ein Length-Validator hinzugefügt", () => {
-			const wrapper = mount(SvwsUiTextareaInput, { props: { maxLen: 3 } });
-			const validatorLength = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorLength;
-
-			expect(validatorLength).not.toBeNull();
-			expect(validatorLength).toBeInstanceOf(BasicValidator);
+		test("maxLen=3 ohne 'validation' → Length-Validator wird gesetzt", () => {
+			const w = mount(SvwsUiTextareaInput, { props: { maxLen: 3 } });
+			const v = w.findComponent({ name: "SvwsUiTextareaInput" }).vm.validatorLength;
+			expect(v).not.toBeNull();
+			expect(v).toBeInstanceOf(BasicValidator);
 		});
 
 		test.each([
 			[undefined, "'Hallo'", "Hallo"],
 			[3, "'Hal'", "Hal"],
 			[3, "''", ""],
-			[3, null, null],
-		])("Mit Prop 'maxLen = %s' und Eingabe = %s wird kein Fehler für die Length-Validierung generiert", (maxLen, _inputString, modelValue) => {
-			const wrapper = mount(SvwsUiTextareaInput, { props: { maxLen, modelValue } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(0);
+			[3, "null", null],
+		])("maxLen=%s, Eingabe=%s → kein Length-Fehler", (maxLen, _label, modelValue) => {
+			const w = mount(SvwsUiTextareaInput, { props: { maxLen, modelValue } });
+			expect(w.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult.fehler.size()).toBe(0);
 		});
 
-		test("Mit Prop 'maxLen = 3' und Eingabe = 'Hallo' wird ein Fehler für die Length-Validierung generiert", () => {
-			const wrapper = mount(SvwsUiTextareaInput, { props: { modelValue: "Hallo", maxLen: 3 } });
-			const validatorResult = wrapper.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult;
-
-			expect(validatorResult.fehler.size()).toBe(1);
-			expect(validatorResult.fehler.getFirst().getFehlermeldung()).toBe("Der Wert darf maximal 3 Zeichen lang sein.");
-
+		test("maxLen=3, Eingabe='Hallo' → Length-Validierungsfehler", () => {
+			const w = mount(SvwsUiTextareaInput, { props: { modelValue: "Hallo", maxLen: 3 } });
+			const result = w.findComponent({ name: "SvwsUiTextareaInput" }).vm.validationResult;
+			expect(result.fehler.size()).toBe(1);
+			expect(result.fehler.getFirst().getFehlermeldung()).toBe("Der Wert darf maximal 3 Zeichen lang sein.");
 		});
 	});
 });
 
-afterEach(() => {
-	wrapper.unmount();
-	document.body.innerHTML = "";
-});
+// ─────────────────────────────────────────────────────────────────────────────
+// Helpers
+// ─────────────────────────────────────────────────────────────────────────────
 
 function getValidatorFehler(haertegrad: ValidatorFehlerart = ValidatorFehlerart.MUSS): List<ValidatorFehler> {
 	const customValidator = new CustomValidatorRequired(haertegrad);

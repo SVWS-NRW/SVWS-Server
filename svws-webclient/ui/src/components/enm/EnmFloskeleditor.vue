@@ -21,7 +21,7 @@
 					<div>
 						<div class="pb-4">
 							<svws-ui-textarea-input class="floskel-input modalFocusField" placeholder="Floskeln auswählen oder manuell eingeben"
-								:model-value="text" @input="onInput" autoresize />
+								v-model="text" autoresize />
 						</div>
 						<div class="flex justify-between gap-2 w-full flex-row-reverse">
 							<div v-if="showButtons" class="flex gap-2">
@@ -309,14 +309,6 @@
 
 	const schueler = computed<ENMv1Schueler | null>(() => props.auswahl.schueler);
 	const clean = computed(() => (text.value === null) || !templateRegex.exec(text.value));
-
-	function onInput(value: string) {
-		if (value.length > 1) {
-			text.value = value;
-		} else {
-			text.value = null;
-		}
-	}
 
 	const floskelMap = computed(() => {
 		const floskeln = new Map<string, ENMv1Floskel>();

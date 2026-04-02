@@ -12,8 +12,7 @@
 						:manager="einwilligungsschluesselCoreTypeManager"
 						searchable />
 					<svws-ui-textarea-input placeholder="Beschreibung" span="full"
-						:model-value="model.proxy.beschreibung"
-						@input="value => model.proxy.beschreibung = value" />
+						v-model="model.proxy.beschreibung" />
 					<ui-select label="Personenart" class="col-span-full"
 						v-model="model.personTyp.value"
 						:manager="personTypManager"

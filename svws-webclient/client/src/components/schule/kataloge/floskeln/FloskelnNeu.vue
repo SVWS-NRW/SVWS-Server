@@ -9,7 +9,6 @@
 						:max-len="10" :disabled="!hatKompetenzAdd" required />
 					<svws-ui-textarea-input placeholder="Text"
 						v-model="model.proxy.text"
-						@input="value => model.proxy.text = value"
 						:validation="() => model.getFehler('text')"
 						:disabled="!hatKompetenzAdd" required @keydown.enter.prevent />
 					<svws-ui-input-wrapper :grid="2">

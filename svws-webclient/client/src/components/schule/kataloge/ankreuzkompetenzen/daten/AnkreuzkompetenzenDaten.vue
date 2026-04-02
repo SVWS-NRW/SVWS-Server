@@ -3,7 +3,7 @@
 		<svws-ui-content-card>
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-textarea-input placeholder="Kompetenzbeschreibung" class="contentFocusField"
-					:model-value="model.proxy.floskelText"
+					v-model="model.proxy.floskelText"
 					@change="patchFloskeltext"
 					:validation="() => model.getFehler('floskelText')"
 					:max-len="255" :readonly="!hatKompetenzUpdate" required />

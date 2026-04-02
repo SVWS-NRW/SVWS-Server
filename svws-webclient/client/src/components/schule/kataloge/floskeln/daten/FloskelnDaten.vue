@@ -11,7 +11,7 @@
 					<svws-ui-textarea-input placeholder="Text" span="full"
 						v-model="model.proxy.text"
 						:validation="() => model.getFehler('text')"
-						@commit="model.patch" @keydown.enter.prevent
+						@change="model.patch" @keydown.enter.prevent
 						:readonly="!hatKompetenzUpdate" required autoresize resizeable="none" />
 					<svws-ui-input-wrapper :grid="2">
 						<ui-select label="Floskelgruppe"

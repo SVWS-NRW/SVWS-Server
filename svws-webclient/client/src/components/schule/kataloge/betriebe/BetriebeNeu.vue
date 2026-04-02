@@ -20,8 +20,7 @@
 						:validation="() => model.getFehler('branche')"
 						:max-len="50" />
 					<svws-ui-textarea-input placeholder="Bemerkungen"
-						:model-value="model.proxy.bemerkungen"
-						@input="value => model.proxy.bemerkungen = value"
+						v-model="model.proxy.bemerkungen"
 						:validation="() => model.getFehler('bemerkungen')"
 						resizeable="none" :max-len="255" />
 					<div>

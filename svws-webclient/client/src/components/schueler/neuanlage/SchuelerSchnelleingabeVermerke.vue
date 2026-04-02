@@ -29,8 +29,7 @@
 					:manager="vermerkartenManager"
 					:removable="false" searchable />
 				<svws-ui-textarea-input placeholder="Bemerkung" class="col-span-full"
-					:model-value="vermerk.bemerkung"
-					@input="v => vermerk.bemerkung = v ?? ''"
+					v-model="vermerk.bemerkung"
 					:autoresize="true" />
 				<svws-ui-notification type="warning" v-if="manager().vermerkartenById.size === 0">
 					Die Liste der Vermerkarten ist leer. Es sollte mindestens eine Vermerkart unter Schule/Kataloge angelegt werden, damit zusätzliche Vermerke

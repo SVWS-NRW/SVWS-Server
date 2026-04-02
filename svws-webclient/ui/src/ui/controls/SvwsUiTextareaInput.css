@@ -37,6 +37,10 @@
 	}
 }
 
+.textarea-input--control.textarea-input--auto-grow {
+	overflow: hidden;
+}
+
 span.textarea-input--control {
 	padding-top: 0.4em;
 	padding-bottom: 0.4em;

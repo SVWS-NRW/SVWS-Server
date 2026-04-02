@@ -13,7 +13,7 @@
 						:manager="einwilligungsschluesselManager"
 						:readonly searchable />
 					<svws-ui-textarea-input placeholder="Beschreibung" span="full"
-						:model-value="model.proxy.beschreibung"
+						v-model="model.proxy.beschreibung"
 						@change="patchBeschreibung" />
 					<svws-ui-text-input placeholder="Personenart" span="2"
 						:model-value="textPersonTyp"
