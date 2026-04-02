@@ -13,7 +13,7 @@
 		<div class="page page-grid-cards">
 			<svws-ui-content-card title="Reporting">
 				<svws-ui-input-wrapper>
-					<report-parameters :create-report />
+					<report-parameters :create-report :id-hauptdaten-objekt="-1" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 		</div>

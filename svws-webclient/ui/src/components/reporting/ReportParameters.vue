@@ -4,7 +4,7 @@
 			<ui-select :manager="reportvorlageSelectManager" v-model="localReportvorlage" />
 		</div>
 		<div v-if="idAbschnitt === undefined">
-			<svws-ui-input-number v-model="localIdAbschnit" placeholder="ID Schuljahresabschnitt" />
+			<svws-ui-input-number v-model="localIdAbschnitt" placeholder="ID Schuljahresabschnitt" />
 		</div>
 		<div v-if="(idHauptdatenObjekt !== undefined) && (idHauptdatenObjekt < 0)">
 			<svws-ui-input-number v-model="localIdHauptdatenObjekt" placeholder="ID des Hauptdaten-Objekts" />
@@ -32,41 +32,53 @@
 								</svws-ui-button>
 							</div>
 						</div>
-						<div v-if="gruppe.beschreibung" class="text-sm opacity-75 mt-1">{{ gruppe.beschreibung }}</div>
+						<div v-if="gruppe.beschreibung" class="text-sm mt-1">{{ gruppe.beschreibung }}</div>
 					</div>
 					<div :class="['grid gap-2', gruppe.uiAnzahlSpalten === 0 ? 'grid-cols-1' : gruppe.uiAnzahlSpalten > 6 ? 'grid-cols-6' : `grid-cols-${gruppe.uiAnzahlSpalten}`]">
 						<template v-for="vp in gruppe.reportvorlageParameter" :key="vp.name">
 							<div v-if="vp.uiIstSichtbar === true" :class="vp.uiAnzahlSpalten === 0 ? 'col-span-1' : vp.uiAnzahlSpalten > 6 ? 'col-span-6' : `col-span-${vp.uiAnzahlSpalten}`">
-								<component :is="inputComponent(vp, gruppe)" v-model="parameterWert(vp).value" :name="vp.name" />
+								<component :is="inputComponent(vp)" v-model="parameterWert(vp).value" :name="vp.name" />
 								<label :for="vp.name"> {{ vp.bezeichnung }} </label>
 							</div>
 						</template>
 					</div>
-					<br>
 				</div>
 			</template>
 			<div class="text-left" />
-			<template v-for="gruppe of parameter.sortierungDefinitionenGruppen" :key="gruppe.bezeichnung">
-				<div v-if="gruppe.uiIstSichtbar && !gruppe.sortierungDefinitionenOptionen.isEmpty()" class="col-span-full">
-					<span class="font-bold">{{ gruppe.bezeichnung }}</span>
-					<ui-select :manager="mapSelectManagerSortierung.get(gruppe.bezeichnung)" :model-value="gruppe.sortierungDefinitionen.isEmpty() ? undefined : gruppe.sortierungDefinitionen.get(0)"
-						@update:model-value="v => v instanceof ReportingSortierungDefinition && gruppe.sortierungDefinitionen.addFirst(v)" />
+
+			<div v-if="parameter.sortierungDefinitionenGruppen.size() > 0" class="border-2 border-ui-25 rounded-md p-2 my-2 col-span-full">
+				<div class="font-bold mb-2">Sortierung</div>
+				<div class="flex items-center gap-x-4 gap-y-2">
+					<template v-for="gruppe of parameter.sortierungDefinitionenGruppen" :key="gruppe.bezeichnung">
+						<template v-if="gruppe.uiIstSichtbar && !gruppe.sortierungDefinitionenOptionen.isEmpty()">
+							<span>{{ gruppe.bezeichnung }}</span>
+							<ui-select :manager="mapSelectManagerSortierung.get(gruppe.bezeichnung)" :model-value="gruppe.sortierungDefinitionen.isEmpty() ? undefined : gruppe.sortierungDefinitionen.get(0)"
+								@update:model-value="v => v instanceof ReportingSortierungDefinition ? gruppe.sortierungDefinitionen = ListUtils.create1(v) : gruppe.sortierungDefinitionen.clear()" />
+						</template>
+					</template>
 				</div>
-			</template>
-			<template v-for="gruppe of parameter.filterDefinitionenGruppen" :key="gruppe.bezeichnung">
-				<div v-if="gruppe.uiIstSichtbar && !gruppe.filterDefinitionenOptionen.isEmpty()" class="col-span-full">
-					<span class="font-bold">{{ gruppe.bezeichnung }}</span>
-					<ui-select-multi v-if="gruppe.uiIstMultiselect" :manager="mapSelectManagerFilter.get(gruppe.bezeichnung)" v-model="gruppe.filterDefinitionen" />
-					<ui-select v-else :manager="mapSelectManagerFilter.get(gruppe.bezeichnung)" :model-value="gruppe.filterDefinitionen.isEmpty() ? undefined : gruppe.filterDefinitionen.get(0)"
-						@update:model-value="v => v instanceof ReportingFilterDefinition && gruppe.filterDefinitionen.addFirst(v)" />
+			</div>
+
+			<div v-if="parameter.filterDefinitionenGruppen.size() > 0" class="border-2 border-ui-25 rounded-md p-2 my-2 col-span-full">
+				<div class="font-bold mb-2">Filterung</div>
+				<div class="flex items-center gap-x-4 gap-y-2">
+					<template v-for="gruppe of parameter.filterDefinitionenGruppen" :key="gruppe.bezeichnung">
+						<template v-if="gruppe.uiIstSichtbar && !gruppe.filterDefinitionenOptionen.isEmpty()">
+							<span>{{ gruppe.bezeichnung }}</span>
+							<ui-select-multi v-if="gruppe.uiIstMultiselect" :manager="mapSelectManagerFilter.get(gruppe.bezeichnung)" :model-value="gruppe.filterDefinitionen"
+								@update:model-value="v => filterUpdate(v, gruppe.filterDefinitionen)" />
+							<ui-select v-else :manager="mapSelectManagerFilter.get(gruppe.bezeichnung)" :model-value="gruppe.filterDefinitionen.isEmpty() ? undefined : gruppe.filterDefinitionen.get(0)"
+								@update:model-value="v => v instanceof ReportingFilterDefinition ? gruppe.filterDefinitionen = ListUtils.create1(v) : gruppe.filterDefinitionen.clear()" />
+						</template>
+					</template>
 				</div>
-			</template>
+			</div>
 
 			<template v-if="ausgabeformat === 0 || ((parameter.ausgabeformatOptionen.size() > 1) && (ausgabeformat === undefined) && (parameter.ausgabeformat === 0))">
 				<ui-select :manager="ausgabeSelectManager" v-model="parameter.ausgabeformat" />
 			</template>
 
-			<!-- Ausgabeformat -->
+			<!-- PDF-Ausgabe -->
 			<template v-if="parameter.ausgabeformatOptionen.contains(ReportingAusgabeformat.PDF.getId())">
 				<div class="text-left col-span-4">
 					<svws-ui-button @click="downloadPDF" :is-loading class="mt-4">
@@ -76,12 +88,13 @@
 					</svws-ui-button>
 				</div>
 			</template>
+
 			<!-- E-Mail-Eingabefelder -->
 			<template v-if="(parameter.ausgabeformatOptionen.contains(ReportingAusgabeformat.EMAIL.getId())) && ServerMode.DEV.equals(servermode ?? null)">
 				<div class="border-2 border-ui-25 rounded-md p-2 my-2">
 					<div class="flex flex-col mb-2">
 						<div class="font-bold">E-Mail-Versand</div>
-						<div class="text-sm opacity-75 mt-1">Die Dateien werden gemäß der obiger Einstellungen erzeugt und dann als E-Mail versendet.</div>
+						<div class="text-sm mt-1">Die Dateien werden gemäß der obiger Einstellungen erzeugt und dann als E-Mail versendet.</div>
 					</div>
 					<div class="flex flex-col gap-4">
 						<div class="flex flex-col gap-1">
@@ -98,8 +111,8 @@
 					<span v-else class="icon i-ri-mail-send-line" />
 					E-Mails senden
 				</svws-ui-button>
-			<!-- Ende: E-Mail-Eingabefelder -->
 			</template>
+			<!-- Ende: E-Mail-Eingabefelder -->
 		</div>
 	</div>
 </template>
@@ -125,11 +138,11 @@
 	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
 	import { ReportingAusgabeformat } from "../../../../core/src/core/types/reporting/ReportingAusgabeformat";
 	import { ReportingReportvorlageParameterTyp } from "../../../../core/src/core/types/reporting/ReportingReportvorlageParameterTyp";
-	import type { ReportingReportvorlageParameterGruppe } from "../../../../core/src/core/data/reporting/ReportingReportvorlageParameterGruppe";
 	import { ServerMode } from "../../../../core/src/core/types/ServerMode";
 	import { SelectManager } from "../../../../ui/src/ui/controls/select/manager/SelectManager";
 	import { ReportingSortierungDefinition } from "../../../../core/src/core/data/reporting/ReportingSortierungDefinition";
 	import { ReportingFilterDefinition } from "../../../../core/src/core/data/reporting/ReportingFilterDefinition";
+	import { ListUtils } from "../../../../core/src";
 
 	const props = defineProps<{
 		reportvorlage?: ReportingReportvorlage;
@@ -147,18 +160,67 @@
 	const logs = ref<List<string | null>>();
 	const status = ref<boolean>();
 	const eMailParameter: Ref<ReportingEMailDaten> = ref(new ReportingEMailDaten());
-	const parameter: Ref<ReportingParameter> = ref(new ReportingParameter());
 	const localReportvorlage = ref<ReportingReportvorlage>();
 	const localIdHauptdatenObjekt = ref<number>(-1);
 	const localIdsHauptdaten = ref<string>("");
 	const localIdsDetaildaten = ref<string>("");
-	const localIdAbschnit = ref<number>(0);
+	const localIdAbschnitt = ref<number>(0);
+	const parameter = ref(new ReportingParameter());
 
 	watch(() => props.reportvorlage, () => {
-		localReportvorlage.value = props.reportvorlage;
-	}, { immediate: true });
-
+			localReportvorlage.value = props.reportvorlage;
+			if (localReportvorlage.value === undefined) {
+				localReportvorlage.value = ReportingReportvorlage.values().at(0);
+			}
+		},
+		{ immediate: true });
 	watchEffect(() => parameter.value = localReportvorlage.value?.getReportingParameter() ?? new ReportingParameter());
+
+	const mapSelectManagerSortierung = computed<Map<string, SelectManager<ReportingSortierungDefinition>>>(() => {
+		const map = new Map<string, SelectManager<ReportingSortierungDefinition>>();
+		for (const gruppe of parameter.value.sortierungDefinitionenGruppen) {
+			if (gruppe.sortierungDefinitionen.isEmpty() && !gruppe.sortierungDefinitionenOptionen.isEmpty()) {
+				gruppe.sortierungDefinitionen.add(gruppe.sortierungDefinitionenOptionen.get(0));
+			}
+			map.set(gruppe.bezeichnung, new SelectManager({
+				options: gruppe.sortierungDefinitionenOptionen,
+				selectionDisplayText: (option): string => option.bezeichnung,
+				optionDisplayText: (option): string => option.bezeichnung,
+			}));
+		}
+		return map;
+	});
+
+	const mapSelectManagerFilter = computed<Map<string, SelectManager<ReportingFilterDefinition>>>(() => {
+		const map = new Map<string, SelectManager<ReportingFilterDefinition>>();
+		for (const gruppe of parameter.value.filterDefinitionenGruppen) {
+			map.set(gruppe.bezeichnung, new SelectManager({
+				options: gruppe.filterDefinitionenOptionen,
+				selectionDisplayText: (option): string => option.bezeichnung,
+				optionDisplayText: (option): string => option.bezeichnung,
+			}));
+		}
+		return map;
+	});
+
+	const ausgabeSelectManager = computed(() => {
+		return new SelectManager({
+			options: parameter.value.ausgabeformatOptionen,
+			selectionDisplayText: (option) => ReportingAusgabeformat.getByID(option)?.name() ?? '—',
+			optionDisplayText: (option) => ReportingAusgabeformat.getByID(option)?.name() ?? '—',
+		});
+	});
+
+
+	function filterUpdate(list: Iterable<ReportingFilterDefinition> | null | undefined, selected: List<ReportingFilterDefinition>) {
+		selected.clear();
+		if ((list === undefined) || (list === null)) {
+			return;
+		}
+		for (const item of list) {
+			selected.add(item);
+		}
+	}
 
 	const checkboxes: ComputedRef<Map<string, ReportingReportvorlageParameter[]>> = computed(() => {
 		const map = new Map<string, ReportingReportvorlageParameter[]>();
@@ -212,7 +274,7 @@
 		return list;
 	});
 
-	function inputComponent(vp: ReportingReportvorlageParameter, gruppe: ReportingReportvorlageParameterGruppe): Component {
+	function inputComponent(vp: ReportingReportvorlageParameter): Component {
 		const type = ReportingUIKomponentenTyp.getByID(vp.uiKomponentenTyp);
 		switch (type.name()) {
 			case "INPUT":
@@ -231,33 +293,6 @@
 		}
 	}
 
-	const mapSelectManagerSortierung = new Map<string, SelectManager<ReportingSortierungDefinition>>();
-	const mapSelectManagerFilter = new Map<string, SelectManager<ReportingFilterDefinition>>();
-
-	for (const option of parameter.value.sortierungDefinitionenGruppen) {
-		const objectSelectManager = new SelectManager({
-			options: option.sortierungDefinitionenOptionen,
-			selectionDisplayText: (option): string => option.bezeichnung,
-			optionDisplayText: (option): string => option.bezeichnung,
-		});
-		mapSelectManagerSortierung.set(option.bezeichnung, objectSelectManager);
-	}
-
-	for (const option of parameter.value.filterDefinitionenGruppen) {
-		const objectSelectManager = new SelectManager({
-			options: option.filterDefinitionenOptionen,
-			selectionDisplayText: (option): string => option.bezeichnung,
-			optionDisplayText: (option): string => option.bezeichnung,
-		});
-		mapSelectManagerFilter.set(option.bezeichnung, objectSelectManager);
-	}
-
-	const ausgabeSelectManager = new SelectManager({
-		options: parameter.value.ausgabeformatOptionen,
-		selectionDisplayText: (option) => ReportingAusgabeformat.getByID(option)?.name() ?? '—',
-		optionDisplayText: (option) => ReportingAusgabeformat.getByID(option)?.name() ?? '—',
-	});
-
 	const reportvorlageSelectManager = new SelectManager({
 		options: ReportingReportvorlage.values(),
 		selectionDisplayText: option => option.getBezeichnung(),
@@ -266,8 +301,8 @@
 
 	async function downloadPDF() {
 		isLoading.value = true;
-		parameter.value.idSchuljahresabschnitt = props.idAbschnitt ?? localIdAbschnit.value;
-		parameter.value.idHauptdatenObjekt = props.idHauptdatenObjekt ?? localIdHauptdatenObjekt.value;
+		parameter.value.idSchuljahresabschnitt = props.idAbschnitt ?? localIdAbschnitt.value;
+		parameter.value.idHauptdatenObjekt = (props.idHauptdatenObjekt !== undefined && props.idHauptdatenObjekt >= 0) ? props.idHauptdatenObjekt : localIdHauptdatenObjekt.value;
 		parameter.value.idsHauptdaten = listHauptdaten.value;
 		parameter.value.idsDetaildaten = listDetaildaten.value;
 		parameter.value.ausgabeformat = ReportingAusgabeformat.PDF.getId();
@@ -289,8 +324,8 @@
 			return;
 		}
 		isLoading.value = true;
-		parameter.value.idSchuljahresabschnitt = props.idAbschnitt ?? localIdAbschnit.value;
-		parameter.value.idHauptdatenObjekt = props.idHauptdatenObjekt ?? localIdHauptdatenObjekt.value;
+		parameter.value.idSchuljahresabschnitt = props.idAbschnitt ?? localIdAbschnitt.value;
+		parameter.value.idHauptdatenObjekt = (props.idHauptdatenObjekt !== undefined && props.idHauptdatenObjekt >= 0) ? props.idHauptdatenObjekt : localIdHauptdatenObjekt.value;
 		parameter.value.idsHauptdaten = listHauptdaten.value;
 		parameter.value.idsDetaildaten = listDetaildaten.value;
 		parameter.value.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();

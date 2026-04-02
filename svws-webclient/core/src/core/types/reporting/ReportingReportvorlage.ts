@@ -142,7 +142,7 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	/**
 	 * Report-Vorlage: Stundenplanung - Klasse - Stundenplan
 	 */
-	public static readonly STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN", 22, "Stundenplanung-KlassenStundenplan", "", "", ReportingReportvorlageDatenContext.STUNDENPLANUNG, "stundenplanung/StundenplanungKlassenStundenplan.html", "Klassen-Stundenplan", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVKlassenStundenplan());
+	public static readonly STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN: ReportingReportvorlage = new ReportingReportvorlage("STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN", 22, "Stundenplanung-KlassenStundenplan", "Klassen-Stundenplan", "Den ausgewählten Stundenplan für die ausgewählten Klassen erzeugen oder versenden.", ReportingReportvorlageDatenContext.STUNDENPLANUNG, "stundenplanung/StundenplanungKlassenStundenplan.html", "Klassen-Stundenplan", ArrayList.of(BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN), ReportingReportvorlageKonfigurationStundenplanung.getStundenplanungVKlassenStundenplan());
 
 	/**
 	 * Report-Vorlage: Stundenplanung - Lehrer - Stundenplan

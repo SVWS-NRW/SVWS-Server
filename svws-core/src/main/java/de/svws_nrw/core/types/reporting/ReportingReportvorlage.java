@@ -291,7 +291,9 @@ public enum ReportingReportvorlage {
 	),
 
 	/** Report-Vorlage: Stundenplanung - Klasse - Stundenplan */
-	STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN("Stundenplanung-KlassenStundenplan", "", "",
+	STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN("Stundenplanung-KlassenStundenplan",
+			"Klassen-Stundenplan",
+			"Den ausgewählten Stundenplan für die ausgewählten Klassen erzeugen oder versenden.",
 			ReportingReportvorlageDatenContext.STUNDENPLANUNG,
 			"stundenplanung/StundenplanungKlassenStundenplan.html",
 			"Klassen-Stundenplan",
