@@ -402,12 +402,12 @@ public enum LehrerFachrichtung implements @NotNull CoreType<LehrerFachrichtungKa
 
 
 	/**
-	 * Bestimmt die Liste aller Lehrämter, welche in dem angebenen Schuljahr für die übergebene Fachrichtung zulässig sind.
+	 * Bestimmt die Liste aller Lehrämter, welche in dem angegebenen Schuljahr für die übergebene Fachrichtung zulässig sind.
 	 *
 	 * @param schuljahr      das Schuljahr, auf welches sich die Anfrage bezieht
 	 * @param fachrichtung   die Fachrichtung, zu welcher die zulässigen Lehrämter angefragt werden
 	 *
-	 * @return die Liste der zulässigen Lehrämter für die übergebene Fachrichtung in dem angebebenen Schuljahr
+	 * @return die Liste der zulässigen Lehrämter für die übergebene Fachrichtung in dem angegebenen Schuljahr
 	 */
 	public static @NotNull List<LehrerLehramt> getLehraemterBySchuljahrAndFachrichtung(final int schuljahr, final @NotNull LehrerFachrichtung fachrichtung) {
 		// Überprüfen, ob der Cache für das Schuljahr existiert; falls nicht, Cache für alle Kategorien aufbauen

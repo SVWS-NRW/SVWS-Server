@@ -21,7 +21,7 @@ public class SchuleAdressenStatistikGesamt {
 	@Schema(description = "Das Adresskennzeichen einer Adresse", example = "A")
 	public String adresskennzeichen;
 
-	/** Der Strassenname einer Adresse. */
+	/** Der Straßenname einer Adresse. */
 	@Schema(description = "Der Strassenname einer Adresse", example = "Musterstrasse")
 	public String strassenname;
 

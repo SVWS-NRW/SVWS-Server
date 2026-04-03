@@ -1,12 +1,12 @@
 package de.svws_nrw.asd.data.schueler;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die Schubesuchsdaten zu einer bisher besuchten Schule.
+ * Sie beschreibt die Schulbesuchsdaten zu einer bisher besuchten Schule.
  */
 @XmlRootElement
 @Schema(description = "Ein Eintrag in der Liste der bisher besuchten Schulen.")

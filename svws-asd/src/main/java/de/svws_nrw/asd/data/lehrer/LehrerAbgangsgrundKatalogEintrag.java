@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die gütligen Statistikwerte für den Katalog der LehrerAbgangsgründe.
+ * Sie liefert die gültigen Statistikwerte für den Katalog der LehrerAbgangsgründe.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Arten von LehrerAbgangsgrund.")

@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
 public class Reformpaedagogik extends CoreTypeSimple<ReformpaedagogikKatalogEintrag, Reformpaedagogik> {
 
 	/**
-	 * Erstellung einer Reformpaedagogik mit Standardwerten
+	 * Erstellung einer Reformpädagogik mit Standardwerten
 	 */
 	public Reformpaedagogik() {
 		// leer
@@ -47,7 +47,7 @@ public class Reformpaedagogik extends CoreTypeSimple<ReformpaedagogikKatalogEint
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	@Override
 	public Reformpaedagogik getInstance() {

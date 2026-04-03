@@ -32,7 +32,7 @@ public class FachKatalogEintrag extends CoreTypeDataNurSchulformenUndSchulgliede
 	@Schema(description = "gibt an, ob es sich um eine Fremdsprache handelt", example = "true")
 	public boolean istFremdsprache = false;
 
-	/** Gibt an, ob es sich um ein Fach der Herkuntftsprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache) */
+	/** Gibt an, ob es sich um ein Fach der Herkunftssprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache) */
 	@Schema(description = "gibt an, ob es sich um ein Fach der Herkuntftsprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache)",
 			example = "false")
 	public boolean istHKFS = false;

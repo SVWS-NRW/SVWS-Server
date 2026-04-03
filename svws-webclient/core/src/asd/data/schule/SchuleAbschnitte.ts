@@ -16,7 +16,7 @@ export class SchuleAbschnitte extends JavaObject {
 	public abschnittBez: string = "Halbjahr";
 
 	/**
-	 * Eine Liste der einzelnen speziellen Bezeichnungnen für dei Abschnitte (z.B. 1. Quartal, 2. Quartal, ...)
+	 * Eine Liste der einzelnen speziellen Bezeichnungen für die Abschnitte (z.B. 1. Quartal, 2. Quartal, ...)
 	 */
 	public bezAbschnitte: List<string> = new ArrayList<string>();
 

@@ -6,7 +6,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die schulspezifischen Lehrerfunktionen für die Lehrerabschnittsdaten mit der angebenen ID.
+ * Sie beschreibt die schulspezifischen Lehrerfunktionen für die Lehrerabschnittsdaten mit der angegebenen ID.
  */
 @XmlRootElement
 @Schema(description = "Schulspezifische Lehrerfunktion bei Lehrerabschnittsdaten.")

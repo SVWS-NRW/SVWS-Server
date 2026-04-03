@@ -103,7 +103,7 @@ public enum Schulform implements @NotNull CoreType<SchulformKatalogEintrag, Schu
 
 	/**
 	 * Gibt alle Schulformen dieser Aufzählung mit gymnasialer Oberstufe zurück, welche
-	 * in dem angebenen Schuljahr gültig sind.
+	 * in dem angegebenen Schuljahr gültig sind.
 	 *
 	 * @param schuljahr   das Schuljahr
 	 *

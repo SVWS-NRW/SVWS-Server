@@ -21,7 +21,7 @@ public class Sprachendaten {
 	/** Die Liste der Sprachbelegungen. */
 	public @NotNull List<Sprachbelegung> belegungen = new ArrayList<>();
 
-	/** Die Liste der Sprachpruefungen. */
+	/** Die Liste der Sprachprüfungen. */
 	public @NotNull List<Sprachpruefung> pruefungen = new ArrayList<>();
 
 	/**

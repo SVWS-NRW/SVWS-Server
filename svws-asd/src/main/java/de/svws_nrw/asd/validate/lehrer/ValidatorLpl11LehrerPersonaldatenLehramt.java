@@ -55,7 +55,7 @@ public final class ValidatorLpl11LehrerPersonaldatenLehramt extends Validator {
 			return true;
 		}
 
-		// Fehlerkürzel: LPL3 Überprüfung, ob bei einer jungen Lehrerkraft ein 'reguläres' Lehramt vorliegt
+		// Fehlerkürzel: LPL3 Überprüfung, ob bei einer jungen Lehrkraft ein 'reguläres' Lehramt vorliegt
 		if (datum.getJahr() >= 2003 && datum.getJahr() <= 2006) {
 			for (final LehrerLehramtEintrag lehrerLehramtEintrag2 : this.lehraemter.get()) {
 				final LehrerLehramt lehrerLehramt2 = LehrerLehramt.data().getWertByIDOrNull(lehrerLehramtEintrag2.idKatalogLehramt);
@@ -65,7 +65,7 @@ public final class ValidatorLpl11LehrerPersonaldatenLehramt extends Validator {
 				if (regulaereLehraemter.contains(lehrerLehramt2)) {
 					try {
 						this.addFehler(3, "Für das Lehramt '" + LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag2.idKatalogLehramt).text + "' ist die Lehrkraft sehr jung. Wenn das Alter der Lehrkraft korrekt ist, sollte das eingetragene Lehramt überprüft werden. Bitte verwenden Sie die 'regulären' Lehrämter nur dann, wenn eine entsprechende abgeschlossene Ausbildung vorliegt. Wenn es sich um einen Studierenden handelt, der neben seinem Studium als Lehrkraft tätig ist, verwenden sie bitte das Lehramt 'Studierende'. Ansonsten tragen Sie bitte das Lehramt 'Sonstiges' ein. ");
-					} catch (@SuppressWarnings("unused") CoreTypeException e) {
+					} catch (@SuppressWarnings("unused") final CoreTypeException e) {
 						this.addFehler(3, "Für das Lehramt mit der ID '" + lehrerLehramtEintrag2.idKatalogLehramt + "' ist die Lehrkraft sehr jung. Wenn das Alter der Lehrkraft korrekt ist, sollte das eingetragene Lehramt überprüft werden. Bitte verwenden Sie die 'regulären' Lehrämter nur dann, wenn eine entsprechende abgeschlossene Ausbildung vorliegt. Wenn es sich um einen Studierenden handelt, der neben seinem Studium als Lehrkraft tätig ist, verwenden sie bitte das Lehramt 'Studierende'. Ansonsten tragen Sie bitte das Lehramt 'Sonstiges' ein. ");
 					}
 					return false;

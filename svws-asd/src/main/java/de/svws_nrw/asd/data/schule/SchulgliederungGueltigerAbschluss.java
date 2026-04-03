@@ -6,12 +6,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Eine Kombination aus einem allgemeinbildenden und einem berufsbildenen
- * Abschluss an einer Schulform des Berufskolleg in Bezug auf die möglichen
+ * Eine Kombination aus einem allgemeinbildenden und einem berufsbildenden
+ * Abschluss an einer Schulform des Berufskollegs in Bezug auf die möglichen
  * Jahrgänge für diese Abschlusskombination.
  */
 @XmlRootElement
-@Schema(description = "eine Kombination aus einem allgemeinbildenden und einem berufsbildenen Abschluss an einer Schulform des Berufskolleg in Bezug auf die möglichen Jahrgänge für diese Abschlusskombination.")
+@Schema(description = "eine Kombination aus einem allgemeinbildenden und einem berufsbildenden Abschluss an einer Schulform des Berufskollegs in Bezug auf die möglichen Jahrgänge für diese Abschlusskombination.")
 @TranspilerDTO
 public class SchulgliederungGueltigerAbschluss {
 

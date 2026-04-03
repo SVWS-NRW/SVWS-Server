@@ -15,72 +15,72 @@ export class LehrerBeschaeftigungsart extends JavaEnum<LehrerBeschaeftigungsart>
 	static readonly all_values_by_name: Map<string, LehrerBeschaeftigungsart> = new Map<string, LehrerBeschaeftigungsart>();
 
 	/**
-	 * Beschaeftigungsart 'Vollzeit' eines Lehrers
+	 * Beschäftigungsart 'Vollzeit' eines Lehrers
 	 */
 	public static readonly V: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("V", 0, );
 
 	/**
-	 * Beschaeftigungsart 'Teilzeit' eines Lehrers
+	 * Beschäftigungsart 'Teilzeit' eines Lehrers
 	 */
 	public static readonly T: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("T", 1, );
 
 	/**
-	 * Beschaeftigungsart 'Altersteilzeit (Beschäftigungsphase)' eines Lehrers
+	 * Beschäftigungsart 'Altersteilzeit (Beschäftigungsphase)' eines Lehrers
 	 */
 	public static readonly AT: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("AT", 2, );
 
 	/**
-	 * Beschaeftigungsart 'Altersteilzeit, vorm. teilzeitbeschäftigt (Verzichtsphase Altersermäßigung)' eines Lehrers
+	 * Beschäftigungsart 'Altersteilzeit, vorm. teilzeitbeschäftigt (Verzichtsphase Altersermäßigung)' eines Lehrers
 	 */
 	public static readonly TA: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("TA", 3, );
 
 	/**
-	 * Beschaeftigungsart 'Altersteilzeit, vorm. vollzeitbeschäftigt (Verzichtsphase Altersermäßigung)' eines Lehrers
+	 * Beschäftigungsart 'Altersteilzeit, vorm. vollzeitbeschäftigt (Verzichtsphase Altersermäßigung)' eines Lehrers
 	 */
 	public static readonly VA: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("VA", 4, );
 
 	/**
-	 * Beschaeftigungsart 'Sabbatjahr' eines Lehrers
+	 * Beschäftigungsart 'Sabbatjahr' eines Lehrers
 	 */
 	public static readonly TS: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("TS", 5, );
 
 	/**
-	 * Beschaeftigungsart 'Nebenberufliche Beschäftigung' eines Lehrers
+	 * Beschäftigungsart 'Nebenberufliche Beschäftigung' eines Lehrers
 	 */
 	public static readonly SB: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("SB", 6, );
 
 	/**
-	 * Beschaeftigungsart 'Geringfügige Beschäftigung' eines Lehrers
+	 * Beschäftigungsart 'Geringfügige Beschäftigung' eines Lehrers
 	 */
 	public static readonly GB: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("GB", 7, );
 
 	/**
-	 * Beschaeftigungsart 'Studierende' eines Lehrers
+	 * Beschäftigungsart 'Studierende' eines Lehrers
 	 */
 	public static readonly ST: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("ST", 8, );
 
 	/**
-	 * Beschaeftigungsart 'Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)' eines Lehrers
+	 * Beschäftigungsart 'Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)' eines Lehrers
 	 */
 	public static readonly NA: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("NA", 9, );
 
 	/**
-	 * Beschaeftigungsart 'Gestellungsvertrag' eines Lehrers
+	 * Beschäftigungsart 'Gestellungsvertrag' eines Lehrers
 	 */
 	public static readonly G: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("G", 10, );
 
 	/**
-	 * Beschaeftigungsart 'Unentgeltlich Beschäftigte' eines Lehrers
+	 * Beschäftigungsart 'Unentgeltlich Beschäftigte' eines Lehrers
 	 */
 	public static readonly X: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("X", 11, );
 
 	/**
-	 * Beschaeftigungsart 'Beamte auf Widerruf (LAA) in Teilzeit' eines Lehrers
+	 * Beschäftigungsart 'Beamte auf Widerruf (LAA) in Teilzeit' eines Lehrers
 	 */
 	public static readonly WT: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("WT", 12, );
 
 	/**
-	 * Beschaeftigungsart 'Beamte auf Widerruf (LAA) in Vollzeit' eines Lehrers
+	 * Beschäftigungsart 'Beamte auf Widerruf (LAA) in Vollzeit' eines Lehrers
 	 */
 	public static readonly WV: LehrerBeschaeftigungsart = new LehrerBeschaeftigungsart("WV", 13, );
 

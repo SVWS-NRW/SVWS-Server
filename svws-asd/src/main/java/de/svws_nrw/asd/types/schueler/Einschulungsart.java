@@ -46,7 +46,7 @@ public class Einschulungsart extends CoreTypeSimple<EinschulungsartKatalogEintra
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	@Override
 	public Einschulungsart getInstance() {

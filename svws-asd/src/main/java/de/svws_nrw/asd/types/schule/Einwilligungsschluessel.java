@@ -47,7 +47,7 @@ public class Einwilligungsschluessel extends CoreTypeSimple<Einwilligungsschlues
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	@Override
 	public Einwilligungsschluessel getInstance() {

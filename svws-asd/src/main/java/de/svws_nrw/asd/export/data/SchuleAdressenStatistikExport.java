@@ -21,7 +21,7 @@ public class SchuleAdressenStatistikExport {
 	@Schema(description = "satzschlüssel: Das Adresskennzeichen einer Adresse", example = "A")
 	public String adresskennzeichen = "";
 
-	/** Der Amtliche Gemeindeschlüssel: Länderkuerzel. */
+	/** Der Amtliche Gemeindeschlüssel: Länderkürzel. */
 	@Schema(description = "der Amtliche Gemeindeschlüssel: Länderkuerzel", example = "05")
 	public String regionalschluesselLaenderkuerzel = "";
 
@@ -29,7 +29,7 @@ public class SchuleAdressenStatistikExport {
 	@Schema(description = "der Amtliche Gemeindeschlüssel: Gemeindekennzahl.", example = "123456")
 	public String regionalschluesselGemeindekennzahl = "";
 
-	/** Der Strassenname einer Adresse. */
+	/** Der Straßenname einer Adresse. */
 	@Schema(description = "der Strassenname einer Adresse", example = "Musterstrasse")
 	public String strassenname = "";
 

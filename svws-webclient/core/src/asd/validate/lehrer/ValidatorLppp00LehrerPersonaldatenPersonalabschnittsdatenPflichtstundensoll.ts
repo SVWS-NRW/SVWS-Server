@@ -19,7 +19,7 @@ export class ValidatorLppp00LehrerPersonaldatenPersonalabschnittsdatenPflichtstu
 	 *
 	 * @param pflichtstundensoll     das Pflichtstundensoll
 	 * @param idEinsatzstatus        der Einsatzstatus
-	 * @param idBeschaeftigungsart   die Beschaeftigungsart
+	 * @param idBeschaeftigungsart   die Beschäftigungsart
 	 * @param kontext                der Kontext des Validators
 	 */
 	public constructor(pflichtstundensoll: Supplier<number | null>, idEinsatzstatus: Supplier<number | null>, idBeschaeftigungsart: Supplier<number | null>, kontext: ValidatorKontext) {

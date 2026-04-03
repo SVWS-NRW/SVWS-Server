@@ -7,7 +7,7 @@ export class Reformpaedagogik extends CoreTypeSimple<ReformpaedagogikKatalogEint
 
 
 	/**
-	 * Erstellung einer Reformpaedagogik mit Standardwerten
+	 * Erstellung einer Reformpädagogik mit Standardwerten
 	 */
 	public constructor() {
 		super();
@@ -41,7 +41,7 @@ export class Reformpaedagogik extends CoreTypeSimple<ReformpaedagogikKatalogEint
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	public getInstance(): Reformpaedagogik | null {
 		return new Reformpaedagogik();

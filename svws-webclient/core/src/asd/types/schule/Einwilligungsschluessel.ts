@@ -41,7 +41,7 @@ export class Einwilligungsschluessel extends CoreTypeSimple<Einwilligungsschlues
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	public getInstance(): Einwilligungsschluessel | null {
 		return new Einwilligungsschluessel();

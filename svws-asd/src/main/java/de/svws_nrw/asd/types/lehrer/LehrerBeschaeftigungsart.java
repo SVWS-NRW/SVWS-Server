@@ -11,46 +11,46 @@ import jakarta.validation.constraints.NotNull;
  */
 public enum LehrerBeschaeftigungsart implements @NotNull CoreType<LehrerBeschaeftigungsartKatalogEintrag, LehrerBeschaeftigungsart> {
 
-	/** Beschaeftigungsart 'Vollzeit' eines Lehrers */
+	/** Beschäftigungsart 'Vollzeit' eines Lehrers */
 	V,
 
-	/** Beschaeftigungsart 'Teilzeit' eines Lehrers */
+	/** Beschäftigungsart 'Teilzeit' eines Lehrers */
 	T,
 
-	/** Beschaeftigungsart 'Altersteilzeit (Beschäftigungsphase)' eines Lehrers */
+	/** Beschäftigungsart 'Altersteilzeit (Beschäftigungsphase)' eines Lehrers */
 	AT,
 
-	/** Beschaeftigungsart 'Altersteilzeit, vorm. teilzeitbeschäftigt (Verzichtsphase Altersermäßigung)' eines Lehrers */
+	/** Beschäftigungsart 'Altersteilzeit, vorm. teilzeitbeschäftigt (Verzichtsphase Altersermäßigung)' eines Lehrers */
 	TA,
 
-	/** Beschaeftigungsart 'Altersteilzeit, vorm. vollzeitbeschäftigt (Verzichtsphase Altersermäßigung)' eines Lehrers */
+	/** Beschäftigungsart 'Altersteilzeit, vorm. vollzeitbeschäftigt (Verzichtsphase Altersermäßigung)' eines Lehrers */
 	VA,
 
-	/** Beschaeftigungsart 'Sabbatjahr' eines Lehrers */
+	/** Beschäftigungsart 'Sabbatjahr' eines Lehrers */
 	TS,
 
-	/** Beschaeftigungsart 'Nebenberufliche Beschäftigung' eines Lehrers */
+	/** Beschäftigungsart 'Nebenberufliche Beschäftigung' eines Lehrers */
 	SB,
 
-	/** Beschaeftigungsart 'Geringfügige Beschäftigung' eines Lehrers */
+	/** Beschäftigungsart 'Geringfügige Beschäftigung' eines Lehrers */
 	GB,
 
-	/** Beschaeftigungsart 'Studierende' eines Lehrers */
+	/** Beschäftigungsart 'Studierende' eines Lehrers */
 	ST,
 
-	/** Beschaeftigungsart 'Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)' eines Lehrers */
+	/** Beschäftigungsart 'Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)' eines Lehrers */
 	NA,
 
-	/** Beschaeftigungsart 'Gestellungsvertrag' eines Lehrers */
+	/** Beschäftigungsart 'Gestellungsvertrag' eines Lehrers */
 	G,
 
-	/** Beschaeftigungsart 'Unentgeltlich Beschäftigte' eines Lehrers */
+	/** Beschäftigungsart 'Unentgeltlich Beschäftigte' eines Lehrers */
 	X,
 
-	/** Beschaeftigungsart 'Beamte auf Widerruf (LAA) in Teilzeit' eines Lehrers */
+	/** Beschäftigungsart 'Beamte auf Widerruf (LAA) in Teilzeit' eines Lehrers */
 	WT,
 
-	/** Beschaeftigungsart 'Beamte auf Widerruf (LAA) in Vollzeit' eines Lehrers */
+	/** Beschäftigungsart 'Beamte auf Widerruf (LAA) in Vollzeit' eines Lehrers */
 	WV;
 
 

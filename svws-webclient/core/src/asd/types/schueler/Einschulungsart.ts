@@ -41,7 +41,7 @@ export class Einschulungsart extends CoreTypeSimple<EinschulungsartKatalogEintra
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	public getInstance(): Einschulungsart | null {
 		return new Einschulungsart();

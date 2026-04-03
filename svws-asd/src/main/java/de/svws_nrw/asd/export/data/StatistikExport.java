@@ -13,12 +13,12 @@ public class StatistikExport {
 	@Schema(description = "Die Daten der Schule (B01)")
 	public @NotNull SchuleStatistikExport schuleStatistikExport = new SchuleStatistikExport();
 
-	/** Die Religionszugehörigkeiten der Schueler (S42). */
+	/** Die Religionszugehörigkeiten der Schüler (S42). */
 	@ArraySchema(
 			schema = @Schema(implementation = ReligionszugehoerigkeitenStatistikExport.class, description = "Die Religionszugehörigkeiten der Schueler (S42)"))
 	public @NotNull List<ReligionszugehoerigkeitenStatistikExport> religionszugehoerigkeitenStatistikExport = new ArrayList<>();
 
-	/** Vom Schulbesuch zurueckgestellte Kinder (S43). */
+	/** Vom Schulbesuch zurückgestellte Kinder (S43). */
 	@Schema(description = "vom Schulbesuch zurueckgestellte Kinder (S43)")
 	public @NotNull VomSchulbesuchZurueckgestelltStatistikExport vomSchulbesuchZurueckgestelltStatistikExport =
 			new VomSchulbesuchZurueckgestelltStatistikExport();

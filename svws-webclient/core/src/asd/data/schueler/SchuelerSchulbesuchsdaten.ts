@@ -18,7 +18,7 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	public idVorherigeSchule: number | null = null;
 
 	/**
-	 * Die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule.
+	 * Die allgemeine Herkunftsart des Schüler in Bezug auf die Schulform der zuvor besuchten Schule.
 	 */
 	public vorigeAllgHerkunft: string | null = null;
 

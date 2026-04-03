@@ -17,7 +17,7 @@ public abstract class Validator extends BasicValidator {
 
 
 	/**
-	 * Erstellt einen neuen Validator in dem übegebenen Kontext
+	 * Erstellt einen neuen Validator in dem übergebenen Kontext
 	 *
 	 * @param kontext   der Kontext, in dem der Validator ausgeführt wird
 	 */

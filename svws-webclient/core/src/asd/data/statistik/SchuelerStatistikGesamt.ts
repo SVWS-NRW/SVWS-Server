@@ -53,7 +53,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 	public religionanmeldung: string | null = null;
 
 	/**
-	 * Die Anrechungszeit in Monaten für den Beginn des Bildungsganges des Berufskolleg (z.B. 0,6,12,18).
+	 * Die Anrechnungszeit in Monaten für den Beginn des Bildungsganges des Berufskolleg (z.B. 0,6,12,18).
 	 */
 	public bkAzvo: number | null = null;
 
@@ -98,7 +98,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 	public vorherigeSchuleNr: string | null = null;
 
 	/**
-	 * Die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule.
+	 * Die allgemeine Herkunftsart des Schüler in Bezug auf die Schulform der zuvor besuchten Schule.
 	 */
 	public vorigeAllgHerkunft: string | null = null;
 

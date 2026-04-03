@@ -48,6 +48,7 @@ public class ValidatorFehlerartKontext {
 	@Schema(description = "gibt an, bis zu welchem Schuljahr der Fehlerart-Kontext des Validators gilt. Falls für immer, so ist null gesetzt.",
 			example = "null")
 	public Integer gueltigBis = null;
+
 	/** Das alte Kürzel des Prüfschritts */
 	@Schema(description = "das alte Kürzel des Prüfschritts")
 	public String altes_kuerzel = "";

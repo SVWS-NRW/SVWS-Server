@@ -41,7 +41,7 @@ export class Floskelgruppenart extends CoreTypeSimple<FloskelgruppenartKatalogEi
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	public getInstance(): Floskelgruppenart | null {
 		return new Floskelgruppenart();

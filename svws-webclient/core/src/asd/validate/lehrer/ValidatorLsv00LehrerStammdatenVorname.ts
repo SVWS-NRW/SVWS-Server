@@ -1,6 +1,7 @@
 import { ValidatorLsv10LehrerStammdatenVorname } from '../../../asd/validate/lehrer/ValidatorLsv10LehrerStammdatenVorname';
 import type { Supplier } from '../../../java/util/function/Supplier';
 import { Class } from '../../../java/lang/Class';
+import { JavaString } from '../../../java/lang/JavaString';
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
@@ -26,7 +27,7 @@ export class ValidatorLsv00LehrerStammdatenVorname extends Validator {
 
 	protected pruefe(): boolean {
 		const vorname: string | null = this.daten.get();
-		if (vorname === null || vorname.length === 0) {
+		if (vorname === null || JavaString.isEmpty(vorname)) {
 			this.addFehler(0, "Vorname der Lehrkraft: Kein Wert vorhanden.");
 			return false;
 		}

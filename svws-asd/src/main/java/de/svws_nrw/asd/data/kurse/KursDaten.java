@@ -55,7 +55,7 @@ public class KursDaten {
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
 	public boolean istSichtbar;
 
-	/** Die Liste der zusätzlichen Lehrkräft eines Kurses. */
+	/** Die Liste der zusätzlichen Lehrkraft eines Kurses. */
 	@ArraySchema(schema = @Schema(implementation = KursLehrer.class))
 	public @NotNull List<KursLehrer> weitereLehrer = new ArrayList<>();
 

@@ -20,12 +20,12 @@ import { HashSet } from '../../java/util/HashSet';
 export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U>> extends JavaObject {
 
 	/**
-	 * Eine Map mit den Daten der initisierten Core-Types
+	 * Eine Map mit den Daten der initialisierten Core-Types
 	 */
-	private static _data: JavaMap<string, CoreTypeDataManager<CoreTypeData, any>> = new HashMap<string, CoreTypeDataManager<CoreTypeData, any>>();
+	private static dataMap: JavaMap<string, CoreTypeDataManager<CoreTypeData, any>> = new HashMap<string, CoreTypeDataManager<CoreTypeData, any>>();
 
 	/**
-	 * Der name des Core-Types
+	 * Der Name des Core-Types
 	 */
 	private readonly _name: string;
 
@@ -115,7 +115,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	private readonly _mapBySchuljahrAndSchulformAndSchluessel: JavaMap<number, JavaMap<Schulform, JavaMap<string, U>>> = new HashMap<number, JavaMap<Schulform, JavaMap<string, U>>>();
 
 	/**
-	 * Eine Map mit der Zuordnung der Historien-Einträge zu den jeweilgen Schuljahren
+	 * Eine Map mit der Zuordnung der Historien-Einträge zu den jeweiligen Schuljahren
 	 */
 	private readonly _mapEintraegeBySchuljahr: HashMap<number, List<T>> = new HashMap<number, List<T>>();
 
@@ -171,7 +171,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 * @param manager   der Core-Type-Manager
 	 */
 	public static putManager<T extends CoreTypeData, U extends CoreType<T, U>>(clazz: Class<U>, manager: CoreTypeDataManager<T, U>): void {
-		CoreTypeDataManager._data.put(clazz.getCanonicalName(), manager);
+		CoreTypeDataManager.dataMap.put(clazz.getCanonicalName(), manager);
 	}
 
 	/**
@@ -185,7 +185,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 * @return der Core-Type-Manager
 	 */
 	public static getManager<T extends CoreTypeData, U extends CoreType<T, U>>(clazz: Class<U>): CoreTypeDataManager<T, U> {
-		const manager: CoreTypeDataManager<T, U> | null = cast_de_svws_nrw_asd_utils_CoreTypeDataManager(CoreTypeDataManager._data.get(clazz.getCanonicalName()));
+		const manager: CoreTypeDataManager<T, U> | null = cast_de_svws_nrw_asd_utils_CoreTypeDataManager(CoreTypeDataManager.dataMap.get(clazz.getCanonicalName()));
 		if (manager === null) {
 			throw new CoreTypeException("Der Core-Type " + clazz.getSimpleName() + " wurde noch nicht initialisiert.")
 		}
@@ -495,7 +495,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 
 	/**
 	 * Gibt den Core-Type-Wert für das angegebene Kürzel zurück.
-	 * Diese Methode sollte i.A. nicht mehr zur Indenfikation des Core-Types genutzt
+	 * Diese Methode sollte i.A. nicht mehr zur Identifikation des Core-Types genutzt
 	 * werden. Sie steht dennoch für die Kompatibilität zu alten Schuldatenbanken zur Verfügung.
 	 *
 	 * @param kuerzel   das Kürzel
@@ -508,7 +508,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 
 	/**
 	 * Gibt den Core-Type-Wert für das angegebene Kürzel zurück.
-	 * Diese Methode sollte i.A. nicht mehr zur Indenfikation des Core-Types genutzt
+	 * Diese Methode sollte i.A. nicht mehr zur Identifikation des Core-Types genutzt
 	 * werden. Sie steht dennoch für die Kompatibilität zu alten Schuldatenbanken zur Verfügung.
 	 *
 	 * @param kuerzel   das Kürzel
@@ -605,7 +605,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	}
 
 	/**
-	 * Gibt alle Schulformen dieser Aufzählung zurück, welche in dem angebenen Schuljahr gültig sind.
+	 * Gibt alle Schulformen dieser Aufzählung zurück, welche in dem angegebenen Schuljahr gültig sind.
 	 *
 	 * @param schuljahr   das Schuljahr
 	 *
@@ -639,7 +639,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	}
 
 	/**
-	 * Gibt den Katalog-Eintrag des Jahrgangs für die übergenene Schulform in dem übergebenen Schuljahr zurück.
+	 * Gibt den Katalog-Eintrag des Jahrgangs für die übergebene Schulform in dem übergebenen Schuljahr zurück.
 	 *
 	 * @param schuljahr   das Schuljahr
 	 * @param sf          die Schulform
@@ -687,7 +687,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	}
 
 	/**
-	 * Liefert die zulässige Core-Type-Werte für die angegebene Schulform in dem angegebenen Schuljahr und dem angebenen Schlüssel oder
+	 * Liefert die zulässige Core-Type-Werte für die angegebene Schulform in dem angegebenen Schuljahr und dem angegebenen Schlüssel oder
 	 * null falls eine solcher Core-Type-Wert nicht existiert.
 	 *
 	 * @param schuljahr   das Schuljahr

@@ -6,7 +6,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie beschreibt die Anrechnungsstunden für die Lehrerabschnittsdaten mit der angebenen ID.
+ * Sie beschreibt die Anrechnungsstunden für die Lehrerabschnittsdaten mit der angegebenen ID.
  * Dabei kann es sich sowohl um allgemeine Anrechnungsstunden, als auch um Abrechnungsstunden bezüglich
  * Mehr- oder Minderleistungen, handeln.
  */

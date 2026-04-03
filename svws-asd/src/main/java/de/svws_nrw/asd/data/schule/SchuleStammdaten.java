@@ -1,13 +1,13 @@
 package de.svws_nrw.asd.data.schule;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -82,11 +82,11 @@ public class SchuleStammdaten {
 	@Schema(description = "Anzahl der Abschnitte pro Jahrgangsstufe", example = "1")
 	public long anzJGS_Jahr;
 
-	/** Die Informationen zu den Abschnitten pro Jahr. (meist Haljahre (2) oder Quartale (4) */
+	/** Die Informationen zu den Abschnitten pro Jahr. (meist Halbjahre (2) oder Quartale (4) */
 	@Schema(description = "Abschnittsinformatioenn zur Schule")
 	public @NotNull SchuleAbschnitte schuleAbschnitte = new SchuleAbschnitte();
 
-	/** Die Dauer einer Unterrichsteinheit in Minuten. */
+	/** Die Dauer einer Unterrichtseinheit in Minuten. */
 	@Schema(description = "Dauer einer Unterrichtseinheit", example = "45")
 	public long dauerUnterrichtseinheit;
 

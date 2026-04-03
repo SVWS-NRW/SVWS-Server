@@ -47,7 +47,7 @@ public class LehrerPflichtstundensollVollzeit extends CoreTypeSimple<LehrerPflic
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	@Override
 	public LehrerPflichtstundensollVollzeit getInstance() {

@@ -41,7 +41,7 @@ export class Herkunftsschulnummer extends CoreTypeSimple<HerkunftsschulnummerKat
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	public getInstance(): Herkunftsschulnummer | null {
 		return new Herkunftsschulnummer();

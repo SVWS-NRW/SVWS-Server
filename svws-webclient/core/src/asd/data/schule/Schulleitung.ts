@@ -24,12 +24,12 @@ export class Schulleitung extends JavaObject {
 	public idLehrer: number = -1;
 
 	/**
-	 * Das Datum, mit welchem die Leitunsfunktion übernommen wurde
+	 * Das Datum, mit welchem die Leitungsfunktion übernommen wurde
 	 */
 	public beginn: string | null = null;
 
 	/**
-	 * Das Datum, bis zu welchem die Leitunsfunktion übernommen wurde
+	 * Das Datum, bis zu welchem die Leitungsfunktion übernommen wurde
 	 */
 	public ende: string | null = null;
 

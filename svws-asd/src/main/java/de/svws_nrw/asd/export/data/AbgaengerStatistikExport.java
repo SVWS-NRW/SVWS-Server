@@ -18,7 +18,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class AbgaengerStatistikExport {
 
-	/** Satzschlüssel: Der Jahrgang der Schüler an Allgemeinbildenen Schulen. */
+	/** Satzschlüssel: Der Jahrgang der Schüler an Allgemeinbildenden Schulen. */
 	@Schema(description = "satzschlüssel: der Jahrgang der Schüler an Allgemeinbildenden Schulen", example = "09")
 	public String jahrgang = "";
 

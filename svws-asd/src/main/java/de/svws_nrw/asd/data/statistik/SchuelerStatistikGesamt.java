@@ -54,7 +54,7 @@ public class SchuelerStatistikGesamt {
 	@Schema(description = "das Datum der Religionsanmeldung", example = "12.12.1912")
 	public String religionanmeldung;
 
-	/** Die Anrechungszeit in Monaten für den Beginn des Bildungsganges des Berufskolleg (z.B. 0,6,12,18). */
+	/** Die Anrechnungszeit in Monaten für den Beginn des Bildungsganges des Berufskolleg (z.B. 0,6,12,18). */
 	@Schema(description = "die Anrechungszeit in Monaten für den Beginn des Berufskolleg (z.B. 0,6,12,18)", example = "12")
 	public Integer bkAzvo;
 
@@ -95,7 +95,7 @@ public class SchuelerStatistikGesamt {
 	@Schema(description = "Die Schulnr der vorher besuchten Schule", example = "123456")
 	public String vorherigeSchuleNr;
 
-	/** Die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule. */
+	/** Die allgemeine Herkunftsart des Schüler in Bezug auf die Schulform der zuvor besuchten Schule. */
 	@Schema(description = "die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule",
 			example = "Grundschule (auch Primarstufe der Volkschule)")
 	public String vorigeAllgHerkunft;

@@ -18,7 +18,7 @@ export class Sprachendaten extends JavaObject {
 	public belegungen: List<Sprachbelegung> = new ArrayList<Sprachbelegung>();
 
 	/**
-	 * Die Liste der Sprachpruefungen.
+	 * Die Liste der Sprachprüfungen.
 	 */
 	public pruefungen: List<Sprachpruefung> = new ArrayList<Sprachpruefung>();
 

@@ -55,7 +55,7 @@ export class Verkehrssprache extends CoreTypeSimple<VerkehrsspracheKatalogEintra
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	public getInstance(): Verkehrssprache | null {
 		return new Verkehrssprache();

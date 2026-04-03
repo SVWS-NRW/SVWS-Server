@@ -48,7 +48,7 @@ public final class BerufskollegBerufsebene3 extends CoreTypeSimple<BerufskollegB
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	@Override
 	public BerufskollegBerufsebene3 getInstance() {

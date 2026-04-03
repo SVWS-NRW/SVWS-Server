@@ -53,7 +53,7 @@ export class KursDaten extends JavaObject {
 	public istSichtbar: boolean = false;
 
 	/**
-	 * Die Liste der zusätzlichen Lehrkräft eines Kurses.
+	 * Die Liste der zusätzlichen Lehrkraft eines Kurses.
 	 */
 	public weitereLehrer: List<KursLehrer> = new ArrayList<KursLehrer>();
 

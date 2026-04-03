@@ -6,7 +6,7 @@ import { Class } from '../../../java/lang/Class';
 export class AbiturStatistikGesamt extends JavaObject {
 
 	/**
-	 * Die Liste der Statistikkuerzel der Abiturfächer.
+	 * Die Liste der Statistikkürzel der Abiturfächer.
 	 */
 	public abifach: List<string> = new ArrayList<string>();
 

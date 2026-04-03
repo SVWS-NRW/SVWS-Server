@@ -41,7 +41,7 @@ export class HerkunftSonstige extends CoreTypeSimple<HerkunftSonstigeKatalogEint
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	public getInstance(): HerkunftSonstige | null {
 		return new HerkunftSonstige();

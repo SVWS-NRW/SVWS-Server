@@ -47,7 +47,7 @@ public class Herkunftsarten extends CoreTypeSimple<HerkunftsartenKatalogEintrag,
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	@Override
 	public Herkunftsarten getInstance() {

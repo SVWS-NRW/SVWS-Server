@@ -64,10 +64,10 @@ public enum KAOAZusatzmerkmal implements CoreType<KAOAZusatzmerkmalKatalogEintra
 	/** KAoA-Zusatzmerkmal: Keine Teilnahme der Eltern bzw. Erziehungsberechtigten an STAR - Beratungs- und Informationsveranstaltungen */
 	SBO_2_6_2,
 
-	/** KAoA-Zusatzmerkmal: Berufwahlpass NRW SekI/II erhalten */
+	/** KAoA-Zusatzmerkmal: Berufswahlpass NRW SekI/II erhalten */
 	SBO_3_4_1,
 
-	/** KAoA-Zusatzmerkmal: Berufwahlpass NRW Leichte Sprache erhalten */
+	/** KAoA-Zusatzmerkmal: Berufswahlpass NRW Leichte Sprache erhalten */
 	SBO_3_4_2,
 
 	/** KAoA-Zusatzmerkmal: Berufswahlpass NRW kompakt erhalten */
@@ -97,10 +97,10 @@ public enum KAOAZusatzmerkmal implements CoreType<KAOAZusatzmerkmalKatalogEintra
 	/** KAoA-Zusatzmerkmal: Keine Teilnahme an der Potenzialanalyse */
 	SBO_4_3_2,
 
-	/** KAoA-Zusatzmerkmal: An der Festellung des funktionalen Sehvermögens teilgenommen */
+	/** KAoA-Zusatzmerkmal: An der Feststellung des funktionalen Sehvermögens teilgenommen */
 	SBO_4_4_1,
 
-	/** KAoA-Zusatzmerkmal: Keine Teilnahme an der Feststellung des funktionalen Sehrvermögens */
+	/** KAoA-Zusatzmerkmal: Keine Teilnahme an der Feststellung des funktionalen Sehvermögens */
 	SBO_4_4_2,
 
 	/** KAoA-Zusatzmerkmal: An der STAR-Potenzialanalyse teilgenommen */

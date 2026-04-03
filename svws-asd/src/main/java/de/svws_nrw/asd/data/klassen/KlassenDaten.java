@@ -1,14 +1,14 @@
 package de.svws_nrw.asd.data.klassen;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.asd.data.schueler.Schueler;
 import de.svws_nrw.transpiler.TranspilerDTO;
-import jakarta.validation.constraints.NotNull;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -64,7 +64,7 @@ public class KlassenDaten {
 	@Schema(description = "die ID der Vorgängerklasse, sofern im vorigen Schuljahresabschnitt definiert - ansonsten null", example = "4711", nullable = true)
 	public Long idVorgaengerklasse = null;
 
-	/** Das Kürzel der Vorgängerklasse vor der letzen Versetzung. */
+	/** Das Kürzel der Vorgängerklasse vor der letzten Versetzung. */
 	@Schema(description = "das Kürzel der Vorgängerklasse vor der letzen Versetzung.", example = "08b", nullable = true)
 	public String kuerzelVorgaengerklasse = null;
 

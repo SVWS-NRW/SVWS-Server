@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die gütligen Statistikwerte für den Katalog der LehrerEinsatzstati.
+ * Sie liefert die gültigen Statistikwerte für den Katalog der LehrerEinsatzstatistik.
  */
 
 @XmlRootElement

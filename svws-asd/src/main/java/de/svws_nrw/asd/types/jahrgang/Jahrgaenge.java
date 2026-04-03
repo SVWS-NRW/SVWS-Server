@@ -159,7 +159,7 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 
 
 	/**
-	 * Gibt den Katalog-Eintrag des Jahrgangs für die übergenene Schulform in dem übergebenen Schuljahr zurück.
+	 * Gibt den Katalog-Eintrag des Jahrgangs für die übergebene Schulform in dem übergebenen Schuljahr zurück.
 	 *
 	 * @param schuljahr   das Schuljahr
 	 * @param sf          die Schulform
@@ -413,8 +413,8 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 
 
 	/**
-	 * Gibt zurück, ob bei diesem Jahrgang für die angebebene Schulform und Schulgliederung in dem Schuljahr eine
-	 * Lernbereichsnote 1 angebeben werden kann.
+	 * Gibt zurück, ob bei diesem Jahrgang für die angegebene Schulform und Schulgliederung in dem Schuljahr eine
+	 * Lernbereichsnote 1 angegeben werden kann.
 	 *
 	 * @param schulform        die Schulform
 	 * @param schulgliederung  die Schulgliederung
@@ -439,8 +439,8 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 
 
 	/**
-	 * Gibt die Bezeichnung der Lernbereichtsnote 1 zurück, sofern bei diesem Jahrgang für die angebebene Schulform
-	 * und Schulgliederung in dem Schuljahr eine Lernbereichsnote 1 angebeben werden kann.
+	 * Gibt die Bezeichnung der Lernbereichsnote 1 zurück, sofern bei diesem Jahrgang für die angegebene Schulform
+	 * und Schulgliederung in dem Schuljahr eine Lernbereichsnote 1 angegeben werden kann.
 	 *
 	 * @param schulform        die Schulform
 	 * @param schulgliederung  die Schulgliederung
@@ -460,8 +460,8 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 
 
 	/**
-	 * Gibt zurück, ob bei diesem Jahrgang für die angebebene Schulform und Schulgliederung in dem Schuljahr eine
-	 * Lernbereichsnote 2 angebeben werden kann.
+	 * Gibt zurück, ob bei diesem Jahrgang für die angegebene Schulform und Schulgliederung in dem Schuljahr eine
+	 * Lernbereichsnote 2 angegeben werden kann.
 	 *
 	 * @param schulform        die Schulform
 	 * @param schulgliederung  die Schulgliederung
@@ -484,8 +484,8 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 
 
 	/**
-	 * Gibt die Bezeichnung der Lernbereichtsnote 2 zurück, sofern bei diesem Jahrgang für die angebebene Schulform
-	 * und Schulgliederung in dem Schuljahr eine Lernbereichsnote 2 angebeben werden kann.
+	 * Gibt die Bezeichnung der Lernbereichsnote 2 zurück, sofern bei diesem Jahrgang für die angegebene Schulform
+	 * und Schulgliederung in dem Schuljahr eine Lernbereichsnote 2 angegeben werden kann.
 	 *
 	 * @param schulform        die Schulform
 	 * @param schulgliederung  die Schulgliederung

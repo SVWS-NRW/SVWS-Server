@@ -24,7 +24,7 @@ export class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 
 
 	/**
-	 * Erstellt eine Nationalitaeten mit Standardwerten
+	 * Erstellt eine Nationalitäten mit Standardwerten
 	 */
 	public constructor() {
 		super();
@@ -61,7 +61,7 @@ export class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	public getInstance(): Nationalitaeten | null {
 		return new Nationalitaeten();

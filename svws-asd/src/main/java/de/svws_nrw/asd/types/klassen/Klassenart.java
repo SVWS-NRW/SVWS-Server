@@ -28,7 +28,7 @@ public enum Klassenart implements CoreType<KlassenartKatalogEintrag, Klassenart>
 	/** Klassenart: Hauptschulklasse 1B */
 	HA_1B,
 
-	/** Klassenart: Hauptschuleklasse ohne Differenzierung nach A und B */
+	/** Klassenart: Hauptschulklasse ohne Differenzierung nach A und B */
 	HA_AB,
 
 	/** Klassenart: Auffangklasse */

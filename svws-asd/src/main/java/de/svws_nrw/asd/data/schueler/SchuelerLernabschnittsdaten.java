@@ -127,11 +127,11 @@ public class SchuelerLernabschnittsdaten {
 	@Schema(description = "gibt an, ob eine Diagnose zu Autismus vorliegt oder nicht", example = "false")
 	public boolean hatAutismus = false;
 
-	/** Gibt an, ob zieldifferent unterrichet wird oder nicht */
+	/** Gibt an, ob zieldifferent unterrichtet wird oder nicht */
 	@Schema(description = "gibt an, ob zieldifferent unterrichet wird oder nicht", example = "false")
 	public boolean hatZieldifferentenUnterricht = false;
 
-	/** Die ID des Haupförderschwerpunktes des Schülers */
+	/** Die ID des Hauptförderschwerpunktes des Schülers */
 	@Schema(description = "die ID des Haupförderschwerpunktes des Schülers", example = "null")
 	public Long foerderschwerpunkt1ID = null;
 
@@ -143,7 +143,7 @@ public class SchuelerLernabschnittsdaten {
 	@Schema(description = "die ID eines Sonderpädagogen, der den Schüler betreut und auch im Notenmodul hat", example = "null")
 	public Long sonderpaedagogeID = null;
 
-	/** Die Sprache des bilngualen Zweigs, falls der Schüler im bilingualen Zweig unterrichtet wird */
+	/** Die Sprache des bilingualen Zweigs, falls der Schüler im bilingualen Zweig unterrichtet wird */
 	@Schema(description = "die Sprache des bilngualen Zweigs, falls der Schüler im bilingualen Zweig unterrichtet wird", example = "null")
 	public String bilingualerZweig = null;
 

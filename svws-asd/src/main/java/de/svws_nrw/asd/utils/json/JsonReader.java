@@ -38,8 +38,7 @@ public final class JsonReader {
 
 
 	/**
-	 * Liest eine JSON-Datei als UTF-8-String aus der angegebenen Resource
-	 * ein.
+	 * Liest eine JSON-Datei als UTF-8-String aus der angegebenen Ressource ein.
 	 *
 	 * @param location   der Ort, an dem sich die JSON-Resource befindet
 	 *
@@ -55,9 +54,9 @@ public final class JsonReader {
 
 
 	/**
-	 * Erzeugt zu der JSON-Ressource an der angebenen Stelle (location) ein Objekt vom Typ T.
+	 * Erzeugt zu der JSON-Ressource an der angegebenen Stelle (location) ein Objekt vom Typ T.
 	 *
-	 * @param <T>        der generische Parameter für die Klasse T des Objects
+	 * @param <T>        der generische Parameter für die Klasse T des Objekts
 	 * @param location   der Ort, an dem sich die CSV-Resource befindet
 	 * @param clazz      das Klassenobjekt zur generischen Klasse T
 	 *
@@ -74,7 +73,7 @@ public final class JsonReader {
 
 
 	/**
-	 * Erzeugt zu der JSON-Ressource an der angebenen Stelle (location) die Informationen
+	 * Erzeugt zu der JSON-Ressource an der angegebenen Stelle (location) die Informationen
 	 * zu einem Core-Type mit den DTOs vom T.
 	 *
 	 * @param <T>        der Typ der DTOs von dem Core-Type.
@@ -94,7 +93,7 @@ public final class JsonReader {
 
 
 	/**
-	 * Liest eine JSON-Datei als UTF-8-String aus der angegebenen Resource
+	 * Liest eine JSON-Datei als UTF-8-String aus der angegebenen Ressource
 	 * ein.
 	 *
 	 * @param location   der Ort, an dem sich die JSON-Resource befindet
@@ -144,12 +143,12 @@ public final class JsonReader {
 
 
 	/**
-	 * Diese Methode ermittelt für den angebenen String location ein
+	 * Diese Methode ermittelt für den angegebenen String location ein
 	 * zugehöriges Path-Objekt aus dem zugehörigen Resource-Ordner.
 	 * Dabei wird auch der Zugriff auf ein ZIP-Dateisystem genutzt,
-	 * falls sich die Resource in einem JAR-File befindet.
+	 * falls sich die Ressource in einem JAR-File befindet.
 	 *
-	 * @param location   der Pfad der Resource
+	 * @param location   der Pfad der Ressource
 	 *
 	 * @return das Path-Objekt zum Zugriff auf die Ressource
 	 *
@@ -164,8 +163,8 @@ public final class JsonReader {
 			}
 			final var uri = url.toURI();
 			if (uri.toString().contains("jar:file:")) {
-				final String[] jar_path_elements = uri.toString().split("!");
-				return getJarPath(jar_path_elements[0], jar_path_elements[1]);
+				final String[] jarPathElements = uri.toString().split("!");
+				return getJarPath(jarPathElements[0], jarPathElements[1]);
 			}
 			return Paths.get(uri);
 		} catch (IOException | URISyntaxException e) {
@@ -175,7 +174,7 @@ public final class JsonReader {
 
 
 	/**
-	 * Ermittelt alle Dateien, die in dem angebenen Pfad path liegen und zu dem
+	 * Ermittelt alle Dateien, die in dem angegebenen Pfad path liegen und zu dem
 	 * Package mit dem Name packageName oder einem Sub-Package davon gehören
 	 * sowie die angegebene Dateiendung haben.
 	 *

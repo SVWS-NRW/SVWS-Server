@@ -18,7 +18,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 public class AbiturStatistikGesamt {
 
-	/** Die Liste der Statistikkuerzel der Abiturfächer. */
+	/** Die Liste der Statistikkürzel der Abiturfächer. */
 	@ArraySchema(schema = @Schema(implementation = String.class))
 	public @NotNull List<String> abifach = new ArrayList<>();
 

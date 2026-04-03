@@ -79,7 +79,7 @@ public class SchuleStatistikGesamt {
 	@Schema(description = "die ID des Schuljahresabschnittes, in welchem sich die Schule befindet", example = "14")
 	public long idSchuljahresabschnitt;
 
-	/** Die Dauer einer Unterrichsteinheit in Minuten. */
+	/** Die Dauer einer Unterrichtseinheit in Minuten. */
 	@Schema(description = "Dauer einer Unterrichtseinheit", example = "45")
 	public long dauerUnterrichtseinheit;
 
@@ -119,8 +119,8 @@ public class SchuleStatistikGesamt {
 	@Schema(description = "Talentschule Form", example = "0")
 	public long idTalentschule;
 
-	/** Reformpedagogik Schulebene */
-	@Schema(description = "Reformpedagogik Schulebene", example = "3")
+	/** Reformpädagogik Schulebene */
+	@Schema(description = "Reformpädagogik Schulebene", example = "3")
 	public long idReformpaedagogik;
 
 	/** Die Liste der Schuljahresabschnitte, welche an der Schule definiert sind. */

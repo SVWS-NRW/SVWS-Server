@@ -10,7 +10,7 @@ import de.svws_nrw.asd.data.CoreTypeException;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Diese abstracte Klasse stellt den Bezeichner für einen CoreTypeSimple bereit,
+ * Diese abstrakte Klasse stellt den Bezeichner für einen CoreTypeSimple bereit,
  * da das ENUM Interface nicht verwendet wird.
  *
  * @param <T> der Typ der Historieneinträge des Core-Types

@@ -27,8 +27,8 @@ import jakarta.validation.constraints.NotNull;
  */
 public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U>> {
 
-	/** Eine Map mit den Daten der initisierten Core-Types */
-	private static @NotNull Map<String, CoreTypeDataManager<? extends CoreTypeData, ?>> _data = new HashMap<>();
+	/** Eine Map mit den Daten der initialisierten Core-Types */
+	private static @NotNull Map<String, CoreTypeDataManager<? extends CoreTypeData, ?>> dataMap = new HashMap<>();
 
 	/**
 	 * Fügt für den Core-Type einen Core-Type-Manager hinzu
@@ -40,7 +40,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 */
 	public static <T extends CoreTypeData, U extends CoreType<T, U>> void putManager(final @NotNull Class<U> clazz,
 			final @NotNull CoreTypeDataManager<T, U> manager) {
-		_data.put(clazz.getCanonicalName(), manager);
+		dataMap.put(clazz.getCanonicalName(), manager);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 * @return der Core-Type-Manager
 	 */
 	public static <T extends CoreTypeData, U extends CoreType<T, U>> @NotNull CoreTypeDataManager<T, U> getManager(final @NotNull Class<U> clazz) {
-		@SuppressWarnings("unchecked") final CoreTypeDataManager<T, U> manager = (CoreTypeDataManager<T, U>) _data.get(clazz.getCanonicalName());
+		@SuppressWarnings("unchecked") final CoreTypeDataManager<T, U> manager = (CoreTypeDataManager<T, U>) dataMap.get(clazz.getCanonicalName());
 		if (manager == null) {
 			throw new CoreTypeException("Der Core-Type " + clazz.getSimpleName() + " wurde noch nicht initialisiert.");
 		}
@@ -64,7 +64,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 
 	/* ----- Die nachfolgenden Attribute werden mithilfe des Konstruktors initialisiert und der Werte/Inhalte werden anschließend nicht mehr modifiziert ----- */
 
-	/** Der name des Core-Types */
+	/** Der Name des Core-Types */
 	private final @NotNull String _name;
 
 	/** Die Version der Core-Type-Daten, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
@@ -121,7 +121,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	/** Eine geschachtelte Map mit der Zuordnung einer von Core-Type-Werten zu einem Schuljahr, einer Schulform und dem Schlüssel */
 	private final @NotNull Map<Integer, Map<Schulform, Map<String, U>>> _mapBySchuljahrAndSchulformAndSchluessel = new HashMap<>();
 
-	/** Eine Map mit der Zuordnung der Historien-Einträge zu den jeweilgen Schuljahren */
+	/** Eine Map mit der Zuordnung der Historien-Einträge zu den jeweiligen Schuljahren */
 	private final @NotNull HashMap<Integer, List<T>> _mapEintraegeBySchuljahr = new HashMap<>();
 
 
@@ -508,7 +508,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 
 	/**
 	 * Gibt den Core-Type-Wert für das angegebene Kürzel zurück.
-	 * Diese Methode sollte i.A. nicht mehr zur Indenfikation des Core-Types genutzt
+	 * Diese Methode sollte i.A. nicht mehr zur Identifikation des Core-Types genutzt
 	 * werden. Sie steht dennoch für die Kompatibilität zu alten Schuldatenbanken zur Verfügung.
 	 *
 	 * @param kuerzel   das Kürzel
@@ -522,7 +522,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 
 	/**
 	 * Gibt den Core-Type-Wert für das angegebene Kürzel zurück.
-	 * Diese Methode sollte i.A. nicht mehr zur Indenfikation des Core-Types genutzt
+	 * Diese Methode sollte i.A. nicht mehr zur Identifikation des Core-Types genutzt
 	 * werden. Sie steht dennoch für die Kompatibilität zu alten Schuldatenbanken zur Verfügung.
 	 *
 	 * @param kuerzel   das Kürzel
@@ -638,7 +638,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 
 
 	/**
-	 * Gibt alle Schulformen dieser Aufzählung zurück, welche in dem angebenen Schuljahr gültig sind.
+	 * Gibt alle Schulformen dieser Aufzählung zurück, welche in dem angegebenen Schuljahr gültig sind.
 	 *
 	 * @param schuljahr   das Schuljahr
 	 *
@@ -674,7 +674,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 
 
 	/**
-	 * Gibt den Katalog-Eintrag des Jahrgangs für die übergenene Schulform in dem übergebenen Schuljahr zurück.
+	 * Gibt den Katalog-Eintrag des Jahrgangs für die übergebene Schulform in dem übergebenen Schuljahr zurück.
 	 *
 	 * @param schuljahr   das Schuljahr
 	 * @param sf          die Schulform
@@ -726,7 +726,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 
 
 	/**
-	 * Liefert die zulässige Core-Type-Werte für die angegebene Schulform in dem angegebenen Schuljahr und dem angebenen Schlüssel oder
+	 * Liefert die zulässige Core-Type-Werte für die angegebene Schulform in dem angegebenen Schuljahr und dem angegebenen Schlüssel oder
 	 * null falls eine solcher Core-Type-Wert nicht existiert.
 	 *
 	 * @param schuljahr   das Schuljahr

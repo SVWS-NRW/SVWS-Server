@@ -41,7 +41,7 @@ export class BerufskollegBerufsebene2 extends CoreTypeSimple<BerufskollegBerufse
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	public getInstance(): BerufskollegBerufsebene2 | null {
 		return new BerufskollegBerufsebene2();

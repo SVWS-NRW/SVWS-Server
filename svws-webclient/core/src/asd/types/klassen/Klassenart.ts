@@ -39,7 +39,7 @@ export class Klassenart extends JavaEnum<Klassenart> implements CoreType<Klassen
 	public static readonly HA_1B: Klassenart = new Klassenart("HA_1B", 2, );
 
 	/**
-	 * Klassenart: Hauptschuleklasse ohne Differenzierung nach A und B
+	 * Klassenart: Hauptschulklasse ohne Differenzierung nach A und B
 	 */
 	public static readonly HA_AB: Klassenart = new Klassenart("HA_AB", 3, );
 

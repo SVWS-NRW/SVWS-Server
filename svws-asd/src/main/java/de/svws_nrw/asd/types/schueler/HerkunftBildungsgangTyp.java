@@ -24,7 +24,7 @@ public enum HerkunftBildungsgangTyp implements CoreType<HerkunftBildungsgangTypK
 	/** Berufskolleg: Berufsfachschule */
 	BF,
 
-	/** Berufskolleg: Berufschule */
+	/** Berufskolleg: Berufsschule */
 	BS,
 
 	/** Berufskolleg: Berufliches Gymnasium */

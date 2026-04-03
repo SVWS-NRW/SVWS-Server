@@ -19,7 +19,7 @@ export class SchuelerLeistungsdaten extends JavaObject {
 	public fachID: number = -1;
 
 	/**
-	 * Die ID des Kurses, auf welches sich die Leistungsdaten beziehen - bei Klassen unterricht NULL.
+	 * Die ID des Kurses, auf welches sich die Leistungsdaten beziehen - bei Klassenunterricht NULL.
 	 */
 	public kursID: number | null = null;
 
@@ -74,7 +74,7 @@ export class SchuelerLeistungsdaten extends JavaObject {
 	public note: string | null = null;
 
 	/**
-	 * Das Kürzel der erteilten Qurtalsnote - es können auch Pseudonoten eingetragen werden (z.B. AT).
+	 * Das Kürzel der erteilten Quartalsnote - es können auch Pseudonoten eingetragen werden (z.B. AT).
 	 */
 	public noteQuartal: string | null = null;
 

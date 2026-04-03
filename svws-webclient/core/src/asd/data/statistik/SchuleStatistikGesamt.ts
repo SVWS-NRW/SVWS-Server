@@ -83,7 +83,7 @@ export class SchuleStatistikGesamt extends JavaObject {
 	public idSchuljahresabschnitt: number = 0;
 
 	/**
-	 * Die Dauer einer Unterrichsteinheit in Minuten.
+	 * Die Dauer einer Unterrichtseinheit in Minuten.
 	 */
 	public dauerUnterrichtseinheit: number = 0;
 
@@ -133,7 +133,7 @@ export class SchuleStatistikGesamt extends JavaObject {
 	public idTalentschule: number = 0;
 
 	/**
-	 * Reformpedagogik Schulebene
+	 * Reformpädagogik Schulebene
 	 */
 	public idReformpaedagogik: number = 0;
 

@@ -62,13 +62,12 @@ public class Verkehrssprache extends CoreTypeSimple<VerkehrsspracheKatalogEintra
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	@Override
 	public Verkehrssprache getInstance() {
 		return new Verkehrssprache();
 	}
-
 
 
 	/**

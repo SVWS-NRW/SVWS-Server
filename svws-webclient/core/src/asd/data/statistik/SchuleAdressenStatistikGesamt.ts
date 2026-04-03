@@ -14,7 +14,7 @@ export class SchuleAdressenStatistikGesamt extends JavaObject {
 	public adresskennzeichen: string | null = null;
 
 	/**
-	 * Der Strassenname einer Adresse.
+	 * Der Straßenname einer Adresse.
 	 */
 	public strassenname: string | null = null;
 

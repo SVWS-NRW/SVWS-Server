@@ -17,7 +17,7 @@ public final class ValidatorLssLehrerStammdatenStaatsangehoerigkeitID extends Va
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param daten                 die StaatsangehörigkeitID des Lehrers
-	 * @param idRechtsverhaeltnis   das Rechtsverhaeltnis des Lehrers
+	 * @param idRechtsverhaeltnis   das Rechtsverhältnis des Lehrers
 	 * @param kontext               der Kontext des Validators
 	 */
 	public ValidatorLssLehrerStammdatenStaatsangehoerigkeitID(final @NotNull Supplier<@AllowNull String> daten, final @NotNull Supplier<@AllowNull Long> idRechtsverhaeltnis,

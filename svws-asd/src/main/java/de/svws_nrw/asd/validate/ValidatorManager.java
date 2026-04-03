@@ -50,7 +50,7 @@ public final class ValidatorManager {
 
 
 	/**
-	 * Erstellt einen neuen Manager für die übergebene Schulform und die Entsprechene Validierungsumgebung
+	 * Erstellt einen neuen Manager für die übergebene Schulform und die entsprechende Validierungsumgebung
 	 * (Zebras oder SVWS)
 	 *
 	 * @param zebras      die Umgebung, in der gerade validiert wird: true: ZeBrAS  false: SVWS
@@ -247,7 +247,7 @@ public final class ValidatorManager {
 	/**
 	 * Holt das Objekt aus der HashMap oder erzeugt es wenn es nicht vorhanden ist.
 	 *
-	 * @param art - die Fehlerart, für die die Liste ggfs. erzeugt wird
+	 * @param art - die Fehlerart, für die die Liste ggf. erzeugt wird
 	 * @param map - die HashMap mit den ArrayLists
 	 *
 	 * @return das benötigte Objekt
@@ -266,7 +266,7 @@ public final class ValidatorManager {
 	/**
 	 * holt das Objekt aus der HashMap oder erzeugt es wenn es nicht vorhanden ist.
 
-	 * @param schulform - die Fehlerart, für die die Liste ggfs. erzeugt wird
+	 * @param schulform - die Fehlerart, für die die Liste ggf. erzeugt wird
 	 * @param map - die HashMap mit den ArrayLists
 	 * @return das benötigte Objekt
 	 */
@@ -504,9 +504,9 @@ public final class ValidatorManager {
 				}
 			}
 			// Test am Scanpoint, Abbruch sobald feststeht, dass untermenge keine Untermenge ist.
-			// Ergibt die modulo-2 Berechnung des Index an dieser Stelle am Sccanpoint das Ergebnis 0
+			// Ergibt die modulo-2 Berechnung des Index an dieser Stelle am Scanpoint das Ergebnis 0
 			// liegt eine Lücke vor und der Index zeigt auf das Ende der Lücke.
-			// Ergibt die modulo-2 Berechnung des Index an dieser Stelle am Sccanpoint das Ergebnis 1
+			// Ergibt die modulo-2 Berechnung des Index an dieser Stelle am Scanpoint das Ergebnis 1
 			// liegt keine Lücke vor und der Index zeigt auf den Anfang der folgenden Lücke.
 			// Das While wird verlassen sobald obermenge%2=0 und untermenge%2=1 ist und false als Return-Wert feststeht.
 		} while ((iObermenge % 2 == 1) || (iUntermenge % 2 == 0));

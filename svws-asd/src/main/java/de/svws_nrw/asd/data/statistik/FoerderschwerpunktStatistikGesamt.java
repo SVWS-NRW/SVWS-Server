@@ -17,7 +17,7 @@ public class FoerderschwerpunktStatistikGesamt {
 	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id;
 
-	/** Die ID des Eintrags im Rahmen der amtlichen Schulstatisik. */
+	/** Die ID des Eintrags im Rahmen der amtlichen Schulstatistik. */
 	@Schema(description = "die ID des Eintrags im Rahmen der amtlichen Schulstatisik", example = "1000")
 	public long idKatalog = -1;
 

@@ -124,7 +124,7 @@ export class SchuelerStammdaten extends JavaObject {
 	public religionanmeldung: string | null = null;
 
 	/**
-	 * Gibt an, ob ein Migrationshintergrund bei dems Schülerdatensatz vorhanden ist.
+	 * Gibt an, ob ein Migrationshintergrund bei dem Schülerdatensatz vorhanden ist.
 	 */
 	public hatMigrationshintergrund: boolean = false;
 
@@ -209,7 +209,7 @@ export class SchuelerStammdaten extends JavaObject {
 	public istBerufsschulpflichtErfuellt: boolean = false;
 
 	/**
-	 * Gibt an, ob der Schüler einen Nachweis über die Maserimpfpflicht erbracht hat.
+	 * Gibt an, ob der Schüler einen Nachweis über die Masernimpfpflicht erbracht hat.
 	 */
 	public hatMasernimpfnachweis: boolean = false;
 

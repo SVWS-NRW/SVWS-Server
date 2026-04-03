@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Daten zur Reformpaedagogik.
+ * Sie liefert die Daten zur Reformpädagogik.
  */
 @XmlRootElement
 @Schema(description = "Ein Eintrag im Katalog zur Reformpaedagogik.")

@@ -9,7 +9,7 @@ export class FoerderschwerpunktStatistikGesamt extends JavaObject {
 	public id: number = 0;
 
 	/**
-	 * Die ID des Eintrags im Rahmen der amtlichen Schulstatisik.
+	 * Die ID des Eintrags im Rahmen der amtlichen Schulstatistik.
 	 */
 	public idKatalog: number = -1;
 

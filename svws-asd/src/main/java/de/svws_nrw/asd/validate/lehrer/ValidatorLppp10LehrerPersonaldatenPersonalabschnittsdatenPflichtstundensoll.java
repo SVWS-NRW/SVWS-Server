@@ -31,9 +31,9 @@ public final class ValidatorLppp10LehrerPersonaldatenPersonalabschnittsdatenPfli
 
 	@Override
 	protected boolean pruefe() {
-		final Double pflichtstundensoll = this.pflichtstundensoll.get();
+		final Double pflichtstundensollTemp = this.pflichtstundensoll.get();
 
-		if (pflichtstundensoll != null && (pflichtstundensoll < 0.0 || pflichtstundensoll > 41.0)) {
+		if (pflichtstundensollTemp != null && (pflichtstundensollTemp < 0.0 || pflichtstundensollTemp > 41.0)) {
 			this.addFehler(1,
 					"Unzulässiger Wert im Feld 'pflichtstundensoll'. Zulässig sind im Stundenmodell Werte im Bereich von 0,00 bis 41,00 Wochenstunden. "
 							+ "Im Minutenmodell zwischen 0,00 und 1845,00 Minuten.");

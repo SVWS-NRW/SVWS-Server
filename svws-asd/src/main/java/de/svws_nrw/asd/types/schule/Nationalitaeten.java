@@ -36,7 +36,7 @@ public class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 
 
 	/**
-	 * Erstellt eine Nationalitaeten mit Standardwerten
+	 * Erstellt eine Nationalitäten mit Standardwerten
 	 */
 	public Nationalitaeten() {
 		// nichts zu tun
@@ -76,7 +76,7 @@ public class Nationalitaeten extends CoreTypeSimple<NationalitaetenKatalogEintra
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	@Override
 	public Nationalitaeten getInstance() {

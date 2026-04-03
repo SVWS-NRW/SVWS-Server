@@ -41,7 +41,7 @@ export class LehrerAnrechnungsgrund extends CoreTypeSimple<LehrerAnrechnungsgrun
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	public getInstance(): LehrerAnrechnungsgrund | null {
 		return new LehrerAnrechnungsgrund();

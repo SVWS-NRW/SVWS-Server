@@ -144,12 +144,12 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	public hatAutismus: boolean = false;
 
 	/**
-	 * Gibt an, ob zieldifferent unterrichet wird oder nicht
+	 * Gibt an, ob zieldifferent unterrichtet wird oder nicht
 	 */
 	public hatZieldifferentenUnterricht: boolean = false;
 
 	/**
-	 * Die ID des Haupförderschwerpunktes des Schülers
+	 * Die ID des Hauptförderschwerpunktes des Schülers
 	 */
 	public foerderschwerpunkt1ID: number | null = null;
 
@@ -164,7 +164,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	public sonderpaedagogeID: number | null = null;
 
 	/**
-	 * Die Sprache des bilngualen Zweigs, falls der Schüler im bilingualen Zweig unterrichtet wird
+	 * Die Sprache des bilingualen Zweigs, falls der Schüler im bilingualen Zweig unterrichtet wird
 	 */
 	public bilingualerZweig: string | null = null;
 

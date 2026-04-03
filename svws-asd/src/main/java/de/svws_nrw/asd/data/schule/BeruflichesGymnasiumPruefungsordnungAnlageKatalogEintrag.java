@@ -25,8 +25,8 @@ public class BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag extends Co
 	/** Die Schulgliederung */
 	@Schema(description = "die Schulgliederung", example = "D01")
 	public @NotNull String gliederung = "";
-	/** Der Fachklassenschlüssel */
 
+	/** Der Fachklassenschlüssel */
 	@Schema(description = "der Fachklassenschlüssel", example = "13000")
 	public @NotNull String fachklassenschluessel = "";
 
@@ -34,7 +34,7 @@ public class BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag extends Co
 	@Schema(description = "die Varianten der Stundentafeln eines Bildungsgangs", example = "")
 	public @NotNull List<BeruflichesGymnasiumStundentafel> stundentafeln = new ArrayList<>();
 
-	/** Die Fussnoten zu den Stundentafeln */
+	/** Die Fußnoten zu den Stundentafeln */
 	@Schema(description = "Die Fussnoten zu den Stundentafeln", example = "3) Die in § 4 Absatz 6 genannten Schülerinnen und Schüler haben im Beruflichen Gymnasium mindestens 102 Gesamtwochenstunden Pflichtunterricht.")
 	public @NotNull List<String> fussnoten = new ArrayList<>();
 

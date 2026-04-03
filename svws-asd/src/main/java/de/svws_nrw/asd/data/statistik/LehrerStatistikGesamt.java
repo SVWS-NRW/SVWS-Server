@@ -19,7 +19,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class LehrerStatistikGesamt {
 
-	//**** Nicht Abschnittsbezogene Daten
+	// Nicht abschnittsbezogene Daten
 
 	/** Die ID des Lehrers. */
 	@Schema(description = "Die ID des Lehrers.", example = "4711", accessMode = Schema.AccessMode.READ_ONLY)

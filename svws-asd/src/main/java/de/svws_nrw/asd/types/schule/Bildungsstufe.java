@@ -47,7 +47,7 @@ public class Bildungsstufe extends CoreTypeSimple<BildungsstufeKatalogEintrag, B
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	@Override
 	public Bildungsstufe getInstance() {

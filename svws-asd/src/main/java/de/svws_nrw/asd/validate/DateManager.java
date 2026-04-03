@@ -105,7 +105,7 @@ public final class DateManager implements Comparable<DateManager> {
 
 	/**
 	 * Prüft im Rahmen der Erstellung des Date-Managers, ob die Werte für Tag, Monat und Jahr
-	 * gültig sind. Außerdem wird ermittelt, ob es sich um ein Schaltjahr handelt, und wieviel
+	 * gültig sind. Außerdem wird ermittelt, ob es sich um ein Schaltjahr handelt, und wie viel
 	 * Tage im Monat existieren.
 	 *
 	 * @throws InvalidDateException   wenn die Werte für Tag, Monat oder Jahr fehlerhaft sind
@@ -396,7 +396,7 @@ public final class DateManager implements Comparable<DateManager> {
 
 
 	/**
-	 * Prüft, ob das Datum in dem Interval [von; bis] liegt.
+	 * Prüft, ob das Datum in dem Intervall [von; bis] liegt.
 	 *
 	 * @param von   das erste Jahr, welches akzeptiert wird
 	 * @param bis   das letzte Jahr, welches akzeptiert wird

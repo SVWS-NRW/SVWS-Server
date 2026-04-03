@@ -88,12 +88,12 @@ export class SchuleStammdaten extends JavaObject {
 	public anzJGS_Jahr: number = 0;
 
 	/**
-	 * Die Informationen zu den Abschnitten pro Jahr. (meist Haljahre (2) oder Quartale (4)
+	 * Die Informationen zu den Abschnitten pro Jahr. (meist Halbjahre (2) oder Quartale (4)
 	 */
 	public schuleAbschnitte: SchuleAbschnitte = new SchuleAbschnitte();
 
 	/**
-	 * Die Dauer einer Unterrichsteinheit in Minuten.
+	 * Die Dauer einer Unterrichtseinheit in Minuten.
 	 */
 	public dauerUnterrichtseinheit: number = 0;
 

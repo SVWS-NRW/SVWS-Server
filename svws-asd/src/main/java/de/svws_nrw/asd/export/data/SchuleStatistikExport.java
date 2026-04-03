@@ -62,11 +62,11 @@ public class SchuleStatistikExport {
 	@Schema(description = "die Mailadresse der Schule", example = "info@schule.de")
 	public String email = "";
 
-	/** Die Adresse der Homepage der Schule (Domain-Name) */
+	/** Die Adresse der Homepage der Schule (Domain-Name)*/
 	@Schema(description = "die Adresse der Homepage der Schule", example = "www.schule.de")
 	public String webAdresse = "";
 
-	/** Das Zeitmodel (Unterrichtsstunden- (1) oder Unterrichtsminutenmodell (45)). */
+	/** Das Zeitmodell (Unterrichtsstunden- (1) oder Unterrichtsminutenmodell (45)). */
 	@Schema(description = "Das Zeitmodel (Unterrichtsstunden- (1) oder Unterrichtsminutenmodell (45))", example = "1")
 	public int zeitmodel = 45;
 

@@ -27,7 +27,7 @@ export class BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag extends Co
 	public stundentafeln: List<BeruflichesGymnasiumStundentafel> = new ArrayList<BeruflichesGymnasiumStundentafel>();
 
 	/**
-	 * Die Fussnoten zu den Stundentafeln
+	 * Die Fußnoten zu den Stundentafeln
 	 */
 	public fussnoten: List<string> = new ArrayList<string>();
 

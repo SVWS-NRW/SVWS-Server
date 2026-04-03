@@ -47,7 +47,7 @@ public class Floskelgruppenart extends CoreTypeSimple<FloskelgruppenartKatalogEi
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	@Override
 	public Floskelgruppenart getInstance() {

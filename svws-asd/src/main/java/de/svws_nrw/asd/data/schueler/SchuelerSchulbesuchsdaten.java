@@ -30,7 +30,7 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "die ID der vorher besuchten Schule", example = "12")
 	public Long idVorherigeSchule;
 
-	/** Die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule. */
+	/** Die allgemeine Herkunftsart des Schüler in Bezug auf die Schulform der zuvor besuchten Schule. */
 	@Schema(description = "die allgemeine Herkunftsart des Schüler in Bezug auf die schulform der zuvor besuchten Schule",
 			example = "Grundschule (auch Primarstufe der Volkschule)")
 	public String vorigeAllgHerkunft;

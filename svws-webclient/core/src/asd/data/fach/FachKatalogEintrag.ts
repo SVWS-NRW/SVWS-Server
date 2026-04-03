@@ -25,7 +25,7 @@ export class FachKatalogEintrag extends CoreTypeDataNurSchulformenUndSchulgliede
 	public istFremdsprache: boolean = false;
 
 	/**
-	 * Gibt an, ob es sich um ein Fach der Herkuntftsprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache)
+	 * Gibt an, ob es sich um ein Fach der Herkunftssprache handelt (Unterrichts in der Herkunftssprache oder Herkunftssprache anstelle einer Pflichtfremdsprache)
 	 */
 	public istHKFS: boolean = false;
 

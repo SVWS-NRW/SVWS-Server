@@ -48,7 +48,7 @@ public class HerkunftSonstige extends CoreTypeSimple<HerkunftSonstigeKatalogEint
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	@Override
 	public HerkunftSonstige getInstance() {

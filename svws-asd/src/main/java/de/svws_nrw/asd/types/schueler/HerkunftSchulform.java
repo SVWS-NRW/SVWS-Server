@@ -47,7 +47,7 @@ public class HerkunftSchulform extends CoreTypeSimple<HerkunftSchulformKatalogEi
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	@Override
 	public HerkunftSchulform getInstance() {

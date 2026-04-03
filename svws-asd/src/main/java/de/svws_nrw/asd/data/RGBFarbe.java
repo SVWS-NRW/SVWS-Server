@@ -32,7 +32,7 @@ public class RGBFarbe {
 	}
 
 	/**
-	 * Erstellt eine neue Farbe mit den übergebenenen Komponenten
+	 * Erstellt eine neue Farbe mit den übergebenen Komponenten
 	 *
 	 * @param red     die Rot-Komponente (0-225)
 	 * @param green   die Grün-Komponente (0-225)
@@ -46,7 +46,7 @@ public class RGBFarbe {
 	}
 
 	/**
-	 * Erstellt eine neue Farbe mit den übergebenenen Komponenten
+	 * Erstellt eine neue Farbe mit den übergebenen Komponenten
 	 *
 	 * @param decimal     Die Farbe in Dezimal
 	 */

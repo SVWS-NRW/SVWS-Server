@@ -62,7 +62,7 @@ export class KlassenDaten extends JavaObject {
 	public idVorgaengerklasse: number | null = null;
 
 	/**
-	 * Das Kürzel der Vorgängerklasse vor der letzen Versetzung.
+	 * Das Kürzel der Vorgängerklasse vor der letzten Versetzung.
 	 */
 	public kuerzelVorgaengerklasse: string | null = null;
 

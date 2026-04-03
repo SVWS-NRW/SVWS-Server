@@ -21,7 +21,7 @@ public final class ValidatorLppp00LehrerPersonaldatenPersonalabschnittsdatenPfli
 	 *
 	 * @param pflichtstundensoll     das Pflichtstundensoll
 	 * @param idEinsatzstatus        der Einsatzstatus
-	 * @param idBeschaeftigungsart   die Beschaeftigungsart
+	 * @param idBeschaeftigungsart   die Beschäftigungsart
 	 * @param kontext                der Kontext des Validators
 	 */
 	public ValidatorLppp00LehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll(

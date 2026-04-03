@@ -35,7 +35,7 @@ public final class ValidatorLpl10LehrerPersonaldatenLehramt extends Validator {
 	@Override
 	protected boolean pruefe() {
 
-		// Fehlerkürzel: LPL2 Überprüfung, ob bei einer Lehrerkraft ein Lehramt mehrmals eingetragen wurde
+		// Fehlerkürzel: LPL2 Überprüfung, ob bei einer Lehrkraft ein Lehramt mehrmals eingetragen wurde
 		final @NotNull Map<Long, LehrerLehramtEintrag> lehramtMap = new HashMap<>();
 
 		for (final @NotNull LehrerLehramtEintrag lehrerLehramtEintrag : this.lehraemter.get()) {
@@ -43,7 +43,7 @@ public final class ValidatorLpl10LehrerPersonaldatenLehramt extends Validator {
 			if (lehramtMap.put(lehrerLehramtEintrag.idKatalogLehramt, lehrerLehramtEintrag) != null) {
 				try {
 					this.addFehler(2, "Das Lehramt '" + LehrerLehramt.data().getEintragByIDOrException(lehrerLehramtEintrag.idKatalogLehramt).text + "' ist mehrfach eingetragen. Bitte löschen Sie die überflüssigen Einträge.");
-				} catch (@SuppressWarnings("unused") CoreTypeException e) {
+				} catch (@SuppressWarnings("unused") final CoreTypeException e) {
 					this.addFehler(2, "Das Lehramt '" + lehrerLehramtEintrag.idKatalogLehramt + "' ist mehrfach eingetragen. Bitte löschen Sie die überflüssigen Einträge.");
 				}
 				return false;

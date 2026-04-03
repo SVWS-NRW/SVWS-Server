@@ -1,14 +1,14 @@
 package de.svws_nrw.asd.data.schule;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.asd.data.CoreTypeData;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Werte für den Katalog der in der amtlichenn Schulstatistik berücksichtigten Nationalitäten.
+ * Sie liefert die Werte für den Katalog der in der amtlichen Schulstatistik berücksichtigten Nationalitäten.
  */
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Nationalitäten.")

@@ -41,7 +41,7 @@ export class HerkunftSchulform extends CoreTypeSimple<HerkunftSchulformKatalogEi
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	public getInstance(): HerkunftSchulform | null {
 		return new HerkunftSchulform();

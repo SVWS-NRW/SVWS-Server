@@ -121,7 +121,7 @@ public class SchuelerStammdaten {
 
 	// **** Daten zum Migrationshintergrund
 
-	/** Gibt an, ob ein Migrationshintergrund bei dems Schülerdatensatz vorhanden ist. */
+	/** Gibt an, ob ein Migrationshintergrund bei dem Schülerdatensatz vorhanden ist. */
 	@Schema(description = "gibt an, ob ein Migrationshintergrund vorhanden ist", example = "true")
 	public boolean hatMigrationshintergrund;
 
@@ -192,7 +192,7 @@ public class SchuelerStammdaten {
 	@Schema(description = "gibt an, ob der Schüler die Berufsschulpflicht erfüllt hat oder nicht", example = "true")
 	public boolean istBerufsschulpflichtErfuellt;
 
-	/** Gibt an, ob der Schüler einen Nachweis über die Maserimpfpflicht erbracht hat. */
+	/** Gibt an, ob der Schüler einen Nachweis über die Masernimpfpflicht erbracht hat. */
 	@Schema(description = "gibt an, ob der Schüler einen Nachweis über die Masernimpfpflicht erbracht hat", example = "true")
 	public boolean hatMasernimpfnachweis;
 

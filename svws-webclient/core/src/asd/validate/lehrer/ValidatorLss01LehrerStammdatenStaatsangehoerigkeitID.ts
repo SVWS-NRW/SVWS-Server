@@ -18,7 +18,7 @@ export class ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID extends Valida
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
 	 * @param daten                 die StaatsangehoerigkeitID des Lehrers
-	 * @param idRechtsverhaeltnis   das Rechtsverhaeltnis des Lehrers
+	 * @param idRechtsverhaeltnis   das Rechtsverhältnis des Lehrers
 	 * @param kontext               der Kontext des Validators
 	 */
 	public constructor(daten: Supplier<string>, idRechtsverhaeltnis: Supplier<number>, kontext: ValidatorKontext) {

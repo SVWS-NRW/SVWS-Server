@@ -43,22 +43,24 @@ import de.svws_nrw.asd.data.lehrer.LehrerPflichtstundensollVollzeitKatalogEintra
 import de.svws_nrw.asd.data.lehrer.LehrerRechtsverhaeltnisKatalogEintrag;
 import de.svws_nrw.asd.data.lehrer.LehrerZugangsgrundKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.BetreuungsartKatalogEintrag;
-import de.svws_nrw.asd.data.schueler.HerkunftsartenKatalogEintrag;
-import de.svws_nrw.asd.data.schueler.HerkunftSchulformKatalogEintrag;
-import de.svws_nrw.asd.data.schueler.HerkunftSonstigeKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftBildungsgangKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.HerkunftBildungsgangTypKatalogEintrag;
+import de.svws_nrw.asd.data.schueler.HerkunftSchulformKatalogEintrag;
+import de.svws_nrw.asd.data.schueler.HerkunftSonstigeKatalogEintrag;
+import de.svws_nrw.asd.data.schueler.HerkunftsartenKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.BeruflichesGymnasiumPruefungsordnungAnlageKatalogEintrag;
 import de.svws_nrw.asd.data.schule.BerufskollegAnlageKatalogEintrag;
 import de.svws_nrw.asd.data.schule.BerufskollegBerufsebeneKatalogEintrag;
 import de.svws_nrw.asd.data.schule.BildungsgangTypKatalogEintrag;
+import de.svws_nrw.asd.data.schule.BildungsstufeKatalogEintrag;
 import de.svws_nrw.asd.data.schule.EinwilligungsschluesselKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FloskelgruppenartKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag;
 import de.svws_nrw.asd.data.schule.FormOffenerGanztagKatalogEintrag;
+import de.svws_nrw.asd.data.schule.HerkunftsschulnummerKatalogEintrag;
 import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
 import de.svws_nrw.asd.data.schule.NationalitaetenKatalogEintrag;
 import de.svws_nrw.asd.data.schule.OrganisationsformKatalogEintrag;
@@ -67,10 +69,8 @@ import de.svws_nrw.asd.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
-import de.svws_nrw.asd.data.schule.BildungsstufeKatalogEintrag;
 import de.svws_nrw.asd.data.schule.TerminKatalogEintrag;
 import de.svws_nrw.asd.data.schule.VerkehrsspracheKatalogEintrag;
-import de.svws_nrw.asd.data.schule.HerkunftsschulnummerKatalogEintrag;
 import de.svws_nrw.asd.types.CoreType;
 import de.svws_nrw.asd.types.CoreTypeSimple;
 import de.svws_nrw.asd.types.Note;
@@ -107,12 +107,12 @@ import de.svws_nrw.asd.types.lehrer.LehrerPflichtstundensollVollzeit;
 import de.svws_nrw.asd.types.lehrer.LehrerRechtsverhaeltnis;
 import de.svws_nrw.asd.types.lehrer.LehrerZugangsgrund;
 import de.svws_nrw.asd.types.schueler.Betreuungsart;
-import de.svws_nrw.asd.types.schueler.Herkunftsarten;
-import de.svws_nrw.asd.types.schueler.HerkunftSchulform;
-import de.svws_nrw.asd.types.schueler.HerkunftSonstige;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
 import de.svws_nrw.asd.types.schueler.HerkunftBildungsgang;
 import de.svws_nrw.asd.types.schueler.HerkunftBildungsgangTyp;
+import de.svws_nrw.asd.types.schueler.HerkunftSchulform;
+import de.svws_nrw.asd.types.schueler.HerkunftSonstige;
+import de.svws_nrw.asd.types.schueler.Herkunftsarten;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen;
@@ -123,24 +123,24 @@ import de.svws_nrw.asd.types.schule.BerufskollegBerufsebene2;
 import de.svws_nrw.asd.types.schule.BerufskollegBerufsebene3;
 import de.svws_nrw.asd.types.schule.BerufskollegBildungsgangTyp;
 import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
+import de.svws_nrw.asd.types.schule.Bildungsstufe;
 import de.svws_nrw.asd.types.schule.Einwilligungsschluessel;
 import de.svws_nrw.asd.types.schule.Floskelgruppenart;
 import de.svws_nrw.asd.types.schule.Foerderschwerpunkt;
 import de.svws_nrw.asd.types.schule.FormOffenerGanztag;
+import de.svws_nrw.asd.types.schule.Herkunftsschulnummer;
 import de.svws_nrw.asd.types.schule.Kindergartenbesuch;
 import de.svws_nrw.asd.types.schule.Nationalitaeten;
+import de.svws_nrw.asd.types.schule.Reformpaedagogik;
 import de.svws_nrw.asd.types.schule.Religion;
 import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
 import de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
-import de.svws_nrw.asd.types.schule.Bildungsstufe;
 import de.svws_nrw.asd.types.schule.Termin;
 import de.svws_nrw.asd.types.schule.Verkehrssprache;
 import de.svws_nrw.asd.types.schule.WeiterbildungskollegBildungsgangTyp;
 import de.svws_nrw.asd.types.schule.WeiterbildungskollegOrganisationsformen;
-import de.svws_nrw.asd.types.schule.Herkunftsschulnummer;
-import de.svws_nrw.asd.types.schule.Reformpaedagogik;
 import de.svws_nrw.asd.utils.json.JsonCoreTypeData;
 import de.svws_nrw.asd.utils.json.JsonReader;
 import jakarta.validation.constraints.NotNull;
@@ -167,13 +167,13 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 	/** Die Klasse der Katalog-Einträge des Core-Types */
 	public final Class<T> dataClass;
 
-	/** Der Pfad zu der Ressources des Core-Types */
+	/** Der Pfad zu der Ressourcen des Core-Types */
 	public final String path;
 
 	/** Die Daten des Core-Types, welche aus der Ressource geladen wurden */
 	private JsonCoreTypeData<T> data;
 
-	/** Die möglichen Werte des Core-Types - bei Simple-Core-Types werden diese Lazy initialisiert. */
+	/** Die möglichen Werte des Core-Types - bei Simple-Core-Types werden diese "lazy" initialisiert. */
 	private U[] values = null;
 
 	/** Der Manager für die Core-Type-Daten */
@@ -274,7 +274,7 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 
 
 	/**
-	 * Initialisiert alle Core-Type mit den Daten aus den angegeben ressourcen
+	 * Initialisiert alle Core-Type mit den Daten aus den angegeben Ressourcen
 	 */
 	public static void initAll() {
 		// Lade die Daten
@@ -290,7 +290,7 @@ public final class CoreTypeRessource<T extends CoreTypeData, U extends CoreType<
 	 * Reinitialisieren der Values eines CoreTypeSimple.
 	 *
 	 * @param <S>                der Typ des Core-Types
-	 * @param jsonCoreTypeData   die Daten für die erneute Initilialisierung
+	 * @param jsonCoreTypeData   die Daten für die erneute Initialisierung
 	 *
 	 * @throws CoreTypeRessourceException wenn bei der Initialisierung eines Simple-Core-Types ein Fehler auftritt
 	 */

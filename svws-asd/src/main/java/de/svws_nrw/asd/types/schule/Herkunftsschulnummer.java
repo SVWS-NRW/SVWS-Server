@@ -49,7 +49,7 @@ public final class Herkunftsschulnummer extends CoreTypeSimple<Herkunftsschulnum
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	@Override
 	public Herkunftsschulnummer getInstance() {

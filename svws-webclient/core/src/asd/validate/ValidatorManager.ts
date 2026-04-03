@@ -61,7 +61,7 @@ export class ValidatorManager extends JavaObject {
 
 
 	/**
-	 * Erstellt einen neuen Manager für die übergebene Schulform und die Entsprechene Validierungsumgebung
+	 * Erstellt einen neuen Manager für die übergebene Schulform und die entsprechende Validierungsumgebung
 	 * (Zebras oder SVWS)
 	 *
 	 * @param zebras      die Umgebung, in der gerade validiert wird: true: ZeBrAS  false: SVWS
@@ -240,7 +240,7 @@ export class ValidatorManager extends JavaObject {
 	/**
 	 * Holt das Objekt aus der HashMap oder erzeugt es wenn es nicht vorhanden ist.
 	 *
-	 * @param art - die Fehlerart, für die die Liste ggfs. erzeugt wird
+	 * @param art - die Fehlerart, für die die Liste ggf. erzeugt wird
 	 * @param map - die HashMap mit den ArrayLists
 	 *
 	 * @return das benötigte Objekt
@@ -257,7 +257,7 @@ export class ValidatorManager extends JavaObject {
 	/**
 	 * holt das Objekt aus der HashMap oder erzeugt es wenn es nicht vorhanden ist.
 	 *
-	 * @param schulform - die Fehlerart, für die die Liste ggfs. erzeugt wird
+	 * @param schulform - die Fehlerart, für die die Liste ggf. erzeugt wird
 	 * @param map - die HashMap mit den ArrayLists
 	 * @return das benötigte Objekt
 	 */

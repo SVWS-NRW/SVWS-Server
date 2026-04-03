@@ -60,7 +60,7 @@ public class JsonCoreTypeData<T extends CoreTypeData> {
 	 */
 	public JsonCoreTypeData(final String json, final Class<T> clazz) throws IOException {
 		_clazz = clazz;
-		// Lade die JSON-Datei und durchwandere das JSON-Objekt als Baumstruktor
+		// Lade die JSON-Datei und durchwandere das JSON-Objekt als Baumstruktur
 		final JsonNode root = mapper.readTree(json);
 		// Prüfe den Aufbau der root-Node
 		final JsonNode version = root.findValue("version");
@@ -140,7 +140,7 @@ public class JsonCoreTypeData<T extends CoreTypeData> {
 	 */
 	public String serialize() {
 		final OutputStream outputStream = new ByteArrayOutputStream();
-		// Identer mit Tab-Einrückung und Unix-LineFeed erstellen.
+		// Indenter mit Tab-Einrückung und Unix-LineFeed erstellen.
 		final DefaultPrettyPrinter.Indenter indenter = new DefaultIndenter("\t", "\n");
 		final Separators separators = new Separators(Separators.DEFAULT_ROOT_VALUE_SEPARATOR, //
 				':', // objectFieldValueSeparator
@@ -156,7 +156,7 @@ public class JsonCoreTypeData<T extends CoreTypeData> {
 		printer.indentObjectsWith(indenter);
 		// Sorgt für einen formatierten Json-String mittels PrettyPrinter.
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
-		// Create a new root node
+		// Erzeugt einen neuen Wurzel-Knoten
 		final ObjectNode rootNode = mapper.createObjectNode();
 		rootNode.put("version", this._version);
 		final ArrayNode datenArrayNode = mapper.createArrayNode();

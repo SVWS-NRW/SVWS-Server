@@ -82,7 +82,7 @@ public enum Foerderschwerpunkt implements @NotNull CoreType<FoerderschwerpunktKa
 
 
 	/**
-	 * Prüft, ob der Förderschwerpunkt in dem angebenen Schuljahr bei der angegeben Schulform zulässig ist.
+	 * Prüft, ob der Förderschwerpunkt in dem angegebenen Schuljahr bei der angegeben Schulform zulässig ist.
 	 *
 	 * @param schuljahr   das Schuljahr
 	 * @param schulform   die Schulform

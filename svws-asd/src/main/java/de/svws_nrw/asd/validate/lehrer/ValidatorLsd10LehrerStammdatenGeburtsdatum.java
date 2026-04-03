@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLsd10LehrerStammdatenGeburtsdatum extends Validator {
 
-	/** Das Geburtsdatumm des Lehrers */
+	/** Das Geburtsdatum des Lehrers */
 	private final @NotNull Supplier<String> daten;
 
 	/**
@@ -35,11 +35,11 @@ public final class ValidatorLsd10LehrerStammdatenGeburtsdatum extends Validator 
 		DateManager geburtsdatum = null;
 			try {
 				geburtsdatum = DateManager.from(daten.get());
-			} catch (InvalidDateException e) {
+			} catch (final InvalidDateException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		final DateManager finalGeburtsdatum = geburtsdatum; //wegen Lambda hier nochmal als final.
+		final DateManager finalGeburtsdatum = geburtsdatum; // wegen Lambda hier nochmal als final.
 
 		final int schuljahr = kontext().getSchuljahr();
 

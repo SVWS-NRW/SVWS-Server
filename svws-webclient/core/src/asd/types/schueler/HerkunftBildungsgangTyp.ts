@@ -35,7 +35,7 @@ export class HerkunftBildungsgangTyp extends JavaEnum<HerkunftBildungsgangTyp> i
 	public static readonly BF: HerkunftBildungsgangTyp = new HerkunftBildungsgangTyp("BF", 3, );
 
 	/**
-	 * Berufskolleg: Berufschule
+	 * Berufskolleg: Berufsschule
 	 */
 	public static readonly BS: HerkunftBildungsgangTyp = new HerkunftBildungsgangTyp("BS", 4, );
 

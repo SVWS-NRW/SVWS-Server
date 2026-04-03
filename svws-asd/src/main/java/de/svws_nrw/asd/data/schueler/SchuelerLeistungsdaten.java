@@ -1,9 +1,9 @@
 package de.svws_nrw.asd.data.schueler;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Die Klasse liefert die Leistungsdaten eines Lernabschnitts eines Schülers zurück.
@@ -26,7 +26,7 @@ public class SchuelerLeistungsdaten {
 	@Schema(description = "die ID des Faches, auf welches sich die Leistungsdaten beziehen", example = "46")
 	public long fachID = -1;
 
-	/** Die ID des Kurses, auf welches sich die Leistungsdaten beziehen - bei Klassen unterricht NULL. */
+	/** Die ID des Kurses, auf welches sich die Leistungsdaten beziehen - bei Klassenunterricht NULL. */
 	@Schema(description = "die ID des Kurses, auf welches sich die Leistungsdaten beziehen - bei Klassen unterricht NULL", example = "7732")
 	public Long kursID = null;
 
@@ -79,7 +79,7 @@ public class SchuelerLeistungsdaten {
 	@Schema(description = "das Kürzel der erteilten Note - es können auch Pseudonoten eingetragen werden (z.B. AT)", example = "3-")
 	public String note = null;
 
-	/** Das Kürzel der erteilten Qurtalsnote - es können auch Pseudonoten eingetragen werden (z.B. AT). */
+	/** Das Kürzel der erteilten Quartalsnote - es können auch Pseudonoten eingetragen werden (z.B. AT). */
 	@Schema(description = "das Kürzel der erteilten Quartalsnote - es können auch Pseudonoten eingetragen werden (z.B. AT)", example = "3-")
 	public String noteQuartal = null;
 

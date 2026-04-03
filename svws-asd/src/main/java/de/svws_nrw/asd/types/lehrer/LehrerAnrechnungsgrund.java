@@ -47,7 +47,7 @@ public class LehrerAnrechnungsgrund extends CoreTypeSimple<LehrerAnrechnungsgrun
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	@Override
 	public LehrerAnrechnungsgrund getInstance() {

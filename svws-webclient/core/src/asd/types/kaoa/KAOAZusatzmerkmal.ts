@@ -100,12 +100,12 @@ export class KAOAZusatzmerkmal extends JavaEnum<KAOAZusatzmerkmal> implements Co
 	public static readonly SBO_2_6_2: KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_2_6_2", 15, );
 
 	/**
-	 * KAoA-Zusatzmerkmal: Berufwahlpass NRW SekI/II erhalten
+	 * KAoA-Zusatzmerkmal: Berufswahlpass NRW SekI/II erhalten
 	 */
 	public static readonly SBO_3_4_1: KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_3_4_1", 16, );
 
 	/**
-	 * KAoA-Zusatzmerkmal: Berufwahlpass NRW Leichte Sprache erhalten
+	 * KAoA-Zusatzmerkmal: Berufswahlpass NRW Leichte Sprache erhalten
 	 */
 	public static readonly SBO_3_4_2: KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_3_4_2", 17, );
 
@@ -155,12 +155,12 @@ export class KAOAZusatzmerkmal extends JavaEnum<KAOAZusatzmerkmal> implements Co
 	public static readonly SBO_4_3_2: KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_4_3_2", 26, );
 
 	/**
-	 * KAoA-Zusatzmerkmal: An der Festellung des funktionalen Sehvermögens teilgenommen
+	 * KAoA-Zusatzmerkmal: An der Feststellung des funktionalen Sehvermögens teilgenommen
 	 */
 	public static readonly SBO_4_4_1: KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_4_4_1", 27, );
 
 	/**
-	 * KAoA-Zusatzmerkmal: Keine Teilnahme an der Feststellung des funktionalen Sehrvermögens
+	 * KAoA-Zusatzmerkmal: Keine Teilnahme an der Feststellung des funktionalen Sehvermögens
 	 */
 	public static readonly SBO_4_4_2: KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_4_4_2", 28, );
 

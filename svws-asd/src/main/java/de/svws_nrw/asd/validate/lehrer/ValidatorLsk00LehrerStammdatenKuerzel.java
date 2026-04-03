@@ -13,13 +13,13 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class ValidatorLsk00LehrerStammdatenKuerzel extends Validator {
 
-	/** Das Geburtsdatumm des Lehrers */
+	/** Das Geburtsdatum des Lehrers */
 	private final @NotNull Supplier<@AllowNull String> daten;
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
 	 *
-	 * @param daten     das Geburtsdatumm des Lehrers
+	 * @param daten     das Geburtsdatum des Lehrers
 	 * @param kontext   der Kontext des Validators
 	 */
 	public ValidatorLsk00LehrerStammdatenKuerzel(final @NotNull Supplier<@AllowNull String> daten,

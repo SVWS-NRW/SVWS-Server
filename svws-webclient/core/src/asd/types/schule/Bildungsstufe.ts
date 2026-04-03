@@ -41,7 +41,7 @@ export class Bildungsstufe extends CoreTypeSimple<BildungsstufeKatalogEintrag, B
 	}
 
 	/**
-	 * Erzeugt eine Instance dieser Klasse.
+	 * Erzeugt eine Instanz dieser Klasse.
 	 */
 	public getInstance(): Bildungsstufe | null {
 		return new Bildungsstufe();
