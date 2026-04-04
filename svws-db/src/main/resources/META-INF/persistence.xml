@@ -443,6 +443,7 @@
         <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten</class>
         <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten</class>
         <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleistungen</class>
+        <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZP10</class>
         <class>de.svws_nrw.db.dto.current.uv.DTOUvFach</class>
         <class>de.svws_nrw.db.dto.current.uv.DTOUvKlasse</class>
         <class>de.svws_nrw.db.dto.current.uv.DTOUvKurs</class>

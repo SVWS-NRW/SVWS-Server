@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "TimestampsNotenmodulCredentials")
-@JsonPropertyOrder({"idLehrer", "tsPasswordHash"})
+@JsonPropertyOrder({"idLehrer", "tsPasswordHash", "tsArt2FA", "tsTotpSecret", "tsIstErstanmeldung"})
 public final class DTOTimestampsNotenmodulCredentials {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -45,6 +45,24 @@ public final class DTOTimestampsNotenmodulCredentials {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsPasswordHash */
 	public static final String QUERY_LIST_BY_TSPASSWORDHASH = "SELECT e FROM DTOTimestampsNotenmodulCredentials e WHERE e.tsPasswordHash IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsArt2FA */
+	public static final String QUERY_BY_TSART2FA = "SELECT e FROM DTOTimestampsNotenmodulCredentials e WHERE e.tsArt2FA = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsArt2FA */
+	public static final String QUERY_LIST_BY_TSART2FA = "SELECT e FROM DTOTimestampsNotenmodulCredentials e WHERE e.tsArt2FA IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsTotpSecret */
+	public static final String QUERY_BY_TSTOTPSECRET = "SELECT e FROM DTOTimestampsNotenmodulCredentials e WHERE e.tsTotpSecret = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsTotpSecret */
+	public static final String QUERY_LIST_BY_TSTOTPSECRET = "SELECT e FROM DTOTimestampsNotenmodulCredentials e WHERE e.tsTotpSecret IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsIstErstanmeldung */
+	public static final String QUERY_BY_TSISTERSTANMELDUNG = "SELECT e FROM DTOTimestampsNotenmodulCredentials e WHERE e.tsIstErstanmeldung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsIstErstanmeldung */
+	public static final String QUERY_LIST_BY_TSISTERSTANMELDUNG = "SELECT e FROM DTOTimestampsNotenmodulCredentials e WHERE e.tsIstErstanmeldung IN ?1";
+
 	/** die ID des Lehrers */
 	@Id
 	@Column(name = "idLehrer")
@@ -55,6 +73,21 @@ public final class DTOTimestampsNotenmodulCredentials {
 	@Column(name = "tsPasswordHash")
 	@JsonProperty
 	public String tsPasswordHash;
+
+	/** Der Zeitstempel der letzten Änderung an der Art der Zwei-Faktor-Authentifizierung. */
+	@Column(name = "tsArt2FA")
+	@JsonProperty
+	public String tsArt2FA;
+
+	/** Der Zeitstempel der letzten Änderung an dem Shared-Secret für TOTP. */
+	@Column(name = "tsTotpSecret")
+	@JsonProperty
+	public String tsTotpSecret;
+
+	/** Der Zeitstempel der letzten Änderung an der Information, ob es sich bei der nächsten Anmeldung um eine erstanmeldung handelt oder nicht. */
+	@Column(name = "tsIstErstanmeldung")
+	@JsonProperty
+	public String tsIstErstanmeldung;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOTimestampsNotenmodulCredentials ohne eine Initialisierung der Attribute.
@@ -67,13 +100,28 @@ public final class DTOTimestampsNotenmodulCredentials {
 	 * Erstellt ein neues Objekt der Klasse DTOTimestampsNotenmodulCredentials ohne eine Initialisierung der Attribute.
 	 * @param idLehrer   der Wert für das Attribut idLehrer
 	 * @param tsPasswordHash   der Wert für das Attribut tsPasswordHash
+	 * @param tsArt2FA   der Wert für das Attribut tsArt2FA
+	 * @param tsTotpSecret   der Wert für das Attribut tsTotpSecret
+	 * @param tsIstErstanmeldung   der Wert für das Attribut tsIstErstanmeldung
 	 */
-	public DTOTimestampsNotenmodulCredentials(final long idLehrer, final String tsPasswordHash) {
+	public DTOTimestampsNotenmodulCredentials(final long idLehrer, final String tsPasswordHash, final String tsArt2FA, final String tsTotpSecret, final String tsIstErstanmeldung) {
 		this.idLehrer = idLehrer;
 		if (tsPasswordHash == null) {
 			throw new NullPointerException("tsPasswordHash must not be null");
 		}
 		this.tsPasswordHash = tsPasswordHash;
+		if (tsArt2FA == null) {
+			throw new NullPointerException("tsArt2FA must not be null");
+		}
+		this.tsArt2FA = tsArt2FA;
+		if (tsTotpSecret == null) {
+			throw new NullPointerException("tsTotpSecret must not be null");
+		}
+		this.tsTotpSecret = tsTotpSecret;
+		if (tsIstErstanmeldung == null) {
+			throw new NullPointerException("tsIstErstanmeldung must not be null");
+		}
+		this.tsIstErstanmeldung = tsIstErstanmeldung;
 	}
 
 
@@ -108,7 +156,7 @@ public final class DTOTimestampsNotenmodulCredentials {
 	 */
 	@Override
 	public String toString() {
-		return "DTOTimestampsNotenmodulCredentials(idLehrer=" + this.idLehrer + ", tsPasswordHash=" + this.tsPasswordHash + ")";
+		return "DTOTimestampsNotenmodulCredentials(idLehrer=" + this.idLehrer + ", tsPasswordHash=" + this.tsPasswordHash + ", tsArt2FA=" + this.tsArt2FA + ", tsTotpSecret=" + this.tsTotpSecret + ", tsIstErstanmeldung=" + this.tsIstErstanmeldung + ")";
 	}
 
 }

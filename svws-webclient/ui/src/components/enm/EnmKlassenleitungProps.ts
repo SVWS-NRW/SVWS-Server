@@ -1,13 +1,13 @@
 import type { EnmManager } from "./EnmManager";
-import type { ENMv1LeistungBemerkungen } from "../../../../core/src/core/data/enm/v1/ENMv1LeistungBemerkungen";
-import type { ENMv1Lernabschnitt } from "../../../../core/src/core/data/enm/v1/ENMv1Lernabschnitt";
-import type { ENMv1Klasse } from "../../../../core/src/core/data/enm/v1/ENMv1Klasse";
+import type { ENMv2LeistungBemerkungen } from "../../../../core/src/core/data/enm/v2/ENMv2LeistungBemerkungen";
+import type { ENMv2Lernabschnitt } from "../../../../core/src/core/data/enm/v2/ENMv2Lernabschnitt";
+import type { ENMv2Klasse } from "../../../../core/src/core/data/enm/v2/ENMv2Klasse";
 
 export interface EnmKlassenleitungProps {
 	enmManager: () => EnmManager;
-	auswahl: () => Array<ENMv1Klasse>;
-	patchBemerkungen: (id: number, data: ENMv1LeistungBemerkungen, patch: Partial<ENMv1LeistungBemerkungen>) => Promise<void>;
-	patchLernabschnitt: (data: ENMv1Lernabschnitt, patch: Partial<ENMv1Lernabschnitt>) => Promise<void>;
+	auswahl: () => Array<ENMv2Klasse>;
+	patchBemerkungen: (id: number, data: ENMv2LeistungBemerkungen, patch: Partial<ENMv2LeistungBemerkungen>) => Promise<void>;
+	patchLernabschnitt: (data: ENMv2Lernabschnitt, patch: Partial<ENMv2Lernabschnitt>) => Promise<void>;
 	columnsVisible: () => Map<string, boolean | null>;
 	setColumnsVisible: (columns: Map<string, boolean | null>) => Promise<void>;
 }

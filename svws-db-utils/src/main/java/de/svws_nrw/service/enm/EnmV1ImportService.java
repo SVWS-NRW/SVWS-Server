@@ -316,7 +316,7 @@ public class EnmV1ImportService {
 			final DTOTimestampsNotenmodulCredentials credTS = kontext.mapLehrerCredsTimestamps.get(enmLehrer.id);
 			if (isTimestampAfter(enmLehrer.tsPasswordHash, credTS == null ? null : credTS.tsPasswordHash)) {
 				if (cred == null) {
-					cred = new DTONotenmodulCredentials(enmLehrer.id, "", enmLehrer.passwordHash);
+					cred = new DTONotenmodulCredentials(enmLehrer.id, "", enmLehrer.passwordHash, 0, true);
 				} else {
 					cred.passwordHash = enmLehrer.passwordHash;
 				}

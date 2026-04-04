@@ -1,10 +1,10 @@
 import type { ENMv2Abteilung } from "../../../../../core/src/core/data/enm/v2/ENMv2Abteilung";
-import type { ENMv1Jahrgang } from "../../../../../core/src/core/data/enm/v1/ENMv1Jahrgang";
-import type { ENMv1Klasse } from "../../../../../core/src/core/data/enm/v1/ENMv1Klasse";
+import type { ENMv2Jahrgang } from "../../../../../core/src/core/data/enm/v2/ENMv2Jahrgang";
+import type { ENMv2Klasse } from "../../../../../core/src/core/data/enm/v2/ENMv2Klasse";
 import type { Comparator } from "../../../../../core/src/java/util/Comparator";
 
 /** Ein Java-Comparator für den Vergleich zweier ENM-Klassen-Objekte zur Sortierung in Listen und anderen Datenstrukturen */
-export const comparatorENMKlasse = <Comparator<ENMv1Klasse>>{ compare: (a: ENMv1Klasse, b: ENMv1Klasse): number => {
+export const comparatorENMKlasse = <Comparator<ENMv2Klasse>>{ compare: (a: ENMv2Klasse, b: ENMv2Klasse): number => {
 	// Vergleiche zuerst anhand der gesetzten Sortierung der Klasse...
 	const tmp = a.sortierung - b.sortierung;
 	if (tmp !== 0) {
@@ -34,7 +34,7 @@ export const comparatorENMAbteilung = <Comparator<ENMv2Abteilung>>{ compare: (a:
 } };
 
 /** Ein Java-Comparator für den Vergleich zweier ENM-Jahrgangs-Objekte zur Sortierung in Listen und anderen Datenstrukturen */
-export const comparatorENMJahrgang = <Comparator<ENMv1Jahrgang>>{ compare: (a: ENMv1Jahrgang, b: ENMv1Jahrgang): number => {
+export const comparatorENMJahrgang = <Comparator<ENMv2Jahrgang>>{ compare: (a: ENMv2Jahrgang, b: ENMv2Jahrgang): number => {
 	// Vergleiche zuerst anhand der gesetzten Sortierung der Jahrgänge...
 	const tmp = a.sortierung - b.sortierung;
 	if (tmp !== 0) {

@@ -40,6 +40,7 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerAnkreuzko
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleistungen;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZP10;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.repo.enm.NotenmodulCredentialsRepository;
 import de.svws_nrw.repo.enm.NotenmodulCredentialsTimestampsRepository;
@@ -68,6 +69,7 @@ import de.svws_nrw.repo.schueler.SchuelerRepository;
 import de.svws_nrw.repo.schueler.SchuelerTeilleistungenRepository;
 import de.svws_nrw.repo.schueler.SchuelerTeilleistungenTimestampsRepository;
 import de.svws_nrw.repo.schueler.SchuelerZP10Repository;
+import de.svws_nrw.repo.schueler.SchuelerZP10TimestampsRepository;
 import de.svws_nrw.repo.schule.AbteilungenKlassenRepository;
 import de.svws_nrw.repo.schule.AbteilungenRepository;
 import de.svws_nrw.repo.schule.SchuleRepository;
@@ -136,6 +138,9 @@ public final class EnmV2GetServiceKontext {
 
 	/** Das Repository für den Zugriff auf die Schüler-ZP10-Daten */
 	private final SchuelerZP10Repository schuelerZP10Repository;
+
+	/** Das Repository für den Zugriff auf die Zeitstempel für die Schüler-ZP10-Daten */
+	private final SchuelerZP10TimestampsRepository schuelerZP10TimestampsRepository;
 
 	/** Das Repository für den Zugriff auf die Kurse */
 	private final KurseRepository kurseRepository;
@@ -273,6 +278,9 @@ public final class EnmV2GetServiceKontext {
 	/** Eine Map mit den ZP10-Daten von Schülern zugeordnet zu deren ID */
 	private Map<Long, List<DTOSchuelerZP10>> mapZP10;
 
+	/** Eine Map mit den Zeitstempeln der Schüler-ZP10-Daten zugeordnet zu der IDs der ZP10-Daten */
+	private Map<Long, DTOTimestampsSchuelerZP10> mapZP10Timestamps;
+
 	/** Die Liste der Floskelgruppen */
 	private List<DTOFloskelgruppen> listFloskelgruppen;
 
@@ -301,6 +309,7 @@ public final class EnmV2GetServiceKontext {
 			final SchuelerAnkreuzkompetenzenRepository schuelerAnkreuzkompetenzenRepository,
 			final SchuelerAnkreuzkompetenzenTimestampsRepository schuelerAnkreuzkompetenzenTimestampsRepository,
 			final SchuelerZP10Repository schuelerZP10Repository,
+			final SchuelerZP10TimestampsRepository schuelerZP10TimestampsRepository,
 			final KurseRepository kurseRepository,
 			final KlassenRepository klassenRepository,
 			final KlassenleitungenRepository klassenleitungenRepository,
@@ -333,6 +342,7 @@ public final class EnmV2GetServiceKontext {
 		this.schuelerAnkreuzkompetenzenRepository = schuelerAnkreuzkompetenzenRepository;
 		this.schuelerAnkreuzkompetenzenTimestampsRepository = schuelerAnkreuzkompetenzenTimestampsRepository;
 		this.schuelerZP10Repository = schuelerZP10Repository;
+		this.schuelerZP10TimestampsRepository = schuelerZP10TimestampsRepository;
 		this.kurseRepository = kurseRepository;
 		this.klassenRepository = klassenRepository;
 		this.klassenleitungenRepository = klassenleitungenRepository;
@@ -370,6 +380,7 @@ public final class EnmV2GetServiceKontext {
 	 * @param schuelerAnkreuzkompetenzenRepository             das Repository für den Zugriff auf die Schüler-Ankreuzkompetenzen
 	 * @param schuelerAnkreuzkompetenzenTimestampsRepository   das Repository für den Zugriff auf die Zeitstempel für die Schüler-Ankreuzkompetenzen
 	 * @param schuelerZP10Repository                           das Repository für den Zugriff auf die Schüler-ZP10-Daten
+	 * @param schuelerZP10TimestampsRepository                 das Repository für den Zugriff auf die Zeitstempel für die Schüler-ZP10-Daten
 	 * @param kurseRepository                                  das Repository für den Zugriff auf die Kurse
 	 * @param klassenRepository                                das Repository für den Zugriff auf die Klassen
 	 * @param klassenleitungenRepository                       das Repository für den Zugriff auf die Klassenleitungen
@@ -406,6 +417,7 @@ public final class EnmV2GetServiceKontext {
 			final SchuelerAnkreuzkompetenzenRepository schuelerAnkreuzkompetenzenRepository,
 			final SchuelerAnkreuzkompetenzenTimestampsRepository schuelerAnkreuzkompetenzenTimestampsRepository,
 			final SchuelerZP10Repository schuelerZP10Repository,
+			final SchuelerZP10TimestampsRepository schuelerZP10TimestampsRepository,
 			final KurseRepository kurseRepository,
 			final KlassenRepository klassenRepository,
 			final KlassenleitungenRepository klassenleitungenRepository,
@@ -425,7 +437,8 @@ public final class EnmV2GetServiceKontext {
 				schuelerRepository, schuelerLernabschnittRepository, schuelerLernabschnittTimestampsRepository, schuelerLernabschnittBemerkungenRepository,
 				schuelerLeistungsdatenRepository, schuelerLeistungsdatenTimestampsRepository,
 				schuelerTeilleistungenRepository, schuelerTeilleistungenTimestampsRepository,
-				schuelerAnkreuzkompetenzenRepository, schuelerAnkreuzkompetenzenTimestampsRepository, schuelerZP10Repository,
+				schuelerAnkreuzkompetenzenRepository, schuelerAnkreuzkompetenzenTimestampsRepository,
+				schuelerZP10Repository, schuelerZP10TimestampsRepository,
 				kurseRepository, klassenRepository, klassenleitungenRepository, jahrgaengeRepository, foerderschwerpunkteRepository,
 				ankreuzkompetenzenKonfigurationRepository, ankreuzkompetenzenRepository, ankreuzkompetenzenJahrgaengeRepository,
 				floskelRepository, floskelgruppenRepository, floskelJahrgaengeRepository, teilleistungsartRepository,
@@ -623,7 +636,7 @@ public final class EnmV2GetServiceKontext {
 		final List<DTOSchuelerZP10> listZP10 = schuelerZP10Repository.getListBySchuelerIds(mapSchueler.keySet());
 		this.mapZP10 = listZP10.stream().filter(e -> e.Schuljahresabschnitts_ID == idSchuljahresabschnitt)
 				.collect(Collectors.groupingBy(e -> e.Schueler_ID));
-		// TODO Bestimme die Zeitstempel zu den ZP10-Daten, sobald diese verfügbar sind
+		this.mapZP10Timestamps = schuelerZP10TimestampsRepository.findMapByIds(listZP10.stream().map(e -> e.ID).toList());
 
 		// Lese nun die restlichen nicht schülerspezifischen ENM-Daten ein
 		this.schule = schuleRepository.getFirst();
@@ -1028,6 +1041,21 @@ public final class EnmV2GetServiceKontext {
 	 */
 	public List<DTOSchuelerZP10> getZP10Daten(final long idSchueler) {
 		return mapZP10.getOrDefault(idSchueler, List.of());
+	}
+
+
+	/**
+	 * Gibt die Zeitstempel für die ZP10-Daten mit der angegebenen ID zurück.
+	 *
+	 * @param idZP10   die ID der ZP10-Daten
+	 *
+	 * @return die Zeitstempel für die ZP10-Daten
+	 */
+	public DTOTimestampsSchuelerZP10 getZP10Timestamps(final long idZP10) {
+		if (this.mapZP10Timestamps == null) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Der Daten-Kontext wurde nicht initialisiert.");
+		}
+		return this.mapZP10Timestamps.get(idZP10);
 	}
 
 

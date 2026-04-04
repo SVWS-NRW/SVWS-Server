@@ -1,15 +1,23 @@
 package de.svws_nrw.db.dto.current.notenmodul;
 
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.converter.current.Boolean01Converter;
+
 
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import de.svws_nrw.csv.converter.current.Boolean01ConverterSerializer;
+import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
+
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle Notenmodul_Credentials.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
@@ -18,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "Notenmodul_Credentials")
-@JsonPropertyOrder({"idLehrer", "initialkennwort", "passwordHash"})
+@JsonPropertyOrder({"idLehrer", "initialkennwort", "passwordHash", "art2FA", "totpSecret", "istErstanmeldung"})
 public final class DTONotenmodulCredentials {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -51,6 +59,24 @@ public final class DTONotenmodulCredentials {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes passwordHash */
 	public static final String QUERY_LIST_BY_PASSWORDHASH = "SELECT e FROM DTONotenmodulCredentials e WHERE e.passwordHash IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes art2FA */
+	public static final String QUERY_BY_ART2FA = "SELECT e FROM DTONotenmodulCredentials e WHERE e.art2FA = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes art2FA */
+	public static final String QUERY_LIST_BY_ART2FA = "SELECT e FROM DTONotenmodulCredentials e WHERE e.art2FA IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes totpSecret */
+	public static final String QUERY_BY_TOTPSECRET = "SELECT e FROM DTONotenmodulCredentials e WHERE e.totpSecret = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes totpSecret */
+	public static final String QUERY_LIST_BY_TOTPSECRET = "SELECT e FROM DTONotenmodulCredentials e WHERE e.totpSecret IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes istErstanmeldung */
+	public static final String QUERY_BY_ISTERSTANMELDUNG = "SELECT e FROM DTONotenmodulCredentials e WHERE e.istErstanmeldung = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes istErstanmeldung */
+	public static final String QUERY_LIST_BY_ISTERSTANMELDUNG = "SELECT e FROM DTONotenmodulCredentials e WHERE e.istErstanmeldung IN ?1";
+
 	/** Die LehrerID des Lehrers, für den die Credentials gelten */
 	@Id
 	@Column(name = "idLehrer")
@@ -67,6 +93,24 @@ public final class DTONotenmodulCredentials {
 	@JsonProperty
 	public String passwordHash;
 
+	/** Gibt die Art der verwendeten Zwei-Faktor-Authentifizierung an (0 = Keine, 1 = TOTP, 2 = EMail). */
+	@Column(name = "art2FA")
+	@JsonProperty
+	public int art2FA;
+
+	/** Das Shared Secret für 2FA mit TOTP */
+	@Column(name = "totpSecret")
+	@JsonProperty
+	public String totpSecret;
+
+	/** Gibt an, ob bei der nächsten Anmeldung eines Lehrer eine Erstanmeldung vorliegt oder nicht. */
+	@Column(name = "istErstanmeldung")
+	@JsonProperty
+	@Convert(converter = Boolean01Converter.class)
+	@JsonSerialize(using = Boolean01ConverterSerializer.class)
+	@JsonDeserialize(using = Boolean01ConverterDeserializer.class)
+	public Boolean istErstanmeldung;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTONotenmodulCredentials ohne eine Initialisierung der Attribute.
 	 */
@@ -79,8 +123,10 @@ public final class DTONotenmodulCredentials {
 	 * @param idLehrer   der Wert für das Attribut idLehrer
 	 * @param initialkennwort   der Wert für das Attribut initialkennwort
 	 * @param passwordHash   der Wert für das Attribut passwordHash
+	 * @param art2FA   der Wert für das Attribut art2FA
+	 * @param istErstanmeldung   der Wert für das Attribut istErstanmeldung
 	 */
-	public DTONotenmodulCredentials(final long idLehrer, final String initialkennwort, final String passwordHash) {
+	public DTONotenmodulCredentials(final long idLehrer, final String initialkennwort, final String passwordHash, final int art2FA, final Boolean istErstanmeldung) {
 		this.idLehrer = idLehrer;
 		if (initialkennwort == null) {
 			throw new NullPointerException("initialkennwort must not be null");
@@ -90,6 +136,8 @@ public final class DTONotenmodulCredentials {
 			throw new NullPointerException("passwordHash must not be null");
 		}
 		this.passwordHash = passwordHash;
+		this.art2FA = art2FA;
+		this.istErstanmeldung = istErstanmeldung;
 	}
 
 
@@ -124,7 +172,7 @@ public final class DTONotenmodulCredentials {
 	 */
 	@Override
 	public String toString() {
-		return "DTONotenmodulCredentials(idLehrer=" + this.idLehrer + ", initialkennwort=" + this.initialkennwort + ", passwordHash=" + this.passwordHash + ")";
+		return "DTONotenmodulCredentials(idLehrer=" + this.idLehrer + ", initialkennwort=" + this.initialkennwort + ", passwordHash=" + this.passwordHash + ", art2FA=" + this.art2FA + ", totpSecret=" + this.totpSecret + ", istErstanmeldung=" + this.istErstanmeldung + ")";
 	}
 
 }

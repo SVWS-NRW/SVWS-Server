@@ -182,7 +182,12 @@ class DBConnection {
      */
     public function querySingleOrNull(string $sql): object | null {
         try {
-            return $this->pdo->query($sql)->fetchObject();
+            $stmt = $this->pdo->query($sql);
+            if (!$stmt) {
+                return null;
+            }
+            $result = $stmt->fetchObject();
+            return $result ?: null;
         } catch (PDOException $e) {
             return null;
         }

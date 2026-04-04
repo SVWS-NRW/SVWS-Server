@@ -157,6 +157,7 @@ class ImportManager {
         $stmtTeilleistung = $this->conn->prepareStatement("INSERT INTO Teilleistungen(id, ts, idLeistung, daten, tsArtID, tsDatum, tsBemerkung, tsNote) VALUES (:id, :ts, :idLeistung, :daten, :tsArtID, :tsDatum, :tsBemerkung, :tsNote)");
         $stmtAnkreuzkomp = $this->conn->prepareStatement("INSERT INTO Ankreuzkompetenzen(id, ts, idSchueler, idKompetenz, daten, tsStufe) VALUES (:id, :ts, :idSchueler, :idKompetenz, :daten, :tsStufe)");
         $stmtSprachenfolge = $this->conn->prepareStatement("INSERT INTO Sprachenfolge(id, sprache, ts, idSchueler, daten) VALUES (:id, :sprache, :ts, :idSchueler, :daten)");
+        $stmtZP10 = $this->conn->prepareStatement("INSERT INTO ZP10(id, ts, idSchueler, idLehrer, daten, tsVornote, tsNoteSchriftlichePruefung, tsMuendlichePruefung, tsMuendlichePruefungFreiwillig, tsNoteMuendlichePruefung, tsAbschlussnote) VALUES (:id, :ts, :idSchueler, :idLehrer, :daten, :tsVornote, :tsNoteSchriftlichePruefung, :tsMuendlichePruefung, :tsMuendlichePruefungFreiwillig, :tsNoteMuendlichePruefung, :tsAbschlussnote)");
         foreach ($this->enmSchueler as $schueler) {
             // Erstelle den Schülereintrag mit einem JSON ohne Detaildaten zu der Sprachenfolge, den Leistungsdaten und den Ankreuzkompetenzen ...
             $tmpJsonSchueler = json_encode($schueler, JSON_UNESCAPED_SLASHES);
@@ -223,7 +224,7 @@ class ImportManager {
                 $this->conn->bindStatementValue($stmtAnkreuzkomp, ":tsStufe", $komp->tsStufe, PDO::PARAM_STR);
                 $this->conn->executeStatement($stmtAnkreuzkomp);
             }
-            // ... und die Sprachenfolge
+            // ... dann die Sprachenfolge
             foreach ($schueler->sprachenfolge as $sprachenfolge) {
                 $jsonSprachenfolge = json_encode($sprachenfolge, JSON_UNESCAPED_SLASHES);
                 $this->conn->bindStatementValue($stmtSprachenfolge, ":id", $sprachenfolge->id, PDO::PARAM_INT);
@@ -232,6 +233,22 @@ class ImportManager {
                 $this->conn->bindStatementValue($stmtSprachenfolge, ":idSchueler", $schueler->id, PDO::PARAM_INT);
                 $this->conn->bindStatementValue($stmtSprachenfolge, ":daten", $jsonSprachenfolge, PDO::PARAM_STR);
                 $this->conn->executeStatement($stmtSprachenfolge);
+            }
+            // und die ZP10-Daten
+            foreach ($schueler->zp10 as $zp10) {
+                $jsonZP10 = json_encode($zp10, JSON_UNESCAPED_SLASHES);
+                $this->conn->bindStatementValue($stmtZP10, ":id", $zp10->id, PDO::PARAM_INT);
+                $this->conn->bindStatementValue($stmtZP10, ":ts", $this->ts, PDO::PARAM_INT);
+                $this->conn->bindStatementValue($stmtZP10, ":idSchueler", $schueler->id, PDO::PARAM_INT);
+                $this->conn->bindStatementValue($stmtZP10, ":idLehrer", $zp10->lehrerID, PDO::PARAM_INT);
+                $this->conn->bindStatementValue($stmtZP10, ":daten", $jsonZP10, PDO::PARAM_STR);
+                $this->conn->bindStatementValue($stmtZP10, ":tsVornote", $zp10->tsVornote, PDO::PARAM_STR);
+                $this->conn->bindStatementValue($stmtZP10, ":tsNoteSchriftlichePruefung", $zp10->tsNoteSchriftlichePruefung, PDO::PARAM_STR);
+                $this->conn->bindStatementValue($stmtZP10, ":tsMuendlichePruefung", $zp10->tsMuendlichePruefung, PDO::PARAM_STR);
+                $this->conn->bindStatementValue($stmtZP10, ":tsMuendlichePruefungFreiwillig", $zp10->tsMuendlichePruefungFreiwillig, PDO::PARAM_STR);
+                $this->conn->bindStatementValue($stmtZP10, ":tsNoteMuendlichePruefung", $zp10->tsNoteMuendlichePruefung, PDO::PARAM_STR);
+                $this->conn->bindStatementValue($stmtZP10, ":tsAbschlussnote", $zp10->tsAbschlussnote, PDO::PARAM_STR);
+                $this->conn->executeStatement($stmtZP10);
             }
         }
         $this->conn->commitTransaction();
@@ -564,6 +581,114 @@ class ImportManager {
         $this->conn->commitTransaction();
     }
 
+
+    private function importUpdateZP10GeneratePreparedStatement(mixed $alt, mixed $neu): \PDOStatement {
+        $sql = "UPDATE ZP10 SET ";
+        if ($alt->tsVornote > $neu->tsVornote) {
+            $sql .= "tsVornote=:tsVornote,";
+        }
+        if ($alt->tsNoteSchriftlichePruefung > $neu->tsNoteSchriftlichePruefung) {
+            $sql .= "tsNoteSchriftlichePruefung=:tsNoteSchriftlichePruefung,";
+        }
+        if ($alt->tsMuendlichePruefung > $neu->tsMuendlichePruefung) {
+            $sql .= "tsMuendlichePruefung=:tsMuendlichePruefung,";
+        }
+        if ($alt->tsMuendlichePruefungFreiwillig > $neu->tsMuendlichePruefungFreiwillig) {
+            $sql .= "tsMuendlichePruefungFreiwillig=:tsMuendlichePruefungFreiwillig,";
+        }
+        if ($alt->tsNoteMuendlichePruefung > $neu->tsNoteMuendlichePruefung) {
+            $sql .= "tsNoteMuendlichePruefung=:tsNoteMuendlichePruefung,";
+        }
+        if ($alt->tsAbschlussnote > $neu->tsAbschlussnote) {
+            $sql .= "tsAbschlussnote=:tsAbschlussnote,";
+        }
+        $sql .= "daten=:daten WHERE id=:id and ts=:ts";
+        return $this->conn->prepareStatement($sql);
+    }
+
+    private function importUpdateZP10BindStatementVariables(\PDOStatement $stmt, mixed $alt, mixed $neu): void {
+        $jsonAlt = json_decode($alt->daten);
+        $jsonNeu = json_decode($neu->daten);
+
+        if ($alt->tsVornote > $neu->tsVornote) {
+            $this->conn->bindStatementValue($stmt, ":tsVornote", $alt->tsVornote, PDO::PARAM_STR);
+            $jsonNeu->vornote = $jsonAlt->vornote;
+            $jsonNeu->tsVornote = $jsonAlt->tsVornote;
+        }
+        if ($alt->tsNoteSchriftlichePruefung > $neu->tsNoteSchriftlichePruefung) {
+            $this->conn->bindStatementValue($stmt, ":tsNoteSchriftlichePruefung", $alt->tsNoteSchriftlichePruefung, PDO::PARAM_STR);
+            $jsonNeu->noteSchriftlichePruefung = $jsonAlt->noteSchriftlichePruefung;
+            $jsonNeu->tsNoteSchriftlichePruefung = $jsonAlt->tsNoteSchriftlichePruefung;
+        }
+        if ($alt->tsMuendlichePruefung > $neu->tsMuendlichePruefung) {
+            $this->conn->bindStatementValue($stmt, ":tsMuendlichePruefung", $alt->tsMuendlichePruefung, PDO::PARAM_STR);
+            $jsonNeu->muendlichePruefung = $jsonAlt->muendlichePruefung;
+            $jsonNeu->tsMuendlichePruefung = $jsonAlt->tsMuendlichePruefung;
+        }
+        if ($alt->tsMuendlichePruefungFreiwillig > $neu->tsMuendlichePruefungFreiwillig) {
+            $this->conn->bindStatementValue($stmt, ":tsMuendlichePruefungFreiwillig", $alt->tsMuendlichePruefungFreiwillig, PDO::PARAM_STR);
+            $jsonNeu->muendlichePruefungFreiwillig = $jsonAlt->muendlichePruefungFreiwillig;
+            $jsonNeu->tsMuendlichePruefungFreiwillig = $jsonAlt->tsMuendlichePruefungFreiwillig;
+        }
+        if ($alt->tsNoteMuendlichePruefung > $neu->tsNoteMuendlichePruefung) {
+            $this->conn->bindStatementValue($stmt, ":tsNoteMuendlichePruefung", $alt->tsNoteMuendlichePruefung, PDO::PARAM_STR);
+            $jsonNeu->noteMuendlichePruefung = $jsonAlt->noteMuendlichePruefung;
+            $jsonNeu->tsNoteMuendlichePruefung = $jsonAlt->tsNoteMuendlichePruefung;
+        }
+        if ($alt->tsAbschlussnote > $neu->tsAbschlussnote) {
+            $this->conn->bindStatementValue($stmt, ":tsAbschlussnote", $alt->tsAbschlussnote, PDO::PARAM_STR);
+            $jsonNeu->abschlussnote = $jsonAlt->abschlussnote;
+            $jsonNeu->tsAbschlussnote = $jsonAlt->tsAbschlussnote;
+        }
+        $this->conn->bindStatementValue($stmt, ":daten", json_encode($jsonNeu, JSON_UNESCAPED_SLASHES), PDO::PARAM_STR);
+        $this->conn->bindStatementValue($stmt, ":id", $neu->id, PDO::PARAM_INT);
+        $this->conn->bindStatementValue($stmt, ":ts", $neu->ts, PDO::PARAM_INT);
+    }
+
+    /**
+     * Erstellt einen Abgleich von vorherigen Einträgen zu den Einträgen mit dem angegebenen Zeitstempel.
+     *
+     * @param int $ts   der Zeitstempel der neu importierten Daten
+     */
+	protected function importDiffZP10(int $ts): void {
+        // Entferne zunächst alle alten ZP10-Daten, die nicht in den neuen Daten enthalten sind oder keine Änderungen haben
+        $this->conn->dropFrom('ZP10', "ts < $ts AND (id, ts) NOT IN (SELECT a.id, a.ts FROM ZP10 a JOIN ZP10 b WHERE a.id = b.id AND a.ts < b.ts AND (a.tsVornote <> b.tsVornote OR a.tsNoteSchriftlichePruefung <> b.tsNoteSchriftlichePruefung OR a.tsMuendlichePruefung <> b.tsMuendlichePruefung OR a.tsMuendlichePruefungFreiwillig <> b.tsMuendlichePruefungFreiwillig OR a.tsNoteMuendlichePruefung <> b.tsNoteMuendlichePruefung OR a.tsAbschlussnote <> b.tsAbschlussnote))");
+        // Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
+        $diffsOld = $this->conn->queryAllOrNull("SELECT id, ts, idSchueler, idLehrer, daten, tsVornote, tsNoteSchriftlichePruefung, tsMuendlichePruefung, tsMuendlichePruefungFreiwillig, tsNoteMuendlichePruefung, tsAbschlussnote FROM ZP10 WHERE ts < $ts");
+        if ($diffsOld === null) {
+            return;
+        }
+        // Erstelle aus den alten Daten eine Map basierend auf der id und eine Liste der ids
+        $mapOld = [];
+        $idsArray = [];
+        foreach ($diffsOld as $row) {
+            $mapOld[$row->id] = $row;
+            $idsArray[] = $row->id;
+        }
+        if (empty($idsArray)) {
+            return;
+        }
+        $ids = implode(",", $idsArray);
+        // Lese dann alle dazugehörigen Daten mit neuem Zeitstempel ein
+        $this->conn->beginTransaction();
+        $diffsNeu = $this->conn->queryAllOrExit500("SELECT * FROM ZP10 WHERE ts = $ts AND id IN ($ids)", "Fehler beim Lesen der neuen ZP10-Daten");
+        foreach ($diffsNeu as $neu) {
+            $alt = $mapOld[$neu->id];
+            $needUpdate = ($alt->tsVornote > $neu->tsVornote)
+                || ($alt->tsNoteSchriftlichePruefung > $neu->tsNoteSchriftlichePruefung)
+                || ($alt->tsMuendlichePruefung > $neu->tsMuendlichePruefung)
+                || ($alt->tsMuendlichePruefungFreiwillig > $neu->tsMuendlichePruefungFreiwillig)
+                || ($alt->tsNoteMuendlichePruefung > $neu->tsNoteMuendlichePruefung)
+                || ($alt->tsAbschlussnote > $neu->tsAbschlussnote);
+            if ($needUpdate > 0) {
+                $stmt = $this->importUpdateZP10GeneratePreparedStatement($alt, $neu);
+                $this->importUpdateZP10BindStatementVariables($stmt, $alt, $neu);
+                $this->conn->executeStatement($stmt);
+            }
+        }
+        $this->conn->commitTransaction();
+    }
+
     /**
      * Erstellt einen Abgleich von vorherigen Einträgen zu den Einträgen mit dem angegebenen Zeitstempel.
      *
@@ -618,9 +743,10 @@ class ImportManager {
      */
     protected function importDiffLehrer(int $ts): void {
         // Entferne zunächst alle alten Lehrer-Einträge, die nicht in den neuen Daten enthalten sind oder keine Änderungen haben
-        $this->conn->dropFrom('Lehrer', "ts < $ts AND (id, ts) NOT IN (SELECT a.id, a.ts FROM Lehrer a JOIN Lehrer b WHERE a.id = b.id AND a.ts < b.ts AND (a.tsPasswordHash <> b.tsPasswordHash))");
+        $this->conn->dropFrom('Lehrer', "ts < $ts AND (id, ts) NOT IN (SELECT a.id, a.ts FROM Lehrer a JOIN Lehrer b WHERE a.id = b.id AND a.ts < b.ts AND (a.tsPasswordHash <> b.tsPasswordHash OR a.totpSecret <> b.totpSecret OR a.tsArt2FA <> b.tsArt2FA OR a.tsIstErstanmeldung <> b.tsIstErstanmeldung))");
+
         // Lese dann alle Daten mit dem alten Zeitstempel ein, da diese ggf. Änderungen beinhalten
-        $diffsOld = $this->conn->queryAllOrNull("SELECT id, ts, daten, eMailDienstlich, passwordHash, tsPasswordHash FROM Lehrer WHERE ts < $ts");
+        $diffsOld = $this->conn->queryAllOrNull("SELECT id, ts, daten, eMailDienstlich, passwordHash, tsPasswordHash, art2FA, tsArt2FA, totpSecret, istErstanmeldung, tsIstErstanmeldung FROM Lehrer WHERE ts < $ts");
         if ($diffsOld === null) {
             return;
         }
@@ -637,19 +763,47 @@ class ImportManager {
         $ids = implode(",", $idsArray);
         // Lese dann alle dazugehörigen Daten mit neuem Zeitstempel ein
         $this->conn->beginTransaction();
-        $sql = "UPDATE Lehrer SET passwordHash=:passwordHash,tsPasswordHash=:tsPasswordHash,daten=:daten WHERE id=:id AND ts=:ts";
+        $sql = "UPDATE Lehrer SET passwordHash=:passwordHash, tsPasswordHash=:tsPasswordHash, art2FA=:art2FA, tsArt2FA=:tsArt2FA, totpSecret=:totpSecret, istErstanmeldung=:istErstanmeldung, tsIstErstanmeldung=:tsIstErstanmeldung, daten=:daten WHERE id=:id AND ts=:ts";
         $stmt = $this->conn->prepareStatement($sql);
         $diffsNeu = $this->conn->queryAllOrExit500("SELECT * FROM Lehrer WHERE ts = $ts AND id IN ($ids)", "Fehler Lesen der neuen Lehrerdaten");
         foreach ($diffsNeu as $neu) {
             $alt = $mapOld[$neu->id];
-            $needUpdate = ($alt->tsPasswordHash > $neu->tsPasswordHash);
+            $needUpdate = ($alt->tsPasswordHash > $neu->tsPasswordHash)
+                || ($alt->totpSecret <> $neu->totpSecret)
+                || ($alt->tsArt2FA > $neu->tsArt2FA)
+                || ($alt->tsIstErstanmeldung > $neu->tsIstErstanmeldung);
             if ($needUpdate > 0) {
                 $jsonAlt = json_decode($alt->daten);
                 $jsonNeu = json_decode($neu->daten);
-                $this->conn->bindStatementValue($stmt, ":passwordHash", $alt->passwordHash, PDO::PARAM_STR);
-                $this->conn->bindStatementValue($stmt, ":tsPasswordHash", $alt->tsPasswordHash, PDO::PARAM_STR);
-                $jsonNeu->passwordHash = $jsonAlt->passwordHash;
-                $jsonNeu->tsPasswordHash = $jsonAlt->tsPasswordHash;
+
+                if ($alt->tsPasswordHash > $neu->tsPasswordHash) {
+                    $this->conn->bindStatementValue($stmt, ":passwordHash", $alt->passwordHash, PDO::PARAM_STR);
+                    $this->conn->bindStatementValue($stmt, ":tsPasswordHash", $alt->tsPasswordHash, PDO::PARAM_STR);
+                    $jsonNeu->passwordHash = $jsonAlt->passwordHash;
+                    $jsonNeu->tsPasswordHash = $jsonAlt->tsPasswordHash;
+                } else {
+                    $this->conn->bindStatementValue($stmt, ":passwordHash", $neu->passwordHash, PDO::PARAM_STR);
+                    $this->conn->bindStatementValue($stmt, ":tsPasswordHash", $neu->tsPasswordHash, PDO::PARAM_STR);
+                }
+                if ($alt->tsArt2FA > $neu->tsArt2FA) {
+                    $this->conn->bindStatementValue($stmt, ":art2FA", $alt->art2FA, PDO::PARAM_INT);
+                    $this->conn->bindStatementValue($stmt, ":tsArt2FA", $alt->tsArt2FA, PDO::PARAM_STR);
+                    $jsonNeu->art2FA = $jsonAlt->art2FA;
+                    $jsonNeu->tsArt2FA = $jsonAlt->tsArt2FA;
+                } else {
+                    $this->conn->bindStatementValue($stmt, ":art2FA", $neu->art2FA, PDO::PARAM_INT);
+                    $this->conn->bindStatementValue($stmt, ":tsArt2FA", $neu->tsArt2FA, PDO::PARAM_STR);
+                }
+                if ($alt->tsIstErstanmeldung > $neu->tsIstErstanmeldung) {
+                    $this->conn->bindStatementValue($stmt, ":istErstanmeldung", $alt->istErstanmeldung, PDO::PARAM_INT);
+                    $this->conn->bindStatementValue($stmt, ":tsIstErstanmeldung", $alt->tsIstErstanmeldung, PDO::PARAM_STR);
+                    $jsonNeu->istErstanmeldung = $jsonAlt->istErstanmeldung;
+                    $jsonNeu->tsIstErstanmeldung = $jsonAlt->tsIstErstanmeldung;
+                } else {
+                    $this->conn->bindStatementValue($stmt, ":istErstanmeldung", $neu->istErstanmeldung, PDO::PARAM_INT);
+                    $this->conn->bindStatementValue($stmt, ":tsIstErstanmeldung", $neu->tsIstErstanmeldung, PDO::PARAM_STR);
+                }
+                $this->conn->bindStatementValue($stmt, ":totpSecret", $neu->totpSecret, PDO::PARAM_STR);
                 $this->conn->bindStatementValue($stmt, ":daten", json_encode($jsonNeu, JSON_UNESCAPED_SLASHES), PDO::PARAM_STR);
                 $this->conn->bindStatementValue($stmt, ":id", $neu->id, PDO::PARAM_INT);
                 $this->conn->bindStatementValue($stmt, ":ts", $neu->ts, PDO::PARAM_INT);
@@ -671,6 +825,7 @@ class ImportManager {
         $this->conn->dropFrom('Leistungsdaten', "ts <> $ts");
         $this->conn->dropFrom('Teilleistungen', "ts <> $ts");
         $this->conn->dropFrom('Ankreuzkompetenzen', "ts <> $ts");
+        $this->conn->dropFrom('ZP10', "ts <> $ts");
         $this->conn->dropFrom('Sprachenfolge', "ts <> $ts");
         $this->conn->dropFrom('Lehrer', "ts <> $ts");
     }
@@ -686,6 +841,7 @@ class ImportManager {
         $conn->clearTable('Leistungsdaten');
         $conn->clearTable('Teilleistungen');
         $conn->clearTable('Ankreuzkompetenzen');
+        $conn->clearTable('ZP10');
         $conn->clearTable('Sprachenfolge');
         $conn->clearTable('Lehrer');
     }

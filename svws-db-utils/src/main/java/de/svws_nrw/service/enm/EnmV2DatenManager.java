@@ -26,12 +26,15 @@ import de.svws_nrw.core.data.enm.v2.ENMv2SchuelerAnkreuzkompetenz;
 import de.svws_nrw.core.data.enm.v2.ENMv2Teilleistung;
 import de.svws_nrw.core.data.enm.v2.ENMv2Teilleistungsart;
 import de.svws_nrw.core.data.enm.v2.ENMv2ZP10;
+import de.svws_nrw.db.dto.current.notenmodul.DTONotenmodulCredentials;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerZP10;
 import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungen;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsNotenmodulCredentials;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZP10;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -188,13 +191,13 @@ public class EnmV2DatenManager {
 	/**
 	 * Fügt einen Lehrer hinzu und überprüft dabei, ob der Lehrer schon in der Liste vorhanden ist.
 	 *
-	 * @param lehrer            die Lehrer-Daten aus der Datenbank
-	 * @param passwordHash      der Password-Hash des Lehrer-Kennwortes für das Notenmodul
-	 * @param tsPasswordHash    der Zeitstempel, wann der Password-Hash zuletzt geändert wurde
+	 * @param lehrer    die Lehrer-Daten aus der Datenbank
+	 * @param creds     die Informationen zu den Credentials des Lehrers
+	 * @param tsCreds   die Zeitstempel zu den Credentials, wann der Password-Hash zuletzt geändert wurde
 	 *
 	 * @return true, falls der Lehrer hinzugefügt wurde, ansonsten false
 	 */
-	public boolean addLehrer(final DTOLehrer lehrer, final @NotNull String passwordHash, final String tsPasswordHash) {
+	public boolean addLehrer(final DTOLehrer lehrer, final DTONotenmodulCredentials creds, final DTOTimestampsNotenmodulCredentials tsCreds) {
 		if (mapLehrer.get(lehrer.ID) != null) {
 			return false;
 		}
@@ -205,11 +208,13 @@ public class EnmV2DatenManager {
 		enmLehrer.vorname = lehrer.Vorname;
 		enmLehrer.geschlecht = lehrer.Geschlecht.kuerzel;
 		enmLehrer.eMailDienstlich = lehrer.eMailDienstlich;
-		enmLehrer.passwordHash = passwordHash;
-		enmLehrer.tsPasswordHash = tsPasswordHash;
-		enmLehrer.totpSecret = null;          // TODO aus DB, sobald dort implementiert
-		enmLehrer.istErstanmeldung = false;   // TODO aus DB, sobald dort implementiert
-		enmLehrer.tsIstErstanmeldung = null;  // TODO aus DB, sobald dort implementiert
+		enmLehrer.passwordHash = (creds == null) ? "" : creds.passwordHash;
+		enmLehrer.tsPasswordHash = (tsCreds == null) ? null : tsCreds.tsPasswordHash;
+		enmLehrer.art2FA = (creds == null) ? 0 : creds.art2FA;
+		enmLehrer.tsArt2FA = (tsCreds == null) ? null : tsCreds.tsArt2FA;
+		enmLehrer.totpSecret = (creds == null) || (creds.totpSecret == null) ? "" : creds.totpSecret;
+		enmLehrer.istErstanmeldung = (creds == null) || creds.istErstanmeldung;
+		enmLehrer.tsIstErstanmeldung = (tsCreds == null) ? null : tsCreds.tsIstErstanmeldung;
 		daten.lehrer.add(enmLehrer);
 		mapLehrer.put(lehrer.ID, enmLehrer);
 		return true;
@@ -708,24 +713,25 @@ public class EnmV2DatenManager {
 	 *
 	 * @param schueler   die Daten des Schülers
 	 * @param zp10       die ZP10-Daten des Schülers
+	 * @param tsZP10     die Zeitstempel zu den ZP10-Daten
 	 */
-	public void addSchuelerZP10(final @NotNull ENMv2Schueler schueler, final @NotNull DTOSchuelerZP10 zp10) {
+	public void addSchuelerZP10(final @NotNull ENMv2Schueler schueler, final @NotNull DTOSchuelerZP10 zp10, final @NotNull DTOTimestampsSchuelerZP10 tsZP10) {
 		final ENMv2ZP10 enmZP10 = new ENMv2ZP10();
 		enmZP10.id = zp10.ID;
 		enmZP10.idFach = zp10.Fach_ID;
 		enmZP10.idLehrer = zp10.Fachlehrer_ID;
 		enmZP10.vornote = zp10.Vornote;
-		enmZP10.tsVornote = null;                                           // TODO Zeitstempel wird hier benötigt
+		enmZP10.tsVornote = tsZP10.tsVornote;
 		enmZP10.noteSchriftlichePruefung = zp10.NoteSchriftlich;
-		enmZP10.tsNoteSchriftlichePruefung = null;                          // TODO Zeitstempel wird hier benötigt
-		enmZP10.muendlichePruefung = (zp10.MdlPruefung == null) ? false : zp10.MdlPruefung;
-		enmZP10.tsMuendlichePruefung = null;                                // TODO Zeitstempel wird hier benötigt
-		enmZP10.muendlichePruefungFreiwillig = (zp10.MdlPruefungFW == null) ? false : zp10.MdlPruefungFW;
-		enmZP10.tsMuendlichePruefungFreiwillig = null;                      // TODO Zeitstempel wird hier benötigt
+		enmZP10.tsNoteSchriftlichePruefung = tsZP10.tsNoteSchriftlichePruefung;
+		enmZP10.muendlichePruefung = (zp10.MdlPruefung != null) && zp10.MdlPruefung;
+		enmZP10.tsMuendlichePruefung = tsZP10.tsMuendlichePruefung;
+		enmZP10.muendlichePruefungFreiwillig = (zp10.MdlPruefungFW != null) && zp10.MdlPruefungFW;
+		enmZP10.tsMuendlichePruefungFreiwillig = tsZP10.tsMuendlichePruefungFreiwillig;
 		enmZP10.noteMuendlichePruefung = zp10.NoteMuendlich;
-		enmZP10.tsNoteMuendlichePruefung = null;                            // TODO Zeitstempel wird hier benötigt
+		enmZP10.tsNoteMuendlichePruefung = tsZP10.tsNoteMuendlichePruefung;
 		enmZP10.abschlussnote = zp10.NoteAbschluss;
-		enmZP10.tsAbschlussnote = null;                                     // TODO Zeitstempel wird hier benötigt
+		enmZP10.tsAbschlussnote = tsZP10.tsAbschlussnote;
 		schueler.zp10.add(enmZP10);
 	}
 

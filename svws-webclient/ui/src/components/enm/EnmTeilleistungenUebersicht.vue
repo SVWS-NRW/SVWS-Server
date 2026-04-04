@@ -103,10 +103,10 @@
 	import type { ComponentPublicInstance } from 'vue';
 	import { computed, watch } from 'vue';
 	import type { EnmTeilleistungenProps } from './EnmTeilleistungenProps';
-	import type { ENMv1Leistung } from '../../../../core/src/core/data/enm/v1/ENMv1Leistung';
+	import type { ENMv2Leistung } from '../../../../core/src/core/data/enm/v2/ENMv2Leistung';
 	import type { PairNN } from '../../../../core/src/asd/adt/PairNN';
-	import type { ENMv1Schueler } from '../../../../core/src/core/data/enm/v1/ENMv1Schueler';
-	import type { ENMv1Teilleistung } from '../../../../core/src/core/data/enm/v1/ENMv1Teilleistung';
+	import type { ENMv2Schueler } from '../../../../core/src/core/data/enm/v2/ENMv2Schueler';
+	import type { ENMv2Teilleistung } from '../../../../core/src/core/data/enm/v2/ENMv2Teilleistung';
 	import { HashSet } from '../../../../core/src/java/util/HashSet';
 	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
 	import type { List } from '../../../../core/src/java/util/List';
@@ -130,9 +130,9 @@
 		return result;
 	});
 
-	const gridManager = new GridManager<string, PairNN<ENMv1Leistung, ENMv1Schueler>, List<PairNN<ENMv1Leistung, ENMv1Schueler>>>({
-		daten: computed<List<PairNN<ENMv1Leistung, ENMv1Schueler>>>(() => {
-			const result = new ArrayList<PairNN<ENMv1Leistung, ENMv1Schueler>>();
+	const gridManager = new GridManager<string, PairNN<ENMv2Leistung, ENMv2Schueler>, List<PairNN<ENMv2Leistung, ENMv2Schueler>>>({
+		daten: computed<List<PairNN<ENMv2Leistung, ENMv2Schueler>>>(() => {
+			const result = new ArrayList<PairNN<ENMv2Leistung, ENMv2Schueler>>();
 			for (const lerngruppenAuswahl of props.auswahl()) {
 				const leistungen = props.enmManager().mapLerngruppeLeistungen.get(lerngruppenAuswahl.id);
 				if ((leistungen === null)) {
@@ -173,7 +173,7 @@
 	}, { immediate: true });
 
 
-	function inputNoteTeilleistung(pair: PairNN<ENMv1Leistung, ENMv1Schueler>, teilleistung: ENMv1Teilleistung, col: number, index: number) {
+	function inputNoteTeilleistung(pair: PairNN<ENMv2Leistung, ENMv2Schueler>, teilleistung: ENMv2Teilleistung, col: number, index: number) {
 		const key = 'Teilleistung_' + teilleistung.id + '_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: string | null) => void props.patchTeilleistung(teilleistung, { note: value });
 		return (element: LocalElement) => {
@@ -184,7 +184,7 @@
 		};
 	}
 
-	function inputNoteQuartal(pair: PairNN<ENMv1Leistung, ENMv1Schueler>, col: number, index: number) {
+	function inputNoteQuartal(pair: PairNN<ENMv2Leistung, ENMv2Schueler>, col: number, index: number) {
 		const key = 'Quartal_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: string | null) => void props.patchLeistung(pair.a, { noteQuartal: value });
 		return (element: LocalElement) => {
@@ -195,7 +195,7 @@
 		};
 	}
 
-	function inputNote(pair: PairNN<ENMv1Leistung, ENMv1Schueler>, col: number, index: number) {
+	function inputNote(pair: PairNN<ENMv2Leistung, ENMv2Schueler>, col: number, index: number) {
 		const key = 'Note_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: string | null) => void props.patchLeistung(pair.a, { note: value });
 		return (element: LocalElement) => {

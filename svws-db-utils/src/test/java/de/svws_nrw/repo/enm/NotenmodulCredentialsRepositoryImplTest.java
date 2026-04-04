@@ -32,7 +32,7 @@ class NotenmodulCredentialsRepositoryImplTest {
 	@DisplayName("Test: Der Konstruktor setzt die ID-Zugriffe (getId/setId) korrekt auf das ID-Feld von DTONotenmodulCredentials.")
 	void testConstructorAndIdAccess() {
 		// Teste getId indirekt via getMap()
-		final DTONotenmodulCredentials k = new DTONotenmodulCredentials(999L, "Streng Geheim", "Ein Hash evtl. von dem PW");
+		final DTONotenmodulCredentials k = new DTONotenmodulCredentials(999L, "Streng Geheim", "Ein Hash evtl. von dem PW", 0, true);
 		when(conn.queryAll(DTONotenmodulCredentials.class)).thenReturn(List.of(k));
 		assertThat(repository.getMap()).containsEntry(999L, k);
 

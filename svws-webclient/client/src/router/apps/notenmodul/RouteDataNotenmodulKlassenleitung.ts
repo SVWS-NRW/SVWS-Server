@@ -1,4 +1,4 @@
-import type { SimpleOperationResponse, ENMv1Klasse, List } from "@core";
+import type { SimpleOperationResponse, ENMv2Klasse, List } from "@core";
 import { UnsupportedOperationException } from "@core";
 import { EnmKlassenleitungAuswahlListeManager, ViewType } from "@ui";
 import { api } from "~/router/Api";
@@ -40,11 +40,11 @@ export class RouteDataNotenmodulKlassenleitung extends RouteDataAuswahl<EnmKlass
 		param.id = id;
 	}
 
-	public async ladeDaten(auswahl: ENMv1Klasse, state: Partial<RouteStateNotenmodulKlassenleitung>): Promise<ENMv1Klasse | null> {
+	public async ladeDaten(auswahl: ENMv2Klasse, state: Partial<RouteStateNotenmodulKlassenleitung>): Promise<ENMv2Klasse | null> {
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<ENMv1Klasse>, id: number): Promise<boolean> {
+	protected async doPatch(data: Partial<ENMv2Klasse>, id: number): Promise<boolean> {
 		return true;
 	}
 

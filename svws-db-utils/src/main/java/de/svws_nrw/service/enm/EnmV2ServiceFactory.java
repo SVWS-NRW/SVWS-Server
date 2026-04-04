@@ -99,6 +99,7 @@ public final class EnmV2ServiceFactory {
 				schuelerRepositoryFactory.getSchuelerAnkreuzkompetenzenRepository(),
 				schuelerRepositoryFactory.getSchuelerAnkreuzkompetenzenTimestampsRepository(),
 				schuelerRepositoryFactory.getSchuelerZP10Repository(),
+				schuelerRepositoryFactory.getSchuelerZP10TimestampsRepository(),
 				kurseRepositoryFactory.getKurseRepository(),
 				klassenRepositoryFactory.getKlassenRepository(),
 				klassenRepositoryFactory.getKlassenleitungenRepository(),

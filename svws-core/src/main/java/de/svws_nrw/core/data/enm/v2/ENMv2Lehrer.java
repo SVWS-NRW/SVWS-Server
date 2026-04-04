@@ -46,6 +46,14 @@ public class ENMv2Lehrer {
 	@Schema(description = "der Zeitstempel der letzten Änderung an dem Password-Hash", example = "2013-11-14 13:12:48.774")
 	public String tsPasswordHash;
 
+	/** Gibt die Art der verwendeten Zwei-Faktor-Authentifizierung an (0 = Keine, 1 = TOTP, 2 = Mail). */
+	@Schema(description = "gibt die Art der verwendeten Zwei-Faktor-Authentifizierung an (0 = Keine, 1 = TOTP, 2 = Mail)")
+	public int art2FA;
+
+	/** Der Zeitstempel für die konfigurierte Art der Zwei-Faktor-Authentifzierung */
+	@Schema(description = "der Zeitstempel für die konfigurierte Art der Zwei-Faktor-Authentifzierung", example = "2013-11-14 13:12:48.774")
+	public String tsArt2FA;
+
 	/** Das Shared-Secret für TOTP */
 	@Schema(description = "das Shared-Secret für TOTP")
 	public @NotNull String totpSecret = "";

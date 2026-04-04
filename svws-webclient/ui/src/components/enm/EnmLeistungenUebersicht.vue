@@ -173,9 +173,9 @@
 	import type { ComponentPublicInstance } from 'vue';
 	import { computed, watchEffect } from 'vue';
 	import type { EnmLeistungenUebersichtProps } from './EnmLeistungenUebersichtProps';
-	import type { ENMv1Leistung } from '../../../../core/src/core/data/enm/v1/ENMv1Leistung';
+	import type { ENMv2Leistung } from '../../../../core/src/core/data/enm/v2/ENMv2Leistung';
 	import type { PairNN } from '../../../../core/src/asd/adt/PairNN';
-	import type { ENMv1Schueler } from '../../../../core/src/core/data/enm/v1/ENMv1Schueler';
+	import type { ENMv2Schueler } from '../../../../core/src/core/data/enm/v2/ENMv2Schueler';
 	import { Note } from '../../../../core/src/asd/types/Note';
 	import type { List } from '../../../../core/src/java/util/List';
 	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
@@ -187,9 +187,9 @@
 
 	const colsValidationTooltip = new Set(["Quartal", "Note", "FS", "FSU"]);
 
-	const gridManager = new GridManager<string, PairNN<ENMv1Leistung, ENMv1Schueler>, List<PairNN<ENMv1Leistung, ENMv1Schueler>>>({
-		daten: computed<List<PairNN<ENMv1Leistung, ENMv1Schueler>>>(() => {
-			const result = new ArrayList<PairNN<ENMv1Leistung, ENMv1Schueler>>();
+	const gridManager = new GridManager<string, PairNN<ENMv2Leistung, ENMv2Schueler>, List<PairNN<ENMv2Leistung, ENMv2Schueler>>>({
+		daten: computed<List<PairNN<ENMv2Leistung, ENMv2Schueler>>>(() => {
+			const result = new ArrayList<PairNN<ENMv2Leistung, ENMv2Schueler>>();
 			for (const lerngruppenAuswahl of props.auswahl()) {
 				const leistungen = props.enmManager().mapLerngruppeLeistungen.get(lerngruppenAuswahl.id);
 				if ((leistungen === null)) {
@@ -231,7 +231,7 @@
 
 	const notenKuerzel = computed(() => Note.values().map(e => e.daten(props.enmManager().schuljahr)?.kuerzel).filter(e => e !== ""));
 
-	function inputNoteQuartal(pair: PairNN<ENMv1Leistung, ENMv1Schueler>, col: number, index: number) {
+	function inputNoteQuartal(pair: PairNN<ENMv2Leistung, ENMv2Schueler>, col: number, index: number) {
 		const key = 'Quartal_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: string | null) => void props.patchLeistung(pair.a, { noteQuartal: value });
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
@@ -242,7 +242,7 @@
 		};
 	}
 
-	function inputNote(pair: PairNN<ENMv1Leistung, ENMv1Schueler>, col: number, index: number) {
+	function inputNote(pair: PairNN<ENMv2Leistung, ENMv2Schueler>, col: number, index: number) {
 		const key = 'Note_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: string | null) => void props.patchLeistung(pair.a, { note: value });
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
@@ -253,7 +253,7 @@
 		};
 	}
 
-	function inputMahnung(pair: PairNN<ENMv1Leistung, ENMv1Schueler>, col: number, index: number) {
+	function inputMahnung(pair: PairNN<ENMv2Leistung, ENMv2Schueler>, col: number, index: number) {
 		const key = 'Mahnung_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: boolean) => void props.patchLeistung(pair.a, { istGemahnt: value });
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
@@ -264,10 +264,10 @@
 		};
 	}
 
-	function inputFehlstunden(pair: PairNN<ENMv1Leistung, ENMv1Schueler>, col: number, index: number) {
+	function inputFehlstunden(pair: PairNN<ENMv2Leistung, ENMv2Schueler>, col: number, index: number) {
 		const key = 'FS_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: number | null) => {
-			const patch = <Partial<ENMv1Leistung>>{ fehlstundenFach: value };
+			const patch = <Partial<ENMv2Leistung>>{ fehlstundenFach: value };
 			const inputFSU = gridManager.getInputByKey('FSU_' + pair.a.id + "_" + pair.b.id);
 			if (inputFSU !== null) {
 				const inputFSUTyped = inputFSU as GridInputIntegerDiv<string>;
@@ -286,7 +286,7 @@
 		};
 	}
 
-	function inputFehlstundenUnendschuldigt(pair: PairNN<ENMv1Leistung, ENMv1Schueler>, col: number, index: number) {
+	function inputFehlstundenUnendschuldigt(pair: PairNN<ENMv2Leistung, ENMv2Schueler>, col: number, index: number) {
 		const key = 'FSU_' + pair.a.id + "_" + pair.b.id;
 		const setter = (value: number | null) => void props.patchLeistung(pair.a, { fehlstundenUnentschuldigtFach: value });
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
@@ -298,7 +298,7 @@
 	}
 
 
-	function inputBemerkung(pair: PairNN<ENMv1Leistung, ENMv1Schueler>, col: number, index: number) {
+	function inputBemerkung(pair: PairNN<ENMv2Leistung, ENMv2Schueler>, col: number, index: number) {
 		const key = 'FB' + pair.a.id + "_" + pair.b.id;
 		const setter = (_value: boolean) => void props.focusFloskelEditor(pair.b, pair.a, index, true);
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {

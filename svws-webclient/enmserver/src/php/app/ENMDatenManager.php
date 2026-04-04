@@ -152,7 +152,7 @@ class ENMDatenManager {
         if ($this->mapLerngruppenFachlehrer === null) {
             $this->mapLerngruppenFachlehrer = [];
             foreach ($this->enmDaten->lerngruppen as $lerngruppe) {
-                foreach ($lerngruppe->lehrerID as $lid) {
+                foreach ($lerngruppe->idsLehrer as $lid) {
                     if ($lid === $lehrer->id) {
                         $this->mapLerngruppenFachlehrer[$lerngruppe->id] = $lerngruppe;
                     }
@@ -192,6 +192,8 @@ class ENMDatenManager {
             'teilleistungLeistung' => [],
             'ankreuzkompetenzen' => [],
             'ankreuzkompetenzSchueler' => [],
+            'zp10' => [],
+            'zp10Schueler' => [],
         ];
         $this->mapsLeistungsdaten = (object)[
             'schueler' => [],
@@ -220,6 +222,10 @@ class ENMDatenManager {
             foreach ($schueler->ankreuzkompetenzen as $ankreuzkompetenz) {
                 $this->mapsSchueler->ankreuzkompetenzen[$ankreuzkompetenz->id] = $ankreuzkompetenz;
                 $this->mapsSchueler->ankreuzkompetenzSchueler[$ankreuzkompetenz->id] = $schueler;
+            }
+            foreach ($schueler->zp10 as $zp10) {
+                $this->mapsSchueler->zp10[$zp10->id] = $zp10;
+                $this->mapsSchueler->zp10Schueler[$zp10->id] = $schueler;
             }
         }
     }
@@ -288,6 +294,21 @@ class ENMDatenManager {
             Http::exit500("Die ENM-Daten sind inkonsistent. Zu der Ankreuzkompetenz-ID {$idAnkreuzkompetenz} konnte kein Schüler bestimmt werden.");
         }
         return $map->ankreuzkompetenzSchueler[$idAnkreuzkompetenz]->klasseID;
+    }
+
+    /**
+     * Ermittelt die ID der Klasse des Schülers für eine ID von ZP10-Daten
+     *
+     * @param int $idZP10   die ID der ZP10-Daten
+    *
+     * @return int   die ID der Klasse
+     */
+    public function getKlassenIdByZP10Id(int $idZP10): int {
+        $map = $this->getMapsSchueler();
+        if (!array_key_exists($idZP10, $map->zp10Schueler)) {
+            Http::exit500("Die ENM-Daten sind inkonsistent. Zu der ZP10-ID {$idZP10} konnte kein Schüler bestimmt werden.");
+        }
+        return $map->zp10Schueler[$idZP10]->klasseID;
     }
 
     /**
@@ -384,11 +405,16 @@ class ENMDatenManager {
     public function getENMDatenForLehrer(object $lehrer): string {
         // Nehme die ENM-Daten ohne Lehrer- und Schülerdaten ...
         $daten = $this->enmDaten;
-        // Bestimme die zu integrierenden Lehrer-Daten, entferne dabei die Informationen zu den Kennwörtern
+        // Bestimme die zu integrierenden Lehrer-Daten, entferne dabei die Informationen zu den Credentials
         $daten->lehrer = $this->enmLehrer;
         foreach ($daten->lehrer as $l) {
             $l->passwordHash = "";
             $l->tsPasswordHash = null;
+            $l->art2FA = 0;
+            $l->tsArt2FA = null;
+            $l->totpSecret = "";
+            $l->istErstanmeldung = false;
+            $l->tsIstErstanmeldung = null;
         }
         $mapAnkreuzkompetenzen = $this->getMapAnkreuzkompetenzen();
         $mapKlassen = $this->getMapKlassen($lehrer);
@@ -422,13 +448,24 @@ class ENMDatenManager {
                     $kompetenzen[] = $schuelerkompetenz;
                 }
             }
+
+            // Bestimme die ZP10-Daten, die dem Lehrer zugeordnet sind
+            $zp10Liste = [];
+            foreach ($schueler->zp10 as $zp10) {
+                // Lehrer sieht ZP10, wenn er Klassenlehrer oder der eingetragene Fachlehrer/Prüfer ist
+                if ($istKlassenlehrer || ($zp10->idLehrer === $lehrer->id)) {
+                    $zp10Liste[] = $zp10;
+                }
+            }
+
             // Prüfe, ob der Schüler zurückgegeben werden soll
-            if ((empty($leistungen)) && (empty($kompetenzen))) {
+            if (empty($leistungen) && empty($kompetenzen) && empty($zp10Liste)) {
                 continue;
             }
             // Ersetze die Leistungsdaten und die Ankreuzkompetenzen
             $schueler->leistungsdaten = $leistungen;
             $schueler->ankreuzkompetenzen = $kompetenzen;
+            $schueler->zp10 = $zp10Liste;
             $listSchueler[] = $schueler;
         }
         $daten->schueler = $listSchueler;

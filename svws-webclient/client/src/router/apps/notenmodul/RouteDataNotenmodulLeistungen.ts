@@ -1,4 +1,4 @@
-import type { ENMv1Lerngruppe, List, SimpleOperationResponse } from "@core";
+import type { ENMv2Lerngruppe, List, SimpleOperationResponse } from "@core";
 import { UnsupportedOperationException } from "@core";
 import { EnmLerngruppenAuswahlListeManager, ViewType } from "@ui";
 
@@ -43,11 +43,11 @@ export class RouteDataNotenmodulLeistungen extends RouteDataAuswahl<EnmLerngrupp
 		param.id = id;
 	}
 
-	public async ladeDaten(auswahl: ENMv1Lerngruppe, state: Partial<RouteStateNotenmodulLeistungen>): Promise<ENMv1Lerngruppe | null> {
+	public async ladeDaten(auswahl: ENMv2Lerngruppe, state: Partial<RouteStateNotenmodulLeistungen>): Promise<ENMv2Lerngruppe | null> {
 		return auswahl;
 	}
 
-	protected async doPatch(data: Partial<ENMv1Lerngruppe>, id: number): Promise<boolean> {
+	protected async doPatch(data: Partial<ENMv2Lerngruppe>, id: number): Promise<boolean> {
 		return true;
 	}
 

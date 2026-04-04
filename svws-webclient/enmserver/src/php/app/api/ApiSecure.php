@@ -83,7 +83,7 @@ class ApiSecure {
      * @param Database db   die aktuelle Datenbank-Verbindung
      */
     private function truncate(Database $db): void {
-        $db->reinitDatbase();
+        $db->reinitDatabase();
         Http::exit200OKJson("OK");
     }
 

@@ -16,44 +16,228 @@ class Database {
     // Die Datenbank-Verbindung
     public $conn;
 
+    // Die Revision des Datenbank-Schema. Muss bei jeder strukturellen Änderung um eins erhöht werden.
+    public const SCHEMA_REVISION = 1;
+
+    /**
+     * Definiert das Soll-Schema: Tabelle => Spalten-Definitionen
+     */
+    private const TABLES = [
+        'SchemaInfo' => [
+            'Revision' => 'INTEGER PRIMARY KEY'
+        ],
+        'OAuth' => [
+            'clientID' => 'INTEGER PRIMARY KEY',
+            'token' => 'TEXT',
+            'tokenTimestamp' => 'INTEGER',
+            'tokenValidForSecs' => 'INTEGER'
+        ],
+        'ServerConfig' => [
+            'schluessel' => 'TEXT PRIMARY KEY',
+            'wert' => 'TEXT'
+        ],
+        'ClientConfig' => [
+            'schluessel' => 'TEXT PRIMARY KEY',
+            'wert' => 'TEXT'
+        ],
+        'ClientLehrerConfig' => [
+            'idLehrer' => 'INTEGER',
+            'schluessel' => 'TEXT',
+            'wert' => 'TEXT',
+            'PRIMARY KEY(idLehrer, schluessel)'
+        ],
+        'Daten' => [
+            'ts' => 'INTEGER PRIMARY KEY',
+            'schulnummer' => 'INTEGER',
+            'daten' => 'TEXT'
+        ],
+        'Schueler' => [
+            'id' => 'INTEGER',
+            'ts' => 'INTEGER',
+            'idJahrgang' => 'INTEGER',
+            'idKlasse' => 'INTEGER',
+            'daten' => 'TEXT',
+            'tsFehlstundenGesamt' => 'TEXT',
+            'tsFehlstundenGesamtUnentschuldigt' => 'TEXT',
+            'tsASV' => 'TEXT',
+            'tsAUE' => 'TEXT',
+            'tsZB' => 'TEXT',
+            'tsLELS' => 'TEXT',
+            'tsSchulformEmpf' => 'TEXT',
+            'tsIndividuelleVersetzungsbemerkungen' => 'TEXT',
+            'tsFoerderbemerkungen' => 'TEXT',
+            'PRIMARY KEY(id, ts)'
+        ],
+        'Leistungsdaten' => [
+            'id' => 'INTEGER',
+            'ts' => 'INTEGER',
+            'idSchueler' => 'INTEGER',
+            'idLerngruppe' => 'INTEGER',
+            'daten' => 'TEXT',
+            'tsNote' => 'TEXT',
+            'tsNoteQuartal' => 'TEXT',
+            'tsFehlstundenFach' => 'TEXT',
+            'tsFehlstundenUnentschuldigtFach' => 'TEXT',
+            'tsFachbezogeneBemerkungen' => 'TEXT',
+            'tsIstGemahnt' => 'TEXT',
+            'PRIMARY KEY(id, ts)'
+        ],
+        'Teilleistungen' => [
+            'id' => 'INTEGER',
+            'ts' => 'INTEGER',
+            'idLeistung' => 'INTEGER',
+            'daten' => 'TEXT',
+            'tsArtID' => 'TEXT',
+            'tsDatum' => 'TEXT',
+            'tsBemerkung' => 'TEXT',
+            'tsNote' => 'TEXT',
+            'PRIMARY KEY(id, ts)'
+        ],
+        'ZP10' => [
+            'id' => 'INTEGER',
+            'ts' => 'INTEGER',
+            'idSchueler' => 'INTEGER',
+            'idLehrer' => 'INTEGER',
+            'daten' => 'TEXT',
+            'tsVornote' => 'TEXT',
+            'tsNoteSchriftlichePruefung' => 'TEXT',
+            'tsMuendlichePruefung' => 'TEXT',
+            'tsMuendlichePruefungFreiwillig' => 'TEXT',
+            'tsNoteMuendlichePruefung' => 'TEXT',
+            'tsAbschlussnote' => 'TEXT',
+            'PRIMARY KEY(id, ts)'
+        ],
+        'Ankreuzkompetenzen' => [
+            'id' => 'INTEGER',
+            'ts' => 'INTEGER',
+            'idSchueler' => 'INTEGER',
+            'idKompetenz' => 'INTEGER',
+            'daten' => 'TEXT',
+            'tsStufe' => 'TEXT',
+            'PRIMARY KEY(id, ts)'
+        ],
+        'Sprachenfolge' => [
+            'id' => 'INTEGER',
+            'sprache' => 'TEXT',
+            'ts' => 'INTEGER',
+            'idSchueler' => 'INTEGER',
+            'daten' => 'TEXT',
+            'PRIMARY KEY(id, sprache, ts)'
+        ],
+        'Lehrer' => [
+            'id' => 'INTEGER',
+            'ts' => 'INTEGER',
+            'daten' => 'TEXT',
+            'eMailDienstlich' => 'TEXT',
+            'passwordHash' => 'TEXT',
+            'tsPasswordHash' => 'TEXT',
+            'art2FA' => 'INTEGER DEFAULT 0',
+            'tsArt2FA' => 'TEXT',
+            'totpSecret' => 'TEXT',
+            'istErstanmeldung' => 'INTEGER DEFAULT 1',
+            'tsIstErstanmeldung' => 'TEXT',
+            'PRIMARY KEY(id, ts)'
+        ],
+        'Lehrertoken' => [
+            'idLehrer' => 'INTEGER PRIMARY KEY',
+            'token' => 'TEXT',
+            'tokenTimestamp' => 'INTEGER',
+            'tokenValidForSecs' => 'INTEGER'
+        ],
+    ];
+
     /**
      * Erstellt eine neue Verbindung zu der SQLite-Datenbank, welche in der übergebenen Konfiguration
      * angegeben ist. Existiert diese Datenbank noch nicht, so wird sie mit Default-Werten initialisiert.
      */
     public function __construct(Config $config) {
         $this->config = $config;
-        // Prüfe, ob die Datenbank bereits existiert. Wenn nicht, dann lege eine neue mit Default-Werten an
-        $dbPath = $config->getDatabasePath()."/".$config->getDatabaseFilename();
-        $dbNeedsInitialization = file_exists($dbPath);
         $this->conn = new DBConnection($config->getDatabasePath(), $config->getDatabaseFilename());
-        if (!$dbNeedsInitialization) {
-            $this->initDatabase();
+
+        $this->checkAndRepair();
+    }
+
+
+    /**
+     * Prüft, ob die Datenbank eine gültige Revision hat. Ist dies nicht der Fall, so wird eine Reperatur
+     * anhand der Schema-Defintion gestartet.
+     */
+    protected function checkAndRepair(): void {
+        // Stelle sicher, dass die Tabelle SchemaInfo immer vorhanden ist
+        $this->conn->createTable('SchemaInfo', 'CREATE TABLE IF NOT EXISTS SchemaInfo(Revision INTEGER PRIMARY KEY)');
+
+        // Prüfe die Revision des Datenbank-Schemas
+        $res = $this->conn->querySingleOrNull("SELECT Revision FROM SchemaInfo");
+        $rev = $res === null ? 0 : (int)$res->Revision;
+
+        // Eine Prüfung findet statt, wenn die gefundene Revision von der erwarteten abweicht
+        if ($rev !== self::SCHEMA_REVISION) {
+            foreach (self::TABLES as $tableName => $columns) {
+                $this->repairTable($tableName, $columns);
+            }
+
+            // Stelle sicher, dass die Tabellen auch mit initialen Daten befüllt sind.
+            $this->setInitialData();
+
+            // Aktualisiere die Schema-Revision
+            $this->conn->clearTable('SchemaInfo');
+            $this->conn->insertInto('SchemaInfo', "INSERT INTO SchemaInfo(Revision) VALUES (" . self::SCHEMA_REVISION . ")");
+        }
+    }
+
+
+    /**
+     * Repariert eine Datenbank-Tabelle mit dem übergebenen Namen, sofern sie fehlerhaft ist mit den übergebenen
+     * Spalteninformationen.
+     *
+     * @param string $tableName        der Tabellenname
+     * @param array $expectedColumns   die erwarteten Spalten, ggf. mit einer zusätzlichen Primärschlüsseldefinition
+     */
+    private function repairTable(string $tableName, array $expectedColumns): void {
+        // Erstelle die Tabelle, wenn sich noch nicht existiert
+        $colDefs = [];
+        foreach ($expectedColumns as $name => $def) {
+            if (is_string($name)) {
+                // normale Spaltendefinition
+                $colDefs[] = "$name $def";
+            } else {
+                // Primärschlüsseldefintion am Ende berücksichtigen
+                $colDefs[] = $def;
+            }
+        }
+        $sql = "CREATE TABLE IF NOT EXISTS $tableName (" . implode(', ', $colDefs) . ")";
+        $this->conn->createTable($tableName, $sql);
+
+        // Prüfe die Spalten einzeln und füge sie ggf. hinzu - ein entfernen findet nicht statt...
+        $existingColumns = $this->conn->queryAllOrNull("PRAGMA table_info($tableName)");
+        $existingNames = array_map(fn($c) => $c->name, $existingColumns ?? []);
+        foreach ($expectedColumns as $colName => $colDef) {
+            // Überspringe ggf. die zusammengesetzte Primärschlüssel-Definitionen (keine Spalten)
+            if (!is_string($colName)) {
+                continue;
+            }
+            // Füge bei Bedarf die Spalten hinzu
+            if (!in_array($colName, $existingNames)) {
+                $this->conn->execUpdate("ALTER TABLE $tableName ADD COLUMN $colName $colDef");
+            }
         }
     }
 
     /**
-     * Initialisiert die Datenbank mit Default-Werten
+     * Befüllt die Datenbank mit den initialen Daten für ein schema.
      */
-    protected function initDatabase(): void {
-        $this->conn->createTable('OAuth', 'CREATE TABLE OAuth(clientID INTEGER PRIMARY KEY, token TEXT, tokenTimestamp INTEGER, tokenValidForSecs INTEGER)');
-        $this->conn->insertInto('OAuth', "INSERT INTO OAuth(clientID, token, tokenTimestamp, tokenValidForSecs) VALUES (1, NULL, NULL, NULL)");
-        $this->conn->createTable('ServerConfig', 'CREATE TABLE ServerConfig(schluessel TEXT PRIMARY KEY, wert TEXT)');
-        $this->conn->createTable('ClientConfig', 'CREATE TABLE ClientConfig(schluessel TEXT PRIMARY KEY, wert TEXT)');
-        $this->conn->createTable('ClientLehrerConfig', 'CREATE TABLE ClientLehrerConfig(idLehrer INTEGER, schluessel TEXT, wert TEXT, PRIMARY KEY (idLehrer, schluessel))');
-        $this->conn->createTable('Daten', 'CREATE TABLE Daten(ts INTEGER PRIMARY KEY, schulnummer INTEGER, daten TEXT)');
-        $this->conn->createTable('Schueler', 'CREATE TABLE Schueler(id INTEGER, ts INTEGER, idJahrgang INTEGER, idKlasse INTEGER, daten TEXT, tsFehlstundenGesamt TEXT, tsFehlstundenGesamtUnentschuldigt TEXT, tsASV TEXT, tsAUE TEXT, tsZB TEXT, tsLELS TEXT, tsSchulformEmpf TEXT, tsIndividuelleVersetzungsbemerkungen TEXT, tsFoerderbemerkungen TEXT, PRIMARY KEY(id, ts))');
-        $this->conn->createTable('Leistungsdaten', 'CREATE TABLE Leistungsdaten(id INTEGER, ts INTEGER, idSchueler INTEGER, idLerngruppe INTEGER, daten TEXT, tsNote TEXT, tsNoteQuartal TEXT, tsFehlstundenFach TEXT, tsFehlstundenUnentschuldigtFach TEXT, tsFachbezogeneBemerkungen TEXT, tsIstGemahnt TEXT, PRIMARY KEY(id, ts))');
-        $this->conn->createTable('Teilleistungen', 'CREATE TABLE Teilleistungen(id INTEGER, ts INTEGER, idLeistung INTEGER, daten TEXT, tsArtID TEXT, tsDatum TEXT, tsBemerkung TEXT, tsNote TEXT, PRIMARY KEY(id, ts))');
-        $this->conn->createTable('Ankreuzkompetenzen', 'CREATE TABLE Ankreuzkompetenzen(id INTEGER, ts INTEGER, idSchueler INTEGER, idKompetenz INTEGER, daten TEXT, tsStufe TEXT, PRIMARY KEY(id, ts))');
-        $this->conn->createTable('Sprachenfolge', 'CREATE TABLE Sprachenfolge(id INTEGER, sprache TEXT, ts INTEGER, idSchueler INTEGER, daten TEXT, PRIMARY KEY (id, sprache, ts))');
-        $this->conn->createTable('Lehrer', 'CREATE TABLE Lehrer(id INTEGER, ts INTEGER, daten TEXT, eMailDienstlich TEXT, passwordHash TEXT, tsPasswordHash TEXT, PRIMARY KEY(id, ts))');
-        $this->conn->createTable('Lehrertoken', 'CREATE TABLE Lehrertoken(idLehrer INTEGER PRIMARY KEY, token TEXT, tokenTimestamp INTEGER, tokenValidForSecs INTEGER)');
+    private function setInitialData(): void {
+        // Prüfe, ob der OAuth-Eintrag für clientID 1 existiert
+        $oauthEntry = $this->conn->querySingleOrNull("SELECT clientID FROM OAuth WHERE clientID = 1");
+        if ($oauthEntry === null) {
+            $this->conn->insertInto('OAuth', "INSERT INTO OAuth(clientID, token, tokenTimestamp, tokenValidForSecs) VALUES (1, NULL, NULL, NULL)");
+        }
     }
 
     /**
      * Reinitialisiert die Datenbank, indem das Client-Secret neu gesetzt wird und die vorhanden ENM-Daten gelöscht werden.
      */
-    public function reinitDatbase(): void {
+    public function reinitDatabase(): void {
         ImportManager::clearENMDaten($this->conn);
         $this->conn->clearTable('ServerConfig');
         $this->conn->clearTable('ClientConfig');
@@ -391,6 +575,14 @@ class Database {
             foreach ($results as $row) {
                 $schueler = $mapSchueler[$row->idSchueler];
                 $schueler->ankreuzkompetenzen[] = json_decode($row->daten);
+            }
+        }
+        // Integration der ZP10-Daten
+        $results = $this->conn->queryAllOrNull("SELECT idSchueler, daten FROM ZP10");
+        if ($results != null) {
+            foreach ($results as $row) {
+                $schueler = $mapSchueler[$row->idSchueler];
+                $schueler->zp10[] = json_decode($row->daten);
             }
         }
         // Integration der Sprachenfolge

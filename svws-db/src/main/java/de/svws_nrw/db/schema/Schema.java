@@ -244,6 +244,7 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerAnkreuzkompetenz
 import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerTeilleistungen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerZP10;
 import de.svws_nrw.db.schema.tabellen.Tabelle_UV_Faecher;
 import de.svws_nrw.db.schema.tabellen.Tabelle_UV_Klassen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_UV_Kurse;
@@ -1194,6 +1195,9 @@ public final class Schema {
 
 	/** Tabelle Katalog_Ankreuzkompetenz_Jahrgang */
 	public static final Tabelle_Ankreuzkompetenz_Jahrgang tab_Ankreuzkompetenz_Jahrgang = add(new Tabelle_Ankreuzkompetenz_Jahrgang());
+
+	/** Tabelle TimestampsSchuelerZP10 */
+	public static final Tabelle_TimestampsSchuelerZP10 tab_TimestampsSchuelerZP10 = add(new Tabelle_TimestampsSchuelerZP10());
 
 
 	/**

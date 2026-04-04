@@ -32,7 +32,8 @@ class NotenmodulCredentialsTimestampsRepositoryImplTest {
 	@DisplayName("Test: Der Konstruktor setzt die ID-Zugriffe (getId/setId) korrekt auf das ID-Feld von DTOTimestampsNotenmodulCredentials.")
 	void testConstructorAndIdAccess() {
 		// Teste getId indirekt via getMap()
-		final DTOTimestampsNotenmodulCredentials k = new DTOTimestampsNotenmodulCredentials(999L, "Der Zeitstempel");
+		final DTOTimestampsNotenmodulCredentials k =
+				new DTOTimestampsNotenmodulCredentials(999L, "Der Zeitstempel 1", "Der Zeitstempel 2", "Der Zeitstempel 3", "Der Zeitstempel 4");
 		when(conn.queryAll(DTOTimestampsNotenmodulCredentials.class)).thenReturn(List.of(k));
 		assertThat(repository.getMap()).containsEntry(999L, k);
 

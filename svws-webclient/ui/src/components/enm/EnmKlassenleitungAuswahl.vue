@@ -18,7 +18,7 @@
 <script setup lang="ts">
 
 	import { computed, onBeforeMount, ref } from 'vue';
-	import type { ENMv1Klasse } from '../../../../core/src/core/data/enm/v1/ENMv1Klasse';
+	import type { ENMv2Klasse } from '../../../../core/src/core/data/enm/v2/ENMv2Klasse';
 	import { useRegionSwitch } from '../../ui/composables/useRegionSwitch';
 	import type { EnmKlassenleitungAuswahlProps } from './EnmKlassenleitungAuswahlProps';
 	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
@@ -32,12 +32,12 @@
 
 	onBeforeMount(() => props.setAuswahlEinzel(getFirst()));
 
-	const rowsFiltered = computed<Iterable<ENMv1Klasse>>(() => {
+	const rowsFiltered = computed<Iterable<ENMv2Klasse>>(() => {
 		const searchValueLowerCase = search.value.toLocaleLowerCase();
 		if (searchValueLowerCase === "") {
 			return props.enmManager().listKlassenKlassenlehrer;
 		}
-		const list = new ArrayList<ENMv1Klasse>();
+		const list = new ArrayList<ENMv2Klasse>();
 		for (const e of props.enmManager().listKlassenKlassenlehrer) {
 			if (((e.kuerzel !== null) && e.kuerzel.toLocaleLowerCase().includes(searchValueLowerCase))
 				|| (e.kuerzelAnzeige !== null && e.kuerzelAnzeige.toLocaleLowerCase().includes(searchValueLowerCase))) {
@@ -47,7 +47,7 @@
 		return list;
 	});
 
-	function getFirst(): ENMv1Klasse | null {
+	function getFirst(): ENMv2Klasse | null {
 		const list = props.enmManager().listKlassenKlassenlehrer;
 		if (list.isEmpty()) {
 			return null;
@@ -55,7 +55,7 @@
 		return list.getFirst();
 	}
 
-	function setMehrfachauswahl(items: Array<ENMv1Klasse>) {
+	function setMehrfachauswahl(items: Array<ENMv2Klasse>) {
 		if (items.length === 0) {
 			const first = (props.auswahlMehrfach().length === 0) ? getFirst() : props.auswahlMehrfach()[0];
 			props.setAuswahlMehrfach(items);
@@ -66,7 +66,7 @@
 		}
 	}
 
-	function setEinzelauswahl(item: ENMv1Klasse) {
+	function setEinzelauswahl(item: ENMv2Klasse) {
 		props.setAuswahlEinzel(item);
 		props.setAuswahlMehrfach([]);
 	}

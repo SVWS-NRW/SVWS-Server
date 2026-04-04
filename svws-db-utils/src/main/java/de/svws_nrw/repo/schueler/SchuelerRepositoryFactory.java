@@ -13,6 +13,7 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerAnkreuzko
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleistungen;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZP10;
 import de.svws_nrw.repo.RepositoryFactory;
 
 /**
@@ -157,6 +158,15 @@ public final class SchuelerRepositoryFactory extends RepositoryFactory {
 	 */
 	public SchuelerZP10Repository getSchuelerZP10Repository() {
 		return getOrCreate(SchuelerZP10Repository.class, () -> new SchuelerZP10RepositoryImpl(conn));
+	}
+
+	/**
+	 * Erstellt ein neues Repository für {@link DTOTimestampsSchuelerZP10}.
+	 *
+	 * @return das Repository-Objekt
+	 */
+	public SchuelerZP10TimestampsRepository getSchuelerZP10TimestampsRepository() {
+		return getOrCreate(SchuelerZP10TimestampsRepository.class, () -> new SchuelerZP10TimestampsRepositoryImpl(conn));
 	}
 
 }

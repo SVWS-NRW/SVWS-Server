@@ -45,6 +45,7 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsNotenmodulCredent
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleistungen;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZP10;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -90,10 +91,8 @@ public final class EnmV2GetService {
 			tsCreds = kontext.getTimestampCredentials(lehrer.ID);
 		}
 
-		// TODO totpSecret und istErstanmeldung ergänzen
-
 		// Füge den Lehrer hinzu
-		kontext.manager.addLehrer(lehrer, (creds == null) ? "" : creds.passwordHash, (tsCreds == null) ? null : tsCreds.tsPasswordHash);
+		kontext.manager.addLehrer(lehrer, creds, tsCreds);
 	}
 
 
@@ -504,7 +503,8 @@ public final class EnmV2GetService {
 			this.addLehrerIfNotExists(zp10.Fachlehrer_ID);
 
 			// TODO zugehörige Zeitstempelinformationen zu den ZP10-Daten im Kontext laden und auch hier übergeben...
-			kontext.manager.addSchuelerZP10(enmSchueler, zp10);
+			final DTOTimestampsSchuelerZP10 tsZP10 = kontext.getZP10Timestamps(zp10.ID);
+			kontext.manager.addSchuelerZP10(enmSchueler, zp10, tsZP10);
 		}
 	}
 

@@ -11,7 +11,7 @@ import de.svws_nrw.repo.schueler.SchuelerRepositoryFactory;
 public final class NotenmodulServiceFactory {
 
 	private final NotenmodulRepositoryFactory notenmodulRepositoryFactory;
-	private final EnmV1ServiceFactory enmV1ServiceFactory;
+	private final EnmV2ServiceFactory enmV2ServiceFactory;
 	private final LehrerRepositoryFactory lehrerRepositoryFactory;
 	private final SchuelerRepositoryFactory schuelerRepositoryFactory;
 	private final KatalogeRepositoryFactory katalogeRepositoryFactory;
@@ -20,16 +20,16 @@ public final class NotenmodulServiceFactory {
 	 * Erstellt eine neue Service-Factory
 	 *
 	 * @param notenmodulRepositoryFactory   die Factory für Notenmodul-Repositories
-	 * @param enmV1ServiceFactory           die Service-Factory für Services zu ENM-Daten in der Version 1
+	 * @param enmV2ServiceFactory           die Service-Factory für Services zu ENM-Daten in der Version 2
 	 * @param lehrerRepositoryFactory       die Factory für Lehrer-Repositories
 	 * @param schuelerRepositoryFactory     die Factory für Schüler-Repositories
 	 * @param katalogeRepositoryFactory     die Factory für Katalog-Repositories
 	 */
-	private NotenmodulServiceFactory(final NotenmodulRepositoryFactory notenmodulRepositoryFactory, final EnmV1ServiceFactory enmV1ServiceFactory,
+	private NotenmodulServiceFactory(final NotenmodulRepositoryFactory notenmodulRepositoryFactory, final EnmV2ServiceFactory enmV2ServiceFactory,
 			final LehrerRepositoryFactory lehrerRepositoryFactory, final SchuelerRepositoryFactory schuelerRepositoryFactory,
 			final KatalogeRepositoryFactory katalogeRepositoryFactory) {
 		this.notenmodulRepositoryFactory = notenmodulRepositoryFactory;
-		this.enmV1ServiceFactory = enmV1ServiceFactory;
+		this.enmV2ServiceFactory = enmV2ServiceFactory;
 		this.lehrerRepositoryFactory = lehrerRepositoryFactory;
 		this.schuelerRepositoryFactory = schuelerRepositoryFactory;
 		this.katalogeRepositoryFactory = katalogeRepositoryFactory;
@@ -40,7 +40,7 @@ public final class NotenmodulServiceFactory {
 	 * Erzeugt eine neue Instanz der Service-Factory
 	 *
 	 * @param notenmodulRepositoryFactory   die Factory für Notenmodul-Repositories
-	 * @param enmV1ServiceFactory           die Service-Factory für Services zu ENM-Daten in der Version 1
+	 * @param enmV2ServiceFactory           die Service-Factory für Services zu ENM-Daten in der Version 2
 	 * @param lehrerRepositoryFactory       die Factory für Lehrer-Repositories
 	 * @param schuelerRepositoryFactory     die Factory für Schüler-Repositories
 	 * @param katalogeRepositoryFactory     die Factory für Katalog-Repositories
@@ -48,9 +48,9 @@ public final class NotenmodulServiceFactory {
 	 * @return die neue Factory-Instanz
 	 */
 	public static NotenmodulServiceFactory getNewInstance(final NotenmodulRepositoryFactory notenmodulRepositoryFactory,
-			final EnmV1ServiceFactory enmV1ServiceFactory, final LehrerRepositoryFactory lehrerRepositoryFactory,
+			final EnmV2ServiceFactory enmV2ServiceFactory, final LehrerRepositoryFactory lehrerRepositoryFactory,
 			final SchuelerRepositoryFactory schuelerRepositoryFactory, final KatalogeRepositoryFactory katalogeRepositoryFactory) {
-		return new NotenmodulServiceFactory(notenmodulRepositoryFactory, enmV1ServiceFactory, lehrerRepositoryFactory, schuelerRepositoryFactory,
+		return new NotenmodulServiceFactory(notenmodulRepositoryFactory, enmV2ServiceFactory, lehrerRepositoryFactory, schuelerRepositoryFactory,
 				katalogeRepositoryFactory);
 	}
 
@@ -73,8 +73,8 @@ public final class NotenmodulServiceFactory {
 	 */
 	public NotenmodulSynchronisationService getNotenmodulSynchronisationService() {
 		return new NotenmodulSynchronisationService(notenmodulRepositoryFactory.getNotenmodulVerbindungenRepository(),
-				enmV1ServiceFactory.getEnmV1GetService(),
-				enmV1ServiceFactory.getEnmV1ImportService()
+				enmV2ServiceFactory.getEnmV2GetService(),
+				enmV2ServiceFactory.getEnmV2ImportService()
 		);
 	}
 
@@ -86,7 +86,7 @@ public final class NotenmodulServiceFactory {
 	public NotenmodulCredentialsService getNotenmodulCredentialsService() {
 		return new NotenmodulCredentialsService(notenmodulRepositoryFactory.getNotenmodulCredentialsRepository(),
 				lehrerRepositoryFactory.getLehrerRepository(),
-				enmV1ServiceFactory.getEnmV1GetService()
+				enmV2ServiceFactory.getEnmV2GetService()
 		);
 	}
 

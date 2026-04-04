@@ -27,6 +27,26 @@ public class Tabelle_TimestampsNotenmodulCredentials extends SchemaTabelle {
 			.setNotNull()
 			.setJavaComment("Der Zeitstempel der letzten Änderung an dem Password-Hash der Notenmodul-Credentials.");
 
+	/** Die Definition der Tabellenspalte tsArt2FA */
+	public final SchemaTabelleSpalte col_tsArt2FA = add("tsArt2FA", SchemaDatentypen.DATETIME, false)
+			.setDatenlaenge(3)
+			.setNotNull()
+			.setJavaComment("Der Zeitstempel der letzten Änderung an der Art der Zwei-Faktor-Authentifizierung.")
+			.setRevision(SchemaRevisionen.REV_60);
+
+	/** Die Definition der Tabellenspalte tsTotpSecret */
+	public final SchemaTabelleSpalte col_tsTotpSecret = add("tsTotpSecret", SchemaDatentypen.DATETIME, false)
+			.setDatenlaenge(3)
+			.setNotNull()
+			.setJavaComment("Der Zeitstempel der letzten Änderung an dem Shared-Secret für TOTP.")
+			.setRevision(SchemaRevisionen.REV_60);
+
+	/** Die Definition der Tabellenspalte tsIstErstanmeldung */
+	public final SchemaTabelleSpalte col_tsIstErstanmeldung = add("tsIstErstanmeldung", SchemaDatentypen.DATETIME, false)
+			.setDatenlaenge(3)
+			.setNotNull()
+			.setJavaComment("Der Zeitstempel der letzten Änderung an der Information, ob es sich bei der nächsten Anmeldung um eine erstanmeldung handelt oder nicht.")
+			.setRevision(SchemaRevisionen.REV_60);
 
 	/** Die Definition des Fremdschlüssels TimestampsNotenmodulCredentials_FK */
 	public final SchemaTabelleFremdschluessel fk_TimestampsNotenmodulCredentials_FK = addForeignKey(
@@ -37,13 +57,39 @@ public class Tabelle_TimestampsNotenmodulCredentials extends SchemaTabelle {
 
 
 	/** Trigger t_INSERT_TimestampsNotenmodulCredentials */
-	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsNotenmodulCredentials = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsNotenmodulCredentials_UNTIL_REV60 = addTrigger(
 			"t_INSERT_TimestampsNotenmodulCredentials",
 			DBDriver.MARIA_DB,
 			"""
 			AFTER INSERT ON Notenmodul_Credentials FOR EACH ROW
 			INSERT INTO TimestampsNotenmodulCredentials(idLehrer, tsPasswordHash) VALUES (NEW.idLehrer, CURTIME(3));
-			""", Schema.tab_Notenmodul_Credentials, Schema.tab_TimestampsNotenmodulCredentials);
+			""", Schema.tab_Notenmodul_Credentials, Schema.tab_TimestampsNotenmodulCredentials)
+			.setVeraltet(SchemaRevisionen.REV_60);
+
+	/** Trigger t_INSERT_TimestampsNotenmodulCredentials */
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsNotenmodulCredentials = addTrigger(
+			"t_INSERT_TimestampsNotenmodulCredentials",
+			DBDriver.MARIA_DB,
+			"""
+			AFTER INSERT ON Notenmodul_Credentials FOR EACH ROW
+			INSERT INTO TimestampsNotenmodulCredentials(idLehrer, tsPasswordHash, tsArt2FA, tsTotpSecret, tsIstErstanmeldung) VALUES (NEW.idLehrer, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3));
+			""", Schema.tab_Notenmodul_Credentials, Schema.tab_TimestampsNotenmodulCredentials)
+			.setRevision(SchemaRevisionen.REV_60);
+
+	/** Trigger t_UPDATE_TimestampsNotenmodulCredentials */
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsNotenmodulCredentials_UNTIL_REV60 = addTrigger(
+			"t_UPDATE_TimestampsNotenmodulCredentials",
+			DBDriver.MARIA_DB,
+			"""
+			AFTER UPDATE ON Notenmodul_Credentials FOR EACH ROW
+			BEGIN
+			    IF (OLD.passwordHash IS NULL AND NEW.passwordHash IS NOT NULL) OR (OLD.passwordHash <> NEW.passwordHash) THEN
+			        UPDATE TimestampsNotenmodulCredentials SET tsPasswordHash = CURTIME(3) WHERE idLehrer = NEW.idLehrer;
+			    END IF;
+			END
+			""",
+			Schema.tab_Notenmodul_Credentials, Schema.tab_TimestampsNotenmodulCredentials)
+			.setVeraltet(SchemaRevisionen.REV_60);
 
 	/** Trigger t_UPDATE_TimestampsNotenmodulCredentials */
 	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsNotenmodulCredentials = addTrigger(
@@ -55,10 +101,19 @@ public class Tabelle_TimestampsNotenmodulCredentials extends SchemaTabelle {
 			    IF (OLD.passwordHash IS NULL AND NEW.passwordHash IS NOT NULL) OR (OLD.passwordHash <> NEW.passwordHash) THEN
 			        UPDATE TimestampsNotenmodulCredentials SET tsPasswordHash = CURTIME(3) WHERE idLehrer = NEW.idLehrer;
 			    END IF;
+			    IF (OLD.art2FA <> NEW.art2FA) THEN
+			        UPDATE TimestampsNotenmodulCredentials SET tsArt2FA = CURTIME(3) WHERE idLehrer = NEW.idLehrer;
+			    END IF;
+			    IF (OLD.totpSecret IS NULL AND NEW.totpSecret IS NOT NULL) OR (OLD.totpSecret <> NEW.totpSecret) THEN
+			        UPDATE TimestampsNotenmodulCredentials SET tsTotpSecret = CURTIME(3) WHERE idLehrer = NEW.idLehrer;
+			    END IF;
+			    IF (OLD.istErstanmeldung <> NEW.istErstanmeldung) THEN
+			        UPDATE TimestampsNotenmodulCredentials SET tsIstErstanmeldung = CURTIME(3) WHERE idLehrer = NEW.idLehrer;
+			    END IF;
 			END
 			""",
-			Schema.tab_Notenmodul_Credentials, Schema.tab_TimestampsNotenmodulCredentials);
-
+			Schema.tab_Notenmodul_Credentials, Schema.tab_TimestampsNotenmodulCredentials)
+			.setRevision(SchemaRevisionen.REV_60);
 
 	/**
 	 * Erstellt die Schema-Definition für die Tabelle TimestampsNotenmodulCredentials.

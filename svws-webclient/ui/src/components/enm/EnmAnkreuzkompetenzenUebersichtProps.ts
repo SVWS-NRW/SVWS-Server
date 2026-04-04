@@ -1,13 +1,13 @@
-import type { ENMv1Klasse } from "../../../../core/src/core/data/enm/v1/ENMv1Klasse";
-import type { ENMv1Leistung } from "../../../../core/src/core/data/enm/v1/ENMv1Leistung";
-import type { ENMv1Schueler } from "../../../../core/src/core/data/enm/v1/ENMv1Schueler";
-import type { ENMv1SchuelerAnkreuzkompetenz } from "../../../../core/src/core/data/enm/v1/ENMv1SchuelerAnkreuzkompetenz";
+import type { ENMv2Klasse } from "../../../../core/src/core/data/enm/v2/ENMv2Klasse";
+import type { ENMv2Leistung } from "../../../../core/src/core/data/enm/v2/ENMv2Leistung";
+import type { ENMv2Schueler } from "../../../../core/src/core/data/enm/v2/ENMv2Schueler";
+import type { ENMv2SchuelerAnkreuzkompetenz } from "../../../../core/src/core/data/enm/v2/ENMv2SchuelerAnkreuzkompetenz";
 import type { EnmManager } from "./EnmManager";
 
 export interface EnmAnkreuzkompetenzenUebersichtProps {
 	enmManager: () => EnmManager;
-	auswahl: () => Array<ENMv1Klasse>;
-	patchLeistung: (data: ENMv1Leistung, patch: Partial<ENMv1Leistung>) => Promise<void>;
-	patchAnkreuzkompetenz: (data: ENMv1SchuelerAnkreuzkompetenz, patch: Partial<ENMv1SchuelerAnkreuzkompetenz>) => Promise<void>;
-	focusFloskelEditor: (schueler: ENMv1Schueler | null, leistung: ENMv1Leistung | null, row: number | null, doFocus: boolean) => Promise<void>;
+	auswahl: () => Array<ENMv2Klasse>;
+	patchLeistung: (data: ENMv2Leistung, patch: Partial<ENMv2Leistung>) => Promise<void>;
+	patchAnkreuzkompetenz: (data: ENMv2SchuelerAnkreuzkompetenz, patch: Partial<ENMv2SchuelerAnkreuzkompetenz>) => Promise<void>;
+	focusFloskelEditor: (schueler: ENMv2Schueler | null, leistung: ENMv2Leistung | null, row: number | null, doFocus: boolean) => Promise<void>;
 }

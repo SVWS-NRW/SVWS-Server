@@ -232,6 +232,7 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerAnkreuzko
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleistungen;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZP10;
 import de.svws_nrw.db.dto.current.uv.DTOUvFach;
 import de.svws_nrw.db.dto.current.uv.DTOUvKlasse;
 import de.svws_nrw.db.dto.current.uv.DTOUvKurs;
@@ -531,6 +532,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOTimestampsSchuelerLeistungsdaten.class.getSimpleName(), DTOTimestampsSchuelerLeistungsdaten.class);
              mapDTOName2DTOClass.put(DTOTimestampsSchuelerLernabschnittsdaten.class.getSimpleName(), DTOTimestampsSchuelerLernabschnittsdaten.class);
              mapDTOName2DTOClass.put(DTOTimestampsSchuelerTeilleistungen.class.getSimpleName(), DTOTimestampsSchuelerTeilleistungen.class);
+             mapDTOName2DTOClass.put(DTOTimestampsSchuelerZP10.class.getSimpleName(), DTOTimestampsSchuelerZP10.class);
              mapDTOName2DTOClass.put(DTOUvFach.class.getSimpleName(), DTOUvFach.class);
              mapDTOName2DTOClass.put(DTOUvKlasse.class.getSimpleName(), DTOUvKlasse.class);
              mapDTOName2DTOClass.put(DTOUvKurs.class.getSimpleName(), DTOUvKurs.class);
@@ -825,6 +827,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("TimestampsSchuelerLeistungsdaten", DTOTimestampsSchuelerLeistungsdaten.class);
              mapTablename2DTOClass.put("TimestampsSchuelerLernabschnittsdaten", DTOTimestampsSchuelerLernabschnittsdaten.class);
              mapTablename2DTOClass.put("TimestampsSchuelerTeilleistungen", DTOTimestampsSchuelerTeilleistungen.class);
+             mapTablename2DTOClass.put("TimestampsSchuelerZP10", DTOTimestampsSchuelerZP10.class);
              mapTablename2DTOClass.put("UV_Faecher", DTOUvFach.class);
              mapTablename2DTOClass.put("UV_Klassen", DTOUvKlasse.class);
              mapTablename2DTOClass.put("UV_Kurse", DTOUvKurs.class);

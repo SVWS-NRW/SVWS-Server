@@ -9,12 +9,12 @@
 <script setup lang="ts">
 
 	import { nextTick, ref, shallowRef, useTemplateRef } from 'vue';
-	import type { ENMv1Schueler } from '../../../../core/src/core/data/enm/v1/ENMv1Schueler';
-	import { ENMv1Leistung } from '../../../../core/src/core/data/enm/v1/ENMv1Leistung';
-	import type { ENMv1Klasse } from '../../../../core/src/core/data/enm/v1/ENMv1Klasse';
+	import type { ENMv2Schueler } from '../../../../core/src/core/data/enm/v2/ENMv2Schueler';
+	import { ENMv2Leistung } from '../../../../core/src/core/data/enm/v2/ENMv2Leistung';
+	import type { ENMv2Klasse } from '../../../../core/src/core/data/enm/v2/ENMv2Klasse';
 	import type { EnmAnkreuzkompetenzenProps } from './EnmAnkreuzkompetenzenProps';
 
-	type AuswahlZelle = { klasse: ENMv1Klasse | null, schueler: ENMv1Schueler | null, leistung: ENMv1Leistung | null };
+	type AuswahlZelle = { klasse: ENMv2Klasse | null, schueler: ENMv2Schueler | null, leistung: ENMv2Leistung | null };
 
 	const props = defineProps<EnmAnkreuzkompetenzenProps>();
 
@@ -36,7 +36,7 @@
 		gridRef.value.gridManager.focusRowLast = row;
 		const { b: schueler } = gridRef.value.gridManagerSchueler.daten.get(row);
 		const { kompetenz: leistung } = gridRef.value.gridManager.daten.getFirst();
-		if (leistung instanceof ENMv1Leistung) {
+		if (leistung instanceof ENMv2Leistung) {
 			auswahlZelle.value = { klasse: null, schueler, leistung };
 		} else {
 			auswahlZelle.value = { klasse: null, schueler, leistung: null };
@@ -46,7 +46,7 @@
 		}
 	}
 
-	async function focusFloskelEditor(schueler: ENMv1Schueler | null, leistung: ENMv1Leistung | null, row: number | null, doFocus: boolean) {
+	async function focusFloskelEditor(schueler: ENMv2Schueler | null, leistung: ENMv2Leistung | null, row: number | null, doFocus: boolean) {
 		auswahlZelle.value = { klasse: null, schueler, leistung };
 		initialRow.value = row;
 		if (doFocus) {

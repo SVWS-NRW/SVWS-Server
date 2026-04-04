@@ -82,25 +82,25 @@
 
 	import type { ComponentPublicInstance } from 'vue';
 	import { computed, onMounted, onBeforeUnmount, onUnmounted, ref, watch } from 'vue';
-	import type { ENMv1Floskel } from '../../../../core/src/core/data/enm/v1/ENMv1Floskel';
-	import type { ENMv1Floskelgruppe } from '../../../../core/src/core/data/enm/v1/ENMv1Floskelgruppe';
+	import type { ENMv2Floskel } from '../../../../core/src/core/data/enm/v2/ENMv2Floskel';
+	import type { ENMv2Floskelgruppe } from '../../../../core/src/core/data/enm/v2/ENMv2Floskelgruppe';
 	import { ArrayList } from '../../../../core/src/java/util/ArrayList';
-	import type { ENMv1Schueler } from '../../../../core/src/core/data/enm/v1/ENMv1Schueler';
-	import type { ENMv1Leistung } from '../../../../core/src/core/data/enm/v1/ENMv1Leistung';
-	import { ENMv1Klasse } from '../../../../core/src/core/data/enm/v1/ENMv1Klasse';
+	import type { ENMv2Schueler } from '../../../../core/src/core/data/enm/v2/ENMv2Schueler';
+	import type { ENMv2Leistung } from '../../../../core/src/core/data/enm/v2/ENMv2Leistung';
+	import { ENMv2Klasse } from '../../../../core/src/core/data/enm/v2/ENMv2Klasse';
 	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
 	import type { List } from '../../../../core/src/java/util/List';
 	import type { EnmManager, BemerkungenHauptgruppe, EnmLerngruppenAuswahlEintrag } from './EnmManager';
 	import { PairNN } from '../../../../core/src/asd/adt/PairNN';
 	import { SelectManager } from '../../ui/controls/select/manager/SelectManager';
 
-	type RowType = { gruppe: ENMv1Floskelgruppe, floskel: ENMv1Floskel | null };
+	type RowType = { gruppe: ENMv2Floskelgruppe, floskel: ENMv2Floskel | null };
 	type StrOrUndef = string | undefined;
 
 	const props = defineProps<{
 		enmManager: () => EnmManager;
-		lerngruppenAuswahl: () => Array<EnmLerngruppenAuswahlEintrag | ENMv1Klasse>;
-		auswahl: { klasse: ENMv1Klasse | null, schueler: ENMv1Schueler | null, leistung: ENMv1Leistung | null };
+		lerngruppenAuswahl: () => Array<EnmLerngruppenAuswahlEintrag | ENMv2Klasse>;
+		auswahl: { klasse: ENMv2Klasse | null, schueler: ENMv2Schueler | null, leistung: ENMv2Leistung | null };
 		patch: (value: string | null) => Promise<void>;
 		erlaubteHauptgruppe: BemerkungenHauptgruppe;
 		initialRow: number | null;
@@ -129,19 +129,19 @@
 		'ZB': 'Zeugnis-Bemerkungen',
 	} as const;
 
-	const gridManagerSchueler = new GridManager<string, PairNN<string, ENMv1Schueler>, List<PairNN<string, ENMv1Schueler>>>({
-		daten: computed<List<PairNN<string, ENMv1Schueler>>>(() => {
-			const result = new ArrayList<PairNN<string, ENMv1Schueler>>();
+	const gridManagerSchueler = new GridManager<string, PairNN<string, ENMv2Schueler>, List<PairNN<string, ENMv2Schueler>>>({
+		daten: computed<List<PairNN<string, ENMv2Schueler>>>(() => {
+			const result = new ArrayList<PairNN<string, ENMv2Schueler>>();
 			for (const lerngruppenAuswahl of props.lerngruppenAuswahl()) {
-				if (lerngruppenAuswahl instanceof ENMv1Klasse) {
+				if (lerngruppenAuswahl instanceof ENMv2Klasse) {
 					const listSchueler = props.enmManager().mapKlassenSchueler.get(lerngruppenAuswahl.id);
 					const klasse = props.enmManager().mapKlassen.get(lerngruppenAuswahl.id);
 					if ((klasse === null) || (listSchueler === null)) {
 						continue;
 					}
-					const list = new ArrayList<PairNN<string, ENMv1Schueler>>();
+					const list = new ArrayList<PairNN<string, ENMv2Schueler>>();
 					for (const schueler of listSchueler) {
-						const pair = new PairNN<string, ENMv1Schueler>(klasse.kuerzel ?? '???', schueler);
+						const pair = new PairNN<string, ENMv2Schueler>(klasse.kuerzel ?? '???', schueler);
 						list.add(pair);
 					}
 					result.addAll(list);
@@ -152,7 +152,7 @@
 						continue;
 					}
 					for (const pairLeistung of leistungen) {
-						const pair = new PairNN<string, ENMv1Schueler>(fach.bezeichnung ?? '???', pairLeistung.b);
+						const pair = new PairNN<string, ENMv2Schueler>(fach.bezeichnung ?? '???', pairLeistung.b);
 						result.add(pair);
 					}
 				}
@@ -198,8 +198,8 @@
 	const { niveauSet, jahrgangSet, floskelgruppen } = computed(() => {
 		const jahrgangSet = ref(new Set<number>());
 		const niveauSet = ref(new Set<number>());
-		const floskelnHauptgruppe: ENMv1Floskelgruppe[] = [];
-		const floskelnAllgemein: ENMv1Floskelgruppe[] = [];
+		const floskelnHauptgruppe: ENMv2Floskelgruppe[] = [];
+		const floskelnAllgemein: ENMv2Floskelgruppe[] = [];
 		for (const gruppe of props.enmManager().listFloskelgruppen) {
 			if (gruppe.floskeln.isEmpty()) {
 				continue;
@@ -248,7 +248,7 @@
 		set: (value) => jahrgangSelectedMemo.value = value,
 	});
 
-	function inputBemerkung(floskel: ENMv1Floskel, col: number, index: number) {
+	function inputBemerkung(floskel: ENMv2Floskel, col: number, index: number) {
 		const key = `Floskel_${floskel.kuerzel}`;
 		const setter = () => ergaenzeFloskel(floskel);
 		return (element: Element | ComponentPublicInstance<unknown> | null) => {
@@ -307,11 +307,11 @@
 
 	watch(bemerkung, () => text.value = bemerkung.value, { immediate: true });
 
-	const schueler = computed<ENMv1Schueler | null>(() => props.auswahl.schueler);
+	const schueler = computed<ENMv2Schueler | null>(() => props.auswahl.schueler);
 	const clean = computed(() => (text.value === null) || !templateRegex.exec(text.value));
 
 	const floskelMap = computed(() => {
-		const floskeln = new Map<string, ENMv1Floskel>();
+		const floskeln = new Map<string, ENMv2Floskel>();
 		for (const row of gridManager.daten) {
 			if (typeof row.floskel?.kuerzel === 'string') {
 				floskeln.set(row.floskel.kuerzel.toLocaleLowerCase(), row.floskel);
@@ -334,7 +334,7 @@
 	const grossPronomenMap = computed(() => new Map([['m', 'Er'], ['w', 'Sie'], ['d', props.auswahl.schueler?.vorname ?? '???'], ['x', props.auswahl.schueler?.vorname ?? '???']]));
 	const anredeMap = computed(() => new Map([['m', 'Herr'], ['w', 'Frau']]));
 
-	function ergaenzeFloskel(floskel: ENMv1Floskel) {
+	function ergaenzeFloskel(floskel: ENMv2Floskel) {
 		let tmp = text.value;
 		if (tmp === null) {
 			tmp = "";

@@ -1,5 +1,5 @@
-import type { ENMv1Klasse, ENMv1Leistung, ENMv1LeistungBemerkungen, ENMv1Lernabschnitt, ENMv1SchuelerAnkreuzkompetenz, ENMv1Teilleistung } from "@core";
-import { BenutzerKompetenz, BenutzerTyp, DeveloperNotificationException, ENMv1Daten, OpenApiError } from "@core";
+import type { ENMv2Klasse, ENMv2Leistung, ENMv2LeistungBemerkungen, ENMv2Lernabschnitt, ENMv2SchuelerAnkreuzkompetenz, ENMv2Teilleistung } from "@core";
+import { BenutzerKompetenz, BenutzerTyp, DeveloperNotificationException, ENMv2Daten, OpenApiError } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeNotenmodulLeistungen } from "./RouteNotenmodulLeistungen";
@@ -10,7 +10,7 @@ import { EnmSpaltenManager } from "../../../../../ui/src/components/enm/EnmSpalt
 
 interface RouteStateNotenmodul extends RouteStateInterface {
 	// Die ENM-Daten, welche für den angemeldeten Lehrer-Benutzer über die API geladen werden
-	daten: ENMv1Daten | null;
+	daten: ENMv2Daten | null;
 
 	// Der Manager für die ENM-Daten, welche für den angemeldeten Lehrer-Benutzer über die API geladen werden
 	manager: EnmManager | null;
@@ -22,10 +22,10 @@ interface RouteStateNotenmodul extends RouteStateInterface {
 	auswahlLerngruppe: EnmLerngruppenAuswahlEintrag | null;
 
 	// Die aktuell ausgewählten Klassen bei der Ansicht für die Klassenleitung (bei Mehrfachauswahl)
-	auswahlKlassen: Array<ENMv1Klasse>;
+	auswahlKlassen: Array<ENMv2Klasse>;
 
 	// Die aktuell ausgewählte Klasse bei der Ansicht für die Klassenleitung (bei Einzelauswahl)
-	auswahlKlasse: ENMv1Klasse | null;
+	auswahlKlasse: ENMv2Klasse | null;
 }
 
 
@@ -59,9 +59,9 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 				throw new DeveloperNotificationException("Der Benutzer hat keine Berechtigung, um auf das Notenmodul zuzugreifen. Diese Stelle sollte daher nicht erreichbar sein und es handelt sich um einen Programmierfehler.");
 			}
 			if (api.benutzertyp === BenutzerTyp.LEHRER) {
-				patchedState.daten = await api.server.getLehrerENMDaten(api.schema, api.benutzerIDLehrer);
+				patchedState.daten = await api.server.getLehrerENMv2Daten(api.schema, api.benutzerIDLehrer);
 			} else {
-				patchedState.daten = await api.server.getENMDaten(api.schema);
+				patchedState.daten = await api.server.getENMv2Daten(api.schema);
 			}
 			patchedState.manager = new EnmManager(patchedState.daten, patchedState.daten.lehrerID);
 			const lerngruppen = patchedState.manager.mapLerngruppenAuswahl.values();
@@ -84,7 +84,7 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 
 		} catch (error) {
 			if ((error instanceof OpenApiError) && (error.response instanceof Response) && (error.response.status === 404)) {
-				patchedState.daten = new ENMv1Daten();
+				patchedState.daten = new ENMv2Daten();
 				patchedState.manager = new EnmManager(patchedState.daten, patchedState.daten.lehrerID);
 			}
 		}
@@ -172,7 +172,7 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 *
 	 * @returns die Klassen-Auswahl
 	 */
-	get auswahlKlasse(): ENMv1Klasse | null {
+	get auswahlKlasse(): ENMv2Klasse | null {
 		return this._state.value.auswahlKlasse;
 	}
 
@@ -182,7 +182,7 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 *
 	 * @returns die Klassen-Auswahl
 	 */
-	get auswahlKlassen(): Array<ENMv1Klasse> {
+	get auswahlKlassen(): Array<ENMv2Klasse> {
 		if (this._state.value.auswahlKlasse === null) {
 			return this._state.value.auswahlKlassen;
 		}
@@ -194,7 +194,7 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 *
 	 * @returns die Klassen-Auswahl
 	 */
-	get auswahlKlassenNurMehrfachauswahl(): Array<ENMv1Klasse> {
+	get auswahlKlassenNurMehrfachauswahl(): Array<ENMv2Klasse> {
 		return this._state.value.auswahlKlassen;
 	}
 
@@ -203,7 +203,7 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 *
 	 * @param value   die neue Auswahl
 	 */
-	public setAuswahlKlasse = (value: ENMv1Klasse | null) => {
+	public setAuswahlKlasse = (value: ENMv2Klasse | null) => {
 		this._state.value.auswahlKlasse = value;
 		this.commit();
 	};
@@ -213,7 +213,7 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 *
 	 * @param value   die neue Auswahl
 	 */
-	public setAuswahlKlassen = (value: Array<ENMv1Klasse>) => {
+	public setAuswahlKlassen = (value: Array<ENMv2Klasse>) => {
 		this._state.value.auswahlKlassen = value;
 		this.commit();
 	};
@@ -225,7 +225,7 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 *
 	 * @returns true im Erfolgsfall und ansonsten false
 	 */
-	public patchLeistung = async (data: ENMv1Leistung, patch: Partial<ENMv1Leistung>): Promise<void> => {
+	public patchLeistung = async (data: ENMv2Leistung, patch: Partial<ENMv2Leistung>): Promise<void> => {
 		patch.id = data.id;
 		await api.server.patchENMLeistung(patch, api.schema);
 		Object.assign(data, patch);
@@ -239,7 +239,7 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 *
 	 * @returns true im Erfolgsfall und ansonsten false
 	 */
-	public patchTeilleistung = async (data: ENMv1Teilleistung, patch: Partial<ENMv1Teilleistung>): Promise<void> => {
+	public patchTeilleistung = async (data: ENMv2Teilleistung, patch: Partial<ENMv2Teilleistung>): Promise<void> => {
 		patch.id = data.id;
 		await api.server.patchENMTeilleistung(patch, api.schema);
 		Object.assign(data, patch);
@@ -253,7 +253,7 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 *
 	 * @returns true im Erfolgsfall und ansonsten false
 	 */
-	public patchBemerkungen = async (id: number, data: ENMv1LeistungBemerkungen, patch: Partial<ENMv1LeistungBemerkungen>): Promise<void> => {
+	public patchBemerkungen = async (id: number, data: ENMv2LeistungBemerkungen, patch: Partial<ENMv2LeistungBemerkungen>): Promise<void> => {
 		await api.server.patchENMSchuelerBemerkungen(patch, api.schema, id);
 		Object.assign(data, patch);
 		this.commit();
@@ -266,7 +266,7 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 *
 	 * @returns true im Erfolgsfall und ansonsten false
 	 */
-	public patchLernabschnitt = async (data: ENMv1Lernabschnitt, patch: Partial<ENMv1Lernabschnitt>): Promise<void> => {
+	public patchLernabschnitt = async (data: ENMv2Lernabschnitt, patch: Partial<ENMv2Lernabschnitt>): Promise<void> => {
 		patch.id = data.id;
 		await api.server.patchENMSchuelerLernabschnitt(patch, api.schema);
 		Object.assign(data, patch);
@@ -280,7 +280,7 @@ export class RouteDataNotenmodul extends RouteData<RouteStateNotenmodul> {
 	 *
 	 * @returns true im Erfolgsfall und ansonsten false
 	 */
-	public patchAnkreuzkompetenz = async (data: ENMv1SchuelerAnkreuzkompetenz, patch: Partial<ENMv1SchuelerAnkreuzkompetenz>): Promise<void> => {
+	public patchAnkreuzkompetenz = async (data: ENMv2SchuelerAnkreuzkompetenz, patch: Partial<ENMv2SchuelerAnkreuzkompetenz>): Promise<void> => {
 		patch.id = data.id;
 		console.log(patch, 'für ID', data.id);
 		await api.server.patchENMSchuelerAnkreuzkompetenz(patch, api.schema);

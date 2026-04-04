@@ -44,6 +44,16 @@ export class ENMv2Lehrer extends JavaObject {
 	public tsPasswordHash: string | null = null;
 
 	/**
+	 * Gibt die Art der verwendeten Zwei-Faktor-Authentifizierung an (0 = Keine, 1 = TOTP, 2 = Mail).
+	 */
+	public art2FA: number = 0;
+
+	/**
+	 * Der Zeitstempel für die konfigurierte Art der Zwei-Faktor-Authentifzierung
+	 */
+	public tsArt2FA: string | null = null;
+
+	/**
 	 * Das Shared-Secret für TOTP
 	 */
 	public totpSecret: string = "";
@@ -91,6 +101,10 @@ export class ENMv2Lehrer extends JavaObject {
 			throw new Error('invalid json format, missing attribute passwordHash');
 		result.passwordHash = obj.passwordHash;
 		result.tsPasswordHash = (obj.tsPasswordHash === undefined) ? null : obj.tsPasswordHash === null ? null : obj.tsPasswordHash;
+		if (obj.art2FA === undefined)
+			throw new Error('invalid json format, missing attribute art2FA');
+		result.art2FA = obj.art2FA;
+		result.tsArt2FA = (obj.tsArt2FA === undefined) ? null : obj.tsArt2FA === null ? null : obj.tsArt2FA;
 		if (obj.totpSecret === undefined)
 			throw new Error('invalid json format, missing attribute totpSecret');
 		result.totpSecret = obj.totpSecret;
@@ -111,6 +125,8 @@ export class ENMv2Lehrer extends JavaObject {
 		result += '"eMailDienstlich" : ' + ((obj.eMailDienstlich === null) ? 'null' : JSON.stringify(obj.eMailDienstlich)) + ',';
 		result += '"passwordHash" : ' + JSON.stringify(obj.passwordHash) + ',';
 		result += '"tsPasswordHash" : ' + ((obj.tsPasswordHash === null) ? 'null' : JSON.stringify(obj.tsPasswordHash)) + ',';
+		result += '"art2FA" : ' + obj.art2FA.toString() + ',';
+		result += '"tsArt2FA" : ' + ((obj.tsArt2FA === null) ? 'null' : JSON.stringify(obj.tsArt2FA)) + ',';
 		result += '"totpSecret" : ' + JSON.stringify(obj.totpSecret) + ',';
 		result += '"istErstanmeldung" : ' + obj.istErstanmeldung.toString() + ',';
 		result += '"tsIstErstanmeldung" : ' + ((obj.tsIstErstanmeldung === null) ? 'null' : JSON.stringify(obj.tsIstErstanmeldung)) + ',';
@@ -144,6 +160,12 @@ export class ENMv2Lehrer extends JavaObject {
 		}
 		if (obj.tsPasswordHash !== undefined) {
 			result += '"tsPasswordHash" : ' + ((obj.tsPasswordHash === null) ? 'null' : JSON.stringify(obj.tsPasswordHash)) + ',';
+		}
+		if (obj.art2FA !== undefined) {
+			result += '"art2FA" : ' + obj.art2FA.toString() + ',';
+		}
+		if (obj.tsArt2FA !== undefined) {
+			result += '"tsArt2FA" : ' + ((obj.tsArt2FA === null) ? 'null' : JSON.stringify(obj.tsArt2FA)) + ',';
 		}
 		if (obj.totpSecret !== undefined) {
 			result += '"totpSecret" : ' + JSON.stringify(obj.totpSecret) + ',';

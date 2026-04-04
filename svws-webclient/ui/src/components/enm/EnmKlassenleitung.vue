@@ -8,13 +8,13 @@
 
 	import { nextTick, ref, shallowRef, useTemplateRef } from 'vue';
 	import type { EnmKlassenleitungProps } from './EnmKlassenleitungProps';
-	import type { ENMv1LeistungBemerkungen } from '../../../../core/src/core/data/enm/v1/ENMv1LeistungBemerkungen';
+	import type { ENMv2LeistungBemerkungen } from '../../../../core/src/core/data/enm/v2/ENMv2LeistungBemerkungen';
 	import type { BemerkungenHauptgruppe } from './EnmManager';
-	import type { ENMv1Klasse } from '../../../../core/src/core/data/enm/v1/ENMv1Klasse';
-	import type { ENMv1Schueler } from '../../../../core/src/core/data/enm/v1/ENMv1Schueler';
-	import type { ENMv1Leistung } from '../../../../core/src/core/data/enm/v1/ENMv1Leistung';
+	import type { ENMv2Klasse } from '../../../../core/src/core/data/enm/v2/ENMv2Klasse';
+	import type { ENMv2Schueler } from '../../../../core/src/core/data/enm/v2/ENMv2Schueler';
+	import type { ENMv2Leistung } from '../../../../core/src/core/data/enm/v2/ENMv2Leistung';
 
-	type AuswahlZelle = { klasse: ENMv1Klasse | null, schueler: ENMv1Schueler | null, leistung: ENMv1Leistung | null };
+	type AuswahlZelle = { klasse: ENMv2Klasse | null, schueler: ENMv2Schueler | null, leistung: ENMv2Leistung | null };
 
 	const props = defineProps<EnmKlassenleitungProps>();
 
@@ -42,7 +42,7 @@
 	}
 	const erlaubteHauptgruppe = shallowRef<BemerkungenHauptgruppe>('ZB');
 
-	async function focusFloskelEditor(hauptgruppe: BemerkungenHauptgruppe | null, schueler: ENMv1Schueler | null, klasse: ENMv1Klasse | null, row: number | null, doFocus: boolean) {
+	async function focusFloskelEditor(hauptgruppe: BemerkungenHauptgruppe | null, schueler: ENMv2Schueler | null, klasse: ENMv2Klasse | null, row: number | null, doFocus: boolean) {
 		if (hauptgruppe !== null) {
 			erlaubteHauptgruppe.value = hauptgruppe;
 		}
@@ -58,7 +58,7 @@
 		if ((auswahlZelle.value.schueler === null) || (auswahlZelle.value.klasse === null)) {
 			return;
 		}
-		const patch = <Partial<ENMv1LeistungBemerkungen>>{};
+		const patch = <Partial<ENMv2LeistungBemerkungen>>{};
 		switch (erlaubteHauptgruppe.value) {
 			case 'ASV':
 				patch.ASV = bemerkung;
