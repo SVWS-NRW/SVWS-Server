@@ -18,7 +18,7 @@ import { GostBelegungsfehler } from '../../../../../core/abschluss/gost/GostBele
 export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 
 	/**
-	 * Eine Vektor mit den Projektfächern, die belegt wurden. Dies sollte im Regelfall nur ein Fach sein, können aber ggf. bei einer gültigen Belegung bis zu drei Fächer sein
+	 * Ein Vektor mit den Projektfächern, die belegt wurden. Dies sollte im Regelfall nur ein Fach sein, können aber ggf. bei einer gültigen Belegung bis zu drei Fächer sein
 	 */
 	private projektkursBelegung: List<AbiturFachbelegung> = new ArrayList<AbiturFachbelegung>();
 
@@ -28,7 +28,7 @@ export class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 	private projektkurs: AbiturFachbelegung | null = null;
 
 	/**
-	 * ein Vektor, welcher die anrechenbaren Halbjahre eines gültig angewählten Projektkurses beinhaltet
+	 * Ein Vektor, welcher die anrechenbaren Halbjahre eines gültig angewählten Projektkurses beinhaltet
 	 */
 	private projektkursHalbjahre: List<GostHalbjahr> = new ArrayList<GostHalbjahr>();
 

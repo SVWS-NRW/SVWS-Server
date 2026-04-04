@@ -69,9 +69,9 @@ public final class CsvReader {
 	 * Diese Methode ermittelt für den angegebenen String location ein
 	 * zugehöriges Path-Objekt aus dem zugehörigen Resource-Ordner.
 	 * Dabei wird auch der Zugriff auf ein ZIP-Dateisystem genutzt,
-	 * falls sich die Resource in einem JAR-File befindet.
+	 * falls sich die Ressource in einem JAR-File befindet.
 	 *
-	 * @param location   der Pfad der Resource
+	 * @param location   der Pfad der Ressource
 	 *
 	 * @return das Path-Objekt zum Zugriff auf die Ressource
 	 *
@@ -87,9 +87,9 @@ public final class CsvReader {
 		final var uri = url.toURI();
 		if (uri.toString().contains("jar:file:")) {
 			try {
-				final String[] jar_path_elements = uri.toString().split("!");
-				final FileSystem zipfs = getZipFileSystem(jar_path_elements[0]);
-				return zipfs.getPath(jar_path_elements[1]);
+				final String[] jarPathElements = uri.toString().split("!");
+				final FileSystem zipfs = getZipFileSystem(jarPathElements[0]);
+				return zipfs.getPath(jarPathElements[1]);
 			} catch (final IOException e) {
 				e.printStackTrace();
 				return null;

@@ -433,8 +433,8 @@ export class Abi30BelegpruefungKurszahlenUndWochenstunden extends GostBelegpruef
 
 	/**
 	 * Gesamtprüfung Punkte 80-82:
-	 * Prüfe, ob die Summe der durschnittlichen Kursstunden der 3 Jahre größer oder gleich 100 bzw. 102 ist
-	 * und ob die durchschnittliche Summe der Kursstunden in der Einführungsphase under Qualifikationsphase
+	 * Prüfe, ob die Summe der durchschnittlichen Kursstunden der 3 Jahre größer oder gleich 100 bzw. 102 ist
+	 * und ob die durchschnittliche Summe der Kursstunden in der Einführungsphase und der Qualifikationsphase
 	 * größer oder gleich 34 ist.
 	 */
 	private pruefeKursstundenSummen(): void {

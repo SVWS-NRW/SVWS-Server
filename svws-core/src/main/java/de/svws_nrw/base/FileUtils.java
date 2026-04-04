@@ -121,9 +121,9 @@ public final class FileUtils {
 	public static void move(final File file, final OutputStream ostream) throws IOException {
 		try (InputStream istream = new BufferedInputStream(new FileInputStream(file))) {
 			final byte[] buf = new byte[65536];
-			int bytes_read = -1;
-			while ((bytes_read = istream.read(buf)) > -1) {
-				ostream.write(buf, 0, bytes_read);
+			int bytesGelesen = -1;
+			while ((bytesGelesen = istream.read(buf)) > -1) {
+				ostream.write(buf, 0, bytesGelesen);
 			}
 		}
 		Files.delete(file.toPath());
@@ -158,9 +158,9 @@ public final class FileUtils {
 	public static void copy(final File file, final OutputStream ostream) throws IOException {
 		try (InputStream istream = new BufferedInputStream(new FileInputStream(file))) {
 			final byte[] buf = new byte[65536];
-			int bytes_read = -1;
-			while ((bytes_read = istream.read(buf)) > -1) {
-				ostream.write(buf, 0, bytes_read);
+			int bytesGelesen = -1;
+			while ((bytesGelesen = istream.read(buf)) > -1) {
+				ostream.write(buf, 0, bytesGelesen);
 			}
 		}
 	}

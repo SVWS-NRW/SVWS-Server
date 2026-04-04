@@ -184,9 +184,9 @@ public class ServiceAbschlussMSA extends Service {
 	 */
 	private @NotNull AbschlussErgebnis pruefeDefizite(final @NotNull AbschlussFaecherGruppen faecher, final @NotNull String logIndent) {
 		// Erfasse den Status der Optionen für das "Beheben" von Defiziten
-		boolean ignorieren_genutzt = false;
-		boolean ausgleich_genutzt = false;  // gibt an, ob bereits ein Ausgleich genutzt wurde
-		boolean nachpruefung_genutzt = false;
+		boolean ignorierenGenutzt = false;
+		boolean ausgleichGenutzt = false;  // gibt an, ob bereits ein Ausgleich genutzt wurde
+		boolean nachpruefungGenutzt = false;
 		final @NotNull List<GEAbschlussFach> npFaecher = new ArrayList<>();
 
 		// Bestimme die Defizite in den beiden Fächergruppen
@@ -215,25 +215,25 @@ public class ServiceAbschlussMSA extends Service {
 		}
 
 		// Prüfe auf eine Abweichung von zwei Notenstufen in FG2 - darf nur 1x vorkommen und muss dann unberücksichtigt bleiben
-		final @NotNull List<GEAbschlussFach> sonstige_ungenuegend = faecher.fg2.getFaecher(filterDefizite2NS);
-		if (sonstige_ungenuegend.size() > 1) {
+		final @NotNull List<GEAbschlussFach> sonstigeUngenuegend = faecher.fg2.getFaecher(filterDefizite2NS);
+		if (sonstigeUngenuegend.size() > 1) {
 			logger.logLn(LogLevel.DEBUG,
 					logIndent + " -> zu viele Defizite, kann nicht mehr als eine Note mit 6 (bzw. 5 bei einem G-Kurs) in FG2 unberücksichtigt lassen");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA, false);
-		} else if (sonstige_ungenuegend.size() == 1) {
+		} else if (sonstigeUngenuegend.size() == 1) {
 			// Muss unberücksichtigt bleiben -> "Ignorieren", aber nur, falls es sich nicht um das leistungsdifferenzierte Fach handelt, dann ist dies ggf. ein notwendiges Nachprüfungsfach
-			final @NotNull GEAbschlussFach defizitFach = sonstige_ungenuegend.get(0);
+			final @NotNull GEAbschlussFach defizitFach = sonstigeUngenuegend.get(0);
 			if (GELeistungsdifferenzierteKursart.Sonstige.hat(defizitFach.kursart)) {
 				defizitFach.ausgeglichen = true;
 				logger.logLn(LogLevel.DEBUG, logIndent + " -> unberücksichtigt: Defizit in " + defizitFach.kuerzel + " (2 Notenstufen)");
-				ignorieren_genutzt = true;
+				ignorierenGenutzt = true;
 			} else if ((GELeistungsdifferenzierteKursart.E.hat(defizitFach.kursart)) && (defizitFach.note == 6)) {
 				logger.logLn(LogLevel.DEBUG, logIndent + "   -> Ein ungenügend in dem E-Kurs " + defizitFach.kuerzel
 						+ " kann nicht ausgelichen werden und eine Nachprüfung ist nicht zulässig!");
 				return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA, false);
 			} else {
 				logger.logLn(LogLevel.DEBUG, logIndent + "   -> Nachprüfung muss falls möglich in " + defizitFach.kuerzel + " stattfinden!");
-				nachpruefung_genutzt = true;
+				nachpruefungGenutzt = true;
 				npFaecher.add(defizitFach);
 				defizitFach.note--; // verbessere für die weitere Berechnung
 			}
@@ -241,33 +241,33 @@ public class ServiceAbschlussMSA extends Service {
 
 
 		// drei Defizite in FG1 führen dazu, dass ein Abschluss nicht mehr möglich ist, zwei immer wenn WP kein Defizitfach ist oder kein Ausgleich in FG1 verfügbar ist.
-		final GEAbschlussFach wp_defizit = faecher.fg1.getFach(filterDefizitWP);
+		final GEAbschlussFach wpDefizit = faecher.fg1.getFach(filterDefizitWP);
 		if ((fg1_defizite > 2)
-				|| ((fg1_defizite == 2) && (wp_defizit == null))
+				|| ((fg1_defizite == 2) && (wpDefizit == null))
 				|| ((fg1_defizite == 2) && (fg1_anzahlAusgleiche == 0))
-				|| ((fg1_defizite == 1) && (wp_defizit == null) && (fg1_anzahlAusgleiche == 0))) {
+				|| ((fg1_defizite == 1) && (wpDefizit == null) && (fg1_anzahlAusgleiche == 0))) {
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> zu viele Defizite in FG1");
 			return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA, false);
 		}
 
 		// Bei zwei Defiziten muss WP in die Nachprüfung und das andere Fach muss ausgeglichen werden
 		// - Dies geht nur, falls die Nachprüfungsoption nicht bereits genutzt wurde für das leistungsdifferenzierte Fach in FG2
-		if ((fg1_defizite == 2) && (wp_defizit != null)) {
-			if (nachpruefung_genutzt) {
+		if ((fg1_defizite == 2) && (wpDefizit != null)) {
+			if (nachpruefungGenutzt) {
 				logger.logLn(LogLevel.DEBUG, logIndent + " -> zu viele Defizite in FG1, eine Nachprüfung in mehreren Fächern (WP, "
-						+ sonstige_ungenuegend.get(0).kuerzel + ") ist nicht möglich!");
+						+ sonstigeUngenuegend.get(0).kuerzel + ") ist nicht möglich!");
 				return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA, false);
 			}
 			// Setze WP als Nachprüfungsfach
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> WP-Defizite in FG1, eine Nachprüfung ist, sofern möglich, in WP nötig!");
-			npFaecher.add(wp_defizit);
-			nachpruefung_genutzt = true;
+			npFaecher.add(wpDefizit);
+			nachpruefungGenutzt = true;
 		}
 
 		// Ein einzelnen FG1-Defizit muss auch ausgeglichen werden, falls WP kein Defizit ist (implizit ist hier ein Ausgleich vorhanden, da sonst zuvor abgebrochen worden wäre, s.o.)
-		if ((fg1_defizite == 2) || ((fg1_defizite == 1) && (wp_defizit == null))) {
+		if ((fg1_defizite == 2) || ((fg1_defizite == 1) && (wpDefizit == null))) {
 			// Nutze die Ausgleichs-Option für FG1
-			ausgleich_genutzt = true;
+			ausgleichGenutzt = true;
 			final GEAbschlussFach defizitFach = faecher.fg1.getFach(filterDefizitNichtWP);
 			if (defizitFach == null) {
 				throw new NullPointerException();
@@ -283,41 +283,41 @@ public class ServiceAbschlussMSA extends Service {
 		}
 
 		// Bei einem Defizit in WP kann man entweder den Ausgleichs- oder die Nachprüfungs-Option wählen, sofern diese nicht für das leistungsdifferenzierte Fach in der FG2 genutzt wurde
-		if (((fg1_defizite == 1) && (wp_defizit != null))) {
+		if (((fg1_defizite == 1) && (wpDefizit != null))) {
 			// Prüfe erst die Ausgleichsoption
-			final @NotNull GEAbschlussFach defizitFach = wp_defizit;
+			final @NotNull GEAbschlussFach defizitFach = wpDefizit;
 			final GEAbschlussFach ausgleichsFach = faecher.fg1.getFach(filterAusgleiche);
 			if (ausgleichsFach != null) {
-				ausgleich_genutzt = true;
+				ausgleichGenutzt = true;
 				defizitFach.ausgeglichen = true;
 				ausgleichsFach.ausgleich = true;
 				logger.logLn(LogLevel.DEBUG, logIndent + " -> Prüfe mit Ausgleich: Gleiche das Defizit (FG1) in " + defizitFach.kuerzel + " mit "
 						+ ausgleichsFach.kuerzel + " (FG1) aus. " + defizitFach.kuerzel + " alternativ als Nachprüfungsfach denkbar.");
 				final @NotNull AbschlussErgebnis abschlussergebnis =
-						pruefeFG2(faecher, logIndent + "  ", npFaecher, 2, ignorieren_genutzt, ausgleich_genutzt, nachpruefung_genutzt);
+						pruefeFG2(faecher, logIndent + "  ", npFaecher, 2, ignorierenGenutzt, ausgleichGenutzt, nachpruefungGenutzt);
 				// Sollte eine Nachprüfung nötig sein, so kann dies auch WP sein -> ergänze dieses Fach
 				if (!abschlussergebnis.erworben && (abschlussergebnis.npFaecher != null) && AbschlussManager.hatNachpruefungsmoeglichkeit(abschlussergebnis)
-						&& (wp_defizit.kuerzel != null)) {
-					abschlussergebnis.npFaecher.add(wp_defizit.kuerzel);
+						&& (wpDefizit.kuerzel != null)) {
+					abschlussergebnis.npFaecher.add(wpDefizit.kuerzel);
 				}
 				return abschlussergebnis;
 			}
 
 			// Setze WP als Nachprüfungsfach, da kein Ausgleich in FG1 vorhanden ist. Dies geht nur, wenn nicht auch eine Nachprüfung in dem leistungsdifferenzierten Fach der FG2 nötig ist.
-			if ((sonstige_ungenuegend.size() == 1) && (!sonstige_ungenuegend.get(0).ausgeglichen)) {
+			if ((sonstigeUngenuegend.size() == 1) && (!sonstigeUngenuegend.get(0).ausgeglichen)) {
 				logger.logLn(LogLevel.DEBUG, logIndent + " -> das Defizit in WP kann nicht ausgeglichen werden und eine Nachprüfung in mehreren Fächern (WP, "
-						+ sonstige_ungenuegend.get(0).kuerzel + ") ist nicht möglich!");
+						+ sonstigeUngenuegend.get(0).kuerzel + ") ist nicht möglich!");
 				return AbschlussManager.getErgebnis(SchulabschlussAllgemeinbildend.MSA, false);
 			}
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> WP-Defizite in FG1 ohne Ausgleichsmöglichkeit, eine Nachprüfung ist, sofern möglich, in WP nötig!");
-			npFaecher.add(wp_defizit);
-			nachpruefung_genutzt = true;
+			npFaecher.add(wpDefizit);
+			nachpruefungGenutzt = true;
 		}
 
 		// Kein Defizit in FG1
 		final @NotNull AbschlussErgebnis abschlussergebnis =
-				pruefeFG2(faecher, logIndent, npFaecher, 2, ignorieren_genutzt, ausgleich_genutzt, nachpruefung_genutzt);
-		if ((nachpruefung_genutzt) && abschlussergebnis.erworben) {
+				pruefeFG2(faecher, logIndent, npFaecher, 2, ignorierenGenutzt, ausgleichGenutzt, nachpruefungGenutzt);
+		if ((nachpruefungGenutzt) && abschlussergebnis.erworben) {
 			return AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.MSA, AbschlussManager.getKuerzel(npFaecher));
 		}
 		return abschlussergebnis;
@@ -341,7 +341,7 @@ public class ServiceAbschlussMSA extends Service {
 	private @NotNull AbschlussErgebnis pruefeFG2(final @NotNull AbschlussFaecherGruppen faecher, final @NotNull String logIndent,
 			final @NotNull List<GEAbschlussFach> npFaecher, final long benoetige3er, final boolean ignorierenGenutzt, final boolean ausgleichGenutzt,
 			final boolean nachpruefungGenutzt) {
-		// Prufe, ob weitere Defizite vorliegen
+		// Prüfe, ob weitere Defizite vorliegen
 		final @NotNull List<GEAbschlussFach> defizite = faecher.fg2.getFaecher(filterDefizite);
 		final @NotNull List<GEAbschlussFach> mangelhaft = faecher.fg2.getFaecher(filterDefizite1NS);
 		final boolean hat_defizit = !defizite.isEmpty();

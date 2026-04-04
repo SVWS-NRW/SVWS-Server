@@ -139,7 +139,7 @@ public class UntisGPU002 {
 	/** Eigenwert */
 	public String eigenwert;
 
-	/** Eigenwert in hundertausendstel */
+	/** Eigenwert in Hunderttausendstel */
 	public String eigenwertHunderttausendstel;
 
 	/** Schülergruppe */

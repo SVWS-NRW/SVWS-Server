@@ -58,7 +58,7 @@ public final class Abi30BelegpruefungFachkombinationen extends GostBelegpruefung
 
 
 	private void pruefeHatFachkombination(final @NotNull GostJahrgangFachkombination kombi, final @NotNull GostHalbjahr... halbjahre) {
-		// Prüfe, ob das erste fach überhaupt belegt ist und die Fachkombination "aktivieren" kann
+		// Prüfe, ob das erste Fach überhaupt belegt ist und die Fachkombination "aktivieren" kann
 		final AbiturFachbelegung belegung1 = manager.getFachbelegungByID(kombi.fachID1);
 		if (belegung1 == null) {
 			return;

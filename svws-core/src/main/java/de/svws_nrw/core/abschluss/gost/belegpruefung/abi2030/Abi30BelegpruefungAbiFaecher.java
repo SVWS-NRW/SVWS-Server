@@ -286,7 +286,7 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 
 	/**
 	 * Gesamtprüfung:
-	 * Prüfe, on das 5. Abiturfach ...
+	 * Prüfe, ob das 5. Abiturfach ...
 	 */
 	private void pruefeSchriftlichkeitAB5() {
 		final AbiturFachbelegung ab5 = (mapAbiturFachbelegungen == null) ? null : mapAbiturFachbelegungen.get(GostAbiturFach.AB5);
@@ -327,7 +327,7 @@ public final class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 				addFehler(GostBelegungsfehler.ABI_27_2);
 				return;
 			}
-			// Prüfe, on das Leitfach als Abiturfach gewählt wurde. Das ist nicht zulässig.
+			// Prüfe, ob das Leitfach als Abiturfach gewählt wurde. Das ist nicht zulässig.
 			if (GostAbiturFach.fromID(leitfach.abiturFach) != null) {
 				addFehler(GostBelegungsfehler.ABI_28_2);
 			}

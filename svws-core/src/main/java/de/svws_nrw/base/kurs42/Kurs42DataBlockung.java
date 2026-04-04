@@ -21,7 +21,7 @@ public final class Kurs42DataBlockung {
 	/** Das Schuljahr, auf welches sich Blockung bezieht. */
 	public int Jahr;
 
-	/** Der Abschnitt, auf welchen sich die Blockung bezieht. Ggf. ist zu prüfen, ob die Schule im Quartalsbetireb ist. */
+	/** Der Abschnitt, auf welchen sich die Blockung bezieht. Ggf. ist zu prüfen, ob die Schule im Quartalsbetrieb ist. */
 	public int Abschnitt;
 
 	/** Der Name der Blockung. */

@@ -195,13 +195,13 @@ public class ServiceAbschlussHA9 extends Service {
 		if (hatNP) {
 			// Nachprüfung kann prinzipiell bei allen Fächern mit mangelhaft erfolgen
 			// bei 2x5 in FG1 muss die Nachprüfung allerdings in FG1 erfolgen!
-			final @NotNull List<String> np_faecher = (fg1_mangelhaft == 2)
+			final @NotNull List<String> npFaecher = (fg1_mangelhaft == 2)
 					? faecher.fg1.getKuerzel(filterMangelhaft)
 					: faecher.getKuerzel(filterMangelhaft);
 			logger.logLn(LogLevel.DEBUG, logIndent + " -> zu viele Defizite: "
 					+ ((fg1_mangelhaft == 2) ? "2x5 in FG1, aber kein weiteres Defizit in FG2" : "3 Defizite nicht erlaubt"));
 
-			final @NotNull AbschlussErgebnis abschlussergebnis = AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.HA9, np_faecher);
+			final @NotNull AbschlussErgebnis abschlussergebnis = AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.HA9, npFaecher);
 			logger.logLn(LogLevel.INFO, " -> Nachprüfungsmöglichkeit(en) in " + AbschlussManager.getNPFaecherString(abschlussergebnis));
 			return abschlussergebnis;
 		}

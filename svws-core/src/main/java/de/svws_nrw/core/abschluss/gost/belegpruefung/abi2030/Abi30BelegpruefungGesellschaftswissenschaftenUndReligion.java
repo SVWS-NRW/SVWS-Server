@@ -32,7 +32,7 @@ import jakarta.validation.constraints.NotNull;
  */
 /**
  * Diese Klasse gruppiert alle Belegprüfungen für einen Schüler für die Prüfung der
- * EF1 bzw. für die Gesamtprüfungen, welche im Bereich der Gesellschaftwissenschaften
+ * EF1 bzw. für die Gesamtprüfungen, welche im Bereich der Gesellschaftswissenschaften
  * und Religion durchgeführt werden
  */
 public final class Abi30BelegpruefungGesellschaftswissenschaftenUndReligion extends GostBelegpruefung {

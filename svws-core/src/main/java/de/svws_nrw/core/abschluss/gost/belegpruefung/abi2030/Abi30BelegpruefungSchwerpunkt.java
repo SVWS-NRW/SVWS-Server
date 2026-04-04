@@ -48,24 +48,24 @@ public final class Abi30BelegpruefungSchwerpunkt extends GostBelegpruefung {
 
 	@Override
 	protected void pruefeEF1() {
-		final @NotNull Abi30BelegpruefungFremdsprachen pruefung_sprachen = ((@NotNull Abi30BelegpruefungFremdsprachen) pruefungen_vorher[0]);
-		final @NotNull Abi30BelegpruefungNaturwissenschaften pruefung_nawi = ((@NotNull Abi30BelegpruefungNaturwissenschaften) pruefungen_vorher[1]);
+		final @NotNull Abi30BelegpruefungFremdsprachen pruefungSprachen = ((@NotNull Abi30BelegpruefungFremdsprachen) pruefungen_vorher[0]);
+		final @NotNull Abi30BelegpruefungNaturwissenschaften pruefungNawi = ((@NotNull Abi30BelegpruefungNaturwissenschaften) pruefungen_vorher[1]);
 
 		// Prüfe, ob insgesamt so viele Fremdsprachen und Naturwissenschaften gewählt wurden, dass zunächst kein Schwerpunkt vorliegt.
 		// Dann liegt kein Belegungsfehler vor.
-		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2)
-				&& (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
+		if ((pruefungSprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2)
+				&& (pruefungNawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefungNawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
 			return;
 		}
 
 		// Prüfe, ob ein sprachlicher Schwerpunkt vorliegt
-		if (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
+		if (pruefungSprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
 			addFehler(GostBelegungsfehler.NW_FS_12_INFO);
 			return;
 		}
 
 		// Prüfe, ob ein naturwissenschaftlicher Schwerpunkt vorliegt
-		if ((pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
+		if ((pruefungNawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefungNawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
 			addFehler(GostBelegungsfehler.NW_FS_13_INFO);
 			return;
 		}
@@ -79,24 +79,24 @@ public final class Abi30BelegpruefungSchwerpunkt extends GostBelegpruefung {
 
 	@Override
 	protected void pruefeGesamt() {
-		final @NotNull Abi30BelegpruefungFremdsprachen pruefung_sprachen = ((@NotNull Abi30BelegpruefungFremdsprachen) pruefungen_vorher[0]);
-		final @NotNull Abi30BelegpruefungNaturwissenschaften pruefung_nawi = ((@NotNull Abi30BelegpruefungNaturwissenschaften) pruefungen_vorher[1]);
+		final @NotNull Abi30BelegpruefungFremdsprachen pruefungSprachen = ((@NotNull Abi30BelegpruefungFremdsprachen) pruefungen_vorher[0]);
+		final @NotNull Abi30BelegpruefungNaturwissenschaften pruefungNawi = ((@NotNull Abi30BelegpruefungNaturwissenschaften) pruefungen_vorher[1]);
 
 		// Prüfe, ob insgesamt so viele Fremdsprachen und Naturwissenschaften gewählt wurden, dass zunächst kein Schwerpunkt vorliegt.
 		// Dann liegt kein Belegungsfehler vor.
-		if ((pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2)
-				&& (pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
+		if ((pruefungSprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2)
+				&& (pruefungNawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefungNawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
 			return;
 		}
 
 		// Prüfe, ob ein sprachlicher Schwerpunkt vorliegt
-		if (pruefung_sprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
+		if (pruefungSprachen.getAnzahlDurchgehendSchritflichBelegt() >= 2) {
 			addFehler(GostBelegungsfehler.NW_FS_12_INFO);
 			return;
 		}
 
 		// Prüfe, ob ein naturwissenschaftlicher Schwerpunkt vorliegt
-		if ((pruefung_nawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefung_nawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
+		if ((pruefungNawi.getAnzahlDurchgehendBelegt() >= 2) && (pruefungNawi.getAnzahlDurchgehendSchritflichBelegt() >= 1)) {
 			addFehler(GostBelegungsfehler.NW_FS_13_INFO);
 			return;
 		}

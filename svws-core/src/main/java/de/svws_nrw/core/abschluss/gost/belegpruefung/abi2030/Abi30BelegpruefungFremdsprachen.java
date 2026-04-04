@@ -48,7 +48,7 @@ public final class Abi30BelegpruefungFremdsprachen extends GostBelegpruefung {
 	private @NotNull List<AbiturFachbelegung> _biliSachfaecher = new ArrayList<>();
 
 	/** Die Anzahl der durchgehenden bzw. potenziell durchgehenden Belegungen - nur schriftlich (für die Schwerpunktberechnung
-	 * - hier zählt auch ein bilinguales Sachfach, wo die Fremdsprache der Unterrichtsprache aus der Sek I nicht fortgeführt wurde). */
+	 * - hier zählt auch ein bilinguales Sachfach, wo die Fremdsprache der Unterrichtssprache aus der Sek I nicht fortgeführt wurde). */
 	private int _anzahlDurchgehendSchriftlich;
 
 

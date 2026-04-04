@@ -165,9 +165,9 @@ export class ServiceAbschlussHA9 extends Service {
 		}
 		const hatNP: boolean = (fg1_mangelhaft === 2) || (ges_defizite === 3);
 		if (hatNP) {
-			const np_faecher: List<string> = (fg1_mangelhaft === 2) ? faecher.fg1.getKuerzel(ServiceAbschlussHA9.filterMangelhaft) : faecher.getKuerzel(ServiceAbschlussHA9.filterMangelhaft);
+			const npFaecher: List<string> = (fg1_mangelhaft === 2) ? faecher.fg1.getKuerzel(ServiceAbschlussHA9.filterMangelhaft) : faecher.getKuerzel(ServiceAbschlussHA9.filterMangelhaft);
 			this.logger.logLn(LogLevel.DEBUG, logIndent + " -> zu viele Defizite: " + ((fg1_mangelhaft === 2) ? "2x5 in FG1, aber kein weiteres Defizit in FG2" : "3 Defizite nicht erlaubt"));
-			const abschlussergebnis: AbschlussErgebnis = AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.HA9, np_faecher);
+			const abschlussergebnis: AbschlussErgebnis = AbschlussManager.getErgebnisNachpruefung(SchulabschlussAllgemeinbildend.HA9, npFaecher);
 			this.logger.logLn(LogLevel.INFO, " -> Nachprüfungsmöglichkeit(en) in " + AbschlussManager.getNPFaecherString(abschlussergebnis));
 			return abschlussergebnis;
 		}

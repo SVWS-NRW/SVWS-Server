@@ -94,7 +94,7 @@ public class BKGymAbiturdatenManager {
 	}
 
 
-		/**
+	/**
 	 * Führte die Schritte zur Belegprüfung aus
 	 */
 	private void belegPruefung() {

@@ -69,11 +69,11 @@ export class ServicePrognose extends Service {
 			return prognose;
 		}
 		let abschluss: SchulabschlussAllgemeinbildend = SchulabschlussAllgemeinbildend.OA;
-		let np_faecher: List<string> | null = null;
+		let npFaecher: List<string> | null = null;
 		if (!JavaObject.equalsTranspiler("10", (input.jahrgang))) {
 			const ha9: ServiceAbschlussHA9 = new ServiceAbschlussHA9();
 			const ha9output: AbschlussErgebnis = ha9.berechne(input);
-			np_faecher = ha9output.npFaecher;
+			npFaecher = ha9output.npFaecher;
 			if (ha9output.erworben) {
 				abschluss = SchulabschlussAllgemeinbildend.HA9;
 			}
@@ -89,7 +89,7 @@ export class ServicePrognose extends Service {
 			abschluss = SchulabschlussAllgemeinbildend.HA10;
 		} else
 			if (JavaObject.equalsTranspiler("10", (input.jahrgang)) || (JavaObject.equalsTranspiler(SchulabschlussAllgemeinbildend.HA9, (abschluss)))) {
-				np_faecher = ha10output.npFaecher;
+				npFaecher = ha10output.npFaecher;
 			}
 		this.log.append(ha10.getLog());
 		if ((!JavaObject.equalsTranspiler(SchulabschlussAllgemeinbildend.OA, (abschluss))) || (!ServicePrognose.hatLernbereichsnoten(input))) {
@@ -104,15 +104,15 @@ export class ServicePrognose extends Service {
 				if (msaqOutput.erworben) {
 					abschluss = SchulabschlussAllgemeinbildend.MSA_Q;
 				} else {
-					np_faecher = msaqOutput.npFaecher;
+					npFaecher = msaqOutput.npFaecher;
 				}
 				this.logger.logLn(LogLevel.INFO, "");
 				this.log.append(msaq.getLog());
 			} else {
-				np_faecher = msaOutput.npFaecher;
+				npFaecher = msaOutput.npFaecher;
 			}
 		}
-		const prognose: AbschlussErgebnis = AbschlussManager.getErgebnisNachpruefung(abschluss, np_faecher);
+		const prognose: AbschlussErgebnis = AbschlussManager.getErgebnisNachpruefung(abschluss, npFaecher);
 		prognose.erworben = (!JavaObject.equalsTranspiler(SchulabschlussAllgemeinbildend.OA, (abschluss)));
 		prognose.log = this.log.getStrings();
 		return prognose;

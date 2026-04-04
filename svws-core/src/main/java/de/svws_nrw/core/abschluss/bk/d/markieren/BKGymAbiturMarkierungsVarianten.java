@@ -1,7 +1,6 @@
 package de.svws_nrw.core.abschluss.bk.d.markieren;
 
 import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,7 +12,8 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Diese Klasse enthält die verschiedenen Markierungsvarianten, von denen die beste
  * abschließend ermittelt wird/werden kann.
- * Das ist notwendig, da die beste Markierung bei der Fremdsprachenbelegung nicht nur auf Grundlagedirekt durch eine mögliche Markierungsoption entsprechend den Regel der Prüfungsordnung
+ * Das ist notwendig, da die beste Markierung bei der Fremdsprachenbelegung nicht nur auf Grundlage direkt
+ * durch eine mögliche Markierungsoption entsprechend den Regel der Prüfungsordnung
  * der Fremdsprachenkurse ermittelt werden kann. Auch für die Berücksichtigung der
  * Facharbeit wird eine zusätzliche Variante durchgerechnet.
  */

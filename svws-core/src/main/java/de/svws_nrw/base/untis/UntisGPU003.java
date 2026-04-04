@@ -67,10 +67,10 @@ public class UntisGPU003 {
 	/** Faktor */
 	public String faktor;
 
-	/** Stundenten männl. */
+	/** Studenten männl. */
 	public Integer studentenM;
 
-	/** Stundenten weibl. */
+	/** Studenten weibl. */
 	public Integer studentenW;
 
 	/** Schulform */
@@ -112,7 +112,7 @@ public class UntisGPU003 {
 	/** Das Kürzel der Hauptklasse - relevant bei Verwendung von Teilklassen */
 	public String kuerzelHauptklasse;
 
-	/** Stundenten interges. */
+	/** Studenten interges. */
 	public Integer studentenI;
 
 	/** Ignorieren - Dummy für das Einlesen der Daten */

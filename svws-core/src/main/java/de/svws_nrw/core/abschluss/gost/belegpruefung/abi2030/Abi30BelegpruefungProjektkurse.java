@@ -1,8 +1,9 @@
 package de.svws_nrw.core.abschluss.gost.belegpruefung.abi2030;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefung;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
@@ -10,7 +11,6 @@ import de.svws_nrw.core.abschluss.gost.GostBelegungsfehler;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -36,13 +36,13 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class Abi30BelegpruefungProjektkurse extends GostBelegpruefung {
 
-	/** Eine Vektor mit den Projektfächern, die belegt wurden. Dies sollte im Regelfall nur ein Fach sein, können aber ggf. bei einer gültigen Belegung bis zu drei Fächer sein */
+	/** Ein Vektor mit den Projektfächern, die belegt wurden. Dies sollte im Regelfall nur ein Fach sein, können aber ggf. bei einer gültigen Belegung bis zu drei Fächer sein */
 	private @NotNull List<AbiturFachbelegung> projektkursBelegung = new ArrayList<>();
 
 	/** falls ein Projektkurs gültig gewählt wurde: Der Projektkurs, sonst: null */
 	private AbiturFachbelegung projektkurs = null;
 
-	/** ein Vektor, welcher die anrechenbaren Halbjahre eines gültig angewählten Projektkurses beinhaltet */
+	/** Ein Vektor, welcher die anrechenbaren Halbjahre eines gültig angewählten Projektkurses beinhaltet */
 	private @NotNull List<GostHalbjahr> projektkursHalbjahre = new ArrayList<>();
 
 

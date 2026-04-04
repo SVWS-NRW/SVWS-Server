@@ -96,7 +96,7 @@ public class BKGymAbiturMarkierungsregelFachgruppe extends BKGymAbiturMarkierung
 
 
 	/**
-	 * Prueft ob die geforderte Anzahl von Markierungen schon vorhanden sind
+	 * Prüft ob die geforderte Anzahl von Markierungen schon vorhanden sind
 	 *
 	 * @param faecher    die FachIDs, der in Frage kommenden Fächer
 	 * @param variante   die Variante

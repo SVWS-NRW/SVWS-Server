@@ -104,13 +104,13 @@ public class CommandLineParser {
 
 
 	/**
-	 * Liefert der Wert der Option mt dem angegebenen short tag.
+	 * Liefert der Wert der Option mit dem angegebenen short tag.
 	 *
 	 * @param tag   das short tag der Option
 	 *
 	 * @return der Wert der Option
 	 *
-	 * @throws CommandLineException tritt auf, wenn die option nicht bekannt ist oder ein Fehler beim Parsen der Kommandozeile auftritt
+	 * @throws CommandLineException tritt auf, wenn die Option nicht bekannt ist oder ein Fehler beim Parsen der Kommandozeile auftritt
 	 */
 	public String getValue(final String tag) throws CommandLineException {
 		if (!options.containsKey(tag)) {
@@ -124,7 +124,7 @@ public class CommandLineParser {
 
 
 	/**
-	 * Liefert der Wert der Option mt dem angegebenen short tag oder im Fehlerfall
+	 * Liefert der Wert der Option mit dem angegebenen short tag oder im Fehlerfall
 	 * den angegebenen Default-Wert
 	 *
 	 * @param tag   das short tag der Option
@@ -190,7 +190,7 @@ public class CommandLineParser {
 	/**
 	 * Gibt die übergebene Fehlermeldung und die gültigen Kommandozeilen-Optionen
 	 * auf der Konsole (System.out) aus und beendet anschließend das Programm
-	 * mit dem angebeben Exit-Code.
+	 * mit dem angegebenen Exit-Code.
 	 *
 	 * @param code    die Fehlermeldung, die ausgegeben werden soll
 	 * @param error   der Exit-Code, mit dem das Programm beendet wird

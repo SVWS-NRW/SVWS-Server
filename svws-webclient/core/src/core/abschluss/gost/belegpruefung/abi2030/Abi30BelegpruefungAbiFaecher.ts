@@ -254,7 +254,7 @@ export class Abi30BelegpruefungAbiFaecher extends GostBelegpruefung {
 
 	/**
 	 * Gesamtprüfung:
-	 * Prüfe, on das 5. Abiturfach ...
+	 * Prüfe, ob das 5. Abiturfach ...
 	 */
 	private pruefeSchriftlichkeitAB5(): void {
 		const ab5: AbiturFachbelegung | null = (this.mapAbiturFachbelegungen === null) ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB5);
