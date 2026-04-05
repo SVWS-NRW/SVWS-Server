@@ -1,14 +1,15 @@
 package de.svws_nrw.base.email;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
+
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * Gemeinsame Basis-Klasse für die Versandtests des E-Mail-Job-Managers.
@@ -221,7 +222,7 @@ abstract class AbstractEmailJobManagerSendTestBase {
 	protected void assertJobLogSkippedEmpty(final long jobId) {
 		final EmailJob job = manager.getJob(jobId);
 		assertThat(job).isNotNull();
-		assertThat(job.logSkipped).as("Skip-Log von Job %d sollte leer sein", jobId).isEmpty();
+		assertThat(job.getLogSkipped()).as("Skip-Log von Job %d sollte leer sein", jobId).isEmpty();
 	}
 
 	/**
@@ -245,7 +246,7 @@ abstract class AbstractEmailJobManagerSendTestBase {
 		final EmailJob job = mgr.getJob(jobId);
 		assertThat(job).isNotNull();
 
-		final List<String> allLogs = new ArrayList<>(job.logSkipped);
+		final List<String> allLogs = new ArrayList<>(job.getLogSkipped());
 		final boolean found = Arrays.stream(expectedSnippets).anyMatch(snippet -> allLogs.stream().anyMatch(log -> log.contains(snippet)));
 
 		assertThat(found)
@@ -261,7 +262,7 @@ abstract class AbstractEmailJobManagerSendTestBase {
 	protected void assertJobLogErrorsIsEmpty(final long jobId) {
 		final EmailJob job = manager.getJob(jobId);
 		assertThat(job).isNotNull();
-		assertThat(job.logError).as("Error-Log von Job %d sollte leer sein", jobId).isEmpty();
+		assertThat(job.getLogError()).as("Error-Log von Job %d sollte leer sein", jobId).isEmpty();
 	}
 
 	/**
@@ -285,7 +286,7 @@ abstract class AbstractEmailJobManagerSendTestBase {
 		final EmailJob job = mgr.getJob(jobId);
 		assertThat(job).isNotNull();
 
-		final List<String> allLogs = new ArrayList<>(job.logError);
+		final List<String> allLogs = new ArrayList<>(job.getLogError());
 		final boolean found = Arrays.stream(expectedSnippets).anyMatch(snippet -> allLogs.stream().anyMatch(log -> log.contains(snippet)));
 
 		assertThat(found)

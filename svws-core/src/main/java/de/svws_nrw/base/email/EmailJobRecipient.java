@@ -7,7 +7,7 @@ import java.util.Objects;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Die Klasse beinhaltet die Informationen zu einem E-Mail-Enpfänger und den ihm zugeordneten Anhöngen.
+ * Die Klasse beinhaltet die Informationen zu einem E-Mail-Enpfänger und den ihm zugeordneten Anhängen.
  */
 public final class EmailJobRecipient {
 
@@ -23,8 +23,14 @@ public final class EmailJobRecipient {
 	 * @param recipient die Empfänger-E-Mail-Adresse
 	 */
 	public EmailJobRecipient(final @NotNull String recipient) {
-		if ((recipient == null) || recipient.isBlank()) {
-			throw new IllegalArgumentException("Notwendiger Parameter E-Mail-Adresse für die Erzeugung eines E-Mail-Recipients ist null oder leer.");
+		// @NotNull sichert nicht gegen die Übergabe von null. SonarQube denkt aber so und meldet bei Prüfung mittels "== null" immer
+		// "java:S2589, Remove this expression which always evaluates to true/false.". Daher hier die Prüfung mittels Objects.requireNonNull.
+		try {
+			if (Objects.requireNonNull(recipient).isBlank()) {
+				throw new IllegalArgumentException("Notwendiger Parameter E-Mail-Adresse für die Erzeugung eines E-Mail-Recipients ist leer.");
+			}
+		} catch (final NullPointerException e) {
+			throw new IllegalArgumentException("Notwendiger Parameter E-Mail-Adresse für die Erzeugung eines E-Mail-Recipients ist null.");
 		}
 		this.email = recipient;
 	}

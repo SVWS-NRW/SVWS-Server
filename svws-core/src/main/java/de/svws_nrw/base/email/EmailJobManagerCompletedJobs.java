@@ -13,13 +13,13 @@ import jakarta.validation.constraints.NotNull;
  */
 class EmailJobManagerCompletedJobs {
 
-	/** Der Email-Job-Manager, dessen abgeschlossenen Jobs hier verwaltet werden */
+	/** Der E-Mail-Job-Manager, dessen abgeschlossene Jobs hier verwaltet werden */
 	private final @NotNull EmailJobManager manager;
 
 	/** Die Menge der abgeschlossenen Jobs */
 	private final Set<EmailJob> jobsCompleted = new HashSet<>();
 
-	/** Der ThreadBuilder, um Threads zum Aufräumen von abgeschlossenen Threads zur Erzeugen */
+	/** Der ThreadBuilder, um Threads zum Aufräumen von abgeschlossenen Threads zu Erzeugen */
 	private final Thread.Builder threadBuilder;
 
 
@@ -36,14 +36,12 @@ class EmailJobManagerCompletedJobs {
 
 
 	/**
-	 * Fügt einen job als abgeschlossen hinzu und setzt den übergebenen Status und
-	 * den aktuellen Zeitstempel bei dem Job
+	 * Fügt einen abgeschlossenen Job zur Verwaltung hinzu und startet den zugehörigen Aufräum-Thread.
+	 * Der Status des Jobs muss bereits vor dem Aufruf dieser Methode korrekt gesetzt worden sein.
 	 *
-	 * @param job      der Email-Job
-	 * @param status   der Status des Email-Jobs
+	 * @param job   der abgeschlossene E-Mail-Job
 	 */
-	synchronized void add(final @NotNull EmailJob job, final @NotNull EmailJobStatus status) {
-		job.setStatus(status);
+	synchronized void add(final @NotNull EmailJob job) {
 		this.jobsCompleted.add(job);
 		// Starte den Thread zum Aufräumen des Jobs
 		threadBuilder.start(() -> waitForRemoval(job));
@@ -51,15 +49,16 @@ class EmailJobManagerCompletedJobs {
 
 
 	/**
-	 * Entfernt alle Jobs sofort ohne die vorgegebene Zeit abzuwarten.
+	 * Entfernt alle Jobs sofort, ohne die vorgegebene Zeit abzuwarten.
 	 */
 	synchronized void removeAll() {
+		this.jobsCompleted.clear();
 		this.notifyAll();
 	}
 
 
 	/**
-	 * Wird von der add-Methode aufgerufen und wartet die vorgegebene Zeit bevor
+	 * Wird von der add-Methode aufgerufen und wartet die vorgegebene Zeit, bevor
 	 * der abgeschlossene Job endgültig aus dem Manager entfernt wird.
 	 *
 	 * @param job   der abgeschlossene Job
@@ -74,7 +73,8 @@ class EmailJobManagerCompletedJobs {
 					this.wait(zeitRest);
 				} catch (@SuppressWarnings("unused") final InterruptedException e) {
 					Thread.currentThread().interrupt();
-					return; // "Job" bleibt in der Liste, da er ja nicht fertig wurde.
+					// Auch bei Unterbrechung den Job aufräumen, damit er nicht dauerhaft in mapJobs verbleibt.
+					break;
 				}
 				zeitRest = zeitEnde - System.currentTimeMillis();
 			}

@@ -3,18 +3,20 @@ package de.svws_nrw.base.email;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse beinhaltet einen Job zum Versenden von E-Mails und beschreibt einen Versandvorgang. Dieser
- * unterstützt das Versenden von Mails an einzelne Empfänge mit unterschiedlichen Anhängen.
+ * unterstützt das Versenden von Mails an einzelne Empfänger mit unterschiedlichen Anhängen.
  */
 public final class EmailJob {
 
 	/** Die eindeutige ID des Jobs, sofern diese schon von einem {@link EmailJobManager} zugeteilt wurde. */
-	private Long id = null;
+	private volatile Long id = null;
 
 	/** Die E-Mail-Adresse des Senders (from) */
 	private final @NotNull String from;
@@ -28,25 +30,23 @@ public final class EmailJob {
 	/** Eine Liste mit den Adressen der Empfänger und den ihnen zugeordneten Anhängen. */
 	private final @NotNull List<EmailJobRecipient> recipients = new ArrayList<>();
 
-
 	/** Aktueller Status des Jobs. */
-	private EmailJobStatus status = EmailJobStatus.QUEUED;
+	private volatile EmailJobStatus status = EmailJobStatus.QUEUED;
 
 	/** Gibt an, ob der Job zum Abbrechen markiert wurde. */
 	private volatile boolean cancellationRequested = false;
 
 	/** Zeitstempel der letzten Statusänderung in Millisekunden */
-	private long timeLastChanged = System.currentTimeMillis();
-
+	private volatile long timeLastChanged = System.currentTimeMillis();
 
 	/** Die Anzahl der erfolgreich versendeten E-Mails. */
-	private int countSuccess = 0;
+	private final AtomicInteger countSuccess = new AtomicInteger(0);
 
 	/** Die Liste der Log-Informationen, wenn einzelne Empfänger des Jobs ausgelassen wurden. */
-	public final @NotNull List<String> logSkipped = Collections.synchronizedList(new ArrayList<>());
+	private final @NotNull List<String> logSkipped = Collections.synchronizedList(new ArrayList<>());
 
 	/** Die Liste mit dem Fehler-Log. */
-	public final @NotNull List<String> logError = Collections.synchronizedList(new ArrayList<>());
+	private final @NotNull List<String> logError = Collections.synchronizedList(new ArrayList<>());
 
 
 	/**
@@ -55,8 +55,14 @@ public final class EmailJob {
 	 * @param from   die E-Mail-Adresse des Senders
 	 */
 	public EmailJob(final @NotNull String from) {
-		if ((from == null) || from.isBlank()) {
-			throw new IllegalArgumentException("Notwendiger Parameter Absender-E-Mail-Adresse für die Erzeugung eines E-Mail-Jobs ist null oder leer.");
+		// @NotNull sichert nicht gegen die Übergabe von null. SonarQube denkt aber so und meldet bei Prüfung mittels "== null" immer
+		// "java:S2589, Remove this expression which always evaluates to true/false.". Daher hier die Prüfung mittels Objects.requireNonNull.
+		try {
+			if (Objects.requireNonNull(from).isBlank()) {
+				throw new IllegalArgumentException("Notwendiger Parameter Absender-E-Mail-Adresse für die Erzeugung eines E-Mail-Jobs ist leer.");
+			}
+		} catch (final NullPointerException e) {
+			throw new IllegalArgumentException("Notwendiger Parameter Absender-E-Mail-Adresse für die Erzeugung eines E-Mail-Jobs ist null.");
 		}
 		this.from = from;
 	}
@@ -87,11 +93,13 @@ public final class EmailJob {
 	 * @return true, wenn die ID gesetzt werden konnte und zuvor keine ID gesetzt war, und ansonsten false
 	 */
 	boolean setId(final long id) {
-		if (this.id != null) {
-			return false;
+		synchronized (this) {
+			if (this.id != null) {
+				return false;
+			}
+			this.id = id;
+			return true;
 		}
-		this.id = id;
-		return true;
 	}
 
 
@@ -143,9 +151,9 @@ public final class EmailJob {
 	 * @return dieser Job
 	 */
 	public @NotNull EmailJob withSubject(final @NotNull String subject) {
-		if (subject != null) {
-			this.subject = subject;
-		}
+		// @NotNull sichert nicht gegen die Übergabe von null. SonarQube denkt aber so und meldet bei Prüfung mittels "== null" immer
+		// "java:S2589, Remove this expression which always evaluates to true/false.". Daher hier die Prüfung mittels Objects.requireNonNull.
+		this.subject = Objects.requireNonNullElse(subject, this.subject);
 		return this;
 	}
 
@@ -158,9 +166,9 @@ public final class EmailJob {
 	 * @return dieser Job
 	 */
 	public @NotNull EmailJob withBody(final @NotNull String body) {
-		if (body != null) {
-			this.body = body;
-		}
+		// @NotNull sichert nicht gegen die Übergabe von null. SonarQube denkt aber so und meldet bei Prüfung mittels "== null" immer
+		// "java:S2589, Remove this expression which always evaluates to true/false.". Daher hier die Prüfung mittels Objects.requireNonNull.
+		this.body = Objects.requireNonNullElse(body, this.body);
 		return this;
 	}
 
@@ -196,12 +204,38 @@ public final class EmailJob {
 
 
 	/**
+	 * Fügt mehrere Einträge zum Übersprungen-Log hinzu.
+	 *
+	 * @param messages   die Log-Nachrichten
+	 *
+	 * @return dieser Job
+	 */
+	public @NotNull EmailJob addLogSkipped(final @NotNull List<String> messages) {
+		this.logSkipped.addAll(messages);
+		return this;
+	}
+
+
+	/**
+	 * Fügt mehrere Einträge zum Error-Log hinzu.
+	 *
+	 * @param messages   die Log-Nachrichten
+	 *
+	 * @return dieser Job
+	 */
+	public @NotNull EmailJob addLogError(final @NotNull List<String> messages) {
+		this.logError.addAll(messages);
+		return this;
+	}
+
+
+	/**
 	 * Gibt den Zeitpunkt zurück, zu welchem zuletzt eine Änderung des Job-Status
 	 * vorgenommen wurde.
 	 *
 	 * @return der Zeitpunkt in Millisekunden ab Mitternacht am 1. Januar 1970 (siehe auch {@link System#currentTimeMillis()})
 	 */
-	public long getTimeLastChanged() {
+	public synchronized long getTimeLastChanged() {
 		return timeLastChanged;
 	}
 
@@ -211,7 +245,7 @@ public final class EmailJob {
 	 *
 	 * @return der aktuelle Status des Jobs
 	 */
-	public @NotNull EmailJobStatus getStatus() {
+	public synchronized @NotNull EmailJobStatus getStatus() {
 		return status;
 	}
 
@@ -223,8 +257,10 @@ public final class EmailJob {
 	 * @param status  der Job-Status
 	 */
 	void setStatus(final @NotNull EmailJobStatus status) {
-		this.status = status;
-		this.timeLastChanged = System.currentTimeMillis();
+		synchronized (this) {
+			this.status = status;
+			this.timeLastChanged = System.currentTimeMillis();
+		}
 	}
 
 
@@ -234,7 +270,7 @@ public final class EmailJob {
 	 * Daher ist diese Methode package private.
 	 */
 	void notifyEmailSent() {
-		this.countSuccess++;
+		this.countSuccess.incrementAndGet();
 	}
 
 
@@ -244,7 +280,7 @@ public final class EmailJob {
 	 * @return die Anzahl der versendeten E-Mails aus diesem Job
 	 */
 	public int getEmailsSent() {
-		return this.countSuccess;
+		return this.countSuccess.get();
 	}
 
 
@@ -265,4 +301,44 @@ public final class EmailJob {
 		return this.cancellationRequested;
 	}
 
+
+	/**
+	 * Fügt einen Eintrag in das Übersprungen-Log hinzu. Paketprivat, da nur der Manager schreiben darf.
+	 *
+	 * @param message   die Log-Nachricht
+	 */
+	void addLogSkipped(final @NotNull String message) {
+		this.logSkipped.add(message);
+	}
+
+	/**
+	 * Fügt einen Eintrag in das Fehler-Log hinzu. Paketprivat, da nur der Manager schreiben darf.
+	 *
+	 * @param message   die Log-Nachricht
+	 */
+	void addLogError(final @NotNull String message) {
+		this.logError.add(message);
+	}
+
+	/**
+	 * Gibt eine unveränderliche Kopie des Übersprungen-Logs zurück.
+	 *
+	 * @return die Log-Einträge der übersprungenen Empfänger
+	 */
+	public @NotNull List<String> getLogSkipped() {
+		synchronized (logSkipped) {
+			return List.copyOf(logSkipped);
+		}
+	}
+
+	/**
+	 * Gibt eine unveränderliche Kopie des Fehler-Logs zurück.
+	 *
+	 * @return die Fehler-Log-Einträge
+	 */
+	public @NotNull List<String> getLogError() {
+		synchronized (logError) {
+			return List.copyOf(logError);
+		}
+	}
 }

@@ -1,7 +1,5 @@
 package de.svws_nrw.base.email;
 
-import jakarta.validation.constraints.NotNull;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
+
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Dieser Manager verwaltet Jobs zum Versenden von E-Mails mithilfe eines Threads pro Datenbankschema und Benutzer.
@@ -34,6 +34,30 @@ public final class EmailJobManager {
 
 	/** Eine Deque, um die Sendezeitpunkte für die letzten 60 Sekunden zu speichern, um damit die Senderate von E-Mails pro Minute zu begrenzen. */
 	private final ArrayDeque<Long> sendTimestamps = new ArrayDeque<>();
+
+	/**
+	 * Dieses Lock-Objekt stellt sicher, dass die Statusübergänge eines Jobs atomar ablaufen.
+	 * Es schützt konkret die folgenden kritischen Übergänge:
+	 *
+	 * <ul>
+	 *   <li><b>QUEUED → SENDING</b> (in {@link #processJob}): Der Worker-Thread prüft das
+	 *       Abbruch-Flag und setzt den Status erst dann auf SENDING, wenn kein Abbruch
+	 *       angefordert wurde. Ohne diesen Lock könnte {@link #cancelJob} gleichzeitig
+	 *       den Status auf CANCELED setzen.</li>
+	 *   <li><b>QUEUED → CANCELED</b> (in {@link #cancelJob}): Der Status-Check und das
+	 *       Entfernen des Jobs aus der Queue laufen atomar ab. Ohne diesen Lock könnte
+	 *       der Worker-Thread den Job zwischen dem Check und dem Entfernen bereits
+	 *       übernehmen und auf SENDING setzen.</li>
+	 *   <li><b>Eintragen in die Queue</b> (in {@link #enqueue}): Das Einfügen in
+	 *       {@code mapJobs} und in die {@code jobs}-Queue erfolgt atomar, sodass
+	 *       {@link #cancelJob} keinen Zwischenzustand sehen kann, in dem der Job bereits
+	 *       in der Map, aber noch nicht in der Queue eingetragen ist.</li>
+	 * </ul>
+	 *
+	 * Der Lock wird jeweils nur für den Statusübergang selbst gehalten und sofort
+	 * danach freigegeben, um den eigentlichen Versandvorgang nicht zu blockieren.
+	 */
+	private final Object queueTransitionLock = new Object();
 
 	/** Der Worker-Thread, der für diesen Job-Manager verantwortlich ist. */
 	private final Thread thread;
@@ -73,8 +97,11 @@ public final class EmailJobManager {
 		if (!isNewJob) {
 			return -1;
 		}
-		mapJobs.put(job.getId(), job);
-		jobs.add(job);
+		// Erst in mapJobs eintragen, dann in die Queue – beide Schritte unter dem Lock, damit cancelJob() keinen inkonsistenten Zustand sieht.
+		synchronized (queueTransitionLock) {
+			mapJobs.put(job.getId(), job);
+			jobs.add(job);
+		}
 		return job.getId();
 	}
 
@@ -125,25 +152,33 @@ public final class EmailJobManager {
 	 * @return true, wenn der Job gefunden wurde (unabhängig davon, ob er sofort gestoppt werden konnte), und ansonsten false
 	 */
 	public boolean cancelJob(final long idJob) {
-		// Prüfe, ob die ID gültig ist
 		final EmailJob job = mapJobs.get(idJob);
 		if (job == null) {
 			return false;
 		}
 
-		// Breche den Job ab. Ab diesem Moment wird der Job spätestens in processJob() abgebrochen.
-		job.requestCancellation();
-		if (job.getStatus() != EmailJobStatus.QUEUED) {
-			return true;
+		EmailJobStatus finalStatus = null;
+		synchronized (queueTransitionLock) {
+			job.requestCancellation();
+			if (job.getStatus() != EmailJobStatus.QUEUED) {
+				// Job läuft bereits – processJob() wertet cancellationRequested aus.
+				return true;
+			}
+			if (jobs.remove(job)) {
+				job.addLogError("- ABBRUCH: Job %d wurde vor dem Start abgebrochen.".formatted(job.getId()));
+				// Status noch unter dem Lock setzen.
+				job.setStatus(EmailJobStatus.CANCELED);
+				finalStatus = EmailJobStatus.CANCELED;
+			}
+			// Wenn remove() false liefert, hat der Worker den Job bereits entnommen,
+			// aber den Status noch nicht auf SENDING gesetzt. cancellationRequested ist
+			// jedoch bereits true, sodass processJob() den Job als CANCELED behandelt.
 		}
-
-		// Entferne den Job auch aus der Queue und markiere ihn auch als abgebrochen.
-		if (jobs.remove(job)) {
-			job.logError.add("- ABBRUCH: Job %d wurde vor dem Start abgebrochen.".formatted(job.getId()));
-			completedJobs.add(job, EmailJobStatus.CANCELED);
+		// completedJobs.add() wird bewusst außerhalb des queueTransitionLock aufgerufen,
+		// um die Lock-Haltezeit zu minimieren und eine verschachtelte Synchronisation zu vermeiden.
+		if (finalStatus != null) {
+			completedJobs.add(job);
 		}
-		// Wenn der Job nicht entfernt werden konnte, ist der Job schon im Worker. Dann wird er in processJob() abgebrochen und der Abbruch dort dokumentiert.
-		// Gebe daher true zurück.
 		return true;
 	}
 
@@ -160,7 +195,11 @@ public final class EmailJobManager {
 
 
 	/**
-	 * Die Methode des Worker-Threads des Job-Managers
+	 * Die Methode des Worker-Threads des Job-Managers.
+	 * Die Schleife endet, wenn {@link #shutdown()} aufgerufen wird: Entweder durch
+	 * das Interrupt-Signal (beim Warten auf einen neuen Job in {@code jobs.take()})
+	 * oder nach Abschluss des aktuell laufenden Jobs, da dieser über
+	 * {@link EmailJob#hasCancellationRequest()} das Abbruch-Flag auswertet.
 	 */
 	private void run() {
 		while (running) {
@@ -177,65 +216,100 @@ public final class EmailJobManager {
 
 
 	/**
-	 * Bearbeitet den übergebenen Job und startet das Versenden der E-Mails.
+	 * Verarbeitet einen einzelnen Job aus der Warteschlange. Diese Methode wird vom Worker-Thread aufgerufen.
 	 *
-	 * @param job   der abzuarbeitende Job des Managers
+	 * <p>Zunächst wird unter dem {@code queueTransitionLock} atomar geprüft, ob ein Abbruch des Jobs
+	 * angefordert wurde, bevor der Versand beginnt. Ist dies der Fall, wird der Job als {@code CANCELED}
+	 * markiert und aus der Verarbeitung entfernt, ohne dass E-Mails versendet werden.
+	 * Andernfalls wechselt der Status auf {@code SENDING} und der eigentliche Versand beginnt.</p>
+	 *
+	 * <p>Der Versandvorgang selbst läuft außerhalb des Locks, da er zeitintensiv sein kann und andere
+	 * Threads – insbesondere {@link #cancelJob} – nicht blockiert werden sollen. Ein während des Versands
+	 * eingehender Abbruch wird durch regelmäßige Prüfung des Abbruch-Flags in {@link #sendInternal}
+	 * berücksichtigt und führt zum Auslösen einer {@link EmailJobCanceledException}.</p>
+	 *
+	 * <p>Nach dem Versand – unabhängig davon, ob er erfolgreich war, abgebrochen oder durch eine
+	 * Exception unterbrochen wurde – wird der abschließende Status des Jobs in
+	 * {@link #setStatusAfterProcessJob} gesetzt. Ein gesetztes Abbruch-Flag hat dabei immer Vorrang
+	 * und führt zum Status {@code CANCELED}, auch wenn bereits E-Mails versendet wurden.</p>
+	 *
+	 * @param job   der zu verarbeitende E-Mail-Job
 	 */
 	private void processJob(final EmailJob job) {
-		// Wenn der Job als abgebrochen markiert wurde, kann er auch nicht weiter bearbeitet werden und der Status wird aus CANCELED gesetzt
-		if (job.hasCancellationRequest()) {
-			// Protokolliere den Abbruch. Dies greift nur, falls cancelJob() den Job nicht mehr aus der Queue entfernen konnte.
-			if (job.logError.isEmpty()) {
-				job.logError.add("- ABBRUCH: Job %d wurde vor dem Start abgebrochen.".formatted(job.getId()));
+		// Sichere den Übergang von QUEUED zu SENDING atomar ab, damit cancelJob() nicht gleichzeitig von QUEUED zu CANCELED wechseln kann.
+		boolean canceledBeforeStart;
+		synchronized (queueTransitionLock) {
+			canceledBeforeStart = job.hasCancellationRequest();
+			if (canceledBeforeStart) {
+				// Protokolliere den Abbruch. Dies greift nur, falls cancelJob() den Job nicht mehr aus der Queue entfernen konnte.
+				if (job.getLogError().isEmpty()) {
+					job.addLogError("- ABBRUCH: Job %d wurde vor dem Start abgebrochen.".formatted(job.getId()));
+				}
+				job.setStatus(EmailJobStatus.CANCELED);
+			} else {
+				// Status-Wechsel unter dem Lock, damit cancelJob() ihn korrekt sieht.
+				job.setStatus(EmailJobStatus.SENDING);
 			}
-			completedJobs.add(job, EmailJobStatus.CANCELED);
+		}
+		// completedJobs.add() wird bewusst außerhalb des queueTransitionLock aufgerufen,
+		// um die Lock-Haltezeit zu minimieren und eine verschachtelte Synchronisation zu vermeiden.
+		// Der canceledBeforeStart-Flag wurde noch unter dem Lock ermittelt und ist daher zuverlässig.
+		if (canceledBeforeStart) {
+			completedJobs.add(job);
 			return;
 		}
 
-		// Setze den Status auf Running ...
-		job.setStatus(EmailJobStatus.SENDING);
 		try {
-			// ... und versende alle Mails des Jobs
 			final boolean allSuccessful = this.sendAll(job);
 			setStatusAfterProcessJob(job, allSuccessful);
 		} catch (@SuppressWarnings("unused") final EmailJobCanceledException e) {
-			// Diese Exception wird in dem Fall aufgerufen, dass der Job unterbrochen wurde. Damit Status CANCELED
-			job.logError.add("- ABBRUCH: Job %d wurde während des Versands abgebrochen.".formatted(job.getId()));
-			completedJobs.add(job, EmailJobStatus.CANCELED);
+			setStatusAfterProcessJob(job, false);
 		} catch (final Exception e) {
-			// Bei einem unerwarteten Fehler wird der Status des Jobs auf FAILED gesetzt
-			job.logError.add("- FEHLER: Unerwarteter Fehler während des Versands von Job " + job.getId() + ": "
+			job.addLogError("- FEHLER: Unerwarteter Fehler während des Versands von Job " + job.getId() + ": "
 					+ (e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName()));
-			completedJobs.add(job, EmailJobStatus.FAILED);
+			setStatusAfterProcessJob(job, false);
 		}
 	}
 
+	/**
+	 * Setzt den abschließenden Status des Jobs nach dem Versandvorgang.
+	 *
+	 * <p>Der endgültige Status wird unter dem {@code queueTransitionLock} bestimmt und gesetzt,
+	 * um sicherzustellen, dass ein parallel laufendes {@link #cancelJob} das Abbruch-Flag nicht
+	 * zwischen dem Status-Check und dem Setzen des endgültigen Status verändern kann.</p>
+	 *
+	 * <p>Ein gesetztes Abbruch-Flag hat dabei immer Vorrang vor dem Versandergebnis: Auch wenn
+	 * alle E-Mails bereits erfolgreich versendet wurden, wird der Job als {@code CANCELED} markiert,
+	 * sobald {@link #cancelJob} das Flag vor Abschluss dieser Methode gesetzt hat.</p>
+	 *
+	 * @param job            der abgeschlossene Job
+	 * @param allSuccessful  true, wenn alle E-Mails ohne Fehler versendet wurden
+	 */
 	private void setStatusAfterProcessJob(final EmailJob job, final boolean allSuccessful) {
-		// Wenn der Job nicht vorher abgebrochen wurde, prüfe, ob alle Mails erfolgreich versandt wurden.
-		if (!job.hasCancellationRequest()) {
-			if (allSuccessful && job.logError.isEmpty() && job.logSkipped.isEmpty()) {
-				// Der Job ist nur erfolgreich, wenn alle Mails erfolgreich versendet wurden und kein Fehler aufgetreten ist.
-				completedJobs.add(job, EmailJobStatus.COMPLETED_SUCCESSFULLY);
+		@SuppressWarnings("java:S1854") // finalStatus kann hier nicht final sein (bedingte Zuweisung im synchronized-Block)
+		EmailJobStatus finalStatus;
+		synchronized (queueTransitionLock) {
+			// Ein Abbruch-Request hat immer Vorrang, unabhängig davon, wann er gesetzt wurde.
+			if (job.hasCancellationRequest()) {
+				job.addLogError("- ABBRUCH: Job %d wurde während des Versands abgebrochen.".formatted(job.getId()));
+				finalStatus = EmailJobStatus.CANCELED;
+			} else if (allSuccessful && job.getLogError().isEmpty() && job.getLogSkipped().isEmpty()) {
+				finalStatus = EmailJobStatus.COMPLETED_SUCCESSFULLY;
 			} else {
-				if (job.getEmailsSent() > 0) {
-					completedJobs.add(job, EmailJobStatus.COMPLETED_WITH_ERRORS);
-				} else {
-					completedJobs.add(job, EmailJobStatus.FAILED);
-				}
+				finalStatus = (job.getEmailsSent() > 0) ? EmailJobStatus.COMPLETED_WITH_ERRORS : EmailJobStatus.FAILED;
 			}
-		} else {
-			// Falls aufgrund des Multi-Threading zwischen dem ersten Check mittels hasCancellationRequest zu Beginn dieser Methode und dem Check dieser
-			// if-Bedingung ein CancellationRequest gesetzt wurde und keine Exception auftritt, würde der Status des Jobs hier immer noch SENDING sein.
-			// Setze den Status daher korrekterweise für diesen sehr seltenen Randfall auf CANCELED.
-			job.logError.add("- ABBRUCH: Job %d wurde während des Versands abgebrochen.".formatted(job.getId()));
-			completedJobs.add(job, EmailJobStatus.CANCELED);
+			// Status wird noch unter dem Lock gesetzt, damit kein anderer Thread einen Zwischenstatus sieht.
+			job.setStatus(finalStatus);
 		}
+		// completedJobs.add() wird bewusst außerhalb des queueTransitionLock aufgerufen,
+		// um die Lock-Haltezeit zu minimieren und eine verschachtelte Synchronisation zu vermeiden.
+		completedJobs.add(job);
 	}
 
 
 	/**
 	 * Diese Methode dient der Einhaltung des Limits für die Anzahl der E-Mails pro Minute.
-	 * Sie wartet blockierend, bis wieder genüg Zeit für das Versenden einer weiteren E-Mail vergangen ist.
+	 * Sie wartet blockierend, bis wieder genügend Zeit für das Versenden einer weiteren E-Mail vergangen ist.
 	 *
 	 * @throws EmailJobCanceledException   falls der wartende Thread durch Thread.interrupt() unterbrochen wurde (siehe shutdown-Methode)
 	 */
@@ -311,7 +385,7 @@ public final class EmailJobManager {
 	private boolean sendToRecipient(final @NotNull EmailJob job, final @NotNull EmailJobRecipient recipient) {
 		// Prüfe, ob E-Mails ohne Anhänge herausgefiltert werden sollen und der Empfänger keine Anhänge erhält.
 		if (recipient.attachments.isEmpty() && context.isFilterMailsWithoutAttachments()) {
-			job.logSkipped.add("- Für Empfänger %s konnten keine Anhänge für den Versand ermittelt werden. Er wird beim Versand übersprungen."
+			job.addLogSkipped("- Für Empfänger %s konnten keine Anhänge für den Versand ermittelt werden. Er wird beim Versand übersprungen."
 					.formatted(recipient.email));
 			return false;
 		}
@@ -325,12 +399,11 @@ public final class EmailJobManager {
 		final List<List<Integer>> pakete = groupAttachments(job, recipient.attachments, recipient.email);
 		if (pakete.isEmpty()) {
 			if (context.isFilterMailsWithoutAttachments()) {
-				job.logSkipped.add("- Für Empfänger %s konnten keine Anhänge für den Versand ermittelt werden. Er wird beim Versand übersprungen."
+				job.addLogSkipped("- Für Empfänger %s konnten keine Anhänge für den Versand ermittelt werden. Er wird beim Versand übersprungen."
 						.formatted(recipient.email));
 				return false;
-			} else {
-				return sendInternal(job, recipient, new ArrayList<>());
 			}
+			return sendInternal(job, recipient, new ArrayList<>());
 		}
 
 		// ... und versende diese in einzelnen E-Mails
@@ -378,7 +451,7 @@ public final class EmailJobManager {
 			// Wenn der Versand abgebrochen wurde, wird die Exception weitergeleitet.
 			throw e;
 		} catch (final Exception e) {
-			job.logError.add("- Fehler beim Versand an Empfänger " + recipient + ": " + e.getMessage());
+			job.addLogError("- Fehler beim Versand an Empfänger " + recipient + ": " + e.getMessage());
 			return false;
 		}
 		job.notifyEmailSent();
@@ -428,8 +501,7 @@ public final class EmailJobManager {
 				// Fall 1: Die Größe überschreitet das Limit und dies ist laut Job-Konfiguration untersagt
 				if (context.isForceMaxAttachmentSize()) {
 					// Die maximale Paketgröße darf nicht überschritten werden, verwerfe daher den Anhang und logge das Problem.
-					job.logSkipped
-							.add(("- Für Empfänger %s wurde ein Anhang nicht versendet. Grund: Der Anhang überschreitet die maximale Größe für E-Mail-Anhänge.")
+					job.addLogSkipped(("- Für Empfänger %s wurde ein Anhang nicht versendet. Grund: Der Anhang überschreitet die maximale Größe für E-Mail-Anhänge.")
 									.formatted(recipient));
 				} else {
 					// Fall 2: Die Größe überschreitet das Limit und dies ist laut Job-Konfiguration erlaubt. Erzeuge daher ein Einzelpaket am Ende der Ergebnisliste

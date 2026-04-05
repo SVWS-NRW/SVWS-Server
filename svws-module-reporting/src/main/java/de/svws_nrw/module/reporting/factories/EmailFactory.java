@@ -1,11 +1,18 @@
 package de.svws_nrw.module.reporting.factories;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 import de.svws_nrw.base.email.EmailJob;
 import de.svws_nrw.base.email.EmailJobAttachment;
 import de.svws_nrw.base.email.EmailJobManagerContext;
 import de.svws_nrw.base.email.EmailJobManagerFactory;
-import de.svws_nrw.base.email.EmailJobStatus;
 import de.svws_nrw.base.email.EmailJobRecipient;
+import de.svws_nrw.base.email.EmailJobStatus;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.benutzer.BenutzerEMailDaten;
 import de.svws_nrw.core.logger.LogLevel;
@@ -17,9 +24,9 @@ import de.svws_nrw.module.reporting.builders.ReportBuilderPdf;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
+import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.lerngruppen.ReportingKurs;
-import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.person.ReportingPerson;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import jakarta.mail.internet.AddressException;
@@ -28,13 +35,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Versendet Report-Ergebnisse in Form von PDF-Dateien per E-Mail an die zugehörigen Personen.
@@ -104,8 +104,8 @@ public final class EmailFactory {
 			final @NotNull EmailJob job = new EmailJob(absenderEmail)
 					.withSubject(subject)
 					.withBody(body)
-					.addRecipients(mapEmpfaengerEmailAnhaenge);
-			job.logSkipped.addAll(listUebersprungen);
+					.addRecipients(mapEmpfaengerEmailAnhaenge)
+					.addLogSkipped(listUebersprungen);
 			final long jobId = manager.enqueue(job);
 
 			final SimpleOperationResponse simple = new SimpleOperationResponse();
@@ -204,10 +204,10 @@ public final class EmailFactory {
 	 * weist sie den jeweiligen Empfängern zu, um so die vollständigen Daten für den E-Mail-Versand vorzubereiten. Nicht zuordenbare oder ungültige Einträge
 	 * werden in einer separaten Liste aufgeführt.
 	 *
-	 * @param parameter Die Reporting-Parameter, die unter anderem Informationen zu E-Mail-Daten enthalten.
-	 * @param empfaengerTyp Der Typ der Empfänger, der für die Ermittlung der E-Mail-Adressen benutzt wird.
-	 * @param mapGruppiertePdfs Eine Zuordnung von IDs zu einer Liste von PdfBuilder-Objekten, die die PDFs repräsentieren.
-	 * @param listUebersprungen Die Liste, in der Informationen über übersprungene Datensätze gesammelt werden.
+	 * @param parameter           Die Reporting-Parameter, die unter anderem Informationen zu E-Mail-Daten enthalten.
+	 * @param empfaengerTyp       Der Typ der Empfänger, der für die Ermittlung der E-Mail-Adressen benutzt wird.
+	 * @param mapGruppiertePdfs   Eine Zuordnung von IDs zu einer Liste von PdfBuilder-Objekten, die die PDFs repräsentieren.
+	 * @param listUebersprungen   Die Liste, in der Informationen über übersprungene Datensätze gesammelt werden.
 	 *
 	 * @return Eine Zuordnung von E-Mail-Adressen zu Empfänger-Objekten und deren zugehörigen Anhängen.
 	 *
@@ -313,8 +313,8 @@ public final class EmailFactory {
 	 * Ermittelt eine Liste von Empfänger-Personen basierend auf der angegebenen ID und dem spezifizierten Typ.
 	 * Die Methode verarbeitet verschiedene Modi und gibt die entsprechenden Daten aus dem Reporting-Repository zurück.
 	 *
-	 * @param id Die ID, anhand der die zu ermittelnden Personen identifiziert werden
-	 * @param typ Der Typ, der den Typ der zu ermittelnden Empfänger vorgibt.
+	 * @param id    Die ID, anhand der die zu ermittelnden Personen identifiziert werden
+	 * @param typ   Der Typ, der den Typ der zu ermittelnden Empfänger vorgibt.
 	 *
 	 * @return Eine Liste von ReportingPerson-Objekten, die die ermittelten Empfänger darstellen.
 	 */
@@ -409,8 +409,8 @@ public final class EmailFactory {
 	 * Liefert die E-Mail-Adresse einer angegebenen Person. Falls die Schul-E-Mail-Adresse nicht vorhanden oder ungültig ist, wird die private E-Mail-Adresse
 	 * verwendet, sofern diese als Alternative erlaubt ist. Gibt einen leeren String zurück, wenn keine gültige E-Mail-Adresse gefunden wurde.
 	 *
-	 * @param reportingPerson Die Person, von der die E-Mail-Adresse abgerufen werden soll.
-	 * @param istPrivateEmailAlternative Gibt an, ob auch die private E-Mail-Adresse der Peron berücksichtigt werden soll.
+	 * @param reportingPerson              Die Person, von der die E-Mail-Adresse abgerufen werden soll.
+	 * @param istPrivateEmailAlternative   Gibt an, ob auch die private E-Mail-Adresse der Person berücksichtigt werden soll.
 	 *
 	 * @return Die gültige E-Mail-Adresse der Person oder ein leerer String, wenn keine gültige E-Mail-Adresse gefunden wurde.
 	 */

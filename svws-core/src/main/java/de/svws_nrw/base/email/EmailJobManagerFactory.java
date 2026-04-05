@@ -1,6 +1,7 @@
 package de.svws_nrw.base.email;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -8,10 +9,11 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klasse verwaltet die Instanzen der EmailJobManager und erstellt
  * bei Bedarf neue Job-Manager. Die Factory selber ist ein Singleton.
  */
+@SuppressWarnings("java:S6548") // Singleton Design gewünscht
 public final class EmailJobManagerFactory {
 
-	/** Die Instanz der Factory sofern auf diese zugegriffen wurde */
-	private static EmailJobManagerFactory instance = null;
+	/** Die Singleton-Instanz der Factory. Sie wird einmalig beim Laden der Klasse erzeugt. */
+	private static final EmailJobManagerFactory instance = new EmailJobManagerFactory();
 
 	/** Gibt an, ob die Factory aktiv ist und neue {@link EmailJobManager} erstellt werden dürfen. */
 	private boolean active = true;
@@ -33,9 +35,6 @@ public final class EmailJobManagerFactory {
 	 * @return die Instanz der Factory
 	 */
 	public static EmailJobManagerFactory getInstance() {
-		if (instance == null) {
-			instance = new EmailJobManagerFactory();
-		}
 		return instance;
 	}
 
@@ -78,7 +77,11 @@ public final class EmailJobManagerFactory {
 	 * @return die Instanz des {@link EmailJobManager}
 	 */
 	public synchronized @NotNull EmailJobManager getManager(final @NotNull EmailJobManagerContext context) {
-		if (context == null) {
+		// @NotNull sichert nicht gegen die Übergabe von null. SonarQube denkt aber so und meldet bei Prüfung mittels "== null" immer
+		// "java:S2589, Remove this expression which always evaluates to true/false.". Daher hier die Prüfung mittels Objects.requireNonNull.
+		try {
+			Objects.requireNonNull(context);
+		} catch (final NullPointerException e) {
 			throw new IllegalArgumentException("Ohne einen Job-Manager-Context kann kein Manager erzeugt werden.");
 		}
 		if (!active) {

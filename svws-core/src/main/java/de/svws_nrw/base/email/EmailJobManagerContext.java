@@ -1,6 +1,7 @@
 package de.svws_nrw.base.email;
 
 import java.time.Duration;
+import java.util.Objects;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -50,8 +51,15 @@ public class EmailJobManagerContext {
 	 * @param session   die Session für das Versenden von Email per SMTP
 	 */
 	public EmailJobManagerContext(final @NotNull String schema, final long idUser, final @NotNull MailSmtpSession session) {
-		if ((schema == null) || schema.isBlank() || (session == null)) {
-			throw new IllegalArgumentException("Notwendige Parameter für die Erzeugung eines E-Mail-Job-Manager-Contexts sind null oder leer.");
+		// @NotNull sichert nicht gegen die Übergabe von null. SonarQube denkt aber so und meldet bei Prüfung mittels "== null" immer
+		// "java:S2589, Remove this expression which always evaluates to true/false.". Daher hier die Prüfung mittels Objects.requireNonNull.
+		try {
+			Objects.requireNonNull(session);
+			if (Objects.requireNonNull(schema).isBlank()) {
+				throw new IllegalArgumentException("Notwendige Parameter für die Erzeugung eines E-Mail-Job-Manager-Contexts sind leer.");
+			}
+		} catch (final NullPointerException e) {
+			throw new IllegalArgumentException("Notwendige Parameter für die Erzeugung eines E-Mail-Job-Manager-Contexts sind null.");
 		}
 		this.schema = schema;
 		this.idUser = idUser;

@@ -108,8 +108,8 @@ public class DataEmailJobs {
 			resp.log.add("Status = " + job.getStatus());
 			resp.log.add("Gesamtzahl-Empfänger = " + job.getRecipients().size());
 			resp.log.add("Gesendet = " + job.getEmailsSent());
-			resp.log.add("Übersprungen = " + job.logSkipped.size());
-			resp.log.add("Fehler = " + job.logError.size());
+			resp.log.add("Übersprungen = " + job.getLogSkipped().size());
+			resp.log.add("Fehler = " + job.getLogError().size());
 			return Response.ok(resp).type(MediaType.APPLICATION_JSON).build();
 		} catch (final ApiOperationException e) {
 			resp.success = false;
@@ -133,10 +133,8 @@ public class DataEmailJobs {
 			resp.success = true;
 			resp.log.add("Job-ID = " + job.getId());
 			resp.log.add("Status = " + job.getStatus());
-			resp.log.addAll(job.logSkipped);
-			resp.log.addAll(job.logError);
-			if (resp.log.isEmpty())
-				resp.log.add("Es ist noch kein Log vorhanden.");
+			resp.log.addAll(job.getLogSkipped());
+			resp.log.addAll(job.getLogError());
 			return Response.ok(resp).type(MediaType.APPLICATION_JSON).build();
 		} catch (final ApiOperationException e) {
 			resp.success = false;

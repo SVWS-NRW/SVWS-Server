@@ -74,7 +74,8 @@ class MailSmtpSessionMockHelper {
 
 	private void applyDelay() {
 		if (delayMs > 0) {
-			await().pollDelay(Duration.ofMillis(delayMs)).atMost(Duration.ofMillis(delayMs + 1)).untilAsserted(() -> { });
+			// Aufruf garantiert ein Mindest-Delay. Ist das System stark ausgelastet, beträgt die Toleranz bis zu 1000ms mehr.
+			await().pollDelay(Duration.ofMillis(delayMs)).atMost(Duration.ofMillis(delayMs + 1000)).until(() -> true);
 		}
 	}
 

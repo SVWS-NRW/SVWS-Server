@@ -1,5 +1,7 @@
 package de.svws_nrw.base.email;
 
+import java.util.Objects;
+
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -35,8 +37,15 @@ public class MailSmtpSessionConfig {
 	 * @param password   das Kennwort
 	 */
 	public MailSmtpSessionConfig(final @NotNull String host, final @NotNull String username, final @NotNull String password) {
-		if ((host == null) || (username == null) || (password == null) || host.isBlank() || username.isBlank()) {
-			throw new IllegalArgumentException("Notwendige Parameter für die Erzeugung eines E-Mail-SmtpSessionConfig sind null oder leer.");
+		// @NotNull sichert nicht gegen die Übergabe von null. SonarQube denkt aber so und meldet bei Prüfung mittels "== null" immer
+		// "java:S2589, Remove this expression which always evaluates to true/false.". Daher hier die Prüfung mittels Objects.requireNonNull.
+		try {
+			Objects.requireNonNull(password);
+			if (Objects.requireNonNull(host).isBlank() || Objects.requireNonNull(username).isBlank()) {
+				throw new IllegalArgumentException("Notwendige Parameter für die Erzeugung eines E-Mail-SmtpSessionConfig sind leer.");
+			}
+		} catch (final NullPointerException e) {
+			throw new IllegalArgumentException("Notwendige Parameter für die Erzeugung eines E-Mail-SmtpSessionConfig sind null.");
 		}
 		this._host = host;
 		this._username = username;

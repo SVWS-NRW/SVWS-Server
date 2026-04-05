@@ -1,9 +1,11 @@
 package de.svws_nrw.base.email;
 
+import java.util.Objects;
+
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Die Klasse beinhaltet die Informationen zu einem Attachment einer EMail-Empfängers.
+ * Die Klasse beinhaltet die Informationen zu einem Attachment eines E-Mail-Empfängers.
  */
 public class EmailJobAttachment {
 
@@ -25,8 +27,14 @@ public class EmailJobAttachment {
 	 * @param mimetype   der Mime-Type
 	 */
 	public EmailJobAttachment(final @NotNull String filename, final @NotNull byte[] data, final @NotNull String mimetype) {
-		if ((filename == null) || filename.isBlank() || (data == null) || (data.length == 0) || (mimetype == null) || mimetype.isBlank()) {
-			throw new IllegalArgumentException("Notwendige Parameter für die Erzeugung eines E-Mail-Attachments sind null oder leer.");
+		// @NotNull sichert nicht gegen die Übergabe von null. SonarQube denkt aber so und meldet bei Prüfung mittels "== null" immer
+		// "java:S2589, Remove this expression which always evaluates to true/false.". Daher hier die Prüfung mittels Objects.requireNonNull.
+		try {
+			if (Objects.requireNonNull(filename).isBlank() || (Objects.requireNonNull(data).length == 0) || Objects.requireNonNull(mimetype).isBlank()) {
+				throw new IllegalArgumentException("Notwendige Parameter für die Erzeugung eines E-Mail-Attachments sind leer.");
+			}
+		} catch (final NullPointerException e) {
+			throw new IllegalArgumentException("Notwendige Parameter für die Erzeugung eines E-Mail-Attachments sind null.");
 		}
 		this.filename = filename;
 		this.data = data;
