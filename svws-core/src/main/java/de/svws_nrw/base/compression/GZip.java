@@ -63,7 +63,7 @@ public final class GZip {
 	 *
 	 * @return die komprimierten Daten
 	 *
-	 * @throws CompressionException   falls ein Fehler beim Komprimieren ensteht
+	 * @throws CompressionException   falls ein Fehler beim Komprimieren entsteht
 	 */
 	public static byte[] encode(final byte[] data) throws CompressionException {
 		return encodeData(gzipOut -> gzipOut.write(data));
@@ -98,7 +98,7 @@ public final class GZip {
 	 *
 	 * @return die komprimierten Daten als Base64-String
 	 *
-	 * @throws CompressionException   falls ein Fehler beim Komprimieren ensteht
+	 * @throws CompressionException   falls ein Fehler beim Komprimieren entsteht
 	 */
 	public static String encodeBase64(final byte[] data) throws CompressionException {
 		return Base64.getEncoder().encodeToString(encode(data));

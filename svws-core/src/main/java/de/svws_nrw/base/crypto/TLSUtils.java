@@ -74,7 +74,7 @@ public final class TLSUtils {
 
 	/**
 	 * Die Methode führt einen TLS-Handshake mit dem Server bei der übergebenen URL durch und gibt die
-	 * Zertifikatskette in der übergebebenen Liste zurück. Außerdem wird ein boolean-Wert zurückgegeben,
+	 * Zertifikatskette in der übergebenen Liste zurück. Außerdem wird ein boolean-Wert zurückgegeben,
 	 * welcher angibt, ob dem Zertifikat aufgrund der Zertifikatskette vertraut wird. Das Server-Zertifikat
 	 * ist das erste Zertifikat in der Kette.
 	 *
@@ -138,7 +138,7 @@ public final class TLSUtils {
 
 	/**
 	 * Die Methode führt einen TLS-Handshake mit dem Server bei der übergebenen URL durch und gibt die
-	 * Zertifikatskette in der übergebebenen Liste zurück. Außerdem wird ein boolean-Wert zurückgegeben,
+	 * Zertifikatskette in der übergebenen Liste zurück. Außerdem wird ein boolean-Wert zurückgegeben,
 	 * welcher angibt, ob dem Zertifikat aufgrund der Zertifikatskette vertraut wird. Das Server-Zertifikat
 	 * ist das erste Zertifikat in der Kette.
 	 *

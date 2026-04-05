@@ -2,12 +2,12 @@ package de.svws_nrw.base.kurs42;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.ArrayList;
 import java.util.function.Function;
 
 import de.svws_nrw.asd.adt.Pair;
@@ -317,7 +317,7 @@ public class Kurs42Import {
 			final int zugeordnet = zuordnung_kurs_schiene.getSubMapSizeOrZero(kurs.id);
 			if (kurs.anzahlSchienen != zugeordnet) {
 				logger.logLn(
-						"Der Kurs %s hat laut den Kurs42-Daten %x Schienen, aber er ist %x Schienen zugeordnet. Der letzte Wert wird als richtig übernommen."
+						"Der Kurs %s hat laut den Kurs42-Daten %d Schienen, aber er ist %d Schienen zugeordnet. Der letzte Wert wird als richtig übernommen."
 								.formatted(mapKursByID.get(kurs.id).Name, kurs.anzahlSchienen, zugeordnet));
 				kurs.anzahlSchienen = zugeordnet;
 			}

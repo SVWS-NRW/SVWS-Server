@@ -38,7 +38,7 @@ export class ValidatorLsv10LehrerStammdatenVorname extends Validator {
 	}
 
 	protected pruefe(): boolean {
-		if (JavaString.isBlank(this.daten.get().trim())) {
+		if (JavaString.isBlank(this.daten.get())) {
 			this.addFehler(1, "Vorname der Lehrkraft: Der Vorname darf nicht nur aus Leerzeichen bestehen.");
 			return false;
 		}
