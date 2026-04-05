@@ -22,7 +22,7 @@ export class DateManager extends JavaObject implements Comparable<DateManager> {
 	private readonly jahr: number;
 
 	/**
-	 * Gibt an, on das Datum in einem Schaltjahr liegt oder nicht.
+	 * Gibt an, ob das Datum in einem Schaltjahr liegt oder nicht.
 	 */
 	private istSchaltjahr: boolean = false;
 
@@ -104,7 +104,7 @@ export class DateManager extends JavaObject implements Comparable<DateManager> {
 		if (this.tagImJahr < tagImJahrMontagKW1) {
 			this.kalenderwochenjahr = jahr - 1;
 			const istVjSchaltjahr: boolean = (DateManager.getSchalttageBisJahr(jahr - 1) - DateManager.getSchalttageBisJahr(jahr - 2)) === 1;
-			const wt1vj: number = DateManager.getWochentagOfTagImJahr(jahr, 1);
+			const wt1vj: number = DateManager.getWochentagOfTagImJahr(jahr - 1, 1);
 			const kwVjAnzahl: number = ((wt1vj === 4) || (istVjSchaltjahr && (wt1vj === 3))) ? 53 : 52;
 			this.kalenderwoche = kwVjAnzahl;
 		} else {

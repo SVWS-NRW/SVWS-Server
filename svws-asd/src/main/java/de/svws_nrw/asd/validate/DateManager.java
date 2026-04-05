@@ -19,7 +19,7 @@ public final class DateManager implements Comparable<DateManager> {
 	/** Das Jahr */
 	private final int jahr;
 
-	/** Gibt an, on das Datum in einem Schaltjahr liegt oder nicht. */
+	/** Gibt an, ob das Datum in einem Schaltjahr liegt oder nicht. */
 	private boolean istSchaltjahr;
 
 	/** Der Tag im Jahr (1-365/366) - je nach Schaltjahr */
@@ -85,7 +85,7 @@ public final class DateManager implements Comparable<DateManager> {
 			// letzte KW des Vorjahres
 			this.kalenderwochenjahr = jahr - 1;
 			final boolean istVjSchaltjahr = (getSchalttageBisJahr(jahr - 1) - getSchalttageBisJahr(jahr - 2)) == 1;
-			final int wt1vj = getWochentagOfTagImJahr(jahr, 1);
+			final int wt1vj = getWochentagOfTagImJahr(jahr - 1, 1);
 			final int kwVjAnzahl = ((wt1vj == 4) || (istVjSchaltjahr && (wt1vj == 3))) ? 53 : 52;
 			kalenderwoche = kwVjAnzahl;
 		} else {

@@ -35,7 +35,7 @@ public final class ValidatorLsv00LehrerStammdatenVorname extends Validator {
 	protected boolean pruefe() {
 		final String vorname = daten.get();
 
-		if (vorname == null || vorname.isEmpty()) {
+		if (vorname == null || vorname.isBlank()) {
 			addFehler(0, "Vorname der Lehrkraft: Kein Wert vorhanden.");
 			return false;
 		}
