@@ -1,6 +1,7 @@
 package de.svws_nrw.core.adt.map;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,6 +94,41 @@ public class ListMap2DLongKeys<V> {
 		}
 		if (_map2 != null) {
 			MapUtils.getOrCreateArrayList(_map2, key2).add(value);
+		}
+	}
+
+	/**
+	 * Fügt das Element hinzu.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @param value Der zugeordnete Wert. Der Wert NULL ist nicht erlaubt.
+	 */
+	public void addSingle(final long key1, final long key2, final @NotNull V value) {
+		if (!get12(key1, key2).isEmpty()) {
+			throw new DeveloperNotificationException("Es gibt schon ein Element mit (%d, %d).".formatted(key1, key2));
+		}
+		add(key1, key2, value);
+	}
+
+	/**
+	 * Fügt die Elemente hinzu.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @param values Der zugeordnete Wert. Der Wert NULL ist nicht erlaubt.
+	 */
+	public void addAll(final long key1, final long key2, final @NotNull Collection<V> values) {
+		final @NotNull LongArrayKey key = new LongArrayKey(key1, key2);
+		MapUtils.getOrCreateArrayList(_map12, key).addAll(values);
+
+		if (_map1 != null) {
+			MapUtils.getOrCreateArrayList(_map1, key1).addAll(values);
+		}
+		if (_map2 != null) {
+			MapUtils.getOrCreateArrayList(_map2, key2).addAll(values);
 		}
 	}
 

@@ -66,7 +66,7 @@ public class GostKursklausurRich {
 	@Schema(description = "die ID des Klausurtermins, sofern schon gesetzt", example = "5555")
 	public Long idTermin = null;
 
-	/** Die Startzeit der Klausur in Minuten seit 0 Uhr, sofern abweichend von Startzeit des gesamten Termins. */
+	/** Die Startzeit der Klausur in Minuten seit 0 Uhr, sofern abweichend von der Startzeit des gesamten Termins. */
 	@Schema(description = "die Startzeit der Klausur in Minuten seit 0 Uhr, sofern abweichend von Startzeit des gesamten Termins", example = "540")
 	public Integer startzeit = null;
 

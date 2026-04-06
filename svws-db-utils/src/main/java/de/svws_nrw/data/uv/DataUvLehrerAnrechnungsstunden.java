@@ -50,11 +50,13 @@ public final class DataUvLehrerAnrechnungsstunden extends DataManagerRevised<Lon
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOUvLehrerAnrechnungsstunden getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die Lehrer-Anrechnungsstunde darf nicht null sein.");
+		}
 		final DTOUvLehrerAnrechnungsstunden dto = conn.queryByKey(DTOUvLehrerAnrechnungsstunden.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Lehrer-Anrechnungsstunde zur ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 

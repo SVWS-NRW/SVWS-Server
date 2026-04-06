@@ -2,11 +2,13 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
-import type { List } from '../../../java/util/List';
 import { LongArrayKey } from '../../../core/adt/LongArrayKey';
-import { Class } from '../../../java/lang/Class';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { JavaString } from '../../../java/lang/JavaString';
 import { MapUtils } from '../../../core/utils/MapUtils';
+import type { Collection } from '../../../java/util/Collection';
+import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class ListMap2DLongKeys<V> extends JavaObject {
@@ -81,6 +83,40 @@ export class ListMap2DLongKeys<V> extends JavaObject {
 		}
 		if (this._map2 !== null) {
 			MapUtils.getOrCreateArrayList(this._map2, key2).add(value);
+		}
+	}
+
+	/**
+	 * Fügt das Element hinzu.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @param value Der zugeordnete Wert. Der Wert NULL ist nicht erlaubt.
+	 */
+	public addSingle(key1: number, key2: number, value: V): void {
+		if (!this.get12(key1, key2).isEmpty()) {
+			throw new DeveloperNotificationException(JavaString.format("Es gibt schon ein Element mit (%d, %d).", key1, key2))
+		}
+		this.add(key1, key2, value);
+	}
+
+	/**
+	 * Fügt die Elemente hinzu.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 *
+	 * @param values Der zugeordnete Wert. Der Wert NULL ist nicht erlaubt.
+	 */
+	public addAll(key1: number, key2: number, values: Collection<V>): void {
+		const key: LongArrayKey = new LongArrayKey(key1, key2);
+		MapUtils.getOrCreateArrayList(this._map12, key).addAll(values);
+		if (this._map1 !== null) {
+			MapUtils.getOrCreateArrayList(this._map1, key1).addAll(values);
+		}
+		if (this._map2 !== null) {
+			MapUtils.getOrCreateArrayList(this._map2, key2).addAll(values);
 		}
 	}
 

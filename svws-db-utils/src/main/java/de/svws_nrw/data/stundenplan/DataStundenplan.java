@@ -84,8 +84,9 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	@Override
 	protected Stundenplan map(final DTOStundenplan stundenplan) throws ApiOperationException {
 		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, stundenplan.Schuljahresabschnitts_ID);
-		if (schuljahresabschnitt == null)
+		if (schuljahresabschnitt == null) {
 			return null;
+		}
 		final List<StundenplanZeitraster> zeitraster = DataStundenplanZeitraster.getZeitraster(conn, stundenplan.ID);
 		final List<StundenplanRaum> raeume = DataStundenplanRaeume.getRaeume(conn, stundenplan.ID);
 		final List<StundenplanSchiene> schienen = DataStundenplanSchienen.getSchienen(conn, stundenplan.ID);
@@ -136,10 +137,12 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 			case "wochenTypModell" -> {
 				final long idStundenplan = dto.ID;
 				int wochentypmodell = JSONMapper.convertToIntegerInRange(value, false, 0, 100);
-				if (wochentypmodell == 1)
+				if (wochentypmodell == 1) {
 					wochentypmodell = 0;
-				if (dto.WochentypModell == wochentypmodell)
+				}
+				if (dto.WochentypModell == wochentypmodell) {
 					return;
+				}
 				// Bestimme den kompletten Unterricht, der einem Wochentyp > als dem Wert für das Wochentyp-Modell zugeordnet ist und passe diesen ggf. an.
 				final List<Long> idsZeitraster = conn.queryList(DTOStundenplanZeitraster.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanZeitraster.class, idStundenplan)
 						.stream().map(z -> z.ID).toList();
@@ -148,8 +151,9 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 							conn.queryList("SELECT e FROM DTOStundenplanUnterricht e WHERE e.Zeitraster_ID IN ?1 AND e.Wochentyp > ?2",
 									DTOStundenplanUnterricht.class, idsZeitraster, wochentypmodell);
 					if (!unterrichte.isEmpty()) {
-						for (final DTOStundenplanUnterricht unterricht : unterrichte)
+						for (final DTOStundenplanUnterricht unterricht : unterrichte) {
 							unterricht.Wochentyp = 0;
+						}
 						conn.transactionPersistAll(unterrichte);
 						conn.transactionFlush();
 					}
@@ -198,11 +202,13 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOStundenplan getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den Stundenplan darf nicht null sein.");
+		}
 		final DTOStundenplan dto = conn.queryByKey(DTOStundenplan.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Stundenplan zur ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 
@@ -259,11 +265,13 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 		if (Boolean.TRUE.equals(dto.Aktiv) && (patchedAttributes.containsKey("gueltigAb") || patchedAttributes.containsKey("gueltigBis") || patchedAttributes.containsKey("aktiv"))) {
 			final List<StundenplanListeEintrag> plaene = DataStundenplanListe.getStundenplaene(conn, dto.Schuljahresabschnitts_ID);
 			for (final StundenplanListeEintrag plan : plaene) {
-                if ((plan.id == dto.ID) || !plan.aktiv)
-                    continue;
-                if (DateUtils.berechneGemeinsameTage(plan.gueltigAb, plan.gueltigBis, dto.Beginn, dto.Ende).length > 0)
-                    throw new ApiOperationException(Status.CONFLICT,
-                            "Der Gültigkeit des Stundenplans steht in Konflikt zum Stundenplan mit der ID %d.".formatted(plan.id));
+                if ((plan.id == dto.ID) || !plan.aktiv) {
+					continue;
+                }
+                if (DateUtils.berechneGemeinsameTage(plan.gueltigAb, plan.gueltigBis, dto.Beginn, dto.Ende).length > 0) {
+					throw new ApiOperationException(Status.CONFLICT,
+							"Der Gültigkeit des Stundenplans steht in Konflikt zum Stundenplan mit der ID %d.".formatted(plan.id));
+                }
             }
 		}
 	}
@@ -301,8 +309,9 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
 		final Stundenplan alt = getById(idAlt);
-		if (alt == null)
+		if (alt == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Stundenplan-Kopiervorlage mit ID %d nicht gefunden.".formatted(idAlt));
+		}
 		final Map<String, Object> initAttributes = JSONMapper.toMap(isStundenplanNeu);
 		initAttributes.put("wochenTypModell",  alt.wochenTypModell);
 		final Stundenplan neu = super.add(initAttributes);
@@ -336,9 +345,10 @@ public final class DataStundenplan extends DataManagerRevised<Long, DTOStundenpl
 		if (alt.idSchuljahresabschnitt != neu.idSchuljahresabschnitt) {
 			final DataSchuljahresabschnitte dataSja = new DataSchuljahresabschnitte(conn);
 			final Schuljahresabschnitt sjaNeu = dataSja.getByID(neu.idSchuljahresabschnitt);
-			if ((sjaNeu.abschnitt != 2) || (sjaNeu.idVorigerAbschnitt != alt.idSchuljahresabschnitt))
+			if ((sjaNeu.abschnitt != 2) || (sjaNeu.idVorigerAbschnitt != alt.idSchuljahresabschnitt)) {
 				throw new ApiOperationException(Status.BAD_REQUEST,
 					"Der zu kopierende Stundenplan muss im gleichen Schuljahr liegen wie der neue Stundenplan.");
+			}
 			return neu.idSchuljahresabschnitt;
 		}
 		return null;

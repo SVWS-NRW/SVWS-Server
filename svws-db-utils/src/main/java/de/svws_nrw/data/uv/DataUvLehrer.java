@@ -48,11 +48,13 @@ public final class DataUvLehrer extends DataManagerRevised<Long, DTOUvLehrer, Uv
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOUvLehrer getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den UV-Lehrer darf nicht null sein.");
+		}
 		final DTOUvLehrer dto = conn.queryByKey(DTOUvLehrer.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Lehrer zur ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 

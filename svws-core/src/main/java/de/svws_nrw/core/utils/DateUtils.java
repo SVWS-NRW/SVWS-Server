@@ -722,4 +722,26 @@ public final class DateUtils {
 		}
 	}
 
+	/**
+	 * Prüft, ob zwei Gültigkeitsintervalle sich überlappen.
+	 * Ein Intervall ist definiert durch [gueltigVon, gueltigBis].
+	 * Ist gueltigBis null oder leer, so ist das Intervall ab gueltigVon unbegrenzt.
+	 *
+	 * @param gueltigVonA   der Beginn des ersten Intervalls
+	 * @param gueltigBisA   das Ende des ersten Intervalls (null oder leer = unbegrenzt)
+	 * @param gueltigVonB   der Beginn des zweiten Intervalls
+	 * @param gueltigBisB   das Ende des zweiten Intervalls (null oder leer = unbegrenzt)
+	 * @return true, wenn sich die Intervalle überlappen, sonst false
+	 */
+	public static boolean intervallUeberlappt(final @NotNull String gueltigVonA, final String gueltigBisA,
+			final @NotNull String gueltigVonB, final String gueltigBisB) {
+		if ((gueltigBisA != null) && (gueltigBisA.compareTo(gueltigVonB) < 0)) {
+			return false;
+		}
+		if ((gueltigBisB != null) && (gueltigBisB.compareTo(gueltigVonA) < 0)) {
+			return false;
+		}
+		return true;
+	}
+
 }

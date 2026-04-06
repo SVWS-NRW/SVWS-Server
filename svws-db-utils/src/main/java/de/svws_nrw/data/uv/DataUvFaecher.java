@@ -49,11 +49,13 @@ public final class DataUvFaecher extends DataManagerRevised<Long, DTOUvFach, UvF
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOUvFach getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die ID für das UV-Fach darf nicht null sein.");
+		}
 		final DTOUvFach dto = conn.queryByKey(DTOUvFach.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Kein UV-Fach mit der ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 

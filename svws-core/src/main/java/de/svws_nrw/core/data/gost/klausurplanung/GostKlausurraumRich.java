@@ -27,7 +27,7 @@ public class GostKlausurraumRich {
 	@Schema(description = "die Grösse des Raumes an Arbeitsplätzen für Schüler", example = "30")
 	public int groesse = -1;
 
-	/** Ein Array mit den IDs der im Raum enthaltenen Schülerklausurterminen. */
+	/** Ein Array mit den IDs des im Raum enthaltenen Schülerklausurtermins. */
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der im Raum enthaltenen Schülerklausurterminen."))
 	public @NotNull List<Long> schuelerklausurterminIDs = new ArrayList<>();
 

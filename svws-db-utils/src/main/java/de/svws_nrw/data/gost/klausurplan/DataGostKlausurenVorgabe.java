@@ -454,7 +454,7 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 		// Alte Sprachen
 		if (fach.kuerzel.matches("^[GLH]\\d?$")) {
 			if (!fach.istFremdSpracheNeuEinsetzend) {
-				return kursart == GostKursart.LK ? 300 : 240; // fortgeführt
+				return (kursart == GostKursart.LK) ? 300 : 240; // fortgeführt
 			}
 		    return 210; // GK neu einsetzend
 		}
@@ -462,31 +462,31 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 		// Moderne Fremdsprachen
 		if (fach.istFremdsprache) {
 			if (!fach.istFremdSpracheNeuEinsetzend) {
-				return kursart == GostKursart.LK ? 315 : 285; // fortgeführt
+				return (kursart == GostKursart.LK) ? 315 : 285; // fortgeführt
 			}
 			return 255; // GK neu einsetzend
 		}
 
 		// Naturwissenschaften
 		if (List.of(Fach.BI.toString(), Fach.CH.toString(), Fach.PH.toString()).contains(fach.kuerzel)) {
-			return kursart == GostKursart.LK ? 300 : 255;
+			return (kursart == GostKursart.LK) ? 300 : 255;
 		}
 
 		if (Fach.D.toString().equals(fach.kuerzel)) {
-			return kursart == GostKursart.LK ? 315 : 255;
+			return (kursart == GostKursart.LK) ? 315 : 255;
 		}
 
 		if (Fach.M.toString().equals(fach.kuerzel)) {
-			return kursart == GostKursart.LK ? 300 : 255;
+			return (kursart == GostKursart.LK) ? 300 : 255;
 		}
 
 		// Informatik, Ernährungslehre, Technik
 		if (List.of(Fach.IF.toString(), Fach.EL.toString(), Fach.TC.toString()).contains(fach.kuerzel)) {
-			return kursart == GostKursart.LK ? 270 : 225;
+			return (kursart == GostKursart.LK) ? 270 : 225;
 		}
 
 		// alle anderen Fächer
-		return kursart == GostKursart.LK ? 300 : 240;
+		return (kursart == GostKursart.LK) ? 300 : 240;
 	}
 
 }

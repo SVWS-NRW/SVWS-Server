@@ -49,11 +49,13 @@ public final class DataUvZeitraster extends DataManagerRevised<Long, DTOUvZeitra
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOUvZeitraster getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für das Zeitraster darf nicht null sein.");
+		}
 		final DTOUvZeitraster dto = conn.queryByKey(DTOUvZeitraster.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Zeitraster mit der ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 

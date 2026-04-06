@@ -58,8 +58,9 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Ein Manager zur Handhabung von Daten der Gost-Klausurplanung.
- * Es können Daten mehrerer Abiturjahrgänge und Gost-Halbjahre verwaltet.
+ * Es können Daten mehrerer Abiturjahrgänge und Gost-Halbjahre verwaltet werden.
  */
+@SuppressWarnings({ "unused", "java:S100", "java:S1192", "java:S117" })
 public class GostKlausurplanManager {
 
 	// externe Manager, klausurplanfremde Daten
@@ -221,12 +222,12 @@ public class GostKlausurplanManager {
 		if ((a == b) || (a.id == b.id)) {
 			return 0;
 		}
-		// Zuerst prüfen, ob es sich um die gleiche Schuelerklausur handelt
+		// Zuerst prüfen, ob es sich um die gleiche Schülerklausur handelt
 		if (a.idSchuelerklausur != b.idSchuelerklausur) {
 			final @NotNull GostSchuelerklausur kA = schuelerklausurBySchuelerklausurtermin(a);
 			final @NotNull GostSchuelerklausur kB = schuelerklausurBySchuelerklausurtermin(b);
 
-			// Wenn _schuelerMap existiert und unterschiedliche Schüler, nach Name sortieren
+			// Wenn _schuelerMap existiert und unterschiedliche Schüler, nach Namen sortieren
 			if (kA.idSchueler != kB.idSchueler) {
 				final SchuelerListeEintrag sA = _schuelerlisteeintrag_by_id.get(kA.idSchueler);
 				final SchuelerListeEintrag sB = _schuelerlisteeintrag_by_id.get(kB.idSchueler);
@@ -242,7 +243,7 @@ public class GostKlausurplanManager {
 			}
 		}
 
-		// Wenn es sich um die gleiche Schuelerklausur handelt, nach FolgeNr sortieren
+		// Wenn es sich um die gleiche Schülerklausur handelt, nach FolgeNr sortieren
 		if (a.idSchuelerklausur == b.idSchuelerklausur) {
 			final int folgeNrComparison = Integer.compare(a.folgeNr, b.folgeNr);
 			if (folgeNrComparison != 0) {
@@ -661,7 +662,7 @@ public class GostKlausurplanManager {
 	/**
 	 * Prüft, ob zu dem angegebenen Schuljahresabschnitt bereits die StundenplanManager aus der Datenbank geladen wurden.
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
-	 * @return true, wenn die StundenplanManager bereits geladen wurde, sonst false
+	 * @return true, wenn der StundenplanManager bereits geladen wurde, sonst false
 	 */
 	public boolean stundenplanManagerGeladenByAbschnitt(final long idSchuljahresabschnitt) {
 		return _stundenplanmanagermenge_by_schuljahresabschnitt.containsKey(idSchuljahresabschnitt);
@@ -1002,7 +1003,7 @@ public class GostKlausurplanManager {
 	 * Setzt die Maps, die zu den {@link SchuelerListeEintrag}en gehören.
 	 *
 	 * @param listSchueler Liste von {@link SchuelerListeEintrag}en
-	 * @param ignoreExists wenn true, wird bei bereits existierenden Schülern kein Fehler geworfen und der alte Eintrag beibehalten
+	 * @param ignoreExists wenn true, wird bei bereits existierenden Schülern kein Fehler geworfen und der alte Eintrag wird beibehalten
 	 */
 	private void schuelerAddAllOhneUpdate(final @NotNull List<SchuelerListeEintrag> listSchueler, final boolean ignoreExists) {
 		for (final SchuelerListeEintrag sle : listSchueler) {
@@ -2003,7 +2004,6 @@ public class GostKlausurplanManager {
 	    }
 	}
 
-
 	/**
 	 * Fügt alle {@link GostKursklausur}-Objekte hinzu.
 	 *
@@ -2231,7 +2231,6 @@ public class GostKlausurplanManager {
 				schuelerklausurtermin);
 		}
 	}
-
 
 	/**
 	 * Fügt alle {@link GostSchuelerklausurTermin}-Objekte hinzu.
@@ -3186,7 +3185,7 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Liefert eine Liste von {@link GostKlausurtermin}en, die für Nachschreiber zugelassen, zu den übergebenen Parametern
+	 * Liefert eine Liste von {@link GostKlausurtermin}en, die für Nachschreiber zugelassen sind, zu den übergebenen Parametern
 	 *
 	 * @param abiJahrgang   der Abitur-Jahrgang, zu dem die {@link GostKlausurtermin}e gesucht werden
 	 * @param halbjahr      das {@link GostHalbjahr}, zu dem die {@link GostKlausurtermin}e gesucht werden
@@ -3588,7 +3587,7 @@ public class GostKlausurplanManager {
 	 */
 	private @NotNull List<PairNN<GostSchuelerklausurTermin, GostSchuelerklausurTermin>> konfliktPaarSchuelerklausurtermineGetMenge(
 			final List<GostSchuelerklausurTermin> menge1, final List<GostSchuelerklausurTermin> menge2) {
-		// Wenn eine von beiden Mengen leer ist, kann kein Konfklikt entstehen
+		// Wenn eine von beiden Mengen leer ist, kann kein Konflikt entstehen
 		if ((menge1 == null) || (menge2 == null) || menge1.isEmpty() || menge2.isEmpty()) {
 			return new ArrayList<>();
 		}
@@ -3610,7 +3609,7 @@ public class GostKlausurplanManager {
 			final Map<Long, GostSchuelerklausurTermin> menge1, final List<GostSchuelerklausurTermin> menge2) {
 		// Erstelle leere Map für Rückgabe
 		final @NotNull List<PairNN<GostSchuelerklausurTermin, GostSchuelerklausurTermin>> ergebnis = new ArrayList<>();
-		// Wenn eine von beiden Mengen leer ist, kann kein Konfklikt entstehen
+		// Wenn eine von beiden Mengen leer ist, kann kein Konflikt entstehen
 		if ((menge1 == null) || (menge2 == null) || menge1.isEmpty() || menge2.isEmpty()) {
 			return ergebnis;
 		}
@@ -3688,13 +3687,13 @@ public class GostKlausurplanManager {
 
 	/**
 	 * Liefert eine Map {@link GostKursklausur} -> Schülerid-Menge, die nur die neuen Konflikte liefert,
-	 * die die übergebe {@link GostKursklausur} bei Hinzufügen im übergebenen {@link GostKlausurtermin} verursacht.
+	 * die die übergebe {@link GostKursklausur} beim Hinzufügen im übergebenen {@link GostKlausurtermin} verursacht.
 	 *
 	 * @param termin der zu prüfende {@link GostKlausurtermin}
 	 * @param kursklausur die zu prüfende {@link GostKursklausur}
 	 *
 	 * @return die Map {@link GostKursklausur} -> Schülerid-Menge, die nur die neuen Konflikte liefert,
-	 * die die übergebe {@link GostKursklausur} bei Hinzufügen im übergebenen {@link GostKlausurtermin} verursacht.
+	 * die die Übergebe {@link GostKursklausur} beim Hinzufügen im übergebenen {@link GostKlausurtermin} verursacht.
 	 */
 	public @NotNull Map<GostKursklausur, Set<Long>> konflikteNeuMapKursklausurSchueleridsByTerminAndKursklausur(
 			final @NotNull GostKlausurtermin termin, final @NotNull GostKursklausur kursklausur) {
@@ -3703,12 +3702,14 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Liefert die Anzahl der neuen Schüler-Konflikte, die die übergebe {@link GostKursklausur} bei Hinzufügen im übergebenen {@link GostKlausurtermin} verursacht.
+	 * Liefert die Anzahl der neuen Schüler-Konflikte, die die übergebe {@link GostKursklausur} beim Hinzufügen im übergebenen {@link GostKlausurtermin}
+	 * verursacht.
 	 *
 	 * @param termin der zu prüfende {@link GostKlausurtermin}
 	 * @param kursklausur die zu prüfende {@link GostKursklausur}
 	 *
-	 * @return die Anzahl der neuen Schüler-Konflikte, die die übergebe {@link GostKursklausur} bei Hinzufügen im übergebenen {@link GostKlausurtermin} verursacht.
+	 * @return die Anzahl der neuen Schüler-Konflikte, die die übergebe {@link GostKursklausur} beim Hinzufügen im übergebenen {@link GostKlausurtermin}
+	 * verursacht.
 	 */
 	public int konflikteAnzahlZuTerminGetByTerminAndKursklausur(final @NotNull GostKlausurtermin termin,
 			final @NotNull GostKursklausur kursklausur) {
@@ -3800,13 +3801,13 @@ public class GostKlausurplanManager {
 	// #####################################################################
 
 	/**
-	 * Liefert für einen Schwellwert und einen {@link GostKlausurtermin} eine Map Schüler-ID -> {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
-	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert und die betreffenden {@link GostSchuelerklausurTermin}e.
+	 * Liefert für einen Schwellwert und einen {@link GostKlausurtermin} eine Map Schüler-ID → {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
+	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert, und die betreffenden {@link GostSchuelerklausurTermin}e.
 	 *
 	 * @param termin    der {@link GostKlausurtermin}, dessen Kalenderwoche geprüft wird
-	 * @param threshold der Schwellwert (z.B. 3), der mindestens erreicht sein muss, damit die Schüler-IDs in die Rückgabe-Map aufgenommen wird
+	 * @param threshold der Schwellwert (z. B. 3), der mindestens erreicht sein muss, damit die Schüler-IDs in die Rückgabe-Map aufgenommen werden
 	 *
-	 * @return die Map Schüler-ID -> {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
+	 * @return die Map Schüler-ID → {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
 	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert und die betreffenden {@link GostSchuelerklausurTermin}e.
 	 */
 	public @NotNull Map<Long, Set<GostSchuelerklausurTermin>> klausurenProSchueleridExceedingKWThresholdByTerminAndThreshold(
@@ -3819,16 +3820,16 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Liefert für einen Schwellwert, einen {@link GostKlausurtermin} und eine {@link GostKursklausur} eine Map Schüler-ID -> {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
-	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert und die betreffenden {@link GostSchuelerklausurTermin}e, wenn die übergebene {@link GostKursklausur} in den übergebenen {@link GostKlausurtermin} integriert würde.
+	 * Liefert für einen Schwellwert, einen {@link GostKlausurtermin} und eine {@link GostKursklausur} eine Map Schüler-ID → {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
+	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert, und die betreffenden {@link GostSchuelerklausurTermin}e, wenn die übergebene {@link GostKursklausur} in den übergebenen {@link GostKlausurtermin} integriert würde.
 	 *
 	 * @param termin    der {@link GostKlausurtermin}, dessen Kalenderwoche geprüft wird
 	 * @param klausur   die {@link GostKursklausur}, deren Integration in den {@link GostKlausurtermin} <code>termin</code> angenommen wird
-	 * @param threshold der Schwellwert (z.B. 3), der mindestens erreicht sein muss, damit die
+	 * @param threshold der Schwellwert (z. B. 3), der mindestens erreicht sein muss, damit die
 	 *                  Schüler-IDs in die Rückgabe-Map aufgenommen werden
 	 *
-	 * @return die Map Schüler-ID -> {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
-	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert und die betreffenden {@link GostSchuelerklausurTermin}e, wenn die übergebene {@link GostKursklausur} in den übergebenen {@link GostKlausurtermin} integriert würde.
+	 * @return die Map Schüler-ID → {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
+	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert, und die betreffenden {@link GostSchuelerklausurTermin}e, wenn die übergebene {@link GostKursklausur} in den übergebenen {@link GostKlausurtermin} integriert würde.
 	 */
 	public @NotNull Map<Long, Set<GostSchuelerklausurTermin>> klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(
 			final @NotNull GostKlausurtermin termin, final @NotNull GostKursklausur klausur, final int threshold) {
@@ -3841,17 +3842,17 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Liefert für einen Schwellwert und ein Datum eine Map Schüler-ID -> {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
-	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert und die betreffenden {@link GostSchuelerklausurTermin}e, wenn der übergebene {@link GostKlausurtermin} in die Kalenderwoche zusätzlich geplant würde.
+	 * Liefert für einen Schwellwert und ein Datum eine Map Schüler-ID → {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
+	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert, und die betreffenden {@link GostSchuelerklausurTermin}e, wenn der übergebene {@link GostKlausurtermin} in die Kalenderwoche zusätzlich geplant würde.
 	 *
 	 * @param termin        der Klausurtermin, der zusätzlich in die durch <code>datum</code> angegebene Kalenderwoche geplant werden soll
 	 * @param datum         das Datum, dessen Kalenderwoche auf die Klausuranzahl geprüft wird
-	 * @param threshold     der Schwellwert (z.B. 3), der mindestens erreicht sein muss, damit die
+	 * @param threshold     der Schwellwert (z. B. 3), der mindestens erreicht sein muss, damit die
 	 *                  Schüler-IDs in die Rückgabe-Map aufgenommen werden
 	 * @param thresholdOnly wenn <code>true</code> wird die Schüler-ID nur bei exaktem Erreichen des <code>threshold</code> in die Rückgabe-Map aufgenommen. Größere Werte werden nicht berücksichtigt.
 	 *
-	 * @return die Map Schüler-ID -> {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
-	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert und die betreffenden {@link GostSchuelerklausurTermin}e, wenn der übergebene {@link GostKlausurtermin} in die Kalenderwoche zusätzlich geplant würde.
+	 * @return die Map Schüler-ID → {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
+	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert, und die betreffenden {@link GostSchuelerklausurTermin}e, wenn der übergebene {@link GostKlausurtermin} in die Kalenderwoche zusätzlich geplant würde.
 	 */
 	public @NotNull Map<Long, Set<GostSchuelerklausurTermin>> klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(
 			final @NotNull GostKlausurtermin termin, final @NotNull String datum, final int threshold,
@@ -3903,16 +3904,16 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Liefert für einen Schwellwert, eine Kalenderwoche, und ein Abiturjahr eine Map Schüler-ID -> {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
-	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert und die betreffenden {@link GostSchuelerklausurTermin}e.
+	 * Liefert für einen Schwellwert, eine Kalenderwoche und ein Abiturjahr eine Map Schüler-ID → {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
+	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert, und die betreffenden {@link GostSchuelerklausurTermin}e.
 	 *
 	 * @param kw            die Kalenderwoche, für die die Klausuranzahl geprüft wird
 	 * @param abijahr       das Abiturjahr der gesuchten Konflikt-Schüler
-	 * @param threshold     der Schwellwert (z.B. 3), der mindestens erreicht sein muss, damit die
+	 * @param threshold     der Schwellwert (z. B. 3), der mindestens erreicht sein muss, damit die
 	 *                  Schüler-IDs in die Rückgabe-Map aufgenommen werden
 	 * @param thresholdOnly wenn <code>true</code> wird die Schüler-ID nur bei exaktem Erreichen des <code>threshold</code> in die Rückgabe-Map aufgenommen. Größere Werte werden nicht berücksichtigt.
 	 *
-	 * @return die Map Schüler-ID -> {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
+	 * @return die Map Schüler-ID → {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
 	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert und die betreffenden {@link GostSchuelerklausurTermin}e.
 	 */
 	public @NotNull Map<Long, Set<GostSchuelerklausurTermin>> klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndThreshold(
@@ -3921,17 +3922,17 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Liefert für einen Schwellwert, eine Kalenderwoche, und ein Abiturjahr eine Map Schüler-ID -> {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
-	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert und die betreffenden {@link GostSchuelerklausurTermin}e.
+	 * Liefert für einen Schwellwert, eine Kalenderwoche und ein Abiturjahr eine Map Schüler-ID → {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
+	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert, und die betreffenden {@link GostSchuelerklausurTermin}e.
 	 *
 	 * @param abijahr       das Abiturjahr der gesuchten Konflikt-Schüler
 	 * @param halbjahr das GostHalbjahr
 	 * @param quartal das Quartal
-	 * @param threshold     der Schwellwert (z.B. 3), der mindestens erreicht sein muss, damit die
+	 * @param threshold     der Schwellwert (z. B. 3), der mindestens erreicht sein muss, damit die
 	 *                  Schüler-IDs in die Rückgabe-Map aufgenommen werden
-	 * @param thresholdMinus der Schwellwert (z.B. 4), dessen Menge von der Threshold-Menge abgezogen wird, damit Warnungen nicht die Fehler enthalten, bei -1 wird nichts abgezogen
+	 * @param thresholdMinus der Schwellwert (z. B. 4), dessen Menge von der Threshold-Menge abgezogen wird, damit Warnungen nicht die Fehler enthalten, bei -1 wird nichts abgezogen
 	 *
-	 * @return die Map Schüler-ID -> {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
+	 * @return die Map Schüler-ID → {@link GostSchuelerklausurTermin}menge, die Schüler-IDs von Schülern enthalten, die in der den Termin
 	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreiben, als der Schwellwert definiert und die betreffenden {@link GostSchuelerklausurTermin}e.
 	 */
 	public @NotNull List<PairNN<PairNN<Integer, Long>, List<GostSchuelerklausurTermin>>> klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(
@@ -4809,7 +4810,7 @@ public class GostKlausurplanManager {
 
 	/**
 	 * Liefert den Vorgänger-{@link GostSchuelerklausurTermin}, sofern vorhanden, zu einem {@link GostSchuelerklausurTermin}, also den
-	 * versäumte Schülerklausurtermin.
+	 * versäumten Schülerklausurtermin.
 	 *
 	 * @param skt der {@link GostSchuelerklausurTermin}, dessen Vorgänger gesucht wird
 	 *
@@ -4913,7 +4914,7 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Führt alle Attribut-Patches aller Objekte im übergeben {@link GostKlausurenUpdate} im
+	 * Führt alle Attribut-Patches aller Objekte im übergebenen {@link GostKlausurenUpdate} im
 	 * Manager durch.
 	 *
 	 * @param update das {@link GostKlausurenUpdate}-Objekt mit den zu patchenden Werten
@@ -5153,7 +5154,7 @@ public class GostKlausurplanManager {
 	 *
 	 * @param termin der {@link GostKlausurtermin}
 	 *
-	 * @return die die Menge aller {@link GostSchuelerklausurTermin}e  zu einem {@link GostKlausurtermin}, die noch keinem {@link GostKlausurraum} zugewiesen sind.
+	 * @return die Menge aller {@link GostSchuelerklausurTermin}e zu einem {@link GostKlausurtermin}, die noch keinem {@link GostKlausurraum} zugewiesen sind.
 	 */
 	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurOhneRaumGetMengeByTermin(final @NotNull GostKlausurtermin termin) {
 		return _schuelerklausurterminaktuellmenge_by_idRaum_and_idTermin.get12(-1L, termin.id);
@@ -5528,7 +5529,7 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Erzeugt aus einer Liste von {@link GostSchuelerklausurTermin}en eine um z.B. für Blockungs-Algorithmen relevante Informationen angereicherte Liste von {@link GostSchuelerklausurTerminRich}-Objekten.
+	 * Erzeugt aus einer Liste von {@link GostSchuelerklausurTermin}en eine um z. B. für Blockungs-Algorithmen relevante Informationen angereicherte Liste von {@link GostSchuelerklausurTerminRich}-Objekten.
 	 *
 	 * @param termine die Liste der {@link GostSchuelerklausurTermin}e.
 	 *
@@ -5543,7 +5544,7 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Erzeugt aus einer Liste von {@link GostKlausurraum}en eine um z.B. für Blockungs-Algorithmen relevante Informationen angereicherte Liste von {@link GostKlausurraumRich}-Objekten.
+	 * Erzeugt aus einer Liste von {@link GostKlausurraum}en eine um z. B. für Blockungs-Algorithmen relevante Informationen angereicherte Liste von {@link GostKlausurraumRich}-Objekten.
 	 *
 	 * @param raeume die Liste der {@link GostKlausurraum}e.
 	 *

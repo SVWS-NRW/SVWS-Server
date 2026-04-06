@@ -53,12 +53,12 @@ public class GostKlausurtermin {
 	@Schema(defaultValue = "false", description = "die Information, ob es sich um einen Haupttermin handelt oder nicht", example = "true")
 	public boolean istHaupttermin = false;
 
-	/** Die Information, ob es bei einen Haupttermin Nachschreibklausuren zugelassen sind oder nicht. */
+	/** Die Information, ob bei einem Haupttermin Nachschreibklausuren zugelassen sind oder nicht. */
 	@Schema(defaultValue = "false", description = "die Information, ob es bei einen Haupttermin Nachschreibklausuren zugelassen sind oder nicht", example = "false")
 	public boolean nachschreiberZugelassen = false;
 
 	/**
-	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 * Vergleicht, ob das aktelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
 	 *
 	 * @param another     das zu vergleichende Objekt
 	 * @return true, falls die Objekte indentisch sind, sonst false
@@ -69,7 +69,7 @@ public class GostKlausurtermin {
 	}
 
 	/**
-	 * Erzeugt den Hashcode zu Objekt auf Basis der id.
+	 * Erzeugt den Hashcode zum Objekt auf Basis der id.
 	 *
 	 * @return den HashCode
 	 */

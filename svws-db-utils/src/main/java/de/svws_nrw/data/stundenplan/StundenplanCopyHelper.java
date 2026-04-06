@@ -66,8 +66,9 @@ final class StundenplanCopyHelper {
 			listNeu.add(neu);
 			mapAltNeu.put(alt.ID, neu.ID);
 		}
-		if (!conn.transactionPersistAll(listNeu))
+		if (!conn.transactionPersistAll(listNeu)) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Aufsichtsbereiche.");
+		}
 		return mapAltNeu;
 	}
 
@@ -90,8 +91,9 @@ final class StundenplanCopyHelper {
 					new DTOStundenplanKalenderwochenZuordnung(nextID++, stundenplanNeu.id, alt.Jahr, alt.KW, alt.Wochentyp);
 			listNeu.add(neu);
 		}
-		if (!conn.transactionPersistAll(listNeu))
+		if (!conn.transactionPersistAll(listNeu)) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Kalenderwochenzuordnungen.");
+		}
 	}
 
 	/**
@@ -124,8 +126,9 @@ final class StundenplanCopyHelper {
 			listNeu.add(neu);
 			mapAltNeu.put(alt.ID, neu.ID);
 		}
-		if (!conn.transactionPersistAll(listNeu))
+		if (!conn.transactionPersistAll(listNeu)) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Pausenzeiten.");
+		}
 		return mapAltNeu;
 	}
 
@@ -144,8 +147,9 @@ final class StundenplanCopyHelper {
 	static Map<Long, Long> kopierePausenaufsichten(final DBEntityManager conn,
 			final Map<Long, Long> pausenzeitMapping, final Stundenplan stundenplanNeu, final Logger logger)
 			throws ApiOperationException {
-		if (pausenzeitMapping.isEmpty())
+		if (pausenzeitMapping.isEmpty()) {
 			return new HashMap<>();
+		}
 		final Map<Long, String> lehrerLabelCache = new HashMap<>();
 		final List<DTOStundenplanPausenaufsichten> listAlt = conn.queryList(DTOStundenplanPausenaufsichten.QUERY_LIST_BY_PAUSENZEIT_ID,
 				DTOStundenplanPausenaufsichten.class, pausenzeitMapping.keySet());
@@ -166,10 +170,12 @@ final class StundenplanCopyHelper {
 			listNeu.add(neu);
 			mapAltNeu.put(alt.ID, neu.ID);
 		}
-		if (!conn.transactionPersistAll(listNeu))
+		if (!conn.transactionPersistAll(listNeu)) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Pausenaufsichten.");
-		if ((logger != null) && (!skippedLehrer.isEmpty()))
+		}
+		if ((logger != null) && (!skippedLehrer.isEmpty())) {
 			logger.logLn(LogLevel.WARNING, "Pausenaufsichten übersprungen (Lehrer nicht im Zielabschnitt aktiv): " + String.join(", ", skippedLehrer));
+		}
 		return mapAltNeu;
 	}
 
@@ -188,8 +194,9 @@ final class StundenplanCopyHelper {
 	static void kopierePausenzeitenKlassenzuordnungen(final DBEntityManager conn,
 			final Map<Long, Long> pausenzeitMapping, final Long abschnittNeu, final Logger logger)
 			throws ApiOperationException {
-		if (pausenzeitMapping.isEmpty())
+		if (pausenzeitMapping.isEmpty()) {
 			return;
+		}
 		final Map<Long, String> klasseLabelCache = new HashMap<>();
 		final List<DTOStundenplanPausenzeitKlassenzuordnung> listAlt = conn.queryList(DTOStundenplanPausenzeitKlassenzuordnung.QUERY_LIST_BY_PAUSENZEIT_ID,
 				DTOStundenplanPausenzeitKlassenzuordnung.class, pausenzeitMapping.keySet());
@@ -213,10 +220,12 @@ final class StundenplanCopyHelper {
 					klasseIdNeu);
 			listNeu.add(neu);
 		}
-		if (!conn.transactionPersistAll(listNeu))
+		if (!conn.transactionPersistAll(listNeu)) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Pausenaufsichten.");
-		if ((logger != null) && (!skippedKlassen.isEmpty()))
+		}
+		if ((logger != null) && (!skippedKlassen.isEmpty())) {
 			logger.logLn(LogLevel.WARNING, "Pausenzeiten-Klassenzuordnungen übersprungen (Klasse existiert nicht): " + String.join(", ", skippedKlassen));
+		}
 	}
 
 	/**
@@ -232,8 +241,9 @@ final class StundenplanCopyHelper {
 	static void kopierePausenaufsichtenBereiche(final DBEntityManager conn,
 			final Map<Long, Long> pausenaufsichtMapping, final Map<Long, Long> aufsichtsbereichMapping, final Logger logger)
 			throws ApiOperationException {
-		if (aufsichtsbereichMapping.isEmpty() || pausenaufsichtMapping.isEmpty())
+		if (aufsichtsbereichMapping.isEmpty() || pausenaufsichtMapping.isEmpty()) {
 			return;
+		}
 		final List<DTOStundenplanPausenaufsichtenBereiche> listAlt = conn.queryList(DTOStundenplanPausenaufsichtenBereiche.QUERY_LIST_BY_AUFSICHTSBEREICH_ID,
 				DTOStundenplanPausenaufsichtenBereiche.class, aufsichtsbereichMapping.keySet());
 		final List<DTOStundenplanPausenaufsichtenBereiche> listNeu = new ArrayList<>(listAlt.size());
@@ -253,10 +263,12 @@ final class StundenplanCopyHelper {
 					alt.Wochentyp);
 			listNeu.add(neu);
 		}
-		if (!conn.transactionPersistAll(listNeu))
+		if (!conn.transactionPersistAll(listNeu)) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Pausenaufsichts-Bereiche.");
-		if ((logger != null) && (!skippedMappings.isEmpty()))
+		}
+		if ((logger != null) && (!skippedMappings.isEmpty())) {
 			logger.logLn(LogLevel.WARNING, "Pausenaufsichten-Bereiche übersprungen (Zuordnung existiert nicht): " + String.join(", ", skippedMappings));
+		}
 	}
 
 	/**
@@ -288,8 +300,9 @@ final class StundenplanCopyHelper {
 			listNeu.add(neu);
 			mapAltNeu.put(alt.ID, neu.ID);
 		}
-		if (!conn.transactionPersistAll(listNeu))
+		if (!conn.transactionPersistAll(listNeu)) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Räume.");
+		}
 		return mapAltNeu;
 	}
 
@@ -322,8 +335,9 @@ final class StundenplanCopyHelper {
 			listNeu.add(neu);
 			mapAltNeu.put(alt.ID, neu.ID);
 		}
-		if (!conn.transactionPersistAll(listNeu))
+		if (!conn.transactionPersistAll(listNeu)) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Schienen.");
+		}
 		return mapAltNeu;
 	}
 
@@ -357,8 +371,9 @@ final class StundenplanCopyHelper {
 			listNeu.add(neu);
 			mapAltNeu.put(alt.ID, neu.ID);
 		}
-		if (!conn.transactionPersistAll(listNeu))
+		if (!conn.transactionPersistAll(listNeu)) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Zeitraster.");
+		}
 		return mapAltNeu;
 	}
 
@@ -374,8 +389,9 @@ final class StundenplanCopyHelper {
 	 */
 	static Map<Long, Long> getKursMappings(final DBEntityManager conn,
 			final Collection<Long> kursIdsAlt, final long abschnittNeu) {
-		if (kursIdsAlt.isEmpty())
+		if (kursIdsAlt.isEmpty()) {
 			return new HashMap<>();
+		}
 		final Map<Long, DTOKurs> kurseAlleAlt = conn.queryList(DTOKurs.QUERY_LIST_BY_ID,
 				DTOKurs.class, kursIdsAlt).stream()
 				.collect(Collectors.toMap(k -> k.ID, k -> k));
@@ -386,14 +402,16 @@ final class StundenplanCopyHelper {
 		final Map<Long, Long> kursMappings = new HashMap<>();
 		for (final DTOKurs kursAlt : kurseAlleAlt.values()) {
 			final String kurzbez = kursAlt.KurzBez;
-			if (kurzbez == null)
+			if (kurzbez == null) {
 				continue;
+			}
 			final List<DTOKurs> kandidatenNeu = kurseNeuByKurzBez.get(kurzbez);
-			if ((kandidatenNeu == null) || kandidatenNeu.isEmpty())
+			if ((kandidatenNeu == null) || kandidatenNeu.isEmpty()) {
 				continue;
+			}
 			final Set<Long> jahrgaengeAlt = convertKursJahrgaenge(kursAlt);
 			DTOKurs kursNeu = null;
-			if (!jahrgaengeAlt.isEmpty())
+			if (!jahrgaengeAlt.isEmpty()) {
 				for (final DTOKurs kandidat : kandidatenNeu) {
 					final Set<Long> jahrgaengeNeu = convertKursJahrgaenge(kandidat);
 					if (jahrgaengeNeu.equals(jahrgaengeAlt)) {
@@ -401,10 +419,13 @@ final class StundenplanCopyHelper {
 						break;
 					}
 				}
-			if ((kursNeu == null) && jahrgaengeAlt.isEmpty() && (kandidatenNeu.size() == 1))
+			}
+			if ((kursNeu == null) && jahrgaengeAlt.isEmpty() && (kandidatenNeu.size() == 1)) {
 				kursNeu = kandidatenNeu.getFirst();
-			if (kursNeu != null)
+			}
+			if (kursNeu != null) {
 				kursMappings.put(kursAlt.ID, kursNeu.ID);
+			}
 		}
 		return kursMappings;
 	}
@@ -419,12 +440,16 @@ final class StundenplanCopyHelper {
 	 */
 	static Set<Long> convertKursJahrgaenge(final DTOKurs kurs) {
 		final Set<Long> result = new HashSet<>();
-		if (kurs.Jahrgang_ID != null)
+		if (kurs.Jahrgang_ID != null) {
 			result.add(kurs.Jahrgang_ID);
-		if (kurs.Jahrgaenge != null)
-			for (final String jahrgang : kurs.Jahrgaenge.split(","))
-				if (jahrgang.matches("^\\d+$"))
+		}
+		if (kurs.Jahrgaenge != null) {
+			for (final String jahrgang : kurs.Jahrgaenge.split(",")) {
+				if (jahrgang.matches("^\\d+$")) {
 					result.add(Long.parseLong(jahrgang));
+				}
+			}
+		}
 		return result;
 	}
 
@@ -439,8 +464,9 @@ final class StundenplanCopyHelper {
 	 * @return eine Map von alten zu neuen Klassen-IDs
 	 */
 	static Map<Long, Long> getKlassenMappings(final DBEntityManager conn, final Collection<Long> klassenIdsAlt, final long abschnittNeu) {
-		if (klassenIdsAlt.isEmpty())
+		if (klassenIdsAlt.isEmpty()) {
 			return new HashMap<>();
+		}
 		final Map<Long, DTOKlassen> klassenAlleAlt = conn.queryList(DTOKlassen.QUERY_LIST_BY_ID,
 				DTOKlassen.class, klassenIdsAlt).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
 		final Map<String, DTOKlassen> klassenAlleNeu = conn.queryList(DTOKlassen.QUERY_BY_SCHULJAHRESABSCHNITTS_ID,
@@ -448,8 +474,9 @@ final class StundenplanCopyHelper {
 		final Map<Long, Long> klassenMappings = new HashMap<>();
 		for (final DTOKlassen klasseAlt : klassenAlleAlt.values()) {
 			final DTOKlassen klasseNeu = klassenAlleNeu.get(klasseAlt.Klasse);
-			if (klasseNeu != null)
+			if (klasseNeu != null) {
 				klassenMappings.put(klasseAlt.ID, klasseNeu.ID);
+			}
 		}
 		return klassenMappings;
 	}
@@ -471,8 +498,9 @@ final class StundenplanCopyHelper {
 	static Map<Long, DTOStundenplanUnterricht> kopiereUnterrichte(final DBEntityManager conn, final Map<Long, Long> zeitrasterMapping, final Long abschnittNeu,
 			final Logger logger)
 			throws ApiOperationException {
-		if (zeitrasterMapping.isEmpty())
+		if (zeitrasterMapping.isEmpty()) {
 			return new HashMap<>();
+		}
 		final List<DTOStundenplanUnterricht> listAlt =
 				conn.queryList(DTOStundenplanUnterricht.QUERY_LIST_BY_ZEITRASTER_ID, DTOStundenplanUnterricht.class, zeitrasterMapping.keySet());
 		final Map<Long, String> kursLabelCache = new HashMap<>();
@@ -506,20 +534,24 @@ final class StundenplanCopyHelper {
 			}
 			mapAltNeu.put(alt.ID, neu);
 		}
-		if (!conn.transactionPersistAll(mapAltNeu.values()))
+		if (!conn.transactionPersistAll(mapAltNeu.values())) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Unterrichte.");
-		if ((logger != null) && (!skippedZeitraster.isEmpty()))
+		}
+		if ((logger != null) && (!skippedZeitraster.isEmpty())) {
 			logger.logLn(LogLevel.WARNING, "Unterrichte übersprungen (Zeitraster existiert nicht): " + String.join(", ", skippedZeitraster));
-		if ((logger != null) && (!skippedKurse.isEmpty()))
+		}
+		if ((logger != null) && (!skippedKurse.isEmpty())) {
 			logger.logLn(LogLevel.WARNING, "Unterrichte übersprungen (Kurs existiert nicht): " + String.join(", ", skippedKurse));
+		}
 		return mapAltNeu;
 	}
 
 	private static String unterrichtLabel(final DBEntityManager conn, final DTOStundenplanUnterricht unterricht,
 			final Map<Long, String> kursLabelCache, final Map<Long, String> klasseLabelCache, final Map<Long, String> fachLabelCache,
 			final Map<Long, String> jahrgangLabelCache) {
-		if (unterricht.Kurs_ID != null)
+		if (unterricht.Kurs_ID != null) {
 			return kursLabelById(conn, unterricht.Kurs_ID, kursLabelCache, jahrgangLabelCache);
+		}
 		final List<DTOStundenplanUnterrichtKlasse> listKlassen = conn.queryList(
 				DTOStundenplanUnterrichtKlasse.QUERY_BY_UNTERRICHT_ID, DTOStundenplanUnterrichtKlasse.class, unterricht.ID);
 		final List<String> klassen = new ArrayList<>();
@@ -528,8 +560,9 @@ final class StundenplanCopyHelper {
 			klassen.add(klasseLabel(conn, id, klasseLabelCache));
 		}
 		final String fachLabel = fachLabel(conn, unterricht.Fach_ID, fachLabelCache);
-		if (!klassen.isEmpty())
+		if (!klassen.isEmpty()) {
 			return String.join("/", klassen) + " - " + fachLabel;
+		}
 		return "Unterricht " + unterricht.ID + " - " + fachLabel;
 	}
 
@@ -537,16 +570,18 @@ final class StundenplanCopyHelper {
 			final Map<Long, String> kursLabelCache, final Map<Long, String> klasseLabelCache, final Map<Long, String> fachLabelCache,
 			final Map<Long, String> jahrgangLabelCache) {
 		final DTOStundenplanUnterricht unterricht = conn.queryByKey(DTOStundenplanUnterricht.class, unterrichtId);
-		if (unterricht == null)
+		if (unterricht == null) {
 			return "Unterricht " + unterrichtId;
+		}
 		return unterrichtLabel(conn, unterricht, kursLabelCache, klasseLabelCache, fachLabelCache, jahrgangLabelCache);
 	}
 
 	private static String kursLabelById(final DBEntityManager conn, final long kursId,
 			final Map<Long, String> kursLabelCache, final Map<Long, String> jahrgangLabelCache) {
 		String label = kursLabelCache.get(kursId);
-		if (label != null)
+		if (label != null) {
 			return label;
+		}
 		final DTOKurs kurs = conn.queryByKey(DTOKurs.class, kursId);
 		if (kurs == null) {
 			label = "Kurs " + kursId;
@@ -558,8 +593,9 @@ final class StundenplanCopyHelper {
 		final Set<Long> jahrgangIds = convertKursJahrgaenge(kurs);
 		if (!jahrgangIds.isEmpty()) {
 			final List<String> jgLabels = new ArrayList<>();
-			for (final Long id : jahrgangIds)
+			for (final Long id : jahrgangIds) {
 				jgLabels.add(jahrgangLabel(conn, id, jahrgangLabelCache));
+			}
 			label += " (Jg: " + String.join(",", jgLabels) + ")";
 		}
 		kursLabelCache.put(kursId, label);
@@ -568,8 +604,9 @@ final class StundenplanCopyHelper {
 
 	private static String jahrgangLabel(final DBEntityManager conn, final long jahrgangId, final Map<Long, String> cache) {
 		String label = cache.get(jahrgangId);
-		if (label != null)
+		if (label != null) {
 			return label;
+		}
 		final DTOJahrgang jg = conn.queryByKey(DTOJahrgang.class, jahrgangId);
 		if (jg == null) {
 			label = "Jg " + jahrgangId;
@@ -588,8 +625,9 @@ final class StundenplanCopyHelper {
 
 	private static String klasseLabel(final DBEntityManager conn, final long klasseId, final Map<Long, String> cache) {
 		String label = cache.get(klasseId);
-		if (label != null)
+		if (label != null) {
 			return label;
+		}
 		final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, klasseId);
 		label = (klasse != null) ? klasse.Klasse : ("Klasse " + klasseId);
 		cache.put(klasseId, label);
@@ -598,8 +636,9 @@ final class StundenplanCopyHelper {
 
 	private static String fachLabel(final DBEntityManager conn, final long fachId, final Map<Long, String> cache) {
 		String label = cache.get(fachId);
-		if (label != null)
+		if (label != null) {
 			return label;
+		}
 		final DTOFach fach = conn.queryByKey(DTOFach.class, fachId);
 		label = (fach != null) ? fach.Kuerzel : ("Fach " + fachId);
 		cache.put(fachId, label);
@@ -608,8 +647,9 @@ final class StundenplanCopyHelper {
 
 	private static String lehrerLabel(final DBEntityManager conn, final long lehrerId, final Map<Long, String> cache) {
 		String label = cache.get(lehrerId);
-		if (label != null)
+		if (label != null) {
 			return label;
+		}
 		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, lehrerId);
 		label = (lehrer != null) ? lehrer.Kuerzel : ("Lehrer " + lehrerId);
 		cache.put(lehrerId, label);
@@ -618,8 +658,9 @@ final class StundenplanCopyHelper {
 
 	private static String raumLabel(final DBEntityManager conn, final long raumId, final Map<Long, String> cache) {
 		String label = cache.get(raumId);
-		if (label != null)
+		if (label != null) {
 			return label;
+		}
 		final DTOStundenplanRaum raum = conn.queryByKey(DTOStundenplanRaum.class, raumId);
 		label = (raum != null) ? raum.Kuerzel : ("Raum " + raumId);
 		cache.put(raumId, label);
@@ -629,17 +670,19 @@ final class StundenplanCopyHelper {
 	private static String schieneLabel(final DBEntityManager conn, final long schieneId, final Map<Long, String> cache,
 			final Map<Long, String> jahrgangLabelCache) {
 		String label = cache.get(schieneId);
-		if (label != null)
+		if (label != null) {
 			return label;
+		}
 		final DTOStundenplanSchienen schiene = conn.queryByKey(DTOStundenplanSchienen.class, schieneId);
 		if (schiene == null) {
 			label = "Schiene " + schieneId;
 		} else {
 			final String base = (schiene.Bezeichnung != null) ? schiene.Bezeichnung : ("Schiene " + schiene.Nummer);
-			if (schiene.Jahrgang_ID != null)
+			if (schiene.Jahrgang_ID != null) {
 				label = base + " (" + jahrgangLabel(conn, schiene.Jahrgang_ID, jahrgangLabelCache) + ")";
-			else
+			} else {
 				label = base;
+			}
 		}
 		cache.put(schieneId, label);
 		return label;
@@ -659,8 +702,9 @@ final class StundenplanCopyHelper {
 	static void kopiereUnterrichteKlassen(final DBEntityManager conn, final Map<Long, DTOStundenplanUnterricht> unterrichteMapping, final Long abschnittNeu,
 			final Logger logger)
 			throws ApiOperationException {
-		if (unterrichteMapping.isEmpty())
+		if (unterrichteMapping.isEmpty()) {
 			return;
+		}
 		final Map<Long, String> kursLabelCache = new HashMap<>();
 		final Map<Long, String> klasseLabelCache = new HashMap<>();
 		final Map<Long, String> fachLabelCache = new HashMap<>();
@@ -694,12 +738,15 @@ final class StundenplanCopyHelper {
 					klasseIdNeu);
 			listNeu.add(neu);
 		}
-		if (!conn.transactionPersistAll(listNeu))
+		if (!conn.transactionPersistAll(listNeu)) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Unterrichts-Klassen.");
-		if ((logger != null) && (!skippedKlassen.isEmpty()))
+		}
+		if ((logger != null) && (!skippedKlassen.isEmpty())) {
 			logger.logLn(LogLevel.WARNING, "Unterrichts-Klassen übersprungen (Klasse existiert nicht): " + String.join(", ", skippedKlassen));
-		if ((logger != null) && (!skippedUnterricht.isEmpty()))
+		}
+		if ((logger != null) && (!skippedUnterricht.isEmpty())) {
 			logger.logLn(LogLevel.WARNING, "Unterrichts-Klassen übersprungen (Unterricht nicht kopiert): " + String.join(", ", skippedUnterricht));
+		}
 	}
 
 	/**
@@ -719,8 +766,9 @@ final class StundenplanCopyHelper {
 	static void kopiereUnterrichteLehrer(final DBEntityManager conn, final Map<Long, DTOStundenplanUnterricht> unterrichteMapping, final Long abschnittNeu,
 			final Stundenplan stundenplanNeu, final Logger logger)
 			throws ApiOperationException {
-		if (unterrichteMapping.isEmpty())
+		if (unterrichteMapping.isEmpty()) {
 			return;
+		}
 		final Map<Long, String> kursLabelCache = new HashMap<>();
 		final Map<Long, String> klasseLabelCache = new HashMap<>();
 		final Map<Long, String> fachLabelCache = new HashMap<>();
@@ -755,12 +803,15 @@ final class StundenplanCopyHelper {
 					lehrerID);
 			listNeu.add(neu);
 		}
-		if (!conn.transactionPersistAll(listNeu))
+		if (!conn.transactionPersistAll(listNeu)) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Unterrichts-Lehrer.");
-		if ((logger != null) && (!skippedUnterricht.isEmpty()))
+		}
+		if ((logger != null) && (!skippedUnterricht.isEmpty())) {
 			logger.logLn(LogLevel.WARNING, "Unterrichts-Lehrer übersprungen (Unterricht nicht kopiert): " + String.join(", ", skippedUnterricht));
-		if ((logger != null) && (!skippedLehrer.isEmpty()))
+		}
+		if ((logger != null) && (!skippedLehrer.isEmpty())) {
 			logger.logLn(LogLevel.WARNING, "Unterrichts-Lehrer übersprungen (kein Lehrer-Mapping): " + String.join(", ", skippedLehrer));
+		}
 	}
 
 	/**
@@ -789,8 +840,9 @@ final class StundenplanCopyHelper {
 		final List<DTOStundenplanUnterrichtKlasse> unterrichtKlasse =
 				conn.queryList(DTOStundenplanUnterrichtKlasse.QUERY_BY_UNTERRICHT_ID,
 						DTOStundenplanUnterrichtKlasse.class, unterricht.ID);
-		if (unterrichtKlasse.size() != 1)
+		if (unterrichtKlasse.size() != 1) {
 			return null;
+		}
 		final List<DTOSchuelerLeistungsdaten> slaList = conn.queryList(
 				"""
 				SELECT sld FROM DTOSchuelerLeistungsdaten sld
@@ -821,8 +873,9 @@ final class StundenplanCopyHelper {
 	static void kopiereUnterrichteRaeume(final DBEntityManager conn, final Map<Long, DTOStundenplanUnterricht> unterrichteMapping,
 			final Map<Long, Long> raeumeMapping, final Logger logger)
 			throws ApiOperationException {
-		if (unterrichteMapping.isEmpty())
+		if (unterrichteMapping.isEmpty()) {
 			return;
+		}
 		final Map<Long, String> kursLabelCache = new HashMap<>();
 		final Map<Long, String> klasseLabelCache = new HashMap<>();
 		final Map<Long, String> fachLabelCache = new HashMap<>();
@@ -852,12 +905,15 @@ final class StundenplanCopyHelper {
 					raumIdNeu);
 			listNeu.add(neu);
 		}
-		if (!conn.transactionPersistAll(listNeu))
+		if (!conn.transactionPersistAll(listNeu)) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Unterrichts-Räume.");
-		if ((logger != null) && (!skippedRaeume.isEmpty()))
+		}
+		if ((logger != null) && (!skippedRaeume.isEmpty())) {
 			logger.logLn(LogLevel.WARNING, "Unterrichts-Räume übersprungen (Raum existiert nicht): " + String.join(", ", skippedRaeume));
-		if ((logger != null) && (!skippedUnterricht.isEmpty()))
+		}
+		if ((logger != null) && (!skippedUnterricht.isEmpty())) {
 			logger.logLn(LogLevel.WARNING, "Unterrichts-Räume übersprungen (Unterricht nicht kopiert): " + String.join(", ", skippedUnterricht));
+		}
 	}
 
 	/**
@@ -873,8 +929,9 @@ final class StundenplanCopyHelper {
 	static void kopiereUnterrichteSchienen(final DBEntityManager conn, final Map<Long, DTOStundenplanUnterricht> unterrichteMapping,
 			final Map<Long, Long> schienenMapping, final Logger logger)
 			throws ApiOperationException {
-		if (unterrichteMapping.isEmpty())
+		if (unterrichteMapping.isEmpty()) {
 			return;
+		}
 		final Map<Long, String> kursLabelCache = new HashMap<>();
 		final Map<Long, String> klasseLabelCache = new HashMap<>();
 		final Map<Long, String> fachLabelCache = new HashMap<>();
@@ -904,12 +961,15 @@ final class StundenplanCopyHelper {
 					schieneIdNeu);
 			listNeu.add(neu);
 		}
-		if (!conn.transactionPersistAll(listNeu))
+		if (!conn.transactionPersistAll(listNeu)) {
 			throw new ApiOperationException(Response.Status.INTERNAL_SERVER_ERROR, "Fehler beim Persistieren der Unterrichts-Schienen.");
-		if ((logger != null) && (!skippedSchienen.isEmpty()))
+		}
+		if ((logger != null) && (!skippedSchienen.isEmpty())) {
 			logger.logLn(LogLevel.WARNING, "Unterrichts-Schienen übersprungen (Schiene existiert nicht): " + String.join(", ", skippedSchienen));
-		if ((logger != null) && (!skippedUnterricht.isEmpty()))
+		}
+		if ((logger != null) && (!skippedUnterricht.isEmpty())) {
 			logger.logLn(LogLevel.WARNING, "Unterrichts-Schienen übersprungen (Unterricht nicht kopiert): " + String.join(", ", skippedUnterricht));
+		}
 	}
 
 }

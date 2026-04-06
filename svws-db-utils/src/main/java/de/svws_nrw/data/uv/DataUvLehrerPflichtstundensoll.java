@@ -48,13 +48,15 @@ public final class DataUvLehrerPflichtstundensoll extends DataManagerRevised<Lon
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOUvLehrerPflichtstundensoll getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Die ID für das Lehrer-Pflichtstundensoll darf nicht null sein.");
+		}
 		final DTOUvLehrerPflichtstundensoll dto = conn.queryByKey(DTOUvLehrerPflichtstundensoll.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Kein Lehrer-Pflichtstundensoll mit der ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 

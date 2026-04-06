@@ -49,11 +49,13 @@ public final class DataUvStundentafelnFaecher extends DataManagerRevised<Long, D
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOUvStundentafelFach getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für das UV-Stundentafel-Fach darf nicht null sein.");
+		}
 		final DTOUvStundentafelFach dto = conn.queryByKey(DTOUvStundentafelFach.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein UV-Stundentafel-Fach zur ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 

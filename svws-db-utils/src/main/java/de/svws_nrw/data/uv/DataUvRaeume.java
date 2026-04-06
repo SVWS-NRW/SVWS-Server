@@ -49,11 +49,13 @@ public final class DataUvRaeume extends DataManagerRevised<Long, DTOUvRaum, UvRa
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOUvRaum getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den UV-Raum darf nicht null sein.");
+		}
 		final DTOUvRaum dto = conn.queryByKey(DTOUvRaum.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Raum zur ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 

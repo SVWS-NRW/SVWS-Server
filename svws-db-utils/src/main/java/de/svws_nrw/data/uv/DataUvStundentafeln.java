@@ -51,11 +51,13 @@ public final class DataUvStundentafeln extends DataManagerRevised<Long, DTOUvStu
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOUvStundentafel getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die UV-Stundentafel darf nicht null sein.");
+		}
 		final DTOUvStundentafel dto = conn.queryByKey(DTOUvStundentafel.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Stundentafel zur ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 

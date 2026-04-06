@@ -78,12 +78,14 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOGostKlausurenTermine getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den GostKlausurtermin darf nicht null sein.");
+		}
 
 		final DTOGostKlausurenTermine klasseDto = conn.queryByKey(DTOGostKlausurenTermine.class, id);
-		if (klasseDto == null)
+		if (klasseDto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein GostKlausurtermin zur ID " + id + " gefunden.");
+		}
 
 		return klasseDto;
 	}
@@ -123,27 +125,31 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 			case "datum" -> {
 				final String newDate = JSONMapper.convertToString(value, true, false, null, name);
 				final boolean change = !Objects.equals(newDate, dto.Datum);
-				if (change)
+				if (change) {
 					handleRaumzuweisungenBeiTerminverschiebung(dto);
+				}
 				dto.Datum = newDate;
-				if (newDate == null)
+				if (newDate == null) {
 					dto.Startzeit = null;
-				else if (change && (raumDataChanged == null))
+				} else if (change && (raumDataChanged == null)) {
 					raumDataChanged = new GostKlausurenCollectionSkrsKrsData(); // neu berechnen
+				}
 			}
 			case "startzeit" -> {
 				final Integer startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440, name);
 				final boolean change = (startzeit != null) && !startzeit.equals(dto.Startzeit);
 				dto.Startzeit = startzeit;
-				if (change && (raumDataChanged == null))
+				if (change && (raumDataChanged == null)) {
 					raumDataChanged = new GostKlausurenCollectionSkrsKrsData(); // neu berechnen
+				}
 			}
 			case "istHaupttermin" -> dto.IstHaupttermin = JSONMapper.convertToBoolean(value, false, name);
 			case "nachschreiberZugelassen" -> {
 				final boolean newValue = JSONMapper.convertToBoolean(value, false, name);
 				if ((dto.NachschreiberZugelassen != null) && dto.NachschreiberZugelassen && !newValue
-						&& !new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuTerminIds(ListUtils.create1(dto.ID)).stream().filter(skt -> skt.folgeNr > 0).toList().isEmpty())
+						&& !new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuTerminIds(ListUtils.create1(dto.ID)).stream().filter(skt -> skt.folgeNr > 0).toList().isEmpty()) {
 					throw new ApiOperationException(Status.FORBIDDEN, "Klausurtermin enthält Nachschreibklausuren");
+				}
 				dto.NachschreiberZugelassen = newValue;
 			}
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
@@ -153,16 +159,18 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	@Override
 	public Response patchAsResponse(final Long id, final InputStream is) throws ApiOperationException {
 		patchFromStream(id, is);
-		if (raumDataChanged == null)
+		if (raumDataChanged == null) {
 			raumDataChanged = new GostKlausurenCollectionSkrsKrsData();
+		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(raumDataChanged).build();
 	}
 
 	@Override
 	protected void saveDatabaseDTO(final DTOGostKlausurenTermine dto) throws ApiOperationException {
 		super.saveDatabaseDTO(dto);
-		if (raumDataChanged != null)
+		if (raumDataChanged != null) {
 			raumDataChanged.addAll(new DataGostKlausurenSchuelerklausurraumstunde(conn).updateRaeumeZuKlausurtermin(map(dto)));
+		}
 	}
 
 	/**
@@ -176,8 +184,9 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	 */
 	public List<GostKlausurtermin> getKlausurtermineZuKursklausuren(final List<GostKursklausur> kursKlausuren)
 			throws ApiOperationException {
-		if (kursKlausuren.isEmpty())
+		if (kursKlausuren.isEmpty()) {
 			return new ArrayList<>();
+		}
 		final List<DTOGostKlausurenTermine> terminDTOs = conn.queryByKeyList(DTOGostKlausurenTermine.class,
 				kursKlausuren.stream().map(kk -> kk.idTermin).toList());
 		return mapList(terminDTOs);
@@ -194,8 +203,9 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	 */
 	public Set<GostKlausurtermin> getKlausurtermineZuSchuelerklausurterminen(final Collection<GostSchuelerklausurTermin> schuelerklausurTermine) throws ApiOperationException {
 		final Set<GostKlausurtermin> ergebnis = new HashSet<>();
-		if (schuelerklausurTermine.isEmpty())
+		if (schuelerklausurTermine.isEmpty()) {
 			return new HashSet<>(ergebnis);
+		}
 		final List<GostSchuelerklausurTermin> schuelerklausurTermineNullTermin = schuelerklausurTermine.stream().filter(skt -> skt.folgeNr == 0).toList();
 		if (!schuelerklausurTermineNullTermin.isEmpty()) {
 			final List<GostSchuelerklausur> schuelerklausurNullTermin =
@@ -234,10 +244,12 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 		final String plusTermine = (((plusTerminIds == null) || plusTerminIds.isEmpty()) ? "" : " OR t.ID IN :plusIds");
 		final TypedQuery<DTOGostKlausurenTermine> query = conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid" + plusHJ + plusTermine, DTOGostKlausurenTermine.class)
 				.setParameter("jgid", abiturjahr);
-		if (ghj != null)
+		if (ghj != null) {
 			query.setParameter("hj", Arrays.asList(ganzesSchuljahr ? ghj.getSchuljahr() : new GostHalbjahr[] { ghj }));
-		if (!plusTermine.isEmpty())
+		}
+		if (!plusTermine.isEmpty()) {
 			query.setParameter("plusIds", plusTerminIds);
+		}
 		return mapList(query.getResultList());
 	}
 
@@ -253,8 +265,9 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	 */
 	public List<GostKlausurtermin> getKlausurterminmengeSelbesDatumZuTermin(final GostKlausurtermin termin)
 			throws ApiOperationException {
-		if (termin.datum == null)
+		if (termin.datum == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Klausurtermin hat kein Datum gesetzt, ID: " + termin.id);
+		}
 		return mapList(conn.queryList(DTOGostKlausurenTermine.QUERY_BY_DATUM, DTOGostKlausurenTermine.class, termin.datum));
 	}
 
@@ -285,8 +298,9 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	 */
 	public List<GostKlausurtermin> getKlausurterminmengeSelbesDatumZuTerminMenge(final List<GostKlausurtermin> termine)
 			throws ApiOperationException {
-		if (termine.isEmpty())
+		if (termine.isEmpty()) {
 			return new ArrayList<>();
+		}
 		return mapList(conn.queryList(DTOGostKlausurenTermine.QUERY_LIST_BY_DATUM, DTOGostKlausurenTermine.class, termine.stream().map(t -> t.datum).toList()));
 	}
 
@@ -313,8 +327,9 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	 * @return der Klausurtermin
 	 */
 	public static List<DTOGostKlausurenTermine> getKlausurterminDTOsZuIds(final DBEntityManager conn, final List<Long> listIds) {
-		if (listIds.isEmpty())
+		if (listIds.isEmpty()) {
 			return new ArrayList<>();
+		}
 		return conn.queryByKeyList(DTOGostKlausurenTermine.class, listIds);
 	}
 
@@ -355,18 +370,22 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	    	    raum.idStundenplanRaum = null;
 	    	    neueRaumListe.add(raum);
 	    	}
-	        if (istTerminraumMitTerminfremdenKlausuren(raum, dtoCopyRaeume.ID, manager))
-	            bearbeiteTerminraumMitTerminfremdenKlausuren(raum, manager, neueRaumListe, neueRaumListeRich);
-	        else if (istTerminfremderRaumMitTerminklausuren(raum, manager, referenzTermin))
-	            bearbeiteTerminfremdenRaumMitTerminklausuren(raum, manager, neueRaumListe, neueRaumListeRich, referenzTermin);
+	        if (istTerminraumMitTerminfremdenKlausuren(raum, dtoCopyRaeume.ID, manager)) {
+				bearbeiteTerminraumMitTerminfremdenKlausuren(raum, manager, neueRaumListe, neueRaumListeRich);
+	        } else if (istTerminfremderRaumMitTerminklausuren(raum, manager, referenzTermin)) {
+				bearbeiteTerminfremdenRaumMitTerminklausuren(raum, manager, neueRaumListe, neueRaumListeRich, referenzTermin);
+	        }
 	        // Sonstige Fälle: keine Änderung
 	    }
-		if (raumDataChanged == null)
+		if (raumDataChanged == null) {
 			raumDataChanged = new GostKlausurenCollectionSkrsKrsData();
-	    if (!neueRaumListeRich.isEmpty())
-		    raumDataChanged.addAll(new DataGostKlausurenSchuelerklausurraumstunde(conn).setzeRaumZuSchuelerklausurterminen(neueRaumListeRich));
-	    if (!neueRaumListe.isEmpty())
-	    	raumDataChanged.raumdata.raeume.addAll(neueRaumListe);
+		}
+	    if (!neueRaumListeRich.isEmpty()) {
+			raumDataChanged.addAll(new DataGostKlausurenSchuelerklausurraumstunde(conn).setzeRaumZuSchuelerklausurterminen(neueRaumListeRich));
+	    }
+	    if (!neueRaumListe.isEmpty()) {
+			raumDataChanged.raumdata.raeume.addAll(neueRaumListe);
+	    }
 	}
 
 	private static boolean istTerminraumMitTerminfremdenKlausuren(final GostKlausurraum raum, final long terminId, final GostKlausurplanManager manager) {

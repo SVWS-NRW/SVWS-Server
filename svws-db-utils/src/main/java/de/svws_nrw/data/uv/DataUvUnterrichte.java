@@ -34,11 +34,13 @@ public final class DataUvUnterrichte extends DataManagerRevised<Long, DTOUvUnter
 	}
 
 	private DTOUvUnterricht getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID darf nicht null sein.");
+		}
 		final DTOUvUnterricht dto = conn.queryByKey(DTOUvUnterricht.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Unterricht mit ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 

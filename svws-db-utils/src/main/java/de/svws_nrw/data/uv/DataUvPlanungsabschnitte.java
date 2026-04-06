@@ -58,12 +58,14 @@ public final class DataUvPlanungsabschnitte extends DataManagerRevised<Long, DTO
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOUvPlanungsabschnitt getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den UV-Planungsabschnitt darf nicht null sein.");
+		}
 
 		final DTOUvPlanungsabschnitt dto = conn.queryByKey(DTOUvPlanungsabschnitt.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Planungsabschnitt zur ID " + id + " gefunden.");
+		}
 
 		return dto;
 	}
@@ -135,11 +137,13 @@ public final class DataUvPlanungsabschnitte extends DataManagerRevised<Long, DTO
 				&& (patchedAttributes.containsKey("gueltigAb") || patchedAttributes.containsKey("gueltigBis") || patchedAttributes.containsKey("aktiv"))) {
 			final List<UvPlanungsabschnitt> plaene = getUvPlanungsabschnitteBySchuljahr(conn, dto.Schuljahr);
 			for (final UvPlanungsabschnitt abschnitt : plaene) {
-				if ((abschnitt.id == dto.ID) || !abschnitt.aktiv)
+				if ((abschnitt.id == dto.ID) || !abschnitt.aktiv) {
 					continue;
-				if (DateUtils.berechneGemeinsameTage(abschnitt.gueltigVon, abschnitt.gueltigBis, dto.GueltigVon, dto.GueltigBis).length > 0)
+				}
+				if (DateUtils.berechneGemeinsameTage(abschnitt.gueltigVon, abschnitt.gueltigBis, dto.GueltigVon, dto.GueltigBis).length > 0) {
 					throw new ApiOperationException(Status.CONFLICT,
 							"Der Gültigkeit des UV-Planungsabschnitts steht in Konflikt zum Planungsabschnitt mit der ID %d.".formatted(abschnitt.id));
+				}
 			}
 		}
 	}

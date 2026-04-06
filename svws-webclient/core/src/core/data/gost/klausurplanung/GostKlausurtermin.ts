@@ -55,7 +55,7 @@ export class GostKlausurtermin extends JavaObject {
 	public istHaupttermin: boolean = false;
 
 	/**
-	 * Die Information, ob es bei einen Haupttermin Nachschreibklausuren zugelassen sind oder nicht.
+	 * Die Information, ob bei einem Haupttermin Nachschreibklausuren zugelassen sind oder nicht.
 	 */
 	public nachschreiberZugelassen: boolean = false;
 
@@ -68,7 +68,7 @@ export class GostKlausurtermin extends JavaObject {
 	}
 
 	/**
-	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 * Vergleicht, ob das aktelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
 	 *
 	 * @param another     das zu vergleichende Objekt
 	 * @return true, falls die Objekte indentisch sind, sonst false
@@ -78,7 +78,7 @@ export class GostKlausurtermin extends JavaObject {
 	}
 
 	/**
-	 * Erzeugt den Hashcode zu Objekt auf Basis der id.
+	 * Erzeugt den Hashcode zum Objekt auf Basis der id.
 	 *
 	 * @return den HashCode
 	 */

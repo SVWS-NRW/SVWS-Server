@@ -67,7 +67,7 @@ export class GostKursklausurRich extends JavaObject {
 	public idTermin: number | null = null;
 
 	/**
-	 * Die Startzeit der Klausur in Minuten seit 0 Uhr, sofern abweichend von Startzeit des gesamten Termins.
+	 * Die Startzeit der Klausur in Minuten seit 0 Uhr, sofern abweichend von der Startzeit des gesamten Termins.
 	 */
 	public startzeit: number | null = null;
 

@@ -84,12 +84,14 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOGostKlausurenSchuelerklausurenTermineRaumstunden getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die GostSchuelerklausurterminraumstunde darf nicht null sein.");
+		}
 
 		final DTOGostKlausurenSchuelerklausurenTermineRaumstunden klasseDto = conn.queryByKey(DTOGostKlausurenSchuelerklausurenTermineRaumstunden.class, id);
-		if (klasseDto == null)
+		if (klasseDto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine GostSchuelerklausurterminraumstunde zur ID " + id + " gefunden.");
+		}
 
 		return klasseDto;
 	}
@@ -137,8 +139,9 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 	 */
 	public List<DTOGostKlausurenSchuelerklausurenTermineRaumstunden> getSchuelerklausurterminraumstundenDTOsZuSchuelerklausurterminids(
 			final List<Long> idsSchuelerklausurtermine) {
-		if (idsSchuelerklausurtermine.isEmpty())
+		if (idsSchuelerklausurtermine.isEmpty()) {
 			return new ArrayList<>();
+		}
 		return conn.queryList(DTOGostKlausurenSchuelerklausurenTermineRaumstunden.QUERY_LIST_BY_SCHUELERKLAUSURTERMIN_ID,
 				DTOGostKlausurenSchuelerklausurenTermineRaumstunden.class, idsSchuelerklausurtermine);
 	}
@@ -165,8 +168,9 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 	 */
 	public List<GostSchuelerklausurterminraumstunde> getSchuelerklausurterminraumstundenZuKlausurraumstunden(
 			final Collection<GostKlausurraumstunde> listKlausurraumstunden) throws ApiOperationException {
-		if (listKlausurraumstunden.isEmpty())
+		if (listKlausurraumstunden.isEmpty()) {
 			return new ArrayList<>();
+		}
 
 		final List<DTOGostKlausurenSchuelerklausurenTermineRaumstunden> dtos = conn.queryList(
 				DTOGostKlausurenSchuelerklausurenTermineRaumstunden.QUERY_LIST_BY_RAUMSTUNDE_ID, DTOGostKlausurenSchuelerklausurenTermineRaumstunden.class,
@@ -185,8 +189,9 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 	 */
 	public List<GostSchuelerklausurterminraumstunde> getSchuelerklausurterminraumstundenZuRaumid(final long idRaum) throws ApiOperationException {
 		final List<GostKlausurraumstunde> listKlausurraumstunden = new DataGostKlausurenRaumstunde(conn).getKlausurraumstundenZuRaumid(idRaum);
-		if (listKlausurraumstunden.isEmpty())
+		if (listKlausurraumstunden.isEmpty()) {
 			return new ArrayList<>();
+		}
 		return getSchuelerklausurterminraumstundenZuKlausurraumstunden(listKlausurraumstunden);
 
 	}
@@ -226,8 +231,9 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 	public GostKlausurenCollectionSkrsKrsData loescheRaumZuSchuelerklausurIds(final List<Long> sktIds)
 			throws ApiOperationException {
 		final GostKlausurenCollectionSkrsKrsData result = new GostKlausurenCollectionSkrsKrsData();
-		if (sktIds.isEmpty())
+		if (sktIds.isEmpty()) {
 			return result;
+		}
 
 		final List<DTOGostKlausurenSchuelerklausurenTermineRaumstunden> stundenAlt = getSchuelerklausurterminraumstundenDTOsZuSchuelerklausurterminids(sktIds);
 		conn.transactionRemoveAll(stundenAlt);
@@ -278,8 +284,9 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 			manRaumstunden.addAll(new DataGostKlausurenRaumstunde(conn).getKlausurraumstundenZuSchuelerklausurterminraumstunden(manSchuelerklausurterminraumstunden));
 		}
 
-		if (raeume != null)
+		if (raeume != null) {
 			manRaeume.addAll(raeume);
+		}
 
 		manRaeume.addAll(new DataGostKlausurenRaum(conn).getKlausurraeumeZuRaumstunden(manRaumstunden));
 		manRaumstunden.addAll(new DataGostKlausurenRaumstunde(conn).getKlausurraumstundenZuRaeumen(manRaeume));
@@ -331,8 +338,9 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 		final GostKlausurenCollectionSkrsKrsData result = new GostKlausurenCollectionSkrsKrsData();
 
 		final List<GostSchuelerklausurTermin> skts = manager.schuelerklausurterminGetMengeByRaumid(raum.klausurraum.id);
-		if (!raum.schuelerklausurterminIDs.isEmpty())
+		if (!raum.schuelerklausurterminIDs.isEmpty()) {
 			skts.addAll(new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausurterminids(raum.schuelerklausurterminIDs));
+		}
 		final GostKlausurtermin termin = manager.terminGetByIdOrException(raum.klausurraum.idTermin);
 
 		final int minStart = manager.minKlausurstartzeitBySchuelerklausurterminMenge(skts, true);
@@ -345,8 +353,9 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 		final List<StundenplanZeitraster> zeitrasterRaum =
 				stundenplanManager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()), minStart,
 						maxEnd - minStart);
-		if (zeitrasterRaum.isEmpty())
+		if (zeitrasterRaum.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Zeitraster konnte nicht ermittelt werden");
+		}
 
 		result.raumdata.raumstunden.addAll(createRaumStundenInDb(raum.klausurraum, zeitrasterRaum, manager));
 		conn.transactionFlush();
@@ -375,8 +384,9 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 		final GostKlausurenCollectionSkrsKrsData result = new GostKlausurenCollectionSkrsKrsData();
 
 		for (final GostKlausurraum raum : raeume) {
-			if (manager.schuelerklausurterminGetMengeByRaum(raum).isEmpty())
+			if (manager.schuelerklausurterminGetMengeByRaum(raum).isEmpty()) {
 				continue;
+			}
 			result.addAll(recreateRaumstunden(new GostKlausurraumRich(raum, null), manager));
 		}
 
@@ -394,14 +404,16 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 	 */
 	public GostKlausurenCollectionSkrsKrsData setzeRaumZuSchuelerklausurterminen(final List<GostKlausurraumRich> zuteilungen)
 			throws ApiOperationException {
-		if (zuteilungen.isEmpty())
+		if (zuteilungen.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 
 		final GostKlausurenCollectionSkrsKrsData result = new GostKlausurenCollectionSkrsKrsData();
 
 		for (final GostKlausurraumRich raum : zuteilungen) {
-			if ((raum.schuelerklausurterminIDs == null) || raum.schuelerklausurterminIDs.isEmpty())
+			if ((raum.schuelerklausurterminIDs == null) || raum.schuelerklausurterminIDs.isEmpty()) {
 				continue;
+			}
 
 			final List<GostSchuelerklausurTermin> neu =
 					new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausurterminids(raum.schuelerklausurterminIDs);
@@ -431,13 +443,15 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 	 */
 	public GostKlausurenCollectionSkrsKrsData updateRaeumeZuSchuelerklausurterminen(final List<GostSchuelerklausurTermin> skts)
 			throws ApiOperationException {
-		if (skts.isEmpty())
+		if (skts.isEmpty()) {
 			throw new ApiOperationException(Status.NOT_FOUND);
+		}
 		final GostKlausurenCollectionSkrsKrsData result = new GostKlausurenCollectionSkrsKrsData();
 		final GostKlausurplanManager manager = createKlausurManagerMitStundenplan(null, skts, null);
 		final Set<GostKlausurraum> raeume = skts.stream().map(manager::raumGetBySchuelerklausurtermin).filter(Objects::nonNull).collect(Collectors.toSet());
-		for (final GostKlausurraum raum : raeume)
+		for (final GostKlausurraum raum : raeume) {
 			result.addAll(recreateRaumstunden(new GostKlausurraumRich(raum, null), manager));
+		}
 		return result;
 	}
 
@@ -455,8 +469,9 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 		final List<GostKlausurraumstunde> result = new ArrayList<>();
 		long idNextKrs = conn.transactionGetNextID(DTOGostKlausurenRaumstunden.class);
 		for (final StundenplanZeitraster stunde : zeitrasterRaum) {
-			if (manager.raumstundeGetByRaumAndZeitrasterOrNull(raum, stunde) == null)
+			if (manager.raumstundeGetByRaumAndZeitrasterOrNull(raum, stunde) == null) {
 				result.add(createRaumStundeInDb(raum, stunde, manager, idNextKrs++));
+			}
 		}
 		return result;
 	}
@@ -464,8 +479,9 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 	private GostKlausurraumstunde createRaumStundeInDb(final GostKlausurraum raum,
 			final StundenplanZeitraster zeitraster, final GostKlausurplanManager manager, final long idNext) throws ApiOperationException {
 		// Bestimme die ID der ersten neuen Klausurraumstunde
-		if (manager.raumstundeGetByRaumAndZeitrasterOrNull(raum, zeitraster) != null)
+		if (manager.raumstundeGetByRaumAndZeitrasterOrNull(raum, zeitraster) != null) {
 			throw new DeveloperNotificationException("Raumstunde für Raum %d und Zeitraster %d existiert bereits.".formatted(raum.id, zeitraster.id));
+		}
 		final DTOGostKlausurenRaumstunden dtoStundeNeu = new DTOGostKlausurenRaumstunden(idNext, raum.id);
 		dtoStundeNeu.Zeitraster_ID = zeitraster.id;
 		final GostKlausurraumstunde ergebnis = new DataGostKlausurenRaumstunde(conn).map(dtoStundeNeu);
@@ -498,8 +514,9 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 					manager.stundenplanManagerGetByTerminOrException(termin).getZeitrasterByWochentagStartVerstrichen(
 							Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()),
 							startzeit, manager.vorgabeBySchuelerklausurTermin(sk).dauer);
-			if (zeitrasterSk.isEmpty())
+			if (zeitrasterSk.isEmpty()) {
 				throw new ApiOperationException(Status.NOT_FOUND, "Zeitraster konnte nicht ermittelt werden");
+			}
 			conn.transactionExecuteDelete(
 					"DELETE FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden v WHERE v.Schuelerklausurtermin_ID = %d".formatted(sk.id));
 			final List<GostSchuelerklausurterminraumstunde> vorhanden = manager.schuelerklausurraumstundeGetMengeByIdSchuelerklausurtermin(sk.id);
@@ -513,10 +530,11 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 						raumstundeVorhanden.id);
 				conn.transactionPersist(skRaumStundeNeu);
 				final GostSchuelerklausurterminraumstunde aktuell = map(skRaumStundeNeu);
-				if (vorhanden.contains(aktuell))
+				if (vorhanden.contains(aktuell)) {
 					vorhanden.remove(aktuell);
-				else
+				} else {
 					ergebnis.raumdata.sktRaumstunden.add(aktuell);
+				}
 			}
 			ergebnis.schuelerklausurterminraumstundenGeloescht.addAll(vorhanden);
 		}
@@ -540,8 +558,9 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 		final GostKlausurenCollectionRaumData retCollection = new GostKlausurenCollectionRaumData();
 		retCollection.idsKlausurtermine = terminIDs;
 		retCollection.raeume = new DataGostKlausurenRaum(conn).getKlausurraeumeZuTerminIDs(terminIDs);
-		if (retCollection.raeume.isEmpty())
+		if (retCollection.raeume.isEmpty()) {
 			return retCollection;
+		}
 		retCollection.raumstunden = new DataGostKlausurenRaumstunde(conn).getKlausurraumstundenZuRaeumen(retCollection.raeume);
 		retCollection.sktRaumstunden =
 				getSchuelerklausurterminraumstundenZuKlausurraumstunden(retCollection.raumstunden);
@@ -562,8 +581,9 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 	public GostKlausurenCollectionRaumData getSchuelerklausurraumstundenBySchuelerklausurterminids(final List<Long> idSkts, final boolean includeSelbesDatum)
 			throws ApiOperationException {
 		final GostKlausurenCollectionRaumData retCollection = new GostKlausurenCollectionRaumData();
-		if (idSkts.isEmpty())
+		if (idSkts.isEmpty()) {
 			return retCollection;
+		}
 
 		final List<GostSchuelerklausurTermin> skts =
 				new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausurterminids(idSkts);
@@ -575,8 +595,9 @@ public final class DataGostKlausurenSchuelerklausurraumstunde
 			retCollection.idsKlausurtermine = skts.stream().map(s -> s.idTermin).toList();
 		}
 		retCollection.raeume = new DataGostKlausurenRaum(conn).getKlausurraeumeZuTerminIDs(retCollection.idsKlausurtermine);
-		if (retCollection.raeume.isEmpty())
+		if (retCollection.raeume.isEmpty()) {
 			return retCollection;
+		}
 		retCollection.raumstunden = new DataGostKlausurenRaumstunde(conn).getKlausurraumstundenZuRaeumen(retCollection.raeume);
 		retCollection.sktRaumstunden = getSchuelerklausurterminraumstundenZuKlausurraumstunden(retCollection.raumstunden);
 		return retCollection;

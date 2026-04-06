@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
-import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.utils.MapUtils;
@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
  * Diese 5D-List-Map ordnet 5 Schlüssel auf eine Liste von Werten (V) ab.
  * <br> Diese spezielle Map stellt Zugriffsmethoden für alle Kombinationen der Schlüssel auf die Werte (V) zur Verfügung.
  * <br> Die Einfüge-Reihenfolge bleibt bei allen Listen erhalten.
- * <br> Ein Entfernen aus der Datenstruktur ist nicht vorgesehen.
+ * <br> Ein Entfernen aus der Datenstruktur ist im Allgemeinen nicht sinnvoll, da jeder Löschvorgang O(n) Laufzeit hat und zusätzlich bei den folgenden Zugriffen alle Cache-Maps neu aufgebaut werden müssen.
  *
  * @param <V> Der Typ der zugeordneten Werte.
  */
@@ -57,7 +57,6 @@ public class ListMap5DLongKeys<V> {
 	private Map<LongArrayKey, List<V>> _map2345 = null;
 
 	private final @NotNull Map<LongArrayKey, List<V>> _map12345 = new HashMap<>();
-	private final @NotNull List<Pair<LongArrayKey, V>> _list = new ArrayList<>();
 
 	/**
 	 * Konstruktor.
@@ -66,15 +65,15 @@ public class ListMap5DLongKeys<V> {
 		// leer
 	}
 
-    private @NotNull Map<Long, List<V>> _lazyLoad1() {
+	private @NotNull Map<Long, List<V>> _lazyLoad1() {
 		final Map<Long, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key1 = e.a.getKeyAt(0);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key1 = e.getKey().getKeyAt(0);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, key1);
 			} else {
-				MapUtils.getOrCreateArrayList(map, key1).add(e.b);
+				MapUtils.getOrCreateArrayList(map, key1).addAll(e.getValue());
 			}
 		}
 
@@ -84,12 +83,12 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<Long, List<V>> _lazyLoad2() {
 		final Map<Long, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key2 = e.a.getKeyAt(1);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key2 = e.getKey().getKeyAt(1);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, key2);
 			} else {
-				MapUtils.getOrCreateArrayList(map, key2).add(e.b);
+				MapUtils.getOrCreateArrayList(map, key2).addAll(e.getValue());
 			}
 		}
 
@@ -99,12 +98,12 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<Long, List<V>> _lazyLoad3() {
 		final Map<Long, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key3 = e.a.getKeyAt(2);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key3 = e.getKey().getKeyAt(2);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, key3);
 			} else {
-				MapUtils.getOrCreateArrayList(map, key3).add(e.b);
+				MapUtils.getOrCreateArrayList(map, key3).addAll(e.getValue());
 			}
 		}
 
@@ -114,12 +113,12 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<Long, List<V>> _lazyLoad4() {
 		final Map<Long, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key4 = e.a.getKeyAt(3);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key4 = e.getKey().getKeyAt(3);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, key4);
 			} else {
-				MapUtils.getOrCreateArrayList(map, key4).add(e.b);
+				MapUtils.getOrCreateArrayList(map, key4).addAll(e.getValue());
 			}
 		}
 
@@ -129,12 +128,12 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<Long, List<V>> _lazyLoad5() {
 		final Map<Long, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key5 = e.a.getKeyAt(4);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key5 = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, key5);
 			} else {
-				MapUtils.getOrCreateArrayList(map, key5).add(e.b);
+				MapUtils.getOrCreateArrayList(map, key5).addAll(e.getValue());
 			}
 		}
 
@@ -144,13 +143,13 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad12() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key1 = e.a.getKeyAt(0);
-			final long key2 = e.a.getKeyAt(1);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key1 = e.getKey().getKeyAt(0);
+			final long key2 = e.getKey().getKeyAt(1);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2)).addAll(e.getValue());
 			}
 		}
 
@@ -160,13 +159,13 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad13() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key1 = e.a.getKeyAt(0);
-			final long key3 = e.a.getKeyAt(2);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key1 = e.getKey().getKeyAt(0);
+			final long key3 = e.getKey().getKeyAt(2);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3)).addAll(e.getValue());
 			}
 		}
 
@@ -176,13 +175,13 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad14() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key1 = e.a.getKeyAt(0);
-			final long key4 = e.a.getKeyAt(3);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key1 = e.getKey().getKeyAt(0);
+			final long key4 = e.getKey().getKeyAt(3);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key4));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key4)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key4)).addAll(e.getValue());
 			}
 		}
 
@@ -192,13 +191,13 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad15() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key1 = e.a.getKeyAt(0);
-			final long key5 = e.a.getKeyAt(4);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key1 = e.getKey().getKeyAt(0);
+			final long key5 = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key5)).addAll(e.getValue());
 			}
 		}
 
@@ -208,13 +207,13 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad23() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key2 = e.a.getKeyAt(1);
-			final long key3 = e.a.getKeyAt(2);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key2 = e.getKey().getKeyAt(1);
+			final long key3 = e.getKey().getKeyAt(2);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3)).addAll(e.getValue());
 			}
 		}
 
@@ -224,13 +223,13 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad24() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key2 = e.a.getKeyAt(1);
-			final long key4 = e.a.getKeyAt(3);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key2 = e.getKey().getKeyAt(1);
+			final long key4 = e.getKey().getKeyAt(3);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key4));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key4)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key4)).addAll(e.getValue());
 			}
 		}
 
@@ -240,13 +239,13 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad25() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key2 = e.a.getKeyAt(1);
-			final long key5 = e.a.getKeyAt(4);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key2 = e.getKey().getKeyAt(1);
+			final long key5 = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key5)).addAll(e.getValue());
 			}
 		}
 
@@ -256,13 +255,13 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad34() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key3 = e.a.getKeyAt(2);
-			final long key4 = e.a.getKeyAt(3);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key3 = e.getKey().getKeyAt(2);
+			final long key4 = e.getKey().getKeyAt(3);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key4));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key4)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key4)).addAll(e.getValue());
 			}
 		}
 
@@ -272,13 +271,13 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad35() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key3 = e.a.getKeyAt(2);
-			final long key5 = e.a.getKeyAt(4);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key3 = e.getKey().getKeyAt(2);
+			final long key5 = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key5)).addAll(e.getValue());
 			}
 		}
 
@@ -288,13 +287,13 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad45() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key4 = e.a.getKeyAt(3);
-			final long key5 = e.a.getKeyAt(4);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key4 = e.getKey().getKeyAt(3);
+			final long key5 = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key4, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key4, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key4, key5)).addAll(e.getValue());
 			}
 		}
 
@@ -304,14 +303,14 @@ public class ListMap5DLongKeys<V> {
     private @NotNull Map<LongArrayKey, List<V>> _lazyLoad125() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key1 = e.a.getKeyAt(0);
-			final long key2 = e.a.getKeyAt(1);
-			final long key5 = e.a.getKeyAt(4);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key1 = e.getKey().getKeyAt(0);
+			final long key2 = e.getKey().getKeyAt(1);
+			final long key5 = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key5)).addAll(e.getValue());
 			}
 		}
 
@@ -321,14 +320,14 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad135() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key1 = e.a.getKeyAt(0);
-			final long key3 = e.a.getKeyAt(2);
-			final long key5 = e.a.getKeyAt(4);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key1 = e.getKey().getKeyAt(0);
+			final long key3 = e.getKey().getKeyAt(2);
+			final long key5 = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key5)).addAll(e.getValue());
 			}
 		}
 
@@ -338,14 +337,14 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad145() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key1 = e.a.getKeyAt(0);
-			final long key4 = e.a.getKeyAt(3);
-			final long key5 = e.a.getKeyAt(4);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key1 = e.getKey().getKeyAt(0);
+			final long key4 = e.getKey().getKeyAt(3);
+			final long key5 = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key4, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key4, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key4, key5)).addAll(e.getValue());
 			}
 		}
 
@@ -355,14 +354,14 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad235() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key2 = e.a.getKeyAt(1);
-			final long key3 = e.a.getKeyAt(2);
-			final long key5 = e.a.getKeyAt(4);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key2 = e.getKey().getKeyAt(1);
+			final long key3 = e.getKey().getKeyAt(2);
+			final long key5 = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key5)).addAll(e.getValue());
 			}
 		}
 
@@ -372,14 +371,14 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad245() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key2 = e.a.getKeyAt(1);
-			final long key4 = e.a.getKeyAt(3);
-			final long key5 = e.a.getKeyAt(4);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key2 = e.getKey().getKeyAt(1);
+			final long key4 = e.getKey().getKeyAt(3);
+			final long key5 = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key4, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key4, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key4, key5)).addAll(e.getValue());
 			}
 		}
 
@@ -389,14 +388,14 @@ public class ListMap5DLongKeys<V> {
     private @NotNull Map<LongArrayKey, List<V>> _lazyLoad123() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key1 = e.a.getKeyAt(0);
-			final long key2 = e.a.getKeyAt(1);
-			final long key3 = e.a.getKeyAt(2);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key1 = e.getKey().getKeyAt(0);
+			final long key2 = e.getKey().getKeyAt(1);
+			final long key3 = e.getKey().getKeyAt(2);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3)).addAll(e.getValue());
 			}
 		}
 
@@ -406,14 +405,14 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad124() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key1 = e.a.getKeyAt(0);
-			final long key2 = e.a.getKeyAt(1);
-			final long key4 = e.a.getKeyAt(3);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key1 = e.getKey().getKeyAt(0);
+			final long key2 = e.getKey().getKeyAt(1);
+			final long key4 = e.getKey().getKeyAt(3);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key4));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key4)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key4)).addAll(e.getValue());
 			}
 		}
 
@@ -423,14 +422,14 @@ public class ListMap5DLongKeys<V> {
     private @NotNull Map<LongArrayKey, List<V>> _lazyLoad134() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key1 = e.a.getKeyAt(0);
-			final long key3 = e.a.getKeyAt(2);
-			final long key4 = e.a.getKeyAt(3);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key1 = e.getKey().getKeyAt(0);
+			final long key3 = e.getKey().getKeyAt(2);
+			final long key4 = e.getKey().getKeyAt(3);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key4));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key4)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key4)).addAll(e.getValue());
 			}
 		}
 
@@ -440,14 +439,14 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad234() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key2 = e.a.getKeyAt(1);
-			final long key3 = e.a.getKeyAt(2);
-			final long key4 = e.a.getKeyAt(3);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key2 = e.getKey().getKeyAt(1);
+			final long key3 = e.getKey().getKeyAt(2);
+			final long key4 = e.getKey().getKeyAt(3);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key4));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key4)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key4)).addAll(e.getValue());
 			}
 		}
 
@@ -457,15 +456,15 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad1234() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key1 = e.a.getKeyAt(0);
-			final long key2 = e.a.getKeyAt(1);
-			final long key3 = e.a.getKeyAt(2);
-			final long key4 = e.a.getKeyAt(3);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key1 = e.getKey().getKeyAt(0);
+			final long key2 = e.getKey().getKeyAt(1);
+			final long key3 = e.getKey().getKeyAt(2);
+			final long key4 = e.getKey().getKeyAt(3);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key4));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key4)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key4)).addAll(e.getValue());
 			}
 		}
 
@@ -475,15 +474,15 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad1235() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key1 = e.a.getKeyAt(0);
-			final long key2 = e.a.getKeyAt(1);
-			final long key3 = e.a.getKeyAt(2);
-			final long key5 = e.a.getKeyAt(4);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key1 = e.getKey().getKeyAt(0);
+			final long key2 = e.getKey().getKeyAt(1);
+			final long key3 = e.getKey().getKeyAt(2);
+			final long key5 = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key5)).addAll(e.getValue());
 			}
 		}
 
@@ -493,15 +492,15 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad1245() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key1 = e.a.getKeyAt(0);
-			final long key2 = e.a.getKeyAt(1);
-			final long key4 = e.a.getKeyAt(3);
-			final long key5 = e.a.getKeyAt(4);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key1 = e.getKey().getKeyAt(0);
+			final long key2 = e.getKey().getKeyAt(1);
+			final long key4 = e.getKey().getKeyAt(3);
+			final long key5 = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key4, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key4, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key4, key5)).addAll(e.getValue());
 			}
 		}
 
@@ -511,15 +510,15 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad1345() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key1 = e.a.getKeyAt(0);
-			final long key3 = e.a.getKeyAt(2);
-			final long key4 = e.a.getKeyAt(3);
-			final long key5 = e.a.getKeyAt(4);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key1 = e.getKey().getKeyAt(0);
+			final long key3 = e.getKey().getKeyAt(2);
+			final long key4 = e.getKey().getKeyAt(3);
+			final long key5 = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key4, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key4, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key4, key5)).addAll(e.getValue());
 			}
 		}
 
@@ -529,15 +528,15 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad2345() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key2 = e.a.getKeyAt(1);
-			final long key3 = e.a.getKeyAt(2);
-			final long key4 = e.a.getKeyAt(3);
-			final long key5 = e.a.getKeyAt(4);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key2 = e.getKey().getKeyAt(1);
+			final long key3 = e.getKey().getKeyAt(2);
+			final long key4 = e.getKey().getKeyAt(3);
+			final long key5 = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key4, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key4, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key4, key5)).addAll(e.getValue());
 			}
 		}
 
@@ -547,16 +546,16 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad12345() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key1 = e.a.getKeyAt(0);
-			final long key2 = e.a.getKeyAt(1);
-			final long key3 = e.a.getKeyAt(2);
-			final long key4 = e.a.getKeyAt(3);
-			final long key5 = e.a.getKeyAt(4);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key1 = e.getKey().getKeyAt(0);
+			final long key2 = e.getKey().getKeyAt(1);
+			final long key3 = e.getKey().getKeyAt(2);
+			final long key4 = e.getKey().getKeyAt(3);
+			final long key5 = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key4, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key4, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key4, key5)).addAll(e.getValue());
 			}
 		}
 
@@ -566,14 +565,14 @@ public class ListMap5DLongKeys<V> {
 	private @NotNull Map<LongArrayKey, List<V>> _lazyLoad345() {
 		final Map<LongArrayKey, List<V>> map = new HashMap<>();
 
-		for (final @NotNull Pair<LongArrayKey, V> e : _list) {
-			final long key3 = e.a.getKeyAt(2);
-			final long key4 = e.a.getKeyAt(3);
-			final long key5 = e.a.getKeyAt(4);
-			if (e.b == null) {
+		for (final @NotNull Entry<LongArrayKey, List<V>> e : _map12345.entrySet()) {
+			final long key3 = e.getKey().getKeyAt(2);
+			final long key4 = e.getKey().getKeyAt(3);
+			final long key5 = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key4, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key4, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key4, key5)).addAll(e.getValue());
 			}
 		}
 
@@ -616,7 +615,6 @@ public class ListMap5DLongKeys<V> {
 	public void add(final long key1, final long key2, final long key3, final long key4, final long key5, final @NotNull V value) {
 		final @NotNull LongArrayKey key = new LongArrayKey(key1, key2, key3, key4, key5);
 		MapUtils.getOrCreateArrayList(_map12345, key).add(value);
-		_list.add(new Pair<>(key, value));
 
 		if (_map1 != null) {
 			MapUtils.getOrCreateArrayList(_map1, key1).add(value);
@@ -714,6 +712,24 @@ public class ListMap5DLongKeys<V> {
 	}
 
 	/**
+	 * Fügt das Element hinzu. Wirft eine Exception, falls es schon ein Element mit diesem Schlüssel gibt.
+	 *
+	 * @param key1  Der 1. Schlüssel.
+	 * @param key2  Der 2. Schlüssel.
+	 * @param key3  Der 3. Schlüssel.
+	 * @param key4  Der 4. Schlüssel.
+	 * @param key5  Der 5. Schlüssel.
+	 *
+	 * @param value Der zugeordnete Wert. Der Wert NULL ist nicht erlaubt.
+	 */
+	public void addSingle(final long key1, final long key2, final long key3, final long key4, final long key5, final @NotNull V value) {
+		if (!get12345(key1, key2, key3, key4, key5).isEmpty()) {
+			throw new DeveloperNotificationException("Es gibt schon ein Element mit (%d, %d, %d, %d, %d).".formatted(key1, key2, key3, key4, key5));
+		}
+		add(key1, key2, key3, key4, key5, value);
+	}
+
+	/**
 	 * Erzeugt den Pfad (key1, key2, key3, key4, key5) fügt aber nichts hinzu.
 	 * Alle Pfad, die es vorher nicht gab, verweisen dann auf leere Listen.
 	 *
@@ -726,7 +742,6 @@ public class ListMap5DLongKeys<V> {
 	public void addEmpty(final long key1, final long key2, final long key3, final long key4, final long key5) {
 		final @NotNull LongArrayKey key = new LongArrayKey(key1, key2, key3, key4, key5);
 		MapUtils.getOrCreateArrayList(_map12345, key);
-		_list.add(new Pair<>(key, null));
 
 		if (_map1 != null) {
 			MapUtils.getOrCreateArrayList(_map1, key1);
@@ -1315,10 +1330,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map1 == null) {
 			_map1 = _lazyLoad1();
 		}
-		if (!_map1.containsKey(key1)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map1, key1));
+		final List<V> list = _map1.get(key1);
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1333,10 +1346,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map2 == null) {
 			_map2 = _lazyLoad2();
 		}
-		if (!_map2.containsKey(key2)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map2, key2));
+		final List<V> list = _map2.get(key2);
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1351,10 +1362,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map3 == null) {
 			_map3 = _lazyLoad3();
 		}
-		if (!_map3.containsKey(key3)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map3, key3));
+		final List<V> list = _map3.get(key3);
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1369,10 +1378,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map4 == null) {
 			_map4 = _lazyLoad4();
 		}
-		if (!_map4.containsKey(key4)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map4, key4));
+		final List<V> list = _map4.get(key4);
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1387,10 +1394,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map5 == null) {
 			_map5 = _lazyLoad5();
 		}
-		if (!_map5.containsKey(key5)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map5, key5));
+		final List<V> list = _map5.get(key5);
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1406,11 +1411,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map12 == null) {
 			_map12 = _lazyLoad12();
 		}
-		final LongArrayKey key = new LongArrayKey(key1, key2);
-		if (!_map12.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map12, key));
+		final List<V> list = _map12.get(new LongArrayKey(key1, key2));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1426,11 +1428,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map13 == null) {
 			_map13 = _lazyLoad13();
 		}
-		final LongArrayKey key = new LongArrayKey(key1, key3);
-		if (!_map13.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map13, key));
+		final List<V> list = _map13.get(new LongArrayKey(key1, key3));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1446,11 +1445,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map14 == null) {
 			_map14 = _lazyLoad14();
 		}
-		final LongArrayKey key = new LongArrayKey(key1, key4);
-		if (!_map14.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map14, key));
+		final List<V> list = _map14.get(new LongArrayKey(key1, key4));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1466,11 +1462,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map15 == null) {
 			_map15 = _lazyLoad15();
 		}
-		final LongArrayKey key = new LongArrayKey(key1, key5);
-		if (!_map15.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map15, key));
+		final List<V> list = _map15.get(new LongArrayKey(key1, key5));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1486,11 +1479,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map23 == null) {
 			_map23 = _lazyLoad23();
 		}
-		final LongArrayKey key = new LongArrayKey(key2, key3);
-		if (!_map23.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map23, key));
+		final List<V> list = _map23.get(new LongArrayKey(key2, key3));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1506,11 +1496,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map24 == null) {
 			_map24 = _lazyLoad24();
 		}
-		final LongArrayKey key = new LongArrayKey(key2, key4);
-		if (!_map24.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map24, key));
+		final List<V> list = _map24.get(new LongArrayKey(key2, key4));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1526,11 +1513,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map25 == null) {
 			_map25 = _lazyLoad25();
 		}
-		final LongArrayKey key = new LongArrayKey(key2, key5);
-		if (!_map25.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map25, key));
+		final List<V> list = _map25.get(new LongArrayKey(key2, key5));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1546,11 +1530,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map34 == null) {
 			_map34 = _lazyLoad34();
 		}
-		final LongArrayKey key = new LongArrayKey(key3, key4);
-		if (!_map34.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map34, key));
+		final List<V> list = _map34.get(new LongArrayKey(key3, key4));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1566,11 +1547,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map35 == null) {
 			_map35 = _lazyLoad35();
 		}
-		final LongArrayKey key = new LongArrayKey(key3, key5);
-		if (!_map35.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map35, key));
+		final List<V> list = _map35.get(new LongArrayKey(key3, key5));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1586,11 +1564,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map45 == null) {
 			_map45 = _lazyLoad45();
 		}
-		final LongArrayKey key = new LongArrayKey(key4, key5);
-		if (!_map45.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map45, key));
+		final List<V> list = _map45.get(new LongArrayKey(key4, key5));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1607,11 +1582,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map123 == null) {
 			_map123 = _lazyLoad123();
 		}
-		final LongArrayKey key = new LongArrayKey(key1, key2, key3);
-		if (!_map123.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map123, key));
+		final List<V> list = _map123.get(new LongArrayKey(key1, key2, key3));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1628,11 +1600,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map124 == null) {
 			_map124 = _lazyLoad124();
 		}
-		final LongArrayKey key = new LongArrayKey(key1, key2, key4);
-		if (!_map124.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map124, key));
+		final List<V> list = _map124.get(new LongArrayKey(key1, key2, key4));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1649,11 +1618,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map125 == null) {
 			_map125 = _lazyLoad125();
 		}
-		final LongArrayKey key = new LongArrayKey(key1, key2, key5);
-		if (!_map125.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map125, key));
+		final List<V> list = _map125.get(new LongArrayKey(key1, key2, key5));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1670,11 +1636,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map134 == null) {
 			_map134 = _lazyLoad134();
 		}
-		final LongArrayKey key = new LongArrayKey(key1, key3, key4);
-		if (!_map134.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map134, key));
+		final List<V> list = _map134.get(new LongArrayKey(key1, key3, key4));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1691,11 +1654,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map135 == null) {
 			_map135 = _lazyLoad135();
 		}
-		final LongArrayKey key = new LongArrayKey(key1, key3, key5);
-		if (!_map135.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map135, key));
+		final List<V> list = _map135.get(new LongArrayKey(key1, key3, key5));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1712,11 +1672,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map145 == null) {
 			_map145 = _lazyLoad145();
 		}
-		final LongArrayKey key = new LongArrayKey(key1, key4, key5);
-		if (!_map145.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map145, key));
+		final List<V> list = _map145.get(new LongArrayKey(key1, key4, key5));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1733,11 +1690,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map234 == null) {
 			_map234 = _lazyLoad234();
 		}
-		final LongArrayKey key = new LongArrayKey(key2, key3, key4);
-		if (!_map234.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map234, key));
+		final List<V> list = _map234.get(new LongArrayKey(key2, key3, key4));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1754,11 +1708,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map235 == null) {
 			_map235 = _lazyLoad235();
 		}
-		final LongArrayKey key = new LongArrayKey(key2, key3, key5);
-		if (!_map235.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map235, key));
+		final List<V> list = _map235.get(new LongArrayKey(key2, key3, key5));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1775,11 +1726,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map245 == null) {
 			_map245 = _lazyLoad245();
 		}
-		final LongArrayKey key = new LongArrayKey(key2, key4, key5);
-		if (!_map245.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map245, key));
+		final List<V> list = _map245.get(new LongArrayKey(key2, key4, key5));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1796,11 +1744,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map345 == null) {
 			_map345 = _lazyLoad345();
 		}
-		final LongArrayKey key = new LongArrayKey(key3, key4, key5);
-		if (!_map345.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map345, key));
+		final List<V> list = _map345.get(new LongArrayKey(key3, key4, key5));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1818,11 +1763,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map1234 == null) {
 			_map1234 = _lazyLoad1234();
 		}
-		final LongArrayKey key = new LongArrayKey(key1, key2, key3, key4);
-		if (!_map1234.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map1234, key));
+		final List<V> list = _map1234.get(new LongArrayKey(key1, key2, key3, key4));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1840,11 +1782,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map1235 == null) {
 			_map1235 = _lazyLoad1235();
 		}
-		final LongArrayKey key = new LongArrayKey(key1, key2, key3, key5);
-		if (!_map1235.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map1235, key));
+		final List<V> list = _map1235.get(new LongArrayKey(key1, key2, key3, key5));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1862,11 +1801,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map1245 == null) {
 			_map1245 = _lazyLoad1245();
 		}
-		final LongArrayKey key = new LongArrayKey(key1, key2, key4, key5);
-		if (!_map1245.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map1245, key));
+		final List<V> list = _map1245.get(new LongArrayKey(key1, key2, key4, key5));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1884,11 +1820,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map1345 == null) {
 			_map1345 = _lazyLoad1345();
 		}
-		final LongArrayKey key = new LongArrayKey(key1, key3, key4, key5);
-		if (!_map1345.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map1345, key));
+		final List<V> list = _map1345.get(new LongArrayKey(key1, key3, key4, key5));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1906,11 +1839,8 @@ public class ListMap5DLongKeys<V> {
 		if (_map2345 == null) {
 			_map2345 = _lazyLoad2345();
 		}
-		final LongArrayKey key = new LongArrayKey(key2, key3, key4, key5);
-		if (!_map2345.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map2345, key));
+		final List<V> list = _map2345.get(new LongArrayKey(key2, key3, key4, key5));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
 	/**
@@ -1926,11 +1856,8 @@ public class ListMap5DLongKeys<V> {
 	 * @return eine Liste aller Values in dieser Zuordnung.
 	 */
 	public @NotNull List<V> get12345(final long key1, final long key2, final long key3, final long key4, final long key5) {
-		final LongArrayKey key = new LongArrayKey(key1, key2, key3, key4, key5);
-		if (!_map12345.containsKey(key)) {
-			return new ArrayList<>();
-		}
-		return new ArrayList<>(MapUtils.getOrCreateArrayList(_map12345, key));
+		final List<V> list = _map12345.get(new LongArrayKey(key1, key2, key3, key4, key5));
+		return (list == null) ? new ArrayList<>() : new ArrayList<>(list);
 	}
 
     /**

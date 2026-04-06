@@ -51,11 +51,13 @@ public final class DataUvKurse extends DataManagerRevised<Long, DTOUvKurs, UvKur
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOUvKurs getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "ID darf nicht null sein.");
+		}
 		final DTOUvKurs dto = conn.queryByKey(DTOUvKurs.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Kein UV-Kurs mit ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 

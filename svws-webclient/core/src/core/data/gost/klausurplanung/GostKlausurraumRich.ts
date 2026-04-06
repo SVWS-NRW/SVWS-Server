@@ -18,7 +18,7 @@ export class GostKlausurraumRich extends JavaObject {
 	public groesse: number = -1;
 
 	/**
-	 * Ein Array mit den IDs der im Raum enthaltenen Schülerklausurterminen.
+	 * Ein Array mit den IDs des im Raum enthaltenen Schülerklausurtermins.
 	 */
 	public schuelerklausurterminIDs: List<number> = new ArrayList<number>();
 

@@ -6,9 +6,9 @@ import type { List } from '../../../java/util/List';
 import { LongArrayKey } from '../../../core/adt/LongArrayKey';
 import { Class } from '../../../java/lang/Class';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { JavaString } from '../../../java/lang/JavaString';
 import { MapUtils } from '../../../core/utils/MapUtils';
 import type { JavaMap } from '../../../java/util/JavaMap';
-import { Pair } from '../../../asd/adt/Pair';
 
 export class ListMap3DLongKeys<V> extends JavaObject {
 
@@ -26,8 +26,6 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 
 	private readonly _map123: JavaMap<LongArrayKey, List<V>> = new HashMap<LongArrayKey, List<V>>();
 
-	private readonly _list: List<Pair<LongArrayKey, V>> = new ArrayList<Pair<LongArrayKey, V>>();
-
 
 	/**
 	 * Konstruktor.
@@ -38,12 +36,12 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad1(): JavaMap<number, List<V>> {
 		const map: JavaMap<number, List<V>> | null = new HashMap<number, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			if (e.b === null) {
+		for (const entry123 of this._map123.entrySet()) {
+			const key1: number = entry123.getKey().getKeyAt(0);
+			if (entry123.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, key1);
 			} else {
-				MapUtils.getOrCreateArrayList(map, key1).add(e.b);
+				MapUtils.getOrCreateArrayList(map, key1).addAll(entry123.getValue());
 			}
 		}
 		return map;
@@ -51,12 +49,12 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad2(): JavaMap<number, List<V>> {
 		const map: JavaMap<number, List<V>> | null = new HashMap<number, List<V>>();
-		for (const e of this._list) {
-			const key2: number = e.a.getKeyAt(1);
-			if (e.b === null) {
+		for (const entry123 of this._map123.entrySet()) {
+			const key2: number = entry123.getKey().getKeyAt(1);
+			if (entry123.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, key2);
 			} else {
-				MapUtils.getOrCreateArrayList(map, key2).add(e.b);
+				MapUtils.getOrCreateArrayList(map, key2).addAll(entry123.getValue());
 			}
 		}
 		return map;
@@ -64,12 +62,12 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad3(): JavaMap<number, List<V>> {
 		const map: JavaMap<number, List<V>> | null = new HashMap<number, List<V>>();
-		for (const e of this._list) {
-			const key3: number = e.a.getKeyAt(2);
-			if (e.b === null) {
+		for (const entry123 of this._map123.entrySet()) {
+			const key3: number = entry123.getKey().getKeyAt(2);
+			if (entry123.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, key3);
 			} else {
-				MapUtils.getOrCreateArrayList(map, key3).add(e.b);
+				MapUtils.getOrCreateArrayList(map, key3).addAll(entry123.getValue());
 			}
 		}
 		return map;
@@ -77,13 +75,13 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad12(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			const key2: number = e.a.getKeyAt(1);
-			if (e.b === null) {
+		for (const entry123 of this._map123.entrySet()) {
+			const key1: number = entry123.getKey().getKeyAt(0);
+			const key2: number = entry123.getKey().getKeyAt(1);
+			if (entry123.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2)).addAll(entry123.getValue());
 			}
 		}
 		return map;
@@ -91,13 +89,13 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad13(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			const key3: number = e.a.getKeyAt(2);
-			if (e.b === null) {
+		for (const entry123 of this._map123.entrySet()) {
+			const key1: number = entry123.getKey().getKeyAt(0);
+			const key3: number = entry123.getKey().getKeyAt(2);
+			if (entry123.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3)).addAll(entry123.getValue());
 			}
 		}
 		return map;
@@ -105,13 +103,13 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad23(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key2: number = e.a.getKeyAt(1);
-			const key3: number = e.a.getKeyAt(2);
-			if (e.b === null) {
+		for (const entry123 of this._map123.entrySet()) {
+			const key2: number = entry123.getKey().getKeyAt(1);
+			const key3: number = entry123.getKey().getKeyAt(2);
+			if (entry123.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3)).addAll(entry123.getValue());
 			}
 		}
 		return map;
@@ -151,7 +149,6 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 	public add(key1: number, key2: number, key3: number, value: V): void {
 		const key: LongArrayKey = new LongArrayKey(key1, key2, key3);
 		MapUtils.getOrCreateArrayList(this._map123, key).add(value);
-		this._list.add(new Pair<LongArrayKey, V>(key, value));
 		if (this._map1 !== null) {
 			MapUtils.getOrCreateArrayList(this._map1, key1).add(value);
 		}
@@ -173,6 +170,22 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 	}
 
 	/**
+	 * Fügt das Element hinzu. Wirft eine Exception, falls es schon ein Element mit diesem Schlüssel gibt.
+	 *
+	 * @param key1  Der 1. Schlüssel.
+	 * @param key2  Der 2. Schlüssel.
+	 * @param key3  Der 3. Schlüssel.
+	 *
+	 * @param value Der zugeordnete Wert. Der Wert NULL ist nicht erlaubt.
+	 */
+	public addSingle(key1: number, key2: number, key3: number, value: V): void {
+		if (!this.get123(key1, key2, key3).isEmpty()) {
+			throw new DeveloperNotificationException(JavaString.format("Es gibt schon ein Element mit (%d, %d, %d).", key1, key2, key3))
+		}
+		this.add(key1, key2, key3, value);
+	}
+
+	/**
 	 * Erzeugt den Pfad (key1, key2, key3) fügt aber nichts hinzu.
 	 * Alle Pfade, die es vorher nicht gab, verweisen dann auf leere Listen.
 	 *
@@ -181,9 +194,8 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 	 * @param key3  Der 3. Schlüssel.
 	 */
 	public addEmpty(key1: number, key2: number, key3: number): void {
-		const key: LongArrayKey = new LongArrayKey(key1, key2, key3);
-		MapUtils.getOrCreateArrayList(this._map123, key);
-		this._list.add(new Pair<LongArrayKey, V>(key, null));
+		const key123: LongArrayKey = new LongArrayKey(key1, key2, key3);
+		MapUtils.getOrCreateArrayList(this._map123, key123);
 		if (this._map1 !== null) {
 			MapUtils.getOrCreateArrayList(this._map1, key1);
 		}
@@ -202,6 +214,144 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 		if (this._map23 !== null) {
 			MapUtils.getOrCreateArrayList(this._map23, new LongArrayKey(key2, key3));
 		}
+	}
+
+	private invalidateCaches(): void {
+		this._map1 = null;
+		this._map2 = null;
+		this._map3 = null;
+		this._map12 = null;
+		this._map13 = null;
+		this._map23 = null;
+	}
+
+	/**
+	 * Entfernt den Wert aus der zur Zuordnung (key1, key2, key3) gehörenden Value-Liste.
+	 * Falls es den Pfad nicht gibt, wird eine Exception geworfen.
+	 * Alle Caches der Map werden gelöscht und müssen beim ersten Zugriff neu aufgebaut werden.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 * @param value  Der zu entfernende Wert.
+	 */
+	public removeValueOrException(key1: number, key2: number, key3: number, value: V): void {
+		const key: LongArrayKey = new LongArrayKey(key1, key2, key3);
+		MapUtils.removeFromListAndTrimOrException(this._map123, key, value);
+		this.invalidateCaches();
+	}
+
+	/**
+	 * Entfernt den Pfad (key1, key2, key3) aus der Map.
+	 * Alle Caches der Map werden gelöscht und müssen beim ersten Zugriff neu aufgebaut werden.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return der bisherige Wert zu (key1, key2, key3) oder {@code null}, falls nicht existent.
+	 */
+	public remove(key1: number, key2: number, key3: number): List<V> | null {
+		const key: LongArrayKey = new LongArrayKey(key1, key2, key3);
+		const values: List<V> | null = this._map123.remove(key);
+		if (values !== null) {
+			this.invalidateCaches();
+		}
+		return values;
+	}
+
+	/**
+	 * Entfernt den Pfad (key1, key2, key3) aus der Map.
+	 * Falls es den Pfad nicht gibt, wird eine Exception geworfen.
+	 * Alle Caches der Map werden gelöscht und müssen beim ersten Zugriff neu aufgebaut werden.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return der bisherige Wert zu (key1, key2, key3)
+	 */
+	public removeOrException(key1: number, key2: number, key3: number): List<V> {
+		return DeveloperNotificationException.ifNull("Pfad (" + key1 + ", " + key2 + ", " + key3 + ") existiert nicht!", this.remove(key1, key2, key3));
+	}
+
+	/**
+	 * Entfernt den Pfad (key1, key2, key3) aus der Map.
+	 * Wirft eine DeveloperNotificationException, falls in der gemappten Liste das Element nicht als einziges enthalten ist.
+	 * Falls es den Pfad nicht gibt, wird eine Exception geworfen.
+	 * Alle Caches der Map werden gelöscht und müssen beim ersten Zugriff neu aufgebaut werden.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 * @param key2   Der 2. Schlüssel.
+	 * @param key3   Der 3. Schlüssel.
+	 *
+	 * @return der bisherige Wert zu (key1, key2, key3)
+	 */
+	public removeSingleOrException(key1: number, key2: number, key3: number): V {
+		const values: List<V> | null = this.removeOrException(key1, key2, key3);
+		DeveloperNotificationException.ifTrue("Pfad (" + key1 + ", " + key2 + ", " + key3 + ") enthält nicht genau ein Element (tatsächlich " + values.size() + ")!", values.size() !== 1);
+		return values.getFirst();
+	}
+
+	/**
+	 * Entfernt alle Einträge, bei denen der erste Schlüssel (key1) übereinstimmt.
+	 * Falls kein Eintrag zu key1 existiert, passiert nichts.
+	 * Alle Caches der Map werden gelöscht und müssen beim ersten Zugriff neu aufgebaut werden.
+	 *
+	 * @param key1   Der 1. Schlüssel.
+	 */
+	public removeAllByKey1(key1: number): void {
+		this.removeAllByKeyX(key1, 0);
+	}
+
+	/**
+	 * Entfernt alle Einträge, bei denen der zweite Schlüssel (key2) übereinstimmt.
+	 * Falls kein Eintrag zu key2 existiert, passiert nichts.
+	 * Alle Caches der Map werden gelöscht und müssen beim ersten Zugriff neu aufgebaut werden.
+	 *
+	 * @param key2   Der 2. Schlüssel.
+	 */
+	public removeAllByKey2(key2: number): void {
+		this.removeAllByKeyX(key2, 1);
+	}
+
+	/**
+	 * Entfernt alle Einträge, bei denen der dritte Schlüssel (key3) übereinstimmt.
+	 * Falls kein Eintrag zu key3 existiert, passiert nichts.
+	 * Alle Caches der Map werden gelöscht und müssen beim ersten Zugriff neu aufgebaut werden.
+	 *
+	 * @param key3   Der 3. Schlüssel.
+	 */
+	public removeAllByKey3(key3: number): void {
+		this.removeAllByKeyX(key3, 2);
+	}
+
+	private removeAllByKeyX(key: number, x: number): void {
+		const toRemove: List<LongArrayKey> | null = new ArrayList<LongArrayKey>();
+		for (const keyEntry of this._map123.keySet()) {
+			if (keyEntry.getKeyAt(x) === key) {
+				toRemove.add(keyEntry);
+			}
+		}
+		for (const keyEntry of toRemove) {
+			this._map123.remove(keyEntry);
+		}
+		if (!toRemove.isEmpty()) {
+			this.invalidateCaches();
+		}
+	}
+
+	/**
+	 * Gibt eine flache Liste aller Values in dieser 3D-ListMap zurück.
+	 *
+	 * @return eine flache Liste aller enthaltenen Werte
+	 */
+	public getAllValues(): List<V> {
+		const result: List<V> | null = new ArrayList<V>();
+		for (const values of this._map123.values()) {
+			result.addAll(values);
+		}
+		return result;
 	}
 
 	/**
@@ -315,10 +465,8 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 		if (this._map1 === null) {
 			this._map1 = this._lazyLoad1();
 		}
-		if (!this._map1.containsKey(key1)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map1, key1));
+		const list: List<V> | null = this._map1.get(key1);
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -332,10 +480,8 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 		if (this._map2 === null) {
 			this._map2 = this._lazyLoad2();
 		}
-		if (!this._map2.containsKey(key2)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map2, key2));
+		const list: List<V> | null = this._map2.get(key2);
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -349,10 +495,8 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 		if (this._map3 === null) {
 			this._map3 = this._lazyLoad3();
 		}
-		if (!this._map3.containsKey(key3)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map3, key3));
+		const list: List<V> | null = this._map3.get(key3);
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -367,11 +511,8 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 		if (this._map12 === null) {
 			this._map12 = this._lazyLoad12();
 		}
-		const key: LongArrayKey = new LongArrayKey(key1, key2);
-		if (!this._map12.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map12, key));
+		const list: List<V> | null = this._map12.get(new LongArrayKey(key1, key2));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -386,11 +527,8 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 		if (this._map13 === null) {
 			this._map13 = this._lazyLoad13();
 		}
-		const key: LongArrayKey = new LongArrayKey(key1, key3);
-		if (!this._map13.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map13, key));
+		const list: List<V> | null = this._map13.get(new LongArrayKey(key1, key3));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -405,11 +543,8 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 		if (this._map23 === null) {
 			this._map23 = this._lazyLoad23();
 		}
-		const key: LongArrayKey = new LongArrayKey(key2, key3);
-		if (!this._map23.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map23, key));
+		const list: List<V> | null = this._map23.get(new LongArrayKey(key2, key3));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -422,11 +557,8 @@ export class ListMap3DLongKeys<V> extends JavaObject {
 	 * @return eine Kopie der Liste aller Values zum Mapping (key1, key2, key3).
 	 */
 	public get123(key1: number, key2: number, key3: number): List<V> {
-		const key: LongArrayKey = new LongArrayKey(key1, key2, key3);
-		if (!this._map123.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map123, key));
+		const list: List<V> | null = this._map123.get(new LongArrayKey(key1, key2, key3));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**

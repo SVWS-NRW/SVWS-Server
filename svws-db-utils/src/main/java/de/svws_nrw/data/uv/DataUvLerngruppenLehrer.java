@@ -48,13 +48,15 @@ public final class DataUvLerngruppenLehrer extends DataManagerRevised<Long, DTOU
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOUvLerngruppenLehrer getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Die ID für die Lerngruppen-Lehrer-Zuordnung darf nicht null sein.");
+		}
 		final DTOUvLerngruppenLehrer dto = conn.queryByKey(DTOUvLerngruppenLehrer.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Keine Lerngruppen-Lehrer-Zuordnung mit der ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 

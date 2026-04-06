@@ -671,6 +671,27 @@ export class DateUtils extends JavaObject {
 			}
 	}
 
+	/**
+	 * Prüft, ob zwei Gültigkeitsintervalle sich überlappen.
+	 * Ein Intervall ist definiert durch [gueltigVon, gueltigBis].
+	 * Ist gueltigBis null oder leer, so ist das Intervall ab gueltigVon unbegrenzt.
+	 *
+	 * @param gueltigVonA   der Beginn des ersten Intervalls
+	 * @param gueltigBisA   das Ende des ersten Intervalls (null oder leer = unbegrenzt)
+	 * @param gueltigVonB   der Beginn des zweiten Intervalls
+	 * @param gueltigBisB   das Ende des zweiten Intervalls (null oder leer = unbegrenzt)
+	 * @return true, wenn sich die Intervalle überlappen, sonst false
+	 */
+	public static intervallUeberlappt(gueltigVonA: string, gueltigBisA: string | null, gueltigVonB: string, gueltigBisB: string | null): boolean {
+		if ((gueltigBisA !== null) && (JavaString.compareTo(gueltigBisA, gueltigVonB) < 0)) {
+			return false;
+		}
+		if ((gueltigBisB !== null) && (JavaString.compareTo(gueltigBisB, gueltigVonA) < 0)) {
+			return false;
+		}
+		return true;
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.DateUtils';
 	}

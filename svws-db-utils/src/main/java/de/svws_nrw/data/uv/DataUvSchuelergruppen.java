@@ -58,11 +58,13 @@ public final class DataUvSchuelergruppen extends DataManagerRevised<Long, DTOUvS
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOUvSchuelergruppe getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die ID für die UV-Schülergruppe darf nicht null sein.");
+		}
 		final DTOUvSchuelergruppe dto = conn.queryByKey(DTOUvSchuelergruppe.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Kein Eintrag zur ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 
@@ -181,7 +183,8 @@ public final class DataUvSchuelergruppen extends DataManagerRevised<Long, DTOUvS
 							.formatted(tableName, idColumnName, idColumnValue, fkColumnName, fkColumnIdsCSV)
 			);
 		}
-		if (!dtosToCreate.isEmpty())
+		if (!dtosToCreate.isEmpty()) {
 			conn.transactionPersistAll(dtosToCreate);
+		}
 	}
 }

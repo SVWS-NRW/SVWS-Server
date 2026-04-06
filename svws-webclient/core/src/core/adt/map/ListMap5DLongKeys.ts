@@ -6,9 +6,9 @@ import type { List } from '../../../java/util/List';
 import { LongArrayKey } from '../../../core/adt/LongArrayKey';
 import { Class } from '../../../java/lang/Class';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { JavaString } from '../../../java/lang/JavaString';
 import { MapUtils } from '../../../core/utils/MapUtils';
 import type { JavaMap } from '../../../java/util/JavaMap';
-import { Pair } from '../../../asd/adt/Pair';
 
 export class ListMap5DLongKeys<V> extends JavaObject {
 
@@ -74,8 +74,6 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private readonly _map12345: JavaMap<LongArrayKey, List<V>> = new HashMap<LongArrayKey, List<V>>();
 
-	private readonly _list: List<Pair<LongArrayKey, V>> = new ArrayList<Pair<LongArrayKey, V>>();
-
 
 	/**
 	 * Konstruktor.
@@ -86,12 +84,12 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad1(): JavaMap<number, List<V>> {
 		const map: JavaMap<number, List<V>> | null = new HashMap<number, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key1: number = e.getKey().getKeyAt(0);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, key1);
 			} else {
-				MapUtils.getOrCreateArrayList(map, key1).add(e.b);
+				MapUtils.getOrCreateArrayList(map, key1).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -99,12 +97,12 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad2(): JavaMap<number, List<V>> {
 		const map: JavaMap<number, List<V>> | null = new HashMap<number, List<V>>();
-		for (const e of this._list) {
-			const key2: number = e.a.getKeyAt(1);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key2: number = e.getKey().getKeyAt(1);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, key2);
 			} else {
-				MapUtils.getOrCreateArrayList(map, key2).add(e.b);
+				MapUtils.getOrCreateArrayList(map, key2).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -112,12 +110,12 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad3(): JavaMap<number, List<V>> {
 		const map: JavaMap<number, List<V>> | null = new HashMap<number, List<V>>();
-		for (const e of this._list) {
-			const key3: number = e.a.getKeyAt(2);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key3: number = e.getKey().getKeyAt(2);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, key3);
 			} else {
-				MapUtils.getOrCreateArrayList(map, key3).add(e.b);
+				MapUtils.getOrCreateArrayList(map, key3).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -125,12 +123,12 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad4(): JavaMap<number, List<V>> {
 		const map: JavaMap<number, List<V>> | null = new HashMap<number, List<V>>();
-		for (const e of this._list) {
-			const key4: number = e.a.getKeyAt(3);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key4: number = e.getKey().getKeyAt(3);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, key4);
 			} else {
-				MapUtils.getOrCreateArrayList(map, key4).add(e.b);
+				MapUtils.getOrCreateArrayList(map, key4).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -138,12 +136,12 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad5(): JavaMap<number, List<V>> {
 		const map: JavaMap<number, List<V>> | null = new HashMap<number, List<V>>();
-		for (const e of this._list) {
-			const key5: number = e.a.getKeyAt(4);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key5: number = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, key5);
 			} else {
-				MapUtils.getOrCreateArrayList(map, key5).add(e.b);
+				MapUtils.getOrCreateArrayList(map, key5).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -151,13 +149,13 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad12(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			const key2: number = e.a.getKeyAt(1);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key1: number = e.getKey().getKeyAt(0);
+			const key2: number = e.getKey().getKeyAt(1);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -165,13 +163,13 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad13(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			const key3: number = e.a.getKeyAt(2);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key1: number = e.getKey().getKeyAt(0);
+			const key3: number = e.getKey().getKeyAt(2);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -179,13 +177,13 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad14(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			const key4: number = e.a.getKeyAt(3);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key1: number = e.getKey().getKeyAt(0);
+			const key4: number = e.getKey().getKeyAt(3);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key4));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key4)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key4)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -193,13 +191,13 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad15(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			const key5: number = e.a.getKeyAt(4);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key1: number = e.getKey().getKeyAt(0);
+			const key5: number = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key5)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -207,13 +205,13 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad23(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key2: number = e.a.getKeyAt(1);
-			const key3: number = e.a.getKeyAt(2);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key2: number = e.getKey().getKeyAt(1);
+			const key3: number = e.getKey().getKeyAt(2);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -221,13 +219,13 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad24(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key2: number = e.a.getKeyAt(1);
-			const key4: number = e.a.getKeyAt(3);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key2: number = e.getKey().getKeyAt(1);
+			const key4: number = e.getKey().getKeyAt(3);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key4));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key4)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key4)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -235,13 +233,13 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad25(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key2: number = e.a.getKeyAt(1);
-			const key5: number = e.a.getKeyAt(4);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key2: number = e.getKey().getKeyAt(1);
+			const key5: number = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key5)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -249,13 +247,13 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad34(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key3: number = e.a.getKeyAt(2);
-			const key4: number = e.a.getKeyAt(3);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key3: number = e.getKey().getKeyAt(2);
+			const key4: number = e.getKey().getKeyAt(3);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key4));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key4)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key4)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -263,13 +261,13 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad35(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key3: number = e.a.getKeyAt(2);
-			const key5: number = e.a.getKeyAt(4);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key3: number = e.getKey().getKeyAt(2);
+			const key5: number = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key5)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -277,13 +275,13 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad45(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key4: number = e.a.getKeyAt(3);
-			const key5: number = e.a.getKeyAt(4);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key4: number = e.getKey().getKeyAt(3);
+			const key5: number = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key4, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key4, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key4, key5)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -291,14 +289,14 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad125(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			const key2: number = e.a.getKeyAt(1);
-			const key5: number = e.a.getKeyAt(4);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key1: number = e.getKey().getKeyAt(0);
+			const key2: number = e.getKey().getKeyAt(1);
+			const key5: number = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key5)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -306,14 +304,14 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad135(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			const key3: number = e.a.getKeyAt(2);
-			const key5: number = e.a.getKeyAt(4);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key1: number = e.getKey().getKeyAt(0);
+			const key3: number = e.getKey().getKeyAt(2);
+			const key5: number = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key5)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -321,14 +319,14 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad145(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			const key4: number = e.a.getKeyAt(3);
-			const key5: number = e.a.getKeyAt(4);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key1: number = e.getKey().getKeyAt(0);
+			const key4: number = e.getKey().getKeyAt(3);
+			const key5: number = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key4, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key4, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key4, key5)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -336,14 +334,14 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad235(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key2: number = e.a.getKeyAt(1);
-			const key3: number = e.a.getKeyAt(2);
-			const key5: number = e.a.getKeyAt(4);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key2: number = e.getKey().getKeyAt(1);
+			const key3: number = e.getKey().getKeyAt(2);
+			const key5: number = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key5)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -351,14 +349,14 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad245(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key2: number = e.a.getKeyAt(1);
-			const key4: number = e.a.getKeyAt(3);
-			const key5: number = e.a.getKeyAt(4);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key2: number = e.getKey().getKeyAt(1);
+			const key4: number = e.getKey().getKeyAt(3);
+			const key5: number = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key4, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key4, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key4, key5)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -366,14 +364,14 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad123(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			const key2: number = e.a.getKeyAt(1);
-			const key3: number = e.a.getKeyAt(2);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key1: number = e.getKey().getKeyAt(0);
+			const key2: number = e.getKey().getKeyAt(1);
+			const key3: number = e.getKey().getKeyAt(2);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -381,14 +379,14 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad124(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			const key2: number = e.a.getKeyAt(1);
-			const key4: number = e.a.getKeyAt(3);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key1: number = e.getKey().getKeyAt(0);
+			const key2: number = e.getKey().getKeyAt(1);
+			const key4: number = e.getKey().getKeyAt(3);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key4));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key4)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key4)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -396,14 +394,14 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad134(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			const key3: number = e.a.getKeyAt(2);
-			const key4: number = e.a.getKeyAt(3);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key1: number = e.getKey().getKeyAt(0);
+			const key3: number = e.getKey().getKeyAt(2);
+			const key4: number = e.getKey().getKeyAt(3);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key4));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key4)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key4)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -411,14 +409,14 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad234(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key2: number = e.a.getKeyAt(1);
-			const key3: number = e.a.getKeyAt(2);
-			const key4: number = e.a.getKeyAt(3);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key2: number = e.getKey().getKeyAt(1);
+			const key3: number = e.getKey().getKeyAt(2);
+			const key4: number = e.getKey().getKeyAt(3);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key4));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key4)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key4)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -426,15 +424,15 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad1234(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			const key2: number = e.a.getKeyAt(1);
-			const key3: number = e.a.getKeyAt(2);
-			const key4: number = e.a.getKeyAt(3);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key1: number = e.getKey().getKeyAt(0);
+			const key2: number = e.getKey().getKeyAt(1);
+			const key3: number = e.getKey().getKeyAt(2);
+			const key4: number = e.getKey().getKeyAt(3);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key4));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key4)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key4)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -442,15 +440,15 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad1235(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			const key2: number = e.a.getKeyAt(1);
-			const key3: number = e.a.getKeyAt(2);
-			const key5: number = e.a.getKeyAt(4);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key1: number = e.getKey().getKeyAt(0);
+			const key2: number = e.getKey().getKeyAt(1);
+			const key3: number = e.getKey().getKeyAt(2);
+			const key5: number = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key5)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -458,15 +456,15 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad1245(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			const key2: number = e.a.getKeyAt(1);
-			const key4: number = e.a.getKeyAt(3);
-			const key5: number = e.a.getKeyAt(4);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key1: number = e.getKey().getKeyAt(0);
+			const key2: number = e.getKey().getKeyAt(1);
+			const key4: number = e.getKey().getKeyAt(3);
+			const key5: number = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key4, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key4, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key4, key5)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -474,15 +472,15 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad1345(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			const key3: number = e.a.getKeyAt(2);
-			const key4: number = e.a.getKeyAt(3);
-			const key5: number = e.a.getKeyAt(4);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key1: number = e.getKey().getKeyAt(0);
+			const key3: number = e.getKey().getKeyAt(2);
+			const key4: number = e.getKey().getKeyAt(3);
+			const key5: number = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key4, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key4, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key3, key4, key5)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -490,15 +488,15 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad2345(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key2: number = e.a.getKeyAt(1);
-			const key3: number = e.a.getKeyAt(2);
-			const key4: number = e.a.getKeyAt(3);
-			const key5: number = e.a.getKeyAt(4);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key2: number = e.getKey().getKeyAt(1);
+			const key3: number = e.getKey().getKeyAt(2);
+			const key4: number = e.getKey().getKeyAt(3);
+			const key5: number = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key4, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key4, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key2, key3, key4, key5)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -506,16 +504,16 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad12345(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key1: number = e.a.getKeyAt(0);
-			const key2: number = e.a.getKeyAt(1);
-			const key3: number = e.a.getKeyAt(2);
-			const key4: number = e.a.getKeyAt(3);
-			const key5: number = e.a.getKeyAt(4);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key1: number = e.getKey().getKeyAt(0);
+			const key2: number = e.getKey().getKeyAt(1);
+			const key3: number = e.getKey().getKeyAt(2);
+			const key4: number = e.getKey().getKeyAt(3);
+			const key5: number = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key4, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key4, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key1, key2, key3, key4, key5)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -523,14 +521,14 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 
 	private _lazyLoad345(): JavaMap<LongArrayKey, List<V>> {
 		const map: JavaMap<LongArrayKey, List<V>> | null = new HashMap<LongArrayKey, List<V>>();
-		for (const e of this._list) {
-			const key3: number = e.a.getKeyAt(2);
-			const key4: number = e.a.getKeyAt(3);
-			const key5: number = e.a.getKeyAt(4);
-			if (e.b === null) {
+		for (const e of this._map12345.entrySet()) {
+			const key3: number = e.getKey().getKeyAt(2);
+			const key4: number = e.getKey().getKeyAt(3);
+			const key5: number = e.getKey().getKeyAt(4);
+			if (e.getValue().isEmpty()) {
 				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key4, key5));
 			} else {
-				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key4, key5)).add(e.b);
+				MapUtils.getOrCreateArrayList(map, new LongArrayKey(key3, key4, key5)).addAll(e.getValue());
 			}
 		}
 		return map;
@@ -572,7 +570,6 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 	public add(key1: number, key2: number, key3: number, key4: number, key5: number, value: V): void {
 		const key: LongArrayKey = new LongArrayKey(key1, key2, key3, key4, key5);
 		MapUtils.getOrCreateArrayList(this._map12345, key).add(value);
-		this._list.add(new Pair<LongArrayKey, V>(key, value));
 		if (this._map1 !== null) {
 			MapUtils.getOrCreateArrayList(this._map1, key1).add(value);
 		}
@@ -666,6 +663,24 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 	}
 
 	/**
+	 * Fügt das Element hinzu. Wirft eine Exception, falls es schon ein Element mit diesem Schlüssel gibt.
+	 *
+	 * @param key1  Der 1. Schlüssel.
+	 * @param key2  Der 2. Schlüssel.
+	 * @param key3  Der 3. Schlüssel.
+	 * @param key4  Der 4. Schlüssel.
+	 * @param key5  Der 5. Schlüssel.
+	 *
+	 * @param value Der zugeordnete Wert. Der Wert NULL ist nicht erlaubt.
+	 */
+	public addSingle(key1: number, key2: number, key3: number, key4: number, key5: number, value: V): void {
+		if (!this.get12345(key1, key2, key3, key4, key5).isEmpty()) {
+			throw new DeveloperNotificationException(JavaString.format("Es gibt schon ein Element mit (%d, %d, %d, %d, %d).", key1, key2, key3, key4, key5))
+		}
+		this.add(key1, key2, key3, key4, key5, value);
+	}
+
+	/**
 	 * Erzeugt den Pfad (key1, key2, key3, key4, key5) fügt aber nichts hinzu.
 	 * Alle Pfad, die es vorher nicht gab, verweisen dann auf leere Listen.
 	 *
@@ -678,7 +693,6 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 	public addEmpty(key1: number, key2: number, key3: number, key4: number, key5: number): void {
 		const key: LongArrayKey = new LongArrayKey(key1, key2, key3, key4, key5);
 		MapUtils.getOrCreateArrayList(this._map12345, key);
-		this._list.add(new Pair<LongArrayKey, V>(key, null));
 		if (this._map1 !== null) {
 			MapUtils.getOrCreateArrayList(this._map1, key1);
 		}
@@ -1263,10 +1277,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map1 === null) {
 			this._map1 = this._lazyLoad1();
 		}
-		if (!this._map1.containsKey(key1)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map1, key1));
+		const list: List<V> | null = this._map1.get(key1);
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1281,10 +1293,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map2 === null) {
 			this._map2 = this._lazyLoad2();
 		}
-		if (!this._map2.containsKey(key2)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map2, key2));
+		const list: List<V> | null = this._map2.get(key2);
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1299,10 +1309,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map3 === null) {
 			this._map3 = this._lazyLoad3();
 		}
-		if (!this._map3.containsKey(key3)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map3, key3));
+		const list: List<V> | null = this._map3.get(key3);
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1317,10 +1325,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map4 === null) {
 			this._map4 = this._lazyLoad4();
 		}
-		if (!this._map4.containsKey(key4)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map4, key4));
+		const list: List<V> | null = this._map4.get(key4);
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1335,10 +1341,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map5 === null) {
 			this._map5 = this._lazyLoad5();
 		}
-		if (!this._map5.containsKey(key5)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map5, key5));
+		const list: List<V> | null = this._map5.get(key5);
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1354,11 +1358,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map12 === null) {
 			this._map12 = this._lazyLoad12();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key1, key2);
-		if (!this._map12.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map12, key));
+		const list: List<V> | null = this._map12.get(new LongArrayKey(key1, key2));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1374,11 +1375,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map13 === null) {
 			this._map13 = this._lazyLoad13();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key1, key3);
-		if (!this._map13.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map13, key));
+		const list: List<V> | null = this._map13.get(new LongArrayKey(key1, key3));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1394,11 +1392,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map14 === null) {
 			this._map14 = this._lazyLoad14();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key1, key4);
-		if (!this._map14.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map14, key));
+		const list: List<V> | null = this._map14.get(new LongArrayKey(key1, key4));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1414,11 +1409,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map15 === null) {
 			this._map15 = this._lazyLoad15();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key1, key5);
-		if (!this._map15.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map15, key));
+		const list: List<V> | null = this._map15.get(new LongArrayKey(key1, key5));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1434,11 +1426,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map23 === null) {
 			this._map23 = this._lazyLoad23();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key2, key3);
-		if (!this._map23.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map23, key));
+		const list: List<V> | null = this._map23.get(new LongArrayKey(key2, key3));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1454,11 +1443,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map24 === null) {
 			this._map24 = this._lazyLoad24();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key2, key4);
-		if (!this._map24.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map24, key));
+		const list: List<V> | null = this._map24.get(new LongArrayKey(key2, key4));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1474,11 +1460,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map25 === null) {
 			this._map25 = this._lazyLoad25();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key2, key5);
-		if (!this._map25.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map25, key));
+		const list: List<V> | null = this._map25.get(new LongArrayKey(key2, key5));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1494,11 +1477,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map34 === null) {
 			this._map34 = this._lazyLoad34();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key3, key4);
-		if (!this._map34.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map34, key));
+		const list: List<V> | null = this._map34.get(new LongArrayKey(key3, key4));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1514,11 +1494,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map35 === null) {
 			this._map35 = this._lazyLoad35();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key3, key5);
-		if (!this._map35.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map35, key));
+		const list: List<V> | null = this._map35.get(new LongArrayKey(key3, key5));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1534,11 +1511,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map45 === null) {
 			this._map45 = this._lazyLoad45();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key4, key5);
-		if (!this._map45.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map45, key));
+		const list: List<V> | null = this._map45.get(new LongArrayKey(key4, key5));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1555,11 +1529,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map123 === null) {
 			this._map123 = this._lazyLoad123();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key1, key2, key3);
-		if (!this._map123.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map123, key));
+		const list: List<V> | null = this._map123.get(new LongArrayKey(key1, key2, key3));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1576,11 +1547,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map124 === null) {
 			this._map124 = this._lazyLoad124();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key1, key2, key4);
-		if (!this._map124.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map124, key));
+		const list: List<V> | null = this._map124.get(new LongArrayKey(key1, key2, key4));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1597,11 +1565,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map125 === null) {
 			this._map125 = this._lazyLoad125();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key1, key2, key5);
-		if (!this._map125.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map125, key));
+		const list: List<V> | null = this._map125.get(new LongArrayKey(key1, key2, key5));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1618,11 +1583,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map134 === null) {
 			this._map134 = this._lazyLoad134();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key1, key3, key4);
-		if (!this._map134.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map134, key));
+		const list: List<V> | null = this._map134.get(new LongArrayKey(key1, key3, key4));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1639,11 +1601,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map135 === null) {
 			this._map135 = this._lazyLoad135();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key1, key3, key5);
-		if (!this._map135.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map135, key));
+		const list: List<V> | null = this._map135.get(new LongArrayKey(key1, key3, key5));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1660,11 +1619,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map145 === null) {
 			this._map145 = this._lazyLoad145();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key1, key4, key5);
-		if (!this._map145.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map145, key));
+		const list: List<V> | null = this._map145.get(new LongArrayKey(key1, key4, key5));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1681,11 +1637,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map234 === null) {
 			this._map234 = this._lazyLoad234();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key2, key3, key4);
-		if (!this._map234.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map234, key));
+		const list: List<V> | null = this._map234.get(new LongArrayKey(key2, key3, key4));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1702,11 +1655,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map235 === null) {
 			this._map235 = this._lazyLoad235();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key2, key3, key5);
-		if (!this._map235.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map235, key));
+		const list: List<V> | null = this._map235.get(new LongArrayKey(key2, key3, key5));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1723,11 +1673,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map245 === null) {
 			this._map245 = this._lazyLoad245();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key2, key4, key5);
-		if (!this._map245.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map245, key));
+		const list: List<V> | null = this._map245.get(new LongArrayKey(key2, key4, key5));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1744,11 +1691,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map345 === null) {
 			this._map345 = this._lazyLoad345();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key3, key4, key5);
-		if (!this._map345.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map345, key));
+		const list: List<V> | null = this._map345.get(new LongArrayKey(key3, key4, key5));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1766,11 +1710,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map1234 === null) {
 			this._map1234 = this._lazyLoad1234();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key1, key2, key3, key4);
-		if (!this._map1234.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map1234, key));
+		const list: List<V> | null = this._map1234.get(new LongArrayKey(key1, key2, key3, key4));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1788,11 +1729,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map1235 === null) {
 			this._map1235 = this._lazyLoad1235();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key1, key2, key3, key5);
-		if (!this._map1235.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map1235, key));
+		const list: List<V> | null = this._map1235.get(new LongArrayKey(key1, key2, key3, key5));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1810,11 +1748,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map1245 === null) {
 			this._map1245 = this._lazyLoad1245();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key1, key2, key4, key5);
-		if (!this._map1245.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map1245, key));
+		const list: List<V> | null = this._map1245.get(new LongArrayKey(key1, key2, key4, key5));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1832,11 +1767,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map1345 === null) {
 			this._map1345 = this._lazyLoad1345();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key1, key3, key4, key5);
-		if (!this._map1345.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map1345, key));
+		const list: List<V> | null = this._map1345.get(new LongArrayKey(key1, key3, key4, key5));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1854,11 +1786,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 		if (this._map2345 === null) {
 			this._map2345 = this._lazyLoad2345();
 		}
-		const key: LongArrayKey | null = new LongArrayKey(key2, key3, key4, key5);
-		if (!this._map2345.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map2345, key));
+		const list: List<V> | null = this._map2345.get(new LongArrayKey(key2, key3, key4, key5));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**
@@ -1874,11 +1803,8 @@ export class ListMap5DLongKeys<V> extends JavaObject {
 	 * @return eine Liste aller Values in dieser Zuordnung.
 	 */
 	public get12345(key1: number, key2: number, key3: number, key4: number, key5: number): List<V> {
-		const key: LongArrayKey | null = new LongArrayKey(key1, key2, key3, key4, key5);
-		if (!this._map12345.containsKey(key)) {
-			return new ArrayList();
-		}
-		return new ArrayList<V>(MapUtils.getOrCreateArrayList(this._map12345, key));
+		const list: List<V> | null = this._map12345.get(new LongArrayKey(key1, key2, key3, key4, key5));
+		return (list === null) ? new ArrayList() : new ArrayList(list);
 	}
 
 	/**

@@ -50,11 +50,13 @@ public final class DataUvSchienen extends DataManagerRevised<Long, DTOUvSchiene,
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOUvSchiene getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die UV-Schiene darf nicht null sein.");
+		}
 		final DTOUvSchiene dto = conn.queryByKey(DTOUvSchiene.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schiene zur ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 

@@ -67,11 +67,13 @@ public final class DataUvSchueler extends DataManagerRevised<LongPair, DTOUvPlan
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOUvPlanungsabschnittSchueler getDTO(final LongPair id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "Die ID für den UV-Schüler darf nicht null sein.");
+		}
 		final DTOUvPlanungsabschnittSchueler dto = conn.queryByKey(DTOUvPlanungsabschnittSchueler.class, id.a, id.b);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Kein Eintrag zur ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 

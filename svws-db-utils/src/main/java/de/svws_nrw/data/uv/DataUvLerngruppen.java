@@ -50,11 +50,13 @@ public final class DataUvLerngruppen extends DataManagerRevised<Long, DTOUvLerng
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOUvLerngruppe getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die UV-Lerngruppe darf nicht null sein.");
+		}
 		final DTOUvLerngruppe dto = conn.queryByKey(DTOUvLerngruppe.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Lerngruppe zur ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 

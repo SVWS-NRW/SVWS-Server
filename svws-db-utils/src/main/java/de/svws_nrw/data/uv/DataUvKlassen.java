@@ -43,11 +43,13 @@ public final class DataUvKlassen extends DataManagerRevised<Long, DTOUvKlasse, U
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOUvKlasse getDTO(final Long id) throws ApiOperationException {
-		if (id == null)
+		if (id == null) {
 			throw new ApiOperationException(Response.Status.BAD_REQUEST, "ID darf nicht null sein.");
+		}
 		final DTOUvKlasse dto = conn.queryByKey(DTOUvKlasse.class, id);
-		if (dto == null)
+		if (dto == null) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, "Keine UV-Klasse mit ID " + id + " gefunden.");
+		}
 		return dto;
 	}
 
