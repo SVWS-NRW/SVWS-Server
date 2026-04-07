@@ -44,6 +44,11 @@ export class ENMv2Lehrer extends JavaObject {
 	public tsPasswordHash: string | null = null;
 
 	/**
+	 * Gibt an, es sich bei dem Password-Hash um den Hash des Initialkennwortes handelt oder nicht.
+	 */
+	public istInitialPassword: boolean = false;
+
+	/**
 	 * Gibt die Art der verwendeten Zwei-Faktor-Authentifizierung an (0 = Keine, 1 = TOTP, 2 = Mail).
 	 */
 	public art2FA: number = 0;
@@ -101,6 +106,9 @@ export class ENMv2Lehrer extends JavaObject {
 			throw new Error('invalid json format, missing attribute passwordHash');
 		result.passwordHash = obj.passwordHash;
 		result.tsPasswordHash = (obj.tsPasswordHash === undefined) ? null : obj.tsPasswordHash === null ? null : obj.tsPasswordHash;
+		if (obj.istInitialPassword === undefined)
+			throw new Error('invalid json format, missing attribute istInitialPassword');
+		result.istInitialPassword = obj.istInitialPassword;
 		if (obj.art2FA === undefined)
 			throw new Error('invalid json format, missing attribute art2FA');
 		result.art2FA = obj.art2FA;
@@ -125,6 +133,7 @@ export class ENMv2Lehrer extends JavaObject {
 		result += '"eMailDienstlich" : ' + ((obj.eMailDienstlich === null) ? 'null' : JSON.stringify(obj.eMailDienstlich)) + ',';
 		result += '"passwordHash" : ' + JSON.stringify(obj.passwordHash) + ',';
 		result += '"tsPasswordHash" : ' + ((obj.tsPasswordHash === null) ? 'null' : JSON.stringify(obj.tsPasswordHash)) + ',';
+		result += '"istInitialPassword" : ' + obj.istInitialPassword.toString() + ',';
 		result += '"art2FA" : ' + obj.art2FA.toString() + ',';
 		result += '"tsArt2FA" : ' + ((obj.tsArt2FA === null) ? 'null' : JSON.stringify(obj.tsArt2FA)) + ',';
 		result += '"totpSecret" : ' + JSON.stringify(obj.totpSecret) + ',';
@@ -160,6 +169,9 @@ export class ENMv2Lehrer extends JavaObject {
 		}
 		if (obj.tsPasswordHash !== undefined) {
 			result += '"tsPasswordHash" : ' + ((obj.tsPasswordHash === null) ? 'null' : JSON.stringify(obj.tsPasswordHash)) + ',';
+		}
+		if (obj.istInitialPassword !== undefined) {
+			result += '"istInitialPassword" : ' + obj.istInitialPassword.toString() + ',';
 		}
 		if (obj.art2FA !== undefined) {
 			result += '"art2FA" : ' + obj.art2FA.toString() + ',';

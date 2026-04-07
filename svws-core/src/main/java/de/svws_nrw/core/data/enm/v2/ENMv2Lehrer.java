@@ -46,6 +46,10 @@ public class ENMv2Lehrer {
 	@Schema(description = "der Zeitstempel der letzten Änderung an dem Password-Hash", example = "2013-11-14 13:12:48.774")
 	public String tsPasswordHash;
 
+	/** Gibt an, es sich bei dem Password-Hash um den Hash des Initialkennwortes handelt oder nicht. */
+	@Schema(description = "gibt an, es sich bei dem Password-Hash um den Hash des Initialkennwortes handelt oder nicht")
+	public boolean istInitialPassword;
+
 	/** Gibt die Art der verwendeten Zwei-Faktor-Authentifizierung an (0 = Keine, 1 = TOTP, 2 = Mail). */
 	@Schema(description = "gibt die Art der verwendeten Zwei-Faktor-Authentifizierung an (0 = Keine, 1 = TOTP, 2 = Mail)")
 	public int art2FA;

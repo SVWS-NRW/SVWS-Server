@@ -35,6 +35,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungen;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsNotenmodulCredentials;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerZP10;
+import de.svws_nrw.ext.jbcrypt.BCrypt;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -210,6 +211,8 @@ public class EnmV2DatenManager {
 		enmLehrer.eMailDienstlich = lehrer.eMailDienstlich;
 		enmLehrer.passwordHash = (creds == null) ? "" : creds.passwordHash;
 		enmLehrer.tsPasswordHash = (tsCreds == null) ? null : tsCreds.tsPasswordHash;
+		enmLehrer.istInitialPassword = (creds != null) && (creds.initialkennwort != null) && (creds.passwordHash != null)
+				&& BCrypt.checkpw(creds.initialkennwort, creds.passwordHash);
 		enmLehrer.art2FA = (creds == null) ? 0 : creds.art2FA;
 		enmLehrer.tsArt2FA = (tsCreds == null) ? null : tsCreds.tsArt2FA;
 		enmLehrer.totpSecret = (creds == null) || (creds.totpSecret == null) ? "" : creds.totpSecret;

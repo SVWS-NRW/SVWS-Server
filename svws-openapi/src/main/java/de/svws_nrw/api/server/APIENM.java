@@ -676,6 +676,31 @@ public class APIENM {
 
 
 	/**
+	 * Die OpenAPI-Methode zum Neusetzen des TOTP-Secrets eines Lehrers für das externe Notenmodul.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die ID des Lehrers
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Reponse
+	 */
+	@POST
+	@Path("/credentials/totp/reset/{id : \\d+}")
+	@Operation(summary = "Ersetzt das TOTP-Secret durch ein zufälliges neues Secret. Danach wird der Anmeldeprozess auf Erstanmeldung zurückgesetzt.",
+			description = "Ersetzt das TOTP-Secret durch ein zufälliges neues Secret. Danach wird der Anmeldeprozess auf Erstanmeldung zurückgesetzt.")
+	@ApiResponse(responseCode = "204", description = "Das Secret wird neu gesetzt.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte zum Neusetzen des Secrets.")
+	@ApiResponse(responseCode = "404", description = "Die ID des Lehrers ist in der DB nicht vorhanden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response resetENMLehrerTotpSecret(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return NotenmodulControllerFactory.withAdminAccessOrSelf(request, id)
+				.getNotenmodulCredentialsController()
+				.resetTotpSecret(id);
+	}
+
+
+	/**
 	 * Die OpenAPI-Methode für die Synchronisation der Daten für das Externe Datenmodul (ENM) in Bezug auf alle Lehrer.
 	 *
 	 * @param schema         das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

@@ -43,6 +43,31 @@ public class NotenmodulCredentialsService {
 
 
 	/**
+	 * Erstellt ein neues Initialkennwort der Länge 15
+	 *
+	 * @return das neue Initialkennwort
+	 */
+	private static String createInitialkennwort() {
+		return Passwords.generateRandomPasswordWithoutSpecialChars(15);
+	}
+
+
+	/**
+	 * Erstellt initiale Credentials für den Lehrer mit der übergebenen ID.
+	 *
+	 * @param idLehrer   die ID des Lehrers
+	 * @param password   das zu setzende Kennwort, falls es vom Initialkennwort abweichen soll
+	 */
+	private void createInitialCredentials(final long idLehrer, final String password) {
+		final String initial = createInitialkennwort();
+		final String hash = BCrypt.hashpw(((password == null) || password.isBlank()) ? initial : password, BCrypt.gensalt());
+		final DTONotenmodulCredentials cred = new DTONotenmodulCredentials(idLehrer, initial, hash, 0, true);
+		cred.totpSecret = Passwords.generateTotpSecret();
+		notenmodulCredentialsRepository.update(cred);
+	}
+
+
+	/**
 	 * Gibt für alle Lehrer, welche bei den ENM-Daten vorkommen die Initialkennwörter zurück.
 	 *
 	 * @return die Liste der Initialkennwörter
@@ -80,14 +105,19 @@ public class NotenmodulCredentialsService {
 			for (final DTONotenmodulCredentials cred : existing) {
 				final boolean hasInitial = (cred.initialkennwort != null) && (!cred.initialkennwort.isBlank());
 				final boolean hasHash = (cred.passwordHash != null) && (!cred.passwordHash.isBlank());
-				if (hasInitial && hasHash) {
+				final boolean hasTotp = (cred.totpSecret != null) && (!cred.totpSecret.isBlank());
+				if (hasInitial && hasTotp && hasHash) {
 					continue;
 				}
 				if (!hasInitial) {
-					cred.initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
+					cred.initialkennwort = createInitialkennwort();
 				}
 				if (!hasHash) {
 					cred.passwordHash = BCrypt.hashpw(cred.initialkennwort, BCrypt.gensalt());
+				}
+				if (!hasTotp) {
+					cred.totpSecret = Passwords.generateTotpSecret();
+					cred.istErstanmeldung = true;
 				}
 				notenmodulCredentialsRepository.update(cred);
 			}
@@ -95,9 +125,7 @@ public class NotenmodulCredentialsService {
 			final Set<Long> idsExisting = existing.stream().map(c -> c.idLehrer).collect(Collectors.toUnmodifiableSet());
 			final List<Long> ids = lehrerRepository.getAll().stream().map(l -> l.ID).filter(l -> !idsExisting.contains(l)).toList();
 			for (final long id : ids) {
-				final String initial = Passwords.generateRandomPasswordWithoutSpecialChars(10);
-				final String hash = BCrypt.hashpw(initial, BCrypt.gensalt());
-				notenmodulCredentialsRepository.update(new DTONotenmodulCredentials(id, initial, hash, 0, true));
+				createInitialCredentials(id, null);
 			}
 			notenmodulCredentialsRepository.flush();
 		});
@@ -114,18 +142,17 @@ public class NotenmodulCredentialsService {
 		transactional(() -> {
 			// Prüfe, ob ein Lehrer mit der ID in der Datenbank existiert
 			lehrerRepository.findById(idLehrer)
-					.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Ein Lehrer mit der ID %d konnte nicht gefunden werden.".formatted(idLehrer)));
+					.orElseThrow(
+							() -> new ApiOperationException(Status.NOT_FOUND, "Ein Lehrer mit der ID %d konnte nicht gefunden werden.".formatted(idLehrer)));
 			// Setze die Credentials neu
 			final Optional<DTONotenmodulCredentials> foundCred = notenmodulCredentialsRepository.findById(idLehrer);
 			if (foundCred.isEmpty()) {
-				final String initial = Passwords.generateRandomPasswordWithoutSpecialChars(10);
-				final String hash = BCrypt.hashpw(initial, BCrypt.gensalt());
-				notenmodulCredentialsRepository.update(new DTONotenmodulCredentials(idLehrer, initial, hash, 0, true));
+				createInitialCredentials(idLehrer, null);
 			} else {
 				final DTONotenmodulCredentials cred = foundCred.get();
 				final boolean hasInitial = (cred.initialkennwort != null) && (!cred.initialkennwort.isBlank());
 				if (!hasInitial) {
-					cred.initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
+					cred.initialkennwort = createInitialkennwort();
 				}
 				cred.passwordHash = BCrypt.hashpw(cred.initialkennwort, BCrypt.gensalt());
 				notenmodulCredentialsRepository.update(cred);
@@ -154,13 +181,10 @@ public class NotenmodulCredentialsService {
 
 			// Lese ggf. vorhandene Credentials aus der Datenbank ein und erzeuge des neuen Password-Hash
 			final Optional<DTONotenmodulCredentials> foundCred = notenmodulCredentialsRepository.findById(idLehrer);
-			final String hash = BCrypt.hashpw(password, BCrypt.gensalt());
 
 			// Wenn noch keine Credentials vorhanden sind, dann erstelle neu
 			if (foundCred.isEmpty()) {
-				final String initial = Passwords.generateRandomPasswordWithoutSpecialChars(10);
-				final DTONotenmodulCredentials cred = new DTONotenmodulCredentials(idLehrer, initial, hash, 0, true);
-				notenmodulCredentialsRepository.update(cred);
+				createInitialCredentials(idLehrer, password);
 				return;
 			}
 
@@ -168,10 +192,36 @@ public class NotenmodulCredentialsService {
 			final DTONotenmodulCredentials cred = foundCred.get();
 			final boolean hasInitial = (cred.initialkennwort != null) && (!cred.initialkennwort.isBlank());
 			if (!hasInitial) {
-				cred.initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
+				cred.initialkennwort = createInitialkennwort();
 			}
-			cred.passwordHash = hash;
+			cred.passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
 			notenmodulCredentialsRepository.update(cred);
+		});
+	}
+
+
+	/**
+	 * Ersetzt ein vorhandenes TOTP-Secret durch ein neues TOTP-Secret oder erzuegt ggf. ein neues. Danach
+	 * wird erneut von einer Erstanmeldung für die 2FA ausgegangen.
+	 *
+	 * @param idLehrer   die ID des Lehrers
+	 */
+	public void resetTotpSecret(final long idLehrer) {
+		transactional(() -> {
+			// Prüfe, ob ein Lehrer mit der ID in der Datenbank existiert
+			lehrerRepository.findById(idLehrer)
+					.orElseThrow(
+							() -> new ApiOperationException(Status.NOT_FOUND, "Ein Lehrer mit der ID %d konnte nicht gefunden werden.".formatted(idLehrer)));
+			// Setze die Credentials neu
+			final Optional<DTONotenmodulCredentials> foundCred = notenmodulCredentialsRepository.findById(idLehrer);
+			if (foundCred.isEmpty()) {
+				createInitialCredentials(idLehrer, null);
+			} else {
+				final DTONotenmodulCredentials cred = foundCred.get();
+				cred.totpSecret = Passwords.generateTotpSecret();
+				cred.istErstanmeldung = true;
+				notenmodulCredentialsRepository.update(cred);
+			}
 		});
 	}
 

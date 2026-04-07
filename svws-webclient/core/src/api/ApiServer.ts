@@ -2635,6 +2635,29 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode resetENMLehrerTotpSecret für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/credentials/totp/reset/{id : \d+}
+	 *
+	 * Ersetzt das TOTP-Secret durch ein zufälliges neues Secret. Danach wird der Anmeldeprozess auf Erstanmeldung zurückgesetzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Das Secret wird neu gesetzt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte zum Neusetzen des Secrets.
+	 *   Code 404: Die ID des Lehrers ist in der DB nicht vorhanden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async resetENMLehrerTotpSecret(schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/enm/credentials/totp/reset/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der PATCH-Methode patchENMLeistung für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/leistung
 	 *
 	 * Passt die Leistungsdaten eines Schüler anhand der ENM-Daten an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung im Rahmen der Notenmodul-Konfiguration besitzt.

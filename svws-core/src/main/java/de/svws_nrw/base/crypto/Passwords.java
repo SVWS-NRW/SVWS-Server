@@ -4,7 +4,8 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
+
+import de.svws_nrw.core.utils.encoding.Base32;
 
 /**
  * Diese Klasse beinhaltet allgemeine Hilfsmethoden für die Nutzung
@@ -12,7 +13,7 @@ import java.util.Random;
  */
 public final class Passwords {
 
-	private static final Random random = new SecureRandom();
+	private static final SecureRandom random = new SecureRandom();
 
 	private Passwords() {
 		throw new IllegalStateException("Instantiation of " + Passwords.class.getName() + " not allowed");
@@ -83,5 +84,15 @@ public final class Passwords {
 		return new String(chars);
 	}
 
+	/**
+	 * Generiert ein zufälliges 160-Bit TOTP-Secret.
+	 *
+	 * @return das neue TOTP-Secret.
+	 */
+	public static String generateTotpSecret() {
+		final byte[] secretBytes = new byte[20];
+		random.nextBytes(secretBytes);
+		return Base32.encode(secretBytes);
+	}
 
 }

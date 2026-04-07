@@ -67,4 +67,19 @@ public final class NotenmodulCredentialsControllerImpl implements NotenmodulCred
 		return Responses.noContent();
 	}
 
+
+	/**
+	 * Ersetzt ein vorhandenes TOTP-Secret durch ein neues TOTP-Secret oder erzuegt ggf. ein neues. Danach
+	 * wird erneut von einer Erstanmeldung für die 2FA ausgegangen.
+	 *
+	 * @param idLehrer   die ID des Lehrers
+	 *
+	 * @return die HTTP-Response
+	 */
+	@Override
+	public Response resetTotpSecret(final long idLehrer) {
+		service.resetTotpSecret(idLehrer);
+		return Responses.noContent();
+	}
+
 }

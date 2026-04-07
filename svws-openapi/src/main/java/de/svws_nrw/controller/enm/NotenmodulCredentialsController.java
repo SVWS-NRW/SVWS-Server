@@ -45,4 +45,15 @@ public interface NotenmodulCredentialsController {
 	 */
 	Response setPassword(long idLehrer, String password);
 
+
+	/**
+	 * Ersetzt ein vorhandenes TOTP-Secret durch ein neues TOTP-Secret oder erzuegt ggf. ein neues. Danach
+	 * wird erneut von einer Erstanmeldung für die 2FA ausgegangen.
+	 *
+	 * @param idLehrer   die ID des Lehrers
+	 *
+	 * @return die HTTP-Response
+	 */
+	Response resetTotpSecret(long idLehrer);
+
 }
