@@ -2,8 +2,6 @@ import { OpenApiError, SimpleOperationResponse, SMTPServerKonfiguration } from "
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeFaecher } from "./kataloge/faecher/RouteFaecher";
-import { AES } from "~/utils/crypto/aes";
-import { AESAlgo } from "~/utils/crypto/aesAlgo";
 
 
 interface RouteStateSchule extends RouteStateInterface {
@@ -21,7 +19,6 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 		super(defaultState);
 	}
 
-
 	setGostLupoImportMDBFuerJahrgang = async (formData: FormData, mode: 'none' | 'schueler' | 'all'): Promise<SimpleOperationResponse> => {
 		try {
 			return await api.server.setGostLupoImportMDBFuerJahrgang(formData, api.schema, mode);
@@ -37,15 +34,6 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 			}
 			return result;
 		}
-	};
-
-	setImportENM = async (file: File, password: string, salt: string) => {
-		const key = await AES.getKey256(password, salt);
-		const aes = new AES(AESAlgo.CBC, key);
-		const base64 = new TextDecoder().decode(await file.arrayBuffer());
-		const encoded = await aes.decryptBase64(base64);
-		console.log(new TextDecoder().decode(encoded));
-		return true;
 	};
 
 }

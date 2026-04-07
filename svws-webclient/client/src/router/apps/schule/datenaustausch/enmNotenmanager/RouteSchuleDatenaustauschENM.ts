@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -6,24 +6,34 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { SchuleDatenaustauschENMProps } from "~/components/schule/datenaustausch/enmNotenmanager/SSchuleDatenaustauschENMProps";
 import type { RouteApp } from "../../../RouteApp";
-import { routeSchule } from "../../RouteSchule";
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
+import { RouteDataSchuleDatenaustauschENM } from "./RouteDataSchuleDatenaustauschENM";
+import { api } from "~/router/Api";
 
 const SSchuleDatenaustauschENM = () => import("~/components/schule/datenaustausch/enmNotenmanager/SSchuleDatenaustauschENM.vue");
 
-export class RouteSchuleDatenaustauschENM extends RouteNode<any, RouteApp> {
+export class RouteSchuleDatenaustauschENM extends RouteNode<RouteDataSchuleDatenaustauschENM, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.NOTENMODUL_ADMINISTRATION], "schule.datenaustausch.enm", "enm", SSchuleDatenaustauschENM);
+		super(Schulform.values(), [BenutzerKompetenz.NOTENMODUL_ADMINISTRATION], "schule.datenaustausch.enm", "enm", SSchuleDatenaustauschENM, new RouteDataSchuleDatenaustauschENM());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "ENM Notenmanager";
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
 	}
+	protected async update(): Promise<void | Error | RouteLocationRaw> {
+		await this.data.ladeDaten();
+	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschENMProps {
 		return {
-			setImportENM: routeSchule.data.setImportENM,
+			serverMode: api.mode,
+			listLehrer: this.data.listLehrer,
+			setImportENM: this.data.setImportENM,
+			exportLehrerENM: this.data.exportLehrerENM,
+			exportGzipENM: this.data.exportGzipENM,
+			importGzipENM: this.data.importGzipENM,
+			importENM: this.data.importENM,
 		};
 	}
 }
