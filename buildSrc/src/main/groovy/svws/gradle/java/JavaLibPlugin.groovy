@@ -94,6 +94,13 @@ class JavaLibPlugin implements Plugin<Project> {
 	}
 
 
+	void addBarcodeConfiguration() {
+		def version = "3.2.0";
+		project.configurations.create('barcode');
+		project.dependencies.add('barcode', 'de.vwsoft:barcodelib4j:' + version);
+	}
+
+
 	void addRestEasyConfiguration() {
 		def version = "7.0.1.Final";
 		project.configurations.create('resteasy');
@@ -191,6 +198,7 @@ class JavaLibPlugin implements Plugin<Project> {
 		this.addJettyConfiguration();
 		this.addPdfConfiguration();
 		this.addThymeleafConfiguration();
+		this.addBarcodeConfiguration();
 		this.addRestEasyConfiguration();
 		this.addSwagger();
 		this.addValidation();
