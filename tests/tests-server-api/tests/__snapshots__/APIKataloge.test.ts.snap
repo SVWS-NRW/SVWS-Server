@@ -51,7 +51,6 @@ ArrayList {
 }
 `;
 
-
 exports[`Kataloge Tests > gegen { schema: 'GymAbi01' } > getKatalogBetriebsart 1`] = `
 ArrayList {
   "addFirst": [Function],
@@ -93,4 +92,3 @@ ArrayList {
   "removeLast": [Function],
 }
 `;
-

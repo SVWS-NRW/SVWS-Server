@@ -37,7 +37,7 @@ abstract class NodePluginConfig {
 		this.node_download_user = p.hasProperty('node_download_user') ? p.node_download_user : System.getenv("NODE_DOWNLOAD_USER")
 		this.node_download_passwd = p.hasProperty('node_download_passwd') ? p.node_download_passwd : System.getenv("NODE_DOWNLOAD_PASSWD")
 		url.convention('https://nodejs.org/dist/v')
-		version.convention('24.14.0') // https://nodejs.org/en/download/prebuilt-installer
+		version.convention('24.14.1') // https://nodejs.org/en/download/prebuilt-installer
 		npmVersion.convention('11.9.0')
 		tsVersion.convention('5.9.3') // https://github.com/microsoft/TypeScript/releases
 		tsNodeTypesVersion.convention('25.3.5') // https://www.npmjs.com/package/@types/node
