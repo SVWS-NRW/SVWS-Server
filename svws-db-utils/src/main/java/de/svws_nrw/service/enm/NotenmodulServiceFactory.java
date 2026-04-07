@@ -74,7 +74,8 @@ public final class NotenmodulServiceFactory {
 	public NotenmodulSynchronisationService getNotenmodulSynchronisationService() {
 		return new NotenmodulSynchronisationService(notenmodulRepositoryFactory.getNotenmodulVerbindungenRepository(),
 				enmV2ServiceFactory.getEnmV2GetService(),
-				enmV2ServiceFactory.getEnmV2ImportService()
+				enmV2ServiceFactory.getEnmV2ImportService(),
+				this.getNotenmodulCredentialsService()
 		);
 	}
 
