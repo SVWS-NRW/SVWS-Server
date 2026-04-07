@@ -51,9 +51,19 @@
 			<span v-if="readonly" class="icon-xs i-ri-lock-line" />
 		</span>
 
-		<span v-if="visualData !== null && (steps !== false) && !disabled && !readonly" class="svws-input-stepper">
-			<button ref="btnMinus" @click="onStepperClick('down')" @blur="onBlur" :class="{'svws-disabled': disableMinusButton}"><span class="icon i-ri-subtract-line" /></button>
-			<button ref="btnPlus" @click="onStepperClick('up')" @blur="onBlur" :class="{'svws-disabled': disablePlusButton}"><span class="icon i-ri-add-line" /></button>
+		<span v-if="(steps !== false) && !disabled && !readonly" class="svws-input-stepper">
+			<button ref="btnMinus" @click="onStepperClick('down')" @blur="onBlur"
+				:title="`Wert um ${steps} reduzieren`"
+				:aria-label="`Wert um ${steps} reduzieren`"
+				:class="{'svws-disabled': disableMinusButton}">
+				<span class="icon i-ri-subtract-line" />
+			</button>
+			<button ref="btnPlus" @click="onStepperClick('up')" @blur="onBlur"
+				:title="`Wert um ${steps} erhöhen`"
+				:aria-label="`Wert um ${steps} erhöhen`"
+				:class="{'svws-disabled': disablePlusButton}">
+				<span class="icon i-ri-add-line" />
+			</button>
 		</span>
 	</div>
 </template>
@@ -263,24 +273,48 @@
 		visualData.value = String(rounded).replaceAll(".", ",");
 	}
 
-	function onStepperClick(stepDirection: string) {
-		if ((props.steps === false) || (data.value === null) || (visualData.value === null)) {
+	function onStepperClick(stepDirection: "up" | "down") {
+		if (props.steps === false) {
 			return;
 		}
 		warnIfStepsNotCompatible(props.steps);
 
+		let newValue: number;
+		newValue = stepValue(stepDirection, props.steps);
+		updateData(newValue);
+		syncVisualData();
+	}
+
+	function stepEmptyValue(): number {
+		if (props.min !== undefined && props.min > 0) {
+			return props.min;
+		}
+
+		if (props.max !== undefined && (props.max < 0)) {
+			return props.max;
+		}
+
+		return 0;
+	}
+
+	function stepValue(stepDirection: "up" | "down", steps: number): number {
+		if (data.value === null || visualData.value === null) {
+			return stepEmptyValue();
+		}
+		let newValue: number;
+
 		// Nutze, wenn möglich den Wert aus visualData, da es sein kann, dass dieser nur ein gerundeter Wert von data ist.
 		// In dem Fall würde es so aussehen, als würde die falsche Zahl addiert/subtrahiert werden
 		const visualNumber = Number(visualData.value.replaceAll(",", "."));
-		let newValue = (Number.isNaN(visualNumber)) ? data.value : visualNumber;
+		newValue = (Number.isNaN(visualNumber)) ? data.value : visualNumber;
 
 		if (stepDirection === 'up') {
-			newValue = Math.round((newValue + props.steps) * 1e10) / 1e10;
-		} else if (stepDirection === 'down') {
-			newValue = Math.round((newValue - props.steps) * 1e10) / 1e10;
+			const newUp = Math.round((newValue + steps) * 1e10) / 1e10;
+			return (props.max === undefined) ? newUp : Math.min(newUp, props.max);
 		}
-		updateData(newValue);
-		syncVisualData();
+		const newDown = Math.round((newValue - steps) * 1e10) / 1e10;
+		return (props.min === undefined) ? newDown : Math.max(newDown, props.min);
+
 	}
 
 	function onBlur(event: Event) {
