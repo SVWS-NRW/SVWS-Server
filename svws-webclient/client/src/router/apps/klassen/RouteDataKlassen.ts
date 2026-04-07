@@ -66,7 +66,7 @@ export class RouteDataKlassen extends RouteDataAuswahl<KlassenListeManager, Rout
 			throw new DeveloperNotificationException('Es ist kein gültiger Schuljahresabschnitt ausgewählt');
 		}
 		// Lade die Kataloge und erstelle den Manager
-		const listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, idSchuljahresabschnitt);
+		const listKlassen = await api.server.getListKlassenDatenBySchuljahresabschnitt(api.schema, idSchuljahresabschnitt);
 		const mapKlassenVorigerAbschnitt = schuljahresabschnitt.idVorigerAbschnitt === null
 			? new Map<number, KlassenDaten>()
 			: await api.getKlassenListe(schuljahresabschnitt.idVorigerAbschnitt);

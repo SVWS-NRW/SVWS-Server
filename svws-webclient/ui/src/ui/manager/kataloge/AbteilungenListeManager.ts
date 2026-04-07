@@ -16,6 +16,7 @@ import { Arrays } from '../../../../../core/src/java/util/Arrays';
 import type { JavaMap } from '../../../../../core/src/java/util/JavaMap';
 import { HashSet } from "../../../../../core/src/java/util/HashSet";
 import type { Schuljahresabschnitt } from '../../../../../core/src/asd/data/schule/Schuljahresabschnitt';
+import type { KlassenListeEintrag } from "../../../../../core/src/asd/data/klassen/KlassenListeEintrag";
 
 export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, Abteilung> {
 
@@ -28,8 +29,8 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 	private readonly _abteilungenFolgeAbschnittByBezeichnung: JavaMap<string, Abteilung> = new HashMap();
 	private readonly _abteilungenFolgeAbschnittById: JavaMap<number, Abteilung> = new HashMap();
 	private readonly _lehrerById: JavaMap<number, LehrerListeEintrag>;
-	private readonly _klassenByIdAktAbschnitt: JavaMap<number, KlassenDaten>;
-	private readonly _klassenByIdFolgeAbschnitt: JavaMap<number, KlassenDaten>;
+	private readonly _klassenByIdAktAbschnitt: JavaMap<number, KlassenListeEintrag>;
+	private readonly _klassenByIdFolgeAbschnitt: JavaMap<number, KlassenListeEintrag>;
 
 	/**
 	 * Ein Default-Comparator für den Vergleich von Abteilungen.
@@ -71,7 +72,7 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 	 */
 	public constructor(idSchuljahresabschnittAuswahl: number, idSchuljahresabschnittSchule: number, schuljahresabschnitte: List<Schuljahresabschnitt>,
 		schulform: Schulform | null, abteilungenAktAbschnitt: List<Abteilung>, abteilungenFolgeAbschnitt: List<Abteilung>, lehrer: List<LehrerListeEintrag>,
-		klassenAktAbschnitt: List<KlassenDaten>, klassenFolgeAbschnitt: List<KlassenDaten>) {
+		klassenAktAbschnitt: List<KlassenListeEintrag>, klassenFolgeAbschnitt: List<KlassenListeEintrag>) {
 		super(idSchuljahresabschnittAuswahl, idSchuljahresabschnittSchule, schuljahresabschnitte, schulform, abteilungenAktAbschnitt,
 			AbteilungenListeManager.COMPARATOR_ABTEILUNGEN_DEFAULT, AbteilungenListeManager._abteilungToId, AbteilungenListeManager._abteilungToId, Arrays.asList());
 		this.mapAbteilungenFolgeAbschnitt(abteilungenFolgeAbschnitt);
@@ -91,13 +92,13 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 		return AbteilungenListeManager.COMPARATOR_ABTEILUNGEN_DEFAULT.compare(a, b);
 	}
 
-	public getKlassenByAuswahl(): List<KlassenDaten> {
-		const result: List<KlassenDaten> | null = new ArrayList<KlassenDaten>();
+	public getKlassenByAuswahl(): List<KlassenListeEintrag> {
+		const result: List<KlassenListeEintrag> | null = new ArrayList<KlassenListeEintrag>();
 		if ((this._daten === null) || (this._daten.klassenzuordnungen.isEmpty())) {
 			return result;
 		}
 		for (const a of this._daten.klassenzuordnungen) {
-			const klasse: KlassenDaten | null = this._klassenByIdAktAbschnitt.get(a.idKlasse);
+			const klasse: KlassenListeEintrag | null = this._klassenByIdAktAbschnitt.get(a.idKlasse);
 			if (klasse !== null) {
 				result.add(klasse);
 			}
@@ -156,7 +157,7 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 		}
 	}
 
-	public getAvailableKlassenToAdd(): List<KlassenDaten> {
+	public getAvailableKlassenToAdd(): List<KlassenListeEintrag> {
 		const alleKlassen = [...this._klassenByIdAktAbschnitt.values()];
 		const alreadyAdded = new Set(this.getKlassenByAuswahl());
 		return Arrays.asList(alleKlassen.filter(v => !alreadyAdded.has(v)));
@@ -199,18 +200,18 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 		return result;
 	}
 
-	private mapKlassen(klassen: List<KlassenDaten>): JavaMap<number, KlassenDaten> {
-		const result: JavaMap<number, KlassenDaten> | null = new HashMap<number, KlassenDaten>();
+	private mapKlassen(klassen: List<KlassenListeEintrag>): JavaMap<number, KlassenListeEintrag> {
+		const result: JavaMap<number, KlassenListeEintrag> | null = new HashMap<number, KlassenListeEintrag>();
 		for (const v of klassen) {
 			result.put(v.id, v);
 		}
 		return result;
 	}
 
-	private klassenEquals(klasse1: KlassenDaten, klasse2: KlassenDaten): boolean {
+	private klassenEquals(klasse1: KlassenListeEintrag, klasse2: KlassenListeEintrag): boolean {
 		return (klasse1.kuerzel === klasse2.kuerzel)
-				&& (klasse1.idJahrgang === klasse2.idJahrgang)
-				&& (klasse1.parallelitaet === klasse2.parallelitaet);
+			&& (klasse1.idJahrgang === klasse2.idJahrgang)
+			&& (klasse1.parallelitaet === klasse2.parallelitaet);
 	}
 
 	private entryMatchesSearchterm(eintrag: Abteilung): boolean {
@@ -238,7 +239,7 @@ export class AbteilungenListeManager extends AuswahlManager<number, Abteilung, A
 		return this._lehrerById;
 	}
 
-	get klassenByIdAktAbschnitt(): JavaMap<number, KlassenDaten> {
+	get klassenByIdAktAbschnitt(): JavaMap<number, KlassenListeEintrag> {
 		return this._klassenByIdAktAbschnitt;
 	}
 

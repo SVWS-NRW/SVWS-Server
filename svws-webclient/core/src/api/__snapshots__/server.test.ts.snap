@@ -24581,7 +24581,7 @@ KlassenDaten {
 }
 `;
 
-exports[`Server > getKlassenFuerAbschnitt 1`] = `
+exports[`Server > getKlassenDetailsBySchuljahresabschnitt 1`] = `
 ArrayList {
   "elementData": [
     KlassenDaten {

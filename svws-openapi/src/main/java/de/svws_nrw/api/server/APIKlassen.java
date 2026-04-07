@@ -2,9 +2,10 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
-import org.jboss.resteasy.annotations.GZIP;
-
+import de.svws_nrw.asd.data.klassen.KlassenListeEintrag;
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.data.klassen.DataKlassenliste;
+import org.jboss.resteasy.annotations.GZIP;
 import de.svws_nrw.asd.data.klassen.KlassenDaten;
 import de.svws_nrw.asd.data.klassen.KlassenartKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
@@ -54,14 +55,14 @@ public class APIKlassen {
 	 * Die OpenAPI-Methode für die Abfrage der Liste der Klassen im angegebenen Schema.
 	 *
 	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param abschnitt     die ID des Schuljahresabschnitts
+	 * @param idSchuljahresabschnitt     die ID des Schuljahresabschnitts
 	 * @param request       die Informationen zur HTTP-Anfrage
 	 *
 	 * @return              die Liste der Klassen mit ID des Datenbankschemas
 	 */
 	@GET
 	@GZIP
-	@Path("/abschnitt/{abschnitt : \\d+}")
+	@Path("/details/abschnitt/{idSchuljahresabschnitt : \\d+}")
 	@Operation(summary = "Gibt eine Übersicht von allen Klassen zurück.",
 			description = "Erstellt eine Liste aller in der Datenbank vorhanden Klassen unter Angabe der ID, des Kürzels, der Parallelität, der Kürzel des "
 					+ "Klassenlehrers und des zweiten Klassenlehrers, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar sein sollen. "
@@ -70,11 +71,37 @@ public class APIKlassen {
 			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KlassenDaten.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Klassen-Einträge gefunden")
-	public Response getKlassenFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).getListBySchuljahresabschnittIDAsResponse(abschnitt),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+	public Response getListKlassenDatenBySchuljahresabschnitt(@PathParam("schema") final String schema,
+			@PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).getListBySchuljahresabschnittIDAsResponse(idSchuljahresabschnitt),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Liste der Klassen im angegebenen Schema.
+	 *
+	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param idSchuljahresabschnitt     die ID des Schuljahresabschnitts
+	 * @param request       die Informationen zur HTTP-Anfrage
+	 *
+	 * @return              die Liste der Klassen mit ID des Datenbankschemas
+	 */
+	@GET
+	@GZIP
+	@Path("/list-item/abschnitt/{idSchuljahresabschnitt : \\d+}")
+	@Operation(summary = "Gibt eine Übersicht von allen Klassen zurück.",
+			description = "Erstellt eine Liste aller in der Datenbank vorhanden Klassen unter Angabe der ID, des Kürzels, der Parallelität, der Kürzel des "
+					+ "Klassenlehrers und des zweiten Klassenlehrers, einer Sortierreihenfolge und ob sie in der Anwendung sichtbar sein sollen. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Klassendaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Eine Liste von Klassen-Listen-Einträgen",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KlassenListeEintrag.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Keine Klassen-Einträge gefunden")
+	public Response getListKlassenListeEintragBySchuljahresabschnitt(@PathParam("schema") final String schema,
+			@PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassenliste(conn).getListBySchuljahresabschnittIDAsResponse(idSchuljahresabschnitt),
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
 

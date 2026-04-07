@@ -62,7 +62,7 @@ export class KlassenDaten extends JavaObject {
 	public idVorgaengerklasse: number | null = null;
 
 	/**
-	 * Das Kürzel der Vorgängerklasse vor der letzten Versetzung.
+	 * Das Kürzel der Vorgängerklasse vor der letzen Versetzung.
 	 */
 	public kuerzelVorgaengerklasse: string | null = null;
 
@@ -127,9 +127,6 @@ export class KlassenDaten extends JavaObject {
 	public beginnSommersemester: boolean = false;
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}

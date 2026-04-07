@@ -16,15 +16,11 @@ import { KlassenListeManager } from "../../../../src/ui/manager/klassen/KlassenL
 describe("Tests für KlassenListeManager", () => {
 	// Testet, ob das HTML korrekt gerendert wird
 	const schulform: Schulform = Schulform.GY;
-	let schuljahresabschnitte: ArrayList<Schuljahresabschnitt> =
-		new ArrayList<Schuljahresabschnitt>();
+	let schuljahresabschnitte: ArrayList<Schuljahresabschnitt> = new ArrayList<Schuljahresabschnitt>();
 	const klassen: ArrayList<KlassenDaten> = new ArrayList<KlassenDaten>();
-	const schueler: ArrayList<SchuelerListeEintrag> =
-		new ArrayList<SchuelerListeEintrag>();
-	const jahrgaenge: ArrayList<JahrgangsDaten> =
-		new ArrayList<JahrgangsDaten>();
-	const lehrer: ArrayList<LehrerListeEintrag> =
-		new ArrayList<LehrerListeEintrag>();
+	const schueler: ArrayList<SchuelerListeEintrag> = new ArrayList<SchuelerListeEintrag>();
+	const jahrgaenge: ArrayList<JahrgangsDaten> = new ArrayList<JahrgangsDaten>();
+	const lehrer: ArrayList<LehrerListeEintrag> = new ArrayList<LehrerListeEintrag>();
 
 	beforeAll(async () => {
 		const reader = new JsonCoreTypeReaderStatic();

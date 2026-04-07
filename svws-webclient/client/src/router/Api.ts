@@ -425,7 +425,7 @@ class Api {
 	 * @returns die Map mit den Klassen
 	 */
 	public async getKlassenListe(idSchuljahresabschnitt: number): Promise<Map<number, KlassenDaten>> {
-		const listKlassen = await this.server.getKlassenFuerAbschnitt(this.schema, idSchuljahresabschnitt);
+		const listKlassen = await this.server.getListKlassenDatenBySchuljahresabschnitt(this.schema, idSchuljahresabschnitt);
 		const mapKlassen = new Map<number, KlassenDaten>();
 		for (const k of listKlassen) {
 			mapKlassen.set(k.id, k);

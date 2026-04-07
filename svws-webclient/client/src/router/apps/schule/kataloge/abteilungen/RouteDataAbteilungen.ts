@@ -1,7 +1,7 @@
 import type { RouteStateAuswahlInterface } from "~/router/RouteDataAuswahl";
 import { RouteDataAuswahl } from "~/router/RouteDataAuswahl";
 import type { RouteParamsRawGeneric } from "vue-router";
-import type { Abteilung, KlassenDaten, List, Schuljahresabschnitt, SimpleOperationResponse } from "@core";
+import type { Abteilung, KlassenListeEintrag, List, Schuljahresabschnitt, SimpleOperationResponse } from "@core";
 import { AbteilungKlassenzuordnung, ArrayList, Arrays } from "@core";
 import { AbteilungenListeManager, ViewType } from "@ui";
 import { routeAbteilungenGruppenprozesse } from "~/router/apps/schule/kataloge/abteilungen/RouteAbteilungenGruppenprozesse";
@@ -34,14 +34,14 @@ export class RouteDataAbteilungen extends RouteDataAuswahl<AbteilungenListeManag
 	protected async createManager(idSchuljahresabschnitt: number): Promise<Partial<RouteStateAuswahlInterface<AbteilungenListeManager>>> {
 		const abteilungen = await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, idSchuljahresabschnitt);
 		const lehrer = await api.server.getLehrer(api.schema);
-		const klassenAktAbschnitt = await api.server.getKlassenFuerAbschnitt(api.schema, idSchuljahresabschnitt);
+		const klassenAktAbschnitt = await api.server.getListKlassenListeEintragBySchuljahresabschnitt(api.schema, idSchuljahresabschnitt);
 
 		const abteilungenFolgeAbschnitt = new ArrayList<Abteilung>();
-		const klassenFolgeAbschnitt = new ArrayList<KlassenDaten>();
+		const klassenFolgeAbschnitt = new ArrayList<KlassenListeEintrag>();
 		const schuljahresabschnitt = api.mapAbschnitte.value.get(idSchuljahresabschnitt);
 		if (this.istSchuleAbschnittUndHatFolgeAbschnitt(schuljahresabschnitt)) {
 			abteilungenFolgeAbschnitt.addAll(await api.server.getAbteilungenByIdJahresAbschnitt(api.schema, schuljahresabschnitt.idFolgeAbschnitt!));
-			klassenFolgeAbschnitt.addAll(await api.server.getKlassenFuerAbschnitt(api.schema, schuljahresabschnitt.idFolgeAbschnitt!));
+			klassenFolgeAbschnitt.addAll(await api.server.getListKlassenListeEintragBySchuljahresabschnitt(api.schema, schuljahresabschnitt.idFolgeAbschnitt!));
 		}
 
 		const manager = new AbteilungenListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,

@@ -127,7 +127,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		} else {
 			[listKurse, listKlassen, listLehrer] = await Promise.all([
 				api.server.getKurseFuerAbschnitt(api.schema, found.schuljahresabschnitt),
-				api.server.getKlassenFuerAbschnitt(api.schema, found.schuljahresabschnitt),
+				api.server.getListKlassenDatenBySchuljahresabschnitt(api.schema, found.schuljahresabschnitt),
 				api.server.getLehrerFuerAbschnitt(api.schema, found.schuljahresabschnitt),
 			]);
 		}
