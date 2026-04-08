@@ -108,9 +108,9 @@ public class SchuelerSchulbesuchsdaten {
 	@Schema(description = "die ID der Schuleingangsphase der Grundschule", example = "2")
 	public Long idGrundschuleJahreEingangsphase;
 
-	/** Das Kürzel für die Übergangsempfehlung der Grundschule in die Sekundarstufe I */
-	@Schema(description = "das Kürzel für die Übergangsempfehlung der Grundschule in die Sekundarstufe I", example = "GY")
-	public String kuerzelGrundschuleUebergangsempfehlung;
+	/** Die ID der Übergangsempfehlung der Grundschule in die Sekundarstufe I */
+	@Schema(description = "die ID der Übergangsempfehlung der Grundschule in die Sekundarstufe I", example = "1")
+	public Long idKuerzelGrundschuleUebergangsempfehlung;
 
 
 	// **** Informationen zu dem Besuch der Sekundarstufe I

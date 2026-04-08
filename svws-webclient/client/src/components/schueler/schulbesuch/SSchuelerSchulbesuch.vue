@@ -103,7 +103,7 @@
 					@update:model-value="v => manager().doPatch({ idGrundschuleJahreEingangsphase : v?.daten(manager().schuljahr)?.id ?? null })"
 					:model-value="manager().getEPJahre()" :readonly />
 				<svws-ui-select title="Übergangsempfehlung Jg. 5" :items="Uebergangsempfehlung.values()" :item-text="textUebergangsempfehlung" removable
-					@update:model-value="v => manager().doPatch({kuerzelGrundschuleUebergangsempfehlung : v?.daten(manager().schuljahr)?.kuerzel ?? null})"
+					@update:model-value="v => manager().doPatch({idKuerzelGrundschuleUebergangsempfehlung : v?.daten(manager().schuljahr)?.id ?? null})"
 					:model-value="manager().getUebergangsempfehlung()" statistics :readonly />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>

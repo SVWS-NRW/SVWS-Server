@@ -27905,8 +27905,8 @@ SchuelerSchulbesuchsdaten {
   "idEntlassjahrgang": null,
   "idGrundschuleJahreEingangsphase": 2,
   "idKindergarten": null,
+  "idKuerzelGrundschuleUebergangsempfehlung": null,
   "idVorherigeSchule": 51,
-  "kuerzelGrundschuleUebergangsempfehlung": null,
   "merkmale": ArrayList {
     "addFirst": [Function],
     "addLast": [Function],

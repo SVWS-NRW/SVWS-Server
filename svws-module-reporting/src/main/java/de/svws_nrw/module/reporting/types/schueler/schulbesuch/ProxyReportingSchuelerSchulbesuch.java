@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchSchule;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.core.data.kataloge.KatalogEntlassgrund;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
-import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchulkatalogEintragNRW;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.types.schule.ProxyReportingSchulkatalogEintragNRW;
 
 /**
  * Proxy-Klasse für die Darstellung von Schulbesuchsdaten eines Schülers für das Reporting.
@@ -49,7 +50,7 @@ public class ProxyReportingSchuelerSchulbesuch extends ReportingSchuelerSchulbes
 				schulbesuchsdaten.grundschuleEinschulungsjahr,
 				schulbesuchsdaten.grundschuleEinschulungsartID,
 				schulbesuchsdaten.idGrundschuleJahreEingangsphase,
-				ersetzeNullBlankTrim(schulbesuchsdaten.kuerzelGrundschuleUebergangsempfehlung),
+				schulbesuchsdaten.idKuerzelGrundschuleUebergangsempfehlung,
 				schulbesuchsdaten.sekIWechsel,
 				ersetzeNullBlankTrim(schulbesuchsdaten.sekIErsteSchulform),
 				schulbesuchsdaten.sekIIWechsel,

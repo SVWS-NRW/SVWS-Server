@@ -68854,7 +68854,7 @@ SchuelerSchulbesuchsdaten {
   "grundschuleEinschulungsartID": null,
   "grundschuleEinschulungsjahr": 2009,
   "grundschuleJahreEingangsphase": 2,
-  "kuerzelGrundschuleUebergangsempfehlung": null,
+  "idKuerzelGrundschuleUebergangsempfehlung": null,
   "id": 1199,
   "merkmale": ArrayList {
     "elementData": [],

@@ -11,6 +11,7 @@ import de.svws_nrw.asd.data.statistik.AbiturStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.SchuelerLernabschnittStatistikGesamt;
 import de.svws_nrw.asd.data.statistik.SchuelerStatistikGesamt;
 import de.svws_nrw.asd.types.schueler.Einschulungsart;
+import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.abitur.DTOSchuelerAbitur;
@@ -133,8 +134,8 @@ public final class SchuelerStatistikService {
 
 		final Einschulungsart einschulungsart = Einschulungsart.data().getWertBySchluessel(dtoSchueler.EinschulungsartASD);
 		daten.idGrundschuleEinschulungsart = (einschulungsart == null) ? null : einschulungsart.getLetzterEintrag().id;
-		daten.kuerzelGrundschuleUebergangsempfehlung = dtoSchueler.Uebergangsempfehlung_JG5;
-
+		final Uebergangsempfehlung uebergangsempfehlung = Uebergangsempfehlung.data().getWertBySchluessel(dtoSchueler.Uebergangsempfehlung_JG5);
+		daten.idKuerzelGrundschuleUebergangsempfehlung = (uebergangsempfehlung == null) ? null : uebergangsempfehlung.historie().getLast().id;
 		// Füge die Daten zum Lernabschnitt hinzu
 		daten.lernabschnitte.add(mapLernabschnittsdaten(dtoLernabschnitt));
 

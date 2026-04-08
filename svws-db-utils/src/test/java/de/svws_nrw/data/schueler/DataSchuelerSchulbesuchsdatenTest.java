@@ -936,37 +936,37 @@ class DataSchuelerSchulbesuchsdatenTest {
 	}
 
 	@Test
-	@DisplayName("mapAttribute | kuerzelGrundschuleUebergangsempfehlung | Erfolg")
-	void mapAttributeTest_kuerzelGrundschuleUebergangsempfehlung() throws ApiOperationException {
+	@DisplayName("mapAttribute | idKuerzelGrundschuleUebergangsempfehlung | Erfolg")
+	void mapAttributeTest_idKuerzelGrundschuleUebergangsempfehlung() throws ApiOperationException {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
-		final var kuerzel = Uebergangsempfehlung.GYMNASIUM.daten(2025).kuerzel;
+		final var key = Uebergangsempfehlung.GYMNASIUM.daten(2025);
 
-		schulbesuchsdaten.mapAttribute(dtoSchueler, "kuerzelGrundschuleUebergangsempfehlung", kuerzel, null);
+		schulbesuchsdaten.mapAttribute(dtoSchueler, "idKuerzelGrundschuleUebergangsempfehlung", key.id, null);
 
-		assertThat(dtoSchueler.Uebergangsempfehlung_JG5).isEqualTo(kuerzel);
+		assertThat(dtoSchueler.Uebergangsempfehlung_JG5).isEqualTo(key.schluessel);
 	}
 
 	@Test
-	@DisplayName("mapAttribute | kuerzelGrundschuleUebergangsempfehlung | value is null")
-	void mapAttributeTest_kuerzelGrundschuleUebergangsempfehlung_null() throws ApiOperationException {
+	@DisplayName("mapAttribute | idKuerzelGrundschuleUebergangsempfehlung | value is null")
+	void mapAttributeTest_idKuerzelGrundschuleUebergangsempfehlung_null() throws ApiOperationException {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 		dtoSchueler.Uebergangsempfehlung_JG5 = "test";
 
-		this.schulbesuchsdaten.mapAttribute(dtoSchueler, "kuerzelGrundschuleUebergangsempfehlung", null, null);
+		this.schulbesuchsdaten.mapAttribute(dtoSchueler, "idKuerzelGrundschuleUebergangsempfehlung", null, null);
 
 		assertThat(dtoSchueler.Uebergangsempfehlung_JG5).isNull();
 	}
 
 	@Test
-	@DisplayName("mapAttribute | kuerzelGrundschuleUebergangsempfehlung | value nicht im Katalog")
-	void mapAttributeTest_kuerzelGrundschuleUebergangsempfehlung_exception() {
+	@DisplayName("mapAttribute | idKuerzelGrundschuleUebergangsempfehlung | value nicht im Katalog")
+	void mapAttributeTest_idKuerzelGrundschuleUebergangsempfehlung_exception() {
 		final var dtoSchueler = new DTOSchueler(1L, "1", true);
 
-		final var throwable = catchThrowable(() -> this.schulbesuchsdaten.mapAttribute(dtoSchueler, "kuerzelGrundschuleUebergangsempfehlung", "test", null));
+		final var throwable = catchThrowable(() -> this.schulbesuchsdaten.mapAttribute(dtoSchueler, "idKuerzelGrundschuleUebergangsempfehlung", 15, null));
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Keine Übergangsempfehlung für das Kürzel test gefunden.")
+				.hasMessage("Keine Übergangsempfehlung für die ID 15 gefunden.")
 				.hasFieldOrPropertyWithValue(STATUS, Response.Status.NOT_FOUND);
 	}
 

@@ -137,9 +137,9 @@ public class SchuelerStatistikGesamt {
 	@Schema(description = "die ID der Einschulungsart in die Grundschule", example = "51")
 	public Long idGrundschuleEinschulungsart;
 
-	/** Das Kürzel für die Übergangsempfehlung der Grundschule in die Sekundarstufe I */
-	@Schema(description = "das Kürzel für die Übergangsempfehlung der Grundschule in die Sekundarstufe I", example = "GY")
-	public String kuerzelGrundschuleUebergangsempfehlung;
+	/** Die ID der Übergangsempfehlung der Grundschule in die Sekundarstufe I */
+	@Schema(description = "die ID der Übergangsempfehlung der Grundschule in die Sekundarstufe I", example = "1")
+	public Long idKuerzelGrundschuleUebergangsempfehlung;
 
 	// **** Ggf. Informationen zum Abitur
 

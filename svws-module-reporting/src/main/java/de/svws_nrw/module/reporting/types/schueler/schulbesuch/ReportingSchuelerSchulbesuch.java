@@ -66,8 +66,8 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	/** Die ID der Schuleingangsphase der Grundschule. */
 	protected final Long idGrundschuleJahreEingangsphase;
 
-	/** Das Kürzel für die Übergangsempfehlung der Grundschule in die Sekundarstufe I */
-	protected final String kuerzelGrundschuleUebergangsempfehlung;
+	/** Die ID für die Übergangsempfehlung der Grundschule in die Sekundarstufe I */
+	protected final Long idKuerzelGrundschuleUebergangsempfehlung;
 
 	/** Das Jahr des Wechsels in die Sekundarstufe I. */
 	protected final Integer sekIWechsel;
@@ -114,7 +114,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	 * @param grundschuleEinschulungsjahr Das Jahr der Einschulung in die Grundschule.
 	 * @param grundschuleEinschulungsartID Die ID der Einschulungsart in die Grundschule.
 	 * @param idGrundschuleJahreEingangsphase Die ID der Schuleingangsphase der Grundschule.
-	 * @param kuerzelGrundschuleUebergangsempfehlung Das Kürzel für die Übergangsempfehlung der Grundschule in die Sekundarstufe I.
+	 * @param idKuerzelGrundschuleUebergangsempfehlung Das Kürzel für die Übergangsempfehlung der Grundschule in die Sekundarstufe I.
 	 * @param sekIWechsel Das Jahr des Wechsels in die Sekundarstufe I.
 	 * @param sekIErsteSchulform Das Kürzel der ersten Schulform in der Sekundarstufe I.
 	 * @param sekIIWechsel Das Jahr des Wechsels in die Sekundarstufe II.
@@ -130,7 +130,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 			final String entlassungDatum, final Long idEntlassjahrgang, final KatalogEntlassgrund entlassungGrund,
 			final String entlassungAbschlussartID, final ReportingSchulkatalogEintragNRW aufnehmendeSchule, final String aufnehmendWechseldatum,
 			final Boolean aufnehmendBestaetigt, final Integer grundschuleEinschulungsjahr, final Long grundschuleEinschulungsartID,
-			final Long idGrundschuleJahreEingangsphase, final String kuerzelGrundschuleUebergangsempfehlung,
+			final Long idGrundschuleJahreEingangsphase, final Long idKuerzelGrundschuleUebergangsempfehlung,
 			final Integer sekIWechsel, final String sekIErsteSchulform, final Integer sekIIWechsel,
 			final Long idDauerKindergartenbesuch, final Long idKindergarten, final boolean verpflichtungSprachfoerderkurs,
 			final boolean teilnahmeSprachfoerderkurs, final List<ReportingSchuelerSchulbesuchSchule> alleSchulen) {
@@ -152,7 +152,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 		this.grundschuleEinschulungsjahr = grundschuleEinschulungsjahr;
 		this.grundschuleEinschulungsartID = grundschuleEinschulungsartID;
 		this.idGrundschuleJahreEingangsphase = idGrundschuleJahreEingangsphase;
-		this.kuerzelGrundschuleUebergangsempfehlung = kuerzelGrundschuleUebergangsempfehlung;
+		this.idKuerzelGrundschuleUebergangsempfehlung = idKuerzelGrundschuleUebergangsempfehlung;
 		this.sekIWechsel = sekIWechsel;
 		this.sekIErsteSchulform = sekIErsteSchulform;
 		this.sekIIWechsel = sekIIWechsel;
@@ -328,12 +328,12 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	}
 
 	/**
-	 * Gibt das Kürzel für die Übergangsempfehlung der Grundschule zurück.
+	 * Gibt die ID für das Kürzel für die Übergangsempfehlung der Grundschule zurück.
 	 *
-	 * @return Das Kürzel für die Übergangsempfehlung.
+	 * @return Die ID für die Übergangsempfehlung.
 	 */
-	public String kuerzelGrundschuleUebergangsempfehlung() {
-		return kuerzelGrundschuleUebergangsempfehlung;
+	public Long idKuerzelGrundschuleUebergangsempfehlung() {
+		return idKuerzelGrundschuleUebergangsempfehlung;
 	}
 
 	/**

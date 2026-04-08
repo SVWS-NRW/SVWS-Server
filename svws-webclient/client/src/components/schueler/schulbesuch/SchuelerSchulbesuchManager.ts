@@ -218,7 +218,7 @@ export class SchuelerSchulbesuchManager extends StateManager<ManagerStateDataSch
 
 	/** Gibt die Übergangsempfehlung des ausgewählten Schülers zurück */
 	public getUebergangsempfehlung(): Uebergangsempfehlung | null {
-		return Uebergangsempfehlung.data().getWertByKuerzel(this.daten.kuerzelGrundschuleUebergangsempfehlung ?? '');
+		return Uebergangsempfehlung.data().getWertByIDOrNull(this.daten.idKuerzelGrundschuleUebergangsempfehlung);
 	}
 
 	/** Gibt die Sek1 Schulform des ausgewählten Schülers zurück */

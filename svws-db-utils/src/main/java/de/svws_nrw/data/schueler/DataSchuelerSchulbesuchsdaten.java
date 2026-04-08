@@ -12,6 +12,7 @@ import de.svws_nrw.asd.data.CoreTypeException;
 import de.svws_nrw.asd.data.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.EinschulungsartKatalogEintrag;
 import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchsdaten;
+import de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.types.jahrgang.PrimarstufeSchuleingangsphaseBesuchsjahre;
@@ -151,7 +152,8 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		final Einschulungsart einschulungsart = Einschulungsart.data().getWertBySchluessel(dtoSchueler.EinschulungsartASD);
 		daten.grundschuleEinschulungsartID = (einschulungsart == null) ? null : einschulungsart.getLetzterEintrag().id;
 		daten.idGrundschuleJahreEingangsphase = mapGrundschuleJahreEingangsphase(dtoSchueler.EPJahre);
-		daten.kuerzelGrundschuleUebergangsempfehlung = dtoSchueler.Uebergangsempfehlung_JG5;
+		final Uebergangsempfehlung empfehlung = Uebergangsempfehlung.data().getWertBySchluessel(dtoSchueler.Uebergangsempfehlung_JG5);
+		daten.idKuerzelGrundschuleUebergangsempfehlung = (dtoSchueler.Uebergangsempfehlung_JG5 == null) ? null : empfehlung.historie().getLast().id;
 		// Informationen zu dem Besuch der Sekundarstufe I
 		daten.sekIWechsel = dtoSchueler.JahrWechsel_SI;
 		daten.sekIErsteSchulform = dtoSchueler.ErsteSchulform_SI;
@@ -243,7 +245,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			case "grundschuleEinschulungsjahr" -> mapJahr(value, "grundschuleEinschulungsjahr", v -> dtoSchueler.Einschulungsjahr = v);
 			case "grundschuleEinschulungsartID" -> mapEinschulungsart(dtoSchueler, value);
 			case "idGrundschuleJahreEingangsphase" -> mapEingangsphase(dtoSchueler, value);
-			case "kuerzelGrundschuleUebergangsempfehlung" -> mapUebergangsempfehlung(dtoSchueler, value);
+			case "idKuerzelGrundschuleUebergangsempfehlung" -> mapUebergangsempfehlung(dtoSchueler, value);
 
 			// Informationen zu dem Besuch der Sekundarstufe I
 			case "sekIWechsel" -> mapJahr(value, "sekIWechsel", v -> dtoSchueler.JahrWechsel_SI = v);
@@ -317,17 +319,18 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 	}
 
 	private static void mapUebergangsempfehlung(final DTOSchueler dtoSchueler, final Object value) throws ApiOperationException {
-		final String kuerzel = JSONMapper.convertToString(
-				value, true, true, null, "kuerzelGrundschuleUebergangsempfehlung");
-		if (kuerzel == null) {
+		final Long id = JSONMapper.convertToLong(
+				value, true, "idKuerzelGrundschuleUebergangsempfehlung");
+		if (id == null) {
 			dtoSchueler.Uebergangsempfehlung_JG5 = null;
 			return;
 		}
-		if (Uebergangsempfehlung.data().getWertByKuerzel(kuerzel) == null) {
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Übergangsempfehlung für das Kürzel %s gefunden.".formatted(kuerzel));
+		final UebergangsempfehlungKatalogEintrag eintrag = Uebergangsempfehlung.data().getEintragByID(id);
+		if (eintrag == null) {
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Übergangsempfehlung für die ID %d gefunden.".formatted(id));
 		}
 
-		dtoSchueler.Uebergangsempfehlung_JG5 = kuerzel;
+		dtoSchueler.Uebergangsempfehlung_JG5 = eintrag.schluessel;
 	}
 
 	private static void mapEingangsphase(final DTOSchueler dtoSchueler, final Object value) throws ApiOperationException {

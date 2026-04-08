@@ -143,9 +143,9 @@ export class SchuelerStatistikGesamt extends JavaObject {
 	public idGrundschuleEinschulungsart: number | null = null;
 
 	/**
-	 * Das Kürzel für die Übergangsempfehlung der Grundschule in die Sekundarstufe I
+	 * Die ID der Übergangsempfehlung der Grundschule in die Sekundarstufe I
 	 */
-	public kuerzelGrundschuleUebergangsempfehlung: string | null = null;
+	public idKuerzelGrundschuleUebergangsempfehlung: number | null = null;
 
 	/**
 	 * Die Daten zum Abitur (sofern vorhanden).
@@ -214,7 +214,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 			throw new Error('invalid json format, missing attribute istJvaSchueler');
 		result.istJvaSchueler = obj.istJvaSchueler;
 		result.idGrundschuleEinschulungsart = (obj.idGrundschuleEinschulungsart === undefined) ? null : obj.idGrundschuleEinschulungsart === null ? null : obj.idGrundschuleEinschulungsart;
-		result.kuerzelGrundschuleUebergangsempfehlung = (obj.kuerzelGrundschuleUebergangsempfehlung === undefined) ? null : obj.kuerzelGrundschuleUebergangsempfehlung === null ? null : obj.kuerzelGrundschuleUebergangsempfehlung;
+		result.idKuerzelGrundschuleUebergangsempfehlung = (obj.idKuerzelGrundschuleUebergangsempfehlung === undefined) ? null : obj.idKuerzelGrundschuleUebergangsempfehlung === null ? null : obj.idKuerzelGrundschuleUebergangsempfehlung;
 		result.abitur = ((obj.abitur === undefined) || (obj.abitur === null)) ? null : AbiturStatistikGesamt.transpilerFromJSON(JSON.stringify(obj.abitur));
 		return result;
 	}
@@ -255,7 +255,7 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		result += '"idEntlassungAbschlussart" : ' + ((obj.idEntlassungAbschlussart === null) ? 'null' : JSON.stringify(obj.idEntlassungAbschlussart)) + ',';
 		result += '"istJvaSchueler" : ' + obj.istJvaSchueler.toString() + ',';
 		result += '"idGrundschuleEinschulungsart" : ' + ((obj.idGrundschuleEinschulungsart === null) ? 'null' : obj.idGrundschuleEinschulungsart.toString()) + ',';
-		result += '"kuerzelGrundschuleUebergangsempfehlung" : ' + ((obj.kuerzelGrundschuleUebergangsempfehlung === null) ? 'null' : JSON.stringify(obj.kuerzelGrundschuleUebergangsempfehlung)) + ',';
+		result += '"idKuerzelGrundschuleUebergangsempfehlung" : ' + ((obj.idKuerzelGrundschuleUebergangsempfehlung === null) ? 'null' : obj.idKuerzelGrundschuleUebergangsempfehlung.toString()) + ',';
 		result += '"abitur" : ' + ((obj.abitur === null) ? 'null' : AbiturStatistikGesamt.transpilerToJSON(obj.abitur)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -352,8 +352,8 @@ export class SchuelerStatistikGesamt extends JavaObject {
 		if (obj.idGrundschuleEinschulungsart !== undefined) {
 			result += '"idGrundschuleEinschulungsart" : ' + ((obj.idGrundschuleEinschulungsart === null) ? 'null' : obj.idGrundschuleEinschulungsart.toString()) + ',';
 		}
-		if (obj.kuerzelGrundschuleUebergangsempfehlung !== undefined) {
-			result += '"kuerzelGrundschuleUebergangsempfehlung" : ' + ((obj.kuerzelGrundschuleUebergangsempfehlung === null) ? 'null' : JSON.stringify(obj.kuerzelGrundschuleUebergangsempfehlung)) + ',';
+		if (obj.idKuerzelGrundschuleUebergangsempfehlung !== undefined) {
+			result += '"idKuerzelGrundschuleUebergangsempfehlung" : ' + ((obj.idKuerzelGrundschuleUebergangsempfehlung === null) ? 'null' : obj.idKuerzelGrundschuleUebergangsempfehlung.toString()) + ',';
 		}
 		if (obj.abitur !== undefined) {
 			result += '"abitur" : ' + ((obj.abitur === null) ? 'null' : AbiturStatistikGesamt.transpilerToJSON(obj.abitur)) + ',';
