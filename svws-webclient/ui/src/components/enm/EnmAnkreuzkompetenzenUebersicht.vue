@@ -28,7 +28,12 @@
 					</template>
 					<template #default="{ row, index }">
 						<template v-if="row.kompetenz instanceof ENMv2Leistung">
-							<td class="text-left bg-ui-50"> {{ row.gruppe.kuerzelAnzeige }} </td>
+							<td class="text-left bg-ui-50">
+								<svws-ui-tooltip class="w-full">
+									{{ row.gruppe.kuerzelAnzeige }}
+									<template #content> {{ row.gruppe.bezeichnung }} </template>
+								</svws-ui-tooltip>
+							</td>
 							<td v-if="auswahlZelle?.b.klasseID && enmManager().sperrungen.istSpalteneingabeErlaubt(auswahlZelle.b.klasseID, 'FB')"
 								:ref="inputBemerkung(mapLeistungen.get(row.gruppe.id), 1, index)" class="ui-table-grid-button col-span-6 text-left"
 								:class="{
