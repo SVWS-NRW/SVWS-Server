@@ -1,9 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
-
 import type { SchuleDatenaustauschENMProps } from "~/components/schule/datenaustausch/enmNotenmanager/SSchuleDatenaustauschENMProps";
 import type { RouteApp } from "../../../RouteApp";
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
@@ -29,7 +26,6 @@ export class RouteSchuleDatenaustauschENM extends RouteNode<RouteDataSchuleDaten
 		return {
 			serverMode: api.mode,
 			listLehrer: this.data.listLehrer,
-			setImportENM: this.data.setImportENM,
 			exportLehrerENM: this.data.exportLehrerENM,
 			exportGzipENM: this.data.exportGzipENM,
 			importGzipENM: this.data.importGzipENM,
@@ -39,4 +35,3 @@ export class RouteSchuleDatenaustauschENM extends RouteNode<RouteDataSchuleDaten
 }
 
 export const routeSchuleDatenaustauschENM = new RouteSchuleDatenaustauschENM();
-

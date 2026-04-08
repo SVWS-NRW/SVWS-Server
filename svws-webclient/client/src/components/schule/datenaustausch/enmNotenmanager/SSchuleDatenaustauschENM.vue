@@ -10,39 +10,21 @@
 	<div class="svws-ui-page w-full">
 		<div class="svws-ui-tab-content">
 			<div class="page page-flex-row">
-				<svws-ui-content-card title="Datei aus dem Externen Notenmanager hochladen">
-					<svws-ui-input-wrapper :grid="2">
-						<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" />
-						<svws-ui-text-input v-model.trim="salt" type="password" placeholder="Salt" />
-						<svws-ui-spacing />
-						<div class="col-span-full">
-							<input class="contentFocusField" type="file" accept=".base64" @change="importFile" :disabled="loading">
-							<svws-ui-spinner :spinning="loading" />
-						</div>
-						<br>{{
-							status === false
-								? "Fehler beim Upload"
-								: status === true
-									? "Upload erfolgreich"
-									: ""
-						}}
-					</svws-ui-input-wrapper>
-				</svws-ui-content-card>
 				<svws-ui-content-card v-if="ServerMode.DEV.equals(serverMode)" title="ENM-Daten exportieren und importieren">
 					<svws-ui-input-wrapper>
 						<div class="flex items-center">
 							<ui-select :manager="lehrerSelect" v-model="lehrer" />
 							<div class="h-full p-3">
-								<svws-ui-button v-if="lehrer !== null" @click="lehrerENM" class="min-w-64 h-full">ENM-Daten herunterladen</svws-ui-button>
+								<svws-ui-button v-if="lehrer !== null" @click="lehrerENM" class="min-w-64 h-full">ENM-Daten für einzelne Lehrkraft herunterladen</svws-ui-button>
 							</div>
 						</div>
 					</svws-ui-input-wrapper>
 					<div class="my-4">
-						<svws-ui-button @click="gzipENM">Alle ENM-Daten als GZIP herunterladen</svws-ui-button>
+						<svws-ui-button @click="gzipENM">Alle ENM-Daten als GZIP herunterladen (Konferenzdaten)</svws-ui-button>
 					</div>
 
 					<div class="col-span-full">
-						ENM-Daten hochladen, erlaubt sind GZIP und JSON
+						ENM-Daten hochladen, erlaubt sind GZIP und JSON, also Konferenzdaten und Lehrerdaten
 						<br><input class="contentFocusField" type="file" accept=".gz, .json" @change="importFileENM" :disabled="loading">
 						<svws-ui-spinner :spinning="loading" /> {{ importStatus ? 'Import erfolgreich' : '' }}
 					</div>
@@ -60,29 +42,9 @@
 	import { ENMv2Daten, ServerMode, type LehrerListeEintrag } from '@core';
 
 	const props = defineProps<SchuleDatenaustauschENMProps>();
-	const status = ref<boolean | undefined>(undefined);
 	const loading = ref<boolean>(false);
 	const importStatus = ref<boolean | undefined>(undefined);
-	const password = ref<string>("");
-	const salt = ref<string>("");
 	const lehrer = ref<LehrerListeEintrag | null>(null);
-
-	async function importFile(event: Event) {
-		const target = event.target as HTMLInputElement;
-		if ((target.files === null) || (target.files.length === 0)) {
-			return;
-		}
-		const file = target.files.item(0);
-		if (!file) {
-			return;
-		}
-		loading.value = true;
-		try {
-			status.value = await props.setImportENM(file, password.value, salt.value);
-		} finally {
-			loading.value = false;
-		}
-	}
 
 	const lehrerSelect = new SelectManager({
 		options: props.listLehrer,
