@@ -290,7 +290,9 @@
 		if (currentTelefonnummernMode.value === Mode.ADD) {
 			// Workaround: Der erste Eintrag wird vor dem Anlegen eines neuen SchuelerTelefons ausgewählt,
 			// damit anschließend das Scrollen zum letzten angelegten Element in der Tabelle funktioniert
-			clickedTelefonnummer.value = props.getListSchuelerTelefoneintraege().getFirst();
+			if (!props.getListSchuelerTelefoneintraege().isEmpty()) {
+				clickedTelefonnummer.value = props.getListSchuelerTelefoneintraege().getFirst();
+			}
 			await props.addSchuelerTelefoneintrag(partialDataWithoutId, schuelerId);
 			clickedTelefonnummer.value = props.getListSchuelerTelefoneintraege().getLast();
 		} else if (currentTelefonnummernMode.value === Mode.PATCH) {
