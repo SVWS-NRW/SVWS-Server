@@ -1,12 +1,21 @@
 <template>
-	<svws-ui-header>
-		<div>
-			<span class="inline-block mr-3">{{ benutzer().anzeigename }}</span>
-			<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-				ID: {{ benutzer().id }}
-			</svws-ui-badge>
+	<header class="svws-ui-header">
+		<div class="svws-ui-header--title">
+			<div class="svws-headline-wrapper">
+				<h2 class="svws-headline">
+					Nutzereinstellungen
+				</h2>
+				<span class="svws-subline inline-flex gap-x-3 gap-y-1 items-center">
+					<span class="mt-1">{{ benutzer().anzeigename }}</span>
+					<svws-ui-badge type="light" title="ID" class="font-mono m-0" size="small">
+						ID: {{ benutzer().id }}
+					</svws-ui-badge>
+				</span>
+			</div>
 		</div>
-	</svws-ui-header>
+		<div class="svws-ui-header--actions" />
+	</header>
+
 	<div class="page page-grid-cards">
 		<svws-ui-content-card title="Passwort ändern">
 			<svws-ui-input-wrapper :grid="2">
@@ -59,10 +68,10 @@
 <script setup lang="ts">
 
 	import { computed, ref, watch } from "vue";
-	import type { BenutzerprofilAppProps } from "./SBenutzerprofilAppProps";
+	import type { NutzereinstellungenAppProps } from "./SNutzereinstellungenAppProps";
 	import { BenutzerTyp } from "@core";
 
-	const props = defineProps<BenutzerprofilAppProps>();
+	const props = defineProps<NutzereinstellungenAppProps>();
 
 	const erstesPasswort = ref('');
 	const zweitesPasswort = ref('');

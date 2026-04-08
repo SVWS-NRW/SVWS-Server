@@ -3,7 +3,6 @@ import { BenutzerEMailDaten, BenutzerTyp, type BenutzerDaten } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
-
 interface RouteStateBenutzerprofil extends RouteStateInterface {
 	benutzerEMailDaten: BenutzerEMailDaten;
 }
@@ -12,7 +11,7 @@ const defaultState = <RouteStateBenutzerprofil> {
 	benutzerEMailDaten: new BenutzerEMailDaten(),
 };
 
-export class RouteDataBenutzerprofil extends RouteData<RouteStateBenutzerprofil> {
+export class RouteDataBenutzerprofilNutzereinstellungen extends RouteData<RouteStateBenutzerprofil> {
 
 	public constructor() {
 		super(defaultState);

@@ -9,6 +9,8 @@ import { RouteDataApp } from "~/router/apps/RouteDataApp";
 import { AppCache } from "~/cache/AppCache";
 import { api } from "~/router/Api";
 import { routeBenutzerprofil } from "./benutzerprofil/RouteBenutzerprofil";
+import { routeBenutzerprofilNutzereinstellungen } from "~/router/apps/benutzerprofil/nutzereinstellungen/RouteBenutzerprofilNutzereinstellungen";
+// import { routeBenutzerprofilWiedervorlagen } from "~/router/apps/benutzerprofil/wiedervorlagen/RouteBenutzerprofilWiedervorlagen";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeKlassen } from "~/router/apps/klassen/RouteKlassen";
@@ -95,6 +97,23 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return this.menuEinstellungen.map(c => c.hidden(routerManager.getRouteParams()) !== false);
 	}
 
+	/** Die Knoten, welche im Menu Benutzerprofil zur Verfügung gestellt werden */
+	// TODO in abstrahierter Form in RouteNode integrieren...
+	private readonly _menuBenutzerprofil: RouteNode<any, any>[];
+	public get menuBenutzerprofil(): RouteNode<any, any>[] {
+		const result: RouteNode<any, any>[] = [];
+		for (const node of this._menuBenutzerprofil) {
+			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz())) {
+				continue;
+			}
+			result.push(node);
+		}
+		return result;
+	}
+	public menuBenutzerprofilHidden(): boolean[] {
+		return this.menuBenutzerprofil.map(c => c.hidden(routerManager.getRouteParams()) !== false);
+	}
+
 	/** Die Knoten, welche im Menu Schule zur Verfügung gestellt werden */
 	// TODO in abstrahierter Form in RouteNode integrieren...
 	private readonly _menuSchule: RouteNode<any, any>[];
@@ -146,6 +165,12 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeStatistik,
 			routeStundenplan,
 			routeEinstellungen,
+		];
+		this._menuBenutzerprofil = [
+			// Aufgaben
+			// routeBenutzerprofilWiedervorlagen,
+			// Einstellungen
+			routeBenutzerprofilNutzereinstellungen,
 		];
 		this._menuEinstellungen = [
 			routeEmailServer,
@@ -201,6 +226,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeNotenmodulKlassenleitung,
 		];
 		super.children = [
+			...this._menuBenutzerprofil,
 			...this._menuMain,
 			...this._menuSchule,
 			...this._menuNotenmodul,
@@ -255,6 +281,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			benutzerprofilApp: { name: routeBenutzerprofil.name, text: routeBenutzerprofil.text, hide: true },
 			apiStatus: api.status,
 			tabManagerSchule: this.getTabManagerSchule,
+			tabManagerBenutzerprofil: this.getTabManagerBenutzerprofil,
 			tabManagerEinstellungen: this.getTabManagerEinstellungen,
 			tabManagerNotenmodul: this.getTabManagerNotenmodul,
 			schuljahresabschnittsauswahl: () => this.data.getSchuljahresabschnittsauswahl(true),
@@ -290,6 +317,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		}
 		if (node === routeEinstellungen) {
 			node = this.menuEinstellungen.at(0);
+		} else	if (node === routeBenutzerprofil) {
+			node = this.menuBenutzerprofil.at(0);
 		} else if (node === routeSchule) {
 			node = this.menuSchule.at(0);
 		} else if (node === routeNotenmodul) {
@@ -306,6 +335,9 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	private getMenuManager(): AppMenuManager {
 		const submenuManager = new Array<{ name: string, manager: TabManager }>();
+		if (routeBenutzerprofil.hidden() === false) {
+			submenuManager.push({ name: "benutzerprofil", manager: this.getTabManagerBenutzerprofil() });
+		}
 		if (routeSchule.hidden() === false) {
 			submenuManager.push({ name: "schule", manager: this.getTabManagerSchule() });
 		}
@@ -321,6 +353,10 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	private getTabManager(): TabManager {
 		return this.createTabManager(super.menu, this.menuHidden(), this.data.view.name, this.setApp, ViewType.DEFAULT);
 	}
+
+	private readonly getTabManagerBenutzerprofil = (): TabManager => {
+		return this.createTabManager(this.menuBenutzerprofil, this.menuBenutzerprofilHidden(), this.data.view.name, this.setTab, ViewType.DEFAULT);
+	};
 
 	private readonly getTabManagerEinstellungen = (): TabManager => {
 		return this.createTabManager(this.menuEinstellungen, this.menuEinstellungenHidden(), this.data.view.name, this.setTab, ViewType.DEFAULT);

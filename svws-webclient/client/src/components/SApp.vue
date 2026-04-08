@@ -49,7 +49,7 @@
 				</template>
 			</svws-ui-menu>
 		</template>
-		<template #secondaryMenu v-if="menu.hasSubmenu">
+		<template #secondaryMenu v-if="menu.hasSubmenu && tabManager !== null">
 			<template v-if="pendingSetApp">
 				<div class="h-full flex flex-col">
 					<div class="secondary-menu--headline">
@@ -68,8 +68,7 @@
 					<div class="secondary-menu--content">
 						<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" class="region-enumeration">2</p>
 						<svws-ui-secondary-menu-navigation class="focus-region" :class="{'highlighted': focusHelpVisible}"
-							:tab-manager="(menu.current.name.startsWith('schule') ? tabManagerSchule :
-								(menu.current.name.startsWith('notenmodul') ? tabManagerNotenmodul : tabManagerEinstellungen))" />
+							:tab-manager />
 					</div>
 				</div>
 			</template>
@@ -135,7 +134,8 @@
 <script setup lang="ts">
 
 	import { computed, onMounted, onUnmounted, ref, onErrorCaptured, watch } from "vue";
-	import { useRegionSwitch, type TabData } from "@ui";
+	import type { TabManager, TabData } from "@ui";
+	import { useRegionSwitch } from "@ui";
 	import type { AppProps } from './SAppProps';
 	import type { SimpleOperationResponse } from '@core';
 	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from '@core';
@@ -175,6 +175,22 @@
 	const schulname = computed<string>(() => {
 		const name = props.schuleStammdaten.bezeichnung1;
 		return (name.length > 0) ? name : "Fehlende Bezeichnung für die Schule";
+	});
+
+	const tabManager = computed<null | (() => TabManager)>(() => {
+		const name = props.menu.current.name;
+
+		if (name.startsWith('schule')) {
+			return props.tabManagerSchule;
+		} else if (name.startsWith('notenmodul')) {
+			return props.tabManagerNotenmodul;
+		} else if (name.startsWith('einstellungen')) {
+			return props.tabManagerEinstellungen;
+		} else if (name.startsWith('benutzerprofil')) {
+			return props.tabManagerBenutzerprofil;
+		}
+
+		return null;
 	});
 
 	const pendingSetApp = ref('');

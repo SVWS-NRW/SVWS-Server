@@ -1,46 +1,34 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { BenutzerprofilAppProps } from "~/components/benutzerprofil/SBenutzerprofilAppProps";
-import type { RouteApp } from "~/router/apps/RouteApp";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
-import { RouteNode } from "~/router/RouteNode";
-import { RouteDataBenutzerprofil } from "~/router/apps/benutzerprofil/RouteDataBenutzerprofil";
-import { api } from "~/router/Api";
 import { AppMenuGroup } from "@ui";
+import { BenutzerKompetenz, type BenutzerKompetenzGruppe, type List, Schulform, ServerMode } from "@core";
+import { api } from "~/router/Api";
+import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
+import { RouteNode } from "~/router/RouteNode";
+import { routeBenutzerprofilNutzereinstellungen } from "~/router/apps/benutzerprofil/nutzereinstellungen/RouteBenutzerprofilNutzereinstellungen";
 
-const SBenutzerprofilApp = () => import("~/components/benutzerprofil/SBenutzerprofilApp.vue");
-
-export class RouteBenutzerprofil extends RouteNode<RouteDataBenutzerprofil, RouteApp> {
+export class RouteBenutzerprofil extends RouteNode<any, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KEINE], "benutzerprofil", "benutzerprofil", SBenutzerprofilApp, new RouteDataBenutzerprofil());
+		super(Schulform.values(), [BenutzerKompetenz.KEINE], "benutzerprofil", "benutzerprofil");
 		super.mode = ServerMode.STABLE;
-		super.propHandler = (route) => this.getProps(route);
+		super.propHandler = (route) => this.getNoProps(route);
 		super.text = "Benutzerprofil";
 		super.menugroup = AppMenuGroup.BENUTZERPROFIL;
 	}
 
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
-		const { id } = RouteNode.getIntParams(to_params, ["id"]);
-		if (this.data.benutzerEMailDaten.id !== id) {
-			await this.data.ladeDaten();
+
+	protected async update(to: RouteNode<any, any>) {
+		if (to.name === this.name) {
+			// redirect to routeBenutzerprofilNutzereinstellungen
+			return routeBenutzerprofilNutzereinstellungen.getRoute();
 		}
 	}
 
-	public getProps(to: RouteLocationNormalized): BenutzerprofilAppProps {
-		return {
-			benutzer: () => this.data.benutzer,
-			benutzertyp: api.benutzertyp,
-			mode: api.mode,
-			patch: this.data.patch,
-			benutzerEMailDaten: () => this.data.benutzerEMailDaten,
-			patchBenutzerEMailDaten: this.data.patchBenutzerEMailDaten,
-			patchPasswort: this.data.patchPasswort,
-			patchPasswortWenom: this.data.patchPasswortWenom,
-			resetPasswordWenom: this.data.passwordResetWenom,
-			aes: api.aes,
-		};
-	}
-
+	public benutzerKompetenzen = (gruppe: BenutzerKompetenzGruppe): List<BenutzerKompetenz> => {
+		const schuljahr = routeApp.data.aktAbschnitt.value.schuljahr;
+		const schulformEintrag = api.schulform.daten(schuljahr);
+		const schulform = Schulform.data().getWertByID(schulformEintrag?.id ?? -1);
+		return BenutzerKompetenz.getKompetenzenMitSchulform(schuljahr, gruppe, schulform);
+	};
 }
 
 export const routeBenutzerprofil = new RouteBenutzerprofil();

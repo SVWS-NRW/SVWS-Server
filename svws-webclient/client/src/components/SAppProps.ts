@@ -14,6 +14,7 @@ export interface AppProps {
 	apiStatus: ApiStatus;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
 	tabManagerSchule: () => TabManager;
+	tabManagerBenutzerprofil: () => TabManager;
 	tabManagerNotenmodul: () => TabManager;
 	tabManagerEinstellungen: () => TabManager;
 }
