@@ -7,7 +7,7 @@
 			<div class="px-3">
 				<svws-ui-content-card>
 					<svws-ui-table v-model="selectedRows" :items="data" :columns="cols" :clickable="state.clickable" :disable-header="state.disableHeader" :disable-footer="state.disableFooter" :selectable="state.selectable" :count="state.count" v-model:clicked="clickedRow" :filtered="docsMultiselectFilterA?.length > 0 || docsMultiselectFilterB?.length > 0"
-						:toggle-columns="state.toggleColumns" :filter-reset="filterReset" :type="state.typeGrid ? 'grid' : 'table'" v-model:hidden-columns="state.hiddenColumns" :lock-selectable="state.lockSelectable">
+						:toggle-columns="state.toggleColumns" :filter-reset :type="state.typeGrid ? 'grid' : 'table'" v-model:hidden-columns="state.hiddenColumns" :lock-selectable="state.lockSelectable">
 						<template #search v-if="state.docsWithSearch">
 							<svws-ui-text-input type="search" placeholder="Suche" v-model="search" />
 						</template>

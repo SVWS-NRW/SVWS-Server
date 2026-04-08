@@ -8,7 +8,7 @@
 						<span class="icon i-ri-arrow-down-s-line" v-else />
 					</template>
 				</div>
-				<svws-ui-checkbox v-model="selected" :indeterminate="indeterminate" :disabled="istAdmin">
+				<svws-ui-checkbox v-model="selected" :indeterminate :disabled="istAdmin">
 					{{ kompetenzgruppe.daten.bezeichnung }}
 				</svws-ui-checkbox>
 			</div>
@@ -16,7 +16,7 @@
 		<div class="svws-ui-td" role="cell" />
 		<template v-if="hatSubKompetenzen">
 			<div v-for="kompetenz in benutzerKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id" class="svws-ui-tr" v-show="!collapsed">
-				<s-benutzergruppe-kompetenz :kompetenz="kompetenz" :show-info :ist-admin="istAdmin" :get-benutzergruppen-manager="getBenutzergruppenManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" />
+				<s-benutzergruppe-kompetenz :kompetenz :show-info :ist-admin :get-benutzergruppen-manager :add-kompetenz :remove-kompetenz />
 			</div>
 		</template>
 	</div>

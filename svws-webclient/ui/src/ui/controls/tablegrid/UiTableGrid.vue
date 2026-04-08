@@ -3,21 +3,21 @@
 		<thead>
 			<template v-for="i in headerCount" :key="i">
 				<tr>
-					<slot :i="i" name="header" />
+					<slot :i name="header" />
 				</tr>
 			</template>
 		</thead>
 		<tbody>
 			<template v-for="(row, index) in manager().daten" :key="manager().getRowKey(row)">
 				<tr :class="{ 'bg-ui-selected': !hideSelection && (manager().focusRow === index) }" @click="rowClicked(row, index)">
-					<slot :row="row" :index="index" />
+					<slot :row :index />
 				</tr>
 			</template>
 		</tbody>
 		<tfoot>
 			<template v-for="i in footerCount" :key="i">
 				<tr>
-					<slot :i="i" name="footer" />
+					<slot :i name="footer" />
 				</tr>
 			</template>
 		</tfoot>

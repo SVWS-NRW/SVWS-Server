@@ -50,7 +50,7 @@
 		</button>
 	</div>
 	<Teleport to="body" v-if="isMounted">
-		<svws-ui-dropdown-list v-if="showList" :statistics :filtered-list :item-text="itemText" :strategy :floating-left :floating-top :selected-item-list
+		<svws-ui-dropdown-list v-if="showList" :statistics :filtered-list :item-text :strategy :floating-left :floating-top :selected-item-list
 			:select-item ref="refList" :search-text :highlight-item="(highlightItem as Item|undefined)" :no-items-text />
 	</Teleport>
 </template>

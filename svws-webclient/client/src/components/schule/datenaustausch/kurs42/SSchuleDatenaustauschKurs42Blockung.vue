@@ -34,7 +34,7 @@
 				<input class="contentFocusField" type="file" accept=".zip" @change="import_file" :disabled="loading">
 				<svws-ui-spinner :spinning="loading" />
 			</svws-ui-input-wrapper>
-			<log-box :logs="logs" :status="status" />
+			<log-box :logs :status />
 		</svws-ui-content-card>
 	</div>
 </template>

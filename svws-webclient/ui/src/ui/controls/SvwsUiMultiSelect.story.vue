@@ -7,7 +7,7 @@
 						:label="state.label"
 						:item-text="item => item.text"
 						:item-sort="(a: any, b: any) => a.text + b.text"
-						:items="items"
+						:items
 						@input="onInput"
 						:headless="state.headless"
 						:statistics="state.statistics"
@@ -16,24 +16,24 @@
 						class="col-span-full" />
 					<svws-ui-spacing :size="2" />
 					<svws-ui-multi-select label="Relevant für die Statistik"
-						:items="items"
+						:items
 						:item-text="item => item.text"
 						v-model="modelValueStatistik"
 						:autocomplete="state.autocomplete"
 						statistics />
 					<svws-ui-multi-select label="Disabled"
-						:items="items"
+						:items
 						:item-text="item => item.text"
 						:autocomplete="state.autocomplete"
 						v-model="modelValueDisabled" disabled />
 					<svws-ui-spacing />
 					<svws-ui-multi-select label="Headless z. B. in der Tabelle"
-						:items="items"
+						:items
 						:item-text="item => item.text"
 						:autocomplete="state.autocomplete"
 						v-model="modelValueHeadlessUndefined" headless />
 					<svws-ui-multi-select label="Headless z. B. in der Tabelle"
-						:items="items"
+						:items
 						:item-text="item => item.text"
 						v-model="modelValueHeadless" headless />
 				</svws-ui-input-wrapper>

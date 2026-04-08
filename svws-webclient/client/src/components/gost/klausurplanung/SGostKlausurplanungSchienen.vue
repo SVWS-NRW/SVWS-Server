@@ -3,7 +3,7 @@
 		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-schienen-hilfe /> </svws-ui-modal-hilfe>
 	</Teleport>
 	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
-		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
+		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl :halbjahr />
 	</Teleport>
 	<svws-ui-modal v-model:show="showModalAutomatischBlocken" size="small">
 		<template #modalTitle>

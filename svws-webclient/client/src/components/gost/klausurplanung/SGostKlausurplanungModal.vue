@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal :show="show" @update:show="value => emit('update:show', value)" size="small" class="hidden">
+	<svws-ui-modal :show @update:show="value => emit('update:show', value)" size="small" class="hidden">
 		<template #modalTitle>Hinweis</template>
 		<template #modalDescription>
 			{{ text }}

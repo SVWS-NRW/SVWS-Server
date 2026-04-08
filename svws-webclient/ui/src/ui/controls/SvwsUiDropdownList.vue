@@ -16,7 +16,7 @@
 				</template>
 			</li>
 			<template v-for="(item, index) in filteredList" :key="index">
-				<slot name="item" :item="item" :index="index">
+				<slot name="item" :item :index>
 					<li :id="`${listIdPrefix}-${index}`"
 						ref="itemRefs"
 						role="option"

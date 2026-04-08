@@ -3,7 +3,7 @@
 		<Variant v-for="(props, title) of propsVariants"
 			:key="title"
 			:id="title"
-			:title="title">
+			:title>
 			<svws-ui-menu-item v-bind="props" @click="onClick">Menu Item</svws-ui-menu-item>
 		</Variant>
 	</Story>

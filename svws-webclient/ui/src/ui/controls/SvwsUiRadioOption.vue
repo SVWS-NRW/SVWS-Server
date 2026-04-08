@@ -7,7 +7,7 @@
 		'radio--label--no-text': !label,
 		'radio--icon-type-view': iconType === 'view'
 	}">
-		<input :id="idInputField" v-model="checked" type="radio" :name="name" :value="value" :disabled="disabled" class="radio--indicator">
+		<input :id="idInputField" v-model="checked" type="radio" :name :value :disabled class="radio--indicator">
 		<span :id="idIcon" v-if="icon" class="radio--indicator-icon">
 			<template v-if="iconType === 'view'">
 				<span class="icon i-ri-eye-line radio--indicator-icon--checked -my-0.5" />

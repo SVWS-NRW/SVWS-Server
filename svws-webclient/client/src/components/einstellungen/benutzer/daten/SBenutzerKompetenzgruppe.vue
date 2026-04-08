@@ -8,7 +8,7 @@
 						<span class="icon i-ri-arrow-down-s-line" v-else />
 					</template>
 				</div>
-				<svws-ui-checkbox v-model="selected" :indeterminate="indeterminate" :disabled="getBenutzerManager().istAdmin()">
+				<svws-ui-checkbox v-model="selected" :indeterminate :disabled="getBenutzerManager().istAdmin()">
 					{{ kompetenzgruppe.daten.bezeichnung }}
 				</svws-ui-checkbox>
 			</div>

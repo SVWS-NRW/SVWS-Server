@@ -170,14 +170,15 @@ export default defineConfig(
 			"@typescript-eslint/prefer-function-type": "off",
 
 			"vue/eqeqeq": "error",
+			"vue/html-closing-bracket-spacing": "warn",
 			"vue/no-required-prop-with-default": "error",
 			"vue/no-setup-props-reactivity-loss": "error",
 			"vue/script-indent": ["error", "tab", { "baseIndent": 1, "switchCase": 1 }],
+			"vue/v-bind-style": ["error", "shorthand", { "sameNameShorthand": "always" }],
 			"vue/max-attributes-per-line": ["error", { "singleline": 10, "multiline": 10, } ],
 			"vue/return-in-computed-property": ["error", { "treatUndefinedAsUnspecified": false } ],
 			"vue/first-attribute-linebreak": ["error", { "singleline": "ignore", "multiline": "beside" }],
 			"vue/html-closing-bracket-newline": ["error", { "singleline": "never", "multiline": "never" }],
-			"vue/html-closing-bracket-spacing": ["warn"],
 			"vue/html-indent": ["error", "tab", { "baseIndent": 1, "alignAttributesVertically": false, "attribute": 1 }],
 		}
 	},

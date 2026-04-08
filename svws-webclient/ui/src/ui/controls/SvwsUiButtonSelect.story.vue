@@ -2,18 +2,18 @@
 	<Story title="Button mit Auswahl" id="svws-ui-button-select" icon="ri:cursor-line" :layout="{ type: 'single', iframe: false }" auto-props-disabled>
 		<Variant title="Default" id="default">
 			<svws-ui-input-wrapper class="p-2">
-				<svws-ui-button-select :dropdown-actions="dropdownActions" />
-				<svws-ui-button-select type="danger" :dropdown-actions="dropdownActions" />
-				<svws-ui-button-select type="secondary" :dropdown-actions="dropdownActions" />
-				<svws-ui-button-select type="secondary" :dropdown-actions="dropdownActions">
+				<svws-ui-button-select :dropdown-actions />
+				<svws-ui-button-select type="danger" :dropdown-actions />
+				<svws-ui-button-select type="secondary" :dropdown-actions />
+				<svws-ui-button-select type="secondary" :dropdown-actions>
 					<template #icon><span class="icon i-ri-printer-line" /></template>
 				</svws-ui-button-select>
 			</svws-ui-input-wrapper>
 			<svws-ui-input-wrapper class="p-2 page--statistik mt-10">
-				<svws-ui-button-select :dropdown-actions="dropdownActions" />
-				<svws-ui-button-select type="danger" :dropdown-actions="dropdownActions" />
-				<svws-ui-button-select type="secondary" :dropdown-actions="dropdownActions" />
-				<svws-ui-button-select type="secondary" :dropdown-actions="dropdownActions">
+				<svws-ui-button-select :dropdown-actions />
+				<svws-ui-button-select type="danger" :dropdown-actions />
+				<svws-ui-button-select type="secondary" :dropdown-actions />
+				<svws-ui-button-select type="secondary" :dropdown-actions>
 					<template #icon><span class="icon i-ri-printer-line" /></template>
 				</svws-ui-button-select>
 			</svws-ui-input-wrapper>

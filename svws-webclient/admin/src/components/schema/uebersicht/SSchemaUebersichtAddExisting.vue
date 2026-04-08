@@ -1,7 +1,7 @@
 <template>
 	<ui-card icon="i-ri-share-forward-2-line" title="In Konfiguration aufnehmen"
 		subtitle="Das Schema wird mit dem angegebenen Benutzer und Kennwort in die Konfiguration der SVWS-Servers aufgenommen."
-		:is-open="isOpen" @update:is-open="(isOpen) => emit('opened', isOpen)">
+		:is-open @update:is-open="(isOpen) => emit('opened', isOpen)">
 		<div class="input-wrapper mt-2">
 			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :disabled="loading" :valid="value => value !== 'root'" />
 			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" :disabled="loading" type="password" />

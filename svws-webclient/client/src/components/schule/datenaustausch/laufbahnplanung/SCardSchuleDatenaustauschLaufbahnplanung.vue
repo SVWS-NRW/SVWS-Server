@@ -26,7 +26,7 @@
 					<svws-ui-spinner :spinning="loading" />
 				</div>
 			</div>
-			<log-box :logs="logs" :status="status" />
+			<log-box :logs :status />
 		</div>
 	</div>
 </template>

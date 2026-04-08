@@ -4,7 +4,7 @@
 		<component :is="collapsible ? 'button' : 'div'" :type="collapsible ? 'button' : 'text'" tabindex="0"
 			:class="[{ 'ui-card--active': isActive }, headerBackgroundColor, headerTextColor, borderColor]"
 			class="ui-card--header relative z-50 focus:ring-2 focus:ring-ui focus:!rounded outline-none"
-			@click="collapsible ? setActive() : null" :aria-expanded="ariaExpanded" :aria-controls="collapsible ? 'cardBody' + instanceId : undefined">
+			@click="collapsible ? setActive() : null" :aria-expanded :aria-controls="collapsible ? 'cardBody' + instanceId : undefined">
 			<!-- Left Collapse Icon -->
 			<div v-if="showCollapseIconLeft" class="ui-card--header--collapse-icon">
 				<transition name="ui-card--icon" mode="out-in">

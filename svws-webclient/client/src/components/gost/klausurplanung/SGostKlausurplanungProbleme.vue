@@ -3,7 +3,7 @@
 		<svws-ui-modal-hilfe> <s-gost-klausurplanung-vorgaben-hilfe /> </svws-ui-modal-hilfe>
 	</Teleport>
 	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
-		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
+		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl :halbjahr />
 	</Teleport>
 	<div class="page page-flex-col min-w-128 max-w-256">
 		<ui-card v-if="abschnitt !== undefined && !kMan().stundenplanManagerGeladenAndExistsByAbschnitt(abschnitt.id)" icon="i-ri-calendar-event-line" :fehler="ValidatorFehlerart.MUSS"

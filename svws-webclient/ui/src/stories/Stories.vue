@@ -12,7 +12,7 @@
 				</div>
 				<div class="overflow-y-auto flex-1 pl-2">
 					<ul>
-						<li v-for="[key, items] of groups" :key="key" class="">
+						<li v-for="[key, items] of groups" :key class="">
 							<div class="text-2xl font-bold capitalize text-ui-100 pl-2 sticky top-0 bg-ui-50">{{ key }}</div>
 							<ul>
 								<li v-for="item of items.sort(cmp)" :key="item.path" class="text-xl pl-10 hover:bg-ui-brand-secondary cursor-pointer mr-2"

@@ -26,7 +26,7 @@
 		<div class="page page-grid-cards">
 			<svws-ui-content-card title="Statusdaten" v-if="hatKompetenzAnsehen">
 				<template #actions v-if="schulform === Schulform.BK || schulform === Schulform.SB">
-					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager"
+					<ui-gruppenprozesse-wrapper :pending-state-manager
 						attribute-name="istDuplikat" :nullable="false" class="self-center">
 						<svws-ui-checkbox v-model="istDuplikat" :disabled="!hatKompetenzUpdate"
 							:indeterminate="!pendingStateManager().isAttributePending('istDuplikat')">
@@ -35,62 +35,62 @@
 					</ui-gruppenprozesse-wrapper>
 				</template>
 				<svws-ui-input-wrapper :grid="2">
-					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="status" :nullable="false">
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="status" :nullable="false">
 						<ui-select v-model="status" label="Status" :manager="statusSelectManager" statistics :removable="false" />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper v-if="alleExtern" :pending-state-manager="pendingStateManager" attribute-name="externeSchulNr">
+					<ui-gruppenprozesse-wrapper v-if="alleExtern" :pending-state-manager attribute-name="externeSchulNr">
 						<ui-select v-model="stammschuleExtern" label="Stammschule" :manager="stammschuleSelectManager" :readonly="!hatKompetenzUpdate" />
 					</ui-gruppenprozesse-wrapper>
 					<div v-else />
-					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="fahrschuelerArtID">
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="fahrschuelerArtID">
 						<ui-select v-model="fahrschuelerArtID" label="Fahrschüler" :manager="fahrschuelerSelectManager" :readonly="!hatKompetenzUpdate" />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="haltestelleID">
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="haltestelleID">
 						<ui-select v-model="haltestelleID" label="Haltestelle" :manager="haltestelleSelectManager" :readonly="!hatKompetenzUpdate"
 							:removable="false" />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="aufnahmedatum">
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="aufnahmedatum">
 						<svws-ui-text-input placeholder="Aufnahmedatum" :readonly="!hatKompetenzUpdate" :model-value="aufnahmedatum"
 							@update:model-value="setAufnahmedatum" type="date" :removable="false" statistics />
 					</ui-gruppenprozesse-wrapper>
 					<svws-ui-spacing />
 					<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes !gap-y-2">
-						<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="istVolljaehrig"
+						<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="istVolljaehrig"
 							:nullable="false">
 							<svws-ui-checkbox :disabled="!hatKompetenzUpdate" v-model="istVolljaehrig"
 								:indeterminate="!pendingStateManager().isAttributePending('istVolljaehrig')">
 								Volljährig
 							</svws-ui-checkbox>
 						</ui-gruppenprozesse-wrapper>
-						<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="keineAuskunftAnDritte"
+						<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="keineAuskunftAnDritte"
 							:nullable="false" class="self-center">
 							<svws-ui-checkbox :disabled="!hatKompetenzUpdate" v-model="keineAuskunftAnDritte"
 								:indeterminate="!pendingStateManager().isAttributePending('keineAuskunftAnDritte')">
 								Keine Auskunft an Dritte
 							</svws-ui-checkbox>
 						</ui-gruppenprozesse-wrapper>
-						<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="istSchulpflichtErfuellt"
+						<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="istSchulpflichtErfuellt"
 							:nullable="false" class="self-center">
 							<svws-ui-checkbox :disabled="!hatKompetenzUpdate" v-model="istSchulpflichtErfuellt"
 								:indeterminate="!pendingStateManager().isAttributePending('istSchulpflichtErfuellt')">
 								Schulpflicht erfüllt
 							</svws-ui-checkbox>
 						</ui-gruppenprozesse-wrapper>
-						<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="istBerufsschulpflichtErfuellt"
+						<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="istBerufsschulpflichtErfuellt"
 							:nullable="false" class="self-center">
 							<svws-ui-checkbox :disabled="!hatKompetenzUpdate" v-model="istBerufsschulpflichtErfuellt"
 								:indeterminate="!pendingStateManager().isAttributePending('istBerufsschulpflichtErfuellt')">
 								Schulpflicht SII erfüllt
 							</svws-ui-checkbox>
 						</ui-gruppenprozesse-wrapper>
-						<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="hatMasernimpfnachweis"
+						<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="hatMasernimpfnachweis"
 							:nullable="false" class="self-center">
 							<svws-ui-checkbox :disabled="!hatKompetenzUpdate" v-model="hatMasernimpfnachweis"
 								:indeterminate="!pendingStateManager().isAttributePending('hatMasernimpfnachweis')">
 								Masern Impfnachweis
 							</svws-ui-checkbox>
 						</ui-gruppenprozesse-wrapper>
-						<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="erhaeltSchuelerBAFOEG"
+						<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="erhaeltSchuelerBAFOEG"
 							:nullable="false" class="self-center">
 							<svws-ui-checkbox :disabled="!hatKompetenzUpdate" v-model="erhaeltSchuelerBAFOEG"
 								:indeterminate="!pendingStateManager().isAttributePending('erhaeltSchuelerBAFOEG')">
@@ -102,30 +102,30 @@
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Staatsangehörigkeit und Konfession" v-if="hatKompetenzAnsehen">
 				<svws-ui-input-wrapper :grid="2">
-					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="staatsangehoerigkeitID">
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="staatsangehoerigkeitID">
 						<ui-select v-model="staatsangehoerigkeitID" label="1. Staatsangehörigkeit" :manager="ersteStaatsAngehoerigkeitSelectManager" statistics
 							:removable="false" />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="staatsangehoerigkeit2ID">
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="staatsangehoerigkeit2ID">
 						<ui-select v-model="staatsangehoerigkeit2ID" label="2. Staatsangehörigkeit"	:manager="zweiteStaatsAngehoerigkeitSelectManager" statistics
 							:removable="false" />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="religionID">
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="religionID">
 						<ui-select v-model="konfession" label="Konfession" :manager="konfessionSelectManager" :readonly="!hatKompetenzUpdate"
 							statistics :removable="false" />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="druckeKonfessionAufZeugnisse"
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="druckeKonfessionAufZeugnisse"
 						:nullable="false" class="self-center">
 						<svws-ui-checkbox v-model="druckeKonfessionAufZeugnisse" :disabled="!hatKompetenzUpdate"
 							:indeterminate="!pendingStateManager().isAttributePending('druckeKonfessionAufZeugnisse')">
 							Konfession aufs Zeugnis
 						</svws-ui-checkbox>
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="religionabmeldung">
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="religionabmeldung">
 						<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht" :readonly="!hatKompetenzUpdate" :model-value="religionabmeldung"
 							@update:model-value="setReligionabmeldung" type="date" :removable="false" statistics />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="religionanmeldung">
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="religionanmeldung">
 						<svws-ui-text-input placeholder="Wiederanmeldung" :readonly="!hatKompetenzUpdate" :model-value="religionanmeldung"
 							@update:model-value="setReligionanmeldung" type="date" :removable="false" statistics />
 					</ui-gruppenprozesse-wrapper>
@@ -133,7 +133,7 @@
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Migrationshintergrund" v-if="hatKompetenzAnsehen" id="Card-Migrationshintergrund">
 				<template #actions>
-					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="hatMigrationshintergrund"
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="hatMigrationshintergrund"
 						:nullable="false" class="self-center">
 						<svws-ui-checkbox @update:model-value="(hatMigrationsHintergrund) => {!hatMigrationsHintergrund && resetMigrationsHintergrundInputs()}"
 							:disabled="!hatKompetenzUpdate" v-model="hatMigrationshintergrund" statistics focus-class-content
@@ -143,28 +143,28 @@
 					</ui-gruppenprozesse-wrapper>
 				</template>
 				<svws-ui-input-wrapper :grid="2">
-					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="zuzugsjahr" :nullable="hatMigrationshintergrund">
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="zuzugsjahr" :nullable="hatMigrationshintergrund">
 						<svws-ui-input-number placeholder="Zuzugsjahr" :model-value="zuzugsjahr" @update:model-value="setZuzugsjahr"
 							:disabled="!hatMigrationshintergrund" statistics :steps="false" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate"
 							:min="minZuzugsjahr" :max="maxZuzugsjahr" />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="geburtsland" :nullable="hatMigrationshintergrund">
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="geburtsland" :nullable="hatMigrationshintergrund">
 						<ui-select v-model="geburtsland" label="Geburtsland" :manager="geburtslandSelectManager" :disabled="!hatMigrationshintergrund"
 							:readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false" searchable statistics />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="verkehrspracheFamilie"
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="verkehrspracheFamilie"
 						:nullable="hatMigrationshintergrund">
 						<ui-select v-model="verkehrssprache" label="Verkehrssprache" :manager="verkehrsspracheSelectManager"
 							:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false"
 							searchable statistics />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="geburtslandMutter"
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="geburtslandMutter"
 						:nullable="hatMigrationshintergrund">
 						<ui-select v-model="geburtslandMutter" label="Geburtsland Mutter" :manager="geburtslandMutterSelectManager"
 							:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false" searchable
 							statistics />
 					</ui-gruppenprozesse-wrapper>
-					<ui-gruppenprozesse-wrapper :pending-state-manager="pendingStateManager" attribute-name="geburtslandVater" :nullable="hatMigrationshintergrund">
+					<ui-gruppenprozesse-wrapper :pending-state-manager attribute-name="geburtslandVater" :nullable="hatMigrationshintergrund">
 						<ui-select v-model="geburtslandVater" label="Geburtsland Vater" :manager="geburtslandVaterSelectManager"
 							:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" :removable="false"
 							searchable statistics />

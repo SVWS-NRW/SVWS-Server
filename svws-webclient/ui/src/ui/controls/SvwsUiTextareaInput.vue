@@ -19,10 +19,10 @@
 			:class="{ 'contentFocusField': isContentFocusField, 'textarea-input--auto-grow': autoresize }"
 			ref="textarea"
 			:value="localValue ?? ''"
-			:rows="rows"
-			:cols="cols"
-			:required="required"
-			:disabled="disabled"
+			:rows
+			:cols
+			:required
+			:disabled
 			@input="onInput"
 			@focus="onFocus"
 			@blur="onBlur"

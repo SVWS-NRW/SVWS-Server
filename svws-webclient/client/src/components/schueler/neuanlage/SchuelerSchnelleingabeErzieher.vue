@@ -97,10 +97,10 @@
 			:show-modal="modalIsShown"
 			:erzieherarten-by-id="manager().erzieherartenById"
 			:hat-kompetenz-update="updateKompetenz"
-			:ist-erster-erz-gespeichert="istErsterErzGespeichert"
+			:ist-erster-erz-gespeichert
 			:orte-by-id="manager().orteById"
 			:ortsteile-by-id="manager().ortsteileById"
-			:schuljahr="schuljahr"
+			:schuljahr
 			@close-modal="closeModal"
 			@send-request="sendRequest"
 			@save-and-show-second="saveAndShowSecondForm"

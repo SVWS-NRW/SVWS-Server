@@ -46,7 +46,7 @@
 					</svws-ui-button>
 				</template>
 			</ui-card>
-			<log-box :logs :status="status">
+			<log-box :logs :status>
 				<template #button>
 					<svws-ui-button v-if="status !== undefined" type="transparent" @click="clearLog" title="Log verwerfen">Log verwerfen</svws-ui-button>
 				</template>

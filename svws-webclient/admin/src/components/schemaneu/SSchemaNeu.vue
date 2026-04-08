@@ -24,7 +24,7 @@
 					<s-schema-neu-duplicate v-if="schema !== undefined" :duplicate-schema :loading :set-status :is-open="currentAction === 'duplicate'" @opened="(isOpen) => setCurrentAction('duplicate', isOpen)" :validator-username :schema />
 				</div>
 				<div class="min-w-fit grow">
-					<log-box :logs="logs" :status="status">
+					<log-box :logs :status>
 						<template #button>
 							<svws-ui-button v-if="status !== undefined" type="transparent" @click="clear" title="Log verwerfen">Log verwerfen </svws-ui-button>
 						</template>
@@ -65,7 +65,7 @@
 			return;
 		}
 		oldAction.value.name = currentAction.value;
-		oldAction.value.open = (currentAction.value === "") ? false : true;
+		oldAction.value.open = (currentAction.value === "");
 		if (open === true) {
 			currentAction.value = newAction;
 		} else {

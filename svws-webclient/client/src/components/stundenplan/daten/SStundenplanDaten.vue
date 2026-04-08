@@ -46,7 +46,7 @@
 							<svws-ui-button @click="openModal" type="transparent" title="Räume importieren"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
 						</s-card-stundenplan-import-raeume-modal>
 						<svws-ui-button @click="delRaeume" type="trash" :disabled="!selectedRaeume.length" />
-						<s-card-stundenplan-add-raum-modal v-slot="{ openModal }" :add-raum="addRaum">
+						<s-card-stundenplan-add-raum-modal v-slot="{ openModal }" :add-raum>
 							<svws-ui-button @click="openModal" type="icon" title="Raum hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 						</s-card-stundenplan-add-raum-modal>
 					</template>

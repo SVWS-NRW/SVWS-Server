@@ -3,7 +3,7 @@
 	<Story title="ValidationTooltip" id="svws-ui-validation-tooltip" icon="ri:cursor-line" :layout="{type: 'grid', width: '45%'}">
 		<Variant id="ValidationTooltip" title="ValidationTooltip">
 			<span v-if="!validationResult.hasFehler">Bitte wähle rechts in den Controls Fehler aus, die angezeigt werden sollen</span>
-			<ui-validation-tooltip v-else :validation-result="validationResult" :disabled="state.disabled" />
+			<ui-validation-tooltip v-else :validation-result :disabled="state.disabled" />
 		</Variant>
 		<template #controls>
 			<HstCheckbox title="disabled"

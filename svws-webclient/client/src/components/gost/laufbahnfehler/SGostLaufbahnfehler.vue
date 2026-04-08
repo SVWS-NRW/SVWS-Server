@@ -10,7 +10,7 @@
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" defer>
-			<svws-ui-button-select type="secondary" :dropdown-actions="dropdownActions" :disabled="apiStatus.pending">
+			<svws-ui-button-select type="secondary" :dropdown-actions :disabled="apiStatus.pending">
 				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon i-ri-printer-line" v-else /> </template>
 			</svws-ui-button-select>
 		</Teleport>

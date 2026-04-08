@@ -67,7 +67,7 @@
 		}">
 		<p v-if="focusHelpVisible" class="region-enumeration">4</p>
 		<div v-if="!disableHeader" class="svws-ui-thead" role="rowgroup" aria-label="Tabellenkopf">
-			<slot name="header" :all-rows-selected="allRowsSelected" :toggle-all-rows="toggleBulkSelection" :columns="columnsComputed">
+			<slot name="header" :all-rows-selected :toggle-all-rows="toggleBulkSelection" :columns="columnsComputed">
 				<div role="row" class="svws-ui-tr" :style="getGridTemplateColumns">
 					<div v-if="selectable" class="svws-ui-td svws-align-center" role="columnheader" aria-label="Alle auswählen">
 						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="(typeof noData !== 'undefined' ? noData : noDataCalculated) || lockSelectable" />
@@ -81,7 +81,7 @@
 								'svws-active': column.sortable && (internalSortByAndOrder.key === column.name) && (typeof internalSortByAndOrder.order === 'boolean'),
 								'svws-divider': column.divider,
 							}]" :tabindex="column.sortable ? 0 : -1">
-						<slot :name="`header(${column.key})`" :column="column">
+						<slot :name="`header(${column.key})`" :column>
 							<span v-if="column.statistic" class="icon i-ri-bar-chart-2-line"
 								:class="{'icon-ui-disabled' : noDataCalculated, 'icon-ui-statistic' : !noDataCalculated }" />
 							<svws-ui-tooltip v-if="column.tooltip">
@@ -155,7 +155,7 @@
 			<slot name="dataFooter" />
 		</div>
 		<div v-if="!disableFooter && (selectable || $slots.footer || $slots.actions || count)" class="svws-ui-tfoot" role="rowgroup" aria-label="Fußzeile">
-			<slot name="footer" :all-rows-selected="allRowsSelected" :toggle-all-rows="toggleBulkSelection" :rows="sortedRows">
+			<slot name="footer" :all-rows-selected :toggle-all-rows="toggleBulkSelection" :rows="sortedRows">
 				<div class="svws-ui-tr" :style="getGridTemplateColumns" role="row">
 					<div v-if="selectable" class="svws-ui-td svws-align-center" role="columnheader" aria-label="Alle auswählen">
 						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="(typeof noData !== 'undefined' ? noData : noDataCalculated) || lockSelectable" />

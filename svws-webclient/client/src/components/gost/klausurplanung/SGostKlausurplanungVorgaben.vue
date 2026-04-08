@@ -3,7 +3,7 @@
 		<svws-ui-modal-hilfe> <s-gost-klausurplanung-vorgaben-hilfe /> </svws-ui-modal-hilfe>
 	</Teleport>
 	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
-		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
+		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl :halbjahr />
 	</Teleport>
 	<div class="page page-flex-row">
 		<div class="grow min-w-fit flex flex-col gap-4 overflow-y-hidden">

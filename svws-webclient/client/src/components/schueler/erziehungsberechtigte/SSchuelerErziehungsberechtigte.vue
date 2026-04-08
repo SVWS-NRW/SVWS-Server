@@ -103,13 +103,13 @@
 			</svws-ui-modal>
 			<s-schueler-erziehungsberechtigte-modal v-model:erster-erz="ersterErz"
 				v-model:zweiter-erz="zweiterErz"
-				:show-modal="showModal"
-				:erzieherarten-by-id="erzieherartenById"
-				:hat-kompetenz-update="hatKompetenzUpdate"
-				:ist-erster-erz-gespeichert="istErsterErzGespeichert"
-				:orte-by-id="orteById"
-				:ortsteile-by-id="ortsteileById"
-				:schuljahr="schuljahr"
+				:show-modal
+				:erzieherarten-by-id
+				:hat-kompetenz-update
+				:ist-erster-erz-gespeichert
+				:orte-by-id
+				:ortsteile-by-id
+				:schuljahr
 				@close-modal="closeModal"
 				@send-request="sendRequest"
 				@save-and-show-second="saveAndShowSecondForm"

@@ -1,6 +1,6 @@
 <template>
 	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
-		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
+		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl :halbjahr />
 	</Teleport>
 	<div class="page page-flex-col">
 		<svws-ui-content-card class="col-span-full" :title="`Klausurplan ${jahrgangsdaten.jahrgang}, ${halbjahr.halbjahr}. Halbjahr${quartalsauswahl.value === 0 ? '' : ', ' + quartalsauswahl.value + '. Quartal'}`">
@@ -8,8 +8,8 @@
 				<s-gost-klausurplanung-detail-ansicht-termin v-for="termin in kMan().terminHtMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value)"
 					:key="termin.id"
 					:abschnitt
-					:termin="termin"
-					:k-man="kMan" />
+					:termin
+					:k-man />
 			</div>
 			<div v-else>
 				<span>Es wurden noch keine Klausurtermine geplant.</span>

@@ -8,7 +8,7 @@
 		<div class="svws-ui-tab-content">
 			<div class="page page-flex-row">
 				<div class="page page-grid-cards">
-					<s-card-schule-datenaustausch-laufbahnplanung :set-gost-lupo-import-m-d-b-fuer-jahrgang="setGostLupoImportMDBFuerJahrgang" />
+					<s-card-schule-datenaustausch-laufbahnplanung :set-gost-lupo-import-m-d-b-fuer-jahrgang />
 				</div>
 			</div>
 		</div>

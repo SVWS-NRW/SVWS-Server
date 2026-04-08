@@ -11,11 +11,8 @@
 		</template>
 		<template #body>
 			<template v-for="benutzer in listBenutzer()" :key="benutzer.id">
-				<s-benutzer-checkbox :benutzer="benutzer"
-					v-model="aktiv" :spalte-links="spalteLinks"
-					:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
-					:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe"
-					:goto-benutzer="gotoBenutzer" />
+				<s-benutzer-checkbox :benutzer v-model="aktiv" :spalte-links :add-benutzer-to-benutzergruppe
+					:remove-benutzer-from-benutzergruppe :goto-benutzer />
 			</template>
 		</template>
 	</svws-ui-table>

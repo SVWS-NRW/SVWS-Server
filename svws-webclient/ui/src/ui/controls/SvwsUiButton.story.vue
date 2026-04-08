@@ -4,7 +4,7 @@
 		<Variant v-for="(props, title) of propsVariants"
 			:key="title"
 			:id="title"
-			:title="title">
+			:title>
 			<div class="flex gap-2 p-1 flex-wrap items-start">
 				<svws-ui-button v-bind="props" @click="onClick">
 					<template v-if="props.type !== 'icon'">
