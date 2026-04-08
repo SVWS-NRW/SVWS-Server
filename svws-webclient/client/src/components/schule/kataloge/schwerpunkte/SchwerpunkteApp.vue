@@ -33,7 +33,7 @@
 		</svws-ui-tab-bar>
 	</template>
 
-	<div v-else>
+	<div v-else class="app--content--placeholder">
 		<span class="icon i-ri-team-line" />
 	</div>
 </template>
