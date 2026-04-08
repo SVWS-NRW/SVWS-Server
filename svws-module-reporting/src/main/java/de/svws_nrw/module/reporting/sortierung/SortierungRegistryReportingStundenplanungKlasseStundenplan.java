@@ -14,6 +14,10 @@ import java.util.List;
  */
 public final class SortierungRegistryReportingStundenplanungKlasseStundenplan {
 
+	private SortierungRegistryReportingStundenplanungKlasseStundenplan() {
+		throw new IllegalStateException("Statische Klasse mit Hilfsmethoden zur Sortierung von Daten für das Reporting. Initialisierung nicht möglich.");
+	}
+
 	/**
 	 * Erstellt einen Comparator für {@link ReportingStundenplanungKlasseStundenplan} anhand angegebener Attribute.
 	 *

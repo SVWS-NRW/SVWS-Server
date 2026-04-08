@@ -219,29 +219,22 @@ public class ProxyReportingLehrerFactoryUnterricht {
 
 		for (final LongArrayKey key : dtoSchuelerLeistungsdaten.keySet123()) {
 			final ReportingSchueler schueler = mapSchueler.get(key.getKeyAt(0));
-			if (schueler == null) {
-				continue;
-			}
-			final ReportingSchuelerLernabschnitt lernabschnitt = schueler.lernabschnittById(key.getKeyAt(1));
-			if (lernabschnitt == null) {
-				continue;
-			}
-			final ReportingKlasse klasse = lernabschnitt.klasse();
-			final ReportingSchuelerLeistungsdaten reportingSchuelerLeistungsdaten = lernabschnitt.leistungsdatenZurId(key.getKeyAt(2));
-			final ReportingFach fach = reportingSchuelerLeistungsdaten.fach();
-			final ReportingLehrer fachlehrer = reportingSchuelerLeistungsdaten.fachlehrer();
+			final ReportingSchuelerLernabschnitt lernabschnitt = (schueler == null) ? null : schueler.lernabschnittById(key.getKeyAt(1));
+			final ReportingKlasse klasse = (lernabschnitt == null) ? null : lernabschnitt.klasse();
+			final ReportingSchuelerLeistungsdaten reportingSchuelerLeistungsdaten = (lernabschnitt == null) ? null : lernabschnitt.leistungsdatenZurId(key.getKeyAt(2));
+			final ReportingFach fach = (reportingSchuelerLeistungsdaten == null) ? null : reportingSchuelerLeistungsdaten.fach();
+			final ReportingLehrer fachlehrer = (reportingSchuelerLeistungsdaten == null) ? null : reportingSchuelerLeistungsdaten.fachlehrer();
 
-			if ((klasse == null) || (fach == null) || (fachlehrer == null)) {
-				continue;
+			if ((schueler != null) && (lernabschnitt != null) && (klasse != null) && (fach != null) && (fachlehrer != null)) {
+				mapIdLeistungsdatenIdSchueler.putIfAbsent(reportingSchuelerLeistungsdaten.id(), schueler.id());
+				mapKlasseFachLehrerLeistungsdaten.add(klasse.id(), fach.id(), fachlehrer.id(), reportingSchuelerLeistungsdaten);
+				mapKlasse.putIfAbsent(klasse.id(), klasse);
+				mapFach.putIfAbsent(fach.id(), fach);
+				mapLehrer.putIfAbsent(fachlehrer.id(), fachlehrer);
 			}
-
-			mapIdLeistungsdatenIdSchueler.putIfAbsent(reportingSchuelerLeistungsdaten.id(), schueler.id());
-			mapKlasseFachLehrerLeistungsdaten.add(klasse.id(), fach.id(), fachlehrer.id(), reportingSchuelerLeistungsdaten);
-			mapKlasse.putIfAbsent(klasse.id(), klasse);
-			mapFach.putIfAbsent(fach.id(), fach);
-			mapLehrer.putIfAbsent(fachlehrer.id(), fachlehrer);
 		}
 	}
+
 
 	/**
 	 * Ermittelt alle Zusatzlehrer aus einer Liste von Leistungsdaten.
@@ -409,30 +402,19 @@ public class ProxyReportingLehrerFactoryUnterricht {
 
 		for (final LongArrayKey key : dtoSchuelerLeistungsdaten.keySet123()) {
 			final ReportingSchueler schueler = mapSchueler.get(key.getKeyAt(0));
-			if (schueler == null) {
-				continue;
-			}
-			final ReportingSchuelerLernabschnitt lernabschnitt = schueler.lernabschnittById(key.getKeyAt(1));
-			if (lernabschnitt == null) {
-				continue;
-			}
-			final ReportingSchuelerLeistungsdaten reportingSchuelerLeistungsdaten = lernabschnitt.leistungsdatenZurId(key.getKeyAt(2));
-			final ReportingKurs kurs = reportingSchuelerLeistungsdaten.kurs();
-			if (kurs == null) {
-				continue;
-			}
-			final ReportingFach fach = reportingSchuelerLeistungsdaten.fach();
-			final ReportingLehrer fachlehrer = reportingSchuelerLeistungsdaten.fachlehrer();
+			final ReportingSchuelerLernabschnitt lernabschnitt = (schueler == null) ? null : schueler.lernabschnittById(key.getKeyAt(1));
+			final ReportingSchuelerLeistungsdaten reportingSchuelerLeistungsdaten = (lernabschnitt == null) ? null : lernabschnitt.leistungsdatenZurId(key.getKeyAt(2));
+			final ReportingKurs kurs = (reportingSchuelerLeistungsdaten == null) ? null : reportingSchuelerLeistungsdaten.kurs();
+			final ReportingFach fach = (reportingSchuelerLeistungsdaten == null) ? null : reportingSchuelerLeistungsdaten.fach();
+			final ReportingLehrer fachlehrer = (reportingSchuelerLeistungsdaten == null) ? null : reportingSchuelerLeistungsdaten.fachlehrer();
 
-			if ((fach == null) || (fachlehrer == null)) {
-				continue;
+			if ((schueler != null) && (lernabschnitt != null) && (kurs != null) && (fach != null) && (fachlehrer != null)) {
+				mapIdLeistungsdatenIdSchueler.putIfAbsent(reportingSchuelerLeistungsdaten.id(), schueler.id());
+				mapKursFachLehrerLeistungsdaten.add(kurs.id(), fach.id(), fachlehrer.id(), reportingSchuelerLeistungsdaten);
+				mapKurse.putIfAbsent(kurs.id(), kurs);
+				mapFach.putIfAbsent(fach.id(), fach);
+				mapLehrer.putIfAbsent(fachlehrer.id(), fachlehrer);
 			}
-
-			mapIdLeistungsdatenIdSchueler.putIfAbsent(reportingSchuelerLeistungsdaten.id(), schueler.id());
-			mapKursFachLehrerLeistungsdaten.add(kurs.id(), fach.id(), fachlehrer.id(), reportingSchuelerLeistungsdaten);
-			mapKurse.putIfAbsent(kurs.id(), kurs);
-			mapFach.putIfAbsent(fach.id(), fach);
-			mapLehrer.putIfAbsent(fachlehrer.id(), fachlehrer);
 		}
 	}
 

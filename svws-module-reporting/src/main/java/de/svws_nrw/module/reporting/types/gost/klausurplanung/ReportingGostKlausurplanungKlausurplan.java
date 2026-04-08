@@ -175,13 +175,13 @@ public class ReportingGostKlausurplanungKlausurplan extends ReportingBaseType {
 	 * @return Eine Liste von Objekten des jeweiligen Typs, die den Filterkriterien entsprechen.
 	 */
 	@JsonIgnore
-	public List<?> datenGefiltert() {
+	public List<ReportingBaseType> datenGefiltert() {
 		switch (this.idsFilterDataType) {
 			case SCHUELER -> {
-				return schuelerGefiltert();
+				return new ArrayList<>(schuelerGefiltert());
 			}
 			case KURSE -> {
-				return kurseGefiltert();
+				return new ArrayList<>(kurseGefiltert());
 			}
 			case null, default -> {
 				return new ArrayList<>();

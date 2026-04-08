@@ -56,13 +56,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 			final List<ReportingGostKlausurplanungKursklausur> kursklausuren, final List<ReportingSchueler> schueler,
 			final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren, final List<Long> idsFilter,
 			final ReportingFilterDataType idsFilterDataType) {
-		super(klausurtermine,
-				kurse,
-				kursklausuren,
-				schueler,
-				schuelerklausuren,
-				idsFilter,
-				idsFilterDataType);
+		super(klausurtermine, kurse, kursklausuren, schueler, schuelerklausuren, idsFilter, idsFilterDataType);
 		this.reportingRepository = reportingRepository;
 		this.gostKlausurplanManager = null;
 	}
@@ -96,7 +90,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 				.map(k -> new ProxyReportingKurs(this.reportingRepository, k))
 				.toList());
 
-		// 3. Klausurtermine erstellen
+		// 3. Klausurtermine erstellen.
 		// HINWEIS: Termine werden ohne Klausuren erzeugt. Wenn Klausuren erzeugt werden, werden diese dem Termin zugewiesen.
 		super.klausurtermine.addAll(this.gostKlausurplanManager.terminGetMengeAsList().stream()
 				.map(t -> (ReportingGostKlausurplanungKlausurtermin) new ProxyReportingGostKlausurplanungKlausurtermin(t))
@@ -187,33 +181,48 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 
 			// Zu einer Schülerklausur kann es mehrere Schülerklausurtermine geben, die sich in ihrer FolgeNr unterscheiden (z. B. bei Nachschrieb).
 			for (final GostSchuelerklausurTermin skTermin : gostKlausurplanManager.schuelerklausurterminGetMengeBySchuelerklausur(sk)) {
-				// 1. Den Klausurtermin für den Schülerklausurtermin ermitteln.
-				final ReportingGostKlausurplanungKlausurtermin klausurtermin;
-
-				// Der Termin mit FolgeNr 0 und TerminID null ist der Termin der Kursklausur.
-				if ((skTermin.folgeNr == 0) && (skTermin.idTermin == null)) {
-					klausurtermin = mapKursklausuren.get(gostKlausurplanManager.kursklausurBySchuelerklausur(sk).id).klausurtermin();
-				} else {
-					klausurtermin = (skTermin.idTermin != null) ? mapKlausurtermine.get(skTermin.idTermin) : null;
-				}
-
-				// 2. Den Klausurraum mit den Stunden zum Schülerklausurtermin ermitteln.
-				ReportingGostKlausurplanungKlausurraum klausurraum = null;
-
-				final GostKlausurraum gostKlausurraum = gostKlausurplanManager.raumGetBySchuelerklausurtermin(skTermin);
-				if (gostKlausurraum != null) {
-					final List<GostKlausurraumstunde> gostKlausurraumstundenSchueler = gostKlausurplanManager.raumstundeGetMengeByRaum(gostKlausurraum);
-					if (!gostKlausurraumstundenSchueler.isEmpty()) {
-						klausurraum = new ProxyReportingGostKlausurplanungKlausurraum(
-								this.reportingRepository, klausurtermin, gostKlausurraum, gostKlausurraumstundenSchueler);
-					}
-				}
-
-				// 3. Schülerklausur erzeugen und der Gesamtliste der Schülerklausuren hinzufügen.
-				super.schuelerklausuren.add(new ProxyReportingGostKlausurplanungSchuelerklausur(sk, skTermin, klausurraum, klausurtermin,
-						mapKursklausuren.get(gostKlausurplanManager.kursklausurBySchuelerklausur(sk).id), schueler(sk.idSchueler)));
+				erstelleSchuelerklausurTermin(sk, skTermin, mapKlausurtermine, mapKursklausuren);
 			}
 		}
+	}
+
+	/**
+	 * Erstellt einen Schülerklausurtermin und fügt diesen der Gesamtliste der Schülerklausuren hinzu.
+	 *
+	 * @param sk                Die Gost-Schülerklausur, für die der Termin erstellt werden soll.
+	 * @param skTermin          Der zugehörige Termin der Schülerklausur.
+	 * @param mapKlausurtermine Eine Zuordnung von Klausurtermin-IDs zu den entsprechenden Reporting-Objekten der Klausurtermine.
+	 * @param mapKursklausuren  Eine Zuordnung von Kursklausur-IDs zu den entsprechenden Reporting-Objekten der Kursklausuren.
+	 */
+	private void erstelleSchuelerklausurTermin(final GostSchuelerklausur sk, final GostSchuelerklausurTermin skTermin,
+			final Map<Long, ReportingGostKlausurplanungKlausurtermin> mapKlausurtermine,
+			final Map<Long, ReportingGostKlausurplanungKursklausur> mapKursklausuren) {
+
+		// 1. Den Klausurtermin für den Schülerklausurtermin ermitteln.
+		final ReportingGostKlausurplanungKlausurtermin klausurtermin;
+
+		// Der Termin mit FolgeNr 0 und TerminID null ist der Termin der Kursklausur.
+		if ((skTermin.folgeNr == 0) && (skTermin.idTermin == null)) {
+			klausurtermin = mapKursklausuren.get(gostKlausurplanManager.kursklausurBySchuelerklausur(sk).id).klausurtermin();
+		} else {
+			klausurtermin = (skTermin.idTermin != null) ? mapKlausurtermine.get(skTermin.idTermin) : null;
+		}
+
+		// 2. Den Klausurraum mit den Stunden zum Schülerklausurtermin ermitteln.
+		ReportingGostKlausurplanungKlausurraum klausurraum = null;
+
+		final GostKlausurraum gostKlausurraum = gostKlausurplanManager.raumGetBySchuelerklausurtermin(skTermin);
+		if (gostKlausurraum != null) {
+			final List<GostKlausurraumstunde> gostKlausurraumstundenSchueler = gostKlausurplanManager.raumstundeGetMengeByRaum(gostKlausurraum);
+			if (!gostKlausurraumstundenSchueler.isEmpty()) {
+				klausurraum = new ProxyReportingGostKlausurplanungKlausurraum(
+						this.reportingRepository, klausurtermin, gostKlausurraum, gostKlausurraumstundenSchueler);
+			}
+		}
+
+		// 3. Schülerklausur erzeugen und der Gesamtliste der Schülerklausuren hinzufügen.
+		super.schuelerklausuren.add(new ProxyReportingGostKlausurplanungSchuelerklausur(sk, skTermin, klausurraum, klausurtermin,
+				mapKursklausuren.get(gostKlausurplanManager.kursklausurBySchuelerklausur(sk).id), schueler(sk.idSchueler)));
 	}
 
 

@@ -67,7 +67,7 @@ public final class ReportBuilderPdf extends ReportBuilder<byte[]> {
 	protected byte[] generateInternalByteArray() throws ApiOperationException {
 		try {
 			final int htmlLength = this.builderContext.getHtmlInput().length() * 2;
-			final int initialSize = Math.min(Math.max(htmlLength, 8 * 1024), 1024 * 1024);
+			final int initialSize = Math.clamp(htmlLength, 8 * 1024, 1024 * 1024);
 			final ByteArrayOutputStream baoStream = new ByteArrayOutputStream(initialSize);
 			this.builderContext.getRenderer().renderPdf(this.builderContext.getHtmlInput(), this.reportBuilderContext.getRootPfad(), baoStream);
 			return baoStream.toByteArray();

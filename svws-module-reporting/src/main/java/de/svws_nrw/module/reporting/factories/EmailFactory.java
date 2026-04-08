@@ -111,8 +111,8 @@ public final class EmailFactory {
 			final SimpleOperationResponse simple = new SimpleOperationResponse();
 			simple.id = jobId;
 			simple.success = true;
-			simple.log.add("Der E-Mail-Versand wurde als Hintergrundjob gestartet mit Job-ID " + jobId);
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Job für den asynchronen E-Mail-Versand wurde gestartet. Job-ID: " + jobId);
+			simple.log.add("Ein E-Mail-Versand-Job wurde gestartet mit Job-ID %d".formatted(jobId));
+			reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Job für den asynchronen E-Mail-Versand wurde gestartet. Job-ID: %d".formatted(jobId));
 
 			return Response.status(Status.ACCEPTED).type(MediaType.APPLICATION_JSON).entity(simple).build();
 		} catch (final Exception e) {
@@ -171,8 +171,7 @@ public final class EmailFactory {
 
 		if (emailAdresse.isBlank()) {
 			reportingRepository.logger().logLn(LogLevel.ERROR, 4,
-					"### FEHLER: Der E-Mail-Versand wurde abgebrochen, da für den aktuellen Benutzer keine gültige E-Mail-Adresse "
-							+ "ermittelt werden konnte. Bitte überprüfen Sie die E-Mail-Einstellungen des Benutzers.");
+					"### FEHLER: Der E-Mail-Versand wurde abgebrochen, da für den aktuellen Benutzer keine gültige E-Mail-Adresse ermittelt werden konnte. Bitte überprüfen Sie die E-Mail-Einstellungen des Benutzers.");
 			throw new ApiOperationException(Status.BAD_REQUEST, null, null, MediaType.APPLICATION_JSON);
 		}
 		return emailAdresse;
@@ -191,7 +190,7 @@ public final class EmailFactory {
 		if ((parameter != null) && (parameter.eMailDaten() != null)
 				&& (ReportingEMailEmpfaengerTyp.getByID(parameter.eMailDaten().empfaengerTyp) != ReportingEMailEmpfaengerTyp.UNDEFINED)) {
 			reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-					"Der E-Mail-Empfänger-Typ wurde ermittelt: " + ReportingEMailEmpfaengerTyp.getByID(parameter.eMailDaten().empfaengerTyp).name());
+					"Der E-Mail-Empfänger-Typ wurde ermittelt: %s".formatted(ReportingEMailEmpfaengerTyp.getByID(parameter.eMailDaten().empfaengerTyp).name()));
 			return ReportingEMailEmpfaengerTyp.getByID(parameter.eMailDaten().empfaengerTyp);
 		}
 		reportingRepository.logger().logLn(LogLevel.ERROR, 4, "### FEHLER: Es wurde kein gültiger Empfängertyp festgelegt");
@@ -220,93 +219,106 @@ public final class EmailFactory {
 		final Map<String, EmailJobRecipient> mapEmpfaengerEmailAnhaenge = new HashMap<>();
 
 		for (final Map.Entry<Long, List<ReportBuilderPdf>> entry : mapGruppiertePdfs.entrySet()) {
-
-			final Long id = entry.getKey();
-			final List<ReportBuilderPdf> pdfBuilders = entry.getValue();
-
-			if (id == null) {
-				continue;
-			}
-
-			if (id < 0) {
-				listUebersprungen.add("- HINWEIS: Es gab PDF-Dateien, die keinem Empfänger zugeordnet werden konnten. Diese werden nicht versendet.");
-				continue;
-			}
-
-			if ((pdfBuilders == null) || pdfBuilders.isEmpty()) {
-				listUebersprungen.add("- Für die ID " + id + " konnten keine PDFs gefunden werden und damit kein E-Mail-Versand erfolgen.");
-				continue;
-			}
-
-			final List<ReportingPerson> empfaengerPersonen = ermittleEmpfaengerPersonen(id, empfaengerTyp);
-			if (empfaengerPersonen.isEmpty()) {
-				listUebersprungen.add("- Für die ID " + id + " konnten keine Empfänger ermittelt werden. Sie wird beim E-Mail-Versand übersprungen.");
-				continue;
-			}
-
-			final List<EmailJobAttachment> attachments = new ArrayList<>();
-
-			for (final ReportBuilderPdf pdfBuilder : pdfBuilders) {
-				try {
-					attachments.add(new EmailJobAttachment(pdfBuilder.getDateinameMitEndung(), pdfBuilder.generate(), "application/pdf"));
-				} catch (final Exception e) {
-					reportingRepository.logger().logLn(LogLevel.ERROR, 4,
-							"### FEHLER: PDF-Datei '" + pdfBuilder.getDateiname() + "' für ID " + id + " konnte nicht generiert werden: "
-									+ e.getMessage());
-					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
-							"### FEHLER: PDF-Datei '" + pdfBuilder.getDateiname() + "' für ID " + id + " konnte nicht generiert werden: "
-									+ e.getMessage());
-				}
-			}
-
-			sammleEmpfaengerUndAnhaengeFuerAttachments(id, empfaengerPersonen, parameter.eMailDaten().istPrivateEmailAlternative, attachments,
-					mapEmpfaengerEmailAnhaenge, listUebersprungen);
+			zuweisenGruppiertePdf(entry.getKey(), entry.getValue(), parameter, empfaengerTyp, mapEmpfaengerEmailAnhaenge, listUebersprungen);
 		}
 
 		return new ArrayList<>(mapEmpfaengerEmailAnhaenge.values());
 	}
 
+	/**
+	 * Verarbeitet einen einzelnen Eintrag aus der PDF-Gruppierung und ordnet ihn den Empfängern zu.
+	 *
+	 * @param id                         Die ID
+	 * @param pdfBuilders                Die Liste der PDF-Builder zur ID
+	 * @param parameter                  Die Reporting-Parameter
+	 * @param empfaengerTyp              Der Typ der Empfänger
+	 * @param mapEmpfaengerEmailAnhaenge Map zur Zuweisung von E-Mail-Anhängen an Empfänger
+	 * @param listUebersprungen          Die Liste übersprungener IDs
+	 *
+	 * @throws ApiOperationException Wenn beim Generieren der PDFs ein Fehler auftritt
+	 */
+	private void zuweisenGruppiertePdf(final Long id, final List<ReportBuilderPdf> pdfBuilders, final ReportingParameterTypisiert parameter,
+			final ReportingEMailEmpfaengerTyp empfaengerTyp, final Map<String, EmailJobRecipient> mapEmpfaengerEmailAnhaenge,
+			final List<String> listUebersprungen) throws ApiOperationException {
+
+		if (id == null) {
+			return;
+		}
+
+		if (id < 0) {
+			listUebersprungen.add("- HINWEIS: Es gab PDF-Dateien, die keinem Empfänger zugeordnet werden konnten. Diese werden nicht versendet.");
+			return;
+		}
+
+		if ((pdfBuilders == null) || pdfBuilders.isEmpty()) {
+			listUebersprungen.add("- Für die ID %d konnten keine PDFs gefunden werden und damit kein E-Mail-Versand erfolgen.".formatted(id));
+			return;
+		}
+
+		final List<ReportingPerson> empfaengerPersonen = ermittleEmpfaengerPersonen(id, empfaengerTyp);
+		if (empfaengerPersonen.isEmpty()) {
+			listUebersprungen.add("- Für die ID %d konnten keine Empfänger ermittelt werden. Sie wird beim E-Mail-Versand übersprungen.".formatted(id));
+			return;
+		}
+
+		final List<EmailJobAttachment> attachments = new ArrayList<>();
+		for (final ReportBuilderPdf pdfBuilder : pdfBuilders) {
+			try {
+				attachments.add(new EmailJobAttachment(pdfBuilder.getDateinameMitEndung(), pdfBuilder.generate(), "application/pdf"));
+			} catch (final Exception e) {
+				reportingRepository.logger().logLn(LogLevel.ERROR, 4,
+						"### FEHLER: PDF-Datei '%s' für ID %d konnte nicht generiert werden: %s".formatted(pdfBuilder.getDateiname(), id, e.getMessage()));
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
+						"### FEHLER: PDF-Datei '%s' für ID %d konnte nicht generiert werden: %s".formatted(pdfBuilder.getDateiname(), id, e.getMessage()));
+			}
+		}
+
+		for (final ReportingPerson empfaengerPerson : empfaengerPersonen) {
+			zuweisenEmailAnhaenge(id, empfaengerPerson, parameter.eMailDaten().istPrivateEmailAlternative, attachments, mapEmpfaengerEmailAnhaenge,
+					listUebersprungen);
+		}
+	}
 
 	/**
-	 * Hilfsmethode zu sammleEmpfaengerUndAnhaenge, welche für die Anhänge eines PDF-Builders die E-Mail-Empfänger bestimmt und diesen zuordnet.
-	 * Die Zuordnung erfolgt über die in dem Parameter mapEmpfaengerEmailAnhaenge übergebene Map, welche im Allgemeinen schon durch vorige
-	 * Aufrufe Zuordnungen von anderen Anhängen beinhaltet.
+	 * Weist einer E-Mail-Adresse Anhänge zu, die für den E-Mail-Versand benötigt werden, prüft die Gültigkeit der E-Mail-Adresse und behandelt Fälle, in
+	 * denen die E-Mail-Adresse nicht nutzbar ist.
 	 *
 	 * @param id                            die ID
-	 * @param empfaengerPersonen            die Personen-Objekte für den Empfänger
+	 * @param empfaengerPerson              das Personen-Objekt für den Empfänger
 	 * @param nutzeAlternativPrivateEmail   gibt an, ob von der Person auch die private E-Mail-Adresse genutzt werden kann
-	 * @param attachments                   die Anhänge, die den Empfänger-Personen zugeordnet werden können
+	 * @param attachments                   die Anhänge, die der Empfänger-Person zugeordnet werden können
 	 * @param mapEmpfaengerEmailAnhaenge    die Map, welche mit dieser Methode schrittweise aufgebaut wird und die Zuordnung der Anhänge beinhaltet
 	 * @param listUebersprungen             die Liste, in der Informationen über übersprungene Datensätze gesammelt werden
 	 */
-	private static void sammleEmpfaengerUndAnhaengeFuerAttachments(final long id, final List<ReportingPerson> empfaengerPersonen,
-			final boolean nutzeAlternativPrivateEmail, final List<EmailJobAttachment> attachments,
-			final Map<String, EmailJobRecipient> mapEmpfaengerEmailAnhaenge, final List<String> listUebersprungen) {
-		for (final ReportingPerson empfaengerPerson : empfaengerPersonen) {
-			final String empfaengerEmail = ermittleEMailAdresseZurPerson(empfaengerPerson, nutzeAlternativPrivateEmail);
+	private static void zuweisenEmailAnhaenge(final long id, final ReportingPerson empfaengerPerson, final boolean nutzeAlternativPrivateEmail,
+			final List<EmailJobAttachment> attachments, final Map<String, EmailJobRecipient> mapEmpfaengerEmailAnhaenge,
+			final List<String> listUebersprungen) {
 
-			if (empfaengerEmail.isBlank()) {
-				listUebersprungen.add("- Für die ID " + id + " konnte keine gültige E-Mail-Adresse des Empfängers ermittelt werden. Sie wird beim "
-						+ "E-Mail-Versand übersprungen.");
-				continue;
-			}
+		final String empfaengerEmail = ermittleEMailAdresseZurPerson(empfaengerPerson, nutzeAlternativPrivateEmail);
 
-			// Überprüfung der E-Mail-Domain.
-			final int atIndex = empfaengerEmail.lastIndexOf('@');
-			if ((atIndex <= 0) || (atIndex == (empfaengerEmail.length() - 1))) {
-				listUebersprungen.add("- Die E-Mail-Adresse '" + empfaengerEmail + "' für ID " + id + " ist ungültig (fehlende oder fehlerhafte Domain).");
-				continue;
-			}
-			final String domain = empfaengerEmail.substring(atIndex + 1).toLowerCase(Locale.ROOT);
-			if (BLOCKED_EMAIL_DOMAINS.contains(domain)) {
-				listUebersprungen.add("- Die E-Mail an " + empfaengerEmail + " konnte nicht versendet werden, da die Domain als unzulässig markiert wurde.");
-				continue;
-			}
-
-			final EmailJobRecipient empfaengerEmailAnhaenge =
-					mapEmpfaengerEmailAnhaenge.computeIfAbsent(empfaengerEmail, k -> new EmailJobRecipient(empfaengerEmail));
-			empfaengerEmailAnhaenge.attachments.addAll(attachments);
+		if (empfaengerEmail.isBlank()) {
+			listUebersprungen
+					.add("- Für die ID %d konnte keine gültige E-Mail-Adresse des Empfängers ermittelt werden. Sie wird beim E-Mail-Versand übersprungen."
+							.formatted(id));
+			return;
 		}
+
+		// Überprüfung der E-Mail-Domain.
+		final int atIndex = empfaengerEmail.lastIndexOf('@');
+		if ((atIndex <= 0) || (atIndex == (empfaengerEmail.length() - 1))) {
+			listUebersprungen.add("- Die E-Mail-Adresse '%s' für ID %d ist ungültig (fehlende oder fehlerhafte Domain).".formatted(empfaengerEmail, id));
+			return;
+		}
+
+		final String domain = empfaengerEmail.substring(atIndex + 1).toLowerCase(Locale.ROOT);
+		if (BLOCKED_EMAIL_DOMAINS.contains(domain)) {
+			listUebersprungen.add("- Die E-Mail an %s konnte nicht versendet werden, da die Domain als unzulässig markiert wurde.".formatted(empfaengerEmail));
+			return;
+		}
+
+		final EmailJobRecipient emailEmpfaenger =
+				mapEmpfaengerEmailAnhaenge.computeIfAbsent(empfaengerEmail, k -> new EmailJobRecipient(empfaengerEmail));
+		emailEmpfaenger.attachments.addAll(attachments);
 	}
 
 	/**
@@ -374,27 +386,27 @@ public final class EmailFactory {
 		if (manager == null) {
 			final SimpleOperationResponse notFound = new SimpleOperationResponse();
 			notFound.success = false;
-			notFound.log.add("E-Mail-Job-Manager nicht gefunden für: " + reportingRepository.conn().getUser().getId() + " ("
-					+ reportingRepository.conn().getDBSchema() + ")");
+			notFound.log.add("E-Mail-Job-Manager nicht gefunden für: %d (%s)".formatted(reportingRepository.conn().getUser().getId(),
+					reportingRepository.conn().getDBSchema()));
 			return Response.status(Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(notFound).build();
 		}
 		final EmailJob job = manager.getJob(idJob);
 		if (job == null) {
 			final SimpleOperationResponse notFound = new SimpleOperationResponse();
 			notFound.success = false;
-			notFound.log.add("Job nicht gefunden: " + idJob);
+			notFound.log.add("Job nicht gefunden: %d".formatted(idJob));
 			return Response.status(Status.NOT_FOUND).type(MediaType.APPLICATION_JSON).entity(notFound).build();
 		}
 		final boolean ok = manager.cancelJob(idJob);
 		final SimpleOperationResponse simple = new SimpleOperationResponse();
 		simple.success = ok;
 		if (!ok) {
-			simple.log.add("Abbruch fehlgeschlagen für Job: " + idJob);
+			simple.log.add("Abbruch fehlgeschlagen für Job: %d".formatted(idJob));
 			return Response.status(Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity(simple).build();
 		}
 		if ((job.getStatus() == EmailJobStatus.COMPLETED_SUCCESSFULLY) || (job.getStatus() == EmailJobStatus.COMPLETED_WITH_ERRORS)
 				|| (job.getStatus() == EmailJobStatus.FAILED) || (job.getStatus() == EmailJobStatus.CANCELED)) {
-			simple.log.add("Job war bereits beendet (Status=" + job.getStatus() + ").");
+			simple.log.add("Job war bereits beendet (Status=%s).".formatted(job.getStatus()));
 		} else {
 			simple.log.add("Abbruch wurde veranlasst.");
 		}

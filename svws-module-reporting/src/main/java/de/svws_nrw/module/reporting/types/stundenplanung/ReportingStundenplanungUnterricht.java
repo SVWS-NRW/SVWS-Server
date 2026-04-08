@@ -19,7 +19,7 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 
 	/** Das Fach des Unterrichts */
-	public ReportingFach fach;
+	protected ReportingFach fach;
 
 	/** Die ID des Unterrichts */
 	protected long id;

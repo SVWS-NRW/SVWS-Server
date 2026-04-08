@@ -8,6 +8,10 @@ import de.svws_nrw.module.reporting.types.fach.ReportingFach;
  */
 public final class FilterRegistryReportingFach {
 
+	private FilterRegistryReportingFach() {
+		throw new IllegalStateException("Statische Klasse mit Hilfsmethoden zur Filterung von Daten für das Reporting. Initialisierung nicht möglich.");
+	}
+
 	/**
 	 * Stellt die {@link FilterRegistry} für die Klasse {@link ReportingFach} öffentlich zur Verfügung.
 	 * Diese Methode wird vom {@link de.svws_nrw.module.reporting.repositories.ReportingRepository} via Reflection aufgerufen.

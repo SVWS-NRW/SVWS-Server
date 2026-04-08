@@ -104,26 +104,12 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 		// Dabei werden auch die Kursbelegungen der Schüler und die Kurse bei den Schienen ergänzt.
 		for (final GostBlockungKurs kurs : datenManager.kursGetListeSortiertNachKursartFachNummer()) {
 			// Liste der Kurslehrer erzeugen.
-			List<ReportingLehrer> kursLehrer = new ArrayList<>();
-			if (!datenManager.kursGetLehrkraefteSortiert(kurs.id).isEmpty()) {
-				kursLehrer = datenManager.kursGetLehrkraefteSortiert(kurs.id)
-						.stream()
-						.map(l -> (ReportingLehrer) new ProxyReportingLehrer(
-								reportingRepository,
-								reportingRepository.mapLehrerStammdaten().computeIfAbsent(l.id, ls -> {
-									try {
-										final DBEntityManager conn = reportingRepository.conn();
-										return new DataLehrerStammdaten(conn, new DataLernplattformen(conn),
-												new DataEinwilligungsarten(conn)).getById(l.id);
-									} catch (final ApiOperationException e) {
-										ReportingExceptionUtils.logException(
-												"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
-												reportingRepository.logger(), LogLevel.INFO, 0);
-										return new LehrerStammdaten();
-									}
-								})))
-						.toList();
-			}
+			final List<ReportingLehrer> kursLehrer = datenManager.kursGetLehrkraefteSortiert(kurs.id)
+					.stream()
+					.map(l -> (ReportingLehrer) new ProxyReportingLehrer(
+							reportingRepository,
+							reportingRepository.mapLehrerStammdaten().computeIfAbsent(l.id, ls -> ladeLehrerStammdaten(l.id))))
+					.toList();
 
 			// Den Kurs der Gost-Kurplanung erzeugen.
 			// Darin fehlen die Kurschüler. Diese werden später durch das ProxyKursobjekt nachgeladen (lazy-loading), in dem dort
@@ -154,24 +140,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 			// Ergänze bei den Schülern die Kursbelegung mit dem neuen Kurs (ohne die Mitschüler des Kurses).
 			// Es kann der Fall auftreten, dass z. B. durch Wiederholung Kursbelegungen ohne Fachwahlen auftreten. Diese werden mit Standardwerten gefüllt.
 			for (final long idKursschueler : ergebnisManager.getOfKursSchuelermenge(kurs.id).stream().map(s -> s.id).toList()) {
-				String fachwahlAbiturfach = "";
-				boolean fachwahlGueltig = false;
-				boolean fachwahlSchriftlich = false;
-				try {
-					final GostFachwahl gostFachwahl = ergebnisManager.getOfSchuelerOfKursFachwahl(idKursschueler, kurs.id);
-					if (gostFachwahl != null) {
-						fachwahlAbiturfach = "" + (gostFachwahl.abiturfach != null ? gostFachwahl.abiturfach : "");
-						fachwahlGueltig = true;
-						fachwahlSchriftlich = gostFachwahl.istSchriftlich;
-					}
-				} catch (final Exception e) {
-					ReportingExceptionUtils.logException(
-							"INFO: Fehler mit definiertem Rückgabewert abgefangen aufgrund fehlender Fachwahl eines Schülers bei dessen Kursplanungskursbelegung.",
-							e, reportingRepository.logger(), LogLevel.INFO, 0);
-				}
-				mapBlockungsergebnisSchuelermenge.get(idKursschueler).gostKursplanungKursbelegungen()
-						.add(new ProxyReportingSchuelerGostKursplanungKursbelegung(fachwahlAbiturfach, fachwahlGueltig, fachwahlSchriftlich,
-								reportingGostKursplanungKurs));
+				ergaenzeKursbelegung(idKursschueler, kurs.id, reportingGostKursplanungKurs, mapBlockungsergebnisSchuelermenge);
 			}
 
 			// Füge den neuen Kurs in die Liste der Kurse der entsprechenden Schienen ein.
@@ -192,6 +161,39 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 				.filter(s -> !ergebnisManager.getOfSchieneKursmengeSortiert(s.id).isEmpty())
 				.toList()
 				.forEach(s -> super.schienen().add(mapBlockungsergebnisSchienenmenge.get(s.id)));
+	}
+
+	private LehrerStammdaten ladeLehrerStammdaten(final long lehrerId) {
+		try {
+			final DBEntityManager conn = reportingRepository.conn();
+			return new DataLehrerStammdaten(conn, new DataLernplattformen(conn),
+					new DataEinwilligungsarten(conn)).getById(lehrerId);
+		} catch (final ApiOperationException e) {
+			ReportingExceptionUtils.logException(
+					"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Stammdaten eines Lehrers.", e,
+					reportingRepository.logger(), LogLevel.INFO, 0);
+			return new LehrerStammdaten();
+		}
+	}
+
+	private void ergaenzeKursbelegung(final long idKursschueler, final long kursId, final ReportingGostKursplanungKurs reportingGostKursplanungKurs,
+			final HashMap<Long, ReportingSchueler> mapBlockungsergebnisSchuelermenge) {
+		String fachwahlAbiturfach = "";
+		boolean fachwahlGueltig = false;
+		boolean fachwahlSchriftlich = false;
+		try {
+			final GostFachwahl gostFachwahl = ergebnisManager.getOfSchuelerOfKursFachwahl(idKursschueler, kursId);
+			fachwahlAbiturfach = (gostFachwahl.abiturfach != null) ? String.valueOf(gostFachwahl.abiturfach) : "";
+			fachwahlGueltig = true;
+			fachwahlSchriftlich = gostFachwahl.istSchriftlich;
+		} catch (final Exception e) {
+			ReportingExceptionUtils.logException(
+					"INFO: Fehler mit definiertem Rückgabewert abgefangen aufgrund fehlender Fachwahl eines Schülers bei dessen Kursplanungskursbelegung.",
+					e, reportingRepository.logger(), LogLevel.INFO, 0);
+		}
+		mapBlockungsergebnisSchuelermenge.get(idKursschueler).gostKursplanungKursbelegungen()
+				.add(new ProxyReportingSchuelerGostKursplanungKursbelegung(fachwahlAbiturfach, fachwahlGueltig, fachwahlSchriftlich,
+						reportingGostKursplanungKurs));
 	}
 
 

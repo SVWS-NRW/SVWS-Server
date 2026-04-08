@@ -14,6 +14,10 @@ import java.util.List;
  */
 public final class SortierungRegistryReportingFach {
 
+	private SortierungRegistryReportingFach() {
+		throw new IllegalStateException("Statische Klasse mit Hilfsmethoden zur Sortierung von Daten für das Reporting. Initialisierung nicht möglich.");
+	}
+
 	/**
 	 * Erstellt einen {@link Comparator} für die Klasse {@link ReportingFach} basierend
 	 * auf den angegebenen Attributen.

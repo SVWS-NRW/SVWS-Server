@@ -166,6 +166,11 @@ public final class ReportBuilderContextHtml extends ReportBuilderContext<ReportB
 	 *
 	 * @return Eine Liste von HtmlContexts der generischen Typisierung, die für die Erstellung von Report-Daten verwendet werden können.
 	 */
+	// SonarQube beanstandet die Verwendung von Wildcards in Rückgabetypen (S1452).
+	// Da der Builder und der Renderer jedoch mit verschiedenen, beliebig typisierten HtmlContext-Objekten
+	// arbeiten müssen und zur Compile-Zeit nicht auf einen konkreten Typ Parameter festgelegt werden können,
+	// ist der Einsatz der Wildcard <?> hier zwingend erforderlich und konzeptionell gewollt.
+	@SuppressWarnings("java:S1452")
 	List<HtmlContext<?>> getHtmlContexts() {
 		return htmlContexts;
 	}

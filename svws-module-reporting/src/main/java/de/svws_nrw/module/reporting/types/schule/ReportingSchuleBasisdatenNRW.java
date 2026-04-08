@@ -4,6 +4,7 @@ package de.svws_nrw.module.reporting.types.schule;
 import java.util.List;
 
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
+import de.svws_nrw.module.reporting.utils.ReportingStrings;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -79,10 +80,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	 * @return Anschrift der Schule einzeilig
 	 */
 	public String anschriftEinzeilig() {
-		return String.format("%s%s%s".formatted(
-				((!bezeichnung.isEmpty()) && (bezeichnung.getFirst() != null) && !bezeichnung.getFirst().isEmpty()) ? bezeichnung.getFirst().trim() : "",
-				", " + this.strassennameHausnummer(),
-				", " + this.plzOrt()));
+		return erstelleAnschrift(bezeichnungSchuleZeileEins(), ", ");
 	}
 
 	/**
@@ -91,10 +89,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	 * @return Anschrift der Schule
 	 */
 	public String anschrift() {
-		return String.format("%s%s%s".formatted(
-				((!bezeichnung.isEmpty()) && (bezeichnung.getFirst() != null) && !bezeichnung.getFirst().isEmpty()) ? bezeichnung.getFirst().trim() : "",
-				"%n" + this.strassennameHausnummer(),
-				"%n" + this.plzOrt()));
+		return erstelleAnschrift(bezeichnungSchuleZeileEins(), "%n");
 	}
 
 	/**
@@ -103,10 +98,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	 * @return Anschrift der Schule im html-Format
 	 */
 	public String anschriftHtml() {
-		return String.format("%s%s%s".formatted(
-				((!bezeichnung.isEmpty()) && (bezeichnung.getFirst() != null) && !bezeichnung.getFirst().isEmpty()) ? bezeichnung.getFirst().trim() : "",
-				"<br/>" + this.strassennameHausnummer(),
-				"<br/>" + this.plzOrt()));
+		return erstelleAnschrift(bezeichnungSchuleZeileEins(), ReportingStrings.BR);
 	}
 
 	/**
@@ -115,10 +107,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	 * @return Anschrift der Schule
 	 */
 	public String anschriftVollstaendig() {
-		return String.format("%s%s%s".formatted(
-				this.bezeichnungSchuleMehrzeilig(),
-				"%n" + this.strassennameHausnummer(),
-				"%n" + this.plzOrt()));
+		return erstelleAnschrift(this.bezeichnungSchuleMehrzeilig(), "%n");
 	}
 
 	/**
@@ -127,10 +116,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	 * @return Anschrift der Schule im html-Format
 	 */
 	public String anschriftVollstaendigHtml() {
-		return String.format("%s%s%s".formatted(
-				this.bezeichnungSchuleMehrzeiligHtml(),
-				"<br/>" + this.strassennameHausnummer(),
-				"<br/>" + this.plzOrt()));
+		return erstelleAnschrift(this.bezeichnungSchuleMehrzeiligHtml(), ReportingStrings.BR);
 	}
 
 	/**
@@ -139,17 +125,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	 * @return Mehrzeiliges Bezeichnungsfeld
 	 */
 	public String bezeichnungSchuleMehrzeilig() {
-		final StringBuilder result = new StringBuilder(
-				((!bezeichnung.isEmpty()) && (bezeichnung.getFirst() != null) && !bezeichnung.getFirst().isEmpty()) ? bezeichnung.getFirst().trim() : "");
-		if (result.isEmpty()) {
-			return "";
-		}
-		for (int i = 1; i < bezeichnung.size(); i++) {
-			if ((bezeichnung.get(i) != null) && (!bezeichnung.get(i).trim().isEmpty())) {
-				result.append("%n").append(bezeichnung.get(i).trim());
-			}
-		}
-		return result.toString();
+		return erstelleBezeichnungSchuleMehrzeilig("%n");
 	}
 
 	/**
@@ -158,17 +134,16 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	 * @return Mehrzeiliges Bezeichnungsfeld im html-Format
 	 */
 	public String bezeichnungSchuleMehrzeiligHtml() {
-		final StringBuilder result = new StringBuilder(
-				((!bezeichnung.isEmpty()) && (bezeichnung.getFirst() != null) && !bezeichnung.getFirst().isEmpty()) ? bezeichnung.getFirst().trim() : "");
-		if (result.isEmpty()) {
-			return "";
-		}
-		for (int i = 1; i < bezeichnung.size(); i++) {
-			if ((bezeichnung.get(i) != null) && (!bezeichnung.get(i).trim().isEmpty())) {
-				result.append("<br/>").append(bezeichnung.get(i).trim());
-			}
-		}
-		return result.toString();
+		return erstelleBezeichnungSchuleMehrzeilig(ReportingStrings.BR);
+	}
+
+	/**
+	 * Stellt das erste der drei Bezeichnungsfelder der Schule zur Verfügung.
+	 *
+	 * @return Die erste Bezeichnung der Schule oder ein Leerstring, falls keine Bezeichnung vorhanden ist
+	 */
+	public String bezeichnungSchuleZeileEins() {
+		return bezeichnung.isEmpty() ? "" : ersetzeNullBlankTrim(bezeichnung.getFirst());
 	}
 
 	/**
@@ -180,11 +155,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 		if ((this.plz == null)) {
 			return "";
 		}
-
-		String result = this.plz;
-		result += " " + this.ort;
-
-		return result.trim();
+		return (this.plz + " " + this.ort).trim();
 	}
 
 	/**
@@ -193,13 +164,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	 * @return Rücksendeinformation
 	 */
 	public String ruecksendeinformation() {
-		return String.format("%s%s%s%s%s".formatted(
-				((!bezeichnung.isEmpty()) && (bezeichnung.getFirst() != null) && !bezeichnung.getFirst().isEmpty()) ? bezeichnung.getFirst().trim() : "",
-				(((!bezeichnung.isEmpty()) && (bezeichnung.getFirst() != null) && !bezeichnung.getFirst().isEmpty())
-						&& (!this.strassennameHausnummer().isEmpty() || !this.plzOrt().isEmpty())) ? " - " : "",
-				this.strassennameHausnummer(),
-				(!this.strassennameHausnummer().isEmpty() && !this.plzOrt().isEmpty()) ? " - " : "",
-				this.plzOrt()));
+		return erstelleAnschrift(bezeichnungSchuleZeileEins(), " - ");
 	}
 
 	/**
@@ -211,12 +176,10 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 		if (this.strassenname.isEmpty()) {
 			return "";
 		}
-
-		String result = this.strassenname;
-		result += !this.hausnummer.isEmpty() ? (" " + this.hausnummer) : "";
-		result += (!this.hausnummer.isEmpty() && !this.hausnummerZusatz.isEmpty()) ? (" " + this.hausnummerZusatz) : "";
-
-		return result.trim();
+		return (this.strassenname
+				+ (!this.hausnummer.isEmpty() ? (" " + this.hausnummer) : "")
+				+ ((!this.hausnummer.isEmpty() && !this.hausnummerZusatz.isEmpty()) ? (" " + this.hausnummerZusatz) : ""))
+				.trim();
 	}
 
 
@@ -313,5 +276,31 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 		return this.hausnummerZusatz;
 	}
 
+
+	// ##### Hilfsmethoden #####
+
+	private String erstelleAnschrift(final String schulbezeichnung, final String trennerOderUmbruch) {
+		if (schulbezeichnung.isBlank()) {
+			return "";
+		}
+		return schulbezeichnung + trennerOderUmbruch
+				+ this.strassennameHausnummer() + (this.strassennameHausnummer().isBlank() ? "" : trennerOderUmbruch)
+				+ this.plzOrt();
+	}
+
+	private String erstelleBezeichnungSchuleMehrzeilig(final String umbruch) {
+		final String ersteZeile = bezeichnungSchuleZeileEins();
+		if (ersteZeile.isEmpty()) {
+			return "";
+		}
+		final StringBuilder result = new StringBuilder(ersteZeile);
+		for (int i = 1; i < bezeichnung.size(); i++) {
+			final String aktuellerTeil = bezeichnung.get(i);
+			if ((aktuellerTeil != null) && (!aktuellerTeil.trim().isEmpty())) {
+				result.append(umbruch).append(aktuellerTeil.trim());
+			}
+		}
+		return result.toString();
+	}
 
 }

@@ -26,7 +26,7 @@ public class ReportingGostKlausurplanungKlausurtermin extends ReportingBaseType 
 	protected GostHalbjahr gostHalbjahr;
 
 	/** Die ID des Klausurtermins. */
-	public long id;
+	protected long id;
 
 	/** Die Information, ob es sich um einen Haupttermin handelt oder nicht. */
 	protected boolean istHaupttermin;

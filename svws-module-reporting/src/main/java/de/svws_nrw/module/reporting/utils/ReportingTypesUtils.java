@@ -83,7 +83,24 @@ public final class ReportingTypesUtils {
 		(Sonar-Warnung java: S3011) ignoriert werden. Ebenso kann daher der Fehler vom Type
 		IllegalAccessException nicht auftreten.
 		*/
+		setzeFelder(quellobjekt, zielobjekt, editierbareFelder);
+	}
+
+	/**
+	 * Setzt die Werte der Public Felder aus dem übergebenen Objekt der Elternklasse auf die Felder dieser davon abgeleiteten Klasse.
+	 *
+	 * @param quellobjekt das Objekt der Elternklasse
+	 * @param zielobjekt das Objekt der abgeleiteten Klasse
+	 * @param editierbareFelder die Liste der editierbaren Felder
+	 */
+	@SuppressWarnings("squid:S3011") // Betrifft Aufruf von setAccessible, siehe dazu Kommentierung im Code unten.
+	private static void setzeFelder(final Object quellobjekt, final Object zielobjekt, final List<Field> editierbareFelder) {
 		for (final Field feld : editierbareFelder) {
+			// Ab hier werden nur die Werte der Public Felder aus dem übergebenen Objekt der Elternklasse
+			// ausgelesen und den Feldern dieser davon abgeleiteten KLasse zugewiesen.
+			// Da die Felder bereits Public sind, kann die Warnung "This accessibility bypass should be removed"
+			// (Sonar-Warnung java: S3011) ignoriert werden.
+			// Ebenso kann daher der Fehler vom Type IllegalAccessException nicht auftreten.
 			try {
 				feld.setAccessible(true);
 				feld.set(zielobjekt, feld.get(quellobjekt));

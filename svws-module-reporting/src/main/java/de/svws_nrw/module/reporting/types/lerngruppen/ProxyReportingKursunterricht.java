@@ -17,6 +17,10 @@ import java.util.Map;
  * Proxy-Klasse für einen Unterricht eines Kurses im Rahmen des Reportings.
  * Erweitert die Klasse {@link ReportingKursunterricht}.
  */
+// SonarQube möchte, dass die Vererbung maximal 5 Stufen besitzt. Hier kann die Warnung ignoriert werden, da die Proxy-Klasse die letzte Ebene darstellt und
+// im Wesentlichen nur der Initialisierung über ein Kurs-Objekt dient. Des Weiteren lässt sich die schulische Realität in der Struktur der Unterrichtsgruppen
+// nicht weiter vereinfachen.
+@SuppressWarnings("java:S110")
 public class ProxyReportingKursunterricht extends ReportingKursunterricht {
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */

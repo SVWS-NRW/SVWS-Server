@@ -111,13 +111,13 @@ public class ReportingStundenplanungZeitelement extends ReportingBaseType implem
 	/**
 	 * Vergleicht dieses ReportingStundenplanungZeitElement mit einem anderen, um eine sortierte Ordnung zu bestimmen.
 	 * Der Vergleich erfolgt basierend auf dem Wochentag sowie dem Beginn- und Endzeitpunkt.
-	 * Der Rückgabewerte kann wie folgt interpretiert werden.
+	 * Der Rückgabewert kann wie folgt interpretiert werden.
 	 * -8 = Wochentag dieses Objekts liegt vor dem übergebenen Zeitelement.
 	 * -4 = Gleicher Wochentag, dieses Objekt beginnt und endet vor dem Beginn des übergebenen Zeitelements.
 	 * -3 = Gleicher Wochentag, dieses Objekt beginnt vor dem Beginn des übergebenen Zeitelements und endet in ihm.
 	 * -2 = Gleicher Wochentag, dieses Objekt beginnt vor dem Beginn des übergebenen Zeitelements und endet nach ihm.
 	 * -1 = Gleicher Wochentag, dieses Objekt beginnt gleichzeitig mit dem übergebenen Zeitelement und endet vor ihm.
-	 *  0 = Beide Element stimmen in Wochentag, Beginn und Ende überein.
+	 *  0 = Beide Elemente stimmen in Wochentag, Beginn und Ende überein.
 	 * +1 = Gleicher Wochentag, dieses Objekt beginnt gleichzeitig mit dem übergebenen Zeitelement und endet nach ihm.
 	 * +2 = Gleicher Wochentag, dieses Objekt beginnt nach dem Beginn des übergebenen Zeitelements und endet in ihm.
 	 * +3 = Gleicher Wochentag, dieses Objekt beginnt nach dem Beginn des übergebenen Zeitelements und endet nach ihm.
@@ -149,7 +149,20 @@ public class ReportingStundenplanungZeitelement extends ReportingBaseType implem
 		final int zeitelementEnde = (zeitelement.ende == null) ? 1441 : zeitelement.ende;
 
 		// Im Folgenden stimmen die Objekte im Wochentag schon überein.
+		return compareZeiten(thisStart, thisEnde, zeitelementStart, zeitelementEnde);
+	}
 
+	/**
+	 * Hilfsmethode für compareToDetail, um die Lage der Elemente zueinander anhand von Start und Ende zu vergleichen. Beide Elemente liegen dann bereits am gleichen Wochentag.
+	 *
+	 * @param thisStart        Startzeit dieses Elements
+	 * @param thisEnde         Endzeit dieses Elements
+	 * @param zeitelementStart Startzeit des Vergleichselements
+	 * @param zeitelementEnde  Endzeit des Vergleichselements
+	 *
+	 * @return Ein int-Wert gemäß der in compareToDetail definierten Logik.
+	 */
+	private int compareZeiten(final int thisStart, final int thisEnde, final int zeitelementStart, final int zeitelementEnde) {
 		// Vergleiche die Lage der Elemente zueinander anhand von Start und Ende.
 		if ((thisStart == zeitelementStart) && (thisEnde == zeitelementEnde)) {
 			return 0;
@@ -164,30 +177,32 @@ public class ReportingStundenplanungZeitelement extends ReportingBaseType implem
 			if (thisEnde <= zeitelementEnde) {
 				// Endet im Vergleichselement.
 				return -3;
-			} else {
-				// Endet nach dem Ende des Vergleichselements.
-				return -2;
 			}
-		} else if (thisStart >= zeitelementEnde) {
+			// Endet nach dem Ende des Vergleichselements.
+			return -2;
+		}
+
+		if (thisStart >= zeitelementEnde) {
 			// Beginn nach dem Vergleichselement.
 			return 4;
-		} else if (thisStart > zeitelementStart) {
+		}
+
+		if (thisStart > zeitelementStart) {
 			// Beginn im Vergleichselement.
 			if (thisEnde <= zeitelementEnde) {
 				return 2;
-			} else {
-				return 3;
 			}
-		} else {
-			// Beginn gleichzeitig mit Vergleichselement.
-			if (thisEnde < zeitelementEnde) {
-				// Endet vor dem Vergleichselement
-				return -1;
-			} else {
-				// Endet nach dem Vergleichselement
-				return 1;
-			}
+			return 3;
 		}
+
+		// Beginn gleichzeitig mit Vergleichselement.
+		if (thisEnde < zeitelementEnde) {
+			// Endet vor dem Vergleichselement
+			return -1;
+		}
+
+		// Endet nach dem Vergleichselement
+		return 1;
 	}
 
 

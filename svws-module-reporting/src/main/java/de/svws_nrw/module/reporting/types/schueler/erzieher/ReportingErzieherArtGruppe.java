@@ -4,18 +4,23 @@ import java.util.List;
 
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import de.svws_nrw.module.reporting.utils.ReportingStrings;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Erzieher-Art-Gruppe.
  * Sie gruppiert verschiedene Erzieher gleicher Art zusammen, um sie als gemeinsamen Erzieher in Reports ansprechen zu können.
  */
 public class ReportingErzieherArtGruppe extends ReportingBaseType {
+	private static final String UND_SPACES = " und ";
 
 	/** Bezeichnung der gruppierten Erzieher-Art. */
 	protected String bezeichnung;
 
 	/** Die Erzieher in dieser Gruppe. */
 	protected List<ReportingErzieher> erzieher;
+
+	/** Die Anzahl der Erzieher in dieser Gruppe. */
+	private final int erzieherAnzahl;
 
 	/** id der gruppierten Erzieher-Art. */
 	protected long id;
@@ -42,32 +47,68 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 		this.id = id;
 		this.schueler = schueler;
 		this.sortierung = sortierung;
+
+		if (erzieher == null) {
+			this.erzieherAnzahl = 0;
+		} else {
+			this.erzieherAnzahl = erzieher.size();
+		}
 	}
 
 	// ##### Berechnete Felder #####
 
 	/**
-	 * Erzeugt die mehrzeilige Briefanschrift im html-Format.
+	 * Erzeugt die mehrzeilige Anrede für eine Briefanschrift im html-Format.
 	 *
 	 * @return Briefanschrift (html)
 	 */
-	public String anschrift() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+	public String anschriftNachname() {
+		return erstelleAnschrift(0);
+	}
+
+	/**
+	 * Erzeugt die mehrzeilige Anrede für eine Briefanschrift im html-Format.
+	 *
+	 * @return Briefanschrift (html)
+	 */
+	public String anschriftVornameNachname() {
+		return erstelleAnschrift(1);
+	}
+
+	/**
+	 * Erzeugt die mehrzeilige Anrede für eine Briefanschrift mit allen Vornamen im html-Format.
+	 *
+	 * @return Briefanschrift (html)
+	 */
+	public String anschriftVornamenNachname() {
+		return erstelleAnschrift(2);
+	}
+
+
+	/**
+	 * Erzeugt die mehrzeilige Briefanschrift im html-Format.
+	 *
+	 * @param anredeNamen Format der Anrede (0 = Nachname, 1 = Vorname + Nachname, 2 = Vornamen + Nachname)
+	 *
+	 * @return Briefanschrift (html)
+	 */
+	private String erstelleAnschrift(final int anredeNamen) {
+		if ((erzieherAnzahl == 0) || (anredeNamen < 0) || (anredeNamen > 2)) {
 			return "";
 		}
 
 		final StringBuilder result = new StringBuilder();
 		for (final ReportingErzieher e : erzieher()) {
-			switch (e.anrede()) {
-				case "Frau" -> result.append("Frau ").append(e.vornameNachname()).append("<br/>");
-				case "Herr" -> result.append("Herrn ").append(e.vornameNachname()).append("<br/>");
-				case "Familie" -> result.append("Familie").append(e.nachname()).append("<br/>");
-				case null, default -> result.append(e.vornameNachname()).append("<br/>");
+			switch (anredeNamen) {
+				case 0 -> result.append(e.anredeAnschriftNachname()).append(ReportingStrings.BR);
+				case 1 -> result.append(e.anredeAnschriftVornameNachname()).append(ReportingStrings.BR);
+				case 2 -> result.append(e.anredeAnschriftVornamenNachname()).append(ReportingStrings.BR);
+				default -> {
+					return "";
+				}
 			}
 		}
-		result.append(!erzieher().getFirst().wohnortsteilname().isEmpty() ? ("OT " + erzieher().getFirst().wohnortsteilname() + "<br/>") : "");
-		result.append(erzieher().getFirst().strassennameHausnummer()).append("<br/>");
-		result.append(erzieher().getFirst().plzOrt());
+		result.append(erzieher().getFirst().adresse());
 
 		return result.toString();
 	}
@@ -78,15 +119,15 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 * @return Formale Anrede
 	 */
 	public String briefanredeFormal() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+		if (erzieherAnzahl == 0) {
 			return "";
 		}
 
 		String result = erzieher().getFirst().briefanredeFormal();
 
 		// Maximal ein zweiter Erzieher kann noch in der Gruppe sein.
-		if (erzieher().size() > 1) {
-			result += "," + erzieher().getLast().briefanredeFormal().substring(0, 1).toLowerCase() + erzieher().getLast().briefanredeFormal().substring(1);
+		if (erzieherAnzahl > 1) {
+			result += ", " + erzieher().getLast().briefanredeFormal().substring(0, 1).toLowerCase() + erzieher().getLast().briefanredeFormal().substring(1);
 		}
 
 		return result;
@@ -98,15 +139,15 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 * @return Persönliche Anrede
 	 */
 	public String briefanredePersoenlich() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+		if (erzieherAnzahl == 0) {
 			return "";
 		}
 
 		String result = erzieher().getFirst().briefanredePersoenlich();
 
 		// Maximal ein zweiter Erzieher kann noch in der Gruppe sein.
-		if (erzieher().size() > 1) {
-			result += "," + erzieher().getLast().briefanredePersoenlich().substring(0, 1).toLowerCase()
+		if (erzieherAnzahl > 1) {
+			result += ", " + erzieher().getLast().briefanredePersoenlich().substring(0, 1).toLowerCase()
 					+ erzieher().getLast().briefanredePersoenlich().substring(1);
 		}
 
@@ -119,15 +160,15 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 * @return E-Mail-Liste im HTML-Format.
 	 */
 	public String emailAdressenHtml() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+		if (erzieherAnzahl == 0) {
 			return "";
 		}
 
 		String result = erzieher().getFirst().emailPrivat();
 
 		// Maximal ein zweiter Erzieher kann noch in der Gruppe sein.
-		if (erzieher().size() > 1) {
-			result += (!result.isEmpty() ? "<br/>" : "") + erzieher().getLast().emailPrivat();
+		if (erzieherAnzahl > 1) {
+			result += (!result.isEmpty() ? ReportingStrings.BR : "") + erzieher().getLast().emailPrivat();
 		}
 
 		return result;
@@ -139,14 +180,14 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 * @return E-Mail-Liste durch Semikolon getrennt.
 	 */
 	public String emailAdressenListe() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+		if (erzieherAnzahl == 0) {
 			return "";
 		}
 
 		String result = erzieher().getFirst().emailPrivat();
 
 		// Maximal ein zweiter Erzieher kann noch in der Gruppe sein.
-		if (erzieher().size() > 1) {
+		if (erzieherAnzahl > 1) {
 			result += (!result.isEmpty() ? ";" : "") + erzieher().getLast().emailPrivat();
 		}
 
@@ -175,21 +216,21 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 * @return Vollständiger Name.
 	 */
 	public String nachnameVorname() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+		if (erzieherAnzahl == 0) {
 			return "";
 		}
 
 		String result = "";
 		// Maximal zwei Erzieher können in einer Gruppe sein.
-		if (erzieher().size() == 1) {
+		if (erzieherAnzahl == 1) {
 			result = erzieher().getFirst().nachnameVorname();
 		} else {
 			final ReportingErzieher e1 = erzieher().getFirst();
 			final ReportingErzieher e2 = erzieher().getLast();
 			if (e1.nachname().equals(e2.nachname())) {
-				result = e1.nachnameVorname() + " und " + e2.vorname();
+				result = e1.nachnameVorname() + UND_SPACES + e2.vorname();
 			} else {
-				result = e1.nachnameVorname() + " und " + e2.nachnameVorname();
+				result = e1.nachnameVorname() + UND_SPACES + e2.nachnameVorname();
 			}
 		}
 
@@ -202,21 +243,21 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 * @return Vollständiger Name.
 	 */
 	public String nachnameVornameMitTitel() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+		if (erzieherAnzahl == 0) {
 			return "";
 		}
 
 		String result = "";
 		// Maximal zwei Erzieher können in einer Gruppe sein.
-		if (erzieher().size() == 1) {
+		if (erzieherAnzahl == 1) {
 			result = erzieher().getFirst().nachnameVornameMitTitel();
 		} else {
 			final ReportingErzieher e1 = erzieher().getFirst();
 			final ReportingErzieher e2 = erzieher().getLast();
 			if (e1.nachname().equals(e2.nachname())) {
-				result = e1.nachnameVornameMitTitel() + " und " + e2.vorname() + (!e2.titel().isEmpty() ? ", " + e2.titel() : "");
+				result = e1.nachnameVornameMitTitel() + UND_SPACES + e2.vorname() + (!e2.titel().isEmpty() ? ", " + e2.titel() : "");
 			} else {
-				result = e1.nachnameVornameMitTitel() + " und " + e2.nachnameVornameMitTitel();
+				result = e1.nachnameVornameMitTitel() + UND_SPACES + e2.nachnameVornameMitTitel();
 			}
 		}
 
@@ -229,7 +270,7 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 * @return Postleitzahl
 	 */
 	public String plz() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+		if (erzieherAnzahl == 0) {
 			return "";
 		}
 
@@ -243,7 +284,7 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 * @return Postleitzahl und Wohnort
 	 */
 	public String plzOrt() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+		if (erzieherAnzahl == 0) {
 			return "";
 		}
 
@@ -257,7 +298,7 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 * @return Geschlechtsspezifischer Ausdruck für "Ihr Sohn/Ihre Tochter" im Nominativ
 	 */
 	public String sohnTochterNominativ() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+		if (erzieherAnzahl == 0) {
 			return "";
 		}
 
@@ -271,7 +312,7 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 * @return Geschlechtsspezifischer Ausdruck für "Ihr Sohn/Ihre Tochter" im Genitiv
 	 */
 	public String sohnTochterGenitiv() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+		if (erzieherAnzahl == 0) {
 			return "";
 		}
 
@@ -285,7 +326,7 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 * @return Geschlechtsspezifischer Ausdruck für "Ihr Sohn/Ihre Tochter" im Dativ
 	 */
 	public String sohnTochterDativ() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+		if (erzieherAnzahl == 0) {
 			return "";
 		}
 
@@ -299,7 +340,7 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 * @return Geschlechtsspezifischer Ausdruck für "Ihr Sohn/Ihre Tochter" im Akkusativ
 	 */
 	public String sohnTochterAkkusativ() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+		if (erzieherAnzahl == 0) {
 			return "";
 		}
 
@@ -313,22 +354,12 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 * @return Straße und Hausnummer
 	 */
 	public String strassennameHausnummer() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+		if (erzieherAnzahl == 0) {
 			return "";
 		}
 
 		// Eine Erziehergruppe hat immer nur eine Adresse.
-		final ReportingErzieher e1 = erzieher().getFirst();
-
-		if (e1.strassenname().isEmpty()) {
-			return "";
-		}
-
-		String result = e1.strassenname();
-		result += !e1.hausnummer().isEmpty() ? (" " + e1.hausnummer()) : "";
-		result += (!e1.hausnummer().isEmpty() && !e1.hausnummerZusatz().isEmpty()) ? (" " + e1.hausnummerZusatz()) : "";
-
-		return result;
+		return erzieher().getFirst().strassennameHausnummer();
 	}
 
 	/**
@@ -337,21 +368,21 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 * @return Vollständiger Name.
 	 */
 	public String vornameNachname() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+		if (erzieherAnzahl == 0) {
 			return "";
 		}
 
 		String result = "";
 		// Maximal zwei Erzieher können in einer Gruppe sein.
-		if (erzieher().size() == 1) {
+		if (erzieherAnzahl == 1) {
 			result = erzieher().getFirst().vornameNachname();
 		} else {
 			final ReportingErzieher e1 = erzieher().getFirst();
 			final ReportingErzieher e2 = erzieher().getLast();
 			if (e1.nachname().equals(e2.nachname())) {
-				result = e1.vorname() + " und " + e2.vornameNachname();
+				result = e1.vorname() + UND_SPACES + e2.vornameNachname();
 			} else {
-				result = e1.vornameNachname() + " und " + e2.vornameNachname();
+				result = e1.vornameNachname() + UND_SPACES + e2.vornameNachname();
 			}
 		}
 
@@ -364,21 +395,21 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 * @return Vollständiger Name.
 	 */
 	public String vornameNachnameMitTitel() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+		if (erzieherAnzahl == 0) {
 			return "";
 		}
 
 		String result = "";
 		// Maximal zwei Erzieher können in einer Gruppe sein.
-		if (erzieher().size() == 1) {
+		if (erzieherAnzahl == 1) {
 			result = erzieher().getFirst().vornameNachnameMitTitel();
 		} else {
 			final ReportingErzieher e1 = erzieher().getFirst();
 			final ReportingErzieher e2 = erzieher().getLast();
 			if (e1.nachname().equals(e2.nachname())) {
-				result = (e1.titel().isEmpty() ? e1.titel() + " " : "") + e1.vorname() + " und " + e2.vornameNachnameMitTitel();
+				result = (e1.titel().isEmpty() ? e1.titel() + " " : "") + e1.vorname() + UND_SPACES + e2.vornameNachnameMitTitel();
 			} else {
-				result = e1.vornameNachnameMitTitel() + " und " + e2.vornameNachnameMitTitel();
+				result = e1.vornameNachnameMitTitel() + UND_SPACES + e2.vornameNachnameMitTitel();
 			}
 		}
 
@@ -391,7 +422,7 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 * @return Wohnortname
 	 */
 	public String wohnortname() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+		if (erzieherAnzahl == 0) {
 			return "";
 		}
 
@@ -405,7 +436,7 @@ public class ReportingErzieherArtGruppe extends ReportingBaseType {
 	 * @return Wohnortsteilname
 	 */
 	public String wohnortsteilname() {
-		if ((erzieher() == null) || erzieher().isEmpty()) {
+		if (erzieherAnzahl == 0) {
 			return "";
 		}
 

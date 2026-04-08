@@ -13,12 +13,12 @@ public class ConvertExpressionFactory implements IExpressionObjectFactory {
 	/**
 	 * Name der Expression
 	 */
-	private static final String expressionName = "convert";
+	private static final String EXPRESSION_NAME = "convert";
 
 	/**
 	 * Liste, die alle Expression-Namen dieser Klasse enthält
 	 */
-	private static final Set<String> allExpressionNames = Set.of(expressionName);
+	private static final Set<String> ALL_EXPRESSION_NAMES = Set.of(EXPRESSION_NAME);
 
 	/**
 	 * Erstellt einen neue SVWSDateExpressionFactory
@@ -34,27 +34,27 @@ public class ConvertExpressionFactory implements IExpressionObjectFactory {
 	 */
 	@Override
 	public Set<String> getAllExpressionObjectNames() {
-		return allExpressionNames;
+		return ALL_EXPRESSION_NAMES;
 	}
 
 	/**
 	 * Überschreibt die buildObject Methode des IExpressionObjectFactory Interfaces.
 	 *
-	 * @param context 				Der Context, mit dem das html-Template mit Daten gefüllt wird.
+	 * @param context 				Der Context, mit dem das HTML-Template mit Daten gefüllt wird.
 	 * @param expressionObjectName 	Name des Expression-Objekts, das erzeugt werden soll.
 	 *
 	 * @return 						Das Expression-Objekt, d. h. die Klasse mit den Java-Methoden für die Expression.
 	 */
 	@Override
 	public Object buildObject(final IExpressionContext context, final String expressionObjectName) {
-		if (expressionName.equals(expressionObjectName)) {
+		if (EXPRESSION_NAME.equals(expressionObjectName)) {
 			return new ConvertExpressionHelper();
 		}
 		return null;
 	}
 
 	/**
-	 * Überschreibt das Attribute isCacheable des IExpressionObjectFactory Interfaces.
+	 * Überschreibt das Attribut isCacheable des IExpressionObjectFactory Interfaces.
 	 *
 	 * @param expressionObjectName 	Name des Expression-Objekts.
 	 *

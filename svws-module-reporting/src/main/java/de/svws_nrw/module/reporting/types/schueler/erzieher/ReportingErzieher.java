@@ -121,17 +121,11 @@ public class ReportingErzieher extends ReportingPerson {
 	 * @return Geschlechtsspezifischer Ausdruck für "Ihr Sohn/Ihre Tochter" im Nominativ
 	 */
 	public String sohnTochterNominativ() {
-		switch (schueler.geschlecht()) {
-			case Geschlecht.W -> {
-				return "Ihre Tochter";
-			}
-			case Geschlecht.M -> {
-				return "Ihr Sohn";
-			}
-			case null, default -> {
-				return "Ihr Kind";
-			}
-		}
+		return switch (schueler.geschlecht()) {
+			case Geschlecht.W -> "Ihre Tochter";
+			case Geschlecht.M -> "Ihr Sohn";
+			case null, default -> "Ihr Kind";
+		};
 	}
 
 	/**
@@ -139,18 +133,13 @@ public class ReportingErzieher extends ReportingPerson {
 	 *
 	 * @return Geschlechtsspezifischer Ausdruck für "Ihr Sohn/Ihre Tochter" im Genitiv
 	 */
+	@SuppressWarnings("java:S1192") // Der Ausdruck 'Ihrer Tochter' wird mehrfach verwendet. Das ist in den drei Methoden eine Folge der deutschen Grammatik.
 	public String sohnTochterGenitiv() {
-		switch (schueler.geschlecht()) {
-			case Geschlecht.W -> {
-				return "Ihrer Tochter";
-			}
-			case Geschlecht.M -> {
-				return "Ihres Sohn";
-			}
-			case null, default -> {
-				return "Ihres Kindes";
-			}
-		}
+		return switch (schueler.geschlecht()) {
+			case Geschlecht.W -> "Ihrer Tochter";
+			case Geschlecht.M -> "Ihres Sohn";
+			case null, default -> "Ihres Kindes";
+		};
 	}
 
 	/**
@@ -158,18 +147,13 @@ public class ReportingErzieher extends ReportingPerson {
 	 *
 	 * @return Geschlechtsspezifischer Ausdruck für "Ihr Sohn/Ihre Tochter" im Dativ
 	 */
+	@SuppressWarnings("java:S1192") // Der Ausdruck 'Ihrer Tochter' wird mehrfach verwendet. Das ist in den drei Methoden eine Folge der deutschen Grammatik.
 	public String sohnTochterDativ() {
-		switch (schueler.geschlecht()) {
-			case Geschlecht.W -> {
-				return "Ihrer Tochter";
-			}
-			case Geschlecht.M -> {
-				return "Ihrem Sohn";
-			}
-			case null, default -> {
-				return "Ihrem Kind";
-			}
-		}
+		return switch (schueler.geschlecht()) {
+			case Geschlecht.W -> "Ihrer Tochter";
+			case Geschlecht.M -> "Ihrem Sohn";
+			case null, default -> "Ihrem Kind";
+		};
 	}
 
 	/**
@@ -177,18 +161,13 @@ public class ReportingErzieher extends ReportingPerson {
 	 *
 	 * @return Geschlechtsspezifischer Ausdruck für "Ihr Sohn/Ihre Tochter" im Akkusativ
 	 */
+	@SuppressWarnings("java:S1192") // Der Ausdruck 'Ihrer Tochter' wird mehrfach verwendet. Das ist in den drei Methoden eine Folge der deutschen Grammatik.
 	public String sohnTochterAkkusativ() {
-		switch (schueler.geschlecht()) {
-			case Geschlecht.W -> {
-				return "Ihrer Tochter";
-			}
-			case Geschlecht.M -> {
-				return "Ihren Sohn";
-			}
-			case null, default -> {
-				return "Ihr Kind";
-			}
-		}
+		return switch (schueler.geschlecht()) {
+			case Geschlecht.W -> "Ihrer Tochter";
+			case Geschlecht.M -> "Ihren Sohn";
+			case null, default -> "Ihr Kind";
+		};
 	}
 
 

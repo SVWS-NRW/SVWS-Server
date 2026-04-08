@@ -72,14 +72,11 @@ public final class ComparatorBuilder {
 		final List<SortierungAttribut> result = new ArrayList<>();
 
 		for (final String listeneintrag : attribute) {
-			if (listeneintrag == null) {
+			if ((listeneintrag == null) || listeneintrag.isBlank()) {
 				continue;
 			}
 
 			String trimmedListeneintrag = listeneintrag.trim();
-			if (trimmedListeneintrag.isEmpty()) {
-				continue;
-			}
 
 			boolean sortiereAufsteigend = true;
 

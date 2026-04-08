@@ -239,11 +239,19 @@ public final class SortierungRegistry<T> {
 	 * @param methodenreferenz eine Methodenreferenz, z. B. ReportingKlasse::sortierung
 	 * @param <E> Typ des Eingabeparameters der Funktion
 	 * @param <R> Rückgabetyp der Funktion
+	 *
 	 * @return der Name der implementierenden Methode (z. B. "sortierung"). Bei einem Fehler wird ein leerer String zurückgegeben.
 	 */
+	@SuppressWarnings("java:S3011") // Betrifft Aufruf von writeReplace zur Extraktion des Methodennamens, siehe dazu Kommentierung im Code unten.
 	public <E, R> String methodeToString(final SerializableFunction<E, R> methodenreferenz) {
 		try {
 			final Method writeReplace = methodenreferenz.getClass().getDeclaredMethod("writeReplace");
+			// Anmerkung zum Aufruf von writeReplace und der suppressed warning S3011:
+			// writeReplace ist eine vom Compiler synthetisch erzeugte, package-private Methode der Lambda-Klasse.
+			// Sie ist nicht Teil der öffentlichen API und daher ohne setAccessible(true) nicht aufrufbar.
+			// Es gibt keine alternative, reflection-freie API in Java SE, um über eine serialisierbare
+			// Methodenreferenz zur Laufzeit an das SerializedLambda-Objekt und damit an den Methodennamen zu gelangen.
+			// Der Zugriff ist auf diese einzelne klar definierte Methode beschränkt und birgt kein Sicherheitsrisiko.
 			writeReplace.setAccessible(true);
 			final Object serializedForm = writeReplace.invoke(methodenreferenz);
 			if (serializedForm instanceof final SerializedLambda lambda) {

@@ -62,7 +62,7 @@
 
 					<!-- Anschrift -->
 					<div th:if="${!keineAnschrift}" class="empfaengeranschrift">
-						<p th:utext="${fuerErzieher ? schueler.erzieherArtGruppen().get(empfaenger - 1).anschrift() : schueler.anschrift()}">Frau Sabine und Herrn Otto Mustermann<br/>Musterstraße 123A<br/>12345 Musterstadt</p>
+						<p th:utext="${fuerErzieher ? schueler.erzieherArtGruppen().get(empfaenger - 1).anschriftVornamenNachname() : schueler.anschriftVornamenNachname()}">Frau Sabine und Herrn Otto Mustermann<br/>Musterstraße 123A<br/>12345 Musterstadt</p>
 					</div>
 
 					<!-- Infoblock -->
@@ -76,7 +76,6 @@
 							<tr>
 								<th>Kontakt:</th>
 								<th></th>
-								<!-- ToDo: Benutzer abseits von Lehrern müssen in der DB mehr Daten erhalten, um den Info-Block füllen zu können. -->
 								<th th:text="${Benutzer.hatLehrkraftdaten() ? Benutzer.lehrer().anredeNachname() : Benutzer.anzeigename()}">Herr Mustermann-Schuster</th>
 							</tr>
 							<tr>
@@ -136,7 +135,6 @@
 						<table th:if="${keineUnterschrift}">
 							<tr style="height: 5mm">
 								<th style="width: 100%;" class="ta-lb">
-									<!-- ToDo: Benutzer abseits von Lehrern müssen in der DB mehr Daten erhalten, um den Info-Block füllen zu können. -->
 									<p th:text="${Benutzer.hatLehrkraftdaten() ? ('gez. ' +  Benutzer.lehrer().unterschriftfeld(true, true)) : ('gez. ' +  Benutzer.anzeigename())}">gez. T. Musterfrau</p>
 								</th>
 							</tr>

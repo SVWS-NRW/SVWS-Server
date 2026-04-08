@@ -97,12 +97,12 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	public ReportingJahrgang folgejahrgang() {
 		if ((super.folgejahrgang() == null) && (super.idFolgejahrgang() != null) && (super.idFolgejahrgang() >= 0)) {
 			if (!this.reportingRepository.mapJahrgaenge().containsKey(super.idFolgejahrgang())) {
-				// TODO: Wenn die Jahrgänge eine Gültigkeit erhalten, dann ist diese hier auch zu implementieren. Aktuell werden in alle Schuljahresabschnitte alle
-				//  Jahrgänge übernommen und der Folgejahrgang innerhalb des gleichen Lernabschnitts ermittelt, da keine Regelung zum Folgejahrgang und einem
-				//  Folgeabschnitt im System implementiert ist. Daher wird eine direkt Rückgabe erzeugt, die aber nie auftreten dürfte.
+				// TODO: Wenn die Jahrgänge auch eine Gültigkeit erhalten, ist diese hier auch zu implementieren. Aktuell werden in alle Schuljahresabschnitte
+				//  alle Jahrgänge übernommen und der Folgejahrgang innerhalb des gleichen Lernabschnitts ermittelt, da keine Regelung zum Folgejahrgang und
+				//  einem Folgeabschnitt im System implementiert ist. Daher wird eine direkte Rückgabe erzeugt, die aber nie auftreten dürfte.
 				return super.folgejahrgang();
 			}
-			// ID des FolgeJahrgangs ist bekannt und der Jahrgang wurde in einem Lernabschnitt bereits erzeugt, hole ihn aus Lernabschnitt.
+			// Die ID des FolgeJahrgangs ist bekannt und der Jahrgang wurde in einem Lernabschnitt bereits erzeugt, daher holt man ihn aus dem Lernabschnitt.
 			super.folgejahrgang = super.schuljahresabschnitt().jahrgang(super.idFolgejahrgang());
 		}
 		return super.folgejahrgang();

@@ -24,10 +24,8 @@ public class ProxyReportingErzieherArt extends ReportingErzieherArt {
 	public ProxyReportingErzieherArt(final ReportingRepository reportingRepository, final Erzieherart erzieherart) {
 		super(ersetzeNullBlankTrim(erzieherart.bezeichnung),
 				erzieherart.id,
-				0
+				erzieherart.sortierung
 		);
-		// TODO: Die Sortierung wird für alle auf 0 gesetzt, da bei der Erstellung dieser Klasse die im Data-Objekt noch fehlte. Wird diese dort ergänzt,
-		//  muss sie auch hier ergänzt werden.
 		this.reportingRepository = reportingRepository;
 	}
 

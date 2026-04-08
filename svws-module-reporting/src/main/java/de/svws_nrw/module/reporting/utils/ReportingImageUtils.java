@@ -11,6 +11,8 @@ import de.svws_nrw.core.logger.Logger;
  */
 public final class ReportingImageUtils {
 
+	private static final String UNKNOWN = "unknown";
+
 	private ReportingImageUtils() {
 		throw new IllegalStateException("Statische Klasse mit Hilfsmethoden zum Fehler-Logging. Initialisierung nicht möglich.");
 	}
@@ -41,7 +43,7 @@ public final class ReportingImageUtils {
 				if (logger != null) {
 					logger.log(LogLevel.ERROR, 0, "### Fehler beim Dekodieren des Base64-Strings für die MimeType-Erkennung: " + e.getMessage());
 				}
-				type = "unknown";
+				type = UNKNOWN;
 			}
 		}
 
@@ -56,7 +58,7 @@ public final class ReportingImageUtils {
 	 */
 	private static String ermittleMimeTypeAusBase64Daten(final byte[] data) {
 		if ((data == null) || (data.length < 4)) {
-			return "unknown";
+			return UNKNOWN;
 		}
 
 		// Konvertiere in int-Array für vorzeichenlosen Vergleich
@@ -93,7 +95,7 @@ public final class ReportingImageUtils {
 			return "image/svg+xml";
 		}
 
-		return "unknown";
+		return UNKNOWN;
 	}
 
 	/**

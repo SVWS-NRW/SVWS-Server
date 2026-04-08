@@ -5,6 +5,7 @@ import de.svws_nrw.asd.types.schule.Nationalitaeten;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.module.reporting.types.ReportingBaseType;
+import de.svws_nrw.module.reporting.utils.ReportingStrings;
 
 /**
  * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Person, welche Super-Klasse für alle personenbezogenen Reporting-Types ist wie Schüler oder Lehrer.
@@ -149,44 +150,70 @@ public class ReportingPerson extends ReportingBaseType {
 // ##### Berechnete Felder #####
 
 	/**
-	 * Erzeugt die mehrzeilige Briefanschrift im html-Format.
+	 * Erzeugt die mehrzeilige Adresse im html-Format mit Ortsteil, Straße, Hausnummer, Postleitzahl und Ort.
 	 *
-	 * @return Briefanschrift (html)
+	 * @return Adresse (html)
 	 */
-	public String anschrift() {
-		String result;
-		switch (anrede) {
-			case "Frau" -> result = "Frau " + this.vornameNachname() + "<br/>";
-			case "Herr" -> result = "Herrn " + this.vornameNachname() + "<br/>";
-			case "Familie" -> result = "Familie" + this.nachname() + "<br/>";
-			case null, default -> result = this.vornameNachname() + "<br/>";
-		}
-		result += !this.wohnortsteilname().isEmpty() ? ("OT " + this.wohnortsteilname() + "<br/>") : "";
-		result += this.strassennameHausnummer() + "<br/>";
-		result += this.plzOrt();
-
-		return result.trim();
+	public String adresse() {
+		return (!this.wohnortsteilname().isEmpty() ? ("OT " + this.wohnortsteilname() + ReportingStrings.BR) : "")
+				+ this.strassennameHausnummer() + ReportingStrings.BR
+				+ this.plzOrt();
 	}
 
 	/**
-	 * Erzeugt die mehrzeilige Briefanschrift mit allen Vornamen im html-Format.
+	 * Erzeugt die mehrzeilige Anschrift für eine Briefanschrift im html-Format.
 	 *
 	 * @return Briefanschrift (html)
 	 */
-	public String anschriftMitAllenVornamen() {
-		String result;
-		switch (anrede) {
-			case "Frau" -> result = "Frau " + this.vornamenNachnameMitTitel() + "<br/>";
-			case "Herr" -> result = "Herrn " + this.vornamenNachnameMitTitel() + "<br/>";
-			case "Familie" -> result = "Familie" + this.nachname() + "<br/>";
-			case null, default -> result = this.vornamenNachnameMitTitel() + "<br/>";
-		}
-		result += !this.wohnortsteilname().isEmpty() ? ("OT " + this.wohnortsteilname() + "<br/>") : "";
-		result += this.strassennameHausnummer() + "<br/>";
-		result += this.plzOrt();
-
-		return result.trim();
+	public String anschriftNachname() {
+		return anredeAnschriftNachname() + ReportingStrings.BR + adresse();
 	}
+
+	/**
+	 * Erzeugt die mehrzeilige Anschrift für eine Briefanschrift im html-Format.
+	 *
+	 * @return Briefanschrift (html)
+	 */
+	public String anschriftVornameNachname() {
+		return anredeAnschriftVornameNachname() + ReportingStrings.BR + adresse();
+	}
+
+	/**
+	 * Erzeugt die mehrzeilige Anschrift für eine Briefanschrift mit allen Vornamen im html-Format.
+	 *
+	 * @return Briefanschrift (html)
+	 */
+	public String anschriftVornamenNachname() {
+		return anredeAnschriftVornamenNachname() + ReportingStrings.BR + adresse();
+	}
+
+	/**
+	 * Erzeugt die Anrede für eine Anschrift mit dem Nachnamen (mit 'Herrn' statt 'Herr').
+	 *
+	 * @return Anrede mit Nachname.
+	 */
+	public String anredeAnschriftNachname() {
+		return erstelleAnrede(this.nachnameMitTitel(), this.vornameNachnameMitTitel(), this.nachname(), true);
+	}
+
+	/**
+	 * Erzeugt die Anrede für eine Anschrift mit einem Vornamen und dem Nachnamen (mit 'Herrn' statt 'Herr').
+	 *
+	 * @return Anrede mit Vorname und Nachname.
+	 */
+	public String anredeAnschriftVornameNachname() {
+		return erstelleAnrede(this.vornameNachnameMitTitel(), this.vornameNachnameMitTitel(), this.nachname(), true);
+	}
+
+	/**
+	 * Erzeugt die Anrede für eine Anschrift mit allen Vornamen und dem Nachnamen (mit 'Herrn' statt 'Herr').
+	 *
+	 * @return Anrede mit Vornamen und Nachname.
+	 */
+	public String anredeAnschriftVornamenNachname() {
+		return erstelleAnrede(this.vornamenNachnameMitTitel(), this.vornamenNachnameMitTitel(), this.nachname(), true);
+	}
+
 
 	/**
 	 * Erzeugt die Anrede zusammen mit dem Nachnamen.
@@ -194,30 +221,7 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Anrede mit Nachname.
 	 */
 	public String anredeNachname() {
-		switch (anrede) {
-			case "Frau" -> {
-				return ("Frau " + this.nachnameMitTitel()).trim();
-			}
-			case "Herr" -> {
-				return ("Herr " + this.nachnameMitTitel()).trim();
-			}
-			case "Familie" -> {
-				return ("Familie " + this.nachname()).trim();
-			}
-			case null, default -> {
-				switch (geschlecht) {
-					case Geschlecht.W -> {
-						return ("Frau " + this.nachnameMitTitel()).trim();
-					}
-					case Geschlecht.M -> {
-						return ("Herr " + this.nachnameMitTitel()).trim();
-					}
-					case null, default -> {
-						return this.vornameNachnameMitTitel();
-					}
-				}
-			}
-		}
+		return erstelleAnrede(this.nachnameMitTitel(), this.vornameNachnameMitTitel(), this.nachname(), false);
 	}
 
 	/**
@@ -226,30 +230,7 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Anrede mit Vorname und Nachname.
 	 */
 	public String anredeVornameNachname() {
-		switch (anrede) {
-			case "Frau" -> {
-				return ("Frau " + this.vornameNachnameMitTitel()).trim();
-			}
-			case "Herr" -> {
-				return ("Herr " + this.vornameNachnameMitTitel()).trim();
-			}
-			case "Familie" -> {
-				return ("Familie " + this.nachname()).trim();
-			}
-			case null, default -> {
-				switch (geschlecht) {
-					case Geschlecht.W -> {
-						return ("Frau " + this.vornameNachnameMitTitel()).trim();
-					}
-					case Geschlecht.M -> {
-						return ("Herr " + this.vornameNachnameMitTitel()).trim();
-					}
-					case null, default -> {
-						return this.vornameNachnameMitTitel();
-					}
-				}
-			}
-		}
+		return erstelleAnrede(this.vornameNachnameMitTitel(), this.vornameNachnameMitTitel(), this.nachname(), false);
 	}
 
 	/**
@@ -258,30 +239,31 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Anrede mit Vornamen und Nachname.
 	 */
 	public String anredeVornamenNachname() {
-		switch (anrede) {
-			case "Frau" -> {
-				return ("Frau " + this.vornamenNachnameMitTitel()).trim();
-			}
-			case "Herr" -> {
-				return ("Herr " + this.vornamenNachnameMitTitel()).trim();
-			}
-			case "Familie" -> {
-				return ("Familie " + this.nachname()).trim();
-			}
-			case null, default -> {
-				switch (geschlecht) {
-					case Geschlecht.W -> {
-						return ("Frau " + this.vornamenNachnameMitTitel()).trim();
-					}
-					case Geschlecht.M -> {
-						return ("Herr " + this.vornamenNachnameMitTitel()).trim();
-					}
-					case null, default -> {
-						return this.vornamenNachnameMitTitel();
-					}
-				}
-			}
-		}
+		return erstelleAnrede(this.vornamenNachnameMitTitel(), this.vornamenNachnameMitTitel(), this.nachname(), false);
+	}
+
+	/**
+	 * Erzeugt die Anrede anhand der eingetragenen Anrede oder des Geschlechts mit den übergebenen Namen.
+	 *
+	 * @param nameWennHerrOderFrau Text für Frau/Herr bzw. die geschlechtsabhängige Standard-Anrede.
+	 * @param nameWennOhneAnrede   Text für die Standard-Anrede ohne spezifische Anrede.
+	 * @param nameWennFamilie	   Text für Familie.
+	 * @param istFuerAnschrift     Legt fest, ob die Anrede für das Anschriftfeld eines Briefes erstellt werden soll ('Herrn' statt 'Herr').
+	 *
+	 * @return Erzeugte Anrede.
+	 */
+	private String erstelleAnrede(final String nameWennHerrOderFrau, final String nameWennOhneAnrede, final String nameWennFamilie,
+			final boolean istFuerAnschrift) {
+		return switch (anrede) {
+			case ReportingStrings.FRAU -> (ReportingStrings.FRAU_SPACE + nameWennHerrOderFrau).trim();
+			case ReportingStrings.HERR -> ((istFuerAnschrift ? ReportingStrings.HERRN_SPACE : ReportingStrings.HERR_SPACE) + nameWennHerrOderFrau).trim();
+			case ReportingStrings.FAMILIE -> (ReportingStrings.FAMILIE_SPACE + nameWennFamilie).trim();
+			case null, default -> switch (geschlecht) {
+				case Geschlecht.W -> (ReportingStrings.FRAU_SPACE + nameWennOhneAnrede).trim();
+				case Geschlecht.M -> ((istFuerAnschrift ? ReportingStrings.HERRN_SPACE : ReportingStrings.HERR_SPACE) + nameWennOhneAnrede).trim();
+				case null, default -> nameWennOhneAnrede.trim();
+			};
+		};
 	}
 
 	/**
@@ -308,27 +290,15 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return "Liebe" oder "Lieber" oder "Hallo"
 	 */
 	public String liebeLieber() {
-		switch (anrede) {
-			case "Frau", "Familie" -> {
-				return "Liebe";
-			}
-			case "Herr" -> {
-				return "Lieber";
-			}
-			case null, default -> {
-				switch (geschlecht) {
-					case Geschlecht.W -> {
-						return "Liebe";
-					}
-					case Geschlecht.M -> {
-						return "Lieber";
-					}
-					case null, default -> {
-						return "Hallo";
-					}
-				}
-			}
-		}
+		return switch (anrede) {
+			case ReportingStrings.FRAU, ReportingStrings.FAMILIE -> "Liebe";
+			case ReportingStrings.HERR -> "Lieber";
+			case null, default -> switch (geschlecht) {
+				case Geschlecht.W -> "Liebe";
+				case Geschlecht.M -> "Lieber";
+				case null, default -> "Hallo";
+			};
+		};
 	}
 
 	/**
@@ -412,27 +382,15 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return "Sehr geehrte" oder "Sehr geehrter" oder "Guten Tag"
 	 */
 	public String sehrGeehrteGeehrter() {
-		switch (anrede) {
-			case "Frau", "Familie" -> {
-				return "Sehr geehrte";
-			}
-			case "Herr" -> {
-				return "Sehr geehrter";
-			}
-			case null, default -> {
-				switch (geschlecht) {
-					case Geschlecht.W -> {
-						return "Sehr geehrte";
-					}
-					case Geschlecht.M -> {
-						return "Sehr geehrter";
-					}
-					case null, default -> {
-						return "Guten Tag";
-					}
-				}
-			}
-		}
+		return switch (anrede) {
+			case ReportingStrings.FRAU, ReportingStrings.FAMILIE -> "Sehr geehrte";
+			case ReportingStrings.HERR -> "Sehr geehrter";
+			case null, default -> switch (geschlecht) {
+				case Geschlecht.W -> "Sehr geehrte";
+				case Geschlecht.M -> "Sehr geehrter";
+				case null, default -> "Guten Tag";
+			};
+		};
 	}
 
 	/**
@@ -606,23 +564,13 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Inhalt des Feldes geschlecht als druckbares Kürzel.
 	 */
 	public String geschlechtDruckKuerzelInKlammern() {
-		switch (geschlecht) {
-			case Geschlecht.M -> {
-				return "(" + Geschlecht.M.kuerzel + ")";
-			}
-			case Geschlecht.W -> {
-				return "(" + Geschlecht.W.kuerzel + ")";
-			}
-			case Geschlecht.D -> {
-				return "(" + Geschlecht.D.kuerzel + ")";
-			}
-			case Geschlecht.X -> {
-				return "(-)";
-			}
-			case null, default -> {
-				return "";
-			}
-		}
+		return switch (geschlecht) {
+			case Geschlecht.M -> "(" + Geschlecht.M.kuerzel + ")";
+			case Geschlecht.W -> "(" + Geschlecht.W.kuerzel + ")";
+			case Geschlecht.D -> "(" + Geschlecht.D.kuerzel + ")";
+			case Geschlecht.X -> "(-)";
+			case null, default -> "";
+		};
 	}
 
 	/**
@@ -631,23 +579,13 @@ public class ReportingPerson extends ReportingBaseType {
 	 * @return Inhalt des Feldes geschlecht als druckbares Symbol.
 	 */
 	public String geschlechtDruckSymbolHtml() {
-		switch (geschlecht) {
-			case Geschlecht.M -> {
-				return "&#9792;";
-			}
-			case Geschlecht.W -> {
-				return "&#9794;";
-			}
-			case Geschlecht.D -> {
-				return Geschlecht.D.kuerzel;
-			}
-			case Geschlecht.X -> {
-				return "-";
-			}
-			case null, default -> {
-				return "";
-			}
-		}
+		return switch (geschlecht) {
+			case Geschlecht.M -> "&#9792;";
+			case Geschlecht.W -> "&#9794;";
+			case Geschlecht.D -> Geschlecht.D.kuerzel;
+			case Geschlecht.X -> "-";
+			case null -> "";
+		};
 	}
 
 	/**

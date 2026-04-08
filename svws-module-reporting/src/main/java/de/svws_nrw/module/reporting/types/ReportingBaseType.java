@@ -50,18 +50,20 @@ public abstract class ReportingBaseType {
 		}
 	}
 
+	@SuppressWarnings("squid:S3011") // Betrifft Aufrufe von setAccessible und set, siehe dazu Kommentierung im Code unten.
 	private static void ersetzeFeldwerte(final Object quellobjekt, final Field[] felderQuellobjekt) {
-		// Filtere nun aus allen Felder die heraus, die nicht static sind. Dadurch können die Werte später sicher zugewiesen.
+		// Filtere nun aus allen Feldern die heraus, die nicht static sind. Dadurch können die Werte später sicher zugewiesen werden.
 		// Wenn es sich dann dabei noch um Strings handelt, welche null sind, dann ersetze null durch einen leeren String.
 		int modifiers;
 		for (final Field feld : felderQuellobjekt) {
 			modifiers = feld.getModifiers();
 			if (Modifier.isPublic(modifiers) || Modifier.isProtected(modifiers)) {
 				try {
+					// setAccessible(true) ist hier unkritisch, da ausschließlich public- und protected-Felder
+					// verarbeitet werden (siehe Modifier-Prüfung oben) und nur null-Strings durch einen leeren
+					// String ersetzt werden. Es werden keine Invarianten der Klasse verletzt.
 					feld.setAccessible(true);
 					if ((feld.getType() == String.class) && (feld.get(quellobjekt) == null)) {
-						// Da der Aufruf aus der Basisklasse erfolgt, können normalerweise nur public-Felder geändert werden.
-						// Setze daher das Flag für den Zugriff per Reflection auf true. Dies ändert nichts an den Festlegungen in der Klasse.
 						feld.set(quellobjekt, "");
 					}
 				} catch (@SuppressWarnings("unused") final IllegalAccessException ignore) {

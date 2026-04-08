@@ -87,8 +87,8 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	public Map<Long, ReportingJahrgang> mapJahrgaenge() {
 		if ((super.mapJahrgaenge == null) || super.mapJahrgaenge.isEmpty()) {
 			super.mapJahrgaenge = new HashMap<>();
-			// TODO: Wenn die Jahrgänge eine Gültigkeit erhalten, dann ist diese hier auch zu implementieren. Aktuell werden in alle Schuljahresabschnitte alle
-			//  Jahrgänge übernommen.
+			// TODO: Wenn die Jahrgänge eine Gültigkeit erhalten, dann ist diese hier auch zu implementieren.
+			//  Aktuell werden alle Jahrgänge in alle Schuljahresabschnitte übernommen.
 			this.reportingRepository.mapJahrgaenge().forEach((idJahrgang, jahrgang) -> super.mapJahrgaenge.put(idJahrgang,
 					new ProxyReportingJahrgang(this.reportingRepository, jahrgang, this)));
 		}

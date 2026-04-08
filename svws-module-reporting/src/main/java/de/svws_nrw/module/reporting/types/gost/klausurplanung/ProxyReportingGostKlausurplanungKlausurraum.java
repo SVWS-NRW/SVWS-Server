@@ -43,27 +43,32 @@ public class ProxyReportingGostKlausurplanungKlausurraum extends ReportingGostKl
 		// Stundenplan zum Klausurtermin ermitteln. Ohne Stundenplan gibt es keine Raumdaten und kein Zeitraster für die Aufsichten.
 		final ReportingStundenplanungStundenplan stundenplan = this.reportingRepository.stundenplan(super.klausurtermin.datum());
 
-		if (stundenplan != null) {
-			// Wenn bereits ein Raum der Schule (aus dem Stundenplan) der Klausur zugeordnet wurde, dann die Daten ermitteln und ergänzen.
-			if (gostKlausurraum.idStundenplanRaum != null) {
-				super.raumdaten = stundenplan.raum(gostKlausurraum.idStundenplanRaum);
-			}
+		if (stundenplan == null) {
+			return;
+		}
 
-			// Stunden der Klausur für die Aufsichten aus dem Zeitraster des Stundenplans ergänzen.
-			if ((gostKlausurraumstunden != null) && !gostKlausurraumstunden.isEmpty()) {
-				final List<ReportingStundenplanungUnterrichtsrasterstunde> stunden = new ArrayList<>();
-				for (final GostKlausurraumstunde stunde : gostKlausurraumstunden) {
-					if (stunde != null) {
-						stunden.add(stundenplan.unterrichtsrasterstunde(stunde.idZeitraster));
-					}
-				}
-				if (!stunden.isEmpty()) {
-					stunden.sort(Comparator.comparing(ReportingStundenplanungUnterrichtsrasterstunde::stundeImUnterrichtsraster));
-					// TODO: Wenn die Aufsichten im Client vorhanden sind und die Datenstrukturen stehen, dann ProxyReportingGostKlausurplanungKlausuraufsicht
-					//  anlegen. Zudem müssen dann auch die fehlenden Daten (hier null) ergänzt werden.
-					super.aufsichten.addAll(stunden.stream().map(z -> (new ReportingGostKlausurplanungKlausuraufsicht(null, null, null, null, z))).toList());
-				}
+		// Wenn bereits ein Raum der Schule (aus dem Stundenplan) der Klausur zugeordnet wurde, dann die Daten ermitteln und ergänzen.
+		if (gostKlausurraum.idStundenplanRaum != null) {
+			super.raumdaten = stundenplan.raum(gostKlausurraum.idStundenplanRaum);
+		}
+
+		// Stunden der Klausur für die Aufsichten aus dem Zeitraster des Stundenplans ergänzen.
+		if ((gostKlausurraumstunden == null) || gostKlausurraumstunden.isEmpty()) {
+			return;
+		}
+
+		final List<ReportingStundenplanungUnterrichtsrasterstunde> stunden = new ArrayList<>();
+		for (final GostKlausurraumstunde stunde : gostKlausurraumstunden) {
+			if (stunde != null) {
+				stunden.add(stundenplan.unterrichtsrasterstunde(stunde.idZeitraster));
 			}
+		}
+
+		if (!stunden.isEmpty()) {
+			stunden.sort(Comparator.comparing(ReportingStundenplanungUnterrichtsrasterstunde::stundeImUnterrichtsraster));
+			// TODO: Wenn die Aufsichten im Client vorhanden sind und die Datenstrukturen stehen, dann ProxyReportingGostKlausurplanungKlausuraufsicht
+			//  anlegen. Zudem müssen dann auch die fehlenden Daten (hier null) ergänzt werden.
+			super.aufsichten.addAll(stunden.stream().map(z -> (new ReportingGostKlausurplanungKlausuraufsicht(null, null, null, null, z))).toList());
 		}
 	}
 }

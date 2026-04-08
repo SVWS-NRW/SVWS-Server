@@ -5,7 +5,6 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.builders.ReportBuilderContextPdf;
 import de.svws_nrw.module.reporting.builders.ReportBuilderHtml;
 import de.svws_nrw.module.reporting.builders.ReportBuilderPdf;
-import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -33,9 +32,6 @@ public class PdfFactory {
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	private final ReportingRepository reportingRepository;
 
-	/** Einstellungen und Daten zum Steuern der Report-Generierung. */
-	private final ReportingParameterTypisiert reportingParameter;
-
 	/** Map mit den Dateinamen und HTML-Dateiinhalten, die in PDF-Dateien gewandelt werden sollen. */
 	private final List<ReportBuilderHtml> htmlBuilders;
 
@@ -52,11 +48,10 @@ public class PdfFactory {
 			throws ApiOperationException {
 
 		this.reportingRepository = reportingRepository;
-		this.reportingParameter = this.reportingRepository.reportingParameter();
 
 		this.reportingRepository.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Initialisierung der PDF-Factory und der Validierung der übergebenen Daten.");
 
-		// Validiere die HTML-Builders
+		// Validiere die HTML-Builder
 		if ((htmlBuilders == null) || htmlBuilders.isEmpty()) {
 			this.reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
 			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
@@ -110,7 +105,7 @@ public class PdfFactory {
 	 *
 	 * @return Ein oder mehrere ReportBuilderPdf-Instanzen zur Erzeugung der PDF-Dateien.
 	 *
-	 * @throws ApiOperationException Wird geworden, wenn ein Fehler bei der Generierung der PDF-Dateien auftritt.
+	 * @throws ApiOperationException Wird geworfen, wenn ein Fehler bei der Generierung der PDF-Dateien auftritt.
 	 */
 	public List<ReportBuilderPdf> getPdfBuilders() throws ApiOperationException {
 

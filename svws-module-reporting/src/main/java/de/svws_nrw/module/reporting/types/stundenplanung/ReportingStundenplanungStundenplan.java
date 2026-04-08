@@ -507,27 +507,32 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 		for (final ReportingStundenplanungPausenzeit pausenzeit : pausenzeiten) {
 			// Durchlaufe alle Pausenzeilen und ergänze die Pausenzeit an der richtigen Stelle, d. h. wenn die Pausenzeit sich (teilweise) mit dem
 			// Pausenraster deckt.
-			for (final ReportingStundenplanungRasterZeile pausenZeile : rasterPausen) {
-				for (final ReportingStundenplanungRasterElement element : pausenZeile.rasterElemente()) {
-					if (istPausenzeitInRasterelement(pausenzeit, element)) {
-						element.addPausenzeit(pausenzeit);
-					}
-				}
-			}
+			setzePausenzeitInRasterzeilen(pausenzeit, rasterPausen);
+
 			// Durchlaufe alle Unterrichtszeilen und ergänze die Pausenzeit an der richtigen Stelle, d. h. wenn die Pause also parallel zu Unterricht liegt.
-			for (final ReportingStundenplanungRasterZeile unterrichtsZeile : rasterUnterrichte) {
-				for (final ReportingStundenplanungRasterElement element : unterrichtsZeile.rasterElemente()) {
-					if (istPausenzeitInRasterelement(pausenzeit, element)) {
-						element.addPausenzeit(pausenzeit);
-					}
-				}
-			}
+			setzePausenzeitInRasterzeilen(pausenzeit, rasterUnterrichte);
 		}
 
 		// Nach dem Setzen der Pausen passe Beginn der ersten Zeile des Pausenrasters und das Ende der letzten Zeile des letzten Pausenrasters an die
 		// Pausenzeiten an.
 		rasterPausen.getFirst().beginn = pausenzeiten.stream().mapToInt(p -> p.beginn).min().orElse(0);
 		rasterPausen.getLast().ende = pausenzeiten.stream().mapToInt(p -> p.ende).max().orElse(1440);
+	}
+
+	/**
+	 * Eine Hilfsmethode, um eine Pausenzeit in eine Liste von Rasterzeilen zu integrieren.
+	 *
+	 * @param pausenzeit Die hinzuzufügende Pausenzeit.
+	 * @param zeilen     Die Liste der Rasterzeilen, die durchsucht werden sollen.
+	 */
+	private void setzePausenzeitInRasterzeilen(final ReportingStundenplanungPausenzeit pausenzeit, final Iterable<ReportingStundenplanungRasterZeile> zeilen) {
+		for (final ReportingStundenplanungRasterZeile zeile : zeilen) {
+			for (final ReportingStundenplanungRasterElement element : zeile.rasterElemente()) {
+				if (istPausenzeitInRasterelement(pausenzeit, element)) {
+					element.addPausenzeit(pausenzeit);
+				}
+			}
+		}
 	}
 
 	private boolean istPausenzeitInRasterelement(final ReportingStundenplanungPausenzeit pausenzeit, final ReportingStundenplanungRasterElement element) {
