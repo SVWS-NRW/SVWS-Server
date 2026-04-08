@@ -1,0 +1,24 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSsd01SchuelerStammdatenGeburtsdatum",
+    "historie" : [ {
+      "praefix" : "SSD01",
+      "altes_kuerzel" : "",
+      "zweig" : "Schueler-Stammdaten-Geburtsdatum",
+      "dtos" : "Schueler",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Individualdaten'",
+      "anzeigebereich_ui" : "Feld 'Geburtsdatum'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["SSD01"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Das Geburtsdatum ist ungültig:",
+      "erlaeuterung" : "",
+      "bedingung" : "(Im Java Code wird das Geburtsdatum zur Prüfung an den DateManager übergeben. Deswegen können wir die genaue Bedingung dazu nicht spezifizieren)",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
+  
