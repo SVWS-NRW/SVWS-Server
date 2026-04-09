@@ -88,17 +88,17 @@ public final class DataTeilstandorte extends DataManagerRevised<String, DTOTeils
 	protected void mapAttribute(final DTOTeilstandorte dto, final String name, final Object value, final Map<String, Object> attributes) {
 		switch (name) {
 			case ADRESS_MERKMAL -> updateAdrMerkmal(dto, name, value);
-			case "plz" -> dto.PLZ = JSONMapper.convertToString(value, true, false, Schema.tab_EigeneSchule_Teilstandorte.col_PLZ.datenlaenge(), name);
-			case "ort" -> dto.Ort = JSONMapper.convertToString(value, true, false, Schema.tab_EigeneSchule_Teilstandorte.col_Ort.datenlaenge(), name);
+			case "plz" -> dto.PLZ = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule_Teilstandorte.col_PLZ.datenlaenge(), name);
+			case "ort" -> dto.Ort = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule_Teilstandorte.col_Ort.datenlaenge(), name);
 			case "strassenname" ->
-				dto.Strassenname = JSONMapper.convertToString(value, true, false, Schema.tab_EigeneSchule_Teilstandorte.col_Strassenname.datenlaenge(), name);
-			case "hausNr" -> dto.HausNr = JSONMapper.convertToString(value, true, false, Schema.tab_EigeneSchule_Teilstandorte.col_HausNr.datenlaenge(), name);
+				dto.Strassenname = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule_Teilstandorte.col_Strassenname.datenlaenge(), name);
+			case "hausNr" -> dto.HausNr = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule_Teilstandorte.col_HausNr.datenlaenge(), name);
 			case "hausNrZusatz" ->
-				dto.HausNrZusatz = JSONMapper.convertToString(value, true, false, Schema.tab_EigeneSchule_Teilstandorte.col_HausNrZusatz.datenlaenge(), name);
+				dto.HausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule_Teilstandorte.col_HausNrZusatz.datenlaenge(), name);
 			case "bemerkung" ->
-				dto.Bemerkung = JSONMapper.convertToString(value, true, false, Schema.tab_EigeneSchule_Teilstandorte.col_Bemerkung.datenlaenge(), name);
+				dto.Bemerkung = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule_Teilstandorte.col_Bemerkung.datenlaenge(), name);
 			case "kuerzel" ->
-				dto.Kuerzel = JSONMapper.convertToString(value, true, false, Schema.tab_EigeneSchule_Teilstandorte.col_Kuerzel.datenlaenge(), name);
+				dto.Kuerzel = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule_Teilstandorte.col_Kuerzel.datenlaenge(), name);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
 	}

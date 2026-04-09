@@ -47,7 +47,7 @@ export class ValidatorStringIsUniqueInList<T> extends BasicValidator {
 
 		for (const entry of this.list()) {
 			// Eigene ID ignorieren
-			if (this.getId(entry) === currentId) {
+			if ((currentId !== null) && (currentId !== undefined) && (this.getId(entry) === currentId)) {
 				continue;
 			}
 

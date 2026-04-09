@@ -3455,7 +3455,7 @@ public class APISchule {
 	@ApiResponse(responseCode = "404", description = "Keine Teilstandorte-Einträge gefunden")
 	public Response getTeilstandorte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataTeilstandorte(conn).getAllAsResponse(),
-				request, ServerMode.DEV, BenutzerKompetenz.KEINE);
+				request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 	}
 
 	/**
@@ -3480,7 +3480,7 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Teilstandort.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataTeilstandorte(conn).addAsResponse(is), request, ServerMode.DEV,
+				conn -> new DataTeilstandorte(conn).addAsResponse(is), request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -3510,7 +3510,7 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Teilstandort.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataTeilstandorte(conn).patchAsResponse(id, is), request, ServerMode.DEV,
+				conn -> new DataTeilstandorte(conn).patchAsResponse(id, is), request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -3538,7 +3538,7 @@ public class APISchule {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
 				conn -> new DataTeilstandorte(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfString(is)),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 

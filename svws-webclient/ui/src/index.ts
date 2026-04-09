@@ -140,6 +140,7 @@ export { ValidatorSchuelerDatumBeginnBildungsgang } from "./validation/Validator
 export { ValidatorSchuelerGeburtsdatum } from "./validation/ValidatorSchuelerGeburtsdatum";
 export { ValidatorStringEquals } from "./validation/common/ValidatorStringEquals";
 export { ValidatorStringMatchesPattern } from "./validation/common/ValidatorStringMatchesPattern";
+export { StringPattern } from "./validation/common/ValidatorStringMatchesPattern";
 export { ValidatorStringLength } from "./validation/common/ValidatorStringLength";
 export { ValidatorInputRequired } from "./validation/common/ValidatorInputRequired";
 export { ValidatorStringIsUniqueInList } from "./validation/common/ValidatorStringIsUniqueInList";
