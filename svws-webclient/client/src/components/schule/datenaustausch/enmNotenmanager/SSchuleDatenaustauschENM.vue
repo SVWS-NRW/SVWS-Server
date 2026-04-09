@@ -10,8 +10,9 @@
 	<div class="svws-ui-page w-full">
 		<div class="svws-ui-tab-content">
 			<div class="page page-flex-row">
-				<svws-ui-content-card v-if="ServerMode.DEV.equals(serverMode)" title="ENM-Daten exportieren und importieren">
+				<div v-if="ServerMode.DEV.equals(serverMode)">
 					<svws-ui-input-wrapper>
+						<div class="text-headline-md">Lehrkraftdaten exportieren</div>
 						<div class="flex items-center">
 							<ui-select :manager="lehrerSelect" v-model="lehrer" />
 							<div class="h-full p-3">
@@ -20,15 +21,16 @@
 						</div>
 					</svws-ui-input-wrapper>
 					<div class="my-4">
-						<svws-ui-button @click="gzipENM">Alle ENM-Daten als GZIP herunterladen (Konferenzdaten)</svws-ui-button>
+						<div class="text-headline-md">Konferenzdaten exportieren</div>
+						<svws-ui-button @click="gzipENM">Alle ENM-Daten als GZIP herunterladen</svws-ui-button>
 					</div>
-
+					<div class="text-headline-md">Lehrkraftdaten und Konferenzdaten importieren</div>
 					<div class="col-span-full">
-						ENM-Daten hochladen, erlaubt sind GZIP und JSON, also Konferenzdaten und Lehrerdaten
+						ENM-Daten hochladen, erlaubt sind GZIP und JSON
 						<br><input class="contentFocusField" type="file" accept=".gz, .json" @change="importFileENM" :disabled="loading">
 						<svws-ui-spinner :spinning="loading" /> {{ importStatus ? 'Import erfolgreich' : '' }}
 					</div>
-				</svws-ui-content-card>
+				</div>
 			</div>
 		</div>
 	</div>
