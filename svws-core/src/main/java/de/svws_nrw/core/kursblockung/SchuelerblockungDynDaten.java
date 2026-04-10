@@ -16,7 +16,8 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * In dieser Klasse werden die Eingabedaten {@link SchuelerblockungInput} auf ihre Konsistenz hin überprüft.
- * Danach wird die Datenstruktur für den schnellen Zugriff aufgebaut.
+ * Danach wird die Datenstruktur für den schnellen Zugriff aufgebaut,
+ * mit dem Ziel einen Schüler auf seine Kurs neu zu verteilen.
  *
  * @author Benjamin A. Bartsch
  */
@@ -83,105 +84,148 @@ public class SchuelerblockungDynDaten {
 	 */
 	void aktionPruefeEingabedaten(final @NotNull SchuelerblockungInput pInput) {
 		// NULL-Referenzen überprüfen.
-		if (pInput == null)
+		if (pInput == null) {
 			throw new DeveloperNotificationException("pInput == NULL");
-		if (pInput.fachwahlen == null)
+		}
+		if (pInput.fachwahlen == null) {
 			throw new DeveloperNotificationException("pInput.fachwahlen == NULL");
-		if (pInput.kurse == null)
+		}
+		if (pInput.kurse == null) {
 			throw new DeveloperNotificationException("pInput.kurse == NULL");
+		}
 
 		// Anzahl an Elementen überprüfen.
-		final int tmpNFachwahlen = pInput.fachwahlen.size();
-		DeveloperNotificationException.ifTrue(
-				"Der Schüler hat zu wenig Fachwahlen (%d), ein Blocken sollte gar nicht angeboten werden!".formatted(tmpNFachwahlen),
-				tmpNFachwahlen < 1);
-		final int tmpNSchienen = pInput.schienen;
-		DeveloperNotificationException.ifTrue(
-				"Die Schienenanzahl (%d) ist zu gering!".formatted(tmpNSchienen),
-				tmpNSchienen < 1);
-		final int nKurse = pInput.kurse.size();
-		DeveloperNotificationException.ifTrue(
-				"Die Kursanzahl (%d) ist zu gering!".formatted(nKurse),
-				nKurse < 1);
+		aktionPruefeEingabedatenAnzahlen(pInput);
 
 		// Attribute der Kurse überprüfen.
-		final HashSet<Long> setKursID = new HashSet<>();
-		for (final @NotNull SchuelerblockungInputKurs kurs : pInput.kurse) {
-			DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
-			DeveloperNotificationException.ifSetAddsDuplicate("setKursID", setKursID, kurs.id);
-			DeveloperNotificationException.ifInvalidID("kurs.fach", kurs.fach);
-			DeveloperNotificationException.ifTrue(
-					"kurs.kursart (%d) ist zu gering!".formatted(kurs.kursart),
-					kurs.kursart < 0);
-			DeveloperNotificationException.ifTrue(
-					"kurs.anzahlSuS (%d) ist zu gering!".formatted(kurs.anzahlSuS),
-					kurs.anzahlSuS < 0);
-			DeveloperNotificationException.ifTrue(
-					"kurs.schienen == (%s) ist nicht definiert!".formatted(kurs.schienen),
-					kurs.schienen == null);
-			DeveloperNotificationException.ifTrue(
-					"kurs.schienen.length (%d) ist zu gering!".formatted(kurs.schienen.length),
-					kurs.schienen.length <= 0);
-			DeveloperNotificationException.ifTrue(
-					"kurs.schienen.length (%d) ist zu groß!".formatted(kurs.schienen.length),
-					kurs.schienen.length > tmpNSchienen);
-			for (final int schiene1 : kurs.schienen) {
-				DeveloperNotificationException.ifTrue(
-						"Kurs %d ist in zu kleiner Schiene (%d)!".formatted(kurs.id, schiene1),
-						schiene1 < 1);
-				DeveloperNotificationException.ifTrue(
-						"Kurs %d ist in zu großer Schiene (%d)!".formatted(kurs.id, schiene1),
-						schiene1 > tmpNSchienen);
-			}
-			DeveloperNotificationException.ifTrue(
-					"Kurs %d ist fixiert und gesperrt, das sollte nicht möglich sein!".formatted(kurs.id),
-					kurs.istFixiert && kurs.istGesperrt);
-		}
+		aktionPruefeEingabedatenKurse(pInput);
 
 
 		// Attribute der Fachwahlen überprüfen.
-		for (final @NotNull GostFachwahl fachwahl : pInput.fachwahlen) {
-			DeveloperNotificationException.ifInvalidID("fachwahl.schuelerID", fachwahl.schuelerID);
-			DeveloperNotificationException.ifInvalidID("fachwahl.fachID", fachwahl.fachID);
-			DeveloperNotificationException.ifInvalidID("fachwahl.kursartID", fachwahl.kursartID);
-		}
+		aktionPruefeEingabedatenFachwahlenAttribute(pInput);
 
-		// Pro Fachwahl auf Doppelfixierungen testen.
-		for (int iFachwahl = 0; iFachwahl < tmpNFachwahlen; iFachwahl++) {
-			DeveloperNotificationException.ifTrue(
-					"pInput.fachwahlenText: Es fehlt der Text zur Fachwahl (%d)!".formatted(iFachwahl),
-					iFachwahl >= pInput.fachwahlenText.size());
-			final @NotNull String representation = pInput.fachwahlenText.get(iFachwahl);
-			final @NotNull GostFachwahl fachwahl = pInput.fachwahlen.get(iFachwahl);
-
-			// Doppelfixierungen herausfinden.
-			boolean kursWurdeFixiert = false;
-			for (final @NotNull SchuelerblockungInputKurs kurs : pInput.kurse)
-				if ((fachwahl.fachID == kurs.fach) && (fachwahl.kursartID == kurs.kursart)) {
-					if (kurs.istGesperrt)
-						continue;
-					if (kurs.istFixiert) {
-						DeveloperNotificationException.ifTrue(
-								"Die Fachart/Fachwahl (%s) hat mehr als eine Fixierung!".formatted(representation),
-								kursWurdeFixiert);
-						kursWurdeFixiert = true;
-					}
-				}
-		}
+		// Pro Fachwahl auf Doppel-Kurs-Fixierungen testen.
+		aktionPruefeEingabedatenFachwahlenDoppelfixierungen(pInput);
 
 		// Kann jeder Kurs einer Fachwahl zugeordnet werden?
+		aktionPruefeEingabedatenFachwahlenZuordnungen(pInput);
+	}
+
+
+	private static void aktionPruefeEingabedatenFachwahlenZuordnungen(@NotNull final SchuelerblockungInput pInput) {
+
 		for (final @NotNull SchuelerblockungInputKurs kurs : pInput.kurse) {
 			int gefunden = 0;
-			for (int r = 0; r < tmpNFachwahlen; r++) {
-				final @NotNull GostFachwahl fachwahl = pInput.fachwahlen.get(r);
-				if ((fachwahl.fachID == kurs.fach) && (fachwahl.kursartID == kurs.kursart))
+			for (int iFachwahl = 0; iFachwahl < pInput.fachwahlen.size(); iFachwahl++) {
+				final @NotNull GostFachwahl fachwahl = pInput.fachwahlen.get(iFachwahl);
+				if ((fachwahl.fachID == kurs.fach) && (fachwahl.kursartID == kurs.kursart)) {
 					gefunden++;
+				}
 			}
+
 			DeveloperNotificationException.ifTrue(
 					"Der Kurs (%d) konnte keiner Fachart/Fachwahl zugeordnet werden!".formatted(kurs.id),
 					gefunden == 0);
 		}
+	}
 
+	private static void aktionPruefeEingabedatenFachwahlenDoppelfixierungen(final @NotNull SchuelerblockungInput pInput) {
+		// Prüfe jede Fachwahl ...
+		for (int iFachwahl = 0; iFachwahl < pInput.fachwahlen.size(); iFachwahl++) {
+
+			DeveloperNotificationException.ifTrue(
+					"pInput.fachwahlenText: Es fehlt der Text zur Fachwahl (%d)!".formatted(iFachwahl),
+					iFachwahl >= pInput.fachwahlenText.size());
+
+			final @NotNull String representation = pInput.fachwahlenText.get(iFachwahl);
+			final @NotNull GostFachwahl fachwahl = pInput.fachwahlen.get(iFachwahl);
+
+			// ... und suche den zur Fachwahl zugehörigen Kurs, welcher fixiert ist.
+			boolean kursWurdeFixiert = false;
+			for (final @NotNull SchuelerblockungInputKurs kurs : pInput.kurse) {
+				if ((fachwahl.fachID == kurs.fach) && (fachwahl.kursartID == kurs.kursart) && (kurs.istFixiert)) {
+					DeveloperNotificationException.ifTrue(
+							"Die Fachart/Fachwahl (%s) hat mehr als eine Fixierung!".formatted(representation),
+							kursWurdeFixiert);
+
+					kursWurdeFixiert = true;
+				}
+			}
+		}
+	}
+
+
+	private static void aktionPruefeEingabedatenFachwahlenAttribute(final @NotNull SchuelerblockungInput pInput) {
+		for (final @NotNull GostFachwahl fachwahl : pInput.fachwahlen) {
+			DeveloperNotificationException.ifInvalidID("fachwahl.schuelerID", fachwahl.schuelerID);
+
+			DeveloperNotificationException.ifInvalidID("fachwahl.fachID", fachwahl.fachID);
+
+			DeveloperNotificationException.ifInvalidID("fachwahl.kursartID", fachwahl.kursartID);
+		}
+	}
+
+
+	private static void aktionPruefeEingabedatenKurse(final @NotNull SchuelerblockungInput pInput) {
+		final HashSet<Long> setKursID = new HashSet<>();
+		for (final @NotNull SchuelerblockungInputKurs kurs : pInput.kurse) {
+			DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
+
+			DeveloperNotificationException.ifSetAddsDuplicate("setKursID", setKursID, kurs.id);
+
+			DeveloperNotificationException.ifInvalidID("kurs.fach", kurs.fach);
+
+			DeveloperNotificationException.ifTrue(
+					"kurs.kursart (%d) ist zu gering!".formatted(kurs.kursart),
+					kurs.kursart < 0);
+
+			DeveloperNotificationException.ifTrue(
+					"kurs.anzahlSuS (%d) ist zu gering!".formatted(kurs.anzahlSuS),
+					kurs.anzahlSuS < 0);
+
+			DeveloperNotificationException.ifTrue(
+					"kurs.schienen == null, also nicht definiert!",
+					kurs.schienen == null);
+
+			DeveloperNotificationException.ifTrue(
+					"kurs.schienen.length (%d) ist zu gering!".formatted(kurs.schienen.length),
+					kurs.schienen.length <= 0);
+
+			DeveloperNotificationException.ifTrue(
+					"kurs.schienen.length (%d > %d) ist zu groß!".formatted(kurs.schienen.length, pInput.schienen),
+					kurs.schienen.length > pInput.schienen);
+
+			for (final int schiene1 : kurs.schienen) {
+				DeveloperNotificationException.ifTrue(
+						"Kurs %d ist in zu kleiner Schiene (%d)!".formatted(kurs.id, schiene1),
+						schiene1 < 1);
+
+				DeveloperNotificationException.ifTrue(
+						"Kurs %d ist in zu großer Schiene (%d)!".formatted(kurs.id, schiene1),
+						schiene1 > pInput.schienen);
+			}
+
+			DeveloperNotificationException.ifTrue(
+					"Kurs %d ist fixiert und gesperrt, das sollte nicht möglich sein!".formatted(kurs.id),
+					kurs.istFixiert && kurs.istGesperrt);
+		}
+	}
+
+
+	private static void aktionPruefeEingabedatenAnzahlen(final @NotNull SchuelerblockungInput pInput) {
+		DeveloperNotificationException.ifTrue(
+				"Der Schüler hat keine Fachwahlen, ein Blocken sollte gar nicht angeboten werden!",
+				pInput.fachwahlen.isEmpty());
+
+		final int nSchienen = pInput.schienen;
+		DeveloperNotificationException.ifTrue(
+				"Die Schienenanzahl (%d) ist zu gering!".formatted(nSchienen),
+				nSchienen < 1);
+
+		final int nKurse = pInput.kurse.size();
+		DeveloperNotificationException.ifTrue(
+				"Die Kursanzahl (%d) ist zu gering!".formatted(nKurse),
+				nKurse < 1);
 	}
 
 	/**
@@ -199,7 +243,7 @@ public class SchuelerblockungDynDaten {
 			// Kurse dieser Fachwahl sammeln...
 			final ArrayList<SchuelerblockungInputKurs> kurse = new ArrayList<>();
 			boolean hatFixiertenKurs = false;
-			for (final @NotNull SchuelerblockungInputKurs kurs : pInput.kurse)
+			for (final @NotNull SchuelerblockungInputKurs kurs : pInput.kurse) {
 				if ((fachwahl.fachID == kurs.fach) && (fachwahl.kursartID == kurs.kursart) && (!kurs.istGesperrt) && (!hatFixiertenKurs)) {
 					if (kurs.istFixiert) {
 						hatFixiertenKurs = true;
@@ -207,16 +251,19 @@ public class SchuelerblockungDynDaten {
 					}
 					kurse.add(kurs);
 				}
+			}
 			_fachwahlZuKurse.add(kurse);
 
 			// Initialisiert '_fachwahlZuHatMultikurse'.
 			int max = 1;
-			for (final @NotNull SchuelerblockungInputKurs kurs : kurse)
+			for (final @NotNull SchuelerblockungInputKurs kurs : kurse) {
 				max = Math.max(max, kurs.schienen.length);
+			}
 			_fachwahlZuHatMultikurse[iFachwahl] = max >= 2;
 		}
 
 	}
+
 
 	/**
 	 * Berechnet das optimale Matching. Zuerst werden die Multikurse verteilt, indem alle Kombination
@@ -226,8 +273,7 @@ public class SchuelerblockungDynDaten {
 	 *
 	 * @return Eine optimale Zuordnung des Schülers auf seine gewählten Kurse.
 	 */
-	@NotNull
-	SchuelerblockungOutput gibBestesMatching() {
+	@NotNull SchuelerblockungOutput gibBestesMatching() {
 		// Datenstrukturen resetten.
 		_aktuellNichtwahlen = 0;
 		_aktuellBewertung = 0;
@@ -270,25 +316,27 @@ public class SchuelerblockungDynDaten {
 			schienenAnzahl = Math.max(schienenAnzahl, kurs.schienen.length);
 			if (aktionBelegeKurs(iFachwahl, kurs)) {
 				aktionVerteileMultikurseRekursiv(iFachwahl + 1);
-				if (!aktionBelegeKursUndo(iFachwahl, kurs))
+				if (!aktionBelegeKursUndo(iFachwahl, kurs)) {
 					throw new DeveloperNotificationException(
 							"In der Methode 'SchuelerblockungDynDaten.aktionVerteileMultikurseRekursiv' ist ein unerwarteter Fehler passiert: "
 									+ "Der Kurs (" + kurs.id + ") konnte vom Algorithmus nicht entfernt werden! "
 									+ "Diesen Fehler kann nur das Programmier-Team beheben.");
+				}
 			}
 		}
 
 		// Nichtwahl
 		_aktuellNichtwahlen += schienenAnzahl;
-		if (_aktuellNichtwahlen <= _aktuellNichtwahlenBest) // Rekursion nur falls Verbesserung möglich.
+		if (_aktuellNichtwahlen <= _aktuellNichtwahlenBest) { // Rekursion nur falls Verbesserung möglich.
 			aktionVerteileMultikurseRekursiv(iFachwahl + 1);
+		}
 		_aktuellNichtwahlen -= schienenAnzahl;
 	}
 
 
 	private static long gibKursBewertung(final @NotNull SchuelerblockungInputKurs kurs) {
 		long bewertung = 0;
-		bewertung +=  kurs.anzahlSuS * (long) kurs.anzahlSuS;
+		bewertung += kurs.anzahlSuS * (long) kurs.anzahlSuS;
 		bewertung += kurs.anzahlZusammenMitWuensche * MALUS_ZUSAMMEN_MIT_IM_KURS;
 		bewertung += kurs.anzahlVerbotenMitWuensche * MALUS_VERBOTEN_MIT_IM_KURS;
 		return bewertung;
@@ -300,14 +348,18 @@ public class SchuelerblockungDynDaten {
 		_aktuellMatrix.fuelleMitWert(UNENDLICH);
 
 		// Zellen der Matrix bewerten.
-		for (int iFachwahl = 0; iFachwahl < nFachwahlen; iFachwahl++)
-			if (!_fachwahlZuHatMultikurse[iFachwahl]) // Zeile gültig?
-				for (int schiene = 0; schiene < nSchienen; schiene++)
+		for (int iFachwahl = 0; iFachwahl < nFachwahlen; iFachwahl++) {
+			if (!_fachwahlZuHatMultikurse[iFachwahl]) { // Zeile gültig?
+				for (int schiene = 0; schiene < nSchienen; schiene++) {
 					if (!_aktuellGesperrteSchiene[schiene]) { // Spalte gültig?
 						final SchuelerblockungInputKurs kurs = gibKleinstenKursInSchiene(_fachwahlZuKurse.get(iFachwahl), schiene);
-						if (kurs != null)
+						if (kurs != null) {
 							data[iFachwahl][schiene] = gibKursBewertung(kurs);
+						}
 					}
+				}
+			}
+		}
 	}
 
 
@@ -321,25 +373,30 @@ public class SchuelerblockungDynDaten {
 		// Die Kurse hinzufügen.
 		for (int iFachwahl = 0; iFachwahl < nFachwahlen; iFachwahl++) {
 			// Multikurse überspringen.
-			if (_fachwahlZuHatMultikurse[iFachwahl])
+			if (_fachwahlZuHatMultikurse[iFachwahl]) {
 				continue;
+			}
 
 			final int schiene = r2c[iFachwahl];
 			if ((schiene < 0) || (data[iFachwahl][schiene] == UNENDLICH)) {
 				_aktuellNichtwahlen++;
 				continue;
 			}
+
 			final SchuelerblockungInputKurs kurs = gibKleinstenKursInSchiene(_fachwahlZuKurse.get(iFachwahl), schiene);
-			if (kurs == null)
+			if (kurs == null) {
 				throw new DeveloperNotificationException(
 						"In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
 								+ "Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! "
 								+ "Diesen Fehler kann nur das Programmier-Team beheben.");
-			if (!aktionBelegeKurs(iFachwahl, kurs))
+			}
+
+			if (!aktionBelegeKurs(iFachwahl, kurs)) {
 				throw new DeveloperNotificationException(
 						"In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
 								+ "Der Kurs (" + kurs.id + ") konnte nicht belegt werden! "
 								+ "Diesen Fehler kann nur das Programmier-Team beheben.");
+			}
 		}
 
 		// Besseren Zustand speichern?
@@ -353,8 +410,9 @@ public class SchuelerblockungDynDaten {
 		// Die Kurse entfernen.
 		for (int iFachwahl = 0; iFachwahl < nFachwahlen; iFachwahl++) {
 			// Multikurse überspringen.
-			if (_fachwahlZuHatMultikurse[iFachwahl])
+			if (_fachwahlZuHatMultikurse[iFachwahl]) {
 				continue;
+			}
 
 			final int schiene = r2c[iFachwahl];
 			if ((schiene < 0) || (data[iFachwahl][schiene] == UNENDLICH)) {
@@ -362,16 +420,18 @@ public class SchuelerblockungDynDaten {
 				continue;
 			}
 			final SchuelerblockungInputKurs kurs = gibKleinstenKursInSchiene(_fachwahlZuKurse.get(iFachwahl), schiene);
-			if (kurs == null)
+			if (kurs == null) {
 				throw new DeveloperNotificationException(
 						"In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
 								+ "Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! "
 								+ "Diesen Fehler kann nur das Programmier-Team beheben.");
-			if (!aktionBelegeKursUndo(iFachwahl, kurs))
+			}
+			if (!aktionBelegeKursUndo(iFachwahl, kurs)) {
 				throw new DeveloperNotificationException(
 						"In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: "
 								+ "Der Kurs (" + kurs.id + ") konnte nicht entfernt werden! "
 								+ "Diesen Fehler kann nur das Programmier-Team beheben.");
+			}
 		}
 	}
 
@@ -379,25 +439,34 @@ public class SchuelerblockungDynDaten {
 	private static SchuelerblockungInputKurs gibKleinstenKursInSchiene(
 			final @NotNull ArrayList<SchuelerblockungInputKurs> pKurse,
 			final int pSchiene) {
-		final long maxSuS = Integer.MAX_VALUE;
+
+		long maxSuS = Integer.MAX_VALUE;
 		SchuelerblockungInputKurs best = null;
-		for (final SchuelerblockungInputKurs kurs : pKurse)
-			if (((kurs.schienen[0] - 1) == pSchiene) // Es handelt sich nicht um einen Multikurs!
-					&& (kurs.anzahlSuS < maxSuS))
+
+		// Es ist garantiert, dass es kein Multikurs ist (ergo: kurs.schienen.length == 1).
+		for (final SchuelerblockungInputKurs kurs : pKurse) {
+			if (((kurs.schienen[0] - 1) == pSchiene) && (kurs.anzahlSuS < maxSuS)) {
 				best = kurs;
+				maxSuS = kurs.anzahlSuS;
+			}
+		}
+
 		return best;
 	}
 
 	private boolean aktionBelegeKurs(final int iFachwahl, final @NotNull SchuelerblockungInputKurs kurs) {
 		// Ist eine Belegung möglich?
-		for (final int schiene1 : kurs.schienen)
-			if (_aktuellGesperrteSchiene[schiene1 - 1]) // 1-Indizierung --> 0-Indizierung
+		for (final int schiene1 : kurs.schienen) {
+			if (_aktuellGesperrteSchiene[schiene1 - 1]) { // 1-Indizierung --> 0-Indizierung
 				return false;
+			}
+		}
 
 		// Zu denen Schiene(n) hinzufügen.
 		_aktuellFachwahlZuKurs[iFachwahl] = kurs.id;
-		for (final int schiene1 : kurs.schienen)
+		for (final int schiene1 : kurs.schienen) {
 			_aktuellGesperrteSchiene[schiene1 - 1] = true; // 1-Indizierung --> 0-Indizierung
+		}
 
 		// Bewertung aktualisieren
 		_aktuellBewertung += gibKursBewertung(kurs);
@@ -407,16 +476,21 @@ public class SchuelerblockungDynDaten {
 
 	private boolean aktionBelegeKursUndo(final int iFachwahl, final @NotNull SchuelerblockungInputKurs kurs) {
 		// Kann der Kurs überhaupt entfernt werden?
-		if (_aktuellFachwahlZuKurs[iFachwahl] < 0)
+		if (_aktuellFachwahlZuKurs[iFachwahl] < 0) {
 			return false;
-		for (final int schiene1 : kurs.schienen)
-			if (!_aktuellGesperrteSchiene[schiene1 - 1]) // 1-Indizierung --> 0-Indizierung
+		}
+
+		for (final int schiene1 : kurs.schienen) {
+			if (!_aktuellGesperrteSchiene[schiene1 - 1]) { // 1-Indizierung --> 0-Indizierung
 				return false;
+			}
+		}
 
 		// Entfernen aus den Schiene(n).
 		_aktuellFachwahlZuKurs[iFachwahl] = -1;
-		for (final int schiene1 : kurs.schienen)
+		for (final int schiene1 : kurs.schienen) {
 			_aktuellGesperrteSchiene[schiene1 - 1] = false; // 1-Indizierung --> 0-Indizierung
+		}
 
 		// Bewertung aktualisieren
 		_aktuellBewertung -= gibKursBewertung(kurs);
@@ -433,8 +507,9 @@ public class SchuelerblockungDynDaten {
 		logger.logLn("BewertungBest  = " + _aktuellNichtwahlenBest + " / " + _aktuellBewertungBest);
 		logger.logLn("FachwahlenBest = " + Arrays.toString(_aktuellFachwahlZuKursBest));
 
-		if (!pPrintMatrix)
+		if (!pPrintMatrix) {
 			return;
+		}
 
 		final @NotNull long @NotNull [][] data = _aktuellMatrix.getMatrix();
 		for (int schiene = 0; schiene < nSchienen; schiene++) {
@@ -446,8 +521,9 @@ public class SchuelerblockungDynDaten {
 		for (int iFachwahl = 0; iFachwahl < nFachwahlen; iFachwahl++) {
 			for (int schiene = 0; schiene < nSchienen; schiene++) {
 				@NotNull String sData = "" + data[iFachwahl][schiene];
-				if (data[iFachwahl][schiene] == UNENDLICH)
+				if (data[iFachwahl][schiene] == UNENDLICH) {
 					sData = "INF";
+				}
 				logger.log(String.format("%5s", sData));
 			}
 			logger.logLn("");
