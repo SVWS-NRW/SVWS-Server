@@ -139,6 +139,22 @@ export class ModelProxy<T extends object> {
 
 
 	/**
+	 * Prüft, sofern die Option checkValidBeforePatch aktiviert ist, für ein gegebenes Attribut,
+	 * ob dieses für einen Patch akzeptiert wird. Das Default-Verhalten ist hier, dass einfach geprüft wird,
+	 * ob ein Validator für das Attribut angeschlagen hat oder nicht. Soll von diesem Verhalten abgewichen werden,
+	 * so sollte diese Methode in der spezialisierten Klasse überschrieben werden, um das Patch-Verhalten
+	 * feiner zu steruen.
+	 *
+	 * @param prop   das zu prüfende Attribut
+	 *
+	 * @returns true, wenn das Attribut gepatcht werden darf, und ansonsten false
+	 */
+	public isValidForPatch(prop: keyof T): boolean {
+		return this.getFehler(prop).isEmpty();
+	}
+
+
+	/**
 	 * Diese Methode ruft, sofern sie gesetzt ist, die Patch-Methode auf, um bei Änderungen an dem Pending-State
 	 * automatisch einen Patch abzusetzen.
 	 *
@@ -153,11 +169,16 @@ export class ModelProxy<T extends object> {
 			return true;
 		}
 		const pending = this.pending;
-		if (Object.keys(pending).length <= 0) {
+		const keys = Object.keys(pending) as Array<keyof T>;
+		if (keys.length <= 0) {
 			return true;
 		}
-		if (this._config.checkValidBeforePatch && this.hatFehler()) {
-			return false;
+		if (this._config.checkValidBeforePatch) {
+			for (const prop of keys) {
+				if (!this.isValidForPatch(prop)) {
+					return false;
+				}
+			}
 		}
 		const result = await this._config.patch(pending);
 		if (result) {
