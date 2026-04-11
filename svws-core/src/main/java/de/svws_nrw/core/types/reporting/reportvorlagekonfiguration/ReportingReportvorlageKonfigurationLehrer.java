@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.svws_nrw.core.data.reporting.ReportingEMailDaten;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp;
@@ -23,7 +24,7 @@ public final class ReportingReportvorlageKonfigurationLehrer {
 	 *
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
-	public static @NotNull ReportingParameter  getLehrerVListeSchuelerLeistungsdaten() {
+	public static @NotNull ReportingParameter getLehrerVListeSchuelerLeistungsdaten() {
 		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
 				ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2,
@@ -40,8 +41,9 @@ public final class ReportingReportvorlageKonfigurationLehrer {
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitBemerkungen", "mit fachbezogenen Bemerkungen",
 										ReportingReportvorlageParameterTyp.BOOLEAN,
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
-						))
-		), new ArrayList<>(), new ArrayList<>(), true, false, true);
+						))),
+				new ReportingEMailDaten(),
+				new ArrayList<>(), new ArrayList<>(), true, false, true);
 	}
 
 	/**
@@ -49,8 +51,9 @@ public final class ReportingReportvorlageKonfigurationLehrer {
 	 *
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
-	public static @NotNull ReportingParameter  getLehrerVStammdatenliste() {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), new ArrayList<>(), new ArrayList<>(),
-				new ArrayList<>(), true, false, true);
+	public static @NotNull ReportingParameter getLehrerVStammdatenliste() {
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), new ArrayList<>(),
+				new ReportingEMailDaten(),
+				new ArrayList<>(), new ArrayList<>(), true, false, true);
 	}
 }

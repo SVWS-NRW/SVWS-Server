@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.svws_nrw.core.data.reporting.ReportingEMailDaten;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
+import de.svws_nrw.core.types.reporting.ReportingEMailEmpfaengerTyp;
 import de.svws_nrw.core.types.reporting.ReportingFilterVerknuepfung;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp;
 import de.svws_nrw.core.types.reporting.ReportingUIKomponentenTyp;
@@ -26,7 +28,7 @@ public final class ReportingReportvorlageKonfigurationKlassen {
 	 *
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
-	public static @NotNull ReportingParameter  getKlassenVListeSchuelerFotosNamen() {
+	public static @NotNull ReportingParameter getKlassenVListeSchuelerFotosNamen() {
 		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), List.of(
 				ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1,
@@ -34,8 +36,13 @@ public final class ReportingReportvorlageKonfigurationKlassen {
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("anzahlBilderProZeile", "Anzahl Bilder pro Spalte",
 										ReportingReportvorlageParameterTyp.INTEGER,
 										"" + 4, true, ReportingUIKomponentenTyp.NUMBERPICKER, 1)
-						))
-		), new ArrayList<>(), new ArrayList<>(), true, false, true);
+						))),
+				ReportingReportvorlageUtils.erzeugeEmailParameter(
+						ReportingEMailEmpfaengerTyp.KLASSENLEHRER,
+						false,
+						"",
+						""),
+				new ArrayList<>(), new ArrayList<>(), true, false, true);
 	}
 
 	/**
@@ -43,7 +50,7 @@ public final class ReportingReportvorlageKonfigurationKlassen {
 	 *
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
-	public static @NotNull ReportingParameter  getKlassenVListeSchuelerKontaktdatenerzieher() {
+	public static @NotNull ReportingParameter getKlassenVListeSchuelerKontaktdatenerzieher() {
 		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), List.of(
 				ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 3,
@@ -83,8 +90,13 @@ public final class ReportingReportvorlageKonfigurationKlassen {
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitErzieherEmailPrivat", "mit Erzieher-E-Mail",
 										ReportingReportvorlageParameterTyp.BOOLEAN,
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
-						))
-		), new ArrayList<>(), new ArrayList<>(), true, false, true);
+						))),
+				ReportingReportvorlageUtils.erzeugeEmailParameter(
+						ReportingEMailEmpfaengerTyp.KLASSENLEHRER,
+						false,
+						"",
+						""),
+				new ArrayList<>(), new ArrayList<>(), true, false, true);
 	}
 
 	/**
@@ -92,7 +104,7 @@ public final class ReportingReportvorlageKonfigurationKlassen {
 	 *
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
-	public static @NotNull ReportingParameter  getKlassenVListeSchuelerLeistungsdaten() {
+	public static @NotNull ReportingParameter getKlassenVListeSchuelerLeistungsdaten() {
 		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()),
 				List.of(ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 2,
@@ -135,8 +147,8 @@ public final class ReportingReportvorlageKonfigurationKlassen {
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitVersetzungAbschluss", "mit Versetzung und Abschluss",
 										ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1),
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitVersetzungsentscheidung", "mit Text zur Versetzungsentscheidung",
-										ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1))
-				)),
+										ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))),
+				new ReportingEMailDaten(),
 				List.of(ReportingReportvorlageUtils.erzeugeSortierungDefinitionGruppe("Fachsortierung", "ReportingFach", true,
 						ReportingSortierungDefinitionFactory.definitionen(
 								ReportingSortierungDefinitionFactory.standard("Standardsortierung der Fächer", "ReportingFach"),

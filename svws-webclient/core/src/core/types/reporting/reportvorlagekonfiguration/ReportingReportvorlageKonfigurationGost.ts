@@ -1,5 +1,7 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import { ReportingEMailEmpfaengerTyp } from '../../../../core/types/reporting/ReportingEMailEmpfaengerTyp';
 import { ReportingReportvorlageParameterTyp } from '../../../../core/types/reporting/ReportingReportvorlageParameterTyp';
+import { ReportingEMailDaten } from '../../../../core/data/reporting/ReportingEMailDaten';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import { ReportingReportvorlageUtils } from '../../../../core/utils/reporting/ReportingReportvorlageUtils';
 import type { List } from '../../../../java/util/List';
@@ -22,7 +24,7 @@ export class ReportingReportvorlageKonfigurationGost extends JavaObject {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static getGostKlausurplanungVKlausurtermineMitKursen(): ReportingParameter {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), ArrayList.of(ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1, Arrays.asList(ReportingReportvorlageUtils.erzeugeVorlageParameter("mitKursklausuren", "mit Kursklausuren", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlageUtils.erzeugeVorlageParameter("mitNachschreibern", "mit Nachschreibern", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlageUtils.erzeugeVorlageParameter("mitKlausurschreiberNamen", "mit Namen der Klausurschreiber", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ArrayList(), new ArrayList(), false, false, true);
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), ArrayList.of(ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen", "Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1, Arrays.asList(ReportingReportvorlageUtils.erzeugeVorlageParameter("mitKursklausuren", "mit Kursklausuren", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlageUtils.erzeugeVorlageParameter("mitNachschreibern", "mit Nachschreibern", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1), ReportingReportvorlageUtils.erzeugeVorlageParameter("mitKlausurschreiberNamen", "mit Namen der Klausurschreiber", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)))), new ReportingEMailDaten(), new ArrayList(), new ArrayList(), false, false, true);
 	}
 
 	/**
@@ -31,7 +33,7 @@ export class ReportingReportvorlageKonfigurationGost extends JavaObject {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static getGostKlausurplanungVSchuelerMitKlausuren(): ReportingParameter {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ArrayList(), new ArrayList(), false, true, true);
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ReportingEMailDaten(), new ArrayList(), new ArrayList(), false, true, true);
 	}
 
 	/**
@@ -40,7 +42,7 @@ export class ReportingReportvorlageKonfigurationGost extends JavaObject {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static getGostKursplanungVKursMitKursschuelern(): ReportingParameter {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ArrayList(), new ArrayList(), false, false, true);
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), new ArrayList(), ReportingReportvorlageUtils.erzeugeEmailParameter(ReportingEMailEmpfaengerTyp.LEHRER, false, "Kurslisten zur Kursplanung", "Im Anhang dieser automatisch generierten E-Mail befinden sich Kurslisten aus der Kursplanung."), new ArrayList(), new ArrayList(), false, false, true);
 	}
 
 	/**
@@ -49,7 +51,7 @@ export class ReportingReportvorlageKonfigurationGost extends JavaObject {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static getGostKursplanungVKurseMitStatistikwerten(): ReportingParameter {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ArrayList(), new ArrayList(), false, false, true);
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ReportingEMailDaten(), new ArrayList(), new ArrayList(), false, false, true);
 	}
 
 	/**
@@ -58,7 +60,7 @@ export class ReportingReportvorlageKonfigurationGost extends JavaObject {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static getGostKursplanungVSchuelerMitKursen(): ReportingParameter {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ArrayList(), new ArrayList(), false, false, true);
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ReportingEMailDaten(), new ArrayList(), new ArrayList(), false, false, true);
 	}
 
 	/**
@@ -67,7 +69,7 @@ export class ReportingReportvorlageKonfigurationGost extends JavaObject {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static getGostKursplanungVSchuelerMitSchienenKursen(): ReportingParameter {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ArrayList(), new ArrayList(), false, false, true);
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ReportingEMailDaten(), new ArrayList(), new ArrayList(), false, false, true);
 	}
 
 	/**
@@ -76,7 +78,7 @@ export class ReportingReportvorlageKonfigurationGost extends JavaObject {
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
 	public static getGostLaufbahnplanungAbiturjahrgangVFachwahlstatistiken(): ReportingParameter {
-		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ArrayList(), new ArrayList(), false, false, true);
+		return ReportingReportvorlageUtils.erzeugeReportingParameter(ArrayList.of(ReportingAusgabeformat.PDF.getId()), new ArrayList(), new ReportingEMailDaten(), new ArrayList(), new ArrayList(), false, false, true);
 	}
 
 	transpilerCanonicalName(): string {

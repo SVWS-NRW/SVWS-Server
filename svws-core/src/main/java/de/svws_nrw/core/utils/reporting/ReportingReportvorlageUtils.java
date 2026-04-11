@@ -15,6 +15,7 @@ import de.svws_nrw.core.data.reporting.ReportingReportvorlageParameter;
 import de.svws_nrw.core.data.reporting.ReportingSortierungDefinition;
 import de.svws_nrw.core.data.reporting.ReportingSortierungDefinitionGruppe;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
+import de.svws_nrw.core.types.reporting.ReportingEMailEmpfaengerTyp;
 import de.svws_nrw.core.types.reporting.ReportingFilterVerknuepfung;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp;
 import de.svws_nrw.core.types.reporting.ReportingUIKomponentenTyp;
@@ -31,6 +32,8 @@ public final class ReportingReportvorlageUtils {
 	 *
 	 * @param ausgabeformatOptionen                 Liste von Ausgabeformat-Optionen. Wenn null oder leer, wird standardmäßig PDF verwendet.
 	 * @param reportvorlageParameterGruppen         Liste von ReportingReportvorlageParameterGruppen. Wenn null, wird eine leere Liste erstellt.
+	 * @param eMailDaten                            Die Einstellungen und Informationen zum E-Mail-Versand. Wenn null, werden Standardwerte initialisiert,
+	 *                                              die aber keinen E-Mail-Versand ermöglichen.
 	 * @param sortierungDefinitionenGruppen         Liste von ReportingSortierungDefinitionGruppen, die die Sortierungsdefinitionen enthalten. Wenn null, wird
 	 *                                              eine leere Liste erstellt.
 	 * @param filterDefinitionenGruppen             Liste von ReportingFilterDefinitionGruppen, die die Filterdefinitionen enthalten. Wenn null, wird eine
@@ -43,6 +46,7 @@ public final class ReportingReportvorlageUtils {
 	 */
 	public static @NotNull ReportingParameter erzeugeReportingParameter(final List<Integer> ausgabeformatOptionen,
 			final List<ReportingReportvorlageParameterGruppe> reportvorlageParameterGruppen,
+			final ReportingEMailDaten eMailDaten,
 			final List<ReportingSortierungDefinitionGruppe> sortierungDefinitionenGruppen,
 			final List<ReportingFilterDefinitionGruppe> filterDefinitionenGruppen,
 			final @NotNull boolean uiIstSichtbarEinzelausgabeHauptdaten, final @NotNull boolean uiIstSichtbarEinzelausgabeDetaildaten,
@@ -52,6 +56,7 @@ public final class ReportingReportvorlageUtils {
 		reportingParameter.ausgabeformatOptionen = new ArrayList<>(
 				((ausgabeformatOptionen == null) || ausgabeformatOptionen.isEmpty()) ? List.of(ReportingAusgabeformat.PDF.getId()) : ausgabeformatOptionen);
 
+		// Standardausgabeoptionen-Parameter-Gruppe erstellen
 		String ausgabeoptionenBeschreibung = ((uiIstSichtbarEinzelausgabeHauptdaten) || (uiIstSichtbarEinzelausgabeDetaildaten))
 				? "Die Option Einzelausgabe ermöglicht es, pro Datensatz eine Ausgabe in eine einzelne Datei zu erzeugen. "
 				: "";
@@ -70,10 +75,15 @@ public final class ReportingReportvorlageUtils {
 								erzeugeVorlageParameter("duplexdruck", "Duplexdruck", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
 										uiIstSichtbarDuplexdruck, ReportingUIKomponentenTyp.CHECKBOX, 1)));
 
+		// Die Parameter-Gruppen der Vorlage zuweisen, sowohl spezielle als auch allgemeine Gruppen.
 		reportingParameter.reportvorlageParameterGruppen = new ArrayList<>(
 				(reportvorlageParameterGruppen == null) ? new ArrayList<>() : reportvorlageParameterGruppen);
 		reportingParameter.reportvorlageParameterGruppen.add(standardausgabeoptionenGruppe);
 
+		// E-Mail-Daten zuweisen
+		reportingParameter.eMailDaten = (eMailDaten == null) ? new ReportingEMailDaten() : eMailDaten;
+
+		// Sortier- und Filterdefinitionen zuweisen
 		reportingParameter.sortierungDefinitionenGruppen = new ArrayList<>(
 				(sortierungDefinitionenGruppen == null) ? new ArrayList<>() : sortierungDefinitionenGruppen);
 		reportingParameter.filterDefinitionenGruppen = new ArrayList<>(
@@ -131,6 +141,27 @@ public final class ReportingReportvorlageUtils {
 		parameter.uiKomponentenTyp = uiKomponentenTyp.getId();
 		parameter.uiAnzahlSpalten = uiAnzahlSpalten;
 		return parameter;
+	}
+
+	/**
+	 * Erstellt ein ReportingEMailDaten-Objekt basierend auf den angegebenen Eigenschaften.
+	 *
+	 * @param eMailEmpfaengerTyp             Typ des Empfängers für die E-Mail
+	 * @param istPrivateEmailAlternative     Gibt an, ob es sich um eine private E-Mail-Alternative handelt
+	 * @param betreff                        Betreff der E-Mail
+	 * @param text                           Textinhalt der E-Mail
+	 *
+	 * @return Ein ReportingEMailDaten-Objekt mit den angegebenen Eigenschaften
+	 */
+	public static @NotNull ReportingEMailDaten erzeugeEmailParameter(final @NotNull ReportingEMailEmpfaengerTyp eMailEmpfaengerTyp,
+			final boolean istPrivateEmailAlternative, final @NotNull String betreff, final @NotNull String text) {
+
+		final ReportingEMailDaten daten = new ReportingEMailDaten();
+		daten.empfaengerTyp = eMailEmpfaengerTyp.getId();
+		daten.istPrivateEmailAlternative = istPrivateEmailAlternative;
+		daten.betreff = betreff;
+		daten.text = text;
+		return daten;
 	}
 
 	/**

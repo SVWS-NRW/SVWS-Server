@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.svws_nrw.core.data.reporting.ReportingEMailDaten;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.types.reporting.ReportingAusgabeformat;
+import de.svws_nrw.core.types.reporting.ReportingEMailEmpfaengerTyp;
 import de.svws_nrw.core.types.reporting.ReportingReportvorlageParameterTyp;
 import de.svws_nrw.core.types.reporting.ReportingUIKomponentenTyp;
 import de.svws_nrw.core.utils.reporting.ReportingReportvorlageUtils;
@@ -23,7 +25,7 @@ public final class ReportingReportvorlageKonfigurationKurse {
 	 *
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
-	public static @NotNull ReportingParameter  getKurseVListeSchuelerKontaktdatenerzieher() {
+	public static @NotNull ReportingParameter getKurseVListeSchuelerKontaktdatenerzieher() {
 		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), List.of(
 				ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 3,
@@ -66,8 +68,13 @@ public final class ReportingReportvorlageKonfigurationKurse {
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitErzieherEmailPrivat", "mit Erzieher-E-Mail",
 										ReportingReportvorlageParameterTyp.BOOLEAN,
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
-						))
-		), new ArrayList<>(), new ArrayList<>(), true, false, true);
+						))),
+				ReportingReportvorlageUtils.erzeugeEmailParameter(
+						ReportingEMailEmpfaengerTyp.KURSLEHRER,
+						false,
+						"",
+						""),
+				new ArrayList<>(), new ArrayList<>(), true, false, true);
 	}
 
 	/**
@@ -75,7 +82,7 @@ public final class ReportingReportvorlageKonfigurationKurse {
 	 *
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
-	public static @NotNull ReportingParameter  getKurseVListeSchuelerFotosNamen() {
+	public static @NotNull ReportingParameter getKurseVListeSchuelerFotosNamen() {
 		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId(), ReportingAusgabeformat.EMAIL.getId()), List.of(
 				ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1,
@@ -83,8 +90,13 @@ public final class ReportingReportvorlageKonfigurationKurse {
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("anzahlBilderProZeile", "Anzahl Bilder pro Spalte",
 										ReportingReportvorlageParameterTyp.INTEGER,
 										"" + 4, true, ReportingUIKomponentenTyp.NUMBERPICKER, 1)
-						))
-		), new ArrayList<>(), new ArrayList<>(), true, false, true);
+						))),
+				ReportingReportvorlageUtils.erzeugeEmailParameter(
+						ReportingEMailEmpfaengerTyp.KURSLEHRER,
+						false,
+						"",
+						""),
+				new ArrayList<>(), new ArrayList<>(), true, false, true);
 	}
 
 	/**
@@ -92,7 +104,7 @@ public final class ReportingReportvorlageKonfigurationKurse {
 	 *
 	 * @return Ein ReportingParameter-Objekt mit den entsprechenden Parametern
 	 */
-	public static @NotNull ReportingParameter  getKurseVListeSchuelerLeistungsdaten() {
+	public static @NotNull ReportingParameter getKurseVListeSchuelerLeistungsdaten() {
 		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), List.of(
 				ReportingReportvorlageUtils.erzeugeReportingvorlageParameterGruppe("Inhaltsoptionen",
 						"Die folgenden Optionen definieren in Teilen die Inhalte sowie deren Darstellung in der zu erzeugenden Ausgabedatei.", true, 1,
@@ -103,7 +115,8 @@ public final class ReportingReportvorlageKonfigurationKurse {
 								ReportingReportvorlageUtils.erzeugeVorlageParameter("mitBemerkungen", "mit fachbezogenen Bemerkungen",
 										ReportingReportvorlageParameterTyp.BOOLEAN,
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
-						))
-		), new ArrayList<>(), new ArrayList<>(), true, false, true);
+						))),
+				new ReportingEMailDaten(),
+				new ArrayList<>(), new ArrayList<>(), true, false, true);
 	}
 }
