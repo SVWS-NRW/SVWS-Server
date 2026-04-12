@@ -20,12 +20,7 @@
   "DBKonfiguration" : {
     "dbms" : "MARIA_DB",
     "location" : "${MARIADB_HOST}",
-    "defaultschema" : "${MARIADB_DATABASE}",
-    "SchemaKonfiguration" : [ {
-      "name" : "${MARIADB_DATABASE}",
-      "svwslogin" : false,
-      "username" : "${MARIADB_USER}",
-      "password" : "${MARIADB_PASSWORD}"
-    } ]
+    "defaultschema" : null,
+    "SchemaKonfiguration" : []
   }
 }
