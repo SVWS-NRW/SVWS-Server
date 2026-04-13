@@ -14,7 +14,7 @@ export class RouteNotenmodulMail extends RouteNode<any, RouteNotenmodulAdministr
 		super(Schulform.values(), [
 			BenutzerKompetenz.NOTENMODUL_ADMINISTRATION,
 		], "notenmodul.administration.mail", "mail", NotenmodulMail);
-		super.mode = ServerMode.ALPHA;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Mail";
 		this.isHidden = (params?: RouteParams) => this.checkHidden(params);

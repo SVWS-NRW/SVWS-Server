@@ -15,7 +15,7 @@ export class RouteNotenmodulVerbindung extends RouteNode<any, RouteNotenmodulAdm
 		super(Schulform.values(), [
 			BenutzerKompetenz.NOTENMODUL_ADMINISTRATION,
 		], "notenmodul.administration.verbindung", "verbindung", NotenmodulVerbindung);
-		super.mode = ServerMode.ALPHA;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Verbindung";
 		this.isHidden = (params?: RouteParams) => this.checkHidden(params);

@@ -16,7 +16,7 @@ export class RouteNotenmodulKonfiguration extends RouteNode<any, RouteNotenmodul
 		super(Schulform.values(), [
 			BenutzerKompetenz.NOTENMODUL_ADMINISTRATION,
 		], "notenmodul.administration.konfiguration", "konfiguration", NotenmodulKonfiguration);
-		super.mode = ServerMode.ALPHA;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Konfiguration";
 		this.isHidden = (params?: RouteParams) => this.checkHidden(params);

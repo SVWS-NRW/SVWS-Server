@@ -1,7 +1,6 @@
-import type { ApiFile, ENMv2Daten, LehrerListeEintrag, List, ServerMode } from "@core";
+import type { ApiFile, ENMv2Daten, LehrerListeEintrag, List } from "@core";
 
 export interface SchuleDatenaustauschENMProps {
-	serverMode: ServerMode;
 	listLehrer: List<LehrerListeEintrag>;
 	exportLehrerENM: (id: number) => Promise<ENMv2Daten>;
 	exportGzipENM: () => Promise<ApiFile>;

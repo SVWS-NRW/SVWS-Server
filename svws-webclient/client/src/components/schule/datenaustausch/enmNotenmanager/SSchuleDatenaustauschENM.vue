@@ -10,7 +10,7 @@
 	<div class="svws-ui-page w-full">
 		<div class="svws-ui-tab-content">
 			<div class="page page-flex-row">
-				<div v-if="ServerMode.DEV.equals(serverMode)">
+				<div>
 					<svws-ui-input-wrapper>
 						<div class="text-headline-md">Lehrkraftdaten exportieren</div>
 						<div class="flex items-center">
@@ -41,7 +41,7 @@
 	import { ref } from 'vue';
 	import type { SchuleDatenaustauschENMProps } from './SSchuleDatenaustauschENMProps';
 	import { SelectManager } from '@ui';
-	import { ENMv2Daten, ServerMode, type LehrerListeEintrag } from '@core';
+	import { ENMv2Daten, type LehrerListeEintrag } from '@core';
 
 	const props = defineProps<SchuleDatenaustauschENMProps>();
 	const loading = ref<boolean>(false);

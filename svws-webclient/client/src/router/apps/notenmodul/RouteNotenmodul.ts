@@ -19,7 +19,7 @@ export class RouteNotenmodul extends RouteNode<RouteDataNotenmodul, RouteApp> {
 			BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION,
 		], "notenmodul", "notenmodul", undefined, new RouteDataNotenmodul());
 		super.text = "Noten";
-		super.mode = ServerMode.ALPHA;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getNoProps(route);
 		super.menugroup = AppMenuGroup.MAIN;
 		super.icon = "i-ri-music-2-fill";

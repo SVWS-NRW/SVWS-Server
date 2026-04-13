@@ -15,7 +15,7 @@ export class RouteNotenmodulSynchronisation extends RouteNode<any, RouteNotenmod
 		super(Schulform.values(), [
 			BenutzerKompetenz.NOTENMODUL_ADMINISTRATION,
 		], "notenmodul.administration.synchronisation", "synchronisation", NotenmodulSynchronisation);
-		super.mode = ServerMode.ALPHA;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Synchronisation";
 		this.isHidden = (params?: RouteParams) => this.checkHidden(params);

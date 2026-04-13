@@ -5,7 +5,6 @@ import type { SchuleDatenaustauschENMProps } from "~/components/schule/datenaust
 import type { RouteApp } from "../../../RouteApp";
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 import { RouteDataSchuleDatenaustauschENM } from "./RouteDataSchuleDatenaustauschENM";
-import { api } from "~/router/Api";
 
 const SSchuleDatenaustauschENM = () => import("~/components/schule/datenaustausch/enmNotenmanager/SSchuleDatenaustauschENM.vue");
 
@@ -13,7 +12,7 @@ export class RouteSchuleDatenaustauschENM extends RouteNode<RouteDataSchuleDaten
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.NOTENMODUL_ADMINISTRATION], "schule.datenaustausch.enm", "enm", SSchuleDatenaustauschENM, new RouteDataSchuleDatenaustauschENM());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "ENM Notenmanager";
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
@@ -24,7 +23,6 @@ export class RouteSchuleDatenaustauschENM extends RouteNode<RouteDataSchuleDaten
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschENMProps {
 		return {
-			serverMode: api.mode,
 			listLehrer: this.data.listLehrer,
 			exportLehrerENM: this.data.exportLehrerENM,
 			exportGzipENM: this.data.exportGzipENM,

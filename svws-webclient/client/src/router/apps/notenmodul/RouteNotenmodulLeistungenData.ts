@@ -18,7 +18,7 @@ export class RouteNotenmodulLeistungenData extends RouteNode<any, RouteNotenmodu
 			BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN,
 			BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION,
 		], "notenmodul.leistungen.daten", "daten", NotenmodulLeistungen);
-		super.mode = ServerMode.ALPHA;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Leistungsdaten";
 	}

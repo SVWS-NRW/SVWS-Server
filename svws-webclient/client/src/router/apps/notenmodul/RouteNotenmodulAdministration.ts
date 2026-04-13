@@ -23,7 +23,7 @@ export class RouteNotenmodulAdministration extends RouteAuswahlNode<WenomAuswahl
 		super(Schulform.values(), [
 			BenutzerKompetenz.NOTENMODUL_ADMINISTRATION,
 		], "notenmodul.administration", String.raw`notenmodul/administration/:id(-?\d+)?`, NotenmodulAdministrationApp, NotenmodulAdministrationAuswahl, new RouteDataNotenmodulAdministration());
-		super.mode = ServerMode.ALPHA;
+		super.mode = ServerMode.STABLE;
 		super.getAuswahlListProps = (props) => (<NotenmodulAdministrationAuswahlProps>{
 			...props,
 			manager: () => routeNotenmodulAdministration.data.manager,

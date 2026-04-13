@@ -27,7 +27,7 @@ export class RouteNotenmodulLeistungen extends RouteAuswahlNode<EnmLerngruppenAu
 			BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_ALLGEMEIN,
 			BenutzerKompetenz.NOTENMODUL_NOTEN_AENDERN_FUNKTION,
 		], "notenmodul.leistungen", "notenmodul/leistungen", NotenmodulLeistungenApp, NotenmodulLeistungenAuswahl, new RouteDataNotenmodulLeistungen());
-		super.mode = ServerMode.ALPHA;
+		super.mode = ServerMode.STABLE;
 		super.getAuswahlListProps = (props) => (<NotenmodulLeistungenAuswahlProps>{
 			...props,
 			enmManager: () => routeNotenmodul.data.manager,
