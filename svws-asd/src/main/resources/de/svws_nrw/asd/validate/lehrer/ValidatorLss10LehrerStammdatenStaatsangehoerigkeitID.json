@@ -2,12 +2,21 @@
   "version" : 1,
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID",
   "historie" : [ {
+    "praefix" : "LSS10",
+    "altes_kuerzel" : "",
+    "zweig" : "Lehrer-Stammdaten-StaatsangehoerigkeitID",
+    "dtos" : "LehrerStammdaten",
+    "ausfuehrungsbereich_ui" : "Lehrkräfte, Reiter 'Individualdaten'",
+    "anzeigebereich_ui" : "Feld 'Staatsangehörigkeit'",
     "zebras" : true,
     "svws" : true,
-    "praefix" : "LSS10",
+    "vorbedingung" : ["LSS01"],
     "muss" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
     "kann" : [ ],
     "hinweis" : [ ],
+    "text" : "Der eingetragene Wert für das Feld 'Staatsangehörigkeit' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.",
+    "erlaeuterung" : "Der eingetragene Katalogwert ist gültig, wenn gueltigVon kleiner als das aktuelle Schuljahr ist oder NULL ist, oder wenn gueltigBis größer als das aktuelle Schuljahr ist oder NULL ist.",
+    "bedingung" : "((LehrerStammdaten.staatsangehoerigkeitID.bezeichner.gueltigVon ≠ NULL) ∧ (LehrerStammdaten.staatsangehoerigkeitID.bezeichner.gueltigVon > aktuellesSchuljahr )) ∨ ((LehrerStammdaten.staatsangehoerigkeitID.bezeichner.gueltigBis ≠ NULL)∧(LehrerStammdaten.staatsangehoerigkeitID.bezeichner.gueltigBis < aktuellesSchuljahr))",
     "gueltigVon" : null,
     "gueltigBis" : null
   } ]

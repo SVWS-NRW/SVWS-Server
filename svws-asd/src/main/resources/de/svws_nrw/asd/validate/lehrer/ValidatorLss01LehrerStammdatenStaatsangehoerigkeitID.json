@@ -2,12 +2,21 @@
   "version" : 1,
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLss01LehrerStammdatenStaatsangehoerigkeitID",
   "historie" : [ {
+    "praefix" : "LSS01",
+    "altes_kuerzel" : "",
+    "zweig" : "Lehrer-Stammdaten-StaatsangehoerigkeitID",
+    "dtos" : "LehrerStammdaten",
+    "ausfuehrungsbereich_ui" : "Lehrkräfte, Reiter 'Individualdaten'",
+    "anzeigebereich_ui" : "Feld 'Staatsangehörigkeit'",
     "zebras" : true,
     "svws" : true,
-    "praefix" : "LSS01",
+    "vorbedingung" : ["LSS00"],
     "muss" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
     "kann" : [ ],
     "hinweis" : [ ],
+    "text" : "Das Feld 'Staatsangehörigkeit' muss zulässig sein.",
+    "erlaeuterung" : "",
+    "bedingung" : "LehrerStammdaten.staatsangehoerigkeitID ≠ einem Eintrag in Nationalitaeten.json",
     "gueltigVon" : null,
     "gueltigBis" : null
   } ]
