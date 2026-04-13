@@ -447,6 +447,40 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 		return _mapIDToEintrag.get(id);
 	}
 
+	/**
+	 * Gibt den Namen des Core-Type-Wert für die angegebene ID zurück.
+	 *
+	 * @param id   die ID
+	 *
+	 * @return der Name des Core-Type-Wert oder null
+	 */
+	public String getNameByIDOrNull(final Long id) {
+		final U tmp = _mapIDToEnum.get(id);
+
+		if (tmp == null) {
+			return null;
+		}
+
+		return tmp.name();
+	}
+
+	/**
+	 * Gibt den Schluessel für die angegebene ID zurück.
+	 *
+	 * @param id   die ID
+	 *
+	 * @return der Schluessel zur ID oder null
+	 */
+	public String getSchluesselByIDOrNull(final Long id) {
+		final T tmp = _mapIDToEintrag.get(id);
+
+		if (tmp == null) {
+			return null;
+		}
+
+		return tmp.schluessel;
+	}
+
 
 	/**
 	 * Gibt den Core-Type-Wert für die angegebene ID zurück.

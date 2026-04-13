@@ -112,7 +112,7 @@ public final class SchuelerStatistikService {
 		daten.status = dtoSchueler.idStatus;
 		daten.religionabmeldung = dtoSchueler.Religionsabmeldung;
 		daten.religionanmeldung = dtoSchueler.Religionsanmeldung;
-		daten.bkAzvo = dtoSchueler.BKAZVO;
+		daten.bkAvzo = dtoSchueler.BKAZVO;
 
 		daten.hatMigrationshintergrund = Boolean.TRUE.equals(dtoSchueler.Migrationshintergrund);
 		daten.zuzugsjahr = dtoSchueler.JahrZuzug;

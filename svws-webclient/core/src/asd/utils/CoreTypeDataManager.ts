@@ -440,6 +440,36 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	}
 
 	/**
+	 * Gibt den Namen des Core-Type-Wert für die angegebene ID zurück.
+	 *
+	 * @param id   die ID
+	 *
+	 * @return der Name des Core-Type-Wert oder null
+	 */
+	public getNameByIDOrNull(id: number | null): string | null {
+		const tmp: U | null = this._mapIDToEnum.get(id);
+		if (tmp === null) {
+			return null;
+		}
+		return tmp.name();
+	}
+
+	/**
+	 * Gibt den Schluessel für die angegebene ID zurück.
+	 *
+	 * @param id   die ID
+	 *
+	 * @return der Schluessel zur ID oder null
+	 */
+	public getSchluesselByIDOrNull(id: number | null): string | null {
+		const tmp: T | null = this._mapIDToEintrag.get(id);
+		if (tmp === null) {
+			return null;
+		}
+		return tmp.schluessel;
+	}
+
+	/**
 	 * Gibt den Core-Type-Wert für die angegebene ID zurück.
 	 *
 	 * @param id   die ID
