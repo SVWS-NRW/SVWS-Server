@@ -866,6 +866,9 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		const list = new ArrayList(this.kursAuswahl);
 		reportingParameter.idHauptdatenObjekt = this.ergebnismanager.getErgebnis().id;
 		reportingParameter.idsHauptdaten = list;
+		ReportingReportvorlage.getByBezeichnung(reportingParameter.reportvorlage)?.setReportingParameterVorlageparameter(reportingParameter, "einzelausgabeHauptdaten", "true");
+		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
+		reportingParameter.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
 		return await api.server.emailReport(reportingParameter, api.schema);
 	});
 

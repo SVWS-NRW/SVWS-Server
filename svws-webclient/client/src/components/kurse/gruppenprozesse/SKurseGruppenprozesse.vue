@@ -7,16 +7,16 @@
 			<!-- Karte: Kursliste Schüler-Kontaktdaten/Erzieher drucken/versenden -->
 			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" title="Kursliste drucken oder versenden" subtitle="Eine Liste mit den Daten der Schülerinnen und Schüler der ausgewählten Kurse drucken oder versenden."
 				:is-open="currentAction === 'druckKursListeSchuelerKontaktdatenErzieher'" @update:is-open="isOpen => setCurrentAction('druckKursListeSchuelerKontaktdatenErzieher', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER" :servermode="serverMode" :ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail :id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
+				<report-parameters :reportvorlage="ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER" :server-mode :ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail :id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
 			</ui-card>
 			<!-- Karte: Kursliste Schüler-Fotos drucken/versenden -->
 			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" title="Kursliste mit Fotos drucken oder versenden" subtitle="Eine Liste mit den Fotos der Schülerinnen und Schüler der ausgewählten Kurse drucken oder versenden."
 				:is-open="currentAction === 'druckKursListeSchuelerFotos'" @update:is-open="isOpen => setCurrentAction('druckKursListeSchuelerFotos', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_FOTOS_NAMEN" :servermode="serverMode" :ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail :id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
+				<report-parameters :reportvorlage="ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_FOTOS_NAMEN" :server-mode :ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail :id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
 			</ui-card>
 			<ui-card v-if="hatKompetenzDruckenSchuelerLeistungsdaten" icon="i-ri-printer-line" title="Leistungsübersicht drucken" subtitle="Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der ausgewählten Kurse drucken"
 				:is-open="currentAction === 'druckKursListeSchuelerLeistungsdaten'" @update:is-open="isOpen => setCurrentAction('druckKursListeSchuelerLeistungsdaten', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_LEISTUNGSDATEN" :servermode="serverMode" :ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail :id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
+				<report-parameters :reportvorlage="ReportingReportvorlage.KURSE_V_LISTE_SCHUELER_LEISTUNGSDATEN" :server-mode :ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail :id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
 			</ui-card>
 			<!-- Karte: Löschen (bestehende Funktionalität, DEV) -->
 			<ui-card v-if="ServerMode.DEV.checkServerMode(serverMode) && hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Kurse werden gelöscht."

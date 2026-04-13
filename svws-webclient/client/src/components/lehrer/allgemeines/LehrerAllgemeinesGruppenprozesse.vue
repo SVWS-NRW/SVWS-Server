@@ -1,27 +1,33 @@
 <template>
 	<div class="page page-grid-cards">
 		<svws-ui-input-wrapper class="flex flex-col gap-4">
-			<ui-card v-if="hatKompetenzDruckenStundenplan && (mapStundenplaene.size > 0)" icon="i-ri-printer-line" title="Stundenplan Kombiniert drucken oder versenden" subtitle="Drucke oder versende die Stundenpläne der ausgewählten Lehrkräfte."
+			<ui-card v-if="hatKompetenzDruckenStundenplan && (stundenplanModel !== undefined)" icon="i-ri-printer-line" title="Stundenplan Kombiniert drucken oder versenden" subtitle="Drucke oder versende die Stundenpläne der ausgewählten Lehrkräfte."
 				:is-open="currentAction === 'druckLehrerStundenplanKombiniert'" @update:is-open="isOpen => setCurrentAction('druckLehrerStundenplanKombiniert', isOpen)">
 				<div>
 					<div class="flex flex-col">
 						<ui-select v-model="stundenplanModel" :manager="stundenplanSelectManager" label="Stundenplan" />
 					</div>
-					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT" :id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...lehrerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail :id-abschnitt="lehrerListeManager().getSchuljahresabschnittAuswahl()?.id" />
+					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT" :server-mode
+						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...lehrerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]"
+						:create-report="getPDF" :send-e-mail :id-abschnitt="lehrerListeManager().getSchuljahresabschnittAuswahl()?.id" />
 				</div>
 			</ui-card>
-			<ui-card v-if="hatKompetenzDruckenStundenplan && (mapStundenplaene.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken oder versenden" subtitle="Drucke oder versende die Stundenpläne der ausgewählten Lehrkräfte."
+			<ui-card v-if="hatKompetenzDruckenStundenplan && (stundenplanModel !== undefined)" icon="i-ri-printer-line" title="Stundenplan drucken oder versenden" subtitle="Drucke oder versende die Stundenpläne der ausgewählten Lehrkräfte."
 				:is-open="currentAction === 'druckLehrerStundenplan'" @update:is-open="isOpen => setCurrentAction('druckLehrerStundenplan', isOpen)">
 				<div>
 					<div class="flex flex-col">
 						<ui-select v-model="stundenplanModel" :manager="stundenplanSelectManager" label="Stundenplan" />
 					</div>
-					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN" :id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...lehrerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail :id-abschnitt="lehrerListeManager().getSchuljahresabschnittAuswahl()?.id" />
+					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_LEHRER_STUNDENPLAN" :server-mode
+						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...lehrerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]"
+						:create-report="getPDF" :send-e-mail :id-abschnitt="lehrerListeManager().getSchuljahresabschnittAuswahl()?.id" />
 				</div>
 			</ui-card>
 			<ui-card v-if="hatKompetenzDruckenSchuelerLeistungsdaten" icon="i-ri-printer-line" title="Leistungsübersicht drucken" subtitle="Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der ausgewählten Lehrkräfte drucken"
 				:is-open="currentAction === 'druckLehrerListeSchuelerLeistungsdaten'" @update:is-open="isOpen => setCurrentAction('druckLehrerListeSchuelerLeistungsdaten', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN" :ids-hauptdaten="[...lehrerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail :id-abschnitt="lehrerListeManager().getSchuljahresabschnittAuswahl()?.id" />
+				<report-parameters :reportvorlage="ReportingReportvorlage.LEHRER_V_LISTE_SCHUELER_LEISTUNGSDATEN" :server-mode
+					:ids-hauptdaten="[...lehrerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail
+					:id-abschnitt="lehrerListeManager().getSchuljahresabschnittAuswahl()?.id" />
 			</ui-card>
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen"
 				subtitle="Setze einen Löschvermerk bei den ausgewählten Lehrkräften." :is-open="currentAction === 'delete'"
@@ -68,6 +74,8 @@
 	const isDeleteDisabled = computed<boolean>(() => !hatKompetenzLoeschen.value || !props.lehrerListeManager().liste.auswahlExists() || !props.deleteCheck().success || loading.value);
 
 	const stundenplanAuswahl = ref<StundenplanListeEintrag>();
+
+	const stundenplanOptions = computed(() => props.mapStundenplaene.values());
 	const stundenplanModel = computed({
 		get: () => {
 			if (stundenplanAuswahl.value === undefined) {
@@ -75,13 +83,13 @@
 					const [first] = props.mapStundenplaene.values();
 					return first;
 				}
+				return undefined;
 			}
 			return stundenplanAuswahl.value;
 		},
 		set: value => stundenplanAuswahl.value = value,
 	});
 
-	const stundenplanOptions = computed(() => props.mapStundenplaene.values());
 	const stundenplanSelectManager = new SelectManager({
 		options: stundenplanOptions.value,
 		optionDisplayText: s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')',

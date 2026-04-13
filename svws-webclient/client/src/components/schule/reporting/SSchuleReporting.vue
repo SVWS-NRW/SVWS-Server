@@ -13,7 +13,7 @@
 		<div class="page page-grid-cards">
 			<svws-ui-content-card title="Reporting">
 				<svws-ui-input-wrapper>
-					<report-parameters :create-report :id-hauptdaten-objekt="-1" />
+					<report-parameters :create-report :id-hauptdaten-objekt="-1" :server-mode="ServerMode.DEV" />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 		</div>
@@ -23,6 +23,7 @@
 <script setup lang="ts">
 
 	import type { SchuleReportingProps } from "./SSchuleReportingProps";
+	import { ServerMode } from "@core";
 
 	const props = defineProps<SchuleReportingProps>();
 

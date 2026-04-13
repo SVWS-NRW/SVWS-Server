@@ -4,7 +4,8 @@
 		<template #modalTitle>Stundenplan drucken</template>
 		<template #modalContent>
 			<ui-select v-model="stundenplanModel" :manager="stundenplanSelectManager" label="Stundenplan" />
-			<report-parameters :reportvorlage :id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[]" :ids-detaildaten="[]" :create-report="getPDF" :id-abschnitt="-1" />
+			<report-parameters :reportvorlage :server-mode :id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[]"
+				:ids-detaildaten="[]" :create-report="getPDF" :id-abschnitt="-1" />
 		</template>
 	</svws-ui-modal>
 </template>
@@ -12,7 +13,7 @@
 <script setup lang="ts">
 	import { computed, ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';
-	import type { StundenplanListeEintrag, ApiFile, ReportingParameter, ReportingReportvorlage } from '@core';
+	import type { StundenplanListeEintrag, ApiFile, ReportingParameter, ReportingReportvorlage, ServerMode } from '@core';
 	import { DateUtils } from '@core';
 	import { SelectManager } from '@ui';
 
@@ -21,6 +22,7 @@
 		getPDF: (parameter: ReportingParameter) => Promise<ApiFile>;
 		apiStatus: ApiStatus;
 		reportvorlage: ReportingReportvorlage;
+		serverMode: ServerMode;
 	}>();
 
 	const show = ref<boolean>(false);

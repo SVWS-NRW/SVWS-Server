@@ -1,9 +1,9 @@
-import type { StundenplanManager, ApiFile, ReportingParameter } from "@core";
+import type { StundenplanManager, ApiFile, ReportingParameter, ServerMode } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface StundenplanRaumProps {
 	// schulform: Schulform;
-	// serverMode: ServerMode;
+	serverMode: ServerMode;
 	// benutzerKompetenzen: Set<BenutzerKompetenz>,
 	getPDF: (parameter: ReportingParameter) => Promise<ApiFile>;
 	apiStatus: ApiStatus;

@@ -27,6 +27,7 @@ export class RouteStundenplanRaum extends RouteNode<any, RouteStundenplan> {
 
 	public getProps(to: RouteLocationNormalized): StundenplanRaumProps {
 		return {
+			serverMode: api.mode,
 			apiStatus: api.status,
 			getPDF: routeStundenplan.data.getPDF,
 			stundenplanManager: () => routeStundenplan.data.manager.daten(),

@@ -90,7 +90,7 @@
 			</template>
 
 			<!-- E-Mail-Eingabefelder -->
-			<template v-if="(parameter.ausgabeformatOptionen.contains(ReportingAusgabeformat.EMAIL.getId())) && ServerMode.DEV.equals(servermode ?? null)">
+			<template v-if="(parameter.ausgabeformatOptionen.contains(ReportingAusgabeformat.EMAIL.getId())) && ServerMode.DEV.equals(serverMode ?? null) && (parameter.eMailDaten !== null)">
 				<div class="border-2 border-ui-25 rounded-md p-2 my-2">
 					<div class="flex flex-col mb-2">
 						<div class="font-bold">E-Mail-Versand</div>
@@ -98,10 +98,10 @@
 					</div>
 					<div class="flex flex-col gap-4">
 						<div class="flex flex-col gap-1">
-							<svws-ui-text-input v-model="eMailParameter.betreff" placeholder="Betreff eingeben" />
-							<svws-ui-textarea-input autoresize v-model="eMailParameter.text" placeholder="E-Mail-Text eingeben" />
+							<svws-ui-text-input v-model="parameter.eMailDaten.betreff" placeholder="Betreff eingeben" />
+							<svws-ui-textarea-input autoresize v-model="parameter.eMailDaten.text" placeholder="E-Mail-Text eingeben" />
 						</div>
-						<svws-ui-checkbox v-model="eMailParameter.istPrivateEmailAlternative">
+						<svws-ui-checkbox v-model="parameter.eMailDaten.istPrivateEmailAlternative">
 							Private E-Mail-Adresse verwenden, wenn keine schulische E-Mail-Adresse vorhanden ist.
 						</svws-ui-checkbox>
 					</div>
@@ -125,7 +125,7 @@
 	import Select from "../../ui/controls/select/UiSelect.vue";
 	import TextArea from "../../ui/controls/SvwsUiTextareaInput.vue";
 
-	import type { Component, Ref, ComputedRef } from "vue";
+	import type { Component, ComputedRef } from "vue";
 	import { computed, ref, watch, watchEffect } from "vue";
 	import { ReportingReportvorlage } from "../../../../core/src/core/types/reporting/ReportingReportvorlage";
 	import { ReportingParameter } from "../../../../core/src/core/data/reporting/ReportingParameter";
@@ -134,7 +134,6 @@
 	import type { ApiFile } from "../../../../core/src/api/BaseApi";
 	import type { SimpleOperationResponse } from "../../../../core/src/core/data/SimpleOperationResponse";
 	import type { List } from "../../../../core/src/java/util/List";
-	import { ReportingEMailDaten } from "../../../../core/src/core/data/reporting/ReportingEMailDaten";
 	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
 	import { ReportingAusgabeformat } from "../../../../core/src/core/types/reporting/ReportingAusgabeformat";
 	import { ReportingReportvorlageParameterTyp } from "../../../../core/src/core/types/reporting/ReportingReportvorlageParameterTyp";
@@ -152,14 +151,13 @@
 		idAbschnitt?: number;
 		createReport: (parameter: ReportingParameter) => Promise<ApiFile>;
 		sendEMail?: (parameter: ReportingParameter) => Promise<SimpleOperationResponse>;
-		servermode?: ServerMode;
+		serverMode: ServerMode;
 		ausgabeformat?: number;
 	}>();
 
 	const isLoading = ref<boolean>(false);
 	const logs = ref<List<string | null>>();
 	const status = ref<boolean>();
-	const eMailParameter: Ref<ReportingEMailDaten> = ref(new ReportingEMailDaten());
 	const localReportvorlage = ref<ReportingReportvorlage>();
 	const localIdHauptdatenObjekt = ref<number>(-1);
 	const localIdsHauptdaten = ref<string>("");

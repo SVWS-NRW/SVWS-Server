@@ -29,7 +29,9 @@
 		<svws-ui-modal v-model:show="show" size="medium">
 			<template #modalTitle>Stundenplan drucken</template>
 			<template #modalContent>
-				<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_RAUM_STUNDENPLAN" :id-hauptdaten-objekt="stundenplanManager().getStundenplan().id" :ids-hauptdaten="[raum?.id ?? -1]" :ids-detaildaten="[]" :create-report="getPDF" :id-abschnitt="stundenplanManager().getAbschnitt()" />
+				<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_RAUM_STUNDENPLAN" :server-mode
+					:id-hauptdaten-objekt="stundenplanManager().getStundenplan().id" :ids-hauptdaten="[raum?.id ?? -1]" :ids-detaildaten="[]" :create-report="getPDF"
+					:id-abschnitt="stundenplanManager().getAbschnitt()" />
 			</template>
 		</svws-ui-modal>
 	</div>

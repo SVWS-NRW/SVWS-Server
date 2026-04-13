@@ -6,17 +6,23 @@
 		<div v-else class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" title="Klassenliste drucken oder versenden" subtitle="Eine Liste mit den Daten der Schülerinnen und Schüler der ausgewählten Klassen drucken oder versenden."
 				:is-open="currentAction === 'druckKlasseListeSchuelerKontaktdatenErzieher'" @update:is-open="isOpen => setCurrentAction('druckKlasseListeSchuelerKontaktdatenErzieher', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER" :servermode="serverMode" :ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail :id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
+				<report-parameters :reportvorlage="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_KONTAKTDATENERZIEHER" :server-mode
+					:ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail
+					:id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
 			</ui-card>
 
 			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" title="Fotoübersicht der Klassen drucken oder versenden" subtitle="Eine Liste mit den Fotos der Schülerinnen und Schüler der ausgewählten Klassen drucken oder versenden."
 				:is-open="currentAction === 'druckKlasseListeSchuelerFotos'" @update:is-open="isOpen => setCurrentAction('druckKlasseListeSchuelerFotos', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN" :servermode="serverMode" :ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail :id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
+				<report-parameters :reportvorlage="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_FOTOS_NAMEN" :server-mode
+					:ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail
+					:id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
 			</ui-card>
 
 			<ui-card v-if="hatKompetenzDruckenSchuelerLeistungsdaten" icon="i-ri-printer-line" title="Leistungsübersicht drucken" subtitle="Eine Liste mit den Leistungsdaten der Schülerinnen und Schüler der ausgewählten Klassen drucken"
 				:is-open="currentAction === 'druckKlasseListeSchuelerLeistungsdaten'" @update:is-open="isOpen => setCurrentAction('druckKlasseListeSchuelerLeistungsdaten', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN" :servermode="serverMode" :ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail :id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
+				<report-parameters :reportvorlage="ReportingReportvorlage.KLASSEN_V_LISTE_SCHUELER_LEISTUNGSDATEN" :server-mode
+					:ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail
+					:id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
 			</ui-card>
 
 			<ui-card v-if="hatKompetenzDruckenStundenplan && (mapStundenplaene.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken oder versenden" subtitle="Die Stundenpläne der ausgewählten Klassen drucken oder versenden."
@@ -25,7 +31,9 @@
 					<div>
 						<ui-select v-model="stundenplanModel" :manager="stundenplanSelectManager" label="Stundenplan" />
 					</div>
-					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN" :servermode="serverMode" :id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail :id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
+					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN" :server-mode
+						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...manager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]"
+						:create-report="getPDF" :send-e-mail :id-abschnitt="manager().getSchuljahresabschnittAuswahl()?.id" />
 				</div>
 			</ui-card>
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Klassen werden gelöscht."

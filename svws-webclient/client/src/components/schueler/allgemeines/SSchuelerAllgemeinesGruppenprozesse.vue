@@ -6,11 +6,15 @@
 		<svws-ui-input-wrapper v-else class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" title="Schülerliste drucken" subtitle="Drucke eine Liste mit den Daten der ausgewählten Schülerinnen und Schüler."
 				:is-open="currentAction === 'druckSchuelerListeKontaktdatenErzieher'" @update:is-open="isOpen => setCurrentAction('druckSchuelerListeKontaktdatenErzieher', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.SCHUELER_V_LISTE_KONTAKTDATENERZIEHER" :ids-hauptdaten="[...schuelerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail :id-abschnitt="schuelerListeManager().getSchuljahresabschnittAuswahl()?.id" />
+				<report-parameters :reportvorlage="ReportingReportvorlage.SCHUELER_V_LISTE_KONTAKTDATENERZIEHER" :server-mode
+					:ids-hauptdaten="[...schuelerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail
+					:id-abschnitt="schuelerListeManager().getSchuljahresabschnittAuswahl()?.id" />
 			</ui-card>
 			<ui-card v-if="hatKompetenzDruckenSchuelerIndividualdaten" icon="i-ri-printer-line" title="Schulbescheinigung drucken" subtitle="Drucke eine Schulbescheinigung für die ausgewählten Schülerinnen und Schüler."
 				:is-open="currentAction === 'druckSchuelerSchulbescheinigung'" @update:is-open="isOpen => setCurrentAction('druckSchuelerSchulbescheinigung', isOpen)">
-				<report-parameters :reportvorlage="ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG" :ids-hauptdaten="[...schuelerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail :id-abschnitt="schuelerListeManager().getSchuljahresabschnittAuswahl()?.id" />
+				<report-parameters :reportvorlage="ReportingReportvorlage.SCHUELER_V_SCHULBESCHEINIGUNG" :server-mode
+					:ids-hauptdaten="[...schuelerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail
+					:id-abschnitt="schuelerListeManager().getSchuljahresabschnittAuswahl()?.id" />
 			</ui-card>
 			<ui-card v-if="hatKompetenzDruckenStundenplan && (mapStundenplaene.size > 0)" icon="i-ri-printer-line" title="Stundenplan drucken oder versenden" subtitle="Drucke oder versende die Stundenpläne der ausgewählten Schüler."
 				:is-open="currentAction === 'druckSchuelerStundenplan'" @update:is-open="isOpen => setCurrentAction('druckSchuelerStundenplan', isOpen)">
@@ -18,7 +22,9 @@
 					<div class="flex flex-col">
 						<ui-select v-model="stundenplanModel" :manager="stundenplanSelectManager" label="Stundenplan" />
 					</div>
-					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN" :id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...schuelerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]" :create-report="getPDF" :send-e-mail :id-abschnitt="schuelerListeManager().getSchuljahresabschnittAuswahl()?.id" />
+					<report-parameters :reportvorlage="ReportingReportvorlage.STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN" :server-mode
+						:id-hauptdaten-objekt="stundenplanModel?.id ?? -1" :ids-hauptdaten="[...schuelerListeManager().liste.auswahl()].map(i=>i.id)" :ids-detaildaten="[]"
+						:create-report="getPDF" :send-e-mail :id-abschnitt="schuelerListeManager().getSchuljahresabschnittAuswahl()?.id" />
 				</div>
 			</ui-card>
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen"

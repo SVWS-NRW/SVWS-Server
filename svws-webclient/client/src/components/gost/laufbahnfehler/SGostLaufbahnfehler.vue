@@ -330,6 +330,7 @@
 		}
 
 		const reportingParameter = ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getReportingParameter();
+		ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.setReportingParameterVorlageparameter(reportingParameter, "einzelausgabeHauptdaten", "true");
 		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
 		for (const gruppe of reportingParameter.reportvorlageParameterGruppen) {
