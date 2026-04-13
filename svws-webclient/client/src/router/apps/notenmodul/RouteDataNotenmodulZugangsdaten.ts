@@ -1,6 +1,8 @@
 import { HashMap, type JavaMap } from "@core";
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { RouteManager } from "~/router/RouteManager";
+import { routeLehrer } from "../lehrer/RouteLehrer";
 
 
 interface RouteStateNotenmodulZugangsdaten extends RouteStateInterface {
@@ -53,4 +55,22 @@ export class RouteDataNotenmodulZugangsdaten extends RouteData<RouteStateNotenmo
 	get mapEnmInitialKennwoerter(): JavaMap<number, string> {
 		return this._state.value.mapInitialKennwoerter;
 	}
+
+	public open = async (id: number): Promise<void> => {
+		await RouteManager.doRoute(routeLehrer.getRoute({ id }));
+	};
+
+	public resetTotp = async (id: number): Promise<boolean> => {
+		await api.server.resetENMLehrerTotpSecret(api.schema, id);
+		return true;
+	};
+
+	public updatePassword = async (value: string | null, id: number): Promise<boolean> => {
+		if (value === null) {
+			await api.server.resetENMLehrerPasswordToInitial(api.schema, id);
+		} else {
+			await api.server.setENMLehrerPassword(value, api.schema, id);
+		}
+		return true;
+	};
 }

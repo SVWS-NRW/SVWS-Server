@@ -16,7 +16,7 @@ export class RouteNotenmodulZugangsdaten extends RouteNode<RouteDataNotenmodulZu
 		super(Schulform.values(), [
 			BenutzerKompetenz.NOTENMODUL_ADMINISTRATION,
 		], "notenmodul.zugangsdaten", "notenmodul/zugangsdaten", NotenmodulZugangsdaten, new RouteDataNotenmodulZugangsdaten());
-		super.mode = ServerMode.ALPHA;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Zugangsdaten";
 		super.children = [];
@@ -40,8 +40,11 @@ export class RouteNotenmodulZugangsdaten extends RouteNode<RouteDataNotenmodulZu
 
 	public getProps(to: RouteLocationNormalized): NotenmodulZugangsdatenProps {
 		return {
+			open: this.data.open,
 			manager: () => routeNotenmodul.data.manager,
 			mapEnmInitialKennwoerter: () => this.data.mapEnmInitialKennwoerter,
+			updatePassword: this.data.updatePassword,
+			resetTotp: this.data.resetTotp,
 		};
 	}
 

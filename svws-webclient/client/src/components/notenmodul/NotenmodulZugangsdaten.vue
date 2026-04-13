@@ -15,57 +15,88 @@
 			</div>
 		</svws-ui-header>
 		<div class="page ">
-			<div class="h-full overflow-auto">
-				<table class="svws-ui-table min-w-320 max-w-320" role="table" aria-label="Tabelle">
-					<thead class="svws-ui-thead mb-1" aria-label="Tabellenkopf">
-						<tr class="svws-ui-tr" role="row" style="grid-template-columns: 1fr 5fr 5fr 3fr 1rem; min-height: auto;">
-							<th id="kuerzel" class="svws-ui-td" role="columnheader">Kürzel</th>
-							<th id="name" class="svws-ui-td" role="columnheader">Nachname, Vorname</th>
-							<th id="mail" class="svws-ui-td" role="columnheader">Dienst-Email</th>
-							<th id="kennwort" class="svws-ui-td" role="columnheader">Initialkennwort</th>
-						</tr>
-					</thead>
-					<tbody class="svws-ui-tbody h-full overflow-y-auto" aria-label="Tabelleninhalt">
-						<template v-for="lehrer of lehrerListe" :key="lehrer.id">
-							<tr class="svws-ui-tr" role="row" style="grid-template-columns: 1fr 5fr 5fr 3fr 1rem; min-height: auto;">
-								<td class="svws-ui-td">{{ lehrer.kuerzel }}</td>
-								<td class="svws-ui-td">{{ lehrer.nachname }}, {{ lehrer.vorname }}</td>
-								<td class="svws-ui-td">
-									<svws-ui-tooltip v-if="(lehrer.eMailDienstlich === null) || (lehrer.eMailDienstlich.trim().length === 0)">
-										<span class="icon i-ri-alert-line icon-ui-danger" />
-										<template #content>
-											Eine fehlende dienstliche Email-Adresse ist für den Web-Noten-Manager nicht zulässig. Bitte tragen Sie diese im Lehrerbereich ein
-										</template>
-									</svws-ui-tooltip>
-									<svws-ui-tooltip v-else-if="!validatorEmail(lehrer.eMailDienstlich)">
-										<span class="icon i-ri-alert-line icon-ui-danger" />
-										<template #content>
-											Die dienstliche Email-Adresse ist fehlerhaft. Korrigieren Sie diese im Lehrerbereich
-										</template>
-									</svws-ui-tooltip>
-									<svws-ui-tooltip v-else-if="emailDuplikate.has(lehrer.eMailDienstlich)">
-										<span class="icon i-ri-alert-line icon-ui-danger" />
-										<template #content>
-											Diese dienstliche Email-Adresse ist bei mehreren Lehrern eingetragen. Dies ist für den Web-Noten-Manager nicht zulässig.
-										</template>
-									</svws-ui-tooltip>
-									<div v-if="lehrer.eMailDienstlich !== null" @click="copyToClipboard(lehrer, 'mail')" class="cursor-pointer place-items-center">
-										<span>{{ lehrer.eMailDienstlich }}</span>
-										<span class="icon-sm i-ri-file-copy-line" :class="{ 'ping-normal': ((ping?.id === lehrer.id) && (pingType === 'mail')) }" />
-									</div>
-									<div v-else> fehlt </div>
-								</td>
-								<td class="svws-ui-td">
-									<div v-if="mapEnmInitialKennwoerter().get(lehrer.id) !== null" @click="copyToClipboard(lehrer, 'kennwort')" class="cursor-pointer place-items-center">
-										{{ mapEnmInitialKennwoerter().get(lehrer.id) }}
-										<span class="icon-sm i-ri-file-copy-line" :class="{ 'ping-normal': ((ping?.id === lehrer.id) && (pingType === 'kennwort')) }" />
-									</div>
-									<div v-else>kein Kennwort gesetzt</div>
-								</td>
-							</tr>
-						</template>
-					</tbody>
-				</table>
+			<div class="h-full overflow-auto flex gap-4">
+				<ui-table-grid name="Schüler" :manager="() => gridManager">
+					<template #header>
+						<th class="text-left">Kürzel</th>
+						<th class="text-left">Nachname, Vorname</th>
+						<th class="text-left">Dienst-Email</th>
+						<th class="text-left">Initialkennwort</th>
+					</template>
+					<template #default="{ row: lehrer }">
+						<td @click="open(lehrer.id)" class="flex flex-row items-center justify-start gap-2">
+							<span class="cursor-pointer icon-sm i-ri-link" title="Zum Lehrerbereich wechseln" />
+							{{ lehrer.kuerzel }}
+						</td>
+						<td class="text-left">{{ lehrer.nachname }}, {{ lehrer.vorname }}</td>
+						<td class="flex items-center flex-row justify-start gap-2">
+							<svws-ui-tooltip v-if="(lehrer.eMailDienstlich === null) || (lehrer.eMailDienstlich.trim().length === 0)">
+								<span class="icon i-ri-alert-line icon-ui-danger" />
+								<template #content>
+									Eine fehlende dienstliche Email-Adresse ist für den Web-Noten-Manager nicht zulässig. Bitte tragen Sie diese im Lehrerbereich ein
+								</template>
+							</svws-ui-tooltip>
+							<svws-ui-tooltip v-else-if="!validatorEmail(lehrer.eMailDienstlich)">
+								<span class="icon i-ri-alert-line icon-ui-danger" />
+								<template #content>
+									Die dienstliche Email-Adresse ist fehlerhaft. Korrigieren Sie diese im Lehrerbereich
+								</template>
+							</svws-ui-tooltip>
+							<svws-ui-tooltip v-else-if="emailDuplikate.has(lehrer.eMailDienstlich)">
+								<span class="icon i-ri-alert-line icon-ui-danger" />
+								<template #content>
+									Diese dienstliche Email-Adresse ist bei mehreren Lehrern eingetragen. Dies ist für den Web-Noten-Manager nicht zulässig.
+								</template>
+							</svws-ui-tooltip>
+							<div v-if="lehrer.eMailDienstlich !== null" @click="copyToClipboard(lehrer, 'mail')" class="cursor-pointer flex items-center gap-2">
+								<span>{{ lehrer.eMailDienstlich }}</span>
+								<span class="icon-sm i-ri-file-copy-line" :class="{ 'ping-normal': ((ping?.id === lehrer.id) && (pingType === 'mail')) }" />
+							</div>
+							<div v-else @click="open(lehrer.id)">
+								<span>fehlt</span>
+							</div>
+						</td>
+						<td class="text-left">
+							<div v-if="mapEnmInitialKennwoerter().get(lehrer.id) !== null" @click="copyToClipboard(lehrer, 'kennwort')" class="cursor-pointer flex gap-2 items-center">
+								{{ mapEnmInitialKennwoerter().get(lehrer.id) }}
+								<span v-if="lehrer.istInitialPassword" class="icon-sm i-ri-file-copy-line" :class="{ 'ping-normal': ((ping?.id === lehrer.id) && (pingType === 'kennwort')) }" />
+								<svws-ui-tooltip v-else>
+									<span class="icon-sm i-ri-error-warning-line icon-ui-caution" />
+									<template #content>
+										Es wurde ein individuelles Kennwort gesetzt. Dies wird hier nicht angezeigt.
+									</template>
+								</svws-ui-tooltip>
+							</div>
+							<div v-else>kein Kennwort gesetzt</div>
+						</td>
+					</template>
+				</ui-table-grid>
+				<div v-if="selected !== null">
+					<div class="text-headline-md">{{ selected.nachname }}, {{ selected.vorname }}</div>
+					<div class="mb-4">Individuelle Einstellungen für die Zugangsdaten der ausgewählten Lehrkraft</div>
+					<div class="mt-4">
+						Das Passwort wird auf das Initialpasswort zurückgesetzt
+						<div class="flex items-center">
+							<svws-ui-button type="primary" @click="update(null)">Passwort zurücksetzen</svws-ui-button>
+							<span v-if="pingType === 'resetPassword'" class="icon-xl i-ri-check-line icon-ui-success" />
+						</div>
+					</div>
+					<div class="mt-4">
+						Ein individuelles, vom Initialkennwort abweichendes Passwort, setzen
+						<svws-ui-text-input placeholder="Passwort festlegen" :min-len="6" v-model="passwort" />
+						<div class="flex items-center">
+							<svws-ui-button :disabled="passwort.length < 6" type="primary" @click="update(passwort)">Passwort&nbsp;setzen</svws-ui-button>
+							<span v-if="pingType === 'updatePassword'" class="icon-xl i-ri-check-line icon-ui-success" />
+						</div>
+					</div>
+					<div class="mt-4">
+						Zwei-Faktor-Authentifizierung (2FA)
+						<div class="flex items-center">
+							<svws-ui-button type="primary" @click="reset">TOTP Shared Secret zurücksetzen</svws-ui-button>
+							<span v-if="pingType === 'resetTotp'" class="icon-xl i-ri-check-line icon-ui-success" />
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -77,14 +108,18 @@
 	import type { NotenmodulZugangsdatenProps } from './NotenmodulZugangsdatenProps';
 	import type { ENMv2Lehrer, List } from "@core";
 	import { ArrayList, DeveloperNotificationException } from "@core";
+	import { GridManager } from '@ui';
 
 	const props = defineProps<NotenmodulZugangsdatenProps>();
 	const search = ref<string>("");
+	const passwort = ref<string>("");
 
 	const validatorEmail = (value: string | null): boolean => ((value === null) || (value === '')) ? true : (
 		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(value) ||
 		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value)
 	);
+
+	const selected = computed(() => (gridManager.focusRow === null) ? null : lehrerListe.value.get(gridManager.focusRow));
 
 	const lehrerListe = computed<List<ENMv2Lehrer>>(() => {
 		const searchValueLowerCase = search.value.toLocaleLowerCase();
@@ -149,14 +184,15 @@
 	});
 
 	const ping = ref<ENMv2Lehrer | null>(null);
-	const pingType = ref<'mail' | 'kennwort'>();
+	const pingType = ref<'mail' | 'kennwort' | 'resetPassword' | 'updatePassword' | 'resetTotp' | null>(null);
 
-	function pingTimer(lehrer: ENMv2Lehrer, type: 'mail' | 'kennwort') {
+	function pingTimer(lehrer: ENMv2Lehrer, type: 'mail' | 'kennwort' | 'resetPassword' | 'updatePassword' | 'resetTotp') {
 		ping.value = lehrer;
 		pingType.value = type;
 		setTimeout(() => {
 			ping.value = null;
-		}, 300);
+			pingType.value = null;
+		}, 3000);
 	}
 
 	async function copyToClipboard(lehrer: ENMv2Lehrer, type: 'mail' | 'kennwort') {
@@ -173,7 +209,36 @@
 		}
 	}
 
+	async function update(value: string | null) {
+		if (selected.value === null) {
+			return;
+		}
+		await props.updatePassword(value, selected.value.id);
+		const type = value === null ? "resetPassword" : "updatePassword";
+		pingTimer(selected.value, type);
+		selected.value.istInitialPassword = (value === null);
+		passwort.value = "";
+	}
 
+	async function reset() {
+		if (selected.value === null) {
+			return;
+		}
+		await props.resetTotp(selected.value.id);
+		pingTimer(selected.value, "resetTotp");
+	}
+
+	const gridManager = new GridManager<string, ENMv2Lehrer, List<ENMv2Lehrer>>({
+		daten: computed(() => lehrerListe.value),
+		getRowKey: row => `ID_${row.id}`,
+		allowEmptyRowSelection: true,
+		columns: [
+			{ kuerzel: "Kürzel", name: "Kürzel", width: '1fr' },
+			{ kuerzel: "Nachname, Vorname", name: "Nachname, Vorname", width: '5fr' },
+			{ kuerzel: "Dienst-Email", name: "Dienst-Email", width: '5fr' },
+			{ kuerzel: "Initialkennwort", name: "Initialkennwort", width: '3fr' },
+		],
+	});
 
 	const { lehrerOhneEmail, lehrerDoppelteEmail, lehrerFehlerhafteEmail, lehrerEmailProbleme } = computed(() => {
 		const lehrerOhneEmail = ref<number>(0);

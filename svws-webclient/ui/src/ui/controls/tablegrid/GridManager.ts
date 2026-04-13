@@ -50,6 +50,9 @@ export interface GridManagerConfig<KEY, DATA, LIST extends Collection<DATA> | Li
 
 	/** Eine beschreibbare Referenz auf eine Map, um ggf. die Sichtbarkeit der Spalten außerhalb des Managers zu verwalten. */
 	colsVisible?: WritableComputedRef<Map<string, boolean | null>>,
+
+	/** Erlaube die Selektion von Zeilen eines Grids ohne Inputs */
+	allowEmptyRowSelection?: boolean,
 }
 
 
@@ -102,6 +105,9 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	/** Ein Handler, der jedes mal aufgerufen wird, wenn ein input ausgewählt wird */
 	private _onFocusInputHandler: ((input: GridInput<any, any> | null) => void) | null = null;
 
+	/** Gibt an, ob eine Zeile ausgewählt werden darf, wenn keinbe Inputs vorhanden sind */
+	private readonly _allowEmptyRowSelection: boolean = false;
+
 
 	/**
 	 * Erstellt einen neuen Grid-Manager.
@@ -121,6 +127,7 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 		} else {
 			this._colsVisible = config.colsVisible;
 		}
+		this._allowEmptyRowSelection = config.allowEmptyRowSelection === true;
 	}
 
 
@@ -905,7 +912,10 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 	 * @returns die Zeilennummer oder null
 	 */
 	public get focusRow(): number | null {
-		return (this._focusInput.value === null) ? null : this._focusInput.value.row;
+		if (this._focusInput.value !== null) {
+			return this._focusInput.value.row;
+		}
+		return (this._allowEmptyRowSelection) ? this._focusLastRow.value : null;
 	}
 
 	/**
@@ -1067,6 +1077,10 @@ export class GridManager<KEY, DATA, LIST extends Collection<DATA> | List<DATA>> 
 		}
 		// Prüfe, on in der Zeile überhaupt Inputs vorhanden sind, wenn nicht, dann kann auch nichts fokussiert werden
 		if (!(row in this.gridInputsRows)) {
+			if (this._allowEmptyRowSelection) {
+				this._focusLastRow.value = row;
+				this._focusLastColumn.value = null;
+			}
 			return;
 		}
 		// Bestimme die Inputs in der Zeile
