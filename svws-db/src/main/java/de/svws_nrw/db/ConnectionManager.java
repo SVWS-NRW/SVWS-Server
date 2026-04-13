@@ -1,10 +1,6 @@
 package de.svws_nrw.db;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.SQLInvalidAuthorizationSpecException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -36,6 +32,13 @@ public final class ConnectionManager {
 
 	/** Eine HashMap für den schnellen Zugriff auf eine Connection-Factory anhand der Datenbank-Konfiguration */
 	private final HashMap<DBConfig, ConnectionFactory> mapFactories = new HashMap<>();
+
+	/** Zeitstempel der letzten erfolgreichen Verbindungsprüfung pro Factory */
+	private final HashMap<DBConfig, Long> mapLastValidation = new HashMap<>();
+
+	/** Intervall zwischen Verbindungsprüfungen in Millisekunden (30 Sekunden) */
+	private static final long VALIDATION_INTERVAL_MS = 30_000L;
+
 
 	/** Die Instanz des Connectiion-Managers */
 	public static final ConnectionManager instance;
@@ -128,42 +131,38 @@ public final class ConnectionManager {
 				throw pe;
 			}
 		} else {
-			// Führe eine Dummy-DB-Abfrage aus, um Probleme mit der
-			// Server-seitigen Beendung einer Verbindung zu erkennen
-			try {
-				try (EntityManager em = factory.getNewJPAEntityManager()) {
-					try {
-						em.getTransaction().begin();
-						@SuppressWarnings("resource") final Connection conn = em.unwrap(Connection.class);
-						try (Statement stmt = conn.createStatement()) {
-							try (ResultSet rs = stmt.executeQuery("SELECT 1")) {
-								rs.next();
-								rs.getInt(1);
+			// Ratenbegrenzung: Prüfe die Verbindung nur alle VALIDATION_INTERVAL_MS Millisekunden
+			final long now = System.currentTimeMillis();
+			final Long lastValidation = mapLastValidation.get(config);
+			if ((lastValidation == null) || (now - lastValidation > VALIDATION_INTERVAL_MS)) {
+				// Leichtgewichtige Prüfung der Verbindung: SELECT 1 ohne Transaktion
+				try {
+					try (EntityManager em = factory.getNewJPAEntityManager()) {
+						try {
+							em.createNativeQuery("SELECT 1").getSingleResult();
+							mapLastValidation.put(config, now);
+						} catch (@SuppressWarnings("unused") final PersistenceException | DatabaseException e) {
+							// Bestimme die Anzahl der verfügbaren Verbindungen
+							final ServerSession serverSession = em.unwrap(ServerSession.class);
+							final ConnectionPool pool = serverSession.getConnectionPools().get("default");
+							if (pool == null) {
+								Logger.global().logLn(LogLevel.ERROR, "Fehler beim Zugriff auf den DB-Connection-Pool default");
+							} else {
+								Logger.global().logLn(LogLevel.ERROR, "INFO: Verbindung zur Datenbank unterbrochen - versuche sie neu aufzubauen...");
+								Logger.global().logLn(LogLevel.ERROR, "Total number of connections: " + pool.getTotalNumberOfConnections());
+								Logger.global().logLn(LogLevel.ERROR, "Available number of connections: " + pool.getConnectionsAvailable().size());
+								pool.resetConnections();
 							}
 						}
-						em.getTransaction().commit();
-						em.clear();
-					} catch (@SuppressWarnings("unused") SQLException | DatabaseException e) {
-						// Bestimme die Anzahl der verfügbaren Verbindungen
-						final ServerSession serverSession = em.unwrap(ServerSession.class);
-						final ConnectionPool pool = serverSession.getConnectionPools().get("default");
-						if (pool == null) {
-							Logger.global().logLn(LogLevel.ERROR, "Fehler beim Zugriff auf den DB-Connection-Pool default");
-						} else {
-							Logger.global().logLn(LogLevel.ERROR, "INFO: Verbindung zur Datenbank unterbrochen - versuche sie neu aufzubauen...");
-							Logger.global().logLn(LogLevel.ERROR, "Total number of connections: " + pool.getTotalNumberOfConnections());
-							Logger.global().logLn(LogLevel.ERROR, "Available number of connections: " + pool.getConnectionsAvailable().size());
-							pool.resetConnections();
-						}
 					}
+				} catch (final PersistenceException pe) {
+					if ((pe.getCause() instanceof final DatabaseException de) && (de.getCause() instanceof final SQLInvalidAuthorizationSpecException ae)) {
+						mapFactories.remove(config);
+						factory.close();
+						throw new DBException(ae);
+					}
+					throw pe;
 				}
-			} catch (final PersistenceException pe) {
-				if ((pe.getCause() instanceof final DatabaseException de) && (de.getCause() instanceof final SQLInvalidAuthorizationSpecException ae)) {
-					mapFactories.remove(config);
-					factory.close();
-					throw new DBException(ae);
-				}
-				throw pe;
 			}
 		}
 		return factory;
