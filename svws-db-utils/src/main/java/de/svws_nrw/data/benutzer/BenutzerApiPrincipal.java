@@ -2,6 +2,9 @@ package de.svws_nrw.data.benutzer;
 
 import java.io.Serializable;
 import java.security.Principal;
+import java.util.ArrayList;
+
+import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.logger.Logger;
@@ -220,6 +223,26 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 			// Setze den übergebene Benutzername und das Kennwort auch für die Datenbankverbindung, falls die DB-Konfiguration eine Anmeldung per SVWS-Benutzer vorsieht
 			config = config.switchUser(PersistenceUnits.SVWS_DB, username, password);
 		}
+
+		// Prüfe den Authentifizierungs-Cache, um wiederholte DB-Abfragen bei identischen Anmeldedaten zu vermeiden
+		final BenutzerAuthCache.CacheEntry cachedAuth = BenutzerAuthCache.get(schema, username, password);
+		if (cachedAuth != null) {
+			final Benutzer cachedUser = Benutzer.create(config);
+			cachedUser.setUsername(cachedAuth.correctedUsername());
+			cachedUser.setPassword(password);
+			cachedUser.setId(cachedAuth.userId());
+			cachedUser.setIdLehrer(cachedAuth.idLehrer());
+			cachedUser.setAES();
+			if (cachedAuth.stammdaten() != null) {
+				cachedUser.schuleSetStammdaten(cachedAuth.stammdaten());
+			}
+			cachedUser.setKompetenzen(new ArrayList<>(cachedAuth.kompetenzen()));
+			cachedUser.setKlassenIDs(cachedAuth.klassenIDs());
+			cachedUser.setLeitungsfunktionen(cachedAuth.leitungsfunktionen());
+			cachedUser.setAbiturjahrgaenge(cachedAuth.abiturjahrgaenge());
+			return new BenutzerApiPrincipal(cachedUser);
+		}
+
 		try {
 			final Benutzer user = Benutzer.create(config);
 			user.setUsername(username);
@@ -236,8 +259,10 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 			user.setAES();
 
 			// Lese die Stammdaten der Schule ein und setze diese beim Benutzer-Objekt
+			SchuleStammdaten loadedStammdaten = null;
 			try (DBEntityManager conn = user.getEntityManager()) {
-				user.schuleSetStammdaten(DataSchuleStammdaten.getStammdaten(conn));
+				loadedStammdaten = DataSchuleStammdaten.getStammdaten(conn);
+				user.schuleSetStammdaten(loadedStammdaten);
 			} catch (@SuppressWarnings("unused") final ApiOperationException aoe) {
 				Logger.global().logLn(
 						"Es können bei der Anmeldung noch keine Daten zur Schule eingelesen werden. Bitte prüfen Sie, ob das Schema \"%s\" bereits initialisiert wurde."
@@ -246,6 +271,11 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 
 			// Lese die Benutzerkompetenzen aus der Datenbank
 			DBBenutzerUtils.leseKompetenzen(user);
+
+
+			// Speichere das Authentifizierungsergebnis im Cache
+			BenutzerAuthCache.put(schema, username, password, user.getUsername(), user.getId(), user.getIdLehrer(),
+					user.getKompetenzen(), loadedStammdaten, user.getKlassenIDs(), user.getLeitungsfunktionen(), user.getAbiturjahrgaenge());
 
 			return new BenutzerApiPrincipal(user);
 		} catch (@SuppressWarnings("unused") final DBException de) {
