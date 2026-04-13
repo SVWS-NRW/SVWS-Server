@@ -18,24 +18,26 @@ public final class ValidationUtils {
 	}
 
 	/**
-	 * Validiert, ob ein Eingabeparameter leer oder unverändert ist.
-	 * Note: oldValue set, newValue null -> true
+	 * Prüft, ob ein neuer Wert leer ist oder sich nicht vom alten Wert unterscheidet.
 	 *
-	 * @param oldValue gespeicherter Wert.
-	 * @param newValue neuer Wert.
-	 * @return true, wenn der wert blank ist oder unverändert ist, ansonsten false.
+	 * @param oldValue der aktuell gespeicherte Wert
+	 * @param newValue der neue Wert zur Prüfung
+	 * @return {@code true} wenn newValue blank oder identisch zu oldValue ist
+	 *
+	 * @see #isRelevantUpdate(String, String)
 	 */
 	public static boolean isBlankOrUnchanged(final String oldValue, final String newValue) {
 		return StringUtils.isBlank(newValue) || Strings.CS.equals(oldValue, newValue);
 	}
 
 	/**
-	 * Validiert, ob ein Eingabeparameter unverändert ist.
-	 * Note: oldValue set, newValue null -> true
+	 * Prüft, ob ein neuer Wert eine Änderung darstellt (case-sensitive Vergleich).
 	 *
-	 * @param oldValue gespeicherter Wert.
-	 * @param newValue neuer Wert.
-	 * @return true, wenn der wert unverändert ist, ansonsten false.
+	 * @param oldValue der aktuell gespeicherte Wert
+	 * @param newValue der neue Wert zur Prüfung
+	 * @return {@code true} wenn sich die Werte unterscheiden, {@code false} wenn identisch
+	 *
+	 * @see #isBlankOrUnchanged(String, String)
 	 */
 	public static boolean isRelevantUpdate(final String oldValue, final String newValue) {
 		return !Strings.CS.equals(oldValue, newValue);
