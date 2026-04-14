@@ -17,7 +17,7 @@ export class RouteJahrgaengeNeu extends RouteNode<any, RouteJahrgaenge> {
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.jahrgaenge.neu", "neu", JahrgaengeNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Jahrgang Neu";
 		super.setCheckpoint = true;

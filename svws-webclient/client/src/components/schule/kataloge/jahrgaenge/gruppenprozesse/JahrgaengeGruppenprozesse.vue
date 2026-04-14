@@ -3,7 +3,7 @@
 		<div v-if="hatkeineErforderlicheKompetenz">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
+		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Jahrgänge werden gelöscht" icon="i-ri-delete-bin-line">
 				<div>
 					<span v-if="selectedAllowedToDelete">Alle ausgewählten Jahrgänge sind bereit zum Löschen.</span>
@@ -38,7 +38,7 @@
 	import { ref, computed } from "vue";
 	import type { JahrgaengeGruppenprozesseProps } from "./JahrgaengeGruppenprozesseProps";
 	import type { List } from "@core";
-	import { ServerMode, BenutzerKompetenz } from "@core";
+	import { BenutzerKompetenz } from "@core";
 
 	const props = defineProps<JahrgaengeGruppenprozesseProps>();
 	const isLoading = ref<boolean>(false);

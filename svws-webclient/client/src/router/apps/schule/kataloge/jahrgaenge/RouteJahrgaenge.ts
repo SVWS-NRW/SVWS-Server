@@ -19,7 +19,7 @@ export class RouteJahrgaenge extends RouteAuswahlNode<JahrgaengeListeManager, Ro
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.jahrgaenge", "schule/jahrgaenge/:id(\\d+)?", JahrgaengeApp, JahrgaengeAuswahl, new RouteDataJahrgaenge());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Jahrgänge";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [

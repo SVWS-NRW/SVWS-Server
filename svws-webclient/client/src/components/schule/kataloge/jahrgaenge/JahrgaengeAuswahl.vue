@@ -16,7 +16,7 @@
 					<svws-ui-checkbox type="toggle" v-model="showOnlyVisibleJahrgaenge">Nur Sichtbare</svws-ui-checkbox>
 				</template>
 				<template #actions v-if="!readonly">
-					<svws-ui-tooltip v-if="ServerMode.DEV.checkServerMode(serverMode)" position="bottom">
+					<svws-ui-tooltip position="bottom">
 						<svws-ui-button type="icon" v-if="benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)"
 							@click="gotoHinzufuegenView(true)"
 							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
@@ -37,7 +37,7 @@
 	import type { JahrgaengeAuswahlProps } from "./JahrgaengeAuswahlProps";
 	import { computed } from "vue";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import type { JahrgangsDaten } from "@core";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();
