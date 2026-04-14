@@ -27,7 +27,7 @@ export class ValidatorGsd10GesamtSchuelerdatenDuplikate extends Validator {
 		let success: boolean = true;
 		const schuelerListe: List<SchuelerStatistikGesamt> = this.listSchueler.get();
 		if (schuelerListe.isEmpty()) {
-			return success;
+			return true;
 		}
 		const ids: JavaSet<number> = new HashSet<number>();
 		for (const schueler of schuelerListe) {
