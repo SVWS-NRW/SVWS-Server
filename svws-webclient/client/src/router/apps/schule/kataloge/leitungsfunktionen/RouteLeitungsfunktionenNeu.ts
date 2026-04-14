@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized } from "vue-router";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { ViewType } from "@ui";
@@ -15,6 +15,7 @@ export class RouteLeitungsfunktionenNeu extends RouteNode<any, RouteLeitungsfunk
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.leitungsfunktionen.neu", "neu", LeitungsfunktionenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Leitungsfunktionen";
 		super.setCheckpoint = true;

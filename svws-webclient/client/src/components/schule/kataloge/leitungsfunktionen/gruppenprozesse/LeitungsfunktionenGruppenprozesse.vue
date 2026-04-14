@@ -3,7 +3,7 @@
 		<div v-if="hatkeineErforderlicheKompetenz">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
+		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Leitungsfunktionen werden gelöscht" icon="i-ri-delete-bin-line">
 				<div>
 					<span v-if="selectedAllowedToDelete">Alle ausgewählten Leitungsfunktionen sind bereit zum Löschen.</span>
@@ -37,7 +37,7 @@
 
 	import { ref, computed } from "vue";
 	import type { List } from "@core";
-	import { ServerMode, BenutzerKompetenz } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import type { LeitungsfunktionenGruppenprozesseProps } from "~/components/schule/kataloge/leitungsfunktionen/gruppenprozesse/LeitungsfunktionenGruppenprozesseProps";
 
 	const props = defineProps<LeitungsfunktionenGruppenprozesseProps>();

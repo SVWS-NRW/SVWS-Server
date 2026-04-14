@@ -3,7 +3,7 @@
 		<svws-ui-content-card>
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField"
+					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="full"
 						v-model="model.proxy.bezeichnung"
 						required readonly />
 				</svws-ui-input-wrapper>

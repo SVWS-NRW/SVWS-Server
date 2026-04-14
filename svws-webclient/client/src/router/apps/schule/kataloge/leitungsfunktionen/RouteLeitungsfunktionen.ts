@@ -1,7 +1,7 @@
 import type { RouteParams } from "vue-router";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import type { RouteNode } from "~/router/RouteNode";
-import { BenutzerKompetenz, Schulform } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteAuswahlNode } from "~/router/RouteAuswahlNode";
 import { RouteSchuleMenuGroup } from "~/router/apps/schule/RouteSchuleMenuGroup";
 import { RouteDataLeitungsfunktionen } from "./RouteDataLeitungsfunktionen";
@@ -19,6 +19,7 @@ export class RouteLeitungsfunktionen extends RouteAuswahlNode<Leitungsfunktionen
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.leitungsfunktionen",
 			"schule/leitungsfunktionen/:id(\\d+)?", LeitungsfunktionenApp, LeitungsfunktionenAuswahl, new RouteDataLeitungsfunktionen());
 		super.text = "Leitungsfunktionen";
+		super.mode = ServerMode.STABLE;
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [
 			routeLeitungsfunktionenDaten,
