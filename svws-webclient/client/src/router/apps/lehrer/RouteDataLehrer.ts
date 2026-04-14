@@ -118,7 +118,6 @@ export class RouteDataLehrer extends RouteDataAuswahl<LehrerListeManager, RouteS
 		if (managerAlt.hasPersonalDaten()) {
 			manager.setPersonalDaten(await api.server.getLehrerPersonaldaten(api.schema, daten.id));
 		}
-		await this.updateMapStundenplaene();
 	}
 
 	public async updateMapStundenplaene() {
