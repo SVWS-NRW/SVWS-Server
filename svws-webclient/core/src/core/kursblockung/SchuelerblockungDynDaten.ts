@@ -7,12 +7,11 @@ import { GostFachwahl } from '../../core/data/gost/GostFachwahl';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../java/lang/JavaString';
 import { JavaMath } from '../../java/lang/JavaMath';
-import { Logger } from '../../core/logger/Logger';
 import { System } from '../../java/lang/System';
 import { JavaInteger } from '../../java/lang/JavaInteger';
 import { SchuelerblockungInput } from '../../core/data/kursblockung/SchuelerblockungInput';
-import { Random } from '../../java/util/Random';
 import { KursblockungMatrix } from '../../core/kursblockung/KursblockungMatrix';
+import { Random } from '../../java/util/Random';
 import { Class } from '../../java/lang/Class';
 import { Arrays } from '../../java/util/Arrays';
 import { HashSet } from '../../java/util/HashSet';
@@ -25,38 +24,33 @@ export class SchuelerblockungDynDaten extends JavaObject {
 
 	private static readonly MALUS_VERBOTEN_MIT_IM_KURS: number = 1000;
 
-	/**
-	 * Ein {@link Random}-Objekt zur Steuerung des Zufalls über einen Anfangs-Seed.
-	 */
-	private readonly _random: Random;
-
 	private readonly nFachwahlen: number;
 
 	private readonly nSchienen: number;
 
-	private readonly _fachwahlZuKurse: ArrayList<ArrayList<SchuelerblockungInputKurs>>;
+	private readonly fachwahlZuKurse: ArrayList<ArrayList<SchuelerblockungInputKurs>>;
 
-	private readonly _fachwahlZuHatMultikurse: Array<boolean>;
+	private readonly fachwahlZuHatMultikurse: Array<boolean>;
 
-	private readonly _fachwahlZuFachID: Array<number>;
+	private readonly fachwahlZuFachID: Array<number>;
 
-	private readonly _fachwahlZuKursartID: Array<number>;
+	private readonly fachwahlZuKursartID: Array<number>;
 
-	private readonly _aktuellMatrix: KursblockungMatrix;
+	private readonly dynMatrix: KursblockungMatrix;
 
-	private readonly _aktuellGesperrteSchiene: Array<boolean>;
+	private readonly dynGesperrteSchiene: Array<boolean>;
 
-	private readonly _aktuellFachwahlZuKurs: Array<number>;
+	private readonly dynFachwahlZuKurs: Array<number>;
 
-	private readonly _aktuellFachwahlZuKursBest: Array<number>;
+	private readonly dynFachwahlZuKursBest: Array<number>;
 
-	private _aktuellNichtwahlen: number = 0;
+	private dynNichtwahlen: number = 0;
 
-	private _aktuellNichtwahlenBest: number = 0;
+	private dynNichtwahlenBest: number = 0;
 
-	private _aktuellBewertung: number = 0;
+	private dynBewertung: number = 0;
 
-	private _aktuellBewertungBest: number = 0;
+	private dynBewertungBest: number = 0;
 
 
 	/**
@@ -68,21 +62,20 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	 */
 	public constructor(pRandom: Random, pInput: SchuelerblockungInput) {
 		super();
-		this._random = pRandom;
 		this.aktionPruefeEingabedaten(pInput);
 		this.nFachwahlen = pInput.fachwahlen.size();
 		this.nSchienen = pInput.schienen;
-		this._fachwahlZuKurse = new ArrayList();
-		this._fachwahlZuHatMultikurse = Array(this.nFachwahlen).fill(false);
-		this._fachwahlZuFachID = Array(this.nFachwahlen).fill(0);
-		this._fachwahlZuKursartID = Array(this.nFachwahlen).fill(0);
+		this.fachwahlZuKurse = new ArrayList();
+		this.fachwahlZuHatMultikurse = Array(this.nFachwahlen).fill(false);
+		this.fachwahlZuFachID = Array(this.nFachwahlen).fill(0);
+		this.fachwahlZuKursartID = Array(this.nFachwahlen).fill(0);
 		this.aktionInitialisiereDatenstrukturen(pInput);
-		this._aktuellMatrix = new KursblockungMatrix(pRandom, this.nFachwahlen, this.nSchienen);
-		this._aktuellGesperrteSchiene = Array(this.nSchienen).fill(false);
-		this._aktuellFachwahlZuKurs = Array(this.nFachwahlen).fill(0);
-		this._aktuellFachwahlZuKursBest = Array(this.nFachwahlen).fill(0);
-		this._aktuellBewertung = 0;
-		this._aktuellBewertungBest = 0;
+		this.dynMatrix = new KursblockungMatrix(pRandom, this.nFachwahlen, this.nSchienen);
+		this.dynGesperrteSchiene = Array(this.nSchienen).fill(false);
+		this.dynFachwahlZuKurs = Array(this.nFachwahlen).fill(0);
+		this.dynFachwahlZuKursBest = Array(this.nFachwahlen).fill(0);
+		this.dynBewertung = 0;
+		this.dynBewertungBest = 0;
 	}
 
 	/**
@@ -91,9 +84,6 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	 * @param pInput Die Eingabedaten (Schnittstelle zur GUI).
 	 */
 	aktionPruefeEingabedaten(pInput: SchuelerblockungInput): void {
-		if (pInput === null) {
-			throw new DeveloperNotificationException("pInput == NULL")
-		}
 		if (pInput.fachwahlen === null) {
 			throw new DeveloperNotificationException("pInput.fachwahlen == NULL")
 		}
@@ -171,15 +161,16 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	}
 
 	/**
-	 * Initialisiert {@link #_fachwahlen}, {@link #_fachwahlZuKurse} und {@link #_fachwahlZuHatMultikurse}.
+	 * Initialisiert {@link #fachwahlZuFachID}, {@link #fachwahlZuFachID} und
+	 *  {@link #fachwahlZuKurse}, {@link #fachwahlZuHatMultikurse}.
 	 *
 	 * @param pInput Die Eingabedaten (Schnittstelle zur GUI).
 	 */
 	private aktionInitialisiereDatenstrukturen(pInput: SchuelerblockungInput): void {
 		for (let iFachwahl: number = 0; iFachwahl < this.nFachwahlen; iFachwahl++) {
 			const fachwahl: GostFachwahl = pInput.fachwahlen.get(iFachwahl);
-			this._fachwahlZuFachID[iFachwahl] = fachwahl.fachID;
-			this._fachwahlZuKursartID[iFachwahl] = fachwahl.kursartID;
+			this.fachwahlZuFachID[iFachwahl] = fachwahl.fachID;
+			this.fachwahlZuKursartID[iFachwahl] = fachwahl.kursartID;
 			const kurse: ArrayList<SchuelerblockungInputKurs> | null = new ArrayList<SchuelerblockungInputKurs>();
 			let hatFixiertenKurs: boolean = false;
 			for (const kurs of pInput.kurse) {
@@ -191,12 +182,12 @@ export class SchuelerblockungDynDaten extends JavaObject {
 					kurse.add(kurs);
 				}
 			}
-			this._fachwahlZuKurse.add(kurse);
+			this.fachwahlZuKurse.add(kurse);
 			let max: number = 1;
 			for (const kurs of kurse) {
 				max = Math.max(max, kurs.schienen.length);
 			}
-			this._fachwahlZuHatMultikurse[iFachwahl] = max >= 2;
+			this.fachwahlZuHatMultikurse[iFachwahl] = max >= 2;
 		}
 	}
 
@@ -209,20 +200,20 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	 * @return Eine optimale Zuordnung des Schülers auf seine gewählten Kurse.
 	 */
 	gibBestesMatching(): SchuelerblockungOutput {
-		this._aktuellNichtwahlen = 0;
-		this._aktuellBewertung = 0;
-		this._aktuellNichtwahlenBest = SchuelerblockungDynDaten.UNENDLICH;
-		this._aktuellBewertungBest = SchuelerblockungDynDaten.UNENDLICH;
-		Arrays.fill(this._aktuellFachwahlZuKurs, -1);
-		Arrays.fill(this._aktuellFachwahlZuKursBest, -1);
-		Arrays.fill(this._aktuellGesperrteSchiene, false);
+		this.dynNichtwahlen = 0;
+		this.dynBewertung = 0;
+		this.dynNichtwahlenBest = SchuelerblockungDynDaten.UNENDLICH;
+		this.dynBewertungBest = SchuelerblockungDynDaten.UNENDLICH;
+		Arrays.fill(this.dynFachwahlZuKurs, -1);
+		Arrays.fill(this.dynFachwahlZuKursBest, -1);
+		Arrays.fill(this.dynGesperrteSchiene, false);
 		this.aktionVerteileMultikurseRekursiv(0);
 		const out: SchuelerblockungOutput = new SchuelerblockungOutput();
 		for (let iFachwahl: number = 0; iFachwahl < this.nFachwahlen; iFachwahl++) {
 			const wahl: SchuelerblockungOutputFachwahlZuKurs = new SchuelerblockungOutputFachwahlZuKurs();
-			wahl.fachID = this._fachwahlZuFachID[iFachwahl];
-			wahl.kursartID = this._fachwahlZuKursartID[iFachwahl];
-			wahl.kursID = this._aktuellFachwahlZuKursBest[iFachwahl];
+			wahl.fachID = this.fachwahlZuFachID[iFachwahl];
+			wahl.kursartID = this.fachwahlZuKursartID[iFachwahl];
+			wahl.kursID = this.dynFachwahlZuKursBest[iFachwahl];
 			out.fachwahlenZuKurs.add(wahl);
 		}
 		return out;
@@ -233,12 +224,12 @@ export class SchuelerblockungDynDaten extends JavaObject {
 			this.aktionVerteileMitMatching();
 			return;
 		}
-		if (!this._fachwahlZuHatMultikurse[iFachwahl]) {
+		if (!this.fachwahlZuHatMultikurse[iFachwahl]) {
 			this.aktionVerteileMultikurseRekursiv(iFachwahl + 1);
 			return;
 		}
 		let schienenAnzahl: number = 2;
-		for (const kurs of this._fachwahlZuKurse.get(iFachwahl)) {
+		for (const kurs of this.fachwahlZuKurse.get(iFachwahl)) {
 			schienenAnzahl = Math.max(schienenAnzahl, kurs.schienen.length);
 			if (this.aktionBelegeKurs(iFachwahl, kurs)) {
 				this.aktionVerteileMultikurseRekursiv(iFachwahl + 1);
@@ -247,11 +238,11 @@ export class SchuelerblockungDynDaten extends JavaObject {
 				}
 			}
 		}
-		this._aktuellNichtwahlen += schienenAnzahl;
-		if (this._aktuellNichtwahlen <= this._aktuellNichtwahlenBest) {
+		this.dynNichtwahlen += schienenAnzahl;
+		if (this.dynNichtwahlen <= this.dynNichtwahlenBest) {
 			this.aktionVerteileMultikurseRekursiv(iFachwahl + 1);
 		}
-		this._aktuellNichtwahlen -= schienenAnzahl;
+		this.dynNichtwahlen -= schienenAnzahl;
 	}
 
 	private static gibKursBewertung(kurs: SchuelerblockungInputKurs): number {
@@ -262,14 +253,31 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		return bewertung;
 	}
 
-	private aktionVerteileMitMatchingFuelleMatrix(): void {
-		const data: Array<Array<number>> = this._aktuellMatrix.getMatrix();
-		this._aktuellMatrix.fuelleMitWert(SchuelerblockungDynDaten.UNENDLICH);
+	private aktionVerteileMitMatching(): void {
+		const matrix: Array<Array<number>> = this.dynMatrix.getMatrix();
+		this.aktionVerteileMitMatchingFuelleMatrix();
+		const r2c: Array<number> = this.dynMatrix.gibMinimalesBipartitesMatchingGewichtet(true);
 		for (let iFachwahl: number = 0; iFachwahl < this.nFachwahlen; iFachwahl++) {
-			if (!this._fachwahlZuHatMultikurse[iFachwahl]) {
+			this.aktionVerteileMitMatchingKursHinzufuegen(iFachwahl, matrix, r2c);
+		}
+		if ((this.dynNichtwahlen < this.dynNichtwahlenBest) || ((this.dynNichtwahlen === this.dynNichtwahlenBest) && (this.dynBewertung < this.dynBewertungBest))) {
+			this.dynNichtwahlenBest = this.dynNichtwahlen;
+			this.dynBewertungBest = this.dynBewertung;
+			System.arraycopy(this.dynFachwahlZuKurs, 0, this.dynFachwahlZuKursBest, 0, this.nFachwahlen);
+		}
+		for (let iFachwahl: number = 0; iFachwahl < this.nFachwahlen; iFachwahl++) {
+			this.aktionVerteileMitMatchingKursEntfernen(iFachwahl, matrix, r2c);
+		}
+	}
+
+	private aktionVerteileMitMatchingFuelleMatrix(): void {
+		const data: Array<Array<number>> = this.dynMatrix.getMatrix();
+		this.dynMatrix.fuelleMitWert(SchuelerblockungDynDaten.UNENDLICH);
+		for (let iFachwahl: number = 0; iFachwahl < this.nFachwahlen; iFachwahl++) {
+			if (!this.fachwahlZuHatMultikurse[iFachwahl]) {
 				for (let schiene: number = 0; schiene < this.nSchienen; schiene++) {
-					if (!this._aktuellGesperrteSchiene[schiene]) {
-						const kurs: SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
+					if (!this.dynGesperrteSchiene[schiene]) {
+						const kurs: SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this.fachwahlZuKurse.get(iFachwahl), schiene);
 						if (kurs !== null) {
 							data[iFachwahl][schiene] = SchuelerblockungDynDaten.gibKursBewertung(kurs);
 						}
@@ -279,48 +287,39 @@ export class SchuelerblockungDynDaten extends JavaObject {
 		}
 	}
 
-	private aktionVerteileMitMatching(): void {
-		const data: Array<Array<number>> = this._aktuellMatrix.getMatrix();
-		this.aktionVerteileMitMatchingFuelleMatrix();
-		const r2c: Array<number> = this._aktuellMatrix.gibMinimalesBipartitesMatchingGewichtet(true);
-		for (let iFachwahl: number = 0; iFachwahl < this.nFachwahlen; iFachwahl++) {
-			if (this._fachwahlZuHatMultikurse[iFachwahl]) {
-				continue;
-			}
-			const schiene: number = r2c[iFachwahl];
-			if ((schiene < 0) || (data[iFachwahl][schiene] === SchuelerblockungDynDaten.UNENDLICH)) {
-				this._aktuellNichtwahlen++;
-				continue;
-			}
-			const kurs: SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
-			if (kurs === null) {
-				throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
-			}
-			if (!this.aktionBelegeKurs(iFachwahl, kurs)) {
-				throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Kurs (" + kurs.id + ") konnte nicht belegt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
-			}
+	private aktionVerteileMitMatchingKursHinzufuegen(iFachwahl: number, matrix: Array<Array<number>>, r2c: Array<number>): void {
+		if (this.fachwahlZuHatMultikurse[iFachwahl]) {
+			return;
 		}
-		if ((this._aktuellNichtwahlen < this._aktuellNichtwahlenBest) || ((this._aktuellNichtwahlen === this._aktuellNichtwahlenBest) && (this._aktuellBewertung < this._aktuellBewertungBest))) {
-			this._aktuellNichtwahlenBest = this._aktuellNichtwahlen;
-			this._aktuellBewertungBest = this._aktuellBewertung;
-			System.arraycopy(this._aktuellFachwahlZuKurs, 0, this._aktuellFachwahlZuKursBest, 0, this.nFachwahlen);
+		const schiene: number = r2c[iFachwahl];
+		if ((schiene < 0) || (matrix[iFachwahl][schiene] === SchuelerblockungDynDaten.UNENDLICH)) {
+			this.dynNichtwahlen++;
+			return;
 		}
-		for (let iFachwahl: number = 0; iFachwahl < this.nFachwahlen; iFachwahl++) {
-			if (this._fachwahlZuHatMultikurse[iFachwahl]) {
-				continue;
-			}
-			const schiene: number = r2c[iFachwahl];
-			if ((schiene < 0) || (data[iFachwahl][schiene] === SchuelerblockungDynDaten.UNENDLICH)) {
-				this._aktuellNichtwahlen--;
-				continue;
-			}
-			const kurs: SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this._fachwahlZuKurse.get(iFachwahl), schiene);
-			if (kurs === null) {
-				throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
-			}
-			if (!this.aktionBelegeKursUndo(iFachwahl, kurs)) {
-				throw new DeveloperNotificationException("In der Methode 'SchuelerblockungDynDaten.aktionVerteileMitMatching' ist ein unerwarteter Fehler passiert: Der Kurs (" + kurs.id + ") konnte nicht entfernt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
-			}
+		const kurs: SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this.fachwahlZuKurse.get(iFachwahl), schiene);
+		if (kurs === null) {
+			throw new DeveloperNotificationException("Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
+		}
+		if (!this.aktionBelegeKurs(iFachwahl, kurs)) {
+			throw new DeveloperNotificationException("Der Kurs (" + kurs.id + ") konnte nicht belegt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
+		}
+	}
+
+	private aktionVerteileMitMatchingKursEntfernen(iFachwahl: number, matrix: Array<Array<number>>, r2c: Array<number>): void {
+		if (this.fachwahlZuHatMultikurse[iFachwahl]) {
+			return;
+		}
+		const schiene: number = r2c[iFachwahl];
+		if ((schiene < 0) || (matrix[iFachwahl][schiene] === SchuelerblockungDynDaten.UNENDLICH)) {
+			this.dynNichtwahlen--;
+			return;
+		}
+		const kurs: SchuelerblockungInputKurs | null = SchuelerblockungDynDaten.gibKleinstenKursInSchiene(this.fachwahlZuKurse.get(iFachwahl), schiene);
+		if (kurs === null) {
+			throw new DeveloperNotificationException("Der Fachart (" + iFachwahl + ") wurde ein NULL-Kurs zugeordnet! Diesen Fehler kann nur das Programmier-Team beheben.")
+		}
+		if (!this.aktionBelegeKursUndo(iFachwahl, kurs)) {
+			throw new DeveloperNotificationException("Der Kurs (" + kurs.id + ") konnte nicht entfernt werden! Diesen Fehler kann nur das Programmier-Team beheben.")
 		}
 	}
 
@@ -338,61 +337,33 @@ export class SchuelerblockungDynDaten extends JavaObject {
 
 	private aktionBelegeKurs(iFachwahl: number, kurs: SchuelerblockungInputKurs): boolean {
 		for (const schiene1 of kurs.schienen) {
-			if (this._aktuellGesperrteSchiene[schiene1 - 1]) {
+			if (this.dynGesperrteSchiene[schiene1 - 1]) {
 				return false;
 			}
 		}
-		this._aktuellFachwahlZuKurs[iFachwahl] = kurs.id;
+		this.dynFachwahlZuKurs[iFachwahl] = kurs.id;
 		for (const schiene1 of kurs.schienen) {
-			this._aktuellGesperrteSchiene[schiene1 - 1] = true;
+			this.dynGesperrteSchiene[schiene1 - 1] = true;
 		}
-		this._aktuellBewertung += SchuelerblockungDynDaten.gibKursBewertung(kurs);
+		this.dynBewertung += SchuelerblockungDynDaten.gibKursBewertung(kurs);
 		return true;
 	}
 
 	private aktionBelegeKursUndo(iFachwahl: number, kurs: SchuelerblockungInputKurs): boolean {
-		if (this._aktuellFachwahlZuKurs[iFachwahl] < 0) {
+		if (this.dynFachwahlZuKurs[iFachwahl] < 0) {
 			return false;
 		}
 		for (const schiene1 of kurs.schienen) {
-			if (!this._aktuellGesperrteSchiene[schiene1 - 1]) {
+			if (!this.dynGesperrteSchiene[schiene1 - 1]) {
 				return false;
 			}
 		}
-		this._aktuellFachwahlZuKurs[iFachwahl] = -1;
+		this.dynFachwahlZuKurs[iFachwahl] = -1;
 		for (const schiene1 of kurs.schienen) {
-			this._aktuellGesperrteSchiene[schiene1 - 1] = false;
+			this.dynGesperrteSchiene[schiene1 - 1] = false;
 		}
-		this._aktuellBewertung -= SchuelerblockungDynDaten.gibKursBewertung(kurs);
+		this.dynBewertung -= SchuelerblockungDynDaten.gibKursBewertung(kurs);
 		return true;
-	}
-
-	private debug(logger: Logger, pHeader: string, pPrintMatrix: boolean): void {
-		logger.logLn("");
-		logger.logLn("#################### " + pHeader + " ####################");
-		logger.logLn("Bewertung      = " + this._aktuellNichtwahlen + " / " + this._aktuellBewertung);
-		logger.logLn("Fachwahlen     = " + Arrays.toString(this._aktuellFachwahlZuKurs));
-		logger.logLn("BewertungBest  = " + this._aktuellNichtwahlenBest + " / " + this._aktuellBewertungBest);
-		logger.logLn("FachwahlenBest = " + Arrays.toString(this._aktuellFachwahlZuKursBest));
-		if (!pPrintMatrix) {
-			return;
-		}
-		const data: Array<Array<number>> = this._aktuellMatrix.getMatrix();
-		for (let schiene: number = 0; schiene < this.nSchienen; schiene++) {
-			const sData: string | null = this._aktuellGesperrteSchiene[schiene] ? "1" : "0";
-			logger.log(JavaString.format("%5s", sData));
-		}
-		logger.logLn("");
-		for (let iFachwahl: number = 0; iFachwahl < this.nFachwahlen; iFachwahl++) {
-			for (let schiene: number = 0; schiene < this.nSchienen; schiene++) {
-				let sData: string = "" + data[iFachwahl][schiene];
-				if (data[iFachwahl][schiene] === SchuelerblockungDynDaten.UNENDLICH) {
-					sData = "INF";
-				}
-				logger.log(JavaString.format("%5s", sData));
-			}
-			logger.logLn("");
-		}
 	}
 
 	transpilerCanonicalName(): string {
