@@ -1,0 +1,23 @@
+{
+  "version" : 1,
+  "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSsg01SchuelerStammdatenGeschlecht",
+  "historie" : [ {
+    "praefix" : "SSG01",
+    "altes_kuerzel" : "",
+    "zweig" : "Schueler-Stammdaten-Geschlecht",
+    "dtos" : "Schueler",
+    "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Individualdaten'",
+    "anzeigebereich_ui" : "Feld 'Geschlecht'",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : ["SSG00"],
+    "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+    "kann" : [ ],
+    "hinweis" : [ ],
+    "text" : "Unzulässiger Schlüssel '' + SchuelerStammdaten.geschlecht + '' im Feld 'Geschlecht'. Die gültigen Schlüssel entnehmen Sie bitte dem Pulldownmenü.",
+    "erlaeuterung" : "Der Prüfschritt soll anschlagen, wenn für das Feld Geschlecht ein unzulässiger Wert vorliegt. Die zulässigen Werte finden sich in der Klasse Geschlecht.java.",
+    "bedingung" : "SchuelerStammdaten.geschlecht ≠ einem Eintrag in der Klasse 'Geschlecht.java'",
+    "gueltigVon" : null,
+    "gueltigBis" : null
+  } ]
+}

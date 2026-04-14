@@ -1,0 +1,23 @@
+{
+  "version" : 1,
+  "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSsg00SchuelerStammdatenGeschlecht",
+  "historie" : [ {
+    "praefix" : "SSG00",
+    "altes_kuerzel" : "",
+    "zweig" : "Schueler-Stammdaten-Geschlecht",
+    "dtos" : "SchuelerStammdaten",
+    "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Individualdaten'",
+    "anzeigebereich_ui" : "Feld 'Geschlecht'",
+    "svws" : true,
+    "zebras" : true,
+    "vorbedingung" : [ ],
+    "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+    "kann" : [ ],
+    "hinweis" : [ ],
+    "text" : "Das Feld 'Geschlecht' muss besetzt sein.",
+    "erlaeuterung" : "",
+    "bedingung" : "SchuelerStammdaten.geschlecht = @",
+    "gueltigVon" : null,
+    "gueltigBis" : null
+  } ]
+}

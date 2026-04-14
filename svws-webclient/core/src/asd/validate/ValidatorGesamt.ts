@@ -1,13 +1,14 @@
+import { ValidatorSsSchuelerStammdaten } from '../../asd/validate/schueler/ValidatorSsSchuelerStammdaten';
 import { ArrayList } from '../../java/util/ArrayList';
-import { ValidatorSssSchuleStammdatenSchulform } from '../../asd/validate/schule/ValidatorSssSchuleStammdatenSchulform';
 import { ValidatorLpLehrerPersonaldaten } from '../../asd/validate/lehrer/ValidatorLpLehrerPersonaldaten';
+import { ValidatorGlGesamtLehrerdaten } from '../../asd/validate/gesamt/ValidatorGlGesamtLehrerdaten';
+import { ValidatorSssSchuleStammdatenSchulform } from '../../asd/validate/schule/ValidatorSssSchuleStammdatenSchulform';
 import type { List } from '../../java/util/List';
 import type { Supplier } from '../../java/util/function/Supplier';
 import { Class } from '../../java/lang/Class';
 import { StatistikGesamt } from '../../asd/data/statistik/StatistikGesamt';
 import { ValidatorKontext } from '../../asd/validate/ValidatorKontext';
 import { Validator, cast_de_svws_nrw_asd_validate_Validator } from '../../asd/validate/Validator';
-import { ValidatorGlGesamtLehrerdaten } from '../../asd/validate/gesamt/ValidatorGlGesamtLehrerdaten';
 import { ValidatorLsLehrerStammdaten } from '../../asd/validate/lehrer/ValidatorLsLehrerStammdaten';
 
 export class ValidatorGesamt extends Validator {
@@ -43,6 +44,9 @@ export class ValidatorGesamt extends Validator {
 		for (const lehrer of gesamt.lehrer) {
 			this._validatoren.add(new ValidatorLsLehrerStammdaten({ get: () => lehrer.nachname }, { get: () => lehrer.vorname }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.geschlecht }, { get: () => lehrer.kuerzel }, { get: () => lehrer.staatsangehoerigkeitID }, { get: () => lehrer.idRechtsverhaeltnis }, this.kontext()));
 			this._validatoren.add(new ValidatorLpLehrerPersonaldaten({ get: () => lehrer.id }, { get: () => gesamt.schule.idSchuljahresabschnitt }, { get: () => lehrer.idRechtsverhaeltnis }, { get: () => lehrer.pflichtstundensoll }, { get: () => lehrer.anrechnungen }, { get: () => lehrer.idEinsatzstatus }, { get: () => lehrer.idBeschaeftigungsart }, { get: () => lehrer.geburtsdatum }, { get: () => lehrer.lehraemter }, { get: () => lehrer.mehrleistung }, { get: () => lehrer.minderleistung }, this.kontext()));
+		}
+		for (const schueler of gesamt.schueler) {
+			this._validatoren.add(new ValidatorSsSchuelerStammdaten({ get: () => schueler.geschlecht }, this.kontext()));
 		}
 		return true;
 	}
