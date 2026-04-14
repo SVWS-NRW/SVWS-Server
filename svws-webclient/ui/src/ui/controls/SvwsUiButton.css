@@ -136,6 +136,10 @@
 	&:focus-visible {
 		@apply icon-ui-danger-hover;
 	}
+
+	.button--trash-icon {
+		@apply flex items-center justify-center;
+	}
 }
 
 .button--trash,
@@ -158,17 +162,14 @@
 }
 
 .button:disabled {
-	.button--trash-icon .icon {
-		@apply icon-ui-danger-secondary;
-	}
 	&,
 	&:hover,
 	&:focus,
 	&:focus-visible {
 		@apply bg-ui-disabled text-ui-ondisabled border-ui-disabled;
 		@apply cursor-not-allowed pointer-events-none;
-		.button--trash-icon .icon {
-			@apply icon-ui-danger-secondary-hover;
+		.icon {
+			@apply icon-ui-ondisabled;
 		}
 	}
 }

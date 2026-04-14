@@ -6,8 +6,11 @@
 		<Variant title="Default" id="default">
 			<div class="px-3">
 				<svws-ui-content-card>
-					<svws-ui-table v-model="selectedRows" :items="data" :columns="cols" :clickable="state.clickable" :disable-header="state.disableHeader" :disable-footer="state.disableFooter" :selectable="state.selectable" :count="state.count" v-model:clicked="clickedRow" :filtered="docsMultiselectFilterA?.length > 0 || docsMultiselectFilterB?.length > 0"
-						:toggle-columns="state.toggleColumns" :filter-reset :type="state.typeGrid ? 'grid' : 'table'" v-model:hidden-columns="state.hiddenColumns" :lock-selectable="state.lockSelectable">
+					<svws-ui-table v-model="selectedRows" v-model:clicked="clickedRow" v-model:hidden-columns="state.hiddenColumns" :items="data"
+						:columns="cols" :row-actions :clickable="state.clickable" :selectable="state.selectable"
+						:disable-header="state.disableHeader" :disable-footer="state.disableFooter" :count="state.count"
+						:filtered="docsMultiselectFilterA?.length > 0 || docsMultiselectFilterB?.length > 0"
+						:toggle-columns="state.toggleColumns" :filter-reset :type="state.typeGrid ? 'grid' : 'table'" :lock-selectable="state.lockSelectable">
 						<template #search v-if="state.docsWithSearch">
 							<svws-ui-text-input type="search" placeholder="Suche" v-model="search" />
 						</template>
@@ -37,6 +40,14 @@
 						<template #cell(email)="{value}">
 							<span class="line-clamp-1 break-all">{{ value }}</span>
 						</template>
+						<template #actions v-if="state.showBulk">
+							<div v-for="rowAction in rowActions" :key="rowAction.label" class="flex items-center">
+								<svws-ui-button v-if="rowAction.trash" type="trash" @click="console.log(`Bulk Action ${rowAction.label}`)" :disabled="rowAction.disabled" />
+								<svws-ui-button v-else type="icon" @click="console.log(`Bulk Action ${rowAction.label}`)" :disabled="rowAction.disabled">
+									<span :class="[rowAction.iconClass, 'icon']" :aria-label="rowAction.label" :title="rowAction.label" />
+								</svws-ui-button>
+							</div>
+						</template>
 					</svws-ui-table>
 				</svws-ui-content-card>
 			</div>
@@ -54,6 +65,14 @@
 				<HstCheckbox v-model="state.disableFooter" title="disable-footer" />
 				<HstCheckbox v-model="state.lockSelectable" title="disable-selection-checkboxes" />
 				<HstCheckbox v-model="state.count" title="count" />
+				<div class="text-headline-sm">
+					Actions
+				</div>
+				<HstCheckbox v-model="state.showBulk" title="Bulk Actions" />
+				<HstCheckbox v-model="state.add" title="Hinzufügen" />
+				<HstCheckbox v-model="state.delete" title="Löschen" />
+				<HstCheckbox v-model="state.accept" title="Bestätigen" />
+				<HstCheckbox v-model="state.details" title="Details" />
 			</template>
 		</Variant>
 		<Variant title="Inputs" id="inputs">
@@ -80,7 +99,7 @@
 <script setup lang="ts">
 
 	import { ref, reactive, computed } from "vue";
-	import type { DataTableColumn, SortByAndOrder } from "../../types";
+	import type { DataTableColumn, DataTableRowAction, SortByAndOrder } from "../../types";
 
 	const itemRefs = ref(new Map());
 	const hiddenColumns = ref<Set<string>>(new Set<string>());
@@ -109,6 +128,11 @@
 		docsToggleValue: true,
 		typeGrid: false,
 		hiddenColumns,
+		add: false,
+		delete: false,
+		accept: false,
+		details: false,
+		showBulk: false,
 	});
 
 	const cols = ref<DataTableColumn[]>([
@@ -120,7 +144,30 @@
 		{ key: "itemID", label: "ID", tooltip: "Identifikation", fixedWidth: 4, align: "right", toggle: true },
 	]);
 
-	const data = ref([
+	const rowActions = computed<DataTableRowAction<DataType>[]>(() => {
+		const actions: DataTableRowAction<DataType>[] = [];
+
+		if (state.add) {
+			actions.push({ label: "Hinzufügen", iconClass: "i-ri-add-line", action: (item: DataType) => alert(`Hinzufügen: ${item.name}`), disabled: true });
+		}
+
+		if (state.delete) {
+			actions.push({ label: "Löschen", action: (item: DataType) => alert(`Löschen: ${item.name}`), trash: true });
+		}
+
+		if (state.accept) {
+			actions.push({ label: "Bestätigen", iconClass: "i-ri-check-line", action: (item: DataType) => alert(`Bestätigen: ${item.name}`) });
+		}
+
+		if (state.details) {
+			actions.push({ label: "Details", iconClass: "i-ri-eye-line", action: (item: DataType) => alert(`Default: ${item.name}`) });
+		}
+
+		return actions;
+	});
+
+	type DataType = { id: number, name: string, email: string, customIcon: string, test: string, itemID: string, fach: string };
+	const data = ref<DataType[]>([
 		{ id: 0, name: "Testlisa Testschülerin", email: "lisa@example.com", customIcon: "2023", test: "Zum Testen", itemID: '3', fach: 'Deutsch' },
 		{ id: 1, name: "Generischer Name", email: "name@example.com", customIcon: "2022", test: "Neu", itemID: '99', fach: 'Englisch' },
 		{ id: 2, name: "Andere Person 6", email: "person6@example.com", customIcon: "2008", test: "Platzhalter", itemID: '42', fach: '' },
