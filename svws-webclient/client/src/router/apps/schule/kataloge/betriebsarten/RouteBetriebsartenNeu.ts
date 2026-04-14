@@ -14,7 +14,7 @@ export class RouteBetriebsartenNeu extends RouteNode<any, RouteBetriebsarten> {
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.betriebsarten.neu", "neu", BetriebsartenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Betriebsarten Neu";
 		super.setCheckpoint = true;

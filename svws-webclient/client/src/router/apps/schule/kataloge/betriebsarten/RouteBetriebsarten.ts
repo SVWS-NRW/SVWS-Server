@@ -15,8 +15,9 @@ import BetriebsartenAuswahl from "~/components/schule/kataloge/betriebsarten/Bet
 
 export class RouteBetriebsarten extends RouteAuswahlNode<BetriebsartenListeManager, RouteDataBetriebsarten, RouteApp> {
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.betriebsarten", "schule/betriebsarten/:id(\\d+)?", BetriebsartenApp, BetriebsartenAuswahl, new RouteDataBetriebsarten());
-		super.mode = ServerMode.DEV;
+		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.betriebsarten",
+			"schule/betriebsarten/:id(\\d+)?", BetriebsartenApp, BetriebsartenAuswahl, new RouteDataBetriebsarten());
+		super.mode = ServerMode.STABLE;
 		super.text = "Betriebsarten";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [
