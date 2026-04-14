@@ -13,7 +13,7 @@
 					<svws-ui-text-input placeholder="Suchen" v-model="searchTerm" type="search" removable />
 				</template>
 				<template #actions>
-					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
+					<svws-ui-tooltip position="bottom">
 						<svws-ui-button type="icon"
 							@click="gotoHinzufuegenView(true)"
 							:has-focus="noFilteredEntries"
@@ -35,7 +35,7 @@
 	import type { DataTableColumn } from "@ui";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import type { Floskelgruppe } from "@core";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
 	import type { FloskelgruppenAuswahlProps } from "./FloskelgruppenAuswahlProps";
 

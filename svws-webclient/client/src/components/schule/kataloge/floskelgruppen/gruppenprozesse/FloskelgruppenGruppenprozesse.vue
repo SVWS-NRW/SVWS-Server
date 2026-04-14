@@ -3,7 +3,7 @@
 		<div v-if="!hatIrgendwelcheKompetenzen">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
+		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Floskelgruppen werden gelöscht">
 				<div>
 					<span v-if="selectedAllowedToDelete">Alle ausgewählten Floskelgruppen sind bereit zum Löschen.</span>
@@ -36,7 +36,7 @@
 <script setup lang="ts">
 
 	import type { List } from "@core";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { computed, ref } from "vue";
 	import type { FloskelgruppenGruppenprozesseProps } from "./FloskelgruppenGruppenprozesseProps";
 

@@ -15,7 +15,7 @@ export class RouteFloskelgruppenNeu extends RouteNode<any, RouteFloskelgruppen> 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.floskelgruppen.neu", "neu", FloskelgruppenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Floskelgruppen";
 		super.setCheckpoint = true;

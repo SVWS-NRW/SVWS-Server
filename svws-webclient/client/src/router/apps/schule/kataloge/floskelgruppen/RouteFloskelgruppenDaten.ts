@@ -13,7 +13,7 @@ export class RouteFloskelgruppenDaten extends RouteNode<any, RouteFloskelgruppen
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.floskelgruppen.daten",
 			"daten", FloskelgruppenDaten);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Floskelgruppe";
 	}

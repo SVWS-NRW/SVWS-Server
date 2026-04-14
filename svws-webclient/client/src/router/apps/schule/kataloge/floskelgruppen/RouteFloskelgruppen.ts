@@ -18,7 +18,7 @@ export class RouteFloskelgruppen extends RouteAuswahlNode<FloskelgruppenListeMan
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.floskelgruppen",
 			`schule/floskelgruppen/:id(\\d+)?`, FloskelgruppenApp, FloskelgruppenAuswahl, new RouteDataFloskelgruppen());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Floskelgruppen";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [
