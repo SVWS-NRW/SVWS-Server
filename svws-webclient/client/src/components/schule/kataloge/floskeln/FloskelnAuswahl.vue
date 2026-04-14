@@ -34,7 +34,7 @@
 					<span class="line-clamp-2">{{ value }}</span>
 				</template>
 				<template #actions v-if="!readonly">
-					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
+					<svws-ui-tooltip position="bottom">
 						<svws-ui-button type="icon"
 							@click="gotoHinzufuegenView(true)"
 							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
@@ -55,7 +55,7 @@
 	import type { DataTableColumn } from "@ui";
 	import { SelectManager, useRegionSwitch, ViewType } from "@ui";
 	import type { FachDaten, Floskel, Floskelgruppe, JahrgangsDaten } from "@core";
-	import { BenutzerKompetenz, Floskelgruppenart, ServerMode } from "@core";
+	import { BenutzerKompetenz, Floskelgruppenart } from "@core";
 	import { computed } from "vue";
 	import type { FloskelnAuswahlProps } from "./FloskelnAuswahlProps";
 

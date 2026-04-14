@@ -17,7 +17,7 @@ export class RouteFloskelnGruppenprozesse extends RouteNode<any, RouteFloskeln> 
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN,
 			BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN], "schule.floskeln.gruppenprozesse", "gruppenprozesse", FloskelnGruppenprozesse);
 		super.types = new Set([ViewType.GRUPPENPROZESSE]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Gruppenprozesse";
 	}
