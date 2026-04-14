@@ -7,7 +7,7 @@ use wenom\Http;
 /**
  * Diese Klasse stellt Methode für die Base32-Kodierung zur Verfügung
  */
-final class Base32 {
+class Base32 {
 
     /** Das Base-32-Alphabet (A-Z und 2-7) */
     private const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";

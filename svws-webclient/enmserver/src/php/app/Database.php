@@ -761,4 +761,23 @@ class Database {
         $this->conn->executeStatement($stmt);
     }
 
+
+    public function setLehrerErstanmeldungAbgeschlossen(int $idLehrer): void {
+        $lehrer = $this->getENMLehrerByID($idLehrer);
+        if ($lehrer === null) {
+            Http::exit500("Fehler beim Zugriff auf die Lehrer-Daten");
+        }
+        $lehrer->istErstanmeldung = false;
+        $lehrer->tsIstErstanmeldung = date('Y-m-d H:i:s.v', time());
+        $updatedLehrer = json_encode($lehrer, JSON_UNESCAPED_SLASHES);
+        $this->conn->beginTransaction();
+        $stmt = $this->conn->prepareStatement("UPDATE Lehrer SET istErstanmeldung=:istErstanmeldung, tsIstErstanmeldung=:tsIstErstanmeldung, daten=:daten WHERE id=:id");
+        $this->conn->bindStatementValue($stmt, ":id", $idLehrer, PDO::PARAM_INT);
+        $this->conn->bindStatementValue($stmt, ":istErstanmeldung", $lehrer->istErstanmeldung, PDO::PARAM_INT);
+        $this->conn->bindStatementValue($stmt, ":tsIstErstanmeldung", $lehrer->tsIstErstanmeldung, PDO::PARAM_STR);
+        $this->conn->bindStatementValue($stmt, ":daten", $updatedLehrer, PDO::PARAM_STR);
+        $this->conn->executeStatement($stmt);
+        $this->conn->commitTransaction();
+    }
+
 }

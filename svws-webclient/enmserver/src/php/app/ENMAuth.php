@@ -2,6 +2,7 @@
 
 namespace wenom;
 
+use wenom\Base32;
 
 /**
  * Diese Klasse stellt die Funktionalität für die Authentifizierung zur Verfügung.
@@ -83,6 +84,18 @@ class ENMAuth {
         }
     }
 
+
+    /**
+     * Gibt die Remote-IP-Adresse der Anfrage zurück. Ist die Server-Variable nicht gesetzt,
+     * so wird unkown als string zurückgegeben.
+     *
+     * @return string   die IP-Adresse oder unknown, falls keine gesetzt ist
+     */
+    public function getRemoteAddr(): string {
+        return $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    }
+
+
     /**
      * Prüfe den Authorization-Header, ob dieser eine Basic-Authentifizierung mit den Crendentials
      * eines Lehrers hat.
@@ -96,7 +109,7 @@ class ENMAuth {
         }
 
         // Prüfe, ob bereits zu viele Login-Versuche innerhalb kürzerer Zeit stattgefunden haben
-        $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        $ip = $this->getRemoteAddr();
         $lehrer = $this->db->getENMLehrerByEmail($this->authUser);
         $idLehrer = ($lehrer !== null) ? $lehrer->id : -1;
         if ($this->db->istLoginGesperrt($ip, $idLehrer)) {
@@ -185,6 +198,11 @@ class ENMAuth {
         if (!$lehrer) {
             Http::exit401Unauthorized();
         }
+
+        if ($this->db->istLoginGesperrt($this->getRemoteAddr(), $lehrer->id)) {
+            Http::exit429TooManyRequests("Zu viele Fehlversuche. Bitte warten Sie einige Minuten.");
+        }
+
         return $lehrer;
     }
 

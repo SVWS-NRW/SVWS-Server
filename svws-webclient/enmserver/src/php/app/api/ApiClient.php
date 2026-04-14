@@ -111,7 +111,7 @@ class ApiClient {
                 'POST' => [
                     'init' => fn() => $this->createAppContext(),
                     'auth' => fn($config, $db, $auth) => $auth->pruefeLehrerTotpSession(),
-                    'call' => fn($config, $db, $auth, $lehrer) => $this->loginTotp($config, $auth, $lehrer)
+                    'call' => fn($config, $db, $auth, $lehrer) => $this->loginTotp($config, $db, $auth, $lehrer)
                 ]
             ],
             'mode' => [
@@ -225,6 +225,18 @@ class ApiClient {
         // Fall 1: 2FA mit TOTP wird verwendet
         if ($lehrer->art2FA === 1) {
             $jwt = ENMAuth::createJsonWebToken($config->getClientTotpAuthSessionKey(), $lehrer->id, $config->getLifetimeTotpAccessToken());
+            if ($lehrer->istErstanmeldung) {
+                $token = json_decode($jwt);
+                $response = [
+                    'token' => $token,
+                    'setup' => [
+                        'secret'  => $lehrer->totpSecret,
+                        'issuer'  => 'WeNoM',
+                        'account' => $lehrer->eMailDienstlich
+                    ]
+                ];
+                Http::exit202AcceptedJson(json_encode($response, JSON_UNESCAPED_SLASHES));
+            }
             Http::exit202AcceptedJson($jwt);
         }
         Http::exit400BadRequest("Eine 2FA mit der ID ".$lehrer->art2FA." wird vom Server noch nicht unterstützt.");
@@ -239,10 +251,11 @@ class ApiClient {
      * TOTP bestimmt ist.
      *
      * @param Config $config   die Konfiguration
+     * @param Database $db     die Datenbank-Verbindung
      * @param ENMAuth $auth    die Klasse für Authentifizierung
      * @param object $lehrer   das authentifizierte Lehrer-Objekt
      */
-    private function loginTotp(Config $config, ENMAuth $auth, object $lehrer): void {
+    private function loginTotp(Config $config, Database $db, ENMAuth $auth, object $lehrer): void {
         $body = Http::getBodyJsonObject();
 
         if (!isset($body->code)) {
@@ -255,9 +268,14 @@ class ApiClient {
 
         $success = $auth->pruefeLehrerTotpToken($lehrer->totpSecret, $code);
         if ($success) {
+            $db->clearLoginFailures($auth->getRemoteAddr(), $lehrer->id);
+            if ($lehrer -> istErstanmeldung) {
+                $db->setLehrerErstanmeldungAbgeschlossen($lehrer->id);
+            }
             $jwt = ENMAuth::createJsonWebToken($config->getClientSessionKey(), $lehrer->id, $config->getLifetimeAccessToken());
             Http::exit200OKJson($jwt);
         } else {
+            $db->updateLoginFailures($auth->getRemoteAddr(), $lehrer->id);
             Http::exit403Forbidden();
         }
     }
