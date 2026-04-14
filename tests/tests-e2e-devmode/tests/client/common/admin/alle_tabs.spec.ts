@@ -44,6 +44,8 @@ test('Admins können entsprechende Bereiche im DEV Mode einsehen', async ({ page
 
 	await expect(page.getByRole('button', { name: 'Betriebe' })).toBeVisible();
 	await page.getByRole('button', { name: 'Betriebe' }).click();
+	await expect(page.getByText('Betriebe')).toBeVisible();
+	await page.waitForTimeout(300);
 
 	await expect(page.getByRole('button', { name: 'KAoA' })).toBeVisible();
 	await page.getByRole('button', { name: 'KAoA' }).click();
