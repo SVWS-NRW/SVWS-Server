@@ -700,7 +700,7 @@ class Database {
      * @return boolean true, falls der Login für die IP und den Lehrer aktuell gesperrt ist
      */
     public function istLoginGesperrt(string $ip, int $idLehrer): bool {
-        // Prüfe zunächst die Login-Versuche eines Lehrers auf einer IP-Adresse (maximal 3 Versuche in 15 Minuten)
+        // Prüfe zunächst die Login-Versuche eines Lehrers auf einer IP-Adresse (maximal 3 Versuche in 5 Minuten)
         $maxTries = 3; // maximal 3 Versuche
         $limit = time() - 300; // pro 5 Minuten (300 Sekunden)
         $stmt = $this->conn->prepareStatement("SELECT COUNT(*) as versuche FROM LoginFehlversuche WHERE (ip = :ip AND idLehrer = :idLehrer) AND zeitpunkt > :limit");

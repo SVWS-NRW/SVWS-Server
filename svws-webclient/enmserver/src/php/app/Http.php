@@ -87,7 +87,6 @@ class Http {
 
         list($header, $payload, $signature) = $parts;
         $validSig = self::base64UrlEncode(hash_hmac('sha256', $header.".".$payload, $key, true));
-
         if (!hash_equals($validSig, $signature)) {
             return null;
         }
@@ -324,6 +323,20 @@ class Http {
         header('Content-Type: application/gzip;');
         echo gzencode($data, 5);
         http_response_code(200);
+        exit;
+    }
+
+    /**
+     * Gibt ein Accepted (202) für JSON-Daten ggf. mit Daten für ein echo zurück und beendet das PHP-Skript.
+     *
+     * @param ?string data   die Daten, welche ggf. noch ausgegeben werden
+     */
+    public static function exit202AcceptedJson(?string $data = null): never {
+        header('Content-Type: application/json; charset=utf-8');
+        http_response_code(202);
+        if ($data != null) {
+            echo $data;
+        }
         exit;
     }
 

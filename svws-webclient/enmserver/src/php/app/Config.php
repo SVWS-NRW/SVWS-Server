@@ -32,7 +32,19 @@ class Config {
     protected ?string $secret = null;
 
     // Gibt an, ob die Anwendung im Debug-Modus betrieben wird oder nicht
-    protected $debugMode = false;
+    protected bool $debugMode = false;
+
+    // Die Lebensdauer für ein Access-Token einer Client-Verbindung (Default: 8 h)
+    protected int $lifetimeAccessToken = 8 * 3600;
+
+    // Die Lebensdauer für ein Access-Token einer Client-Verbindung (Default: 2 min)
+    protected int $lifetimeTotpAccessToken = 120;
+
+    // Die Größe des Zeitfensters bei der TOTP-Token-Prüfung in Sekunden (Default: 30 sec)
+    protected int $totpTimeslice = 30;
+
+    // Die Toleranz in Zeitfenstern bei der TOTP-Token-Prüfung (Default: 1)
+    protected int $totpTolerance = 1;
 
 
     /**
@@ -164,6 +176,53 @@ class Config {
         return hash_hmac('sha256', 'WeNoM-Client-Session', $this->getClientSecret());
     }
 
+
+    /**
+     * Erzeugt einen neuen, vom Client-Secret abgeleiteten, Schlüssel für Client-Login-TOTP-Sessions.
+     * Dies ist eine zusätzliche Schutz-Maßnahme für das Client-Secret.
+     */
+    public function getClientTotpAuthSessionKey(): string {
+        return hash_hmac('sha256', 'WeNoM-TOTP-Auth-Session', $this->getClientSecret());
+    }
+
+
+    /**
+     * Gibt die Lebendsdauer für ein Access-Token für den Client-Zugriff eines vollständig angemeldeten Benutzers zurück.
+     *
+     * @return int die Lebensdauer
+     */
+    public function getLifetimeAccessToken(): int {
+        return $this->lifetimeAccessToken;
+    }
+
+
+    /**
+     * Gibt die Lebendsdauer für ein Access-Token für den Login-Vorgangs für einen bereits mit dem Kennwort angemeldeten
+     * Benutzers zurück.
+     *
+     * @return int die Lebensdauer
+     */
+    public function getLifetimeTotpAccessToken(): int {
+        return $this->lifetimeTotpAccessToken;
+    }
+
+    /**
+     * Gibt die Größe des Zeitfensters bei der TOTP-Token-Prüfung in Sekunden zurück.
+     *
+     * @return int die Größe des Zeitfensters in Sekunden
+     */
+    public function getTotpTimeslice(): int {
+        return $this->totpTimeslice;
+    }
+
+    /**
+     * Gibt die Toleranz in Zeitfenstern bei der TOTP-Token-Prüfung zurück.
+     *
+     * @return int die Anzahl der Zeitfenster für die Toleranz
+     */
+    public function getTotpTolerance(): int {
+        return $this->totpTolerance;
+    }
 
     /**
      * Erzeugt einen zufälligen, URL-sicheren String, der für Kennwörter verwendet werden kann.

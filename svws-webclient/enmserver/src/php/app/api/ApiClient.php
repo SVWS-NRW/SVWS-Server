@@ -107,6 +107,13 @@ class ApiClient {
                     'call' => fn($config, $db, $auth, $lehrer) => $this->login($config, $lehrer)
                 ]
             ],
+            'login_totp' => [
+                'POST' => [
+                    'init' => fn() => $this->createAppContext(),
+                    'auth' => fn($config, $db, $auth) => $auth->pruefeLehrerTotpSession(),
+                    'call' => fn($config, $db, $auth, $lehrer) => $this->loginTotp($config, $auth, $lehrer)
+                ]
+            ],
             'mode' => [
                 'GET' => [
                     'init' => fn() => $this->createAppContext(),
@@ -202,23 +209,59 @@ class ApiClient {
         Http::exit200OKJson($config->getServerMode());
     }
 
+
     /**
      * Authentifiziert den Lehrer und gibt ein JSON-Web-Token (JWT) zurück.
      *
      * @param Config $config   die WeNoM-Server-Konfiguration
-     * @param object $lehrer   das authentifzierte Lehrer-Objekt
+     * @param object $lehrer   das authentifizierte Lehrer-Objekt
      */
     private function login(Config $config, object $lehrer): void {
-        // Erstelle das Json-Web-Token mit einer Gültigkeit von 8 Stunden
-        $expiration_time = 8 * 3600;
-        $payload = [
-            'sub' => $lehrer->id,
-            'exp' => time() + $expiration_time,
-            'iat' => time()
-        ];
-        $jwt = Http::createJsonWebToken($payload, $config->getClientSessionKey());
-        Http::exit200OKJson(json_encode([ 'token' => $jwt, 'id' => $lehrer->id ]));
+        // Fall 0: 2FA deaktiviert (für den Lehrer)
+        if ($lehrer->art2FA === 0) {
+            $jwt = ENMAuth::createJsonWebToken($config->getClientSessionKey(), $lehrer->id, $config->getLifetimeAccessToken());
+            Http::exit200OKJson($jwt);
+        }
+        // Fall 1: 2FA mit TOTP wird verwendet
+        if ($lehrer->art2FA === 1) {
+            $jwt = ENMAuth::createJsonWebToken($config->getClientTotpAuthSessionKey(), $lehrer->id, $config->getLifetimeTotpAccessToken());
+            Http::exit202AcceptedJson($jwt);
+        }
+        Http::exit400BadRequest("Eine 2FA mit der ID ".$lehrer->art2FA." wird vom Server noch nicht unterstützt.");
     }
+
+
+    /**
+     * Prüft beim Login-Vorgang nach erfolgreicher Prüfung des ersten Faktors den zweiten Faktor per TOTP
+     * und gibt ein JSON-Web-Token (JWT) für den Client-Zugriff zurück.
+     *
+     * Anmerkung: Der Zugang zu diesem Endpunkt erfolgt über ein spezielles JWT des login-Endpunktes, welches nur für
+     * TOTP bestimmt ist.
+     *
+     * @param Config $config   die Konfiguration
+     * @param ENMAuth $auth    die Klasse für Authentifizierung
+     * @param object $lehrer   das authentifizierte Lehrer-Objekt
+     */
+    private function loginTotp(Config $config, ENMAuth $auth, object $lehrer): void {
+        $body = Http::getBodyJsonObject();
+
+        if (!isset($body->code)) {
+            Http::exit400BadRequest("Es muss ein JSON-Objekt mit dem Attribut 'code' übergeben werden.");
+        }
+        $code = (string)$body->code;
+        if (!preg_match('/^\d{6}$/', $code)) {
+            Http::exit400BadRequest("Der Code muss 6 Ziffern beinhalten.");
+        }
+
+        $success = $auth->pruefeLehrerTotpToken($lehrer->totpSecret, $code);
+        if ($success) {
+            $jwt = ENMAuth::createJsonWebToken($config->getClientSessionKey(), $lehrer->id, $config->getLifetimeAccessToken());
+            Http::exit200OKJson($jwt);
+        } else {
+            Http::exit403Forbidden();
+        }
+    }
+
 
     /**
      * Prüft, ob eine SMTP-Client-Konfiguration vorhanden ist oder nicht.

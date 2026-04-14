@@ -132,7 +132,7 @@ class ImportManager {
      */
     protected function writeENMLehrer(): void {
         $this->conn->beginTransaction();
-        $stmt = $this->conn->prepareStatement("INSERT INTO Lehrer(id, ts, daten, eMailDienstlich, passwordHash, tsPasswordHash) VALUES (:id, :ts, :daten, :email, :pw, :tspw)");
+        $stmt = $this->conn->prepareStatement("INSERT INTO Lehrer(id, ts, daten, eMailDienstlich, passwordHash, tsPasswordHash, art2FA, tsArt2FA, totpSecret, istErstanmeldung, tsIstErstanmeldung) VALUES (:id, :ts, :daten, :email, :pw, :tspw, :art2FA, :tsArt2FA, :totpSecret, :istErstanmeldung, :tsIstErstanmeldung)");
         foreach ($this->enmLehrer as $lehrer) {
             $jsonLehrer = json_encode($lehrer, JSON_UNESCAPED_SLASHES);
             $this->conn->bindStatementValue($stmt, ":id", $lehrer->id, PDO::PARAM_INT);
@@ -141,6 +141,11 @@ class ImportManager {
             $this->conn->bindStatementValue($stmt, ":email", $lehrer->eMailDienstlich, PDO::PARAM_STR);
             $this->conn->bindStatementValue($stmt, ":pw", $lehrer->passwordHash, PDO::PARAM_STR);
             $this->conn->bindStatementValue($stmt, ":tspw", $lehrer->tsPasswordHash, PDO::PARAM_STR);
+            $this->conn->bindStatementValue($stmt, ":art2FA", $lehrer->art2FA, PDO::PARAM_INT);
+            $this->conn->bindStatementValue($stmt, ":tsArt2FA", $lehrer->tsArt2FA, PDO::PARAM_STR);
+            $this->conn->bindStatementValue($stmt, ":totpSecret", $lehrer->totpSecret, PDO::PARAM_STR);
+            $this->conn->bindStatementValue($stmt, ":istErstanmeldung", $lehrer->istErstanmeldung, PDO::PARAM_INT);
+            $this->conn->bindStatementValue($stmt, ":tsIstErstanmeldung", $lehrer->tsIstErstanmeldung, PDO::PARAM_STR);
             $this->conn->executeStatement($stmt);
         }
         $this->conn->commitTransaction();

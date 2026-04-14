@@ -98,7 +98,7 @@ class ENMAuth {
         // Prüfe, ob bereits zu viele Login-Versuche innerhalb kürzerer Zeit stattgefunden haben
         $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
         $lehrer = $this->db->getENMLehrerByEmail($this->authUser);
-        $idLehrer = $lehrer ? $lehrer->id : -1;
+        $idLehrer = ($lehrer !== null) ? $lehrer->id : -1;
         if ($this->db->istLoginGesperrt($ip, $idLehrer)) {
             Http::exit429TooManyRequests("Zu viele Fehlversuche. Bitte warten Sie einige Minuten.");
         }
@@ -116,6 +116,27 @@ class ENMAuth {
         // Bei einem Erfolg hingegen können vergangene Fehlversuche gelöscht werden
         $this->db->clearLoginFailures($ip, $idLehrer);
         return $lehrer;
+    }
+
+
+    /**
+     * Erstellt ein aktuelles JWT für eine Session für einen Lehrer.
+     *
+     * @param string $sessionKey   der Session-Key für das Signieren des JWT
+     * @param string $idLehrer     die ID des Lehrers
+     * @param string $expTime      die Zeit in Sekunden für die Gültigkeit des JWT
+     *
+     * @return string | false   das JSON mit dem JWT
+     */
+    public static function createJsonWebToken(string $sessionKey, int $idLehrer, int $expTime): string | false {
+        // Erstelle das Json-Web-Token mit einer Gültigkeit von 8 Stunden
+        $payload = [
+            'sub' => $idLehrer,
+            'exp' => time() + $expTime,
+            'iat' => time()
+        ];
+        $jwt = Http::createJsonWebToken($payload, $sessionKey);
+        return json_encode([ 'token' => $jwt, 'id' => $idLehrer ]);
     }
 
 
@@ -143,6 +164,82 @@ class ENMAuth {
         return $lehrer;
     }
 
+    /**
+     * Prüft das spezielle Json-Web-Token für TOTP-Prüfung und gibt bei erfolgreicher Authentifizierung das
+     * Lehrer-Objekt des angemeldeten Benutzers zurück.
+     *
+     * @return object   das Lehrer-Objekt des angemeldeten Benutzer
+     */
+    public function pruefeLehrerTotpSession(): object {
+        if (strcasecmp(($this->authMethod ?? ''), "Bearer") !== 0) {
+            Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="WeNoM"');
+        }
+
+        $payload = Http::verifyJsonWebToken($this->authToken, $this->config->getClientTotpAuthSessionKey());
+        if (!$payload || ($payload->exp < time())) {
+            Http::exit401Unauthorized("Sitzung abgelaufen.");
+        }
+
+        // Schneller ID-Lookup statt teurem Passwort-Hash-Vergleich
+        $lehrer = $this->db->getENMLehrerByID((int) $payload->sub);
+        if (!$lehrer) {
+            Http::exit401Unauthorized();
+        }
+        return $lehrer;
+    }
+
+    /**
+     * Bestimmt den TOTP-Token für das angegebene Zeitfenster
+     *
+     * @param string $secret   das TOTP Shared Secret (nicht Base32-kodiert!)
+     * @param int $timeSlice   das Zeitfenster
+     *
+     * @return string das TOTP-Token
+     */
+    private function calculateTotpToken(string $secret, int $timeSlice): string {
+        $hash = hash_hmac('sha1', pack('N*', 0).pack('N*', $timeSlice), $secret, true);
+
+        // Dynamisches Truncating gemäß RFC 4226
+        $offset = ord($hash[strlen($hash) - 1]) & 0xf;
+        $part = substr($hash, $offset, 4);
+        $value = unpack('N', $part)[1] & 0x7fffffff;
+        $truncatedHash = $value % 1000000;
+
+        return str_pad($truncatedHash, 6, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Verifziert den übergebenen TOTP-Token mit dem übergebenen Shared Secret gemäß RFC 6238.
+     * Dabei wird aus praktischen Gründen auch eine Zukunftstoleranz zugelassen, falls die Uhren nicht
+     * perfekt synchronisiert sind.
+     *
+     * @param string $secret   das Base32-kodierte TOTP Shared Secret
+     * @param string $token    der 6-stellige TOTP-Token
+     *
+     * @return true, wenn der Token gültig ist, und ansonsten false
+     */
+    public function pruefeLehrerTotpToken(string $secret, string $token): bool {
+        $secretDecoded = Base32::decode($secret);
+
+        // Bestimme das aktuelle Zeitfenster und den Toleranzbereich darum
+        $sizeTimeslice = $this->config->getTotpTimeslice();
+        $currentTimeSlice = intdiv(time(), $sizeTimeslice);
+        $tolerance = $this->config->getTotpTolerance();
+
+        // Prüfe das aktuelle Zeitfenster
+        if (hash_equals($this->calculateTotpToken($secretDecoded, $currentTimeSlice), $token)) {
+            return true;
+        }
+
+        // Prüfe den Toleranzbereich, jeweils abwechselnd die Vergangenheit und die Zukunft...
+        for ($i = 1; $i <= $tolerance; $i++) {
+            if (hash_equals($this->calculateTotpToken($secretDecoded, $currentTimeSlice - $i), $token) ||
+                    hash_equals($this->calculateTotpToken($secretDecoded, $currentTimeSlice + $i), $token)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Prüft, ob das Access-Token der Anfrage zu einem Client gehört und gültig ist.
