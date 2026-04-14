@@ -3,6 +3,10 @@
     "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSsdSchuelerStammdatenGeburtsdatum",
     "historie" : [ {
       "praefix" : "SSD",
+      "zweig" : "Schueler-Stammdaten-Geburtsdatum",
+      "dtos" : "SchuelerStammdaten",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Individualdaten'",
+      "anzeigebereich_ui" : "Feld 'Geburtsdatum'",
       "svws" : true,
       "zebras" : true,
       "vorbedingung" : [ ],

@@ -3,6 +3,10 @@
   "validator" : "de.svws_nrw.asd.validate.schule.ValidatorSssSchuleStammdatenSchulform",
   "historie" : [ {
     "praefix" : "SSS",
+    "zweig" : "Schule-Stammdaten-Schulform",
+    "dtos" : "",
+    "ausfuehrungsbereich_ui" : "",
+    "anzeigebereich_ui" : "",
     "svws" : true,
     "zebras" : true,
     "muss" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],

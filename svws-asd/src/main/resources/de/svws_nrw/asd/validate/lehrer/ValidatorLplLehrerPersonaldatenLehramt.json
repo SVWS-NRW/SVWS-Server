@@ -3,6 +3,10 @@
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLplLehrerPersonaldatenLehramt",
   "historie" : [ {
     "praefix" : "LPL",
+    "zweig" : "Lehrer-Personaldaten-Lehramt",
+    "dtos" : "LehrerPersonaldaten, LehrerStammdaten",
+    "ausfuehrungsbereich_ui" : "Lehrkräfte, Reiter 'Personaldaten'",
+    "anzeigebereich_ui" : "Lehrämter (an der betroffenen Zeile)",
     "svws" : true,
     "zebras" : true,
     "muss" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],

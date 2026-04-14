@@ -1,0 +1,19 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLplkLehrerPersonaldatenLehramtKombination",
+    "historie" : [ {
+      "praefix" : "LPLK",
+      "zweig" : "Lehrer-Personaldaten-Lehramt",
+      "dtos" : "LehrerPersonaldaten",
+      "ausfuehrungsbereich_ui" : "Lehrkräfte, Reiter 'Personaldaten'",
+      "anzeigebereich_ui" : "Lehrämter (an der betroffenen Zeile)",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : [ ],
+      "kann" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],
+      "hinweis" : [ ],
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }

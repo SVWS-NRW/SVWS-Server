@@ -3,6 +3,10 @@
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsart",
   "historie" : [ {
     "praefix" : "LPPB",
+    "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Beschaeftigungsart",
+    "dtos" : "LehrerPersonalabschnittsdaten",
+    "ausfuehrungsbereich_ui" : "Lehrkräfte, Reiter 'Personaldaten'",
+    "anzeigebereich_ui" : "Feld 'Beschäftigungsart'",
     "svws" : true,
     "zebras" : true,
     "muss" : [ ],

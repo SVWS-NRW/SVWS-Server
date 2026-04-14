@@ -3,6 +3,10 @@
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLsvLehrerStammdatenVorname",
   "historie" : [ {
     "praefix" : "LSV",
+    "zweig" : "Lehrer-Stammdaten-Vorname",
+    "dtos" : "LehrerStammdaten",
+    "ausfuehrungsbereich_ui" : "Lehrkräfte, Reiter 'Individualdaten'",
+    "anzeigebereich_ui" : "Feld 'Rufname'",
     "svws" : true,
     "zebras" : true,
     "muss" : [ ],

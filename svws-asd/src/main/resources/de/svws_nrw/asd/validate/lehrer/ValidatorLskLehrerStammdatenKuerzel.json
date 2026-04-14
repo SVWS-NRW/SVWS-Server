@@ -3,6 +3,10 @@
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLskLehrerStammdatenKuerzel",
   "historie" : [ {
     "praefix" : "LSK",
+    "zweig" : "Lehrer-Stammdaten-Kuerzel",
+    "dtos" :  "LehrerStammdaten",
+    "ausfuehrungsbereich_ui" : "Lehrkräfte, Reiter 'Individualdaten'",
+    "anzeigebereich_ui" : "Feld 'Kürzel'",
     "svws" : true,
     "zebras" : true,
     "muss" : [ "G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB" ],

@@ -3,6 +3,10 @@
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLpppLehrerPersonaldatenPersonalabschnittsdatenPflichtstundensoll",
   "historie" : [ {
     "praefix" : "LPPP",
+    "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Pflichtstundensoll",
+    "dtos" : "LehrerPersonalabschnittsdaten",
+    "ausfuehrungsbereich_ui" : "Reiter Personaldaten",
+    "anzeigebereich_ui" : "Beschäftigungsdaten, Pflichtstundensoll",
     "svws" : true,
     "zebras" : true,
     "muss" : [ ],

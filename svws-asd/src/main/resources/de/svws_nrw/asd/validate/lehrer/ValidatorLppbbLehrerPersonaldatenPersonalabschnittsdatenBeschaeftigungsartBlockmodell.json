@@ -3,6 +3,10 @@
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLppbbLehrerPersonaldatenPersonalabschnittsdatenBeschaeftigungsartBlockmodell",
   "historie" : [ {
     "praefix" : "LPPBB",
+    "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Beschäftigungsart-Blockmodell",
+    "dtos" : "LehrerPersonalabschnittsdaten",
+    "ausfuehrungsbereich_ui" : "Reiter Personaldaten",
+    "anzeigebereich_ui" : "Mehr- und Minderleistung, Anrechnungsstunden (an der entsprechenden Zeile",
     "svws" : true,
     "zebras" : true,
     "muss" : [ ],

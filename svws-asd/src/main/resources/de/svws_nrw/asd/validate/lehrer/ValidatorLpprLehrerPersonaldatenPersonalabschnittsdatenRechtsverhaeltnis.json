@@ -3,6 +3,10 @@
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLpprLehrerPersonaldatenPersonalabschnittsdatenRechtsverhaeltnis",
   "historie" : [ {
     "praefix" : "LPPR",
+    "zweig" : "Lehrer-Personaldaten-Personalabschnittsdaten-Rechtsverhaeltnis",
+    "dtos" : "LehrerPersonalabschnittsdaten",
+    "ausfuehrungsbereich_ui" : "Reiter Personaldaten",
+    "anzeigebereich_ui" : "Feld 'Rechtsverhaeltnis'",
     "svws" : true,
     "zebras" : true,
     "muss" : [ ],

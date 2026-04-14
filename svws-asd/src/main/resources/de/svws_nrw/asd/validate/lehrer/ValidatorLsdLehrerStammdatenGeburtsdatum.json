@@ -3,6 +3,10 @@
   "validator" : "de.svws_nrw.asd.validate.lehrer.ValidatorLsdLehrerStammdatenGeburtsdatum",
   "historie" : [ {
     "praefix" : "LSD",
+    "zweig" : "Lehrer-Stammdaten-Geburtsdatum",
+    "dtos" : "LehrerStammdaten",
+    "ausfuehrungsbereich_ui" : "Lehrkräfte, Reiter 'Individualdaten'",
+    "anzeigebereich_ui" : "Feld 'Geburtsdatum'",
     "svws" : true,
     "zebras" : true,
     "muss" : [ ],
