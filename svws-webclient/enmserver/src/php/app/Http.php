@@ -390,6 +390,20 @@ class Http {
     }
 
     /**
+     * Gibt einen TOO MANY REQUESTS (429) zurück und beendet das PHP-Skript.
+     *
+     * @param string msg   ein optionaler Parameter, um eine Nachricht als plain text zurückzugeben
+     */
+    public static function exit429TooManyRequests(?string $msg = null): never {
+        http_response_code(429);
+        if ($msg != null) {
+            header('Content-Type: text/plain; charset=utf-8');
+            echo $msg;
+        }
+        exit;
+    }
+
+    /**
      * Gibt einen INTERNAL_SERVER_ERROR (500) mit der übergebenen Nachricht zurück und
      * beendet das PHP-Skript.
      *

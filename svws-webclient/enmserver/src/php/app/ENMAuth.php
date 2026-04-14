@@ -94,13 +94,27 @@ class ENMAuth {
         if (strcmp($this->authMethod, "Basic") != 0) {
             Http::exit401UnauthorizedRealm();
         }
+
+        // Prüfe, ob bereits zu viele Login-Versuche innerhalb kürzerer Zeit stattgefunden haben
+        $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
         $lehrer = $this->db->getENMLehrerByEmail($this->authUser);
-        if ($lehrer === null) {
+        $idLehrer = $lehrer ? $lehrer->id : -1;
+        if ($this->db->istLoginGesperrt($ip, $idLehrer)) {
+            Http::exit429TooManyRequests("Zu viele Fehlversuche. Bitte warten Sie einige Minuten.");
+        }
+
+        // Überprüfe das Lehrer-Kennwort (Nutze ggf. einen ungültigen Hash, damit keine Timing-Angriffe gegen Benutzernamen funktionieren)
+        $hash = ($lehrer !== null) ? $lehrer->passwordHash : '$2y$10$abcdefghijklmnopqrstuvwABCDEFGHIJKLMNOPQRSTUVWXYZ012345';
+        $isValid = password_verify($this->authPassword, $hash);
+
+        // Vermerke ggf. den Fehlerversuch für den Login
+        if (!$isValid || ($lehrer === null)) {
+            $this->db->updateLoginFailures($ip, $idLehrer);
             Http::exit401UnauthorizedRealm();
         }
-        if (!password_verify($this->authPassword, $lehrer->passwordHash)) {
-            Http::exit401UnauthorizedRealm();
-        }
+
+        // Bei einem Erfolg hingegen können vergangene Fehlversuche gelöscht werden
+        $this->db->clearLoginFailures($ip, $idLehrer);
         return $lehrer;
     }
 

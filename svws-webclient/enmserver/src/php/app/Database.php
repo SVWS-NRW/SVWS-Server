@@ -17,7 +17,7 @@ class Database {
     public $conn;
 
     // Die Revision des Datenbank-Schema. Muss bei jeder strukturellen Änderung um eins erhöht werden.
-    public const SCHEMA_REVISION = 1;
+    public const SCHEMA_REVISION = 2;
 
     /**
      * Definiert das Soll-Schema: Tabelle => Spalten-Definitionen
@@ -25,6 +25,12 @@ class Database {
     private const TABLES = [
         'SchemaInfo' => [
             'Revision' => 'INTEGER PRIMARY KEY'
+        ],
+        'LoginFehlversuche' => [
+            'ip' => 'TEXT',
+            'idLehrer' => 'INTEGER',
+            'zeitpunkt' => 'INTEGER',
+            'PRIMARY KEY(ip, idLehrer, zeitpunkt)'
         ],
         'OAuth' => [
             'clientID' => 'INTEGER PRIMARY KEY',
@@ -682,6 +688,77 @@ class Database {
         $this->conn->executeStatement($stmt);
 
         $this->conn->commitTransaction();
+    }
+
+    /**
+     * Prüft, ob der Login für die übergebenen IP-Adresse und die ID des Lehrers aktuell gesperrt ist, um Brute-Force-Angriffe
+     * zu vermeiden.
+     *
+     * @param string $ip      die IP-Adresse
+     * @param int $idLehrer   die ID des Lehrers
+     *
+     * @return boolean true, falls der Login für die IP und den Lehrer aktuell gesperrt ist
+     */
+    public function istLoginGesperrt(string $ip, int $idLehrer): bool {
+        // Prüfe zunächst die Login-Versuche eines Lehrers auf einer IP-Adresse (maximal 3 Versuche in 15 Minuten)
+        $maxTries = 3; // maximal 3 Versuche
+        $limit = time() - 300; // pro 5 Minuten (300 Sekunden)
+        $stmt = $this->conn->prepareStatement("SELECT COUNT(*) as versuche FROM LoginFehlversuche WHERE (ip = :ip AND idLehrer = :idLehrer) AND zeitpunkt > :limit");
+        $this->conn->bindStatementValue($stmt, ":ip", $ip, PDO::PARAM_STR);
+        $this->conn->bindStatementValue($stmt, ":idLehrer", $idLehrer, PDO::PARAM_INT);
+        $this->conn->bindStatementValue($stmt, ":limit", $limit, PDO::PARAM_INT);
+        $this->conn->executeStatement($stmt);
+        $res = $stmt->fetch(PDO::FETCH_OBJ);
+        if ((int)$res->versuche >= $maxTries) {
+            return true;
+        }
+
+        // Prüfe, ob von einer IP-Adresse insgesamt zu viele Fehlversuche stammen
+        $maxTries = 100; // maximal 100 Versuche
+        $limit = time() - 300; // pro 5 Minuten (300 Sekunden)
+        $stmt = $this->conn->prepareStatement("SELECT COUNT(*) as versuche FROM LoginFehlversuche WHERE ip = :ip AND zeitpunkt > :limit");
+        $this->conn->bindStatementValue($stmt, ":ip", $ip, PDO::PARAM_STR);
+        $this->conn->bindStatementValue($stmt, ":limit", $limit, PDO::PARAM_INT);
+        $this->conn->executeStatement($stmt);
+        $res = $stmt->fetch(PDO::FETCH_OBJ);
+        if ((int)$res->versuche >= $maxTries) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Fügt einen neuen Eintrag zu den fehlgeschlagenen Login-Versuchen für die angebene IP und
+     * den angebenen Lehrer hinzu.
+     *
+     * @param string $ip      die IP-Adresse
+     * @param int $idLehrer   die ID des Lehrers
+     */
+    public function updateLoginFailures(string $ip, int $idLehrer): void {
+        $stmt = $this->conn->prepareStatement("INSERT OR IGNORE INTO LoginFehlversuche(ip, idLehrer, zeitpunkt) VALUES (:ip, :id, :zeit)");
+        $this->conn->bindStatementValue($stmt, ":ip", $ip, PDO::PARAM_STR);
+        $this->conn->bindStatementValue($stmt, ":id", $idLehrer, PDO::PARAM_INT);
+        $this->conn->bindStatementValue($stmt, ":zeit", time(), PDO::PARAM_INT);
+        $this->conn->executeStatement($stmt);
+    
+        // Räume die Tabelle mit den Fehlversuche immer wieder gelegentlich auf... (nicht immer, da dies nicht performant ist)
+        if (rand(1, 100) === 1) {
+            $this->conn->execUpdate("DELETE FROM LoginFehlversuche WHERE zeitpunkt < " . (time() - 3600));
+        }
+    }
+
+    /**
+     * Leert die Tabelle mit den fehlgeschlagenen Login-Versuchen für die angebene IP und den angebenen Lehrer.
+     *
+     * @param string $ip      die IP-Adresse
+     * @param int $idLehrer   die ID des Lehrers
+     */
+    public function clearLoginFailures(string $ip, int $idLehrer): void {
+        $stmt = $this->conn->prepareStatement("DELETE FROM LoginFehlversuche WHERE ip = :ip AND idLehrer = :idLehrer");
+        $this->conn->bindStatementValue($stmt, ":ip", $ip, PDO::PARAM_STR);
+        $this->conn->bindStatementValue($stmt, ":idLehrer", $idLehrer, PDO::PARAM_INT);
+        $this->conn->executeStatement($stmt);
     }
 
 }
