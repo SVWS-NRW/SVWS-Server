@@ -13,7 +13,7 @@ export class RouteFoerderschwerpunkteDaten extends RouteNode<any, RouteFoerdersc
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.foerderschwerpunkte.daten",
 			"daten", FoerderschwerpunkteDaten);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Förderschwerpunkte";
 	}

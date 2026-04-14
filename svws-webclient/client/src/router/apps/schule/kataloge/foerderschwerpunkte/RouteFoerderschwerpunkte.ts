@@ -18,7 +18,7 @@ export class RouteFoerderschwerpunkte extends RouteAuswahlNode<Foerderschwerpunk
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.foerderschwerpunkte",
 			"schule/foerderschwerpunkte/:id(\\d+)?", FoerderschwerpunkteApp, FoerderschwerpunkteAuswahl, new RouteDataFoerderschwerpunkte());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Förderschwerpunkte";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [

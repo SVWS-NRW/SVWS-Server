@@ -16,7 +16,7 @@
 					<svws-ui-checkbox type="toggle" v-model="sichtbareFoerderschwerpunkte">Nur Sichtbare</svws-ui-checkbox>
 				</template>
 				<template #actions v-if="!readonly">
-					<svws-ui-tooltip v-if="ServerMode.DEV.checkServerMode(serverMode)" position="bottom">
+					<svws-ui-tooltip position="bottom">
 						<svws-ui-button type="icon"
 							@click="gotoHinzufuegenView(true)"
 							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
@@ -37,7 +37,7 @@
 	import type { FoerderschwerpunkteAuswahlProps } from "~/components/schule/kataloge/foerderschwerpunkte/FoerderschwerpunkteAuswahlProps";
 	import type { DataTableColumn } from "@ui";
 	import type { FoerderschwerpunktEintrag } from "@core";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed, ref } from "vue";
 

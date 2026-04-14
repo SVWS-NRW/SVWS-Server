@@ -3,7 +3,7 @@
 		<div v-if="!hatIrgendwelcheKompetenzen">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
+		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Förderschwerpunkte werden gelöscht" icon="i-ri-delete-bin-line">
 				<div>
 					<span v-if="preConditionCheck.success">Alle ausgewählten Förderschwerpunkte sind bereit zum Löschen.</span>
@@ -35,7 +35,7 @@
 <script setup lang="ts">
 
 	import type { List } from "@core";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { computed, ref } from "vue";
 	import type { FoerderschwerpunkteGruppenprozesseProps } from "~/components/schule/kataloge/foerderschwerpunkte/gruppenprozesse/FoerderschwerpunkteGruppenprozesseProps";
 

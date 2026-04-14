@@ -15,7 +15,7 @@ export class RouteFoerderschwerpunkteNeu extends RouteNode<any, RouteFoerderschw
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.foerderschwerpunkte.neu", "neu", FoerderschwerpunkteNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Förderschwerpunkte";
 		super.setCheckpoint = true;
