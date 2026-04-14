@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.gesamt.ValidatorGsd10GesamtSchuelerdatenDuplikate",
+    "historie" : [ {
+      "praefix" : "GSD10",
+      "altes_kuerzel" : "",
+      "zweig" : "Gesamt-Schuelerdaten-Duplikate",
+      "dtos" : "SchuelerStammdaten",
+      "ausfuehrungsbereich_ui" : "Statistik, Gesamtprüfung",
+      "anzeigebereich_ui" : "Statistik",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : [ ],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Schüler: Die ID ' + SchuelerStammdaten.id + ' kommt mehrfach vor.",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerStammdaten.id(i) = SchuelerStammdaten.id(j) i = beliebiger Schüler-Satz; j = beliebiger Schüler-Satz; i ≠ j",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+}
