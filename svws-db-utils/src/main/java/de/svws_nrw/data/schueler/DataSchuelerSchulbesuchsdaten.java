@@ -152,8 +152,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		final Einschulungsart einschulungsart = Einschulungsart.data().getWertBySchluessel(dtoSchueler.EinschulungsartASD);
 		daten.grundschuleEinschulungsartID = (einschulungsart == null) ? null : einschulungsart.getLetzterEintrag().id;
 		daten.idGrundschuleJahreEingangsphase = mapGrundschuleJahreEingangsphase(dtoSchueler.EPJahre);
-		final Uebergangsempfehlung empfehlung = Uebergangsempfehlung.data().getWertBySchluessel(dtoSchueler.Uebergangsempfehlung_JG5);
-		daten.idKuerzelGrundschuleUebergangsempfehlung = (dtoSchueler.Uebergangsempfehlung_JG5 == null) ? null : empfehlung.historie().getLast().id;
+		daten.idKuerzelGrundschuleUebergangsempfehlung = mapUebergangsempfehlung(dtoSchueler.Uebergangsempfehlung_JG5);
 		// Informationen zu dem Besuch der Sekundarstufe I
 		daten.sekIWechsel = dtoSchueler.JahrWechsel_SI;
 		daten.sekIErsteSchulform = dtoSchueler.ErsteSchulform_SI;
@@ -170,6 +169,14 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		daten.alleSchulen = DataSchuelerSchulbesuchSchule.mapMultiple(schuelerAbgaenge, entlassartenByBezeichnung, schulenBySchulnummer);
 
 		return daten;
+	}
+
+	private Long mapUebergangsempfehlung(final String uebergangsempfehlungJg5) {
+		try {
+			return Uebergangsempfehlung.data().getWertBySchluessel(uebergangsempfehlungJg5).historie().getLast().id;
+		} catch (final Exception ignored) {
+			return null;
+		}
 	}
 
 	private static Long mapSchluesselDauerKindergartenbesuch(final DTOSchueler dtoSchueler) throws ApiOperationException {
@@ -245,7 +252,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 			case "grundschuleEinschulungsjahr" -> mapJahr(value, "grundschuleEinschulungsjahr", v -> dtoSchueler.Einschulungsjahr = v);
 			case "grundschuleEinschulungsartID" -> mapEinschulungsart(dtoSchueler, value);
 			case "idGrundschuleJahreEingangsphase" -> mapEingangsphase(dtoSchueler, value);
-			case "idKuerzelGrundschuleUebergangsempfehlung" -> mapUebergangsempfehlung(dtoSchueler, value);
+			case "idKuerzelGrundschuleUebergangsempfehlung" -> updateUebergangsempfehlung(dtoSchueler, value);
 
 			// Informationen zu dem Besuch der Sekundarstufe I
 			case "sekIWechsel" -> mapJahr(value, "sekIWechsel", v -> dtoSchueler.JahrWechsel_SI = v);
@@ -318,7 +325,7 @@ public final class DataSchuelerSchulbesuchsdaten extends DataManagerRevised<Long
 		dtoSchueler.ErsteSchulform_SI = kuerzel;
 	}
 
-	private static void mapUebergangsempfehlung(final DTOSchueler dtoSchueler, final Object value) throws ApiOperationException {
+	private static void updateUebergangsempfehlung(final DTOSchueler dtoSchueler, final Object value) throws ApiOperationException {
 		final Long id = JSONMapper.convertToLong(
 				value, true, "idKuerzelGrundschuleUebergangsempfehlung");
 		if (id == null) {
