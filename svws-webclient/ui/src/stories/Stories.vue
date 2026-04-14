@@ -29,9 +29,6 @@
 			<div class="h-full flex isolate" ref="dragger1">
 				<div class="flex flex-col relative top-0 left-0 z-20 border-r border-ui-25 h-full" :style="leftStyle1">
 					<div class="flex-none flex justify-around h-10 mx-8 items-center gap-4">
-						<div class="text-ui-caution font-bold">
-							Zur alten Histoire-Version der Doku geht es hier: <a href="https://eloquent-baklava-d6aa9d.netlify.app/">Link</a>
-						</div>
 						<ui-color-mode />
 						<div class="w-60"><SvwsUiButton type="transparent" @click="gridView = (gridView === 'single') ? 'grid':'single'">{{ gridView === 'single' ? 'Single':'Grid' }} aktiviert</SvwsUiButton></div>
 						<div class="w-60">

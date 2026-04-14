@@ -40,6 +40,7 @@ const routes = [
 	{ path: '/navigation/AppLayout', component: () => import('../ui/nav/SvwsUiMenu.story.vue') },
 	{ path: '/gost/laufbahnplanungInfos', component: () => import('../components/gost/laufbahnplanung/SLaufbahnplanungInformationen.story.vue') },
 	{ path: '/composables/usePaneSplitter', component: () => import('../ui/composables/usePaneSplitter.story.vue') },
+	{ path: '/components/QrCode', component: () => import('../components/qr/QrCode.story.vue') },
 ];
 
 const router = createRouter({ history: createWebHistory(), routes });
