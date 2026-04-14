@@ -6,5 +6,6 @@ export interface NotenmodulZugangsdatenProps {
 	manager: () => EnmManager;
 	mapEnmInitialKennwoerter: () => JavaMap<number, string>;
 	updatePassword: (value: string | null, id: number) => Promise<boolean>;
-	resetTotp: (is: number) => Promise<boolean>;
+	resetTotp: (id: number) => Promise<boolean>;
+	set2fa: (art: number, id: number) => Promise<boolean>;
 }

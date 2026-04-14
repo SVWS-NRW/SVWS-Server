@@ -56,4 +56,14 @@ public interface NotenmodulCredentialsController {
 	 */
 	Response resetTotpSecret(long idLehrer);
 
+	/**
+	 * Setzt die Methode für die Zwei-Faktor-Authentifizierung für einen Lehrer.
+	 *
+	 * @param idLehrer   die ID des Lehrers
+	 * @param art2FA     die zu verwendende Methode für die Zwei-Faktor-Authentifizierung
+	 *
+	 * @return die HTTP-Response
+	 */
+	Response setArt2FA(long idLehrer, Integer art2FA);
+
 }

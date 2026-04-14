@@ -57,11 +57,12 @@ public class NotenmodulCredentialsService {
 	 *
 	 * @param idLehrer   die ID des Lehrers
 	 * @param password   das zu setzende Kennwort, falls es vom Initialkennwort abweichen soll
+	 * @param art2FA     die zu verwendende Methode für die Zwei-Faktor-Authentifizierung
 	 */
-	private void createInitialCredentials(final long idLehrer, final String password) {
+	private void createInitialCredentials(final long idLehrer, final String password, final int art2FA) {
 		final String initial = createInitialkennwort();
 		final String hash = BCrypt.hashpw(((password == null) || password.isBlank()) ? initial : password, BCrypt.gensalt());
-		final DTONotenmodulCredentials cred = new DTONotenmodulCredentials(idLehrer, initial, hash, 0, true);
+		final DTONotenmodulCredentials cred = new DTONotenmodulCredentials(idLehrer, initial, hash, art2FA, true);
 		cred.totpSecret = Passwords.generateTotpSecret();
 		notenmodulCredentialsRepository.update(cred);
 	}
@@ -125,7 +126,7 @@ public class NotenmodulCredentialsService {
 			final Set<Long> idsExisting = existing.stream().map(c -> c.idLehrer).collect(Collectors.toUnmodifiableSet());
 			final List<Long> ids = lehrerRepository.getAll().stream().map(l -> l.ID).filter(l -> !idsExisting.contains(l)).toList();
 			for (final long id : ids) {
-				createInitialCredentials(id, null);
+				createInitialCredentials(id, null, 0);
 			}
 			notenmodulCredentialsRepository.flush();
 		});
@@ -147,7 +148,7 @@ public class NotenmodulCredentialsService {
 			// Setze die Credentials neu
 			final Optional<DTONotenmodulCredentials> foundCred = notenmodulCredentialsRepository.findById(idLehrer);
 			if (foundCred.isEmpty()) {
-				createInitialCredentials(idLehrer, null);
+				createInitialCredentials(idLehrer, null, 0);
 			} else {
 				final DTONotenmodulCredentials cred = foundCred.get();
 				final boolean hasInitial = (cred.initialkennwort != null) && (!cred.initialkennwort.isBlank());
@@ -184,7 +185,7 @@ public class NotenmodulCredentialsService {
 
 			// Wenn noch keine Credentials vorhanden sind, dann erstelle neu
 			if (foundCred.isEmpty()) {
-				createInitialCredentials(idLehrer, password);
+				createInitialCredentials(idLehrer, password, 0);
 				return;
 			}
 
@@ -215,7 +216,7 @@ public class NotenmodulCredentialsService {
 			// Setze die Credentials neu
 			final Optional<DTONotenmodulCredentials> foundCred = notenmodulCredentialsRepository.findById(idLehrer);
 			if (foundCred.isEmpty()) {
-				createInitialCredentials(idLehrer, null);
+				createInitialCredentials(idLehrer, null, 0);
 			} else {
 				final DTONotenmodulCredentials cred = foundCred.get();
 				cred.totpSecret = Passwords.generateTotpSecret();
@@ -225,4 +226,38 @@ public class NotenmodulCredentialsService {
 		});
 	}
 
+	/**
+	 * Setzt die Methode für die Zwei-Faktor-Authentifizierung für einen Lehrer.
+	 *
+	 * @param idLehrer   die ID des Lehrers
+	 * @param art2FA     die zu verwendende Methode für die Zwei-Faktor-Authentifizierung
+	 */
+	public void setArt2FA(final long idLehrer, final Integer art2FA) {
+		transactional(() -> {
+			// Prüfe, ob die Methode gültig ist oder nicht
+			if (art2FA == null) {
+				throw new ApiOperationException(Status.BAD_REQUEST, "Eine Zwei-Faktor-Methode muss angebenen werden");
+			}
+			if ((art2FA < 0) || (art2FA > 1)) {
+				throw new ApiOperationException(Status.BAD_REQUEST, "Eine Zwei-Faktor-Methode %d wird nicht unterstützt".formatted(art2FA));
+			}
+			// Prüfe, ob ein Lehrer mit der ID in der Datenbank existiert
+			lehrerRepository.findById(idLehrer)
+					.orElseThrow(
+							() -> new ApiOperationException(Status.NOT_FOUND, "Ein Lehrer mit der ID %d konnte nicht gefunden werden.".formatted(idLehrer)));
+			// Setze die Methode der Zwei-Faktor-Authentifizierung bei den Credentials
+			final Optional<DTONotenmodulCredentials> foundCred = notenmodulCredentialsRepository.findById(idLehrer);
+			if (foundCred.isEmpty()) {
+				createInitialCredentials(idLehrer, null, art2FA);
+			} else {
+				final DTONotenmodulCredentials cred = foundCred.get();
+				cred.art2FA = art2FA;
+				if (cred.totpSecret == null) {
+					cred.totpSecret = Passwords.generateTotpSecret();
+					cred.istErstanmeldung = true;
+				}
+				notenmodulCredentialsRepository.update(cred);
+			}
+		});
+	}
 }

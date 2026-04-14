@@ -2636,6 +2636,32 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode setENMLehrerArt2FA für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/credentials/set2fa/{id : \d+}
+	 *
+	 * Setzt die Methode der Zwei-Faktor-Authentifizierung (2FA) für einen Lehrer für das externe Notenmodul auf das übergebene Kennwort. Hat der Lehrer noch keine Credentials, so werden diese neu erzeugt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Methode wurde gesetzt.
+	 *   Code 400: Die Methode ist ungültig.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte zum Setzen der Methode.
+	 *   Code 404: Die ID des Lehrers ist in der DB nicht vorhanden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {number | null} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async setENMLehrerArt2FA(data : number | null, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/enm/credentials/set2fa/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = JSON.stringify(data);
+		await super.postJSON(path, body);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode resetENMLehrerTotpSecret für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/credentials/totp/reset/{id : \d+}
 	 *
 	 * Ersetzt das TOTP-Secret durch ein zufälliges neues Secret. Danach wird der Anmeldeprozess auf Erstanmeldung zurückgesetzt.

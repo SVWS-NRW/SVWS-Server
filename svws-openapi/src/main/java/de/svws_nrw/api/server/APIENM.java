@@ -701,6 +701,37 @@ public class APIENM {
 
 
 	/**
+	 * Die OpenAPI-Methode zum Setzen der Methode der Zwei-Faktor-Authentifizierung (2FA) für einen Lehrer für das externe Notenmodul.
+	 * Hat der Lehrer noch keine Credentials, so werden diese neu erzeugt.
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id         die ID des Lehrers
+	 * @param is         der Input-Stream mit der zu setzenden Art der Authentifizierung
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Reponse
+	 */
+	@POST
+	@Path("/credentials/set2fa/{id : \\d+}")
+	@Operation(summary = "Setzt die Methode der Zwei-Faktor-Authentifizierung (2FA) für einen Lehrer für das externe Notenmodul auf das übergebene Kennwort.",
+			description = "Setzt die Methode der Zwei-Faktor-Authentifizierung (2FA) für einen Lehrer für das externe Notenmodul auf das übergebene Kennwort. "
+					+ "Hat der Lehrer noch keine Credentials, so werden diese neu erzeugt.")
+	@ApiResponse(responseCode = "204", description = "Die Methode wurde gesetzt.")
+	@ApiResponse(responseCode = "400", description = "Die Methode ist ungültig.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte zum Setzen der Methode.")
+	@ApiResponse(responseCode = "404", description = "Die ID des Lehrers ist in der DB nicht vorhanden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response setENMLehrerArt2FA(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@RequestBody(description = "Die Methode", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					schema = @Schema(implementation = Integer.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		final Integer art2FA = JSONMapper.toInteger(is);
+		return NotenmodulControllerFactory.withAdminAccessOrSelf(request, id)
+				.getNotenmodulCredentialsController()
+				.setArt2FA(id, art2FA);
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Synchronisation der Daten für das Externe Datenmodul (ENM) in Bezug auf alle Lehrer.
 	 *
 	 * @param schema         das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

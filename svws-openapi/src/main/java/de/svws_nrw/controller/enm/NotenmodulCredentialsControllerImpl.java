@@ -82,4 +82,18 @@ public final class NotenmodulCredentialsControllerImpl implements NotenmodulCred
 		return Responses.noContent();
 	}
 
+	/**
+	 * Setzt die Methode für die Zwei-Faktor-Authentifizierung für einen Lehrer.
+	 *
+	 * @param idLehrer   die ID des Lehrers
+	 * @param art2FA     die zu verwendende Methode für die Zwei-Faktor-Authentifizierung
+	 *
+	 * @return die HTTP-Response
+	 */
+	@Override
+	public Response setArt2FA(final long idLehrer, final Integer art2FA) {
+		service.setArt2FA(idLehrer, art2FA);
+		return Responses.noContent();
+	}
+
 }

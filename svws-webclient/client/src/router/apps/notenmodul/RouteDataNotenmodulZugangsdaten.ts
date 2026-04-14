@@ -73,4 +73,9 @@ export class RouteDataNotenmodulZugangsdaten extends RouteData<RouteStateNotenmo
 		}
 		return true;
 	};
+
+	public set2fa = async (value: number, id: number): Promise<boolean> => {
+		await api.server.setENMLehrerArt2FA(value, api.schema, id);
+		return true;
+	};
 }

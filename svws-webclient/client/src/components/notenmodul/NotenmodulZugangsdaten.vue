@@ -15,13 +15,14 @@
 			</div>
 		</svws-ui-header>
 		<div class="page ">
-			<div class="h-full overflow-auto flex gap-4">
+			<div class="h-full overflow-auto flex gap-16">
 				<ui-table-grid name="Schüler" :manager="() => gridManager">
 					<template #header>
 						<th class="text-left">Kürzel</th>
 						<th class="text-left">Nachname, Vorname</th>
 						<th class="text-left">Dienst-Email</th>
 						<th class="text-left">Initialkennwort</th>
+						<th class="text-center">2FA</th>
 					</template>
 					<template #default="{ row: lehrer }">
 						<td @click="open(lehrer.id)" class="flex flex-row items-center justify-start gap-2">
@@ -69,31 +70,61 @@
 							</div>
 							<div v-else>kein Kennwort gesetzt</div>
 						</td>
+						<td>
+							<div class="flex items-center justify-center h-full">
+								<svws-ui-tooltip>
+									<span v-if="lehrer.art2FA > 0" class="icon-sm i-ri-verified-badge-fill icon-ui-success" />
+									<span v-else class="icon-sm i-ri-alert-fill icon-ui-danger" />
+									<template #content>
+										<span v-if="lehrer.art2FA > 0">Es wurde eine Zwei-Faktor-Authentifizierung eingerichtet ({{ lehrer.art2FA === 1 ? 'TOTP' : 'EMail' }}).</span>
+										<span v-else>Es wurde keine Zwei-Faktor-Authentifizierung eingerichtet.</span>
+									</template>
+								</svws-ui-tooltip>
+							</div>
+						</td>
 					</template>
 				</ui-table-grid>
 				<div v-if="selected !== null">
 					<div class="text-headline-md">{{ selected.nachname }}, {{ selected.vorname }}</div>
 					<div class="mb-4">Individuelle Einstellungen für die Zugangsdaten der ausgewählten Lehrkraft</div>
-					<div class="mt-4">
-						Das Passwort wird auf das Initialpasswort zurückgesetzt
-						<div class="flex items-center">
-							<svws-ui-button type="primary" @click="update(null)">Passwort zurücksetzen</svws-ui-button>
-							<span v-if="pingType === 'resetPassword'" class="icon-xl i-ri-check-line icon-ui-success" />
+					<div class="content-card mt-4">
+						<div class="content-card--header">
+							<div class="content-card--headline">Passwort</div>
+						</div>
+						<div class="content-card--content">
+							<div class="">
+								Das Passwort wird auf das Initialpasswort zurückgesetzt
+								<div class="flex items-center">
+									<svws-ui-button type="primary" @click="update(null)">Passwort zurücksetzen</svws-ui-button>
+									<span v-if="pingType === 'resetPassword'" class="icon-xl i-ri-check-line icon-ui-success" />
+								</div>
+							</div>
+							<div class="mt-4">
+								Ein individuelles, vom Initialkennwort abweichendes Passwort, setzen
+								<svws-ui-text-input placeholder="Passwort festlegen" :min-len="6" v-model="passwort" />
+								<div class="flex items-center">
+									<svws-ui-button :disabled="passwort.length < 6" type="primary" @click="update(passwort)">Passwort&nbsp;setzen</svws-ui-button>
+									<span v-if="pingType === 'updatePassword'" class="icon-xl i-ri-check-line icon-ui-success" />
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="mt-4">
-						Ein individuelles, vom Initialkennwort abweichendes Passwort, setzen
-						<svws-ui-text-input placeholder="Passwort festlegen" :min-len="6" v-model="passwort" />
-						<div class="flex items-center">
-							<svws-ui-button :disabled="passwort.length < 6" type="primary" @click="update(passwort)">Passwort&nbsp;setzen</svws-ui-button>
-							<span v-if="pingType === 'updatePassword'" class="icon-xl i-ri-check-line icon-ui-success" />
+					<div class="content-card mt-4">
+						<div class="content-card--header">
+							<div class="content-card--headline">Zwei-Faktor-Authentifizierung</div>
 						</div>
-					</div>
-					<div class="mt-4">
-						Zwei-Faktor-Authentifizierung (2FA)
-						<div class="flex items-center">
-							<svws-ui-button type="primary" @click="reset">TOTP Shared Secret zurücksetzen</svws-ui-button>
-							<span v-if="pingType === 'resetTotp'" class="icon-xl i-ri-check-line icon-ui-success" />
+						<div class="content-card--content">
+							<div class="">
+								Welche Art der Zwei-Faktor-Authentifizierung soll verwendet werden
+								<ui-select :manager="zfaManager" v-model="art2fa" :removable="false" />
+							</div>
+							<div v-if="selected.art2FA === 1" class="mt-4">
+								Zwei-Faktor-Authentifizierung (2FA)
+								<div class="flex items-center">
+									<svws-ui-button type="primary" @click="reset">TOTP Shared Secret zurücksetzen</svws-ui-button>
+									<span v-if="pingType === 'resetTotp'" class="icon-xl i-ri-check-line icon-ui-success" />
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -104,15 +135,26 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from 'vue';
+	import { computed, ref, triggerRef } from 'vue';
 	import type { NotenmodulZugangsdatenProps } from './NotenmodulZugangsdatenProps';
 	import type { ENMv2Lehrer, List } from "@core";
 	import { ArrayList, DeveloperNotificationException } from "@core";
-	import { GridManager } from '@ui';
+	import { GridManager, SelectManager } from '@ui';
 
 	const props = defineProps<NotenmodulZugangsdatenProps>();
 	const search = ref<string>("");
 	const passwort = ref<string>("");
+
+	const art2fa = computed({
+		get: () => selected.value?.art2FA ?? 0,
+		set: value => {
+			if (selected.value !== null) {
+				void props.set2fa(value, selected.value.id);
+				selected.value.art2FA = value;
+				triggerRef(selected);
+			}
+		},
+	});
 
 	const validatorEmail = (value: string | null): boolean => ((value === null) || (value === '')) ? true : (
 		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(value) ||
@@ -120,6 +162,25 @@
 	);
 
 	const selected = computed(() => (gridManager.focusRow === null) ? null : lehrerListe.value.get(gridManager.focusRow));
+
+	const zfaManager = new SelectManager({
+		options: new Set([0, 1]),
+		optionDisplayText: which2fa,
+		selectionDisplayText: which2fa,
+	});
+
+	function which2fa(v: number) {
+		switch (v) {
+			case 0:
+				return "keine Zwei-Faktor-Authentifizierung";
+			case 1:
+				return "Zwei-Faktor-Authentifizierung mit TOTP";
+			case 2:
+				return "Zwei-Faktor-Authentifizierung per EMail";
+			default:
+				return "";
+		}
+	}
 
 	const lehrerListe = computed<List<ENMv2Lehrer>>(() => {
 		const searchValueLowerCase = search.value.toLocaleLowerCase();
@@ -237,6 +298,7 @@
 			{ kuerzel: "Nachname, Vorname", name: "Nachname, Vorname", width: '5fr' },
 			{ kuerzel: "Dienst-Email", name: "Dienst-Email", width: '5fr' },
 			{ kuerzel: "Initialkennwort", name: "Initialkennwort", width: '3fr' },
+			{ kuerzel: "2FA", name: "2FA", width: '1fr' },
 		],
 	});
 

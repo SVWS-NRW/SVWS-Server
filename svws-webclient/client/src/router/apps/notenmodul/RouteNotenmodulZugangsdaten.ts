@@ -45,6 +45,7 @@ export class RouteNotenmodulZugangsdaten extends RouteNode<RouteDataNotenmodulZu
 			mapEnmInitialKennwoerter: () => this.data.mapEnmInitialKennwoerter,
 			updatePassword: this.data.updatePassword,
 			resetTotp: this.data.resetTotp,
+			set2fa: this.data.set2fa,
 		};
 	}
 

@@ -1,8 +1,8 @@
 <template>
 	<div class="qr-container">
-		<div v-if="qr" class="qr-wrapper">
-			<svg :viewBox="`0 0 ${qr.size + 8} ${qr.size + 8}`" shape-rendering="crispEdges">
-				<path :d="toPath(qr)" fill="currentColor" />
+		<div v-if="d !== null" class="qr-wrapper">
+			<svg :viewBox="`0 0 ${qr.size} ${qr.size}`" shape-rendering="crispEdges">
+				<path :d fill="currentColor" />
 			</svg>
 		</div>
 		<div v-else class="error">
@@ -19,20 +19,22 @@
 		uri: string | URL;
 	}>();
 
-
-	function toPath(qr: QrCode): string {
-		const parts: Array<string> = [];
-		for (let y = 0; y < qr.size; y++) {
-			for (let x = 0; x < qr.size; x++) {
-				if (qr.getModule(x, y)) {
-					parts.push(`M${x + 4},${y + 4}h1v1h-1z`);
+	const qr = computed(() => QrCode.encodeText(props.uri.toString(), Ecc.MEDIUM));
+	const d = computed(() => {
+		try {
+			let parts = "";
+			for (let y = 0; y < qr.value.size; y++) {
+				for (let x = 0; x < qr.value.size; x++) {
+					if (qr.value.getModule(x, y)) {
+						parts += `M${x},${y}h1v1h-1z `;
+					}
 				}
 			}
+			return parts;
+		} catch {
+			return null;
 		}
-		return parts.join(" ");
-	}
-
-	const qr = computed(() => QrCode.encodeText(props.uri.toString(), Ecc.MEDIUM));
+	});
 
 </script>
 
