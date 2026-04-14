@@ -13,7 +13,7 @@ export class RouteBeschaeftigungsartenDaten extends RouteNode<any, RouteBeschaef
 	public constructor() {
 		super([Schulform.BK, Schulform.SB, Schulform.WB], [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.beschaeftigungsarten.daten",
 			"daten", BeschaeftigungsartenDaten);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Beschäftigungsart";
 	}

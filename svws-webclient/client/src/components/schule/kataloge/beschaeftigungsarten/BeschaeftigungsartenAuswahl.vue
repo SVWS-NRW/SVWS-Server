@@ -21,7 +21,7 @@
 					</svws-ui-checkbox>
 				</template>
 				<template #actions v-if="hatKompetenzAendern">
-					<svws-ui-tooltip v-if="ServerMode.DEV.checkServerMode(serverMode)" position="bottom">
+					<svws-ui-tooltip position="bottom">
 						<svws-ui-button type="icon"
 							@click="gotoHinzufuegenView(true)"
 							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
@@ -43,7 +43,7 @@
 	import type { DataTableColumn } from "@ui";
 	import type { Beschaeftigungsart } from "@core";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

@@ -3,7 +3,7 @@
 		<div v-if="hatKeineErforderlicheKompetenz">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
+		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Beschäftigungsarten werden gelöscht" icon="i-ri-delete-bin-line">
 				<div>
 					<span v-if="selectedAllowedToDelete">Alle ausgewählten Beschäftigungsarten sind bereit zum Löschen.</span>
@@ -37,7 +37,7 @@
 
 	import type { List } from "@core";
 	import type { BeschaeftigungsartenGruppenprozesseProps } from "~/components/schule/kataloge/beschaeftigungsarten/gruppenprozesse/BeschaeftigungsartenGruppenprozesseProps";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { computed, ref } from "vue";
 
 	const props = defineProps<BeschaeftigungsartenGruppenprozesseProps>();

@@ -15,7 +15,7 @@ export class RouteBeschaeftigungsartenNeu extends RouteNode<any, RouteBeschaefti
 	public constructor() {
 		super([Schulform.BK, Schulform.SB, Schulform.WB], [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.beschaeftigungsarten.neu", "neu", BeschaeftigungsartenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Beschäftigungsarten";
 		super.setCheckpoint = true;

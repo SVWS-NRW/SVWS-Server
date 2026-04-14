@@ -18,7 +18,7 @@ export class RouteBeschaeftigungsarten extends RouteAuswahlNode<Beschaeftigungsa
 	public constructor() {
 		super([Schulform.BK, Schulform.SB, Schulform.WB], [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.beschaeftigungsarten",
 			"schule/beschaeftigungsarten/:id(\\d+)?", BeschaeftigungsartenApp, BeschaeftigungsartenAuswahl, new RouteDataBeschaeftigungsarten());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Beschäftigungsarten";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [
