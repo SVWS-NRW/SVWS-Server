@@ -20,7 +20,7 @@ import org.thymeleaf.context.Context;
 /**
  * Ein Thymeleaf-Html-Daten-Context zum Bereich "Kurse", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
-public final class HtmlContextKurse extends HtmlContext<ReportingKurs> {
+public final class HtmlContextKurse extends HtmlContext<ReportingKurs> implements HtmlContextAufteilbar<HtmlContextKurse> {
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
@@ -110,6 +110,7 @@ public final class HtmlContextKurse extends HtmlContext<ReportingKurs> {
 	 *
 	 * @return	Liste der Einzel-Contexts.
 	 */
+	@Override
 	public List<HtmlContextKurse> getEinzelContexts() {
 		final List<HtmlContextKurse> resultContexts = new ArrayList<>();
 

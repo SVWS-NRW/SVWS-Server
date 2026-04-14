@@ -22,7 +22,8 @@ import org.thymeleaf.context.Context;
 /**
  * Ein Thymeleaf-Html-Daten-Context zum Bereich "GostKursplanung", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
-public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlContext<Object> {
+public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlContext<Object>
+		implements HtmlContextAufteilbar<HtmlContextGostKursplanungBlockungsergebnis> {
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
@@ -129,11 +130,12 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 
 	/**
 	 * Erstellt eine Liste von HTML-Kontexten für die Kursplanung eines Blockungsergebnisses in der gymnasialen Oberstufe. Dabei wird für jede übermittelte
-	 * Detail-ID ein separater Kontext erzeugt, der die relevanten Daten enthält.
+	 * ID ein separater Kontext erzeugt, der die relevanten Daten enthält.
 	 *
-	 * @return Eine Liste von HtmlContextGostKursplanungBlockungsergebnis-Objekten, wobei jedes Objekt einen separaten Kontext für die angegebene Detail-ID
-	 * darstellt. Wird keine Detail-ID übermittelt oder sind Daten unvollständig, wird eine leere Liste zurückgegeben.
+	 * @return Eine Liste von HtmlContextGostKursplanungBlockungsergebnis-Objekten, wobei jedes Objekt einen separaten Kontext für die angegebene ID
+	 * darstellt. Wird keine ID übermittelt oder sind Daten unvollständig, wird eine leere Liste zurückgegeben.
 	 */
+	@Override
 	public List<HtmlContextGostKursplanungBlockungsergebnis> getEinzelContexts() {
 		final List<HtmlContextGostKursplanungBlockungsergebnis> result = new ArrayList<>();
 
@@ -156,9 +158,9 @@ public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlConte
 	}
 
 	/**
-	 * Gibt eine Liste von IDs für die Ausgabe von Detaildaten zurück. Falls keine IDs definiert sind, wird eine leere Liste zurückgegeben.
+	 * Gibt eine Liste von IDs für die Ausgabe von Daten zurück. Falls keine IDs definiert sind, wird eine leere Liste zurückgegeben.
 	 *
-	 * @return Eine Liste von Long-Werten, die die IDs der Detaildaten darstellen, oder eine leere Liste, wenn keine Detaildaten-IDs vorhanden sind.
+	 * @return Eine Liste von Long-Werten, die die IDs der Daten darstellen, oder eine leere Liste, wenn keine Daten-IDs vorhanden sind.
 	 */
 	@Override
 	public List<Long> getIds() {

@@ -165,23 +165,13 @@ public class ReportingParameterTypisiert {
 	// ##### Getter für spezielle bzw. allgemeine ReportvorlageParameter. #####
 
 	/**
-	 * Gibt zurück, ob eine Einzelausgabe für Hauptdaten gewünscht ist.
+	 * Gibt zurück, ob eine Einzelausgabe für Daten gewünscht ist.
 	 *
-	 * @return true, wenn Einzelausgabe für Hauptdaten gewünscht
+	 * @return true, wenn Einzelausgabe für Daten gewünscht
 	 */
-	public boolean einzelausgabeHauptdaten() {
-		final ReportingReportvorlageParameter einzelausgabeHauptdaten = mapReportVorlageParameter.get("einzelausgabeHauptdaten");
-		return (einzelausgabeHauptdaten != null) && einzelausgabeHauptdaten.wert.equalsIgnoreCase("true");
-	}
-
-	/**
-	 * Gibt zurück, ob eine Einzelausgabe für Detaildaten gewünscht ist.
-	 *
-	 * @return true, wenn Einzelausgabe für Detaildaten gewünscht
-	 */
-	public boolean einzelausgabeDetaildaten() {
-		final ReportingReportvorlageParameter einzelausgabeDetaildaten = mapReportVorlageParameter.get("einzelausgabeDetaildaten");
-		return (einzelausgabeDetaildaten != null) && einzelausgabeDetaildaten.wert.equalsIgnoreCase("true");
+	public boolean einzelausgabeDaten() {
+		final ReportingReportvorlageParameter einzelausgabeDaten = mapReportVorlageParameter.get("einzelausgabeDaten");
+		return (einzelausgabeDaten != null) && einzelausgabeDaten.wert.equalsIgnoreCase("true");
 	}
 
 	/**

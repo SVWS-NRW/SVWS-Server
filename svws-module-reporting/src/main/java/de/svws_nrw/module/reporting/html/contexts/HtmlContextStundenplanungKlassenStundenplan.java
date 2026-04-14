@@ -13,7 +13,8 @@ import org.thymeleaf.context.Context;
 /**
  * Ein Thymeleaf-html-Daten-Context zum Bereich "Stundenplanung", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
-public final class HtmlContextStundenplanungKlassenStundenplan extends HtmlContext<ReportingStundenplanungKlasseStundenplan> {
+public final class HtmlContextStundenplanungKlassenStundenplan extends HtmlContext<ReportingStundenplanungKlasseStundenplan>
+		implements HtmlContextAufteilbar<HtmlContextStundenplanungKlassenStundenplan> {
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
@@ -61,6 +62,7 @@ public final class HtmlContextStundenplanungKlassenStundenplan extends HtmlConte
 	 *
 	 * @return	Liste der Einzel-Contexts.
 	 */
+	@Override
 	public List<HtmlContextStundenplanungKlassenStundenplan> getEinzelContexts() {
 		final List<HtmlContextStundenplanungKlassenStundenplan> resultContexts = new ArrayList<>();
 

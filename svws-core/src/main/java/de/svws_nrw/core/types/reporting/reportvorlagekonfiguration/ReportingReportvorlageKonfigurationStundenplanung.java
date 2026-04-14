@@ -35,7 +35,7 @@ public final class ReportingReportvorlageKonfigurationStundenplanung {
 										true, ReportingUIKomponentenTyp.CHECKBOX, 1)
 						))),
 				new ReportingEMailDaten(),
-				new ArrayList<>(), new ArrayList<>(), false, true, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public final class ReportingReportvorlageKonfigurationStundenplanung {
 						false,
 						"",
 						""),
-				new ArrayList<>(), new ArrayList<>(), false, true, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public final class ReportingReportvorlageKonfigurationStundenplanung {
 						false,
 						"",
 						""),
-				new ArrayList<>(), new ArrayList<>(), false, true, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public final class ReportingReportvorlageKonfigurationStundenplanung {
 										ReportingReportvorlageParameterTyp.BOOLEAN, "" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
 						))),
 				new ReportingEMailDaten(),
-				new ArrayList<>(), new ArrayList<>(), false, false, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 
 	/**
@@ -133,7 +133,7 @@ public final class ReportingReportvorlageKonfigurationStundenplanung {
 										true, ReportingUIKomponentenTyp.CHECKBOX, 1)
 						))),
 				new ReportingEMailDaten(),
-				new ArrayList<>(), new ArrayList<>(), false, true, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 
 	/**
@@ -163,6 +163,6 @@ public final class ReportingReportvorlageKonfigurationStundenplanung {
 						false,
 						"",
 						""),
-				new ArrayList<>(), new ArrayList<>(), false, true, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 }

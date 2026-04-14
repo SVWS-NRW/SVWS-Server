@@ -38,8 +38,7 @@ public final class ReportingReportvorlageUtils {
 	 *                                              eine leere Liste erstellt.
 	 * @param filterDefinitionenGruppen             Liste von ReportingFilterDefinitionGruppen, die die Filterdefinitionen enthalten. Wenn null, wird eine
 	 *                                              leere Liste erstellt.
-	 * @param uiIstSichtbarEinzelausgabeHauptdaten  Gibt an, ob die Option "Einzelausgabe Hauptdaten" in der UI sichtbar sein soll.
-	 * @param uiIstSichtbarEinzelausgabeDetaildaten Gibt an, ob die Option "Einzelausgabe Detaildaten" in der UI sichtbar sein soll.
+	 * @param uiIstSichtbarEinzelausgabeDaten       Gibt an, ob die Option "Einzelausgabe" in der UI sichtbar sein soll.
 	 * @param uiIstSichtbarDuplexdruck              Gibt an, ob die Option "Duplexdruck" in der UI sichtbar sein soll.
 	 *
 	 * @return Ein konfiguriertes ReportingParameter-Objekt mit den angegebenen Eigenschaften.
@@ -49,7 +48,7 @@ public final class ReportingReportvorlageUtils {
 			final ReportingEMailDaten eMailDaten,
 			final List<ReportingSortierungDefinitionGruppe> sortierungDefinitionenGruppen,
 			final List<ReportingFilterDefinitionGruppe> filterDefinitionenGruppen,
-			final @NotNull boolean uiIstSichtbarEinzelausgabeHauptdaten, final @NotNull boolean uiIstSichtbarEinzelausgabeDetaildaten,
+			final @NotNull boolean uiIstSichtbarEinzelausgabeDaten,
 			final @NotNull boolean uiIstSichtbarDuplexdruck) {
 
 		final ReportingParameter reportingParameter = new ReportingParameter();
@@ -57,8 +56,8 @@ public final class ReportingReportvorlageUtils {
 				((ausgabeformatOptionen == null) || ausgabeformatOptionen.isEmpty()) ? List.of(ReportingAusgabeformat.PDF.getId()) : ausgabeformatOptionen);
 
 		// Standardausgabeoptionen-Parameter-Gruppe erstellen
-		String ausgabeoptionenBeschreibung = ((uiIstSichtbarEinzelausgabeHauptdaten) || (uiIstSichtbarEinzelausgabeDetaildaten))
-				? "Die Option Einzelausgabe ermöglicht es, pro Datensatz eine Ausgabe in eine einzelne Datei zu erzeugen. "
+		String ausgabeoptionenBeschreibung = (uiIstSichtbarEinzelausgabeDaten)
+				? "Die Option 'Daten in einzelne Dateien ausgeben' ermöglicht es, bei der Ausgabe pro Datensatz in eine einzelne Datei zu erzeugen. "
 				: "";
 		ausgabeoptionenBeschreibung += (uiIstSichtbarDuplexdruck)
 				? ("Wird Duplexdruck aktiviert, so kann die erzeuget Datei später auf einem Drucker mit der Option 'beidseitiger Druck (Duplexdruck)' gedruckt "
@@ -68,10 +67,8 @@ public final class ReportingReportvorlageUtils {
 		final ReportingReportvorlageParameterGruppe standardausgabeoptionenGruppe =
 				erzeugeReportingvorlageParameterGruppe("Ausgabeoptionen", ausgabeoptionenBeschreibung, true, 3,
 						Arrays.asList(
-								erzeugeVorlageParameter("einzelausgabeHauptdaten", "Einzelausgabe der Daten", ReportingReportvorlageParameterTyp.BOOLEAN,
-										"" + false, uiIstSichtbarEinzelausgabeHauptdaten, ReportingUIKomponentenTyp.CHECKBOX, 1),
-								erzeugeVorlageParameter("einzelausgabeDetaildaten", "Einzelausgabe der Daten", ReportingReportvorlageParameterTyp.BOOLEAN,
-										"" + false, uiIstSichtbarEinzelausgabeDetaildaten, ReportingUIKomponentenTyp.CHECKBOX, 1),
+								erzeugeVorlageParameter("einzelausgabeDaten", "Daten in einzelne Dateien ausgeben", ReportingReportvorlageParameterTyp.BOOLEAN,
+										"" + false, uiIstSichtbarEinzelausgabeDaten, ReportingUIKomponentenTyp.CHECKBOX, 1),
 								erzeugeVorlageParameter("duplexdruck", "Duplexdruck", ReportingReportvorlageParameterTyp.BOOLEAN, "" + false,
 										uiIstSichtbarDuplexdruck, ReportingUIKomponentenTyp.CHECKBOX, 1)));
 

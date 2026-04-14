@@ -594,7 +594,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "mitKlausurschreiberNamen", istDetailliert.toString());
 		}
 
-		reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "einzelausgabeDetaildaten", (title.indexOf("einzeln") > 0).toString());
+		reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "einzelausgabeDaten", (title.indexOf("einzeln") > 0).toString());
 
 		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
 		reportingParameter.idsHauptdaten = new ArrayList<number>();

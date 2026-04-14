@@ -298,7 +298,7 @@
 
 		if (vorlage === "Laufbahnwahlbogen") {
 			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "nurBelegteFaecher", nurBelegung.toString());
-			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "einzelausgabeHauptdaten", einzelausgabe.toString());
+			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "einzelausgabeDaten", einzelausgabe.toString());
 		} else {
 			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "mitFehlernKommentaren", mitFehlern.toString());
 			reportvorlage.setReportingParameterVorlageparameter(reportingParameter, "mitHinweisen", mitHinweisen.toString());
@@ -330,7 +330,6 @@
 		}
 
 		const reportingParameter = ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.getReportingParameter();
-		ReportingReportvorlage.SCHUELER_V_GOST_LAUFBAHNPLANUNG_WAHLBOGEN.setReportingParameterVorlageparameter(reportingParameter, "einzelausgabeHauptdaten", "true");
 		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
 		reportingParameter.ausgabeformat = ReportingAusgabeformat.EMAIL.getId();
 		for (const gruppe of reportingParameter.reportvorlageParameterGruppen) {

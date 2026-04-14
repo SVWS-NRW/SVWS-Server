@@ -43,7 +43,7 @@ public final class ReportingReportvorlageKonfigurationLehrer {
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
 						))),
 				new ReportingEMailDaten(),
-				new ArrayList<>(), new ArrayList<>(), true, false, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 
 	/**
@@ -54,6 +54,6 @@ public final class ReportingReportvorlageKonfigurationLehrer {
 	public static @NotNull ReportingParameter getLehrerVStammdatenliste() {
 		return ReportingReportvorlageUtils.erzeugeReportingParameter(List.of(ReportingAusgabeformat.PDF.getId()), new ArrayList<>(),
 				new ReportingEMailDaten(),
-				new ArrayList<>(), new ArrayList<>(), true, false, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 }

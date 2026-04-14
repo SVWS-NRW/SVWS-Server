@@ -74,7 +74,7 @@ public final class ReportingReportvorlageKonfigurationKurse {
 						false,
 						"",
 						""),
-				new ArrayList<>(), new ArrayList<>(), true, false, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 
 	/**
@@ -96,7 +96,7 @@ public final class ReportingReportvorlageKonfigurationKurse {
 						false,
 						"",
 						""),
-				new ArrayList<>(), new ArrayList<>(), true, false, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 
 	/**
@@ -117,6 +117,6 @@ public final class ReportingReportvorlageKonfigurationKurse {
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
 						))),
 				new ReportingEMailDaten(),
-				new ArrayList<>(), new ArrayList<>(), true, false, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 }

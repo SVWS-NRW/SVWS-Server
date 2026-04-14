@@ -20,7 +20,7 @@ import org.thymeleaf.context.Context;
 /**
  * Ein Thymeleaf-Html-Daten-Context zum Bereich "Klassen", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
-public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> {
+public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> implements HtmlContextAufteilbar<HtmlContextKlassen> {
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
@@ -112,6 +112,7 @@ public final class HtmlContextKlassen extends HtmlContext<ReportingKlasse> {
 	 *
 	 * @return	Liste der Einzel-Contexts.
 	 */
+	@Override
 	public List<HtmlContextKlassen> getEinzelContexts() {
 		final List<HtmlContextKlassen> resultContexts = new ArrayList<>();
 

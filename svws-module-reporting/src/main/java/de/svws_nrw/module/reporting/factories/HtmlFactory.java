@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Supplier;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -35,6 +34,7 @@ import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungKlass
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungLehrerStundenplan;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungRaumStundenplan;
 import de.svws_nrw.module.reporting.html.contexts.HtmlContextStundenplanungSchuelerStundenplan;
+import de.svws_nrw.module.reporting.html.contexts.HtmlContextAufteilbar;
 import de.svws_nrw.module.reporting.parameter.ReportingParameterTypisiert;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.validierung.ReportingValidierung;
@@ -105,9 +105,9 @@ public class HtmlFactory {
 	/**
 	 * Erzeugt eine neue HTML-Factory, um eine HTML-Datei aus einem HTML-Template zu erzeugen.
 	 *
-	 * @param reportingRepository		Repository für das Reporting, welches verschiedene Daten aus der Datenbank zwischenspeichert.
+	 * @param reportingRepository        Repository für das Reporting, welches verschiedene Daten aus der Datenbank zwischenspeichert.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	protected HtmlFactory(final ReportingRepository reportingRepository)
 			throws ApiOperationException {
@@ -146,7 +146,7 @@ public class HtmlFactory {
 	/**
 	 * Erzeugte die notwendigen Contexts für die HTML-Erstellung auf Basis des angegebenen HTML-Templates.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	private void getContexts() throws ApiOperationException {
 
@@ -200,7 +200,7 @@ public class HtmlFactory {
 	/**
 	 * Initialisiert den Context für Schüler.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public void initContextSchueler() throws ApiOperationException {
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Schüler für die HTML-Generierung.");
@@ -223,7 +223,7 @@ public class HtmlFactory {
 	/**
 	 * Initialisiert den Context für Klassen.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public void initContextKlassen() throws ApiOperationException {
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Klassen für die HTML-Generierung.");
@@ -238,7 +238,7 @@ public class HtmlFactory {
 	/**
 	 * Initialisiert den Context für Kurse.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public void initContextKurse() throws ApiOperationException {
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Kurse für die HTML-Generierung.");
@@ -253,7 +253,7 @@ public class HtmlFactory {
 	/**
 	 * Initialisiert den Context für Lehrer.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public void initContextLehrer() throws ApiOperationException {
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für Lehrer für die HTML-Generierung.");
@@ -268,7 +268,7 @@ public class HtmlFactory {
 	/**
 	 * Initialisiert die Fachwahlstatistiken für den Context der GOSt-Laufbahnplanung eines Abiturjahrgangs.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public void initContextGostLaufbahnplanungAbiturjahrgangFachwahlstatistiken() throws ApiOperationException {
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Gost-Laufbahnplan eines Abiturjahrgangs und dessen "
@@ -285,7 +285,7 @@ public class HtmlFactory {
 	/**
 	 * Initialisiert den Context für die GOSt-Kursplanung.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public void initContextGostKursplanung() throws ApiOperationException {
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für ein Gost-Blockungsergebnis für die HTML-Generierung.");
@@ -307,7 +307,7 @@ public class HtmlFactory {
 	/**
 	 * Initialisiert den Context für die GOSt-Klausurplanung.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public void initContextGostKlausurplanung() throws ApiOperationException {
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Gost-Klausurplan für die HTML-Generierung.");
@@ -327,7 +327,7 @@ public class HtmlFactory {
 	/**
 	 * Initialisiert den Context zur Stundenplanung.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public void initContextStundenplanung() throws ApiOperationException {
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Validiere die Daten für einen Stundenplan für die HTML-Generierung.");
@@ -388,7 +388,7 @@ public class HtmlFactory {
 	 *
 	 * @return Eine Liste mit ReportBuilderHtml-Instanzen.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	protected List<ReportBuilderHtml> createHtmlBuilders() throws ApiOperationException {
 		return getHtmlBuilders();
@@ -400,7 +400,7 @@ public class HtmlFactory {
 	 *
 	 * @return Im Falle eines Success enthält die HTTP-Response das HTML-Dokument oder die ZIP-Datei.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	protected Response createHtmlResponse() throws ApiOperationException {
 		try {
@@ -453,10 +453,8 @@ public class HtmlFactory {
 
 		final List<ReportBuilderHtml> htmlBuilders = new ArrayList<>();
 
-		if (reportingParameter.einzelausgabeHauptdaten()) {
-			erzeugeHauptEinzelContexts(htmlBuilders, htmlTemplateCode);
-		} else if (reportingParameter.einzelausgabeDetaildaten()) {
-			erzeugeDetailEinzelContexts(htmlBuilders, htmlTemplateCode);
+		if (reportingParameter.einzelausgabeDaten()) {
+			erzeugeEinzelContexts(htmlBuilders, htmlTemplateCode);
 		} else {
 			htmlBuilders.add(getReportBuilderHtml(htmlTemplateCode));
 		}
@@ -472,57 +470,53 @@ public class HtmlFactory {
 	 *
 	 * @throws ApiOperationException Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	private void erzeugeHauptEinzelContexts(final List<ReportBuilderHtml> htmlBuilders, final String htmlTemplateCode) throws ApiOperationException {
-		if (reportingReportvorlage.name().startsWith("SCHUELER_V_")) {
-			// Zerlege den Gesamt-Schüler-Context in einzelne Contexts mit jeweils einem Schüler
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Erzeuge einzelne Haupt-Kontexte für jeden Schüler, da einzelne Dateien angefordert wurden.");
-			final List<HtmlContextSchueler> schuelerContexts = ((HtmlContextSchueler) mapHtmlContexts.get(CONTEXT_SCHUELER)).getEinzelContexts();
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-					"Verarbeite Schüler-Template (%s) und Daten aus den einzelnen Kontexten zu finalen HTML-Dateiinhalten."
-							.formatted(reportingReportvorlage.name()));
-			for (final HtmlContextSchueler schuelerContext : schuelerContexts) {
-				mapHtmlContexts.put(CONTEXT_SCHUELER, schuelerContext);
-				htmlBuilders.add(getReportBuilderHtml(htmlTemplateCode));
-			}
-		}
-		if (reportingReportvorlage.name().startsWith("LEHRER_V_")) {
-			// Zerlege den Gesamt-Lehrer-Context in einzelne Contexts mit jeweils einem Lehrer
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Erzeuge einzelne Haupt-Kontexte für jeden Lehrer, da einzelne Dateien angefordert wurden.");
-			final List<HtmlContextLehrer> lehrerContexts = ((HtmlContextLehrer) mapHtmlContexts.get(CONTEXT_LEHRER)).getEinzelContexts();
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-					"Verarbeite Lehrer-Template (%s) und Daten aus den einzelnen Kontexten zu finalen HTML-Dateiinhalten."
-							.formatted(reportingReportvorlage.name()));
-			for (final HtmlContextLehrer lehrerContext : lehrerContexts) {
-				mapHtmlContexts.put(CONTEXT_LEHRER, lehrerContext);
-				htmlBuilders.add(getReportBuilderHtml(htmlTemplateCode));
-			}
-		}
-		if (reportingReportvorlage.name().startsWith("KLASSEN_V_")) {
-			// Zerlege den Gesamt-Klassen-Context in einzelne Contexts mit jeweils einer Klasse
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Erzeuge einzelne Haupt-Kontexte für jede Klasse, da einzelne Dateien angefordert wurden.");
-			final List<HtmlContextKlassen> klassenContexts = ((HtmlContextKlassen) mapHtmlContexts.get(CONTEXT_KLASSEN)).getEinzelContexts();
+	private void erzeugeEinzelContexts(final List<ReportBuilderHtml> htmlBuilders, final String htmlTemplateCode) throws ApiOperationException {
+		final String contextBezeichnung = ermittleEinzelContextBezeichnung();
+		final HtmlContext<?> baseContext = mapHtmlContexts.get(contextBezeichnung);
 
+		if (baseContext instanceof final HtmlContextAufteilbar<?> aufteilbarerContext) {
 			reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-					"Verarbeite Klassen-Template (%s) und Daten aus den einzelnen Kontexten zu finalen HTML-Dateiinhalten."
-							.formatted(reportingReportvorlage.name()));
-			for (final HtmlContextKlassen klasseContext : klassenContexts) {
-				mapHtmlContexts.put(CONTEXT_KLASSEN, klasseContext);
-				htmlBuilders.add(getReportBuilderHtml(htmlTemplateCode));
-			}
-		}
-		if (reportingReportvorlage.name().startsWith("KURSE_V_")) {
-			// Zerlege den Gesamt-Kurse-Context in einzelne Contexts mit jeweils einem Kurs
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Erzeuge einzelne Haupt-Kontexte für jeden Kurs, da einzelne Dateien angefordert wurden.");
-			final List<HtmlContextKurse> kurseContexts = ((HtmlContextKurse) mapHtmlContexts.get(CONTEXT_KURSE)).getEinzelContexts();
+					"Erzeuge einzelne Kontexte für " + contextBezeichnung + " für Template " + reportingReportvorlage.name());
 
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-					"Verarbeite Kurse-Template (%s) und Daten aus den einzelnen Kontexten zu finalen HTML-Dateiinhalten."
-							.formatted(reportingReportvorlage.name()));
-			for (final HtmlContextKurse kursContext : kurseContexts) {
-				mapHtmlContexts.put(CONTEXT_KURSE, kursContext);
+			final List<? extends HtmlContext<?>> einzelContexts = aufteilbarerContext.getEinzelContexts();
+
+			for (final HtmlContext<?> einzelContext : einzelContexts) {
+				mapHtmlContexts.put(contextBezeichnung, einzelContext);
 				htmlBuilders.add(getReportBuilderHtml(htmlTemplateCode));
 			}
+		} else {
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"FEHLER: Der Kontext " + contextBezeichnung + " unterstützt das Aufteilen in Einzeldokumente nicht.");
 		}
+	}
+
+	/**
+	 * Ermittelt die Bezeichnung für den einzelnen Kontext basierend auf der ReportingReportvorlage.
+	 *
+	 * @return Die Bezeichnung des einzelnen Kontextes.
+	 */
+	private String ermittleEinzelContextBezeichnung() {
+		return switch (this.reportingReportvorlage.getReportingReportvorlageDatenContext()) {
+			case SCHUELER -> CONTEXT_SCHUELER;
+			case KLASSEN -> CONTEXT_KLASSEN;
+			case KURSE -> CONTEXT_KURSE;
+			case LEHRER -> CONTEXT_LEHRER;
+			case GOST_KURSPLANUNG -> CONTEXT_GOST_BLOCKUNGSERGEBNIS;
+			case GOST_KLAUSURPLANUNG -> CONTEXT_GOST_KLAUSURPLAN;
+			case STUNDENPLANUNG -> switch (this.reportingReportvorlage) {
+				// Bei der Stundenplanung erfolgt die Zuordnung anhand der Reportvorlage.
+				case STUNDENPLANUNG_V_FACH_STUNDENPLAN -> CONTEXT_STUNDENPLANUNG_FAECHER;
+				case STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN -> CONTEXT_STUNDENPLANUNG_KLASSEN;
+				case STUNDENPLANUNG_V_LEHRER_STUNDENPLAN, STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT -> CONTEXT_STUNDENPLANUNG_LEHRER;
+				case STUNDENPLANUNG_V_RAUM_STUNDENPLAN -> CONTEXT_STUNDENPLANUNG_RAEUME;
+				case STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN -> CONTEXT_STUNDENPLANUNG_SCHUELER;
+				default -> throw new ApiOperationException(Status.BAD_REQUEST,
+						"FEHLER: Die Vorlage " + this.reportingReportvorlage.getBezeichnung() + " unterstützt keine Einzelausgabe.");
+			};
+			default ->
+				throw new ApiOperationException(Status.BAD_REQUEST,
+						"FEHLER: Die Vorlage " + this.reportingReportvorlage.getBezeichnung() + " unterstützt keine Einzelausgabe.");
+		};
 	}
 
 	/**
@@ -543,72 +537,6 @@ public class HtmlFactory {
 		}
 
 		return ids.stream().filter(Objects::nonNull).distinct().toList();
-	}
-
-
-	/**
-	 * Erzeugt einzelne Detail-Kontexte basierend auf der definierten Darstellungsvorlage und den verfügbaren Datenquellen. Die Methode verarbeitet
-	 * verschiedene Vorlagentypen und erstellt individuelle HTML-Kontexte entsprechend den Anforderungen des Vorlagentyps.
-	 *
-	 * @param htmlBuilders     Liste der ReportBuilderHtml, die zur Erstellung der Inhalte verwendet werden
-	 * @param htmlTemplateCode Der Code der HTML-Vorlage, der die Art der zu erstellenden Kontexte definiert
-	 *
-	 * @throws ApiOperationException Wird ausgelöst, wenn ein Fehler bei der Verarbeitung der Vorlagentypen oder der verfügbaren Kontexte auftritt.
-	 */
-	private void erzeugeDetailEinzelContexts(final List<ReportBuilderHtml> htmlBuilders, final String htmlTemplateCode) throws ApiOperationException {
-		switch (reportingReportvorlage) {
-			case GOST_KLAUSURPLANUNG_V_SCHUELER_MIT_KLAUSUREN -> splitteDetailContexts(CONTEXT_GOST_KLAUSURPLAN,
-					((HtmlContextGostKlausurplanungKlausurplan) mapHtmlContexts.get(CONTEXT_GOST_KLAUSURPLAN))::getEinzelContexts,
-					htmlBuilders, htmlTemplateCode, "Erzeuge einzelne Detail-Kontexte des Klausurplans für jeden Schüler.");
-			case GOST_KURSPLANUNG_V_KURS_MIT_KURSSCHUELERN -> splitteDetailContexts(CONTEXT_GOST_BLOCKUNGSERGEBNIS,
-					((HtmlContextGostKursplanungBlockungsergebnis) mapHtmlContexts.get(CONTEXT_GOST_BLOCKUNGSERGEBNIS))::getEinzelContexts,
-					htmlBuilders, htmlTemplateCode, "Erzeuge einzelne Detail-Kontexte der Kursplanung für jeden Kurs.");
-			case STUNDENPLANUNG_V_FACH_STUNDENPLAN -> splitteDetailContexts(CONTEXT_STUNDENPLANUNG_FAECHER,
-					((HtmlContextStundenplanungFachStundenplan) mapHtmlContexts.get(CONTEXT_STUNDENPLANUNG_FAECHER))::getEinzelContexts,
-					htmlBuilders, htmlTemplateCode, "Erzeuge einzelne Detail-Kontexte der Fachstundenpläne für jedes Fach.");
-			case STUNDENPLANUNG_V_KLASSEN_STUNDENPLAN -> splitteDetailContexts(CONTEXT_STUNDENPLANUNG_KLASSEN,
-					((HtmlContextStundenplanungKlassenStundenplan) mapHtmlContexts.get(CONTEXT_STUNDENPLANUNG_KLASSEN))::getEinzelContexts,
-					htmlBuilders, htmlTemplateCode, "Erzeuge einzelne Detail-Kontexte der Klassenstundenpläne für jede Klasse.");
-			case STUNDENPLANUNG_V_LEHRER_STUNDENPLAN, STUNDENPLANUNG_V_LEHRER_STUNDENPLAN_KOMBINIERT -> splitteDetailContexts(CONTEXT_STUNDENPLANUNG_LEHRER,
-					((HtmlContextStundenplanungLehrerStundenplan) mapHtmlContexts.get(CONTEXT_STUNDENPLANUNG_LEHRER))::getEinzelContexts,
-					htmlBuilders, htmlTemplateCode, "Erzeuge einzelne Detail-Kontexte der Lehrerstundenpläne für jeden Lehrer.");
-			case STUNDENPLANUNG_V_RAUM_STUNDENPLAN -> splitteDetailContexts(CONTEXT_STUNDENPLANUNG_RAEUME,
-					((HtmlContextStundenplanungRaumStundenplan) mapHtmlContexts.get(CONTEXT_STUNDENPLANUNG_RAEUME))::getEinzelContexts,
-					htmlBuilders, htmlTemplateCode, "Erzeuge einzelne Detail-Kontexte der Raumstundenpläne für jeden Raum.");
-			case STUNDENPLANUNG_V_SCHUELER_STUNDENPLAN -> splitteDetailContexts(CONTEXT_STUNDENPLANUNG_SCHUELER,
-					((HtmlContextStundenplanungSchuelerStundenplan) mapHtmlContexts.get(CONTEXT_STUNDENPLANUNG_SCHUELER))::getEinzelContexts,
-					htmlBuilders, htmlTemplateCode, "Erzeuge einzelne Detail-Kontexte der Schülerstundenpläne für jeden Schüler.");
-			default -> throw new ApiOperationException(Status.BAD_REQUEST,
-					"FEHLER: Es wurden Einzeldaten-Kontexte für eine Vorlage angefordert, die dies nicht Unterstützung. Erstellung wird abgebrochen.");
-		}
-	}
-
-	/**
-	 * Teilt die Detailkontexte anhand der bereitgestellten Kontextspezifikationen auf und erstellt HTML-Inhalte für jeden Kontext basierend auf dem
-	 * angegebenen Template.
-	 *
-	 * @param <C>                        Der Typ des HTML-Kontextes, der erzeugt werden soll.
-	 * @param bezeichnungContext         Der Name des Kontextes, der verarbeitet wird.
-	 * @param functionErmittleEinzelContexts  Eine Funktion, die eine Liste von Einzelkontexten bereitstellt.
-	 * @param htmlBuilders               Die HTML-Builder-Liste, in die die erzeugten Inhalte eingefügt werden.
-	 * @param htmlTemplateCode           Der Template-Code, der für die HTML-Generierung verwendet wird.
-	 * @param logText                    Ein Text, der zur Protokollierung des Prozesses verwendet wird.
-	 *
-	 * @throws ApiOperationException Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
-	 */
-	private <C extends HtmlContext<?>> void splitteDetailContexts(final String bezeichnungContext, final Supplier<List<C>> functionErmittleEinzelContexts,
-			final List<ReportBuilderHtml> htmlBuilders, final String htmlTemplateCode, final String logText) throws ApiOperationException {
-
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4, logText);
-		final List<C> einzelContexts = functionErmittleEinzelContexts.get();
-
-		reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-				"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen HTML-Dateiinhalten.".formatted(reportingReportvorlage.name()));
-
-		for (final C einzelContext : einzelContexts) {
-			mapHtmlContexts.put(bezeichnungContext, einzelContext);
-			htmlBuilders.add(getReportBuilderHtml(htmlTemplateCode));
-		}
 	}
 
 	/**
@@ -656,11 +584,11 @@ public class HtmlFactory {
 	/**
 	 * Erstellt eine ZIP-Datei, die alle HTML-Dateien aus der übergebenen Liste enthält.
 	 *
-	 * @param htmlBuilders 				Eine Liste mit den ReportBuilderHtml-Instanzen, die die HTML-Inhalte erzeugen.
+	 * @param htmlBuilders                Eine Liste mit den ReportBuilderHtml-Instanzen, die die HTML-Inhalte erzeugen.
 	 *
 	 * @return Gibt das ZIP in Form eines ByteArrays zurück.
 	 *
-	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
+	 * @throws ApiOperationException    Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	private byte[] createZIP(final List<ReportBuilderHtml> htmlBuilders) throws ApiOperationException {
 		final byte[] zipData;

@@ -42,7 +42,7 @@ public final class ReportingReportvorlageKonfigurationKlassen {
 						false,
 						"",
 						""),
-				new ArrayList<>(), new ArrayList<>(), true, false, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 
 	/**
@@ -96,7 +96,7 @@ public final class ReportingReportvorlageKonfigurationKlassen {
 						false,
 						"",
 						""),
-				new ArrayList<>(), new ArrayList<>(), true, false, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 
 	/**
@@ -162,6 +162,6 @@ public final class ReportingReportvorlageKonfigurationKlassen {
 										ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("aufZeugnis", "true"))),
 								ReportingFilterDefinitionFactory.definition("Nur Fächer mit Prüfungsordnungsrelevanz", "ReportingFach",
 										ReportingFilterDefinitionFactory.and(ReportingFilterDefinitionFactory.eq("istPruefungsordnungsRelevant", "true"))))
-				)), true, false, true);
+				)), true, true);
 	}
 }

@@ -85,6 +85,7 @@ public final class ReportingFactory {
 			}
 			this.reportingParameter = reportingParameter;
 
+			// Validiere das Ausgabeformat, insbesondere, ob dieses mit dem von der API vorgegebenen Ausgabeformat übereinstimmt.
 			if ((reportingAusgabeformat == null) || reportingAusgabeformat.equals(ReportingAusgabeformat.UNDEFINED)
 					|| (ReportingAusgabeformat.getByID(this.reportingParameter.ausgabeformat) == ReportingAusgabeformat.UNDEFINED)
 					|| (ReportingAusgabeformat.getByID(this.reportingParameter.ausgabeformat) != reportingAusgabeformat)) {
@@ -175,17 +176,36 @@ public final class ReportingFactory {
 			if ((g.name == null) || g.name.isBlank() || (g.reportvorlageParameter == null)) {
 				continue;
 			}
-			for (final ReportingReportvorlageParameter p : g.reportvorlageParameter) {
-				if ((p == null) || (p.name == null) || p.name.isBlank()) {
-					continue;
-				}
-				mapUebergebeneReportvorlageParameter.put(g.name + "#" + p.name, p);
-			}
+			validiereParameterDerGruppe(reportingParameter, g, mapUebergebeneReportvorlageParameter);
 		}
 
 		// Definierte Struktur aus der Reportvorlage laden (SOLL-Werte) und Ergebnisliste nach Vorlage mit den evtl. übergebenen Werten kombinieren.
 		// Das Ergebnis wird in das Reporting-Parameter-Gruppen-Objekt zurückgeschrieben.
 		this.reportingParameter.reportvorlageParameterGruppen = getKombinierteReportvorlageParameter(reportvorlage, mapUebergebeneReportvorlageParameter);
+	}
+
+	/**
+	 * Validiert die Parameter der übergebenen Parametergruppe und überprüft, ob sie mit den übergebenen Werten übereinstimmen.
+	 * Hierbei wird beim E-Mail-Versand aus Datenschutzgründen die Einzelausgabe der Daten automatisch aktiviert.
+	 *
+	 * @param reportingParameter                    das Reporting-Parameter-Objekt
+	 * @param reportingReportvorlageParameterGruppe die Parametergruppe
+	 * @param mapUebergebeneReportvorlageParameter  die Map mit den übergebenen Reportvorlage-Parametern
+	 */
+	private static void validiereParameterDerGruppe(final ReportingParameter reportingParameter,
+			final ReportingReportvorlageParameterGruppe reportingReportvorlageParameterGruppe,
+			final HashMap<String, ReportingReportvorlageParameter> mapUebergebeneReportvorlageParameter) {
+		for (final ReportingReportvorlageParameter p : reportingReportvorlageParameterGruppe.reportvorlageParameter) {
+			if ((p == null) || (p.name == null) || p.name.isBlank()) {
+				continue;
+			}
+			// Um Datenschutz zu gewährleisten, wird beim E-Mail-Versand nur die Einzelausgabe von Daten unterstützt (ein einzelnes PDF pro Datenelement).
+			// Stelle dies hier sicher.
+			if ((reportingParameter.ausgabeformat == ReportingAusgabeformat.EMAIL.getId()) && p.name.equalsIgnoreCase("einzelausgabeDaten")) {
+				p.wert = "true";
+			}
+			mapUebergebeneReportvorlageParameter.put(reportingReportvorlageParameterGruppe.name + "#" + p.name, p);
+		}
 	}
 
 	/**

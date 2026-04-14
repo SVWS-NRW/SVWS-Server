@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Ein Thymeleaf-Html-Daten-Context zum Bereich "Schüler", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
-public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> {
+public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> implements HtmlContextAufteilbar<HtmlContextSchueler> {
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
@@ -95,6 +95,7 @@ public final class HtmlContextSchueler extends HtmlContext<ReportingSchueler> {
 	 *
 	 * @return	Liste der Einzel-Contexts.
 	 */
+	@Override
 	public List<HtmlContextSchueler> getEinzelContexts() {
 		final List<HtmlContextSchueler> resultContexts = new ArrayList<>();
 

@@ -54,7 +54,7 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 								ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1)
 				))),
 				new ReportingEMailDaten(),
-				new ArrayList<>(), new ArrayList<>(), true, false, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 
 	/**
@@ -90,7 +90,7 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 								ReportingReportvorlageParameterTyp.STRING, "", true, ReportingUIKomponentenTyp.INPUT, 1)
 				))),
 				new ReportingEMailDaten(),
-				new ArrayList<>(), new ArrayList<>(), true, false, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 
 	/**
@@ -111,7 +111,7 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 										true, ReportingUIKomponentenTyp.CHECKBOX, 1)
 						))),
 				new ReportingEMailDaten(),
-				new ArrayList<>(), new ArrayList<>(), true, false, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 
 	/**
@@ -133,7 +133,7 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 						false,
 						"Persönlicher Wahlbogen zur Laufbahnplanung in der GOSt",
 						"Im Anhang dieser automatisch generierten E-Mail befindet sich dein persönlicher Wahlbogen zur Laufbahnplanung in der gymnasialen Oberstufe."),
-				new ArrayList<>(), new ArrayList<>(), true, false, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 
 	/**
@@ -166,7 +166,7 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 										"" + false, true, ReportingUIKomponentenTyp.CHECKBOX, 1)
 						))),
 				new ReportingEMailDaten(),
-				new ArrayList<>(), new ArrayList<>(), true, false, true);
+				new ArrayList<>(), new ArrayList<>(), true, true);
 	}
 
 	/**
@@ -225,6 +225,6 @@ public final class ReportingReportvorlageKonfigurationSchueler {
 								ReportingSortierungDefinitionFactory.definition("Sortierung nach Klasse, Name, Vorname", "ReportingSchueler", false,
 										List.of("Klasse, Nachname, Vorname, Vornamen")))
 				)),
-				new ArrayList<>(), false, false, true);
+				new ArrayList<>(), false, true);
 	}
 }

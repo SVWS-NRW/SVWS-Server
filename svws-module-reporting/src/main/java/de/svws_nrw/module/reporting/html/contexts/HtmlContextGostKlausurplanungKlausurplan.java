@@ -23,7 +23,8 @@ import jakarta.ws.rs.core.Response;
 /**
  * Ein Thymeleaf-html-Daten-Context zum Bereich "GostKlausurplanung", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
-public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext<Object> {
+public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext<Object>
+		implements HtmlContextAufteilbar<HtmlContextGostKlausurplanungKlausurplan> {
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
@@ -151,6 +152,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext<
 	 *
 	 * @return	Liste der Einzel-Contexts.
 	 */
+	@Override
 	public List<HtmlContextGostKlausurplanungKlausurplan> getEinzelContexts() {
 		final List<HtmlContextGostKlausurplanungKlausurplan> result = new ArrayList<>();
 

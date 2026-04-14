@@ -94,7 +94,7 @@
 				<div class="border-2 border-ui-25 rounded-md p-2 my-2">
 					<div class="flex flex-col mb-2">
 						<div class="font-bold">E-Mail-Versand</div>
-						<div class="text-sm mt-1">Die Dateien werden gemäß der obiger Einstellungen erzeugt und dann als E-Mail versendet.</div>
+						<div class="text-sm mt-1">Pro Datensatz werden die Dateien gemäß der obiger Einstellungen erzeugt und dann als E-Mail an die zugeordnete Person versendet.</div>
 					</div>
 					<div class="flex flex-col gap-4">
 						<div class="flex flex-col gap-1">

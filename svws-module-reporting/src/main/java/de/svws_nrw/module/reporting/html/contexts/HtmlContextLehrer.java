@@ -12,7 +12,7 @@ import org.thymeleaf.context.Context;
 /**
  * Ein Thymeleaf-Html-Daten-Context zum Bereich "Lehrer", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
-public final class HtmlContextLehrer extends HtmlContext<ReportingLehrer> {
+public final class HtmlContextLehrer extends HtmlContext<ReportingLehrer> implements HtmlContextAufteilbar<HtmlContextLehrer> {
 
 	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
@@ -83,6 +83,7 @@ public final class HtmlContextLehrer extends HtmlContext<ReportingLehrer> {
 	 *
 	 * @return	Liste der Einzel-Contexts.
 	 */
+	@Override
 	public List<HtmlContextLehrer> getEinzelContexts() {
 		final List<HtmlContextLehrer> resultContexts = new ArrayList<>();
 
