@@ -1,11 +1,16 @@
 package de.svws_nrw.module.reporting.html.dialects;
 
+import de.svws_nrw.base.compression.GZip;
 import de.svws_nrw.core.utils.DateUtils;
+import de.svws_nrw.core.utils.encoding.Base32;
+import de.svws_nrw.core.utils.encoding.Base45;
 import de.svws_nrw.module.reporting.utils.ReportingBarcodeUtils;
 import jakarta.validation.constraints.NotNull;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Base64;
 import java.util.Date;
 
 
@@ -142,5 +147,170 @@ public class ConvertExpressionHelper {
 	 */
 	public String toBarcodeCode128AsSvgHtmlImageSource(final String barcodeInhalt, final double breiteInMM, final double hoeheInMM) {
 		return ReportingBarcodeUtils.erzeugeBarcodeCode128(barcodeInhalt, breiteInMM, hoeheInMM);
+	}
+
+	/**
+	 * Gibt zu einem als String vorliegenden QR-Code-Inhalt einen QR-Code im SVG-Format zurück,
+	 * der als Base64-codierter String zur direkten Einbettung in HTML (Data-URI) verwendet werden kann.
+	 *
+	 * @param qrInhalt		Der QR-Code-Inhalt, der kodiert werden soll.
+	 * @param breiteInMM	Die gewünschte Breite des QR-Codes in Millimetern.
+	 * @param hoeheInMM		Die gewünschte Höhe des QR-Codes in Millimetern.
+	 *
+	 * @return				Der QR-Code als Base64-codierter SVG-String zur direkten Einbettung in HTML (Data-URI) oder null, falls ein Fehler auftritt.
+	 *                      Eine Einbettung könnte dabei mittels Thymeleaf erfolgen:
+	 *                      {@code <img th:src="${#convert.to2DCodeQRCodeAsSvgHtmlImageSource('Hello World', 50, 50)}"
+	 *                                  th:alt="'QR-Code'" />}
+	 */
+	public String to2DCodeQRCodeAsSvgHtmlImageSource(final String qrInhalt, final double breiteInMM, final double hoeheInMM) {
+		return ReportingBarcodeUtils.erzeuge2DCodeQRCode(qrInhalt, breiteInMM, hoeheInMM);
+	}
+
+	/**
+	 * Komprimiert den übergebenen String mit GZip und gibt ihn als Base64-kodierten String zurück.
+	 *
+	 * @param input   der zu komprimierende String
+	 *
+	 * @return        der komprimierte String als Base64 oder leerer String bei Fehler oder null/empty input
+	 */
+	public String compressGZipString(final String input) {
+		if ((input == null) || input.isEmpty()) {
+			return "";
+		}
+		try {
+			return GZip.encodeBase64(input.getBytes(StandardCharsets.UTF_8));
+		} catch (@SuppressWarnings("unused") final Exception ignore) {
+			return "";
+		}
+	}
+
+	/**
+	 * Dekomprimiert den übergebenen Base64-kodierten, GZip-komprimierten String.
+	 *
+	 * @param input   der zu dekomprimierende Base64-String
+	 *
+	 * @return        der dekomprimierte String oder leerer String bei Fehler oder null/empty input
+	 */
+	public String decompressGZipString(final String input) {
+		if ((input == null) || input.isEmpty()) {
+			return "";
+		}
+		try {
+			final byte[] decompressed = GZip.decodeBase64(input);
+			return new String(decompressed, StandardCharsets.UTF_8);
+		} catch (@SuppressWarnings("unused") final Exception ignore) {
+			return "";
+		}
+	}
+
+	/**
+	 * Kodiert den übergebenen String mit Base45 und gibt ihn als String zurück.
+	 *
+	 * @param input   der zu kodierende String
+	 *
+	 * @return        der kodierte String oder leerer String bei Fehler oder null/empty input
+	 */
+	public String encodeBase45(final String input) {
+		if ((input == null) || input.isEmpty()) {
+			return "";
+		}
+		try {
+			return Base45.encode(input.getBytes(StandardCharsets.UTF_8));
+		} catch (@SuppressWarnings("unused") final Exception ignore) {
+			return "";
+		}
+	}
+
+	/**
+	 * Dekodiert den übergebenen Base45-kodierten String und gibt ihn als String zurück.
+	 *
+	 * @param input   der zu dekodierende Base45-String
+	 *
+	 * @return        der dekodierte String oder leerer String bei Fehler oder null/empty input
+	 */
+	public String decodeBase45(final String input) {
+		if ((input == null) || input.isEmpty()) {
+			return "";
+		}
+		try {
+			final byte[] decoded = Base45.decode(input);
+			return new String(decoded, StandardCharsets.UTF_8);
+		} catch (@SuppressWarnings("unused") final Exception ignore) {
+			return "";
+		}
+	}
+
+	/**
+	 * Kodiert den übergebenen String mit Base64 und gibt ihn als String zurück.
+	 *
+	 * @param input   der zu kodierende String
+	 *
+	 * @return        der kodierte String oder leerer String bei Fehler oder null/empty input
+	 */
+	public String encodeBase64(final String input) {
+		if ((input == null) || input.isEmpty()) {
+			return "";
+		}
+		try {
+			return Base64.getEncoder().encodeToString(input.getBytes(StandardCharsets.UTF_8));
+		} catch (@SuppressWarnings("unused") final Exception ignore) {
+			return "";
+		}
+	}
+
+	/**
+	 * Dekodiert den übergebenen Base64-kodierten String und gibt ihn als String zurück.
+	 *
+	 * @param input   der zu dekodierende Base64-String
+	 *
+	 * @return        der dekodierte String oder leerer String bei Fehler oder null/empty input
+	 */
+	public String decodeBase64(final String input) {
+		if ((input == null) || input.isEmpty()) {
+			return "";
+		}
+		try {
+			final byte[] decoded = Base64.getDecoder().decode(input);
+			return new String(decoded, StandardCharsets.UTF_8);
+		} catch (@SuppressWarnings("unused") final Exception ignore) {
+			return "";
+		}
+	}
+
+	/**
+	 * Kodiert den übergebenen String mit Base32 und gibt ihn als String zurück.
+	 *
+	 * @param input   der zu kodierende String
+	 *
+	 * @return        der kodierte String oder leerer String bei Fehler oder null/empty input
+	 */
+	public String encodeBase32(final String input) {
+		if ((input == null) || input.isEmpty()) {
+			return "";
+		}
+		try {
+			return Base32.encode(input.getBytes(StandardCharsets.UTF_8));
+		} catch (@SuppressWarnings("unused") final Exception ignore) {
+			return "";
+		}
+	}
+
+	/**
+	 * Dekodiert den übergebenen Base32-kodierten String und gibt ihn als String zurück.
+	 *
+	 * @param input   der zu dekodierende Base32-String
+	 *
+	 * @return        der dekodierte String oder leerer String bei Fehler oder null/empty input
+	 */
+	public String decodeBase32(final String input) {
+		if ((input == null) || input.isEmpty()) {
+			return "";
+		}
+		try {
+			final byte[] decoded = Base32.decode(input);
+			return new String(decoded, StandardCharsets.UTF_8);
+		} catch (@SuppressWarnings("unused") final Exception ignore) {
+			return "";
+		}
 	}
 }
