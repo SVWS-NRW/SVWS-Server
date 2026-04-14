@@ -21,7 +21,7 @@
 					</svws-ui-checkbox>
 				</template>
 				<template #actions v-if="hatKompetenzAendern">
-					<svws-ui-tooltip v-if="ServerMode.DEV.checkServerMode(serverMode)" position="bottom">
+					<svws-ui-tooltip position="bottom">
 						<svws-ui-button type="icon"
 							@click="gotoHinzufuegenView(true)"
 							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
@@ -42,7 +42,7 @@
 	import type { HaltestellenAuswahlProps } from "~/components/schule/kataloge/haltestellen/HaltestellenAuswahlProps";
 	import type { DataTableColumn } from "@ui";
 	import { useRegionSwitch, ViewType } from "@ui";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import type { Haltestelle } from "@core";
 	import { computed } from "vue";
 

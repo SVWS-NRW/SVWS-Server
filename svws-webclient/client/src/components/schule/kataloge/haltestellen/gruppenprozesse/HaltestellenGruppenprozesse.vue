@@ -3,7 +3,7 @@
 		<div v-if="hatKeineErforderlicheKompetenz">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
+		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Haltestellen werden gelöscht">
 				<div>
 					<span v-if="selectedAllowedToDelete">Alle ausgewählten Haltestellen sind bereit zum Löschen.</span>
@@ -53,7 +53,7 @@
 
 	import type { HaltestellenGruppenprozesseProps } from "~/components/schule/kataloge/haltestellen/gruppenprozesse/HaltestellenGruppenprozesseProps";
 	import type { List } from "@core";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { computed, ref } from "vue";
 
 	const props = defineProps<HaltestellenGruppenprozesseProps>();

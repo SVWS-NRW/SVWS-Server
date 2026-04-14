@@ -18,7 +18,7 @@ export class RouteHaltestellen extends RouteAuswahlNode<HaltestellenListeManager
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.haltestellen",
 			"schule/haltestellen/:id(\\d+)?", HaltestellenApp, HaltestellenAuswahl, new RouteDataHaltestellen());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Haltestellen";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [
