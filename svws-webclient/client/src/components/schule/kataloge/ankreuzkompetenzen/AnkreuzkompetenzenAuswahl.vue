@@ -41,7 +41,7 @@
 				</template>
 
 				<template #actions v-if="!readonly">
-					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
+					<svws-ui-tooltip position="bottom">
 						<svws-ui-button type="icon"
 							@click="gotoHinzufuegenView(true)"
 							:has-focus="noFilteredItems" :disabled="isHinzufuegenView">
@@ -61,7 +61,7 @@
 	import type { DataTableColumn } from "@ui";
 	import { SelectManager, useRegionSwitch } from "@ui";
 	import type { Ankreuzkompetenz, FachDaten, JahrgangsDaten } from "@core";
-	import { Schulgliederung, ServerMode } from "@core";
+	import { Schulgliederung } from "@core";
 	import { useKatalogAuswahl } from "~/composables/useKatalogAuswahl";
 	import type { AnkreuzkompetenzenAuswahlProps } from "~/components/schule/kataloge/ankreuzkompetenzen/AnkreuzkompetenzenAuswahlProps";
 	import { computed } from "vue";

@@ -95,7 +95,7 @@ public class APIAnkreuzkompetenzen {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataAnkreuzkompetenzen(conn, null).addAsResponse(is), request,
-				ServerMode.DEV,
+				ServerMode.STABLE,
 				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
@@ -126,7 +126,7 @@ public class APIAnkreuzkompetenzen {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Ankreuzkompetenz.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataAnkreuzkompetenzen(conn, null).patchAsResponse(id, is), request, ServerMode.DEV,
+				conn -> new DataAnkreuzkompetenzen(conn, null).patchAsResponse(id, is), request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
@@ -153,7 +153,7 @@ public class APIAnkreuzkompetenzen {
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
-				conn -> new DataAnkreuzkompetenzen(conn, null).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)), request, ServerMode.DEV,
+				conn -> new DataAnkreuzkompetenzen(conn, null).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)), request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
@@ -183,7 +183,7 @@ public class APIAnkreuzkompetenzen {
 							array = @ArraySchema(schema = @Schema(implementation = AnkreuzkompetenzJahrgangszuordnung.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataAnkreuzkompetenzJahrgangszuordnungen(conn).addMultipleAsResponse(is), request, ServerMode.DEV,
+				conn -> new DataAnkreuzkompetenzJahrgangszuordnungen(conn).addMultipleAsResponse(is), request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
@@ -213,6 +213,6 @@ public class APIAnkreuzkompetenzen {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> new DataAnkreuzkompetenzJahrgangszuordnungen(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
-				request, ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+				request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 }

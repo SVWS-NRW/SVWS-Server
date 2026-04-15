@@ -18,7 +18,7 @@ export class RouteAnkreuzkompetenzen extends RouteAuswahlNode<Ankreuzkompetenzen
 		super(Schulform.values(),
 			[BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.ankreuzkompetenzen",
 			"schule/ankreuzkompetenzen/:id(\\d+)?", AnkreuzkompetenzenApp, AnkreuzkompetenzenAuswahl, new RouteDataAnkreuzkompetenzen());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Ankreuzkompetenzen";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [

@@ -3,7 +3,7 @@
 		<div v-if="hatKeineErforderlicheKompetenz">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
+		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Ankreuzkompetenzen werden gelöscht." icon="i-ri-delete-bin-line">
 				<div>
 					<span v-if="selectedAllowedToDelete">Alle ausgewählten Ankreuzkompetenzen sind bereit zum Löschen.</span>
@@ -37,7 +37,7 @@
 
 	import { computed, ref } from "vue";
 	import type { List } from "@core";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import type { AnkreuzkompetenzenGruppenprozesseProps } from "~/components/schule/kataloge/ankreuzkompetenzen/gruppenprozesse/AnkreuzkompetenzenGruppenprozesseProps";
 
 	const props = defineProps<AnkreuzkompetenzenGruppenprozesseProps>();

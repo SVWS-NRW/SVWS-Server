@@ -12,7 +12,7 @@ class RouteAnkreuzkompetenzenDaten extends RouteNode<any, RouteAnkreuzkompetenze
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN],
 			"schule.ankreuzkompetenzen.daten", "daten", AnkreuzkompetenzenDaten);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Ankreuzkompetenzen";
 	}

@@ -15,7 +15,7 @@ export class RouteAnkreuzkompetenzenNeu extends RouteNode<any, RouteAnkreuzkompe
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.ankreuzkompetenzen.neu", "neu", AnkreuzkompetenzenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Ankreuzkompetenzen Neu";
 		super.setCheckpoint = true;
