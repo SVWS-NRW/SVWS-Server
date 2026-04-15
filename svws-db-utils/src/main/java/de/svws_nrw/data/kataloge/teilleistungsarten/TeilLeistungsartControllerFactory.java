@@ -30,7 +30,7 @@ public final class TeilLeistungsartControllerFactory {
 	private static TeilLeistungsartControllerFactory getNewInstance(final HttpServletRequest request,
 			final BenutzerKompetenz kompetenz) {
 
-		DBBenutzerUtils.getDBConnection(request, ServerMode.DEV, kompetenz);
+		DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, kompetenz);
 		final var katalogeRepositoryFactory = KatalogeRepositoryFactory.getNewInstance();
 		final var serviceFactory = TeilLeistungsartServiceFactory.getNewInstance(katalogeRepositoryFactory);
 

@@ -22,7 +22,7 @@
 					<svws-ui-checkbox type="toggle" v-model="showOnlyVisible">Nur Sichtbare</svws-ui-checkbox>
 				</template>
 				<template #actions v-if="!readonly">
-					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
+					<svws-ui-tooltip position="bottom">
 						<svws-ui-button type="icon"
 							@click="gotoHinzufuegenView(true)"
 							:has-focus="noFilteredItems"
@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-	import { type Teilleistungsart, ServerMode } from "@core";
+	import { type Teilleistungsart } from "@core";
 	import { type DataTableColumn, useRegionSwitch } from "@ui";
 
 	import type { TeilleistungsartenAuswahlProps } from "./TeilleistungsartenAuswahlProps";

@@ -19,7 +19,7 @@ class RouteTeilleistungsartenGruppenprozesse extends RouteNode<any, RouteTeillei
 			"gruppenprozesse",
 			TeilleistungsartenGruppenprozesse);
 		super.types = new Set([ViewType.GRUPPENPROZESSE]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Gruppenprozesse";
 	}

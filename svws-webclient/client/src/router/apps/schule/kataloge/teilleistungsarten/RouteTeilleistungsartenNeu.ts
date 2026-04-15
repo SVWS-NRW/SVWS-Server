@@ -15,7 +15,7 @@ export class RouteTeilleistungsartenNeu extends RouteNode<any, RouteTeilleistung
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.teilleistungsarten.neu", "neu", TeilleistungsartenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Teilleistungsarten Neu";
 		super.setCheckpoint = true;

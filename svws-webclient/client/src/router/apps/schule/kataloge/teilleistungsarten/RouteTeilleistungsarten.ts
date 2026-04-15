@@ -23,7 +23,7 @@ export class RouteTeilleistungsarten extends RouteAuswahlNode<Teilleistungsarten
 			TeilleistungsartenAuswahl,
 			new RouteDataTeilleistungsarten());
 
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Teilleistungsarten";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [
