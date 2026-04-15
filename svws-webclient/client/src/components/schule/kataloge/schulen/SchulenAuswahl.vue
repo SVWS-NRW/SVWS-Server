@@ -21,7 +21,7 @@
 					</svws-ui-checkbox>
 				</template>
 				<template #actions v-if="hatKompetenzAendern">
-					<svws-ui-tooltip v-if="ServerMode.DEV.checkServerMode(serverMode)" position="bottom">
+					<svws-ui-tooltip position="bottom">
 						<svws-ui-button type="icon"
 							@click="gotoHinzufuegenView(true)"
 							:has-focus="noFilteredEntries" :disabled="isHinzufuegenView">
@@ -41,7 +41,7 @@
 
 	import type { SchulenAuswahlProps } from "~/components/schule/kataloge/schulen/SchulenAuswahlProps";
 	import { computed } from 'vue';
-	import { BenutzerKompetenz, type SchulEintrag, ServerMode } from "@core";
+	import { BenutzerKompetenz, type SchulEintrag } from "@core";
 	import { useRegionSwitch, ViewType } from "@ui";
 
 	const { focusHelpVisible, focusSwitchingEnabled } = useRegionSwitch();

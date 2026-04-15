@@ -19,7 +19,7 @@ export class RouteSchulen extends RouteAuswahlNode<SchulenListeManager, RouteDat
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.schulen", String.raw`schule/schulen/:id(\d+)?`, SchulenApp, SchulenAuswahl, new RouteDataSchulen());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Schulen";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [

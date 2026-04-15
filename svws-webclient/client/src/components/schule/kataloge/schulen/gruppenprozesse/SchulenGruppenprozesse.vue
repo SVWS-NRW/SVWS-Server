@@ -3,7 +3,7 @@
 		<div v-if="hatkeineErforderlicheKompetenz">
 			Für die Nutzung der Gruppenprozesse fehlen Benutzerkompetenzen.
 		</div>
-		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
+		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" title="Löschen" subtitle="Ausgewählte Schulen werden gelöscht." icon="i-ri-delete-bin-line">
 				<div>
 					<span v-if="selectedAllowedToDelete">Alle ausgewählten Schulen sind bereit zum Löschen.</span>
@@ -38,7 +38,7 @@
 	import { computed, ref } from "vue";
 	import type { SchulenGruppenprozesseProps } from "./SchulenGruppenprozesseProps";
 	import type { List } from "@core";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 
 	const props = defineProps<SchulenGruppenprozesseProps>();
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN));
