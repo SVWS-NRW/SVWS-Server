@@ -33,7 +33,7 @@ public final class ValidatorSss01SchuleStammdatenSchulform extends Validator {
 		final @NotNull String schulformKrz = daten.get();
 
 		try {
-			return Schulform.data().getWertByKuerzel(schulformKrz) == null;
+			return Schulform.data().getWertByKuerzel(schulformKrz) != null;
 		} catch (@SuppressWarnings("unused") final CoreTypeException e) {
 			addFehler(1, "Das Kürzel für die Schulform ist ungültig.");
 			return false;

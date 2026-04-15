@@ -16,6 +16,7 @@ public final class ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID extends 
 
 	/** Die Lehrer-Stammdaten */
 	private final @NotNull Supplier<String> daten;
+	private static final @NotNull String FEHLERTEXT = "Der eingetragene Wert für das Feld 'Staatsangehörigkeit' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.";
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -39,15 +40,16 @@ public final class ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID extends 
 			return true;
 		}
 
-		for (NationalitaetenKatalogEintrag historie : staatsangehoerigkeitID.historie()) {
+		for (final NationalitaetenKatalogEintrag historie : staatsangehoerigkeitID.historie()) {
 
-			int gueltigVon = (historie.gueltigVon == null) ? 0 : historie.gueltigVon;
-			int gueltigBis = (historie.gueltigBis == null) ? 99999 : historie.gueltigBis;
+			final int gueltigVon = (historie.gueltigVon == null) ? 0 : historie.gueltigVon;
+			final int gueltigBis = (historie.gueltigBis == null) ? 99999 : historie.gueltigBis;
 
 			if (gueltigVon <= schuljahr && gueltigBis >= schuljahr) {
 				return true;
 			}
 		}
+		this.addFehler(0, FEHLERTEXT);
 		return false;
 
 	}

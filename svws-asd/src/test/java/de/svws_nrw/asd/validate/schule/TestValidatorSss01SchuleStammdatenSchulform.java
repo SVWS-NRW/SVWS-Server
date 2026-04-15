@@ -88,7 +88,7 @@ class TestValidatorSss01SchuleStammdatenSchulform {
 				testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		validatorSss01SchuleStammdaten = new ValidatorSss01SchuleStammdatenSchulform(() -> schulform, kontext);
 
-		assertEquals(expected, validatorSss01SchuleStammdaten.run());
+		assertEquals(expected, validatorSss01SchuleStammdaten.pruefe());
 	}
 
 
@@ -109,7 +109,7 @@ class TestValidatorSss01SchuleStammdatenSchulform {
 		kontext = new ValidatorKontext(testdaten_001.schule.schulNr, Schulform.data().getWertByKuerzelOrException(testdaten_001.schule.schulform),
 				testdaten_001.schule.abschnitte, testdaten_001.schule.idSchuljahresabschnitt, true);
 		validatorSss01SchuleStammdaten = new ValidatorSss01SchuleStammdatenSchulform(() -> testdaten_001.schule.schulform, kontext);
-		assertEquals(true, validatorSss01SchuleStammdaten.run());
+		assertEquals(true, validatorSss01SchuleStammdaten.pruefe());
 	}
 
 	@ParameterizedTest

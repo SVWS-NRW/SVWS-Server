@@ -11,6 +11,8 @@ export class ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID extends Valida
 	 */
 	private readonly daten: Supplier<string>;
 
+	private static readonly FEHLERTEXT: string = "Der eingetragene Wert für das Feld 'Staatsangehörigkeit' ist für das ausgewählte Schuljahr nicht gültig. Bitte prüfen.";
+
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -29,13 +31,14 @@ export class ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID extends Valida
 		if (staatsangehoerigkeitID === null) {
 			return true;
 		}
-		for (let historie of staatsangehoerigkeitID.historie()) {
-			let gueltigVon: number = (historie.gueltigVon === null) ? 0 : historie.gueltigVon;
-			let gueltigBis: number = (historie.gueltigBis === null) ? 99999 : historie.gueltigBis;
+		for (const historie of staatsangehoerigkeitID.historie()) {
+			const gueltigVon: number = (historie.gueltigVon === null) ? 0 : historie.gueltigVon;
+			const gueltigBis: number = (historie.gueltigBis === null) ? 99999 : historie.gueltigBis;
 			if (gueltigVon <= schuljahr && gueltigBis >= schuljahr) {
 				return true;
 			}
 		}
+		this.addFehler(0, ValidatorLss10LehrerStammdatenStaatsangehoerigkeitID.FEHLERTEXT);
 		return false;
 	}
 

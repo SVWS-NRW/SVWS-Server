@@ -23,7 +23,7 @@ export class ValidatorSss01SchuleStammdatenSchulform extends Validator {
 	protected pruefe(): boolean {
 		const schulformKrz: string = this.daten.get();
 		try {
-			return Schulform.data().getWertByKuerzel(schulformKrz) === null;
+			return Schulform.data().getWertByKuerzel(schulformKrz) !== null;
 		} catch(e : any) {
 			this.addFehler(1, "Das Kürzel für die Schulform ist ungültig.");
 			return false;
