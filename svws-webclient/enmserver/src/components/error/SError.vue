@@ -62,6 +62,7 @@
 	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 	import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 	import { OpenApiError } from "@core/api/OpenApiError";
+	import { useAuthState } from "~/states/AuthState";
 
 	type CapturedError = {
 		id: number;
@@ -72,6 +73,7 @@
 	};
 
 	const props = defineProps<ErrorProps>();
+	const auth = useAuthState();
 	const copied = ref<boolean | null>(null);
 
 	const errorDescription = computed(() => {
@@ -86,7 +88,7 @@
 	});
 
 	function goBack() {
-		window.history.back();
+		globalThis.history.back();
 	}
 
 	async function createCapturedError(): Promise<CapturedError> {
@@ -120,17 +122,17 @@
 
 	async function copyToClipboard() {
 		const capturedError = await createCapturedError();
-		const json = JSON.stringify({ env: { mode: props.api.mode.text, version: props.api.version, commit: props.api.githash, userAgent: window.navigator.userAgent }, capturedError }, null, 2);
+		const json = JSON.stringify({ env: { mode: auth.mode.text, version: auth.version, commit: auth.githash, userAgent: globalThis.navigator.userAgent }, capturedError }, null, 2);
 		try {
 			await navigator.clipboard.writeText("```json\n" + json + "\n```");
-		} catch (e) {
+		} catch {
 			copied.value = false;
 		}
 		copied.value = true;
 	}
 
 	function reloadClient() {
-		window.location.href = window.location.origin;
+		globalThis.location.href = globalThis.location.origin;
 	}
 
 </script>

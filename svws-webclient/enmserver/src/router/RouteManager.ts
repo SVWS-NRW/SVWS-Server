@@ -2,13 +2,13 @@ import { reactive } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, Router, NavigationFailure, RouteParams } from "vue-router";
 import { createRouter, createWebHashHistory } from "vue-router";
 import { RouteNode } from "~/router/RouteNode";
-import { api } from "~/router/Api";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeLogin } from "~/router/RouteLogin";
 import { routeError } from "~/router/error/RouteError";
 import { RoutingStatus } from "~/router/RoutingStatus";
 import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 import { ServerMode } from "@core/core/types/ServerMode";
+import { authState } from "~/states/AuthStateImpl";
 
 interface RouteStateError {
 	code: number | undefined;
@@ -179,14 +179,13 @@ export class RouteManager {
 			return false;
 		}
 		this.active = true; // Setze, dass ein Routing-Vorgang bearbeitet wird
-		api.status.start();
 		// Ist der Benutzer nicht authentifiziert, so wird er zur Login-Seite weitergeleitet
-		if (!api.authenticated && (to.name !== "login")) {
+		if (!authState.authenticated && (to.name !== "login")) {
 			routeLogin.routepath = to.fullPath;
 			return { name: "login", query: { redirect: to.fullPath } };
 		}
 		// Aktualisiere ggf. den goto-Parameter
-		if (!api.authenticated && (to.name === "login")) {
+		if (!authState.authenticated && (to.name === "login")) {
 			let redirect = to.query.redirect;
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			if ((redirect === undefined) || (redirect === null) || ((!Array.isArray(redirect)) && (redirect.startsWith("/error")))) {
@@ -208,13 +207,13 @@ export class RouteManager {
 			return false;
 		}
 		// Prüfe zunächst, ob die Ziel-Route für den angemeldeten Benutzer und die Schulform der Schule erlaubt ist oder nicht
-		if (api.authenticated && (!to_node.hatSchulform() || !to_node.hatEineKompetenz())) {
+		if (authState.authenticated && (!to_node.hatSchulform())) {
 			return false;
 		}
-		if (api.mode !== ServerMode.STABLE) {
+		if (authState.mode !== ServerMode.STABLE) {
 			console.log("Routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node.name + " " + JSON.stringify(to.params)
 		}
-		if (!to_node.mode.checkServerMode(api.mode)) {
+		if (!to_node.mode.checkServerMode(authState.mode)) {
 			return routeError.getErrorRoute(new DeveloperNotificationException("Die Route ist nicht verfügbar, da die Client-Funktionen sich derzeit in der Entwicklung befinden (Stand: " + to_node.mode.name() + ")."), 503);
 		}
 		// Rufe die beforeEach-Methode bei der Ziel-Route auf und prüfe, ob die Route abgelehnt oder umgeleite wird...
@@ -336,10 +335,10 @@ export class RouteManager {
 			this._routeLocation = to;
 			const from_node: RouteNode<any, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
 			if (failure === undefined) {
-				if (api.mode !== ServerMode.STABLE) {
+				if (authState.mode !== ServerMode.STABLE) {
 					console.log("Completed routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
 				}
-				if ((to_node !== undefined) && (from_node !== undefined) && (from.fullPath !== "/") && api.authenticated) {
+				if ((to_node !== undefined) && (from_node !== undefined) && (from.fullPath !== "/") && authState.authenticated) {
 					// Prüfe, ob die Knoten Nachfolger bzw. Vorgänger voneinander sind
 					const equals = (to_node.name === from_node.name);
 					const to_is_successor = to_node.checkSuccessorOf(from_node);
@@ -366,14 +365,13 @@ export class RouteManager {
 					}
 				}
 			} else {
-				if (api.mode !== ServerMode.STABLE) {
+				if (authState.mode !== ServerMode.STABLE) {
 					console.log("Failed Routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); //  + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
 				}
 			}
 		} catch (e) {
 			console.log("Unexpected routing error:", e);
 		} finally {
-			api.status.stop();
 			this.active = false; // Setze, dass die Handhabung des Routing-Vorgangs abgeschlossen wurde
 		}
 	}

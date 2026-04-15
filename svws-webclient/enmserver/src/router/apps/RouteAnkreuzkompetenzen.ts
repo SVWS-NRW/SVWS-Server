@@ -1,7 +1,6 @@
 import type { EnmAnkreuzkompetenzenAuswahlProps } from "@ui/components/enm/EnmAnkreuzkompetenzenAuswahlProps";
 import type { EnmAnkreuzkompetenzenProps } from "@ui/components/enm/EnmAnkreuzkompetenzenProps";
 import { Schulform } from "@core/asd/types/schule/Schulform";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import EnmAnkreuzkompetenzen from "@ui/components/enm/EnmAnkreuzkompetenzen.vue";
 import { RouteNode } from "../RouteNode";
 import { routeApp, type RouteApp } from "./RouteApp";
@@ -12,7 +11,7 @@ import EnmAnkreuzkompetenzenAuswahl from "@ui/components/enm/EnmAnkreuzkompetenz
 export class RouteAnkreuzkompetenzen extends RouteNode<any, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KEINE], "ankreuzkompetenzen", "ankreuzkompetenzen", EnmAnkreuzkompetenzen);
+		super(Schulform.values(), "ankreuzkompetenzen", "ankreuzkompetenzen", EnmAnkreuzkompetenzen);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = () => this.getProps();
 		super.text = "Ankreuzkompetenzen";

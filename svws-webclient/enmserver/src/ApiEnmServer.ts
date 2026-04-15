@@ -9,6 +9,14 @@ import { ServerMode } from "@core/core/types/ServerMode";
 import { BaseApi } from "./BaseApi";
 import { ENMv2Daten } from "@core/core/data/enm/v2/ENMv2Daten";
 
+export interface ApiLoginData {
+	idLehrer: number;
+	isTotp: boolean;
+	setup: {
+		secret: string, issuer: string, account: string
+	} | null;
+}
+
 export class ApiEnmServer extends BaseApi {
 
 	/**
@@ -27,14 +35,38 @@ export class ApiEnmServer extends BaseApi {
 	 * War der Aufruf erfolgreich, so wird der Json-Web-Token zurückgegeben und für die weiteren API-Zugriffe
 	 * verwendet.
 	 *
+	 * @returns ein Objekt mit der ID des angemeldeten Lehrers und ggf. weiteren Informationen für die Erstanmeldung eines Benutzers
+	 */
+	public async login(): Promise<ApiLoginData> {
+		const response = await super.postTextBased("/api/login", 'application/json', 'application/json', null);
+
+		const isTotp = (response.status === 202);
+
+		const data = JSON.parse(response.data);
+		const setup = data.setup ?? null;
+		const jwt = (setup === null) ? data : data.token;
+		this.setBearerToken(jwt.token);
+
+		return { idLehrer: jwt.id, isTotp, setup };
+	}
+
+	/**
+	 * Schließt den Login-Vorgang durch Überprüfung des TOTP-Codes ab.
+	 *
+	 * @param {string} code - der 6-stellige TOTP-Code
+	 *
 	 * @returns die ID des angemeldeten Lehrers
 	 */
-	public async login(): Promise<number> {
-		const response = await super.postTextBased("/api/login", 'application/json', 'application/json', null);
-		const data = JSON.parse(response) as { token: string, id: number };
-		this.setBearerToken(data.token); // Umstellung auf Auth über den Json-Web-Token
-		return data.id;
+	public async loginTotp(code: string): Promise<number> {
+		const body = JSON.stringify({ code: code });
+		const response = await super.postTextBased("/api/login_totp", 'application/json', 'application/json', body);
+
+		const jwt = JSON.parse(response.data);
+
+		this.setBearerToken(jwt.token);
+		return jwt.id;
 	}
+
 
 	/**
 	 * Implementierung der GET-Methode getServerMode für den Zugriff auf die URL https://{hostname}/api/mode
@@ -51,7 +83,8 @@ export class ApiEnmServer extends BaseApi {
 	 * @returns der Server-Mode
 	 */
 	public async getServerMode(): Promise<ServerMode> {
-		return ServerMode.getByText(await super.getTextBased("/api/mode", "*/*"));
+		const response = await super.getTextBased("/api/mode", "*/*");
+		return ServerMode.getByText(response.data);
 	}
 
 	/**
@@ -69,7 +102,8 @@ export class ApiEnmServer extends BaseApi {
 	 * @returns die Schulform oder null, falls der Server ein ungültiges Schulform-Kürzel geliefert hat
 	 */
 	public async getSchulform(): Promise<Schulform | null> {
-		return Schulform.data().getWertByKuerzel(await super.getTextBased("/api/schulform", "*/*"));
+		const response = await super.getTextBased("/api/schulform", "*/*");
+		return Schulform.data().getWertByKuerzel(response.data);
 	}
 
 	/**
@@ -89,7 +123,8 @@ export class ApiEnmServer extends BaseApi {
 	 * @returns die GZip-komprimierte ENM-JSON-Datei
 	 */
 	public async getLehrerENMDaten(): Promise<ENMv2Daten> {
-		return ENMv2Daten.transpilerFromJSON(await super.getTextBased('/api/daten', 'application/json'));
+		const response = await super.getTextBased('/api/daten', 'application/json');
+		return ENMv2Daten.transpilerFromJSON(response.data);
 	}
 
 	/**
@@ -200,7 +235,8 @@ export class ApiEnmServer extends BaseApi {
 	 * @returns Die Key-Value-Paare der Konfigurationseinträge als Liste
 	 */
 	public async getClientConfig(): Promise<BenutzerConfig> {
-		return BenutzerConfig.transpilerFromJSON(await super.getTextBased("/api/clientconfig", "*/*"));
+		const response = await super.getTextBased("/api/clientconfig", "*/*");
+		return BenutzerConfig.transpilerFromJSON(response.data);
 	}
 
 	/**
@@ -216,7 +252,7 @@ export class ApiEnmServer extends BaseApi {
 	 */
 	public async setClientConfigUserKey(data: string | null, key: string): Promise<void> {
 		const body = `{ "key": ${JSON.stringify(key)}, "value": ${JSON.stringify(data)} }`;
-		return super.putTextBased("/api/clientconfig", 'application/json', body);
+		await super.putTextBased("/api/clientconfig", 'application/json', body);
 	}
 
 }

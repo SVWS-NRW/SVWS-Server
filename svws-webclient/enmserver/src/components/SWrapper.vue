@@ -9,7 +9,7 @@
 	</svws-ui-notification>
 	<svws-ui-notifications v-if="errors.size > 0">
 		<div v-if="errors.size > 1" class="bg-ui-100">
-			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-ui-100 border-light fixed right-6 left-0 top-5 z-50 w-[29rem] max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
+			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-ui-100 border-light fixed right-6 left-0 top-5 z-50 w-116 max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
 			<div class="min-h-[1.85rem]" />
 		</div>
 		<template v-for="error of [...errors.values()].reverse().slice(0, 20)" :key="error.id">
@@ -66,10 +66,10 @@
 	}
 
 	// Dieser Listener gilt nur für Promises
-	window.addEventListener("unhandledrejection", errorHandler);
+	globalThis.addEventListener("unhandledrejection", errorHandler);
 
 	// Dieser Listener fängt alle anderen Fehler ab
-	window.addEventListener("error", errorHandler);
+	globalThis.addEventListener("error", errorHandler);
 
 	onErrorCaptured((reason) => {
 		if (reason.name === 'resetAllErrors') {
@@ -83,13 +83,13 @@
 	async function createCapturedError(reason: Error) {
 		console.warn(reason);
 		counter.value++;
-		let name = `Fehler ${reason.name !== 'Error' ? ': ' + reason.name : ''}`;
+		let name = `Fehler ${reason.name === 'Error' ? '' : ': ' + reason.name}`;
 		let message = reason.message;
 		let log = null;
 		if (reason instanceof DeveloperNotificationException) {
 			name = "Programmierfehler: Bitte melden Sie diesen Fehler.";
 		} else if (reason instanceof UserNotificationException) {
-			name = "Nutzungsfehler: Dieser Fehler wurde durch eine nicht vorgesehene Nutzung der verwendeten Funktion hervorgerufen, z.B. durch unmögliche Kombinationen etc.";
+			name = "Hinweis:";
 		} else if (reason instanceof OpenApiError) {
 			name = "API-Fehler: Dieser Fehler wird durch eine fehlerhafte Kommunikation mit dem Server verursacht. In der Regel bedeutet das, dass die verschickten Daten nicht den Vorgaben entsprechen.";
 			if (reason.response instanceof Response) {
@@ -120,9 +120,9 @@
 
 	const browser = () => {
 		try {
-			const dc = new DecompressionStream("gzip");
+			new DecompressionStream("gzip");
 			return true;
-		} catch (e) {
+		} catch {
 			return false;
 		}
 	};

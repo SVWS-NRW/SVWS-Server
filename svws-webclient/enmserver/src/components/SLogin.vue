@@ -1,5 +1,5 @@
 <template>
-	<ui-login-layout :version :githash application="Web Noten Manager">
+	<ui-login-layout version="auth.version" githash="auth.githash" application="Web Noten Manager">
 		<template #logo>
 			<img src="/images/Wappenzeichen_NRW_bw.svg" alt="Logo NRW" class="h-14">
 		</template>
@@ -36,23 +36,25 @@
 			{{ error.message }}
 		</svws-ui-notification>
 	</svws-ui-notifications>
+	<s-login-totp-modal v-model:show="showTotpModal" />
 </template>
 
 <script setup lang="ts">
 
-	import { computed, nextTick, onMounted, ref, shallowRef } from "vue";
+	import { computed, nextTick, onMounted, ref, shallowRef, watch } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
-	import { version } from '../../version';
-	import { githash } from '../../githash';
 	import type { LoginProps } from "./SLoginProps";
 	import { JsonCoreTypeReaderStatic } from "../../../core/src/asd/utils/JsonCoreTypeReaderStatic";
 	import SvwsUiTextInput from "@ui/ui/controls/SvwsUiTextInput.vue";
 	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
+	import { useAuthState } from "~/states/AuthState";
 
 	const props = defineProps<LoginProps>();
+	const auth = useAuthState();
+
+	const showTotpModal = ref<boolean>(false);
 
 	const refUsername = ref<ComponentExposed<typeof SvwsUiTextInput>>();
-	const firstauth = ref(true);
 	const username = ref("");
 	const password = ref("");
 	const error = ref<{ name: string; message: string; } | null>(null);
@@ -63,7 +65,7 @@
 			set.difference(new Set());
 			// Versuche beim Laden der Komponente automatisch mit Default-Einstellungen eine Verbindung zu dem Server aufzubauen
 			await connect();
-		} catch (e) {
+		} catch {
 			error.value = {
 				name: "Achtung",
 				message: "Ihr Browser ist veraltet. Bitte aktualisieren Sie Ihren Browser auf eine aktuelle Version. Die weitere Nutzung wird zu Fehlern im ENM-Client führen.",
@@ -78,8 +80,8 @@
 	const serverFound = shallowRef<boolean>(false);
 
 	const inputHostname = computed<string>({
-		get: () => props.hostname,
-		set: (value) => props.setHostname(value),
+		get: () => auth.hostname,
+		set: (value) => auth.setHostname(value),
 	});
 
 	async function initCoreTypes() {
@@ -92,7 +94,7 @@
 		inputFocus.value = false;
 		error.value = null;
 		try {
-			await props.connectTo(props.hostname);
+			await auth.connectTo(auth.hostname);
 			serverFound.value = true;
 			await initCoreTypes();
 		} catch (e) {
@@ -109,15 +111,41 @@
 		});
 	}
 
+
+	async function waitForTotpModalClose(): Promise<void> {
+		return new Promise((resolve) => {
+			const unwatch = watch(showTotpModal, (value) => {
+				if (value === false) {
+					unwatch();
+					resolve();
+				}
+			});
+		});
+	}
+
+
 	async function doLogin() {
 		inputFocus.value = false;
 		error.value = null;
 		authenticating.value = true;
-		await props.login(username.value, password.value);
-		authenticating.value = false;
-		firstauth.value = false;
-		if (!props.authenticated) {
+		let success;
+		try {
+			success = await auth.login(username.value, password.value);
+		} finally {
+			authenticating.value = false;
+		}
+		if (!success) {
 			error.value = { name: "Eingabefehler", message: "Passwort oder Benutzername falsch." };
+			return;
+		}
+		if (!auth.pending2FA) {
+			await props.finishLogin();
+			return;
+		}
+		showTotpModal.value = true;
+		await waitForTotpModalClose();
+		if (auth.authenticated) {
+			await props.finishLogin();
 		}
 	}
 

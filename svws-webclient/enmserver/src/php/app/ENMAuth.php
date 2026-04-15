@@ -161,18 +161,18 @@ class ENMAuth {
      */
     public function pruefeLehrerSession(): object {
         if (strcasecmp(($this->authMethod ?? ''), "Bearer") !== 0) {
-            Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="WeNoM"');
+            Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server"');
         }
 
         $payload = Http::verifyJsonWebToken($this->authToken, $this->config->getClientSessionKey());
-        if (!$payload || ($payload->exp < time())) {
-            Http::exit401Unauthorized("Sitzung abgelaufen.");
+        if (($payload === null) || ($payload->exp < time())) {
+            Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_token", error_description="The access token has expired"');
         }
 
         // Schneller ID-Lookup statt teurem Passwort-Hash-Vergleich
         $lehrer = $this->db->getENMLehrerByID((int) $payload->sub);
         if (!$lehrer) {
-            Http::exit401Unauthorized();
+            Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server"');
         }
         return $lehrer;
     }
@@ -185,18 +185,18 @@ class ENMAuth {
      */
     public function pruefeLehrerTotpSession(): object {
         if (strcasecmp(($this->authMethod ?? ''), "Bearer") !== 0) {
-            Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="WeNoM"');
+            Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server"');
         }
 
         $payload = Http::verifyJsonWebToken($this->authToken, $this->config->getClientTotpAuthSessionKey());
         if (!$payload || ($payload->exp < time())) {
-            Http::exit401Unauthorized("Sitzung abgelaufen.");
+            Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server", error="invalid_token", error_description="The access token has expired"');
         }
 
         // Schneller ID-Lookup statt teurem Passwort-Hash-Vergleich
         $lehrer = $this->db->getENMLehrerByID((int) $payload->sub);
         if (!$lehrer) {
-            Http::exit401Unauthorized();
+            Http::exit401Unauthorized('WWW-Authenticate: Bearer realm="ENM-Server"');
         }
 
         if ($this->db->istLoginGesperrt($this->getRemoteAddr(), $lehrer->id)) {

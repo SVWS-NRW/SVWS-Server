@@ -1,11 +1,10 @@
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
-import { api } from "~/router/Api";
 import SLogin from "~/components/SLogin.vue";
 import type { LoginProps } from "~/components/SLoginProps";
 import { Schulform } from "@core/asd/types/schule/Schulform";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import { ServerMode } from "@core/core/types/ServerMode";
+import { authState } from "~/states/AuthStateImpl";
 
 export class RouteLogin extends RouteNode<any, any> {
 
@@ -15,33 +14,26 @@ export class RouteLogin extends RouteNode<any, any> {
 	public routepath = "/";
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KEINE], "login", "/login", SLogin);
+		super(Schulform.values(), "login", "/login", SLogin);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps();
 		super.text = "Login";
 	}
 
-	public login = async (username: string, password: string): Promise<void> => {
-		const success = await api.login(username, password);
-		if (success) {
-			await RouteManager.doRoute(this.routepath);
-		}
+	public finishLogin = async (): Promise<void> => {
+		await RouteManager.doRoute(this.routepath);
 	};
 
 	public logout = async () => {
 		this.routepath = "/";
+		await authState.logout();
 		await RouteManager.doRoute(this.getRoute());
-		await api.logout();
 		RouteManager.resetRouteState();
 	};
 
 	public getProps(): LoginProps {
 		return {
-			setHostname: api.setHostname,
-			login: this.login,
-			connectTo: api.connectTo,
-			authenticated: api.authenticated,
-			hostname: api.hostname,
+			finishLogin: this.finishLogin,
 		};
 	}
 

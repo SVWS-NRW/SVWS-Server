@@ -3,7 +3,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { Schulform } from "@core/asd/types/schule/Schulform";
 import { ServerMode } from "@core/core/types/ServerMode";
-import { BenutzerKompetenz } from "@core/core/types/benutzer/BenutzerKompetenz";
 import type { EnmKlassenleitungAuswahlProps } from "@ui/components/enm/EnmKlassenleitungAuswahlProps";
 
 const EnmKlassenleitungAuswahl = () => import("@ui/components/enm/EnmKlassenleitungAuswahl.vue");
@@ -12,7 +11,7 @@ const EnmKlassenleitung = () => import("@ui/components/enm/EnmKlassenleitung.vue
 export class RouteKlassenleitung extends RouteNode<any, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KEINE], "klassenleitung", "klassenleitung", EnmKlassenleitung);
+		super(Schulform.values(), "klassenleitung", "klassenleitung", EnmKlassenleitung);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps();
 		super.text = "Klassenleitung";

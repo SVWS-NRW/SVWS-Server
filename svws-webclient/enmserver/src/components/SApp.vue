@@ -3,7 +3,7 @@
 		<template #sidebar>
 			<svws-ui-menu :focus-switching-enabled :focus-help-visible>
 				<template #header>
-					<svws-ui-menu-header :user="username" class="cursor-pointer" />
+					<svws-ui-menu-header :user="auth.username" class="cursor-pointer" />
 				</template>
 				<template #default>
 					<template v-for="item in apps" :key="item.name">
@@ -75,7 +75,7 @@
 		</template>
 		<template #main>
 			<main class="app--page h-full" :class="app.name" role="main">
-				<div v-show="pendingSetApp" class="flex flex-col w-full h-full grow" :class="{'svws-api--pending': apiStatus.pending}">
+				<div v-show="pendingSetApp" class="flex flex-col w-full h-full grow">
 					<svws-ui-header>
 						<div class="flex items-center">
 							<div class="w-20 mr-6" v-if="(app.name === 'schueler') || (app.name === 'lehrer')">
@@ -90,7 +90,7 @@
 					</svws-ui-header>
 				</div>
 				<p v-if="focusSwitchingEnabled" v-show="focusHelpVisible" class="region-enumeration">8</p>
-				<div v-show="!pendingSetApp" class="flex flex-col w-full h-full grow overflow-hidden" :class="{'svws-api--pending': apiStatus.pending, 'focus-region': focusSwitchingEnabled, 'highlighted': focusHelpVisible}">
+				<div v-show="!pendingSetApp" class="flex flex-col w-full h-full grow overflow-hidden" :class="{'focus-region': focusSwitchingEnabled, 'highlighted': focusHelpVisible}">
 					<router-view :key="app.name" />
 				</div>
 			</main>
@@ -98,7 +98,7 @@
 	</svws-ui-app-layout>
 	<svws-ui-notifications v-if="errors.size > 0">
 		<div v-if="errors.size > 1" class="bg-ui-100">
-			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-ui-100 border-light fixed right-6 left-0 top-5 z-50 w-[29rem] max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
+			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-ui-100 border-light fixed right-6 left-0 top-5 z-50 w-116 max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
 			<div class="min-h-[1.85rem]" />
 		</div>
 		<template v-for="error of [...errors.values()].reverse().slice(0, 20)" :key="error.id">
@@ -124,13 +124,15 @@
 	import type { AppProps } from './SAppProps';
 	import { githash } from '../../githash';
 	import { version } from '../../version';
-	import { api } from '~/router/Api';
 	import type { SimpleOperationResponse } from "@core/core/data/SimpleOperationResponse";
 	import { DeveloperNotificationException } from "@core/core/exceptions/DeveloperNotificationException";
 	import { UserNotificationException } from "@core/core/exceptions/UserNotificationException";
 	import { useRegionSwitch } from "@ui/ui/composables/useRegionSwitch";
 	import type { TabData } from "@ui/ui/nav/TabData";
 	import { OpenApiError } from "@core/api/OpenApiError";
+	import { useAuthState } from "~/states/AuthState";
+
+	const auth = useAuthState();
 
 	const props = defineProps<AppProps>();
 
@@ -142,7 +144,7 @@
 	async function copyToClipboard() {
 		try {
 			await navigator.clipboard.writeText(`${version} ${githash}`);
-		} catch (e) {
+		} catch {
 			copied.value = false;
 		}
 		copied.value = true;
@@ -192,13 +194,12 @@
 	const errors = ref<Map<number, CapturedError>>(new Map());
 
 	function copyString(error: CapturedError) {
-		const json = JSON.stringify({ env: { mode: api.mode.text, version: api.version, commit: api.githash }, error }, null, 2);
+		const json = JSON.stringify({ env: { mode: auth.mode.text, version: auth.version, commit: auth.githash }, error }, null, 2);
 		return "```json\n" + json + "\n```";
 	}
 
 	function errorHandler(event: ErrorEvent | PromiseRejectionEvent) {
 		event.preventDefault();
-		api.status.stop();
 		console.log(event);
 		if (event instanceof ErrorEvent) {
 			void createCapturedError(event.error);
@@ -209,13 +210,12 @@
 	}
 
 	// Dieser Listener gilt nur für Promises
-	window.addEventListener("unhandledrejection", errorHandler);
+	globalThis.addEventListener("unhandledrejection", errorHandler);
 
 	// Dieser Listener fängt alle anderen Fehler ab
-	window.addEventListener("error", errorHandler);
+	globalThis.addEventListener("error", errorHandler);
 
 	onErrorCaptured((reason) => {
-		api.status.stop();
 		if (reason.name === 'resetAllErrors') {
 			errors.value.clear();
 		} else {
@@ -235,7 +235,7 @@
 	async function createCapturedError(reason: Error) {
 		console.warn(reason);
 		counter.value++;
-		let name = `Fehler ${reason.name !== 'Error' ? ': ' + reason.name : ''}`;
+		let name = `Fehler ${reason.name === 'Error' ? '' : ': ' + reason.name}`;
 		let message = reason.message;
 		let log = null;
 		if (reason instanceof DeveloperNotificationException) {
