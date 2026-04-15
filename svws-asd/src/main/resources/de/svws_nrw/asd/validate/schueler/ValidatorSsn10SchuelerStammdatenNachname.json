@@ -1,0 +1,23 @@
+{
+    "version" : 1,
+    "validator" : "de.svws_nrw.asd.validate.schueler.ValidatorSsn10SchuelerStammdatenNachname",
+    "historie" : [ {
+      "praefix" : "SSN10",
+      "altes_kuerzel" : "",
+      "zweig" : "Schueler-Stammdaten-Nachname",
+      "dtos" : "Schueler",
+      "ausfuehrungsbereich_ui" : "Schüler, Reiter 'Individualdaten'",
+      "anzeigebereich_ui" : "Feld 'Nachname'",
+      "svws" : true,
+      "zebras" : true,
+      "vorbedingung" : ["SSN00"],
+      "muss" : ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+      "kann" : [ ],
+      "hinweis" : [ ],
+      "text" : "Nachname des Schülers: Der Nachname darf nicht nur aus Leerzeichen bestehen.",
+      "erlaeuterung" : "",
+      "bedingung" : "SchuelerStammdaten.nachname = Leerzeichen",
+      "gueltigVon" : null,
+      "gueltigBis" : null
+    } ]
+  }
