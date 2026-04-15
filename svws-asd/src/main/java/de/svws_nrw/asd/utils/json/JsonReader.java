@@ -47,7 +47,13 @@ public final class JsonReader {
 	 * @throws IOException          falls die Datei nicht erfolgreich gelesen werden kann
 	 */
 	public static String fromResource(final String location) throws IOException {
+		if (location == null) {
+			throw new IllegalArgumentException("Die location darf nicht null sein.");
+		}
 		final Path path = getPath(location);
+		if (path == null) {
+			throw new IOException("Keine Ressource unter %s gefunden.".formatted(location));
+		}
 		return Files.readString(path);
 	}
 
@@ -103,6 +109,9 @@ public final class JsonReader {
 	public static String fromResourceOrEmptyString(final String location) {
 		try {
 			final Path path = getPath(location);
+			if (path == null) {
+				return "";
+			}
 			return Files.readString(path);
 		} catch (@SuppressWarnings("unused") final IOException e) {
 			return "";
