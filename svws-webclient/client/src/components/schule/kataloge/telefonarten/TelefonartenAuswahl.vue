@@ -16,7 +16,7 @@
 					<svws-ui-checkbox type="toggle" v-model="showOnlyVisibleTelefonarten">Nur Sichtbare</svws-ui-checkbox>
 				</template>
 				<template #actions>
-					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
+					<svws-ui-tooltip position="bottom">
 						<svws-ui-button type="icon"
 							@click="gotoHinzufuegenView(true)"
 							:has-focus="noFilteredEntries"
@@ -37,7 +37,7 @@
 
 	import { computed } from "vue";
 	import type { Telefonart } from "@core";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import type { TelefonartenAuswahlProps } from "~/components/schule/kataloge/telefonarten/TelefonartenAuswahlProps";

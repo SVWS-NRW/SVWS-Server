@@ -3,7 +3,7 @@
 		<div v-if="hatKeineErforderlicheKompetenz">
 			Für die Nutzung der Gruppenprozesse fehlen die Benutzerkompetenzen.
 		</div>
-		<div v-if="ServerMode.DEV.checkServerMode(serverMode)" class="flex flex-col gap-4">
+		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Telefonarten werden gelöscht.">
 				<div>
 					<span v-if="selectedAreNotReferenced">Alle ausgewählten Telefonarten sind bereit zum Löschen.</span>
@@ -54,7 +54,7 @@
 	import type { TelefonartenGruppenprozesseProps } from "~/components/schule/kataloge/telefonarten/gruppenprozesse/TelefonartenGruppenprozesseProps";
 	import type { List } from "@core";
 	import { ref, computed } from "vue";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 
 	const props = defineProps<TelefonartenGruppenprozesseProps>();
 	const isLoading = ref<boolean>(false);

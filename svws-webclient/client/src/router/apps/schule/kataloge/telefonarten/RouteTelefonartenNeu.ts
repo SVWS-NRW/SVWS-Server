@@ -15,7 +15,7 @@ export class RouteTelefonartenNeu extends RouteNode<any, RouteTelefonarten> {
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.telefonarten.neu", "neu", TelefonartenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Telefonarten Neu";
 		super.setCheckpoint = true;

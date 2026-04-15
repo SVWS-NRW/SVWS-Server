@@ -2622,7 +2622,7 @@ public class APISchule {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Telefonart.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataTelefonarten(conn).addAsResponse(is),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -2654,7 +2654,7 @@ public class APISchule {
 							schema = @Schema(implementation = Telefonart.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataTelefonarten(conn).patchAsResponse(id, is),
-				request, ServerMode.DEV,
+				request, ServerMode.STABLE,
 				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
 	}
 
@@ -2682,7 +2682,7 @@ public class APISchule {
 			@RequestBody(description = "Die IDs der zu löschenden Telefonarten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataTelefonarten(conn).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)),
-				request, ServerMode.DEV, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
 	}
 
 	/**

@@ -17,7 +17,7 @@ export class RouteTelefonarten extends RouteAuswahlNode<TelefonartenListeManager
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.telefonarten", "schule/telefonarten/:id(\\d+)?", TelefonartenApp, TelefonartenAuswahl, new RouteDataTelefonarten());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Telefonarten";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [
