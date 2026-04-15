@@ -13,6 +13,7 @@ import de.svws_nrw.asd.data.schueler.SchuelerSchulbesuchMerkmal;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerMerkmale;
 import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -24,11 +25,10 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchuelerMerkmale, SchuelerSchulbesuchMerkmal> {
 
+	private static final String ID_SCHUELER = "idSchueler";
+	private static final String ID_MERKMAL = "idMerkmal";
 	/** Ein Cache für den schnellen Zugriff auf den Katalog der Merkmale */
 	private final Map<String, DTOMerkmale> merkmale;
-
-	/** Die Id des Schülers - benötigt zum Persistieren neuer DTOSchuelerMerkmale */
-	private final Long idSchueler;
 
 	/**
 	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link SchuelerSchulbesuchMerkmal}.
@@ -36,30 +36,15 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 	 * @param conn         die Datenbank-Verbindung für den Datenbankzugriff
 	 */
 	public DataSchuelerMerkmale(final DBEntityManager conn) {
-		this(conn, null);
-	}
-
-	/**
-	 * Erstellt einen neuen {@link DataManagerRevised} für das Core-DTO {@link SchuelerSchulbesuchMerkmal}.
-	 *
-	 * @param conn         die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param idSchueler   die ID des Schülers - benötigt zum Persistieren neuer DTOSchuelerMerkmale
-	 */
-	public DataSchuelerMerkmale(final DBEntityManager conn, final Long idSchueler) {
 		super(conn);
-		this.idSchueler = idSchueler;
-		setAttributesNotPatchable("id", "idSchueler");
-		setAttributesRequiredOnCreation("idMerkmal");
+		setAttributesNotPatchable("id", ID_SCHUELER);
+		setAttributesRequiredOnCreation(ID_MERKMAL, ID_SCHUELER);
 		merkmale = conn.queryAll(DTOMerkmale.class).stream().collect(Collectors.toMap(m -> m.Kurztext, m -> m));
 	}
 
 	@Override
 	protected void initDTO(final DTOSchuelerMerkmale dto, final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		dto.ID = newID;
-		if (this.idSchueler == null) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID des Schuelers darf nicht null sein.");
-		}
-		dto.Schueler_ID = this.idSchueler;
 	}
 
 	@Override
@@ -89,6 +74,7 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 	private static SchuelerSchulbesuchMerkmal map(final DTOSchuelerMerkmale dto, final Map<String, DTOMerkmale> merkmale) {
 		final SchuelerSchulbesuchMerkmal merkmal = new SchuelerSchulbesuchMerkmal();
 		merkmal.id = dto.ID;
+		merkmal.idSchueler = dto.Schueler_ID;
 		merkmal.idMerkmal = Optional.ofNullable(dto.Kurztext).map(merkmale::get).map(m -> m.ID).orElse(null);
 		merkmal.datumVon = dto.DatumVon;
 		merkmal.datumBis = dto.DatumBis;
@@ -104,7 +90,9 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 	 * @return die Core-DTOs
 	 */
 	public static List<SchuelerSchulbesuchMerkmal> mapMultiple(final Collection<DTOSchuelerMerkmale> dtos, final Map<String, DTOMerkmale> merkmale) {
-		return dtos.stream().map(dto -> map(dto, merkmale)).toList();
+		return dtos.stream()
+				.map(dto -> map(dto, merkmale))
+				.toList();
 	}
 
 	@Override
@@ -117,8 +105,9 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 					throw new ApiOperationException(Status.BAD_REQUEST, "IdPatch %d ist ungleich dtoId %d".formatted(id, dto.ID));
 				}
 			}
-			case "idMerkmal" -> {
-				final Long id = JSONMapper.convertToLong(value, false, "idMerkmal");
+			case ID_SCHUELER -> mapIdSchueler(dto, value, name);
+			case ID_MERKMAL -> {
+				final Long id = JSONMapper.convertToLong(value, false, ID_MERKMAL);
 				dto.Kurztext = merkmale.values().stream().filter(m -> m.ID == id).findFirst().map(m -> m.Kurztext)
 						.orElseThrow(() -> new ApiOperationException(Status.BAD_REQUEST, "Zur id %d existiert kein Merkmal.".formatted(id)));
 			}
@@ -126,6 +115,15 @@ public final class DataSchuelerMerkmale extends DataManagerRevised<Long, DTOSchu
 			case "datumBis" -> mapDatumBis(dto, value);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
+	}
+
+	private void mapIdSchueler(final DTOSchuelerMerkmale dto, final Object value, final String name) {
+		final Long idSchueler = JSONMapper.convertToLong(value, false, name);
+		final DTOSchueler dtoSchueler = this.conn.queryByKey(DTOSchueler.class, idSchueler);
+		if (dtoSchueler == null) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Kein Schüler zur id %d gefunden".formatted(idSchueler));
+		}
+		dto.Schueler_ID = idSchueler;
 	}
 
 	private static void mapDatumBis(final DTOSchuelerMerkmale dto, final Object value) throws ApiOperationException {

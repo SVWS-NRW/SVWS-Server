@@ -9,6 +9,11 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 	public id: number = 0;
 
 	/**
+	 * Die ID des Schülers
+	 */
+	public idSchueler: number = 0;
+
+	/**
 	 * Die ID des Merkmals
 	 */
 	public idMerkmal: number | null = null;
@@ -24,9 +29,6 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 	public datumBis: string | null = null;
 
 
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
 	public constructor() {
 		super();
 	}
@@ -47,6 +49,9 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
+		if (obj.idSchueler === undefined)
+			throw new Error('invalid json format, missing attribute idSchueler');
+		result.idSchueler = obj.idSchueler;
 		result.idMerkmal = (obj.idMerkmal === undefined) ? null : obj.idMerkmal === null ? null : obj.idMerkmal;
 		result.datumVon = (obj.datumVon === undefined) ? null : obj.datumVon === null ? null : obj.datumVon;
 		result.datumBis = (obj.datumBis === undefined) ? null : obj.datumBis === null ? null : obj.datumBis;
@@ -56,6 +61,7 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 	public static transpilerToJSON(obj: SchuelerSchulbesuchMerkmal): string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
 		result += '"idMerkmal" : ' + ((obj.idMerkmal === null) ? 'null' : obj.idMerkmal.toString()) + ',';
 		result += '"datumVon" : ' + ((obj.datumVon === null) ? 'null' : JSON.stringify(obj.datumVon)) + ',';
 		result += '"datumBis" : ' + ((obj.datumBis === null) ? 'null' : JSON.stringify(obj.datumBis)) + ',';
@@ -68,6 +74,9 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 		let result = '{';
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.idSchueler !== undefined) {
+			result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
 		}
 		if (obj.idMerkmal !== undefined) {
 			result += '"idMerkmal" : ' + ((obj.idMerkmal === null) ? 'null' : obj.idMerkmal.toString()) + ',';

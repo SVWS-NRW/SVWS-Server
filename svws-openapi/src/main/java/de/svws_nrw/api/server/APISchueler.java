@@ -467,54 +467,29 @@ public class APISchueler {
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage von SchuelerMerkmalen.
-	 *
-	 * @param schema     das Datenbankschema, auf das die Abfrage ausgeführt werden soll
-	 * @param id         die Datenbank-ID zur Identifikation eines SchülerMerkmals
-	 * @param request    die Informationen zur HTTP-Anfrage
-	 *
-	 * @return das SchuelerMerkmal
-	 */
-	@GET
-	@Path("/merkmal/{id : \\d+}")
-	@Operation(summary = "Liefert das zur ID zugehörige SchuelerMerkmal.",
-			description = "Gibt das SchuelerMerkmal zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
-	@ApiResponse(responseCode = "200", description = "Das SchuelerMerkmal", content = @Content(mediaType = "application/json",
-			schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class)))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Kein SchuelerMerkmal mit der angegebenen ID gefunden.")
-	public Response getSchuelerMerkmal(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerMerkmale(conn).getByIdAsResponse(id),
-				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
-	}
-
 	/**
 	 * Die OpenAPI-Methode für das Hinzufügen von SchuelerMerkmalen.
 	 *
 	 * @param schema       das Datenbankschema
-	 * @param idSchueler   die ID des Schülers bei dem das Merkmal hinzugefügt werden soll
 	 * @param is           der Input-Stream mit den Daten des SchuelerMerkmals
 	 * @param request      die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die HTTP-Antwort mit dem neuen SchuelerMerkmal
 	 */
 	@POST
-	@Path("{idSchueler : \\d+}/merkmal")
+	@Path("/merkmal")
 	@Operation(summary = "Erstellt ein neues SchuelerMerkmal und gibt das zugehörige Objekt zurück.",
 			description = "Erstellt neue SchuelerMerkmale, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.")
 	@ApiResponse(responseCode = "201", description = "Das SchuelerMerkmal wurde erfolgreich hinzugefügt.",
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um SchuelerMerkmale hinzuzufügen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response addSchuelerMerkmal(@PathParam("schema") final String schema, @PathParam("idSchueler") final long idSchueler,
+	public Response addSchuelerMerkmal(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die Daten des zu erstellenden SchuelerMerkmal ohne ID, die automatisch generiert wird", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = SchuelerSchulbesuchMerkmal.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerMerkmale(conn, idSchueler).addAsResponse(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerMerkmale(conn).addAsResponse(is),
 				request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
 

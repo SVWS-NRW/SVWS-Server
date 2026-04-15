@@ -324,7 +324,8 @@
 			await props.addSchuelerSchulbesuchMerkmal(partialDataWithoutId);
 		}
 		if (type === Mode.PATCH) {
-			await props.patchSchuelerSchulbesuchMerkmal(newEntryMerkmal.value.id, partialDataWithoutId);
+			const { idSchueler, ...partialDataWithoutIdSchueler } = partialDataWithoutId;
+			await props.patchSchuelerSchulbesuchMerkmal(newEntryMerkmal.value.id, partialDataWithoutIdSchueler);
 		}
 		enterDefaultMode();
 	}

@@ -12497,35 +12497,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode addSchuelerMerkmal für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{idSchueler : \d+}/merkmal
-	 *
-	 * Erstellt neue SchuelerMerkmale, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 201: Das SchuelerMerkmal wurde erfolgreich hinzugefügt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerSchulbesuchMerkmal
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um SchuelerMerkmale hinzuzufügen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<SchuelerSchulbesuchMerkmal>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} idSchueler - der Pfad-Parameter idSchueler
-	 *
-	 * @returns Das SchuelerMerkmal wurde erfolgreich hinzugefügt.
-	 */
-	public async addSchuelerMerkmal(data : Partial<SchuelerSchulbesuchMerkmal>, schema : string, idSchueler : number) : Promise<SchuelerSchulbesuchMerkmal> {
-		const path = "/db/{schema}/schueler/{idSchueler : \\d+}/merkmal"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{idSchueler\s*(:[^{}]+({[^{}]+})*)?}/g, idSchueler.toString());
-		const body : string = SchuelerSchulbesuchMerkmal.transpilerToJSONPatch(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return SchuelerSchulbesuchMerkmal.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der POST-Methode addSchuelerTelefon für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{idSchueler : \d+}/telefon
 	 *
 	 * Erstellt einen neuen Schülertelefoneintrag. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerdaten besitzt.
@@ -13394,27 +13365,27 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getSchuelerMerkmal für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/merkmal/{id : \d+}
+	 * Implementierung der POST-Methode addSchuelerMerkmal für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/merkmal
 	 *
-	 * Gibt das SchuelerMerkmal zurück, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
+	 * Erstellt neue SchuelerMerkmale, insofern der SVWS-Benutzer die erforderliche Berechtigung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Das SchuelerMerkmal
+	 *   Code 201: Das SchuelerMerkmal wurde erfolgreich hinzugefügt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SchuelerSchulbesuchMerkmal
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.
-	 *   Code 404: Kein SchuelerMerkmal mit der angegebenen ID gefunden.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um SchuelerMerkmale hinzuzufügen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
+	 * @param {Partial<SchuelerSchulbesuchMerkmal>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
 	 *
-	 * @returns Das SchuelerMerkmal
+	 * @returns Das SchuelerMerkmal wurde erfolgreich hinzugefügt.
 	 */
-	public async getSchuelerMerkmal(schema : string, id : number) : Promise<SchuelerSchulbesuchMerkmal> {
-		const path = "/db/{schema}/schueler/merkmal/{id : \\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const result : string = await super.getJSON(path);
+	public async addSchuelerMerkmal(data : Partial<SchuelerSchulbesuchMerkmal>, schema : string) : Promise<SchuelerSchulbesuchMerkmal> {
+		const path = "/db/{schema}/schueler/merkmal"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = SchuelerSchulbesuchMerkmal.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return SchuelerSchulbesuchMerkmal.transpilerFromJSON(text);
 	}

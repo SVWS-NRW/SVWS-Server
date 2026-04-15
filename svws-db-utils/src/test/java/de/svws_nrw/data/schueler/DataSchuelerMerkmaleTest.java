@@ -51,7 +51,7 @@ class DataSchuelerMerkmaleTest {
 		final var merkmal = new DTOMerkmale(1L);
 		merkmal.Kurztext = "GANZTAG";
 		when(this.conn.queryAll(DTOMerkmale.class)).thenReturn(List.of(merkmal));
-		dataSchuelerMerkmale = new DataSchuelerMerkmale(conn, 123L);
+		dataSchuelerMerkmale = new DataSchuelerMerkmale(conn);
 	}
 
 	@Test
@@ -64,7 +64,7 @@ class DataSchuelerMerkmaleTest {
 
 			assertThat(throwable)
 					.isInstanceOf(ApiOperationException.class)
-					.hasMessage("Es werden weitere Attribute (idMerkmal) benötigt, damit die Entität erstellt werden kann.")
+					.hasMessage("Es werden weitere Attribute (idSchueler,idMerkmal) benötigt, damit die Entität erstellt werden kann.")
 					.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 		}
 	}
@@ -115,20 +115,6 @@ class DataSchuelerMerkmaleTest {
 		this.dataSchuelerMerkmale.initDTO(dto, 2L, null);
 
 		assertThat(dto.ID).isEqualTo(2L);
-	}
-
-	@Test
-	@DisplayName("initDTO | missing idSchueler")
-	void initDTOTest_idSchuelerMissing() {
-		final var dto = getDtoMerkmal();
-		dataSchuelerMerkmale = new DataSchuelerMerkmale(conn);
-
-		final var throwable = catchThrowable(() -> this.dataSchuelerMerkmale.initDTO(dto, 2L, null));
-
-		assertThat(throwable)
-				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Die ID des Schuelers darf nicht null sein.")
-				.hasFieldOrPropertyWithValue("status", Response.Status.BAD_REQUEST);
 	}
 
 	@Test

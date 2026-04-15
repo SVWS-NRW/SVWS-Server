@@ -60,7 +60,8 @@ export class RouteDataSchuelerSchulbesuch extends RouteData<RouteStateDataSchuel
 	};
 
 	addSchuelerSchulbesuchMerkmal = async (data: Partial<SchuelerSchulbesuchMerkmal>): Promise<void> => {
-		const result = await api.server.addSchuelerMerkmal(data, api.schema, this.auswahl.id);
+		data.idSchueler = this.auswahl.id;
+		const result = await api.server.addSchuelerMerkmal(data, api.schema);
 		this.schuelerSchulbesuchManager.addSchuelerSchulbesuchMerkmal(result);
 		this.commit();
 	};

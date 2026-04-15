@@ -17,6 +17,10 @@ public class SchuelerSchulbesuchMerkmal {
 	@Schema(description = "die ID des besonderen Merkmals für die Statistik", example = "3", accessMode = Schema.AccessMode.READ_ONLY)
 	public long id;
 
+	/** Die ID des Schülers */
+	@Schema(description = "Die ID des Schülers", example = "3")
+	public long idSchueler;
+
 	/** Die ID des Merkmals */
 	@Schema(description = "die ID des Merkmals", example = "1")
 	public Long idMerkmal;
@@ -28,12 +32,5 @@ public class SchuelerSchulbesuchMerkmal {
 	/** Das Datum, bis wann das Merkmal vorliegt. */
 	@Schema(description = "das Datum, bis wann das Merkmal vorliegt", example = "2008-07-31")
 	public String datumBis;
-
-	/**
-	 * Leerer Standardkonstruktor.
-	 */
-	public SchuelerSchulbesuchMerkmal() {
-		// leer
-	}
 
 }
