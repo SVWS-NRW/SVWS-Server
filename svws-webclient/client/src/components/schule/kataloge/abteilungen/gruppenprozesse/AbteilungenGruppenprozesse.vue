@@ -1,6 +1,6 @@
 <template>
 	<div class="page page-grid-cards">
-		<div class="flex flex-col gap-4" v-if="ServerMode.DEV.checkServerMode(serverMode)">
+		<div class="flex flex-col gap-4">
 			<ui-card v-if="hatKompetenzLoeschen" icon="i-ri-delete-bin-line" title="Löschen" subtitle="Ausgewählte Abteilungen werden gelöscht">
 				<div class="w-full">
 					<svws-ui-checkbox v-model="deleteAbteilungenInFolgeAbschnitt">
@@ -29,7 +29,7 @@
 	import { computed, ref } from "vue";
 	import type { AbteilungenGruppenprozesseProps } from "./AbteilungenGruppenprozesseProps";
 	import type { List } from "@core";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 
 	const props = defineProps<AbteilungenGruppenprozesseProps>();
 

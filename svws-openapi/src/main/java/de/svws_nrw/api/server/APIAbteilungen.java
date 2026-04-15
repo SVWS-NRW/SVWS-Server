@@ -102,7 +102,7 @@ public class APIAbteilungen {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Abteilung.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataAbteilungen(conn, null).addAsResponse(is, idSchuljahresabschnitt), request,
-				ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+				ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class APIAbteilungen {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Abteilung.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataAbteilungen(conn, null).patchAsResponse(id, is), request,
-				ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+				ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class APIAbteilungen {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(conn ->
 						new DataAbteilungen(conn, null).deleteMultipleAsSimpleResponseList(JSONMapper.toListOfLong(is)), request,
-				ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+				ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
 
@@ -188,7 +188,7 @@ public class APIAbteilungen {
 							array = @ArraySchema(schema = @Schema(implementation = AbteilungKlassenzuordnung.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataAbteilungenKlassenzuordnungen(conn).addMultipleAsResponse(is), request,
-				ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+				ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
 	/**
@@ -215,7 +215,7 @@ public class APIAbteilungen {
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn ->
 						new DataAbteilungenKlassenzuordnungen(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)), request,
-				ServerMode.DEV, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
+				ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
 	}
 
 }

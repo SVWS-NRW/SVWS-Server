@@ -18,7 +18,7 @@ export class RouteAbteilungen extends RouteAuswahlNode<AbteilungenListeManager, 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.abteilungen",
 			"schule/abteilungen/:id(\\d+)?", AbteilungenApp, AbteilungenAuswahl, new RouteDataAbteilungen());
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.text = "Abteilungen";
 		super.menugroup = RouteSchuleMenuGroup.KATALOGE;
 		super.children = [

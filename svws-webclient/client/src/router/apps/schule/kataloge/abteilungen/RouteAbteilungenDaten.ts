@@ -13,7 +13,7 @@ export class RouteAbteilungenDaten extends RouteNode<any, RouteAbteilungen> {
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN], "schule.abteilungen.daten",
 			"daten", AbteilungenDaten);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Abteilungen";
 	}

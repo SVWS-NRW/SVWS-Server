@@ -15,7 +15,7 @@ export class RouteAbteilungenNeu extends RouteNode<any, RouteAbteilungen> {
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.LEHRERDATEN_AENDERN], "schule.abteilungen.neu", "neu", AbteilungenNeu);
 		super.types = new Set([ViewType.HINZUFUEGEN]);
-		super.mode = ServerMode.DEV;
+		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "abteilungen";
 		super.setCheckpoint = true;

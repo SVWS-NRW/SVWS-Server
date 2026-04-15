@@ -17,7 +17,7 @@
 					<svws-ui-checkbox type="toggle" v-model="showOnlyVisibleAbteilungen">Nur Sichtbare</svws-ui-checkbox>
 				</template>
 				<template #actions v-if="!readonly">
-					<svws-ui-tooltip v-if="ServerMode.DEV.checkServerMode(serverMode)" position="top">
+					<svws-ui-tooltip position="top">
 						<svws-ui-button type="icon"
 							@click="gotoHinzufuegenView(true)"
 							:has-focus="noFilteredEntries" :disabled="isHinzufuegenDisabled">
@@ -37,7 +37,7 @@
 	import type { AbteilungenAuswahlProps } from "~/components/schule/kataloge/abteilungen/AbteilungenAuswahlProps";
 	import type { DataTableColumn } from "@ui";
 	import type { Abteilung } from "@core";
-	import { BenutzerKompetenz, ServerMode } from "@core";
+	import { BenutzerKompetenz } from "@core";
 	import { useRegionSwitch, ViewType } from "@ui";
 	import { computed } from "vue";
 
