@@ -4,22 +4,22 @@
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="1">
 					<svws-ui-text-input placeholder="Bezeichnung" class="contentFocusField" span="2"
-						:model-value="manager().auswahl().bezeichnung"
-						@change="patchBezeichnung"
-						:valid="bezeichnungIsValid"
-						:min-len="1" :max-len="100" required :readonly="!hatKompetenzUpdate" />
+						v-model="data.proxy.bezeichnung"
+						:validation="() => data.getFehler('bezeichnung')"
+						@commit="data.patch"
+						:max-len="50" :readonly />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-spacing :size="2" />
 			<svws-ui-content-card title="Ansicht & Sortierung">
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-input-number placeholder="Sortierung"
-						:model-value="manager().auswahl().sortierung"
-						@change="patchSortierung"
-						:valid="sortierungIsValid"
-						:min="0" :max="32000" :readonly="!hatKompetenzUpdate" :removable="false" />
+						v-model="data.proxy.sortierung"
+						:validation="() => data.getFehler('sortierung')"
+						@commit="data.patch"
+						:min="0" :max="32000" :readonly />
 					<svws-ui-spacing />
-					<svws-ui-checkbox v-model="istSichtbar" :readonly="!hatKompetenzUpdate">
+					<svws-ui-checkbox v-model="data.proxy.istSichtbar" :readonly>
 						Sichtbar
 					</svws-ui-checkbox>
 				</svws-ui-input-wrapper>
@@ -33,41 +33,12 @@
 	import type { BeschaeftigungsartenDatenProps } from "~/components/schule/kataloge/beschaeftigungsarten/daten/BeschaeftigungsartenDatenProps";
 	import { BenutzerKompetenz } from "@core";
 	import { computed } from "vue";
-	import { isUniqueInList, mandatoryInputIsValid, numberHasDecimals, numberIsValid } from "~/util/validation/Validation";
+	import { BeschaeftigungsartModelProxy } from "~/components/schule/kataloge/beschaeftigungsarten/modelproxy/BeschaeftigungsartModelProxy";
 
 	const props = defineProps<BeschaeftigungsartenDatenProps>();
+	const data = new BeschaeftigungsartModelProxy(() => props.manager().auswahl(), () => props.manager().liste.list(), props.patch);
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN));
+	const readonly = computed(() => !hatKompetenzUpdate.value);
 
-	const istSichtbar = computed<boolean>({
-		get: () => props.manager().auswahl().istSichtbar,
-		set: (v: boolean) => void patchSichtbar(v),
-	});
-
-	async function patchBezeichnung(bezeichnung: string | null) {
-		if (bezeichnungIsValid(bezeichnung)) {
-			await props.patch({ bezeichnung: bezeichnung ?? '' });
-		}
-	}
-
-	async function patchSortierung(value: number | null): Promise<void> {
-		if (sortierungIsValid(value)) {
-			await props.patch({ sortierung: value === null ? 32000 : value });
-		}
-	}
-
-	async function patchSichtbar(value: boolean): Promise<void> {
-		await props.patch({ istSichtbar: value });
-	}
-
-	// ---validate---
-	function bezeichnungIsValid(bezeichnung: string | null) {
-		return mandatoryInputIsValid(bezeichnung, 100)
-			&& isUniqueInList(bezeichnung, props.manager().liste.list(), "bezeichnung", "id", props.manager().auswahlID() ?? undefined);
-	}
-
-	function sortierungIsValid(sortierung: number | null): boolean {
-		return !numberHasDecimals(sortierung)
-			&& numberIsValid(sortierung, true, 0, 32000);
-	}
 
 </script>
