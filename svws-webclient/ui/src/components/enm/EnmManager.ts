@@ -718,11 +718,15 @@ export class EnmManager {
 	public leistungGetKursartAsString(leistung: ENMv2Leistung): string {
 		// Bestimme die Lerngruppe zu der Leistung
 		const lerngruppe = this.mapLerngruppen.get(leistung.lerngruppenID);
-		if ((lerngruppe === null) || (lerngruppe.kursartID === null) || (lerngruppe.kursartKuerzel === null)) {
+		if ((lerngruppe === null) || ((lerngruppe.kursartID === null) || (lerngruppe.kursartKuerzel === null))) {
 			return '';
 		}
-		// Bei Grundkursen muss die Schriftlichkeit mit angezeigt werden
 		let kuerzel = lerngruppe.kursartKuerzel;
+		// Bei einem Differenzierungskurs muss die spezielle Differenzierung beim Schüler für die Ausgabe beachtet werden
+		if (kuerzel === 'DK') {
+			return leistung.istDifferenzierungkursErweitert ? "E" : "G";
+		}
+		// Bei Grundkursen in der Oberstufe muss die Schriftlichkeit mit angezeigt werden
 		if (kuerzel === 'GK') {
 			kuerzel = kuerzel + ((leistung.istSchriftlich ?? false) ? "S" : "M");
 		}
