@@ -88,7 +88,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addThymeleafConfiguration() {
-		def version = "3.1.3.RELEASE";
+		def version = "3.1.4.RELEASE";
 		project.configurations.create('thymeleaf');
 		project.dependencies.add('thymeleaf', 'org.thymeleaf:thymeleaf:' + version);
 	}
