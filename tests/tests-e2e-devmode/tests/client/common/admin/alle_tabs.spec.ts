@@ -42,23 +42,28 @@ test('Admins können entsprechende Bereiche im DEV Mode einsehen', async ({ page
 	await expect(page.getByText('Erziehungsberechtigte')).toBeVisible();
 	await expect(page.getByText('Daten zu Caroline Triebel')).toBeVisible();
 
+
 	await expect(page.getByRole('button', { name: 'Betriebe' })).toBeVisible();
 	await page.getByRole('button', { name: 'Betriebe' }).click();
 	await expect(page.getByText('Betriebe')).toBeVisible();
 	await page.waitForTimeout(300);
 
+
 	await expect(page.getByRole('button', { name: 'KAoA' })).toBeVisible();
 	await page.getByRole('button', { name: 'KAoA' }).click();
 	await expect(page.getByRole('button', { name: 'Neuen Eintrag anlegen' })).toBeVisible();
+	await page.waitForTimeout(300);
 
 
 	await expect(page.getByRole('button', { name: 'Schulbesuch' })).toBeVisible();
 	await page.getByRole('button', { name: 'Schulbesuch' }).click();
 	await expect(page.getByText('Vor der Aufnahme besucht')).toBeVisible();
+	await page.waitForTimeout(300);
 
 
 	await expect(page.getByRole('button', { name: 'Lernabschnitte' })).toBeVisible();
 	await page.getByRole('button', { name: 'Lernabschnitte' }).click();
+	await page.waitForTimeout(300);
 	await expect(page.getByRole('button', { name: 'Allgemein' })).toBeVisible();
 	await expect(page.getByRole('button', { name: 'Leistungsdaten', exact: true })).toBeVisible();
 	await expect(page.getByRole('button', { name: 'Klausuren' })).toBeVisible();
