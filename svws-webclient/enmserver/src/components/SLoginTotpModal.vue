@@ -1,6 +1,13 @@
 <template>
 	<svws-ui-modal v-model:show="show" class="hidden">
-		<template #modalTitle>Eingabe des zweiten Anmeldefaktors</template>
+		<template #modalTitle>
+			<div class="flex flex-col">
+				Eingabe des zweiten Anmeldefaktors
+				<span v-if="expirationSeconds > 0" class="text-sm font-normal font-mono opacity-50">
+					(Läuft ab in {{ formattedExpiration }})
+				</span>
+			</div>
+		</template>
 		<template #modalContent>
 			<div class="flex flex-col gap-2 text-left">
 				<template v-if="(auth.totpSetup !== null) && (otpauthUrl !== null)">
@@ -38,6 +45,9 @@
 	const token = ref<string>("");
 	const isTokenValid = computed(() => token.value.length === 6);
 
+	const now = ref(Math.floor(Date.now() / 1000));
+	let timer: ReturnType<typeof setInterval> | undefined = undefined;
+
 	const errorMessage = ref<string | null>(null);
 
 	const otpauthUrl = computed<string | null>(() => {
@@ -56,14 +66,37 @@
 		tokenInput.value = methods;
 	}
 
+	const expirationSeconds = computed(() => {
+		return (now.value > 0) ? auth.expirationSeconds : 0;
+	});
+
+	const formattedExpiration = computed(() => {
+		const s = expirationSeconds.value;
+		return `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
+	});
+
 	// Führe aktionen beim Zeigen oder Verstecken des Modals per Watcher automatisch aus
 	watch(show, async (isVisible) => {
 		if (isVisible) {
+			now.value = Math.floor(Date.now() / 1000);
+			timer = globalThis.setInterval(() => {
+				now.value = Math.floor(Date.now() / 1000);
+			}, 1000);
 			await nextTick();
 			tokenInput.value?.focus();
 		} else {
+			if (timer !== undefined) {
+				globalThis.clearInterval(timer);
+				timer = undefined;
+			}
 			errorMessage.value = null;
 			token.value = "";
+		}
+	});
+
+	watch(expirationSeconds, async (newValue) => {
+		if ((newValue <= 0) && show.value) {
+			await cancelLogin();
 		}
 	});
 

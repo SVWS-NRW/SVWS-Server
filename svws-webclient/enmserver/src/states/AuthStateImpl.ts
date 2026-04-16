@@ -8,6 +8,26 @@ import type { Schulform } from "@core/asd/types/schule/Schulform";
 import { version } from '../../version';
 import { githash } from "../../githash";
 
+/**
+ * Der Paylod from JWT-Token
+ */
+interface JWTPayload {
+
+	// Die Lehrer-ID
+	sub: number;
+
+	// Der Ablaufzeitpunkt als Unix-Timestamp
+	exp: number;
+
+	// Der Erstellungszeitpunkt als Unix-Timestamp
+	iat: number;
+
+}
+
+
+/**
+ * Die Implementierung für den Status der Authentifizierung des WeNoM-Clients
+ */
 class AuthStateImpl implements AuthState {
 
 	// Gibt an, ob der Client beim Server authentifiziert ist
@@ -15,6 +35,9 @@ class AuthStateImpl implements AuthState {
 
 	// Gibt an, ob die Authentifizierung mit einem ersten Faktor erfolgreich war, aber noch auf einen zweiten Faktor gewartet wird.
 	private readonly _pending2FA = ref<boolean>(false);
+
+	// Der aktuell gültige Token
+	private readonly _token = ref<string | null>(null);
 
 	// Bei einer Erstanmeldung die Informationen für den QR-Code für TOTP und ansonsten null
 	private readonly _totpSetup = shallowRef<{ secret: string, issuer: string, account: string } | null>(null);
@@ -55,6 +78,13 @@ class AuthStateImpl implements AuthState {
 	/** Gibt den Githash des aktuellen Commits der Anwendung zurück */
 	public get githash(): string {
 		return githash;
+	}
+
+	/**
+	 * Gibt das aktuelle Access-Token zurück
+	 */
+	public get token(): string | null {
+		return this._token.value;
 	}
 
 	/** Gibt die Klassen für den Zugriff auf die Server-API zurück. */
@@ -122,6 +152,55 @@ class AuthStateImpl implements AuthState {
 
 
 	/**
+	 * Bestimmt den Payload den JWT-Access-Tokens
+	 *
+	 * @returns die Payload des Access-Tokens
+	 */
+	private getTokenPayload(): JWTPayload | null {
+		if (this._token.value === null) {
+			return null;
+		}
+		try {
+			const base64Url = this._token.value.split('.')[1];
+			const base64 = base64Url.replaceAll('-', '+').replaceAll('_', '/');
+			const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
+				const cp = c.codePointAt(0);
+				const hex = (cp === undefined) ? '00' : cp.toString(16).padStart(2, '0');
+				return '%' + hex;
+			}).join(''));
+			return JSON.parse(jsonPayload) as JWTPayload;
+		} catch {
+			return null;
+		}
+	}
+
+
+	/**
+	 * Gibt die verbleibende Zeit in Sekunden für die Gültigkeit des Tokens zurück.
+	 * Existiert kein Token so wird 0 zurückgegeben.
+	 *
+	 * @returns die verbleibenden Sekunden der Token-Gültigkeit
+	 */
+	public get expirationSeconds(): number {
+		const payload = this.getTokenPayload();
+		if (!payload) {
+			return 0;
+		}
+		const now = Math.floor(Date.now() / 1000);
+		return Math.max(0, payload.exp - now);
+	}
+
+	/**
+	 * Gibt den Ablaufzeitpunkt als Date-Objekt zurück. Liegt kein Token vor, so wird null zurückgegeben.
+	 *
+	 * @returns der Ablaufzeitpunkt als Date oder null
+	 */
+	public get expiresAt(): Date | null {
+		const payload = this.getTokenPayload();
+		return payload ? new Date(payload.exp * 1000) : null;
+	}
+
+	/**
 	 * Versucht eine Verbindung zu einem Server bei der angegebenen Adresse herzustellen.
 	 *
 	 * @param adresse   die Adresse bestehend aus Hostnamen und ggf. Port des SVWS-Servers
@@ -182,6 +261,7 @@ class AuthStateImpl implements AuthState {
 				return true;
 			};
 			const result = await this._api.login();
+			this._token.value = result.token;
 
 			// Wenn 2FA aktiv ist, dann muss dieser noch geprüft werden ...
 			if (result.isTotp) {
@@ -210,7 +290,8 @@ class AuthStateImpl implements AuthState {
 	 */
 	public async verifyTotp(code: string): Promise<boolean> {
 		try {
-			await this.api.loginTotp(code);
+			const result = await this.api.loginTotp(code);
+			this._token.value = result.token;
 			await this.finalizeLogin();
 			return true;
 		} catch {
@@ -237,6 +318,7 @@ class AuthStateImpl implements AuthState {
 	public async logout(): Promise<void> {
 		this._authenticated.value = false;
 		this._pending2FA.value = false;
+		this._token.value = null;
 		this._totpSetup.value = null;
 		this._username = "";
 		this._api = undefined;

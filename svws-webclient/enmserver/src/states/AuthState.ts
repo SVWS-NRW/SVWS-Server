@@ -21,6 +21,21 @@ export interface AuthState {
 	get hostname(): string;
 
 	/**
+	 * Gibt die verbleibende Zeit in Sekunden für die Gültigkeit des Tokens zurück.
+	 * Existiert kein Token so wird 0 zurückgegeben.
+	 *
+	 * @returns die verbleibenden Sekunden der Token-Gültigkeit
+	 */
+	get expirationSeconds(): number;
+
+	/**
+	 * Gibt den Ablaufzeitpunkt als Date-Objekt zurück. Liegt kein Token vor, so wird null zurückgegeben.
+	 *
+	 * @returns der Ablaufzeitpunkt als Date oder null
+	 */
+	get expiresAt(): Date | null;
+
+	/**
 	 * Setzt den Hostnamen, der für die Verbindung verwendet wird.
 	 *
 	 * @param hostname    der Hostname

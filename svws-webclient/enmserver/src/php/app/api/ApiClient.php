@@ -224,7 +224,8 @@ class ApiClient {
         }
         // Fall 1: 2FA mit TOTP wird verwendet
         if ($lehrer->art2FA === 1) {
-            $jwt = ENMAuth::createJsonWebToken($config->getClientTotpAuthSessionKey(), $lehrer->id, $config->getLifetimeTotpAccessToken());
+            $lifetimeAccessToken = $lehrer->istErstanmeldung ? $config->getLifetimeTotpAccessTokenInitial() : $config->getLifetimeTotpAccessToken();
+            $jwt = ENMAuth::createJsonWebToken($config->getClientTotpAuthSessionKey(), $lehrer->id, $lifetimeAccessToken);
             if ($lehrer->istErstanmeldung) {
                 $token = json_decode($jwt);
                 $response = [

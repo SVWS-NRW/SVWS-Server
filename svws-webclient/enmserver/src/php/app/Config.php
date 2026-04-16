@@ -40,6 +40,9 @@ class Config {
     // Die Lebensdauer für ein Access-Token einer Client-Verbindung (Default: 2 min)
     protected int $lifetimeTotpAccessToken = 120;
 
+    // Die Lebensdauer für ein Access-Token einer Client-Verbindung (Default: 10 min)
+    protected int $lifetimeTotpAccessTokenInitial = 600;
+
     // Die Größe des Zeitfensters bei der TOTP-Token-Prüfung in Sekunden (Default: 30 sec)
     protected int $totpTimeslice = 30;
 
@@ -198,12 +201,22 @@ class Config {
 
     /**
      * Gibt die Lebendsdauer für ein Access-Token für den Login-Vorgangs für einen bereits mit dem Kennwort angemeldeten
-     * Benutzers zurück.
+     * Benutzers zurück. (Für den Fall, dass keine Erstanmeldung vorgenommen wird)
      *
      * @return int die Lebensdauer
      */
     public function getLifetimeTotpAccessToken(): int {
         return $this->lifetimeTotpAccessToken;
+    }
+
+    /**
+     * Gibt die Lebendsdauer für ein Access-Token für den Login-Vorgangs für einen bereits mit dem Kennwort angemeldeten
+     * Benutzers zurück. (Für den Fall, dass eine Erstanmeldung vorgenommen wird)
+     *
+     * @return int die Lebensdauer
+     */
+    public function getLifetimeTotpAccessTokenInitial(): int {
+        return $this->lifetimeTotpAccessTokenInitial;
     }
 
     /**

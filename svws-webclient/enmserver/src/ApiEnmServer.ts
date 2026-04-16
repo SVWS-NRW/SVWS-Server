@@ -11,6 +11,7 @@ import { ENMv2Daten } from "@core/core/data/enm/v2/ENMv2Daten";
 
 export interface ApiLoginData {
 	idLehrer: number;
+	token: string;
 	isTotp: boolean;
 	setup: {
 		secret: string, issuer: string, account: string
@@ -47,8 +48,9 @@ export class ApiEnmServer extends BaseApi {
 		const jwt = (setup === null) ? data : data.token;
 		this.setBearerToken(jwt.token);
 
-		return { idLehrer: jwt.id, isTotp, setup };
+		return { idLehrer: jwt.id, token: jwt.token, isTotp, setup };
 	}
+
 
 	/**
 	 * Schließt den Login-Vorgang durch Überprüfung des TOTP-Codes ab.
@@ -57,14 +59,14 @@ export class ApiEnmServer extends BaseApi {
 	 *
 	 * @returns die ID des angemeldeten Lehrers
 	 */
-	public async loginTotp(code: string): Promise<number> {
+	public async loginTotp(code: string): Promise<{ idLehrer: number, token: string }> {
 		const body = JSON.stringify({ code: code });
 		const response = await super.postTextBased("/api/login_totp", 'application/json', 'application/json', body);
 
 		const jwt = JSON.parse(response.data);
 
 		this.setBearerToken(jwt.token);
-		return jwt.id;
+		return { idLehrer: jwt.id, token: jwt.token };
 	}
 
 
