@@ -118,33 +118,33 @@ Schueler;Haltestelle_ID;Haltestelle;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Ha
 Schueler;Hausnr;Hausnummer;S;;;;;ALLE
 Schueler;ID;ASV;S;;;ASV;SELECT L.ASV, A.ID FROM SchuelerLD_PSFachBem L, SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% AND A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND L.Abschnitt_ID=A.ID;ALLE
 Schueler;ID;Aktuelles Halbjahr;I;;;AktHalbjahr;SELECT (SJA.Jahr*10+SJA.Abschnitt) as AktHalbjahr from Schuljahresabschnitte SJA, Schueler S where S.ID=% AND SJA.ID=S.Schuljahresabschnitts_ID;ALLE
-Schueler;ID;Allg. Adresse: 1. Tel.-Nr.;S;;;AllgAdrTelefon1;SELECT A.AllgAdrTelefon1, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: 2. Tel.-Nr.;S;;;AllgAdrTelefon2;SELECT A.AllgAdrTelefon2, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Bemerkungen;S;;;AllgAdrBemerkungen;SELECT A.AllgAdrBemerkungen, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Betreuer Abteilung;S;;;Abteilung;SELECT P.Abteilung FROM AllgAdrAnsprechpartner P, Schueler_AllgAdr A WHERE A.Schueler_ID=% and P.ID=A.Ansprechpartner_ID ORDER BY A.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Betreuer Anrede;S;;;Anrede;SELECT P.Anrede FROM AllgAdrAnsprechpartner P, Schueler_AllgAdr A WHERE A.Schueler_ID=% and P.ID=A.Ansprechpartner_ID ORDER BY A.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Betreuer E-Mail;S;;;Email;SELECT P.EMail FROM AllgAdrAnsprechpartner P, Schueler_AllgAdr A WHERE A.Schueler_ID=% and P.ID=A.Ansprechpartner_ID ORDER BY A.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Betreuer Name;S;;;Name;SELECT P.Name FROM AllgAdrAnsprechpartner P, Schueler_AllgAdr A WHERE A.Schueler_ID=% and P.ID=A.Ansprechpartner_ID ORDER BY A.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Betreuer Telefon;S;;;Telefon;SELECT P.Telefon FROM AllgAdrAnsprechpartner P, Schueler_AllgAdr A WHERE A.Schueler_ID=% and P.ID=A.Ansprechpartner_ID ORDER BY A.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Betreuer Titel;S;;;Titel;SELECT P.Titel FROM AllgAdrAnsprechpartner P, Schueler_AllgAdr A WHERE A.Schueler_ID=% and P.ID=A.Ansprechpartner_ID ORDER BY A.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Betreuer Vorname;S;;;Vorname;SELECT P.Vorname FROM AllgAdrAnsprechpartner P, Schueler_AllgAdr A WHERE A.Schueler_ID=% and P.ID=A.Ansprechpartner_ID ORDER BY A.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Betreuungslehrer;S;;;Nachname;SELECT L.Nachname FROM K_Lehrer L, Schueler_AllgAdr A WHERE A.Schueler_ID=% AND L.ID=A.Betreuungslehrer_ID ORDER BY A.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Betreuungslehrer Anrede;S;"3;4";"Herr;Frau";Geschlecht;SELECT L.Geschlecht FROM K_Lehrer L, Schueler_AllgAdr A WHERE A.Schueler_ID=% AND L.ID=A.Betreuungslehrer_ID ORDER BY A.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Branche;S;;;AllgAdrBranche;SELECT A.AllgAdrBranche, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Bundesland;S;;;Land;SELECT O.Land,SA.ID FROM K_Ort O, K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID AND O.ID=A.AllgAdrOrt_ID ORDER BY SA.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: E-Mail;S;;;AllgAdrEMail;SELECT A.AllgAdrEMail, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Fax-Nr.;S;;;AllgAdrFax;SELECT A.AllgAdrFax, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Kreis;S;;;Kreis;SELECT O.Kreis, SA.ID FROM K_Ort O, K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID AND O.ID=A.AllgAdrOrt_ID ORDER BY SA.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Name1;S;;;AllgAdrName1;SELECT A.AllgAdrName1, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Name2;S;;;AllgAdrName2;SELECT A.AllgAdrName2, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Ort;S;;;Bezeichnung;SELECT O.Bezeichnung, A.AllgAdrName1, SA.ID FROM K_Ort O, K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID AND O.ID=A.AllgAdrOrt_ID ORDER BY SA.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: PLZ;S;;;PLZ;SELECT O.PLZ, A.AllgAdrName1, SA.ID FROM K_Ort O, K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID AND O.ID=A.AllgAdrOrt_ID ORDER BY SA.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Sonstige Betreuer;S;;;Ausbilder;SELECT Ausbilder FROM Schueler_AllgAdr WHERE Schueler_ID=% ORDER BY Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Straße;S;;;AllgAdrStrasse;SELECT CONCAT(IFNULL(A.AllgAdrStrassenname,''),' ', IFNULL(A.AllgAdrHausNr,'')) as AllgAdrStrasse, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Vertragsbeginn;D;;;Vertragsbeginn;SELECT Vertragsbeginn FROM Schueler_AllgAdr WHERE Schueler_ID=% ORDER BY Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Vertragsende;D;;;Vertragsende;SELECT Vertragsende FROM Schueler_AllgAdr WHERE Schueler_ID=% ORDER BY Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Zusatz1;S;;;AllgAdrZusatz1;SELECT A.AllgAdrZusatz1, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
-Schueler;ID;Allg. Adresse: Zusatz2;S;;;AllgAdrZusatz2;SELECT A.AllgAdrZusatz2, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: 1. Tel.-Nr.;S;;;AllgAdrTelefon1;SELECT A.AllgAdrTelefon1, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: 2. Tel.-Nr.;S;;;AllgAdrTelefon2;SELECT A.AllgAdrTelefon2, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Bemerkungen;S;;;AllgAdrBemerkungen;SELECT A.AllgAdrBemerkungen, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Betreuer Abteilung;S;;;Abteilung;SELECT P.Abteilung FROM AllgAdrAnsprechpartner P, Schueler_AllgAdr A WHERE A.Schueler_ID=% and P.ID=A.Ansprechpartner_ID ORDER BY A.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Betreuer Anrede;S;;;Anrede;SELECT P.Anrede FROM AllgAdrAnsprechpartner P, Schueler_AllgAdr A WHERE A.Schueler_ID=% and P.ID=A.Ansprechpartner_ID ORDER BY A.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Betreuer E-Mail;S;;;Email;SELECT P.EMail FROM AllgAdrAnsprechpartner P, Schueler_AllgAdr A WHERE A.Schueler_ID=% and P.ID=A.Ansprechpartner_ID ORDER BY A.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Betreuer Name;S;;;Name;SELECT P.Name FROM AllgAdrAnsprechpartner P, Schueler_AllgAdr A WHERE A.Schueler_ID=% and P.ID=A.Ansprechpartner_ID ORDER BY A.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Betreuer Telefon;S;;;Telefon;SELECT P.Telefon FROM AllgAdrAnsprechpartner P, Schueler_AllgAdr A WHERE A.Schueler_ID=% and P.ID=A.Ansprechpartner_ID ORDER BY A.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Betreuer Titel;S;;;Titel;SELECT P.Titel FROM AllgAdrAnsprechpartner P, Schueler_AllgAdr A WHERE A.Schueler_ID=% and P.ID=A.Ansprechpartner_ID ORDER BY A.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Betreuer Vorname;S;;;Vorname;SELECT P.Vorname FROM AllgAdrAnsprechpartner P, Schueler_AllgAdr A WHERE A.Schueler_ID=% and P.ID=A.Ansprechpartner_ID ORDER BY A.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Betreuungslehrer;S;;;Nachname;SELECT L.Nachname FROM K_Lehrer L, Schueler_AllgAdr A WHERE A.Schueler_ID=% AND L.ID=A.Betreuungslehrer_ID ORDER BY A.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Betreuungslehrer Anrede;S;"3;4";"Herr;Frau";Geschlecht;SELECT L.Geschlecht FROM K_Lehrer L, Schueler_AllgAdr A WHERE A.Schueler_ID=% AND L.ID=A.Betreuungslehrer_ID ORDER BY A.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Branche;S;;;AllgAdrBranche;SELECT A.AllgAdrBranche, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Bundesland;S;;;Land;SELECT O.Land,SA.ID FROM K_Ort O, K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID AND O.ID=A.AllgAdrOrt_ID ORDER BY SA.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: E-Mail;S;;;AllgAdrEMail;SELECT A.AllgAdrEMail, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Fax-Nr.;S;;;AllgAdrFax;SELECT A.AllgAdrFax, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Kreis;S;;;Kreis;SELECT O.Kreis, SA.ID FROM K_Ort O, K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID AND O.ID=A.AllgAdrOrt_ID ORDER BY SA.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Name1;S;;;AllgAdrName1;SELECT A.AllgAdrName1, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Name2;S;;;AllgAdrName2;SELECT A.AllgAdrName2, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Ort;S;;;Bezeichnung;SELECT O.Bezeichnung, A.AllgAdrName1, SA.ID FROM K_Ort O, K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID AND O.ID=A.AllgAdrOrt_ID ORDER BY SA.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: PLZ;S;;;PLZ;SELECT O.PLZ, A.AllgAdrName1, SA.ID FROM K_Ort O, K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID AND O.ID=A.AllgAdrOrt_ID ORDER BY SA.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Sonstige Betreuer;S;;;Ausbilder;SELECT Ausbilder FROM Schueler_AllgAdr WHERE Schueler_ID=% ORDER BY Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Straße;S;;;AllgAdrStrasse;SELECT CONCAT(IFNULL(A.AllgAdrStrassenname,''),' ', IFNULL(A.AllgAdrHausNr,'')) as AllgAdrStrasse, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Vertragsbeginn;D;;;Vertragsbeginn;SELECT Vertragsbeginn FROM Schueler_AllgAdr WHERE Schueler_ID=% ORDER BY Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Vertragsende;D;;;Vertragsende;SELECT Vertragsende FROM Schueler_AllgAdr WHERE Schueler_ID=% ORDER BY Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Zusatz1;S;;;AllgAdrZusatz1;SELECT A.AllgAdrZusatz1, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
+Schueler;ID;Betrieb: Zusatz2;S;;;AllgAdrZusatz2;SELECT A.AllgAdrZusatz2, SA.ID FROM K_AllgAdresse A, Schueler_AllgAdr SA WHERE SA.Schueler_ID=% AND A.ID=SA.Adresse_ID ORDER BY SA.Sortierung DESC;ALLE
 Schueler;ID;Erzieher 1: Anrede;S;;;Anrede1;SELECT Anrede1 FROM SchuelerErzAdr WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
 Schueler;ID;Erzieher 1: Briefanrede;S;"Herr;Frau";"Sehr geehrter Herr;Sehr geehrte Frau";Anrede1;SELECT Anrede1 FROM SchuelerErzAdr WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
 Schueler;ID;Erzieher 1: E-Mail;S;;;ErzEMail;SELECT ErzEMail FROM SchuelerErzAdr WHERE Schueler_ID=% ORDER BY Sortierung;ALLE
