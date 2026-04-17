@@ -1,171 +1,187 @@
 <template>
-	<ui-table-grid name="Leistungsdaten" :header-count="1" :footer-count="0" :manager="() => gridManager">
-		<template #header>
-			<template v-for="col of gridManager.cols.values()" :key="col.name">
-				<template v-if="col.kuerzel !== ''">
-					<th v-if="gridManager.isColVisible(col.kuerzel) ?? true" class="flex h-10">
-						<div class="h-full content-center">
-							<template v-if="col.kuerzel !== col.name">
-								<svws-ui-tooltip>
-									{{ col.kuerzel }}
-									<template #content>{{ col.name }}</template>
-								</svws-ui-tooltip>
-							</template>
-							<template v-else>{{ col.kuerzel }}</template>
-							<template v-if="colsValidationTooltip.has(col.kuerzel)">
-								<svws-ui-tooltip>
-									<span class="icon-sm i-ri-question-line ml-0.5" />
-									<template #content>
-										<div class="font-bold">{{ col.name }}</div>
-										<template v-if="(col.kuerzel === 'Quartal') || (col.kuerzel === 'Note')">
-											<ul>
-												<li v-for="n in notenKuerzel" :key="n"> {{ n }} </li>
-											</ul>
+	<div class="flex flex-col">
+		<template v-if="sperrenVorhanden.size > 0">
+			<div class="p-4 mb-4 border rounded-md bg-ui-warning text-ui-onwarning border-ui-warning font-normal text-base">
+				{{ sperrenVorhanden.size === 1 ? 'Klasse' : 'Klassen' }} {{ gesperrteKlassen }} gesperrt. Eine Eingabe ist nicht möglich.
+			</div>
+		</template>
+		<ui-table-grid name="Leistungsdaten" :header-count="1" :footer-count="0" :manager="() => gridManager">
+			<template #header>
+				<template v-for="col of gridManager.cols.values()" :key="col.name">
+					<template v-if="col.kuerzel !== ''">
+						<th v-if="gridManager.isColVisible(col.kuerzel) ?? true" class="flex h-10">
+							<div class="h-full content-center">
+								<template v-if="col.kuerzel !== col.name">
+									<svws-ui-tooltip>
+										{{ col.kuerzel }}
+										<template #content>{{ col.name }}</template>
+									</svws-ui-tooltip>
+								</template>
+								<template v-else-if="col.kuerzel === 'Sperre'" />
+								<template v-else>{{ col.kuerzel }}</template>
+								<template v-if="colsValidationTooltip.has(col.kuerzel)">
+									<svws-ui-tooltip>
+										<span class="icon-sm i-ri-question-line ml-0.5" />
+										<template #content>
+											<div class="font-bold">{{ col.name }}</div>
+											<template v-if="(col.kuerzel === 'Quartal') || (col.kuerzel === 'Note')">
+												<ul>
+													<li v-for="n in notenKuerzel" :key="n"> {{ n }} </li>
+												</ul>
+											</template>
+											<template v-else-if="col.kuerzel === 'FS'">
+												<ul>
+													<li>Keine negativen Werte</li>
+													<li>Maximal 999</li>
+													<li>Größer/gleich FSU</li>
+												</ul>
+											</template>
+											<template v-else-if="col.kuerzel === 'FSU'">
+												<ul>
+													<li>Keine negativen Werte</li>
+													<li>Maximal 999</li>
+													<li>Kleiner/gleich FS</li>
+												</ul>
+											</template>
 										</template>
-										<template v-else-if="col.kuerzel === 'FS'">
-											<ul>
-												<li>Keine negativen Werte</li>
-												<li>Maximal 999</li>
-												<li>Größer/gleich FSU</li>
-											</ul>
+									</svws-ui-tooltip>
+								</template>
+							</div>
+						</th>
+					</template>
+					<template v-else>
+						<th>
+							<svws-ui-tooltip :hover="false" :show-arrow="false" position="top" class="h-full w-full">
+								<span class="icon" :class="gridManager.hasHiddenColumn ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" />
+								<span class="icon i-ri-arrow-down-s-line" />
+								<template #content>
+									<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
+										<template v-for="hideable of gridManager.hideableColumns" :key="hideable.name">
+											<li>
+												<svws-ui-checkbox :model-value="gridManager.isColVisible(hideable.kuerzel)" @update:model-value="value => gridManager.setColVisibility(hideable.kuerzel, value)">
+													{{ hideable.kuerzel }}
+												</svws-ui-checkbox>
+											</li>
 										</template>
-										<template v-else-if="col.kuerzel === 'FSU'">
-											<ul>
-												<li>Keine negativen Werte</li>
-												<li>Maximal 999</li>
-												<li>Kleiner/gleich FS</li>
-											</ul>
-										</template>
-									</template>
-								</svws-ui-tooltip>
-							</template>
-						</div>
-					</th>
+									</ul>
+								</template>
+							</svws-ui-tooltip>
+						</th>
+					</template>
 				</template>
-				<template v-else>
-					<th>
-						<svws-ui-tooltip :hover="false" :show-arrow="false" position="top" class="h-full w-full">
-							<span class="icon" :class="gridManager.hasHiddenColumn ? 'i-ri-layout-column-fill' : 'i-ri-layout-column-line'" />
-							<span class="icon i-ri-arrow-down-s-line" />
+			</template>
+			<template #default="{ row: pair, index }">
+				<td>
+					<div v-if="!enmManager().sperrungen.istEingabeErlaubt(pair.b.klasseID)" class="flex items-center h-full">
+						<svws-ui-tooltip>
+							<span class="icon i-ri-lock-2-line icon-ui-danger" />
+							<template #content>Die Eingabe für diese Klasse ist gesperrt</template>
+						</svws-ui-tooltip>
+					</div>
+				</td>
+				<td v-if="gridManager.isColVisible('Klasse') ?? true">
+					{{ enmManager().mapKlassen.get(pair.b.klasseID)?.kuerzelAnzeige ?? '—' }}
+				</td>
+				<td v-if="gridManager.isColVisible('Name') ?? true" class="text-left">
+					{{ pair.b.nachname }}, {{ pair.b.vorname }} ({{ pair.b.geschlecht }})
+				</td>
+				<td v-if="gridManager.isColVisible('Fach') ?? true">
+					{{ enmManager().lerngruppeGetFachkuerzel(pair.a.lerngruppenID) }}
+				</td>
+				<td v-if="gridManager.isColVisible('Kurs') ?? true">
+					{{ enmManager().lerngruppeGetKursbezeichnung(pair.a.lerngruppenID) }}
+				</td>
+				<td v-if="gridManager.isColVisible('Kursart') ?? true">
+					{{ enmManager().leistungGetKursartAsString(pair.a) }}
+				</td>
+				<td v-if="gridManager.isColVisible('Lehrer') ?? true">
+					{{ enmManager().lerngruppeGetFachlehrerOrNull(pair.a.lerngruppenID) }}
+				</td>
+				<template v-if="gridManager.isColVisible('Quartal') ?? true">
+					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Quartal')"
+						:ref="inputNoteQuartal(pair, 6, index)" class="ui-table-grid-input"
+						:class="{
+							'bg-ui-selected': (gridManager.focusColumn === 6),
+							'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII(),
+							'contentFocusField': gridManager.isFocusLast(6, index),
+						}" />
+					<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII() }">{{ pair.a.noteQuartal ?? "-" }}</td>
+				</template>
+				<template v-if="gridManager.isColVisible('Note') ?? true">
+					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Note')"
+						:ref="inputNote(pair, 7, index)" class="ui-table-grid-input"
+						:class="{
+							'bg-ui-selected': (gridManager.focusColumn === 7),
+							'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII(),
+							'contentFocusField': gridManager.isFocusLast(7, index),
+						}" />
+					<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII() }">{{ pair.a.note ?? "-" }}</td>
+				</template>
+				<template v-if="gridManager.isColVisible('Mahnung') ?? true">
+					<template v-if="(pair.a.mahndatum === null) && enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Mahnung')">
+						<td :ref="inputMahnung(pair, 8, index)" class="ui-table-grid-button"
+							:class="{
+								'bg-ui-selected': (gridManager.focusColumn === 8),
+								'contentFocusField': gridManager.isFocusLast(8, index),
+							}">
+							<span v-if="pair.a.istGemahnt === true" class="icon-sm align-middle i-ri-checkbox-line bg-ui-danger" />
+							<span v-else class="icon-sm align-middle i-ri-checkbox-blank-line" />
+						</td>
+					</template>
+					<template v-else>
+						<td>
+							<span v-if="pair.a.mahndatum !== null" class="icon-sm align-middle i-ri-check-line" />
+							<span v-else-if="pair.a.istGemahnt === true" class="icon-sm align-middle i-ri-check-line bg-ui-danger" />
+						</td>
+					</template>
+				</template>
+				<template v-if="gridManager.isColVisible('FS') ?? true">
+					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, false)"
+						:ref="inputFehlstunden(pair, 9, index)" class="ui-table-grid-input"
+						:class="{
+							'bg-ui-selected': (gridManager.focusColumn === 9),
+							'contentFocusField': gridManager.isFocusLast(9, index),
+						}" />
+					<td v-else>{{ pair.a.fehlstundenFach ?? "—" }}</td>
+				</template>
+				<template v-if="gridManager.isColVisible('FSU') ?? true">
+					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, false)"
+						:ref="inputFehlstundenUnendschuldigt(pair, 10, index)" class="ui-table-grid-input"
+						:class="{
+							'bg-ui-selected': (gridManager.focusColumn === 10),
+							'contentFocusField': gridManager.isFocusLast(10, index),
+						}" />
+					<td v-else>{{ pair.a.fehlstundenUnentschuldigtFach ?? "-" }}</td>
+				</template>
+				<template v-if="gridManager.isColVisible('Bemerkung') ?? true">
+					<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'FB')"
+						:ref="inputBemerkung(pair, 11, index)" class="ui-table-grid-button"
+						:class="{
+							'bg-ui-selected': (gridManager.focusColumn === 11),
+							'contentFocusField': gridManager.isFocusLast(11, index),
+						}">
+						<svws-ui-tooltip v-if="(pair.a.fachbezogeneBemerkungen !== null) && (pair.a.fachbezogeneBemerkungen.length > 20)" class="h-full w-full">
+							<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.a.fachbezogeneBemerkungen ?? "-" }}</span>
 							<template #content>
-								<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
-									<template v-for="hideable of gridManager.hideableColumns" :key="hideable.name">
-										<li>
-											<svws-ui-checkbox :model-value="gridManager.isColVisible(hideable.kuerzel)" @update:model-value="value => gridManager.setColVisibility(hideable.kuerzel, value)">
-												{{ hideable.kuerzel }}
-											</svws-ui-checkbox>
-										</li>
-									</template>
-								</ul>
+								{{ pair.a.fachbezogeneBemerkungen }}
 							</template>
 						</svws-ui-tooltip>
-					</th>
-				</template>
-			</template>
-		</template>
-		<template #default="{ row: pair, index }">
-			<td v-if="gridManager.isColVisible('Klasse') ?? true">
-				{{ enmManager().mapKlassen.get(pair.b.klasseID)?.kuerzelAnzeige ?? '—' }}
-			</td>
-			<td v-if="gridManager.isColVisible('Name') ?? true" class="text-left">
-				{{ pair.b.nachname }}, {{ pair.b.vorname }} ({{ pair.b.geschlecht }})
-			</td>
-			<td v-if="gridManager.isColVisible('Fach') ?? true">
-				{{ enmManager().lerngruppeGetFachkuerzel(pair.a.lerngruppenID) }}
-			</td>
-			<td v-if="gridManager.isColVisible('Kurs') ?? true">
-				{{ enmManager().lerngruppeGetKursbezeichnung(pair.a.lerngruppenID) }}
-			</td>
-			<td v-if="gridManager.isColVisible('Kursart') ?? true">
-				{{ enmManager().leistungGetKursartAsString(pair.a) }}
-			</td>
-			<td v-if="gridManager.isColVisible('Lehrer') ?? true">
-				{{ enmManager().lerngruppeGetFachlehrerOrNull(pair.a.lerngruppenID) }}
-			</td>
-			<template v-if="gridManager.isColVisible('Quartal') ?? true">
-				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Quartal')"
-					:ref="inputNoteQuartal(pair, 6, index)" class="ui-table-grid-input"
-					:class="{
-						'bg-ui-selected': (gridManager.focusColumn === 6),
-						'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII(),
-						'contentFocusField': gridManager.isFocusLast(6, index),
-					}" />
-				<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.noteQuartal).istDefizitSekII() }">{{ pair.a.noteQuartal ?? "-" }}</td>
-			</template>
-			<template v-if="gridManager.isColVisible('Note') ?? true">
-				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Note')"
-					:ref="inputNote(pair, 7, index)" class="ui-table-grid-input"
-					:class="{
-						'bg-ui-selected': (gridManager.focusColumn === 7),
-						'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII(),
-						'contentFocusField': gridManager.isFocusLast(7, index),
-					}" />
-				<td v-else :class="{ 'text-ui-danger': Note.fromKuerzel(pair.a.note).istDefizitSekII() }">{{ pair.a.note ?? "-" }}</td>
-			</template>
-			<template v-if="gridManager.isColVisible('Mahnung') ?? true">
-				<template v-if="(pair.a.mahndatum === null) && enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'Mahnung')">
-					<td :ref="inputMahnung(pair, 8, index)" class="ui-table-grid-button"
-						:class="{
-							'bg-ui-selected': (gridManager.focusColumn === 8),
-							'contentFocusField': gridManager.isFocusLast(8, index),
-						}">
-						<span v-if="pair.a.istGemahnt === true" class="icon-sm align-middle i-ri-checkbox-line bg-ui-danger" />
-						<span v-else class="icon-sm align-middle i-ri-checkbox-blank-line" />
+						<span v-else class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.a.fachbezogeneBemerkungen ?? "-" }}</span>
+					</td>
+					<td v-else>
+						<svws-ui-tooltip v-if="(pair.a.fachbezogeneBemerkungen !== null) && (pair.a.fachbezogeneBemerkungen.length > 20)" class="h-full w-full">
+							<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.a.fachbezogeneBemerkungen ?? "-" }}</span>
+							<template #content>
+								{{ pair.a.fachbezogeneBemerkungen }}
+							</template>
+						</svws-ui-tooltip>
+						<span v-else class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.a.fachbezogeneBemerkungen ?? "-" }}</span>
 					</td>
 				</template>
-				<template v-else>
-					<td>
-						<span v-if="pair.a.mahndatum !== null" class="icon-sm align-middle i-ri-check-line" />
-						<span v-else-if="pair.a.istGemahnt === true" class="icon-sm align-middle i-ri-check-line bg-ui-danger" />
-					</td>
-				</template>
+				<td />
 			</template>
-			<template v-if="gridManager.isColVisible('FS') ?? true">
-				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, false)"
-					:ref="inputFehlstunden(pair, 9, index)" class="ui-table-grid-input"
-					:class="{
-						'bg-ui-selected': (gridManager.focusColumn === 9),
-						'contentFocusField': gridManager.isFocusLast(9, index),
-					}" />
-				<td v-else>{{ pair.a.fehlstundenFach ?? "—" }}</td>
-			</template>
-			<template v-if="gridManager.isColVisible('FSU') ?? true">
-				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istFehlstundeneingabeErlaubt(pair.b.klasseID, false)"
-					:ref="inputFehlstundenUnendschuldigt(pair, 10, index)" class="ui-table-grid-input"
-					:class="{
-						'bg-ui-selected': (gridManager.focusColumn === 10),
-						'contentFocusField': gridManager.isFocusLast(10, index),
-					}" />
-				<td v-else>{{ pair.a.fehlstundenUnentschuldigtFach ?? "-" }}</td>
-			</template>
-			<template v-if="gridManager.isColVisible('Bemerkung') ?? true">
-				<td v-if="enmManager().lerngruppeIstFachlehrer(pair.a.lerngruppenID) && enmManager().sperrungen.istSpalteneingabeErlaubt(pair.b.klasseID, 'FB')"
-					:ref="inputBemerkung(pair, 11, index)" class="ui-table-grid-button"
-					:class="{
-						'bg-ui-selected': (gridManager.focusColumn === 11),
-						'contentFocusField': gridManager.isFocusLast(11, index),
-					}">
-					<svws-ui-tooltip v-if="(pair.a.fachbezogeneBemerkungen !== null) && (pair.a.fachbezogeneBemerkungen.length > 20)" class="h-full w-full">
-						<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.a.fachbezogeneBemerkungen ?? "-" }}</span>
-						<template #content>
-							{{ pair.a.fachbezogeneBemerkungen }}
-						</template>
-					</svws-ui-tooltip>
-					<span v-else class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.a.fachbezogeneBemerkungen ?? "-" }}</span>
-				</td>
-				<td v-else>
-					<svws-ui-tooltip v-if="(pair.a.fachbezogeneBemerkungen !== null) && (pair.a.fachbezogeneBemerkungen.length > 20)" class="h-full w-full">
-						<span class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.a.fachbezogeneBemerkungen ?? "-" }}</span>
-						<template #content>
-							{{ pair.a.fachbezogeneBemerkungen }}
-						</template>
-					</svws-ui-tooltip>
-					<span v-else class="text-ellipsis overflow-hidden whitespace-nowrap w-full">{{ pair.a.fachbezogeneBemerkungen ?? "-" }}</span>
-				</td>
-			</template>
-			<td />
-		</template>
-	</ui-table-grid>
+		</ui-table-grid>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -182,6 +198,7 @@
 	import type { GridInput } from '../../ui/controls/tablegrid/GridInput';
 	import type { GridInputIntegerDiv } from '../../ui/controls/tablegrid/GridInputIntegerDiv';
 	import { GridManager } from '../../ui/controls/tablegrid/GridManager';
+	import type { ENMv2Klasse } from '../../../../core/src/core/data/enm/v2/ENMv2Klasse';
 
 	const props = defineProps<EnmLeistungenUebersichtProps>();
 
@@ -201,6 +218,7 @@
 		}),
 		getRowKey: row => `${row.a.id}_${row.b.id}`,
 		columns: [
+			{ kuerzel: "Sperre", name: "Sperre", width: "2rem", hideable: false },
 			{ kuerzel: "Klasse", name: "Klasse", width: "4rem", hideable: false },
 			{ kuerzel: "Name", name: "Name, Vorname", width: "16rem", hideable: false },
 			{ kuerzel: "Fach", name: "Fach", width: "4rem", hideable: false },
@@ -309,5 +327,29 @@
 			}
 		};
 	}
+
+	const sperrenVorhanden = computed(() => {
+		const set = new Set<ENMv2Klasse>();
+		for (const l of props.auswahl()) {
+			const klassen = props.enmManager().mapLerngruppeKlassen.get(l.id);
+			if (klassen === null) {
+				continue;
+			}
+			for (const klasse of klassen) {
+				if (!props.enmManager().sperrungen.istEingabeErlaubt(klasse.id)) {
+					set.add(klasse);
+				}
+			}
+		}
+		return set;
+	});
+
+	const gesperrteKlassen = computed(() => {
+		let str = "";
+		for (const k of sperrenVorhanden.value) {
+			str += `${k.kuerzel}, `;
+		}
+		return str.slice(0, -2);
+	});
 
 </script>
