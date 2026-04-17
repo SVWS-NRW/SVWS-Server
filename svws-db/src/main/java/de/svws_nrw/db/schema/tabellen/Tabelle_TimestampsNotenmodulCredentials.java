@@ -92,7 +92,7 @@ public class Tabelle_TimestampsNotenmodulCredentials extends SchemaTabelle {
 			.setVeraltet(SchemaRevisionen.REV_60);
 
 	/** Trigger t_UPDATE_TimestampsNotenmodulCredentials */
-	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsNotenmodulCredentials = addTrigger(
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsNotenmodulCredentials_UNTIL_REV63 = addTrigger(
 			"t_UPDATE_TimestampsNotenmodulCredentials",
 			DBDriver.MARIA_DB,
 			"""
@@ -113,7 +113,32 @@ public class Tabelle_TimestampsNotenmodulCredentials extends SchemaTabelle {
 			END
 			""",
 			Schema.tab_Notenmodul_Credentials, Schema.tab_TimestampsNotenmodulCredentials)
-			.setRevision(SchemaRevisionen.REV_60);
+			.setRevision(SchemaRevisionen.REV_60)
+			.setVeraltet(SchemaRevisionen.REV_63);
+
+	/** Trigger t_UPDATE_TimestampsNotenmodulCredentials */
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsNotenmodulCredentials = addTrigger(
+			"t_UPDATE_TimestampsNotenmodulCredentials",
+			DBDriver.MARIA_DB,
+			"""
+			AFTER UPDATE ON Notenmodul_Credentials FOR EACH ROW
+			BEGIN
+			    IF (OLD.passwordHash IS NULL AND NEW.passwordHash IS NOT NULL) OR (OLD.passwordHash <> NEW.passwordHash) THEN
+			        UPDATE TimestampsNotenmodulCredentials SET tsPasswordHash = CURTIME(3) WHERE idLehrer = NEW.idLehrer;
+			    END IF;
+			    IF (OLD.art2FA <> NEW.art2FA) THEN
+			        UPDATE TimestampsNotenmodulCredentials SET tsArt2FA = CURTIME(3) WHERE idLehrer = NEW.idLehrer;
+			    END IF;
+			    IF (OLD.totpSecret IS NULL AND NEW.totpSecret IS NOT NULL) OR (OLD.totpSecret <> NEW.totpSecret) THEN
+			        UPDATE TimestampsNotenmodulCredentials SET tsTotpSecret = CURTIME(3), tsIstErstanmeldung = CURTIME(3) WHERE idLehrer = NEW.idLehrer;
+			    END IF;
+			    IF (OLD.istErstanmeldung <> NEW.istErstanmeldung) THEN
+			        UPDATE TimestampsNotenmodulCredentials SET tsIstErstanmeldung = CURTIME(3) WHERE idLehrer = NEW.idLehrer;
+			    END IF;
+			END
+			""",
+			Schema.tab_Notenmodul_Credentials, Schema.tab_TimestampsNotenmodulCredentials)
+			.setRevision(SchemaRevisionen.REV_63);
 
 	/**
 	 * Erstellt die Schema-Definition für die Tabelle TimestampsNotenmodulCredentials.
