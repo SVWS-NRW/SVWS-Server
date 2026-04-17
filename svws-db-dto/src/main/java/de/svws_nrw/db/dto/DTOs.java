@@ -178,6 +178,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOHerkunftSchulformen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOHerkunftsart;
 import de.svws_nrw.db.dto.current.schild.schule.DTOHerkunftsartSchulformen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
+import de.svws_nrw.db.dto.current.schild.schule.DTOLogo;
 import de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale;
 import de.svws_nrw.db.dto.current.schild.schule.DTOOrganisationsformenKatalogKeys;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchulformen;
@@ -478,6 +479,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOHerkunftsart.class.getSimpleName(), DTOHerkunftsart.class);
              mapDTOName2DTOClass.put(DTOHerkunftsartSchulformen.class.getSimpleName(), DTOHerkunftsartSchulformen.class);
              mapDTOName2DTOClass.put(DTOJahrgang.class.getSimpleName(), DTOJahrgang.class);
+             mapDTOName2DTOClass.put(DTOLogo.class.getSimpleName(), DTOLogo.class);
              mapDTOName2DTOClass.put(DTOMerkmale.class.getSimpleName(), DTOMerkmale.class);
              mapDTOName2DTOClass.put(DTOOrganisationsformenKatalogKeys.class.getSimpleName(), DTOOrganisationsformenKatalogKeys.class);
              mapDTOName2DTOClass.put(DTOSchulformen.class.getSimpleName(), DTOSchulformen.class);
@@ -773,6 +775,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("Herkunftsart", DTOHerkunftsart.class);
              mapTablename2DTOClass.put("Herkunftsart_Schulformen", DTOHerkunftsartSchulformen.class);
              mapTablename2DTOClass.put("EigeneSchule_Jahrgaenge", DTOJahrgang.class);
+             mapTablename2DTOClass.put("Logo", DTOLogo.class);
              mapTablename2DTOClass.put("EigeneSchule_Merkmale", DTOMerkmale.class);
              mapTablename2DTOClass.put("OrganisationsformenKatalog_Keys", DTOOrganisationsformenKatalogKeys.class);
              mapTablename2DTOClass.put("EigeneSchule_Schulformen", DTOSchulformen.class);

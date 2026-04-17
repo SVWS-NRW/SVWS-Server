@@ -47,6 +47,7 @@ import de.svws_nrw.db.schema.revisionen.Revision56Updates;
 import de.svws_nrw.db.schema.revisionen.Revision58Updates;
 import de.svws_nrw.db.schema.revisionen.Revision60Updates;
 import de.svws_nrw.db.schema.revisionen.Revision61Updates;
+import de.svws_nrw.db.schema.revisionen.Revision62Updates;
 import de.svws_nrw.db.schema.revisionen.Revision6Updates;
 import de.svws_nrw.db.schema.revisionen.RevisionNoUpdates;
 
@@ -312,22 +313,24 @@ public enum SchemaRevisionen {
 
 	/** Erstellen eines Triggers zum Verhindern fehlerhafter Klassen-Zuordnung bei Lernabschnitten (unterschiedliche Schuljahresabschnitte)
 	 * und Ergänzen fehlender Einträge in TimestampsNotenmodulCredentials */
-	REV_61(61, "2026-04-16");
+	REV_61(61, "2026-04-16"),
 
+	/** Anlegen der Tabellen zur Logoverwaltung */
+	REV_62(62, "2026-04-17");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_61;
+	public static final SchemaRevisionen maxRevision = REV_62;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_61;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_62;
 
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
@@ -433,6 +436,7 @@ public enum SchemaRevisionen {
 				case REV_58 -> new Revision58Updates();
 				case REV_60 -> new Revision60Updates();
 				case REV_61 -> new Revision61Updates();
+				case REV_62 -> new Revision62Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}

@@ -29,6 +29,7 @@
         <class>de.svws_nrw.db.converter.current.PersonTypConverter</class>
         <class>de.svws_nrw.db.converter.current.PersonTypNullableConverter</class>
         <class>de.svws_nrw.db.converter.current.PersonalTypConverter</class>
+        <class>de.svws_nrw.db.converter.current.ReportingBildDefinitionConverter</class>
         <class>de.svws_nrw.db.converter.current.SprachpruefungniveauConverter</class>
         <class>de.svws_nrw.db.converter.current.StringToIntegerConverter</class>
         <class>de.svws_nrw.db.converter.current.UhrzeitConverter</class>
@@ -389,6 +390,7 @@
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOHerkunftsart</class>
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOHerkunftsartSchulformen</class>
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang</class>
+        <class>de.svws_nrw.db.dto.current.schild.schule.DTOLogo</class>
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOMerkmale</class>
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOOrganisationsformenKatalogKeys</class>
         <class>de.svws_nrw.db.dto.current.schild.schule.DTOSchulformen</class>

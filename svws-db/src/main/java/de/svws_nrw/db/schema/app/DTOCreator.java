@@ -444,6 +444,7 @@ public class DTOCreator {
                           <class>de.svws_nrw.db.converter.current.PersonTypConverter</class>
                           <class>de.svws_nrw.db.converter.current.PersonTypNullableConverter</class>
                           <class>de.svws_nrw.db.converter.current.PersonalTypConverter</class>
+                          <class>de.svws_nrw.db.converter.current.ReportingBildDefinitionConverter</class>
                           <class>de.svws_nrw.db.converter.current.SprachpruefungniveauConverter</class>
                           <class>de.svws_nrw.db.converter.current.StringToIntegerConverter</class>
                           <class>de.svws_nrw.db.converter.current.UhrzeitConverter</class>

@@ -19,6 +19,7 @@ import de.svws_nrw.db.converter.current.NationalitaetenConverter;
 import de.svws_nrw.db.converter.current.PersonTypConverter;
 import de.svws_nrw.db.converter.current.PersonTypNullableConverter;
 import de.svws_nrw.db.converter.current.PersonalTypConverter;
+import de.svws_nrw.db.converter.current.ReportingBildDefinitionConverter;
 import de.svws_nrw.db.converter.current.SprachpruefungniveauConverter;
 import de.svws_nrw.db.converter.current.StringToIntegerConverter;
 import de.svws_nrw.db.converter.current.UhrzeitConverter;
@@ -126,6 +127,7 @@ public abstract class DBAttributeConverter<X, Y> implements AttributeConverter<X
 		add(new UhrzeitConverter());
 		add(new UhrzeitConverterString());
 		add(new VerkehrssprachenConverter());
+		add(new ReportingBildDefinitionConverter());
 
 		// Zukünftige Revisionen: Konverter für zukünftige Revision liegen im Sub-Package revNNN und beginnen mit dem Präfix RevNNN
 	}

@@ -163,6 +163,7 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerPersonaldatenLehramtFachrich
 import de.svws_nrw.db.schema.tabellen.Tabelle_LehrerPersonaldatenLehramtLehrbefaehigung;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Lernplattformen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Logins;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Logo;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Nationalitaeten_Keys;
 import de.svws_nrw.db.schema.tabellen.Tabelle_NichtMoeglAbiFachKombi;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Noten;
@@ -1199,6 +1200,8 @@ public final class Schema {
 	/** Tabelle TimestampsSchuelerZP10 */
 	public static final Tabelle_TimestampsSchuelerZP10 tab_TimestampsSchuelerZP10 = add(new Tabelle_TimestampsSchuelerZP10());
 
+	/** Tabelle Logo */
+	public static final Tabelle_Logo tab_Logo = add(new Tabelle_Logo());
 
 	/**
 	 * Liefert die SQL-Befehle zum Anlegen von Default-SVWS-Benutzern
