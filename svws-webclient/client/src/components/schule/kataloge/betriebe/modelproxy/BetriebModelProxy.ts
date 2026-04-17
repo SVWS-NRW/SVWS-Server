@@ -5,6 +5,7 @@ import { StringPattern } from "../../../../../../../ui/src/validation/common/Val
 import { computed } from "vue";
 import type { Betriebsart, OrtKatalogEintrag, Betrieb } from "@core";
 import { AdressenUtils } from "@core";
+import { ValidatorStrasse } from "../../../../../../../ui/src/validation/common/ValidatorStrasse";
 
 export class BetriebModelProxy extends ModelProxy<Betrieb> {
 
@@ -38,8 +39,7 @@ export class BetriebModelProxy extends ModelProxy<Betrieb> {
 		this.addValidator(new ValidatorStringLength(() => this.proxy.bemerkungen, null, 255), "bemerkungen");
 		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.bemerkungen, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "bemerkungen");
 
-		this.addValidator(new ValidatorStringLength(() => this.proxy.strasse, null, 50), "strasse");
-		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.strasse, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "strasse");
+		this.addValidator(new ValidatorStrasse(() => this.adresse.value, 55, 10, 30), "strasse", "hausnummer", "hausnummerZusatz");
 
 		this.addValidator(new ValidatorStringLength(() => this.proxy.telefon1, null, 20), "telefon1");
 		this.addValidator(new ValidatorStringMatchesPattern(() => this.proxy.telefon1, StringPattern.NO_LEADING_OR_TRAILING_WHITESPACES), "telefon1");

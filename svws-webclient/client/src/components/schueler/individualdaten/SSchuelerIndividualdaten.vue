@@ -370,7 +370,7 @@
 
 	async function patchStrasse(value: string | null) {
 		if (value !== null) {
-			const vals = AdressenUtils.splitStrasse(value);
+			const vals = AdressenUtils.splitAndTrimStrasse(value);
 			await props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] });
 		}
 	}

@@ -280,7 +280,7 @@
 
 	function patchStrasse(value: string | null) {
 		if ((value !== null) && (erzieher.value !== undefined)) {
-			const vals = AdressenUtils.splitStrasse(value);
+			const vals = AdressenUtils.splitAndTrimStrasse(value);
 			void props.patchErzieher({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] }, erzieher.value.id);
 		}
 	}

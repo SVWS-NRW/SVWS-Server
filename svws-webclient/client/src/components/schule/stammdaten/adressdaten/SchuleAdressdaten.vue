@@ -299,7 +299,7 @@
 	}
 	const patchStrasse = (value: string | null) => {
 		if (value !== null) {
-			const [strassenname, hausnummer, hausnummerZusatz] = AdressenUtils.splitStrasse(value);
+			const [strassenname, hausnummer, hausnummerZusatz] = AdressenUtils.splitAndTrimStrasse(value);
 			void props.patch({ strassenname, hausnummer, hausnummerZusatz });
 		}
 	};

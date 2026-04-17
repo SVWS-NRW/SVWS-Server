@@ -13,6 +13,17 @@ public class TestdatenSplitStrasse {
 	@JsonProperty
 	public String strasse;
 
+	/** Der Namensteil der Strasseninformation getrimmt */
+	@JsonProperty
+	public String nameTrimmed;
+
+	/** Der Teil mit der Hausnummer der Strasseninformation getrimmt */
+	@JsonProperty
+	public String hausNrTrimmed;
+
+	/** Der Teil mit dem Hausnummerzusatz der Strasseninformation getrimmt*/
+	@JsonProperty
+	public String zusatzTrimmed;
 	/** Der Namensteil der Strasseninformation */
 	@JsonProperty
 	public String name;

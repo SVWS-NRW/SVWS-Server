@@ -875,7 +875,7 @@ public final class DBMigrationManager {
 		}
 		// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
 		if (daten.Strasse != null) {
-			final String[] aufgeteilt = AdressenUtils.splitStrasse(daten.Strasse);
+			final String[] aufgeteilt = AdressenUtils.splitAndTrimStrasse(daten.Strasse);
 			daten.Strassenname = aufgeteilt[0];
 			daten.HausNr = aufgeteilt[1];
 			daten.HausNrZusatz = aufgeteilt[2];
@@ -919,7 +919,7 @@ public final class DBMigrationManager {
 		for (final MigrationDTOTeilstandorte daten : entities) {
 			// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
 			if (daten.Strasse != null) {
-				final String[] aufgeteilt = AdressenUtils.splitStrasse(daten.Strasse);
+				final String[] aufgeteilt = AdressenUtils.splitAndTrimStrasse(daten.Strasse);
 				daten.Strassenname = aufgeteilt[0];
 				daten.HausNr = aufgeteilt[1];
 				daten.HausNrZusatz = aufgeteilt[2];
@@ -998,7 +998,7 @@ public final class DBMigrationManager {
 		for (final MigrationDTOSchuleNRW daten : entities) {
 			// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
 			if (daten.Strasse != null) {
-				final String[] aufgeteilt = AdressenUtils.splitStrasse(daten.Strasse);
+				final String[] aufgeteilt = AdressenUtils.splitAndTrimStrasse(daten.Strasse);
 				daten.Strassenname = aufgeteilt[0];
 				daten.HausNr = aufgeteilt[1];
 				daten.HausNrZusatz = aufgeteilt[2];
@@ -1188,7 +1188,7 @@ public final class DBMigrationManager {
 			}
 			// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
 			if (daten.PersonStrasse != null) {
-				final String[] aufgeteilt = AdressenUtils.splitStrasse(daten.PersonStrasse);
+				final String[] aufgeteilt = AdressenUtils.splitAndTrimStrasse(daten.PersonStrasse);
 				daten.PersonStrassenname = aufgeteilt[0];
 				daten.PersonHausNr = aufgeteilt[1];
 				daten.PersonHausNrZusatz = aufgeteilt[2];
@@ -1504,7 +1504,7 @@ public final class DBMigrationManager {
 			}
 			// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
 			if (daten.Strasse != null) {
-				final String[] aufgeteilt = AdressenUtils.splitStrasse(daten.Strasse);
+				final String[] aufgeteilt = AdressenUtils.splitAndTrimStrasse(daten.Strasse);
 				daten.Strassenname = aufgeteilt[0];
 				daten.HausNr = aufgeteilt[1];
 				daten.HausNrZusatz = aufgeteilt[2];
@@ -1970,7 +1970,7 @@ public final class DBMigrationManager {
 			}
 			// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
 			if (daten.Strasse != null) {
-				final String[] aufgeteilt = AdressenUtils.splitStrasse(daten.Strasse);
+				final String[] aufgeteilt = AdressenUtils.splitAndTrimStrasse(daten.Strasse);
 				daten.Strassenname = aufgeteilt[0];
 				daten.HausNr = aufgeteilt[1];
 				daten.HausNrZusatz = aufgeteilt[2];
@@ -2004,7 +2004,7 @@ public final class DBMigrationManager {
 			final MigrationDTOSchuelerErzieherAdresse daten = entities.get(i);
 			// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
 			if (daten.ErzStrasse != null) {
-				final String[] aufgeteilt = AdressenUtils.splitStrasse(daten.ErzStrasse);
+				final String[] aufgeteilt = AdressenUtils.splitAndTrimStrasse(daten.ErzStrasse);
 				daten.ErzStrassenname = aufgeteilt[0];
 				daten.ErzHausNr = aufgeteilt[1];
 				daten.ErzHausNrZusatz = aufgeteilt[2];
@@ -2101,7 +2101,7 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOBetrieb daten = entities.get(i);
 			if (daten.strasse != null) {
-				final String[] aufgeteilt = AdressenUtils.splitStrasse(daten.strasse);
+				final String[] aufgeteilt = AdressenUtils.splitAndTrimStrasse(daten.strasse);
 				daten.strassenname = aufgeteilt[0];
 				daten.hausnr = aufgeteilt[1];
 				daten.hausnrzusatz = aufgeteilt[2];
@@ -2262,7 +2262,7 @@ public final class DBMigrationManager {
 		for (final MigrationDTOKindergarten daten : entities) {
 			// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
 			if (daten.Strasse != null) {
-				final String[] aufgeteilt = AdressenUtils.splitStrasse(daten.Strasse);
+				final String[] aufgeteilt = AdressenUtils.splitAndTrimStrasse(daten.Strasse);
 				daten.Strassenname = aufgeteilt[0];
 				daten.HausNr = aufgeteilt[1];
 				daten.HausNrZusatz = aufgeteilt[2];

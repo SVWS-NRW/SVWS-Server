@@ -374,7 +374,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		eigeneSchule.Bezeichnung1 = schulEintrag.ABez1;
 		eigeneSchule.Bezeichnung2 = schulEintrag.ABez2;
 		eigeneSchule.Bezeichnung3 = schulEintrag.ABez3;
-		final String[] strasse = AdressenUtils.splitStrasse(schulEintrag.Strasse);
+		final String[] strasse = AdressenUtils.splitAndTrimStrasse(schulEintrag.Strasse);
 		eigeneSchule.Strassenname = strasse[0];
 		eigeneSchule.HausNr = strasse[1];
 		eigeneSchule.HausNrZusatz = strasse[2];

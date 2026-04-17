@@ -14,6 +14,33 @@ public final class AdressenUtils {
 	/**
 	 * Teilt eine Straßenangabe bestehend aus dem
 	 * Strassennamen, der Hausnummer und dem Hausnummerzusatz
+	 * in die Bestandteile auf. Zu lange Angaben werden automatisch getrimmt.
+	 *
+	 * In TS kann man diese Funktion sehr schön auf diese Weise verwenden,
+	 * da die Attribute in den verwendeten Klassen ebenso benannt sind:
+	 * `const [ strassenname, hausnummer, hausnummerZusatz ] = AdressenUtils.splitStrasse(value);`
+	 *
+	 * @param strasse   die Strassenangabe
+	 *
+	 * @return ein Array mit den 3 Elementen (0 - Strassennamen (max. 55 Zeichen), 1 - Hausnummer (max. 10 Zeichen) und 2 - Hausnummerzusatz (max.30 Zeichen))
+	 */
+	public static @NotNull String @NotNull [] splitAndTrimStrasse(final String strasse) {
+		final @NotNull String @NotNull [] result = splitStrasse(strasse);
+		if (result[0].length() > 55) {
+			result[0] = result[0].substring(0, 55);
+		}
+		if (result[1].length() > 10) {
+			result[1] = result[1].substring(0, 10);
+		}
+		if (result[2].length() > 30) {
+			result[2] = result[2].substring(0, 30);
+		}
+		return result;
+	}
+
+	/**
+	 * Teilt eine Straßenangabe bestehend aus dem
+	 * Strassennamen, der Hausnummer und dem Hausnummerzusatz
 	 * in die Bestandteile auf.
 	 *
 	 * In TS kann man diese Funktion sehr schön auf diese Weise verwenden,
@@ -37,15 +64,6 @@ public final class AdressenUtils {
 		final @NotNull String rest = tmp.substring(result[0].length()).trim();
 		result[1] = rest.replaceFirst("\\D*$", "").trim();
 		result[2] = rest.substring(result[1].length()).trim();
-		if (result[0].length() > 55) {
-			result[0] = result[0].substring(0, 55);
-		}
-		if (result[1].length() > 10) {
-			result[1] = result[1].substring(0, 10);
-		}
-		if (result[2].length() > 30) {
-			result[2] = result[2].substring(0, 30);
-		}
 		return result;
 	}
 

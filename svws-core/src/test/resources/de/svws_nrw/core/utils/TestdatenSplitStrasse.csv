@@ -1,3 +1,4 @@
-"strasse";"name";"hausNr";"zusatz"
-"Rosenstr. 26 a";"Rosenstr.";"26";"a" 
-"Schlossallee 1+ 22";"Schlossallee";"1+ 22";""
+"strasse";"nameTrimmed";"hausNrTrimmed";"zusatzTrimmed";"name";"hausNr";"zusatz"
+"Rosenstr. 26 a";"Rosenstr.";"26";"a";"Rosenstr.";"26";"a"
+"Schlossallee 1+ 22";"Schlossallee";"1+ 22";"";"Schlossallee";"1+ 22";""
+"Ich bin ein extrem langer Straßenname mit zu vielen Zeichen 12345678910 Ich bin ein extrem langer Hausnummerzusatz mit zu vielen Zeichen";"Ich bin ein extrem langer Straßenname mit zu vielen Zei";"1234567891";"Ich bin ein extrem langer Haus";"Ich bin ein extrem langer Straßenname mit zu vielen Zeichen";"12345678910";"Ich bin ein extrem langer Hausnummerzusatz mit zu vielen Zeichen"
