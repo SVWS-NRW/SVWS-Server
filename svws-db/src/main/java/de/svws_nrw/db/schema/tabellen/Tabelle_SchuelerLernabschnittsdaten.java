@@ -1,6 +1,7 @@
 package de.svws_nrw.db.schema.tabellen;
 
 import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
@@ -13,6 +14,7 @@ import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
 import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
+import de.svws_nrw.db.schema.SchemaTabelleTrigger;
 import de.svws_nrw.db.schema.SchemaTabelleUniqueIndex;
 
 /**
@@ -529,6 +531,38 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 			col_Schuljahresabschnitts_ID,
 			col_WechselNr
 	).setRevision(SchemaRevisionen.REV_1);
+
+
+	/** Trigger t_INSERT_SchuelerLernabschnittsdaten_Klassen_ID */
+	public final SchemaTabelleTrigger trigger_MariaDB_INSERT_SchuelerLernabschnittsdaten_Klassen_ID = addTrigger(
+			"t_INSERT_SchuelerLernabschnittsdaten_Klassen_ID",
+			DBDriver.MARIA_DB,
+			"""
+			BEFORE INSERT ON SchuelerLernabschnittsdaten FOR EACH ROW
+			BEGIN
+			    IF (NEW.Klassen_ID IS NOT NULL) AND NOT EXISTS (SELECT 1 FROM Klassen WHERE ID = NEW.Klassen_ID AND Schuljahresabschnitts_ID = NEW.Schuljahresabschnitts_ID) THEN
+			        SIGNAL SQLSTATE '45000'
+			        SET MESSAGE_TEXT = 'Operation abgebrochen: Klassen_ID und Schuljahresabschnitts_ID sind nicht konsistent!';
+			    END IF;
+			END
+			""", Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Klassen)
+			.setRevision(SchemaRevisionen.REV_61);
+
+
+	/** Trigger t_UPDATE_SchuelerLernabschnittsdaten_Klassen_ID */
+	public final SchemaTabelleTrigger trigger_MariaDB_UPDATE_SchuelerLernabschnittsdaten_Klassen_ID = addTrigger(
+			"t_UPDATE_SchuelerLernabschnittsdaten_Klassen_ID",
+			DBDriver.MARIA_DB,
+			"""
+			BEFORE UPDATE ON SchuelerLernabschnittsdaten FOR EACH ROW
+			BEGIN
+			    IF (NEW.Klassen_ID IS NOT NULL) AND NOT EXISTS (SELECT 1 FROM Klassen WHERE ID = NEW.Klassen_ID AND Schuljahresabschnitts_ID = NEW.Schuljahresabschnitts_ID) THEN
+			        SIGNAL SQLSTATE '45000'
+			        SET MESSAGE_TEXT = 'Operation abgebrochen: Ungültige Klassen-Zuordnung für diesen Abschnitt!';
+			    END IF;
+			END
+			""", Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Klassen)
+			.setRevision(SchemaRevisionen.REV_61);
 
 
 	/**
