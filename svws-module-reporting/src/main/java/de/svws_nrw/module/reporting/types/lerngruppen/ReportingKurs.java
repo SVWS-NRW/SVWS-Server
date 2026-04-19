@@ -77,6 +77,7 @@ public class ReportingKurs extends ReportingLerngruppe {
 	 * @param idsSchueler Die Schüler des Kurses als Liste ihrer IDs.
 	 * @param schulnummer Die Schulnummer des Kurses, falls der Kurs an einer anderen Schule stattfindet.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingKurs(final long id, final ReportingSchuljahresabschnitt schuljahresabschnitt, final String kuerzel, final ReportingFach fach,
 			final List<ReportingLehrer> kurslehrer, final Map<Long, Double> wochenstundenKurslehrer, final List<ReportingSchueler> schueler,
 			final int sortierung, final int wochenstunden, final String bezeichnungZeugnis, final boolean istEpochalunterricht, final boolean istSichtbar,

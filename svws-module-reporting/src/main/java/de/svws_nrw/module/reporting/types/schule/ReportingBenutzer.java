@@ -61,6 +61,7 @@ public class ReportingBenutzer extends ReportingPerson {
 	 * @param wohnort Der Wohnort des Benutzers.
 	 * @param wohnortsteil Ggf. der Ortsteil des Wohnortes des Benutzers.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingBenutzer(final String anrede, final String anzeigename, final String benutzername, final String emailPrivat, final String emailSchule,
 			final String faxSchule,
 			final String geburtsdatum, final String geburtsland, final String geburtsname, final String geburtsort,

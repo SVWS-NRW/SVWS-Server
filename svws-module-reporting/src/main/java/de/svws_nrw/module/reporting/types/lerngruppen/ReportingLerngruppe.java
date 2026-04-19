@@ -47,6 +47,7 @@ public abstract class ReportingLerngruppe extends ReportingSchuelergruppe {
 	 * @param wochenstundenSchueler Die Anzahl der Wochenstunden der Schüler in der Lerngruppe.
 	 * @param sortierung Die Sortierreihenfolge des Listen-Eintrags.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	protected ReportingLerngruppe(final long id, final ReportingSchuljahresabschnitt schuljahresabschnitt, final String kuerzel,
 			final @NotNull ReportingFach fach, final List<ReportingLehrer> fachlehrer, final Map<Long, Double> wochenstundenFachlehrer,
 			final List<ReportingSchueler> schueler, final int wochenstundenSchueler, final int sortierung) {

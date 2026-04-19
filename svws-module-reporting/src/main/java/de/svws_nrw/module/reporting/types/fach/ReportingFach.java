@@ -102,6 +102,7 @@ public class ReportingFach extends ReportingBaseType {
 	 * @param sortierung Die Sortierreihenfolge des Fächerlisten-Eintrags.
 	 * @param statistikfach Das Statistik-Fach des Faches
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingFach(final String aufgabenfeld, final boolean aufZeugnis, final String bezeichnung, final String bezeichnungUeberweisungszeugnis,
 			final String bezeichnungZeugnis, final String bilingualeSprache, final Fachgruppe fachgruppe, final boolean holeAusAltenLernabschnitten,
 			final long id, final boolean istFHRFach, final boolean istFremdsprache, final boolean istFremdSpracheNeuEinsetzend, final boolean istGostFach,

@@ -54,6 +54,7 @@ public class ReportingSchulkatalogEintragNRW extends ReportingSchuleBasisdatenNR
 	 * @param schulleiter Der Name des/der Schulleiters/Schulleiterin.
 	 * @param sortierung Die Position dieses Eintrags in der Sortierreihenfolge.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingSchulkatalogEintragNRW(final List<String> bezeichnung, final String email, final String fax, final String hausnummer,
 			final String ort, final String plz, final long schulnummer, final String strassenname, final String telefon, final String hausnummerZusatz,
 			final long id, final boolean istSichtbar, final String kuerzel, final String kurzbezeichnung, final SchulformKatalogEintrag schulform,

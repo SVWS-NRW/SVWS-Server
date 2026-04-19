@@ -63,6 +63,7 @@ public class ReportingSchuelerSprachbelegung extends ReportingBaseType {
 	 * @param sprache Das einstellige Sprachkürzel des Faches der Sprache
 	 * @param statistikfach Das Statistik-Fach zur Sprache
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingSchuelerSprachbelegung(final Integer belegungBisAbschnitt, final String belegungBisJahrgang, final Integer belegungVonAbschnitt,
 			final String belegungVonJahrgang, final boolean hatGraecum, final boolean hatHebraicum, final boolean hatKleinesLatinum, final boolean hatLatinum,
 			final Sprachreferenzniveau referenzniveau, final Integer reihenfolge, final String sprache, final ReportingStatistikFach statistikfach) {

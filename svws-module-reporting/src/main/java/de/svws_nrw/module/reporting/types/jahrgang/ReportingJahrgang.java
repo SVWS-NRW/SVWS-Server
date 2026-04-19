@@ -82,6 +82,7 @@ public class ReportingJahrgang extends ReportingBaseType {
 	 * @param schuljahresabschnitt Der Schuljahresabschnitt zu diesem Jahrgang.
 	 * @param sortierung Die Sortierreihenfolge des Jahrgangs in der Liste der Jahrgänge.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingJahrgang(final Integer anzahlRestabschnitte, final String bezeichnung, final Long gueltigBis, final Long gueltigVon,
 			final ReportingJahrgang folgejahrgang, final long id, final Long idFolgejahrgang, final Jahrgaenge jahrgang, final List<ReportingKlasse> klassen,
 			final String kuerzel, final String kuerzelSchulgliederung, final String kuerzelStatistik, final boolean istSichtbar,

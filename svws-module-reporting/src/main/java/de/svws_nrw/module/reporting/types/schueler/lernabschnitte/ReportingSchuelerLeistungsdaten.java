@@ -121,6 +121,7 @@ public class ReportingSchuelerLeistungsdaten extends ReportingBaseType {
 	 * @param wochenstundenSchueler Die dem Schüler angerechneten Wochenstunden des Faches.
 	 * @param zusatzLehrer Die Lehrkräfte, die das Fach neben der Fachlehrkraft unterrichten.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingSchuelerLeistungsdaten(final Integer abifach, final boolean aufZeugnis, final ReportingFach fach, final ReportingLehrer fachlehrer,
 			final int fehlstundenGesamt, final int fehlstundenUnentschuldigt, final String geholtJahrgangAbgeschlossen, final int gewichtungAllgemeinbildend,
 			final long id, final boolean istEpochal, final boolean istGemahnt, final boolean istZP10oderZKEF, final ReportingKurs kurs, final String kursart,

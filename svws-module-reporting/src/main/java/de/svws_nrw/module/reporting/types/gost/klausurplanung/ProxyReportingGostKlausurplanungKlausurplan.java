@@ -51,6 +51,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	 *                              Wert der Eigenschaft idsFilterDataType.
 	 * @param idsFilterDataType     Der Typ von Daten, auf den sich die Filterung der IDs bezieht.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository,
 			final List<ReportingGostKlausurplanungKlausurtermin> klausurtermine, final List<ReportingKurs> kurse,
 			final List<ReportingGostKlausurplanungKursklausur> kursklausuren, final List<ReportingSchueler> schueler,

@@ -62,6 +62,7 @@ public class ReportingGostKlausurplanungKursklausur extends ReportingBaseType {
 	 * @param schuelerklausuren	Die Liste der Schülerklausuren zu dieser Klausur.
 	 * @param startzeit			Die Startzeit der Klausur in Minuten seit 0 Uhr, wenn abweichend vom Klausurtermin, sonst null.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingGostKlausurplanungKursklausur(final int auswahlzeit, final String bemerkung, final int dauer, final long id,
 			final boolean istAudioNotwendig, final boolean istMdlPruefung,
 			final boolean istVideoNotwendig, final ReportingGostKlausurplanungKlausurtermin klausurtermin, final ReportingKurs kurs,

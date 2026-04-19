@@ -91,6 +91,7 @@ public class ReportingGostKursplanungBlockungsergebnis extends ReportingBaseType
 	 * @param idsFilter Eine Liste von IDs, die die Ausgabe auf diese IDs beschränkt. Auf welchen Datentyp sich diese IDs beziehen, definiert der Wert der Eigenschaft idsFilterDataType.
 	 * @param idsFilterDataType Der Typ von Daten, auf den sich die Filterung der IDs bezieht.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingGostKursplanungBlockungsergebnis(final int abiturjahr, final int anzahlDummy, final int anzahlExterne, final int anzahlMaxKurseProSchiene,
 			final int anzahlSchienen, final int anzahlSchueler, final String bezeichnung,
 			final Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik, final GostHalbjahr gostHalbjahr, final long id,

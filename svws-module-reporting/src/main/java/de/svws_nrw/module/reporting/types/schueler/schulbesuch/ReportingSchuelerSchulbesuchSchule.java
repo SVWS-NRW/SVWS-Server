@@ -48,6 +48,7 @@ public class ReportingSchuelerSchulbesuchSchule extends ReportingBaseType {
 	 * @param schule Die Daten der Schule.
 	 * @param schulgliederung Der Schlüssel des Bildungsganges/Schulgliederung an der Schule.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingSchuelerSchulbesuchSchule(final String datumVon, final String datumBis, final String idAbschlussart, final Long idEntlassgrund,
 			final String idOrganisationsform, final String jahrgangVon, final String jahrgangBis, final ReportingSchulkatalogEintragNRW schule,
 			final String schulgliederung) {

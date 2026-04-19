@@ -109,6 +109,7 @@ public class ReportingKlasse extends ReportingSchuelergruppe {
 	 * @param verwendungAnkreuzkompetenzen Gibt an, ob Ankreuzkompetenzen für die Klasse verwendet werden.
 	 * @param vorgaengerklasse Die Vorgängerklasse dieser Klasse zur idVorgaengerklasse.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingKlasse(final long id, final ReportingSchuljahresabschnitt schuljahresabschnitt, final String kuerzel,
 			final List<ReportingSchueler> schueler, final int sortierung, final boolean beginnSommersemester, final String beschreibung,
 			final ReportingKlasse folgeklasse, final Long idAllgemeinbildendOrganisationsform, final Long idBerufsbildendOrganisationsform,

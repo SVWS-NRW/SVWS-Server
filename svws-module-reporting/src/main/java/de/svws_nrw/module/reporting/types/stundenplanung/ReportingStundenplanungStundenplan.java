@@ -93,6 +93,7 @@ public class ReportingStundenplanungStundenplan extends ReportingBaseType {
 	 * @param wochenbezeichnungen       Die Bezeichnungen der Wochen des Stundenplans als Map zur Wochennummer
 	 * @param unterrichtsrasterstunden 	Die Stunden des Unterrichtsrasters dieses Stundenplanes.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingStundenplanungStundenplan(final String beschreibung, final String gueltigAb, final String gueltigBis, final long id,
 			final List<ReportingStundenplanungPausenzeit> pausenzeiten, final List<ReportingStundenplanungRaum> raeume,
 			final ReportingSchuljahresabschnitt schuljahresabschnitt, final int wochenperiodizitaet, final Map<Integer, String> wochenbezeichnungen,

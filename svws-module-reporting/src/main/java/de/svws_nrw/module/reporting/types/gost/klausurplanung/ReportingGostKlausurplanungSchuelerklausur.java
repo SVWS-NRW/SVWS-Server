@@ -51,6 +51,7 @@ public class ReportingGostKlausurplanungSchuelerklausur extends ReportingBaseTyp
 	 * @param schueler					Der Schüler dieser Schülerklausur.
 	 * @param startzeit					Die Startzeit des Schülerklausurtermins in Minuten seit 0 Uhr, falls schon gesetzt.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingGostKlausurplanungSchuelerklausur(final String bemerkung, final long id,
 			final long idSchuelerklausurtermin, final ReportingGostKlausurplanungKlausurraum klausurraum,
 			final ReportingGostKlausurplanungKlausurtermin klausurtermin, final ReportingGostKlausurplanungKursklausur kursklausur,

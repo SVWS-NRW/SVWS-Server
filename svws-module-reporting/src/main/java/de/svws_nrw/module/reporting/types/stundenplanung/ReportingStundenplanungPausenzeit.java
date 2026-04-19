@@ -47,6 +47,7 @@ public class ReportingStundenplanungPausenzeit extends ReportingStundenplanungZe
 	 * @param pausenaufsichten Die Klassen, die dieser Pausenzeit zugeordnet sind. Diese Liste ist leer, falls der Zeitraum für alle Klassen gilt.
 	 * @param wochentag        Der {@link Wochentag} an dem diese Pausenzeit liegt.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingStundenplanungPausenzeit(final long id, final ReportingStundenplanungStundenplan stundenplan, final String bezeichnung,
 			final Integer beginn, final Integer ende, final List<ReportingKlasse> klassen, final List<ReportingStundenplanungPausenaufsicht> pausenaufsichten,
 			final Wochentag wochentag) {

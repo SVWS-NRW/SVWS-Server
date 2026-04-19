@@ -70,7 +70,7 @@ public class ProxyReportingBenutzer extends ReportingBenutzer {
 				if (dtoBenutzer != null) {
 					super.anzeigename = dtoBenutzer.AnzeigeName;
 				}
-			} catch (final Exception ignore) {
+			} catch (@SuppressWarnings("unused") final Exception ignore) {
 				// Bei einem Fehler im Datenbankzugriff fehlt nur der Anzeigename. Daher kann der Fehler ignoriert werden.
 			}
 		}

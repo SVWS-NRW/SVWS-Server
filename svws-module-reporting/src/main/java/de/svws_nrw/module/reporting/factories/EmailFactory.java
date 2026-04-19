@@ -475,7 +475,7 @@ public final class EmailFactory {
 			final InternetAddress address = new InternetAddress(emailAddress);
 			address.validate();
 			return true;
-		} catch (@SuppressWarnings("unused") final AddressException addressException) {
+		} catch (@SuppressWarnings("unused") final AddressException ignore) {
 			return false;
 		}
 	}

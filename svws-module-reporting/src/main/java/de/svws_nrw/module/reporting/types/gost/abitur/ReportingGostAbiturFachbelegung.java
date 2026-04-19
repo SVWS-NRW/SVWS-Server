@@ -76,6 +76,7 @@ public class ReportingGostAbiturFachbelegung extends ReportingBaseType {
 	 * @param halbjahresbelegungen Die Einzelbelegungen des Faches in den einzelnen Halbjahren im Block I des Abiturs
 	 * @param letzteKursart Die letzte Kursart der gymnasialen Oberstufe (LK, GK, ZK, PJK, VTF), mit welcher das Fach belegt wurde
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingGostAbiturFachbelegung(final Integer abiturFach, final Double block1NotenpunkteDurchschnitt, final Integer block1PunktSumme,
 			final Boolean block2MuendlichePruefungAbweichung, final Boolean block2MuendlichePruefungBestehen, final Boolean block2MuendlichePruefungFreiwillig,
 			final Note block2MuendlichePruefungNote, final Integer block2MuendlichePruefungReihenfolge, final ReportingLehrer block2Pruefer,

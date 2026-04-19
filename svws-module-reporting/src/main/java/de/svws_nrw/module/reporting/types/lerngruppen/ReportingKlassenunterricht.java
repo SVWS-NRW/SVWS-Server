@@ -38,6 +38,7 @@ public class ReportingKlassenunterricht extends ReportingLerngruppe {
 	 * @param wochenstundenSchueler Wochenstunden für die Schüler
 	 * @param mapSchuelerLeistungsdaten Eine Map, die die Leistungsdaten zu diesem Unterricht zur ID des Schülers speichert
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingKlassenunterricht(final @NotNull ReportingKlasse klasse, final @NotNull ReportingFach fach, final ReportingLehrer bewertenderLehrer,
 			final List<ReportingLehrer> fachlehrer, final Map<Long, Double> wochenstundenFachlehrer, final List<ReportingSchueler> schueler,
 			final int wochenstundenSchueler, final Map<Long, ReportingSchuelerLeistungsdaten> mapSchuelerLeistungsdaten) {

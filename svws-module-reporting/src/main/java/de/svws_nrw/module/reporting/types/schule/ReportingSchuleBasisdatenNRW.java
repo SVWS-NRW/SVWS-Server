@@ -57,6 +57,7 @@ public class ReportingSchuleBasisdatenNRW extends ReportingBaseType {
 	 * @param telefon Die Telefonnummer der Schule.
 	 * @param hausnummerZusatz Ggf. der Hausnummernzusatz der Straße, in der die Schule liegt.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingSchuleBasisdatenNRW(final List<String> bezeichnung, final String email, final String fax,
 			final String hausnummer, final String ort, final String plz, final long schulnummer, final String strassenname, final String telefon,
 			final String hausnummerZusatz) {

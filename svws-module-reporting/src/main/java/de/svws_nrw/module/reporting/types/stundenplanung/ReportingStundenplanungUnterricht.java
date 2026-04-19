@@ -59,6 +59,7 @@ public class ReportingStundenplanungUnterricht extends ReportingBaseType {
 	 * @param wochentyp                 Der Wochen-Typ bei der Unterscheidung von Mehrwochenplänen.
 	 * @param stundeImUnterrichtsraster Die Stunde im Unterrichtsraster des Stundenplans.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingStundenplanungUnterricht(final long id, final ReportingFach fach, final List<ReportingKlasse> klassen, final ReportingKurs kurs,
 			final List<ReportingLehrer> lehrkraefte, final List<ReportingStundenplanungRaum> raeume, final List<Long> schienen, final int wochentyp,
 			final ReportingStundenplanungUnterrichtsrasterstunde stundeImUnterrichtsraster) {

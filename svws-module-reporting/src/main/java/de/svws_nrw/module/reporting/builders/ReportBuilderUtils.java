@@ -156,7 +156,7 @@ public final class ReportBuilderUtils {
 			//noinspection ResultOfMethodCallIgnored
 			new File(dateiname).getCanonicalFile();
 			return true;
-		} catch (@SuppressWarnings("unused") final Exception e) {
+		} catch (@SuppressWarnings("unused") final Exception ignore) {
 			return false;
 		}
 	}

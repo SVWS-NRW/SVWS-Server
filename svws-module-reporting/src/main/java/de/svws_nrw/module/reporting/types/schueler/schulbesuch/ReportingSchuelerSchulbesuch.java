@@ -124,6 +124,7 @@ public class ReportingSchuelerSchulbesuch extends ReportingBaseType {
 	 * @param teilnahmeSprachfoerderkurs Teilnahme des Schülers an einem Sprachförderkurs (Ja/Nein).
 	 * @param alleSchulen Die Informationen zu allen bisher besuchten Schulen.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingSchuelerSchulbesuch(final ReportingSchulkatalogEintragNRW vorherigeSchule, final String vorigeAllgHerkunft,
 			final String vorigeEntlassdatum, final String vorigeEntlassjahrgang, final String vorigeArtLetzteVersetzung,
 			final String vorigeBemerkung, final KatalogEntlassgrund vorigeEntlassgrund, final String vorigeAbschlussartID,

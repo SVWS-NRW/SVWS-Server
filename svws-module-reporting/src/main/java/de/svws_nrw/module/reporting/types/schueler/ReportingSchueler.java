@@ -212,6 +212,7 @@ public class ReportingSchueler extends ReportingPerson {
 	 * @param wohnortsteil Der Ortsteil des Wohnorts des Schülers.
 	 * @param zuzugsjahr Das Zuzugsjahr des Schülers.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingSchueler(final ReportingSchuelerLernabschnitt aktuellerLernabschnitt, final String anmeldedatum,
 			final String anrede, final String aufnahmedatum, final ReportingSchuelerLernabschnitt auswahlLernabschnitt,
 			final boolean druckeKonfessionAufZeugnisse, final String emailPrivat, final String emailSchule, final boolean erhaeltMeisterBAFOEG,

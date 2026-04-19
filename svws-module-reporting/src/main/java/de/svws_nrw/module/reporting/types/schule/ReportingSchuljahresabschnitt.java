@@ -64,6 +64,7 @@ public class ReportingSchuljahresabschnitt extends ReportingBaseType {
 	 * @param klassen				Die Klassen des Schuljahresabschnitts
 	 * @param kurse					Die Kurse des Schuljahresabschnitts
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingSchuljahresabschnitt(final long id, final int schuljahr, final int abschnitt, final Long idFolgenderAbschnitt,
 			final Long idVorherigerAbschnitt, final ReportingSchuljahresabschnitt folgenderAbschnitt, final ReportingSchuljahresabschnitt vorherigerAbschnitt,
 			final Map<Long, ReportingFach> faecher, final Map<Long, ReportingJahrgang> jahrgaenge, final Map<Long, ReportingKlasse> klassen,

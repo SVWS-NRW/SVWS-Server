@@ -270,6 +270,7 @@ public class ReportingSchuelerLernabschnitt extends ReportingBaseType {
 	 * @param zeugnisBemerkungText Der Text für allgemeine Zeugnisbemerkungen.
 	 * @param zeugnisLELSText Der Text für Zeugnisbemerkungen zur Lernentwicklung in Grundschulen.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingSchuelerLernabschnitt(final String abschluss, final Integer abschlussart, final String abschlussBerufsbildend,
 			final String bilingualerZweig, final String datumAnfang, final String datumEnde, final String datumKonferenz,
 			final String datumZeugnis, final int fehlstundenGesamt, final Integer fehlstundenGrenzwert, final int fehlstundenUnentschuldigt,

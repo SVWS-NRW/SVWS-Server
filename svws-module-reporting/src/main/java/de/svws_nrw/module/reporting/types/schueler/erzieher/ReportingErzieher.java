@@ -58,6 +58,7 @@ public class ReportingErzieher extends ReportingPerson {
 	 * @param wohnort Der Wohnort des Erziehers.
 	 * @param wohnortsteil Ggf. der Ortsteil des Wohnortes des Erziehers.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingErzieher(final String anrede, final ReportingErzieherArt art, final String bemerkung, final String emailPrivat, final String emailSchule,
 			final Boolean erhaeltAnschreiben, final String geburtsdatum, final String geburtsland, final String geburtsname, final String geburtsort,
 			final Geschlecht geschlecht, final String hausnummer, final String hausnummerZusatz, final long id, final String nachname,

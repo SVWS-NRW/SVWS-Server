@@ -140,6 +140,7 @@ public class ReportingSchuelerGostAbitur extends ReportingBaseType {
 	 * @param projektkursThema Das Projektkurs thema, sofern ein Projektkurs belegt wurde.
 	 * @param pruefungBestanden Die Angabe, ob die Abiturprüfung bestanden wurde oder nicht - sofern das Prüfungsverfahren schon abgeschlossen wurde.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingSchuelerGostAbitur(final int abiturjahr, final int abiturSchuljahr, final ReportingSchuljahresabschnitt abiturSchuljahresabschnitt,
 			final String besondereLernleistungArt, final Note besondereLernleistungNote, final String besondereLernleistungThema,
 			final boolean[] bewertetesHalbjahr, final String bilingualeSprache, final Integer block1AnzahlKurse, final Integer block1DefiziteGesamt,

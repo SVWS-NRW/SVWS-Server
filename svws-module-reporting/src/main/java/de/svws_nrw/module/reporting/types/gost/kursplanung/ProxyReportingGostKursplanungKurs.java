@@ -39,6 +39,7 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 	 * @param schienen                  Liste vom Typ Schiene, die die Schienen beinhaltet, in denen der Kurs gemäß Blockungsergebnis liegt.
 	 * @param schueler					Liste der Schüler des Kurses.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ProxyReportingGostKursplanungKurs(final ReportingGostKursplanungBlockungsergebnis reportingGostKursplanungBlockungsergebnis, final int anzahlAB12,
 			final int anzahlAB3, final int anzahlAB4, final int anzahlDummy, final int anzahlExterne, final int anzahlSchueler,
 			final int anzahlSchuelerSchriftlich, final String bezeichnung, final ReportingFach fach,

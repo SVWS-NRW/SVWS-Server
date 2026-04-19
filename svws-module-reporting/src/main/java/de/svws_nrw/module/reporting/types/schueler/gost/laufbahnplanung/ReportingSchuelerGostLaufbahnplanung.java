@@ -168,6 +168,7 @@ public class ReportingSchuelerGostLaufbahnplanung extends ReportingBaseType {
 	 * @param wochenstundenDurchschnittQPh Wochenstundendurchschnitt in der Qualifikationsphase
 	 * @param wochenstundenGesamt Wochenstundensumme der gesamten Laufbahn
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingSchuelerGostLaufbahnplanung(final int abiturjahr, final String aktuelleKlasse, final String aktuellesGOStHalbjahr,
 			final String auswahlKlasse, final String auswahlGOStHalbjahr, final String beratungsbogenText, final List<ReportingLehrer> beratungslehrkraefte,
 			final String emailText, final List<ReportingGostLaufbahnplanungFachwahl> fachwahlen, final List<ReportingGostLaufbahnplanungErgebnismeldung> fehler,

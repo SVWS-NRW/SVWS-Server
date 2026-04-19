@@ -62,6 +62,7 @@ public class ReportingGostFachwahlstatistikHalbjahr extends ReportingBaseType {
 	 * @param wahlenPJK Die Anzahl der Wahlen als Zusatzkurs.
 	 * @param wahlenVTF Die Anzahl der Wahlen als Zusatzkurs.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingGostFachwahlstatistikHalbjahr(final int abiturjahr, final ReportingFach fach, final GostHalbjahr gostHalbjahr, final int wahlenLK,
 			final int wahlenGK, final int wahlenGKMuendlich, final int wahlenGKSchriftlich, final int wahlenAB3, final int wahlenAB4, final int wahlenZK,
 			final int wahlenPJK, final int wahlenVTF) {

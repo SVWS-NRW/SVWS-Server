@@ -86,6 +86,7 @@ public class ReportingStatistikFach extends ReportingBaseType {
 	 * @param kuerzelASD Das eindeutige Kürzel des Faches entsprechend der Vorgaben der amtlichen Schulstatistik
 	 * @param nurSII Gibt an, ob das Fach nur in der Sekundarstufe II unterrichtet wird.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingStatistikFach(final String abJahrgang, final Integer aufgabenfeld, final String bezeichnung, final boolean exportASD,
 			final ReportingFach fach, final Fachgruppe fachgruppe, final Integer gueltigBis, final Integer gueltigVon, final String htmlFarbeRGB,
 			final long idFachkatalog, final boolean istAusRegUFach, final boolean istErsatzPflichtFS, final boolean istFremdsprache, final boolean istHKFS,

@@ -26,6 +26,7 @@ public class ProxyReportingGostKursplanungSchiene extends ReportingGostKursplanu
 	 * @param kurse						Eine Liste vom Typ Kurse, die alle Kurse der Schiene und deren Daten enthält.
 	 * @param nummer					Die Nummer der Schiene.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ProxyReportingGostKursplanungSchiene(final ReportingGostKursplanungBlockungsergebnis reportingGostKursplanungBlockungsergebnis,
 			final int anzahlDummy, final int anzahlExterne, final int anzahlSchueler, final String bezeichnung, final boolean hatKollisionen, final Long id,
 			final List<Long> idsKurseMitKollisionen, final List<Long> idsSchuelerMitKollisionen, final List<ReportingGostKursplanungKurs> kurse,

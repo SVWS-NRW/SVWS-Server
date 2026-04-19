@@ -57,6 +57,7 @@ public class ReportingGostAbiturFachbelegungHalbjahr extends ReportingBaseType {
 	 * @param note Die erteilte Note.
 	 * @param wochenstunden Die Wochenstundenzahl, mir der das Fach belegt wurde
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingGostAbiturFachbelegungHalbjahr(final String bilingualeSprache, final Boolean block1gewertet, final Boolean block1kursAufZeugnis,
 			final int fehlstundenGesamt, final int fehlstundenUnentschuldigt, final String halbjahrKuerzel, final boolean istSchriftlich,
 			final String kursartKuerzel, final ReportingLehrer lehrer, final Note note, final int wochenstunden) {

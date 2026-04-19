@@ -78,6 +78,7 @@ public class ReportingSchule extends ReportingSchuleBasisdatenNRW {
 	 * @param stvSchulleitung            Die stellvertretende Schulleitung.
 	 * @param webAdresse                 Die Webadresse der Schule.
 	 */
+	@SuppressWarnings("java:S107") // Konstruktoren mit zu vielen Parametern (gemäß SonarQube) werden aktuell toleriert und nicht refacored (Stand 2026-04).
 	public ReportingSchule(final List<String> bezeichnung, final String email, final String fax, final String hausnummer, final String ort, final String plz,
 			final long schulnummer, final String strassenname, final String telefon, final String hausnummerZusatz,
 			final ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt,
