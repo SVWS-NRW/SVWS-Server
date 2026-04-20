@@ -100,7 +100,7 @@ public class ValidatorFehler {
 	 * @return der ASD-Fehlercode
 	 */
 	public @NotNull String getFehlercode() {
-		return _validator.getFehlercodePraefix() + _pruefschritt;
+		return _validator.getFehlercodePraefix();
 	}
 
 

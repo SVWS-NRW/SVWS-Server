@@ -94,7 +94,7 @@ describe("UiValidationTooltip", () => {
 		const statistikText = statistikHeadline.find(".text-headline-md.font-medium");
 		expect(statistikText.exists()).toBeTruthy();
 		expect(statistikText.text()).toBe("Statistik");
-		expect(statistikHeadline.find(String.raw`.icon.i-ri-bar-chart-2-line.icon-ui-statistic.pointer-events-auto.mt-0\.5`).exists()).toBeTruthy();
+		expect(statistikHeadline.find(String.raw`.icon.i-ri-bar-chart-2-line.icon-ui-statistic.pointer-events-auto`).exists()).toBeTruthy();
 	});
 
 	test("Zeige keine Statistik Headline, wenn keine Statistik Fehler existieren", async () => {
@@ -153,8 +153,7 @@ describe("UiValidationTooltip", () => {
 		// Prüfe Prüfcodes
 		expect(fehlergruppenItems.map(t => {
 			const badge = t.find(".fehler-badge");
-			const badgeText = badge.exists() ? badge.text() : "";
-			return badgeText;
+			return badge.exists() ? badge.text() : "";
 		})).toEqual([
 			"",
 			"",
@@ -162,12 +161,12 @@ describe("UiValidationTooltip", () => {
 			"",
 			"",
 			"",
-			"MV0",
-			"MV1",
-			"KV0",
-			"KV1",
-			"HV0",
-			"HV1",
+			"MV",
+			"MV",
+			"KV",
+			"KV",
+			"HV",
+			"HV",
 		]);
 
 	});

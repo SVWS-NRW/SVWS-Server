@@ -101,7 +101,7 @@ export class ValidatorFehler extends JavaObject {
 	 * @return der ASD-Fehlercode
 	 */
 	public getFehlercode(): string {
-		return this._validator.getFehlercodePraefix() + this._pruefschritt;
+		return this._validator.getFehlercodePraefix();
 	}
 
 	/**
